@@ -1,4 +1,13 @@
 Verified+1: Anonymous Coward #1000004
+build-config+1: <songwenwu@linuxdeepin.com>
+Code-Review+2: <snyh@snyh.org>
+Submitted-by: <snyh@snyh.org>
+Submitted-at: Thu, 04 Sep 2014 16:20:40 -0500
+Reviewed-on: https://cr.deepin.io/630
+Project: dde-daemon
+Branch: refs/heads/master
+
+Verified+1: Anonymous Coward #1000004
 build-config+1: 宋文武 <songwenwu@linuxdeepin.com>
 Code-Review+2: snyh <snyh@snyh.org>
 Submitted-by: snyh <snyh@snyh.org>

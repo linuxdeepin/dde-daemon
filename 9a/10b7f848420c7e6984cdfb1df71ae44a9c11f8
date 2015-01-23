@@ -1,4 +1,12 @@
 Verified+1: Anonymous Coward #1000004
+Code-Review+2: <snyh@snyh.org>
+Submitted-by: <liliqiang@linuxdeepin.com>
+Submitted-at: Thu, 21 Aug 2014 15:51:32 -0500
+Reviewed-on: https://cr.deepin.io/356
+Project: dde-daemon
+Branch: refs/heads/master
+
+Verified+1: Anonymous Coward #1000004
 Code-Review+2: snyh <snyh@snyh.org>
 Submitted-by: Liqiang Lee <liliqiang@linuxdeepin.com>
 Submitted-at: Thu, 21 Aug 2014 15:51:32 +0800

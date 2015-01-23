@@ -1,4 +1,15 @@
 Verified+1: Anonymous Coward #1000004
+Code-Review+1: leaeasy <leaeasy@gmail.com>
+build-config+1: leaeasy <leaeasy@gmail.com>
+Code-Review+2: <snyh@snyh.org>
+Code-Review+2: <fasheng.xu@gmail.com>
+Submitted-by: <fasheng.xu@gmail.com>
+Submitted-at: Wed, 20 Aug 2014 10:01:35 -0500
+Reviewed-on: https://cr.deepin.io/292
+Project: dde-daemon
+Branch: refs/heads/master
+
+Verified+1: Anonymous Coward #1000004
 build-config+1: leaeasy <leaeasy@gmail.com>
 Code-Review+1: leaeasy <leaeasy@gmail.com>
 Code-Review+2: snyh <snyh@snyh.org>

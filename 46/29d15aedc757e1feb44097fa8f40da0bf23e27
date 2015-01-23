@@ -1,6 +1,16 @@
 Verified+1: Anonymous Coward #1000004
 Verified+1: liangrui <liangrui@linuxdeepin.com>
 Code-Review+2: jouyouyun <jouyouwen717@gmail.com>
+Code-Review+2: <snyh@snyh.org>
+Submitted-by: <snyh@snyh.org>
+Submitted-at: Mon, 10 Nov 2014 13:45:44 -0500
+Reviewed-on: https://cr.deepin.io/1449
+Project: dde-daemon
+Branch: refs/heads/master
+
+Verified+1: Anonymous Coward #1000004
+Verified+1: liangrui <liangrui@linuxdeepin.com>
+Code-Review+2: jouyouyun <jouyouwen717@gmail.com>
 Code-Review+2: snyh <snyh@snyh.org>
 Submitted-by: snyh <snyh@snyh.org>
 Submitted-at: Mon, 10 Nov 2014 13:45:44 +0800
