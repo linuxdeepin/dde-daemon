@@ -31,7 +31,6 @@ const (
 	dthemeCustomId  = "Custom"
 
 	wrapBgSchema    = "com.deepin.wrap.gnome.desktop.background"
-	gnomeBgSchema   = "org.gnome.desktop.background"
 	gsKeyBackground = "picture-uri"
 
 	appearanceSchema = "com.deepin.dde.appearance"
@@ -52,7 +51,6 @@ type Manager struct {
 	setting *gio.Settings
 
 	wrapBgSetting  *gio.Settings
-	gnomeBgSetting *gio.Settings
 
 	watcher    *fsnotify.Watcher
 	endWatcher chan struct{}
@@ -65,7 +63,6 @@ func NewManager() *Manager {
 	m.setPropFontSize(m.setting.GetInt(gsKeyFontSize))
 
 	m.wrapBgSetting, _ = dutils.CheckAndNewGSettings(wrapBgSchema)
-	m.gnomeBgSetting, _ = dutils.CheckAndNewGSettings(gnomeBgSchema)
 
 	var err error
 	m.watcher, err = fsnotify.NewWatcher()
@@ -85,10 +82,6 @@ func (m *Manager) destroy() {
 
 	if m.wrapBgSetting != nil {
 		m.wrapBgSetting.Unref()
-	}
-
-	if m.gnomeBgSetting != nil {
-		m.gnomeBgSetting.Unref()
 	}
 
 	if m.watcher != nil {
