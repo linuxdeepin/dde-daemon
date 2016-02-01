@@ -158,6 +158,7 @@ func getLocale() string {
 	if err != nil || len(locale) == 0 {
 		locale, err = getLocaleFromFile(systemLocaleFile)
 		if err != nil || len(locale) == 0 {
+			/* This file is used by systemd to store system-wide locale settings */
 			locale, err = getLocaleFromFile(systemdLocaleFile)
 			if err != nil || len(locale) == 0 {
 				locale = defaultLocale
