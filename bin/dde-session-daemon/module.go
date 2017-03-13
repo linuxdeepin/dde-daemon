@@ -23,7 +23,6 @@ import (
 	_ "pkg.deepin.io/dde/daemon/debug"
 	_ "pkg.deepin.io/dde/daemon/gesture"
 	"pkg.deepin.io/dde/daemon/loader"
-	_ "pkg.deepin.io/dde/daemon/mounts"
 	_ "pkg.deepin.io/dde/daemon/mpris"
 	_ "pkg.deepin.io/dde/daemon/network"
 	_ "pkg.deepin.io/dde/daemon/screenedge"
@@ -64,7 +63,7 @@ func listenDaemonSettings() {
 			return
 		}
 	})
-	daemonSettings.GetBoolean("mounts")
+	daemonSettings.GetBoolean("audio")
 }
 
 func checkDependencies(s *gio.Settings, module loader.Module, enabled bool) error {
