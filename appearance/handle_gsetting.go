@@ -50,6 +50,10 @@ func (m *Manager) listenBgGSettings() {
 			logger.Debugf("[Gnome background] Invalid background file '%v'", uri)
 			return
 		}
+		if !background.IsBackgroundFile(uri) {
+			logger.Debugf("[Gnome background] Invalid background file '%v'", uri)
+			return
+		}
 
 		err := m.doSetBackground(uri)
 		if err != nil {
