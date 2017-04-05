@@ -34,7 +34,7 @@ func SetDefaultGrubSettingFile(file string) {
 }
 
 const (
-	grubUpdateCmd                 = "/usr/sbin/update-grub"
+	grubUpdateCmd                 = "/usr/sbin/grub-mkconfig -o /boot/grub/grub.cfg"
 	lsbReleaseCmd                 = "/usr/bin/lsb_release"
 	defaultGrubDefaultEntry       = "0"
 	defaultGrubGfxmode            = "auto"
