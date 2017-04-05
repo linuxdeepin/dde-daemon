@@ -82,7 +82,7 @@ func (ge *Grub2Ext) DoGenerateGrubMenu() (ok bool, err error) {
 	// Unicode characters
 	// FIXME: keep same with the current system language settings
 	os.Setenv("LANG", "en_US.UTF-8")
-	cmd := exec.Command(grubUpdateCmd)
+	cmd := exec.Command("/bin/bash", "-c", grubUpdateCmd)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	err = cmd.Run()
