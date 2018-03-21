@@ -224,7 +224,16 @@ func identifyWindowByWmClass(m *DockManager, winInfo *WindowInfo) (string, *AppI
 	if winInfo.wmClass != nil {
 		instance := winInfo.wmClass.Instance
 		if instance != "" {
-			appInfo := NewAppInfo(instance)
+			// example:
+			// WM_CLASS(STRING) = "Brackets", "Brackets"
+			// wm class instance is Brackets
+			// try app id org.deepin.flatdeb.brackets
+			appInfo := NewAppInfo("org.deepin.flatdeb." + strings.ToLower(instance))
+			if appInfo != nil {
+				return appInfo.innerId, appInfo
+			}
+
+			appInfo = NewAppInfo(instance)
 			if appInfo != nil {
 				return appInfo.innerId, appInfo
 			}
