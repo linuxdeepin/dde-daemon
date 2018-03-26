@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+## [3.2.8.1] - 2018-03-26
+*   feat(dock): add window identify for org.deepin.flatdeb.*
+
 ## [3.2.8] - 2017-12-13
 *   add moudle swapsched
 *   doc: update bluetooth faq
