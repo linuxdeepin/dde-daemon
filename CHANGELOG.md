@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+[3.2.13.4] 2018-04-24
+*   fix(apps): directory permissions is not 0755
+
 [3.2.13.3] 2018-04-19
 *   fix(session/power): submodule name typo
 *   fix(network): close hotspot no send notification
