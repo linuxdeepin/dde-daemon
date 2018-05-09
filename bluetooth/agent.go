@@ -25,6 +25,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	"pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 )
@@ -41,13 +42,13 @@ type authorize struct {
 }
 
 type agent struct {
-	service  *dbusutil.Service
-	bluezObj dbus.BusObject
+	service      *dbusutil.Service
+	bluezManager *bluez.Manager
 
 	b       *Bluetooth
 	rspChan chan authorize
 
-	lk            sync.Mutex
+	mu            sync.Mutex
 	requestDevice dbus.ObjectPath
 
 	methods *struct {
@@ -81,6 +82,15 @@ func (a *agent) Release() *dbus.Error {
 //                 org.bluez.Error.Canceled
 func (a *agent) RequestPinCode(dpath dbus.ObjectPath) (pincode string, busErr *dbus.Error) {
 	logger.Info("RequestPinCode()")
+
+	d, err := a.b.getDevice(dpath)
+	if err != nil {
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
+	}
+	d.agentWorkStart()
+	defer d.agentWorkEnd()
+
 	//return utils.RandString(8), nil
 	auth, err := a.emitRequest(dpath, "RequestPinCode")
 	if err != nil {
@@ -109,8 +119,17 @@ func (a *agent) DisplayPinCode(devPath dbus.ObjectPath, pinCode string) (err *db
 //Possible errors: org.bluez.Error.Rejected
 //				   org.bluez.Error.Canceled
 func (a *agent) RequestPasskey(dpath dbus.ObjectPath) (passkey uint32, busErr *dbus.Error) {
-	//passkey = rand.Uint32() % 999999
 	logger.Info("RequestPasskey()")
+
+	d, err := a.b.getDevice(dpath)
+	if err != nil {
+		logger.Warning(err)
+		return 0, dbusutil.ToError(err)
+	}
+	d.agentWorkStart()
+	defer d.agentWorkEnd()
+
+	//passkey = rand.Uint32() % 999999
 	auth, err := a.emitRequest(dpath, "RequestPasskey")
 	if err != nil {
 		return 0, dbusutil.ToError(err)
@@ -147,8 +166,17 @@ func (a *agent) DisplayPasskey(dpath dbus.ObjectPath, passkey uint32,
 //			       org.bluez.Error.Canceled
 func (a *agent) RequestConfirmation(dpath dbus.ObjectPath, passkey uint32) *dbus.Error {
 	logger.Info("RequestConfirmation", dpath, passkey)
+
+	d, err := a.b.getDevice(dpath)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+	d.agentWorkStart()
+	defer d.agentWorkEnd()
+
 	key := fmt.Sprintf("%06d", passkey)
-	_, err := a.emitRequest(dpath, "RequestConfirmation", key)
+	_, err = a.emitRequest(dpath, "RequestConfirmation", key)
 	return dbusutil.ToError(err)
 }
 
@@ -158,7 +186,16 @@ func (a *agent) RequestConfirmation(dpath dbus.ObjectPath, passkey uint32) *dbus
 //				   org.bluez.Error.Canceled
 func (a *agent) RequestAuthorization(dpath dbus.ObjectPath) *dbus.Error {
 	logger.Info("RequestAuthorization()")
-	_, err := a.emitRequest(dpath, "RequestAuthorization")
+
+	d, err := a.b.getDevice(dpath)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+	d.agentWorkStart()
+	defer d.agentWorkEnd()
+
+	_, err = a.emitRequest(dpath, "RequestAuthorization")
 	return dbusutil.ToError(err)
 }
 
@@ -177,6 +214,7 @@ func (a *agent) AuthorizeService(dpath dbus.ObjectPath, uuid string) *dbus.Error
 func (a *agent) Cancel() *dbus.Error {
 	logger.Info("Cancel()")
 	a.rspChan <- authorize{path: a.requestDevice, accept: false, key: ""}
+	a.emitCancelled()
 	return nil
 }
 
@@ -185,79 +223,77 @@ func (a *agent) Cancel() *dbus.Error {
 func newAgent(service *dbusutil.Service) (a *agent) {
 	a = &agent{
 		service: service,
-		rspChan: make(chan authorize, 1),
+		rspChan: make(chan authorize),
 	}
 	return
 }
 
-func (a *agent) init() (err error) {
-	defer func() {
-		if err := recover(); err != nil {
-			logger.Error(err)
-			a.destroy()
-		}
-	}()
-
+func (a *agent) init() {
 	sysBus := a.service.Conn()
-	a.bluezObj = sysBus.Object(bluezDBusServiceName, bluezDBusPath)
+	a.bluezManager = bluez.NewManager(sysBus)
+	a.registerDefaultAgent()
+	return
+}
 
+func (a *agent) registerDefaultAgent() {
 	// register agent
-	err = a.bluezObj.Call(bluezAgentManagerDBusInterface+".RegisterAgent", 0,
-		dbus.ObjectPath(agentDBusPath), "DisplayYesNo").Err
+	err := a.bluezManager.RegisterAgent(0, agentDBusPath, "DisplayYesNo")
 	if err != nil {
 		logger.Warning("failed to register agent:", err)
-		return err
+		return
 	}
 
 	// request default agent
-	err = a.bluezObj.Call(bluezAgentManagerDBusInterface+".RequestDefaultAgent", 0,
-		dbus.ObjectPath(agentDBusPath)).Err
+	err = a.bluezManager.RequestDefaultAgent(0, agentDBusPath)
 	if err != nil {
-		logger.Warning("failed to set default agent:", err)
-		return err
+		logger.Warning("failed to become the default agent:", err)
+		err = a.bluezManager.UnregisterAgent(0, agentDBusPath)
+		if err != nil {
+			logger.Warning(err)
+		}
+		return
 	}
-
-	return nil
 }
 
 func (a *agent) destroy() {
-	a.bluezObj.Call(bluezAgentManagerDBusInterface+".UnregisterAgent", 0,
-		dbus.ObjectPath(agentDBusPath))
+	err := a.bluezManager.UnregisterAgent(0, agentDBusPath)
+	if err != nil {
+		logger.Warning(err)
+	}
 
-	a.service.StopExport(a)
+	err = a.service.StopExport(a)
+	if err != nil {
+		logger.Warning(err)
+	}
 }
 
 func (a *agent) waitResponse() (auth authorize, err error) {
-	// TODO: time is too short or long
 	logger.Info("waitResponse")
 
 	defer func() {
+		a.mu.Lock()
 		a.requestDevice = ""
+		a.mu.Unlock()
 	}()
 
 	t := time.NewTimer(60 * time.Second)
-	for {
-		// TODO: remove for
-		select {
-		case auth = <-a.rspChan:
-			logger.Info("receive", auth)
-			if !auth.accept {
-				err = errBluezRejected
-				logger.Warningf("emitRequest return with: %v", err)
-				return
-			}
-			logger.Infof("emitRequest accept %v with %v", a.requestDevice, auth.key)
-			return
-		case <-t.C:
-			logger.Info("timeout")
-			err = errBluezCanceled
+	select {
+	case auth = <-a.rspChan:
+		logger.Info("receive", auth)
+		if !auth.accept {
+			err = errBluezRejected
 			logger.Warningf("emitRequest return with: %v", err)
 			return
 		}
+		logger.Infof("emitRequest accept %v with %v", a.requestDevice, auth.key)
+		return
+	case <-t.C:
+		logger.Info("timeout")
+		err = errBluezCanceled
+		logger.Warningf("emitRequest return with: %v", err)
+		a.emitCancelled()
+		return
 	}
-	logger.Error("Should not run here!!!")
-	err = errBluezCanceled
-	return
 }
 
 func (a *agent) emit(signal string, devPath dbus.ObjectPath, args ...interface{}) (err error) {
@@ -267,12 +303,27 @@ func (a *agent) emit(signal string, devPath dbus.ObjectPath, args ...interface{}
 	return a.b.service.Emit(a.b, signal, args0...)
 }
 
+func (a *agent) emitCancelled() {
+	a.mu.Lock()
+	devPath := a.requestDevice
+	a.mu.Unlock()
+
+	if devPath == "" {
+		logger.Warning("failed to emitCancelled, devPath is empty")
+		return
+	}
+	err := a.b.service.Emit(a.b, "Cancelled", devPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
 func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...interface{}) (auth authorize, err error) {
 	logger.Info("emitRequest", devPath, signal, args)
 
-	a.lk.Lock()
+	a.mu.Lock()
 	a.requestDevice = devPath
-	a.lk.Unlock()
+	a.mu.Unlock()
 
 	_, err = a.b.getDevice(devPath)
 	if nil != err {
@@ -284,47 +335,4 @@ func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...inte
 	a.emit(signal, devPath, args...)
 
 	return a.waitResponse()
-}
-
-func (b *Bluetooth) feed(devPath dbus.ObjectPath, accept bool, key string) (err error) {
-	_, err = b.getDevice(devPath)
-	if nil != err {
-		logger.Warningf("FeedRequest can not find device: %v, %v", devPath, err)
-		return err
-	}
-
-	b.agent.lk.Lock()
-	if b.agent.requestDevice != devPath {
-		b.agent.lk.Unlock()
-		logger.Warningf("FeedRequest can not find match device: %v, %v", b.agent.requestDevice, devPath)
-		return errBluezCanceled
-	}
-	b.agent.lk.Unlock()
-
-	b.agent.rspChan <- authorize{path: devPath, accept: accept, key: key}
-	return nil
-}
-
-//Confirm should call when you receive RequestConfirmation signal
-func (b *Bluetooth) Confirm(devPath dbus.ObjectPath, accept bool) *dbus.Error {
-	logger.Info("Confirm()")
-	err := b.feed(devPath, accept, "")
-	return dbusutil.ToError(err)
-}
-
-//FeedPinCode should call when you receive RequestPinCode signal, notice that accept must true
-//if you accept connect request. If accept is false, pinCode will be ignored.
-func (b *Bluetooth) FeedPinCode(devPath dbus.ObjectPath, accept bool, pinCode string) *dbus.Error {
-	logger.Info("FeedPinCode()")
-	err := b.feed(devPath, accept, pinCode)
-	return dbusutil.ToError(err)
-}
-
-//FeedPasskey should call when you receive RequestPasskey signal, notice that accept must true
-//if you accept connect request. If accept is false, passkey will be ignored.
-//passkey must be range in 0~999999.
-func (b *Bluetooth) FeedPasskey(devPath dbus.ObjectPath, accept bool, passkey uint32) *dbus.Error {
-	logger.Info("FeedPasskey()")
-	err := b.feed(devPath, accept, fmt.Sprintf("%06d", passkey))
-	return dbusutil.ToError(err)
 }

@@ -20,14 +20,10 @@
 package bluetooth
 
 import (
-	"dbus/org/freedesktop/notifications"
 	"fmt"
-	. "pkg.deepin.io/lib/gettext"
-)
 
-const (
-	dbusNotifyDest = "org.freedesktop.Notifications"
-	dbusNotifyPath = "/org/freedesktop/Notifications"
+	. "pkg.deepin.io/lib/gettext"
+	libnotify "pkg.deepin.io/lib/notify"
 )
 
 const (
@@ -36,33 +32,39 @@ const (
 	notifyIconBluetoothConnectFailed = "notification-bluetooth-error"
 )
 
-func notify(icon, summary, body string) {
-	notifier, err := notifications.NewNotifier(dbusNotifyDest, dbusNotifyPath)
-	if err != nil {
-		logger.Error(err)
-		return
-	}
+var globalNotification *libnotify.Notification
 
+func init() {
+	globalNotification = libnotify.NewNotification("", "", "")
+}
+
+func notify(icon, summary, body string) {
 	logger.Info("notify", icon, summary, body)
-	// use goroutine to fix dbus cycle call issue
-	go func() {
-		notifier.Notify("Bluetooth", 0, icon, summary, body, nil, nil, 0)
-		notifications.DestroyNotifier(notifier)
-	}()
+	globalNotification.Update(summary, body, icon)
+	err := globalNotification.Show()
+	if err != nil {
+		logger.Warning(err)
+	}
 	return
 }
 
-func notifyBluetoothConnected(alias string) {
+func notifyConnected(alias string) {
 	notify(notifyIconBluetoothConnected, Tr("Connected"), alias)
 }
-func notifyBluetoothDisconnected(alias string) {
+func notifyDisconnected(alias string) {
 	notify(notifyIconBluetoothDisconnected, Tr("Disconnected"), alias)
 }
-func notifyBluetoothConnectFailed(alias string) {
+
+func notifyConnectFailedHostDown(alias string) {
 	format := Tr("Make sure %q is turned on and in range")
-	notify(notifyIconBluetoothConnectFailed, Tr("Bluetooth connection failed"), fmt.Sprintf(format, alias))
+	notifyConnectFailedAux(alias, format)
 }
-func notifyBluetoothDeviceIgnored(alias string) {
-	format := Tr("Failed to connect %q, automatically ignored")
+
+func notifyConnectFailedPairing(alias string) {
+	format := Tr("Failed to connect %q, pairing failed")
+	notifyConnectFailedAux(alias, format)
+}
+
+func notifyConnectFailedAux(alias, format string) {
 	notify(notifyIconBluetoothConnectFailed, Tr("Bluetooth connection failed"), fmt.Sprintf(format, alias))
 }

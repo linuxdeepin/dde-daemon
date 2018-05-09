@@ -2027,3 +2027,7 @@ msgstr "设置硬件时钟使用本地时间或 UTC 需要认证。"
 #: ../../timedate/manager_ifc.go:106
 msgid "Authentication is required to set the system timezone."
 msgstr "设置系统时区需要认证。"
+
+#: ../../bluetooth/utils_notify.go:64
+msgid "Failed to connect %q, pairing failed"
+msgstr "无法连接%q，配对失败"
