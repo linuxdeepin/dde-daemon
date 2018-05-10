@@ -1975,12 +1975,12 @@ msgstr ""
 #: ../../session/power/manager_events.go:133
 #: ../../session/power/manager_events.go:157
 msgid "Battery Critical Low"
-msgstr ""
+msgstr "Battery Critically Low"
 
 #: ../../session/power/manager_events.go:134
 #: ../../session/power/manager_events.go:158
 msgid "Computer has been in suspend mode, please plug in"
-msgstr ""
+msgstr "Computer will suspend very soon, please plug in now"
 
 #: ../../session/power/manager_events.go:164
 msgid "Battery Low"
@@ -1988,7 +1988,7 @@ msgstr ""
 
 #: ../../session/power/manager_events.go:165
 msgid "Computer will be in suspend mode, please plug in now"
-msgstr ""
+msgstr "Computer will suspend soon, please plug in"
 
 #: ../../timedate/manager_ifc.go:56
 msgid "Authentication is required to set the system time."
