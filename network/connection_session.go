@@ -176,7 +176,7 @@ func newConnectionSessionByOpen(uuid string, devPath dbus.ObjectPath) (s *Connec
 		chSecret <- 0
 	}()
 	select {
-	case <-time.After(500 * time.Millisecond):
+	case <-time.After(1 * time.Second):
 	case <-chSecret:
 	}
 
