@@ -189,9 +189,7 @@ func (sr *SubRecorder) checkSave() {
 		return
 	}
 
-	sr.launchedMapMutex.RLock()
 	err := sr.save()
-	sr.launchedMapMutex.RUnlock()
 	if err != nil {
 		logger.Warning("SubRecorder.saveDirContent error:", err)
 	}
@@ -199,6 +197,7 @@ func (sr *SubRecorder) checkSave() {
 }
 
 func (sr *SubRecorder) writeStatus(w io.Writer) error {
+	// NOTE: csv.NewWriter will new a bufio.Writer
 	writer := csv.NewWriter(w)
 	sr.launchedMapMutex.RLock()
 	writer.Write([]string{"# " + sr.root})
@@ -211,6 +210,7 @@ func (sr *SubRecorder) writeStatus(w io.Writer) error {
 			record[1] = "f"
 		}
 		if err := writer.Write(record); err != nil {
+			sr.launchedMapMutex.RUnlock()
 			return err
 		}
 	}
@@ -228,13 +228,8 @@ func (sr *SubRecorder) save() error {
 	if err != nil {
 		return err
 	}
-	if err := sr.writeStatus(bufio.NewWriter(f)); err != nil {
-		return err
-	}
-	if err := f.Sync(); err != nil {
-		return err
-	}
-	if err := f.Close(); err != nil {
+	defer f.Close()
+	if err := sr.writeStatus(f); err != nil {
 		return err
 	}
 
