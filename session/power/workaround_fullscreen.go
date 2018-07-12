@@ -162,6 +162,10 @@ func (wa *fullScreenWorkaround) inhibit() {
 }
 
 func (wa *fullScreenWorkaround) isFullScreenFocused(xid xproto.Window) bool {
+	if wa.manager.helper == nil {
+		return false
+	}
+
 	xu := wa.manager.helper.xu
 	states, _ := ewmh.WmStateGet(xu, xid)
 	found := 0

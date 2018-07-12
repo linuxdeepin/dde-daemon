@@ -23,6 +23,8 @@ import (
 	"dbus/com/deepin/daemon/display"
 	"dbus/com/deepin/daemon/helper/backlight"
 
+	"gir/gio-2.0"
+
 	ddbus "pkg.deepin.io/dde/daemon/dbus"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 )
@@ -65,6 +67,8 @@ func (c *DisplayController) ExecCmd(cmd ActionCmd) error {
 	}
 }
 
+const gsKeyAmbientLightAdjustBrightness = "ambient-light-adjust-brightness"
+
 func (c *DisplayController) changeBrightness(raised bool) error {
 	if c.disp == nil || !ddbus.IsSessionBusActivated(c.disp.DestName) {
 		return ErrIsNil{"DisplayController.disp"}
@@ -74,6 +78,13 @@ func (c *DisplayController) changeBrightness(raised bool) error {
 	if !raised {
 		osd = "BrightnessDown"
 	}
+
+	gs := gio.NewSettings("com.deepin.dde.power")
+	autoAdjustBrightnessEnabled := gs.GetBoolean(gsKeyAmbientLightAdjustBrightness)
+	if autoAdjustBrightnessEnabled {
+		gs.SetBoolean(gsKeyAmbientLightAdjustBrightness, false)
+	}
+	gs.Unref()
 
 	err := c.disp.ChangeBrightness(raised)
 	if err != nil {

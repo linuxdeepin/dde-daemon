@@ -25,8 +25,10 @@ import (
 	liblockfront "dbus/com/deepin/dde/lockfront"
 	libsessionmanager "dbus/com/deepin/sessionmanager"
 	libpower "dbus/com/deepin/system/power"
+	"dbus/net/hadess/sensorproxy"
 	liblogin1 "dbus/org/freedesktop/login1"
 	libscreensaver "dbus/org/freedesktop/screensaver"
+
 	"pkg.deepin.io/lib/notify"
 
 	"github.com/BurntSushi/xgb/dpms"
@@ -42,8 +44,8 @@ type Helper struct {
 	Display        *libdisplay.Display
 	LockFront      *liblockfront.LockFront
 	Login1Manager  *liblogin1.Manager
-
-	xu *xgbutil.XUtil
+	SensorProxy    *sensorproxy.SensorProxy
+	xu             *xgbutil.XUtil
 }
 
 func NewHelper() (*Helper, error) {
@@ -102,6 +104,13 @@ func (h *Helper) init() error {
 		return err
 	}
 
+	h.SensorProxy, err = sensorproxy.NewSensorProxy("net.hadess.SensorProxy",
+		"/net/hadess/SensorProxy")
+	if err != nil {
+		logger.Warning("init sensor proxy failed:", err)
+		return err
+	}
+
 	// init X conn
 	h.xu, err = xgbutil.NewConn()
 	if err != nil {
@@ -150,6 +159,11 @@ func (h *Helper) Destroy() {
 	if h.Login1Manager != nil {
 		liblogin1.DestroyManager(h.Login1Manager)
 		h.Login1Manager = nil
+	}
+
+	if h.SensorProxy != nil {
+		sensorproxy.DestroySensorProxy(h.SensorProxy)
+		h.SensorProxy = nil
 	}
 
 	// NOTE: Don't close x conn, because the bug of lib xgbutil.

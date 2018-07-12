@@ -66,6 +66,8 @@ func (psp *powerSavePlan) initSettingsChangedHandler() {
 				logger.Debug("Change OnBattery plan")
 				psp.OnBattery()
 			}
+		} else if key == settingKeyAmbientLightAdjuestBrightness {
+			psp.manager.claimOrReleaseAmbientLight()
 		}
 	})
 }
@@ -105,6 +107,7 @@ func (psp *powerSavePlan) Start() error {
 
 	screenSaver.ConnectIdleOn(psp.HandleIdleOn)
 	screenSaver.ConnectIdleOff(psp.HandleIdleOff)
+
 	return nil
 }
 

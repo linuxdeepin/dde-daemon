@@ -23,14 +23,18 @@ import (
 	"sync"
 
 	"gir/gio-2.0"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	"pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
+	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
 type Manager struct {
 	service              *dbusutil.Service
+	sysSigLoop           *dbusutil.SignalLoop
+	sysDBusDaemon        *ofdbus.DBus
 	helper               *Helper
 	settings             *gio.Settings
 	isSuspending         bool
@@ -47,6 +51,9 @@ type Manager struct {
 
 	// 警告级别
 	WarnLevel WarnLevel
+
+	// 是否有环境光传感器
+	HasAmbientLightSensor bool
 
 	// dbusutil-gen: ignore-below
 	// 电池是否可用，是否存在
@@ -73,16 +80,26 @@ type Manager struct {
 
 	// 笔记本电脑盖上盖子后是否睡眠
 	LidClosedSleep gsprop.Bool `prop:"access:rw"`
+
+	AmbientLightAdjustBrightness gsprop.Bool `prop:"access:rw"`
+	ambientLightClaimed          bool
+	lightLevelUnit               string
+	lidSwitchState               uint
+	sessionActive                bool
 }
 
 func NewManager(service *dbusutil.Service) (*Manager, error) {
-	m := &Manager{
-		service: service,
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return nil, err
 	}
+
 	helper, err := NewHelper()
 	if err != nil {
 		return nil, err
 	}
+	m := new(Manager)
+	m.service = service
 	m.helper = helper
 
 	m.settings = gio.NewSettings(gsSchemaPower)
@@ -95,17 +112,30 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	m.ScreenBlackLock.Bind(m.settings, settingKeyScreenBlackLock)
 	m.SleepLock.Bind(m.settings, settingKeySleepLock)
 	m.LidClosedSleep.Bind(m.settings, settingKeyLidClosedSleep)
+	m.AmbientLightAdjustBrightness.Bind(m.settings,
+		settingKeyAmbientLightAdjuestBrightness)
 
 	power := m.helper.Power
 	m.LidIsPresent = power.HasLidSwitch.Get()
 	m.OnBattery = power.OnBattery.Get()
 	logger.Info("LidIsPresent", m.LidIsPresent)
+	m.HasAmbientLightSensor = helper.SensorProxy.HasAmbientLight.Get()
+	logger.Debug("HasAmbientLightSensor:", m.HasAmbientLightSensor)
+	if m.HasAmbientLightSensor {
+		m.lightLevelUnit = helper.SensorProxy.LightLevelUnit.Get()
+	}
+
+	m.sessionActive = helper.SessionWatcher.IsActive.Get()
 
 	// init battery display
 	m.BatteryIsPresent = make(map[string]bool)
 	m.BatteryPercentage = make(map[string]float64)
 	m.BatteryState = make(map[string]uint32)
 
+	m.sysSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
+	m.sysDBusDaemon = ofdbus.NewDBus(systemBus)
+
+	m.claimOrReleaseAmbientLight()
 	return m, nil
 }
 
@@ -122,6 +152,30 @@ func (m *Manager) init() {
 		logger.Debug("BatteryDisplayUpdate", timestamp)
 		m.handleBatteryDisplayUpdate()
 	})
+
+	m.helper.SensorProxy.LightLevel.ConnectChanged(func() {
+		m.handleLightLevelChanged()
+	})
+
+	m.helper.SessionWatcher.IsActive.ConnectChanged(func() {
+		isActive := m.helper.SessionWatcher.IsActive.Get()
+		m.sessionActive = isActive
+		logger.Debug("session active changed to:", isActive)
+		m.claimOrReleaseAmbientLight()
+	})
+
+	m.sysSigLoop.Start()
+	m.sysDBusDaemon.InitSignalExt(m.sysSigLoop, true)
+	m.sysDBusDaemon.ConnectNameOwnerChanged(
+		func(name string, oldOwner string, newOwner string) {
+			if name == "net.hadess.SensorProxy" && newOwner != "" {
+				logger.Debug("sensorProxy restarted")
+				hasSensor := m.helper.SensorProxy.HasAmbientLight.Get()
+				m.setPropHasAmbientLightSensor(hasSensor)
+				m.ambientLightClaimed = false
+				m.claimOrReleaseAmbientLight()
+			}
+		})
 
 	m.warnLevelConfig.setChangeCallback(m.handleBatteryDisplayUpdate)
 
@@ -152,6 +206,7 @@ func (m *Manager) isX11SessionActive() (bool, error) {
 
 func (m *Manager) destroy() {
 	m.destroySubmodules()
+	m.releaseAmbientLight()
 
 	if m.helper != nil {
 		m.helper.Destroy()
@@ -162,7 +217,10 @@ func (m *Manager) destroy() {
 		m.inhibitor.unblock()
 		m.inhibitor = nil
 	}
-	m.service.StopExport(m)
+
+	m.sysDBusDaemon.RemoveHandler(proxy.RemoveAllHandlers)
+	m.sysSigLoop.Stop()
+
 }
 
 func (*Manager) GetInterfaceName() string {

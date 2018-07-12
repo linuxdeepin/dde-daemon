@@ -72,7 +72,7 @@ Depends: ${shlibs:Depends},
 Breaks: dde-daemon(<< 2.92.2), dde-workspace
 Conflicts: dde-workspace, lastore-daemon-migration
 Provides: lastore-daemon-migration
-Recommends: proxychains-ng, flatpak
+Recommends: proxychains-ng, flatpak, iio-sensor-proxy
 Suggests:
  bluez (>=5.4),
  libpam-fprintd,
