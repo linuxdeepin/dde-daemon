@@ -467,6 +467,11 @@ func (b *Bluetooth) addAdapter(apath dbus.ObjectPath) {
 		if err != nil {
 			logger.Warning(err)
 		}
+
+		err = a.core.StartDiscovery(0)
+		if err != nil {
+			logger.Warning(err)
+		}
 	}
 
 	b.adaptersLock.Lock()

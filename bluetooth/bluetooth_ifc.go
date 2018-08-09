@@ -33,7 +33,7 @@ func (b *Bluetooth) RemoveDevice(apath, dpath dbus.ObjectPath) *dbus.Error {
 
 	err = a.core.RemoveDevice(0, dpath)
 	if err != nil {
-		logger.Warning("failed to remove device %q from adapter %q: %v",
+		logger.Warningf("failed to remove device %q from adapter %q: %v",
 			dpath, apath, err)
 		return dbusutil.ToError(err)
 	}
