@@ -98,6 +98,7 @@ func NewAudio(core *pulse.Context, service *dbusutil.Service) *Audio {
 	go func() {
 		a.update()
 		a.applyConfig()
+		a.fixActivePortNotAvailable()
 		if a.defaultSink != nil {
 			_prevSinkActivePort = a.defaultSink.ActivePort
 		}
@@ -358,4 +359,41 @@ func isPortExists(name string, ports []pulse.PortInfo) bool {
 		}
 	}
 	return false
+}
+
+func getBestPort(ports []pulse.PortInfo) pulse.PortInfo {
+	var portUnknown pulse.PortInfo
+	var portYes pulse.PortInfo
+	for _, port := range ports {
+		if port.Available == pulse.AvailableTypeYes {
+			if port.Priority > portYes.Priority || portYes.Name == "" {
+				portYes = port
+			}
+		} else if port.Available == pulse.AvailableTypeUnknow {
+			if port.Priority > portUnknown.Priority || portUnknown.Name == "" {
+				portUnknown = port
+			}
+		}
+	}
+
+	if portYes.Name != "" {
+		return portYes
+	}
+	return portUnknown
+}
+
+func (a *Audio) fixActivePortNotAvailable() {
+	sinkInfoList := a.core.GetSinkList()
+	for _, sinkInfo := range sinkInfoList {
+		activePort := sinkInfo.ActivePort
+
+		if activePort.Available == pulse.AvailableTypeNo {
+			newPort := getBestPort(sinkInfo.Ports)
+			if newPort.Name != activePort.Name && newPort.Name != "" {
+				logger.Info("auto switch to port", newPort.Name)
+				sinkInfo.SetPort(newPort.Name)
+				a.saveConfig()
+			}
+		}
+	}
 }
