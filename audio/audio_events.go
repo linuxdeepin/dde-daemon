@@ -22,36 +22,64 @@ package audio
 import "pkg.deepin.io/lib/pulse"
 import "time"
 
-func (a *Audio) initEventHandlers() {
-	if !a.init {
-		a.core.ConnectStateChanged(pulse.ContextStateFailed, func() {
-			logger.Warning("Pulse context connection failed, try again")
-			a.core = pulse.GetContextForced()
-			a.update()
-			a.init = false
-			a.initEventHandlers()
-		})
+func (a *Audio) handleEvent() {
+	for {
+		select {
+		case event := <-a.eventChan:
+			switch event.Facility {
+			case pulse.FacilityServer:
+				a.handleServerEvent(event.Type)
+				a.saveConfig()
+			case pulse.FacilityCard:
+				a.handleCardEvent(event.Type, event.Index)
+				a.saveConfig()
+			case pulse.FacilitySink:
+				a.handleSinkEvent(event.Type, event.Index)
+				a.saveConfig()
+			case pulse.FacilitySource:
+				a.handleSourceEvent(event.Type, event.Index)
+				a.saveConfig()
+			case pulse.FacilitySinkInput:
+				a.handleSinkInputEvent(event.Type, event.Index)
+			}
 
-		a.core.Connect(pulse.FacilityCard, func(e int, idx uint32) {
-			a.handleCardEvent(e, idx)
-			a.saveConfig()
-		})
-		a.core.Connect(pulse.FacilitySink, func(e int, idx uint32) {
-			a.handleSinkEvent(e, idx)
-			a.saveConfig()
-		})
-		a.core.Connect(pulse.FacilitySource, func(e int, idx uint32) {
-			a.handleSourceEvent(e, idx)
-			a.saveConfig()
-		})
-		a.core.Connect(pulse.FacilitySinkInput, func(e int, idx uint32) {
-			a.handleSinkInputEvent(e, idx)
-		})
-		a.core.Connect(pulse.FacilityServer, func(e int, idx uint32) {
-			a.handleServerEvent()
-			a.saveConfig()
-		})
-		a.init = true
+		case <-a.quit:
+			logger.Debug("handleEvent return")
+			return
+		}
+	}
+}
+
+func (a *Audio) initCtxChan() {
+	a.core.AddEventChan(a.eventChan)
+	a.core.AddStateChan(a.stateChan)
+}
+
+func (a *Audio) handleStateChanged() {
+	for {
+		select {
+		case state := <-a.stateChan:
+			switch state {
+			case pulse.ContextStateFailed:
+				logger.Warning("Pulse context connection failed, try again")
+				ctx := pulse.GetContextForced()
+				if ctx == nil {
+					logger.Warning("failed to connect pulseaudio server")
+					break
+				}
+
+				a.destroyCtxRelated()
+				a.PropsMu.Lock()
+				a.core = ctx
+				a.PropsMu.Unlock()
+				a.update()
+				a.initCtxChan()
+			}
+
+		case <-a.quit:
+			logger.Debug("handleStateChanged return")
+			return
+		}
 	}
 }
 
@@ -184,47 +212,25 @@ func (a *Audio) handleSinkEvent(eType int, idx uint32) {
 	}
 }
 
-func (a *Audio) sinkInputPoller() {
-	for {
-		select {
-		case handler, ok := <-a.siEventChan:
-			if !ok {
-				logger.Error("SinkInput event channel has been abnormally closed!")
-				return
-			}
-
-			handler()
-		case <-a.siPollerExit:
-			return
-		}
-	}
-}
-
 func (a *Audio) handleSinkInputEvent(eType int, idx uint32) {
 	switch eType {
 	case pulse.EventTypeNew:
-		a.siEventChan <- func() {
-			a.addSinkInput(idx)
-		}
+		a.addSinkInput(idx)
 	case pulse.EventTypeRemove:
-		a.siEventChan <- func() {
-			a.removeSinkInput(idx)
-		}
+		a.removeSinkInput(idx)
 
 	case pulse.EventTypeChange:
-		a.siEventChan <- func() {
-			for _, s := range a.sinkInputs {
-				if s.index == idx {
-					info, err := a.core.GetSinkInput(idx)
-					if err != nil {
-						logger.Warning(err)
-						break
-					}
-
-					s.core = info
-					s.update()
+		for _, s := range a.sinkInputs {
+			if s.index == idx {
+				info, err := a.core.GetSinkInput(idx)
+				if err != nil {
+					logger.Warning(err)
 					break
 				}
+
+				s.core = info
+				s.update()
+				break
 			}
 		}
 	}
@@ -261,7 +267,7 @@ func (a *Audio) handleSourceEvent(eType int, idx uint32) {
 	}
 }
 
-func (a *Audio) handleServerEvent() {
+func (a *Audio) handleServerEvent(eType int) {
 	sinfo, err := a.core.GetServer()
 	if err != nil {
 		logger.Error(err)

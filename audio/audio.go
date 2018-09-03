@@ -71,8 +71,9 @@ type Audio struct {
 
 	cards CardInfos
 
-	siEventChan  chan func()
-	siPollerExit chan struct{}
+	quit      chan struct{}
+	eventChan chan *pulse.Event
+	stateChan chan int
 
 	isSaving    bool
 	saverLocker sync.Mutex
@@ -89,12 +90,14 @@ type Audio struct {
 
 func NewAudio(core *pulse.Context, service *dbusutil.Service) *Audio {
 	a := &Audio{
-		core:    core,
-		service: service,
+		core:      core,
+		service:   service,
+		eventChan: make(chan *pulse.Event, 100),
+		stateChan: make(chan int, 10),
+		quit:      make(chan struct{}),
 	}
 	a.MaxUIVolume = pulse.VolumeUIMax
-	a.siEventChan = make(chan func(), 10)
-	a.siPollerExit = make(chan struct{})
+	a.initCtxChan()
 	go func() {
 		a.update()
 		a.applyConfig()
@@ -103,8 +106,6 @@ func NewAudio(core *pulse.Context, service *dbusutil.Service) *Audio {
 			_prevSinkActivePort = a.defaultSink.ActivePort
 		}
 		a.updateProps()
-		a.initEventHandlers()
-		a.sinkInputPoller()
 	}()
 	return a
 }
@@ -328,8 +329,31 @@ func (a *Audio) Reset() {
 }
 
 func (a *Audio) destroy() {
-	close(a.siPollerExit)
+	close(a.quit)
+	a.destroyCtxRelated()
 	a.service.StopExport(a)
+}
+
+func (a *Audio) destroyCtxRelated() {
+	a.PropsMu.Lock()
+	a.core.RemoveEventChan(a.eventChan)
+	a.core.RemoveStateChan(a.stateChan)
+
+	if a.defaultSink != nil {
+		a.service.StopExport(a.defaultSink)
+		a.defaultSink = nil
+	}
+
+	if a.defaultSource != nil {
+		a.service.StopExport(a.defaultSource)
+		a.defaultSource = nil
+	}
+
+	for _, sinkInput := range a.sinkInputs {
+		a.service.StopExport(sinkInput)
+	}
+	a.sinkInputs = nil
+	a.PropsMu.Unlock()
 }
 
 func (a *Audio) moveSinkInputsToSink(sinkId uint32) {

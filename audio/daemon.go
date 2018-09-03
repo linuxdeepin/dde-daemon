@@ -79,6 +79,8 @@ func (*Daemon) Start() error {
 		return err
 	}
 
+	go _audio.handleEvent()
+	go _audio.handleStateChanged()
 	initDefaultVolume(_audio)
 	return nil
 }
