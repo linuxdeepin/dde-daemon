@@ -196,7 +196,12 @@ func (m *Manager) init() {
 	m.shortcutManager.AddCustom(m.customShortcutManager)
 
 	var err error
-	m.audioController, err = NewAudioController()
+	m.backlightHelper, err = backlight.NewBacklight("com.deepin.daemon.helper.Backlight",
+		"/com/deepin/daemon/helper/Backlight")
+	if err != nil {
+		logger.Warning("NewBacklight failed:", err)
+	}
+	m.audioController, err = NewAudioController(m.backlightHelper)
 	if err != nil {
 		logger.Warning("NewAudioController failed:", err)
 	}
@@ -204,12 +209,6 @@ func (m *Manager) init() {
 	m.mediaPlayerController, err = NewMediaPlayerController()
 	if err != nil {
 		logger.Warning("NewMediaPlayerController failed:", err)
-	}
-
-	m.backlightHelper, err = backlight.NewBacklight("com.deepin.daemon.helper.Backlight",
-		"/com/deepin/daemon/helper/Backlight")
-	if err != nil {
-		logger.Warning("NewBacklight failed:", err)
 	}
 
 	m.startManager, err = sessionmanager.NewStartManager("com.deepin.SessionManager", "/com/deepin/StartManager")

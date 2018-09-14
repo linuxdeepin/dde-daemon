@@ -21,6 +21,7 @@ package keybinding
 
 import (
 	"dbus/com/deepin/daemon/audio"
+	"dbus/com/deepin/daemon/helper/backlight"
 
 	ddbus "pkg.deepin.io/dde/daemon/dbus"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
@@ -32,10 +33,11 @@ const (
 )
 
 type AudioController struct {
-	audioDaemon *audio.Audio
+	audioDaemon            *audio.Audio
+	huaweiMicLedWorkaround *huaweiMicLedWorkaround
 }
 
-func NewAudioController() (*AudioController, error) {
+func NewAudioController(backlightHelper *backlight.Backlight) (*AudioController, error) {
 	c := &AudioController{}
 	var err error
 	// c.audioDaemon must not be nil
@@ -43,6 +45,7 @@ func NewAudioController() (*AudioController, error) {
 	if err != nil {
 		return nil, err
 	}
+	c.initHuaweiMicLedWorkaround(backlightHelper)
 	return c, nil
 }
 
@@ -50,6 +53,11 @@ func (c *AudioController) Destroy() {
 	if c.audioDaemon != nil {
 		audio.DestroyAudio(c.audioDaemon)
 		c.audioDaemon = nil
+	}
+
+	if c.huaweiMicLedWorkaround != nil {
+		c.huaweiMicLedWorkaround.destroy()
+		c.huaweiMicLedWorkaround = nil
 	}
 }
 
