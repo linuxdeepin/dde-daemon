@@ -21,7 +21,9 @@ package audio
 
 import (
 	"fmt"
+	"strings"
 	"sync"
+	"time"
 
 	"gir/gio-2.0"
 	"pkg.deepin.io/lib/dbus1"
@@ -248,8 +250,10 @@ func initDefaultVolume(audio *Audio) {
 	defaultInputVolume = pulse.VolumeUIMax * inVolumePer
 	defaultOutputVolume = pulse.VolumeUIMax * outVolumePer
 
-	audio.resetSinksVolume()
-	audio.resetSourceVolume()
+	go func() {
+		audio.resetSinksVolume()
+		audio.resetSourceVolume()
+	}()
 
 	gsAudio.SetBoolean(gsKeyFirstRun, false)
 }
@@ -434,12 +438,27 @@ setPort:
 
 func (a *Audio) resetSinksVolume() {
 	for _, s := range a.ctx.GetSinkList() {
-		a.ctx.SetSinkMuteByIndex(s.Index, false)
-		cv := s.Volume.SetAvg(defaultOutputVolume).SetBalance(s.ChannelMap,
-			0).SetFade(s.ChannelMap, 0)
-		a.ctx.SetSinkVolumeByIndex(s.Index, cv)
-	}
+		oldActivePort := s.ActivePort.Name
+		for _, port := range s.Ports {
+			volPer := defaultOutputVolume
+			if strings.Contains(port.Name, "speaker") {
+				volPer = 0.67
+			} else if strings.Contains(port.Name, "headphones") {
+				volPer = 0.17
+			}
+			s.SetPort(port.Name)
+			time.Sleep(100 * time.Millisecond)
 
+			cv := s.Volume.SetAvg(volPer).
+				SetBalance(s.ChannelMap, 0).
+				SetFade(s.ChannelMap, 0)
+			a.ctx.SetSinkVolumeByIndex(s.Index, cv)
+			time.Sleep(100 * time.Millisecond)
+		}
+
+		s.SetPort(oldActivePort)
+		a.ctx.SetSinkMuteByIndex(s.Index, false)
+	}
 }
 
 func (a *Audio) resetSourceVolume() {
