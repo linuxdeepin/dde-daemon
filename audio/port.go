@@ -21,6 +21,7 @@ package audio
 
 import (
 	"fmt"
+
 	"pkg.deepin.io/lib/pulse"
 )
 
@@ -30,7 +31,11 @@ type Port struct {
 	Available   byte // Unknow:0, No:1, Yes:2
 }
 
-func (p Port) String() string {
+func (p *Port) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+
 	availableStr := "Invalid"
 	switch int(p.Available) {
 	case pulse.AvailableTypeUnknow:
@@ -49,6 +54,13 @@ func toPort(v pulse.PortInfo) Port {
 		Description: v.Description,
 		Available:   byte(v.Available),
 	}
+}
+
+func toPorts(portInfoList []pulse.PortInfo) (result []Port) {
+	for _, p := range portInfoList {
+		result = append(result, toPort(p))
+	}
+	return
 }
 
 // return port and whether found
