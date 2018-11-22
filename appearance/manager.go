@@ -173,11 +173,13 @@ func newManager(service *dbusutil.Service) *Manager {
 
 func (m *Manager) initCurrentBgs() {
 	m.currentDesktopBgs = m.setting.GetStrv(gsKeyBackgroundURIs)
-	greeterBg, err := m.userObj.GreeterBackground().Get(0)
-	if err == nil {
-		m.currentGreeterBg = greeterBg
-	} else {
-		logger.Warning(err)
+	if m.userObj != nil {
+	  greeterBg, err := m.userObj.GreeterBackground().Get(0)
+		if err == nil {
+			m.currentGreeterBg = greeterBg
+		} else {
+			logger.Warning(err)
+		}
 	}
 }
 
