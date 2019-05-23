@@ -52,7 +52,8 @@ func (d *Daemon) Start() (err error) {
 		return
 	}
 
-	err = service.Export(dbusPath, d.manager, d.manager.warnLevelConfig)
+	err = service.Export(dbusPath, d.manager,
+		d.manager.warnLevelConfig, d.manager.syncConfig)
 	if err != nil {
 		return err
 	}
@@ -60,6 +61,11 @@ func (d *Daemon) Start() (err error) {
 	err = service.RequestName(dbusServiceName)
 	if err != nil {
 		return err
+	}
+
+	err = d.manager.syncConfig.Register()
+	if err != nil {
+		logger.Warning("failed to register for deepin sync:", err)
 	}
 
 	go d.manager.init()
@@ -79,6 +85,11 @@ func (d *Daemon) Stop() error {
 	if err != nil {
 		logger.Warning(err)
 	}
+	err = service.StopExport(d.manager.syncConfig)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	d.manager.destroy()
 	d.manager = nil
 	return nil
