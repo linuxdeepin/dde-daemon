@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-16 05:11+0800\n"
+"POT-Creation-Date: 2020-03-22 10:53+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -977,23 +977,12 @@ msgid ""
 "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
-#: ../../session/power/manager_events.go:176
-msgid "Battery Critically Low"
-msgstr ""
-
 #: ../../session/power/manager_events.go:177
-msgid "Computer will suspend very soon, please plug in now"
+msgid "Battery critically low"
 msgstr ""
 
-#: ../../session/power/manager_events.go:200
-#: ../../session/power/manager_events.go:207
-msgid "Battery Low"
-msgstr ""
-
-#: ../../session/power/manager_events.go:201
-msgid "Computer will suspend soon, please plug in"
-msgstr ""
-
+#: ../../session/power/manager_events.go:198
+#: ../../session/power/manager_events.go:203
 #: ../../session/power/manager_events.go:208
 msgid "Battery low, please plug in"
 msgstr ""
