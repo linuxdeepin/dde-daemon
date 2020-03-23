@@ -23,7 +23,6 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/lib/appinfo/desktopappinfo"
 	"pkg.deepin.io/lib/dbus1"
 	. "pkg.deepin.io/lib/gettext"
@@ -109,13 +108,13 @@ func (entry *AppEntry) getMenuItemCloseAll() *MenuItem {
 	return NewMenuItem(Tr("Close All"), func(timestamp uint32) {
 		logger.Debug("Close All")
 		entry.PropsMu.RLock()
-		winIds := entry.getAllowedCloseWindows()
+		winInfos := entry.getAllowedCloseWindows()
 		entry.PropsMu.RUnlock()
 
-		for _, win := range winIds {
-			err := closeWindow(win, x.Timestamp(timestamp))
+		for _, winInfo := range winInfos {
+			err := winInfo.close(timestamp)
 			if err != nil {
-				logger.Warningf("failed to close window %d: %v", win, err)
+				logger.Warningf("failed to close window %d: %v", winInfo, err)
 			}
 		}
 	}, true)

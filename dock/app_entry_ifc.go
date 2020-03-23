@@ -22,13 +22,12 @@ package dock
 import (
 	"errors"
 	"os"
-	"pkg.deepin.io/lib/procfs"
 	"syscall"
 	"time"
 
-	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/procfs"
 )
 
 func (e *AppEntry) GetInterfaceName() string {
@@ -57,28 +56,26 @@ func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-	win := entry.current.window
-	state, err := ewmh.GetWMState(globalXConn, win).Reply(globalXConn)
-	if err != nil {
-		logger.Warningf("failed to get ewmh WMState for win %d: %v", win, err)
-		return dbusutil.ToError(err)
-	}
 
-	activeWin := entry.manager.getActiveWindow()
-
-	if win == activeWin {
-		if atomsContains(state, atomNetWmStateHidden) {
-			err = activateWindow(win)
+	winInfo := entry.current
+	var err error
+	if m.isActiveWindow(winInfo) {
+		if winInfo.isMinimized() {
+			err = winInfo.activate()
 		} else {
 			if len(entry.windows) == 1 {
-				err = minimizeWindow(win)
-			} else if entry.manager.getActiveWindow() == win {
-				nextWin := entry.findNextLeader()
-				err = activateWindow(nextWin)
+				err = winInfo.minimize()
+			} else {
+				nextWinInfo := entry.findNextLeader()
+				if nextWinInfo != nil {
+					err = nextWinInfo.activate()
+				} else {
+					err = errors.New("nextWinInfo is nil")
+				}
 			}
 		}
 	} else {
-		err = activateWindow(win)
+		err = winInfo.activate()
 	}
 
 	if err != nil {
@@ -160,12 +157,16 @@ func (entry *AppEntry) ForceQuit() *dbus.Error {
 	winInfoSlice := entry.getWindowInfoSlice()
 	entry.PropsMu.RUnlock()
 
-	pidWinInfosMap := make(map[uint][]*WindowInfo)
+	pidWinInfosMap := make(map[uint][]WindowInfo)
 	for _, winInfo := range winInfoSlice {
-		if winInfo.pid != 0 && winInfo.process != nil {
-			pidWinInfosMap[winInfo.pid] = append(pidWinInfosMap[winInfo.pid], winInfo)
+		pid := winInfo.getPid()
+		if pid != 0 && winInfo.getProcess() != nil {
+			pidWinInfosMap[pid] = append(pidWinInfosMap[pid], winInfo)
 		} else {
-			killClient(winInfo.window)
+			err := winInfo.killClient()
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 	}
 
@@ -175,7 +176,10 @@ func (entry *AppEntry) ForceQuit() *dbus.Error {
 			logger.Warning(err)
 			if os.IsPermission(err) {
 				for _, winInfo := range winInfoSlice {
-					killClient(winInfo.window)
+					err = winInfo.killClient()
+					if err != nil {
+						logger.Warning(err)
+					}
 				}
 			}
 		}
@@ -213,9 +217,9 @@ func killProcess(pid uint) error {
 func (entry *AppEntry) GetAllowedCloseWindows() ([]uint32, *dbus.Error) {
 	entry.PropsMu.RLock()
 	ret := make([]uint32, len(entry.windows))
-	winIds := entry.getAllowedCloseWindows()
-	for idx, winId := range winIds {
-		ret[idx] = uint32(winId)
+	winInfos := entry.getAllowedCloseWindows()
+	for idx, winInfo := range winInfos {
+		ret[idx] = uint32(winInfo.getXid())
 	}
 	entry.PropsMu.RUnlock()
 	return ret, nil

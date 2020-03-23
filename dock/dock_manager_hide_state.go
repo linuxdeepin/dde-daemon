@@ -151,6 +151,19 @@ func (m *Manager) isWindowDockOverlap(win x.Window) (bool, error) {
 	return hasIntersection(winRect, m.FrontendWindowRect), nil
 }
 
+func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
+	geo := winInfo.geometry
+	winRect := &Rect{
+		X:      geo.X,
+		Y:      geo.Y,
+		Width:  uint32(geo.Width),
+		Height: uint32(geo.Height),
+	}
+	logger.Debug("window rect:", winRect)
+	logger.Debug("dock rect:", m.FrontendWindowRect)
+	return hasIntersection(winRect, m.FrontendWindowRect), nil
+}
+
 const (
 	ddeLauncherWMClass = "dde-launcher"
 )
@@ -163,28 +176,7 @@ func isDDELauncher(win x.Window) (bool, error) {
 	return winClass.Instance == ddeLauncherWMClass, nil
 }
 
-func (m *Manager) getActiveWindow() (activeWin x.Window) {
-	m.activeWindowMu.Lock()
-	if m.activeWindow == 0 {
-		activeWin = m.activeWindowOld
-	} else {
-		activeWin = m.activeWindow
-	}
-	m.activeWindowMu.Unlock()
-	return
-}
-
-func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
-	activeWin := m.getActiveWindow()
-	if activeWin == 0 {
-		logger.Debug("shouldHideOnSmartHideMode: activeWindow is 0")
-		return false, errors.New("activeWindow is 0")
-	}
-	if m.isDDELauncherVisible() {
-		logger.Debug("shouldHideOnSmartHideMode: dde launcher is visible")
-		return false, nil
-	}
-
+func (m *Manager) shouldHideOnSmartHideModeX(activeWin x.Window) (bool, error) {
 	isLauncher, err := isDDELauncher(activeWin)
 	if err != nil {
 		logger.Warning(err)
@@ -208,6 +200,33 @@ func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, error) {
+	return m.isWindowDockOverlapK(activeWin)
+}
+
+func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
+	activeWinInfo := m.getActiveWindow()
+	if activeWinInfo == nil {
+		logger.Debug("shouldHideOnSmartHideMode: activeWinInfo is nil")
+		return false, errors.New("activeWinInfo is nil")
+	}
+	if m.isDDELauncherVisible() {
+		logger.Debug("shouldHideOnSmartHideMode: dde launcher is visible")
+		return false, nil
+	}
+
+	switch awi := activeWinInfo.(type) {
+	case *XWindowInfo:
+		activeWin := awi.getXid()
+		return m.shouldHideOnSmartHideModeX(activeWin)
+
+	case *KWindowInfo:
+		return m.shouldHideOnSmartHideModeK(awi)
+	default:
+		return false, errors.New("invalid type WindowInfo")
+	}
 }
 
 func (m *Manager) smartHideModeTimerExpired() {

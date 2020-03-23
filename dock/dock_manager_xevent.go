@@ -20,6 +20,7 @@
 package dock
 
 import (
+	"os"
 	"sort"
 	"time"
 
@@ -39,7 +40,7 @@ func (m *Manager) registerWindow(win x.Window) {
 		return
 	}
 
-	winInfo = NewWindowInfo(win)
+	winInfo = newXWindowInfo(win)
 	m.listenWindowXEvent(winInfo)
 
 	m.windowInfoMapMutex.Lock()
@@ -95,30 +96,42 @@ func (m *Manager) handleClientListChanged() {
 	}
 }
 
-func (m *Manager) handleActiveWindowChanged() {
+func (m *Manager) handleActiveWindowChangedX() {
 	activeWindow, err := ewmh.GetActiveWindow(globalXConn).Reply(globalXConn)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
+	winInfo := m.findWindowByXid(activeWindow)
+
+	logger.Debug("Active window changed X", activeWindow)
+	m.handleActiveWindowChanged(winInfo)
+}
+
+func (m *Manager) handleActiveWindowChanged(activeWindow WindowInfo) {
 	m.activeWindowMu.Lock()
-	if m.activeWindow == activeWindow {
+	if activeWindow == nil {
+		m.activeWindowOld = m.activeWindow
+		m.activeWindow = nil
 		m.activeWindowMu.Unlock()
-		logger.Debug("Active window no change")
 		return
 	}
-	// try handle activeWindow == 0
-	m.activeWindowOld = m.activeWindow
+
+	if m.activeWindow == activeWindow {
+		logger.Debug("active window no change")
+		m.activeWindowMu.Unlock()
+		return
+	}
 	m.activeWindow = activeWindow
 	m.activeWindowMu.Unlock()
 
-	logger.Debug("Active window changed", activeWindow)
+	activeWinXid := activeWindow.getXid()
 
 	m.Entries.mu.RLock()
 	for _, entry := range m.Entries.items {
 		entry.PropsMu.Lock()
 
-		winInfo, ok := entry.windows[activeWindow]
+		winInfo, ok := entry.windows[activeWinXid]
 		if ok {
 			entry.setPropIsActive(true)
 			entry.setCurrentWindowInfo(winInfo)
@@ -135,20 +148,55 @@ func (m *Manager) handleActiveWindowChanged() {
 	m.updateHideState(true)
 }
 
+func (m *Manager) getActiveWindow() (activeWin WindowInfo) {
+	m.activeWindowMu.Lock()
+	defer m.activeWindowMu.Unlock()
+
+	if m.activeWindow == nil {
+		activeWin = m.activeWindowOld
+	} else {
+		activeWin = m.activeWindow
+	}
+	return
+}
+
+func (m *Manager) isActiveWindow(winInfo WindowInfo) bool {
+	if winInfo == nil {
+		return false
+	}
+	return winInfo == m.activeWindow
+}
+
+var globalDisableXEvent = false
+
+func init() {
+	if os.Getenv("DISABLE_X_EVENT") == "1" {
+		globalDisableXEvent = true
+	}
+}
+
 func (m *Manager) listenRootWindowXEvent() {
+	if globalDisableXEvent {
+		return
+	}
+
 	const eventMask = x.EventMaskPropertyChange | x.EventMaskSubstructureNotify
 	err := x.ChangeWindowAttributesChecked(globalXConn, m.rootWindow, x.CWEventMask,
 		[]uint32{eventMask}).Check(globalXConn)
 	if err != nil {
 		logger.Warning(err)
 	}
-	m.handleActiveWindowChanged()
+	m.handleActiveWindowChangedX()
 	m.handleClientListChanged()
 }
 
-func (m *Manager) listenWindowXEvent(winInfo *WindowInfo) {
+func (m *Manager) listenWindowXEvent(winInfo *XWindowInfo) {
+	if globalDisableXEvent {
+		return
+	}
+
 	const eventMask = x.EventMaskPropertyChange | x.EventMaskStructureNotify | x.EventMaskVisibilityChange
-	err := x.ChangeWindowAttributesChecked(globalXConn, winInfo.window, x.CWEventMask,
+	err := x.ChangeWindowAttributesChecked(globalXConn, winInfo.xid, x.CWEventMask,
 		[]uint32{eventMask}).Check(globalXConn)
 	if err != nil {
 		logger.Warning(err)
@@ -157,7 +205,7 @@ func (m *Manager) listenWindowXEvent(winInfo *WindowInfo) {
 
 func (m *Manager) handleDestroyNotifyEvent(ev *x.DestroyNotifyEvent) {
 	logger.Debug("DestroyNotifyEvent window:", ev.Window)
-	winInfo := m.getWindowInfo(ev.Window)
+	winInfo := m.findXWindowInfo(ev.Window)
 	if winInfo != nil {
 		m.detachWindow(winInfo)
 	}
@@ -169,15 +217,8 @@ func (m *Manager) handleMapNotifyEvent(ev *x.MapNotifyEvent) {
 	m.registerWindow(ev.Window)
 }
 
-func (m *Manager) getWindowInfo(win x.Window) *WindowInfo {
-	m.windowInfoMapMutex.RLock()
-	v := m.windowInfoMap[win]
-	m.windowInfoMapMutex.RUnlock()
-	return v
-}
-
 func (m *Manager) handleConfigureNotifyEvent(ev *x.ConfigureNotifyEvent) {
-	winInfo := m.getWindowInfo(ev.Window)
+	winInfo := m.findXWindowInfo(ev.Window)
 	if winInfo == nil {
 		return
 	}
@@ -239,7 +280,7 @@ func (m *Manager) handleRootWindowPropertyNotifyEvent(ev *x.PropertyNotifyEvent)
 	case atomNetClientList:
 		m.handleClientListChanged()
 	case atomNetActiveWindow:
-		m.handleActiveWindowChanged()
+		m.handleActiveWindowChangedX()
 	case atomNetShowingDesktop:
 		m.updateHideState(false)
 	}
@@ -251,7 +292,7 @@ func (m *Manager) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 		return
 	}
 
-	winInfo := m.getWindowInfo(ev.Window)
+	winInfo := m.findXWindowInfo(ev.Window)
 	if winInfo == nil {
 		return
 	}
@@ -270,7 +311,7 @@ func (m *Manager) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 		needAttachOrDetach = true
 
 	case atomGtkApplicationId:
-		winInfo.gtkAppId = getWindowGtkApplicationId(winInfo.window)
+		winInfo.gtkAppId = getWindowGtkApplicationId(winInfo.xid)
 		newInnerId = genInnerId(winInfo)
 
 	case atomNetWmPid:
@@ -310,7 +351,7 @@ func (m *Manager) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 
 	if winInfo.updateCalled && newInnerId != "" && winInfo.innerId != newInnerId {
 		// winInfo.innerId changed
-		logger.Debugf("window %v innerId changed to %s", winInfo.window, newInnerId)
+		logger.Debugf("window %v innerId changed to %s", winInfo.xid, newInnerId)
 		m.detachWindow(winInfo)
 		winInfo.innerId = newInnerId
 		winInfo.entryInnerId = ""
