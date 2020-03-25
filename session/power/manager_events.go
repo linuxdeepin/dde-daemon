@@ -78,6 +78,7 @@ func (m *Manager) initOnBatteryChangedHandler() {
 }
 
 func (m *Manager) handleBeforeSuspend() {
+	m.setDPMSModeOff()
 	m.setPrepareSuspend(suspendStatePrepare)
 	logger.Debug("before sleep")
 	if m.SleepLock.Get() {
@@ -93,12 +94,12 @@ func (m *Manager) handleWakeup() {
 	}
 
 	// Fix wayland sometimes no dpms event after wakeup
-	if m.UseWayland {
-		err := m.helper.ScreenSaver.SimulateUserActivity(0)
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
+	//if m.UseWayland {
+	//	err := m.helper.ScreenSaver.SimulateUserActivity(0)
+	//	if err != nil {
+	//		logger.Warning(err)
+	//	}
+	//}
 
 	m.setDPMSModeOn()
 	m.helper.Power.RefreshBatteries(0)
@@ -194,7 +195,7 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 
 	case WarnLevelCritical:
 		playSound(soundutils.EventBatteryLow)
-		m.sendNotify(iconBatteryLow,"",
+		m.sendNotify(iconBatteryLow, "",
 			Tr("Battery low, please plug in"))
 
 	case WarnLevelDanger:

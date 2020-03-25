@@ -172,6 +172,7 @@ func main() {
 	}
 
 	if needRunMainLoop {
+		go app.memLeakLoop()
 		runMainLoop()
 	}
 }

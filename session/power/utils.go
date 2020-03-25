@@ -97,7 +97,7 @@ func (m *Manager) setDPMSModeOn() {
 	var err error
 
 	if m.UseWayland {
-		_, err = exec.Command("dde_wldpms", "-s", "On").Output()
+		setDPMSByKWL("On")
 	} else {
 		c := m.helper.xConn
 		err = dpms.ForceLevelChecked(c, dpms.DPMSModeOn).Check(c)
@@ -111,13 +111,36 @@ func (m *Manager) setDPMSModeOff() {
 	logger.Info("DPMS Off")
 	var err error
 	if m.UseWayland {
-		_, err = exec.Command("dde_wldpms", "-s", "Off").Output()
+		setDPMSByKWL("Off")
 	} else {
 		c := m.helper.xConn
 		err = dpms.ForceLevelChecked(c, dpms.DPMSModeOff).Check(c)
 	}
 	if err != nil {
 		logger.Warning("Set DPMS off error:", err)
+	}
+}
+
+func setDPMSByKWL(mode string) {
+	logger.Debug("[setDPMSByKWL] will set dpms mode:", mode)
+	var cmd = exec.Command("dde_wldpms", "-s", mode)
+	var timeout = make(chan bool)
+	go func() {
+		time.Sleep(3)
+		timeout <- false
+	}()
+	go func(m string, c *exec.Cmd) {
+		_, err := c.Output()
+		if err != nil {
+			logger.Info("Failed to set dpms:", m, err)
+		}
+		timeout <- true
+	}(mode, cmd)
+
+	<-timeout
+	if cmd.ProcessState != nil && !cmd.ProcessState.Exited() && cmd.Process != nil {
+		logger.Debug("[setDPMSByKWL] Set dpms timeout, self kill")
+		cmd.Process.Kill()
 	}
 }
 
