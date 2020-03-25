@@ -36,9 +36,10 @@ type Card struct {
 }
 
 type CardExport struct {
-	Id    uint32
-	Name  string
-	Ports []CardPortExport
+	Id       uint32
+	Name     string
+	Profiles ProfileList
+	Ports    []CardPortExport
 }
 
 type CardPortExport struct {
@@ -123,9 +124,10 @@ func (cards CardList) string() string {
 		}
 
 		list = append(list, CardExport{
-			Id:    cardInfo.Id,
-			Name:  cardInfo.Name,
-			Ports: ports,
+			Id:       cardInfo.Id,
+			Name:     cardInfo.Name,
+			Profiles: cardInfo.Profiles,
+			Ports:    ports,
 		})
 	}
 	return toJSON(list)
