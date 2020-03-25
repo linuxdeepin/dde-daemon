@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Desktop Environment\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-16 05:11+0800\n"
-"PO-Revision-Date: 2020-03-16 09:17+0000\n"
+"POT-Creation-Date: 2020-03-22 10:53+0800\n"
+"PO-Revision-Date: 2020-03-23 03:31+0000\n"
 "Last-Translator: Cindy0514\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/linuxdeepin/deepin-desktop-environment/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -987,23 +987,12 @@ msgstr "已连接"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”没有通过系统安全验证，无法运行"
 
-#: ../../session/power/manager_events.go:176
-msgid "Battery Critically Low"
+#: ../../session/power/manager_events.go:177
+msgid "Battery critically low"
 msgstr "电池电量耗尽"
 
-#: ../../session/power/manager_events.go:177
-msgid "Computer will suspend very soon, please plug in now"
-msgstr "计算机马上进入待机状态，请连接电源以恢复使用"
-
-#: ../../session/power/manager_events.go:200
-#: ../../session/power/manager_events.go:207
-msgid "Battery Low"
-msgstr "电池电量低"
-
-#: ../../session/power/manager_events.go:201
-msgid "Computer will suspend soon, please plug in"
-msgstr "计算机将要进入待机状态，请连接电源"
-
+#: ../../session/power/manager_events.go:198
+#: ../../session/power/manager_events.go:203
 #: ../../session/power/manager_events.go:208
 msgid "Battery low, please plug in"
 msgstr "电池电量低，请连接电源"
