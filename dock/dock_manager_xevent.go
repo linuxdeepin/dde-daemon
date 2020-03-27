@@ -164,13 +164,13 @@ func (m *Manager) isActiveWindow(winInfo WindowInfo) bool {
 	if winInfo == nil {
 		return false
 	}
-	return winInfo == m.activeWindow
+	return winInfo == m.getActiveWindow()
 }
 
 var globalDisableXEvent = false
 
 func init() {
-	if os.Getenv("DISABLE_X_EVENT") == "1" {
+	if os.Getenv("DEEPIN_DOCK_DISABLE_X_EVENT") == "1" {
 		globalDisableXEvent = true
 	}
 }
