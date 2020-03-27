@@ -23,6 +23,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	dbus "pkg.deepin.io/lib/dbus1"
+	"pkg.deepin.io/lib/dbusutil"
 	"strings"
 	"sync"
 	"time"
@@ -132,6 +134,42 @@ func (psp *powerSavePlan) Reset() {
 	}
 }
 
+func (psp *powerSavePlan) ConnectIdle() error {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	err = sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Idle", "IdleTimeout").Err
+		//dbus.WithMatchObjectPath("/com/deepin/daemon/KWayland/Idle")).Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	sessionSigLoop := dbusutil.NewSignalLoop(sessionBus, 10)
+	sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Idle.IdleTimeout",
+	}, func(sig *dbus.Signal) {
+		if strings.HasPrefix(string(sig.Path),
+			"/com/deepin/daemon/KWayland/") &&
+			len(sig.Body) == 1 {
+			bIdle, ok := sig.Body[0].(bool)
+			if !ok {
+				return
+			}
+			if bIdle {
+				psp.HandleIdleOn()
+			} else {
+				psp.HandleIdleOff()
+			}
+		}
+	})
+	sessionSigLoop.Start()
+
+	return nil
+}
+
 func (psp *powerSavePlan) Start() error {
 	psp.Reset()
 	psp.initSettingsChangedHandler()
@@ -147,8 +185,15 @@ func (psp *powerSavePlan) Start() error {
 
 	power.PowerSavingModeEnabled().ConnectChanged(psp.handlePowerSavingModeChanged)
 
-	screenSaver.ConnectIdleOn(psp.HandleIdleOn)
-	screenSaver.ConnectIdleOff(psp.HandleIdleOff)
+
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		psp.ConnectIdle()
+	} else {
+		screenSaver.ConnectIdleOn(psp.HandleIdleOn)
+		screenSaver.ConnectIdleOff(psp.HandleIdleOff)
+	}
+
 	return nil
 }
 
