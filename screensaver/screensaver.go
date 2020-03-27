@@ -21,7 +21,6 @@ package screensaver
 
 import (
 	"errors"
-	"os"
 	"strings"
 	"sync"
 
@@ -191,34 +190,16 @@ func (ss *ScreenSaver) setTimeout(seconds, interval uint32, blank bool) {
 		ss.blank = x.BlankingNotPreferred
 	}
 
-	sessionType := os.Getenv("XDG_SESSION_TYPE")
-	if strings.Contains(sessionType, "wayland"){
-		sessionBus, err := dbus.SessionBus()
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		err = sessionBus.Object("com.deepin.daemon.KWayland",
-			"/com/deepin/daemon/KWayland/Output").Call("com.deepin.daemon.KWayland.Idle.SetIdleTimeout", 0, seconds * 1000).Err
+	err := x.SetScreenSaverChecked(ss.xConn, int16(seconds), int16(interval), ss.blank,
+		x.ExposuresNotAllowed).Check(ss.xConn)
+	if err != nil {
+		logger.Warning(err)
+	}
 
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-
-	} else {
-		err := x.SetScreenSaverChecked(ss.xConn, int16(seconds), int16(interval), ss.blank,
-			x.ExposuresNotAllowed).Check(ss.xConn)
-		if err != nil {
-			logger.Warning(err)
-		}
-
-		err = dpms.SetTimeoutsChecked(ss.xConn, 0, 0,
-			0).Check(ss.xConn)
-		if err != nil {
-			logger.Warning(err)
-		}
-
+	err = dpms.SetTimeoutsChecked(ss.xConn, 0, 0,
+		0).Check(ss.xConn)
+	if err != nil {
+		logger.Warning(err)
 	}
 
 	logger.Info("SetTimeout to ", seconds, interval, blank)
