@@ -784,7 +784,7 @@ func (sm *ShortcutManager) AddSystem(gsettings *gio.Settings) {
 		if name == "" {
 			name = id
 		}
-		if id == "terminal-quake"{
+		if id == "terminal-quake" {
 			continue
 		}
 		session := os.Getenv("XDG_SESSION_TYPE")
@@ -810,6 +810,10 @@ func (sm *ShortcutManager) AddWM(gsettings *gio.Settings) {
 	logger.Debug("AddWM")
 	idNameMap := getWMIdNameMap()
 	for _, id := range gsettings.ListKeys() {
+		// 'preview-workspace' unsupported in wayland, so filter it
+		if id == "preview-workspace" {
+			continue
+		}
 		name := idNameMap[id]
 		if name == "" {
 			name = id
@@ -871,6 +875,10 @@ func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
 	idNameMap := getWMIdNameMap()
 
 	for _, accel := range accels {
+		// 'preview-workspace' unsupported in wayland, so filter it
+		if accel.Id == "preview-workspace" {
+			continue
+		}
 		name := idNameMap[accel.Id]
 		if name == "" {
 			name = accel.Id
