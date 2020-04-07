@@ -789,7 +789,7 @@ func (sm *ShortcutManager) AddSystem(gsettings *gio.Settings) {
 		}
 		session := os.Getenv("XDG_SESSION_TYPE")
 		if strings.Contains(session, "wayland") {
-			if id == "deepin-screen-recorder" || id == "wm-switcher" {
+			if id == "deepin-screen-recorder" || id == "wm-switcher" || id == "translation"{
 				continue
 			}
 		}
