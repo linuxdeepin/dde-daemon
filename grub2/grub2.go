@@ -238,6 +238,38 @@ func getModifyFuncPrepareGfxmodeDetect(gfxmodesStr string) func(map[string]strin
 	return f
 }
 
+func getModifyFuncFinishGfxmodeDetect(currentGfxmode grub_common.Gfxmode) func(map[string]string) {
+	f := func(params map[string]string) {
+		var maxGfxmode grub_common.Gfxmode
+		detectGfxmodes := strings.Split(params[grubGfxmode], ",")
+		logger.Debug("detectGfxmodes:", detectGfxmodes)
+		if len(detectGfxmodes) > 0 {
+			var err error
+			maxGfxmode, err = grub_common.ParseGfxmode(detectGfxmodes[0])
+			if err != nil {
+				logger.Warning(err)
+			}
+		} else {
+			logger.Warning("failed to get detect gfxmodes")
+		}
+		logger.Debug("maxGfxmode:", maxGfxmode)
+		notMax := maxGfxmode.Width != 0 && currentGfxmode != maxGfxmode
+
+		themeEnabled := params[grubTheme] != ""
+		if themeEnabled {
+			params[grubTheme] = quoteString(defaultGrubTheme)
+			params[grubBackground] = quoteString(defaultGrubBackground)
+		}
+		params[grubGfxmode] = currentGfxmode.String()
+		params[grub_common.DeepinGfxmodeAdjusted] = "1"
+		delete(params, grub_common.DeepinGfxmodeDetect)
+		if notMax {
+			params[grub_common.DeepinGfxmodeNotSupported] = maxGfxmode.String()
+		}
+	}
+	return f
+}
+
 func getModifyTaskPrepareGfxmodeDetect(gfxmodesStr string) modifyTask {
 	f := getModifyFuncPrepareGfxmodeDetect(gfxmodesStr)
 	return modifyTask{
@@ -267,20 +299,6 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 	g.PropsMu.Unlock()
 	logger.Debug("currentGfxmode:", currentGfxmode)
 
-	var maxGfxmode grub_common.Gfxmode
-	detectGfxmodes := strings.Split(params[grubGfxmode], ",")
-	logger.Debug("detectGfxmodes:", detectGfxmodes)
-	if len(detectGfxmodes) > 0 {
-		maxGfxmode, err = grub_common.ParseGfxmode(detectGfxmodes[0])
-		if err != nil {
-			logger.Warning(err)
-		}
-	} else {
-		logger.Warning("failed to get detect gfxmodes")
-	}
-	logger.Debug("maxGfxmode:", maxGfxmode)
-	notMax := maxGfxmode.Width != 0 && currentGfxmode != maxGfxmode
-
 	themeEnabled := params[grubTheme] != ""
 
 	currentGfxmodeStr := currentGfxmode.String()
@@ -295,19 +313,8 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 	g.theme.emitSignalBackgroundChanged()
 
 	task := modifyTask{
-		paramsModifyFunc: func(params map[string]string) {
-			if themeEnabled {
-				params[grubTheme] = quoteString(defaultGrubTheme)
-				params[grubBackground] = quoteString(defaultGrubBackground)
-			}
-			params[grubGfxmode] = currentGfxmodeStr
-			params[grub_common.DeepinGfxmodeAdjusted] = "1"
-			delete(params, grub_common.DeepinGfxmodeDetect)
-			if notMax {
-				params[grub_common.DeepinGfxmodeNotSupported] = maxGfxmode.String()
-			}
-		},
-		adjustTheme: themeEnabled,
+		paramsModifyFunc: getModifyFuncFinishGfxmodeDetect(currentGfxmode),
+		adjustTheme:      themeEnabled,
 	}
 	g.addModifyTask(task)
 }

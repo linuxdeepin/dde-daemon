@@ -21,7 +21,6 @@ package grub2
 
 import (
 	"io/ioutil"
-	"os"
 	"os/exec"
 	"time"
 
@@ -93,11 +92,45 @@ func PrepareGfxmodeDetect() error {
 	}
 
 	cmd := exec.Command(adjustThemeCmd, "-fallback-only")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = runCmd(cmd)
 	if err != nil {
 		logger.Warning("failed to adjust theme:", err)
+	}
+
+	return nil
+}
+
+func FinishGfxmodeDetect() error {
+	params, err := grub_common.LoadGrubParams()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	currentGfxmode, _, err := grub_common.GetBootArgDeepinGfxmode()
+	if err != nil {
+		params[grub_common.DeepinGfxmodeDetect] = "2"
+		return writeGrubParams(params)
+	}
+
+	getModifyFuncFinishGfxmodeDetect(currentGfxmode)(params)
+
+	err = writeGrubParams(params)
+	if err != nil {
+		return err
+	}
+
+	themeEnabled := params[grubTheme] != ""
+	if themeEnabled {
+		cmd := exec.Command(adjustThemeCmd)
+		err = runCmd(cmd)
+		if err != nil {
+			logger.Warning("failed to adjust theme:", err)
+		}
+	}
+
+	err = runUpdateGrub()
+	if err != nil {
+		return err
 	}
 
 	return nil
