@@ -4,7 +4,7 @@ Description=Accounts Service
 # In order to avoid races with identity-providing services like SSSD or
 # winbind, we need to ensure that Accounts Service starts after
 # nss-user-lookup.target
-After=nss-user-lookup.target
+After=nss-user-lookup.target NetworkManager.srevice
 Wants=nss-user-lookup.target
 
 [Service]
