@@ -154,9 +154,7 @@ func runUpdateGrub() error {
 		logger.Debugf("$ %s -o %s", grubMkconfigCmd, grubScriptFile)
 	}
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	return runCmd(cmd)
 }
 
 func (m *modifyManager) updateEnd() {

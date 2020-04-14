@@ -85,6 +85,9 @@ func (h *XRecordEventHandler) handleKeyEvent(pressed bool, keycode uint8, state 
 			if h.modKeyReleasedCb != nil {
 				logger.Debugf("modKeyReleased keycode %d historyPressedMods: %s",
 					keycode, Modifiers(h.historyPressedMods))
+				if mod == keysyms.ModMaskSuper {
+					return;
+				}
 				h.modKeyReleasedCb(keycode, h.historyPressedMods)
 			}
 		}

@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"strconv"
 
 	"pkg.deepin.io/dde/daemon/grub_common"
@@ -102,4 +103,10 @@ func getFileMD5sum(file string) (string, error) {
 
 	sum := fmt.Sprintf("%x", h.Sum(nil))
 	return sum, nil
+}
+
+func runCmd(cmd *exec.Cmd) error {
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }

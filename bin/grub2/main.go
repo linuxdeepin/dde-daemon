@@ -29,21 +29,25 @@ import (
 
 var logger = log.NewLogger("daemon/grub2")
 
-func init() {
-	grub2.SetLogger(logger)
-}
-
 var (
 	optPrepareGfxmodeDetect bool
+	optFinishGfxmodeDetect  bool
 	optSetupTheme           bool
 	optDebug                bool
 )
 
-func main() {
+func init() {
+	grub2.SetLogger(logger)
+
 	flag.BoolVar(&optDebug, "debug", false, "debug mode")
 	flag.BoolVar(&optPrepareGfxmodeDetect, "prepare-gfxmode-detect", false,
 		"prepare gfxmode detect")
+	flag.BoolVar(&optFinishGfxmodeDetect, "finish-gfxmode-detect", false,
+		"finish gfxmode detect")
 	flag.BoolVar(&optSetupTheme, "setup-theme", false, "do nothing")
+}
+
+func main() {
 	flag.Parse()
 	if optDebug {
 		logger.SetLogLevel(log.LevelDebug)
@@ -52,6 +56,13 @@ func main() {
 	if optPrepareGfxmodeDetect {
 		logger.Debug("mode: prepare gfxmode detect")
 		err := grub2.PrepareGfxmodeDetect()
+		if err != nil {
+			logger.Warning(err)
+			os.Exit(2)
+		}
+	} else if optFinishGfxmodeDetect {
+		logger.Debug("mode: finish gfxmode detect")
+		err := grub2.FinishGfxmodeDetect()
 		if err != nil {
 			logger.Warning(err)
 			os.Exit(2)
