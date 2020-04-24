@@ -44,6 +44,18 @@ func NewInputdevicesDaemon(logger *log.Logger) *Daemon {
 	return d
 }
 
+func HandlePrepareForSleep(sleep bool) {
+	if _manager == nil || _manager.kbd == nil {
+		return
+	}
+
+	if sleep {
+		return
+	}
+
+	_manager.kbd.init()
+}
+
 func (*Daemon) GetDependencies() []string {
 	return []string{}
 }
