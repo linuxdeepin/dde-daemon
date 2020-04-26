@@ -623,7 +623,7 @@ func (b *Bluetooth) getPairedDeviceList() []*device {
 			continue
 		}
 		for _, dev := range list {
-			if dev.Paired && !dev.connected {
+			if dev.Paired && !dev.connected && b.isDeviceNeedRepair(dev) {
 				devList = append(devList, dev)
 			}
 		}
@@ -681,4 +681,12 @@ func (b *Bluetooth) wakeupWorkaround() {
 		}
 		b.tryConnectPairedDevices()
 	})
+}
+
+func (b *Bluetooth) isDeviceNeedRepair(dev *device) bool {
+	// Audio-card Input-keyboard Input-mouse are allowed re-pair
+	if dev.Icon == "audio-card" || (dev.Class != 0 && (dev.Icon == "input-mouse" || dev.Icon == "input-keyboard")) {
+		return true
+	}
+	return false
 }

@@ -74,6 +74,7 @@ type device struct {
 	Icon    string
 	RSSI    int16
 	Address string
+	Class   uint32
 
 	connected         bool
 	connectedTime     time.Time
@@ -192,6 +193,7 @@ func newDevice(systemSigLoop *dbusutil.SignalLoop, dpath dbus.ObjectPath) (d *de
 	d.ServicesResolved, _ = d.core.ServicesResolved().Get(0)
 	d.Icon, _ = d.core.Icon().Get(0)
 	d.RSSI, _ = d.core.RSSI().Get(0)
+	d.Class, _ = d.core.Class().Get(0)
 	d.updateState()
 	d.disconnectChan = make(chan struct{})
 	d.core.InitSignalExt(systemSigLoop, true)
@@ -371,6 +373,15 @@ func (d *device) connectProperties() {
 			return
 		}
 		logger.Debugf("%s Blocked: %v", d, value)
+	})
+
+	_ = d.core.Class().ConnectChanged(func(hasValue bool, value uint32) {
+		if !hasValue {
+			return
+		}
+		d.Class = value
+		logger.Debugf("%s Class: %v", d, value)
+		d.notifyDevicePropertiesChanged()
 	})
 }
 
