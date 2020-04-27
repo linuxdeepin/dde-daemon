@@ -631,6 +631,9 @@ func isGoodWindow(win x.Window) bool {
 	return err == nil
 }
 
-func killClient(win x.Window) error {
-	return x.KillClientChecked(globalXConn, uint32(win)).Check(globalXConn)
+func killClient(win x.Window) {
+	err := x.KillClientChecked(globalXConn, uint32(win)).Check(globalXConn)
+	if err != nil {
+		logger.Warning(err)
+	}
 }

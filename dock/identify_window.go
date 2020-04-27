@@ -32,7 +32,7 @@ type IdentifyWindowFunc struct {
 	Fn   _IdentifyWindowFunc
 }
 
-type _IdentifyWindowFunc func(*Manager, *XWindowInfo) (string, *AppInfo)
+type _IdentifyWindowFunc func(*Manager, *WindowInfo) (string, *AppInfo)
 
 func (m *Manager) registerIdentifyWindowFuncs() {
 	m.registerIdentifyWindowFunc("PidEnv", identifyWindowByPidEnv)
@@ -54,39 +54,9 @@ func (m *Manager) registerIdentifyWindowFunc(name string, fn _IdentifyWindowFunc
 	})
 }
 
-func (m *Manager) identifyWindow(winInfo WindowInfo) (innerId string, appInfo *AppInfo) {
-	switch wi := winInfo.(type) {
-	case *XWindowInfo:
-		return m.identifyWindowX(wi)
-	case *KWindowInfo:
-		return m.identifyWindowK(wi)
-	default:
-		return "", nil
-	}
-}
-
-func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo *AppInfo) {
-	appId := winInfo.appId
-	if appId == "totem" {
-		appId = "org.gnome.Totem"
-	}
-
-	appInfo = NewAppInfo(appId)
-	if appInfo != nil {
-		innerId = appInfo.innerId
-		fixedAppInfo := fixAutostartAppInfo(appInfo)
-		if fixedAppInfo != nil {
-			appInfo = fixedAppInfo
-			appInfo.identifyMethod = "FixAutostart"
-			innerId = fixedAppInfo.innerId
-		}
-	}
-	return
-}
-
-func (m *Manager) identifyWindowX(winInfo *XWindowInfo) (innerId string, appInfo *AppInfo) {
+func (m *Manager) identifyWindow(winInfo *WindowInfo) (innerId string, appInfo *AppInfo) {
 	logger.Debugf("identifyWindow: window id: %v, window innerId: %q",
-		winInfo.xid, winInfo.innerId)
+		winInfo.window, winInfo.innerId)
 	if winInfo.innerId == "" {
 		logger.Debug("identifyWindow: winInfo.innerId is empty")
 		return
@@ -129,7 +99,7 @@ func fixAutostartAppInfo(appInfo *AppInfo) *AppInfo {
 	return nil
 }
 
-func identifyWindowByScratch(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByScratch(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	desktopFile := filepath.Join(scratchDir, addDesktopExt(winInfo.innerId))
 	logger.Debugf("try scratch desktop file: %q", desktopFile)
 	appInfo := NewAppInfoFromFile(desktopFile)
@@ -141,7 +111,7 @@ func identifyWindowByScratch(m *Manager, winInfo *XWindowInfo) (string, *AppInfo
 	return "", nil
 }
 
-func identifyWindowByPid(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByPid(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	if winInfo.pid > 10 {
 		logger.Debugf("identifyWindowByPid: pid: %d", winInfo.pid)
 		entry := m.Entries.GetByWindowPid(winInfo.pid)
@@ -154,7 +124,7 @@ func identifyWindowByPid(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
 	return "", nil
 }
 
-func identifyWindowByGtkAppId(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByGtkAppId(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	gtkAppId := winInfo.gtkAppId
 	logger.Debugf("identifyWindowByGtkAppId: gtkAppId: %q", gtkAppId)
 	if gtkAppId != "" {
@@ -168,7 +138,7 @@ func identifyWindowByGtkAppId(m *Manager, winInfo *XWindowInfo) (string, *AppInf
 	return "", nil
 }
 
-func identifyWindowByFlatpakAppID(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByFlatpakAppID(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	flatpakRef := winInfo.flatpakAppID
 	logger.Debugf("identifyWindowByFlatpakAppID: flatpak ref is %q", flatpakRef)
 	if strings.HasPrefix(flatpakRef, "app/") {
@@ -232,7 +202,7 @@ var crxAppIdMap = map[string]string{
 	"crx_ohcknkkbjmgdfcejpbmhjbohnepcagkc": "apps.com.douban.radio",
 }
 
-func identifyWindowByCrxId(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByCrxId(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	if winInfo.wmClass != nil &&
 		strings.EqualFold(winInfo.wmClass.Class, "chromium-browser") &&
 		strings.HasPrefix(winInfo.wmClass.Instance, "crx_") {
@@ -251,7 +221,7 @@ func identifyWindowByCrxId(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) 
 	return "", nil
 }
 
-func identifyWindowByPidEnv(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByPidEnv(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	pid := winInfo.pid
 	process := winInfo.process
 	if process != nil && pid != 0 {
@@ -290,7 +260,7 @@ func identifyWindowByPidEnv(m *Manager, winInfo *XWindowInfo) (string, *AppInfo)
 	return "", nil
 }
 
-func identifyWindowByRule(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByRule(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	ret := m.windowPatterns.Match(winInfo)
 	if ret == "" {
 		return "", nil
@@ -319,7 +289,7 @@ func identifyWindowByRule(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
 	return "", nil
 }
 
-func identifyWindowByWmClass(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByWmClass(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	if winInfo.wmClass != nil {
 		instance := winInfo.wmClass.Instance
 		if instance != "" {
@@ -350,9 +320,9 @@ func identifyWindowByWmClass(m *Manager, winInfo *XWindowInfo) (string, *AppInfo
 	return "", nil
 }
 
-func identifyWindowByBamf(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByBamf(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	// bamf
-	win := winInfo.xid
+	win := winInfo.window
 	desktop, err := getDesktopFromWindowByBamf(win)
 	if err != nil {
 		logger.Warning(err)
@@ -369,7 +339,7 @@ func identifyWindowByBamf(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
 	return "", nil
 }
 
-func identifyWindowByCmdlineXWalk(m *Manager, winInfo *XWindowInfo) (string, *AppInfo) {
+func identifyWindowByCmdlineXWalk(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	process := winInfo.process
 	if process == nil || winInfo.pid == 0 {
 		return "", nil

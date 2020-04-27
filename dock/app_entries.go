@@ -169,7 +169,7 @@ func (entries *AppEntries) GetByWindowPid(pid uint) *AppEntry {
 	for _, entry := range entries.items {
 		entry.PropsMu.RLock()
 		for _, winInfo := range entry.windows {
-			if winInfo.getPid() == pid {
+			if winInfo.pid == pid {
 				foundPid = true
 				break
 			}

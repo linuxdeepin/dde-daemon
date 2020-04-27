@@ -23,7 +23,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	"sync"
 	"time"
 
@@ -64,19 +63,16 @@ type Manager struct {
 	syncConfig         *dsync.Config
 	clientList         windowSlice
 	clientListInited   bool
-	windowInfoMap      map[x.Window]*XWindowInfo
+	windowInfoMap      map[x.Window]*WindowInfo
 	windowInfoMapMutex sync.RWMutex
 	settings           *gio.Settings
 	appearanceSettings *gio.Settings
 	pluginSettings     *pluginSettingsStorage
 
-	rootWindow x.Window
-
-	activeWindow    WindowInfo
-	activeWindowOld WindowInfo
+	rootWindow      x.Window
+	activeWindow    x.Window
+	activeWindowOld x.Window
 	activeWindowMu  sync.Mutex
-
-	waylandManager *WaylandManager
 
 	ddeLauncherVisible   bool
 	ddeLauncherVisibleMu sync.Mutex
@@ -97,9 +93,7 @@ type Manager struct {
 	appsObj      *libApps.Apps
 	startManager *sessionmanager.StartManager
 	wmSwitcher   *wmswitcher.WMSwitcher
-	waylandWM    *kwayland.WindowManager
-
-	wmName string
+	wmName       string
 
 	signals *struct {
 		ServiceRestarted struct{}
@@ -136,8 +130,6 @@ type Manager struct {
 		GetPluginSettings         func() `out:"jsonStr"`
 		MergePluginSettings       func() `in:"jsonStr"`
 		RemovePluginSettings      func() `in:"key1,key2List"`
-		DebugRegisterWW           func() `in:"winId"`
-		DebugSetActiveWindow      func() `in:"winId"`
 	}
 }
 
@@ -207,54 +199,11 @@ func (m *Manager) launch(desktopFile string, timestamp uint32, files []string) {
 	}
 }
 
-func (m *Manager) findWindowByXidX(win x.Window) (winInfo WindowInfo) {
-	m.windowInfoMapMutex.RLock()
-	winInfo, ok := m.windowInfoMap[win]
-	m.windowInfoMapMutex.RUnlock()
-	if ok {
-		return winInfo
-	}
-	return nil
-}
-
-func (m *Manager) findXWindowInfo(win x.Window) *XWindowInfo {
-	m.windowInfoMapMutex.RLock()
-	winInfo := m.windowInfoMap[win]
-	m.windowInfoMapMutex.RUnlock()
-	return winInfo
-}
-
-func (m *Manager) findWindowByXidK(win x.Window) (winInfo WindowInfo) {
-	m.waylandManager.mu.Lock()
-	for _, winInfo0 := range m.waylandManager.windows {
-		if winInfo0.getXid() == win {
-			m.waylandManager.mu.Unlock()
-			return winInfo0
-		}
-	}
-	m.waylandManager.mu.Unlock()
-	return nil
-}
-
-func (m *Manager) findWindowByXid(win x.Window) (winInfo WindowInfo) {
-	winInfo = m.findWindowByXidX(win)
-	if winInfo != nil {
-		return
-	}
-
-	return m.findWindowByXidK(win)
-}
-
 // ActivateWindow会激活给定id的窗口，被激活的窗口通常会成为焦点窗口。
 func (m *Manager) ActivateWindow(win uint32) *dbus.Error {
-	winInfo := m.findWindowByXid(x.Window(win))
-	if winInfo == nil {
-		return dbusutil.ToError(fmt.Errorf("not found window %d", win))
-	}
-
-	err := winInfo.activate()
+	err := activateWindow(x.Window(win))
 	if err != nil {
-		logger.Warningf("failed to activate window %d: %v", win, err)
+		logger.Warning("Activate window failed:", err)
 		return dbusutil.ToError(err)
 	}
 	return nil
@@ -262,14 +211,9 @@ func (m *Manager) ActivateWindow(win uint32) *dbus.Error {
 
 // CloseWindow会将传入id的窗口关闭。
 func (m *Manager) CloseWindow(win uint32) *dbus.Error {
-	winInfo := m.findWindowByXid(x.Window(win))
-	if winInfo == nil {
-		return dbusutil.ToError(fmt.Errorf("not found window %d", win))
-	}
-
-	err := winInfo.close(0)
+	err := closeWindow(x.Window(win), 0)
 	if err != nil {
-		logger.Warningf("failed to close window %d: %v", win, err)
+		logger.Warning("Close window failed:", err)
 		return dbusutil.ToError(err)
 	}
 	return nil
@@ -463,9 +407,8 @@ func (m *Manager) QueryWindowIdentifyMethod(wid uint32) (string, *dbus.Error) {
 	for _, entry := range m.Entries.items {
 		winInfo, ok := entry.windows[x.Window(wid)]
 		if ok {
-			appInfo := winInfo.getAppInfo()
-			if appInfo != nil {
-				return appInfo.identifyMethod, nil
+			if winInfo.appInfo != nil {
+				return winInfo.appInfo.identifyMethod, nil
 			} else {
 				return "Failed", nil
 			}

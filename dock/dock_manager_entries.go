@@ -59,43 +59,28 @@ func (m *Manager) markAppLaunched(appInfo *AppInfo) {
 	}()
 }
 
-func (m *Manager) shouldShowOnDock(winInfo WindowInfo) bool {
-	switch winInfo.(type) {
-	case *XWindowInfo:
-		win := winInfo.getXid()
-		isReg := m.isWindowRegistered(win)
-		clientListContains := m.clientList.Contains(win)
-		shouldSkip := winInfo.shouldSkip()
-		isGood := isGoodWindow(win)
-		logger.Debugf("isReg: %v, client list contains: %v, shouldSkip: %v, isGood: %v",
-			isReg, clientListContains, shouldSkip, isGood)
+func (m *Manager) attachOrDetachWindow(winInfo *WindowInfo) {
+	win := winInfo.window
 
-		showOnDock := isReg && clientListContains && isGood && !shouldSkip
-		return showOnDock
+	isReg := m.isWindowRegistered(win)
+	clientListContains := m.clientList.Contains(win)
+	shouldSkip := winInfo.shouldSkip()
+	isGood := isGoodWindow(win)
+	logger.Debugf("isReg: %v, client list contains: %v, shouldSkip: %v, isGood: %v",
+		isReg, clientListContains, shouldSkip, isGood)
 
-	case *KWindowInfo:
-		return !winInfo.shouldSkip()
-	default:
-		return false
-	}
-}
-
-func (m *Manager) attachOrDetachWindow(winInfo WindowInfo) {
-	win := winInfo.getXid()
-	showOnDock := m.shouldShowOnDock(winInfo)
+	showOnDock := isReg && clientListContains && isGood && !shouldSkip
 	logger.Debugf("win %v showOnDock? %v", win, showOnDock)
-	entry := winInfo.getEntry()
+	entry := winInfo.entry
 	if entry != nil {
 		if !showOnDock {
 			m.detachWindow(winInfo)
 		}
 	} else {
 
-		if winInfo.getEntryInnerId() == "" {
-			entryInnerId, appInfo := m.identifyWindow(winInfo)
-			winInfo.setEntryInnerId(entryInnerId)
-			winInfo.setAppInfo(appInfo)
-			m.markAppLaunched(appInfo)
+		if winInfo.entryInnerId == "" {
+			winInfo.entryInnerId, winInfo.appInfo = m.identifyWindow(winInfo)
+			m.markAppLaunched(winInfo.appInfo)
 		} else {
 			logger.Debugf("win %v identified", win)
 		}
@@ -118,6 +103,7 @@ func (m *Manager) initClientList() {
 	for _, win := range winSlice {
 		m.registerWindow(win)
 	}
+	m.clientListInited = true
 }
 
 func (m *Manager) initDockedApps() {
@@ -159,14 +145,14 @@ func (m *Manager) removeAppEntry(e *AppEntry) {
 	m.Entries.Remove(e)
 }
 
-func (m *Manager) attachWindow(winInfo WindowInfo) {
-	entry := m.Entries.GetByInnerId(winInfo.getEntryInnerId())
+func (m *Manager) attachWindow(winInfo *WindowInfo) {
+	entry := m.Entries.GetByInnerId(winInfo.entryInnerId)
 
 	if entry != nil {
 		// existed
 		entry.attachWindow(winInfo)
 	} else {
-		entry = newAppEntry(m, winInfo.getEntryInnerId(), winInfo.getAppInfo())
+		entry = newAppEntry(m, winInfo.entryInnerId, winInfo.appInfo)
 		ok := entry.attachWindow(winInfo)
 		if ok {
 			err := m.exportAppEntry(entry)
@@ -177,8 +163,8 @@ func (m *Manager) attachWindow(winInfo WindowInfo) {
 	}
 }
 
-func (m *Manager) detachWindow(winInfo WindowInfo) {
-	entry := m.Entries.getByWindowId(winInfo.getXid())
+func (m *Manager) detachWindow(winInfo *WindowInfo) {
+	entry := m.Entries.getByWindowId(winInfo.window)
 	if entry == nil {
 		return
 	}

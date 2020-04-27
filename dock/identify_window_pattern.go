@@ -79,7 +79,7 @@ func loadWindowPatterns(file string) (WindowPatterns, error) {
 	return patterns, nil
 }
 
-func (patterns WindowPatterns) Match(winInfo *XWindowInfo) string {
+func (patterns WindowPatterns) Match(winInfo *WindowInfo) string {
 	for i := range patterns {
 		pattern := &patterns[i]
 		rules := pattern.ParsedRules
@@ -106,7 +106,7 @@ func (patterns WindowPatterns) Match(winInfo *XWindowInfo) string {
 	return ""
 }
 
-func parseRuleKey(winInfo *XWindowInfo, key string) string {
+func parseRuleKey(winInfo *WindowInfo, key string) string {
 	switch key {
 	case "hasPid":
 		if winInfo.process != nil && winInfo.process.hasPid {
@@ -156,7 +156,7 @@ func parseRuleKey(winInfo *XWindowInfo, key string) string {
 	return ""
 }
 
-func (rule *WindowRuleParsed) Match(winInfo *XWindowInfo) bool {
+func (rule *WindowRuleParsed) Match(winInfo *WindowInfo) bool {
 	keyParsed := parseRuleKey(winInfo, rule.Key)
 	fn := rule.ValueParsed.Fn
 	if fn == nil {

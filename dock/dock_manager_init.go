@@ -23,7 +23,6 @@ import (
 	"time"
 
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
 	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.launcher"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
@@ -57,8 +56,6 @@ func (m *Manager) initEntries() {
 		}()
 	}
 	m.initClientList()
-	m.initWaylandWindows()
-	m.clientListInited = true
 }
 
 func (m *Manager) connectSettingKeyChanged(key string, handler func(key string)) {
@@ -206,7 +203,7 @@ func (m *Manager) init() error {
 
 	m.listenSettingsChanged()
 
-	m.windowInfoMap = make(map[x.Window]*XWindowInfo)
+	m.windowInfoMap = make(map[x.Window]*WindowInfo)
 	m.windowPatterns, err = loadWindowPatterns(windowPatternsFile)
 	if err != nil {
 		logger.Warning("loadWindowPatterns failed:", err)
@@ -224,13 +221,10 @@ func (m *Manager) init() error {
 	m.ddeLauncher = libDDELauncher.NewLauncher(sessionBus)
 	m.startManager = sessionmanager.NewStartManager(sessionBus)
 	m.wmSwitcher = wmswitcher.NewWMSwitcher(sessionBus)
-	m.waylandWM = kwayland.NewWindowManager(sessionBus)
-	m.waylandManager = newWaylandManager()
 	m.sessionSigLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)
 	m.sessionSigLoop.Start()
 	m.listenLauncherSignal()
 	m.listenWMSwitcherSignal()
-	m.listenWaylandWMSignals()
 
 	m.registerIdentifyWindowFuncs()
 	m.initEntries()

@@ -98,7 +98,7 @@ func createScratchDesktopFileWithAppEntry(entry *AppEntry) (string, error) {
 	if entry.current == nil {
 		return "", errors.New("entry.current is nil")
 	}
-	appId := entry.current.getInnerId()
+	appId := entry.current.innerId
 	title := entry.current.getDisplayName()
 	// icon
 	icon := entry.current.getIcon()
@@ -228,12 +228,12 @@ func (m *Manager) undockEntry(entry *AppEntry) {
 			if strings.HasPrefix(filepath.Base(desktop), windowHashPrefix) {
 				// desktop base starts with w:
 				// 由于有 Pid 识别方法在，在这里不能用 m.identifyWindow 再次识别
-				entry.innerId = entry.current.getInnerId()
+				entry.innerId = entry.current.innerId
 				entry.setAppInfo(nil)
 			} else {
 				// desktop base starts with d:
 				var newAppInfo *AppInfo
-				logger.Debug("re-identify window", entry.current.getInnerId())
+				logger.Debug("re-identify window", entry.current.innerId)
 				entry.innerId, newAppInfo = m.identifyWindow(entry.current)
 				entry.setAppInfo(newAppInfo)
 			}
