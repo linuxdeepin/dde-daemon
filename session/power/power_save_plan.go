@@ -21,16 +21,13 @@ package power
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 	"sync"
 	"time"
 
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
-	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/gsettings"
 	"pkg.deepin.io/lib/procfs"
 )
@@ -422,25 +419,6 @@ func (psp *powerSavePlan) shouldPreventIdle() (bool, error) {
 	activeWin, err := ewmh.GetActiveWindow(conn).Reply(conn)
 	if err != nil {
 		return false, err
-	}
-	if activeWin == 0 && len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
-		logger.Debug("In wayland, try kwayland interface...")
-		wm := kwayland.NewWindowManager(psp.manager.service.Conn())
-		aw, err := wm.ActiveWindow(0)
-		if err != nil {
-			logger.Warning("Failed to get active window from wayland:", err)
-			return false, err
-		}
-		if aw == 0 {
-			return false, nil
-		}
-		win, err := kwayland.NewWindow(psp.manager.service.Conn(),
-			dbus.ObjectPath(fmt.Sprintf("/com/deepin/daemon/KWayland/PlasmaWindow_%d", aw)))
-		if err != nil {
-			logger.Warning("Failed to new window from wayland:", aw, err)
-			return false, err
-		}
-		return win.IsFullscreen(0)
 	}
 
 	isFullscreenAndFocused, err := psp.isWindowFullScreenAndFocused(activeWin)
