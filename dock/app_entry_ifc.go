@@ -74,7 +74,6 @@ func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 				}
 			}
 		}
-
 	} else {
 		err = winInfo.activate()
 	}
