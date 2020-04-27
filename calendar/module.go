@@ -99,7 +99,6 @@ func (m *Module) start() error {
 		}
 	}
 
-	initPredefinedJobTypes()
 	service := loader.GetService()
 	m.scheduler = newScheduler(db, service)
 
