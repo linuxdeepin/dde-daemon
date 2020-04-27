@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"strings"
 	"sync"
