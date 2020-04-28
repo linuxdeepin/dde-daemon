@@ -22,6 +22,7 @@ package inputdevices
 import (
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
+	"time"
 )
 
 //go:generate dbusutil-gen -type Keyboard,Mouse,Touchpad,TrackPoint,Wacom keyboard.go mouse.go touchpad.go trackpoint.go wacom.go
@@ -53,7 +54,16 @@ func HandlePrepareForSleep(sleep bool) {
 		return
 	}
 
-	_manager.kbd.init()
+	// fixed repeat not work after suspend wakeup in wayland
+	var repeat = _manager.kbd.RepeatEnabled.Get()
+	if !repeat {
+		return
+	}
+	go func(enabled bool) {
+		_manager.kbd.doApplyRepeat(!enabled)
+		time.Sleep(time.Second * 3)
+		_manager.kbd.doApplyRepeat(enabled)
+	}(repeat)
 }
 
 func (*Daemon) GetDependencies() []string {

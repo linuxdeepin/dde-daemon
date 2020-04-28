@@ -496,16 +496,20 @@ func (kbd *Keyboard) setLayoutListForAccountsUser(layoutList []string) {
 }
 
 func (kbd *Keyboard) applyRepeat() {
+	var repeat = kbd.RepeatEnabled.Get()
+	kbd.doApplyRepeat(repeat)
+}
+
+func (kbd *Keyboard) doApplyRepeat(enabled bool) {
 	var (
-		repeat   = kbd.RepeatEnabled.Get()
 		delay    = kbd.RepeatDelay.Get()
 		interval = kbd.RepeatInterval.Get()
 	)
-	err := dxinput.SetKeyboardRepeat(repeat, delay, interval)
+	err := dxinput.SetKeyboardRepeat(enabled, delay, interval)
 	if err != nil {
-		logger.Debug("failed to set repeat:", err, repeat, delay, interval)
+		logger.Debug("failed to set repeat:", err, enabled, delay, interval)
 	}
-	setWMKeyboardRepeat(repeat, delay, interval)
+	setWMKeyboardRepeat(enabled, delay, interval)
 }
 
 func applyLayout(value string) error {
