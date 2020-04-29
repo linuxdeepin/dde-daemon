@@ -142,7 +142,12 @@
 				        "audio/x-ogg",
 				        "audio/x-flac",
 				        "application/x-flac",
-				        "audio/flac"
+				        "audio/flac",
+					"audio/wma",
+					"audio/aac",
+					"audio/AMR",
+					"audio/x-aac",
+					"audio/x-MR"
 			      ]
 		    },
 		    {
