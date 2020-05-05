@@ -44,11 +44,14 @@ import (
 	_ "pkg.deepin.io/dde/daemon/launcher"
 	_ "pkg.deepin.io/dde/daemon/service_trigger"
 
+	_ "pkg.deepin.io/dde/daemon/inputdevices"
+
 	_ "pkg.deepin.io/dde/daemon/clipboard"
+
+	// needs inputdevices for signal listen
 	_ "pkg.deepin.io/dde/daemon/keybinding"
 
 	_ "pkg.deepin.io/dde/daemon/appearance"
-	_ "pkg.deepin.io/dde/daemon/inputdevices"
 
 	_ "pkg.deepin.io/dde/daemon/gesture"
 	_ "pkg.deepin.io/dde/daemon/housekeeping"

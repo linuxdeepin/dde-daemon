@@ -207,6 +207,13 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		}
 	}
 
+	return &m, nil
+}
+
+func (m *Manager) init() {
+	sessionBus := m.service.Conn()
+	sysBus, _ := dbus.SystemBus()
+
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
 	m.gsMediaKey = gio.NewSettings(gsSchemaMediaKey)
@@ -215,9 +222,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.shortcutManager.AddSpecial()
 	m.shortcutManager.AddSystem(m.gsSystem)
 	m.shortcutManager.AddMedia(m.gsMediaKey)
-
 	m.wm = wm.NewWm(sessionBus)
-
 	if shouldUseDDEKwin() {
 		m.shortcutManager.AddKWin(m.wm)
 	} else {
@@ -225,13 +230,18 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		m.shortcutManager.AddWM(m.gsGnomeWM)
 	}
 
+	// init custom shortcuts
 	customConfigFilePath := filepath.Join(basedir.GetUserConfigDir(), customConfigFile)
 	m.customShortcutManager = shortcuts.NewCustomShortcutManager(customConfigFilePath)
 	m.shortcutManager.AddCustom(m.customShortcutManager)
 
+	// init controllers
 	m.backlightHelper = backlight.NewBacklight(sysBus)
 	m.audioController = NewAudioController(sessionBus, m.backlightHelper)
 	m.mediaPlayerController = NewMediaPlayerController(m.systemSigLoop, sessionBus)
+	m.displayController = NewDisplayController(m.backlightHelper, sessionBus)
+	m.kbdLightController = NewKbdLightController(m.backlightHelper)
+	m.touchPadController = NewTouchPadController(sessionBus)
 
 	m.startManager = sessionmanager.NewStartManager(sessionBus)
 	m.keyboard = inputdevices.NewKeyboard(sessionBus)
@@ -247,11 +257,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		}
 	})
 
-	m.displayController = NewDisplayController(m.backlightHelper, sessionBus)
-	m.kbdLightController = NewKbdLightController(m.backlightHelper)
-	m.touchPadController = NewTouchPadController(sessionBus)
-
-	return &m, nil
+	m.initHandlers()
 }
 
 func (m *Manager) destroy() {

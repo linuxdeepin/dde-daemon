@@ -80,7 +80,7 @@ func (d *Daemon) Start() error {
 
 	go func() {
 		m := d.manager
-		m.initHandlers()
+		m.init()
 
 		// listen gsettings changed event
 		m.listenGSettingsChanged(gsSchemaSystem, d.manager.gsSystem, shortcuts.ShortcutTypeSystem)
