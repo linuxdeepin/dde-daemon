@@ -73,7 +73,7 @@ func (m *Manager) SetNTP(useNTP bool) *dbus.Error {
 	if err != nil {
 		logger.Debug("SetNTP failed:", err)
 	}
-
+	m.UseAutoSet.Set(useNTP)
 	return dbusutil.ToError(err)
 }
 
