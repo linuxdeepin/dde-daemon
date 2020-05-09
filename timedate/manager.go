@@ -40,7 +40,6 @@ const (
 	settingsKey24Hour       = "is-24hour"
 	settingsKeyTimezoneList = "user-timezone-list"
 	settingsKeyDSTOffset    = "dst-offset"
-	settingsKeyAutoSet      = "is-auto-set"
 
 	dbusServiceName = "com.deepin.daemon.Timedate"
 	dbusPath        = "/com/deepin/daemon/Timedate"
@@ -71,8 +70,6 @@ type Manager struct {
 	DSTOffset gsprop.Int `prop:"access:rw"`
 	// User added timezone list
 	UserTimezones gsprop.Strv
-	// Use Auto Set
-	UseAutoSet gsprop.Bool `prop:"access:rw"`
 
 	settings *gio.Settings
 	td       *timedate1.Timedate
@@ -113,9 +110,7 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	m.Use24HourFormat.Bind(m.settings, settingsKey24Hour)
 	m.DSTOffset.Bind(m.settings, settingsKeyDSTOffset)
 	m.UserTimezones.Bind(m.settings, settingsKeyTimezoneList)
-	m.UseAutoSet.Bind(m.settings, settingsKeyAutoSet)
 
-	m.NTP = m.UseAutoSet.Get()
 	return m, nil
 }
 
