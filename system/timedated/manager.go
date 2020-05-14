@@ -23,8 +23,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"sync"
 
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
@@ -71,19 +69,6 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	server, err := getNTPServer()
 	if err != nil {
 		logger.Warning(err)
-	}
-	timeDateSchema := "com.deepin.dde.datetime"
-	settings := gio.NewSettings(timeDateSchema)
-	var isFirstBootProp gsprop.Bool
-	isFirstBootProp.Bind(settings, "is-first-boot")
-	isFirstBoot := isFirstBootProp.Get()
-	if isFirstBoot { // first boot
-		err = core.SetNTP(0, true, false)
-		if err != nil {
-			logger.Error(err)
-		}
-		isFirstBootProp.Set(false)
-		gio.SettingsSync()
 	}
 
 	return &Manager{
