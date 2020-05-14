@@ -70,6 +70,25 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		logger.Warning(err)
 	}
+	/*
+		timeDateSchema := "com.deepin.dde.datetime"
+		settings := gio.NewSettings(timeDateSchema)
+		var isFirstBootProp gsprop.Bool
+		isFirstBootProp.Bind(settings, "is-first-boot")
+		isFirstBoot := isFirstBootProp.Get()
+		if isFirstBoot { // first boot
+			err = core.SetNTP(0, true, false)
+			if err != nil {
+				logger.Error(err)
+			}
+			isFirstBootProp.Set(false)
+			gio.SettingsSync()
+		}
+	*/
+	err = core.SetNTP(0, true, false)
+	if err != nil {
+		logger.Error(err)
+	}
 
 	return &Manager{
 		core:      core,
