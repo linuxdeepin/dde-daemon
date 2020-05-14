@@ -20,10 +20,12 @@
 package timedated
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
+	"syscall"
 
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
@@ -70,22 +72,7 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		logger.Warning(err)
 	}
-	/*
-		timeDateSchema := "com.deepin.dde.datetime"
-		settings := gio.NewSettings(timeDateSchema)
-		var isFirstBootProp gsprop.Bool
-		isFirstBootProp.Bind(settings, "is-first-boot")
-		isFirstBoot := isFirstBootProp.Get()
-		if isFirstBoot { // first boot
-			err = core.SetNTP(0, true, false)
-			if err != nil {
-				logger.Error(err)
-			}
-			isFirstBootProp.Set(false)
-			gio.SettingsSync()
-		}
-	*/
-	err = core.SetNTP(0, true, false)
+	err = startNTPbyFirstBoot(core)
 	if err != nil {
 		logger.Error(err)
 	}
@@ -95,6 +82,38 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 		service:   service,
 		NTPServer: server,
 	}, nil
+}
+
+func startNTPbyFirstBoot(core *timedate1.Timedate) error {
+	filePath := "/var/lib/dde-daemon/firstBootFile"
+	err := syscall.Access(filePath, syscall.F_OK)
+	if err != nil {
+		err = core.SetNTP(0, true, false)
+		if err != nil {
+			logger.Error(err)
+		}
+		logger.Error(err)
+		file, e := os.OpenFile(filePath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0666)
+		if e != nil {
+			logger.Error("文件创建失败！！", e)
+			return e
+		}
+		writer := bufio.NewWriter(file)
+		_, e = writer.Write([]byte("This system first boot complete, do not delete this file\n"))
+		if e != nil {
+			logger.Error("内容写入缓冲区失败！！", e)
+			return e
+		}
+		e = writer.Flush()
+		if e != nil {
+			logger.Error("内容刷入文件失败！！", e)
+			return e
+		}
+
+	} else {
+		logger.Info("file exist")
+	}
+	return nil
 }
 
 func (*Manager) GetInterfaceName() string {
