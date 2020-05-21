@@ -106,6 +106,13 @@ func doHandleKWinDeviceRemoved(sysName string) {
 		}
 		minfos = append(minfos, tmp)
 	}
+	for i:=0;i<len(devInfos);i++ {
+		if devInfos[i].Id == int32(id) {
+			devInfos = append(devInfos[:i],devInfos[i+1:]...)
+			logger.Debug("update devInfos id=",id)
+			break
+		}
+	}
 	if changed {
 		logger.Debug("[Device Removed] mouse:", sysName, minfos)
 		mouseInfos = minfos
