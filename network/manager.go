@@ -93,9 +93,9 @@ type Manager struct {
 	sessionSigLoop *dbusutil.SignalLoop
 	syncConfig     *dsync.Config
 
-	activeConnectDevpath 	 dbus.ObjectPath
-	activeConnectUuid 		 string
-	activeConnectSettingPath dbus.ObjectPath
+	ActiveConnectDevpath 	 dbus.ObjectPath
+	ActiveConnectUuid 		 string
+	ActiveConnectSettingPath dbus.ObjectPath
 
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {

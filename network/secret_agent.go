@@ -593,8 +593,8 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 				settingName, askItems, requestNew)
 			if err != nil {
 				logger.Warning("askPasswords error:", err)
-				if sa.m.activeConnectSettingPath == connectionPath {
-					return nil, errSecretAgentUserCanceled
+				if sa.m.ActiveConnectSettingPath == connectionPath {
+					sa.m.DisconnectDevice(sa.m.ActiveConnectDevpath)
 				}
 			} else {
 				for key, value := range resultAsk {
