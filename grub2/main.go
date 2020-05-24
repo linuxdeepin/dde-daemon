@@ -62,7 +62,7 @@ func RunAsDaemon() {
 		logger.Fatal("failed to request name:", err)
 	}
 
-	service.SetAutoQuitHandler(5*time.Minute, _g.canSafelyExit)
+	service.SetAutoQuitHandler(2*time.Minute, _g.canSafelyExit)
 	service.Wait()
 }
 

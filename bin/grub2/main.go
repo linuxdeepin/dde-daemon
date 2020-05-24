@@ -23,6 +23,8 @@ import (
 	"flag"
 	"os"
 
+	"os/exec"
+
 	"pkg.deepin.io/dde/daemon/grub2"
 	"pkg.deepin.io/lib/log"
 )
@@ -52,6 +54,20 @@ func main() {
 	if optDebug {
 		logger.SetLogLevel(log.LevelDebug)
 	}
+
+	// fix os /boot firm in huawei
+	// TODO(jouyouyun): detect whether /boot mount as ro
+	outs, err := exec.Command("/bin/sh", "-c", "mount -o rw,remount /boot").CombinedOutput()
+	if err != nil {
+		logger.Warning("Failed to remount /boot to rw:", string(outs), err)
+		os.Exit(2)
+	}
+	defer func() {
+		outs, err := exec.Command("/bin/sh", "-c", "mount -o ro,remount /boot").CombinedOutput()
+		if err != nil {
+			logger.Warning("Failed to remount /boot to ro:", string(outs), err)
+		}
+	}()
 
 	if optPrepareGfxmodeDetect {
 		logger.Debug("mode: prepare gfxmode detect")
