@@ -64,7 +64,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!message" line="0"/>
 			<source>Authentication is required to set keyboard layout</source>
-			<translation>Se requiere autenticación para establecer el diseño del teclado</translation>
+			<translation>Se requiere autenticación para establecer la distribución del teclado</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!description" line="0"/>

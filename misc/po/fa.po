@@ -1,18 +1,29 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Alik Miankoli <alikmiankoliid@gmail.com>, 2016
-# AmirHosein Lesani <xenups@outlook.com>, 2019
+# Hootan Baraary <h.baraary@yahoo.com>, 2020
+# pej A, 2020
+# Amir Dadash <dadashamir25@gmail.com>, 2020
+# mohammad raufzahed <mohammadraufzahed1389@gmail.com>, 2020
+# Hadi Kamell <beemeyl@gmail.com>, 2020
+# Maahyar Motevakel <mahyar.motevakel@gmail.com>, 2020
+# Alik Miankoli <alikmiankoliid@gmail.com>, 2020
+# Cindy0514, 2020
+# AmirHosein Lesani <xenups@outlook.com>, 2020
+# amirhosein lesani <xenups@gmail.com>, 2020
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Deepin Desktop Environment\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 10:32+0800\n"
-"PO-Revision-Date: 2019-11-13 03:52+0000\n"
-"Last-Translator: transifex deepin <transifex@deepin.com>\n"
-"Language-Team: Persian (http://www.transifex.com/linuxdeepin/deepin-desktop-environment/language/fa/)\n"
+"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"PO-Revision-Date: 2020-05-28 08:30+0000\n"
+"Last-Translator: amirhosein lesani <xenups@gmail.com>, 2020\n"
+"Language-Team: Persian (https://www.transifex.com/linuxdeepin/teams/3617/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,53 +38,51 @@ msgstr "لطفاً یک گذرواژه که کمتر از 8 نویسه نباش�
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "گذرواژه باید حاوی حروف انگلیسی ( حساس به حالت ) , اعداد یا نمادهای خاص باشد ( ~ ! @ # % ^ * * ( ) { } ^ * ? , . < >)"
+msgstr ""
+"رمزعبور باید حاوی حروف انگلیسی ( حساس به حالت ) , اعداد یا نمادهای خاص باشد "
+"(~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts/checkers/username.go:63
 msgid "Username cannot be empty"
 msgstr "نام کاربری نمیتواند خالی باشد."
 
-#: ../../accounts/checkers/username.go:65
-msgid "Username must only contain a~z, 0~9, - or _"
-msgstr "نام کاربر باید فقط حاوی  a~z, 0~9, - or _ باشد ."
+#: ../../accounts/checkers/username.go:68
+msgid "The first character must be a letter or number"
+msgstr ""
 
-#: ../../accounts/checkers/username.go:67
-msgid "The first character must be in lower case"
-msgstr "حرف اول باید با حروف کوچک نوشته شود."
-
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:70
 msgid "The username already exists"
 msgstr "این نام کاربری  از قبل وجود دارد"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username has been used by system"
 msgstr "نام کاربری توسط سیستم استفاده شده است."
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:74
 msgid "Username must be between 3 and 32 characters"
 msgstr "نام کاربری باید بین 3 تا 32 نویسه باشد"
 
-#: ../../appearance/scale.go:61
+#: ../../appearance/scale.go:66
 msgid "Set successfully"
 msgstr "با موفقیت تنظیم شد"
 
-#: ../../appearance/scale.go:62
+#: ../../appearance/scale.go:67
 msgid "Please log back in to view the changes"
 msgstr "لطفاً برای مشاهده تغییرات وارد سیستم شوید"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:74
 msgid "Display scaling"
 msgstr "نمایش مقیاس"
 
-#: ../../appearance/scale.go:67
+#: ../../appearance/scale.go:75
 msgid "Setting display scaling"
 msgstr "تنظیم نمایش مقیاس"
 
-#: ../../bin/dde-authority/fprint_transaction.go:20
+#: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr "تأیید اثر انگشت انجام نشد"
 
-#: ../../bin/dde-authority/fprint_transaction.go:21
+#: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
 msgstr "تایید اثر انگشت منقضی شد "
 
@@ -125,96 +134,96 @@ msgstr "دسترسی پیام"
 msgid "Message notification"
 msgstr "مدیریت اعلان"
 
-#: ../../bluetooth/utils_notify.go:52 ../../network/utils_notify.go:107
-msgid "Connected"
-msgstr "متصل شد"
+#: ../../bluetooth/utils_notify.go:69
+msgid "Connect %q successfully"
+msgstr "اتصال %q با موفقیت انجام شد"
 
-#: ../../bluetooth/utils_notify.go:55 ../../network/utils_notify.go:80
-#: ../../network/utils_notify.go:84 ../../network/utils_notify.go:88
-#: ../../network/utils_notify.go:92 ../../network/utils_notify.go:110
-#: ../../network/utils_notify.go:113 ../../network/utils_notify.go:202
+#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
+#: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
+#: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
-msgstr "اتصال قطع شد"
+msgstr "قطع اتصال"
 
-#: ../../bluetooth/utils_notify.go:59
+#: ../../bluetooth/utils_notify.go:77
 msgid "Make sure %q is turned on and in range"
 msgstr "اطمینان حاصل کنید که %q روشن و در دامنه است"
 
-#: ../../bluetooth/utils_notify.go:64
-msgid "Failed to connect %q, pairing failed"
-msgstr "اتصال %q انجام نشد ، جفت شدن انجام نشد"
-
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:82
 msgid "Bluetooth connection failed"
 msgstr "اتصال  بلوتوث ناموفق بود"
 
-#: ../../calendar/job.go:413 ../../calendar/job.go:420
+#: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
 msgstr "امروز"
 
-#: ../../calendar/job.go:415 ../../calendar/job.go:422
+#: ../../calendar/job.go:510 ../../calendar/job.go:517
 msgid "tomorrow"
 msgstr "فردا"
 
-#: ../../calendar/job.go:435
+#: ../../calendar/job.go:530
 #, c-format
 msgid "%s to %s"
 msgstr "%s به %s"
 
-#: ../../calendar/module.go:126
+#: ../../calendar/module.go:127 ../../calendar/type.go:25
 msgid "Work"
 msgstr "کار"
 
-#: ../../calendar/module.go:127
+#: ../../calendar/module.go:128 ../../calendar/type.go:30
 msgid "Life"
 msgstr "زندگی"
 
-#: ../../calendar/module.go:128
+#: ../../calendar/module.go:129 ../../calendar/type.go:35
 msgid "Other"
 msgstr "سایر"
 
-#: ../../calendar/scheduler.go:477
+#: ../../calendar/scheduler.go:489
 msgid "One day before start"
 msgstr "یک روز قبل از شروع"
 
-#: ../../calendar/scheduler.go:478 ../../calendar/scheduler.go:483
-#: ../../calendar/scheduler.go:491 ../../calendar/scheduler.go:495
+#: ../../calendar/scheduler.go:490 ../../calendar/scheduler.go:495
+#: ../../calendar/scheduler.go:503 ../../calendar/scheduler.go:507
 msgid "Close"
 msgstr "بستن"
 
-#: ../../calendar/scheduler.go:482
+#: ../../calendar/scheduler.go:494
 msgid "Remind me tomorrow"
 msgstr "فردا یادم بنداز"
 
-#: ../../calendar/scheduler.go:490
+#: ../../calendar/scheduler.go:502
 msgid "Remind me later"
 msgstr "بعدا ً به من یادآوری کن"
 
-#: ../../calendar/scheduler.go:500
+#: ../../calendar/scheduler.go:512
 msgid "Schedule Reminder"
 msgstr "یادآور برنامه"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../calendar/type.go:40
+msgid "Festival"
+msgstr ""
+
+#: ../../dock/app_entry_menu.go:101
 msgid "Open"
 msgstr "باز کردن"
 
-#: ../../dock/app_entry_menu.go:107
+#: ../../dock/app_entry_menu.go:108
 msgid "Close All"
 msgstr "بستن همه"
 
-#: ../../dock/app_entry_menu.go:123
+#: ../../dock/app_entry_menu.go:124
 msgid "Force Quit"
 msgstr "خروج اجباری"
 
-#: ../../dock/app_entry_menu.go:130
+#: ../../dock/app_entry_menu.go:131
 msgid "Dock"
 msgstr "داک"
 
-#: ../../dock/app_entry_menu.go:137
+#: ../../dock/app_entry_menu.go:138
 msgid "Undock"
 msgstr "باز کردن از داک"
 
-#: ../../dock/app_entry_menu.go:144
+#: ../../dock/app_entry_menu.go:145
 msgid "All Windows"
 msgstr "همه پنجره ها"
 
@@ -224,7 +233,7 @@ msgstr "فضای دیسک کافی نیست ، لطفا به موقع تمیز �
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
-msgstr "اجرا کننده"
+msgstr "لانچر"
 
 #: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Terminal"
@@ -292,105 +301,113 @@ msgstr "دیپین پیکر"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
-msgstr ""
+msgstr "دستیار هوشمند دسکتاپ"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Text to Speech"
-msgstr ""
+msgstr "متن به گفتار"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Speech to Text"
+msgstr "گفتار به متن"
+
+#: ../../keybinding/shortcuts/id_name_map.go:48
+msgid "Clipboard"
+msgstr "کلیپ بورد"
+
+#: ../../keybinding/shortcuts/id_name_map.go:49
+msgid "Translation"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
 msgstr "تغییر صفحه کلید"
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
 msgstr "رفتن به فضای کار سمت چپ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:74
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
 msgstr "رفتن به فضای کار سمت راست"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
 msgstr "رفتن به فضای کار بالا"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
 msgstr "رفتن به فضای کار پایین"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
 msgstr "تغییر پنجره های مشابه"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
 msgstr "تعویض پنجره های مشابه بصورت معکوس"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
 msgstr "تغییر پنجره ها"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
 msgstr "تغییر پنجره ها بصورت معکوس"
 
-#: ../../keybinding/shortcuts/id_name_map.go:92
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
 msgstr "نمایش دسکتاپ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:101
+#: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
 msgstr "بزرگ کردن پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:102
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Restore window"
 msgstr "بازگردانی پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Minimize window"
 msgstr "پایین بردن پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
 msgstr "بستن پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
 msgstr "جابجایی پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
 msgstr "تغییر سایز پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:122
+#: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
 msgstr "انتقال به فضای کار سمت چپ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:123
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
 msgstr "انتقال به فضای کار سمت راست"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
 msgstr "انتقال به فضای کار بالا"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
 msgstr "انتقال به فضای کار سمت پایین"
 
-#: ../../keybinding/shortcuts/id_name_map.go:147
+#: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
 msgstr "نمایش پنجره های تمام فضاهای کار"
 
-#: ../../keybinding/shortcuts/id_name_map.go:148
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
 msgstr "نمایش پنجره های فضای کار جاری"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
 msgstr "نمایش فضای کار"
 
@@ -416,54 +433,54 @@ msgstr "در حال عوض کردن زبان سیستم ، لطفا ً صبر ک
 msgid "System language changed, please log out and then log in"
 msgstr "زبان سیستم تغییر کرده است ، لطفاً  خارج شوید و سپس دوباره وارد شوید"
 
-#: ../../lastore/check_source.go:51
-msgid "Restore"
-msgstr "بازگردانی "
-
-#: ../../lastore/check_source.go:70 ../../lastore/lastore.go:248
-msgid "Cancel"
-msgstr "انصراف"
-
-#: ../../lastore/lastore.go:240
+#: ../../lastore/lastore.go:247
 msgid "Retry"
 msgstr "سعی مجدد"
 
-#: ../../lastore/notify.go:82
+#: ../../lastore/lastore.go:255
+msgid "Cancel"
+msgstr "انصراف"
+
+#: ../../lastore/notify.go:97
 msgid "%q installed successfully."
 msgstr "%q با موفقیت نصب شد."
 
-#: ../../lastore/notify.go:85
+#: ../../lastore/notify.go:100
 msgid "%q failed to install."
 msgstr "%q نصب نشد."
 
-#: ../../lastore/notify.go:93
-msgid "%q removed successfully."
-msgstr "%q با موفقیت حذف شد."
+#: ../../lastore/notify.go:108
+msgid "Removed successfully"
+msgstr ""
 
-#: ../../lastore/notify.go:95
-msgid "%q failed to remove."
-msgstr "%q نتوانست حذف شود."
+#: ../../lastore/notify.go:110
+msgid "Failed to remove the app"
+msgstr ""
 
-#: ../../lastore/notify.go:102
+#: ../../lastore/notify.go:117
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
-msgstr "برای جلوگیری از خاموش شدن خودکار و برای بروزرسانی عادی، سیستم را به برق متصل کنید "
+msgstr ""
+"برای جلوگیری از خاموش شدن خودکار و برای بروزرسانی عادی، سیستم را به برق متصل"
+" کنید "
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:122
 msgid "Package cache wiped"
 msgstr "حافظه پنهان بسته پاک شد"
 
-#: ../../lastore/notify.go:112
+#: ../../lastore/notify.go:127
 msgid ""
 "Your system source has been modified, please restore to official source for "
 "your normal use"
-msgstr "منبع سیستم شما تغییر یافته است ، لطفاً برای استفاده عادی خود به منبع رسمی برگردید"
+msgstr ""
+"منبع سیستم شما تغییر یافته است ، لطفاً برای استفاده عادی خود به منبع رسمی "
+"برگردید"
 
-#: ../../launcher/manager_uninstall.go:69
+#: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
 msgstr "%q با موفقیت حذف شد"
 
-#: ../../launcher/manager_uninstall.go:71
+#: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q حذف انجام نشد"
 
@@ -477,12 +494,12 @@ msgstr "BG (2.4 GHz)"
 
 #: ../../network/manager_active_conn.go:322
 msgid "Automatic"
-msgstr "اتوماتیک"
+msgstr "خودکار"
 
 #: ../../network/manager_active_conn.go:333
 #: ../../network/manager_active_conn.go:338
 msgid "None"
-msgstr "هیچ کدام"
+msgstr "هیچ "
 
 #: ../../network/manager_active_conn.go:340
 msgid "WEP 40/128-bit Key"
@@ -516,7 +533,7 @@ msgstr "Tunneled TLS"
 msgid "Protected EAP"
 msgstr "Protected EAP"
 
-#: ../../network/manager_connection.go:278 ../../network/nm_custom_type.go:225
+#: ../../network/manager_connection.go:337 ../../network/nm_custom_type.go:225
 msgid "Wired Connection"
 msgstr "اتصال سیمی"
 
@@ -603,7 +620,9 @@ msgstr "دستگاه برای پیکر بندی آماده نیست."
 #: ../../network/state_handler.go:44
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr "پیکربندی IP نمی تواند محفوظ باشد (بدون آدرس ، زمان بندی و غیره در دسترس نیست)"
+msgstr ""
+"پیکربندی IP نمی تواند محفوظ باشد (بدون آدرس ، زمان بندی و غیره در دسترس "
+"نیست)"
 
 #: ../../network/state_handler.go:45
 msgid "The IP configuration is no longer valid"
@@ -796,8 +815,8 @@ msgid "ModemManager did not run or quitted unexpectedly"
 msgstr "مدیریت کننده مودم اجراء نشده یا بصورت غیر منتظره بسته شده."
 
 #: ../../network/state_handler.go:92
-msgid "The 802.11 Wi-Fi network could not be found"
-msgstr "شبکه Wi-Fi 802.11 یافت نشد"
+msgid "The 802.11 WLAN network could not be found"
+msgstr ""
 
 #: ../../network/state_handler.go:93
 msgid "A secondary connection of the base connection failed"
@@ -841,12 +860,15 @@ msgstr "کابل شبکه جدا شده."
 
 #: ../../network/state_handler.go:107
 msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr "لطفاً مطمئن شوید که سیم کارت درج شده است و دستگاه دارای  سیگنال شبکه است"
+msgstr ""
+"لطفاً مطمئن شوید که سیم کارت درج شده است و دستگاه دارای  سیگنال شبکه است"
 
 #: ../../network/state_handler.go:108
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr "لطفاً اطمینان حاصل کنید که یک طرح صحیح و بدون عقب افتادگی سیم کارت انتخاب شده است"
+msgstr ""
+"لطفاً اطمینان حاصل کنید که یک طرح صحیح و بدون عقب افتادگی سیم کارت انتخاب "
+"شده است"
 
 #: ../../network/state_handler.go:111
 msgid "Failed to activate VPN connection, reason unknown"
@@ -913,86 +935,86 @@ msgstr "هات اسپات فعال شد"
 msgid "%q connected"
 msgstr "%q متصل شده"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:325
+#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
 msgid "Hotspot disabled"
 msgstr "هات اسپات غیرفعال شد"
 
-#: ../../network/state_handler.go:327 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:331
 msgid "%q disconnected"
 msgstr "%q قطع شد"
 
-#: ../../network/state_handler.go:333
+#: ../../network/state_handler.go:337
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "اشتراک هات اسپات امکان پذیر نیست ، لطفاً تنظیمات dnsmasq را بررسی کنید"
+msgstr ""
+"اشتراک هات اسپات امکان پذیر نیست ، لطفاً تنظیمات dnsmasq را بررسی کنید"
 
-#: ../../network/state_handler.go:335
+#: ../../network/state_handler.go:339
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "اتصال %q امکان پذیر نیست ، لطفاً به روتر بی سیم نزدیک تر شوید"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please check your router or net cable."
-msgstr "اتصال %q امکان پذیر نیست ، لطفاً روتر یا کابل اینترنت خود را بررسی کنید."
+msgstr ""
+"اتصال %q امکان پذیر نیست ، لطفاً روتر یا کابل اینترنت خود را بررسی کنید."
 
-#: ../../network/state_handler.go:340
+#: ../../network/state_handler.go:344
 msgid "Password is required to connect %q"
 msgstr "برای اتصال به %q  نیاز به رمز عبور دارید"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "اتصال انجام نشد ، قادر به اتصال %q ، گذرواژه اشتباه است"
 
-#: ../../network/utils_dbus_nm.go:229
+#: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"
 msgstr "ناشناخته"
 
-#: ../../network/utils_notify.go:80
+#: ../../network/utils_notify.go:99
 msgid "You are now offline."
 msgstr "شما هم اکنون آفلاین هستید."
 
-#: ../../network/utils_notify.go:84
+#: ../../network/utils_notify.go:103
 msgid "Airplane mode enabled."
 msgstr "حالت هواپیما فعال شد."
 
-#: ../../network/utils_notify.go:92
+#: ../../network/utils_notify.go:111
 msgid "Access Point mode is not supported by this device."
 msgstr "حالت Access point توسط این دستگاه پشتیبانی نمی شود."
 
-#: ../../network/utils_notify.go:96 ../../network/utils_notify.go:100
-#: ../../network/utils_notify.go:103
+#: ../../network/utils_notify.go:115 ../../network/utils_notify.go:119
+#: ../../network/utils_notify.go:122
 msgid "Network"
 msgstr "شبکه"
 
-#: ../../network/utils_notify.go:96
+#: ../../network/utils_notify.go:115
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "کلید سخت افزاری WLAN خاموش است. لطفا آن را در صورت لزوم روشن کنید."
 
-#: ../../network/utils_notify.go:100
+#: ../../network/utils_notify.go:119
 msgid "System proxy is set successfully."
 msgstr "تنظیمات پراکسی سیستم با موفقیت انجام شد."
 
-#: ../../network/utils_notify.go:103
+#: ../../network/utils_notify.go:122
 msgid "System proxy has been cancelled."
 msgstr "تنظیم کردن  پراکسی سیستم لغو شد."
 
-#: ../../session/power/manager_events.go:151
-msgid "Battery Critically Low"
+#: ../../network/utils_notify.go:126
+msgid "Connected"
+msgstr "متصل شده"
+
+#: ../../service_trigger/msg.go:7
+#, c-format
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgstr ""
+
+#: ../../session/power/manager_events.go:184
+msgid "Battery critically low"
 msgstr "باتری بسیار کم است"
 
-#: ../../session/power/manager_events.go:152
-msgid "Computer will suspend very soon, please plug in now"
-msgstr "کامپیوتر خیلی زود به حالت تعلیق در می آید ، لطفا آن را به برق متصل کنید"
-
-#: ../../session/power/manager_events.go:175
-#: ../../session/power/manager_events.go:182
-msgid "Battery Low"
-msgstr "کمبود باتری"
-
-#: ../../session/power/manager_events.go:176
-msgid "Computer will suspend soon, please plug in"
-msgstr "کامپیوتر به زودی به حالت تعلیق در می آید ، لطفا آن را به برق متصل کنید"
-
-#: ../../session/power/manager_events.go:183
+#: ../../session/power/manager_events.go:205
+#: ../../session/power/manager_events.go:210
+#: ../../session/power/manager_events.go:215
 msgid "Battery low, please plug in"
 msgstr "باتری شما کم است ، لطفاً دستگاه را برق وصل کنید"
 
@@ -1014,7 +1036,9 @@ msgstr "برای تغییر سرور NTP احراز هویت لازم است"
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
-msgstr "احراز هویت برای کنترل اینکه آیا RTC زمان محلی و یا UTC را ذخیره کند  لازم است "
+msgstr ""
+"احراز هویت برای کنترل اینکه آیا RTC زمان محلی و یا UTC را ذخیره کند  لازم "
+"است "
 
 #: ../../timedate/manager_ifc.go:141
 msgid "Authentication is required to set the system timezone"

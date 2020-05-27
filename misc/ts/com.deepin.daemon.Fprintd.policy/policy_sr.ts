@@ -4,7 +4,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>Аутентификација је неопходна да додате отисак лозинку</translation>
+			<translation>Идентификација је неопходна да додате отисак лозинку</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!description" line="0"/>
@@ -14,7 +14,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>Аутентификација је неопходна да обришете отисак лозинку</translation>
+			<translation>Идентификација је неопходна да обришете отисак лозинку</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>

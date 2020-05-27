@@ -213,7 +213,7 @@ func (m *Manager) uninstall(id string) error {
 		logger.Warning(err)
 	}
 
-	if pkg == "" {
+	if pkg == "" || strings.Contains(pkg, "wps-office") {
 		// try again
 		pkg, err = queryPkgNameWithDpkg(item.Path)
 		if err != nil {
@@ -264,6 +264,20 @@ func (m *Manager) uninstall(id string) error {
 }
 
 func queryPkgNameWithDpkg(itemPath string) (string, error) {
+
+	// check whether it is the app of the new specification
+	fileInfo, err := os.Lstat(itemPath)
+	if err != nil {
+		return "", err
+	}
+	if strings.HasPrefix(fileInfo.Mode().String(), "L") {
+		// desktop file is symbol link
+		linkDst, err := os.Readlink(itemPath)
+		if err != nil {
+			return "", err
+		}
+		itemPath = linkDst
+	}
 	out, err := exec.Command("dpkg", "-S", itemPath).Output()
 	if err != nil {
 		return "", err

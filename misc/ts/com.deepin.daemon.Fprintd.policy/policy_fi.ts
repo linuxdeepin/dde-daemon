@@ -9,7 +9,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!description" line="0"/>
 			<source>Add fingerprint password</source>
-			<translation>Lisää sormenjälkisalasana</translation>
+			<translation>Lisää sormenjälki salasanaksi</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>

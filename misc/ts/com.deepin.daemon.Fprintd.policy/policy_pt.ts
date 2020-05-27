@@ -4,7 +4,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>A autenticação é necessária para adicionar palavra-passe de impressão digital</translation>
+			<translation>É necessária a autenticação para adicionar palavra-passe de impressão digital</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!description" line="0"/>
@@ -14,7 +14,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>A autenticação é necessária para limpar palavras-passe de impressões digitais</translation>
+			<translation>É necessária a autenticação para limpar palavras-passe de impressões digitais</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>

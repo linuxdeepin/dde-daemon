@@ -1,26 +1,36 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Kiss Zoltan <atari@freemail.hu>, 2017
-# ddabrahim <ddabrahim@googlemail.com>, 2016-2017
-# Jack Howell <jack.howell@protonmail.com>, 2018
-# Kiss Zoltan <atari@freemail.hu>, 2017
-# Laszlo Espadas, 2017
-# Lukács Péter <lukacspeter1977@gmail.com>, 2019
-# Márton András Hábele, 2019
-# ccedb894e6c246847bbbb58794dea50d, 2018
-# Reda Da <alex19930329@gmail.com>, 2017
-# Walton Henry <waltonh@mail.com>, 2017-2019
+# b1094bbfad3b29958bce7f8a2c08de92, 2020
+# vmarci21 <vmarci21@msn.com>, 2020
+# Jack Howell <jack.howell@protonmail.com>, 2020
+# ccedb894e6c246847bbbb58794dea50d, 2020
+# Kiss Zoltan <atari@freemail.hu>, 2020
+# c5c74d5c0e928622070863d16011fda8_265b1fe, 2020
+# Maggie Liu <maggie.liufei@gmail.com>, 2020
+# ddabrahim <ddabrahim@googlemail.com>, 2020
+# kdavid97 <kdavid97@gmail.hu>, 2020
+# tejeskifly <batta.daniel91@gmail.com>, 2020
+# SlazO <blum1866@gmail.com>, 2020
+# Imre Klész <eschungary@gmail.com>, 2020
+# Reda Da <alex19930329@gmail.com>, 2020
+# Walton Henry <waltonh@mail.com>, 2020
+# Cindy0514, 2020
+# hungi <lukacspeter1977@gmail.com>, 2020
+# e7b367b198a92ab3e6fd7f551a36a082, 2020
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Deepin Desktop Environment\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 10:32+0800\n"
-"PO-Revision-Date: 2019-11-13 03:52+0000\n"
-"Last-Translator: transifex deepin <transifex@deepin.com>\n"
-"Language-Team: Hungarian (http://www.transifex.com/linuxdeepin/deepin-desktop-environment/language/hu/)\n"
+"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"PO-Revision-Date: 2020-05-28 08:30+0000\n"
+"Last-Translator: e7b367b198a92ab3e6fd7f551a36a082, 2020\n"
+"Language-Team: Hungarian (https://www.transifex.com/linuxdeepin/teams/3617/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -35,53 +45,51 @@ msgstr "Adj meg egy 8 karakterből álló jelszót"
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "A jelszó nem tartalmazhat ékezeteket (de kis és nagy betűket igen), valamint számokat és speciális karaktereket (~!@#$%^&*()[]{}\\|/?,.<>)"
+msgstr ""
+"A jelszó nem tartalmazhat ékezeteket (de kis és nagy betűket igen), valamint"
+" számokat és speciális karaktereket (~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts/checkers/username.go:63
 msgid "Username cannot be empty"
 msgstr "A felhasználónév nem maradhat üres"
 
-#: ../../accounts/checkers/username.go:65
-msgid "Username must only contain a~z, 0~9, - or _"
-msgstr "A felhasználónév csak a-z, 0-9, - vagy _ karaktereket tartalmazhat"
+#: ../../accounts/checkers/username.go:68
+msgid "The first character must be a letter or number"
+msgstr "Az első karakternek betűnek vagy számnak kell lennie"
 
-#: ../../accounts/checkers/username.go:67
-msgid "The first character must be in lower case"
-msgstr "Az eső karakternek kisbetűnek kell lennie"
-
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:70
 msgid "The username already exists"
-msgstr ""
+msgstr "A felhasználónév már létezik"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username has been used by system"
 msgstr "Ez a felhasználónév már használatban van"
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:74
 msgid "Username must be between 3 and 32 characters"
 msgstr "A felhasználónév hosszának 3 és 32 karakter között kell lennie"
 
-#: ../../appearance/scale.go:61
+#: ../../appearance/scale.go:66
 msgid "Set successfully"
 msgstr "A beállítás sikerült"
 
-#: ../../appearance/scale.go:62
+#: ../../appearance/scale.go:67
 msgid "Please log back in to view the changes"
 msgstr "Kérlek jelentkezz be újra a módosítások megtekintéséhez"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:74
 msgid "Display scaling"
 msgstr "Felbontás"
 
-#: ../../appearance/scale.go:67
+#: ../../appearance/scale.go:75
 msgid "Setting display scaling"
 msgstr "Kijelző-méret beállítás"
 
-#: ../../bin/dde-authority/fprint_transaction.go:20
+#: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr "Az ujjlenyomat-azonosítás sikertelen"
 
-#: ../../bin/dde-authority/fprint_transaction.go:21
+#: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
 msgstr "Az ujjlenyomat-azonosítás túllépte a megengedett időt"
 
@@ -133,96 +141,96 @@ msgstr "Üzenet hozzáférés"
 msgid "Message notification"
 msgstr "Üzenet értesítés"
 
-#: ../../bluetooth/utils_notify.go:52 ../../network/utils_notify.go:107
-msgid "Connected"
-msgstr "Kapcsolódva"
+#: ../../bluetooth/utils_notify.go:69
+msgid "Connect %q successfully"
+msgstr "%q csatlakoztatása sikeres"
 
-#: ../../bluetooth/utils_notify.go:55 ../../network/utils_notify.go:80
-#: ../../network/utils_notify.go:84 ../../network/utils_notify.go:88
-#: ../../network/utils_notify.go:92 ../../network/utils_notify.go:110
-#: ../../network/utils_notify.go:113 ../../network/utils_notify.go:202
+#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
+#: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
+#: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "Szétkapcsolva"
 
-#: ../../bluetooth/utils_notify.go:59
+#: ../../bluetooth/utils_notify.go:77
 msgid "Make sure %q is turned on and in range"
 msgstr "Ellenőrizd, hogy a %q be van e kapcsolva és hatótávolságon belül van."
 
-#: ../../bluetooth/utils_notify.go:64
-msgid "Failed to connect %q, pairing failed"
-msgstr "Csatlakozás sikertelen %q, párosítás meghiúsult"
-
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:82
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth kapcsolódás sikertelen"
 
-#: ../../calendar/job.go:413 ../../calendar/job.go:420
+#: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
-msgstr ""
+msgstr "ma"
 
-#: ../../calendar/job.go:415 ../../calendar/job.go:422
+#: ../../calendar/job.go:510 ../../calendar/job.go:517
 msgid "tomorrow"
-msgstr ""
+msgstr "holnap"
 
-#: ../../calendar/job.go:435
+#: ../../calendar/job.go:530
 #, c-format
 msgid "%s to %s"
-msgstr ""
+msgstr "%s és %s között"
 
-#: ../../calendar/module.go:126
+#: ../../calendar/module.go:127 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Munka"
 
-#: ../../calendar/module.go:127
+#: ../../calendar/module.go:128 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Magánélet"
 
-#: ../../calendar/module.go:128
+#: ../../calendar/module.go:129 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Egyéb"
 
-#: ../../calendar/scheduler.go:477
+#: ../../calendar/scheduler.go:489
 msgid "One day before start"
-msgstr ""
+msgstr "Egy nappal kezdés előtt"
 
-#: ../../calendar/scheduler.go:478 ../../calendar/scheduler.go:483
-#: ../../calendar/scheduler.go:491 ../../calendar/scheduler.go:495
+#: ../../calendar/scheduler.go:490 ../../calendar/scheduler.go:495
+#: ../../calendar/scheduler.go:503 ../../calendar/scheduler.go:507
 msgid "Close"
 msgstr "Bezárás"
 
-#: ../../calendar/scheduler.go:482
+#: ../../calendar/scheduler.go:494
 msgid "Remind me tomorrow"
-msgstr ""
+msgstr "Emlékeztetés holnap"
 
-#: ../../calendar/scheduler.go:490
+#: ../../calendar/scheduler.go:502
 msgid "Remind me later"
-msgstr ""
+msgstr "Emlékeztetés később"
 
-#: ../../calendar/scheduler.go:500
+#: ../../calendar/scheduler.go:512
 msgid "Schedule Reminder"
+msgstr "Ütemezési emlékeztető"
+
+#: ../../calendar/type.go:40
+msgid "Festival"
 msgstr ""
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../dock/app_entry_menu.go:101
 msgid "Open"
 msgstr "Megnyitás"
 
-#: ../../dock/app_entry_menu.go:107
+#: ../../dock/app_entry_menu.go:108
 msgid "Close All"
 msgstr "Összes bezárása"
 
-#: ../../dock/app_entry_menu.go:123
+#: ../../dock/app_entry_menu.go:124
 msgid "Force Quit"
 msgstr "Kényszerített kilépés"
 
-#: ../../dock/app_entry_menu.go:130
+#: ../../dock/app_entry_menu.go:131
 msgid "Dock"
 msgstr "Kitűzés a Dokkra"
 
-#: ../../dock/app_entry_menu.go:137
+#: ../../dock/app_entry_menu.go:138
 msgid "Undock"
 msgstr "Eltávolítás a Dokkról"
 
-#: ../../dock/app_entry_menu.go:144
+#: ../../dock/app_entry_menu.go:145
 msgid "All Windows"
 msgstr "Összes ablak"
 
@@ -240,7 +248,7 @@ msgstr "Terminál"
 
 #: ../../keybinding/shortcuts/id_name_map.go:30
 msgid "Screen Recorder"
-msgstr ""
+msgstr "Képernyő felvevő"
 
 #: ../../keybinding/shortcuts/id_name_map.go:31
 msgid "Lock screen"
@@ -292,7 +300,7 @@ msgstr "Gyorsképernyő kikapcsolás"
 
 #: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "System Monitor"
-msgstr ""
+msgstr "Rendszermonitor"
 
 #: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Deepin Picker"
@@ -300,105 +308,113 @@ msgstr "Deepin Picker"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
-msgstr ""
+msgstr "Asztali intelligens asszisztens"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Text to Speech"
-msgstr ""
+msgstr "Szöveget felolvasásra"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Speech to Text"
+msgstr "Felolvasását szövegre"
+
+#: ../../keybinding/shortcuts/id_name_map.go:48
+msgid "Clipboard"
+msgstr "Vágólap"
+
+#: ../../keybinding/shortcuts/id_name_map.go:49
+msgid "Translation"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
 msgstr "Billentyűzetkiosztás váltás"
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
 msgstr "Váltás a baloldali munkaterületre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:74
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
 msgstr "Váltás a jobboldali munkaterületre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
 msgstr "Váltás a felső munkaterületre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
 msgstr "Váltás az alsó munkaterületre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
 msgstr "Váltás hasonló ablakra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
 msgstr "Váltás hasonló ablakok között fordítva"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
 msgstr "Ablakváltás"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
 msgstr "Ablakváltás fordított sorrendben"
 
-#: ../../keybinding/shortcuts/id_name_map.go:92
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
 msgstr "Asztal mutatása"
 
-#: ../../keybinding/shortcuts/id_name_map.go:101
+#: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
 msgstr "Ablak maximalizálása"
 
-#: ../../keybinding/shortcuts/id_name_map.go:102
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Restore window"
 msgstr "Ablak visszaállatása "
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Minimize window"
 msgstr "Ablak kicsinyítése "
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
 msgstr "Ablak bezárása"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
 msgstr "Ablak mozgatása"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
 msgstr "Ablak méretezése "
 
-#: ../../keybinding/shortcuts/id_name_map.go:122
+#: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
 msgstr "Áthelyezés a baloldali munkaterületre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:123
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
 msgstr "Áthelyezés a jobboldali munkaterületre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
 msgstr "Áthelyezés a felső munkaterületre "
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
 msgstr "Áthelyezés az alsó munkaterületre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:147
+#: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
 msgstr "A munkaterületek ablakainak megjelenítése"
 
-#: ../../keybinding/shortcuts/id_name_map.go:148
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
 msgstr "A jelenlegi munkaterület ablakainak megjelenítése"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
 msgstr "Munkaterület  megjelenítése"
 
@@ -414,7 +430,9 @@ msgstr "A rendszer nyelv váltása sikertelen volt, próbáld meg később"
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
-msgstr "Rendszer nyelv váltása és a szükséges nyelvi csomagok telepítése folyamatban, kérlek várj..."
+msgstr ""
+"Rendszer nyelv váltása és a szükséges nyelvi csomagok telepítése "
+"folyamatban, kérlek várj..."
 
 #: ../../langselector/locale.go:417
 msgid "Changing system language, please wait..."
@@ -424,54 +442,54 @@ msgstr "Rendszer nyelv váltása, kérlek várj..."
 msgid "System language changed, please log out and then log in"
 msgstr "Rendszer nyelv váltása megtörtént, kérlek jelentkezz ki majd be"
 
-#: ../../lastore/check_source.go:51
-msgid "Restore"
-msgstr "Visszaállítás"
-
-#: ../../lastore/check_source.go:70 ../../lastore/lastore.go:248
-msgid "Cancel"
-msgstr "Mégse"
-
-#: ../../lastore/lastore.go:240
+#: ../../lastore/lastore.go:247
 msgid "Retry"
 msgstr "Újra"
 
-#: ../../lastore/notify.go:82
+#: ../../lastore/lastore.go:255
+msgid "Cancel"
+msgstr "Mégsem"
+
+#: ../../lastore/notify.go:97
 msgid "%q installed successfully."
 msgstr "%q sikeresen telepítve."
 
-#: ../../lastore/notify.go:85
+#: ../../lastore/notify.go:100
 msgid "%q failed to install."
 msgstr "%q telepítése nem sikerült."
 
-#: ../../lastore/notify.go:93
-msgid "%q removed successfully."
-msgstr "%q eltávolítása sikeres."
+#: ../../lastore/notify.go:108
+msgid "Removed successfully"
+msgstr ""
 
-#: ../../lastore/notify.go:95
-msgid "%q failed to remove."
-msgstr "%q eltávolítása sikertelen."
+#: ../../lastore/notify.go:110
+msgid "Failed to remove the app"
+msgstr ""
 
-#: ../../lastore/notify.go:102
+#: ../../lastore/notify.go:117
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
-msgstr "Az automatikus kikapcsolás megelőzése érdekében csatlakoztasd az eszközt az áramforráshoz."
+msgstr ""
+"Az automatikus kikapcsolás megelőzése érdekében csatlakoztasd az eszközt az "
+"áramforráshoz."
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:122
 msgid "Package cache wiped"
 msgstr "A gyorsítótár kiürítve"
 
-#: ../../lastore/notify.go:112
+#: ../../lastore/notify.go:127
 msgid ""
 "Your system source has been modified, please restore to official source for "
 "your normal use"
-msgstr "A rendszer forrástárolója meg lett változtatva, állítsd vissza a hivatalos forrástárolót a megfelelő működés érdekében"
+msgstr ""
+"A rendszer forrástárolója meg lett változtatva, állítsd vissza a hivatalos "
+"forrástárolót a megfelelő működés érdekében"
 
-#: ../../launcher/manager_uninstall.go:69
+#: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
 msgstr "%q sikeresen eltávolítva"
 
-#: ../../launcher/manager_uninstall.go:71
+#: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q eltávolítása sikertelen"
 
@@ -522,9 +540,9 @@ msgstr "Elrejtett TLS"
 
 #: ../../network/manager_active_conn.go:360
 msgid "Protected EAP"
-msgstr "Védett EAP"
+msgstr "Protected EAP"
 
-#: ../../network/manager_connection.go:278 ../../network/nm_custom_type.go:225
+#: ../../network/manager_connection.go:337 ../../network/nm_custom_type.go:225
 msgid "Wired Connection"
 msgstr "Vezetékes kapcsolat"
 
@@ -611,7 +629,9 @@ msgstr "Az eszköz nem áll készen a konfigurálásra"
 #: ../../network/state_handler.go:44
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr "IP konfiguráció lefoglalása sikertelen (nincs rendelkezésre álló cím, időtúllépés, stb)"
+msgstr ""
+"IP konfiguráció lefoglalása sikertelen (nincs rendelkezésre álló cím, "
+"időtúllépés, stb)"
 
 #: ../../network/state_handler.go:45
 msgid "The IP configuration is no longer valid"
@@ -625,7 +645,9 @@ msgstr "Jelszó megadása szükséges"
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
-msgstr "A 802.1X hitelesítendő fél lecsatlakozott a hozzáférési pontról vagy a hitelesítő szerverről"
+msgstr ""
+"A 802.1X hitelesítendő fél lecsatlakozott a hozzáférési pontról vagy a "
+"hitelesítő szerverről"
 
 #: ../../network/state_handler.go:48
 msgid "Configuration of the 802.1X supplicant failed"
@@ -669,7 +691,9 @@ msgstr "A megosztott kapcsolat szolgáltatás elindítása sikertelen"
 
 #: ../../network/state_handler.go:58
 msgid "The shared connection service quitted or failed unexpectedly"
-msgstr "A megosztott kapcsolat szolgáltatás leállításra került vagy váratlanul leállt"
+msgstr ""
+"A megosztott kapcsolat szolgáltatás leállításra került vagy váratlanul "
+"leállt"
 
 #: ../../network/state_handler.go:59
 msgid "The AutoIP service failed to start"
@@ -804,8 +828,8 @@ msgid "ModemManager did not run or quitted unexpectedly"
 msgstr "ModemManager nem futott vagy váratlanul leállt"
 
 #: ../../network/state_handler.go:92
-msgid "The 802.11 Wi-Fi network could not be found"
-msgstr "A 802.11 Wi-Fi hálózat nem található"
+msgid "The 802.11 WLAN network could not be found"
+msgstr ""
 
 #: ../../network/state_handler.go:93
 msgid "A secondary connection of the base connection failed"
@@ -849,12 +873,15 @@ msgstr "Hálózati kábel nincs bedugva"
 
 #: ../../network/state_handler.go:107
 msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr "Kérem ellenőrizze, hogy a SIM kártya mobil hálózati jellel lett behelyezve"
+msgstr ""
+"Kérem ellenőrizze, hogy a SIM kártya mobil hálózati jellel lett behelyezve"
 
 #: ../../network/state_handler.go:108
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr "Kérem ellenőrizze, hogy egy megfelelő csomag ki lett választva a SIM kártya hátraléka nélkül"
+msgstr ""
+"Kérem ellenőrizze, hogy egy megfelelő csomag ki lett választva a SIM kártya "
+"hátraléka nélkül"
 
 #: ../../network/state_handler.go:111
 msgid "Failed to activate VPN connection, reason unknown"
@@ -866,12 +893,16 @@ msgstr "A VPN kapcsolat sikertelen"
 
 #: ../../network/state_handler.go:113
 msgid "The VPN connection state changed due to being disconnected by users"
-msgstr "A VPN kapcsolat állapota megváltozott, mert a kapcsolatot a felhasználó bezárta"
+msgstr ""
+"A VPN kapcsolat állapota megváltozott, mert a kapcsolatot a felhasználó "
+"bezárta"
 
 #: ../../network/state_handler.go:114
 msgid ""
 "The VPN connection state changed due to being disconnected from devices"
-msgstr "A VPN kapcsolat állapota megváltozott, mert a kapcsolat az eszközzel megszakadt"
+msgstr ""
+"A VPN kapcsolat állapota megváltozott, mert a kapcsolat az eszközzel "
+"megszakadt"
 
 #: ../../network/state_handler.go:115
 msgid "VPN service stopped"
@@ -883,7 +914,9 @@ msgstr "A VPN kapcsolat IP konfigurációja érvénytelen"
 
 #: ../../network/state_handler.go:117
 msgid "The connection attempt to VPN service timed out"
-msgstr "A VPN szolgáltatáshoz való csatlakozási kísérlet időtúllépés miatt sikertelen"
+msgstr ""
+"A VPN szolgáltatáshoz való csatlakozási kísérlet időtúllépés miatt "
+"sikertelen"
 
 #: ../../network/state_handler.go:118
 msgid "The VPN service start timed out"
@@ -907,100 +940,107 @@ msgstr "A kapcsolat eltávolításra került a beállításokból"
 
 #: ../../network/state_handler.go:251
 msgid "Enabling hotspot"
-msgstr ""
+msgstr "Hotspot engedélyezése"
 
 #: ../../network/state_handler.go:253
 msgid "Connecting %q"
-msgstr ""
+msgstr "Csatlakozás %q"
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
-msgstr ""
+msgstr "Hotspot bekapcsolva"
 
 #: ../../network/state_handler.go:263
 msgid "%q connected"
 msgstr "%q kapcsolódva"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:325
+#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
 msgid "Hotspot disabled"
-msgstr ""
+msgstr "Hotspot kikapcsolva"
 
-#: ../../network/state_handler.go:327 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:331
 msgid "%q disconnected"
 msgstr "%q szétkapcsolva"
 
-#: ../../network/state_handler.go:333
-msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "Nem sikerült a hotspot megosztás, kérjük, ellenőrizze a netmasztk beállítást"
-
-#: ../../network/state_handler.go:335
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "Nem sikerült csatlakozni %q -hoz, próbáljon meg a router hatótávolságán belül kapcsolódni."
-
 #: ../../network/state_handler.go:337
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "Csatlakozás sikertelen %q, kérem ellenőrizze a routert és a LAN-kábelt."
-
-#: ../../network/state_handler.go:340
-msgid "Password is required to connect %q"
+msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
+"Nem sikerült a hotspot megosztás, kérjük, ellenőrizze a netmasztk beállítást"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:339
+msgid "Unable to connect %q, please keep closer to the wireless router"
+msgstr ""
+"Nem sikerült csatlakozni %q -hoz, próbáljon meg a router hatótávolságán "
+"belül kapcsolódni."
+
+#: ../../network/state_handler.go:341
+msgid "Unable to connect %q, please check your router or net cable."
+msgstr ""
+"Csatlakozás sikertelen %q, kérem ellenőrizze a routert és a LAN-kábelt."
+
+#: ../../network/state_handler.go:344
+msgid "Password is required to connect %q"
+msgstr "Jelszó szükéges a csatlakozáshoz %q"
+
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Nem sikerült csatlakoztatni a %q -hoz, kérem ellenőrizze a beírt jelszót."
+msgstr ""
+"Nem sikerült csatlakoztatni a %q -hoz, kérem ellenőrizze a beírt jelszót."
 
-#: ../../network/utils_dbus_nm.go:229
+#: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"
 msgstr "Ismeretlen"
 
-#: ../../network/utils_notify.go:80
+#: ../../network/utils_notify.go:99
 msgid "You are now offline."
 msgstr "Kapcsolat bontásra került."
 
-#: ../../network/utils_notify.go:84
+#: ../../network/utils_notify.go:103
 msgid "Airplane mode enabled."
 msgstr "Repülési üzemmód engedélyezve. "
 
-#: ../../network/utils_notify.go:92
+#: ../../network/utils_notify.go:111
 msgid "Access Point mode is not supported by this device."
 msgstr "A hozzáférési pont módot nem támogatja az eszköz. "
 
-#: ../../network/utils_notify.go:96 ../../network/utils_notify.go:100
-#: ../../network/utils_notify.go:103
+#: ../../network/utils_notify.go:115 ../../network/utils_notify.go:119
+#: ../../network/utils_notify.go:122
 msgid "Network"
 msgstr "Hálózat"
 
-#: ../../network/utils_notify.go:96
+#: ../../network/utils_notify.go:115
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr "A számítógépen ki van kapcsolva a vezeték nélküli adapter. Kapcsoljuk be ha szükséges."
+msgstr ""
+"A számítógépen ki van kapcsolva a vezeték nélküli adapter. Kapcsoljuk be ha "
+"szükséges."
 
-#: ../../network/utils_notify.go:100
+#: ../../network/utils_notify.go:119
 msgid "System proxy is set successfully."
 msgstr "Rendszer Proxy sikeresen beállítva."
 
-#: ../../network/utils_notify.go:103
+#: ../../network/utils_notify.go:122
 msgid "System proxy has been cancelled."
 msgstr "Rendszer Proxy leállítva."
 
-#: ../../session/power/manager_events.go:151
-msgid "Battery Critically Low"
-msgstr "Akkutöltöttség kritikusan alacsony"
+#: ../../network/utils_notify.go:126
+msgid "Connected"
+msgstr "Kapcsolódva"
 
-#: ../../session/power/manager_events.go:152
-msgid "Computer will suspend very soon, please plug in now"
-msgstr "A rendszer pillanatokon belül hibernálásra kerül, kérem csatlakoztassa a töltőt mielőbb"
+#: ../../service_trigger/msg.go:7
+#, c-format
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgstr ""
+"\"%s\" nem felelt meg a a rendszerbiztonsági ellenőrzésnek és jelenleg nem "
+"futtatható"
 
-#: ../../session/power/manager_events.go:175
-#: ../../session/power/manager_events.go:182
-msgid "Battery Low"
-msgstr "Alacsony akkumulátor töltöttség"
+#: ../../session/power/manager_events.go:184
+msgid "Battery critically low"
+msgstr "Az akkumlátor töltöttsége kritikusan alacsony"
 
-#: ../../session/power/manager_events.go:176
-msgid "Computer will suspend soon, please plug in"
-msgstr "A rendszer hamarosan hibernálásra kerül, kérem csatlakoztassa a töltőt"
-
-#: ../../session/power/manager_events.go:183
+#: ../../session/power/manager_events.go:205
+#: ../../session/power/manager_events.go:210
+#: ../../session/power/manager_events.go:215
 msgid "Battery low, please plug in"
 msgstr "Akkutöltöttség alacsony, kérem csatlakoztassa a töltőt"
 

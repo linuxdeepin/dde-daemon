@@ -1,25 +1,27 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Cindy0514, 2018-2020
+# electricface <songwentai@linuxdeepin.com>, 2020
+# 李洪武 <lihongwu1987@gmail.com>, 2020
+# Michael Jay Tong <michaeljayt@gmail.com>, 2020
+# cxbii <mycxbii@gmail.com>, 2020
+# hualet <mr.asianwang@gmail.com>, 2020
+# Maggie Liu <maggie.liufei@gmail.com>, 2020
+# transifex deepin <transifex@deepin.com>, 2020
 # Cindy0514, 2020
-# deepin_transifex <xiabin@linuxdeepin.com>, 2017-2018
-# Maggie Liu <maggie.liufei@gmail.com>, 2016
-# Maggie Liu <maggie.liufei@gmail.com>, 2016
-# Maggie Liu <maggie.liufei@gmail.com>, 2017
-# Maggie Liu <maggie.liufei@gmail.com>, 2017
-# Michael Jay Tong <michaeljayt@gmail.com>, 2016-2017
-# transifex deepin <transifex@deepin.com>, 2019
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Deepin Desktop Environment\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-22 10:53+0800\n"
-"PO-Revision-Date: 2020-03-23 03:31+0000\n"
-"Last-Translator: Cindy0514\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/linuxdeepin/deepin-desktop-environment/language/zh_CN/)\n"
+"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"PO-Revision-Date: 2020-05-28 08:30+0000\n"
+"Last-Translator: Cindy0514, 2020\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,7 +30,7 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
-msgstr "请输入长度不小于8位密码"
+msgstr "请输入长度不小于8位的密码"
 
 #: ../../accounts/checkers/password.go:55
 msgid ""
@@ -137,7 +139,7 @@ msgstr "连接%q成功"
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
-msgstr "断开"
+msgstr "已断开"
 
 #: ../../bluetooth/utils_notify.go:77
 msgid "Make sure %q is turned on and in range"
@@ -147,73 +149,77 @@ msgstr "请确定%q已打开而且在通讯范围内"
 msgid "Bluetooth connection failed"
 msgstr "蓝牙连接失败"
 
-#: ../../calendar/job.go:419 ../../calendar/job.go:426
+#: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
 msgstr "今天"
 
-#: ../../calendar/job.go:421 ../../calendar/job.go:428
+#: ../../calendar/job.go:510 ../../calendar/job.go:517
 msgid "tomorrow"
 msgstr "明天"
 
-#: ../../calendar/job.go:441
+#: ../../calendar/job.go:530
 #, c-format
 msgid "%s to %s"
 msgstr "%s至%s"
 
-#: ../../calendar/module.go:126
+#: ../../calendar/module.go:127 ../../calendar/type.go:25
 msgid "Work"
 msgstr "工作"
 
-#: ../../calendar/module.go:127
+#: ../../calendar/module.go:128 ../../calendar/type.go:30
 msgid "Life"
 msgstr "生活"
 
-#: ../../calendar/module.go:128
+#: ../../calendar/module.go:129 ../../calendar/type.go:35
 msgid "Other"
 msgstr "其他"
 
-#: ../../calendar/scheduler.go:477
+#: ../../calendar/scheduler.go:489
 msgid "One day before start"
 msgstr "提前1天提醒"
 
-#: ../../calendar/scheduler.go:478 ../../calendar/scheduler.go:483
-#: ../../calendar/scheduler.go:491 ../../calendar/scheduler.go:495
+#: ../../calendar/scheduler.go:490 ../../calendar/scheduler.go:495
+#: ../../calendar/scheduler.go:503 ../../calendar/scheduler.go:507
 msgid "Close"
 msgstr "关闭"
 
-#: ../../calendar/scheduler.go:482
+#: ../../calendar/scheduler.go:494
 msgid "Remind me tomorrow"
 msgstr "明天提醒"
 
-#: ../../calendar/scheduler.go:490
+#: ../../calendar/scheduler.go:502
 msgid "Remind me later"
 msgstr "稍后提醒"
 
-#: ../../calendar/scheduler.go:500
+#: ../../calendar/scheduler.go:512
 msgid "Schedule Reminder"
 msgstr "日程提醒"
 
-#: ../../dock/app_entry_menu.go:102
+#: ../../calendar/type.go:40
+msgid "Festival"
+msgstr "节日"
+
+#: ../../dock/app_entry_menu.go:101
 msgid "Open"
 msgstr "打开"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:108
 msgid "Close All"
 msgstr "关闭所有"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:124
 msgid "Force Quit"
 msgstr "强制退出"
 
-#: ../../dock/app_entry_menu.go:132
+#: ../../dock/app_entry_menu.go:131
 msgid "Dock"
-msgstr "驻留"
+msgstr "任务栏"
 
-#: ../../dock/app_entry_menu.go:139
+#: ../../dock/app_entry_menu.go:138
 msgid "Undock"
 msgstr "移除驻留"
 
-#: ../../dock/app_entry_menu.go:146
+#: ../../dock/app_entry_menu.go:145
 msgid "All Windows"
 msgstr "所有窗口"
 
@@ -440,12 +446,12 @@ msgid "%q failed to install."
 msgstr "%q 安装失败"
 
 #: ../../lastore/notify.go:108
-msgid "%q removed successfully."
-msgstr "卸载 %q 成功。"
+msgid "Removed successfully"
+msgstr "卸载成功"
 
 #: ../../lastore/notify.go:110
-msgid "%q failed to remove."
-msgstr "卸载 %q 失败。"
+msgid "Failed to remove the app"
+msgstr "卸载失败"
 
 #: ../../lastore/notify.go:117
 msgid ""
@@ -920,7 +926,7 @@ msgstr "已连接%q"
 msgid "Hotspot disabled"
 msgstr "热点共享已关闭"
 
-#: ../../network/state_handler.go:331 ../../network/state_handler.go:351
+#: ../../network/state_handler.go:331
 msgid "%q disconnected"
 msgstr "%q已断开"
 
@@ -944,7 +950,7 @@ msgstr "连接%q需要密码"
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "连接失败，未能加入%q，密码不正确"
 
-#: ../../network/utils_dbus_nm.go:267
+#: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"
 msgstr "未知"
 
@@ -987,13 +993,13 @@ msgstr "已连接"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”没有通过系统安全验证，无法运行"
 
-#: ../../session/power/manager_events.go:177
+#: ../../session/power/manager_events.go:184
 msgid "Battery critically low"
 msgstr "电池电量耗尽"
 
-#: ../../session/power/manager_events.go:198
-#: ../../session/power/manager_events.go:203
-#: ../../session/power/manager_events.go:208
+#: ../../session/power/manager_events.go:205
+#: ../../session/power/manager_events.go:210
+#: ../../session/power/manager_events.go:215
 msgid "Battery low, please plug in"
 msgstr "电池电量低，请连接电源"
 
