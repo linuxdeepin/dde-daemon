@@ -93,7 +93,7 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		layoutChanged:   make(chan struct{}),
 		pinyinEnabled:   isZH(),
 	}
-
+	time.Sleep(time.Duration(1)*time.Second)
 	ss.xRecordEventHandler = NewXRecordEventHandler(keySymbols)
 	ss.xRecordEventHandler.modKeyReleasedCb = func(code uint8, mods uint16) {
 		isGrabbed := isKbdAlreadyGrabbed(ss.conn)
