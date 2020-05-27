@@ -130,6 +130,7 @@ type Manager struct {
 		GetPluginSettings         func() `out:"jsonStr"`
 		MergePluginSettings       func() `in:"jsonStr"`
 		RemovePluginSettings      func() `in:"key1,key2List"`
+		EditAppIcon               func() `in:"desktopId,name,iconPath" out:"newPath"`
 	}
 }
 
@@ -326,7 +327,12 @@ func (m *Manager) IsDocked(desktopFile string) (bool, *dbus.Error) {
 func (m *Manager) requestDock(desktopFile string, index int32) (bool, error) {
 	logger.Debug("requestDock", desktopFile, index)
 	desktopFile = toLocalPath(desktopFile)
+
+	if newpath := getNewDesktopFilePath(desktopFile); newpath != "" {
+		desktopFile = newpath
+	}
 	appInfo := NewAppInfoFromFile(desktopFile)
+
 	if appInfo == nil {
 		return false, errors.New("invalid desktopFilePath")
 	}
@@ -459,4 +465,9 @@ func (m *Manager) MergePluginSettings(jsonStr string) *dbus.Error {
 func (m *Manager) RemovePluginSettings(key1 string, key2List []string) *dbus.Error {
 	m.pluginSettings.remove(key1, key2List)
 	return nil
+}
+
+func (m *Manager) EditAppIcon(desktopId string, name string, iconPath string) (string, *dbus.Error) {
+	newPath := m.modifyNameIcon(desktopId, name, iconPath)
+	return newPath, nil
 }

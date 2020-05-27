@@ -24,6 +24,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"pkg.deepin.io/lib/keyfile"
 	"strings"
 	"text/template"
 
@@ -246,4 +247,103 @@ func (m *Manager) undockEntry(entry *AppEntry) {
 		entry.PropsMu.Unlock()
 	}
 	m.saveDockedApps()
+}
+
+func (m *Manager) modifyNameIcon(desktopId string, name string, iconPath string) string {
+	entry := m.Entries.GetById(desktopId)
+	var desktopName string
+	if entry != nil {
+		logger.Debugf("editing icon ", entry.Id)
+		desktopName = strings.TrimSuffix(filepath.Base(entry.DesktopFile), desktopExt)
+	} else {
+		logger.Error("entry is null")
+		return ""
+	}
+
+	//  src path
+	srcFile := entry.DesktopFile
+	//	~/.local/share/applications
+	fileHome := filepath.Join(pathCodeDirMap["/H@"], desktopName+desktopExt)
+
+	kfile := keyfile.NewKeyFile()
+
+	_, err := os.Stat(fileHome)
+	if err == nil {
+		err = kfile.LoadFromFile(fileHome)
+	} else {
+		err = kfile.LoadFromFile(srcFile)
+	}
+
+	if err == nil {
+		var iconPathLocal string
+		if iconPath != "" {
+			//copy icon to local path
+			iconPathLocal = filepath.Join(homeDir, ".local/share/icons/", filepath.Base(iconPath))
+			iconDirLocal := filepath.Dir(iconPathLocal)
+
+			if err = os.MkdirAll(iconDirLocal, os.ModePerm); err != nil {
+				iconPathLocal = ""
+				logger.Debug("MkdirAll error ", err)
+			} else {
+				err = copyFileContents(iconPath, iconPathLocal)
+				if err != nil {
+					logger.Debugf("iconPath:%s copy to iconPathLocal:%s failed,error=%s", iconPath, iconPathLocal, err.Error())
+				}
+
+				entry.setPropIcon(iconPathLocal)
+				entry.Icon = iconPathLocal
+			}
+		}
+		if name != "" {
+			entry.setPropName(name)
+			entry.Name = name
+		}
+
+		m.setNewValue(kfile, name, iconPathLocal, fileHome)
+
+		appInfoTmp := NewAppInfoFromFile(fileHome)
+		if appInfoTmp == nil {
+			logger.Error("modifyNameIcon  NewAppInfoFromFile failed!!!! ")
+		} else {
+			entry.appInfo = appInfoTmp
+			logger.Debug("entry.appInfo ", entry.appInfo)
+		}
+		if m.modifyNameIconInDesktop(desktopName, name, iconPathLocal) != "success" {
+			logger.Debugf("desktopfile %s unchanged", desktopName)
+		}
+
+		logger.Debugf("modified Icon %s", desktopName)
+	} else {
+		logger.Errorf("unable to modify config error=%s", err.Error())
+		return ""
+	}
+	return fileHome
+}
+
+func (m *Manager) modifyNameIconInDesktop(desktopName string, name string, iconPath string) string {
+	pathDesktop := filepath.Join(homeDir, "Desktop")
+
+	fileDestop := filepath.Join(pathDesktop, desktopName+desktopExt)
+
+	_, err := os.Stat(fileDestop)
+	if err == nil {
+		kfile := keyfile.NewKeyFile()
+		err = kfile.LoadFromFile(fileDestop)
+
+		m.setNewValue(kfile, name, iconPath, fileDestop)
+		return "success"
+	}
+	return ""
+}
+
+func (m *Manager) setNewValue(kf *keyfile.KeyFile, name string, iconPath string, dstFile string) {
+	if iconPath != "" {
+		kf.SetValue("Desktop Entry", "Icon", iconPath)
+	}
+	if name != "" {
+		locale := os.Getenv("LANGUAGE")
+		kf.SetValue("Desktop Entry", "Name["+locale+"]", name)
+		kf.SetValue("Desktop Entry", "GenericName["+locale+"]", name)
+	}
+	kf.SaveToFile(dstFile)
 }

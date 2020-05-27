@@ -62,8 +62,22 @@ func (entries *AppEntries) GetType() reflect.Type {
 
 func (entries *AppEntries) GetByInnerId(id string) *AppEntry {
 	entries.mu.RLock()
+
 	for _, entry := range entries.items {
 		if entry.innerId == id {
+			entries.mu.RUnlock()
+			return entry
+		}
+	}
+	entries.mu.RUnlock()
+	return nil
+}
+
+func (entries *AppEntries) GetById(id string) *AppEntry {
+	entries.mu.RLock()
+
+	for _, entry := range entries.items {
+		if entry.Id == id {
 			entries.mu.RUnlock()
 			return entry
 		}

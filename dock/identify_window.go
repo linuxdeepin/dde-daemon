@@ -249,6 +249,9 @@ func identifyWindowByPidEnv(m *Manager, winInfo *WindowInfo) (string, *AppInfo) 
 		}
 
 		if try {
+			if newpath := getNewDesktopFilePath(launchedDesktopFile); newpath != "" {
+				launchedDesktopFile = newpath
+			}
 			appInfo := NewAppInfoFromFile(launchedDesktopFile)
 			if appInfo != nil {
 				// success

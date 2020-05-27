@@ -79,6 +79,7 @@ func newAppEntry(dockManager *Manager, innerId string, appInfo *AppInfo) *AppEnt
 	entry.setAppInfo(appInfo)
 	entry.Name = entry.getName()
 	entry.Icon = entry.getIcon()
+
 	return entry
 }
 
