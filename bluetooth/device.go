@@ -535,6 +535,7 @@ func (d *device) doConnect(hasNotify bool) error {
 	}
 
 	d.ConnectState = true
+	d.notifyDevicePropertiesChanged()
 	if hasNotify && d.Paired && d.State == deviceStateConnected && d.ConnectState {
 		notifyConnected(d.Alias)
 	}
