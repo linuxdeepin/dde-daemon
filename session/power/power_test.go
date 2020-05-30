@@ -31,12 +31,10 @@ func TestWarnLevelConfig(t *testing.T) {
 			UsePercentageForPolicy: true,
 
 			LowTime:      1200,
-			DangerTime:   900,
 			CriticalTime: 600,
 			ActionTime:   300,
 
 			LowPercentage:      20,
-			DangerPercentage:   15,
 			CriticalPercentage: 10,
 			ActionPercentage:   5,
 		}
@@ -56,12 +54,10 @@ func Test_getWarnLevel(t *testing.T) {
 			UsePercentageForPolicy: true,
 
 			LowTime:      1200,
-			DangerTime:   900,
 			CriticalTime: 600,
 			ActionTime:   300,
 
 			LowPercentage:      20,
-			DangerPercentage:   15,
 			CriticalPercentage: 10,
 			ActionPercentage:   5,
 		}
@@ -77,8 +73,6 @@ func Test_getWarnLevel(t *testing.T) {
 		c.So(getWarnLevel(config, onBattery, 5.0, 0), ShouldEqual, WarnLevelAction)
 		c.So(getWarnLevel(config, onBattery, 5.1, 0), ShouldEqual, WarnLevelCritical)
 		c.So(getWarnLevel(config, onBattery, 10.0, 0), ShouldEqual, WarnLevelCritical)
-		c.So(getWarnLevel(config, onBattery, 10.1, 0), ShouldEqual, WarnLevelDanger)
-		c.So(getWarnLevel(config, onBattery, 15.0, 0), ShouldEqual, WarnLevelDanger)
 		c.So(getWarnLevel(config, onBattery, 15.1, 0), ShouldEqual, WarnLevelLow)
 		c.So(getWarnLevel(config, onBattery, 20.0, 0), ShouldEqual, WarnLevelLow)
 		c.So(getWarnLevel(config, onBattery, 20.1, 0), ShouldEqual, WarnLevelNone)
@@ -91,8 +85,6 @@ func Test_getWarnLevel(t *testing.T) {
 		c.So(getWarnLevel(config, onBattery, 0, 300), ShouldEqual, WarnLevelAction)
 		c.So(getWarnLevel(config, onBattery, 0, 301), ShouldEqual, WarnLevelCritical)
 		c.So(getWarnLevel(config, onBattery, 0, 600), ShouldEqual, WarnLevelCritical)
-		c.So(getWarnLevel(config, onBattery, 0, 601), ShouldEqual, WarnLevelDanger)
-		c.So(getWarnLevel(config, onBattery, 0, 900), ShouldEqual, WarnLevelDanger)
 		c.So(getWarnLevel(config, onBattery, 0, 901), ShouldEqual, WarnLevelLow)
 		c.So(getWarnLevel(config, onBattery, 0, 1200), ShouldEqual, WarnLevelLow)
 		c.So(getWarnLevel(config, onBattery, 0, 12001), ShouldEqual, WarnLevelNone)
