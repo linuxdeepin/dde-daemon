@@ -253,7 +253,7 @@ func (m *Manager) modifyNameIcon(desktopId string, name string, iconPath string)
 	entry := m.Entries.GetById(desktopId)
 	var desktopName string
 	if entry != nil {
-		logger.Debugf("editing icon ", entry.Id)
+		logger.Debug("editing icon ", entry.Id)
 		desktopName = strings.TrimSuffix(filepath.Base(entry.DesktopFile), desktopExt)
 	} else {
 		logger.Error("entry is null")
