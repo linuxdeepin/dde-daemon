@@ -547,14 +547,14 @@ func (d *device) doRealConnect() error {
 	d.setConnectPhase(connectPhaseConnectProfilesEnd)
 	if err != nil {
 		// connect failed
-		logger.Debugf("%s connect failed: %v", d, err)
-		globalBluetooth.config.setDeviceConfigConnected(d.getAddress(), false)
+		logger.Warningf("%s connect failed: %v", d, err)
+		globalBluetooth.config.setDeviceConfigConnected(d, false)
 		return err
 	}
 
 	// connect succeeded
-	logger.Debugf("%s connect succeeded", d)
-	globalBluetooth.config.setDeviceConfigConnected(d.getAddress(), true)
+	logger.Infof("%s connect succeeded", d)
+	globalBluetooth.config.setDeviceConfigConnected(d, true)
 
 	// auto trust device when connecting success
 	d.doTrust()
@@ -658,7 +658,7 @@ func (d *device) Disconnect() {
 		return
 	}
 
-	globalBluetooth.config.setDeviceConfigConnected(d.getAddress(), false)
+	globalBluetooth.config.setDeviceConfigConnected(d, false)
 
 	ch := d.goWaitDisconnect()
 

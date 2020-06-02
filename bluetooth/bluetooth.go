@@ -379,7 +379,8 @@ func (b *Bluetooth) addDevice(dpath dbus.ObjectPath) {
 		return
 	}
 
-	b.config.addDeviceConfig(d.getAddress())
+	// device detail info is needed to write into config file
+	b.config.addDeviceConfig(d)
 
 	b.devicesLock.Lock()
 	b.devices[d.AdapterPath] = append(b.devices[d.AdapterPath], d)
@@ -678,7 +679,9 @@ func (b *Bluetooth) tryConnectPairedDevices() {
 	}
 }
 
+// get paired device list
 func (b *Bluetooth) getPairedDeviceList() []*device {
+	// memory lock
 	b.adaptersLock.Lock()
 	defer b.adaptersLock.Unlock()
 	b.devicesLock.Lock()
