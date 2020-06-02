@@ -93,6 +93,11 @@ type device struct {
 	mu                sync.Mutex
 	confirmation      chan bool
 	pairingFailedTime time.Time
+
+	// mark if pc or mobile request a connection
+	// if is pc, then do not need to show notification window
+	// else show notification window
+	isInitiativeConnect bool
 }
 
 func (d *device) getActiveDoConnect() bool {
@@ -693,4 +698,19 @@ func killBluetoothDialog() {
 	if err != nil {
 		logger.Warning("kill err ", err)
 	}
+}
+
+// set and get pc or mobile request a connection first
+// if is true, pc request first, dont need to show notification window
+// else need show
+func (d *device) SetInitiativeConnect(isInitiativeConnect bool) {
+	d.mu.Lock()
+	d.isInitiativeConnect = isInitiativeConnect
+	d.mu.Unlock()
+}
+func (d *device) GetInitiativeConnect() bool {
+	d.mu.Lock()
+	needEnsure := d.isInitiativeConnect
+	d.mu.Unlock()
+	return needEnsure
 }

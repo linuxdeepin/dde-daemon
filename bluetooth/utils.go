@@ -21,6 +21,9 @@ package bluetooth
 
 import (
 	"encoding/json"
+	"io/ioutil"
+	"pkg.deepin.io/lib/procfs"
+	"strconv"
 )
 
 func isStringInArray(str string, list []string) bool {
@@ -40,4 +43,38 @@ func marshalJSON(v interface{}) (strJSON string) {
 	}
 	strJSON = string(byteJSON)
 	return
+}
+
+// find process
+func checkProcessExists(processName string) bool {
+	files, err := ioutil.ReadDir("/proc")
+	if err != nil {
+		logger.Warningf("read proc failed,err:%v", err)
+	}
+
+	for _, f := range files {
+		if !f.IsDir() {
+			continue
+		}
+
+		pid, err := strconv.ParseUint(f.Name(), 10, 32)
+		if err != nil {
+			continue
+		}
+
+		process := procfs.Process(pid)
+		executablePath, err := process.Exe()
+		if err != nil {
+			//fmt.Println(err)
+			continue
+		}
+		//if !fullpath {
+		//	executablePath = filepath.Base(executablePath)
+		//}
+		if executablePath == processName {
+			return true
+		}
+	}
+
+	return false
 }

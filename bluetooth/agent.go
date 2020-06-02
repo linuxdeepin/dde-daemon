@@ -374,17 +374,33 @@ func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...inte
 		return auth, errBluezCanceled
 	}
 
+	// if signal is request confirmation, we deal signal self
 	if signal == "RequestConfirmation" {
-		if d.getActiveDoConnect() {
-			showConfirmDialog(devPath, args[0].(string))
+		// judge ensure state, if is true, means pc request a connection
+		// dont need to show notification window
+		if d.GetInitiativeConnect() {
+			// reset state
+			d.SetInitiativeConnect(false)
+			//if true, means pc active invoke the connect request
+			err = notifyInitiativeConnect(d, args[0].(string))
+			if err != nil {
+				logger.Warningf("notify initiative connect failed,err:%v", err)
+			}
 		} else {
-			notifyRequestConfirm(d.Alias, devPath, args[0].(string))
+			// if not, means device invoke the connect request,
+			// need to show notification window
+			err = notifyPassiveConnect(d, args[0].(string))
+			if err != nil {
+				logger.Warningf("notify passive connect failed,err:%v", err)
+			}
 		}
-		d.setActiveDoConnect(false)
 	} else {
+		//if signal is not request confirmation, we emit it to dbus
 		logger.Debug("Send Signal for device: ", devPath, signal, args)
-		a.emit(signal, devPath, args...)
+		err = a.emit(signal, devPath, args...)
+		if err != nil {
+			logger.Warningf("emitRequest emit signal failed,err:%v", err)
+		}
 	}
-
 	return a.waitResponse()
 }
