@@ -141,7 +141,7 @@ func (psp *powerSavePlan) ConnectIdle() error {
 	}
 	err = sessionBus.Object("com.deepin.daemon.KWayland",
 		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Idle", "IdleTimeout").Err
-		//dbus.WithMatchObjectPath("/com/deepin/daemon/KWayland/Idle")).Err
+	//dbus.WithMatchObjectPath("/com/deepin/daemon/KWayland/Idle")).Err
 	if err != nil {
 		logger.Warning(err)
 		return err
@@ -183,7 +183,6 @@ func (psp *powerSavePlan) Start() error {
 	})
 
 	power.PowerSavingModeEnabled().ConnectChanged(psp.handlePowerSavingModeChanged)
-
 
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	if strings.Contains(sessionType, "wayland") {
@@ -462,17 +461,18 @@ func (psp *powerSavePlan) screenBlack() {
 }
 
 func (psp *powerSavePlan) shouldPreventIdle() (bool, error) {
+	isFullscreenAndFocused := false
+	var pid uint32 = 0
 	conn := psp.manager.helper.xConn
 	activeWin, err := ewmh.GetActiveWindow(conn).Reply(conn)
 	if err != nil {
 		return false, err
 	}
-	if activeWin == 0 && len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
 		logger.Debug("In wayland, try kwayland interface...")
 		wm := kwayland.NewWindowManager(psp.manager.service.Conn())
 		aw, err := wm.ActiveWindow(0)
 		if err != nil {
-			logger.Warning("Failed to get active window from wayland:", err)
 			return false, err
 		}
 		if aw == 0 {
@@ -481,24 +481,29 @@ func (psp *powerSavePlan) shouldPreventIdle() (bool, error) {
 		win, err := kwayland.NewWindow(psp.manager.service.Conn(),
 			dbus.ObjectPath(fmt.Sprintf("/com/deepin/daemon/KWayland/PlasmaWindow_%d", aw)))
 		if err != nil {
-			logger.Warning("Failed to new window from wayland:", aw, err)
 			return false, err
 		}
-		return win.IsFullscreen(0)
-	}
-
-	isFullscreenAndFocused, err := psp.isWindowFullScreenAndFocused(activeWin)
-	if err != nil {
-		return false, err
+		pid, err = win.Pid(0)
+		if err != nil {
+			return false, err
+		}
+		isFullscreenAndFocused, err = win.IsFullscreen(0)
+		if err != nil {
+			return false, err
+		}
+	} else {
+		isFullscreenAndFocused, err = psp.isWindowFullScreenAndFocused(activeWin)
+		if err != nil {
+			return false, err
+		}
+		pid, err = ewmh.GetWMPid(conn, activeWin).Reply(conn)
+		if err != nil {
+			return false, err
+		}
 	}
 
 	if !isFullscreenAndFocused {
 		return false, nil
-	}
-
-	pid, err := ewmh.GetWMPid(conn, activeWin).Reply(conn)
-	if err != nil {
-		return false, err
 	}
 
 	p := procfs.Process(pid)

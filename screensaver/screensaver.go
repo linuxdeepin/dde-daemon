@@ -117,8 +117,24 @@ func (ss *ScreenSaver) Inhibit(sender dbus.Sender, name, reason string) (uint32,
 
 // 模拟用户操作，让系统处于使用状态，重新开始 Idle 定时器
 func (ss *ScreenSaver) SimulateUserActivity() *dbus.Error {
-	err := x.ForceScreenSaverChecked(ss.xConn, x.ScreenSaverReset).Check(ss.xConn)
-	return dbusutil.ToError(err)
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		sessionBus, err := dbus.SessionBus()
+		if err != nil {
+			logger.Warning(err)
+			return dbusutil.ToError(err)
+		}
+		err = sessionBus.Object("com.deepin.daemon.KWayland",
+			"/com/deepin/daemon/KWayland/Output").Call("com.deepin.daemon.KWayland.Idle.simulateUserActivity", 0).Err
+		if err != nil {
+			logger.Warning(err)
+			return dbusutil.ToError(err)
+		}
+	} else {
+		err := x.ForceScreenSaverChecked(ss.xConn, x.ScreenSaverReset).Check(ss.xConn)
+		return dbusutil.ToError(err)
+	}
+	return nil
 }
 
 // 根据 id 取消对应的抑制操作
@@ -192,14 +208,14 @@ func (ss *ScreenSaver) setTimeout(seconds, interval uint32, blank bool) {
 	}
 
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
-	if strings.Contains(sessionType, "wayland"){
+	if strings.Contains(sessionType, "wayland") {
 		sessionBus, err := dbus.SessionBus()
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
 		err = sessionBus.Object("com.deepin.daemon.KWayland",
-			"/com/deepin/daemon/KWayland/Output").Call("com.deepin.daemon.KWayland.Idle.SetIdleTimeout", 0, seconds * 1000).Err
+			"/com/deepin/daemon/KWayland/Output").Call("com.deepin.daemon.KWayland.Idle.SetIdleTimeout", 0, seconds*1000).Err
 
 		if err != nil {
 			logger.Warning(err)
