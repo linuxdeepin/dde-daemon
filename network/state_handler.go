@@ -354,6 +354,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 					if oldState == nm.NM_DEVICE_STATE_CONFIG && newState == nm.NM_DEVICE_STATE_NEED_AUTH {
 						msg = fmt.Sprintf(Tr("Connection failed, unable to connect %s, wrong password"), dsi.aconnId)
 					}
+					sh.m.hasSaveSecret = true
 				case CUSTOM_NM_DEVICE_STATE_REASON_CABLE_UNPLUGGED: //disconnected due to cable unplugged
 					// if device is ethernet,notify disconnected message
 

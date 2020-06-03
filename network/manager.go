@@ -86,16 +86,13 @@ type Manager struct {
 	stateHandler       *stateHandler
 	proxyChainsManager *proxychains.Manager
 
-	hasSaveSecret 		bool //determine whether to save the password to the keyring
-	items 			[]settingItem // save password information temporarily
-	saveToKeyring		bool// do not save password to keyring by default 
-	
+	hasSaveSecret bool          //determine whether to save the password to the keyring
+	items         []settingItem // save password information temporarily
+	saveToKeyring bool          // do not save password to keyring by default
+
 	sessionSigLoop *dbusutil.SignalLoop
 	syncConfig     *dsync.Config
 
-	activeConnectDevpath     dbus.ObjectPath
-	activeConnectUuid        string
-	activeConnectSettingPath dbus.ObjectPath
 
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {

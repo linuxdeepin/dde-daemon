@@ -547,6 +547,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 		}
 
 		setting["secrets"] = dbus.MakeVariant(vpnSecretsData)
+
 	} else if secretKeys, ok := secretSettingKeys[settingName]; ok {
 		var askItems []string
 		for _, secretKey := range secretKeys {
@@ -600,9 +601,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 				settingName, askItems, requestNew)
 			if err != nil {
 				logger.Warning("askPasswords error:", err)
-				if sa.m.activeConnectSettingPath == connectionPath {
-					sa.m.DisconnectDevice(sa.m.activeConnectDevpath)
-				}
+				return nil, errSecretAgentUserCanceled
 			} else {
 				for key, value := range resultAsk {
 					setting[key] = dbus.MakeVariant(value)
@@ -622,12 +621,8 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 							})
 						}
 						sa.m.items = items
-						for _, item := range items {
-							sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
-						}
 					}
 				}
-				
 			}
 		}
 		// when requestNew is true or dont save secretKey here
