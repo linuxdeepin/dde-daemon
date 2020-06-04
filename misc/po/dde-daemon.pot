@@ -119,7 +119,6 @@ msgstr ""
 msgid "Message notification"
 msgstr ""
 
-<<<<<<< HEAD
 #: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr ""
@@ -168,32 +167,6 @@ msgid "Click here to connect to %q"
 msgstr ""
 
 #: ../../bluetooth/utils_notify.go:136
-=======
-#: ../../bluetooth/utils_notify.go:98
-msgid "Connect %q successfully"
-msgstr ""
-
-#: ../../bluetooth/utils_notify.go:102 ../../network/utils_notify.go:185
-#: ../../network/utils_notify.go:189 ../../network/utils_notify.go:193
-#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:215
-#: ../../network/utils_notify.go:218 ../../network/utils_notify.go:307
-msgid "Disconnected"
-msgstr ""
-
-#: ../../bluetooth/utils_notify.go:106
-msgid "Make sure %q is turned on and in range"
-msgstr ""
-
-#: ../../bluetooth/utils_notify.go:111
-msgid "Bluetooth connection failed"
-msgstr ""
-
-#: ../../bluetooth/utils_notify.go:139
-msgid "Click here to connect to %q"
-msgstr ""
-
-#: ../../bluetooth/utils_notify.go:140
->>>>>>> 0592a10f... feat(lastore):dde-control-center setting update
 msgid "Add Bluetooth devices"
 msgstr ""
 
@@ -201,7 +174,6 @@ msgstr ""
 msgid "Pair"
 msgstr ""
 
-<<<<<<< HEAD
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
 msgstr ""
@@ -211,17 +183,6 @@ msgid "tomorrow"
 msgstr ""
 
 #: ../../calendar/job.go:530
-=======
-#: ../../calendar/job.go:514 ../../calendar/job.go:521
-msgid "today"
-msgstr ""
-
-#: ../../calendar/job.go:516 ../../calendar/job.go:523
-msgid "tomorrow"
-msgstr ""
-
-#: ../../calendar/job.go:536
->>>>>>> 0592a10f... feat(lastore):dde-control-center setting update
 #, c-format
 msgid "%s to %s"
 msgstr ""
@@ -238,7 +199,6 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-<<<<<<< HEAD
 #: ../../calendar/scheduler.go:489
 msgid "One day before start"
 msgstr ""
@@ -257,26 +217,6 @@ msgid "Remind me later"
 msgstr ""
 
 #: ../../calendar/scheduler.go:512
-=======
-#: ../../calendar/scheduler.go:495
-msgid "One day before start"
-msgstr ""
-
-#: ../../calendar/scheduler.go:496 ../../calendar/scheduler.go:501
-#: ../../calendar/scheduler.go:509 ../../calendar/scheduler.go:513
-msgid "Close"
-msgstr ""
-
-#: ../../calendar/scheduler.go:500
-msgid "Remind me tomorrow"
-msgstr ""
-
-#: ../../calendar/scheduler.go:508
-msgid "Remind me later"
-msgstr ""
-
-#: ../../calendar/scheduler.go:518
->>>>>>> 0592a10f... feat(lastore):dde-control-center setting update
 msgid "Schedule Reminder"
 msgstr ""
 
@@ -284,11 +224,7 @@ msgstr ""
 msgid "Festival"
 msgstr ""
 
-<<<<<<< HEAD
 #: ../../dock/app_entry_menu.go:101
-=======
-#: ../../dock/app_entry_menu.go:102
->>>>>>> 0592a10f... feat(lastore):dde-control-center setting update
 msgid "Open"
 msgstr ""
 
@@ -1012,14 +948,9 @@ msgstr ""
 msgid "Hotspot disabled"
 msgstr ""
 
-<<<<<<< HEAD
 #: ../../network/state_handler.go:337
 #, c-format
 msgid "%s disconnected"
-=======
-#: ../../network/state_handler.go:331 ../../network/state_handler.go:355
-msgid "%q disconnected"
->>>>>>> 0592a10f... feat(lastore):dde-control-center setting update
 msgstr ""
 
 #: ../../network/state_handler.go:343
@@ -1089,7 +1020,6 @@ msgid ""
 "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
-<<<<<<< HEAD
 #: ../../session/power/manager_events.go:184
 msgid "Battery critically low"
 msgstr ""
@@ -1097,15 +1027,6 @@ msgstr ""
 #: ../../session/power/manager_events.go:205
 #: ../../session/power/manager_events.go:210
 #: ../../session/power/manager_events.go:215
-=======
-#: ../../session/power/manager_events.go:183
-msgid "Battery critically low"
-msgstr ""
-
-#: ../../session/power/manager_events.go:204
-#: ../../session/power/manager_events.go:209
-#: ../../session/power/manager_events.go:214
->>>>>>> 0592a10f... feat(lastore):dde-control-center setting update
 msgid "Battery low, please plug in"
 msgstr ""
 

@@ -21,6 +21,7 @@ package keybinding
 
 import (
 	"fmt"
+	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	"time"
 
 	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
@@ -177,27 +178,38 @@ func (m *Manager) initHandlers() {
 		}
 	}
 
-	m.handlers[ActionTypeSystemShutdown] = func(ev *KeyEvent) {
-		// In panguV/klu environment, if the machine wakes up from s3 via pressing the power button,
-		// the desktop will receive the power button event, then dde-shutdown will show up, which
-		// looks weird. The reason causes this is the Huawei kernel works differently when getting
-		// into sleep, it does NOT block the button/interrupt events but instead sending them to the
-		// higher layer such as KWin and dde-daemon above it. To fix this, we need to block the
-		// events when sleeping, then work as normal.
-		sleeping, err := m.login1Manager.PreparingForSleep().Get(0)
-		if err != nil {
-			logger.Warning("Get 'PreparingForSleep' state failed", err)
-		} else if sleeping {
-			return
-		}
+	m.handlers[ActionTypeSystemShutdown] = func(ev *KeyEvent) { // 电源键按下的handler
+		var powerPressAction int32
 
-		cmd := getPowerButtonPressedExec()
-		go func() {
-			err := m.execCmd(cmd, false)
-			if err != nil {
-				logger.Warning("execCmd error:", err)
-			}
-		}()
+		systemBus, _ := dbus.SystemBus()
+		systemPower := power.NewPower(systemBus)
+		onBattery, err := systemPower.OnBattery().Get(0)
+		if err != nil {
+			logger.Error(err)
+		}
+		if onBattery {
+			powerPressAction = m.gsPower.GetEnum("battery-press-power-button")
+		} else {
+			powerPressAction = m.gsPower.GetEnum("line-power-press-power-button")
+		}
+		switch powerPressAction {
+		case powerActionShutdown:
+			m.systemShutdown()
+		case powerActionSuspend:
+			systemSuspend()
+		case powerActionHibernate:
+			m.systemHibernate()
+		case powerActionTurnOffScreen:
+			m.systemTurnOffScreen()
+		case powerActionShowUI:
+			cmd := "dde-shutdown"
+			go func() {
+				err := m.execCmd(cmd, false)
+				if err != nil {
+					logger.Warning("execCmd error:", err)
+				}
+			}()
+		}
 	}
 
 	m.handlers[ActionTypeSystemSuspend] = func(ev *KeyEvent) {

@@ -522,52 +522,40 @@ msgstr "%q eliminada correctament"
 msgid "Failed to uninstall %q"
 msgstr "Ha fallat desinstal·lar %q."
 
-#: ../../network/manager_active_conn.go:318
-msgid "A (5 GHz)"
-msgstr "A (5 GHz)"
-
-#: ../../network/manager_active_conn.go:320
-msgid "BG (2.4 GHz)"
-msgstr "BG (2.4 GHz)"
-
-#: ../../network/manager_active_conn.go:322
-msgid "Automatic"
-msgstr "Automàtic"
-
-#: ../../network/manager_active_conn.go:333
-#: ../../network/manager_active_conn.go:338
+#: ../../network/manager_active_conn.go:351
+#: ../../network/manager_active_conn.go:356
 msgid "None"
 msgstr "Cap"
 
-#: ../../network/manager_active_conn.go:340
+#: ../../network/manager_active_conn.go:358
 msgid "WEP 40/128-bit Key"
 msgstr "Clau WEP de 40/128 bits"
 
-#: ../../network/manager_active_conn.go:342
+#: ../../network/manager_active_conn.go:360
 msgid "WPA/WPA2 Personal"
 msgstr "WPA / WPA2 personal"
 
-#: ../../network/manager_active_conn.go:350
+#: ../../network/manager_active_conn.go:368
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:352
+#: ../../network/manager_active_conn.go:370
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:354
+#: ../../network/manager_active_conn.go:372
 msgid "LEAP"
 msgstr "SALT"
 
-#: ../../network/manager_active_conn.go:356
+#: ../../network/manager_active_conn.go:374
 msgid "FAST"
 msgstr "Ràpid"
 
-#: ../../network/manager_active_conn.go:358
+#: ../../network/manager_active_conn.go:376
 msgid "Tunneled TLS"
 msgstr "TLS per túnel"
 
-#: ../../network/manager_active_conn.go:360
+#: ../../network/manager_active_conn.go:378
 msgid "Protected EAP"
 msgstr "EAP protegit"
 

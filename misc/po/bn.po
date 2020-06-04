@@ -517,52 +517,40 @@ msgstr "%q সফলভাবে মুছে ফেলা হয়েছে"
 msgid "Failed to uninstall %q"
 msgstr "%q আনইনস্টল করতে ব্যর্থ হয়েছে"
 
-#: ../../network/manager_active_conn.go:318
-msgid "A (5 GHz)"
-msgstr "A (5 GHz)"
-
-#: ../../network/manager_active_conn.go:320
-msgid "BG (2.4 GHz)"
-msgstr "BG (2.4 GHz)"
-
-#: ../../network/manager_active_conn.go:322
-msgid "Automatic"
-msgstr "স্বয়ংক্রিয়"
-
-#: ../../network/manager_active_conn.go:333
-#: ../../network/manager_active_conn.go:338
+#: ../../network/manager_active_conn.go:351
+#: ../../network/manager_active_conn.go:356
 msgid "None"
 msgstr "কোনটিই নয়"
 
-#: ../../network/manager_active_conn.go:340
+#: ../../network/manager_active_conn.go:358
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-বিট কী"
 
-#: ../../network/manager_active_conn.go:342
+#: ../../network/manager_active_conn.go:360
 msgid "WPA/WPA2 Personal"
 msgstr "WPA / WPA2 ব্যক্তিগত"
 
-#: ../../network/manager_active_conn.go:350
+#: ../../network/manager_active_conn.go:368
 msgid "TLS"
 msgstr "টিএলএস"
 
-#: ../../network/manager_active_conn.go:352
+#: ../../network/manager_active_conn.go:370
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:354
+#: ../../network/manager_active_conn.go:372
 msgid "LEAP"
 msgstr "লিপ"
 
-#: ../../network/manager_active_conn.go:356
+#: ../../network/manager_active_conn.go:374
 msgid "FAST"
 msgstr "দ্রুত"
 
-#: ../../network/manager_active_conn.go:358
+#: ../../network/manager_active_conn.go:376
 msgid "Tunneled TLS"
 msgstr "টানেলড টিএলএস"
 
-#: ../../network/manager_active_conn.go:360
+#: ../../network/manager_active_conn.go:378
 msgid "Protected EAP"
 msgstr "সুরক্ষিত EAP"
 
@@ -1061,6 +1049,39 @@ msgstr ""
 #: ../../session/power/manager_events.go:215
 msgid "Battery low, please plug in"
 msgstr "ব্যাটারি কম, অনুগ্রহ করে চার্জার সংযুক্ত করুন"
+
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:366 ../../session/power/utils.go:370
+msgid "Power settings changed"
+msgstr ""
+
+#: ../../session/power/utils.go:383
+msgid "When the lid is closed, "
+msgstr ""
+
+#: ../../session/power/utils.go:387
+msgid "When pressing the power button, "
+msgstr ""
+
+#: ../../session/power/utils.go:397
+msgid "your computer will shut down"
+msgstr ""
+
+#: ../../session/power/utils.go:399
+msgid "your computer will suspend"
+msgstr ""
+
+#: ../../session/power/utils.go:401
+msgid "your computer will sleep"
+msgstr ""
+
+#: ../../session/power/utils.go:403
+msgid "your monitor will turn off"
+msgstr ""
+
+#: ../../session/power/utils.go:405
+msgid "it will do nothing to your computer"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:59
 msgid "Authentication is required to set the system time"
