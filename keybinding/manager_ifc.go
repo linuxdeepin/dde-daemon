@@ -20,6 +20,7 @@
 package keybinding
 
 import (
+	"os"
 	"errors"
 	"fmt"
 	"strings"
@@ -372,6 +373,12 @@ func (m *Manager) SelectKeystroke() *dbus.Error {
 
 func (m *Manager) SetNumLockState(state int32) *dbus.Error {
 	logger.Debug("SetNumLockState", state)
+	
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		err := setNumLockWl(m.waylandOutputMgr, m.conn, NumLockState(state))
+		return dbusutil.ToError(err)
+	}
+
 	err := setNumLockState(m.conn, m.keySymbols, NumLockState(state))
 	return dbusutil.ToError(err)
 }

@@ -22,6 +22,7 @@ package keybinding
 import (
 	"errors"
 
+	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/test"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
@@ -72,6 +73,26 @@ func queryCapsLockState(conn *x.Conn) (CapsLockState, error) {
 	} else {
 		return CapsLockOff, nil
 	}
+}
+
+func setNumLockWl(wl *kwayland.OutputManagement, conn *x.Conn, state NumLockState)  error {
+	if !(state == NumLockOff || state == NumLockOn) {
+		return errors.New("invalid num lock state")
+	}
+
+	logger.Debug("setNumLockWl", state)
+	
+	state0, err := queryNumLockState(conn)
+	
+	if err != nil {
+		return err
+	}
+
+	if state0 != state {
+		return wl.WlSimulateKey(0, 69)    //69-kwin对应的NumLock
+	}
+
+	return nil
 }
 
 func setNumLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols, state NumLockState) error {

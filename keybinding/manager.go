@@ -29,6 +29,7 @@ import (
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
@@ -87,6 +88,7 @@ type Manager struct {
 	keyboard        *inputdevices.Keyboard
 	keyboardLayout  string
 	wm              *wm.Wm
+	waylandOutputMgr    *kwayland.OutputManagement
 
 	// controllers
 	audioController       *AudioController
@@ -181,6 +183,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		keySymbols:            keysyms.NewKeySymbols(conn),
 	}
 
+	m.waylandOutputMgr = kwayland.NewOutputManagement(sessionBus)
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	m.systemSigLoop = dbusutil.NewSignalLoop(sysBus, 10)
 
