@@ -113,6 +113,7 @@ type Manager struct {
 		}
 
 		PluginSettingsSynced struct{}
+		DockAppSettingsSynced struct{}
 	}
 
 	methods *struct {
@@ -399,7 +400,7 @@ func (m *Manager) requestDock(desktopFile string, index int32) (bool, error) {
 	}
 
 	if newlyCreated {
-		err := m.exportAppEntry(entry)
+		err = m.exportAppEntry(entry)
 		if err != nil {
 			return false, err
 		}
