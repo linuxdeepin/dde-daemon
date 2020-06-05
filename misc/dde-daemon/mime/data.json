@@ -83,7 +83,8 @@
 		    {
 			      "AppId":[
                 "google-chrome.desktop",
-                "firefox.desktop"
+                "firefox.desktop",
+		"uos-browser.desktop"
             ],
 			      "AppType":"broswer",
 			      "SupportedType":[
