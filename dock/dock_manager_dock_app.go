@@ -24,9 +24,10 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"pkg.deepin.io/lib/keyfile"
 	"strings"
 	"text/template"
+
+	"pkg.deepin.io/lib/keyfile"
 
 	dutils "pkg.deepin.io/lib/utils"
 )
@@ -249,15 +250,15 @@ func (m *Manager) undockEntry(entry *AppEntry) {
 	m.saveDockedApps()
 }
 
-func (m *Manager) modifyNameIcon(desktopId string, name string, iconPath string) string {
-	entry := m.Entries.GetById(desktopId)
+func (m *Manager) modifyNameIcon(entryId string, name string, iconPath string) (string, error) {
+	entry := m.Entries.GetById(entryId)
 	var desktopName string
 	if entry != nil {
 		logger.Debug("editing icon ", entry.Id)
 		desktopName = strings.TrimSuffix(filepath.Base(entry.DesktopFile), desktopExt)
 	} else {
 		logger.Error("entry is null")
-		return ""
+		return "", errors.New("entry is null")
 	}
 
 	//  src path
@@ -279,20 +280,15 @@ func (m *Manager) modifyNameIcon(desktopId string, name string, iconPath string)
 		if iconPath != "" {
 			//copy icon to local path
 			iconPathLocal = filepath.Join(homeDir, ".local/share/icons/", filepath.Base(iconPath))
-			iconDirLocal := filepath.Dir(iconPathLocal)
 
-			if err = os.MkdirAll(iconDirLocal, os.ModePerm); err != nil {
-				iconPathLocal = ""
-				logger.Debug("MkdirAll error ", err)
-			} else {
-				err = copyFileContents(iconPath, iconPathLocal)
-				if err != nil {
-					logger.Debugf("iconPath:%s copy to iconPathLocal:%s failed,error=%s", iconPath, iconPathLocal, err.Error())
-				}
-
-				entry.setPropIcon(iconPathLocal)
-				entry.Icon = iconPathLocal
+			err = copyFileContents(iconPath, iconPathLocal)
+			if err != nil {
+				logger.Debugf("iconPath:%s copy to iconPathLocal:%s failed,error=%v", iconPath, iconPathLocal, err)
+				return "", err
 			}
+
+			entry.setPropIcon(iconPathLocal)
+			entry.Icon = iconPathLocal
 		}
 		if name != "" {
 			entry.setPropName(name)
@@ -314,10 +310,10 @@ func (m *Manager) modifyNameIcon(desktopId string, name string, iconPath string)
 
 		logger.Debugf("modified Icon %s", desktopName)
 	} else {
-		logger.Errorf("unable to modify config error=%s", err.Error())
-		return ""
+		logger.Errorf("unable to modify config error=%v", err)
+		return "", err
 	}
-	return fileHome
+	return fileHome, nil
 }
 
 func (m *Manager) modifyNameIconInDesktop(desktopName string, name string, iconPath string) string {

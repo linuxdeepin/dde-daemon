@@ -27,15 +27,15 @@ import (
 	"time"
 
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
+	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
 	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.launcher"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
-	"github.com/linuxdeepin/go-x11-client"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wmswitcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
+	x "github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/dde/daemon/common/dsync"
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbus1"
+	gio "pkg.deepin.io/gir/gio-2.0"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"pkg.deepin.io/lib/dbusutil/proxy"
@@ -328,8 +328,8 @@ func (m *Manager) requestDock(desktopFile string, index int32) (bool, error) {
 	logger.Debug("requestDock", desktopFile, index)
 	desktopFile = toLocalPath(desktopFile)
 
-	if newpath := getNewDesktopFilePath(desktopFile); newpath != "" {
-		desktopFile = newpath
+	if newPath, err := getNewDesktopFilePath(desktopFile); err != nil {
+		desktopFile = newPath
 	}
 	appInfo := NewAppInfoFromFile(desktopFile)
 
@@ -468,6 +468,6 @@ func (m *Manager) RemovePluginSettings(key1 string, key2List []string) *dbus.Err
 }
 
 func (m *Manager) EditAppIcon(desktopId string, name string, iconPath string) (string, *dbus.Error) {
-	newPath := m.modifyNameIcon(desktopId, name, iconPath)
-	return newPath, nil
+	newPath, err := m.modifyNameIcon(desktopId, name, iconPath)
+	return newPath, dbusutil.ToError(err)
 }

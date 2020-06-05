@@ -100,26 +100,34 @@ func strSliceContains(slice []string, v string) bool {
 }
 
 func copyFileContents(src, dst string) (err error) {
-	in, err := os.Open(src)
-	if err != nil {
-		return
+	_, err = os.Stat(src)
+	if os.IsNotExist(err) {
+		return err
 	}
-	defer in.Close()
-	out, err := os.Create(dst)
-	if err != nil {
-		return
+	dstDir := filepath.Dir(dst)
+	if err = os.MkdirAll(dstDir, 0755); err != nil {
+		return err
 	}
-	defer func() {
-		cerr := out.Close()
-		if err == nil {
-			err = cerr
+	input, err := ioutil.ReadFile(src)
+	if err != nil {
+		// we try again
+		source, err := os.Open(src)
+		if err != nil {
+			return err
 		}
-	}()
-	if _, err = io.Copy(out, in); err != nil {
-		return
+		defer source.Close()
+		destFile, err := os.Create(dst)
+		if err != nil {
+			return err
+		}
+		defer destFile.Close()
+		_, err = io.Copy(destFile, source)
+		if err == nil {
+			os.Chmod(dst, 0644)
+		}
+		return err
 	}
-	err = out.Sync()
-	return
+	return ioutil.WriteFile(dst, input, 0644)
 }
 
 func getCurrentTimestamp() uint32 {

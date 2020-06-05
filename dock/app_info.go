@@ -23,7 +23,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"pkg.deepin.io/lib/appinfo/desktopappinfo"
@@ -63,8 +62,8 @@ func getDockedDesktopAppInfo(app string) *desktopappinfo.DesktopAppInfo {
 
 	absPath := unzipDesktopPath(app)
 
-	if newpath := getNewDesktopFilePath(absPath); newpath != "" {
-		absPath = newpath
+	if newPath, err := getNewDesktopFilePath(absPath); err == nil {
+		absPath = newPath
 	}
 
 	ai, err := desktopappinfo.NewDesktopAppInfoFromFile(absPath)
@@ -94,8 +93,8 @@ func NewAppInfoFromFile(file string) *AppInfo {
 		return nil
 	}
 
-	if newpath := getNewDesktopFilePath(file); newpath != "" {
-		file = newpath
+	if newPath, err := getNewDesktopFilePath(file); err != nil {
+		file = newPath
 		logger.Debug("new dtp path ", file)
 	}
 	dai, _ := desktopappinfo.NewDesktopAppInfoFromFile(file)
@@ -115,18 +114,14 @@ func NewAppInfoFromFile(file string) *AppInfo {
 	return newAppInfo(dai)
 }
 
-func getNewDesktopFilePath(srcFile string) string {
+func getNewDesktopFilePath(srcFile string) (string, error) {
 	desktopFilePath := filepath.Join(homeDir, ".local/share/applications/", filepath.Base(srcFile))
-	_, err := os.Stat(desktopFilePath)
-	if os.IsNotExist(err) {
-		if copyFileContents(srcFile, desktopFilePath) != nil {
-			logger.Error("unable to copy to desktopfile to local path")
-			return ""
-		}
-		os.Chmod(desktopFilePath, os.ModePerm)
-		return desktopFilePath
+
+	if err := copyFileContents(srcFile, desktopFilePath); err != nil {
+		logger.Error("unable to copy to desktopfile to local path,err is ", err)
+		return "", err
 	}
-	return desktopFilePath
+	return desktopFilePath, nil
 }
 
 func (ai *AppInfo) genInnerId() {
