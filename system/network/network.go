@@ -130,9 +130,12 @@ func (n *Network) init() error {
 	n.sigLoop.Start()
 	n.nmManager = networkmanager.NewManager(sysBus)
 	n.nmSettings = networkmanager.NewSettings(sysBus)
-	devicePaths, err := n.nmManager.GetDevices(0)
+
+	n.connectSignal()
+
+	devicePaths, err := n.nmManager.Devices().Get(0)
 	if err != nil {
-		logger.Warning(err)
+		logger.Warning("failed to get devices", err)
 	} else {
 		for _, devPath := range devicePaths {
 			err = n.addDevice(devPath)
@@ -148,7 +151,6 @@ func (n *Network) init() error {
 			}
 		}
 	}
-	n.connectSignal()
 
 	return nil
 }
@@ -595,7 +597,7 @@ func (n *Network) toggleWirelessEnabled() (bool, error) {
 		devPath := d.nmDevice.Path_()
 		err = n.enableDevice(string(devPath), enabled)
 		if err != nil {
-            logger.Warningf("failed to enable %v device %s: %v", enabled, devPath, err)
+			logger.Warningf("failed to enable %v device %s: %v", enabled, devPath, err)
 		}
 	}
 
