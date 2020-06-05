@@ -30,7 +30,8 @@ type SessionInfo struct {
 	Uid     uint32
 	Desktop string
 	Display string
-
+        Type    string
+        Id      string
 	sessionPath dbus.ObjectPath
 }
 
@@ -54,11 +55,19 @@ func newSessionInfo(sessionPath dbus.ObjectPath) (*SessionInfo, error) {
 
 	desktop, _ := core.Desktop().Get(0)
 	display, _ := core.Display().Get(0)
+        sessionType, _ := core.Type().Get(0)
+        sessionId, _ := core.Id().Get(0)
+
+        if sessionType == "wayland" {
+           display = "wayland-0"
+        }
 
 	var info = SessionInfo{
 		Uid:         userInfo.UID,
 		Desktop:     desktop,
 		Display:     display,
+                Type:        sessionType,
+                Id:          sessionId,
 		sessionPath: sessionPath,
 	}
 
