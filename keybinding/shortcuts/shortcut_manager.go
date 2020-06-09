@@ -603,8 +603,11 @@ func isKbdAlreadyGrabbed(conn *x.Conn) bool {
 			// err is nil and activeWin is not viewable
 			grabWin = rootWin
 		} else {
-			// err is nil, activeWin is viewable
-			grabWin = activeWin
+			sessionType := os.Getenv("XDG_SESSION_TYPE")
+			if !strings.Contains(sessionType, "wayland") {
+				// err is nil, activeWin is viewable
+				grabWin = activeWin
+			}
 		}
 	}
 
