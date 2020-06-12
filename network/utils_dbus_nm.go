@@ -808,6 +808,8 @@ func nmGetIp6ConfigInfo(path dbus.ObjectPath) (address, prefix string, gateways,
 	}
 
 	addressProp, _ := ip6config.Addresses().Get(0)
+	gateway, _ := ip6config.Gateway().Get(0)
+	gateways = append(gateways, gateway)
 	ipv6Addresses := wrapNMDBusIpv6Addresses(addressProp)
 	if len(ipv6Addresses) > 0 {
 		address = ipv6Addresses[0].Address
@@ -815,8 +817,8 @@ func nmGetIp6ConfigInfo(path dbus.ObjectPath) (address, prefix string, gateways,
 	}
 	for _, addr := range ipv6Addresses {
 		gateways = append(gateways, addr.Gateway)
-		if(addr.Address[:6] != "FE80::" &&     // link local
-			addr.Address[:6] != "FEC0::") {    // site local
+		if(addr.Address[:5] != "FE80:" &&     // link local
+			addr.Address[:5] != "FEC0:") {    // site local
 			address = addr.Address
 			prefix = fmt.Sprintf("%d", addr.Prefix)
 		}
