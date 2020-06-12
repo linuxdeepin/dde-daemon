@@ -94,6 +94,10 @@ type Manager struct {
 	syncConfig     *dsync.Config
 
 
+	WirelessAccessPoints      string `prop:"access:r"` //用于读取AP
+	updateWirelessCountTicker *countTicker
+
+	//nolint
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {
 			devPath, apJSON string
@@ -226,6 +230,7 @@ func (m *Manager) init() {
 	})
 	m.updatePropConnectivity()
 
+	m.initCountTicker()
 	// move to power module
 	// connect computer suspend signal
 	// _, err = loginManager.ConnectPrepareForSleep(func(active bool) {
@@ -265,6 +270,11 @@ func (m *Manager) destroy() {
 	// reset dbus properties
 	m.setPropNetworkingEnabled(false)
 	m.updatePropState()
+
+	if m.updateWirelessCountTicker != nil {
+		m.updateWirelessCountTicker.Stop()
+		m.updateWirelessCountTicker = nil
+	}
 }
 
 func watchNetworkManagerRestart(m *Manager) {
