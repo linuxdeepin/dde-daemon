@@ -23,10 +23,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"pkg.deepin.io/lib/dbusutil"
 	"strings"
 	"sync"
 	"time"
+
+	"pkg.deepin.io/lib/dbusutil"
 
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	x "github.com/linuxdeepin/go-x11-client"
@@ -446,15 +447,18 @@ func (psp *powerSavePlan) screenBlack() {
 			manager.lockWaitShow(5*time.Second, true)
 		}
 
-		if adjustBrightnessEnabled {
-			// set min brightness for all outputs
-			brightnessTable := make(map[string]float64)
-			for output := range psp.oldBrightnessTable {
-				brightnessTable[output] = 0.02
+		//HandleIdleOff后，任务被清除，此时不需要执行熄屏和DPMS Off操作
+		if psp.tasks != nil {
+			if adjustBrightnessEnabled {
+				// set min brightness for all outputs
+				brightnessTable := make(map[string]float64)
+				for output := range psp.oldBrightnessTable {
+					brightnessTable[output] = 0.02
+				}
+				manager.setDisplayBrightness(brightnessTable)
 			}
-			manager.setDisplayBrightness(brightnessTable)
+			manager.setDPMSModeOff()
 		}
-		manager.setDPMSModeOff()
 
 	})
 	psp.addTask(taskF)
