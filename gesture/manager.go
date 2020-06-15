@@ -9,10 +9,11 @@ import (
 	"path/filepath"
 	"sync"
 
-	"pkg.deepin.io/gir/gio-2.0"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.gesture"
+	"github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
@@ -27,17 +28,20 @@ const (
 )
 
 type Manager struct {
-	wm            *wm.Wm
-	sysDaemon     *daemon.Daemon
-	systemSigLoop *dbusutil.SignalLoop
-	mu            sync.RWMutex
-	userFile      string
-	builtinSets   map[string]func() error
-	gesture       *gesture.Gesture
-	setting       *gio.Settings
-	tsSetting     *gio.Settings
-	enabled       bool
-	Infos         gestureInfos
+	wm             *wm.Wm
+	sysDaemon      *daemon.Daemon
+	systemSigLoop  *dbusutil.SignalLoop
+	sessionSigLoop *dbusutil.SignalLoop
+	mu             sync.RWMutex
+	userFile       string
+	builtinSets    map[string]func() error
+	gesture        *gesture.Gesture
+	sessionManager *sessionmanager.SessionManager
+	setting        *gio.Settings
+	tsSetting      *gio.Settings
+	enabled        bool
+	locked         bool
+	Infos          gestureInfos
 
 	methods *struct {
 		SetLongPressDuration func() `in:"duration"`
@@ -107,12 +111,17 @@ func newManager() (*Manager, error) {
 
 	m.gesture = gesture.NewGesture(systemConn)
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemConn, 10)
+
+	m.sessionManager = sessionmanager.NewSessionManager(sessionConn)
+	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionConn, 10)
+
 	return m, nil
 }
 
 func (m *Manager) destroy() {
 	m.gesture.RemoveHandler(proxy.RemoveAllHandlers)
 	m.systemSigLoop.Stop()
+	m.sessionSigLoop.Stop()
 	m.setting.Unref()
 }
 
@@ -123,11 +132,37 @@ func (m *Manager) init() {
 	m.gesture.InitSignalExt(m.systemSigLoop, true)
 	m.gesture.ConnectEvent(func(name string, direction string, fingers int32) {
 		logger.Debug("[Event] received:", name, direction, fingers)
-		err := m.Exec(name, direction, fingers)
-		if err != nil {
-			logger.Error("Exec failed:", err)
+		if !m.locked {
+			err := m.Exec(name, direction, fingers)
+			if err != nil {
+				logger.Error("Exec failed:", err)
+			}
+		} else {
+			logger.Debug("Current status is Locked")
 		}
 	})
+
+	m.sessionSigLoop.Start()
+	m.sessionManager.InitSignalExt(m.sessionSigLoop, true)
+	_ = m.sessionManager.Locked().ConnectChanged(func(hasValue bool, value bool) {
+		if !hasValue {
+			return
+		}
+		m.locked = value
+
+		sessionBus, err := dbus.SessionBus()
+		if err != nil {
+			logger.Error("Failed to get SessionBus:", err)
+			return
+		}
+		kWinObj := sessionBus.Object("org.kde.KWin", "/KWin")
+		err = kWinObj.Call("org.kde.KWin.disableGestureForClient", 0, m.locked).Err
+		if err != nil {
+			logger.Error("Failed to Call disableGestureForClient:", err)
+			return
+		}
+	})
+
 	m.listenGSettingsChanged()
 }
 
