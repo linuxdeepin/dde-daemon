@@ -261,6 +261,12 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				notify(icon, "", Tr("Hotspot enabled"))
 			} else {
 				notify(icon, "", fmt.Sprintf(Tr("%q connected"), msg))
+				if !sh.m.hasSaveSecret {
+					if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
+						sh.savePasswordByConnectionStatus(data)
+					}
+					sh.m.hasSaveSecret = true
+				}
 			}
 		case nm.NM_DEVICE_STATE_FAILED, nm.NM_DEVICE_STATE_DISCONNECTED, nm.NM_DEVICE_STATE_NEED_AUTH,
 			nm.NM_DEVICE_STATE_UNMANAGED, nm.NM_DEVICE_STATE_UNAVAILABLE:
@@ -328,7 +334,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 						if dsi.connectionType == connectionWirelessHotspot {
 							notify(icon, "", Tr("Hotspot disabled"))
 						} else {
-							msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
+								msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
 						}
 					}
 				case nm.NM_DEVICE_STATE_REASON_NEW_ACTIVATION:
@@ -341,11 +347,14 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 						msg = fmt.Sprintf(Tr("Unable to connect %q, please check your router or net cable."), dsi.aconnId)
 					}
 				case nm.NM_DEVICE_STATE_REASON_NO_SECRETS:
-					msg = fmt.Sprintf(Tr("Password is required to connect %q"), dsi.aconnId)
+					if isSecretDialogExist() {
+					        msg = fmt.Sprintf(Tr("Password is required to connect %q"), dsi.aconnId)
+				        }
 				case nm.NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT:
 					if oldState == nm.NM_DEVICE_STATE_CONFIG && newState == nm.NM_DEVICE_STATE_NEED_AUTH {
-						msg = fmt.Sprintf(Tr("Connection failed, unable to connect %q, wrong password"), dsi.aconnId)
+						msg = fmt.Sprintf(Tr("Connection failed, unable to connect %q, wrong password"), dsi.aconnId)					
 					}
+					sh.m.hasSaveSecret = true
 				//default:
 				//	if dsi.aconnId != "" {
 				//		msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
@@ -368,5 +377,20 @@ func (sh *stateHandler) remove(path dbus.ObjectPath) {
 	if dev, ok := sh.devices[path]; ok {
 		nmDestroyDevice(dev.nmDev)
 		delete(sh.devices, path)
+	}
+}
+
+//Because the password is saved to keyring by 
+//default, the storage operation needs to be 
+//performed according to the status judgment, and 
+//only when the password is correct.
+func (sh *stateHandler) savePasswordByConnectionStatus (data connectionData) {
+	connUUID, ok := getConnectionDataString(data, "connection", "uuid")
+	if !ok {
+		logger.Debug("Failed to save password because can not find connUUID")
+		return 
+	}
+	for _, item := range sh.m.items {
+		sh.m.secretAgent.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
 	}
 }

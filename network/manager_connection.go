@@ -478,7 +478,7 @@ func (m *Manager) activateConnection(uuid string, devPath dbus.ObjectPath) (cpat
 		logger.Warning("ActivateConnection empty device path:", uuid)
 		return
 	}
-
+	
 	cpath, err = nmGetConnectionByUuid(uuid)
 	if err != nil {
 		// connection will be activated in ensureUniqueConnectionExists() if not exists
@@ -487,7 +487,12 @@ func (m *Manager) activateConnection(uuid string, devPath dbus.ObjectPath) (cpat
 		}
 		return
 	}
+	m.hasSaveSecret = true
+	m.saveToKeyring= true 
 	_, err = nmActivateConnection(cpath, devPath)
+	m.activeConnectDevpath = devPath
+	m.activeConnectUuid = uuid
+	m.activeConnectSettingPath = cpath
 	return
 }
 

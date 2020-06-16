@@ -56,6 +56,8 @@ type SecretAgent struct {
 	saveSecretsTasks   map[saveSecretsTaskKey]saveSecretsTask
 	saveSecretsTasksMu sync.Mutex
 
+	m *Manager 
+
 	methods *struct {
 		GetSecrets        func() `in:"connection,connectionPath,settingName,hints,flags" out:"secrets"`
 		CancelGetSecrets  func() `in:"connectionPath,settingName"`
@@ -64,6 +66,8 @@ type SecretAgent struct {
 		DeleteSecrets     func() `in:"connection,connectionPath"`
 	}
 }
+
+var errSecretAgentUserCanceled = errors.New("user canceled")
 
 func (sa *SecretAgent) addSaveSecretsTask(connPath dbus.ObjectPath,
 	settingName string, process *os.Process) {
@@ -129,7 +133,7 @@ func (sa *SecretAgent) getDefaultCollection() (*secrets.Collection, error) {
 	return collectionObj, err
 }
 
-func newSecretAgent(secServiceObj *secrets.Service) (*SecretAgent, error) {
+func newSecretAgent(secServiceObj *secrets.Service, manager *Manager) (*SecretAgent, error) {
 	_, sessionPath, err := secServiceObj.OpenSession(0, "plain", dbus.MakeVariant(""))
 	if err != nil {
 		return nil, err
@@ -139,6 +143,7 @@ func newSecretAgent(secServiceObj *secrets.Service) (*SecretAgent, error) {
 	sa.secretSessionPath = sessionPath
 	sa.secretService = secServiceObj
 	sa.saveSecretsTasks = make(map[saveSecretsTaskKey]saveSecretsTask)
+	sa.m = manager
 	logger.Debug("session path:", sessionPath)
 	return sa, nil
 }
@@ -296,6 +301,15 @@ type getSecretsReply struct {
 	Secrets []string `json:"secrets"`
 }
 
+func isSecretDialogExist() bool {
+	out, err := exec.Command("/bin/sh", "-c", "ps -ef |grep dnetwork-secret-dialog").CombinedOutput()
+	if err != nil {
+		logger.Error(err)
+		return false
+	}
+	return strings.Contains(string(out), "/usr/lib/deepin-daemon/dnetwork-secret-dialog")
+}
+
 func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	connectionData map[string]map[string]dbus.Variant,
 	connUUID, settingName string, settingKeys []string, requestNew bool) (map[string]string, error) {
@@ -321,7 +335,10 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 		return nil, err
 	}
 	logger.Debugf("reqJSON: %s", reqJSON)
-
+	//true : exist -> return
+	if isSecretDialogExist() {
+		return nil, err
+	}
 	cmd := exec.Command(nmSecretDialogBin)
 	cmd.Stdin = bytes.NewReader(reqJSON)
 	var cmdOutBuf bytes.Buffer
@@ -360,6 +377,12 @@ func (sa *SecretAgent) GetSecrets(connectionData map[string]map[string]dbus.Vari
 	var err error
 	secretsData, err = sa.getSecrets(connectionData, connectionPath, settingName, hints, flags)
 	if err != nil {
+		if err == errSecretAgentUserCanceled {
+			return nil, &dbus.Error{
+				Name: "org.freedesktop.NetworkManager.SecretAgent.UserCanceled",
+				Body: []interface{}{"user canceled"},
+			}
+		}
 		return nil, dbusutil.ToError(err)
 	}
 
@@ -452,6 +475,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 	if !ok {
 		return nil, errors.New("not found connection uuid")
 	}
+	connId, _ := getConnectionDataString(connectionData, "connection", "id")
 
 	logger.Debug("uuid:", connUUID)
 	secretsData = make(map[string]map[string]dbus.Variant)
@@ -533,7 +557,21 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 					isMustAsk(connectionData, settingName, secretKey) {
 					askItems = append(askItems, secretKey)
 				}
-			}
+			} else if secretFlags == secretFlagAgentOwned && sa.m.saveToKeyring {
+				resultSaved, err := sa.getAll(connUUID, settingName)
+				if err != nil {
+					return nil, err
+				}		
+				logger.Debugf("getAll resultSaved: %#v", resultSaved)
+			        if len(resultSaved) == 0 && allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
+					askItems = append(askItems, secretKey)
+				}
+			} else if !sa.m.saveToKeyring {
+					err = sa.deleteAll(connUUID)
+					if err != nil {
+						return nil, err
+					}
+			} 
 		}
 
 		if allowInteraction && len(askItems) > 0 {
@@ -541,13 +579,45 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 				settingName, askItems, requestNew)
 			if err != nil {
 				logger.Warning("askPasswords error:", err)
+				if sa.m.activeConnectSettingPath == connectionPath {
+					return nil, errSecretAgentUserCanceled
+				}
 			} else {
 				for key, value := range resultAsk {
 					setting[key] = dbus.MakeVariant(value)
-				}
+					secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
+					getSecretFlagsKeyName(key))
+					if secretFlags == secretFlagAgentOwned {
+						sa.m.hasSaveSecret = false 
+						var items []settingItem
+						valueStr, ok := setting[key].Value().(string)
+						if ok {
+							label := fmt.Sprintf("Network secret for %s/%s/%s", connId, settingName, key)
+							items = append(items, settingItem{
+								settingName: settingName,
+								settingKey:  key,
+								value:       valueStr,
+								label:       label,
+							})
+						}
+						sa.m.items = items
+					}
+				}							
 			}
 		}
 
+		if !sa.m.saveToKeyring {
+			for _, item := range sa.m.items {
+				secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
+				getSecretFlagsKeyName(item.settingKey))
+				if secretFlags == secretFlagAgentOwned {
+					sa.m.hasSaveSecret = false
+					sa.m.saveToKeyring = true 
+					setting[item.settingKey] = dbus.MakeVariant(item.value)
+					return 
+				}
+			}
+		} 
 		resultSaved, err := sa.getAll(connUUID, settingName)
 		if err != nil {
 			return nil, err
@@ -564,6 +634,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 	}
 	return
 }
+
 
 func printConnectionData(data map[string]map[string]dbus.Variant) {
 	for settingName, setting := range data {
@@ -770,10 +841,17 @@ func (sa *SecretAgent) saveSecrets(connectionData map[string]map[string]dbus.Var
 	for _, item := range arr {
 		label := item.label
 		if label == "" {
-			label = fmt.Sprintf("Network secret for %s/%s/%s", connId,
+			item.label = fmt.Sprintf("Network secret for %s/%s/%s", connId,
 				item.settingName, item.settingKey)
 		}
-		sa.set(label, connUUID, item.settingName, item.settingKey, item.value)
+		secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
+			getSecretFlagsKeyName(item.settingKey))
+		if secretFlags == secretFlagAgentOwned {
+			sa.m.saveToKeyring = false 
+			sa.m.items = arr
+			continue
+		}
+		sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
 	}
 
 	// delete
