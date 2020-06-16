@@ -239,6 +239,10 @@ func (b *Bluetooth) init() {
 	b.connectedDevices = make(map[string][]*device, len(DeviceTypes))
 	b.connectedLock.Unlock()
 
+	b.connectedLock.Lock()
+	b.connectedDevices = make(map[string][]*device, len(DeviceTypes))
+	b.connectedLock.Unlock()
+
 	// start bluetooth goroutine
 	// monitor click signal or time out signal to close notification window
 	go beginTimerNotify(globalTimerNotifier)
@@ -763,14 +767,6 @@ func (b *Bluetooth) wakeupWorkaround() {
 		}
 		b.tryConnectPairedDevices()
 	})
-}
-
-func (b *Bluetooth) isDeviceNeedRepair(dev *device) bool {
-	// Audio-card Input-keyboard Input-mouse are allowed re-pair
-	if dev.Icon == "audio-card" || (dev.Class != 0 && (dev.Icon == "input-mouse" || dev.Icon == "input-keyboard")) {
-		return true
-	}
-	return false
 }
 
 func (b *Bluetooth) addConnectedDevice(connectedDev *device) {

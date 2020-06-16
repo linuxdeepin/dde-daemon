@@ -284,6 +284,8 @@ func (d *device) connectProperties() {
 			d.connectedTime = time.Now()
 		} else {
 			d.ConnectState = false
+			// if disconnect success, remove device from map
+			globalBluetooth.removeConnectedDevice(d)
 			// when disconnected quickly after connecting, automatically try to connect
 			sinceConnected := time.Since(d.connectedTime)
 			logger.Debug("sinceConnected:", sinceConnected)
@@ -629,12 +631,15 @@ func (d *device) audioA2DPWorkaround() {
 
 func (d *device) Connect() {
 	logger.Debug(d, "call Connect()")
-	d.setActiveDoConnect(true)
+	// Pc request a connection, don not need to open add-device-window
+	// set ensure state as true
+	d.SetInitiativeConnect(true)
 	err := d.doConnect(true)
+	// add active connected device to map in case auto connect close this device
+	// when auto connect happens, this type device element is not nil, dont try to create connection
 	if err == nil && d.ConnectState == true {
 		globalBluetooth.addConnectedDevice(d)
 	}
-
 }
 
 func (d *device) Disconnect() {
