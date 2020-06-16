@@ -77,7 +77,7 @@
         "Fingers": 4,
         "Action": {
             "Type": "built-in",
-            "Action": "ShowWorkspace"
+            "Action": "ShowAllWindow"
         }
     },
     {
