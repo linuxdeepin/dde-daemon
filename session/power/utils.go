@@ -412,7 +412,7 @@ func getPowerActionString(action int32) string {
 	case powerActionSuspend:
 		return Tr("your computer will suspend")
 	case powerActionHibernate:
-		return Tr("your computer will sleep")
+		return Tr("your computer will hibernate")
 	case powerActionTurnOffScreen:
 		return Tr("your monitor will turn off")
 	case powerActionDoNothing:
