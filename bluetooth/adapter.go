@@ -85,13 +85,13 @@ func (a *adapter) String() string {
 }
 
 func (a *adapter) notifyAdapterAdded() {
-	logger.Info("AdapterAdded", a)
+	logger.Debug("AdapterAdded", a)
 	globalBluetooth.service.Emit(globalBluetooth, "AdapterAdded", marshalJSON(a))
 	globalBluetooth.updateState()
 }
 
 func (a *adapter) notifyAdapterRemoved() {
-	logger.Info("AdapterRemoved", a)
+	logger.Debug("AdapterRemoved", a)
 	globalBluetooth.service.Emit(globalBluetooth, "AdapterRemoved", marshalJSON(a))
 	globalBluetooth.updateState()
 }

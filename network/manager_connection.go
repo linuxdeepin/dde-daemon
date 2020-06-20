@@ -238,7 +238,7 @@ func (m *Manager) removeConnection(cpath dbus.ObjectPath) {
 }
 
 func (m *Manager) doRemoveConnection(conns connectionSlice, i int) connectionSlice {
-	logger.Infof("remove connection %#v", conns[i])
+	logger.Debugf("remove connection %#v", conns[i])
 	m.destroyConnection(conns[i])
 	copy(conns[i:], conns[i+1:])
 	conns = conns[:len(conns)-1]
@@ -478,7 +478,7 @@ func (m *Manager) activateConnection(uuid string, devPath dbus.ObjectPath) (cpat
 		logger.Warning("ActivateConnection empty device path:", uuid)
 		return
 	}
-	
+
 	cpath, err = nmGetConnectionByUuid(uuid)
 	if err != nil {
 		// connection will be activated in ensureUniqueConnectionExists() if not exists
@@ -488,7 +488,7 @@ func (m *Manager) activateConnection(uuid string, devPath dbus.ObjectPath) (cpat
 		return
 	}
 	m.hasSaveSecret = true
-	m.saveToKeyring= true 
+	m.saveToKeyring = true
 	_, err = nmActivateConnection(cpath, devPath)
 	m.activeConnectDevpath = devPath
 	m.activeConnectUuid = uuid

@@ -28,7 +28,7 @@ import (
 	"strings"
 
 	"pkg.deepin.io/dde/daemon/iw"
-	"pkg.deepin.io/lib/dbus1"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/utils"
 )
 
@@ -220,12 +220,12 @@ func execWithIO(name string, arg ...string) (process *os.Process, stdin io.Write
 func isWirelessDeviceSupportHotspot(macAddress string) bool {
 	devices, err := iw.ListWirelessInfo()
 	if err != nil {
-		logger.Warning("Failed to detect hotspot:", macAddress, err)
+		logger.Debug("failed to detect hotspot:", macAddress, err)
 		return false
 	}
 	dev := devices.Get(macAddress)
 	if dev == nil {
-		logger.Warning("Failed to find device:", macAddress)
+		logger.Debug("failed to find device:", macAddress)
 		return false
 	}
 	return dev.SupportedHotspot()

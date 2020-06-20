@@ -446,7 +446,7 @@ func (d *device) doConnect(hasNotify bool) error {
 	connectPhase := d.getConnectPhase()
 	disconnectPhase := d.getDisconnectPhase()
 	if connectPhase != connectPhaseNone {
-		logger.Warningf("%s connect is in progress", d)
+		logger.Debugf("%s connect is in progress", d)
 		return nil
 	} else if disconnectPhase != disconnectPhaseNone {
 		logger.Debugf("%s disconnect is in progress", d)
@@ -494,13 +494,13 @@ func (d *device) doRealConnect() error {
 	d.setConnectPhase(connectPhaseConnectProfilesEnd)
 	if err != nil {
 		// connect failed
-		logger.Warningf("%s connect failed: %v", d, err)
+		logger.Debugf("%s connect failed: %v", d, err)
 		globalBluetooth.config.setDeviceConfigConnected(d.getAddress(), false)
 		return err
 	}
 
 	// connect succeeded
-	logger.Infof("%s connect succeeded", d)
+	logger.Debugf("%s connect succeeded", d)
 	globalBluetooth.config.setDeviceConfigConnected(d.getAddress(), true)
 
 	// auto trust device when connecting success
@@ -552,13 +552,13 @@ func (d *device) doPair() error {
 	err = d.core.Pair(0)
 	d.setConnectPhase(connectPhasePairEnd)
 	if err != nil {
-		logger.Warningf("%s pair failed: %v", d, err)
+		logger.Debugf("%s pair failed: %v", d, err)
 		d.pairingFailedTime = time.Now()
 		d.setConnectPhase(connectPhaseNone)
 		return err
 	}
 
-	logger.Warningf("%s pair succeeded", d)
+	logger.Debugf("%s pair succeeded", d)
 	return nil
 }
 
@@ -607,7 +607,7 @@ func (d *device) Disconnect() {
 	d.setDisconnectPhase(disconnectPhaseDisconnectStart)
 	err = d.core.Disconnect(0)
 	if err != nil {
-		logger.Warningf("failed to disconnect %s: %v", d, err)
+		logger.Debugf("failed to disconnect %s: %v", d, err)
 	}
 	d.setDisconnectPhase(disconnectPhaseDisconnectEnd)
 
