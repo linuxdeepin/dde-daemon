@@ -144,12 +144,6 @@ func (n *Network) init() error {
 				continue
 			}
 		}
-
-		for iface := range n.config.Devices {
-			if n.getDeviceByIface(iface) == nil {
-				delete(n.config.Devices, iface)
-			}
-		}
 	}
 
 	return nil
@@ -464,9 +458,6 @@ func (n *Network) enableDevice1(d *device) (cpath dbus.ObjectPath, err error) {
 	}
 
 	if connPath0 != "" {
-	/*	logger.Debug("activate connection", connPath0)
-		_, err = n.nmManager.ActivateConnection(0, connPath0,
-			d.nmDevice.Path_(), "/")*/
 		return connPath0, err
 	}
 	return "/", nil
