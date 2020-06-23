@@ -25,7 +25,7 @@ import (
 	"strings"
 	"sync"
 
-	"pkg.deepin.io/lib/dbus1"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/procfs"
 	"pkg.deepin.io/lib/pulse"
@@ -102,6 +102,8 @@ func getSinkInputVisible(sinkInputInfo *pulse.SinkInput) bool {
 		//TODO: what's the meaning of this type? Should we filter this SinkInput?
 		return true
 	case "event", "a11y", "test":
+		return false
+	case "filter":
 		return false
 	default:
 		return true
