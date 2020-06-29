@@ -58,6 +58,9 @@ type SecretAgent struct {
 	saveSecretsTasks   map[saveSecretsTaskKey]saveSecretsTask
 	saveSecretsTasksMu sync.Mutex
 
+	// sleep for 2 seconds when trying to get keyring in the first boot
+	needSleep bool
+
 	m *Manager
 
 	methods *struct {
@@ -146,6 +149,7 @@ func newSecretAgent(secServiceObj *secrets.Service, manager *Manager) (*SecretAg
 	sa.secretService = secServiceObj
 	sa.saveSecretsTasks = make(map[saveSecretsTaskKey]saveSecretsTask)
 	sa.m = manager
+	sa.needSleep = true
 	logger.Debug("session path:", sessionPath)
 	return sa, nil
 }
@@ -194,6 +198,11 @@ func checkCollectionLocked(collection *secrets.Collection) {
 }
 
 func (sa *SecretAgent) getAll(uuid, settingName string) (map[string]string, error) {
+	if sa.needSleep {
+		time.Sleep(2 * time.Second)
+		sa.needSleep = false
+	}
+
 	attributes := map[string]string{
 		keyringTagConnUUID:    uuid,
 		keyringTagSettingName: settingName,
