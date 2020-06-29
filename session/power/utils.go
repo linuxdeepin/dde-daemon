@@ -63,12 +63,6 @@ func (m *Manager) waitLockShowing(timeout time.Duration) {
 				return
 			}
 
-			//wait for show lock window
-			if m.UseWayland {
-				logger.Debug("In wayland environment, unsupported check lock whether showin, wait 5s")
-				continue;
-			}
-
 			logger.Debug("waitLockShowing tick")
 			locked, err := m.helper.SessionManager.Locked().Get(0)
 			if err != nil {
