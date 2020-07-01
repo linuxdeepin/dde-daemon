@@ -57,8 +57,26 @@ func HandlePrepareForSleep(sleep bool) {
 	time.Sleep(time.Second * 3)
 	for _, aobj := range globalBluetooth.adapters {
 		if !aobj.Powered {
-			continue
+			powered := globalBluetooth.config.getAdapterConfigPowered(aobj.address)
+			if !powered {
+				continue
+			}
+
+			// 'Powered' is true in config file, so reset it
+			if err := aobj.core.Powered().Set(0, true); err != nil {
+				logger.Warningf("failed to set %s powered: %v", aobj, err)
+				continue
+			}
 		}
+
+		if !aobj.Discovering {
+			// sometimes the adapter stops discovering and 'Discovering' property becomes 'false'
+			// so try to start again
+			if err := aobj.core.StartDiscovery(0); err != nil {
+				logger.Warningf("failed to start discovery, %s, %v", aobj, err)
+			}
+		}
+
 		_ = aobj.core.Discoverable().Set(0, globalBluetooth.config.Discoverable)
 	}
 	globalBluetooth.tryConnectPairedDevices()
