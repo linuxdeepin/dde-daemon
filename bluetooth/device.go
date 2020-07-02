@@ -34,7 +34,7 @@ const (
 	deviceStateDisconnected  = 0
 	deviceStateConnecting    = 1
 	deviceStateConnected     = 2
-	deviceStateDisconnecting = 1
+	deviceStateDisconnecting = 3
 )
 
 type deviceState uint32
@@ -47,6 +47,8 @@ func (s deviceState) String() string {
 		return "doing"
 	case deviceStateConnected:
 		return "Connected"
+    	case deviceStateDisconnecting:
+       		return "Disconnecting"
 	default:
 		return fmt.Sprintf("Unknown(%d)", s)
 	}
@@ -68,6 +70,8 @@ type device struct {
 	Paired           bool
 	State            deviceState
 	ServicesResolved bool
+	ConnectState     bool
+
 	// optional
 	UUIDs   []string
 	Name    string
@@ -81,6 +85,7 @@ type device struct {
 	retryConnectCount int
 	connecting        bool
 	agentWorking      bool
+	isActiveDoConnect bool
 
 	connectPhase      connectPhase
 	disconnectPhase   disconnectPhase
@@ -88,6 +93,19 @@ type device struct {
 	mu                sync.Mutex
 	confirmation      chan bool
 	pairingFailedTime time.Time
+}
+
+func (d *device) getActiveDoConnect() bool {
+	d.mu.Lock()
+	value := d.isActiveDoConnect
+	d.mu.Unlock()
+	return value
+}
+
+func (d *device) setActiveDoConnect(value bool) {
+	d.mu.Lock()
+	d.isActiveDoConnect = value
+	d.mu.Unlock()
 }
 
 type connectPhase uint32
@@ -151,6 +169,9 @@ func (d *device) setConnectPhase(value connectPhase) {
 
 	d.updateState()
 	d.notifyDevicePropertiesChanged()
+	if d.Paired && d.State == deviceStateConnected && d.ConnectState {
+		notifyConnected(d.Alias)
+	}
 }
 
 func (d *device) getConnectPhase() connectPhase {
@@ -196,6 +217,9 @@ func newDevice(systemSigLoop *dbusutil.SignalLoop, dpath dbus.ObjectPath) (d *de
 	d.Class, _ = d.core.Class().Get(0)
 	d.updateState()
 	d.disconnectChan = make(chan struct{})
+	if d.Paired && d.connected {
+		d.ConnectState = true
+	}
 	d.core.InitSignalExt(systemSigLoop, true)
 	d.connectProperties()
 	return
@@ -208,6 +232,15 @@ func (d *device) destroy() {
 func (d *device) notifyDeviceAdded() {
 	logger.Debug("DeviceAdded", d)
 	err := globalBluetooth.service.Emit(globalBluetooth, "DeviceAdded", marshalJSON(d))
+	if err != nil {
+		logger.Warning(err)
+	}
+	globalBluetooth.updateState()
+}
+
+func (d *device) notifyDevicePinCancle() {
+	logger.Debug("DevicePinCancle", d)
+	err := globalBluetooth.service.Emit(globalBluetooth, "PinCancle", marshalJSON(d))
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -242,12 +275,15 @@ func (d *device) connectProperties() {
 		needNotify := true
 
 		if connected {
+			d.ConnectState = true
 			d.connectedTime = time.Now()
 		} else {
+			d.ConnectState = false
 			// when disconnected quickly after connecting, automatically try to connect
 			sinceConnected := time.Since(d.connectedTime)
 			logger.Debug("sinceConnected:", sinceConnected)
 			logger.Debug("retryConnectCount:", d.retryConnectCount)
+			d.notifyDevicePinCancle()
 
 			if sinceConnected < 300*time.Millisecond {
 				if d.retryConnectCount == 0 {
@@ -269,7 +305,7 @@ func (d *device) connectProperties() {
 		d.updateState()
 		d.notifyDevicePropertiesChanged()
 
-		if needNotify {
+		if needNotify && d.Paired && d.State == deviceStateConnected && d.ConnectState {
 			d.notifyConnectedChanged()
 		}
 		return
@@ -466,23 +502,35 @@ func (d *device) doConnect(hasNotify bool) error {
 
 	err = d.doPair()
 	if err != nil {
+		d.ConnectState = false
 		if hasNotify {
-			notifyConnectFailedHostDown(d.Alias)
+
+			if d.getDisconnectPhase() == disconnectPhaseNone {
+				d.core.Disconnect(0)
+			} else {
+				d.setDisconnectPhase(disconnectPhaseNone)
+				d.updateState()
+			}
+			killBluetoothDialog()
+			notifyConnectFailed(d.Alias, err.Error())
 		}
 		return err
 	}
-
+	killBluetoothDialog()
 	d.audioA2DPWorkaround()
 
 	err = d.doRealConnect()
 	if err != nil {
+		d.ConnectState = false
 		if hasNotify {
+			d.core.Disconnect(0)
 			notifyConnectFailedHostDown(d.Alias)
 		}
 		return err
 	}
 
-	if hasNotify {
+	d.ConnectState = true
+	if hasNotify && d.Paired && d.State == deviceStateConnected && d.ConnectState {
 		notifyConnected(d.Alias)
 	}
 	return nil
@@ -575,6 +623,7 @@ func (d *device) audioA2DPWorkaround() {
 
 func (d *device) Connect() {
 	logger.Debug(d, "call Connect()")
+	d.setActiveDoConnect(true)
 	d.doConnect(true)
 }
 
@@ -610,6 +659,8 @@ func (d *device) Disconnect() {
 		logger.Debugf("failed to disconnect %s: %v", d, err)
 	}
 	d.setDisconnectPhase(disconnectPhaseDisconnectEnd)
+	d.ConnectState = false
+	d.notifyDevicePropertiesChanged()
 
 	<-ch
 	notifyDisconnected(d.Alias)
@@ -627,4 +678,15 @@ func (d *device) goWaitDisconnect() chan struct{} {
 		ch <- struct{}{}
 	}()
 	return ch
+}
+
+func killBluetoothDialog() {
+	logger.Debug("killBluetoothDialog")
+	if cmdPinDialog == nil {
+		return		
+	} 
+	err := cmdPinDialog.Process.Kill()
+	if err != nil {
+		logger.Warning("kill err ", err)
+	}
 }

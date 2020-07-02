@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"POT-Creation-Date: 2020-07-02 17:34+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: n1coc4cola <n1coc4cola@gmail.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/linuxdeepin/teams/3617/fr/)\n"
@@ -140,24 +140,60 @@ msgstr "Message d'accès"
 msgid "Message notification"
 msgstr "Message de notification"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr "%q connecté avec succès"
 
-#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
 #: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "Déconnecté"
 
-#: ../../bluetooth/utils_notify.go:77
+#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
 msgid "Make sure %q is turned on and in range"
-msgstr "Assurez-vous que %q est sous tension "
+msgstr "Assurez-vous que %q est allumé"
 
-#: ../../bluetooth/utils_notify.go:82
+#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
 msgid "Bluetooth connection failed"
 msgstr "Connection bluetooth échouée "
+
+#: ../../bluetooth/utils_notify.go:110
+msgid "Page Timeout"
+msgstr "Page périmée"
+
+#: ../../bluetooth/utils_notify.go:113
+msgid "Authentication Timeout"
+msgstr "Temps d'authentification dépassé"
+
+#: ../../bluetooth/utils_notify.go:116
+msgid "Authentication Rejected"
+msgstr "Authentification rejetée"
+
+#: ../../bluetooth/utils_notify.go:119
+msgid "Authentication Canceled"
+msgstr "Authentification annulée"
+
+#: ../../bluetooth/utils_notify.go:122
+msgid "Already Paired"
+msgstr "Déjà jumelé"
+
+#: ../../bluetooth/utils_notify.go:125
+msgid "Authentication Failed"
+msgstr "Authentification annulée"
+
+#: ../../bluetooth/utils_notify.go:135
+msgid "Click here to connect to %q"
+msgstr "Cliquez ici pour vous connecter à %q"
+
+#: ../../bluetooth/utils_notify.go:136
+msgid "Add Bluetooth devices"
+msgstr "Ajouter un appareil Bluetooth"
+
+#: ../../bluetooth/utils_notify.go:150
+msgid "Pair"
+msgstr "Jumeler"
 
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
@@ -195,11 +231,11 @@ msgstr "Fermer"
 
 #: ../../calendar/scheduler.go:494
 msgid "Remind me tomorrow"
-msgstr "Rappeler-le moi demain"
+msgstr "Rappelez-le moi demain"
 
 #: ../../calendar/scheduler.go:502
 msgid "Remind me later"
-msgstr "Rappeler-le moi plus tard"
+msgstr "Rappelez-le moi plus tard"
 
 #: ../../calendar/scheduler.go:512
 msgid "Schedule Reminder"
@@ -319,7 +355,7 @@ msgstr "Discours vers texte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Clipboard"
-msgstr "Presse-papiers "
+msgstr "Presse-papiers"
 
 #: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Translation"
@@ -327,7 +363,7 @@ msgstr "Traduction"
 
 #: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
-msgstr "Changer de périphérique "
+msgstr "Changer de configuration"
 
 #: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
@@ -461,11 +497,11 @@ msgstr "%q installation échouée."
 
 #: ../../lastore/notify.go:108
 msgid "Removed successfully"
-msgstr ""
+msgstr "Supprimé avec succès"
 
 #: ../../lastore/notify.go:110
 msgid "Failed to remove the app"
-msgstr ""
+msgstr "La surpression de l'app a échouée"
 
 #: ../../lastore/notify.go:117
 msgid ""
@@ -955,37 +991,37 @@ msgstr "Point d'accès activé"
 msgid "%q connected"
 msgstr "%q connecté"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
+#: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Point d'accès désactivé"
 
-#: ../../network/state_handler.go:331
+#: ../../network/state_handler.go:337
 msgid "%q disconnected"
 msgstr "%q déconnecté"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Impossible de partager le point d'accès, veuillez vérifier les paramètres de"
 " dnsmasq"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Impossible de se connecter à %q, veuillez-vous rapprocher du routeur sans "
 "fil."
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Impossible de se connecter à %q, veuillez vérifier votre routeur ou votre "
 "câble internet."
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:351
 msgid "Password is required to connect %q"
 msgstr "Mot de passe requis pour se connecter %q"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Échec de la connexion, impossible de connecter %q, mot de passe incorrect"

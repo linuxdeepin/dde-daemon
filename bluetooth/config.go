@@ -21,6 +21,7 @@ package bluetooth
 
 import (
 	"strings"
+	"time"
 
 	"pkg.deepin.io/lib/utils"
 )
@@ -40,6 +41,14 @@ type adapterConfig struct {
 
 type deviceConfig struct {
 	Connected bool
+}
+
+// add address message
+type deviceConfigWithAddress struct {
+	Icon       string
+	Connected  bool
+	LatestTime time.Duration
+	Address    string
 }
 
 func newConfig() (c *config) {

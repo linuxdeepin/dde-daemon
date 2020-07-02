@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Besnik Bleta <besnik@programeshqip.org>, 2020
 # Cindy0514, 2020
+# Besnik Bleta <besnik@programeshqip.org>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"POT-Creation-Date: 2020-07-02 17:34+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
-"Last-Translator: Cindy0514, 2020\n"
+"Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2020\n"
 "Language-Team: Albanian (https://www.transifex.com/linuxdeepin/teams/3617/sq/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,24 +127,60 @@ msgstr "Hyrje në mesazhe"
 msgid "Message notification"
 msgstr "Njoftim mesazhesh"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr "%q u lidh me sukses"
 
-#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
 #: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "E shkëputur"
 
-#: ../../bluetooth/utils_notify.go:77
+#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
 msgid "Make sure %q is turned on and in range"
 msgstr "Sigurohuni që %q është hapur dhe brenda intervali"
 
-#: ../../bluetooth/utils_notify.go:82
+#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
 msgid "Bluetooth connection failed"
 msgstr "Lidhja përmes Bluetooth-it dështoi"
+
+#: ../../bluetooth/utils_notify.go:110
+msgid "Page Timeout"
+msgstr "Mbarim Kohe Për Faqen"
+
+#: ../../bluetooth/utils_notify.go:113
+msgid "Authentication Timeout"
+msgstr "Mbarim Kohe Mirëfilltësimi"
+
+#: ../../bluetooth/utils_notify.go:116
+msgid "Authentication Rejected"
+msgstr "Mirëfilltësimi u Hodh Poshtë"
+
+#: ../../bluetooth/utils_notify.go:119
+msgid "Authentication Canceled"
+msgstr "Mirëfilltësimi u Anulua"
+
+#: ../../bluetooth/utils_notify.go:122
+msgid "Already Paired"
+msgstr "Çiftuar Tashmë"
+
+#: ../../bluetooth/utils_notify.go:125
+msgid "Authentication Failed"
+msgstr "Mirëfilltësimi Dështoi"
+
+#: ../../bluetooth/utils_notify.go:135
+msgid "Click here to connect to %q"
+msgstr "Klikoni këtu që të lidhet me %q"
+
+#: ../../bluetooth/utils_notify.go:136
+msgid "Add Bluetooth devices"
+msgstr "Shtoni pajisje Bluetooth"
+
+#: ../../bluetooth/utils_notify.go:150
+msgid "Pair"
+msgstr "Çiftoje"
 
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
@@ -447,11 +483,11 @@ msgstr "S’u arrit të instalohej %q."
 
 #: ../../lastore/notify.go:108
 msgid "Removed successfully"
-msgstr ""
+msgstr "U hoq me sukses"
 
 #: ../../lastore/notify.go:110
 msgid "Failed to remove the app"
-msgstr ""
+msgstr "S’u arrit të hiqej aplikacioni"
 
 #: ../../lastore/notify.go:117
 msgid ""
@@ -864,6 +900,8 @@ msgstr ""
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
 msgstr ""
+"Ju lutemi, sigurohuni se qe përzgjedhur një plan i saktë, pa detyrime ndaj "
+"kartës SIM"
 
 #: ../../network/state_handler.go:111
 msgid "Failed to activate VPN connection, reason unknown"
@@ -930,35 +968,35 @@ msgstr "Hotspot-i u aktivizua"
 msgid "%q connected"
 msgstr "%q u lidh"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
+#: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Hotspot-i u çaktivizua"
 
-#: ../../network/state_handler.go:331
+#: ../../network/state_handler.go:337
 msgid "%q disconnected"
 msgstr "%q u shkëput"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "S’arrihet të ndahet hotspot me të tjerë, ju lutemi, kontrolloni rregullimet "
 "për dnsmasq"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "S’arrihet të lidhet %q, ju lutemi, jini më afër rrugëzuesit pa fill"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit ose "
 "rrjetit tuaj."
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:351
 msgid "Password is required to connect %q"
 msgstr "Për lidhjen e %q lypset fjalëkalim"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Lidhja dështoi, s’arrihet të lidhet %q, fjalëkalim i gabuar"
 

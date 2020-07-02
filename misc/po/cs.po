@@ -5,19 +5,19 @@
 # 
 # Translators:
 # fri, 2020
-# Pavel Borecki <pavel.borecki@gmail.com>, 2020
 # 李洪武 <lihongwu1987@gmail.com>, 2020
 # op6464 <op64@seznam.cz>, 2020
 # Cindy0514, 2020
+# Pavel Borecki <pavel.borecki@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"POT-Creation-Date: 2020-07-02 17:34+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
-"Last-Translator: Cindy0514, 2020\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/linuxdeepin/teams/3617/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,24 +130,60 @@ msgstr "Přístup ke zprávám"
 msgid "Message notification"
 msgstr "Upozorňování na zprávy"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr "%q úspěšně připojeno"
 
-#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
 #: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "Odpojeno"
 
-#: ../../bluetooth/utils_notify.go:77
+#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
 msgid "Make sure %q is turned on and in range"
 msgstr "Ujistěte se, že zařízení %q je zapnuté a v dosahu"
 
-#: ../../bluetooth/utils_notify.go:82
+#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth připojení se nezdařilo"
+
+#: ../../bluetooth/utils_notify.go:110
+msgid "Page Timeout"
+msgstr "Překročen časový limit stránky"
+
+#: ../../bluetooth/utils_notify.go:113
+msgid "Authentication Timeout"
+msgstr "Překročen časový limit pro ověření"
+
+#: ../../bluetooth/utils_notify.go:116
+msgid "Authentication Rejected"
+msgstr "Ověření odmítnuto"
+
+#: ../../bluetooth/utils_notify.go:119
+msgid "Authentication Canceled"
+msgstr "Ověření se zrušeno"
+
+#: ../../bluetooth/utils_notify.go:122
+msgid "Already Paired"
+msgstr "Už spárováno"
+
+#: ../../bluetooth/utils_notify.go:125
+msgid "Authentication Failed"
+msgstr "Ověření se nezdařilo"
+
+#: ../../bluetooth/utils_notify.go:135
+msgid "Click here to connect to %q"
+msgstr "Pro připojení k %q klikněte sem"
+
+#: ../../bluetooth/utils_notify.go:136
+msgid "Add Bluetooth devices"
+msgstr "Přidat Bluetooth zařízení"
+
+#: ../../bluetooth/utils_notify.go:150
+msgid "Pair"
+msgstr "Spárovat"
 
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
@@ -449,11 +485,11 @@ msgstr "%q se nepodařilo nainstalovat."
 
 #: ../../lastore/notify.go:108
 msgid "Removed successfully"
-msgstr ""
+msgstr "Úspěšně odebráno"
 
 #: ../../lastore/notify.go:110
 msgid "Failed to remove the app"
-msgstr ""
+msgstr "Aplikaci se nepodařilo odebrat"
 
 #: ../../lastore/notify.go:117
 msgid ""
@@ -932,33 +968,33 @@ msgstr "Hotspot zapnutý"
 msgid "%q connected"
 msgstr "%q připojeno"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
+#: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Hotspot vypnut"
 
-#: ../../network/state_handler.go:331
+#: ../../network/state_handler.go:337
 msgid "%q disconnected"
 msgstr "%q odpojeno"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Nedaří se sdílet hotspot – prosím zkontrolujte nastavení dnsmasq"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Nelze se připojit k %q. Přesuňte se blíže k bezdrátovému přístupovému bodu"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nedaří se připojit k %q – zkontrolujte síťové zařízení a kabely prosím."
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:351
 msgid "Password is required to connect %q"
 msgstr "Pro připojení se k %q je požadováno heslo"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Připojení k %q se nezdařilo – chybné heslo"
 

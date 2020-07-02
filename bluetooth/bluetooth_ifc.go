@@ -123,11 +123,13 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 	powered bool) *dbus.Error {
 
 	logger.Debug("SetAdapterPowered", apath, powered)
-
 	a, err := b.getAdapter(apath)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
+
+	a.Powered = powered
+	a.notifyPropertiesChanged()
 
 	err = a.core.Powered().Set(0, powered)
 	if err != nil {

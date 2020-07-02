@@ -10,7 +10,6 @@
 # C Phan <saochi09@googlemail.com>, 2020
 # Niklas Poslovski <ni.pos@gmx.de>, 2020
 # Adalbert Saric <saric.adalbert349@gmail.com>, 2020
-# Ettore Atalan <atalanttore@googlemail.com>, 2020
 # Eduard Gotwig <eduardgotwig@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # valsu <valsu@hylia.de>, 2020
@@ -18,15 +17,16 @@
 # Timo Kröning, 2020
 # Cindy0514, 2020
 # Marcel Pa <marcelpaluch@me.com>, 2020
+# Ettore Atalan <atalanttore@googlemail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"POT-Creation-Date: 2020-07-02 17:34+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
-"Last-Translator: Marcel Pa <marcelpaluch@me.com>, 2020\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,24 +138,60 @@ msgstr "Nachrichtenzugriff"
 msgid "Message notification"
 msgstr "Benachrichtigung bei Nachricht"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr "%q erfolgreich verbunden"
 
-#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
 #: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "Getrennt"
 
-#: ../../bluetooth/utils_notify.go:77
+#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
 msgid "Make sure %q is turned on and in range"
 msgstr "Stellen Sie sicher, dass %q eingeschaltet und in Reichweite ist"
 
-#: ../../bluetooth/utils_notify.go:82
+#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth-Verbindung fehlgeschlagen"
+
+#: ../../bluetooth/utils_notify.go:110
+msgid "Page Timeout"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:113
+msgid "Authentication Timeout"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:116
+msgid "Authentication Rejected"
+msgstr "Authentifizierung abgelehnt"
+
+#: ../../bluetooth/utils_notify.go:119
+msgid "Authentication Canceled"
+msgstr "Authentifizierung abgebrochen"
+
+#: ../../bluetooth/utils_notify.go:122
+msgid "Already Paired"
+msgstr "Bereits gekoppelt"
+
+#: ../../bluetooth/utils_notify.go:125
+msgid "Authentication Failed"
+msgstr "Authentifizierung fehlgeschlagen"
+
+#: ../../bluetooth/utils_notify.go:135
+msgid "Click here to connect to %q"
+msgstr "Zum Verbinden mit %q hier klicken"
+
+#: ../../bluetooth/utils_notify.go:136
+msgid "Add Bluetooth devices"
+msgstr "Bluetooth-Geräte hinzufügen"
+
+#: ../../bluetooth/utils_notify.go:150
+msgid "Pair"
+msgstr "Koppeln"
 
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
@@ -460,7 +496,7 @@ msgstr "%q konnte nicht installiert werden."
 
 #: ../../lastore/notify.go:108
 msgid "Removed successfully"
-msgstr ""
+msgstr "Erfolgreich entfernt"
 
 #: ../../lastore/notify.go:110
 msgid "Failed to remove the app"
@@ -958,35 +994,35 @@ msgstr "Hotspot aktiviert"
 msgid "%q connected"
 msgstr "%q verbunden"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
+#: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Hotspot deaktiviert"
 
-#: ../../network/state_handler.go:331
+#: ../../network/state_handler.go:337
 msgid "%q disconnected"
 msgstr "%q getrennt"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Der Hotspot konnte nicht geteilt werden, prüfen Sie bitte die Einstellungen "
 "von dnsmasq"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Keine Verbindung %q, Reichweite zum WLAN Router verringern."
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Kann keine Verbindung mit %q herstellen, bitte überprüfen Sie Ihren Router "
 "und das Netzwerkkabel."
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:351
 msgid "Password is required to connect %q"
 msgstr "Für die Verbindung mit %q ist ein Kennwort erforderlich"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Verbindung mit %q fehlgeschlagen. Das Passwort ist ungültig"
 

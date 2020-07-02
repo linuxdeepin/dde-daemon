@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"POT-Creation-Date: 2020-07-02 17:34+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Marian c <dark1ro@yahoo.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/linuxdeepin/teams/3617/ro/)\n"
@@ -45,7 +45,7 @@ msgstr "Câmpul nume utilizator nu poate fi gol"
 
 #: ../../accounts/checkers/username.go:68
 msgid "The first character must be a letter or number"
-msgstr ""
+msgstr "Primul caracter trebuie să fie o literă sau un număr"
 
 #: ../../accounts/checkers/username.go:70
 msgid "The username already exists"
@@ -131,24 +131,60 @@ msgstr "Acces mesaj"
 msgid "Message notification"
 msgstr "Notificare mesaj"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr "Contectare %q cu succes"
 
-#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
 #: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "Deconectat"
 
-#: ../../bluetooth/utils_notify.go:77
+#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
 msgid "Make sure %q is turned on and in range"
 msgstr "Asiguraţi-vă că %q este pornit şi în zona de acoperire"
 
-#: ../../bluetooth/utils_notify.go:82
+#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
 msgid "Bluetooth connection failed"
 msgstr "Conexiune Bluetooth eşuată"
+
+#: ../../bluetooth/utils_notify.go:110
+msgid "Page Timeout"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:113
+msgid "Authentication Timeout"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:116
+msgid "Authentication Rejected"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:119
+msgid "Authentication Canceled"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:122
+msgid "Already Paired"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:125
+msgid "Authentication Failed"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:135
+msgid "Click here to connect to %q"
+msgstr "Faceți clic aici pentru a vă conecta la %q"
+
+#: ../../bluetooth/utils_notify.go:136
+msgid "Add Bluetooth devices"
+msgstr "Adăugați dispozitive Bluetooth"
+
+#: ../../bluetooth/utils_notify.go:150
+msgid "Pair"
+msgstr "Împerechează"
 
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
@@ -198,7 +234,7 @@ msgstr "Programare Reminder"
 
 #: ../../calendar/type.go:40
 msgid "Festival"
-msgstr ""
+msgstr "Festival"
 
 #: ../../dock/app_entry_menu.go:101
 msgid "Open"
@@ -314,7 +350,7 @@ msgstr "Clipboard"
 
 #: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Translation"
-msgstr ""
+msgstr "Traducere"
 
 #: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
@@ -817,7 +853,7 @@ msgstr "Manager Modem nepornit sau renuntat pe neasteptate"
 
 #: ../../network/state_handler.go:92
 msgid "The 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "Rețeaua 802.11 WLAN nu a putut fi găsită"
 
 #: ../../network/state_handler.go:93
 msgid "A secondary connection of the base connection failed"
@@ -937,31 +973,31 @@ msgstr "Hotspot activat"
 msgid "%q connected"
 msgstr "%q conectat"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
+#: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Hotspot dezactivat"
 
-#: ../../network/state_handler.go:331
+#: ../../network/state_handler.go:337
 msgid "%q disconnected"
 msgstr "%q deconectat"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Imposibil de partajat hotspot, verificaţi setările dnsmasq "
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Imposibil de conectat %q, staţi mai aproape de router"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Imposibil de conectat %q, verificaţi router sau cablu reţea"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:351
 msgid "Password is required to connect %q"
 msgstr "Parolă necesară pentru conectare la %q"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Conexiune eşuată, ne se poate contecta la %q, parolă invalidă"
 
@@ -1009,6 +1045,8 @@ msgstr "Conectat"
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
+"\"%s\"  nu a trecut verificarea de securitate a sistemului și nu poate fi "
+"executat acum"
 
 #: ../../session/power/manager_events.go:184
 msgid "Battery critically low"

@@ -21,7 +21,9 @@ package bluetooth
 
 import (
 	"fmt"
+	"os/exec"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -34,6 +36,8 @@ const (
 	agentDBusPath      = dbusPath + "/Agent"
 	agentDBusInterface = "org.bluez.Agent1"
 )
+
+var cmdPinDialog *exec.Cmd
 
 type authorize struct {
 	path   dbus.ObjectPath
@@ -111,6 +115,14 @@ func (a *agent) RequestPinCode(dpath dbus.ObjectPath) (pincode string, busErr *d
 func (a *agent) DisplayPinCode(devPath dbus.ObjectPath, pinCode string) (err *dbus.Error) {
 	logger.Info("DisplayPinCode()", pinCode)
 	a.b.service.Emit(a.b, "DisplayPinCode", devPath, pinCode)
+
+	d, error := a.b.getDevice(devPath)
+	if nil != error {
+		logger.Warningf("DisplayPasskey can not find device: %v, %v", devPath, error)
+		return nil
+	}
+	showConfirmDialog(devPath, pinCode)
+	d.setActiveDoConnect(false)
 	return
 }
 
@@ -152,12 +164,16 @@ func (a *agent) RequestPasskey(dpath dbus.ObjectPath) (passkey uint32, busErr *d
 //the value contains less than 6 digits.
 func (a *agent) DisplayPasskey(dpath dbus.ObjectPath, passkey uint32,
 	entered uint16) *dbus.Error {
-
 	logger.Info("DisplayPasskey()", passkey, entered)
-	err := a.b.service.Emit(a.b, "DisplayPasskey", dpath, passkey, uint32(entered))
-	if err != nil {
-		logger.Warning("Failed to emit signal 'DisplayPasskey':", err, dpath, passkey, entered)
+	d, err := a.b.getDevice(dpath)
+	if nil != err {
+		logger.Warningf("DisplayPasskey can not find device: %v, %v", dpath, err)
+		return nil
 	}
+	key := fmt.Sprintf("%06d", passkey)
+	logger.Debug("dpath = ", dpath)
+	showConfirmDialog(dpath, key)
+	d.setActiveDoConnect(false)
 	return nil
 }
 
@@ -321,6 +337,30 @@ func (a *agent) emitCancelled() {
 	}
 }
 
+func isDialogExist(dialog string) bool {
+	cmd := `ps ux | awk '/` + dialog + `/ && !/awk/ {print $2}'`
+	result, err := exec.Command("/bin/sh", "-c", cmd).Output()
+	if err != nil {
+		return true
+	}
+	return strings.TrimSpace(string(result)) != ""
+}
+
+func showConfirmDialog(devPath dbus.ObjectPath, pinCode string) {
+	if isDialogExist("dde-bluetooth-dialog") {
+		logger.Info("notifyActiveConnectTry dialog exist")
+		return
+	}
+
+	var timestamp = strconv.FormatInt(time.Now().UnixNano(), 10)
+	cmdPinDialog = exec.Command(bluetoothPinCodeDialogBin, pinCode, string(devPath), timestamp)
+	if err := cmdPinDialog.Start(); err != nil {
+		logger.Error(err)
+		return
+	}
+	go cmdPinDialog.Wait()
+}
+
 func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...interface{}) (auth authorize, err error) {
 	logger.Info("emitRequest", devPath, signal, args)
 
@@ -328,14 +368,23 @@ func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...inte
 	a.requestDevice = devPath
 	a.mu.Unlock()
 
-	_, err = a.b.getDevice(devPath)
+	d, err := a.b.getDevice(devPath)
 	if nil != err {
 		logger.Warningf("emitRequest can not find device: %v, %v", devPath, err)
 		return auth, errBluezCanceled
 	}
 
-	logger.Debug("Send Signal for device: ", devPath, signal, args)
-	a.emit(signal, devPath, args...)
+	if signal == "RequestConfirmation" {
+		if d.getActiveDoConnect() {
+			showConfirmDialog(devPath, args[0].(string))
+		} else {
+			notifyRequestConfirm(d.Alias, devPath, args[0].(string))
+		}
+		d.setActiveDoConnect(false)
+	} else {
+		logger.Debug("Send Signal for device: ", devPath, signal, args)
+		a.emit(signal, devPath, args...)
+	}
 
 	return a.waitResponse()
 }

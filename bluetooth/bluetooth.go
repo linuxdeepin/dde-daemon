@@ -56,6 +56,7 @@ const (
 	StateConnected   = 2
 )
 
+
 type dbusObjectData map[string]dbus.Variant
 
 //go:generate dbusutil-gen -type Bluetooth bluetooth.go
@@ -77,8 +78,9 @@ type Bluetooth struct {
 	devicesLock sync.Mutex
 	devices     map[dbus.ObjectPath][]*device
 
-	PropsMu sync.RWMutex
-	State   uint32 // StateUnavailable/StateAvailable/StateConnected
+	PropsMu  sync.RWMutex
+	State    uint32 // StateUnavailable/StateAvailable/StateConnected
+	pinTimes uint32 // Limite passKey times
 
 	methods *struct {
 		DebugInfo                     func() `out:"info"`
@@ -106,7 +108,7 @@ type Bluetooth struct {
 			adapterJSON string
 		}
 
-		DeviceAdded, DeviceRemoved, DevicePropertiesChanged struct {
+		DeviceAdded, DeviceRemoved, DevicePropertiesChanged, PinCancle struct {
 			devJSON string
 		}
 
@@ -545,7 +547,7 @@ func (b *Bluetooth) isAdapterExists(apath dbus.ObjectPath) bool {
 }
 
 func (b *Bluetooth) feed(devPath dbus.ObjectPath, accept bool, key string) (err error) {
-	_, err = b.getDevice(devPath)
+	d, err := b.getDevice(devPath)
 	if nil != err {
 		logger.Warningf("FeedRequest can not find device: %v, %v", devPath, err)
 		return err
@@ -555,6 +557,10 @@ func (b *Bluetooth) feed(devPath dbus.ObjectPath, accept bool, key string) (err 
 	if b.agent.requestDevice != devPath {
 		b.agent.mu.Unlock()
 		logger.Warningf("FeedRequest can not find match device: %q, %q", b.agent.requestDevice, devPath)
+		if d.Icon == "input-keyboard" {
+			d.setDisconnectPhase(disconnectPhaseStart)
+			d.core.Disconnect(0)
+		}
 		return errBluezCanceled
 	}
 	b.agent.mu.Unlock()
@@ -605,11 +611,20 @@ func (b *Bluetooth) tryConnectPairedDevices() {
 		err = obj.doConnect(false)
 		if err != nil {
 			logger.Debug("failed to connect:", obj.String(), err)
+			for i := 0; i < 2; i++ {
+				err = obj.doConnect(false)
+				if err != nil {
+					logger.Debug("failed to connect:", obj.String(), err)
+				} else {
+					break
+				}
+			}
 		}
 	}
 }
 
 func (b *Bluetooth) getPairedDeviceList() []*device {
+
 	b.adaptersLock.Lock()
 	defer b.adaptersLock.Unlock()
 	b.devicesLock.Lock()
@@ -623,7 +638,7 @@ func (b *Bluetooth) getPairedDeviceList() []*device {
 			continue
 		}
 		for _, dev := range list {
-			if dev.Paired && !dev.connected && b.isDeviceNeedRepair(dev) {
+			if dev.Paired && !dev.connected && b.isDeviceNeedReconnection(dev) {
 				devList = append(devList, dev)
 			}
 		}
@@ -683,10 +698,7 @@ func (b *Bluetooth) wakeupWorkaround() {
 	})
 }
 
-func (b *Bluetooth) isDeviceNeedRepair(dev *device) bool {
+func (b *Bluetooth) isDeviceNeedReconnection(dev *device) bool {
 	// Audio-card Input-keyboard Input-mouse are allowed re-pair
-	if dev.Icon == "audio-card" || (dev.Class != 0 && (dev.Icon == "input-mouse" || dev.Icon == "input-keyboard")) {
-		return true
-	}
-	return false
+	return dev.Icon == "audio-card"
 }

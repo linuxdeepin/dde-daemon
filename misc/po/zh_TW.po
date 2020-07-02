@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"POT-Creation-Date: 2020-07-02 17:34+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
@@ -130,24 +130,60 @@ msgstr "存取訊息"
 msgid "Message notification"
 msgstr "訊息通知"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr "成功連線至 %q"
 
-#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
 #: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "已斷線"
 
-#: ../../bluetooth/utils_notify.go:77
+#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
 msgid "Make sure %q is turned on and in range"
 msgstr "確認 %q 已開啟且在範圍內"
 
-#: ../../bluetooth/utils_notify.go:82
+#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
 msgid "Bluetooth connection failed"
 msgstr "藍牙連線失敗"
+
+#: ../../bluetooth/utils_notify.go:110
+msgid "Page Timeout"
+msgstr "連接超時"
+
+#: ../../bluetooth/utils_notify.go:113
+msgid "Authentication Timeout"
+msgstr "身份驗證超時"
+
+#: ../../bluetooth/utils_notify.go:116
+msgid "Authentication Rejected"
+msgstr "身份驗證被拒"
+
+#: ../../bluetooth/utils_notify.go:119
+msgid "Authentication Canceled"
+msgstr "身份驗證取消"
+
+#: ../../bluetooth/utils_notify.go:122
+msgid "Already Paired"
+msgstr "已配對"
+
+#: ../../bluetooth/utils_notify.go:125
+msgid "Authentication Failed"
+msgstr "驗證失敗"
+
+#: ../../bluetooth/utils_notify.go:135
+msgid "Click here to connect to %q"
+msgstr "點擊以設定添加%q"
+
+#: ../../bluetooth/utils_notify.go:136
+msgid "Add Bluetooth devices"
+msgstr "添加藍牙裝置"
+
+#: ../../bluetooth/utils_notify.go:150
+msgid "Pair"
+msgstr "配對"
 
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
@@ -213,7 +249,7 @@ msgstr "強制離開"
 
 #: ../../dock/app_entry_menu.go:131
 msgid "Dock"
-msgstr "Dock"
+msgstr "駐停"
 
 #: ../../dock/app_entry_menu.go:138
 msgid "Undock"
@@ -922,31 +958,31 @@ msgstr "已啟用熱點"
 msgid "%q connected"
 msgstr "已連線到 %q 網路"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
+#: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "已停用熱點"
 
-#: ../../network/state_handler.go:331
+#: ../../network/state_handler.go:337
 msgid "%q disconnected"
 msgstr "已斷開到 %q 的連線"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "無法分享熱點，請檢查 dnsmasq 設定"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "無法連線到 %q 網路，請離無線網路路由器更近點"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "無法連線到 %q 網路，請檢查路由器或網路線"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:351
 msgid "Password is required to connect %q"
 msgstr "連線至 %q 需要密碼"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "連線失敗：無法連線到 %q 網路，原因：密碼錯誤"
 

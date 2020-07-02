@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"POT-Creation-Date: 2020-07-02 17:34+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Serdar Sağlam <teknomobil@msn.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
@@ -132,24 +132,60 @@ msgstr "İleti erişimi"
 msgid "Message notification"
 msgstr "İleti bildirimi"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr "%q bağlantısı başarılı"
 
-#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
 #: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "Bağlantı kesildi"
 
-#: ../../bluetooth/utils_notify.go:77
+#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
 msgid "Make sure %q is turned on and in range"
 msgstr "%q ağının açık ve aralıkta olduğundan emin olun"
 
-#: ../../bluetooth/utils_notify.go:82
+#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth bağlantısı kurulamadı"
+
+#: ../../bluetooth/utils_notify.go:110
+msgid "Page Timeout"
+msgstr "Sayfa Zaman Aşımı"
+
+#: ../../bluetooth/utils_notify.go:113
+msgid "Authentication Timeout"
+msgstr "Doğrulama Zaman Aşımı"
+
+#: ../../bluetooth/utils_notify.go:116
+msgid "Authentication Rejected"
+msgstr "Doğrulama Reddedildi"
+
+#: ../../bluetooth/utils_notify.go:119
+msgid "Authentication Canceled"
+msgstr "Doğrulama İptal Edildi"
+
+#: ../../bluetooth/utils_notify.go:122
+msgid "Already Paired"
+msgstr "Zaten Eşlendi"
+
+#: ../../bluetooth/utils_notify.go:125
+msgid "Authentication Failed"
+msgstr "Doğrulama Başarısız"
+
+#: ../../bluetooth/utils_notify.go:135
+msgid "Click here to connect to %q"
+msgstr "%q ağına bağlanmak için tıkla"
+
+#: ../../bluetooth/utils_notify.go:136
+msgid "Add Bluetooth devices"
+msgstr "Bluetooth aygıtları ekle"
+
+#: ../../bluetooth/utils_notify.go:150
+msgid "Pair"
+msgstr "Eşleştir"
 
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
@@ -451,11 +487,11 @@ msgstr "%q kurulamadı."
 
 #: ../../lastore/notify.go:108
 msgid "Removed successfully"
-msgstr ""
+msgstr "Kaldırıldı"
 
 #: ../../lastore/notify.go:110
 msgid "Failed to remove the app"
-msgstr ""
+msgstr "Uygulama kaldırılamadı"
 
 #: ../../lastore/notify.go:117
 msgid ""
@@ -943,34 +979,34 @@ msgstr "Erişim noktası etkin"
 msgid "%q connected"
 msgstr "%q bağlantısı kuruldu"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
+#: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Erişim noktası devre dışı"
 
-#: ../../network/state_handler.go:331
+#: ../../network/state_handler.go:337
 msgid "%q disconnected"
 msgstr "%q bağlantısı kesildi"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Erişim noktası paylaşılamadı, lütfen dnsmasq ayarlarını denetleyin"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "%q bağlantısı kurulamadı, lütfen kablosuz erişim noktasına daha yakın durun"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q bağlantısı kurulamadı, lütfen erişim noktanızı ya da ağ kablonuzu "
 "denetleyin."
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:351
 msgid "Password is required to connect %q"
 msgstr "%q bağlanmak için parola gerekli"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Bağlantı kurulamadı, parola yanlış olduğundan %q bağlantısı kurulamadı"
@@ -1020,7 +1056,7 @@ msgstr "\"%s\" sistem güvenlik doğrulamasını geçemedi ve şimdi çalıştı
 
 #: ../../session/power/manager_events.go:184
 msgid "Battery critically low"
-msgstr "Batarya kritik derecede düşük"
+msgstr "Pil kritik derecede düşük"
 
 #: ../../session/power/manager_events.go:205
 #: ../../session/power/manager_events.go:210

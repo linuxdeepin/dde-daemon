@@ -5,7 +5,7 @@
 # 
 # Translators:
 # Lukas Zemeckis <nekaip3@gmail.com>, 2020
-# Mantas Kriaučiūnas <mantas@akl.lt>, 2020
+# Mantas Kriaučiūnas Baltix <mantas@akl.lt>, 2020
 # Moo, 2020
 # Jonas Motiejūnas <exjonas@gmail.com>, 2020
 # Cindy0514, 2020
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-28 17:22+0800\n"
+"POT-Creation-Date: 2020-07-02 17:34+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Lithuanian (https://www.transifex.com/linuxdeepin/teams/3617/lt/)\n"
@@ -129,24 +129,60 @@ msgstr "Žinučių prieiga"
 msgid "Message notification"
 msgstr "Žinučių pranešimai"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/utils_notify.go:90
 msgid "Connect %q successfully"
 msgstr "%q sėkmingai prijungta"
 
-#: ../../bluetooth/utils_notify.go:73 ../../network/utils_notify.go:99
+#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
 #: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
 #: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
 #: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
 msgid "Disconnected"
 msgstr "Atsijungta"
 
-#: ../../bluetooth/utils_notify.go:77
+#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
 msgid "Make sure %q is turned on and in range"
 msgstr "Įsitikinkite, kad %q yra įjungtas ir yra pasiekiamame nuotolyje"
 
-#: ../../bluetooth/utils_notify.go:82
+#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth ryšys nepavyko"
+
+#: ../../bluetooth/utils_notify.go:110
+msgid "Page Timeout"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:113
+msgid "Authentication Timeout"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:116
+msgid "Authentication Rejected"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:119
+msgid "Authentication Canceled"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:122
+msgid "Already Paired"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:125
+msgid "Authentication Failed"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:135
+msgid "Click here to connect to %q"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:136
+msgid "Add Bluetooth devices"
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:150
+msgid "Pair"
+msgstr ""
 
 #: ../../calendar/job.go:508 ../../calendar/job.go:515
 msgid "today"
@@ -932,32 +968,32 @@ msgstr "Prieigos taškas įjungtas"
 msgid "%q connected"
 msgstr "%q prijungtas"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:329
+#: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Prieigos taškas išjungtas"
 
-#: ../../network/state_handler.go:331
+#: ../../network/state_handler.go:337
 msgid "%q disconnected"
 msgstr "%q atjungtas"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Nepavyko bendrinti prieigos taško, patikrinkite dnsmasq nustatymus"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Nepavyko prijungti %q, laikykite arčiau belaidžio maršrutizatoriaus"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nepavyko prijungti %q, patikrinkite savo maršrutizatorių ar tinklo laidą."
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:351
 msgid "Password is required to connect %q"
 msgstr "Norint prijungti %q, reikalingas slaptažodis"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Ryšys patyrė nesėkmę, nepavyko prisijungti prie %q, neteisingas slaptažodis"
