@@ -208,8 +208,17 @@ func (psp *powerSavePlan) Start() error {
 	if err != nil {
 		logger.Warning("failed to connectChanged Brightness:", err)
 	}
-
+	psp.dealWithPowerSavingModeWhenSystemBoot()
 	return nil
+}
+
+// 处理开关机前后，节能模式状态不一致的情况
+func (psp *powerSavePlan) dealWithPowerSavingModeWhenSystemBoot() {
+	power := psp.manager.helper.Power
+	newPowerSaveState, _ := power.PowerSavingModeEnabled().Get(0)
+	if newPowerSaveState != psp.manager.settings.GetBoolean(settingKeyPowerSavingEnabled) {
+		psp.handlePowerSavingModeChanged(true, newPowerSaveState)
+	}
 }
 
 // 节能模式降低亮度的比例,并降低亮度
@@ -281,6 +290,8 @@ func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bo
 		return
 	}
 	logger.Debug("power saving mode enabled changed to", enabled)
+
+	psp.manager.settings.SetBoolean(settingKeyPowerSavingEnabled, enabled)
 
 	psp.manager.PropsMu.RLock()
 	hasLightSensor := psp.manager.HasAmbientLightSensor
