@@ -305,9 +305,10 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		return err
 	}
 
-	d.InitSignalExt(n.sigLoop, false)
+	d.InitSignalExt(n.sigLoop, true)
 	_, err = d.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
 		//logger.Debugf("device state changed %v newState %d", d.Path_(), newState)
+
 		enabled := n.isIfaceEnabled(iface)
 		state, err := d.State().Get(0)
 		if err != nil {
@@ -326,6 +327,31 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 			}
 		}
 	})
+
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	err = d.Interface().ConnectChanged(func(hasValue bool, iface string) {
+		if !hasValue {
+			return
+		}
+
+		for _, device := range n.devices {
+			if device.nmDevice == d {
+				if config, ok := n.config.Devices[device.iface]; ok {
+					n.configMu.Lock()
+					n.config.Devices[iface] = config
+					delete(n.config.Devices, device.iface)
+					n.configMu.Unlock()
+				}
+
+				device.iface = iface
+				break
+			}
+		}
+	})
+
 	if err != nil {
 		logger.Warning(err)
 	}
