@@ -543,8 +543,7 @@ func (d *device) doConnect(hasNotify bool) error {
 		}
 		return err
 	}
-	killBluetoothDialog()
-	d.audioA2DPWorkaround()
+	// d.audioA2DPWorkaround()
 
 	err = d.doRealConnect()
 	if err != nil {
