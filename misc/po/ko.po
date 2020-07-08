@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: MarongHappy <daemul72@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/linuxdeepin/teams/3617/ko/)\n"
@@ -944,44 +944,51 @@ msgid "Enabling hotspot"
 msgstr "핫스팟 활성화"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "%q 연결중"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "핫스팟 사용"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q 연결됨"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "핫스팟 사용안함"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q 연결 끊김"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "핫스팟을 공유할 수 없습니다. dnsmasq 설정을 확인하십시오"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "%q을(를) 연결할 수 없습니다. 무선 라우터에 가까이 있어야 합니다"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr ""
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "%q을(를) 연결할 수 없습니다. 라우터 또는 인터넷 케이블을 확인하십시오."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
+msgstr ""
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "%q을(를) 연결하려면 비밀번호가 필요합니다"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "연결 실패, %q을(를) 연결할 수 없습니다. 비밀번호가 잘못되었습니다"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr ""
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

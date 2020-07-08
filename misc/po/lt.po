@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Lithuanian (https://www.transifex.com/linuxdeepin/teams/3617/lt/)\n"
@@ -957,46 +957,51 @@ msgid "Enabling hotspot"
 msgstr "Įjungiamas prieigos taškas"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "Prijungiama %q"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "Prieigos taškas įjungtas"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q prijungtas"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Prieigos taškas išjungtas"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q atjungtas"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Nepavyko bendrinti prieigos taško, patikrinkite dnsmasq nustatymus"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "Nepavyko prijungti %q, laikykite arčiau belaidžio maršrutizatoriaus"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr ""
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
-"Nepavyko prijungti %q, patikrinkite savo maršrutizatorių ar tinklo laidą."
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "Norint prijungti %q, reikalingas slaptažodis"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
 msgstr ""
-"Ryšys patyrė nesėkmę, nepavyko prisijungti prie %q, neteisingas slaptažodis"
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

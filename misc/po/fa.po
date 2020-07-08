@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: amirhosein lesani <xenups@gmail.com>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/linuxdeepin/teams/3617/fa/)\n"
@@ -960,24 +960,27 @@ msgid "Enabling hotspot"
 msgstr "فعال کردن هات اسپات"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "در حال اتصال %q"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "هات اسپات فعال شد"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q متصل شده"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "هات اسپات غیرفعال شد"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q قطع شد"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
@@ -985,21 +988,24 @@ msgstr ""
 "اشتراک هات اسپات امکان پذیر نیست ، لطفاً تنظیمات dnsmasq را بررسی کنید"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "اتصال %q امکان پذیر نیست ، لطفاً به روتر بی سیم نزدیک تر شوید"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr ""
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
-"اتصال %q امکان پذیر نیست ، لطفاً روتر یا کابل اینترنت خود را بررسی کنید."
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "برای اتصال به %q  نیاز به رمز عبور دارید"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "اتصال انجام نشد ، قادر به اتصال %q ، گذرواژه اشتباه است"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr ""
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

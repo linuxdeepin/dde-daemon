@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Chinese (Hong Kong) (https://www.transifex.com/linuxdeepin/teams/3617/zh_HK/)\n"
@@ -945,44 +945,51 @@ msgid "Enabling hotspot"
 msgstr "正在嘗試打開熱點"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "正在連接%q"
+#, c-format
+msgid "Connecting %s"
+msgstr "%s連接中"
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "熱點共享已開啟"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "已連接%q"
+#, c-format
+msgid "%s connected"
+msgstr "%s已連接"
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "熱點共享已關閉"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q已斷開"
+#, c-format
+msgid "%s disconnected"
+msgstr "%s已切斷連接"
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "無法共享熱點，請檢查dnsmasq 相關設置"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "未能加入%q，請嘗試靠近無線路由器"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr "未能加入%s，請嘗試靠近無線路由器"
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "未能加入%q，請檢查路由器或網線。"
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
+msgstr "未能加入%s，請檢查路由器或網線。"
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "連接%q需要密碼"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr "連接%s需要密碼"
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "連接失敗，未能加入%q，密碼不正確"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr "連接失敗，未能加入%s，密碼不正確"
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

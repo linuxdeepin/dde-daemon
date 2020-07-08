@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Serdar Sağlam <teknomobil@msn.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
@@ -968,48 +968,54 @@ msgid "Enabling hotspot"
 msgstr "Erişim noktasını etkinleşir"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "Bağlanıyor %q"
+#, c-format
+msgid "Connecting %s"
+msgstr "Bağlanıyor %s"
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "Erişim noktası etkin"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q bağlantısı kuruldu"
+#, c-format
+msgid "%s connected"
+msgstr "%s bağlandı"
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Erişim noktası devre dışı"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q bağlantısı kesildi"
+#, c-format
+msgid "%s disconnected"
+msgstr "%s bağlantısı kesildi"
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Erişim noktası paylaşılamadı, lütfen dnsmasq ayarlarını denetleyin"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
-"%q bağlantısı kurulamadı, lütfen kablosuz erişim noktasına daha yakın durun"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr "%s bağlanılamıyor, lütfen kablosuz yönlendiriciye yakın tutun"
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
-"%q bağlantısı kurulamadı, lütfen erişim noktanızı ya da ağ kablonuzu "
+"%s bağlantısı kurulamadı, lütfen erişim noktanızı ya da ağ kablonuzu "
 "denetleyin."
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "%q bağlanmak için parola gerekli"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr "%s bağlanmak için parola gerekli"
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
 msgstr ""
-"Bağlantı kurulamadı, parola yanlış olduğundan %q bağlantısı kurulamadı"
+"Bağlantı kurulamadı, parola yanlış olduğundan %s bağlantısı kurulamadı"
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

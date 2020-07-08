@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Davidmp <medipas@gmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/linuxdeepin/teams/3617/ca/)\n"
@@ -970,24 +970,27 @@ msgid "Enabling hotspot"
 msgstr "S'habilita el punt d'accés."
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "Es connecta amb %q"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "Punt d'accés habilitat"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q connectada"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Punt d'accés inhabilitat"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q desconnectada"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
@@ -996,24 +999,24 @@ msgstr ""
 "de dnsmasq."
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
 msgstr ""
-"No es pot connectar amb %q. Si us plau, mantingueu-vos a prop de "
-"l'encaminador."
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
-"No es pot connectar amb %q, comproveu l'encaminador o el cable de xarxa."
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "Cal la contrasenya per connectar amb %q"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
 msgstr ""
-"Ha fallat la connexió. No es pot connectar amb %q. Contrasenya incorrecta."
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Malay (https://www.transifex.com/linuxdeepin/teams/3617/ms/)\n"
@@ -958,48 +958,51 @@ msgid "Enabling hotspot"
 msgstr "Membenarkan kawasan khas"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "Menyambungkan %q"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "Kawasan khas dibenarkan"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q bersambung"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Kawasan khas dilumpuhkan"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q terputus"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Tidak boleh berkongsi kawasan khas, sila periksa tetapan dnsmasq"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
 msgstr ""
-"Tidak boleh bersambung dengan %q, pastikan anda berhampiran dengan penghala "
-"tanpa wayar"
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
-"Tidak boleh bersambung dengan %q, sila periksa penghala atau kabel rangkaian"
-" anda."
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "Kata laluan diperlukan untuk bersambung dengan %q"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Sambungan gagal, tidak dapat bersambung dengan %q, kata laluan salah"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr ""
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

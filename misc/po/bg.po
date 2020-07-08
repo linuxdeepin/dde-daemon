@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Bulgarian (https://www.transifex.com/linuxdeepin/teams/3617/bg/)\n"
@@ -961,7 +961,8 @@ msgid "Enabling hotspot"
 msgstr ""
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
+#, c-format
+msgid "Connecting %s"
 msgstr ""
 
 #: ../../network/state_handler.go:261
@@ -969,36 +970,42 @@ msgid "Hotspot enabled"
 msgstr ""
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q свързан"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr ""
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q прекъснат"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Неуспешно споделяне на хотспот, проверете dnsmasq настройките"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "Неуспешно свързване с %q, приближете се до безжичния рутер"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr ""
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "Невъзможна връзка с %q, моля проверете рутера или мрежовия кабел."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
+msgstr ""
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
+#, c-format
+msgid "Password is required to connect %s"
 msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Неуспешна връзка, не се свързваме с %q, грешна парола"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr ""
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

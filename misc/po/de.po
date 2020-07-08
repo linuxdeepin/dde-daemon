@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
@@ -983,24 +983,27 @@ msgid "Enabling hotspot"
 msgstr "Hotspot aktivieren"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "%q wird verbunden"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "Hotspot aktiviert"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q verbunden"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Hotspot deaktiviert"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q getrennt"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
@@ -1009,22 +1012,24 @@ msgstr ""
 "von dnsmasq"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "Keine Verbindung %q, Reichweite zum WLAN Router verringern."
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr ""
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
-"Kann keine Verbindung mit %q herstellen, bitte überprüfen Sie Ihren Router "
-"und das Netzwerkkabel."
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "Für die Verbindung mit %q ist ein Kennwort erforderlich"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Verbindung mit %q fehlgeschlagen. Das Passwort ist ungültig"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr ""
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

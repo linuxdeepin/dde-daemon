@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Jozef Gaal <preklady@mayday.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/linuxdeepin/teams/3617/sk/)\n"
@@ -272,7 +272,7 @@ msgstr "Terminál"
 
 #: ../../keybinding/shortcuts/id_name_map.go:30
 msgid "Screen Recorder"
-msgstr ""
+msgstr "Nahrávanie obrazovky"
 
 #: ../../keybinding/shortcuts/id_name_map.go:31
 msgid "Lock screen"
@@ -839,7 +839,7 @@ msgstr "Zariadenie InfiniBand nepodporuje režim pripojenia"
 
 #: ../../network/state_handler.go:89
 msgid "A dependency of the connection failed"
-msgstr ""
+msgstr "Závislosť pripojenia zlyhala"
 
 #: ../../network/state_handler.go:90
 msgid "RFC 2684 Ethernet bridging error to ADSL"
@@ -958,46 +958,51 @@ msgid "Enabling hotspot"
 msgstr "Povoľuje sa Hotspot"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "Pripája sa %q"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "Hotspot povolený"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q pripojený"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Hotspot vypnutý"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q odpojený"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Nepodarilo sa zdieľať hotspot, skontrolujte nastavenia dnsmasq"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
 msgstr ""
-"Nepodarilo sa pripojiť %q, prosím priblížte sa bližšie k bezdrôtovému "
-"smerovaču"
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "Nepodarilo sa pripojiť %q, skontrolujte router alebo sieťový kábel."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
+msgstr ""
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "Na pripojenie k %q je potrebné heslo"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Pripojenie zlyhalo, nemôžem pripojiť %q, nesprávne heslo"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr ""
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

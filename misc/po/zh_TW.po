@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
@@ -947,44 +947,51 @@ msgid "Enabling hotspot"
 msgstr "正在啟用熱點"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "正在連線至 %q"
+#, c-format
+msgid "Connecting %s"
+msgstr "正在連線 %s"
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "已啟用熱點"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "已連線到 %q 網路"
+#, c-format
+msgid "%s connected"
+msgstr "%s已連線"
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "已停用熱點"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "已斷開到 %q 的連線"
+#, c-format
+msgid "%s disconnected"
+msgstr "%s 已斷線"
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "無法分享熱點，請檢查 dnsmasq 設定"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "無法連線到 %q 網路，請離無線網路路由器更近點"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr "無法連線到 %s 網路，請離無線網路路由器更近點"
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "無法連線到 %q 網路，請檢查路由器或網路線"
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
+msgstr "無法連線到 %s 網路，請檢查路由器或網路線"
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "連線至 %q 需要密碼"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr "連線至 %s 需要密碼"
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "連線失敗：無法連線到 %q 網路，原因：密碼錯誤"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr "連線失敗：無法連線到 %s 網路，原因：密碼錯誤"
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

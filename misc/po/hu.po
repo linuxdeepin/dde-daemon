@@ -7,7 +7,6 @@
 # b1094bbfad3b29958bce7f8a2c08de92, 2020
 # vmarci21 <vmarci21@msn.com>, 2020
 # Jack Howell <jack.howell@protonmail.com>, 2020
-# ccedb894e6c246847bbbb58794dea50d, 2020
 # Kiss Zoltan <atari@freemail.hu>, 2020
 # c5c74d5c0e928622070863d16011fda8_265b1fe, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
@@ -27,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: e7b367b198a92ab3e6fd7f551a36a082, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/linuxdeepin/teams/3617/hu/)\n"
@@ -979,24 +978,27 @@ msgid "Enabling hotspot"
 msgstr "Hotspot engedélyezése"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "Csatlakozás %q"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "Hotspot bekapcsolva"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q kapcsolódva"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Hotspot kikapcsolva"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q szétkapcsolva"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
@@ -1004,24 +1006,24 @@ msgstr ""
 "Nem sikerült a hotspot megosztás, kérjük, ellenőrizze a netmasztk beállítást"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
 msgstr ""
-"Nem sikerült csatlakozni %q -hoz, próbáljon meg a router hatótávolságán "
-"belül kapcsolódni."
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
-"Csatlakozás sikertelen %q, kérem ellenőrizze a routert és a LAN-kábelt."
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "Jelszó szükéges a csatlakozáshoz %q"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
 msgstr ""
-"Nem sikerült csatlakoztatni a %q -hoz, kérem ellenőrizze a beírt jelszót."
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-02 17:34+0800\n"
+"POT-Creation-Date: 2020-07-07 12:17+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2020\n"
 "Language-Team: Albanian (https://www.transifex.com/linuxdeepin/teams/3617/sq/)\n"
@@ -957,24 +957,27 @@ msgid "Enabling hotspot"
 msgstr "Po aktivizohet hotspot-i"
 
 #: ../../network/state_handler.go:253
-msgid "Connecting %q"
-msgstr "Po lidhet %q"
+#, c-format
+msgid "Connecting %s"
+msgstr ""
 
 #: ../../network/state_handler.go:261
 msgid "Hotspot enabled"
 msgstr "Hotspot-i u aktivizua"
 
 #: ../../network/state_handler.go:263
-msgid "%q connected"
-msgstr "%q u lidh"
+#, c-format
+msgid "%s connected"
+msgstr ""
 
 #: ../../network/state_handler.go:280 ../../network/state_handler.go:335
 msgid "Hotspot disabled"
 msgstr "Hotspot-i u çaktivizua"
 
 #: ../../network/state_handler.go:337
-msgid "%q disconnected"
-msgstr "%q u shkëput"
+#, c-format
+msgid "%s disconnected"
+msgstr ""
 
 #: ../../network/state_handler.go:343
 msgid "Unable to share hotspot, please check dnsmasq settings"
@@ -983,22 +986,24 @@ msgstr ""
 "për dnsmasq"
 
 #: ../../network/state_handler.go:345
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "S’arrihet të lidhet %q, ju lutemi, jini më afër rrugëzuesit pa fill"
+#, c-format
+msgid "Unable to connect %s, please keep closer to the wireless router"
+msgstr ""
 
 #: ../../network/state_handler.go:347
-msgid "Unable to connect %q, please check your router or net cable."
+#, c-format
+msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
-"S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit ose "
-"rrjetit tuaj."
 
 #: ../../network/state_handler.go:351
-msgid "Password is required to connect %q"
-msgstr "Për lidhjen e %q lypset fjalëkalim"
+#, c-format
+msgid "Password is required to connect %s"
+msgstr ""
 
 #: ../../network/state_handler.go:355
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Lidhja dështoi, s’arrihet të lidhet %q, fjalëkalim i gabuar"
+#, c-format
+msgid "Connection failed, unable to connect %s, wrong password"
+msgstr ""
 
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"
