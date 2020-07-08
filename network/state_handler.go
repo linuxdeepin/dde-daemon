@@ -250,7 +250,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				if dsi.connectionType == connectionWirelessHotspot {
 					notify(icon, "", Tr("Enabling hotspot"))
 				} else {
-					notify(icon, "", fmt.Sprintf(Tr("Connecting %q"), dsi.aconnId))
+					notify(icon, "", fmt.Sprintf(Tr("Connecting %s"), dsi.aconnId))
 				}
 			}
 		case nm.NM_DEVICE_STATE_ACTIVATED:
@@ -260,7 +260,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 			if dsi.connectionType == connectionWirelessHotspot {
 				notify(icon, "", Tr("Hotspot enabled"))
 			} else {
-				notify(icon, "", fmt.Sprintf(Tr("%q connected"), msg))
+				notify(icon, "", fmt.Sprintf(Tr("%s connected"), msg))
 				if !sh.m.hasSaveSecret {
 					if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
 						sh.savePasswordByConnectionStatus(data)
@@ -334,7 +334,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 						if dsi.connectionType == connectionWirelessHotspot {
 							notify(icon, "", Tr("Hotspot disabled"))
 						} else {
-								msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
+								msg = fmt.Sprintf(Tr("%s disconnected"), dsi.aconnId)
 						}
 					}
 				case nm.NM_DEVICE_STATE_REASON_NEW_ACTIVATION:
@@ -342,17 +342,17 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 					if dsi.connectionType == connectionWirelessHotspot {
 						msg = Tr("Unable to share hotspot, please check dnsmasq settings")
 					} else if dsi.connectionType == connectionWireless {
-						msg = fmt.Sprintf(Tr("Unable to connect %q, please keep closer to the wireless router"), dsi.aconnId)
+						msg = fmt.Sprintf(Tr("Unable to connect %s, please keep closer to the wireless router"), dsi.aconnId)
 					} else if dsi.connectionType == connectionWired {
-						msg = fmt.Sprintf(Tr("Unable to connect %q, please check your router or net cable."), dsi.aconnId)
+						msg = fmt.Sprintf(Tr("Unable to connect %s, please check your router or net cable."), dsi.aconnId)
 					}
 				case nm.NM_DEVICE_STATE_REASON_NO_SECRETS:
 					if isSecretDialogExist() {
-					        msg = fmt.Sprintf(Tr("Password is required to connect %q"), dsi.aconnId)
+					        msg = fmt.Sprintf(Tr("Password is required to connect %s"), dsi.aconnId)
 				        }
 				case nm.NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT:
 					if oldState == nm.NM_DEVICE_STATE_CONFIG && newState == nm.NM_DEVICE_STATE_NEED_AUTH {
-						msg = fmt.Sprintf(Tr("Connection failed, unable to connect %q, wrong password"), dsi.aconnId)					
+						msg = fmt.Sprintf(Tr("Connection failed, unable to connect %s, wrong password"), dsi.aconnId)
 					}
 					sh.m.hasSaveSecret = true
 				//default:
