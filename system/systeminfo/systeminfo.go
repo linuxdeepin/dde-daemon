@@ -37,6 +37,7 @@ func (m Module) Start() error {
 	}
 	//init get memory
 	go m.m.calculateMemoryViaLshw()
+	go m.m.initProductNameViaDmidecode()
 	return nil
 }
 

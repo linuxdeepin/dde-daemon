@@ -1,11 +1,13 @@
 package systeminfo
 
 import (
+	"context"
 	"encoding/xml"
 	"fmt"
 	"os/exec"
 	"strings"
 	"sync"
+	"time"
 
 	"pkg.deepin.io/lib/dbusutil"
 )
@@ -15,18 +17,30 @@ const (
 	dbusPath        = "/com/deepin/system/SystemInfo"
 	dbusInterface   = dbusServiceName
 
- 	KB =  1 << 10
- 	MB =  1 << 20
- 	GB =  1 << 30
- 	TB =  1 << 40
- 	EB =  1 << 50
+	KB = 1 << 10
+	MB = 1 << 20
+	GB = 1 << 30
+	TB = 1 << 40
+	EB = 1 << 50
 )
 
 type Manager struct {
-	service   *dbusutil.Service
-	PropsMu   sync.RWMutex
+	service         *dbusutil.Service
+	PropsMu         sync.RWMutex
 	MemorySize      uint64
 	MemorySizeHuman string
+	ProductName     string
+}
+
+type dmiSystemInfo struct {
+	Manufacturer string
+	ProductName  string
+	Version      string
+	SerialNumber string
+	UUID         string
+	WakeUpType   string
+	SKUNumber    string
+	Family       string
 }
 
 type lshwXmlList struct {
@@ -34,8 +48,8 @@ type lshwXmlList struct {
 }
 
 type lshwXmlNode struct {
-	Description string  `xml:"description"`
-	Size 		uint64  `xml:"size"`
+	Description string `xml:"description"`
+	Size        uint64 `xml:"size"`
 }
 
 func formatFileSize(fileSize uint64) (size string) {
@@ -67,7 +81,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 
 func runLshwMemory() (out []byte, err error) {
 	cmd := exec.Command("lshw", "-c", "memory", "-sanitize", "-xml")
-	out,err = cmd.Output()
+	out, err = cmd.Output()
 	if err != nil {
 		logger.Error(err)
 		return out, err
@@ -86,7 +100,7 @@ func parseXml(bytes []byte) (result lshwXmlNode, err error) {
 	len := len(list.Items)
 	for i := 0; i < len; i++ {
 		data := list.Items[i]
-		logger.Debug("Description : ", data.Description," , size : ", data.Size)
+		logger.Debug("Description : ", data.Description, " , size : ", data.Size)
 		if strings.ToLower(data.Description) == "system memory" {
 			result = data
 		}
@@ -122,4 +136,75 @@ func (m *Manager) calculateMemoryViaLshw() {
 	m.setMemorySizeHuman(memory)
 	m.PropsMu.Unlock()
 	logger.Debug("System Memory : ", ret.Size)
+}
+
+func (m *Manager) initProductNameViaDmidecode() {
+	dmiSystemInfo, err := newDmiSystemInfo()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	value := ""
+
+	if strings.Contains(dmiSystemInfo.ProductName, "KLVU-WDU0") {
+		value = "klu"
+	} else if strings.Contains(dmiSystemInfo.ProductName, "PGUV-WBX0") {
+		value = "panguV"
+	} else if strings.Contains(dmiSystemInfo.ProductName, "PGU-WBX0") {
+		value = "pangu"
+	} else {
+		value = dmiSystemInfo.ProductName
+	}
+
+	m.PropsMu.Lock()
+	m.ProductName = value
+	err = m.service.EmitPropertyChanged(m, "ProductName", m.ProductName)
+	if err != nil {
+		logger.Warning(err)
+	}
+	m.PropsMu.Unlock()
+}
+
+// newDmiSystemInfo new a dmiSystemInfo pointer by dmidecode cmd
+func newDmiSystemInfo() (*dmiSystemInfo, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
+	out, err := exec.CommandContext(ctx, "dmidecode", "-t", "1").CombinedOutput()
+	cancel()
+	if err != nil {
+		return nil, err
+	}
+
+	var sysInfo dmiSystemInfo
+
+	lines := strings.Split(string(out), "\n")
+	for _, line := range lines {
+		kv := strings.SplitN(line, ":", 2)
+
+		if len(kv) < 2 {
+			continue
+		}
+
+		val := strings.TrimSpace(kv[1])
+		switch strings.TrimSpace(kv[0]) {
+		case "Manufacturer":
+			sysInfo.Manufacturer = val
+		case "Product Name":
+			sysInfo.ProductName = val
+		case "Version":
+			sysInfo.Version = val
+		case "Serial Number":
+			sysInfo.SerialNumber = val
+		case "UUID":
+			sysInfo.UUID = val
+		case "Wake-up Type":
+			sysInfo.WakeUpType = val
+		case "SKU Number":
+			sysInfo.SKUNumber = val
+		case "Family":
+			sysInfo.Family = val
+		}
+	}
+
+	return &sysInfo, nil
 }
