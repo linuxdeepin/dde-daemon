@@ -20,6 +20,7 @@
 package power
 
 import (
+	"context"
 	"os"
 	"os/exec"
 	"time"
@@ -119,24 +120,13 @@ func (m *Manager) setDPMSModeOff() {
 
 func setDPMSByKWL(mode string) {
 	logger.Debug("[setDPMSByKWL] will set dpms mode:", mode)
-	var cmd = exec.Command("dde_wldpms", "-s", mode)
-	var timeout = make(chan bool)
-	go func() {
-		time.Sleep(3)
-		timeout <- false
-	}()
-	go func(m string, c *exec.Cmd) {
-		_, err := c.Output()
-		if err != nil {
-			logger.Info("Failed to set dpms:", m, err)
-		}
-		timeout <- true
-	}(mode, cmd)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	out, err := exec.CommandContext(ctx, "dde_wldpms", "-s", mode).CombinedOutput()
+	cancel()
 
-	<-timeout
-	if cmd.ProcessState != nil && !cmd.ProcessState.Exited() && cmd.Process != nil {
-		logger.Debug("[setDPMSByKWL] Set dpms timeout, self kill")
-		cmd.Process.Kill()
+	//dde_wldpms执行超时，或者命令切换dpms状态出现错误
+	if err != nil {
+		logger.Warningf("failed to exec dde_wldpms: %s (%s)", string(out), err)
 	}
 }
 
