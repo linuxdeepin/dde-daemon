@@ -140,6 +140,9 @@ func (tpad *Touchpad) init() {
 	tpad.disableWhileTyping()
 	tpad.enablePalmDetect()
 	tpad.setPalmDimensions()
+
+	// 默认使能中键模拟
+	tpad.enableMiddleButtonEmulation()
 }
 
 func (tpad *Touchpad) handleDeviceChanged() {
@@ -429,4 +432,15 @@ func enableGesture(enabled bool) {
 
 	s.SetBoolean("enabled", enabled)
 	s.Unref()
+}
+
+// 默认使能中键模拟
+func (tpad *Touchpad) enableMiddleButtonEmulation() {
+	enable := true
+	for _, dev := range tpad.devInfos {
+		err := dev.EnableMiddleButtonEmulation(enable)
+		if err != nil {
+			logger.Warning("[enableMiddleButtonEmulation] failed to set:", dev.Id, enable, err)
+		}
+	}
 }
