@@ -20,6 +20,7 @@
 package keybinding
 
 import (
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -203,9 +204,16 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 				m.NumLockState.Set(int32(state))
 			}
 		} else {
-			err := setNumLockState(m.conn, m.keySymbols, nlState)
-			if err != nil {
-				logger.Warning("setNumLockState failed:", err)
+			if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+				err := setNumLockWl(m.waylandOutputMgr, m.conn, nlState)
+				if err != nil {
+					logger.Warning("setNumLockWl failed:", err)
+				}
+			} else {
+				err := setNumLockState(m.conn, m.keySymbols, nlState)
+				if err != nil {
+					logger.Warning("setNumLockState failed:", err)
+				}
 			}
 		}
 	}
