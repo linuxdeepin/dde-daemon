@@ -28,9 +28,9 @@ import (
 
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
@@ -82,14 +82,14 @@ type Manager struct {
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
-	sessionSigLoop  *dbusutil.SignalLoop
-	systemSigLoop   *dbusutil.SignalLoop
-	startManager    *sessionmanager.StartManager
-	backlightHelper *backlight.Backlight
-	keyboard        *inputdevices.Keyboard
-	keyboardLayout  string
-	wm              *wm.Wm
-	waylandOutputMgr    *kwayland.OutputManagement
+	sessionSigLoop   *dbusutil.SignalLoop
+	systemSigLoop    *dbusutil.SignalLoop
+	startManager     *sessionmanager.StartManager
+	backlightHelper  *backlight.Backlight
+	keyboard         *inputdevices.Keyboard
+	keyboardLayout   string
+	wm               *wm.Wm
+	waylandOutputMgr *kwayland.OutputManagement
 
 	// controllers
 	audioController       *AudioController
@@ -409,4 +409,18 @@ func (m *Manager) eliminateKeystrokeConflict() {
 
 	m.shortcutManager.ConflictingKeystrokes = nil
 	m.shortcutManager.EliminateConflictDone = true
+}
+
+func HandlePrepareForSleep(sleep bool) {
+	if sleep {
+		_sleepState.sleeping = true
+	} else {
+		// just sleep then reset the value, unnecessary to synchronize with the
+		// handler[ActionTypeSystemShutdown], because in practise, the power button
+		// event always comes first.
+		go func() {
+			time.Sleep(time.Second * 1)
+			_sleepState.sleeping = false
+		}()
+	}
 }

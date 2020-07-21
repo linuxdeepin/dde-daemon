@@ -28,6 +28,12 @@ import (
 	dbus "pkg.deepin.io/lib/dbus1"
 )
 
+type SleepingState struct {
+	sleeping bool
+}
+
+var _sleepState SleepingState
+
 func (m *Manager) shouldShowCapsLockOSD() bool {
 	return m.gsKeyboard.GetBoolean(gsKeyShowCapsLockOSD)
 }
@@ -178,8 +184,17 @@ func (m *Manager) initHandlers() {
 	}
 
 	m.handlers[ActionTypeSystemShutdown] = func(ev *KeyEvent) {
-		cmd := getPowerButtonPressedExec()
+		// In panguV/klu environment, if the machine wakes up from s3 via pressing the power button,
+		// the desktop will receive the power button event, then dde-shutdown will show up, which
+		// looks weird. The reason causes this is the Huawei kernel works differently when getting
+		// into sleep, it does NOT block the button/interrupt events but instead sending them to the
+		// higher layer such as KWin and dde-daemon above it. To fix this, we need to block the first
+		// event after wakeup, then work as normal.
+		if _sleepState.sleeping {
+			return
+		}
 
+		cmd := getPowerButtonPressedExec()
 		go func() {
 			err := m.execCmd(cmd, false)
 			if err != nil {
