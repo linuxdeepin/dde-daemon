@@ -339,7 +339,7 @@ handle_touch_events(struct libinput_event *ev, int ty)
 		double x = libinput_event_touch_get_x_transformed(touch, touch_timer.width);
 		double y = libinput_event_touch_get_y_transformed(touch, touch_timer.height);
 		g_debug("\t[Transformed] X: %lf, Y: %lf", x, y);
-		if (valid_long_press_touch(x, y) == 1) {
+		if (valid_long_press_touch(x, y) != 0) {
 			break;
 		}
 		// cancel touch_timer
