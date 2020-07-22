@@ -21,7 +21,6 @@ package bluetooth
 
 import (
 	"strings"
-	"time"
 
 	"pkg.deepin.io/lib/utils"
 )
@@ -40,14 +39,19 @@ type adapterConfig struct {
 }
 
 type deviceConfig struct {
+	// add icon info to mark device type
+	Icon string
+	// device connect status
 	Connected bool
+	// record latest time to do compare with other devices
+	LatestTime int64
 }
 
 // add address message
 type deviceConfigWithAddress struct {
 	Icon       string
 	Connected  bool
-	LatestTime time.Duration
+	LatestTime int64
 	Address    string
 }
 
@@ -236,4 +240,84 @@ func (c *config) setDeviceConfigConnected(address string, connected bool) {
 
 	c.save()
 	return
+}
+
+// select latest devices from devAddressMap, each type only contain one device
+func (c *config) filterDemandedTypeDevices(devAddressMap map[string]*device) []*device {
+	// prepare map to contain different type device, each device is distributed one nil element
+	// to fill suitable device
+	typeDeviceConfigMap := make(map[string][]*deviceConfigWithAddress, len(DeviceTypes))
+	for _, value := range DeviceTypes {
+		typeDeviceConfigMap[value] = nil
+	}
+
+	// find latest devices to fill ordered type device
+	for _, deviceUnit := range devAddressMap {
+		// if device's address is empty, ignore this device
+		if deviceUnit.getAddress() == "" {
+			continue
+		}
+
+		// check if device type is included in required types
+		if _, ok := typeDeviceConfigMap[deviceUnit.Icon]; !ok {
+			continue
+		}
+
+		// get device info from config devices according to address
+		devConfig := c.Devices[deviceUnit.getAddress()]
+		if devConfig == nil {
+			continue
+		}
+
+		// only paired but not connected devices allowed to auto connect
+		if !deviceUnit.Paired || deviceUnit.connected {
+			continue
+		}
+
+		// only audio card try to auto connect one device
+		// other devices try to auto connect all devices
+		if deviceUnit.Icon != DeviceTypes[AudioCard] {
+			typeDeviceConfigMap[deviceUnit.Icon] = append(typeDeviceConfigMap[deviceUnit.Icon], &deviceConfigWithAddress{
+				Icon:       devConfig.Icon,
+				Connected:  devConfig.Connected,
+				LatestTime: devConfig.LatestTime,
+				Address:    deviceUnit.getAddress(),
+			})
+		} else {
+			// some type devices can only auto connect once
+			var recentlyDev *deviceConfigWithAddress
+			if len(typeDeviceConfigMap[deviceUnit.Icon]) == 0 {
+				recentlyDev = nil
+				typeDeviceConfigMap[deviceUnit.Icon] = make([]*deviceConfigWithAddress, 1)
+			} else {
+				recentlyDev = typeDeviceConfigMap[deviceUnit.Icon][0]
+			}
+			// if element in target address is nil or time is less than new time, then replace the element
+			if recentlyDev == nil || recentlyDev.LatestTime < devConfig.LatestTime {
+				typeDeviceConfigMap[deviceUnit.Icon][0] = &deviceConfigWithAddress{
+					Icon:       devConfig.Icon,
+					Connected:  devConfig.Connected,
+					LatestTime: devConfig.LatestTime,
+					Address:    deviceUnit.getAddress(),
+				}
+			}
+		}
+	}
+	// add all filtered devices to device list
+	var deviceList []*device
+	for _, deviceConfigs := range typeDeviceConfigMap {
+		// check if type devices is nil
+		if deviceConfigs == nil {
+			continue
+		}
+		// select device from devAddressMap, add device to device list
+		for _, devCfg := range deviceConfigs {
+			if devCfg == nil {
+				continue
+			}
+			deviceList = append(deviceList, devAddressMap[devCfg.Address])
+		}
+	}
+	logger.Debugf("all auto connect device is %v", deviceList)
+	return deviceList
 }

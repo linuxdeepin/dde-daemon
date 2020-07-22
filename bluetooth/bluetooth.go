@@ -56,6 +56,36 @@ const (
 	StateConnected   = 2
 )
 
+// device type index
+const (
+	Computer = iota
+	Phone
+	Modem
+	NetworkWireless
+	AudioCard
+	CameraVideo
+	InputGaming
+	InputKeyboard
+	InputTablet
+	InputMouse
+	Printer
+	CameraPhone
+)
+
+var DeviceTypes []string = []string{
+	"computer",
+	"phone",
+	"modem",
+	"network-wireless",
+	"audio-card",
+	"camera-video",
+	"input-gaming",
+	"input-keyboard",
+	"input-tablet",
+	"input-mouse",
+	"printer",
+	"camera-photo",
+}
 
 type dbusObjectData map[string]dbus.Variant
 
@@ -78,9 +108,12 @@ type Bluetooth struct {
 	devicesLock sync.Mutex
 	devices     map[dbus.ObjectPath][]*device
 
-	PropsMu  sync.RWMutex
-	State    uint32 // StateUnavailable/StateAvailable/StateConnected
-	pinTimes uint32 // Limite passKey times
+	PropsMu sync.RWMutex
+	State   uint32 // StateUnavailable/StateAvailable/StateConnected
+	// 当发起设备连接成功后，应该把连接的设备添加进设备列表
+	// 为了防止放同类设备被扫描到，且之前已配对过，会发起自动连接，而把当前连接的设备顶掉
+	connectedDevices map[string][]*device
+	connectedLock    sync.RWMutex
 
 	methods *struct {
 		DebugInfo                     func() `out:"info"`
@@ -108,7 +141,7 @@ type Bluetooth struct {
 			adapterJSON string
 		}
 
-		DeviceAdded, DeviceRemoved, DevicePropertiesChanged, PinCancle struct {
+		DeviceAdded, DeviceRemoved, DevicePropertiesChanged struct {
 			devJSON string
 		}
 
@@ -202,6 +235,9 @@ func (b *Bluetooth) init() {
 	b.devices = make(map[dbus.ObjectPath][]*device)
 
 	systemBus := b.systemSigLoop.Conn()
+	b.connectedLock.Lock()
+	b.connectedDevices = make(map[string][]*device, len(DeviceTypes))
+	b.connectedLock.Unlock()
 
 	b.apiDevice = apidevice.NewDevice(systemBus)
 	b.sysDBusDaemon = ofdbus.NewDBus(systemBus)
@@ -376,8 +412,31 @@ func (b *Bluetooth) addDevice(dpath dbus.ObjectPath) {
 			}
 
 			if paired && !connected {
-				logger.Infof("auto connect %s", d)
-				d.Connect()
+				// only audio card auto connect one device
+				// other devices try to auto connect all devices
+				if d.Icon != DeviceTypes[AudioCard] {
+					logger.Infof("auto connect %s", d)
+					// auto connect, dont show notification window
+					err = d.doConnect(false)
+					// if connect success, add dev into map
+					if err == nil && d.ConnectState == true {
+						b.addConnectedDevice(d)
+					}
+				} else {
+					// check if this type device connected already, if connected, dont connect again
+					// if not, try to auto connect
+					b.connectedLock.Lock()
+					connectedDevicesCount := len(b.connectedDevices[d.Icon])
+					b.connectedLock.Unlock()
+					if connectedDevicesCount == 0 {
+						logger.Infof("auto connect %s", d)
+						err = d.doConnect(false)
+						// if connect success, add dev into map
+						if err == nil && d.ConnectState == true {
+							b.addConnectedDevice(d)
+						}
+					}
+				}
 			}
 		})
 	}
@@ -547,7 +606,7 @@ func (b *Bluetooth) isAdapterExists(apath dbus.ObjectPath) bool {
 }
 
 func (b *Bluetooth) feed(devPath dbus.ObjectPath, accept bool, key string) (err error) {
-	d, err := b.getDevice(devPath)
+	_, err = b.getDevice(devPath)
 	if nil != err {
 		logger.Warningf("FeedRequest can not find device: %v, %v", devPath, err)
 		return err
@@ -557,10 +616,6 @@ func (b *Bluetooth) feed(devPath dbus.ObjectPath, accept bool, key string) (err 
 	if b.agent.requestDevice != devPath {
 		b.agent.mu.Unlock()
 		logger.Warningf("FeedRequest can not find match device: %q, %q", b.agent.requestDevice, devPath)
-		if d.Icon == "input-keyboard" {
-			d.setDisconnectPhase(disconnectPhaseStart)
-			d.core.Disconnect(0)
-		}
 		return errBluezCanceled
 	}
 	b.agent.mu.Unlock()
@@ -596,53 +651,58 @@ func (b *Bluetooth) updateState() {
 func (b *Bluetooth) tryConnectPairedDevices() {
 	var devList = b.getPairedDeviceList()
 	for _, dev := range devList {
-		logger.Info("[DEBUG] Auto connect device:", dev.Path)
-		obj, err := b.getDevice(dev.Path)
-		if err != nil {
-			logger.Warning("failed to get device for auto connect:", dev.String(), err)
+		// make sure dev always exist
+		if dev == nil {
 			continue
 		}
+		logger.Info("[DEBUG] Auto connect device:", dev.Path)
 
 		// if device using LE mode, will suspend, try connect should be failed, filter it.
 		if !b.isBREDRDevice(dev) {
 			continue
 		}
-		logger.Debug("Will auto connect device:", obj.String(), obj.adapter.address, obj.Address)
-		err = obj.doConnect(false)
+		logger.Debug("Will auto connect device:", dev.String(), dev.adapter.address, dev.Address)
+		err := dev.doConnect(false)
 		if err != nil {
-			logger.Debug("failed to connect:", obj.String(), err)
-			for i := 0; i < 2; i++ {
-				err = obj.doConnect(false)
-				if err != nil {
-					logger.Debug("failed to connect:", obj.String(), err)
-				} else {
-					break
-				}
+			logger.Debug("failed to connect:", dev.String(), err)
+		} else {
+			// if auto connect success, add device into map connectedDevices
+			if dev.ConnectState == true {
+				b.addConnectedDevice(dev)
 			}
 		}
 	}
 }
 
 func (b *Bluetooth) getPairedDeviceList() []*device {
-
 	b.adaptersLock.Lock()
 	defer b.adaptersLock.Unlock()
 	b.devicesLock.Lock()
 	defer b.devicesLock.Unlock()
 
-	var devList []*device
+	// get all paired devices list from adapters
+	var devAddressMap = make(map[string]*device)
 	for _, aobj := range b.adapters {
 		logger.Info("[DEBUG] Auto connect adapter:", aobj.Path)
+
+		// check if devices list in current adapter is legal
 		list := b.devices[aobj.Path]
 		if len(list) == 0 || !b.config.getAdapterConfigPowered(aobj.address) {
 			continue
 		}
-		for _, dev := range list {
-			if dev.Paired && !dev.connected && b.isDeviceNeedReconnection(dev) {
-				devList = append(devList, dev)
+
+		// add devices info to list
+		for _, value := range list {
+			// select already paired but not connected device from list
+			if value == nil || !value.Paired || value.connected {
+				continue
 			}
+			devAddressMap[value.getAddress()] = value
 		}
 	}
+
+	// select the latest devices of each deviceType and add them into list
+	devList := b.config.filterDemandedTypeDevices(devAddressMap)
 	return devList
 }
 
@@ -698,7 +758,32 @@ func (b *Bluetooth) wakeupWorkaround() {
 	})
 }
 
-func (b *Bluetooth) isDeviceNeedReconnection(dev *device) bool {
+func (b *Bluetooth) isDeviceNeedRepair(dev *device) bool {
 	// Audio-card Input-keyboard Input-mouse are allowed re-pair
-	return dev.Icon == "audio-card"
+	if dev.Icon == "audio-card" || (dev.Class != 0 && (dev.Icon == "input-mouse" || dev.Icon == "input-keyboard")) {
+		return true
+	}
+	return false
+}
+
+func (b *Bluetooth) addConnectedDevice(connectedDev *device) {
+	b.connectedLock.Lock()
+	b.connectedDevices[connectedDev.Icon] = append(b.connectedDevices[connectedDev.Icon], connectedDev)
+	b.connectedLock.Unlock()
+}
+
+func (b *Bluetooth) removeConnectedDevice(disconnectedDev *device) {
+	b.connectedLock.Lock()
+	// check if dev exist in connectedDevices map, if exist, remove device
+	if connectedDevices, ok := globalBluetooth.connectedDevices[disconnectedDev.Icon]; ok {
+		var tempDevices []*device
+		for _, dev := range connectedDevices {
+			// check if disconnected device exist in connected devices, if exist, abandon this
+			if dev.Address != disconnectedDev.Address {
+				tempDevices = append(tempDevices, dev)
+			}
+		}
+		globalBluetooth.connectedDevices[disconnectedDev.Icon] = tempDevices
+	}
+	b.connectedLock.Unlock()
 }

@@ -47,8 +47,8 @@ func (s deviceState) String() string {
 		return "doing"
 	case deviceStateConnected:
 		return "Connected"
-    	case deviceStateDisconnecting:
-       		return "Disconnecting"
+	case deviceStateDisconnecting:
+		return "Disconnecting"
 	default:
 		return fmt.Sprintf("Unknown(%d)", s)
 	}
@@ -624,7 +624,11 @@ func (d *device) audioA2DPWorkaround() {
 func (d *device) Connect() {
 	logger.Debug(d, "call Connect()")
 	d.setActiveDoConnect(true)
-	d.doConnect(true)
+	err := d.doConnect(true)
+	if err == nil && d.ConnectState == true {
+		globalBluetooth.addConnectedDevice(d)
+	}
+
 }
 
 func (d *device) Disconnect() {
@@ -683,8 +687,8 @@ func (d *device) goWaitDisconnect() chan struct{} {
 func killBluetoothDialog() {
 	logger.Debug("killBluetoothDialog")
 	if cmdPinDialog == nil {
-		return		
-	} 
+		return
+	}
 	err := cmdPinDialog.Process.Kill()
 	if err != nil {
 		logger.Warning("kill err ", err)
