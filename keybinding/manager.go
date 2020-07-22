@@ -37,7 +37,7 @@ import (
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
-	"pkg.deepin.io/gir/gio-2.0"
+	gio "pkg.deepin.io/gir/gio-2.0"
 	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
@@ -115,10 +115,11 @@ type Manager struct {
 
 	shortcutManager *shortcuts.ShortcutManager
 	// shortcut action handlers
-	handlers            []shortcuts.KeyEventFunc
-	lastKeyEventTime    time.Time
-	lastExecCmdTime     time.Time
-	grabScreenKeystroke *shortcuts.Keystroke
+	handlers             []shortcuts.KeyEventFunc
+	lastKeyEventTime     time.Time
+	lastExecCmdTime      time.Time
+	lastMethodCalledTime time.Time
+	grabScreenKeystroke  *shortcuts.Keystroke
 
 	// for switch kbd layout
 	switchKbdLayoutState SKLState
@@ -245,9 +246,12 @@ func (m *Manager) init() {
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
 	m.gsMediaKey = gio.NewSettings(gsSchemaMediaKey)
 	m.gsPower = gio.NewSettings(gsSchemaSessionPower)
+	m.wm = wm.NewWm(sessionBus)
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
 	m.shortcutManager.AddSpecial()
+	m.shortcutManager.AddSystem(m.gsSystem, m.wm)
+	m.shortcutManager.AddMedia(m.gsMediaKey)
 
 	// when session is locked, we need handle some keyboard function event
 	m.lockFront = lockfront.NewLockFront(sessionBus)
@@ -256,12 +260,11 @@ func (m *Manager) init() {
 		m.handleKeyEventFromLockFront(changKey)
 	})
 
-	m.wm = wm.NewWm(sessionBus)
 	if shouldUseDDEKwin() {
 		m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
 		m.shortcutManager.AddKWin(m.wm)
 	} else {
-		m.shortcutManager.AddSystem(m.gsSystem)
+		m.shortcutManager.AddSystem(m.gsSystem, m.wm)
 		m.gsGnomeWM = gio.NewSettings(gsSchemaGnomeWM)
 		m.shortcutManager.AddWM(m.gsGnomeWM)
 	}
