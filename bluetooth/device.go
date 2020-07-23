@@ -543,7 +543,7 @@ func (d *device) doConnect(hasNotify bool) error {
 		}
 		return err
 	}
-	// d.audioA2DPWorkaround()
+	d.audioA2DPWorkaround()
 
 	err = d.doRealConnect()
 	if err != nil {
