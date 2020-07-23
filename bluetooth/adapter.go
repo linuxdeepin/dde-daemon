@@ -123,6 +123,17 @@ func (a *adapter) connectProperties() {
 		if !hasValue {
 			return
 		}
+		// 如果上层还是关闭状态，就不能让适配器启动
+		PoweredCfg := globalBluetooth.config.getAdapterConfigPowered(a.address)
+		if PoweredCfg != value && !PoweredCfg {
+			// 上层未开启蓝牙，需要把后端适配器给power off
+			err := a.core.Powered().Set(0, PoweredCfg)
+			if err != nil {
+				logger.Warningf("failed to set %s powered: %v,config is %v", a, err, PoweredCfg)
+				return
+			}
+			return
+		}
 		a.Powered = value
 		logger.Debugf("%s Powered: %v", a, value)
 		a.notifyPropertiesChanged()
