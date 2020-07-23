@@ -122,6 +122,9 @@ install: build translate install-dde-data install-icons install-pam-module
 	mkdir -pv ${DESTDIR}/usr/lib/deepin-daemon/service-trigger
 	cp -f misc/service-trigger/*.json ${DESTDIR}/usr/lib/deepin-daemon/service-trigger/
 
+	mkdir -pv ${DESTDIR}/etc/NetworkManager/conf.d
+	cp -f misc/etc/NetworkManager/conf.d/* ${DESTDIR}/etc/NetworkManager/conf.d/
+
 install-pam-module:
 	mkdir -pv ${DESTDIR}/${PAM_MODULE_DIR}
 	cp -f out/pam_deepin_auth.so ${DESTDIR}/${PAM_MODULE_DIR}
