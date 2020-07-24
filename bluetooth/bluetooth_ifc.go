@@ -2,7 +2,9 @@ package bluetooth
 
 import (
 	"fmt"
+	"time"
 
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
 	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 )
@@ -119,6 +121,34 @@ func (b *Bluetooth) RequestDiscovery(apath dbus.ObjectPath) *dbus.Error {
 	return nil
 }
 
+// 检查蓝牙设备是否被飞行模式禁用
+func checkAndEnableBluetoothDevice() {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+
+	air := airplanemode.NewAirplaneMode(sysBus)
+	if air == nil {
+		return
+	}
+	enabled, err := air.BluetoothEnabled().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	// 如果蓝牙设备被禁用，则开启蓝牙设备
+	if !enabled {
+		err = air.EnableBluetooth(0, true)
+		if err != nil {
+			return
+		}
+		// 启动蓝牙设备需要时间
+		time.Sleep(time.Second)
+	}
+	return
+}
+
 func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 	powered bool) *dbus.Error {
 
@@ -126,6 +156,11 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 	a, err := b.getAdapter(apath)
 	if err != nil {
 		return dbusutil.ToError(err)
+	}
+
+	// 如果要手动开启蓝牙，需要判断蓝牙设备是否在飞行模式下被禁用，如果禁用则需要开启
+	if powered {
+		checkAndEnableBluetoothDevice()
 	}
 
 	a.Powered = powered
