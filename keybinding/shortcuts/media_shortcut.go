@@ -48,8 +48,8 @@ var mediaIdActionMap = map[string]*Action{
 	"my-computer": NewExecCmdAction("gvfs-open computer:///", false),
 	// eject CD/ROM
 	"eject":      NewExecCmdAction("eject -r", false),
-	"calculator": NewExecCmdAction("gnome-calculator", false),
-	"calculater": NewExecCmdAction("gnome-calculator", false),
+	"calculator": NewExecCmdAction("deepin-calculator", false),
+	"calculater": NewExecCmdAction("deepin-calculator", false),
 	"calendar":   NewExecCmdAction("dde-calendar", false),
 
 	// audio control
