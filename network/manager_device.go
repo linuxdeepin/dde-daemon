@@ -453,8 +453,36 @@ func (m *Manager) IsDeviceEnabled(devPath dbus.ObjectPath) (bool, *dbus.Error) {
 	return b, dbusutil.ToError(err)
 }
 
+// 飞行模式下，第一次wifi回连失败，则去10s轮询是否有可用的热点，然后继续回连
+func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
+	for i := 0; i < 10; i++ {
+		// 每次休眠一秒再去获取
+		time.Sleep(time.Second)
+		// 获取当前device的状态
+		dev := m.getDevice(devPath)
+		if dev == nil {
+			return
+		}
+		// wifi设备是否处于可连接而未连接状态，那么可以连接
+		if dev.State == nm.NM_DEVICE_STATE_DISCONNECTED {
+			err := m.enableDevice(devPath, true)
+			if err == nil {
+				// 连接成功，退出
+				return
+			}
+		} else {
+			return
+		}
+	}
+}
+
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
 	err := m.enableDevice(devPath, enabled)
+	// 特殊情况：飞行模式开启和关闭的时候，开启wifi模块，会出现回连失败
+	if err != nil {
+		// 回连失败，起个线程，在未来的10s内自动回连
+		go m.doAutoConnect(devPath)
+	}
 	return dbusutil.ToError(err)
 }
 
@@ -469,7 +497,7 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool) (err error
 		if err != nil {
 			return
 		}
-		m.ActivateConnection(uuid,devPath)
+		m.ActivateConnection(uuid, devPath)
 	}
 
 	m.stateHandler.locker.Lock()
