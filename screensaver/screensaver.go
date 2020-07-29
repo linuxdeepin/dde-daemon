@@ -165,6 +165,9 @@ func (ss *ScreenSaver) unInhibit(cookie uint32) {
 		if ss.lastVals != nil {
 			logger.Info("recover from ", ss.lastVals)
 			ss.setTimeout(ss.lastVals.seconds, ss.lastVals.interval, ss.lastVals.blank)
+			//同步最新的setTimeout 调用设置的值，避免在影院播放时，设置休眠值，播放完毕后，idleTime没有更新
+			ss.idleTime = ss.lastVals.seconds
+
 			ss.lastVals = nil
 		} else {
 			ss.setTimeout(ss.idleTime, ss.idleInterval, ss.blank == 1)
