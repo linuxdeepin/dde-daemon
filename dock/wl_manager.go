@@ -198,7 +198,7 @@ func (m *Manager) registerWindowWayland(objPath dbus.ObjectPath) {
 		return
 	}
 	if globalRestrictWaylandWindow {
-		if appId != "totem" {
+		if appId != "totem" && appId != "deepin-movie"{
 			return
 		}
 	}
