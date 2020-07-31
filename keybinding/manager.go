@@ -31,6 +31,7 @@ import (
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
@@ -90,6 +91,7 @@ type Manager struct {
 	keyboardLayout   string
 	wm               *wm.Wm
 	waylandOutputMgr *kwayland.OutputManagement
+	login1Manager    *login1.Manager
 
 	// controllers
 	audioController       *AudioController
@@ -187,6 +189,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.waylandOutputMgr = kwayland.NewOutputManagement(sessionBus)
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	m.systemSigLoop = dbusutil.NewSignalLoop(sysBus, 10)
+	m.login1Manager = login1.NewManager(sysBus)
 
 	m.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
 	m.NumLockState.Bind(m.gsKeyboard, gsKeyNumLockState)
@@ -409,18 +412,4 @@ func (m *Manager) eliminateKeystrokeConflict() {
 
 	m.shortcutManager.ConflictingKeystrokes = nil
 	m.shortcutManager.EliminateConflictDone = true
-}
-
-func HandlePrepareForSleep(sleep bool) {
-	if sleep {
-		_sleepState.sleeping = true
-	} else {
-		// just sleep then reset the value, unnecessary to synchronize with the
-		// handler[ActionTypeSystemShutdown], because in practise, the power button
-		// event always comes first.
-		go func() {
-			time.Sleep(time.Second * 1)
-			_sleepState.sleeping = false
-		}()
-	}
 }

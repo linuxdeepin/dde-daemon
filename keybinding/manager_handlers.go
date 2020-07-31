@@ -28,12 +28,6 @@ import (
 	dbus "pkg.deepin.io/lib/dbus1"
 )
 
-type SleepingState struct {
-	sleeping bool
-}
-
-var _sleepState SleepingState
-
 func (m *Manager) shouldShowCapsLockOSD() bool {
 	return m.gsKeyboard.GetBoolean(gsKeyShowCapsLockOSD)
 }
@@ -188,9 +182,12 @@ func (m *Manager) initHandlers() {
 		// the desktop will receive the power button event, then dde-shutdown will show up, which
 		// looks weird. The reason causes this is the Huawei kernel works differently when getting
 		// into sleep, it does NOT block the button/interrupt events but instead sending them to the
-		// higher layer such as KWin and dde-daemon above it. To fix this, we need to block the first
-		// event after wakeup, then work as normal.
-		if _sleepState.sleeping {
+		// higher layer such as KWin and dde-daemon above it. To fix this, we need to block the
+		// events when sleeping, then work as normal.
+		sleeping, err := m.login1Manager.PreparingForSleep().Get(0)
+		if err != nil {
+			logger.Warning("Get 'PreparingForSleep' state failed", err)
+		} else if sleeping {
 			return
 		}
 

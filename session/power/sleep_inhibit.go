@@ -25,7 +25,6 @@ import (
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/dde/daemon/appearance"
 	"pkg.deepin.io/dde/daemon/bluetooth"
-	"pkg.deepin.io/dde/daemon/keybinding"
 	"pkg.deepin.io/dde/daemon/network"
 )
 
@@ -48,7 +47,6 @@ func newSleepInhibitor(login1Manager *login1.Manager) *sleepInhibitor {
 		// signal `PrepareForSleep` true -> false
 		if before {
 			// TODO(jouyouyun): implement 'PrepareForSleep' register
-			keybinding.HandlePrepareForSleep(true)
 			appearance.HandlePrepareForSleep(true)
 			network.HandlePrepareForSleep(true)
 			go bluetooth.HandlePrepareForSleep(true)
@@ -62,7 +60,6 @@ func newSleepInhibitor(login1Manager *login1.Manager) *sleepInhibitor {
 				logger.Warning(err)
 			}
 		} else {
-			keybinding.HandlePrepareForSleep(false)
 			suspendPulseSources(0)
 			suspendPulseSinks(0)
 			if inhibitor.OnWakeup != nil {
