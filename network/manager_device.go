@@ -123,7 +123,6 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		Path:      nmDev.Path_(),
 	}
 	dev.udi, _ = nmDev.Udi().Get(0)
-	dev.State, _ = nmDev.State().Get(0)
 	dev.Interface, _ = nmDev.Interface().Get(0)
 	dev.Driver, _ = nmDev.Driver().Get(0)
 
@@ -357,6 +356,10 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		logger.Warning(err)
 	}
 
+	// 后端创建Device的时候如果networkmanager发生了状态变迁，不会被后端感知
+	// 因为device还没有创建完成，也不会给前端发送信号
+	// 创建完成之前手动同步，完成之后由信号感知
+	dev.State, _ = nmDev.State().Get(0)
 	return
 }
 

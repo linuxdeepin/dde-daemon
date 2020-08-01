@@ -10,10 +10,11 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
+	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
 	"pkg.deepin.io/dde/daemon/network/nm"
-	"pkg.deepin.io/lib/dbus1"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/strv"
 )
@@ -56,7 +57,7 @@ type SecretAgent struct {
 	saveSecretsTasks   map[saveSecretsTaskKey]saveSecretsTask
 	saveSecretsTasksMu sync.Mutex
 
-	m *Manager 
+	m *Manager
 
 	methods *struct {
 		GetSecrets        func() `in:"connection,connectionPath,settingName,hints,flags" out:"secrets"`
@@ -180,6 +181,17 @@ func (sa *SecretAgent) deleteAll(uuid string) error {
 	return nil
 }
 
+// 处理重启指纹登录的时候，secrets可能还没有准备好，collection还处于locked状态，获取不到密码，最多等2s让其准备完毕
+func checkCollectionLocked(collection *secrets.Collection) {
+	for i := 0; i < 4; i++ {
+		locked, err := collection.Locked().Get(0)
+		if err != nil || !locked {
+			return
+		}
+		time.Sleep(time.Millisecond * 500)
+	}
+}
+
 func (sa *SecretAgent) getAll(uuid, settingName string) (map[string]string, error) {
 	attributes := map[string]string{
 		keyringTagConnUUID:    uuid,
@@ -189,6 +201,8 @@ func (sa *SecretAgent) getAll(uuid, settingName string) (map[string]string, erro
 	if err != nil {
 		return nil, err
 	}
+
+	checkCollectionLocked(defaultCollection)
 
 	items, err := defaultCollection.SearchItems(0, attributes)
 	if err != nil {
@@ -561,17 +575,17 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 				resultSaved, err := sa.getAll(connUUID, settingName)
 				if err != nil {
 					return nil, err
-				}		
+				}
 				logger.Debugf("getAll resultSaved: %#v", resultSaved)
-			        if len(resultSaved) == 0 && allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
+				if len(resultSaved) == 0 && allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
 					askItems = append(askItems, secretKey)
 				}
 			} else if !sa.m.saveToKeyring {
-					err = sa.deleteAll(connUUID)
-					if err != nil {
-						return nil, err
-					}
-			} 
+				err = sa.deleteAll(connUUID)
+				if err != nil {
+					return nil, err
+				}
+			}
 		}
 
 		if allowInteraction && len(askItems) > 0 {
@@ -586,9 +600,9 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 				for key, value := range resultAsk {
 					setting[key] = dbus.MakeVariant(value)
 					secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
-					getSecretFlagsKeyName(key))
+						getSecretFlagsKeyName(key))
 					if secretFlags == secretFlagAgentOwned {
-						sa.m.hasSaveSecret = false 
+						sa.m.hasSaveSecret = false
 						var items []settingItem
 						valueStr, ok := setting[key].Value().(string)
 						if ok {
@@ -602,22 +616,22 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 						}
 						sa.m.items = items
 					}
-				}							
+				}
 			}
 		}
 
 		if !sa.m.saveToKeyring {
 			for _, item := range sa.m.items {
 				secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
-				getSecretFlagsKeyName(item.settingKey))
+					getSecretFlagsKeyName(item.settingKey))
 				if secretFlags == secretFlagAgentOwned {
 					sa.m.hasSaveSecret = false
-					sa.m.saveToKeyring = true 
+					sa.m.saveToKeyring = true
 					setting[item.settingKey] = dbus.MakeVariant(item.value)
-					return 
+					return
 				}
 			}
-		} 
+		}
 		resultSaved, err := sa.getAll(connUUID, settingName)
 		if err != nil {
 			return nil, err
@@ -634,7 +648,6 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 	}
 	return
 }
-
 
 func printConnectionData(data map[string]map[string]dbus.Variant) {
 	for settingName, setting := range data {
@@ -847,7 +860,7 @@ func (sa *SecretAgent) saveSecrets(connectionData map[string]map[string]dbus.Var
 		secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
 			getSecretFlagsKeyName(item.settingKey))
 		if secretFlags == secretFlagAgentOwned {
-			sa.m.saveToKeyring = false 
+			sa.m.saveToKeyring = false
 			sa.m.items = arr
 			continue
 		}
