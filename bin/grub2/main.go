@@ -21,6 +21,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"os/exec"
@@ -36,6 +37,7 @@ var (
 	optFinishGfxmodeDetect  bool
 	optSetupTheme           bool
 	optDebug                bool
+	optOSNum                bool
 )
 
 func init() {
@@ -50,6 +52,7 @@ func init() {
 }
 
 func main() {
+	flag.BoolVar(&optOSNum, "os-num", false, "get system num")
 	flag.Parse()
 	if optDebug {
 		logger.SetLogLevel(log.LevelDebug)
@@ -86,6 +89,13 @@ func main() {
 	} else if optSetupTheme {
 		// for compatibility
 		return
+	} else if optOSNum {
+		num, err := grub2.GetOSNum()
+		if err != nil {
+			logger.Warning(err)
+			os.Exit(2)
+		}
+		fmt.Println(num)
 	} else {
 		logger.Debug("mode: daemon")
 		grub2.RunAsDaemon()
