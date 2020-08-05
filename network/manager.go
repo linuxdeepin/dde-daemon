@@ -97,6 +97,7 @@ type Manager struct {
 	sessionSigLoop *dbusutil.SignalLoop
 	syncConfig     *dsync.Config
 
+	isPortalChecking         bool
 
 	WirelessAccessPoints      string `prop:"access:r"` //用于读取AP
 	updateWirelessCountTicker *countTicker
@@ -231,9 +232,6 @@ func (m *Manager) init() {
 	// update property Connectivity
 	_ = nmManager.Connectivity().ConnectChanged(func(hasValue bool, value uint32) {
 		logger.Debug("connectivity state changed ", hasValue, value)
-		if hasValue && value == nm.NM_CONNECTIVITY_PORTAL {
-			go m.doPortalAuthentication()
-		}
 		m.updatePropConnectivity()
 	})
 	m.updatePropConnectivity()
@@ -385,12 +383,24 @@ func (m *Manager) initNMObjManager(systemBus *dbus.Conn) {
 }
 
 func (m *Manager) doPortalAuthentication() {
+	connectivity, err := nmManager.CheckConnectivity(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	if connectivity != nm.NM_CONNECTIVITY_PORTAL {
+		return
+	}
 	logger.Info("portal authentication begin")
 
-	err := exec.Command(`xdg-open`, `https://www.uniontech.com`).Start()
+	err = exec.Command(`xdg-open`, `https://www.uniontech.com`).Start()
 	if err != nil {
 		logger.Warning(err)
 	}
+	if m.isPortalChecking {
+		return
+	}
+	m.isPortalChecking = true
 	for i := 0; i < maxPortalCheckTimes; i++ {
 		connectivity, err := nmManager.CheckConnectivity(0)
 		if err != nil {
@@ -404,5 +414,6 @@ func (m *Manager) doPortalAuthentication() {
 		time.Sleep(1 * time.Second)
 	}
 
+	m.isPortalChecking = false
 	logger.Info("portal authentication end")
 }
