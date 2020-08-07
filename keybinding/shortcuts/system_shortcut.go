@@ -57,7 +57,6 @@ func (ss *SystemShortcut) SetAction(newAction *Action) error {
 	if newAction.Type != ActionTypeExecCmd {
 		return ErrInvalidActionType
 	}
-
 	arg, ok := newAction.Arg.(*ActionExecCmdArg)
 	if !ok {
 		return ErrTypeAssertionFail
@@ -68,6 +67,10 @@ func (ss *SystemShortcut) SetAction(newAction *Action) error {
 
 var loadSysActionsFileOnce sync.Once
 var actionsCache *actionHandler
+
+func GetSystemActionCmd(id string) string{
+	return getSystemActionCmd(id)
+}
 
 func getSystemActionCmd(id string) string {
 	loadSysActionsFileOnce.Do(func() {

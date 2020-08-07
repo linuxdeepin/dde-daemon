@@ -93,7 +93,7 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		layoutChanged:   make(chan struct{}),
 		pinyinEnabled:   isZH(),
 	}
-	time.Sleep(time.Duration(1)*time.Second)
+	time.Sleep(time.Duration(1) * time.Second)
 	ss.xRecordEventHandler = NewXRecordEventHandler(keySymbols)
 	ss.xRecordEventHandler.modKeyReleasedCb = func(code uint8, mods uint16) {
 		isGrabbed := isKbdAlreadyGrabbed(ss.conn)
@@ -643,6 +643,7 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 			shortcut := keystroke.Shortcut
 			if shortcut != nil && shortcut.GetType() == ShortcutTypeSystem &&
 				strings.HasPrefix(shortcut.GetId(), "screenshot") {
+
 				keyEvent := &KeyEvent{
 					Mods:     key.Mods,
 					Code:     key.Code,
@@ -713,7 +714,6 @@ func (sm *ShortcutManager) Add(shortcut Shortcut) {
 func (sm *ShortcutManager) addWithoutLock(shortcut Shortcut) {
 	logger.Debug("add", shortcut)
 	uid := shortcut.GetUid()
-
 	sm.idShortcutMap[uid] = shortcut
 
 	sm.grabShortcut(shortcut)
@@ -792,7 +792,7 @@ func (sm *ShortcutManager) AddSystem(gsettings *gio.Settings) {
 		}
 		session := os.Getenv("XDG_SESSION_TYPE")
 		if strings.Contains(session, "wayland") {
-			if id == "deepin-screen-recorder" || id == "wm-switcher" || id == "translation"{
+			if id == "deepin-screen-recorder" || id == "wm-switcher" || id == "translation" {
 				continue
 			}
 		}
@@ -874,7 +874,6 @@ func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
 		logger.Warning("failed to get all KWin accels:", err)
 		return
 	}
-
 	idNameMap := getWMIdNameMap()
 
 	for _, accel := range accels {
@@ -884,11 +883,46 @@ func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
 		}
 		name := idNameMap[accel.Id]
 		if name == "" {
+			name = getSystemIdNameMap()[accel.Id]
+			logger.Debug("action", accel.Id, name)
+		}
+		if name == "" {
 			name = accel.Id
 		}
-
 		ks := newKWinShortcut(accel.Id, name, accel.Keystrokes, wmObj)
 		sm.addWithoutLock(ks)
+	}
+}
+
+func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj *wm.Wm) {
+	logger.Debug("AddSystemToKwin")
+	idNameMap := getSystemIdNameMap()
+	session := os.Getenv("XDG_SESSION_TYPE")
+	for _, id := range gsettings.ListKeys() {
+		name := idNameMap[id]
+		if name == "" {
+			name = id
+		}
+		if id == "terminal-quake" {
+			continue
+		}
+		if strings.Contains(session, "wayland") {
+			if id == "wm-switcher" || id == "translation" {
+				continue
+			}
+		}
+		accelJson, err := util.MarshalJSON(util.KWinAccel{
+			Id:         id,
+			Keystrokes: gsettings.GetStrv(id),
+		})
+		if err != nil {
+			logger.Warning("failed to get json:", err)
+			continue
+		}
+		ok, err := wmObj.SetAccel(0, accelJson)
+		if !ok {
+			logger.Warning("failed to set KWin accels:", id, gsettings.GetStrv(id), err)
+		}
 	}
 }
 

@@ -234,16 +234,17 @@ func (m *Manager) init() {
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
 	m.shortcutManager.AddSpecial()
-	m.shortcutManager.AddSystem(m.gsSystem)
-	m.shortcutManager.AddMedia(m.gsMediaKey)
+
 	m.wm = wm.NewWm(sessionBus)
 	if shouldUseDDEKwin() {
+		m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
 		m.shortcutManager.AddKWin(m.wm)
 	} else {
+		m.shortcutManager.AddSystem(m.gsSystem)
 		m.gsGnomeWM = gio.NewSettings(gsSchemaGnomeWM)
 		m.shortcutManager.AddWM(m.gsGnomeWM)
 	}
-
+	m.shortcutManager.AddMedia(m.gsMediaKey)
 	// init custom shortcuts
 	customConfigFilePath := filepath.Join(basedir.GetUserConfigDir(), customConfigFile)
 	m.customShortcutManager = shortcuts.NewCustomShortcutManager(customConfigFilePath)
@@ -270,8 +271,57 @@ func (m *Manager) init() {
 			m.shortcutManager.NotifyLayoutChanged()
 		}
 	})
-
+	go m.ListenGlobalAccel(sessionBus)
 	m.initHandlers()
+}
+
+var kwinSysActionCmdMap = map[string]string{
+	"Launcher":              "launcher",               //Super_L Super_R
+	"Terminal":              "terminal",               //<Control><Alt>T
+	"Terminal Quake Window": "terminal-quake",         //
+	"Lock screen":           "lock-screen",            //super+l
+	"Shutdown interface":    "logout",                 //ctrl+alt+del
+	"File manager":          "file-manager",           //super+e
+	"Screenshot":            "screenshot",             //ctrl+alt+a
+	"Full screenshot":       "screenshot-fullscreen",  //print
+	"Window screenshot":     "screenshot-window",      //alt+print
+	"Delay screenshot":      "screenshot-delayed",     //ctrl+print
+	"Disable Touchpad":      "disable-touchpad",       //
+	"Switch window effects": "wm-switcher",            //alt+tab
+	"turn-off-screen":       "Fast Screen Off",        //<Shift><Super>L
+	"Deepin Picker":         "color-picker",           //ctrl+alt+v
+	"System Monitor":        "system-monitor",         //ctrl+alt+escape
+	"Screen Recorder":       "deepin-screen-recorder", // deepin-screen-recorder ctrl+alt+r
+	"Desktop AI Assistant":  "ai-assistant",           // ai-assistant [<Super>Q]q
+	"Text to Speech":        "text-to-speech",
+	"Speech to Text":        "speech-to-text",
+	"Clipboard":             "clipboard",
+	"Translation":           "translation",
+	"Show/Hide the dock":    "show-dock",
+}
+
+func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
+	err := sessionBus.Object("org.kde.kglobalaccel",
+		"/component/kwin").AddMatchSignal("org.kde.kglobalaccel.Component", "globalShortcutPressed").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "org.kde.kglobalaccel.Component.globalShortcutPressed",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			key := sig.Body[0].(string)
+			ok := strings.Compare(string("kwin"), key)
+			if ok == 0 {
+				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
+				cmd := shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[sig.Body[1].(string)])
+				m.execCmd(cmd, true)
+			}
+		}
+	})
+	return nil
 }
 
 func (m *Manager) destroy() {
