@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-31 18:14+0800\n"
+"POT-Creation-Date: 2020-09-03 10:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1002,7 +1002,7 @@ msgid "Access Point mode is not supported by this device."
 msgstr ""
 
 #: ../../network/utils_notify.go:201 ../../network/utils_notify.go:205
-#: ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:208 ../../network/utils_notify.go:310
 msgid "Network"
 msgstr ""
 
@@ -1020,6 +1020,10 @@ msgstr ""
 
 #: ../../network/utils_notify.go:212
 msgid "Connected"
+msgstr ""
+
+#: ../../network/utils_notify.go:310
+msgid "Portal network authentication succeedful."
 msgstr ""
 
 #: ../../service_trigger/msg.go:7
