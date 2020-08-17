@@ -572,11 +572,10 @@ func (d *device) doRealConnect() error {
 	d.setConnectPhase(connectPhaseConnectProfilesEnd)
 	if err != nil {
 		// connect failed
-		logger.Warningf("%s connect failed: %v", d, err)
+		logger.Debugf("%s connect failed", d)
 		globalBluetooth.config.setDeviceConfigConnected(d, false)
 		return err
 	}
-
 	// connect succeeded
 	logger.Infof("%s connect succeeded", d)
 	globalBluetooth.config.setDeviceConfigConnected(d, true)

@@ -20,7 +20,7 @@
 package bluetooth
 
 import (
-	"time"
+	//"time"
 
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/dbusutil"
@@ -50,11 +50,26 @@ func HandlePrepareForSleep(sleep bool) {
 		return
 	}
 	if sleep {
+		for _, aobj := range globalBluetooth.adapters {
+			if aobj.Powered {
+				if err := aobj.core.StopDiscovery(0); err != nil {
+					logger.Warningf("failed to stop discovery, %s, %v", aobj, err)
+					continue
+				}
+				// 'Powered' is true in config file, so reset it
+				if err := aobj.core.Powered().Set(0, false); err != nil {
+					logger.Warningf("failed to set %s powered off: %v", aobj, err)
+					continue
+				}
+			}
+	
+
+		}
 		logger.Debug("prepare to sleep")
 		return
 	}
 	logger.Debug("Wakeup from sleep, will set adapter and try connect device")
-	time.Sleep(time.Second * 3)
+	//time.Sleep(time.Second * 3)
 	for _, aobj := range globalBluetooth.adapters {
 		if !aobj.Powered {
 			powered := globalBluetooth.config.getAdapterConfigPowered(aobj.address)
@@ -79,7 +94,8 @@ func HandlePrepareForSleep(sleep bool) {
 
 		_ = aobj.core.Discoverable().Set(0, globalBluetooth.config.Discoverable)
 	}
-	globalBluetooth.tryConnectPairedDevices()
+	//move reconnect devices into adapter.go when power signal on coming
+	//globalBluetooth.tryConnectPairedDevices()
 }
 
 func (*daemon) Start() error {

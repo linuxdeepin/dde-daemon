@@ -26,6 +26,8 @@ import (
 	"strconv"
 )
 
+type deviceConfigWithAddressSlice []*deviceConfigWithAddress
+
 func isStringInArray(str string, list []string) bool {
 	for _, tmp := range list {
 		if tmp == str {
@@ -77,4 +79,14 @@ func checkProcessExists(processName string) bool {
 	}
 
 	return false
+}
+
+func (a deviceConfigWithAddressSlice) Len() int {
+	return len(a)
+}
+func (a deviceConfigWithAddressSlice) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+func (a deviceConfigWithAddressSlice) Less(i, j int) bool {
+	return a[j].LatestTime < a[i].LatestTime
 }

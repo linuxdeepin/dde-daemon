@@ -203,7 +203,8 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 			// start discovering success, reset discovering timer
 			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
 		}
-		go b.tryConnectPairedDevices()
+		//move reconnect devices into adapter.go when power signal on coming
+		//go b.tryConnectPairedDevices()
 	}
 
 	return nil

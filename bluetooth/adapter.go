@@ -149,6 +149,11 @@ func (a *adapter) connectProperties() {
 		a.Powered = value
 		logger.Debugf("%s Powered: %v", a, value)
 		a.notifyPropertiesChanged()
+		time.Sleep(1)
+		//reconnect devices here to aviod problem when  airplane open and closed,paired devices not connecte initiatively 
+		if value{
+			globalBluetooth.tryConnectPairedDevices()
+		}
 	})
 	a.core.Discovering().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
