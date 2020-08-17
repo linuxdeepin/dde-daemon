@@ -50,6 +50,7 @@ type powerSavePlan struct {
 	tasks              delayedTasks
 	// key output name, value old brightness
 	oldBrightnessTable map[string]float64
+	oldACBrightnessTable map[string]float64
 	mu                 sync.Mutex
 	screensaverRunning bool
 
@@ -76,6 +77,29 @@ func newPowerSavePlan(manager *Manager) (string, submodule, error) {
 	p.fullscreenWorkaroundAppList = manager.settings.GetStrv(
 		"fullscreen-workaround-app-list")
 	return submodulePSP, p, nil
+}
+
+func (psp *powerSavePlan) handleOnBatteryChanged() {
+	logger.Debug("OnBattery  Changed")
+	psp.manager.PropsMu.RLock()
+	hasLightSensor := psp.manager.HasAmbientLightSensor
+	psp.manager.PropsMu.RUnlock()
+
+	if hasLightSensor && psp.manager.AmbientLightAdjustBrightness.Get() {
+		return
+	}
+	brightnessTable := psp.oldACBrightnessTable
+	if brightnessTable == nil {
+		brightnessTable , _ = psp.manager.helper.Display.GetBrightness(0)
+	}
+	newbrightnessTable, err := psp.manager.helper.Display.GetBrightness(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	psp.oldACBrightnessTable = newbrightnessTable
+	logger.Debug("OnBattery changed brightnessTable [last-new]", brightnessTable, psp.oldACBrightnessTable)
+	psp.manager.setAndSaveDisplayBrightness(brightnessTable)
 }
 
 // 监听 GSettings 值改变, 更新节电计划
@@ -180,6 +204,7 @@ func (psp *powerSavePlan) Start() error {
 
 	//OnBattery changed will effect current PowerSavePlan
 	power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
+		psp.handleOnBatteryChanged()
 		psp.Reset()
 	})
 
