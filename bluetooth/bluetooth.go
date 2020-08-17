@@ -649,39 +649,50 @@ func (b *Bluetooth) updateState() {
 }
 
 func (b *Bluetooth) tryConnectPairedDevices() {
-	var devList = b.getPairedDeviceList()
-	for _, dev := range devList {
+	var typeDeviceListMap = b.getPairedDeviceList()
+	for deviceType, devlist := range typeDeviceListMap {
 		// make sure dev always exist
-		if dev == nil {
+		if devlist == nil {
 			continue
 		}
-		logger.Info("[DEBUG] Auto connect device:", dev.Path)
+		for _, dev := range devlist {
+			if dev == nil {
+				continue
+			}
+			logger.Info("[DEBUG] Auto connect device:", dev.Path)
 
-		// if device using LE mode, will suspend, try connect should be failed, filter it.
-		if !b.isBREDRDevice(dev) {
-			continue
-		}
-		logger.Debug("Will auto connect device:", dev.String(), dev.adapter.address, dev.Address)
-		err := dev.doConnect(false)
-		if err != nil {
-			logger.Debug("failed to connect:", dev.String(), err)
-		} else {
-			// if auto connect success, add device into map connectedDevices
-			if dev.ConnectState == true {
-				b.addConnectedDevice(dev)
+			// if device using LE mode, will suspend, try connect should be failed, filter it.
+			if !b.isBREDRDevice(dev) {
+				continue
+			}
+			logger.Debug("Will auto connect device:", dev.String(), dev.adapter.address, dev.Address)
+			err := dev.doConnect(false)
+			if err != nil {
+				logger.Debug("failed to connect:", dev.String(), err)
+			} else {
+				// if auto connect success, add device into map connectedDevices
+				if dev.ConnectState == true {
+					b.addConnectedDevice(dev)
+				}
+				if b.isDeviceInput(deviceType) {
+					//for input device only connect one device by time,include audio-card
+					break
+				}
 			}
 		}
 	}
 }
 
-func (b *Bluetooth) getPairedDeviceList() []*device {
+func (b *Bluetooth) getPairedDeviceList() map[string][]*device {
 	b.adaptersLock.Lock()
 	defer b.adaptersLock.Unlock()
 	b.devicesLock.Lock()
 	defer b.devicesLock.Unlock()
 
-	// get all paired devices list from adapters
+	// get all paired and input devices list from adapters
 	var devAddressMap = make(map[string]*device)
+	// get all paired and output devices list from adapters
+
 	for _, aobj := range b.adapters {
 		logger.Info("[DEBUG] Auto connect adapter:", aobj.Path)
 
@@ -692,18 +703,20 @@ func (b *Bluetooth) getPairedDeviceList() []*device {
 		}
 
 		// add devices info to list
-		for _, value := range list {
+		for _, dev := range list {
 			// select already paired but not connected device from list
-			if value == nil || !value.Paired || value.connected {
+		
+			if dev == nil || !dev.Paired || dev.connected {
 				continue
 			}
-			devAddressMap[value.getAddress()] = value
+			devAddressMap[dev.getAddress()] = dev
+
 		}
 	}
 
 	// select the latest devices of each deviceType and add them into list
-	devList := b.config.filterDemandedTypeDevices(devAddressMap)
-	return devList
+	typeDeviceListMap := b.config.filterDemandedTypeDevices(devAddressMap)
+	return typeDeviceListMap
 }
 
 func (b *Bluetooth) getTechnologies(dev *device) ([]string, error) {
@@ -758,6 +771,14 @@ func (b *Bluetooth) wakeupWorkaround() {
 	})
 }
 
+func (b *Bluetooth) isDeviceInput(deviceType string) bool {
+	//true:input false:output
+	//audio-card handld as input device ,only connect one device
+	if deviceType == "input-gaming" || deviceType == "input-mouse" || deviceType == "input-keyboard" || deviceType == "input-tablet" || deviceType == "audio-card" {
+		return true
+	}
+	return false
+}
 func (b *Bluetooth) isDeviceNeedRepair(dev *device) bool {
 	// Audio-card Input-keyboard Input-mouse are allowed re-pair
 	if dev.Icon == "audio-card" || (dev.Class != 0 && (dev.Icon == "input-mouse" || dev.Icon == "input-keyboard")) {
