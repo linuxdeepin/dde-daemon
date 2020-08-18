@@ -96,6 +96,10 @@ type Manager struct {
 	sessionSigLoop *dbusutil.SignalLoop
 	syncConfig     *dsync.Config
 
+	debugChangeAPBand         string //调用接口切换ap频段
+	checkAPStrengthTimer      *time.Timer
+
+	//nolint
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {
 			devPath, apJSON string
@@ -110,6 +114,7 @@ type Manager struct {
 		ActivateAccessPoint          func() `in:"uuid,apPath,devPath" out:"cPath"`
 		ActivateConnection           func() `in:"uuid,devPath" out:"cPath"`
 		DeactivateConnection         func() `in:"uuid"`
+		DebugChangeAPChannel         func() `in:"band"`
 		DeleteConnection             func() `in:"uuid"`
 		DisableWirelessHotspotMode   func() `in:"devPath"`
 		DisconnectDevice             func() `in:"devPath"`
@@ -286,6 +291,11 @@ func (m *Manager) destroy() {
 	// reset dbus properties
 	m.setPropNetworkingEnabled(false)
 	m.updatePropState()
+
+	if m.checkAPStrengthTimer != nil {
+		m.checkAPStrengthTimer.Stop()
+		m.checkAPStrengthTimer = nil
+	}
 }
 
 func watchNetworkManagerRestart(m *Manager) {
