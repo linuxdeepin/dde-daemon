@@ -329,11 +329,6 @@ var xCategories = map[string][]CategoryID{
 
 func parseXCategoryString(name string) []CategoryID {
 	name = strings.ToLower(name)
-	id, ok := categoryNameTable[name]
-	if ok {
-		return []CategoryID{id}
-	}
-
 	if ids, ok := xCategories[name]; ok {
 		return ids
 	}
