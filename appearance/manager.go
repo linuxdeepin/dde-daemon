@@ -223,6 +223,13 @@ func newManager(service *dbusutil.Service) *Manager {
 
 	m.wsLoopMap = make(map[string]*WSLoop)
 	m.wsSchedulerMap = make(map[string]*WSScheduler)
+	cfg, err := m.doUnmarshalWallpaperSlideshow(m.WallpaperSlideShow.Get())
+	if err == nil {
+		for icfg := range cfg {
+			m.wsLoopMap[icfg] = newWSLoop()
+			m.wsSchedulerMap[icfg] = newWSScheduler()
+		}
+	}
 
 	m.gnomeBgSetting, _ = dutils.CheckAndNewGSettings(gnomeBgSchema)
 
@@ -944,28 +951,36 @@ func (m *Manager) autoChangeBg(monitorSpace string, t time.Time) {
 }
 
 func (m *Manager) initWallpaperSlideshow() {
+	// move to power module
+	// _, err := m.login1Manager.ConnectPrepareForSleep(func(before bool) {
+	// 	if !before {
+	// 		// after sleep
+	// 		if m.WallpaperSlideShow.Get() == wsPolicyWakeup {
+	// 			m.autoChangeBg(time.Now())
+	// 		}
+	// 	}
+	// })
+	// if err != nil {
+	// 	logger.Warning(err)
+	// }
 	m.loadWSConfig()
 	cfg, err := m.doUnmarshalWallpaperSlideshow(m.WallpaperSlideShow.Get())
 	if err == nil {
-		for monitorSpace, policy := range cfg {
-			_, ok := m.wsSchedulerMap[monitorSpace]
-			if !ok {
-				m.wsSchedulerMap[monitorSpace] = newWSScheduler(m.autoChangeBg)
+		for icfg := range cfg {
+			if m.wsSchedulerMap[icfg] != nil {
+				m.wsSchedulerMap[icfg].fn = m.autoChangeBg
 			}
-			_, ok = m.wsLoopMap[monitorSpace]
-			if !ok {
-				m.wsLoopMap[monitorSpace] = newWSLoop()
-			}
+			policy := cfg[icfg]
 			if isValidWSPolicy(policy) {
 				if policy == wsPolicyLogin {
-					err := m.changeBgAfterLogin(monitorSpace)
+					err := m.changeBgAfterLogin(icfg)
 					if err != nil {
 						logger.Warning("failed to change background after login:", err)
 					}
 				} else {
 					nSec, err := strconv.ParseUint(policy, 10, 32)
-					if err == nil && m.wsSchedulerMap[monitorSpace] != nil {
-						m.wsSchedulerMap[monitorSpace].updateInterval(monitorSpace, time.Duration(nSec)*time.Second)
+					if err == nil && m.wsSchedulerMap[icfg] != nil {
+						m.wsSchedulerMap[icfg].updateInterval(icfg, time.Duration(nSec)*time.Second)
 					}
 				}
 			}
@@ -1022,7 +1037,7 @@ func (m *Manager) loadWSConfig() {
 	for monitorSpace := range cfg {
 		_, ok := m.wsSchedulerMap[monitorSpace]
 		if !ok {
-			m.wsSchedulerMap[monitorSpace] = newWSScheduler(m.autoChangeBg)
+			m.wsSchedulerMap[monitorSpace] = newWSScheduler()
 		}
 		m.wsSchedulerMap[monitorSpace].mu.Lock()
 		m.wsSchedulerMap[monitorSpace].lastSetBg = cfg[monitorSpace].LastChange
@@ -1044,26 +1059,27 @@ func (m *Manager) updateWSPolicy(policy string) {
 	cfg, err := m.doUnmarshalWallpaperSlideshow(policy)
 	m.loadWSConfig()
 	if err == nil {
-		for monitorSpace, policy := range cfg {
-			_, ok := m.wsSchedulerMap[monitorSpace]
+		for icfg := range cfg {
+			policy = cfg[icfg]
+			_, ok := m.wsSchedulerMap[icfg]
 			if !ok {
-				m.wsSchedulerMap[monitorSpace] = newWSScheduler(m.autoChangeBg)
+				m.wsSchedulerMap[icfg] = newWSScheduler()
 			}
-			_, ok = m.wsLoopMap[monitorSpace]
+			_, ok = m.wsLoopMap[icfg]
 			if !ok {
-				m.wsLoopMap[monitorSpace] = newWSLoop()
+				m.wsLoopMap[icfg] = newWSLoop()
 			}
-			if m.curMonitorSpace == monitorSpace && isValidWSPolicy(policy) {
+			if m.curMonitorSpace == icfg && isValidWSPolicy(policy) {
 				nSec, err := strconv.ParseUint(policy, 10, 32)
 				if err == nil {
-					m.wsSchedulerMap[monitorSpace].lastSetBg = time.Now()
-					m.wsSchedulerMap[monitorSpace].updateInterval(monitorSpace, time.Duration(nSec)*time.Second)
-					err = m.saveWSConfig(monitorSpace, time.Now())
+					m.wsSchedulerMap[icfg].lastSetBg = time.Now()
+					m.wsSchedulerMap[icfg].updateInterval(icfg, time.Duration(nSec)*time.Second)
+					err = m.saveWSConfig(icfg, time.Now())
 					if err != nil {
 						logger.Warning(err)
 					}
 				} else {
-					m.wsSchedulerMap[monitorSpace].stop()
+					m.wsSchedulerMap[icfg].stop()
 				}
 			}
 		}
