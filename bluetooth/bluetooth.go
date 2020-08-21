@@ -25,6 +25,7 @@ import (
 	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
 	"sync"
 	"time"
+	"strings"
 
 	apidevice "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.device"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
@@ -111,18 +112,24 @@ type Bluetooth struct {
 	devicesLock sync.Mutex
 	devices     map[dbus.ObjectPath][]*device
 
+	//backupdevice
+	backupDeviceLock sync.Mutex
+	backupDevices    map[dbus.ObjectPath][]*backupDevice
+
 	PropsMu sync.RWMutex
 	State   uint32 // StateUnavailable/StateAvailable/StateConnected
 	// 当发起设备连接成功后，应该把连接的设备添加进设备列表
 	// 为了防止放同类设备被扫描到，且之前已配对过，会发起自动连接，而把当前连接的设备顶掉
 	connectedDevices map[string][]*device
 	connectedLock    sync.RWMutex
+	//设备被清空后需要连接的设备路径
+	prepareToConnectedDevice dbus.ObjectPath
+	prepareToConnectedLock   sync.Mutex
 
 	methods *struct {
 		DebugInfo                     func() `out:"info"`
 		GetDevices                    func() `in:"adapter" out:"devicesJSON"`
-		ConnectDevice                 func() `in:"device"`
-		//ConnectPairedDevices		  func()
+		ConnectDevice                 func() `in:"device,adapter"`
 		DisconnectDevice              func() `in:"device"`
 		RemoveDevice                  func() `in:"adapter,device"`
 		SetDeviceAlias                func() `in:"device,alias"`
@@ -237,6 +244,10 @@ func (b *Bluetooth) init() {
 	b.systemSigLoop.Start()
 	b.config = newConfig()
 	b.devices = make(map[dbus.ObjectPath][]*device)
+
+	b.backupDeviceLock.Lock()
+	b.backupDevices = make(map[dbus.ObjectPath][]*backupDevice)
+	b.backupDeviceLock.Unlock()
 
 	systemBus := b.systemSigLoop.Conn()
 	b.connectedLock.Lock()
@@ -464,6 +475,13 @@ func (b *Bluetooth) addDevice(dpath dbus.ObjectPath) {
 	}
 
 	d.notifyDeviceAdded()
+
+	//扫描1S钟，若扫描需要连接的设备，直接连接
+	if d.adapter.scanReadyToConnectDeviceTimeoutFlag {
+		if b.prepareToConnectedDevice == d.Path {
+			go d.Connect()
+		}
+	}
 }
 
 func (b *Bluetooth) removeDevice(dpath dbus.ObjectPath) {
@@ -476,13 +494,14 @@ func (b *Bluetooth) removeDevice(dpath dbus.ObjectPath) {
 	b.devicesLock.Lock()
 	defer b.devicesLock.Unlock()
 	b.devices[apath] = b.doRemoveDevice(b.devices[apath], i)
-	return
 }
 
 func (b *Bluetooth) doRemoveDevice(devices []*device, i int) []*device {
 	// NOTE: do not remove device from config
 	d := devices[i]
-	d.notifyDeviceRemoved()
+	if d.adapter.Discovering || d.Paired {
+		d.notifyDeviceRemoved()
+	}
 	d.destroy()
 	copy(devices[i:], devices[i+1:])
 	devices[len(devices)-1] = nil
@@ -509,6 +528,17 @@ func (b *Bluetooth) findDevice(dpath dbus.ObjectPath) (apath dbus.ObjectPath, in
 	return "", -1
 }
 
+func (b *Bluetooth) findBackupDevice(dpath dbus.ObjectPath) (apath dbus.ObjectPath, index int) {
+	for p, devices := range b.backupDevices {
+		for i, d := range devices {
+			if d.Path == dpath {
+				return p, i
+			}
+		}
+	}
+	return "", -1
+}
+
 func (b *Bluetooth) getDeviceIndex(dpath dbus.ObjectPath) (apath dbus.ObjectPath, index int) {
 	b.devicesLock.Lock()
 	defer b.devicesLock.Unlock()
@@ -523,6 +553,16 @@ func (b *Bluetooth) getDevice(dpath dbus.ObjectPath) (*device, error) {
 		return nil, errInvalidDevicePath
 	}
 	return b.devices[apath][index], nil
+}
+
+func (b *Bluetooth) getBackupDevice(dpath dbus.ObjectPath) (*backupDevice, error) {
+	b.backupDeviceLock.Lock()
+	defer b.backupDeviceLock.Unlock()
+	apath, index := b.findBackupDevice(dpath)
+	if index < 0 {
+		return nil, errInvalidDevicePath
+	}
+	return b.backupDevices[apath][index], nil
 }
 
 func (b *Bluetooth) getAdapterDevices(adapterAddress string) []*device {
@@ -691,16 +731,20 @@ func (b *Bluetooth) tryConnectPairedDevices() {
 			err := dev.doConnect(false)
 			if err != nil {
 				logger.Debug("failed to connect:", dev.String(), err)
-			} else {
-				// if auto connect success, add device into map connectedDevices
-				if dev.ConnectState == true {
-					b.addConnectedDevice(dev)
+				//reconnect once when connect failed of host is down of waking up 
+				if strings.Contains(err.Error(),"Host is down"){
+					dev.doConnect(false)
 				}
-				if b.isDeviceInput(deviceType) {
-					//for input device only connect one device by time,include audio-card
-					break
-				}
+			} 
+			// if auto connect success, add device into map connectedDevices
+			if dev.ConnectState == true {
+				b.addConnectedDevice(dev)
 			}
+			if b.isDeviceInput(deviceType) {
+				//for input device only connect one device by time,include audio-card
+				break
+			}
+			
 		}
 	}
 }
