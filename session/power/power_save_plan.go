@@ -196,14 +196,21 @@ func (psp *powerSavePlan) Start() error {
 	if err != nil {
 		logger.Warning("failed to connectChanged PowerSavingModeBrightnessDropPercent:", err)
 	}
-	_, err = screenSaver.ConnectIdleOn(psp.HandleIdleOn)
-	if err != nil {
+	
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		psp.ConnectIdle()
+	} else {
+		_, err = screenSaver.ConnectIdleOn(psp.HandleIdleOn)
+		if err != nil {
 		logger.Warning("failed to ConnectIdleOn:", err)
+		}
+		_, err = screenSaver.ConnectIdleOff(psp.HandleIdleOff)
+		if err != nil {
+			logger.Warning("failed to ConnectIdleOff:", err)
+		}
 	}
-	_, err = screenSaver.ConnectIdleOff(psp.HandleIdleOff)
-	if err != nil {
-		logger.Warning("failed to ConnectIdleOff:", err)
-	}
+
 	err = display.Brightness().ConnectChanged(psp.saveSetBrightnessTime)
 	if err != nil {
 		logger.Warning("failed to connectChanged Brightness:", err)
