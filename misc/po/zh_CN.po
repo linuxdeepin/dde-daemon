@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # electricface <songwentai@linuxdeepin.com>, 2020
 # 李洪武 <lihongwu1987@gmail.com>, 2020
@@ -12,20 +12,21 @@
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # transifex deepin <transifex@deepin.com>, 2020
 # Cindy0514, 2020
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-07 12:17+0800\n"
+"POT-Creation-Date: 2020-08-31 18:14+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/"
+"teams/3617/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts/checkers/password.go:53
@@ -36,7 +37,8 @@ msgstr "请输入长度不小于8位的密码"
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
+msgstr ""
+"密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
 
 #: ../../accounts/checkers/username.go:63
 msgid "Username cannot be empty"
@@ -130,70 +132,70 @@ msgstr "消息访问"
 msgid "Message notification"
 msgstr "消息通知"
 
-#: ../../bluetooth/utils_notify.go:90
+#: ../../bluetooth/utils_notify.go:117
 msgid "Connect %q successfully"
 msgstr "连接%q成功"
 
-#: ../../bluetooth/utils_notify.go:94 ../../network/utils_notify.go:99
-#: ../../network/utils_notify.go:103 ../../network/utils_notify.go:107
-#: ../../network/utils_notify.go:111 ../../network/utils_notify.go:129
-#: ../../network/utils_notify.go:132 ../../network/utils_notify.go:221
+#: ../../bluetooth/utils_notify.go:121 ../../network/utils_notify.go:185
+#: ../../network/utils_notify.go:189 ../../network/utils_notify.go:193
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:215
+#: ../../network/utils_notify.go:218 ../../network/utils_notify.go:307
 msgid "Disconnected"
 msgstr "已断开"
 
-#: ../../bluetooth/utils_notify.go:98 ../../bluetooth/utils_notify.go:128
+#: ../../bluetooth/utils_notify.go:125 ../../bluetooth/utils_notify.go:155
 msgid "Make sure %q is turned on and in range"
 msgstr "请确定%q已打开而且在通讯范围内"
 
-#: ../../bluetooth/utils_notify.go:103 ../../bluetooth/utils_notify.go:131
+#: ../../bluetooth/utils_notify.go:130 ../../bluetooth/utils_notify.go:158
 msgid "Bluetooth connection failed"
 msgstr "蓝牙连接失败"
 
-#: ../../bluetooth/utils_notify.go:110
+#: ../../bluetooth/utils_notify.go:137
 msgid "Page Timeout"
 msgstr "连接超时"
 
-#: ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:140
 msgid "Authentication Timeout"
 msgstr "身份验证超时"
 
-#: ../../bluetooth/utils_notify.go:116
+#: ../../bluetooth/utils_notify.go:143
 msgid "Authentication Rejected"
 msgstr "身份验证被拒"
 
-#: ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth/utils_notify.go:146
 msgid "Authentication Canceled"
 msgstr "身份验证取消"
 
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:149
 msgid "Already Paired"
 msgstr "已配对"
 
-#: ../../bluetooth/utils_notify.go:125
+#: ../../bluetooth/utils_notify.go:152
 msgid "Authentication Failed"
 msgstr "验证失败"
 
-#: ../../bluetooth/utils_notify.go:135
+#: ../../bluetooth/utils_notify.go:162 ../../bluetooth/utils_notify.go:220
 msgid "Click here to connect to %q"
 msgstr "点击以设置添加%q"
 
-#: ../../bluetooth/utils_notify.go:136
+#: ../../bluetooth/utils_notify.go:163 ../../bluetooth/utils_notify.go:221
 msgid "Add Bluetooth devices"
 msgstr "添加蓝牙设备"
 
-#: ../../bluetooth/utils_notify.go:150
+#: ../../bluetooth/utils_notify.go:177 ../../bluetooth/utils_notify.go:231
 msgid "Pair"
 msgstr "配对"
 
-#: ../../calendar/job.go:508 ../../calendar/job.go:515
+#: ../../calendar/job.go:510 ../../calendar/job.go:517
 msgid "today"
 msgstr "今天"
 
-#: ../../calendar/job.go:510 ../../calendar/job.go:517
+#: ../../calendar/job.go:512 ../../calendar/job.go:519
 msgid "tomorrow"
 msgstr "明天"
 
-#: ../../calendar/job.go:530
+#: ../../calendar/job.go:532
 #, c-format
 msgid "%s to %s"
 msgstr "%s至%s"
@@ -210,24 +212,24 @@ msgstr "生活"
 msgid "Other"
 msgstr "其他"
 
-#: ../../calendar/scheduler.go:489
+#: ../../calendar/scheduler.go:497
 msgid "One day before start"
 msgstr "提前1天提醒"
 
-#: ../../calendar/scheduler.go:490 ../../calendar/scheduler.go:495
-#: ../../calendar/scheduler.go:503 ../../calendar/scheduler.go:507
+#: ../../calendar/scheduler.go:498 ../../calendar/scheduler.go:503
+#: ../../calendar/scheduler.go:511 ../../calendar/scheduler.go:515
 msgid "Close"
 msgstr "关闭"
 
-#: ../../calendar/scheduler.go:494
+#: ../../calendar/scheduler.go:502
 msgid "Remind me tomorrow"
 msgstr "明天提醒"
 
-#: ../../calendar/scheduler.go:502
+#: ../../calendar/scheduler.go:510
 msgid "Remind me later"
 msgstr "稍后提醒"
 
-#: ../../calendar/scheduler.go:512
+#: ../../calendar/scheduler.go:520
 msgid "Schedule Reminder"
 msgstr "日程提醒"
 
@@ -443,35 +445,44 @@ msgstr "显示当前工作区的窗口"
 msgid "Display workspace"
 msgstr "显示工作区 "
 
+#: ../../keybinding/shortcuts/id_name_map.go:210
+#, fuzzy
+msgid "Switch monitors"
+msgstr "切换窗口"
+
 #: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "切换语言需要认证"
 
-#: ../../langselector/locale.go:390
-msgid "Failed to change system language, please try later"
-msgstr "系统语言切换失败，请稍后重试"
-
-#: ../../langselector/locale.go:414
+#: ../../langselector/locale.go:159
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "正在切换系统语言并安装缺失的语言包，请稍候…"
 
-#: ../../langselector/locale.go:417
+#: ../../langselector/locale.go:160
 msgid "Changing system language, please wait..."
 msgstr "正在切换系统语言，请稍候…"
 
-#: ../../langselector/locale.go:465
+#: ../../langselector/locale.go:161
 msgid "System language changed, please log out and then log in"
 msgstr "语言切换成功，请注销后重新登录"
 
-#: ../../lastore/lastore.go:247
+#: ../../langselector/locale.go:403
+msgid "Failed to change system language, please try later"
+msgstr "系统语言切换失败，请稍后重试"
+
+#: ../../lastore/lastore.go:248
 msgid "Retry"
 msgstr "重试"
 
-#: ../../lastore/lastore.go:255
+#: ../../lastore/lastore.go:256
 msgid "Cancel"
 msgstr "取消"
+
+#: ../../lastore/lastore.go:270
+msgid "Update Now"
+msgstr ""
 
 #: ../../lastore/notify.go:97
 msgid "%q installed successfully."
@@ -504,6 +515,10 @@ msgid ""
 "your normal use"
 msgstr "检测到您的系统源已被修改，为了您的正常使用，建议恢复到官方源"
 
+#: ../../lastore/notify.go:132
+msgid "New system edition available"
+msgstr ""
+
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
 msgstr "成功卸载 %q "
@@ -512,52 +527,40 @@ msgstr "成功卸载 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸载失败"
 
-#: ../../network/manager_active_conn.go:318
-msgid "A (5 GHz)"
-msgstr "A（5 GHz）"
-
-#: ../../network/manager_active_conn.go:320
-msgid "BG (2.4 GHz)"
-msgstr "BG（2.4 GHz）"
-
-#: ../../network/manager_active_conn.go:322
-msgid "Automatic"
-msgstr "自动"
-
-#: ../../network/manager_active_conn.go:333
-#: ../../network/manager_active_conn.go:338
+#: ../../network/manager_active_conn.go:351
+#: ../../network/manager_active_conn.go:356
 msgid "None"
 msgstr "无"
 
-#: ../../network/manager_active_conn.go:340
+#: ../../network/manager_active_conn.go:358
 msgid "WEP 40/128-bit Key"
 msgstr "WEP40/128位密钥"
 
-#: ../../network/manager_active_conn.go:342
+#: ../../network/manager_active_conn.go:360
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2个人版"
 
-#: ../../network/manager_active_conn.go:350
+#: ../../network/manager_active_conn.go:368
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:352
+#: ../../network/manager_active_conn.go:370
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:354
+#: ../../network/manager_active_conn.go:372
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:356
+#: ../../network/manager_active_conn.go:374
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:358
+#: ../../network/manager_active_conn.go:376
 msgid "Tunneled TLS"
 msgstr "隧道TLS"
 
-#: ../../network/manager_active_conn.go:360
+#: ../../network/manager_active_conn.go:378
 msgid "Protected EAP"
 msgstr "受保护的EAP"
 
@@ -906,8 +909,7 @@ msgid "The VPN connection state changed due to being disconnected by users"
 msgstr "用户断开致使VPN连接状态改变"
 
 #: ../../network/state_handler.go:114
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
+msgid "The VPN connection state changed due to being disconnected from devices"
 msgstr "设备断开致使VPN连接状态改变"
 
 #: ../../network/state_handler.go:115
@@ -993,58 +995,96 @@ msgstr "连接%s需要密码"
 msgid "Connection failed, unable to connect %s, wrong password"
 msgstr "连接失败，未能加入%s，密码不正确"
 
+#: ../../network/state_handler.go:364
+#, fuzzy
+msgid "%q disconnected"
+msgstr "%s已断开"
+
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"
 msgstr "未知"
 
-#: ../../network/utils_notify.go:99
+#: ../../network/utils_notify.go:185
 msgid "You are now offline."
 msgstr "当前已离线。"
 
-#: ../../network/utils_notify.go:103
+#: ../../network/utils_notify.go:189
 msgid "Airplane mode enabled."
 msgstr "飞行模式已启用"
 
-#: ../../network/utils_notify.go:111
+#: ../../network/utils_notify.go:197
 msgid "Access Point mode is not supported by this device."
 msgstr "此设备不支持热点模式。"
 
-#: ../../network/utils_notify.go:115 ../../network/utils_notify.go:119
-#: ../../network/utils_notify.go:122
+#: ../../network/utils_notify.go:201 ../../network/utils_notify.go:205
+#: ../../network/utils_notify.go:208
 msgid "Network"
 msgstr "网络"
 
-#: ../../network/utils_notify.go:115
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
+#: ../../network/utils_notify.go:201
+msgid "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "无线网卡的硬件开关已关闭，如需使用无线请先打开开关。"
 
-#: ../../network/utils_notify.go:119
+#: ../../network/utils_notify.go:205
 msgid "System proxy is set successfully."
 msgstr "设置系统代理成功。"
 
-#: ../../network/utils_notify.go:122
+#: ../../network/utils_notify.go:208
 msgid "System proxy has been cancelled."
 msgstr "系统代理已取消。"
 
-#: ../../network/utils_notify.go:126
+#: ../../network/utils_notify.go:212
 msgid "Connected"
 msgstr "已连接"
 
 #: ../../service_trigger/msg.go:7
 #, c-format
-msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgid ""
+"\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”没有通过系统安全验证，无法运行"
 
-#: ../../session/power/manager_events.go:184
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "电池电量耗尽"
 
-#: ../../session/power/manager_events.go:205
-#: ../../session/power/manager_events.go:210
-#: ../../session/power/manager_events.go:215
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "电池电量低，请连接电源"
+
+#: ../../session/power/utils.go:370 ../../session/power/utils.go:374
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+msgid "Power settings changed"
+msgstr "电源设置更改"
+
+#: ../../session/power/utils.go:397
+msgid "When the lid is closed, "
+msgstr "“笔记本合盖时”"
+
+#: ../../session/power/utils.go:401
+msgid "When pressing the power button, "
+msgstr "“按电源按钮时”"
+
+#: ../../session/power/utils.go:411
+msgid "your computer will shut down"
+msgstr "修改为关机"
+
+#: ../../session/power/utils.go:413
+msgid "your computer will suspend"
+msgstr "修改为待机"
+
+#: ../../session/power/utils.go:415
+msgid "your computer will hibernate"
+msgstr "修改为休眠"
+
+#: ../../session/power/utils.go:417
+msgid "your monitor will turn off"
+msgstr "修改为关闭显示器"
+
+#: ../../session/power/utils.go:419
+msgid "it will do nothing to your computer"
+msgstr "修改为无任何操作"
 
 #: ../../timedate/manager_ifc.go:59
 msgid "Authentication is required to set the system time"
@@ -1069,3 +1109,12 @@ msgstr "设置硬件时钟使用本地时间或 UTC 需要认证"
 #: ../../timedate/manager_ifc.go:141
 msgid "Authentication is required to set the system timezone"
 msgstr "设置系统时区需要认证"
+
+#~ msgid "A (5 GHz)"
+#~ msgstr "A（5 GHz）"
+
+#~ msgid "BG (2.4 GHz)"
+#~ msgstr "BG（2.4 GHz）"
+
+#~ msgid "Automatic"
+#~ msgstr "自动"
