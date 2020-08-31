@@ -70,7 +70,9 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 	if appId == "totem" {
 		appId = "org.gnome.Totem"
 	}
-
+	if appId == "org.deepin.deepin-terminal" {
+		appId = "deepin-terminal"
+	}
 	appInfo = NewAppInfo(appId)
 	if appInfo != nil {
 		innerId = appInfo.innerId

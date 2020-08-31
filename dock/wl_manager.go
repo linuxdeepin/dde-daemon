@@ -198,7 +198,10 @@ func (m *Manager) registerWindowWayland(objPath dbus.ObjectPath) {
 		return
 	}
 	if globalRestrictWaylandWindow {
-		if appId != "totem" && appId != "deepin-movie"{
+		if appId != "totem" && appId != "deepin-movie" && appId != "deepin-draw" && appId != "org.deepin.deepin-terminal" && appId != "dde-file-manager" {
+			if appId == "org.deepin.deepin-terminal" {
+				appId = "deepin-terminal"
+			}
 			return
 		}
 	}
