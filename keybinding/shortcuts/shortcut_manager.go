@@ -892,7 +892,6 @@ func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
 		return
 	}
 	idNameMap := getWMIdNameMap()
-
 	for _, accel := range accels {
 		// 'preview-workspace' unsupported in wayland, so filter it
 		if accel.Id == "preview-workspace" {
@@ -906,7 +905,11 @@ func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
 		if name == "" {
 			name = accel.Id
 		}
-		ks := newKWinShortcut(accel.Id, name, accel.Keystrokes, wmObj)
+		keystrokes:= accel.Keystrokes
+		if keystrokes == nil{
+			keystrokes = accel.DefaultKeystrokes
+		}
+		ks := newKWinShortcut(accel.Id, name, keystrokes, wmObj)
 		sm.addWithoutLock(ks)
 	}
 }
@@ -920,11 +923,8 @@ func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj *wm.Wm
 		if name == "" {
 			name = id
 		}
-		if id == "terminal-quake" {
-			continue
-		}
 		if strings.Contains(session, "wayland") {
-			if id == "wm-switcher" || id == "translation" {
+			if id == "wm-switcher" {
 				continue
 			}
 		}
