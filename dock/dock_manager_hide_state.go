@@ -52,7 +52,7 @@ func hasIntersection(rectA, rectB *Rect) bool {
 	ay := max(y, y1)
 	bx := min(X+w, x1+w1)
 	by := min(y+h, y1+h1)
-	return ax < bx && ay < by
+	return ax <= bx && ay <= by
 }
 
 func (m *Manager) getActiveWinGroup(activeWin x.Window) (ret []x.Window) {
