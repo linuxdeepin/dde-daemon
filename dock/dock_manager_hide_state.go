@@ -41,7 +41,7 @@ func min(a, b int) int {
 	return b
 }
 
-func hasIntersection(rectA, rectB *Rect) bool {
+func (m *Manager) hasIntersection(rectA, rectB *Rect) bool {
 	if rectA == nil || rectB == nil {
 		logger.Warning("hasIntersection rectA or rectB is nil")
 		return false
@@ -52,7 +52,17 @@ func hasIntersection(rectA, rectB *Rect) bool {
 	ay := max(y, y1)
 	bx := min(X+w, x1+w1)
 	by := min(y+h, y1+h1)
-	return ax <= bx && ay <= by
+
+	position_val := m.Position.Get()
+	logger.Debug("position_val=", position_val)
+
+	if position_val == int32(positionRight) || position_val == int32(positionLeft) {
+		return ax <= bx && ay < by
+	} else if position_val == int32(positionTop) || position_val == int32(positionBottom) {
+		return ax < bx && ay <= by
+	} else {
+		return ax < bx && ay < by
+	}
 }
 
 func (m *Manager) getActiveWinGroup(activeWin x.Window) (ret []x.Window) {
@@ -148,7 +158,7 @@ func (m *Manager) isWindowDockOverlap(win x.Window) (bool, error) {
 
 	logger.Debug("window rect:", winRect)
 	logger.Debug("dock rect:", m.FrontendWindowRect)
-	return hasIntersection(winRect, m.FrontendWindowRect), nil
+	return m.hasIntersection(winRect, m.FrontendWindowRect), nil
 }
 
 func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
@@ -161,7 +171,7 @@ func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
 	}
 	logger.Debug("window rect:", winRect)
 	logger.Debug("dock rect:", m.FrontendWindowRect)
-	return hasIntersection(winRect, m.FrontendWindowRect), nil
+	return m.hasIntersection(winRect, m.FrontendWindowRect), nil
 }
 
 const (
