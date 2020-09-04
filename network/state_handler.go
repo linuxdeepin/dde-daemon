@@ -361,7 +361,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 					logger.Debug("Disconnected due to unplugged cable")
 					if dsi.devType == nm.NM_DEVICE_TYPE_ETHERNET {
 						logger.Debug("unplugged device is ethernet")
-						msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
+						msg = fmt.Sprintf(Tr("%s disconnected"), dsi.aconnId)
 					}
 
 					//default:
