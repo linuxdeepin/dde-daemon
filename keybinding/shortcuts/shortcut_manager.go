@@ -151,7 +151,6 @@ func (sm *ShortcutManager) recordEventLoop() {
 			logger.Debug("record disabled!")
 			continue
 		}
-
 		if reply.ClientSwapped {
 			logger.Warning("reply.ClientSwapped is true")
 			continue
@@ -894,7 +893,7 @@ func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
 	idNameMap := getWMIdNameMap()
 	for _, accel := range accels {
 		// 'preview-workspace' unsupported in wayland, so filter it
-		if accel.Id == "preview-workspace" {
+		if accel.Id == "preview-workspace" || accel.Id == "color-picker" {
 			continue
 		}
 		name := idNameMap[accel.Id]
@@ -905,9 +904,34 @@ func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
 		if name == "" {
 			name = accel.Id
 		}
-		keystrokes:= accel.Keystrokes
-		if keystrokes == nil{
+		keystrokes := accel.Keystrokes
+		if keystrokes == nil {
 			keystrokes = accel.DefaultKeystrokes
+		}
+		//Del
+		if accel.Id == "logout" {
+			for i := 0; i < len(keystrokes); i++ {
+				keystrokes[i] = strings.Replace(keystrokes[i], "Del", "Delete", 1)
+			}
+		}
+		//minimize
+		if accel.Id == "minimize" {
+			if accel.DefaultKeystrokes != nil {
+				keystrokes = accel.DefaultKeystrokes
+			}
+		}
+		//launcher
+		if accel.Id == "launcher" {
+			if keystrokes == nil {
+				keystrokes = append(keystrokes, "<Super_L>")
+			}
+		}
+		//system-monitor
+		if accel.Id == "system-monitor" {
+
+			for i := 0; i < len(keystrokes); i++ {
+				keystrokes[i] = strings.Replace(keystrokes[i], "Esc", "Escape", 1)
+			}
 		}
 		ks := newKWinShortcut(accel.Id, name, keystrokes, wmObj)
 		sm.addWithoutLock(ks)
@@ -917,17 +941,16 @@ func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
 func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj *wm.Wm) {
 	logger.Debug("AddSystemToKwin")
 	idNameMap := getSystemIdNameMap()
-	session := os.Getenv("XDG_SESSION_TYPE")
 	for _, id := range gsettings.ListKeys() {
 		name := idNameMap[id]
 		if name == "" {
 			name = id
 		}
-		if strings.Contains(session, "wayland") {
-			if id == "wm-switcher" {
-				continue
-			}
+
+		if id == "launcher" || id == "system_monitor" {
+			continue
 		}
+
 		accelJson, err := util.MarshalJSON(util.KWinAccel{
 			Id:         id,
 			Keystrokes: gsettings.GetStrv(id),
