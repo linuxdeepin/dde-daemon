@@ -22,6 +22,7 @@ package bluetooth
 import (
 	"errors"
 	"fmt"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
 	"sync"
 	"time"
 
@@ -32,6 +33,7 @@ import (
 	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
+	. "pkg.deepin.io/lib/gettext"
 )
 
 const (
@@ -95,6 +97,7 @@ type Bluetooth struct {
 	service       *dbusutil.Service
 	systemSigLoop *dbusutil.SignalLoop
 	config        *config
+	airplane      *airplanemode.AirplaneMode
 	objectManager *bluez.ObjectManager
 	sysDBusDaemon *ofdbus.DBus
 	apiDevice     *apidevice.Device
@@ -261,6 +264,11 @@ func (b *Bluetooth) init() {
 	b.objectManager.ConnectInterfacesAdded(b.handleInterfacesAdded)
 	b.objectManager.ConnectInterfacesRemoved(b.handleInterfacesRemoved)
 
+	//airplanemode signals
+	b.airplane = airplanemode.NewAirplaneMode(systemBus)
+	b.airplane.InitSignalExt(b.systemSigLoop, true)
+	b.airplane.ConnectAirplaneOn(b.handleAirplaneOn)
+
 	b.agent.init()
 	b.loadObjects()
 
@@ -347,6 +355,10 @@ func (b *Bluetooth) handleInterfacesRemoved(path dbus.ObjectPath, interfaces []s
 	if isStringInArray(bluezDeviceDBusInterface, interfaces) {
 		b.removeDevice(path)
 	}
+}
+
+func (b *Bluetooth) handleAirplaneOn() {
+	notifyDisconnected(Tr("Airplane mode enabled."))
 }
 
 func (b *Bluetooth) handleDBusNameOwnerChanged(name, oldOwner, newOwner string) {

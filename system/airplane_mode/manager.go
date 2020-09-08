@@ -42,6 +42,9 @@ type Manager struct {
 		EnableWifi      func() `in:"enabled"`
 		EnableBluetooth func() `in:"enabled"`
 	}
+	signals *struct {
+		AirplaneOn struct{}
+	}
 }
 
 func (m *Manager) GetInterfaceName() string {
@@ -196,6 +199,11 @@ func (m *Manager) Enable(sender dbus.Sender, enabled bool) *dbus.Error {
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
+	}
+
+	if enabled {
+		logger.Info("airplane enabled")
+		m.service.Emit(m, "AirplaneOn")
 	}
 
 	return nil

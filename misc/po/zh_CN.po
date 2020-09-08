@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-31 18:14+0800\n"
+"POT-Creation-Date: 2020-09-05 19:25+0800\n"
 "PO-Revision-Date: 2020-05-28 08:30+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/"
@@ -84,6 +84,10 @@ msgstr "指纹验证失败"
 msgid "Fingerprint verification timed out"
 msgstr "指纹验证超时"
 
+#: ../../bluetooth/bluetooth.go:361 ../../network/utils_notify.go:189
+msgid "Airplane mode enabled."
+msgstr "飞行模式已启用"
+
 #: ../../bluetooth/bluez_profile.go:29
 msgid "Serial port"
 msgstr "串行端口"
@@ -132,58 +136,58 @@ msgstr "消息访问"
 msgid "Message notification"
 msgstr "消息通知"
 
-#: ../../bluetooth/utils_notify.go:117
+#: ../../bluetooth/utils_notify.go:119
 msgid "Connect %q successfully"
 msgstr "连接%q成功"
 
-#: ../../bluetooth/utils_notify.go:121 ../../network/utils_notify.go:185
+#: ../../bluetooth/utils_notify.go:123 ../../network/utils_notify.go:185
 #: ../../network/utils_notify.go:189 ../../network/utils_notify.go:193
 #: ../../network/utils_notify.go:197 ../../network/utils_notify.go:215
 #: ../../network/utils_notify.go:218 ../../network/utils_notify.go:307
 msgid "Disconnected"
 msgstr "已断开"
 
-#: ../../bluetooth/utils_notify.go:125 ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:127 ../../bluetooth/utils_notify.go:157
 msgid "Make sure %q is turned on and in range"
 msgstr "请确定%q已打开而且在通讯范围内"
 
-#: ../../bluetooth/utils_notify.go:130 ../../bluetooth/utils_notify.go:158
+#: ../../bluetooth/utils_notify.go:132 ../../bluetooth/utils_notify.go:160
 msgid "Bluetooth connection failed"
 msgstr "蓝牙连接失败"
 
-#: ../../bluetooth/utils_notify.go:137
+#: ../../bluetooth/utils_notify.go:139
 msgid "Page Timeout"
 msgstr "连接超时"
 
-#: ../../bluetooth/utils_notify.go:140
+#: ../../bluetooth/utils_notify.go:142
 msgid "Authentication Timeout"
 msgstr "身份验证超时"
 
-#: ../../bluetooth/utils_notify.go:143
+#: ../../bluetooth/utils_notify.go:145
 msgid "Authentication Rejected"
 msgstr "身份验证被拒"
 
-#: ../../bluetooth/utils_notify.go:146
+#: ../../bluetooth/utils_notify.go:148
 msgid "Authentication Canceled"
 msgstr "身份验证取消"
 
-#: ../../bluetooth/utils_notify.go:149
+#: ../../bluetooth/utils_notify.go:151
 msgid "Already Paired"
 msgstr "已配对"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:154
 msgid "Authentication Failed"
 msgstr "验证失败"
 
-#: ../../bluetooth/utils_notify.go:162 ../../bluetooth/utils_notify.go:220
+#: ../../bluetooth/utils_notify.go:164 ../../bluetooth/utils_notify.go:223
 msgid "Click here to connect to %q"
 msgstr "点击以设置添加%q"
 
-#: ../../bluetooth/utils_notify.go:163 ../../bluetooth/utils_notify.go:221
+#: ../../bluetooth/utils_notify.go:165 ../../bluetooth/utils_notify.go:224
 msgid "Add Bluetooth devices"
 msgstr "添加蓝牙设备"
 
-#: ../../bluetooth/utils_notify.go:177 ../../bluetooth/utils_notify.go:231
+#: ../../bluetooth/utils_notify.go:179 ../../bluetooth/utils_notify.go:234
 msgid "Pair"
 msgstr "配对"
 
@@ -1008,10 +1012,6 @@ msgstr "未知"
 msgid "You are now offline."
 msgstr "当前已离线。"
 
-#: ../../network/utils_notify.go:189
-msgid "Airplane mode enabled."
-msgstr "飞行模式已启用"
-
 #: ../../network/utils_notify.go:197
 msgid "Access Point mode is not supported by this device."
 msgstr "此设备不支持热点模式。"
@@ -1109,6 +1109,14 @@ msgstr "设置硬件时钟使用本地时间或 UTC 需要认证"
 #: ../../timedate/manager_ifc.go:141
 msgid "Authentication is required to set the system timezone"
 msgstr "设置系统时区需要认证"
+
+#, fuzzy
+#~ msgid "Airplane mode enabled, BLUZ service stopped"
+#~ msgstr "飞行模式已启用"
+
+#, fuzzy
+#~ msgid "Bluetooth"
+#~ msgstr "添加蓝牙设备"
 
 #~ msgid "A (5 GHz)"
 #~ msgstr "A（5 GHz）"
