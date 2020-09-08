@@ -46,6 +46,7 @@ type CardPortExport struct {
 	Name        string
 	Description string
 	Direction   int
+	Available   int
 }
 
 func newCard(card *pulse.Card) *Card {
@@ -120,6 +121,7 @@ func (cards CardList) string() string {
 				Name:        portInfo.Name,
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
+				Available:   portInfo.Available,
 			})
 		}
 

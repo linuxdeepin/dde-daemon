@@ -25,10 +25,11 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"strings"
 	"sync"
 	"time"
+
+	"pkg.deepin.io/lib/dbusutil/gsprop"
 
 	"golang.org/x/xerrors"
 	"pkg.deepin.io/dde/daemon/common/dsync"
@@ -281,33 +282,27 @@ func (a *Audio) init() error {
 	a.updatePropSources()
 	a.updatePropSinkInputs()
 
-	serverInfo, err := a.ctx.GetServer()
-	if err == nil {
-		a.mu.Lock()
-		a.defaultSourceName = serverInfo.DefaultSourceName
-		a.defaultSinkName = serverInfo.DefaultSinkName
-
-		for _, sink := range a.sinks {
-			if sink.Name == a.defaultSinkName {
-				a.defaultSink = sink
-				a.PropsMu.Lock()
-				a.setPropDefaultSink(sink.getPath())
-				a.PropsMu.Unlock()
-			}
+	a.mu.Lock()
+	for _, sink := range a.sinks {
+		if int(sink.ActivePort.Available) == 2 {
+			a.defaultSink = sink
+			a.defaultSinkName = sink.ActivePort.Description
+			a.PropsMu.Lock()
+			a.setPropDefaultSink(sink.getPath())
+			a.PropsMu.Unlock()
 		}
-
-		for _, source := range a.sources {
-			if source.Name == a.defaultSourceName {
-				a.defaultSource = source
-				a.PropsMu.Lock()
-				a.setPropDefaultSource(source.getPath())
-				a.PropsMu.Unlock()
-			}
-		}
-		a.mu.Unlock()
-	} else {
-		logger.Warning(err)
 	}
+
+	for _, source := range a.sources {
+		if int(source.ActivePort.Available) == 2 {
+			a.defaultSource = source
+			a.defaultSourceName = source.ActivePort.Description
+			a.PropsMu.Lock()
+			a.setPropDefaultSource(source.getPath())
+			a.PropsMu.Unlock()
+		}
+	}
+	a.mu.Unlock()
 
 	a.mu.Lock()
 	a.cards = newCardList(a.ctx.GetCardList())
@@ -562,7 +557,7 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 }
 
 func (a *Audio) resetSinksVolume() {
-	logger.Debug("reset sink volume",defaultOutputVolume)
+	logger.Debug("reset sink volume", defaultOutputVolume)
 	for _, s := range a.ctx.GetSinkList() {
 		a.ctx.SetSinkMuteByIndex(s.Index, false)
 		curPort := s.ActivePort.Name
@@ -590,7 +585,7 @@ func (a *Audio) resetSinksVolume() {
 }
 
 func (a *Audio) resetSourceVolume() {
-	logger.Debug("reset source volume",defaultInputVolume)
+	logger.Debug("reset source volume", defaultInputVolume)
 	for _, s := range a.ctx.GetSourceList() {
 		a.ctx.SetSourceMuteByIndex(s.Index, false)
 		cv := s.Volume.SetAvg(defaultInputVolume).SetBalance(s.ChannelMap,
