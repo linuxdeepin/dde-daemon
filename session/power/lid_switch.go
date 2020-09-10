@@ -75,7 +75,18 @@ func (h *LidSwitchHandler) onLidClosed() {
 	case powerActionShutdown:
 		m.doShutdown()
 	case powerActionSuspend:
-		m.doSuspend()
+		outputs, err := getWorkingOutputNames(m.helper)
+		if err != nil {
+			logger.Warning("getWorkingOutputNames failed:", err)
+		}
+		logger.Debug("working outputs:", outputs)
+		if len(outputs) > 1 {
+			if err := h.startAskUser(); err != nil {
+				logger.Warning("LidSwitchHandler.startAskUser failed", err)
+			}
+		} else {
+			m.doSuspend()
+		}
 	case powerActionHibernate:
 		m.doHibernate()
 	case powerActionTurnOffScreen:
