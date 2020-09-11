@@ -229,6 +229,7 @@ func (a *Audio) saveAudioState() error {
 	device := sink.props["alsa.device"]
 	card := sink.props["alsa.card"]
 	mute := sink.Mute
+	volume := sink.Volume * 100.0
 	sink.PropsMu.RUnlock()
 
 	cardId, err := toALSACardId(card)
@@ -240,6 +241,7 @@ func (a *Audio) saveAudioState() error {
 		"card":   dbus.MakeVariant(cardId),
 		"device": dbus.MakeVariant(device),
 		"mute":   dbus.MakeVariant(mute),
+		"volume": dbus.MakeVariant(volume),
 	}
 
 	player := soundthemeplayer.NewSoundThemePlayer(sysBus)
