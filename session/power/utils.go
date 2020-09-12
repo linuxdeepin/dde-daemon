@@ -231,6 +231,15 @@ func (m *Manager) doTurnOffScreen() {
 	m.setDPMSModeOff()
 }
 
+
+func (m *Manager) doTurnOnScreen() {
+	if m.ScreenBlackLock.Get() {
+		m.doLock(true)
+	}
+	logger.Info("Turn off screen")
+	m.setDPMSModeOn()
+}
+
 func (m *Manager) setDisplayBrightness(brightnessTable map[string]float64) {
 	display := m.helper.Display
 	for output, brightness := range brightnessTable {

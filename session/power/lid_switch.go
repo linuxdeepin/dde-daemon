@@ -104,9 +104,24 @@ func (h *LidSwitchHandler) onLidOpened() {
 	m.lidSwitchState = lidSwitchStateOpen
 	m.PropsMu.Unlock()
 	m.claimOrReleaseAmbientLight()
+	var onBattery bool
+	onBattery = h.manager.OnBattery
 
 	if err := h.stopAskUser(); err != nil {
 		logger.Warning("stopAskUser error:", err)
+	}
+	var lidCloseAction int32
+	if onBattery {
+		lidCloseAction = m.BatteryLidClosedAction.Get() // 获取合盖操作
+	} else {
+		lidCloseAction = m.LinePowerLidClosedAction.Get() // 获取合盖操作
+	}
+
+	switch lidCloseAction {
+	case powerActionTurnOffScreen:
+		m.doTurnOnScreen()
+	case powerActionDoNothing:
+		return
 	}
 }
 
