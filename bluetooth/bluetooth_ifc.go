@@ -200,7 +200,7 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 
 	// save the powered state
 	b.config.setAdapterConfigPowered(a.address, powered)
-
+	/*
 	if powered {
 		err := a.core.Discoverable().Set(0, b.config.Discoverable)
 		if err != nil {
@@ -217,7 +217,7 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 		//move reconnect devices into adapter.go when power signal on coming
 		//go b.tryConnectPairedDevices()
 	}
-
+	*/
 	return nil
 }
 

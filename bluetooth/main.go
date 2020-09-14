@@ -50,8 +50,16 @@ func HandlePrepareForSleep(sleep bool) {
 		return
 	}
 	if sleep {
+		//disconnect all connect devices
+		for _, dobjlist := range globalBluetooth.connectedDevices {
+			for _,connectedDevice := range dobjlist{
+				go connectedDevice.core.Disconnect(0)
+			}
+		}
 		for _, aobj := range globalBluetooth.adapters {
 			if aobj.Powered {
+
+				//handle adapter statue to false
 				if err := aobj.core.StopDiscovery(0); err != nil {
 					logger.Warningf("failed to stop discovery, %s, %v", aobj, err)
 					continue
@@ -62,8 +70,6 @@ func HandlePrepareForSleep(sleep bool) {
 					continue
 				}
 			}
-	
-
 		}
 		logger.Debug("prepare to sleep")
 		return

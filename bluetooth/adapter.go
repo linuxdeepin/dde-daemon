@@ -182,13 +182,27 @@ func (a *adapter) connectProperties() {
 		}
 		a.Powered = value
 		logger.Debugf("%s Powered: %v", a, value)
-		a.notifyPropertiesChanged()
-		//sleep 3 seconds for adapter host on
-		time.Sleep(3)
+		
+		//wait for bluez to set the attributes before sending changge signal
+		time.Sleep(2 * time.Second)
 		//reconnect devices here to aviod problem when  airplane open and closed,paired devices not connecte initiatively 
 		if value{
-			globalBluetooth.tryConnectPairedDevices()
+			err := a.core.Discoverable().Set(0, globalBluetooth.config.Discoverable)
+			if err != nil {
+				logger.Warningf("failed to set discoverable for %s: %v", a, err)
+			}
+			err = a.core.StartDiscovery(0)
+			if err != nil {
+				logger.Warningf("failed to start discovery for %s: %v", a, err)
+			} else {
+				logger.Debug("reset timer for stop scan")
+				// start discovering success, reset discovering timer
+				a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+			}
+			//move reconnect devices into adapter.go when power signal on coming
+			go globalBluetooth.tryConnectPairedDevices()
 		}
+		a.notifyPropertiesChanged()
 	})
 	a.core.Discovering().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
