@@ -64,7 +64,7 @@ type Manager struct {
 	syncConfig         *dsync.Config
 	clientList         windowSlice
 	clientListInited   bool
-	windowInfoMap      map[x.Window]*XWindowInfo
+	windowInfoMap      map[x.Window]WindowInfo
 	windowInfoMapMutex sync.RWMutex
 	settings           *gio.Settings
 	appearanceSettings *gio.Settings
@@ -213,7 +213,10 @@ func (m *Manager) findWindowByXidX(win x.Window) (winInfo WindowInfo) {
 	winInfo, ok := m.windowInfoMap[win]
 	m.windowInfoMapMutex.RUnlock()
 	if ok {
-		return winInfo
+		val, ok2 := (winInfo).(*XWindowInfo)
+		if ok2 {
+			return val
+		}
 	}
 	return nil
 }
@@ -222,7 +225,11 @@ func (m *Manager) findXWindowInfo(win x.Window) *XWindowInfo {
 	m.windowInfoMapMutex.RLock()
 	winInfo := m.windowInfoMap[win]
 	m.windowInfoMapMutex.RUnlock()
-	return winInfo
+	val, ok := (winInfo).(*XWindowInfo)
+	if ok {
+		return val
+	}
+	return nil
 }
 
 func (m *Manager) findWindowByXidK(win x.Window) (winInfo WindowInfo) {

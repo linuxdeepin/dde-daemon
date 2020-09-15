@@ -7,6 +7,7 @@ import (
 
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	dbus "pkg.deepin.io/lib/dbus1"
+	x "github.com/linuxdeepin/go-x11-client"
 )
 
 type WaylandManager struct {
@@ -209,6 +210,15 @@ func (m *Manager) registerWindowWayland(objPath dbus.ObjectPath) {
 		return
 	}
 
+	realWid, err := winObj.WindowId(0)
+	if err != nil {
+		logger.Warning(err)
+		realWid = 0
+	}
+	if realWid != 0 {
+		xid = realWid
+	}
+
 	winInfo := newKWindowInfo(winObj, xid)
 	m.listenKWindowSignals(winInfo)
 
@@ -217,6 +227,32 @@ func (m *Manager) registerWindowWayland(objPath dbus.ObjectPath) {
 	m.waylandManager.mu.Unlock()
 
 	m.attachOrDetachWindow(winInfo)
+
+	if realWid != 0 {
+		m.windowInfoMapMutex.Lock()
+		m.windowInfoMap[x.Window(realWid)] = winInfo
+		m.windowInfoMapMutex.Unlock()
+	}
+}
+
+func (m *Manager) registerKWaylandInfo(winInfo WindowInfo) {
+	switch winInfo.(type) {
+	case *KWindowInfo:
+		break
+	default:
+		logger.Warningf("registerKWaylandInfo, not wayland, wid=%d", winInfo.getXid())
+		return
+	}
+
+	m.windowInfoMapMutex.RLock()
+	defer m.windowInfoMapMutex.RUnlock()
+
+	winInfo, ok := m.windowInfoMap[winInfo.getXid()]
+	if ok {
+		logger.Warningf("registerKWaylandInfo, already registered, wid=%d", winInfo.getXid())
+		return
+	}
+	m.windowInfoMap[winInfo.getXid()] = winInfo
 }
 
 func (m *Manager) initWaylandWindows() {

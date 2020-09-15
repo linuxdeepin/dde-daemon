@@ -26,6 +26,7 @@ import (
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"pkg.deepin.io/dde/daemon/session/common"
 	"pkg.deepin.io/lib/dbus1"
+	x "github.com/linuxdeepin/go-x11-client"
 )
 
 func (m *Manager) allocEntryId() string {
@@ -174,6 +175,16 @@ func (m *Manager) attachWindow(winInfo WindowInfo) {
 				m.Entries.Append(entry)
 			}
 		}
+	}
+}
+
+func (m *Manager) changedAttachedWindowId(winInfo WindowInfo, newWid uint32) {
+	entry := m.Entries.GetByInnerId(winInfo.getEntryInnerId())
+	if entry != nil {
+		oldWid := winInfo.getXid()
+		winInfo.changeXid(x.Window(newWid))
+		entry.changedAttachedWindowId(winInfo, uint32(oldWid), newWid)
+		m.registerKWaylandInfo(winInfo);
 	}
 }
 

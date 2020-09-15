@@ -440,3 +440,8 @@ func (winInfo *XWindowInfo) close(timestamp uint32) error {
 func (winInfo *XWindowInfo) killClient() error {
 	return killClient(winInfo.xid)
 }
+
+func (winInfo *XWindowInfo) changeXid(xid x.Window) bool {
+	logger.Warning("XWindowInfo should not change xid!")
+	return false
+}

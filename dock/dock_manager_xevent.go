@@ -40,11 +40,11 @@ func (m *Manager) registerWindow(win x.Window) {
 		return
 	}
 
-	winInfo = newXWindowInfo(win)
-	m.listenWindowXEvent(winInfo)
+	xwinInfo := newXWindowInfo(win)
+	m.listenWindowXEvent(xwinInfo)
 
 	m.windowInfoMapMutex.Lock()
-	m.windowInfoMap[win] = winInfo
+	m.windowInfoMap[win] = xwinInfo
 	m.windowInfoMapMutex.Unlock()
 
 	// 由于可能存在得不到任何可以识别窗口的信息，导致识别错误的情况，所以要循环判断是否可以获取到可用属性，循环10次，间隔100ms
@@ -61,7 +61,7 @@ func (m *Manager) registerWindow(win x.Window) {
 			pid := getWmPid(win)
 			wmClass, _ := getWmClass(win)
 			if pid != 0 || wmClass != nil {
-				m.attachOrDetachWindow(winInfo)
+				m.attachOrDetachWindow(xwinInfo)
 				return
 			}
 			logger.Debug("win id is: ", win)

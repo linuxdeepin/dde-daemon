@@ -206,7 +206,7 @@ func (m *Manager) init() error {
 
 	m.listenSettingsChanged()
 
-	m.windowInfoMap = make(map[x.Window]*XWindowInfo)
+	m.windowInfoMap = make(map[x.Window]WindowInfo)
 	m.windowPatterns, err = loadWindowPatterns(windowPatternsFile)
 	if err != nil {
 		logger.Warning("loadWindowPatterns failed:", err)

@@ -28,6 +28,7 @@ type WindowInfo interface {
 	minimize() error
 	isMinimized() bool
 	killClient() error
+	changeXid(x.Window) bool
 }
 
 type KWindowInfo struct {
@@ -267,4 +268,9 @@ func (winInfo *KWindowInfo) close(timestamp uint32) error {
 
 func (winInfo *KWindowInfo) killClient() error {
 	return nil
+}
+
+func (winInfo *KWindowInfo) changeXid(xid x.Window) bool {
+	winInfo.xid = xid
+	return true
 }

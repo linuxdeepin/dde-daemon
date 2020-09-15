@@ -231,6 +231,28 @@ func (entry *AppEntry) attachWindow(winInfo WindowInfo) bool {
 	return true
 }
 
+
+func (entry *AppEntry) changedAttachedWindowId(winInfo WindowInfo, oldWid uint32, newWid uint32) bool {
+	switch winInfo.(type) {
+	case *KWindowInfo:
+		break
+	default:
+		return false
+	}
+	entry.PropsMu.Lock()
+	defer entry.PropsMu.Unlock()
+
+	if _, ok := entry.windows[x.Window(oldWid)]; !ok {
+		logger.Debugf("changedAttachedWindowId, oldWid found. oldwid=%v, newwid=%v", oldWid, newWid)
+		return false
+	}
+	entry.windows[x.Window(newWid)] = winInfo
+	delete(entry.windows, x.Window(oldWid))
+
+	winInfo.print()
+	return true
+}
+
 // return need remove?
 func (entry *AppEntry) detachWindow(winInfo WindowInfo) bool {
 	winInfo.setEntry(nil)
@@ -324,8 +346,9 @@ func (entry *AppEntry) getIcon() string {
 
 func (e *AppEntry) updateWindowInfos() {
 	windowInfos := newWindowInfos()
-	for win, winInfo := range e.windows {
-		windowInfos[win] = ExportWindowInfo{
+	for _, winInfo := range e.windows {
+		windowInfos[winInfo.getXid()] = ExportWindowInfo{
+		//windowInfos[win] = ExportWindowInfo{
 			Title: winInfo.getTitle(),
 			Flash: winInfo.isDemandingAttention(),
 		}
