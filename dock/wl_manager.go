@@ -197,10 +197,8 @@ func (m *Manager) registerWindowWayland(objPath dbus.ObjectPath) {
 		logger.Warning(err)
 		return
 	}
-	if globalRestrictWaylandWindow {
-		if appId != "totem" && appId != "deepin-movie" && appId != "deepin-draw" && appId != "deepin-editor" && appId != "org.deepin.deepin-terminal" && appId != "dde-introduction" && appId != "dde-file-manager" && appId != "qtcreator"  && appId != "dde-control-center" {
-			return
-		}
+	if appId == "dde-desktop" || appId == "dde-dock" || appId == "dde-launcher" {
+		return
 	}
 
 	xid, err := globalXConn.AllocID()
