@@ -21,6 +21,7 @@ package network
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -467,7 +468,7 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 		}
 		// wifi设备是否处于可连接而未连接状态，那么可以连接
 		if dev.State == nm.NM_DEVICE_STATE_DISCONNECTED {
-			err := m.enableDevice(devPath, true)
+			err := m.enableDevice(devPath, true,true)
 			if err == nil {
 				// 连接成功，退出
 				return
@@ -480,7 +481,7 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
 	logger.Info("call EnableDevice in session", devPath, enabled)
-	err := m.enableDevice(devPath, enabled)
+	err := m.enableDevice(devPath, enabled,true)
 	// 特殊情况：飞行模式开启和关闭的时候，开启wifi模块，会出现回连失败
 	if err != nil {
 		// 回连失败，起个线程，在未来的10s内自动回连
@@ -489,13 +490,13 @@ func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Erro
 	return dbusutil.ToError(err)
 }
 
-func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool) (err error) {
+func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate bool) (err error) {
 	cpath, err := m.sysNetwork.EnableDevice(0, string(devPath), enabled)
 	if err != nil {
 		return
 	}
-
-	if enabled {
+	// check if need activate connection
+	if enabled && activate {
 		var uuid string
 		//回连之前获取回连热点数据,若没有,则直接返回
 		_,err =nmGetConnectionData(cpath)
@@ -509,6 +510,12 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool) (err error
 		m.ActivateConnection(uuid, devPath)
 	}
 
+	// set enable device state
+	m.setDeviceEnabled(enabled, devPath)
+	return
+}
+
+func (m *Manager) setDeviceEnabled(enabled bool, devPath dbus.ObjectPath) {
 	m.stateHandler.locker.Lock()
 	defer m.stateHandler.locker.Unlock()
 	dsi, ok := m.stateHandler.devices[devPath]
@@ -517,6 +524,16 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool) (err error
 	}
 	dsi.enabled = enabled
 	return
+}
+
+func (m *Manager) getDeviceEnabled(devPath dbus.ObjectPath) (bool, error) {
+	m.stateHandler.locker.Lock()
+	defer m.stateHandler.locker.Unlock()
+	dsi, ok := m.stateHandler.devices[devPath]
+	if !ok {
+		return false, errors.New("device path not exist")
+	}
+	return dsi.enabled, nil
 }
 
 // SetDeviceManaged set target device managed or unmnaged from
