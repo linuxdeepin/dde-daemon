@@ -46,6 +46,8 @@ func (m *Manager) listenWaylandWMSignals() {
 		activeWinInfo := m.waylandManager.handleActiveWindowChangedK(activeWinInternalId)
 		if activeWinInfo != nil {
 			m.handleActiveWindowChanged(activeWinInfo)
+		} else {
+			m.updateHideState(false)
 		}
 	})
 	if err != nil {

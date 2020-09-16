@@ -171,6 +171,15 @@ func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
 	}
 	logger.Debug("window rect:", winRect)
 	logger.Debug("dock rect:", m.FrontendWindowRect)
+	isActiveWin, err := winInfo.winObj.IsActive(0)
+	if err != nil {
+		logger.Warning(err)
+		return false, nil
+	}
+	if !isActiveWin {
+		logger.Debug("check K window is not Active && return isWindowDockOverlapK false")
+		return false, nil
+	}
 	return m.hasIntersection(winRect, m.FrontendWindowRect), nil
 }
 
