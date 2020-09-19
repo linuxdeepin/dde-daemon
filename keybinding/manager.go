@@ -31,6 +31,8 @@ import (
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
+	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 
@@ -250,8 +252,6 @@ func (m *Manager) init() {
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
 	m.shortcutManager.AddSpecial()
-	m.shortcutManager.AddMedia(m.gsMediaKey)
-
 	// when session is locked, we need handle some keyboard function event
 	m.lockFront = lockfront.NewLockFront(sessionBus)
 	m.lockFront.InitSignalExt(m.sessionSigLoop, true)
@@ -261,9 +261,11 @@ func (m *Manager) init() {
 
 	if shouldUseDDEKwin() {
 		m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
+		m.shortcutManager.AddMediaToKwin(m.gsMediaKey, m.wm)
 		m.shortcutManager.AddKWin(m.wm)
 	} else {
 		m.shortcutManager.AddSystem(m.gsSystem, m.wm)
+		m.shortcutManager.AddMedia(m.gsMediaKey)
 		m.gsGnomeWM = gio.NewSettings(gsSchemaGnomeWM)
 		m.shortcutManager.AddWM(m.gsGnomeWM)
 	}
@@ -294,8 +296,8 @@ func (m *Manager) init() {
 			m.shortcutManager.NotifyLayoutChanged()
 		}
 	})
-	go m.ListenGlobalAccel(sessionBus)
 	m.initHandlers()
+	go m.ListenGlobalAccel(sessionBus)
 }
 
 var kwinSysActionCmdMap = map[string]string{
@@ -323,6 +325,64 @@ var kwinSysActionCmdMap = map[string]string{
 	"Show/Hide the dock":    "show-dock",
 }
 
+var waylandMediaIdMap = map[string]string{
+	"Messenger":         "messenger",           // XF86Messenger
+	"Save":              "save",                // XF86Save
+	"New":               "new",                 // XF86New
+	"WakeUp":            "wake-up",             // XF86WakeUp
+	"audio-rewind":      "AudioRewind",         // XF86AudioRewind
+	"VolumeMute":        "audio-mute",          // XF86AudioMute  "AudioMute":
+	"MonBrightnessUp":   "mon-brightness-up",   // XF86MonBrightnessUp
+	"WLAN":              "wlan",                // XF86WLAN
+	"AudioMedia":        "audio-media",         // XF86AudioMedia
+	"reply":             "Reply",               // XF86Reply
+	"favorites":         "Favorites",           // XF86Favorites
+	"audio-play":        "AudioPlay",           // XF86AudioPlay
+	"AudioMicMute":      "audio-mic-mute",      // XF86AudioMicMute
+	"audio-pause":       "AudioPause",          // XF86AudioPause
+	"audio-stop":        "AudioStop",           // XF86AudioStop
+	"PowerOff":          "power-off",           // XF86PowerOff
+	"documents":         "Documents",           // XF86Documents
+	"game":              "Game",                // XF86Game
+	"Search":            "search",              // XF86Search
+	"AudioRecord":       "audio-record",        // XF86AudioRecord
+	"Display":           "display",             // XF86Display
+	"reload":            "Reload",              // XF86Reload
+	"explorer":          "Explorer",            // XF86Explorer
+	"Calculator":        "calculator",          // XF86Calculator
+	"calendar":          "Calendar",            // XF86Calendar
+	"forward":           "Forward",             // XF86Forward
+	"cut":               "Cut",                 // XF86Cut
+	"MonBrightnessDown": "mon-brightness-down", // XF86MonBrightnessDown
+	"Copy":              "copy",                // XF86Copy
+	"Tools":             "tools",               // XF86Tools
+	"VolumeUp":          "audio-raise-volume",  // XF86AudioRaiseVolume "AudioRaiseVolume":  "audio-raise-volume",
+	"close":             "Close",               // XF86Close
+	"WWW":               "www",                 // XF86WWW
+	"HomePage":          "home-page",           // XF86HomePage
+	"sleep":             "Sleep",               // XF86Sleep
+	"VolumeDown":        "audio-lower-volume",  // XF86AudioLowerVolume  "AudioLowerVolume":  "audio-lower-volume",
+	"AudioPrev":         "audio-prev",          // XF86AudioPrev
+	"audio-next":        "AudioNext",           // XF86AudioNext
+	"Paste":             "paste",               // XF86Paste
+	"open":              "Open",                // XF86Open
+	"send":              "Send",                // XF86Send
+	"my-computer":       "MyComputer",          // XF86MyComputer
+	"Mail":              "mail",                // XF86Mail
+	"adjust-brightness": "BrightnessAdjust",    // XF86BrightnessAdjust
+	"LogOff":            "log-off",             // XF86LogOff
+	"pictures":          "Pictures",            // XF86Pictures
+	"Terminal":          "terminal",            // XF86Terminal
+	"video":             "Video",               // XF86Video
+	"Music":             "music",               // XF86Music
+	"app-left":          "ApplicationLeft",     // XF86ApplicationLeft
+	"app-right":         "ApplicationRight",    // XF86ApplicationRight
+	"meeting":           "Meeting",             // XF86Meeting
+	"Switch monitors":   "switch-monitors",
+	"Numlock":           "numlock",
+	"Capslock":          "capslock",
+}
+
 func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 	err := sessionBus.Object("org.kde.kglobalaccel",
 		"/component/kwin").AddMatchSignal("org.kde.kglobalaccel.Component", "globalShortcutPressed").Err
@@ -340,7 +400,12 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 			if ok == 0 {
 				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
 				cmd := shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[sig.Body[1].(string)])
-				m.execCmd(cmd, true)
+				if cmd == "" {
+					m.handleKeyEventByWayland(waylandMediaIdMap[sig.Body[1].(string)])
+				} else {
+					m.execCmd(cmd, true)
+
+				}
 			}
 		}
 	})
@@ -385,6 +450,153 @@ func (m *Manager) handleKeyEventFromLockFront(changKey string) {
 						logger.Warning(m.touchPadController.Name(), "Controller exec cmd err:", err)
 					}
 				}
+			}
+		}
+	}
+}
+
+func (m *Manager) handleKeyEventByWayland(changKey string) {
+	action := shortcuts.GetAction(changKey)
+	logger.Debugf("Receive LockFront ChangKey action%#+v", action)
+	// numlock/capslock
+	if action.Type == shortcuts.ActionTypeSystemShutdown {
+		var powerPressAction int32
+		systemBus, _ := dbus.SystemBus()
+		systemPower := power.NewPower(systemBus)
+		onBattery, err := systemPower.OnBattery().Get(0)
+		if err != nil {
+			logger.Error(err)
+		}
+		if onBattery {
+			powerPressAction = m.gsPower.GetEnum("battery-press-power-button")
+		} else {
+			powerPressAction = m.gsPower.GetEnum("line-power-press-power-button")
+		}
+		logger.Debug("powerPressAction:", powerPressAction)
+		switch powerPressAction {
+		case powerActionShutdown:
+			m.systemShutdown()
+		case powerActionSuspend:
+			systemSuspend()
+		case powerActionHibernate:
+			m.systemHibernate()
+		case powerActionTurnOffScreen:
+			m.systemTurnOffScreen()
+		case powerActionShowUI:
+			cmd := "dde-shutdown"
+			go func() {
+				err := m.execCmd(cmd, false)
+				if err != nil {
+					logger.Warning("execCmd error:", err)
+				}
+			}()
+		}
+	} else if action.Type == shortcuts.ActionTypeShowControlCenter {
+		err := m.execCmd("dbus-send --session --dest=com.deepin.dde.ControlCenter  --print-reply /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.Show",
+			false)
+		if err != nil {
+			logger.Warning("failed to show control center:", err)
+		}
+
+	} else if action.Type == shortcuts.ActionTypeToggleWireless {
+		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) {
+			sysBus, err := dbus.SystemBus()
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			sysNetwork := sys_network.NewNetwork(sysBus)
+			enabled, err := sysNetwork.ToggleWirelessEnabled(0)
+			if err != nil {
+				logger.Warning("failed to toggle wireless enabled:", err)
+				return
+			}
+			if enabled {
+				showOSD("WLANOn")
+			} else {
+				showOSD("WLANOff")
+			}
+
+		} else {
+			state, err := getRfkillWlanState()
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			if state == 0 {
+				showOSD("WLANOff")
+			} else {
+				showOSD("WLANOn")
+			}
+		}
+
+	} else if action.Type == shortcuts.ActionTypeShowNumLockOSD {
+		/*
+			state, err := queryNumLockState(m.conn)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			save := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
+			switch state {
+			case NumLockOn:
+				if save {
+					m.NumLockState.Set(int32(NumLockOn))
+				}
+				showOSD("NumLockOn")
+			case NumLockOff:
+				if save {
+					m.NumLockState.Set(int32(NumLockOff))
+				}
+				showOSD("NumLockOff")
+			}*/
+	} else if action.Type == shortcuts.ActionTypeShowCapsLockOSD {
+		/*
+			if !m.shouldShowCapsLockOSD() {
+				return
+			}
+
+			state, err := queryCapsLockState(m.conn)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			logger.Debug("caps:", state)
+
+			switch state {
+			case CapsLockOff:
+				showOSD("CapsLockOff")
+			case CapsLockOn:
+				showOSD("CapsLockOn")
+			}*/
+	} else {
+		cmd, ok := action.Arg.(shortcuts.ActionCmd)
+		if !ok {
+			logger.Warning(errTypeAssertionFail)
+		} else {
+			if action.Type == shortcuts.ActionTypeAudioCtrl {
+				// audio-mute/audio-lower-volume/audio-raise-volume
+				if m.audioController != nil {
+					if err := m.audioController.ExecCmd(cmd); err != nil {
+						logger.Warning(m.audioController.Name(), "Controller exec cmd err:", err)
+					}
+				}
+			} else if action.Type == shortcuts.ActionTypeDisplayCtrl {
+				// mon-brightness-up/mon-brightness-down
+				if m.displayController != nil {
+					if err := m.displayController.ExecCmd(cmd); err != nil {
+						logger.Warning(m.displayController.Name(), "Controller exec cmd err:", err)
+					}
+				}
+			} else if action.Type == shortcuts.ActionTypeTouchpadCtrl {
+				// touchpad-toggle/touchpad-on/touchpad-off
+				if m.touchPadController != nil {
+					if err := m.touchPadController.ExecCmd(cmd); err != nil {
+						logger.Warning(m.touchPadController.Name(), "Controller exec cmd err:", err)
+					}
+				}
+			} else if action.Type == shortcuts.ActionTypeSystemShutdown {
+
 			}
 		}
 	}

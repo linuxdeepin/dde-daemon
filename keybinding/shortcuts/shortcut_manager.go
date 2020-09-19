@@ -966,6 +966,33 @@ func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj *wm.Wm
 	}
 }
 
+func (sm *ShortcutManager) AddMediaToKwin(gsettings *gio.Settings, wmObj *wm.Wm) {
+	logger.Debug("AddMediaToKwin")
+	idNameMap := getMediaIdNameMap()
+	for _, id := range gsettings.ListKeys() {
+		name := idNameMap[id]
+		logger.Warning("+++ gsetting KWin accels ID , NANE:", id, name)
+
+		if name == "" {
+			name = id
+		}
+
+		accelJson, err := util.MarshalJSON(util.KWinAccel{
+			Id:         id,
+			Keystrokes: []string{GetQtKeycodeMap()[id]}, //gsettings.GetStrv(id),
+		})
+		if err != nil {
+			logger.Warning("failed to get json:", err)
+			continue
+		}
+
+		ok, err := wmObj.SetAccel(0, accelJson)
+		if !ok {
+			logger.Warning("failed to set KWin accels:", accelJson, err)
+		}
+	}
+}
+
 func isZH() bool {
 	lang := gettext.QueryLang()
 	return strings.HasPrefix(lang, "zh")

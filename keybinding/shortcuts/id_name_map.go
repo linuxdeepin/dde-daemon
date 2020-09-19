@@ -208,6 +208,8 @@ func getMediaIdNameMap() map[string]string {
 		"app-right":           "ApplicationRight",  // XF86ApplicationRight
 		"meeting":             "Meeting",           // XF86Meeting
 		"switch-monitors":     gettext.Tr("Switch monitors"),
+		"numlock":             "Numlock",
+		"capslock":            "Capslock",
 	}
 	return idNameMap
 }
