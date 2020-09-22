@@ -309,6 +309,7 @@ func (m *Manager) initSysNetwork(sysBus *dbus.Conn) {
 	}
 
 	_, err = m.sysNetwork.ConnectDeviceEnabled(func(devPath dbus.ObjectPath, enabled bool) {
+		time.Sleep(1*time.Second)
 		err := m.service.Emit(manager, "DeviceEnabled", string(devPath), enabled)
 		if err != nil {
 			logger.Warning(err)
