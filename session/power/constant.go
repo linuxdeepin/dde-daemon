@@ -58,10 +58,15 @@ const (
 	settingKeyCriticalPercentage     = "percentage-critical"
 	settingKeyActionPercentage       = "percentage-action"
 
+
 	settingKeyLowTime      = "time-to-empty-low"
 	settingKeyDangerTime   = "time-to-empty-danger"
 	settingKeyCriticalTime = "time-to-empty-critical"
 	settingKeyActionTime   = "time-to-empty-action"
+
+	settingKeySaveBrightnessWhilePsm = "save-brightness-while-psm"
+
+	settingKeyMode = "mode"
 
 	// cmd
 	cmdDDELowPower = "/usr/lib/deepin-daemon/dde-lowpower"
