@@ -479,6 +479,7 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 }
 
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
+	logger.Info("call EnableDevice in session", devPath, enabled)
 	err := m.enableDevice(devPath, enabled)
 	// 特殊情况：飞行模式开启和关闭的时候，开启wifi模块，会出现回连失败
 	if err != nil {
@@ -493,8 +494,14 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool) (err error
 	if err != nil {
 		return
 	}
+
 	if enabled {
 		var uuid string
+		//回连之前获取回连热点数据,若没有,则直接返回
+		_,err =nmGetConnectionData(cpath)
+		if err != nil {
+			return nil
+		}
 		uuid, err = nmGetConnectionUuid(cpath)
 		if err != nil {
 			return
