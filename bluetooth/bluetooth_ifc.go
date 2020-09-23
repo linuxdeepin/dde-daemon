@@ -191,6 +191,16 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 
 	a.Powered = powered
 	a.notifyPropertiesChanged()
+	if !powered{
+		for _, dobjlist := range globalBluetooth.devices {
+			for _,device := range dobjlist{
+				connectstatus,_ := device.core.Connected().Get(0)
+				if connectstatus{
+					go device.core.Disconnect(0)
+				}
+			}
+		}
+	}
 
 	err = a.core.Powered().Set(0, powered)
 	if err != nil {
