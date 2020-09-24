@@ -54,7 +54,7 @@ func GetQtKeycodeMap() map[string]string {
 		"app-left":            "Qt::Key_ApplicationLeft",   // XF86ApplicationLeft
 		"app-right":           "Qt::Key_ApplicationRight",  // XF86ApplicationRight
 		"meeting":             "Qt::Key_Meeting",           // XF86Meeting
-		"switch-monitors":     "Qt::Key_Switch monitors",
+		"switch-monitors":      "<Super>P",
 		"numlock":             "Qt::Key_NumLock",
 		"capslock":            "Qt::Key_CapsLock",
 	}
