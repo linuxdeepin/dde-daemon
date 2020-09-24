@@ -244,7 +244,7 @@ func (m *Manager) init() error {
 		m.DisplayMode.Set(int32(DisplayModeEfficientMode))
 	}
 
-	go m.eventHandleLoop()
-	m.listenRootWindowXEvent()
+	// go m.eventHandleLoop()
+	// m.listenRootWindowXEvent()
 	return nil
 }
