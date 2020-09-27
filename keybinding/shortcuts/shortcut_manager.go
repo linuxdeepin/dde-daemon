@@ -993,6 +993,23 @@ func (sm *ShortcutManager) AddMediaToKwin(gsettings *gio.Settings, wmObj *wm.Wm)
 	}
 }
 
+func (sm *ShortcutManager) AddSpecialToKwin(wmObj *wm.Wm) {
+	accelJson, err := util.MarshalJSON(util.KWinAccel{
+		Id:         "switch-kbd-layout",
+		Keystrokes: []string{"<Super>space"},
+	})
+	if err != nil {
+		logger.Warning("failed to get json:", err)
+	}
+
+	ok, err := wmObj.SetAccel(0, accelJson)
+	if !ok {
+		logger.Warning("failed to set KWin accels:", accelJson, err)
+	}
+	logger.Warning("set sepical KWin accels:", accelJson)
+
+}
+
 func isZH() bool {
 	lang := gettext.QueryLang()
 	return strings.HasPrefix(lang, "zh")

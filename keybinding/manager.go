@@ -251,7 +251,6 @@ func (m *Manager) init() {
 	m.wm = wm.NewWm(sessionBus)
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
-	m.shortcutManager.AddSpecial()
 	// when session is locked, we need handle some keyboard function event
 	m.lockFront = lockfront.NewLockFront(sessionBus)
 	m.lockFront.InitSignalExt(m.sessionSigLoop, true)
@@ -260,10 +259,12 @@ func (m *Manager) init() {
 	})
 
 	if shouldUseDDEKwin() {
+		m.shortcutManager.AddSpecialToKwin(m.wm)
 		m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
 		m.shortcutManager.AddMediaToKwin(m.gsMediaKey, m.wm)
 		m.shortcutManager.AddKWin(m.wm)
 	} else {
+		m.shortcutManager.AddSpecial()
 		m.shortcutManager.AddSystem(m.gsSystem, m.wm)
 		m.shortcutManager.AddMedia(m.gsMediaKey)
 		m.gsGnomeWM = gio.NewSettings(gsSchemaGnomeWM)
@@ -381,6 +382,7 @@ var waylandMediaIdMap = map[string]string{
 	"Switch monitors":   "switch-monitors",
 	"Numlock":           "numlock",
 	"Capslock":          "capslock",
+	"Switch kbd layout":  "switch-kbd-layout",
 }
 
 func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
@@ -457,7 +459,6 @@ func (m *Manager) handleKeyEventFromLockFront(changKey string) {
 
 func (m *Manager) handleKeyEventByWayland(changKey string) {
 	action := shortcuts.GetAction(changKey)
-	logger.Debugf("Receive LockFront ChangKey action%#+v", action)
 	// numlock/capslock
 	if action.Type == shortcuts.ActionTypeSystemShutdown {
 		var powerPressAction int32
@@ -569,7 +570,21 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			case CapsLockOn:
 				showOSD("CapsLockOn")
 			}*/
-	} else {
+	} else if action.Type == shortcuts.ActionTypeSwitchKbdLayout{
+		switch m.switchKbdLayoutState {
+		case SKLStateNone:
+			m.switchKbdLayoutState = SKLStateWait
+			go m.sklWait()
+
+		case SKLStateWait:
+			m.switchKbdLayoutState = SKLStateOSDShown
+			m.terminateSKLWait()
+			showOSD("SwitchLayout")
+
+		case SKLStateOSDShown:
+			showOSD("SwitchLayout")
+		}
+	}else {
 		cmd, ok := action.Arg.(shortcuts.ActionCmd)
 		if !ok {
 			logger.Warning(errTypeAssertionFail)

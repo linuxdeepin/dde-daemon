@@ -117,6 +117,9 @@ var mediaIdActionMap = map[string]*Action{
 	// but can be specially by 'EnableNetworkController'
 	"wlan":  &Action{Type: ActionTypeToggleWireless},
 	"tools": &Action{Type: ActionTypeShowControlCenter},
+	//add sepcial
+	"switch-kbd-layout": &Action{Type:ActionTypeSwitchKbdLayout},
+
 }
 
 func (ms *MediaShortcut) GetAction() *Action {
