@@ -154,6 +154,7 @@ func (a *adapter) connectProperties() {
 		}
 		a.Name = value
 		logger.Debugf("%s Name: %v", a, value)
+		a.startDiscovery()
 		a.notifyPropertiesChanged()
 	})
 
@@ -163,6 +164,7 @@ func (a *adapter) connectProperties() {
 		}
 		a.Alias = value
 		logger.Debugf("%s Alias: %v", a, value)
+		a.startDiscovery()
 		a.notifyPropertiesChanged()
 	})
 	a.core.Powered().ConnectChanged(func(hasValue bool, value bool) {
@@ -218,7 +220,7 @@ func (a *adapter) connectProperties() {
 		}
 		a.Discoverable = value
 		logger.Debugf("%s Discoverable: %v", a, value)
-		a.notifyPropertiesChanged()
+	
 	})
 	a.core.DiscoverableTimeout().ConnectChanged(func(hasValue bool, value uint32) {
 		if !hasValue {
@@ -226,16 +228,20 @@ func (a *adapter) connectProperties() {
 		}
 		a.DiscoverableTimeout = value
 		logger.Debugf("%s DiscoverableTimeout: %v", a, value)
-		a.notifyPropertiesChanged()
+		
 	})
 }
 
 func (a *adapter)startDiscovery(){
-	err:=a.core.StartDiscovery(0)
-	if err!=nil{
-		logger.Warningf("failed to start discovery for %s: %v",a,err)
-	}else{
-		logger.Debug("reset timer for stop scan")
-		a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+
+	discoveringstatus,_ :=a.core.Discovering().Get(0)
+	if !discoveringstatus{
+		err:=a.core.StartDiscovery(0)
+		if err!=nil{
+			logger.Warningf("failed to start discovery for %s: %v",a,err)
+		}else{
+			logger.Debug("reset timer for stop scan")
+			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+		}
 	}
 }
