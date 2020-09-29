@@ -22,6 +22,7 @@ package network
 import (
 	"fmt"
 	"sort"
+	"time"
 
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"pkg.deepin.io/dde/daemon/network/nm"
@@ -57,6 +58,7 @@ func (m *Manager) initConnectionManage() {
 	m.connectionsLock.Lock()
 	m.connections = make(map[string]connectionSlice)
 	m.connectionsLock.Unlock()
+        var CurentConnectionsList []dbus.ObjectPath
 
 	_, err := nmSettings.ConnectNewConnection(func(cpath dbus.ObjectPath) {
 		logger.Info("add connection", cpath)
@@ -72,7 +74,19 @@ func (m *Manager) initConnectionManage() {
 	if err != nil {
 		logger.Warning(err)
 	}
-	for _, cpath := range nmGetConnectionList() {
+	//在注销或重启后，networkmanager的setting数据未初始化完成获取不到，最多等待2s循环获取
+	for i := 0; i < 4; i++ {
+		CurentConnectionsList = nmGetConnectionList()
+		if CurentConnectionsList == nil {
+			time.Sleep(time.Millisecond * 500)
+			continue
+		} else {
+			logger.Debug("nmGetConnectionList successed")
+			break
+		}
+
+	}
+	for _, cpath := range CurentConnectionsList {
 		m.addConnection(cpath)
 	}
 }
