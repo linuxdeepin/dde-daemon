@@ -31,7 +31,7 @@ import (
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
+	ses_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.network"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
@@ -340,10 +340,10 @@ var waylandMediaIdMap = map[string]string{
 	"AudioMedia":        "audio-media",         // XF86AudioMedia
 	"reply":             "Reply",               // XF86Reply
 	"favorites":         "Favorites",           // XF86Favorites
-	"audio-play":        "AudioPlay",           // XF86AudioPlay
+	"AudioPlay":         "audio-play",           // XF86AudioPlay
 	"AudioMicMute":      "audio-mic-mute",      // XF86AudioMicMute
-	"audio-pause":       "AudioPause",          // XF86AudioPause
-	"audio-stop":        "AudioStop",           // XF86AudioStop
+	"AudioPause":        "audio-pause",          // XF86AudioPause
+	"AudioStop":         "audio-stop",           // XF86AudioStop
 	"PowerOff":          "power-off",           // XF86PowerOff
 	"documents":         "Documents",           // XF86Documents
 	"game":              "Game",                // XF86Game
@@ -366,7 +366,7 @@ var waylandMediaIdMap = map[string]string{
 	"sleep":             "Sleep",               // XF86Sleep
 	"VolumeDown":        "audio-lower-volume",  // XF86AudioLowerVolume  "AudioLowerVolume":  "audio-lower-volume",
 	"AudioPrev":         "audio-prev",          // XF86AudioPrev
-	"audio-next":        "AudioNext",           // XF86AudioNext
+	"AudioNext":         "audio-next",          // XF86AudioNext
 	"Paste":             "paste",               // XF86Paste
 	"open":              "Open",                // XF86Open
 	"send":              "Send",                // XF86Send
@@ -503,24 +503,36 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 
 	} else if action.Type == shortcuts.ActionTypeToggleWireless {
 		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) {
-			sysBus, err := dbus.SystemBus()
+			sessionBus, err := dbus.SessionBus()
 			if err != nil {
 				logger.Warning(err)
 				return
 			}
-			sysNetwork := sys_network.NewNetwork(sysBus)
-
-			enabled, err := sysNetwork.ToggleWirelessEnabled(0)
+			obj := ses_network.NewNetwork(sessionBus)
+			ret , err := obj.GetActiveConnectionInfo(0)
 			if err != nil {
-				logger.Warning("failed to toggle wireless enabled:", err)
+				logger.Warning(err)
+			}
+			var enabled bool = false
+			if strings.Contains(ret, "wireless") {
+				enabled = true
+			}
+			connWifi, err:= obj.Devices().Get(0)
+			wifiPre :=  "\"wireless\":[{\"Path\":\"/org/freedesktop/NetworkManager/Devices/"
+			i := strings.Index(connWifi, wifiPre)
+			if i < 0 {
 				return
 			}
-			if enabled {
-				showOSD("WLANOn")
-			} else {
-				showOSD("WLANOff")
-			}
 
+			lenwifi := "\"wireless\":[{\"Path\":\""
+			devpath := connWifi[i+len(lenwifi):i+len(wifiPre)+1]
+			if enabled {
+				obj.EnableDevice(0, dbus.ObjectPath(devpath), false)
+				showOSD("WLANOff")
+			} else {
+				obj.EnableDevice(0, dbus.ObjectPath(devpath), true)
+				showOSD("WLANOn")
+			}
 		} else {
 			state, err := getRfkillWlanState()
 			if err != nil {
