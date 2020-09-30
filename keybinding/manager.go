@@ -93,6 +93,7 @@ type Manager struct {
 	gsPower    *gio.Settings
 
 	enableListenGSettings bool
+	clickNum  uint32
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
@@ -298,6 +299,7 @@ func (m *Manager) init() {
 		}
 	})
 	m.initHandlers()
+	m.clickNum = 0
 	go m.ListenGlobalAccel(sessionBus)
 }
 
@@ -507,6 +509,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 				return
 			}
 			sysNetwork := sys_network.NewNetwork(sysBus)
+
 			enabled, err := sysNetwork.ToggleWirelessEnabled(0)
 			if err != nil {
 				logger.Warning("failed to toggle wireless enabled:", err)
@@ -612,9 +615,40 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 				}
 			} else if action.Type == shortcuts.ActionTypeSystemShutdown {
 
+			} else if action.Type == shortcuts.ActionTypeMediaPlayerCtrl {
+				m.clickNum = m.clickNum + 1
+				if m.clickNum == 1 {
+					time.AfterFunc(time.Millisecond*600, func() {
+						m.playMeadiaByHeadphone()
+					})
+				}
 			}
 		}
 	}
+}
+
+func getMediaPlayAction(num uint32)(shortcuts.ActionCmd) {
+	var cmd shortcuts.ActionCmd = shortcuts.MediaPlayerPlay
+	if num == 2 {
+		cmd = shortcuts.MediaPlayerNext
+	} else if num == 3 {
+		cmd = shortcuts.MediaPlayerPrevious
+	} else {
+		cmd = shortcuts.MediaPlayerPlay
+	}
+	return cmd
+}
+
+func (m *Manager) playMeadiaByHeadphone() {
+	cmd := getMediaPlayAction(m.clickNum)
+	m.clickNum = 0
+	if m.mediaPlayerController != nil {
+		err := m.mediaPlayerController.ExecCmd(cmd)
+		if err != nil {
+			logger.Warning(m.mediaPlayerController.Name(), "Controller exec cmd err:", err)
+		}
+	}
+	return
 }
 
 func (m *Manager) destroy() {

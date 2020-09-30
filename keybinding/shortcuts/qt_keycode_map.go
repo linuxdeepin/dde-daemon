@@ -13,7 +13,7 @@ func GetQtKeycodeMap() map[string]string {
 		"audio-media":         "Qt::Key_AudioMedia",        // XF86AudioMedia
 		"reply":               "Qt::Key_Reply",             // XF86Reply
 		"favorites":           "Qt::Key_Favorites",         // XF86Favorites
-		"audio-play":          "Qt::Key_AudioPlay",         // XF86AudioPlay
+		"audio-play":          "Qt::Key_MediaPlay",         // XF86AudioPlay
 		"audio-mic-mute":      "Qt::Key_MicMute",           // XF86AudioMicMute
 		"audio-pause":         "Qt::Key_AudioPause",        // XF86AudioPause
 		"audio-stop":          "Qt::Key_AudioStop",         // XF86AudioStop
@@ -38,8 +38,8 @@ func GetQtKeycodeMap() map[string]string {
 		"home-page":           "Qt::Key_HomePage",          // XF86HomePage
 		"sleep":               "Qt::Key_Sleep",             // XF86Sleep
 		"audio-lower-volume":  "Qt::Key_VolumeDown",        // XF86AudioLowerVolume
-		"audio-prev":          "Qt::Key_AudioPrev",         // XF86AudioPrev
-		"audio-next":          "Qt::Key_AudioNext",         // XF86AudioNext
+		"audio-prev":          "Qt::Key_MediaPrevious",         // XF86AudioPrev
+		"audio-next":          "Qt::Key_MediaNext",         // XF86AudioNext
 		"paste":               "Qt::Key_Paste",             // XF86Paste
 		"open":                "Qt::Key_Open",              // XF86Open
 		"send":                "Qt::Key_Send",              // XF86Send
