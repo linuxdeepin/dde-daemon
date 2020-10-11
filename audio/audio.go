@@ -283,24 +283,67 @@ func (a *Audio) init() error {
 	a.updatePropSinkInputs()
 
 	a.mu.Lock()
+
+	//find default sink and source as: default and avaiable > available > unavaiable default
+	serverInfo, err := a.ctx.GetServer()
+	if err == nil {
+		a.mu.Lock()
+		a.defaultSourceName = serverInfo.DefaultSourceName
+		a.defaultSinkName = serverInfo.DefaultSinkName
+	}
+
+	var aviSink bool = false
 	for _, sink := range a.sinks {
-		if int(sink.ActivePort.Available) == 2 {
+		if int(sink.ActivePort.Available) == 2  || int(sink.ActivePort.Available) == 0 {
 			a.defaultSink = sink
-			a.defaultSinkName = sink.ActivePort.Description
 			a.PropsMu.Lock()
 			a.setPropDefaultSink(sink.getPath())
 			a.PropsMu.Unlock()
+			if sink.Name == a.defaultSinkName {
+				break
+			}
+			a.defaultSinkName = sink.Name
+			aviSink = true
+
+		}else {
+			if  aviSink == false && sink.Name == a.defaultSinkName {
+				a.defaultSink = sink
+				a.PropsMu.Lock()
+				a.setPropDefaultSink(sink.getPath())
+				a.PropsMu.Unlock()
+			}
 		}
 	}
 
+	var aviSource bool = false
 	for _, source := range a.sources {
-		if int(source.ActivePort.Available) == 2 {
+		if int(source.ActivePort.Available) == 2  || int(source.ActivePort.Available) == 0 {
 			a.defaultSource = source
-			a.defaultSourceName = source.ActivePort.Description
 			a.PropsMu.Lock()
 			a.setPropDefaultSource(source.getPath())
 			a.PropsMu.Unlock()
+			if source.Name == a.defaultSourceName {
+				break
+			}
+			a.defaultSourceName = source.Name
+			aviSource = true
+
+		}else{
+			if aviSource ==false && source.Name == a.defaultSourceName {
+				a.defaultSource = source
+				a.PropsMu.Lock()
+				a.setPropDefaultSource(source.getPath())
+				a.PropsMu.Unlock()
+			}
 		}
+	}
+	//set-default-sink to pulse
+	if a.defaultSinkName != serverInfo.DefaultSinkName {
+		a.ctx.SetDefaultSink(a.defaultSinkName)
+	}
+	//set-default-source to pulse
+	if a.defaultSourceName != serverInfo.DefaultSourceName {
+		a.ctx.SetDefaultSource(a.defaultSourceName)
 	}
 	a.mu.Unlock()
 

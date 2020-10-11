@@ -84,6 +84,7 @@ func (a *Audio) applyConfig() {
 	logger.Debug("Audio config sink validity:", sinkValidity, cfg.Sink)
 	if sinkValidity {
 		a.ctx.SetDefaultSink(cfg.Sink)
+		a.updateDefaultSink(cfg.Sink)
 	}
 
 	var sourceValidity = true
@@ -109,6 +110,7 @@ func (a *Audio) applyConfig() {
 	logger.Debug("Audio config source validity:", sourceValidity, cfg.Source)
 	if sourceValidity {
 		a.ctx.SetDefaultSource(cfg.Source)
+		a.updateDefaultSource(cfg.Source)
 	}
 }
 
