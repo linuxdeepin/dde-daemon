@@ -21,12 +21,15 @@ package keybinding
 
 import (
 	"errors"
+	"os"
+	"time"
 
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/test"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	dbus "pkg.deepin.io/lib/dbus1"
 )
 
 type NumLockState uint
@@ -75,21 +78,44 @@ func queryCapsLockState(conn *x.Conn) (CapsLockState, error) {
 	}
 }
 
-func setNumLockWl(wl *kwayland.OutputManagement, conn *x.Conn, state NumLockState)  error {
+func setNumLockWl(wl *kwayland.OutputManagement, conn *x.Conn, state NumLockState) error {
 	if !(state == NumLockOff || state == NumLockOn) {
 		return errors.New("invalid num lock state")
 	}
 
 	logger.Debug("setNumLockWl", state)
-	
-	state0, err := queryNumLockState(conn)
-	
-	if err != nil {
-		return err
+
+	var state0 NumLockState
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		systemBus, err := dbus.SystemBus()
+		if err != nil {
+			return nil
+		}
+		systemdObj := systemBus.Object("com.deepin.system.Evdev", "/com/deepin/system/Evdev")
+		var ret int32
+		time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
+		err = systemdObj.Call("com.deepin.system.Evdev.GetNumLockState", 0).Store(&ret)
+		if err != nil {
+			logger.Warning(err)
+			return nil
+		}
+
+		if 0 == ret {
+			state0 = NumLockOff
+		} else {
+			state0 = NumLockOn
+		}
+	} else {
+		var err error
+		state0, err = queryNumLockState(conn)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	if state0 != state {
-		return wl.WlSimulateKey(0, 69)    //69-kwin对应的NumLock
+		return wl.WlSimulateKey(0, 69) //69-kwin对应的NumLock
 	}
 
 	return nil

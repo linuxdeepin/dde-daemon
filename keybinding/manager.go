@@ -29,9 +29,9 @@ import (
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
+	ses_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.network"
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	ses_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.network"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
@@ -93,15 +93,15 @@ type Manager struct {
 	gsPower    *gio.Settings
 
 	enableListenGSettings bool
-	clickNum  uint32
+	clickNum              uint32
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
-	lockFront *lockfront.LockFront
+	lockFront        *lockfront.LockFront
 	sessionSigLoop   *dbusutil.SignalLoop
 	systemSigLoop    *dbusutil.SignalLoop
 	startManager     *sessionmanager.StartManager
-	sessionManager  *sessionmanager.SessionManager
+	sessionManager   *sessionmanager.SessionManager
 	backlightHelper  *backlight.Backlight
 	keyboard         *inputdevices.Keyboard
 	keyboardLayout   string
@@ -340,10 +340,10 @@ var waylandMediaIdMap = map[string]string{
 	"AudioMedia":        "audio-media",         // XF86AudioMedia
 	"reply":             "Reply",               // XF86Reply
 	"favorites":         "Favorites",           // XF86Favorites
-	"AudioPlay":         "audio-play",           // XF86AudioPlay
+	"AudioPlay":         "audio-play",          // XF86AudioPlay
 	"AudioMicMute":      "audio-mic-mute",      // XF86AudioMicMute
-	"AudioPause":        "audio-pause",          // XF86AudioPause
-	"AudioStop":         "audio-stop",           // XF86AudioStop
+	"AudioPause":        "audio-pause",         // XF86AudioPause
+	"AudioStop":         "audio-stop",          // XF86AudioStop
 	"PowerOff":          "power-off",           // XF86PowerOff
 	"documents":         "Documents",           // XF86Documents
 	"game":              "Game",                // XF86Game
@@ -384,7 +384,7 @@ var waylandMediaIdMap = map[string]string{
 	"Switch monitors":   "switch-monitors",
 	"Numlock":           "numlock",
 	"Capslock":          "capslock",
-	"Switch kbd layout":  "switch-kbd-layout",
+	"Switch kbd layout": "switch-kbd-layout",
 }
 
 func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
@@ -509,7 +509,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 				return
 			}
 			obj := ses_network.NewNetwork(sessionBus)
-			ret , err := obj.GetActiveConnectionInfo(0)
+			ret, err := obj.GetActiveConnectionInfo(0)
 			if err != nil {
 				logger.Warning(err)
 			}
@@ -517,15 +517,15 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			if strings.Contains(ret, "wireless") {
 				enabled = true
 			}
-			connWifi, err:= obj.Devices().Get(0)
-			wifiPre :=  "\"wireless\":[{\"Path\":\"/org/freedesktop/NetworkManager/Devices/"
+			connWifi, err := obj.Devices().Get(0)
+			wifiPre := "\"wireless\":[{\"Path\":\"/org/freedesktop/NetworkManager/Devices/"
 			i := strings.Index(connWifi, wifiPre)
 			if i < 0 {
 				return
 			}
 
 			lenwifi := "\"wireless\":[{\"Path\":\""
-			devpath := connWifi[i+len(lenwifi):i+len(wifiPre)+1]
+			devpath := connWifi[i+len(lenwifi) : i+len(wifiPre)+1]
 			if enabled {
 				obj.EnableDevice(0, dbus.ObjectPath(devpath), false)
 				showOSD("WLANOff")
@@ -547,45 +547,90 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 		}
 
 	} else if action.Type == shortcuts.ActionTypeShowNumLockOSD {
-		/*
-			state, err := queryNumLockState(m.conn)
+		var state NumLockState
+		if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+			systemBus, err := dbus.SystemBus()
+			if err != nil {
+				return
+			}
+			systemdObj := systemBus.Object("com.deepin.system.Evdev", "/com/deepin/system/Evdev")
+			var ret int32
+			time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
+			err = systemdObj.Call("com.deepin.system.Evdev.GetNumLockState", 0).Store(&ret)
 			if err != nil {
 				logger.Warning(err)
 				return
 			}
-			save := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
-			switch state {
-			case NumLockOn:
-				if save {
-					m.NumLockState.Set(int32(NumLockOn))
-				}
-				showOSD("NumLockOn")
-			case NumLockOff:
-				if save {
-					m.NumLockState.Set(int32(NumLockOff))
-				}
-				showOSD("NumLockOff")
-			}*/
+
+			if 0 == ret {
+				state = NumLockOff
+			} else {
+				state = NumLockOn
+			}
+		} else {
+			var err error
+			state, err = queryNumLockState(m.conn)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+		}
+
+		save := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
+
+		switch state {
+		case NumLockOn:
+			if save {
+				m.NumLockState.Set(int32(NumLockOn))
+			}
+			showOSD("NumLockOn")
+		case NumLockOff:
+			if save {
+				m.NumLockState.Set(int32(NumLockOff))
+			}
+			showOSD("NumLockOff")
+		}
 	} else if action.Type == shortcuts.ActionTypeShowCapsLockOSD {
-		/*
-			if !m.shouldShowCapsLockOSD() {
+		if !m.shouldShowCapsLockOSD() {
+			return
+		}
+
+		var state CapsLockState
+		if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+			systemBus, err := dbus.SystemBus()
+			if err != nil {
+				return
+			}
+			time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
+			systemdObj := systemBus.Object("com.deepin.system.Evdev", "/com/deepin/system/Evdev")
+			var ret int32
+			err = systemdObj.Call("com.deepin.system.Evdev.GetCapsLockState", 0).Store(&ret)
+			if err != nil {
+				logger.Warning(err)
 				return
 			}
 
+			if 0 == ret {
+				state = CapsLockOff
+			} else {
+				state = CapsLockOn
+			}
+		} else {
 			state, err := queryCapsLockState(m.conn)
 			if err != nil {
 				logger.Warning(err)
 				return
 			}
 			logger.Debug("caps:", state)
+		}
 
-			switch state {
-			case CapsLockOff:
-				showOSD("CapsLockOff")
-			case CapsLockOn:
-				showOSD("CapsLockOn")
-			}*/
-	} else if action.Type == shortcuts.ActionTypeSwitchKbdLayout{
+		switch state {
+		case CapsLockOff:
+			showOSD("CapsLockOff")
+		case CapsLockOn:
+			showOSD("CapsLockOn")
+		}
+	} else if action.Type == shortcuts.ActionTypeSwitchKbdLayout {
 		switch m.switchKbdLayoutState {
 		case SKLStateNone:
 			m.switchKbdLayoutState = SKLStateWait
@@ -599,7 +644,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 		case SKLStateOSDShown:
 			showOSD("SwitchLayout")
 		}
-	}else {
+	} else {
 		cmd, ok := action.Arg.(shortcuts.ActionCmd)
 		if !ok {
 			logger.Warning(errTypeAssertionFail)
@@ -639,7 +684,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 	}
 }
 
-func getMediaPlayAction(num uint32)(shortcuts.ActionCmd) {
+func getMediaPlayAction(num uint32) shortcuts.ActionCmd {
 	var cmd shortcuts.ActionCmd = shortcuts.MediaPlayerPlay
 	if num == 2 {
 		cmd = shortcuts.MediaPlayerNext
