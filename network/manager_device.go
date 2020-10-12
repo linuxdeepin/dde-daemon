@@ -482,11 +482,18 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
 	logger.Info("call EnableDevice in session", devPath, enabled)
 	err := m.enableDevice(devPath, enabled,true)
+	
+	/*
+	飞行模式没有调用此处的接口，屏蔽此概率可能会导致wifi开关异常代码
 	// 特殊情况：飞行模式开启和关闭的时候，开启wifi模块，会出现回连失败
+	
 	if err != nil {
 		// 回连失败，起个线程，在未来的10s内自动回连
-		go m.doAutoConnect(devPath)
+		if enabled{
+			go m.doAutoConnect(devPath)
+		}
 	}
+	*/
 	return dbusutil.ToError(err)
 }
 
