@@ -346,6 +346,12 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 					} else if dsi.connectionType == connectionWired {
 						msg = fmt.Sprintf(Tr("Unable to connect %s, please check your router or net cable."), dsi.aconnId)
 					}
+				case nm.NM_DEVICE_STATE_REASON_NO_SECRETS:
+					//在没有密码输入时，链接超时断开，kill掉密码dialog进程
+                                        if isSecretDialogExist() {
+                                               killAllSecretDialog()
+                                        }
+
 				case nm.NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT:
 					if oldState == nm.NM_DEVICE_STATE_CONFIG && newState == nm.NM_DEVICE_STATE_NEED_AUTH {
 						msg = fmt.Sprintf(Tr("Connection failed, unable to connect %s, wrong password"), dsi.aconnId)

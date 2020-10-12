@@ -334,6 +334,14 @@ func isSecretDialogExist() bool {
 	return strings.Contains(string(out), "/usr/lib/deepin-daemon/dnetwork-secret-dialog")
 }
 
+func killAllSecretDialog() {
+	_, err := exec.Command("/bin/sh", "-c", "pkill -ef dnetwork-secret-dialog").CombinedOutput()
+	if err != nil {
+		logger.Error(err)
+
+	}
+}
+
 func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	connectionData map[string]map[string]dbus.Variant,
 	connUUID, settingName string, settingKeys []string, requestNew bool) (map[string]string, error) {
