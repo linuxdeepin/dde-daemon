@@ -242,7 +242,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 		}
 
 		switch newState {
-		case nm.NM_DEVICE_STATE_PREPARE:
+		case nm.NM_DEVICE_STATE_IP_CHECK:
 			if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
 				dsi.aconnId = getSettingConnectionId(data)
 				icon := generalGetNotifyDisconnectedIcon(dsi.devType, path)
