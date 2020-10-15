@@ -94,19 +94,14 @@ func (m *Manager) handleWakeup() {
 		m.doLock(true)
 	}
 
-	// Fix wayland sometimes no dpms event after wakeup
-	//if m.UseWayland {
-	//	err := m.helper.ScreenSaver.SimulateUserActivity(0)
-	//	if err != nil {
-	//		logger.Warning(err)
-	//	}
-	//}
-
-	if v := m.submodules[submodulePSP]; v != nil {
-		if psp := v.(*powerSavePlan); psp != nil {
-			psp.HandleIdleOff()
+	//Fix wayland sometimes no dpms event after wakeup
+	if m.UseWayland {
+		err := m.helper.ScreenSaver.SimulateUserActivity(0)
+		if err != nil {
+			logger.Warning(err)
 		}
 	}
+
 
 	if v := m.submodules[submodulePSP]; v != nil {
 		if psp := v.(*powerSavePlan); psp != nil {
