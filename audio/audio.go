@@ -282,27 +282,33 @@ func (a *Audio) init() error {
 	a.updatePropSources()
 	a.updatePropSinkInputs()
 
-	a.mu.Lock()
-	for _, sink := range a.sinks {
-		if int(sink.ActivePort.Available) == 2 {
-			a.defaultSink = sink
-			a.defaultSinkName = sink.ActivePort.Description
-			a.PropsMu.Lock()
-			a.setPropDefaultSink(sink.getPath())
-			a.PropsMu.Unlock()
-		}
-	}
+	serverInfo, err := a.ctx.GetServer()
+	if err == nil {
+		a.mu.Lock()
+		a.defaultSourceName = serverInfo.DefaultSourceName
+		a.defaultSinkName = serverInfo.DefaultSinkName
 
-	for _, source := range a.sources {
-		if int(source.ActivePort.Available) == 2 {
-			a.defaultSource = source
-			a.defaultSourceName = source.ActivePort.Description
-			a.PropsMu.Lock()
-			a.setPropDefaultSource(source.getPath())
-			a.PropsMu.Unlock()
+		for _, sink := range a.sinks {
+			if sink.Name == a.defaultSinkName {
+				a.defaultSink = sink
+				a.PropsMu.Lock()
+				a.setPropDefaultSink(sink.getPath())
+				a.PropsMu.Unlock()
+			}
 		}
+
+		for _, source := range a.sources {
+			if source.Name == a.defaultSourceName {
+				a.defaultSource = source
+				a.PropsMu.Lock()
+				a.setPropDefaultSource(source.getPath())
+				a.PropsMu.Unlock()
+			}
+		}
+		a.mu.Unlock()
+	} else {
+		logger.Warning(err)
 	}
-	a.mu.Unlock()
 
 	a.mu.Lock()
 	a.cards = newCardList(a.ctx.GetCardList())
