@@ -326,6 +326,10 @@ var kwinSysActionCmdMap = map[string]string{
 	"Clipboard":             "clipboard",
 	"Translation":           "translation",
 	"Show/Hide the dock":    "show-dock",
+
+	// cmd
+	"Calculator": "calculator", // XF86Calculator
+	"Search":     "search",     // XF86Search
 }
 
 var waylandMediaIdMap = map[string]string{
@@ -347,12 +351,10 @@ var waylandMediaIdMap = map[string]string{
 	"PowerOff":          "power-off",           // XF86PowerOff
 	"documents":         "Documents",           // XF86Documents
 	"game":              "Game",                // XF86Game
-	"Search":            "search",              // XF86Search
 	"AudioRecord":       "audio-record",        // XF86AudioRecord
 	"Display":           "display",             // XF86Display
 	"reload":            "Reload",              // XF86Reload
 	"explorer":          "Explorer",            // XF86Explorer
-	"Calculator":        "calculator",          // XF86Calculator
 	"calendar":          "Calendar",            // XF86Calendar
 	"forward":           "Forward",             // XF86Forward
 	"cut":               "Cut",                 // XF86Cut

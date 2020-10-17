@@ -68,7 +68,7 @@ func (ss *SystemShortcut) SetAction(newAction *Action) error {
 var loadSysActionsFileOnce sync.Once
 var actionsCache *actionHandler
 
-func GetSystemActionCmd(id string) string{
+func GetSystemActionCmd(id string) string {
 	return getSystemActionCmd(id)
 }
 
@@ -110,8 +110,11 @@ var defaultSysActionCmdMap = map[string]string{
 	"disable-touchpad":      "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
 	"wm-switcher":           "dbus-send --type=method_call --dest=com.deepin.WMSwitcher /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM",
 	"turn-off-screen":       "sleep 0.5; xset dpms force off",
-	"notification-center":    "dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle",
+	"notification-center":   "dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle",
 	"clipboard":             "dbus-send --print-reply --dest=com.deepin.dde.Clipboard /com/deepin/dde/Clipboard com.deepin.dde.Clipboard.Toggle",
+	// cmd
+	"calculator": "/usr/bin/deepin-calculator",
+	"search":     "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle",
 }
 
 type actionHandler struct {
