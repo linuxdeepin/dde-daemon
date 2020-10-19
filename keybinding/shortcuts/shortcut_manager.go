@@ -955,6 +955,10 @@ func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj *wm.Wm
 			Id:         id,
 			Keystrokes: gsettings.GetStrv(id),
 		})
+
+		if id == "screenshot-window" {
+			accelJson = `{"Id":"screenshot-window","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
+		}
 		if err != nil {
 			logger.Warning("failed to get json:", err)
 			continue
