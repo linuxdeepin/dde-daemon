@@ -5,9 +5,6 @@ import (
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
-
-	
-	
 )
 
 const (
@@ -28,27 +25,26 @@ func (d *RfkillDev) isBlocked() bool {
 }
 
 func enableBt(enabled bool) error {
-	
-	//add bluetoochctl command to aviod adapter statuw abnormal when using rfkill causeing reconnect failed 
+
+	//add bluetoochctl command to aviod adapter statuw abnormal when using rfkill causeing reconnect failed
 	action := "off"
-	if enabled{
+	if enabled {
 		action = "on"
 		exec.Command("rfkill", "unblock", "bluetooth").Run()
 		err := exec.Command("/usr/bin/bluetoothctl", "power", action).Run()
-		if err!=nil{
+		if err != nil {
 			return err
 		}
-		
+
 		return nil
 	}
 
 	err := exec.Command("/usr/bin/bluetoothctl", "power", action).Run()
-		if err!=nil{
-			return err
-		}
+	if err != nil {
+		return err
+	}
 	exec.Command("rfkill", "block", "bluetooth").Run()
-	
-		
+
 	return nil
 }
 
@@ -65,6 +61,18 @@ func getBtEnabled() (bool, error) {
 		}
 	}
 	return blockedCount < len(devices), nil
+}
+
+func restartBt(enabled bool) error {
+	action := "stop"
+	if enabled {
+		action = "restart"
+	}
+	err := exec.Command("service", "bluetooth", action).Run()
+	if err != nil {
+		logger.Debug("exec.Command RestartBluetooth enabled")
+	}
+	return err
 }
 
 func listBt() ([]*RfkillDev, error) {

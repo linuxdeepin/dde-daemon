@@ -38,9 +38,10 @@ type Manager struct {
 	state AirplaneModeState
 
 	methods *struct {
-		Enable          func() `in:"enabled"`
-		EnableWifi      func() `in:"enabled"`
-		EnableBluetooth func() `in:"enabled"`
+		Enable           func() `in:"enabled"`
+		EnableWifi       func() `in:"enabled"`
+		EnableBluetooth  func() `in:"enabled"`
+		RestartBluetooth func() `in:"enabled"`
 	}
 	signals *struct {
 		AirplaneOn struct{}
@@ -255,6 +256,19 @@ func (m *Manager) EnableBluetooth(sender dbus.Sender, enabled bool) *dbus.Error 
 
 func (m *Manager) enableBluetooth(enabled bool) error {
 	return enableBt(enabled)
+}
+
+func (m *Manager) RestartBluetooth(sender dbus.Sender, enabled bool) *dbus.Error {
+	err := m.restartBluetooth(enabled)
+	if err != nil {
+		logger.Debug("airplane RestartBluetooth enabled")
+	}
+
+	return dbusutil.ToError(err)
+}
+
+func (m *Manager) restartBluetooth(enabled bool) error {
+	return restartBt(enabled)
 }
 
 func checkAuthorization(actionId string, sysBusName string) error {

@@ -20,14 +20,19 @@
 package sessionwatcher
 
 import (
+	"os/exec"
+	"strings"
 	"sync"
 
-	"pkg.deepin.io/lib/dbus1"
+	"time"
+
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 
 	libdisplay "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	bluetooth "pkg.deepin.io/dde/daemon/bluetooth"
 )
 
 const (
@@ -176,6 +181,48 @@ func (m *Manager) deleteSession(id string, path dbus.ObjectPath) {
 	m.mu.Unlock()
 }
 
+func killPulseAudio() {
+	logger.Debug("kill pulseaudio")
+	err := exec.Command("pkill", "-f", "/usr/bin/pulseaudio").Run()
+	if err != nil {
+		logger.Warning("failed to kill pulseaudio:", err)
+	}
+}
+
+func getPidByName(name string) ([]byte, error) {
+	cmd := `ps ux | awk '/` + name + `/ && !/awk/ {print $2}'`
+	pid, err := exec.Command("/bin/sh", "-c", cmd).Output()
+	if err != nil {
+		logger.Debug("Running  cmd:", cmd, err)
+		return nil, err
+	}
+	return pid, nil
+}
+
+func suspendPulseAudio() {
+	logger.Debug("suspend pulseaudio")
+	pid, _ := getPidByName("pulseaudio")
+	str := string(pid)
+	strings.Trim(str, " ")
+	err := exec.Command("kill", "-STOP", strings.Trim(str, "\n")).Run()
+	if err != nil {
+		logger.Warning("failed to kill pulseaudio:", err)
+	}
+	logger.Debug("Running  cmd stop pulseaudio")
+}
+
+func ResumePulseAudio() {
+	logger.Debug("suspend pulseaudio")
+	pid, _ := getPidByName("pulseaudio")
+	str := string(pid)
+	strings.Trim(str, " ")
+	err := exec.Command("kill", "-CONT", strings.Trim(str, "\n")).Run()
+	if err != nil {
+		logger.Warning("failed to resume pulseaudio:", err)
+	}
+	logger.Debug("Running  cmd resume pulseaudio")
+}
+
 func (m *Manager) handleSessionChanged() {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -207,6 +254,12 @@ func (m *Manager) handleSessionChanged() {
 		// fixed block when unused pulse-audio
 		go suspendPulseSinks(0)
 		go suspendPulseSources(0)
+		ResumePulseAudio()
+		logger.Debug("[handleSessionChanged] reconnect bluetooth")
+		time.AfterFunc(2*time.Second, func() {
+			logger.Info("delay func restart bt")
+			bluetooth.RestartBtService()
+		})
 
 		logger.Debug("[handleSessionChanged] Refresh Brightness")
 		go m.display.RefreshBrightness(0)
@@ -214,6 +267,7 @@ func (m *Manager) handleSessionChanged() {
 		logger.Debug("[handleSessionChanged] Suspend pulse")
 		go suspendPulseSinks(1)
 		go suspendPulseSources(1)
+		suspendPulseAudio()
 	}
 }
 

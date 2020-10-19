@@ -22,10 +22,11 @@ package bluetooth
 import (
 	"errors"
 	"fmt"
-	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
+	"strings"
 	"sync"
 	"time"
-	"strings"
+
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
 
 	apidevice "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.device"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
@@ -285,6 +286,7 @@ func (b *Bluetooth) init() {
 
 	b.config.clearSpareConfig(b)
 	b.config.save()
+	RestartBtService()
 	go b.tryConnectPairedDevices()
 	// move to power module
 	// b.wakeupWorkaround()
@@ -731,11 +733,11 @@ func (b *Bluetooth) tryConnectPairedDevices() {
 			err := dev.doConnect(false)
 			if err != nil {
 				logger.Debug("failed to connect:", dev.String(), err)
-				//reconnect once when connect failed of host is down of waking up 
-				if strings.Contains(err.Error(),"Host is down"){
+				//reconnect once when connect failed of host is down of waking up
+				if strings.Contains(err.Error(), "Host is down") {
 					dev.doConnect(false)
 				}
-			} 
+			}
 			// if auto connect success, add device into map connectedDevices
 			if dev.ConnectState == true {
 				b.addConnectedDevice(dev)
@@ -744,7 +746,6 @@ func (b *Bluetooth) tryConnectPairedDevices() {
 				//for input device only connect one device by time,include audio-card
 				break
 			}
-			
 		}
 	}
 }
@@ -771,7 +772,6 @@ func (b *Bluetooth) getPairedDeviceList() map[string][]*device {
 		// add devices info to list
 		for _, dev := range list {
 			// select already paired but not connected device from list
-		
 			if dev == nil || !dev.Paired || dev.connected {
 				continue
 			}
@@ -873,4 +873,23 @@ func (b *Bluetooth) removeConnectedDevice(disconnectedDev *device) {
 		globalBluetooth.connectedDevices[disconnectedDev.Icon] = tempDevices
 	}
 	b.connectedLock.Unlock()
+}
+
+func RestartBtService() {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+
+	air := airplanemode.NewAirplaneMode(sysBus)
+	if air == nil {
+		return
+	}
+
+	err = air.RestartBluetooth(0, true)
+	if err != nil {
+		air.RestartBluetooth(0, true)
+		logger.Info("RestartBluetooth err")
+		return
+	}
 }
