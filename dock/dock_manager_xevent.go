@@ -139,11 +139,6 @@ func (m *Manager) handleActiveWindowChanged(activeWindow WindowInfo) {
 		return
 	}
 
-	if m.activeWindow == activeWindow {
-		logger.Debug("active window no change")
-		m.activeWindowMu.Unlock()
-		return
-	}
 	m.activeWindow = activeWindow
 	m.activeWindowMu.Unlock()
 
