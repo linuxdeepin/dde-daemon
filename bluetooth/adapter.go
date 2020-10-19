@@ -171,6 +171,7 @@ func (a *adapter) connectProperties() {
 		if !hasValue {
 			return
 		}
+		/*
 		// 如果上层还是关闭状态，就不能让适配器启动
 		PoweredCfg := globalBluetooth.config.getAdapterConfigPowered(a.address)
 		if PoweredCfg != value && !PoweredCfg {
@@ -182,6 +183,7 @@ func (a *adapter) connectProperties() {
 			}
 			return
 		}
+		*/
 		a.Powered = value
 		logger.Debugf("%s Powered: %v", a, value)
 		
