@@ -50,9 +50,10 @@ type powerSavePlan struct {
 	metaTasks          metaTasks
 	tasks              delayedTasks
 	// key output name, value old brightness
-	oldBrightnessTable map[string]float64
-	mu                 sync.Mutex
-	screensaverRunning bool
+	oldBrightnessTable   map[string]float64
+	oldACBrightnessTable map[string]float64
+	mu                   sync.Mutex
+	screensaverRunning   bool
 
 	atomNetWMStateFullscreen    x.Atom
 	atomNetWMStateFocused       x.Atom
@@ -183,6 +184,7 @@ func (psp *powerSavePlan) Start() error {
 	screenSaver := helper.ScreenSaver
 	//OnBattery changed will effect current PowerSavePlan
 	err := power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
+		psp.handleOnBatteryChanged()
 		psp.Reset()
 	})
 	if err != nil {
@@ -196,14 +198,14 @@ func (psp *powerSavePlan) Start() error {
 	if err != nil {
 		logger.Warning("failed to connectChanged PowerSavingModeBrightnessDropPercent:", err)
 	}
-	
+
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	if strings.Contains(sessionType, "wayland") {
 		psp.ConnectIdle()
 	} else {
 		_, err = screenSaver.ConnectIdleOn(psp.HandleIdleOn)
 		if err != nil {
-		logger.Warning("failed to ConnectIdleOn:", err)
+			logger.Warning("failed to ConnectIdleOn:", err)
 		}
 		_, err = screenSaver.ConnectIdleOff(psp.HandleIdleOff)
 		if err != nil {
@@ -776,4 +778,27 @@ func (psp *powerSavePlan) saveSetBrightnessTime(value bool, value2 map[string]fl
 	psp.mu.Lock()
 	psp.setBrightnessTime = time.Now()
 	psp.mu.Unlock()
+}
+
+func (psp *powerSavePlan) handleOnBatteryChanged() {
+	logger.Debug("OnBattery  Changed")
+	psp.manager.PropsMu.RLock()
+	hasLightSensor := psp.manager.HasAmbientLightSensor
+	psp.manager.PropsMu.RUnlock()
+
+	if hasLightSensor && psp.manager.AmbientLightAdjustBrightness.Get() {
+		return
+	}
+	brightnessTable := psp.oldACBrightnessTable
+	if brightnessTable == nil {
+		brightnessTable, _ = psp.manager.helper.Display.GetBrightness(0)
+	}
+	newbrightnessTable, err := psp.manager.helper.Display.GetBrightness(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	psp.oldACBrightnessTable = newbrightnessTable
+	logger.Debug("OnBattery changed brightnessTable [last-new]", brightnessTable, psp.oldACBrightnessTable)
+	psp.manager.setAndSaveDisplayBrightness(brightnessTable)
 }
