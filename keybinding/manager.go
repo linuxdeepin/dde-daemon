@@ -92,8 +92,9 @@ type Manager struct {
 	gsGnomeWM  *gio.Settings
 	gsPower    *gio.Settings
 
-	enableListenGSettings bool
-	clickNum              uint32
+	enableListenGSettings   bool
+	clickNum                uint32
+	delayNetworkStateChange bool
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
@@ -244,6 +245,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 func (m *Manager) init() {
 	sessionBus := m.service.Conn()
 	sysBus, _ := dbus.SystemBus()
+	m.delayNetworkStateChange = true
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
@@ -511,14 +513,6 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 				return
 			}
 			obj := ses_network.NewNetwork(sessionBus)
-			ret, err := obj.GetActiveConnectionInfo(0)
-			if err != nil {
-				logger.Warning(err)
-			}
-			var enabled bool = false
-			if strings.Contains(ret, "wireless") {
-				enabled = true
-			}
 			connWifi, err := obj.Devices().Get(0)
 			wifiPre := "\"wireless\":[{\"Path\":\"/org/freedesktop/NetworkManager/Devices/"
 			i := strings.Index(connWifi, wifiPre)
@@ -528,6 +522,22 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 
 			lenwifi := "\"wireless\":[{\"Path\":\""
 			devpath := connWifi[i+len(lenwifi) : i+len(wifiPre)+1]
+			enabled := false
+			if ret, err := obj.IsDeviceEnabled(0, dbus.ObjectPath(devpath)); ret {
+				enabled = true
+				if err != nil {
+					logger.Warning(err)
+					return
+				}
+			}
+
+			if false == m.delayNetworkStateChange {
+				return
+			}
+			m.delayNetworkStateChange = false
+			time.Sleep(500 * time.Millisecond) //+ 与前端的延时对应
+			m.delayNetworkStateChange = true
+
 			if enabled {
 				obj.EnableDevice(0, dbus.ObjectPath(devpath), false)
 				showOSD("WLANOff")
