@@ -72,6 +72,10 @@ msgstr "Display scaling"
 msgid "Setting display scaling"
 msgstr "Setting display scaling"
 
+#: ../../audio/sinkinput.go:311
+msgid "Voice Notes"
+msgstr "Voice Notes"
+
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr "Fingerprint verification failed"

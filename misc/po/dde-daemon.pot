@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-03 10:48+0800\n"
+"POT-Creation-Date: 2020-10-21 14:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,12 +63,20 @@ msgstr ""
 msgid "Setting display scaling"
 msgstr ""
 
+#: ../../audio/sinkinput.go:311
+msgid "Voice Notes"
+msgstr ""
+
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr ""
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
+msgstr ""
+
+#: ../../bluetooth/bluetooth.go:374 ../../network/utils_notify.go:189
+msgid "Airplane mode enabled."
 msgstr ""
 
 #: ../../bluetooth/bluez_profile.go:29
@@ -550,7 +558,7 @@ msgstr ""
 msgid "Protected EAP"
 msgstr ""
 
-#: ../../network/manager_connection.go:337 ../../network/nm_custom_type.go:225
+#: ../../network/manager_connection.go:351 ../../network/nm_custom_type.go:225
 msgid "Wired Connection"
 msgstr ""
 
@@ -952,7 +960,7 @@ msgstr ""
 msgid "Hotspot disabled"
 msgstr ""
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:337 ../../network/state_handler.go:366
 #, c-format
 msgid "%s disconnected"
 msgstr ""
@@ -971,18 +979,9 @@ msgstr ""
 msgid "Unable to connect %s, please check your router or net cable."
 msgstr ""
 
-#: ../../network/state_handler.go:351
-#, c-format
-msgid "Password is required to connect %s"
-msgstr ""
-
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:357
 #, c-format
 msgid "Connection failed, unable to connect %s, wrong password"
-msgstr ""
-
-#: ../../network/state_handler.go:364
-msgid "%q disconnected"
 msgstr ""
 
 #: ../../network/utils_dbus_nm.go:271
@@ -991,10 +990,6 @@ msgstr ""
 
 #: ../../network/utils_notify.go:185
 msgid "You are now offline."
-msgstr ""
-
-#: ../../network/utils_notify.go:189
-msgid "Airplane mode enabled."
 msgstr ""
 
 #: ../../network/utils_notify.go:197
@@ -1032,46 +1027,46 @@ msgid ""
 "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
-#: ../../session/power/manager_events.go:201
+#: ../../session/power/manager_events.go:196
 msgid "Battery critically low"
 msgstr ""
 
+#: ../../session/power/manager_events.go:217
 #: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
-#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr ""
 
-#: ../../session/power/utils.go:370 ../../session/power/utils.go:374
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
+#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
 msgid "Power settings changed"
 msgstr ""
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:406
 msgid "When the lid is closed, "
 msgstr ""
 
-#: ../../session/power/utils.go:401
+#: ../../session/power/utils.go:410
 msgid "When pressing the power button, "
 msgstr ""
 
-#: ../../session/power/utils.go:411
+#: ../../session/power/utils.go:420
 msgid "your computer will shut down"
 msgstr ""
 
-#: ../../session/power/utils.go:413
+#: ../../session/power/utils.go:422
 msgid "your computer will suspend"
 msgstr ""
 
-#: ../../session/power/utils.go:415
+#: ../../session/power/utils.go:424
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:417
+#: ../../session/power/utils.go:426
 msgid "your monitor will turn off"
 msgstr ""
 
-#: ../../session/power/utils.go:419
+#: ../../session/power/utils.go:428
 msgid "it will do nothing to your computer"
 msgstr ""
 

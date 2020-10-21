@@ -72,6 +72,10 @@ msgstr "屏幕縮放"
 msgid "Setting display scaling"
 msgstr "即將設置屏幕縮放"
 
+#: ../../audio/sinkinput.go:311
+msgid "Voice Notes"
+msgstr "語音記事本"
+
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr "指紋驗證失敗"

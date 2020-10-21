@@ -84,6 +84,10 @@ msgstr "Échelle d'affichage"
 msgid "Setting display scaling"
 msgstr "Mise à l'échelle de l'affichage"
 
+#: ../../audio/sinkinput.go:311
+msgid "Voice Notes"
+msgstr "bloc-notes phonétique"
+
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr "Echec de la vérification de l'empreinte digitale"

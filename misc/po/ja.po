@@ -71,6 +71,10 @@ msgstr "ディスプレイスケーリング"
 msgid "Setting display scaling"
 msgstr "ディスプレイスケーリングを設定"
 
+#: ../../audio/sinkinput.go:311
+msgid "Voice Notes"
+msgstr "表音メモ帳"
+
 #: ../../bin/dde-authority/fprint_transaction.go:20
 msgid "Fingerprint verification failed"
 msgstr ""
