@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"os/exec"
 	"strconv"
+
+	"pkg.deepin.io/lib/keyfile"
 )
 
 func isStrInArray(str string, array []string) bool {
@@ -53,4 +55,19 @@ func strToInt(str string, defaultVal int) int {
 		val = defaultVal
 	}
 	return val
+}
+
+func systemType() string {
+	kf := keyfile.NewKeyFile()
+	err := kf.LoadFromFile("/etc/deepin-version")
+	if err != nil {
+		fmt.Println("load version file failed, err: ", err)
+		return ""
+	}
+	typ, err := kf.GetString("Release", "Type")
+	if err != nil {
+		fmt.Println("get version type failed, err: ", err)
+		return ""
+	}
+	return typ
 }

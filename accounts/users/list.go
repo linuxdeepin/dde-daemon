@@ -172,6 +172,9 @@ func (infos UserInfos) filterUserInfos() UserInfos {
 
 func (info UserInfo) isHumanUser(configLoginDefs string) bool {
 	if info.Name == "root" {
+		if systemType() == "Server" {
+			return true
+		}
 		return false
 	}
 
