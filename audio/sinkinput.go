@@ -29,6 +29,7 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/procfs"
 	"pkg.deepin.io/lib/pulse"
+	. "pkg.deepin.io/lib/gettext"
 )
 
 const (
@@ -306,6 +307,9 @@ func (s *SinkInput) update(sinkInputInfo *pulse.SinkInput) {
 	s.channelMap = sinkInputInfo.ChannelMap
 	s.setPropSinkIndex(sinkInputInfo.Sink)
 	name := sinkInputInfo.PropList[PropAppName]
+	if strings.Compare(string(name),"Voice Notes") == 0 {
+		name = Tr("Voice Notes")
+	}
 	s.setPropName(name)
 	icon := sinkInputInfo.PropList[PropAppIconName]
 	correctedIcon, err := s.correctIcon(sinkInputInfo)
