@@ -456,6 +456,14 @@ func (m *Manager) ensureWirelessHotspotConnectionExists(wirelessDevPath dbus.Obj
 
 // DeleteConnection delete a connection through uuid.
 func (m *Manager) DeleteConnection(uuid string) *dbus.Error {
+	//删除当前链接，将accessPoints属性中uuid属性置为空
+	for tdmpevPath,devaccesspointlist := range m.accessPoints{
+		for i, ap := range devaccesspointlist {
+			if uuid == ap.Uuid {
+				m.accessPoints[tdmpevPath][i].Uuid = ""
+			}
+		}
+	}
 	err := m.deleteConnection(uuid)
 	return dbusutil.ToError(err)
 }

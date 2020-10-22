@@ -62,6 +62,7 @@ type accessPoint struct {
 	Secured      bool
 	SecuredInEap bool
 	Strength     uint8
+	Uuid         string
 	Path         dbus.ObjectPath
 }
 
@@ -381,6 +382,14 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 		uuid = utils.GenUuid()
 		var ssid []byte
 		ssid, err = nmAp.Ssid().Get(0)
+		//创建新链接配置时，同步uuid到accessPoints属性中
+		devaccesspointlist := m.accessPoints[devPath]
+		for i, ap := range devaccesspointlist {
+			if decodeSsid(ssid) == ap.Ssid {
+				m.accessPoints[devPath][i].Uuid = uuid
+			}
+		}
+
 		if err != nil {
 			logger.Warning("failed to get Ap Ssid:", err)
 			return

@@ -136,6 +136,12 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 
 	nmDev.InitSignalExt(m.sysSigLoop, true)
 
+	//add device state change signal 
+	err=nmDev.State().ConnectChanged(func(hasValue bool, value uint32) {
+		dev.State,_ = nmDev.State().Get(0)
+		m.updatePropDevices()
+	})
+
 	// dispatch for different device types
 	switch dev.nmDevType {
 	case nm.NM_DEVICE_TYPE_ETHERNET:
@@ -317,7 +323,6 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		if !m.isDeviceExists(devPath) {
 			return
 		}
-
 		dev.State = newState
 		m.devicesLock.Lock()
 		m.updatePropDevices()
@@ -619,8 +624,17 @@ func (m *Manager) RequestWirelessScan() *dbus.Error {
 			if err != nil {
 				logger.Debug(err)
 			}
-
+			//每一次扫描就获取每个热点是否存在相对应的uuid配置
 			accessPoints := m.getAccessPointsByPath(dev.Path)
+			wirelessconnections := m.connections[deviceWifi]
+			for _, accessPoint := range accessPoints {
+				for _, connectiondata := range wirelessconnections {
+					if connectiondata.Ssid == accessPoint.Ssid {
+						accessPoint.Uuid = connectiondata.Uuid
+					}
+
+				}
+			}
 			wirelessAccessPoints[dev.Path] = accessPoints
 		}
 	}
