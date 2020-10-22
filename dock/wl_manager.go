@@ -6,8 +6,8 @@ import (
 	"sync"
 
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
-	dbus "pkg.deepin.io/lib/dbus1"
 	x "github.com/linuxdeepin/go-x11-client"
+	dbus "pkg.deepin.io/lib/dbus1"
 )
 
 type WaylandManager struct {
@@ -200,7 +200,7 @@ func (m *Manager) registerWindowWayland(objPath dbus.ObjectPath) {
 		logger.Warning(err)
 		return
 	}
-	if appId == "dde-desktop" || appId == "dde-dock" || appId == "dde-launcher" {
+	if appId == "dde-desktop" || appId == "dde-dock" || appId == "dde-launcher" || appId == "dde-clipboard" || appId == "dde-osd" {
 		return
 	}
 
