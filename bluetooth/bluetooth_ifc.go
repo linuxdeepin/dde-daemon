@@ -194,9 +194,10 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 	if !powered{
 		for _, dobjlist := range globalBluetooth.devices {
 			for _,device := range dobjlist{
-				connectstatus,_ := device.core.Connected().Get(0)
-				if connectstatus{
-					go device.core.Disconnect(0)
+				//获取每个device的状态，若正在链接或已链接则断开
+				connectstatus := device.getState()
+				if connectstatus==1 || connectstatus==2{
+					go device.Disconnect()
 				}
 			}
 		}
