@@ -111,7 +111,7 @@ func main() {
 		logger.Fatal("failed to export:", err)
 	}
 
-	ddcciManager, err := ddcci.NewManager()
+	ddcciManager, err := ddcci.NewManager(service)
 	if err != nil {
 		logger.Warning(err)
 	} else {
@@ -125,6 +125,5 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to request name:", err)
 	}
-
 	service.Wait()
 }

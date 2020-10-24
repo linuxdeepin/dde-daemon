@@ -27,23 +27,24 @@ type Manager struct {
 	configTimestamp x.Timestamp
 
 	methods *struct {
-		CheckSupport    func() `in:"edidChecksum" out:"support"`
-		GetBrightness   func() `in:"edidChecksum" out:"value"`
-		SetBrightness   func() `in:"edidChecksum,value"`
+		CheckSupport    func() `in:"edidBase64" out:"support"`
+		GetBrightness   func() `in:"edidBase64" out:"value"`
+		SetBrightness   func() `in:"edidBase64,value"`
 		RefreshDisplays func()
 	}
 }
 
-func NewManager() (*Manager, error) {
+func NewManager(service *dbusutil.Service) (*Manager, error) {
 	m := &Manager{}
+	m.service = service
 
 	// 在 arm 和 mips 架构下，调用 i2c 的接口会导致待机后无法唤醒，
 	// 所以不在 arm 和 mips 架构下使用 DDC/CI 功能。
-	if !strings.HasPrefix(runtime.GOARCH, "arm") && !strings.HasPrefix(runtime.GOARCH, "mips") {
+	if !strings.HasPrefix(runtime.GOARCH, "mips") {
 		var err error
 		m.ddcci, err = newDDCCI()
 		if err != nil {
-			return nil, fmt.Errorf("failed to init ddc/ci: %s", err)
+			return nil, fmt.Errorf("brightness: failed to init ddc/ci: %s", err)
 		}
 	}
 
@@ -54,47 +55,50 @@ func (*Manager) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func (m *Manager) CheckSupport(edidChecksum string) (bool, *dbus.Error) {
+func (m *Manager) CheckSupport(edidBase64 string) (bool, *dbus.Error) {
 	if m.ddcci == nil {
 		return false, nil
 	}
 
-	return m.ddcci.SupportBrightness(edidChecksum), nil
+	return m.ddcci.SupportBrightness(edidBase64), nil
 }
 
-func (m *Manager) GetBrightness(edidChecksum string) (int32, *dbus.Error) {
+func (m *Manager) GetBrightness(edidBase64 string) (int32, *dbus.Error) {
 	if m.ddcci == nil {
 		return 0, nil
 	}
 
-	if !m.ddcci.SupportBrightness(edidChecksum) {
-		err := fmt.Errorf("not support ddc/ci: %s", edidChecksum)
+	if !m.ddcci.SupportBrightness(edidBase64) {
+		err := fmt.Errorf("brightness: not support ddc/ci: %s", edidBase64)
 		return 0, dbusutil.ToError(err)
 	}
 
-	brightness, err := m.ddcci.GetBrightness(edidChecksum)
+	brightness, err := m.ddcci.GetBrightness(edidBase64)
 	return int32(brightness), dbusutil.ToError(err)
 }
 
-func (m *Manager) SetBrightness(edidChecksum string, value int32) *dbus.Error {
+func (m *Manager) SetBrightness(edidBase64 string, value int32) *dbus.Error {
 	if m.ddcci == nil {
 		return nil
 	}
 
-	if !m.ddcci.SupportBrightness(edidChecksum) {
-		err := fmt.Errorf("not support ddc/ci: %s", edidChecksum)
+	if !m.ddcci.SupportBrightness(edidBase64) {
+		err := fmt.Errorf("brightness: not support ddc/ci: %s", edidBase64)
 		return dbusutil.ToError(err)
 	}
 
-	err := m.ddcci.SetBrightness(edidChecksum, int(value))
+	err := m.ddcci.SetBrightness(edidBase64, int(value))
 	return dbusutil.ToError(err)
 }
 
 func (m *Manager) RefreshDisplays() *dbus.Error {
-	if m.ddcci == nil {
-		return nil
-	}
-
-	err := m.ddcci.RefreshDisplays()
-	return dbusutil.ToError(err)
+	//ddcutil代码有问题，无法刷新，暂用退出的方式来刷新显示器列表
+	m.service.Quit()
+	return nil
+	//if m.ddcci == nil {
+	//	return nil
+	//}
+	//
+	//err := m.ddcci.RefreshDisplays()
+	//return dbusutil.ToError(err)
 }
