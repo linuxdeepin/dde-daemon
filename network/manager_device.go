@@ -409,6 +409,22 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 
 	dev.State, _ = nmDev.State().Get(0)
 	dev.Interface, _ = nmDev.Interface().Get(0)
+	// get device enable state from system network
+	enabled, _ := m.sysNetwork.IsDeviceEnabled(0, dev.Interface)
+	// adjust device enable state
+	// due to script in pre-up and pre-down, device will be always set as true or false,
+	// in this situation, the config kept in local file is not exact, config need be adjusted
+	if dev.State > nm.NM_DEVICE_STATE_DISCONNECTED && !enabled {
+		_, err = m.sysNetwork.EnableDevice(0, dev.Interface, true)
+		if err != nil {
+			logger.Warningf("set device enable failed, err: %v", err)
+		}
+	} else if dev.State <= nm.NM_DEVICE_STATE_DISCONNECTED && enabled {
+		_, err = m.sysNetwork.EnableDevice(0, dev.Interface, false)
+		if err != nil {
+			logger.Warningf("set device enable failed, err: %v", err)
+		}
+	}
 	dev.Managed = nmGeneralIsDeviceManaged(devPath)
 
 	// TODO: NetworkManager 升级 1.22 后，直接使用 NetworkManager 的 InterfaceFlags 属性
