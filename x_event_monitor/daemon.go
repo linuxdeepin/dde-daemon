@@ -20,6 +20,7 @@
 package x_event_monitor
 
 import (
+	"os"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -30,6 +31,7 @@ const (
 	dbusInterface   = dbusServiceName
 	moduleName      = "x-event-monitor"
 )
+var globalWayland bool
 
 var (
 	logger = log.NewLogger(moduleName)
@@ -37,6 +39,9 @@ var (
 
 func init() {
 	loader.Register(NewDaemon(logger))
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		globalWayland = true
+	}
 }
 
 type Daemon struct {
@@ -65,8 +70,12 @@ func (d *Daemon) Start() error {
 		return err
 	}
 	m.initXExtensions()
+	// add kwayland if
 	go m.handleXEvent()
 
+	go m.ListenGlobalCursorPressed()
+	go m.ListenGlobalCursorRelease()
+	go m.ListenGlobalCursorMove()
 	err = service.Export(dbusPath, m)
 	if err != nil {
 		return err

@@ -62,6 +62,7 @@ type Manager struct {
 	xConn               *x.Conn
 	keySymbols          *keysyms.KeySymbols
 	service             *dbusutil.Service
+	sessionSigLoop      *dbusutil.SignalLoop
 	signals             *struct {
 		CancelAllArea struct{}
 
@@ -92,9 +93,21 @@ type Manager struct {
 	pidAidsMap      map[uint32]strv.Strv
 	idAreaInfoMap   map[string]*coordinateInfo
 	idReferCountMap map[string]int32
+	cursorMask      uint32
 
 	mu sync.Mutex
 }
+
+const (
+	buttonLeft  = 272
+	buttonRight = 273
+	leftBit     = 0
+	rightBit    = 1
+	midBit      = 2
+	x11BtnLeft  = 1
+	x11BtnRight = 3
+	x11BtnMid   = 2
+)
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	xConn, err := x.NewConn()
@@ -112,6 +125,10 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		idAreaInfoMap:       make(map[string]*coordinateInfo),
 		idReferCountMap:     make(map[string]int32),
 	}
+	sessionBus := m.service.Conn()
+	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
+	m.sessionSigLoop.Start()
+	m.cursorMask = 0
 	return m, nil
 }
 
@@ -137,6 +154,107 @@ func (m *Manager) selectXInputEvents() {
 }
 
 const evMaskForHideCursor uint32 = input.XIEventMaskRawMotion | input.XIEventMaskRawTouchBegin
+
+/*-----------------------------------------------
+ *cursorMask 0:release 1:press
+ *bit0: left button
+ *bit1: right button
+ *bit3: move
+ *------------------------------------------------*/
+func (m *Manager) ListenGlobalCursorPressed() error {
+	sessionBus := m.service.Conn()
+	logger.Debug("[test global key] sessionBus", sessionBus)
+	err := sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonPress").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.ButtonPress",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			key := sig.Body[0].(uint32)
+			x := sig.Body[1].(uint32)
+			y := sig.Body[2].(uint32)
+			if key == buttonLeft {
+				m.cursorMask |= uint32(uint32(1) << leftBit)
+				key = x11BtnLeft
+			} else if key == buttonRight {
+				m.cursorMask |= uint32(uint32(1) << rightBit)
+				key = x11BtnRight
+			} else {
+				m.cursorMask |= uint32(uint32(1) << midBit)
+				key = x11BtnMid
+			}
+			m.handleButtonEvent(int32(key), true, int32(x), int32(y))
+		}
+	})
+	return nil
+}
+
+func (m *Manager) ListenGlobalCursorRelease() error {
+	sessionBus := m.service.Conn()
+	err := sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonRelease").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.ButtonRelease",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			key := sig.Body[0].(uint32)
+			x := sig.Body[1].(uint32)
+			y := sig.Body[2].(uint32)
+
+			if key == buttonLeft {
+				m.cursorMask &= ^(uint32(1) << leftBit)
+				key = x11BtnLeft
+			} else if key == buttonRight {
+				m.cursorMask &= ^(uint32(1) << rightBit)
+				key = x11BtnRight
+			} else {
+				m.cursorMask &= ^(uint32(1) << midBit)
+				key = x11BtnMid
+			}
+			m.handleButtonEvent(int32(key), false, int32(x), int32(y))
+		}
+	})
+	return nil
+}
+
+func (m *Manager) ListenGlobalCursorMove() error {
+	sessionBus := m.service.Conn()
+	err := sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.CursorMove",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			x := sig.Body[0].(uint32)
+			y := sig.Body[1].(uint32)
+
+			//m.cursorMask |= (1 << cursorBit)
+			var hasPress = false
+			if m.cursorMask > 0 {
+				hasPress = true
+			}
+
+			logger.Debug("[test global cursor] get CursorMove", x, y)
+			m.handleCursorEvent(int32(x), int32(y), hasPress)
+		}
+	})
+	return nil
+}
 
 func (m *Manager) deselectXInputEvents() {
 	var evMask uint32
@@ -245,8 +363,12 @@ func (m *Manager) handleXEvent() {
 			geEvent, _ := x.NewGeGenericEvent(ev)
 			if geEvent.Extension == inputExtData.MajorOpcode {
 				switch geEvent.EventType {
+
 				case input.RawMotionEventCode:
-					//logger.Debug("raw motion event")
+					if globalWayland {
+						return
+					}
+					logger.Debug("raw motion event")
 					if m.hideCursorWhenTouch {
 						m.beginMoveMouse()
 					}
@@ -268,6 +390,7 @@ func (m *Manager) handleXEvent() {
 					}
 
 				case input.RawKeyPressEventCode:
+
 					e, _ := input.NewRawKeyPressEvent(geEvent.Data)
 					qpReply, err := m.queryPointer()
 					if err != nil {
@@ -287,7 +410,11 @@ func (m *Manager) handleXEvent() {
 					}
 
 				case input.RawButtonPressEventCode:
+					if globalWayland {
+						return
+					}
 					e, _ := input.NewRawButtonPressEvent(geEvent.Data)
+					logger.Debug("----button-press--value---", int32(e.Detail))
 					qpReply, err := m.queryPointer()
 					if err != nil {
 						logger.Warning(err)
@@ -297,7 +424,11 @@ func (m *Manager) handleXEvent() {
 					}
 
 				case input.RawButtonReleaseEventCode:
+					if globalWayland {
+						return
+					}
 					e, _ := input.NewRawButtonReleaseEvent(geEvent.Data)
+					logger.Debug("----button-release--value---", int32(e.Detail))
 					qpReply, err := m.queryPointer()
 					if err != nil {
 						logger.Warning(err)
