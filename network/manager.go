@@ -214,9 +214,8 @@ func (m *Manager) init() {
 	m.initDeviceManage()
 	m.initActiveConnectionManage()
 	m.initNMObjManager(systemBus)
-	m.initSysNetwork(systemBus)
-
 	m.stateHandler = newStateHandler(m.sysSigLoop, m)
+	m.initSysNetwork(systemBus)
 
 	// update property "State"
 	err = nmManager.State().ConnectChanged(func(hasValue bool, value uint32) {
