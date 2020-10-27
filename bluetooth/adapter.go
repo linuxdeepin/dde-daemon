@@ -187,8 +187,6 @@ func (a *adapter) connectProperties() {
 		a.Powered = value
 		logger.Debugf("%s Powered: %v", a, value)
 		
-		//wait for bluez to set the attributes before sending changge signal
-		time.Sleep(2 * time.Second)
 		//reconnect devices here to aviod problem when  airplane open and closed,paired devices not connecte initiatively 
 		if value{
 			err := a.core.Discoverable().Set(0, globalBluetooth.config.Discoverable)
