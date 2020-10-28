@@ -322,3 +322,8 @@ func (s *Sink) playFeedback() {
 	s.PropsMu.RUnlock()
 	playFeedbackWithDevice(name)
 }
+
+func (s *Sink) setMute(v bool) {
+	logger.Debugf("Sink #%d setMute %v", s.index, v)
+	s.audio.context().SetSinkMuteByIndex(s.index, v)
+}

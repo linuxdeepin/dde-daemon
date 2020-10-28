@@ -263,3 +263,8 @@ func (s *Source) update(sourceInfo *pulse.Source) {
 
 	s.PropsMu.Unlock()
 }
+
+func (s *Source) setMute(v bool) {
+	logger.Debugf("Source #%d setMute %v", s.index, v)
+	s.audio.context().SetSourceMuteByIndex(s.index, v)
+}

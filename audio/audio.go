@@ -522,6 +522,7 @@ func (a *Audio) setDefaultSourceWithPort(cardId uint32, portName string) error {
 func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.Error {
 	logger.Debugf("Audio.SetPort card idx: %d, port name: %q, direction: %d",
 		cardId, portName, direction)
+
 	err := a.setPort(cardId, portName, int(direction))
 	if err != nil {
 		return dbusutil.ToError(err)
@@ -542,15 +543,27 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 
 	if int(direction) == pulse.DirectionSink {
 		logger.Debugf("output port %s %s now is first priority", card.core.Name, portName)
+		sink := a.getDefaultSink()
+		if sink == nil {
+			return dbusutil.ToError(fmt.Errorf("can not get default sink"))
+		}
+		sink.setMute(true)
+
 		priorities.SetOutputPortFirst(card.core.Name, portName)
 		err = priorities.Save(globalPrioritiesFilePath)
 		priorities.Print()
 	} else {
 		logger.Debugf("input port %s %s now is first priority", card.core.Name, portName)
+		source := a.getDefaultSource()
+		if source == nil {
+			return dbusutil.ToError(fmt.Errorf("can not get default source"))
+		}
+		source.setMute(true)
 		priorities.SetInputPortFirst(card.core.Name, portName)
 		err = priorities.Save(globalPrioritiesFilePath)
 		priorities.Print()
 	}
+
 	return dbusutil.ToError(err)
 }
 
@@ -566,6 +579,22 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
+	}
+
+	defaultSinkActivePortName := a.getDefaultSinkActivePortName()
+	defaultSourceActivePortName := a.getDefaultSourceActivePortName()
+	if portName == defaultSinkActivePortName {
+		defaultSink := a.getDefaultSink()
+		if defaultSink == nil {
+			return dbusutil.ToError(errors.New("can not get default sink"))
+		}
+		defaultSink.setMute(!enabled)
+	} else if portName == defaultSourceActivePortName {
+		defaultsource := a.getDefaultSource()
+		if defaultsource == nil {
+			return dbusutil.ToError(errors.New("can not get default source"))
+		}
+		defaultsource.setMute(!enabled)
 	}
 
 	return nil
