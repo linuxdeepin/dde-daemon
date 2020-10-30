@@ -63,10 +63,12 @@ var (
 	notifyId            uint32
 	notifyIdMu          sync.Mutex
 	globalNotifyManager *NotifyManager
+	recordNotifyInfo    string
 )
 
 func initNotifyManager() {
 	globalNotifyManager = newNotifyManager()
+	recordNotifyInfo = ""
 	go globalNotifyManager.loop()
 }
 
@@ -146,7 +148,7 @@ func (nm *NotifyManager) loop() {
 		nm.mu.Unlock()
 
 		if msg != nil {
-			time.Sleep(1500 * time.Millisecond) // sleep 1.5 seconds
+			time.Sleep(300 * time.Millisecond) // sleep 1.5 seconds
 		}
 	}
 }
@@ -179,6 +181,13 @@ func _notify(icon, summary, body string) {
 	notifyIdMu.Lock()
 	notifyId = nid
 	notifyIdMu.Unlock()
+	
+	if recordNotifyInfo != "" {
+		go func() {
+			time.Sleep(5 * time.Second)
+			recordNotifyInfo = ""
+		}()
+	}
 }
 
 func notifyNetworkOffline() {

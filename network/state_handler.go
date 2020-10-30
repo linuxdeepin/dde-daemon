@@ -242,7 +242,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 		}
 
 		switch newState {
-		case nm.NM_DEVICE_STATE_IP_CHECK:
+		case nm.NM_DEVICE_STATE_PREPARE:
 			if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
 				dsi.aconnId = getSettingConnectionId(data)
 				icon := generalGetNotifyDisconnectedIcon(dsi.devType, path)
@@ -250,7 +250,15 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				if dsi.connectionType == connectionWirelessHotspot {
 					notify(icon, "", Tr("Enabling hotspot"))
 				} else {
+					//Prevent multiple the same notify information from triggering multiple pop-ups
+					var notifyinfo string
+					notifyinfo = fmt.Sprintf("Connecting %s", dsi.aconnId)
+					if recordNotifyInfo != "" && recordNotifyInfo == notifyinfo {
+						logger.Debug("--------[Prepare] Re-Receive the same state-NotifyInfo:", recordNotifyInfo)
+						return
+					}
 					notify(icon, "", fmt.Sprintf(Tr("Connecting %s"), dsi.aconnId))
+					recordNotifyInfo = notifyinfo
 				}
 			}
 		case nm.NM_DEVICE_STATE_ACTIVATED:
