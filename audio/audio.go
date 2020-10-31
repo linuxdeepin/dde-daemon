@@ -339,7 +339,6 @@ func (a *Audio) init() error {
 		a.resetSinksVolume()
 		a.resetSourceVolume()
 		a.trySelectBestPort()
-		a.settings.SetBoolean(gsKeyFirstRun, false)
 	} else {
 		a.applyConfig()
 	}

@@ -24,6 +24,7 @@ import (
 	"sort"
 	"strconv"
 	"time"
+	"strings"
 
 	"pkg.deepin.io/lib/dbus1"
 )
@@ -199,6 +200,17 @@ func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
 		if err != nil {
 			logger.Warning(err)
 			return
+		}
+		firstRun := a.settings.GetBoolean(gsKeyFirstRun)
+		if firstRun {
+			pname := strings.ToLower(sinkInfo.ActivePort.Name)
+			var cv pulse.CVolume
+			if strings.Contains(pname, "headphone") || strings.Contains(pname, "headset") {
+				cv = sinkInfo.Volume.SetAvg(defaultHeadphoneOutputVolume).SetBalance(sinkInfo.ChannelMap,
+					0).SetFade(sinkInfo.ChannelMap, 0)
+				a.ctx.SetSinkVolumeByIndex(idx, cv)
+				a.settings.SetBoolean(gsKeyFirstRun, false)
+			}
 		}
 
 		a.mu.Lock()
