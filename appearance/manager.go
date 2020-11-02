@@ -96,6 +96,7 @@ const (
 	gsKeyWallpaperSlideshow = "wallpaper-slideshow"
 	gsKeyWallpaperURIs      = "wallpaper-uris"
 	gsKeyQtActiveColor      = "qt-active-color"
+	gsKeyDTKWindowRadius    = "dtk-window-radius"
 
 	propQtActiveColor = "QtActiveColor"
 
@@ -138,6 +139,8 @@ type Manager struct {
 	WallpaperSlideShow gsprop.String `prop:"access:rw"`
 	WallpaperURIs      gsprop.String
 	QtActiveColor      string `prop:"access:rw"`
+	// 社区版定制需求，保存窗口圆角值，默认 18
+	WindowRadius       gsprop.Int `prop:"access:rw"`
 
 	wsLoopMap      map[string]*WSLoop
 	wsSchedulerMap map[string]*WSScheduler
@@ -233,6 +236,8 @@ func newManager(service *dbusutil.Service) *Manager {
 	m.Opacity.Bind(m.setting, gsKeyOpacity)
 	m.WallpaperSlideShow.Bind(m.setting, gsKeyWallpaperSlideshow)
 	m.WallpaperURIs.Bind(m.setting, gsKeyWallpaperURIs)
+	// 社区版定制需求  保存窗口圆角值
+	m.WindowRadius.Bind(m.setting, gsKeyDTKWindowRadius)
 	var err error
 	m.QtActiveColor, err = m.getQtActiveColor()
 	if err != nil {
