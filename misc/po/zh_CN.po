@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-11 15:04+0800\n"
+"POT-Creation-Date: 2020-11-02 16:46+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
@@ -38,23 +38,27 @@ msgid ""
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr "密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
 msgstr "用户名不能为空"
 
-#: ../../accounts/checkers/username.go:67
+#: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "首字符必须为字母或数字"
 
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "此用户名已存在"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr "该名称已存在"
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
 msgstr "此用户名已被系统使用"
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "用户名长度必须介于3到32个字符之间"
 
@@ -150,7 +154,7 @@ msgstr "您已成功接收来自%q的文件"
 msgid "Done"
 msgstr "完成"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:478
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
 msgstr "文件接收中止"
 
@@ -178,7 +182,7 @@ msgstr "蓝牙文件传输"
 msgid "%q wants to send files to you. Receive?"
 msgstr "您收到%q发送给您的文件，是否接收？"
 
-#: ../../bluetooth/obex_agent.go:479
+#: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
 msgstr "接收%q超时"
 
@@ -187,7 +191,7 @@ msgid "Connect %q successfully"
 msgstr "连接%q成功"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:359
 msgid "%q disconnected"
 msgstr "%q已断开"
 
@@ -465,7 +469,7 @@ msgstr "显示当前工作区的窗口"
 msgid "Display workspace"
 msgstr "显示工作区 "
 
-#: ../../keybinding/shortcuts/id_name_map.go:210
+#: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
 msgstr "多屏切换"
 
@@ -584,13 +588,17 @@ msgstr "应用代理设置成功"
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
 #: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202 ../../network/utils_notify.go:304
+#: ../../network/utils_notify.go:202
 msgid "Network"
 msgstr "网络"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr "应用代理设置失败"
+
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "连接%q需要密码"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -821,7 +829,7 @@ msgstr "DCB 或 FCoE 配置失败"
 
 #: ../../network/state_handler.go:96
 msgid "Network teaming control failed"
-msgstr " 组队网络控制失败"
+msgstr "组队网络控制失败"
 
 #: ../../network/state_handler.go:97
 msgid "Modem failed to run or not available"
@@ -829,7 +837,7 @@ msgstr "调制解调器运行失败或不可用"
 
 #: ../../network/state_handler.go:98
 msgid "Modem now ready and available"
-msgstr " 调制解调器现在准备就绪"
+msgstr "调制解调器现在准备就绪"
 
 #: ../../network/state_handler.go:99
 msgid "SIM PIN is incorrect"
@@ -941,11 +949,7 @@ msgstr "未能加入%q，请尝试靠近无线路由器"
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "未能加入%q，请检查路由器或网线。"
 
-#: ../../network/state_handler.go:349
-msgid "Password is required to connect %q"
-msgstr "连接%q需要密码"
-
-#: ../../network/state_handler.go:352
+#: ../../network/state_handler.go:350
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "连接失败，未能加入%q，密码不正确"
 
@@ -984,10 +988,6 @@ msgstr "系统代理已取消。"
 msgid "Connected"
 msgstr "已连接"
 
-#: ../../network/utils_notify.go:304
-msgid "Portal network authentication successful"
-msgstr "Portal网络认证成功"
-
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
@@ -1003,59 +1003,59 @@ msgstr "电池电量耗尽"
 msgid "Battery low, please plug in"
 msgstr "电池电量低，请连接电源"
 
-#: ../../session/power/utils.go:349 ../../session/power/utils.go:353
-#: ../../session/power/utils.go:357 ../../session/power/utils.go:361
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
 msgstr "电源设置更改"
 
-#: ../../session/power/utils.go:376
+#: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
 msgstr "“笔记本合盖时”"
 
-#: ../../session/power/utils.go:380
+#: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
 msgstr "“按电源按钮时”"
 
-#: ../../session/power/utils.go:390
+#: ../../session/power/utils.go:391
 msgid "your computer will shut down"
 msgstr "修改为关机"
 
-#: ../../session/power/utils.go:392
+#: ../../session/power/utils.go:393
 msgid "your computer will suspend"
 msgstr "修改为待机"
 
-#: ../../session/power/utils.go:394
+#: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
 msgstr "修改为休眠"
 
-#: ../../session/power/utils.go:396
+#: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
 msgstr "修改为关闭显示器"
 
-#: ../../session/power/utils.go:398
+#: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
 msgstr "修改为无任何操作"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "设置系统时间需要认证"
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "开启或关闭网络时间同步需要认证"
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
 msgstr "修改时间服务器需要认证"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr "设置硬件时钟使用本地时间或 UTC 需要认证"
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
 msgstr "设置系统时区需要认证"

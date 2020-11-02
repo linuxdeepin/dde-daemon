@@ -6,19 +6,19 @@
 # Translators:
 # Yuriy Moskalchuk <termosyura@ukr.net>, 2020
 # Roman <dejitaru.tiger@gmail.com>, 2020
-# Marck Hrin, 2020
 # Cindy0514, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Yuri Chornoivan <yurchor@ukr.net>, 2020
+# Marck Hrin, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-11 15:04+0800\n"
+"POT-Creation-Date: 2020-11-02 16:46+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
+"Last-Translator: Marck Hrin, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,23 +38,27 @@ msgstr ""
 "Пароль має складатися з латинських літер (великі і малі літери вважаються "
 "різними), цифр та спеціальних символів (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
 msgstr "Поле, призначене для імені користувача, не може бути пустим"
 
-#: ../../accounts/checkers/username.go:67
+#: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "Перший символ має бути літерою або цифрою"
 
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Таке ім'я користувача вже існує"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr ""
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
 msgstr "Це ім'я користувача вже використовувалося в системі."
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
 
@@ -136,7 +140,7 @@ msgstr "Скасувати"
 
 #: ../../bluetooth/obex_agent.go:352
 msgid "Receiving %q files from %q"
-msgstr ""
+msgstr "Отримуємо %q файлів з %q"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "View"
@@ -144,13 +148,13 @@ msgstr "Переглянути"
 
 #: ../../bluetooth/obex_agent.go:367
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "Вами успішно отримано файли з %q"
 
 #: ../../bluetooth/obex_agent.go:368
 msgid "Done"
 msgstr "Виконано"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:478
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
 msgstr "Припинити отримання файлів"
 
@@ -176,18 +180,18 @@ msgstr "Передавання файлів Bluetooth"
 
 #: ../../bluetooth/obex_agent.go:428
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "%q хоче надіслати вам файли. Отримати ці файли?"
 
-#: ../../bluetooth/obex_agent.go:479
+#: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
-msgstr ""
+msgstr "Перевищено час очікування на отримання %q"
 
 #: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "Підключення %q успішне"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:359
 msgid "%q disconnected"
 msgstr "%q відключено"
 
@@ -465,7 +469,7 @@ msgstr "Показати вікна поточного робочого прос
 msgid "Display workspace"
 msgstr "Показати робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:210
+#: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
 msgstr "Перемкнути монітори"
 
@@ -588,13 +592,17 @@ msgstr "Успішно налаштовано проксі-сервер прог
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
 #: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202 ../../network/utils_notify.go:304
+#: ../../network/utils_notify.go:202
 msgid "Network"
 msgstr "Мережа"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr "Не вдалося налаштувати проксі-сервер програми"
+
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "Пароль, необхідний для підключення %q"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -958,11 +966,7 @@ msgstr ""
 "Не вдалося з'єднатися із %q. Будь ласка, перевірте, чи працює ваш "
 "маршрутизатор або мережевий кабель."
 
-#: ../../network/state_handler.go:349
-msgid "Password is required to connect %q"
-msgstr "Пароль, необхідний для підключення %q"
-
-#: ../../network/state_handler.go:352
+#: ../../network/state_handler.go:350
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Помилка підключення, неможливо підключити %q, невірний пароль"
 
@@ -1003,10 +1007,6 @@ msgstr "Системний проксі було скасовано."
 msgid "Connected"
 msgstr "Підключено"
 
-#: ../../network/utils_notify.go:304
-msgid "Portal network authentication successful"
-msgstr "Успішне розпізнавання на порталі мережі"
-
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
@@ -1026,44 +1026,44 @@ msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
 "мережі живлення"
 
-#: ../../session/power/utils.go:349 ../../session/power/utils.go:353
-#: ../../session/power/utils.go:357 ../../session/power/utils.go:361
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
 msgstr "Параметри живлення змінено"
 
-#: ../../session/power/utils.go:376
+#: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
 msgstr "Якщо закрито кришку,"
 
-#: ../../session/power/utils.go:380
+#: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
 msgstr "Якщо натиснуто кнопку живлення,"
 
-#: ../../session/power/utils.go:390
+#: ../../session/power/utils.go:391
 msgid "your computer will shut down"
 msgstr "ваш комп'ютер буде вимкнено"
 
-#: ../../session/power/utils.go:392
+#: ../../session/power/utils.go:393
 msgid "your computer will suspend"
 msgstr "ваш комп'ютер буде призупинено"
 
-#: ../../session/power/utils.go:394
+#: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
 msgstr "ваш комп'ютер буде приспано"
 
-#: ../../session/power/utils.go:396
+#: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
 msgstr "монітор буде вимкнено"
 
-#: ../../session/power/utils.go:398
+#: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
 msgstr "ніяких дій із комп'ютером не буде виконано"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "Аутентифікація потрібна для встановлення системного часу."
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1071,11 +1071,11 @@ msgstr ""
 "Аутентифікація необхідна для того, щоб контролювати, чи має бути увімкнено "
 "синхронізацію часу мережі."
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
 msgstr "Для зміни NTP-сервера потрібна автентифікація"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1083,6 +1083,6 @@ msgstr ""
 "Аутентифікація необхідна для контролю того, чи зберігає RTC місцевий або UTC"
 " час ."
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
 msgstr "Аутентифікація потрібна для встановлення системного часового поясу."

@@ -4,24 +4,24 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Vasile Rusu <basil_russu@hotmail.com>, 2020
 # Transifex Bot <>, 2020
 # Анатолий Валерианович <ffox909@mail.ru>, 2020
 # crja72 <crja72@gmail.com>, 2020
 # Serge Kukharski, 2020
 # Cindy0514, 2020
 # Владимир Киреев <vovan_kireev@mail.ru>, 2020
-# Валерий Владимирович, 2020
 # gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2020
+# Basil Russu <basil_russu@hotmail.com>, 2020
+# Валерий Владимирович, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-11 15:04+0800\n"
+"POT-Creation-Date: 2020-11-02 16:46+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2020\n"
+"Last-Translator: Валерий Владимирович, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,23 +41,27 @@ msgstr ""
 "Пароль должен содержать Английские буквы (с учетом регистра), цифры или "
 "специальные символы (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
 msgstr "Имя пользователя не может быть пустым"
 
-#: ../../accounts/checkers/username.go:67
+#: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "Первый символ должен быть буквой или цифрой"
 
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Имя пользователя уже существует."
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr ""
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
 msgstr "Имя пользователя было использовано системой"
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Имя пользователя должно быть длинной 3-32 символа"
 
@@ -139,7 +143,7 @@ msgstr "Отмена"
 
 #: ../../bluetooth/obex_agent.go:352
 msgid "Receiving %q files from %q"
-msgstr ""
+msgstr "Получение %q файлов из %q"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "View"
@@ -147,19 +151,19 @@ msgstr "Просмотр"
 
 #: ../../bluetooth/obex_agent.go:367
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "Получение файлов из %q  успешно завершено"
 
 #: ../../bluetooth/obex_agent.go:368
 msgid "Done"
 msgstr "Готово"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:478
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
-msgstr ""
+msgstr "Остановить получение файлов"
 
 #: ../../bluetooth/obex_agent.go:385
 msgid "You have cancelled the file transfer"
-msgstr ""
+msgstr "Вы прервали процесс отправки файла"
 
 #: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
 msgid "Bluetooth connection failed"
@@ -179,18 +183,18 @@ msgstr "Передача файлов по Bluetooth"
 
 #: ../../bluetooth/obex_agent.go:428
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "%q  хочет отправить вам файлы. Принять?"
 
-#: ../../bluetooth/obex_agent.go:479
+#: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
-msgstr ""
+msgstr "Время получения %q  истекло"
 
 #: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "%q соединено успешно"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:359
 msgid "%q disconnected"
 msgstr "%q отсоединено"
 
@@ -468,7 +472,7 @@ msgstr "Показать окна текущего рабочего стола"
 msgid "Display workspace"
 msgstr "Отобразить рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:210
+#: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
 msgstr "Переключить мониторы"
 
@@ -592,13 +596,17 @@ msgstr "Прокси-сервер приложения успешно устан
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
 #: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202 ../../network/utils_notify.go:304
+#: ../../network/utils_notify.go:202
 msgid "Network"
 msgstr "Сеть"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr "Не удалось установить прокси-сервер приложения"
+
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "Для подключения к %q требуется пароль"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -954,11 +962,7 @@ msgstr ""
 "Не удалось соединить %q, пожалуйста проверьте ваш беспроводной маршрутизатор"
 " или сетевой кабель."
 
-#: ../../network/state_handler.go:349
-msgid "Password is required to connect %q"
-msgstr "Для подключения к %q требуется пароль"
-
-#: ../../network/state_handler.go:352
+#: ../../network/state_handler.go:350
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Не удалось подключиться, не удалось соединить %q, неправильный пароль"
 
@@ -998,10 +1002,6 @@ msgstr "Системный прокси был отменен."
 msgid "Connected"
 msgstr "Подключено"
 
-#: ../../network/utils_notify.go:304
-msgid "Portal network authentication successful"
-msgstr "Проверка подлинности сети прошла успешно"
-
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
@@ -1019,44 +1019,44 @@ msgstr "Критически низкий заряд батареи"
 msgid "Battery low, please plug in"
 msgstr "Низкий заряд батареи, пожалуйста подключите питание"
 
-#: ../../session/power/utils.go:349 ../../session/power/utils.go:353
-#: ../../session/power/utils.go:357 ../../session/power/utils.go:361
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
 msgstr "Настройки питания изменены"
 
-#: ../../session/power/utils.go:376
+#: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
 msgstr "Когда крышка закрыта,"
 
-#: ../../session/power/utils.go:380
+#: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
 msgstr "При нажатии на кнопку питания,"
 
-#: ../../session/power/utils.go:390
+#: ../../session/power/utils.go:391
 msgid "your computer will shut down"
 msgstr "Ваш компьютер выключится"
 
-#: ../../session/power/utils.go:392
+#: ../../session/power/utils.go:393
 msgid "your computer will suspend"
 msgstr "Ваш компьютер перейдет в режим ожидания"
 
-#: ../../session/power/utils.go:394
+#: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
 msgstr "Ваш компьютер будет находится в спящем режиме"
 
-#: ../../session/power/utils.go:396
+#: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
 msgstr "Ваш монитор будет выключен"
 
-#: ../../session/power/utils.go:398
+#: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
 msgstr "Ничего не делать с компьютером"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "Для установки системного времени требуется аутентификация."
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1064,11 +1064,11 @@ msgstr ""
 "Для управления включением синхронизации времени по сети требуется "
 "аутентификация."
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
 msgstr "Для смены NTP-сервера требуется аутентификация"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1076,6 +1076,6 @@ msgstr ""
 "Аутентификация требуется для контроля того, сохраняет ли RTC местное время "
 "или время UTC."
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
 msgstr "Для установки часового пояса системы требуется аутентификация"
