@@ -189,8 +189,6 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 		checkAndEnableBluetoothDevice()
 	}
 
-	a.Powered = powered
-	a.notifyPropertiesChanged()
 	if !powered{
 		for _, dobjlist := range globalBluetooth.devices {
 			for _,device := range dobjlist{

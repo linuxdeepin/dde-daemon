@@ -286,7 +286,8 @@ func (b *Bluetooth) init() {
 
 	b.config.clearSpareConfig(b)
 	b.config.save()
-	RestartBtService()
+	//TODO:暂时屏蔽多用户切换切换的调用，修复重启蓝牙关闭的问题，后面针对此处做兼容性修改
+	//RestartBtService()
 	go b.tryConnectPairedDevices()
 	// move to power module
 	// b.wakeupWorkaround()
