@@ -27,9 +27,9 @@ import (
 
 	"github.com/godbus/dbus"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wfd"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wifi"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	wfd "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wfd"
+	wifi "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wifi"
+	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"pkg.deepin.io/dde/daemon/iw"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
@@ -196,7 +196,7 @@ func (m *Miracast) addObject(objPath dbus.ObjectPath) (interface{}, error) {
 	} else {
 		logger.Debug("add", objPath)
 	}
-	return nil, fmt.Errorf("unknow object objPath: %v", objPath)
+	return nil, fmt.Errorf("unknown object objPath: %v", objPath)
 }
 
 func (m *Miracast) addLinkInfo(objPath dbus.ObjectPath) (*LinkInfo, error) {

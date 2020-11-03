@@ -342,9 +342,9 @@ func (sm *ShortcutManager) grabKeystroke(shortcut Shortcut, ks *Keystroke, dummy
 			// conflict
 			if conflictKeystroke.Shortcut != nil {
 				conflictCount++
-				logger.Debugf("key %v is grabed by %v", key, conflictKeystroke.Shortcut.GetId())
+				logger.Debugf("key %v is grabbed by %v", key, conflictKeystroke.Shortcut.GetId())
 			} else {
-				logger.Warningf("key %v is grabed, conflictKeystroke.Shortcut is nil", key)
+				logger.Warningf("key %v is grabbed, conflictKeystroke.Shortcut is nil", key)
 			}
 			continue
 		}
@@ -476,7 +476,7 @@ func dummyGrab(shortcut Shortcut, ks *Keystroke) bool {
 
 func (sm *ShortcutManager) UngrabAll() {
 	sm.keyKeystrokeMapMu.Lock()
-	// ungrab all grabed keys
+	// ungrab all grabbed keys
 	for key, keystroke := range sm.keyKeystrokeMap {
 		dummy := dummyGrab(keystroke.Shortcut, keystroke)
 		if !dummy {
