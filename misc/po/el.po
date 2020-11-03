@@ -9,18 +9,18 @@
 # Tsvetan Bankov <emerge.life@gmail.com>, 2020
 # Francesko Isallari <francesko1989@gmail.com>, 2020
 # Cindy0514, 2020
-# Jim Gios <jgpers@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # 79353a696ad19dc202b261b3067b7640_bec941e, 2020
+# Jim Gios <jgpers@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-11 15:04+0800\n"
+"POT-Creation-Date: 2020-11-02 16:46+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: 79353a696ad19dc202b261b3067b7640_bec941e, 2020\n"
+"Last-Translator: Jim Gios <jgpers@gmail.com>, 2020\n"
 "Language-Team: Greek (https://www.transifex.com/linuxdeepin/teams/3617/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,23 +40,27 @@ msgstr ""
 "Ο κωδικός πρέπει να περιέχει Αγγλικά γράμματα (case-sensitive), νούμερα ή "
 "εδικά σύμβολα (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
 msgstr "Το όνομα χρήστη δεν μπορεί να είναι κενό"
 
-#: ../../accounts/checkers/username.go:67
+#: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "Ο πρώτος χαρακτήρας πρέπει να είναι γράμμα ή αριθμός"
 
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Το όνομα χρήστη υπάρχει ήδη"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr ""
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
 msgstr "Το όνομα χρήστη έχει χρησιμοποιηθεί από το σύστημα."
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Το όνομα χρήστη πρέπει να έχει μήκος μεταξύ 3-32 χαρακτήρων"
 
@@ -152,7 +156,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:478
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
 msgstr ""
 
@@ -180,7 +184,7 @@ msgstr ""
 msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:479
+#: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
 msgstr ""
 
@@ -189,7 +193,7 @@ msgid "Connect %q successfully"
 msgstr "Σύνδεση %q επιτυχώς"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:359
 msgid "%q disconnected"
 msgstr "Το %q αποσυνδέθηκε"
 
@@ -467,7 +471,7 @@ msgstr "Εμφάνιση παραθύρων του τρέχοντος χώρου
 msgid "Display workspace"
 msgstr "Εμφάνιση χώρου εργασίας"
 
-#: ../../keybinding/shortcuts/id_name_map.go:210
+#: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
 msgstr ""
 
@@ -591,13 +595,17 @@ msgstr ""
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
 #: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202 ../../network/utils_notify.go:304
+#: ../../network/utils_notify.go:202
 msgid "Network"
 msgstr "Δίκτυο"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr ""
+
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "Απαιτείται κωδικός για σύνδεση του %q"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -958,11 +966,7 @@ msgstr ""
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 
-#: ../../network/state_handler.go:349
-msgid "Password is required to connect %q"
-msgstr "Απαιτείται κωδικός για σύνδεση του %q"
-
-#: ../../network/state_handler.go:352
+#: ../../network/state_handler.go:350
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 
@@ -1004,10 +1008,6 @@ msgstr "Ο μεσολάβησης του συστήματος έχει ακυρ�
 msgid "Connected"
 msgstr "Συνδέθηκε"
 
-#: ../../network/utils_notify.go:304
-msgid "Portal network authentication successful"
-msgstr ""
-
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
@@ -1023,59 +1023,59 @@ msgstr "Κρίσιμα χαμηλή μπαταρία"
 msgid "Battery low, please plug in"
 msgstr "Χαμηλή μπαταρία, παρακαλώ συνδέστε"
 
-#: ../../session/power/utils.go:349 ../../session/power/utils.go:353
-#: ../../session/power/utils.go:357 ../../session/power/utils.go:361
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
 msgstr ""
 
-#: ../../session/power/utils.go:376
+#: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
 msgstr ""
 
-#: ../../session/power/utils.go:380
+#: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
 msgstr ""
 
-#: ../../session/power/utils.go:390
+#: ../../session/power/utils.go:391
 msgid "your computer will shut down"
 msgstr ""
 
-#: ../../session/power/utils.go:392
+#: ../../session/power/utils.go:393
 msgid "your computer will suspend"
 msgstr ""
 
-#: ../../session/power/utils.go:394
+#: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:396
+#: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
 msgstr ""
 
-#: ../../session/power/utils.go:398
+#: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "Απαιτείται πιστοποίηση για ορισμό της ώρας του συστήματος"
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
 msgstr "Απαιτείται πιστοποίηση για αλλαγή του NTP διακομιστή"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
 msgstr "Απαιτείται πιστοποίηση για ορισμό της ζώνης ώρας του συστήματος"

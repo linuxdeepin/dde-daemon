@@ -7,17 +7,17 @@
 # Thomas Sungjin Kang <potopro@gmail.com>, 2020
 # Sangmin Lee <sangminlee7648@gmail.com>, 2020
 # Cindy0514, 2020
-# JungHee Lee <daemul72@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
+# JungHee Lee <daemul72@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-11 15:04+0800\n"
+"POT-Creation-Date: 2020-11-02 16:46+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Maggie Liu <maggie.liufei@gmail.com>, 2020\n"
+"Last-Translator: JungHee Lee <daemul72@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/linuxdeepin/teams/3617/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,23 +35,27 @@ msgid ""
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr "비밀번호는 영문자(대소문자 구분), 숫자 또는 특수 기호(~!@#$%^&*()[]{}|/?,.<>)만 포함해야 합니다  "
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
 msgstr "사용자 이름은 비워 둘 수 없습니다"
 
-#: ../../accounts/checkers/username.go:67
+#: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "첫 번째 문자는 문자 또는 숫자여야 합니다."
 
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "사용자 이름이 이미 존재합니다"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr ""
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
 msgstr "사용자 이름이 시스템에서 사용되었습니다"
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "사용자 이름은 3 ~ 32 자 사이 여야합니다"
 
@@ -147,7 +151,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:478
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
 msgstr ""
 
@@ -175,7 +179,7 @@ msgstr ""
 msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:479
+#: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
 msgstr ""
 
@@ -184,7 +188,7 @@ msgid "Connect %q successfully"
 msgstr "%q 연결 성공"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:359
 msgid "%q disconnected"
 msgstr "%q 연결 끊김"
 
@@ -462,7 +466,7 @@ msgstr "현재 작업공간의 창 표시"
 msgid "Display workspace"
 msgstr "작업공간 표시"
 
-#: ../../keybinding/shortcuts/id_name_map.go:210
+#: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
 msgstr "모니터 전환"
 
@@ -581,13 +585,17 @@ msgstr ""
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
 #: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202 ../../network/utils_notify.go:304
+#: ../../network/utils_notify.go:202
 msgid "Network"
 msgstr "네트워크"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr ""
+
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "%q을(를) 연결하려면 비밀번호가 필요합니다"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -938,11 +946,7 @@ msgstr "%q을(를) 연결할 수 없습니다. 무선 라우터에 가까이 있
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%q을(를) 연결할 수 없습니다. 라우터 또는 인터넷 케이블을 확인하십시오."
 
-#: ../../network/state_handler.go:349
-msgid "Password is required to connect %q"
-msgstr "%q을(를) 연결하려면 비밀번호가 필요합니다"
-
-#: ../../network/state_handler.go:352
+#: ../../network/state_handler.go:350
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "연결 실패, %q을(를) 연결할 수 없습니다. 비밀번호가 잘못되었습니다"
 
@@ -981,10 +985,6 @@ msgstr "시스템 프록시가 취소되었습니다."
 msgid "Connected"
 msgstr "연결됨"
 
-#: ../../network/utils_notify.go:304
-msgid "Portal network authentication successful"
-msgstr ""
-
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
@@ -1000,59 +1000,59 @@ msgstr "배터리 잔량 부족"
 msgid "Battery low, please plug in"
 msgstr "배터리 부족,. 전원을 연결하세요"
 
-#: ../../session/power/utils.go:349 ../../session/power/utils.go:353
-#: ../../session/power/utils.go:357 ../../session/power/utils.go:361
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
 msgstr "전원 설정이 변경됨"
 
-#: ../../session/power/utils.go:376
+#: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
 msgstr "뚜껑이 닫히면, "
 
-#: ../../session/power/utils.go:380
+#: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
 msgstr "전원 버튼을 누르면, "
 
-#: ../../session/power/utils.go:390
+#: ../../session/power/utils.go:391
 msgid "your computer will shut down"
 msgstr "컴퓨터가 종료됩니다"
 
-#: ../../session/power/utils.go:392
+#: ../../session/power/utils.go:393
 msgid "your computer will suspend"
 msgstr "컴퓨터는 대기모드 상태가 됩니다"
 
-#: ../../session/power/utils.go:394
+#: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
 msgstr "컴퓨터가 최대 절전 모드임"
 
-#: ../../session/power/utils.go:396
+#: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
 msgstr "모니터가 꺼집니다"
 
-#: ../../session/power/utils.go:398
+#: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
 msgstr "그것은 당신의 컴퓨터에 아무 도움도 되지 않을 것입니다"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "시스템 시간을 설정하려면 인증이 필요합니다"
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "네트워크 시간 동기화를 활성화할지 여부를 제어하려면 인증이 필요합니다"
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
 msgstr "NTP 서버를 변경하려면 인증이 필요함"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr "RTC가 로컬 또는 UTC 시간을 저장하는지 제어하려면 인증이 필요합니다"
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
 msgstr "시스템 시간대를 설정하려면 인증이 필요합니다"

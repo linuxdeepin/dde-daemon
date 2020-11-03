@@ -9,25 +9,25 @@
 # Luis Castillo <castilloluis2005@gmail.com>, 2020
 # efedezeta <pocodance@gmail.com>, 2020
 # deepin_transifex <xiabin@linuxdeepin.com>, 2020
-# Alejandro Hamann <linkstat@gmail.com>, 2020
-# Alvaro Samudio <alvarosamudio@protonmail.com>, 2020
+# Pablo Alejandro Hamann <linkstat@gmail.com>, 2020
 # jhalo <jhalo@protonmail.com>, 2020
 # Diego Sanguinetti, 2020
 # Tomás Warynyca <tomas.warynyca@outlook.com>, 2020
 # Cindy0514, 2020
 # Zaraza, 2020
 # Martín Josemaría <martin.vuelta@gmail.com>, 2020
-# Isaías Gätjens M <igatjens@gmail.com>, 2020
 # jose luis <josemdance@outlook.com>, 2020
+# Alvaro Samudio <alvarosamudio@protonmail.com>, 2020
+# Isaías Gätjens M <igatjens@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-11 15:04+0800\n"
+"POT-Creation-Date: 2020-11-02 16:46+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: jose luis <josemdance@outlook.com>, 2020\n"
+"Last-Translator: Isaías Gätjens M <igatjens@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/linuxdeepin/teams/3617/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,23 +47,27 @@ msgstr ""
 "En la contraseña solo use letras sin tilde (distingue mayúsculas y "
 "minúsculas), números o símbolos especiales (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
 msgstr "El nombre de usuario no puede estar vacío"
 
-#: ../../accounts/checkers/username.go:67
+#: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "El primer carácter debe ser una letra o número"
 
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "El nombre de usuario ya existe"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr ""
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
 msgstr "El nombre de usuario ha sido usado por el sistema"
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nombre de usuario debe tener entre 3 y 32 caracteres"
 
@@ -145,7 +149,7 @@ msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:352
 msgid "Receiving %q files from %q"
-msgstr ""
+msgstr "Recibiendo %q archivos de %q"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "View"
@@ -153,19 +157,19 @@ msgstr "Ver"
 
 #: ../../bluetooth/obex_agent.go:367
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "Archivos recibidos exitósamente de %q"
 
 #: ../../bluetooth/obex_agent.go:368
 msgid "Done"
-msgstr ""
+msgstr "Finalizar"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:478
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
-msgstr ""
+msgstr "Detener recepción de archivos"
 
 #: ../../bluetooth/obex_agent.go:385
 msgid "You have cancelled the file transfer"
-msgstr ""
+msgstr "Transferencia de archivos cancelada"
 
 #: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
 msgid "Bluetooth connection failed"
@@ -185,18 +189,18 @@ msgstr "Transferencia de archivo por Bluetooth"
 
 #: ../../bluetooth/obex_agent.go:428
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "%q está enviándole archivos. ¿Quiere recibirlos?"
 
-#: ../../bluetooth/obex_agent.go:479
+#: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
-msgstr ""
+msgstr "%q no responde"
 
 #: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "Conectado a %q con éxito"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:359
 msgid "%q disconnected"
 msgstr "%q desconectado"
 
@@ -474,7 +478,7 @@ msgstr "Mostrar ventanas del espacio de trabajo actual"
 msgid "Display workspace"
 msgstr "Mostrar espacio de trabajo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:210
+#: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
 msgstr "Cambiar entre monitores"
 
@@ -592,18 +596,22 @@ msgstr "Conexión cableada"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
-msgstr ""
+msgstr "Proxy de aplicaciones configurado exitósamente"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
 #: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202 ../../network/utils_notify.go:304
+#: ../../network/utils_notify.go:202
 msgid "Network"
 msgstr "Red"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
-msgstr ""
+msgstr "La configuración del proxy de aplicaciones falló"
+
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "Se requiere contraseña para conectarse %q"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -970,11 +978,7 @@ msgstr ""
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "No se puede conectar %q, compruebe su enrutador o cable de red."
 
-#: ../../network/state_handler.go:349
-msgid "Password is required to connect %q"
-msgstr "Se requiere contraseña para conectarse %q"
-
-#: ../../network/state_handler.go:352
+#: ../../network/state_handler.go:350
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Error en la conexión, no se puede conectar %q, contraseña incorrecta"
 
@@ -1015,10 +1019,6 @@ msgstr "El proxy del sistema ha sido cancelado."
 msgid "Connected"
 msgstr "Conectado"
 
-#: ../../network/utils_notify.go:304
-msgid "Portal network authentication successful"
-msgstr "Autenticación del portal de red exitosa"
-
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
@@ -1036,44 +1036,44 @@ msgstr "Batería críticamente baja"
 msgid "Battery low, please plug in"
 msgstr "Batería baja, por favor, conéctela"
 
-#: ../../session/power/utils.go:349 ../../session/power/utils.go:353
-#: ../../session/power/utils.go:357 ../../session/power/utils.go:361
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
 msgstr "Modificar configuraciones de energía"
 
-#: ../../session/power/utils.go:376
+#: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
 msgstr "Cuando la tapa está cerrada,"
 
-#: ../../session/power/utils.go:380
+#: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
 msgstr "Al presionar el botón de encendido,"
 
-#: ../../session/power/utils.go:390
+#: ../../session/power/utils.go:391
 msgid "your computer will shut down"
 msgstr "su equipo se apagará"
 
-#: ../../session/power/utils.go:392
+#: ../../session/power/utils.go:393
 msgid "your computer will suspend"
 msgstr "su equipo se suspenderá"
 
-#: ../../session/power/utils.go:394
+#: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
 msgstr "su equipo hibernará"
 
-#: ../../session/power/utils.go:396
+#: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
 msgstr "su monitor se apagará"
 
-#: ../../session/power/utils.go:398
+#: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
 msgstr "no cambiará nada a su equipo"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "Se requiere autenticación para configurar la hora del sistema"
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1081,11 +1081,11 @@ msgstr ""
 "Se requiere autenticación para controlar la sincronización de la hora por "
 "red si está activada"
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
 msgstr "Se requiere autenticación para cambiar el servidor NTP"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1093,7 +1093,7 @@ msgstr ""
 "Se requiere autenticación para controlar si el RTC almacena la hora local o "
 "UTC."
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
 msgstr ""
 "Se requiere autenticación para configurar la zona horaria del sistema."

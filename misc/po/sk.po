@@ -7,17 +7,17 @@
 # fasier <matus.ravas@outlook.com>, 2020
 # Microtus <hrabosmartin@gmail.com>, 2020
 # Cindy0514, 2020
-# Jozef Gaal <preklady@mayday.sk>, 2020
 # Marek Bujko <marek.bujko@gmail.com>, 2020
+# Jozef Gaal <preklady@mayday.sk>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-11 15:04+0800\n"
+"POT-Creation-Date: 2020-11-02 16:46+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Marek Bujko <marek.bujko@gmail.com>, 2020\n"
+"Last-Translator: Jozef Gaal <preklady@mayday.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/linuxdeepin/teams/3617/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,23 +37,27 @@ msgstr ""
 "Heslo musí obsahovať písmená anglickej abecedy (veľké a malé písmená), "
 "číslice alebo špeciálne znaky (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
 msgstr "Užívateľské meno nemôže byť prázdne"
 
-#: ../../accounts/checkers/username.go:67
+#: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "Prvý znak musí byť písmeno alebo číslo"
 
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Meno používateľa už existuje"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr ""
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
 msgstr "Meno používateľa už je používané v systéme"
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Používateľské meno musí mať 3 až 32 znakov"
 
@@ -149,7 +153,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:478
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
 msgstr ""
 
@@ -177,7 +181,7 @@ msgstr ""
 msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:479
+#: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
 msgstr ""
 
@@ -186,7 +190,7 @@ msgid "Connect %q successfully"
 msgstr "Pripojenie k %q úspešné"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:359
 msgid "%q disconnected"
 msgstr "%q odpojený"
 
@@ -464,7 +468,7 @@ msgstr "Zobraziť okná z aktuálného pracovného prostredia"
 msgid "Display workspace"
 msgstr "Pracovné prostredie"
 
-#: ../../keybinding/shortcuts/id_name_map.go:210
+#: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
 msgstr ""
 
@@ -587,13 +591,17 @@ msgstr ""
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
 #: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202 ../../network/utils_notify.go:304
+#: ../../network/utils_notify.go:202
 msgid "Network"
 msgstr "Sieť"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr ""
+
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "Na pripojenie k %q je potrebné heslo"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -952,11 +960,7 @@ msgstr ""
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Nepodarilo sa pripojiť %q, skontrolujte router alebo sieťový kábel."
 
-#: ../../network/state_handler.go:349
-msgid "Password is required to connect %q"
-msgstr "Na pripojenie k %q je potrebné heslo"
-
-#: ../../network/state_handler.go:352
+#: ../../network/state_handler.go:350
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Pripojenie zlyhalo, nemôžem pripojiť %q, nesprávne heslo"
 
@@ -995,10 +999,6 @@ msgstr "System proxy bolo zrušené. "
 msgid "Connected"
 msgstr "Pripojené"
 
-#: ../../network/utils_notify.go:304
-msgid "Portal network authentication successful"
-msgstr ""
-
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
@@ -1014,54 +1014,54 @@ msgstr "Kriticky nízka úroveň batérie"
 msgid "Battery low, please plug in"
 msgstr "Vybitá batéria, prosím pripojte kábel napájania"
 
-#: ../../session/power/utils.go:349 ../../session/power/utils.go:353
-#: ../../session/power/utils.go:357 ../../session/power/utils.go:361
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
 msgstr "Nastavenia napájania boli zmenené"
 
-#: ../../session/power/utils.go:376
+#: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
 msgstr "Po zatvorení veka,"
 
-#: ../../session/power/utils.go:380
+#: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
 msgstr "Po stlačení tlačidla vypnutia,"
 
-#: ../../session/power/utils.go:390
+#: ../../session/power/utils.go:391
 msgid "your computer will shut down"
 msgstr "sa váš počítač vypne"
 
-#: ../../session/power/utils.go:392
+#: ../../session/power/utils.go:393
 msgid "your computer will suspend"
 msgstr "váš počítač prejde do režimu pozastavenia"
 
-#: ../../session/power/utils.go:394
+#: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:396
+#: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
 msgstr "váš monitor sa vypne"
 
-#: ../../session/power/utils.go:398
+#: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
 msgstr "váš počítač nespraví nič"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "Na nastavenie systémového času je potrebné overenie"
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "Je potrebné overiť, či je zapnutá synchronizácia času v sieti"
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
 msgstr "Na zmenu NTP servera je potrebné overenie"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1069,6 +1069,6 @@ msgstr ""
 "Autentifikácia je potrebná na kontrolu, či RTC ukladá miestny čas alebo čas "
 "UTC"
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
 msgstr "Na nastavenie časového pásma systému je potrebné overenie"

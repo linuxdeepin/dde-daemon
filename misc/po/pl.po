@@ -7,20 +7,20 @@
 # Marcin Pianka <marcin.pianka@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Wiktor Jezioro <wikjezioro@op.pl>, 2020
-# Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2020
 # Pyroxar <kacper-paczos@linux.pl>, 2020
 # Cindy0514, 2020
-# Marcin Kozioł <koziol.martin@gmail.com>, 2020
 # Piotr Strębski <strebski@gmail.com>, 2020
+# Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2020
+# Marcin Kozioł <koziol.martin@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-11 15:04+0800\n"
+"POT-Creation-Date: 2020-11-02 16:46+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2020\n"
+"Last-Translator: Marcin Kozioł <koziol.martin@gmail.com>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/linuxdeepin/teams/3617/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,23 +40,27 @@ msgstr ""
 "Hasło musi zawierać litery alfabetu angielskiego (uwzględniając wielkie "
 "litery), cyfry lub znaki specjalne (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
 msgstr "Nazwa użytkownika nie może być pusta"
 
-#: ../../accounts/checkers/username.go:67
+#: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "Pierwszy znak musi być literą lub cyfrą"
 
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Nazwa użytkownika już istnieje"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr ""
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
 msgstr "Nazwa użytkownika jest używana przez system."
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nazwa użytkownika musi mieć od 3 do 32 znaków"
 
@@ -138,7 +142,7 @@ msgstr "Anuluj"
 
 #: ../../bluetooth/obex_agent.go:352
 msgid "Receiving %q files from %q"
-msgstr ""
+msgstr "Odbieranie plików %q z %q"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "View"
@@ -146,19 +150,19 @@ msgstr "Podgląd"
 
 #: ../../bluetooth/obex_agent.go:367
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "Pomyślnie otrzymałeś pliki od %q"
 
 #: ../../bluetooth/obex_agent.go:368
 msgid "Done"
-msgstr ""
+msgstr "Gotowe"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:478
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
-msgstr ""
+msgstr "Zatrzymaj odbieranie plików"
 
 #: ../../bluetooth/obex_agent.go:385
 msgid "You have cancelled the file transfer"
-msgstr ""
+msgstr "Anulowałeś przesyłanie plików"
 
 #: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
 msgid "Bluetooth connection failed"
@@ -178,18 +182,18 @@ msgstr "Transfer pliku Bluetooth"
 
 #: ../../bluetooth/obex_agent.go:428
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "%q chce wysłać do Ciebie pliki. Odebrać?"
 
-#: ../../bluetooth/obex_agent.go:479
+#: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
-msgstr ""
+msgstr "Upłynął limit czasu odbioru %q"
 
 #: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "Połączenie %q gotowe. "
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:359
 msgid "%q disconnected"
 msgstr "%q jest rozłączone"
 
@@ -468,7 +472,7 @@ msgstr "Wyświetl okna z bieżącej przestrzeni roboczej"
 msgid "Display workspace"
 msgstr "Wyświetl przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:210
+#: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
 msgstr "Przełącz monitory"
 
@@ -586,18 +590,22 @@ msgstr "Połączenie przewodowe"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
-msgstr ""
+msgstr "Serwer proxy aplikacji został pomyślnie ustawiony"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
 #: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202 ../../network/utils_notify.go:304
+#: ../../network/utils_notify.go:202
 msgid "Network"
 msgstr "Sieć"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
-msgstr ""
+msgstr "Nie udało się ustawić serwera proxy aplikacji"
+
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "Aby połączyć się z %q wymagane jest hasło"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -958,11 +966,7 @@ msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nie można połączyć z %q, prosimy sprawdzić swój router lub kabel sieciowy."
 
-#: ../../network/state_handler.go:349
-msgid "Password is required to connect %q"
-msgstr "Aby połączyć się z %q wymagane jest hasło"
-
-#: ../../network/state_handler.go:352
+#: ../../network/state_handler.go:350
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Połączenie nie powiodło się, nie można połączyć z %q, złe hasło"
 
@@ -1003,10 +1007,6 @@ msgstr "Pośrednik systemu został anulowany."
 msgid "Connected"
 msgstr "Połączono"
 
-#: ../../network/utils_notify.go:304
-msgid "Portal network authentication successful"
-msgstr "Pomyślne uwierzytelnienie sieciowe portalu"
-
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
@@ -1024,44 +1024,44 @@ msgstr "Krytycznie niski poziom baterii"
 msgid "Battery low, please plug in"
 msgstr "Niski stan baterii, prosimy podłączyć do zasilania"
 
-#: ../../session/power/utils.go:349 ../../session/power/utils.go:353
-#: ../../session/power/utils.go:357 ../../session/power/utils.go:361
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
 msgstr "Ustawienia zasilania uległy zmianie"
 
-#: ../../session/power/utils.go:376
+#: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
 msgstr "Kiedy pokrywa jest zamknięta,"
 
-#: ../../session/power/utils.go:380
+#: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
 msgstr "Po naciśnięciu przycisku zasilania,"
 
-#: ../../session/power/utils.go:390
+#: ../../session/power/utils.go:391
 msgid "your computer will shut down"
 msgstr "twój komputer zostanie zamknięty"
 
-#: ../../session/power/utils.go:392
+#: ../../session/power/utils.go:393
 msgid "your computer will suspend"
 msgstr "Twój komputer zawiesi się"
 
-#: ../../session/power/utils.go:394
+#: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
 msgstr "komputer przejdzie w stan hibernacji"
 
-#: ../../session/power/utils.go:396
+#: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
 msgstr "monitor wyłączy się"
 
-#: ../../session/power/utils.go:398
+#: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
 msgstr "nie zrobi nic z twoim komputerem"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "Aby ustawić czas systemowy wymagane jest uwierzytelnienie."
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1069,11 +1069,11 @@ msgstr ""
 "Aby kontrolować włączenie synchronizacji z czasu sieciowego wymagane jest "
 "uwierzytelnienie"
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
 msgstr "Uwierzytelnienie jest wymagane do zmiany serwera NTP"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1081,6 +1081,6 @@ msgstr ""
 "Aby kontrolować zasoby lokalne RTC lub czas UTC konieczne jest "
 "uwierzytelnienie."
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
 msgstr "Aby ustawić strefę czasową systemu wymagane jest uwierzytelnienie"
