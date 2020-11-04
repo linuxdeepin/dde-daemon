@@ -104,6 +104,7 @@ func (m *Mouse) init() {
 	m.enableAdaptiveAccelProfile()
 	m.motionAcceleration()
 	m.motionThreshold()
+	m.syncConfigToXsettings()
 	if m.DisableTpad.Get() {
 		m.disableTouchPad()
 	}
@@ -269,4 +270,8 @@ func (m *Mouse) doubleClick() {
 
 func (m *Mouse) dragThreshold() {
 	xsSetInt32(xsPropDragThres, m.DragThreshold.Get())
+}
+
+func (m *Mouse) syncConfigToXsettings() {
+	m.doubleClick() // 初始化时,将默认配置同步到xsettings中
 }
