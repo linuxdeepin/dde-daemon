@@ -120,8 +120,8 @@ func checkDependencies(s *gio.Settings, module loader.Module, enabled bool) erro
 			continue
 		}
 
-		if m.IsEnable() == true && isStrInList(module.Name(), m.GetDependencies()) {
-			return fmt.Errorf("Can not diable this module '%s', because of it was depended by'%s'",
+		if m.IsEnable() && isStrInList(module.Name(), m.GetDependencies()) {
+			return fmt.Errorf("Can not disable this module '%s', because of it was depended by'%s'",
 				module.Name(), m.Name())
 		}
 	}
