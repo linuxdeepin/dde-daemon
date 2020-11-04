@@ -46,7 +46,6 @@ case "$1" in
     fi
     linkJavaFallbackFont
     prepareGfxmodeDetect
-    pam-auth-update --package
     ;;
     triggered)
     if [ -f /usr/share/fcitx/addon/fcitx-xkb.conf ];then
