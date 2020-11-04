@@ -170,7 +170,7 @@ export GOPATH="$(pwd)/build:%{gopath}"
 %else
 export GOPATH=/usr/share/gocode
 %endif
-%make_install PAM_MODULE_DIR=%{_libdir}/security GOBUILD="go build -compiler gc -ldflags \"-B $BUILDID\""
+%make_install GOBUILD="go build -compiler gc -ldflags \"-B $BUILDID\""
 
 # fix systemd/logind config
 install -d %{buildroot}/usr/lib/systemd/logind.conf.d/
@@ -212,7 +212,6 @@ fi
 %license LICENSE
 %{_sysconfdir}/default/grub.d/10_deepin.cfg
 %{_sysconfdir}/grub.d/35_deepin_gfxmode
-%{_sysconfdir}/pam.d/deepin-auth
 %{_sysconfdir}/pam.d/deepin-auth-keyboard
 %{_sysconfdir}/NetworkManager/conf.d/deepin.dde.daemon.conf
 %{_sysconfdir}/modules-load.d/i2c_dev.conf
@@ -234,9 +233,7 @@ fi
 %dir %{_sysconfdir}/pulse/daemon.conf.d
 %{_sysconfdir}/pulse/daemon.conf.d/10-deepin.conf
 %{_udevrulesdir}/80-deepin-fprintd.rules
-%{_datadir}/pam-configs/deepin-auth
 %{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla
-%{_libdir}/security/pam_deepin_auth.so
 %{_unitdir}/dbus-com.deepin.dde.lockservice.service
 %{_unitdir}/deepin-accounts-daemon.service
 %{_unitdir}/hwclock_stop.service
