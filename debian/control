@@ -41,11 +41,9 @@ Build-Depends:
  libfontconfig1-dev,
  libinput-dev,
  libxcb1-dev,libxcb-record0-dev,
- libpam-dev,
  deepin-gettext-tools,
  libnl-3-dev,
  libnl-genl-3-dev,
- libsystemd-dev,
  deepin-desktop-schemas,
  python3,
  librsvg2-bin

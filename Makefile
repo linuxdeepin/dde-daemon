@@ -37,10 +37,6 @@ out/bin/default-file-manager: bin/default-file-manager/main.c
 out/bin/desktop-toggle: bin/desktop-toggle/main.c
 	gcc $^ $(shell pkg-config --cflags --libs x11) -o $@
 
-out/pam_deepin_auth.so: misc/pam-module/deepin_auth.c
-	gcc -fPIC -shared -Wall $(shell pkg-config --libs libsystemd) -o $@ $^
-	chmod -x $@
-
 out/locale/%/LC_MESSAGES/dde-daemon.mo: misc/po/%.po
 	mkdir -p $(@D)
 	msgfmt -o $@ $<
@@ -61,12 +57,12 @@ ts_to_policy:
 	deepin-policy-ts-convert ts2policy misc/polkit-action/com.deepin.daemon.$$i.policy.in misc/ts/com.deepin.daemon.$$i.policy misc/polkit-action/com.deepin.daemon.$$i.policy; \
 	done
 
-build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle out/pam_deepin_auth.so $(addprefix out/bin/, ${BINARIES}) ts_to_policy
+build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle $(addprefix out/bin/, ${BINARIES}) ts_to_policy
 
 test: prepare
 	env GOPATH="${GOPATH}:${CURDIR}/${GOPATH_DIR}" go test -v ./...
 
-install: build translate install-dde-data install-icons install-pam-module
+install: build translate install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
 	cp out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 
@@ -88,9 +84,6 @@ install: build translate install-dde-data install-icons install-pam-module
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde-daemon
 	cp -r misc/dde-daemon/*   ${DESTDIR}${PREFIX}/share/dde-daemon/
-
-	mkdir -pv ${DESTDIR}${PREFIX}/share/pam-configs
-	cp -r misc/pam-configs/* ${DESTDIR}${PREFIX}/share/pam-configs
 
 	mkdir -pv ${DESTDIR}/var/cache/appearance
 	cp -r misc/thumbnail ${DESTDIR}/var/cache/appearance/
@@ -118,16 +111,12 @@ install: build translate install-dde-data install-icons install-pam-module
 
 	mkdir -pv ${DESTDIR}/lib/udev/rules.d
 	cp -f misc/udev-rules/*.rules ${DESTDIR}/lib/udev/rules.d/
-	
+
 	mkdir -pv ${DESTDIR}/usr/lib/deepin-daemon/service-trigger
 	cp -f misc/service-trigger/*.json ${DESTDIR}/usr/lib/deepin-daemon/service-trigger/
 
 	mkdir -pv ${DESTDIR}/etc/modules-load.d
 	cp -f misc/modules-load/i2c_dev.conf ${DESTDIR}/etc/modules-load.d/
-
-install-pam-module:
-	mkdir -pv ${DESTDIR}/${PAM_MODULE_DIR}
-	cp -f out/pam_deepin_auth.so ${DESTDIR}/${PAM_MODULE_DIR}
 
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
