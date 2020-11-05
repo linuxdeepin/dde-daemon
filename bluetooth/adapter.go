@@ -199,6 +199,8 @@ func (a *adapter) connectProperties() {
 				err = a.core.StopDiscovery(0)
 				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
 				globalBluetooth.tryConnectPairedDevices()
+
+				a.discoveringTimeoutFlag = false
 				// start discovery
 				err = a.core.StartDiscovery(0)
 				if err != nil {
@@ -264,6 +266,7 @@ func (a *adapter) connectProperties() {
 	}
 }
 func (a *adapter) startDiscovery() {
+	a.discoveringTimeoutFlag = false
 	err := a.core.StartDiscovery(0)
 	if err != nil {
 		logger.Warningf("failed to start discovery for %s: %v", a, err)
