@@ -249,7 +249,7 @@ func (m *Manager) ListenGlobalCursorMove() error {
 				hasPress = true
 			}
 
-			logger.Debug("[test global cursor] get CursorMove", x, y)
+			//logger.Debug("[test global cursor] get CursorMove", x, y)
 			m.handleCursorEvent(int32(x), int32(y), hasPress)
 		}
 	})
@@ -414,7 +414,7 @@ func (m *Manager) handleXEvent() {
 						return
 					}
 					e, _ := input.NewRawButtonPressEvent(geEvent.Data)
-					logger.Debug("----button-press--value---", int32(e.Detail))
+					//logger.Debug("----button-press--value---", int32(e.Detail))
 					qpReply, err := m.queryPointer()
 					if err != nil {
 						logger.Warning(err)
@@ -428,7 +428,7 @@ func (m *Manager) handleXEvent() {
 						return
 					}
 					e, _ := input.NewRawButtonReleaseEvent(geEvent.Data)
-					logger.Debug("----button-release--value---", int32(e.Detail))
+					//logger.Debug("----button-release--value---", int32(e.Detail))
 					qpReply, err := m.queryPointer()
 					if err != nil {
 						logger.Warning(err)

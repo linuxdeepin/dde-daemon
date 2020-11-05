@@ -184,7 +184,14 @@ func (psp *powerSavePlan) Start() error {
 	screenSaver := helper.ScreenSaver
 	//OnBattery changed will effect current PowerSavePlan
 	err := power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
-		psp.handleOnBatteryChanged()
+		pspEnable, _ := power.PowerSavingModeEnabled().Get(0)
+		pspEnableBatteryLow, _ := power.PowerSavingModeAutoWhenBatteryLow().Get(0)
+		pspEnableAuto, _ := power.PowerSavingModeAuto().Get(0)
+		//logger.Debug("<spspEnable>", pspEnable, "<pspEnableBatteryLow>", pspEnableBatteryLow, "<pspEnableAuto>", pspEnableAuto)
+		if !pspEnable && !pspEnableAuto && !pspEnableBatteryLow {
+			psp.handleOnBatteryChanged()
+			logger.Debug("AC/DC recovery in psp closed")
+		}
 		psp.Reset()
 	})
 	if err != nil {
