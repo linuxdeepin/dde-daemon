@@ -321,6 +321,22 @@ func watchNetworkManagerRestart(m *Manager) {
 	}
 }
 
+
+func (m *Manager) InitWirelessDeviceState(){
+	m.devicesLock.Lock()
+	defer m.devicesLock.Unlock()
+	for _, devs := range m.devices {
+		for _, dev := range devs {
+			
+			if dev.nmDevType==nm.NM_DEVICE_TYPE_WIFI{
+				m.wirelessEnabled,_ = m.IsDeviceEnabled(dev.Path)
+			}
+			
+		}
+	}
+}
+
+
 func (m *Manager) initSysNetwork(sysBus *dbus.Conn) {
 	m.sysNetwork = sysNetwork.NewNetwork(sysBus)
 	m.sysNetwork.InitSignalExt(m.sysSigLoop, true)
@@ -328,13 +344,18 @@ func (m *Manager) initSysNetwork(sysBus *dbus.Conn) {
 	if err != nil {
 		logger.Warning(err)
 	}
+	
+	m.InitWirelessDeviceState()
 
+	/*
 	_, err = m.sysNetwork.ConnectDeviceEnabled(func(devPath dbus.ObjectPath, enabled bool) {
+		logger.Debug("\n############3Emit DeviceEnabled#########3\n",string(devPath), enabled)
 		err := m.service.Emit(manager, "DeviceEnabled", string(devPath), enabled)
 		if err != nil {
 			logger.Warning(err)
 		}
 	})
+	*/
 	if err != nil {
 		logger.Warning(err)
 	}

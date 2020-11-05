@@ -191,7 +191,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 	case nm.NM_DEVICE_TYPE_WIFI:
 		nmDevWireless := nmDev.Wireless()
 		dev.ClonedAddress, _ = nmDevWireless.HwAddress().Get(0)
-		dev.HwAddress, _ = nmDevWireless.PermHwAddress().Get(0)
+		dev.HwAddress, _ = nmDevWireless.PermHwAddress().Get(0)		
 
 		// connect property, about wireless active access point
 		err = nmDevWireless.ActiveAccessPoint().ConnectChanged(func(hasValue bool,
@@ -461,6 +461,22 @@ func (m *Manager) IsDeviceEnabled(devPath dbus.ObjectPath) (bool, *dbus.Error) {
 	return b, dbusutil.ToError(err)
 }
 
+func (m *Manager) IsDeviceWireless(devPath dbus.ObjectPath) (bool) {
+	for _, devs := range m.devices {
+		for _, dev := range devs {
+			if dev.Path == devPath {
+				if dev.nmDevType==nm.NM_DEVICE_TYPE_WIFI{
+					return true
+				}
+			}
+		}
+	}
+	logger.Warning("can not find devPath in deviceslist")
+	//default return wire type of false
+	return false
+
+}
+
 // 飞行模式下，第一次wifi回连失败，则去10s轮询是否有可用的热点，然后继续回连
 func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 	for i := 0; i < 10; i++ {
@@ -485,39 +501,56 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 }
 
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
-	logger.Info("call EnableDevice in session", devPath, enabled)
-	err := m.enableDevice(devPath, enabled,true)
+	//wireless switch handle here to be compatible for f9 control
+	if m.IsDeviceWireless(devPath){
 	
-	/*
-	飞行模式没有调用此处的接口，屏蔽此概率可能会导致wifi开关异常代码
-	// 特殊情况：飞行模式开启和关闭的时候，开启wifi模块，会出现回连失败
-	
-	if err != nil {
-		// 回连失败，起个线程，在未来的10s内自动回连
-		if enabled{
-			go m.doAutoConnect(devPath)
+		if enabled!=m.wirelessEnabled{
+			m.wirelessEnabled = enabled
+			err := m.enableDevice(devPath, enabled,true)
+			if err != nil {
+				return dbusutil.ToError(err)
+			}
+			if enabled{
+				time.AfterFunc(5*time.Second,func(){
+					logger.Debug("enable wireles_Device and RequestWirelessScan")
+					m.RequestWirelessScan()
+				})
+			}
+			return dbusutil.ToError(err)
+		}
+
+	}else{
+		err := m.enableDevice(devPath, enabled,true)
+		if err != nil {
+			return dbusutil.ToError(err)
 		}
 	}
-	*/
-	return dbusutil.ToError(err)
+	return nil
 }
 
 func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate bool) (err error) {
+	logger.Info("call EnableDevice in session", devPath, enabled)
 	cpath, err := m.sysNetwork.EnableDevice(0, string(devPath), enabled)
 	if err != nil {
-		return
+		logger.Warning("EnableDevice:",err)
+		return err
+	}
+	//emit DeviceEnabled singal here,do not use system signal
+	err = m.service.Emit(manager, "DeviceEnabled", string(devPath), enabled)
+	if err != nil {
+		logger.Warning(err)
 	}
 	// check if need activate connection
 	if enabled && activate {
 		var uuid string
-		//回连之前获取回连热点数据,若没有,则直接返回
+	
 		_,err =nmGetConnectionData(cpath)
 		if err != nil {
 			return nil
 		}
 		uuid, err = nmGetConnectionUuid(cpath)
 		if err != nil {
-			return
+			return err
 		}
 		m.ActivateConnection(uuid, devPath)
 	}
@@ -614,6 +647,66 @@ func (m *Manager) listDeviceConnections(devPath dbus.ObjectPath) ([]dbus.ObjectP
 	return availableConnections, nil
 }
 
+func (m *Manager) UpdateWirelessAccessPoints() (err error) {
+	
+	wirelessAccessPoints := make(map[dbus.ObjectPath][]*accessPoint)
+	if devices, ok := m.devices[deviceWifi]; ok {
+		for _, dev := range devices {
+			
+			//每一次扫描就获取每个热点是否存在相对应的uuid配置
+			accessPoints := m.getAccessPointsByPath(dev.Path)
+			wirelessconnections := m.connections[deviceWifi]
+			for _, accessPoint := range accessPoints {
+				for _, connectiondata := range wirelessconnections {
+					if connectiondata.Ssid == accessPoint.Ssid {
+						accessPoint.Uuid = connectiondata.Uuid
+					}
+
+				}
+			}
+
+			statustmp,_:=m.IsDeviceEnabled(dev.Path)
+			
+			if !statustmp && accessPoints ==nil{
+			 	return nil
+			}
+			wirelessAccessPoints[dev.Path] = accessPoints
+		}
+	}
+	
+	wirelessAccessPointsJson, err := json.Marshal(wirelessAccessPoints)
+	if err != nil {
+		logger.Warning(err)
+	}
+	wirelessAccessPointsJsonStr := string(wirelessAccessPointsJson)
+	m.WirelessAccessPoints = wirelessAccessPointsJsonStr
+	m.emitPropChangedWirelessAccessPoints(wirelessAccessPointsJsonStr)
+	logger.Debug("@@@@@@@emitPropChangedWirelessAccessPoints",wirelessAccessPointsJsonStr)
+	return nil
+
+}
+
+func (m *Manager) RequestWirelessScan() *dbus.Error {
+	//遍历每个wifi的网卡，请求scan
+	if devices, ok := m.devices[deviceWifi]; ok {
+		for _, dev := range devices {
+			//add scan action
+			dev.nmDev.RequestScan(0,nil)
+			accessPointsList,err := dev.nmDev.GetAllAccessPoints(0)
+			if err != nil {
+				logger.Debug("GetAllAccessPoints",err)
+			}
+			logger.Debug("******************GetAllAccessPoints",accessPointsList)
+			for _,accessPointPath:=range accessPointsList{
+				m.addAccessPoint(dev.Path,accessPointPath)
+			}
+		}
+	}
+	
+	go m.UpdateWirelessAccessPoints()
+	return nil
+}
+/*
 // RequestWirelessScan request all wireless devices re-scan access point list.
 func (m *Manager) RequestWirelessScan() *dbus.Error {
 	m.devicesLock.Lock()
@@ -635,6 +728,11 @@ func (m *Manager) RequestWirelessScan() *dbus.Error {
 
 				}
 			}
+			statustmp,_:=m.IsDeviceEnabled(dev.Path)
+			if !statustmp && accessPoints ==nil{
+				//continue
+				return nil
+			}
 			wirelessAccessPoints[dev.Path] = accessPoints
 		}
 	}
@@ -650,6 +748,7 @@ func (m *Manager) RequestWirelessScan() *dbus.Error {
 	m.emitPropChangedWirelessAccessPoints(wirelessAccessPointsJsonStr)
 	return nil
 }
+*/
 
 func (m *Manager) getAccessPointsByPath(path dbus.ObjectPath) []*accessPoint {
 	m.accessPointsLock.Lock()

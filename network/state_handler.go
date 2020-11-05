@@ -269,6 +269,10 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				notify(icon, "", Tr("Hotspot enabled"))
 			} else {
 				notify(icon, "", fmt.Sprintf(Tr("%s connected"), msg))
+				//ap connected to update wifilist of control center
+				if dsi.devType ==2 {
+					sh.m.UpdateWirelessAccessPoints()
+				}
 				if !sh.m.hasSaveSecret {
 					if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
 						sh.savePasswordByConnectionStatus(data)

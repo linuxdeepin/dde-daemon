@@ -106,8 +106,8 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 				m.service.Emit(m, "AccessPointPropertiesChanged", string(devPath), apJSON)
 			}
 		} else {
-			// ignored state changed, if became ignored now, send
-			// removed signal or send added signal
+			//ignored state changed, if became ignored now, send
+			//removed signal or send added signal
 			if ignoredNow {
 				logger.Debugf("access point is ignored %#v", ap)
 				m.service.Emit(m, "AccessPointRemoved", string(devPath), apJSON)
@@ -211,7 +211,15 @@ func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
 	if err != nil {
 		return
 	}
-	//logger.Debug("add access point", devPath, apPath)
+	
+	//sync new ap uuid
+	wirelessconnections := m.connections[deviceWifi]
+	for _, connectiondata := range wirelessconnections {
+		if connectiondata.Ssid == ap.Ssid {
+			ap.Uuid = connectiondata.Uuid
+		}
+
+	}
 	m.accessPoints[devPath] = append(m.accessPoints[devPath], ap)
 }
 

@@ -537,8 +537,10 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			m.delayNetworkStateChange = false
 			time.Sleep(500 * time.Millisecond) //+ 与前端的延时对应
 			m.delayNetworkStateChange = true
-
+			
 			if enabled {
+				//add to avoid conflict with contorl-center
+				time.Sleep(500 * time.Millisecond)
 				obj.EnableDevice(0, dbus.ObjectPath(devpath), false)
 				showOSD("WLANOff")
 			} else {
