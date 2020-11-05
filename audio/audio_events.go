@@ -158,16 +158,30 @@ func (a *Audio) autoSwitchPort() {
 	if a.needAutoSwitchOutputPort() {
 		cardName, portName := priorities.GetFirstOutput()
 		if cardName != "" && portName != "" {
-			logger.Debugf("output port auto switch to %s %s", cardName, portName)
-			card, err := a.cards.getByName(cardName)
-			if err == nil {
-				err = a.setPort(card.Id, portName, pulse.DirectionSink)
-			}
-			if err != nil {
-				logger.Warning(err)
+			if cardName == a.outputCardName && portName == a.outputPortName {
+				// 端口不变，切换计数累加
+				a.outputAutoSwitchCount ++
 			} else {
-				outputCardName = cardName
-				outputPortName = portName
+				// 端口改变变，切换计数初始化
+				a.outputAutoSwitchCount = 0
+			}
+			// 切换次数超出限制，停止自动切换
+			if a.outputAutoSwitchCount < 10 {
+				logger.Debugf("output port auto switch to %s %s ", cardName, portName)
+				card, err := a.cards.getByName(cardName)
+				if err == nil {
+					err = a.setPort(card.Id, portName, pulse.DirectionSink)
+				}
+				if err != nil {
+					logger.Warning(err)
+				} else {
+					outputCardName = cardName
+					outputPortName = portName
+				}
+				a.outputCardName = cardName
+				a.outputPortName = portName
+			} else {
+				logger.Debug("stop auto switch output port")
 			}
 		} else {
 			logger.Debugf("no output port")
@@ -185,13 +199,27 @@ func (a *Audio) autoSwitchPort() {
 				strings.Contains(portName, "headset")
 		})
 		if cardName != "" && portName != "" {
-			logger.Debugf("input port auto switch to %s %s", cardName, portName)
-			card, err := a.cards.getByName(cardName)
-			if err == nil {
-				err = a.setPort(card.Id, portName, pulse.DirectionSource)
+			if cardName == a.inputCardName && portName == a.inputPortName {
+				// 端口不变，切换计数累加
+				a.inputAutoSwitchCount ++
+			} else {
+				// 端口改变变，切换计数初始化
+				a.inputAutoSwitchCount = 0
 			}
-			if err != nil {
-				logger.Warning(err)
+			// 切换次数超出限制，停止自动切换
+			if a.inputAutoSwitchCount < 10 {
+				logger.Debugf("input port auto switch to %s %s", cardName, portName)
+				card, err := a.cards.getByName(cardName)
+				if err == nil {
+					err = a.setPort(card.Id, portName, pulse.DirectionSource)
+				}
+				if err != nil {
+					logger.Warning(err)
+				}
+				a.inputCardName = cardName
+				a.inputPortName = portName
+			} else {
+				logger.Debug("stop auto switch input port")
 			}
 		} else {
 			logger.Debugf("no input port")

@@ -137,6 +137,16 @@ type Audio struct {
 	noRestartPulseAudio bool
 
 	ReduceNoise gsprop.Bool `prop:"access:rw"`
+	// 当前输入端口
+	inputCardName    string
+	inputPortName    string
+	// 输入端口切换计数器
+	inputAutoSwitchCount int
+	// 当前输出端口
+	outputCardName    string
+	outputPortName    string
+	// 输出端口切换计数器
+	outputAutoSwitchCount int
 
 	// nolint
 	methods *struct {
@@ -330,6 +340,8 @@ func (a *Audio) init() error {
 	a.quit = make(chan struct{})
 	a.ctx.AddEventChan(a.eventChan)
 	a.ctx.AddStateChan(a.stateChan)
+	a.inputAutoSwitchCount = 0
+	a.outputAutoSwitchCount = 0
 
 	a.mu.Unlock()
 
