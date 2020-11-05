@@ -237,7 +237,7 @@ func newManager(service *dbusutil.Service) *Manager {
 	m.WallpaperSlideShow.Bind(m.setting, gsKeyWallpaperSlideshow)
 	m.WallpaperURIs.Bind(m.setting, gsKeyWallpaperURIs)
 	// 社区版定制需求  保存窗口圆角值
-	m.WindowRadius.Bind(m.setting, gsKeyDTKWindowRadius)
+	m.WindowRadius.Bind(m.xSettingsGs, gsKeyDTKWindowRadius)
 	var err error
 	m.QtActiveColor, err = m.getQtActiveColor()
 	if err != nil {
