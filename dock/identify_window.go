@@ -66,8 +66,18 @@ func (m *Manager) identifyWindow(winInfo WindowInfo) (innerId string, appInfo *A
 }
 
 func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo *AppInfo) {
+	desktopNamePath := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
 	appId := winInfo.appId
-	appInfo = NewAppInfo(appId)
+	//+ TODO通过获取wps的Desktop文件来规避无法显示appId的情况,此修改只对wpsoffice应用有影响
+	if appId == "wpsoffice" {
+		if desktopNamePath == "" {
+			appInfo = NewAppInfo(appId)
+		} else {
+			appInfo = NewAppInfo(desktopNamePath)
+		}
+	} else {
+		appInfo = NewAppInfo(appId)
+	}
 	if appInfo != nil {
 		innerId = appInfo.innerId
 		fixedAppInfo := fixAutostartAppInfo(appInfo)
