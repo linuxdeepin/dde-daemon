@@ -24,7 +24,7 @@ import (
 	"strings"
 	"sync"
 
-	"time"
+	//"time"
 
 	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
@@ -32,7 +32,7 @@ import (
 
 	libdisplay "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	bluetooth "pkg.deepin.io/dde/daemon/bluetooth"
+	//bluetooth "pkg.deepin.io/dde/daemon/bluetooth"
 )
 
 const (
@@ -254,20 +254,23 @@ func (m *Manager) handleSessionChanged() {
 		// fixed block when unused pulse-audio
 		go suspendPulseSinks(0)
 		go suspendPulseSources(0)
+		//屏蔽音频切换需求的代码，会概率造成蓝牙服务在s3唤醒时关闭
+                //TODO:重新评估此需求的方案,修改pluseaudio来实现
+		/*
 		ResumePulseAudio()
 		logger.Debug("[handleSessionChanged] reconnect bluetooth")
 		time.AfterFunc(2*time.Second, func() {
 			logger.Info("delay func restart bt")
 			bluetooth.RestartBtService()
 		})
-
+		*/
 		logger.Debug("[handleSessionChanged] Refresh Brightness")
 		go m.display.RefreshBrightness(0)
 	} else {
 		logger.Debug("[handleSessionChanged] Suspend pulse")
 		go suspendPulseSinks(1)
 		go suspendPulseSources(1)
-		suspendPulseAudio()
+		//suspendPulseAudio()
 	}
 }
 
