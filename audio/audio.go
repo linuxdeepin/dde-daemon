@@ -535,6 +535,10 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 	logger.Debugf("Audio.SetPort card idx: %d, port name: %q, direction: %d",
 		cardId, portName, direction)
 
+	if !a.isPortEnabled(cardId, portName, direction) {
+		return dbusutil.ToError(fmt.Errorf("card idx: %d, port name: %q is disabled", cardId, portName))
+	}
+
 	err := a.setPort(cardId, portName, int(direction))
 	if err != nil {
 		return dbusutil.ToError(err)
@@ -1023,4 +1027,22 @@ func (a *Audio) disableBluezSourceIfProfileIsA2dp() {
 		logger.Warning(err)
 		return
 	}
+}
+
+func (a *Audio) isPortEnabled(cardId uint32, portName string, direction int32) bool {
+	//判断cardId 以及 portName的有效性
+	if int(direction) == pulse.DirectionSink {
+		sink := a.findSinkByCardIndexPortName(cardId, portName)
+		if sink == nil {
+			return false
+		}
+	} else {
+		source := a.findSourceByCardIndexPortName(cardId, portName)
+		if source == nil {
+			return false
+		}
+	}
+
+	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(cardId), portName)
+	return portConfig.Enabled
 }
