@@ -18,7 +18,7 @@ Name:           %{sname}
 %else
 Name:           %{repo}
 %endif
-Version:        5.12.0.19
+Version:        5.12.0.25
 Release:        1%{?fedora:%dist}
 Summary:        Daemon handling the DDE session settings
 License:        GPLv3
@@ -28,11 +28,11 @@ Source0:        %{url}/archive/%{version}/%{repo}-%{version}.tar.gz
 # upstream default mono font set to 'Noto Mono', which is not yet available in
 # Fedora. We change to 'Noto Sans Mono'
 Source1:        fontconfig.json
+Source2:        %{sname}.sysusers
 %else
 URL:            http://shuttle.corp.deepin.com/cache/tasks/18802/unstable-amd64/
 Source0:        %{repo}-%{version}.orig.tar.xz
 %endif
-Source2:        deepin-auth
 
 BuildRequires:  python3
 %if 0%{?fedora}
@@ -109,7 +109,6 @@ Daemon handling the DDE session settings
 %prep
 %autosetup -p1 -n %{repo}-%{version}
 patch langselector/locale.go < rpm/locale.go.patch
-install -m 644 %{SOURCE2} misc/etc/pam.d/deepin-auth
 
 # Fix library exec path
 sed -i '/deepin/s|lib|libexec|' Makefile
@@ -171,6 +170,10 @@ export GOPATH="$(pwd)/build:%{gopath}"
 export GOPATH=/usr/share/gocode
 %endif
 %make_install GOBUILD="go build -compiler gc -ldflags \"-B $BUILDID\""
+
+%if 0%{?fedora}
+install -Dm644 %{SOURCE2} %{buildroot}/usr/lib/sysusers.d/%{name}.conf
+%endif
 
 # fix systemd/logind config
 install -d %{buildroot}/usr/lib/systemd/logind.conf.d/
@@ -238,6 +241,7 @@ fi
 %{_unitdir}/deepin-accounts-daemon.service
 %{_unitdir}/hwclock_stop.service
 %if 0%{?fedora}
+%{_sysusersdir}/%{name}.conf
 %{_datadir}/deepin-default-settings/
 %endif
 
