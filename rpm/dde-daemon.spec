@@ -213,8 +213,6 @@ fi
 %files -f %{repo}.lang
 %doc README.md
 %license LICENSE
-%{_sysconfdir}/default/grub.d/10_deepin.cfg
-%{_sysconfdir}/grub.d/35_deepin_gfxmode
 %{_sysconfdir}/pam.d/deepin-auth-keyboard
 %{_sysconfdir}/NetworkManager/conf.d/deepin.dde.daemon.conf
 %{_sysconfdir}/modules-load.d/i2c_dev.conf
@@ -229,7 +227,6 @@ fi
 %{_datadir}/polkit-1/actions/*.policy
 %{_var}/cache/appearance/
 %{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla
-%{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla
 %{_sysconfdir}/acpi/actions/deepin_lid.sh
 %{_sysconfdir}/acpi/events/deepin_lid
 # This directory is not provided by any other package.
@@ -243,6 +240,17 @@ fi
 %if 0%{?fedora}
 %{_sysusersdir}/%{name}.conf
 %{_datadir}/deepin-default-settings/
+%exclude %{_sysconfdir}/default/grub.d/10_deepin.cfg
+%exclude %{_sysconfdir}/grub.d/35_deepin_gfxmode
+%exclude %{_libexecdir}/%{name}/grub2
+%exclude %{_datadir}/dbus-1/system-services/com.deepin.daemon.Grub2.service
+%exclude %{_datadir}/dbus-1/system.d/com.deepin.daemon.Grub2.conf
+%exclude %{_datadir}/polkit-1/actions/com.deepin.daemon.Grub2.policy
+%exclude %{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla
+%else
+%{_sysconfdir}/default/grub.d/10_deepin.cfg
+%{_sysconfdir}/grub.d/35_deepin_gfxmode
+%{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla
 %endif
 
 %changelog
