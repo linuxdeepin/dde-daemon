@@ -138,13 +138,13 @@ type Audio struct {
 
 	ReduceNoise gsprop.Bool `prop:"access:rw"`
 	// 当前输入端口
-	inputCardName    string
-	inputPortName    string
+	inputCardName string
+	inputPortName string
 	// 输入端口切换计数器
 	inputAutoSwitchCount int
 	// 当前输出端口
-	outputCardName    string
-	outputPortName    string
+	outputCardName string
+	outputPortName string
 	// 输出端口切换计数器
 	outputAutoSwitchCount int
 
@@ -559,7 +559,7 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 		if sink == nil {
 			return dbusutil.ToError(fmt.Errorf("can not get default sink"))
 		}
-		sink.setMute(true)
+		sink.setMute(false)
 
 		priorities.SetOutputPortFirst(card.core.Name, portName)
 		err = priorities.Save(globalPrioritiesFilePath)
@@ -570,7 +570,7 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 		if source == nil {
 			return dbusutil.ToError(fmt.Errorf("can not get default source"))
 		}
-		source.setMute(true)
+		source.setMute(false)
 		priorities.SetInputPortFirst(card.core.Name, portName)
 		err = priorities.Save(globalPrioritiesFilePath)
 		priorities.Print()
