@@ -60,6 +60,7 @@ const (
 	confKeyHistoryLayout      = "HistoryLayout"
 	confKeyUse24HourFormat    = "Use24HourFormat"
 	confKeyUUID               = "UUID"
+	confKeyWorkspace          = "Workspace"
 	confKeyWeekdayFormat      = "WeekdayFormat"
 	confKeyShortDateFormat    = "ShortDateFormat"
 	confKeyLongDateFormat     = "LongDateFormat"
@@ -74,6 +75,7 @@ const (
 	defaultShortTimeFormat = 0
 	defaultLongTimeFormat  = 0
 	defaultWeekBegins      = 0
+	defaultWorkspace       = 1
 )
 
 func getDefaultUserBackground() string {
@@ -122,6 +124,8 @@ type User struct {
 	Locked bool
 	// 是否允许此用户自动登录
 	AutomaticLogin bool
+	// 当前工作区
+	Workspace	int32
 
 	// deprecated property
 	SystemAccount bool
@@ -169,6 +173,7 @@ type User struct {
 		SetShortTimeFormat    func() `in:"value"`
 		SetLongTimeFormat     func() `in:"value"`
 		SetWeekBegins         func() `in:"value"`
+		SetCurrentWorkspace   func() `in:"currentWorkspace"`
 	}
 }
 
@@ -235,6 +240,7 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 		u.ShortTimeFormat = defaultShortTimeFormat
 		u.LongTimeFormat = defaultLongTimeFormat
 		u.WeekBegins = defaultWeekBegins
+		u.Workspace = defaultWorkspace
 
 		err = u.writeUserConfig()
 		if err != nil {
@@ -278,6 +284,7 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 	}
 
 	u.customIcon, _ = kf.GetString(confGroupUser, confKeyCustomIcon)
+	u.Workspace, _ = kf.GetInteger(confGroupUser, confKeyWorkspace)
 
 	// CustomIcon is the newly added field in the configuration file
 	if u.customIcon == "" {
@@ -477,6 +484,7 @@ func (u *User) writeUserConfigWithChanges(changes []configChange) error {
 	kf.SetString(confGroupUser, confKeyGreeterBackground, u.GreeterBackground)
 	kf.SetStringList(confGroupUser, confKeyHistoryLayout, u.HistoryLayout)
 	kf.SetString(confGroupUser, confKeyUUID, u.UUID)
+	kf.SetInteger(confGroupUser, confKeyWorkspace, u.Workspace)
 
 	for _, change := range changes {
 		switch val := change.value.(type) {

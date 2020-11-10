@@ -451,6 +451,10 @@ func (m *Manager) init() error {
 	if err != nil {
 		logger.Warning(err)
 	}
+	_, err = m.wm.ConnectWorkspaceSwitched(m.handleWmWorkspaceSwithched)
+	if err != nil {
+		logger.Warning(err)
+	}
 	m.imageBlur = accounts.NewImageBlur(systemBus)
 	m.imageEffect = imageeffect.NewImageEffect(systemBus)
 
@@ -665,6 +669,17 @@ func (m *Manager) handleWmWorkspaceCountChanged(count int32) {
 	err := m.doUpdateWallpaperURIs()
 	if err != nil {
 		logger.Warning("failed to update WallpaperURIs:", err)
+	}
+}
+
+//切换工作区
+func (m *Manager) handleWmWorkspaceSwithched(from, to int32) {
+	logger.Debugf("wm workspace switched from %d to %d", from, to)
+	if m.userObj != nil {
+		err := m.userObj.SetCurrentWorkspace(0, to)
+		if err != nil {
+			logger.Warning("call userObj.SetCurrentWorkspace err:", err)
+		}
 	}
 }
 

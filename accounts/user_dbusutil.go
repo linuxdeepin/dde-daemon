@@ -232,6 +232,10 @@ func (v *User) emitPropChangedDesktopBackgrounds(value []string) error {
 	return v.service.EmitPropertyChanged(v, "DesktopBackgrounds", value)
 }
 
+func (v *User) emitPropChangedWorkspace(value int32) error {
+	return v.service.EmitPropertyChanged(v, "Workspace", value)
+}
+
 func (v *User) setPropGroups(value []string) (changed bool) {
 	if !isStrvEqual(v.Groups, value) {
 		v.Groups = value

@@ -574,6 +574,37 @@ func (u *User) SetDesktopBackgrounds(sender dbus.Sender, val []string) *dbus.Err
 	return nil
 }
 
+// 记录当前工作区，登录时前端从记录文件中获取当前工作区以及相应的桌面背景
+func (u *User) SetCurrentWorkspace(sender dbus.Sender, currentWorkspace int32) *dbus.Error {
+	logger.Debug("[SetCurrentWorkspace] currentWorkspace", currentWorkspace)
+
+	err := u.checkAuth(sender, true, "")
+	if err != nil {
+		logger.Debug("[SetCurrentWorkspace] access denied:", err)
+		return dbusutil.ToError(err)
+	}
+
+	if currentWorkspace <= 0 {
+		return dbusutil.ToError(errors.New("currentWorkspace is err"))
+	}
+
+	u.PropsMu.Lock()
+	defer u.PropsMu.Unlock()
+
+	if currentWorkspace == u.Workspace {
+		return nil
+	}
+
+	err = u.writeUserConfigWithChange(confKeyWorkspace, currentWorkspace)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
+	u.Workspace = currentWorkspace
+	_ = u.emitPropChangedWorkspace(currentWorkspace)
+	return nil
+}
+
 func (u *User) SetGreeterBackground(sender dbus.Sender, bg string) *dbus.Error {
 	logger.Debug("[SetGreeterBackground] new background:", bg)
 
