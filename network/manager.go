@@ -63,6 +63,14 @@ type Manager struct {
 	NetworkingEnabled bool `prop:"access:rw"` // airplane mode for NetworkManager
 	VpnEnabled        bool `prop:"access:rw"`
 
+	// hidden properties
+	wirelessEnabled bool
+	wwanEnabled     bool
+	wiredEnabled    bool
+
+	delayEnableVpn bool
+	delayVpnLock   sync.Mutex
+
 	// update by manager_devices.go
 	devicesLock sync.Mutex
 	devices     map[string][]*device
@@ -222,6 +230,25 @@ func (m *Manager) init() {
 	// update property "State"
 	err = nmManager.State().ConnectChanged(func(hasValue bool, value uint32) {
 		m.updatePropState()
+		// get network state
+		avail, err := isNetworkAvailable()
+		if err != nil {
+			logger.Warningf("get network state failed, err: %v", err)
+			return
+		}
+		// check network state
+		if !avail {
+			return
+		}
+		// get delay vpn state
+		delay := m.getDelayEnableVpn()
+		// if vpn enable is true, but network disconnect last time, try to auto connect vpn.
+		// delay is marked as true when trying to enable vpn state but network cant be available,
+		// so need to retry enable vpn and try to auto connect vpn.
+		if !delay && !m.VpnEnabled {
+			return
+		}
+		m.setVpnEnable(true)
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -342,9 +369,9 @@ func (m *Manager) initSysNetwork(sysBus *dbus.Conn) {
 	if err != nil {
 		logger.Warning(err)
 	} else {
-		m.VpnEnabled = vpnEnabled
+		// set vpn enable
+		m.setVpnEnable(vpnEnabled)
 	}
-
 	err = m.sysNetwork.VpnEnabled().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
@@ -413,4 +440,69 @@ func (m *Manager) doPortalAuthentication() {
 	}
 	m.portalLastDetectionTime = time.Now()
 	m.protalAuthBrowserOpened = true
+}
+
+// auto connect vpn
+func (m *Manager) autoConnectVpn() {
+	// get vpn list from NetworkManager/Settings
+	uuidList, err := getAutoConnectConnUuidListByConnType("vpn")
+	if err != nil {
+		logger.Warningf("get vpn conn uuid list failed, err: %v", err)
+		return
+	}
+	logger.Debugf("all auto connect vpn is %v", uuidList)
+	// auto connect vpn list
+	for _, uuid := range uuidList {
+		_, err := m.activateConnection(uuid, "/")
+		if err != nil {
+			logger.Warningf("activate connection vpn failed, err: %v", err)
+		}
+	}
+}
+
+// set vpn enable
+func (m *Manager) setVpnEnable(vpnEnabled bool) {
+	// if vpn enable is true, check if network is available.
+	if vpnEnabled {
+		// get network available state
+		avail, err := isNetworkAvailable()
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		// check if network is available
+		if avail {
+			logger.Debug("network available is true")
+			// if network available is true and enable is true,
+			// set vpn enable and emit signal immediately.
+			m.setPropVpnEnabled(true)
+			// reset delay vpn enable
+			m.setDelayEnableVpn(false)
+			// auto connect vpn
+			m.autoConnectVpn()
+		} else {
+			logger.Debug("network available is false")
+			// mark delayEnableVpn as true
+			m.setDelayEnableVpn(true)
+		}
+	} else {
+		logger.Debug("set vpn enable false")
+		// reset delay enable vpn as false
+		m.setDelayEnableVpn(false)
+	}
+}
+
+// set delay enable vpn
+func (m *Manager) setDelayEnableVpn(enable bool) {
+	m.delayVpnLock.Lock()
+	m.delayEnableVpn = enable
+	m.delayVpnLock.Unlock()
+}
+
+// get delay enable vpn
+func (m *Manager) getDelayEnableVpn() bool {
+	m.delayVpnLock.Lock()
+	enable := m.delayEnableVpn
+	m.delayVpnLock.Unlock()
+	return enable
 }
