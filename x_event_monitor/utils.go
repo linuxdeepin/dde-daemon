@@ -20,7 +20,7 @@
 package x_event_monitor
 
 const (
-	MotionFlag = int32(1)
+	MotionFlag = int32(1)		//当此标志为1, 则鼠标在册注区域中移动时,会实时发送鼠标位置信号
 	ButtonFlag = int32(1 << 1)
 	KeyFlag    = int32(1 << 2)
 )

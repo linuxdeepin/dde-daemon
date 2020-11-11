@@ -44,7 +44,7 @@ var errAreasNotRegistered = errors.New("the areas has not been registered yet")
 type coordinateInfo struct {
 	areas        []coordinateRange
 	moveIntoFlag bool
-	motionFlag   bool
+	motionFlag   bool	//是否发送鼠标在区域中移动的信号
 	buttonFlag   bool
 	keyFlag      bool
 }
@@ -78,6 +78,7 @@ type Manager struct {
 			x, y int32
 			id   string
 		}
+		CursorShowAgain struct {}
 	}
 	//nolint
 	methods *struct {
@@ -175,6 +176,10 @@ func (m *Manager) beginMoveMouse() {
 		logger.Warning(err)
 	}
 	m.cursorShowed = true
+	err = m.service.Emit(m, "CursorShowAgain")
+	if err != nil {
+		logger.Warning(err)
+	}
 }
 
 func (m *Manager) beginTouch() {
@@ -248,6 +253,11 @@ func (m *Manager) handleXEvent() {
 					//logger.Debug("raw motion event")
 					if m.hideCursorWhenTouch {
 						m.beginMoveMouse()
+					}
+
+					_, ok := m.idReferCountMap[fullscreenId]
+					if len(m.idAreaInfoMap) == 0 && !ok {
+						break
 					}
 					qpReply, err := m.queryPointer()
 					if err != nil {
