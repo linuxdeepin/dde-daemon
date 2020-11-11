@@ -18,8 +18,8 @@ func canSuspend() bool {
 		logger.Warningf("read %s failed: %v", fileMemSleep, err)
 		return false
 	}
-	if !strings.Contains(string(data), "[deep]") {
-		logger.Debugf("can not find '[deep]' in %s", fileMemSleep)
+	if !strings.Contains(string(data), "deep") {
+		logger.Debugf("can not find 'deep' in %s", fileMemSleep)
 		return false
 	}
 
