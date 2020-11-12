@@ -23,6 +23,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -95,7 +96,11 @@ type Manager struct {
 	enableListenGSettings   bool
 	clickNum                uint32
 	delayNetworkStateChange bool
-	dpmsIsOff		bool
+	dpmsIsOff               bool
+	shortcutIsPressed       bool
+	shortcutCmd             string
+	shortcutKey             string
+	shortcutKeyCmd          string
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
@@ -248,6 +253,7 @@ func (m *Manager) init() {
 	sysBus, _ := dbus.SystemBus()
 	m.delayNetworkStateChange = true
 	m.dpmsIsOff = false
+	m.shortcutIsPressed = false
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
@@ -304,8 +310,10 @@ func (m *Manager) init() {
 	})
 	m.initHandlers()
 	m.clickNum = 0
+	go m.ListenGlobalAccelRelease(sessionBus)
 	go m.ListenGlobalAccel(sessionBus)
 	go m.ListenKeyboardEvent(sysBus)
+	go m.DealWithShortcutEvent()
 }
 
 var kwinSysActionCmdMap = map[string]string{
@@ -406,16 +414,67 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 		Name: "org.kde.kglobalaccel.Component.globalShortcutPressed",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
-			key := sig.Body[0].(string)
-			ok := strings.Compare(string("kwin"), key)
+			m.shortcutKey = sig.Body[0].(string)
+			m.shortcutKeyCmd = sig.Body[1].(string)
+			ok := strings.Compare(string("kwin"), m.shortcutKey)
 			if ok == 0 {
-				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
-				cmd := shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[sig.Body[1].(string)])
-				if cmd == "" {
-					m.handleKeyEventByWayland(waylandMediaIdMap[sig.Body[1].(string)])
+				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1], m.shortcutIsPressed)
+				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
+				//+ 根据产品需求，目前只开发F1,F2,F5，F6快捷键的长按效果
+				if m.shortcutKeyCmd == "MonBrightnessDown" || m.shortcutKeyCmd == "MonBrightnessUp" ||
+				   m.shortcutKeyCmd == "VolumeDown" || m.shortcutKeyCmd == "VolumeUp" {
+					m.shortcutIsPressed = true
 				} else {
-					m.execCmd(cmd, true)
+					m.shortcutIsPressed = false
+					if m.shortcutCmd == "" {
+						m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
+					} else {
+						m.execCmd(m.shortcutCmd, true)
+					}
+				}
+			}
+		}
+	})
 
+	//+ 监听锁屏信号
+	err = sessionBus.Object("com.deepin.dde.lockFront",
+		"/com/deepin/dde/lockFront").AddMatchSignal("com.deepin.dde.lockFront", "Visible").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.dde.lockFront.Visible",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 0 {
+			isLocked := sig.Body[0].(bool)
+			if isLocked {
+				m.shortcutIsPressed = false
+
+				sessionBus, err := dbus.SessionBus()
+				if err != nil {
+					return
+				}
+				obj := sessionBus.Object("org.kde.kglobalaccel", "/kglobalaccel")
+				err = obj.Call("org.kde.KGlobalAccel.blockGlobalShortcuts", 0, true).Err
+				if err != nil {
+					return
+				} else {
+					var stringList = [...]string{"PowerOff", "CapsLock", "MonBrightnessDown", "MonBrightnessUp",
+					"VolumeMute", "VolumeDown", "VolumeUp", "AudioMicMute", "WLAN", "Tools", "Full screenshot"}					
+					for _, str := range stringList {
+						err = obj.Call("org.kde.KGlobalAccel.setActiveByUniqueName", 0, str, true).Err
+						if err != nil {
+							return
+						}
+						time.Sleep(10 * time.Millisecond)
+					}
+				}
+			} else {
+				obj := sessionBus.Object("org.kde.kglobalaccel", "/kglobalaccel")
+				err = obj.Call("org.kde.KGlobalAccel.blockGlobalShortcuts", 0, false).Err
+				if err != nil {
+					return
 				}
 			}
 		}
@@ -430,7 +489,6 @@ func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
 		logger.Warning(err)
 		return err
 	}
-
 	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "com.deepin.daemon.Gesture.KeyboardEvent",
 	}, func(sig *dbus.Signal) {
@@ -450,6 +508,48 @@ func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
 		}
 	})
 	return nil
+}
+
+func (m *Manager) ListenGlobalAccelRelease(sessionBus *dbus.Conn) error {
+	err := sessionBus.Object("org.kde.kglobalaccel",
+		"/component/kwin").AddMatchSignal("org.kde.kglobalaccel.Component", "globalShortcutReleased").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "org.kde.kglobalaccel.Component.globalShortcutReleased",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			m.shortcutIsPressed = false
+		}
+	})
+	return nil
+}
+
+func (m *Manager) DealWithShortcutEvent() {
+	for {
+		if m.shortcutIsPressed {
+			for {
+				if m.shortcutCmd == "" {
+					m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
+				} else {
+					m.execCmd(m.shortcutCmd, true)
+				}
+				if !m.shortcutIsPressed {
+					break
+				}
+
+				time.Sleep(200 * time.Millisecond)
+
+				if !m.shortcutIsPressed {
+					break
+				}
+			}
+		}
+		runtime.Gosched()
+	}
 }
 
 func (m *Manager) handleKeyEventFromLockFront(changKey string) {
@@ -569,7 +669,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			m.delayNetworkStateChange = false
 			time.Sleep(500 * time.Millisecond) //+ 与前端的延时对应
 			m.delayNetworkStateChange = true
-			
+
 			if enabled {
 				//add to avoid conflict with contorl-center
 				time.Sleep(500 * time.Millisecond)
@@ -720,7 +820,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 
 			} else if action.Type == shortcuts.ActionTypeMediaPlayerCtrl {
 				//增蓝牙耳机快捷键的处理
-				if cmd ==shortcuts.MediaPlayerPlay {
+				if cmd == shortcuts.MediaPlayerPlay {
 					m.clickNum = m.clickNum + 1
 					if m.clickNum == 1 {
 						time.AfterFunc(time.Millisecond*600, func() {
@@ -731,11 +831,11 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 					if m.mediaPlayerController != nil {
 						err := m.mediaPlayerController.ExecCmd(cmd)
 						if err != nil {
-							logger.Warning(m.mediaPlayerController.Name(), "Controller exec cmd err:", err)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+							logger.Warning(m.mediaPlayerController.Name(), "Controller exec cmd err:", err)
 						}
 					}
 				}
-				
+
 			}
 		}
 	}
