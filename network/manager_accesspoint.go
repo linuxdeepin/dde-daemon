@@ -66,8 +66,9 @@ func (v apSecType) String() string {
 }
 
 type accessPoint struct {
-	nmAp    *nmdbus.AccessPoint
-	devPath dbus.ObjectPath
+	nmAp            *nmdbus.AccessPoint
+	devPath         dbus.ObjectPath
+	shouldBeIgnored bool
 
 	Ssid         string
 	Secured      bool
@@ -103,15 +104,16 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 			return
 		}
 
-		ignoredBefore := ap.shouldBeIgnore()
+		ignoredBefore := ap.shouldBeIgnored
 		ap.updateProps()
-		ignoredNow := ap.shouldBeIgnore()
+		ignoredNow := ap.shouldBeIgnored
 		apJSON, _ := marshalJSON(ap)
 		if ignoredNow == ignoredBefore {
 			// ignored state not changed, only send properties changed
 			// signal when not ignored
 			if ignoredNow {
 				logger.Debugf("access point(ignored) properties changed %#v", ap)
+				return
 			} else {
 				//logger.Debugf("access point properties changed %#v", ap)
 				err = m.service.Emit(m, "AccessPointPropertiesChanged", string(devPath), apJSON)
@@ -130,12 +132,17 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 		if err != nil {
 			logger.Warning("failed to emit signal:", err)
 		}
+
+		m.PropsMu.Lock()
+		m.updatePropWirelessAccessPoints()
+		m.PropsMu.Unlock()
+
 	})
 	if err != nil {
 		logger.Warning("failed to monitor changing properties of AccessPoint", err)
 	}
 
-	if ap.shouldBeIgnore() {
+	if ap.shouldBeIgnored {
 		logger.Debugf("new access point is ignored %#v", ap)
 	} else {
 		apJSON, _ := marshalJSON(ap)
@@ -165,6 +172,16 @@ func (a *accessPoint) updateProps() {
 	a.SecuredInEap = getApSecType(a.nmAp) == apSecEap
 	a.Strength, _ = a.nmAp.Strength().Get(0)
 	a.Frequency, _ = a.nmAp.Frequency().Get(0)
+
+	// Check if current access point should be ignore in front-end. Hide
+	// the access point that strength less than 10 (not include 0 which
+	// should be caused by the network driver issue) and not activated.
+	if a.Strength < 10 && a.Strength != 0 &&
+		!manager.isAccessPointActivated(a.devPath, a.Ssid) {
+		a.shouldBeIgnored = true
+	} else {
+		a.shouldBeIgnored = false
+	}
 }
 
 func getApSecType(ap *nmdbus.AccessPoint) apSecType {
@@ -190,17 +207,6 @@ func doParseApSecType(flags, wpaFlags, rsnFlags uint32) apSecType {
 		r = apSecEap
 	}
 	return r
-}
-
-// Check if current access point should be ignore in front-end. Hide
-// the access point that strength less than 10 (not include 0 which
-// should be caused by the network driver issue) and not activated.
-func (a *accessPoint) shouldBeIgnore() bool {
-	if a.Strength < 10 && a.Strength != 0 &&
-		!manager.isAccessPointActivated(a.devPath, a.Ssid) {
-		return true
-	}
-	return false
 }
 
 func (m *Manager) isAccessPointActivated(devPath dbus.ObjectPath, ssid string) bool {
@@ -231,9 +237,6 @@ func (m *Manager) initAccessPoints(devPath dbus.ObjectPath, apPaths []dbus.Objec
 	for _, apPath := range apPaths {
 		ap, err := m.newAccessPoint(devPath, apPath)
 		if err != nil {
-			continue
-		}
-		if ap.shouldBeIgnore() {
 			continue
 		}
 		//logger.Debug("add access point", devPath, apPath)
@@ -300,7 +303,7 @@ func (m *Manager) GetAccessPoints(path dbus.ObjectPath) (apsJSON string, busErr 
 	accessPoints := m.accessPoints[path]
 	filteredAccessPoints := make([]*accessPoint, 0, len(m.accessPoints))
 	for _, ap := range accessPoints {
-		if !ap.shouldBeIgnore() {
+		if !ap.shouldBeIgnored {
 			filteredAccessPoints = append(filteredAccessPoints, ap)
 		}
 	}
@@ -502,7 +505,7 @@ func (m *Manager) checkAPStrength() {
 				continue
 			}
 			//当热点还没有连接成功时,不需要切换
-			if  state != nm.NM_ACTIVE_CONNECTION_STATE_ACTIVATED {
+			if state != nm.NM_ACTIVE_CONNECTION_STATE_ACTIVATED {
 				logger.Debug("do not need change if connection not be activated")
 				continue
 			}
@@ -527,7 +530,7 @@ func (m *Manager) checkAPStrength() {
 			logger.Debug("changeAPChanel, apPath:", apPath)
 			if band == "" {
 				// 信号强度改变小于1格，不发生切换
-				if apNow.Strength < strength + 20 {
+				if apNow.Strength < strength+20 {
 					continue
 				}
 				if apNow.Frequency >= frequency5GLowerlimit &&

@@ -102,10 +102,10 @@ type Manager struct {
 
 	portalLastDetectionTime time.Time
 
-	WirelessAccessPoints string `prop:"access:r"` //用于读取AP
-	debugChangeAPBand    string //调用接口切换ap频段
-	checkAPStrengthTimer *time.Timer
-	protalAuthBrowserOpened    bool  // PORTAL认证中状态
+	WirelessAccessPoints    string `prop:"access:r"` //用于读取AP
+	debugChangeAPBand       string //调用接口切换ap频段
+	checkAPStrengthTimer    *time.Timer
+	protalAuthBrowserOpened bool // PORTAL认证中状态
 
 	//nolint
 	signals *struct {
