@@ -148,7 +148,7 @@ func (nm *NotifyManager) loop() {
 		nm.mu.Unlock()
 
 		if msg != nil {
-			time.Sleep(300 * time.Millisecond) // sleep 1.5 seconds
+			time.Sleep(1000 * time.Millisecond) // sleep 1 seconds
 		}
 	}
 }
