@@ -115,9 +115,9 @@ func (m *Manager) emitPropChangedWirelessAccessPoints(value string) error {
 	return m.service.EmitPropertyChanged(m, "WirelessAccessPoints", value)
 }
 
-// 每60s自动更新一次WirelessAccessPoints属性，并发送属性改变信号
+// 每15s自动更新一次WirelessAccessPoints属性，并发送属性改变信号
 func (m *Manager) initCountTicker() {
-	m.updateWirelessCountTicker = newCountTicker(60*time.Second, func(count int) {
+	m.updateWirelessCountTicker = newCountTicker(15*time.Second, func(count int) {
 		err := m.RequestWirelessScan()
 		if err != nil {
 			logger.Warning("RequestWirelessScan: ", err)
