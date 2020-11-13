@@ -57,9 +57,13 @@ type Daemon struct {
 		NetworkSetConnections          func() `in:"data"`
 		BluetoothGetDeviceTechnologies func() `in:"adapter,device" out:"technologies"`
 	}
-	signals *struct {
+	signals       *struct { //nolint
 		HandleForSleep struct {
 			start bool
+		}
+		ScalePlymouthDone struct {
+			scale uint32
+			err   string
 		}
 	}
 }
@@ -107,6 +111,7 @@ func main() {
 	logger.SetRestartCommand("/usr/lib/deepin-daemon/dde-system-daemon")
 
 	_daemon = &Daemon{}
+	_daemon.service = service
 	err = service.Export(dbusPath, _daemon)
 	if err != nil {
 		logger.Fatal("failed to export:", err)

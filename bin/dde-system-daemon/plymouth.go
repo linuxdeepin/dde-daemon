@@ -20,26 +20,41 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os/exec"
 	"sync"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
+	_ "pkg.deepin.io/lib/dbusutil"
 )
 
 var plymouthLocker sync.Mutex
 
-func (*Daemon) ScalePlymouth(scale uint32) *dbus.Error {
+func (d *Daemon) ScalePlymouth(scale uint32) *dbus.Error {
+	go func() {
+		err := d.scalePlymouth(scale)
+		res := ""
+		if err != nil {
+			res = err.Error()
+		}
+		err = d.service.Emit(d, "ScalePlymouthDone", scale, res)
+		if err != nil {
+			logger.Warning("failed to emit ScalePlymouthDone signal, err:", err)
+		}
+	}()
+	return nil
+}
+
+func (d *Daemon) scalePlymouth(scale uint32) error {
 	plymouthLocker.Lock()
 	defer plymouthLocker.Unlock()
-
-	logger.Debug("ScalePlymouth", scale)
 	defer logger.Debug("end ScalePlymouth", scale)
 
 	var (
-		out []byte
-		err error
+		out    []byte
+		kernel []byte
+		err    error
 	)
 
 	// TODO: inhibit poweroff
@@ -47,8 +62,7 @@ func (*Daemon) ScalePlymouth(scale uint32) *dbus.Error {
 	case 1:
 		var name = "uos-ssd-logo"
 		//if isSSD() {
-		//	name = "deepin-ssd-logo"
-		//}
+		//	name = "deepin-ssd-logo" //}
 		out, err = exec.Command("plymouth-set-default-theme", name).CombinedOutput()
 	case 2:
 		var name = "uos-hidpi-ssd-logo"
@@ -57,22 +71,22 @@ func (*Daemon) ScalePlymouth(scale uint32) *dbus.Error {
 		//}
 		out, err = exec.Command("plymouth-set-default-theme", name).CombinedOutput()
 	default:
-		return dbusutil.ToError(fmt.Errorf("invalid scale value: %d", scale))
+		return fmt.Errorf("invalid scale value: %d", scale)
 	}
 
 	if err != nil {
-		logger.Error("Failed to set plymouth theme:", string(out), err)
-		return dbusutil.ToError(err)
+		return fmt.Errorf("failed to set plymouth theme: %s, err: %v", string(out), err)
 	}
 
-	kernel, _ := exec.Command("uname", "-r").CombinedOutput()
-
+	kernel, err = exec.Command("uname", "-r").CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("failed to get kernel, err: %v", err)
+	}
 	out, err = exec.Command("update-initramfs",
-		"-u", "-k", string(kernel[:len(kernel)-1])).CombinedOutput()
+		"-u", "-k", string(bytes.TrimSpace(kernel))).CombinedOutput()
 	if err != nil {
-		logger.Error("Failed to update initramfs:", string(out), err)
-		return dbusutil.ToError(err)
+		return fmt.Errorf("failed to update initramfs: %s, err: %v", string(out), err)
 	}
-	logger.Debug("Plymouth update result:", string(out))
+
 	return nil
 }
