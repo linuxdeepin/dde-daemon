@@ -284,7 +284,6 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 	}
 
 	u.customIcon, _ = kf.GetString(confGroupUser, confKeyCustomIcon)
-	u.Workspace, _ = kf.GetInteger(confGroupUser, confKeyWorkspace)
 
 	// CustomIcon is the newly added field in the configuration file
 	if u.customIcon == "" {
@@ -363,6 +362,12 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 	u.UUID, err = kf.GetString(confGroupUser, confKeyUUID)
 	if err != nil || u.UUID == "" {
 		u.UUID = dutils.GenUuid()
+		isSave = true
+	}
+
+	u.Workspace, err = kf.GetInteger(confGroupUser, confKeyWorkspace)
+	if err != nil || u.Workspace == 0 {
+		u.Workspace = defaultWorkspace
 		isSave = true
 	}
 
