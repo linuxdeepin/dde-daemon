@@ -44,7 +44,7 @@ var errAreasNotRegistered = errors.New("the areas has not been registered yet")
 type coordinateInfo struct {
 	areas        []coordinateRange
 	moveIntoFlag bool
-	motionFlag   bool	//是否发送鼠标在区域中移动的信号
+	motionFlag   bool //是否发送鼠标在区域中移动的信号
 	buttonFlag   bool
 	keyFlag      bool
 }
@@ -63,7 +63,7 @@ type Manager struct {
 	keySymbols          *keysyms.KeySymbols
 	service             *dbusutil.Service
 	//nolint
-	signals             *struct {
+	signals *struct {
 		CancelAllArea                     struct{}
 		CursorInto, CursorOut, CursorMove struct {
 			x, y int32
@@ -78,7 +78,7 @@ type Manager struct {
 			x, y int32
 			id   string
 		}
-		CursorShowAgain struct {}
+		CursorShowAgain struct{}
 	}
 	//nolint
 	methods *struct {
@@ -89,9 +89,10 @@ type Manager struct {
 		DebugGetPidAreasMap func() `out:"pidAreasMapJSON"`
 	}
 
-	pidAidsMap      map[uint32]strv.Strv
-	idAreaInfoMap   map[string]*coordinateInfo
-	idReferCountMap map[string]int32
+	pidAidsMap            map[uint32]strv.Strv
+	idAreaInfoMap         map[string]*coordinateInfo
+	idReferCountMap       map[string]int32
+	fullscreenMotionCount int32
 
 	mu sync.Mutex
 }
@@ -388,7 +389,7 @@ func (m *Manager) handleCursorEvent(x, y int32, press bool) {
 	}
 
 	_, ok := m.idReferCountMap[fullscreenId]
-	if ok {
+	if ok && m.fullscreenMotionCount > 0 {
 		err := m.service.Emit(m, "CursorMove", x, y, fullscreenId)
 		if err != nil {
 			logger.Warning(err)
@@ -410,12 +411,12 @@ func (m *Manager) handleButtonEvent(button int32, press bool, x, y int32) {
 		if press {
 			err := m.service.Emit(m, "ButtonPress", button, x, y, id)
 			if err != nil {
-				logger.Warning("Emit error:",err)
+				logger.Warning("Emit error:", err)
 			}
 		} else {
 			err := m.service.Emit(m, "ButtonRelease", button, x, y, id)
 			if err != nil {
-				logger.Warning("Emit error:",err)
+				logger.Warning("Emit error:", err)
 			}
 		}
 	}
@@ -428,12 +429,12 @@ func (m *Manager) handleButtonEvent(button int32, press bool, x, y int32) {
 	if press {
 		err := m.service.Emit(m, "ButtonPress", button, x, y, fullscreenId)
 		if err != nil {
-			logger.Warning("Emit error:",err)
+			logger.Warning("Emit error:", err)
 		}
 	} else {
 		err := m.service.Emit(m, "ButtonRelease", button, x, y, fullscreenId)
 		if err != nil {
-			logger.Warning("Emit error:",err)
+			logger.Warning("Emit error:", err)
 		}
 	}
 }
@@ -457,12 +458,12 @@ func (m *Manager) handleKeyboardEvent(code int32, press bool, x, y int32) {
 		if press {
 			err := m.service.Emit(m, "KeyPress", m.keyCode2Str(code), x, y, id)
 			if err != nil {
-				logger.Warning("Emit error:",err)
+				logger.Warning("Emit error:", err)
 			}
 		} else {
 			err := m.service.Emit(m, "KeyRelease", m.keyCode2Str(code), x, y, id)
 			if err != nil {
-				logger.Warning("Emit error:",err)
+				logger.Warning("Emit error:", err)
 			}
 		}
 	}
@@ -473,13 +474,13 @@ func (m *Manager) handleKeyboardEvent(code int32, press bool, x, y int32) {
 			err := m.service.Emit(m, "KeyPress", m.keyCode2Str(code), x, y,
 				fullscreenId)
 			if err != nil {
-				logger.Warning("Emit error:",err)
+				logger.Warning("Emit error:", err)
 			}
 		} else {
 			err := m.service.Emit(m, "KeyRelease", m.keyCode2Str(code), x, y,
 				fullscreenId)
 			if err != nil {
-				logger.Warning("Emit error:",err)
+				logger.Warning("Emit error:", err)
 			}
 		}
 	}
@@ -614,6 +615,46 @@ func (m *Manager) UnregisterArea(sender dbus.Sender, id string) (bool, *dbus.Err
 	}
 	logger.Debugf("area %q unregistered by pid %d", id, pid)
 	return true, nil
+}
+
+func (m *Manager) RegisterFullScreenMotionFlag(sender dbus.Sender) *dbus.Error {
+	err := m.changeFullscreenMotionCount(true, sender)
+	return dbusutil.ToError(err)
+}
+
+func (m *Manager) UnregisterFullScreenMotionFlag(sender dbus.Sender) *dbus.Error {
+	err := m.changeFullscreenMotionCount(false, sender)
+	return dbusutil.ToError(err)
+}
+
+func (m *Manager) changeFullscreenMotionCount(add bool, sender dbus.Sender) (err error) {
+	pid, err := m.service.GetConnPID(string(sender))
+	if err != nil {
+		return
+	}
+	var (
+		count    int32
+		funcName string
+	)
+	if add {
+		count = 1
+		funcName = "RegisterFullScreenMotionFlag"
+	} else {
+		count = -1
+		funcName = "UnregisterFullScreenMotionFlag"
+	}
+	logger.Debugf("%s pid %d", funcName, pid)
+
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	aidList, ok := m.pidAidsMap[pid]
+	if !ok || !aidList.Contains(fullscreenId) {
+		err = fmt.Errorf("%s err: pid %d hasn't registed fullscreen motion", funcName, pid)
+		return
+	}
+	m.fullscreenMotionCount += count
+
+	return nil
 }
 
 func (m *Manager) getIdList(x, y int32) ([]string, []string) {
