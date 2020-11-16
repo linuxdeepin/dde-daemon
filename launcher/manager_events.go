@@ -39,52 +39,80 @@ func isDesktopFile(path string) bool {
 	return matched
 }
 
+//当允许或者禁止搜索包名时,设置SearchTarget中的包名字段
+func (m *Manager) handlePackageNameSearchChanged() {
+	enabled := m.settings.GetBoolean(gsKeyPackageNameSearch)
+	logger.Debug("itemSearchTarget update, search package name enable: ", enabled)
+	if enabled != m.packageNameSearchEnabled {
+		if enabled {
+			for _, item := range m.items {
+				item.addSearchTarget(idScore, item.ID)
+			}
+		} else {
+			for _, item := range m.items {
+				item.deleteSearchTarget(item.ID)
+			}
+		}
+	}
+	m.packageNameSearchEnabled = enabled
+
+}
+
+func (m *Manager) handleAppHiddenChanged() {
+	m.appsHiddenMu.Lock()
+	defer m.appsHiddenMu.Unlock()
+
+	newVal := m.settings.GetStrv(gsKeyAppsHidden)
+	logger.Debug(gsKeyAppsHidden+" changed", newVal)
+
+	added, removed := diffAppsHidden(m.appsHidden, newVal)
+	logger.Debugf(gsKeyAppsHidden+" added: %v, removed: %v", added, removed)
+	for _, appID := range added {
+		// apps need to be hidden
+		item := m.getItemById(appID)
+		if item == nil {
+			continue
+		}
+
+		m.removeItem(appID)
+		m.emitItemChanged(item, AppStatusDeleted)
+	}
+
+	for _, appID := range removed {
+		// apps need to be displayed
+		item := m.getItemById(appID)
+		if item != nil {
+			continue
+		}
+
+		appInfo := desktopappinfo.NewDesktopAppInfo(appID)
+		if appInfo == nil {
+			continue
+		}
+
+		item = NewItemWithDesktopAppInfo(appInfo)
+		m.setItemID(item)
+		shouldShow := appInfo.ShouldShow() &&
+			!isDeepinCustomDesktopFile(appInfo.GetFileName())
+
+		if !shouldShow {
+			continue
+		}
+
+		m.addItemWithLock(item)
+		m.emitItemChanged(item, AppStatusCreated)
+	}
+	m.appsHidden = newVal
+}
+
 func (m *Manager) listenSettingsChanged() {
-	gsettings.ConnectChanged(gsSchemaLauncher, gsKeyAppsHidden, func(key string) {
-		m.appsHiddenMu.Lock()
-		defer m.appsHiddenMu.Unlock()
-
-		newVal := m.settings.GetStrv(gsKeyAppsHidden)
-		logger.Debug(gsKeyAppsHidden+" changed", newVal)
-
-		added, removed := diffAppsHidden(m.appsHidden, newVal)
-		logger.Debugf(gsKeyAppsHidden+" added: %v, removed: %v", added, removed)
-		for _, appID := range added {
-			// apps need to be hidden
-			item := m.getItemById(appID)
-			if item == nil {
-				continue
-			}
-
-			m.removeItem(appID)
-			m.emitItemChanged(item, AppStatusDeleted)
+	gsettings.ConnectChanged(gsSchemaLauncher, "*", func(key string) {
+		switch key {
+		case gsKeyAppsHidden:
+			m.handleAppHiddenChanged()
+		case gsKeyPackageNameSearch:
+			m.handlePackageNameSearchChanged()
 		}
-
-		for _, appID := range removed {
-			// apps need to be displayed
-			item := m.getItemById(appID)
-			if item != nil {
-				continue
-			}
-
-			appInfo := desktopappinfo.NewDesktopAppInfo(appID)
-			if appInfo == nil {
-				continue
-			}
-
-			item = NewItemWithDesktopAppInfo(appInfo)
-			m.setItemID(item)
-			shouldShow := appInfo.ShouldShow() &&
-				!isDeepinCustomDesktopFile(appInfo.GetFileName())
-
-			if !shouldShow {
-				continue
-			}
-
-			m.addItemWithLock(item)
-			m.emitItemChanged(item, AppStatusCreated)
-		}
-		m.appsHidden = newVal
 	})
 }
 

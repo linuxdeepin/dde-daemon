@@ -20,6 +20,7 @@
 package launcher
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 
@@ -123,37 +124,35 @@ const (
 var pinyinArgs = pinyin.NewArgs()
 
 func init() {
-	pinyinArgs.Heteronym = true
+	pinyinArgs.Heteronym = false
 	pinyinArgs.Fallback = func(r rune, a pinyin.Args) []string {
 		return []string{string(r)}
 	}
 }
 
-func toPinyin(str string) string {
+//获取拼音和拼音简拼
+func toPinyinAndShortening(str string) (string, string) {
 	pySliceSlice := pinyin.Pinyin(str, pinyinArgs)
-	items := make([]string, len(pySliceSlice))
+	pyStrSlice := make([]string, len(pySliceSlice))
+	shortening := bytes.NewBuffer(make([]byte, len(pySliceSlice)))
 	for idx, pySlice := range pySliceSlice {
-		items[idx] = strings.Join(pySlice, "")
+		pyStrSlice[idx] = strings.Join(pySlice, "")
+		if len(pySlice[0]) > 0 {
+			shortening.WriteByte(pySlice[0][0])
+		}
 	}
-	return strings.Join(items, "")
+	return strings.Join(pyStrSlice, ""), shortening.String()
 }
 
 func (item *Item) setSearchTargets(pinyinEnabled bool) {
-	item.addSearchTarget(idScore, item.ID)
 	item.addSearchTarget(nameScore, item.Name)
 	item.addSearchTarget(nameScore, item.enName)
 	item.addSearchTarget(genericNameScore, item.genericName)
-	for _, c := range item.categories {
-		item.addSearchTarget(categoryScore, c)
-	}
-	if pinyinEnabled {
-		namePy := toPinyin(item.Name)
-		item.addSearchTarget(nameScore, namePy)
-	}
 
-	// add keywords
-	for _, kw := range item.keywords {
-		item.addSearchTarget(keywordScore, kw)
+	if pinyinEnabled {
+		pinyin, shortening := toPinyinAndShortening(item.Name)
+		item.addSearchTarget(nameScore, pinyin)
+		item.addSearchTarget(nameScore, shortening)
 	}
 }
 
@@ -161,9 +160,19 @@ func (item *Item) addSearchTarget(score SearchScore, str string) {
 	if str == "" {
 		return
 	}
+	str = strings.Replace(str, " ", "", -1)
 	str = strings.ToLower(str)
 	scoreInDict, ok := item.searchTargets[str]
 	if !ok || (ok && scoreInDict < score) {
 		item.searchTargets[str] = score
 	}
+}
+
+func (item *Item) deleteSearchTarget(str string) {
+	if str == "" {
+		return
+	}
+	str = strings.Replace(str, " ", "", -1)
+	str = strings.ToLower(str)
+	delete(item.searchTargets, str)
 }

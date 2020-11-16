@@ -37,7 +37,7 @@ import (
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/dde/daemon/session/common"
-	"pkg.deepin.io/gir/gio-2.0"
+	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"pkg.deepin.io/lib/gettext"
@@ -63,6 +63,7 @@ const (
 	gsKeyAppsUseProxy       = "apps-use-proxy"
 	gsKeyAppsDisableScaling = "apps-disable-scaling"
 	gsKeyAppsHidden         = "apps-hidden"
+	gsKeyPackageNameSearch  = "search-package-name"
 )
 
 type Manager struct {
@@ -81,7 +82,8 @@ type Manager struct {
 	pkgCategoryMap map[string]CategoryID
 	nameMap        map[string]string
 
-	searchTaskStack *searchTaskStack
+	searchTaskStack          *searchTaskStack
+	packageNameSearchEnabled bool
 
 	itemsChangedHit uint32
 	searchMu        sync.Mutex
@@ -179,6 +181,8 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	m.settings = gio.NewSettings(gsSchemaLauncher)
 	m.DisplayMode.Bind(m.settings, gsKeyDisplayMode)
 	m.Fullscreen.Bind(m.settings, gsKeyFullscreen)
+	//should exec before app item's init
+	m.packageNameSearchEnabled = m.settings.GetBoolean(gsKeyPackageNameSearch)
 
 	m.noPkgItemIDs = make(map[string]int)
 
@@ -323,6 +327,9 @@ func (m *Manager) addItem(item *Item) {
 	item.CategoryID = m.queryCategoryID(item)
 	logger.Debug("addItem category", item.CategoryID)
 	item.setSearchTargets(m.pinyinEnabled)
+	if m.packageNameSearchEnabled {
+		item.addSearchTarget(idScore, item.ID)
+	}
 	logger.Debug("item search targets:", item.searchTargets)
 	m.items[item.ID] = item
 }

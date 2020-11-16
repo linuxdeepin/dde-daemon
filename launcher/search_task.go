@@ -21,17 +21,15 @@ package launcher
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 	"sync"
 	"unicode"
 )
 
 type searchTask struct {
-	mu           sync.RWMutex
-	chars        []rune
-	fuzzyMatcher *regexp.Regexp
-	stack        *searchTaskStack
+	mu    sync.RWMutex
+	chars []rune
+	stack *searchTaskStack
 
 	result MatchResults
 
@@ -85,19 +83,6 @@ func newSearchTask(c rune, stack *searchTaskStack, prev *searchTask) *searchTask
 		t.chars = prev.chars[:]
 	}
 	t.chars = append(t.chars, c)
-
-	// init fuzzyMatcher
-	var metaQuotedChars []string
-	for _, char := range t.chars {
-		metaQuotedChars = append(metaQuotedChars, regexp.QuoteMeta(string(char)))
-	}
-	regStr := strings.Join(metaQuotedChars, ".*?")
-	logger.Debug("regexp Str:", regStr)
-	var err error
-	t.fuzzyMatcher, err = regexp.Compile(regStr)
-	if err != nil {
-		logger.Warning(err)
-	}
 
 	return t
 }
@@ -175,15 +160,6 @@ func (st *searchTask) match(item *Item) *MatchResult {
 					// xqueryx
 					score += BelowAverage
 				}
-			}
-			continue
-		}
-
-		if st.fuzzyMatcher != nil {
-			loc := st.fuzzyMatcher.FindStringIndex(v)
-			if loc != nil {
-				score += vScore
-				score += BelowAverage
 			}
 		}
 	}
