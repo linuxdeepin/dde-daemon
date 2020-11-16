@@ -46,36 +46,56 @@ func (m *Manager) setScaleFactor(scale float64) error {
 
 var notifyId uint32
 
-func sendNotify(summary, body, icon string) error {
-	sessionConn, err := dbus.SessionBus()
-	if err != nil {
-		return err
-	}
-	nid := atomic.LoadUint32(&notifyId)
-	notifier := notifications.NewNotifications(sessionConn)
-	nid, err = notifier.Notify(0, "dde-control-center", nid,
-		icon, summary, body,
-		nil, nil, -1)
-	if err != nil {
-		atomic.StoreUint32(&notifyId, nid)
-	}
-	return err
-}
+const icon = "dialog-window-scale"
 
 func handleSetScaleFactorDone() {
-	err := sendNotify(gettext.Tr("Set successfully"),
-		gettext.Tr("Please log back in to view the changes"), "dialog-window-scale")
+	const (
+		expireTimeout = 15 * 1000
+		requestLogout = "dbus-send,--type=method_call,--dest=com.deepin.SessionManager,/com/deepin/SessionManager,com.deepin.SessionManager.RequestLogout"
+	)
+	body := gettext.Tr("Log out for display scaling settings to take effect")
+	summary := gettext.Tr("Set successfully")
+	sessionBus, err := dbus.SessionBus()
 	if err != nil {
 		logger.Warning(err)
+		return
 	}
+	nid := atomic.LoadUint32(&notifyId)
+	notifier := notifications.NewNotifications(sessionBus)
+	nid, err = notifier.Notify(0, "dde-control-center", nid,
+		icon, summary, body,
+		[]string{"_logout", gettext.Tr("Logout Now"), "_later", gettext.Tr("Later")},
+		map[string]dbus.Variant{
+			"x-deepin-action-_logout": dbus.MakeVariant(requestLogout),
+			"x-deepin-action-_later":  dbus.MakeVariant(""),
+		}, expireTimeout)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		atomic.StoreUint32(&notifyId, nid)
+	}
+
 }
 
 func handleSetScaleFactorStarted() {
-	err := sendNotify(gettext.Tr("Display scaling"),
-		gettext.Tr("Setting display scaling"), "dialog-window-scale")
+	body := gettext.Tr("Setting display scaling")
+	summary := gettext.Tr("Display scaling")
+	sessionBus, err := dbus.SessionBus()
 	if err != nil {
 		logger.Warning(err)
+		return
 	}
+	nid := atomic.LoadUint32(&notifyId)
+	notifier := notifications.NewNotifications(sessionBus)
+	nid, err = notifier.Notify(0, "dde-control-center", nid,
+		icon, summary, body,
+		nil, nil, 0)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		atomic.StoreUint32(&notifyId, nid)
+	}
+
 }
 
 func (m *Manager) setScreenScaleFactors(factors map[string]float64) error {
