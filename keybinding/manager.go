@@ -28,6 +28,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
+	keyevent "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.keyevent"
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
@@ -91,18 +92,19 @@ type Manager struct {
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
-	lockFront *lockfront.LockFront
+	lockFront     *lockfront.LockFront
 	shutdownFront *shutdownfront.ShutdownFront
 
-	sessionSigLoop  *dbusutil.SignalLoop
-	systemSigLoop   *dbusutil.SignalLoop
-	sessionMaganer  *sessionmanager.SessionManager
-	startManager    *sessionmanager.StartManager
-	sessionManager  *sessionmanager.SessionManager
-	backlightHelper *backlight.Backlight
-	keyboard        *inputdevices.Keyboard
-	keyboardLayout  string
-	wm              *wm.Wm
+	sessionSigLoop            *dbusutil.SignalLoop
+	systemSigLoop             *dbusutil.SignalLoop
+	startManager              *sessionmanager.StartManager
+	sessionManager            *sessionmanager.SessionManager
+	backlightHelper           *backlight.Backlight
+	keyboard                  *inputdevices.Keyboard
+	keyboardLayout            string
+	wm                        *wm.Wm
+	keyEvent                  *keyevent.KeyEvent
+	specialKeycodeBindingList map[SpecialKeycodeMapKey]func()
 
 	// controllers
 	audioController       *AudioController
@@ -223,6 +225,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.gsMediaKey = gio.NewSettings(gsSchemaMediaKey)
 	m.gsPower = gio.NewSettings(gsSchemaSessionPower)
 	m.wm = wm.NewWm(sessionBus)
+	m.keyEvent = keyevent.NewKeyEvent(sysBus)
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
 	m.shortcutManager.AddSpecial()
@@ -265,7 +268,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.audioController = NewAudioController(sessionBus, m.backlightHelper)
 	m.mediaPlayerController = NewMediaPlayerController(m.systemSigLoop, sessionBus)
 
-	m.sessionMaganer = sessionmanager.NewSessionManager(sessionBus)
 	m.startManager = sessionmanager.NewStartManager(sessionBus)
 	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
 	m.keyboard = inputdevices.NewKeyboard(sessionBus)
@@ -287,6 +289,13 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.displayController = NewDisplayController(m.backlightHelper, sessionBus)
 	m.kbdLightController = NewKbdLightController(m.backlightHelper)
 	m.touchPadController = NewTouchPadController(sessionBus)
+
+	m.initSpecialKeycodeMap()
+	m.keyEvent.InitSignalExt(m.systemSigLoop, true)
+	_, err = m.keyEvent.ConnectKeyEvent(m.handleSpecialKeycode)
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	return &m, nil
 }
@@ -387,6 +396,11 @@ func (m *Manager) destroy() {
 	if m.keyboard != nil {
 		m.keyboard.RemoveHandler(proxy.RemoveAllHandlers)
 		m.keyboard = nil
+	}
+
+	if m.keyEvent != nil {
+		m.keyEvent.RemoveHandler(proxy.RemoveAllHandlers)
+		m.keyEvent = nil
 	}
 
 	if m.sessionSigLoop != nil {
