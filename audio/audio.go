@@ -1030,17 +1030,20 @@ func (a *Audio) disableBluezSourceIfProfileIsA2dp() {
 }
 
 func (a *Audio) isPortEnabled(cardId uint32, portName string, direction int32) bool {
-	//判断cardId 以及 portName的有效性
-	if int(direction) == pulse.DirectionSink {
-		sink := a.findSinkByCardIndexPortName(cardId, portName)
-		if sink == nil {
-			return false
-		}
-	} else {
-		source := a.findSourceByCardIndexPortName(cardId, portName)
-		if source == nil {
-			return false
-		}
+	// 判断cardId 以及 portName的有效性
+	a.mu.Lock()
+	card, _ := a.cards.get(cardId)
+	a.mu.Unlock()
+	if card == nil {
+		logger.Warningf("not found card #%d", cardId)
+		return false
+	}
+
+	var err error
+	_, err = card.Ports.Get(portName, int(direction))
+	if err != nil {
+		logger.Warningf("get port %s info failed: %v", portName, err)
+		return false
 	}
 
 	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(cardId), portName)
