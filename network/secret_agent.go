@@ -186,14 +186,14 @@ func (sa *SecretAgent) deleteAll(uuid string) error {
 	return nil
 }
 
-// 处理重启指纹登录的时候，secrets可能还没有准备好，collection还处于locked状态，获取不到密码，最多等2s让其准备完毕
+// 处理重启指纹登录的时候，secrets可能还没有准备好，collection还处于locked状态，获取不到密码，最多等5s让其准备完毕
 func checkCollectionLocked(collection *secrets.Collection) {
-	for i := 0; i < 4; i++ {
+	for i := 0; i < 5; i++ {
 		locked, err := collection.Locked().Get(0)
-		if err != nil || !locked {
+		if err == nil && !locked {
 			return
 		}
-		time.Sleep(time.Millisecond * 500)
+		time.Sleep(time.Millisecond * 1000)
 	}
 }
 
