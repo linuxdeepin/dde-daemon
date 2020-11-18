@@ -62,15 +62,15 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 	// 用于定时停止扫描
 	a.discoveringTimeout = time.AfterFunc(defaultDiscoveringTimeout, func() {
 		logger.Debug("discovery time out, stop discovering")
-		//扫描结束后添加备份
+		//扫描结束后更新备份
+		globalBluetooth.backupDeviceLock.Lock()
+		globalBluetooth.backupDevices = make(map[dbus.ObjectPath][]*backupDevice)
 		for adapterpath, devices := range globalBluetooth.devices {
 			for _, device := range devices {
-				bd := newBackupDevice(device)
-				globalBluetooth.backupDeviceLock.Lock()
-				globalBluetooth.backupDevices[adapterpath] = append(globalBluetooth.backupDevices[adapterpath], bd)
-				globalBluetooth.backupDeviceLock.Unlock()
+				globalBluetooth.backupDevices[adapterpath] = append(globalBluetooth.backupDevices[adapterpath], newBackupDevice(device))
 			}
 		}
+		globalBluetooth.backupDeviceLock.Unlock()
 		//Scan timeout
 		a.discoveringTimeoutFlag = true
 		if err := a.core.StopDiscovery(0); err != nil {
