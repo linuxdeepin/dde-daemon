@@ -18,10 +18,12 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <math.h>
 
 #include <glib.h>
 #include <poll.h>
+#include <errno.h>
 
 #include "utils.h"
 #include "core.h"
@@ -99,7 +101,13 @@ start_loop(int verbose, double distance)
     fds.revents = 0;
 
     quit = 0;
-    while(!quit && poll(&fds, 1, -1) > -1) {
+    while(!quit) {
+        int iret = poll(&fds, 1, -1);
+        //ignore err Interrupted system call
+        if(iret == -1 && errno != EINTR){
+            break;
+        }
+
         handle_events(li);
     }
 
@@ -403,6 +411,22 @@ handle_touch_events(struct libinput_event *ev, int ty)
 }
 
 static void
+handle_keyboard_events(struct libinput_event *ev, int type)
+{
+    struct libinput_device *dev = libinput_event_get_device(ev);
+    if (!dev) {
+        fprintf(stderr, "Get device from event failure\n");
+        return ;
+    }
+
+    struct libinput_event_keyboard *keyboard = libinput_event_get_keyboard_event(ev);
+    uint32_t key = libinput_event_keyboard_get_key(keyboard);
+    enum libinput_key_state state = libinput_event_keyboard_get_key_state(keyboard);
+
+    handleKeyboardEvent(key,(uint32_t)state);
+}
+
+static void
 handle_events(struct libinput *li)
 {
     struct libinput_event *ev;
@@ -445,6 +469,10 @@ handle_events(struct libinput *li)
         case LIBINPUT_EVENT_TOUCH_FRAME:
         case LIBINPUT_EVENT_TOUCH_CANCEL:{
             handle_touch_events(ev, type);
+            break;
+        }
+        case LIBINPUT_EVENT_KEYBOARD_KEY: {
+            handle_keyboard_events(ev, type);
             break;
         }
         default:

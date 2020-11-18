@@ -95,6 +95,7 @@ type Manager struct {
 	enableListenGSettings   bool
 	clickNum                uint32
 	delayNetworkStateChange bool
+	dpmsIsOff		bool
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
@@ -246,6 +247,7 @@ func (m *Manager) init() {
 	sessionBus := m.service.Conn()
 	sysBus, _ := dbus.SystemBus()
 	m.delayNetworkStateChange = true
+	m.dpmsIsOff = false
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
@@ -303,6 +305,7 @@ func (m *Manager) init() {
 	m.initHandlers()
 	m.clickNum = 0
 	go m.ListenGlobalAccel(sessionBus)
+	go m.ListenKeyboardEvent(sysBus)
 }
 
 var kwinSysActionCmdMap = map[string]string{
@@ -413,6 +416,35 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 				} else {
 					m.execCmd(cmd, true)
 
+				}
+			}
+		}
+	})
+	return nil
+}
+
+func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
+	err := systemBus.Object("com.deepin.daemon.Gesture",
+		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "KeyboardEvent").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.Gesture.KeyboardEvent",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			key := sig.Body[0].(uint32)
+			value := sig.Body[1].(uint32)
+			//+ 短按电源键同时出发kwin快捷键逻辑和libinput逻辑有冲突，先屏蔽
+			if m.dpmsIsOff && value == 1 && key != 116 {
+				logger.Debug("Keyboard:", key, value)
+				err := exec.Command("dde_wldpms", "-s", "On").Run()
+				if err != nil {
+					logger.Warningf("failed to exec dde_wldpms: %s", err)
+				} else {
+					m.dpmsIsOff = false
 				}
 			}
 		}

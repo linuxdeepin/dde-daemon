@@ -105,6 +105,10 @@ type Manager struct {
 			direction string
 			fingers   int32
 		}
+		KeyboardEvent struct {
+			key   uint32
+			state uint32
+		}
 	}
 }
 
@@ -151,6 +155,11 @@ func handleTouchEvent(ty, btn C.int) {
 		TouchType(btn).String())
 	_m.service.Emit(_m, "Event", TouchType(ty).String(),
 		TouchType(btn).String(), 0)
+}
+
+//export handleKeyboardEvent
+func handleKeyboardEvent(key, state C.uint) {
+	_m.service.Emit(_m, "KeyboardEvent", uint32(key), uint32(state))
 }
 
 func (*Daemon) Start() error {

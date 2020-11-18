@@ -161,6 +161,7 @@ func (m *Manager) systemTurnOffScreen() {
 
 	if useWayland {
 		err = exec.Command("dde_wldpms", "-s", "Off").Run()
+		m.dpmsIsOff = true
 	} else {
 		xConn, err := x.NewConn()
 		if err != nil {
