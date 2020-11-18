@@ -42,7 +42,7 @@ const (
 	obexAgentDBusPath      = dbusPath + "/ObexAgent"
 	obexAgentDBusInterface = "org.bluez.obex.Agent1"
 
-	receiveFileNotifyTimeout = 5 * 1000
+	receiveFileNotifyTimeout = 15 * 1000
 	receiveFileTimeout       = 40 * time.Second
 )
 
