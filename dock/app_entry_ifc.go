@@ -25,7 +25,7 @@ import (
 	"syscall"
 	"time"
 
-	"pkg.deepin.io/lib/dbus1"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/procfs"
 )
@@ -60,7 +60,8 @@ func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 	winInfo := entry.current
 	var err error
 	if m.isActiveWindow(winInfo) {
-		if winInfo.isMinimized() {
+		sd, _ := m.waylandWM.IsShowingDesktop(0)
+		if winInfo.isMinimized() || sd {
 			err = winInfo.activate()
 		} else {
 			if len(entry.windows) == 1 {
