@@ -68,6 +68,11 @@ func (m *Manager) identifyWindow(winInfo WindowInfo) (innerId string, appInfo *A
 func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo *AppInfo) {
 	desktopNamePath := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
 	appId := winInfo.appId
+	//+ TODO对于appId为空的情况，使用title过滤，此项修改针对浏览器下载窗口
+	title := winInfo.getTitle()
+	if title == "下载" {
+		appId = "uos-browser"
+	}
 	//+ TODO通过获取wps的Desktop文件来规避无法显示appId的情况,此修改只对wpsoffice应用有影响
 	if appId == "wpsoffice" {
 		if desktopNamePath == "" {
