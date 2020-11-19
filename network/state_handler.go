@@ -249,7 +249,10 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				if dsi.connectionType == connectionWirelessHotspot {
 					notify(icon, "", Tr("Enabling hotspot"))
 				} else {
-					notify(icon, "", fmt.Sprintf(Tr("Connecting %q"), dsi.aconnId))
+					// 防止连接状态由60变40再次弹出正在连接的通知消息
+					if oldState == nm.NM_DEVICE_STATE_DISCONNECTED {
+						notify(icon, "", fmt.Sprintf(Tr("Connecting %q"), dsi.aconnId))
+					}
 				}
 			}
 		case nm.NM_DEVICE_STATE_ACTIVATED:
