@@ -224,13 +224,21 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 func handleUnplugedEvent(oldActivePort, newActivePort Port, oldPortUnavailable bool) {
 	logger.Debug("[handleUnplugedEvent] Old port:", oldActivePort.String(), oldPortUnavailable)
 	logger.Debug("[handleUnplugedEvent] New port:", newActivePort.String())
+
+	//PanguV Machine check Unplug event: old active port is headphone, new active port is headphone too
+	//differents value： Available
+	newPortName := strings.ToLower(newActivePort.Name)
+	isHeadphtone_NoActive := (newActivePort.Available==byte(1)) &&
+					         (strings.Contains(newPortName, "headphone") || strings.Contains(newPortName, "headset-output"));
+
 	// old active port is headphone or bluetooth
 	if isHeadphoneOrHeadsetPort(oldActivePort.Name) &&
 		// old active port available is yes or unknown, not no
 		int(oldActivePort.Available) != pulse.AvailableTypeNo &&
 		// new port is not headphone and bluetooth
-		!isHeadphoneOrHeadsetPort(newActivePort.Name) && oldPortUnavailable {
-		pauseAllPlayers()
+		(!isHeadphoneOrHeadsetPort(newActivePort.Name) || isHeadphtone_NoActive) &&
+		oldPortUnavailable {
+			pauseAllPlayers()
 	}
 }
 
