@@ -200,7 +200,8 @@ func (m *Manager) registerWindowWayland(objPath dbus.ObjectPath) {
 		logger.Warning(err)
 		return
 	}
-	if appId == "dde-desktop" || appId == "dde-dock" || appId == "dde-launcher" || appId == "dde-clipboard" || appId == "dde-osd" || appId == "dde-polkit-agent" {
+	if appId == "dde-desktop" || appId == "dde-dock" || appId == "dde-launcher" || appId == "dde-clipboard" || 
+	   appId == "dde-osd" || appId == "dde-polkit-agent" || appId == "dde-simple-egl" {
 		return
 	}
 
