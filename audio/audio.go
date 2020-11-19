@@ -857,6 +857,25 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 	a.resumeSinkConfig(sink)
 }
 
+func (a *Audio) updateSources(index uint32) (source *Source){
+	sourceInfoList := a.ctx.GetSourceList()
+	for _, sourceInfo := range sourceInfoList {
+		// 判断pluseaudio的source索引是否存在，并返回存在的source信息
+		if sourceInfo.Index == index {
+			logger.Debug("get same source index:",index)
+			source := newSource(sourceInfo, a)
+			a.sources[index] = source
+			sourcePath := source.getPath()
+			err := a.service.Export(sourcePath, source)
+			if err != nil {
+				logger.Warning(err)
+			}
+			return source
+		}
+	}
+	return nil
+}
+
 func (a *Audio) updateDefaultSource(sourceName string) {
 	sourceInfo := a.getSourceInfoByName(sourceName)
 	if sourceInfo == nil {
@@ -878,10 +897,14 @@ func (a *Audio) updateDefaultSource(sourceName string) {
 
 	source, ok := a.sources[sourceInfo.Index]
 	if !ok {
-		a.mu.Unlock()
-		logger.Warningf("not found source #%d", sourceInfo.Index)
-		a.setPropDefaultSource("/")
-		return
+		// a.sources是缓存的source信息，未查到source信息，需要重新通过pluseaudio查询source信息
+		source = a.updateSources(sourceInfo.Index)
+		if source == nil {
+			a.mu.Unlock()
+			logger.Warningf("not found source #%d", sourceInfo.Index)
+			a.setPropDefaultSource("/")
+			return
+		}
 	}
 	a.defaultSource = source
 	defaultSourcePath := source.getPath()
