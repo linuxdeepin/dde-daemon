@@ -26,24 +26,13 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	_ "pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/dbusutil"
 )
 
 var plymouthLocker sync.Mutex
 
 func (d *Daemon) ScalePlymouth(scale uint32) *dbus.Error {
-	go func() {
-		err := d.scalePlymouth(scale)
-		res := ""
-		if err != nil {
-			res = err.Error()
-		}
-		err = d.service.Emit(d, "ScalePlymouthDone", scale, res)
-		if err != nil {
-			logger.Warning("failed to emit ScalePlymouthDone signal, err:", err)
-		}
-	}()
-	return nil
+	return dbusutil.ToError(d.scalePlymouth(scale))
 }
 
 func (d *Daemon) scalePlymouth(scale uint32) error {

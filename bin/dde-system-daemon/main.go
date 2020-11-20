@@ -58,13 +58,9 @@ type Daemon struct {
 		NetworkSetConnections          func() `in:"data"`
 		BluetoothGetDeviceTechnologies func() `in:"adapter,device" out:"technologies"`
 	}
-	signals       *struct { //nolint
+	signals *struct { //nolint
 		HandleForSleep struct {
 			start bool
-		}
-		ScalePlymouthDone struct {
-			scale uint32
-			err   string
 		}
 	}
 }
