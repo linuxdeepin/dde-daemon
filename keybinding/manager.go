@@ -719,12 +719,23 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			} else if action.Type == shortcuts.ActionTypeSystemShutdown {
 
 			} else if action.Type == shortcuts.ActionTypeMediaPlayerCtrl {
-				m.clickNum = m.clickNum + 1
-				if m.clickNum == 1 {
-					time.AfterFunc(time.Millisecond*600, func() {
-						m.playMeadiaByHeadphone()
-					})
+				//增蓝牙耳机快捷键的处理
+				if cmd ==shortcuts.MediaPlayerPlay {
+					m.clickNum = m.clickNum + 1
+					if m.clickNum == 1 {
+						time.AfterFunc(time.Millisecond*600, func() {
+							m.playMeadiaByHeadphone()
+						})
+					}
+				} else {
+					if m.mediaPlayerController != nil {
+						err := m.mediaPlayerController.ExecCmd(cmd)
+						if err != nil {
+							logger.Warning(m.mediaPlayerController.Name(), "Controller exec cmd err:", err)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+						}
+					}
 				}
+				
 			}
 		}
 	}
