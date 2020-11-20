@@ -1515,14 +1515,18 @@ func (m *Manager) updateNewVersionData() error {
 	primaryMonitor := reverseMonitorMap["Primary"]
 	slideshowConfig := make(mapMonitorWorkspaceWSPolicy)
 	slideShow := m.WallpaperSlideShow.Get()
-	workspaceCount, _ := m.wm.WorkspaceCount(0)
-	for i := 1; i <= int(workspaceCount); i++ {
-		key := genMonitorKeyString(primaryMonitor, i)
-		slideshowConfig[key] = slideShow
-	}
-	err := m.setPropertyWallpaperSlideShow(slideshowConfig)
+	_, err := doUnmarshalWallpaperSlideshow(slideShow)
 	if err != nil {
-		return err
+		// slideShow的内容无法解析为map[string]string数据表示低版本壁纸，进行数据格式转换
+		workspaceCount, _ := m.wm.WorkspaceCount(0)
+		for i := 1; i <= int(workspaceCount); i++ {
+			key := genMonitorKeyString(primaryMonitor, i)
+			slideshowConfig[key] = slideShow
+		}
+		err := m.setPropertyWallpaperSlideShow(slideshowConfig)
+		if err != nil {
+			return err
+		}
 	}
 
 	monitorWorkspaceWallpaperURIs := make(mapMonitorWorkspaceWallpaperURIs)
