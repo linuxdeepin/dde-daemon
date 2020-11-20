@@ -20,6 +20,8 @@
 package power_manager
 
 import (
+	"os"
+
 	"github.com/godbus/dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/lib/dbusutil"
@@ -75,8 +77,8 @@ func (m *Manager) CanReboot() (bool, *dbus.Error) {
 }
 
 func (m *Manager) CanSuspend() (bool, *dbus.Error) {
-	if !canSuspend() {
-		logger.Debug("cannot suspend")
+	_, err := os.Stat("/sys/power/mem_sleep")
+	if os.IsNotExist(err) {
 		return false, nil
 	}
 
