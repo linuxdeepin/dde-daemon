@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-02 16:46+0800\n"
+"POT-Creation-Date: 2020-11-20 17:03+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/linuxdeepin/teams/3617/fi/)\n"
@@ -55,7 +55,7 @@ msgstr "Käyttäjänimi on jo olemassa"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "Nimi on jo olemassa"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
@@ -65,21 +65,29 @@ msgstr "Käyttäjätunnus on järjestelmän käytössä"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Käyttäjätunnuksen on oltava 3-32 merkin pituinen"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:56
+msgid "Log out for display scaling settings to take effect"
+msgstr ""
+
+#: ../../appearance/scale.go:57
 msgid "Set successfully"
 msgstr "Asetettu onnistuneesti"
 
 #: ../../appearance/scale.go:67
-msgid "Please log back in to view the changes"
-msgstr "Kirjaudu sisään nähdäksesi muutokset"
+msgid "Later"
+msgstr ""
 
-#: ../../appearance/scale.go:74
-msgid "Display scaling"
-msgstr "Näytön skaalaus"
+#: ../../appearance/scale.go:67
+msgid "Log Out Now"
+msgstr ""
 
-#: ../../appearance/scale.go:75
+#: ../../appearance/scale.go:81
 msgid "Setting display scaling"
 msgstr "Asetetaan näytön skaalausta"
+
+#: ../../appearance/scale.go:82
+msgid "Display scaling"
+msgstr "Näytön skaalaus"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -546,40 +554,40 @@ msgstr "%q poistettu onnistuneesti"
 msgid "Failed to uninstall %q"
 msgstr "Kohteen %q poistaminen epäonnistui"
 
-#: ../../network/manager_active_conn.go:362
 #: ../../network/manager_active_conn.go:367
+#: ../../network/manager_active_conn.go:372
 msgid "None"
 msgstr "Mitään"
 
-#: ../../network/manager_active_conn.go:369
+#: ../../network/manager_active_conn.go:374
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit-avain"
 
-#: ../../network/manager_active_conn.go:371
+#: ../../network/manager_active_conn.go:376
 msgid "WPA/WPA2 Personal"
 msgstr "Oma WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:379
+#: ../../network/manager_active_conn.go:384
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:381
+#: ../../network/manager_active_conn.go:386
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:383
+#: ../../network/manager_active_conn.go:388
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:385
+#: ../../network/manager_active_conn.go:390
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:387
+#: ../../network/manager_active_conn.go:392
 msgid "Tunneled TLS"
 msgstr "Tunneloitu TLS"
 
-#: ../../network/manager_active_conn.go:389
+#: ../../network/manager_active_conn.go:394
 msgid "Protected EAP"
 msgstr "Suojattu EAP"
 

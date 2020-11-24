@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-02 16:46+0800\n"
+"POT-Creation-Date: 2020-11-20 17:03+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Alex, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
@@ -57,7 +57,7 @@ msgstr "O nome de usuário já existe"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "O nome já existe"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
@@ -67,21 +67,29 @@ msgstr "O nome de usuário foi usado pelo sistema"
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:56
+msgid "Log out for display scaling settings to take effect"
+msgstr ""
+
+#: ../../appearance/scale.go:57
 msgid "Set successfully"
 msgstr "Definido"
 
 #: ../../appearance/scale.go:67
-msgid "Please log back in to view the changes"
-msgstr "Faça login novamente para ver as alterações"
+msgid "Later"
+msgstr ""
 
-#: ../../appearance/scale.go:74
-msgid "Display scaling"
-msgstr "Escala de Exibição"
+#: ../../appearance/scale.go:67
+msgid "Log Out Now"
+msgstr ""
 
-#: ../../appearance/scale.go:75
+#: ../../appearance/scale.go:81
 msgid "Setting display scaling"
 msgstr "Configurando a escala de exibição"
+
+#: ../../appearance/scale.go:82
+msgid "Display scaling"
+msgstr "Escala de Exibição"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -547,40 +555,40 @@ msgstr "%q foi desinstalado"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao remover %q"
 
-#: ../../network/manager_active_conn.go:362
 #: ../../network/manager_active_conn.go:367
+#: ../../network/manager_active_conn.go:372
 msgid "None"
 msgstr "Nenhum"
 
-#: ../../network/manager_active_conn.go:369
+#: ../../network/manager_active_conn.go:374
 msgid "WEP 40/128-bit Key"
 msgstr "Chave WEP de 40/128-bit"
 
-#: ../../network/manager_active_conn.go:371
+#: ../../network/manager_active_conn.go:376
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Pessoal"
 
-#: ../../network/manager_active_conn.go:379
+#: ../../network/manager_active_conn.go:384
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:381
+#: ../../network/manager_active_conn.go:386
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:383
+#: ../../network/manager_active_conn.go:388
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:385
+#: ../../network/manager_active_conn.go:390
 msgid "FAST"
 msgstr "RÁPIDO"
 
-#: ../../network/manager_active_conn.go:387
+#: ../../network/manager_active_conn.go:392
 msgid "Tunneled TLS"
 msgstr "TLS em túnel"
 
-#: ../../network/manager_active_conn.go:389
+#: ../../network/manager_active_conn.go:394
 msgid "Protected EAP"
 msgstr "EAP Protegido"
 

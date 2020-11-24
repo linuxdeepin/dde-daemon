@@ -64,7 +64,7 @@ func handleSetScaleFactorDone() {
 	notifier := notifications.NewNotifications(sessionBus)
 	nid, err = notifier.Notify(0, "dde-control-center", nid,
 		icon, summary, body,
-		[]string{"_logout", gettext.Tr("Logout Now"), "_later", gettext.Tr("Later")},
+		[]string{"_logout", gettext.Tr("Log Out Now"), "_later", gettext.Tr("Later")},
 		map[string]dbus.Variant{
 			"x-deepin-action-_logout": dbus.MakeVariant(requestLogout),
 			"x-deepin-action-_later":  dbus.MakeVariant(""),

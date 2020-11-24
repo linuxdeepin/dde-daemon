@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-02 16:46+0800\n"
+"POT-Creation-Date: 2020-11-20 17:03+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Chinese (Hong Kong) (https://www.transifex.com/linuxdeepin/teams/3617/zh_HK/)\n"
@@ -49,7 +49,7 @@ msgstr "此用戶名已存在"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr "该名称已存在"
+msgstr "該名稱已存在"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
@@ -59,21 +59,29 @@ msgstr "此用戶名已被系統使用"
 msgid "Username must be between 3 and 32 characters"
 msgstr "用戶名長度必須介於3到32個字符之間"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:56
+msgid "Log out for display scaling settings to take effect"
+msgstr "屏幕縮放需註銷後才能生效"
+
+#: ../../appearance/scale.go:57
 msgid "Set successfully"
 msgstr "設置成功"
 
 #: ../../appearance/scale.go:67
-msgid "Please log back in to view the changes"
-msgstr "設置屏幕縮放後請註銷用戶再查看"
+msgid "Later"
+msgstr "稍後註銷"
 
-#: ../../appearance/scale.go:74
-msgid "Display scaling"
-msgstr "屏幕縮放"
+#: ../../appearance/scale.go:67
+msgid "Log Out Now"
+msgstr "立即註銷"
 
-#: ../../appearance/scale.go:75
+#: ../../appearance/scale.go:81
 msgid "Setting display scaling"
 msgstr "即將設置屏幕縮放"
+
+#: ../../appearance/scale.go:82
+msgid "Display scaling"
+msgstr "屏幕縮放"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -537,40 +545,40 @@ msgstr "成功卸載 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸載失敗"
 
-#: ../../network/manager_active_conn.go:362
 #: ../../network/manager_active_conn.go:367
+#: ../../network/manager_active_conn.go:372
 msgid "None"
 msgstr "無"
 
-#: ../../network/manager_active_conn.go:369
+#: ../../network/manager_active_conn.go:374
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128位 密鑰"
 
-#: ../../network/manager_active_conn.go:371
+#: ../../network/manager_active_conn.go:376
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 個人版"
 
-#: ../../network/manager_active_conn.go:379
+#: ../../network/manager_active_conn.go:384
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:381
+#: ../../network/manager_active_conn.go:386
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:383
+#: ../../network/manager_active_conn.go:388
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:385
+#: ../../network/manager_active_conn.go:390
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:387
+#: ../../network/manager_active_conn.go:392
 msgid "Tunneled TLS"
 msgstr "隧道TLS"
 
-#: ../../network/manager_active_conn.go:389
+#: ../../network/manager_active_conn.go:394
 msgid "Protected EAP"
 msgstr "受保護的EAP"
 

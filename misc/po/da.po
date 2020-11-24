@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-02 16:46+0800\n"
+"POT-Creation-Date: 2020-11-20 17:03+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: scootergrisen, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/linuxdeepin/teams/3617/da/)\n"
@@ -60,21 +60,29 @@ msgstr "Brugernavnet er blevet brugt af systemet"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Brugernavnet skal være mellem 3-32 tegn langt"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:56
+msgid "Log out for display scaling settings to take effect"
+msgstr ""
+
+#: ../../appearance/scale.go:57
 msgid "Set successfully"
 msgstr "Sat"
 
 #: ../../appearance/scale.go:67
-msgid "Please log back in to view the changes"
-msgstr "Log venligst ind igen for at vise ændringerne"
+msgid "Later"
+msgstr ""
 
-#: ../../appearance/scale.go:74
-msgid "Display scaling"
-msgstr "Skærmskalering"
+#: ../../appearance/scale.go:67
+msgid "Log Out Now"
+msgstr ""
 
-#: ../../appearance/scale.go:75
+#: ../../appearance/scale.go:81
 msgid "Setting display scaling"
 msgstr "Sætter skærmskalering"
+
+#: ../../appearance/scale.go:82
+msgid "Display scaling"
+msgstr "Skærmskalering"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -542,40 +550,40 @@ msgstr "%q fjernet"
 msgid "Failed to uninstall %q"
 msgstr "Kunne ikke afinstallere %q"
 
-#: ../../network/manager_active_conn.go:362
 #: ../../network/manager_active_conn.go:367
+#: ../../network/manager_active_conn.go:372
 msgid "None"
 msgstr "Intet"
 
-#: ../../network/manager_active_conn.go:369
+#: ../../network/manager_active_conn.go:374
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit-nøgle"
 
-#: ../../network/manager_active_conn.go:371
+#: ../../network/manager_active_conn.go:376
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 personlig"
 
-#: ../../network/manager_active_conn.go:379
+#: ../../network/manager_active_conn.go:384
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:381
+#: ../../network/manager_active_conn.go:386
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:383
+#: ../../network/manager_active_conn.go:388
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:385
+#: ../../network/manager_active_conn.go:390
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:387
+#: ../../network/manager_active_conn.go:392
 msgid "Tunneled TLS"
 msgstr "Tunneled TLS"
 
-#: ../../network/manager_active_conn.go:389
+#: ../../network/manager_active_conn.go:394
 msgid "Protected EAP"
 msgstr "Beskyttet EAP"
 

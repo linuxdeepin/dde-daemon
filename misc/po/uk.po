@@ -8,17 +8,17 @@
 # Roman <dejitaru.tiger@gmail.com>, 2020
 # Cindy0514, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Yuri Chornoivan <yurchor@ukr.net>, 2020
 # Marck Hrin, 2020
+# Yuri Chornoivan <yurchor@ukr.net>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-02 16:46+0800\n"
+"POT-Creation-Date: 2020-11-20 17:03+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Marck Hrin, 2020\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +52,7 @@ msgstr "Таке ім'я користувача вже існує"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "Таке ім'я вже існує"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
@@ -62,21 +62,29 @@ msgstr "Це ім'я користувача вже використовувал�
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:56
+msgid "Log out for display scaling settings to take effect"
+msgstr ""
+
+#: ../../appearance/scale.go:57
 msgid "Set successfully"
 msgstr "Успішно встановлено"
 
 #: ../../appearance/scale.go:67
-msgid "Please log back in to view the changes"
-msgstr "Увійдіть знову, щоб переглянути зміни"
+msgid "Later"
+msgstr ""
 
-#: ../../appearance/scale.go:74
-msgid "Display scaling"
-msgstr "Маштабування дисплею"
+#: ../../appearance/scale.go:67
+msgid "Log Out Now"
+msgstr ""
 
-#: ../../appearance/scale.go:75
+#: ../../appearance/scale.go:81
 msgid "Setting display scaling"
 msgstr "Налаштування масштабування зображення"
+
+#: ../../appearance/scale.go:82
+msgid "Display scaling"
+msgstr "Маштабування дисплею"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -544,40 +552,40 @@ msgstr "%q успішно видалено"
 msgid "Failed to uninstall %q"
 msgstr "Не вдалося встановити %q"
 
-#: ../../network/manager_active_conn.go:362
 #: ../../network/manager_active_conn.go:367
+#: ../../network/manager_active_conn.go:372
 msgid "None"
 msgstr "Нічого"
 
-#: ../../network/manager_active_conn.go:369
+#: ../../network/manager_active_conn.go:374
 msgid "WEP 40/128-bit Key"
 msgstr "Ключ WEP 40/128-біт"
 
-#: ../../network/manager_active_conn.go:371
+#: ../../network/manager_active_conn.go:376
 msgid "WPA/WPA2 Personal"
 msgstr "Режим WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:379
+#: ../../network/manager_active_conn.go:384
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:381
+#: ../../network/manager_active_conn.go:386
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:383
+#: ../../network/manager_active_conn.go:388
 msgid "LEAP"
 msgstr "ІНТЕРВАЛ"
 
-#: ../../network/manager_active_conn.go:385
+#: ../../network/manager_active_conn.go:390
 msgid "FAST"
 msgstr "ШВИДКО"
 
-#: ../../network/manager_active_conn.go:387
+#: ../../network/manager_active_conn.go:392
 msgid "Tunneled TLS"
 msgstr "Тунельований TLS"
 
-#: ../../network/manager_active_conn.go:389
+#: ../../network/manager_active_conn.go:394
 msgid "Protected EAP"
 msgstr "Захищений EAP"
 
