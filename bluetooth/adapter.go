@@ -154,7 +154,6 @@ func (a *adapter) connectProperties() {
 		}
 		a.Name = value
 		logger.Debugf("%s Name: %v", a, value)
-		a.startDiscovery()
 		a.notifyPropertiesChanged()
 	})
 
@@ -164,7 +163,6 @@ func (a *adapter) connectProperties() {
 		}
 		a.Alias = value
 		logger.Debugf("%s Alias: %v", a, value)
-		a.startDiscovery()
 		a.notifyPropertiesChanged()
 	})
 	a.core.Powered().ConnectChanged(func(hasValue bool, value bool) {
@@ -186,24 +184,33 @@ func (a *adapter) connectProperties() {
 		*/
 		a.Powered = value
 		logger.Debugf("%s Powered: %v", a, value)
-		a.notifyPropertiesChanged()
+		
 		//reconnect devices here to aviod problem when  airplane open and closed,paired devices not connecte initiatively 
 		if value{
+			
 			err := a.core.Discoverable().Set(0, globalBluetooth.config.Discoverable)
 			if err != nil {
 				logger.Warningf("failed to set discoverable for %s: %v", a, err)
 			}
-			err = a.core.StartDiscovery(0)
-			if err != nil {
-				logger.Warningf("failed to start discovery for %s: %v", a, err)
-			} else {
-				logger.Debug("reset timer for stop scan")
-				// start discovering success, reset discovering timer
+			go func(){
+				//time.Sleep(1*time.Second)
+				err = a.core.StopDiscovery(0)
+				globalBluetooth.tryConnectPairedDevices()
+				a.discoveringTimeoutFlag = false
+
+				err = a.core.StartDiscovery(0)
+				if err != nil {
+					logger.Warningf("failed to start discovery for %s: %v", a, err)
+				} 
 				a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
-			}
-			//move reconnect devices into adapter.go when power signal on coming
-			go globalBluetooth.tryConnectPairedDevices()
+	 
+			}()
+			
+				
+		}else{
+			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
 		}
+		a.notifyPropertiesChanged()
 	})
 	a.core.Discovering().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
@@ -211,7 +218,15 @@ func (a *adapter) connectProperties() {
 		}
 		a.Discovering = value
 		logger.Debugf("%s Discovering: %v", a, value)
-		a.notifyPropertiesChanged()
+		if a.discoveringTimeoutFlag{
+			a.notifyPropertiesChanged()
+		}else{
+			if value!=a.Powered{
+				return 
+			}
+			a.notifyPropertiesChanged()
+		}
+		
 	})
 	a.core.Discoverable().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
@@ -219,7 +234,7 @@ func (a *adapter) connectProperties() {
 		}
 		a.Discoverable = value
 		logger.Debugf("%s Discoverable: %v", a, value)
-	
+		a.notifyPropertiesChanged()
 	})
 	a.core.DiscoverableTimeout().ConnectChanged(func(hasValue bool, value uint32) {
 		if !hasValue {
@@ -232,15 +247,12 @@ func (a *adapter) connectProperties() {
 }
 
 func (a *adapter)startDiscovery(){
-
-	discoveringstatus,_ :=a.core.Discovering().Get(0)
-	if !discoveringstatus{
-		err:=a.core.StartDiscovery(0)
-		if err!=nil{
-			logger.Warningf("failed to start discovery for %s: %v",a,err)
-		}else{
-			logger.Debug("reset timer for stop scan")
-			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
-		}
+	a.discoveringTimeoutFlag =false
+	err:=a.core.StartDiscovery(0)
+	if err!=nil{
+		logger.Warningf("failed to start discovery for %s: %v",a,err)
+	}else{
+		logger.Debug("reset timer for stop scan")
+		a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
 	}
 }

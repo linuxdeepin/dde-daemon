@@ -205,8 +205,8 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 	if err != nil {
 		logger.Warningf("failed to set %s powered: %v", a, err)
 		return dbusutil.ToError(err)
-	}
 
+	}
 	// save the powered state
 	b.config.setAdapterConfigPowered(a.address, powered)
 	/*
@@ -219,7 +219,6 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 		if err != nil {
 			logger.Warningf("failed to start discovery for %s: %v", a, err)
 		} else {
-			logger.Debug("reset timer for stop scan")
 			// start discovering success, reset discovering timer
 			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
 		}
