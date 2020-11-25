@@ -90,6 +90,9 @@ func newMouse(service *dbusutil.Service, touchPad *Touchpad) *Mouse {
 }
 
 func (m *Mouse) init() {
+	//触摸板和鼠标都是用mouse的doubleClick，检测到只有触摸板时也同步到xsettings
+	m.syncConfigToXsettings()
+
 	if !m.Exist {
 		tpad := m.touchPad
 		if tpad.Exist && tpad.TPadEnable.Get() {
@@ -104,7 +107,6 @@ func (m *Mouse) init() {
 	m.enableAdaptiveAccelProfile()
 	m.motionAcceleration()
 	m.motionThreshold()
-	m.syncConfigToXsettings()
 	if m.DisableTpad.Get() {
 		m.disableTouchPad()
 	}
