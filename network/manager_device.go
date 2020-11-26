@@ -502,10 +502,11 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
 	//wireless switch handle here to be compatible for f9 control
-	if m.IsDeviceWireless(devPath){
-	
-		if enabled!=m.wirelessEnabled{
-			m.wirelessEnabled = enabled
+	if m.IsDeviceWireless(devPath) {
+		
+		currentstatus,_ := m.getDeviceEnabled(devPath)
+		if enabled != currentstatus{
+			
 			err := m.enableDevice(devPath, enabled,true)
 			if err != nil {
 				return dbusutil.ToError(err)
@@ -519,7 +520,7 @@ func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Erro
 			return dbusutil.ToError(err)
 		}
 
-	}else{
+	}else {
 		err := m.enableDevice(devPath, enabled,true)
 		if err != nil {
 			return dbusutil.ToError(err)
@@ -529,18 +530,15 @@ func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Erro
 }
 
 func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate bool) (err error) {
-	logger.Info("call EnableDevice in session", devPath, enabled)
 	cpath, err := m.sysNetwork.EnableDevice(0, string(devPath), enabled)
 	if err != nil {
 		logger.Warning("EnableDevice:",err)
 		return err
 	}
-	//emit DeviceEnabled singal here,do not use system signal
-	err = m.service.Emit(manager, "DeviceEnabled", string(devPath), enabled)
-	if err != nil {
-		logger.Warning(err)
-	}
+
 	// check if need activate connection
+	// set enable device state
+	m.setDeviceEnabled(enabled, devPath)
 	if enabled && activate {
 		var uuid string
 	
@@ -555,8 +553,7 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 		m.ActivateConnection(uuid, devPath)
 	}
 
-	// set enable device state
-	m.setDeviceEnabled(enabled, devPath)
+	
 	return
 }
 
@@ -681,7 +678,6 @@ func (m *Manager) UpdateWirelessAccessPoints() (err error) {
 	wirelessAccessPointsJsonStr := string(wirelessAccessPointsJson)
 	m.WirelessAccessPoints = wirelessAccessPointsJsonStr
 	m.emitPropChangedWirelessAccessPoints(wirelessAccessPointsJsonStr)
-	logger.Debug("@@@@@@@emitPropChangedWirelessAccessPoints",wirelessAccessPointsJsonStr)
 	return nil
 
 }
@@ -696,7 +692,7 @@ func (m *Manager) RequestWirelessScan() *dbus.Error {
 			if err != nil {
 				logger.Debug("GetAllAccessPoints",err)
 			}
-			logger.Debug("******************GetAllAccessPoints",accessPointsList)
+		
 			for _,accessPointPath:=range accessPointsList{
 				m.addAccessPoint(dev.Path,accessPointPath)
 			}

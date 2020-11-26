@@ -344,18 +344,15 @@ func (m *Manager) initSysNetwork(sysBus *dbus.Conn) {
 	if err != nil {
 		logger.Warning(err)
 	}
-	
-	m.InitWirelessDeviceState()
 
-	/*
 	_, err = m.sysNetwork.ConnectDeviceEnabled(func(devPath dbus.ObjectPath, enabled bool) {
-		logger.Debug("\n############3Emit DeviceEnabled#########3\n",string(devPath), enabled)
 		err := m.service.Emit(manager, "DeviceEnabled", string(devPath), enabled)
 		if err != nil {
 			logger.Warning(err)
 		}
+		m.setDeviceEnabled(enabled, devPath)
 	})
-	*/
+	
 	if err != nil {
 		logger.Warning(err)
 	}
