@@ -72,11 +72,11 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 	if title == "下载" {
 		appId = "uos-browser"
 	}
-	//+ TODO通过获取wps的Desktop文件来规避无法显示appId的情况,此修改只对wpsoffice应用有影响
-	if appId == "wpsoffice" {
-		//+ 获取GIO_LAUNCHED_DESKTOP_FILE需要写在if逻辑中，不然会导致在pangv机器上打开系统管理器等应用崩溃问题
+	//+ 防止出现指针为空调用后崩溃问题
+	if winInfo.process != nil {
+		//+ 对于启动的应用目前逻辑是先获取应用的desktop文件名，如果能够获取到使用该文件名去匹配；无法获取则使用appId去匹配！
 		desktopNamePath := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
-		if desktopNamePath == "" {
+		if !strings.Contains(desktopNamePath, ".desktop") {
 			appInfo = NewAppInfo(appId)
 		} else {
 			appInfo = NewAppInfo(desktopNamePath)
