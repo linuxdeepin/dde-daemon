@@ -147,7 +147,6 @@ func toPinyinAndShortening(str string) (string, string) {
 func (item *Item) setSearchTargets(pinyinEnabled bool) {
 	item.addSearchTarget(nameScore, item.Name)
 	item.addSearchTarget(nameScore, item.enName)
-	item.addSearchTarget(genericNameScore, item.genericName)
 
 	if pinyinEnabled {
 		pinyin, shortening := toPinyinAndShortening(item.Name)
