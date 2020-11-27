@@ -51,9 +51,14 @@ func HandlePrepareForSleep(sleep bool) {
 	}
 	if sleep {
 		//disconnect all connect devices
-		for _, dobjlist := range globalBluetooth.connectedDevices {
-			for _,connectedDevice := range dobjlist{
-				go connectedDevice.core.Disconnect(0)
+		for _, dobjlist := range globalBluetooth.devices {
+			for _,device := range dobjlist{
+				//获取每个device的状态，若正在链接或已链接则断开
+				connectstatus := device.getState()
+				if connectstatus==1 || connectstatus==2{
+					logger.Debug("HandlePrepareForSleep to disconnect device:",device.Name,device.Alias,device.Path)
+					go device.Disconnect()
+				}
 			}
 		}
 		for _, aobj := range globalBluetooth.adapters {
