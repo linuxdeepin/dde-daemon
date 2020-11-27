@@ -76,7 +76,8 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 	if winInfo.process != nil {
 		//+ 对于启动的应用目前逻辑是先获取应用的desktop文件名，如果能够获取到使用该文件名去匹配；无法获取则使用appId去匹配！
 		desktopNamePath := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
-		if !strings.Contains(desktopNamePath, ".desktop") {
+		//+ TODO通过desktop环境变量中是否含有deepin-terminal来判断应用是否通过终端运行,后面可以通过判断父进程是否为deepin-terminal来筛选.
+		if !strings.Contains(desktopNamePath, ".desktop") || strings.Contains(desktopNamePath, "deepin-terminal.desktop") {
 			appInfo = NewAppInfo(appId)
 		} else {
 			appInfo = NewAppInfo(desktopNamePath)
