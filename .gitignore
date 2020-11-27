@@ -46,3 +46,4 @@ gopath/
 
 a.out
 misc/polkit-action/*.policy
+coverage.csv

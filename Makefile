@@ -62,6 +62,9 @@ build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/des
 test: prepare
 	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -v ./...
 
+test-coverage: prepare
+	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -cover -v ./... | awk '$$2 ~ "_${CURDIR}" {print $$2","$$5}' | sed "s:${CURDIR}::g" | sed 's/files\]/0\.0%/g' > coverage.csv
+
 print_gopath: prepare
 	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
 
