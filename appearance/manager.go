@@ -73,6 +73,7 @@ const (
 	TypeStandardFont      = "standardfont"
 	TypeMonospaceFont     = "monospacefont"
 	TypeFontSize          = "fontsize"
+        baseCursorSize        = 24
 )
 
 const (
@@ -498,7 +499,8 @@ func (m *Manager) init() error {
 	if err != nil {
 		logger.Warning("failed to set cursor theme:", err)
 	}
-
+	// Init cursor size
+	m.wm.CursorSize().Set(0, int32(baseCursorSize*m.getScaleFactor()))
 	// Init theme list
 	time.AfterFunc(time.Second*10, func() {
 		if !dutils.IsFileExist(fonts.DeepinFontConfig) {
