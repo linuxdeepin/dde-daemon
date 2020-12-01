@@ -62,7 +62,7 @@ type Manager struct {
 	sessionSigLoop     *dbusutil.SignalLoop
 	syncConfig         *dsync.Config
 	clientList         windowSlice
-	clientListInited   bool
+	clientListInitEnd  bool
 	windowInfoMap      map[x.Window]*WindowInfo
 	windowInfoMapMutex sync.RWMutex
 	settings           *gio.Settings
@@ -106,7 +106,7 @@ type Manager struct {
 			entryId string
 		}
 
-		PluginSettingsSynced struct{}
+		PluginSettingsSynced  struct{}
 		DockAppSettingsSynced struct{}
 	}
 	//nolint
@@ -312,7 +312,7 @@ func (m *Manager) SetFrontendWindowRect(x, y int32, width, height uint32) *dbus.
 	m.FrontendWindowRect.Height = height
 	err := m.service.EmitPropertyChanged(m, "FrontendWindowRect", m.FrontendWindowRect)
 	if err != nil {
-		logger.Warning("EmitPropertyChanged error:",err)
+		logger.Warning("EmitPropertyChanged error:", err)
 	}
 	m.updateHideState(false)
 	return nil

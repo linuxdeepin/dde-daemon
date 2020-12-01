@@ -54,11 +54,12 @@ func (m *Manager) initEntries() {
 			time.Sleep(time.Second)
 			err := m.service.StopExport(entry)
 			if err != nil {
-				logger.Warning("StopExport error:",err)
+				logger.Warning("StopExport error:", err)
 			}
 		}()
 	}
 	m.initClientList()
+	m.clientListInitEnd = true
 }
 
 func (m *Manager) connectSettingKeyChanged(key string, handler func(key string)) {

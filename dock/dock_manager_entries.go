@@ -40,7 +40,7 @@ func (m *Manager) allocEntryId() string {
 }
 
 func (m *Manager) markAppLaunched(appInfo *AppInfo) {
-	if !m.clientListInited || appInfo == nil {
+	if !m.clientListInitEnd || appInfo == nil {
 		return
 	}
 	file := appInfo.GetFileName()
@@ -108,7 +108,6 @@ func (m *Manager) initClientList() {
 		winInfo := m.registerWindow(win)
 		m.attachOrDetachWindow(winInfo)
 	}
-	m.clientListInited = true
 }
 
 func (m *Manager) initDockedApps() {
