@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mozillazg/go-pinyin"
+	pinyin "github.com/mozillazg/go-pinyin"
 	"pkg.deepin.io/lib/appinfo/desktopappinfo"
 )
 
@@ -134,7 +134,7 @@ func init() {
 func toPinyinAndShortening(str string) (string, string) {
 	pySliceSlice := pinyin.Pinyin(str, pinyinArgs)
 	pyStrSlice := make([]string, len(pySliceSlice))
-	shortening := bytes.NewBuffer(make([]byte, len(pySliceSlice)))
+	var shortening bytes.Buffer
 	for idx, pySlice := range pySliceSlice {
 		pyStrSlice[idx] = strings.Join(pySlice, "")
 		if len(pySlice[0]) > 0 {
