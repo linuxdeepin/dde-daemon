@@ -64,6 +64,7 @@ Requires:       gnome-keyring-pam
 Requires:       imwheel
 Requires:       deepin-installer-timezones
 
+Recommends:     lshw
 Recommends:     iso-codes
 Recommends:     mobile-broadband-provider-info
 Recommends:     google-noto-mono-fonts
