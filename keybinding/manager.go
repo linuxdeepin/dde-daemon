@@ -461,7 +461,8 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 					return
 				} else {
 					var stringList = [...]string{"PowerOff", "CapsLock", "MonBrightnessDown", "MonBrightnessUp",
-					"VolumeMute", "VolumeDown", "VolumeUp", "AudioMicMute", "WLAN", "Tools", "Full screenshot"}					
+					"VolumeMute", "VolumeDown", "VolumeUp", "AudioMicMute", "WLAN", "Tools", "Full screenshot",
+					"PowerOff"}
 					for _, str := range stringList {
 						err = obj.Call("org.kde.KGlobalAccel.setActiveByUniqueName", 0, str, true).Err
 						if err != nil {
@@ -475,6 +476,28 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 				err = obj.Call("org.kde.KGlobalAccel.blockGlobalShortcuts", 0, false).Err
 				if err != nil {
 					return
+				}
+			}
+		}
+	})
+
+	//+ 监控鼠标移动事件
+	err = sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.CursorMove",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			if m.dpmsIsOff {
+				err := exec.Command("dde_wldpms", "-s", "On").Run()
+				if err != nil {
+					logger.Warningf("failed to exec dde_wldpms: %s", err)
+				} else {
+					m.dpmsIsOff = false
 				}
 			}
 		}
