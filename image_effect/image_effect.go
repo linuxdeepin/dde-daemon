@@ -135,7 +135,7 @@ func newImageEffect() *ImageEffect {
 }
 
 func ddePixmix(uid int, inputFile, outputFile string, envVars []string) error {
-	return runCmdRedirectStdOut(uid, outputFile, []string{"dde-pixmix", "-o=-", inputFile}, envVars)
+	return runCmdRedirectStdOut(uid, outputFile, []string{"xvfb-run", "dde-pixmix", "-o=-", inputFile}, envVars)
 }
 
 func (ie *ImageEffect) Get(sender dbus.Sender, effect, filename string) (outputFile string, busErr *dbus.Error) {
@@ -173,7 +173,7 @@ func (ie *ImageEffect) Get(sender dbus.Sender, effect, filename string) (outputF
 		err = xerrors.Errorf("failed to get process %d environ: %w", pid, err)
 		return
 	}
-	var envVarNames = []string{"DISPLAY", "XDG_RUNTIME_DIR"}
+	var envVarNames = []string{"XDG_RUNTIME_DIR"}
 	var envVars = make([]string, len(envVarNames))
 	for idx, envVarName := range envVarNames {
 		envVarVal := processEnv.Get(envVarName)

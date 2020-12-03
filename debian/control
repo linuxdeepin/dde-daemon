@@ -83,6 +83,7 @@ Depends: ${shlibs:Depends},
  xkb-data,
  libnotify-bin,
  rfkill,
+ xvfb,
  hwinfo,
  dmidecode
 Breaks: lastore-daemon(<< 0.9.64)

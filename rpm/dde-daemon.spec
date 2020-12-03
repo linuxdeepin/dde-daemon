@@ -93,6 +93,7 @@ Requires:       dde-polkit-agent
 Requires:       rfkill
 Requires:       gvfs
 Requires:       iw
+Requires:       %{_bindir}/xvfb-run
 
 Recommends:     iso-codes
 Recommends:     imwheel
