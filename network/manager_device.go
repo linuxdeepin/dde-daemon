@@ -420,9 +420,26 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			logger.Warningf("set device enable failed, err: %v", err)
 		}
 	} else if dev.State <= nm.NM_DEVICE_STATE_DISCONNECTED && enabled {
-		_, err = m.sysNetwork.EnableDevice(0, dev.Interface, false)
-		if err != nil {
-			logger.Warningf("set device enable failed, err: %v", err)
+		// wired device has three state: enabled, disabled, disconnected(state is enabled but unplugged)
+		// so should judge if need adjust state here
+		needUpdate := true
+		if dev.nmDevType == nm.NM_DEVICE_TYPE_ETHERNET {
+			nmDevWired := nmDev.Wired()
+			carrier, err := nmDevWired.Carrier().Get(0)
+			if err != nil {
+				logger.Warning(err)
+			}
+			// if current device is unplugged, show disconnected or disabled according to origin state
+			// so do not need to adjust here
+			if !carrier {
+				needUpdate = false
+			}
+		}
+		if needUpdate {
+			_, err = m.sysNetwork.EnableDevice(0, dev.Interface, false)
+			if err != nil {
+				logger.Warningf("set device enable failed, err: %v", err)
+			}
 		}
 	}
 	dev.Managed = nmGeneralIsDeviceManaged(devPath)
