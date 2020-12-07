@@ -20,12 +20,15 @@
 package timedated
 
 import (
+	"sync"
+
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
 
 type Daemon struct {
 	*loader.ModuleBase
+	wg sync.WaitGroup
 }
 
 var (
@@ -36,6 +39,7 @@ var (
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("timedated", daemon, logger)
+	daemon.wg.Add(1)
 	return daemon
 }
 
@@ -43,11 +47,17 @@ func (*Daemon) GetDependencies() []string {
 	return []string{}
 }
 
+func (d *Daemon) WaitEnable() {
+	d.wg.Wait()
+	return
+}
+
 func init() {
 	loader.Register(NewDaemon(logger))
 }
 
-func (*Daemon) Start() error {
+func (d *Daemon) Start() error {
+	defer d.wg.Done()
 	if _manager != nil {
 		return nil
 	}

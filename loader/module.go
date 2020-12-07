@@ -31,12 +31,13 @@ type Module interface {
 	GetDependencies() []string
 	SetLogLevel(log.Priority)
 	LogLevel() log.Priority
+	WaitEnable() // TODO: should this function return when modules enable failed?
 	ModuleImpl
 }
 type Modules []Module
 
 type ModuleImpl interface {
-	Start() error
+	Start() error // please keep Start sync, please return err, err log will be done by loader
 	Stop() error
 }
 

@@ -20,6 +20,8 @@
 package dock
 
 import (
+	"sync"
+
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 
@@ -28,6 +30,7 @@ import (
 
 type Daemon struct {
 	*loader.ModuleBase
+	wg sync.WaitGroup
 }
 
 const moduleName = "dock"
@@ -35,7 +38,12 @@ const moduleName = "dock"
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase(moduleName, daemon, logger)
+	daemon.wg.Add(1)
 	return daemon
+}
+
+func (d *Daemon) WaitEnable() {
+	d.wg.Wait()
 }
 
 func (d *Daemon) Stop() error {
@@ -55,11 +63,12 @@ func (d *Daemon) Stop() error {
 func (d *Daemon) startFailed() {
 	err := d.Stop()
 	if err != nil {
-		logger.Warning("Stop error:",err)
+		logger.Warning("Stop error:", err)
 	}
 }
 
 func (d *Daemon) Start() error {
+	defer d.wg.Done()
 	if dockManager != nil {
 		return nil
 	}

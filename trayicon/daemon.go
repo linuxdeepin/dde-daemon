@@ -21,6 +21,7 @@ package trayicon
 
 import (
 	"os"
+	"sync"
 
 	dbus "github.com/godbus/dbus"
 	x "github.com/linuxdeepin/go-x11-client"
@@ -34,6 +35,7 @@ type Daemon struct {
 	manager *TrayManager
 	snw     *StatusNotifierWatcher
 	sigLoop *dbusutil.SignalLoop // session bus signal loop
+	wg      sync.WaitGroup
 }
 
 const moduleName = "trayicon"
@@ -41,6 +43,7 @@ const moduleName = "trayicon"
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase(moduleName, daemon, logger)
+	daemon.wg.Add(1)
 	return daemon
 }
 
@@ -48,11 +51,17 @@ func (d *Daemon) GetDependencies() []string {
 	return []string{}
 }
 
+func (d *Daemon) WaitEnable() {
+	d.wg.Wait()
+	return
+}
+
 func (d *Daemon) Name() string {
 	return moduleName
 }
 
 func (d *Daemon) Start() error {
+	defer d.wg.Done()
 	var err error
 	// init x conn
 	XConn, err = x.NewConn()

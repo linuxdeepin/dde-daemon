@@ -20,6 +20,8 @@
 package accounts
 
 import (
+	"sync"
+
 	"pkg.deepin.io/dde/daemon/accounts/logined"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
@@ -39,12 +41,18 @@ type Daemon struct {
 	manager        *Manager
 	loginedManager *logined.Manager
 	imageBlur      *ImageBlur
+	wg             sync.WaitGroup
 }
 
 func NewDaemon() *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("accounts", daemon, logger)
+	daemon.wg.Add(1)
 	return daemon
+}
+
+func (d *Daemon) WaitEnable() {
+	d.wg.Wait()
 }
 
 func (*Daemon) GetDependencies() []string {
@@ -52,6 +60,7 @@ func (*Daemon) GetDependencies() []string {
 }
 
 func (d *Daemon) Start() error {
+	defer d.wg.Done()
 	if d.manager != nil {
 		return nil
 	}

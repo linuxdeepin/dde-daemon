@@ -22,6 +22,7 @@ package appearance
 
 import (
 	"errors"
+	"sync"
 	"time"
 
 	"github.com/godbus/dbus"
@@ -38,6 +39,7 @@ var (
 
 type Module struct {
 	*loader.ModuleBase
+	wg sync.WaitGroup
 }
 
 func init() {
@@ -45,9 +47,14 @@ func init() {
 	loader.Register(NewModule(logger))
 }
 
+func (m *Module) WaitEnable() {
+	m.wg.Wait()
+}
+
 func NewModule(logger *log.Logger) *Module {
 	var d = new(Module)
 	d.ModuleBase = loader.NewModuleBase("appearance", d, logger)
+	d.wg.Add(1)
 	return d
 }
 
@@ -133,19 +140,11 @@ func (*Module) start() error {
 }
 
 func (m *Module) Start() error {
+	defer m.wg.Done()
 	if _m != nil {
 		return nil
 	}
-
-	go func() {
-		t0 := time.Now()
-		err := m.start()
-		if err != nil {
-			logger.Warning(err)
-		}
-		logger.Info("start appearance module cost", time.Since(t0))
-	}()
-	return nil
+	return m.start()
 }
 
 func (*Module) Stop() error {

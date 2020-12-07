@@ -1,6 +1,8 @@
 package image_effect
 
 import (
+	"sync"
+
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -12,13 +14,19 @@ func init() {
 type Module struct {
 	ie *ImageEffect
 	*loader.ModuleBase
+	wg sync.WaitGroup
 }
 
-func (m Module) GetDependencies() []string {
+func (m *Module) WaitEnable() {
+	m.wg.Wait()
+}
+
+func (m *Module) GetDependencies() []string {
 	return nil
 }
 
-func (m Module) Start() error {
+func (m *Module) Start() error {
+	defer m.wg.Done()
 	if m.ie != nil {
 		return nil
 	}
@@ -32,7 +40,7 @@ func (m Module) Start() error {
 	return nil
 }
 
-func (m Module) Stop() error {
+func (m *Module) Stop() error {
 	// TODO
 	return nil
 }
@@ -44,6 +52,7 @@ var logger = log.NewLogger("daemon/" + moduleName)
 func newModule() *Module {
 	m := &Module{}
 	m.ModuleBase = loader.NewModuleBase(moduleName, m, logger)
+	m.wg.Add(1)
 	return m
 }
 

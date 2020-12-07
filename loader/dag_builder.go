@@ -33,9 +33,6 @@ type DAGBuilder struct {
 	log *log.Logger
 
 	dag *graph.Data
-
-	nodes          map[string]*graph.Node
-	handledModules map[string]struct{}
 }
 
 func NewDAGBuilder(loader *Loader, enablingModules []string, disableModules []string, flag EnableFlag) *DAGBuilder {
@@ -55,31 +52,22 @@ func NewDAGBuilder(loader *Loader, enablingModules []string, disableModules []st
 		flag:            flag,
 		log:             loader.log,
 		dag:             graph.New(),
-		nodes:           map[string]*graph.Node{},
-		handledModules:  map[string]struct{}{},
 	}
 }
 
-func createNodeIfNeeded(dag *graph.Data, nodes map[string]*graph.Node, name string) *graph.Node {
-	node, ok := nodes[name]
-	if !ok {
-		nodes[name] = graph.NewNode(name)
-		node = nodes[name]
-		dag.AddNode(node)
-	}
-
-	return node
-}
-
-func (builder *DAGBuilder) buildDAG(enablingModules []string) error {
+func (builder *DAGBuilder) buildDAG() error {
 	logLevel := builder.log.GetLogLevel()
-	for _, name := range enablingModules {
-		if _, ok := builder.handledModules[name]; ok {
-			continue
+	queue := make([]*graph.Node, 0, len(builder.enablingModules))
+	for _, name := range builder.enablingModules {
+		node := graph.NewNode(name)
+		if builder.dag.AddNode(node) {
+			queue = append(queue, node)
 		}
-
-		builder.handledModules[name] = struct{}{}
-
+	}
+	for len(queue) != 0 {
+		node := queue[0]
+		queue = queue[1:]
+		name := node.ID
 		module := builder.modules.Get(name)
 		if module == nil {
 			if builder.flag.HasFlag(EnableFlagIgnoreMissingModule) {
@@ -91,7 +79,6 @@ func (builder *DAGBuilder) buildDAG(enablingModules []string) error {
 				return &EnableError{ModuleName: name, Code: ErrorMissingModule}
 			}
 		}
-
 		if _, ok := builder.disableModules[name]; ok {
 			if !builder.flag.HasFlag(EnableFlagForceStart) {
 				return &EnableError{ModuleName: name, Code: ErrorConflict}
@@ -99,31 +86,20 @@ func (builder *DAGBuilder) buildDAG(enablingModules []string) error {
 
 			// TODO: add a flag: skip module whose dependencies is not disabled.
 		}
-
-		node := createNodeIfNeeded(builder.dag, builder.nodes, name)
 		dependencies := module.GetDependencies()
-
 		for _, dependency := range dependencies {
-			if tmp := builder.modules.Get(dependency); tmp == nil {
-				// TODO: add a flag: skip modules whose dependencies is not meet.
-				return &EnableError{ModuleName: name, Code: ErrorNoDependencies, detail: dependency}
+			depNode := graph.NewNode(dependency)
+			if builder.dag.AddNode(depNode) {
+				queue = append(queue, depNode)
 			}
-
-			depNode := createNodeIfNeeded(builder.dag, builder.nodes, dependency)
-			builder.dag.UpdateEdgeWeight(depNode, node, 0)
-		}
-
-		err := builder.buildDAG(dependencies)
-		if err != nil {
-			return err
+			builder.dag.UpdateEdgeWeight(builder.dag.GetNodeByID(dependency), node, 0)
 		}
 	}
-
 	return nil
 }
 
 func (builder *DAGBuilder) Execute() (*graph.Data, error) {
-	err := builder.buildDAG(builder.enablingModules)
+	err := builder.buildDAG()
 	if err != nil {
 		return nil, err
 	}

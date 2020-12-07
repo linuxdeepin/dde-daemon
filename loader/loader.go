@@ -113,7 +113,7 @@ func (l *Loader) List() []Module {
 	var modules Modules
 
 	l.lock.Lock()
-	modules = append(modules,l.modules...)
+	modules = append(modules, l.modules...)
 	l.lock.Unlock()
 
 	return modules
@@ -125,37 +125,67 @@ func (l *Loader) GetModule(name string) Module {
 	return l.modules.Get(name)
 }
 
+func (l *Loader) WaitDependencies(module Module) {
+	for _, dependencyName := range module.GetDependencies() {
+		l.modules.Get(dependencyName).WaitEnable()
+	}
+}
+
 func (l *Loader) EnableModules(enablingModules []string, disableModules []string, flag EnableFlag) error {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 
+	// build a dag
+	startTime := time.Now()
 	builder := NewDAGBuilder(l, enablingModules, disableModules, flag)
 	dag, err := builder.Execute()
 	if err != nil {
 		return err
 	}
+	endTime := time.Now()
+	duration := endTime.Sub(startTime)
+	l.log.Infof("build dag done, cost %s", duration)
 
+	// perform a topo sort
 	nodes, ok := dag.TopologicalDag()
 	if !ok {
 		return &EnableError{Code: ErrorCircleDependencies}
 	}
+	endTime = time.Now()
+	duration = endTime.Sub(startTime)
+	l.log.Infof("topo sort done, cost add up to %s", duration)
 
-	for _, name := range enablingModules {
-		node := nodes.Get(name)
+	// enable modules
+	for _, node := range nodes {
 		if node == nil {
 			continue
 		}
 		module := l.modules.Get(node.ID)
-		l.log.Info("enable module", node.ID)
-		startTime := time.Now()
-		err := module.Enable(true)
-		endTime := time.Now()
-		duration := endTime.Sub(startTime)
-		if err != nil {
-			l.log.Fatalf("enable module %s failed: %s, cost %s", node.ID, err, duration)
-		}
-		l.log.Info("enable module", node.ID, "done, cost", duration)
+		go func() {
+			l.log.Info("enable module", module.Name())
+			startTime := time.Now()
+
+			// wait for its dependency
+			l.WaitDependencies(module)
+			l.log.Info("module", module.Name(), "wait done")
+			err := module.Enable(true)
+			endTime := time.Now()
+			duration := endTime.Sub(startTime)
+			if err != nil {
+				l.log.Fatalf("enable module %s failed: %s, cost %s", module.Name(), err, duration)
+			} else {
+				l.log.Infof("enable module %s done cost %s", module.Name(), duration)
+			}
+		}()
 	}
 
+	for _, n := range nodes {
+		m := l.modules.Get(n.ID)
+		m.WaitEnable()
+	}
+
+	endTime = time.Now()
+	duration = endTime.Sub(startTime)
+	l.log.Infof("enable modules done, cost add up to %s", duration)
 	return nil
 }

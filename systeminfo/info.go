@@ -66,6 +66,7 @@ type Daemon struct {
 	PropsMu       sync.RWMutex
 	systeminfo    *systeminfo.SystemInfo
 	sigSystemLoop *dbusutil.SignalLoop
+	wg            sync.WaitGroup
 	*loader.ModuleBase
 }
 
@@ -74,7 +75,12 @@ var logger = log.NewLogger("daemon/systeminfo")
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("systeminfo", daemon, logger)
+	daemon.wg.Add(1)
 	return daemon
+}
+
+func (d *Daemon) WaitEnable() {
+	d.wg.Wait()
 }
 
 func (d *Daemon) GetDependencies() []string {
@@ -82,6 +88,7 @@ func (d *Daemon) GetDependencies() []string {
 }
 
 func (d *Daemon) Start() error {
+	defer d.wg.Done()
 	if d.info != nil {
 		return nil
 	}
@@ -127,7 +134,7 @@ func (d *Daemon) initSysSystemInfo() {
 	d.sigSystemLoop.Start()
 	d.systeminfo.InitSignalExt(d.sigSystemLoop, true)
 
-	//通过demicode获取"CPU频率", 接收com.deepin.daemon.SystemInfo的属性CurrentSpeed改变信号
+	// 通过 demicode 获取 "CPU 频率", 接收 com.deepin.daemon.SystemInfo 的属性 CurrentSpeed 改变信号
 	err = d.systeminfo.CurrentSpeed().ConnectChanged(func(hasValue bool, value uint64) {
 		logger.Infof("demicode hasValue : %t, CurrentSpeed : %d", hasValue, value)
 		if !hasValue {
@@ -135,7 +142,7 @@ func (d *Daemon) initSysSystemInfo() {
 		}
 		d.PropsMu.Lock()
 		d.info.CurrentSpeed = value
-		//假如此时cpu max mhz还是0, 且value不是0, 则给d.info.CPUMaxMHz再赋值
+		//假如此时 cpu max mhz 还是0, 且 value 不是0, 则给 d.infoCPUMaxMHz 再赋值
 		if isFloatEqual(d.info.CPUMaxMHz, 0.0) && value != 0 {
 			d.info.CPUMaxMHz = float64(value)
 		}

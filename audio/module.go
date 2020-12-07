@@ -20,6 +20,7 @@
 package audio
 
 import (
+	"sync"
 	"time"
 
 	"golang.org/x/xerrors"
@@ -39,12 +40,18 @@ func init() {
 type Module struct {
 	*loader.ModuleBase
 	audio *Audio
+	wg    sync.WaitGroup
 }
 
 func NewModule(logger *log.Logger) *Module {
 	var d = new(Module)
 	d.ModuleBase = loader.NewModuleBase("audio", d, logger)
+	d.wg.Add(1)
 	return d
+}
+
+func (m *Module) WaitEnable() {
+	m.wg.Wait()
 }
 
 func (*Module) GetDependencies() []string {
@@ -52,9 +59,16 @@ func (*Module) GetDependencies() []string {
 }
 
 func (m *Module) start() error {
+	err := startPulseaudio() // 为了保证蓝牙模块依赖audio模块,并且audio模块启动pulseaudio完成.
+	if err != nil {
+		err = xerrors.Errorf("failed to start pulseaudio: %w", err)
+		logger.Warning(err)
+		return err
+	}
+
 	service := loader.GetService()
 	m.audio = newAudio(service)
-	err := m.audio.init()
+	err = m.audio.init()
 	if err != nil {
 		logger.Warning("failed to init audio module:", err)
 		return nil
@@ -76,24 +90,15 @@ func (m *Module) start() error {
 }
 
 func (m *Module) Start() error {
+	defer m.wg.Done()
 	if m.audio != nil {
 		return nil
 	}
-	err := startPulseaudio() // 为了保证蓝牙模块依赖audio模块,并且audio模块启动pulseaudio完成.
+	waitSoundThemePlayerExit()
+	err := m.start()
 	if err != nil {
-		err = xerrors.Errorf("failed to start pulseaudio: %w", err)
 		logger.Warning(err)
-		return err
-	} // TODO 等loader模块重构依赖完成,将该部分再修改会start中
-	go func() {
-		waitSoundThemePlayerExit()
-		t0 := time.Now()
-		err := m.start()
-		if err != nil {
-			logger.Warning(err)
-		}
-		logger.Info("start audio module cost", time.Since(t0))
-	}()
+	}
 	return nil
 }
 

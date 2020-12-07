@@ -20,6 +20,8 @@
 package apps
 
 import (
+	"sync"
+
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -36,17 +38,23 @@ type Daemon struct {
 	*loader.ModuleBase
 	recorder *ALRecorder
 	watcher  *DFWatcher
+	wg       sync.WaitGroup
 }
 
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("apps", daemon, logger)
+	daemon.wg.Add(1)
 	return daemon
 }
 
+func (d *Daemon) WaitEnable() {
+	d.wg.Wait()
+}
+
 func (d *Daemon) Start() error {
+	defer d.wg.Done()
 	service := loader.GetService()
-	logger.Debug("apps daemon start")
 
 	var err error
 	d.watcher, err = newDFWatcher(service)

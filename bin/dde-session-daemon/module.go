@@ -27,33 +27,8 @@ import (
 	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/gsettings"
 
-	_ "pkg.deepin.io/dde/daemon/dock"
-	_ "pkg.deepin.io/dde/daemon/trayicon"
-	_ "pkg.deepin.io/dde/daemon/x_event_monitor"
-
-	_ "pkg.deepin.io/dde/daemon/network"
-
-	_ "pkg.deepin.io/dde/daemon/audio"
-
-	_ "pkg.deepin.io/dde/daemon/screensaver"
-	_ "pkg.deepin.io/dde/daemon/sessionwatcher"
-
-	// depends: screensaver, sessionwatcher
-	_ "pkg.deepin.io/dde/daemon/session/power"
-
-	_ "pkg.deepin.io/dde/daemon/launcher"
-	_ "pkg.deepin.io/dde/daemon/service_trigger"
-
-	_ "pkg.deepin.io/dde/daemon/clipboard"
-	_ "pkg.deepin.io/dde/daemon/keybinding"
-
 	_ "pkg.deepin.io/dde/daemon/appearance"
-	_ "pkg.deepin.io/dde/daemon/inputdevices"
-
-	_ "pkg.deepin.io/dde/daemon/gesture"
-	_ "pkg.deepin.io/dde/daemon/housekeeping"
-	_ "pkg.deepin.io/dde/daemon/timedate"
-
+	_ "pkg.deepin.io/dde/daemon/audio"
 	_ "pkg.deepin.io/dde/daemon/bluetooth"
 	_ "pkg.deepin.io/dde/daemon/screenedge"
 
@@ -65,12 +40,29 @@ import (
 	_ "pkg.deepin.io/dde/daemon/systeminfo"
 
 	_ "pkg.deepin.io/dde/daemon/calltrace"
+	_ "pkg.deepin.io/dde/daemon/clipboard"
 	_ "pkg.deepin.io/dde/daemon/debug"
-
-	_ "pkg.deepin.io/dde/daemon/lastore"
-
+	_ "pkg.deepin.io/dde/daemon/dock"
+	_ "pkg.deepin.io/dde/daemon/gesture"
 	_ "pkg.deepin.io/dde/daemon/grub_gfx"
+	_ "pkg.deepin.io/dde/daemon/housekeeping"
+	_ "pkg.deepin.io/dde/daemon/inputdevices"
+	_ "pkg.deepin.io/dde/daemon/keybinding"
+	_ "pkg.deepin.io/dde/daemon/lastore"
+	_ "pkg.deepin.io/dde/daemon/launcher"
+	_ "pkg.deepin.io/dde/daemon/mime"
+	_ "pkg.deepin.io/dde/daemon/miracast"
+	_ "pkg.deepin.io/dde/daemon/network"
+	_ "pkg.deepin.io/dde/daemon/screenedge"
+	_ "pkg.deepin.io/dde/daemon/screensaver"
+	_ "pkg.deepin.io/dde/daemon/service_trigger"
+	_ "pkg.deepin.io/dde/daemon/session/power"
 	_ "pkg.deepin.io/dde/daemon/session/uadpagent"
+	_ "pkg.deepin.io/dde/daemon/sessionwatcher"
+	_ "pkg.deepin.io/dde/daemon/systeminfo"
+	_ "pkg.deepin.io/dde/daemon/timedate"
+	_ "pkg.deepin.io/dde/daemon/trayicon"
+	_ "pkg.deepin.io/dde/daemon/x_event_monitor"
 )
 
 var (
