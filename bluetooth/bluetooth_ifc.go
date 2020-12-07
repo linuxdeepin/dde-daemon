@@ -91,14 +91,22 @@ func (b *Bluetooth) SetDeviceTrusted(dpath dbus.ObjectPath, trusted bool) *dbus.
 
 // GetDevices return all device objects that marshaled by json.
 func (b *Bluetooth) GetDevices(apath dbus.ObjectPath) (devicesJSON string, err *dbus.Error) {
-	b.devicesLock.Lock()
-	devices := b.devices[apath]
-	var result []*device
-	for _, device := range devices {
-		result = append(result, device)
+	if adapter, ok := b.adapters[apath]; ok {
+		b.devicesLock.Lock()
+		if adapter.discoveringTimeoutFlag {					//蓝牙设备被清除， 发送备份的蓝牙设备列表
+			var result []*backupDevice
+			devices := b.backupDevices[apath]
+			result = append(result, devices...)
+			devicesJSON = marshalJSON(result)
+
+		} else {
+			var result []*device
+			devices := b.devices[apath]
+			result = append(result, devices...)
+			devicesJSON = marshalJSON(result)
+		}
+		b.devicesLock.Unlock()
 	}
-	devicesJSON = marshalJSON(result)
-	b.devicesLock.Unlock()
 	return
 }
 
