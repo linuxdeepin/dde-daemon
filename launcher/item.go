@@ -20,11 +20,11 @@
 package launcher
 
 import (
-	"bytes"
 	"fmt"
 	"strings"
+	"unicode"
 
-	pinyin "github.com/mozillazg/go-pinyin"
+	"github.com/Lofanmi/pinyin-golang/pinyin"
 	"pkg.deepin.io/lib/appinfo/desktopappinfo"
 )
 
@@ -121,27 +121,48 @@ const (
 	categoryScore    = 60
 )
 
-var pinyinArgs = pinyin.NewArgs()
-
-func init() {
-	pinyinArgs.Heteronym = false
-	pinyinArgs.Fallback = func(r rune, a pinyin.Args) []string {
-		return []string{string(r)}
-	}
+func isHans(data rune) bool {
+	return unicode.Is(unicode.Han, data)
 }
 
-//获取拼音和拼音简拼
-func toPinyinAndShortening(str string) (string, string) {
-	pySliceSlice := pinyin.Pinyin(str, pinyinArgs)
-	pyStrSlice := make([]string, len(pySliceSlice))
-	var shortening bytes.Buffer
-	for idx, pySlice := range pySliceSlice {
-		pyStrSlice[idx] = strings.Join(pySlice, "")
-		if len(pySlice[0]) > 0 {
-			shortening.WriteByte(pySlice[0][0])
+func hansToPinyinAndAbbr(hans string) (string, string) {
+	dict := pinyin.NewDict()
+	pyTmp := dict.Sentence(hans).None()
+	abbrTmp := dict.Abbr(hans, "")
+	return pyTmp, abbrTmp
+}
+
+//获取拼音和拼音简拼,如Qt 5 设计器 -> Qt5shejiqi, Qt5sjq
+//当字符中有字母和数字以及汉字时，只转换汉字部分，其他部分不转换
+func toPinyinAndAbbr(str string) (string, string) {
+	var hans strings.Builder
+	var haveHans bool
+	var pinYin strings.Builder
+	var abbr strings.Builder
+	for _, v := range str {
+		if isHans(v) {
+			hans.WriteRune(v)
+			haveHans = true
+		} else {
+			if haveHans {
+				pyTmp, abbrTmp := hansToPinyinAndAbbr(hans.String())
+				pinYin.WriteString(pyTmp)
+				abbr.WriteString(abbrTmp)
+				haveHans = false
+				hans.Reset()
+			}
+			pinYin.WriteRune(v)
+			abbr.WriteRune(v)
 		}
 	}
-	return strings.Join(pyStrSlice, ""), shortening.String()
+	if haveHans {
+		pyTmp, abbrTmp := hansToPinyinAndAbbr(hans.String())
+		pinYin.WriteString(pyTmp)
+		abbr.WriteString(abbrTmp)
+	}
+
+	return strings.Replace(pinYin.String(), " ", "", -1), strings.Replace(abbr.String(), " ", "", -1)
+
 }
 
 func (item *Item) setSearchTargets(pinyinEnabled bool) {
@@ -149,9 +170,9 @@ func (item *Item) setSearchTargets(pinyinEnabled bool) {
 	item.addSearchTarget(nameScore, item.enName)
 
 	if pinyinEnabled {
-		pinyin, shortening := toPinyinAndShortening(item.Name)
+		pinyin, abbr := toPinyinAndAbbr(item.Name)
 		item.addSearchTarget(nameScore, pinyin)
-		item.addSearchTarget(nameScore, shortening)
+		item.addSearchTarget(nameScore, abbr)
 	}
 }
 
