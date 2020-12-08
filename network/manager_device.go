@@ -457,6 +457,13 @@ func (m *Manager) getDeviceIndex(devPath dbus.ObjectPath) (devType string, index
 }
 
 func (m *Manager) IsDeviceEnabled(devPath dbus.ObjectPath) (bool, *dbus.Error) {
+	//return disable status when airplanemode on
+	if m.IsDeviceWireless(devPath) {
+		if !m.wirelessEnabled {
+			return false, nil
+		}
+	}
+	
 	b, err := m.sysNetwork.IsDeviceEnabled(0, string(devPath))
 	return b, dbusutil.ToError(err)
 }
@@ -530,6 +537,7 @@ func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Erro
 }
 
 func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate bool) (err error) {
+	logger.Debug("!!!!!!!!enableDevice!!!!!!!!!!",devPath,enabled)
 	cpath, err := m.sysNetwork.EnableDevice(0, string(devPath), enabled)
 	if err != nil {
 		logger.Warning("EnableDevice:",err)

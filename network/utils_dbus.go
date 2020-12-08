@@ -50,11 +50,38 @@ func (m *Manager) initDbusObjects() {
 
 	nmManager = nmdbus.NewManager(systemBus)
 	nmManager.InitSignalExt(m.sysSigLoop, true)
+	err = nmManager.WirelessEnabled().ConnectChanged(func(hasValue bool, value bool) {
+		if !hasValue {
+			return
+		}
+		m.wirelessEnabled = value
+		for connTyp, wirelessDevs := range m.devices {
+			if connTyp == "wireless" {
+				for _, dev := range wirelessDevs {
+					if value {
+						//judge current status of device,do not enable device if it's alreadly set disable
+						enabled, err := m.IsDeviceEnabled(dev.Path)
+						if err != nil {
+							logger.Warning(err)
+							continue
+						}
+						if enabled {
+							m.EnableDevice(dev.Path,value)
+							m.service.Emit(manager, "DeviceEnabled", string(dev.Path), enabled)
+						}
 
+					} else {
+						m.DisconnectDevice(dev.Path)
+						m.service.Emit(manager, "DeviceEnabled", string(dev.Path), value)
+					}	
+				}
+			}
+		}
+	})
 	nmSettings = nmdbus.NewSettings(systemBus)
 	nmSettings.InitSignalExt(m.sysSigLoop, true)
 
-	loginManager = login1.NewManager(systemBus)
+	loginManager = login1.NewManager(systemBus)			
 	loginManager.InitSignalExt(m.sysSigLoop, true)
 
 	notification = notifications.NewNotifications(sessionBus)
