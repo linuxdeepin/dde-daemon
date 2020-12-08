@@ -47,7 +47,8 @@ Build-Depends:
  libnl-genl-3-dev,
  deepin-desktop-schemas,
  python3,
- librsvg2-bin
+ librsvg2-bin,
+ golang-github-lofanmi-pinyin-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
