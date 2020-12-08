@@ -40,8 +40,14 @@ const (
 
 func (m *Manager) setPrepareSuspend(v int) {
 	m.prepareSuspendLocker.Lock()
-	m.prepareSuspend = v
-	m.prepareSuspendLocker.Unlock()
+	defer m.prepareSuspendLocker.Unlock()
+	if m.prepareSuspend != v {
+		m.prepareSuspend = v
+		err := m.service.Emit(m, "SuspendState", v)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
 }
 
 func (m *Manager) shouldIgnoreIdleOn() bool {

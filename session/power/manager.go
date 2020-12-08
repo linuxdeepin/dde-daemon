@@ -140,6 +140,13 @@ type Manager struct {
 		// 平板锁屏时息屏处理接口
 		SetScreenBlack func()
 	}
+
+	//nolint
+	signals *struct {
+		SuspendState struct {
+			state int
+		}
+	}
 }
 
 var _manager *Manager
