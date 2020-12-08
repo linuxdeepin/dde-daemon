@@ -91,9 +91,6 @@ install: build translate install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde-daemon
 	cp -r misc/dde-daemon/*   ${DESTDIR}${PREFIX}/share/dde-daemon/
 
-	mkdir -pv ${DESTDIR}/var/cache/appearance
-	cp -r misc/thumbnail ${DESTDIR}/var/cache/appearance/
-
 	mkdir -pv ${DESTDIR}/lib/systemd/system/
 	cp -f misc/systemd/services/* ${DESTDIR}/lib/systemd/system/
 
