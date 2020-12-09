@@ -50,6 +50,7 @@ func (m *Manager) initDbusObjects() {
 
 	nmManager = nmdbus.NewManager(systemBus)
 	nmManager.InitSignalExt(m.sysSigLoop, true)
+	m.wirelessEnabled, _ = nmManager.WirelessEnabled().Get(0)
 	err = nmManager.WirelessEnabled().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
