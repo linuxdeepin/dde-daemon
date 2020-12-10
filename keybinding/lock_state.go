@@ -87,20 +87,19 @@ func setNumLockWl(wl *kwayland.OutputManagement, conn *x.Conn, state NumLockStat
 
 	var state0 NumLockState
 	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
-		systemBus, err := dbus.SystemBus()
+		sessionBus, err := dbus.SessionBus()
 		if err != nil {
-			return nil
+			return err
 		}
-		systemdObj := systemBus.Object("com.deepin.system.Evdev", "/com/deepin/system/Evdev")
-		var ret int32
 		time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
-		err = systemdObj.Call("com.deepin.system.Evdev.GetNumLockState", 0).Store(&ret)
+		sessionObj := sessionBus.Object("org.kde.KWin", "/Xkb")
+		var ret int32
+		err = sessionObj.Call("org.kde.kwin.Xkb.getLeds", 0).Store(&ret)
 		if err != nil {
 			logger.Warning(err)
-			return nil
+			return err
 		}
-
-		if 0 == ret {
+		if 0 == (ret & 0x1) {
 			state0 = NumLockOff
 		} else {
 			state0 = NumLockOn

@@ -28,7 +28,6 @@ import (
 	_ "pkg.deepin.io/dde/daemon/fprintd"
 	_ "pkg.deepin.io/dde/daemon/image_effect"
 	_ "pkg.deepin.io/dde/daemon/system/airplane_mode"
-	_ "pkg.deepin.io/dde/daemon/system/evdev"
 	_ "pkg.deepin.io/dde/daemon/system/gesture"
 	_ "pkg.deepin.io/dde/daemon/system/network"
 	_ "pkg.deepin.io/dde/daemon/system/power"

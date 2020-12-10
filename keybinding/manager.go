@@ -740,20 +740,19 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 	} else if action.Type == shortcuts.ActionTypeShowNumLockOSD {
 		var state NumLockState
 		if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
-			systemBus, err := dbus.SystemBus()
+			sessionBus, err := dbus.SessionBus()
 			if err != nil {
 				return
 			}
-			systemdObj := systemBus.Object("com.deepin.system.Evdev", "/com/deepin/system/Evdev")
-			var ret int32
 			time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
-			err = systemdObj.Call("com.deepin.system.Evdev.GetNumLockState", 0).Store(&ret)
+			sessionObj := sessionBus.Object("org.kde.KWin", "/Xkb")
+			var ret int32
+			err = sessionObj.Call("org.kde.kwin.Xkb.getLeds", 0).Store(&ret)
 			if err != nil {
 				logger.Warning(err)
 				return
 			}
-
-			if 0 == ret {
+			if 0 == (ret & 0x1) {
 				state = NumLockOff
 			} else {
 				state = NumLockOn
@@ -788,20 +787,19 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 
 		var state CapsLockState
 		if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
-			systemBus, err := dbus.SystemBus()
+			sessionBus, err := dbus.SessionBus()
 			if err != nil {
 				return
 			}
 			time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
-			systemdObj := systemBus.Object("com.deepin.system.Evdev", "/com/deepin/system/Evdev")
+			sessionObj := sessionBus.Object("org.kde.KWin", "/Xkb")
 			var ret int32
-			err = systemdObj.Call("com.deepin.system.Evdev.GetCapsLockState", 0).Store(&ret)
+			err = sessionObj.Call("org.kde.kwin.Xkb.getLeds", 0).Store(&ret)
 			if err != nil {
 				logger.Warning(err)
 				return
 			}
-
-			if 0 == ret {
+			if 0 == (ret & 0x2) {
 				state = CapsLockOff
 			} else {
 				state = CapsLockOn
