@@ -502,6 +502,28 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 			}
 		}
 	})
+
+	//+ 监控鼠标按下事件
+	err = sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonPress").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.ButtonPress",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			if m.dpmsIsOff {
+				err := exec.Command("dde_wldpms", "-s", "On").Run()
+				if err != nil {
+					logger.Warningf("failed to exec dde_wldpms: %s", err)
+				} else {
+					m.dpmsIsOff = false
+				}
+			}
+		}
+	})
 	return nil
 }
 
