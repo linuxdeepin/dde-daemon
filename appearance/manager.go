@@ -1056,6 +1056,7 @@ func (m *Manager) loadWSConfig() {
 }
 
 func (m *Manager) updateWSPolicy(policy string) {
+	logger.Debug("updateWSPolicy->get m.WallpaperSlideShow=", policy)
 	cfg, err := m.doUnmarshalWallpaperSlideshow(policy)
 	m.loadWSConfig()
 	if err == nil {
@@ -1068,6 +1069,9 @@ func (m *Manager) updateWSPolicy(policy string) {
 			_, ok = m.wsLoopMap[icfg]
 			if !ok {
 				m.wsLoopMap[icfg] = newWSLoop()
+			}
+			if m.wsSchedulerMap[icfg] != nil {
+				m.wsSchedulerMap[icfg].fn = m.autoChangeBg
 			}
 			if m.curMonitorSpace == icfg && isValidWSPolicy(policy) {
 				nSec, err := strconv.ParseUint(policy, 10, 32)
