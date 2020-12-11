@@ -23,7 +23,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 
@@ -78,6 +77,16 @@ const ( // power按键事件的响应
 	powerActionShowUI
 )
 
+//+ 根据产品需求，目前只开发F1,F2,F5，F6快捷键的长按效果
+var (
+	longPressList = []string{
+		"MonBrightnessDown",
+		"MonBrightnessUp",
+		"VolumeDown",
+		"VolumeUp",
+	}
+)
+
 type Manager struct {
 	service *dbusutil.Service
 	// properties
@@ -97,7 +106,7 @@ type Manager struct {
 	clickNum                uint32
 	delayNetworkStateChange bool
 	dpmsIsOff               bool
-	shortcutIsPressed       bool
+	lpm                     *LongPressManager
 	shortcutCmd             string
 	shortcutKey             string
 	shortcutKeyCmd          string
@@ -183,6 +192,82 @@ const (
 	SKLStateOSDShown
 )
 
+type LongPressManager struct {
+	m              *Manager
+	period         int
+	keyCode        string
+	running        bool
+	longHanderQuit chan bool
+}
+
+func newLongPressManager(pm *Manager) *LongPressManager {
+	return &LongPressManager{
+		m:              pm,
+		period:         200,
+		running:        false,
+		longHanderQuit: make(chan bool),
+	}
+}
+
+func (lpm *LongPressManager) Run(code string, state int) {
+	go func(code string, state int) {
+		if lpm.running {
+			quitSuccess := false
+			lpm.longHanderQuit <- true
+			//短暂延时一下，保证能够上次协程能正常退出,重试三次
+			retry := 3
+			for retry > 0 {
+				retry--
+				time.Sleep(100 * time.Millisecond)
+				if !lpm.running {
+					//结束成功
+					quitSuccess = true
+					break
+				}
+			}
+			if !quitSuccess {
+				//退出失败
+				logger.Warning("last quit failed.")
+				return
+			}
+		}
+		lpm.running = true
+		lpm.keyCode = code
+		if lpm.period < 100 {
+			lpm.period = 100
+		}
+		//先运行一次
+		logger.Debug("do long press")
+		lpm.m.handleKeyEventByWayland(waylandMediaIdMap[code])
+		for lpm.running {
+			select {
+			case <-time.After(time.Duration(lpm.period) * time.Millisecond):
+				lpm.m.handleKeyEventByWayland(waylandMediaIdMap[code])
+			case <-lpm.longHanderQuit:
+				lpm.running = false
+				logger.Debug("quit long press")
+			}
+		}
+	}(code, state)
+}
+
+func (lpm *LongPressManager) Quit(code string) {
+	if lpm.running && lpm.keyCode == code {
+		lpm.longHanderQuit <- true
+	}
+}
+
+func canLongPress(key string) bool {
+	can := false
+	for _, item := range longPressList {
+		if item == key {
+			can = true
+			break
+		}
+	}
+	return can
+}
+
 func (m *Manager) systemConn() *dbus.Conn {
 	return m.systemSigLoop.Conn()
 }
@@ -253,7 +338,6 @@ func (m *Manager) init() {
 	sysBus, _ := dbus.SystemBus()
 	m.delayNetworkStateChange = true
 	m.dpmsIsOff = false
-	m.shortcutIsPressed = false
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
@@ -310,10 +394,11 @@ func (m *Manager) init() {
 	})
 	m.initHandlers()
 	m.clickNum = 0
+	m.lpm = newLongPressManager(m)
+
 	go m.ListenGlobalAccelRelease(sessionBus)
 	go m.ListenGlobalAccel(sessionBus)
 	go m.ListenKeyboardEvent(sysBus)
-	go m.DealWithShortcutEvent()
 }
 
 var kwinSysActionCmdMap = map[string]string{
@@ -418,14 +503,11 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 			m.shortcutKeyCmd = sig.Body[1].(string)
 			ok := strings.Compare(string("kwin"), m.shortcutKey)
 			if ok == 0 {
-				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1], m.shortcutIsPressed)
+				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
 				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
-				//+ 根据产品需求，目前只开发F1,F2,F5，F6快捷键的长按效果
-				if m.shortcutKeyCmd == "MonBrightnessDown" || m.shortcutKeyCmd == "MonBrightnessUp" ||
-				   m.shortcutKeyCmd == "VolumeDown" || m.shortcutKeyCmd == "VolumeUp" {
-					m.shortcutIsPressed = true
+				if canLongPress(m.shortcutKeyCmd) {
+					m.lpm.Run(m.shortcutKeyCmd, 1)
 				} else {
-					m.shortcutIsPressed = false
 					if m.shortcutCmd == "" {
 						m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
 					} else {
@@ -449,7 +531,7 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 		if len(sig.Body) > 0 {
 			isLocked := sig.Body[0].(bool)
 			if isLocked {
-				m.shortcutIsPressed = false
+				//m.shortcutIsPressed = false
 
 				sessionBus, err := dbus.SessionBus()
 				if err != nil {
@@ -461,8 +543,8 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 					return
 				} else {
 					var stringList = [...]string{"PowerOff", "CapsLock", "MonBrightnessDown", "MonBrightnessUp",
-					"VolumeMute", "VolumeDown", "VolumeUp", "AudioMicMute", "WLAN", "Tools", "Full screenshot",
-					"PowerOff"}
+						"VolumeMute", "VolumeDown", "VolumeUp", "AudioMicMute", "WLAN", "Tools", "Full screenshot",
+						"PowerOff"}
 					for _, str := range stringList {
 						err = obj.Call("org.kde.KGlobalAccel.setActiveByUniqueName", 0, str, true).Err
 						if err != nil {
@@ -567,34 +649,19 @@ func (m *Manager) ListenGlobalAccelRelease(sessionBus *dbus.Conn) error {
 		Name: "org.kde.kglobalaccel.Component.globalShortcutReleased",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
-			m.shortcutIsPressed = false
-		}
-	})
-	return nil
-}
-
-func (m *Manager) DealWithShortcutEvent() {
-	for {
-		if m.shortcutIsPressed {
-			for {
-				if m.shortcutCmd == "" {
-					m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
-				} else {
-					m.execCmd(m.shortcutCmd, true)
-				}
-				if !m.shortcutIsPressed {
-					break
-				}
-
-				time.Sleep(200 * time.Millisecond)
-
-				if !m.shortcutIsPressed {
-					break
+			m.shortcutKey = sig.Body[0].(string)
+			m.shortcutKeyCmd = sig.Body[1].(string)
+			ok := strings.Compare(string("kwin"), m.shortcutKey)
+			if ok == 0 {
+				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
+				if canLongPress(m.shortcutKeyCmd) {
+					logger.Debug("quit long press")
+					m.lpm.Quit(m.shortcutKeyCmd)
 				}
 			}
 		}
-		runtime.Gosched()
-	}
+	})
+	return nil
 }
 
 func (m *Manager) handleKeyEventFromLockFront(changKey string) {
