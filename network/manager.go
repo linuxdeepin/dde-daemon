@@ -20,6 +20,7 @@
 package network
 
 import (
+	"os"
 	"os/exec"
 	"sync"
 	"time"
@@ -423,6 +424,10 @@ func (m *Manager) initNMObjManager(systemBus *dbus.Conn) {
 }
 
 func (m *Manager) doPortalAuthentication() {
+	portalEnv := os.Getenv("PORTAL_ENABLE")
+	if portalEnv != "1" {
+		return
+	}
 	err := exec.Command("pgrep", "startdde").Run()
 	if err != nil {
 		return
