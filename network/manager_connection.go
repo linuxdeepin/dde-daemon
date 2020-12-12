@@ -23,7 +23,8 @@ import (
 	"fmt"
 	"sort"
 
-        "time"
+	"time"
+
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"pkg.deepin.io/dde/daemon/network/nm"
 	dbus "pkg.deepin.io/lib/dbus1"
@@ -58,7 +59,7 @@ func (m *Manager) initConnectionManage() {
 	m.connectionsLock.Lock()
 	m.connections = make(map[string]connectionSlice)
 	m.connectionsLock.Unlock()
-        var CurentConnectionsList []dbus.ObjectPath
+	var CurentConnectionsList []dbus.ObjectPath
 
 	_, err := nmSettings.ConnectNewConnection(func(cpath dbus.ObjectPath) {
 		logger.Info("add connection", cpath)
@@ -457,7 +458,7 @@ func (m *Manager) ensureWirelessHotspotConnectionExists(wirelessDevPath dbus.Obj
 // DeleteConnection delete a connection through uuid.
 func (m *Manager) DeleteConnection(uuid string) *dbus.Error {
 	//删除当前链接，将accessPoints属性中uuid属性置为空
-	for tdmpevPath,devaccesspointlist := range m.accessPoints{
+	for tdmpevPath, devaccesspointlist := range m.accessPoints {
 		for i, ap := range devaccesspointlist {
 			if uuid == ap.Uuid {
 				m.accessPoints[tdmpevPath][i].Uuid = ""
@@ -465,6 +466,7 @@ func (m *Manager) DeleteConnection(uuid string) *dbus.Error {
 		}
 	}
 	err := m.deleteConnection(uuid)
+	m.UpdateWirelessAccessPoints()
 	return dbusutil.ToError(err)
 }
 
@@ -473,7 +475,9 @@ func (m *Manager) deleteConnection(uuid string) (err error) {
 	if err != nil {
 		return
 	}
-
+	//前端在删除后1s内再去连接，nm的信号给慢了，导致后端数据同步慢，导致前端出现wifi的第四级页面
+	//直接在这里删除connect配置，更新后端数据
+	m.removeConnection(cpath)
 	nmConn, err := nmNewSettingsConnection(cpath)
 	if err != nil {
 		return

@@ -22,10 +22,10 @@ package network
 import (
 	"errors"
 	"fmt"
-
+	//"time"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"pkg.deepin.io/dde/daemon/network/nm"
-	"pkg.deepin.io/lib/dbus1"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/utils"
 )
@@ -64,6 +64,7 @@ type accessPoint struct {
 	Strength     uint8
 	Uuid         string
 	Path         dbus.ObjectPath
+	HwAddress    string
 }
 
 func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoint, err error) {
@@ -139,6 +140,7 @@ func (a *accessPoint) updateProps() {
 	a.Secured = getApSecType(a.nmAp) != apSecNone
 	a.SecuredInEap = getApSecType(a.nmAp) == apSecEap
 	a.Strength, _ = a.nmAp.Strength().Get(0)
+	a.HwAddress, _ = a.nmAp.HwAddress().Get(0)
 }
 
 func getApSecType(ap *nmdbus.AccessPoint) apSecType {
@@ -211,7 +213,7 @@ func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
 	if err != nil {
 		return
 	}
-	
+
 	//sync new ap uuid
 	wirelessconnections := m.connections[deviceWifi]
 	for _, connectiondata := range wirelessconnections {
@@ -392,22 +394,25 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 		ssid, err = nmAp.Ssid().Get(0)
 		//创建新链接配置时，同步uuid到accessPoints属性中
 		devaccesspointlist := m.accessPoints[devPath]
-		for i, ap := range devaccesspointlist {
+		
+		for _, ap := range devaccesspointlist {
 			if decodeSsid(ssid) == ap.Ssid {
-				m.accessPoints[devPath][i].Uuid = uuid
+				ap.Uuid = uuid
 			}
 		}
-
+		
 		if err != nil {
 			logger.Warning("failed to get Ap Ssid:", err)
 			return
 		}
-
+		
 		data := newWirelessConnectionData(decodeSsid(ssid), uuid, ssid, secType)
+		
 		cpath, _, err = nmAddAndActivateConnection(data, devPath, true)
 		if err != nil {
 			return
 		}
+		m.UpdateWirelessAccessPoints()
 	}
 	return
 }

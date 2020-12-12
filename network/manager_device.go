@@ -136,9 +136,9 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 
 	nmDev.InitSignalExt(m.sysSigLoop, true)
 
-	//add device state change signal 
-	err=nmDev.State().ConnectChanged(func(hasValue bool, value uint32) {
-		dev.State,_ = nmDev.State().Get(0)
+	//add device state change signal
+	err = nmDev.State().ConnectChanged(func(hasValue bool, value uint32) {
+		dev.State, _ = nmDev.State().Get(0)
 		m.updatePropDevices()
 	})
 
@@ -191,7 +191,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 	case nm.NM_DEVICE_TYPE_WIFI:
 		nmDevWireless := nmDev.Wireless()
 		dev.ClonedAddress, _ = nmDevWireless.HwAddress().Get(0)
-		dev.HwAddress, _ = nmDevWireless.PermHwAddress().Get(0)		
+		dev.HwAddress, _ = nmDevWireless.PermHwAddress().Get(0)
 
 		// connect property, about wireless active access point
 		err = nmDevWireless.ActiveAccessPoint().ConnectChanged(func(hasValue bool,
@@ -463,16 +463,16 @@ func (m *Manager) IsDeviceEnabled(devPath dbus.ObjectPath) (bool, *dbus.Error) {
 			return false, nil
 		}
 	}
-	
+
 	b, err := m.sysNetwork.IsDeviceEnabled(0, string(devPath))
 	return b, dbusutil.ToError(err)
 }
 
-func (m *Manager) IsDeviceWireless(devPath dbus.ObjectPath) (bool) {
+func (m *Manager) IsDeviceWireless(devPath dbus.ObjectPath) bool {
 	for _, devs := range m.devices {
 		for _, dev := range devs {
 			if dev.Path == devPath {
-				if dev.nmDevType==nm.NM_DEVICE_TYPE_WIFI{
+				if dev.nmDevType == nm.NM_DEVICE_TYPE_WIFI {
 					return true
 				}
 			}
@@ -496,7 +496,7 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 		}
 		// wifi设备是否处于可连接而未连接状态，那么可以连接
 		if dev.State == nm.NM_DEVICE_STATE_DISCONNECTED {
-			err := m.enableDevice(devPath, true,true)
+			err := m.enableDevice(devPath, true, true)
 			if err == nil {
 				// 连接成功，退出
 				return
@@ -510,25 +510,22 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
 	//wireless switch handle here to be compatible for f9 control
 	if m.IsDeviceWireless(devPath) {
-		
-		currentstatus,_ := m.getDeviceEnabled(devPath)
-		if enabled != currentstatus{
-			
-			err := m.enableDevice(devPath, enabled,true)
+
+		currentstatus, _ := m.getDeviceEnabled(devPath)
+		if enabled != currentstatus {
+
+			err := m.enableDevice(devPath, enabled, true)
 			if err != nil {
 				return dbusutil.ToError(err)
 			}
-			if enabled{
-				time.AfterFunc(5*time.Second,func(){
-					logger.Debug("enable wireles_Device and RequestWirelessScan")
-					m.RequestWirelessScan()
-				})
+			if enabled {
+				m.updateWirelessCountTicker.Reset()
 			}
 			return dbusutil.ToError(err)
 		}
 
-	}else {
-		err := m.enableDevice(devPath, enabled,true)
+	} else {
+		err := m.enableDevice(devPath, enabled, true)
 		if err != nil {
 			return dbusutil.ToError(err)
 		}
@@ -537,10 +534,10 @@ func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Erro
 }
 
 func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate bool) (err error) {
-	logger.Debug("!!!!!!!!enableDevice!!!!!!!!!!",devPath,enabled)
+	logger.Debug("!!!!!!!!enableDevice!!!!!!!!!!", devPath, enabled)
 	cpath, err := m.sysNetwork.EnableDevice(0, string(devPath), enabled)
 	if err != nil {
-		logger.Warning("EnableDevice:",err)
+		logger.Warning("EnableDevice:", err)
 		return err
 	}
 
@@ -549,8 +546,8 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 	m.setDeviceEnabled(enabled, devPath)
 	if enabled && activate {
 		var uuid string
-	
-		_,err =nmGetConnectionData(cpath)
+
+		_, err = nmGetConnectionData(cpath)
 		if err != nil {
 			return nil
 		}
@@ -561,7 +558,6 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 		m.ActivateConnection(uuid, devPath)
 	}
 
-	
 	return
 }
 
@@ -653,13 +649,12 @@ func (m *Manager) listDeviceConnections(devPath dbus.ObjectPath) ([]dbus.ObjectP
 }
 
 func (m *Manager) UpdateWirelessAccessPoints() (err error) {
-	
+
 	wirelessAccessPoints := make(map[dbus.ObjectPath][]*accessPoint)
 	if devices, ok := m.devices[deviceWifi]; ok {
 		for _, dev := range devices {
-			
-			//每一次扫描就获取每个热点是否存在相对应的uuid配置
 			accessPoints := m.getAccessPointsByPath(dev.Path)
+			
 			wirelessconnections := m.connections[deviceWifi]
 			for _, accessPoint := range accessPoints {
 				for _, connectiondata := range wirelessconnections {
@@ -669,16 +664,16 @@ func (m *Manager) UpdateWirelessAccessPoints() (err error) {
 
 				}
 			}
-
-			statustmp,_:=m.IsDeviceEnabled(dev.Path)
 			
-			if !statustmp && accessPoints ==nil{
-			 	return nil
+			statustmp, _ := m.IsDeviceEnabled(dev.Path)
+
+			if !statustmp && accessPoints == nil {
+				continue
 			}
 			wirelessAccessPoints[dev.Path] = accessPoints
 		}
 	}
-	
+
 	wirelessAccessPointsJson, err := json.Marshal(wirelessAccessPoints)
 	if err != nil {
 		logger.Warning(err)
@@ -695,64 +690,30 @@ func (m *Manager) RequestWirelessScan() *dbus.Error {
 	if devices, ok := m.devices[deviceWifi]; ok {
 		for _, dev := range devices {
 			//add scan action
-			dev.nmDev.RequestScan(0,nil)
-			accessPointsList,err := dev.nmDev.GetAllAccessPoints(0)
-			if err != nil {
-				logger.Debug("GetAllAccessPoints",err)
-			}
-		
-			for _,accessPointPath:=range accessPointsList{
-				m.addAccessPoint(dev.Path,accessPointPath)
-			}
-		}
-	}
-	
-	go m.UpdateWirelessAccessPoints()
-	return nil
-}
-/*
-// RequestWirelessScan request all wireless devices re-scan access point list.
-func (m *Manager) RequestWirelessScan() *dbus.Error {
-	m.devicesLock.Lock()
-	wirelessAccessPoints := make(map[dbus.ObjectPath][]*accessPoint)
-	if devices, ok := m.devices[deviceWifi]; ok {
-		for _, dev := range devices {
 			err := dev.nmDev.RequestScan(0, nil)
 			if err != nil {
-				logger.Debug(err)
+				logger.Debug("RequestScan error", dev.Path, err)
 			}
-			//每一次扫描就获取每个热点是否存在相对应的uuid配置
-			accessPoints := m.getAccessPointsByPath(dev.Path)
-			wirelessconnections := m.connections[deviceWifi]
-			for _, accessPoint := range accessPoints {
-				for _, connectiondata := range wirelessconnections {
-					if connectiondata.Ssid == accessPoint.Ssid {
-						accessPoint.Uuid = connectiondata.Uuid
-					}
-
-				}
-			}
-			statustmp,_:=m.IsDeviceEnabled(dev.Path)
-			if !statustmp && accessPoints ==nil{
-				//continue
-				return nil
-			}
-			wirelessAccessPoints[dev.Path] = accessPoints
 		}
 	}
-	m.devicesLock.Unlock()
-	wirelessAccessPointsJson, err := json.Marshal(wirelessAccessPoints)
-	if err != nil {
-		logger.Warning(err)
+	//wait 3s for results of aplist
+	time.Sleep(3 * time.Second)
+	if devices, ok := m.devices[deviceWifi]; ok {
+		for _, dev := range devices {		
+			accessPointsList, err := dev.nmDev.GetAllAccessPoints(0)
+			if err != nil {
+				logger.Debug("GetAllAccessPoints", err)
+			}
+			for _, accessPointPath := range accessPointsList {
+				m.addAccessPoint(dev.Path, accessPointPath)
+			}
+		}
 	}
-	wirelessAccessPointsJsonStr := string(wirelessAccessPointsJson)
-	m.PropsMu.Lock()
-	m.WirelessAccessPoints = wirelessAccessPointsJsonStr
-	m.PropsMu.Unlock()
-	m.emitPropChangedWirelessAccessPoints(wirelessAccessPointsJsonStr)
+
+	m.UpdateWirelessAccessPoints()
 	return nil
 }
-*/
+
 
 func (m *Manager) getAccessPointsByPath(path dbus.ObjectPath) []*accessPoint {
 	m.accessPointsLock.Lock()
