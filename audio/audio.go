@@ -796,7 +796,6 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 	if err != nil {
 		logger.Warning(err)
 	}
-
 	a.IncreaseVolume.Set(portConfig.IncreaseVolume)
 	if portConfig.IncreaseVolume {
 		a.MaxUIVolume = increaseMaxVolume
@@ -850,10 +849,14 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 	a.mu.Lock()
 	sink, ok := a.sinks[sinkInfo.Index]
 	if !ok {
-		a.mu.Unlock()
-		logger.Warningf("not found sink #%d", sinkInfo.Index)
-		a.setPropDefaultSink("/")
-		return
+		// a.sinks 是缓存的 sink 信息，未查到 sink 信息，需要重新通过pluseaudio查询 sink 信息
+		sink = a.updateSinks(sinkInfo.Index)
+		if sink == nil {
+			a.mu.Unlock()
+			logger.Warningf("not found sink #%d", sinkInfo.Index)
+			a.setPropDefaultSink("/")
+			return
+		}
 	}
 
 	a.defaultSink = sink
@@ -882,6 +885,25 @@ func (a *Audio) updateSources(index uint32) (source *Source) {
 				logger.Warning(err)
 			}
 			return source
+		}
+	}
+	return nil
+}
+
+func (a *Audio) updateSinks(index uint32) (sink *Sink) {
+	sinkInfoList := a.ctx.GetSinkList()
+	for _, sinkInfo := range sinkInfoList {
+		// 判断pluseaudio的sink索引是否存在，并返回存在的sink信息
+		if sinkInfo.Index == index {
+			logger.Debug("get same sink index:", index)
+			sink := newSink(sinkInfo, a)
+			a.sinks[index] = sink
+			sinkPath := sink.getPath()
+			err := a.service.Export(sinkPath, sink)
+			if err != nil {
+				logger.Warning(err)
+			}
+			return sink
 		}
 	}
 	return nil
