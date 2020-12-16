@@ -21,6 +21,7 @@ package accounts
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -147,34 +148,53 @@ func checkAccountType(accountType int) error {
 }
 
 func checkAuth(actionId string, sysBusName string) error {
-	success, err := checkAuthByPolkit(actionId, sysBusName)
+	ret, err := checkAuthByPolkit(actionId, sysBusName)
 	if err != nil {
 		return err
 	}
-
-	if !success {
+	if !ret.IsAuthorized {
+		inf, err := getDetailsKey(ret.Details, "polkit.dismissed")
+		if err == nil {
+			if dismiss, ok := inf.(string); ok {
+				if dismiss != "" {
+					return errors.New("")
+				}
+			}
+		}
 		return fmt.Errorf(ErrCodeAuthFailed.String())
 	}
-
 	return nil
 }
 
-func checkAuthByPolkit(actionId string, sysBusName string) (bool, error) {
+func checkAuthByPolkit(actionId string, sysBusName string) (ret polkit.AuthorizationResult, err error) {
 	systemBus, err := dbus.SystemBus()
 	if err != nil {
-		return false, err
+		return
 	}
 	authority := polkit.NewAuthority(systemBus)
 	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
 	subject.SetDetail("name", sysBusName)
 
-	ret, err := authority.CheckAuthorization(0, subject,
+	ret, err = authority.CheckAuthorization(0, subject,
 		actionId, nil,
 		polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
 	if err != nil {
-		return false, err
+		logger.Warningf("call check auth failed, err: %v", err)
+		return
 	}
-	return ret.IsAuthorized, nil
+	logger.Debugf("call check auth success, ret: %v", ret)
+	return
+}
+
+func getDetailsKey(details map[string]dbus.Variant, key string) (interface{}, error) {
+	result, ok := details[key]
+	if !ok {
+		return nil, errors.New("key dont exist in details")
+	}
+	if utils.IsInterfaceNil(result) {
+		return nil, errors.New("result is nil")
+	}
+	return result.Value(), nil
 }
 
 func getDefaultLocale() (locale string) {
