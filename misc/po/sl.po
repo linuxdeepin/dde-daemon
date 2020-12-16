@@ -1,19 +1,28 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Eva Černi <mini.muca000@gmail.com>, 2016
-# Gorzy Gorup <gorupgorazd@gmail.com>, 2016-2018
-# worm <thewormhole@gmail.com>, 2016
+# RokX, 2020
+# andrej55 <andrej.marsetic@gmail.com>, 2020
+# Eva Černi <mini.muca000@gmail.com>, 2020
+# Tadej Logar <tadej.logar.101@gmail.com>, 2020
+# kloki <klokimass@gmail.com>, 2020
+# worm <thewormhole@gmail.com>, 2020
+# Cindy0514, 2020
+# Gorzy Gorup <gorupgorazd@gmail.com>, 2020
+# Arnold Marko <arnold.marko@gmail.com>, 2020
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Deepin Desktop Environment\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 10:32+0800\n"
-"PO-Revision-Date: 2019-11-13 03:52+0000\n"
-"Last-Translator: transifex deepin <transifex@deepin.com>\n"
-"Language-Team: Slovenian (http://www.transifex.com/linuxdeepin/deepin-desktop-environment/language/sl/)\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2020\n"
+"Language-Team: Slovenian (https://www.transifex.com/linuxdeepin/teams/3617/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,200 +37,272 @@ msgstr "Prosim, vnesite geslo z več kot 8 znaki."
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "Geslo mora vsebovati angleške črke (veliksot črk je pomembna), številke ali posebne simbole (~!@#$%^&*()[]{}\\|/?,.<>)"
+msgstr ""
+"Geslo mora vsebovati angleške črke (velikost črk je pomembna), številke ali "
+"posebne simbole (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:63
+#: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
-msgstr ""
-
-#: ../../accounts/checkers/username.go:65
-msgid "Username must only contain a~z, 0~9, - or _"
-msgstr ""
-
-#: ../../accounts/checkers/username.go:67
-msgid "The first character must be in lower case"
-msgstr ""
+msgstr "Uporabniško ime ne more biti prazno"
 
 #: ../../accounts/checkers/username.go:69
-msgid "The username already exists"
-msgstr ""
+msgid "The first character must be a letter or number"
+msgstr "Prvi znak mora biti črka ali številka"
 
 #: ../../accounts/checkers/username.go:71
+msgid "The username already exists"
+msgstr "To uporabniško ime že obstaja"
+
+#: ../../accounts/checkers/username.go:74
+msgid "The name already exists"
+msgstr "Ime že obstaja"
+
+#: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
-msgstr ""
+msgstr "Uporabniško ime je uporabil sistem"
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
+msgstr "Uporabniško ime mora imeti od 3 do 32 znakov"
+
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
 msgstr ""
 
-#: ../../appearance/scale.go:61
+#: ../../appearance/scale.go:56
+msgid "Log out for display scaling settings to take effect"
+msgstr "Odjavite se, da začnejo nastavitve merila delovati"
+
+#: ../../appearance/scale.go:57
 msgid "Set successfully"
 msgstr "Uspešno nastavljeno"
 
-#: ../../appearance/scale.go:62
-msgid "Please log back in to view the changes"
-msgstr ""
-
-#: ../../appearance/scale.go:66
-msgid "Display scaling"
-msgstr "Spreminjanje velikosti prikaza"
+#: ../../appearance/scale.go:67
+msgid "Later"
+msgstr "kasneje"
 
 #: ../../appearance/scale.go:67
-msgid "Setting display scaling"
-msgstr "Nastavljanje spreminjanja velikosti"
+msgid "Log Out Now"
+msgstr "Odjavi se sedaj"
 
-#: ../../bin/dde-authority/fprint_transaction.go:20
-msgid "Fingerprint verification failed"
-msgstr ""
+#: ../../appearance/scale.go:81
+msgid "Setting display scaling"
+msgstr "Nastavitve merila zaslona"
+
+#: ../../appearance/scale.go:82
+msgid "Display scaling"
+msgstr "Spreminjanje merila zaslona"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
-msgid "Fingerprint verification timed out"
-msgstr ""
+msgid "Fingerprint verification failed"
+msgstr "Preverjanje prstnega odtisa ni uspelo"
 
-#: ../../bluetooth/bluez_profile.go:29
-msgid "Serial port"
-msgstr "Serijska vrata"
+#: ../../bin/dde-authority/fprint_transaction.go:22
+msgid "Fingerprint verification timed out"
+msgstr "Čas za preverjanje prstnih odtisov se je izteklo"
 
 #: ../../bluetooth/bluez_profile.go:30
+msgid "Serial port"
+msgstr "Serijski vmesnik"
+
+#: ../../bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
 msgstr "Klicno povezovanje"
 
-#: ../../bluetooth/bluez_profile.go:31
+#: ../../bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
 msgstr "Prostoročna naprava"
 
-#: ../../bluetooth/bluez_profile.go:32
+#: ../../bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
 msgstr "Prostoročna glasovna vstopna točka"
 
-#: ../../bluetooth/bluez_profile.go:33
+#: ../../bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
 msgstr "Glasovna vstopna točka s slušalkami"
 
-#: ../../bluetooth/bluez_profile.go:34
+#: ../../bluetooth/bluez_profile.go:35
 msgid "Object push"
 msgstr "Pošlji objekt"
 
-#: ../../bluetooth/bluez_profile.go:35
+#: ../../bluetooth/bluez_profile.go:36
 msgid "File transfer"
 msgstr "Prenos datoteke"
 
-#: ../../bluetooth/bluez_profile.go:36
+#: ../../bluetooth/bluez_profile.go:37
 msgid "Synchronization"
 msgstr "Sinhronizacija"
 
-#: ../../bluetooth/bluez_profile.go:37
+#: ../../bluetooth/bluez_profile.go:38
 msgid "Phone book access"
 msgstr "Dostop do imenika"
 
-#: ../../bluetooth/bluez_profile.go:38
-msgid "Phone book access client"
-msgstr "Dostop do imenika stranke"
-
 #: ../../bluetooth/bluez_profile.go:39
-msgid "Message access"
-msgstr "Prejeto sporočilo"
+msgid "Phone book access client"
+msgstr "Odjemalni strežnik telefonskega imenika"
 
 #: ../../bluetooth/bluez_profile.go:40
+msgid "Message access"
+msgstr "Dostop do sporočil"
+
+#: ../../bluetooth/bluez_profile.go:41
 msgid "Message notification"
 msgstr "Obvestilo o sporočilu"
 
-#: ../../bluetooth/utils_notify.go:52 ../../network/utils_notify.go:107
-msgid "Connected"
-msgstr "Povezava vzpostavljena"
+#: ../../bluetooth/obex_agent.go:345 ../../lastore/lastore.go:255
+msgid "Cancel"
+msgstr "Prekliči"
 
-#: ../../bluetooth/utils_notify.go:55 ../../network/utils_notify.go:80
-#: ../../network/utils_notify.go:84 ../../network/utils_notify.go:88
-#: ../../network/utils_notify.go:92 ../../network/utils_notify.go:110
-#: ../../network/utils_notify.go:113 ../../network/utils_notify.go:202
-msgid "Disconnected"
-msgstr "Povezava prekinjena"
+#: ../../bluetooth/obex_agent.go:352
+msgid "Receiving %q files from %q"
+msgstr "Prejemam %q datotek od %q"
 
-#: ../../bluetooth/utils_notify.go:59
-msgid "Make sure %q is turned on and in range"
-msgstr "Preveri, da %q je vklopen in v dosegu."
+#: ../../bluetooth/obex_agent.go:361
+msgid "View"
+msgstr "Prikaži"
 
-#: ../../bluetooth/utils_notify.go:64
-msgid "Failed to connect %q, pairing failed"
-msgstr "Povezava z/s %q ni uspela, parjenje ni bilo mogoče"
+#: ../../bluetooth/obex_agent.go:367
+msgid "You have received files from %q successfully"
+msgstr "Od %q ste uspešno prejeli datoteke"
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth/obex_agent.go:368
+msgid "Done"
+msgstr "Opravljeno"
+
+#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
+msgid "Stop Receiving Files"
+msgstr "Zaustavi prejemanje datotek"
+
+#: ../../bluetooth/obex_agent.go:385
+msgid "You have cancelled the file transfer"
+msgstr "Prenos datotek ste prekinili"
+
+#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth povezava ni uspela "
 
-#: ../../calendar/job.go:413 ../../calendar/job.go:420
+#: ../../bluetooth/obex_agent.go:422
+msgid "Decline"
+msgstr "Zavrni"
+
+#: ../../bluetooth/obex_agent.go:422
+msgid "Receive"
+msgstr "Prejmi"
+
+#: ../../bluetooth/obex_agent.go:427
+msgid "Bluetooth File Transfer"
+msgstr "Bluetooth prenos datotek"
+
+#: ../../bluetooth/obex_agent.go:428
+msgid "%q wants to send files to you. Receive?"
+msgstr "%q vam želi poslati datoteke. Prejmem?"
+
+#: ../../bluetooth/obex_agent.go:483
+msgid "Receiving %q timed out"
+msgstr "Prejemanje %q je časovno poteklo"
+
+#: ../../bluetooth/utils_notify.go:98
+msgid "Connect %q successfully"
+msgstr "Povezovanje z %q je uspelo"
+
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
+msgid "%q disconnected"
+msgstr "%q ni več povezan"
+
+#: ../../bluetooth/utils_notify.go:108
+msgid "Make sure %q is turned on and in range"
+msgstr "Preveri, da %q je vklopljen in v dosegu."
+
+#: ../../bluetooth/utils_notify.go:146
+msgid "Click here to connect to %q"
+msgstr "Kliknite tukaj za povezovanje z %q"
+
+#: ../../bluetooth/utils_notify.go:147
+msgid "Add Bluetooth devices"
+msgstr "Dodajanje Bluetooth naprav"
+
+#: ../../bluetooth/utils_notify.go:157
+msgid "Pair"
+msgstr "Parjenje"
+
+#: ../../calendar/job.go:509 ../../calendar/job.go:516
 msgid "today"
-msgstr ""
+msgstr "danes"
 
-#: ../../calendar/job.go:415 ../../calendar/job.go:422
+#: ../../calendar/job.go:511 ../../calendar/job.go:518
 msgid "tomorrow"
-msgstr ""
+msgstr "jutri"
 
-#: ../../calendar/job.go:435
+#: ../../calendar/job.go:531
 #, c-format
 msgid "%s to %s"
-msgstr ""
+msgstr "%s do %s"
 
-#: ../../calendar/module.go:126
+#: ../../calendar/module.go:127 ../../calendar/type.go:25
 msgid "Work"
-msgstr ""
+msgstr "o"
 
-#: ../../calendar/module.go:127
+#: ../../calendar/module.go:128 ../../calendar/type.go:30
 msgid "Life"
-msgstr ""
+msgstr "ivljenje"
 
-#: ../../calendar/module.go:128
+#: ../../calendar/module.go:129 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Ostalo"
 
-#: ../../calendar/scheduler.go:477
+#: ../../calendar/scheduler.go:588
 msgid "One day before start"
-msgstr ""
+msgstr "Dan pred pričetkom"
 
-#: ../../calendar/scheduler.go:478 ../../calendar/scheduler.go:483
-#: ../../calendar/scheduler.go:491 ../../calendar/scheduler.go:495
+#: ../../calendar/scheduler.go:589 ../../calendar/scheduler.go:594
+#: ../../calendar/scheduler.go:602 ../../calendar/scheduler.go:606
 msgid "Close"
 msgstr "Zapri"
 
-#: ../../calendar/scheduler.go:482
+#: ../../calendar/scheduler.go:593
 msgid "Remind me tomorrow"
-msgstr ""
+msgstr "Opomni me jutri"
 
-#: ../../calendar/scheduler.go:490
+#: ../../calendar/scheduler.go:601
 msgid "Remind me later"
-msgstr ""
+msgstr "Opomni me kasneje"
 
-#: ../../calendar/scheduler.go:500
+#: ../../calendar/scheduler.go:611
 msgid "Schedule Reminder"
-msgstr ""
+msgstr "Nastavi opomnik"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../calendar/type.go:40
+msgid "Festival"
+msgstr "Festival"
+
+#: ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Odpri"
 
-#: ../../dock/app_entry_menu.go:107
+#: ../../dock/app_entry_menu.go:109
 msgid "Close All"
-msgstr ""
+msgstr "Zapri vse"
 
-#: ../../dock/app_entry_menu.go:123
+#: ../../dock/app_entry_menu.go:125
 msgid "Force Quit"
-msgstr ""
+msgstr "Prisili zapiranje"
 
-#: ../../dock/app_entry_menu.go:130
+#: ../../dock/app_entry_menu.go:135
 msgid "Dock"
-msgstr ""
+msgstr "Zasidraj"
 
-#: ../../dock/app_entry_menu.go:137
+#: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr ""
+msgstr "Odsidraj"
 
-#: ../../dock/app_entry_menu.go:144
+#: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
 msgstr "Vsa okna"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
-msgstr "Premajhen prostor na disku, prosim pravočasno očistite!"
+msgstr "Premalo prostora na disku. Pravočasno ga očistite!"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
@@ -233,7 +314,7 @@ msgstr "Terminal"
 
 #: ../../keybinding/shortcuts/id_name_map.go:30
 msgid "Screen Recorder"
-msgstr ""
+msgstr "Snemalnik zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:31
 msgid "Lock screen"
@@ -241,11 +322,11 @@ msgstr "Zakleni zaslon"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Prikaži/skrij pristan"
+msgstr "Prikaži/skrij sidrišče"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
-msgstr ""
+msgstr "Zaustavi vmesnik"
 
 #: ../../keybinding/shortcuts/id_name_map.go:34
 msgid "Terminal Quake Window"
@@ -253,19 +334,19 @@ msgstr "Okno terminala Quake"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "Slika zaslona"
+msgstr "Posnetek zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "Slika celega zaslona"
+msgstr "Posnetek celega zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
-msgstr "Slika okna"
+msgstr "Posnetek okna"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "Zamakni zajem zaslona"
+msgstr "Zajem zaslona z zamikom"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "File manager"
@@ -273,11 +354,11 @@ msgstr "Upravitelj datotek"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Disable Touchpad"
-msgstr "Onemogoči drsno ploščico"
+msgstr "Onemogoči sledilno ploščico"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "Switch window effects"
-msgstr "Preklopi okenske učinke"
+msgstr "Preklopi učinke oken"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Fast Screen Off"
@@ -285,738 +366,725 @@ msgstr "Hitri izklop zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "System Monitor"
-msgstr ""
+msgstr "Nadzornik sistema"
 
 #: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Deepin Picker"
-msgstr "Kapalka Deepin"
+msgstr "Deepin kapalka"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
-msgstr ""
+msgstr "Namizni AI pomočnik"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Text to Speech"
-msgstr ""
+msgstr "Besedilo v govor"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Speech to Text"
-msgstr ""
+msgstr "Govor v besedilo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:48
+msgid "Clipboard"
+msgstr "Odložišče"
+
+#: ../../keybinding/shortcuts/id_name_map.go:49
+msgid "Translation"
+msgstr "Prevod"
+
+#: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
 msgstr "Zamenjaj postavitev"
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
 msgstr "Preklopi na levo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:74
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
 msgstr "Preklopi na desno delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
 msgstr "Preklopi na zgornjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
 msgstr "Preklopi na spodnjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
 msgstr "Preklopi podobna okna."
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
 msgstr "Preklopi podobna okna v obratnem vrstnem redu."
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
 msgstr "Preklopi okna."
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
 msgstr "Preklopi okna v obratnem redu."
 
-#: ../../keybinding/shortcuts/id_name_map.go:92
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
 msgstr "Prikaži namizje"
 
-#: ../../keybinding/shortcuts/id_name_map.go:101
+#: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
 msgstr "Povečaj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:102
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Restore window"
 msgstr "Obnovi okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Minimize window"
 msgstr "Pomanjšaj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
 msgstr "Zapri okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
 msgstr "Premakni okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
 msgstr "Spremeni velikost okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:122
+#: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
 msgstr "Premakni se na levo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:123
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
 msgstr "Premakni se na desno delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
 msgstr "Premakni se na zgornjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
 msgstr "Premakni se na spodnjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:147
+#: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
 msgstr "Prikaži okna na vseh delovnih mestih."
 
-#: ../../keybinding/shortcuts/id_name_map.go:148
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
 msgstr "Prikaži okna na trenutni delovni površini."
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
-msgstr "Prikaži delovna mesta."
+msgstr "Prikaži delovne površine"
 
-#: ../../langselector/locale.go:63
+#: ../../keybinding/shortcuts/id_name_map.go:212
+msgid "Switch monitors"
+msgstr "Preklopi monitor"
+
+#: ../../langselector/locale.go:62
 msgid "Authentication is required to switch language"
 msgstr "Za zamenjavo jezika je potrebna avtentikacija"
 
-#: ../../langselector/locale.go:390
-msgid "Failed to change system language, please try later"
-msgstr ""
-
-#: ../../langselector/locale.go:414
+#: ../../langselector/locale.go:159
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
+"Spreminjanje sistemskega jezika in nameščanje jezikovnih paketov. "
+"Počakajte..."
 
-#: ../../langselector/locale.go:417
+#: ../../langselector/locale.go:160
 msgid "Changing system language, please wait..."
-msgstr ""
+msgstr "Spreminjanje sistemskega jezika. Počakajte..."
 
-#: ../../langselector/locale.go:465
+#: ../../langselector/locale.go:161
 msgid "System language changed, please log out and then log in"
-msgstr ""
+msgstr "Jezik sistema je bil spremenjen. Odjavite se in ponovno prijavite"
 
-#: ../../lastore/check_source.go:51
-msgid "Restore"
-msgstr "Obnovi"
+#: ../../langselector/locale.go:402
+msgid "Failed to change system language, please try later"
+msgstr "Neuspešno spreminjanje jezika sistema. Poskusite znova kasneje"
 
-#: ../../lastore/check_source.go:70 ../../lastore/lastore.go:248
-msgid "Cancel"
-msgstr "Prekliči"
-
-#: ../../lastore/lastore.go:240
+#: ../../lastore/lastore.go:247
 msgid "Retry"
-msgstr "Poskusi ponovno"
+msgstr "Ponovi"
 
-#: ../../lastore/notify.go:82
+#: ../../lastore/lastore.go:269
+msgid "Update Now"
+msgstr "Posodobi zdaj"
+
+#: ../../lastore/notify.go:96
 msgid "%q installed successfully."
 msgstr "%q je uspešno nameščen."
 
-#: ../../lastore/notify.go:85
+#: ../../lastore/notify.go:99
 msgid "%q failed to install."
 msgstr "Namestitev %q je spodletela."
 
-#: ../../lastore/notify.go:93
-msgid "%q removed successfully."
-msgstr "%q je uspešno odstranjen."
+#: ../../lastore/notify.go:107
+msgid "Removed successfully"
+msgstr "Uspešno odstranjeno"
 
-#: ../../lastore/notify.go:95
-msgid "%q failed to remove."
-msgstr "Odstranitev %q ni uspela."
+#: ../../lastore/notify.go:109
+msgid "Failed to remove the app"
+msgstr "Neuspešno odstranjevanje programa"
 
-#: ../../lastore/notify.go:102
+#: ../../lastore/notify.go:116
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
-msgstr "Da se izognete samodejnemu izklopu, vključite običajne posodobitve."
+msgstr ""
+"Da se izognete samodejnemu izklopu, se priklopite na električno omrežje za "
+"normalno posodobitev."
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:121
 msgid "Package cache wiped"
 msgstr "Predpomnilnik paketa izbrisan"
 
-#: ../../lastore/notify.go:112
-msgid ""
-"Your system source has been modified, please restore to official source for "
-"your normal use"
-msgstr "Vaš sistemski vir je bil spremenjen, za normalno uporabo spremenite nazaj na uradni vir"
+#: ../../lastore/notify.go:126
+msgid "New system edition available"
+msgstr "Na voljo je nova izdaja sistema"
 
-#: ../../launcher/manager_uninstall.go:69
+#: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
 msgstr "%q je uspešno odstranjen"
 
-#: ../../launcher/manager_uninstall.go:71
+#: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "Ni uspelo odstraniti %q"
 
-#: ../../network/manager_active_conn.go:318
-msgid "A (5 GHz)"
-msgstr "A (5 GHz)"
-
-#: ../../network/manager_active_conn.go:320
-msgid "BG (2.4 GHz)"
-msgstr "BG (2,4 GHz)"
-
-#: ../../network/manager_active_conn.go:322
-msgid "Automatic"
-msgstr "Samodejno"
-
-#: ../../network/manager_active_conn.go:333
-#: ../../network/manager_active_conn.go:338
+#: ../../network/manager_active_conn.go:367
+#: ../../network/manager_active_conn.go:372
 msgid "None"
-msgstr "Nihče"
+msgstr "brez"
 
-#: ../../network/manager_active_conn.go:340
+#: ../../network/manager_active_conn.go:374
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit ključ"
 
-#: ../../network/manager_active_conn.go:342
+#: ../../network/manager_active_conn.go:376
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Osebno"
 
-#: ../../network/manager_active_conn.go:350
+#: ../../network/manager_active_conn.go:384
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:352
+#: ../../network/manager_active_conn.go:386
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:354
+#: ../../network/manager_active_conn.go:388
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:356
+#: ../../network/manager_active_conn.go:390
 msgid "FAST"
 msgstr "HITRO"
 
-#: ../../network/manager_active_conn.go:358
+#: ../../network/manager_active_conn.go:392
 msgid "Tunneled TLS"
 msgstr "Tunelirani TLS"
 
-#: ../../network/manager_active_conn.go:360
+#: ../../network/manager_active_conn.go:394
 msgid "Protected EAP"
 msgstr "Zaščiten EAP"
 
-#: ../../network/manager_connection.go:278 ../../network/nm_custom_type.go:225
+#: ../../network/manager_connection.go:334
 msgid "Wired Connection"
 msgstr "Žična povezava"
 
-#: ../../network/nm_custom_type.go:223
-msgid "Connection"
-msgstr "Povezava"
+#: ../../network/proxychains/utils_notify.go:45
+msgid "Application proxy is set successfully"
+msgstr "Uspešno nastavljanje programskega posrednika"
 
-#: ../../network/nm_custom_type.go:227
-msgid "Wireless Connection"
-msgstr "Brezžična povezava"
+#: ../../network/proxychains/utils_notify.go:45
+#: ../../network/proxychains/utils_notify.go:48
+#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:202
+msgid "Network"
+msgstr "Omrežje"
 
-#: ../../network/nm_custom_type.go:229
-msgid "Wireless Ad-Hoc"
-msgstr "Wireless Ad-Hoc"
+#: ../../network/proxychains/utils_notify.go:48
+msgid "Failed to set the application proxy"
+msgstr "Neuspešno nastavljanje programskega posrednika"
 
-#: ../../network/nm_custom_type.go:231
-msgid "Wireless Ap-Hotspot"
-msgstr "Wireless Ap-Hotspot"
+#: ../../network/secret_agent.go:394
+msgid "Password is required to connect %q"
+msgstr "Za povezovanje z %q je potrebno  geslo"
 
-#: ../../network/nm_custom_type.go:233
-msgid "PPPoE Connection"
-msgstr "PPPoE povezave"
-
-#: ../../network/nm_custom_type.go:235
-msgid "Mobile Connection"
-msgstr "Mobilna povezava"
-
-#: ../../network/nm_custom_type.go:237
-msgid "Mobile GSM Connection"
-msgstr "Mobilna GSM povezava"
-
-#: ../../network/nm_custom_type.go:239
-msgid "Mobile CDMA Connection"
-msgstr "Mobilna CDMA povezava"
-
-#: ../../network/nm_custom_type.go:241
-msgid "VPN Connection"
-msgstr "VPN povezave"
-
-#: ../../network/nm_custom_type.go:243
-msgid "VPN L2TP"
-msgstr "VPN L2TP"
-
-#: ../../network/nm_custom_type.go:245
-msgid "VPN OpenConnect"
-msgstr "VPN OpenConnect"
-
-#: ../../network/nm_custom_type.go:247
-msgid "VPN OpenVPN"
-msgstr "VPN OpenVPN"
-
-#: ../../network/nm_custom_type.go:249
-msgid "VPN PPTP"
-msgstr "VPN PPTP"
-
-#: ../../network/nm_custom_type.go:251
-msgid "VPN StrongSwan"
-msgstr "VPN strongSwan"
-
-#: ../../network/nm_custom_type.go:253
-msgid "VPN VPNC"
-msgstr "VPN VPNC"
-
-#: ../../network/state_handler.go:39
+#: ../../network/state_handler.go:38
 msgid "Device state changed"
 msgstr "Stanje naprave spremenjeno"
 
-#: ../../network/state_handler.go:40
+#: ../../network/state_handler.go:39
 msgid "Device state changed, reason unknown"
-msgstr ""
+msgstr "Stanje naprave se je iz neznanih razlogov spremenilo"
+
+#: ../../network/state_handler.go:40
+msgid "The device is now managed"
+msgstr "Naprava je sedaj upravljena"
 
 #: ../../network/state_handler.go:41
-msgid "The device is now managed"
-msgstr "Naprava se zdaj upravlja"
+msgid "The device is no longer managed"
+msgstr "Naprave se več ne upravlja"
 
 #: ../../network/state_handler.go:42
-msgid "The device is no longer managed"
-msgstr "Naprava se ne upravlja več"
+msgid "The device has not been ready for configuration"
+msgstr "Naprava ni bila pripravljena za nastavljanje"
 
 #: ../../network/state_handler.go:43
-msgid "The device has not been ready for configuration"
-msgstr "Naprava ni bila pripravljena na konfiguracijo"
-
-#: ../../network/state_handler.go:44
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr "IP konfiguracija ni bila rezervirana (na voljo ni noben naslov, zakasnitev, itd)"
+msgstr ""
+"IP konfiguracija ni bila rezervirana (na voljo ni noben naslov, zakasnitev, "
+"itd)"
 
-#: ../../network/state_handler.go:45
+#: ../../network/state_handler.go:44
 msgid "The IP configuration is no longer valid"
 msgstr "IP konfiguracija ni več veljavna"
 
-#: ../../network/state_handler.go:46
+#: ../../network/state_handler.go:45
 msgid "Passwords were required but not provided"
 msgstr "Geslo je bilo zahtevano, vendar ni na voljo"
 
-#: ../../network/state_handler.go:47
+#: ../../network/state_handler.go:46
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
-msgstr "802.1x odjemalec se je odklopil od dostopne točke ali pristnostnega strežnika"
+msgstr ""
+"802.1x odjemalec se je odklopil od dostopne točke ali pristnostnega "
+"strežnika"
 
-#: ../../network/state_handler.go:48
+#: ../../network/state_handler.go:47
 msgid "Configuration of the 802.1X supplicant failed"
 msgstr "Nastavitev 802.1X odjemalca ni bila uspešna"
 
-#: ../../network/state_handler.go:49
+#: ../../network/state_handler.go:48
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
 msgstr "802.1X odjemalec je nenadoma prenehal delovati"
 
-#: ../../network/state_handler.go:50
+#: ../../network/state_handler.go:49
 msgid "The 802.1X supplicant took too long time to authenticate"
 msgstr "802.1X odjemalec se ni uspel pravočasno overiti"
 
-#: ../../network/state_handler.go:51
+#: ../../network/state_handler.go:50
 msgid "The PPP service failed to start within the allowed time"
 msgstr "Storitev PPP se ni uspela zagnati v dovoljenem času"
 
-#: ../../network/state_handler.go:52
+#: ../../network/state_handler.go:51
 msgid "The PPP service disconnected unexpectedly"
 msgstr "Storitev PPP se je odklopila nepričakovano"
 
-#: ../../network/state_handler.go:53
+#: ../../network/state_handler.go:52
 msgid "The PPP service quitted or failed unexpectedly"
 msgstr "Storitev PPP se je ustavila ali sesula"
 
-#: ../../network/state_handler.go:54
+#: ../../network/state_handler.go:53
 msgid "The DHCP service failed to start within the allowed time"
 msgstr "Storitev DHCP se ni uspela zagnati v dovoljenem času"
 
-#: ../../network/state_handler.go:55
+#: ../../network/state_handler.go:54
 msgid "The DHCP service reported an unexpected error"
 msgstr "Storitev DHCP poroča o nepričakovani napaki"
 
-#: ../../network/state_handler.go:56
+#: ../../network/state_handler.go:55
 msgid "The DHCP service quitted or failed unexpectedly"
 msgstr "Storitev DHCP se je ustavila ali sesula"
 
-#: ../../network/state_handler.go:57
+#: ../../network/state_handler.go:56
 msgid "The shared connection service failed to start"
 msgstr "Storitev za deljene povezave se ni uspela zagnati"
 
-#: ../../network/state_handler.go:58
+#: ../../network/state_handler.go:57
 msgid "The shared connection service quitted or failed unexpectedly"
 msgstr "Storitev za deljene povezave se je ustavila ali sesula"
 
-#: ../../network/state_handler.go:59
+#: ../../network/state_handler.go:58
 msgid "The AutoIP service failed to start"
 msgstr "Storitev AutoIP se ni uspela zagnati"
 
-#: ../../network/state_handler.go:60
+#: ../../network/state_handler.go:59
 msgid "The AutoIP service reported an unexpected error"
 msgstr "Storitev AutoIP je prijavila nepričakovano napako"
 
-#: ../../network/state_handler.go:61
+#: ../../network/state_handler.go:60
 msgid "The AutoIP service quitted or failed unexpectedly"
 msgstr "Storitev AutoIP se je ustavila ali sesula"
 
-#: ../../network/state_handler.go:62
+#: ../../network/state_handler.go:61
 msgid "Dialing failed due to busy lines"
 msgstr "Klicanje ni uspelo zaradi zasedene linije"
 
-#: ../../network/state_handler.go:63
+#: ../../network/state_handler.go:62
 msgid "Dialing failed due to no dial tone"
 msgstr "Klicanje ni uspelo, ker ni bilo klicnega tona"
 
-#: ../../network/state_handler.go:64
+#: ../../network/state_handler.go:63
 msgid "Dialing failed due to the carrier"
 msgstr "Klicanje ni uspelo zaradi prenašalca"
 
-#: ../../network/state_handler.go:65
+#: ../../network/state_handler.go:64
 msgid "Dialing timed out"
 msgstr "Klicanje je poteklo"
 
-#: ../../network/state_handler.go:66
+#: ../../network/state_handler.go:65
 msgid "Dialing failed"
 msgstr "Klicanje ni uspelo"
 
-#: ../../network/state_handler.go:67
+#: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
 msgstr "Zagon modema ni uspel"
 
-#: ../../network/state_handler.go:68
+#: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
 msgstr "Ni uspelo izbrati določenega GSM APN"
 
-#: ../../network/state_handler.go:69
+#: ../../network/state_handler.go:68
 msgid "No networks searched"
 msgstr "Ni iskanih omrežij"
 
-#: ../../network/state_handler.go:70
+#: ../../network/state_handler.go:69
 msgid "Network registration was denied"
 msgstr "Registracija omrežja je bila zavrnjena"
 
-#: ../../network/state_handler.go:71
+#: ../../network/state_handler.go:70
 msgid "Network registration timed out"
 msgstr "Registracija omrežja je potekla"
 
-#: ../../network/state_handler.go:72
+#: ../../network/state_handler.go:71
 msgid "Failed to register to the requested GSM network"
-msgstr ""
+msgstr "Neuspešna registracija na zahtevanem GSM omrežju"
 
-#: ../../network/state_handler.go:73
+#: ../../network/state_handler.go:72
 msgid "PIN check failed"
 msgstr "Preverjanje PIN ni uspelo"
 
-#: ../../network/state_handler.go:74
+#: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
 msgstr "Morda manjka potrebna programska oprema za napravo"
 
-#: ../../network/state_handler.go:75
+#: ../../network/state_handler.go:74
 msgid "The device was removed"
 msgstr "Naprava je bila odstranjena"
 
-#: ../../network/state_handler.go:76
+#: ../../network/state_handler.go:75
 msgid "NetworkManager went to sleep"
 msgstr "NetworkManager je zaspal"
 
-#: ../../network/state_handler.go:77
+#: ../../network/state_handler.go:76
 msgid "The device's active connection was removed or disappeared"
 msgstr "Aktivna povezava z napravo je bila odstranjena ali je izginila"
 
-#: ../../network/state_handler.go:78
+#: ../../network/state_handler.go:77
 msgid "A user or client requested to disconnect"
 msgstr "Uporabnik ali klient je zahteval prekinitev povezave"
 
-#: ../../network/state_handler.go:79
+#: ../../network/state_handler.go:78
 msgid "The device's carrier/link changed"
 msgstr "Spremenjen prenašalec/povezava naprave"
 
-#: ../../network/state_handler.go:80
+#: ../../network/state_handler.go:79
 msgid "The device's existing connection was assumed"
 msgstr "Obstoječa povezava naprave je bila uporabljena"
 
-#: ../../network/state_handler.go:81
+#: ../../network/state_handler.go:80
 msgid "The 802.1x supplicant is now available"
 msgstr "802.1X odejmalec je na voljo"
 
-#: ../../network/state_handler.go:82
+#: ../../network/state_handler.go:81
 msgid "The modem could not be found"
 msgstr "Modema ni bilo mogoče najti"
 
-#: ../../network/state_handler.go:83
+#: ../../network/state_handler.go:82
 msgid "The Bluetooth connection timed out or failed"
 msgstr "Povezava Bluetooth je potekla ali spodletela"
 
-#: ../../network/state_handler.go:84
+#: ../../network/state_handler.go:83
 msgid "GSM Modem's SIM Card was not inserted"
 msgstr "SIM kartica ni vstavljena"
 
-#: ../../network/state_handler.go:85
+#: ../../network/state_handler.go:84
 msgid "GSM Modem's SIM PIN required"
 msgstr "Zahtevan PIN za SIM kartico"
 
-#: ../../network/state_handler.go:86
+#: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
 msgstr "Zahtevan PUK za SIM kartico"
 
-#: ../../network/state_handler.go:87
+#: ../../network/state_handler.go:86
 msgid "SIM card error in GSM Modem"
 msgstr "Napaka SIM kartice v modemu GSM"
 
-#: ../../network/state_handler.go:88
+#: ../../network/state_handler.go:87
 msgid "InfiniBand device does not support connected mode"
 msgstr "Naprava InfiniBand ne podpira povezanega načina"
 
-#: ../../network/state_handler.go:89
+#: ../../network/state_handler.go:88
 msgid "A dependency of the connection failed"
-msgstr ""
+msgstr "Odvisnost povezave ni bila uspešna"
 
-#: ../../network/state_handler.go:90
+#: ../../network/state_handler.go:89
 msgid "RFC 2684 Ethernet bridging error to ADSL"
 msgstr "Napaka povezovanja RFC 2684 Etherneta in ADSL"
 
-#: ../../network/state_handler.go:91
+#: ../../network/state_handler.go:90
 msgid "ModemManager did not run or quitted unexpectedly"
 msgstr "ModemManager se ni zagnal ali se je sesul"
 
-#: ../../network/state_handler.go:92
-msgid "The 802.11 Wi-Fi network could not be found"
-msgstr "Omrežja 802,11 Wi-Fi ni bilo mogoče najti"
+#: ../../network/state_handler.go:91
+msgid "The 802.11 WLAN network could not be found"
+msgstr "Brezžičnega omrežja 802.11 ni bilo mogoče najti"
 
-#: ../../network/state_handler.go:93
+#: ../../network/state_handler.go:92
 msgid "A secondary connection of the base connection failed"
 msgstr "Rezervna povezava osnovne povezave je bila prekinjena"
 
-#: ../../network/state_handler.go:96
+#: ../../network/state_handler.go:95
 msgid "DCB or FCoE setup failed"
 msgstr "Namestitev DCB ali FCoE ni uspela"
 
-#: ../../network/state_handler.go:97
+#: ../../network/state_handler.go:96
 msgid "Network teaming control failed"
 msgstr "Omrežno skupinsko upravljanje ni uspelo"
 
-#: ../../network/state_handler.go:98
+#: ../../network/state_handler.go:97
 msgid "Modem failed to run or not available"
 msgstr "Modem ne deluje ali ni na voljo"
 
-#: ../../network/state_handler.go:99
+#: ../../network/state_handler.go:98
 msgid "Modem now ready and available"
 msgstr "Modem je pripravljen in na razpolago"
 
-#: ../../network/state_handler.go:100
+#: ../../network/state_handler.go:99
 msgid "SIM PIN is incorrect"
 msgstr "SIM PIN je nepravilen"
 
-#: ../../network/state_handler.go:101
+#: ../../network/state_handler.go:100
 msgid "New connection activation is enqueuing"
 msgstr "Nova aktivacija povezave je na čakalni listi"
 
-#: ../../network/state_handler.go:102
+#: ../../network/state_handler.go:101
 msgid "Parent device changed"
 msgstr "Nadrejena naprava je bila spremenjena"
 
-#: ../../network/state_handler.go:103
+#: ../../network/state_handler.go:102
 msgid "Management status of parent device changed"
 msgstr "Stanje upravljanja z nadrejeno napravo se je spremenilo"
 
-#: ../../network/state_handler.go:106
+#: ../../network/state_handler.go:105
 msgid "Network cable is unplugged"
 msgstr "Omrežni kabel je izključen"
 
-#: ../../network/state_handler.go:107
+#: ../../network/state_handler.go:106
 msgid "Please make sure SIM card has been inserted with mobile network signal"
 msgstr "Preverite, ali je SIM kartica v napravi in če ste v območju signala"
 
-#: ../../network/state_handler.go:108
+#: ../../network/state_handler.go:107
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
 msgstr "Prepričajte se, da ste uporabili pravilni način delovanja SIM kartice"
 
-#: ../../network/state_handler.go:111
+#: ../../network/state_handler.go:110
 msgid "Failed to activate VPN connection, reason unknown"
-msgstr ""
+msgstr "Neuspešna aktivacija VPN povezave. Razlog ni znan"
+
+#: ../../network/state_handler.go:111
+msgid "Failed to activate VPN connection"
+msgstr "Neuspešna aktivacija VPN povezave"
 
 #: ../../network/state_handler.go:112
-msgid "Failed to activate VPN connection"
-msgstr ""
-
-#: ../../network/state_handler.go:113
 msgid "The VPN connection state changed due to being disconnected by users"
 msgstr ""
+"Stanje VPN povezave se je spremenilo zaradi odklopa s strani uporabnikov"
 
-#: ../../network/state_handler.go:114
+#: ../../network/state_handler.go:113
 msgid ""
 "The VPN connection state changed due to being disconnected from devices"
-msgstr ""
+msgstr "Stanje VPN povezave se je spremenilo zaradi odklopa s strani naprav"
 
-#: ../../network/state_handler.go:115
+#: ../../network/state_handler.go:114
 msgid "VPN service stopped"
 msgstr "Storitev VPN se je ustavila"
 
-#: ../../network/state_handler.go:116
+#: ../../network/state_handler.go:115
 msgid "The IP config of VPN connection was invalid"
 msgstr "IP-nastavitve povezave VPN so napačne"
 
-#: ../../network/state_handler.go:117
+#: ../../network/state_handler.go:116
 msgid "The connection attempt to VPN service timed out"
 msgstr "Čas vzpostavljanja povezave VPN je potekel"
 
-#: ../../network/state_handler.go:118
+#: ../../network/state_handler.go:117
 msgid "The VPN service start timed out"
 msgstr "Čas za zagon storitve VPN je potekel"
 
-#: ../../network/state_handler.go:119
+#: ../../network/state_handler.go:118
 msgid "The VPN service failed to start"
 msgstr "Storitev VPN se ni uspela zagnati"
 
-#: ../../network/state_handler.go:120
+#: ../../network/state_handler.go:119
 msgid "The VPN connection password was not provided"
-msgstr ""
+msgstr "Geslo za VPN povezavo ni bilo podano"
 
-#: ../../network/state_handler.go:121
+#: ../../network/state_handler.go:120
 msgid "Authentication to VPN server failed"
 msgstr "Avtentikacija strežnika VPN ni uspela"
 
-#: ../../network/state_handler.go:122
+#: ../../network/state_handler.go:121
 msgid "The connection was deleted from settings"
 msgstr "Povezava je bila izbrisana iz nastavitev"
 
-#: ../../network/state_handler.go:251
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
-msgstr ""
+msgstr "Vklop dostopne točke"
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
-msgstr ""
-
-#: ../../network/state_handler.go:261
-msgid "Hotspot enabled"
-msgstr ""
+msgstr "Povezovanje %q"
 
 #: ../../network/state_handler.go:263
+msgid "Hotspot enabled"
+msgstr "Dostopna točka je vklopljena"
+
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q povezano"
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:325
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
-msgstr ""
+msgstr "Dostopna točka je izklopljena"
 
-#: ../../network/state_handler.go:327 ../../network/state_handler.go:347
-msgid "%q disconnected"
-msgstr "%q ni več povezano"
-
-#: ../../network/state_handler.go:333
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Deljenje vroče točke ni uspelo, prosim preverite nastavitve dnsmasq"
 
-#: ../../network/state_handler.go:335
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "Ni mogoče povezati %q, prosimo približajte se brezžičnemu usmerjevalniku"
+msgstr ""
+"Ni mogoče povezati %q, prosimo približajte se brezžičnemu usmerjevalniku"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Ni mogoče povezati %q, prosim preverite svoj usmerjevalnik ali kabel."
 
-#: ../../network/state_handler.go:340
-msgid "Password is required to connect %q"
-msgstr ""
-
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Povezava %q ni uspela, napačno geslo"
 
-#: ../../network/utils_dbus_nm.go:229
+#: ../../network/utils_dbus_nm.go:259
 msgid "Unknown"
-msgstr "Neznan"
+msgstr "Neznano"
 
-#: ../../network/utils_notify.go:80
-msgid "You are now offline."
-msgstr "Zdaj ste brez povezave."
-
-#: ../../network/utils_notify.go:84
+#: ../../network/utils_notify.go:183
 msgid "Airplane mode enabled."
 msgstr "Način za letalo omogočen."
 
-#: ../../network/utils_notify.go:92
+#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
+#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
+#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+msgid "Disconnected"
+msgstr "Povezava prekinjena"
+
+#: ../../network/utils_notify.go:191
 msgid "Access Point mode is not supported by this device."
 msgstr "Način dostopna točka ne podpira te naprava."
 
-#: ../../network/utils_notify.go:96 ../../network/utils_notify.go:100
-#: ../../network/utils_notify.go:103
-msgid "Network"
-msgstr "Omrežje"
-
-#: ../../network/utils_notify.go:96
+#: ../../network/utils_notify.go:195
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "Stikalo WLAN kartice je izklopljeno, vklopite ga."
 
-#: ../../network/utils_notify.go:100
+#: ../../network/utils_notify.go:199
 msgid "System proxy is set successfully."
 msgstr "Povezava do namestniskega strežnika je bila uspešno nastavljena"
 
-#: ../../network/utils_notify.go:103
+#: ../../network/utils_notify.go:202
 msgid "System proxy has been cancelled."
 msgstr "Povezava do namestniskega strežnika je bila prekinjena."
 
-#: ../../session/power/manager_events.go:151
-msgid "Battery Critically Low"
+#: ../../network/utils_notify.go:206
+msgid "Connected"
+msgstr "Povezava vzpostavljena"
+
+#: ../../service_trigger/msg.go:7
+#, c-format
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
+"\"%s\" ni prestalo sistemskega varnostnega preverjanje, zato ne more biti "
+"zagnana "
 
-#: ../../session/power/manager_events.go:152
-msgid "Computer will suspend very soon, please plug in now"
-msgstr ""
+#: ../../session/power/manager_events.go:203
+msgid "Battery critically low"
+msgstr "Akumulator je kritično prazen"
 
-#: ../../session/power/manager_events.go:175
-#: ../../session/power/manager_events.go:182
-msgid "Battery Low"
-msgstr "Prazna baterija"
-
-#: ../../session/power/manager_events.go:176
-msgid "Computer will suspend soon, please plug in"
-msgstr ""
-
-#: ../../session/power/manager_events.go:183
+#: ../../session/power/manager_events.go:224
+#: ../../session/power/manager_events.go:229
+#: ../../session/power/manager_events.go:234
 msgid "Battery low, please plug in"
-msgstr ""
+msgstr "Akumulator je skoraj prazen. Priključite napajalnik"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
+#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+msgid "Power settings changed"
+msgstr "Nastavitve za rabo energije so se spremenile"
+
+#: ../../session/power/utils.go:377
+msgid "When the lid is closed, "
+msgstr "Ko je ohišje zaprto,"
+
+#: ../../session/power/utils.go:381
+msgid "When pressing the power button, "
+msgstr "Ob pritisku na gumb za vklop"
+
+#: ../../session/power/utils.go:391
+msgid "your computer will shut down"
+msgstr "se bo računalnik zaustavil"
+
+#: ../../session/power/utils.go:393
+msgid "your computer will suspend"
+msgstr "bo računalnik obmiroval"
+
+#: ../../session/power/utils.go:395
+msgid "your computer will hibernate"
+msgstr "bo računalnik zaspal"
+
+#: ../../session/power/utils.go:397
+msgid "your monitor will turn off"
+msgstr "se bo izklopil zaslon"
+
+#: ../../session/power/utils.go:399
+msgid "it will do nothing to your computer"
+msgstr "se ne bo zgodilo nič"
+
+#: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
-msgstr ""
+msgstr "Za nastavljanje sistemske ure je potrebna overitev"
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
+"Za upravljanje vklopa časovne sinhronizacije na omrežju je potrebna "
+"overitev."
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
-msgstr ""
+msgstr "Za spreminjanje NTP strežnika je potrebna overitev"
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
-msgstr ""
+msgstr "Za določanje ali RTC hrani lokalni ali UTC čas je potrebna overitev"
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
-msgstr ""
+msgstr "Za določanje časovnega pasu je potrebna overitev"

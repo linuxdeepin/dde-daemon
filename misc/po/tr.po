@@ -6,20 +6,20 @@
 # Translators:
 # Vahap Karataş <k.vahap@gmail.com>, 2020
 # Kaya Zeren <kayazeren@gmail.com>, 2020
-# meda <ademcal@yahoo.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Cindy0514, 2020
 # yakup <mutouk@yandex.ru>, 2020
 # Serdar Sağlam <teknomobil@msn.com>, 2020
+# meda <ademcal@yahoo.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Serdar Sağlam <teknomobil@msn.com>, 2020\n"
+"Last-Translator: meda <ademcal@yahoo.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,9 +63,13 @@ msgstr "Bu kullanıcı adı sistem tarafından kullanılıyor"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Kullanıcı adı 3 ile 32 karakter arasında olmalıdır"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "Ekran ölçekleme ayarlarının etkili olması için oturumu kapatın"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -73,11 +77,11 @@ msgstr "Ayarlandı"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Sonra"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Şimdi Oturumu Kapat"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -199,8 +203,8 @@ msgstr "%q alım zaman aşımına uğradı"
 msgid "Connect %q successfully"
 msgstr "%q bağlantısı başarılı"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q bağlantısı kesildi"
 
@@ -945,37 +949,37 @@ msgstr "Bağlantı ayarlardan silindi"
 msgid "Enabling hotspot"
 msgstr "Erişim noktasını etkinleşir"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Bağlanıyor %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Erişim noktası etkin"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q bağlı"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Erişim noktası devre dışı"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Erişim noktası paylaşılamadı, dnsmasq ayarlarını denetle"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%q bağlanılamıyor, lütfen kablosuz yönlendiriciye yakın tutun"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q bağlantısı kurulamadı, lütfen erişim noktanızı ya da ağ kablonuzu "
 "denetleyin."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Bağlantı kurulamadı, parola yanlış olduğundan %q bağlantısı kurulamadı"

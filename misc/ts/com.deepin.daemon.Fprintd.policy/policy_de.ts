@@ -34,7 +34,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!message" line="0"/>
 			<source>Password is required to perform this action</source>
-			<translation type="unfinished"/>
+			<translation>Zur Durchführung dieser Aktion ist ein Passwort erforderlich</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!description" line="0"/>

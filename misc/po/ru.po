@@ -14,15 +14,16 @@
 # Basil Russu <basil_russu@hotmail.com>, 2020
 # Валерий Владимирович, 2020
 # Artem Kulikov <artem.job.kulikov@gmail.com>, 2020
+# Vladislav Evseev <poryvay.vladik@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Artem Kulikov <artem.job.kulikov@gmail.com>, 2020\n"
+"Last-Translator: Vladislav Evseev <poryvay.vladik@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,9 +67,14 @@ msgstr "Имя пользователя было использовано сис
 msgid "Username must be between 3 and 32 characters"
 msgstr "Имя пользователя должно быть длинной 3-32 символа"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
+"Выход для того, чтобы настройки масштабирования дисплея вступили в силу"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -76,11 +82,11 @@ msgstr "Задано успешно"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Позже"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Выход из системы сейчас же"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -202,8 +208,8 @@ msgstr "Время получения %q  истекло"
 msgid "Connect %q successfully"
 msgstr "%q соединено успешно"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q отсоединено"
 
@@ -939,39 +945,39 @@ msgstr "Соединение было удалено из настроек."
 msgid "Enabling hotspot"
 msgstr "Включение точки доступа"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Подключение %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Точка доступа включена"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q соединено"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Точка доступа отключена"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Не удалось предоставить точку доступа, проверьте настройки dnsmasq"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Не удалось соединить %q, пожалуйста держитесь ближе к беспроводному "
 "маршрутизатору."
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не удалось соединить %q, пожалуйста проверьте ваш беспроводной маршрутизатор"
 " или сетевой кабель."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Не удалось подключиться, не удалось соединить %q, неправильный пароль"
 

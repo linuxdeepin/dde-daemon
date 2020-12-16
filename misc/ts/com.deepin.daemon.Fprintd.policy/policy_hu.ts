@@ -4,17 +4,17 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>Hitelesítés szükséges az ujjlenyomat hozzáadásához</translation>
+			<translation>Hitelesítés szükséges az ujjlenyomat azonosítók hozzáadásához</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!description" line="0"/>
 			<source>Add fingerprint password</source>
-			<translation>Ujjlenyomat hozzáadása</translation>
+			<translation>Ujjlenyomat azonosító hozzáadása</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>Hitelesítés szükséges az ujjlenyomatok törléséhez</translation>
+			<translation>Hitelesítés szükséges az ujjlenyomat azonosítók törléséhez</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>
@@ -24,12 +24,12 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!message" line="0"/>
 			<source>Authentication is required to rename fingerprint password</source>
-			<translation>Hitelesítés szükséges az ujjlenyomat-jelszó átnevezéséhez</translation>
+			<translation>Hitelesítés szükséges az ujjlenyomat azonosító átnevezéséhez</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!description" line="0"/>
 			<source>Rename fingerprint password</source>
-			<translation>Ujjlenyomat-jelszó átnevezése </translation>
+			<translation>Ujjlenyomat azonosító átnevezése </translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!message" line="0"/>
@@ -39,7 +39,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!description" line="0"/>
 			<source>Manage fingerprint passwords</source>
-			<translation>Ujjlenyomat-jelszó kezelése</translation>
+			<translation>Ujjlenyomat azonosítók kezelése</translation>
 		</message>
 	</context>
 </TS>

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Massimo A. Carofano <real.massimo@hotmail.it>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/linuxdeepin/teams/3617/it/)\n"
@@ -60,9 +60,13 @@ msgstr "L'username è utilizzata dal sistema."
 msgid "Username must be between 3 and 32 characters"
 msgstr "L'username deve esser compresa tra 3 e 32 caratteri"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "Autenticazione Policykit fallita"
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "Disconnetti l'utente per rendere effettivo lo scaling del display"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -70,11 +74,11 @@ msgstr "Modifica effettuata"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Dopo"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Disconnetti ora"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -196,8 +200,8 @@ msgstr "Ricezione da %q scaduta"
 msgid "Connect %q successfully"
 msgstr "Connesso con successo a %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q disconnesso"
 
@@ -942,37 +946,37 @@ msgstr "La connessione è stata eliminata dalle impostazioni"
 msgid "Enabling hotspot"
 msgstr "Attiva l'hotspot"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Connessione a %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot attivato"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q connesso"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Hotspot disattivato"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Impossibile condividere l'hotspot, controllare le impostazioni dnsmasq"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Impossibile collegarsi a %q, avvicinati al router wireless"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Impossibile connettersi a %q, controlla il tuo router o il cavo di rete."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Connessione fallita, impossibile connettersi a %q, password errata"
 

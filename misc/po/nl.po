@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/linuxdeepin/teams/3617/nl/)\n"
@@ -65,9 +65,13 @@ msgstr "Deze gebruikersnaam wordt gebruikt door het systeem"
 msgid "Username must be between 3 and 32 characters"
 msgstr "De gebruikersnaam moet tussen de 3 en 32 tekens lang zijn"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "Policykit-verificatie mislukt"
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "Meld je af en weer aan om de beeldgrootte-instellingen toe te passen"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -75,11 +79,11 @@ msgstr "Instellen voltooid"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Later"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Nu afmelden"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -201,8 +205,8 @@ msgstr "De verbinding met %q is verlopen"
 msgid "Connect %q successfully"
 msgstr "Verbonden met %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "Verbinding verbroken met %q"
 
@@ -948,38 +952,38 @@ msgstr "De verbinding is verwijderd uit het instellingencentrum"
 msgid "Enabling hotspot"
 msgstr "Hotspot opzetten"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Verbinden met %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "De hotspot is opgezet"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q verbonden"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "De hotspot is uitgeschakeld"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "De hotspot kan niet worden gedeeld - controleer de dnswasq-instellingen"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Kan geen verbinding maken met %q - blijf in de buurt van de draadloze router"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Kan geen verbinding maken met %q - controleer de router of netwerkkabel"
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Kan geen verbinding maken met %q: onjuist wachtwoord"
 

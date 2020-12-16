@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Alex, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
@@ -67,9 +67,13 @@ msgstr "O nome de usuário foi usado pelo sistema"
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "A autenticação do Policykit falhou"
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "Sair para que as configurações da escala de exibição tenham efeito"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -77,11 +81,11 @@ msgstr "Definido"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Mais tarde"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Sair Agora"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -203,8 +207,8 @@ msgstr "O recebimento de %s expirou"
 msgid "Connect %q successfully"
 msgstr "Conectado à %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q desconectado"
 
@@ -946,40 +950,40 @@ msgstr "A conexão foi excluída das configurações"
 msgid "Enabling hotspot"
 msgstr "Ativando o Hotspot"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Conectando %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot ativado"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q conectada"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Hotspot desativado"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Não foi possível compartilhar o Hotspot; verifique as configurações do "
 "dnsmasq"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Não é possível conectar-se à %q; verifique a intensidade do sinal Wi-Fi"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Não foi possível conectar-se à %q; verifique as conexões ou os dispositivos "
 "de rede."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "A conexão falhou, senha incorreta. Incapaz de conectar-se à %q"
 

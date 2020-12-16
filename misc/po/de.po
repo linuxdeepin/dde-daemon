@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
@@ -59,7 +59,7 @@ msgstr "Der Benutzername existiert bereits"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "Der Name existiert bereits"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
@@ -69,9 +69,14 @@ msgstr "Der Benutzername ist vom System verwendet worden"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Benutzername muss zwischen 3 und 32 Zeichen lang sein"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
+"Melden Sie sich ab, damit die Anzeigeskalierungseinstellungen wirksam werden"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -79,11 +84,11 @@ msgstr "Erfolgreich festgelegt"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Später"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Jetzt abmelden"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -139,7 +144,7 @@ msgstr "Telefonbuchzugriff"
 
 #: ../../bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
-msgstr "Telefonbuch-Client"
+msgstr "Telefonbuchzugriff-Client"
 
 #: ../../bluetooth/bluez_profile.go:40
 msgid "Message access"
@@ -205,8 +210,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "%q erfolgreich verbunden"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q getrennt"
 
@@ -624,7 +629,7 @@ msgstr "Für die Verbindung mit %q ist ein Kennwort erforderlich"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
-msgstr "Gerätestatus geändert."
+msgstr "Gerätestatus geändert"
 
 #: ../../network/state_handler.go:39
 msgid "Device state changed, reason unknown"
@@ -741,11 +746,11 @@ msgstr "Anwahl wegen dem Netzbetreiber gescheitert."
 
 #: ../../network/state_handler.go:64
 msgid "Dialing timed out"
-msgstr "Wählzeitüberschreitung."
+msgstr "Wählzeitüberschreitung"
 
 #: ../../network/state_handler.go:65
 msgid "Dialing failed"
-msgstr "Anruf fehlgeschlagen."
+msgstr "Anruf fehlgeschlagen"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
@@ -761,7 +766,7 @@ msgstr "Keine Netzwerke gesucht"
 
 #: ../../network/state_handler.go:69
 msgid "Network registration was denied"
-msgstr "Netzwerkregistrierung wurde verweigert."
+msgstr "Netzwerkregistrierung wurde verweigert"
 
 #: ../../network/state_handler.go:70
 msgid "Network registration timed out"
@@ -962,39 +967,39 @@ msgstr "Die Verbindung wurde aus den Einstellungen entfernt."
 msgid "Enabling hotspot"
 msgstr "Hotspot aktivieren"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "%q wird verbunden"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot aktiviert"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q verbunden"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Hotspot deaktiviert"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Der Hotspot konnte nicht geteilt werden, prüfen Sie bitte die Einstellungen "
 "von dnsmasq"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Keine Verbindung %q, Reichweite zum WLAN Router verringern."
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Kann keine Verbindung mit %q herstellen, bitte überprüfen Sie Ihren Router "
 "und das Netzwerkkabel."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Verbindung mit %q fehlgeschlagen. Das Passwort ist ungültig"
 
@@ -1063,7 +1068,7 @@ msgstr "Wenn der Deckel geschlossen ist,"
 
 #: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
-msgstr ""
+msgstr "Beim Drücken des Ein/Aus-Schalters, "
 
 #: ../../session/power/utils.go:391
 msgid "your computer will shut down"
