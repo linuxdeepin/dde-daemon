@@ -33,11 +33,12 @@ type activeConnection struct {
 	typ       string
 	vpnFailed bool
 
-	Devices []dbus.ObjectPath
-	Id      string
-	Uuid    string
-	State   uint32
-	Vpn     bool
+	Devices        []dbus.ObjectPath
+	Id             string
+	Uuid           string
+	State          uint32
+	Vpn            bool
+	SpecificObject dbus.ObjectPath
 }
 
 var frequencyChannelMap = map[uint32]int32{
@@ -89,6 +90,7 @@ type hotspotConnectionInfo struct {
 
 func (m *Manager) initActiveConnectionManage() {
 	m.initActiveConnections()
+
 	senderNm := "org.freedesktop.NetworkManager"
 	interfaceActiveConnection := "org.freedesktop.NetworkManager.Connection.Active"
 	interfaceVpnConnection := "org.freedesktop.NetworkManager.VPN.Connection"
@@ -138,18 +140,28 @@ func (m *Manager) initActiveConnectionManage() {
 				return
 			}
 
-			stateVar, ok := props["State"]
-			if !ok {
-				return
+			specificPathVar, ok := props["SpecificPath"]
+			if ok {
+				specificPath, ok := specificPathVar.Value().(dbus.ObjectPath)
+				if ok {
+					logger.Debugf("active connection %s SpecificPath changed %v", sig.Path, specificPath)
+					m.updateActiveConnSpecificPath(sig.Path, specificPath)
+				}
 			}
-			state, ok := stateVar.Value().(uint32)
-			if !ok {
-				return
-			}
-			logger.Debugf("active connection %s state changed %v", sig.Path, state)
-			m.updateActiveConnState(sig.Path, state)
 
-			if state == nm.NM_ACTIVE_CONNECTION_STATE_ACTIVATED {
+			var state uint32
+			var stateChanged bool
+			stateVar, ok := props["State"]
+			if ok {
+				state, stateChanged = stateVar.Value().(uint32)
+				if stateChanged {
+					logger.Debugf("active connection %s state changed %v", sig.Path, state)
+					m.updateActiveConnState(sig.Path, state)
+
+				}
+			}
+
+			if stateChanged && state == nm.NM_ACTIVE_CONNECTION_STATE_ACTIVATED {
 				connectivity, err := nmManager.CheckConnectivity(0)
 				if err != nil {
 					logger.Warning(err)
@@ -225,6 +237,19 @@ func (m *Manager) doHandleVpnNotification(apath dbus.ObjectPath, state, reason u
 	}
 }
 
+func (m *Manager) updateActiveConnSpecificPath(apath dbus.ObjectPath, specificPath dbus.ObjectPath) {
+	m.activeConnectionsLock.Lock()
+	defer m.activeConnectionsLock.Unlock()
+
+	aConn, ok := m.activeConnections[apath]
+	if !ok {
+		return
+	}
+	aConn.SpecificObject = specificPath
+
+	m.updatePropActiveConnections()
+}
+
 func (m *Manager) updateActiveConnState(apath dbus.ObjectPath, state uint32) {
 	m.activeConnectionsLock.Lock()
 	defer m.activeConnectionsLock.Unlock()
@@ -253,6 +278,7 @@ func (m *Manager) newActiveConnection(path dbus.ObjectPath) (aconn *activeConnec
 	if cpath, err := nmGetConnectionByUuid(aconn.Uuid); err == nil {
 		aconn.Id = nmGetConnectionId(cpath)
 	}
+	aconn.SpecificObject, _ = nmAConn.SpecificObject().Get(0)
 
 	return
 }
