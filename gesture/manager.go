@@ -12,6 +12,7 @@ import (
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.gesture"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbus1"
@@ -42,6 +43,7 @@ type Manager struct {
 	enabled        bool
 	locked         bool
 	Infos          gestureInfos
+	sessionWatcher *sessionwatcher.SessionWatcher
 
 	methods *struct {
 		SetLongPressDuration func() `in:"duration"`
@@ -114,6 +116,7 @@ func newManager() (*Manager, error) {
 
 	m.sessionManager = sessionmanager.NewSessionManager(sessionConn)
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionConn, 10)
+	m.sessionWatcher = sessionwatcher.NewSessionWatcher(sessionConn)
 
 	return m, nil
 }
@@ -149,7 +152,7 @@ func (m *Manager) init() {
 			return
 		}
 		m.locked = value
-
+        
 		sessionBus, err := dbus.SessionBus()
 		if err != nil {
 			logger.Error("Failed to get SessionBus:", err)
@@ -170,9 +173,16 @@ func (m *Manager) Exec(name, direction string, fingers int32) error {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	if !m.enabled || !isSessionActive() {
+	if !m.enabled {
 		logger.Debug("Gesture had been disabled or session inactive")
 		return nil
+	}
+	if !isSessionActive() {
+          active,err := m.sessionWatcher.IsActive().Get(0)
+		if err != nil || !active {
+			logger.Debug("Gesture had been disabled or session inactive")
+			return nil
+		}
 	}
 
 	info := m.Infos.Get(name, direction, fingers)
