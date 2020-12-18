@@ -9,67 +9,67 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!description" line="0"/>
 			<source>Change your own user data</source>
-			<translation>Spremenite lastne uporabniške podatke</translation>
+			<translation>Spremenite uporabniške podatke</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!message" line="0"/>
 			<source>Authentication is required to change user data</source>
-			<translation>Za spremembo podatkov uporabnikov je zahtevana overitev</translation>
+			<translation>Srememba podatkov uporabnika zahteva overitev</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!description" line="0"/>
 			<source>Manage user accounts</source>
-			<translation>Upravljaj račune uporabnikov</translation>
+			<translation>Upravljanje uporabniških računov</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!message" line="0"/>
 			<source>Authentication is required to enable auto login</source>
-			<translation>Za omogočanje samodejne prijave je potrebna avtentikacija</translation>
+			<translation>Vklop samodejne prijave zahteva overitev</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!description" line="0"/>
 			<source>Enable Auto Login</source>
-			<translation>Omogoči samodejno prijavo</translation>
+			<translation>Vklopi samodejno prijavo</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!message" line="0"/>
 			<source>Authentication is required to disable auto login</source>
-			<translation>Za onemogočanje samodejne prijave je potrebna avtentikacija</translation>
+			<translation>Izklop samodejne prijave zahteva overitev</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!description" line="0"/>
 			<source>Disable Auto Login</source>
-			<translation>Onemogoči samodejno prijavo</translation>
+			<translation>Izklopi samodejno prijavo</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!message" line="0"/>
 			<source>Authentication is required to enable login without password</source>
-			<translation>Za prijavo brez gesla je potrebna avtentikacija</translation>
+			<translation>Prijava brez gesla zahteva overitev</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!description" line="0"/>
 			<source>Enable Login without password</source>
-			<translation>Omogoči prijavo brez gesla</translation>
+			<translation>Vklopi prijavo brez gesla</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-nopass-login!message" line="0"/>
 			<source>Authentication is required to disable login without password</source>
-			<translation>Za onemogočanje prijave brez gesla je potrebna avtentikacija</translation>
+			<translation>Izklop prijave brez gesla zahteva overitev</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-nopass-login!description" line="0"/>
 			<source>Disable Login without password</source>
-			<translation>Onemogoči prijavo brez gesla</translation>
+			<translation>Izklopi prijavo brez gesla</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!message" line="0"/>
 			<source>Authentication is required to set keyboard layout</source>
-			<translation type="unfinished"/>
+			<translation>Sprememba razporeda tipkovnice zahteva overitev</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!description" line="0"/>
 			<source>Set keyboard layout</source>
-			<translation type="unfinished"/>
+			<translation>Določi razpored tipkovnice</translation>
 		</message>
 	</context>
 </TS>

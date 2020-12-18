@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
@@ -61,6 +61,10 @@ msgstr "此用户名已被系统使用"
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "用户名长度必须介于3到32个字符之间"
+
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "认证失败"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -198,8 +202,8 @@ msgstr "接收%q超时"
 msgid "Connect %q successfully"
 msgstr "连接%q成功"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q已断开"
 
@@ -929,35 +933,35 @@ msgstr "该连接已从设置中删除"
 msgid "Enabling hotspot"
 msgstr "正在尝试打开热点"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "正在连接%q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "热点共享已开启"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "已连接%q"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "热点共享已关闭"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "无法共享热点，请检查dnsmasq 相关设置"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "未能加入%q，请尝试靠近无线路由器"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "未能加入%q，请检查路由器或网线。"
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "连接失败，未能加入%q，密码不正确"
 

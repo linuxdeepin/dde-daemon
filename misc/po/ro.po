@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Marian c <dark1ro@yahoo.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/linuxdeepin/teams/3617/ro/)\n"
@@ -62,6 +62,10 @@ msgstr "Acest nume de utilizator este utilizat de sistem."
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Numele de utilizator trebuie să aibă între 3 şi 32 caractere"
+
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr ""
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -199,8 +203,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "Contectare %q cu succes"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q deconectat"
 
@@ -942,35 +946,35 @@ msgstr "Conexiunea a fost eliminată din setări."
 msgid "Enabling hotspot"
 msgstr "Activare hotspot"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Conectare %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot activat"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q conectat"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Hotspot dezactivat"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Imposibil de partajat hotspot, verificaţi setările dnsmasq "
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Imposibil de conectat %q, staţi mai aproape de router"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Imposibil de conectat %q, verificaţi router sau cablu reţea"
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Conexiune eşuată, ne se poate contecta la %q, parolă invalidă"
 

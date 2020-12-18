@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/linuxdeepin/teams/3617/fi/)\n"
@@ -65,9 +65,13 @@ msgstr "Käyttäjätunnus on järjestelmän käytössä"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Käyttäjätunnuksen on oltava 3-32 merkin pituinen"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "Policykit todennus epäonnistui"
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "Kirjaudu ulos, jotta näytön skaalaus tulee voimaan"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -75,11 +79,11 @@ msgstr "Asetettu onnistuneesti"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Myöhemmin"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Kirjaudu ulos nyt"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -201,8 +205,8 @@ msgstr "Vastaanotto kohteesta %q aikakatkaistiin"
 msgid "Connect %q successfully"
 msgstr "Yhdistetty %q onnistuneesti"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q irrotettu"
 
@@ -939,36 +943,36 @@ msgstr "Yhteys poistettiin asetuksista"
 msgid "Enabling hotspot"
 msgstr "Hotspotin käyttöönotto"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Yhdistää %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot käytössä"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "Yhdistetty kohteeseen %q"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Hotspot suljettu"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Hotspot-yhteyden jako epäonnistui, tarkista dnsmasq:n asetukset"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Yhteys kohteeseen %q epäonnistui, pysyttele lähempänä langatonta reititintä"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Yhteys kohteeseen %q epäonnistui, tarkista reititin tai verkkokaapeli"
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Yhteys kohteeseen %q epäonnistui, väärä salasana"
 

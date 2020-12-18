@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: roxfr <roxfr@outlook.fr>, 2020\n"
 "Language-Team: French (https://www.transifex.com/linuxdeepin/teams/3617/fr/)\n"
@@ -71,9 +71,15 @@ msgstr "Le nom d'utilisateur a été utilisé par le système"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Le nom d'utilisateur doit être entre 3 et 32 caractères"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "L'authentification Policykit a échoué"
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
+"Déconnectez-vous pour que les paramètres de mise à l'échelle de l'affichage "
+"prennent effet"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -81,11 +87,11 @@ msgstr "Établit avec succès"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Plus tard"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Déconnectez-vous maintenant"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -207,8 +213,8 @@ msgstr "Réception de %q a expiré"
 msgid "Connect %q successfully"
 msgstr "%q connecté avec succès"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q déconnecté"
 
@@ -959,41 +965,41 @@ msgstr "La connexion a été supprimée des paramètres"
 msgid "Enabling hotspot"
 msgstr "Activation du point d'accès"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Connexion %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Point d'accès activé"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q connecté"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Point d'accès désactivé"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Impossible de partager le point d'accès, veuillez vérifier les paramètres de"
 " dnsmasq"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Impossible de se connecter à %q, veuillez-vous rapprocher du routeur sans "
 "fil."
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Impossible de se connecter à %q, veuillez vérifier votre routeur ou votre "
 "câble internet."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Échec de la connexion, impossible de connecter %q, mot de passe incorrect"

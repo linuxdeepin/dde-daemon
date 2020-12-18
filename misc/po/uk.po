@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
@@ -62,9 +62,14 @@ msgstr "Це ім'я користувача вже використовувал�
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "Не пройдено розпізнавання до Policykit"
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
+"Вийдіть із системи, щоб параметри масштабування дисплея набули чинності"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -72,11 +77,11 @@ msgstr "Успішно встановлено"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Пізніше"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Вийти з системи зараз"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -198,8 +203,8 @@ msgstr "Перевищено час очікування на отримання
 msgid "Connect %q successfully"
 msgstr "Підключення %q успішне"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q відключено"
 
@@ -942,39 +947,39 @@ msgstr "З'єднання було видалено з налаштувань."
 msgid "Enabling hotspot"
 msgstr "Увімкнути точку доступу"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Підключити %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Точка доступу увімкнена"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q підключено"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Точка доступу вимкнена"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Неможливо поділитися точкою доступу, перевірте налаштування dnsmasq"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Неможливо підключити %q, будь ласка, тримайтеся ближче до бездротового "
 "маршрутизатора"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не вдалося з'єднатися із %q. Будь ласка, перевірте, чи працює ваш "
 "маршрутизатор або мережевий кабель."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Помилка підключення, неможливо підключити %q, невірний пароль"
 

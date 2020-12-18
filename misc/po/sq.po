@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2020\n"
 "Language-Team: Albanian (https://www.transifex.com/linuxdeepin/teams/3617/sq/)\n"
@@ -59,9 +59,14 @@ msgstr "Emri i përdoruesit është përdorur nga sistemi"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Emri i përdoruesit duhet të jetë mes 3 dhe 32 shenja i gjatë"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "Mirëfilltësimi me Policykit dështoi"
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
+"Që të hyjnë në fuqi rregullimet për përshkallëzim, bëni daljen nga llogaria"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -69,11 +74,11 @@ msgstr "U caktua me sukses"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Më vonë"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Dilni Tani"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -195,8 +200,8 @@ msgstr "Marrjes së %q i mbaroi koha"
 msgid "Connect %q successfully"
 msgstr "%q u lidh me sukses"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q u shkëput"
 
@@ -937,39 +942,39 @@ msgstr "Lidhja u fshi prej rregullimeve"
 msgid "Enabling hotspot"
 msgstr "Po aktivizohet hotspot-i"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Po lidhet %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot-i u aktivizua"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q u lidh"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Hotspot-i u çaktivizua"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "S’arrihet të ndahet hotspot me të tjerë, ju lutemi, kontrolloni rregullimet "
 "për dnsmasq"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "S’arrihet të lidhet %q, ju lutemi, jini më afër rrugëzuesit pa fill"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit ose "
 "rrjetit tuaj."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Lidhja dështoi, s’arrihet të lidhet %q, fjalëkalim i gabuar"
 

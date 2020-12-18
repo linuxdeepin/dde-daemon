@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Davidmp <medipas@gmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/linuxdeepin/teams/3617/ca/)\n"
@@ -62,9 +62,13 @@ msgstr "El nom d'usuari ja l'ha usat el sistema."
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nom d'usuari ha de tenir de 3 a 32 caràcters de llargada."
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "Ha fallat l'autenticació de Policykit."
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "Sortiu de la sessió perquè l'escalatge de la pantalla tingui efecte."
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -72,11 +76,11 @@ msgstr "Establiment correcte"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Més tard"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Surt-ne ara"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -198,8 +202,8 @@ msgstr "S'ha esgotat el temps d'espera per rebre %q."
 msgid "Connect %q successfully"
 msgstr "Connexió amb %q correcta"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q desconnectada"
 
@@ -950,40 +954,40 @@ msgstr "La connexió s'ha eliminat de la configuració."
 msgid "Enabling hotspot"
 msgstr "S'habilita el punt d'accés."
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Es connecta amb %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Punt d'accés habilitat"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q connectada"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Punt d'accés inhabilitat"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "No es pot compartir el punt d'accés. Si us plau, comproveu la configuració "
 "de dnsmasq."
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "No es pot connectar amb %q. Si us plau, mantingueu-vos a prop de "
 "l'encaminador."
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "No es pot connectar amb %q, comproveu l'encaminador o el cable de xarxa."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Ha fallat la connexió. No es pot connectar amb %q. Contrasenya incorrecta."

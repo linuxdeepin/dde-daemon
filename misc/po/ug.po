@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2020\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
@@ -53,7 +53,7 @@ msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
@@ -63,9 +63,14 @@ msgstr "بۇ ئەزالىق نامى سىستېما تەرىپىدىن ئىشل�
 msgid "Username must be between 3 and 32 characters"
 msgstr "ئىشلەتكۈچى ئىسمى 3 دىن 32 ھەرپ ئارىلىقىدا بولۇشى كېرەك"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
+"كۆرسىتىش ھالىتىنى تەڭشىگەندىن كېيىن  قايتا قوزغاتسىڭىز ئۈنۈملۈك بولىدۇ"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -73,11 +78,11 @@ msgstr "تەڭشەلدى"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "بىردەمدىن كېيىن"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "ھازىرلا"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -149,7 +154,7 @@ msgstr "بىكار قىلىش"
 
 #: ../../bluetooth/obex_agent.go:352
 msgid "Receiving %q files from %q"
-msgstr ""
+msgstr "%q دىن كەلگەن %q دانە ھۆججەت قوبۇللىنىۋاتىدۇ"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "View"
@@ -157,7 +162,7 @@ msgstr "كۆرۈش"
 
 #: ../../bluetooth/obex_agent.go:367
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "%q دىن كەلگەن ھۆججەتنى قوبۇللاش تاماملاندى"
 
 #: ../../bluetooth/obex_agent.go:368
 msgid "Done"
@@ -189,18 +194,18 @@ msgstr "كۆكچىشتە ھۆججەت يوللاش"
 
 #: ../../bluetooth/obex_agent.go:428
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "%q ھۆججەت يوللىدى، قوبۇللامسىز؟"
 
 #: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
-msgstr ""
+msgstr "%q دىن قوبۇللاش ۋاقتى ئۆتتى"
 
 #: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "%qغا ئۇلاندى"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%qدىن ئۈزۈلدى"
 
@@ -940,37 +945,37 @@ msgstr "بۇ ئۇلىنىش تەڭشەكتىن ئۆچۈرۋىتىلىپتۇ"
 msgid "Enabling hotspot"
 msgstr "قىزىق نۇقتىا ئېچىلىۋاتىدۇ"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "%qغا ئۇلىنىۋاتىدۇ"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "قىزىق نۇقتا ھەمبەھرىلەندى"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%qغا ئۇلاندى"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "قىزىق نۇقتا تاقالدى"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "قىزىق نۇقتىنى ئورتاقلىشالمىدى ،dnsmasq غا مۇناسىۋەتلىك تەڭشەكلەرنى تەكشۈرۈپ "
 "بېقىڭ"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qغا ئۇلانمىدى، سىمسىز روتېرغا يېقىنلىشىپ سىناپ بېقىڭ"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qغا ئۇلانمىدى. روتېرنى ياكى تور سىمىنى تەكشۈرۈڭ"
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "ئۇلانمىدى، %qغا كىرەلمىدى، پارول خاتا"
 

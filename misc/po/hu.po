@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-20 17:03+0800\n"
+"POT-Creation-Date: 2020-12-16 10:39+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Béla Bajza, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/linuxdeepin/teams/3617/hu/)\n"
@@ -73,6 +73,10 @@ msgstr "Ez a felhasználónév már használatban van a rendszer által"
 msgid "Username must be between 3 and 32 characters"
 msgstr "A felhasználónév hosszának 3 és 32 karakter között kell lennie"
 
+#: ../../accounts/utils.go:80
+msgid "Policykit authentication failed"
+msgstr "Az házirend hitelesítése sikertelen"
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
@@ -88,7 +92,7 @@ msgstr "Később"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Kijelentkezés most"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -210,8 +214,8 @@ msgstr "% q fogadásának időtúllépése"
 msgid "Connect %q successfully"
 msgstr "%q csatlakoztatása sikeres"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:336
-#: ../../network/state_handler.go:359
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
+#: ../../network/state_handler.go:362
 msgid "%q disconnected"
 msgstr "%q szétkapcsolva"
 
@@ -514,8 +518,8 @@ msgstr "A rendszer nyelv változtatása folyamatban, kérjük várjon..."
 #: ../../langselector/locale.go:161
 msgid "System language changed, please log out and then log in"
 msgstr ""
-"A rendszer nyelv változtatása megtörtént, kérjük jelentkezzen ki, majd újra "
-"be az életbe lépéshez"
+"A rendszer nyelvének változtatása megtörtént, kérjük jelentkezzen ki, majd "
+"újra be az életbe lépéshez"
 
 #: ../../langselector/locale.go:402
 msgid "Failed to change system language, please try later"
@@ -962,41 +966,41 @@ msgstr "A kapcsolat eltávolításra került a beállításokból"
 msgid "Enabling hotspot"
 msgstr "Hotspot engedélyezése"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Csatlakozás %q"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot bekapcsolva"
 
-#: ../../network/state_handler.go:262
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q csatlakozva"
 
-#: ../../network/state_handler.go:279 ../../network/state_handler.go:334
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr "Hotspot kikapcsolva"
 
-#: ../../network/state_handler.go:342
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Nem sikerült a hotspot megosztása, kérjük ellenőrizze a nDNS maszk "
 "beállítást"
 
-#: ../../network/state_handler.go:344
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Nem sikerült csatlakozni %q -eszközhöz,, kérjük próbálja meg közelebb vinni "
 "a Routerhez"
 
-#: ../../network/state_handler.go:346
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nem sikerült csatlakozni a %q eszközhöz, kérjük ellenőrizze a Routert, vagy "
 "a hálózati kábelt."
 
-#: ../../network/state_handler.go:350
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "A kapcsolat sikertelen, nem sikerült kapcsolódni a %q-hoz, helytelen jelszó"
