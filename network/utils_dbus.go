@@ -67,12 +67,13 @@ func (m *Manager) initDbusObjects() {
 							continue
 						}
 						if enabled {
-							m.EnableDevice(dev.Path,value)
+							m.enableDevice(dev.Path,value, true)
 							m.service.Emit(manager, "DeviceEnabled", string(dev.Path), enabled)
 						}
 
 					} else {
 						m.DisconnectDevice(dev.Path)
+						m.setDeviceEnabled(value, dev.Path)
 						m.service.Emit(manager, "DeviceEnabled", string(dev.Path), value)
 					}	
 				}

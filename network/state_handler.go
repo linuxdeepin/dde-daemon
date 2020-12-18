@@ -211,12 +211,21 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 	sh.devices[path] = &deviceStateInfo{nmDev: nmDev}
 	sh.devices[path].devType = deviceType
 	sh.devices[path].devUdi, _ = nmDev.Udi().Get(0)
-	enabled, err := sh.m.sysNetwork.IsDeviceEnabled(0, string(path))
-	if err == nil {
-		sh.devices[path].enabled = enabled
-	} else {
-		logger.Warning(err)
+	//init wireless device state
+	if deviceType == 2 {
+		if !sh.m.wirelessEnabled {
+			sh.devices[path].enabled = false
+		}else {
+			enabled, err := sh.m.sysNetwork.IsDeviceEnabled(0, string(path))
+			if err == nil {
+				sh.devices[path].enabled = enabled
+			} else {
+				logger.Warning(err)
+			}
+		}
 	}
+	
+	
 
 	if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
 		// remember active connection id and type if exists

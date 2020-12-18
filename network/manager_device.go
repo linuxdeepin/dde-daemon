@@ -510,8 +510,8 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
 	//wireless switch handle here to be compatible for f9 control
 	if m.IsDeviceWireless(devPath) {
-
 		currentstatus, _ := m.getDeviceEnabled(devPath)
+		logger.Debug("###########getDeviceEnabled!!!!!!!!!!", devPath, currentstatus)
 		if enabled != currentstatus {
 
 			err := m.enableDevice(devPath, enabled, true)
@@ -519,8 +519,15 @@ func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Erro
 				return dbusutil.ToError(err)
 			}
 			if enabled {
-				m.updateWirelessCountTicker.Reset()
+                          	//TODO:
+                         	//飞行模式开启关闭后，由于华为的固件改动需要5s的时长，nm才会导出aplist给后端
+                          	//此处过5s再去扫描并获取数据
+				time.AfterFunc(5*time.Second,func(){
+					m.updateWirelessCountTicker.Reset()
+				})
+				
 			}
+			
 			return dbusutil.ToError(err)
 		}
 
@@ -540,7 +547,7 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 		logger.Warning("EnableDevice:", err)
 		return err
 	}
-
+	
 	// check if need activate connection
 	// set enable device state
 	m.setDeviceEnabled(enabled, devPath)
@@ -668,7 +675,7 @@ func (m *Manager) UpdateWirelessAccessPoints() (err error) {
 			statustmp, _ := m.IsDeviceEnabled(dev.Path)
 
 			if !statustmp && accessPoints == nil {
-				continue
+				return 
 			}
 			wirelessAccessPoints[dev.Path] = accessPoints
 		}
@@ -696,8 +703,7 @@ func (m *Manager) RequestWirelessScan() *dbus.Error {
 			}
 		}
 	}
-	//wait 3s for results of aplist
-	time.Sleep(3 * time.Second)
+
 	if devices, ok := m.devices[deviceWifi]; ok {
 		for _, dev := range devices {		
 			accessPointsList, err := dev.nmDev.GetAllAccessPoints(0)

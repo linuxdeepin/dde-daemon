@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 	"sync"
-
+	"time"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/dde/daemon/network/nm"
@@ -400,7 +400,6 @@ func (n *Network) enableDevice(pathOrIface string, enabled bool) (cpath dbus.Obj
 	}
 
 	n.enableIface(d.iface, enabled)
-
 	if enabled {
 		cpath, err = n.enableDevice1(d)
 		if err != nil {
@@ -426,6 +425,7 @@ func (n *Network) enableDevice(pathOrIface string, enabled bool) (cpath dbus.Obj
 }
 
 func (n *Network) enableDevice1(d *device) (cpath dbus.ObjectPath, err error) {
+	var connPaths []dbus.ObjectPath
 	err = n.enableNetworking()
 	if err != nil {
 		return "/", err
@@ -448,12 +448,25 @@ func (n *Network) enableDevice1(d *device) (cpath dbus.ObjectPath, err error) {
 		return "/", err
 	}
 
-	connPaths, err := d.nmDevice.AvailableConnections().Get(0)
-	if err != nil {
-		return "/", err
-	}
-	logger.Debug("available connections:", connPaths)
+  	//TODO:
+  	//华为固件升级导致，飞行模式开关后，wifi做回连时需要5s左右才能获取到回连数据
+  	//因此这里做最长5s的延时
+	for i := 0; i < 10; i++ {
+		connPaths, err = d.nmDevice.AvailableConnections().Get(0)
+		if err != nil {
+			logger.Debug("Get AvailableConnections failed!!!")
+			return "/", err
+		}
+		if len(connPaths) > 0 {
+			logger.Debug("Get AvailableConnections successed",connPaths)
+			break
+		} else {
+			time.Sleep(time.Millisecond * 500)
+			continue
+		}
 
+	}
+  
 	var connPath0 dbus.ObjectPath
 	var maxTs uint64
 	for _, connPath := range connPaths {
