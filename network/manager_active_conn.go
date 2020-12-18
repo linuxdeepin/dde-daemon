@@ -56,6 +56,7 @@ type activeConnectionInfo struct {
 	IsPrimaryConnection bool
 	Device              dbus.ObjectPath
 	SettingPath         dbus.ObjectPath
+	SpecificObject      dbus.ObjectPath
 	ConnectionType      string
 	Protocol            string
 	ConnectionName      string
@@ -344,6 +345,11 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 		return
 	}
 
+	specificObject, err := nmAConn.SpecificObject().Get(0)
+	if err != nil {
+		return
+	}
+
 	deviceType, _ := nmDev.DeviceType().Get(0)
 	devType = getCustomDeviceType(deviceType)
 	devIfc, _ = nmDev.Interface().Get(0)
@@ -448,6 +454,7 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 		IsPrimaryConnection: nmGetPrimaryConnection() == apath,
 		Device:              devPath,
 		SettingPath:         nmConn.Path_(),
+		SpecificObject:      specificObject,
 		ConnectionType:      connType,
 		Protocol:            protocol,
 		ConnectionName:      connName,
