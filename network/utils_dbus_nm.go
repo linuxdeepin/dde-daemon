@@ -80,9 +80,8 @@ func isDeviceStateActivated(state uint32) bool {
 	return state == nm.NM_DEVICE_STATE_ACTIVATED
 }
 func isDeviceStateInActivating(state uint32) bool {
-	return state == nm.NM_DEVICE_STATE_ACTIVATED
+	return state >= nm.NM_DEVICE_STATE_PREPARE && state <= nm.NM_DEVICE_STATE_ACTIVATED
 }
-
 func isDeviceStateReasonInvalid(reason uint32) bool {
 	switch reason {
 	case nm.NM_DEVICE_STATE_REASON_UNKNOWN:
