@@ -80,6 +80,7 @@ type accessPoint struct {
 func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoint, err error) {
 	nmAp, err := nmNewAccessPoint(apPath)
 	if err != nil {
+		logger.Warningf("create access point failed, err: %v", err)
 		return
 	}
 
@@ -91,6 +92,7 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 	ap.updateProps()
 	if len(ap.Ssid) == 0 {
 		err = fmt.Errorf("ignore hidden access point")
+		logger.Warningf("ssid is nil, err: %v", err)
 		return
 	}
 
@@ -113,7 +115,7 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 			if ignoredNow {
 				logger.Debugf("access point(ignored) properties changed %#v", ap)
 			} else {
-				//logger.Debugf("access point properties changed %#v", ap)
+				logger.Debugf("access point properties changed %#v", ap)
 				m.service.Emit(m, "AccessPointPropertiesChanged", string(devPath), apJSON)
 			}
 		} else {
@@ -123,7 +125,7 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 				logger.Debugf("access point is ignored %#v", ap)
 				m.service.Emit(m, "AccessPointRemoved", string(devPath), apJSON)
 			} else {
-				logger.Debugf("ignored access point available %#v", ap)
+				logger.Debugf("AccessPointAdded %#v", ap)
 				m.service.Emit(m, "AccessPointAdded", string(devPath), apJSON)
 			}
 		}
@@ -133,6 +135,7 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 		logger.Debugf("new access point is ignored %#v", ap)
 	} else {
 		apJSON, _ := marshalJSON(ap)
+		logger.Debugf("AccessPointAdded %#v", ap)
 		m.service.Emit(m, "AccessPointAdded", string(devPath), apJSON)
 	}
 
@@ -213,7 +216,7 @@ func (m *Manager) clearAccessPoints() {
 }
 
 func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
-	logger.Warning("addAccessPoint", apPath)
+	logger.Debugf("addAccessPoint: %v", apPath)
 	if m.checkAPStrengthTimer == nil {
 		m.checkAPStrengthTimer = time.AfterFunc(scanWifiDelayTime, m.checkAPStrength)
 	} else {
@@ -498,7 +501,7 @@ func (m *Manager) checkAPStrength() {
 				logger.Debug("no need to change AP")
 				continue
 			}
-			logger.Debug("changeAPChanel,apPath:",  apPath)
+			logger.Debug("changeAPChanel,apPath:", apPath)
 			if band == "" {
 				if apNow.Frequency >= frequency5GLowerlimit &&
 					apNow.Frequency <= frequency5GUpperlimit {
