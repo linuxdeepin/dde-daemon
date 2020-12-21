@@ -26,12 +26,12 @@ import (
 	"pkg.deepin.io/dde/daemon/network/nm"
 )
 
-func newWiredConnectionForDevice(id, uuid string, devPath dbus.ObjectPath, active bool) (cpath dbus.ObjectPath, err error) {
+func newUnsavedWiredConnectionForDevice(id, uuid string, devPath dbus.ObjectPath, active bool) (cpath dbus.ObjectPath, err error) {
 	logger.Infof("new wired connection, id=%s, uuid=%s, devPath=%s", id, uuid, devPath)
 	data := newWiredConnectionData(id, uuid, devPath)
 
 	setSettingConnectionAutoconnect(data, true)
-	cpath, err = nmAddConnection(data)
+	cpath, err = nmAddConnectionUnsaved(data)
 	if err != nil {
 		return "/", err
 	}

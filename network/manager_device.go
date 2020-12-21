@@ -357,8 +357,8 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 
 	// connect signals
 	_, err = dev.nmDev.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
-		logger.Debugf("device state changed, %d => %d, reason[%d] %s",
-			oldState, newState, reason, deviceErrorTable[reason])
+		logger.Debugf("device %s state changed, %d => %d, reason[%d] %s",
+			string(devPath), oldState, newState, reason, deviceErrorTable[reason])
 
 		if !m.isDeviceExists(devPath) {
 			return
