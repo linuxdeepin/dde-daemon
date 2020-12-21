@@ -22,18 +22,14 @@ package audio
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_isVolumeValid(t *testing.T) {
-	Convey("isVolumeValid", t, func(c C) {
-		c.So(isVolumeValid(0), ShouldBeTrue)
-		c.So(isVolumeValid(-1), ShouldBeFalse)
-	})
+	assert.True(t, isVolumeValid(0))
+	assert.False(t, isVolumeValid(-1))
 }
 func Test_floatPrecision(t *testing.T) {
-	Convey("floatPrecision", t, func(c C) {
-		c.So(floatPrecision(3.1415926), ShouldEqual, 3.14)
-		c.So(floatPrecision(2.718281828), ShouldEqual, 2.72)
-	})
+	assert.Equal(t, floatPrecision(3.1415926), 3.14)
+	assert.Equal(t, floatPrecision(2.718281828), 2.72)
 }

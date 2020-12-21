@@ -22,26 +22,24 @@ package dock
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_hasIntersection(t *testing.T) {
-	Convey("hasIntersection", t, func(c C) {
-		rect1 := Rect{0, 0, 100, 100}
-		rect2 := Rect{0, 0, 50, 50}
-		rect3 := Rect{1, 1, 30, 30}
-		rect4 := Rect{32,1, 15, 20}
-		rect5 := Rect{32,22,15, 15}
+	rect1 := Rect{0, 0, 100, 100}
+	rect2 := Rect{0, 0, 50, 50}
+	rect3 := Rect{1, 1, 30, 30}
+	rect4 := Rect{32, 1, 15, 20}
+	rect5 := Rect{32, 22, 15, 15}
 
-		c.So(hasIntersection(&rect2, &rect1), ShouldBeTrue)
-		c.So(hasIntersection(&rect3, &rect1), ShouldBeTrue)
-		c.So(hasIntersection(&rect3, &rect2), ShouldBeTrue)
-		c.So(hasIntersection(&rect4, &rect1), ShouldBeTrue)
-		c.So(hasIntersection(&rect4, &rect2), ShouldBeTrue)
-		c.So(hasIntersection(&rect4, &rect3), ShouldBeFalse)
-		c.So(hasIntersection(&rect5, &rect1), ShouldBeTrue)
-		c.So(hasIntersection(&rect5, &rect2), ShouldBeTrue)
-		c.So(hasIntersection(&rect5, &rect3), ShouldBeFalse)
-		c.So(hasIntersection(&rect5, &rect4), ShouldBeFalse)
-	})
+	assert.True(t, hasIntersection(&rect2, &rect1))
+	assert.True(t, hasIntersection(&rect3, &rect1))
+	assert.True(t, hasIntersection(&rect3, &rect2))
+	assert.True(t, hasIntersection(&rect4, &rect1))
+	assert.True(t, hasIntersection(&rect4, &rect2))
+	assert.False(t, hasIntersection(&rect4, &rect3))
+	assert.True(t, hasIntersection(&rect5, &rect1))
+	assert.True(t, hasIntersection(&rect5, &rect2))
+	assert.False(t, hasIntersection(&rect5, &rect3))
+	assert.False(t, hasIntersection(&rect5, &rect4))
 }

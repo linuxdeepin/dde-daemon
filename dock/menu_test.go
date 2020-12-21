@@ -23,7 +23,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func IsContainItem(items []*MenuItem, item *MenuItem) bool {
@@ -36,34 +36,30 @@ func IsContainItem(items []*MenuItem, item *MenuItem) bool {
 }
 
 func Test_AppendItem(t *testing.T) {
-	Convey("AppendItem", t, func(c C) {
-		menu := NewMenu()
-		item0 := NewMenuItem("item 0", nil, true)
-		item1 := NewMenuItem("item 1", nil, true)
-		item2 := NewMenuItem("item 2", nil, true)
-		item3 := NewMenuItem("item 3", nil, true)
-		menu.AppendItem(item0, item1, item2)
+	menu := NewMenu()
+	item0 := NewMenuItem("item 0", nil, true)
+	item1 := NewMenuItem("item 1", nil, true)
+	item2 := NewMenuItem("item 2", nil, true)
+	item3 := NewMenuItem("item 3", nil, true)
+	menu.AppendItem(item0, item1, item2)
 
-		c.So(IsContainItem(menu.Items, item0), ShouldBeTrue)
-		c.So(IsContainItem(menu.Items, item1), ShouldBeTrue)
-		c.So(IsContainItem(menu.Items, item2), ShouldBeTrue)
-		c.So(IsContainItem(menu.Items, item3), ShouldBeFalse)
-	})
+	assert.True(t, IsContainItem(menu.Items, item0))
+	assert.True(t, IsContainItem(menu.Items, item1))
+	assert.True(t, IsContainItem(menu.Items, item2))
+	assert.False(t, IsContainItem(menu.Items, item3))
 }
 
 func Test_GenerateMenuJson(t *testing.T) {
-	Convey("GenerateMenuJson", t, func(c C) {
-		menu := NewMenu()
-		item0 := NewMenuItem("item 0", nil, true)
-		item1 := NewMenuItem("item 1", nil, true)
-		item2 := NewMenuItem("item 2", nil, true)
-		menu.AppendItem(item0, item1, item2)
+	menu := NewMenu()
+	item0 := NewMenuItem("item 0", nil, true)
+	item1 := NewMenuItem("item 1", nil, true)
+	item2 := NewMenuItem("item 2", nil, true)
+	menu.AppendItem(item0, item1, item2)
 
-		menuJSON := menu.GenerateJSON()
-		c.So(menuJSON, ShouldEqual, `{"items":[{"itemId":"0","itemText":"item 0","isActive":true,"isCheckable":false,"checked":false,"itemIcon":"","itemIconHover":"","itemIconInactive":"","showCheckMark":false,"itemSubMenu":null},{"itemId":"1","itemText":"item 1","isActive":true,"isCheckable":false,"checked":false,"itemIcon":"","itemIconHover":"","itemIconInactive":"","showCheckMark":false,"itemSubMenu":null},{"itemId":"2","itemText":"item 2","isActive":true,"isCheckable":false,"checked":false,"itemIcon":"","itemIconHover":"","itemIconInactive":"","showCheckMark":false,"itemSubMenu":null}],"checkableMenu":false,"singleCheck":false}`)
+	menuJSON := menu.GenerateJSON()
+	assert.Equal(t, menuJSON, `{"items":[{"itemId":"0","itemText":"item 0","isActive":true,"isCheckable":false,"checked":false,"itemIcon":"","itemIconHover":"","itemIconInactive":"","showCheckMark":false,"itemSubMenu":null},{"itemId":"1","itemText":"item 1","isActive":true,"isCheckable":false,"checked":false,"itemIcon":"","itemIconHover":"","itemIconInactive":"","showCheckMark":false,"itemSubMenu":null},{"itemId":"2","itemText":"item 2","isActive":true,"isCheckable":false,"checked":false,"itemIcon":"","itemIconHover":"","itemIconInactive":"","showCheckMark":false,"itemSubMenu":null}],"checkableMenu":false,"singleCheck":false}`)
 
-		var parseResult interface{}
-		err := json.Unmarshal([]byte(menuJSON), &parseResult)
-		c.So(err, ShouldBeNil)
-	})
+	var parseResult interface{}
+	err := json.Unmarshal([]byte(menuJSON), &parseResult)
+	assert.Nil(t, err)
 }

@@ -22,48 +22,46 @@ package dock
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_windowInfosTypeEqual(t *testing.T) {
-	Convey("windowInfosType Equal", t, func(c C) {
-		wa := windowInfosType{
-			0: {"a", false},
-			1: {"b", false},
-			2: {"c", true},
-		}
-		wb := windowInfosType{
-			2: {"c", true},
-			1: {"b", false},
-			0: {"a", false},
-		}
-		c.So(wa.Equal(wb), ShouldBeTrue)
+	wa := windowInfosType{
+		0: {"a", false},
+		1: {"b", false},
+		2: {"c", true},
+	}
+	wb := windowInfosType{
+		2: {"c", true},
+		1: {"b", false},
+		0: {"a", false},
+	}
+	assert.True(t, wa.Equal(wb))
 
-		wc := windowInfosType{
-			1: {"b", false},
-			2: {"c", false},
-		}
-		c.So(wc.Equal(wa), ShouldBeFalse)
+	wc := windowInfosType{
+		1: {"b", false},
+		2: {"c", false},
+	}
+	assert.False(t, wc.Equal(wa))
 
-		wd := windowInfosType{
-			0: {"aa", false},
-			1: {"b", false},
-			2: {"c", false},
-		}
-		c.So(wd.Equal(wa), ShouldBeFalse)
+	wd := windowInfosType{
+		0: {"aa", false},
+		1: {"b", false},
+		2: {"c", false},
+	}
+	assert.False(t, wd.Equal(wa))
 
-		we := windowInfosType{
-			0: {"a", false},
-			1: {"b", false},
-			3: {"c", false},
-		}
-		c.So(we.Equal(wa), ShouldBeFalse)
+	we := windowInfosType{
+		0: {"a", false},
+		1: {"b", false},
+		3: {"c", false},
+	}
+	assert.False(t, we.Equal(wa))
 
-		wf := windowInfosType{
-			0: {"a", false},
-			1: {"b", false},
-			2: {"c", false},
-		}
-		c.So(wf.Equal(wa), ShouldBeFalse)
-	})
+	wf := windowInfosType{
+		0: {"a", false},
+		1: {"b", false},
+		2: {"c", false},
+	}
+	assert.False(t, wf.Equal(wa))
 }

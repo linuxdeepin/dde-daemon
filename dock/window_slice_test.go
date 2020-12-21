@@ -22,7 +22,7 @@ package dock
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_diffSortedWindowSlice(t *testing.T) {
@@ -30,14 +30,12 @@ func Test_diffSortedWindowSlice(t *testing.T) {
 	b := windowSlice{1, 3, 5, 6, 7}
 	add, remove := diffSortedWindowSlice(a, b)
 
-	Convey("diffSortedWindowSlice", t, func(c C) {
-		c.So(len(add), ShouldEqual, 3)
-		c.So(add[0], ShouldEqual, 5)
-		c.So(add[1], ShouldEqual, 6)
-		c.So(add[2], ShouldEqual, 7)
+	assert.Equal(t, len(add), 3)
+	assert.Equal(t, int(add[0]), 5)
+	assert.Equal(t, int(add[1]), 6)
+	assert.Equal(t, int(add[2]), 7)
 
-		c.So(len(remove), ShouldEqual, 2)
-		c.So(remove[0], ShouldEqual, 2)
-		c.So(remove[1], ShouldEqual, 4)
-	})
+	assert.Equal(t, len(remove), 2)
+	assert.Equal(t, int(remove[0]), 2)
+	assert.Equal(t, int(remove[1]), 4)
 }

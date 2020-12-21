@@ -20,19 +20,14 @@ package lastore
 import (
 	"testing"
 
-	. "gopkg.in/check.v1"
+	"github.com/stretchr/testify/assert"
 )
 
 // Hook up gocheck into the "go test" runner.
-func Test(t *testing.T) { TestingT(t) }
 
-type MySuite struct{}
-
-var _ = Suite(&MySuite{})
-
-func (*MySuite) TestStrSliceSetEqual(c *C) {
-	c.Assert(strSliceSetEqual([]string{}, []string{}), Equals, true)
-	c.Assert(strSliceSetEqual([]string{"a"}, []string{"a"}), Equals, true)
-	c.Assert(strSliceSetEqual([]string{"a", "b"}, []string{"a"}), Equals, false)
-	c.Assert(strSliceSetEqual([]string{"a", "b", "d"}, []string{"b", "d", "a"}), Equals, true)
+func TestStrSliceSetEqual(t *testing.T) {
+	assert.Equal(t, strSliceSetEqual([]string{}, []string{}), true)
+	assert.Equal(t, strSliceSetEqual([]string{"a"}, []string{"a"}), true)
+	assert.Equal(t, strSliceSetEqual([]string{"a", "b"}, []string{"a"}), false)
+	assert.Equal(t, strSliceSetEqual([]string{"a", "b", "d"}, []string{"b", "d", "a"}), true)
 }

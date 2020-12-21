@@ -21,16 +21,12 @@ package appinfo
 
 import (
 	"os"
+	"testing"
 
-	C "gopkg.in/check.v1"
+	"github.com/stretchr/testify/assert"
 )
 
-type ConfigFileTestSuite struct {
-}
-
-var _ = C.Suite(&ConfigFileTestSuite{})
-
-func (*ConfigFileTestSuite) TestConfigFilePath(c *C.C) {
+func Test_ConfigFilePath(t *testing.T) {
 	os.Setenv("XDG_CONFIG_HOME", "../testdata/.config")
-	c.Assert(ConfigFilePath("launcher/test.ini"), C.Equals, "../testdata/.config/launcher/test.ini")
+	assert.Equal(t, ConfigFilePath("launcher/test.ini"), "../testdata/.config/launcher/test.ini")
 }

@@ -22,7 +22,7 @@ package dock
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 var deskotpFilePathTestMap = map[string]string{
@@ -39,64 +39,52 @@ func init() {
 }
 
 func Test_addDesktopExt(t *testing.T) {
-	Convey("addDesktopExt", t, func(c C) {
-		c.So(addDesktopExt("0ad"), ShouldEqual, "0ad.desktop")
-		c.So(addDesktopExt("0ad.desktop"), ShouldEqual, "0ad.desktop")
-		c.So(addDesktopExt("0ad.desktop-x"), ShouldEqual, "0ad.desktop-x.desktop")
-	})
+	assert.Equal(t, addDesktopExt("0ad"), "0ad.desktop")
+	assert.Equal(t, addDesktopExt("0ad.desktop"), "0ad.desktop")
+	assert.Equal(t, addDesktopExt("0ad.desktop-x"), "0ad.desktop-x.desktop")
 }
 
 func Test_trimDesktopExt(t *testing.T) {
-	Convey("trimDesktopExt", t, func(c C) {
-		c.So(trimDesktopExt("deepin-movie"), ShouldEqual, "deepin-movie")
-		c.So(trimDesktopExt("deepin-movie.desktop"), ShouldEqual, "deepin-movie")
-		c.So(trimDesktopExt("deepin-movie.desktop-x"), ShouldEqual, "deepin-movie.desktop-x")
-	})
+	assert.Equal(t, trimDesktopExt("deepin-movie"), "deepin-movie")
+	assert.Equal(t, trimDesktopExt("deepin-movie.desktop"), "deepin-movie")
+	assert.Equal(t, trimDesktopExt("deepin-movie.desktop-x"), "deepin-movie.desktop-x")
 }
 
 func Test_zipDesktopPath(t *testing.T) {
-	Convey("zipDesktopPath", t, func(c C) {
-		for path, zipped := range deskotpFilePathTestMap {
-			c.So(zipped, ShouldEqual, zipDesktopPath(path))
-		}
-	})
+	for path, zipped := range deskotpFilePathTestMap {
+		assert.Equal(t, zipped, zipDesktopPath(path))
+	}
 }
 
 func Test_unzipDesktopPath(t *testing.T) {
-	Convey("unzipDesktopPath", t, func(c C) {
-		for path, zipped := range deskotpFilePathTestMap {
-			c.So(path, ShouldEqual, unzipDesktopPath(zipped))
-		}
-	})
+	for path, zipped := range deskotpFilePathTestMap {
+		assert.Equal(t, path, unzipDesktopPath(zipped))
+	}
 }
 
 func Test_getDesktopIdByFilePath(t *testing.T) {
-	Convey("getDesktopIdByFilePath", t, func(c C) {
-		path := "/usr/share/applications/deepin-screenshot.desktop"
-		desktopId := getDesktopIdByFilePath(path)
-		c.So(desktopId, ShouldEqual, "deepin-screenshot.desktop")
+	path := "/usr/share/applications/deepin-screenshot.desktop"
+	desktopId := getDesktopIdByFilePath(path)
+	assert.Equal(t, desktopId, "deepin-screenshot.desktop")
 
-		path = "/usr/share/applications/kde4/krita.desktop"
-		desktopId = getDesktopIdByFilePath(path)
-		c.So(desktopId, ShouldEqual, "kde4-krita.desktop")
+	path = "/usr/share/applications/kde4/krita.desktop"
+	desktopId = getDesktopIdByFilePath(path)
+	assert.Equal(t, desktopId, "kde4-krita.desktop")
 
-		path = "/home/tp/.local/share/applications/telegramdesktop.desktop"
-		desktopId = getDesktopIdByFilePath(path)
-		c.So(desktopId, ShouldEqual, "telegramdesktop.desktop")
+	path = "/home/tp/.local/share/applications/telegramdesktop.desktop"
+	desktopId = getDesktopIdByFilePath(path)
+	assert.Equal(t, desktopId, "telegramdesktop.desktop")
 
-		path = "/home/tp/.local/share/applications/dirfortest/dir2/space test.desktop"
-		desktopId = getDesktopIdByFilePath(path)
-		c.So(desktopId, ShouldEqual, "dirfortest-dir2-space test.desktop")
-	})
+	path = "/home/tp/.local/share/applications/dirfortest/dir2/space test.desktop"
+	desktopId = getDesktopIdByFilePath(path)
+	assert.Equal(t, desktopId, "dirfortest-dir2-space test.desktop")
 }
 
 func Test_addDirTrailingSlash(t *testing.T) {
-	Convey("addDirTrailingSlash", t, func(c C) {
-		dir := "/usr/shareapplication"
-		dir2 := addDirTrailingSlash(dir)
-		c.So(dir2, ShouldEqual, dir + "/")
+	dir := "/usr/shareapplication"
+	dir2 := addDirTrailingSlash(dir)
+	assert.Equal(t, dir2, dir+"/")
 
-		dir3 := addDirTrailingSlash(dir2)
-		c.So(dir3, ShouldEqual, dir2)
-	})
+	dir3 := addDirTrailingSlash(dir2)
+	assert.Equal(t, dir3, dir2)
 }

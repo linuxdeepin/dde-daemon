@@ -22,38 +22,36 @@ package inputdevices
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_addItemToList(t *testing.T) {
-	Convey("addItemToList", t, func(c C) {
-		dst := []string{}
-		src := []string{
-			"hello",
-			"world",
-			"foo",
-			"bar",
-		}
-		var ret bool
+	dst := []string{}
+	src := []string{
+		"hello",
+		"world",
+		"foo",
+		"bar",
+	}
+	var ret bool
 
-		for _, str := range src {
-			dst, ret = addItemToList(str, dst)
-			c.So(ret, ShouldBeTrue)
-		}
+	for _, str := range src {
+		dst, ret = addItemToList(str, dst)
+		assert.True(t, ret)
+	}
 
-		for _, str := range src {
-			dst, ret = addItemToList(str, dst)
-			c.So(ret, ShouldBeFalse)
-		}
+	for _, str := range src {
+		dst, ret = addItemToList(str, dst)
+		assert.False(t, ret)
+	}
 
-		for _, str := range src {
-			dst, ret = delItemFromList(str, dst)
-			c.So(ret, ShouldBeTrue)
-		}
+	for _, str := range src {
+		dst, ret = delItemFromList(str, dst)
+		assert.True(t, ret)
+	}
 
-		for _, str := range src {
-			dst, ret = delItemFromList(str, dst)
-			c.So(ret, ShouldBeFalse)
-		}
-	})
+	for _, str := range src {
+		dst, ret = delItemFromList(str, dst)
+		assert.False(t, ret)
+	}
 }

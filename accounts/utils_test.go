@@ -22,7 +22,7 @@ package accounts
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 var str = []string{"/bin/sh", "/bin/bash",
@@ -30,59 +30,47 @@ var str = []string{"/bin/sh", "/bin/bash",
 	"/usr/bin/fish",
 }
 
-func TestGetLocaleFromFile(t *testing.T) {
-	Convey("getLocaleFromFile", t, func(c C) {
-		c.So(getLocaleFromFile("testdata/locale"), ShouldEqual, "zh_CN.UTF-8")
-	})
+func Test_GetLocaleFromFile(t *testing.T) {
+	assert.Equal(t, getLocaleFromFile("testdata/locale"), "zh_CN.UTF-8")
 }
 
-func TestSystemLayout(t *testing.T) {
-	Convey("Get system layout", t, func(c C) {
-		layout, err := getSystemLayout("testdata/keyboard_us")
-		c.So(err, ShouldBeNil)
-		c.So(layout, ShouldEqual, "us;")
-		layout, _ = getSystemLayout("testdata/keyboard_us_chr")
-		c.So(layout, ShouldEqual, "us;chr")
-	})
+func Test_SystemLayout(t *testing.T) {
+	layout, err := getSystemLayout("testdata/keyboard_us")
+	assert.Nil(t, err)
+	assert.Equal(t, layout, "us;")
+	layout, _ = getSystemLayout("testdata/keyboard_us_chr")
+	assert.Equal(t, layout, "us;chr")
 }
 
 func TestAvailableShells(t *testing.T) {
-	Convey("Get available shells", t, func(c C) {
-		var ret = []string{"/bin/sh", "/bin/bash",
-			"/bin/zsh", "/usr/bin/zsh",
-			"/usr/bin/fish",
-		}
-		shells := getAvailableShells("testdata/shells")
-		c.So(shells, ShouldResemble, ret)
-	})
+	var ret = []string{"/bin/sh", "/bin/bash",
+		"/bin/zsh", "/usr/bin/zsh",
+		"/usr/bin/fish",
+	}
+	shells := getAvailableShells("testdata/shells")
+	assert.ElementsMatch(t, shells, ret)
 }
 
 func TestIsStrInArray(t *testing.T) {
-	Convey("IsStrInArray", t, func(c C) {
-		ret := isStrInArray("testdata/shells", str)
-		c.So(ret, ShouldEqual, false)
-		ret = isStrInArray("/bin/sh", str)
-		c.So(ret, ShouldEqual, true)
-	})
+	ret := isStrInArray("testdata/shells", str)
+	assert.Equal(t, ret, false)
+	ret = isStrInArray("/bin/sh", str)
+	assert.Equal(t, ret, true)
 }
 
 func TestIsStrvEqual(t *testing.T) {
-	Convey("IsStrvEqual", t, func(c C) {
-		var str1 = []string{"/bin/sh", "/bin/bash",
-			"/bin/zsh", "/usr/bin/zsh",
-			"/usr/bin/fish",
-		}
-		var str2 = []string{"/bin/sh", "/bin/bash"}
-		ret := isStrvEqual(str, str1)
-		c.So(ret, ShouldEqual, true)
-		ret = isStrvEqual(str, str2)
-		c.So(ret, ShouldEqual, false)
-	})
+	var str1 = []string{"/bin/sh", "/bin/bash",
+		"/bin/zsh", "/usr/bin/zsh",
+		"/usr/bin/fish",
+	}
+	var str2 = []string{"/bin/sh", "/bin/bash"}
+	ret := isStrvEqual(str, str1)
+	assert.Equal(t, ret, true)
+	ret = isStrvEqual(str, str2)
+	assert.Equal(t, ret, false)
 }
 
 func TestGetValueFromLine(t *testing.T) {
-	Convey("GetValueFromLine", t, func(c C) {
-		ret := getValueFromLine("testdata/shells", "/")
-		c.So(ret, ShouldEqual, "shells")
-	})
+	ret := getValueFromLine("testdata/shells", "/")
+	assert.Equal(t, ret, "shells")
 }

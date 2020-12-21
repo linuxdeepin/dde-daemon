@@ -22,63 +22,55 @@ package audio
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_contains(t *testing.T) {
-	Convey("contains", t, func(c C) {
-		c.So(contains("hbc.abcd.1234", "world.abcd.1234", "hbc"), ShouldBeTrue)
-		c.So(contains("hello.abcd.1234", "hbc.abcd.1234", "hbc"), ShouldBeTrue)
-		c.So(contains("HBC.abcd.1234", "world.abcd.1234", "hbc"), ShouldBeTrue)
-		c.So(contains("hello.abcd.1234", "HBC.abcd.1234", "hbc"), ShouldBeTrue)
-		c.So(contains("hello.abcd.1234", "world.abcd.1234", "hbc"), ShouldBeFalse)
-	})
+	assert.True(t, contains("hbc.abcd.1234", "world.abcd.1234", "hbc"))
+	assert.True(t, contains("hello.abcd.1234", "hbc.abcd.1234", "hbc"))
+	assert.True(t, contains("HBC.abcd.1234", "world.abcd.1234", "hbc"))
+	assert.True(t, contains("hello.abcd.1234", "HBC.abcd.1234", "hbc"))
+	assert.False(t, contains("hello.abcd.1234", "world.abcd.1234", "hbc"))
 }
 
 func Test_GetPortType(t *testing.T) {
-	Convey("GetPortType", t, func(c C) {
-		c.So(GetPortType("hbc.abcd.1234", "world.abcd.1234"), ShouldEqual, PortTypeHeadset)
-		c.So(GetPortType("bluez.abcd.1234", "world.abcd.1234"), ShouldEqual, PortTypeBluetooth)
-		c.So(GetPortType("hbc.abcd.1234", "bluez.abcd.1234"), ShouldEqual, PortTypeBluetooth)
-		c.So(GetPortType("usb.abcd.1234", "world.abcd.1234"), ShouldEqual, PortTypeHeadset)
-		c.So(GetPortType("hbc.abcd.1234", "usb.abcd.1234"), ShouldEqual, PortTypeHeadset)
-		c.So(GetPortType("hello.abcd.speaker", "world.abcd.1234"), ShouldEqual, PortTypeSpeaker)
-		c.So(GetPortType("hdmi.abcd.speaker", "world.abcd.1234"), ShouldEqual, PortTypeHdmi)
-	})
+	assert.Equal(t, GetPortType("hbc.abcd.1234", "world.abcd.1234"), PortTypeHeadset)
+	assert.Equal(t, GetPortType("bluez.abcd.1234", "world.abcd.1234"), PortTypeBluetooth)
+	assert.Equal(t, GetPortType("hbc.abcd.1234", "bluez.abcd.1234"), PortTypeBluetooth)
+	assert.Equal(t, GetPortType("usb.abcd.1234", "world.abcd.1234"), PortTypeHeadset)
+	assert.Equal(t, GetPortType("hbc.abcd.1234", "usb.abcd.1234"), PortTypeHeadset)
+	assert.Equal(t, GetPortType("hello.abcd.speaker", "world.abcd.1234"), PortTypeSpeaker)
+	assert.Equal(t, GetPortType("hdmi.abcd.speaker", "world.abcd.1234"), PortTypeHdmi)
 }
 
 func Test_IsInputTypeAfter(t *testing.T) {
-	Convey("IsInputTypeAfter", t, func(c C) {
-		pr := NewPriorities()
-		pr.defaultInit(CardList{})
-		c.So(pr.IsInputTypeAfter(PortTypeHeadset, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsInputTypeAfter(PortTypeHdmi, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeHeadset), ShouldBeFalse)
-		c.So(pr.IsInputTypeAfter(PortTypeHdmi, PortTypeSpeaker), ShouldBeFalse)
+	pr := NewPriorities()
+	pr.defaultInit(CardList{})
+	assert.False(t, pr.IsInputTypeAfter(PortTypeHeadset, PortTypeBluetooth))
+	assert.False(t, pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeBluetooth))
+	assert.False(t, pr.IsInputTypeAfter(PortTypeHdmi, PortTypeBluetooth))
+	assert.False(t, pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeHeadset))
+	assert.False(t, pr.IsInputTypeAfter(PortTypeHdmi, PortTypeSpeaker))
 
-		c.So(pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeHeadset), ShouldBeTrue)
-		c.So(pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeSpeaker), ShouldBeTrue)
-		c.So(pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeHdmi), ShouldBeTrue)
-		c.So(pr.IsInputTypeAfter(PortTypeHeadset, PortTypeSpeaker), ShouldBeTrue)
-		c.So(pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeHdmi), ShouldBeTrue)
-	})
+	assert.True(t, pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeHeadset))
+	assert.True(t, pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeSpeaker))
+	assert.True(t, pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeHdmi))
+	assert.True(t, pr.IsInputTypeAfter(PortTypeHeadset, PortTypeSpeaker))
+	assert.True(t, pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeHdmi))
 }
 
 func Test_IsOutputTypeAfter(t *testing.T) {
-	Convey("IsOutputTypeAfter", t, func(c C) {
-		pr := NewPriorities()
-		pr.defaultInit(CardList{})
-		c.So(pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeHeadset), ShouldBeFalse)
-		c.So(pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeSpeaker), ShouldBeFalse)
+	pr := NewPriorities()
+	pr.defaultInit(CardList{})
+	assert.False(t, pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeBluetooth))
+	assert.False(t, pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeBluetooth))
+	assert.False(t, pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeBluetooth))
+	assert.False(t, pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeHeadset))
+	assert.False(t, pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeSpeaker))
 
-		c.So(pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeHeadset), ShouldBeTrue)
-		c.So(pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeSpeaker), ShouldBeTrue)
-		c.So(pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeHdmi), ShouldBeTrue)
-		c.So(pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeSpeaker), ShouldBeTrue)
-		c.So(pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeHdmi), ShouldBeTrue)
-	})
+	assert.True(t, pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeHeadset))
+	assert.True(t, pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeSpeaker))
+	assert.True(t, pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeHdmi))
+	assert.True(t, pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeSpeaker))
+	assert.True(t, pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeHdmi))
 }

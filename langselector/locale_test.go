@@ -23,40 +23,28 @@ import (
 	"os"
 	"testing"
 
-	C "gopkg.in/check.v1"
+	"github.com/stretchr/testify/assert"
 )
 
-func Test(t *testing.T) {
-	C.TestingT(t)
-}
-
-type TestWrapper struct{}
-
-func init() {
-	C.Suite(&TestWrapper{})
-}
-
-func (t *TestWrapper) TestGenerateLocaleEnvFile(c *C.C) {
+func Test_GenerateLocaleEnvFile(t *testing.T) {
 	example := `LANG=en_US.UTF-8
 LANGUAGE=en_US
 LC_TIME="zh_CN.UTF-8"
 `
-
-	c.Check(string(generateLocaleEnvFile("en_US.UTF-8",
-		"testdata/pam_environment")), C.Equals, example)
+	assert.Equal(t, string(generateLocaleEnvFile("en_US.UTF-8",
+		"testdata/pam_environment")), example)
 }
 
-func (t *TestWrapper) TestGetLocale(c *C.C) {
+func Test_GetLocale(t *testing.T) {
 	l, err := getLocaleFromFile("testdata/pam_environment")
-	c.Check(err, C.Not(C.NotNil))
-	c.Check(l, C.Equals, "zh_CN.UTF-8")
+	assert.Nil(t, err)
+	assert.Equal(t, l, "zh_CN.UTF-8")
 
 	l = getCurrentUserLocale()
-	c.Check(len(l), C.Not(C.Equals), 0)
+	assert.NotEqual(t, len(l), 0)
 }
 
-func (t *TestWrapper) TestWriteUserLocale(c *C.C) {
-	c.Check(writeLocaleEnvFile("zh_CN.UTF-8", "testdata/pam"),
-		C.Not(C.NotNil))
+func Test_WriteUserLocale(t *testing.T) {
+	assert.Nil(t, writeLocaleEnvFile("zh_CN.UTF-8", "testdata/pam"))
 	os.RemoveAll("testdata/pam")
 }

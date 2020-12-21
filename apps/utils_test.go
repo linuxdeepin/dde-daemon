@@ -23,14 +23,12 @@ import (
 	"os"
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_getHomeByUid(t *testing.T) {
-	Convey("getHomeByUid", t, func(c C) {
-		uid := os.Getuid()
-		home, err := getHomeByUid(uid)
-		c.So(err, ShouldBeNil)
-		c.So(home, ShouldEqual, os.Getenv("HOME"))
-	})
+	uid := os.Getuid()
+	home, err := getHomeByUid(uid)
+	assert.Nil(t, err)
+	assert.Equal(t, home, os.Getenv("HOME"))
 }

@@ -22,36 +22,32 @@ package background
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestScanner(t *testing.T) {
-	Convey("getBgFilesInDir", t, func(c C) {
-		c.So(getBgFilesInDir("testdata/Theme1/wallpapers"), ShouldResemble,
-			[]string{
-				"testdata/Theme1/wallpapers/desktop.jpg",
-			})
-		c.So(getBgFilesInDir("testdata/Theme2/wallpapers"), ShouldBeNil)
-	})
+func Test_Scanner(t *testing.T) {
+	assert.ElementsMatch(t, getBgFilesInDir("testdata/Theme1/wallpapers"),
+		[]string{
+			"testdata/Theme1/wallpapers/desktop.jpg",
+		})
+	assert.Nil(t, getBgFilesInDir("testdata/Theme2/wallpapers"))
 }
 
-func TestFileInDirs(t *testing.T) {
-	Convey("Test file whether in dirs", t, func(c C) {
-		var dirs = []string{
-			"/tmp/backgrounds",
-			"/tmp/wallpapers",
-		}
+func Test_FileInDirs(t *testing.T) {
+	var dirs = []string{
+		"/tmp/backgrounds",
+		"/tmp/wallpapers",
+	}
 
-		c.So(isFileInDirs("/tmp/backgrounds/1.jpg", dirs),
-			ShouldEqual, true)
-		c.So(isFileInDirs("/tmp/wallpapers/1.jpg", dirs),
-			ShouldEqual, true)
-		c.So(isFileInDirs("/tmp/background/1.jpg", dirs),
-			ShouldEqual, false)
-	})
+	assert.Equal(t, isFileInDirs("/tmp/backgrounds/1.jpg", dirs),
+		true)
+	assert.Equal(t, isFileInDirs("/tmp/wallpapers/1.jpg", dirs),
+		true)
+	assert.Equal(t, isFileInDirs("/tmp/background/1.jpg", dirs),
+		false)
 }
 
-func TestGetBgFiles(t *testing.T) {
+func Test_GetBgFiles(t *testing.T) {
 	files := getSysBgFiles()
 	t.Log(files)
 }

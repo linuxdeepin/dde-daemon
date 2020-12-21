@@ -22,95 +22,88 @@ package audio
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
 	"pkg.deepin.io/lib/pulse"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_isBluezAudio(t *testing.T) {
-	Convey("isBluezAudio", t, func(c C) {
-		c.So(isBluezAudio("bluez.abcd.1234"), ShouldBeTrue)
-		c.So(isBluezAudio("hbc.bluez.1234"), ShouldBeTrue)
-		c.So(isBluezAudio("BLUEZ.abcd.1234"), ShouldBeTrue)
-		c.So(isBluezAudio("bluz.abcd.1234"), ShouldBeFalse)
-		c.So(isBluezAudio("hbc.bluz.1234"), ShouldBeFalse)
-		c.So(isBluezAudio("BLUZ.abcd.1234"), ShouldBeFalse)
-	})
+	assert.True(t, isBluezAudio("bluez.abcd.1234"))
+	assert.True(t, isBluezAudio("hbc.bluez.1234"))
+	assert.True(t, isBluezAudio("BLUEZ.abcd.1234"))
+	assert.False(t, isBluezAudio("bluz.abcd.1234"))
+	assert.False(t, isBluezAudio("hbc.bluz.1234"))
+	assert.False(t, isBluezAudio("BLUZ.abcd.1234"))
 }
 
 func Test_createBluezVirtualCardPorts(t *testing.T) {
-	Convey("createBluezVirtualCardPorts", t, func(c C) {
-		cardName := "bluez.test.a2dp"
-		portName := "bluez.test.port0"
-		desc := "headset"
-		var cardPorts pulse.CardPortInfos
-		cardPorts = append(cardPorts, pulse.CardPortInfo{
-			PortInfo: pulse.PortInfo{
-				Name:        portName,
-				Description: desc,
-				Priority:    0,
-				Available:   pulse.AvailableTypeUnknow,
-			},
-			Direction: pulse.DirectionSink,
-			Profiles:  pulse.ProfileInfos2{},
-		})
-		portinfos := createBluezVirtualCardPorts(cardName, cardPorts)
-		c.So(len(portinfos), ShouldEqual, 0)
-
-		cardPorts[0].Profiles = append(cardPorts[0].Profiles, pulse.ProfileInfo2{
-			Name:        "a2dp_sink",
-			Description: "A2DP",
+	cardName := "bluez.test.a2dp"
+	portName := "bluez.test.port0"
+	desc := "headset"
+	var cardPorts pulse.CardPortInfos
+	cardPorts = append(cardPorts, pulse.CardPortInfo{
+		PortInfo: pulse.PortInfo{
+			Name:        portName,
+			Description: desc,
 			Priority:    0,
-			NSinks:      1,
-			NSources:    0,
 			Available:   pulse.AvailableTypeUnknow,
-		})
-		portinfos = createBluezVirtualCardPorts(cardName, cardPorts)
-		c.So(len(portinfos), ShouldEqual, 1)
-
-		cardPorts[0].Profiles = append(cardPorts[0].Profiles, pulse.ProfileInfo2{
-			Name:        "headset_head_unit",
-			Description: "Headset",
-			Priority:    0,
-			NSinks:      1,
-			NSources:    0,
-			Available:   pulse.AvailableTypeUnknow,
-		})
-		portinfos = createBluezVirtualCardPorts(cardName, cardPorts)
-		c.So(len(portinfos), ShouldEqual, 2)
-		c.So(portinfos[0].Name, ShouldEqual, portName+"(headset_head_unit)")
-		c.So(portinfos[1].Name, ShouldEqual, portName+"(a2dp_sink)")
+		},
+		Direction: pulse.DirectionSink,
+		Profiles:  pulse.ProfileInfos2{},
 	})
+	portinfos := createBluezVirtualCardPorts(cardName, cardPorts)
+	assert.Equal(t, len(portinfos), 0)
+
+	cardPorts[0].Profiles = append(cardPorts[0].Profiles, pulse.ProfileInfo2{
+		Name:        "a2dp_sink",
+		Description: "A2DP",
+		Priority:    0,
+		NSinks:      1,
+		NSources:    0,
+		Available:   pulse.AvailableTypeUnknow,
+	})
+	portinfos = createBluezVirtualCardPorts(cardName, cardPorts)
+	assert.Equal(t, len(portinfos), 1)
+
+	cardPorts[0].Profiles = append(cardPorts[0].Profiles, pulse.ProfileInfo2{
+		Name:        "headset_head_unit",
+		Description: "Headset",
+		Priority:    0,
+		NSinks:      1,
+		NSources:    0,
+		Available:   pulse.AvailableTypeUnknow,
+	})
+	portinfos = createBluezVirtualCardPorts(cardName, cardPorts)
+	assert.Equal(t, len(portinfos), 2)
+	assert.Equal(t, portinfos[0].Name, portName+"(headset_head_unit)")
+	assert.Equal(t, portinfos[1].Name, portName+"(a2dp_sink)")
 }
 
 func Test_createBluezVirtualSinkPorts(t *testing.T) {
-	Convey("createBluezVirtualSinkPorts", t, func(c C) {
-		name := "bluez.abcd.1234"
-		var ports []Port
-		ports = append(ports, Port{
-			Name:        name,
-			Description: "headsert",
-			Available:   byte(pulse.AvailableTypeUnknow),
-		})
-
-		ret := createBluezVirtualSinkPorts(ports)
-		c.So(len(ret), ShouldEqual, 2)
-		c.So(ret[0].Name, ShouldEqual, name+"(headset_head_unit)")
-		c.So(ret[1].Name, ShouldEqual, name+"(a2dp_sink)")
+	name := "bluez.abcd.1234"
+	var ports []Port
+	ports = append(ports, Port{
+		Name:        name,
+		Description: "headsert",
+		Available:   byte(pulse.AvailableTypeUnknow),
 	})
+
+	ret := createBluezVirtualSinkPorts(ports)
+	assert.Equal(t, len(ret), 2)
+	assert.Equal(t, ret[0].Name, name+"(headset_head_unit)")
+	assert.Equal(t, ret[1].Name, name+"(a2dp_sink)")
 }
 
 func Test_createBluezVirtualSourcePorts(t *testing.T) {
-	Convey("createBluezVirtualSourcePorts", t, func(c C) {
-		name := "bluez.abcd.1234"
-		var ports []Port
-		ports = append(ports, Port{
-			Name:        name,
-			Description: "headset",
-			Available:   byte(pulse.AvailableTypeUnknow),
-		})
-
-		ret := createBluezVirtualSourcePorts(ports)
-		c.So(len(ret), ShouldEqual, 1)
-		c.So(ret[0].Name, ShouldEqual, name+"(headset_head_unit)")
+	name := "bluez.abcd.1234"
+	var ports []Port
+	ports = append(ports, Port{
+		Name:        name,
+		Description: "headset",
+		Available:   byte(pulse.AvailableTypeUnknow),
 	})
+
+	ret := createBluezVirtualSourcePorts(ports)
+	assert.Equal(t, len(ret), 1)
+	assert.Equal(t, ret[0].Name, name+"(headset_head_unit)")
 }

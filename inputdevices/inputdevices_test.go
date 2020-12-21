@@ -23,62 +23,49 @@ import (
 	"fmt"
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestSystemLayout(t *testing.T) {
-	Convey("Get system layout", t, func(c C) {
-		layout, err := getSystemLayout("testdata/keyboard")
-		c.So(err, ShouldBeNil)
-		c.So(layout, ShouldEqual, "us;")
-	})
+func Test_SystemLayout(t *testing.T) {
+	layout, err := getSystemLayout("testdata/keyboard")
+	assert.Nil(t, err)
+	assert.Equal(t, layout, "us;")
 }
 
-func TestParseXKBFile(t *testing.T) {
-	Convey("Parse xkb rule file", t, func(c C) {
-		handler, err := getLayoutsFromFile("testdata/base.xml")
-		c.So(err, ShouldBeNil)
-		c.So(handler, ShouldNotBeNil)
-	})
+func Test_ParseXKBFile(t *testing.T) {
+	handler, err := getLayoutsFromFile("testdata/base.xml")
+	assert.Nil(t, err)
+	assert.NotNil(t, handler)
 }
 
-func TestStrList(t *testing.T) {
+func Test_StrList(t *testing.T) {
 	var list = []string{"abc", "xyz", "123"}
-	Convey("Add item to list", t, func(c C) {
-		ret, added := addItemToList("456", list)
-		c.So(len(ret), ShouldEqual, 4)
-		c.So(added, ShouldEqual, true)
+	ret, added := addItemToList("456", list)
+	assert.Len(t, ret, 4)
+	assert.True(t, added)
 
-		ret, added = addItemToList("123", list)
-		c.So(len(ret), ShouldEqual, 3)
-		c.So(added, ShouldEqual, false)
-	})
+	ret, added = addItemToList("123", list)
+	assert.Len(t, ret, 3)
+	assert.False(t, added)
 
-	Convey("Delete item from list", t, func(c C) {
-		ret, deleted := delItemFromList("123", list)
-		c.So(len(ret), ShouldEqual, 2)
-		c.So(deleted, ShouldEqual, true)
+	ret, deleted := delItemFromList("123", list)
+	assert.Equal(t, len(ret), 2)
+	assert.True(t, deleted)
 
-		ret, deleted = delItemFromList("456", list)
-		c.So(len(ret), ShouldEqual, 3)
-		c.So(deleted, ShouldEqual, false)
-	})
+	ret, deleted = delItemFromList("456", list)
+	assert.Len(t, ret, 3)
+	assert.False(t, deleted)
 
-	Convey("Is item in list", t, func(c C) {
-		c.So(isItemInList("123", list), ShouldEqual, true)
-		c.So(isItemInList("456", list), ShouldEqual, false)
-	})
+	assert.True(t, isItemInList("123", list))
+	assert.False(t, isItemInList("456", list))
 }
 
-func TestSyndaemonExist(t *testing.T) {
-	Convey("Test syndaemon exist", t, func(c C) {
-		c.So(isSyndaemonExist("testdata/syndaemon.pid"), ShouldEqual, false)
-		c.So(isProcessExist("testdata/dde-desktop-cmdline", "dde-desktop"),
-			ShouldEqual, true)
-	})
+func Test_SyndaemonExist(t *testing.T) {
+	assert.False(t, isSyndaemonExist("testdata/syndaemon.pid"))
+	assert.True(t, isProcessExist("testdata/dde-desktop-cmdline", "dde-desktop"))
 }
 
-func TestCurveControlPoints(t *testing.T) {
+func Test_CurveControlPoints(t *testing.T) {
 	// output svg path for debug
 	for i := 1; i <= 7; i++ {
 		p := getPressureCurveControlPoints(i)

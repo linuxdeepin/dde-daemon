@@ -3,7 +3,7 @@ package bluetooth
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 var str = []string{"/bin/sh", "/bin/bash",
@@ -12,20 +12,16 @@ var str = []string{"/bin/sh", "/bin/bash",
 }
 
 func TestIsStringInArray(t *testing.T) {
-	Convey("IsStringInArray", t, func(c C) {
-		ret := isStringInArray("testdata/shells", str)
-		c.So(ret, ShouldEqual, false)
-		ret = isStringInArray("/bin/sh", str)
-		c.So(ret, ShouldEqual, true)
-	})
+	ret := isStringInArray("testdata/shells", str)
+	assert.False(t, ret)
+	ret = isStringInArray("/bin/sh", str)
+	assert.True(t, ret)
 }
 
 func TestMarshalJSON(t *testing.T) {
 	str1 := make(map[string]string)
 	str1["name"] = "uniontech"
 	str1["addr"] = "wuhan"
-	Convey("MarshalJSON", t, func(c C) {
-		ret := marshalJSON(str1)
-		c.So(ret, ShouldEqual, `{"addr":"wuhan","name":"uniontech"}`)
-	})
+	ret := marshalJSON(str1)
+	assert.Equal(t, ret, `{"addr":"wuhan","name":"uniontech"}`)
 }

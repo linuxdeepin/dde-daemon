@@ -22,15 +22,13 @@ package gesture
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_isInWindowBlacklist(t *testing.T) {
-	Convey("isInWindowBlacklist", t, func(c C) {
-		slice := []string{"window1", "window2", "window3"}
-		c.So(isInWindowBlacklist("window1", slice), ShouldBeTrue)
-		c.So(isInWindowBlacklist("window2", slice), ShouldBeTrue)
-		c.So(isInWindowBlacklist("window3", slice), ShouldBeTrue)
-		c.So(isInWindowBlacklist("window4", slice), ShouldBeFalse)
-	})
+	slice := []string{"window1", "window2", "window3"}
+	assert.True(t, isInWindowBlacklist("window1", slice))
+	assert.True(t, isInWindowBlacklist("window2", slice))
+	assert.True(t, isInWindowBlacklist("window3", slice))
+	assert.False(t, isInWindowBlacklist("window4", slice))
 }

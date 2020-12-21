@@ -22,38 +22,32 @@ package dock
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_uniqStrSlice(t *testing.T) {
 	slice := []string{"a", "b", "c", "c", "b", "a", "c"}
 	slice = uniqStrSlice(slice)
-	Convey("uniqStrSlice", t, func(c C) {
-		c.So(len(slice), ShouldEqual, 3)
-		c.So(slice[0], ShouldEqual, "a")
-		c.So(slice[1], ShouldEqual, "b")
-		c.So(slice[2], ShouldEqual, "c")
-	})
+	assert.Equal(t, len(slice), 3)
+	assert.Equal(t, slice[0], "a")
+	assert.Equal(t, slice[1], "b")
+	assert.Equal(t, slice[2], "c")
 }
 
 func Test_strSliceEqual(t *testing.T) {
 	sa := []string{"a", "b", "c"}
 	sb := []string{"a", "b", "c", "d"}
 	sc := sa[:]
-	Convey("strSliceEqual", t, func(c C) {
-		c.So(strSliceEqual(sa, sb), ShouldBeFalse)
-		c.So(strSliceEqual(sa, sc), ShouldBeTrue)
-	})
+	assert.False(t, strSliceEqual(sa, sb))
+	assert.True(t, strSliceEqual(sa, sc))
 }
 
 func Test_strSliceContains(t *testing.T) {
-	Convey("strSliceContains", t, func(c C) {
-		slice := []string{"a", "b", "c"}
-		c.So(strSliceContains(slice, "a"), ShouldBeTrue)
-		c.So(strSliceContains(slice, "b"), ShouldBeTrue)
-		c.So(strSliceContains(slice, "c"), ShouldBeTrue)
-		c.So(strSliceContains(slice, "d"), ShouldBeFalse)
-		c.So(strSliceContains(slice, "e"), ShouldBeFalse)
-	})
+	slice := []string{"a", "b", "c"}
+	assert.True(t, strSliceContains(slice, "a"))
+	assert.True(t, strSliceContains(slice, "b"))
+	assert.True(t, strSliceContains(slice, "c"))
+	assert.False(t, strSliceContains(slice, "d"))
+	assert.False(t, strSliceContains(slice, "e"))
 
 }

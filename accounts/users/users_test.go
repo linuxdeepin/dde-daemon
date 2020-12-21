@@ -23,31 +23,22 @@ import (
 	"testing"
 
 	libdate "github.com/rickb777/date"
-	C "gopkg.in/check.v1"
+	"github.com/stretchr/testify/assert"
+
 	dutils "pkg.deepin.io/lib/utils"
 )
 
-type testWrapper struct{}
-
-func init() {
-	C.Suite(&testWrapper{})
-}
-
-func Test(t *testing.T) {
-	C.TestingT(t)
-}
-
-func (*testWrapper) TestGetUserInfos(c *C.C) {
+func Test_GetUserInfos(t *testing.T) {
 	var names = []string{"test1", "test2", "vbox"}
 	infos, err := getUserInfosFromFile("testdata/passwd")
-	c.Check(err, C.Equals, nil)
-	c.Check(len(infos), C.Equals, 3)
+	assert.Nil(t, err)
+	assert.Equal(t, len(infos), 3)
 	for i, info := range infos {
-		c.Check(info.Name, C.Equals, names[i])
+		assert.Equal(t, info.Name, names[i])
 	}
 }
 
-func (*testWrapper) TestUserInfoValid(c *C.C) {
+func Test_UserInfoValid(t *testing.T) {
 	var infos = []struct {
 		name  UserInfo
 		valid bool
@@ -91,30 +82,30 @@ func (*testWrapper) TestUserInfoValid(c *C.C) {
 	}
 
 	for _, v := range infos {
-		c.Check(v.name.isHumanUser("testdata/login.defs"), C.Equals, v.valid)
+		assert.Equal(t, v.name.isHumanUser("testdata/login.defs"), v.valid)
 	}
 }
 
-func (*testWrapper) TestFoundUserInfo(c *C.C) {
+func Test_FoundUserInfo(t *testing.T) {
 	info, err := getUserInfo(UserInfo{Name: "test1"}, "testdata/passwd")
-	c.Check(err, C.Equals, nil)
-	c.Check(info.Name, C.Equals, "test1")
+	assert.Nil(t, err)
+	assert.Equal(t, info.Name, "test1")
 
 	info, err = getUserInfo(UserInfo{Uid: "1001"}, "testdata/passwd")
-	c.Check(err, C.Equals, nil)
-	c.Check(info.Name, C.Equals, "test1")
+	assert.Nil(t, err)
+	assert.Equal(t, info.Name, "test1")
 
 	info, err = getUserInfo(UserInfo{Name: "1006"}, "testdata/passwd")
-	c.Check(err, C.NotNil)
+	assert.NotNil(t, err)
 
 	info, err = getUserInfo(UserInfo{Uid: "1006"}, "testdata/passwd")
-	c.Check(err, C.NotNil)
+	assert.NotNil(t, err)
 
 	info, err = getUserInfo(UserInfo{Uid: "1006"}, "testdata/xxxxx")
-	c.Check(err, C.NotNil)
+	assert.NotNil(t, err)
 }
 
-func (*testWrapper) TestAdminUser(c *C.C) {
+func Test_AdminUser(t *testing.T) {
 	var datas = []struct {
 		name  string
 		admin bool
@@ -134,84 +125,84 @@ func (*testWrapper) TestAdminUser(c *C.C) {
 	}
 
 	list, err := getAdminUserList("testdata/group", "testdata/sudoers_deepin")
-	c.Check(err, C.Equals, nil)
+	assert.Nil(t, err)
 
 	for _, data := range datas {
-		c.Check(isStrInArray(data.name, list), C.Equals, data.admin)
+		assert.Equal(t, isStrInArray(data.name, list), data.admin)
 	}
 }
 
-func (*testWrapper) TestGetAutoLoginUser(c *C.C) {
+func TestGetAutoLoginUser(t *testing.T) {
 	// lightdm
 	name, err := getIniKeys("testdata/autologin/lightdm_autologin.conf",
 		kfGroupLightdmSeat,
 		[]string{kfKeyLightdmAutoLoginUser}, []string{""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "wen")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/lightdm.conf",
 		kfGroupLightdmSeat,
 		[]string{kfKeyLightdmAutoLoginUser}, []string{""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "")
+	assert.Nil(t, err, nil)
+	assert.Equal(t, name, "")
 	_, err = getIniKeys("testdata/autologin/xxxxx.conf", "", nil, nil)
-	c.Check(err, C.Not(C.Equals), nil)
+	assert.NotNil(t, err)
 
 	// gdm
 	name, err = getIniKeys("testdata/autologin/custom_autologin.conf",
 		kfGroupGDM3Daemon, []string{kfKeyGDM3AutomaticEnable,
 			kfKeyGDM3AutomaticLogin}, []string{"True", ""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "wen")
+	assert.Nil(t, err, nil)
+	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/custom.conf",
 		kfGroupGDM3Daemon, []string{kfKeyGDM3AutomaticEnable,
 			kfKeyGDM3AutomaticLogin}, []string{"True", ""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "")
+	assert.Nil(t, err, nil)
+	assert.Equal(t, name, "")
 
 	// kdm
 	name, err = getIniKeys("testdata/autologin/kdmrc_autologin",
 		kfGroupKDMXCore, []string{kfKeyKDMAutoLoginEnable,
 			kfKeyKDMAutoLoginUser}, []string{"true", ""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "wen")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/kdmrc",
 		kfGroupKDMXCore, []string{kfKeyKDMAutoLoginEnable,
 			kfKeyKDMAutoLoginUser}, []string{"true", ""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "")
 
 	// sddm
 	name, err = getIniKeys("testdata/autologin/sddm_autologin.conf",
 		kfGroupSDDMAutologin,
 		[]string{kfKeySDDMUser}, []string{""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "wen")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/sddm.conf",
 		kfGroupSDDMAutologin,
 		[]string{kfKeySDDMUser}, []string{""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "")
 
 	// lxdm
 	name, err = getIniKeys("testdata/autologin/lxdm_autologin.conf",
 		kfGroupLXDMBase,
 		[]string{kfKeyLXDMAutologin}, []string{""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "wen")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/lxdm.conf",
 		kfGroupLXDMBase,
 		[]string{kfKeyLXDMAutologin}, []string{""})
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "")
 
 	// slim
 	name, err = parseSlimConfig("testdata/autologin/slim_autologin.conf",
 		"", false)
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "wen")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "wen")
 	name, err = parseSlimConfig("testdata/autologin/slim.conf", "", false)
-	c.Check(err, C.Equals, nil)
-	c.Check(name, C.Equals, "")
+	assert.Nil(t, err)
+	assert.Equal(t, name, "")
 	// cp 'testdata/autologin/slim.conf' to '/tmp/slim_tmp.conf'
 	// _, err = parseSlimConfig("/tmp/slim_tmp.conf", "wen", true)
 	// c.Check(err, C.Equals, nil)
@@ -220,47 +211,47 @@ func (*testWrapper) TestGetAutoLoginUser(c *C.C) {
 	// c.Check(name, C.Equals, "wen")
 
 	m, err := getDefaultDM("testdata/autologin/default-display-manager")
-	c.Check(err, C.Equals, nil)
-	c.Check(m, C.Equals, "lightdm")
+	assert.Nil(t, err)
+	assert.Equal(t, m, "lightdm")
 	_, err = getDefaultDM("testdata/autologin/xxxxx")
-	c.Check(err, C.Not(C.Equals), nil)
+	assert.NotNil(t, err)
 }
 
-func (*testWrapper) TestXSession(c *C.C) {
+func Test_XSession(t *testing.T) {
 	session, _ := getIniKeys("testdata/autologin/lightdm.conf", kfGroupLightdmSeat,
 		[]string{"user-session"}, []string{""})
-	c.Check(session, C.Equals, "deepin")
+	assert.Equal(t, session, "deepin")
 	session, _ = getIniKeys("testdata/autologin/sddm.conf", kfGroupSDDMAutologin,
 		[]string{kfKeySDDMSession}, []string{""})
-	c.Check(session, C.Equals, "kde-plasma.desktop")
+	assert.Equal(t, session, "kde-plasma.desktop")
 }
 
-func (*testWrapper) TestWriteStrvData(c *C.C) {
+func Test_WriteStrvData(t *testing.T) {
 	var (
 		datas = []string{"123", "abc", "xyz"}
 		file  = "/tmp/write_strv"
 	)
 	err := writeStrvToFile(datas, file, 0644)
-	c.Check(err, C.Equals, nil)
+	assert.Nil(t, err)
 
 	md5, _ := dutils.SumFileMd5(file)
-	c.Check(md5, C.Equals, "0b188e42e5f8d5bc5a6560ce68d5fbc6")
+	assert.Equal(t, md5, "0b188e42e5f8d5bc5a6560ce68d5fbc6")
 }
 
-func (*testWrapper) TestGetDefaultShell(c *C.C) {
+func Test_GetDefaultShell(t *testing.T) {
 	shell, err := getDefaultShell("testdata/adduser.conf")
-	c.Check(err, C.Equals, nil)
-	c.Check(shell, C.Equals, "/bin/zsh")
+	assert.Nil(t, err)
+	assert.Equal(t, shell, "/bin/zsh")
 
 	shell, err = getDefaultShell("testdata/adduser1.conf")
-	c.Check(err, C.Equals, nil)
-	c.Check(shell, C.Equals, "")
+	assert.Nil(t, err)
+	assert.Equal(t, shell, "")
 
 	_, err = getDefaultShell("testdata/xxxxx.conf")
-	c.Check(err, C.Not(C.Equals), nil)
+	assert.NotNil(t, err)
 }
 
-func (*testWrapper) TestStrInArray(c *C.C) {
+func Test_StrInArray(t *testing.T) {
 	var array = []string{"abc", "123", "xyz"}
 
 	var datas = []struct {
@@ -282,29 +273,29 @@ func (*testWrapper) TestStrInArray(c *C.C) {
 	}
 
 	for _, data := range datas {
-		c.Check(isStrInArray(data.value, array), C.Equals, data.ret)
+		assert.Equal(t, isStrInArray(data.value, array), data.ret)
 	}
 }
 
-func (*testWrapper) TestGetAdmGroup(c *C.C) {
+func Test_GetAdmGroup(t *testing.T) {
 	groups, users, err := getAdmGroupAndUser("testdata/sudoers_deepin")
-	c.Check(err, C.Equals, nil)
-	c.Check(isStrInArray("sudo", groups), C.Equals, true)
-	c.Check(isStrInArray("root", users), C.Equals, true)
+	assert.Nil(t, err)
+	assert.Equal(t, isStrInArray("sudo", groups), true)
+	assert.Equal(t, isStrInArray("root", users), true)
 
 	groups, users, err = getAdmGroupAndUser("testdata/sudoers_arch")
-	c.Check(err, C.Equals, nil)
-	c.Check(isStrInArray("sudo", groups), C.Equals, true)
-	c.Check(isStrInArray("wheel", groups), C.Equals, true)
-	c.Check(isStrInArray("root", users), C.Equals, true)
+	assert.Nil(t, err)
+	assert.Equal(t, isStrInArray("sudo", groups), true)
+	assert.Equal(t, isStrInArray("wheel", groups), true)
+	assert.Equal(t, isStrInArray("root", users), true)
 }
 
-func (*testWrapper) TestDMFromService(c *C.C) {
+func Test_DMFromService(t *testing.T) {
 	dm, _ := getDMFromSystemService("testdata/autologin/display-manager.service")
-	c.Check(dm, C.Equals, "lightdm")
+	assert.Equal(t, dm, "lightdm")
 }
 
-func (*testWrapper) TestIsPasswordExpired(c *C.C) {
+func Test_IsPasswordExpired(t *testing.T) {
 	for _, testCase := range []struct {
 		shadowInfo *ShadowInfo
 		today      libdate.Date
@@ -346,6 +337,6 @@ func (*testWrapper) TestIsPasswordExpired(c *C.C) {
 			result: true,
 		},
 	} {
-		c.Check(isPasswordExpired(testCase.shadowInfo, testCase.today), C.Equals, testCase.result)
+		assert.Equal(t, isPasswordExpired(testCase.shadowInfo, testCase.today), testCase.result)
 	}
 }
