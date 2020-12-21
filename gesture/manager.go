@@ -15,13 +15,13 @@ import (
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.gesture"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.dock"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/gsettings"
 	dutils "pkg.deepin.io/lib/utils"
-	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 )
 
 const (
@@ -80,18 +80,22 @@ func newManager() (*Manager, error) {
 	}
 	// for touch long press
 	infos = append(infos, &gestureInfo{
-		Name:      "touch right button",
-		Direction: "down",
-		Fingers:   0,
+		Event: EventInfo{
+			Name:      "touch right button",
+			Direction: "down",
+			Fingers:   0,
+		},
 		Action: ActionInfo{
 			Type:   ActionTypeCommandline,
 			Action: "xdotool mousedown 3",
 		},
 	})
 	infos = append(infos, &gestureInfo{
-		Name:      "touch right button",
-		Direction: "up",
-		Fingers:   0,
+		Event: EventInfo{
+			Name:      "touch right button",
+			Direction: "up",
+			Fingers:   0,
+		},
 		Action: ActionInfo{
 			Type:   ActionTypeCommandline,
 			Action: "xdotool mouseup 3",
@@ -150,7 +154,20 @@ func (m *Manager) init() {
 	m.systemSigLoop.Start()
 	m.gesture.InitSignalExt(m.systemSigLoop, true)
 	_, err = m.gesture.ConnectEvent(func(name string, direction string, fingers int32) {
-		err = m.Exec(name, direction, fingers)
+		should, err := m.shouldHandleEvent()
+		if err != nil {
+			logger.Error("shouldHandleEvent failed:", err)
+			return
+		}
+		if !should {
+			return
+		}
+
+		err = m.Exec(EventInfo{
+			Name:      name,
+			Direction: direction,
+			Fingers:   fingers,
+		})
 		if err != nil {
 			logger.Error("Exec failed:", err)
 		}
@@ -160,16 +177,12 @@ func (m *Manager) init() {
 	}
 
 	_, err = m.gesture.ConnectTouchEdgeMoveStopLeave(func(direction string, scaleX float64, scaleY float64, duration int32) {
-		m.mu.RLock()
-		defer m.mu.RUnlock()
-		// 多用户存在，防止非当前用户响应触摸屏手势
-		currentSessionPath, err := m.sessionmanager.CurrentSessionPath().Get(0)
+		should, err := m.shouldHandleEvent()
 		if err != nil {
-			logger.Error("get login1 session path failed:", err)
+			logger.Error("shouldHandleEvent failed:", err)
 			return
 		}
-		if !m.enabled || !isSessionActive(currentSessionPath) {
-			logger.Debug("Gesture had been disabled or session inactive")
+		if !should {
 			return
 		}
 
@@ -183,16 +196,12 @@ func (m *Manager) init() {
 	}
 
 	_, err = m.gesture.ConnectTouchEdgeEvent(func(direction string, scaleX float64, scaleY float64) {
-		m.mu.RLock()
-		defer m.mu.RUnlock()
-		// 多用户存在，防止非当前用户响应触摸屏手势
-		currentSessionPath, err := m.sessionmanager.CurrentSessionPath().Get(0)
+		should, err := m.shouldHandleEvent()
 		if err != nil {
-			logger.Error("get login1 session path failed:", err)
+			logger.Error("shouldHandleEvent failed:", err)
 			return
 		}
-		if !m.enabled || !isSessionActive(currentSessionPath) {
-			logger.Debug("Gesture had been disabled or session inactive")
+		if !should {
 			return
 		}
 
@@ -208,38 +217,37 @@ func (m *Manager) init() {
 	m.listenGSettingsChanged()
 }
 
-func (m *Manager) Exec(name, direction string, fingers int32) error {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	currentSessionPath, err := m.sessionmanager.CurrentSessionPath().Get(0)
-	if err != nil {
-		logger.Error("get login1 session path failed:", err)
-		return err
+func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
+	// allow right button up when kbd grabbed
+	if (info.Event.Name != "touch right button" || info.Event.Direction != "up") && isKbdAlreadyGrabbed() {
+		logger.Debug("another process grabbed keyboard, not exec action")
+		return true
 	}
-	if !m.enabled || !isSessionActive(currentSessionPath) {
-		logger.Debug("Gesture had been disabled or session inactive")
+
+	// TODO(jouyouyun): improve touch right button handler
+	if info.Event.Name == "touch right button" {
+		// filter google chrome
+		if isInWindowBlacklist(getCurrentActionWindowCmd(), m.tsSetting.GetStrv(tsSchemaKeyBlacklist)) {
+			logger.Debug("the current active window in blacklist")
+			return true
+		}
+	}
+
+	return false
+}
+
+func (m *Manager) Exec(evInfo EventInfo) error {
+	info := m.Infos.Get(evInfo)
+	if info == nil {
+		return fmt.Errorf("not found event info: %s", info.Event.toString())
+	}
+
+	logger.Debugf("[Exec]: event info:%s  action info:%s", info.Event.toString(), info.Action.toString())
+	if m.shouldIgnoreGesture(info) {
 		return nil
 	}
 
-	info := m.Infos.Get(name, direction, fingers)
-	if info == nil {
-		return fmt.Errorf("not found gesture info for: %s, %s, %d", name, direction, fingers)
-	}
-
-	logger.Debug("[Exec] action info:", info.Name, info.Direction, info.Fingers,
-		info.Action.Type, info.Action.Action)
-	// allow right button up when kbd grabbed
-	if (info.Name != "touch right button" || info.Direction != "up") && isKbdAlreadyGrabbed() {
-		return fmt.Errorf("another process grabbed keyboard, not exec action")
-	}
-	// TODO(jouyouyun): improve touch right button handler
-	if info.Name == "touch right button" {
-		// filter google chrome
-		if isInWindowBlacklist(getCurrentActionWindowCmd(), m.tsSetting.GetStrv(tsSchemaKeyBlacklist)) {
-			logger.Debug("The current active window in blacklist")
-			return nil
-		}
-	} else if strings.HasPrefix(info.Name, "touch") {
+	if strings.HasPrefix(info.Event.Name, "touch") {
 		return m.handleTouchScreenEvent(info)
 	}
 
@@ -389,4 +397,25 @@ func (m *Manager) handleSwipeStop(fingers int32) error {
 		return m.wm.ClearMoveStatus(0)
 	}
 	return nil
+}
+
+// 多用户存在，防止非当前用户响应触摸屏手势
+func (m *Manager) shouldHandleEvent() (bool, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	if !m.enabled {
+		return false, nil
+	}
+
+	currentSessionPath, err := m.sessionmanager.CurrentSessionPath().Get(0)
+	if err != nil {
+		return false, fmt.Errorf("get login1 session path failed: %v", err)
+	}
+
+	if !isSessionActive(currentSessionPath) {
+		return false, nil
+	}
+
+	return true, nil
 }

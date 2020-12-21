@@ -47,28 +47,44 @@ type ActionInfo struct {
 	Action string
 }
 
-type gestureInfo struct {
-	Name      string
+type EventInfo struct {
+	Name string
 	Direction string
-	Fingers   int32
-	Action    ActionInfo
+	Fingers int32
+}
+
+type gestureInfo struct {
+	Event 	EventInfo
+	Action  ActionInfo
 }
 type gestureInfos []*gestureInfo
 
-func (infos gestureInfos) Get(name, direction string, fingers int32) *gestureInfo {
+
+func (action ActionInfo) toString() string {
+	return fmt.Sprintf("Type:%s, Action=%s", action.Type, action.Action)
+}
+
+func (evInfo EventInfo) equal(info EventInfo) bool {
+	return evInfo.Name == info.Name && evInfo.Direction == info.Direction && evInfo.Fingers == info.Fingers
+}
+
+func (evInfo EventInfo) toString() string {
+	return fmt.Sprintf("Name=%s, Direction=%s, Fingers=%d", evInfo.Name, evInfo.Direction, evInfo.Fingers)
+}
+
+func (infos gestureInfos) Get(evInfo EventInfo) *gestureInfo {
 	for _, info := range infos {
-		if info.Name == name && info.Direction == direction &&
-			info.Fingers == fingers {
+		if info.Event.equal(evInfo) {
 			return info
 		}
 	}
 	return nil
 }
 
-func (infos gestureInfos) Set(name, direction string, fingers int32, action ActionInfo) error {
-	info := infos.Get(name, direction, fingers)
+func (infos gestureInfos) Set (evInfo EventInfo, action ActionInfo) error {
+	info := infos.Get(evInfo)
 	if info == nil {
-		return fmt.Errorf("not found gesture info for: %s, %s, %d", name, direction, fingers)
+		return fmt.Errorf("not found gesture info for: %s, %s, %d", evInfo.Name, evInfo.Direction, evInfo.Fingers)
 	}
 	info.Action = action
 	return nil

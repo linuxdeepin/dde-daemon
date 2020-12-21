@@ -30,5 +30,5 @@ func Test_isInWindowBlacklist(t *testing.T) {
 	assert.True(t, isInWindowBlacklist("window1", slice))
 	assert.True(t, isInWindowBlacklist("window2", slice))
 	assert.True(t, isInWindowBlacklist("window3", slice))
-	assert.False(t, isInWindowBlacklist("window4", slice))
+	assert.False(t,isInWindowBlacklist("window4", slice))
 }

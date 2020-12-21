@@ -63,33 +63,41 @@ func (m *Manager) toggleShowMultiTasking() error {
 	return m.wm.PerformAction(0, wmActionShowWorkspace)
 }
 
-func (m *Manager) doHandle4Or5FingersSwipeUp() error {
+func (m *Manager) getWmStates() (bool, bool, error) {
 	isShowDesktop, err := m.wm.GetIsShowDesktop(0)
 	if err != nil {
-		return err
+		return false, false, err
 	}
 	isShowMultiTask, err := m.wm.GetMultiTaskingStatus(0)
 	if err != nil {
+		return false, false, err
+	}
+
+	return isShowDesktop, isShowMultiTask, nil
+}
+
+func (m *Manager) doHandle4Or5FingersSwipeUp() error {
+	isShowDesktop, isShowMultiTask, err := m.getWmStates()
+	if err != nil {
 		return err
 	}
-	if !isShowDesktop && !isShowMultiTask {
-		return m.toggleShowMultiTasking()
-	}
-	if isShowDesktop && !isShowMultiTask {
+
+	if !isShowMultiTask {
+		if !isShowDesktop {
+			return m.toggleShowMultiTasking()
+		}
 		return m.toggleShowDesktop()
 	}
+
 	return nil
 }
 
 func (m *Manager) doHandle4Or5FingersSwipeDown() error {
-	isShowDesktop, err := m.wm.GetIsShowDesktop(0)
+	isShowDesktop, isShowMultiTask, err := m.getWmStates()
 	if err != nil {
 		return err
 	}
-	isShowMultiTask, err := m.wm.GetMultiTaskingStatus(0)
-	if err != nil {
-		return err
-	}
+
 	if isShowMultiTask {
 		return m.toggleShowMultiTasking()
 	}
