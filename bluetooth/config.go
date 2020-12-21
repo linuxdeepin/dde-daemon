@@ -224,6 +224,9 @@ func (c *config) getDeviceConfigConnected(address string) (connected bool) {
 }
 
 func (c *config) setDeviceConfigConnected(device *device, connected bool) {
+	if device == nil {
+		return
+	}
 	dc, ok := c.getDeviceConfig(device.getAddress())
 	if !ok {
 		return

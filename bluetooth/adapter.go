@@ -86,6 +86,7 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 			backupdevice, err1 := globalBluetooth.getBackupDevice(globalBluetooth.prepareToConnectedDevice)
 			if err1 != nil {
 				logger.Debug("getBackupDevice Failed:", err1)
+				return
 			}
 			notifyConnectFailedHostDown(backupdevice.Alias)
 		}
