@@ -517,7 +517,10 @@ func (d *device) getState() deviceState {
 }
 
 func (d *device) getAddress() string {
-	return d.adapter.address + "/" + d.Address
+	if d.adapter != nil {
+		return d.adapter.address + "/" + d.Address
+	}
+	return "/"
 }
 
 func (d *device) doConnect(hasNotify bool) error {
