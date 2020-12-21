@@ -233,9 +233,7 @@ func nmGeneralGetDeviceIdentifier(devPath dbus.ObjectPath) (devId string, err er
 		err = fmt.Errorf("could not get adsl device identifier now")
 		logger.Error(err)
 	case nm.NM_DEVICE_TYPE_ETHERNET:
-		// some device the 'hw_addr_perm' unset by driver, so use 'hw_addr' as id
-		// PMS Bug ID: 16704
-		devId, err = nmGeneralGetDeviceHwAddr(devPath, false)
+		devId, err = nmGeneralGetDeviceHwAddr(devPath, true)
 	default:
 		devId, err = nmGeneralGetDeviceHwAddr(devPath, true)
 	}
@@ -731,6 +729,14 @@ func nmGetWirelessConnectionSsidByUuid(uuid string) (ssid []byte) {
 
 func nmAddConnection(data connectionData) (cpath dbus.ObjectPath, err error) {
 	cpath, err = nmSettings.AddConnection(0, data)
+	if err != nil {
+		logger.Error(err)
+	}
+	return
+}
+
+func nmAddConnectionUnsaved(data connectionData) (cpath dbus.ObjectPath, err error) {
+	cpath, err = nmSettings.AddConnectionUnsaved(0, data)
 	if err != nil {
 		logger.Error(err)
 	}
