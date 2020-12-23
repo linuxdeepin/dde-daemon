@@ -50,6 +50,13 @@ type Daemon struct {
 		NetworkGetConnections          func() `out:"data"`
 		NetworkSetConnections          func() `in:"data"`
 		BluetoothGetDeviceTechnologies func() `in:"adapter,device" out:"technologies"`
+		ClearTtys                      func()
+		IsPidVirtualMachine            func() `in:"pid" out:"ret"`
+	}
+	signals *struct { //nolint
+		HandleForSleep struct {
+			start bool
+		}
 	}
 }
 
