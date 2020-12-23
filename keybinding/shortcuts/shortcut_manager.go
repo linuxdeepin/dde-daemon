@@ -26,6 +26,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/godbus/dbus"
+	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/record"
@@ -34,6 +36,7 @@ import (
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"pkg.deepin.io/dde/daemon/keybinding/util"
 	gio "pkg.deepin.io/gir/gio-2.0"
+	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/log"
 	"pkg.deepin.io/lib/pinyin_search"
@@ -59,8 +62,10 @@ func SetLogger(l *log.Logger) {
 type KeyEventFunc func(ev *KeyEvent)
 
 type ShortcutManager struct {
-	conn     *x.Conn
-	dataConn *x.Conn // conn for receive record event
+	conn          *x.Conn
+	dataConn      *x.Conn // conn for receive record event
+	daemonDaemon  *daemon.Daemon
+	sigSystemLoop *dbusutil.SignalLoop
 
 	idShortcutMap     map[string]Shortcut
 	idShortcutMapMu   sync.Mutex
@@ -136,6 +141,11 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		go ss.recordEventLoop()
 	} else {
 		logger.Warning("init record failed: ", err)
+	}
+
+	err = ss.initSysDaemon()
+	if err != nil {
+		logger.Warning("init system D-BUS failed: ", err)
 	}
 
 	return ss
@@ -634,8 +644,52 @@ func (sm *ShortcutManager) SetAllModKeysReleasedCallback(cb func()) {
 	sm.xRecordEventHandler.allModKeysReleasedCb = cb
 }
 
+//get Active Window pid
+//注意: 从D-BUS启动dde-system-daemon的时候x会取不到环境变量,只能把获取pid放到dde-session-daemon
+func (sm *ShortcutManager) getActiveWindowPid() (uint32, error) {
+	activeWin, err := ewmh.GetActiveWindow(sm.conn).Reply(sm.conn)
+	if err != nil {
+		logger.Warning(err)
+		return 0, err
+	}
+
+	pid, err1 := ewmh.GetWMPid(sm.conn, activeWin).Reply(sm.conn)
+	if err1 != nil {
+		logger.Warning(err1)
+		return 0, err1
+	}
+
+	return uint32(pid), nil
+}
+
+func (sm *ShortcutManager) canCallScreenshot(pid uint32) (bool, error) {
+	ret, err := sm.daemonDaemon.IsPidVirtualMachine(0, pid)
+	if err != nil {
+		logger.Warning(err)
+		return ret, err
+	}
+
+	return ret, nil
+}
+
+//初始化go-dbus-factory system DBUS : com.deepin.daemon.Daemon
+func (sm *ShortcutManager) initSysDaemon() error {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	sm.daemonDaemon = daemon.NewDaemon(sysBus)
+	sm.sigSystemLoop = dbusutil.NewSignalLoop(sysBus, 10)
+	sm.sigSystemLoop.Start()
+	sm.daemonDaemon.InitSignalExt(sm.sigSystemLoop, true)
+
+	return nil
+}
+
 func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state uint16) {
 	sm.xRecordEventHandler.handleKeyEvent(pressed, code, state)
+
 	if pressed {
 		// Special handling screenshot* shortcuts
 		key := combineStateCode2Key(state, code)
@@ -646,6 +700,29 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 			shortcut := keystroke.Shortcut
 			if shortcut != nil && shortcut.GetType() == ShortcutTypeSystem &&
 				strings.HasPrefix(shortcut.GetId(), "screenshot") {
+				//如果当前没有窗口被grab,则直接不用判断是否需要截图
+				if !isKbdAlreadyGrabbed(sm.conn) {
+					logger.Info("handleXRecordKeyEvent : no active window grabbed")
+					return
+				}
+				//先获取active应用pid, 传给dde-system-daemon解析
+				//判断是否是在 虚拟机/云平台 进行截图
+				pid, err := sm.getActiveWindowPid()
+				if err == nil {
+					bCanScreenshot, err1 := sm.canCallScreenshot(pid)
+					logger.Info(">> handleXRecordKeyEvent -> canCallScreenshot result bCanScreenshot : ", bCanScreenshot)
+					//获取出错时，当做非虚拟机
+					if err1 != nil {
+						logger.Warning(err1)
+					} else {
+						//true:表示当前是 虚拟机/云平台，要过滤掉
+						if bCanScreenshot {
+							logger.Info("current top app is virtual or cloud")
+							return
+						}
+					}
+				}
+
 				keyEvent := &KeyEvent{
 					Mods:     key.Mods,
 					Code:     key.Code,
