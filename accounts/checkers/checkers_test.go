@@ -92,29 +92,35 @@ func Test_CheckPasswordValid(t *testing.T) {
 	type passwordCheckPair struct {
 		str     string
 		errCode passwordErrorCode
+		Prompt  string
+		isOK    bool
 	}
 
 	passwordStrErrList := []passwordCheckPair{
-		{"", passwordErrCodeShort},
-		{"aa", passwordErrCodeShort},
-		{"aA1?", passwordErrCodeShort},
-		{"aaaaaaaa", passwordErrCodeSimple},
-		{"aaaaAAAA", passwordErrCodeSimple},
-		{"aaaaAA12", passwordErrCodeSimple},
-		{"aaaaaa1?", passwordErrCodeSimple},
-		{"AAAAAA1?", passwordErrCodeSimple},
-		{"aaaaA12?", passwordOK},
+		{"", passwordErrCodeShort, "Please enter a password not less than 8 characters", false},
+		{"aa", passwordErrCodeShort, "Please enter a password not less than 8 characters", false},
+		{"aA1?", passwordErrCodeShort, "Please enter a password not less than 8 characters", false},
+		{"aaaaaaaa", passwordErrCodeSimple, "The password must contain English letters (case-sensitive), numbers or special symbols (~!@#$%^&*()[]{}\\|/?,.<>)", false},
+		{"aaaaAAAA", passwordErrCodeSimple, "The password must contain English letters (case-sensitive), numbers or special symbols (~!@#$%^&*()[]{}\\|/?,.<>)", false},
+		{"aaaaAA12", passwordErrCodeSimple, "The password must contain English letters (case-sensitive), numbers or special symbols (~!@#$%^&*()[]{}\\|/?,.<>)", false},
+		{"aaaaaa1?", passwordErrCodeSimple, "The password must contain English letters (case-sensitive), numbers or special symbols (~!@#$%^&*()[]{}\\|/?,.<>)", false},
+		{"AAAAAA1?", passwordErrCodeSimple, "The password must contain English letters (case-sensitive), numbers or special symbols (~!@#$%^&*()[]{}\\|/?,.<>)", false},
+		{"aaaaA12?", passwordOK, "", true},
 	}
 
 	releaseType := "Server"
 	for _, v := range passwordStrErrList {
 		errCode := CheckPasswordValid(releaseType, v.str)
 		assert.Equal(t, errCode, v.errCode)
+		assert.Equal(t, errCode.IsOk(), v.isOK)
+		assert.Equal(t, errCode.Prompt(), v.Prompt)
 	}
 
 	releaseType = "Desktop"
 	for _, v := range passwordStrErrList {
 		errCode := CheckPasswordValid(releaseType, v.str)
 		assert.Equal(t, errCode, passwordOK)
+		assert.True(t, errCode.IsOk())
+		assert.Equal(t, errCode.Prompt(), "")
 	}
 }
