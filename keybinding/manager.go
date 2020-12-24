@@ -110,6 +110,7 @@ type Manager struct {
 	shortcutCmd             string
 	shortcutKey             string
 	shortcutKeyCmd          string
+	pressedKeyNum		int
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
@@ -243,6 +244,9 @@ func (lpm *LongPressManager) Run(code string, state int) {
 			select {
 			case <-time.After(time.Duration(lpm.period) * time.Millisecond):
 				lpm.m.handleKeyEventByWayland(waylandMediaIdMap[code])
+				if lpm.running && lpm.m.pressedKeyNum == 0{
+					lpm.running = false
+				}
 			case <-lpm.longHanderQuit:
 				lpm.running = false
 				logger.Debug("quit long press")
@@ -338,6 +342,7 @@ func (m *Manager) init() {
 	sysBus, _ := dbus.SystemBus()
 	m.delayNetworkStateChange = true
 	m.dpmsIsOff = false
+	m.pressedKeyNum = 0
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
@@ -506,6 +511,7 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
 				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
 				if canLongPress(m.shortcutKeyCmd) {
+					m.pressedKeyNum++
 					m.lpm.Run(m.shortcutKeyCmd, 1)
 				} else {
 					if m.shortcutCmd == "" {
@@ -657,6 +663,10 @@ func (m *Manager) ListenGlobalAccelRelease(sessionBus *dbus.Conn) error {
 				if canLongPress(m.shortcutKeyCmd) {
 					logger.Debug("quit long press")
 					m.lpm.Quit(m.shortcutKeyCmd)
+					m.pressedKeyNum--
+					if m.pressedKeyNum < 0 {
+						m.pressedKeyNum = 0
+					}
 				}
 			}
 		}
