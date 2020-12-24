@@ -567,6 +567,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 
 	} else if secretKeys, ok := secretSettingKeys[settingName]; ok {
 		var askItems []string
+		var notSaved bool
 		for _, secretKey := range secretKeys {
 			secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
 				getSecretFlagsKeyName(secretKey))
@@ -574,6 +575,10 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 			if secretFlags == secretFlagAsk {
 				if allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
 					askItems = append(askItems, secretKey)
+					// 根据NM文档，password-flags为2时，此时不需要保存密码
+					if secretKey == "password" {
+						notSaved = true
+					}
 				}
 			} else if secretFlags == secretFlagNone {
 				secretStr, _ := getConnectionDataString(connectionData, settingName,
@@ -641,6 +646,11 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 					}
 				}
 			}
+		}
+		// 不需要保存密码，则直接返回
+		if notSaved {
+			logger.Debugf("get not saved secret : %#v", setting)
+			return
 		}
 		// when requestNew is true or dont save secretKey here
 		if !sa.m.saveToKeyring || requestNew {
