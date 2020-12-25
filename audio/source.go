@@ -69,6 +69,18 @@ func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 		index:   sourceInfo.Index,
 		service: audio.service,
 	}
+	if !isPhysicalDevice(sourceInfo.Name) {
+		masterSourceInfo := audio.getSourceInfoByName(sourceInfo.Proplist["device.master_device"])
+		if masterSourceInfo == nil {
+			logger.Warningf("cannot get master source for %s", sourceInfo.Name)
+		} else {
+			sourceInfo.Card = masterSourceInfo.Card
+			sourceInfo.Ports = masterSourceInfo.Ports
+			sourceInfo.ActivePort = masterSourceInfo.ActivePort
+			logger.Debugf("create reducing noise source on %s", masterSourceInfo.Name)
+		}
+	}
+
 	s.update(sourceInfo)
 	return s
 }
@@ -227,7 +239,6 @@ func (*Source) GetInterfaceName() string {
 
 func (s *Source) update(sourceInfo *pulse.Source) {
 	s.PropsMu.Lock()
-
 	s.cVolume = sourceInfo.Volume
 	s.channelMap = sourceInfo.ChannelMap
 	s.Name = sourceInfo.Name
