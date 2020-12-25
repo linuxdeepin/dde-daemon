@@ -368,7 +368,7 @@ func (a *Audio) init() error {
 		logger.Warningf("load %q failed : %s", configKeeperFile, err)
 	}
 	a.resumeSinkConfig(a.defaultSink)
-	a.resumeSourceConfig(a.defaultSource, true)
+	a.resumeSourceConfig(a.defaultSource, isPhysicalDevice(a.defaultSourceName))
 	a.autoSwitchPort()
 
 	a.fixActivePortNotAvailable()
@@ -622,6 +622,9 @@ func (a *Audio) IsPortEnabled(cardId uint32, portName string) (bool, *dbus.Error
 }
 
 func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
+	if a.ReduceNoise.Get() {
+		a.ReduceNoise.Set(false)
+	}
 	a.portLocker.Lock()
 	defer a.portLocker.Unlock()
 	var (
@@ -775,6 +778,11 @@ func (*Audio) GetInterfaceName() string {
 }
 
 func (a *Audio) resumeSinkConfig(s *Sink) {
+	if s == nil {
+		logger.Warning("nil sink")
+		return
+	}
+
 	logger.Debugf("resume sink %s %s", a.getCardNameById(s.Card), s.ActivePort.Name)
 	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
 
@@ -797,6 +805,11 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 }
 
 func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
+	if s == nil {
+		logger.Warning("nil source")
+		return
+	}
+
 	logger.Debugf("resume source %s %s", a.getCardNameById(s.Card), s.ActivePort.Name)
 	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
 
@@ -811,11 +824,8 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 	}
 
 	if isPhyDev {
-		err := a.setReduceNoise(portConfig.ReduceNoise)
-		if err != nil {
-			logger.Warning("set reduce noise fail:", err)
-		}
 		a.ReduceNoise.Set(portConfig.ReduceNoise)
+		logger.Debugf("physical source, set reduce noise %v", portConfig.ReduceNoise)
 	}
 }
 
@@ -857,12 +867,12 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 	a.resumeSinkConfig(sink)
 }
 
-func (a *Audio) updateSources(index uint32) (source *Source){
+func (a *Audio) updateSources(index uint32) (source *Source) {
 	sourceInfoList := a.ctx.GetSourceList()
 	for _, sourceInfo := range sourceInfoList {
 		// 判断pluseaudio的source索引是否存在，并返回存在的source信息
 		if sourceInfo.Index == index {
-			logger.Debug("get same source index:",index)
+			logger.Debug("get same source index:", index)
 			source := newSource(sourceInfo, a)
 			a.sources[index] = source
 			sourcePath := source.getPath()
@@ -885,15 +895,6 @@ func (a *Audio) updateDefaultSource(sourceName string) {
 	}
 	logger.Debugf("updateDefaultSource #%d %s", sourceInfo.Index, sourceName)
 	a.mu.Lock()
-
-	if !isPhysicalDevice(sourceName) {
-		sourceInfo = a.getSourceInfoByName(sourceInfo.Proplist["device.master_device"])
-		if sourceInfo == nil {
-			logger.Warning("failed to get virtual device sourceInfo for name:", sourceName)
-			a.mu.Unlock()
-			return
-		}
-	}
 
 	source, ok := a.sources[sourceInfo.Index]
 	if !ok {

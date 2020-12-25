@@ -160,7 +160,7 @@ func (a *Audio) autoSwitchPort() {
 		if cardName != "" && portName != "" {
 			if cardName == a.outputCardName && portName == a.outputPortName {
 				// 端口不变，切换计数累加
-				a.outputAutoSwitchCount ++
+				a.outputAutoSwitchCount++
 			} else {
 				// 端口改变变，切换计数初始化
 				a.outputAutoSwitchCount = 0
@@ -201,7 +201,7 @@ func (a *Audio) autoSwitchPort() {
 		if cardName != "" && portName != "" {
 			if cardName == a.inputCardName && portName == a.inputPortName {
 				// 端口不变，切换计数累加
-				a.inputAutoSwitchCount ++
+				a.inputAutoSwitchCount++
 			} else {
 				// 端口改变变，切换计数初始化
 				a.inputAutoSwitchCount = 0
@@ -593,9 +593,7 @@ func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
 			return
 		}
 		logger.Debugf("[Event] source #%d added %s", idx, sourceInfo.Name)
-		if !isPhysicalDevice(sourceInfo.Name) {
-			return
-		}
+
 		if isBluezAudio(sourceInfo.Name) && !isBluezDeviceValid(sourceInfo.Proplist["bluez.path"]) {
 			return
 		}
@@ -608,10 +606,6 @@ func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
 		a.sourceIdx = idx
 		a.addSource(sourceInfo)
 
-		source, ok := a.sources[idx]
-		if ok {
-			a.resumeSourceConfig(source, true)
-		}
 	case pulse.EventTypeRemove:
 		a.mu.Lock()
 		source, ok := a.sources[idx]
@@ -631,10 +625,7 @@ func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
 		}
 		// 移除物理设备需要关闭虚拟通道，后面切换
 		if isPhysicalDevice(source.Name) {
-			err = a.setReduceNoise(false)
-			if err != nil {
-				logger.Warning("set reduce noise fail:", err)
-			}
+			a.ReduceNoise.Set(false)
 			s := a.defaultSource
 			_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
 			if portConfig.ReduceNoise != a.ReduceNoise.Get() {
@@ -648,9 +639,7 @@ func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
 			return
 		}
 		logger.Debugf("[Event] source #%d changed %s", idx, sourceInfo.Name)
-		if !isPhysicalDevice(sourceInfo.Name) {
-			return
-		}
+
 		if isBluezAudio(sourceInfo.Name) && !isBluezDeviceValid(sourceInfo.Proplist["bluez.path"]) {
 			return
 		}
@@ -692,6 +681,7 @@ func (a *Audio) handleServerEvent(eventType int) {
 		a.defaultSourceName = server.DefaultSourceName
 		a.updateDefaultSink(server.DefaultSinkName)
 		a.updateDefaultSource(server.DefaultSourceName)
+		a.autoSwitchPort()
 	}
 }
 
@@ -721,6 +711,7 @@ func (a *Audio) listenGSettingVolumeIncreaseChanged() {
 func (a *Audio) listenGSettingReduceNoiseChanged() {
 	gsettings.ConnectChanged(gsSchemaAudio, gsKeyReduceNoise, func(val string) {
 		reduce := a.ReduceNoise.Get()
+		logger.Debugf("gsettings reduce noise changed to %v", reduce)
 		if reduce && isBluezAudio(a.defaultSource.Name) {
 			logger.Debug("bluetooth audio device cannot open reduce-noise")
 			a.ReduceNoise.Set(false)
