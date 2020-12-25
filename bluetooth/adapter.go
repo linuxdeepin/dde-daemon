@@ -61,15 +61,15 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 	// 用于定时停止扫描
 	a.discoveringTimeout = time.AfterFunc(defaultDiscoveringTimeout, func() {
 		logger.Debug("discovery time out, stop discovering")
-		//扫描结束后添加备份
+		//扫描结束后更新备份
+		globalBluetooth.backupDeviceLock.Lock()
+		globalBluetooth.backupDevices = make(map[dbus.ObjectPath][]*backupDevice)
 		for adapterpath, devices := range globalBluetooth.devices {
 			for _, device := range devices {
-				bd := newBackupDevice(device)
-				globalBluetooth.backupDeviceLock.Lock()
-				globalBluetooth.backupDevices[adapterpath] = append(globalBluetooth.backupDevices[adapterpath], bd)
-				globalBluetooth.backupDeviceLock.Unlock()
+				globalBluetooth.backupDevices[adapterpath] = append(globalBluetooth.backupDevices[adapterpath], newBackupDevice(device))
 			}
 		}
+		globalBluetooth.backupDeviceLock.Unlock()
 		//Scan timeout
 		a.discoveringTimeoutFlag = true
 		if err := a.core.StopDiscovery(0); err != nil {
@@ -84,9 +84,10 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 		if err != nil {
 			backupdevice, err1 := globalBluetooth.getBackupDevice(globalBluetooth.prepareToConnectedDevice)
 			if err1 != nil {
-				logger.Debug("getBackupDevice Failed:", err1)
+				logger.Debug("get prepareToConnectedDevice BackupDevice Failed:", err1)
+			}else {
+				notifyConnectFailedHostDown(backupdevice.Alias)
 			}
-			notifyConnectFailedHostDown(backupdevice.Alias)
 		}
 		//清空备份
 		globalBluetooth.backupDeviceLock.Lock()
@@ -112,7 +113,6 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 			logger.Warning("failed to get hostname:", err)
 		}
 	}
-
 	a.Alias, _ = a.core.Alias().Get(0)
 	a.Name, _ = a.core.Name().Get(0)
 	a.Powered, _ = a.core.Powered().Get(0)
@@ -193,11 +193,10 @@ func (a *adapter) connectProperties() {
 				logger.Warningf("failed to set discoverable for %s: %v", a, err)
 			}
 			go func(){
-				//time.Sleep(1*time.Second)
+				a.discoveringTimeoutFlag = false
 				err = a.core.StopDiscovery(0)
 				globalBluetooth.tryConnectPairedDevices()
-				a.discoveringTimeoutFlag = false
-
+				
 				err = a.core.StartDiscovery(0)
 				if err != nil {
 					logger.Warningf("failed to start discovery for %s: %v", a, err)

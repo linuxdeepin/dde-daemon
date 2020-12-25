@@ -49,6 +49,7 @@ func (b *Bluetooth) RemoveDevice(apath, dpath dbus.ObjectPath) *dbus.Error {
 		logger.Warningf("failed to get device, err: %v", err)
 		return dbusutil.ToError(err)
 	}
+	b.removeBackupDevice(dpath)
 	// check if device connect state is connecting, if is, mark remove state as true
 	deviceState := removeDev.getState()
 	if deviceState == deviceStateConnecting {
