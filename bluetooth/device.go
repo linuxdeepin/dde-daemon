@@ -518,7 +518,9 @@ func (d *device) getState() deviceState {
 		return deviceStateDisconnecting
 
 	} else {
-		if d.connected {
+		deviceconnected, _ := d.core.Connected().Get(0)
+		if deviceconnected {
+			d.ConnectState = true
 			return deviceStateConnected
 		} else {
 			return deviceStateDisconnected
