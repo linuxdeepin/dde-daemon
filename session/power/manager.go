@@ -128,6 +128,8 @@ type Manager struct {
 	// if prepare suspend, ignore idle off
 	prepareSuspend       int
 	prepareSuspendLocker sync.Mutex
+	// if srceern Black, ignore next idle on
+	isMonitorBlack bool
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
@@ -142,7 +144,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
 	m.inhibitFd = -1
 	m.prepareSuspend = suspendStateUnknown
-
+	m.isMonitorBlack = false
 	m.syncConfig = dsync.NewConfig("power", &syncConfig{m: m}, m.sessionSigLoop, dbusPath, logger)
 
 	helper, err := newHelper(systemBus, sessionBus)

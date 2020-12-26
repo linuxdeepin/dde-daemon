@@ -105,6 +105,7 @@ func (m *Manager) setDPMSModeOn() {
 	if err != nil {
 		logger.Warning("Set DPMS on error:", err)
 	}
+	m.isMonitorBlack = false
 }
 
 func (m *Manager) setDPMSModeOff() {
@@ -119,6 +120,7 @@ func (m *Manager) setDPMSModeOff() {
 	if err != nil {
 		logger.Warning("Set DPMS off error:", err)
 	}
+	m.isMonitorBlack = true
 }
 
 func setDPMSByKWL(mode string) {

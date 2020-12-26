@@ -115,6 +115,12 @@ func (psp *powerSavePlan) initSettingsChangedHandler() {
 func (psp *powerSavePlan) OnBattery() {
 	logger.Debug("Use OnBattery plan")
 	m := psp.manager
+	//如果已经在电源黑屏，等屏幕点亮后再更新数据
+	if m.isMonitorBlack == true {
+		return
+	}
+	logger.Debug("Use isMonitorBlack plan======", m.isMonitorBlack)
+
 	psp.Update(m.BatteryScreensaverDelay.Get(), m.BatteryLockDelay.Get(),
 		m.BatteryScreenBlackDelay.Get(),
 		m.BatterySleepDelay.Get())
@@ -123,6 +129,10 @@ func (psp *powerSavePlan) OnBattery() {
 func (psp *powerSavePlan) OnLinePower() {
 	logger.Debug("Use OnLinePower plan")
 	m := psp.manager
+	//如果已经在电池黑屏，等屏幕点亮后再更新数据
+	if m.isMonitorBlack == true {
+		return
+	}
 	psp.Update(m.LinePowerScreensaverDelay.Get(), m.LinePowerLockDelay.Get(),
 		m.LinePowerScreenBlackDelay.Get(),
 		m.LinePowerSleepDelay.Get())
@@ -731,11 +741,12 @@ func (psp *powerSavePlan) HandleIdleOn() {
 // 结束 Idle
 func (psp *powerSavePlan) HandleIdleOff() {
 	psp.mu.Lock()
-	defer psp.mu.Unlock()
+        //为防止死锁，主动释放锁
+	//defer psp.mu.Unlock()
 
 	if psp.manager.shouldIgnoreIdleOff() {
 		psp.manager.setPrepareSuspend(suspendStateFinish)
-		logger.Info("HandleIdleOff : IGNORE =========")
+		psp.mu.Unlock()
 		return
 	}
 
@@ -754,6 +765,9 @@ func (psp *powerSavePlan) HandleIdleOff() {
 			time.Sleep(time.Millisecond * 500)
 		}
 	}
+	psp.mu.Unlock()
+        //重新更新定时任务的数据
+	psp.Reset()
 }
 
 func (psp *powerSavePlan) isWindowFullScreenAndFocused(xid x.Window) (bool, error) {
