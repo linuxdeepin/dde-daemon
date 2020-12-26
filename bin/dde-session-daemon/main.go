@@ -172,7 +172,8 @@ func main() {
 	}
 
 	if needRunMainLoop {
-		go app.memLeakLoop()
+		// TODO: 有内存泄露目前为调查清楚，暂时取消内存检测机制，问题解决了放开
+		//go app.memLeakLoop()
 		runMainLoop()
 	}
 }
