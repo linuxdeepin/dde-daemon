@@ -617,6 +617,18 @@ func (b *Bluetooth) getAdapterDevices(adapterAddress string) []*device {
 	return result
 }
 
+func (b *Bluetooth) updateconnectState() {
+       for _, devices := range b.devices {
+               for _, d := range devices {
+                       connected,_ := d.core.Connected().Get(0)
+                       d.ConnectState = connected
+		       paired,_ :=d.core.Paired().Get(0)
+		       d.Paired = paired
+               }
+       }
+
+}
+
 func (b *Bluetooth) addAdapter(apath dbus.ObjectPath) {
 	if b.isAdapterExists(apath) {
 		logger.Warning("repeat add adapter", apath)

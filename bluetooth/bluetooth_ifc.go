@@ -102,6 +102,8 @@ func (b *Bluetooth) GetDevices(apath dbus.ObjectPath) (devicesJSON string, err *
 
 		} else {
 			var result []*device
+
+			b.updateconnectState()
 			devices := b.devices[apath]
 			result = append(result, devices...)
 			devicesJSON = marshalJSON(result)
