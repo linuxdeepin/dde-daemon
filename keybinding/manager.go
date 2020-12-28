@@ -237,15 +237,15 @@ func (lpm *LongPressManager) Run(code string, state int) {
 		if lpm.period < 100 {
 			lpm.period = 100
 		}
-		//先运行一次
 		logger.Debug("do long press")
-		lpm.m.handleKeyEventByWayland(waylandMediaIdMap[code])
 		for lpm.running {
 			select {
 			case <-time.After(time.Duration(lpm.period) * time.Millisecond):
-				lpm.m.handleKeyEventByWayland(waylandMediaIdMap[code])
+				//+ 添加判断，防止出现按一次响应两次的情况
 				if lpm.running && lpm.m.pressedKeyNum == 0{
 					lpm.running = false
+				} else {
+					lpm.m.handleKeyEventByWayland(waylandMediaIdMap[code])
 				}
 			case <-lpm.longHanderQuit:
 				lpm.running = false
@@ -511,6 +511,8 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
 				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
 				if canLongPress(m.shortcutKeyCmd) {
+					//+ 把响应一次的逻辑放到协程外执行，防止协程响应延迟
+					m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
 					m.pressedKeyNum++
 					m.lpm.Run(m.shortcutKeyCmd, 1)
 				} else {
