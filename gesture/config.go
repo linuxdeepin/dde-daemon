@@ -64,17 +64,13 @@ func (action ActionInfo) toString() string {
 	return fmt.Sprintf("Type:%s, Action=%s", action.Type, action.Action)
 }
 
-func (evInfo EventInfo) equal(info EventInfo) bool {
-	return evInfo.Name == info.Name && evInfo.Direction == info.Direction && evInfo.Fingers == info.Fingers
-}
-
 func (evInfo EventInfo) toString() string {
 	return fmt.Sprintf("Name=%s, Direction=%s, Fingers=%d", evInfo.Name, evInfo.Direction, evInfo.Fingers)
 }
 
 func (infos gestureInfos) Get(evInfo EventInfo) *gestureInfo {
 	for _, info := range infos {
-		if info.Event.equal(evInfo) {
+		if info.Event == evInfo {
 			return info
 		}
 	}
@@ -91,7 +87,7 @@ func (infos gestureInfos) Set (evInfo EventInfo, action ActionInfo) error {
 }
 
 func newGestureInfosFromFile(filename string) (gestureInfos, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := ioutil.ReadFile(filepath.Clean(filename))
 	if err != nil {
 		return nil, err
 	}

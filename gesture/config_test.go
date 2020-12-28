@@ -29,15 +29,17 @@ var (
 	configPath = "testdata/gesture"
 )
 
+// 查找手势信息
 func findGestureInfo(evInfo EventInfo, infos gestureInfos) bool {
 	for _, info := range infos {
-		if info.Event.equal(evInfo) {
+		if info.Event == evInfo {
 			return true
 		}
 	}
 	return false
 }
 
+// 测试: 从文件读取手势信息
 func Test_newGestureInfosFromFile(t *testing.T) {
 	infos, err := newGestureInfosFromFile(configPath)
 	assert.Nil(t, err)
@@ -56,6 +58,7 @@ func Test_newGestureInfosFromFile(t *testing.T) {
 	assert.True(t, findGestureInfo(EventInfo{Name:"swipe", Direction:"right", Fingers:5}, infos))
 }
 
+// 测试：Get接口
 func Test_Get(t *testing.T) {
 	infos, err := newGestureInfosFromFile(configPath)
 	assert.Nil(t, err)
@@ -101,6 +104,7 @@ func Test_Get(t *testing.T) {
 	assert.NotNil(t, infos.Get(EventInfo{Name:"swipe", Direction:"right", Fingers:5}))
 }
 
+// 测试：Set接口
 func Test_Set(t *testing.T) {
 	infos, err := newGestureInfosFromFile(configPath)
 	assert.Nil(t, err)
