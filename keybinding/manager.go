@@ -415,6 +415,11 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 			ok := strings.Compare(string("kwin"), m.shortcutKey)
 			if ok == 0 {
 				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
+				isDpmsOn := m.getScreenDPMS()
+				if !isDpmsOn && m.dpmsIsOff == false {
+					logger.Warning("dpms on is :", isDpmsOn)
+					return
+				}
 				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
 				if m.shortcutCmd == "" {
 					m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])

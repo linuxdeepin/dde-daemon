@@ -30,13 +30,13 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-
+	
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"pkg.deepin.io/dde/daemon/keybinding/util"
 	"pkg.deepin.io/lib/strv"
 
 	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbus1"
+	dbus "pkg.deepin.io/lib/dbus1"
 )
 
 func getPowerButtonPressedExec() string {
@@ -177,6 +177,47 @@ func (m *Manager) systemTurnOffScreen() {
 	if err != nil {
 		logger.Warning("Set DPMS off error:", err)
 	}
+}
+
+func (m *Manager) getScreenDPMS() bool {
+	logger.Info("Get DPMS State")
+	var useWayland bool
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		useWayland = true
+	} else {
+		useWayland = false
+	}
+
+	if useWayland {
+		sessionBus, err := dbus.SessionBus()
+		if err != nil {
+			return false
+		}
+		sessionObj := sessionBus.Object("com.deepin.daemon.KWayland", "/com/deepin/daemon/KWayland/DpmsManager")
+		var ret []dbus.Variant
+		err = sessionObj.Call("com.deepin.daemon.KWayland.DpmsManager.dpmsList", 0).Store(&ret)
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+
+		for i := 0; i < len(ret); i++ {
+			v := ret[i].Value().(string)
+			sessionObj := sessionBus.Object("com.deepin.daemon.KWayland", dbus.ObjectPath(v))
+			var ret int32
+			err = sessionObj.Call("com.deepin.daemon.KWayland.Dpms.getDpmsMode", 0).Store(&ret)
+			if err != nil {
+				logger.Warning(err)
+				return false
+			}
+
+			// 只要有一个屏幕是亮的就判断为亮
+			if ret == 0 {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func systemLogout() {
