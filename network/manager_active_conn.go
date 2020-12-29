@@ -196,6 +196,11 @@ func (m *Manager) doHandleVpnNotification(apath dbus.ObjectPath, state, reason u
 	// notification for vpn
 	switch state {
 	case nm.NM_VPN_CONNECTION_STATE_ACTIVATED:
+		// NetworkManager may has bug, VPN activated state is emitted unexpectedly when vpn is disconnected
+		// vpn connected should not notified when reason is disconnected
+		if reason == nm.NM_VPN_CONNECTION_STATE_REASON_USER_DISCONNECTED {
+			return
+		}
 		notifyVpnConnected(aConn.Id)
 	case nm.NM_VPN_CONNECTION_STATE_DISCONNECTED:
 		if aConn.vpnFailed {
