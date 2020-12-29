@@ -22,7 +22,7 @@ package power
 import (
 	"syscall"
 
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
+	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/dde/daemon/appearance"
 	"pkg.deepin.io/dde/daemon/bluetooth"
@@ -70,6 +70,9 @@ func newSleepInhibitor(login1Manager *login1.Manager, daemon *daemon.Daemon) *sl
 			suspendPulseSinks(0)
 			if inhibitor.OnWakeup != nil {
 				inhibitor.OnWakeup()
+			}
+			if _manager != nil {
+				_manager.handleBatteryDisplayUpdate()
 			}
 			network.HandlePrepareForSleep(false)
 			bluetooth.HandlePrepareForSleep(false)
