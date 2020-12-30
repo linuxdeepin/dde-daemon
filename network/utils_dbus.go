@@ -68,13 +68,15 @@ func (m *Manager) initDbusObjects() {
 						}
 						if enabled {
 							m.enableDevice(dev.Path,value, true)
-							m.service.Emit(manager, "DeviceEnabled", string(dev.Path), enabled)
 						}
 
 					} else {
 						m.DisconnectDevice(dev.Path)
-						m.setDeviceEnabled(value, dev.Path)
-						m.service.Emit(manager, "DeviceEnabled", string(dev.Path), value)
+						currentWirelessEnabled,_ := nmManager.WirelessEnabled().Get(0)
+						if currentWirelessEnabled == value{
+							m.service.Emit(manager, "DeviceEnabled", string(dev.Path), value)
+						}
+						
 					}	
 				}
 			}

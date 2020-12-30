@@ -400,6 +400,7 @@ func (n *Network) enableDevice(pathOrIface string, enabled bool) (cpath dbus.Obj
 	}
 
 	n.enableIface(d.iface, enabled)
+	err = n.service.Emit(n, "DeviceEnabled", d.nmDevice.Path_(), enabled)
 	if enabled {
 		cpath, err = n.enableDevice1(d)
 		if err != nil {
@@ -412,7 +413,6 @@ func (n *Network) enableDevice(pathOrIface string, enabled bool) (cpath dbus.Obj
 		}
 		cpath = "/"
 	}
-	err = n.service.Emit(n, "DeviceEnabled", d.nmDevice.Path_(), enabled)
 	if err != nil {
 		logger.Warning(err)
 	}

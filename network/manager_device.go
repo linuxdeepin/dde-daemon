@@ -510,27 +510,20 @@ func (m *Manager) doAutoConnect(devPath dbus.ObjectPath) {
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
 	//wireless switch handle here to be compatible for f9 control
 	if m.IsDeviceWireless(devPath) {
-		currentstatus, _ := m.getDeviceEnabled(devPath)
-		logger.Debug("###########getDeviceEnabled!!!!!!!!!!", devPath, currentstatus)
-		if enabled != currentstatus {
-
+		logger.Debug("###########EnableDevice!!!!!!!!!!", devPath,enabled)
 			err := m.enableDevice(devPath, enabled, true)
 			if err != nil {
 				return dbusutil.ToError(err)
 			}
 			if enabled {
-                          	//TODO:
-                         	//飞行模式开启关闭后，由于华为的固件改动需要5s的时长，nm才会导出aplist给后端
-                          	//此处过5s再去扫描并获取数据
+				//TODO:
+				//飞行模式开启关闭后，由于华为的固件改动需要5s的时长，nm才会导出aplist给后端
+				//此处过5s再去扫描并获取数据
 				time.AfterFunc(5*time.Second,func(){
 					m.updateWirelessCountTicker.Reset()
 				})
 				
 			}
-			
-			return dbusutil.ToError(err)
-		}
-
 	} else {
 		err := m.enableDevice(devPath, enabled, true)
 		if err != nil {
