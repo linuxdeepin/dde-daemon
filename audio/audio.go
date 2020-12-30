@@ -838,7 +838,7 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 	a.mu.Lock()
 	sink, ok := a.sinks[sinkInfo.Index]
 	if !ok {
-		// a.sinks 是缓存的 sink 信息，未查到 sink 信息，需要重新通过pluseaudio查询 sink 信息
+		// a.sinks 是缓存的 sink 信息，未查到 sink 信息，需要重新通过 pulseaudio 查询 sink 信息
 		sink = a.updateSinks(sinkInfo.Index)
 		if sink == nil {
 			a.mu.Unlock()
@@ -863,7 +863,7 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 func (a *Audio) updateSources(index uint32) (source *Source) {
 	sourceInfoList := a.ctx.GetSourceList()
 	for _, sourceInfo := range sourceInfoList {
-		// 判断pluseaudio的source索引是否存在，并返回存在的source信息
+		// 判断 pulseaudio 的 source 索引是否存在，并返回存在的 source 信息
 		if sourceInfo.Index == index {
 			logger.Debug("get same source index:", index)
 			source := newSource(sourceInfo, a)
@@ -882,7 +882,7 @@ func (a *Audio) updateSources(index uint32) (source *Source) {
 func (a *Audio) updateSinks(index uint32) (sink *Sink) {
 	sinkInfoList := a.ctx.GetSinkList()
 	for _, sinkInfo := range sinkInfoList {
-		// 判断pluseaudio的sink索引是否存在，并返回存在的sink信息
+		// 判断pulseaudio的sink索引是否存在，并返回存在的sink信息
 		if sinkInfo.Index == index {
 			logger.Debug("get same sink index:", index)
 			sink := newSink(sinkInfo, a)
@@ -919,7 +919,7 @@ func (a *Audio) updateDefaultSource(sourceName string) {
 
 	source, ok := a.sources[sourceInfo.Index]
 	if !ok {
-		// a.sources是缓存的source信息，未查到source信息，需要重新通过pluseaudio查询source信息
+		// a.sources 是缓存的 source 信息，未查到 source 信息，需要重新通过 pulseaudio 查询 source 信息
 		source = a.updateSources(sourceInfo.Index)
 		if source == nil {
 			a.mu.Unlock()
