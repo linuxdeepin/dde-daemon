@@ -35,16 +35,16 @@ const (
 )
 
 var (
-	defaultSup []string = []string{"hvm", "bochs", "virt", "vmware", "kvm", "cloud", "invented"}
-	m_supApps  []string
+	defaultSupportedVirtualMachines []string = []string{"hvm", "bochs", "virt", "vmware", "kvm", "cloud", "invented"}
+	supportedVirtualMachines        []string
 )
 
 func init() {
-	//将有效的支持虚拟机数据存入m_supApps，以供后面截图的时候直接调用
+	//将有效的支持虚拟机数据存入supportedVirtualMachines，以供后面截图的时候直接调用
 	//为了尽可能小的影响性能优化，将获取数据放到协程
 	go func() {
-		m_supApps = getValidSupData(readSupConfigFile())
-		logger.Debug("support virtual : ", m_supApps)
+		supportedVirtualMachines = getValidSupData(readSupConfigFile())
+		logger.Debug("support virtual : ", supportedVirtualMachines)
 	}()
 }
 
@@ -55,12 +55,12 @@ func readSupConfigFile() []string {
 	err := kf.LoadFromFile(supportVirsConf)
 	if err != nil {
 		logger.Warning("load version file failed, err: ", err)
-		return defaultSup
+		return defaultSupportedVirtualMachines
 	}
 	ret, err1 := kf.GetStringList(virsGroupAppName, virsKeySupport)
 	if err1 != nil {
 		logger.Warning("get version type failed, err: ", err1)
-		return defaultSup
+		return defaultSupportedVirtualMachines
 	}
 
 	return ret
@@ -132,11 +132,11 @@ func isPidVirtual(supApps []string, pid uint32) (bool, error) {
 }
 
 func (d *Daemon) IsPidVirtualMachine(pid uint32) (bool, *dbus.Error) {
-	ret, err := isPidVirtual(m_supApps, pid)
+	ret, err := isPidVirtual(supportedVirtualMachines, pid)
 	if err != nil {
 		return false, nil
 	}
-	logger.Info(" CanCallScreenshot, ret : ", ret)
+	logger.Info("IsPidVirtualMachine, ret:", ret)
 
 	return ret, dbusutil.ToError(err)
 }

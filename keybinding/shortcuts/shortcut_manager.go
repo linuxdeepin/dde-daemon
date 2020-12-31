@@ -36,7 +36,6 @@ import (
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"pkg.deepin.io/dde/daemon/keybinding/util"
 	gio "pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/log"
 	"pkg.deepin.io/lib/pinyin_search"
@@ -62,10 +61,9 @@ func SetLogger(l *log.Logger) {
 type KeyEventFunc func(ev *KeyEvent)
 
 type ShortcutManager struct {
-	conn          *x.Conn
-	dataConn      *x.Conn // conn for receive record event
-	daemonDaemon  *daemon.Daemon
-	sigSystemLoop *dbusutil.SignalLoop
+	conn         *x.Conn
+	dataConn     *x.Conn // conn for receive record event
+	daemonDaemon *daemon.Daemon
 
 	idShortcutMap     map[string]Shortcut
 	idShortcutMapMu   sync.Mutex
@@ -662,7 +660,7 @@ func (sm *ShortcutManager) getActiveWindowPid() (uint32, error) {
 	return uint32(pid), nil
 }
 
-func (sm *ShortcutManager) canCallScreenshot(pid uint32) (bool, error) {
+func (sm *ShortcutManager) isPidVirtualMachine(pid uint32) (bool, error) {
 	ret, err := sm.daemonDaemon.IsPidVirtualMachine(0, pid)
 	if err != nil {
 		logger.Warning(err)
@@ -680,10 +678,6 @@ func (sm *ShortcutManager) initSysDaemon() error {
 		return err
 	}
 	sm.daemonDaemon = daemon.NewDaemon(sysBus)
-	sm.sigSystemLoop = dbusutil.NewSignalLoop(sysBus, 10)
-	sm.sigSystemLoop.Start()
-	sm.daemonDaemon.InitSignalExt(sm.sigSystemLoop, true)
-
 	return nil
 }
 
@@ -709,15 +703,15 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 				//判断是否是在 虚拟机/云平台 进行截图
 				pid, err := sm.getActiveWindowPid()
 				if err == nil {
-					bCanScreenshot, err1 := sm.canCallScreenshot(pid)
-					logger.Info(">> handleXRecordKeyEvent -> canCallScreenshot result bCanScreenshot : ", bCanScreenshot)
+					isVirtualMachine, err := sm.isPidVirtualMachine(pid)
+					logger.Info("handleXRecordKeyEvent, isVirtualMachine:", isVirtualMachine)
 					//获取出错时，当做非虚拟机
-					if err1 != nil {
-						logger.Warning(err1)
+					if err != nil {
+						logger.Warning(err)
 					} else {
 						//true:表示当前是 虚拟机/云平台，要过滤掉
-						if bCanScreenshot {
-							logger.Info("current top app is virtual or cloud")
+						if isVirtualMachine {
+							logger.Info("current active window is virtual or cloud")
 							return
 						}
 					}
