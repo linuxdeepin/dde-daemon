@@ -58,6 +58,7 @@ type Daemon struct {
 		NetworkSetConnections          func() `in:"data"`
 		BluetoothGetDeviceTechnologies func() `in:"adapter,device" out:"technologies"`
 		ClearTtys                      func()
+		ClearTty                       func() `in:"number"`
 		IsPidVirtualMachine            func() `in:"pid" out:"ret"`
 	}
 	signals *struct { //nolint
