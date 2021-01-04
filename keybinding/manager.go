@@ -309,6 +309,7 @@ func (m *Manager) init() {
 	m.clickNum = 0
 	go m.ListenGlobalAccel(sessionBus)
 	go m.ListenKeyboardEvent(sysBus)
+	go m.ListenMouseEvent(sysBus)
 }
 
 var kwinSysActionCmdMap = map[string]string{
@@ -529,6 +530,31 @@ func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
 			//+ 短按电源键同时出发kwin快捷键逻辑和libinput逻辑有冲突，先屏蔽
 			if m.dpmsIsOff && value == 1 && key != 116 {
 				logger.Debug("Keyboard:", key, value)
+				err := exec.Command("dde_wldpms", "-s", "On").Run()
+				if err != nil {
+					logger.Warningf("failed to exec dde_wldpms: %s", err)
+				} else {
+					m.dpmsIsOff = false
+				}
+			}
+		}
+	})
+	return nil
+}
+
+func (m *Manager) ListenMouseEvent(systemBus *dbus.Conn) error {
+	err := systemBus.Object("com.deepin.daemon.Gesture",
+		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "MouseEvent").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.Gesture.MouseEvent",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			if m.dpmsIsOff {
+				logger.Debug("MouseEvent: dpms on")
 				err := exec.Command("dde_wldpms", "-s", "On").Run()
 				if err != nil {
 					logger.Warningf("failed to exec dde_wldpms: %s", err)

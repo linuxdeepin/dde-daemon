@@ -24,6 +24,8 @@
 #include <glib.h>
 #include <poll.h>
 #include <errno.h>
+#include <syslog.h>
+#include <libinput.h>
 
 #include "utils.h"
 #include "core.h"
@@ -70,7 +72,7 @@ static double longpress_distance = LONG_PRESS_MAX_DISTANCE;
 
 int
 start_loop(int verbose, double distance)
-{
+{   
     struct libinput *li = open_from_udev("seat0", NULL, verbose);
     if (!li) {
         return -1;
@@ -427,10 +429,32 @@ handle_keyboard_events(struct libinput_event *ev, int type)
 }
 
 static void
+handle_mouse_events(struct libinput_event *ev, int type)
+{
+    struct libinput_device *dev = libinput_event_get_device(ev);
+    if (!dev) {
+        fprintf(stderr, "Get device from event failure\n");
+        return ;
+    }
+
+    struct libinput_event_pointer *mouse = libinput_event_get_pointer_event(ev);
+    syslog(0,"mouse event",type);
+    enum libinput_pointer_axis_source source = libinput_event_pointer_get_axis_source(mouse);
+    syslog(0,"mouse event source---%d",source);
+
+    double value = libinput_event_pointer_get_axis_value(mouse,	LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL );
+    syslog(0,"mouse event source---%f",value);
+
+
+    handleMouseEvent(type, source,value);
+}
+
+static void
 handle_events(struct libinput *li)
 {
     struct libinput_event *ev;
     libinput_dispatch(li);
+
     while ((ev = libinput_get_event(li))) {
         int type =libinput_event_get_type(ev);
         switch (type) {
@@ -475,7 +499,15 @@ handle_events(struct libinput *li)
             handle_keyboard_events(ev, type);
             break;
         }
+        case LIBINPUT_EVENT_POINTER_MOTION:
+        case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
+	    case LIBINPUT_EVENT_POINTER_BUTTON:
+	    case LIBINPUT_EVENT_POINTER_AXIS: {
+            handle_mouse_events(ev, type);
+            break;
+        }
         default:
+         syslog(0,"Default type: %d", type); 
             break;
         }
         libinput_event_destroy(ev);

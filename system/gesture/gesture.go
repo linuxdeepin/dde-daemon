@@ -109,6 +109,10 @@ type Manager struct {
 			key   uint32
 			state uint32
 		}
+		MouseEvent struct {
+			state uint32
+			value uint32
+		}
 	}
 }
 
@@ -160,6 +164,16 @@ func handleTouchEvent(ty, btn C.int) {
 //export handleKeyboardEvent
 func handleKeyboardEvent(key, state C.uint) {
 	_m.service.Emit(_m, "KeyboardEvent", uint32(key), uint32(state))
+}
+
+//export handleMouseEvent
+func handleMouseEvent(ty uint32, state C.uint, value C.double) {
+	logger.Info("handleMouseEvent========")
+	err := _m.service.Emit(_m, "MouseEvent", uint32(state), uint32(ty))
+	if err != nil {
+		logger.Warning("Failed to lhandleMouseEvent:", err)
+
+	}
 }
 
 func (*Daemon) Start() error {
