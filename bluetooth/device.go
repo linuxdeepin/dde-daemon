@@ -198,7 +198,6 @@ func (d *device) setConnectPhase(value connectPhase) {
 	case connectPhaseConnectProfilesEnd:
 		logger.Debugf("%s connect profiles end", d)
 	}
-
 	d.updateState()
 	d.notifyDevicePropertiesChanged()
 	if d.Paired && d.State == deviceStateConnected && d.ConnectState {
@@ -351,10 +350,8 @@ func (d *device) connectProperties() {
 			default:
 			}
 		}
-
 		d.updateState()
 		d.notifyDevicePropertiesChanged()
-
 		if needNotify && d.Paired && d.State == deviceStateConnected && d.ConnectState {
 			d.notifyConnectedChanged()
 		}

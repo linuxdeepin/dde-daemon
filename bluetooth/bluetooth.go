@@ -618,15 +618,16 @@ func (b *Bluetooth) getAdapterDevices(adapterAddress string) []*device {
 }
 
 func (b *Bluetooth) updateconnectState() {
-       for _, devices := range b.devices {
-               for _, d := range devices {
-                       connected,_ := d.core.Connected().Get(0)
-                       d.ConnectState = connected
-		       paired,_ :=d.core.Paired().Get(0)
-		       d.Paired = paired
-               }
-       }
-
+	for _, devices := range b.devices {
+		for _, d := range devices {
+			if d!=nil {
+			connected,_ := d.core.Connected().Get(0)
+			d.ConnectState = connected
+			paired,_ :=d.core.Paired().Get(0)
+			d.Paired = paired
+			}		
+		}
+	}
 }
 
 func (b *Bluetooth) addAdapter(apath dbus.ObjectPath) {
