@@ -22,7 +22,6 @@ package zoneinfo
 import (
 	"os"
 	"testing"
-	"time"
 
 	C "gopkg.in/check.v1"
 )
@@ -82,31 +81,31 @@ var zoneInfos = []ZoneInfo{
 		"Europe/Andorra",
 		"Andorra",
 		3600,
-		DSTInfo{1585443600,1603587599,7200},
+		DSTInfo{1585443600, 1603587599, 7200},
 	},
 	{
 		"Asia/Dubai",
 		"Dubai",
 		14400,
-		DSTInfo{0,0,0},
+		DSTInfo{0, 0, 0},
 	},
 	{
 		"Asia/Kabul",
 		"Kabul",
 		16200,
-		DSTInfo{0,0,0},
+		DSTInfo{0, 0, 0},
 	},
 	{
 		"Europe/Tirane",
 		"Tirane",
 		3600,
-		DSTInfo{1585443600,1603587599,7200},
+		DSTInfo{1585443600, 1603587599, 7200},
 	},
 	{
 		"Asia/Yerevan",
 		"Yerevan",
 		14400,
-		DSTInfo{0,0,0},
+		DSTInfo{0, 0, 0},
 	},
 }
 
@@ -117,10 +116,8 @@ func (*testWrapper) TestGetDSTTime(c *C.C) {
 		_ = os.Setenv("LANGUAGE", lang)
 	}()
 
-	year := time.Now().Year()
-
 	for _, info := range zoneInfos {
-		first, second, ok := getDSTTime(info.Name, int32(year))
+		first, second, ok := getDSTTime(info.Name, 2020) // 固定计算2020年夏令时相关时间
 		c.Check(first, C.Equals, info.DST.Enter)
 		c.Check(second, C.Equals, info.DST.Leave)
 		if first == 0 || second == 0 {
@@ -140,7 +137,7 @@ func (*testWrapper) TestGetRawUSec(c *C.C) {
 
 	for _, info := range zoneInfos {
 		enter := getRawUSec(info.Name, info.DST.Enter)
-		c.Check(enter + 1, C.Equals, info.DST.Enter)
+		c.Check(enter+1, C.Equals, info.DST.Enter)
 	}
 }
 
@@ -168,10 +165,17 @@ func (*testWrapper) TestGetZoneInfo(c *C.C) {
 	defer func() {
 		_ = os.Setenv("LANGUAGE", lang)
 	}()
-
 	for _, info := range zoneInfos {
-		zoneinfo, err := GetZoneInfo(info.Name)
+		dstInfo := newDSTInfo(info.Name)
+		if dstInfo != nil {
+			info.DST.Enter = dstInfo.Enter
+			info.DST.Leave = dstInfo.Leave
+			info.DST.Offset = dstInfo.Offset
+		} else {
+			info.Offset = getOffsetByUSec(info.Name, 0)
+		}
+		zoneInfo, err := GetZoneInfo(info.Name)
 		c.Check(err, C.Equals, nil)
-		c.Check(*zoneinfo, C.Equals, info)
+		c.Check(*zoneInfo, C.Equals, info)
 	}
 }
