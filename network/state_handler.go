@@ -361,7 +361,10 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 						logger.Debug("unplugged device is ethernet")
 						msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
 					}
-
+				case nm.NM_DEVICE_STATE_REASON_NO_SECRETS:
+					msg = fmt.Sprintf(Tr("Password is required to connect %q"), dsi.aconnId)
+				case nm.NM_DEVICE_STATE_REASON_SSID_NOT_FOUND:
+					msg = fmt.Sprintf(Tr("The %q 802.11 WLAN network could not be found"), dsi.aconnId)
 					//default:
 					//	if dsi.aconnId != "" {
 					//		msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)

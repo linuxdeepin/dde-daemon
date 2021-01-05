@@ -227,7 +227,6 @@ func (m *Manager) init() {
 	m.stateHandler = newStateHandler(m.sysSigLoop, m)
 	m.initSysNetwork(systemBus)
 
-
 	// update property "State"
 	err = nmManager.State().ConnectChanged(func(hasValue bool, value uint32) {
 		m.updatePropState()
