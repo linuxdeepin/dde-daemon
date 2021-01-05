@@ -77,6 +77,11 @@ func (winInfo *KWindowInfo) shouldSkip() bool {
 		logger.Warning(err)
 		return true
 	}
+	//+ 添加窗口能否最小化判断，如果窗口不能最小化则隐藏任务栏图标
+	canMinimize, _ := winInfo.winObj.IsMinimizeable(0)
+	if canMinimize == false {
+		skip = true
+	}
 	return skip
 }
 
