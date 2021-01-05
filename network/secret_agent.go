@@ -18,7 +18,6 @@ import (
 	"pkg.deepin.io/dde/daemon/network/nm"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/strv"
-	. "pkg.deepin.io/lib/gettext"
 )
 
 const (
@@ -390,9 +389,6 @@ func (sa *SecretAgent) GetSecrets(connectionData map[string]map[string]dbus.Vari
 	secretsData, err = sa.getSecrets(connectionData, connectionPath, settingName, hints, flags)
 	if err != nil {
 		if err == errSecretAgentUserCanceled {
-			connId, _ := getConnectionDataString(connectionData, "connection", "id")
-			msg := fmt.Sprintf(Tr("Password is required to connect %q"), connId)
-			notify(notifyIconWirelessDisconnected, "", msg)
 			return nil, &dbus.Error{
 				Name: "org.freedesktop.NetworkManager.SecretAgent.UserCanceled",
 				Body: []interface{}{"user canceled"},
@@ -748,7 +744,10 @@ func (a *SecretAgent) createPendingKey(connectionData map[string]map[string]dbus
 			logger.Warning("failed to write string", err)
 			return
 		}
-		stdinWriter.Flush()
+		err = stdinWriter.Flush()
+		if err != nil {
+			logger.Warning("failed to flush auth dialog data", err)
+		}
 
 		newVpnSecretData := make(map[string]string)
 		lastKey := ""
