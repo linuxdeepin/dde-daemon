@@ -15,6 +15,9 @@ const (
 	PortTypeHeadset
 	PortTypeSpeaker
 	PortTypeHdmi
+	PortTypeMultiChannel
+
+	PortTypeCount // 类型数量
 )
 
 type PortToken struct {
@@ -36,12 +39,26 @@ var (
 	globalPrioritiesFilePath = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/priorities.json")
 )
 
+func hasElement(slice []int, value int) bool {
+	for _, v := range slice {
+		if value == v {
+			return true
+		}
+	}
+
+	return false
+}
+
 func contains(cardName string, portName string, substr string) bool {
 	return strings.Contains(strings.ToLower(cardName), substr) ||
 		strings.Contains(strings.ToLower(portName), substr)
 }
 
 func GetPortType(cardName string, portName string) int {
+	if contains(cardName, portName, "multichannel") {
+		return PortTypeMultiChannel
+	}
+
 	if contains(cardName, portName, "bluez") {
 		return PortTypeBluetooth
 	}
@@ -101,8 +118,71 @@ func (pr *Priorities) Load(file string, cards CardList) {
 		pr.defaultInit(cards)
 		return
 	}
+	pr.completeTypes()
 	pr.RemoveUnavailable(cards)
 	pr.AddAvailable(cards)
+	pr.sortOutput()
+	pr.sortInput()
+}
+
+// 读取配置文件获得的类型优先级中类型的数量少于PortTypeCount时
+// 将缺少的类型补充完整
+// 通常发生在增加了新的类型的时候
+func (pr *Priorities) completeTypes() {
+	for i := 0; i < PortTypeCount; i++ {
+		if !hasElement(pr.OutputTypePriority, i) {
+			pr.OutputTypePriority = append(pr.OutputTypePriority, i)
+		}
+	}
+
+	for i := 0; i < PortTypeCount; i++ {
+		if !hasElement(pr.InputTypePriority, i) {
+			pr.InputTypePriority = append(pr.InputTypePriority, i)
+		}
+	}
+}
+
+// 调整输出端口实例的优先级
+// 当修改端口类型时，某些端口的优先级需要进行调整
+// 例如原先将 多声道 视为 内置扬声器
+// 现在将 多声道 单独分为一类
+// 从旧的配置文件里读出来的多声道实例的优先级就不合理了
+// 此时通过类型优先级对实例优先级进行排序
+// 为了避免原先类型优先级相同的端口在排序时被打乱
+// 不能使用快速排序，这里使用稳定的冒泡排序
+func (pr *Priorities) sortOutput() {
+	length := len(pr.OutputInstancePriority)
+	for i := 0; i+1 < length; i++ {
+		for j := i; j+1 < length; j++ {
+			port1 := pr.OutputInstancePriority[j]
+			port2 := pr.OutputInstancePriority[j+1]
+			type1 := GetPortType(port1.CardName, port1.PortName)
+			type2 := GetPortType(port2.CardName, port2.PortName)
+
+			// type1优先级在type2后面，交换
+			if pr.IsOutputTypeAfter(type2, type1) {
+				pr.OutputInstancePriority[j], pr.OutputInstancePriority[j+1] = pr.OutputInstancePriority[j+1], pr.OutputInstancePriority[j]
+			}
+		}
+	}
+}
+
+// 调整输入端口实例的优先级
+func (pr *Priorities) sortInput() {
+	length := len(pr.InputInstancePriority)
+	for i := 0; i+1 < length; i++ {
+		for j := i; j+1 < length; j++ {
+			port1 := pr.InputInstancePriority[j]
+			port2 := pr.InputInstancePriority[j+1]
+			type1 := GetPortType(port1.CardName, port1.PortName)
+			type2 := GetPortType(port2.CardName, port2.PortName)
+
+			// type1优先级在type2后面，交换
+			if pr.IsInputTypeAfter(type2, type1) {
+				pr.InputInstancePriority[j], pr.InputInstancePriority[j+1] = pr.InputInstancePriority[j+1], pr.InputInstancePriority[j]
+			}
+		}
+	}
 }
 
 func (pr *Priorities) RemoveUnavailable(cards CardList) {
@@ -335,15 +415,10 @@ func (pr *Priorities) IsOutputTypeAfter(type1 int, type2 int) bool {
 }
 
 func (pr *Priorities) defaultInit(cards CardList) {
-	pr.OutputTypePriority = append(pr.OutputTypePriority, PortTypeBluetooth)
-	pr.OutputTypePriority = append(pr.OutputTypePriority, PortTypeHeadset)
-	pr.OutputTypePriority = append(pr.OutputTypePriority, PortTypeSpeaker)
-	pr.OutputTypePriority = append(pr.OutputTypePriority, PortTypeHdmi)
-
-	pr.InputTypePriority = append(pr.InputTypePriority, PortTypeBluetooth)
-	pr.InputTypePriority = append(pr.InputTypePriority, PortTypeHeadset)
-	pr.InputTypePriority = append(pr.InputTypePriority, PortTypeSpeaker)
-	pr.InputTypePriority = append(pr.InputTypePriority, PortTypeHdmi)
+	for t := 0; t < PortTypeCount; t++ {
+		pr.OutputTypePriority = append(pr.OutputTypePriority, t)
+		pr.InputTypePriority = append(pr.InputTypePriority, t)
+	}
 
 	pr.AddAvailable(cards)
 }
