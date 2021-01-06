@@ -346,6 +346,7 @@ func (a *Audio) init() error {
 	a.mu.Unlock()
 
 	priorities.Load(globalPrioritiesFilePath, a.cards)
+	logger.Debug("priorities load")
 	priorities.Print()
 	err = priorities.Save(globalPrioritiesFilePath)
 	if err != nil {
