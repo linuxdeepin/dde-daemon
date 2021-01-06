@@ -92,7 +92,7 @@ func resetKWin(wmObj *wm.Wm) error {
 func showOSD(signal string) {
 	logger.Debug("show OSD", signal)
 	sessionDBus, _ := dbus.SessionBus()
-	go sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
+	sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
 }
 
 const sessionManagerDest = "com.deepin.SessionManager"
