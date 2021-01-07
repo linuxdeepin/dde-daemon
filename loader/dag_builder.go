@@ -38,7 +38,7 @@ type DAGBuilder struct {
 func NewDAGBuilder(loader *Loader, enablingModules []string, disableModules []string, flag EnableFlag) *DAGBuilder {
 	disableModulesMap := map[string]struct{}{}
 	for _, name := range disableModules {
-		if m := loader.modules.Get(name); m == nil {
+		if _,  ok := loader.modules[name]; ok {
 			loader.log.Warningf("disabled module(%s) is no existed", name)
 			continue
 		}
@@ -68,8 +68,8 @@ func (builder *DAGBuilder) buildDAG() error {
 		node := queue[0]
 		queue = queue[1:]
 		name := node.ID
-		module := builder.modules.Get(name)
-		if module == nil {
+		module,  ok := builder.modules[name]
+		if !ok {
 			if builder.flag.HasFlag(EnableFlagIgnoreMissingModule) {
 				if logLevel == log.LevelDebug {
 					builder.log.Info("no such a module named", name)

@@ -92,42 +92,41 @@ func (l *Loader) SetLogLevel(pri log.Priority) {
 func (l *Loader) AddModule(m Module) {
 	l.lock.Lock()
 	defer l.lock.Unlock()
-
-	tmp := l.modules.Get(m.Name())
-	if tmp != nil {
-		l.log.Debug("Register", m.Name(), "is already registered")
+	name := m.Name()
+	_, exist := l.modules[name]
+	if exist {
+		l.log.Debug("Register", name, "is already registered")
 		return
 	}
-
-	l.log.Debug("Register module:", m.Name())
-	l.modules = append(l.modules, m)
+	l.log.Debug("Register module:", name)
+	l.modules[name] = m
 }
 
 func (l *Loader) DeleteModule(name string) {
 	l.lock.Lock()
 	defer l.lock.Unlock()
-	l.modules, _ = l.modules.Delete(name)
+	delete(l.modules, name)
 }
 
 func (l *Loader) List() []Module {
-	var modules Modules
-
 	l.lock.Lock()
-	modules = append(modules, l.modules...)
-	l.lock.Unlock()
-
+	defer l.lock.Unlock()
+	modules := make([]Module, 0, len(l.modules))
+	for _, m := range l.modules {
+		modules = append(modules, m)
+	}
 	return modules
 }
 
 func (l *Loader) GetModule(name string) Module {
 	l.lock.Lock()
 	defer l.lock.Unlock()
-	return l.modules.Get(name)
+	return l.modules[name]
 }
 
 func (l *Loader) WaitDependencies(module Module) {
 	for _, dependencyName := range module.GetDependencies() {
-		l.modules.Get(dependencyName).WaitEnable()
+		l.modules[dependencyName].WaitEnable()
 	}
 }
 
@@ -160,27 +159,32 @@ func (l *Loader) EnableModules(enablingModules []string, disableModules []string
 		if node == nil {
 			continue
 		}
-		module := l.modules.Get(node.ID)
+		module := l.modules[node.ID]
+		name := node.ID
+
 		go func() {
-			l.log.Info("enable module", module.Name())
+			l.log.Info("enable module", name)
 			startTime := time.Now()
 
 			// wait for its dependency
 			l.WaitDependencies(module)
-			l.log.Info("module", module.Name(), "wait done")
-			err := module.Enable(true)
 			endTime := time.Now()
 			duration := endTime.Sub(startTime)
+			l.log.Info("module", name, "wait done, cost", duration)
+
+			err := module.Enable(true)
+			endTime = time.Now()
+			duration = endTime.Sub(startTime)
 			if err != nil {
-				l.log.Fatalf("enable module %s failed: %s, cost %s", module.Name(), err, duration)
+				l.log.Fatalf("enable module %s failed: %s, cost %s", name, err, duration)
 			} else {
-				l.log.Infof("enable module %s done cost %s", module.Name(), duration)
+				l.log.Infof("enable module %s done cost %s", name, duration)
 			}
 		}()
 	}
 
 	for _, n := range nodes {
-		m := l.modules.Get(n.ID)
+		m := l.modules[n.ID]
 		m.WaitEnable()
 	}
 
