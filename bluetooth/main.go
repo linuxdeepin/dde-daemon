@@ -52,12 +52,14 @@ func HandlePrepareForSleep(sleep bool) {
 	if sleep {
 		//disconnect all connect devices
 		for _, dobjlist := range globalBluetooth.devices {
-			for _,device := range dobjlist{
-				//获取每个device的状态，若正在链接或已链接则断开
-				connectstatus := device.getState()
-				if connectstatus==1 || connectstatus==2{
-					logger.Debug("HandlePrepareForSleep to disconnect device:",device.Name,device.Alias,device.Path)
-					go device.Disconnect()
+			for _, device := range dobjlist {
+				if device != nil {
+					//获取每个device的状态，若正在链接或已链接则断开
+					connectstatus := device.getState()
+					if connectstatus == 1 || connectstatus == 2 {
+						logger.Debug("HandlePrepareForSleep to disconnect device:", device.Name, device.Alias, device.Path)
+						go device.Disconnect()
+					}
 				}
 			}
 		}
@@ -69,11 +71,11 @@ func HandlePrepareForSleep(sleep bool) {
 					continue
 				}
 				/*
-				// 'Powered' is true in config file, so reset it
-				if err := aobj.core.Powered().Set(0, false); err != nil {
-					logger.Warningf("failed to set %s powered off: %v", aobj, err)
-					continue
-				}
+					// 'Powered' is true in config file, so reset it
+					if err := aobj.core.Powered().Set(0, false); err != nil {
+						logger.Warningf("failed to set %s powered off: %v", aobj, err)
+						continue
+					}
 				*/
 			}
 		}
@@ -84,20 +86,20 @@ func HandlePrepareForSleep(sleep bool) {
 	//time.Sleep(time.Second * 3)
 	for _, aobj := range globalBluetooth.adapters {
 		/*
-		if !aobj.Powered {
-			
-			powered := globalBluetooth.config.getAdapterConfigPowered(aobj.address)
-			if !powered {
-				continue
+			if !aobj.Powered {
+
+				powered := globalBluetooth.config.getAdapterConfigPowered(aobj.address)
+				if !powered {
+					continue
+				}
+
+				// 'Powered' is true in config file, so reset it
+				if err := aobj.core.Powered().Set(0, true); err != nil {
+					logger.Warningf("failed to set %s powered: %v", aobj, err)
+					continue
+				}
+
 			}
-			
-			// 'Powered' is true in config file, so reset it
-			if err := aobj.core.Powered().Set(0, true); err != nil {
-				logger.Warningf("failed to set %s powered: %v", aobj, err)
-				continue
-			}
-			
-		}
 		*/
 		if !aobj.Discovering {
 			// sometimes the adapter stops discovering and 'Discovering' property becomes 'false'

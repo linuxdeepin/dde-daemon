@@ -22,16 +22,16 @@ package bluetooth
 func (b *Bluetooth) disconnectA2DPDeviceExcept(d *device) {
 	for _, devices := range b.devices {
 		for _, device := range devices {
-			if device.Path == d.Path {
+			if device == nil || device.Path == d.Path {
 				continue
 			}
 			for _, uuid := range device.UUIDs {
 				if uuid == A2DP_SINK_UUID {
-					if d.Icon == DeviceTypes[AudioCard] && device.ConnectState{
+					if d.Icon == DeviceTypes[AudioCard] && device.ConnectState {
 						logger.Infof("disconnect A2DP %s", device)
 						device.Disconnect()
 					}
-					
+
 				}
 			}
 		}

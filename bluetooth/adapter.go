@@ -21,12 +21,13 @@ package bluetooth
 
 import (
 	"fmt"
-	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	"os"
+	"time"
+
+	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
-	"time"
 )
 
 type adapter struct {
@@ -66,7 +67,9 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 		globalBluetooth.backupDevices = make(map[dbus.ObjectPath][]*backupDevice)
 		for adapterpath, devices := range globalBluetooth.devices {
 			for _, device := range devices {
-				globalBluetooth.backupDevices[adapterpath] = append(globalBluetooth.backupDevices[adapterpath], newBackupDevice(device))
+				if device != nil {
+					globalBluetooth.backupDevices[adapterpath] = append(globalBluetooth.backupDevices[adapterpath], newBackupDevice(device))
+				}
 			}
 		}
 		globalBluetooth.backupDeviceLock.Unlock()
@@ -85,7 +88,7 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 			backupdevice, err1 := globalBluetooth.getBackupDevice(globalBluetooth.prepareToConnectedDevice)
 			if err1 != nil {
 				logger.Debug("get prepareToConnectedDevice BackupDevice Failed:", err1)
-			}else {
+			} else {
 				notifyConnectFailedHostDown(backupdevice.Alias)
 			}
 		}
@@ -170,43 +173,42 @@ func (a *adapter) connectProperties() {
 			return
 		}
 		/*
-		// 如果上层还是关闭状态，就不能让适配器启动
-		PoweredCfg := globalBluetooth.config.getAdapterConfigPowered(a.address)
-		if PoweredCfg != value && !PoweredCfg {
-			// 上层未开启蓝牙，需要把后端适配器给power off
-			err := a.core.Powered().Set(0, PoweredCfg)
-			if err != nil {
-				logger.Warningf("failed to set %s powered: %v,config is %v", a, err, PoweredCfg)
+			// 如果上层还是关闭状态，就不能让适配器启动
+			PoweredCfg := globalBluetooth.config.getAdapterConfigPowered(a.address)
+			if PoweredCfg != value && !PoweredCfg {
+				// 上层未开启蓝牙，需要把后端适配器给power off
+				err := a.core.Powered().Set(0, PoweredCfg)
+				if err != nil {
+					logger.Warningf("failed to set %s powered: %v,config is %v", a, err, PoweredCfg)
+					return
+				}
 				return
 			}
-			return
-		}
 		*/
 		a.Powered = value
 		logger.Debugf("%s Powered: %v", a, value)
-		
-		//reconnect devices here to aviod problem when  airplane open and closed,paired devices not connecte initiatively 
-		if value{
-			
+
+		//reconnect devices here to aviod problem when  airplane open and closed,paired devices not connecte initiatively
+		if value {
+
 			err := a.core.Discoverable().Set(0, globalBluetooth.config.Discoverable)
 			if err != nil {
 				logger.Warningf("failed to set discoverable for %s: %v", a, err)
 			}
-			go func(){
+			go func() {
 				a.discoveringTimeoutFlag = false
 				err = a.core.StopDiscovery(0)
 				globalBluetooth.tryConnectPairedDevices()
-				
+
 				err = a.core.StartDiscovery(0)
 				if err != nil {
 					logger.Warningf("failed to start discovery for %s: %v", a, err)
-				} 
+				}
 				a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
-	 
+
 			}()
-			
-				
-		}else{
+
+		} else {
 			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
 		}
 		a.notifyPropertiesChanged()
@@ -217,15 +219,15 @@ func (a *adapter) connectProperties() {
 		}
 		a.Discovering = value
 		logger.Debugf("%s Discovering: %v", a, value)
-		if a.discoveringTimeoutFlag{
+		if a.discoveringTimeoutFlag {
 			a.notifyPropertiesChanged()
-		}else{
-			if value!=a.Powered{
-				return 
+		} else {
+			if value != a.Powered {
+				return
 			}
 			a.notifyPropertiesChanged()
 		}
-		
+
 	})
 	a.core.Discoverable().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
@@ -241,16 +243,16 @@ func (a *adapter) connectProperties() {
 		}
 		a.DiscoverableTimeout = value
 		logger.Debugf("%s DiscoverableTimeout: %v", a, value)
-		
+
 	})
 }
 
-func (a *adapter)startDiscovery(){
-	a.discoveringTimeoutFlag =false
-	err:=a.core.StartDiscovery(0)
-	if err!=nil{
-		logger.Warningf("failed to start discovery for %s: %v",a,err)
-	}else{
+func (a *adapter) startDiscovery() {
+	a.discoveringTimeoutFlag = false
+	err := a.core.StartDiscovery(0)
+	if err != nil {
+		logger.Warningf("failed to start discovery for %s: %v", a, err)
+	} else {
 		logger.Debug("reset timer for stop scan")
 		a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
 	}

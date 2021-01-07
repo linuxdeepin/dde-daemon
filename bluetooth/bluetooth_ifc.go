@@ -92,11 +92,11 @@ func (b *Bluetooth) SetDeviceTrusted(dpath dbus.ObjectPath, trusted bool) *dbus.
 
 // GetDevices return all device objects that marshaled by json.
 func (b *Bluetooth) GetDevices(apath dbus.ObjectPath) (devicesJSON string, err *dbus.Error) {
-	
+
 	if adapter, ok := b.adapters[apath]; ok {
-		logger.Debug("!!!!!!!!!!!!!!GetDevices",adapter.discoveringTimeoutFlag)
+		logger.Debug("!!!!!!!!!!!!!!GetDevices", adapter.discoveringTimeoutFlag)
 		b.devicesLock.Lock()
-		if adapter.discoveringTimeoutFlag {					//蓝牙设备被清除， 发送备份的蓝牙设备列表
+		if adapter.discoveringTimeoutFlag { //蓝牙设备被清除， 发送备份的蓝牙设备列表
 			var result []*backupDevice
 			devices := b.backupDevices[apath]
 			result = append(result, devices...)
@@ -195,23 +195,23 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 	if powered {
 		checkAndEnableBluetoothDevice()
 	}
-	
-	if !powered{
+
+	if !powered {
 		b.devicesLock.Lock()
 		for _, dobjlist := range b.devices {
-			for _,device := range dobjlist{
+			for _, device := range dobjlist {
 				//获取每个device的状态，若正在链接或已链接则断开
-				if device!=nil{
-					if device.State==1 || device.State==2{
+				if device != nil {
+					if device.State == 1 || device.State == 2 {
 						go device.Disconnect()
 					}
 				}
-				
+
 			}
 		}
 		b.devicesLock.Unlock()
 	}
-	
+
 	err = a.core.Powered().Set(0, powered)
 	if err != nil {
 		logger.Warningf("failed to set %s powered: %v", a, err)
@@ -221,21 +221,21 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 	// save the powered state
 	b.config.setAdapterConfigPowered(a.address, powered)
 	/*
-	if powered {
-		err := a.core.Discoverable().Set(0, b.config.Discoverable)
-		if err != nil {
-			logger.Warningf("failed to set discoverable for %s: %v", a, err)
+		if powered {
+			err := a.core.Discoverable().Set(0, b.config.Discoverable)
+			if err != nil {
+				logger.Warningf("failed to set discoverable for %s: %v", a, err)
+			}
+			err = a.core.StartDiscovery(0)
+			if err != nil {
+				logger.Warningf("failed to start discovery for %s: %v", a, err)
+			} else {
+				// start discovering success, reset discovering timer
+				a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+			}
+			//move reconnect devices into adapter.go when power signal on coming
+			//go b.tryConnectPairedDevices()
 		}
-		err = a.core.StartDiscovery(0)
-		if err != nil {
-			logger.Warningf("failed to start discovery for %s: %v", a, err)
-		} else {
-			// start discovering success, reset discovering timer
-			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
-		}
-		//move reconnect devices into adapter.go when power signal on coming
-		//go b.tryConnectPairedDevices()
-	}
 	*/
 	return nil
 }
@@ -367,7 +367,7 @@ func (b *Bluetooth) ClearUnpairedDevice() *dbus.Error {
 	b.devicesLock.Lock()
 	for _, devices := range b.devices {
 		for _, d := range devices {
-			if !d.Paired {
+			if d != nil && !d.Paired {
 				logger.Info("remove unpaired device", d)
 				removeDevices = append(removeDevices, d)
 			}

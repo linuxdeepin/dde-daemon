@@ -219,7 +219,9 @@ func (b *Bluetooth) destroy() {
 	b.devicesLock.Lock()
 	for _, devices := range b.devices {
 		for _, device := range devices {
-			device.destroy()
+			if device != nil {
+				device.destroy()
+			}
 		}
 	}
 	b.devicesLock.Unlock()
@@ -336,8 +338,10 @@ func (b *Bluetooth) removeAllObjects() {
 	b.devicesLock.Lock()
 	for _, devices := range b.devices {
 		for _, device := range devices {
-			device.notifyDeviceRemoved()
-			device.destroy()
+			if device != nil {
+				device.notifyDeviceRemoved()
+				device.destroy()
+			}
 		}
 	}
 	b.devices = make(map[dbus.ObjectPath][]*device)
@@ -542,8 +546,10 @@ func (b *Bluetooth) isDeviceExists(dpath dbus.ObjectPath) bool {
 func (b *Bluetooth) findDevice(dpath dbus.ObjectPath) (apath dbus.ObjectPath, index int) {
 	for p, devices := range b.devices {
 		for i, d := range devices {
-			if d.Path == dpath {
-				return p, i
+			if d != nil {
+				if d.Path == dpath {
+					return p, i
+				}
 			}
 		}
 	}
@@ -620,12 +626,12 @@ func (b *Bluetooth) getAdapterDevices(adapterAddress string) []*device {
 func (b *Bluetooth) updateconnectState() {
 	for _, devices := range b.devices {
 		for _, d := range devices {
-			if d!=nil {
-			connected,_ := d.core.Connected().Get(0)
-			d.ConnectState = connected
-			paired,_ :=d.core.Paired().Get(0)
-			d.Paired = paired
-			}		
+			if d != nil {
+				connected, _ := d.core.Connected().Get(0)
+				d.ConnectState = connected
+				paired, _ := d.core.Paired().Get(0)
+				d.Paired = paired
+			}
 		}
 	}
 }
@@ -733,7 +739,7 @@ func (b *Bluetooth) updateState() {
 
 	for _, devices := range b.devices {
 		for _, d := range devices {
-			if d.connected {
+			if d != nil && d.connected {
 				newState = StateConnected
 				break
 			}
