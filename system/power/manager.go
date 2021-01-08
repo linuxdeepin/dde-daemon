@@ -213,6 +213,14 @@ func (m *Manager) init() error {
 	m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
 	m.Mode = cfg.Mode
 
+	// 恢复配置
+	err := m.doSetMode(m.Mode)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		logger.Debugf("init mode %s", m.Mode)
+	}
+
 	m.initAC(devices)
 	m.initBatteries(devices)
 	for _, dev := range devices {
@@ -224,7 +232,6 @@ func (m *Manager) init() error {
 	// init LMT config
 	m.updatePowerSavingMode()
 
-	var err error
 	m.IsHighPerformanceSupported = m.cpus.IsBoostFileExist()
 	m.CpuBoost, err = m.cpus.GetBoostEnabled()
 	if err != nil {
