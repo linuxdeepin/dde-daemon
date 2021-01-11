@@ -11,13 +11,13 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.gesture"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.dock"
+	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
+	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
+	gesture "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.gesture"
+	dock "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.dock"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	"pkg.deepin.io/gir/gio-2.0"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/gsettings"
@@ -33,19 +33,19 @@ const (
 )
 
 type Manager struct {
-	wm            *wm.Wm
-	sysDaemon     *daemon.Daemon
-	systemSigLoop *dbusutil.SignalLoop
-	mu            sync.RWMutex
-	userFile      string
-	builtinSets   map[string]func() error
-	gesture       *gesture.Gesture
-	dock          *dock.Dock
-	display       *display.Display
-	setting       *gio.Settings
-	tsSetting     *gio.Settings
-	enabled       bool
-	Infos         gestureInfos
+	wm             *wm.Wm
+	sysDaemon      *daemon.Daemon
+	systemSigLoop  *dbusutil.SignalLoop
+	mu             sync.RWMutex
+	userFile       string
+	builtinSets    map[string]func() error
+	gesture        *gesture.Gesture
+	dock           *dock.Dock
+	display        *display.Display
+	setting        *gio.Settings
+	tsSetting      *gio.Settings
+	enabled        bool
+	Infos          gestureInfos
 	sessionmanager *sessionmanager.SessionManager
 	//nolint
 	methods *struct {
@@ -113,16 +113,16 @@ func newManager() (*Manager, error) {
 	}
 
 	m := &Manager{
-		userFile:  configUserPath,
-		Infos:     infos,
-		setting:   setting,
-		tsSetting: tsSetting,
-		enabled:   setting.GetBoolean(gsKeyEnabled),
-		wm:        wm.NewWm(sessionConn),
-		dock:      dock.NewDock(sessionConn),
-		display:   display.NewDisplay(sessionConn),
-		sysDaemon: daemon.NewDaemon(systemConn),
-		sessionmanager:sessionmanager.NewSessionManager(sessionConn),
+		userFile:       configUserPath,
+		Infos:          infos,
+		setting:        setting,
+		tsSetting:      tsSetting,
+		enabled:        setting.GetBoolean(gsKeyEnabled),
+		wm:             wm.NewWm(sessionConn),
+		dock:           dock.NewDock(sessionConn),
+		display:        display.NewDisplay(sessionConn),
+		sysDaemon:      daemon.NewDaemon(systemConn),
+		sessionmanager: sessionmanager.NewSessionManager(sessionConn),
 	}
 
 	m.gesture = gesture.NewGesture(systemConn)
@@ -231,6 +231,8 @@ func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
 			logger.Debug("the current active window in blacklist")
 			return true
 		}
+	} else if strings.HasPrefix(info.Event.Name, "touch") {
+		return true
 	}
 
 	return false
@@ -245,10 +247,6 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 	logger.Debugf("[Exec]: event info:%s  action info:%s", info.Event.toString(), info.Action.toString())
 	if m.shouldIgnoreGesture(info) {
 		return nil
-	}
-
-	if strings.HasPrefix(info.Event.Name, "touch") {
-		return m.handleTouchScreenEvent(info)
 	}
 
 	var cmd = info.Action.Action
@@ -304,11 +302,6 @@ func (*Manager) GetInterfaceName() string {
 	return dbusServiceIFC
 }
 
-//handle touchscreen event
-func (*Manager) handleTouchScreenEvent(info *gestureInfo) error {
-	return nil
-}
-
 //param @edge: swipe to touchscreen edge
 func (m *Manager) handleTouchEdgeMoveStopLeave(edge string, scaleX float64, scaleY float64, duration int32) error {
 	if edge == "bot" {
@@ -355,13 +348,13 @@ func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float
 	}
 
 	if edge == "left" {
-		if scaleX * float64(screenWight) > 100 {
+		if scaleX*float64(screenWight) > 100 {
 			cmd = "xdotool key ctrl+alt+v"
 		}
 	}
 
 	if edge == "right" {
-		if (1 - scaleX) * float64(screenWight) > 100 {
+		if (1-scaleX)*float64(screenWight) > 100 {
 			cmd = "dbus-send --type=method_call --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
 		}
 	}
