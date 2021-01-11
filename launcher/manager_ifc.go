@@ -39,7 +39,8 @@ const (
 	dbusObjPath        = "/com/deepin/dde/daemon/Launcher"
 	dbusInterface      = dbusServiceName
 	desktopMainSection = "Desktop Entry"
-	launcherExecPath   = "/usr/bin/dde-launcher"
+	ddeLauncherExecPath   = "/usr/bin/dde-launcher"
+	dueLauncherExecPath   = "/usr/bin/due-launcher"
 )
 
 var errorInvalidID = errors.New("invalid ID")
@@ -166,7 +167,7 @@ func (m *Manager) RequestUninstall(sender dbus.Sender, id string, purge bool) *d
 		return dbusutil.ToError(err)
 	}
 
-	if execPath != launcherExecPath {
+	if execPath != ddeLauncherExecPath && execPath != dueLauncherExecPath {
 		err = fmt.Errorf("%q is not allowed to uninstall packages", execPath)
 		logger.Warning(err)
 		return dbusutil.ToError(err)
