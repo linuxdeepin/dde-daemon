@@ -59,6 +59,7 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 	a.core.InitSignalExt(systemSigLoop, true)
 	a.connectProperties()
 	a.address, _ = a.core.Address().Get(0)
+	a.Powered, _ = a.core.Powered().Get(0)
 	// 用于定时停止扫描
 	a.discoveringTimeout = time.AfterFunc(defaultDiscoveringTimeout, func() {
 		logger.Debug("discovery time out, stop discovering")
