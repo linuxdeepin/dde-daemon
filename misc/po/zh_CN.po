@@ -11,16 +11,16 @@
 # hualet <mr.asianwang@gmail.com>, 2020
 # transifex deepin <transifex@deepin.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Cindy0514, 2020
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
+"POT-Creation-Date: 2021-01-12 13:17+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2020\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,10 +61,6 @@ msgstr "此用户名已被系统使用"
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "用户名长度必须介于3到32个字符之间"
-
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr "认证失败"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -552,40 +548,40 @@ msgstr "成功卸载 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸载失败"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "无"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "WEP40/128位密钥"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2个人版"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "隧道TLS"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "受保护的EAP"
 
@@ -607,10 +603,6 @@ msgstr "网络"
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr "应用代理设置失败"
-
-#: ../../network/secret_agent.go:394
-msgid "Password is required to connect %q"
-msgstr "连接%q需要密码"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -965,7 +957,15 @@ msgstr "未能加入%q，请检查路由器或网线。"
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "连接失败，未能加入%q，密码不正确"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/state_handler.go:365
+msgid "Password is required to connect %q"
+msgstr "连接%q需要密码"
+
+#: ../../network/state_handler.go:367
+msgid "The %q 802.11 WLAN network could not be found"
+msgstr "%q 802.11 WLAN网络无法找到"
+
+#: ../../network/utils_dbus_nm.go:258
 msgid "Unknown"
 msgstr "未知"
 

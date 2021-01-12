@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
+"POT-Creation-Date: 2021-01-12 13:17+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Marian c <dark1ro@yahoo.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/linuxdeepin/teams/3617/ro/)\n"
@@ -53,7 +53,7 @@ msgstr "Numele de utilizator există deja"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "Numele există deja"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
@@ -63,13 +63,9 @@ msgstr "Acest nume de utilizator este utilizat de sistem."
 msgid "Username must be between 3 and 32 characters"
 msgstr "Numele de utilizator trebuie să aibă între 3 şi 32 caractere"
 
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr ""
-
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "Deloghează-te pentru ca setările de scalare să intre în vigoare"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -77,11 +73,11 @@ msgstr "Setat cu succes"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Mai târziu"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Delogare Acum"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -153,7 +149,7 @@ msgstr "Anulează"
 
 #: ../../bluetooth/obex_agent.go:352
 msgid "Receiving %q files from %q"
-msgstr ""
+msgstr "Recepționare %q fișiere de la %q"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "View"
@@ -161,19 +157,19 @@ msgstr "Aspect"
 
 #: ../../bluetooth/obex_agent.go:367
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "Ați recepționat fișiere de la %q cu succes"
 
 #: ../../bluetooth/obex_agent.go:368
 msgid "Done"
-msgstr ""
+msgstr "Gata"
 
 #: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
 msgid "Stop Receiving Files"
-msgstr ""
+msgstr "Stop Recepția de Fișiere"
 
 #: ../../bluetooth/obex_agent.go:385
 msgid "You have cancelled the file transfer"
-msgstr ""
+msgstr "Ați anulat recepția de fișier"
 
 #: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
 msgid "Bluetooth connection failed"
@@ -181,23 +177,23 @@ msgstr "Conexiune Bluetooth eşuată"
 
 #: ../../bluetooth/obex_agent.go:422
 msgid "Decline"
-msgstr ""
+msgstr "Refuză"
 
 #: ../../bluetooth/obex_agent.go:422
 msgid "Receive"
-msgstr ""
+msgstr "Primește"
 
 #: ../../bluetooth/obex_agent.go:427
 msgid "Bluetooth File Transfer"
-msgstr ""
+msgstr "Transfer Fișier Bluetooth"
 
 #: ../../bluetooth/obex_agent.go:428
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "%q dorește să vă transmită fișiere. Primiți?"
 
 #: ../../bluetooth/obex_agent.go:483
 msgid "Receiving %q timed out"
-msgstr ""
+msgstr "Recepția %q a expirat"
 
 #: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
@@ -484,7 +480,7 @@ msgstr "Afișează spațiu de lucru"
 
 #: ../../keybinding/shortcuts/id_name_map.go:212
 msgid "Switch monitors"
-msgstr ""
+msgstr "Schimbați monitoarele"
 
 #: ../../langselector/locale.go:62
 msgid "Authentication is required to switch language"
@@ -528,11 +524,11 @@ msgstr "instalarea %q a eșuat."
 
 #: ../../lastore/notify.go:107
 msgid "Removed successfully"
-msgstr ""
+msgstr "Eliminate cu succes"
 
 #: ../../lastore/notify.go:109
 msgid "Failed to remove the app"
-msgstr ""
+msgstr "Eșuat eliminarea aplicației"
 
 #: ../../lastore/notify.go:116
 msgid ""
@@ -557,40 +553,40 @@ msgstr "%q eliminate cu succes"
 msgid "Failed to uninstall %q"
 msgstr "Dezinstalare eşuată %q"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Nici un"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "Cheie WEP 40/128-bit"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "TLS tunelizat"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "EAP Protejat"
 
@@ -600,7 +596,7 @@ msgstr "Conexiune prin cablu"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
-msgstr ""
+msgstr "Proxy Aplicație setat cu succes"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
@@ -611,11 +607,7 @@ msgstr "Reţea"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
-msgstr ""
-
-#: ../../network/secret_agent.go:394
-msgid "Password is required to connect %q"
-msgstr "Parolă necesară pentru conectare la %q"
+msgstr "Setare Proxy Aplicație a eșuat"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -978,7 +970,15 @@ msgstr "Imposibil de conectat %q, verificaţi router sau cablu reţea"
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Conexiune eşuată, ne se poate contecta la %q, parolă invalidă"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/state_handler.go:365
+msgid "Password is required to connect %q"
+msgstr "Parolă necesară pentru conectare la %q"
+
+#: ../../network/state_handler.go:367
+msgid "The %q 802.11 WLAN network could not be found"
+msgstr ""
+
+#: ../../network/utils_dbus_nm.go:258
 msgid "Unknown"
 msgstr "Necunoscut"
 
@@ -1035,35 +1035,35 @@ msgstr "Baterie scăzută, vă rugăm conectați"
 #: ../../session/power/utils.go:350 ../../session/power/utils.go:354
 #: ../../session/power/utils.go:358 ../../session/power/utils.go:362
 msgid "Power settings changed"
-msgstr ""
+msgstr "Setările de alimentare s-au schimbat"
 
 #: ../../session/power/utils.go:377
 msgid "When the lid is closed, "
-msgstr ""
+msgstr "Când este închis capacul,"
 
 #: ../../session/power/utils.go:381
 msgid "When pressing the power button, "
-msgstr ""
+msgstr "Când este apăsat butonul de pornire,"
 
 #: ../../session/power/utils.go:391
 msgid "your computer will shut down"
-msgstr ""
+msgstr "computerul se va închide"
 
 #: ../../session/power/utils.go:393
 msgid "your computer will suspend"
-msgstr ""
+msgstr "computerul se va suspenda"
 
 #: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
-msgstr ""
+msgstr "computerul va hiberna"
 
 #: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
-msgstr ""
+msgstr "monitorul se va închide"
 
 #: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"
-msgstr ""
+msgstr "nu va face nimic computerului dvs."
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
