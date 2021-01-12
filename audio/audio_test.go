@@ -22,15 +22,15 @@ func Test_objectPathSliceEqual(t *testing.T) {
 
 func Test_isPortExists(t *testing.T) {
 	var tests = []pulse.PortInfo{
-		{"MG-T1S", "audio", 1, pulse.AvailableTypeUnknow},
-		{"MG-T1S", "audio", 2, pulse.AvailableTypeNo},
-		{"MG-T1S", "audio", 3, pulse.AvailableTypeYes},
-		{"", "audio", 4, pulse.AvailableTypeUnknow},
-		{"", "audio", 5, pulse.AvailableTypeNo},
-		{"", "audio", 6, pulse.AvailableTypeYes},
-		{"MG-T1S", "audio", 7, pulse.AvailableTypeUnknow},
-		{"MG-T1S", "audio", 8, pulse.AvailableTypeNo},
-		{"MG-T1S", "audio", 9, pulse.AvailableTypeYes},
+		{Name: "MG-T1S", Description: "audio", Priority: 1, Available: pulse.AvailableTypeUnknow},
+		{Name: "MG-T1S", Description: "audio", Priority: 2, Available: pulse.AvailableTypeNo},
+		{Name: "MG-T1S", Description: "audio", Priority: 3, Available: pulse.AvailableTypeYes},
+		{Description: "audio", Priority: 4, Available: pulse.AvailableTypeUnknow},
+		{Description: "audio", Priority: 5, Available: pulse.AvailableTypeNo},
+		{Description: "audio", Priority: 6, Available: pulse.AvailableTypeYes},
+		{Name: "MG-T1S", Description: "audio", Priority: 7, Available: pulse.AvailableTypeUnknow},
+		{Name: "MG-T1S", Description: "audio", Priority: 8, Available: pulse.AvailableTypeNo},
+		{Name: "MG-T1S", Description: "audio", Priority: 9, Available: pulse.AvailableTypeYes},
 	}
 	assert.Equal(t, isPortExists("MG-T1S", tests), true)
 	assert.Equal(t, isPortExists("", tests), true)
@@ -39,17 +39,17 @@ func Test_isPortExists(t *testing.T) {
 
 func Test_getBestPort(t *testing.T) {
 	var tests = []pulse.PortInfo{
-		{"MG-T1S", "audio", 1, pulse.AvailableTypeUnknow},
-		{"MG-T1S", "audio", 2, pulse.AvailableTypeNo},
-		{"MG-T1S", "audio", 3, pulse.AvailableTypeYes},
-		{"", "audio", 4, pulse.AvailableTypeUnknow},
-		{"", "audio", 5, pulse.AvailableTypeNo},
-		{"", "audio", 6, pulse.AvailableTypeYes},
-		{"MG-T1S", "audio", 7, pulse.AvailableTypeUnknow},
-		{"MG-T1S", "audio", 8, pulse.AvailableTypeNo},
-		{"MG-T1S", "audio", 9, pulse.AvailableTypeYes},
+		{Name: "MG-T1S", Description: "audio", Priority: 1, Available: pulse.AvailableTypeUnknow},
+		{Name: "MG-T1S", Description: "audio", Priority: 2, Available: pulse.AvailableTypeNo},
+		{Name: "MG-T1S", Description: "audio", Priority: 3, Available: pulse.AvailableTypeYes},
+		{Description: "audio", Priority: 4, Available: pulse.AvailableTypeUnknow},
+		{Description: "audio", Priority: 5, Available: pulse.AvailableTypeNo},
+		{Description: "audio", Priority: 6, Available: pulse.AvailableTypeYes},
+		{Name: "MG-T1S", Description: "audio", Priority: 7, Available: pulse.AvailableTypeUnknow},
+		{Name: "MG-T1S", Description: "audio", Priority: 8, Available: pulse.AvailableTypeNo},
+		{Name: "MG-T1S", Description: "audio", Priority: 9, Available: pulse.AvailableTypeYes},
 	}
-	var ret = pulse.PortInfo{"MG-T1S", "audio", 9, pulse.AvailableTypeYes}
+	var ret = pulse.PortInfo{Name: "MG-T1S", Description: "audio", Priority: 9, Available: pulse.AvailableTypeYes}
 	ret1 := getBestPort(tests)
 	assert.Equal(t, ret1, ret)
 }
