@@ -15,15 +15,16 @@
 # Валерий Владимирович, 2020
 # Artem Kulikov <artem.job.kulikov@gmail.com>, 2020
 # Vladislav Evseev <poryvay.vladik@gmail.com>, 2020
+# Dober Man, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
+"POT-Creation-Date: 2021-01-12 16:43+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Vladislav Evseev <poryvay.vladik@gmail.com>, 2020\n"
+"Last-Translator: Dober Man, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,10 +67,6 @@ msgstr "Имя пользователя было использовано сис
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Имя пользователя должно быть длинной 3-32 символа"
-
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr ""
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -293,7 +290,7 @@ msgstr "Принудительный Выход"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
-msgstr "Док"
+msgstr "Закрепить"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
@@ -563,44 +560,44 @@ msgstr "%q успешно удалён"
 msgid "Failed to uninstall %q"
 msgstr "Не удалось удалить %q"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Ничего"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-бит. ключ"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "Персональный WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "Туннельный TLS "
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "Защищенный EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Проводное Соединение"
 
@@ -618,10 +615,6 @@ msgstr "Сеть"
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr "Не удалось установить прокси-сервер приложения"
-
-#: ../../network/secret_agent.go:394
-msgid "Password is required to connect %q"
-msgstr "Для подключения к %q требуется пароль"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -981,7 +974,15 @@ msgstr ""
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Не удалось подключиться, не удалось соединить %q, неправильный пароль"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/state_handler.go:365
+msgid "Password is required to connect %q"
+msgstr "Для подключения к %q требуется пароль"
+
+#: ../../network/state_handler.go:367
+msgid "The %q 802.11 WLAN network could not be found"
+msgstr ""
+
+#: ../../network/utils_dbus_nm.go:256
 msgid "Unknown"
 msgstr "Неизвестный"
 
@@ -1039,7 +1040,8 @@ msgstr "Низкий заряд батареи, пожалуйста подкл�
 msgid "Power settings changed"
 msgstr "Настройки питания изменены"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:377 ../../session/power/utils_test.go:12
+#: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Когда крышка закрыта,"
 
@@ -1047,11 +1049,11 @@ msgstr "Когда крышка закрыта,"
 msgid "When pressing the power button, "
 msgstr "При нажатии на кнопку питания,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:391 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "Ваш компьютер выключится"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:393 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "Ваш компьютер перейдет в режим ожидания"
 

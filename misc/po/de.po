@@ -17,15 +17,16 @@
 # Cindy0514, 2020
 # Timo Kröning, 2020
 # Ettore Atalan <atalanttore@googlemail.com>, 2020
+# 7db8a9134ffa67446d66162ab0aeea61_98ecb95, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
+"POT-Creation-Date: 2021-01-12 16:43+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2020\n"
+"Last-Translator: 7db8a9134ffa67446d66162ab0aeea61_98ecb95, 2021\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,10 +69,6 @@ msgstr "Der Benutzername ist vom System verwendet worden"
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Benutzername muss zwischen 3 und 32 Zeichen lang sein"
-
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr ""
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -567,44 +564,44 @@ msgstr "%q erfolgreich entfernt"
 msgid "Failed to uninstall %q"
 msgstr "%q konnte nicht deinstalliert werden"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Keine"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-Bit-Schlüssel"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "Getunneltes TLS"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "Geschütztes EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Kabelgebundene Verbindung"
 
@@ -622,10 +619,6 @@ msgstr "Netzwerk"
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr ""
-
-#: ../../network/secret_agent.go:394
-msgid "Password is required to connect %q"
-msgstr "Für die Verbindung mit %q ist ein Kennwort erforderlich"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -1003,7 +996,15 @@ msgstr ""
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Verbindung mit %q fehlgeschlagen. Das Passwort ist ungültig"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/state_handler.go:365
+msgid "Password is required to connect %q"
+msgstr "Für die Verbindung mit %q ist ein Kennwort erforderlich"
+
+#: ../../network/state_handler.go:367
+msgid "The %q 802.11 WLAN network could not be found"
+msgstr ""
+
+#: ../../network/utils_dbus_nm.go:256
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -1062,7 +1063,8 @@ msgstr "Akkuladung niedrig, bitte anschließen"
 msgid "Power settings changed"
 msgstr "Energieeinstellungen geändert"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:377 ../../session/power/utils_test.go:12
+#: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Wenn der Deckel geschlossen ist,"
 
@@ -1070,13 +1072,13 @@ msgstr "Wenn der Deckel geschlossen ist,"
 msgid "When pressing the power button, "
 msgstr "Beim Drücken des Ein/Aus-Schalters, "
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:391 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
-msgstr ""
+msgstr "Ihr Computer wird heruntergefahren"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:393 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
-msgstr ""
+msgstr "Ihr Computer wird in den Ruhezustand versetzt"
 
 #: ../../session/power/utils.go:395
 msgid "your computer will hibernate"
@@ -1084,7 +1086,7 @@ msgstr ""
 
 #: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
-msgstr ""
+msgstr "Ihr Monitor wird sich ausschalten"
 
 #: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"

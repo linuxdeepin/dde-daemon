@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
+"POT-Creation-Date: 2021-01-12 16:43+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2020\n"
 "Language-Team: Sinhala (https://www.transifex.com/linuxdeepin/teams/3617/si/)\n"
@@ -57,10 +57,6 @@ msgstr "පරිශීලක නාමය පද්ධතිය විසින
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "පරිශීලක නාමය අක්ෂර 3 ත් 32 ත් අතර විය යුතුය"
-
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr ""
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -552,44 +548,44 @@ msgstr "%q සාර්ථකව ඉවත් කර ඇත."
 msgid "Failed to uninstall %q"
 msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "කිසිවක් නැත"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit යතුර"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "WPA / WPA2 පුද්ගලික"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "උමං TLS"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "ආරක්ෂිත EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "රැහැන් සම්බන්ධතාවය"
 
@@ -607,10 +603,6 @@ msgstr "ජාලය"
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
 msgstr ""
-
-#: ../../network/secret_agent.go:394
-msgid "Password is required to connect %q"
-msgstr "%q සම්බන්ධ කිරීමට මුරපදය අවශ්‍ය වේ"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
@@ -974,7 +966,15 @@ msgstr ""
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "සම්බන්ධතාවය අසාර්ථක විය, %q සම්බන්ධ කිරීමට නොහැකි විය, වැරදි මුරපදයකි"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/state_handler.go:365
+msgid "Password is required to connect %q"
+msgstr "%q සම්බන්ධ කිරීමට මුරපදය අවශ්‍ය වේ"
+
+#: ../../network/state_handler.go:367
+msgid "The %q 802.11 WLAN network could not be found"
+msgstr ""
+
+#: ../../network/utils_dbus_nm.go:256
 msgid "Unknown"
 msgstr "නොදත් "
 
@@ -1031,7 +1031,8 @@ msgstr "අඩු බැටරි ධාරිතාවක් පවතී, ක�
 msgid "Power settings changed"
 msgstr "බල සැකසුම් වෙනස් විය"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:377 ../../session/power/utils_test.go:12
+#: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "පියන වසා ඇති විට,"
 
@@ -1039,11 +1040,11 @@ msgstr "පියන වසා ඇති විට,"
 msgid "When pressing the power button, "
 msgstr "බල බොත්තම එබීමේදී,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:391 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "ඔබේ පරිගණකය වසා දමනු ඇත"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:393 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "ඔබේ පරිගණකය අත්හිටුවනු ඇත"
 
