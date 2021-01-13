@@ -483,7 +483,7 @@ func (psp *powerSavePlan) makeSystemSleep() {
 	psp.stopScreensaver()
 	//psp.manager.setDPMSModeOn()
 	//psp.resetBrightness()
-	psp.manager.doSuspend()
+	psp.manager.doSuspendByFront()
 }
 
 func (psp *powerSavePlan) lock() {

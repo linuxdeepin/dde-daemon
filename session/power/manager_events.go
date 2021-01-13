@@ -87,9 +87,6 @@ func (m *Manager) initOnBatteryChangedHandler() {
 func (m *Manager) handleBeforeSuspend() {
 	m.setPrepareSuspend(suspendStatePrepare)
 	logger.Debug("before sleep")
-	if m.SleepLock.Get() {
-		m.lockWaitShow(5*time.Second, false)
-	}
 }
 
 func (m *Manager) handleWakeup() {

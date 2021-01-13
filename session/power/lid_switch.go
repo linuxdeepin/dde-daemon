@@ -80,9 +80,9 @@ func (h *LidSwitchHandler) onLidClosed() {
 	case powerActionShutdown:
 		m.doShutdown()
 	case powerActionSuspend:
-		m.doSuspend()
+		m.doSuspendByFront()
 	case powerActionHibernate:
-		m.doHibernate()
+		m.doHibernateByFront()
 	case powerActionTurnOffScreen:
 		m.doTurnOffScreen()
 	case powerActionDoNothing:
