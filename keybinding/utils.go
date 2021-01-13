@@ -111,7 +111,11 @@ func systemLock() {
 }
 
 func (m *Manager) canSuspend() bool {
-	can, err := m.sessionManager.CanSuspend(0) // 当前能否待机
+	if os.Getenv("POWER_CAN_SLEEP") == "0" {
+		logger.Info("env POWER_CAN_SLEEP == 0")
+		return false
+	}
+	can, err := m.sessionManager.CanSuspend(0)
 	if err != nil {
 		logger.Warning(err)
 		return false
@@ -121,19 +125,37 @@ func (m *Manager) canSuspend() bool {
 
 func (m *Manager) systemSuspend() {
 	if !m.canSuspend() {
-		logger.Info("can not Suspend")
+		logger.Info("can not suspend")
 		return
 	}
 
-	logger.Debug("Suspend")
+	logger.Debug("suspend")
 	err := m.sessionManager.RequestSuspend(0)
 	if err != nil {
 		logger.Warning("failed to Suspend:", err)
 	}
 }
 
+// 为了处理待机闪屏的问题，通过前端进行待机，前端会在待机前显示一个纯黑的界面
+func (m *Manager) systemSuspendByFront() {
+	if !m.canSuspend() {
+		logger.Info("can not suspend")
+		return
+	}
+
+	logger.Debug("suspend")
+	err := m.shutdownFront.Suspend(0)
+	if err != nil {
+		logger.Warning("failed to suspend:", err)
+	}
+}
+
 func (m *Manager) canHibernate() bool {
-	can, err := m.sessionManager.CanHibernate(0) // 能否休眠
+	if os.Getenv("POWER_CAN_HIBERNATE") == "0" {
+		logger.Info("env POWER_CAN_HIBERNATE == 0")
+		return false
+	}
+	can, err := m.sessionManager.CanHibernate(0)
 	if err != nil {
 		logger.Warning(err)
 		return false
@@ -149,6 +171,19 @@ func (m *Manager) systemHibernate() {
 
 	logger.Debug("Hibernate")
 	err := m.sessionManager.RequestHibernate(0)
+	if err != nil {
+		logger.Warning("failed to Hibernate:", err)
+	}
+}
+
+func (m *Manager) systemHibernateByFront() {
+	if !m.canHibernate() {
+		logger.Info("can not Hibernate")
+		return
+	}
+
+	logger.Debug("Hibernate")
+	err := m.shutdownFront.Hibernate(0)
 	if err != nil {
 		logger.Warning("failed to Hibernate:", err)
 	}
