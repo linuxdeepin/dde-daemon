@@ -19,7 +19,10 @@
 
 package shortcuts
 
-import ()
+import (
+	"github.com/godbus/dbus"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
+)
 
 type MediaShortcut struct {
 	*GSettingsShortcut
@@ -35,15 +38,16 @@ const (
 )
 
 const (
-	cmdMyComputer      = "gvfs-open computer:///"
-	cmdDocuments       = "gvfs-open ~/Documents"
-	cmdEject           = "eject -r"
-	cmdCalculator      = "deepin-calculator"
-	cmdCalendar        = "dde-calendar"
-	cmdMeeting         = "deepin-contacts"
-	cmdTerminal        = "/usr/lib/deepin-daemon/default-terminal"
-	cmdMessenger       = "dbus-send --print-reply --dest=com.deepin.dde.osd /com/deepin/dde/Notification com.deepin.dde.Notification.Toggle"
-	cmdLauncher        = "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle"
+	cmdMyComputer = "gvfs-open computer:///"
+	cmdDocuments  = "gvfs-open ~/Documents"
+	cmdEject      = "eject -r"
+	cmdCalculator = "deepin-calculator"
+	cmdCalendar   = "dde-calendar"
+	cmdMeeting    = "deepin-contacts"
+	cmdTerminal   = "/usr/lib/deepin-daemon/default-terminal"
+	cmdMessenger  = "dbus-send --print-reply --dest=com.deepin.dde.osd /com/deepin/dde/Notification com.deepin.dde.Notification.Toggle"
+	cmdLauncher   = "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle"
+	cmdCamera     = "deepin-camera"
 )
 
 var mediaIdActionMap = map[string]*Action{
@@ -113,10 +117,33 @@ var mediaIdActionMap = map[string]*Action{
 	"log-off":    &Action{Type: ActionTypeSystemLogOff},
 	"away":       &Action{Type: ActionTypeSystemAway},
 
+	"ariplane-mode-toggle": NewCallbackAction(airplaneModeToggle),
+	"web-cam":              NewExecCmdAction(cmdCamera, false),
+
 	// We do not need to deal with XF86Wlan key default,
 	// but can be specially by 'EnableNetworkController'
 	"wlan":  &Action{Type: ActionTypeToggleWireless},
 	"tools": &Action{Type: ActionTypeShowControlCenter},
+}
+
+func airplaneModeToggle(ev *KeyEvent) {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	air := airplanemode.NewAirplaneMode(systemBus)
+	enabled, err := air.Enabled().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	err = air.Enable(0, !enabled)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	logger.Debugf("toggle airplane mode from %v to %v", enabled, !enabled)
 }
 
 func (ms *MediaShortcut) GetAction() *Action {

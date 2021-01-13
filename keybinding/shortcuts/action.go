@@ -45,6 +45,8 @@ const (
 	ActionTypeToggleWireless
 	ActionTypeShowControlCenter
 
+	ActionTypeCallback // 触发回调函数点Action
+
 	// end
 	actionTypeMax
 )
@@ -150,5 +152,12 @@ func NewTouchpadCtrlAction(cmd ActionCmd) *Action {
 	return &Action{
 		Type: ActionTypeTouchpadCtrl,
 		Arg:  cmd,
+	}
+}
+
+func NewCallbackAction(fn func(ev *KeyEvent)) *Action {
+	return &Action{
+		Type: ActionTypeCallback,
+		Arg:  fn,
 	}
 }
