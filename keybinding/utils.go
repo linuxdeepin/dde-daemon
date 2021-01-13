@@ -110,39 +110,80 @@ func systemLock() {
 	go sessionDBus.Object(sessionManagerDest, sessionManagerObjPath).Call(sessionManagerDest+".RequestLock", 0)
 }
 
-func (m *Manager) systemSuspend() {
+func (m *Manager) canSuspend() bool {
+	if os.Getenv("POWER_CAN_SLEEP") == "0" {
+		logger.Info("env POWER_CAN_SLEEP == 0")
+		return false
+	}
 	can, err := m.sessionManager.CanSuspend(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return can
+}
 
-	if !can {
+func (m *Manager) systemSuspend() {
+	if !m.canSuspend() {
 		logger.Info("can not suspend")
 		return
 	}
 
 	logger.Debug("suspend")
-	err = m.sessionManager.RequestSuspend(0)
+	err := m.sessionManager.RequestSuspend(0)
 	if err != nil {
 		logger.Warning("failed to suspend:", err)
 	}
 }
 
-func (m *Manager) systemHibernate() {
-	if os.Getenv("POWER_CAN_SLEEP") == "0" {
-		logger.Info("can not Hibernate, env POWER_CAN_SLEEP == 0")
+// 为了处理待机闪屏的问题，通过前端进行待机，前端会在待机前显示一个纯黑的界面
+func (m *Manager) systemSuspendByFront() {
+	if !m.canSuspend() {
+		logger.Info("can not suspend")
 		return
+	}
+
+	logger.Debug("suspend")
+	err := m.shutdownFront.Suspend(0)
+	if err != nil {
+		logger.Warning("failed to suspend:", err)
+	}
+}
+
+func (m *Manager) canHibernate() bool {
+	if os.Getenv("POWER_CAN_HIBERNATE") == "0" {
+		logger.Info("env POWER_CAN_HIBERNATE == 0")
+		return false
 	}
 	can, err := m.sessionManager.CanHibernate(0)
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	return can
+}
 
-	if !can {
+func (m *Manager) systemHibernate() {
+	if !m.canHibernate() {
 		logger.Info("can not Hibernate")
 		return
 	}
 
 	logger.Debug("Hibernate")
-	err = m.sessionManager.RequestHibernate(0)
+	err := m.sessionManager.RequestHibernate(0)
+	if err != nil {
+		logger.Warning("failed to Hibernate:", err)
+	}
+}
+
+func (m *Manager) systemHibernateByFront() {
+	if !m.canHibernate() {
+		logger.Info("can not Hibernate")
+		return
+	}
+
+	logger.Debug("Hibernate")
+	err := m.shutdownFront.Hibernate(0)
 	if err != nil {
 		logger.Warning("failed to Hibernate:", err)
 	}

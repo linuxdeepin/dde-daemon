@@ -122,26 +122,41 @@ func (m *Manager) doLock(autoStartAuth bool) {
 	}
 }
 
-func (m *Manager) doSuspend() {
+func (m *Manager) canSuspend() bool {
 	if os.Getenv("POWER_CAN_SLEEP") == "0" {
-		logger.Info("can not suspend, env POWER_CAN_SLEEP == 0")
-		return
+		logger.Info("env POWER_CAN_SLEEP == 0")
+		return false
 	}
-
-	sessionManager := m.helper.SessionManager
-	can, err := sessionManager.CanSuspend(0)
+	can, err := m.helper.SessionManager.CanSuspend(0)
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	return can
+}
 
-	if !can {
+func (m *Manager) doSuspend() {
+	if !m.canSuspend() {
 		logger.Info("can not suspend")
 		return
 	}
 
 	logger.Debug("suspend")
-	err = sessionManager.RequestSuspend(0)
+	err := m.helper.SessionManager.RequestSuspend(0)
+	if err != nil {
+		logger.Warning("failed to suspend:", err)
+	}
+}
+
+// 为了处理待机闪屏的问题，通过前端进行待机，前端会在待机前显示一个纯黑的界面
+func (m *Manager) doSuspendByFront() {
+	if !m.canSuspend() {
+		logger.Info("can not suspend")
+		return
+	}
+
+	logger.Debug("suspend")
+	err := m.helper.ShutdownFront.Suspend(0)
 	if err != nil {
 		logger.Warning("failed to suspend:", err)
 	}
@@ -167,26 +182,40 @@ func (m *Manager) doShutdown() {
 	}
 }
 
-func (m *Manager) doHibernate() {
-	if os.Getenv("POWER_CAN_SLEEP") == "0" {
-		logger.Info("can not hibernate, env POWER_CAN_SLEEP == 0")
-		return
+func (m *Manager) canHibernate() bool {
+	if os.Getenv("POWER_CAN_HIBERNATE") == "0" {
+		logger.Info("env POWER_CAN_HIBERNATE == 0")
+		return false
 	}
-
-	sessionManager := m.helper.SessionManager
-	can, err := sessionManager.CanHibernate(0)
+	can, err := m.helper.SessionManager.CanHibernate(0)
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	return can
+}
 
-	if !can {
+func (m *Manager) doHibernate() {
+	if !m.canHibernate() {
 		logger.Info("can not hibernate")
 		return
 	}
 
 	logger.Debug("hibernate")
-	err = sessionManager.RequestHibernate(0)
+	err := m.helper.SessionManager.RequestHibernate(0)
+	if err != nil {
+		logger.Warning("failed to hibernate:", err)
+	}
+}
+
+func (m *Manager) doHibernateByFront() {
+	if !m.canHibernate() {
+		logger.Info("can not hibernate")
+		return
+	}
+
+	logger.Debug("hibernate")
+	err := m.helper.ShutdownFront.Hibernate(0)
 	if err != nil {
 		logger.Warning("failed to hibernate:", err)
 	}
