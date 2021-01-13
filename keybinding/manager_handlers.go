@@ -41,6 +41,19 @@ func (m *Manager) initHandlers() {
 		logger.Debug("non-Op do nothing")
 	}
 
+	m.handlers[ActionTypeCallback] = func(ev *KeyEvent) {
+		action := ev.Shortcut.GetAction()
+		fn, ok := action.Arg.(func(ev *KeyEvent))
+		if !ok {
+			logger.Warning(ErrTypeAssertionFail)
+			return
+		}
+
+		if fn != nil {
+			go fn(ev)
+		}
+	}
+
 	m.handlers[ActionTypeExecCmd] = func(ev *KeyEvent) {
 		// prevent shortcuts such as switch window managers from being
 		// triggered twice by mistake.
