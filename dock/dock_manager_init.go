@@ -140,6 +140,20 @@ func (m *Manager) handleLauncherItemCreated(itemInfo launcher.ItemInfo) {
 	}
 }
 
+//在收到应用更新的信号后，如果app对desktop文件的'Exec'属性做了更改，需要更新该应用之前的'appInfo'和'innerId'为新的值
+func (m *Manager) handleLauncherItemUpdated(itemInfo launcher.ItemInfo) {
+	desktopFile := toLocalPath(itemInfo.Path)
+	entry, err := m.Entries.GetByDesktopFilePath(desktopFile)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	appInfo := NewAppInfoFromFile(desktopFile)
+	entry.appInfo = appInfo
+	entry.innerId = appInfo.innerId
+}
+
 func (m *Manager) listenLauncherSignal() {
 	m.launcher.InitSignalExt(m.sessionSigLoop, true)
 	_, err := m.launcher.ConnectItemChanged(func(status string, itemInfo launcher.ItemInfo,
@@ -152,7 +166,7 @@ func (m *Manager) listenLauncherSignal() {
 		case "created":
 			m.handleLauncherItemCreated(itemInfo)
 		case "updated":
-			// TODO: handle launcher item updated
+			m.handleLauncherItemUpdated(itemInfo)
 		}
 	})
 	if err != nil {
