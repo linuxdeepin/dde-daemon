@@ -150,11 +150,13 @@ func (nm *NotifyManager) loop() {
 }
 
 func notify(icon, summary, body string) {
-	globalNotifyManager.addMsg(&notifyMsg{
-		icon:    icon,
-		summary: summary,
-		body:    body,
-	})
+	if globalSessionActive {
+		globalNotifyManager.addMsg(&notifyMsg{
+			icon:    icon,
+			summary: summary,
+			body:    body,
+		})
+	}
 }
 
 func _notify(icon, summary, body string) {
