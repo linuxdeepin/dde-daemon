@@ -100,7 +100,7 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 	_, err = ap.nmAp.AccessPoint().ConnectPropertiesChanged(func(properties map[string]dbus.Variant) {
 		m.accessPointsLock.Lock()
 		defer m.accessPointsLock.Unlock()
-		if !m.isAccessPointExists(apPath) {
+		if !m.isAccessPointExists(devPath, apPath) {
 			return
 		}
 
@@ -251,7 +251,7 @@ func (m *Manager) initAccessPoints(devPath dbus.ObjectPath, apPaths []dbus.Objec
 func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
 	m.accessPointsLock.Lock()
 	defer m.accessPointsLock.Unlock()
-	if m.isAccessPointExists(apPath) {
+	if m.isAccessPointExists(devPath, apPath) {
 		return
 	}
 	ap, err := m.newAccessPoint(devPath, apPath)
@@ -265,10 +265,10 @@ func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
 func (m *Manager) removeAccessPoint(devPath, apPath dbus.ObjectPath) {
 	m.accessPointsLock.Lock()
 	defer m.accessPointsLock.Unlock()
-	if !m.isAccessPointExists(apPath) {
+	i := m.getAccessPointIndex(devPath, apPath)
+	if i < 0 {
 		return
 	}
-	_, i := m.getAccessPointIndex(apPath)
 	m.accessPoints[devPath] = m.doRemoveAccessPoint(m.accessPoints[devPath], i)
 }
 
@@ -280,20 +280,18 @@ func (m *Manager) doRemoveAccessPoint(aps []*accessPoint, i int) []*accessPoint 
 	return aps
 }
 
-func (m *Manager) isAccessPointExists(apPath dbus.ObjectPath) bool {
-	_, i := m.getAccessPointIndex(apPath)
+func (m *Manager) isAccessPointExists(devPath, apPath dbus.ObjectPath) bool {
+	i := m.getAccessPointIndex(devPath, apPath)
 	return i >= 0
 }
 
-func (m *Manager) getAccessPointIndex(apPath dbus.ObjectPath) (devPath dbus.ObjectPath, index int) {
-	for d, aps := range m.accessPoints {
-		for i, ap := range aps {
-			if ap.Path == apPath {
-				return d, i
-			}
+func (m *Manager) getAccessPointIndex(devPath, apPath dbus.ObjectPath) int {
+	for i, ap := range m.accessPoints[devPath] {
+		if ap.Path == apPath {
+			return i
 		}
 	}
-	return "", -1
+	return -1
 }
 
 // GetAccessPoints return all access points object which marshaled by json.
