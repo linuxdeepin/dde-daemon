@@ -66,9 +66,8 @@ func (v apSecType) String() string {
 }
 
 type accessPoint struct {
-	nmAp            *nmdbus.AccessPoint
-	devPath         dbus.ObjectPath
-	shouldBeIgnored bool
+	nmAp    *nmdbus.AccessPoint
+	devPath dbus.ObjectPath
 
 	Ssid         string
 	Secured      bool
@@ -104,34 +103,7 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 			return
 		}
 
-		ignoredBefore := ap.shouldBeIgnored
 		ap.updateProps()
-		ignoredNow := ap.shouldBeIgnored
-		apJSON, _ := marshalJSON(ap)
-		if ignoredNow == ignoredBefore {
-			// ignored state not changed, only send properties changed
-			// signal when not ignored
-			if ignoredNow {
-				logger.Debugf("access point(ignored) properties changed %#v", ap)
-				return
-			} else {
-				//logger.Debugf("access point properties changed %#v", ap)
-				err = m.service.Emit(m, "AccessPointPropertiesChanged", string(devPath), apJSON)
-			}
-		} else {
-			// ignored state changed, if became ignored now, send
-			// removed signal or send added signal
-			if ignoredNow {
-				logger.Debugf("access point is ignored %#v", ap)
-				err = m.service.Emit(m, "AccessPointRemoved", string(devPath), apJSON)
-			} else {
-				logger.Debugf("ignored access point available %#v", ap)
-				err = m.service.Emit(m, "AccessPointAdded", string(devPath), apJSON)
-			}
-		}
-		if err != nil {
-			logger.Warning("failed to emit signal:", err)
-		}
 
 		m.PropsMu.Lock()
 		m.updatePropWirelessAccessPoints()
@@ -142,14 +114,10 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 		logger.Warning("failed to monitor changing properties of AccessPoint", err)
 	}
 
-	if ap.shouldBeIgnored {
-		logger.Debugf("new access point is ignored %#v", ap)
-	} else {
-		apJSON, _ := marshalJSON(ap)
-		err1 := m.service.Emit(m, "AccessPointAdded", string(devPath), apJSON)
-		if err1 != nil {
-			logger.Warning("failed to emit signal:", err1)
-		}
+	apJSON, _ := marshalJSON(ap)
+	err1 := m.service.Emit(m, "AccessPointAdded", string(devPath), apJSON)
+	if err1 != nil {
+		logger.Warning("failed to emit signal:", err1)
 	}
 
 	return
@@ -172,16 +140,6 @@ func (a *accessPoint) updateProps() {
 	a.SecuredInEap = getApSecType(a.nmAp) == apSecEap
 	a.Strength, _ = a.nmAp.Strength().Get(0)
 	a.Frequency, _ = a.nmAp.Frequency().Get(0)
-
-	// Check if current access point should be ignore in front-end. Hide
-	// the access point that strength less than 10 (not include 0 which
-	// should be caused by the network driver issue) and not activated.
-	if a.Strength < 10 && a.Strength != 0 &&
-		!manager.isAccessPointActivated(a.devPath, a.Ssid) {
-		a.shouldBeIgnored = true
-	} else {
-		a.shouldBeIgnored = false
-	}
 }
 
 func getApSecType(ap *nmdbus.AccessPoint) apSecType {
@@ -249,8 +207,6 @@ func (m *Manager) initAccessPoints(devPath dbus.ObjectPath, apPaths []dbus.Objec
 }
 
 func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
-	m.accessPointsLock.Lock()
-	defer m.accessPointsLock.Unlock()
 	if m.isAccessPointExists(devPath, apPath) {
 		return
 	}
@@ -263,8 +219,6 @@ func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
 }
 
 func (m *Manager) removeAccessPoint(devPath, apPath dbus.ObjectPath) {
-	m.accessPointsLock.Lock()
-	defer m.accessPointsLock.Unlock()
 	i := m.getAccessPointIndex(devPath, apPath)
 	if i < 0 {
 		return
@@ -299,13 +253,7 @@ func (m *Manager) GetAccessPoints(path dbus.ObjectPath) (apsJSON string, busErr 
 	m.accessPointsLock.Lock()
 	defer m.accessPointsLock.Unlock()
 	accessPoints := m.accessPoints[path]
-	filteredAccessPoints := make([]*accessPoint, 0, len(m.accessPoints))
-	for _, ap := range accessPoints {
-		if !ap.shouldBeIgnored {
-			filteredAccessPoints = append(filteredAccessPoints, ap)
-		}
-	}
-	apsJSON, err := marshalJSON(filteredAccessPoints)
+	apsJSON, err := marshalJSON(accessPoints)
 	busErr = dbusutil.ToError(err)
 	return
 }

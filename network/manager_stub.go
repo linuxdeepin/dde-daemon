@@ -97,19 +97,6 @@ func (m *Manager) updatePropConnections() {
 }
 
 func (m *Manager) updatePropWirelessAccessPoints() {
-	accessPoints := make(map[dbus.ObjectPath][]*accessPoint, len(m.accessPoints))
-	for devPath, apArr := range m.accessPoints {
-		accessPoints[devPath] = make([]*accessPoint, 0, len(apArr))
-
-		for _, ap := range apArr {
-			if ap.shouldBeIgnored {
-				continue
-			}
-
-			accessPoints[devPath] = append(accessPoints[devPath], ap)
-		}
-	}
-
-	aps, _ := marshalJSON(accessPoints)
+	aps, _ := marshalJSON(m.accessPoints)
 	m.setPropWirelessAccessPoints(aps)
 }
