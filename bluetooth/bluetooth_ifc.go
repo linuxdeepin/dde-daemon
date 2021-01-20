@@ -293,15 +293,7 @@ func (b *Bluetooth) SetAdapterDiscovering(apath dbus.ObjectPath,
 	}
 
 	if discovering {
-		err = a.core.StartDiscovery(0)
-		if err != nil {
-			logger.Warningf("failed to start discovery for %s: %v", a, err)
-			return dbusutil.ToError(err)
-		} else {
-			logger.Debug("reset timer for stop scan")
-			// start discovering success, reset discovering timer
-			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
-		}
+		a.startDiscovery()
 	} else {
 		err = a.core.StopDiscovery(0)
 		if err != nil {
