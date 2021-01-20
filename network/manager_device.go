@@ -262,32 +262,53 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			logger.Warning(err)
 		}
 
-		// connect signals AccessPointAdded() and AccessPointRemoved()
-		_, err = nmDevWireless.ConnectAccessPointAdded(func(apPath dbus.ObjectPath) {
-			if m.checkAPStrengthTimer == nil {
-				m.checkAPStrengthTimer = time.AfterFunc(scanWifiDelayTime, m.checkAPStrength)
-			} else {
-				m.checkAPStrengthTimer.Reset(scanWifiDelayTime)
+		err = nmDevWireless.AccessPoints().ConnectChanged(func(hasValue bool, value []dbus.ObjectPath) {
+			if !hasValue {
+				return
 			}
 
-			m.addAccessPoint(dev.Path, apPath)
+			shouldRemove := make([]dbus.ObjectPath, 0, len(m.accessPoints[devPath]))
+			for _, a := range m.accessPoints[devPath] {
+				var found bool
+				for _, v := range value {
+					if v == a.Path {
+						found = true
+						break
+					}
+				}
 
-			m.PropsMu.Lock()
-			m.updatePropWirelessAccessPoints()
-			m.PropsMu.Unlock()
+				if !found {
+					shouldRemove = append(shouldRemove, a.Path)
+				}
+			}
+
+			shouldAdd := make([]dbus.ObjectPath, 0, len(value))
+			for _, v := range value {
+				var found bool
+				for _, a := range m.accessPoints[devPath] {
+					if v == a.Path {
+						found = true
+						break
+					}
+				}
+
+				if !found {
+					shouldAdd = append(shouldAdd, v)
+				}
+			}
+
+			m.accessPointsLock.Lock()
+			for _, a := range shouldRemove {
+				m.removeAccessPoint(devPath, a)
+			}
+
+			for _, a := range shouldAdd {
+				m.addAccessPoint(devPath, a)
+			}
+			m.accessPointsLock.Unlock()
 		})
 		if err != nil {
-			logger.Warning(err)
-		}
-		_, err = nmDevWireless.ConnectAccessPointRemoved(func(apPath dbus.ObjectPath) {
-			m.removeAccessPoint(dev.Path, apPath)
-
-			m.PropsMu.Lock()
-			m.updatePropWirelessAccessPoints()
-			m.PropsMu.Unlock()
-		})
-		if err != nil {
-			logger.Warning(err)
+			logger.Warning("connect to AccessPoints changed failed:", err)
 		}
 
 		accessPoints := nmGetAccessPoints(devPath)
