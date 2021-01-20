@@ -314,7 +314,7 @@ func (l *Lastore) notifyJob(path dbus.ObjectPath) {
 			strings.Contains(info.Name, "+notify") {
 			l.notifyAutoClean()
 		}
-	case UpdateSourceJobType:
+	case UpdateSourceJobType, CustomUpdateJobType:
 		val, _ := l.core.UpdatablePackages().Get(0)
 		if status == SucceedStatus && len(val) > 0 &&
 			strings.Contains(info.Name, "+notify") {
@@ -408,7 +408,7 @@ func guestJobTypeFromPath(path dbus.ObjectPath) string {
 	for _, jobType := range []string{
 		// job types:
 		InstallJobType, DownloadJobType, RemoveJobType,
-		UpdateSourceJobType, DistUpgradeJobType, CleanJobType,
+		UpdateSourceJobType, DistUpgradeJobType, CleanJobType, CustomUpdateJobType,
 	} {
 		if strings.Contains(_path, jobType) {
 			return jobType

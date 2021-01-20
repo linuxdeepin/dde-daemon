@@ -13,6 +13,7 @@ const (
 	DistUpgradeJobType        = "dist_upgrade"
 	PrepareDistUpgradeJobType = "prepare_dist_upgrade"
 	UpdateSourceJobType       = "update_source"
+	CustomUpdateJobType       = "custom_update"
 	CleanJobType              = "clean"
 )
 
