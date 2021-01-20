@@ -26,7 +26,9 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	sysNetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
 	"pkg.deepin.io/dde/daemon/common/dsync"
@@ -52,11 +54,15 @@ type connectionData map[string]map[string]dbus.Variant
 
 // Manager is the main DBus object for network module.
 type Manager struct {
-	sysSigLoop   *dbusutil.SignalLoop
-	service      *dbusutil.Service
-	sysNetwork   *sysNetwork.Network
-	nmObjManager *nmdbus.ObjectManager
-	PropsMu      sync.RWMutex
+	sysSigLoop         *dbusutil.SignalLoop
+	service            *dbusutil.Service
+	sysNetwork         *sysNetwork.Network
+	nmObjManager       *nmdbus.ObjectManager
+	PropsMu            sync.RWMutex
+	sessionManager     *sessionmanager.SessionManager
+	currentSessionPath dbus.ObjectPath
+	currentSession     *login1.Session
+
 	// update by manager.go
 	State        uint32 // global networking state
 	Connectivity uint32
@@ -183,6 +189,16 @@ func (m *Manager) init() {
 
 	disableNotify()
 	defer enableNotify()
+
+	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
+	m.currentSessionPath, err = m.sessionManager.CurrentSessionPath().Get(0)
+	if err != nil {
+		logger.Warning("get sessionManager CurrentSessionPath failed:", err)
+	}
+	m.currentSession, err = login1.NewSession(systemBus, m.currentSessionPath)
+	if err != nil {
+		logger.Error("Failed to connect self session:", err)
+	}
 
 	sysService, err := dbusutil.NewSystemService()
 	if err != nil {

@@ -226,6 +226,8 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 	// connect signals
 	nmDev.InitSignalExt(sh.sysSigLoop, true)
 	_, err = nmDev.ConnectStateChanged(func(newState, oldState, reason uint32) {
+		sessionActived := sh.m.isSessionActive()
+
 		logger.Debugf("device state changed, %d => %d, reason[%d] %s", oldState, newState, reason, deviceErrorTable[reason])
 		sh.locker.Lock()
 		defer sh.locker.Unlock()
@@ -247,11 +249,15 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				icon := generalGetNotifyDisconnectedIcon(dsi.devType, path)
 				logger.Debug("--------[Prepare] Active connection info:", dsi.aconnId, dsi.connectionType, dsi.nmDev.Path_())
 				if dsi.connectionType == connectionWirelessHotspot {
-					notify(icon, "", Tr("Enabling hotspot"))
+					if sessionActived {
+						notify(icon, "", Tr("Enabling hotspot"))
+					}
 				} else {
 					// 防止连接状态由60变40再次弹出正在连接的通知消息
 					if oldState == nm.NM_DEVICE_STATE_DISCONNECTED {
-						notify(icon, "", fmt.Sprintf(Tr("Connecting %q"), dsi.aconnId))
+						if sessionActived {
+							notify(icon, "", fmt.Sprintf(Tr("Connecting %q"), dsi.aconnId))
+						}
 					}
 				}
 			}
@@ -260,9 +266,13 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 			msg := dsi.aconnId
 			logger.Debug("--------[Activated] Active connection info:", dsi.aconnId, dsi.connectionType, dsi.nmDev.Path_())
 			if dsi.connectionType == connectionWirelessHotspot {
-				notify(icon, "", Tr("Hotspot enabled"))
+				if sessionActived {
+					notify(icon, "", Tr("Hotspot enabled"))
+				}
 			} else {
-				notify(icon, "", fmt.Sprintf(Tr("%q connected"), msg))
+				if sessionActived {
+					notify(icon, "", fmt.Sprintf(Tr("%q connected"), msg))
+				}
 				if !sh.m.hasSaveSecret {
 					if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
 						sh.savePasswordByConnectionStatus(data)
@@ -279,7 +289,9 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 			if reason == nm.NM_DEVICE_STATE_REASON_REMOVED {
 				if dsi.connectionType == connectionWirelessHotspot {
 					icon := generalGetNotifyDisconnectedIcon(dsi.devType, path)
-					notify(icon, "", Tr("Hotspot disabled"))
+					if sessionActived {
+						notify(icon, "", Tr("Hotspot disabled"))
+					}
 				}
 				return
 			}
@@ -334,7 +346,9 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				case nm.NM_DEVICE_STATE_REASON_USER_REQUESTED:
 					if newState == nm.NM_DEVICE_STATE_DISCONNECTED {
 						if dsi.connectionType == connectionWirelessHotspot {
-							notify(icon, "", Tr("Hotspot disabled"))
+							if sessionActived {
+								notify(icon, "", Tr("Hotspot disabled"))
+							}
 						} else {
 							msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
 						}
@@ -372,7 +386,9 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				}
 			}
 			if msg != "" {
-				notify(icon, "", msg)
+				if sessionActived {
+					notify(icon, "", msg)
+				}
 			}
 		}
 	})
