@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"pkg.deepin.io/dde/daemon/network/nm"
-	"pkg.deepin.io/lib/dbus1"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 )
 
@@ -118,9 +118,12 @@ func (m *Manager) emitPropChangedWirelessAccessPoints(value string) error {
 // 每60s自动更新一次WirelessAccessPoints属性，并发送属性改变信号
 func (m *Manager) initCountTicker() {
 	m.updateWirelessCountTicker = newCountTicker(60*time.Second, func(count int) {
-		err := m.RequestWirelessScan()
-		if err != nil {
-			logger.Warning("RequestWirelessScan: ", err)
+		if !m.IsWIfiConnect() {
+			err := m.RequestWirelessScan()
+			if err != nil {
+				logger.Warning("RequestWirelessScan: ", err)
+			}
 		}
+
 	})
 }
