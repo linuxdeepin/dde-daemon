@@ -91,14 +91,12 @@ func (m *Manager) SetBrightness(edidBase64 string, value int32) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
+
+
 func (m *Manager) RefreshDisplays() *dbus.Error {
-	//ddcutil代码有问题，无法刷新，暂用退出的方式来刷新显示器列表
-	m.service.Quit()
-	return nil
-	//if m.ddcci == nil {
-	//	return nil
-	//}
-	//
-	//err := m.ddcci.RefreshDisplays()
-	//return dbusutil.ToError(err)
+	if m.ddcci == nil {
+		return nil
+	}
+	err := m.ddcci.RefreshDisplays()
+	return dbusutil.ToError(err)
 }

@@ -4,12 +4,11 @@ package ddcci
 // #include <ddcutil_c_api.h>
 import "C"
 import (
+	"encoding/base64"
 	"fmt"
+	"reflect"
 	"sync"
 	"unsafe"
-	"encoding/base64"
-	"reflect"
-	"time"
 
 	"pkg.deepin.io/lib/utils"
 )
@@ -18,8 +17,69 @@ type ddcci struct {
 	listPointer *C.DDCA_Display_Info_List
 	listMu      sync.Mutex
 
-	displayHandleMap map[string]C.DDCA_Display_Handle  //index -> handle
-	displayMap map[string]int  //edidBase64 --> ddcutil monitor index
+	displayHandleMap map[string]*displayHandle //index -> handle
+	//displayMap       map[string]int         //edidBase64 --> ddcutil monitor index
+}
+
+type displayHandle struct {
+	ddcci  *ddcci
+	idx    int
+	edid   [128]byte
+	info   *C.DDCA_Display_Info
+	handle C.DDCA_Display_Handle
+	val    int
+	state  int
+}
+
+func (d *ddcci) newDisplayHandle(idx int) *displayHandle {
+	dh := &displayHandle{
+		idx: idx,
+	}
+	dh.info = d.getDisplayInfoByIdx(idx)
+	return dh
+}
+
+func (d *displayHandle) Open() error {
+	if d.state > 0 {
+		return nil
+	}
+	status := C.ddca_open_display2(d.info.dref, C.bool(true), &d.handle)
+	if status != C.int(0) {
+		logger.Info("doing ddca_open_display2 error")
+		return fmt.Errorf("brightness,init: failed to open monitor=%d", status)
+	}
+	d.state = 1
+	return nil
+}
+
+func (d *displayHandle) Close() error {
+	if d.state == 0 {
+		return nil
+	}
+	C.ddca_close_display(d.handle)
+	d.state = 0
+	return nil
+}
+
+func (d *displayHandle) getState() int {
+	return d.state
+}
+
+func (d *displayHandle) initEdid() {
+	edid := C.GoBytes(unsafe.Pointer(&d.info.edid_bytes), 128)
+	copy(d.edid[:], edid)
+}
+
+func (d *displayHandle) getEdidBase64() string {
+	return base64.StdEncoding.EncodeToString(d.edid[:])
+}
+
+func (d *displayHandle) setBrightness(percent int) error {
+	status := C.ddca_set_non_table_vcp_value(d.handle, brightnessVCP, 0, C.uchar(percent))
+	if status != C.int(0) {
+		return fmt.Errorf("brightness: failed to set brightness via DDC/CI: %d", status)
+	}
+	return nil
 }
 
 const (
@@ -28,8 +88,7 @@ const (
 
 func newDDCCI() (*ddcci, error) {
 	ddc := &ddcci{
-		displayMap: make(map[string]int),
-		displayHandleMap: make(map[string]C.DDCA_Display_Handle),
+		displayHandleMap: make(map[string]*displayHandle),
 	}
 
 	status := C.ddca_set_max_tries(C.DDCA_MULTI_PART_TRIES, 5)
@@ -46,17 +105,18 @@ func newDDCCI() (*ddcci, error) {
 }
 
 func (d *ddcci) freeList() {
-	fmt.Printf("brightness: freeList, clear all display cache\n")
+	//logger.Debug("brightness: freeList, clear all display cache d.lisPointer", d.listPointer)
 	for _, handle := range d.displayHandleMap {
-		C.ddca_close_display(handle)
+		handle.Close()
 	}
-	d.displayHandleMap = make(map[string]C.DDCA_Display_Handle)
+
+	d.displayHandleMap = make(map[string]*displayHandle)
 
 	if d.listPointer != nil {
 		C.ddca_free_display_info_list(d.listPointer)
+		C.ddca_free_all_displays()
 		d.listPointer = nil
 	}
-	d.displayMap = make(map[string]int)
 }
 
 func (d *ddcci) RefreshDisplays() error {
@@ -69,7 +129,7 @@ func (d *ddcci) RefreshDisplays() error {
 	if status != C.int(0) {
 		return fmt.Errorf("brightness: failed to get display info list: %d", status)
 	}
-	logger.Warning("brightness: display-number=", int(d.listPointer.ct))
+	logger.Debug("brightness: display-number=", int(d.listPointer.ct))
 	for i := 0; i < int(d.listPointer.ct); i++ {
 		err := d.initDisplay(i)
 		if err != nil {
@@ -81,37 +141,20 @@ func (d *ddcci) RefreshDisplays() error {
 }
 
 func (d *ddcci) initDisplay(idx int) error {
-	logger.Warning("brightness: initDisplay enter, index=", idx)
-	item := d.getDisplayInfoByIdx(idx)
-
-	var handle C.DDCA_Display_Handle
-	status := C.ddca_open_display2(item.dref, C.bool(true), &handle)
-	if status != C.int(0) {
-		return fmt.Errorf("brightness,init: failed to open monitor=%d", status)
-	}
-
-	defer C.ddca_close_display(handle)
-
-	var val C.DDCA_Non_Table_Vcp_Value
-	status = C.ddca_get_non_table_vcp_value(handle, brightnessVCP, &val)
-	if status != C.int(0) {
-		return fmt.Errorf("brightness,init: failed to check DDC/CI support, status=%d", status)
-	}
-
-	edid := C.GoBytes(unsafe.Pointer(&item.edid_bytes), 128)
-	edidBase64 := base64.StdEncoding.EncodeToString(edid)
-	logger.Warningf("brightness,init: idx=%d, edidBase64=%s", idx, edidBase64)
-	d.displayMap[string(edidBase64)] = idx
+	logger.Debug("brightness: initDisplay enter, index=", idx)
+	dh := d.newDisplayHandle(idx)
+	dh.Open()
+	dh.initEdid()
+	d.displayHandleMap[dh.getEdidBase64()] = dh
 	return nil
 }
-
 
 func (d *ddcci) SupportBrightness(edidBase64 string) bool {
 	d.listMu.Lock()
 	defer d.listMu.Unlock()
 
 	index, find := d.findMonitorIndex(edidBase64)
-	fmt.Printf("brightness: SupportBrightness: %d, %v, %s\n", index, find, edidBase64)
+	logger.Debug("brightness: SupportBrightness", index, find, edidBase64)
 	return find
 }
 
@@ -119,14 +162,14 @@ func (d *ddcci) GetBrightness(edidBase64 string) (brightness int, err error) {
 	d.listMu.Lock()
 	defer d.listMu.Unlock()
 
-	handle := d.getDisplayHandle(edidBase64)
-	if handle == nil {
-		err = fmt.Errorf("brightness: failed to open monitor")
+	handle, ok := d.displayHandleMap[edidBase64]
+	if !ok || handle == nil {
+		err = fmt.Errorf("brightness: failed to find monitor handle")
 		return
 	}
 
 	var val C.DDCA_Non_Table_Vcp_Value
-	status := C.ddca_get_non_table_vcp_value(handle, brightnessVCP, &val)
+	status := C.ddca_get_non_table_vcp_value(handle.handle, brightnessVCP, &val)
 	if status != C.int(0) {
 		err = fmt.Errorf("brightness: failed to get brightness: %d", status)
 		return
@@ -140,44 +183,57 @@ func (d *ddcci) SetBrightness(edidBase64 string, percent int) error {
 	d.listMu.Lock()
 	defer d.listMu.Unlock()
 
-	t0 := time.Now()
-
 	// 开启结果验证，防止返回设置成功，但实际上没有生效的情况
 	// 此方法仅对当前线程生效
 	C.ddca_enable_verify(false)
-	handle := d.getDisplayHandle(edidBase64)
-	if handle == nil {
-		return fmt.Errorf("brightness: failed to open monitor")
-	}
-	status := C.ddca_set_non_table_vcp_value(handle, brightnessVCP, 0, C.uchar(percent))
-	if status != C.int(0) {
-		return fmt.Errorf("brightness: failed to set brightness via DDC/CI: %d", status)
+	dh, ok := d.displayHandleMap[edidBase64]
+	if !ok || dh == nil {
+		//ignore any bytes
+		idx, find := d.findMonitorIndex(edidBase64)
+		if find {
+			dh = d.getDisplayHandleByIdx(idx)
+			logger.Info("get display handle by indes---------", idx)
+
+		} else {
+			return fmt.Errorf("brightness: failed to find monitor")
+		}
 	}
 
-	elapse := time.Since(t0)
-	fmt.Printf("brightness: SetBrightness elapse=%v, value=%d, for %s\n", elapse, percent, edidBase64)
+	if dh.getState() == 0 {
+		dh.Open()
+	}
+
+        return  dh.setBrightness(percent)
+}
+
+func (d *ddcci) getDisplayHandleByIdx(idx int) *displayHandle {
+	for _, handle := range d.displayHandleMap {
+		if handle.idx == idx {
+			logger.Debugf("getDisplayHandleByIdx:=== %d\n", idx)
+			return handle
+		}
+	}
 	return nil
 }
 
-
 func zeroEdidMonitorName(byBuf []byte) bool {
 	if len(byBuf) < 128 {
-		fmt.Printf("zeroEdidMonitorName: len error, %d\n", len(byBuf))
+		logger.Infof("zeroEdidMonitorName: len error, %d\n", len(byBuf))
 		return false
 	}
 	hasModify := false
 	//解释几个数字: edid长度128,头部长54，扩展部分18字节一段，54 + 18 * 4 = 126
 	for i := 0; i < 4; i++ {
-		offset := 0x36 + i * 18
+		offset := 0x36 + i*18
 		//fmt.Printf("zeroEdidMonitorName: idx=%d, %x\n", i, byBuf[offset: offset + 5])
-		if reflect.DeepEqual(byBuf[offset: offset + 3], []byte{0,0,0}) {
-			if byBuf[offset + 3] == 0xfc {
-				fmt.Printf("brightness: zeroEdidMonitorName, block index=%d\n", i)
+		if reflect.DeepEqual(byBuf[offset:offset+3], []byte{0, 0, 0}) {
+			if byBuf[offset+3] == 0xfc {
+				//logger.Debugf("brightness: zeroEdidMonitorName, block index=%d\n", i)
 				hasModify = true
 				zeroStart := offset + 5
 				zeroLen := 13
 				for j := 0; j < zeroLen; j++ {
-					byBuf[zeroStart + j] = 0
+					byBuf[zeroStart+j] = 0
 				}
 			}
 		}
@@ -185,48 +241,28 @@ func zeroEdidMonitorName(byBuf []byte) bool {
 	return hasModify
 }
 
-func (d *ddcci) findMonitorIndex(edidBase64 string) (idx int, find bool) {
-	idx, find = d.displayMap[edidBase64]
-	if !find {
-		bufInput,_ := base64.StdEncoding.DecodeString(edidBase64)
-		zeroEdidMonitorName(bufInput)
-		for edidIter, idxIter := range d.displayMap {
-			bufIter,_ := base64.StdEncoding.DecodeString(edidIter)
-			zeroEdidMonitorName(bufIter)
-			if reflect.DeepEqual(bufInput, bufIter) {
-				idx = idxIter
-				find = true
-			}
-        }
-	}
-	return
-}
-
-func (d *ddcci) getDisplayHandle(edidBase64 string) C.DDCA_Display_Handle {
-	//find from cache
-	tmp_handle, tmp_find := d.displayHandleMap[edidBase64]
-	if tmp_find {
-		return tmp_handle
+func (d *ddcci) findMonitorIndex(edidBase64 string) (int, bool) {
+	logger.Debug("edidBase64:", edidBase64)
+	dh, find := d.displayHandleMap[edidBase64]
+	if find {
+		logger.Info("find df for edidBase64:", edidBase64)
+		return dh.idx, find
 	}
 
-	//open display
-	idx,find := d.findMonitorIndex(edidBase64)
-	if !find {
-		fmt.Printf("brightness: getDisplayHandle faield, edidBase64=%s\n", edidBase64)
-		return nil
+	idx := 0
+	bufInput, _ := base64.StdEncoding.DecodeString(edidBase64)
+	zeroEdidMonitorName(bufInput)
+	for edidIter, idxIter := range d.displayHandleMap {
+		//logger.Debugf("edid:", edidIter)
+		bufIter, _ := base64.StdEncoding.DecodeString(edidIter)
+		zeroEdidMonitorName(bufIter)
+		if reflect.DeepEqual(bufInput, bufIter) {
+			idx = idxIter.idx
+			find = true
+			//logger.Debugf("brightness: DeepEqual\n")
+		}
 	}
-
-	item := d.getDisplayInfoByIdx(idx)
-	var handle C.DDCA_Display_Handle
-	status := C.ddca_open_display2(item.dref, C.bool(true), &handle)
-	if status != C.int(0) {
-		return nil
-	}
-
-	//cache display handle
-	d.displayHandleMap[edidBase64] = handle
-
-	return handle
+	return idx, find
 }
 
 func (d *ddcci) getDisplayInfoByIdx(idx int) *C.DDCA_Display_Info {
