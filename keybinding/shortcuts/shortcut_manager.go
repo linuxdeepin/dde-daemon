@@ -693,7 +693,8 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 		if ok {
 			shortcut := keystroke.Shortcut
 			if shortcut != nil && shortcut.GetType() == ShortcutTypeSystem &&
-				strings.HasPrefix(shortcut.GetId(), "screenshot") {
+				(strings.HasPrefix(shortcut.GetId(), "screenshot") ||
+					strings.HasPrefix(shortcut.GetId(), "deepin-screen-recorder")) {
 				//如果当前没有窗口被grab,则直接不用判断是否需要截图
 				if !isKbdAlreadyGrabbed(sm.conn) {
 					logger.Info("handleXRecordKeyEvent : no active window grabbed")
