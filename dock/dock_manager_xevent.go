@@ -73,11 +73,12 @@ func (m *Manager) handleClientListChanged() {
 	m.clientList = newClientList
 
 	if len(add) > 0 {
-		logger.Debug("client list add:", add)
 		for _, win := range add {
 			window0 := win
-			winInfo := m.registerWindow(window0)
-			go func() {
+			addFunc := func() {
+				logger.Debugf("client list add: %x", window0)
+				winInfo := m.registerWindow(window0)
+				logger.Infof("%v", m.windowInfoMap)
 				repeatCount := 0
 				for {
 					if repeatCount > 10 {
@@ -96,22 +97,30 @@ func (m *Manager) handleClientListChanged() {
 					repeatCount++
 					time.Sleep(100 * time.Millisecond)
 				}
-			}()
-
+			}
+			m.entryDealChan <- addFunc
 		}
 	}
 
 	if len(remove) > 0 {
-		logger.Debug("client list remove:", remove)
 		for _, win := range remove {
-
-			m.windowInfoMapMutex.RLock()
-			winInfo := m.windowInfoMap[win]
-			m.windowInfoMapMutex.RUnlock()
-			if winInfo != nil {
-				m.detachWindow(winInfo)
-				winInfo.entryInnerId = ""
+			window0 := win
+			removeFunc := func() {
+				logger.Debugf("client list remove: %x", window0)
+				m.windowInfoMapMutex.RLock()
+				logger.Infof("%v", m.windowInfoMap)
+				winInfo := m.windowInfoMap[window0]
+				m.windowInfoMapMutex.RUnlock()
+				if winInfo != nil {
+					m.detachWindow(winInfo)
+					winInfo.entryInnerId = ""
+				} else {
+					logger.Warningf("window info of '%x' is nil", window0)
+					entry := m.Entries.getByWindowId(window0)
+					m.removeAppEntry(entry)
+				}
 			}
+			m.entryDealChan <- removeFunc
 		}
 	}
 }

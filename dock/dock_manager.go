@@ -28,12 +28,12 @@ import (
 
 	"github.com/godbus/dbus"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
+	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
 	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.launcher"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
-	"github.com/linuxdeepin/go-x11-client"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wmswitcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
+	x "github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
@@ -69,6 +69,7 @@ type Manager struct {
 	appearanceSettings *gio.Settings
 	pluginSettings     *pluginSettingsStorage
 
+	entryDealChan   chan func()
 	rootWindow      x.Window
 	activeWindow    x.Window
 	activeWindowOld x.Window
@@ -463,4 +464,14 @@ func (m *Manager) MergePluginSettings(jsonStr string) *dbus.Error {
 func (m *Manager) RemovePluginSettings(key1 string, key2List []string) *dbus.Error {
 	m.pluginSettings.remove(key1, key2List)
 	return nil
+}
+
+// 在Dock添加上添加图标的时候，有时候windowInfo不完整
+// 会重复尝试10次，为了避免阻塞其他功能，放在goroutine里处理
+// 窗口的增加和减少是有顺序的，在这个单独的goroutine里处理
+func (m *Manager) accessEntries() {
+	for {
+		fun := <-m.entryDealChan
+		fun()
+	}
 }

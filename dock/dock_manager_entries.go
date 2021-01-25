@@ -145,6 +145,9 @@ func (m *Manager) appendDockedApp(app string) {
 }
 
 func (m *Manager) removeAppEntry(e *AppEntry) {
+	if e == nil {
+		return
+	}
 	logger.Info("removeAppEntry id:", e.Id)
 	m.Entries.Remove(e)
 }
@@ -170,6 +173,7 @@ func (m *Manager) attachWindow(winInfo *WindowInfo) {
 func (m *Manager) detachWindow(winInfo *WindowInfo) {
 	entry := m.Entries.getByWindowId(winInfo.window)
 	if entry == nil {
+		logger.Warningf("entry of window '%x' is nil", winInfo.window)
 		return
 	}
 	needRemove := entry.detachWindow(winInfo)

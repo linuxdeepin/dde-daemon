@@ -24,12 +24,12 @@ import (
 
 	"github.com/godbus/dbus"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
+	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
 	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.launcher"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
-	"github.com/linuxdeepin/go-x11-client"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wmswitcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
+	x "github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
@@ -255,6 +255,9 @@ func (m *Manager) init() error {
 	if m.DisplayMode.Get() == int32(DisplayModeClassicMode) {
 		m.DisplayMode.Set(int32(DisplayModeEfficientMode))
 	}
+
+	m.entryDealChan = make(chan func(), 64)
+	go m.accessEntries()
 
 	go m.eventHandleLoop()
 	m.listenRootWindowXEvent()
