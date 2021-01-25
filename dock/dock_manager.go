@@ -69,6 +69,7 @@ type Manager struct {
 	appearanceSettings *gio.Settings
 	pluginSettings     *pluginSettingsStorage
 
+	entryDealChan   chan func()
 	rootWindow      x.Window
 	activeWindow    x.Window
 	activeWindowOld x.Window
@@ -439,4 +440,14 @@ func (m *Manager) MergePluginSettings(jsonStr string) *dbus.Error {
 func (m *Manager) RemovePluginSettings(key1 string, key2List []string) *dbus.Error {
 	m.pluginSettings.remove(key1, key2List)
 	return nil
+}
+
+// 在Dock添加上添加图标的时候，有时候windowInfo不完整
+// 会重复尝试10次，为了避免阻塞其他功能，放在goroutine里处理
+// 窗口的增加和减少是有顺序的，在这个单独的goroutine里处理
+func (m *Manager) accessEntries() {
+	for {
+		fun := <-m.entryDealChan
+		fun()
+	}
 }
