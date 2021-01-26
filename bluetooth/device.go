@@ -352,8 +352,13 @@ func (d *device) connectProperties() {
 		}
 		d.updateState()
 		d.notifyDevicePropertiesChanged()
-		if needNotify && d.Paired && d.State == deviceStateConnected && d.ConnectState {
-			d.notifyConnectedChanged()
+
+		if needNotify {
+			if d.Paired && d.State == deviceStateConnected && d.ConnectState {
+				d.notifyConnectedChanged()
+			} else if d.State == deviceStateDisconnected && !d.ConnectState {
+				notifyDisconnected(d.Alias)
+			}
 		}
 		return
 	})
