@@ -508,7 +508,7 @@ func (d *device) getState() deviceState {
 		return deviceStateDisconnecting
 
 	} else {
-		if d.connected {
+		if d.connected && d.Paired {
 			return deviceStateConnected
 		} else {
 			return deviceStateDisconnected

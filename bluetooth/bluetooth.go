@@ -701,7 +701,7 @@ func (b *Bluetooth) updateState() {
 
 	for _, devices := range b.devices {
 		for _, d := range devices {
-			if d.connected {
+			if d.connected && d.Paired {
 				newState = StateConnected
 				break
 			}
