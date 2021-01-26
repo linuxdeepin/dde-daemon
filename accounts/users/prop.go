@@ -307,7 +307,7 @@ func EnableNoPasswdLogin(username string, enabled bool) error {
 }
 
 func getAdminUserList(fileGroup, fileSudoers string) ([]string, error) {
-	groups, users, err := getAdmGroupAndUser(fileSudoers)
+	groups, users, err := getAdmGroupAndUser(fileSudoers, true)
 	if err != nil {
 		return nil, err
 	}
@@ -336,7 +336,8 @@ var (
 )
 
 // get adm group and user from '/etc/sudoers'
-func getAdmGroupAndUser(file string) ([]string, []string, error) {
+// filer: 安全问题，是否过滤掉NOPASSWD
+func getAdmGroupAndUser(file string, filerNoPwd bool) ([]string, []string, error) {
 	finfo, err := os.Stat(file)
 	if err != nil {
 		return nil, nil, err
@@ -366,6 +367,10 @@ func getAdmGroupAndUser(file string) ([]string, []string, error) {
 		}
 
 		if line[0] == '#' || !strings.Contains(line, `ALL=(ALL`) {
+			continue
+		}
+
+		if filerNoPwd == true && strings.Contains(line, "NOPASSWD") {
 			continue
 		}
 

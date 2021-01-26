@@ -287,12 +287,12 @@ func (*testWrapper) TestStrInArray(c *C.C) {
 }
 
 func (*testWrapper) TestGetAdmGroup(c *C.C) {
-	groups, users, err := getAdmGroupAndUser("testdata/sudoers_deepin")
+	groups, users, err := getAdmGroupAndUser("testdata/sudoers_deepin", false)
 	c.Check(err, C.Equals, nil)
 	c.Check(isStrInArray("sudo", groups), C.Equals, true)
 	c.Check(isStrInArray("root", users), C.Equals, true)
 
-	groups, users, err = getAdmGroupAndUser("testdata/sudoers_arch")
+	groups, users, err = getAdmGroupAndUser("testdata/sudoers_arch", false)
 	c.Check(err, C.Equals, nil)
 	c.Check(isStrInArray("sudo", groups), C.Equals, true)
 	c.Check(isStrInArray("wheel", groups), C.Equals, true)

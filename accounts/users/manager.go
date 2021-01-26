@@ -101,7 +101,7 @@ func GetPresetGroups(userType int) []string {
 		groups = make([]string, len(commonGroups))
 		copy(groups, commonGroups)
 
-		adminGroups, _, _ := getAdmGroupAndUser(userFileSudoers)
+		adminGroups, _, _ := getAdmGroupAndUser(userFileSudoers, true)
 		groups = append(groups, adminGroups...)
 	default:
 		return nil
