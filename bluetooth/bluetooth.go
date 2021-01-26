@@ -754,38 +754,42 @@ func (b *Bluetooth) updateState() {
 func (b *Bluetooth) tryConnectPairedDevices() {
 	var typeDeviceListMap = b.getPairedDeviceList()
 	for deviceType, devlist := range typeDeviceListMap {
-		// make sure dev always exist
-		if devlist == nil {
-			continue
-		}
-		for _, dev := range devlist {
-			if dev == nil {
+		//only reconnect audio-card
+		if deviceType == "audio-card" {
+			// make sure dev always exist
+			if devlist == nil {
 				continue
 			}
-			logger.Info("[DEBUG] Auto connect device:", dev.Path)
+			for _, dev := range devlist {
+				if dev == nil {
+					continue
+				}
+				logger.Info("[DEBUG] Auto connect device:", dev.Path)
 
-			// if device using LE mode, will suspend, try connect should be failed, filter it.
-			if !b.isBREDRDevice(dev) {
-				continue
-			}
-			logger.Debug("Will auto connect device:", dev.String(), dev.adapter.address, dev.Address)
-			err := dev.doConnect(false)
-			if err != nil {
-				logger.Debug("failed to connect:", dev.String(), err)
-				//reconnect once when connect failed of host is down of waking up
-				if strings.Contains(err.Error(), "Host is down") {
-					dev.doConnect(false)
+				// if device using LE mode, will suspend, try connect should be failed, filter it.
+				if !b.isBREDRDevice(dev) {
+					continue
+				}
+				logger.Debug("Will auto connect device:", dev.String(), dev.adapter.address, dev.Address)
+				err := dev.doConnect(false)
+				if err != nil {
+					logger.Debug("failed to connect:", dev.String(), err)
+					//reconnect once when connect failed of host is down of waking up
+					if strings.Contains(err.Error(), "Host is down") {
+						dev.doConnect(false)
+					}
+				}
+				// if auto connect success, add device into map connectedDevices
+				if dev.ConnectState == true {
+					b.addConnectedDevice(dev)
+				}
+				if b.isDeviceInput(deviceType) {
+					//for input device only connect one device by time,include audio-card
+					break
 				}
 			}
-			// if auto connect success, add device into map connectedDevices
-			if dev.ConnectState == true {
-				b.addConnectedDevice(dev)
-			}
-			if b.isDeviceInput(deviceType) {
-				//for input device only connect one device by time,include audio-card
-				break
-			}
 		}
+
 	}
 }
 
