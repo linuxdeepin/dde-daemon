@@ -101,6 +101,8 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 		return true
 	}
 
+	a.updateSources(a.defaultSource.index)
+
 	cardName, portName := priorities.GetFirstInput()
 	currentCardName := a.getCardNameById(a.defaultSource.Card)
 	currentPortName := a.defaultSource.ActivePort.Name
@@ -126,6 +128,8 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 		return true
 	}
 
+	a.updateSinks(a.defaultSink.index)
+
 	cardName, portName := priorities.GetFirstOutput()
 	currentCardName := a.getCardNameById(a.defaultSink.Card)
 	currentPortName := a.defaultSink.ActivePort.Name
@@ -147,6 +151,10 @@ func (a *Audio) autoSwitchPort() {
 	// 用于输出为a2dp时，输入跳过headset
 	outputCardName := ""
 	outputPortName := ""
+	//用于输入为headset时，输出跳过a2dp
+	inputCardName := ""
+	inputPortName := ""
+
 	outputCard, err := a.cards.get(a.defaultSink.Card)
 	if err == nil {
 		outputCardName = outputCard.core.Name
@@ -155,8 +163,23 @@ func (a *Audio) autoSwitchPort() {
 		logger.Warning(err)
 	}
 
+	inputCard, err := a.cards.get(a.defaultSource.Card)
+	if err == nil {
+		inputCardName = inputCard.core.Name
+		inputPortName = a.defaultSource.ActivePort.Name
+	} else {
+		logger.Warning(err)
+	}
+
 	if a.needAutoSwitchOutputPort() {
-		cardName, portName := priorities.GetFirstOutput()
+		cardName, portName := priorities.GetFirstOutputSkip(func(cardName, portName string) bool {
+			// 当输入使用headset时，输出跳过a2dp
+			logger.Debugf("check %s %s ", cardName, portName)
+			return cardName == inputCardName &&
+				strings.Contains(inputPortName, "headphone-input") &&
+				strings.Contains(portName, "a2dp")
+		})
+
 		if cardName != "" && portName != "" {
 			if cardName == a.outputCardName && portName == a.outputPortName {
 				// 端口不变，切换计数累加
@@ -215,6 +238,9 @@ func (a *Audio) autoSwitchPort() {
 				}
 				if err != nil {
 					logger.Warning(err)
+				} else {
+					inputCardName = cardName
+					inputPortName = portName
 				}
 				a.inputCardName = cardName
 				a.inputPortName = portName

@@ -254,11 +254,12 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 	if isBluezAudio(s.Name) {
 		logger.Debugf("create bluez virtual port for sink %s", s.Name)
 		s.setPropPorts(createBluezVirtualSinkPorts(toPorts(sinkInfo.Ports)))
-		profile := bluezAudioGetSinkProfile(s)
-		if profile == "headset_head_unit" {
+
+		//此处获取的profile可能不是最新的，导致设置相应端口信息错误，改为Name去判断
+		if strings.Contains(sinkInfo.Name, "headset_head_unit"){
 			newActivePort.Name += "(headset_head_unit)"
 			newActivePort.Description += "(Headset)"
-		} else if profile == "a2dp_sink" {
+		} else if strings.Contains(sinkInfo.Name, "a2dp_sink"){
 			newActivePort.Name += "(a2dp_sink)"
 			newActivePort.Description += "(A2DP)"
 		} else {
