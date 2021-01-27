@@ -124,6 +124,10 @@ type Audio struct {
 	mu                sync.Mutex
 	quit              chan struct{}
 
+	//TODO panguV专用属性 解决bug55140
+	isPanguV				bool
+	createAudioObjFinish	bool
+
 	cards CardList
 
 	isSaving    bool
@@ -278,6 +282,10 @@ func (a *Audio) init() error {
 		}
 	}
 	a.mu.Unlock()
+
+	//TODO bug55140
+	a.initSyncStateAndVolumes()
+
 	a.updatePropSinks()
 	a.updatePropSources()
 	a.updatePropSinkInputs()
@@ -402,6 +410,31 @@ func (a *Audio) initDefaultVolumes() {
 	defaultInputVolume = inVolumePer
 	defaultOutputVolume = outVolumePer
 	defaultHeadphoneOutputVolume = headphoneOutVolumePer
+}
+
+//TODO bug55140 判断是否panguV,同步panguV的声卡音量保存到gsetting
+func (a *Audio) initSyncStateAndVolumes() {
+	//audio对象创建完成，设createAudioObjFinish为true,用于允许sink/source的update()操作更新音量大小属性
+	out, _ := exec.Command("qdbus", "--system", "com.deepin.system.SystemInfo","/com/deepin/system/SystemInfo","com.deepin.system.SystemInfo.ProductName").Output()
+	if strings.Contains(string(out),"PGUV-WBY0") {
+		logger.Debug("Get Machine Product Name Is PanguV")
+		a.isPanguV = true
+	} else {
+		logger.Debug("Get Machine Product Name Is Not PanguV")
+		return
+	}
+	a.createAudioObjFinish = true
+
+	//首次启动需要同步更新,通过获取gsetting保存的音量值，更新sink/source音量
+	firstRun := a.settings.GetBoolean(gsKeyFirstRun)
+	if firstRun {
+		if a.isPanguV {
+			a.settings.SetInt("headphone-volume", int32(defaultHeadphoneOutputVolume * 100.0))
+			a.settings.SetInt("physical-output-volume", int32(defaultOutputVolume * 100.0))
+			a.settings.SetInt("earphone-volume", int32(defaultInputVolume * 100.0))
+			a.settings.SetInt("physical-input-volume", int32(defaultInputVolume * 100.0))
+		}
+	}
 }
 
 func (a *Audio) findSinkByCardIndexPortName(cardId uint32, portName string) *pulse.Sink {
@@ -582,6 +615,7 @@ func (a *Audio) resetSinksVolume() {
 				cv = s.Volume.SetAvg(defaultOutputVolume).SetBalance(s.ChannelMap,
 					0).SetFade(s.ChannelMap, 0)
 			}
+
 			a.ctx.SetSinkVolumeByIndex(sidx, cv)
 			time.Sleep(time.Millisecond * 100)
 		}

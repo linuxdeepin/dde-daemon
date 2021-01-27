@@ -62,6 +62,13 @@ type Source struct {
 	}
 }
 
+//TODO bug55140
+var (
+	AudioSourceName1 = "3a_source"                                                 //虚拟source映射AudiosourceName2
+	AudioSourceName2 = "alsa_input.platform-sound_hi6405.analog-stereo"            //panguv物理声卡的source
+	AudioSourceName3 = "alsa_output.platform-sound_hi6405.analog-stereo.monitor"   //虚拟source无激活port
+)
+
 func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 	s := &Source{
 		audio:   audio,
@@ -70,6 +77,30 @@ func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 	}
 	s.update(sourceInfo)
 	return s
+}
+
+//TODO bug55140 write source'volume to audio's gsetting if machine is panguV
+func (s *Source) doSetVolumeToSetting( v float64) {
+	if s.audio.isPanguV && s.audio.createAudioObjFinish {
+		//存在激活port才有效
+		iv := int32(floatPrecision(v) * 100.0)
+		activePort := s.ActivePort.Name
+		portAvai := s.ActivePort.Available
+
+		switch s.Name {
+		case AudioSourceName1,AudioSourceName2:
+			if activePort == "" {
+				s.audio.settings.SetInt("physical-input-volume", iv)
+			}
+			if portAvai == 0 || portAvai == 2 {
+				s.audio.settings.SetInt("earphone-volume", iv)
+			} else {
+				s.audio.settings.SetInt("physical-input-volume", iv)
+			}
+		case AudioSourceName3:
+			s.audio.settings.SetInt("physical-input-volume", iv)
+		}
+	}
 }
 
 // 如何反馈输入音量？
@@ -81,6 +112,11 @@ func (s *Source) SetVolume(v float64, isPlay bool) *dbus.Error {
 	if v == 0 {
 		v = 0.001
 	}
+
+	//TODO bug55140
+	s.doSetVolumeToSetting(v)
+	logger.Debugf("Set Volume [source:%s] %v ", s.Name, v)
+
 	s.PropsMu.RLock()
 	cv := s.cVolume.SetAvg(v)
 	s.PropsMu.RUnlock()
@@ -89,6 +125,7 @@ func (s *Source) SetVolume(v float64, isPlay bool) *dbus.Error {
 	if isPlay {
 		playFeedback()
 	}
+
 	return nil
 }
 
@@ -171,6 +208,43 @@ func (*Source) GetInterfaceName() string {
 	return dbusInterface + ".Source"
 }
 
+//TODO bug55140 只针对panguv，通过读取gsetting配置里保存的音量值设置对应source的音量
+func (s *Source) setAndCheckSourceVolumeByGsetting(sourceInfo *pulse.Source, sourceVolume *float64) {
+	if s.audio.isPanguV && s.audio.createAudioObjFinish {
+		activePort := sourceInfo.ActivePort.Name
+		if activePort == "" {
+			logger.Errorf("Failed: Get Source's activePort is Null  & return")
+			return
+		}
+
+		var setVolome int32
+		var sourceVolume_tmp float64
+
+		switch sourceInfo.Name {
+		case AudioSourceName1,AudioSourceName2:
+			portAvai := sourceInfo.ActivePort.Available
+			if portAvai == 0 || portAvai == 2 {
+				setVolome = s.audio.settings.GetInt("earphone-volume")
+			} else {
+				setVolome = s.audio.settings.GetInt("physical-input-volume")
+			}
+		case AudioSourceName3:
+			setVolome = s.audio.settings.GetInt("physical-input-volume")
+		default:
+			return
+		}
+
+		sourceVolume_tmp = floatPrecision(float64(setVolome) / 100.0)
+		if *sourceVolume != sourceVolume_tmp {
+			logger.Debugf("Source update need change volume:%v to setting's volume:%v", *sourceVolume, sourceVolume_tmp)
+			*sourceVolume = sourceVolume_tmp
+			cv := sourceInfo.Volume.SetAvg(sourceVolume_tmp)
+			s.audio.context().SetSinkVolumeByIndex(sourceInfo.Index, cv)
+		}
+
+	}
+}
+
 func (s *Source) update(sourceInfo *pulse.Source) {
 	s.PropsMu.Lock()
 
@@ -181,8 +255,15 @@ func (s *Source) update(sourceInfo *pulse.Source) {
 	s.Card = sourceInfo.Card
 	s.BaseVolume = sourceInfo.BaseVolume.ToPercent()
 
-	s.setPropVolume(floatPrecision(sourceInfo.Volume.Avg()))
+	var source_volume float64
+	source_volume = floatPrecision(sourceInfo.Volume.Avg())
+	logger.Debugf("Update Source name :%s [ActivePort:%v,volume:%v]", s.Name, sourceInfo.ActivePort, source_volume)
+
+	//TODO bug55140
+	s.setAndCheckSourceVolumeByGsetting(sourceInfo, &source_volume)
+
 	s.setPropMute(sourceInfo.Mute)
+	s.setPropVolume(source_volume)
 
 	//TODO: handle this
 	s.setPropSupportFade(false)

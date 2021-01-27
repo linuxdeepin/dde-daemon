@@ -157,7 +157,7 @@ func (a *Audio) saveConfig() {
 	a.isSaving = true
 	a.saverLocker.Unlock()
 
-	time.AfterFunc(time.Millisecond*500, func() {
+	time.AfterFunc(time.Second*1, func() {
 		a.doSaveConfig()
 
 		a.saverLocker.Lock()
