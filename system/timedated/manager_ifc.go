@@ -43,9 +43,12 @@ func (m *Manager) SetTime(sender dbus.Sender, usec int64, relative bool, msg str
 
 // SetTimezone set the system time zone, the value from /usr/share/zoneinfo/zone.tab
 func (m *Manager) SetTimezone(sender dbus.Sender, timezone, msg string) *dbus.Error {
-	err := m.checkAuthorization("SetTimezone", msg, sender)
-	if err != nil {
-		return dbusutil.ToError(err)
+	// 取消平板环境DeepinTablet下用户验证
+	if os.Getenv("XDG_CURRENT_DESKTOP") != "DeepinTablet" {
+		err := m.checkAuthorization("SetTimezone", msg, sender)
+		if err != nil {
+			return dbusutil.ToError(err)
+		}
 	}
 
 	// TODO: check timezone validity
