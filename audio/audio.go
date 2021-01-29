@@ -68,6 +68,7 @@ var (
 	defaultInputVolume           = 0.1
 	defaultOutputVolume          = 0.5
 	defaultHeadphoneOutputVolume = 0.17
+	defaultHdmiOutputVolume      = 1.0
 	gMaxUIVolume                 float64
 )
 
@@ -610,6 +611,9 @@ func (a *Audio) resetSinksVolume() {
 			var cv pulse.CVolume
 			if strings.Contains(pname, "headphone") || strings.Contains(pname, "headset") {
 				cv = s.Volume.SetAvg(defaultHeadphoneOutputVolume).SetBalance(s.ChannelMap,
+					0).SetFade(s.ChannelMap, 0)
+			} else if strings.Contains(pname, "hdmi-output") {
+				cv = s.Volume.SetAvg(defaultHdmiOutputVolume).SetBalance(s.ChannelMap,
 					0).SetFade(s.ChannelMap, 0)
 			} else {
 				cv = s.Volume.SetAvg(defaultOutputVolume).SetBalance(s.ChannelMap,
