@@ -125,7 +125,7 @@ type User struct {
 	// 是否允许此用户自动登录
 	AutomaticLogin bool
 	// 当前工作区
-	Workspace	int32
+	Workspace int32
 
 	// deprecated property
 	SystemAccount bool
@@ -142,39 +142,6 @@ type User struct {
 	HistoryLayout []string
 
 	configLocker sync.Mutex
-	//nolint
-	methods *struct {
-		SetFullName           func() `in:"name"`
-		SetHomeDir            func() `in:"home"`
-		SetShell              func() `in:"shell"`
-		SetPassword           func() `in:"password"`
-		SetAccountType        func() `in:"accountType"`
-		SetLocked             func() `in:"locked"`
-		SetAutomaticLogin     func() `in:"enabled"`
-		EnableNoPasswdLogin   func() `in:"enabled"`
-		SetLocale             func() `in:"locale"`
-		SetLayout             func() `in:"layout"`
-		SetIconFile           func() `in:"iconFile"`
-		DeleteIconFile        func() `in:"iconFile"`
-		SetDesktopBackgrounds func() `in:"backgrounds"`
-		SetGreeterBackground  func() `in:"background"`
-		SetHistoryLayout      func() `in:"layouts"`
-		IsIconDeletable       func() `in:"icon"`
-		GetLargeIcon          func() `out:"icon"`
-		AddGroup              func() `in:"group"`
-		DeleteGroup           func() `in:"group"`
-		SetGroups             func() `in:"groups"`
-		SetUse24HourFormat    func() `in:"value"`
-		SetMaxPasswordAge     func() `in:"nDays"`
-		IsPasswordExpired     func() `out:"expired"`
-		SetWeekdayFormat      func() `in:"value"`
-		SetShortDateFormat    func() `in:"value"`
-		SetLongDateFormat     func() `in:"value"`
-		SetShortTimeFormat    func() `in:"value"`
-		SetLongTimeFormat     func() `in:"value"`
-		SetWeekBegins         func() `in:"value"`
-		SetCurrentWorkspace   func() `in:"currentWorkspace"`
-	}
 }
 
 func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User, error) {

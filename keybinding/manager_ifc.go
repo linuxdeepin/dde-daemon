@@ -63,7 +63,7 @@ func (*Manager) GetInterfaceName() string {
 }
 
 //true : ignore
-func (m *Manager)isIgnoreRepeat(name string) bool  {
+func (m *Manager) isIgnoreRepeat(name string) bool {
 	const minKeyEventInterval = 200 * time.Millisecond
 	now := time.Now()
 	duration := now.Sub(m.lastMethodCalledTime)
@@ -78,7 +78,7 @@ func (m *Manager)isIgnoreRepeat(name string) bool  {
 
 // Reset reset all shortcut
 func (m *Manager) Reset() *dbus.Error {
-	if (m.isIgnoreRepeat("Reset")) {
+	if m.isIgnoreRepeat("Reset") {
 		return nil
 	}
 
@@ -152,7 +152,7 @@ func (m *Manager) Reset() *dbus.Error {
 	return nil
 }
 
-func (m *Manager) ListAllShortcuts() (string, *dbus.Error) {
+func (m *Manager) ListAllShortcuts() (shortcuts string, busErr *dbus.Error) {
 	list := m.shortcutManager.List()
 	ret, err := util.MarshalJSON(list)
 	if err != nil {
@@ -161,7 +161,7 @@ func (m *Manager) ListAllShortcuts() (string, *dbus.Error) {
 	return ret, nil
 }
 
-func (m *Manager) ListShortcutsByType(type0 int32) (string, *dbus.Error) {
+func (m *Manager) ListShortcutsByType(type0 int32) (shortcuts string, busErr *dbus.Error) {
 	list := m.shortcutManager.ListByType(type0)
 	ret, err := util.MarshalJSON(list)
 	if err != nil {
@@ -230,7 +230,7 @@ func (m *Manager) ClearShortcutKeystrokes(id string, type0 int32) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) LookupConflictingShortcut(keystroke string) (string, *dbus.Error) {
+func (m *Manager) LookupConflictingShortcut(keystroke string) (shortcut string, busErr *dbus.Error) {
 	ks, err := shortcuts.ParseKeystroke(keystroke)
 	if err != nil {
 		// parse keystroke error
@@ -371,12 +371,12 @@ func (m *Manager) DeleteShortcutKeystroke(id string, type0 int32, keystroke stri
 	return nil
 }
 
-func (m *Manager) GetShortcut(id string, type0 int32) (string, *dbus.Error) {
-	shortcut := m.shortcutManager.GetByIdType(id, type0)
-	if shortcut == nil {
+func (m *Manager) GetShortcut(id string, type0 int32) (shortcut string, busErr *dbus.Error) {
+	s := m.shortcutManager.GetByIdType(id, type0)
+	if s == nil {
 		return "", dbusutil.ToError(ErrShortcutNotFound{id, type0})
 	}
-	detail, err := shortcut.Marshal()
+	detail, err := s.Marshal()
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
@@ -395,7 +395,7 @@ func (m *Manager) SetNumLockState(state int32) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
-func (m *Manager) SearchShortcuts(query string) (string, *dbus.Error) {
+func (m *Manager) SearchShortcuts(query string) (shortcuts string, busErr *dbus.Error) {
 	list := m.shortcutManager.Search(query)
 	ret, err := util.MarshalJSON(list)
 	if err != nil {
@@ -404,9 +404,9 @@ func (m *Manager) SearchShortcuts(query string) (string, *dbus.Error) {
 	return ret, nil
 }
 
-func (m *Manager) GetCapsLockState() (int32, *dbus.Error) {
-	state, err := queryCapsLockState(m.conn)
-	return int32(state), dbusutil.ToError(err)
+func (m *Manager) GetCapsLockState() (state int32, busErr *dbus.Error) {
+	lockState, err := queryCapsLockState(m.conn)
+	return int32(lockState), dbusutil.ToError(err)
 }
 
 func (m *Manager) SetCapsLockState(state int32) *dbus.Error {

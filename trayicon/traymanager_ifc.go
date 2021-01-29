@@ -38,7 +38,7 @@ func (*TrayManager) GetInterfaceName() string {
 }
 
 // Manage方法获取系统托盘图标的管理权。
-func (m *TrayManager) Manage() (bool, *dbus.Error) {
+func (m *TrayManager) Manage() (ok bool, busErr *dbus.Error) {
 	logger.Debug("call Manage by dbus")
 
 	err := m.sendClientMsgMANAGER()
@@ -50,7 +50,7 @@ func (m *TrayManager) Manage() (bool, *dbus.Error) {
 }
 
 // GetName返回传入的系统图标的窗口id的窗口名。
-func (m *TrayManager) GetName(win uint32) (string, *dbus.Error) {
+func (m *TrayManager) GetName(win uint32) (name string, busErr *dbus.Error) {
 	m.mutex.Lock()
 	icon, ok := m.icons[x.Window(win)]
 	m.mutex.Unlock()
@@ -61,7 +61,7 @@ func (m *TrayManager) GetName(win uint32) (string, *dbus.Error) {
 }
 
 // EnableNotification设置对应id的窗口是否可以通知。
-func (m *TrayManager) EnableNotification(win uint32, enable bool) *dbus.Error {
+func (m *TrayManager) EnableNotification(win uint32, enabled bool) *dbus.Error {
 	m.mutex.Lock()
 	icon, ok := m.icons[x.Window(win)]
 	m.mutex.Unlock()
@@ -70,7 +70,7 @@ func (m *TrayManager) EnableNotification(win uint32, enable bool) *dbus.Error {
 	}
 
 	icon.mu.Lock()
-	icon.notify = enable
+	icon.notify = enabled
 	icon.mu.Unlock()
 	return nil
 }

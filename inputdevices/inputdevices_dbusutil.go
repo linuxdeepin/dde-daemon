@@ -2,6 +2,28 @@
 
 package inputdevices
 
+func (v *Keyboard) setPropCurrentLayout(value string) (changed bool) {
+	if v.CurrentLayout != value {
+		v.CurrentLayout = value
+		v.emitPropChangedCurrentLayout(value)
+		return true
+	}
+	return false
+}
+
+func (v *Keyboard) emitPropChangedCurrentLayout(value string) error {
+	return v.service.EmitPropertyChanged(v, "CurrentLayout", value)
+}
+
+func (v *Keyboard) setPropUserLayoutList(value []string) {
+	v.UserLayoutList = value
+	v.emitPropChangedUserLayoutList(value)
+}
+
+func (v *Keyboard) emitPropChangedUserLayoutList(value []string) error {
+	return v.service.EmitPropertyChanged(v, "UserLayoutList", value)
+}
+
 func (v *Mouse) setPropDeviceList(value string) (changed bool) {
 	if v.DeviceList != value {
 		v.DeviceList = value
@@ -117,26 +139,4 @@ func (v *Wacom) setPropMapOutput(value string) (changed bool) {
 
 func (v *Wacom) emitPropChangedMapOutput(value string) error {
 	return v.service.EmitPropertyChanged(v, "MapOutput", value)
-}
-
-func (v *Keyboard) setPropCurrentLayout(value string) (changed bool) {
-	if v.CurrentLayout != value {
-		v.CurrentLayout = value
-		v.emitPropChangedCurrentLayout(value)
-		return true
-	}
-	return false
-}
-
-func (v *Keyboard) emitPropChangedCurrentLayout(value string) error {
-	return v.service.EmitPropertyChanged(v, "CurrentLayout", value)
-}
-
-func (v *Keyboard) setPropUserLayoutList(value []string) {
-	v.UserLayoutList = value
-	v.emitPropChangedUserLayoutList(value)
-}
-
-func (v *Keyboard) emitPropChangedUserLayoutList(value []string) error {
-	return v.service.EmitPropertyChanged(v, "UserLayoutList", value)
 }

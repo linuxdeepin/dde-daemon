@@ -23,6 +23,8 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 type Manager struct {
 	service *dbusutil.Service
 	quit    chan bool

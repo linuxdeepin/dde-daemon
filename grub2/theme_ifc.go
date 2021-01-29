@@ -60,7 +60,7 @@ func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string)
 	return nil
 }
 
-func (theme *Theme) GetBackground() (string, *dbus.Error) {
+func (theme *Theme) GetBackground() (background string, busErr *dbus.Error) {
 	theme.service.DelayAutoQuit()
 
 	theme.g.PropsMu.RLock()

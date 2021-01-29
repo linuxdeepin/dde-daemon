@@ -27,17 +27,10 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 )
 
+//go:generate dbusutil-gen em -type Manager
 type Manager struct {
 	service  *dbusutil.Service
 	objLogin *login1.Manager
-
-	// nolint
-	methods *struct {
-		CanShutdown  func() `out:"can"`
-		CanReboot    func() `out:"can"`
-		CanSuspend   func() `out:"can"`
-		CanHibernate func() `out:"can"`
-	}
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
@@ -66,17 +59,17 @@ func (m *Manager) init() error {
 	return nil
 }
 
-func (m *Manager) CanShutdown() (bool, *dbus.Error) {
+func (m *Manager) CanShutdown() (can bool, busErr *dbus.Error) {
 	str, _ := m.objLogin.CanPowerOff(0)
 	return str == "yes", nil
 }
 
-func (m *Manager) CanReboot() (bool, *dbus.Error) {
+func (m *Manager) CanReboot() (can bool, busErr *dbus.Error) {
 	str, _ := m.objLogin.CanReboot(0)
 	return str == "yes", nil
 }
 
-func (m *Manager) CanSuspend() (bool, *dbus.Error) {
+func (m *Manager) CanSuspend() (can bool, busErr *dbus.Error) {
 	_, err := os.Stat("/sys/power/mem_sleep")
 	if os.IsNotExist(err) {
 		return false, nil
@@ -86,7 +79,7 @@ func (m *Manager) CanSuspend() (bool, *dbus.Error) {
 	return str == "yes", nil
 }
 
-func (m *Manager) CanHibernate() (bool, *dbus.Error) {
+func (m *Manager) CanHibernate() (can bool, busErr *dbus.Error) {
 	if !canHibernate() {
 		logger.Debug("cannot suspend")
 		return false, nil

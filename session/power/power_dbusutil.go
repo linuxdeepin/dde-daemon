@@ -28,6 +28,19 @@ func (v *Manager) emitPropChangedOnBattery(value bool) error {
 	return v.service.EmitPropertyChanged(v, "OnBattery", value)
 }
 
+func (v *Manager) setPropUseWayland(value bool) (changed bool) {
+	if v.UseWayland != value {
+		v.UseWayland = value
+		v.emitPropChangedUseWayland(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedUseWayland(value bool) error {
+	return v.service.EmitPropertyChanged(v, "UseWayland", value)
+}
+
 func (v *Manager) setPropWarnLevel(value WarnLevel) (changed bool) {
 	if v.WarnLevel != value {
 		v.WarnLevel = value

@@ -46,37 +46,36 @@ func (*Grub2) GetInterfaceName() string {
 
 // GetSimpleEntryTitles return entry titles only in level one and will
 // filter out some useless entries such as sub-menus and "memtest86+".
-func (grub *Grub2) GetSimpleEntryTitles() ([]string, *dbus.Error) {
+func (grub *Grub2) GetSimpleEntryTitles() (titles []string, busErr *dbus.Error) {
 	grub.service.DelayAutoQuit()
 
-	entryTitles := make([]string, 0)
 	for _, entry := range grub.entries {
 		if entry.parentSubMenu == nil && entry.entryType == MENUENTRY {
 			title := entry.getFullTitle()
 			if !strings.Contains(title, "memtest86+") {
-				entryTitles = append(entryTitles, title)
+				titles = append(titles, title)
 			}
 		}
 	}
-	if len(entryTitles) == 0 {
+	if len(titles) == 0 {
 		logger.Warningf("there is no menu entry in %q", grubScriptFile)
 	}
-	return entryTitles, nil
+	return titles, nil
 }
 
-func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) ([]string, *dbus.Error) {
+func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) (gfxModes []string, busErr *dbus.Error) {
 	g.service.DelayAutoQuit()
-	gfxmodes, err := g.getAvailableGfxmodes(sender)
+	modes, err := g.getAvailableGfxmodes(sender)
 	if err != nil {
 		logger.Warning(err)
 		return nil, dbusutil.ToError(err)
 	}
-	gfxmodes.SortDesc()
-	result := make([]string, len(gfxmodes))
-	for idx, m := range gfxmodes {
-		result[idx] = m.String()
+	modes.SortDesc()
+	gfxModes = make([]string, len(modes))
+	for idx, m := range modes {
+		gfxModes[idx] = m.String()
 	}
-	return result, nil
+	return gfxModes, nil
 }
 
 func (g *Grub2) SetDefaultEntry(sender dbus.Sender, entry string) *dbus.Error {

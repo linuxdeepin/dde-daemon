@@ -35,6 +35,8 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
+//go:generate dbusutil-gen em -type Miracast
+
 const (
 	dbusServiceName = "com.deepin.daemon.Miracast"
 	dbusPath        = "/com/deepin/daemon/Miracast"
@@ -83,16 +85,6 @@ type Miracast struct {
 			eventType uint8
 			path      dbus.ObjectPath
 		}
-	}
-	//nolint
-	methods *struct {
-		ListLinks   func() `out:"links"`
-		ListSinks   func() `out:"sinks"`
-		Enable      func() `in:"link,enabled"`
-		SetLinkName func() `in:"link,name"`
-		Scanning    func() `in:"link,enabled"`
-		Connect     func() `in:"sink,x,y,w,h"`
-		Disconnect  func() `in:"sink"`
 	}
 }
 

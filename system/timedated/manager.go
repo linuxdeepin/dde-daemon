@@ -35,21 +35,13 @@ import (
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
+//go:generate dbusutil-gen em -type Manager
 
 type Manager struct {
 	core      *timedate1.Timedate
 	service   *dbusutil.Service
 	PropsMu   sync.RWMutex
 	NTPServer string
-
-	// nolint
-	methods *struct {
-		SetTime      func() `in:"usec,relative,message"`
-		SetTimezone  func() `in:"timezone,message"`
-		SetLocalRTC  func() `in:"enabled,fixSystem,message"`
-		SetNTP       func() `in:"enabled,message"`
-		SetNTPServer func() `in:"server,message"`
-	}
 }
 
 const (

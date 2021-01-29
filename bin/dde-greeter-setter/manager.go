@@ -31,6 +31,8 @@ import (
 	"pkg.deepin.io/lib/keyfile"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	dbusServiceName = "com.deepin.daemon.Greeter"
 	dbusPath        = "/com/deepin/daemon/Greeter"
@@ -67,10 +69,6 @@ var globalKeyConvertMap = map[string]string{
 
 type Manager struct {
 	service *dbusutil.Service
-
-	methods *struct { //nolint
-		UpdateGreeterQtTheme func() `in:"fd"`
-	}
 }
 
 func (m *Manager) UpdateGreeterQtTheme(fd dbus.UnixFD) *dbus.Error {

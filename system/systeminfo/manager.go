@@ -12,6 +12,8 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	dbusServiceName = "com.deepin.system.SystemInfo"
 	dbusPath        = "/com/deepin/system/SystemInfo"
@@ -197,7 +199,7 @@ func filterUnNumber(value string) string {
 	return reg.ReplaceAllString(value, "")
 }
 
-func (m *Manager)systemBit() string {
+func (m *Manager) systemBit() string {
 	output, err := exec.Command("/usr/bin/getconf", "LONG_BIT").Output()
 	if err != nil {
 		return "64"

@@ -28,9 +28,9 @@ import (
 
 // SetTime set the current time and date,
 // pass a value of microseconds since 1 Jan 1970 UTC
-func (m *Manager) SetTime(sender dbus.Sender, usec int64, relative bool, msg string) *dbus.Error {
+func (m *Manager) SetTime(sender dbus.Sender, usec int64, relative bool, message string) *dbus.Error {
 	/*
-		err := m.checkAuthorization("SetTime", msg, sender)
+		err := m.checkAuthorization("SetTime", message, sender)
 		if err != nil {
 			return dbusutil.ToError(err)
 		}
@@ -42,8 +42,8 @@ func (m *Manager) SetTime(sender dbus.Sender, usec int64, relative bool, msg str
 }
 
 // SetTimezone set the system time zone, the value from /usr/share/zoneinfo/zone.tab
-func (m *Manager) SetTimezone(sender dbus.Sender, timezone, msg string) *dbus.Error {
-	err := m.checkAuthorization("SetTimezone", msg, sender)
+func (m *Manager) SetTimezone(sender dbus.Sender, timezone, message string) *dbus.Error {
+	err := m.checkAuthorization("SetTimezone", message, sender)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -62,8 +62,8 @@ func (m *Manager) SetTimezone(sender dbus.Sender, timezone, msg string) *dbus.Er
 }
 
 // SetLocalRTC to control whether the RTC is the local time or UTC.
-func (m *Manager) SetLocalRTC(sender dbus.Sender, enabled bool, fixSystem bool, msg string) *dbus.Error {
-	err := m.checkAuthorization("SetLocalRTC", msg, sender)
+func (m *Manager) SetLocalRTC(sender dbus.Sender, enabled bool, fixSystem bool, message string) *dbus.Error {
+	err := m.checkAuthorization("SetLocalRTC", message, sender)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -81,9 +81,9 @@ func (m *Manager) SetLocalRTC(sender dbus.Sender, enabled bool, fixSystem bool, 
 }
 
 // SetNTP to control whether the system clock is synchronized with the network
-func (m *Manager) SetNTP(sender dbus.Sender, enabled bool, msg string) *dbus.Error {
+func (m *Manager) SetNTP(sender dbus.Sender, enabled bool, message string) *dbus.Error {
 	/*
-		err := m.checkAuthorization("SetNTP", msg, sender)
+		err := m.checkAuthorization("SetNTP", message, sender)
 		if err != nil {
 			return dbusutil.ToError(err)
 		}
@@ -110,8 +110,8 @@ func (m *Manager) SetNTP(sender dbus.Sender, enabled bool, msg string) *dbus.Err
 	return dbusutil.ToError(err)
 }
 
-func (m *Manager) SetNTPServer(sender dbus.Sender, server, msg string) *dbus.Error {
-	err := m.checkAuthorization("SetNTPServer", msg, sender)
+func (m *Manager) SetNTPServer(sender dbus.Sender, server, message string) *dbus.Error {
+	err := m.checkAuthorization("SetNTPServer", message, sender)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}

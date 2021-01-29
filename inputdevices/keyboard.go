@@ -76,13 +76,13 @@ type Keyboard struct {
 	service        *dbusutil.Service
 	sysSigLoop     *dbusutil.SignalLoop
 	PropsMu        sync.RWMutex
-	CurrentLayout  string      `prop:"access:rw"`
-	LayoutScope    gsprop.Enum `prop:"access:rw"`
+	CurrentLayout  string `prop:"access:rw"`
 	appLayoutCfg   appLayoutConfig
 	// dbusutil-gen: equal=nil
 	UserLayoutList []string
 
 	// dbusutil-gen: ignore-below
+	LayoutScope    gsprop.Enum `prop:"access:rw"`
 	RepeatEnabled  gsprop.Bool `prop:"access:rw"`
 	CapslockToggle gsprop.Bool `prop:"access:rw"`
 
@@ -98,17 +98,6 @@ type Keyboard struct {
 	layoutMap layoutMap
 
 	devNumber int
-	//nolint
-	methods *struct {
-		AddLayoutOption    func() `in:"option"`
-		DeleteLayoutOption func() `in:"option"`
-
-		AddUserLayout    func() `in:"layout"`
-		DeleteUserLayout func() `in:"layout"`
-
-		GetLayoutDesc func() `in:"layout" out:"description"`
-		LayoutList    func() `out:"layout_list"`
-	}
 }
 
 func newKeyboard(service *dbusutil.Service) *Keyboard {

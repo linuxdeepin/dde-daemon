@@ -31,6 +31,8 @@ import (
 	"pkg.deepin.io/lib/log"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	dbusServiceName = "com.deepin.daemon.helper.Backlight"
 	dbusPath        = "/com/deepin/daemon/helper/Backlight"
@@ -44,9 +46,6 @@ const (
 
 type Manager struct {
 	service *dbusutil.Service
-	methods *struct { //nolint
-		SetBrightness func() `in:"type,name,value"`
-	}
 }
 
 var logger = log.NewLogger("backlight_helper")

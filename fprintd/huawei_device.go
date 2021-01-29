@@ -30,8 +30,6 @@ type HuaweiDevice struct {
 	userUuid string
 
 	ScanType string // const
-
-	methods *deviceMethods //nolint
 }
 
 func (d *HuaweiDevice) destroy() {
@@ -172,7 +170,7 @@ func (dev *HuaweiDevice) ClaimForce(sender dbus.Sender, username string) *dbus.E
 	return dbusutil.ToError(err)
 }
 
-func (dev *HuaweiDevice) GetCapabilities() ([]string, *dbus.Error) {
+func (dev *HuaweiDevice) GetCapabilities() (caps []string, busErr *dbus.Error) {
 	return []string{"ClaimForce", "DeleteEnrolledFinger"}, nil
 }
 
@@ -335,7 +333,7 @@ func (dev *HuaweiDevice) verifyStart(sender dbus.Sender) error {
 	return err
 }
 
-func (dev *HuaweiDevice) VerifyStart(sender dbus.Sender, _finger string) *dbus.Error {
+func (dev *HuaweiDevice) VerifyStart(sender dbus.Sender, finger string) *dbus.Error {
 	err := dev.verifyStart(sender)
 	return dbusutil.ToError(err)
 }
@@ -427,14 +425,14 @@ func (dev *HuaweiDevice) deleteEnrolledFinger(sender dbus.Sender, username, fing
 	return nil
 }
 
-func (dev *HuaweiDevice) ListEnrolledFingers(username string) ([]string, *dbus.Error) {
-	result, err := dev.listEnrolledFingers(username)
+func (dev *HuaweiDevice) ListEnrolledFingers(username string) (fingers []string, busErr *dbus.Error) {
+	fingers, err := dev.listEnrolledFingers(username)
 	if err != nil {
 		logger.Warningf("ListEnrolledFingers() username: %q, err: %v", username, err)
 	} else {
-		logger.Debugf("ListEnrolledFingers() username: %q, ret: %v", username, result)
+		logger.Debugf("ListEnrolledFingers() username: %q, ret: %v", username, fingers)
 	}
-	return result, dbusutil.ToError(err)
+	return fingers, dbusutil.ToError(err)
 }
 
 func (dev *HuaweiDevice) listEnrolledFingers(username string) ([]string, error) {
@@ -470,10 +468,10 @@ func (*HuaweiDevice) GetInterfaceName() string {
 }
 
 const (
-	fprintdEnrollStatusCompleted          = "enroll-completed"
-	fprintdEnrollStatusFailed             = "enroll-failed"
-	fprintdEnrollStatusStagePassed        = "enroll-stage-passed"
-	fprintdEnrollStatusRetryScan          = "enroll-retry-scan"
+	fprintdEnrollStatusCompleted   = "enroll-completed"
+	fprintdEnrollStatusFailed      = "enroll-failed"
+	fprintdEnrollStatusStagePassed = "enroll-stage-passed"
+	fprintdEnrollStatusRetryScan   = "enroll-retry-scan"
 
 	fprintdVerifyStatusNoMatch      = "verify-no-match"
 	fprintdVerifyStatusMatch        = "verify-match"

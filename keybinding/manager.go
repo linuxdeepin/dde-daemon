@@ -44,6 +44,8 @@ import (
 	"pkg.deepin.io/lib/xdg/basedir"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	// shortcut signals:
 	shortcutSignalChanged = "Changed"
@@ -136,33 +138,6 @@ type Manager struct {
 			pressed   bool
 			keystroke string
 		}
-	}
-
-	//nolint
-	methods *struct {
-		AddCustomShortcut         func() `in:"name,action,keystroke" out:"id,type"`
-		AddShortcutKeystroke      func() `in:"id,type,keystroke"`
-		ClearShortcutKeystrokes   func() `in:"id,type"`
-		DeleteCustomShortcut      func() `in:"id"`
-		DeleteShortcutKeystroke   func() `in:"id,type,keystroke"`
-		GetShortcut               func() `in:"id,type" out:"shortcut"`
-		ListAllShortcuts          func() `out:"shortcuts"`
-		ListShortcutsByType       func() `in:"type" out:"shortcuts"`
-		SearchShortcuts           func() `in:"query" out:"shortcuts"`
-		LookupConflictingShortcut func() `in:"keystroke" out:"shortcut"`
-		ModifyCustomShortcut      func() `in:"id,name,cmd,keystroke"`
-		SetNumLockState           func() `in:"state"`
-		GetCapsLockState          func() `out:"state"`
-		SetCapsLockState          func() `in:"state"`
-
-		// deprecated
-		Add            func() `in:"name,action,keystroke" out:"ret0,ret1"`
-		Query          func() `in:"id,type" out:"shortcut"`
-		List           func() `out:"shortcuts"`
-		Delete         func() `in:"id,type"`
-		Disable        func() `in:"id,type"`
-		CheckAvaliable func() `in:"keystroke" out:"available,shortcut"`
-		ModifiedAccel  func() `in:"id,type,keystroke,add" out:"ret0,ret1"`
 	}
 }
 

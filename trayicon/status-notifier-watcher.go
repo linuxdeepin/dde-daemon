@@ -28,12 +28,6 @@ type StatusNotifierWatcher struct {
 	ProtocolVersion int32
 
 	// nolint
-	methods *struct {
-		RegisterStatusNotifierItem func() `in:"serviceName"`
-		RegisterStatusNotifierHost func() `in:"serviceName"`
-	}
-
-	// nolint
 	signals *struct {
 		StatusNotifierItemRegistered struct {
 			ServiceName string

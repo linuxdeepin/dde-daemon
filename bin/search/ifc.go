@@ -31,7 +31,7 @@ func (*Manager) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func (m *Manager) NewSearchWithStrList(list []string) (string, bool, *dbus.Error) {
+func (m *Manager) NewSearchWithStrList(list []string) (md5sum string, ok bool, busErr *dbus.Error) {
 	m.service.DelayAutoQuit()
 	var datas []dataInfo
 	strs := ""
@@ -52,8 +52,8 @@ func (m *Manager) NewSearchWithStrList(list []string) (string, bool, *dbus.Error
 		datas = append(datas, info)
 	}
 
-	md5Str, ok := dutils.SumStrMd5(strs)
-	if !ok {
+	md5Str, ok1 := dutils.SumStrMd5(strs)
+	if !ok1 {
 		logger.Warning("Sum MD5 Failed")
 		return "", false, nil
 	}
@@ -76,7 +76,7 @@ func (m *Manager) NewSearchWithStrList(list []string) (string, bool, *dbus.Error
 	return md5Str, true, nil
 }
 
-func (m *Manager) NewSearchWithStrDict(dict map[string]string) (string, bool, *dbus.Error) {
+func (m *Manager) NewSearchWithStrDict(dict map[string]string) (md5sum string, ok bool, busErr *dbus.Error) {
 	m.service.DelayAutoQuit()
 
 	var datas []dataInfo
@@ -99,8 +99,8 @@ func (m *Manager) NewSearchWithStrDict(dict map[string]string) (string, bool, *d
 		datas = append(datas, info)
 	}
 
-	md5Str, ok := dutils.SumStrMd5(strs)
-	if !ok {
+	md5Str, ok1 := dutils.SumStrMd5(strs)
+	if !ok1 {
 		logger.Warning("Sum MD5 Failed")
 		return "", false, nil
 	}
@@ -123,42 +123,40 @@ func (m *Manager) NewSearchWithStrDict(dict map[string]string) (string, bool, *d
 	return md5Str, true, nil
 }
 
-func (m *Manager) SearchString(str, md5 string) ([]string, *dbus.Error) {
+func (m *Manager) SearchString(str, md5sum string) (result []string, busErr *dbus.Error) {
 	m.service.DelayAutoQuit()
 
 	var list []string
-	if len(str) < 1 || len(md5) < 1 {
+	if len(str) < 1 || len(md5sum) < 1 {
 		return list, nil
 	}
 
-	list = searchString(str, md5)
-	var tmp []string
+	list = searchString(str, md5sum)
 	for _, v := range list {
-		if !strIsInList(v, tmp) {
-			tmp = append(tmp, v)
+		if !strIsInList(v, result) {
+			result = append(result, v)
 		}
 	}
 
-	return tmp, nil
+	return result, nil
 }
 
-func (m *Manager) SearchStartWithString(str, md5 string) ([]string, *dbus.Error) {
+func (m *Manager) SearchStartWithString(str, md5sum string) (result []string, busErr *dbus.Error) {
 	m.service.DelayAutoQuit()
 
 	var list []string
-	if len(str) < 1 || len(md5) < 1 {
+	if len(str) < 1 || len(md5sum) < 1 {
 		return list, nil
 	}
 
-	list = searchStartWithString(str, md5)
-	var tmp []string
+	list = searchStartWithString(str, md5sum)
 	for _, v := range list {
-		if !strIsInList(v, tmp) {
-			tmp = append(tmp, v)
+		if !strIsInList(v, result) {
+			result = append(result, v)
 		}
 	}
 
-	return tmp, nil
+	return result, nil
 }
 
 func strIsInList(str string, list []string) bool {

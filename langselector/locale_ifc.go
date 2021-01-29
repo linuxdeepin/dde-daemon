@@ -68,12 +68,12 @@ func (lang *LangSelector) SetLocale(locale string) *dbus.Error {
 // Get locale info list that deepin supported
 //
 // 得到系统支持的 locale 信息列表
-func (lang *LangSelector) GetLocaleList() ([]LocaleInfo, *dbus.Error) {
+func (lang *LangSelector) GetLocaleList() (locales []LocaleInfo, busErr *dbus.Error) {
 	lang.service.DelayAutoQuit()
 	return lang.getCachedLocales(), nil
 }
 
-func (lang *LangSelector) GetLocaleDescription(locale string) (string, *dbus.Error) {
+func (lang *LangSelector) GetLocaleDescription(locale string) (description string, busErr *dbus.Error) {
 	lang.service.DelayAutoQuit()
 
 	infos := lang.getCachedLocales()
@@ -95,7 +95,7 @@ func (lang *LangSelector) Reset() *dbus.Error {
 	return lang.SetLocale(locale)
 }
 
-func (lang *LangSelector) GetLanguageSupportPackages(locale string) ([]string, *dbus.Error) {
+func (lang *LangSelector) GetLanguageSupportPackages(locale string) (packages []string, busErr *dbus.Error) {
 	lang.service.DelayAutoQuit()
 
 	ls, err := language_support.NewLanguageSupport()
@@ -103,9 +103,9 @@ func (lang *LangSelector) GetLanguageSupportPackages(locale string) ([]string, *
 		return nil, dbusutil.ToError(err)
 	}
 
-	pkgs := ls.ByLocale(locale, false)
+	packages = ls.ByLocale(locale, false)
 	ls.Destroy()
-	return pkgs, nil
+	return packages, nil
 }
 
 func (lang *LangSelector) AddLocale(locale string) *dbus.Error {

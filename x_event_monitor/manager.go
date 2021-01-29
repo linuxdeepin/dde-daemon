@@ -36,6 +36,8 @@ import (
 	dutils "pkg.deepin.io/lib/utils"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const fullscreenId = "d41d8cd98f00b204e9800998ecf8427e"
 
 var errAreasRegistered = errors.New("the areas has been registered")
@@ -79,14 +81,6 @@ type Manager struct {
 			id   string
 		}
 		CursorShowAgain struct{}
-	}
-	//nolint
-	methods *struct {
-		RegisterArea        func() `in:"x1,y1,x2,y2,flag" out:"id"`
-		RegisterAreas       func() `in:"areas,flag" out:"id"`
-		RegisterFullScreen  func() `out:"id"`
-		UnregisterArea      func() `in:"id" out:"ok"`
-		DebugGetPidAreasMap func() `out:"pidAreasMapJSON"`
 	}
 
 	pidAidsMap            map[uint32]strv.Strv
@@ -513,7 +507,7 @@ func (m *Manager) unregisterPidArea(pid uint32, areasId string) {
 	}
 }
 
-func (m *Manager) RegisterArea(sender dbus.Sender, x1, y1, x2, y2, flag int32) (string, *dbus.Error) {
+func (m *Manager) RegisterArea(sender dbus.Sender, x1, y1, x2, y2, flag int32) (id string, busErr *dbus.Error) {
 	return m.RegisterAreas(sender,
 		[]coordinateRange{{x1, y1, x2, y2}},
 		flag)
@@ -586,7 +580,7 @@ func (m *Manager) RegisterFullScreen(sender dbus.Sender) (id string, busErr *dbu
 	return fullscreenId, nil
 }
 
-func (m *Manager) UnregisterArea(sender dbus.Sender, id string) (bool, *dbus.Error) {
+func (m *Manager) UnregisterArea(sender dbus.Sender, id string) (ok bool, busErr *dbus.Error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -602,8 +596,8 @@ func (m *Manager) UnregisterArea(sender dbus.Sender, id string) (bool, *dbus.Err
 
 	m.unregisterPidArea(pid, id)
 
-	_, ok := m.idReferCountMap[id]
-	if !ok {
+	_, ok1 := m.idReferCountMap[id]
+	if !ok1 {
 		logger.Warningf("not found key %q in idReferCountMap", id)
 		return false, nil
 	}
@@ -705,7 +699,7 @@ func (m *Manager) sumAreasMd5(areas []coordinateRange, flag int32) (md5Str strin
 	return
 }
 
-func (m *Manager) DebugGetPidAreasMap() (string, *dbus.Error) {
+func (m *Manager) DebugGetPidAreasMap() (pidAreasMapJSON string, busErr *dbus.Error) {
 	m.mu.Lock()
 	data, err := json.Marshal(m.pidAidsMap)
 	m.mu.Unlock()

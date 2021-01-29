@@ -16,6 +16,8 @@ import (
 	"pkg.deepin.io/lib/procfs"
 )
 
+//go:generate dbusutil-gen em -type UadpAgent
+
 var logger = log.NewLogger("daemon/session/UadpAgent")
 
 const (
@@ -42,12 +44,6 @@ type UadpAgent struct {
 	mu                  sync.Mutex
 
 	secretData map[string]string // 密钥缓存
-
-	// nolint
-	methods *struct {
-		SetDataKey func() `in:"keyName, dataKey"`
-		GetDataKey func() `in:"keyName" out:"dataKey"`
-	}
 }
 
 func newUadpAgent(service *dbusutil.Service) (*UadpAgent, error) {
@@ -95,19 +91,19 @@ func (u *UadpAgent) SetDataKey(sender dbus.Sender, keyName string, dataKey strin
 }
 
 // 提供给用户调用,用户通过此接口获取密钥
-func (u *UadpAgent) GetDataKey(sender dbus.Sender, keyName string) (string, *dbus.Error) {
+func (u *UadpAgent) GetDataKey(sender dbus.Sender, keyName string) (dataKey string, busErr *dbus.Error) {
 	executablePath, keyringKey, err := u.getExePathAndKeyringKey(sender, false)
 	if err != nil {
 		logger.Warning("failed to get exePath and keyringKey:", err)
 		return "", dbusutil.ToError(err)
 	}
 	// 将密钥解密,并返回给用户
-	key, err := u.uadpDaemon.GetDataKey(0, executablePath, keyName, keyringKey)
+	dataKey, err = u.uadpDaemon.GetDataKey(0, executablePath, keyName, keyringKey)
 	if err != nil {
 		logger.Warning("failed to get data key:", err)
 		return "", dbusutil.ToError(err)
 	}
-	return key, nil
+	return dataKey, nil
 }
 
 // 获取调用者二进制可执行文件路径和用于加解密数据的密钥

@@ -56,7 +56,7 @@ func (*Manager) GetInterfaceName() string {
 // ty: 用户类型，0 为普通用户，1 为管理员
 
 func (m *Manager) CreateUser(sender dbus.Sender,
-	name, fullName string, accountType int32) (dbus.ObjectPath, *dbus.Error) {
+	name, fullName string, accountType int32) (userPath dbus.ObjectPath, busErr *dbus.Error) {
 
 	logger.Debug("[CreateUser] new user:", name, fullName, accountType)
 
@@ -154,7 +154,7 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 	return nil
 }
 
-func (m *Manager) FindUserById(uid string) (string, *dbus.Error) {
+func (m *Manager) FindUserById(uid string) (user string, busErr *dbus.Error) {
 	userPath := userDBusPathPrefix + uid
 	for _, v := range m.UserList {
 		if v == userPath {
@@ -165,7 +165,7 @@ func (m *Manager) FindUserById(uid string) (string, *dbus.Error) {
 	return "", dbusutil.ToError(fmt.Errorf("Invalid uid: %s", uid))
 }
 
-func (m *Manager) FindUserByName(name string) (string, *dbus.Error) {
+func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) {
 	m.usersMapMu.Lock()
 	defer m.usersMapMu.Unlock()
 
@@ -181,7 +181,7 @@ func (m *Manager) FindUserByName(name string) (string, *dbus.Error) {
 // 随机得到一个用户头像
 //
 // ret0：头像路径，为空则表示获取失败
-func (m *Manager) RandUserIcon() (string, *dbus.Error) {
+func (m *Manager) RandUserIcon() (iconFile string, busErr *dbus.Error) {
 	icons := getUserStandardIcons()
 	if len(icons) == 0 {
 		return "", dbusutil.ToError(errors.New("Did not find any user icons"))
@@ -243,7 +243,7 @@ func (m *Manager) IsUsernameValid(sender dbus.Sender, name string) (valid bool,
 // ret1: 提示信息
 //
 // ret2: 不合法代码
-func (m *Manager) IsPasswordValid(password string) (bool, string, int32, *dbus.Error) {
+func (m *Manager) IsPasswordValid(password string) (valid bool, msg string, code int32, busErr *dbus.Error) {
 	releaseType := getDeepinReleaseType()
 	logger.Infof("release type %q", releaseType)
 	errCode := checkers.CheckPasswordValid(releaseType, password)
@@ -274,7 +274,7 @@ func (m *Manager) AllowGuestAccount(sender dbus.Sender, allow bool) *dbus.Error 
 	return nil
 }
 
-func (m *Manager) CreateGuestAccount(sender dbus.Sender) (string, *dbus.Error) {
+func (m *Manager) CreateGuestAccount(sender dbus.Sender) (user string, busErr *dbus.Error) {
 	err := m.checkAuth(sender)
 	if err != nil {
 		return "", dbusutil.ToError(err)
@@ -293,17 +293,17 @@ func (m *Manager) CreateGuestAccount(sender dbus.Sender) (string, *dbus.Error) {
 	return userDBusPathPrefix + info.Uid, nil
 }
 
-func (m *Manager) GetGroups() ([]string, *dbus.Error) {
+func (m *Manager) GetGroups() (groups []string, busErr *dbus.Error) {
 	groups, err := users.GetAllGroups()
 	return groups, dbusutil.ToError(err)
 }
 
-func (m *Manager) GetPresetGroups(accountType int32) ([]string, *dbus.Error) {
+func (m *Manager) GetPresetGroups(accountType int32) (groups []string, busErr *dbus.Error) {
 	err := checkAccountType(int(accountType))
 	if err != nil {
 		return nil, dbusutil.ToError(err)
 	}
 
-	groups := users.GetPresetGroups(int(accountType))
+	groups = users.GetPresetGroups(int(accountType))
 	return groups, nil
 }

@@ -7,15 +7,17 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
+	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/gettext"
 )
+
+//go:generate dbusutil-gen em -type Lastore
 
 type Lastore struct {
 	service        *dbusutil.Service
@@ -40,11 +42,6 @@ type Lastore struct {
 	// prop:
 	PropsMu            sync.RWMutex
 	SourceCheckEnabled bool
-	//nolint
-	methods *struct {
-		SetSourceCheckEnabled func() `in:"val"`
-		IsDiskSpaceSufficient func() `out:"result"`
-	}
 }
 
 type CacheJobInfo struct {
@@ -323,7 +320,7 @@ func (l *Lastore) notifyJob(path dbus.ObjectPath) {
 	}
 }
 
-func (*Lastore) IsDiskSpaceSufficient() (bool, *dbus.Error) {
+func (*Lastore) IsDiskSpaceSufficient() (result bool, busErr *dbus.Error) {
 	avail, err := queryVFSAvailable("/")
 	if err != nil {
 		return false, dbusutil.ToError(err)

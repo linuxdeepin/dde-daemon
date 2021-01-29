@@ -29,11 +29,6 @@ type ImageBlur struct {
 			ok          bool
 		}
 	}
-	//nolint
-	methods *struct {
-		Get    func() `in:"source" out:"blurred"`
-		Delete func() `in:"file"`
-	}
 }
 
 func newImageBlur(service *dbusutil.Service) *ImageBlur {
@@ -47,7 +42,7 @@ func (ib *ImageBlur) GetInterfaceName() string {
 	return imageBlurDBusInterface
 }
 
-func (ib *ImageBlur) Get(file string) (string, *dbus.Error) {
+func (ib *ImageBlur) Get(file string) (blurred string, busErr *dbus.Error) {
 	logger.Debugf("Get %q", file)
 
 	blurFile := getImageBlurFile(file)

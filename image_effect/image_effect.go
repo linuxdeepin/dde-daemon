@@ -33,6 +33,8 @@ import (
 	"pkg.deepin.io/lib/procfs"
 )
 
+//go:generate dbusutil-gen em -type ImageEffect
+
 const (
 	dbusServiceName = "com.deepin.daemon.ImageEffect"
 	dbusInterface   = dbusServiceName
@@ -58,11 +60,6 @@ func (etf effectToolFunc) generate(uid int, inputFile, outputFile string, envVar
 type ImageEffect struct {
 	service *dbusutil.Service
 	tools   map[string]effectTool
-	//nolint
-	methods *struct {
-		Get    func() `in:"effect,filename" out:"outputFile"`
-		Delete func() `in:"effect,filename"`
-	}
 	tasks   map[taskKey]*Task
 	tasksMu sync.Mutex
 }

@@ -26,7 +26,7 @@ const (
 	nmSyncVersion = "1.0"
 )
 
-func (*Daemon) NetworkGetConnections() ([]byte, *dbus.Error) {
+func (*Daemon) NetworkGetConnections() (data []byte, busErr *dbus.Error) {
 	list, err := getConnectionList(nmConnDir)
 	if err != nil {
 		return nil, dbusutil.ToError(err)
@@ -35,7 +35,7 @@ func (*Daemon) NetworkGetConnections() ([]byte, *dbus.Error) {
 		Version:     nmSyncVersion,
 		Connections: list,
 	}
-	data, err := json.Marshal(&info)
+	data, err = json.Marshal(&info)
 	if err != nil {
 		return nil, dbusutil.ToError(err)
 	}

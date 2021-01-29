@@ -34,7 +34,7 @@ const (
 	EventSinkDisconnected
 )
 
-func (m *Miracast) ListLinks() (LinkInfos, *dbus.Error) {
+func (m *Miracast) ListLinks() (links LinkInfos, busErr *dbus.Error) {
 	logger.Debug("call ListLinks")
 	m.init()
 	m.linkLocker.Lock()
@@ -42,7 +42,7 @@ func (m *Miracast) ListLinks() (LinkInfos, *dbus.Error) {
 	return m.links, nil
 }
 
-func (m *Miracast) ListSinks() (SinkInfos, *dbus.Error) {
+func (m *Miracast) ListSinks() (sinks SinkInfos, busErr *dbus.Error) {
 	logger.Debug("call ListSinks")
 	m.init()
 	m.sinkLocker.Lock()
@@ -50,10 +50,10 @@ func (m *Miracast) ListSinks() (SinkInfos, *dbus.Error) {
 	return m.sinks, nil
 }
 
-func (m *Miracast) Enable(linkPath dbus.ObjectPath, enabled bool) *dbus.Error {
-	logger.Debug("call Enable", linkPath, enabled)
+func (m *Miracast) Enable(link dbus.ObjectPath, enabled bool) *dbus.Error {
+	logger.Debug("call Enable", link, enabled)
 	m.init()
-	err := m.enable(linkPath, enabled)
+	err := m.enable(link, enabled)
 	return dbusutil.ToError(err)
 }
 
@@ -97,10 +97,10 @@ func (m *Miracast) enable(linkPath dbus.ObjectPath, enabled bool) error {
 	return link.EnableManaged(enabled)
 }
 
-func (m *Miracast) SetLinkName(linkPath dbus.ObjectPath, name string) *dbus.Error {
-	logger.Debug("call SetLinkName", linkPath, name)
+func (m *Miracast) SetLinkName(link dbus.ObjectPath, name string) *dbus.Error {
+	logger.Debug("call SetLinkName", link, name)
 	m.init()
-	err := m.setLinkName(linkPath, name)
+	err := m.setLinkName(link, name)
 	return dbusutil.ToError(err)
 }
 
@@ -121,10 +121,10 @@ func (m *Miracast) setLinkName(linkPath dbus.ObjectPath, name string) error {
 	return nil
 }
 
-func (m *Miracast) Scanning(linkPath dbus.ObjectPath, enabled bool) *dbus.Error {
-	logger.Debug("call Scanning", linkPath, enabled)
+func (m *Miracast) Scanning(link dbus.ObjectPath, enabled bool) *dbus.Error {
+	logger.Debug("call Scanning", link, enabled)
 	m.init()
-	err := m.scanning(linkPath, enabled)
+	err := m.scanning(link, enabled)
 	return dbusutil.ToError(err)
 }
 
@@ -163,10 +163,10 @@ func (m *Miracast) scanning(linkPath dbus.ObjectPath, enabled bool) error {
 	return nil
 }
 
-func (m *Miracast) Connect(sinkPath dbus.ObjectPath, x, y, w, h uint32) *dbus.Error {
-	logger.Debug("call Connect", sinkPath, x, y, w, h)
+func (m *Miracast) Connect(sink dbus.ObjectPath, x, y, w, h uint32) *dbus.Error {
+	logger.Debug("call Connect", sink, x, y, w, h)
 	m.init()
-	err := m.connect(sinkPath, x, y, w, h)
+	err := m.connect(sink, x, y, w, h)
 	return dbusutil.ToError(err)
 }
 
@@ -234,9 +234,9 @@ func (m *Miracast) connect(sinkPath dbus.ObjectPath, x, y, w, h uint32) error {
 	return nil
 }
 
-func (m *Miracast) Disconnect(sinkPath dbus.ObjectPath) *dbus.Error {
-	logger.Debug("call Disconnect", sinkPath)
+func (m *Miracast) Disconnect(sink dbus.ObjectPath) *dbus.Error {
+	logger.Debug("call Disconnect", sink)
 	m.init()
-	err := m.disconnectSink(sinkPath)
+	err := m.disconnectSink(sink)
 	return dbusutil.ToError(err)
 }

@@ -17,7 +17,7 @@ func (m *Manager) SetLongPressDuration(duration uint32) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) GetLongPressDuration() (uint32, *dbus.Error) {
+func (m *Manager) GetLongPressDuration() (duration uint32, busErr *dbus.Error) {
 	return uint32(m.tsSetting.GetInt(tsSchemaKeyLongPress)), nil
 }
 
@@ -33,9 +33,8 @@ func (m *Manager) SetShortPressDuration(duration uint32) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) GetShortPressDuration() (uint32, *dbus.Error) {
+func (m *Manager) GetShortPressDuration() (duration uint32, busErr *dbus.Error) {
 	return uint32(m.tsSetting.GetInt(tsSchemaKeyShortPress)), nil
-
 }
 
 func (m *Manager) SetEdgeMoveStopDuration(duration uint32) *dbus.Error {
@@ -50,7 +49,6 @@ func (m *Manager) SetEdgeMoveStopDuration(duration uint32) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) GetEdgeMoveStopDuration() (uint32, *dbus.Error) {
+func (m *Manager) GetEdgeMoveStopDuration() (duration uint32, busErr *dbus.Error) {
 	return uint32(m.tsSetting.GetInt(tsSchemaKeyEdgeMoveStop)), nil
-
 }

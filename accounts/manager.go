@@ -43,6 +43,7 @@ const (
 )
 
 //go:generate dbusutil-gen -type Manager,User manager.go user.go
+//go:generate dbusutil-gen em -type Manager,User,ImageBlur
 
 type Manager struct {
 	service *dbusutil.Service
@@ -71,20 +72,6 @@ type Manager struct {
 		UserDeleted struct {
 			objPath string
 		}
-	}
-	//nolint
-	methods *struct {
-		CreateUser         func() `in:"name,fullName,accountType" out:"user"`
-		DeleteUser         func() `in:"name,rmFiles"`
-		FindUserById       func() `in:"uid" out:"user"`
-		FindUserByName     func() `in:"name" out:"user"`
-		RandUserIcon       func() `out:"iconFile"`
-		IsUsernameValid    func() `in:"name" out:"ok,errReason,errCode"`
-		IsPasswordValid    func() `in:"password" out:"ok,errReason,errCode"`
-		AllowGuestAccount  func() `in:"allow"`
-		CreateGuestAccount func() `out:"user"`
-		GetGroups          func() `out:"groups"`
-		GetPresetGroups    func() `in:"accountType" out:"groups"`
 	}
 }
 

@@ -71,7 +71,9 @@ type Background struct {
 type Backgrounds []*Background
 
 func refreshBackground() {
-	logger.Debug("refresh background")
+	if logger != nil {
+		logger.Debug("refresh background")
+	}
 	var bgs Backgrounds
 	// add custom
 	for _, file := range getCustomBgFiles() {

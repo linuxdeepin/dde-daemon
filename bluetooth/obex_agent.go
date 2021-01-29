@@ -69,12 +69,6 @@ type obexAgent struct {
 
 	notify   *notifications.Notifications
 	notifyID uint32
-
-	// nolint
-	methods *struct {
-		AuthorizePush func() `in:"transferPath" out:"filename"`
-		Cancel        func()
-	}
 }
 
 func (*obexAgent) GetInterfaceName() string {
@@ -116,14 +110,14 @@ func (a *obexAgent) unregisterAgent() {
 }
 
 // AuthorizePush 用于请求用户接收文件
-func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (string, *dbus.Error) {
+func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (filename string, busErr *dbus.Error) {
 	transfer, err := obex.NewTransfer(a.service.Conn(), transferPath)
 	if err != nil {
 		logger.Error("failed to new transfer:", err)
 		return "", dbusutil.ToError(err)
 	}
 
-	filename, err := transfer.Name().Get(0)
+	filename, err = transfer.Name().Get(0)
 	if err != nil {
 		logger.Warning("failed to get filename:", err)
 		return "", dbusutil.ToError(err)

@@ -32,6 +32,8 @@ import (
 	"pkg.deepin.io/lib/xdg/basedir"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 var logger *log.Logger
 
 func SetLogger(l *log.Logger) {
@@ -49,10 +51,6 @@ type Manager struct {
 
 	jsonFile string
 	confFile string
-	//nolint
-	methods *struct {
-		Set func() `in:"type0,ip,port,user,password"`
-	}
 }
 
 func NewManager(service *dbusutil.Service) *Manager {

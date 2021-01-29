@@ -50,7 +50,7 @@ func (m *Manager) SetTopLeft(value string) *dbus.Error {
 }
 
 // Get left-top edge action
-func (m *Manager) TopLeftAction() (string, *dbus.Error) {
+func (m *Manager) TopLeftAction() (value string, busErr *dbus.Error) {
 	return m.settings.GetEdgeAction(TopLeft), nil
 }
 
@@ -61,7 +61,7 @@ func (m *Manager) SetBottomLeft(value string) *dbus.Error {
 }
 
 // Get left-bottom edge action
-func (m *Manager) BottomLeftAction() (string, *dbus.Error) {
+func (m *Manager) BottomLeftAction() (value string, busErr *dbus.Error) {
 	return m.settings.GetEdgeAction(BottomLeft), nil
 }
 
@@ -72,7 +72,7 @@ func (m *Manager) SetTopRight(value string) *dbus.Error {
 }
 
 // Get right-top edge action
-func (m *Manager) TopRightAction() (string, *dbus.Error) {
+func (m *Manager) TopRightAction() (value string, busErr *dbus.Error) {
 	return m.settings.GetEdgeAction(TopRight), nil
 }
 
@@ -83,6 +83,6 @@ func (m *Manager) SetBottomRight(value string) *dbus.Error {
 }
 
 // Get right-bottom edge action
-func (m *Manager) BottomRightAction() (string, *dbus.Error) {
+func (m *Manager) BottomRightAction() (value string, busErr *dbus.Error) {
 	return m.settings.GetEdgeAction(BottomRight), nil
 }

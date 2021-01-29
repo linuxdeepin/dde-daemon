@@ -17,11 +17,7 @@ type PAMTransaction struct {
 	PropsMu        sync.RWMutex
 	Authenticating bool
 	Sender         string
-	methods        *struct { //nolint
-		SetUser func() `in:"user"`
-	}
-
-	core *pam.Transaction
+	core           *pam.Transaction
 }
 
 func (tx *PAMTransaction) setPropAuthenticating(value bool) {

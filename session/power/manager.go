@@ -34,6 +34,8 @@ import (
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
+//go:generate dbusutil-gen em -type Manager,WarnLevelConfigManager
+
 type Manager struct {
 	service              *dbusutil.Service
 	sessionSigLoop       *dbusutil.SignalLoop
@@ -133,11 +135,6 @@ type Manager struct {
 
 	// 是否支持高性能模式
 	IsHighPerformanceSupported bool
-
-	// nolint
-	methods *struct {
-		SetPrepareSuspend func() `in:"suspendState"`
-	}
 }
 
 var _manager *Manager
@@ -410,7 +407,7 @@ func (m *Manager) permitLogind() {
 	}
 }
 
-func (m *Manager) SetPrepareSuspend(v int) *dbus.Error {
-	m.setPrepareSuspend(v)
+func (m *Manager) SetPrepareSuspend(suspendState int) *dbus.Error {
+	m.setPrepareSuspend(suspendState)
 	return nil
 }

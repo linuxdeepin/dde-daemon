@@ -27,7 +27,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
+	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
 	"pkg.deepin.io/dde/api/soundutils"
 	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
@@ -35,15 +35,17 @@ import (
 	"pkg.deepin.io/lib/strv"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	gsSchemaSoundEffect = "com.deepin.dde.sound-effect"
 	gsSchemaAppearance  = "com.deepin.dde.appearance"
 	gsKeyEnabled        = "enabled"
 	gsKeySoundTheme     = "sound-theme"
 
-	DBusServiceName = "com.deepin.daemon.SoundEffect"
-	dbusPath        = "/com/deepin/daemon/SoundEffect"
-	dbusInterface   = DBusServiceName
+	DBusServiceName        = "com.deepin.daemon.SoundEffect"
+	dbusPath               = "/com/deepin/daemon/SoundEffect"
+	dbusInterface          = DBusServiceName
 	allowPlaySoundMaxCount = 3
 )
 
@@ -56,16 +58,6 @@ type Manager struct {
 	names         strv.Strv
 
 	Enabled gsprop.Bool `prop:"access:rw"`
-	//nolint
-	methods *struct {
-		PlaySystemSound    func() `in:"name"`
-		GetSystemSoundFile func() `in:"name" out:"file"`
-		PlaySound          func() `in:"name"`
-		GetSoundFile       func() `in:"name" out:"file"`
-		EnableSound        func() `in:"name,enabled"`
-		IsSoundEnabled     func() `in:"name" out:"enabled"`
-		GetSoundEnabledMap func() `out:"result"`
-	}
 }
 
 func NewManager(service *dbusutil.Service) *Manager {
@@ -156,14 +148,14 @@ func (m *Manager) PlaySound(name string) *dbus.Error {
 }
 
 // deprecated
-func (m *Manager) GetSystemSoundFile(name string) (string, *dbus.Error) {
+func (m *Manager) GetSystemSoundFile(name string) (file string, busErr *dbus.Error) {
 	return m.GetSoundFile(name)
 }
 
-func (m *Manager) GetSoundFile(name string) (string, *dbus.Error) {
+func (m *Manager) GetSoundFile(name string) (file string, busErr *dbus.Error) {
 	m.service.DelayAutoQuit()
 
-	file := soundutils.GetSystemSoundFile(name)
+	file = soundutils.GetSystemSoundFile(name)
 	if file == "" {
 		return "", dbusutil.ToError(errors.New("sound file not found"))
 	}
@@ -210,7 +202,7 @@ func (m *Manager) EnableSound(name string, enabled bool) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) IsSoundEnabled(name string) (bool, *dbus.Error) {
+func (m *Manager) IsSoundEnabled(name string) (enabled bool, busErr *dbus.Error) {
 	if !m.names.Contains(name) {
 		return false, dbusutil.ToError(errors.New("invalid sound event"))
 	}
@@ -218,8 +210,8 @@ func (m *Manager) IsSoundEnabled(name string) (bool, *dbus.Error) {
 	return m.soundEffectGs.GetBoolean(name), nil
 }
 
-func (m *Manager) GetSoundEnabledMap() (map[string]bool, *dbus.Error) {
-	result := make(map[string]bool, len(m.names))
+func (m *Manager) GetSoundEnabledMap() (result map[string]bool, busErr *dbus.Error) {
+	result = make(map[string]bool, len(m.names))
 	for _, name := range m.names {
 		result[name] = m.soundEffectGs.GetBoolean(name)
 	}

@@ -44,6 +44,8 @@ import (
 	"pkg.deepin.io/lib/strv"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	lastoreDataDir    = "/var/lib/lastore"
 	desktopPkgMapFile = lastoreDataDir + "/desktop_package.json"
@@ -129,23 +131,6 @@ type Manager struct {
 			appId  string
 			errMsg string
 		}
-	}
-
-	//nolint
-	methods *struct {
-		GetAllItemInfos          func() `out:"itemInfoList"`
-		GetItemInfo              func() `in:"id" out:"itemInfo"`
-		GetAllNewInstalledApps   func() `out:"apps"`
-		IsItemOnDesktop          func() `in:"id" out:"result"`
-		RequestRemoveFromDesktop func() `in:"id" out:"ok"`
-		RequestSendToDesktop     func() `in:"id" out:"ok"`
-		MarkLaunched             func() `in:"id"`
-		RequestUninstall         func() `in:"id,purge"`
-		Search                   func() `in:"key"`
-		GetUseProxy              func() `in:"id" out:"value"`
-		SetUseProxy              func() `in:"id,value"`
-		GetDisableScaling        func() `in:"id" out:"value"`
-		SetDisableScaling        func() `in:"id,value"`
 	}
 }
 

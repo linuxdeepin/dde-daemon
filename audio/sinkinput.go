@@ -58,14 +58,6 @@ type SinkInput struct {
 	Fade           float64
 	SupportFade    bool
 	SinkIndex      uint32
-
-	// nolint
-	methods *struct {
-		SetVolume  func() `in:"value,isPlay"`
-		SetBalance func() `in:"value,isPlay"`
-		SetFade    func() `in:"value"`
-		SetMute    func() `in:"value"`
-	}
 }
 
 func newSinkInput(sinkInputInfo *pulse.SinkInput, audio *Audio) *SinkInput {
@@ -109,16 +101,16 @@ func getSinkInputVisible(sinkInputInfo *pulse.SinkInput) bool {
 	}
 }
 
-func (s *SinkInput) SetVolume(v float64, isPlay bool) *dbus.Error {
-	if !isVolumeValid(v) {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *SinkInput) SetVolume(value float64, isPlay bool) *dbus.Error {
+	if !isVolumeValid(value) {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
-	if v == 0 {
-		v = 0.001
+	if value == 0 {
+		value = 0.001
 	}
 	s.PropsMu.RLock()
-	cv := s.cVolume.SetAvg(v)
+	cv := s.cVolume.SetAvg(value)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSinkInputVolume(s.index, cv)
 
@@ -128,13 +120,13 @@ func (s *SinkInput) SetVolume(v float64, isPlay bool) *dbus.Error {
 	return nil
 }
 
-func (s *SinkInput) SetBalance(v float64, isPlay bool) *dbus.Error {
-	if v < -1.00 || v > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *SinkInput) SetBalance(value float64, isPlay bool) *dbus.Error {
+	if value < -1.00 || value > 1.00 {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
 	s.PropsMu.RLock()
-	cv := s.cVolume.SetBalance(s.channelMap, v)
+	cv := s.cVolume.SetBalance(s.channelMap, value)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSinkInputVolume(s.index, cv)
 
@@ -144,13 +136,13 @@ func (s *SinkInput) SetBalance(v float64, isPlay bool) *dbus.Error {
 	return nil
 }
 
-func (s *SinkInput) SetFade(v float64) *dbus.Error {
-	if v < -1.00 || v > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *SinkInput) SetFade(value float64) *dbus.Error {
+	if value < -1.00 || value > 1.00 {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
 	s.PropsMu.RLock()
-	cv := s.cVolume.SetFade(s.channelMap, v)
+	cv := s.cVolume.SetFade(s.channelMap, value)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSinkInputVolume(s.index, cv)
 
@@ -158,9 +150,9 @@ func (s *SinkInput) SetFade(v float64) *dbus.Error {
 	return nil
 }
 
-func (s *SinkInput) SetMute(v bool) *dbus.Error {
-	s.audio.context().SetSinkInputMute(s.index, v)
-	if !v {
+func (s *SinkInput) SetMute(value bool) *dbus.Error {
+	s.audio.context().SetSinkInputMute(s.index, value)
+	if !value {
 		playFeedback()
 	}
 	return nil

@@ -20,73 +20,75 @@ type queryJobsParams struct {
 	End   time.Time
 }
 
-func (s *Scheduler) QueryJobs(paramsStr string) (string, *dbus.Error) {
-	var params queryJobsParams
-	err := fromJson(paramsStr, &params)
+func (s *Scheduler) QueryJobs(params string) (jobsJSON string, busErr *dbus.Error) {
+	var ps queryJobsParams
+	err := fromJson(params, &ps)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
 
-	jobs, err := s.queryJobs(params.Key, params.Start, params.End)
+	jobs, err := s.queryJobs(ps.Key, ps.Start, ps.End)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
-	result, err := toJson(jobs)
-	return result, dbusutil.ToError(err)
+	jobsJSON, err = toJson(jobs)
+	return jobsJSON, dbusutil.ToError(err)
 }
 
-func (s *Scheduler) QueryJobsWithLimit(paramsStr string, maxNum int32) (string, *dbus.Error) {
-	var params queryJobsParams
-	err := fromJson(paramsStr, &params)
+func (s *Scheduler) QueryJobsWithLimit(params string, maxNum int32) (jobsJSON string, busErr *dbus.Error) {
+	var ps queryJobsParams
+	err := fromJson(params, &ps)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
 
-	jobs, err := s.queryJobsWithLimit(params.Key, params.Start, params.End, maxNum)
+	jobs, err := s.queryJobsWithLimit(ps.Key, ps.Start, ps.End, maxNum)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
 
-	result, err := toJson(jobs)
-	return result, dbusutil.ToError(err)
+	jobsJSON, err = toJson(jobs)
+	return jobsJSON, dbusutil.ToError(err)
 }
 
-func (s *Scheduler) QueryJobsWithRule(paramsStr string, rule string) (string, *dbus.Error) {
-	var params queryJobsParams
-	err := fromJson(paramsStr, &params)
+func (s *Scheduler) QueryJobsWithRule(params string, rule string) (jobsJSON string, busErr *dbus.Error) {
+	var ps queryJobsParams
+	err := fromJson(params, &ps)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
 
-	jobs, err := s.queryJobsWithRule(params.Key, params.Start, params.End, rule)
+	jobs, err := s.queryJobsWithRule(ps.Key, ps.Start, ps.End, rule)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
 
-	result, err := toJson(jobs)
-	return result, dbusutil.ToError(err)
+	jobsJSON, err = toJson(jobs)
+	return jobsJSON, dbusutil.ToError(err)
 }
 
-func (s *Scheduler) GetJobs(startYear, startMonth, startDay, endYear, endMonth, endDay int32) (string, *dbus.Error) {
+func (s *Scheduler) GetJobs(startYear, startMonth, startDay, endYear, endMonth, endDay int32) (jobsJSON string, busErr *dbus.Error) {
 	startDate := libdate.New(int(startYear), time.Month(startMonth), int(startDay))
 	endDate := libdate.New(int(endYear), time.Month(endMonth), int(endDay))
 	jobs, err := s.getJobs(startDate, endDate)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
-	result, err := toJson(jobs)
-	return result, dbusutil.ToError(err)
+	jobsJSON, err = toJson(jobs)
+	return jobsJSON, dbusutil.ToError(err)
 }
 
-func (s *Scheduler) GetJobsWithLimit(startYear, startMonth, startDay, endYear, endMonth, endDay int32, maxNum int32) (string, *dbus.Error) {
+func (s *Scheduler) GetJobsWithLimit(startYear, startMonth, startDay, endYear,
+	endMonth, endDay int32, maxNum int32) (jobsJSON string, busErr *dbus.Error) {
+
 	startDate := libdate.New(int(startYear), time.Month(startMonth), int(startDay))
 	endDate := libdate.New(int(endYear), time.Month(endMonth), int(endDay))
 	jobs, err := s.getJobsWithLimit(startDate, endDate, maxNum)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
-	result, err := toJson(jobs)
-	return result, dbusutil.ToError(err)
+	jobsJSON, err = toJson(jobs)
+	return jobsJSON, dbusutil.ToError(err)
 }
 
 func (s *Scheduler) getJobsWithLimit(startDate, endDate libdate.Date, maxNum int32) ([]dateJobsWrap, error) {
@@ -102,15 +104,17 @@ func (s *Scheduler) getJobsWithLimit(startDate, endDate libdate.Date, maxNum int
 	return result, nil
 }
 
-func (s *Scheduler) GetJobsWithRule(startYear, startMonth, startDay, endYear, endMonth, endDay int32, rule string) (string, *dbus.Error) {
+func (s *Scheduler) GetJobsWithRule(startYear, startMonth, startDay,
+	endYear, endMonth, endDay int32, rule string) (jobsJSON string, busErr *dbus.Error) {
+
 	startDate := libdate.New(int(startYear), time.Month(startMonth), int(startDay))
 	endDate := libdate.New(int(endYear), time.Month(endMonth), int(endDay))
 	jobs, err := s.getJobsWithRule(startDate, endDate, rule)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
-	result, err := toJson(jobs)
-	return result, dbusutil.ToError(err)
+	jobsJSON, err = toJson(jobs)
+	return jobsJSON, dbusutil.ToError(err)
 }
 
 func (s *Scheduler) getJobsWithRule(startDate, endDate libdate.Date, rule string) ([]dateJobsWrap, error) {
@@ -130,13 +134,13 @@ func (s *Scheduler) getJobsWithRule(startDate, endDate libdate.Date, rule string
 	return result, nil
 }
 
-func (s *Scheduler) GetJob(id int64) (string, *dbus.Error) {
+func (s *Scheduler) GetJob(id int64) (jobJSON string, busErr *dbus.Error) {
 	job, err := s.getJob(uint(id))
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
-	result, err := toJson(job)
-	return result, dbusutil.ToError(err)
+	jobJSON, err = toJson(job)
+	return jobJSON, dbusutil.ToError(err)
 }
 
 func (s *Scheduler) DeleteJob(id int64) *dbus.Error {
@@ -147,9 +151,9 @@ func (s *Scheduler) DeleteJob(id int64) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
-func (s *Scheduler) UpdateJob(jobStr string) *dbus.Error {
+func (s *Scheduler) UpdateJob(jobJSON string) *dbus.Error {
 	var jj JobJSON
-	err := fromJson(jobStr, &jj)
+	err := fromJson(jobJSON, &jj)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -165,9 +169,9 @@ func (s *Scheduler) UpdateJob(jobStr string) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
-func (s *Scheduler) CreateJob(jobStr string) (int64, *dbus.Error) {
+func (s *Scheduler) CreateJob(jobJSON string) (id int64, busErr *dbus.Error) {
 	var jj JobJSON
-	err := fromJson(jobStr, &jj)
+	err := fromJson(jobJSON, &jj)
 	if err != nil {
 		return 0, dbusutil.ToError(err)
 	}
@@ -184,22 +188,22 @@ func (s *Scheduler) CreateJob(jobStr string) (int64, *dbus.Error) {
 	return int64(job.ID), nil
 }
 
-func (s *Scheduler) GetTypes() (string, *dbus.Error) {
+func (s *Scheduler) GetTypes() (typesJSON string, busErr *dbus.Error) {
 	types, err := s.getTypes()
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
-	result, err := toJson(types)
-	return result, dbusutil.ToError(err)
+	typesJSON, err = toJson(types)
+	return typesJSON, dbusutil.ToError(err)
 }
 
-func (s *Scheduler) GetType(id int64) (string, *dbus.Error) {
+func (s *Scheduler) GetType(id int64) (typeJSON string, busErr *dbus.Error) {
 	t, err := s.getType(uint(id))
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
-	result, err := toJson(t)
-	return result, dbusutil.ToError(err)
+	typeJSON, err = toJson(t)
+	return typeJSON, dbusutil.ToError(err)
 }
 
 func (s *Scheduler) DeleteType(id int64) *dbus.Error {
@@ -207,9 +211,9 @@ func (s *Scheduler) DeleteType(id int64) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
-func (s *Scheduler) CreateType(typeStr string) (int64, *dbus.Error) {
+func (s *Scheduler) CreateType(typeJSON string) (id int64, busErr *dbus.Error) {
 	var jobType JobTypeJSON
-	err := fromJson(typeStr, &jobType)
+	err := fromJson(typeJSON, &jobType)
 	if err != nil {
 		return 0, dbusutil.ToError(err)
 	}
@@ -222,9 +226,9 @@ func (s *Scheduler) CreateType(typeStr string) (int64, *dbus.Error) {
 	return int64(jt.ID), nil
 }
 
-func (s *Scheduler) UpdateType(typeStr string) *dbus.Error {
+func (s *Scheduler) UpdateType(typeJSON string) *dbus.Error {
 	var jobType JobTypeJSON
-	err := fromJson(typeStr, &jobType)
+	err := fromJson(typeJSON, &jobType)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}

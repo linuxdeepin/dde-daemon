@@ -33,10 +33,10 @@ import (
 
 	"github.com/godbus/dbus"
 	// dbus services:
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.api.localehelper"
+	localehelper "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.localehelper"
 	libnetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.network"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
+	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"pkg.deepin.io/dde/api/lang_info"
 	"pkg.deepin.io/dde/api/language_support"
 	"pkg.deepin.io/dde/api/userenv"
@@ -94,11 +94,12 @@ var (
 var (
 	//save old language notifycation data
 	notifyTxtStartWithInstall string
-	notifyTxtStart string
-	notifyTxtDone string
+	notifyTxtStart            string
+	notifyTxtDone             string
 )
 
 //go:generate dbusutil-gen -type LangSelector locale.go
+//go:generate dbusutil-gen em -type LangSelector
 type LangSelector struct {
 	service      *dbusutil.Service
 	systemBus    *dbus.Conn
@@ -114,15 +115,6 @@ type LangSelector struct {
 	Locales  []string
 	settings *gio.Settings
 
-	//nolint
-	methods *struct {
-		SetLocale                  func() `in:"locale"`
-		GetLocaleList              func() `out:"locales"`
-		GetLocaleDescription       func() `in:"locale" out:"description"`
-		GetLanguageSupportPackages func() `in:"locale" out:"packages"`
-		AddLocale                  func() `in:"locale"`
-		DeleteLocale               func() `in:"locale"`
-	}
 	//nolint
 	signals *struct {
 		Changed struct {

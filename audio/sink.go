@@ -67,16 +67,6 @@ type Sink struct {
 	Card uint32
 
 	props map[string]string
-
-	// nolint
-	methods *struct {
-		SetVolume  func() `in:"value,isPlay"`
-		SetBalance func() `in:"value,isPlay"`
-		SetFade    func() `in:"value"`
-		SetMute    func() `in:"value"`
-		SetPort    func() `in:"name"`
-		GetMeter   func() `out:"meter"`
-	}
 }
 
 func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {
@@ -95,21 +85,21 @@ func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {
 // v: 音量大小
 //
 // isPlay: 是否播放声音反馈
-func (s *Sink) SetVolume(v float64, isPlay bool) *dbus.Error {
-	logger.Debugf("set #%d sink %q volume %f", s.index, s.Name, v)
-	if !isVolumeValid(v) {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
+	logger.Debugf("set #%d sink %q volume %f", s.index, s.Name, value)
+	if !isVolumeValid(value) {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
-	if v == 0 {
-		v = 0.001
+	if value == 0 {
+		value = 0.001
 	}
 	s.PropsMu.Lock()
-	cv := s.cVolume.SetAvg(v)
+	cv := s.cVolume.SetAvg(value)
 	s.PropsMu.Unlock()
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 
-	configKeeper.SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, v)
+	configKeeper.SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 	err := configKeeper.Save(configKeeperFile)
 	if err != nil {
 		logger.Warning(err)
@@ -127,17 +117,17 @@ func (s *Sink) SetVolume(v float64, isPlay bool) *dbus.Error {
 // v: 声道平衡值
 //
 // isPlay: 是否播放声音反馈
-func (s *Sink) SetBalance(v float64, isPlay bool) *dbus.Error {
-	if v < -1.00 || v > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *Sink) SetBalance(value float64, isPlay bool) *dbus.Error {
+	if value < -1.00 || value > 1.00 {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
 	s.PropsMu.RLock()
-	cv := s.cVolume.SetBalance(s.channelMap, v)
+	cv := s.cVolume.SetBalance(s.channelMap, value)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 
-	configKeeper.SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, v)
+	configKeeper.SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 	err := configKeeper.Save(configKeeperFile)
 	if err != nil {
 		logger.Warning(err)
@@ -155,13 +145,13 @@ func (s *Sink) SetBalance(v float64, isPlay bool) *dbus.Error {
 // v: 声道平衡值
 //
 // isPlay: 是否播放声音反馈
-func (s *Sink) SetFade(v float64) *dbus.Error {
-	if v < -1.00 || v > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *Sink) SetFade(value float64) *dbus.Error {
+	if value < -1.00 || value > 1.00 {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
 	s.PropsMu.RLock()
-	cv := s.cVolume.SetFade(s.channelMap, v)
+	cv := s.cVolume.SetFade(s.channelMap, value)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 	s.playFeedback()
@@ -198,18 +188,18 @@ func (s *Sink) setVBF(v, b, f float64) *dbus.Error {
 }
 
 // 是否静音
-func (s *Sink) SetMute(v bool) *dbus.Error {
-	logger.Debugf("Sink #%d SetMute %v", s.index, v)
-	s.audio.context().SetSinkMuteByIndex(s.index, v)
+func (s *Sink) SetMute(value bool) *dbus.Error {
+	logger.Debugf("Sink #%d SetMute %v", s.index, value)
+	s.audio.context().SetSinkMuteByIndex(s.index, value)
 
-	configKeeper.SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, v)
+	configKeeper.SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 	err := configKeeper.Save(configKeeperFile)
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
 
-	if !v {
+	if !value {
 		s.playFeedback()
 	}
 	return nil
@@ -311,7 +301,7 @@ func isHeadphoneOrHeadsetPort(portName string) bool {
 	return strings.Contains(name, "headphone") || strings.Contains(name, "headset-output")
 }
 
-func (s *Sink) GetMeter() (dbus.ObjectPath, *dbus.Error) {
+func (s *Sink) GetMeter() (meter dbus.ObjectPath, busErr *dbus.Error) {
 	//TODO
 	return "/", nil
 }

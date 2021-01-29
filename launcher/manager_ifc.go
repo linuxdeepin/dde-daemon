@@ -48,8 +48,8 @@ func (m *Manager) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func (m *Manager) GetAllItemInfos() ([]ItemInfo, *dbus.Error) {
-	list := make([]ItemInfo, 0, len(m.items))
+func (m *Manager) GetAllItemInfos() (list []ItemInfo, busErr *dbus.Error) {
+	list = make([]ItemInfo, 0, len(m.items))
 	for _, item := range m.items {
 		list = append(list, item.newItemInfo())
 	}
@@ -57,7 +57,7 @@ func (m *Manager) GetAllItemInfos() ([]ItemInfo, *dbus.Error) {
 	return list, nil
 }
 
-func (m *Manager) GetItemInfo(id string) (ItemInfo, *dbus.Error) {
+func (m *Manager) GetItemInfo(id string) (itemInfo ItemInfo, busErr *dbus.Error) {
 	item := m.getItemById(id)
 	if item == nil {
 		return ItemInfo{}, dbusutil.ToError(errorInvalidID)
@@ -65,25 +65,24 @@ func (m *Manager) GetItemInfo(id string) (ItemInfo, *dbus.Error) {
 	return item.newItemInfo(), nil
 }
 
-func (m *Manager) GetAllNewInstalledApps() ([]string, *dbus.Error) {
+func (m *Manager) GetAllNewInstalledApps() (apps []string, busErr *dbus.Error) {
 	newApps, err := m.appsObj.GetNew(0)
 	if err != nil {
 		return nil, dbusutil.ToError(err)
 	}
-	var ids []string
 	// newApps type is map[string][]string
 	for dir, names := range newApps {
 		for _, name := range names {
 			path := filepath.Join(dir, name) + desktopExt
 			if item := m.getItemByPath(path); item != nil {
-				ids = append(ids, item.ID)
+				apps = append(apps, item.ID)
 			}
 		}
 	}
-	return ids, nil
+	return apps, nil
 }
 
-func (m *Manager) IsItemOnDesktop(id string) (bool, *dbus.Error) {
+func (m *Manager) IsItemOnDesktop(id string) (result bool, busErr *dbus.Error) {
 	item := m.getItemById(id)
 	if item == nil {
 		return false, dbusutil.ToError(errorInvalidID)
@@ -102,7 +101,7 @@ func (m *Manager) IsItemOnDesktop(id string) (bool, *dbus.Error) {
 	}
 }
 
-func (m *Manager) RequestRemoveFromDesktop(id string) (bool, *dbus.Error) {
+func (m *Manager) RequestRemoveFromDesktop(id string) (ok bool, busErr *dbus.Error) {
 	item := m.getItemById(id)
 	if item == nil {
 		return false, dbusutil.ToError(errorInvalidID)
@@ -112,7 +111,7 @@ func (m *Manager) RequestRemoveFromDesktop(id string) (bool, *dbus.Error) {
 	return err == nil, dbusutil.ToError(err)
 }
 
-func (m *Manager) RequestSendToDesktop(id string) (bool, *dbus.Error) {
+func (m *Manager) RequestSendToDesktop(id string) (ok bool, busErr *dbus.Error) {
 	item := m.getItemById(id)
 	if item == nil {
 		return false, dbusutil.ToError(errorInvalidID)
@@ -136,7 +135,7 @@ func (m *Manager) RequestSendToDesktop(id string) (bool, *dbus.Error) {
 	}
 	kf.SetString(desktopMainSection, "X-Deepin-CreatedBy", dbusServiceName)
 	kf.SetString(desktopMainSection, "X-Deepin-AppID", id)
-	// Desktop files in user desktop direcotry do not require executable permission
+	// Desktop files in user desktop directory do not require executable permission
 	if err := kf.SaveToFile(dest); err != nil {
 		logger.Warning("save new desktop file failed:", err)
 		return false, dbusutil.ToError(err)
@@ -224,20 +223,20 @@ func (m *Manager) Search(key string) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) GetUseProxy(id string) (bool, *dbus.Error) {
+func (m *Manager) GetUseProxy(id string) (value bool, busErr *dbus.Error) {
 	return m.getUseFeature(gsKeyAppsUseProxy, id)
 }
 
-func (m *Manager) SetUseProxy(id string, val bool) *dbus.Error {
-	return m.setUseFeature(gsKeyAppsUseProxy, id, val)
+func (m *Manager) SetUseProxy(id string, value bool) *dbus.Error {
+	return m.setUseFeature(gsKeyAppsUseProxy, id, value)
 }
 
-func (m *Manager) GetDisableScaling(id string) (bool, *dbus.Error) {
+func (m *Manager) GetDisableScaling(id string) (value bool, busErr *dbus.Error) {
 	return m.getUseFeature(gsKeyAppsDisableScaling, id)
 }
 
-func (m *Manager) SetDisableScaling(id string, val bool) *dbus.Error {
-	return m.setUseFeature(gsKeyAppsDisableScaling, id, val)
+func (m *Manager) SetDisableScaling(id string, value bool) *dbus.Error {
+	return m.setUseFeature(gsKeyAppsDisableScaling, id, value)
 }
 
 func (m *Manager) getExecutablePath(sender dbus.Sender) (string, error) {

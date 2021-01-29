@@ -35,6 +35,8 @@ import (
 	"pkg.deepin.io/lib/log"
 )
 
+//go:generate dbusutil-gen em -type SessionDaemon
+
 const (
 	ProfTypeCPU = "cpu"    //nolint
 	ProfTypeMem = "memory" //nolint
@@ -79,10 +81,6 @@ type SessionDaemon struct {
 	part1DisabledModules []string
 	part2EnabledModules  []string
 	part2DisabledModules []string
-
-	methods *struct { //nolint
-		CallTrace func() `in:"times,seconds"`
-	}
 }
 
 func (*SessionDaemon) GetInterfaceName() string {

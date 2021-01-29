@@ -26,17 +26,12 @@ import (
 	"pkg.deepin.io/lib/log"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 type Manager struct {
 	service    *dbusutil.Service
 	writeStart bool
 	writeEnd   chan bool
-
-	methods *struct { //nolint
-		NewSearchWithStrList  func() `in:"list" out:"md5sum,ok"`
-		NewSearchWithStrDict  func() `in:"dict" out:"md5sum,ok"`
-		SearchString          func() `in:"str,md5sum" out:"result"`
-		SearchStartWithString func() `in:"str,md5sum" out:"result"`
-	}
 }
 
 const (

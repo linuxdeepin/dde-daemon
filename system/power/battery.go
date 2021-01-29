@@ -63,11 +63,6 @@ type Battery struct {
 	batteryHistory []float64
 
 	refreshDone func()
-
-	// nolint
-	methods *struct {
-		Debug func() `in:"cmd"`
-	}
 }
 
 const (

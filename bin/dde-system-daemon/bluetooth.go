@@ -15,7 +15,7 @@ const (
 	kfKeyTechnologies = "SupportedTechnologies"
 )
 
-func (*Daemon) BluetoothGetDeviceTechnologies(adapter, device string) ([]string, *dbus.Error) {
+func (*Daemon) BluetoothGetDeviceTechnologies(adapter, device string) (technologies []string, busErr *dbus.Error) {
 	var filename = filepath.Join(bluetoothPrefixDir, adapter, device, "info")
 	technologies, err := doBluetoothGetDeviceTechnologies(filename)
 	if err != nil {

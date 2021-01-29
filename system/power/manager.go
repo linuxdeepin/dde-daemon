@@ -45,6 +45,7 @@ func init() {
 }
 
 //go:generate dbusutil-gen -type Manager,Battery -import pkg.deepin.io/dde/api/powersupply/battery manager.go battery.go
+//go:generate dbusutil-gen em -type Manager,Battery
 
 // https://www.kernel.org/doc/Documentation/power/power_supply_class.txt
 type Manager struct {
@@ -98,15 +99,6 @@ type Manager struct {
 	// 当前模式
 	Mode string
 
-	// nolint
-	methods *struct {
-		GetBatteries   func() `out:"batteries"`
-		Debug          func() `in:"cmd"`
-		SetCpuGovernor func() `in:"governor"`
-		SetCpuBoost    func() `in:"enabled"`
-		SetMode        func() `in:"mode"`
-		LockCpuFreq    func() `in:"governor, lockTime"`
-	}
 	// nolint
 	signals *struct {
 		BatteryDisplayUpdate struct {

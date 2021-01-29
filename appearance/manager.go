@@ -41,12 +41,11 @@ import (
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	imageeffect "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.imageeffect"
+	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedate"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	timedate "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
-	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedate"
-	"pkg.deepin.io/lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
 	"pkg.deepin.io/dde/api/theme_thumb"
@@ -60,10 +59,13 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"pkg.deepin.io/lib/dbusutil/proxy"
+	"pkg.deepin.io/lib/log"
 	"pkg.deepin.io/lib/strv"
 	dutils "pkg.deepin.io/lib/utils"
 	"pkg.deepin.io/lib/xdg/basedir"
 )
+
+//go:generate dbusutil-gen em -type Manager
 
 // The supported types
 const (
@@ -140,7 +142,7 @@ type Manager struct {
 	WallpaperURIs      gsprop.String
 	QtActiveColor      string `prop:"access:rw"`
 	// 社区版定制需求，保存窗口圆角值，默认 18
-	WindowRadius       gsprop.Int `prop:"access:rw"`
+	WindowRadius gsprop.Int `prop:"access:rw"`
 
 	wsLoopMap      map[string]*WSLoop
 	wsSchedulerMap map[string]*WSScheduler
@@ -191,22 +193,6 @@ type Manager struct {
 		Refreshed struct {
 			type0 string
 		}
-	}
-
-	//nolint
-	methods *struct {
-		Delete                func() `in:"type,name"`
-		GetScaleFactor        func() `out:"scale_factor"`
-		List                  func() `in:"type" out:"list"`
-		Set                   func() `in:"type,value"`
-		SetScaleFactor        func() `in:"scale_factor"`
-		Show                  func() `in:"type,names" out:"detail"`
-		Thumbnail             func() `in:"type,name" out:"file"`
-		SetScreenScaleFactors func() `in:"scaleFactors"`
-		GetScreenScaleFactors func() `out:"scaleFactors"`
-		SetMonitorBackground  func() `in:"monitorName,imageFile"`
-		SetWallpaperSlideShow func() `in:"monitorName,wallpaperSlideShow"`
-		GetWallpaperSlideShow func() `in:"monitorName" out:"slideShow"`
 	}
 }
 
@@ -508,7 +494,7 @@ func (m *Manager) init() error {
 	m.timeDate.InitSignalExt(m.sysSigLoop, true)
 
 	m.sessionTimeDate = sessiontimedate.NewTimedate(sessionBus)
-	m.sessionTimeDate.InitSignalExt(m.sessionSigLoop,true)
+	m.sessionTimeDate.InitSignalExt(m.sessionSigLoop, true)
 
 	zone, err := m.timeDate.Timezone().Get(0)
 	if err != nil {

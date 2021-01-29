@@ -41,18 +41,12 @@ const (
 	Success
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 type Manager struct {
 	service       *dbusutil.Service
 	authLocker    sync.Mutex
 	authUserTable map[string]chan string // 'pid+user': 'password'
-
-	methods *struct { //nolint
-		CurrentUser      func() `out:"username"`
-		IsLiveCD         func() `in:"username" out:"result"`
-		SwitchToUser     func() `in:"username"`
-		AuthenticateUser func() `in:"username"`
-		UnlockCheck      func() `in:"username,password"`
-	}
 
 	signals *struct { //nolint
 		Event struct {
@@ -119,7 +113,7 @@ func newManager(service *dbusutil.Service) *Manager {
 	return &m
 }
 
-func (m *Manager) CurrentUser() (string, *dbus.Error) {
+func (m *Manager) CurrentUser() (username string, busErr *dbus.Error) {
 	username, err := getGreeterUser(greeterUserConfig)
 	if err != nil {
 		return "", dbusutil.ToError(err)
@@ -127,7 +121,7 @@ func (m *Manager) CurrentUser() (string, *dbus.Error) {
 	return username, nil
 }
 
-func (m *Manager) IsLiveCD(username string) (bool, *dbus.Error) {
+func (m *Manager) IsLiveCD(username string) (result bool, busErr *dbus.Error) {
 	return isInLiveCD(username), nil
 }
 

@@ -25,11 +25,13 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/log"
 )
+
+//go:generate dbusutil-gen em -type Manager
 
 // Manager manager logined user list
 type Manager struct {

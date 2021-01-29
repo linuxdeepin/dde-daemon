@@ -48,9 +48,9 @@ func (m *Manager) SetDate(year, month, day, hour, min, sec, nsec int32) *dbus.Er
 	us := (t.Unix() * 1000000) + int64(t.Nanosecond()/1000)
 	err1 := m.SetTime(us, false)
 	if err1 == nil {
-		err = m.service.Emit(m,"TimeUpdate")
+		err = m.service.Emit(m, "TimeUpdate")
 		if err != nil {
-			logger.Debug("emit TimeUpdate failed:",err)
+			logger.Debug("emit TimeUpdate failed:", err)
 		}
 	}
 	return err1
@@ -94,8 +94,8 @@ func (m *Manager) SetNTPServer(server string) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
-func (m *Manager) GetSampleNTPServers() ([]string, *dbus.Error) {
-	var servers = []string{
+func (m *Manager) GetSampleNTPServers() (servers []string, busErr *dbus.Error) {
+	servers = []string{
 		"0.debian.pool.ntp.org",
 		"1.debian.pool.ntp.org",
 		"2.debian.pool.ntp.org",
@@ -185,7 +185,7 @@ func (m *Manager) DeleteUserTimezone(zone string) *dbus.Error {
 }
 
 // GetZoneInfo returns the information of the specified time zone.
-func (m *Manager) GetZoneInfo(zone string) (zoneinfo.ZoneInfo, *dbus.Error) {
+func (m *Manager) GetZoneInfo(zone string) (zoneInfo zoneinfo.ZoneInfo, busErr *dbus.Error) {
 	info, err := zoneinfo.GetZoneInfo(zone)
 	if err != nil {
 		logger.Debugf("Get zone info for '%s' failed: %v", zone, err)
@@ -196,6 +196,6 @@ func (m *Manager) GetZoneInfo(zone string) (zoneinfo.ZoneInfo, *dbus.Error) {
 }
 
 // GetZoneList returns all the valid timezones.
-func (m *Manager) GetZoneList() ([]string, *dbus.Error) {
+func (m *Manager) GetZoneList() (zoneList []string, busErr *dbus.Error) {
 	return zoneinfo.GetAllZones(), nil
 }

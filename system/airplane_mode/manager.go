@@ -24,6 +24,7 @@ const (
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
+//go:generate dbusutil-gen em -type Manager
 
 type Manager struct {
 	service   *dbusutil.Service
@@ -36,13 +37,6 @@ type Manager struct {
 	BluetoothEnabled bool
 
 	state AirplaneModeState
-
-	// nolint
-	methods *struct {
-		Enable          func() `in:"enabled"`
-		EnableWifi      func() `in:"enabled"`
-		EnableBluetooth func() `in:"enabled"`
-	}
 }
 
 func (m *Manager) GetInterfaceName() string {

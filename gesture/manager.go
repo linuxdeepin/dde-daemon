@@ -24,6 +24,8 @@ import (
 	dutils "pkg.deepin.io/lib/utils"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	tsSchemaID              = "com.deepin.dde.touchscreen"
 	tsSchemaKeyLongPress    = "longpress-duration"
@@ -47,15 +49,6 @@ type Manager struct {
 	enabled        bool
 	Infos          gestureInfos
 	sessionmanager *sessionmanager.SessionManager
-	//nolint
-	methods *struct {
-		SetLongPressDuration    func() `in:"duration"`
-		GetLongPressDuration    func() `out:"duration"`
-		SetShortPressDuration   func() `in:"duration"`
-		GetShortPressDuration   func() `out:"duration"`
-		SetEdgeMoveStopDuration func() `in:"duration"`
-		GetEdgeMoveStopDuration func() `out:"duration"`
-	}
 }
 
 func newManager() (*Manager, error) {

@@ -51,16 +51,6 @@ type Source struct {
 	ActivePort Port
 	// 声卡的索引
 	Card uint32
-
-	// nolint
-	methods *struct {
-		SetVolume  func() `in:"value,isPlay"`
-		SetBalance func() `in:"value,isPlay"`
-		SetFade    func() `in:"value"`
-		SetMute    func() `in:"value"`
-		SetPort    func() `in:"name"`
-		GetMeter   func() `out:"meter"`
-	}
 }
 
 func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
@@ -86,21 +76,21 @@ func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 }
 
 // 如何反馈输入音量？
-func (s *Source) SetVolume(v float64, isPlay bool) *dbus.Error {
-	logger.Debugf("set source %q volume %f", s.Name, v)
-	if !isVolumeValid(v) {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *Source) SetVolume(value float64, isPlay bool) *dbus.Error {
+	logger.Debugf("set source %q volume %f", s.Name, value)
+	if !isVolumeValid(value) {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
-	if v == 0 {
-		v = 0.001
+	if value == 0 {
+		value = 0.001
 	}
 	s.PropsMu.RLock()
-	cv := s.cVolume.SetAvg(v)
+	cv := s.cVolume.SetAvg(value)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
-	configKeeper.SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, v)
+	configKeeper.SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 	err := configKeeper.Save(configKeeperFile)
 	if err != nil {
 		logger.Warning(err)
@@ -113,17 +103,17 @@ func (s *Source) SetVolume(v float64, isPlay bool) *dbus.Error {
 	return nil
 }
 
-func (s *Source) SetBalance(v float64, isPlay bool) *dbus.Error {
-	if v < -1.00 || v > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *Source) SetBalance(value float64, isPlay bool) *dbus.Error {
+	if value < -1.00 || value > 1.00 {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
 	s.PropsMu.RLock()
-	cv := s.cVolume.SetBalance(s.channelMap, v)
+	cv := s.cVolume.SetBalance(s.channelMap, value)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
-	configKeeper.SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, v)
+	configKeeper.SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 	err := configKeeper.Save(configKeeperFile)
 	if err != nil {
 		logger.Warning(err)
@@ -136,13 +126,13 @@ func (s *Source) SetBalance(v float64, isPlay bool) *dbus.Error {
 	return nil
 }
 
-func (s *Source) SetFade(v float64) *dbus.Error {
-	if v < -1.00 || v > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
+func (s *Source) SetFade(value float64) *dbus.Error {
+	if value < -1.00 || value > 1.00 {
+		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
 
 	s.PropsMu.RLock()
-	cv := s.cVolume.SetFade(s.channelMap, v)
+	cv := s.cVolume.SetFade(s.channelMap, value)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
@@ -179,17 +169,17 @@ func (s *Source) setVBF(v, b, f float64) *dbus.Error {
 	return nil
 }
 
-func (s *Source) SetMute(v bool) *dbus.Error {
-	s.audio.context().SetSourceMuteByIndex(s.index, v)
+func (s *Source) SetMute(value bool) *dbus.Error {
+	s.audio.context().SetSourceMuteByIndex(s.index, value)
 
-	configKeeper.SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, v)
+	configKeeper.SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 	err := configKeeper.Save(configKeeperFile)
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
 
-	if !v {
+	if !value {
 		playFeedback()
 	}
 	return nil
@@ -200,7 +190,7 @@ func (s *Source) SetPort(name string) *dbus.Error {
 	return nil
 }
 
-func (s *Source) GetMeter() (dbus.ObjectPath, *dbus.Error) {
+func (s *Source) GetMeter() (meter dbus.ObjectPath, busErr *dbus.Error) {
 	id := fmt.Sprintf("source%d", s.index)
 	s.audio.mu.Lock()
 	m, ok := s.audio.meters[id]

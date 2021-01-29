@@ -70,6 +70,7 @@ var (
 )
 
 //go:generate dbusutil-gen -type Audio,Sink,SinkInput,Source,Meter -import github.com/godbus/dbus audio.go sink.go sinkinput.go source.go meter.go
+//go:generate dbusutil-gen em -type Audio,Sink,SinkInput,Source,Meter
 
 func objectPathSliceEqual(v1, v2 []dbus.ObjectPath) bool {
 	if len(v1) != len(v2) {
@@ -96,10 +97,12 @@ type Audio struct {
 	DefaultSource           dbus.ObjectPath
 	Cards                   string
 	CardsWithoutUnavailable string
-	IncreaseVolume          gsprop.Bool `prop:"access:rw"`
-	defaultPaCfg            defaultPaConfig
-
 	// dbusutil-gen: ignore
+	IncreaseVolume gsprop.Bool `prop:"access:rw"`
+	// dbusutil-gen: ignore
+	ReduceNoise  gsprop.Bool `prop:"access:rw"`
+	defaultPaCfg defaultPaConfig
+
 	// 最大音量
 	MaxUIVolume float64 // readonly
 
@@ -136,7 +139,6 @@ type Audio struct {
 
 	noRestartPulseAudio bool
 
-	ReduceNoise gsprop.Bool `prop:"access:rw"`
 	// 当前输入端口
 	inputCardName string
 	inputPortName string
@@ -147,13 +149,6 @@ type Audio struct {
 	outputPortName string
 	// 输出端口切换计数器
 	outputAutoSwitchCount int
-
-	// nolint
-	methods *struct {
-		SetPort        func() `in:"cardId,portName,direction"`
-		SetPortEnabled func() `in:"cardId,portName,enabled"`
-		IsPortEnabled  func() `in:"cardId,portName" out:"enabled"`
-	}
 
 	// nolint
 	signals *struct {
@@ -617,7 +612,7 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 	return nil
 }
 
-func (a *Audio) IsPortEnabled(cardId uint32, portName string) (bool, *dbus.Error) {
+func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, busErr *dbus.Error) {
 	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	return portConfig.Enabled, nil
 }

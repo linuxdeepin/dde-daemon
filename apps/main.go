@@ -24,6 +24,8 @@ import (
 	"pkg.deepin.io/lib/log"
 )
 
+//go:generate dbusutil-gen em -type ALRecorder,DFWatcher
+
 var logger = log.NewLogger("daemon/apps")
 
 func init() {

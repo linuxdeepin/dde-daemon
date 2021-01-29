@@ -104,6 +104,7 @@ var DeviceTypes []string = []string{
 }
 
 //go:generate dbusutil-gen -type Bluetooth bluetooth.go
+//go:generate dbusutil-gen em -type Bluetooth,agent,obexAgent
 
 type Bluetooth struct {
 	service       *dbusutil.Service
@@ -143,31 +144,9 @@ type Bluetooth struct {
 	sessionCancelChMap   map[dbus.ObjectPath]chan struct{}
 	sessionCancelChMapMu sync.Mutex
 
-	settings      *gio.Settings
+	settings *gio.Settings
+	//dbusutil-gen: ignore
 	DisplaySwitch gsprop.Bool `prop:"access:rw"`
-
-	// nolint
-	methods *struct {
-		DebugInfo                     func() `out:"info"`
-		GetDevices                    func() `in:"adapter" out:"devicesJSON"`
-		ConnectDevice                 func() `in:"device,adapter"`
-		DisconnectDevice              func() `in:"device"`
-		RemoveDevice                  func() `in:"adapter,device"`
-		SetDeviceAlias                func() `in:"device,alias"`
-		SetDeviceTrusted              func() `in:"device,trusted"`
-		Confirm                       func() `in:"device,accept"`
-		FeedPinCode                   func() `in:"device,accept,pinCode"`
-		FeedPasskey                   func() `in:"device,accept,passkey"`
-		GetAdapters                   func() `out:"adaptersJSON"`
-		RequestDiscovery              func() `in:"adapter"`
-		SendFiles                     func() `in:"device,files" out:"sessionPath"`
-		CancelTransferSession         func() `in:"sessionPath"`
-		SetAdapterPowered             func() `in:"adapter,powered"`
-		SetAdapterAlias               func() `in:"adapter,alias"`
-		SetAdapterDiscoverable        func() `in:"adapter,discoverable"`
-		SetAdapterDiscovering         func() `in:"adapter,discovering"`
-		SetAdapterDiscoverableTimeout func() `in:"adapter,timeout"`
-	}
 
 	// nolint
 	signals *struct {

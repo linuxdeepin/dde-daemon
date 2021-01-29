@@ -34,6 +34,8 @@ import (
 	"pkg.deepin.io/lib/log"
 )
 
+//go:generate dbusutil-gen em -type ScreenSaver
+
 var logger = log.NewLogger("daemon/screensaver")
 
 type inhibitor struct {
@@ -71,12 +73,6 @@ type ScreenSaver struct {
 		// Idle 超时后，如果系统被使用就发送此信号，重新开始 Idle 计时器
 		IdleOff struct{}
 	}
-	//nolint
-	methods *struct {
-		Inhibit    func() `in:"name,reason" out:"cookie"`
-		UnInhibit  func() `in:"cookie"`
-		SetTimeout func() `in:"seconds,interval,blank"`
-	}
 }
 
 type timeoutVals struct {
@@ -90,9 +86,9 @@ type timeoutVals struct {
 //
 // reason: 抑制原因
 //
-// ret0: 此次操作对应的 id，用来取消抑制
-func (ss *ScreenSaver) Inhibit(sender dbus.Sender, name, reason string) (uint32,
-	*dbus.Error) {
+// cookie: 此次操作对应的 id，用来取消抑制
+func (ss *ScreenSaver) Inhibit(sender dbus.Sender, name, reason string) (cookie uint32,
+	busErr *dbus.Error) {
 	ss.mu.Lock()
 	defer ss.mu.Unlock()
 

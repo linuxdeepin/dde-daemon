@@ -136,7 +136,7 @@ func (entry *AppEntry) PresentWindows() *dbus.Error {
 	if len(windowIds) > 0 {
 		err := entry.manager.wm.PresentWindows(dbus.FlagNoAutoStart, windowIds)
 		if err != nil {
-			logger.Warning("PresentWindows error:",err)
+			logger.Warning("PresentWindows error:", err)
 		}
 	}
 	return nil
@@ -213,13 +213,13 @@ func killProcess(pid uint) error {
 	return nil
 }
 
-func (entry *AppEntry) GetAllowedCloseWindows() ([]uint32, *dbus.Error) {
+func (entry *AppEntry) GetAllowedCloseWindows() (windows []uint32, busErr *dbus.Error) {
 	entry.PropsMu.RLock()
-	ret := make([]uint32, len(entry.windows))
+	windows = make([]uint32, len(entry.windows))
 	winIds := entry.getAllowedCloseWindows()
 	for idx, winId := range winIds {
-		ret[idx] = uint32(winId)
+		windows[idx] = uint32(winId)
 	}
 	entry.PropsMu.RUnlock()
-	return ret, nil
+	return windows, nil
 }

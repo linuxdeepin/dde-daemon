@@ -25,6 +25,7 @@ import (
 )
 
 //go:generate dbusutil-gen -type Keyboard,Mouse,Touchpad,TrackPoint,Wacom keyboard.go mouse.go touchpad.go trackpoint.go wacom.go
+//go:generate dbusutil-gen em -type Keyboard,Mouse,Touchpad,TrackPoint,Wacom,Manager
 
 var (
 	_manager *Manager

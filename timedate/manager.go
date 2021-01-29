@@ -24,9 +24,9 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedated"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
+	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
+	timedated "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedated"
+	timedate1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
 	ddbus "pkg.deepin.io/dde/daemon/dbus"
 	"pkg.deepin.io/dde/daemon/session/common"
 	"pkg.deepin.io/gir/gio-2.0"
@@ -53,6 +53,8 @@ const (
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
+//go:generate dbusutil-gen em -type Manager
+
 // Manage time settings
 type Manager struct {
 	service       *dbusutil.Service
@@ -98,23 +100,10 @@ type Manager struct {
 	td       *timedate1.Timedate
 	setter   *timedated.Timedated
 	userObj  *accounts.User
-	//nolint
-	methods *struct {
-		SetDate             func() `in:"year,month,day,hour,min,sec,nsec"`
-		SetTime             func() `in:"usec,relative"`
-		SetNTP              func() `in:"useNTP"`
-		SetNTPServer        func() `in:"server"`
-		GetSampleNTPServers func() `out:"servers"`
-		SetLocalRTC         func() `in:"localeRTC,fixSystem"`
-		SetTimezone         func() `in:"zone"`
-		AddUserTimezone     func() `in:"zone"`
-		DeleteUserTimezone  func() `in:"zone"`
-		GetZoneInfo         func() `in:"zone" out:"zone_info"`
-		GetZoneList         func() `out:"zone_list"`
-	}
+
 	//nolint
 	signals *struct {
-		TimeUpdate struct{
+		TimeUpdate struct {
 		}
 	}
 }

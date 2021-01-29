@@ -8,10 +8,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/linuxdeepin/go-x11-client"
+	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
 	"pkg.deepin.io/lib/log"
 )
+
+//go:generate dbusutil-gen em -type Manager
 
 var (
 	atomClipboardManager     x.Atom
@@ -70,10 +72,6 @@ type Manager struct {
 
 	contentMu sync.Mutex
 	content   []*TargetData
-	//nolint
-	methods *struct {
-		RemoveTarget func() `in:"target"`
-	}
 }
 
 func (m *Manager) getTargetData(target x.Atom) *TargetData {

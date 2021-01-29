@@ -55,7 +55,7 @@ func (m *Manager) Reset() *dbus.Error {
 }
 
 // List list all available for the special type, return a json format list
-func (m *Manager) List(ty string) (string, *dbus.Error) {
+func (m *Manager) List(ty string) (list string, busErr *dbus.Error) {
 	logger.Debug("List for type:", ty)
 	jsonStr, err := m.list(ty)
 	if err != nil {
@@ -98,7 +98,7 @@ func (m *Manager) list(ty string) (string, error) {
 
 // Show show detail infos for the special type
 // ret0: detail info, json format
-func (m *Manager) Show(ty string, names []string) (string, *dbus.Error) {
+func (m *Manager) Show(ty string, names []string) (detail string, busErr *dbus.Error) {
 	logger.Debugf("Show '%s' type '%s'", names, ty)
 	jsonStr, err := m.show(ty, names)
 	if err != nil {
@@ -230,7 +230,7 @@ func (m *Manager) SetWallpaperSlideShow(monitorName string, wallpaperSlideShow s
 	return dbusutil.ToError(err)
 }
 
-func (m *Manager) GetWallpaperSlideShow(monitorName string) (string, *dbus.Error) {
+func (m *Manager) GetWallpaperSlideShow(monitorName string) (slideShow string, busErr *dbus.Error) {
 	logger.Debugf("Get Current Workspace Wallpaper SlideShow For Monitor '%s'", monitorName)
 	slideShow, err := m.doGetWallpaperSlideShow(monitorName)
 	return slideShow, dbusutil.ToError(err)
@@ -260,7 +260,7 @@ func (m *Manager) delete(ty, name string) error {
 }
 
 // Thumbnail get thumbnail for the special 'name'
-func (m *Manager) Thumbnail(ty, name string) (string, *dbus.Error) {
+func (m *Manager) Thumbnail(ty, name string) (file string, busErr *dbus.Error) {
 	file, err := m.thumbnail(ty, name)
 	if err != nil {
 		return "", dbusutil.ToError(err)
@@ -291,7 +291,7 @@ func (m *Manager) thumbnail(ty, name string) (string, error) {
 	return "", fmt.Errorf("invalid type: %v", ty)
 }
 
-func (m *Manager) GetScaleFactor() (float64, *dbus.Error) {
+func (m *Manager) GetScaleFactor() (scaleFactor float64, busErr *dbus.Error) {
 	return m.getScaleFactor(), nil
 }
 
@@ -312,7 +312,7 @@ func (m *Manager) SetScreenScaleFactors(v map[string]float64) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
-func (m *Manager) GetScreenScaleFactors() (map[string]float64, *dbus.Error) {
+func (m *Manager) GetScreenScaleFactors() (scaleFactors map[string]float64, busErr *dbus.Error) {
 	v, err := m.getScreenScaleFactors()
 	return v, dbusutil.ToError(err)
 }

@@ -86,6 +86,7 @@ func init() {
 }
 
 //go:generate dbusutil-gen -type Network network.go
+//go:generate dbusutil-gen em -type Network
 
 type Network struct {
 	service    *dbusutil.Service
@@ -97,13 +98,6 @@ type Network struct {
 	nmManager  *networkmanager.Manager
 	nmSettings *networkmanager.Settings
 	sigLoop    *dbusutil.SignalLoop
-	// nolint
-	methods    *struct {
-		IsDeviceEnabled       func() `in:"pathOrIface" out:"enabled"`
-		EnableDevice          func() `in:"pathOrIface,enabled" out:"cpath"`
-		Ping                  func() `in:"host"`
-		ToggleWirelessEnabled func() `out:"enabled"`
-	}
 
 	// nolint
 	signals *struct {
@@ -465,9 +459,9 @@ func (n *Network) saveConfig() error {
 	return saveConfig(configFile, n.config)
 }
 
-func (n *Network) IsDeviceEnabled(pathOrIface string) (bool, *dbus.Error) {
-	b, err := n.isDeviceEnabled(pathOrIface)
-	return b, dbusutil.ToError(err)
+func (n *Network) IsDeviceEnabled(pathOrIface string) (enabled bool, busErr *dbus.Error) {
+	enabled, err := n.isDeviceEnabled(pathOrIface)
+	return enabled, dbusutil.ToError(err)
 }
 
 func (n *Network) isDeviceEnabled(pathOrIface string) (bool, error) {
@@ -547,7 +541,7 @@ func (n *Network) enableWireless() error {
 	return n.nmManager.WirelessEnabled().Set(0, true)
 }
 
-func (n *Network) ToggleWirelessEnabled() (bool, *dbus.Error) {
+func (n *Network) ToggleWirelessEnabled() (enabled bool, busErr *dbus.Error) {
 	enabled, err := n.toggleWirelessEnabled()
 	return enabled, dbusutil.ToError(err)
 }

@@ -551,9 +551,9 @@ func (m *Manager) getDeviceIndex(devPath dbus.ObjectPath) (devType string, index
 	return "", -1
 }
 
-func (m *Manager) IsDeviceEnabled(devPath dbus.ObjectPath) (bool, *dbus.Error) {
-	b, err := m.sysNetwork.IsDeviceEnabled(0, string(devPath))
-	return b, dbusutil.ToError(err)
+func (m *Manager) IsDeviceEnabled(devPath dbus.ObjectPath) (enabled bool, busErr *dbus.Error) {
+	enabled, err := m.sysNetwork.IsDeviceEnabled(0, string(devPath))
+	return enabled, dbusutil.ToError(err)
 }
 
 func (m *Manager) EnableDevice(devPath dbus.ObjectPath, enabled bool) *dbus.Error {
@@ -643,9 +643,9 @@ func (m *Manager) setDeviceManaged(devPathOrIfc string, managed bool) (err error
 }
 
 // ListDeviceConnections return the available connections for the device
-func (m *Manager) ListDeviceConnections(devPath dbus.ObjectPath) ([]dbus.ObjectPath, *dbus.Error) {
-	paths, err := m.listDeviceConnections(devPath)
-	return paths, dbusutil.ToError(err)
+func (m *Manager) ListDeviceConnections(devPath dbus.ObjectPath) (connections []dbus.ObjectPath, busErr *dbus.Error) {
+	connections, err := m.listDeviceConnections(devPath)
+	return connections, dbusutil.ToError(err)
 }
 
 func (m *Manager) listDeviceConnections(devPath dbus.ObjectPath) ([]dbus.ObjectPath, error) {

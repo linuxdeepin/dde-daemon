@@ -75,14 +75,11 @@ func (d *Daemon) Stop() error {
 	return nil
 }
 
+//go:generate dbusutil-gen em -type Helper
+
 type Helper struct {
 	loginManager *login1.Manager
 	sysSigLoop   *dbusutil.SignalLoop
-
-	// nolint
-	methods *struct {
-		Prepare func() `in:"sessionID"`
-	}
 }
 
 func (*Helper) GetInterfaceName() string {

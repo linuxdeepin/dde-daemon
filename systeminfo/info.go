@@ -24,11 +24,13 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.system.systeminfo"
+	systeminfo "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.systeminfo"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/log"
 )
+
+//go:generate dbusutil-gen em -type SystemInfo
 
 const (
 	dbusServiceName = "com.deepin.daemon.SystemInfo"
@@ -60,7 +62,7 @@ type SystemInfo struct {
 }
 
 type Daemon struct {
-	info 		  *SystemInfo
+	info          *SystemInfo
 	PropsMu       sync.RWMutex
 	systeminfo    *systeminfo.SystemInfo
 	sigSystemLoop *dbusutil.SignalLoop
@@ -127,14 +129,14 @@ func (d *Daemon) initSysSystemInfo() {
 
 	//通过demicode获取"CPU频率", 接收com.deepin.daemon.SystemInfo的属性CurrentSpeed改变信号
 	err = d.systeminfo.CurrentSpeed().ConnectChanged(func(hasValue bool, value uint64) {
-		logger.Infof("demicode hasValue : %t, CurrentSpeed : %d",hasValue, value)
+		logger.Infof("demicode hasValue : %t, CurrentSpeed : %d", hasValue, value)
 		if !hasValue {
 			return
 		}
 		d.PropsMu.Lock()
 		d.info.CurrentSpeed = value
 		//假如此时cpu max mhz还是0, 且value不是0, 则给d.info.CPUMaxMHz再赋值
-		if isFloatEqual(d.info.CPUMaxMHz, 0.0) &&  value != 0 {
+		if isFloatEqual(d.info.CPUMaxMHz, 0.0) && value != 0 {
 			d.info.CPUMaxMHz = float64(value)
 		}
 		d.PropsMu.Unlock()
@@ -153,7 +155,7 @@ func (d *Daemon) initSysSystemInfo() {
 	}
 	d.info.CPUMaxMHz = float64(d.info.CurrentSpeed)
 	d.PropsMu.Unlock()
-	logger.Info("d.info.CurrentSpeed : ",d.info.CurrentSpeed, " , d.info.CPUMaxMHz : ", d.info.CPUMaxMHz)
+	logger.Info("d.info.CurrentSpeed : ", d.info.CurrentSpeed, " , d.info.CPUMaxMHz : ", d.info.CPUMaxMHz)
 }
 
 func NewSystemInfo() *SystemInfo {

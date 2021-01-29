@@ -27,7 +27,7 @@ import (
 
 	"github.com/godbus/dbus"
 	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/com.huawei.fingerprint"
-	"github.com/linuxdeepin/go-dbus-factory/net.reactivated.fprint"
+	fprint "github.com/linuxdeepin/go-dbus-factory/net.reactivated.fprint"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	"golang.org/x/xerrors"
@@ -47,6 +47,7 @@ const (
 )
 
 //go:generate dbusutil-gen -type Manager -import github.com/godbus/dbus manager.go
+//go:generate dbusutil-gen em -type Manager,HuaweiDevice,Device
 
 type Manager struct {
 	service       *dbusutil.Service
@@ -62,11 +63,6 @@ type Manager struct {
 	PropsMu sync.RWMutex
 	// dbusutil-gen: equal=nil
 	Devices []dbus.ObjectPath
-	//nolint
-	methods *struct {
-		GetDefaultDevice func() `out:"device"`
-		GetDevices       func() `out:"devices"`
-	}
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
@@ -96,7 +92,7 @@ func (m *Manager) getDefaultDeviceInter() (IDevice, error) {
 	return m.devices.Get(objPath), nil
 }
 
-func (m *Manager) GetDefaultDevice() (dbus.ObjectPath, *dbus.Error) {
+func (m *Manager) GetDefaultDevice() (device dbus.ObjectPath, busErr *dbus.Error) {
 	err := m.refreshDeviceHuawei()
 	if err != nil {
 		logger.Warning(err)
@@ -115,12 +111,12 @@ func (m *Manager) GetDefaultDevice() (dbus.ObjectPath, *dbus.Error) {
 	return convertFPrintPath(objPath), nil
 }
 
-func (m *Manager) GetDevices() ([]dbus.ObjectPath, *dbus.Error) {
+func (m *Manager) GetDevices() (devices []dbus.ObjectPath, busErr *dbus.Error) {
 	m.refreshDevices()
 	m.PropsMu.Lock()
-	paths := m.Devices
+	devices = m.Devices
 	m.PropsMu.Unlock()
-	return paths, nil
+	return devices, nil
 }
 
 func (m *Manager) refreshDevicesFprintd() error {

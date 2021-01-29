@@ -56,6 +56,8 @@ const (
 )
 
 //go:generate dbusutil-gen -type Grub2,Theme grub2.go theme.go
+//go:generate dbusutil-gen em -type Grub2,Theme
+
 type Grub2 struct {
 	service            *dbusutil.Service
 	modifyManager      *modifyManager
@@ -71,16 +73,6 @@ type Grub2 struct {
 	Gfxmode      string
 	Timeout      uint32
 	Updating     bool
-
-	//nolint
-	methods *struct {
-		GetSimpleEntryTitles func() `out:"titles"` // ([]string, *dbus.Error) {
-		GetAvailableGfxmodes func() `out:"gfxmodes"`
-		SetDefaultEntry      func() `in:"entry"`
-		SetEnableTheme       func() `in:"enabled"`
-		SetGfxmode           func() `in:"gfxmode"`
-		SetTimeout           func() `in:"timeout"`
-	}
 }
 
 // return -1 for failed

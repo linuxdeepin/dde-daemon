@@ -34,12 +34,6 @@ type Theme struct {
 	PropsMu sync.RWMutex
 
 	//nolint
-	methods *struct {
-		SetBackgroundSourceFile func() `in:"filename"`
-		GetBackground           func() `out:"background"`
-	}
-
-	//nolint
 	signals *struct {
 		BackgroundChanged struct{}
 	}

@@ -31,12 +31,9 @@ type FPrintTransaction struct {
 	PropsMu        sync.RWMutex
 	Authenticating bool
 	Sender         string
-	methods        *struct { //nolint
-		SetUser func() `in:"user"`
-	}
-	quit       chan struct{}
-	release    chan struct{}
-	devicePath dbus.ObjectPath
+	quit           chan struct{}
+	release        chan struct{}
+	devicePath     dbus.ObjectPath
 }
 
 func (tx *FPrintTransaction) setPropAuthenticating(value bool) {

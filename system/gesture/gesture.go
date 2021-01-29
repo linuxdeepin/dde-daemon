@@ -32,6 +32,8 @@ import (
 	"pkg.deepin.io/lib/log"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	dbusServiceName = "com.deepin.daemon.Gesture"
 	dbusPath        = "/com/deepin/daemon/Gesture"
@@ -137,12 +139,6 @@ func (t TouchDirection) String() string {
 
 type Manager struct {
 	service *dbusutil.Service
-
-	// nolint
-	methods *struct {
-		SetShortPressDuration   func() `in:"duration"`
-		SetEdgeMoveStopDuration func() `in:"duration"`
-	}
 
 	// nolint
 	signals *struct {

@@ -9,12 +9,14 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/jinzhu/gorm"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	libdate "github.com/rickb777/date"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/log"
 )
+
+//go:generate dbusutil-gen em -type Scheduler
 
 type Scheduler struct {
 	signalLoop          *dbusutil.SignalLoop
@@ -30,27 +32,7 @@ type Scheduler struct {
 
 	changeChan chan []uint
 	quitChan   chan struct{}
-	//nolint
-	methods *struct {
-		GetJobs            func() `in:"startYear,startMonth,startDay,endYear,endMonth,endDay" out:"jobs"`
-		GetJob             func() `in:"id" out:"job"`
-		GetJobsWithLimit   func() `in:"startYear,startMonth,startDay,endYear,endMonth,endDay,maxNum" out:"jobs"`
-		GetJobsWithRule    func() `in:"startYear,startMonth,startDay,endYear,endMonth,endDay,rule" out:"jobs"`
-		QueryJobs          func() `in:"params" out:"jobs"`
-		QueryJobsWithLimit func() `in:"params,maxNum" out:"jobs"`
-		QueryJobsWithRule  func() `in:"params,rule" out:"jobs"`
-		DeleteJob          func() `in:"id"`
-		UpdateJob          func() `in:"jobInfo"`
-		CreateJob          func() `in:"jobInfo" out:"id"`
 
-		GetTypes   func() `out:"types"`
-		GetType    func() `in:"id" out:"type"`
-		DeleteType func() `in:"id"`
-		UpdateType func() `in:"typeInfo"`
-		CreateType func() `in:"typeInfo" out:"id"`
-
-		DebugRemindJob func() `in:"id"`
-	}
 	//nolint
 	signals *struct {
 		JobsUpdated struct {

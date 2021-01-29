@@ -37,7 +37,8 @@ const (
 	OpcodeSystemTrayCancelMessage
 )
 
-//go:generate dbusutil-gen -type TrayManager,StatusNotifierWatcher traymanager.go status-notifier-watcher.go
+//go:generate dbusutil-gen -type TrayManager,StatusNotifierWatcher -import pkg.deepin.io/lib/strv traymanager.go status-notifier-watcher.go
+//go:generate dbusutil-gen em -type TrayManager,StatusNotifierWatcher
 
 // TrayManager为系统托盘的管理器。
 type TrayManager struct {
@@ -64,13 +65,6 @@ type TrayManager struct {
 		Added, Removed, Changed struct {
 			id uint32
 		}
-	}
-
-	// nolint
-	methods *struct {
-		Manage             func() `out:"ok"`
-		GetName            func() `in:"win" out:"name"`
-		EnableNotification func() `in:"win,enabled"`
 	}
 }
 

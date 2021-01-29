@@ -20,6 +20,8 @@ import (
 	"pkg.deepin.io/lib/procfs"
 )
 
+//go:generate dbusutil-gen em -type Uadp
+
 var logger = log.NewLogger("daemon/Uadp")
 
 const (
@@ -47,11 +49,6 @@ type Uadp struct {
 
 	secretMu sync.Mutex
 	mu       sync.Mutex
-
-	methods *struct {
-		SetDataKey func() `in:"exePath,keyName,dataKey,keyringKey"`
-		GetDataKey func() `in:"exePath,keyName,keyringKey" out:"dataKey"`
-	}
 }
 
 func newUadp(service *dbusutil.Service) (*Uadp, error) {
@@ -139,7 +136,7 @@ func pkcs7Padding(cipherText []byte, blockSize int) []byte {
 	return append(cipherText, padText...)
 }
 
-func (u *Uadp) GetDataKey(sender dbus.Sender, exePath, keyName, keyringKey string) (string, *dbus.Error) {
+func (u *Uadp) GetDataKey(sender dbus.Sender, exePath, keyName, keyringKey string) (dataKey string, busErr *dbus.Error) {
 	_, err := u.verifyIdentity(sender)
 	if err != nil {
 		logger.Warning("failed to verify:", err)
@@ -157,12 +154,12 @@ func (u *Uadp) GetDataKey(sender dbus.Sender, exePath, keyName, keyringKey strin
 		return "", dbusutil.ToError(errors.New("not authorized"))
 	}
 
-	key, err := u.getDataKey(exePath, keyName, keyringKey)
+	dataKey, err = u.getDataKey(exePath, keyName, keyringKey)
 	if err != nil {
 		logger.Warning("failed to decrypt Key:", err)
 		return "", dbusutil.ToError(err)
 	}
-	return key, nil
+	return dataKey, nil
 }
 
 func (u *Uadp) getDataKey(exePath, keyName, keyringKey string) (string, error) {

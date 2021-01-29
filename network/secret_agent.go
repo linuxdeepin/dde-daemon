@@ -62,14 +62,6 @@ type SecretAgent struct {
 	needSleep bool
 
 	m *Manager
-	//nolint
-	methods *struct {
-		GetSecrets        func() `in:"connection,connectionPath,settingName,hints,flags" out:"secrets"`
-		CancelGetSecrets  func() `in:"connectionPath,settingName"`
-		SaveSecrets       func() `in:"connection,connectionPath"`
-		SaveSecretsDeepin func() `in:"connection,connectionPath"`
-		DeleteSecrets     func() `in:"connection,connectionPath"`
-	}
 }
 
 var errSecretAgentUserCanceled = errors.New("user canceled")
@@ -1048,7 +1040,7 @@ func (sa *SecretAgent) DeleteSecrets(connectionData map[string]map[string]dbus.V
 	return dbusutil.ToError(err)
 }
 
-func (*SecretAgentSession) GetSystemBusName() (string, *dbus.Error) {
+func (*SecretAgentSession) GetSystemBusName() (name string, busErr *dbus.Error) {
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
 		return "", dbusutil.ToError(err)
@@ -1057,10 +1049,6 @@ func (*SecretAgentSession) GetSystemBusName() (string, *dbus.Error) {
 }
 
 type SecretAgentSession struct {
-	//nolint
-	methods *struct {
-		GetSystemBusName func() `out:"name"`
-	}
 }
 
 func (*SecretAgentSession) GetInterfaceName() string {

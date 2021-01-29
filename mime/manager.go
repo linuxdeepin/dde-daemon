@@ -37,6 +37,8 @@ import (
 	"pkg.deepin.io/lib/xdg/basedir"
 )
 
+//go:generate dbusutil-gen em -type Manager
+
 const (
 	AppMimeTerminal = "application/x-terminal"
 
@@ -53,16 +55,7 @@ type Manager struct {
 
 	done     chan struct{}
 	doneResp chan struct{}
-	//nolint
-	methods *struct {
-		GetDefaultApp func() `in:"mimeType" out:"defaultApp"`
-		SetDefaultApp func() `in:"mimeTypes,desktopId"`
-		ListApps      func() `in:"mimeType" out:"apps"`
-		DeleteApp     func() `in:"mimeTypes,desktopId"`
-		ListUserApps  func() `in:"mimeType" out:"userApps"`
-		AddUserApp    func() `in:"mimeTypes,desktopId"`
-		DeleteUserApp func() `in:"desktopId"`
-	}
+
 	//nolint
 	signals *struct {
 		Change struct{}
@@ -222,7 +215,7 @@ func (m *Manager) Reset() {
 // ty: the special mime
 // ret0: the default app info
 // ret1: error message
-func (m *Manager) GetDefaultApp(mimeType string) (string, *dbus.Error) {
+func (m *Manager) GetDefaultApp(mimeType string) (defaultApp string, busErr *dbus.Error) {
 	var (
 		info *AppInfo
 		err  error
@@ -236,7 +229,7 @@ func (m *Manager) GetDefaultApp(mimeType string) (string, *dbus.Error) {
 		return "", dbusutil.ToError(err)
 	}
 
-	defaultApp, err := toJSON(info)
+	defaultApp, err = toJSON(info)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
@@ -248,17 +241,17 @@ func (m *Manager) GetDefaultApp(mimeType string) (string, *dbus.Error) {
 // ty: the special mime
 // deskId: the default app desktop id
 // ret0: error message
-func (m *Manager) SetDefaultApp(mimes []string, desktopDd string) *dbus.Error {
+func (m *Manager) SetDefaultApp(mimes []string, desktopId string) *dbus.Error {
 	var err error
 	for _, mime := range mimes {
 		if mime == AppMimeTerminal {
-			err = setDefaultTerminal(desktopDd)
+			err = setDefaultTerminal(desktopId)
 		} else {
-			err = SetAppInfo(mime, desktopDd)
+			err = SetAppInfo(mime, desktopId)
 		}
 		if err != nil {
 			logger.Warningf("Set '%s' default app to '%s' failed: %v",
-				mime, desktopDd, err)
+				mime, desktopId, err)
 			break
 		}
 	}
@@ -268,12 +261,12 @@ func (m *Manager) SetDefaultApp(mimes []string, desktopDd string) *dbus.Error {
 // ListApps list the apps that supported the special mime
 // ty: the special mime
 // ret0: the app infos
-func (m *Manager) ListApps(ty string) (string, *dbus.Error) {
+func (m *Manager) ListApps(mimeType string) (apps string, busErr *dbus.Error) {
 	var infos AppInfos
-	if ty == AppMimeTerminal {
+	if mimeType == AppMimeTerminal {
 		infos = getTerminalInfos()
 	} else {
-		infos = GetAppInfos(ty)
+		infos = GetAppInfos(mimeType)
 	}
 
 	// filter out deepin custom desktop file
@@ -286,12 +279,12 @@ func (m *Manager) ListApps(ty string) (string, *dbus.Error) {
 		filteredInfos = append(filteredInfos, info)
 	}
 
-	content, err := toJSON(filteredInfos)
+	apps, err := toJSON(filteredInfos)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
 
-	return content, nil
+	return apps, nil
 }
 
 func (m *Manager) DeleteApp(mimeTypes []string, desktopId string) *dbus.Error {
@@ -385,8 +378,8 @@ func isDeepinCustomDesktopFile(file string) bool {
 	return dir == userAppDir && strings.HasPrefix(base, "deepin-custom-")
 }
 
-func (m *Manager) ListUserApps(ty string) (string, *dbus.Error) {
-	apps := m.userManager.Get(ty)
+func (m *Manager) ListUserApps(mimeType string) (userApps string, busErr *dbus.Error) {
+	apps := m.userManager.Get(mimeType)
 	if len(apps) == 0 {
 		return "", nil
 	}
@@ -400,22 +393,22 @@ func (m *Manager) ListUserApps(ty string) (string, *dbus.Error) {
 		info.CanDelete = true
 		infos = append(infos, info)
 	}
-	content, err := toJSON(infos)
+	userApps, err := toJSON(infos)
 	if err != nil {
 		return "", dbusutil.ToError(err)
 	}
-	return content, nil
+	return userApps, nil
 }
 
-func (m *Manager) AddUserApp(mimes []string, desktopId string) *dbus.Error {
-	logger.Debugf("Manager.AddUserApp mimes %v desktop id: %q", mimes, desktopId)
+func (m *Manager) AddUserApp(mimeTypes []string, desktopId string) *dbus.Error {
+	logger.Debugf("Manager.AddUserApp mimeTypes: %v, desktopId: %q", mimeTypes, desktopId)
 	// check app validity
 	_, err := newAppInfoById(desktopId)
 	if err != nil {
-		logger.Warningf("Invalid desktop id %q", desktopId)
+		logger.Warningf("invalid desktop id %q", desktopId)
 		return dbusutil.ToError(err)
 	}
-	if !m.userManager.Add(mimes, desktopId) {
+	if !m.userManager.Add(mimeTypes, desktopId) {
 		return nil
 	}
 	err = m.userManager.Write()

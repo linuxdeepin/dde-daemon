@@ -6,214 +6,6 @@ import (
 	"pkg.deepin.io/dde/api/powersupply/battery"
 )
 
-func (v *Manager) setPropOnBattery(value bool) (changed bool) {
-	if v.OnBattery != value {
-		v.OnBattery = value
-		v.emitPropChangedOnBattery(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedOnBattery(value bool) error {
-	return v.service.EmitPropertyChanged(v, "OnBattery", value)
-}
-
-func (v *Manager) setPropHasLidSwitch(value bool) (changed bool) {
-	if v.HasLidSwitch != value {
-		v.HasLidSwitch = value
-		v.emitPropChangedHasLidSwitch(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedHasLidSwitch(value bool) error {
-	return v.service.EmitPropertyChanged(v, "HasLidSwitch", value)
-}
-
-func (v *Manager) setPropHasBattery(value bool) (changed bool) {
-	if v.HasBattery != value {
-		v.HasBattery = value
-		v.emitPropChangedHasBattery(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedHasBattery(value bool) error {
-	return v.service.EmitPropertyChanged(v, "HasBattery", value)
-}
-
-func (v *Manager) setPropBatteryPercentage(value float64) (changed bool) {
-	if v.BatteryPercentage != value {
-		v.BatteryPercentage = value
-		v.emitPropChangedBatteryPercentage(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedBatteryPercentage(value float64) error {
-	return v.service.EmitPropertyChanged(v, "BatteryPercentage", value)
-}
-
-func (v *Manager) setPropBatteryStatus(value battery.Status) (changed bool) {
-	if v.BatteryStatus != value {
-		v.BatteryStatus = value
-		v.emitPropChangedBatteryStatus(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedBatteryStatus(value battery.Status) error {
-	return v.service.EmitPropertyChanged(v, "BatteryStatus", value)
-}
-
-func (v *Manager) setPropBatteryTimeToEmpty(value uint64) (changed bool) {
-	if v.BatteryTimeToEmpty != value {
-		v.BatteryTimeToEmpty = value
-		v.emitPropChangedBatteryTimeToEmpty(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedBatteryTimeToEmpty(value uint64) error {
-	return v.service.EmitPropertyChanged(v, "BatteryTimeToEmpty", value)
-}
-
-func (v *Manager) setPropBatteryTimeToFull(value uint64) (changed bool) {
-	if v.BatteryTimeToFull != value {
-		v.BatteryTimeToFull = value
-		v.emitPropChangedBatteryTimeToFull(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedBatteryTimeToFull(value uint64) error {
-	return v.service.EmitPropertyChanged(v, "BatteryTimeToFull", value)
-}
-
-func (v *Manager) setPropBatteryCapacity(value float64) (changed bool) {
-	if v.BatteryCapacity != value {
-		v.BatteryCapacity = value
-		v.emitPropChangedBatteryCapacity(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedBatteryCapacity(value float64) error {
-	return v.service.EmitPropertyChanged(v, "BatteryCapacity", value)
-}
-
-func (v *Manager) setPropPowerSavingModeEnabled(value bool) (changed bool) {
-	if v.PowerSavingModeEnabled != value {
-		v.PowerSavingModeEnabled = value
-		v.emitPropChangedPowerSavingModeEnabled(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedPowerSavingModeEnabled(value bool) error {
-	return v.service.EmitPropertyChanged(v, "PowerSavingModeEnabled", value)
-}
-
-func (v *Manager) setPropPowerSavingModeAuto(value bool) (changed bool) {
-	if v.PowerSavingModeAuto != value {
-		v.PowerSavingModeAuto = value
-		v.emitPropChangedPowerSavingModeAuto(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedPowerSavingModeAuto(value bool) error {
-	return v.service.EmitPropertyChanged(v, "PowerSavingModeAuto", value)
-}
-
-func (v *Manager) setPropPowerSavingModeAutoWhenBatteryLow(value bool) (changed bool) {
-	if v.PowerSavingModeAutoWhenBatteryLow != value {
-		v.PowerSavingModeAutoWhenBatteryLow = value
-		v.emitPropChangedPowerSavingModeAutoWhenBatteryLow(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedPowerSavingModeAutoWhenBatteryLow(value bool) error {
-	return v.service.EmitPropertyChanged(v, "PowerSavingModeAutoWhenBatteryLow", value)
-}
-
-func (v *Manager) setPropPowerSavingModeBrightnessDropPercent(value uint32) (changed bool) {
-	if v.PowerSavingModeBrightnessDropPercent != value {
-		v.PowerSavingModeBrightnessDropPercent = value
-		v.emitPropChangedPowerSavingModeBrightnessDropPercent(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedPowerSavingModeBrightnessDropPercent(value uint32) error {
-	return v.service.EmitPropertyChanged(v, "PowerSavingModeBrightnessDropPercent", value)
-}
-
-func (v *Manager) setPropCpuGovernor(value string) (changed bool) {
-	if v.CpuGovernor != value {
-		v.CpuGovernor = value
-		v.emitPropChangedCpuGovernor(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedCpuGovernor(value string) error {
-	return v.service.EmitPropertyChanged(v, "CpuGovernor", value)
-}
-
-func (v *Manager) setPropCpuBoost(value bool) (changed bool) {
-	if v.CpuBoost != value {
-		v.CpuBoost = value
-		v.emitPropChangedCpuBoost(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedCpuBoost(value bool) error {
-	return v.service.EmitPropertyChanged(v, "CpuBoost", value)
-}
-
-func (v *Manager) setPropIsHighPerformanceSupported(value bool) (changed bool) {
-	if v.IsHighPerformanceSupported != value {
-		v.IsHighPerformanceSupported = value
-		v.emitPropChangedIsHighPerformanceSupported(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedIsHighPerformanceSupported(value bool) error {
-	return v.service.EmitPropertyChanged(v, "IsHighPerformanceSupported", value)
-}
-
-func (v *Manager) setPropMode(value string) (changed bool) {
-	if v.Mode != value {
-		v.Mode = value
-		v.emitPropChangedMode(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedMode(value string) error {
-	return v.service.EmitPropertyChanged(v, "Mode", value)
-}
-
 func (v *Battery) setPropSysfsPath(value string) (changed bool) {
 	if v.SysfsPath != value {
 		v.SysfsPath = value
@@ -446,4 +238,212 @@ func (v *Battery) setPropUpdateTime(value int64) (changed bool) {
 
 func (v *Battery) emitPropChangedUpdateTime(value int64) error {
 	return v.service.EmitPropertyChanged(v, "UpdateTime", value)
+}
+
+func (v *Manager) setPropOnBattery(value bool) (changed bool) {
+	if v.OnBattery != value {
+		v.OnBattery = value
+		v.emitPropChangedOnBattery(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedOnBattery(value bool) error {
+	return v.service.EmitPropertyChanged(v, "OnBattery", value)
+}
+
+func (v *Manager) setPropHasLidSwitch(value bool) (changed bool) {
+	if v.HasLidSwitch != value {
+		v.HasLidSwitch = value
+		v.emitPropChangedHasLidSwitch(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedHasLidSwitch(value bool) error {
+	return v.service.EmitPropertyChanged(v, "HasLidSwitch", value)
+}
+
+func (v *Manager) setPropHasBattery(value bool) (changed bool) {
+	if v.HasBattery != value {
+		v.HasBattery = value
+		v.emitPropChangedHasBattery(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedHasBattery(value bool) error {
+	return v.service.EmitPropertyChanged(v, "HasBattery", value)
+}
+
+func (v *Manager) setPropBatteryPercentage(value float64) (changed bool) {
+	if v.BatteryPercentage != value {
+		v.BatteryPercentage = value
+		v.emitPropChangedBatteryPercentage(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryPercentage(value float64) error {
+	return v.service.EmitPropertyChanged(v, "BatteryPercentage", value)
+}
+
+func (v *Manager) setPropBatteryStatus(value battery.Status) (changed bool) {
+	if v.BatteryStatus != value {
+		v.BatteryStatus = value
+		v.emitPropChangedBatteryStatus(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryStatus(value battery.Status) error {
+	return v.service.EmitPropertyChanged(v, "BatteryStatus", value)
+}
+
+func (v *Manager) setPropBatteryTimeToEmpty(value uint64) (changed bool) {
+	if v.BatteryTimeToEmpty != value {
+		v.BatteryTimeToEmpty = value
+		v.emitPropChangedBatteryTimeToEmpty(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryTimeToEmpty(value uint64) error {
+	return v.service.EmitPropertyChanged(v, "BatteryTimeToEmpty", value)
+}
+
+func (v *Manager) setPropBatteryTimeToFull(value uint64) (changed bool) {
+	if v.BatteryTimeToFull != value {
+		v.BatteryTimeToFull = value
+		v.emitPropChangedBatteryTimeToFull(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryTimeToFull(value uint64) error {
+	return v.service.EmitPropertyChanged(v, "BatteryTimeToFull", value)
+}
+
+func (v *Manager) setPropBatteryCapacity(value float64) (changed bool) {
+	if v.BatteryCapacity != value {
+		v.BatteryCapacity = value
+		v.emitPropChangedBatteryCapacity(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryCapacity(value float64) error {
+	return v.service.EmitPropertyChanged(v, "BatteryCapacity", value)
+}
+
+func (v *Manager) setPropPowerSavingModeEnabled(value bool) (changed bool) {
+	if v.PowerSavingModeEnabled != value {
+		v.PowerSavingModeEnabled = value
+		v.emitPropChangedPowerSavingModeEnabled(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedPowerSavingModeEnabled(value bool) error {
+	return v.service.EmitPropertyChanged(v, "PowerSavingModeEnabled", value)
+}
+
+func (v *Manager) setPropPowerSavingModeAuto(value bool) (changed bool) {
+	if v.PowerSavingModeAuto != value {
+		v.PowerSavingModeAuto = value
+		v.emitPropChangedPowerSavingModeAuto(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedPowerSavingModeAuto(value bool) error {
+	return v.service.EmitPropertyChanged(v, "PowerSavingModeAuto", value)
+}
+
+func (v *Manager) setPropPowerSavingModeAutoWhenBatteryLow(value bool) (changed bool) {
+	if v.PowerSavingModeAutoWhenBatteryLow != value {
+		v.PowerSavingModeAutoWhenBatteryLow = value
+		v.emitPropChangedPowerSavingModeAutoWhenBatteryLow(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedPowerSavingModeAutoWhenBatteryLow(value bool) error {
+	return v.service.EmitPropertyChanged(v, "PowerSavingModeAutoWhenBatteryLow", value)
+}
+
+func (v *Manager) setPropPowerSavingModeBrightnessDropPercent(value uint32) (changed bool) {
+	if v.PowerSavingModeBrightnessDropPercent != value {
+		v.PowerSavingModeBrightnessDropPercent = value
+		v.emitPropChangedPowerSavingModeBrightnessDropPercent(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedPowerSavingModeBrightnessDropPercent(value uint32) error {
+	return v.service.EmitPropertyChanged(v, "PowerSavingModeBrightnessDropPercent", value)
+}
+
+func (v *Manager) setPropCpuGovernor(value string) (changed bool) {
+	if v.CpuGovernor != value {
+		v.CpuGovernor = value
+		v.emitPropChangedCpuGovernor(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedCpuGovernor(value string) error {
+	return v.service.EmitPropertyChanged(v, "CpuGovernor", value)
+}
+
+func (v *Manager) setPropCpuBoost(value bool) (changed bool) {
+	if v.CpuBoost != value {
+		v.CpuBoost = value
+		v.emitPropChangedCpuBoost(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedCpuBoost(value bool) error {
+	return v.service.EmitPropertyChanged(v, "CpuBoost", value)
+}
+
+func (v *Manager) setPropIsHighPerformanceSupported(value bool) (changed bool) {
+	if v.IsHighPerformanceSupported != value {
+		v.IsHighPerformanceSupported = value
+		v.emitPropChangedIsHighPerformanceSupported(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedIsHighPerformanceSupported(value bool) error {
+	return v.service.EmitPropertyChanged(v, "IsHighPerformanceSupported", value)
+}
+
+func (v *Manager) setPropMode(value string) (changed bool) {
+	if v.Mode != value {
+		v.Mode = value
+		v.emitPropChangedMode(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedMode(value string) error {
+	return v.service.EmitPropertyChanged(v, "Mode", value)
 }

@@ -131,7 +131,7 @@ func isPidVirtual(supApps []string, pid uint32) (bool, error) {
 	return isVirtual(execPath, supApps), nil
 }
 
-func (d *Daemon) IsPidVirtualMachine(pid uint32) (bool, *dbus.Error) {
+func (d *Daemon) IsPidVirtualMachine(pid uint32) (isVM bool, busErr *dbus.Error) {
 	ret, err := isPidVirtual(supportedVirtualMachines, pid)
 	if err != nil {
 		return false, nil

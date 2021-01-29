@@ -37,18 +37,18 @@ func (*Manager) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func (m *Manager) GetBatteries() ([]dbus.ObjectPath, *dbus.Error) {
+func (m *Manager) GetBatteries() (batteries []dbus.ObjectPath, busErr *dbus.Error) {
 	m.batteriesMu.Lock()
 
-	result := make([]dbus.ObjectPath, len(m.batteries))
+	batteries = make([]dbus.ObjectPath, len(m.batteries))
 	idx := 0
 	for _, bat := range m.batteries {
-		result[idx] = bat.getObjPath()
+		batteries[idx] = bat.getObjPath()
 		idx++
 	}
 
 	m.batteriesMu.Unlock()
-	return result, nil
+	return batteries, nil
 }
 
 func (m *Manager) refreshBatteries() {

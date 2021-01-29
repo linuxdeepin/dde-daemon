@@ -24,10 +24,12 @@ import (
 
 	"github.com/godbus/dbus"
 	libdisplay "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
+
+//go:generate dbusutil-gen em -type Manager
 
 const (
 	dbusServiceName = "com.deepin.daemon.SessionWatcher"
@@ -46,11 +48,6 @@ type Manager struct {
 
 	PropsMu  sync.RWMutex
 	IsActive bool
-	//nolint
-	methods  *struct {
-		GetSessions        func() `out:"sessions"`
-		IsX11SessionActive func() `out:"is_active"`
-	}
 }
 
 var (
@@ -115,7 +112,7 @@ func (m *Manager) initUserSessions() {
 		m.handleSessionChanged()
 	})
 	if err != nil {
-		logger.Warning("ConnectSessionNew error:",err)
+		logger.Warning("ConnectSessionNew error:", err)
 	}
 
 	_, err = m.loginManager.ConnectSessionRemoved(func(id string, path dbus.ObjectPath) {
@@ -124,7 +121,7 @@ func (m *Manager) initUserSessions() {
 		m.handleSessionChanged()
 	})
 	if err != nil {
-		logger.Warning("ConnectSessionRemoved error:",err)
+		logger.Warning("ConnectSessionRemoved error:", err)
 	}
 }
 
@@ -167,7 +164,7 @@ func (m *Manager) addSession(id string, path dbus.ObjectPath) {
 		m.handleSessionChanged()
 	})
 	if err != nil {
-		logger.Warning("ConnectChanged error:",err)
+		logger.Warning("ConnectChanged error:", err)
 	}
 }
 
@@ -235,7 +232,7 @@ func (m *Manager) setIsActive(val bool) bool {
 		logger.Debug("[setIsActive] IsActive changed:", val)
 		err := m.service.EmitPropertyChanged(m, "IsActive", val)
 		if err != nil {
-			logger.Warning("EmitPropertyChanged error:",err)
+			logger.Warning("EmitPropertyChanged error:", err)
 		}
 		return true
 	}
@@ -256,7 +253,7 @@ func (m *Manager) getActiveSession() *login1.Session {
 	return nil
 }
 
-func (m *Manager) IsX11SessionActive() (bool, *dbus.Error) {
+func (m *Manager) IsX11SessionActive() (active bool, busErr *dbus.Error) {
 	m.mu.Lock()
 	ty := m.activeSessionType
 	m.mu.Unlock()
@@ -268,12 +265,12 @@ func (m *Manager) IsX11SessionActive() (bool, *dbus.Error) {
 	return false, nil
 }
 
-func (m *Manager) GetSessions() (ret []dbus.ObjectPath, err *dbus.Error) {
+func (m *Manager) GetSessions() (sessions []dbus.ObjectPath, err *dbus.Error) {
 	m.mu.Lock()
-	ret = make([]dbus.ObjectPath, len(m.sessions))
+	sessions = make([]dbus.ObjectPath, len(m.sessions))
 	i := 0
 	for _, session := range m.sessions {
-		ret[i] = session.Path_()
+		sessions[i] = session.Path_()
 		i++
 	}
 	m.mu.Unlock()

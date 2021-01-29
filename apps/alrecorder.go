@@ -48,14 +48,6 @@ type ALRecorder struct {
 	loginManager      *login1.Manager
 
 	// nolint
-	methods *struct {
-		GetNew         func() `out:"newApps"`
-		MarkLaunched   func() `in:"desktopFile"`
-		WatchDirs      func() `in:"dirs"`
-		UninstallHints func() `in:"desktopFiles"`
-	}
-
-	// nolint
 	signals *struct {
 		Launched struct {
 			file string
@@ -232,7 +224,7 @@ func (r *ALRecorder) MarkLaunched(file string) *dbus.Error {
 	return nil
 }
 
-func (r *ALRecorder) GetNew(sender dbus.Sender) (map[string][]string, *dbus.Error) {
+func (r *ALRecorder) GetNew(sender dbus.Sender) (newApps map[string][]string, busErr *dbus.Error) {
 	uid, err := r.Service().GetConnUID(string(sender))
 	if err != nil {
 		return nil, dbusutil.ToError(err)

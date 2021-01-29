@@ -312,8 +312,8 @@ func (m *Manager) GetAccessPoints(path dbus.ObjectPath) (apsJSON string, busErr 
 	return
 }
 
-func (m *Manager) ActivateAccessPoint(uuid string, apPath, devPath dbus.ObjectPath) (dbus.ObjectPath,
-	*dbus.Error) {
+func (m *Manager) ActivateAccessPoint(uuid string, apPath, devPath dbus.ObjectPath) (connection dbus.ObjectPath,
+	busErr *dbus.Error) {
 	var err error
 	cpath, err := m.activateAccessPoint(uuid, apPath, devPath)
 	if err != nil {

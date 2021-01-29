@@ -21,16 +21,11 @@
 
 package apps
 
-import (
-	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-)
-
-func (r *ALRecorder) DebugUserRemoved(sender dbus.Sender) *dbus.Error {
-	uid, err := r.Service().GetConnUID(string(sender))
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
-	r.handleUserRemoved(int(uid))
-	return nil
-}
+//func (r *ALRecorder) DebugUserRemoved(sender dbus.Sender) *dbus.Error {
+//	uid, err := r.Service().GetConnUID(string(sender))
+//	if err != nil {
+//		return dbusutil.ToError(err)
+//	}
+//	r.handleUserRemoved(int(uid))
+//	return nil
+//}
