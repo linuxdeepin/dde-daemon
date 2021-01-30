@@ -192,8 +192,7 @@ func (d *ddcci) SetBrightness(edidBase64 string, percent int) error {
 		idx, find := d.findMonitorIndex(edidBase64)
 		if find {
 			dh = d.getDisplayHandleByIdx(idx)
-			logger.Info("get display handle by indes---------", idx)
-
+			logger.Info("get display handle by index---------", idx)
 		} else {
 			return fmt.Errorf("brightness: failed to find monitor")
 		}
@@ -202,8 +201,7 @@ func (d *ddcci) SetBrightness(edidBase64 string, percent int) error {
 	if dh.getState() == 0 {
 		dh.Open()
 	}
-
-        return  dh.setBrightness(percent)
+	return dh.setBrightness(percent)
 }
 
 func (d *ddcci) getDisplayHandleByIdx(idx int) *displayHandle {

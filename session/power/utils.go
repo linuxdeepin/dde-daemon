@@ -21,12 +21,13 @@ package power
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
-	"fmt"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 	"github.com/linuxdeepin/go-x11-client/util/wm/icccm"
@@ -234,7 +235,6 @@ func (m *Manager) doTurnOffScreen() {
 	m.setDPMSModeOff()
 }
 
-
 func (m *Manager) doTurnOnScreen() {
 	if m.ScreenBlackLock.Get() {
 		m.doLock(true)
@@ -250,6 +250,19 @@ func (m *Manager) setDisplayBrightness(brightnessTable map[string]float64) {
 		err := display.SetBrightness(0, output, brightness)
 		if err != nil {
 			logger.Warningf("Change output %q brightness to %.2f failed: %v", output, brightness, err)
+                        //ddcutil 黑屏后i2c恢复较慢，为防止亮度不能正常恢复，做三次尝试，每次2s(测试值)
+                        //TODO:I2C/ddc优化
+			if strings.Contains(output, "VGA") {
+				logger.Warningf("Change output brightness again........")				
+				for i := 0; i < 3; i++ {
+					time.Sleep(2 * time.Second)
+					err := display.SetBrightness(0, output, brightness)
+					if err == nil {
+						logger.Debug("Change output brightness sucessfully!", output, brightness, err)
+						break
+					}
+				}
+                        }
 		} else {
 			logger.Infof("Change output %q brightness to %.2f done!", output, brightness)
 		}
