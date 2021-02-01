@@ -21,19 +21,19 @@ package dock
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
 
 	dutils "pkg.deepin.io/lib/utils"
 )
 
 const dockedItemTemplate string = `[Desktop Entry]
-Name={{ .Name }}
-Exec={{ .Exec }}
-Icon={{ .Icon }}
+Name=%s
+Exec=%s
+Icon=%s
 Type=Application
 Terminal=false
 StartupNotify=false
@@ -45,22 +45,15 @@ type dockedItemInfo struct {
 
 func createScratchDesktopFile(id, title, icon, cmd string) (string, error) {
 	logger.Debugf("create scratch file for %q", id)
-	file := filepath.Join(scratchDir, addDesktopExt(id))
-	f, err := os.OpenFile(file, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
-	if err != nil {
-		logger.Warning("Open file for write failed:", err)
-		return "", err
-	}
-
-	defer f.Close()
-	temp := template.Must(template.New("docked_item_temp").Parse(dockedItemTemplate))
+	filename := filepath.Join(scratchDir, addDesktopExt(id))
 	dockedItem := dockedItemInfo{title, icon, cmd}
 	logger.Debugf("dockedItem: %#v", dockedItem)
-	err = temp.Execute(f, dockedItem)
+	content := fmt.Sprintf(dockedItemTemplate, dockedItem.Name, dockedItem.Exec, dockedItem.Icon)
+	err := ioutil.WriteFile(filename, []byte(content), 0644)
 	if err != nil {
 		return "", err
 	}
-	return file, nil
+	return filename, nil
 }
 
 func removeScratchFiles(desktopFile string) {
