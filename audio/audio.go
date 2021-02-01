@@ -222,12 +222,6 @@ func startPulseaudio() error {
 }
 
 func getCtx() (ctx *pulse.Context, err error) {
-	err = startPulseaudio()
-	if err != nil {
-		err = xerrors.Errorf("failed to start pulseaudio: %w", err)
-		return
-	}
-
 	ctx = pulse.GetContextForced()
 	if ctx == nil {
 		err = errors.New("failed to get pulse context")
@@ -875,7 +869,7 @@ func (a *Audio) updateSources(index uint32) (source *Source) {
 	sourceInfoList := a.ctx.GetSourceList()
 	for _, sourceInfo := range sourceInfoList {
 		//如果音频为输入，过滤到所有的monitor
-		if strings.HasSuffix(sourceInfo.Name, ".monitor"){
+		if strings.HasSuffix(sourceInfo.Name, ".monitor") {
 			logger.Debugf("skip %s source update", sourceInfo.Name)
 			continue
 		}

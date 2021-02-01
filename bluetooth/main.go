@@ -38,7 +38,7 @@ func newBluetoothDaemon(logger *log.Logger) *daemon {
 }
 
 func (*daemon) GetDependencies() []string {
-	return []string{}
+	return []string{"audio"}
 }
 
 var globalBluetooth *Bluetooth
