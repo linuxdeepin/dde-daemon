@@ -20,9 +20,6 @@
 package debug
 
 import (
-	_ "net/http/pprof"
-
-	"net/http"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -32,7 +29,6 @@ var (
 )
 
 type Daemon struct {
-	pprofExists bool
 	*loader.ModuleBase
 }
 
@@ -47,17 +43,6 @@ func (*Daemon) GetDependencies() []string {
 }
 
 func (d *Daemon) Start() error {
-	if !d.pprofExists {
-		go func() {
-			d.pprofExists = true
-			err := http.ListenAndServe("localhost:6969", nil)
-			if err != nil {
-				d.pprofExists = false
-				logger.Error("Enable pprof failed:", err)
-				return
-			}
-		}()
-	}
 	if d.LogLevel() != log.LevelDebug {
 		loader.ToggleLogDebug(true)
 	}
