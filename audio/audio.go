@@ -222,12 +222,6 @@ func startPulseaudio() error {
 }
 
 func getCtx() (ctx *pulse.Context, err error) {
-	err = startPulseaudio()
-	if err != nil {
-		err = xerrors.Errorf("failed to start pulseaudio: %w", err)
-		return
-	}
-
 	ctx = pulse.GetContextForced()
 	if ctx == nil {
 		err = errors.New("failed to get pulse context")
@@ -863,6 +857,11 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 func (a *Audio) updateSources(index uint32) (source *Source) {
 	sourceInfoList := a.ctx.GetSourceList()
 	for _, sourceInfo := range sourceInfoList {
+		//如果音频为输入，过滤到所有的monitor
+		if strings.HasSuffix(sourceInfo.Name, ".monitor") {
+			logger.Debugf("skip %s source update", sourceInfo.Name)
+			continue
+		}
 		// 判断 pulseaudio 的 source 索引是否存在，并返回存在的 source 信息
 		if sourceInfo.Index == index {
 			logger.Debug("get same source index:", index)

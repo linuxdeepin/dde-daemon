@@ -22,6 +22,7 @@ package audio
 import (
 	"time"
 
+	"golang.org/x/xerrors"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/log"
@@ -78,7 +79,12 @@ func (m *Module) Start() error {
 	if m.audio != nil {
 		return nil
 	}
-
+	err := startPulseaudio() // 为了保证蓝牙模块依赖audio模块,并且audio模块启动pulseaudio完成.
+	if err != nil {
+		err = xerrors.Errorf("failed to start pulseaudio: %w", err)
+		logger.Warning(err)
+		return err
+	} // TODO 等loader模块重构依赖完成,将该部分再修改会start中
 	go func() {
 		waitSoundThemePlayerExit()
 		t0 := time.Now()
