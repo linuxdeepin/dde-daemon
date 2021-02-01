@@ -62,11 +62,11 @@ func runMainLoop() {
 func getEnableFlag(flag *Flags) loader.EnableFlag {
 	enableFlag := loader.EnableFlagIgnoreMissingModule
 
-	if *flag.IgnoreMissingModules {
+	if flag.IgnoreMissingModules {
 		enableFlag = loader.EnableFlagNone
 	}
 
-	if *flag.ForceStart {
+	if flag.ForceStart {
 		enableFlag |= loader.EnableFlagForceStart
 	}
 
@@ -87,16 +87,19 @@ func (*SessionDaemon) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func NewSessionDaemon(flags *Flags, settings *gio.Settings, logger *log.Logger) *SessionDaemon {
-	session := &SessionDaemon{
-		flags:    flags,
+func NewSessionDaemon(settings *gio.Settings, logger *log.Logger) *SessionDaemon {
+	daemon := &SessionDaemon{
+		flags: &Flags{
+			IgnoreMissingModules: _options.ignore,
+			ForceStart:           _options.force,
+		},
 		settings: settings,
 		log:      logger,
 	}
 
-	session.initModules()
+	daemon.initModules()
 
-	return session
+	return daemon
 }
 
 func (s *SessionDaemon) register(service *dbusutil.Service) error {
@@ -221,7 +224,7 @@ func (s *SessionDaemon) disableModules(disableModules []string) error {
 }
 
 func (s *SessionDaemon) listModule(name string) error {
-	if name == "" {
+	if name == "all" {
 		for _, module := range loader.List() {
 			fmt.Println(module.Name())
 		}
@@ -233,10 +236,7 @@ func (s *SessionDaemon) listModule(name string) error {
 		return fmt.Errorf("no such a module named %s", name)
 	}
 
-	for _, m := range module.GetDependencies() {
-		fmt.Println(m)
-	}
-
+	fmt.Printf("module %v dependencies: %v\n", name, module.GetDependencies())
 	return nil
 }
 

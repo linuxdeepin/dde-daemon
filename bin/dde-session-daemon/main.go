@@ -26,6 +26,7 @@ package main
 import "C"
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -37,11 +38,10 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
+	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
 	"pkg.deepin.io/dde/api/soundutils"
 	"pkg.deepin.io/dde/api/userenv"
 	"pkg.deepin.io/dde/daemon/loader"
-	dapp "pkg.deepin.io/lib/app"
 	"pkg.deepin.io/lib/dbusutil"
 	. "pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/log"
@@ -77,43 +77,115 @@ func allowRun() bool {
 	return allowRun
 }
 
+var _options struct {
+	verbose  bool
+	logLevel string
+	list     string
+	enable   string
+	disable  string
+	ignore   bool
+	force    bool
+
+	enablingModules []string
+	disableModules  []string
+}
+
+func toLogLevel(name string) (log.Priority, error) {
+	name = strings.ToLower(name)
+	logLevel := log.LevelInfo
+	var err error
+	switch name {
+	case "":
+		logLevel = log.LevelInfo
+	case "error":
+		logLevel = log.LevelError
+	case "warn":
+		logLevel = log.LevelWarning
+	case "info":
+		logLevel = log.LevelInfo
+	case "debug":
+		logLevel = log.LevelDebug
+	case "no":
+		logLevel = log.LevelDisable
+	default:
+		err = fmt.Errorf("%s is not support", name)
+	}
+
+	return logLevel, err
+}
+
 func init() {
 	rand.Seed(time.Now().UnixNano())
+
+	// -v | -verbose
+	const verboseUsage = "Show much more message, shorthand for --loglevel debug."
+	flag.BoolVar(&_options.verbose, "v", false, verboseUsage)
+	flag.BoolVar(&_options.verbose, "verbose", false, verboseUsage)
+
+	// -l | -loglevel
+	const logLevelUsage = "Set log level, possible value is error/warn/info/debug/no, info is default"
+	flag.StringVar(&_options.logLevel, "l", "", logLevelUsage)
+	flag.StringVar(&_options.logLevel, "loglevel", "", logLevelUsage)
+
+	// -f | -force
+	const forceUsage = "Force start disabled module."
+	flag.BoolVar(&_options.force, "f", false, forceUsage)
+	flag.BoolVar(&_options.force, "force", false, forceUsage)
+
+	// -i | -ignore
+	const ignoreUsage = "Ignore missing modules."
+	flag.BoolVar(&_options.ignore, "i", true, ignoreUsage)
+	flag.BoolVar(&_options.ignore, "ignore", true, ignoreUsage)
+
+	// -list
+	flag.StringVar(&_options.list, "list", "",
+		"List all the modules or the dependencies of one module. The argument can be all or the name of the module.")
+
+	// -enable
+	flag.StringVar(&_options.enable, "enable", "",
+		"Enable modules and their dependencies, ignore settings.")
+
+	// -disable
+	flag.StringVar(&_options.disable, "disable", "", "Disable modules, ignore settings.")
 }
 
 func main() {
+	logger.SetLogLevel(log.LevelInfo)
 	if !allowRun() {
 		logger.Warning("session manager does not allow me to run")
 		os.Exit(1)
 	}
 
+	flag.Parse()
 	InitI18n()
 	Textdomain("dde-daemon")
 
-	cmd := dapp.New("dde-session-dameon", "dde session daemon", "version "+__VERSION__)
+	if _options.verbose {
+		_options.logLevel = "debug"
+	}
+
+	logLevel, err := toLogLevel(_options.logLevel)
+	if err != nil {
+		logger.Warning("failed to parse loglevel:", err)
+		os.Exit(1)
+	}
+
+	if _options.enable != "" {
+		_options.enablingModules = strings.Split(_options.enable, ",")
+	}
+	if _options.disable != "" {
+		_options.disableModules = strings.Split(_options.disable, ",")
+	}
 
 	usr, err := user.Current()
 	if err == nil {
 		_ = os.Chdir(usr.HomeDir)
 	}
 
-	flags := new(Flags)
-	flags.IgnoreMissingModules = cmd.Flag("Ignore", "ignore missing modules, --no-ignore to revert it.").Short('i').Default("true").Bool()
-	flags.ForceStart = cmd.Flag("force", "Force start disabled module.").Short('f').Bool()
-
-	cmd.Command("auto", "Automatically get enabled and disabled modules from settings.").Default()
-	enablingModules := cmd.Command("enable", "Enable modules and their dependencies, ignore settings.").Arg("module", "module names.").Required().Strings()
-	disableModules := cmd.Command("disable", "Disable modules, ignore settings.").Arg("module", "module names.").Required().Strings()
-	listModule := cmd.Command("list", "List all the modules or the dependencies of one module.").Arg("module", "module name.").String()
-
-	subCmd := cmd.ParseCommandLine(os.Args[1:])
-
-	_ = cmd.StartProfile()
-
 	C.init()
 	proxy.SetupProxy()
 
-	app := NewSessionDaemon(flags, daemonSettings, logger)
+	app := NewSessionDaemon(daemonSettings, logger)
 
 	service, err := dbusutil.NewSessionService()
 	if err != nil {
@@ -127,33 +199,32 @@ func main() {
 
 	loader.SetService(service)
 
-	logger.SetLogLevel(log.LevelInfo)
-	if cmd.IsLogLevelNone() &&
+	if _options.logLevel == "" &&
 		(utils.IsEnvExists(log.DebugLevelEnv) || utils.IsEnvExists(log.DebugMatchEnv)) {
-		logger.Info("Log level is none and debug env exists, so ignore cmd.loglevel")
+		logger.Info("Log level is none and debug env exists, so do not call loader.SetLogLevel")
 	} else {
-		appLogLevel := cmd.LogLevel()
-		logger.Info("App log level:", appLogLevel)
-		// set all modules log level to appLogLevel
-		loader.SetLogLevel(appLogLevel)
+		logger.Info("App log level:", _options.logLevel)
+		// set all modules log level to logLevel
+		loader.SetLogLevel(logLevel)
 	}
-
-	needRunMainLoop := true
 
 	// Ensure each module and mainloop in the same thread
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
-	switch subCmd {
-	case "auto":
+	if _options.list != "" {
+		err = app.listModule(_options.list)
+		if err != nil {
+			logger.Warning(err)
+			os.Exit(1)
+		}
+		os.Exit(0)
+	} else if len(_options.enablingModules) > 0 {
+		err = app.enableModules(_options.enablingModules)
+	} else if len(_options.disableModules) > 0 {
+		err = app.disableModules(_options.disableModules)
+	} else {
 		app.execDefaultAction()
-	case "enable":
-		err = app.enableModules(*enablingModules)
-	case "disable":
-		err = app.disableModules(*disableModules)
-	case "list":
-		err = app.listModule(*listModule)
-		needRunMainLoop = false
 	}
 
 	if err != nil {
@@ -171,9 +242,7 @@ func main() {
 		logger.Warning(err)
 	}
 
-	if needRunMainLoop {
-		runMainLoop()
-	}
+	runMainLoop()
 }
 
 // migrate user env from ~/.pam_environment to ~/.dde-env

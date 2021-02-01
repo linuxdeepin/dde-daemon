@@ -20,6 +20,6 @@
 package main
 
 type Flags struct {
-	IgnoreMissingModules *bool
-	ForceStart           *bool
+	IgnoreMissingModules bool
+	ForceStart           bool
 }
