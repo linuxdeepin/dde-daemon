@@ -54,13 +54,14 @@ type Manager struct {
 // 允许发送的按键列表
 var allowList = map[uint32]bool{
 	KEY_TOUCHPAD_TOGGLE: true,
+	KEY_POWER:           true,
 }
 
 func newManager(service *dbusutil.Service) *Manager {
 	m := &Manager{
 		service: service,
 		quit:    make(chan bool),
-		ch:      make(chan *KeyEvent),
+		ch:      make(chan *KeyEvent, 64),
 	}
 
 	return m
