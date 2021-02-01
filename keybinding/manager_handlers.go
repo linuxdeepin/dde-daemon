@@ -25,7 +25,6 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
-	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 )
 
@@ -188,53 +187,6 @@ func (m *Manager) initHandlers() {
 			} else {
 				showOSD("WLANOn")
 			}
-		}
-	}
-
-	m.handlers[ActionTypeSystemShutdown] = func(ev *KeyEvent) { // 电源键按下的handler
-		var powerPressAction int32
-
-		systemBus, _ := dbus.SystemBus()
-		systemPower := power.NewPower(systemBus)
-		onBattery, err := systemPower.OnBattery().Get(0)
-		if err != nil {
-			logger.Error(err)
-		}
-
-		screenBlackLock := m.gsPower.GetBoolean("screen-black-lock")
-
-		if onBattery {
-			powerPressAction = m.gsPower.GetEnum("battery-press-power-button")
-		} else {
-			powerPressAction = m.gsPower.GetEnum("line-power-press-power-button")
-		}
-		switch powerPressAction {
-		case powerActionShutdown:
-			m.systemShutdown()
-		case powerActionSuspend:
-			m.systemSuspendByFront()
-		case powerActionHibernate:
-			m.systemHibernateByFront()
-		case powerActionTurnOffScreen:
-			if screenBlackLock {
-				systemLock()
-			}
-			m.systemTurnOffScreen()
-		case powerActionShowUI:
-			cmd := "dde-lock -t"
-			go func() {
-				locked, err := m.sessionManager.Locked().Get(0)
-				if err != nil {
-					logger.Warning("sessionManager get locked error:", err)
-				}
-				if locked {
-					return
-				}
-				err = m.execCmd(cmd, false)
-				if err != nil {
-					logger.Warning("execCmd error:", err)
-				}
-			}()
 		}
 	}
 
