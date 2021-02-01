@@ -20,10 +20,11 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
 	"path"
+
 	dutils "pkg.deepin.io/lib/utils"
 )
 
@@ -33,33 +34,38 @@ const (
 	TypeIcon       = "icon"
 	TypeCursor     = "cursor"
 	TypeBackground = "background"
+
+	forceFlagUsage = "Force generate thumbnails"
+	destDirUsage   = "Thumbnails output directory"
 )
 
-var (
-	forceFlag = kingpin.Flag("force", "Force generate thumbnails").Short('f').Bool()
-	destDir   = kingpin.Flag("output", "Thumbnails output directory").Default("").Short('o').String()
-	thumbType = kingpin.Arg("type", "Thumbnail type, such as: gtk, icon, cursor...").Default("all").String()
-)
+var _forceFlag bool
+var _destDir string
+
+func init() {
+	flag.BoolVar(&_forceFlag, "force", false, forceFlagUsage)
+	flag.BoolVar(&_forceFlag, "f", false, forceFlagUsage)
+	flag.StringVar(&_destDir, "output", "", destDirUsage)
+	flag.StringVar(&_destDir, "o", "", destDirUsage)
+}
 
 func main() {
-	kingpin.Parse()
-	argNum := len(os.Args)
-	if argNum == 1 || os.Args[1] == "-h" || os.Args[1] == "--help" {
-		usage()
-	}
+	flag.Usage = usage
+	flag.Parse()
 
+	thumbType := flag.Arg(0)
 	var thumbFiles []string
-	switch *thumbType {
+	switch thumbType {
 	case TypeAll:
-		thumbFiles = genAllThumbnails(*forceFlag)
+		thumbFiles = genAllThumbnails(_forceFlag)
 	case TypeGtk:
-		thumbFiles = genGtkThumbnails(*forceFlag)
+		thumbFiles = genGtkThumbnails(_forceFlag)
 	case TypeIcon:
-		thumbFiles = genIconThumbnails(*forceFlag)
+		thumbFiles = genIconThumbnails(_forceFlag)
 	case TypeCursor:
-		thumbFiles = genCursorThumbnails(*forceFlag)
+		thumbFiles = genCursorThumbnails(_forceFlag)
 	case TypeBackground:
-		thumbFiles = genBgThumbnails(*forceFlag)
+		thumbFiles = genBgThumbnails(_forceFlag)
 	default:
 		usage()
 	}
@@ -85,25 +91,28 @@ func usage() {
 }
 
 func moveThumbFiles(files []string) {
-	if len(*destDir) == 0 {
+	if len(_destDir) == 0 {
 		return
 	}
 
-	err := os.MkdirAll(*destDir, 0755)
+	err := os.MkdirAll(_destDir, 0755)
 	if err != nil {
-		fmt.Printf("Create '%s' failed: %v\n", *destDir, err)
+		_, _ = fmt.Fprintf(os.Stderr, "create %q failed: %v\n", _destDir, err)
 		return
 	}
 	for _, file := range files {
-		dest := path.Join(*destDir, path.Base(file))
-		if !*forceFlag && dutils.IsFileExist(dest) {
+		dest := path.Join(_destDir, path.Base(file))
+		if !_forceFlag && dutils.IsFileExist(dest) {
 			continue
 		}
-		err := dutils.CopyFile(file, dest)
-		os.Remove(file)
+		err = dutils.CopyFile(file, dest)
 		if err != nil {
-			fmt.Printf("Move '%s' to '%s' failed: %v\n", file, dest, err)
+			_, _ = fmt.Fprintf(os.Stderr, "copy file %q to %q failed: %v\n", file, dest, err)
 			continue
+		}
+		err = os.Remove(file)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "delete file %q failed: %v\n", file, err)
 		}
 	}
 }
