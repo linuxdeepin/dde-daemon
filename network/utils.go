@@ -21,8 +21,11 @@ package network
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"strings"
@@ -245,4 +248,47 @@ func (m *Manager) isSessionActive() bool {
 		return false
 	}
 	return active
+}
+
+// 解析重定向地址
+func getRedirectFromResponse(resp *http.Response, detectUrl string) (string, error) {
+	if resp == nil {
+		return "", errors.New("response is nil")
+	}
+	// 当前返回的是否为重定向
+	if resp.StatusCode != 302 {
+		return "", errors.New("response is not redirect")
+	}
+	// 是否包含location
+	location := resp.Header.Get("Location")
+	if location == "" {
+		return "", errors.New("response has no location")
+	}
+	// 默认返回整个location
+	urlMsg, err := url.Parse(location)
+	if err != nil {
+		logger.Warningf("parse location failed, err: %v", err)
+		// 解析失败则返回原来的location，不对location做处理
+		return location, nil
+	}
+	// 判断url参数
+	if len(urlMsg.RawQuery) > 0 {
+		// 获取解析参数
+		paramSl, err := url.ParseQuery(urlMsg.RawQuery)
+		if err != nil {
+			// 解析失败则返回原location
+			logger.Warningf("parse params failed, err: %v", err)
+			return location, nil
+		}
+		// 获取url信息
+		redirectUrl := paramSl.Get("url")
+		// 认证后的跳转到地址如果为之前的请求地址，则删除该地址，否则不删除
+		if strings.Contains(redirectUrl, detectUrl) {
+			paramSl.Del("url")
+			// 参数更新
+			urlMsg.RawQuery = paramSl.Encode()
+			return urlMsg.String(), nil
+		}
+	}
+	return location, nil
 }

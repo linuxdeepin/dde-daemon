@@ -20,7 +20,7 @@
 package network
 
 import (
-	"os"
+	"net/http"
 	"os/exec"
 	"sync"
 	"time"
@@ -411,10 +411,6 @@ func (m *Manager) initNMObjManager(systemBus *dbus.Conn) {
 }
 
 func (m *Manager) doPortalAuthentication() {
-	portalEnv := os.Getenv("PORTAL_ENABLE")
-	if portalEnv != "1" {
-		return
-	}
 	err := exec.Command("pgrep", "startdde").Run()
 	if err != nil {
 		return
@@ -425,9 +421,31 @@ func (m *Manager) doPortalAuthentication() {
 	if sincePortalDetection < checkRepeatTime || m.protalAuthBrowserOpened {
 		return
 	}
-	err = exec.Command(`xdg-open`, `https://www.uniontech.com`).Start()
+
+	// http client to get url
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+	// get url
+	detectUrl := "http://detectportal.deepin.com"
+	res, err := client.Get(detectUrl)
 	if err != nil {
-		logger.Warning(err)
+		logger.Warningf("get remote http failed ,err: %v", err)
+		return
+	}
+	// get portal addr from response
+	portal, err := getRedirectFromResponse(res, detectUrl)
+	if err != nil {
+		logger.Warningf("get redirect hosts failed, err: %v", err)
+		return
+	}
+	logger.Debugf("portal addr is %v", portal)
+	err = exec.Command(`xdg-open`, portal).Start()
+	if err != nil {
+		logger.Warningf("xdg open windows failed, err: %v", err)
+		return
 	}
 	m.portalLastDetectionTime = time.Now()
 	m.protalAuthBrowserOpened = true
