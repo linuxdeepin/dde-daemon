@@ -87,11 +87,6 @@ func (m *Manager) CanSuspend() (bool, *dbus.Error) {
 }
 
 func (m *Manager) CanHibernate() (bool, *dbus.Error) {
-	if !canHibernate() {
-		logger.Debug("cannot suspend")
-		return false, nil
-	}
-
 	str, _ := m.objLogin.CanHibernate(0)
 	return str == "yes", nil
 }
