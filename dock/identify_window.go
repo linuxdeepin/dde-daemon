@@ -72,18 +72,17 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 	if title == "下载" {
 		appId = "uos-browser"
 	}
-	//+ 防止出现指针为空调用后崩溃问题
-	if winInfo.process != nil {
-		//+ 对于启动的应用目前逻辑是先获取应用的desktop文件名，如果能够获取到使用该文件名去匹配；无法获取则使用appId去匹配！
-		desktopNamePath := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
-		//+ TODO通过desktop环境变量中是否含有deepin-terminal来判断应用是否通过终端运行,后面可以通过判断父进程是否为deepin-terminal来筛选.
-		if !strings.Contains(desktopNamePath, ".desktop") || strings.Contains(desktopNamePath, "deepin-terminal.desktop") {
-			appInfo = NewAppInfo(appId)
-		} else {
-			appInfo = NewAppInfo(desktopNamePath)
+	// 先使用appId获取appInfo,如果不能成功获取再使用GIO_LAUNCHED_DESKTOP_FILE环境变量获取 
+	appInfo = NewAppInfo(appId)
+	if appInfo == nil {
+		//+ 防止出现指针为空调用后崩溃问题
+		if winInfo.process != nil {
+			desktopNamePath := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
+			logger.Info("desktopNamePath: ", desktopNamePath, "appId: ", appId, "appInfo: ", appInfo)
+			if strings.Contains(desktopNamePath, ".desktop") {
+				appInfo = NewAppInfo(desktopNamePath)
+			}
 		}
-	} else {
-		appInfo = NewAppInfo(appId)
 	}
 	if appInfo != nil {
 		innerId = appInfo.innerId
