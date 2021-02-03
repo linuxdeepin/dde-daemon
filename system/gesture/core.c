@@ -438,12 +438,8 @@ handle_mouse_events(struct libinput_event *ev, int type)
     }
 
     struct libinput_event_pointer *mouse = libinput_event_get_pointer_event(ev);
-    syslog(0,"mouse event",type);
     enum libinput_pointer_axis_source source = libinput_event_pointer_get_axis_source(mouse);
-    syslog(0,"mouse event source---%d",source);
-
     double value = libinput_event_pointer_get_axis_value(mouse,	LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL );
-    syslog(0,"mouse event source---%f",value);
 
 
     handleMouseEvent(type, source,value);
