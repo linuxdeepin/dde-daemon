@@ -56,7 +56,6 @@ BuildRequires:  golang(github.com/teambition/rrule-go)
 BuildRequires:  golang(github.com/davecgh/go-spew/spew)
 %else
 BuildRequires:  gocode
-BuildRequires:  ddcutil-devel
 BuildRequires:  resize-devel
 BuildRequires:  gorm-devel
 BuildRequires:  inflection-devel
