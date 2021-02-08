@@ -505,22 +505,6 @@ func (m *Manager) activateConnection(uuid string, devPath dbus.ObjectPath) (cpat
 		return
 	}
 
-	// if need enable device
-	enable, err := m.getDeviceEnabled(devPath)
-	if err != nil {
-		logger.Warningf("get device enabled state failed, err: %v", err)
-		return
-	}
-	if !enable {
-		// add new connection but device is disabled, need to update device enabled state as true
-		// but dont need to auto connect ActivateConnection, else may cause unexpected connection
-		err = m.enableDevice(devPath, true, false)
-		if err != nil {
-			logger.Warningf("enable device failed, err: %v", err)
-			return
-		}
-	}
-
 	cpath, err = nmGetConnectionByUuid(uuid)
 	if err != nil {
 		// connection will be activated in ensureUniqueConnectionExists() if not exists
@@ -529,6 +513,41 @@ func (m *Manager) activateConnection(uuid string, devPath dbus.ObjectPath) (cpat
 		}
 		return
 	}
+
+	// according to NM API Doc
+	// if the activate connection type is vpn, dev path is ignored, dont need to check device state
+	conn, err := nmNewSettingsConnection(cpath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	// get setting data
+	connData, err := conn.GetSettings(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	// check if type is vpn, if not, should async device state
+	connTyp := getSettingConnectionType(connData)
+	if connTyp != "vpn" {
+		// if need enable device
+		var enabled bool
+		enabled, err = m.getDeviceEnabled(devPath)
+		if err != nil {
+			logger.Warningf("get device enabled state failed, err: %v", err)
+			return
+		}
+		if !enabled {
+			// add new connection but device is disabled, need to update device enabled state as true
+			// but dont need to auto connect ActivateConnection, else may cause unexpected connection
+			err = m.enableDevice(devPath, true, false)
+			if err != nil {
+				logger.Warningf("enable device failed, err: %v", err)
+				return
+			}
+		}
+	}
+
 	m.hasSaveSecret = true
 	m.saveToKeyring = true
 	_, err = nmActivateConnection(cpath, devPath)
