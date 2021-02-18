@@ -80,11 +80,11 @@ func (c *MediaPlayerController) ExecCmd(cmd ActionCmd) error {
 	}
 
 	logger.Debug("[HandlerAction] active player dest name:", player.ServiceName_())
+
 	switch cmd {
-	case MediaPlayerPlay:
+	case MediaPlayerPlay, MediaPlayerPause:
 		return player.PlayPause(0)
-	case MediaPlayerPause:
-		return player.Pause(0)
+
 	case MediaPlayerStop:
 		return player.Stop(0)
 
