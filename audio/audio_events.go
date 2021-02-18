@@ -101,7 +101,13 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 		return true
 	}
 
-	a.updateSources(a.defaultSource.index)
+	sourceInfo := a.getSourceInfoByName(a.defaultSource.Name)
+	if sourceInfo == nil {
+		logger.Warning("empty source info")
+		return false
+	}
+
+	a.sources[a.defaultSource.index].update(sourceInfo)
 
 	cardName, portName := priorities.GetFirstInput()
 	currentCardName := a.getCardNameById(a.defaultSource.Card)
@@ -128,7 +134,13 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 		return true
 	}
 
-	a.updateSinks(a.defaultSink.index)
+	sinkInfo := a.getSinkInfoByName(a.defaultSink.Name)
+	if sinkInfo == nil {
+		logger.Warning("empty sink info")
+		return false
+	}
+
+	a.sinks[a.defaultSink.index].update(sinkInfo)
 
 	cardName, portName := priorities.GetFirstOutput()
 	currentCardName := a.getCardNameById(a.defaultSink.Card)
