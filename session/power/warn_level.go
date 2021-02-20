@@ -57,19 +57,32 @@ func getWarnLevel(config *warnLevelConfig, onBattery bool,
 	logger.Debugf("_getWarnLevel onBattery %v, percentage %v, timeToEmpty %v, usePercentage %v",
 		onBattery, percentage, timeToEmpty, usePercentageForPolicy)
 	if usePercentageForPolicy {
-		if percentage > config.LowPercentage || percentage == 0.0 {
+		if percentage == 0.0 {
 			return WarnLevelNone
 		}
-		if percentage > config.DangerPercentage {
-			return WarnLevelLow
+
+		// 当电池电量到达低电量阈值且达到系统固定低电量提醒值时，才去弹低电量提醒通知
+		if percentage <= config.LowPowerNotifyThreshold {
+			if percentage <= config.ActionPercentage {
+				return WarnLevelAction
+			}
+
+			if percentage <= config.CriticalPercentage {
+				return WarnLevelCritical
+			}
+
+			if percentage <= config.DangerPercentage {
+				return WarnLevelDanger
+			}
+
+			if percentage <= config.LowPercentage && config.LowPercentage <= config.LowPowerNotifyThreshold {
+				return WarnLevelLow
+			}
+
+			return WarnLevelNone
 		}
-		if percentage > config.CriticalPercentage {
-			return WarnLevelDanger
-		}
-		if percentage > config.ActionPercentage {
-			return WarnLevelCritical
-		}
-		return WarnLevelAction
+
+		return WarnLevelNone
 	} else {
 		if timeToEmpty > config.LowTime || timeToEmpty == 0 {
 			return WarnLevelNone
