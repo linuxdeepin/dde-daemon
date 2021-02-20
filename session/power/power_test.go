@@ -35,10 +35,11 @@ func TestWarnLevelConfig(t *testing.T) {
 			CriticalTime: 600,
 			ActionTime:   300,
 
-			LowPercentage:      20,
-			DangerPercentage:   15,
-			CriticalPercentage: 10,
-			ActionPercentage:   5,
+			LowPowerNotifyThreshold: 20,
+			LowPercentage:           20,
+			DangerPercentage:        15,
+			CriticalPercentage:      10,
+			ActionPercentage:        5,
 		}
 		c.So(conf.isValid(), ShouldBeTrue)
 		conf.LowTime = 599
@@ -60,10 +61,11 @@ func Test_getWarnLevel(t *testing.T) {
 			CriticalTime: 600,
 			ActionTime:   300,
 
-			LowPercentage:      20,
-			DangerPercentage:   15,
-			CriticalPercentage: 10,
-			ActionPercentage:   5,
+			LowPowerNotifyThreshold: 20,
+			LowPercentage:           20,
+			DangerPercentage:        15,
+			CriticalPercentage:      10,
+			ActionPercentage:        5,
 		}
 
 		onBattery := false

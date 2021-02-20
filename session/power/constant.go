@@ -43,7 +43,7 @@ const (
 	settingKeyBatteryLidClosedAction       = "battery-lid-closed-action"
 	settingKeyBatteryPressPowerBtnAction   = "battery-press-power-button"
 	settingKeyLowPowerNotifyEnable         = "low-power-notify-enable"
-	settingKeyLowPowerNotifyThreshold      = "percentage-low"
+	settingKeyLowPowerNotifyThreshold      = "low-power-notify-threshold"
 	settingKeyLowPowerAutoSleepThreshold   = "percentage-action"
 	settingKeyBrightnessDropPercent        = "brightness-drop-percent"
 	settingKeyPowerSavingEnabled           = "power-saving-mode-enabled"

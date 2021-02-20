@@ -29,15 +29,16 @@ import (
 )
 
 type warnLevelConfig struct {
-	UsePercentageForPolicy bool
-	LowTime                uint64
-	DangerTime             uint64
-	CriticalTime           uint64
-	ActionTime             uint64
-	LowPercentage          float64
-	DangerPercentage       float64
-	CriticalPercentage     float64
-	ActionPercentage       float64
+	UsePercentageForPolicy  bool
+	LowTime                 uint64
+	DangerTime              uint64
+	CriticalTime            uint64
+	ActionTime              uint64
+	LowPowerNotifyThreshold float64
+	LowPercentage           float64
+	DangerPercentage        float64
+	CriticalPercentage      float64
+	ActionPercentage        float64
 }
 
 func (c *warnLevelConfig) isValid() bool {
@@ -61,10 +62,11 @@ type WarnLevelConfigManager struct {
 	CriticalTime gsprop.Int `prop:"access:rw"`
 	ActionTime   gsprop.Int `prop:"access:rw"`
 
-	LowPercentage      gsprop.Int `prop:"access:rw"`
-	DangerPercentage   gsprop.Int `prop:"access:rw"`
-	CriticalPercentage gsprop.Int `prop:"access:rw"`
-	ActionPercentage   gsprop.Int `prop:"access:rw"`
+	LowPowerNotifyThreshold gsprop.Int `prop:"access:rw"`
+	LowPercentage           gsprop.Int `prop:"access:rw"`
+	DangerPercentage        gsprop.Int `prop:"access:rw"`
+	CriticalPercentage      gsprop.Int `prop:"access:rw"`
+	ActionPercentage        gsprop.Int `prop:"access:rw"`
 
 	settings    *gio.Settings
 	changeTimer *time.Timer
@@ -83,6 +85,7 @@ func NewWarnLevelConfigManager(gs *gio.Settings) *WarnLevelConfigManager {
 	m.CriticalTime.Bind(gs, settingKeyCriticalTime)
 	m.ActionTime.Bind(gs, settingKeyActionTime)
 
+	m.LowPowerNotifyThreshold.Bind(gs, settingKeyLowPowerNotifyThreshold)
 	m.LowPercentage.Bind(gs, settingKeyLowPercentage)
 	m.DangerPercentage.Bind(gs, settingKeyDangerlPercentage)
 	m.CriticalPercentage.Bind(gs, settingKeyCriticalPercentage)
@@ -100,10 +103,11 @@ func (m *WarnLevelConfigManager) getWarnLevelConfig() *warnLevelConfig {
 		CriticalTime:           uint64(m.CriticalTime.Get()),
 		ActionTime:             uint64(m.ActionTime.Get()),
 
-		LowPercentage:      float64(m.LowPercentage.Get()),
-		DangerPercentage:   float64(m.DangerPercentage.Get()),
-		CriticalPercentage: float64(m.CriticalPercentage.Get()),
-		ActionPercentage:   float64(m.ActionPercentage.Get()),
+		LowPowerNotifyThreshold: float64(m.LowPowerNotifyThreshold.Get()),
+		LowPercentage:           float64(m.LowPercentage.Get()),
+		DangerPercentage:        float64(m.DangerPercentage.Get()),
+		CriticalPercentage:      float64(m.CriticalPercentage.Get()),
+		ActionPercentage:        float64(m.ActionPercentage.Get()),
 	}
 }
 
@@ -141,6 +145,7 @@ func (m *WarnLevelConfigManager) connectSettingsChanged() {
 	gsettings.ConnectChanged(gsSchemaPower, "*", func(key string) {
 		switch key {
 		case settingKeyUsePercentageForPolicy,
+			settingKeyLowPowerNotifyThreshold,
 			settingKeyLowPercentage,
 			settingKeyDangerlPercentage,
 			settingKeyCriticalPercentage,
@@ -161,6 +166,7 @@ func (m *WarnLevelConfigManager) connectSettingsChanged() {
 func (m *WarnLevelConfigManager) Reset() *dbus.Error {
 	s := m.settings
 	s.Reset(settingKeyUsePercentageForPolicy)
+	s.Reset(settingKeyLowPowerNotifyThreshold)
 	s.Reset(settingKeyLowPercentage)
 	s.Reset(settingKeyDangerlPercentage)
 	s.Reset(settingKeyCriticalPercentage)
