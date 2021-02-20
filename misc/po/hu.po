@@ -92,11 +92,11 @@ msgstr "Kijelentkezés most"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
-msgstr "Kijelző méretezés beállításai"
+msgstr "Képernyő méretezésének beállítása"
 
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
-msgstr "Kijelző méretezése"
+msgstr "Képernyő méretezése"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -184,7 +184,7 @@ msgstr "Ön megszakította a fájlátvitelt"
 
 #: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
 msgid "Bluetooth connection failed"
-msgstr "Bluetooth kapcsolódás sikertelen"
+msgstr "A Bluetooth csatlakozás sikertelen"
 
 #: ../../bluetooth/obex_agent.go:422
 msgid "Decline"
@@ -297,11 +297,11 @@ msgstr "Kényszerített kilépés"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
-msgstr "Kitűzés a Dokkra"
+msgstr "Kitűzés a Dokkolóra"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr "Eltávolítás a Dokkról"
+msgstr "Eltávolítás a Dokkolóról"
 
 #: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
@@ -329,7 +329,7 @@ msgstr "Képernyő zárolása"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Dokk mutatása / elrejtése"
+msgstr "Dokkoló mutatása / elrejtése"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -983,8 +983,8 @@ msgstr ""
 #: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
-"Nem sikerült csatlakozni %q -eszközhöz,, kérjük próbálja meg közelebb vinni "
-"a Routerhez"
+"Nem sikerült csatlakozni a %q -eszközhöz, kérjük próbálja meg közelebb vinni"
+" a Routerhez"
 
 #: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
@@ -995,7 +995,8 @@ msgstr ""
 #: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
-"A kapcsolat sikertelen, nem sikerült kapcsolódni a %q-hoz, helytelen jelszó"
+"A csatlakozás sikertelen, nem sikerült csatlakozni a %q-hoz, helytelen "
+"jelszó"
 
 #: ../../network/state_handler.go:365
 msgid "Password is required to connect %q"
@@ -1087,7 +1088,7 @@ msgstr "A számítógép hibernált állapotba kerül"
 
 #: ../../session/power/utils.go:397
 msgid "your monitor will turn off"
-msgstr "A kijelzője ki fog kapcsolni"
+msgstr "A képernyője ki fog kapcsolni"
 
 #: ../../session/power/utils.go:399
 msgid "it will do nothing to your computer"

@@ -15,6 +15,7 @@
 # Cindy0514, 2020
 # Raphael Miquelis <raphaelmiquelis@gmail.com>, 2020
 # Alex, 2020
+# Cassiano Molinari <chano2808a@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 16:43+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Alex, 2020\n"
+"Last-Translator: Cassiano Molinari <chano2808a@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -985,7 +986,7 @@ msgstr "Uma senha é necessária para conectar-se à %q"
 
 #: ../../network/state_handler.go:367
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "A rede %q 802.11 WLAN não pode ser encontrada"
 
 #: ../../network/utils_dbus_nm.go:256
 msgid "Unknown"

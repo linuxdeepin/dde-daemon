@@ -33,7 +33,7 @@ msgstr "請輸入長度不小於8位的密碼 "
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
+msgstr "密碼必須包含英文（區分大小寫）、數字或特殊符號（~!@#$%^&*()[]{}\\|/?,.<>）"
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
