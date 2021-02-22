@@ -96,18 +96,19 @@ func (a *Audio) isCardIdValid(cardId uint32) bool {
 }
 
 func (a *Audio) needAutoSwitchInputPort() bool {
+	server, err := a.ctx.GetServer()
+	if err != nil {
+		logger.Error(err)
+		return false
+	}
+
+	a.defaultSourceName = server.DefaultSourceName
+	a.updateDefaultSource(a.defaultSourceName)
+
 	if a.defaultSource == nil || !a.isCardIdValid(a.defaultSource.Card) {
 		logger.Debug("default source is invalid")
 		return true
 	}
-
-	sourceInfo := a.getSourceInfoByName(a.defaultSource.Name)
-	if sourceInfo == nil {
-		logger.Warning("empty source info")
-		return false
-	}
-
-	a.sources[a.defaultSource.index].update(sourceInfo)
 
 	cardName, portName := priorities.GetFirstInput()
 	currentCardName := a.getCardNameById(a.defaultSource.Card)
@@ -130,17 +131,18 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 }
 
 func (a *Audio) needAutoSwitchOutputPort() bool {
-	if a.defaultSink == nil || !a.isCardIdValid(a.defaultSink.Card) {
-		return true
-	}
-
-	sinkInfo := a.getSinkInfoByName(a.defaultSink.Name)
-	if sinkInfo == nil {
-		logger.Warning("empty sink info")
+	server, err := a.ctx.GetServer()
+	if err != nil {
+		logger.Error(err)
 		return false
 	}
 
-	a.sinks[a.defaultSink.index].update(sinkInfo)
+	a.defaultSinkName = server.DefaultSinkName
+	a.updateDefaultSink(a.defaultSinkName)
+
+	if a.defaultSink == nil || !a.isCardIdValid(a.defaultSink.Card) {
+		return true
+	}
 
 	cardName, portName := priorities.GetFirstOutput()
 	currentCardName := a.getCardNameById(a.defaultSink.Card)
@@ -289,7 +291,8 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 
 			card, err := cards.get(idx)
 			if err == nil {
-				for _, port := range cardInfo.Ports {
+				// 此处需从对应的card获取对应的端口，防止获取的蓝牙虚拟端口没有带对应后缀信息
+				for _, port := range card.Ports {
 					if port.Available == pulse.AvailableTypeNo {
 						logger.Warningf("port(%s %s) available is no", card.Name, port.Name)
 						continue
