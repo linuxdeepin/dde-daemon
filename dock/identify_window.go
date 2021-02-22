@@ -66,6 +66,10 @@ func (m *Manager) identifyWindow(winInfo WindowInfo) (innerId string, appInfo *A
 }
 
 func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo *AppInfo) {
+	// TODO对桌面调起的文管应用做规避处理，需要在此处添加，因为初始化时appId和title为空
+	if winInfo.appId == "dde-desktop" && m.shouldShowOnDock(winInfo) {
+		winInfo.appId = "dde-file-manager"
+	}
 	appId := winInfo.appId
 	//+ TODO对于appId为空的情况，使用title过滤，此项修改针对浏览器下载窗口
 	title := winInfo.getTitle()

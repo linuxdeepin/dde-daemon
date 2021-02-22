@@ -221,10 +221,6 @@ func (m *Manager) registerWindowWayland(objPath dbus.ObjectPath) {
 	}
 
 	winInfo := newKWindowInfo(winObj, xid)
-	// TODO对桌面调起的文管应用做规避处理
-	if winInfo.appId == "dde-desktop" && m.shouldShowOnDock(winInfo) {
-		winInfo.appId = "dde-file-manager"
-	}
 	m.listenKWindowSignals(winInfo)
 
 	m.waylandManager.mu.Lock()
