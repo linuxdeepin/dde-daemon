@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 16:43+0800\n"
+"POT-Creation-Date: 2021-02-23 15:40+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2020\n"
 "Language-Team: Sinhala (https://www.transifex.com/linuxdeepin/teams/3617/si/)\n"
@@ -138,55 +138,56 @@ msgstr "පණිවිඩ ප්‍රවේශය"
 msgid "Message notification"
 msgstr "පණිවිඩ දැනුම්දීම්"
 
-#: ../../bluetooth/obex_agent.go:345 ../../lastore/lastore.go:255
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
-#: ../../bluetooth/obex_agent.go:352
+#: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %q files from %q"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:361
+#: ../../bluetooth/obex_agent.go:355
 msgid "View"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:367
+#: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:368
+#: ../../bluetooth/obex_agent.go:362
 msgid "Done"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
+#: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:385
+#: ../../bluetooth/obex_agent.go:379
 msgid "You have cancelled the file transfer"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:122
 msgid "Bluetooth connection failed"
 msgstr "බ්ලූටූත් සම්බන්ධතාවය අසාර්ථක විය"
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Decline"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Receive"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:427
+#: ../../bluetooth/obex_agent.go:421
 msgid "Bluetooth File Transfer"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:428
+#: ../../bluetooth/obex_agent.go:422
 msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:483
+#: ../../bluetooth/obex_agent.go:477
 msgid "Receiving %q timed out"
 msgstr ""
 
@@ -194,8 +195,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "%q සාර්ථකව සම්බන්ධ කර ඇත."
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
+#: ../../network/state_handler.go:376
 msgid "%q disconnected"
 msgstr "%q විසන්ධි විය"
 
@@ -203,15 +204,20 @@ msgstr "%q විසන්ධි විය"
 msgid "Make sure %q is turned on and in range"
 msgstr "%q සක්‍රිය බව සහ පරාසය තුළ ඇති බවට වග බලා ගන්න"
 
-#: ../../bluetooth/utils_notify.go:146
+#: ../../bluetooth/utils_notify.go:117
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:155
 msgid "Click here to connect to %q"
 msgstr "%q හා සම්බන්ධ වීමට මෙතන ක්ලික් කරන්න"
 
-#: ../../bluetooth/utils_notify.go:147
+#: ../../bluetooth/utils_notify.go:156
 msgid "Add Bluetooth devices"
 msgstr "බ්ලූටූත් උපාංග එක් කරන්න"
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:166
 msgid "Pair"
 msgstr "එකිනෙක සම්බන්ධ කරන්න"
 
@@ -240,24 +246,24 @@ msgstr "ජීවිතය"
 msgid "Other"
 msgstr "වෙනත්"
 
-#: ../../calendar/scheduler.go:588
+#: ../../calendar/scheduler.go:570
 msgid "One day before start"
 msgstr "ආරම්භ කිරීමට ඇත්තේ එක් දිනක් පමණි"
 
-#: ../../calendar/scheduler.go:589 ../../calendar/scheduler.go:594
-#: ../../calendar/scheduler.go:602 ../../calendar/scheduler.go:606
+#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
+#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
 msgid "Close"
 msgstr "වසා දමන්න"
 
-#: ../../calendar/scheduler.go:593
+#: ../../calendar/scheduler.go:575
 msgid "Remind me tomorrow"
 msgstr "මට හෙට මතක් කරන්න"
 
-#: ../../calendar/scheduler.go:601
+#: ../../calendar/scheduler.go:583
 msgid "Remind me later"
 msgstr "මට පසුව මතක් කරන්න"
 
-#: ../../calendar/scheduler.go:611
+#: ../../calendar/scheduler.go:593
 msgid "Schedule Reminder"
 msgstr "මතක් කිරීමක් සකසන්න"
 
@@ -481,7 +487,7 @@ msgstr ""
 msgid "Authentication is required to switch language"
 msgstr "භාෂාව මාරු කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:151
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -489,23 +495,23 @@ msgstr ""
 "පද්ධති භාෂාව වෙනස් කිරීම සහ අවශ්‍ය භාෂා පැකේජ ස්ථාපනය කරමින් පවතී, කරුණාකර "
 "රැඳී සිටින්න ..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:152
 msgid "Changing system language, please wait..."
 msgstr "පද්ධති භාෂාව වෙනස් කිරීම, කරුණාකර රැඳී සිටින්න ..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:153
 msgid "System language changed, please log out and then log in"
 msgstr "පද්ධති භාෂාව වෙනස් වී ඇත, කරුණාකර පද්ධතියෙන් ඉවත් වී නැවත ඇතුළු වන්න"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:394
 msgid "Failed to change system language, please try later"
 msgstr "පද්ධති භාෂාව වෙනස් කිරීමට අපොහොසත් විය, කරුණාකර පසුව උත්සාහ කරන්න"
 
-#: ../../lastore/lastore.go:247
+#: ../../lastore/lastore.go:244
 msgid "Retry"
 msgstr "නැවත උත්සාහ කරන්න"
 
-#: ../../lastore/lastore.go:269
+#: ../../lastore/lastore.go:266
 msgid "Update Now"
 msgstr "දැන් යාවත්කාලීන කරන්න"
 
@@ -928,49 +934,49 @@ msgstr "VPN සේවාදායකය-server සත්‍යාපනය ක�
 msgid "The connection was deleted from settings"
 msgstr "සැකසුම් වලින් සම්බන්ධතාවය මකා දමන ලදි"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:253
 msgid "Enabling hotspot"
 msgstr "හොට්ස්පොට් සක්‍රීය කරමින්"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:259
 msgid "Connecting %q"
 msgstr "%q සම්බන්ධ වෙමින් පවතී"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:270
 msgid "Hotspot enabled"
 msgstr "හොට්ස්පොට් සක්‍රීයයි"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:274
 msgid "%q connected"
 msgstr "%q සම්බන්ධයි"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
 msgid "Hotspot disabled"
 msgstr "හොට්ස්පොට් අක්‍රීයයි"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:359
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "හොට්ස්පොට් බෙදා ගැනීමට නොහැක, කරුණාකර dnsmasq සැකසුම් පරීක්ෂා කරන්න"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:361
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර රැහැන් රහිත රවුටරයට සමීපව සිටින්න"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:363
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර ඔබේ රවුටරය හෝ ජාල කේබලය පරීක්ෂා කරන්න."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:367
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "සම්බන්ධතාවය අසාර්ථක විය, %q සම්බන්ධ කිරීමට නොහැකි විය, වැරදි මුරපදයකි"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "%q සම්බන්ධ කිරීමට මුරපදය අවශ්‍ය වේ"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
@@ -1016,47 +1022,47 @@ msgstr "සම්බන්ධයි"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" සත්‍යාපනය සමත් නොවූ අතර දැන් ක්‍රියාත්මක කළ නොහැක"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:197
 msgid "Battery critically low"
 msgstr "බැටරි ධාරිතාවය ඉතා අඩුය"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:218
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
 msgid "Battery low, please plug in"
 msgstr "අඩු බැටරි ධාරිතාවක් පවතී, කරුණාකර විදුලි සැපයුමක් ලබා දෙන්න"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
+#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
 msgid "Power settings changed"
 msgstr "බල සැකසුම් වෙනස් විය"
 
-#: ../../session/power/utils.go:377 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "පියන වසා ඇති විට,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:410
 msgid "When pressing the power button, "
 msgstr "බල බොත්තම එබීමේදී,"
 
-#: ../../session/power/utils.go:391 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "ඔබේ පරිගණකය වසා දමනු ඇත"
 
-#: ../../session/power/utils.go:393 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "ඔබේ පරිගණකය අත්හිටුවනු ඇත"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:424
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:426
 msgid "your monitor will turn off"
 msgstr "ඔබගේ මොනිටරය ක්‍රියා විරහිත වනු ඇත"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:428
 msgid "it will do nothing to your computer"
 msgstr "එය ඔබේ පරිගණකයට කිසිවක් නොකරනු ඇත"
 

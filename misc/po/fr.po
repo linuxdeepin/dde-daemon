@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 16:43+0800\n"
+"POT-Creation-Date: 2021-02-23 15:40+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: roxfr <roxfr@outlook.fr>, 2021\n"
 "Language-Team: French (https://www.transifex.com/linuxdeepin/teams/3617/fr/)\n"
@@ -153,55 +153,56 @@ msgstr "Message d'accès"
 msgid "Message notification"
 msgstr "Message de notification"
 
-#: ../../bluetooth/obex_agent.go:345 ../../lastore/lastore.go:255
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "Annuler"
 
-#: ../../bluetooth/obex_agent.go:352
+#: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %q files from %q"
 msgstr "Réception des fichiers %q de %q"
 
-#: ../../bluetooth/obex_agent.go:361
+#: ../../bluetooth/obex_agent.go:355
 msgid "View"
 msgstr "Affichage"
 
-#: ../../bluetooth/obex_agent.go:367
+#: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
 msgstr "Vous avez reçu les fichiers de %q avec succès"
 
-#: ../../bluetooth/obex_agent.go:368
+#: ../../bluetooth/obex_agent.go:362
 msgid "Done"
 msgstr "Terminé"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
+#: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
 msgstr "Arrêter de recevoir des fichiers"
 
-#: ../../bluetooth/obex_agent.go:385
+#: ../../bluetooth/obex_agent.go:379
 msgid "You have cancelled the file transfer"
 msgstr "Vous avez annulé le transfert de fichier"
 
-#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:122
 msgid "Bluetooth connection failed"
 msgstr "Connection bluetooth échouée "
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Decline"
 msgstr "Décliner"
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Receive"
 msgstr "Recevoir"
 
-#: ../../bluetooth/obex_agent.go:427
+#: ../../bluetooth/obex_agent.go:421
 msgid "Bluetooth File Transfer"
 msgstr "Transfert de fichiers par Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:428
+#: ../../bluetooth/obex_agent.go:422
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q veut vous envoyer des fichiers. Accepter ?"
 
-#: ../../bluetooth/obex_agent.go:483
+#: ../../bluetooth/obex_agent.go:477
 msgid "Receiving %q timed out"
 msgstr "Réception de %q a expiré"
 
@@ -209,8 +210,8 @@ msgstr "Réception de %q a expiré"
 msgid "Connect %q successfully"
 msgstr "%q connecté avec succès"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
+#: ../../network/state_handler.go:376
 msgid "%q disconnected"
 msgstr "%q déconnecté"
 
@@ -218,15 +219,20 @@ msgstr "%q déconnecté"
 msgid "Make sure %q is turned on and in range"
 msgstr "Assurez-vous que %q est sous tension "
 
-#: ../../bluetooth/utils_notify.go:146
+#: ../../bluetooth/utils_notify.go:117
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:155
 msgid "Click here to connect to %q"
 msgstr "Cliquez ici pour vous connecter à %q"
 
-#: ../../bluetooth/utils_notify.go:147
+#: ../../bluetooth/utils_notify.go:156
 msgid "Add Bluetooth devices"
 msgstr "Ajouter un appareil Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:166
 msgid "Pair"
 msgstr "Jumeler"
 
@@ -255,24 +261,24 @@ msgstr "Vie"
 msgid "Other"
 msgstr "Autre"
 
-#: ../../calendar/scheduler.go:588
+#: ../../calendar/scheduler.go:570
 msgid "One day before start"
 msgstr "Un jour avant le début"
 
-#: ../../calendar/scheduler.go:589 ../../calendar/scheduler.go:594
-#: ../../calendar/scheduler.go:602 ../../calendar/scheduler.go:606
+#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
+#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
 msgid "Close"
 msgstr "Fermer"
 
-#: ../../calendar/scheduler.go:593
+#: ../../calendar/scheduler.go:575
 msgid "Remind me tomorrow"
 msgstr "Rappeler-le moi demain"
 
-#: ../../calendar/scheduler.go:601
+#: ../../calendar/scheduler.go:583
 msgid "Remind me later"
 msgstr "Rappeler-le moi plus tard"
 
-#: ../../calendar/scheduler.go:611
+#: ../../calendar/scheduler.go:593
 msgid "Schedule Reminder"
 msgstr "Rappel d'horaire"
 
@@ -496,7 +502,7 @@ msgstr "Changer de moniteur"
 msgid "Authentication is required to switch language"
 msgstr "L'authentification est requise pour changer la langue"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:151
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -504,25 +510,25 @@ msgstr ""
 "Changement de la langue du système et installation des composants "
 "linguistiques en cours, veuillez patienter..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:152
 msgid "Changing system language, please wait..."
 msgstr "Changement de la langue du système en cours, veuillez patienter..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:153
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "Langue du système changée, veuillez-vous déconnecter puis vous reconnecter"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:394
 msgid "Failed to change system language, please try later"
 msgstr ""
 "Impossible de changer la langue du système, veuillez réessayer plus tard"
 
-#: ../../lastore/lastore.go:247
+#: ../../lastore/lastore.go:244
 msgid "Retry"
 msgstr "Réessayer"
 
-#: ../../lastore/lastore.go:269
+#: ../../lastore/lastore.go:266
 msgid "Update Now"
 msgstr "Mettre à jour maintenant"
 
@@ -953,54 +959,54 @@ msgstr "L'authentification au serveur VPN a échoué"
 msgid "The connection was deleted from settings"
 msgstr "La connexion a été supprimée des paramètres"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:253
 msgid "Enabling hotspot"
 msgstr "Activation du point d'accès"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:259
 msgid "Connecting %q"
 msgstr "Connexion %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:270
 msgid "Hotspot enabled"
 msgstr "Point d'accès activé"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:274
 msgid "%q connected"
 msgstr "%q connecté"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
 msgid "Hotspot disabled"
 msgstr "Point d'accès désactivé"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:359
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Impossible de partager le point d'accès, veuillez vérifier les paramètres de"
 " dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:361
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Impossible de se connecter à %q, veuillez-vous rapprocher du routeur sans "
 "fil."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:363
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Impossible de se connecter à %q, veuillez vérifier votre routeur ou votre "
 "câble internet."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:367
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Échec de la connexion, impossible de connecter %q, mot de passe incorrect"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "Mot de passe requis pour se connecter à %q"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Le réseau WLAN 802.11 %q est introuvable"
 
@@ -1048,47 +1054,47 @@ msgstr ""
 "\"%s\" n'a pas passé la vérification de sécurité du système et ne peut pas "
 "s'exécuter maintenant"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:197
 msgid "Battery critically low"
 msgstr "Niveau de batterie critique"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:218
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
 msgid "Battery low, please plug in"
 msgstr "Batterie faible, veuillez brancher votre appareil"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
+#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
 msgid "Power settings changed"
 msgstr "Paramètres d'énergie changée"
 
-#: ../../session/power/utils.go:377 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Lorsque le couvercle est fermé,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:410
 msgid "When pressing the power button, "
 msgstr "Lorsque vous appuyez sur le bouton d'alimentation,"
 
-#: ../../session/power/utils.go:391 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "votre ordinateur va s'éteindre"
 
-#: ../../session/power/utils.go:393 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "L'ordinateur se mettra en veille "
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:424
 msgid "your computer will hibernate"
 msgstr "votre ordinateur se mettra en veille prolongée"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:426
 msgid "your monitor will turn off"
 msgstr "votre écran s'éteindra"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:428
 msgid "it will do nothing to your computer"
 msgstr "ne rien faire à l'ordinateur"
 

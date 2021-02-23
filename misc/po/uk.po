@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 16:43+0800\n"
+"POT-Creation-Date: 2021-02-23 15:40+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
@@ -143,55 +143,56 @@ msgstr "Доступ до повідомлень"
 msgid "Message notification"
 msgstr "Сповіщення про повідомлення"
 
-#: ../../bluetooth/obex_agent.go:345 ../../lastore/lastore.go:255
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: ../../bluetooth/obex_agent.go:352
+#: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %q files from %q"
 msgstr "Отримуємо %q файлів з %q"
 
-#: ../../bluetooth/obex_agent.go:361
+#: ../../bluetooth/obex_agent.go:355
 msgid "View"
 msgstr "Переглянути"
 
-#: ../../bluetooth/obex_agent.go:367
+#: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
 msgstr "Вами успішно отримано файли з %q"
 
-#: ../../bluetooth/obex_agent.go:368
+#: ../../bluetooth/obex_agent.go:362
 msgid "Done"
 msgstr "Виконано"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
+#: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
 msgstr "Припинити отримання файлів"
 
-#: ../../bluetooth/obex_agent.go:385
+#: ../../bluetooth/obex_agent.go:379
 msgid "You have cancelled the file transfer"
 msgstr "Вами скасовано передавання файлів"
 
-#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:122
 msgid "Bluetooth connection failed"
 msgstr "Збій підключення з Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Decline"
 msgstr "Відхилити"
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Receive"
 msgstr "Отримати"
 
-#: ../../bluetooth/obex_agent.go:427
+#: ../../bluetooth/obex_agent.go:421
 msgid "Bluetooth File Transfer"
 msgstr "Передавання файлів Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:428
+#: ../../bluetooth/obex_agent.go:422
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q хоче надіслати вам файли. Отримати ці файли?"
 
-#: ../../bluetooth/obex_agent.go:483
+#: ../../bluetooth/obex_agent.go:477
 msgid "Receiving %q timed out"
 msgstr "Перевищено час очікування на отримання %q"
 
@@ -199,8 +200,8 @@ msgstr "Перевищено час очікування на отримання
 msgid "Connect %q successfully"
 msgstr "Підключення %q успішне"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
+#: ../../network/state_handler.go:376
 msgid "%q disconnected"
 msgstr "%q відключено"
 
@@ -208,15 +209,22 @@ msgstr "%q відключено"
 msgid "Make sure %q is turned on and in range"
 msgstr "Переконайтеся, що %q увімкнений і знаходиться у межах досяжності "
 
-#: ../../bluetooth/utils_notify.go:146
+#: ../../bluetooth/utils_notify.go:117
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+"%q більше не може з'єднатися із %q. Спробуйте наказати системі забути про "
+"цей пристрій і повторіть спробу пов'язати його."
+
+#: ../../bluetooth/utils_notify.go:155
 msgid "Click here to connect to %q"
 msgstr "Натисніть тут, щоб підключитися до %q"
 
-#: ../../bluetooth/utils_notify.go:147
+#: ../../bluetooth/utils_notify.go:156
 msgid "Add Bluetooth devices"
 msgstr "Додайте пристрої Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:166
 msgid "Pair"
 msgstr "З'єднати"
 
@@ -245,24 +253,24 @@ msgstr "Життя"
 msgid "Other"
 msgstr "Інше"
 
-#: ../../calendar/scheduler.go:588
+#: ../../calendar/scheduler.go:570
 msgid "One day before start"
 msgstr "За день до початку"
 
-#: ../../calendar/scheduler.go:589 ../../calendar/scheduler.go:594
-#: ../../calendar/scheduler.go:602 ../../calendar/scheduler.go:606
+#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
+#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
 msgid "Close"
 msgstr "Закрити"
 
-#: ../../calendar/scheduler.go:593
+#: ../../calendar/scheduler.go:575
 msgid "Remind me tomorrow"
 msgstr "Нагадати мені завтра"
 
-#: ../../calendar/scheduler.go:601
+#: ../../calendar/scheduler.go:583
 msgid "Remind me later"
 msgstr "Нагадати мені пізніше"
 
-#: ../../calendar/scheduler.go:611
+#: ../../calendar/scheduler.go:593
 msgid "Schedule Reminder"
 msgstr "Розклад нагадування"
 
@@ -486,7 +494,7 @@ msgstr "Перемкнути монітори"
 msgid "Authentication is required to switch language"
 msgstr "Аутентифікація потрібна для перемикання мови"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:151
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -494,23 +502,23 @@ msgstr ""
 "Змінюється мова системи та встановлюються необхідні мовні пакети, "
 "зачекайте..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:152
 msgid "Changing system language, please wait..."
 msgstr "Зміна мови системи, зачекайте..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:153
 msgid "System language changed, please log out and then log in"
 msgstr "Змінено мову системи, вийдіть із системи та увійдіть"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:394
 msgid "Failed to change system language, please try later"
 msgstr "Не вдалося змінити мову системи, спробуйте пізніше"
 
-#: ../../lastore/lastore.go:247
+#: ../../lastore/lastore.go:244
 msgid "Retry"
 msgstr "Спробувати ще раз"
 
-#: ../../lastore/lastore.go:269
+#: ../../lastore/lastore.go:266
 msgid "Update Now"
 msgstr "Оновити зараз"
 
@@ -935,51 +943,51 @@ msgstr "Аутентифікація при доступі до VPN-сервер
 msgid "The connection was deleted from settings"
 msgstr "З'єднання було видалено з налаштувань."
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:253
 msgid "Enabling hotspot"
 msgstr "Увімкнути точку доступу"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:259
 msgid "Connecting %q"
 msgstr "Підключити %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:270
 msgid "Hotspot enabled"
 msgstr "Точка доступу увімкнена"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:274
 msgid "%q connected"
 msgstr "%q підключено"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
 msgid "Hotspot disabled"
 msgstr "Точка доступу вимкнена"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:359
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Неможливо поділитися точкою доступу, перевірте налаштування dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:361
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Неможливо підключити %q, будь ласка, тримайтеся ближче до бездротового "
 "маршрутизатора"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:363
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не вдалося з'єднатися із %q. Будь ласка, перевірте, чи працює ваш "
 "маршрутизатор або мережевий кабель."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:367
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Помилка підключення, неможливо підключити %q, невірний пароль"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "Пароль, необхідний для підключення %q"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Не вдалося знайти мережу WLAN 802.11 %q"
 
@@ -1027,49 +1035,49 @@ msgstr ""
 "«%s» не пройдено перевіркою засобів захисту системи. Цю програму зараз не "
 "можна запускати."
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:197
 msgid "Battery critically low"
 msgstr "Акумулятор критично розряджено"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:218
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
 msgid "Battery low, please plug in"
 msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
 "мережі живлення"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
+#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
 msgid "Power settings changed"
 msgstr "Параметри живлення змінено"
 
-#: ../../session/power/utils.go:377 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Якщо закрито кришку,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:410
 msgid "When pressing the power button, "
 msgstr "Якщо натиснуто кнопку живлення,"
 
-#: ../../session/power/utils.go:391 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "ваш комп'ютер буде вимкнено"
 
-#: ../../session/power/utils.go:393 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "ваш комп'ютер буде призупинено"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:424
 msgid "your computer will hibernate"
 msgstr "ваш комп'ютер буде приспано"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:426
 msgid "your monitor will turn off"
 msgstr "монітор буде вимкнено"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:428
 msgid "it will do nothing to your computer"
 msgstr "ніяких дій із комп'ютером не буде виконано"
 

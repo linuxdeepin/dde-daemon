@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 16:43+0800\n"
+"POT-Creation-Date: 2021-02-23 15:40+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/linuxdeepin/teams/3617/fi/)\n"
@@ -145,55 +145,56 @@ msgstr "Viesteihin pääsy"
 msgid "Message notification"
 msgstr "Ilmoitusviesti"
 
-#: ../../bluetooth/obex_agent.go:345 ../../lastore/lastore.go:255
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: ../../bluetooth/obex_agent.go:352
+#: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %q files from %q"
 msgstr "Vastaanotetaan %q tiedostoa kohteesta %q"
 
-#: ../../bluetooth/obex_agent.go:361
+#: ../../bluetooth/obex_agent.go:355
 msgid "View"
 msgstr "Katsele"
 
-#: ../../bluetooth/obex_agent.go:367
+#: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
 msgstr "Olet vastaanottanut tiedostoja käyttäjältä %q onnistuneesti"
 
-#: ../../bluetooth/obex_agent.go:368
+#: ../../bluetooth/obex_agent.go:362
 msgid "Done"
 msgstr "Valmis"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
+#: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
 msgstr "Lopeta tiedostojen vastaanotto"
 
-#: ../../bluetooth/obex_agent.go:385
+#: ../../bluetooth/obex_agent.go:379
 msgid "You have cancelled the file transfer"
 msgstr "Olet peruuttanut tiedostonsiirron"
 
-#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:122
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth-yhteyden muodostaminen epäonnistui"
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Decline"
 msgstr "Kieltäydy"
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Receive"
 msgstr "Vastaanota"
 
-#: ../../bluetooth/obex_agent.go:427
+#: ../../bluetooth/obex_agent.go:421
 msgid "Bluetooth File Transfer"
 msgstr "Bluetooth-tiedostonsiirto"
 
-#: ../../bluetooth/obex_agent.go:428
+#: ../../bluetooth/obex_agent.go:422
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q haluaa lähettää tiedostoja sinulle. Otatko vastaan?"
 
-#: ../../bluetooth/obex_agent.go:483
+#: ../../bluetooth/obex_agent.go:477
 msgid "Receiving %q timed out"
 msgstr "Vastaanotto kohteesta %q aikakatkaistiin"
 
@@ -201,8 +202,8 @@ msgstr "Vastaanotto kohteesta %q aikakatkaistiin"
 msgid "Connect %q successfully"
 msgstr "Yhdistetty %q onnistuneesti"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
+#: ../../network/state_handler.go:376
 msgid "%q disconnected"
 msgstr "%q irrotettu"
 
@@ -210,15 +211,20 @@ msgstr "%q irrotettu"
 msgid "Make sure %q is turned on and in range"
 msgstr "Varmista että %q on päällä ja kantaman sisällä"
 
-#: ../../bluetooth/utils_notify.go:146
+#: ../../bluetooth/utils_notify.go:117
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+
+#: ../../bluetooth/utils_notify.go:155
 msgid "Click here to connect to %q"
 msgstr "Yhteys napsauttamalla tätä %q"
 
-#: ../../bluetooth/utils_notify.go:147
+#: ../../bluetooth/utils_notify.go:156
 msgid "Add Bluetooth devices"
 msgstr "Lisää Bluetooth-laitteita"
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:166
 msgid "Pair"
 msgstr "Pari"
 
@@ -247,24 +253,24 @@ msgstr "Oma"
 msgid "Other"
 msgstr "Muut"
 
-#: ../../calendar/scheduler.go:588
+#: ../../calendar/scheduler.go:570
 msgid "One day before start"
 msgstr "Yksi päivä ennen lähtöä"
 
-#: ../../calendar/scheduler.go:589 ../../calendar/scheduler.go:594
-#: ../../calendar/scheduler.go:602 ../../calendar/scheduler.go:606
+#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
+#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
 msgid "Close"
 msgstr "Sulje"
 
-#: ../../calendar/scheduler.go:593
+#: ../../calendar/scheduler.go:575
 msgid "Remind me tomorrow"
 msgstr "Muistuta huomenna"
 
-#: ../../calendar/scheduler.go:601
+#: ../../calendar/scheduler.go:583
 msgid "Remind me later"
 msgstr "Muistuta myöhemmin"
 
-#: ../../calendar/scheduler.go:611
+#: ../../calendar/scheduler.go:593
 msgid "Schedule Reminder"
 msgstr "Aikatauluta muistutus"
 
@@ -488,7 +494,7 @@ msgstr "Vaihda näytöt"
 msgid "Authentication is required to switch language"
 msgstr "Kielen vaihtaminen vaatii tunnistautumisen"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:151
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -496,23 +502,23 @@ msgstr ""
 "Järjestelmän kielen muuttaminen ja tarvittavien kielipakettien asentaminen "
 "odota ..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:152
 msgid "Changing system language, please wait..."
 msgstr "Järjestelmän kielen muuttaminen odota ..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:153
 msgid "System language changed, please log out and then log in"
 msgstr "Järjestelmän kieli muuttui, kirjaudu ulos ja kirjaudu sisään"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:394
 msgid "Failed to change system language, please try later"
 msgstr "Järjestelmän kielen vaihtaminen epäonnistui, yritä myöhemmin"
 
-#: ../../lastore/lastore.go:247
+#: ../../lastore/lastore.go:244
 msgid "Retry"
 msgstr "Uudelleen"
 
-#: ../../lastore/lastore.go:269
+#: ../../lastore/lastore.go:266
 msgid "Update Now"
 msgstr "Päivitä välittömästi"
 
@@ -931,48 +937,48 @@ msgstr "Tunnistautuminen VPN-palvelimeen epäonnistui"
 msgid "The connection was deleted from settings"
 msgstr "Yhteys poistettiin asetuksista"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:253
 msgid "Enabling hotspot"
 msgstr "Hotspotin käyttöönotto"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:259
 msgid "Connecting %q"
 msgstr "Yhdistää %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:270
 msgid "Hotspot enabled"
 msgstr "Hotspot käytössä"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:274
 msgid "%q connected"
 msgstr "Yhdistetty kohteeseen %q"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
 msgid "Hotspot disabled"
 msgstr "Hotspot suljettu"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:359
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Hotspot-yhteyden jako epäonnistui, tarkista dnsmasq:n asetukset"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:361
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Yhteys kohteeseen %q epäonnistui, pysyttele lähempänä langatonta reititintä"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:363
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Yhteys kohteeseen %q epäonnistui, tarkista reititin tai verkkokaapeli"
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:367
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Yhteys kohteeseen %q epäonnistui, väärä salasana"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "Yhdistämiseen tarvitaan salasana %q"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN-verkkoa ei löytynyt"
 
@@ -1019,47 +1025,47 @@ msgstr ""
 "\"%s\" ei läpäistänyt järjestelmän suojauksen vahvistusta, eikä sitä voi "
 "suorittaa nyt"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:197
 msgid "Battery critically low"
 msgstr "Akku kriittisesti alhainen"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:218
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
 msgid "Battery low, please plug in"
 msgstr "Virtataso alhainen, ole hyvä ja yhdistä verkkovirtaan"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
+#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
 msgid "Power settings changed"
 msgstr "Virta-asetukset muuttuneet"
 
-#: ../../session/power/utils.go:377 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Kun kansi on kiinni,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:410
 msgid "When pressing the power button, "
 msgstr "Kun painat virtapainiketta,"
 
-#: ../../session/power/utils.go:391 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "tietokoneesi sammuu"
 
-#: ../../session/power/utils.go:393 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "tietokoneesi siirtyy lepotilaan"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:424
 msgid "your computer will hibernate"
 msgstr "tietokoneesi siirtyy valmiustilaan"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:426
 msgid "your monitor will turn off"
 msgstr "näyttö sammuu"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:428
 msgid "it will do nothing to your computer"
 msgstr "se ei tee mitään"
 

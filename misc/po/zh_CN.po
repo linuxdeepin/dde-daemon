@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 16:43+0800\n"
+"POT-Creation-Date: 2021-02-23 15:40+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
@@ -142,55 +142,56 @@ msgstr "消息访问"
 msgid "Message notification"
 msgstr "消息通知"
 
-#: ../../bluetooth/obex_agent.go:345 ../../lastore/lastore.go:255
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "取消"
 
-#: ../../bluetooth/obex_agent.go:352
+#: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %q files from %q"
 msgstr "正在接收来自%q的%q文件"
 
-#: ../../bluetooth/obex_agent.go:361
+#: ../../bluetooth/obex_agent.go:355
 msgid "View"
 msgstr "查看"
 
-#: ../../bluetooth/obex_agent.go:367
+#: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
 msgstr "您已成功接收来自%q的文件"
 
-#: ../../bluetooth/obex_agent.go:368
+#: ../../bluetooth/obex_agent.go:362
 msgid "Done"
 msgstr "完成"
 
-#: ../../bluetooth/obex_agent.go:383 ../../bluetooth/obex_agent.go:482
+#: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
 msgstr "文件接收中止"
 
-#: ../../bluetooth/obex_agent.go:385
+#: ../../bluetooth/obex_agent.go:379
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:122
 msgid "Bluetooth connection failed"
 msgstr "蓝牙连接失败"
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Decline"
 msgstr "拒绝"
 
-#: ../../bluetooth/obex_agent.go:422
+#: ../../bluetooth/obex_agent.go:416
 msgid "Receive"
 msgstr "接收"
 
-#: ../../bluetooth/obex_agent.go:427
+#: ../../bluetooth/obex_agent.go:421
 msgid "Bluetooth File Transfer"
 msgstr "蓝牙文件传输"
 
-#: ../../bluetooth/obex_agent.go:428
+#: ../../bluetooth/obex_agent.go:422
 msgid "%q wants to send files to you. Receive?"
 msgstr "您收到%q发送给您的文件，是否接收？"
 
-#: ../../bluetooth/obex_agent.go:483
+#: ../../bluetooth/obex_agent.go:477
 msgid "Receiving %q timed out"
 msgstr "接收%q超时"
 
@@ -198,8 +199,8 @@ msgstr "接收%q超时"
 msgid "Connect %q successfully"
 msgstr "连接%q成功"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
+#: ../../network/state_handler.go:376
 msgid "%q disconnected"
 msgstr "%q已断开"
 
@@ -207,15 +208,20 @@ msgstr "%q已断开"
 msgid "Make sure %q is turned on and in range"
 msgstr "请确定%q已打开而且在通讯范围内"
 
-#: ../../bluetooth/utils_notify.go:146
+#: ../../bluetooth/utils_notify.go:117
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr "%q无法与%q再连接，请尝试忽略此设备并再次配对。"
+
+#: ../../bluetooth/utils_notify.go:155
 msgid "Click here to connect to %q"
 msgstr "点击以设置添加%q"
 
-#: ../../bluetooth/utils_notify.go:147
+#: ../../bluetooth/utils_notify.go:156
 msgid "Add Bluetooth devices"
 msgstr "添加蓝牙设备"
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:166
 msgid "Pair"
 msgstr "配对"
 
@@ -244,24 +250,24 @@ msgstr "生活"
 msgid "Other"
 msgstr "其他"
 
-#: ../../calendar/scheduler.go:588
+#: ../../calendar/scheduler.go:570
 msgid "One day before start"
 msgstr "提前1天提醒"
 
-#: ../../calendar/scheduler.go:589 ../../calendar/scheduler.go:594
-#: ../../calendar/scheduler.go:602 ../../calendar/scheduler.go:606
+#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
+#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
 msgid "Close"
 msgstr "关闭"
 
-#: ../../calendar/scheduler.go:593
+#: ../../calendar/scheduler.go:575
 msgid "Remind me tomorrow"
 msgstr "明天提醒"
 
-#: ../../calendar/scheduler.go:601
+#: ../../calendar/scheduler.go:583
 msgid "Remind me later"
 msgstr "稍后提醒"
 
-#: ../../calendar/scheduler.go:611
+#: ../../calendar/scheduler.go:593
 msgid "Schedule Reminder"
 msgstr "日程提醒"
 
@@ -485,29 +491,29 @@ msgstr "多屏切换"
 msgid "Authentication is required to switch language"
 msgstr "切换语言需要认证"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:151
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "正在切换系统语言并安装缺失的语言包，请稍候…"
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:152
 msgid "Changing system language, please wait..."
 msgstr "正在切换系统语言，请稍候…"
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:153
 msgid "System language changed, please log out and then log in"
 msgstr "语言切换成功，请注销后重新登录"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:394
 msgid "Failed to change system language, please try later"
 msgstr "系统语言切换失败，请稍后重试"
 
-#: ../../lastore/lastore.go:247
+#: ../../lastore/lastore.go:244
 msgid "Retry"
 msgstr "重试"
 
-#: ../../lastore/lastore.go:269
+#: ../../lastore/lastore.go:266
 msgid "Update Now"
 msgstr "立即更新"
 
@@ -921,47 +927,47 @@ msgstr "验证到VPN服务器失败"
 msgid "The connection was deleted from settings"
 msgstr "该连接已从设置中删除"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:253
 msgid "Enabling hotspot"
 msgstr "正在尝试打开热点"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:259
 msgid "Connecting %q"
 msgstr "正在连接%q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:270
 msgid "Hotspot enabled"
 msgstr "热点共享已开启"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:274
 msgid "%q connected"
 msgstr "已连接%q"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
 msgid "Hotspot disabled"
 msgstr "热点共享已关闭"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:359
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "无法共享热点，请检查dnsmasq 相关设置"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:361
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "未能加入%q，请尝试靠近无线路由器"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:363
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "未能加入%q，请检查路由器或网线。"
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:367
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "连接失败，未能加入%q，密码不正确"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "连接%q需要密码"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN网络无法找到"
 
@@ -1005,47 +1011,47 @@ msgstr "已连接"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”没有通过系统安全验证，无法运行"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:197
 msgid "Battery critically low"
 msgstr "电池电量耗尽"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:218
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
 msgid "Battery low, please plug in"
 msgstr "电池电量低，请连接电源"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
+#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
 msgid "Power settings changed"
 msgstr "电源设置更改"
 
-#: ../../session/power/utils.go:377 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "“笔记本合盖时”"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:410
 msgid "When pressing the power button, "
 msgstr "“按电源按钮时”"
 
-#: ../../session/power/utils.go:391 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "修改为关机"
 
-#: ../../session/power/utils.go:393 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "修改为待机"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:424
 msgid "your computer will hibernate"
 msgstr "修改为休眠"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:426
 msgid "your monitor will turn off"
 msgstr "修改为关闭显示器"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:428
 msgid "it will do nothing to your computer"
 msgstr "修改为无任何操作"
 
