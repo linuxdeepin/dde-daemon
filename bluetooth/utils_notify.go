@@ -113,6 +113,15 @@ func notifyConnectFailedAux(alias, format string) {
 	notify(notifyIconBluetoothConnectFailed, Tr("Bluetooth connection failed"), fmt.Sprintf(format, alias))
 }
 
+func notifyConnectFailedResourceUnavailable(alias, adapterAlias string) {
+	format := Tr("%q can no longer connect to %q. Try to forget this device and pair it again.")
+	notifyConnectFailedResourceUnavailableAux(alias, adapterAlias, format)
+}
+
+func notifyConnectFailedResourceUnavailableAux(alias, adapterAlias, format string) {
+	notify(notifyIconBluetoothConnectFailed, Tr("Bluetooth connection failed"), fmt.Sprintf(format, adapterAlias, alias))
+}
+
 // notify pc initiative connect to device
 // so dont need to show notification window
 func notifyInitiativeConnect(dev *device, pinCode string) error {

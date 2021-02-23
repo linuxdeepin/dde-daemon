@@ -38,6 +38,10 @@ const (
 	deviceStateDisconnecting = 3
 )
 
+const (
+	resourceUnavailable  = "Resource temporarily unavailable"
+)
+
 type deviceState uint32
 
 func (s deviceState) String() string {
@@ -557,10 +561,14 @@ func (d *device) doConnect(hasNotify bool) error {
 
 	err = d.doRealConnect()
 	if err != nil {
-		d.ConnectState = false
 		if hasNotify {
-			notifyConnectFailedHostDown(d.Alias)
+			if resourceUnavailable == err.Error() {
+				notifyConnectFailedResourceUnavailable(d.Alias, d.adapter.Alias)
+			} else {
+				notifyConnectFailedHostDown(d.Alias)
+			}
 		}
+		d.ConnectState = false
 		return err
 	}
 
