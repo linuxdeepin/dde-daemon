@@ -35,6 +35,7 @@ func (m *Module) Start() error {
 	m.uAgent, err = newUadpAgent(service)
 	if err != nil {
 		logger.Warning("failed to newUadpAgent:", err)
+		return err
 	}
 
 	err = service.Export(dbusPath, m.uAgent)
