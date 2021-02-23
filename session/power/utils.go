@@ -89,6 +89,48 @@ func (m *Manager) waitLockShowing(timeout time.Duration) {
 	}
 }
 
+
+const  (
+	dpmsStateOn       int32 = iota
+	dpmsStateStandBy
+	dpmsStateSuspend
+	dpmsStateOff
+)
+func (m *Manager) setDpmsModeByKwin(mode int32)  bool {
+	logger.Info("Set DPMS State", mode)
+	var useWayland bool
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		useWayland = true
+	} else {
+		useWayland = false
+	}
+	if useWayland {
+		sessionBus, err := dbus.SessionBus()
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+		sessionObj := sessionBus.Object("com.deepin.daemon.KWayland", "/com/deepin/daemon/KWayland/DpmsManager")
+		var ret []dbus.Variant
+		err = sessionObj.Call("com.deepin.daemon.KWayland.DpmsManager.dpmsList", 0).Store(&ret)
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+
+		for i := 0; i < len(ret); i++ {
+			v := ret[i].Value().(string)
+			sessionObj := sessionBus.Object("com.deepin.daemon.KWayland", dbus.ObjectPath(v))
+			err = sessionObj.Call("com.deepin.daemon.KWayland.Dpms.setDpmsMode", 0, int32(mode)).Err
+			if err != nil {
+				 logger.Warning(err)
+				 return false
+			}
+		}
+	}
+	return true
+}
+
 func (m *Manager) lockWaitShow(timeout time.Duration, autoStartAuth bool) {
 	m.doLock(autoStartAuth)
 	m.waitLockShowing(timeout)
@@ -99,7 +141,7 @@ func (m *Manager) setDPMSModeOn() {
 	var err error
 
 	if m.UseWayland {
-		setDPMSByKWL("On")
+		m.setDpmsModeByKwin(dpmsStateOn)
 	} else {
 		c := m.helper.xConn
 		err = dpms.ForceLevelChecked(c, dpms.DPMSModeOn).Check(c)
@@ -114,7 +156,7 @@ func (m *Manager) setDPMSModeOff() {
 	logger.Info("DPMS Off")
 	var err error
 	if m.UseWayland {
-		setDPMSByKWL("Off")
+		m.setDpmsModeByKwin(dpmsStateOff)
 	} else {
 		c := m.helper.xConn
 		err = dpms.ForceLevelChecked(c, dpms.DPMSModeOff).Check(c)
