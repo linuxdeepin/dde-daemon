@@ -33,6 +33,7 @@ import (
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 
 	x "github.com/linuxdeepin/go-x11-client"
+	xscreensaver "github.com/linuxdeepin/go-x11-client/ext/screensaver"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"pkg.deepin.io/lib/gsettings"
 	"pkg.deepin.io/lib/procfs"
@@ -612,6 +613,27 @@ func (psp *powerSavePlan) HandleIdleOn() {
 	}
 
 	logger.Info("HandleIdleOn")
+
+	idleTime := psp.metaTasks.min()
+	xConn, err := x.NewConn()
+	if err == nil {
+		xDefaultScreen := xConn.GetDefaultScreen()
+		if xDefaultScreen != nil {
+			xInfo, err := xscreensaver.QueryInfo(xConn, x.Drawable(xDefaultScreen.Root)).Reply(xConn)
+			if err == nil {
+				idleTime = int32(xInfo.MsSinceUserInput / 1000)
+			} else {
+				logger.Warning(err)
+			}
+		} else {
+			logger.Warning("cannot get X11 default screen")
+		}
+	} else {
+		logger.Warning(err)
+	}
+
+	logger.Debugf("idle time: %d ms", idleTime)
+	psp.metaTasks.setRealDelay(idleTime)
 
 	for _, t := range psp.metaTasks {
 		logger.Debugf("do %s after %v", t.name, t.realDelay)
