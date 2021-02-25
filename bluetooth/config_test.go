@@ -20,7 +20,7 @@ var deviceconfig = &deviceConfig{
 func Test_config(t *testing.T) {
 	configAdapters := map[string]*adapterConfig{
 		"00:1A:7D:DA:71:13": {
-			Powered: true,
+			Powered: false,
 		},
 	}
 
