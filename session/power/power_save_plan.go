@@ -722,6 +722,22 @@ func (psp *powerSavePlan) initMultiBrightnessWithPsm() {
 	}
 
 	psp.setBrightnessFromDisplay()
+	// 开机重启注销等操作后，去掉手动调整亮度的限制条件，关闭节能模式亮度提升
+	brightnessDropPercent, err := psp.manager.helper.Power.PowerSavingModeBrightnessDropPercent().Get(0)
+	if err != nil {
+		logger.Warning("failed to get PowerSavingModeBrightnessDropPercent:", err)
+		return
+	}
+	for _, val := range psp.multiBrightnessWithPsm.MultiBrightness {
+		if val.ManuallyModified == true {
+			val.ManuallyModified = false
+			val.BrightnessSaved = val.BrightnessLatest / (1 - float64(brightnessDropPercent)/100) * 1000
+			if val.BrightnessSaved > 1 {
+				val.BrightnessSaved = 1
+			}
+		}
+	}
+	psp.setToBrightnessSave()
 }
 
 func (psp *powerSavePlan) setToBrightnessSave() {
@@ -772,7 +788,7 @@ type brightnessWithPsp struct {
 }
 
 type multiBrightnessWithPsm struct {
-	MultiBrightness []brightnessWithPsp
+	MultiBrightness []*brightnessWithPsp
 	valueTmp        map[string]float64
 }
 
@@ -831,7 +847,7 @@ func (mb *multiBrightnessWithPsm) toObject(b string) error {
 
 func (mb *multiBrightnessWithPsm) mapToObject() {
 	for k, v := range mb.valueTmp {
-		mb.MultiBrightness = append(mb.MultiBrightness, brightnessWithPsp{MonitorName: k, BrightnessSaved: v})
+		mb.MultiBrightness = append(mb.MultiBrightness, &brightnessWithPsp{MonitorName: k, BrightnessSaved: v})
 	}
 }
 
