@@ -83,7 +83,7 @@ func (c *config) save() {
 }
 
 func newAdapterConfig() (ac *adapterConfig) {
-	ac = &adapterConfig{Powered: true}
+	ac = &adapterConfig{Powered: false}
 	return
 }
 
