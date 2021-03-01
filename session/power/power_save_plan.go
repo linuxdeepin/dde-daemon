@@ -628,6 +628,7 @@ func (psp *powerSavePlan) HandleIdleOn() {
 		} else {
 			logger.Warning("cannot get X11 default screen")
 		}
+		xConn.Close()
 	} else {
 		logger.Warning(err)
 	}
