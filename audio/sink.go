@@ -81,7 +81,7 @@ type Sink struct {
 //TODO bug55140
 var (
 	AudioSinkName1 = "histen_sink"                                               //虚拟sink映射AudioSinkName2
-	AudioSinkName2 = "alsa_output.platform-sound_hi6405.analog-stereo"           //panguv物理声卡的sink
+	AudioSinkName2 = "alsa_output.platform-sound_hi6405.analog-stereo"           //panguv内置音频声卡的sink
 )
 
 func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {
@@ -96,24 +96,53 @@ func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {
 }
 
 //TODO bug55140 write sink'volume to audio's gsetting if machine is panguV
-func (s *Sink) doSetVolumeToSetting( v float64) {
-	if s.audio.isPanguV && s.audio.createAudioObjFinish {
-		//存在激活port才有效
+func doSetSinkVolumeToGSetting(s *Sink, v float64) {
+	if s.audio.isPanguV {
 		iv := int32(floatPrecision(v) * 100.0)
-		activePort := s.ActivePort.Name
-		portAvai := s.ActivePort.Available
+		if s.ActivePort.Name == "" {
+			logger.Debug("doSetVolumeToSetting->Sink Get a null activePort")
+			return
+		}
 
-		if s.Name == AudioSinkName1 || s.Name == AudioSinkName2 {
-			if activePort == "" {
-				s.audio.settings.SetInt("physical-output-volume", iv)
-				return
+		//闭包函数,设置音量到audio GSetting
+		var setHeadphoneVolumeForGSetting = func (v int32, selectPort int) {
+			key := "headphone-volume"
+			vl := s.audio.settings.GetStrv(key)
+			if selectPort == 1 {
+				vl[0] = strconv.Itoa(int(v))
+				s.audio.settings.SetStrv(key, vl)
+			} else if selectPort == 2 {
+				vl[1] = strconv.Itoa(int(v))
+				s.audio.settings.SetStrv(key, vl)
 			}
+		}
 
-			if portAvai == 0 || portAvai == 2 {
-				s.audio.settings.SetInt("headphone-volume", iv)
+		switch s.Name {
+		case AudioSinkName1:
+			//修改的是huawei虚拟sink的音量,需要遍历有效sinks里区分不同的激活port和设置port的音量值
+			for _, sinkInfo := range s.audio.sinks {
+				if sinkInfo.Name == AudioSinkName2 {
+					if sinkInfo.ActivePort.Available != 1 {
+						if sinkInfo.ActivePort.Name == "analog-output-headphones-huawei" {
+							setHeadphoneVolumeForGSetting(iv, 1)
+						} else if sinkInfo.ActivePort.Name == "analog-output-headphones-huawei-2" {
+							setHeadphoneVolumeForGSetting(iv, 2)
+						}
+					}
+				}
+			}
+		case AudioSinkName2:
+			if s.ActivePort.Available != 1 {
+				if s.ActivePort.Name == "analog-output-headphones-huawei" {
+					setHeadphoneVolumeForGSetting(iv, 1)
+				} else if s.ActivePort.Name == "analog-output-headphones-huawei-2" {
+					setHeadphoneVolumeForGSetting(iv, 2)
+				}
 			} else {
-				s.audio.settings.SetInt("physical-output-volume", iv)
+				s.audio.settings.SetInt("onboard-output-volume", iv)
 			}
+		default:
+			return
 		}
 	}
 }
@@ -133,8 +162,8 @@ func (s *Sink) SetVolume(v float64, isPlay bool) *dbus.Error {
 	}
 
 	//TODO bug55140
-	s.doSetVolumeToSetting(v)
-	logger.Debugf("Set Volume [sink:%s] %v ", s.Name, v)
+	doSetSinkVolumeToGSetting(s, v)
+	logger.Debugf("Set Volume: [sink:%s] [ActivePort:%v,volume:%v] ", s.Name, s.ActivePort, v)
 
 	s.PropsMu.Lock()
 	cv := s.cVolume.SetAvg(v)
@@ -210,11 +239,10 @@ func (*Sink) GetInterfaceName() string {
 	return dbusInterface + ".Sink"
 }
 
-//TODO bug55140 只针对panguv，通过读取gsetting配置里保存的音量值设置对应sink的音量
-func (s *Sink) setAndCheckSinkVolumeByGsetting(sinkInfo *pulse.Sink, sinkVolume *float64) {
-	if s.audio.isPanguV && s.audio.createAudioObjFinish {
-		activePort := sinkInfo.ActivePort.Name
-		if activePort == "" {
+//TODO bug55140 只针对panguv，通过读取gsetting配置里保存的音量值与pulseaudio获取的音量值做比较，设置对应sink->port的音量
+func compareSinkVolumeByGSetting(s *Sink, sinkInfo *pulse.Sink, sinkVolume *float64) {
+	if s.audio.isPanguV {
+		if sinkInfo.ActivePort.Name == "" {
 			logger.Debug("Failed: Get Sink's activePort is Null & return")
 			return
 		}
@@ -222,13 +250,32 @@ func (s *Sink) setAndCheckSinkVolumeByGsetting(sinkInfo *pulse.Sink, sinkVolume 
 		var setVolome int32
 		var sinkVolume_tmp float64
 
+		//闭包函数,从audio GSetting获取音量
+		var getHeadphoneVolumeFromGSetting = func (selectPort int) int32 {
+			var v int
+			vl := s.audio.settings.GetStrv("headphone-volume")
+			if selectPort == 1 {
+				v, _ = strconv.Atoi(vl[0])
+			} else if selectPort == 2 {
+				v, _ = strconv.Atoi(vl[1])
+			}
+			return int32(v)
+		}
+
 		switch sinkInfo.Name {
-		case AudioSinkName1, AudioSinkName2:
-			portAvai := sinkInfo.ActivePort.Available
-			if portAvai == 0 || portAvai == 2 {
-				setVolome = s.audio.settings.GetInt("headphone-volume")
+		case AudioSinkName1:
+			//存在histen_sink情况下， 只更新内置音频声卡sink的音量即可(华为音频算法服务会同步音量到虚拟sink上)
+			return
+		case AudioSinkName2:
+			//根据当前激活的port到audio gsetting里取headset-volume/headphone-volume键值数组对应index的值
+			if sinkInfo.ActivePort.Available != 1 {
+				if sinkInfo.ActivePort.Name == "analog-output-headphones-huawei" {
+					setVolome = getHeadphoneVolumeFromGSetting(1)
+				} else if sinkInfo.ActivePort.Name == "analog-output-headphones-huawei-2" {
+					setVolome = getHeadphoneVolumeFromGSetting(2)
+				}
 			} else {
-				setVolome = s.audio.settings.GetInt("physical-output-volume")
+				setVolome = s.audio.settings.GetInt("onboard-output-volume")
 			}
 		default:
 			return
@@ -236,12 +283,15 @@ func (s *Sink) setAndCheckSinkVolumeByGsetting(sinkInfo *pulse.Sink, sinkVolume 
 
 		sinkVolume_tmp = floatPrecision(float64(setVolome) / 100.0)
 		if *sinkVolume != sinkVolume_tmp {
-			logger.Debugf("Sink update need change volume:%v to setting's volume:%v", *sinkVolume, sinkVolume_tmp)
 			*sinkVolume = sinkVolume_tmp
-			cv := sinkInfo.Volume.SetAvg(sinkVolume_tmp)
-			s.audio.context().SetSinkVolumeByIndex(sinkInfo.Index, cv)
+			if sinkInfo.ActivePort.Available != 1 {
+				cv := sinkInfo.Volume.SetAvg(sinkVolume_tmp)
+				s.audio.context().SetSinkVolumeByIndex(sinkInfo.Index, cv)
+				logger.Debugf("Update Sink->ActivePort :%s need change volume: %v -> %v", sinkInfo.ActivePort.Name, *sinkVolume, sinkVolume_tmp)
+			} else {
+				logger.Debugf("Update Sink->ActivePort :%s but is UnAvailable(Not Update sink volume)", sinkInfo.ActivePort.Name)
+			}
 		}
-
 	}
 }
 
@@ -260,7 +310,7 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 	logger.Debugf("Update Sink name :%s [ActivePort:%v,volume:%v]", s.Name, sinkInfo.ActivePort, sink_volume)
 
 	//TODO bug55140
-	s.setAndCheckSinkVolumeByGsetting(sinkInfo, &sink_volume)
+	compareSinkVolumeByGSetting(s, sinkInfo, &sink_volume)
 
 	s.setPropMute(sinkInfo.Mute)
 	s.setPropVolume(sink_volume)

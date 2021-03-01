@@ -28,6 +28,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"strconv"
 
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 
@@ -127,7 +128,6 @@ type Audio struct {
 
 	//TODO panguV专用属性 解决bug55140
 	isPanguV				bool
-	createAudioObjFinish	bool
 
 	cards CardList
 
@@ -413,27 +413,41 @@ func (a *Audio) initDefaultVolumes() {
 	defaultHeadphoneOutputVolume = headphoneOutVolumePer
 }
 
-//TODO bug55140 判断是否panguV,同步panguV的声卡音量保存到gsetting
+//TODO bug55140 判断是否panguV,同步panguV的声卡音量保存到audio gsetting配置文件
 func (a *Audio) initSyncStateAndVolumes() {
-	//audio对象创建完成，设createAudioObjFinish为true,用于允许sink/source的update()操作更新音量大小属性
 	out, _ := exec.Command("qdbus", "--system", "com.deepin.system.SystemInfo","/com/deepin/system/SystemInfo","com.deepin.system.SystemInfo.ProductName").Output()
-	if strings.Contains(string(out),"PGUV-WBY0") {
+	if strings.Contains(string(out),"PGUV-") {
 		logger.Debug("Get Machine Product Name Is PanguV")
 		a.isPanguV = true
 	} else {
 		logger.Debug("Get Machine Product Name Is Not PanguV")
 		return
 	}
-	a.createAudioObjFinish = true
 
-	//首次启动需要同步更新,通过获取gsetting保存的音量值，更新sink/source音量
+	outputVolList := a.settings.GetStrv("headphone-volume")
+	inputVolList := a.settings.GetStrv("headset-volume")
+	if len(outputVolList) != 2 || len(inputVolList) != 3 {
+		logger.Debug("Get len(headphone-volume/headset-volume) is not a 2/3")
+		a.isPanguV = false
+		return
+	}
+
+	//首次启动需要同步更新audio gsetting保存的音量键值
 	firstRun := a.settings.GetBoolean(gsKeyFirstRun)
 	if firstRun {
 		if a.isPanguV {
-			a.settings.SetInt("headphone-volume", int32(defaultHeadphoneOutputVolume * 100.0))
-			a.settings.SetInt("physical-output-volume", int32(defaultOutputVolume * 100.0))
-			a.settings.SetInt("earphone-volume", int32(defaultInputVolume * 100.0))
-			a.settings.SetInt("physical-input-volume", int32(defaultInputVolume * 100.0))
+			//依次保存耳机输出ports音量：headphones-huawei和headphones-huawei-2
+			strVolume := strconv.Itoa(int(defaultHeadphoneOutputVolume * 100.0))
+			outputVolList = []string{strVolume, strVolume}
+			a.settings.SetStrv("headphone-volume",outputVolList)
+
+			//依次保存耳机输入ports音量：rear-mic-huawei，rear-mic-huawei和rear-mic-huawei
+			strVolume = strconv.Itoa(int(defaultInputVolume * 100.0))
+			inputVolList = []string{strVolume, strVolume, strVolume}
+			a.settings.SetStrv("headset-volume",inputVolList)
+
+			a.settings.SetInt("onboard-output-volume", int32(defaultOutputVolume * 100.0))
+			a.settings.SetInt("onboard-input-volume", int32(defaultInputVolume * 100.0))
 		}
 	}
 }

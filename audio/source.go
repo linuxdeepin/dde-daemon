@@ -64,9 +64,10 @@ type Source struct {
 
 //TODO bug55140
 var (
-	AudioSourceName1 = "3a_source"                                                 //虚拟source映射AudiosourceName2
-	AudioSourceName2 = "alsa_input.platform-sound_hi6405.analog-stereo"            //panguv物理声卡的source
-	AudioSourceName3 = "alsa_output.platform-sound_hi6405.analog-stereo.monitor"   //虚拟source无激活port
+	AudioSourceName1 = "3a_source"                                     				//华为虚拟source映射AudiosourceName2
+	AudioSourceName2 = "alsa_input.platform-sound_hi6405.analog-stereo"            	//panguv内置音频声卡的source
+	AudioSourceName3 = "alsa_output.platform-sound_hi6405.analog-stereo.monitor"   	//Monitor内置音频,不存在有效输入输出生成
+	AudioSourceName4 = "histen_sink.monitor"										//存在histen_sink输出,不存在输入情况生成
 )
 
 func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
@@ -80,25 +81,63 @@ func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 }
 
 //TODO bug55140 write source'volume to audio's gsetting if machine is panguV
-func (s *Source) doSetVolumeToSetting( v float64) {
-	if s.audio.isPanguV && s.audio.createAudioObjFinish {
-		//存在激活port才有效
+func doSetSourceVolumeToGSetting(s *Source, v float64) {
+	if s.audio.isPanguV {
 		iv := int32(floatPrecision(v) * 100.0)
-		activePort := s.ActivePort.Name
-		portAvai := s.ActivePort.Available
+		if s.ActivePort.Name == "" {
+			if s.Name == AudioSourceName3 || s.Name == AudioSourceName4 {
+				s.audio.settings.SetInt("onboard-input-volume", iv)
+			}
+			logger.Debug("doSetVolumeToSetting->Source Get a null activePort")
+			return
+		}
+
+		//闭包函数,设置音量到audio GSetting
+		var setHeadsetVolumeForGSetting = func (v int32, selectPort int) {
+			key := "headset-volume"
+			vl := s.audio.settings.GetStrv(key)
+			if selectPort == 1 {
+				vl[0] = strconv.Itoa(int(v))
+				s.audio.settings.SetStrv(key, vl)
+			} else if selectPort == 2 {
+				vl[1] = strconv.Itoa(int(v))
+				s.audio.settings.SetStrv(key, vl)
+			} else if selectPort == 3 {
+				vl[2] = strconv.Itoa(int(v))
+				s.audio.settings.SetStrv(key, vl)
+			}
+		}
 
 		switch s.Name {
-		case AudioSourceName1,AudioSourceName2:
-			if activePort == "" {
-				s.audio.settings.SetInt("physical-input-volume", iv)
+		case AudioSourceName1:
+			//修改的是huawei虚拟source的音量,需要遍历有效sources里区分不同的激活port和设置port的音量值
+			for _, sourceInfo := range s.audio.sources {
+				if sourceInfo.Name == AudioSourceName2 {
+					if sourceInfo.ActivePort.Available != 1 {
+						if sourceInfo.ActivePort.Name == "analog-input-rear-mic-huawei" {
+							setHeadsetVolumeForGSetting(iv, 1)
+						} else if sourceInfo.ActivePort.Name == "analog-input-headset-mic-huawei" {
+							setHeadsetVolumeForGSetting(iv, 2)
+						} else if sourceInfo.ActivePort.Name == "analog-input-linein-huawei" {
+							setHeadsetVolumeForGSetting(iv, 3)
+						}
+					}
+				}
 			}
-			if portAvai == 0 || portAvai == 2 {
-				s.audio.settings.SetInt("earphone-volume", iv)
+		case AudioSourceName2:
+			if s.ActivePort.Available != 1 {
+				if s.ActivePort.Name == "analog-input-rear-mic-huawei" {
+					setHeadsetVolumeForGSetting(iv, 1)
+				} else if s.ActivePort.Name == "analog-input-headset-mic-huawei" {
+					setHeadsetVolumeForGSetting(iv, 2)
+				} else if s.ActivePort.Name == "analog-input-linein-huawei" {
+					setHeadsetVolumeForGSetting(iv, 3)
+				}
 			} else {
-				s.audio.settings.SetInt("physical-input-volume", iv)
+				s.audio.settings.SetInt("onboard-input-volume", iv)
 			}
-		case AudioSourceName3:
-			s.audio.settings.SetInt("physical-input-volume", iv)
+		default:
+			return
 		}
 	}
 }
@@ -114,8 +153,8 @@ func (s *Source) SetVolume(v float64, isPlay bool) *dbus.Error {
 	}
 
 	//TODO bug55140
-	s.doSetVolumeToSetting(v)
-	logger.Debugf("Set Volume [source:%s] %v ", s.Name, v)
+	doSetSourceVolumeToGSetting(s, v)
+	logger.Debugf("Set Volume [source:%s] [ActivePort:%v,volume:%v] ", s.Name, s.ActivePort, v)
 
 	s.PropsMu.RLock()
 	cv := s.cVolume.SetAvg(v)
@@ -208,40 +247,70 @@ func (*Source) GetInterfaceName() string {
 	return dbusInterface + ".Source"
 }
 
-//TODO bug55140 只针对panguv，通过读取gsetting配置里保存的音量值设置对应source的音量
-func (s *Source) setAndCheckSourceVolumeByGsetting(sourceInfo *pulse.Source, sourceVolume *float64) {
-	if s.audio.isPanguV && s.audio.createAudioObjFinish {
-		activePort := sourceInfo.ActivePort.Name
-		if activePort == "" {
-			logger.Errorf("Failed: Get Source's activePort is Null  & return")
+//TODO bug55140 只针对panguv，通过读取gsetting配置里保存的音量值与pulseaudio获取的音量值做比较，设置对应source->port的音量
+func compareSourceVolumeByGSetting(s *Source, sourceInfo *pulse.Source, sourceVolume *float64) {
+	if s.audio.isPanguV {
+		if sourceInfo.ActivePort.Name == "" {
+			sname := sourceInfo.Name
+			if sname == AudioSourceName3 || sname == AudioSourceName4 {
+				setvol := s.audio.settings.GetInt("onboard-input-volume")
+				*sourceVolume = floatPrecision(float64(setvol) / 100.0)
+				logger.Errorf("Failed: Get Source's activePort is Null & return onboard-input-volume: %v", *sourceVolume)
+			} else {
+				logger.Errorf("Failed: Get Source's activePort is Null & return")
+			}
 			return
 		}
 
 		var setVolome int32
 		var sourceVolume_tmp float64
 
-		switch sourceInfo.Name {
-		case AudioSourceName1,AudioSourceName2:
-			portAvai := sourceInfo.ActivePort.Available
-			if portAvai == 0 || portAvai == 2 {
-				setVolome = s.audio.settings.GetInt("earphone-volume")
-			} else {
-				setVolome = s.audio.settings.GetInt("physical-input-volume")
+		//闭包函数,从audio GSetting获取音量
+		var getHeadsetVolumeFromGSetting = func (selectPort int) int32 {
+			var v int
+			vl := s.audio.settings.GetStrv("headset-volume")
+			if selectPort == 1 {
+				v, _ = strconv.Atoi(vl[0])
+			} else if selectPort == 2 {
+				v, _ = strconv.Atoi(vl[1])
+			} else if selectPort == 3 {
+				v, _ = strconv.Atoi(vl[2])
 			}
-		case AudioSourceName3:
-			setVolome = s.audio.settings.GetInt("physical-input-volume")
+			return int32(v)
+		}
+
+		switch sourceInfo.Name {
+		case AudioSourceName1:
+			//存在虚拟3a_source情况下， 只更新内置音频声卡source的音量即可(华为音频算法服务会同步音量到虚拟source上)
+			return
+		case AudioSourceName2:
+			//根据当前激活的port到audio gsetting里取headset-volume/headphone-volume键值数组对应index的值
+			if sourceInfo.ActivePort.Available != 1 {
+				if sourceInfo.ActivePort.Name == "analog-input-rear-mic-huawei" {
+					setVolome = getHeadsetVolumeFromGSetting(1)
+				} else if sourceInfo.ActivePort.Name == "analog-input-headset-mic-huawei" {
+					setVolome = getHeadsetVolumeFromGSetting(2)
+				} else if sourceInfo.ActivePort.Name == "analog-input-linein-huawei" {
+					setVolome = getHeadsetVolumeFromGSetting(3)
+				}
+			} else {
+				setVolome = s.audio.settings.GetInt("onboard-input-volume")
+			}
 		default:
 			return
 		}
 
 		sourceVolume_tmp = floatPrecision(float64(setVolome) / 100.0)
 		if *sourceVolume != sourceVolume_tmp {
-			logger.Debugf("Source update need change volume:%v to setting's volume:%v", *sourceVolume, sourceVolume_tmp)
 			*sourceVolume = sourceVolume_tmp
-			cv := sourceInfo.Volume.SetAvg(sourceVolume_tmp)
-			s.audio.context().SetSinkVolumeByIndex(sourceInfo.Index, cv)
+			if sourceInfo.ActivePort.Available != 1 {
+				cv := sourceInfo.Volume.SetAvg(sourceVolume_tmp)
+				s.audio.context().SetSourceVolumeByIndex(sourceInfo.Index, cv)
+				logger.Debugf("Update Source->ActivePort :%s need change volume: %v -> %v", sourceInfo.ActivePort.Name, *sourceVolume, sourceVolume_tmp)
+			} else {
+				logger.Debugf("Update Source->ActivePort :%s but is UnAvailable(Not Update source volume)", sourceInfo.ActivePort.Name)
+			}
 		}
-
 	}
 }
 
@@ -260,7 +329,7 @@ func (s *Source) update(sourceInfo *pulse.Source) {
 	logger.Debugf("Update Source name :%s [ActivePort:%v,volume:%v]", s.Name, sourceInfo.ActivePort, source_volume)
 
 	//TODO bug55140
-	s.setAndCheckSourceVolumeByGsetting(sourceInfo, &source_volume)
+	compareSourceVolumeByGSetting(s, sourceInfo, &source_volume)
 
 	s.setPropMute(sourceInfo.Mute)
 	s.setPropVolume(source_volume)
