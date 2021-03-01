@@ -24,6 +24,7 @@ import (
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
 	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	"pkg.deepin.io/gir/gio-2.0"
 )
 
 const (
@@ -31,10 +32,24 @@ const (
 	volumeMax = 1.5
 )
 
+const (
+	gsKeyOsdAdjustVolState = "osd-adjust-volume-enabled"
+)
+
+type OsdVolumeState int32
+
+// Osd音量调节控制
+const (
+	VolumeAdjustEnable OsdVolumeState = iota
+	VolumeAdjustForbidden
+	VolumeAdjustHidden
+)
+
 type AudioController struct {
 	conn                   *dbus.Conn
 	audioDaemon            *audio.Audio
 	huaweiMicLedWorkaround *huaweiMicLedWorkaround
+	gsKeyboard             *gio.Settings
 }
 
 func NewAudioController(sessionConn *dbus.Conn,
@@ -44,6 +59,7 @@ func NewAudioController(sessionConn *dbus.Conn,
 		audioDaemon: audio.NewAudio(sessionConn),
 	}
 	c.initHuaweiMicLedWorkaround(backlightHelper)
+	c.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
 	return c
 }
 
@@ -78,25 +94,40 @@ func (c *AudioController) ExecCmd(cmd ActionCmd) error {
 }
 
 func (c *AudioController) toggleSinkMute() error {
-	sink, err := c.getDefaultSink()
-	if err != nil {
-		return err
+	var osd string
+	var state = OsdVolumeState(c.gsKeyboard.GetEnum(gsKeyOsdAdjustVolState))
+
+	// 当OsdAdjustVolumeState的值为VolumeAdjustEnable时，才会去执行静音操作
+	if VolumeAdjustEnable == state {
+		sink, err := c.getDefaultSink()
+		if err != nil {
+			return err
+		}
+
+		mute, err := sink.Mute().Get(0)
+		if err != nil {
+			return err
+		}
+
+		err = sink.SetMute(0, !mute)
+		if err != nil {
+			return err
+		}
+		osd = "AudioMute"
+	} else if VolumeAdjustForbidden == state {
+		osd = "AudioMuteAsh"
+	} else {
+		return nil
 	}
 
-	mute, err := sink.Mute().Get(0)
-	if err != nil {
-		return err
-	}
-
-	err = sink.SetMute(0, !mute)
-	if err != nil {
-		return err
-	}
-	showOSD("AudioMute")
+	showOSD(osd)
 	return nil
 }
 
 func (c *AudioController) toggleSourceMute() error {
+	var osd string
+	var state = OsdVolumeState(c.gsKeyboard.GetEnum(gsKeyOsdAdjustVolState))
+
 	source, err := c.getDefaultSource()
 	if err != nil {
 		return err
@@ -107,69 +138,96 @@ func (c *AudioController) toggleSourceMute() error {
 		return err
 	}
 	mute = !mute
-	err = source.SetMute(0, mute)
-	if err != nil {
-		return err
+
+	// 当OsdAdjustVolumeState的值为VolumeAdjustEnable时，才会去执行静音操作
+	if VolumeAdjustEnable == state {
+		err = source.SetMute(0, mute)
+		if err != nil {
+			return err
+		}
+
+		if mute {
+			osd = "AudioMicMuteOn"
+		} else {
+			osd = "AudioMicMuteOff"
+		}
+	} else if VolumeAdjustForbidden == state {
+		if mute {
+			osd = "AudioMicMuteOnAsh"
+		} else {
+			osd = "AudioMicMuteOffAsh"
+		}
+	} else {
+		return nil
 	}
 
-	var osd string
-	if mute {
-		osd = "AudioMicMuteOn"
-	} else {
-		osd = "AudioMicMuteOff"
-	}
 	showOSD(osd)
 	return nil
 }
 
 func (c *AudioController) changeSinkVolume(raised bool) error {
-	sink, err := c.getDefaultSink()
-	if err != nil {
-		return err
-	}
+	var osd string
+	var state = OsdVolumeState(c.gsKeyboard.GetEnum(gsKeyOsdAdjustVolState))
 
-	osd := "AudioUp"
-	v, err := sink.Volume().Get(0)
-	if err != nil {
-		return err
-	}
+	// 当OsdAdjustVolumeState的值为VolumeAdjustEnable时，才会去执行调节音量的操作
+	if VolumeAdjustEnable == state {
+		sink, err := c.getDefaultSink()
+		if err != nil {
+			return err
+		}
 
-	var step = 0.05
-	if !raised {
-		step = -step
-		osd = "AudioDown"
-	}
+		osd = "AudioUp"
+		v, err := sink.Volume().Get(0)
+		if err != nil {
+			return err
+		}
 
-	maxVolume, err := c.audioDaemon.MaxUIVolume().Get(0)
-	if err != nil {
-		logger.Warning(err)
-		maxVolume = volumeMax
-	}
+		var step = 0.05
+		if !raised {
+			step = -step
+			osd = "AudioDown"
+		}
 
-	v += step
-	if v < volumeMin {
-		v = volumeMin
-	} else if v > maxVolume {
-		v = maxVolume
-	}
-
-	logger.Debug("[changeSinkVolume] will set volume to:", v)
-	mute, err := sink.Mute().Get(0)
-	if err != nil {
-		return err
-	}
-
-	if mute {
-		err = sink.SetMute(0, false)
+		maxVolume, err := c.audioDaemon.MaxUIVolume().Get(0)
 		if err != nil {
 			logger.Warning(err)
+			maxVolume = volumeMax
 		}
+
+		v += step
+		if v < volumeMin {
+			v = volumeMin
+		} else if v > maxVolume {
+			v = maxVolume
+		}
+
+		logger.Debug("[changeSinkVolume] will set volume to:", v)
+		mute, err := sink.Mute().Get(0)
+		if err != nil {
+			return err
+		}
+
+		if mute {
+			err = sink.SetMute(0, false)
+			if err != nil {
+				logger.Warning(err)
+			}
+		}
+
+		err = sink.SetVolume(0, v, true)
+		if err != nil {
+			return err
+		}
+	} else if VolumeAdjustForbidden == state {
+		if raised {
+			osd = "AudioUpAsh"
+		} else {
+			osd = "AudioDownAsh"
+		}
+	} else {
+		return nil
 	}
 
-	err = sink.SetVolume(0, v, true)
-	if err != nil {
-		return err
-	}
 	showOSD(osd)
 	return nil
 }
