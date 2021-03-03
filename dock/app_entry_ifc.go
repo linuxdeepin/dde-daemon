@@ -27,7 +27,6 @@ import (
 
 	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/procfs"
 )
 
 func (e *AppEntry) GetInterfaceName() string {
@@ -162,7 +161,9 @@ func (entry *AppEntry) ForceQuit() *dbus.Error {
 	pidWinInfosMap := make(map[uint][]WindowInfo)
 	for _, winInfo := range winInfoSlice {
 		pid := winInfo.getPid()
-		if pid != 0 && winInfo.getProcess() != nil {
+		//winInfo.getProcess()有的时候会存在/proc/pid/下文件权限问题，导致获取的process为空，
+		//改用isProcessAlive判断进程是否存在
+		if pid != 0 && isProcessAlive(pid) {
 			pidWinInfosMap[pid] = append(pidWinInfosMap[pid], winInfo)
 		} else {
 			err := winInfo.killClient()
@@ -190,8 +191,7 @@ func (entry *AppEntry) ForceQuit() *dbus.Error {
 }
 
 func killProcess(pid uint) error {
-	p := procfs.Process(pid)
-	if p.Exist() {
+	if isProcessAlive(pid) {
 		logger.Debug("kill process", pid)
 		osP, err := os.FindProcess(int(pid))
 		if err != nil {
@@ -204,7 +204,7 @@ func killProcess(pid uint) error {
 			return err
 		}
 		time.AfterFunc(5*time.Second, func() {
-			if p.Exist() {
+			if isProcessAlive(pid) {
 				err := osP.Kill()
 				if err != nil {
 					logger.Warningf("failed to send signal KILL to process %d: %v",
@@ -214,6 +214,21 @@ func killProcess(pid uint) error {
 		})
 	}
 	return nil
+}
+
+// if sig is 0, then no signal is sent, but error checking is still performed;
+// this can be used to check for the existence of a process ID or process group ID.
+// quoted from https://man7.org/linux/man-pages/man2/kill.2.html
+func isProcessAlive(pid uint) bool {
+	p, err := os.FindProcess(int(pid))
+	if err != nil {
+		return false
+	}
+	err = p.Signal(syscall.Signal(0))
+	if err != nil {
+		return false
+	}
+	return true
 }
 
 func (entry *AppEntry) GetAllowedCloseWindows() ([]uint32, *dbus.Error) {
