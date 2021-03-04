@@ -122,26 +122,35 @@ func (m *Manager) doLock(autoStartAuth bool) {
 	}
 }
 
-func (m *Manager) doSuspend() {
+func (m *Manager) canSuspend() bool {
 	if os.Getenv("POWER_CAN_SLEEP") == "0" {
-		logger.Info("can not suspend, env POWER_CAN_SLEEP == 0")
-		return
+		logger.Info("can not Suspend, env POWER_CAN_SLEEP == 0")
+		return false
 	}
-
-	sessionManager := m.helper.SessionManager
-	can, err := sessionManager.CanSuspend(0)
+	can, err := m.helper.SessionManager.CanSuspend(0) // 是否支持待机
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	if can {
+		str, err := m.helper.LoginManager.CanSuspend(0) // 当前能否待机
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+		return str == "yes"
+	}
+	return can
+}
 
-	if !can {
+func (m *Manager) doSuspend() {
+	if !m.canSuspend() {
 		logger.Info("can not suspend")
 		return
 	}
 
 	logger.Debug("suspend")
-	err = sessionManager.RequestSuspend(0)
+	err := m.helper.SessionManager.RequestSuspend(0)
 	if err != nil {
 		logger.Warning("failed to suspend:", err)
 	}

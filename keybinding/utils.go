@@ -110,58 +110,90 @@ func systemLock() {
 	go sessionDBus.Object(sessionManagerDest, sessionManagerObjPath).Call(sessionManagerDest+".RequestLock", 0)
 }
 
-func (m *Manager) systemSuspend() {
-	can, err := m.sessionManager.CanSuspend(0)
+func (m *Manager) canSuspend() bool {
+	if os.Getenv("POWER_CAN_SLEEP") == "0" {
+		logger.Info("can not Suspend, env POWER_CAN_SLEEP == 0")
+		return false
+	}
+	can, err := m.sessionManager.CanSuspend(0) // 是否支持待机
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	if can {
+		str, err := m.loginManager.CanSuspend(0) // 当前能否待机
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+		return str == "yes"
+	}
+	return can
+}
 
-	if !can {
-		logger.Info("can not suspend")
+func (m *Manager) systemSuspend() {
+	if !m.canSuspend() {
+		logger.Info("can not Suspend")
 		return
 	}
 
-	logger.Debug("suspend")
-	err = m.sessionManager.RequestSuspend(0)
+	logger.Debug("Suspend")
+	err := m.sessionManager.RequestSuspend(0)
 	if err != nil {
-		logger.Warning("failed to suspend:", err)
+		logger.Warning("failed to Suspend:", err)
 	}
 }
 
-func (m *Manager) systemHibernate() {
+func (m *Manager) canHibernate() bool {
 	if os.Getenv("POWER_CAN_SLEEP") == "0" {
 		logger.Info("can not Hibernate, env POWER_CAN_SLEEP == 0")
-		return
+		return false
 	}
-	can, err := m.sessionManager.CanHibernate(0)
+	can, err := m.sessionManager.CanHibernate(0) // 是否支持休眠
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	if can {
+		str, err := m.loginManager.CanHibernate(0) // 当前能否休眠
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+		return str == "yes"
+	}
+	return can
+}
 
-	if !can {
+func (m *Manager) systemHibernate() {
+	if !m.canHibernate() {
 		logger.Info("can not Hibernate")
 		return
 	}
 
 	logger.Debug("Hibernate")
-	err = m.sessionManager.RequestHibernate(0)
+	err := m.sessionManager.RequestHibernate(0)
 	if err != nil {
 		logger.Warning("failed to Hibernate:", err)
 	}
 }
 
-func (m *Manager) systemShutdown() {
-	can, err := m.sessionManager.CanShutdown(0)
+func (m *Manager) canShutdown() bool {
+	str, err := m.loginManager.CanPowerOff(0) // 当前能否关机
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	return str == "yes"
+}
 
-	if !can {
+func (m *Manager) systemShutdown() {
+	if !m.canShutdown() {
 		logger.Info("can not Shutdown")
 		return
 	}
-
 	logger.Debug("Shutdown")
-	err = m.sessionManager.RequestShutdown(0)
+	err := m.sessionManager.RequestShutdown(0)
 	if err != nil {
 		logger.Warning("failed to Shutdown:", err)
 	}
