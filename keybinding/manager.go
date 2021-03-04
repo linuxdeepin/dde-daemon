@@ -33,6 +33,7 @@ import (
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
@@ -101,6 +102,7 @@ type Manager struct {
 	systemSigLoop             *dbusutil.SignalLoop
 	startManager              *sessionmanager.StartManager
 	sessionManager            *sessionmanager.SessionManager
+	loginManager              *login1.Manager
 	backlightHelper           *backlight.Backlight
 	keyboard                  *inputdevices.Keyboard
 	keyboardLayout            string
@@ -272,6 +274,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		logger.Warning(err)
 	}
 
+	m.loginManager = login1.NewManager(sysBus)
 	return &m, nil
 }
 
