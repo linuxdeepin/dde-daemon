@@ -67,6 +67,9 @@ const (
 	gsSchemaSessionPower = "com.deepin.dde.power"
 
 	customConfigFile = "deepin/dde-daemon/keybinding/custom.ini"
+	CapslockKey = 58
+	NumlockKey = 69
+	KeyPress = 1
 )
 
 const ( // power按键事件的响应
@@ -541,6 +544,11 @@ func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
 				} else {
 					m.dpmsIsOff = false
 				}
+			}
+			if key == CapslockKey && value == KeyPress {
+				m.handleKeyEventByWayland("capslock")
+			} else if key == NumlockKey && value == KeyPress {
+				m.handleKeyEventByWayland("numlock")
 			}
 		}
 	})

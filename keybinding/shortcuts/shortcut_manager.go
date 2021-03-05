@@ -980,6 +980,9 @@ func (sm *ShortcutManager) AddMediaToKwin(gsettings *gio.Settings, wmObj *wm.Wm)
 		if name == "" {
 			name = id
 		}
+		if name == "Capslock" || name == "Numlock" {
+			continue
+		}
 
 		accelJson, err := util.MarshalJSON(util.KWinAccel{
 			Id:         id,
