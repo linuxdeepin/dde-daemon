@@ -394,7 +394,8 @@ func (d *device) connectProperties() {
 			return
 		}
 		d.Paired = value
-		logger.Debugf("%s Paired: %v", d, value)
+		d.updateState()   // Paired属性被修改，影响到下面使用的State和ConnectState
+		logger.Debugf("%s Paired: %v State: %v", d, value, d.State)
 
 		if d.Paired && d.connected && d.State == deviceStateConnected {
 			d.ConnectState = true
