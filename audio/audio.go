@@ -128,6 +128,8 @@ type Audio struct {
 
 	//TODO panguV专用属性 解决bug55140
 	isPanguV				bool
+	//TODO bug64874 保存defaultSink的音量平衡值
+	defaultSinkBalance		float64
 
 	cards CardList
 
@@ -302,6 +304,7 @@ func (a *Audio) init() error {
 				a.defaultSink = sink
 				a.PropsMu.Lock()
 				a.setPropDefaultSink(sink.getPath())
+				a.defaultSinkBalance = sink.cVolume.Balance(sink.channelMap)
 				a.PropsMu.Unlock()
 			}
 		}
@@ -718,6 +721,7 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 
 	a.PropsMu.Lock()
 	a.setPropDefaultSink(defaultSinkPath)
+	a.defaultSinkBalance = sink.cVolume.Balance(sink.channelMap)
 	a.PropsMu.Unlock()
 	logger.Debug("set prop default sink:", defaultSinkPath)
 }

@@ -153,6 +153,7 @@ func (a *Audio) addSink(sinkInfo *pulse.Sink) {
 		a.defaultSink = sink
 		a.PropsMu.Lock()
 		a.setPropDefaultSink(sinkPath)
+		a.defaultSinkBalance = sink.cVolume.Balance(sink.channelMap)
 		a.PropsMu.Unlock()
 		logger.Debug("set prop default sink:", sinkPath)
 	}

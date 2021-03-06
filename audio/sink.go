@@ -191,6 +191,13 @@ func (s *Sink) SetBalance(v float64, isPlay bool) *dbus.Error {
 	cv := s.cVolume.SetBalance(s.channelMap, v)
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
+
+	if s.audio.defaultSink != nil {
+		if s.audio.defaultSink.Name == s.Name {
+			s.audio.defaultSinkBalance = v
+		}
+	}
+
 	if isPlay {
 		s.playFeedback()
 	}
@@ -318,7 +325,26 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 	s.setPropSupportFade(false)
 	s.setPropFade(sinkInfo.Volume.Fade(sinkInfo.ChannelMap))
 	s.setPropSupportBalance(true)
-	s.setPropBalance(sinkInfo.Volume.Balance(sinkInfo.ChannelMap))
+
+	//Changing the sink's volume value will change the sink's balance value while the sink's balance is not 0
+	//Change the default sink's balance value while defaultSinkBalance is not equal to current sink's balance
+	updateBalance := sinkInfo.Volume.Balance(sinkInfo.ChannelMap)
+	if s.audio.defaultSink != nil {
+		if s.audio.defaultSink.Name == sinkInfo.Name {
+			var remainder = s.audio.defaultSinkBalance - updateBalance
+			var isEqual = remainder <= 0.00001 && remainder >= -0.00001
+			if !isEqual {
+				cv := s.cVolume.SetBalance(s.channelMap, s.audio.defaultSinkBalance)
+				s.audio.context().SetSinkVolumeByIndex(sinkInfo.Index, cv)
+				updateBalance = s.audio.defaultSinkBalance
+			}
+			s.setPropBalance(updateBalance)
+		} else {
+			s.setPropBalance(updateBalance)
+		}
+	} else {
+		s.setPropBalance(updateBalance)
+	}
 
 	oldActivePort := s.ActivePort
 	newActivePort := toPort(sinkInfo.ActivePort)
