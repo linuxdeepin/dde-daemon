@@ -218,6 +218,11 @@ func (m *Manager) init() {
 }
 
 func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
+	// cancel gesture in tablet environment
+	if strings.Contains(os.Getenv("XDG_CURRENT_DESKTOP"), "DeepinTablet") {
+		return true;
+	}
+
 	// allow right button up when kbd grabbed
 	if (info.Event.Name != "touch right button" || info.Event.Direction != "up") && isKbdAlreadyGrabbed() {
 		logger.Debug("another process grabbed keyboard, not exec action")
