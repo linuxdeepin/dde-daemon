@@ -21,7 +21,6 @@ package power
 
 import (
 	"math"
-	"os"
 	"os/exec"
 	"time"
 
@@ -123,22 +122,10 @@ func (m *Manager) doLock(autoStartAuth bool) {
 }
 
 func (m *Manager) canSuspend() bool {
-	if os.Getenv("POWER_CAN_SLEEP") == "0" {
-		logger.Info("can not Suspend, env POWER_CAN_SLEEP == 0")
-		return false
-	}
-	can, err := m.helper.SessionManager.CanSuspend(0) // 是否支持待机
+	can, err := m.helper.SessionManager.CanSuspend(0)
 	if err != nil {
 		logger.Warning(err)
 		return false
-	}
-	if can {
-		str, err := m.helper.LoginManager.CanSuspend(0) // 当前能否待机
-		if err != nil {
-			logger.Warning(err)
-			return false
-		}
-		return str == "yes"
 	}
 	return can
 }
@@ -170,6 +157,15 @@ func (m *Manager) doSuspendByFront() {
 	}
 }
 
+func (m *Manager) canShutdown() bool {
+	can, err := m.helper.SessionManager.CanShutdown(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return can
+}
+
 func (m *Manager) doShutdown() {
 	sessionManager := m.helper.SessionManager
 	can, err := sessionManager.CanShutdown(0)
@@ -191,10 +187,6 @@ func (m *Manager) doShutdown() {
 }
 
 func (m *Manager) canHibernate() bool {
-	if os.Getenv("POWER_CAN_HIBERNATE") == "0" {
-		logger.Info("can not hibernate, env POWER_CAN_HIBERNATE == 0")
-		return false
-	}
 	can, err := m.helper.SessionManager.CanHibernate(0)
 	if err != nil {
 		logger.Warning(err)
@@ -208,7 +200,6 @@ func (m *Manager) doHibernate() {
 		logger.Info("can not hibernate")
 		return
 	}
-
 	logger.Debug("hibernate")
 	err := m.helper.SessionManager.RequestHibernate(0)
 	if err != nil {

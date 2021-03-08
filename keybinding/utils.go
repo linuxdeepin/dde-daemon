@@ -111,22 +111,10 @@ func systemLock() {
 }
 
 func (m *Manager) canSuspend() bool {
-	if os.Getenv("POWER_CAN_SLEEP") == "0" {
-		logger.Info("can not suspend, env POWER_CAN_SLEEP == 0")
-		return false
-	}
-	can, err := m.sessionManager.CanSuspend(0) // 是否支持待机
+	can, err := m.sessionManager.CanSuspend(0) // 当前能否待机
 	if err != nil {
 		logger.Warning(err)
 		return false
-	}
-	if can {
-		str, err := m.loginManager.CanSuspend(0) // 当前能否待机
-		if err != nil {
-			logger.Warning(err)
-			return false
-		}
-		return str == "yes"
 	}
 	return can
 }
@@ -159,22 +147,10 @@ func (m *Manager) systemSuspendByFront() {
 }
 
 func (m *Manager) canHibernate() bool {
-	if os.Getenv("POWER_CAN_HIBERNATE") == "0" {
-		logger.Info("can not Hibernate, env POWER_CAN_HIBERNATE == 0")
-		return false
-	}
-	can, err := m.sessionManager.CanHibernate(0) // 是否支持休眠
+	can, err := m.sessionManager.CanHibernate(0) // 能否休眠
 	if err != nil {
 		logger.Warning(err)
 		return false
-	}
-	if can {
-		str, err := m.loginManager.CanHibernate(0) // 当前能否休眠
-		if err != nil {
-			logger.Warning(err)
-			return false
-		}
-		return str == "yes"
 	}
 	return can
 }
@@ -205,20 +181,22 @@ func (m *Manager) systemHibernateByFront() {
 	}
 }
 
-func (m *Manager) systemShutdown() {
-	can, err := m.sessionManager.CanShutdown(0)
+func (m *Manager) canShutdown() bool {
+	can, err := m.sessionManager.CanShutdown(0) // 当前能否关机
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	return can
+}
 
-	if !can {
+func (m *Manager) systemShutdown() {
+	if !m.canShutdown() {
 		logger.Info("can not Shutdown")
 		return
 	}
-
 	logger.Debug("Shutdown")
-	err = m.sessionManager.RequestShutdown(0)
+	err := m.sessionManager.RequestShutdown(0)
 	if err != nil {
 		logger.Warning("failed to Shutdown:", err)
 	}
