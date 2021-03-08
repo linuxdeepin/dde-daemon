@@ -21,7 +21,6 @@ package power
 
 import (
 	"math"
-	"os"
 	"os/exec"
 	"time"
 
@@ -123,81 +122,67 @@ func (m *Manager) doLock(autoStartAuth bool) {
 }
 
 func (m *Manager) canSuspend() bool {
-	if os.Getenv("POWER_CAN_SLEEP") == "0" {
-		logger.Info("can not Suspend, env POWER_CAN_SLEEP == 0")
-		return false
-	}
-	can, err := m.helper.SessionManager.CanSuspend(0) // 是否支持待机
+	can, err := m.helper.SessionManager.CanSuspend(0)
 	if err != nil {
 		logger.Warning(err)
 		return false
-	}
-	if can {
-		str, err := m.helper.LoginManager.CanSuspend(0) // 当前能否待机
-		if err != nil {
-			logger.Warning(err)
-			return false
-		}
-		return str == "yes"
 	}
 	return can
 }
 
 func (m *Manager) doSuspend() {
 	if !m.canSuspend() {
-		logger.Info("can not suspend")
+		logger.Info("can not Suspend")
 		return
 	}
 
-	logger.Debug("suspend")
+	logger.Debug("Suspend")
 	err := m.helper.SessionManager.RequestSuspend(0)
 	if err != nil {
-		logger.Warning("failed to suspend:", err)
+		logger.Warning("failed to Suspend:", err)
 	}
 }
 
-func (m *Manager) doShutdown() {
-	sessionManager := m.helper.SessionManager
-	can, err := sessionManager.CanShutdown(0)
+func (m *Manager) canShutdown() bool {
+	can, err := m.helper.SessionManager.CanShutdown(0)
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	return can
+}
 
-	if !can {
+func (m *Manager) doShutdown() {
+	if !m.canShutdown() {
 		logger.Info("can not Shutdown")
 		return
 	}
 
 	logger.Debug("Shutdown")
-	err = sessionManager.RequestShutdown(0)
+	err := m.helper.SessionManager.RequestShutdown(0)
 	if err != nil {
 		logger.Warning("failed to Shutdown:", err)
 	}
 }
 
-func (m *Manager) doHibernate() {
-	if os.Getenv("POWER_CAN_SLEEP") == "0" {
-		logger.Info("can not hibernate, env POWER_CAN_SLEEP == 0")
-		return
-	}
-
-	sessionManager := m.helper.SessionManager
-	can, err := sessionManager.CanHibernate(0)
+func (m *Manager) canHibernate() bool {
+	can, err := m.helper.SessionManager.CanHibernate(0)
 	if err != nil {
 		logger.Warning(err)
+		return false
+	}
+	return can
+}
+
+func (m *Manager) doHibernate() {
+	if !m.canHibernate() {
+		logger.Info("can not Hibernate")
 		return
 	}
-
-	if !can {
-		logger.Info("can not hibernate")
-		return
-	}
-
-	logger.Debug("hibernate")
-	err = sessionManager.RequestHibernate(0)
+	logger.Debug("Hibernate")
+	err := m.helper.SessionManager.RequestHibernate(0)
 	if err != nil {
-		logger.Warning("failed to hibernate:", err)
+		logger.Warning("failed to Hibernate:", err)
 	}
 }
 
