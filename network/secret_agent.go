@@ -567,7 +567,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 					isMustAsk(connectionData, settingName, secretKey) {
 					askItems = append(askItems, secretKey)
 				}
-			} else if secretFlags == secretFlagAgentOwned && sa.m.saveToKeyring {
+			} else if secretFlags == secretFlagAgentOwned {
 				if requestNew {
 					// check if NMSecretAgentGetSecretsFlags contains NM_SECRET_AGENT_GET_SECRETS_FLAG_REQUEST_NEW
 					// if is, means the password we set last time is incorrect, new password is needed
@@ -584,11 +584,6 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 						askItems = append(askItems, secretKey)
 					}
 				}
-			} else if !sa.m.saveToKeyring {
-				err = sa.deleteAll(connUUID)
-				if err != nil {
-					return nil, err
-				}
 			}
 		}
 		if allowInteraction && len(askItems) > 0 {
@@ -598,13 +593,12 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 				logger.Warning("askPasswords error:", err)
 				return nil, errSecretAgentUserCanceled
 			} else {
+				var items []settingItem
 				for key, value := range resultAsk {
 					setting[key] = dbus.MakeVariant(value)
 					secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
 						getSecretFlagsKeyName(key))
 					if secretFlags == secretFlagAgentOwned {
-						sa.m.hasSaveSecret = false
-						var items []settingItem
 						valueStr, ok := setting[key].Value().(string)
 						if ok {
 							label := fmt.Sprintf("Network secret for %s/%s/%s", connId, settingName, key)
@@ -615,24 +609,15 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 								label:       label,
 							})
 						}
-						sa.m.items = items
 					}
 				}
-			}
-		}
-		// when requestNew is true or dont save secretKey here
-		if !sa.m.saveToKeyring || requestNew {
-			for _, item := range sa.m.items {
-				secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
-					getSecretFlagsKeyName(item.settingKey))
-				if secretFlags == secretFlagAgentOwned {
-					sa.m.hasSaveSecret = false
-					sa.m.saveToKeyring = true
-					setting[item.settingKey] = dbus.MakeVariant(item.value)
-					return
+
+				for _, item := range items {
+					sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
 				}
 			}
 		}
+
 		resultSaved, err := sa.getAll(connUUID, settingName)
 		if err != nil {
 			return nil, err
@@ -953,7 +938,6 @@ func (sa *SecretAgent) saveSecrets(connectionData map[string]map[string]dbus.Var
 		for key, value := range setting {
 			if strv.Strv(secretKeys).Contains(key) {
 				// key is secret key
-
 				secretFlags, _ := getConnectionDataUint32(connectionData,
 					settingName, getSecretFlagsKeyName(key))
 				if secretFlags != secretFlagAgentOwned {
@@ -976,16 +960,11 @@ func (sa *SecretAgent) saveSecrets(connectionData map[string]map[string]dbus.Var
 	for _, item := range arr {
 		label := item.label
 		if label == "" {
-			item.label = fmt.Sprintf("Network secret for %s/%s/%s", connId,
+			label = fmt.Sprintf("Network secret for %s/%s/%s", connId,
 				item.settingName, item.settingKey)
 		}
-		secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
-			getSecretFlagsKeyName(item.settingKey))
-		if secretFlags == secretFlagAgentOwned {
-			sa.m.saveToKeyring = false
-			sa.m.items = arr
-			continue
-		}
+
+		sa.set(label, connUUID, item.settingName, item.settingKey, item.value)
 		err := sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
 		if err != nil {
 			logger.Debug("failed to save Secret to keyring")
