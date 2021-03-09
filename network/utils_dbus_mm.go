@@ -75,7 +75,7 @@ const (
 	moblieNetworkTypeUnknown = "Unknown"
 )
 
-func mmNewModem(modemPath dbus.ObjectPath) (modem *mmdbus.Modem, err error) {
+func mmNewModem(modemPath dbus.ObjectPath) (modem mmdbus.Modem, err error) {
 	systemBus, err := dbus.SystemBus()
 	if err != nil {
 		return
@@ -87,7 +87,7 @@ func mmNewModem(modemPath dbus.ObjectPath) (modem *mmdbus.Modem, err error) {
 	return
 }
 
-func mmDestroyModem(modem *mmdbus.Modem) {
+func mmDestroyModem(modem mmdbus.Modem) {
 	if modem == nil {
 		logger.Error("Modem to destroy is nil")
 		return
@@ -101,7 +101,7 @@ func mmGetModemDeviceIdentifier(modemPath dbus.ObjectPath) (devId string, err er
 		return
 	}
 
-	devId, err = modem.DeviceIdentifier().Get(0)
+	devId, err = modem.Modem().DeviceIdentifier().Get(0)
 	return
 }
 
@@ -111,7 +111,7 @@ func mmGetModemDeviceSysPath(modemPath dbus.ObjectPath) (sysPath string, err err
 		return
 	}
 
-	sysPath, err = modem.Device().Get(0)
+	sysPath, err = modem.Modem().Device().Get(0)
 	return
 }
 
@@ -121,7 +121,7 @@ func mmGetModemDeviceSignalQuality(modemPath dbus.ObjectPath) (signalQuality uin
 		return
 	}
 
-	signalQualityProp, err := modem.SignalQuality().Get(0)
+	signalQualityProp, err := modem.Modem().SignalQuality().Get(0)
 	if err != nil {
 		return
 	}
@@ -130,8 +130,8 @@ func mmGetModemDeviceSignalQuality(modemPath dbus.ObjectPath) (signalQuality uin
 	return
 }
 
-func mmDoGetModemDeviceSignalQuality(modem *mmdbus.Modem) (signalQuality uint32) {
-	prop, err := modem.SignalQuality().Get(0)
+func mmDoGetModemDeviceSignalQuality(modem mmdbus.Modem) (signalQuality uint32) {
+	prop, err := modem.Modem().SignalQuality().Get(0)
 	if err != nil {
 		return 0
 	}
@@ -143,7 +143,7 @@ func mmGetModemDeviceAccessTechnologies(modemPath dbus.ObjectPath) (accessTechno
 	if err != nil {
 		return
 	}
-	accessTechnologies, err = modem.AccessTechnologies().Get(0)
+	accessTechnologies, err = modem.Modem().AccessTechnologies().Get(0)
 	return
 }
 

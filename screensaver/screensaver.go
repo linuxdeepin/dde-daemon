@@ -49,7 +49,7 @@ type ScreenSaver struct {
 	xConn      *x.Conn
 	service    *dbusutil.Service
 	sigLoop    *dbusutil.SignalLoop
-	dbusDaemon *ofdbus.DBus
+	dbusDaemon ofdbus.DBus
 
 	blank        byte
 	idleTime     uint32

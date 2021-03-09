@@ -21,7 +21,7 @@ const (
 
 type HuaweiDevice struct {
 	service *dbusutil.Service
-	core    *huawei_fprint.Fingerprint
+	core    huawei_fprint.Fingerprint
 
 	mu       sync.Mutex
 	claimed  bool

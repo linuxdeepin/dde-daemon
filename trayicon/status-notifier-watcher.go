@@ -15,7 +15,7 @@ import (
 type StatusNotifierWatcher struct {
 	service    *dbusutil.Service
 	sigLoop    *dbusutil.SignalLoop
-	dbusDaemon *ofdbus.DBus
+	dbusDaemon ofdbus.DBus
 
 	hostServiceName string
 	watchedServices strv.Strv

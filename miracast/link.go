@@ -27,7 +27,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wifi"
+	wifi "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wifi"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
@@ -41,7 +41,7 @@ type LinkInfo struct {
 
 	interfaceName string
 	index         uint32
-	core          *wifi.Link
+	core          wifi.Link
 	locker        sync.Mutex
 	myManaged     bool
 }
@@ -159,7 +159,7 @@ func (link *LinkInfo) waitManaged(wantManaged bool) error {
 	})
 }
 
-func waitPeerConnected(peer *wifi.Peer, wantConnected bool) error {
+func waitPeerConnected(peer wifi.Peer, wantConnected bool) error {
 	name := fmt.Sprintf("peer %s connected", peer.Path_())
 	return waitChange(name, wantConnected, func() (b bool, err error) {
 		return peer.Connected().Get(0)

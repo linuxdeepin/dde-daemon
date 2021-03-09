@@ -41,8 +41,8 @@ const (
 type MediaPlayerController struct {
 	conn         *dbus.Conn
 	prevPlayer   string
-	dbusDaemon   *ofdbus.DBus
-	loginManager *login1.Manager
+	dbusDaemon   ofdbus.DBus
+	loginManager login1.Manager
 }
 
 func NewMediaPlayerController(systemSigLoop *dbusutil.SignalLoop,
@@ -82,26 +82,26 @@ func (c *MediaPlayerController) ExecCmd(cmd ActionCmd) error {
 	logger.Debug("[HandlerAction] active player dest name:", player.ServiceName_())
 	switch cmd {
 	case MediaPlayerPlay:
-		return player.PlayPause(0)
+		return player.Player().PlayPause(0)
 	case MediaPlayerPause:
-		return player.Pause(0)
+		return player.Player().Pause(0)
 	case MediaPlayerStop:
-		return player.Stop(0)
+		return player.Player().Stop(0)
 
 	case MediaPlayerPrevious:
-		if err := player.Previous(0); err != nil {
+		if err := player.Player().Previous(0); err != nil {
 			return err
 		}
-		return player.Play(0)
+		return player.Player().Play(0)
 
 	case MediaPlayerNext:
-		if err := player.Next(0); err != nil {
+		if err := player.Player().Next(0); err != nil {
 			return err
 		}
-		return player.Play(0)
+		return player.Player().Play(0)
 
 	case MediaPlayerRewind:
-		pos, err := player.Position().Get(0)
+		pos, err := player.Player().Position().Get(0)
 		if err != nil {
 			return err
 		}
@@ -111,29 +111,29 @@ func (c *MediaPlayerController) ExecCmd(cmd ActionCmd) error {
 			offset = -playerDelta
 		}
 
-		if err := player.Seek(0, offset); err != nil {
+		if err := player.Player().Seek(0, offset); err != nil {
 			return err
 		}
-		status, err := player.PlaybackStatus().Get(0)
+		status, err := player.Player().PlaybackStatus().Get(0)
 		if err != nil {
 			return err
 		}
 		if status != "Playing" {
-			return player.PlayPause(0)
+			return player.Player().PlayPause(0)
 		}
 	case MediaPlayerForword:
-		if err := player.Seek(0, playerDelta); err != nil {
+		if err := player.Player().Seek(0, playerDelta); err != nil {
 			return err
 		}
-		status, err := player.PlaybackStatus().Get(0)
+		status, err := player.Player().PlaybackStatus().Get(0)
 		if err != nil {
 			return err
 		}
 		if status != "Playing" {
-			return player.PlayPause(0)
+			return player.Player().PlayPause(0)
 		}
 	case MediaPlayerRepeat:
-		return player.Play(0)
+		return player.Player().Play(0)
 
 	default:
 		return ErrInvalidActionCmd{cmd}
@@ -156,7 +156,7 @@ func (c *MediaPlayerController) getMprisSender() []string {
 	return senders
 }
 
-func (c *MediaPlayerController) getActiveMpris() *mpris2.MediaPlayer {
+func (c *MediaPlayerController) getActiveMpris() mpris2.MediaPlayer {
 	var senders = c.getMprisSender()
 
 	length := len(senders)
@@ -175,7 +175,7 @@ func (c *MediaPlayerController) getActiveMpris() *mpris2.MediaPlayer {
 			return player
 		}
 
-		status, err := player.PlaybackStatus().Get(0)
+		status, err := player.Player().PlaybackStatus().Get(0)
 		if err != nil {
 			logger.Warning(err)
 			continue

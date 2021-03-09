@@ -202,7 +202,7 @@ func (m *Manager) uninstall(id string) error {
 		return err
 	}
 
-	err = m.appsObj.UninstallHints(0, []string{item.Path})
+	err = m.appsObj.LaunchedRecorder().UninstallHints(0, []string{item.Path})
 	if err != nil {
 		logger.Warning("failed to call apps UninstallHints:", err)
 	}
@@ -223,7 +223,7 @@ func (m *Manager) uninstall(id string) error {
 
 	if pkg != "" {
 		// is pkg installed?
-		installed, err := m.lastore.PackageExists(0, pkg)
+		installed, err := m.lastore.Manager().PackageExists(0, pkg)
 		if err != nil {
 			return err
 		}
@@ -285,7 +285,7 @@ const (
 )
 
 func (m *Manager) uninstallSystemPackage(jobName, pkg string) error {
-	jobPath, err := m.lastore.RemovePackage(0, jobName, pkg)
+	jobPath, err := m.lastore.Manager().RemovePackage(0, jobName, pkg)
 	logger.Debugf("uninstallSystemPackage pkg: %q jobPath: %q", pkg, jobPath)
 	if err != nil {
 		return err

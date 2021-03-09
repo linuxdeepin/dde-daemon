@@ -87,7 +87,7 @@ func (d *Daemon) Stop() error {
 //go:generate dbusutil-gen em -type Helper
 
 type Helper struct {
-	loginManager *login1.Manager
+	loginManager login1.Manager
 	sysSigLoop   *dbusutil.SignalLoop
 }
 

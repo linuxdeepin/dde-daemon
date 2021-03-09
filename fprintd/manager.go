@@ -52,10 +52,10 @@ const (
 type Manager struct {
 	service       *dbusutil.Service
 	sysSigLoop    *dbusutil.SignalLoop
-	fprintManager *fprint.Manager
-	huaweiFprint  *huawei_fprint.Fingerprint
+	fprintManager fprint.Manager
+	huaweiFprint  huawei_fprint.Fingerprint
 	huaweiDevice  *HuaweiDevice
-	dbusDaemon    *ofdbus.DBus
+	dbusDaemon    ofdbus.DBus
 	devices       Devices
 	devicesMu     sync.Mutex
 	fprintCh      chan struct{}

@@ -39,7 +39,7 @@ const (
 )
 
 const (
-	resourceUnavailable  = "Resource temporarily unavailable"
+	resourceUnavailable = "Resource temporarily unavailable"
 )
 
 type deviceState uint32
@@ -64,7 +64,7 @@ var (
 )
 
 type device struct {
-	core    *bluez.Device
+	core    bluez.Device
 	adapter *adapter
 
 	Path        dbus.ObjectPath
@@ -294,7 +294,7 @@ func (d *device) connectProperties() {
 		needRemove := d.getAndResetNeedRemove()
 		if needRemove {
 			// start remove device
-			err := d.adapter.core.RemoveDevice(0, d.Path)
+			err := d.adapter.core.Adapter().RemoveDevice(0, d.Path)
 			if err != nil {
 				logger.Warningf("failed to remove device %q from adapter %q: %v",
 					d.adapter.Path, d.Path, err)
@@ -394,7 +394,7 @@ func (d *device) connectProperties() {
 			return
 		}
 		d.Paired = value
-		d.updateState()   // Paired属性被修改，影响到下面使用的State和ConnectState
+		d.updateState() // Paired属性被修改，影响到下面使用的State和ConnectState
 		logger.Debugf("%s Paired: %v State: %v", d, value, d.State)
 
 		if d.Paired && d.connected && d.State == deviceStateConnected {

@@ -21,12 +21,12 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
+	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 )
 
 type TouchPadController struct {
-	touchPad *inputdevices.TouchPad
+	touchPad inputdevices.TouchPad
 }
 
 func NewTouchPadController(sessionConn *dbus.Conn) *TouchPadController {

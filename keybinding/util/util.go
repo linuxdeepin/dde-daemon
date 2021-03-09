@@ -49,7 +49,7 @@ func (kwa *KWinAccel) fix() {
 	kwa.DefaultKeystrokes = defaultKeystrokes
 }
 
-func GetAllKWinAccels(wm *wm.Wm) ([]KWinAccel, error) {
+func GetAllKWinAccels(wm wm.Wm) ([]KWinAccel, error) {
 	allJson, err := wm.GetAllAccels(0)
 	if err != nil {
 		return nil, err

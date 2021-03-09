@@ -37,7 +37,7 @@ func (c connectionSlice) Less(i, j int) bool { return c[i].Id < c[j].Id }
 func (c connectionSlice) Swap(i, j int)      { c[i], c[j] = c[j], c[i] }
 
 type connection struct {
-	nmConn   *nmdbus.ConnectionSettings
+	nmConn   nmdbus.ConnectionSettings
 	connType string
 
 	Path dbus.ObjectPath
@@ -318,7 +318,7 @@ func getWiredDeviceConnectionUuid(wiredDevPath dbus.ObjectPath) string {
 		return ""
 	}
 
-	apath, err := wired.ActiveConnection().Get(0)
+	apath, err := wired.Device().ActiveConnection().Get(0)
 	if err == nil && isObjPathValid(apath) {
 		aConn, _ := nmNewActiveConnection(apath)
 		if aConn != nil {
@@ -332,7 +332,7 @@ func getWiredDeviceConnectionUuid(wiredDevPath dbus.ObjectPath) string {
 		}
 	}
 
-	connPaths, _ := wired.AvailableConnections().Get(0)
+	connPaths, _ := wired.Device().AvailableConnections().Get(0)
 	for _, connPath := range connPaths {
 		if !isObjPathValid(connPath) {
 			continue
@@ -542,9 +542,9 @@ func (m *Manager) doDisconnectDevice(devPath dbus.ObjectPath) (err error) {
 		return
 	}
 
-	devState, _ := nmDev.State().Get(0)
+	devState, _ := nmDev.Device().State().Get(0)
 	if isDeviceStateInActivating(devState) {
-		err = nmDev.Disconnect(0)
+		err = nmDev.Device().Disconnect(0)
 		if err != nil {
 			logger.Error(err)
 		}

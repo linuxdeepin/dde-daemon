@@ -130,7 +130,7 @@ type stateHandler struct {
 }
 
 type deviceStateInfo struct {
-	nmDev          *nmdbus.Device
+	nmDev          nmdbus.Device
 	enabled        bool
 	devUdi         string
 	devType        uint32
@@ -200,7 +200,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 		return
 	}
 
-	deviceType, _ := nmDev.DeviceType().Get(0)
+	deviceType, _ := nmDev.Device().DeviceType().Get(0)
 	if !isDeviceTypeValid(deviceType) {
 		return
 	}
@@ -209,7 +209,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 	defer sh.locker.Unlock()
 	sh.devices[path] = &deviceStateInfo{nmDev: nmDev}
 	sh.devices[path].devType = deviceType
-	sh.devices[path].devUdi, _ = nmDev.Udi().Get(0)
+	sh.devices[path].devUdi, _ = nmDev.Device().Udi().Get(0)
 	enabled, err := sh.m.sysNetwork.IsDeviceEnabled(0, string(path))
 	if err == nil {
 		sh.devices[path].enabled = enabled
@@ -225,7 +225,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 
 	// connect signals
 	nmDev.InitSignalExt(sh.sysSigLoop, true)
-	_, err = nmDev.ConnectStateChanged(func(newState, oldState, reason uint32) {
+	_, err = nmDev.Device().ConnectStateChanged(func(newState, oldState, reason uint32) {
 		globalSessionActive = sh.m.isSessionActive()
 
 		logger.Debugf("device state changed, %d => %d, reason[%d] %s", oldState, newState, reason, deviceErrorTable[reason])

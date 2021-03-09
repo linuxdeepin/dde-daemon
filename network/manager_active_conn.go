@@ -350,11 +350,11 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 		return
 	}
 
-	deviceType, _ := nmDev.DeviceType().Get(0)
+	deviceType, _ := nmDev.Device().DeviceType().Get(0)
 	devType = getCustomDeviceType(deviceType)
-	devIfc, _ = nmDev.Interface().Get(0)
+	devIfc, _ = nmDev.Device().Interface().Get(0)
 	if devType == deviceModem {
-		devUdi, _ := nmDev.Udi().Get(0)
+		devUdi, _ := nmDev.Device().Udi().Get(0)
 		mobileNetworkType = mmGetModemMobileNetworkType(dbus.ObjectPath(devUdi))
 	}
 

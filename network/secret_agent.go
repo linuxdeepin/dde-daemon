@@ -52,9 +52,9 @@ type saveSecretsTask struct {
 
 type SecretAgent struct {
 	sessionSigLoop      *dbusutil.SignalLoop
-	secretService       *secrets.Service
+	secretService       secrets.Service
 	secretSessionPath   dbus.ObjectPath
-	defaultCollection   *secrets.Collection
+	defaultCollection   secrets.Collection
 	defaultCollectionMu sync.Mutex
 	tryUnlockColMu      sync.Mutex
 
@@ -105,7 +105,7 @@ func (sa *SecretAgent) getSaveSecretsTaskProcess(connPath dbus.ObjectPath,
 }
 
 // getDefaultCollection 获取默认密钥环，并且尝试解锁它。
-func (sa *SecretAgent) getDefaultCollection() (*secrets.Collection, error) {
+func (sa *SecretAgent) getDefaultCollection() (secrets.Collection, error) {
 	col, err := sa.getDefaultCollectionAux()
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ func (sa *SecretAgent) getDefaultCollection() (*secrets.Collection, error) {
 	return col, nil
 }
 
-func (sa *SecretAgent) getDefaultCollectionAux() (*secrets.Collection, error) {
+func (sa *SecretAgent) getDefaultCollectionAux() (secrets.Collection, error) {
 	sa.defaultCollectionMu.Lock()
 	defer sa.defaultCollectionMu.Unlock()
 
@@ -146,7 +146,7 @@ func (sa *SecretAgent) getDefaultCollectionAux() (*secrets.Collection, error) {
 	return collectionObj, err
 }
 
-func newSecretAgent(secServiceObj *secrets.Service, manager *Manager) (*SecretAgent, error) {
+func newSecretAgent(secServiceObj secrets.Service, manager *Manager) (*SecretAgent, error) {
 	_, sessionPath, err := secServiceObj.OpenSession(0, "plain", dbus.MakeVariant(""))
 	if err != nil {
 		return nil, err
@@ -203,7 +203,7 @@ func (sa *SecretAgent) deleteAll(uuid string) error {
 }
 
 // tryUnlockCollection 尝试解锁密钥环，如果返回错误则解锁失败。
-func (sa *SecretAgent) tryUnlockCollection(collection *secrets.Collection) error {
+func (sa *SecretAgent) tryUnlockCollection(collection secrets.Collection) error {
 	// 保证同时只有一个解锁对话框
 	sa.tryUnlockColMu.Lock()
 	defer sa.tryUnlockColMu.Unlock()

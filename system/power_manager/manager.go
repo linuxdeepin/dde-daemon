@@ -30,7 +30,7 @@ import (
 //go:generate dbusutil-gen em -type Manager
 type Manager struct {
 	service  *dbusutil.Service
-	objLogin *login1.Manager
+	objLogin login1.Manager
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {

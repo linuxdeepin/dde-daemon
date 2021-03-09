@@ -59,12 +59,12 @@ var globalSessionActive bool
 type Manager struct {
 	sysSigLoop         *dbusutil.SignalLoop
 	service            *dbusutil.Service
-	sysNetwork         *sysNetwork.Network
-	nmObjManager       *nmdbus.ObjectManager
+	sysNetwork         sysNetwork.Network
+	nmObjManager       nmdbus.ObjectManager
 	PropsMu            sync.RWMutex
-	sessionManager     *sessionmanager.SessionManager
+	sessionManager     sessionmanager.SessionManager
 	currentSessionPath dbus.ObjectPath
-	currentSession     *login1.Session
+	currentSession     login1.Session
 
 	// update by manager.go
 	State        uint32 // global networking state

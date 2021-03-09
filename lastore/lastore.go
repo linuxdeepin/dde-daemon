@@ -27,10 +27,10 @@ type Lastore struct {
 	lang           string
 	inhibitFd      dbus.UnixFD
 
-	power         *power.Power
-	core          *lastore.Lastore
-	sysDBusDaemon *ofdbus.DBus
-	notifications *notifications.Notifications
+	power         power.Power
+	core          lastore.Lastore
+	sysDBusDaemon ofdbus.DBus
+	notifications notifications.Notifications
 
 	syncConfig *dsync.Config
 
@@ -154,7 +154,7 @@ func (l *Lastore) initCore(systemBus *dbus.Conn) {
 	}
 
 	l.core.InitSignalExt(l.sysSigLoop, false)
-	err = l.core.JobList().ConnectChanged(func(hasValue bool, value []dbus.ObjectPath) {
+	err = l.core.Manager().JobList().ConnectChanged(func(hasValue bool, value []dbus.ObjectPath) {
 		if !hasValue {
 			return
 		}
@@ -177,7 +177,7 @@ func (l *Lastore) initCore(systemBus *dbus.Conn) {
 		}
 	})
 
-	jobList, err := l.core.JobList().Get(0)
+	jobList, err := l.core.Manager().JobList().Get(0)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -243,7 +243,7 @@ func (l *Lastore) createJobFailedActions(jobId string) []NotifyAction {
 			Id:   "retry",
 			Name: gettext.Tr("Retry"),
 			Callback: func() {
-				err := l.core.StartJob(dbus.FlagNoAutoStart, jobId)
+				err := l.core.Manager().StartJob(dbus.FlagNoAutoStart, jobId)
 				logger.Infof("StartJob %q : %v", jobId, err)
 			},
 		},
@@ -251,7 +251,7 @@ func (l *Lastore) createJobFailedActions(jobId string) []NotifyAction {
 			Id:   "cancel",
 			Name: gettext.Tr("Cancel"),
 			Callback: func() {
-				err := l.core.CleanJob(dbus.FlagNoAutoStart, jobId)
+				err := l.core.Manager().CleanJob(dbus.FlagNoAutoStart, jobId)
 				logger.Infof("CleanJob %q : %v", jobId, err)
 			},
 		},
@@ -312,7 +312,7 @@ func (l *Lastore) notifyJob(path dbus.ObjectPath) {
 			l.notifyAutoClean()
 		}
 	case UpdateSourceJobType, CustomUpdateJobType:
-		val, _ := l.core.UpdatablePackages().Get(0)
+		val, _ := l.core.Updater().UpdatablePackages().Get(0)
 		if status == SucceedStatus && len(val) > 0 &&
 			strings.Contains(info.Name, "+notify") {
 			l.notifyUpdateSource(l.createUpdateActions())

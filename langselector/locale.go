@@ -103,7 +103,7 @@ var (
 type LangSelector struct {
 	service      *dbusutil.Service
 	systemBus    *dbus.Conn
-	helper       *localehelper.LocaleHelper
+	helper       localehelper.LocaleHelper
 	localesCache LocaleInfos
 
 	PropsMu sync.RWMutex
@@ -559,7 +559,7 @@ func (lang *LangSelector) installPackages(pkgs []string) error {
 	}
 	systemBus := lang.systemBus
 	lastoreObj := lastore.NewLastore(systemBus)
-	jobPath, err := lastoreObj.InstallPackage(0, "",
+	jobPath, err := lastoreObj.Manager().InstallPackage(0, "",
 		strings.Join(pkgs, " "))
 	if err != nil {
 		return err

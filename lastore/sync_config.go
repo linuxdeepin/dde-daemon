@@ -30,9 +30,9 @@ const (
 func (sc *syncConfig) Get() (interface{}, error) {
 	var info syncData
 	info.Version = syncVersion
-	info.AutoCheckUpdates, _ = sc.l.core.AutoCheckUpdates().Get(0)
-	info.AutoClean, _ = sc.l.core.AutoClean().Get(0)
-	info.AutoDownloadUpdates, _ = sc.l.core.AutoDownloadUpdates().Get(0)
+	info.AutoCheckUpdates, _ = sc.l.core.Updater().AutoCheckUpdates().Get(0)
+	info.AutoClean, _ = sc.l.core.Manager().AutoClean().Get(0)
+	info.AutoDownloadUpdates, _ = sc.l.core.Updater().AutoDownloadUpdates().Get(0)
 	info.SmartMirrorEnabled, _ = smartMirrorEnabledGet()
 	return &info, nil
 }
@@ -43,15 +43,15 @@ func (sc *syncConfig) Set(data []byte) error {
 	if err != nil {
 		return err
 	}
-	err = sc.l.core.SetAutoCheckUpdates(0, info.AutoCheckUpdates)
+	err = sc.l.core.Updater().SetAutoCheckUpdates(0, info.AutoCheckUpdates)
 	if err != nil {
 		logger.Warning("Failed to set lastore auto check updates:", err)
 	}
-	err = sc.l.core.SetAutoClean(0, info.AutoClean)
+	err = sc.l.core.Manager().SetAutoClean(0, info.AutoClean)
 	if err != nil {
 		logger.Warning("Failed to set lastore auto clean:", err)
 	}
-	err = sc.l.core.SetAutoDownloadUpdates(0, info.AutoDownloadUpdates)
+	err = sc.l.core.Updater().SetAutoDownloadUpdates(0, info.AutoDownloadUpdates)
 	if err != nil {
 		logger.Warning("Failed to set lastore auto download updates:", err)
 	}

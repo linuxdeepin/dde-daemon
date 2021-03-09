@@ -22,7 +22,7 @@ type Scheduler struct {
 	signalLoop          *dbusutil.SignalLoop
 	db                  *gorm.DB
 	service             *dbusutil.Service
-	notifications       *notifications.Notifications
+	notifications       notifications.Notifications
 	notifyJobMap        map[uint32]*JobJSON // key is notification id
 	notifyJobMapMu      sync.Mutex
 	timerGroup          timerGroup

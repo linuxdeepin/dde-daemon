@@ -28,7 +28,7 @@ const (
 
 type Manager struct {
 	service   *dbusutil.Service
-	nmManager *nmdbus.Manager
+	nmManager nmdbus.Manager
 	sigLoop   *dbusutil.SignalLoop
 
 	PropsMu          sync.RWMutex

@@ -22,7 +22,7 @@ package keybinding
 import (
 	"errors"
 
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 	commonbl "pkg.deepin.io/lib/backlight/common"
 	kbdbl "pkg.deepin.io/lib/backlight/keyboard"
@@ -31,10 +31,10 @@ import (
 const backlightTypeKeyboard = 2
 
 type KbdLightController struct {
-	backlightHelper *backlight.Backlight
+	backlightHelper backlight.Backlight
 }
 
-func NewKbdLightController(backlightHelper *backlight.Backlight) *KbdLightController {
+func NewKbdLightController(backlightHelper backlight.Backlight) *KbdLightController {
 	return &KbdLightController{
 		backlightHelper: backlightHelper,
 	}

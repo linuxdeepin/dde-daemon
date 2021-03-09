@@ -55,7 +55,7 @@ func (b *Bluetooth) RemoveDevice(adapter, device dbus.ObjectPath) *dbus.Error {
 		removeDev.markNeedRemove(true)
 	} else {
 		// connection finish, allow to remove device directly
-		err = a.core.RemoveDevice(0, device)
+		err = a.core.Adapter().RemoveDevice(0, device)
 		if err != nil {
 			logger.Warningf("failed to remove device %q from adapter %q: %v",
 				device, adapter, err)
@@ -139,7 +139,7 @@ func (b *Bluetooth) RequestDiscovery(adapter dbus.ObjectPath) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
-	discovering, err := a.core.Discovering().Get(0)
+	discovering, err := a.core.Adapter().Discovering().Get(0)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -199,7 +199,7 @@ func (b *Bluetooth) SetAdapterPowered(adapter dbus.ObjectPath,
 	//Not scan timeout
 	a.discoveringTimeoutFlag = false
 
-	err = a.core.Powered().Set(0, powered)
+	err = a.core.Adapter().Powered().Set(0, powered)
 	if err != nil {
 		logger.Warningf("failed to set %s powered: %v", a, err)
 		return dbusutil.ToError(err)
@@ -215,7 +215,7 @@ func (b *Bluetooth) SetAdapterAlias(adapter dbus.ObjectPath, alias string) *dbus
 		return dbusutil.ToError(err)
 	}
 
-	err = a.core.Alias().Set(0, alias)
+	err = a.core.Adapter().Alias().Set(0, alias)
 	if err != nil {
 		logger.Warningf("failed to set %s alias: %v", a, err)
 		return dbusutil.ToError(err)
@@ -238,7 +238,7 @@ func (b *Bluetooth) SetAdapterDiscoverable(adapter dbus.ObjectPath,
 		return dbusutil.ToError(err)
 	}
 
-	err = a.core.Discoverable().Set(0, discoverable)
+	err = a.core.Adapter().Discoverable().Set(0, discoverable)
 	if err != nil {
 		logger.Warningf("failed to set %s discoverable: %v", a, err)
 		return dbusutil.ToError(err)
@@ -264,7 +264,7 @@ func (b *Bluetooth) SetAdapterDiscovering(adapter dbus.ObjectPath,
 	if discovering {
 		a.startDiscovery()
 	} else {
-		err = a.core.StopDiscovery(0)
+		err = a.core.Adapter().StopDiscovery(0)
 		if err != nil {
 			logger.Warningf("failed to stop discovery for %s: %v", a, err)
 			return dbusutil.ToError(err)
@@ -283,7 +283,7 @@ func (b *Bluetooth) SetAdapterDiscoverableTimeout(adapter dbus.ObjectPath,
 		return dbusutil.ToError(err)
 	}
 
-	err = a.core.DiscoverableTimeout().Set(0, discoverableTimeout)
+	err = a.core.Adapter().DiscoverableTimeout().Set(0, discoverableTimeout)
 	if err != nil {
 		logger.Warningf("failed to set %s discoverableTimeout: %v", a, err)
 		return dbusutil.ToError(err)

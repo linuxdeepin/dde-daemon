@@ -97,7 +97,7 @@ func pauseAllPlayers() {
 	logger.Debug("pause all players")
 	for _, playerName := range playerNames {
 		player := mpris2.NewMediaPlayer(sessionConn, playerName)
-		err := player.Pause(0)
+		err := player.Player().Pause(0)
 		if err != nil {
 			logger.Warningf("failed to pause player %s: %v", playerName, err)
 		}

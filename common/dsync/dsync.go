@@ -21,7 +21,7 @@ type Interface interface {
 type Config struct {
 	name       string
 	core       Interface
-	dbusDaemon *ofdbus.DBus
+	dbusDaemon ofdbus.DBus
 	path       dbus.ObjectPath
 	sigLoop    *dbusutil.SignalLoop
 	logger     *log.Logger

@@ -37,22 +37,22 @@ const (
 )
 
 type Manager struct {
-	wm             *wm.Wm
-	sysDaemon      *daemon.Daemon
+	wm             wm.Wm
+	sysDaemon      daemon.Daemon
 	systemSigLoop  *dbusutil.SignalLoop
 	mu             sync.RWMutex
 	userFile       string
 	builtinSets    map[string]func() error
-	gesture        *gesture.Gesture
-	dock           *dock.Dock
-	display        *display.Display
+	gesture        gesture.Gesture
+	dock           dock.Dock
+	display        display.Display
 	setting        *gio.Settings
 	tsSetting      *gio.Settings
 	enabled        bool
 	Infos          gestureInfos
-	sessionmanager *sessionmanager.SessionManager
-	clipboard      *clipboard.Clipboard
-	notification   *notification.Notification
+	sessionmanager sessionmanager.SessionManager
+	clipboard      clipboard.Clipboard
+	notification   notification.Notification
 }
 
 func newManager() (*Manager, error) {

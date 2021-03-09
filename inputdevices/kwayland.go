@@ -14,7 +14,7 @@ import (
 
 var (
 	globalWayland bool
-	kwinManager   *kwin.InputDeviceManager
+	kwinManager   kwin.InputDeviceManager
 	kwinIdList    []dbusutil.SignalHandlerId
 )
 

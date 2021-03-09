@@ -63,7 +63,7 @@ type KeyEventFunc func(ev *KeyEvent)
 type ShortcutManager struct {
 	conn         *x.Conn
 	dataConn     *x.Conn // conn for receive record event
-	daemonDaemon *daemon.Daemon
+	daemonDaemon daemon.Daemon
 
 	idShortcutMap     map[string]Shortcut
 	idShortcutMapMu   sync.Mutex
@@ -854,7 +854,7 @@ func (sm *ShortcutManager) FindConflictingKeystroke(ks *Keystroke) (*Keystroke, 
 	return nil, nil
 }
 
-func (sm *ShortcutManager) AddSystem(gsettings *gio.Settings, wmObj *wm.Wm) {
+func (sm *ShortcutManager) AddSystem(gsettings *gio.Settings, wmObj wm.Wm) {
 	logger.Debug("AddSystem")
 	idNameMap := getSystemIdNameMap()
 	allow, err := wmObj.CompositingAllowSwitch().Get(0)
@@ -960,7 +960,7 @@ func (sm *ShortcutManager) AddSpecial() {
 	sm.addWithoutLock(s0)
 }
 
-func (sm *ShortcutManager) AddKWin(wmObj *wm.Wm) {
+func (sm *ShortcutManager) AddKWin(wmObj wm.Wm) {
 	logger.Debug("AddKWin")
 	accels, err := util.GetAllKWinAccels(wmObj)
 	if err != nil {

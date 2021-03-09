@@ -2,7 +2,7 @@ package network
 
 import (
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 )
 
 func getSettingConnectionTimestamp(settings map[string]map[string]dbus.Variant) uint64 {
@@ -52,14 +52,14 @@ func getSettingString(settings map[string]map[string]dbus.Variant, key1, key2 st
 	return val
 }
 
-func setDeviceAutoConnect(d *networkmanager.Device, val bool) error {
-	autoConnect, err := d.Autoconnect().Get(0)
+func setDeviceAutoConnect(d networkmanager.Device, val bool) error {
+	autoConnect, err := d.Device().Autoconnect().Get(0)
 	if err != nil {
 		return err
 	}
 
 	if autoConnect != val {
-		err = d.Autoconnect().Set(0, val)
+		err = d.Device().Autoconnect().Set(0, val)
 		if err != nil {
 			return err
 		}
@@ -67,14 +67,14 @@ func setDeviceAutoConnect(d *networkmanager.Device, val bool) error {
 	return nil
 }
 
-func setDeviceManaged(d *networkmanager.Device, val bool) error {
-	managed, err := d.Managed().Get(0)
+func setDeviceManaged(d networkmanager.Device, val bool) error {
+	managed, err := d.Device().Managed().Get(0)
 	if err != nil {
 		return err
 	}
 
 	if managed != val {
-		err = d.Managed().Set(0, val)
+		err = d.Device().Managed().Set(0, val)
 		if err != nil {
 			return err
 		}

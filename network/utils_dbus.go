@@ -22,7 +22,7 @@ package network
 import (
 	"github.com/godbus/dbus"
 	dbusmgr "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"pkg.deepin.io/lib/dbusutil"
@@ -30,10 +30,10 @@ import (
 )
 
 var (
-	nmManager    *nmdbus.Manager
-	nmSettings   *nmdbus.Settings
-	loginManager *login1.Manager
-	dbusDaemon   *dbusmgr.DBus // system dbus daemon
+	nmManager    nmdbus.Manager
+	nmSettings   nmdbus.Settings
+	loginManager login1.Manager
+	dbusDaemon   dbusmgr.DBus // system dbus daemon
 )
 
 func (m *Manager) initDbusObjects() {

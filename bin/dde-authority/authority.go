@@ -34,9 +34,9 @@ type Authority struct {
 	count         uint64
 	mu            sync.Mutex
 	txs           map[uint64]Transaction
-	fprintManager *fprint.Fprintd
-	dbusDaemon    *ofdbus.DBus
-	accounts      *accounts.Accounts
+	fprintManager fprint.Fprintd
+	dbusDaemon    ofdbus.DBus
+	accounts      accounts.Accounts
 }
 
 func newAuthority(service *dbusutil.Service) *Authority {

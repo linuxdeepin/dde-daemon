@@ -38,7 +38,7 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 type Manager struct {
-	core      *timedate1.Timedate
+	core      timedate1.Timedate
 	service   *dbusutil.Service
 	PropsMu   sync.RWMutex
 	NTPServer string
@@ -78,7 +78,7 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	}, nil
 }
 
-func startNTPbyFirstBoot(core *timedate1.Timedate) error {
+func startNTPbyFirstBoot(core timedate1.Timedate) error {
 	filePath := "/var/lib/dde-daemon/firstBootFile"
 	err := syscall.Access(filePath, syscall.F_OK)
 	if err != nil {

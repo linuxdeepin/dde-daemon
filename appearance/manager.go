@@ -149,15 +149,15 @@ type Manager struct {
 	monitorMap     map[string]string
 	coordinateMap  map[string]*coordinate
 
-	userObj             *accounts.User
-	imageBlur           *accounts.ImageBlur
-	timeDate            *timedate.Timedate
-	sessionTimeDate     *sessiontimedate.Timedate
-	imageEffect         *imageeffect.ImageEffect
-	xSettings           *sessionmanager.XSettings
-	login1Manager       *login1.Manager
+	userObj             accounts.User
+	imageBlur           accounts.ImageBlur
+	timeDate            timedate.Timedate
+	sessionTimeDate     sessiontimedate.Timedate
+	imageEffect         imageeffect.ImageEffect
+	xSettings           sessionmanager.XSettings
+	login1Manager       login1.Manager
 	themeAutoTimer      *time.Timer
-	display             *display.Display
+	display             display.Display
 	latitude            float64
 	longitude           float64
 	locationValid       bool
@@ -179,7 +179,7 @@ type Manager struct {
 	desktopBgs      []string
 	greeterBg       string
 	curMonitorSpace string
-	wm              *wm.Wm
+	wm              wm.Wm
 
 	//nolint
 	signals *struct {

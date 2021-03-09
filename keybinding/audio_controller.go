@@ -21,8 +21,8 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	audio "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
+	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 	"pkg.deepin.io/gir/gio-2.0"
 )
@@ -47,13 +47,13 @@ const (
 
 type AudioController struct {
 	conn                   *dbus.Conn
-	audioDaemon            *audio.Audio
+	audioDaemon            audio.Audio
 	huaweiMicLedWorkaround *huaweiMicLedWorkaround
 	gsKeyboard             *gio.Settings
 }
 
 func NewAudioController(sessionConn *dbus.Conn,
-	backlightHelper *backlight.Backlight) *AudioController {
+	backlightHelper backlight.Backlight) *AudioController {
 	c := &AudioController{
 		conn:        sessionConn,
 		audioDaemon: audio.NewAudio(sessionConn),
@@ -232,7 +232,7 @@ func (c *AudioController) changeSinkVolume(raised bool) error {
 	return nil
 }
 
-func (c *AudioController) getDefaultSink() (*audio.Sink, error) {
+func (c *AudioController) getDefaultSink() (audio.Sink, error) {
 	sinkPath, err := c.audioDaemon.DefaultSink().Get(0)
 	if err != nil {
 		return nil, err
@@ -245,7 +245,7 @@ func (c *AudioController) getDefaultSink() (*audio.Sink, error) {
 	return sink, nil
 }
 
-func (c *AudioController) getDefaultSource() (*audio.Source, error) {
+func (c *AudioController) getDefaultSource() (audio.Source, error) {
 	sourcePath, err := c.audioDaemon.DefaultSource().Get(0)
 	if err != nil {
 		return nil, err

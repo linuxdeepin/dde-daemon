@@ -94,18 +94,18 @@ type Manager struct {
 
 	customShortcutManager *shortcuts.CustomShortcutManager
 
-	lockFront     *lockfront.LockFront
-	shutdownFront *shutdownfront.ShutdownFront
+	lockFront     lockfront.LockFront
+	shutdownFront shutdownfront.ShutdownFront
 
 	sessionSigLoop            *dbusutil.SignalLoop
 	systemSigLoop             *dbusutil.SignalLoop
-	startManager              *sessionmanager.StartManager
-	sessionManager            *sessionmanager.SessionManager
-	backlightHelper           *backlight.Backlight
-	keyboard                  *inputdevices.Keyboard
+	startManager              sessionmanager.StartManager
+	sessionManager            sessionmanager.SessionManager
+	backlightHelper           backlight.Backlight
+	keyboard                  inputdevices.Keyboard
 	keyboardLayout            string
-	wm                        *wm.Wm
-	keyEvent                  *keyevent.KeyEvent
+	wm                        wm.Wm
+	keyEvent                  keyevent.KeyEvent
 	specialKeycodeBindingList map[SpecialKeycodeMapKey]func()
 
 	// controllers

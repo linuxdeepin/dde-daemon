@@ -30,14 +30,14 @@ import (
 )
 
 type sleepInhibitor struct {
-	loginManager *login1.Manager
+	loginManager login1.Manager
 	fd           int
 
 	OnWakeup        func()
 	OnBeforeSuspend func()
 }
 
-func newSleepInhibitor(login1Manager *login1.Manager, daemon *daemon.Daemon) *sleepInhibitor {
+func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *sleepInhibitor {
 	inhibitor := &sleepInhibitor{
 		loginManager: login1Manager,
 		fd:           -1,

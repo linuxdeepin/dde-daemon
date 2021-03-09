@@ -88,12 +88,12 @@ type Manager struct {
 	tempUndockedFiles strv.Strv
 
 	// dbus objects:
-	launcher     *launcher.Launcher
-	ddeLauncher  *libDDELauncher.Launcher
-	wm           *wm.Wm
-	appsObj      *libApps.Apps
-	startManager *sessionmanager.StartManager
-	wmSwitcher   *wmswitcher.WMSwitcher
+	launcher     launcher.Launcher
+	ddeLauncher  libDDELauncher.Launcher
+	wm           wm.Wm
+	appsObj      libApps.Apps
+	startManager sessionmanager.StartManager
+	wmSwitcher   wmswitcher.WMSwitcher
 	wmName       string
 	//nolint
 	signals *struct {

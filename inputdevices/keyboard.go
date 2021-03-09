@@ -94,7 +94,7 @@ type Keyboard struct {
 	UserOptionList gsprop.Strv
 
 	setting   *gio.Settings
-	user      *accounts.User
+	user      accounts.User
 	layoutMap layoutMap
 
 	devNumber int

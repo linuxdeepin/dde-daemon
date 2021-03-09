@@ -111,12 +111,12 @@ type Bluetooth struct {
 	sigLoop       *dbusutil.SignalLoop
 	systemSigLoop *dbusutil.SignalLoop
 	config        *config
-	objectManager *bluez.ObjectManager
-	sysDBusDaemon *ofdbus.DBus
-	apiDevice     *apidevice.Device
+	objectManager bluez.ObjectManager
+	sysDBusDaemon ofdbus.DBus
+	apiDevice     apidevice.Device
 	agent         *agent
 	obexAgent     *obexAgent
-	obexManager   *obex.Manager
+	obexManager   obex.Manager
 
 	// adapter
 	adaptersLock sync.Mutex
@@ -621,18 +621,18 @@ func (b *Bluetooth) addAdapter(apath dbus.ObjectPath) {
 	// initialize adapter power state
 	b.config.addAdapterConfig(a.address)
 	cfgPowered := b.config.getAdapterConfigPowered(a.address)
-	err := a.core.Powered().Set(0, cfgPowered)
+	err := a.core.Adapter().Powered().Set(0, cfgPowered)
 	if err != nil {
 		logger.Warning(err)
 	}
 
-	err = a.core.DiscoverableTimeout().Set(0, 0)
+	err = a.core.Adapter().DiscoverableTimeout().Set(0, 0)
 	if err != nil {
 		logger.Warning(err)
 	}
 
 	if cfgPowered {
-		err = a.core.Discoverable().Set(0, b.config.Discoverable)
+		err = a.core.Adapter().Discoverable().Set(0, b.config.Discoverable)
 		if err != nil {
 			logger.Warning(err)
 		}
@@ -888,7 +888,7 @@ func (b *Bluetooth) sendFiles(dev *device, files []string) (dbus.ObjectPath, err
 	args := make(map[string]dbus.Variant)
 	args["Source"] = dbus.MakeVariant(dev.adapter.address) // 蓝牙适配器地址
 	args["Target"] = dbus.MakeVariant("opp")               // 连接方式「OPP」
-	sessionPath, err := b.obexManager.CreateSession(0, dev.Address, args)
+	sessionPath, err := b.obexManager.Client().CreateSession(0, dev.Address, args)
 	if err != nil {
 		logger.Warning("failed to create obex session:", err)
 		return "", err
@@ -908,7 +908,7 @@ func (b *Bluetooth) sendFiles(dev *device, files []string) (dbus.ObjectPath, err
 	return sessionPath, nil
 }
 
-func (b *Bluetooth) doSendFiles(session *obex.Session, files []string, totalSize uint64) {
+func (b *Bluetooth) doSendFiles(session obex.Session, files []string, totalSize uint64) {
 	sessionPath := session.Path_()
 	cancelCh := make(chan struct{})
 
@@ -1018,7 +1018,7 @@ func (b *Bluetooth) doSendFiles(session *obex.Session, files []string, totalSize
 		}
 	}
 
-	err = b.obexManager.RemoveSession(0, sessionPath)
+	err = b.obexManager.Client().RemoveSession(0, sessionPath)
 	if err != nil {
 		logger.Warning("failed to remove session:", err)
 	}
@@ -1069,7 +1069,7 @@ func (b *Bluetooth) emitTransferFailed(file string, sessionPath dbus.ObjectPath,
 // 监听bluez中adapter的电源设置,同步保存到配置文件中
 func (b *Bluetooth) connectCorePowered() {
 	for _, adapter := range b.adapters {
-		err := adapter.core.Powered().ConnectChanged(func(hasValue bool, value bool) {
+		err := adapter.core.Adapter().Powered().ConnectChanged(func(hasValue bool, value bool) {
 			if !hasValue {
 				return
 			}

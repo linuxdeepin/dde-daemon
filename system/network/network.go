@@ -103,8 +103,8 @@ type Network struct {
 	configMu   sync.Mutex
 	devices    map[dbus.ObjectPath]*device
 	devicesMu  sync.Mutex
-	nmManager  *networkmanager.Manager
-	nmSettings *networkmanager.Settings
+	nmManager  networkmanager.Manager
+	nmSettings networkmanager.Settings
 	sigLoop    *dbusutil.SignalLoop
 
 	// nolint
@@ -133,7 +133,7 @@ func (n *Network) init() error {
 
 type device struct {
 	iface    string
-	nmDevice *networkmanager.Device
+	nmDevice networkmanager.Device
 	type0    uint32
 }
 
@@ -245,10 +245,11 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		return nil
 	}
 
-	d, err := networkmanager.NewDevice(n.getSysBus(), devPath)
+	dev, err := networkmanager.NewDevice(n.getSysBus(), devPath)
 	if err != nil {
 		return err
 	}
+	d := dev.Device()
 	iface, err := d.Interface().Get(0)
 	if err != nil {
 		return err
@@ -259,7 +260,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		return err
 	}
 
-	d.InitSignalExt(n.sigLoop, true)
+	dev.InitSignalExt(n.sigLoop, true)
 	_, err = d.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
 		//logger.Debugf("device state changed %v newState %d", d.Path_(), newState)
 
@@ -273,7 +274,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		if !enabled {
 			if state >= nm.NM_DEVICE_STATE_PREPARE &&
 				state <= nm.NM_DEVICE_STATE_ACTIVATED {
-				logger.Debug("disconnect device", d.Path_())
+				logger.Debug("disconnect device", dev.Path_())
 				err = d.Disconnect(0)
 				if err != nil {
 					logger.Warning(err)
@@ -292,7 +293,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		}
 
 		for _, device := range n.devices {
-			if device.nmDevice == d {
+			if device.nmDevice == dev {
 				if config, ok := n.config.Devices[device.iface]; ok {
 					n.configMu.Lock()
 					n.config.Devices[iface] = config
@@ -312,7 +313,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 
 	n.devices[devPath] = &device{
 		iface:    iface,
-		nmDevice: d,
+		nmDevice: dev,
 		type0:    deviceType,
 	}
 
@@ -403,7 +404,7 @@ func (n *Network) enableDevice1(d *device) (cpath dbus.ObjectPath, err error) {
 		return "/", err
 	}
 
-	connPaths, err := d.nmDevice.AvailableConnections().Get(0)
+	connPaths, err := d.nmDevice.Device().AvailableConnections().Get(0)
 	if err != nil {
 		return "/", err
 	}
@@ -451,14 +452,14 @@ func (n *Network) disableDevice(d *device) error {
 		return err
 	}
 
-	state, err := d.nmDevice.State().Get(0)
+	state, err := d.nmDevice.Device().State().Get(0)
 	if err != nil {
 		return err
 	}
 
 	if state >= nm.NM_DEVICE_STATE_PREPARE &&
 		state <= nm.NM_DEVICE_STATE_ACTIVATED {
-		return d.nmDevice.Disconnect(0)
+		return d.nmDevice.Device().Disconnect(0)
 	}
 	return nil
 }
@@ -579,7 +580,7 @@ func (n *Network) toggleWirelessEnabled() (bool, error) {
 }
 
 type connSettings struct {
-	nmConn   *networkmanager.ConnectionSettings
+	nmConn   networkmanager.ConnectionSettings
 	uuid     string
 	settings map[string]map[string]dbus.Variant
 }
@@ -644,13 +645,13 @@ func (n *Network) deactivateConnectionByUuid(uuid string) {
 	}
 }
 
-func (n *Network) getActiveConnectionsByUuid(uuid string) ([]*networkmanager.ActiveConnection,
+func (n *Network) getActiveConnectionsByUuid(uuid string) ([]networkmanager.ActiveConnection,
 	error) {
 	activeConnPaths, err := n.nmManager.ActiveConnections().Get(0)
 	if err != nil {
 		return nil, err
 	}
-	var result []*networkmanager.ActiveConnection
+	var result []networkmanager.ActiveConnection
 	for _, activeConnPath := range activeConnPaths {
 		activeConn, err := networkmanager.NewActiveConnection(n.getSysBus(), activeConnPath)
 		if err != nil {

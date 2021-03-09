@@ -66,7 +66,7 @@ func (v apSecType) String() string {
 }
 
 type accessPoint struct {
-	nmAp    *nmdbus.AccessPoint
+	nmAp    nmdbus.AccessPoint
 	devPath dbus.ObjectPath
 
 	Ssid         string
@@ -142,7 +142,7 @@ func (a *accessPoint) updateProps() {
 	a.Frequency, _ = a.nmAp.Frequency().Get(0)
 }
 
-func getApSecType(ap *nmdbus.AccessPoint) apSecType {
+func getApSecType(ap nmdbus.AccessPoint) apSecType {
 	flags, _ := ap.Flags().Get(0)
 	wpaFlags, _ := ap.WpaFlags().Get(0)
 	rsnFlags, _ := ap.RsnFlags().Get(0)
@@ -276,7 +276,7 @@ func fixApSecTypeChange(uuid string, secType apSecType) (needUserEdit bool, err 
 		return
 	}
 
-	var conn *nmdbus.ConnectionSettings
+	var conn nmdbus.ConnectionSettings
 	conn, err = nmNewSettingsConnection(cpath)
 	if err != nil {
 		return
@@ -331,7 +331,7 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 	logger.Debugf("ActivateAccessPoint: uuid=%s, apPath=%s, devPath=%s", uuid, apPath, devPath)
 
 	cpath = "/"
-	var nmAp *nmdbus.AccessPoint
+	var nmAp nmdbus.AccessPoint
 	nmAp, err = nmNewAccessPoint(apPath)
 	if err != nil {
 		return
@@ -435,7 +435,7 @@ func (m *Manager) checkAPStrength() {
 			strength, _ := nmAp.Strength().Get(0)
 			ssid, _ := nmAp.Ssid().Get(0)
 
-			aPath, err := dev.nmDev.ActiveConnection().Get(0)
+			aPath, err := dev.nmDev.Device().ActiveConnection().Get(0)
 			if err != nil || !isObjPathValid(aPath) {
 				continue
 			}

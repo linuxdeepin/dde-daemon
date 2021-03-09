@@ -39,11 +39,11 @@ const (
 
 type Manager struct {
 	service           *dbusutil.Service
-	display           *libdisplay.Display
-	loginManager      *login1.Manager
+	display           libdisplay.Display
+	loginManager      login1.Manager
 	systemSigLoop     *dbusutil.SignalLoop
 	mu                sync.Mutex
-	sessions          map[string]*login1.Session
+	sessions          map[string]login1.Session
 	activeSessionType string
 
 	PropsMu  sync.RWMutex
@@ -60,7 +60,7 @@ var (
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	manager := &Manager{
 		service:  service,
-		sessions: make(map[string]*login1.Session),
+		sessions: make(map[string]login1.Session),
 	}
 	systemConn, err := dbus.SystemBus()
 	if err != nil {
@@ -239,7 +239,7 @@ func (m *Manager) setIsActive(val bool) bool {
 	return false
 }
 
-func (m *Manager) getActiveSession() *login1.Session {
+func (m *Manager) getActiveSession() login1.Session {
 	for _, session := range m.sessions {
 		active, err := session.Active().Get(0)
 		if err != nil {

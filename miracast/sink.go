@@ -26,9 +26,9 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wfd"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wifi"
+	audio "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
+	wfd "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wfd"
+	wifi "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.miracle.wifi"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
@@ -40,8 +40,8 @@ type SinkInfo struct {
 	Path      dbus.ObjectPath
 	LinkPath  dbus.ObjectPath
 
-	core   *wfd.Sink
-	peer   *wifi.Peer
+	core   wfd.Sink
+	peer   wifi.Peer
 	locker sync.Mutex
 }
 type SinkInfos []*SinkInfo

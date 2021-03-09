@@ -51,7 +51,7 @@ import (
 //go:generate dbusutil-gen em -type Daemon
 
 type Daemon struct {
-	loginManager  *login1.Manager
+	loginManager  login1.Manager
 	systemSigLoop *dbusutil.SignalLoop
 	service       *dbusutil.Service
 	signals       *struct { //nolint

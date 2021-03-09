@@ -64,7 +64,7 @@ type SystemInfo struct {
 type Daemon struct {
 	info          *SystemInfo
 	PropsMu       sync.RWMutex
-	systeminfo    *systeminfo.SystemInfo
+	systeminfo    systeminfo.SystemInfo
 	sigSystemLoop *dbusutil.SignalLoop
 	wg            sync.WaitGroup
 	*loader.ModuleBase

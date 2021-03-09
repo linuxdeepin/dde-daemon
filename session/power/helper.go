@@ -42,19 +42,19 @@ import (
 )
 
 type Helper struct {
-	Notifications *notifications.Notifications
+	Notifications notifications.Notifications
 
-	Power         *libpower.Power // sig
-	LoginManager  *login1.Manager // sig
-	SensorProxy   *sensorproxy.SensorProxy
-	SysDBusDaemon *ofdbus.DBus
-	Daemon        *daemon.Daemon
+	Power         libpower.Power // sig
+	LoginManager  login1.Manager // sig
+	SensorProxy   sensorproxy.SensorProxy
+	SysDBusDaemon ofdbus.DBus
+	Daemon        daemon.Daemon
 
-	SessionManager *sessionmanager.SessionManager
-	SessionWatcher *sessionwatcher.SessionWatcher
-	ShutdownFront  *shutdownfront.ShutdownFront
-	ScreenSaver    *screensaver.ScreenSaver // sig
-	Display        *display.Display
+	SessionManager sessionmanager.SessionManager
+	SessionWatcher sessionwatcher.SessionWatcher
+	ShutdownFront  shutdownfront.ShutdownFront
+	ScreenSaver    screensaver.ScreenSaver // sig
+	Display        display.Display
 
 	xConn *x.Conn
 }

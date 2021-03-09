@@ -76,9 +76,9 @@ type Manager struct {
 	items          map[string]*Item
 	itemsMutex     sync.Mutex
 
-	appsObj        *libApps.Apps
-	notifications  *notifications.Notifications
-	lastore        *libLastore.Lastore
+	appsObj        libApps.Apps
+	notifications  notifications.Notifications
+	lastore        libLastore.Lastore
 	pinyinEnabled  bool
 	desktopPkgMap  map[string]string
 	pkgCategoryMap map[string]CategoryID
@@ -211,7 +211,7 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	}
 
 	m.appsObj.InitSignalExt(m.sysSigLoop, true)
-	_, err = m.appsObj.ConnectEvent(func(filename string, _ uint32) {
+	_, err = m.appsObj.DesktopFileWatcher().ConnectEvent(func(filename string, _ uint32) {
 		if shouldCheckDesktopFile(filename) {
 			logger.Debug("DFWatcher event", filename)
 			m.delayHandleFileEvent(filename)
@@ -221,14 +221,14 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 		logger.Warning(err)
 	}
 
-	err = m.appsObj.WatchDirs(0, getDataDirsForWatch())
+	err = m.appsObj.LaunchedRecorder().WatchDirs(0, getDataDirsForWatch())
 	if err != nil {
 		logger.Warning(err)
 	}
 
-	_, err = m.appsObj.ConnectServiceRestarted(func() {
+	_, err = m.appsObj.LaunchedRecorder().ConnectServiceRestarted(func() {
 		if m.appsObj != nil {
-			err = m.appsObj.WatchDirs(0, getDataDirsForWatch())
+			err = m.appsObj.LaunchedRecorder().WatchDirs(0, getDataDirsForWatch())
 			if err != nil {
 				logger.Warning(err)
 			}
@@ -237,7 +237,7 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		logger.Warning(err)
 	}
-	_, err = m.appsObj.ConnectLaunched(func(path string) {
+	_, err = m.appsObj.LaunchedRecorder().ConnectLaunched(func(path string) {
 		item := m.getItemByPath(path)
 		if item == nil {
 			return

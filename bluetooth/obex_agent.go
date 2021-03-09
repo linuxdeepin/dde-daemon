@@ -54,7 +54,7 @@ type obexAgent struct {
 	service *dbusutil.Service
 	sigLoop *dbusutil.SignalLoop
 
-	obexManager *obex.Manager
+	obexManager obex.Manager
 
 	requestNotifyCh   chan bool
 	requestNotifyChMu sync.Mutex
@@ -67,7 +67,7 @@ type obexAgent struct {
 	acceptedSessions   map[dbus.ObjectPath]int
 	acceptedSessionsMu sync.Mutex
 
-	notify   *notifications.Notifications
+	notify   notifications.Notifications
 	notifyID uint32
 }
 
@@ -94,7 +94,7 @@ func (a *obexAgent) init() {
 
 // registerAgent 注册 OBEX 的代理
 func (a *obexAgent) registerAgent() {
-	err := a.obexManager.RegisterAgent(0, obexAgentDBusPath)
+	err := a.obexManager.AgentManager().RegisterAgent(0, obexAgentDBusPath)
 	if err != nil {
 		logger.Error("failed to register obex agent:", err)
 	}
@@ -103,7 +103,7 @@ func (a *obexAgent) registerAgent() {
 // nolint
 // unregisterAgent 注销 OBEX 的代理
 func (a *obexAgent) unregisterAgent() {
-	err := a.obexManager.UnregisterAgent(0, obexAgentDBusPath)
+	err := a.obexManager.AgentManager().UnregisterAgent(0, obexAgentDBusPath)
 	if err != nil {
 		logger.Error("failed to unregister obex agent:", err)
 	}
@@ -136,7 +136,7 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (filename string
 		return "", dbusutil.ToError(err)
 	}
 
-	deviceAddress, err := session.Destination().Get(0)
+	deviceAddress, err := session.Session().Destination().Get(0)
 	if err != nil {
 		logger.Warning("failed to get device address:", err)
 		return "", dbusutil.ToError(err)
@@ -168,7 +168,7 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (filename string
 	return filename, nil
 }
 
-func (a *obexAgent) isSessionAccepted(sessionPath dbus.ObjectPath, deviceName, filename string, transfer *obex.Transfer) (bool, error) {
+func (a *obexAgent) isSessionAccepted(sessionPath dbus.ObjectPath, deviceName, filename string, transfer obex.Transfer) (bool, error) {
 	a.acceptedSessionsMu.Lock()
 	defer a.acceptedSessionsMu.Unlock()
 
@@ -204,7 +204,7 @@ func (a *obexAgent) isSessionAccepted(sessionPath dbus.ObjectPath, deviceName, f
 	return true, nil
 }
 
-func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, transfer *obex.Transfer) {
+func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, transfer obex.Transfer) {
 	transfer.InitSignalExt(a.sigLoop, true)
 
 	fileSize, err := transfer.Size().Get(0)
@@ -331,7 +331,7 @@ func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, 
 }
 
 // notifyProgress 发送文件传输进度通知
-func (a *obexAgent) notifyProgress(notify *notifications.Notifications, replaceID uint32, filename string, device string, progress uint64) uint32 {
+func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID uint32, filename string, device string, progress uint64) uint32 {
 	var actions []string
 	var notifyID uint32
 	var err error
@@ -372,7 +372,7 @@ func (a *obexAgent) notifyProgress(notify *notifications.Notifications, replaceI
 }
 
 // notifyFailed 发送文件传输失败通知
-func (a *obexAgent) notifyFailed(notify *notifications.Notifications, replaceID uint32, isCancel bool) uint32 {
+func (a *obexAgent) notifyFailed(notify notifications.Notifications, replaceID uint32, isCancel bool) uint32 {
 	var body string
 	summary := gettext.Tr("Stop Receiving Files")
 	if isCancel {
@@ -468,7 +468,7 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 }
 
 // notifyReceiveFileTimeout 接收文件请求超时通知
-func (a *obexAgent) notifyReceiveFileTimeout(notify *notifications.Notifications, replaceID uint32, filename string) {
+func (a *obexAgent) notifyReceiveFileTimeout(notify notifications.Notifications, replaceID uint32, filename string) {
 	_, err := notify.Notify(0,
 		"dde-control-center",
 		replaceID,

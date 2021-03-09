@@ -34,8 +34,8 @@ import (
 )
 
 type device struct {
-	nmDev      *nmdbus.Device
-	mmDevModem *mmdbus.Modem
+	nmDev      nmdbus.Device
+	mmDevModem mmdbus.Modem
 	nmDevType  uint32
 	id         string
 	udi        string
@@ -120,7 +120,7 @@ func (m *Manager) adjustDeviceStatus() {
 
 		// 如果nmDevice在network启动之前就已经是密码待验证的状态，需要等待nm超时才能自动回连，导致wifi回连太慢
 		// 在这种情况下主动回连
-		stat, _ := nmDev.State().Get(0)
+		stat, _ := nmDev.Device().State().Get(0)
 		if stat == nm.NM_DEVICE_STATE_NEED_AUTH {
 			err := m.enableDevice(path, true, true)
 			if err != nil {
@@ -138,13 +138,13 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 
 	// ignore virtual network interfaces
 	if isVirtualDeviceIfc(nmDev) {
-		driver, _ := nmDev.Driver().Get(0)
+		driver, _ := nmDev.Device().Driver().Get(0)
 		err = fmt.Errorf("ignore virtual network interface which driver is %s %s", driver, devPath)
 		logger.Info(err)
 		return
 	}
 
-	devType, _ := nmDev.DeviceType().Get(0)
+	devType, _ := nmDev.Device().DeviceType().Get(0)
 	if !isDeviceTypeValid(devType) {
 		err = fmt.Errorf("ignore invalid device type %d", devType)
 		logger.Info(err)
@@ -156,8 +156,8 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		nmDevType: devType,
 		Path:      nmDev.Path_(),
 	}
-	dev.udi, _ = nmDev.Udi().Get(0)
-	dev.Driver, _ = nmDev.Driver().Get(0)
+	dev.udi, _ = nmDev.Device().Udi().Get(0)
+	dev.Driver, _ = nmDev.Device().Driver().Get(0)
 
 	dev.Vendor = nmGeneralGetDeviceDesc(devPath)
 	dev.UsbDevice = nmGeneralIsUsbDevice(devPath)
@@ -336,7 +336,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			dev.mmDevModem = mmDevModem
 
 			// connect properties
-			err = dev.mmDevModem.AccessTechnologies().ConnectChanged(func(hasValue bool,
+			err = dev.mmDevModem.Modem().AccessTechnologies().ConnectChanged(func(hasValue bool,
 				value uint32) {
 				if !m.isDeviceExists(devPath) {
 					return
@@ -352,10 +352,10 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			if err != nil {
 				logger.Warning(err)
 			}
-			accessTech, _ := mmDevModem.AccessTechnologies().Get(0)
+			accessTech, _ := mmDevModem.Modem().AccessTechnologies().Get(0)
 			dev.MobileNetworkType = mmDoGetModemMobileNetworkType(accessTech)
 
-			err = dev.mmDevModem.SignalQuality().ConnectChanged(func(hasValue bool,
+			err = dev.mmDevModem.Modem().SignalQuality().ConnectChanged(func(hasValue bool,
 				value mmdbus.ModemSignalQuality) {
 				if !m.isDeviceExists(devPath) {
 					return
@@ -377,7 +377,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 	}
 
 	// connect signals
-	_, err = dev.nmDev.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
+	_, err = dev.nmDev.Device().ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
 		logger.Debugf("device %s state changed, %d => %d, reason[%d] %s",
 			string(devPath), oldState, newState, reason, deviceErrorTable[reason])
 
@@ -400,7 +400,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		logger.Warning(err)
 	}
 
-	err = dev.nmDev.Interface().ConnectChanged(func(hasValue bool, value string) {
+	err = dev.nmDev.Device().Interface().ConnectChanged(func(hasValue bool, value string) {
 		if !hasValue {
 			return
 		}
@@ -414,7 +414,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		logger.Warning(err)
 	}
 
-	err = dev.nmDev.Managed().ConnectChanged(func(hasValue bool, value bool) {
+	err = dev.nmDev.Device().Managed().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
 		}
@@ -428,8 +428,8 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		logger.Warning(err)
 	}
 
-	dev.State, _ = nmDev.State().Get(0)
-	dev.Interface, _ = nmDev.Interface().Get(0)
+	dev.State, _ = nmDev.Device().State().Get(0)
+	dev.Interface, _ = nmDev.Device().Interface().Get(0)
 	// get device enable state from system network
 	enabled, _ := m.sysNetwork.IsDeviceEnabled(0, dev.Interface)
 	// adjust device enable state
@@ -677,20 +677,20 @@ func (m *Manager) listDeviceConnections(devPath dbus.ObjectPath) ([]dbus.ObjectP
 
 	// ignore virtual network interfaces
 	if isVirtualDeviceIfc(nmDev) {
-		driver, _ := nmDev.Driver().Get(0)
+		driver, _ := nmDev.Device().Driver().Get(0)
 		err = fmt.Errorf("ignore virtual network interface which driver is %s %s", driver, devPath)
 		logger.Info(err)
 		return nil, err
 	}
 
-	devType, _ := nmDev.DeviceType().Get(0)
+	devType, _ := nmDev.Device().DeviceType().Get(0)
 	if !isDeviceTypeValid(devType) {
 		err = fmt.Errorf("ignore invalid device type %d", devType)
 		logger.Info(err)
 		return nil, err
 	}
 
-	availableConnections, _ := nmDev.AvailableConnections().Get(0)
+	availableConnections, _ := nmDev.Device().AvailableConnections().Get(0)
 	return availableConnections, nil
 }
 
@@ -700,7 +700,7 @@ func (m *Manager) RequestWirelessScan() *dbus.Error {
 	defer m.devicesLock.Unlock()
 	if devices, ok := m.devices[deviceWifi]; ok {
 		for _, dev := range devices {
-			err := dev.nmDev.RequestScan(0, nil)
+			err := dev.nmDev.Wireless().RequestScan(0, nil)
 			if err != nil {
 				logger.Debug(err)
 			}
@@ -709,7 +709,7 @@ func (m *Manager) RequestWirelessScan() *dbus.Error {
 	return nil
 }
 
-func (m *Manager) wirelessReActiveConnection(nmDev *nmdbus.Device) error {
+func (m *Manager) wirelessReActiveConnection(nmDev nmdbus.Device) error {
 	wireless := nmDev.Wireless()
 	apPath, err := wireless.ActiveAccessPoint().Get(0)
 	if err != nil {
@@ -719,7 +719,7 @@ func (m *Manager) wirelessReActiveConnection(nmDev *nmdbus.Device) error {
 		logger.Debug("Invalid active access point path:", nmDev.Path_())
 		return nil
 	}
-	connPath, err := nmDev.ActiveConnection().Get(0)
+	connPath, err := nmDev.Device().ActiveConnection().Get(0)
 	if err != nil {
 		return err
 	}

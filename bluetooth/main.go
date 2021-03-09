@@ -66,7 +66,7 @@ func HandlePrepareForSleep(sleep bool) {
 		if !aobj.Powered {
 			continue
 		}
-		_ = aobj.core.Discoverable().Set(0, globalBluetooth.config.Discoverable)
+		_ = aobj.core.Adapter().Discoverable().Set(0, globalBluetooth.config.Discoverable)
 	}
 	globalBluetooth.tryConnectPairedDevices()
 }

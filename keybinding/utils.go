@@ -59,7 +59,7 @@ func resetGSettings(gs *gio.Settings) {
 	}
 }
 
-func resetKWin(wmObj *wm.Wm) error {
+func resetKWin(wmObj wm.Wm) error {
 	accels, err := util.GetAllKWinAccels(wmObj)
 	if err != nil {
 		return err

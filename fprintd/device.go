@@ -46,7 +46,7 @@ type IDevice interface {
 
 type Device struct {
 	service *dbusutil.Service
-	core    *fprint.Device
+	core    fprint.Device
 
 	ScanType string
 }

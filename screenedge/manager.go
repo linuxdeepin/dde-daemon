@@ -43,7 +43,7 @@ const (
 type Manager struct {
 	service        *dbusutil.Service
 	settings       *Settings
-	wm             *wm.Wm
+	wm             wm.Wm
 	sessionSigLoop *dbusutil.SignalLoop
 	syncConfig     *dsync.Config
 }

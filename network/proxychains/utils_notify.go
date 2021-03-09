@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	notification            *notifications.Notifications
+	notification            notifications.Notifications
 	notifyIconProxyEnabled  = "notification-network-proxy-enabled"
 	notifyIconProxyDisabled = "notification-network-proxy-disabled"
 )

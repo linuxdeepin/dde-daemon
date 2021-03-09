@@ -97,9 +97,9 @@ type Manager struct {
 	WeekBegins gsprop.Int `prop:"access:rw"`
 
 	settings *gio.Settings
-	td       *timedate1.Timedate
-	setter   *timedated.Timedated
-	userObj  *accounts.User
+	td       timedate1.Timedate
+	setter   timedated.Timedated
+	userObj  accounts.User
 
 	//nolint
 	signals *struct {

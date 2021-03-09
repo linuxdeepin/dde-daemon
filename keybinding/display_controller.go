@@ -21,8 +21,8 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
+	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 	"pkg.deepin.io/gir/gio-2.0"
 )
@@ -41,12 +41,12 @@ const (
 )
 
 type DisplayController struct {
-	display         *display.Display
-	backlightHelper *backlight.Backlight
+	display         display.Display
+	backlightHelper backlight.Backlight
 	gsKeyboard      *gio.Settings
 }
 
-func NewDisplayController(backlightHelper *backlight.Backlight, sessionConn *dbus.Conn) *DisplayController {
+func NewDisplayController(backlightHelper backlight.Backlight, sessionConn *dbus.Conn) *DisplayController {
 	c := &DisplayController{
 		backlightHelper: backlightHelper,
 		display:         display.NewDisplay(sessionConn),

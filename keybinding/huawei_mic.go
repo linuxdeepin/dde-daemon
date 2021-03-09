@@ -4,21 +4,21 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	"pkg.deepin.io/lib/pulse"
 )
 
 const huaweiMicLedName = "huawei::mic"
 
 type huaweiMicLedWorkaround struct {
-	backlightHelper   *backlight.Backlight
+	backlightHelper   backlight.Backlight
 	pulseCtx          *pulse.Context
 	defaultSourceName string
 	defaultSourceMute bool
 	quit              chan struct{}
 }
 
-func (c *AudioController) initHuaweiMicLedWorkaround(backlightHelper *backlight.Backlight) {
+func (c *AudioController) initHuaweiMicLedWorkaround(backlightHelper backlight.Backlight) {
 	fileInfo, err := os.Stat(filepath.Join("/sys/class/leds", huaweiMicLedName))
 	if err != nil {
 		return

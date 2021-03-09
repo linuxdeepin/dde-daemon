@@ -3,16 +3,16 @@ package shortcuts
 import (
 	"errors"
 
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"pkg.deepin.io/dde/daemon/keybinding/util"
 )
 
 type kWinShortcut struct {
 	BaseShortcut
-	wm *wm.Wm
+	wm wm.Wm
 }
 
-func newKWinShortcut(id, name string, keystrokes []string, wm *wm.Wm) *kWinShortcut {
+func newKWinShortcut(id, name string, keystrokes []string, wm wm.Wm) *kWinShortcut {
 	return &kWinShortcut{
 		BaseShortcut: BaseShortcut{
 			Id:         id,

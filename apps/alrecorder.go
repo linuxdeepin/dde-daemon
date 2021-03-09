@@ -45,7 +45,7 @@ type ALRecorder struct {
 	// key is SubRecorder.root
 	subRecorders      map[string]*SubRecorder
 	subRecordersMutex sync.RWMutex
-	loginManager      *login1.Manager
+	loginManager      login1.Manager
 
 	// nolint
 	signals *struct {

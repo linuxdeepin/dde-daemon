@@ -63,7 +63,7 @@ func (tx *FPrintTransaction) getUser() string {
 	}
 }
 
-func (tx *FPrintTransaction) getDevice() (*fprint.Device, error) {
+func (tx *FPrintTransaction) getDevice() (fprint.Device, error) {
 	devicePath, err := tx.parent.fprintManager.GetDefaultDevice(0)
 	if err != nil {
 		return nil, err
@@ -185,7 +185,7 @@ func (tx *FPrintTransaction) releaseOtherTx(devPath dbus.ObjectPath) {
 	tx.parent.releaseFprintTransaction(tx.id, devPath)
 }
 
-func (tx *FPrintTransaction) claimDevice(deviceObj *fprint.Device, user string) error {
+func (tx *FPrintTransaction) claimDevice(deviceObj fprint.Device, user string) error {
 	logger.Debug(tx, "claim device")
 
 	caps, err := deviceObj.GetCapabilities(0)
@@ -217,7 +217,7 @@ func (tx *FPrintTransaction) claimDevice(deviceObj *fprint.Device, user string) 
 
 var errClaimLost = errors.New("claim lost")
 
-func (tx *FPrintTransaction) verify(deviceObj *fprint.Device, user, scanType string) error {
+func (tx *FPrintTransaction) verify(deviceObj fprint.Device, user, scanType string) error {
 	if !tx.isClaimOk() {
 		return errClaimLost
 	}
@@ -290,12 +290,12 @@ func (tx *FPrintTransaction) verify(deviceObj *fprint.Device, user, scanType str
 	return errors.New("verify failed")
 }
 
-func shouldLimitVerifyTime(deviceObj *fprint.Device) bool {
+func shouldLimitVerifyTime(deviceObj fprint.Device) bool {
 	path := string(deviceObj.Path_())
 	return filepath.Base(path) != "huawei"
 }
 
-func (tx *FPrintTransaction) doVerify(deviceObj *fprint.Device, verifyResultCh chan verifyResult,
+func (tx *FPrintTransaction) doVerify(deviceObj fprint.Device, verifyResultCh chan verifyResult,
 	locale string) (ok, continue0 bool) {
 
 	if !tx.isClaimOk() {

@@ -36,11 +36,11 @@ func (*UadpAgent) GetInterfaceName() string {
 
 type UadpAgent struct {
 	service             *dbusutil.Service
-	secretService       *secrets.Service
+	secretService       secrets.Service
 	secretSessionPath   dbus.ObjectPath
-	defaultCollection   *secrets.Collection
+	defaultCollection   secrets.Collection
 	defaultCollectionMu sync.Mutex
-	uadpDaemon          *uadp.Uadp // 提供加解密接口
+	uadpDaemon          uadp.Uadp // 提供加解密接口
 	mu                  sync.Mutex
 
 	secretData map[string]string // 密钥缓存
@@ -239,7 +239,7 @@ func (u *UadpAgent) getExeKeyringKey(exePath string) (string, error) {
 	return keyringKey, nil
 }
 
-func (u *UadpAgent) getDefaultCollection() (*secrets.Collection, error) {
+func (u *UadpAgent) getDefaultCollection() (secrets.Collection, error) {
 	u.defaultCollectionMu.Lock()
 	defer u.defaultCollectionMu.Unlock()
 

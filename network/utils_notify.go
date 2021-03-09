@@ -57,7 +57,7 @@ const (
 
 var (
 	notifyEnabled       = true
-	notification        *notifications.Notifications
+	notification        notifications.Notifications
 	notifyId            uint32
 	notifyIdMu          sync.Mutex
 	globalNotifyManager *NotifyManager

@@ -49,8 +49,8 @@ type Manager struct {
 	submodules           map[string]submodule
 	inhibitor            *sleepInhibitor
 	inhibitFd            dbus.UnixFD
-	systemPower          *systemPower.Power
-	display              *display.Display
+	systemPower          systemPower.Power
+	display              display.Display
 
 	PropsMu sync.RWMutex
 	// 是否有盖子，一般笔记本电脑才有

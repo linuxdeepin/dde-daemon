@@ -25,7 +25,7 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keybind"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
@@ -34,7 +34,7 @@ import (
 var (
 	xconn  *x.Conn
 	_dconn *dbus.Conn
-	_self  *login1.Session
+	_self  login1.Session
 )
 
 const (

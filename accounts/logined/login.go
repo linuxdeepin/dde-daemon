@@ -37,7 +37,7 @@ import (
 type Manager struct {
 	service    *dbusutil.Service
 	sysSigLoop *dbusutil.SignalLoop
-	core       *login1.Manager
+	core       login1.Manager
 	logger     *log.Logger
 
 	userSessions map[uint32]SessionInfos

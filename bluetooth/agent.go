@@ -43,7 +43,7 @@ type authorize struct {
 
 type agent struct {
 	service      *dbusutil.Service
-	bluezManager *bluez.Manager
+	bluezManager bluez.Manager
 
 	b       *Bluetooth
 	rspChan chan authorize
@@ -230,17 +230,17 @@ func (a *agent) init() {
 
 func (a *agent) registerDefaultAgent() {
 	// register agent
-	err := a.bluezManager.RegisterAgent(0, agentDBusPath, "DisplayYesNo")
+	err := a.bluezManager.AgentManager().RegisterAgent(0, agentDBusPath, "DisplayYesNo")
 	if err != nil {
 		logger.Warning("failed to register agent:", err)
 		return
 	}
 
 	// request default agent
-	err = a.bluezManager.RequestDefaultAgent(0, agentDBusPath)
+	err = a.bluezManager.AgentManager().RequestDefaultAgent(0, agentDBusPath)
 	if err != nil {
 		logger.Warning("failed to become the default agent:", err)
-		err = a.bluezManager.UnregisterAgent(0, agentDBusPath)
+		err = a.bluezManager.AgentManager().UnregisterAgent(0, agentDBusPath)
 		if err != nil {
 			logger.Warning(err)
 		}
@@ -249,7 +249,7 @@ func (a *agent) registerDefaultAgent() {
 }
 
 func (a *agent) destroy() {
-	err := a.bluezManager.UnregisterAgent(0, agentDBusPath)
+	err := a.bluezManager.AgentManager().UnregisterAgent(0, agentDBusPath)
 	if err != nil {
 		logger.Warning(err)
 	}

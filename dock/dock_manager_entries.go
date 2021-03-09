@@ -52,7 +52,7 @@ func (m *Manager) markAppLaunched(appInfo *AppInfo) {
 			logger.Warning(err)
 		}
 
-		err = m.appsObj.MarkLaunched(0, file)
+		err = m.appsObj.LaunchedRecorder().MarkLaunched(0, file)
 		if err != nil {
 			logger.Debug(err)
 		}

@@ -44,7 +44,7 @@ const (
 
 const bluetoothDialog string = "dde-bluetooth-dialog"
 
-var globalNotifications *notifications.Notifications
+var globalNotifications notifications.Notifications
 var globalNotifyId uint32
 var globalNotifyMu sync.Mutex
 
