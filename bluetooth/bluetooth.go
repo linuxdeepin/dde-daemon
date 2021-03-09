@@ -645,12 +645,12 @@ func (b *Bluetooth) addAdapter(apath dbus.ObjectPath) {
 	a := newAdapter(b.systemSigLoop, apath)
 	// initialize adapter power state
 	b.config.addAdapterConfig(a.address)
-	//cfgPowered := b.config.getAdapterConfigPowered(a.address)
+	cfgPowered := b.config.getAdapterConfigPowered(a.address)
 
-	//err := a.core.Powered().Set(0, cfgPowered)
-	//if err != nil {
-	//	logger.Warning(err)
-	//}
+	err := a.core.Powered().Set(0, cfgPowered)
+	if err != nil {
+		logger.Warning(err)
+	}
 	logger.Debug("addAdapter!!!! ", a.Powered, a.Path)
 	if a.Powered {
 		a.core.DiscoverableTimeout().Set(0, 0)
