@@ -29,6 +29,7 @@ import (
 	_ "pkg.deepin.io/dde/daemon/image_effect"
 	_ "pkg.deepin.io/dde/daemon/system/airplane_mode"
 	_ "pkg.deepin.io/dde/daemon/system/gesture"
+	_ "pkg.deepin.io/dde/daemon/system/inputdevices"
 	_ "pkg.deepin.io/dde/daemon/system/keyevent"
 	_ "pkg.deepin.io/dde/daemon/system/network"
 	_ "pkg.deepin.io/dde/daemon/system/power"
