@@ -129,9 +129,9 @@ func (m *Manager) handlePower() {
 	case powerActionShutdown:
 		m.systemShutdown()
 	case powerActionSuspend:
-		m.systemSuspend()
+		m.systemSuspendByFront()
 	case powerActionHibernate:
-		m.systemHibernate()
+		m.systemHibernateByFront()
 	case powerActionTurnOffScreen:
 		if screenBlackLock {
 			systemLock()
