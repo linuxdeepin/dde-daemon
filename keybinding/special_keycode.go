@@ -119,7 +119,6 @@ func (m *Manager) handlePower() {
 	}
 
 	screenBlackLock := m.gsPower.GetBoolean("screen-black-lock")
-	sleepLock := m.gsPower.GetBoolean("sleep-lock") // NOTE : 实际上是待机，不是休眠
 
 	if onBattery {
 		powerPressAction = m.gsPower.GetEnum("battery-press-power-button")
@@ -130,19 +129,16 @@ func (m *Manager) handlePower() {
 	case powerActionShutdown:
 		m.systemShutdown()
 	case powerActionSuspend:
-		if sleepLock {
-			systemLock()
-		}
-		m.systemSuspend()
+		m.systemSuspendByFront()
 	case powerActionHibernate:
-		m.systemHibernate()
+		m.systemHibernateByFront()
 	case powerActionTurnOffScreen:
 		if screenBlackLock {
 			systemLock()
 		}
 		m.systemTurnOffScreen()
 	case powerActionShowUI:
-		cmd := "dde-shutdown -s"
+		cmd := "dde-lock -t"
 		go func() {
 			locked, err := m.sessionManager.Locked().Get(0)
 			if err != nil {

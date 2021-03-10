@@ -14,7 +14,7 @@ read/write
 按下电源按钮后执行的命令
 默认为 
 ```
-dde-shutdown
+dde-lock -t
 ```
 
 ### LidClosedAction
