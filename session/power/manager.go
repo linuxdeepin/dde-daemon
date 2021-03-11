@@ -137,6 +137,8 @@ type Manager struct {
 	// nolint
 	methods *struct {
 		SetPrepareSuspend func() `in:"suspendState"`
+		// 平板锁屏时息屏处理接口
+		SetScreenBlack func()
 	}
 }
 
@@ -412,5 +414,14 @@ func (m *Manager) permitLogind() {
 
 func (m *Manager) SetPrepareSuspend(v int) *dbus.Error {
 	m.setPrepareSuspend(v)
+	return nil
+}
+
+func (m *Manager) SetScreenBlack() *dbus.Error {
+	if v := m.submodules[submodulePSP]; v != nil {
+		if psp := v.(*powerSavePlan); psp != nil {
+			psp.screenBlack()
+		}
+	}
 	return nil
 }
