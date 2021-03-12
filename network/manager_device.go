@@ -436,9 +436,9 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 	// due to script in pre-up and pre-down, device will be always set as true or false,
 	// in this situation, the config kept in local file is not exact, config need be adjusted
 	if dev.State > nm.NM_DEVICE_STATE_DISCONNECTED && !enabled {
-		_, err = m.sysNetwork.EnableDevice(0, dev.Interface, true)
-		if err != nil {
-			logger.Warningf("set device enable failed, err: %v", err)
+		_, enableErr := m.sysNetwork.EnableDevice(0, dev.Interface, true)
+		if enableErr != nil {
+			logger.Warningf("set device enable failed, err: %v", enableErr)
 		}
 	}
 	dev.Managed = nmGeneralIsDeviceManaged(devPath)
