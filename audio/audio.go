@@ -781,10 +781,7 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 		logger.Warning(err)
 	}
 
-	err = s.SetMute(portConfig.Mute)
-	if err != nil {
-		logger.Warning(err)
-	}
+	s.setMute(portConfig.Mute)
 	a.IncreaseVolume.Set(portConfig.IncreaseVolume)
 	if portConfig.IncreaseVolume {
 		a.MaxUIVolume = increaseMaxVolume
@@ -807,10 +804,7 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 		logger.Warning(err)
 	}
 
-	err = s.SetMute(portConfig.Mute)
-	if err != nil {
-		logger.Warning(err)
-	}
+	s.setMute(portConfig.Mute)
 
 	if isPhyDev {
 		a.ReduceNoise.Set(portConfig.ReduceNoise)
