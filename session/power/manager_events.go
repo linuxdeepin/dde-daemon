@@ -114,6 +114,10 @@ func (m *Manager) handleWakeup() {
 	}
 
 	m.setDPMSModeOn()
+	err := m.display.RefreshBrightness(0)
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	ch := make(chan *dbus.Call, 1)
 	m.helper.Power.GoRefreshBatteries(0, ch)

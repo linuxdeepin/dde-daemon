@@ -25,6 +25,7 @@ import (
 	"syscall"
 
 	dbus "github.com/godbus/dbus"
+	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	systemPower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/dde/daemon/session/common"
@@ -47,6 +48,7 @@ type Manager struct {
 	inhibitor            *sleepInhibitor
 	inhibitFd            dbus.UnixFD
 	systemPower          *systemPower.Power
+	display              *display.Display
 
 	PropsMu sync.RWMutex
 	// 是否有盖子，一般笔记本电脑才有
@@ -225,6 +227,9 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		logger.Warning(err)
 	}
+
+	// 绑定com.deepin.daemon.Display的DBus
+	m.display = display.NewDisplay(sessionBus)
 
 	return m, nil
 }
