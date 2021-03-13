@@ -98,7 +98,7 @@ func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {
 //TODO bug55140 write sink'volume to audio's gsetting if machine is panguV
 func doSetSinkVolumeToGSetting(s *Sink, v float64) {
 	if s.audio.isPanguV {
-		iv := int32(floatPrecision(v) * 100.0)
+		iv := int32((floatPrecision(v) + 1e-6) * 100.0) //浮点计算需要+1e-6，防止*100后转int精度丢失，出现误差
 		if s.ActivePort.Name == "" {
 			logger.Debug("doSetVolumeToSetting->Sink Get a null activePort")
 			return

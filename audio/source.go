@@ -83,7 +83,7 @@ func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 //TODO bug55140 write source'volume to audio's gsetting if machine is panguV
 func doSetSourceVolumeToGSetting(s *Source, v float64) {
 	if s.audio.isPanguV {
-		iv := int32(floatPrecision(v) * 100.0)
+		iv := int32((floatPrecision(v) + 1e-6) * 100.0) //浮点计算需要+1e-6，防止*100后转int精度丢失，出现误差
 		if s.ActivePort.Name == "" {
 			if s.Name == AudioSourceName3 || s.Name == AudioSourceName4 {
 				s.audio.settings.SetInt("onboard-input-volume", iv)
