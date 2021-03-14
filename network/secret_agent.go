@@ -3,6 +3,7 @@ package network
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -350,7 +351,11 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	if isSecretDialogExist() {
 		return nil, err
 	}
-	cmd := exec.Command(nmSecretDialogBin)
+	// set GetSecrets timeout, default 25 seconds, now set 20 seconds
+	// https://developer.gnome.org/gio/stable/GDBusProxy.html#GDBusProxy--g-default-timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx,nmSecretDialogBin)
 	cmd.Stdin = bytes.NewReader(reqJSON)
 	var cmdOutBuf bytes.Buffer
 	cmd.Stdout = &cmdOutBuf
