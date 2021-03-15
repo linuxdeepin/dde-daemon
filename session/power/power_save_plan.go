@@ -824,3 +824,31 @@ func (mb *multiBrightnessWithPsm) getReferenceBrightnessWhilePsmPercentChanged(k
 	}
 	return 0, fmt.Errorf("not find Monitor %s's Brightness", key)
 }
+
+// 快速息屏
+func (psp *powerSavePlan) quickScreenBlack() {
+	manager := psp.manager
+	// 先判断关闭屏幕前是否锁屏
+	if manager.ScreenBlackLock.Get() {
+		manager.lockWaitShow(1*time.Second, true)
+	}
+
+	adjustBrightnessEnabled := manager.settings.GetBoolean(settingKeyAdjustBrightnessEnabled)
+	if adjustBrightnessEnabled {
+		err := psp.saveCurrentBrightness()
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			psp.stopScreensaver()
+			// set min brightness for all outputs
+			brightnessTable := make(map[string]float64)
+			for output := range psp.oldBrightnessTable {
+				brightnessTable[output] = 0.02
+			}
+			manager.setDisplayBrightness(brightnessTable)
+		}
+	} else {
+		logger.Debug("adjust brightness disabled")
+	}
+	manager.setDPMSModeOff()
+}

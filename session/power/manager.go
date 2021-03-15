@@ -420,7 +420,7 @@ func (m *Manager) SetPrepareSuspend(v int) *dbus.Error {
 func (m *Manager) SetScreenBlack() *dbus.Error {
 	if v := m.submodules[submodulePSP]; v != nil {
 		if psp := v.(*powerSavePlan); psp != nil {
-			psp.screenBlack()
+			psp.quickScreenBlack()
 		}
 	}
 	return nil
