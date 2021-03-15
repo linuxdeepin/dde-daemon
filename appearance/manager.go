@@ -41,12 +41,11 @@ import (
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	imageeffect "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.imageeffect"
+	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedate"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	timedate "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
-	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedate"
-	"pkg.deepin.io/lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
 	"pkg.deepin.io/dde/api/theme_thumb"
@@ -60,6 +59,7 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"pkg.deepin.io/lib/dbusutil/proxy"
+	"pkg.deepin.io/lib/log"
 	"pkg.deepin.io/lib/strv"
 	dutils "pkg.deepin.io/lib/utils"
 	"pkg.deepin.io/lib/xdg/basedir"
@@ -140,7 +140,7 @@ type Manager struct {
 	WallpaperURIs      gsprop.String
 	QtActiveColor      string `prop:"access:rw"`
 	// 社区版定制需求，保存窗口圆角值，默认 18
-	WindowRadius       gsprop.Int `prop:"access:rw"`
+	WindowRadius gsprop.Int `prop:"access:rw"`
 
 	wsLoopMap      map[string]*WSLoop
 	wsSchedulerMap map[string]*WSScheduler
@@ -508,7 +508,7 @@ func (m *Manager) init() error {
 	m.timeDate.InitSignalExt(m.sysSigLoop, true)
 
 	m.sessionTimeDate = sessiontimedate.NewTimedate(sessionBus)
-	m.sessionTimeDate.InitSignalExt(m.sessionSigLoop,true)
+	m.sessionTimeDate.InitSignalExt(m.sessionSigLoop, true)
 
 	zone, err := m.timeDate.Timezone().Get(0)
 	if err != nil {
@@ -1515,10 +1515,10 @@ func (m *Manager) updateNewVersionData() error {
 	primaryMonitor := reverseMonitorMap["Primary"]
 	slideshowConfig := make(mapMonitorWorkspaceWSPolicy)
 	slideShow := m.WallpaperSlideShow.Get()
+	workspaceCount, _ := m.wm.WorkspaceCount(0)
 	_, err := doUnmarshalWallpaperSlideshow(slideShow)
 	if err != nil {
 		// slideShow的内容无法解析为map[string]string数据表示低版本壁纸，进行数据格式转换
-		workspaceCount, _ := m.wm.WorkspaceCount(0)
 		for i := 1; i <= int(workspaceCount); i++ {
 			key := genMonitorKeyString(primaryMonitor, i)
 			slideshowConfig[key] = slideShow
@@ -1529,21 +1529,21 @@ func (m *Manager) updateNewVersionData() error {
 		}
 	}
 
+	// V20对应SP3, SP2阶段gsettings background-uris中部分数据丢失，SP2升到SP3通过窗管接口获取壁纸
 	monitorWorkspaceWallpaperURIs := make(mapMonitorWorkspaceWallpaperURIs)
-	backgroundURIs := m.getBackgroundURIs()
-	for i, uri := range backgroundURIs {
-		err := m.wm.SetWorkspaceBackgroundForMonitor(0, int32(i+1), primaryMonitor, uri)
-		if err != nil {
-			return fmt.Errorf("failed to set background:%v to workspace%v : %v", uri, i+1, err)
+	for monitorName, convertMonitorName := range m.monitorMap {
+		for i := int32(0); i < workspaceCount; i++ {
+			uri, err := m.wm.GetWorkspaceBackgroundForMonitor(0, i+1, monitorName)
+			if err != nil {
+				logger.Warningf("failed to get monitor:%v workspace:%v background:%v", monitorName, i+1, err)
+				continue
+			}
+
+			key := genMonitorKeyString(convertMonitorName, i+1)
+			monitorWorkspaceWallpaperURIs[key] = uri
 		}
-		key := genMonitorKeyString("Primary", i+1)
-		monitorWorkspaceWallpaperURIs[key] = uri
 	}
-	err = m.setPropertyWallpaperURIs(monitorWorkspaceWallpaperURIs)
-	if err != nil {
-		return err
-	}
-	return nil
+	return m.setPropertyWallpaperURIs(monitorWorkspaceWallpaperURIs)
 }
 
 func genMonitorKeyString(monitor string, idx interface{}) string {
