@@ -50,6 +50,8 @@ const checkRepeatTime = 1 * time.Second
 
 type connectionData map[string]map[string]dbus.Variant
 
+var globalSessionActive bool
+
 //go:generate dbusutil-gen em -type Manager,SecretAgent
 
 // Manager is the main DBus object for network module.
