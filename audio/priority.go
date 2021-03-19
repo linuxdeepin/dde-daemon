@@ -11,11 +11,13 @@ import (
 )
 
 const (
-	PortTypeBluetooth = iota
-	PortTypeHeadset
-	PortTypeSpeaker
-	PortTypeHdmi
-	PortTypeMultiChannel
+	PortTypeBluetooth    = iota // 蓝牙音频
+	PortTypeHeadset             // USB和3.5mm 耳麦
+	PortTypeBuiltin             // 内置扬声器和话筒
+	PortTypeHdmi                // HDMI
+	PortTypeLineIO              // 线缆输入输出
+	PortTypeMultiChannel        // 多声道
+	PortTypeUnknown             // 其他类型
 
 	PortTypeCount // 类型数量
 )
@@ -59,11 +61,20 @@ func GetPortType(cardName string, portName string) int {
 		return PortTypeMultiChannel
 	}
 
-	if contains(cardName, portName, "bluez") {
+	if contains(cardName, portName, "linein") ||
+		contains(cardName, portName, "lineout") {
+		return PortTypeLineIO
+	}
+
+	if contains(cardName, portName, "bluez") ||
+		contains(cardName, portName, "bluetooth") {
 		return PortTypeBluetooth
 	}
 
-	if contains(cardName, portName, "usb") {
+	if contains(cardName, portName, "usb") ||
+		contains(cardName, portName, "rear-mic") ||
+		contains(cardName, portName, "front-mic") ||
+		contains(cardName, portName, "headphone") {
 		return PortTypeHeadset
 	}
 
@@ -71,11 +82,13 @@ func GetPortType(cardName string, portName string) int {
 		return PortTypeHdmi
 	}
 
-	if contains(cardName, portName, "speaker") {
-		return PortTypeSpeaker
+	if contains(cardName, portName, "speaker") ||
+		contains(cardName, portName, "input-mic") {
+		return PortTypeBuiltin
+
 	}
 
-	return PortTypeHeadset
+	return PortTypeUnknown
 }
 
 func NewPriorities() *Priorities {
