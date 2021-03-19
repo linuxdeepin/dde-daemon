@@ -669,16 +669,6 @@ func (psp *powerSavePlan) HandleIdleOff() {
 	psp.interruptTasks()
 	psp.manager.setDPMSModeOn()
 	psp.resetBrightness()
-
-	_, err := os.Stat("/etc/deepin/no_suspend")
-	if err == nil {
-		if psp.manager.ScreenBlackLock.Get() {
-			//m.setDPMSModeOn()
-			//m.lockWaitShow(4 * time.Second)
-			psp.manager.doLock(false)
-			time.Sleep(time.Millisecond * 500)
-		}
-	}
 }
 
 func (psp *powerSavePlan) isWindowFullScreenAndFocused(xid x.Window) (bool, error) {
