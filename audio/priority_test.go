@@ -37,12 +37,12 @@ func Test_contains(t *testing.T) {
 
 func Test_GetPortType(t *testing.T) {
 	Convey("GetPortType", t, func(c C) {
-		c.So(GetPortType("hbc.abcd.1234", "world.abcd.1234"), ShouldEqual, PortTypeHeadset)
+		c.So(GetPortType("hbc.abcd.1234", "world.abcd.1234"), ShouldEqual, PortTypeUnknown)
 		c.So(GetPortType("bluez.abcd.1234", "world.abcd.1234"), ShouldEqual, PortTypeBluetooth)
 		c.So(GetPortType("hbc.abcd.1234", "bluez.abcd.1234"), ShouldEqual, PortTypeBluetooth)
 		c.So(GetPortType("usb.abcd.1234", "world.abcd.1234"), ShouldEqual, PortTypeHeadset)
 		c.So(GetPortType("hbc.abcd.1234", "usb.abcd.1234"), ShouldEqual, PortTypeHeadset)
-		c.So(GetPortType("hello.abcd.speaker", "world.abcd.1234"), ShouldEqual, PortTypeSpeaker)
+		c.So(GetPortType("hello.abcd.speaker", "world.abcd.1234"), ShouldEqual, PortTypeBuiltin)
 		c.So(GetPortType("hdmi.abcd.speaker", "world.abcd.1234"), ShouldEqual, PortTypeHdmi)
 	})
 }
@@ -52,16 +52,16 @@ func Test_IsInputTypeAfter(t *testing.T) {
 		pr := NewPriorities()
 		pr.defaultInit(CardList{})
 		c.So(pr.IsInputTypeAfter(PortTypeHeadset, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeBluetooth), ShouldBeFalse)
+		c.So(pr.IsInputTypeAfter(PortTypeBuiltin, PortTypeBluetooth), ShouldBeFalse)
 		c.So(pr.IsInputTypeAfter(PortTypeHdmi, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeHeadset), ShouldBeFalse)
-		c.So(pr.IsInputTypeAfter(PortTypeHdmi, PortTypeSpeaker), ShouldBeFalse)
+		c.So(pr.IsInputTypeAfter(PortTypeBuiltin, PortTypeHeadset), ShouldBeFalse)
+		c.So(pr.IsInputTypeAfter(PortTypeHdmi, PortTypeBuiltin), ShouldBeFalse)
 
 		c.So(pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeHeadset), ShouldBeTrue)
-		c.So(pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeSpeaker), ShouldBeTrue)
+		c.So(pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeBuiltin), ShouldBeTrue)
 		c.So(pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeHdmi), ShouldBeTrue)
-		c.So(pr.IsInputTypeAfter(PortTypeHeadset, PortTypeSpeaker), ShouldBeTrue)
-		c.So(pr.IsInputTypeAfter(PortTypeSpeaker, PortTypeHdmi), ShouldBeTrue)
+		c.So(pr.IsInputTypeAfter(PortTypeHeadset, PortTypeBuiltin), ShouldBeTrue)
+		c.So(pr.IsInputTypeAfter(PortTypeBuiltin, PortTypeHdmi), ShouldBeTrue)
 	})
 }
 
@@ -70,15 +70,15 @@ func Test_IsOutputTypeAfter(t *testing.T) {
 		pr := NewPriorities()
 		pr.defaultInit(CardList{})
 		c.So(pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeBluetooth), ShouldBeFalse)
+		c.So(pr.IsOutputTypeAfter(PortTypeBuiltin, PortTypeBluetooth), ShouldBeFalse)
 		c.So(pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeBluetooth), ShouldBeFalse)
-		c.So(pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeHeadset), ShouldBeFalse)
-		c.So(pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeSpeaker), ShouldBeFalse)
+		c.So(pr.IsOutputTypeAfter(PortTypeBuiltin, PortTypeHeadset), ShouldBeFalse)
+		c.So(pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeBuiltin), ShouldBeFalse)
 
 		c.So(pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeHeadset), ShouldBeTrue)
-		c.So(pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeSpeaker), ShouldBeTrue)
+		c.So(pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeBuiltin), ShouldBeTrue)
 		c.So(pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeHdmi), ShouldBeTrue)
-		c.So(pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeSpeaker), ShouldBeTrue)
-		c.So(pr.IsOutputTypeAfter(PortTypeSpeaker, PortTypeHdmi), ShouldBeTrue)
+		c.So(pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeBuiltin), ShouldBeTrue)
+		c.So(pr.IsOutputTypeAfter(PortTypeBuiltin, PortTypeHdmi), ShouldBeTrue)
 	})
 }
