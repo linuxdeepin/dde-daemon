@@ -351,9 +351,9 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	if isSecretDialogExist() {
 		return nil, err
 	}
-	// set GetSecrets timeout, default 25 seconds, now set 20 seconds
+	// set GetSecrets timeout, default 25 seconds, now set 60 seconds
 	// https://developer.gnome.org/gio/stable/GDBusProxy.html#GDBusProxy--g-default-timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 	cmd := exec.CommandContext(ctx,nmSecretDialogBin)
 	cmd.Stdin = bytes.NewReader(reqJSON)
