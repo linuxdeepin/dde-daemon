@@ -18,7 +18,7 @@ var logger = log.NewLogger("daemon/calendar")
 var dbFile = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/calendar/scheduler.db")
 
 func init() {
-	loader.Register(newModule())
+	//loader.Register(newModule())
 }
 
 type Module struct {
