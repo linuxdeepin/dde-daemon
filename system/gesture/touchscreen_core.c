@@ -55,40 +55,12 @@ void logger(const char *format, ...) {
 };
 #endif
 
-int direction_to_int(enum Direction d) {
-    switch (d) {
-        case DIR_NONE:
-            return 510;
-        case DIR_TOP:
-            return 511;
-        case DIR_RIGHT:
-            return 512;
-        case DIR_BOT:
-            return 513;
-        case DIR_LEFT:
-            return 514;
-        default:
-            return -1;
-    }
-}
-
-int gesture_to_int(enum GestureType g) {
-    switch (g) {
-        case GT_NONE:
-            return 550;
-        case GT_TAP:
-            return 551;
-        case GT_MOVEMENT:
-            return 552;
-        case GT_EDGE:
-            return 553;
-        default:
-            return -1;
-    }
-}
-
 int get_edge_type() {
-    return gesture_to_int(GT_EDGE);
+    return (int)GT_EDGE;
+}
+
+int get_movement_type() {
+    return (int)GT_MOVEMENT;
 }
 
 //set move stop time when it's edge event
@@ -100,6 +72,12 @@ set_edge_move_stop_time(int duration)
 		return ;
 	}
 	edge_move_stop_time = duration;
+}
+
+// udpate touchscreen first touch point info
+void update_first_point_relative_coordinate(double x, double y) {
+    start_point_scale.x = x / screen.width;
+    start_point_scale.y = y / screen.height;
 }
 
 //update touchscreen last touch point info
@@ -337,6 +315,7 @@ void handle_touch_event_down(struct libinput_event *event, struct movement *m) {
    	m[slot].t_end = m[slot].t_start;
    	m[slot].down = true;
 
+    update_first_point_relative_coordinate(m[slot].start.x, m[slot].start.y);
     update_last_point_relative_coordinate(m[slot].end.x, m[slot].end.y);
 
     if (cur_touch_finger_num(m) == 1)
@@ -476,9 +455,14 @@ gesture get_gesture(movement *m, list *ready) {
 		g.type = GT_TAP;
 	} else if (g.num > 1) {
 		g.type = GT_MOVEMENT;
-	} else if ((edge_dir = edge_move_direction(m, ready)) != DIR_NONE) {
-		g.type = GT_EDGE;
-		g.dir = edge_dir;
+	} else if (g.num == 1) {
+	    edge_dir = edge_move_direction(m, ready);
+	    if (edge_dir != DIR_NONE) {
+		    g.type = GT_EDGE;
+		    g.dir = edge_dir;
+		} else {
+		    g.type = GT_MOVEMENT;
+		}
 	}
 	return g;
 }
@@ -496,7 +480,7 @@ void handle_movements(movement *m) {
 	logger("Handle movements: got gesture\n");
 	print_gesture(&g);
 
-	handleTouchScreenEvent(gesture_to_int(g.type), direction_to_int(g.dir), g.num, last_point_scale.x, last_point_scale.y);
+	handleTouchScreenEvent((int)g.type, (int)g.dir, g.num, start_point_scale.x, start_point_scale.y, last_point_scale.x, last_point_scale.y);
 
 	list_destroy(ready);
 	logger("Handle movements: end\n");

@@ -8,19 +8,19 @@
 
 
 enum Direction {            // if applied to edges, will just denote the side of the edge
-	DIR_NONE = 510,
-	DIR_TOP = 511,          // movement towards top
-	DIR_RIGHT = 512,        // movement towards right
-	DIR_BOT = 513,          // movement towards bottom
-	DIR_LEFT = 514,         // movement towards left
+	DIR_NONE,
+	DIR_TOP,          // movement towards top
+	DIR_RIGHT,        // movement towards right
+	DIR_BOT,          // movement towards bottom
+	DIR_LEFT,         // movement towards left
 };
 typedef enum Direction Direction;
 
 enum GestureType {
-	GT_NONE = 550,          // not a gesture
-	GT_TAP = 551,           // single tap on the screen with no movement
-	GT_MOVEMENT = 552,      // general moving gesture
-	GT_EDGE = 553,        // movement starting on edge of screen
+	GT_NONE,          // not a gesture
+	GT_TAP,           // single tap on the screen with no movement
+	GT_MOVEMENT,      // general moving gesture
+	GT_EDGE,        // movement starting on edge of screen
 };
 
 typedef struct gesture {
@@ -54,6 +54,7 @@ static struct moveStop {         //calculate  move stop time
 } moveStop;
 
 static point last_point;
+static point start_point_scale;
 static point last_point_scale;
 static screeninfo screen;
 static int move_stop_distance = 1;
@@ -63,6 +64,7 @@ static Direction edge_move_stop_direction = DIR_NONE;
 static double min_edge_distance = 10.0;   // minimum gesture distance from edge (in mm)
 
 int get_edge_type();
+int get_movement_type();
 point get_last_point_scale();
 void set_edge_move_stop_time(int duration);
 void handle_movements(movement *m);

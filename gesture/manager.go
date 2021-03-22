@@ -22,6 +22,8 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/gsettings"
 	dutils "pkg.deepin.io/lib/utils"
+	clipboard "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.clipboard"
+	notification "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.notification"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -49,6 +51,8 @@ type Manager struct {
 	enabled        bool
 	Infos          gestureInfos
 	sessionmanager *sessionmanager.SessionManager
+	clipboard      *clipboard.Clipboard
+	notification   *notification.Notification
 }
 
 func newManager() (*Manager, error) {
@@ -116,6 +120,8 @@ func newManager() (*Manager, error) {
 		display:        display.NewDisplay(sessionConn),
 		sysDaemon:      daemon.NewDaemon(systemConn),
 		sessionmanager: sessionmanager.NewSessionManager(sessionConn),
+		clipboard:      clipboard.NewClipboard(sessionConn),
+		notification:   notification.NewNotification(sessionConn),
 	}
 
 	m.gesture = gesture.NewGesture(systemConn)
@@ -207,6 +213,24 @@ func (m *Manager) init() {
 		logger.Error("connect handleTouchEdgeEvent failed:", err)
 	}
 
+	_, err = m.gesture.ConnectTouchMovementEvent(func(direction string, fingers int32, startScaleX float64, startScaleY float64, endScaleX float64, endScaleY float64) {
+		should, err := m.shouldHandleEvent()
+		if err != nil {
+			logger.Error("shouldHandleEvent failed:", err)
+			return
+		}
+		if !should {
+			return
+		}
+
+		err = m.handleTouchMovementEvent(direction, fingers, startScaleX, startScaleY, endScaleX, endScaleY)
+		if err != nil {
+			logger.Error("handleTouchMovementEvent failed:", err)
+		}
+	})
+	if err != nil {
+		logger.Error("connect handleTouchMovementEvent failed:", err)
+	}
 	m.listenGSettingsChanged()
 }
 
@@ -333,31 +357,36 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(edge string, scaleX float64, scal
 }
 
 func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float64) error {
-	var cmd = ""
 	screenWight, err := m.display.ScreenWidth().Get(0)
 	if err != nil {
 		logger.Error("get display.ScreenWidth failed:", err)
 		return err
 	}
 
-	if edge == "left" {
+	switch edge {
+	case "left":
 		if scaleX*float64(screenWight) > 100 {
-			cmd = "xdotool key ctrl+alt+v"
+			return m.clipboard.Show(0)
 		}
-	}
-
-	if edge == "right" {
+	case "right":
 		if (1-scaleX)*float64(screenWight) > 100 {
-			cmd = "dbus-send --type=method_call --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
+			return m.notification.Show(0)
 		}
 	}
 
-	if len(cmd) != 0 {
-		out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("%s", string(out))
+	return nil
+}
+
+func (m *Manager) handleTouchMovementEvent(direction string, fingers int32, startScaleX float64, startScaleY float64, endScaleX float64, endScaleY float64) error{
+	if fingers == 1 {
+		switch direction {
+		case "left":
+			return m.clipboard.Hide(0)
+		case "right":
+			return m.notification.Hide(0)
 		}
 	}
+
 	return nil
 }
 

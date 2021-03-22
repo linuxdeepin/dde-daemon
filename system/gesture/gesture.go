@@ -169,6 +169,13 @@ type Manager struct {
 			scaleX, scaleY float64
 		}
 
+		TouchMovementEvent struct {
+			direction string
+			fingers   int32
+			startScaleX, startScaleY float64
+			endScaleX, endScaleY float64
+		}
+
 		TouchSinglePressTimeout struct {
 			time           int32
 			scaleX, scaleY float64
@@ -287,11 +294,17 @@ func handleTouchEvent(ty, btn C.int) {
 }
 
 //export handleTouchScreenEvent
-func handleTouchScreenEvent(ty, direction, fingers C.int, scaleX, scaleY C.double) {
-	if int(ty) == int(C.get_edge_type()) {
-		err := _m.service.Emit(_m, "TouchEdgeEvent", TouchDirection(direction).String(), float64(scaleX), float64(scaleY))
+func handleTouchScreenEvent(ty, direction, fingers C.int, startScaleX, startScaleY, endScaleX, endScaleY C.double) {
+	switch int(ty) {
+	case int(C.get_edge_type()):
+		err := _m.service.Emit(_m, "TouchEdgeEvent", TouchDirection(direction).String(), float64(endScaleX), float64(endScaleY))
 		if err != nil {
 			logger.Error("handleTouchScreenEvent failed:", err)
+		}
+	case int(C.get_movement_type()):
+		err := _m.service.Emit(_m, "TouchMovementEvent", TouchDirection(direction).String(), fingers, float64(startScaleX), float64(startScaleY), float64(endScaleX), float64(endScaleY))
+		if err != nil {
+			logger.Error("handleTouchMovementEvent failed:", err)
 		}
 	}
 }
