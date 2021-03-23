@@ -438,7 +438,7 @@ func (m *Manager) doPortalAuthentication() {
 		return
 	}
 	logger.Debugf("portal addr is %v", portal)
-	err = exec.Command(`xdg-open`, portal).Start()
+	err = exec.Command(`xdg-open`, portal).Run()
 	if err != nil {
 		logger.Warningf("xdg open windows failed, err: %v", err)
 		return

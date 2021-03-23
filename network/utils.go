@@ -154,7 +154,7 @@ func execWithIO(name string, arg ...string) (process *os.Process, stdin io.Write
 	go func() {
 		err = cmd.Wait()
 		if err != nil {
-			logger.Debug("failed to wait cmd:", err)
+			logger.Warning("failed to wait cmd:", err)
 			return
 		}
 	}()
