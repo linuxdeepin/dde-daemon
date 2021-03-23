@@ -496,6 +496,26 @@ func (b *Bluetooth) doRemoveDevice(devices []*device, i int) []*device {
 	return devices
 }
 
+func (b *Bluetooth) removeBackupDevice(dpath dbus.ObjectPath) {
+	b.backupDeviceLock.Lock()
+	defer b.backupDeviceLock.Unlock()
+
+	apath, i := b.findBackupDevice(dpath)
+	if i < 0 {
+		logger.Error("repeat remove device", dpath)
+		return
+	}
+
+	b.backupDevices[apath] = b.doRemoveBackupDevice(b.backupDevices[apath], i)
+}
+
+func (b *Bluetooth) doRemoveBackupDevice(devices []*backupDevice, i int) []*backupDevice {
+	copy(devices[i:], devices[i+1:])
+	devices[len(devices)-1] = nil
+	devices = devices[:len(devices)-1]
+	return devices
+}
+
 func (b *Bluetooth) isDeviceExists(dpath dbus.ObjectPath) bool {
 	_, i := b.getDeviceIndex(dpath)
 	return i >= 0

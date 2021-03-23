@@ -61,6 +61,10 @@ func (b *Bluetooth) RemoveDevice(adapter, device dbus.ObjectPath) *dbus.Error {
 				device, adapter, err)
 			return dbusutil.ToError(err)
 		}
+		// 扫描结束后删除备份数据中的设备
+		if a.discoveringTimeoutFlag {
+			b.removeBackupDevice(device)
+		}
 	}
 	return nil
 }
