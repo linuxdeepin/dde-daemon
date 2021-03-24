@@ -22,11 +22,14 @@ package grub2
 import (
 	"os"
 	"os/exec"
+	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/godbus/dbus"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/utils"
+	dutils "pkg.deepin.io/lib/utils"
 )
 
 const (
@@ -71,16 +74,33 @@ func (theme *Theme) GetBackground() (background string, busErr *dbus.Error) {
 		_, err := os.Stat(defaultGrubBackground)
 		if err != nil {
 			if os.IsNotExist(err) {
-				return fallbackGrubBackground, nil
+				background = fallbackGrubBackground
+			} else {
+				return "", dbusutil.ToError(err)
 			}
-			return "", dbusutil.ToError(err)
 		} else {
-			return defaultGrubBackground, nil
+			background = defaultGrubBackground
 		}
 	} else if strings.Contains(themeFile, "/deepin-fallback/") {
-		return fallbackGrubBackground, nil
+		background = fallbackGrubBackground
 	} else {
 		return "", nil
+	}
+
+	if len(background) == 0 {
+		return "", nil
+	} else {
+
+		tmpBackground := "dde-grub-background" + path.Ext(defaultGrubBackground)
+		backGroundTmpPath := filepath.Join("/tmp", tmpBackground)
+		//copy file to /tmp
+		err := dutils.CopyFile(background, backGroundTmpPath)
+		if err != nil {
+			return "", dbusutil.ToError(err)
+		}
+		logger.Debugf("Copy file %s to %s", background, backGroundTmpPath)
+
+		return backGroundTmpPath, nil
 	}
 }
 
