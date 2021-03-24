@@ -250,12 +250,9 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			dev.ActiveAp = value
 			m.updatePropDevices()
 
-			// Re-active connection if wireless 'ActiveAccessPoint' not equal active connection 'SpecificObject'
-			// such as wifi roaming, but the active connection state is activated
-			err := m.wirelessReActiveConnection(nmDev)
-			if err != nil {
-				logger.Warning("Failed to re-active connection:", err)
-			}
+			// when wifi is roaming, wpa and network-manager will deal this situation,
+			// dde dont need try to re active connection or may cause error connection in OPT env
+			// this case always means nm or wpa has bug, fix nm or wpa is better
 		})
 		if err != nil {
 			logger.Warning(err)
