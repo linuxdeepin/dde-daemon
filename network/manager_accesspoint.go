@@ -138,16 +138,32 @@ func (m *Manager) destroyAccessPoint(ap *accessPoint) {
 func (a *accessPoint) updateProps() {
 	ssid, _ := a.nmAp.Ssid().Get(0)
 	a.Ssid = decodeSsid(ssid)
-	a.Secured = getApSecType(a.nmAp) != apSecNone
-	a.SecuredInEap = getApSecType(a.nmAp) == apSecEap
 	a.Strength, _ = a.nmAp.Strength().Get(0)
+	secTyp, err := getApSecType(a.nmAp)
+	if err != nil {
+		logger.Warningf("get ap sec typ failed, err: %v", err)
+		return
+	}
+	a.Secured = secTyp != apSecNone
+	a.SecuredInEap = secTyp == apSecEap
+
 }
 
-func getApSecType(ap *nmdbus.AccessPoint) apSecType {
-	flags, _ := ap.Flags().Get(0)
-	wpaFlags, _ := ap.WpaFlags().Get(0)
-	rsnFlags, _ := ap.RsnFlags().Get(0)
-	return doParseApSecType(flags, wpaFlags, rsnFlags)
+func getApSecType(ap *nmdbus.AccessPoint) (apSecType, error) {
+	flags, err := ap.Flags().Get(0)
+	if err != nil {
+		return 0, err
+	}
+
+	wpaFlags, err := ap.WpaFlags().Get(0)
+	if err != nil {
+		return 0, err
+	}
+	rsnFlags, err := ap.RsnFlags().Get(0)
+	if err != nil {
+		return 0, err
+	}
+	return doParseApSecType(flags, wpaFlags, rsnFlags), nil
 }
 
 func doParseApSecType(flags, wpaFlags, rsnFlags uint32) apSecType {
@@ -322,11 +338,15 @@ func fixApSecTypeChange(uuid string, secType apSecType) (needUserEdit bool, err 
 		return
 	}
 
+	logger.Debugf(">>>>>> conn data: #%v", connData)
+
 	secTypeOld, err := getApSecTypeFromConnData(connData)
 	if err != nil {
 		logger.Warning("failed to get apSecType from connData")
 		return false, nil
 	}
+
+	logger.Debugf(">>>>>> current sec type is %s", secTypeOld.String())
 
 	if secTypeOld == secType {
 		return
@@ -353,6 +373,7 @@ func fixApSecTypeChange(uuid string, secType apSecType) (needUserEdit bool, err 
 		setSettingIP6ConfigRoutes(connData, getSettingIP6ConfigRoutes(connData))
 	}
 
+	logger.Debugf(">>>>>> update conn data: #%v", connData)
 	err = conn.Update(0, connData)
 	return
 }
@@ -360,23 +381,31 @@ func fixApSecTypeChange(uuid string, secType apSecType) (needUserEdit bool, err 
 // ActivateAccessPoint add and activate connection for access point.
 func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPath) (cpath dbus.ObjectPath, err error) {
 	logger.Debugf("ActivateAccessPoint: uuid=%s, apPath=%s, devPath=%s", uuid, apPath, devPath)
-
 	cpath = "/"
+
 	var nmAp *nmdbus.AccessPoint
 	nmAp, err = nmNewAccessPoint(apPath)
 	if err != nil {
+		logger.Debugf("new access point failed, err: %v", err)
 		return
 	}
-	secType := getApSecType(nmAp)
+	secType, err := getApSecType(nmAp)
+	if err != nil {
+		logger.Warningf("get ap sec typ failed, err: %v", err)
+	}
 	if uuid != "" {
-		var needUserEdit bool
-		needUserEdit, err = fixApSecTypeChange(uuid, secType)
-		if err != nil {
-			return
-		}
-		if needUserEdit {
-			err = errors.New("need user edit")
-			return
+		// if get sec type success, should fix ap typ
+		if err == nil {
+			logger.Debugf("get type success, ap sec typ: %v", secType)
+			var needUserEdit bool
+			needUserEdit, err = fixApSecTypeChange(uuid, secType)
+			if err != nil {
+				return
+			}
+			if needUserEdit {
+				err = errors.New("need user edit")
+				return
+			}
 		}
 		cpath, err = m.activateConnection(uuid, devPath)
 	} else {
