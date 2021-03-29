@@ -30,22 +30,23 @@ const (
 	tsSchemaKeyShortPress   = "shortpress-duration"
 	tsSchemaKeyEdgeMoveStop = "edgemovestop-duration"
 	tsSchemaKeyBlacklist    = "longpress-blacklist"
+	padEnv                  = "Deepin-tablet"
 )
 
 type Manager struct {
-	wm            *wm.Wm
-	sysDaemon     *daemon.Daemon
-	systemSigLoop *dbusutil.SignalLoop
-	mu            sync.RWMutex
-	userFile      string
-	builtinSets   map[string]func() error
-	gesture       *gesture.Gesture
-	dock          *dock.Dock
-	display       *display.Display
-	setting       *gio.Settings
-	tsSetting     *gio.Settings
-	enabled       bool
-	Infos         gestureInfos
+	wm             *wm.Wm
+	sysDaemon      *daemon.Daemon
+	systemSigLoop  *dbusutil.SignalLoop
+	mu             sync.RWMutex
+	userFile       string
+	builtinSets    map[string]func() error
+	gesture        *gesture.Gesture
+	dock           *dock.Dock
+	display        *display.Display
+	setting        *gio.Settings
+	tsSetting      *gio.Settings
+	enabled        bool
+	Infos          gestureInfos
 	sessionmanager *sessionmanager.SessionManager
 	//nolint
 	methods *struct {
@@ -113,16 +114,16 @@ func newManager() (*Manager, error) {
 	}
 
 	m := &Manager{
-		userFile:  configUserPath,
-		Infos:     infos,
-		setting:   setting,
-		tsSetting: tsSetting,
-		enabled:   setting.GetBoolean(gsKeyEnabled),
-		wm:        wm.NewWm(sessionConn),
-		dock:      dock.NewDock(sessionConn),
-		display:   display.NewDisplay(sessionConn),
-		sysDaemon: daemon.NewDaemon(systemConn),
-		sessionmanager:sessionmanager.NewSessionManager(sessionConn),
+		userFile:       configUserPath,
+		Infos:          infos,
+		setting:        setting,
+		tsSetting:      tsSetting,
+		enabled:        setting.GetBoolean(gsKeyEnabled),
+		wm:             wm.NewWm(sessionConn),
+		dock:           dock.NewDock(sessionConn),
+		display:        display.NewDisplay(sessionConn),
+		sysDaemon:      daemon.NewDaemon(systemConn),
+		sessionmanager: sessionmanager.NewSessionManager(sessionConn),
 	}
 
 	m.gesture = gesture.NewGesture(systemConn)
@@ -137,6 +138,11 @@ func (m *Manager) destroy() {
 }
 
 func (m *Manager) init() {
+	// 平板下屏蔽手勢
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		return
+	}
+
 	m.initBuiltinSets()
 	err := m.sysDaemon.SetLongPressDuration(0, uint32(m.tsSetting.GetInt(tsSchemaKeyLongPress)))
 	if err != nil {
@@ -153,6 +159,7 @@ func (m *Manager) init() {
 
 	m.systemSigLoop.Start()
 	m.gesture.InitSignalExt(m.systemSigLoop, true)
+
 	_, err = m.gesture.ConnectEvent(func(name string, direction string, fingers int32) {
 		should, err := m.shouldHandleEvent()
 		if err != nil {
@@ -218,11 +225,6 @@ func (m *Manager) init() {
 }
 
 func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
-	// cancel gesture in tablet environment
-	if strings.Contains(os.Getenv("XDG_CURRENT_DESKTOP"), "DeepinTablet") {
-		return true;
-	}
-
 	// allow right button up when kbd grabbed
 	if (info.Event.Name != "touch right button" || info.Event.Direction != "up") && isKbdAlreadyGrabbed() {
 		logger.Debug("another process grabbed keyboard, not exec action")
@@ -360,13 +362,13 @@ func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float
 	}
 
 	if edge == "left" {
-		if scaleX * float64(screenWight) > 100 {
+		if scaleX*float64(screenWight) > 100 {
 			cmd = "xdotool key ctrl+alt+v"
 		}
 	}
 
 	if edge == "right" {
-		if (1 - scaleX) * float64(screenWight) > 100 {
+		if (1-scaleX)*float64(screenWight) > 100 {
 			cmd = "dbus-send --type=method_call --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
 		}
 	}
