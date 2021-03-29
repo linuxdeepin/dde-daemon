@@ -204,32 +204,7 @@ func (m *Manager) initHandlers() {
 
 	// handle Switch Kbd Layout
 	m.handlers[ActionTypeSwitchKbdLayout] = func(ev *KeyEvent) {
-		logger.Debug("Switch Kbd Layout state", m.switchKbdLayoutState)
-		flags := m.ShortcutSwitchLayout.Get()
-		action := ev.Shortcut.GetAction()
-		arg, ok := action.Arg.(uint32)
-		if !ok {
-			logger.Warning(ErrTypeAssertionFail)
-			return
-		}
-
-		if arg&flags == 0 {
-			return
-		}
-
-		switch m.switchKbdLayoutState {
-		case SKLStateNone:
-			m.switchKbdLayoutState = SKLStateWait
-			go m.sklWait()
-
-		case SKLStateWait:
-			m.switchKbdLayoutState = SKLStateOSDShown
-			m.terminateSKLWait()
-			showOSD("SwitchLayout")
-
-		case SKLStateOSDShown:
-			showOSD("SwitchLayout")
-		}
+		logger.Debug("Switch Kbd Layout shortcut was disbaled by TASK-67900")
 	}
 
 	m.handlers[ActionTypeShowControlCenter] = func(ev *KeyEvent) {
