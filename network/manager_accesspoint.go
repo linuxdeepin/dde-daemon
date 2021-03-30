@@ -389,6 +389,23 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 		logger.Debugf("new access point failed, err: %v", err)
 		return
 	}
+
+	// adjust uuid
+	ssid, err := nmAp.Ssid().Get(0)
+	// if ap exist now, but uuid not exist or /, need adjust uuid
+	if err == nil && (uuid == "" || uuid == `/`) {
+		logger.Debugf("need adjust uuid, ap: %s", apPath)
+		wirelessCons := m.connections[connectionWireless]
+		for _, conn := range wirelessCons {
+			// check if ssid has already config
+			if conn.Ssid == string(ssid) {
+				logger.Debugf("ssid has conn settings #%v already, fix uuid", conn)
+				uuid = conn.Uuid
+				break
+			}
+		}
+	}
+
 	secType, err := getApSecType(nmAp)
 	if err != nil {
 		logger.Warningf("get ap sec typ failed, err: %v", err)
