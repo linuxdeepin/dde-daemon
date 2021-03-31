@@ -613,7 +613,7 @@ func nmGetAccessPoints(devPath dbus.ObjectPath) (apPaths []dbus.ObjectPath) {
 }
 
 func nmGetManagerState() (state uint32) {
-	state, _ = nmManager.State().Get(0)
+	state, _ = nmManager.PropState().Get(0)
 	return
 }
 

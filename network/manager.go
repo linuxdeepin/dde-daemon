@@ -214,7 +214,7 @@ func (m *Manager) init() {
 	m.initSysNetwork(systemBus)
 
 	// update property "State"
-	err = nmManager.State().ConnectChanged(func(hasValue bool, value uint32) {
+	err = nmManager.PropState().ConnectChanged(func(hasValue bool, value uint32) {
 		m.updatePropState()
 		// get network state
 		avail, err := isNetworkAvailable()
