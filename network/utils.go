@@ -218,7 +218,7 @@ func getAutoConnectConnUuidListByConnType(connType string) ([]string, error) {
 }
 
 func isNetworkAvailable() (bool, error) {
-	state, err := nmManager.State().Get(0)
+	state, err := nmManager.PropState().Get(0)
 	if err != nil {
 		return false, err
 	}
