@@ -1,37 +1,8 @@
---- langselector/locale.go.orig	2020-09-18 10:39:04.213018350 +0800
-+++ langselector/locale.go	2020-09-18 10:43:56.901011981 +0800
-@@ -33,15 +33,15 @@
- 
- 	"github.com/godbus/dbus"
- 	// dbus services:
--	"github.com/linuxdeepin/go-dbus-factory/com.deepin.api.localehelper"
-+	localehelper "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.localehelper"
- 	libnetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.network"
--	"github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
--	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
-+	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
-+	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
- 	"pkg.deepin.io/dde/api/lang_info"
- 	"pkg.deepin.io/dde/api/language_support"
- 	"pkg.deepin.io/dde/api/userenv"
- 	ddbus "pkg.deepin.io/dde/daemon/dbus"
--	"pkg.deepin.io/gir/gio-2.0"
-+	gio "pkg.deepin.io/gir/gio-2.0"
- 	"pkg.deepin.io/lib/dbusutil"
- 	. "pkg.deepin.io/lib/gettext"
- 	"pkg.deepin.io/lib/gsettings"
-@@ -94,8 +94,8 @@
- var (
- 	//save old language notifycation data
- 	notifyTxtStartWithInstall string
--	notifyTxtStart string
--	notifyTxtDone string
-+	notifyTxtStart            string
-+	notifyTxtDone             string
- )
- 
- //go:generate dbusutil-gen -type LangSelector locale.go
-@@ -415,29 +415,7 @@
+diff --git a/langselector/locale.go b/langselector/locale.go
+index eaa8d402..b08da2e9 100644
+--- a/langselector/locale.go
++++ b/langselector/locale.go
+@@ -407,29 +407,7 @@ func (lang *LangSelector) setLocale(locale string) {
  	lang.setPropCurrentLocale(locale)
  	lang.PropsMu.Unlock()
  
@@ -62,7 +33,7 @@
  	if err != nil {
  		logger.Warning("failed to write user locale:", err)
  		lang.setLocaleFailed(oldLocale)
-@@ -461,16 +439,6 @@
+@@ -453,16 +431,6 @@ func (lang *LangSelector) setLocale(locale string) {
  		}
  	}
  
