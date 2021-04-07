@@ -152,6 +152,9 @@ func (m *Manager) handleLauncherItemUpdated(itemInfo launcher.ItemInfo) {
 	appInfo := NewAppInfoFromFile(desktopFile)
 	entry.appInfo = appInfo
 	entry.innerId = appInfo.innerId
+	entry.Name = appInfo.GetName()
+	entry.updateMenu()
+	entry.setPropIcon(appInfo.GetIcon())
 }
 
 func (m *Manager) listenLauncherSignal() {
