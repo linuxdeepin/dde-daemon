@@ -11,7 +11,7 @@
 %global release_name server-industry
 
 Name:           dde-daemon
-Version:        5.13.9
+Version:        5.13.13
 Release:        1
 Summary:        Daemon handling the DDE session settings
 License:        GPLv3
@@ -29,9 +29,6 @@ BuildRequires:  pam >= 1.3.1
 BuildRequires:  glib2-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  systemd-devel
-BuildRequires:  resize-devel
-BuildRequires:  gorm-devel
-BuildRequires:  inflection-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  alsa-lib
 BuildRequires:  pulseaudio-libs-devel
@@ -48,6 +45,11 @@ BuildRequires:  librsvg2
 BuildRequires:  libXcursor-devel
 BuildRequires:  ddcutil-devel
 BuildRequires:  pkgconfig(sqlite3)
+BuildRequires:	golang-github-linuxdeepin-go-x11-client-devel
+BuildRequires:  golang-github-linuxdeepin-go-dbus-factory-devel
+BuildRequires:  go-lib-devel
+BuildRequires:  go-gir-generator
+BuildRequires:  dde-api-devel
 
 Requires:       bluez-libs
 Requires:       deepin-desktop-base
@@ -167,20 +169,17 @@ fi
 %{_datadir}/%{name}/
 %{_datadir}/dde/
 %{_datadir}/polkit-1/actions/*.policy
-%{_var}/cache/appearance/
 %{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla
 %{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla
 %{_sysconfdir}/acpi/actions/deepin_lid.sh
 %{_sysconfdir}/acpi/events/deepin_lid
 %{_sysconfdir}/pulse/daemon.conf.d/10-deepin.conf
 /lib/udev/rules.d/80-deepin-fprintd.rules
-%{_datadir}/pam-configs/deepin-auth
 /var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla
-%{_libdir}/security/pam_deepin_auth.so
 /lib/systemd/system/dbus-com.deepin.dde.lockservice.service
 /lib/systemd/system/deepin-accounts-daemon.service
 
 %changelog
-* Wed Mar 12 2021 uoser <uoser@uniontech.com> - 5.13.9-1
-- Update to 5.13.9
+* Tue Apr 8 2021 uoser <uoser@uniontech.com> - 5.13.13-1
+- Update to 5.13.13
 
