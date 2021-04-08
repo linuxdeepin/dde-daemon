@@ -125,6 +125,16 @@ type Manager struct {
 	switchKbdLayoutState SKLState
 	sklWaitQuit          chan int
 
+	// for power key and volumeDown key combo action
+	volumeDownKeyTriggered bool      // 音量-键是否按下
+	volumeUpKeyTriggered   bool      // 音量+键是否按下
+	powerKeyTriggered      bool      // 电源键是否按下
+	volumeDownKeyTime      time.Time // 按下音量-键的时间
+	powerKeyTime           time.Time // 按下电源键的时间
+
+	powerKeyConsumedByScreenshotChord      bool // 按下电源键事件是否被消耗,用来阻止事件继续往下传递
+	volumeDownKeyConsumedByScreenshotChord bool // 按下音量-键事件是否被消耗,用来阻止事件继续往下传递
+
 	//nolint
 	signals *struct {
 		Added, Deleted, Changed struct {

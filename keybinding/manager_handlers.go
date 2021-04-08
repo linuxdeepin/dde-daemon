@@ -21,12 +21,18 @@ package keybinding
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	dbus "github.com/godbus/dbus"
 	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+)
+
+const (
+	padEnv                                 = "Deepin-tablet"
+	SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS = 300 * time.Millisecond
 )
 
 func (m *Manager) shouldShowCapsLockOSD() bool {
@@ -140,11 +146,11 @@ func (m *Manager) initHandlers() {
 		}()
 	}
 
-	m.handlers[ActionTypeAudioCtrl] = buildHandlerFromController(m.audioController)
-	m.handlers[ActionTypeMediaPlayerCtrl] = buildHandlerFromController(m.mediaPlayerController)
-	m.handlers[ActionTypeDisplayCtrl] = buildHandlerFromController(m.displayController)
-	m.handlers[ActionTypeKbdLightCtrl] = buildHandlerFromController(m.kbdLightController)
-	m.handlers[ActionTypeTouchpadCtrl] = buildHandlerFromController(m.touchPadController)
+	m.handlers[ActionTypeAudioCtrl] = m.buildHandlerFromController(m.audioController)
+	m.handlers[ActionTypeMediaPlayerCtrl] = m.buildHandlerFromController(m.mediaPlayerController)
+	m.handlers[ActionTypeDisplayCtrl] = m.buildHandlerFromController(m.displayController)
+	m.handlers[ActionTypeKbdLightCtrl] = m.buildHandlerFromController(m.kbdLightController)
+	m.handlers[ActionTypeTouchpadCtrl] = m.buildHandlerFromController(m.touchPadController)
 	m.handlers[ActionTypeToggleWireless] = func(ev *KeyEvent) {
 		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) {
 			sysBus, err := dbus.SystemBus()
@@ -212,20 +218,39 @@ func (m *Manager) initHandlers() {
 			}
 			m.systemTurnOffScreen()
 		case powerActionShowUI:
-			cmd := "dde-shutdown -s"
-			go func() {
-				locked, err := m.sessionManager.Locked().Get(0)
-				if err != nil {
-					logger.Warning("sessionManager get locked error:", err)
+			// 平板环境
+			if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+				// m.handleBlackScreen(m.blackScreen)
+				// m.blackScreen = !m.blackScreen
+				if !m.powerKeyTriggered {
+					m.powerKeyTriggered = true
+					m.powerKeyConsumedByScreenshotChord = false
+					m.powerKeyTime = time.Now()
+					m.interceptScreenshotChord()
+
+					time.AfterFunc(500*time.Millisecond, func() {
+						if !m.powerKeyConsumedByScreenshotChord {
+							logger.Info("!!!!!!!!!!!!!!!---->关机")
+						}
+						m.resetScreenShotComboFlags()
+					})
 				}
-				if locked {
-					return
-				}
-				err = m.execCmd(cmd, false)
-				if err != nil {
-					logger.Warning("execCmd error:", err)
-				}
-			}()
+			} else {
+				cmd := "dde-shutdown -s"
+				go func() {
+					locked, err := m.sessionManager.Locked().Get(0)
+					if err != nil {
+						logger.Warning("sessionManager get locked error:", err)
+					}
+					if locked {
+						return
+					}
+					err = m.execCmd(cmd, false)
+					if err != nil {
+						logger.Warning("execCmd error:", err)
+					}
+				}()
+			}
 		}
 	}
 
@@ -324,12 +349,26 @@ func (m *Manager) terminateSKLWait() {
 	}
 }
 
+func (m *Manager) interceptScreenshotChord() {
+	if m.volumeDownKeyTriggered && m.powerKeyTriggered && !m.volumeUpKeyTriggered {
+		now := time.Now()
+		// 第一个键按下150ms内，另一个键按下，被认为是同时按下，触发截屏操作
+		logger.Info("!!!!!!!!!!!!!!!!!!time", now.Sub(m.volumeDownKeyTime), now.Sub(m.powerKeyTime))
+		if now.Sub(m.volumeDownKeyTime) <= SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS && now.Sub(m.powerKeyTime) <= SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS {
+			m.volumeDownKeyConsumedByScreenshotChord = true
+			m.powerKeyConsumedByScreenshotChord = true
+			//m.cancelPendingPowerKeyAction()
+			logger.Info("!!!!!!!!!!!!!!!!!!---->截屏")
+		}
+	}
+}
+
 type Controller interface {
 	ExecCmd(cmd ActionCmd) error
 	Name() string
 }
 
-func buildHandlerFromController(c Controller) KeyEventFunc {
+func (m *Manager) buildHandlerFromController(c Controller) KeyEventFunc {
 	return func(ev *KeyEvent) {
 		if c == nil {
 			logger.Warning("controller is nil")
@@ -343,11 +382,38 @@ func buildHandlerFromController(c Controller) KeyEventFunc {
 			logger.Warning(ErrTypeAssertionFail)
 			return
 		}
+
 		logger.Debugf("%v Controller exec cmd %v", name, cmd)
-		if err := c.ExecCmd(cmd); err != nil {
-			logger.Warning(name, "Controller exec cmd err:", err)
+
+		// 响应音量-键时, 需要判断是否是截屏组合键逻辑
+		if name == "Audio" && AudioSinkVolumeDown == ActionCmd(cmd) {
+			if !m.volumeDownKeyTriggered {
+				m.volumeDownKeyTriggered = true
+				m.volumeDownKeyConsumedByScreenshotChord = false
+				//m.cancelPendingPowerKeyAction();
+				m.volumeDownKeyTime = time.Now()
+				m.interceptScreenshotChord()
+
+				time.AfterFunc(500*time.Millisecond, func() {
+					if !m.volumeDownKeyConsumedByScreenshotChord {
+						logger.Info("!!!!!!!!!!!!!!!---->音量-")
+					}
+					m.resetScreenShotComboFlags()
+				})
+			}
+		} else {
+			if err := c.ExecCmd(cmd); err != nil {
+				logger.Warning(name, "Controller exec cmd err:", err)
+			}
 		}
 	}
+}
+
+// 复位跟["电源"+"音量-"]截屏组合键相关的标志变量
+func (m *Manager) resetScreenShotComboFlags() {
+	m.volumeDownKeyTriggered = false
+	m.volumeUpKeyTriggered = false
+	m.powerKeyTriggered = false
 }
 
 type ErrInvalidActionCmd struct {
