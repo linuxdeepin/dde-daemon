@@ -97,7 +97,7 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 
 	// connect property changed signals
 	ap.nmAp.InitSignalExt(m.sysSigLoop, true)
-	_, err = ap.nmAp.AccessPoint().ConnectPropertiesChanged(func(properties map[string]dbus.Variant) {
+	_, err = ap.nmAp.ConnectSignalPropertiesChanged(func(properties map[string]dbus.Variant) {
 		m.accessPointsLock.Lock()
 		defer m.accessPointsLock.Unlock()
 		if !m.isAccessPointExists(apPath) {
