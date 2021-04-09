@@ -20,9 +20,11 @@
 package keybinding
 
 import (
+	"os"
+
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	audio "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
+	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 )
 
@@ -135,9 +137,15 @@ func (c *AudioController) changeSinkVolume(raised bool) error {
 	}
 
 	var step = 0.05
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		step = 0.1
+	}
 	if !raised {
 		step = -step
 		osd = "AudioDown"
+	}
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		osd = "Sound"
 	}
 
 	maxVolume, err := c.audioDaemon.MaxUIVolume().Get(0)

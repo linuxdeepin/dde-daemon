@@ -48,6 +48,11 @@ const (
 	suspendStateButtonClick
 )
 
+const (
+	ddeOsdServiceName = "com.deepin.dde.osd"
+	dueOsdServiceName = "com.deepin.due.shell"
+)
+
 func resetGSettings(gs *gio.Settings) {
 	for _, key := range gs.ListKeys() {
 		userVal := gs.GetUserValue(key)
@@ -95,7 +100,11 @@ func resetKWin(wmObj *wm.Wm) error {
 func showOSD(signal string) {
 	logger.Debug("show OSD", signal)
 	sessionDBus, _ := dbus.SessionBus()
-	go sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		go sessionDBus.Object(dueOsdServiceName, "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
+	} else {
+		go sessionDBus.Object(ddeOsdServiceName, "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
+	}
 }
 
 const sessionManagerDest = "com.deepin.SessionManager"
