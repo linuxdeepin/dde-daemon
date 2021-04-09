@@ -31,7 +31,7 @@ import (
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	"pkg.deepin.io/gir/gio-2.0"
+	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"pkg.deepin.io/lib/dbusutil/proxy"
@@ -612,12 +612,12 @@ func (b *Bluetooth) addAdapter(apath dbus.ObjectPath) {
 		logger.Warning(err)
 	}
 
-	if cfgPowered {
-		err = a.core.DiscoverableTimeout().Set(0, 0)
-		if err != nil {
-			logger.Warning(err)
-		}
+	err = a.core.DiscoverableTimeout().Set(0, 0)
+	if err != nil {
+		logger.Warning(err)
+	}
 
+	if cfgPowered {
 		err = a.core.Discoverable().Set(0, b.config.Discoverable)
 		if err != nil {
 			logger.Warning(err)
