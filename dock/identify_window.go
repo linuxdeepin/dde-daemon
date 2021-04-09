@@ -268,7 +268,7 @@ func identifyWindowByPidEnv(m *Manager, winInfo *WindowInfo) (string, *AppInfo) 
 			launchedDesktopFile, launchedDesktopFilePid)
 
 		var try bool
-		if uint(launchedDesktopFilePid) == pid {
+		if uint(launchedDesktopFilePid) == pid  || process.ppid == 1 { // launchedDesktopFilePid可能被销毁，process变成孤儿进程
 			try = true
 		} else if uint(launchedDesktopFilePid) == process.ppid && process.ppid != 0 {
 			logger.Debug("ppid equal")
