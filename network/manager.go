@@ -37,6 +37,7 @@ import (
 	"pkg.deepin.io/dde/daemon/session/common"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
+	. "pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/strv"
 )
 
@@ -176,7 +177,7 @@ func (m *Manager) init() {
 	}
 
 	// TODO(jouyouyun): improve in future
-	// Sometimes the 'org.freedesktop.secrets' is not exists, this would block the 'init' function, so move to goroutinue
+	// Sometimes the 'org.freedesktop.secrets' is not exists, this would block the 'init' function, so move to goroutine
 	go func() {
 		secServiceObj := secrets.NewService(sessionBus)
 		sa, err := newSecretAgent(secServiceObj, m)
@@ -282,6 +283,62 @@ func (m *Manager) init() {
 
 	m.syncConfig = dsync.NewConfig("network", &syncConfig{m: m},
 		m.sessionSigLoop, dbusPath, logger)
+	m.localeFirstConnection() // TODO: 如果安装器在系统服务启动前配置系统语言,则该方法的调用可以移除
+}
+
+// 安装完成第一次开机时,NetworkManager自动创建一个网络连接(系统语言未配置),因此需要手动更新一次翻译
+func (m *Manager) localeFirstConnection() {
+	for _, path := range nmGetActiveConnections() {
+		activeConnection, err := nmNewActiveConnection(path)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		connType, err := activeConnection.Type().Get(0)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		if connType == nm.NM_SETTING_WIRED_SETTING_NAME {
+			connPath, err := activeConnection.Connection().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				continue
+			}
+			settingsConnection, err := nmNewSettingsConnection(connPath)
+			if err != nil {
+				logger.Warning(err)
+				continue
+			}
+			unsaved, err := settingsConnection.Unsaved().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				continue
+			}
+			if unsaved == true {
+				var connData connectionData
+				connData, err = settingsConnection.GetSettings(0)
+				if err != nil {
+					logger.Warning(err)
+					continue
+				}
+				if isSettingConnectionIdExists(connData) {
+					setSettingConnectionId(connData, Tr("Wired connection"))
+				}
+				if isSettingIP6ConfigAddressesExists(connData) {
+					setSettingIP6ConfigAddresses(connData, getSettingIP6ConfigAddresses(connData))
+				}
+				if isSettingIP6ConfigRoutesExists(connData) {
+					setSettingIP6ConfigRoutes(connData, getSettingIP6ConfigRoutes(connData))
+				}
+				err = settingsConnection.UpdateUnsaved(0, connData)
+				if err != nil {
+					logger.Warning(err)
+					continue
+				}
+			}
+		}
+	}
 }
 
 func (m *Manager) destroy() {
