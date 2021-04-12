@@ -322,12 +322,6 @@ func (u *User) SetAutomaticLogin(sender dbus.Sender, enabled bool) *dbus.Error {
 func (u *User) EnableNoPasswdLogin(sender dbus.Sender, enabled bool) *dbus.Error {
 	logger.Debug("[EnableNoPasswdLogin] enabled:", enabled)
 
-	err := u.checkAuthNoPasswdLogin(sender, enabled)
-	if err != nil {
-		logger.Debug("[EnableNoPasswdLogin] access denied:", err)
-		return dbusutil.ToError(err)
-	}
-
 	u.PropsMu.Lock()
 	defer u.PropsMu.Unlock()
 
