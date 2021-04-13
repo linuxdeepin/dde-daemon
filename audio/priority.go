@@ -10,17 +10,17 @@ import (
 	"pkg.deepin.io/lib/xdg/basedir"
 )
 
-const (
-	PortTypeBluetooth    = iota // 蓝牙音频
-	PortTypeHeadset             // USB和3.5mm 耳麦
-	PortTypeBuiltin             // 内置扬声器和话筒
-	PortTypeHdmi                // HDMI
-	PortTypeLineIO              // 线缆输入输出
-	PortTypeMultiChannel        // 多声道
-	PortTypeUnknown             // 其他类型
+// const (
+// 	PortTypeBluetooth    = iota // 蓝牙音频
+// 	PortTypeHeadset             // USB和3.5mm 耳麦
+// 	PortTypeBuiltin             // 内置扬声器和话筒
+// 	PortTypeHdmi                // HDMI
+// 	PortTypeLineIO              // 线缆输入输出
+// 	PortTypeMultiChannel        // 多声道
+// 	PortTypeUnknown             // 其他类型
 
-	PortTypeCount // 类型数量
-)
+// 	PortTypeCount // 类型数量
+// )
 
 type PortToken struct {
 	CardName string
