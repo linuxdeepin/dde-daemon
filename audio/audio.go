@@ -339,7 +339,9 @@ func (a *Audio) init() error {
 	loadBluezConfig(bluezAudioConfigFilePath) // 注意：这个要在newCardList之前调用
 	a.cards = newCardList(a.ctx.GetCardList())
 
+	GetConfigKeeper().Load()
 	a.PropsMu.Lock()
+	logger.Debug("init cards")
 	a.setPropCards(a.cards.string())
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 	a.PropsMu.Unlock()
@@ -369,7 +371,6 @@ func (a *Audio) init() error {
 		a.settings.SetBoolean(gsKeyFirstRun, false)
 	}
 
-	GetConfigKeeper().Load()
 	a.resumeSinkConfig(a.defaultSink)
 	a.resumeSourceConfig(a.defaultSource, isPhysicalDevice(a.defaultSourceName))
 	a.autoSwitchPort()
@@ -607,6 +608,10 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 		return dbusutil.ToError(err)
 	}
 
+	a.setPropCards(a.cards.string())
+	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
+
+	// TODO: 后面这些应该不需要了,改成触发自动切换,另外当切换到disable端口上时静音
 	defaultSinkActivePortName := a.getDefaultSinkActivePortName()
 	defaultSourceActivePortName := a.getDefaultSourceActivePortName()
 	if portName == defaultSinkActivePortName {
