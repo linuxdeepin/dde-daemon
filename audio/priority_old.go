@@ -3,11 +3,9 @@ package audio
 import (
 	"encoding/json"
 	"io/ioutil"
-	"path/filepath"
 	"strings"
 
 	"pkg.deepin.io/lib/pulse"
-	"pkg.deepin.io/lib/xdg/basedir"
 )
 
 // const (
@@ -37,8 +35,7 @@ type Priorities struct {
 type Skipper func(cardName string, portName string) bool
 
 var (
-	priorities               = NewPriorities()
-	globalPrioritiesFilePath = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/priorities.json")
+	priorities = NewPriorities()
 )
 
 func hasElement(slice []int, value int) bool {

@@ -19,6 +19,17 @@ const (
 	PortTypeInvalid = -1 // 表示无效的类型
 )
 
+// 判断一组字符串中，是否存在其中一个字符串A，使得substr是A的子字符串，不区分大小写
+func hasKeyword(stringList []string, substr string) bool {
+	for _, str := range stringList {
+		if strings.Contains(strings.ToLower(str), strings.ToLower(substr)) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // 检测端口的类型
 func DetectPortType(card *pulse.Card, port *pulse.CardPortInfo) int {
 	// 需要判断的字段列表
@@ -63,17 +74,6 @@ func DetectPortType(card *pulse.Card, port *pulse.CardPortInfo) int {
 	return PortTypeUnknown
 }
 
-// 判断一组字符串中，是否存在其中一个字符串A，使得substr是A的子字符串，不区分大小写
-func hasKeyword(stringList []string, substr string) bool {
-	for _, str := range stringList {
-		if strings.Contains(strings.ToLower(str), strings.ToLower(substr)) {
-			return true
-		}
-	}
-
-	return false
-}
-
 // 优先级中使用的端口（注意：用于表示端口的结构体有好几个，不要弄混）
 type PriorityPort struct {
 	CardName string
@@ -83,6 +83,17 @@ type PriorityPort struct {
 
 // 端口实例优先级列表
 type PriorityPortList []*PriorityPort
+
+// 判断端口实例优先级列表中是否包含某个值，判断时只考虑CardName和PortName，忽略PortType
+func (portList *PriorityPortList) hasElement(port *PriorityPort) bool {
+	for _, p := range *portList {
+		if p.CardName == port.CardName && p.PortName == port.PortName {
+			return true
+		}
+	}
+
+	return false
+}
 
 // 端口类型优先级列表
 type PriorityTypeList []int
@@ -115,10 +126,12 @@ func NewPriorityPolicy() *PriorityPolicy {
 // 读取配置文件获得的类型优先级中类型的数量少于PortTypeCount时
 // 将缺少的类型补充完整
 // 通常发生在增加了新的端口类型的时候
+// 也可以用于初始化空的优先级列表
 func (pp *PriorityPolicy) completeTypes() {
 	for i := 0; i < PortTypeCount; i++ {
 		if !pp.Types.hasElement(i) {
 			pp.Types = append(pp.Types, i)
+			logger.Debugf("append type %d", i)
 		}
 	}
 }
@@ -143,6 +156,9 @@ func (pp *PriorityPolicy) sortPorts() {
 			// type1优先级比type2低，交换
 			if pp.GetPreferType(type1, type2) == type2 {
 				pp.Ports[j], pp.Ports[j+1] = pp.Ports[j+1], pp.Ports[j]
+				logger.Debugf("swap <%s:%s> and <%s:%s>",
+					pp.Ports[j].CardName, pp.Ports[j].PortName,
+					pp.Ports[j+1].CardName, pp.Ports[j+1].PortName)
 			}
 		}
 	}
@@ -196,7 +212,23 @@ func (pp *PriorityPolicy) InsertPortBeforeIndex(port *PriorityPort, index int) {
 }
 
 // 添加一个端口，返回插入的位置索引
-func (pp *PriorityPolicy) AddPort(card *pulse.Card, port *pulse.CardPortInfo) int {
+func (pp *PriorityPolicy) AddPort(port *PriorityPort) int {
+	// 根据类型优先级，将端口插入到合适的位置
+	length := len(pp.Ports)
+	for i, p := range pp.Ports {
+		if pp.GetPreferType(port.PortType, p.PortType) == port.PortType {
+			pp.InsertPortBeforeIndex(port, i)
+			return i
+		}
+	}
+
+	// 如果其它端口优先级都比它高，添加到末尾
+	pp.AppendPort(port)
+	return length
+}
+
+// 添加一个原始端口，返回插入的位置索引
+func (pp *PriorityPolicy) AddRawPort(card *pulse.Card, port *pulse.CardPortInfo) int {
 	portType := DetectPortType(card, port)
 	newPort := PriorityPort{card.Name, port.Name, portType}
 
@@ -231,8 +263,32 @@ func (pp *PriorityPolicy) RemovePortByName(cardName string, portName string) boo
 }
 
 // 删除一个端口
-func (pp *PriorityPolicy) RemovePort(port PriorityPort) bool {
+func (pp *PriorityPolicy) RemovePort(port *PriorityPort) bool {
 	return pp.RemovePortByName(port.CardName, port.PortName)
+}
+
+// 设置有效端口
+// 这是因为从配置文件读出来的数据是上次运行时保存的，两次运行之间（例如关机状态下）可能插拔了设备
+// 因此需要删除无效端口，添加新的有效端口
+func (pp *PriorityPolicy) SetPorts(ports PriorityPortList) {
+	// 清除无效的端口
+	for _, port := range pp.Ports {
+		if !ports.hasElement(port) {
+			pp.RemovePort(port)
+			logger.Debugf("remove port <%s:%s>", port.CardName, port.PortName)
+		}
+	}
+
+	// 添加缺少的有效端口
+	for _, port := range ports {
+		if !pp.Ports.hasElement(port) {
+			pp.AddPort(port)
+			logger.Debugf("add port <%s:%s>", port.CardName, port.PortName)
+			if port.PortType < 0 || port.PortType >= PortTypeCount {
+				logger.Warningf("unexpected port type <%d> of port <%s:%s>", port.PortType, port.CardName, port.PortName)
+			}
+		}
+	}
 }
 
 // 获取优先级最高的端口
@@ -277,6 +333,7 @@ func (pp *PriorityPolicy) SetTheFirstType(portType int) bool {
 func (pp *PriorityPolicy) SetTheFirstPort(cardName string, portName string) bool {
 	portIndex := pp.FindPortIndex(cardName, portName)
 	if portIndex < 0 {
+		logger.Warningf("cannot find <%s:%s> in priority list", cardName, portName)
 		return false
 	}
 

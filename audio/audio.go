@@ -334,13 +334,9 @@ func (a *Audio) init() error {
 
 	a.mu.Unlock()
 
-	priorities.Load(globalPrioritiesFilePath, a.cards)
-	logger.Debug("priorities load")
-	priorities.Print()
-	err = priorities.Save(globalPrioritiesFilePath)
-	if err != nil {
-		logger.Warning(err)
-	}
+	// priorities.Load(globalPrioritiesFilePath, a.cards) // TODO: 删除
+	GetPriorityManager().Init(a.cards)
+	GetPriorityManager().Print()
 
 	go a.handleEvent()
 	go a.handleStateChanged()
@@ -549,25 +545,34 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 
 	if int(direction) == pulse.DirectionSink {
 		logger.Debugf("output port %s %s now is first priority", card.core.Name, portName)
-		sink := a.getDefaultSink()
-		if sink == nil {
-			return dbusutil.ToError(fmt.Errorf("can not get default sink"))
-		}
-		sink.setMute(false)
 
-		priorities.SetOutputPortFirst(card.core.Name, portName)
-		err = priorities.Save(globalPrioritiesFilePath)
-		priorities.Print()
+		// TODO: 静音逻辑变更为端口切换时静音状态不变
+		// sink := a.getDefaultSink()
+		// if sink == nil {
+		// 	return dbusutil.ToError(fmt.Errorf("can not get default sink"))
+		// }
+		// sink.setMute(false)
+
+		// TODO: 删除
+		// priorities.SetOutputPortFirst(card.core.Name, portName)
+		// err = priorities.Save(globalPrioritiesFilePath)
+		// priorities.Print()
+		GetPriorityManager().SetFirstOutputPort(card.core.Name, portName)
 	} else {
 		logger.Debugf("input port %s %s now is first priority", card.core.Name, portName)
-		source := a.getDefaultSource()
-		if source == nil {
-			return dbusutil.ToError(fmt.Errorf("can not get default source"))
-		}
-		source.setMute(false)
-		priorities.SetInputPortFirst(card.core.Name, portName)
-		err = priorities.Save(globalPrioritiesFilePath)
-		priorities.Print()
+
+		// TODO: 静音逻辑变更为端口切换时静音状态不变
+		// source := a.getDefaultSource()
+		// if source == nil {
+		// 	return dbusutil.ToError(fmt.Errorf("can not get default source"))
+		// }
+		// source.setMute(false)
+
+		// TODO: 删除
+		// priorities.SetInputPortFirst(card.core.Name, portName)
+		// err = priorities.Save(globalPrioritiesFilePath)
+		// priorities.Print()
+		GetPriorityManager().SetFirstInputPort(card.core.Name, portName)
 	}
 
 	return dbusutil.ToError(err)
