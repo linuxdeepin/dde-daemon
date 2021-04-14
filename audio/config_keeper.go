@@ -163,6 +163,15 @@ func (ck *ConfigKeeper) SetMute(cardName string, portName string, mute bool) {
 	ck.Save()
 }
 
+func (ck *ConfigKeeper) SetMuteAll(mute bool) {
+	for _, card := range ck.Cards {
+		for _, port := range card.Ports {
+			port.Mute = mute
+		}
+	}
+	ck.Save()
+}
+
 func (card *CardConfig) UpdatePortConfig(portConfig *PortConfig) {
 	card.Ports[portConfig.Name] = portConfig
 }

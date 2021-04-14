@@ -162,7 +162,7 @@ func (s *Source) setVBF(v, b, f float64) *dbus.Error {
 func (s *Source) SetMute(value bool) *dbus.Error {
 	s.audio.context().SetSourceMuteByIndex(s.index, value)
 
-	GetConfigKeeper().SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	GetConfigKeeper().SetMuteAll(value)
 
 	if !value {
 		playFeedback()
