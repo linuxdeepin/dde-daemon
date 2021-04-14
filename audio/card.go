@@ -43,6 +43,7 @@ type CardExport struct {
 
 type CardPortExport struct {
 	Name        string
+	Enabled     bool
 	Description string
 	Direction   int
 }
@@ -133,8 +134,10 @@ func (cards CardList) string() string {
 	for _, cardInfo := range cards {
 		var ports []CardPortExport
 		for _, portInfo := range cardInfo.Ports {
+			_, portConfig := configKeeper.GetCardAndPortConfig(cardInfo.core.Name, portInfo.Name)
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
+				Enabled:     portConfig.Enabled,
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
 			})
