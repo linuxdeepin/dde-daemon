@@ -24,6 +24,7 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -84,6 +85,21 @@ func objectPathSliceEqual(v1, v2 []dbus.ObjectPath) bool {
 	return true
 }
 
+func isStrvEqual(l1, l2 []string) bool {
+	if len(l1) != len(l2) {
+		return false
+	}
+
+	sort.Strings(l1)
+	sort.Strings(l2)
+	for i, v := range l1 {
+		if v != l2[i] {
+			return false
+		}
+	}
+	return true
+}
+
 type Audio struct {
 	service *dbusutil.Service
 	PropsMu sync.RWMutex
@@ -97,6 +113,10 @@ type Audio struct {
 	DefaultSource           dbus.ObjectPath
 	Cards                   string
 	CardsWithoutUnavailable string
+	BluetoothAudioMode      string // 蓝牙模式
+	// dbusutil-gen: equal=isStrvEqual
+	BluetoothAudioModesOpts []string // 可用的蓝牙模式
+
 	// dbusutil-gen: ignore
 	IncreaseVolume gsprop.Bool `prop:"access:rw"`
 	// dbusutil-gen: ignore
@@ -364,6 +384,9 @@ func (a *Audio) init() error {
 	if err != nil {
 		logger.Warning("set reduce noise fail:", err)
 	}
+
+	// 蓝牙支持的模式
+	a.setPropBluetoothAudioModesOpts([]string{"a2dp", "headset"})
 
 	return nil
 }
@@ -1088,4 +1111,23 @@ func (a *Audio) isPortEnabled(cardId uint32, portName string, direction int32) b
 
 	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	return portConfig.Enabled
+}
+
+// 设置蓝牙模式
+func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
+	card, err := a.cards.get(a.defaultSink.Card)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	for _, profile := range card.Profiles {
+		if strings.Contains(strings.ToLower(profile.Name), mode) {
+			card.core.SetProfile(profile.Name)
+
+			// TODO: 这个属性应该在设置成功的消息返回后才能设置
+			a.setPropBluetoothAudioMode(mode)
+		}
+	}
+
+	return nil
 }
