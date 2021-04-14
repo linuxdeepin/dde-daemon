@@ -369,10 +369,7 @@ func (a *Audio) init() error {
 		a.settings.SetBoolean(gsKeyFirstRun, false)
 	}
 
-	err = configKeeper.Load(configKeeperFile)
-	if err != nil {
-		logger.Warningf("load %q failed : %s", configKeeperFile, err)
-	}
+	GetConfigKeeper().Load()
 	a.resumeSinkConfig(a.defaultSink)
 	a.resumeSourceConfig(a.defaultSource, isPhysicalDevice(a.defaultSourceName))
 	a.autoSwitchPort()
@@ -467,7 +464,7 @@ func (a *Audio) findSourceByCardIndexPortName(cardId uint32, portName string) *p
 
 // set default sink and sink active port
 func (a *Audio) setDefaultSinkWithPort(cardId uint32, portName string) error {
-	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(cardId), portName)
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	if !portConfig.Enabled {
 		return fmt.Errorf("card #%d port %q is disabled", cardId, portName)
 	}
@@ -514,7 +511,7 @@ func (a *Audio) getDefaultSourceActivePortName() string {
 
 // set default source and source active port
 func (a *Audio) setDefaultSourceWithPort(cardId uint32, portName string) error {
-	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(cardId), portName)
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	if !portConfig.Enabled {
 		return fmt.Errorf("card #%d port %q is disabled", cardId, portName)
 	}
@@ -602,14 +599,9 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 }
 
 func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *dbus.Error {
-	configKeeper.SetEnabled(a.getCardNameById(cardId), portName, enabled)
-	err := configKeeper.Save(configKeeperFile)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
+	GetConfigKeeper().SetEnabled(a.getCardNameById(cardId), portName, enabled)
 
-	err = a.service.Emit(a, "PortEnabledChanged", cardId, portName, enabled)
+	err := a.service.Emit(a, "PortEnabledChanged", cardId, portName, enabled)
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
@@ -635,7 +627,7 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 }
 
 func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, busErr *dbus.Error) {
-	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(cardId), portName)
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	return portConfig.Enabled, nil
 }
 
@@ -802,7 +794,7 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 	}
 
 	logger.Debugf("resume sink %s %s", a.getCardNameById(s.Card), s.ActivePort.Name)
-	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
 
 	err := s.setVBF(portConfig.Volume, portConfig.Balance, 0.0)
 	if err != nil {
@@ -825,7 +817,7 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 	}
 
 	logger.Debugf("resume source %s %s", a.getCardNameById(s.Card), s.ActivePort.Name)
-	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
 
 	err := s.setVBF(portConfig.Volume, portConfig.Balance, 0.0)
 	if err != nil {
@@ -1109,7 +1101,7 @@ func (a *Audio) isPortEnabled(cardId uint32, portName string, direction int32) b
 		return false
 	}
 
-	_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(cardId), portName)
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	return portConfig.Enabled
 }
 

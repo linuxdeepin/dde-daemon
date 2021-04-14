@@ -24,17 +24,31 @@ type CardConfig struct {
 }
 
 type ConfigKeeper struct {
-	ConfigMap map[string]*CardConfig // Name => CardConfig
+	Cards map[string]*CardConfig // Name => CardConfig
+
+	file string // 配置文件路径
 }
 
-var (
-	configKeeper     = NewConfigKeeper()
-	configKeeperFile = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/audio-config-keeper.json")
-)
+// 创建单例
+func createConfigKeeperSingleton(path string) func() *ConfigKeeper {
+	var ck *ConfigKeeper = nil
+	return func() *ConfigKeeper {
+		if ck == nil {
+			ck = NewConfigKeeper(path)
+		}
+		return ck
+	}
+}
 
-func NewConfigKeeper() *ConfigKeeper {
+// 获取单例
+// 由于优先级管理需要在很多个对象中使用，放在Audio对象中需要添加额外参数传递到各个模块很不方便，因此在此创建一个全局的单例
+var globalConfigKeeperFile = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/audio-config-keeper.json")
+var GetConfigKeeper = createConfigKeeperSingleton(globalConfigKeeperFile)
+
+func NewConfigKeeper(path string) *ConfigKeeper {
 	return &ConfigKeeper{
-		ConfigMap: make(map[string]*CardConfig),
+		Cards: make(map[string]*CardConfig),
+		file:  path,
 	}
 }
 
@@ -57,26 +71,28 @@ func NewPortConfig(name string) *PortConfig {
 	}
 }
 
-func (ck *ConfigKeeper) Save(file string) error {
-	data, err := json.MarshalIndent(ck.ConfigMap, "", "  ")
+func (ck *ConfigKeeper) Save() error {
+	data, err := json.MarshalIndent(ck.Cards, "", "  ")
 	if err != nil {
+		logger.Warning(err)
 		return err
 	}
 
-	return ioutil.WriteFile(file, data, 0644)
+	return ioutil.WriteFile(ck.file, data, 0644)
 }
 
-func (ck *ConfigKeeper) Load(file string) error {
-	data, err := ioutil.ReadFile(file)
+func (ck *ConfigKeeper) Load() error {
+	data, err := ioutil.ReadFile(ck.file)
 	if err != nil {
+		logger.Warning(err)
 		return err
 	}
 
-	return json.Unmarshal(data, &ck.ConfigMap)
+	return json.Unmarshal(data, &ck.Cards)
 }
 
 func (ck *ConfigKeeper) Print() {
-	data, err := json.MarshalIndent(ck.ConfigMap, "", "  ")
+	data, err := json.MarshalIndent(ck.Cards, "", "  ")
 	if err != nil {
 		logger.Warning(err)
 		return
@@ -85,15 +101,15 @@ func (ck *ConfigKeeper) Print() {
 }
 
 func (ck *ConfigKeeper) UpdateCardConfig(cardConfig *CardConfig) {
-	ck.ConfigMap[cardConfig.Name] = cardConfig
+	ck.Cards[cardConfig.Name] = cardConfig
 }
 
 func (ck *ConfigKeeper) RemoveCardConfig(cardName string) {
-	delete(ck.ConfigMap, cardName)
+	delete(ck.Cards, cardName)
 }
 
 func (ck *ConfigKeeper) GetCardAndPortConfig(cardName string, portName string) (*CardConfig, *PortConfig) {
-	card, ok := ck.ConfigMap[cardName]
+	card, ok := ck.Cards[cardName]
 	if !ok {
 		card = NewCardConfig(cardName)
 		port := NewPortConfig(portName)
@@ -112,45 +128,39 @@ func (ck *ConfigKeeper) GetCardAndPortConfig(cardName string, portName string) (
 }
 
 func (ck *ConfigKeeper) SetEnabled(cardName string, portName string, enabled bool) {
-	card, port := ck.GetCardAndPortConfig(cardName, portName)
+	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.Enabled = enabled
-	card.UpdatePortConfig(port)
-	ck.UpdateCardConfig(card)
+	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetVolume(cardName string, portName string, volume float64) {
-	card, port := ck.GetCardAndPortConfig(cardName, portName)
+	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.Volume = volume
-	card.UpdatePortConfig(port)
-	ck.UpdateCardConfig(card)
+	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetIncreaseVolume(cardName string, portName string, enhance bool) {
-	card, port := ck.GetCardAndPortConfig(cardName, portName)
+	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.IncreaseVolume = enhance
-	card.UpdatePortConfig(port)
-	ck.UpdateCardConfig(card)
+	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetBalance(cardName string, portName string, balance float64) {
-	card, port := ck.GetCardAndPortConfig(cardName, portName)
+	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.Balance = balance
-	card.UpdatePortConfig(port)
-	ck.UpdateCardConfig(card)
+	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetReduceNoise(cardName string, portName string, reduce bool) {
-	card, port := ck.GetCardAndPortConfig(cardName, portName)
+	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.ReduceNoise = reduce
-	card.UpdatePortConfig(port)
-	ck.UpdateCardConfig(card)
+	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetMute(cardName string, portName string, mute bool) {
-	card, port := ck.GetCardAndPortConfig(cardName, portName)
+	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.Mute = mute
-	card.UpdatePortConfig(port)
-	ck.UpdateCardConfig(card)
+	ck.Save()
 }
 
 func (card *CardConfig) UpdatePortConfig(portConfig *PortConfig) {

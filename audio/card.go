@@ -134,7 +134,7 @@ func (cards CardList) string() string {
 	for _, cardInfo := range cards {
 		var ports []CardPortExport
 		for _, portInfo := range cardInfo.Ports {
-			_, portConfig := configKeeper.GetCardAndPortConfig(cardInfo.core.Name, portInfo.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardInfo.core.Name, portInfo.Name)
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
 				Enabled:     portConfig.Enabled,

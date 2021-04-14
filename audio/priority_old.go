@@ -227,7 +227,7 @@ func (pr *Priorities) AddAvailable(cards CardList) {
 				continue
 			}
 
-			_, portConfig := configKeeper.GetCardAndPortConfig(card.core.Name, port.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
 			if !portConfig.Enabled {
 				logger.Debugf("disabled port %s %s", card.core.Name, port.Name)
 				continue
@@ -444,11 +444,11 @@ func (pr *Priorities) checkAvailable(cards CardList, cardName string, portName s
 			}
 
 			if port.Available == pulse.AvailableTypeYes {
-				_, portConfig := configKeeper.GetCardAndPortConfig(cardName, portName)
+				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardName, portName)
 				return portConfig.Enabled
 			} else if port.Available == pulse.AvailableTypeUnknow {
 				logger.Warningf("port(%s %s) available is unknown", cardName, portName)
-				_, portConfig := configKeeper.GetCardAndPortConfig(cardName, portName)
+				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardName, portName)
 				return portConfig.Enabled
 			} else {
 				return false

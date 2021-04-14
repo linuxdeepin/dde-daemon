@@ -668,7 +668,7 @@ func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
 		if isPhysicalDevice(source.Name) {
 			a.ReduceNoise.Set(false)
 			s := a.defaultSource
-			_, portConfig := configKeeper.GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
 			if portConfig.ReduceNoise != a.ReduceNoise.Get() {
 				a.ReduceNoise.Set(portConfig.ReduceNoise)
 			}
@@ -740,11 +740,7 @@ func (a *Audio) listenGSettingVolumeIncreaseChanged() {
 			logger.Warning("changed Max UI Volume failed: ", err)
 		} else {
 			sink := a.defaultSink
-			configKeeper.SetIncreaseVolume(a.getCardNameById(sink.Card), sink.ActivePort.Name, volInc)
-			err = configKeeper.Save(configKeeperFile)
-			if err != nil {
-				logger.Warning(err)
-			}
+			GetConfigKeeper().SetIncreaseVolume(a.getCardNameById(sink.Card), sink.ActivePort.Name, volInc)
 		}
 	})
 }
@@ -763,12 +759,8 @@ func (a *Audio) listenGSettingReduceNoiseChanged() {
 			logger.Warning("set Reduce Noise failed: ", err)
 		} else {
 			source := a.defaultSource
-			configKeeper.SetReduceNoise(a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
-			logger.Debugf("configKeeper.SetReduceNoise %s %s %v", a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
-			err = configKeeper.Save(configKeeperFile)
-			if err != nil {
-				logger.Warning(err)
-			}
+			GetConfigKeeper().SetReduceNoise(a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
+			logger.Debugf("GetConfigKeeper().SetReduceNoise %s %s %v", a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
 		}
 	})
 }

@@ -90,12 +90,7 @@ func (s *Source) SetVolume(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
-	configKeeper.SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
-	err := configKeeper.Save(configKeeperFile)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
+	GetConfigKeeper().SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 
 	if isPlay {
 		playFeedback()
@@ -113,12 +108,7 @@ func (s *Source) SetBalance(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
-	configKeeper.SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
-	err := configKeeper.Save(configKeeperFile)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
+	GetConfigKeeper().SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 
 	if isPlay {
 		playFeedback()
@@ -172,12 +162,7 @@ func (s *Source) setVBF(v, b, f float64) *dbus.Error {
 func (s *Source) SetMute(value bool) *dbus.Error {
 	s.audio.context().SetSourceMuteByIndex(s.index, value)
 
-	configKeeper.SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
-	err := configKeeper.Save(configKeeperFile)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
+	GetConfigKeeper().SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 
 	if !value {
 		playFeedback()

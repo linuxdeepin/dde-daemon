@@ -126,7 +126,7 @@ func removeConfig() {
 		logger.Warning(err)
 	}
 
-	err = os.Remove(configKeeperFile)
+	err = os.Remove(globalConfigKeeperFile)
 	if err != nil && !os.IsNotExist(err) {
 		logger.Warning(err)
 	}

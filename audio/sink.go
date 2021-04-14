@@ -99,12 +99,7 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.Unlock()
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 
-	configKeeper.SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
-	err := configKeeper.Save(configKeeperFile)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
+	GetConfigKeeper().SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 
 	if isPlay {
 		s.playFeedback()
@@ -127,12 +122,7 @@ func (s *Sink) SetBalance(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 
-	configKeeper.SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
-	err := configKeeper.Save(configKeeperFile)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
+	GetConfigKeeper().SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 
 	if isPlay {
 		s.playFeedback()
@@ -192,12 +182,7 @@ func (s *Sink) SetMute(value bool) *dbus.Error {
 	logger.Debugf("Sink #%d SetMute %v", s.index, value)
 	s.audio.context().SetSinkMuteByIndex(s.index, value)
 
-	configKeeper.SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
-	err := configKeeper.Save(configKeeperFile)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
+	GetConfigKeeper().SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
 
 	if !value {
 		s.playFeedback()
@@ -246,10 +231,10 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 		s.setPropPorts(createBluezVirtualSinkPorts(toPorts(sinkInfo.Ports)))
 
 		//此处获取的profile可能不是最新的，导致设置相应端口信息错误，改为Name去判断
-		if strings.Contains(sinkInfo.Name, "headset_head_unit"){
+		if strings.Contains(sinkInfo.Name, "headset_head_unit") {
 			newActivePort.Name += "(headset_head_unit)"
 			newActivePort.Description += "(Headset)"
-		} else if strings.Contains(sinkInfo.Name, "a2dp_sink"){
+		} else if strings.Contains(sinkInfo.Name, "a2dp_sink") {
 			newActivePort.Name += "(a2dp_sink)"
 			newActivePort.Description += "(A2DP)"
 		} else {
