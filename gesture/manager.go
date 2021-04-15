@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"sync"
 
 	"github.com/godbus/dbus"
@@ -138,11 +137,6 @@ func (m *Manager) destroy() {
 }
 
 func (m *Manager) init() {
-	// 平板下屏蔽手勢
-	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
-		return
-	}
-
 	m.initBuiltinSets()
 	err := m.sysDaemon.SetLongPressDuration(0, uint32(m.tsSetting.GetInt(tsSchemaKeyLongPress)))
 	if err != nil {
@@ -166,7 +160,7 @@ func (m *Manager) init() {
 			logger.Error("shouldHandleEvent failed:", err)
 			return
 		}
-		if !should {
+		if !should || (os.Getenv("XDG_CURRENT_DESKTOP") == padEnv && name != "touch right button") {
 			return
 		}
 
@@ -189,7 +183,7 @@ func (m *Manager) init() {
 			logger.Error("shouldHandleEvent failed:", err)
 			return
 		}
-		if !should {
+		if !should || os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
 			return
 		}
 
@@ -208,7 +202,7 @@ func (m *Manager) init() {
 			logger.Error("shouldHandleEvent failed:", err)
 			return
 		}
-		if !should {
+		if !should || os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
 			return
 		}
 
@@ -252,10 +246,6 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 	logger.Debugf("[Exec]: event info:%s  action info:%s", info.Event.toString(), info.Action.toString())
 	if m.shouldIgnoreGesture(info) {
 		return nil
-	}
-
-	if strings.HasPrefix(info.Event.Name, "touch") {
-		return m.handleTouchScreenEvent(info)
 	}
 
 	var cmd = info.Action.Action
@@ -309,11 +299,6 @@ func (m *Manager) handleBuiltinAction(cmd string) error {
 
 func (*Manager) GetInterfaceName() string {
 	return dbusServiceIFC
-}
-
-//handle touchscreen event
-func (*Manager) handleTouchScreenEvent(info *gestureInfo) error {
-	return nil
 }
 
 //param @edge: swipe to touchscreen edge
