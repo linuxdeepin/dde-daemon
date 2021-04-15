@@ -115,7 +115,7 @@ type Audio struct {
 	CardsWithoutUnavailable string
 	BluetoothAudioMode      string // 蓝牙模式
 	// dbusutil-gen: equal=isStrvEqual
-	BluetoothAudioModesOpts []string // 可用的蓝牙模式
+	BluetoothAudioModeOpts []string // 可用的蓝牙模式
 
 	// dbusutil-gen: ignore
 	IncreaseVolume gsprop.Bool `prop:"access:rw"`
@@ -384,7 +384,7 @@ func (a *Audio) init() error {
 	}
 
 	// 蓝牙支持的模式
-	a.setPropBluetoothAudioModesOpts([]string{"a2dp", "headset"})
+	a.setPropBluetoothAudioModeOpts([]string{"a2dp", "headset"})
 
 	return nil
 }

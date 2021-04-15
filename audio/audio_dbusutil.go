@@ -279,17 +279,17 @@ func (v *Audio) emitPropChangedBluetoothAudioMode(value string) error {
 	return v.service.EmitPropertyChanged(v, "BluetoothAudioMode", value)
 }
 
-func (v *Audio) setPropBluetoothAudioModesOpts(value []string) (changed bool) {
-	if !isStrvEqual(v.BluetoothAudioModesOpts, value) {
-		v.BluetoothAudioModesOpts = value
-		v.emitPropChangedBluetoothAudioModesOpts(value)
+func (v *Audio) setPropBluetoothAudioModeOpts(value []string) (changed bool) {
+	if !isStrvEqual(v.BluetoothAudioModeOpts, value) {
+		v.BluetoothAudioModeOpts = value
+		v.emitPropChangedBluetoothAudioModeOpts(value)
 		return true
 	}
 	return false
 }
 
-func (v *Audio) emitPropChangedBluetoothAudioModesOpts(value []string) error {
-	return v.service.EmitPropertyChanged(v, "BluetoothAudioModesOpts", value)
+func (v *Audio) emitPropChangedBluetoothAudioModeOpts(value []string) error {
+	return v.service.EmitPropertyChanged(v, "BluetoothAudioModeOpts", value)
 }
 
 func (v *Audio) setPropMaxUIVolume(value float64) (changed bool) {
