@@ -32,6 +32,7 @@ import (
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
@@ -94,6 +95,7 @@ type Manager struct {
 
 	lockFront     *lockfront.LockFront
 	shutdownFront *shutdownfront.ShutdownFront
+	sysPower      *power.Power
 
 	sessionSigLoop            *dbusutil.SignalLoop
 	systemSigLoop             *dbusutil.SignalLoop
@@ -134,6 +136,9 @@ type Manager struct {
 
 	powerKeyConsumedByScreenshotChord      bool // 按下电源键事件是否被消耗,用来阻止事件继续往下传递
 	volumeDownKeyConsumedByScreenshotChord bool // 按下音量-键事件是否被消耗,用来阻止事件继续往下传递
+
+	// 息屏亮屏标识
+	wakeUpScreen bool
 
 	//nolint
 	signals *struct {
@@ -259,6 +264,15 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	})
 	if err != nil {
 		logger.Warning("connect ChangKey signal failed:", err)
+	}
+
+	m.sysPower = power.NewPower(sysBus)
+	m.sysPower.InitSignalExt(m.systemSigLoop, true)
+	_, err = m.sysPower.ConnectPowerActionCode(func(actionCode int32) {
+		m.handlePowerActionCode(actionCode)
+	})
+	if err != nil {
+		logger.Warning("connect PowerActionCode signal failed:", err)
 	}
 
 	if shouldUseDDEKwin() {

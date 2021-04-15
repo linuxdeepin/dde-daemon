@@ -20,11 +20,14 @@
 package power
 
 import (
+	"bytes"
+	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -34,6 +37,17 @@ import (
 	gudev "pkg.deepin.io/gir/gudev-1.0"
 	"pkg.deepin.io/lib/arch"
 	"pkg.deepin.io/lib/dbusutil"
+)
+
+const (
+	EV_KEY    = 1
+	KEY_POWER = 116
+
+	POWER_RELEASE_SHORT = 0 // 电源键短按松开
+	POWER_PRESS         = 1 // 电源键按下
+	POWER_RELEASE_LONG  = 2 // 电源键长按松开
+
+	ueventName = "rk29-keypad"
 )
 
 var noUEvent bool
@@ -123,6 +137,10 @@ type Manager struct {
 
 		LidClosed struct{}
 		LidOpened struct{}
+
+		PowerActionCode struct {
+			actionCode int32
+		}
 	}
 }
 
@@ -213,6 +231,7 @@ func (m *Manager) init() error {
 	m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
 	m.Mode = cfg.Mode
 
+	m.initPowerButtonEventMonitor()
 	m.initAC(devices)
 	m.initBatteries(devices)
 	for _, dev := range devices {
@@ -539,4 +558,102 @@ func (m *Manager) doSetCpuGovernor(governor string) error {
 		m.setPropCpuGovernor(governor)
 	}
 	return err
+}
+
+// 获取平板环境下电源按钮事件路径（/dev/input/目录下的具体event名）
+func getPowerButtonEventPath() string {
+	subsystems := []string{"input"}
+	gudevClient := gudev.NewClient(subsystems)
+	if gudevClient == nil {
+		logger.Info("gudevClient is nil")
+		return ""
+	}
+	defer gudevClient.Unref()
+
+	devices := gudevClient.QueryBySubsystem("input")
+	defer func() {
+		// free devices
+		for _, device := range devices {
+			device.Unref()
+		}
+	}()
+
+	var eventPath string
+	for _, device := range devices {
+		name := device.GetName()
+		if !strings.HasPrefix(name, "event") {
+			continue
+		}
+
+		event := device.GetSysfsAttr("../name")
+		if strings.Contains(event, ueventName) {
+			eventPath = device.GetProperty("DEVNAME")
+			break
+		}
+	}
+	return eventPath
+}
+
+func readPowerButtonEvent(f *os.File) ([]InputEvent, error) {
+	// read
+	count := 16
+
+	events := make([]InputEvent, count)
+	buffer := make([]byte, eventSize*count)
+
+	_, err := f.Read(buffer)
+	if err != nil {
+		logger.Info("f read err:", err)
+		return nil, err
+	}
+
+	b := bytes.NewBuffer(buffer)
+	err = binary.Read(b, binary.LittleEndian, &events)
+	if err != nil {
+		logger.Info("binary read err:", err)
+		return nil, err
+	}
+
+	// remove trailing structures
+	for i := range events {
+		//logger.Debug("i", i)
+		if events[i].Time.Sec == 0 {
+			events = events[:i]
+			break
+		}
+	}
+	return events, nil
+}
+
+func (m *Manager) initPowerButtonEventMonitor() {
+	event := getPowerButtonEventPath()
+	if event == "" {
+		logger.Info("get power button event path failed")
+		return
+	}
+
+	// open
+	f, err := os.Open(event)
+	if err != nil {
+		logger.Info("err:", err)
+		return
+	}
+
+	go func() {
+		for {
+			events, err := readPowerButtonEvent(f)
+			if err != nil {
+				logger.Info(err)
+				continue
+			}
+			for _, ev := range events {
+				if ev.Type == EV_KEY && ev.Code == KEY_POWER {
+					err := m.service.Emit(m, "PowerActionCode", ev.Value)
+					if err != nil {
+						logger.Warning(err)
+					}
+				}
+			}
+		}
+	}()
 }

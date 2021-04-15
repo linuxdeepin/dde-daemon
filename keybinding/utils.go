@@ -228,6 +228,44 @@ func (m *Manager) systemAway() {
 	}
 }
 
+func (m *Manager) handleWakeUpScreen(wakeUp bool) {
+	var err error
+	var useWayland bool
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		useWayland = true
+	} else {
+		useWayland = false
+	}
+
+	// 息屏
+	if !wakeUp {
+		// 息屏前先锁屏
+		if !getLockState() {
+			lockPad()
+		}
+
+		doPrepareSuspend()
+		if useWayland {
+			err = exec.Command("dde_wldpms", "-s", "Off").Run()
+		} else {
+			err = dpms.ForceLevelChecked(m.conn, dpms.DPMSModeOff).Check(m.conn)
+		}
+		if err != nil {
+			logger.Warning("handleWakeUpScreen -------> Set DPMS off error:", err)
+		}
+		undoPrepareSuspend()
+	} else { // 亮屏
+		if useWayland {
+			_, err = exec.Command("dde_wldpms", "-s", "On").Output()
+		} else {
+			err = dpms.ForceLevelChecked(m.conn, dpms.DPMSModeOn).Check(m.conn)
+		}
+		if err != nil {
+			logger.Warning("handleWakeUpScreen -------> Set DPMS on error:", err)
+		}
+	}
+}
+
 func queryCommandByMime(mime string) string {
 	app := gio.AppInfoGetDefaultForType(mime, false)
 	if app == nil {
@@ -310,6 +348,41 @@ func undoPrepareSuspend() {
 	obj := sessionDBus.Object("com.deepin.daemon.Power", "/com/deepin/daemon/Power")
 	err := obj.Call("com.deepin.daemon.Power.SetPrepareSuspend", 0, suspendStateFinish).Err
 	if err != nil {
+		logger.Warning(err)
+	}
+}
+
+// 平板环境中，获取当前是否处于锁屏状态
+func getLockState() bool {
+	bus, err := dbus.SessionBus()
+	if err == nil {
+		dbusObj := bus.Object("com.deepin.due.shell", "/com/deepin/dde/lockFront")
+		var locked bool
+		err = dbusObj.Call("com.deepin.dde.lockFront.LockVisible", 0).Store(&locked)
+		if err != nil {
+			logger.Warning(err)
+			return false
+		} else {
+			logger.Info("------------------>getLockState", locked)
+			return locked
+		}
+	} else {
+		logger.Warning(err)
+		return false
+	}
+}
+
+// 平板环境锁屏
+func lockPad() {
+	bus, err := dbus.SessionBus()
+	if err == nil {
+		dbusObj := bus.Object("com.deepin.due.shell", "/com/deepin/dde/lockFront")
+		err = dbusObj.Call("com.deepin.dde.lockFront.Show", 0).Err
+		logger.Info("------------------>lockPad", err)
+		if err != nil {
+			logger.Warning(err)
+		}
+	} else {
 		logger.Warning(err)
 	}
 }

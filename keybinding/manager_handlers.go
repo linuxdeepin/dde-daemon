@@ -33,6 +33,12 @@ import (
 const (
 	padEnv                                 = "Deepin-tablet"
 	SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS = 300 * time.Millisecond
+
+	POWER_RELEASE_SHORT = 0 // 电源键短按松开
+	POWER_PRESS         = 1 // 电源键按下
+	POWER_RELEASE_LONG  = 2 // 电源键长按松开
+
+	cmdScreenShot = "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.StartScreenshot"
 )
 
 func (m *Manager) shouldShowCapsLockOSD() bool {
@@ -185,6 +191,11 @@ func (m *Manager) initHandlers() {
 	}
 
 	m.handlers[ActionTypeSystemShutdown] = func(ev *KeyEvent) { // 电源键按下的handler
+		// 平板环境下，由于电源键有长按，短按两种操作，此时对电源键的处理不走这个流程
+		if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+			return
+		}
+
 		var powerPressAction int32
 
 		systemBus, _ := dbus.SystemBus()
@@ -218,39 +229,20 @@ func (m *Manager) initHandlers() {
 			}
 			m.systemTurnOffScreen()
 		case powerActionShowUI:
-			// 平板环境
-			if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
-				// m.handleBlackScreen(m.blackScreen)
-				// m.blackScreen = !m.blackScreen
-				if !m.powerKeyTriggered {
-					m.powerKeyTriggered = true
-					m.powerKeyConsumedByScreenshotChord = false
-					m.powerKeyTime = time.Now()
-					m.interceptScreenshotChord()
-
-					time.AfterFunc(500*time.Millisecond, func() {
-						if !m.powerKeyConsumedByScreenshotChord {
-							logger.Info("!!!!!!!!!!!!!!!---->关机")
-						}
-						m.resetScreenShotComboFlags()
-					})
+			cmd := "dde-shutdown -s"
+			go func() {
+				locked, err := m.sessionManager.Locked().Get(0)
+				if err != nil {
+					logger.Warning("sessionManager get locked error:", err)
 				}
-			} else {
-				cmd := "dde-shutdown -s"
-				go func() {
-					locked, err := m.sessionManager.Locked().Get(0)
-					if err != nil {
-						logger.Warning("sessionManager get locked error:", err)
-					}
-					if locked {
-						return
-					}
-					err = m.execCmd(cmd, false)
-					if err != nil {
-						logger.Warning("execCmd error:", err)
-					}
-				}()
-			}
+				if locked {
+					return
+				}
+				err = m.execCmd(cmd, false)
+				if err != nil {
+					logger.Warning("execCmd error:", err)
+				}
+			}()
 		}
 	}
 
@@ -349,16 +341,47 @@ func (m *Manager) terminateSKLWait() {
 	}
 }
 
+func (m *Manager) handlePowerActionCode(actionCode int32) {
+	logger.Info("handlePowerActionCode", actionCode)
+	if actionCode == POWER_RELEASE_SHORT {
+		if !m.powerKeyTriggered {
+			m.powerKeyTriggered = true
+			m.powerKeyConsumedByScreenshotChord = false
+			m.powerKeyTime = time.Now()
+			m.interceptScreenshotChord()
+
+			time.AfterFunc(350*time.Millisecond, func() {
+				if !m.powerKeyConsumedByScreenshotChord {
+					m.handleWakeUpScreen(m.wakeUpScreen)
+					m.wakeUpScreen = !m.wakeUpScreen
+				}
+				m.resetScreenShotComboFlags()
+			})
+		}
+	} else if actionCode == POWER_RELEASE_LONG {
+		cmd := "due-shell -s"
+		go func() {
+			// TODO: 需要判断当前是否已经在锁屏界面
+			err := m.execCmd(cmd, false)
+			if err != nil {
+				logger.Warning("execCmd error:", err)
+			}
+		}()
+	}
+}
+
 func (m *Manager) interceptScreenshotChord() {
+	// TODO： 目前volumeUpKeyTriggered的值一直是false。之后可能会用到，先保留。
 	if m.volumeDownKeyTriggered && m.powerKeyTriggered && !m.volumeUpKeyTriggered {
 		now := time.Now()
-		// 第一个键按下150ms内，另一个键按下，被认为是同时按下，触发截屏操作
-		logger.Info("!!!!!!!!!!!!!!!!!!time", now.Sub(m.volumeDownKeyTime), now.Sub(m.powerKeyTime))
+		// 第一个键按下300ms内，另一个键按下，被认为是同时按下，触发截屏操作
 		if now.Sub(m.volumeDownKeyTime) <= SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS && now.Sub(m.powerKeyTime) <= SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS {
 			m.volumeDownKeyConsumedByScreenshotChord = true
 			m.powerKeyConsumedByScreenshotChord = true
-			//m.cancelPendingPowerKeyAction()
-			logger.Info("!!!!!!!!!!!!!!!!!!---->截屏")
+			err := m.execCmd(cmdScreenShot, false)
+			if err != nil {
+				logger.Warning("failed to exec screenShot:", err)
+			}
 		}
 	}
 }
@@ -390,13 +413,14 @@ func (m *Manager) buildHandlerFromController(c Controller) KeyEventFunc {
 			if !m.volumeDownKeyTriggered {
 				m.volumeDownKeyTriggered = true
 				m.volumeDownKeyConsumedByScreenshotChord = false
-				//m.cancelPendingPowerKeyAction();
 				m.volumeDownKeyTime = time.Now()
 				m.interceptScreenshotChord()
 
-				time.AfterFunc(500*time.Millisecond, func() {
+				time.AfterFunc(350*time.Millisecond, func() {
 					if !m.volumeDownKeyConsumedByScreenshotChord {
-						logger.Info("!!!!!!!!!!!!!!!---->音量-")
+						if err := c.ExecCmd(cmd); err != nil {
+							logger.Warning(name, "Controller exec cmd err:", err)
+						}
 					}
 					m.resetScreenShotComboFlags()
 				})
