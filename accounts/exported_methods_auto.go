@@ -204,6 +204,11 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"password"},
 		},
 		{
+			Name:   "SetPasswordHint",
+			Fn:     v.SetPasswordHint,
+			InArgs: []string{"hint"},
+		},
+		{
 			Name:   "SetShell",
 			Fn:     v.SetShell,
 			InArgs: []string{"shell"},

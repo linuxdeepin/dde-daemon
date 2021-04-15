@@ -25,6 +25,7 @@ typedef struct spwd cspwd;
 */
 import "C"
 import (
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"os"
@@ -966,4 +967,13 @@ func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64
 		return expiredStatusExpiredSoon, relevantDay, nil
 	}
 	return expiredStatusNormal, relevantDay, nil
+}
+
+func (u *User) SetPasswordHint(hint string) (busErr *dbus.Error) {
+	encodeHint := base64.StdEncoding.EncodeToString([]byte(hint))
+	err := u.writeUserConfigWithChange(confKeyPasswordHint, encodeHint)
+	if err == nil {
+		u.setPropPasswordHint(hint)
+	}
+	return dbusutil.ToError(err)
 }
