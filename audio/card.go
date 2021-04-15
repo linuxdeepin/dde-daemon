@@ -162,10 +162,6 @@ func (cards CardList) stringWithoutUnavailable() string {
 				continue
 			}
 			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardInfo.core.Name, portInfo.Name)
-			if !portConfig.Enabled {
-				logger.Debugf("port '%s(%s)' is disabled", portInfo.Name, portInfo.Description)
-				continue
-			}
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
 				Enabled:     portConfig.Enabled,
