@@ -54,7 +54,8 @@ const (
 	systemdLocaleFile    = "/etc/locale.conf"
 	userLocaleConfigFile = ".config/locale.conf"
 
-	defaultLocale = "en_US.UTF-8"
+	defaultLocale        = "en_US.UTF-8"
+	padEnv               = "Deepin-tablet"
 )
 
 var (
@@ -187,6 +188,12 @@ func newLangSelector(service *dbusutil.Service) (*LangSelector, error) {
 		locales = append(locales, locale)
 		lang.settings.SetStrv(gsKeyLocales, locales)
 	}
+
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv && !strv.Strv(locales).Contains(defaultLocale) {
+		locales = append(locales, defaultLocale)
+		lang.settings.SetStrv(gsKeyLocales, locales)
+	}
+
 	lang.Locales = locales
 
 	return &lang, nil
