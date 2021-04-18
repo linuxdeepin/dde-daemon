@@ -471,9 +471,14 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 }
 
 func (m *Manager) getInterfaceFlags(dev *device) uint32 {
+	if strings.Contains(dev.Interface, "p2p-dev") {
+                return 0
+        }
+
 	interfaceInfo, err := net.InterfaceByName(dev.Interface)
 	if err != nil {
 		logger.Warning("failed to get interface info:", err)
+		logger.Warning("dev.Interface is :", dev.Interface)
 		return 0
 	}
 
