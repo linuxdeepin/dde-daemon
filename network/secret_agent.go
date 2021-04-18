@@ -355,7 +355,7 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	// https://developer.gnome.org/gio/stable/GDBusProxy.html#GDBusProxy--g-default-timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
-	cmd := exec.CommandContext(ctx,nmSecretDialogBin)
+	cmd := exec.CommandContext(ctx, nmSecretDialogBin)
 	cmd.Stdin = bytes.NewReader(reqJSON)
 	var cmdOutBuf bytes.Buffer
 	cmd.Stdout = &cmdOutBuf
@@ -393,6 +393,7 @@ func (sa *SecretAgent) GetSecrets(connectionData map[string]map[string]dbus.Vari
 	var err error
 	secretsData, err = sa.getSecrets(connectionData, connectionPath, settingName, hints, flags)
 	if err != nil {
+		logger.Warningf("get secrets failed, err: %v", err)
 		if err == errSecretAgentUserCanceled {
 			return nil, &dbus.Error{
 				Name: "org.freedesktop.NetworkManager.SecretAgent.UserCanceled",
@@ -551,35 +552,29 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 
 	} else if secretKeys, ok := secretSettingKeys[settingName]; ok {
 		var askItems []string
-		// 用于判断当前是否需要保存密码
-		var notSaved bool
 		for _, secretKey := range secretKeys {
 			secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
 				getSecretFlagsKeyName(secretKey))
 
 			if secretFlags == secretFlagAsk {
+				// always ask, means secret will not saved
 				if allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
 					askItems = append(askItems, secretKey)
-					// 根据NM文档，password-flags为2时，此时不需要保存密码
-					if secretKey == "password" {
-						notSaved = true
-					}
 				}
 			} else if secretFlags == secretFlagNone {
+				// means system will storage secret in config file
 				secretStr, _ := getConnectionDataString(connectionData, settingName,
 					secretKey)
-
 				if requestNew {
 					secretStr = ""
 				}
-
 				if secretStr != "" {
 					setting[secretKey] = dbus.MakeVariant(secretStr)
 				} else if allowInteraction &&
 					isMustAsk(connectionData, settingName, secretKey) {
 					askItems = append(askItems, secretKey)
 				}
-			} else if secretFlags == secretFlagAgentOwned && sa.m.saveToKeyring {
+			} else if secretFlags == secretFlagAgentOwned {
 				if requestNew {
 					// check if NMSecretAgentGetSecretsFlags contains NM_SECRET_AGENT_GET_SECRETS_FLAG_REQUEST_NEW
 					// if is, means the password we set last time is incorrect, new password is needed
@@ -589,78 +584,63 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 				} else {
 					resultSaved, err := sa.getAll(connUUID, settingName)
 					if err != nil {
+						logger.Warningf("getAll resultSaved failed, err: %v", err)
 						return nil, err
 					}
-					logger.Debugf("getAll resultSaved: %#v", resultSaved)
+					logger.Debugf("getAll resultSaved success: %#v", resultSaved)
 					if len(resultSaved) == 0 && allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
+						logger.Debug("secret has not exist in keyring, need request new one")
 						askItems = append(askItems, secretKey)
+					} else {
+						logger.Debugf("get secret from keyring success, result: #%v", resultSaved)
+						// save secret to setting
+						for key, value := range resultSaved {
+							setting[key] = dbus.MakeVariant(value)
+						}
 					}
-				}
-			} else if !sa.m.saveToKeyring {
-				err = sa.deleteAll(connUUID)
-				if err != nil {
-					return nil, err
 				}
 			}
 		}
+		// if ask items exist, need to ask password
 		if allowInteraction && len(askItems) > 0 {
+			logger.Debugf("askItem exist, need to ask password, item: %v", askItems)
 			resultAsk, err := sa.askPasswords(connectionPath, connectionData, connUUID,
 				settingName, askItems, requestNew)
 			if err != nil {
 				logger.Warning("askPasswords error:", err)
 				return nil, errSecretAgentUserCanceled
 			} else {
+				logger.Debugf("ask password success, result #%v", resultAsk)
 				for key, value := range resultAsk {
 					setting[key] = dbus.MakeVariant(value)
-					secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
-						getSecretFlagsKeyName(key))
-					if secretFlags == secretFlagAgentOwned {
-						sa.m.hasSaveSecret = false
-						var items []settingItem
-						valueStr, ok := setting[key].Value().(string)
-						if ok {
-							label := fmt.Sprintf("Network secret for %s/%s/%s", connId, settingName, key)
-							items = append(items, settingItem{
-								settingName: settingName,
-								settingKey:  key,
-								value:       valueStr,
-								label:       label,
-							})
-						}
-						sa.m.items = items
-					}
 				}
 			}
 		}
-		// 不需要保存密码，则直接返回
-		if notSaved {
-			logger.Debugf("get not saved secret : %#v", setting)
-			return
-		}
-		// when requestNew is true or dont save secretKey here
-		if !sa.m.saveToKeyring || requestNew {
-			for _, item := range sa.m.items {
-				secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
-					getSecretFlagsKeyName(item.settingKey))
-				if secretFlags == secretFlagAgentOwned {
-					sa.m.hasSaveSecret = false
-					sa.m.saveToKeyring = true
-					setting[item.settingKey] = dbus.MakeVariant(item.value)
-					return
-				}
-			}
-		}
-		resultSaved, err := sa.getAll(connUUID, settingName)
-		if err != nil {
-			return nil, err
-		}
-		logger.Debugf("getAll resultSaved: %#v", resultSaved)
 
-		for key, value := range resultSaved {
+		// NM seems will not save secrets for us, so we save secrets ourselves
+		for key, value := range setting {
 			secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
 				getSecretFlagsKeyName(key))
-			if secretFlags == secretFlagAgentOwned {
-				setting[key] = dbus.MakeVariant(value)
+			if secretFlags != secretFlagAgentOwned {
+				continue
+			}
+			label := fmt.Sprintf("Network secret for %s/%s/%s", connId,
+				settingName, key)
+			// convert to string
+			valueStr, ok := value.Value().(string)
+			if !ok {
+				continue
+			}
+			item := settingItem{
+				label:       label,
+				settingName: settingName,
+				settingKey:  key,
+				value:       valueStr,
+			}
+			logger.Debug("get secret begin to save keyring")
+			err := sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
+			if err != nil {
+				logger.Warningf("set keyring failed, err: %v", err)
 			}
 		}
 	}
@@ -969,11 +949,12 @@ func (sa *SecretAgent) saveSecrets(connectionData map[string]map[string]dbus.Var
 		secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
 			getSecretFlagsKeyName(item.settingKey))
 		if secretFlags == secretFlagAgentOwned {
-			sa.m.saveToKeyring = false
-			sa.m.items = arr
 			continue
 		}
-		sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
+		err := sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
+		if err != nil {
+			logger.Warningf("set keyring failed, err: %v", err)
+		}
 	}
 
 	// delete
@@ -983,7 +964,7 @@ func (sa *SecretAgent) saveSecrets(connectionData map[string]map[string]dbus.Var
 				getSecretFlagsKeyName(secretKey))
 
 			if secretFlags != secretFlagAgentOwned {
-				sa.delete(connUUID, settingName, secretKey)
+				_ = sa.delete(connUUID, settingName, secretKey)
 			}
 		}
 	}
@@ -995,7 +976,7 @@ func (sa *SecretAgent) saveSecrets(connectionData map[string]map[string]dbus.Var
 			for _, secretKey := range vpnSecretKeys {
 				secretFlags := vpnDataMap[getSecretFlagsKeyName(secretKey)]
 				if secretFlags != secretFlagAgentOwnedStr {
-					sa.delete(connUUID, "vpn", secretKey)
+					_ = sa.delete(connUUID, "vpn", secretKey)
 				}
 			}
 		}
