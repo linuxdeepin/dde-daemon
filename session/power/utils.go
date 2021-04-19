@@ -106,7 +106,29 @@ const (
 	lockFrontServiceName = "com.deepin.dde.lockFront"
 	lockFrontIfc         = lockFrontServiceName
 	lockFrontObjPath     = "/com/deepin/dde/lockFront"
+
+	dueShellServiceName = "com.deepin.due.shell"
+	padEnv              = "Deepin-tablet"
 )
+
+// 平板环境中，获取当前是否处于锁屏状态
+func getLockState() bool {
+	bus, err := dbus.SessionBus()
+	if err == nil {
+		dbusObj := bus.Object(dueShellServiceName, lockFrontObjPath)
+		var locked bool
+		err = dbusObj.Call(lockFrontIfc+".LockVisible", 0).Store(&locked)
+		if err != nil {
+			logger.Warning(err)
+			return false
+		} else {
+			return locked
+		}
+	} else {
+		logger.Warning(err)
+		return false
+	}
+}
 
 func (m *Manager) doLock(autoStartAuth bool) {
 	logger.Info("Lock Screen")
@@ -115,10 +137,24 @@ func (m *Manager) doLock(autoStartAuth bool) {
 		logger.Warning(err)
 		return
 	}
-	lockFrontObj := bus.Object(lockFrontServiceName, lockFrontObjPath)
-	err = lockFrontObj.Call(lockFrontIfc+".ShowAuth", 0, autoStartAuth).Err
-	if err != nil {
-		logger.Warning("failed to call lockFront ShowAuth:", err)
+
+	// 平板环境下
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		if getLockState() {
+			return
+		}
+
+		lockFrontObj := bus.Object(dueShellServiceName, lockFrontObjPath)
+		err = lockFrontObj.Call(lockFrontIfc+".Show", 0).Err
+		if err != nil {
+			logger.Warning(err)
+		}
+	} else {
+		lockFrontObj := bus.Object(lockFrontServiceName, lockFrontObjPath)
+		err = lockFrontObj.Call(lockFrontIfc+".ShowAuth", 0, autoStartAuth).Err
+		if err != nil {
+			logger.Warning("failed to call lockFront ShowAuth:", err)
+		}
 	}
 }
 
