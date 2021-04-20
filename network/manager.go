@@ -155,10 +155,9 @@ func (m *Manager) init() {
 		return
 	}
 
-	sessionBus, err := dbus.SessionBus()
-	if err != nil {
-		return
-	}
+	sessionBus := m.service.Conn()
+	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
+	m.sessionSigLoop.Start()
 
 	m.sysSigLoop = sysSigLoop
 	m.initDbusObjects()
@@ -259,8 +258,6 @@ func (m *Manager) init() {
 	// 	logger.Warning(err)
 	// }
 
-	m.sessionSigLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)
-	m.sessionSigLoop.Start()
 	m.syncConfig = dsync.NewConfig("network", &syncConfig{m: m},
 		m.sessionSigLoop, dbusPath, logger)
 }
