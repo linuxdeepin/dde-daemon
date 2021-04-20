@@ -609,38 +609,37 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 			if err != nil {
 				logger.Warning("askPasswords error:", err)
 				return nil, errSecretAgentUserCanceled
-			} else {
-				logger.Debugf("ask password success, result #%v", resultAsk)
-				for key, value := range resultAsk {
-					setting[key] = dbus.MakeVariant(value)
-				}
 			}
-		}
+			logger.Debugf("ask password success, result #%v", resultAsk)
+			for key, value := range resultAsk {
+				setting[key] = dbus.MakeVariant(value)
+			}
 
-		// NM seems will not save secrets for us, so we save secrets ourselves
-		for key, value := range setting {
-			secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
-				getSecretFlagsKeyName(key))
-			if secretFlags != secretFlagAgentOwned {
-				continue
-			}
-			label := fmt.Sprintf("Network secret for %s/%s/%s", connId,
-				settingName, key)
-			// convert to string
-			valueStr, ok := value.Value().(string)
-			if !ok {
-				continue
-			}
-			item := settingItem{
-				label:       label,
-				settingName: settingName,
-				settingKey:  key,
-				value:       valueStr,
-			}
-			logger.Debug("get secret begin to save keyring")
-			err := sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
-			if err != nil {
-				logger.Warningf("set keyring failed, err: %v", err)
+			// NM seems will not save secrets for us, so we save secrets ourselves
+			for key, value := range setting {
+				secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
+					getSecretFlagsKeyName(key))
+				if secretFlags != secretFlagAgentOwned {
+					continue
+				}
+				label := fmt.Sprintf("Network secret for %s/%s/%s", connId,
+					settingName, key)
+				// convert to string
+				valueStr, ok := value.Value().(string)
+				if !ok {
+					continue
+				}
+				item := settingItem{
+					label:       label,
+					settingName: settingName,
+					settingKey:  key,
+					value:       valueStr,
+				}
+				logger.Debug("get secret begin to save keyring")
+				err := sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
+				if err != nil {
+					logger.Warningf("set keyring failed, err: %v", err)
+				}
 			}
 		}
 	}
@@ -948,7 +947,8 @@ func (sa *SecretAgent) saveSecrets(connectionData map[string]map[string]dbus.Var
 		}
 		secretFlags, _ := getConnectionDataUint32(connectionData, item.settingName,
 			getSecretFlagsKeyName(item.settingKey))
-		if secretFlags == secretFlagAgentOwned {
+		// only agent owned password need to be saved
+		if secretFlags != secretFlagAgentOwned {
 			continue
 		}
 		err := sa.set(item.label, connUUID, item.settingName, item.settingKey, item.value)
