@@ -30,26 +30,54 @@ import (
 	"pkg.deepin.io/lib/pulse"
 )
 
+func (a *Audio) pollEvents() []*pulse.Event {
+	events := make([]*pulse.Event, 0)
+
+FOR:
+	for {
+		select {
+		case event := <-a.eventChan:
+			events = append(events, event)
+		default:
+			logger.Debugf("poll %d events", len(events))
+			break FOR
+		}
+	}
+
+	return events
+}
+
+func (a *Audio) dispatchEvents(events []*pulse.Event) {
+	for _, event := range events {
+		switch event.Facility {
+		case pulse.FacilityServer:
+			a.handleServerEvent(event.Type)
+			a.saveConfig()
+		case pulse.FacilityCard:
+			a.handleCardEvent(event.Type, event.Index)
+			a.saveConfig()
+		case pulse.FacilitySink:
+			a.handleSinkEvent(event.Type, event.Index)
+			a.saveConfig()
+		case pulse.FacilitySource:
+			a.handleSourceEvent(event.Type, event.Index)
+			a.saveConfig()
+		case pulse.FacilitySinkInput:
+			a.handleSinkInputEvent(event.Type, event.Index)
+		}
+	}
+}
+
 func (a *Audio) handleEvent() {
 	for {
 		select {
 		case event := <-a.eventChan:
-			switch event.Facility {
-			case pulse.FacilityServer:
-				a.handleServerEvent(event.Type)
-				a.saveConfig()
-			case pulse.FacilityCard:
-				a.handleCardEvent(event.Type, event.Index)
-				a.saveConfig()
-			case pulse.FacilitySink:
-				a.handleSinkEvent(event.Type, event.Index)
-				a.saveConfig()
-			case pulse.FacilitySource:
-				a.handleSourceEvent(event.Type, event.Index)
-				a.saveConfig()
-			case pulse.FacilitySinkInput:
-				a.handleSinkInputEvent(event.Type, event.Index)
-			}
+			tail := a.pollEvents()
+			events := make([]*pulse.Event, 0, 1+len(tail))
+			events = append(events, event)
+			events = append(events, tail...)
+			a.refresh()
+			a.dispatchEvents(events)
 
 		case <-a.quit:
 			logger.Debug("handleEvent return")
@@ -381,30 +409,6 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 	}
 }
 
-func (a *Audio) addSink(sinkInfo *pulse.Sink) {
-	sink := newSink(sinkInfo, a)
-
-	a.mu.Lock()
-	a.sinks[sinkInfo.Index] = sink
-	a.mu.Unlock()
-
-	sinkPath := sink.getPath()
-	err := a.service.Export(sinkPath, sink)
-	if err != nil {
-		logger.Warningf("failed to export sink #%d: %v", sink.index, err)
-		return
-	}
-	a.updatePropSinks()
-
-	if sink.Name == a.defaultSinkName {
-		a.defaultSink = sink
-		a.PropsMu.Lock()
-		a.setPropDefaultSink(sinkPath)
-		a.PropsMu.Unlock()
-		logger.Debug("set prop default sink:", sinkPath)
-	}
-}
-
 func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
 	switch eventType {
 	case pulse.EventTypeNew:
@@ -537,27 +541,6 @@ func (a *Audio) updatePropSinkInputs() {
 	a.updateObjPathsProp("SinkInput", ids, a.setPropSinkInputs)
 }
 
-func (a *Audio) addSinkInput(sinkInputInfo *pulse.SinkInput) {
-	sinkInput := newSinkInput(sinkInputInfo, a)
-	a.mu.Lock()
-	a.sinkInputs[sinkInputInfo.Index] = sinkInput
-	a.mu.Unlock()
-
-	sinkInputPath := sinkInput.getPath()
-
-	if sinkInput.visible {
-		err := a.service.Export(sinkInputPath, sinkInput)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-	}
-	a.updatePropSinkInputs()
-
-	logger.Debugf("sink-input (#%d) %s play with sink #%d", sinkInputInfo.Index,
-		sinkInputInfo.Name, sinkInputInfo.Sink)
-}
-
 func (a *Audio) handleSinkInputAdded(idx uint32) {
 	sinkInputInfo, err := a.ctx.GetSinkInput(idx)
 	if err != nil {
@@ -594,35 +577,6 @@ func (a *Audio) handleSinkInputRemoved(idx uint32) {
 	}
 
 	a.updatePropSinkInputs()
-}
-
-func (a *Audio) addSource(sourceInfo *pulse.Source) {
-	//如果不能启用输入源,说明声卡配置文件是"a2dp",此时不能添加a2dp输入设备
-	if !a.enableSource {
-		a.enableSource = true
-		return
-	}
-	source := newSource(sourceInfo, a)
-
-	a.mu.Lock()
-	a.sources[sourceInfo.Index] = source
-	a.mu.Unlock()
-
-	sourcePath := source.getPath()
-	err := a.service.Export(sourcePath, source)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	a.updatePropSources()
-
-	if a.defaultSourceName == source.Name {
-		a.defaultSource = source
-		a.PropsMu.Lock()
-		a.setPropDefaultSource(sourcePath)
-		a.PropsMu.Unlock()
-	}
 }
 
 func (a *Audio) handleSourceEvent(eventType int, idx uint32) {

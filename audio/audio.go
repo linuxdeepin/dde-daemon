@@ -245,6 +245,162 @@ func getCtx() (ctx *pulse.Context, err error) {
 	return
 }
 
+func (a *Audio) refreshCards() {
+	a.cards = newCardList(a.ctx.GetCardList())
+}
+
+// 添加一个新的sink,参数是pulse的Sink
+func (a *Audio) addSink(sinkInfo *pulse.Sink) {
+	sink := newSink(sinkInfo, a)
+	a.sinks[sinkInfo.Index] = sink
+	sinkPath := sink.getPath()
+	err := a.service.Export(sinkPath, sink)
+	if err != nil {
+		logger.Warning(err)
+	}
+	a.updatePropSinks()
+}
+
+// 添加一个新的source,参数是pulse的Source
+func (a *Audio) addSource(sourceInfo *pulse.Source) {
+	source := newSource(sourceInfo, a)
+	a.sources[sourceInfo.Index] = source
+	sourcePath := source.getPath()
+	err := a.service.Export(sourcePath, source)
+	if err != nil {
+		logger.Warning(err)
+	}
+	a.updatePropSources()
+}
+
+// 添加一个新的sink-input,参数是pulse的SinkInput
+func (a *Audio) addSinkInput(sinkInputInfo *pulse.SinkInput) {
+	logger.Debug("new")
+	sinkInput := newSinkInput(sinkInputInfo, a)
+	logger.Debug("new done")
+	a.sinkInputs[sinkInputInfo.Index] = sinkInput
+	sinkInputPath := sinkInput.getPath()
+	err := a.service.Export(sinkInputPath, sinkInput)
+	if err != nil {
+		logger.Warning(err)
+	}
+	logger.Debug("updatePropSinkInputs")
+	a.updatePropSinkInputs()
+	logger.Debug("updatePropSinkInputs done")
+}
+
+func (a *Audio) refreshSinks() {
+	if a.sinks == nil {
+		a.sinks = make(map[uint32]*Sink)
+	}
+
+	// 获取当前的sinks
+	sinkInfoMap := make(map[uint32]*pulse.Sink)
+	sinkInfoList := a.ctx.GetSinkList()
+
+	for _, sinkInfo := range sinkInfoList {
+		sinkInfoMap[sinkInfo.Index] = sinkInfo
+		sink, exist := a.sinks[sinkInfo.Index]
+		if exist {
+			// 存在则更新
+			logger.Debugf("update sink #%d", sinkInfo.Index)
+			sink.update(sinkInfo)
+		} else {
+			// 不存在则添加
+			logger.Debugf("add sink #%d", sinkInfo.Index)
+			a.addSink(sinkInfo)
+		}
+	}
+
+	// 删除不存在的旧sink
+	for key, sink := range a.sinks {
+		_, exist := sinkInfoMap[key]
+		if !exist {
+			logger.Debugf("delete sink #%d", key)
+			a.service.StopExport(sink)
+			delete(a.sinks, key)
+		}
+	}
+}
+
+func (a *Audio) refreshSources() {
+	if a.sources == nil {
+		a.sources = make(map[uint32]*Source)
+	}
+
+	// 获取当前的sources
+	sourceInfoMap := make(map[uint32]*pulse.Source)
+	sourceInfoList := a.ctx.GetSourceList()
+
+	for _, sourceInfo := range sourceInfoList {
+		sourceInfoMap[sourceInfo.Index] = sourceInfo
+		source, exist := a.sources[sourceInfo.Index]
+		if exist {
+			// 存在则更新
+			logger.Debugf("update source #%d", sourceInfo.Index)
+			source.update(sourceInfo)
+		} else {
+			// 不存在则添加
+			logger.Debugf("add source #%d", sourceInfo.Index)
+			a.addSource(sourceInfo)
+		}
+	}
+
+	// 删除不存在的旧source
+	for key, source := range a.sources {
+		_, exist := sourceInfoMap[key]
+		if !exist {
+			logger.Debugf("delete source #%d", key)
+			a.service.StopExport(source)
+			delete(a.sources, key)
+		}
+	}
+}
+
+func (a *Audio) refershSinkInputs() {
+	if a.sinkInputs == nil {
+		a.sinkInputs = make(map[uint32]*SinkInput)
+	}
+
+	// 获取当前的sink-inputs
+	sinkInputInfoMap := make(map[uint32]*pulse.SinkInput)
+	sinkInputInfoList := a.ctx.GetSinkInputList()
+
+	for _, sinkInputInfo := range sinkInputInfoList {
+		sinkInputInfoMap[sinkInputInfo.Index] = sinkInputInfo
+		sinkInput, exist := a.sinkInputs[sinkInputInfo.Index]
+		if exist {
+			logger.Debugf("update sink-input #%d", sinkInputInfo.Index)
+			sinkInput.update(sinkInputInfo)
+		} else {
+			logger.Debugf("add sink-input #%d", sinkInputInfo.Index)
+			a.addSinkInput(sinkInputInfo)
+		}
+	}
+
+	// 删除不存在的旧sink-inputs
+	for key, sinkInput := range a.sinkInputs {
+		_, exist := sinkInputInfoMap[key]
+		if !exist {
+			logger.Debugf("delete sink-input #%d", key)
+			a.service.StopExport(sinkInput)
+			delete(a.sinkInputs, key)
+		}
+	}
+}
+
+func (a *Audio) refresh() {
+	logger.Debug("refresh cards")
+	a.refreshCards()
+	logger.Debug("refresh sinks")
+	a.refreshSinks()
+	logger.Debug("refresh sources")
+	a.refreshSources()
+	logger.Debug("refresh sinkinputs")
+	a.refershSinkInputs()
+	logger.Debug("refresh done")
+}
+
 func (a *Audio) init() error {
 	if a.settings.GetBoolean(gsKeyDisableAutoMute) {
 		err := disableAutoMuteMode()
@@ -260,52 +416,11 @@ func (a *Audio) init() error {
 
 	a.defaultPaCfg = loadDefaultPaConfig(defaultPaFile)
 	logger.Debugf("defaultPaConfig: %+v", a.defaultPaCfg)
-	a.mu.Lock()
+
 	a.ctx = ctx
 
-	// init a.sinks
-	a.sinks = make(map[uint32]*Sink)
-	sinkInfoList := a.ctx.GetSinkList()
-	for _, sinkInfo := range sinkInfoList {
-		sink := newSink(sinkInfo, a)
-		a.sinks[sinkInfo.Index] = sink
-		sinkPath := sink.getPath()
-		err := a.service.Export(sinkPath, sink)
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
-	// init a.sources
-	a.sources = make(map[uint32]*Source)
-	sourceInfoList := a.ctx.GetSourceList()
-	for _, sourceInfo := range sourceInfoList {
-		source := newSource(sourceInfo, a)
-		a.sources[sourceInfo.Index] = source
-		sourcePath := source.getPath()
-		err := a.service.Export(sourcePath, source)
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
-	// init a.sinkInputs
-	a.sinkInputs = make(map[uint32]*SinkInput)
-	sinkInputInfoList := a.ctx.GetSinkInputList()
-	for _, sinkInputInfo := range sinkInputInfoList {
-		sinkInput := newSinkInput(sinkInputInfo, a)
-		a.sinkInputs[sinkInputInfo.Index] = sinkInput
-		if sinkInput.visible {
-			err := a.service.Export(sinkInput.getPath(), sinkInput)
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
-	}
-	a.mu.Unlock()
-	a.updatePropSinks()
-	a.updatePropSources()
-	a.updatePropSinkInputs()
+	// 更新本地数据
+	a.refresh()
 
 	serverInfo, err := a.ctx.GetServer()
 	if err == nil {
@@ -335,13 +450,11 @@ func (a *Audio) init() error {
 		logger.Warning(err)
 	}
 
-	a.mu.Lock()
-	loadBluezConfig(bluezAudioConfigFilePath) // 注意：这个要在newCardList之前调用
-	a.cards = newCardList(a.ctx.GetCardList())
-
+	loadBluezConfig(bluezAudioConfigFilePath)
 	GetConfigKeeper().Load()
-	a.PropsMu.Lock()
+
 	logger.Debug("init cards")
+	a.PropsMu.Lock()
 	a.setPropCards(a.cards.string())
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 	a.PropsMu.Unlock()
@@ -353,8 +466,6 @@ func (a *Audio) init() error {
 	a.ctx.AddStateChan(a.stateChan)
 	a.inputAutoSwitchCount = 0
 	a.outputAutoSwitchCount = 0
-
-	a.mu.Unlock()
 
 	// priorities.Load(globalPrioritiesFilePath, a.cards) // TODO: 删除
 	GetPriorityManager().Init(a.cards)
@@ -612,21 +723,21 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 
 	// TODO: 后面这些应该不需要了,改成触发自动切换,另外当切换到disable端口上时静音
-	defaultSinkActivePortName := a.getDefaultSinkActivePortName()
-	defaultSourceActivePortName := a.getDefaultSourceActivePortName()
-	if portName == defaultSinkActivePortName {
-		defaultSink := a.getDefaultSink()
-		if defaultSink == nil {
-			return dbusutil.ToError(errors.New("can not get default sink"))
-		}
-		defaultSink.setMute(!enabled)
-	} else if portName == defaultSourceActivePortName {
-		defaultsource := a.getDefaultSource()
-		if defaultsource == nil {
-			return dbusutil.ToError(errors.New("can not get default source"))
-		}
-		defaultsource.setMute(!enabled)
-	}
+	// defaultSinkActivePortName := a.getDefaultSinkActivePortName()
+	// defaultSourceActivePortName := a.getDefaultSourceActivePortName()
+	// if portName == defaultSinkActivePortName {
+	// 	defaultSink := a.getDefaultSink()
+	// 	if defaultSink == nil {
+	// 		return dbusutil.ToError(errors.New("can not get default sink"))
+	// 	}
+	// 	defaultSink.setMute(!enabled)
+	// } else if portName == defaultSourceActivePortName {
+	// 	defaultsource := a.getDefaultSource()
+	// 	if defaultsource == nil {
+	// 		return dbusutil.ToError(errors.New("can not get default source"))
+	// 	}
+	// 	defaultsource.setMute(!enabled)
+	// }
 
 	return nil
 }
