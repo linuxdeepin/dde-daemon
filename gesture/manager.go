@@ -14,7 +14,9 @@ import (
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	gesture "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.gesture"
+	clipboard "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.clipboard"
 	dock "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.dock"
+	notification "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.notification"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	gio "pkg.deepin.io/gir/gio-2.0"
@@ -22,8 +24,6 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/gsettings"
 	dutils "pkg.deepin.io/lib/utils"
-	clipboard "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.clipboard"
-	notification "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.notification"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -258,7 +258,7 @@ func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
 func (m *Manager) Exec(evInfo EventInfo) error {
 	info := m.Infos.Get(evInfo)
 	if info == nil {
-		return fmt.Errorf("not found event info: %s", info.Event.toString())
+		return fmt.Errorf("not found event info: %s", evInfo.toString())
 	}
 
 	logger.Debugf("[Exec]: event info:%s  action info:%s", info.Event.toString(), info.Action.toString())
@@ -377,7 +377,7 @@ func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float
 	return nil
 }
 
-func (m *Manager) handleTouchMovementEvent(direction string, fingers int32, startScaleX float64, startScaleY float64, endScaleX float64, endScaleY float64) error{
+func (m *Manager) handleTouchMovementEvent(direction string, fingers int32, startScaleX float64, startScaleY float64, endScaleX float64, endScaleY float64) error {
 	if fingers == 1 {
 		switch direction {
 		case "left":
