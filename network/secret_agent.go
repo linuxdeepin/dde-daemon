@@ -13,7 +13,8 @@ import (
 	"sync"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	"github.com/godbus/dbus"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
 	"pkg.deepin.io/dde/daemon/network/nm"
 	"pkg.deepin.io/lib/dbusutil"
@@ -50,10 +51,12 @@ type saveSecretsTask struct {
 }
 
 type SecretAgent struct {
+	sessionSigLoop      *dbusutil.SignalLoop
 	secretService       *secrets.Service
 	secretSessionPath   dbus.ObjectPath
 	defaultCollection   *secrets.Collection
 	defaultCollectionMu sync.Mutex
+	tryUnlockColMu      sync.Mutex
 
 	saveSecretsTasks   map[saveSecretsTaskKey]saveSecretsTask
 	saveSecretsTasksMu sync.Mutex
@@ -101,7 +104,20 @@ func (sa *SecretAgent) getSaveSecretsTaskProcess(connPath dbus.ObjectPath,
 	return task.process
 }
 
+// getDefaultCollection 获取默认密钥环，并且尝试解锁它。
 func (sa *SecretAgent) getDefaultCollection() (*secrets.Collection, error) {
+	col, err := sa.getDefaultCollectionAux()
+	if err != nil {
+		return nil, err
+	}
+	err = sa.tryUnlockCollection(col)
+	if err != nil {
+		return nil, err
+	}
+	return col, nil
+}
+
+func (sa *SecretAgent) getDefaultCollectionAux() (*secrets.Collection, error) {
 	sa.defaultCollectionMu.Lock()
 	defer sa.defaultCollectionMu.Unlock()
 
@@ -137,12 +153,20 @@ func newSecretAgent(secServiceObj *secrets.Service, manager *Manager) (*SecretAg
 	}
 
 	sa := &SecretAgent{}
+	sa.sessionSigLoop = manager.sessionSigLoop
 	sa.secretSessionPath = sessionPath
 	sa.secretService = secServiceObj
 	sa.saveSecretsTasks = make(map[saveSecretsTaskKey]saveSecretsTask)
 	sa.m = manager
 	sa.needSleep = true
 	logger.Debug("session path:", sessionPath)
+
+	// 尽早解锁密钥环
+	_, err = sa.getDefaultCollection()
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	return sa, nil
 }
 
@@ -176,6 +200,104 @@ func (sa *SecretAgent) deleteAll(uuid string) error {
 		}
 	}
 	return nil
+}
+
+// tryUnlockCollection 尝试解锁密钥环，如果返回错误则解锁失败。
+func (sa *SecretAgent) tryUnlockCollection(collection *secrets.Collection) error {
+	// 保证同时只有一个解锁对话框
+	sa.tryUnlockColMu.Lock()
+	defer sa.tryUnlockColMu.Unlock()
+
+	locked, err := collection.Locked().Get(0)
+	if err != nil {
+		return err
+	}
+	if !locked {
+		// 未上锁，直接返回
+		return nil
+	}
+
+	collectionPath := collection.Path_()
+
+	unlocked, promptPath, err := sa.secretService.Unlock(0, []dbus.ObjectPath{collectionPath})
+	if err != nil {
+		return err
+	}
+	logger.Debugf("call Unlock unlocked: %v, promptPath: %v", unlocked, promptPath)
+	for _, objPath := range unlocked {
+		if objPath == collectionPath {
+			// 大概已经无密码自动解锁了
+			return nil
+		}
+	}
+
+	if promptPath == "/" {
+		return errors.New("invalid prompt path")
+	}
+
+	sessionBus := sa.sessionSigLoop.Conn()
+
+	promptObj, err := secrets.NewPrompt(sessionBus, promptPath)
+	if err != nil {
+		return err
+	}
+	promptObj.InitSignalExt(sa.sessionSigLoop, true)
+	ch := make(chan error)
+
+	// 防止 org.freedesktop.secrets 服务异常退出，造成 promptObj 不能收到信号，让代码卡住。
+	dbusDaemon := ofdbus.NewDBus(sessionBus)
+	dbusDaemon.InitSignalExt(sa.sessionSigLoop, true)
+	_, err = dbusDaemon.ConnectNameOwnerChanged(func(name string, oldOwner string, newOwner string) {
+		if name == sa.secretService.ServiceName_() && oldOwner != "" && newOwner == "" {
+			ch <- errors.New(sa.secretService.ServiceName_() + " name lost")
+		}
+	})
+	if err != nil {
+		return err
+	}
+	defer func() {
+		dbusDaemon.RemoveAllHandlers()
+	}()
+
+	// 监听解锁完成信号
+	_, err = promptObj.ConnectCompleted(func(dismissed bool, result dbus.Variant) {
+		// 用户取消解锁
+		if dismissed {
+			ch <- errors.New("prompt dismissed by user")
+			return
+		}
+
+		paths, ok := result.Value().([]dbus.ObjectPath)
+		if !ok {
+			ch <- errors.New("type of result.Value() is not []dbus.ObjectPath")
+			return
+		}
+		for _, objPath := range paths {
+			if objPath == collectionPath {
+				// 正常解锁完成
+				ch <- nil
+				return
+			}
+		}
+		// 这里的情况不太可能发生
+		ch <- errors.New("not found collection path in paths")
+	})
+	if err != nil {
+		return err
+	}
+	defer func() {
+		promptObj.RemoveAllHandlers()
+	}()
+
+	// 调用 Prompt 方法之后就会弹出密钥环解锁对话框
+	err = promptObj.Prompt(0, "")
+	if err != nil {
+		return err
+	}
+
+	// 目前设计成无超时的
+	err = <-ch
+	return err
 }
 
 func (sa *SecretAgent) getAll(uuid, settingName string) (map[string]string, error) {
@@ -282,6 +404,7 @@ func (sa *SecretAgent) set(label, uuid, settingName, settingKey, value string) e
 	if err != nil {
 		return err
 	}
+
 	_, _, err = defaultCollection.CreateItem(0, properties, itemSecret, true)
 	return err
 }
