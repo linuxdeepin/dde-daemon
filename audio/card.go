@@ -92,12 +92,7 @@ func (c *Card) update(card *pulse.Card) {
 	sort.Sort(card.Profiles)
 	c.Profiles = newProfileList(card.Profiles)
 	c.filterProfile(card)
-	if isBluezAudio(card.Name) {
-		logger.Debugf("card %s create bluez virtual ports", card.Name)
-		c.Ports = createBluezVirtualCardPorts(card.Name, card.Ports)
-	} else {
-		c.Ports = card.Ports
-	}
+	c.Ports = card.Ports
 }
 
 func (c *Card) tryGetProfileByPort(portName string) (string, error) {

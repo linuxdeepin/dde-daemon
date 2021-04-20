@@ -226,25 +226,8 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 	newActivePort := toPort(sinkInfo.ActivePort)
 	var activePortChanged bool
 
-	if isBluezAudio(s.Name) {
-		logger.Debugf("create bluez virtual port for sink %s", s.Name)
-		s.setPropPorts(createBluezVirtualSinkPorts(toPorts(sinkInfo.Ports)))
-
-		//此处获取的profile可能不是最新的，导致设置相应端口信息错误，改为Name去判断
-		if strings.Contains(sinkInfo.Name, "headset_head_unit") {
-			newActivePort.Name += "(headset_head_unit)"
-			newActivePort.Description += "(Headset)"
-		} else if strings.Contains(sinkInfo.Name, "a2dp_sink") {
-			newActivePort.Name += "(a2dp_sink)"
-			newActivePort.Description += "(A2DP)"
-		} else {
-			logger.Warningf("cannot get profile for sink %s", s.Name)
-		}
-		activePortChanged = s.setPropActivePort(newActivePort)
-	} else {
-		s.setPropPorts(toPorts(sinkInfo.Ports))
-		activePortChanged = s.setPropActivePort(newActivePort)
-	}
+	s.setPropPorts(toPorts(sinkInfo.Ports))
+	activePortChanged = s.setPropActivePort(newActivePort)
 
 	s.props = sinkInfo.PropList
 	s.PropsMu.Unlock()

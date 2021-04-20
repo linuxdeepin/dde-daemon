@@ -235,17 +235,8 @@ func (s *Source) update(sourceInfo *pulse.Source) {
 		ports = append(ports, toPort(p))
 	}
 
-	if isBluezAudio(s.Name) {
-		logger.Debugf("create bluez virtual port for source %s", s.Name)
-		s.setPropPorts(createBluezVirtualSourcePorts(ports))
-		activePort := toPort(sourceInfo.ActivePort)
-		activePort.Name += "(headset_head_unit)"
-		activePort.Description += "(Headset)"
-		s.setPropActivePort(activePort)
-	} else {
-		s.setPropPorts(ports)
-		s.setPropActivePort(toPort(sourceInfo.ActivePort))
-	}
+	s.setPropPorts(ports)
+	s.setPropActivePort(toPort(sourceInfo.ActivePort))
 
 	s.PropsMu.Unlock()
 }
