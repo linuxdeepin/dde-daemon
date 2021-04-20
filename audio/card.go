@@ -71,6 +71,9 @@ func getCardName(card *pulse.Card) (name string) {
 
 func (a *Audio) getCardNameById(cardId uint32) string {
 	if !a.isCardIdValid(cardId) {
+		// 出现这个报错通常是非常严重的问题，说明PulseAudio数据同步更新的重构没有完全实现，
+		// 出现此问题务必要清理掉
+		// 注意：有一种情况下属于正常现象，那就是调用IsPortEnabled的时候，但是不建议调用这个接口
 		logger.Warningf("invalid card ID %d", cardId)
 		return ""
 	}
@@ -125,6 +128,7 @@ func newCardList(cards []*pulse.Card) CardList {
 	var result CardList
 	for _, v := range cards {
 		result = append(result, newCard(v))
+		logger.Debugf("add card #%d %s", v.Index, v.Name)
 	}
 	return result
 }

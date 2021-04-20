@@ -247,6 +247,8 @@ func getCtx() (ctx *pulse.Context, err error) {
 
 func (a *Audio) refreshCards() {
 	a.cards = newCardList(a.ctx.GetCardList())
+	a.setPropCards(a.cards.string())
+	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 }
 
 // 添加一个新的sink,参数是pulse的Sink
@@ -389,6 +391,25 @@ func (a *Audio) refershSinkInputs() {
 	}
 }
 
+func (a *Audio) refreshDefaultSinkSource() {
+	defaultSink := a.ctx.GetDefaultSink()
+	defaultSource := a.ctx.GetDefaultSource()
+
+	if a.defaultSink.Name != defaultSink {
+		logger.Debugf("update default sink to %s", defaultSink)
+		a.updateDefaultSink(defaultSink)
+	} else {
+		logger.Debugf("keep default as %s", defaultSink)
+	}
+
+	if a.defaultSource.Name != defaultSource {
+		logger.Debugf("update default source to %s", defaultSource)
+		a.updateDefaultSource(defaultSource)
+	} else {
+		logger.Debugf("keep default as %s", defaultSource)
+	}
+}
+
 func (a *Audio) refresh() {
 	logger.Debug("refresh cards")
 	a.refreshCards()
@@ -398,6 +419,8 @@ func (a *Audio) refresh() {
 	a.refreshSources()
 	logger.Debug("refresh sinkinputs")
 	a.refershSinkInputs()
+	logger.Debug("refresh default")
+
 	logger.Debug("refresh done")
 }
 
@@ -743,6 +766,8 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 }
 
 func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, busErr *dbus.Error) {
+	// 不建议使用这个接口，可以从Cards和CardsWithoutUnavailable属性中获取此状态
+	logger.Debugf("check is port<%d,%s> enabled", cardId, portName)
 	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	return portConfig.Enabled, nil
 }

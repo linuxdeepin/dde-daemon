@@ -180,6 +180,17 @@ func (pp *PriorityPolicy) GetPreferType(type1 int, type2 int) int {
 	return -1
 }
 
+// 比较端口实例的优先级
+func (pp *PriorityPolicy) GetPreferPort(port1 *PriorityPort, port2 *PriorityPort) *PriorityPort {
+	for _, port := range pp.Ports {
+		if *port == *port1 || *port == *port2 {
+			return port
+		}
+	}
+
+	return nil
+}
+
 // 查找一个端口的index（这个index仅仅指在优先级列表中的index，和PulseAudio中的index无关）
 func (pp *PriorityPolicy) FindPortIndex(cardName string, portName string) int {
 	for i, port := range pp.Ports {
