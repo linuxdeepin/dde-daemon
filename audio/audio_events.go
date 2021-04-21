@@ -256,6 +256,16 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 func (a *Audio) handleCardAdded(idx uint32) {
 	// 数据更新在refreshCards中统一处理，这里只做业务逻辑上的响应
 	logger.Debugf("card %d added", idx)
+
+	card, err := a.cards.get(idx)
+	if err != nil {
+		logger.Warningf("invalid card index #%d", idx)
+		return
+	}
+
+	if isBluezAudio(card.core.Name) {
+		card.AutoSetBluezMode()
+	}
 }
 
 func (a *Audio) handleCardRemoved(idx uint32) {
@@ -267,6 +277,24 @@ func (a *Audio) handleCardRemoved(idx uint32) {
 func (a *Audio) handleCardChanged(idx uint32) {
 	// 数据更新在refreshSinks中统一处理，这里只做业务逻辑上的响应
 	logger.Debugf("card %d changed", idx)
+
+	card, err := a.cards.get(idx)
+	if err != nil {
+		logger.Warningf("invalid card index #%d", idx)
+		return
+	}
+
+	// 手动切换蓝牙模式成功，自动提升蓝牙端口优先级
+	if a.waitingBluezModeSwitch && a.waitingBluezCardName == card.core.Name {
+		if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeA2dp) {
+			a.setPropBluetoothAudioMode(bluezModeA2dp)
+		} else if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeHeadset) {
+			a.setPropBluetoothAudioMode(bluezModeHeadset)
+		}
+
+		a.waitingBluezModeSwitch = false
+		GetPriorityManager().Input.SetTheFirstType(PortTypeBluetooth)
+	}
 }
 
 func (a *Audio) handleSinkEvent(eventType int, idx uint32) {

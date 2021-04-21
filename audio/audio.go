@@ -169,6 +169,10 @@ type Audio struct {
 	outputPortName string
 	// 输出端口切换计数器
 	outputAutoSwitchCount int
+	// 是否处在手动切换蓝牙模式,等待切换完成的状态下
+	waitingBluezModeSwitch bool
+	// 手动切换蓝牙模式,等待切换完成的是哪个声卡
+	waitingBluezCardName string
 
 	// nolint
 	signals *struct {
@@ -473,7 +477,7 @@ func (a *Audio) init() error {
 		logger.Warning(err)
 	}
 
-	loadBluezConfig(bluezAudioConfigFilePath)
+	GetBluezAudioManager().Load()
 	GetConfigKeeper().Load()
 
 	logger.Debug("init cards")
@@ -691,13 +695,6 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 		return dbusutil.ToError(err)
 	}
 
-	// 保存蓝牙音频模式
-	if strings.Contains(portName, "a2dp") {
-		setBluezConfig(card.core.Name, bluezModeA2dp)
-	} else if strings.Contains(portName, "headset") {
-		setBluezConfig(card.core.Name, bluezModeHeadset)
-	}
-
 	if int(direction) == pulse.DirectionSink {
 		logger.Debugf("output port %s %s now is first priority", card.core.Name, portName)
 
@@ -713,6 +710,7 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 		// err = priorities.Save(globalPrioritiesFilePath)
 		// priorities.Print()
 		GetPriorityManager().SetFirstOutputPort(card.core.Name, portName)
+		a.waitingBluezModeSwitch = false
 	} else {
 		logger.Debugf("input port %s %s now is first priority", card.core.Name, portName)
 
@@ -734,6 +732,11 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 }
 
 func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *dbus.Error {
+	if enabled {
+		logger.Debugf("enable port<%d,%s>", cardId, portName)
+	} else {
+		logger.Debugf("disable port<%d,%s>", cardId, portName)
+	}
 	GetConfigKeeper().SetEnabled(a.getCardNameById(cardId), portName, enabled)
 
 	err := a.service.Emit(a, "PortEnabledChanged", cardId, portName, enabled)
@@ -804,12 +807,6 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 	targetPortInfo, err := card.Ports.Get(portName, direction)
 	if err != nil {
 		return err
-	}
-
-	if isBluezAudio(card.core.Name) {
-		var bluezProfile string
-		portName, bluezProfile = bluezAudioParseVirtualPort(portName)
-		card.core.SetProfile(bluezProfile)
 	}
 
 	setDefaultPort := func() error {
@@ -1253,14 +1250,22 @@ func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
 		logger.Warning(err)
 	}
 
-	for _, profile := range card.Profiles {
-		if strings.Contains(strings.ToLower(profile.Name), mode) {
-			card.core.SetProfile(profile.Name)
+	if !isBluezAudio(card.core.Name) {
+		return dbusutil.ToError(fmt.Errorf("current card %s is not bluetooth audio device", card.core.Name))
+	}
 
-			// TODO: 这个属性应该在设置成功的消息返回后才能设置
-			a.setPropBluetoothAudioMode(mode)
+	for _, profile := range card.Profiles {
+		if strings.Contains(strings.ToLower(profile.Name), mode) &&
+			profile.Available != pulse.AvailableTypeNo {
+
+			GetBluezAudioManager().SetMode(card.core.Name, mode)
+			card.core.SetProfile(profile.Name)
+			a.waitingBluezModeSwitch = true
+			a.waitingBluezCardName = card.core.Name
+			// 后续流程在 handleCardChanged
+			return nil
 		}
 	}
 
-	return nil
+	return dbusutil.ToError(fmt.Errorf("%s cannot support %s mode", card.core.Name, mode))
 }
