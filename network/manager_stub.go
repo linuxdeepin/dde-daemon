@@ -86,7 +86,11 @@ func (m *Manager) setPropVpnEnabled(value bool) {
 }
 
 func (m *Manager) updatePropActiveConnections() {
-	m.ActiveConnections, _ = marshalJSON(m.activeConnections)
+	var err error
+	m.ActiveConnections, err = marshalJSON(m.activeConnections)
+	if err != nil {
+		logger.Warningf("marshal ActiveConnection failed, err: %v", err)
+	}
 	m.service.EmitPropertyChanged(m, "ActiveConnections", m.ActiveConnections)
 }
 

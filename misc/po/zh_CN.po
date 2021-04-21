@@ -650,7 +650,7 @@ msgstr "802.1X客户端异常退出或失败"
 
 #: ../../network/state_handler.go:50
 msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "802.1X客户端验证时间过长"
+msgstr "密码验证超时或密码错误"
 
 #: ../../network/state_handler.go:51
 msgid "The PPP service failed to start within the allowed time"
