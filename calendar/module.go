@@ -3,7 +3,6 @@ package calendar
 import (
 	"os"
 	"path/filepath"
-	"sync"
 
 	"pkg.deepin.io/lib/xdg/basedir"
 
@@ -24,11 +23,6 @@ func init() {
 type Module struct {
 	scheduler *Scheduler
 	*loader.ModuleBase
-	wg sync.WaitGroup
-}
-
-func (m *Module) WaitEnable() {
-	m.wg.Wait()
 }
 
 func (m *Module) GetDependencies() []string {
@@ -36,7 +30,6 @@ func (m *Module) GetDependencies() []string {
 }
 
 func (m *Module) Start() error {
-	defer m.wg.Done()
 	if m.scheduler != nil {
 		return nil
 	}
@@ -118,7 +111,6 @@ func (m *Module) start() error {
 func newModule() *Module {
 	m := new(Module)
 	m.ModuleBase = loader.NewModuleBase("calendar", m, logger)
-	m.wg.Add(1)
 	return m
 }
 

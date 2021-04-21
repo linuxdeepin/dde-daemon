@@ -20,8 +20,6 @@
 package power_manager
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -41,13 +39,11 @@ func init() {
 type Daemon struct {
 	*loader.ModuleBase
 	manager *Manager
-	wg      sync.WaitGroup
 }
 
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("powermanager", daemon, logger)
-	daemon.wg.Add(1)
 	return daemon
 }
 
@@ -55,13 +51,7 @@ func (d *Daemon) GetDependencies() []string {
 	return []string{}
 }
 
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
-	return
-}
-
 func (d *Daemon) Start() (err error) {
-	defer d.wg.Done()
 	service := loader.GetService()
 	d.manager, err = newManager(service)
 	if err != nil {

@@ -1,9 +1,7 @@
 package clipboard
 
 import (
-	"sync"
-
-	"github.com/linuxdeepin/go-x11-client"
+	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
@@ -21,17 +19,11 @@ func init() {
 func newModule() *Module {
 	m := new(Module)
 	m.ModuleBase = loader.NewModuleBase("clipboard", m, logger)
-	m.wg.Add(1)
 	return m
 }
 
 type Module struct {
 	*loader.ModuleBase
-	wg sync.WaitGroup
-}
-
-func (m *Module) WaitEnable() {
-	m.wg.Wait()
 }
 
 func (*Module) GetDependencies() []string {
@@ -39,7 +31,6 @@ func (*Module) GetDependencies() []string {
 }
 
 func (mo *Module) Start() error {
-	defer mo.wg.Done()
 	logger.Debug("clipboard module start")
 
 	xConn, err := x.NewConn()

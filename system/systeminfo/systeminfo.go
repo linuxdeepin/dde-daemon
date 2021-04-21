@@ -1,8 +1,6 @@
 package systeminfo
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -16,20 +14,13 @@ func init() {
 type Module struct {
 	m *Manager
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func (m *Module) GetDependencies() []string {
 	return nil
 }
 
-func (m *Module) WaitEnable() {
-	m.wg.Wait()
-	return
-}
-
 func (m *Module) Start() error {
-	defer m.wg.Done()
 	if m.m != nil {
 		return nil
 	}
@@ -73,6 +64,5 @@ func (m *Module) Stop() error {
 func NewModule() *Module {
 	m := &Module{}
 	m.ModuleBase = loader.NewModuleBase("systeminfo", m, logger)
-	m.wg.Add(1)
 	return m
 }

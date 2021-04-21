@@ -20,8 +20,6 @@
 package launcher
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -35,18 +33,12 @@ func init() {
 type Module struct {
 	*loader.ModuleBase
 	manager *Manager
-	wg      sync.WaitGroup
 }
 
 func NewModule(logger *log.Logger) *Module {
 	daemon := new(Module)
 	daemon.ModuleBase = loader.NewModuleBase("launcher", daemon, logger)
-	daemon.wg.Add(1)
 	return daemon
-}
-
-func (d *Module) WaitEnable() {
-	d.wg.Wait()
 }
 
 func (d *Module) GetDependencies() []string {
@@ -80,7 +72,6 @@ func (d *Module) start() error {
 }
 
 func (d *Module) Start() error {
-	defer d.wg.Done()
 	return d.start()
 }
 

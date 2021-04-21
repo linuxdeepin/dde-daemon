@@ -20,8 +20,6 @@
 package debug
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -32,18 +30,12 @@ var (
 
 type Daemon struct {
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func NewDaemon() *Daemon {
 	var d = new(Daemon)
 	d.ModuleBase = loader.NewModuleBase("debug", d, logger)
-	d.wg.Add(1)
 	return d
-}
-
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
 }
 
 func (*Daemon) GetDependencies() []string {

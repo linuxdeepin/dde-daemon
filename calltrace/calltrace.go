@@ -20,7 +20,6 @@
 package calltrace
 
 import (
-	"sync"
 	"time"
 
 	"pkg.deepin.io/dde/daemon/loader"
@@ -35,7 +34,6 @@ var (
 type Daemon struct {
 	ct   *Manager
 	quit chan bool
-	wg   sync.WaitGroup
 	*loader.ModuleBase
 }
 
@@ -46,7 +44,6 @@ func init() {
 func NewDaemon() *Daemon {
 	var d = new(Daemon)
 	d.ModuleBase = loader.NewModuleBase("calltrace", d, logger)
-	d.wg.Add(1)
 	return d
 }
 
@@ -54,13 +51,8 @@ func (*Daemon) GetDependencies() []string {
 	return []string{}
 }
 
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
-}
-
 // Start launch calltrace module
 func (d *Daemon) Start() error {
-	defer d.wg.Done()
 	if d.quit != nil {
 		return nil
 	}

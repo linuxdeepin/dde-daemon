@@ -20,8 +20,6 @@
 package screensaver
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
@@ -35,18 +33,12 @@ type Module struct {
 	sSaver     *ScreenSaver
 	syncConfig *dsync.Config
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func newModule(logger *log.Logger) *Module {
 	m := new(Module)
 	m.ModuleBase = loader.NewModuleBase("screensaver", m, logger)
-	m.wg.Add(1)
 	return m
-}
-
-func (m *Module) WaitEnable() {
-	m.wg.Wait()
 }
 
 func (m *Module) GetDependencies() []string {
@@ -54,7 +46,6 @@ func (m *Module) GetDependencies() []string {
 }
 
 func (m *Module) Start() error {
-	defer m.wg.Done()
 	service := loader.GetService()
 
 	has, err := service.NameHasOwner(dbusServiceName)

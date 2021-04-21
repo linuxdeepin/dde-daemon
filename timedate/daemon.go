@@ -20,8 +20,6 @@
 package timedate
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -33,19 +31,12 @@ var (
 type Daemon struct {
 	*loader.ModuleBase
 	manager *Manager
-	wg      sync.WaitGroup
 }
 
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("timedate", daemon, logger)
-	daemon.wg.Add(1)
 	return daemon
-}
-
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
-	return
 }
 
 func (d *Daemon) GetDependencies() []string {
@@ -54,7 +45,6 @@ func (d *Daemon) GetDependencies() []string {
 
 // Start to run time date manager
 func (d *Daemon) Start() error {
-	defer d.wg.Done()
 	if d.manager != nil {
 		return nil
 	}

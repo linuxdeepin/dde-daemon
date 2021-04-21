@@ -1,8 +1,6 @@
 package lastore
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -21,18 +19,12 @@ func init() {
 type Daemon struct {
 	lastore *Lastore
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func newDaemon() *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("lastore", daemon, logger)
-	daemon.wg.Add(1)
 	return daemon
-}
-
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
 }
 
 func (*Daemon) GetDependencies() []string {
@@ -40,7 +32,6 @@ func (*Daemon) GetDependencies() []string {
 }
 
 func (d *Daemon) Start() error {
-	defer d.wg.Done()
 	service := loader.GetService()
 
 	lastore, err := newLastore(service)

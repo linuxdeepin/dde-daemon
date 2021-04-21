@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
-	"sync"
 	"time"
 
 	dbus "github.com/godbus/dbus"
@@ -30,13 +29,11 @@ func init() {
 type Daemon struct {
 	*loader.ModuleBase
 	sessionWatcher *Helper
-	wg             sync.WaitGroup
 }
 
 func newDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("swapsched", daemon, logger)
-	daemon.wg.Add(1)
 	return daemon
 }
 
@@ -44,13 +41,7 @@ func (d *Daemon) GetDependencies() []string {
 	return []string{}
 }
 
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
-	return
-}
-
 func (d *Daemon) Start() error {
-	defer d.wg.Done()
 	err := cgroup.Init()
 	if err != nil {
 		return err

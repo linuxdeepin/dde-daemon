@@ -26,8 +26,6 @@ package gesture
 import "C"
 
 import (
-	"sync"
-
 	dbus "github.com/godbus/dbus"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/dbusutil"
@@ -172,10 +170,10 @@ type Manager struct {
 		}
 
 		TouchMovementEvent struct {
-			direction string
-			fingers   int32
+			direction                string
+			fingers                  int32
 			startScaleX, startScaleY float64
-			endScaleX, endScaleY float64
+			endScaleX, endScaleY     float64
 		}
 
 		TouchSinglePressTimeout struct {
@@ -217,7 +215,6 @@ var (
 
 type Daemon struct {
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func init() {
@@ -227,17 +224,11 @@ func init() {
 func NewDaemon() *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("gesture", daemon, logger)
-	daemon.wg.Add(1)
 	return daemon
 }
 
 func (*Daemon) GetDependencies() []string {
 	return []string{}
-}
-
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
-	return
 }
 
 func (*Manager) GetInterfaceName() string {
@@ -367,7 +358,6 @@ func handleTouchUpOrCancel(scalex, scaley C.double) {
 }
 
 func (d *Daemon) Start() error {
-	defer d.wg.Done()
 	logger.BeginTracing()
 	logger.Info("start gesture daemon")
 	service := loader.GetService()

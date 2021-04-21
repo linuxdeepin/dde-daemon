@@ -1,8 +1,6 @@
 package uadpagent
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -14,18 +12,12 @@ func init() {
 type Module struct {
 	uAgent *UadpAgent
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func NewModule(logger *log.Logger) *Module {
 	m := new(Module)
 	m.ModuleBase = loader.NewModuleBase("uadpagent", m, logger)
-	m.wg.Add(1)
 	return m
-}
-
-func (m *Module) WaitEnable() {
-	m.wg.Wait()
 }
 
 func (m *Module) GetDependencies() []string {
@@ -33,7 +25,6 @@ func (m *Module) GetDependencies() []string {
 }
 
 func (m *Module) Start() error {
-	defer m.wg.Done()
 	service := loader.GetService()
 
 	if m.uAgent != nil {

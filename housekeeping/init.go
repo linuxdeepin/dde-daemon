@@ -21,11 +21,10 @@ package housekeeping
 
 import (
 	"os"
-	"sync"
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"pkg.deepin.io/dde/daemon/loader"
 	. "pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/log"
@@ -45,17 +44,11 @@ type Daemon struct {
 	*loader.ModuleBase
 	ticker   *time.Ticker
 	stopChan chan struct{}
-	wg       sync.WaitGroup
-}
-
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
 }
 
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("housekeeping", daemon, logger)
-	daemon.wg.Add(1)
 	return daemon
 }
 
@@ -68,7 +61,6 @@ var (
 )
 
 func (d *Daemon) Start() error {
-	defer d.wg.Done()
 	if d.stopChan != nil {
 		return nil
 	}

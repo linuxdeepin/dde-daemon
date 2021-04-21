@@ -20,7 +20,6 @@
 package audio
 
 import (
-	"sync"
 	"time"
 
 	"golang.org/x/xerrors"
@@ -40,18 +39,12 @@ func init() {
 type Module struct {
 	*loader.ModuleBase
 	audio *Audio
-	wg    sync.WaitGroup
 }
 
 func NewModule(logger *log.Logger) *Module {
 	var d = new(Module)
 	d.ModuleBase = loader.NewModuleBase("audio", d, logger)
-	d.wg.Add(1)
 	return d
-}
-
-func (m *Module) WaitEnable() {
-	m.wg.Wait()
 }
 
 func (*Module) GetDependencies() []string {
@@ -90,7 +83,6 @@ func (m *Module) start() error {
 }
 
 func (m *Module) Start() error {
-	defer m.wg.Done()
 	if m.audio != nil {
 		return nil
 	}

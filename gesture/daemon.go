@@ -20,8 +20,6 @@
 package gesture
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -29,7 +27,6 @@ import (
 type Daemon struct {
 	*loader.ModuleBase
 	manager *Manager
-	wg      sync.WaitGroup
 }
 
 const (
@@ -45,7 +42,6 @@ var (
 func NewDaemon() *Daemon {
 	daemon := new(Daemon)
 	daemon.ModuleBase = loader.NewModuleBase("gesture", daemon, logger)
-	daemon.wg.Add(1)
 	return daemon
 }
 
@@ -53,16 +49,11 @@ func init() {
 	loader.Register(NewDaemon())
 }
 
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
-}
-
 func (*Daemon) GetDependencies() []string {
 	return []string{}
 }
 
 func (d *Daemon) Start() error {
-	defer d.wg.Done()
 	if d.manager != nil {
 		return nil
 	}

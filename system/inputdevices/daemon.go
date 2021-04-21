@@ -21,8 +21,6 @@
 package inputdevices
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -42,13 +40,11 @@ func init() {
 type daemon struct {
 	*loader.ModuleBase
 	inputdevices *InputDevices
-	wg           sync.WaitGroup
 }
 
 func newDaemon() *daemon {
 	d := new(daemon)
 	d.ModuleBase = loader.NewModuleBase("inputdevices", d, logger)
-	d.wg.Add(1)
 	return d
 }
 
@@ -56,13 +52,7 @@ func (d *daemon) GetDependencies() []string {
 	return []string{}
 }
 
-func (d *daemon) WaitEnable() {
-	d.wg.Wait()
-}
-
 func (d *daemon) Start() error {
-	defer d.wg.Done()
-
 	if d.inputdevices != nil {
 		return nil
 	}

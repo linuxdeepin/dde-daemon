@@ -3,7 +3,6 @@ package loader
 import (
 	"math/rand"
 	"strings"
-	"sync"
 	"testing"
 	"time"
 
@@ -15,7 +14,6 @@ type Test_Module struct {
 	*ModuleBase
 	dependencies string
 	test         *testing.T
-	wg           sync.WaitGroup
 }
 
 type testItem struct {
@@ -29,24 +27,17 @@ func NewTestModule(name, dependencies string, t *testing.T) *Test_Module {
 	daemon.ModuleBase = NewModuleBase(name, daemon, logger)
 	daemon.test = t
 	daemon.dependencies = dependencies
-	daemon.wg.Add(1)
 	return daemon
 }
 
 func (d *Test_Module) GetDependencies() []string {
-
 	if d.dependencies == "" {
 		return nil
 	}
 	return strings.Split(d.dependencies, " ")
 }
 
-func (d *Test_Module) WaitEnable() {
-	d.wg.Wait()
-}
-
 func (d *Test_Module) Start() error {
-	defer d.wg.Done()
 	time.Sleep(time.Duration(int32(time.Second) * rand.Int31n(3)))
 	return nil
 }

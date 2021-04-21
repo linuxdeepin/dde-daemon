@@ -20,8 +20,6 @@
 package keybinding
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
@@ -35,7 +33,6 @@ func init() {
 type Daemon struct {
 	*loader.ModuleBase
 	manager *Manager
-	wg      sync.WaitGroup
 }
 
 var (
@@ -45,11 +42,7 @@ var (
 func NewDaemon(logger *log.Logger) *Daemon {
 	var d = new(Daemon)
 	d.ModuleBase = loader.NewModuleBase("keybinding", d, logger)
-	d.wg.Add(1)
 	return d
-}
-func (d *Daemon) WaitEnable() {
-	d.wg.Wait()
 }
 
 func (*Daemon) GetDependencies() []string {
@@ -57,7 +50,6 @@ func (*Daemon) GetDependencies() []string {
 }
 
 func (d *Daemon) Start() error {
-	defer d.wg.Done()
 	if d.manager != nil {
 		return nil
 	}

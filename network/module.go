@@ -20,7 +20,6 @@
 package network
 
 import (
-	"sync"
 	"time"
 
 	"pkg.deepin.io/dde/daemon/loader"
@@ -60,18 +59,12 @@ func HandlePrepareForSleep(sleep bool) {
 
 type Module struct {
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func newModule(logger *log.Logger) *Module {
 	module := new(Module)
 	module.ModuleBase = loader.NewModuleBase("network", module, logger)
-	module.wg.Add(1)
 	return module
-}
-
-func (d *Module) WaitEnable() {
-	d.wg.Wait()
 }
 
 func (d *Module) GetDependencies() []string {
@@ -128,7 +121,6 @@ func (d *Module) start() error {
 }
 
 func (d *Module) Start() error {
-	defer d.wg.Done()
 	libnotify.Init("dde-session-daemon")
 	if manager != nil {
 		return nil

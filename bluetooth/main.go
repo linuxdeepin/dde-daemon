@@ -20,7 +20,6 @@
 package bluetooth
 
 import (
-	"sync"
 	"time"
 
 	"pkg.deepin.io/dde/daemon/loader"
@@ -30,22 +29,16 @@ import (
 
 type daemon struct {
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func newBluetoothDaemon(logger *log.Logger) *daemon {
 	var d = new(daemon)
 	d.ModuleBase = loader.NewModuleBase("bluetooth", d, logger)
-	d.wg.Add(1)
 	return d
 }
 
 func (*daemon) GetDependencies() []string {
 	return []string{"audio"}
-}
-
-func (d *daemon) WaitEnable() {
-	d.wg.Wait()
 }
 
 var globalBluetooth *Bluetooth
@@ -72,7 +65,6 @@ func HandlePrepareForSleep(sleep bool) {
 }
 
 func (d *daemon) Start() error {
-	defer d.wg.Done()
 	if globalBluetooth != nil {
 		return nil
 	}

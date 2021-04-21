@@ -1,8 +1,6 @@
 package uadp
 
 import (
-	"sync"
-
 	"pkg.deepin.io/dde/daemon/loader"
 )
 
@@ -13,13 +11,11 @@ func init() {
 type Module struct {
 	uadp *Uadp
 	*loader.ModuleBase
-	wg sync.WaitGroup
 }
 
 func newModule() *Module {
 	m := new(Module)
 	m.ModuleBase = loader.NewModuleBase("Uadp", m, logger)
-	m.wg.Add(1)
 	return m
 }
 
@@ -27,13 +23,7 @@ func (m *Module) GetDependencies() []string {
 	return []string{}
 }
 
-func (m *Module) WaitEnable() {
-	m.wg.Wait()
-	return
-}
-
 func (m *Module) Start() error {
-	defer m.wg.Done()
 	service := loader.GetService()
 
 	if m.uadp != nil {

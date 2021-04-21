@@ -24,20 +24,13 @@ const (
 type Module struct {
 	*loader.ModuleBase
 	network *Network
-	wg      sync.WaitGroup
 }
 
 func (m *Module) GetDependencies() []string {
 	return nil
 }
 
-func (m *Module) WaitEnable() {
-	m.wg.Wait()
-	return
-}
-
 func (m *Module) Start() error {
-	defer m.wg.Done()
 	if m.network != nil {
 		return nil
 	}
@@ -85,7 +78,6 @@ var logger = log.NewLogger("daemon/system/network")
 func newModule(logger *log.Logger) *Module {
 	m := new(Module)
 	m.ModuleBase = loader.NewModuleBase("network", m, logger)
-	m.wg.Add(1)
 	return m
 }
 
