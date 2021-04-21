@@ -21,9 +21,11 @@ package zoneinfo
 
 import (
 	"os"
+	"path"
 	"testing"
 
 	C "gopkg.in/check.v1"
+	dutils "pkg.deepin.io/lib/utils"
 )
 
 type testWrapper struct{}
@@ -53,6 +55,11 @@ func (*testWrapper) TestGetZoneList(c *C.C) {
 }
 
 func (*testWrapper) TestZoneValid(c *C.C) {
+	zoneFile := path.Join(defaultZoneDir, "Asia/Shanghai")
+	if !dutils.IsFileExist(zoneFile) {
+		c.Skip("file not exist")
+	}
+
 	var infos = []struct {
 		zone  string
 		valid bool
