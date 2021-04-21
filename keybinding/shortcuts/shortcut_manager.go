@@ -865,7 +865,7 @@ func (sm *ShortcutManager) AddSystem(gsettings *gio.Settings, wmObj *wm.Wm) {
 	session := os.Getenv("XDG_SESSION_TYPE")
 	for _, id := range gsettings.ListKeys() {
 		if id == "deepin-screen-recorder" || id == "wm-switcher" {
-			if !allow {
+			if !allow && id == "wm-switcher" {
 				logger.Debugf("com.deepin.wm.compositingAllowSwitch is false, filter %s", id)
 				continue
 			}
