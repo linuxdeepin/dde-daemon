@@ -137,8 +137,8 @@ type Manager struct {
 	// nolint
 	methods *struct {
 		SetPrepareSuspend func() `in:"suspendState"`
-		// 平板锁屏时息屏处理接口
-		SetScreenBlack func()
+		// 平板锁屏时息屏,亮屏处理接口
+		WakeUpScreen func() `in:"wakeUp"`
 	}
 
 	//nolint
@@ -424,10 +424,18 @@ func (m *Manager) SetPrepareSuspend(v int) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) SetScreenBlack() *dbus.Error {
+func (m *Manager) WakeUpScreen(wakeUp bool) *dbus.Error {
 	if v := m.submodules[submodulePSP]; v != nil {
 		if psp := v.(*powerSavePlan); psp != nil {
-			psp.quickScreenBlack()
+			// 息屏
+			if !wakeUp {
+				m.setPrepareSuspend(suspendStateButtonClick)
+				psp.quickScreenBlack()
+				m.setPrepareSuspend(suspendStateFinish)
+			} else { // 亮屏
+				psp.manager.setDPMSModeOn()
+				psp.resetBrightness()
+			}
 		}
 	}
 	return nil
