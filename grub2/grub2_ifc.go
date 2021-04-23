@@ -242,11 +242,6 @@ func (g *Grub2) Reset(sender dbus.Sender) *dbus.Error {
 func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 	g.service.DelayAutoQuit()
 
-	err := g.checkAuth(sender, polikitActionIdPrepareGfxmodeDetect)
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
-
 	gfxmodes, err := g.getGfxmodesFromXRandr(sender)
 	if err != nil {
 		logger.Debug("failed to get gfxmodes from XRandr:", err)
