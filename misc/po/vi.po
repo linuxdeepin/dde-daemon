@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-23 15:40+0800\n"
+"POT-Creation-Date: 2021-04-23 13:23+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Hoan Chu Đình <chudinhhoan277@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/linuxdeepin/teams/3617/vi/)\n"
@@ -171,7 +171,7 @@ msgid "You have cancelled the file transfer"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Kết nối bluetooth đã thất bại"
 
@@ -199,8 +199,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "Kết nối %q thành công"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
-#: ../../network/state_handler.go:376
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q ngắt kết nối"
 
@@ -213,15 +213,15 @@ msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "Bấm vào đây để kết nối đến %q"
 
-#: ../../bluetooth/utils_notify.go:156
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Thêm thiết bị Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:166
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Kết nối"
 
@@ -238,15 +238,15 @@ msgstr "Ngày mai"
 msgid "%s to %s"
 msgstr "%s đến %s"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:25
+#: ../../calendar/module.go:126 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Công việc"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:30
+#: ../../calendar/module.go:127 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Cuộc sống"
 
-#: ../../calendar/module.go:129 ../../calendar/type.go:35
+#: ../../calendar/module.go:128 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Khác"
 
@@ -299,7 +299,7 @@ msgstr "Gỡ khỏi dock"
 msgid "All Windows"
 msgstr "Tất cả Cửa sổ"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:98
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Không đủ dung lượng đĩa, xin hãy dọn sạch đúng lúc!"
 
@@ -483,7 +483,7 @@ msgstr "Hiển thị cửa sổ của không gian làm việc hiện tại"
 msgid "Display workspace"
 msgstr "Hiển thị không gian làm việc"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Chuyển màn hình"
 
@@ -556,6 +556,10 @@ msgstr "%q đã được xóa thành công"
 msgid "Failed to uninstall %q"
 msgstr "Gỡ bỏ %q đã thất bại"
 
+#: ../../network/manager.go:326
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -603,8 +607,8 @@ msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Mạng"
 
@@ -932,48 +936,48 @@ msgstr "Xác thực với máy chủ VPN không thành công"
 msgid "The connection was deleted from settings"
 msgstr "Kết nối đã bị xóa khỏi cài đặt"
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Kích hoạt điểm truy cập"
 
-#: ../../network/state_handler.go:259
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Đang kết nối %q"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Điểm truy cập được kích hoạt"
 
-#: ../../network/state_handler.go:274
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q đã kết nối"
 
-#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Điểm truy cập bị vô hiệu hóa"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Không thể chia sẻ điểm truy cập, vui lòng kiểm tra cài đặt dnsmasq"
 
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Không thể kết nối %q, vui lòng để gần hơn với bộ phát wifi"
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Không thể kết nối %q, vui lòng kiểm tra bộ phát wifi hoặc cáp mạng của bạn."
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Kết nối thất bại, không thể kết nối %q, sai mật khẩu"
 
-#: ../../network/state_handler.go:379
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Mật khẩu là bắt buộc để kết nối %q"
 
-#: ../../network/state_handler.go:381
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
@@ -981,34 +985,34 @@ msgstr ""
 msgid "Unknown"
 msgstr "Không rõ"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Chế độ trên máy bay đã kích hoạt."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Đã ngắt kết nối"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Chế độ Điểm Truy cập không được hỗ trợ bởi thiết bị này."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "Công tắc phần cứng của Thẻ WLAN đang tắt, xin hãy bật lên khi cần."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Ủy quyền hệ thống được thiết lập thành công."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Ủy quyền hệ thống đã bị hủy."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Đã kết nối"
 

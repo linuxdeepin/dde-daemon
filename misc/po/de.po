@@ -16,17 +16,17 @@
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Cindy0514, 2020
 # Timo Kröning, 2020
-# Ettore Atalan <atalanttore@googlemail.com>, 2020
 # 7db8a9134ffa67446d66162ab0aeea61_98ecb95, 2021
+# Ettore Atalan <atalanttore@googlemail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-23 15:40+0800\n"
+"POT-Creation-Date: 2021-04-23 13:23+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: 7db8a9134ffa67446d66162ab0aeea61_98ecb95, 2021\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,7 +157,7 @@ msgstr "Abbrechen"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %q files from %q"
-msgstr ""
+msgstr "%q Dateien von %q werden empfangen"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -165,7 +165,7 @@ msgstr "Ansicht"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
-msgstr "Sie haben erfolgreich Dateien von %q erhalten"
+msgstr "Sie haben erfolgreich Dateien von %q empfangen"
 
 #: ../../bluetooth/obex_agent.go:362
 msgid "Done"
@@ -173,14 +173,14 @@ msgstr "Fertig"
 
 #: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
-msgstr ""
+msgstr "Empfangen von Dateien stoppen"
 
 #: ../../bluetooth/obex_agent.go:379
 msgid "You have cancelled the file transfer"
 msgstr "Sie haben die Dateiübertragung abgebrochen"
 
 #: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth-Verbindung fehlgeschlagen"
 
@@ -198,7 +198,7 @@ msgstr "Bluetooth-Dateiübertragung"
 
 #: ../../bluetooth/obex_agent.go:422
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "%q möchte Dateien an Sie senden. Empfangen?"
 
 #: ../../bluetooth/obex_agent.go:477
 msgid "Receiving %q timed out"
@@ -208,8 +208,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "%q erfolgreich verbunden"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
-#: ../../network/state_handler.go:376
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q getrennt"
 
@@ -222,15 +222,15 @@ msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "Zum Verbinden mit %q hier klicken"
 
-#: ../../bluetooth/utils_notify.go:156
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Bluetooth-Geräte hinzufügen"
 
-#: ../../bluetooth/utils_notify.go:166
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Koppeln"
 
@@ -247,15 +247,15 @@ msgstr "morgen"
 msgid "%s to %s"
 msgstr "%s bis %s"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:25
+#: ../../calendar/module.go:126 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Arbeit"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:30
+#: ../../calendar/module.go:127 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Leben"
 
-#: ../../calendar/module.go:129 ../../calendar/type.go:35
+#: ../../calendar/module.go:128 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Andere"
 
@@ -308,7 +308,7 @@ msgstr "Abdocken"
 msgid "All Windows"
 msgstr "Alle Fenster"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:98
 msgid "Insufficient disk space, please clean up in time!"
 msgstr ""
 "Zu wenig freier Speicherplatz, bitte geben Sie unverzüglich Speicher frei!"
@@ -493,7 +493,7 @@ msgstr "Fenster auf aktueller Arbeitsfläche anzeigen"
 msgid "Display workspace"
 msgstr "Arbeitsfläche anzeigen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr ""
 
@@ -570,6 +570,10 @@ msgstr "%q erfolgreich entfernt"
 msgid "Failed to uninstall %q"
 msgstr "%q konnte nicht deinstalliert werden"
 
+#: ../../network/manager.go:326
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -617,8 +621,8 @@ msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Netzwerk"
 
@@ -962,51 +966,51 @@ msgstr "Die Authentifizierung beim VPN Server schlug fehl."
 msgid "The connection was deleted from settings"
 msgstr "Die Verbindung wurde aus den Einstellungen entfernt."
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Hotspot aktivieren"
 
-#: ../../network/state_handler.go:259
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "%q wird verbunden"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Hotspot aktiviert"
 
-#: ../../network/state_handler.go:274
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q verbunden"
 
-#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Hotspot deaktiviert"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Der Hotspot konnte nicht geteilt werden, prüfen Sie bitte die Einstellungen "
 "von dnsmasq"
 
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Keine Verbindung %q, Reichweite zum WLAN Router verringern."
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Kann keine Verbindung mit %q herstellen, bitte überprüfen Sie Ihren Router "
 "und das Netzwerkkabel."
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Verbindung mit %q fehlgeschlagen. Das Passwort ist ungültig"
 
-#: ../../network/state_handler.go:379
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Für die Verbindung mit %q ist ein Kennwort erforderlich"
 
-#: ../../network/state_handler.go:381
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
@@ -1014,36 +1018,36 @@ msgstr ""
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Flugzeugmodus aktiviert."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Getrennt"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Access Point Modus wird auf diesem Gerät nicht unterstützt."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "Der Hardware-Schalter der WLAN-Karte ist aus, bitte anschalten, wenn "
 "benötigt."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "System-Proxy erfolgreich festgelegt."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "System-Proxy wurde entfernt."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Verbunden"
 

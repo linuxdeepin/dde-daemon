@@ -6,7 +6,7 @@
 # Translators:
 # Transifex Bot <>, 2020
 # Анатолий Валерианович <ffox909@mail.ru>, 2020
-# crja72 <crja72@gmail.com>, 2020
+# Артем Рудаковский <crja72@gmail.com>, 2020
 # Serge Kukharski, 2020
 # Cindy0514, 2020
 # Владимир Киреев <vovan_kireev@mail.ru>, 2020
@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-23 15:40+0800\n"
+"POT-Creation-Date: 2021-04-23 13:23+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Snow fire R <iceler75@gmail.com>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/linuxdeepin/teams/3617/ru/)\n"
@@ -179,7 +179,7 @@ msgid "You have cancelled the file transfer"
 msgstr "Вы прервали процесс отправки файла"
 
 #: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth-подключение не удалось"
 
@@ -207,8 +207,8 @@ msgstr "Время получения %q  истекло"
 msgid "Connect %q successfully"
 msgstr "%q соединено успешно"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
-#: ../../network/state_handler.go:376
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q отсоединено"
 
@@ -221,15 +221,15 @@ msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "Нажмите здесь, что подсоединиться к %q"
 
-#: ../../bluetooth/utils_notify.go:156
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Добавить Bluetooth устройство"
 
-#: ../../bluetooth/utils_notify.go:166
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Пара"
 
@@ -246,15 +246,15 @@ msgstr "завтра"
 msgid "%s to %s"
 msgstr "с %s до %s"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:25
+#: ../../calendar/module.go:126 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Работа"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:30
+#: ../../calendar/module.go:127 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Семья"
 
-#: ../../calendar/module.go:129 ../../calendar/type.go:35
+#: ../../calendar/module.go:128 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Другое"
 
@@ -307,7 +307,7 @@ msgstr "Открепить"
 msgid "All Windows"
 msgstr "Все Окна"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:98
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Недостаточно места на диске, пожалуйста, очистите позже!"
 
@@ -491,7 +491,7 @@ msgstr "Показать окна текущего рабочего стола"
 msgid "Display workspace"
 msgstr "Отобразить рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Переключить мониторы"
 
@@ -567,6 +567,10 @@ msgstr "%q успешно удалён"
 msgid "Failed to uninstall %q"
 msgstr "Не удалось удалить %q"
 
+#: ../../network/manager.go:326
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -614,8 +618,8 @@ msgstr "Прокси-сервер приложения успешно устан
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Сеть"
 
@@ -941,51 +945,51 @@ msgstr "Аутентификация на VPN-сервере не удалась
 msgid "The connection was deleted from settings"
 msgstr "Соединение было удалено из настроек."
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Включение точки доступа"
 
-#: ../../network/state_handler.go:259
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Подключение %q"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Точка доступа включена"
 
-#: ../../network/state_handler.go:274
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q соединено"
 
-#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Точка доступа отключена"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Не удалось предоставить точку доступа, проверьте настройки dnsmasq"
 
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Не удалось соединить %q, пожалуйста держитесь ближе к беспроводному "
 "маршрутизатору."
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не удалось соединить %q, пожалуйста проверьте ваш беспроводной маршрутизатор"
 " или сетевой кабель."
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Не удалось подключиться, не удалось соединить %q, неправильный пароль"
 
-#: ../../network/state_handler.go:379
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Для подключения к %q требуется пароль"
 
-#: ../../network/state_handler.go:381
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN сеть не найдена"
 
@@ -993,35 +997,35 @@ msgstr "%q 802.11 WLAN сеть не найдена"
 msgid "Unknown"
 msgstr "Неизвестный"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Включен режим полёта."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Отключено"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Режим точки доступа не поддерживается этим устройством."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "Аппаратный переключатель WLAN-карты выключен, включите если требуется."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Системный прокси установлен успешно."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Системный прокси был отменен."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Подключено"
 

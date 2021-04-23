@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-23 15:40+0800\n"
+"POT-Creation-Date: 2021-04-23 13:23+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2021\n"
 "Language-Team: Albanian (https://www.transifex.com/linuxdeepin/teams/3617/sq/)\n"
@@ -169,7 +169,7 @@ msgid "You have cancelled the file transfer"
 msgstr "E keni anuluar shpërnguljen e kartelave"
 
 #: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Lidhja përmes Bluetooth-it dështoi"
 
@@ -197,8 +197,8 @@ msgstr "Marrjes së %q i mbaroi koha"
 msgid "Connect %q successfully"
 msgstr "%q u lidh me sukses"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
-#: ../../network/state_handler.go:376
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q u shkëput"
 
@@ -210,16 +210,18 @@ msgstr "Sigurohuni që %q është hapur dhe brenda intervali"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%q s’mund të lidhet më me %q. Provoni të harrohet kjo pajisje dhe ta çiftoni"
+" sërish."
 
-#: ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "Klikoni këtu që të lidhet me %q"
 
-#: ../../bluetooth/utils_notify.go:156
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Shtoni pajisje Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:166
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Çiftoje"
 
@@ -236,15 +238,15 @@ msgstr "nesër"
 msgid "%s to %s"
 msgstr "%s në %s"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:25
+#: ../../calendar/module.go:126 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Pune"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:30
+#: ../../calendar/module.go:127 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Jete"
 
-#: ../../calendar/module.go:129 ../../calendar/type.go:35
+#: ../../calendar/module.go:128 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Tjetër"
 
@@ -297,7 +299,7 @@ msgstr "Hiqe nga paneli"
 msgid "All Windows"
 msgstr "Tërë Dritaret"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:98
 msgid "Insufficient disk space, please clean up in time!"
 msgstr ""
 "Hapësirë e pamjaftueshme disku, ju lutemi, ka ardhur koha të bëni pastrim!"
@@ -482,7 +484,7 @@ msgstr "Shfaq dritaret e hapësirës së tanishme të punës"
 msgid "Display workspace"
 msgstr "Shfaq hapësirë pune"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Ndërroni monitorë"
 
@@ -557,6 +559,10 @@ msgstr "%q u hoq me sukses"
 msgid "Failed to uninstall %q"
 msgstr "S’u arrit të çinstalohej %q"
 
+#: ../../network/manager.go:326
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -604,8 +610,8 @@ msgstr "Ndërmjetësi i aplikacionit u ujdis me sukses"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Rrjet"
 
@@ -861,7 +867,7 @@ msgstr "PIN-i i SIM-it është i pasaktë"
 
 #: ../../network/state_handler.go:100
 msgid "New connection activation is enqueuing"
-msgstr ""
+msgstr "Po vihet në radhë aktivizim lidhjeje të re"
 
 #: ../../network/state_handler.go:101
 msgid "Parent device changed"
@@ -936,51 +942,51 @@ msgstr "Mirëfilltësimi te shërbyesi VPN dështoi"
 msgid "The connection was deleted from settings"
 msgstr "Lidhja u fshi prej rregullimeve"
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Po aktivizohet hotspot-i"
 
-#: ../../network/state_handler.go:259
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Po lidhet %q"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Hotspot-i u aktivizua"
 
-#: ../../network/state_handler.go:274
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q u lidh"
 
-#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Hotspot-i u çaktivizua"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "S’arrihet të ndahet hotspot me të tjerë, ju lutemi, kontrolloni rregullimet "
 "për dnsmasq"
 
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "S’arrihet të lidhet %q, ju lutemi, jini më afër rrugëzuesit pa fill"
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit ose "
 "rrjetit tuaj."
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Lidhja dështoi, s’arrihet të lidhet %q, fjalëkalim i gabuar"
 
-#: ../../network/state_handler.go:379
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Për lidhjen e %q lypset fjalëkalim"
 
-#: ../../network/state_handler.go:381
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "S’u gjet dot rrjeti %q 802.11 WLAN"
 
@@ -988,36 +994,36 @@ msgstr "S’u gjet dot rrjeti %q 802.11 WLAN"
 msgid "Unknown"
 msgstr "E panjohur"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "U aktivizua mënyra aeroplan."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "E shkëputur"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Mënyra Pikë Hyrjeje nuk mbulohet nga kjo pajisje."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "Çelësi hardware i kartës WLAN është i mbyllur, ju lutemi, hapeni, kur "
 "nevojitet."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Ndërmjetësi i sistemit u ujdis me sukses."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Ndërmjetësi i sistemit është anuluar."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "E lidhur"
 

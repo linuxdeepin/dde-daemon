@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-23 15:40+0800\n"
+"POT-Creation-Date: 2021-04-23 13:23+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Xəyyam Qocayev <xxmn77@gmail.com>, 2021\n"
 "Language-Team: Azerbaijani (https://www.transifex.com/linuxdeepin/teams/3617/az/)\n"
@@ -171,7 +171,7 @@ msgid "You have cancelled the file transfer"
 msgstr "Siz fayl mübadiləsindən imtina etdiniz"
 
 #: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth bağlantısı alınmadı"
 
@@ -199,8 +199,8 @@ msgstr "%q qəbul edilmə vaxtı bitdi"
 msgid "Connect %q successfully"
 msgstr "%q uğurla qoşuldu"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
-#: ../../network/state_handler.go:376
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q ayrıldı"
 
@@ -212,16 +212,18 @@ msgstr "%q aktiv olduğuna və bu aralıqda olduğuna əmin olun"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%q ilə %q bir-birinə qoşula bilmədi. Bu cihazı unudun və yenidən qoşmağa "
+"cəhd edin."
 
-#: ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "%q qoşulmaq üçün vurun"
 
-#: ../../bluetooth/utils_notify.go:156
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Bluetooth cihazları əlavə edin"
 
-#: ../../bluetooth/utils_notify.go:166
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Qoşalaşdırmaq"
 
@@ -238,15 +240,15 @@ msgstr "sabah"
 msgid "%s to %s"
 msgstr "%s - %s"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:25
+#: ../../calendar/module.go:126 ../../calendar/type.go:25
 msgid "Work"
 msgstr "İş"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:30
+#: ../../calendar/module.go:127 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Həyat"
 
-#: ../../calendar/module.go:129 ../../calendar/type.go:35
+#: ../../calendar/module.go:128 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Digər"
 
@@ -299,7 +301,7 @@ msgstr "Ayırmaq"
 msgid "All Windows"
 msgstr "Bütün Pəncərələr"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:98
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Disk sahəsi azdır, lütfən, vaxtında təmizləyin!"
 
@@ -483,7 +485,7 @@ msgstr "Cari iş sahəsi pəncərələrini göstərmək"
 msgid "Display workspace"
 msgstr "İş sahələrini göstərmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Monitorlar arası keçid"
 
@@ -559,6 +561,10 @@ msgstr "%q uğurla silindi"
 msgid "Failed to uninstall %q"
 msgstr "%q silinməsi baş tutmadı"
 
+#: ../../network/manager.go:326
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -606,8 +612,8 @@ msgstr "Tətbiq proksisi uğurla təyin edildi"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Şəbəkə"
 
@@ -940,50 +946,50 @@ msgstr "VPN xidmətinin doğrulanması alınmadı"
 msgid "The connection was deleted from settings"
 msgstr "Bağlantı, ayarlardan silindi"
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Qöşulma nöqtəsin aktivləşməsi"
 
-#: ../../network/state_handler.go:259
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "%1 qoşulur"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Qoşulma nöqtəsi açıqdır"
 
-#: ../../network/state_handler.go:274
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q qoşuldu"
 
-#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Qoşulma nöqtəsi söndü"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Qoşulma nöqtəsinin paylaşılması mümkün olmadı, dnsmasq ayarlarını yoxlayın"
 
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%q bağlantısı mümkün deyil, lütfən, simsiz routerə yaxın durun"
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q bağlantısı mümkün olmadı, routerinizin və ya şəbəkənizin kabelini "
 "yoxlayın"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Bağlantı alınmadı, %q qoşula bilmir, şifrə səhvdir"
 
-#: ../../network/state_handler.go:379
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "%q qoşulmaq üçün şifrə tələb olunur"
 
-#: ../../network/state_handler.go:381
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN şəbəkəsi tapılmadı"
 
@@ -991,34 +997,34 @@ msgstr "%q 802.11 WLAN şəbəkəsi tapılmadı"
 msgid "Unknown"
 msgstr "Naməlum"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Təyyarə rejimi aktivdir."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Bağlantı kəsildi"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Giriş nöqtəsi rejimi bucihaz tərəfindən dəstəklənmir."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "Avadanlıq WLAN kartını söndürüb, lazım olduqda onu işə salın"
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Sistem proksisi uğurla quraşdırıldı"
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Sistem proksisi ləğv edildi."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Qoşuldu"
 

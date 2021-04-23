@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-23 15:40+0800\n"
+"POT-Creation-Date: 2021-04-23 13:23+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Béla Bajza, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/linuxdeepin/teams/3617/hu/)\n"
@@ -183,7 +183,7 @@ msgid "You have cancelled the file transfer"
 msgstr "Ön megszakította a fájlátvitelt"
 
 #: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "A Bluetooth csatlakozás sikertelen"
 
@@ -211,8 +211,8 @@ msgstr "% q fogadásának időtúllépése"
 msgid "Connect %q successfully"
 msgstr "%q csatlakoztatása sikeres"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
-#: ../../network/state_handler.go:376
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q szétkapcsolva"
 
@@ -229,15 +229,15 @@ msgstr ""
 "A %q már nem tud csatlakozni a következőhöz: %q. Próbálja meg elfelejtetni "
 "ezt az eszközt, és párosítsa újra."
 
-#: ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "Kattintson ide a %q -hoz való csatlakozáshoz"
 
-#: ../../bluetooth/utils_notify.go:156
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Bluetooth eszközök hozzáadása"
 
-#: ../../bluetooth/utils_notify.go:166
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Párosítás"
 
@@ -254,15 +254,15 @@ msgstr "Holnap"
 msgid "%s to %s"
 msgstr "%s és %s között"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:25
+#: ../../calendar/module.go:126 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Munka"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:30
+#: ../../calendar/module.go:127 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Magánélet"
 
-#: ../../calendar/module.go:129 ../../calendar/type.go:35
+#: ../../calendar/module.go:128 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Egyéb"
 
@@ -315,7 +315,7 @@ msgstr "Eltávolítás a Dokkolóról"
 msgid "All Windows"
 msgstr "Összes ablak"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:98
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Nincs elég lemezterület, kérjük takarítsa ki a fájlokat időben!"
 
@@ -499,7 +499,7 @@ msgstr "A jelenlegi munkaterület ablakainak megjelenítése"
 msgid "Display workspace"
 msgstr "Munkaterület megjelenítése"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Monitor váltása"
 
@@ -576,6 +576,10 @@ msgstr "A %q sikeresen eltávolítva"
 msgid "Failed to uninstall %q"
 msgstr "A %q eltávolítása sikertelen"
 
+#: ../../network/manager.go:326
+msgid "Wired connection"
+msgstr "Vezetékes kapcsolat"
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -623,8 +627,8 @@ msgstr "Alkalmazás proxy sikeresen beállítva"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Hálózat"
 
@@ -962,55 +966,55 @@ msgstr "A VPN kiszolgáló hitelesítése sikertelen"
 msgid "The connection was deleted from settings"
 msgstr "A kapcsolat eltávolításra került a beállításokból"
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Hotspot engedélyezése"
 
-#: ../../network/state_handler.go:259
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Csatlakozás %q"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Hotspot bekapcsolva"
 
-#: ../../network/state_handler.go:274
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q csatlakozva"
 
-#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Hotspot kikapcsolva"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Nem sikerült a hotspot megosztása, kérjük ellenőrizze a nDNS maszk "
 "beállítást"
 
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Nem sikerült csatlakozni a %q -eszközhöz, kérjük próbálja meg közelebb vinni"
 " a Routerhez"
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nem sikerült csatlakozni a %q eszközhöz, kérjük ellenőrizze a Routert, vagy "
 "a hálózati kábelt."
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "A csatlakozás sikertelen, nem sikerült csatlakozni a %q-hoz, helytelen "
 "jelszó"
 
-#: ../../network/state_handler.go:379
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Jelszó szükséges a %q csatlakoztatásához"
 
-#: ../../network/state_handler.go:381
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "A %q 802.11 vezeték nélküli hálózat nem található"
 
@@ -1018,36 +1022,36 @@ msgstr "A %q 802.11 vezeték nélküli hálózat nem található"
 msgid "Unknown"
 msgstr "Ismeretlen"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "A repülőgép üzemmód engedélyezve. "
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Szétkapcsolva"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "A hozzáférési pont módot nem támogatja az eszköz. "
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "A számítógépen ki van kapcsolva a vezeték nélküli adapter, kérjük kapcsolja "
 "be amennyiben szüksége van rá."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "A rendszer proxy sikeresen beállítva."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "A rendszer proxy törölve."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Csatlakoztatva"
 

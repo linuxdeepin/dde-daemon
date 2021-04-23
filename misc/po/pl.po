@@ -11,16 +11,16 @@
 # Cindy0514, 2020
 # Piotr Strębski <strebski@gmail.com>, 2020
 # Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2020
-# Marcin Kozioł <koziol.martin@gmail.com>, 2020
+# Marcin Kozioł <koziol.martin@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-23 15:40+0800\n"
+"POT-Creation-Date: 2021-04-23 13:23+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Marcin Kozioł <koziol.martin@gmail.com>, 2020\n"
+"Last-Translator: Marcin Kozioł <koziol.martin@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/linuxdeepin/teams/3617/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgstr "Nazwa użytkownika już istnieje"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "Taka nazwa już istnieje"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
@@ -66,7 +66,7 @@ msgstr "Nazwa użytkownika musi mieć od 3 do 32 znaków"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "Wyloguj się, aby ustawienia skalowania ekranu zaczęły obowiązywać"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -74,11 +74,11 @@ msgstr "Pomyślnie ustawiono"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "Później"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "Wyloguj się teraz"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -173,7 +173,7 @@ msgid "You have cancelled the file transfer"
 msgstr "Anulowałeś przesyłanie plików"
 
 #: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Błąd połączenia Bluetooth"
 
@@ -201,8 +201,8 @@ msgstr "Upłynął limit czasu odbioru %q"
 msgid "Connect %q successfully"
 msgstr "Połączenie %q gotowe. "
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
-#: ../../network/state_handler.go:376
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q jest rozłączone"
 
@@ -214,16 +214,18 @@ msgstr "Upewnij się, że %q jest włączone i znajduje się w zasięgu"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%q nie może już połączyć się z %q. Spróbuj zapomnieć o tym urządzeniu i "
+"sparuj je ponownie."
 
-#: ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "Kliknij tutaj, aby połączyć się z %q"
 
-#: ../../bluetooth/utils_notify.go:156
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Dodaj urządzenia Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:166
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Paruj"
 
@@ -240,15 +242,15 @@ msgstr "jutro"
 msgid "%s to %s"
 msgstr "%s do %s"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:25
+#: ../../calendar/module.go:126 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Praca"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:30
+#: ../../calendar/module.go:127 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Życie"
 
-#: ../../calendar/module.go:129 ../../calendar/type.go:35
+#: ../../calendar/module.go:128 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Inne"
 
@@ -301,7 +303,7 @@ msgstr "Odepnij"
 msgid "All Windows"
 msgstr "Wszystkie okna"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:98
 msgid "Insufficient disk space, please clean up in time!"
 msgstr ""
 "Brak wystarczającego miejsca na dysku: Prosimy go niezwłocznie uprzątnąć!"
@@ -486,7 +488,7 @@ msgstr "Wyświetl okna z bieżącej przestrzeni roboczej"
 msgid "Display workspace"
 msgstr "Wyświetl przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Przełącz monitory"
 
@@ -561,6 +563,10 @@ msgstr "%q pomyślnie usunięte"
 msgid "Failed to uninstall %q"
 msgstr "Błąd odinstalowania %q"
 
+#: ../../network/manager.go:326
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -608,8 +614,8 @@ msgstr "Serwer proxy aplikacji został pomyślnie ustawiony"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Sieć"
 
@@ -942,86 +948,86 @@ msgstr "Uwierzytelnienie do serwera VPN nie powiodło się"
 msgid "The connection was deleted from settings"
 msgstr "Połączenie zostało usunięte z ustawień"
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Włączanie punktu dostępu"
 
-#: ../../network/state_handler.go:259
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Połączenie %q"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Punkt dostępu włączony"
 
-#: ../../network/state_handler.go:274
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q jest połączone"
 
-#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Punkt dostępu wyłączony"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Nie można udostępnić hotspotu, należy sprawdzić ustawienia dnsmasq"
 
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Nie można połączyć z %q, prosimy przybliżyć się do routera bezprzewodowego"
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nie można połączyć z %q, prosimy sprawdzić swój router lub kabel sieciowy."
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Połączenie nie powiodło się, nie można połączyć z %q, złe hasło"
 
-#: ../../network/state_handler.go:379
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Aby połączyć się z %q wymagane jest hasło"
 
-#: ../../network/state_handler.go:381
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "Nie można znaleźć sieci WLAN %q 802.11"
 
 #: ../../network/utils_dbus_nm.go:256
 msgid "Unknown"
 msgstr "Nieznany"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Włączono tryb samolotowy."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Rozłączono"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Tryb punktu dostępowego nie jest obsługiwany przez to urządzenie."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "Przełącznik sprzętowy karty WLAN jest wyłączony, prosimy koniecznie go "
 "włączyć."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Pośrednik systemu został pomyślnie ustawiony."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Pośrednik systemu został anulowany."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Połączono"
 

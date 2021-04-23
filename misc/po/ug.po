@@ -5,20 +5,20 @@
 # 
 # Translators:
 # مۇختەر مەخمۇت <yeganaaa@163.com>, 2020
-# Cindy0514, 2020
 # Abdusalam Huxur <2250907458@qq.com>, 2020
 # Muhammadali Abliz <ordam2@163.com>, 2020
 # 伊力亚斯 伊德日斯 <2032517177@qq.com>, 2020
 # 阿迪力 买买提明 <251078110@qq.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-23 15:40+0800\n"
+"POT-Creation-Date: 2021-04-23 13:23+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2021\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -173,7 +173,7 @@ msgid "You have cancelled the file transfer"
 msgstr "ھۆججەت قوبۇللاشنى بىكار قىلدىڭىز"
 
 #: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:122
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "كۆكچىش ئۇلىنىشى مەغلۇپ بولدى"
 
@@ -201,8 +201,8 @@ msgstr "%q دىن قوبۇللاش ۋاقتى ئۆتتى"
 msgid "Connect %q successfully"
 msgstr "%qغا ئۇلاندى"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:353
-#: ../../network/state_handler.go:376
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%qدىن ئۈزۈلدى"
 
@@ -214,16 +214,18 @@ msgstr "%q ئىچىلىپ بولغانلىقىنى جەزملەشتۈرۈڭ"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%q بىلەن %q قايتا ئۇلىنالمىدى، نەزەردىن ساقىت قىلغاندىن كېيىن قايتا ئۇلاپ "
+"سىناڭ."
 
-#: ../../bluetooth/utils_notify.go:155
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "چېكىپ %q نى قوشۇڭ"
 
-#: ../../bluetooth/utils_notify.go:156
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "كۆك چىش ئۈسكۈنىسىنى قوشۇڭ"
 
-#: ../../bluetooth/utils_notify.go:166
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "جۈپلەش"
 
@@ -240,15 +242,15 @@ msgstr "ئەتە"
 msgid "%s to %s"
 msgstr "%sدىن %sگىچە"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:25
+#: ../../calendar/module.go:126 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Work"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:30
+#: ../../calendar/module.go:127 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Life"
 
-#: ../../calendar/module.go:129 ../../calendar/type.go:35
+#: ../../calendar/module.go:128 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Other"
 
@@ -301,7 +303,7 @@ msgstr "تۇرغۇنلارنى چىقىرىۋېتىش"
 msgid "All Windows"
 msgstr "بارلىق كۆزنەكلەر"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:98
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "دىسكا بوشلۇقى يېتەرسىز، دىسكىڭىزنى تازىلاڭ!"
 
@@ -485,7 +487,7 @@ msgstr "كۆزنەكنى نۆۋەتتىكى خىزمەت رايونلىرىدا 
 msgid "Display workspace"
 msgstr "خىزمەت رايونىنى كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "كۆپ ئېكران ئالماشتۇرۇش"
 
@@ -558,6 +560,10 @@ msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
 msgid "Failed to uninstall %q"
 msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
 
+#: ../../network/manager.go:326
+msgid "Wired connection"
+msgstr "سىملىق تور ئۇلىنىشى"
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -605,8 +611,8 @@ msgstr "سىستېما ۋاكالەتچىلىكىنى تەڭشەش مۇۋەپپ�
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "تور"
 
@@ -939,49 +945,49 @@ msgstr "VPN مۇلازىمىتېرىغا دەلىللەش مەغلۇپ بولد�
 msgid "The connection was deleted from settings"
 msgstr "بۇ ئۇلىنىش تەڭشەكتىن ئۆچۈرۋىتىلىپتۇ"
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "قىزىق نۇقتىا ئېچىلىۋاتىدۇ"
 
-#: ../../network/state_handler.go:259
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "%qغا ئۇلىنىۋاتىدۇ"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "قىزىق نۇقتا ھەمبەھرىلەندى"
 
-#: ../../network/state_handler.go:274
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%qغا ئۇلاندى"
 
-#: ../../network/state_handler.go:293 ../../network/state_handler.go:350
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "قىزىق نۇقتا تاقالدى"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "قىزىق نۇقتىنى ئورتاقلىشالمىدى ،dnsmasq غا مۇناسىۋەتلىك تەڭشەكلەرنى تەكشۈرۈپ "
 "بېقىڭ"
 
-#: ../../network/state_handler.go:361
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qغا ئۇلانمىدى، سىمسىز روتېرغا يېقىنلىشىپ سىناپ بېقىڭ"
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qغا ئۇلانمىدى. روتېرنى ياكى تور سىمىنى تەكشۈرۈڭ"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "ئۇلانمىدى، %qغا كىرەلمىدى، پارول خاتا"
 
-#: ../../network/state_handler.go:379
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "%qغا ئۇلاش ئۈچۈن پارول كېتىدۇ"
 
-#: ../../network/state_handler.go:381
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN تورنى تاپالمىدى"
 
@@ -989,35 +995,35 @@ msgstr "%q 802.11 WLAN تورنى تاپالمىدى"
 msgid "Unknown"
 msgstr "نامەلۇم"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "ئايروپىلان ھالىتى قوزغىتىلدى."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "ئۇلانمىدى"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "زىيارەت نۇقتىسى شەكلى سىزنىڭ ئۈسكۈنىڭىزنى قوللىمايدۇ"
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "بۇ ئۈسكۈنىنىڭ سىمسىز تور كارتىسى تاقاق ئىكەن، سىمسىز تور ئۇزچاتنى ئىچىڭ"
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "سىستېما ۋاكالەتچىلىك تەڭشەش مۇۋەپپەقىيەتلىك بولدى"
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "سىستېما ۋاكالەتچىلىكى بىكار قىلىندى"
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "ئۇلاندى"
 
