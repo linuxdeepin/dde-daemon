@@ -158,6 +158,8 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 		return false
 	}
 
+	logger.Debugf("will auto switch from input<%s,%s> to input<%s,%s>",
+		currentCardName, currentPortName, firstPort.CardName, firstPort.PortName)
 	return true
 }
 
@@ -191,6 +193,8 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 		return false
 	}
 
+	logger.Debugf("will auto switch from output<%s,%s> to output<%s,%s>",
+		currentCardName, currentPortName, firstPort.CardName, firstPort.PortName)
 	return true
 }
 
