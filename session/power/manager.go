@@ -146,6 +146,7 @@ type Manager struct {
 		SuspendState struct {
 			state int
 		}
+		ScreenFullBlack struct {}
 	}
 }
 

@@ -536,7 +536,10 @@ func (psp *powerSavePlan) screenBlack() {
 			manager.setDisplayBrightness(brightnessTable)
 		}
 		manager.setDPMSModeOff()
-
+		err := manager.service.Emit(manager, "ScreenFullBlack")
+		if err != nil {
+			logger.Warning(err)
+		}
 	})
 	psp.addTask(taskF)
 }
