@@ -44,6 +44,7 @@ type CardExport struct {
 type CardPortExport struct {
 	Name        string
 	Enabled     bool
+	Bluetooth   bool
 	Description string
 	Direction   int
 }
@@ -147,6 +148,7 @@ func (cards CardList) string() string {
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
 				Enabled:     portConfig.Enabled,
+				Bluetooth:   isBluetoothCard(cardInfo.core),
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
 			})
@@ -174,6 +176,7 @@ func (cards CardList) stringWithoutUnavailable() string {
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
 				Enabled:     portConfig.Enabled,
+				Bluetooth:   isBluetoothCard(cardInfo.core),
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
 			})
