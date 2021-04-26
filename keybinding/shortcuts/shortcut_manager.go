@@ -84,6 +84,7 @@ type ShortcutManager struct {
 
 	ConflictingKeystrokes []*Keystroke
 	EliminateConflictDone bool
+	isLockVisible         bool
 }
 
 type KeyEvent struct {
@@ -103,6 +104,9 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		layoutChanged:   make(chan struct{}),
 		pinyinEnabled:   isZH(),
 	}
+
+	ddeSessionShellGs := gio.NewSettings("com.deepin.dde.sessionshell.control")
+	ss.isLockVisible = ddeSessionShellGs.GetBoolean("islockvisbile")
 
 	ss.xRecordEventHandler = NewXRecordEventHandler(keySymbols)
 	ss.xRecordEventHandler.modKeyReleasedCb = func(code uint8, mods uint16) {
@@ -589,6 +593,10 @@ func (sm *ShortcutManager) emitKeyEvent(mods Modifiers, key Key) {
 	sm.keyKeystrokeMapMu.Unlock()
 	if ok {
 		logger.Debugf("emitKeyEvent keystroke: %#v", keystroke)
+		if keystroke.Shortcut.GetId() == "lock-screen" && !sm.isLockVisible {
+			logger.Warning("isLockVisible is false, can't use win+l")
+			return
+		}
 		keyEvent := &KeyEvent{
 			Mods:     mods,
 			Code:     key.Code,
