@@ -263,7 +263,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				notify(icon, "", fmt.Sprintf(Tr("%q connected"), msg))
 			}
 		case nm.NM_DEVICE_STATE_FAILED, nm.NM_DEVICE_STATE_DISCONNECTED, nm.NM_DEVICE_STATE_NEED_AUTH,
-			nm.NM_DEVICE_STATE_UNMANAGED, nm.NM_DEVICE_STATE_UNAVAILABLE:
+			nm.NM_DEVICE_STATE_UNMANAGED, nm.NM_DEVICE_STATE_UNAVAILABLE,nm.NM_DEVICE_STATE_RECONNECT:
 			logger.Infof("device disconnected, type %s, %d => %d, reason[%d] %s", getCustomDeviceType(dsi.devType), oldState, newState, reason, deviceErrorTable[reason])
 
 			// ignore device removed signals for that could not
@@ -343,11 +343,19 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 				case nm.NM_DEVICE_STATE_REASON_NO_SECRETS:
 					msg = fmt.Sprintf(Tr("Password is required to connect %q"), dsi.aconnId)
 				case nm.NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT:
+					if oldState == nm.NM_DEVICE_STATE_CONFIG && newState == nm.NM_DEVICE_STATE_RECONNECT {
+						msg = fmt.Sprintf(Tr("Connection %q failed, Server return error, retry to connect"), dsi.aconnId)
+					}
+					// password error
 					if oldState == nm.NM_DEVICE_STATE_CONFIG && newState == nm.NM_DEVICE_STATE_NEED_AUTH {
 						msg = fmt.Sprintf(Tr("Connection failed, unable to connect %q, wrong password"), dsi.aconnId)
 					}
 				case nm.NM_DEVICE_STATE_REASON_SUPPLICANT_TIMEOUT:
-					if oldState == nm.NM_DEVICE_STATE_CONFIG && newState == nm.NM_DEVICE_STATE_NEED_AUTH {
+					// eap time out may password error
+					if oldState == nm.NM_DEVICE_STATE_RECONNECT && newState == nm.NM_DEVICE_STATE_NEED_AUTH {
+						msg = fmt.Sprintf(Tr("Connection %q failed, Server auth failed, please check user and password"), dsi.aconnId)
+					} else {
+						// supplicant time out
 						msg = fmt.Sprintf(deviceErrorTable[nm.NM_DEVICE_STATE_REASON_SUPPLICANT_TIMEOUT])
 					}
 				case CUSTOM_NM_DEVICE_STATE_REASON_CABLE_UNPLUGGED: //disconnected due to cable unplugged

@@ -329,7 +329,10 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		if !m.isDeviceExists(devPath) {
 			return
 		}
-
+		// regard reconnect as config state
+		if newState == nm.NM_DEVICE_STATE_RECONNECT {
+			newState = nm.NM_DEVICE_STATE_CONFIG
+		}
 		dev.State = newState
 		m.devicesLock.Lock()
 		m.updatePropDevices()

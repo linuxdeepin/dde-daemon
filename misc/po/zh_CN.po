@@ -962,6 +962,14 @@ msgstr "连接%q需要密码"
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "连接失败，未能加入%q，密码不正确"
 
+#: ../../network/state_handler.go:348
+msgid "Connection %q failed, Server return error, retry to connect"
+msgstr "连接%q失败，服务端返回错误，正在尝试重连"
+
+#: ../../network/state_handler.go:356
+msgid "Connection %q failed, Server auth failed, please check user and password"
+msgstr "连接%q失败，服务端认证失败，请检查用户名或密码"
+
 #: ../../network/utils_dbus_nm.go:271
 msgid "Unknown"
 msgstr "未知"
