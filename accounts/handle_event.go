@@ -22,6 +22,7 @@ package accounts
 import (
 	"path/filepath"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -186,16 +187,31 @@ func (m *Manager) handleDMConfigChanged() {
 
 func (m *Manager) addUser(uInfo *users.UserInfo) {
 	logger.Debug("addUser", uInfo.Uid)
-	userPath := userDBusPathPrefix + uInfo.Uid
-	err := m.exportUserByPath(userPath)
+	err := m.exportUserByUid(uInfo.Uid)
 	if err != nil {
 		logger.Warningf("failed to export user %s: %v", uInfo.Uid, err)
 		return
 	}
-	err = m.service.Emit(m, "UserAdded", userPath)
+	err = m.service.Emit(m, "UserAdded", userDBusPathPrefix+uInfo.Uid)
 	if err != nil {
 		logger.Warning(err)
 	}
+}
+
+func (m *Manager) addUdcpUser(uId uint32) error {
+	logger.Debug("addUdcpUser", uId)
+	udcpUId := strconv.FormatUint(uint64(uId), 10)
+	err := m.exportUserByUid(udcpUId)
+	if err != nil {
+		logger.Warningf("failed to export user %d: %v", uId, err)
+		return err
+	}
+	m.updatePropUserList()
+	err = m.service.Emit(m, "UserAdded", userDBusPathPrefix+udcpUId)
+	if err != nil {
+		logger.Warning(err)
+	}
+	return err
 }
 
 func (m *Manager) deleteUser(uid string) {
