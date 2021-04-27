@@ -403,6 +403,10 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			m.protalAuthBrowserOpened = false
 		}
 
+		// regard reconnect as config state
+		if newState == nm.NM_DEVICE_STATE_RECONNECT {
+			newState = nm.NM_DEVICE_STATE_CONFIG
+		}
 		dev.State = newState
 		m.devicesLock.Lock()
 		m.updatePropDevices()
