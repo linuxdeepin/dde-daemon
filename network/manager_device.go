@@ -258,8 +258,14 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			logger.Warning(err)
 		}
 		dev.ActiveAp, _ = nmDevWireless.ActiveAccessPoint().Get(0)
-		permHwAddress, _ := nmDevWireless.PermHwAddress().Get(0)
-		dev.SupportHotspot = isWirelessDeviceSupportHotspot(permHwAddress)
+		// check if enable hotspot
+		if enableHotspot() {
+			permHwAddress, _ := nmDevWireless.PermHwAddress().Get(0)
+			dev.SupportHotspot = isWirelessDeviceSupportHotspot(permHwAddress)
+		} else {
+			dev.SupportHotspot = false
+		}
+
 
 		err = nmDevWireless.HwAddress().ConnectChanged(func(hasValue bool, value string) {
 			if !hasValue {

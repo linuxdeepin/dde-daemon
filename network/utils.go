@@ -24,6 +24,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -313,5 +314,20 @@ func (m *Manager) isConnectivityByHttp() bool {
 			}
 		}
 	}
+	return false
+}
+
+// check if need hotspot enable
+func enableHotspot() bool {
+	buf, err := ioutil.ReadFile("/var/lib/deepin/hotspot")
+	if err != nil {
+		logger.Debugf("enable hotspot read failed, err: %v", err)
+		return false
+	}
+	// if enable is set
+	if string(buf) == "enable" {
+		return true
+	}
+	// if not
 	return false
 }
