@@ -551,6 +551,10 @@ func (m *Manager) deactivateConnection(uuid string) (err error) {
 // EnableWirelessHotspotMode activate the device related hotspot
 // connection, if the connection not exists will create one.
 func (m *Manager) EnableWirelessHotspotMode(devPath dbus.ObjectPath) *dbus.Error {
+	// enable hotspot
+	if !enableHotspot() {
+		return nil
+	}
 	err := m.enableWirelessHotSpotMode(devPath)
 	return dbusutil.ToError(err)
 }
@@ -583,6 +587,12 @@ func (m *Manager) DisableWirelessHotspotMode(devPath dbus.ObjectPath) *dbus.Erro
 // IsWirelessHotspotModeEnabled check if the device related hotspot
 // connection activated.
 func (m *Manager) IsWirelessHotspotModeEnabled(devPath dbus.ObjectPath) (enabled bool, err *dbus.Error) {
+	// if enable hotspot
+	if !enableHotspot() {
+		enabled = false
+		return
+	}
+
 	uuid := nmGeneralGetDeviceUniqueUuid(devPath)
 	apaths, _ := nmGetActiveConnectionByUuid(uuid)
 	if len(apaths) > 0 {

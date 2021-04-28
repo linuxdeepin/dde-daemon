@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -296,4 +297,19 @@ func enableNetworking() error {
 	}
 
 	return nmManager.Enable(0, true)
+}
+
+// check if need hotspot enable
+func enableHotspot() bool {
+	buf, err := ioutil.ReadFile("/var/lib/deepin/hotspot")
+	if err != nil {
+		logger.Debugf("enable hotspot read failed, err: %v",err)
+		return false
+	}
+	// if enable is set
+	if string(buf) == "enable" {
+		return true
+	}
+	// if not
+	return false
 }
