@@ -88,7 +88,7 @@ type Touchpad struct {
 	PalmMinWidth  gsprop.Int `prop:"access:rw"`
 	PalmMinZ      gsprop.Int `prop:"access:rw"`
 
-	devInfos     dxTouchpads
+	devInfos     Touchpads
 	setting      *gio.Settings
 	mouseSetting *gio.Settings
 }
@@ -148,7 +148,7 @@ func (tpad *Touchpad) handleDeviceChanged() {
 }
 
 func (tpad *Touchpad) updateDXTpads() {
-	tpad.devInfos = dxTouchpads{}
+	tpad.devInfos = Touchpads{}
 	for _, info := range getTPadInfos(false) {
 		if !globalWayland {
 			tmp := tpad.devInfos.get(info.Id)
@@ -344,7 +344,7 @@ func (tpad *Touchpad) startSyndaemon() {
 	if err != nil {
 		err = os.Remove(syndaemonPidFile)
 		if err != nil {
-			logger.Warning("Remove error:",err)
+			logger.Warning("Remove error:", err)
 		}
 		logger.Debug("[disableWhileTyping] start syndaemon failed:", err)
 		return
@@ -362,7 +362,7 @@ func (tpad *Touchpad) stopSyndaemon() {
 	}
 	err = os.Remove(syndaemonPidFile)
 	if err != nil {
-		logger.Warning("remove error:",err)
+		logger.Warning("remove error:", err)
 	}
 }
 
