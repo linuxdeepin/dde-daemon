@@ -62,7 +62,7 @@ type Mouse struct {
 	DoubleClick   gsprop.Int `prop:"access:rw"`
 	DragThreshold gsprop.Int `prop:"access:rw"`
 
-	devInfos dxMouses
+	devInfos Mouses
 	setting  *gio.Settings
 	touchPad *Touchpad
 }
@@ -118,7 +118,7 @@ func (m *Mouse) handleDeviceChanged() {
 }
 
 func (m *Mouse) updateDXMouses() {
-	m.devInfos = dxMouses{}
+	m.devInfos = Mouses{}
 	for _, info := range getMouseInfos(false) {
 		if info.TrackPoint {
 			continue

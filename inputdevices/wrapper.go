@@ -31,17 +31,31 @@ import (
 	"pkg.deepin.io/dde/api/dxinput"
 	"pkg.deepin.io/dde/api/dxinput/common"
 	dxutils "pkg.deepin.io/dde/api/dxinput/utils"
+	gudev "pkg.deepin.io/gir/gudev-1.0"
 )
 
-type dxMouses []*dxinput.Mouse
-type dxTouchpads []*dxinput.Touchpad
+type mouseInfo struct {
+	*dxinput.Mouse
+	devNode string
+	phys    string
+}
+
+type touchpadInfo struct {
+	*dxinput.Touchpad
+	devNode string
+	phys    string
+}
+
+type Mouses []*mouseInfo
+type Touchpads []*touchpadInfo
 type dxWacoms []*dxinput.Wacom
 
 var (
-	devInfos   common.DeviceInfos
-	mouseInfos dxMouses
-	tpadInfos  dxTouchpads
-	wacomInfos dxWacoms
+	_devInfos    common.DeviceInfos
+	_mouseInfos  Mouses
+	_tpadInfos   Touchpads
+	_wacomInfos  dxWacoms
+	_gudevClient = gudev.NewClient([]string{"input"})
 )
 
 func startDeviceListener() {
@@ -57,11 +71,13 @@ func handleDeviceChanged() {
 	logger.Debug("Device changed")
 
 	getDeviceInfos(true)
-	mouseInfos = dxMouses{}
-	getMouseInfos(true)
-	tpadInfos = dxTouchpads{}
+
+	// 鼠标依赖触摸板的数据，必须在触摸板之后获取
+	_tpadInfos = Touchpads{}
 	getTPadInfos(false)
-	wacomInfos = dxWacoms{}
+	_mouseInfos = Mouses{}
+	getMouseInfos(false)
+	_wacomInfos = dxWacoms{}
 	getWacomInfos(false)
 
 	if _manager == nil {
@@ -76,11 +92,11 @@ func handleDeviceChanged() {
 }
 
 func getDeviceInfos(force bool) common.DeviceInfos {
-	if force || len(devInfos) == 0 {
-		devInfos = dxutils.ListDevice()
+	if force || len(_devInfos) == 0 {
+		_devInfos = dxutils.ListDevice()
 	}
 
-	return devInfos
+	return _devInfos
 }
 
 func getKeyboardNumber() int {
@@ -94,77 +110,145 @@ func getKeyboardNumber() int {
 	return number
 }
 
-func getMouseInfos(force bool) dxMouses {
-	if !force && len(mouseInfos) != 0 {
-		return mouseInfos
+func getExtraInfo(id int32) (devNode string, phys string) {
+	devNodeBytes, length := dxutils.GetProperty(id, "Device Node")
+	if len(devNodeBytes) == 0 {
+		logger.Warningf("could not get DeviceNode for %d", id)
+		return
 	}
 
-	mouseInfos = dxMouses{}
+	devNode = string(devNodeBytes[:length])
+	udevDev := _gudevClient.QueryByDeviceFile(devNode)
+	if udevDev == nil {
+		logger.Warning("failed to get device of", devNode)
+		return
+	}
+	defer udevDev.Unref()
+
+	phys = udevDev.GetSysfsAttr("phys")
+	if phys == "" {
+		parent := udevDev.GetParent()
+		if parent == nil {
+			logger.Warning("failed to get parent device of", devNode)
+			return
+		}
+		phys = parent.GetSysfsAttr("phys")
+
+		parent.Unref()
+	}
+
+	return
+}
+
+func getTouchpadInfoByDxTouchpad(tmp *dxinput.Touchpad) *touchpadInfo {
+	m := &touchpadInfo{
+		Touchpad: tmp,
+	}
+
+	m.devNode, m.phys = getExtraInfo(tmp.Id)
+
+	return m
+}
+
+func getMouseInfoByDxMouse(tmp *dxinput.Mouse) *mouseInfo {
+	m := &mouseInfo{
+		Mouse: tmp,
+	}
+
+	m.devNode, m.phys = getExtraInfo(tmp.Id)
+
+	return m
+}
+
+func getMouseInfos(force bool) Mouses {
+	if !force && len(_mouseInfos) != 0 {
+		return _mouseInfos
+	}
+
+	_mouseInfos = Mouses{}
 	for _, info := range getDeviceInfos(force) {
 		if info.Type == common.DevTypeMouse {
 			tmp, _ := dxinput.NewMouseFromDeviceInfo(info)
-			mouseInfos = append(mouseInfos, tmp)
+			mouse := getMouseInfoByDxMouse(tmp)
+
+			// phys 用来标识物理设备，若俩设备的 phys 相同，说明是同一物理设备，
+			// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
+			found := false
+			for _, touchpad := range _tpadInfos {
+				if touchpad.phys == mouse.phys {
+					found = true
+					break
+				}
+			}
+
+			if found {
+				logger.Debug("mouse device ignored:", tmp.Name)
+				continue
+			}
+
+			_mouseInfos = append(_mouseInfos, mouse)
 		}
 	}
 
-	return mouseInfos
+	return _mouseInfos
 }
 
-func getTPadInfos(force bool) dxTouchpads {
-	if !force && len(tpadInfos) != 0 {
-		return tpadInfos
+func getTPadInfos(force bool) Touchpads {
+	if !force && len(_tpadInfos) != 0 {
+		return _tpadInfos
 	}
 
-	tpadInfos = dxTouchpads{}
+	_tpadInfos = Touchpads{}
 	for _, info := range getDeviceInfos(false) {
 		if info.Type == common.DevTypeTouchpad {
 			tmp, _ := dxinput.NewTouchpadFromDevInfo(info)
-			tpadInfos = append(tpadInfos, tmp)
+
+			_tpadInfos = append(_tpadInfos, getTouchpadInfoByDxTouchpad(tmp))
 		}
 	}
 
-	return tpadInfos
+	return _tpadInfos
 }
 
 func getWacomInfos(force bool) dxWacoms {
-	if !force && len(wacomInfos) != 0 {
-		return wacomInfos
+	if !force && len(_wacomInfos) != 0 {
+		return _wacomInfos
 	}
 
-	wacomInfos = dxWacoms{}
+	_wacomInfos = dxWacoms{}
 	for _, info := range getDeviceInfos(false) {
 		if info.Type == common.DevTypeWacom {
 			tmp, _ := dxinput.NewWacomFromDevInfo(info)
-			wacomInfos = append(wacomInfos, tmp)
+			_wacomInfos = append(_wacomInfos, tmp)
 		}
 	}
 
-	return wacomInfos
+	return _wacomInfos
 }
 
-func (infos dxMouses) get(id int32) *dxinput.Mouse {
+func (infos Mouses) get(id int32) *dxinput.Mouse {
 	for _, info := range infos {
 		if info.Id == id {
-			return info
+			return info.Mouse
 		}
 	}
 	return nil
 }
 
-func (infos dxMouses) string() string {
+func (infos Mouses) string() string {
 	return toJSON(infos)
 }
 
-func (infos dxTouchpads) get(id int32) *dxinput.Touchpad {
+func (infos Touchpads) get(id int32) *dxinput.Touchpad {
 	for _, info := range infos {
 		if info.Id == id {
-			return info
+			return info.Touchpad
 		}
 	}
 	return nil
 }
 
-func (infos dxTouchpads) string() string {
+func (infos Touchpads) string() string {
 	return toJSON(infos)
 }
 

@@ -65,27 +65,27 @@ func doHandleKWinDeviceAdded(sysName string) {
 	switch info.Type {
 	case common.DevTypeMouse:
 		v, _ := dxinput.NewMouseFromDeviceInfo(info)
-		if len(mouseInfos) == 0 {
-			mouseInfos = append(mouseInfos, v)
+		if len(_mouseInfos) == 0 {
+			_mouseInfos = append(_mouseInfos, getMouseInfoByDxMouse(v))
 		} else {
-			for _, tmp := range mouseInfos {
+			for _, tmp := range _mouseInfos {
 				if tmp.Id == v.Id {
 					continue
 				}
-				mouseInfos = append(mouseInfos, v)
+				_mouseInfos = append(_mouseInfos, getMouseInfoByDxMouse(v))
 			}
 		}
 		_manager.mouse.handleDeviceChanged()
 	case common.DevTypeTouchpad:
 		v, _ := dxinput.NewTouchpadFromDevInfo(info)
-		if len(tpadInfos) == 0 {
-			tpadInfos = append(tpadInfos, v)
+		if len(_tpadInfos) == 0 {
+			_tpadInfos = append(_tpadInfos, getTouchpadInfoByDxTouchpad(v))
 		} else {
-			for _, tmp := range tpadInfos {
+			for _, tmp := range _tpadInfos {
 				if tmp.Id == v.Id {
 					continue
 				}
-				tpadInfos = append(tpadInfos, v)
+				_tpadInfos = append(_tpadInfos, getTouchpadInfoByDxTouchpad(v))
 			}
 		}
 		_manager.tpad.handleDeviceChanged()
@@ -97,9 +97,9 @@ func doHandleKWinDeviceRemoved(sysName string) {
 	id, _ := strconv.Atoi(str)
 	logger.Debug("----------------items:", sysName, str, id)
 
-	var minfos dxMouses
+	var minfos Mouses
 	var changed bool
-	for _, tmp := range mouseInfos {
+	for _, tmp := range _mouseInfos {
 		if tmp.Id == int32(id) {
 			changed = true
 			continue
@@ -108,13 +108,13 @@ func doHandleKWinDeviceRemoved(sysName string) {
 	}
 	if changed {
 		logger.Debug("[Device Removed] mouse:", sysName, minfos)
-		mouseInfos = minfos
+		_mouseInfos = minfos
 		_manager.mouse.handleDeviceChanged()
 		return
 	}
 
-	var tinfos dxTouchpads
-	for _, tmp := range tpadInfos {
+	var tinfos Touchpads
+	for _, tmp := range _tpadInfos {
 		if tmp.Id == int32(id) {
 			changed = true
 			continue
@@ -123,7 +123,7 @@ func doHandleKWinDeviceRemoved(sysName string) {
 	}
 	if changed {
 		logger.Debug("[Device Removed] touchpad:", sysName)
-		tpadInfos = tinfos
+		_tpadInfos = tinfos
 		_manager.tpad.handleDeviceChanged()
 	}
 }
