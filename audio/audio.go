@@ -170,10 +170,6 @@ type Audio struct {
 	outputPortName string
 	// 输出端口切换计数器
 	outputAutoSwitchCount int
-	// 是否处在手动切换蓝牙模式,等待切换完成的状态下
-	waitingBluezModeSwitch bool
-	// 手动切换蓝牙模式,等待切换完成的是哪个声卡
-	waitingBluezCardName string
 
 	// nolint
 	signals *struct {
@@ -401,14 +397,14 @@ func (a *Audio) refreshDefaultSinkSource() {
 	defaultSink := a.ctx.GetDefaultSink()
 	defaultSource := a.ctx.GetDefaultSource()
 
-	if a.defaultSink.Name != defaultSink {
+	if a.defaultSink != nil && a.defaultSink.Name != defaultSink {
 		logger.Debugf("update default sink to %s", defaultSink)
 		a.updateDefaultSink(defaultSink)
 	} else {
 		logger.Debugf("keep default as %s", defaultSink)
 	}
 
-	if a.defaultSource.Name != defaultSource {
+	if a.defaultSource != nil && a.defaultSource.Name != defaultSource {
 		logger.Debugf("update default source to %s", defaultSource)
 		a.updateDefaultSource(defaultSource)
 	} else {
@@ -426,7 +422,9 @@ func (a *Audio) refresh() {
 	logger.Debug("refresh sinkinputs")
 	a.refershSinkInputs()
 	logger.Debug("refresh default")
-
+	a.refreshDefaultSinkSource()
+	logger.Debug("refresh bluetooth mode opts")
+	a.refreshBluetoothOpts()
 	logger.Debug("refresh done")
 }
 
@@ -712,7 +710,6 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 		// err = priorities.Save(globalPrioritiesFilePath)
 		// priorities.Print()
 		GetPriorityManager().SetFirstOutputPort(card.core.Name, portName)
-		a.waitingBluezModeSwitch = false
 	} else {
 		logger.Debugf("input port %s %s now is first priority", card.core.Name, portName)
 
@@ -970,6 +967,20 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 		a.ReduceNoise.Set(portConfig.ReduceNoise)
 		logger.Debugf("physical source, set reduce noise %v", portConfig.ReduceNoise)
 	}
+}
+
+func (a *Audio) refreshBluetoothOpts() {
+	if a.defaultSink == nil {
+		return
+	}
+	card, err := a.cards.get(a.defaultSink.Card)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	a.setPropBluetoothAudioModeOpts(card.BluezModeOpts())
+	a.setPropBluetoothAudioMode(card.BluezMode())
 }
 
 func (a *Audio) updateDefaultSink(sinkName string) {
@@ -1257,13 +1268,16 @@ func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
 	}
 
 	for _, profile := range card.Profiles {
+		/* 这里需要注意，profile.Available为0表示不可用，非0表示未知 */
+		logger.Debugf("check profile %s contains %s is %v && available != no is %v",
+			profile.Name, mode, strings.Contains(strings.ToLower(profile.Name), mode),
+			profile.Available != 0)
 		if strings.Contains(strings.ToLower(profile.Name), mode) &&
-			profile.Available != pulse.AvailableTypeNo {
+			profile.Available != 0 {
 
 			GetBluezAudioManager().SetMode(card.core.Name, mode)
+			logger.Debugf("set profile %s", profile.Name)
 			card.core.SetProfile(profile.Name)
-			a.waitingBluezModeSwitch = true
-			a.waitingBluezCardName = card.core.Name
 			// 后续流程在 handleCardChanged
 			return nil
 		}

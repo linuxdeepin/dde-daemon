@@ -141,3 +141,35 @@ func (card *Card) AutoSetBluezMode() {
 	logger.Debugf("card %s auto set bluez mode %s", card.core.Name, mode)
 	card.SetBluezMode(mode)
 }
+
+/* 获取蓝牙声卡的模式(a2dp/headset) */
+func (card *Card) BluezMode() string {
+	profileName := strings.ToLower(card.ActiveProfile.Name)
+	if strings.Contains(strings.ToLower(profileName), bluezModeA2dp) {
+		return bluezModeA2dp
+	} else if strings.Contains(strings.ToLower(profileName), bluezModeHeadset) {
+		return bluezModeHeadset
+	} else {
+		return ""
+	}
+}
+
+/* 获取蓝牙声卡的可用模式 */
+func (card *Card) BluezModeOpts() []string {
+	opts := []string{}
+	for _, profile := range card.Profiles {
+		if profile.Available == 0 {
+			logger.Debugf("%s %s is unavailable", card.core.Name, profile.Name)
+			continue
+		}
+
+		if strings.Contains(strings.ToLower(profile.Name), "a2dp") {
+			opts = append(opts, "a2dp")
+		}
+
+		if strings.Contains(strings.ToLower(profile.Name), "headset") {
+			opts = append(opts, "headset")
+		}
+	}
+	return opts
+}

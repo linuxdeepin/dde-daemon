@@ -93,7 +93,21 @@ func (c *Card) update(card *pulse.Card) {
 	sort.Sort(card.Profiles)
 	c.Profiles = newProfileList(card.Profiles)
 	c.filterProfile(card)
-	c.Ports = card.Ports
+
+	/* 蓝牙声卡的端口需要过滤 */
+	if isBluetoothCard(card) {
+		for _, port := range card.Ports {
+			if c.BluezMode() == bluezModeA2dp && port.Direction == pulse.DirectionSource {
+				// a2dp模式过滤输入端口
+				logger.Debugf("skip bluez input port %s", port.Name)
+				continue
+			}
+
+			c.Ports = append(c.Ports, port)
+		}
+	} else {
+		c.Ports = card.Ports
+	}
 }
 
 func (c *Card) tryGetProfileByPort(portName string) (string, error) {

@@ -299,15 +299,14 @@ func (a *Audio) handleCardChanged(idx uint32) {
 		return
 	}
 
-	// 手动切换蓝牙模式成功，自动提升蓝牙端口优先级
-	if a.waitingBluezModeSwitch && a.waitingBluezCardName == card.core.Name {
+	// 如果发生变化的是当前输出所用的声卡，且是蓝牙声卡
+	if idx == a.defaultSink.Card && isBluetoothCard(card.core) {
 		if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeA2dp) {
 			a.setPropBluetoothAudioMode(bluezModeA2dp)
 		} else if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeHeadset) {
 			a.setPropBluetoothAudioMode(bluezModeHeadset)
 		}
 
-		a.waitingBluezModeSwitch = false
 		GetPriorityManager().Input.SetTheFirstType(PortTypeBluetooth)
 	}
 
