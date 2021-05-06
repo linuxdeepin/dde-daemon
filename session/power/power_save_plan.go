@@ -721,7 +721,7 @@ func (psp *powerSavePlan) initMultiBrightnessWithPsm() {
 	for _, val := range psp.multiBrightnessWithPsm.MultiBrightness {
 		if val.ManuallyModified == true {
 			val.ManuallyModified = false
-			val.BrightnessSaved = val.BrightnessLatest / (1 - float64(brightnessDropPercent)/100) * 1000
+			val.BrightnessSaved = val.BrightnessLatest / (1 - float64(brightnessDropPercent)/100)
 			if val.BrightnessSaved > 1 {
 				val.BrightnessSaved = 1
 			}
