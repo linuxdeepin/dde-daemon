@@ -344,6 +344,11 @@ func (m *Manager) terminateSKLWait() {
 func (m *Manager) handlePowerActionCode(actionCode int32) {
 	logger.Info("handlePowerActionCode", actionCode)
 	if actionCode == POWER_RELEASE_SHORT {
+		// 长按电源结束时发出的POWER_RELEASE_SHORT事件.过滤掉
+		if m.interceptPowerReleaseEvent {
+			return
+		}
+
 		if !m.powerKeyTriggered {
 			m.powerKeyTriggered = true
 			m.powerKeyConsumedByScreenshotChord = false
@@ -359,6 +364,10 @@ func (m *Manager) handlePowerActionCode(actionCode int32) {
 			})
 		}
 	} else if actionCode == POWER_RELEASE_LONG {
+		// 长按电源时, 内核上传的事件流程为:1 -> 2 -> 0
+		// 短按电源时, 内核上传的事件流程为:1 -> 0
+		// 为了防止长按结束时会处理POWER_RELEASE_SHORT事件, 需要将interceptPowerReleaseEvent置为true来过滤掉此次的POWER_RELEASE_SHORT事件
+		m.interceptPowerReleaseEvent = true
 		cmd := "due-shell -s"
 		go func() {
 			// TODO: 需要判断当前是否已经在锁屏界面
@@ -367,6 +376,11 @@ func (m *Manager) handlePowerActionCode(actionCode int32) {
 				logger.Warning("execCmd error:", err)
 			}
 		}()
+	} else if actionCode == POWER_PRESS {
+		// 每次接收到电源press事件时,都重新初始化一次interceptPowerReleaseEvent
+		m.interceptPowerReleaseEvent = false
+	} else {
+		logger.Warning("bad power action code")
 	}
 }
 

@@ -140,6 +140,9 @@ type Manager struct {
 	// 息屏亮屏标识
 	wakeUpScreen bool
 
+	// 过滤电源短按release事件标识
+	interceptPowerReleaseEvent bool
+
 	//nolint
 	signals *struct {
 		Added, Deleted, Changed struct {
