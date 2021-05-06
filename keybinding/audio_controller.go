@@ -178,6 +178,15 @@ func (c *AudioController) changeSinkVolume(raised bool) error {
 	if err != nil {
 		return err
 	}
+
+	// 平板环境下音量为0就设置为静音
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv && v == volumeMin {
+		err = sink.SetMute(0, true)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+
 	showOSD(osd)
 	return nil
 }
