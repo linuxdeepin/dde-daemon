@@ -163,6 +163,11 @@ func (card *Card) BluezModeOpts() []string {
 			continue
 		}
 
+		if strings.Contains(profile.Description, "HFP") {
+			logger.Debugf("%s %s is a HFP profile", card.core.Name, profile.Name)
+			continue
+		}
+
 		if strings.Contains(strings.ToLower(profile.Name), "a2dp") {
 			opts = append(opts, "a2dp")
 		}
