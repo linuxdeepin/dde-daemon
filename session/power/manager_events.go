@@ -20,6 +20,7 @@
 package power
 
 import (
+	"os"
 	"time"
 
 	dbus "github.com/godbus/dbus"
@@ -168,6 +169,7 @@ func (m *Manager) handleBatteryDisplayUpdate() {
 		m.setPropBatteryState(status)
 
 		warnLevel = m.getWarnLevel(percentage, timeToEmpty)
+		updateWarnLevel(warnLevel)
 		warnLevelChanged = m.setPropWarnLevel(warnLevel)
 
 	} else {
@@ -219,8 +221,15 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 				}()
 			} else if count == 5 {
 				// after 5 seconds, force suspend
-				m.disableWarnLevelCountTicker()
-				m.doSuspend()
+				if os.Getenv("XDG_CURRENT_DESKTOP") != padEnv {
+					m.disableWarnLevelCountTicker()
+					m.doSuspend()
+				}
+			} else if count == 15 {
+				// In pad environment, after 15 seconds, force shutdown
+				if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+					m.doShutdown()
+				}
 			}
 		})
 

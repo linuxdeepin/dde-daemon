@@ -19,6 +19,8 @@
 
 package power
 
+import "github.com/godbus/dbus"
+
 type WarnLevel uint32
 
 const (
@@ -89,4 +91,17 @@ func getWarnLevel(config *warnLevelConfig, onBattery bool,
 
 func (m *Manager) getWarnLevel(percentage float64, timeToEmpty uint64) WarnLevel {
 	return getWarnLevel(m.warnLevelConfig.getWarnLevelConfig(), m.OnBattery, percentage, timeToEmpty)
+}
+
+func updateWarnLevel(warnlevel WarnLevel) {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	obj := sessionBus.Object("com.deepin.SessionManager", "/com/deepin/SessionManager")
+	err = obj.Call("com.deepin.SessionManager.SetBatteryWarnLevel", 0, warnlevel).Err
+	if err != nil {
+		logger.Warning(err)
+	}
 }
