@@ -97,11 +97,12 @@ func (b *Bluetooth) SetDeviceTrusted(device dbus.ObjectPath, trusted bool) *dbus
 func (b *Bluetooth) GetDevices(adapter dbus.ObjectPath) (devicesJSON string, err *dbus.Error) {
 	if a, ok := b.adapters[adapter]; ok {
 		b.devicesLock.Lock()
-		if a.discoveringTimeoutFlag { //蓝牙设备被清除， 发送备份的蓝牙设备列表
-			var result []*backupDevice
+		b.backupDeviceLock.Lock()
+		if a.discoveringTimeoutFlag { //蓝牙设备被清除，发送备份的蓝牙设备列表
+			//更新updateBackupDevices,防止设备断开/连接时数据错误
+			b.updateBackupDevices(adapter)
 			devices := b.backupDevices[adapter]
-			result = append(result, devices...)
-			devicesJSON = marshalJSON(result)
+			devicesJSON = marshalJSON(devices)
 
 		} else {
 			var result []*device
@@ -110,6 +111,7 @@ func (b *Bluetooth) GetDevices(adapter dbus.ObjectPath) (devicesJSON string, err
 			devicesJSON = marshalJSON(result)
 		}
 		b.devicesLock.Unlock()
+		b.backupDeviceLock.Unlock()
 	}
 	return
 }

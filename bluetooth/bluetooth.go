@@ -569,6 +569,20 @@ func (b *Bluetooth) getBackupDevice(dpath dbus.ObjectPath) (*backupDevice, error
 	return b.backupDevices[apath][index], nil
 }
 
+// 更新backupDevices数据
+func (b *Bluetooth) updateBackupDevices(adapter dbus.ObjectPath) {
+	devices := b.devices[adapter]
+	for _, device := range devices {
+		apath, index := b.findBackupDevice(device.Path)
+		if index < 0 {
+			logger.Warning("invalid device path: ", device.Path)
+			break
+		} else {
+			b.backupDevices[apath][index] = newBackupDevice(device)
+		}
+	}
+}
+
 func (b *Bluetooth) getAdapterDevices(adapterAddress string) []*device {
 	var aPath dbus.ObjectPath
 	b.adaptersLock.Lock()
