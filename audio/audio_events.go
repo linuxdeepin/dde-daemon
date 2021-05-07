@@ -462,6 +462,11 @@ func (a *Audio) notifyPortDisabled(cardId uint32, port pulse.CardPortInfo) {
 		return
 	}
 
+	icon := "disabled-audio-output-plugged"
+	if port.Direction == pulse.DirectionSource {
+		icon = "disabled-audio-input-plugged"
+	}
+
 	cmd := makeNotifyCmdEnablePort(cardId, port.Name)
 	message := fmt.Sprintf(gettext.Tr("%s had been disabled"), port.Description)
 	actions := []string{"open", gettext.Tr("Open")}
@@ -471,7 +476,7 @@ func (a *Audio) notifyPortDisabled(cardId uint32, port pulse.CardPortInfo) {
 		0,
 		"dde-control-center",
 		0,
-		"icon",
+		icon,
 		message,
 		"",
 		actions,

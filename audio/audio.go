@@ -746,23 +746,7 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 
 	a.setPropCards(a.cards.string())
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
-
-	// TODO: 后面这些应该不需要了,改成触发自动切换,另外当切换到disable端口上时静音
-	// defaultSinkActivePortName := a.getDefaultSinkActivePortName()
-	// defaultSourceActivePortName := a.getDefaultSourceActivePortName()
-	// if portName == defaultSinkActivePortName {
-	// 	defaultSink := a.getDefaultSink()
-	// 	if defaultSink == nil {
-	// 		return dbusutil.ToError(errors.New("can not get default sink"))
-	// 	}
-	// 	defaultSink.setMute(!enabled)
-	// } else if portName == defaultSourceActivePortName {
-	// 	defaultsource := a.getDefaultSource()
-	// 	if defaultsource == nil {
-	// 		return dbusutil.ToError(errors.New("can not get default source"))
-	// 	}
-	// 	defaultsource.setMute(!enabled)
-	// }
+	a.autoSwitchPort()
 
 	return nil
 }
