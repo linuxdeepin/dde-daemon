@@ -205,6 +205,7 @@ func (a *Audio) autoSwitchPort() {
 		card, err := a.cards.getByName(firstOutput.CardName)
 
 		if err == nil {
+			logger.Debugf("auto switch output to #%d %s:%s", card.Id, card.core.Name, firstOutput.PortName)
 			a.setPort(card.Id, firstOutput.PortName, pulse.DirectionSink)
 		} else {
 			logger.Warning(err)
@@ -226,6 +227,7 @@ func (a *Audio) autoSwitchPort() {
 		card, err := a.cards.getByName(firstInput.CardName)
 
 		if err == nil {
+			logger.Debugf("auto switch input to #%d %s:%s", card.Id, card.core.Name, firstInput.PortName)
 			a.setPort(card.Id, firstInput.PortName, pulse.DirectionSource)
 		} else {
 			logger.Warning(err)

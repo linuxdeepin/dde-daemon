@@ -746,6 +746,7 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 
 	a.setPropCards(a.cards.string())
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
+	GetPriorityManager().SetPorts(a.cards)
 	a.autoSwitchPort()
 
 	return nil
