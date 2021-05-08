@@ -23,7 +23,9 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/user"
 	"path/filepath"
+	"strconv"
 	"sync"
 	"time"
 
@@ -48,13 +50,13 @@ const (
 var allEffects = []string{effectPixmix}
 
 type effectTool interface {
-	generate(uid int, inputFile, outputFile string, envVars []string) error
+	generate(userName, inputFile, outputFile string, envVars []string) error
 }
 
-type effectToolFunc func(uid int, inputFile, outputFile string, envVars []string) error
+type effectToolFunc func(userName, inputFile, outputFile string, envVars []string) error
 
-func (etf effectToolFunc) generate(uid int, inputFile, outputFile string, envVars []string) error {
-	return etf(uid, inputFile, outputFile, envVars)
+func (etf effectToolFunc) generate(userName, inputFile, outputFile string, envVars []string) error {
+	return etf(userName, inputFile, outputFile, envVars)
 }
 
 type ImageEffect struct {
@@ -131,8 +133,9 @@ func newImageEffect() *ImageEffect {
 	return ie
 }
 
-func ddePixmix(uid int, inputFile, outputFile string, envVars []string) error {
-	return runCmdRedirectStdOut(uid, outputFile, []string{"dde-pixmix", "-o=-", inputFile}, envVars)
+func ddePixmix(userName, inputFile, outputFile string, envVars []string) error {
+
+	return runCmdRedirectStdOut(userName, outputFile, []string{"dde-pixmix", "-o=-", inputFile}, envVars)
 }
 
 func (ie *ImageEffect) Get(sender dbus.Sender, effect, filename string) (outputFile string, busErr *dbus.Error) {
@@ -164,12 +167,19 @@ func (ie *ImageEffect) Get(sender dbus.Sender, effect, filename string) (outputF
 		return
 	}
 
+	usr, err := user.LookupId(string(strconv.Itoa(int(uid))))
+	if err != nil {
+		err = xerrors.Errorf("failed to get user: %w", err)
+		return
+	}
+
 	process := procfs.Process(pid)
 	processEnv, err := process.Environ()
 	if err != nil {
 		err = xerrors.Errorf("failed to get process %d environ: %w", pid, err)
 		return
 	}
+
 	var envVarNames = []string{"DISPLAY", "XDG_RUNTIME_DIR"}
 	var envVars = make([]string, len(envVarNames))
 	for idx, envVarName := range envVarNames {
@@ -177,7 +187,7 @@ func (ie *ImageEffect) Get(sender dbus.Sender, effect, filename string) (outputF
 		envVars[idx] = envVarName + "=" + envVarVal
 	}
 
-	outputFile, err = ie.get(int(uid), effect, filename, envVars)
+	outputFile, err = ie.get(usr.Username, effect, filename, envVars)
 	if err != nil {
 		err = xerrors.Errorf("failed to get output file: %w", err)
 		return
@@ -185,7 +195,7 @@ func (ie *ImageEffect) Get(sender dbus.Sender, effect, filename string) (outputF
 	return
 }
 
-func (ie *ImageEffect) get(uid int, effect, filename string, envVars []string) (outputFile string, err error) {
+func (ie *ImageEffect) get(username, effect, filename string, envVars []string) (outputFile string, err error) {
 	if effect == "" {
 		effect = defaultEffect
 	}
@@ -234,7 +244,7 @@ func (ie *ImageEffect) get(uid int, effect, filename string, envVars []string) (
 	// task not exist
 	shouldDelete := false
 	t0 := time.Now()
-	err = tool.generate(uid, filename, outputFile, envVars)
+	err = tool.generate(username, filename, outputFile, envVars)
 	elapsed := time.Since(t0)
 	ie.finishTask(effect, filename, err)
 
