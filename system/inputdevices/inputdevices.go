@@ -68,9 +68,9 @@ func (m *InputDevices) newTouchscreen(dev *libinputDevice) {
 	m.touchscreensMu.Lock()
 	defer m.touchscreensMu.Unlock()
 
-	t := newTouchscreen(dev, m.service)
-
 	m.maxTouchscreenId++
+	t := newTouchscreen(dev, m.service, m.maxTouchscreenId)
+
 	path := dbus.ObjectPath(touchscreenDBusPath + strconv.FormatUint(uint64(t.id), 10))
 	t.export(path)
 
@@ -79,7 +79,7 @@ func (m *InputDevices) newTouchscreen(dev *libinputDevice) {
 	touchscreens := append(m.Touchscreens, path)
 	m.setPropTouchscreens(touchscreens)
 
-	m.service.Emit(t, "TouchscreenAdded", path)
+	m.service.Emit(m, "TouchscreenAdded", path)
 }
 
 func (m *InputDevices) removeTouchscreen(dev *libinputDevice) {
@@ -102,7 +102,7 @@ func (m *InputDevices) removeTouchscreen(dev *libinputDevice) {
 
 	delete(m.touchscreens, path)
 
-	m.service.Emit(t, "TouchscreenRemoved", path)
+	m.service.Emit(m, "TouchscreenRemoved", path)
 }
 
 func (m *InputDevices) getIndexByDevNode(devNode string) int {
