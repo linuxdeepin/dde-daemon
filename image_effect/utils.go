@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
@@ -31,11 +30,11 @@ func setFileModTime(filename string, t time.Time) error {
 	return os.Chtimes(filename, now, t)
 }
 
-func runCmdRedirectStdOut(uid int, outputFile string, cmdline, envVars []string) error {
-	args := append([]string{"-u", "#" + strconv.Itoa(uid)}, envVars...)
-	args = append(args, cmdline...)
-	cmd := exec.Command("sudo", args...)
-	logger.Debugf("$ sudo %s > %q", strings.Join(args, " "), outputFile)
+func runCmdRedirectStdOut(userName, outputFile string, cmdline, envVars []string) error {
+	args := append([]string{"-u", userName, "--"}, cmdline...)
+	logger.Debugf("$ runuser %s > %q", strings.Join(args, " "), outputFile)
+
+	cmd := exec.Command("runuser", args...)
 	cmd.Env = append(os.Environ(), envVars...)
 	var errBuf bytes.Buffer
 	cmd.Stderr = &errBuf
