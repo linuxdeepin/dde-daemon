@@ -44,10 +44,11 @@ type Touchscreen struct {
 const touchscreenDBusPath = "/com/deepin/system/InputDevices/Touchscreen/"
 const touchscreenDBusInterface = "com.deepin.system.InputDevices.Touchscreen"
 
-func newTouchscreen(dev *libinputDevice, service *dbusutil.Service) *Touchscreen {
+func newTouchscreen(dev *libinputDevice, service *dbusutil.Service, id uint32) *Touchscreen {
 	t := &Touchscreen{
 		service: service,
 
+		id:         id,
 		Name:       dev.GetName(),
 		Phys:       dev.GetPhys(),
 		DevNode:    dev.GetDevNode(),
