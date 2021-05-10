@@ -105,9 +105,13 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		pinyinEnabled:   isZH(),
 	}
 
-	ddeSessionShellGs := gio.NewSettings("com.deepin.dde.sessionshell.control")
-	ss.isLockVisible = ddeSessionShellGs.GetBoolean("islockvisbile")
+	ddeSessionShellGs, err := dutils.CheckAndNewGSettings("com.deepin.dde.sessionshell.control")
+	if err != nil {
+		logger.Error(err)
+		return nil
+	}
 
+	ss.isLockVisible = ddeSessionShellGs.GetBoolean("islockvisbile")
 	ss.xRecordEventHandler = NewXRecordEventHandler(keySymbols)
 	ss.xRecordEventHandler.modKeyReleasedCb = func(code uint8, mods uint16) {
 		isGrabbed := isKbdAlreadyGrabbed(ss.conn)
@@ -139,7 +143,7 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		}
 	}
 	// init record
-	err := ss.initRecord()
+	err = ss.initRecord()
 	if err == nil {
 		logger.Debug("start record event loop")
 		go ss.recordEventLoop()
@@ -152,6 +156,7 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		logger.Warning("init system D-BUS failed: ", err)
 	}
 
+	ddeSessionShellGs.Unref()
 	return ss
 }
 
