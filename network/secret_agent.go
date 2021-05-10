@@ -325,7 +325,6 @@ func isSecretDialogExist() bool {
 func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	connectionData map[string]map[string]dbus.Variant,
 	connUUID, settingName string, settingKeys []string, requestNew bool) (map[string]string, error) {
-
 	logger.Debugf("askPasswords settingName: %v, settingKeys: %v",
 		settingName, settingKeys)
 	connId, _ := getConnectionDataString(connectionData, "connection", "id")
@@ -347,6 +346,8 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 		return nil, err
 	}
 	logger.Debugf("reqJSON: %s", reqJSON)
+	sa.m.service.Emit(sa.m, "AskPassword", connId)
+
 	//true : exist -> return
 	if isSecretDialogExist() {
 		return nil, err

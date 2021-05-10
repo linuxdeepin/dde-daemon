@@ -116,6 +116,9 @@ type Manager struct {
 			devPath string
 			enabled bool
 		}
+		AskPassword struct {
+			connId string
+		}
 	}
 
 	//nolint
