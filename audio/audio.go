@@ -930,6 +930,11 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 	} else {
 		a.MaxUIVolume = normalMaxVolume
 	}
+
+	if !portConfig.Enabled {
+		// 意外原因切换到被禁用的端口上，例如没有可用端口
+		s.setMute(true)
+	}
 }
 
 func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
@@ -951,6 +956,11 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 	if isPhyDev {
 		a.ReduceNoise.Set(portConfig.ReduceNoise)
 		logger.Debugf("physical source, set reduce noise %v", portConfig.ReduceNoise)
+	}
+
+	if !portConfig.Enabled {
+		// 意外原因切换到被禁用的端口上，例如没有可用端口
+		s.setMute(true)
 	}
 }
 
