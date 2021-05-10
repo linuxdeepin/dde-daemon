@@ -61,6 +61,7 @@ const (
 var (
 	// for locale-helper
 	_ = Tr("Authentication is required to switch language")
+	padEnvDefaultLocales [2]string  = [2]string{"en_US.UTF-8","zh_CN.UTF-8"}
 )
 
 const (
@@ -189,9 +190,13 @@ func newLangSelector(service *dbusutil.Service) (*LangSelector, error) {
 		lang.settings.SetStrv(gsKeyLocales, locales)
 	}
 
-	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv && !strv.Strv(locales).Contains(defaultLocale) {
-		locales = append(locales, defaultLocale)
-		lang.settings.SetStrv(gsKeyLocales, locales)
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		for _, padLocale := range padEnvDefaultLocales {
+			if !strv.Strv(locales).Contains(padLocale) {
+				locales = append(locales, padLocale)
+				lang.settings.SetStrv(gsKeyLocales, locales)
+			}
+		}
 	}
 
 	lang.Locales = locales
