@@ -117,6 +117,16 @@ func (c *Card) filterProfile(card *pulse.Card) {
 	c.Profiles = profiles
 }
 
+func (c *Card) getPortByName(name string) (pulse.CardPortInfo, error) {
+	for _, port := range c.Ports {
+		if port.Name == name {
+			return port, nil
+		}
+	}
+
+	return pulse.CardPortInfo{}, fmt.Errorf("port<%s,%s> not found", c.core.Name, name)
+}
+
 type CardList []*Card
 
 func newCardList(cards []*pulse.Card) CardList {

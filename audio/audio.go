@@ -145,7 +145,8 @@ type Audio struct {
 	mu                sync.Mutex
 	quit              chan struct{}
 
-	cards CardList
+	oldCards CardList // cards在上次更新前的状态，用于判断Port是否是新插入的
+	cards    CardList
 
 	isSaving     bool
 	sourceIdx    uint32 //used to disable source if select a2dp profile
@@ -250,6 +251,7 @@ func getCtx() (ctx *pulse.Context, err error) {
 }
 
 func (a *Audio) refreshCards() {
+	a.oldCards = a.cards
 	a.cards = newCardList(a.ctx.GetCardList())
 	a.setPropCards(a.cards.string())
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())

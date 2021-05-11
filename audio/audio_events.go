@@ -20,11 +20,14 @@
 package audio
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
 
 	dbus "github.com/godbus/dbus"
+	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	"pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/gsettings"
 	"pkg.deepin.io/lib/pulse"
 )
@@ -266,6 +269,14 @@ func (a *Audio) handleCardAdded(idx uint32) {
 	if isBluezAudio(card.core.Name) {
 		card.AutoSetBluezMode()
 	}
+
+	/* 新增声卡上的端口如果被处于禁用状态，进行横幅提示 */
+	for _, port := range card.Ports {
+		_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
+		if port.Available != pulse.AvailableTypeNo && !portConfig.Enabled {
+			a.notifyPortDisabled(idx, port)
+		}
+	}
 }
 
 func (a *Audio) handleCardRemoved(idx uint32) {
@@ -294,6 +305,41 @@ func (a *Audio) handleCardChanged(idx uint32) {
 
 		a.waitingBluezModeSwitch = false
 		GetPriorityManager().Input.SetTheFirstType(PortTypeBluetooth)
+	}
+
+	// Port插入时(从AvailableTypeNo变成其它)，如果端口处于禁用状态，显示横幅提示
+	for _, card := range a.cards {
+		oldCard, err := a.oldCards.getByName(card.core.Name)
+		if err != nil {
+			// oldCard不存在，在 handleCardAdded 中处理
+			logger.Warning(err)
+			continue
+		}
+		for _, port := range card.Ports {
+			if port.Available == pulse.AvailableTypeNo {
+				// 当前状态为AvailableTypeNo，忽略
+				continue
+			}
+
+			isInsert := false
+			oldPort, err := oldCard.getPortByName(port.Name)
+			if err != nil {
+				// oldPort不存在，当做插入
+				// 理论上不会发生，应该会有bug，发生时需要注意
+				logger.Warning(err)
+				isInsert = true
+			} else if oldPort.Available == pulse.AvailableTypeNo {
+				isInsert = true
+			}
+
+			if isInsert {
+				logger.Warningf("port<%s,%s> inserted", card.core.Name, port.Name)
+				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
+				if !portConfig.Enabled {
+					a.notifyPortDisabled(idx, port)
+				}
+			}
+		}
 	}
 }
 
@@ -394,6 +440,45 @@ func (a *Audio) handleSinkInputRemoved(idx uint32) {
 func (a *Audio) handleSinkInputChanged(idx uint32) {
 	// 数据更新在refreshSinkInputs中统一处理，这里只做业务逻辑上的响应
 	logger.Debugf("sink-input %d changed", idx)
+}
+
+/* 创建开启端口的命令，提供给notification调用 */
+func makeNotifyCmdEnablePort(cardId uint32, portName string) string {
+	dest := "com.deepin.daemon.Audio"
+	path := "/com/deepin/daemon/Audio"
+	method := "com.deepin.daemon.Audio.SetPortEnabled"
+	return fmt.Sprintf("dbus-send,--type=method_call,--dest=%s,%s,%s,uint32:%d,string:%s,boolean:true",
+		dest, path, method, cardId, portName)
+}
+
+/* 横幅提示端口被禁用,并提供开启的按钮 */
+func (a *Audio) notifyPortDisabled(cardId uint32, port pulse.CardPortInfo) {
+	session, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	cmd := makeNotifyCmdEnablePort(cardId, port.Name)
+	message := fmt.Sprintf(gettext.Tr("%s had been disabled"), port.Description)
+	actions := []string{"open", gettext.Tr("Open")}
+	hints := map[string]dbus.Variant{"x-deepin-action-open": dbus.MakeVariant(cmd)}
+	notify := notifications.NewNotifications(session)
+	_, err = notify.Notify(
+		0,
+		"dde-control-center",
+		0,
+		"icon",
+		message,
+		"",
+		actions,
+		hints,
+		15*1000,
+	)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 }
 
 func (a *Audio) updateObjPathsProp(type0 string, ids []int, setFn func(value []dbus.ObjectPath) bool) {
