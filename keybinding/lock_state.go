@@ -21,6 +21,7 @@ package keybinding
 
 import (
 	"errors"
+	"fmt"
 
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/test"
@@ -28,22 +29,38 @@ import (
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 )
 
+// NumLockState 数字锁定键状态
 type NumLockState uint
 
 const (
-	NumLockOff NumLockState = iota
-	NumLockOn
-	NumLockUnknown
+	NumLockOff     NumLockState = iota // 关闭，不能输入数字，是方向键
+	NumLockOn                          // 开启，能输入数字
+	NumLockUnknown                     // 未知，出错
 )
 
+func (s NumLockState) String() string {
+	switch s {
+	case NumLockOff:
+		return "off"
+	case NumLockOn:
+		return "on"
+	case NumLockUnknown:
+		return "unknown"
+	default:
+		return fmt.Sprintf("invalid-num-lock-state(%d)", s)
+	}
+}
+
+// CapsLockState 大小写锁定键状态
 type CapsLockState uint
 
 const (
-	CapsLockOff CapsLockState = iota
-	CapsLockOn
-	CapsLockUnknown
+	CapsLockOff     CapsLockState = iota // 关闭，默认输入小写字母
+	CapsLockOn                           // 开启，默认输入大写字母
+	CapsLockUnknown                      // 未知，出错
 )
 
+// 查询 NumLock 数字锁定键状态
 func queryNumLockState(conn *x.Conn) (NumLockState, error) {
 	rootWin := conn.GetDefaultScreen().Root
 	queryPointerReply, err := x.QueryPointer(conn, rootWin).Reply(conn)
@@ -59,6 +76,7 @@ func queryNumLockState(conn *x.Conn) (NumLockState, error) {
 	}
 }
 
+// 查询 CapsLock 大小写锁定键状态
 func queryCapsLockState(conn *x.Conn) (CapsLockState, error) {
 	rootWin := conn.GetDefaultScreen().Root
 	queryPointerReply, err := x.QueryPointer(conn, rootWin).Reply(conn)
@@ -74,7 +92,9 @@ func queryCapsLockState(conn *x.Conn) (CapsLockState, error) {
 	}
 }
 
+// 设置 NumLock 数字锁定键状态
 func setNumLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols, state NumLockState) error {
+	logger.Debug("setNumLockState", state)
 	if !(state == NumLockOff || state == NumLockOn) {
 		return errors.New("invalid num lock state")
 	}
@@ -90,6 +110,7 @@ func setNumLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols, state NumLock
 	return nil
 }
 
+// 设置 CapsLock 大小写锁定键状态
 func setCapsLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols, state CapsLockState) error {
 	if !(state == CapsLockOff || state == CapsLockOn) {
 		return errors.New("invalid caps lock state")
@@ -106,6 +127,7 @@ func setCapsLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols, state CapsLo
 	return nil
 }
 
+// 修改 NumLock 数字锁定键状态，模拟一次相应的键按下和释放。
 func changeNumLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols) (err error) {
 	// get Num_Lock keycode
 	numLockKeycode, err := shortcuts.GetKeyFirstCode(keySymbols, "Num_Lock")
@@ -116,6 +138,7 @@ func changeNumLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols) (err error
 	return simulatePressReleaseKey(conn, numLockKeycode)
 }
 
+// 修改 CapsLock 大小写锁定键状态，模拟一次相应的键按下释放。
 func changeCapsLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols) (err error) {
 	// get Caps_Lock keycode
 	capsLockKeycode, err := shortcuts.GetKeyFirstCode(keySymbols, "Caps_Lock")
@@ -126,6 +149,7 @@ func changeCapsLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols) (err erro
 	return simulatePressReleaseKey(conn, capsLockKeycode)
 }
 
+// 模拟键的按下和释放
 func simulatePressReleaseKey(conn *x.Conn, code x.Keycode) error {
 	rootWin := conn.GetDefaultScreen().Root
 	// fake key press

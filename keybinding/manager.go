@@ -32,6 +32,7 @@ import (
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
@@ -178,22 +179,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.sessionSigLoop.Start()
 	m.systemSigLoop.Start()
 
-	if m.gsKeyboard.GetBoolean(gsKeySaveNumLockState) {
-		nlState := NumLockState(m.NumLockState.Get())
-		if nlState == NumLockUnknown {
-			state, err := queryNumLockState(m.conn)
-			if err != nil {
-				logger.Warning("queryNumLockState failed:", err)
-			} else {
-				m.NumLockState.Set(int32(state))
-			}
-		} else {
-			err := setNumLockState(m.conn, m.keySymbols, nlState)
-			if err != nil {
-				logger.Warning("setNumLockState failed:", err)
-			}
-		}
-	}
+	m.initNumLockState(sysBus)
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
@@ -273,6 +259,48 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 
 	return &m, nil
+}
+
+// 初始化 NumLock 数字锁定键状态
+func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
+	// 从 gsettings 读取相关设置
+	nlState := NumLockState(m.NumLockState.Get())
+	saveStateEnabled := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
+	if nlState == NumLockUnknown {
+		// 判断是否是笔记本, 只根据电池状态，有电池则是笔记本。
+		isLaptop := false
+		sysPower := power.NewPower(sysBus)
+		hasBattery, err := sysPower.HasBattery().Get(0)
+		if err != nil {
+			logger.Warning("failed to get sysPower HasBattery property:", err)
+		} else if hasBattery {
+			isLaptop = true
+		}
+
+		state := NumLockUnknown
+		logger.Debug("isLaptop:", isLaptop)
+		if isLaptop {
+			// 笔记本，默认关闭。
+			state = NumLockOff
+		} else {
+			// 台式机等，默认开启。
+			state = NumLockOn
+		}
+
+		if saveStateEnabled {
+			// 保存新状态到 gsettings
+			m.NumLockState.Set(int32(state))
+		}
+		err = setNumLockState(m.conn, m.keySymbols, state)
+		if err != nil {
+			logger.Warning("setNumLockState failed:", err)
+		}
+	} else if saveStateEnabled {
+		err := setNumLockState(m.conn, m.keySymbols, nlState)
+		if err != nil {
+			logger.Warning("setNumLockState failed:", err)
+		}
+	}
 }
 
 func (m *Manager) handleKeyEventFromLockFront(changKey string) {
