@@ -352,7 +352,6 @@ func (b *Bluetooth) init() {
 
 	b.agent.init()
 	b.loadObjects()
-
 	b.obexAgent.init()
 
 	b.config.clearSpareConfig(b)
