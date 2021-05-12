@@ -721,6 +721,14 @@ func (d *device) Disconnect() {
 		return
 	}
 
+	// 判断是否为经典设备, 如果非经典设备, 则先设置trusted为false, 防止回连
+	if !globalBluetooth.isBREDRDevice(d) {
+		err := d.core.Trusted().Set(0, false)
+		if err != nil {
+			logger.Warningf("set trust failed, err: %v", err)
+		}
+	}
+
 	globalBluetooth.config.setDeviceConfigConnected(d, false)
 
 	ch := d.goWaitDisconnect()

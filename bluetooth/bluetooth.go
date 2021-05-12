@@ -820,6 +820,7 @@ func (b *Bluetooth) getTechnologies(dev *device) ([]string, error) {
 	return technologies, nil
 }
 
+// 判断设备是否为经典蓝牙设备
 func (b *Bluetooth) isBREDRDevice(dev *device) bool {
 	technologies, err := b.getTechnologies(dev)
 	if err != nil {
