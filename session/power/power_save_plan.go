@@ -527,6 +527,12 @@ func (psp *powerSavePlan) screenBlack() {
 			manager.lockWaitShow(5*time.Second, true)
 		}
 
+		// 防止平板自然息屏后进入IdleOn状态
+		if os.Getenv("XDG_CURRENT_DESKTOP") != padEnv {
+			psp.manager.setPrepareSuspend(suspendStateLidClose)
+			defer  psp.manager.setPrepareSuspend(suspendStateFinish)
+		}
+
 		if adjustBrightnessEnabled {
 			// set min brightness for all outputs
 			brightnessTable := make(map[string]float64)
