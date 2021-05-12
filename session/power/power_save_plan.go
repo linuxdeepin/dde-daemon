@@ -364,9 +364,6 @@ func (mts metaTasks) min() int32 {
 }
 
 func (mts metaTasks) setRealDelay(min int32) {
-	if min == 0 {
-		return
-	}
 	for idx := range mts {
 		t := &mts[idx]
 		nSecs := t.delay - min
