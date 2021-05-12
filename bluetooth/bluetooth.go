@@ -331,7 +331,6 @@ func (b *Bluetooth) init() {
 
 	b.agent.init()
 	b.loadObjects()
-	b.connectCorePowered()
 	b.obexAgent.init()
 
 	b.config.clearSpareConfig(b)
@@ -1063,24 +1062,5 @@ func (b *Bluetooth) emitTransferFailed(file string, sessionPath dbus.ObjectPath,
 	err := b.service.Emit(b, "TransferFailed", file, sessionPath, errInfo)
 	if err != nil {
 		logger.Warning("failed to emit TransferFailed:", err)
-	}
-}
-
-// 监听bluez中adapter的电源设置,同步保存到配置文件中
-func (b *Bluetooth) connectCorePowered() {
-	for _, adapter := range b.adapters {
-		err := adapter.core.Adapter().Powered().ConnectChanged(func(hasValue bool, value bool) {
-			if !hasValue {
-				return
-			}
-			adapterConfig, ok := b.config.Adapters[adapter.address]
-			if ok {
-				adapterConfig.Powered = value
-				b.config.save()
-			}
-		})
-		if err != nil {
-			logger.Warning(err)
-		}
 	}
 }
