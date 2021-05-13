@@ -160,7 +160,7 @@ fi
 %{_sysconfdir}/default/grub.d/10_deepin.cfg
 %{_sysconfdir}/grub.d/35_deepin_gfxmode
 %{_sysconfdir}/pam.d/deepin-auth-keyboard
-%{_libexecdir}/%{sname}/
+%{_lib64dir}/%{sname}/
 %{_prefix}/lib/systemd/logind.conf.d/10-%{sname}.conf
 %{_datadir}/dbus-1/services/*.service
 %{_datadir}/dbus-1/system-services/*.service
