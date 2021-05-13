@@ -72,17 +72,16 @@ Daemon handling the DDE session settings
 %prep
 %autosetup
 patch langselector/locale.go < rpm/locale.go.patch
-patch Makefile < rpm/makefile.lib64.patch
 
 # Fix library exec path
-sed -i '/deepin/s|lib|lib64|' Makefile
+sed -i '/deepin/s|lib|libexec|' Makefile
 sed -i '/${DESTDIR}\/usr\/lib\/deepin-daemon\/service-trigger/s|${DESTDIR}/usr/lib/deepin-daemon/service-trigger|${DESTDIR}/usr/libexec/deepin-daemon/service-trigger|g' Makefile
 sed -i '/${DESTDIR}${PREFIX}\/lib\/deepin-daemon/s|${DESTDIR}${PREFIX}/lib/deepin-daemon|${DESTDIR}${PREFIX}/usr/libexec/deepin-daemon|g' Makefile
 sed -i 's|lib/NetworkManager|libexec|' network/utils_test.go
 
 for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
 do
-    sed -i 's|/usr/lib/deepin-daemon|/usr/lib64/deepin-daemon|g' $file
+    sed -i 's|/usr/lib/deepin-daemon|/usr/libexec/deepin-daemon|g' $file
 done
 
 # Fix grub.cfg path
@@ -161,7 +160,7 @@ fi
 %{_sysconfdir}/default/grub.d/10_deepin.cfg
 %{_sysconfdir}/grub.d/35_deepin_gfxmode
 %{_sysconfdir}/pam.d/deepin-auth-keyboard
-%{_lib64dir}/%{sname}/
+%{_libexecdir}/%{sname}/
 %{_prefix}/lib/systemd/logind.conf.d/10-%{sname}.conf
 %{_datadir}/dbus-1/services/*.service
 %{_datadir}/dbus-1/system-services/*.service
