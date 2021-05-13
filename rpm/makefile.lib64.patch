@@ -1,0 +1,15 @@
+diff --git a/Makefile b/Makefile
+index a804c152..7edebfc3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -69,8 +69,8 @@ print_gopath: prepare
+ 	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
+ 
+ install: build translate install-dde-data install-icons
+-	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
+-	cp out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
++	mkdir -pv ${DESTDIR}${PREFIX}/lib64/deepin-daemon
++	cp out/bin/* ${DESTDIR}${PREFIX}/lib64/deepin-daemon/
+ 
+ 	mkdir -pv ${DESTDIR}${PREFIX}/share/locale
+ 	cp -r out/locale/* ${DESTDIR}${PREFIX}/share/locale
