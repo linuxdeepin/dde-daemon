@@ -21,6 +21,7 @@ package launcher
 
 import (
 	"os"
+	"os/user"
 	"path/filepath"
 	"testing"
 
@@ -47,8 +48,24 @@ func Test_getAppIdByFilePath(t *testing.T) {
 }
 
 func Test_getUserAppDir(t *testing.T) {
-	home := os.Getenv("HOME")
-	assert.Equal(t, getUserAppDir(), filepath.Join(home, ".local/share/applications"))
+	dataDir := os.Getenv("XDG_DATA_HOME")
+	if dataDir == "" {
+		home := os.Getenv("HOME")
+		if home == "" {
+			user, err := user.Current()
+			if err != nil {
+				// 跳过此测试
+				t.Skip()
+				return
+			}
+
+			home = user.HomeDir
+		}
+
+		dataDir = filepath.Join(home, ".local/share")
+	}
+
+	assert.Equal(t, getUserAppDir(), filepath.Join(dataDir, "applications"))
 }
 
 func Test_runeSliceDiff(t *testing.T) {
