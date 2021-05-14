@@ -252,10 +252,7 @@ func nmGeneralGetDeviceUniqueUuid(devPath dbus.ObjectPath) (uuid string) {
 	return strToUuid(devId)
 }
 
-// get device network speed (Mb/s)
-func nmGeneralGetDeviceSpeed(devPath dbus.ObjectPath) (speedStr string) {
-	speed := uint32(0)
-	speedStr = Tr("Unknown")
+func nmGeneralGetDeviceSpeedNumeric(devPath dbus.ObjectPath) (speed uint32) {
 	dev, err := nmNewDevice(devPath)
 	if err != nil {
 		return
@@ -280,8 +277,24 @@ func nmGeneralGetDeviceSpeed(devPath dbus.ObjectPath) (speedStr string) {
 		speed = uint32(math.Trunc((float64(bitRate)/1000.0 + 0.5) * 10 / 10))
 	case nm.NM_DEVICE_TYPE_MODEM:
 		// TODO: getting device speed for modem device
+	case nm.NM_DEVICE_TYPE_BOND:
+		devBond := dev.Bond()
+		slaves, _ := devBond.Slaves().Get(0)
+		for _, slave := range slaves {
+			speed += nmGeneralGetDeviceSpeedNumeric(slave)
+		}
+
 	default: // ignore speed for other device types
 	}
+
+	return
+}
+
+// get device network speed (Mb/s)
+func nmGeneralGetDeviceSpeed(devPath dbus.ObjectPath) (speedStr string) {
+	speedStr = Tr("Unknown")
+
+	speed := nmGeneralGetDeviceSpeedNumeric(devPath)
 	if speed != 0 {
 		speedStr = fmt.Sprintf("%d Mb/s", speed)
 	}
