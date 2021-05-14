@@ -51,11 +51,6 @@ func handle_device_added(event *C.struct_libinput_event, userdata unsafe.Pointer
 		return
 	}
 
-	udevDev := C.libinput_device_get_udev_device(dev)
-	phys := C.udev_device_get_sysattr_value(udevDev, C.CString("phys"))
-
-	logger.Warning("phys: ", C.GoString(phys))
-
 	l := (*libinput)(userdata)
 	l.i.newTouchscreen(newLibinputDevice(dev))
 }
