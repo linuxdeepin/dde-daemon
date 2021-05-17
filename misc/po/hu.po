@@ -4,32 +4,32 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Kiss Zoltan <atari@freemail.hu>, 2020
-# c5c74d5c0e928622070863d16011fda8_265b1fe, 2020
-# b1094bbfad3b29958bce7f8a2c08de92, 2020
-# tejeskifly <batta.daniel91@gmail.com>, 2020
-# Walton Henry <waltonh@mail.com>, 2020
-# Jack Howell <jack.howell@protonmail.com>, 2020
-# vmarci21 <vmarci21@msn.com>, 2020
-# ddabrahim <ddabrahim@googlemail.com>, 2020
-# kdavid97 <kdavid97@gmail.hu>, 2020
-# SlazO <blum1866@gmail.com>, 2020
-# Imre Klész <eschungary@gmail.com>, 2020
-# Reda Da <alex19930329@gmail.com>, 2020
-# Lukács Péter <lukacspeter1977@gmail.com>, 2020
-# e7b367b198a92ab3e6fd7f551a36a082, 2020
-# Cindy0514, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Béla Bajza, 2020
+# Kiss Zoltan <atari@freemail.hu>, 2021
+# vmarci21 <vmarci21@msn.com>, 2021
+# tejeskifly <batta.daniel91@gmail.com>, 2021
+# SlazO <blum1866@gmail.com>, 2021
+# Imre Klész <eschungary@gmail.com>, 2021
+# Jack Howell <jack.howell@protonmail.com>, 2021
+# Lukács Péter <lukacspeter1977@gmail.com>, 2021
+# c5c74d5c0e928622070863d16011fda8_265b1fe, 2021
+# b1094bbfad3b29958bce7f8a2c08de92, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
+# ddabrahim <ddabrahim@googlemail.com>, 2021
+# kdavid97 <kdavid97@gmail.hu>, 2021
+# Reda Da <alex19930329@gmail.com>, 2021
+# Walton Henry <waltonh@mail.com>, 2021
+# Cindy0514, 2021
+# e7b367b198a92ab3e6fd7f551a36a082, 2021
+# Béla Bajza, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Béla Bajza, 2020\n"
+"POT-Creation-Date: 2021-05-17 14:10+0800\n"
+"PO-Revision-Date: 2021-05-17 06:17+0000\n"
+"Last-Translator: Béla Bajza, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/linuxdeepin/teams/3617/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,10 +73,6 @@ msgstr "Ez a felhasználónév már használatban van a rendszer által"
 msgid "Username must be between 3 and 32 characters"
 msgstr "A felhasználónév hosszának 3 és 32 karakter között kell lennie"
 
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr "Az házirend hitelesítése sikertelen"
-
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
@@ -96,11 +92,11 @@ msgstr "Kijelentkezés most"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
-msgstr "Kijelző méretezés beállításai"
+msgstr "Képernyő méretezésének beállítása"
 
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
-msgstr "Kijelző méretezése"
+msgstr "Képernyő méretezése"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -188,7 +184,7 @@ msgstr "Ön megszakította a fájlátvitelt"
 
 #: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:113
 msgid "Bluetooth connection failed"
-msgstr "Bluetooth kapcsolódás sikertelen"
+msgstr "A Bluetooth csatlakozás sikertelen"
 
 #: ../../bluetooth/obex_agent.go:422
 msgid "Decline"
@@ -212,7 +208,7 @@ msgstr "% q fogadásának időtúllépése"
 
 #: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
-msgstr "%q csatlakoztatása sikeres"
+msgstr "A %q csatlakoztatása sikeres"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
 #: ../../network/state_handler.go:362
@@ -301,11 +297,11 @@ msgstr "Kényszerített kilépés"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
-msgstr "Kitűzés a Dokkra"
+msgstr "Kitűzés a Dokkolóra"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr "Eltávolítás a Dokkról"
+msgstr "Eltávolítás a Dokkolóról"
 
 #: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
@@ -333,7 +329,7 @@ msgstr "Képernyő zárolása"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Dokk mutatása / elrejtése"
+msgstr "Dokkoló mutatása / elrejtése"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -341,7 +337,7 @@ msgstr "Leállítási felület"
 
 #: ../../keybinding/shortcuts/id_name_map.go:34
 msgid "Terminal Quake Window"
-msgstr "Terminál lebegő mód"
+msgstr "Terminál lebegő képernyős mód"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
@@ -499,11 +495,11 @@ msgstr "Munkaterület megjelenítése"
 msgid "Switch monitors"
 msgstr "Monitor váltása"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Hitelesítés szükség a nyelvi beállítások módosításához"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:161
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -511,17 +507,21 @@ msgstr ""
 "A rendszer nyelv változtatása, és a szükséges nyelvi csomagok telepítése "
 "folyamatban van, kérjük várjon..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:162
 msgid "Changing system language, please wait..."
 msgstr "A rendszer nyelv változtatása folyamatban, kérjük várjon..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:164
+msgid "System language changed, please reboot and then log in"
+msgstr ""
+
+#: ../../langselector/locale.go:166
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "A rendszer nyelvének változtatása megtörtént, kérjük jelentkezzen ki, majd "
 "újra be az életbe lépéshez"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:418
 msgid "Failed to change system language, please try later"
 msgstr "A rendszer nyelv változtatása sikertelen, kérjük próbálja meg később"
 
@@ -572,44 +572,44 @@ msgstr "A %q sikeresen eltávolítva"
 msgid "Failed to uninstall %q"
 msgstr "A %q eltávolítása sikertelen"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Egyik sem"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128 bites kulcs"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Személyes"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
-msgstr "FAST"
+msgstr "GYORS"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "Elrejtett TLS"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "Védett EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Vezetékes kapcsolat"
 
@@ -628,7 +628,7 @@ msgstr "Hálózat"
 msgid "Failed to set the application proxy"
 msgstr "Alkalmazás proxy beállítása sikertelen"
 
-#: ../../network/secret_agent.go:394
+#: ../../network/secret_agent.go:395
 msgid "Password is required to connect %q"
 msgstr "Jelszó szükséges a %q csatlakoztatásához"
 
@@ -905,8 +905,8 @@ msgstr ""
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
 msgstr ""
-"Kérjük, győződjön meg arról, hogy a megfelelő tervet választotta ki, "
-"anélkül, hogy a SIM-kártya meghibásodna"
+"Kérjük győződjön meg arról, hogy a megfelelő tervet választotta ki, anélkül,"
+" hogy a SIM-kártya meghibásodna"
 
 #: ../../network/state_handler.go:110
 msgid "Failed to activate VPN connection, reason unknown"
@@ -991,8 +991,8 @@ msgstr ""
 #: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
-"Nem sikerült csatlakozni %q -eszközhöz,, kérjük próbálja meg közelebb vinni "
-"a Routerhez"
+"Nem sikerült csatlakozni a %q -eszközhöz, kérjük próbálja meg közelebb vinni"
+" a Routerhez"
 
 #: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
@@ -1003,9 +1003,10 @@ msgstr ""
 #: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
-"A kapcsolat sikertelen, nem sikerült kapcsolódni a %q-hoz, helytelen jelszó"
+"A csatlakozás sikertelen, nem sikerült csatlakozni a %q-hoz, helytelen "
+"jelszó"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/utils_dbus_nm.go:257
 msgid "Unknown"
 msgstr "Ismeretlen"
 
@@ -1049,46 +1050,48 @@ msgstr ""
 "\"%s\" nem felelt meg a a rendszerbiztonsági ellenőrzésnek és jelenleg nem "
 "futtatható"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:211
 msgid "Battery critically low"
 msgstr "Az akkumlátor töltöttsége kritikusan alacsony"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:239
+#: ../../session/power/manager_events.go:244
+#: ../../session/power/manager_events.go:249
 msgid "Battery low, please plug in"
-msgstr "Akkutöltöttség alacsony, kérjük csatlakoztassa a töltőt"
+msgstr ""
+"Alacsony akkumulátor szint, kérjük csatlakoztassa a számítógépet a töltőre."
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
 msgid "Power settings changed"
 msgstr "Energiagazdálkodási beállítások megváltoztatva"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:413 ../../session/power/utils_test.go:12
+#: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "A képernyő lecsukásakor"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:417
 msgid "When pressing the power button, "
 msgstr "Főkapcsoló gomb megnyomásakor"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:427 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "A számítógépe le fog állni"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:429 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "A számítógép alvó állapotba kerül"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:431
 msgid "your computer will hibernate"
 msgstr "A számítógép hibernált állapotba kerül"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:433
 msgid "your monitor will turn off"
-msgstr "A kijelzője ki fog kapcsolni"
+msgstr "A képernyője ki fog kapcsolni"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:435
 msgid "it will do nothing to your computer"
 msgstr "Semmit sem fog tenni a számítógépével"
 

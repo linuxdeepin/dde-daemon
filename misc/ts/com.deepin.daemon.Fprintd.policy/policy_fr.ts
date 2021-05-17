@@ -29,7 +29,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!description" line="0"/>
 			<source>Rename fingerprint password</source>
-			<translation>Changer le mot de passe d&apos;une empreinte digitale</translation>
+			<translation>Changer une empreinte digitale</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!message" line="0"/>

@@ -4,22 +4,22 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Slobodan Simić <slsimic@gmail.com>, 2020
-# kolera <koleramilan@gmail.com>, 2020
-# Boki Ball <superdodgeballer@gmail.com>, 2020
-# Cindy0514, 2020
-# Smarty <kidsmart33@gmail.com>, 2020
-# Marko Joksimovic <pauspapir@yahoo.com>, 2020
-# Марко Пејовић <markopejovic@tutanota.com>, 2020
+# Boki Ball <superdodgeballer@gmail.com>, 2021
+# Marko Joksimovic <pauspapir@yahoo.com>, 2021
+# kolera <koleramilan@gmail.com>, 2021
+# Slobodan Simić <slsimic@gmail.com>, 2021
+# Smarty <kidsmart33@gmail.com>, 2021
+# Cindy0514, 2021
+# Марко Пејовић <markopejovic@tutanota.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2020\n"
+"POT-Creation-Date: 2021-05-17 14:10+0800\n"
+"PO-Revision-Date: 2021-05-17 06:17+0000\n"
+"Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2021\n"
 "Language-Team: Serbian (https://www.transifex.com/linuxdeepin/teams/3617/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,10 +62,6 @@ msgstr "Корисничко име се већ користи"
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Корисничко име мора садржати између 3-32 карактера"
-
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr "Policykit неуспешна идентификација"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -486,11 +482,11 @@ msgstr "Приказ активности"
 msgid "Switch monitors"
 msgstr "Промена екрана"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Идентификација је неопходна за промену језика"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:161
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -498,15 +494,19 @@ msgstr ""
 "Промена језика система и инсталирање потребних језичких пакета, молимо "
 "сачекајте..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:162
 msgid "Changing system language, please wait..."
 msgstr "Промена језика система, молимо сачекајте..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:164
+msgid "System language changed, please reboot and then log in"
+msgstr ""
+
+#: ../../langselector/locale.go:166
 msgid "System language changed, please log out and then log in"
 msgstr "Језик система је промењен, одјавите се, затим се пријавите"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:418
 msgid "Failed to change system language, please try later"
 msgstr "Неуспешна промена језика система, молимо покушајте касније"
 
@@ -555,44 +555,44 @@ msgstr "%q уклањање успешно"
 msgid "Failed to uninstall %q"
 msgstr "Уклањање %q неуспешно"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Ништа"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "ВЕП 40/128-bit Кључ"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "ВПА/ВПА2 Лично"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "ТЛС"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "МД5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "ЛЕАП"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "ФАСТ"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "Тунелни ТЛС"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "Заштићени ЕАП"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Жичана веза"
 
@@ -611,7 +611,7 @@ msgstr "Мрежа"
 msgid "Failed to set the application proxy"
 msgstr "Неуспешно пдешавање програмског посредника"
 
-#: ../../network/secret_agent.go:394
+#: ../../network/secret_agent.go:395
 msgid "Password is required to connect %q"
 msgstr "Потребна је лозинка за повезивање %q"
 
@@ -973,7 +973,7 @@ msgstr "Неуспешно повезивање на %q, проверите ва
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Неуспешно повезивање на %q, погрешна лозинка"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/utils_dbus_nm.go:257
 msgid "Unknown"
 msgstr "Непознато"
 
@@ -1015,46 +1015,47 @@ msgstr ""
 "\"%s\" није успешно прошао безбедносну проверу и тренутно се не може "
 "покренути"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:211
 msgid "Battery critically low"
 msgstr "Батерија критично испражњена"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:239
+#: ../../session/power/manager_events.go:244
+#: ../../session/power/manager_events.go:249
 msgid "Battery low, please plug in"
 msgstr "Батерија при крају, прикључите пуњач"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
 msgid "Power settings changed"
 msgstr "Подешавања напајања су промењена"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:413 ../../session/power/utils_test.go:12
+#: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Када је поклопац затворен,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:417
 msgid "When pressing the power button, "
 msgstr "Притиском на дугме за искључвање,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:427 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "рачунар ће се искључити"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:429 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "рачунар ће обуставити рад"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:431
 msgid "your computer will hibernate"
 msgstr "рачунар улази у хибернацију"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:433
 msgid "your monitor will turn off"
 msgstr "екран ће се угасити"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:435
 msgid "it will do nothing to your computer"
 msgstr "то неће утицати на рад рачунара"
 

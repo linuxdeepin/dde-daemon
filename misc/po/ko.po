@@ -4,20 +4,20 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Thomas Sungjin Kang <potopro@gmail.com>, 2020
-# Sangmin Lee <sangminlee7648@gmail.com>, 2020
-# Cindy0514, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
-# JungHee Lee <daemul72@gmail.com>, 2020
+# Thomas Sungjin Kang <potopro@gmail.com>, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Sangmin Lee <sangminlee7648@gmail.com>, 2021
+# Cindy0514, 2021
+# Jung Hee Lee <daemul72@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: JungHee Lee <daemul72@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-05-17 14:10+0800\n"
+"PO-Revision-Date: 2021-05-17 06:17+0000\n"
+"Last-Translator: Jung Hee Lee <daemul72@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/linuxdeepin/teams/3617/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,10 +58,6 @@ msgstr "사용자 이름이 시스템에서 사용되었습니다"
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "사용자 이름은 3 ~ 32 자 사이 여야합니다"
-
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr ""
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -210,7 +206,7 @@ msgstr "%q(이)가 활성화 되어있고 범위 내에 있는지 확인하세�
 
 #: ../../bluetooth/utils_notify.go:146
 msgid "Click here to connect to %q"
-msgstr "%q에 연결하려면 여기를 클릭하십시오"
+msgstr "%q에 연결하려면 여기를 클릭"
 
 #: ../../bluetooth/utils_notify.go:147
 msgid "Add Bluetooth devices"
@@ -482,25 +478,29 @@ msgstr "작업공간 표시"
 msgid "Switch monitors"
 msgstr "모니터 전환"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "언어를 전화하려면 인증이 필요합니다"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:161
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "시스템 언어를 변경하고 필요한 언어 패키지를 설치합니다. 잠시 기다려 주십시오..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:162
 msgid "Changing system language, please wait..."
 msgstr "시스템 언어를 변경하는 중입니다. 잠시 기다려 주십시오..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:164
+msgid "System language changed, please reboot and then log in"
+msgstr ""
+
+#: ../../langselector/locale.go:166
 msgid "System language changed, please log out and then log in"
 msgstr "시스템 언어가 변경되었습니다. 로그아웃한 후 로그인하십시오"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:418
 msgid "Failed to change system language, please try later"
 msgstr "시스템 언어를 변경하지 못했습니다. 나중에 시도하십시오"
 
@@ -549,44 +549,44 @@ msgstr "%q을(를) 성공적으로 제거했습니다"
 msgid "Failed to uninstall %q"
 msgstr "%q을(를) 제거하지 못했습니다"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "없음"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit Key"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "개인 WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "보호된 EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "유선 연결"
 
@@ -605,7 +605,7 @@ msgstr "네트워크"
 msgid "Failed to set the application proxy"
 msgstr ""
 
-#: ../../network/secret_agent.go:394
+#: ../../network/secret_agent.go:395
 msgid "Password is required to connect %q"
 msgstr "%q을(를) 연결하려면 비밀번호가 필요합니다"
 
@@ -962,7 +962,7 @@ msgstr "%q을(를) 연결할 수 없습니다. 라우터 또는 인터넷 케이
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "연결 실패, %q을(를) 연결할 수 없습니다. 비밀번호가 잘못되었습니다"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/utils_dbus_nm.go:257
 msgid "Unknown"
 msgstr "알 수 없음"
 
@@ -1000,48 +1000,49 @@ msgstr "연결됨"
 #: ../../service_trigger/msg.go:7
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
-msgstr "\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 실행할 수 없습니다"
+msgstr "\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 실행할 수 없습니다."
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:211
 msgid "Battery critically low"
 msgstr "배터리 잔량 부족"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:239
+#: ../../session/power/manager_events.go:244
+#: ../../session/power/manager_events.go:249
 msgid "Battery low, please plug in"
 msgstr "배터리 부족,. 전원을 연결하세요"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
 msgid "Power settings changed"
 msgstr "전원 설정이 변경됨"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:413 ../../session/power/utils_test.go:12
+#: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "뚜껑이 닫히면, "
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:417
 msgid "When pressing the power button, "
 msgstr "전원 버튼을 누르면, "
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:427 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "컴퓨터가 종료됩니다"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:429 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "컴퓨터는 대기모드 상태가 됩니다"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:431
 msgid "your computer will hibernate"
 msgstr "컴퓨터가 최대 절전 모드임"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:433
 msgid "your monitor will turn off"
 msgstr "모니터가 꺼집니다"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:435
 msgid "it will do nothing to your computer"
 msgstr "그것은 당신의 컴퓨터에 아무 도움도 되지 않을 것입니다"
 

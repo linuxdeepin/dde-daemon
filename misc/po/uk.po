@@ -4,21 +4,21 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuriy Moskalchuk <termosyura@ukr.net>, 2020
-# Roman <dejitaru.tiger@gmail.com>, 2020
-# Cindy0514, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Marck Hrin, 2020
-# Yuri Chornoivan <yurchor@ukr.net>, 2020
+# Yuri Chornoivan <yurchor@ukr.net>, 2021
+# Yuriy Moskalchuk <termosyura@ukr.net>, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Roman <dejitaru.tiger@gmail.com>, 2021
+# Marck Hrin, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
+"POT-Creation-Date: 2021-05-17 14:10+0800\n"
+"PO-Revision-Date: 2021-05-17 06:17+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,10 +61,6 @@ msgstr "Це ім'я користувача вже використовувал�
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
-
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr "Не пройдено розпізнавання до Policykit"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -486,11 +482,11 @@ msgstr "Показати робочій простір"
 msgid "Switch monitors"
 msgstr "Перемкнути монітори"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Аутентифікація потрібна для перемикання мови"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:161
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -498,15 +494,19 @@ msgstr ""
 "Змінюється мова системи та встановлюються необхідні мовні пакети, "
 "зачекайте..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:162
 msgid "Changing system language, please wait..."
 msgstr "Зміна мови системи, зачекайте..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:164
+msgid "System language changed, please reboot and then log in"
+msgstr ""
+
+#: ../../langselector/locale.go:166
 msgid "System language changed, please log out and then log in"
 msgstr "Змінено мову системи, вийдіть із системи та увійдіть"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:418
 msgid "Failed to change system language, please try later"
 msgstr "Не вдалося змінити мову системи, спробуйте пізніше"
 
@@ -557,44 +557,44 @@ msgstr "%q успішно видалено"
 msgid "Failed to uninstall %q"
 msgstr "Не вдалося встановити %q"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Нічого"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "Ключ WEP 40/128-біт"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "Режим WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "ІНТЕРВАЛ"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "ШВИДКО"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "Тунельований TLS"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "Захищений EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Дротове підключення"
 
@@ -613,7 +613,7 @@ msgstr "Мережа"
 msgid "Failed to set the application proxy"
 msgstr "Не вдалося налаштувати проксі-сервер програми"
 
-#: ../../network/secret_agent.go:394
+#: ../../network/secret_agent.go:395
 msgid "Password is required to connect %q"
 msgstr "Пароль, необхідний для підключення %q"
 
@@ -983,7 +983,7 @@ msgstr ""
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Помилка підключення, неможливо підключити %q, невірний пароль"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/utils_dbus_nm.go:257
 msgid "Unknown"
 msgstr "Невідомо"
 
@@ -1027,48 +1027,49 @@ msgstr ""
 "«%s» не пройдено перевіркою засобів захисту системи. Цю програму зараз не "
 "можна запускати."
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:211
 msgid "Battery critically low"
 msgstr "Акумулятор критично розряджено"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:239
+#: ../../session/power/manager_events.go:244
+#: ../../session/power/manager_events.go:249
 msgid "Battery low, please plug in"
 msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
 "мережі живлення"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
 msgid "Power settings changed"
 msgstr "Параметри живлення змінено"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:413 ../../session/power/utils_test.go:12
+#: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Якщо закрито кришку,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:417
 msgid "When pressing the power button, "
 msgstr "Якщо натиснуто кнопку живлення,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:427 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "ваш комп'ютер буде вимкнено"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:429 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "ваш комп'ютер буде призупинено"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:431
 msgid "your computer will hibernate"
 msgstr "ваш комп'ютер буде приспано"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:433
 msgid "your monitor will turn off"
 msgstr "монітор буде вимкнено"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:435
 msgid "it will do nothing to your computer"
 msgstr "ніяких дій із комп'ютером не буде виконано"
 

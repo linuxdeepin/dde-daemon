@@ -4,19 +4,19 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Mantas Kriaučiūnas Baltix <mantas@akl.lt>, 2020
-# Jonas Motiejūnas <exjonas@gmail.com>, 2020
-# Cindy0514, 2020
-# Moo, 2020
+# Mantas Kriaučiūnas Baltix <mantas@akl.lt>, 2021
+# Moo, 2021
+# Jonas Motiejūnas <exjonas@gmail.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 10:39+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Moo, 2020\n"
+"POT-Creation-Date: 2021-05-17 14:10+0800\n"
+"PO-Revision-Date: 2021-05-17 06:17+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/linuxdeepin/teams/3617/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,10 +59,6 @@ msgstr "Naudotojo vardas naudojamas sistemos"
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Naudotojo vardas privalo būti nuo 3 iki 32 simbolių"
-
-#: ../../accounts/utils.go:80
-msgid "Policykit authentication failed"
-msgstr ""
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -483,26 +479,30 @@ msgstr "Rodyti darbo sritį"
 msgid "Switch monitors"
 msgstr ""
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Norint perjungti kalbą, reikalingas tapatybės nustatymas"
 
-#: ../../langselector/locale.go:159
+#: ../../langselector/locale.go:161
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 "Keičiama sistemos kalba ir įdiegiami reikalingi kalbos paketai, palaukite..."
 
-#: ../../langselector/locale.go:160
+#: ../../langselector/locale.go:162
 msgid "Changing system language, please wait..."
 msgstr "Keičiama sistemos kalba, palaukite..."
 
-#: ../../langselector/locale.go:161
+#: ../../langselector/locale.go:164
+msgid "System language changed, please reboot and then log in"
+msgstr ""
+
+#: ../../langselector/locale.go:166
 msgid "System language changed, please log out and then log in"
 msgstr "Sistemos kalba pakeista, atsijunkite ir vėl prisijunkite"
 
-#: ../../langselector/locale.go:402
+#: ../../langselector/locale.go:418
 msgid "Failed to change system language, please try later"
 msgstr "Nepavyko pakeisti sistemos kalbos, vėliau bandykite dar kartą"
 
@@ -553,44 +553,44 @@ msgstr "%q sėkmingai pašalintas"
 msgid "Failed to uninstall %q"
 msgstr "Nepavyko pašalinti %q"
 
-#: ../../network/manager_active_conn.go:367
-#: ../../network/manager_active_conn.go:372
+#: ../../network/manager_active_conn.go:399
+#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Nėra"
 
-#: ../../network/manager_active_conn.go:374
+#: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bitų raktas"
 
-#: ../../network/manager_active_conn.go:376
+#: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 asmeninis"
 
-#: ../../network/manager_active_conn.go:384
+#: ../../network/manager_active_conn.go:416
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:386
+#: ../../network/manager_active_conn.go:418
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:388
+#: ../../network/manager_active_conn.go:420
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:390
+#: ../../network/manager_active_conn.go:422
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:392
+#: ../../network/manager_active_conn.go:424
 msgid "Tunneled TLS"
 msgstr "Tuneliuotas TLS"
 
-#: ../../network/manager_active_conn.go:394
+#: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
 msgstr "Apsaugota EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Laidinis ryšys"
 
@@ -609,7 +609,7 @@ msgstr "Tinklas"
 msgid "Failed to set the application proxy"
 msgstr ""
 
-#: ../../network/secret_agent.go:394
+#: ../../network/secret_agent.go:395
 msgid "Password is required to connect %q"
 msgstr "Norint prijungti %q, reikalingas slaptažodis"
 
@@ -974,7 +974,7 @@ msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Ryšys patyrė nesėkmę, nepavyko prisijungti prie %q, neteisingas slaptažodis"
 
-#: ../../network/utils_dbus_nm.go:259
+#: ../../network/utils_dbus_nm.go:257
 msgid "Unknown"
 msgstr "Nežinoma"
 
@@ -1017,46 +1017,47 @@ msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" nepraėjo sistemos saugumo patikrinimo ir dabar negali būti paleista"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:211
 msgid "Battery critically low"
 msgstr "Kritiškai žema baterijos įkrova"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:239
+#: ../../session/power/manager_events.go:244
+#: ../../session/power/manager_events.go:249
 msgid "Battery low, please plug in"
 msgstr "Baterija baigia išsikrauti, prijunkite maitinimą"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
 msgid "Power settings changed"
 msgstr ""
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:413 ../../session/power/utils_test.go:12
+#: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr ""
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:417
 msgid "When pressing the power button, "
 msgstr ""
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:427 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr ""
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:429 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr ""
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:431
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:433
 msgid "your monitor will turn off"
 msgstr ""
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:435
 msgid "it will do nothing to your computer"
 msgstr ""
 
