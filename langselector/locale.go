@@ -160,7 +160,11 @@ func (infos LocaleInfos) Get(locale string) (LocaleInfo, error) {
 func initNotifyTxt() {
 	notifyTxtStartWithInstall = Tr("Changing system language and installing the required language packages, please wait...")
 	notifyTxtStart = Tr("Changing system language, please wait...")
-	notifyTxtDone = Tr("System language changed, please log out and then log in")
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		notifyTxtDone = Tr("System language changed, please reboot and then log in")
+	} else {
+		notifyTxtDone = Tr("System language changed, please log out and then log in")
+	}
 }
 
 func newLangSelector(service *dbusutil.Service) (*LangSelector, error) {
