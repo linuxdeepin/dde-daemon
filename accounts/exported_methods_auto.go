@@ -45,6 +45,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"name", "rmFiles"},
 		},
 		{
+			Name:   "EnablePasswdChangedHandler",
+			Fn:     v.EnablePasswdChangedHandler,
+			InArgs: []string{"enable"},
+		},
+		{
 			Name:    "FindUserById",
 			Fn:      v.FindUserById,
 			InArgs:  []string{"uid"},

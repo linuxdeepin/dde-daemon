@@ -91,6 +91,9 @@ func (m *Manager) handleFileChanged(ev fsnotify.Event) {
 }
 
 func (m *Manager) handleFilePasswdChanged() {
+	if !m.enablePasswdChangedHandler {
+		return
+	}
 	infos, err := users.GetHumanUserInfos()
 	if err != nil {
 		logger.Warning(err)

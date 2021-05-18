@@ -60,6 +60,9 @@ type Manager struct {
 	usersMap   map[string]*User
 	usersMapMu sync.Mutex
 
+	enablePasswdChangedHandler   bool
+	enablePasswdChangedHandlerMu sync.Mutex
+
 	delayTaskManager *tasker.DelayTaskManager
 	userAddedChanMap map[string]chan string
 	//                    ^ username
@@ -77,7 +80,8 @@ type Manager struct {
 
 func NewManager(service *dbusutil.Service) *Manager {
 	var m = &Manager{
-		service: service,
+		service:                    service,
+		enablePasswdChangedHandler: true,
 	}
 
 	m.usersMap = make(map[string]*User)

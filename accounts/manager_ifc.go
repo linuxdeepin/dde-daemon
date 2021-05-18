@@ -307,3 +307,24 @@ func (m *Manager) GetPresetGroups(accountType int32) (groups []string, busErr *d
 	groups = users.GetPresetGroups(int(accountType))
 	return groups, nil
 }
+
+// 是否使能accounts服务在监听到/etc/passwd文件变化后,执行对应的属性更新和服务导出,只允许root用户操作该接口
+func (m *Manager) EnablePasswdChangedHandler(sender dbus.Sender, enable bool) *dbus.Error {
+	uid, err := m.service.GetConnUID(string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	if uid != 0 {
+		return dbusutil.ToError(fmt.Errorf("not allow %v call this method", sender))
+	}
+	m.enablePasswdChangedHandlerMu.Lock()
+	defer m.enablePasswdChangedHandlerMu.Unlock()
+	if m.enablePasswdChangedHandler == enable {
+		return nil
+	}
+	m.enablePasswdChangedHandler = enable
+	if enable {
+		m.handleFilePasswdChanged()
+	}
+	return nil
+}
