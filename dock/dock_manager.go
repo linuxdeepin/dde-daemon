@@ -39,7 +39,6 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"pkg.deepin.io/lib/dbusutil/proxy"
-	"pkg.deepin.io/lib/strv"
 )
 
 type Manager struct {
@@ -84,8 +83,6 @@ type Manager struct {
 	entryCount         uint
 	identifyWindowFuns []*IdentifyWindowFunc
 	windowPatterns     WindowPatterns
-
-	tempUndockedFiles strv.Strv
 
 	// dbus objects:
 	launcher     *launcher.Launcher

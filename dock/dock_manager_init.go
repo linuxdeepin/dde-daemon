@@ -123,7 +123,6 @@ func (m *Manager) handleLauncherItemDeleted(itemInfo launcher.ItemInfo) {
 	for _, entry := range dockedEntries {
 		file := entry.appInfo.GetFileName()
 		if file == itemInfo.Path {
-			m.tempUndockedFiles, _ = m.tempUndockedFiles.Add(file)
 			m.undockEntry(entry)
 			return
 		}
@@ -131,13 +130,7 @@ func (m *Manager) handleLauncherItemDeleted(itemInfo launcher.ItemInfo) {
 }
 
 func (m *Manager) handleLauncherItemCreated(itemInfo launcher.ItemInfo) {
-	if m.tempUndockedFiles.Contains(itemInfo.Path) {
-		_, err := m.requestDock(itemInfo.Path, -1)
-		if err != nil {
-			logger.Warning(err)
-		}
-		m.tempUndockedFiles, _ = m.tempUndockedFiles.Delete(itemInfo.Path)
-	}
+
 }
 
 //在收到应用更新的信号后，如果app对desktop文件的'Exec'属性做了更改，需要更新该应用之前的'appInfo'和'innerId'为新的值
