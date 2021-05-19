@@ -356,21 +356,127 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(edge string, scaleX float64, scal
 	return nil
 }
 
+//处理触摸屏滑动手势
+
 func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float64) error {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Error(err)
+	}
+	obj := sessionBus.Object("com.deepin.daemon.Display", "/com/deepin/daemon/Display")
+	var ret dbus.Variant
+	var ret1 dbus.Variant
+	err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display", "Monitors").Store(&ret)
+	if err != nil {
+		logger.Error(err)
+	}
+	err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display", "TouchMap").Store(&ret1)
+	if err != nil {
+		logger.Error(err)
+	}
+	dbusObjectPathArray := ret.Value().([]dbus.ObjectPath)
+	mapTouchName := ret1.Value().(map[string]string)
+	var screenName string
+	if len(mapTouchName) > 0 {
+		for _, screenName = range mapTouchName {
+			break
+		}
+	} else {
+		logger.Warning("The number of touch screen cannot be 0 or less. ")
+		return nil
+	}
+	var rotation uint16
+
+	for _, dbusObjectPath := range dbusObjectPathArray {
+		obj := sessionBus.Object("com.deepin.daemon.Display", dbusObjectPath)
+		var name string
+		err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display.Monitor", "Name").Store(&name)
+		if err != nil {
+			logger.Error(err)
+		}
+		if name == screenName {
+			err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display.Monitor", "Rotation").Store(&rotation)
+			if err != nil {
+				logger.Error(err)
+			}
+			break
+		}
+	}
+	err = m.handleRotationTouchEdgeEvent(rotation, edge, scaleX, scaleY)
+	return err
+}
+
+//处理屏幕旋转后的滑动手势
+func (m *Manager) handleRotationTouchEdgeEvent(rotation uint16, edge string, scaleX float64, scaleY float64) error {
+	var cmd = ""
+	screenHeight, err := m.display.ScreenHeight().Get(0)
+	if err != nil {
+		logger.Error("get display.ScreenHeight failed:", err)
+		return err
+	}
 	screenWight, err := m.display.ScreenWidth().Get(0)
 	if err != nil {
 		logger.Error("get display.ScreenWidth failed:", err)
 		return err
 	}
-
-	switch edge {
-	case "left":
-		if scaleX*float64(screenWight) > 100 {
-			return m.clipboard.Show(0)
+	//不旋转
+	if rotation == 1 {
+		if edge == "left" {
+			if scaleX*float64(screenWight) > 100 {
+				cmd = "xdotool key ctrl+alt+v"
+			}
 		}
-	case "right":
-		if (1-scaleX)*float64(screenWight) > 100 {
-			return m.notification.Show(0)
+		if edge == "right" {
+			if (1-scaleX)*float64(screenWight) > 100 {
+				cmd = "dbus-send --type=method_call --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
+			}
+		}
+	}
+	//旋转90度
+	if rotation == 2 {
+		if edge == "bot" {
+			if scaleY*float64(screenHeight) > 100 {
+				cmd = "xdotool key ctrl+alt+v"
+			}
+		}
+		if edge == "top" {
+			if (1-scaleY)*float64(screenHeight) > 100 {
+				cmd = "dbus-send --type=method_call --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
+			}
+		}
+	}
+	//旋转180度
+	if rotation == 4 {
+		if edge == "left" {
+			if scaleX*float64(screenWight) > 100 {
+				cmd = "dbus-send --type=method_call --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
+
+			}
+		}
+		if edge == "right" {
+			if (1-scaleX)*float64(screenWight) > 100 {
+				cmd = "xdotool key ctrl+alt+v"
+			}
+		}
+	}
+	//旋转270度
+	if rotation == 8 {
+		if edge == "bot" {
+			if scaleY*float64(screenHeight) > 100 {
+				cmd = "dbus-send --type=method_call --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
+			}
+		}
+		if edge == "top" {
+			if (1-scaleY)*float64(screenHeight) > 100 {
+				cmd = "xdotool key ctrl+alt+v"
+			}
+		}
+	}
+
+	if len(cmd) != 0 {
+		out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("%s", string(out))
 		}
 	}
 
