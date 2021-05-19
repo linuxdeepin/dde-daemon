@@ -518,8 +518,15 @@ func (psp *powerSavePlan) screenBlack() {
 		logger.Debug("adjust brightness disabled")
 	}
 
+	var fullBlackTime time.Duration
+	if os.Getenv("XDG_CURRENT_DESKTOP") != padEnv {
+		fullBlackTime = 5000 * time.Millisecond
+	} else {
+		// 平板上创建DelayTask的延时不需要跟dde一样等待5s
+		fullBlackTime = 1000 * time.Millisecond
+	}
+
 	// full black
-	const fullBlackTime = 5000 * time.Millisecond
 	taskF := newDelayedTask("screenFullBlack", fullBlackTime, func() {
 		psp.stopScreensaver()
 		logger.Info("Screen full black")
@@ -530,7 +537,7 @@ func (psp *powerSavePlan) screenBlack() {
 		// 防止平板自然息屏后进入IdleOn状态
 		if os.Getenv("XDG_CURRENT_DESKTOP") != padEnv {
 			psp.manager.setPrepareSuspend(suspendStateLidClose)
-			defer  psp.manager.setPrepareSuspend(suspendStateFinish)
+			defer psp.manager.setPrepareSuspend(suspendStateFinish)
 		}
 
 		if adjustBrightnessEnabled {
