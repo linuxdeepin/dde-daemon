@@ -114,15 +114,7 @@ func (m *Manager) SetNTPServer(sender dbus.Sender, server, message string) *dbus
 	}
 	m.PropsMu.Unlock()
 
-	err = setNTPServer(server)
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
-
-	m.PropsMu.Lock()
-	m.NTPServer = server
-	m.PropsMu.Unlock()
-	err = m.emitPropChangedNTPServer(server)
+	err = m.setNTPServer(server)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -133,7 +125,7 @@ func (m *Manager) SetNTPServer(sender dbus.Sender, server, message string) *dbus
 	} else if ntp {
 		// ntp enabled
 		go func() {
-			err := restartSystemdService("systemd-timesyncd.service", "replace")
+			_, err := m.systemd.RestartUnit(0, timesyncdService, "replace")
 			if err != nil {
 				logger.Warning("failed to restart systemd timesyncd service:", err)
 			}

@@ -70,6 +70,7 @@ func (d *Daemon) Start() error {
 		return err
 	}
 
+	_manager.start()
 	return nil
 }
 

@@ -24,12 +24,15 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"syscall"
 
 	dbus "github.com/godbus/dbus"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
+	systemd1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.systemd1"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
+	timesync1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timesync1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/keyfile"
 )
@@ -38,10 +41,14 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 type Manager struct {
-	core      timedate1.Timedate
-	service   *dbusutil.Service
-	PropsMu   sync.RWMutex
-	NTPServer string
+	core           timedate1.Timedate
+	service        *dbusutil.Service
+	PropsMu        sync.RWMutex
+	NTPServer      string
+	timesyncd      timesync1.Timesync1
+	systemd        systemd1.Manager
+	setNTPServerMu sync.RWMutex
+	signalLoop     *dbusutil.SignalLoop
 }
 
 const (
@@ -52,30 +59,105 @@ const (
 	timedate1ActionId = "org.freedesktop.timedate1.set-time"
 
 	timeSyncCfgFile = "/etc/systemd/timesyncd.conf.d/deepin.conf"
+
+	timesyncdService = "systemd-timesyncd.service"
 )
 
 func NewManager(service *dbusutil.Service) (*Manager, error) {
-	systemBus, err := dbus.SystemBus()
+	core := timedate1.NewTimedate(service.Conn())
+	err := startNTPbyFirstBoot(core)
 	if err != nil {
-		return nil, err
+		logger.Error(err)
 	}
-	core := timedate1.NewTimedate(systemBus)
+	m := &Manager{
+		core:    core,
+		service: service,
+	}
+	return m, nil
+}
 
+func (m *Manager) start() {
+
+	m.signalLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)
+	m.signalLoop.Start()
+
+	m.timesyncd = timesync1.NewTimesync1(m.service.Conn())
 	server, err := getNTPServer()
 	if err != nil {
 		logger.Warning(err)
 	}
-
-	err = startNTPbyFirstBoot(core)
+	m.systemd = systemd1.NewManager(m.service.Conn())
+	// 第一次启动时,默认无NTPServer文件.如果时间同步状态是开启的(系统默认开启),将时间同步服务数据同步到timedated中
+	if server == "" {
+		ntp, err := m.core.NTP().Get(0)
+		if err != nil {
+			logger.Warning(err)
+		}
+		if m.isUnitEnable(timesyncdService) && ntp {
+			serverName, err := m.timesyncd.ServerName().Get(0)
+			if err != nil {
+				logger.Warning(err)
+			} else {
+				server = serverName
+			}
+		}
+	}
+	err = m.setNTPServer(server)
 	if err != nil {
-		logger.Error(err)
+		logger.Warning(err)
+	}
+	m.timesyncd.InitSignalExt(m.signalLoop, true)
+	err = m.timesyncd.ServerName().ConnectChanged(func(hasValue bool, value string) {
+		if !hasValue || value == m.NTPServer {
+			return
+		}
+		err = m.setNTPServer(server)
+		if err != nil {
+			logger.Warning(err)
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+	m.systemd.InitSignalExt(m.signalLoop, true)
+
+	_, err = m.systemd.ConnectUnitNew(func(id string, unit dbus.ObjectPath) {
+		// 监听systemd-timesyncd.service服务的启动,代表了开启了时间同步服务,获取该服务的时间服务器数据,
+		// 如果开启NTP后直接读取timesync1的数据,有可能存在服务未启动的情况,该服务无法被dbus-daemon启动.
+		if id == timesyncdService {
+			if !m.isUnitEnable(timesyncdService) {
+				return
+			}
+			server, err = m.timesyncd.ServerName().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			if server != "" && server != m.NTPServer {
+				err = m.setNTPServer(server)
+				if err != nil {
+					logger.Warning(err)
+				}
+			}
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
+func (m *Manager) setNTPServer(value string) error {
+	m.setNTPServerMu.Lock()
+	defer m.setNTPServerMu.Unlock()
+	err := setNTPServer(value)
+	if err != nil {
+		return err
 	}
 
-	return &Manager{
-		core:      core,
-		service:   service,
-		NTPServer: server,
-	}, nil
+	m.PropsMu.Lock()
+	m.NTPServer = value
+	m.PropsMu.Unlock()
+	return m.emitPropChangedNTPServer(value)
 }
 
 func startNTPbyFirstBoot(core timedate1.Timedate) error {
@@ -183,13 +265,11 @@ func getNTPServer() (string, error) {
 	return server, nil
 }
 
-func restartSystemdService(service, mode string) error {
-	sysBus, err := dbus.SystemBus()
+func (m *Manager) isUnitEnable(unit string) bool {
+	state, err := m.systemd.GetUnitFileState(0, unit)
 	if err != nil {
-		return err
+		logger.Warning(err)
+		return false
 	}
-	systemdObj := sysBus.Object("org.freedesktop.systemd1", "/org/freedesktop/systemd1")
-	var jobPath dbus.ObjectPath
-	err = systemdObj.Call("org.freedesktop.systemd1.Manager.RestartUnit", 0, service, mode).Store(&jobPath)
-	return err
+	return "enabled" == strings.TrimSpace(state)
 }
