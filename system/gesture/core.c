@@ -29,8 +29,8 @@
 
 #define ALARM_TIMEOUT_DEFAULT 700 // 700ms
 #define LONG_PRESS_MAX_DISTANCE 1
-#define SCREEN_WIDTH 100;
-#define SCREEN_HEIGHT 100;
+#define SCREEN_WIDTH 100
+#define SCREEN_HEIGHT 100
 
 struct raw_multitouch_event {
     double dx_unaccel, dy_unaccel;
@@ -39,6 +39,7 @@ struct raw_multitouch_event {
     uint64_t t_start_tap;
     guint tap_id;
     bool dblclick;
+    bool ignore;
 };
 
 static void raw_event_reset(struct raw_multitouch_event *event, bool reset_dblclick);
@@ -471,9 +472,18 @@ handle_touch_events(struct libinput_event *ev, int ty,struct movement *m)
 {
     point scale;
     struct libinput_device *dev = libinput_event_get_device(ev);
+    const char* node= NULL;
+    struct raw_multitouch_event *rme = NULL;
+
     if (!dev) {
         fprintf(stderr, "Get device from event failure\n");
         return ;
+    }
+
+    node = get_multitouch_device_node(ev);
+    rme = g_hash_table_lookup(ev_table, node);
+    if (rme && rme->ignore) {
+        return;
     }
 
     switch (ty) {
@@ -601,7 +611,7 @@ handle_events(struct libinput *li, struct movement *m)
         case LIBINPUT_EVENT_TOUCH_DOWN:
         case LIBINPUT_EVENT_TOUCH_CANCEL:
         case LIBINPUT_EVENT_TOUCH_FRAME:{
-            handle_touch_events(ev, type, m);  
+            handle_touch_events(ev, type, m);
             break;
         }
         default:
@@ -609,5 +619,13 @@ handle_events(struct libinput *li, struct movement *m)
         }
         libinput_event_destroy(ev);
         libinput_dispatch(li);
+    }
+}
+
+void set_device_ignore(const char* node, bool ignore) {
+    struct raw_multitouch_event *rme = g_hash_table_lookup(ev_table, node);
+    if (rme) {
+        g_debug("[gesture] set device ignore: %s", ignore ? "true" : "false");
+        rme->ignore = ignore;
     }
 }

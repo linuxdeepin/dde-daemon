@@ -61,5 +61,6 @@ void quit_loop(void);
 void set_timer_duration(int duration);
 void set_timer_short_duration(int duration);
 void set_dblclick_duration(int duration);
+void set_device_ignore(const char* node, bool ignore);
 
 #endif

@@ -247,6 +247,11 @@ func (*Manager) SetEdgeMoveStopDuration(duration int) *dbus.Error {
 	return nil
 }
 
+func (*Manager) SetInputIgnore(node string, isIgnore bool) *dbus.Error {
+	C.set_device_ignore(C.CString(node), C.bool(isIgnore))
+	return nil
+}
+
 //touchpad gesture
 //export handleGestureEvent
 func handleGestureEvent(ty, direction, fingers C.int) {
