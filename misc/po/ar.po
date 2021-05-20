@@ -5,30 +5,30 @@
 # 
 # Translators:
 # كريم أولاد الشلحة <herr.linux88@gmail.com>, 2020
-# alibacha19 <alibacha19@gmail.com>, 2020
 # Khodr Abdallah <khodr000@gmail.com>, 2020
-# ahmad nourallah <ahmadnurallah@gmail.com>, 2020
-# mo-hd <mo-hd@windowslive.com>, 2020
-# monzerissa169 <monzerissa169@yahoo.com>, 2020
 # Oukiki Saleh <salehoukiki@gmail.com>, 2020
 # Mahmoud Abdelsalam <mahmoud.ad@tutanota.com>, 2020
-# hamdy abd elfatah <hamdy.elzankly@gmail.com>, 2020
-# أشرف بصرى <ashrafmn2008@gmail.com>, 2020
+# ea5b6e8c30cf815b1aed3e5f880f4a98_908896e <4b97d4cb8da17abbf68d43a364316c10_700866>, 2020
 # Hussain Alramadhan <psvitamine1@gmail.com>, 2020
 # Mohammed Alotaibi <mx_202@hotmail.com>, 2020
-# MUHAAB SHAAM <muhaab.org@gmail.com>, 2020
-# Cindy0514, 2020
-# AhmedAyman <ahmedayman321@yahoo.com>, 2020
+# mo-hd <mo-hd@windowslive.com>, 2020
+# monzerissa169 <monzerissa169@yahoo.com>, 2020
+# alibacha19 <alibacha19@gmail.com>, 2020
+# ahmad nourallah <ahmadnurallah@gmail.com>, 2020
+# أشرف بصرى <ashrafmn2008@gmail.com>, 2020
 # Idir Benkhellat <benkhellat.idir@gmail.com>, 2020
+# AhmedAyman <ahmedayman321@yahoo.com>, 2021
+# MUHAAB SHAAM <muhaab.org@gmail.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Idir Benkhellat <benkhellat.idir@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/linuxdeepin/teams/3617/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -208,8 +208,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "توصيل q% تم بنجاح"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q غير متصل"
 
@@ -487,7 +487,7 @@ msgstr "عرض نوافذ مساحة العمل الحالية"
 msgid "Display workspace"
 msgstr "عرض مساحة العمل"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr ""
 
@@ -559,6 +559,10 @@ msgstr "تمت إزالة %q بنجاح"
 msgid "Failed to uninstall %q"
 msgstr "تعذر إلغاء تثبيت %q "
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -596,7 +600,7 @@ msgstr "نفق TLS"
 msgid "Protected EAP"
 msgstr "EAP محمي"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "اتصال سلكي"
 
@@ -606,8 +610,8 @@ msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "الشبكة"
 
@@ -933,82 +937,82 @@ msgstr "فشلت المصادقة على خادم  vpn"
 msgid "The connection was deleted from settings"
 msgstr "تم حذف الاتصال من اﻹعدادات"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "تفعيل نقطة البث"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "توصيل q%"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "نقطة البث مفعلة"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q متصل"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "نقطة البث معطلة"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "لا يمكن مشاركة نقطة الإتصال, رجاءً تأكد من إعدادات dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "غير قادر على الإتصال %q رجاءً أقترب أكثر من جهاز التوجيه اللاسلكي."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "غير قادر على الإتصال %q رجاءً تحقق من جهاز التوجيه أو قابس الإنترنت."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "خطأ في الإتصال, لا يمكن الإتصال  %q, كلمة مرور خاطئة"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "كلمة السر ضرورية لتوصيل q%"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "غير معروف"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "تم تفعيل وضع الطيران"
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "غير متصل"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "نقطة الوصول غير معتمدة من طرف هذا الجهاز"
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "مبدل الجهاز لبطاقة الشبكة \"متوقف\" ، يرجى التبديل على حسب الضرورة ."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "تم تعيين وكيل النظام بنجاح"
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "تم إلغاء وكيل النظام"
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "متصل"
 
@@ -1017,46 +1021,46 @@ msgstr "متصل"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" لم يجتز تحقق أمان النظام، ولن يمكن تشغيله الآن"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "مستوى البطارية منخفض"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "البطارية منخفضة، رجاءً اشبك السلك الكهربائي"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr ""
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr ""
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr ""
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr ""
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr ""
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr ""
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr ""
 

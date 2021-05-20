@@ -5,17 +5,17 @@
 # 
 # Translators:
 # inashdeen <inashdeen@gmail.com>, 2020
-# Cindy0514, 2020
-# abuyop <abuyop@gmail.com>, 2020
+# abuyop <abuyop@gmail.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: abuyop <abuyop@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Malay (https://www.transifex.com/linuxdeepin/teams/3617/ms/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,15 +85,15 @@ msgstr "Penskalaan paparan"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "Pengesahan cap jari gagal"
+msgstr "Pengecaman cap jari gagal"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
-msgstr "Pengesahan cap jari telah tamat masa"
+msgstr "Pengecaman cap jari telah tamat masa"
 
 #: ../../bluetooth/bluez_profile.go:30
 msgid "Serial port"
-msgstr "Port bersiri"
+msgstr "Port serial"
 
 #: ../../bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
@@ -101,11 +101,11 @@ msgstr "Perangkaian dailan"
 
 #: ../../bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
-msgstr "Peranti bebas-tangan"
+msgstr "Peranti Bebas-Tangan"
 
 #: ../../bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
-msgstr "Get laluan suara bebas-tangan"
+msgstr "Get laluan suara Bebas-Tangan"
 
 #: ../../bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
@@ -195,14 +195,14 @@ msgstr "Penerimaan %q telah tamat masa"
 msgid "Connect %q successfully"
 msgstr "Sambungan %q berjaya"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q terputus"
 
 #: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
-msgstr "Pastikan %q dihidupkan dan berada dalam jangkauan"
+msgstr "Pastikan %q dihidupkan dan berada dalam julat"
 
 #: ../../bluetooth/utils_notify.go:146
 msgid "Click here to connect to %q"
@@ -284,7 +284,7 @@ msgstr "Labuh"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr "Tanggal"
+msgstr "Nyahlabuh"
 
 #: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
@@ -316,7 +316,7 @@ msgstr "Tunjuk/Sembunyi labuh"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
-msgstr "Antara muka Matikan Komputer"
+msgstr "Antaramuka Matikan Komputer"
 
 #: ../../keybinding/shortcuts/id_name_map.go:34
 msgid "Terminal Quake Window"
@@ -324,19 +324,19 @@ msgstr "Tetingkap Terminal Quake"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "Tangkap layar"
+msgstr "Cekupan skrin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "Tangkap layar penuh"
+msgstr "Cekupan skrin penuh"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
-msgstr "Tangkap layar bertetingkap"
+msgstr "Cekupan skrin bertetingkap"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "Lengah tangkap layar"
+msgstr "Lengah cekupan skrin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "File manager"
@@ -364,7 +364,7 @@ msgstr "Pemilih Deepin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
-msgstr "Pembantu AI Atas Meja"
+msgstr "Pembantu AI Desktop"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Text to Speech"
@@ -420,7 +420,7 @@ msgstr "Tukar tetingkap secara songsang"
 
 #: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
-msgstr "Tunjuk atas meja"
+msgstr "Tunjuk desktop"
 
 #: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
@@ -474,7 +474,7 @@ msgstr "Papar tetingkap pada ruang kerja semasa"
 msgid "Display workspace"
 msgstr "Papar ruang kerja"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Tukar monitor"
 
@@ -530,8 +530,8 @@ msgstr "Gagal membuang apl"
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
-"Untuk menghindari komputer dimatikan secara automatik, sila palamkan kuasa "
-"untuk kemas kini biasa."
+"Untuk menghindari komputer dimatikan secara automatik, sila palamkan bagi "
+"kemaskini biasa."
 
 #: ../../lastore/notify.go:121
 msgid "Package cache wiped"
@@ -549,6 +549,10 @@ msgstr "%q berjaya dibuang"
 msgid "Failed to uninstall %q"
 msgstr "Gagal menyahpasang %q"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -560,7 +564,7 @@ msgstr "Kunci WEP 40/128-bit"
 
 #: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
-msgstr "WPA/WPA2 Peribadi"
+msgstr "WPA/WPA2 Persendirian"
 
 #: ../../network/manager_active_conn.go:416
 msgid "TLS"
@@ -586,7 +590,7 @@ msgstr "TLS Berterowong"
 msgid "Protected EAP"
 msgstr "EAP Terlindung"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Sambungan Berwayar"
 
@@ -596,8 +600,8 @@ msgstr "Proksi aplikasi berjaya ditetapkan"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Rangkaian"
 
@@ -615,7 +619,7 @@ msgstr "Keadaan peranti berubah, sebab tidak diketahui"
 
 #: ../../network/state_handler.go:40
 msgid "The device is now managed"
-msgstr "Peranti kini terurus"
+msgstr "Peranti kini diurus"
 
 #: ../../network/state_handler.go:41
 msgid "The device is no longer managed"
@@ -930,86 +934,86 @@ msgstr "Pengesahihan ke pelayan VPN telah gagal"
 msgid "The connection was deleted from settings"
 msgstr "Sambungan telah dipadam dari tetapan"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Membenarkan kawasan khas"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Menyambungkan %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Kawasan khas dibenarkan"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q bersambung"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Kawasan khas dilumpuhkan"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Tidak boleh berkongsi kawasan khas, sila periksa tetapan dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Tidak boleh bersambung dengan %q, pastikan anda berhampiran dengan penghala "
 "tanpa wayar"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Tidak boleh bersambung dengan %q, sila periksa penghala atau kabel rangkaian"
 " anda."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Sambungan gagal, tidak dapat bersambung dengan %q, kata laluan salah"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Kata laluan diperlukan untuk bersambung dengan %q"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Tidak diketahui"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Mod kapal terbang dibenarkan."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Terputus"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Mod Titik Capaian tidak disokong oleh peranti ini."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "Suis perkakasan Kad WLAN dimatikan, sila hidupkan jika perlu."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Proksi sistem berjaya ditetapkan."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Proksi sistem dibatalkan."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Bersambung"
 
@@ -1020,46 +1024,46 @@ msgstr ""
 "\"%s\" tidak melepasi pengesahan keselamatan sistem, dan kini tidak dapat "
 "dijalankan"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "Kuasa bateri sangat rendah"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Kuasa bateri lemah, sila palamkan kuasa"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "Tetapan kuasa berubah"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "Bila penutup komputer ditutup,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "Bila menekan butang kuasa."
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "komputer anda akan dimatikan"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "komputer anda akan ditangguh"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "komputer anda akan dihibernasikan"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "monitor anda akan dimatikan"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "tindakan ini tidak membuat apa-apa kepada komputer anda"
 

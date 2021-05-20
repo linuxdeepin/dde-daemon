@@ -4,22 +4,22 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>Pro přidání hesla zastupovaného otiskem prstu je požadováno ověření se</translation>
+			<translation>Pro přidání hesla, zastupovaného otiskem prstu, je požadováno ověření se</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!description" line="0"/>
 			<source>Add fingerprint password</source>
-			<translation>Přidat heslo zastupované otiskem prstu</translation>
+			<translation>Přidat heslo otiskem prstu</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>Pro smazání hesel zastupovaných otiskem prstu je požadováno ověření se</translation>
+			<translation>Pro smazání hesel, zastupovaných otiskem prstu, je požadováno ověření se</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>
 			<source>Clear fingerprint passwords</source>
-			<translation>Smazat hesla zastupovaná otiskem prstu</translation>
+			<translation>Smazat hesla otiskem prstu</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!message" line="0"/>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -189,8 +189,8 @@ msgstr "Receiving %q timed out"
 msgid "Connect %q successfully"
 msgstr "Connect %q successfully"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q disconnected"
 
@@ -468,7 +468,7 @@ msgstr "Display windows of current workspace"
 msgid "Display workspace"
 msgstr "Display workspace"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Switch monitors"
 
@@ -542,6 +542,10 @@ msgstr "%q removed successfully"
 msgid "Failed to uninstall %q"
 msgstr "Failed to uninstall %q"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr "Wired connection"
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -579,7 +583,7 @@ msgstr "Tunneled TLS"
 msgid "Protected EAP"
 msgstr "Protected EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Wired Connection"
 
@@ -589,8 +593,8 @@ msgstr "Application proxy is set successfully"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Network"
 
@@ -921,83 +925,83 @@ msgstr "Authentication to VPN server failed"
 msgid "The connection was deleted from settings"
 msgstr "The connection was deleted from settings"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Enabling hotspot"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Connecting %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Hotspot enabled"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q connected"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Hotspot disabled"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Unable to share hotspot, please check dnsmasq settings"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Unable to connect %q, please keep closer to the wireless router"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Unable to connect %q, please check your router or net cable."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Connection failed, unable to connect %q, wrong password"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Password is required to connect %q"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "The %q 802.11 WLAN network could not be found"
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Unknown"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Airplane mode enabled."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Disconnected"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Access Point mode is not supported by this device."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "System proxy is set successfully."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "System proxy has been cancelled."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Connected"
 
@@ -1006,46 +1010,46 @@ msgstr "Connected"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" did not pass the system security verification, and cannot run now"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "Battery critically low"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Battery low, please plug in"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "Power settings changed"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "When the lid is closed, "
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "When pressing the power button, "
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "your computer will shut down"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "your computer will suspend"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "your computer will hibernate"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "your monitor will turn off"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "it will do nothing to your computer"
 

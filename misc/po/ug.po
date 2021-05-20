@@ -4,21 +4,21 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# مۇختەر مەخمۇت <yeganaaa@163.com>, 2020
-# Cindy0514, 2020
 # Abdusalam Huxur <2250907458@qq.com>, 2020
-# Muhammadali Abliz <ordam2@163.com>, 2020
 # 伊力亚斯 伊德日斯 <2032517177@qq.com>, 2020
-# 阿迪力 买买提明 <251078110@qq.com>, 2020
+# مۇختەر مەخمۇت <yeganaaa@163.com>, 2020
+# Muhammadali Abliz <ordam2@163.com>, 2020
+# 阿迪力 买买提明 <251078110@qq.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +90,7 @@ msgstr "كۆرۈنىش كىچىكلىتىش"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "بارماق ئىزىنى دەلىللەش مەغلۇپ بولدى"
+msgstr "بارماق ئىزىنى دەلىللەش مەغلۇب بولدى"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
@@ -200,8 +200,8 @@ msgstr "%q دىن قوبۇللاش ۋاقتى ئۆتتى"
 msgid "Connect %q successfully"
 msgstr "%qغا ئۇلاندى"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%qدىن ئۈزۈلدى"
 
@@ -479,7 +479,7 @@ msgstr "كۆزنەكنى نۆۋەتتىكى خىزمەت رايونلىرىدا 
 msgid "Display workspace"
 msgstr "خىزمەت رايونىنى كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "كۆپ ئېكران ئالماشتۇرۇش"
 
@@ -552,6 +552,10 @@ msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
 msgid "Failed to uninstall %q"
 msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr "سىملىق تور ئۇلىنىشى"
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -589,7 +593,7 @@ msgstr "تونېلللانغان TLS"
 msgid "Protected EAP"
 msgstr "قوغدالغان EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "سىملىق تور ئۇلىنىشى"
 
@@ -599,8 +603,8 @@ msgstr "سىستېما ۋاكالەتچىلىكىنى تەڭشەش مۇۋەپپ�
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "تور"
 
@@ -647,8 +651,7 @@ msgstr "پارول تەلەپ قىلىنغان، ئەمما تەمىنلەنمى
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
-msgstr ""
-"802.1X تېرمىنالىنىڭ زىيارەت نۇقتىسى ياكى دەلىللەش مۇلازىمىتىرىدىن ئۈزۈلدى"
+msgstr "802.1X客户端从接入点或认证服务器断开连接"
 
 #: ../../network/state_handler.go:47
 msgid "Configuration of the 802.1X supplicant failed"
@@ -660,7 +663,7 @@ msgstr "802.1X تېرمىنالى بىنورمال چېكىندى ياكى مە�
 
 #: ../../network/state_handler.go:49
 msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "802.1X تېرمىنالىنىڭ دەلىللەش ۋاقتى ئۇزۇن بولۇپ كەتتى"
+msgstr "802.1X تېرمىنالىنىڭ دەلىللەش ۋاقتى ئۇزۇن"
 
 #: ../../network/state_handler.go:50
 msgid "The PPP service failed to start within the allowed time"
@@ -728,7 +731,7 @@ msgstr "ئۇلانمىدى"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
-msgstr "مودېلنى  دەسلەپكى قوزغىتىش مەغلۇپ بولدى"
+msgstr "مودېلنى  دەسلەپكى قوزغىتىش مەغلۇب بولدى"
 
 #: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
@@ -852,7 +855,7 @@ msgstr "مودېل تەييار بولدى"
 
 #: ../../network/state_handler.go:99
 msgid "SIM PIN is incorrect"
-msgstr "SIM كارتىنىڭ PIN كودى خاتا"
+msgstr "SIM كارتىنىڭ PIN نومۇرى خاتا"
 
 #: ../../network/state_handler.go:100
 msgid "New connection activation is enqueuing"
@@ -873,7 +876,7 @@ msgstr "تور سىمى چىقىرىۋېتىلدى"
 #: ../../network/state_handler.go:106
 msgid "Please make sure SIM card has been inserted with mobile network signal"
 msgstr ""
-"SIM كارتىنىڭ سېلىنغانلىقىنى ۋە كۆچمە تور سىگنالى بارلىقىنى جەزملەشتۈرۈڭ"
+"SIM كارتىنىڭ قىستۇرۇلغانلىقىنى ۋە كۆچمە تور سىگنالى بارلىقىنى جەزملەشتۈرۈڭ"
 
 #: ../../network/state_handler.go:107
 msgid ""
@@ -933,85 +936,85 @@ msgstr "VPN مۇلازىمىتېرىغا دەلىللەش مەغلۇپ بولد�
 msgid "The connection was deleted from settings"
 msgstr "بۇ ئۇلىنىش تەڭشەكتىن ئۆچۈرۋىتىلىپتۇ"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "قىزىق نۇقتىا ئېچىلىۋاتىدۇ"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "%qغا ئۇلىنىۋاتىدۇ"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "قىزىق نۇقتا ھەمبەھرىلەندى"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%qغا ئۇلاندى"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "قىزىق نۇقتا تاقالدى"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "قىزىق نۇقتىنى ئورتاقلىشالمىدى ،dnsmasq غا مۇناسىۋەتلىك تەڭشەكلەرنى تەكشۈرۈپ "
 "بېقىڭ"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qغا ئۇلانمىدى، سىمسىز روتېرغا يېقىنلىشىپ سىناپ بېقىڭ"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qغا ئۇلانمىدى. روتېرنى ياكى تور سىمىنى تەكشۈرۈڭ"
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "ئۇلانمىدى، %qغا كىرەلمىدى، پارول خاتا"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "%qغا ئۇلاش ئۈچۈن پارول كېتىدۇ"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "%q 802.11 WLAN تورنى تاپالمىدى"
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "نامەلۇم"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "ئايروپىلان ھالىتى قوزغىتىلدى."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "ئۇلانمىدى"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "زىيارەت نۇقتىسى شەكلى سىزنىڭ ئۈسكۈنىڭىزنى قوللىمايدۇ"
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "بۇ ئۈسكۈنىنىڭ سىمسىز تور كارتىسى تاقاق ئىكەن، سىمسىز تور ئۇزچاتنى ئىچىڭ"
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "سىستېما ۋاكالەتچىلىك تەڭشەش مۇۋەپپەقىيەتلىك بولدى"
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "سىستېما ۋاكالەتچىلىكى بىكار قىلىندى"
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "ئۇلاندى"
 
@@ -1020,46 +1023,46 @@ msgstr "ئۇلاندى"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "«%s»سىستېما بىخەتەرلىك تەكشۈرۈشىدىن ئۆتەلمىدى، ئىجرا قىلغىلى بولمايدۇ"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "باتارېيەدە توك تۈگىدى"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "باتارېيەدە توك ئاز قالدى، توكقا چېتىڭ"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "توك تەڭشىكىدە ئۆزگىرىش بولدى"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "«خاتىرە كومپيۇتېرنىڭ ئېكرانى يېپىلغاندا»"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "«قوزغىتىش كۇنۇپكىسىنى باسقاندا»"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "تاقاشقا ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "كۈتۈش ھالىتىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "ئۇيقۇ ھالىتىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "ئېكراننى تاقاشقا ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "ھېچقانداق مەشغۇلات قىلماسلىققا ئۆزگەرتىش"
 

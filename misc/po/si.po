@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Thejan Rajapakshe <coder.clix@gmail.com>, 2020
-# Roshan Karunarathna <rkvisit@gmail.com>, 2020
+# Roshan Karunarathna <rkvisit@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2021\n"
 "Language-Team: Sinhala (https://www.transifex.com/linuxdeepin/teams/3617/si/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -194,8 +194,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "%q සාර්ථකව සම්බන්ධ කර ඇත."
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q විසන්ධි විය"
 
@@ -473,7 +473,7 @@ msgstr "වත්මන් වැඩ අවකාශයේ පවතින ක�
 msgid "Display workspace"
 msgstr "වැඩ අවකාශය පෙන්වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr ""
 
@@ -548,6 +548,10 @@ msgstr "%q සාර්ථකව ඉවත් කර ඇත."
 msgid "Failed to uninstall %q"
 msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -585,7 +589,7 @@ msgstr "උමං TLS"
 msgid "Protected EAP"
 msgstr "ආරක්ෂිත EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "රැහැන් සම්බන්ධතාවය"
 
@@ -595,8 +599,8 @@ msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "ජාලය"
 
@@ -860,7 +864,7 @@ msgstr "ප්‍රධාන උපාංගය වෙනස් විය"
 
 #: ../../network/state_handler.go:102
 msgid "Management status of parent device changed"
-msgstr "මව් උපාංගයේ කළමනාකරණ තත්ත්වය වෙනස් විය"
+msgstr "ප්‍රධාන උපාංගයේ කළමනාකරණ තත්ත්වය වෙනස් විය"
 
 #: ../../network/state_handler.go:105
 msgid "Network cable is unplugged"
@@ -928,86 +932,86 @@ msgstr "VPN සේවාදායකය-server සත්‍යාපනය ක�
 msgid "The connection was deleted from settings"
 msgstr "සැකසුම් වලින් සම්බන්ධතාවය මකා දමන ලදි"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "හොට්ස්පොට් සක්‍රීය කරමින්"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "%q සම්බන්ධ වෙමින් පවතී"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "හොට්ස්පොට් සක්‍රීයයි"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q සම්බන්ධයි"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "හොට්ස්පොට් අක්‍රීයයි"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "හොට්ස්පොට් බෙදා ගැනීමට නොහැක, කරුණාකර dnsmasq සැකසුම් පරීක්ෂා කරන්න"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර රැහැන් රහිත රවුටරයට සමීපව සිටින්න"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර ඔබේ රවුටරය හෝ ජාල කේබලය පරීක්ෂා කරන්න."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "සම්බන්ධතාවය අසාර්ථක විය, %q සම්බන්ධ කිරීමට නොහැකි විය, වැරදි මුරපදයකි"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "%q සම්බන්ධ කිරීමට මුරපදය අවශ්‍ය වේ"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "නොදත් "
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "ගුවන් යානා ප්‍රකාරය සක්‍රීය කර ඇත."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "විසන්ධි වි ඇත"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "ප්‍රවේශ උපාංග ප්‍රකාරයට මෙම උපාංගය සහාය නොදක්වයි."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "WLAN කාඩ්පතේ දෘඩාංග ස්විචය අක්‍රියයි, කරුණාකර අවශ්‍ය පරිදි ක්‍රියාත්මක "
 "කරන්න."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "පද්ධති ප්‍රොක්සිය සාර්ථකව සකසා ඇත."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "පද්ධති ප්‍රොක්සි අවලංගු කර ඇත."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "සම්බන්ධයි"
 
@@ -1016,46 +1020,46 @@ msgstr "සම්බන්ධයි"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" සත්‍යාපනය සමත් නොවූ අතර දැන් ක්‍රියාත්මක කළ නොහැක"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "බැටරි ධාරිතාවය ඉතා අඩුය"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "අඩු බැටරි ධාරිතාවක් පවතී, කරුණාකර විදුලි සැපයුමක් ලබා දෙන්න"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "බල සැකසුම් වෙනස් විය"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "පියන වසා ඇති විට,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "බල බොත්තම එබීමේදී,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "ඔබේ පරිගණකය වසා දමනු ඇත"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "ඔබේ පරිගණකය අත්හිටුවනු ඇත"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "ඔබගේ මොනිටරය ක්‍රියා විරහිත වනු ඇත"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "එය ඔබේ පරිගණකයට කිසිවක් නොකරනු ඇත"
 

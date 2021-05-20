@@ -6,20 +6,20 @@
 # Translators:
 # Vahap Karataş <k.vahap@gmail.com>, 2020
 # Kaya Zeren <kayazeren@gmail.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Cindy0514, 2020
-# yakup <mutouk@yandex.ru>, 2020
-# Serdar Sağlam <teknomobil@msn.com>, 2020
-# meda <ademcal@yahoo.com>, 2020
+# yakup <mutouk@yandex.ru>, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Cindy0514, 2021
+# Serdar Sağlam <teknomobil@msn.com>, 2021
+# meda <ademcal@yahoo.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: meda <ademcal@yahoo.com>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: meda <ademcal@yahoo.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,8 +199,8 @@ msgstr "%q alım zaman aşımına uğradı"
 msgid "Connect %q successfully"
 msgstr "%q bağlantısı başarılı"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q bağlantısı kesildi"
 
@@ -478,7 +478,7 @@ msgstr "Mevcut çalışma alanının pencerelerini görüntüle"
 msgid "Display workspace"
 msgstr "Çalışma alanını görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Monitörleri değiştir"
 
@@ -551,6 +551,10 @@ msgstr "%q kaldırıldı"
 msgid "Failed to uninstall %q"
 msgstr "%q kaldırılamadı"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr "Kablolu bağlantı"
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -588,7 +592,7 @@ msgstr "Tünellenmiş TLS"
 msgid "Protected EAP"
 msgstr "Korumalı EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Kablolu Bağlantı"
 
@@ -598,8 +602,8 @@ msgstr "Uygulama vekil sunucusu başarıyla ayarlandı"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Ağ"
 
@@ -711,7 +715,7 @@ msgstr "AutoIP hizmeti sonlandırıldı veya başarısız oldu"
 
 #: ../../network/state_handler.go:61
 msgid "Dialing failed due to busy lines"
-msgstr "Meşgul hatlar nedeniyle arama başarısız"
+msgstr "Hatlar meşgul olduğundan arama başarısız"
 
 #: ../../network/state_handler.go:62
 msgid "Dialing failed due to no dial tone"
@@ -739,7 +743,7 @@ msgstr "Belirtilen GSM APN seçilemedi"
 
 #: ../../network/state_handler.go:68
 msgid "No networks searched"
-msgstr "Herhangi bir şebeke aranmadı"
+msgstr "Hiçbir ağ aranmadı"
 
 #: ../../network/state_handler.go:69
 msgid "Network registration was denied"
@@ -937,85 +941,85 @@ msgstr "VPN sunucusunda kimlik doğrulanamadı"
 msgid "The connection was deleted from settings"
 msgstr "Bağlantı ayarlardan silindi"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Erişim noktasını etkinleşir"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Bağlanıyor %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Erişim noktası etkin"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q bağlı"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Erişim noktası devre dışı"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Erişim noktası paylaşılamadı, dnsmasq ayarlarını denetle"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%q bağlanılamıyor, lütfen kablosuz yönlendiriciye yakın tutun"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q bağlantısı kurulamadı, lütfen erişim noktanızı ya da ağ kablonuzu "
 "denetleyin."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Bağlantı kurulamadı, parola yanlış olduğundan %q bağlantısı kurulamadı"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "%q bağlanmak için parola gerekli"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "%q  802.11 WLAN ağı bulunamadı"
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Uçak kipi etkinleştirildi."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Bağlantı kesildi"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Erişim Noktası kipi bu aygıt tarafından desteklenmiyor."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "Kablosuz ağ aygıtının donanım anahtarı kapalı, lütfen açın."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Sistem vekil sunucusu ayarlandı."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Sistem vekil sunucu iptal edildi."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Bağlandı"
 
@@ -1024,46 +1028,46 @@ msgstr "Bağlandı"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" sistem güvenlik doğrulamasını geçemedi ve şimdi çalıştırılamıyor"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "Pil kritik derecede düşük"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Düşük pil düzeyi, lütfen fişe takın"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "Güç ayarları değişti"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "Kapak kapatıldığında,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "Güç düğmesine basılınca,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "bilgisayarınız kapanacak"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "bilgisayarınız askıya alınacak"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "bilgisayarınız hazırda bekleyecek"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "ekranınız kapanacak"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "bilgisayarınıza hiçbir şey yapmaz"
 

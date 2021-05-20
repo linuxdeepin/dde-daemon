@@ -4,27 +4,28 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+# Артем Рудаковский <crja72@gmail.com>, 2020
 # Transifex Bot <>, 2020
-# Анатолий Валерианович <ffox909@mail.ru>, 2020
-# crja72 <crja72@gmail.com>, 2020
-# Serge Kukharski, 2020
-# Cindy0514, 2020
-# Владимир Киреев <vovan_kireev@mail.ru>, 2020
-# gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2020
-# Basil Russu <basil_russu@hotmail.com>, 2020
-# Валерий Владимирович, 2020
-# Artem Kulikov <artem.job.kulikov@gmail.com>, 2020
-# Vladislav Evseev <poryvay.vladik@gmail.com>, 2020
 # Dober Man, 2020
+# Анатолий Валерианович <ffox909@mail.ru>, 2020
+# Serge Kukharski, 2020
+# Basil Russu <basil_russu@hotmail.com>, 2021
+# Artem Kulikov <artem.job.kulikov@gmail.com>, 2021
+# Валерий Владимирович, 2021
+# Cindy0514, 2021
+# Vladislav Evseev <poryvay.vladik@gmail.com>, 2021
+# gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2021
+# Snow fire R <iceler75@gmail.com>, 2021
+# Владимир Киреев <vovan_kireev@mail.ru>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Dober Man, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Владимир Киреев <vovan_kireev@mail.ru>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -205,8 +206,8 @@ msgstr "Время получения %q  истекло"
 msgid "Connect %q successfully"
 msgstr "%q соединено успешно"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q отсоединено"
 
@@ -290,7 +291,7 @@ msgstr "Принудительный Выход"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
-msgstr "Закрепить"
+msgstr "Док"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
@@ -306,7 +307,7 @@ msgstr "Недостаточно места на диске, пожалуйст�
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
-msgstr "Выбор Программ"
+msgstr "Запуск программ"
 
 #: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Terminal"
@@ -484,7 +485,7 @@ msgstr "Показать окна текущего рабочего стола"
 msgid "Display workspace"
 msgstr "Отобразить рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Переключить мониторы"
 
@@ -560,6 +561,10 @@ msgstr "%q успешно удалён"
 msgid "Failed to uninstall %q"
 msgstr "Не удалось удалить %q"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr "Проводное соединение"
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -597,7 +602,7 @@ msgstr "Туннельный TLS "
 msgid "Protected EAP"
 msgstr "Защищенный EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Проводное Соединение"
 
@@ -607,8 +612,8 @@ msgstr "Прокси-сервер приложения успешно устан
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Сеть"
 
@@ -934,87 +939,87 @@ msgstr "Аутентификация на VPN-сервере не удалась
 msgid "The connection was deleted from settings"
 msgstr "Соединение было удалено из настроек."
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Включение точки доступа"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Подключение %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Точка доступа включена"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q соединено"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Точка доступа отключена"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Не удалось предоставить точку доступа, проверьте настройки dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Не удалось соединить %q, пожалуйста держитесь ближе к беспроводному "
 "маршрутизатору."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не удалось соединить %q, пожалуйста проверьте ваш беспроводной маршрутизатор"
 " или сетевой кабель."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Не удалось подключиться, не удалось соединить %q, неправильный пароль"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Для подключения к %q требуется пароль"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "%q 802.11 WLAN сеть не найдена"
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Неизвестный"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Включен режим полёта."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Отключено"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Режим точки доступа не поддерживается этим устройством."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "Аппаратный переключатель WLAN-карты выключен, включите если требуется."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Системный прокси установлен успешно."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Системный прокси был отменен."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Подключено"
 
@@ -1025,46 +1030,46 @@ msgstr ""
 "\"%s\" не прошел проверку безопасности системы и не может быть запущен "
 "сейчас"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "Критически низкий заряд батареи"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Низкий заряд батареи, пожалуйста подключите питание"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "Настройки питания изменены"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "Когда крышка закрыта,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "При нажатии на кнопку питания,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "Ваш компьютер выключится"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "Ваш компьютер перейдет в режим ожидания"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "Ваш компьютер будет находится в спящем режиме"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "Ваш монитор будет выключен"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "Ничего не делать с компьютером"
 

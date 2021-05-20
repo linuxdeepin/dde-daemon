@@ -6,28 +6,28 @@
 # Translators:
 # Ldm Public <ldmpub@gmail.com>, 2020
 # FFXP <jeremy.pfenning@ironmail.fr>, 2020
-# Neltus <neltus1@gmail.com>, 2020
-# zwpwjwtz <zwpwjwtz@126.com>, 2020
-# Aestan <anthony.margerand@protonmail.com>, 2020
-# Joselito 8, 2020
 # Charles Monzat <c.monzat@laposte.net>, 2020
+# Aestan <anthony.margerand@protonmail.com>, 2020
 # Tristan Denni <tristan.denni@viacesi.fr>, 2020
+# Neltus <neltus1@gmail.com>, 2020
 # Sami G.-D., 2020
+# zwpwjwtz <zwpwjwtz@126.com>, 2020
 # Kristien <kristien@mailo.com>, 2020
+# Joselito 8, 2020
 # Jean-Philippe Paumier <paumierj@hotmail.com>, 2020
-# Cindy0514, 2020
-# n1coc4cola <n1coc4cola@gmail.com>, 2020
-# lexross <mais@techie.com>, 2020
-# roxfr <roxfr@outlook.fr>, 2020
+# ba56da5c479245883255d97580e861b5_327de87 <cc1517672f7d7ecc8d2a76b655e9f30b_134975>, 2021
+# Cindy0514, 2021
+# n1coc4cola <n1coc4cola@gmail.com>, 2021
+# roxfr <roxfr@outlook.fr>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: roxfr <roxfr@outlook.fr>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: roxfr <roxfr@outlook.fr>, 2021\n"
 "Language-Team: French (https://www.transifex.com/linuxdeepin/teams/3617/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,8 +209,8 @@ msgstr "Réception de %q a expiré"
 msgid "Connect %q successfully"
 msgstr "%q connecté avec succès"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q déconnecté"
 
@@ -366,7 +366,7 @@ msgstr "Basculer entre les effets de fenêtres"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Fast Screen Off"
-msgstr "Extinction d'écran rapide"
+msgstr "Extinction rapide écran"
 
 #: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "System Monitor"
@@ -406,7 +406,7 @@ msgstr "Basculer à l'espace de travail de gauche"
 
 #: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
-msgstr "Basculer sur l'espace de travail de droite"
+msgstr "Basculer à l'espace de travail de droite"
 
 #: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
@@ -414,7 +414,7 @@ msgstr "Basculer à l'espace de travail supérieur"
 
 #: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
-msgstr "Basculer sur l'espace de travail inférieur"
+msgstr "Basculer à l'espace de travail inférieur"
 
 #: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
@@ -422,7 +422,7 @@ msgstr "Basculer entre les fenêtres similaires"
 
 #: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
-msgstr "Basculer entre les fenêtres similaires dans le sens inverse"
+msgstr "Basculer entre les fenêtres similaires en le sens inverse"
 
 #: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
@@ -488,7 +488,7 @@ msgstr "Afficher l'espace de travail actuel"
 msgid "Display workspace"
 msgstr "Afficher l'espace de travail"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Changer de moniteur"
 
@@ -565,6 +565,10 @@ msgstr "%q désinstallé avec succès"
 msgid "Failed to uninstall %q"
 msgstr "Échec de la désinstallation de %q"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr "Connexion filaire"
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -602,7 +606,7 @@ msgstr "TLS par tunnel"
 msgid "Protected EAP"
 msgstr "EAP protégé"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Connexion filaire"
 
@@ -612,8 +616,8 @@ msgstr "Le proxy d'application est défini avec succès"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Réseau"
 
@@ -953,91 +957,91 @@ msgstr "L'authentification au serveur VPN a échoué"
 msgid "The connection was deleted from settings"
 msgstr "La connexion a été supprimée des paramètres"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Activation du point d'accès"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Connexion %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Point d'accès activé"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q connecté"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Point d'accès désactivé"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Impossible de partager le point d'accès, veuillez vérifier les paramètres de"
 " dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Impossible de se connecter à %q, veuillez-vous rapprocher du routeur sans "
 "fil."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Impossible de se connecter à %q, veuillez vérifier votre routeur ou votre "
 "câble internet."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Échec de la connexion, impossible de connecter %q, mot de passe incorrect"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
-msgstr "Mot de passe requis pour se connecter à %q"
+msgstr "Mot de passe requis pour se connecter %q"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "Le réseau WLAN 802.11 %q est introuvable"
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Inconnu"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Mode avion activé."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Déconnecté"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Le mode point d'accès n'est pas supporté par ce périphérique."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "Le connecteur de la carte WIFI est désactivé, veuillez l'activer lorsque "
 "nécessaire."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Le proxy a été réglé avec succès."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Le proxy a été annulé."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Connecté"
 
@@ -1048,46 +1052,46 @@ msgstr ""
 "\"%s\" n'a pas passé la vérification de sécurité du système et ne peut pas "
 "s'exécuter maintenant"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "Niveau de batterie critique"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Batterie faible, veuillez brancher votre appareil"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "Paramètres d'énergie changée"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "Lorsque le couvercle est fermé,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "Lorsque vous appuyez sur le bouton d'alimentation,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "votre ordinateur va s'éteindre"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "L'ordinateur se mettra en veille "
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
-msgstr "votre ordinateur se mettra en hibernation"
+msgstr "votre ordinateur se mettra en veille prolongée"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "votre écran s'éteindra"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "ne rien faire à l'ordinateur"
 

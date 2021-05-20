@@ -5,16 +5,17 @@
 # 
 # Translators:
 # tsewang baljor <bdcwbj@163.com>, 2020
-# yeshe lhamo <981611630@qq.com>, 2020
+# yeshe lhamo <981611630@qq.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: yeshe lhamo <981611630@qq.com>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +61,7 @@ msgstr "སྤྱོད་མཁན་མིང་གི་རིང་ཚད་
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
-msgstr ""
+msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་བྱེད་པར་ཐོ་འདོར་རྗེས་གཞི་ནས་གོ་ཆོད་པ་ཡིན།"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
@@ -68,11 +69,11 @@ msgstr "སྒྲིག་འགོད་བྱས་ཟིན།"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
-msgstr ""
+msgstr "ཏོག་ཙམ་ནས་ཐོ་འདོར་བ།"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr ""
+msgstr "ལམ་སེང་ཐོ་འདོར་བ།"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -140,7 +141,7 @@ msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 
 #: ../../bluetooth/obex_agent.go:345 ../../lastore/lastore.go:255
 msgid "Cancel"
-msgstr "འདོར་བ། "
+msgstr "ཕྱིར་འཐེན།"
 
 #: ../../bluetooth/obex_agent.go:352
 msgid "Receiving %q files from %q"
@@ -194,8 +195,8 @@ msgstr "%qལེན་པ་དུས་ཚོད་ལས་བརྒལ་བ�
 msgid "Connect %q successfully"
 msgstr "%qའབྲེལ་ཐུབ་པ།"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%qབཅད་ཟིན།"
 
@@ -473,7 +474,7 @@ msgstr "མིག་སྔའི་ལས་ཀ་བྱེད་ཁུལ་ག
 msgid "Display workspace"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 
@@ -490,7 +491,7 @@ msgstr ""
 
 #: ../../langselector/locale.go:160
 msgid "Changing system language, please wait..."
-msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
+msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་གཏོགས་ཙམ་སྒུག་རོགས།"
 
 #: ../../langselector/locale.go:161
 msgid "System language changed, please log out and then log in"
@@ -542,11 +543,15 @@ msgstr "རྒྱུད་ཁོངས་ཀྱི་པར་གཞི་གས
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
-msgstr "%qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
+msgstr " %qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
+
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
@@ -585,7 +590,7 @@ msgstr "ཕུག་ལམ་TLS"
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
@@ -595,8 +600,8 @@ msgstr "ཉེར་སྤྱོད་ལས་ཚབ་སྒྲིག་འག
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "དྲ་བ། "
 
@@ -637,7 +642,7 @@ msgstr "IPསྒྲིག་འགོད་གོ་མི་ཆོད།"
 
 #: ../../network/state_handler.go:45
 msgid "Passwords were required but not provided"
-msgstr "གསང་ཨང་དགོས་པས་མཁོ་འདོན་བྱས་མི་འདུག"
+msgstr "གསང་ཨང་དགོས་ཀྱི་འདུག་པས་མཁོ་འདོན་བྱས་མི་འདུག"
 
 #: ../../network/state_handler.go:46
 msgid ""
@@ -651,7 +656,7 @@ msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་སྡེབ་སྒྲ
 
 #: ../../network/state_handler.go:48
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་རྒྱུན་འགལ་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
+msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་ནམ་རྒྱུན་དང་མི་འདྲ་བར་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
 
 #: ../../network/state_handler.go:49
 msgid "The 802.1X supplicant took too long time to authenticate"
@@ -667,7 +672,7 @@ msgstr "PPPཞབས་ཞུ་ཆད་པ།"
 
 #: ../../network/state_handler.go:52
 msgid "The PPP service quitted or failed unexpectedly"
-msgstr "PPPཞབས་ཞུ་རྒྱུན་འགལ་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
+msgstr "PPPཞབས་ཞུ་ནམ་རྒྱུན་དང་མི་འདྲ་བར་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
 
 #: ../../network/state_handler.go:53
 msgid "The DHCP service failed to start within the allowed time"
@@ -675,7 +680,7 @@ msgstr "DHCPཞབས་ཞུ་དུས་བཅད་ནང་འགོ་�
 
 #: ../../network/state_handler.go:54
 msgid "The DHCP service reported an unexpected error"
-msgstr "DHCPཞབས་ཞུས་རྒྱུན་འགལ་ནོར་འཁྲུལ་ཞིག་སྙན་ཞུ་བྱས་འདུག"
+msgstr "DHCPཞབས་ཞུས་ནམ་རྒྱུན་དང་མི་འདྲ་བའི་ནོར་འཁྲུལ་ཞིག་སྙན་ཞུ་བྱས་འདུག"
 
 #: ../../network/state_handler.go:55
 msgid "The DHCP service quitted or failed unexpectedly"
@@ -723,7 +728,7 @@ msgstr "འབྲེལ་མཐུད་བྱེད་མ་ཐུབ།"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
-msgstr "ལེགས་སྒྲིག་དཀྲོལ་ཆས་འགོ་འཛུགས་བྱེད་མ་ཐུབ་པ།"
+msgstr "དཀྲོལ་ཆས་འགོ་འཛུགས་ལེགས་སྒྲིག་བྱེད་མ་ཐུབ་པ།"
 
 #: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
@@ -747,7 +752,7 @@ msgstr "GSMདྲ་རྒྱ་ཐོ་འགོད་བྱེད་མ་ཐ
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "PINཨང་གྲངས་ཞིབ་བཤེར་བྱེད་མ་ཐུབ།"
+msgstr "PINཞིབ་བཤེར་བྱེད་མ་ཐུབ།"
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
@@ -783,7 +788,7 @@ msgstr "802.1xསྤྱོད་མཁན་ཕྱོགས་ད་ལྟ་ས
 
 #: ../../network/state_handler.go:81
 msgid "The modem could not be found"
-msgstr "ལེགས་སྒྲིག་དཀྲོལ་ཆས་མ་རྙེད་པ།"
+msgstr "དཀྲོལ་ཆས་ལེགས་སྒྲིག་མ་རྙེད་པ།"
 
 #: ../../network/state_handler.go:82
 msgid "The Bluetooth connection timed out or failed"
@@ -795,7 +800,7 @@ msgstr "GSMབཅུག་མེད་པའི་ལེགས་སྒྲིག
 
 #: ../../network/state_handler.go:84
 msgid "GSM Modem's SIM PIN required"
-msgstr "GSMལེགས་སྒྲིག་དཀྲོལ་ཆས་ཀྱི་SIMགཱ་ཡི་PINཨང་གྲངས་དགོས།"
+msgstr "GSMལེགས་སྒྲིག་དཀྲོལ་ཆས་ཀྱི་SIMགཱ་ཡི་PINདགོས།"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
@@ -923,86 +928,86 @@ msgstr "VPNཞབས་ཞུ་འཕྲུལ་ཆས་ཕམ་པའི་
 msgid "The connection was deleted from settings"
 msgstr "འབྲེལ་མཐུད་འདི་སྒྲིག་འགོད་ལས་བསུབས་ཟིན།"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "ཚ་གནས་ཁ་འབྱེད་པའི་ཚོད་ལྟ་བྱེད་བཞིན་པ།"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "འབྲེལ་མཐུད་བྱེད་བཞིན་ཡོད་%q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་ཕྱེ་ཡོད།"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "འབྲེལ་མཐུད་ཟིན་%q"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་བརྒྱབ་ཟིན།"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "ཚ་གནས་མཉམ་སྤྱོད་བྱེད་མི་ཐུབ་པས་dnsmasq "
 "དང་འབྲེལ་བའི་སྒྲིག་ཆས་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qསྣོན་ཐུབ་མེད་པས། སྐུད་མེད་ལམ་སྟོན་ཆས་དང་ཉེ་འབྲེལ་ཚོད་ལྟ་བྱེད།"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qསྣོན་ཐུབ་མེད་པས། ལམ་སྟོན་ཆས་སམ་དྲ་སྐུད་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "འབྲེལ་མཐུད་མི་ཐུབ། %qནང་དུ་བཅུག་མི་ཐུབ། གསང་ཨང་ནོར་འདུག"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "%qའབྲེལ་བར་གསང་ཨང་དགོས།"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "%q 802.11 WLANདྲ་རྒྱ་རྙེད་ཐབས་མེད།"
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "རྒྱུ་མཚན་མ་ཤེས།"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "འཕུར་སྐྱོད་དཔེ་རྣམ་འགོ་བསླངས་པ།"
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "ཆད་པ།"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "སྒྲིག་ཆས་འདིས་ཚ་གནས་ལ་རྒྱབ་སྐྱོར་མི་བྱེད།"
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "སྐུད་མེད་དྲ་གཱ་ཡི་སྲ་ཆས་གློག་སྒོ་བརྒྱབ་ཟིན། "
 "གལ་སྲིད་སྐུད་མེད་བེད་སྤྱོད་བྱེད་ཚེ་སྔོན་ལ་གློག་སྒོ་ཕྱེ།"
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "རྒྱུད་ཁོངས་ལས་ཚབ་སྒྲིག་འགོད་ལེགས་གྲུབ་བྱུང་།"
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "རྒྱུད་ཁོངས་ལས་ཚབ་འདོར་ཟིན།"
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "སྦྲེལ་ཟིན། "
 
@@ -1013,46 +1018,46 @@ msgstr ""
 "“%s”རྒྱུད་ཁོངས་བརྒྱུད་དེ་བདེ་འཇགས་ར་སྤྲོད་བྱས་མེད་པས། "
 "འཁོར་སྐྱོད་བྱེད་ཐབས་བྲལ།"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "གློག་རྫོགས་ཟིན།"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
-msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་རོགས།"
+msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་དགོས།"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "གློག་ཁུངས་སྒྲིག་འགོད་སྒྱུར་བ།"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "ལག་ཁྱེར་གློག་ཀླད་ཁ་བརྒྱབ་སྐབས།"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "གློག་ཁུངས་ཀྱི་བསད་སྤར་མནན་སྐབས།"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "སྒུག་སྡོད་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "མལ་གསོ་ཞེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "མངོན་ཆས་སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "བཀོལ་སྤྱོད་གང་ཡང་བྱས་མེད་པར་བཟོ་བཅོས་བྱེད།"
 

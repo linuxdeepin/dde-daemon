@@ -7,17 +7,17 @@
 # Adrián Ramos García <adrian.ramos.garcia.93@gmail.com>, 2020
 # Rubén <feiticeiro2010@hotmail.es>, 2020
 # Cindy0514, 2020
-# David Rebolo Magariños <drgaga345@gmail.com>, 2020
-# Xurxo Guerra Perez <xguerrap@gmail.com>, 2020
+# Xurxo Guerra Perez <xguerrap@gmail.com>, 2021
+# David Rebolo Magariños <drgaga345@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Xurxo Guerra Perez <xguerrap@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: David Rebolo Magariños <drgaga345@gmail.com>, 2021\n"
 "Language-Team: Galician (Spain) (https://www.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
-msgstr "Por favor, insira un contrasinal de máis de 8 caracteres"
+msgstr "Por favor, introduce un contrasinal de máis de 8 caracteres"
 
 #: ../../accounts/checkers/password.go:55
 msgid ""
@@ -39,7 +39,7 @@ msgstr ""
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
-msgstr "O nome de usuario non pode estar baleiro"
+msgstr "O nome de usuario non pode estar vacío"
 
 #: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
@@ -55,11 +55,11 @@ msgstr "O nome xa existe"
 
 #: ../../accounts/checkers/username.go:76
 msgid "The username has been used by system"
-msgstr "O nome de usuario está en uso polo sistema"
+msgstr "O nome de usuario está sendo usado polo sistema"
 
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
-msgstr "O nome de usuario ten de ter entre 3 e 32 caracteres"
+msgstr "O nome de usuario debe estar entre 3 e 32 caracteres"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -88,7 +88,7 @@ msgstr "Escala de visualización"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "Fallou a verificación da pegada dixital"
+msgstr "Erro na verificación por pegada dixital"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
@@ -198,8 +198,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "Conectar %q correctamente"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "%q desconectado"
 
@@ -238,7 +238,7 @@ msgstr "Traballo"
 
 #: ../../calendar/module.go:128 ../../calendar/type.go:30
 msgid "Life"
-msgstr "Persoal"
+msgstr "Vida"
 
 #: ../../calendar/module.go:129 ../../calendar/type.go:35
 msgid "Other"
@@ -246,7 +246,7 @@ msgstr "Outros"
 
 #: ../../calendar/scheduler.go:588
 msgid "One day before start"
-msgstr "Un día antes do comezo"
+msgstr "Un día antes de comezar"
 
 #: ../../calendar/scheduler.go:589 ../../calendar/scheduler.go:594
 #: ../../calendar/scheduler.go:602 ../../calendar/scheduler.go:606
@@ -255,19 +255,19 @@ msgstr "Pechar"
 
 #: ../../calendar/scheduler.go:593
 msgid "Remind me tomorrow"
-msgstr "Lembrarme mañá"
+msgstr "Recórdame mañá"
 
 #: ../../calendar/scheduler.go:601
 msgid "Remind me later"
-msgstr "Lembrarme máis tarde"
+msgstr "Recórdamo máis tarde"
 
 #: ../../calendar/scheduler.go:611
 msgid "Schedule Reminder"
-msgstr "Programar recordatorio"
+msgstr "Recordatorio da programación"
 
 #: ../../calendar/type.go:40
 msgid "Festival"
-msgstr "Festival"
+msgstr "Festividade"
 
 #: ../../dock/app_entry_menu.go:102
 msgid "Open"
@@ -279,7 +279,7 @@ msgstr "Pechar todo"
 
 #: ../../dock/app_entry_menu.go:125
 msgid "Force Quit"
-msgstr "Forzar a saída"
+msgstr "Forzar a saír"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
@@ -287,7 +287,7 @@ msgstr "Doca"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr "Quitar da doca"
+msgstr "Desbordar"
 
 #: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
@@ -477,7 +477,7 @@ msgstr "Amosar as xanelas do espazo de traballo actual"
 msgid "Display workspace"
 msgstr "Amosar o espazo de traballo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Cambiar monitores"
 
@@ -551,6 +551,10 @@ msgstr "%q eliminouse correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Erro ao desinstalar %q"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -588,7 +592,7 @@ msgstr "TLS"
 msgid "Protected EAP"
 msgstr "EAP protexido"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Conexión con fíos"
 
@@ -598,8 +602,8 @@ msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Rede"
 
@@ -932,85 +936,85 @@ msgstr "Fallou a autenticación ao servidor VPN"
 msgid "The connection was deleted from settings"
 msgstr "A conexión eliminouse da configuración"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Habilitar punto de acceso"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Conectando %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "Punto de acceso habilitado"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q conectado"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Punto de acceso desactivado"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Non se pode compartir un punto de acceso, comprobe a configuración de "
 "dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Non se puido conectar% q, mantéñase máis preto do router sen fíos"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Non se puido conectar% q, comproba o enrutador ou o cable neto."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Fallou a conexión e non se puido conectar% q, contrasinal incorrecto"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "O contrasinal é necesario para conectar% q"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Descoñecido"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Modo avión activado."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Desconectado"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "O modo punto de acceso non está soportado por este dispositivo."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "O interruptor físico da tarxeta WLAN está en apagado, por favor encendao."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Proxy configurado con éxito."
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Cancelouse a configuración do proxy."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Conectado"
 
@@ -1021,46 +1025,46 @@ msgstr ""
 "\"%s\" non superou a verificación de seguridade do sistema e non se pode "
 "executar agora"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "Batería moi baixa"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Batería baixa, conécteo"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "A configuración de enerxía cambiou"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "Cando a tapa está pechada,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "Cando presionas o botón de acendido,"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "o teu computador apagarase"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "o teu computador suspenderase"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "o teu computador hibernará"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "o teu monitor apagarase"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "Non fará nada ao teu computador"
 

@@ -8,9 +8,9 @@
 # LNDDYL, 2020
 # Julian Lai <laichiaheng@outlook.com>, 2020
 # jjzrh2 <jjzrh2@126.com>, 2020
-# 凡凡不想平凡 <freddy4212@gmail.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
 # byStarTW (pan93412) <pan93412@gmail.com>, 2020
+# 凡凡不想平凡 <freddy4212@gmail.com>, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Cindy0514, 2021
 # 
 #, fuzzy
@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -198,8 +198,8 @@ msgstr "接收%q超時"
 msgid "Connect %q successfully"
 msgstr "成功連線至 %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
 msgstr "已斷開到 %q 的連線"
 
@@ -477,7 +477,7 @@ msgstr "僅顯示目前工作區視窗"
 msgid "Display workspace"
 msgstr "顯示工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "多屏切換"
 
@@ -548,6 +548,10 @@ msgstr "%q 解除安裝成功"
 msgid "Failed to uninstall %q"
 msgstr "%q 解除安裝失敗"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr "有線連接"
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -585,7 +589,7 @@ msgstr "隧道 TLS"
 msgid "Protected EAP"
 msgstr "受保護 EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "有線網路"
 
@@ -595,8 +599,8 @@ msgstr "應用代理設定成功"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "網路"
 
@@ -745,7 +749,7 @@ msgstr "無法註冊請求的 GSM 網路"
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "PIN 檢查失敗。"
+msgstr "PIN 檢查失敗"
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
@@ -753,11 +757,11 @@ msgstr "設備必要韌體可能已丟失"
 
 #: ../../network/state_handler.go:74
 msgid "The device was removed"
-msgstr "裝置已移除。"
+msgstr "裝置已移除"
 
 #: ../../network/state_handler.go:75
 msgid "NetworkManager went to sleep"
-msgstr "NetworkManager 進入休眠狀態。"
+msgstr "NetworkManager 進入休眠狀態"
 
 #: ../../network/state_handler.go:76
 msgid "The device's active connection was removed or disappeared"
@@ -921,82 +925,82 @@ msgstr "驗證 VPN 伺服器失敗"
 msgid "The connection was deleted from settings"
 msgstr "此連線已從設定中刪除"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "正在啟用熱點"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "正在連線至 %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
 msgstr "已啟用熱點"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "已連線到 %q 網路"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "已停用熱點"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "無法分享熱點，請檢查 dnsmasq 設定"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "無法連線到 %q 網路，請離無線網路路由器更近點"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "無法連線到 %q 網路，請檢查路由器或網路線"
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "連線失敗：無法連線到 %q 網路，原因：密碼錯誤"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "連線至 %q 需要密碼"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "找不到%q 802.11 WLAN 網路"
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "未知"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "已開啟飛航模式。"
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "已斷線"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "裝置不支援存取點功能。"
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "無線網卡的硬體開關為關閉狀態，如要使用請先開啟。"
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "系統代理伺服器設定成功。"
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "系統代理伺服器已被取消。"
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "已連線"
 
@@ -1005,46 +1009,46 @@ msgstr "已連線"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”沒有通過系統安全驗證，無法執行"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "電量耗盡"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "電量剩餘不多，請接上電源"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "電源設定更改"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "“筆記本合蓋時”"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "“按電源按鈕時”"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "修改為關機"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "修改為待機"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "修改為休眠"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "修改為關閉顯示器"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "修改為無任何操作"
 

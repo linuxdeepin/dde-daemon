@@ -4,24 +4,24 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# RokX, 2020
-# andrej55 <andrej.marsetic@gmail.com>, 2020
-# Eva Černi <mini.muca000@gmail.com>, 2020
 # Tadej Logar <tadej.logar.101@gmail.com>, 2020
 # kloki <klokimass@gmail.com>, 2020
+# RokX, 2020
 # worm <thewormhole@gmail.com>, 2020
+# andrej55 <andrej.marsetic@gmail.com>, 2020
+# Eva Černi <mini.muca000@gmail.com>, 2020
 # Cindy0514, 2020
-# Gorzy Gorup <gorupgorazd@gmail.com>, 2020
-# Arnold Marko <arnold.marko@gmail.com>, 2020
+# Gorzy Gorup <gorupgorazd@gmail.com>, 2021
+# Arnold Marko <arnold.marko@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 13:17+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-05-20 15:09+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/linuxdeepin/teams/3617/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"Geslo mora vsebovati angleške črke (velikost črk je pomembna), številke ali "
+"Geslo mora vsebovati angleške črke (veliksot črk je pomembna), številke ali "
 "posebne simbole (~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts/checkers/username.go:64
@@ -63,7 +63,7 @@ msgstr "Uporabniško ime je uporabil sistem"
 
 #: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
-msgstr "Uporabniško ime mora imeti od 3 do 32 znakov"
+msgstr "Uporabniško ime mora vsebovati od 3 do 32 znakov"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -83,11 +83,11 @@ msgstr "Odjavi se sedaj"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
-msgstr "Nastavitve merila zaslona"
+msgstr "Nastavljanje spreminjanja velikosti"
 
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
-msgstr "Spreminjanje merila zaslona"
+msgstr "Spreminjanje velikosti prikaza"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -99,7 +99,7 @@ msgstr "Čas za preverjanje prstnih odtisov se je izteklo"
 
 #: ../../bluetooth/bluez_profile.go:30
 msgid "Serial port"
-msgstr "Serijski vmesnik"
+msgstr "Serijska vrata"
 
 #: ../../bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
@@ -135,11 +135,11 @@ msgstr "Dostop do imenika"
 
 #: ../../bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
-msgstr "Odjemalni strežnik telefonskega imenika"
+msgstr "Dostop do imenika stranke"
 
 #: ../../bluetooth/bluez_profile.go:40
 msgid "Message access"
-msgstr "Dostop do sporočil"
+msgstr "Prejeto sporočilo"
 
 #: ../../bluetooth/bluez_profile.go:41
 msgid "Message notification"
@@ -201,14 +201,14 @@ msgstr "Prejemanje %q je časovno poteklo"
 msgid "Connect %q successfully"
 msgstr "Povezovanje z %q je uspelo"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:339
-#: ../../network/state_handler.go:362
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
+#: ../../network/state_handler.go:357
 msgid "%q disconnected"
-msgstr "%q ni več povezan"
+msgstr "%q ni več povezano"
 
 #: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
-msgstr "Preveri, da %q je vklopljen in v dosegu."
+msgstr "Preveri, da %q je vklopen in v dosegu."
 
 #: ../../bluetooth/utils_notify.go:146
 msgid "Click here to connect to %q"
@@ -298,7 +298,7 @@ msgstr "Vsa okna"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
-msgstr "Premalo prostora na disku. Pravočasno ga očistite!"
+msgstr "Premajhen prostor na disku, prosim pravočasno očistite!"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
@@ -318,7 +318,7 @@ msgstr "Zakleni zaslon"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Prikaži/skrij sidrišče"
+msgstr "Prikaži/skrij pristan"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -330,19 +330,19 @@ msgstr "Okno terminala Quake"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "Posnetek zaslona"
+msgstr "Slika zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "Posnetek celega zaslona"
+msgstr "Slika celega zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
-msgstr "Posnetek okna"
+msgstr "Slika okna"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "Zajem zaslona z zamikom"
+msgstr "Zamakni zajem zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "File manager"
@@ -350,11 +350,11 @@ msgstr "Upravitelj datotek"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Disable Touchpad"
-msgstr "Onemogoči sledilno ploščico"
+msgstr "Onemogoči drsno ploščico"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "Switch window effects"
-msgstr "Preklopi učinke oken"
+msgstr "Preklopi okenske učinke"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Fast Screen Off"
@@ -366,7 +366,7 @@ msgstr "Nadzornik sistema"
 
 #: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Deepin Picker"
-msgstr "Deepin kapalka"
+msgstr "Kapalka Deepin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
@@ -478,9 +478,9 @@ msgstr "Prikaži okna na trenutni delovni površini."
 
 #: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
-msgstr "Prikaži delovne površine"
+msgstr "Prikaži delovna mesta."
 
-#: ../../keybinding/shortcuts/id_name_map.go:212
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Preklopi monitor"
 
@@ -510,7 +510,7 @@ msgstr "Neuspešno spreminjanje jezika sistema. Poskusite znova kasneje"
 
 #: ../../lastore/lastore.go:247
 msgid "Retry"
-msgstr "Ponovi"
+msgstr "Poskusi ponovno"
 
 #: ../../lastore/lastore.go:269
 msgid "Update Now"
@@ -535,9 +535,7 @@ msgstr "Neuspešno odstranjevanje programa"
 #: ../../lastore/notify.go:116
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
-msgstr ""
-"Da se izognete samodejnemu izklopu, se priklopite na električno omrežje za "
-"normalno posodobitev."
+msgstr "Da se izognete samodejnemu izklopu, vključite običajne posodobitve."
 
 #: ../../lastore/notify.go:121
 msgid "Package cache wiped"
@@ -555,10 +553,14 @@ msgstr "%q je uspešno odstranjen"
 msgid "Failed to uninstall %q"
 msgstr "Ni uspelo odstraniti %q"
 
+#: ../../network/manager.go:357
+msgid "Wired connection"
+msgstr ""
+
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
-msgstr "brez"
+msgstr "Nič"
 
 #: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
@@ -592,7 +594,7 @@ msgstr "Tunelirani TLS"
 msgid "Protected EAP"
 msgstr "Zaščiten EAP"
 
-#: ../../network/manager_connection.go:334
+#: ../../network/manager_connection.go:295
 msgid "Wired Connection"
 msgstr "Žična povezava"
 
@@ -602,8 +604,8 @@ msgstr "Uspešno nastavljanje programskega posrednika"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:195 ../../network/utils_notify.go:199
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:204
 msgid "Network"
 msgstr "Omrežje"
 
@@ -621,15 +623,15 @@ msgstr "Stanje naprave se je iz neznanih razlogov spremenilo"
 
 #: ../../network/state_handler.go:40
 msgid "The device is now managed"
-msgstr "Naprava je sedaj upravljena"
+msgstr "Naprava se zdaj upravlja"
 
 #: ../../network/state_handler.go:41
 msgid "The device is no longer managed"
-msgstr "Naprave se več ne upravlja"
+msgstr "Naprava se ne upravlja več"
 
 #: ../../network/state_handler.go:42
 msgid "The device has not been ready for configuration"
-msgstr "Naprava ni bila pripravljena za nastavljanje"
+msgstr "Naprava ni bila pripravljena na konfiguracijo"
 
 #: ../../network/state_handler.go:43
 msgid ""
@@ -894,7 +896,7 @@ msgstr "Neuspešna aktivacija VPN povezave"
 #: ../../network/state_handler.go:112
 msgid "The VPN connection state changed due to being disconnected by users"
 msgstr ""
-"Stanje VPN povezave se je spremenilo zaradi odklopa s strani uporabnikov"
+"Stanje VPN povezave se je spremenilo zaradi odklopa s strani upporabnikov"
 
 #: ../../network/state_handler.go:113
 msgid ""
@@ -933,83 +935,83 @@ msgstr "Avtentikacija strežnika VPN ni uspela"
 msgid "The connection was deleted from settings"
 msgstr "Povezava je bila izbrisana iz nastavitev"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
 msgstr "Vklop dostopne točke"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:256
 msgid "Connecting %q"
 msgstr "Povezovanje %q"
 
-#: ../../network/state_handler.go:263
-msgid "Hotspot enabled"
-msgstr "Dostopna točka je vklopljena"
-
 #: ../../network/state_handler.go:265
+msgid "Hotspot enabled"
+msgstr "Dostopna točka je omogočena"
+
+#: ../../network/state_handler.go:267
 msgid "%q connected"
 msgstr "%q povezano"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
 msgstr "Dostopna točka je izklopljena"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Deljenje vroče točke ni uspelo, prosim preverite nastavitve dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Ni mogoče povezati %q, prosimo približajte se brezžičnemu usmerjevalniku"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Ni mogoče povezati %q, prosim preverite svoj usmerjevalnik ali kabel."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Povezava %q ni uspela, napačno geslo"
 
-#: ../../network/state_handler.go:365
+#: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
 msgstr "Za povezovanje z %q je potrebno  geslo"
 
-#: ../../network/state_handler.go:367
+#: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "%q 802.11 WLAN omrežje ni bilo najdeno"
 
-#: ../../network/utils_dbus_nm.go:258
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Neznano"
 
-#: ../../network/utils_notify.go:183
+#: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
 msgstr "Način za letalo omogočen."
 
-#: ../../network/utils_notify.go:183 ../../network/utils_notify.go:187
-#: ../../network/utils_notify.go:191 ../../network/utils_notify.go:209
-#: ../../network/utils_notify.go:212 ../../network/utils_notify.go:301
+#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
+#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
+#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
 msgstr "Povezava prekinjena"
 
-#: ../../network/utils_notify.go:191
+#: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
 msgstr "Način dostopna točka ne podpira te naprava."
 
-#: ../../network/utils_notify.go:195
+#: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "Stikalo WLAN kartice je izklopljeno, vklopite ga."
 
-#: ../../network/utils_notify.go:199
+#: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
 msgstr "Povezava do namestniskega strežnika je bila uspešno nastavljena"
 
-#: ../../network/utils_notify.go:202
+#: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
 msgstr "Povezava do namestniskega strežnika je bila prekinjena."
 
-#: ../../network/utils_notify.go:206
+#: ../../network/utils_notify.go:208
 msgid "Connected"
 msgstr "Povezava vzpostavljena"
 
@@ -1020,46 +1022,46 @@ msgstr ""
 "\"%s\" ni prestalo sistemskega varnostnega preverjanje, zato ne more biti "
 "zagnana "
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:207
 msgid "Battery critically low"
 msgstr "Akumulator je kritično prazen"
 
-#: ../../session/power/manager_events.go:224
-#: ../../session/power/manager_events.go:229
-#: ../../session/power/manager_events.go:234
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Akumulator je skoraj prazen. Priključite napajalnik"
 
-#: ../../session/power/utils.go:350 ../../session/power/utils.go:354
-#: ../../session/power/utils.go:358 ../../session/power/utils.go:362
+#: ../../session/power/utils.go:344 ../../session/power/utils.go:348
+#: ../../session/power/utils.go:352 ../../session/power/utils.go:356
 msgid "Power settings changed"
 msgstr "Nastavitve za rabo energije so se spremenile"
 
-#: ../../session/power/utils.go:377
+#: ../../session/power/utils.go:371
 msgid "When the lid is closed, "
 msgstr "Ko je ohišje zaprto,"
 
-#: ../../session/power/utils.go:381
+#: ../../session/power/utils.go:375
 msgid "When pressing the power button, "
 msgstr "Ob pritisku na gumb za vklop"
 
-#: ../../session/power/utils.go:391
+#: ../../session/power/utils.go:385
 msgid "your computer will shut down"
 msgstr "se bo računalnik zaustavil"
 
-#: ../../session/power/utils.go:393
+#: ../../session/power/utils.go:387
 msgid "your computer will suspend"
 msgstr "bo računalnik obmiroval"
 
-#: ../../session/power/utils.go:395
+#: ../../session/power/utils.go:389
 msgid "your computer will hibernate"
 msgstr "bo računalnik zaspal"
 
-#: ../../session/power/utils.go:397
+#: ../../session/power/utils.go:391
 msgid "your monitor will turn off"
 msgstr "se bo izklopil zaslon"
 
-#: ../../session/power/utils.go:399
+#: ../../session/power/utils.go:393
 msgid "it will do nothing to your computer"
 msgstr "se ne bo zgodilo nič"
 
