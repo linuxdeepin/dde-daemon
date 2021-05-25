@@ -228,7 +228,12 @@ func (m *Manager) uninstall(id string) error {
 			return err
 		}
 		if installed {
-			return m.uninstallSystemPackage(item.Name, pkg)
+			err := m.uninstallSystemPackage(item.Name, pkg)
+			if err == nil {
+				killProcess(appInfo.GetExecutable())
+			}
+
+			return err
 		}
 	}
 

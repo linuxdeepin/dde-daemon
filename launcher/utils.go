@@ -21,11 +21,13 @@ package launcher
 
 import (
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/xdg/basedir"
 	"pkg.deepin.io/lib/xdg/userdir"
+	"strconv"
 	"strings"
 	"syscall"
 )
@@ -149,4 +151,27 @@ func getFileCTime(filename string) (int64, error) {
 		return 0, err
 	}
 	return int64(stat.Ctim.Sec), nil
+}
+
+func killProcess(exectable string)  {
+	out, err := exec.Command("/bin/sh", "-c", "ps -ef | grep " + exectable + " | grep -v grep | awk '{print $2}'").CombinedOutput()
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+
+	pidStringArr := strings.Split(string(out), "\n")
+	for _, pid := range pidStringArr {
+		_, err := strconv.Atoi(pid)
+		if err != nil {
+			logger.Error(err)
+			continue
+		}
+
+		out, err = exec.Command("/bin/sh", "-c", "kill -9 " + pid).CombinedOutput()
+		if err != nil {
+			logger.Error(err)
+			continue
+		}
+	}
 }
