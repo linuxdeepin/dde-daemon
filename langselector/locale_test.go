@@ -45,6 +45,6 @@ func Test_GetLocale(t *testing.T) {
 }
 
 func Test_WriteUserLocale(t *testing.T) {
-	assert.Nil(t, writeLocaleEnvFile("zh_CN.UTF-8", "testdata/pam"))
+	assert.Nil(t, writeLocaleEnvFile("zh_CN.UTF-8", "testdata/pam_environment", "testdata/pam"))
 	os.RemoveAll("testdata/pam")
 }

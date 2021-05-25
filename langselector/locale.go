@@ -50,9 +50,10 @@ import (
 )
 
 const (
-	systemLocaleFile     = "/etc/default/locale"
-	systemdLocaleFile    = "/etc/locale.conf"
-	userLocaleConfigFile = ".config/locale.conf"
+	systemLocaleFile        = "/etc/default/locale"
+	systemdLocaleFile       = "/etc/locale.conf"
+	userLocaleConfigFile    = ".config/locale.conf"
+	userLocaleConfigFileTmp = ".config/.locale.conf"
 
 	defaultLocale = "en_US.UTF-8"
 )
@@ -306,16 +307,17 @@ func writeUserLocale(locale string) error {
 	}
 
 	localeConfigFile := filepath.Join(homeDir, userLocaleConfigFile)
-	err = writeLocaleEnvFile(locale, localeConfigFile)
+	localeConfigFileTmp := filepath.Join(homeDir, userLocaleConfigFileTmp)
+	err = writeLocaleEnvFile(locale, localeConfigFile, localeConfigFileTmp)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func writeLocaleEnvFile(locale, filename string) error {
-	var content = generateLocaleEnvFile(locale, filename)
-	return ioutil.WriteFile(filename, content, 0644)
+func writeLocaleEnvFile(locale, originFilename string, destFilename string) error {
+	var content = generateLocaleEnvFile(locale, originFilename)
+	return ioutil.WriteFile(destFilename, content, 0644)
 }
 
 func generateLocaleEnvFile(locale, filename string) []byte {

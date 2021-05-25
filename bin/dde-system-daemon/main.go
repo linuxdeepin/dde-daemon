@@ -31,6 +31,7 @@ import (
 	_ "pkg.deepin.io/dde/daemon/system/gesture"
 	_ "pkg.deepin.io/dde/daemon/system/inputdevices"
 	_ "pkg.deepin.io/dde/daemon/system/keyevent"
+	_ "pkg.deepin.io/dde/daemon/system/lang"
 	_ "pkg.deepin.io/dde/daemon/system/network"
 	_ "pkg.deepin.io/dde/daemon/system/power"
 	_ "pkg.deepin.io/dde/daemon/system/power_manager"
