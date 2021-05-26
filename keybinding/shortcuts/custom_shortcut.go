@@ -26,7 +26,6 @@ import (
 
 	"pkg.deepin.io/dde/daemon/keybinding/util"
 	"pkg.deepin.io/lib/keyfile"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 const (
@@ -157,7 +156,7 @@ func (csm *CustomShortcutManager) Save() error {
 }
 
 func (csm *CustomShortcutManager) Add(name, action string, keystrokes []*Keystroke) (Shortcut, error) {
-	id := dutils.GenUuid()
+	id := name
 	csm.kfile.SetString(id, kfKeyName, name)
 	csm.kfile.SetString(id, kfKeyAction, action)
 

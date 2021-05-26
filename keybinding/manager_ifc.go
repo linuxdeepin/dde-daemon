@@ -56,7 +56,8 @@ func (err ErrShortcutNotFound) Error() string {
 
 var errTypeAssertionFail = errors.New("type assertion failed")
 var errShortcutKeystrokesUnmodifiable = errors.New("keystrokes of this shortcut is unmodifiable")
-var errKeystrokeUsed = errors.New("keystroke have been used")
+var errKeystrokeUsed = errors.New("keystroke had been used")
+var errNameUsed = errors.New("name had been used")
 
 func (*Manager) GetInterfaceName() string {
 	return dbusInterface
@@ -176,23 +177,35 @@ func (m *Manager) AddCustomShortcut(name, action, keystroke string) (id string,
 	logger.Debugf("Add custom key: %q %q %q", name, action, keystroke)
 	ks, err := shortcuts.ParseKeystroke(keystroke)
 	if err != nil {
+		logger.Warning(err)
+		busErr = dbusutil.ToError(err)
+		return
+	}
+
+	exist := m.shortcutManager.GetByIdType(name, shortcuts.ShortcutTypeCustom)
+	if exist != nil {
+		err = errNameUsed
+		logger.Warning(err)
 		busErr = dbusutil.ToError(err)
 		return
 	}
 
 	conflictKeystroke, err := m.shortcutManager.FindConflictingKeystroke(ks)
 	if err != nil {
+		logger.Warning(err)
 		busErr = dbusutil.ToError(err)
 		return
 	}
 	if conflictKeystroke != nil {
 		err = errKeystrokeUsed
+		logger.Warning(err)
 		busErr = dbusutil.ToError(err)
 		return
 	}
 
 	shortcut, err := m.customShortcutManager.Add(name, action, []*shortcuts.Keystroke{ks})
 	if err != nil {
+		logger.Warning(err)
 		busErr = dbusutil.ToError(err)
 		return
 	}
