@@ -90,7 +90,12 @@ func (s *Source) SetVolume(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
-	GetConfigKeeper().SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	configKeeper.SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	err := configKeeper.Save(configKeeperFile)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
 
 	if isPlay {
 		playFeedback()
@@ -108,7 +113,12 @@ func (s *Source) SetBalance(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
-	GetConfigKeeper().SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	configKeeper.SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	err := configKeeper.Save(configKeeperFile)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
 
 	if isPlay {
 		playFeedback()
@@ -162,7 +172,12 @@ func (s *Source) setVBF(v, b, f float64) *dbus.Error {
 func (s *Source) SetMute(value bool) *dbus.Error {
 	s.audio.context().SetSourceMuteByIndex(s.index, value)
 
-	GetConfigKeeper().SetMuteAll(value)
+	configKeeper.SetMute(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	err := configKeeper.Save(configKeeperFile)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
 
 	if !value {
 		playFeedback()
@@ -213,19 +228,6 @@ func (*Source) GetInterfaceName() string {
 }
 
 func (s *Source) update(sourceInfo *pulse.Source) {
-	// 如果是虚拟通道，则将card和ports等设为对应主通道的值，这是为了能够正常使用降噪的训通道
-	if !isPhysicalDevice(sourceInfo.Name) {
-		masterSourceInfo := s.audio.getSourceInfoByName(sourceInfo.Proplist["device.master_device"])
-		if masterSourceInfo == nil {
-			logger.Warningf("cannot get master source for %s", sourceInfo.Name)
-		} else {
-			sourceInfo.Card = masterSourceInfo.Card
-			sourceInfo.Ports = masterSourceInfo.Ports
-			sourceInfo.ActivePort = masterSourceInfo.ActivePort
-			logger.Debugf("create reducing noise source on %s", masterSourceInfo.Name)
-		}
-	}
-
 	s.PropsMu.Lock()
 	s.cVolume = sourceInfo.Volume
 	s.channelMap = sourceInfo.ChannelMap
@@ -248,8 +250,17 @@ func (s *Source) update(sourceInfo *pulse.Source) {
 		ports = append(ports, toPort(p))
 	}
 
-	s.setPropPorts(ports)
-	s.setPropActivePort(toPort(sourceInfo.ActivePort))
+	if isBluezAudio(s.Name) {
+		logger.Debugf("create bluez virtual port for source %s", s.Name)
+		s.setPropPorts(createBluezVirtualSourcePorts(ports))
+		activePort := toPort(sourceInfo.ActivePort)
+		activePort.Name += "(headset_head_unit)"
+		activePort.Description += "(Headset)"
+		s.setPropActivePort(activePort)
+	} else {
+		s.setPropPorts(ports)
+		s.setPropActivePort(toPort(sourceInfo.ActivePort))
+	}
 
 	s.PropsMu.Unlock()
 }

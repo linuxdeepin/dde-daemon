@@ -23,11 +23,6 @@ func (v *Audio) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:   v.Reset,
 		},
 		{
-			Name:   "SetBluetoothAudioMode",
-			Fn:     v.SetBluetoothAudioMode,
-			InArgs: []string{"mode"},
-		},
-		{
 			Name:   "SetPort",
 			Fn:     v.SetPort,
 			InArgs: []string{"cardId", "portName", "direction"},
