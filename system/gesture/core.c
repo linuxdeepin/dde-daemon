@@ -19,6 +19,8 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <errno.h>
+#include <string.h>
 
 #include <glib.h>
 #include <poll.h>
@@ -116,7 +118,13 @@ start_loop(int verbose, double distance)
     fds.revents = 0;
 
     quit = 0;
-    while(!quit && poll(&fds, 1, -1) > -1) {
+    while(!quit) {
+        if(poll(&fds, 1, -1) < 0)
+        {
+            fprintf(stderr, "poll failed: %s\n", strerror(errno));
+            continue;
+        }
+
         handle_events(li, movements);
         handle_movements(movements);        //handle touch screen
     }
