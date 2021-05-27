@@ -681,6 +681,19 @@ func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
 		}
 		logger.Debugf("[Event] source #%d changed %s", idx, sourceInfo.Name)
 
+		// 虚拟设备使用对应住设备的端口
+		if !isPhysicalDevice(sourceInfo.Name) {
+			masterSourceInfo := a.getSourceInfoByName(sourceInfo.Proplist["device.master_device"])
+			if masterSourceInfo == nil {
+				logger.Warningf("cannot get master source for %s", sourceInfo.Name)
+			} else {
+				sourceInfo.Card = masterSourceInfo.Card
+				sourceInfo.Ports = masterSourceInfo.Ports
+				sourceInfo.ActivePort = masterSourceInfo.ActivePort
+				logger.Debugf("create reducing noise source on %s", masterSourceInfo.Name)
+			}
+		}
+
 		if isBluezAudio(sourceInfo.Name) && !isBluezDeviceValid(sourceInfo.Proplist["bluez.path"]) {
 			return
 		}
