@@ -22,6 +22,7 @@ package accounts
 import (
 	"path/filepath"
 	"sort"
+	"strconv"
 	"time"
 
 	"pkg.deepin.io/dde/daemon/accounts/users"
@@ -117,7 +118,10 @@ func (m *Manager) handleFilePasswdChanged() {
 		if ok {
 			u.updatePropsPasswd(uInfo)
 		} else {
-			uidsDelete = append(uidsDelete, u.Uid)
+			// 域账户没有保存在本地，无需删除
+			if !m.isUdcpUserID(u.Uid) {
+				uidsDelete = append(uidsDelete, u.Uid)
+			}
 		}
 		delete(infosMap, u.Uid)
 	}
@@ -190,16 +194,56 @@ func (m *Manager) handleDMConfigChanged() {
 
 func (m *Manager) addUser(uInfo *users.UserInfo) {
 	logger.Debug("addUser", uInfo.Uid)
-	userPath := userDBusPathPrefix + uInfo.Uid
-	err := m.exportUserByPath(userPath)
+	err := m.exportUserByUid(uInfo.Uid)
 	if err != nil {
 		logger.Warningf("failed to export user %s: %v", uInfo.Uid, err)
 		return
 	}
-	err = m.service.Emit(m, "UserAdded", userPath)
+	err = m.service.Emit(m, "UserAdded", userDBusPathPrefix+uInfo.Uid)
 	if err != nil {
 		logger.Warning(err)
 	}
+}
+
+func (m *Manager) addUdcpUser(uId uint32) error {
+	logger.Debug("addUdcpUser", uId)
+	udcpUId := strconv.FormatUint(uint64(uId), 10)
+	err := m.exportUserByUid(udcpUId)
+	if err != nil {
+		logger.Warningf("failed to export user %d: %v", uId, err)
+		return err
+	}
+	m.updatePropUserList()
+	err = m.service.Emit(m, "UserAdded", userDBusPathPrefix+udcpUId)
+	if err != nil {
+		logger.Warning(err)
+	}
+	return err
+}
+
+// 判断用户缓存UID列表中是否有域账户，域账户信息只能由web端设置，本地没有保存。
+// 因此，本地/etc/passwd更新不能删除域账户服务
+func (m *Manager) isUdcpUserID(uid string) bool {
+        // 未加域账户不存在iam服务，无法获取GetUserIdList返回结果
+	err := m.initUdcpCache()
+	if err != nil {
+		logger.Errorf("Udcp cache service not exist: %v", err)
+		return false
+	}  
+	// 域账号不会保存在本地文件，所以需要排除
+	userIdList, err := m.udcpCache.GetUserIdList(0)
+	if err != nil {
+		logger.Errorf("Udcp cache getUserIdList failed: %v", err)
+		return false
+	}
+	id, _ := strconv.Atoi(uid)
+	for _, udcpUId := range userIdList {
+		if udcpUId == uint32(id) {
+			logger.Debugf("%v is udcp UID, can not delete", id)
+			return true
+		}
+	}
+	return false
 }
 
 func (m *Manager) deleteUser(uid string) {

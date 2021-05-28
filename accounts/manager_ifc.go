@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 
 	"pkg.deepin.io/dde/daemon/accounts/checkers"
@@ -134,6 +135,33 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 	if user == nil {
 		err := fmt.Errorf("user %q not found", name)
 		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
+	if m.isUdcpUserID(user.Uid) {
+		id, _ := strconv.Atoi(user.Uid)
+		result, err := m.udcpCache.RemoveCacheFile(0, uint32(id))
+		if err != nil {
+			logger.Errorf("Udcp cache RemoveCacheFile failed: %v", err)
+			return dbusutil.ToError(err)
+		}
+
+		if !result {
+			return dbusutil.ToError(errors.New("failed to remove user cache files"))
+		}
+
+		// 删除服务，更新UserList
+		userPath := userDBusPathPrefix + user.Uid
+		m.stopExportUser(userPath)
+		m.updatePropUserList()
+        	// 清楚域账户本地缓存
+		if rmFiles {
+			user.clearData()
+		}
+		err = m.service.Emit(m, "UserDeleted", userPath)
+		if err != nil {
+			logger.Warning(err)
+		}
 		return dbusutil.ToError(err)
 	}
 

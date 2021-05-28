@@ -92,6 +92,11 @@ func GetHumanUserInfos() (UserInfos, error) {
 	return infos, nil
 }
 
+func IsHumanUdcpUserUid(uid uint32) bool {
+	userInfo := UserInfo{Uid: strconv.FormatUint(uint64(uid), 10)}
+	return userInfo.isHumanViaLoginDefs(userFileLoginDefs)
+}
+
 func GetUserInfoByName(name string) (UserInfo, error) {
 	return getUserInfo(UserInfo{Name: name}, userFilePasswd)
 }

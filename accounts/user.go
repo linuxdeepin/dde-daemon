@@ -103,9 +103,9 @@ type User struct {
 	Locked bool
 	// 是否允许此用户自动登录
 	AutomaticLogin bool
-	
+
 	// deprecated property
-	SystemAccount  bool
+	SystemAccount bool
 
 	NoPasswdLogin bool
 
@@ -297,6 +297,71 @@ func NewUser(userPath string, service *dbusutil.Service) (*User, error) {
 
 	u.checkLeftSpace()
 	return u, nil
+}
+
+func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string, ignoreErr bool) (*User, error) {
+	var err error
+	if users.ExistPwUid(usrId) != 0 {
+		return nil, errors.New("No such user id")
+	}
+
+	var u = &User{
+		service:            service,
+		UserName:           users.GetPwName(usrId),
+		FullName:           users.GetPwGecos(usrId),
+		Uid:                users.GetPwUid(usrId),
+		Gid:                users.GetPwGid(usrId),
+		HomeDir:            users.GetPwDir(usrId),
+		Shell:              users.GetPwShell(usrId),
+		AutomaticLogin:     false,
+		NoPasswdLogin:      false,
+		Locked:             false,
+		PasswordStatus:     users.PasswordStatusUsable,
+		MaxPasswordAge:     30,
+		PasswordLastChange: 18737,
+	}
+
+	u.AccountType = users.UserTypeUdcp
+	u.Groups = groups
+
+	// NOTICE(jouyouyun): Got created time,  not accurate, can only be used as a reference
+	u.CreatedTime, err = u.getCreatedTime()
+	if err != nil {
+		logger.Warning("Failed to get created time:", err)
+	}
+
+	updateConfigPath(users.GetPwName(usrId))
+
+	xSession, _ := users.GetDefaultXSession()
+	u.XSession = xSession
+
+	// only show non system account
+	u.SystemAccount = false
+	u.Locale = getDefaultLocale()
+	u.Layout = getDefaultLayout()
+	u.IconFile = defaultUserIcon
+	u.customIcon = u.IconFile
+	u.IconList = u.getAllIcons()
+	u.DesktopBackgrounds = []string{getDefaultUserBackground()}
+	u.GreeterBackground = getDefaultUserBackground()
+	u.HistoryLayout = append(u.HistoryLayout, u.Layout)
+	u.Use24HourFormat = defaultUse24HourFormat
+	//u.WeekdayFormat = defaultWeekdayFormat
+	//u.ShortDateFormat = defaultShortDateFormat
+	//u.LongDateFormat = defaultLongDateFormat
+	//u.ShortTimeFormat = defaultShortTimeFormat
+	//u.LongTimeFormat = defaultLongTimeFormat
+	//u.WeekBegins = defaultWeekBegins
+	u.UUID = dutils.GenUuid()
+	//u.Workspace = defaultWorkspace
+
+	err = u.writeUserConfig()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	u.checkLeftSpace()
+	return u, err
 }
 
 func getUserGreeterBackground(kf *glib.KeyFile) (string, bool) {
