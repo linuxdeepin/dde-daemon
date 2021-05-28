@@ -24,7 +24,7 @@ import (
 	"sync"
 
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/gir/gio-2.0"
+	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/gsettings"
 
 	_ "pkg.deepin.io/dde/daemon/dock"
@@ -108,7 +108,7 @@ func checkDependencies(s *gio.Settings, module loader.Module, enabled bool) erro
 	if enabled {
 		depends := module.GetDependencies()
 		for _, n := range depends {
-			if s.GetBoolean(n) != true {
+			if !s.GetBoolean(n) {
 				return fmt.Errorf("Dependency lose: %v", n)
 			}
 		}
@@ -120,8 +120,8 @@ func checkDependencies(s *gio.Settings, module loader.Module, enabled bool) erro
 			continue
 		}
 
-		if m.IsEnable() == true && isStrInList(module.Name(), m.GetDependencies()) {
-			return fmt.Errorf("Can not diable this module '%s', because of it was depended by'%s'",
+		if m.IsEnable() && isStrInList(module.Name(), m.GetDependencies()) {
+			return fmt.Errorf("Can not disable this module '%s', because of it was depended by'%s'",
 				module.Name(), m.Name())
 		}
 	}
