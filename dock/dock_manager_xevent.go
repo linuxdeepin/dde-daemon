@@ -78,7 +78,6 @@ func (m *Manager) handleClientListChanged() {
 			addFunc := func() {
 				logger.Debugf("client list add: %x", window0)
 				winInfo := m.registerWindow(window0)
-				logger.Infof("%v", m.windowInfoMap)
 				repeatCount := 0
 				for {
 					if repeatCount > 10 {
@@ -108,7 +107,6 @@ func (m *Manager) handleClientListChanged() {
 			removeFunc := func() {
 				logger.Debugf("client list remove: %x", window0)
 				m.windowInfoMapMutex.RLock()
-				logger.Infof("%v", m.windowInfoMap)
 				winInfo := m.windowInfoMap[window0]
 				m.windowInfoMapMutex.RUnlock()
 				if winInfo != nil {
