@@ -59,6 +59,7 @@ Requires:       dde-polkit-agent
 Requires:       rfkill
 Requires:       gvfs
 Requires:       iw
+Requires:       proxychains-ng
 
 Recommends:     iso-codes
 Recommends:     imwheel
