@@ -107,13 +107,6 @@ func (m *Manager) SetNTPServer(sender dbus.Sender, server, message string) *dbus
 		return dbusutil.ToError(err)
 	}
 
-	m.PropsMu.Lock()
-	if m.NTPServer == server {
-		m.PropsMu.Unlock()
-		return nil
-	}
-	m.PropsMu.Unlock()
-
 	err = m.setNTPServer(server)
 	if err != nil {
 		logger.Warning(err)

@@ -20,19 +20,18 @@
 package timedated
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
-	"syscall"
 
 	dbus "github.com/godbus/dbus"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.systemd1"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
 	timesync1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timesync1"
+
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/keyfile"
 )
@@ -65,10 +64,6 @@ const (
 
 func NewManager(service *dbusutil.Service) (*Manager, error) {
 	core := timedate1.NewTimedate(service.Conn())
-	err := startNTPbyFirstBoot(core)
-	if err != nil {
-		logger.Error(err)
-	}
 	m := &Manager{
 		core:    core,
 		service: service,
@@ -108,7 +103,7 @@ func (m *Manager) start() {
 	}
 	m.timesyncd.InitSignalExt(m.signalLoop, true)
 	err = m.timesyncd.ServerName().ConnectChanged(func(hasValue bool, value string) {
-		if !hasValue || value == m.NTPServer {
+		if !hasValue {
 			return
 		}
 		err = m.setNTPServer(server)
@@ -133,7 +128,15 @@ func (m *Manager) start() {
 				logger.Warning(err)
 				return
 			}
-			if server != "" && server != m.NTPServer {
+			ntp, err := m.core.NTP().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			if !ntp {
+				return
+			}
+			if server != "" {
 				err = m.setNTPServer(server)
 				if err != nil {
 					logger.Warning(err)
@@ -147,6 +150,13 @@ func (m *Manager) start() {
 }
 
 func (m *Manager) setNTPServer(value string) error {
+	m.PropsMu.RLock()
+	if m.NTPServer == value {
+		m.PropsMu.RUnlock()
+		return nil
+	}
+	m.PropsMu.RUnlock()
+
 	m.setNTPServerMu.Lock()
 	defer m.setNTPServerMu.Unlock()
 	err := setNTPServer(value)
@@ -158,38 +168,6 @@ func (m *Manager) setNTPServer(value string) error {
 	m.NTPServer = value
 	m.PropsMu.Unlock()
 	return m.emitPropChangedNTPServer(value)
-}
-
-func startNTPbyFirstBoot(core timedate1.Timedate) error {
-	filePath := "/var/lib/dde-daemon/firstBootFile"
-	err := syscall.Access(filePath, syscall.F_OK)
-	if err != nil {
-		err = core.SetNTP(0, true, false)
-		if err != nil {
-			logger.Error(err)
-		}
-		logger.Error(err)
-		file, e := os.OpenFile(filePath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0666)
-		if e != nil {
-			logger.Error("create file error ! !", e)
-			return e
-		}
-		writer := bufio.NewWriter(file)
-		_, e = writer.Write([]byte("This system first boot complete, do not delete this file\n"))
-		if e != nil {
-			logger.Error("write content failed！！", e)
-			return e
-		}
-		e = writer.Flush()
-		if e != nil {
-			logger.Error("flush content error！！", e)
-			return e
-		}
-
-	} else {
-		logger.Info("file exist")
-	}
-	return nil
 }
 
 func (*Manager) GetInterfaceName() string {
