@@ -19,6 +19,8 @@ const (
 	dbusServiceName = "com.deepin.system.Network"
 	dbusPath        = "/com/deepin/system/Network"
 	dbusInterface   = dbusServiceName
+
+	kernelNetworkModuleFile = "/lib/modules/bcmdhd.ko"
 )
 
 type Module struct {
@@ -65,6 +67,7 @@ func (m *Module) Start() error {
 		return err
 	}
 
+	go insertKernelModule()
 	return nil
 }
 
