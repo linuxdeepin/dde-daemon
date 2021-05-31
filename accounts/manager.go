@@ -133,12 +133,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 
 	m.login1Manager.InitSignalExt(m.sysSigLoop, true)
 	_, _ = m.login1Manager.ConnectSessionNew(func(id string, sessionPath dbus.ObjectPath) {
-
-		uId, _ := strconv.Atoi(id)
-		if uId < 10000 {
-			return
-		}
-
 		core, err := login1.NewSession(systemBus, sessionPath)
 		if err != nil {
 			logger.Warningf("new login1 session failed:%v", err)
@@ -148,6 +142,10 @@ func NewManager(service *dbusutil.Service) *Manager {
 		userInfo, err := core.User().Get(0)
 		if err != nil {
 			logger.Warningf("get user info failed:%v", err)
+			return
+		}
+
+		if userInfo.UID < 10000 {
 			return
 		}
 
@@ -262,7 +260,7 @@ func (m *Manager) initUdcpUsers() {
 			continue
 		}
 
-		u, err := NewUdcpUser(uId, m.service, userGroups, false)
+		u, err := NewUdcpUser(uId, m.service, userGroups)
 		if err != nil {
 			logger.Errorf("New udcp user '%d' failed: %v", uId, err)
 			continue
@@ -316,7 +314,7 @@ func (m *Manager) exportUserByUid(uId string) error {
 			return err
 		}
 
-		u, err = NewUdcpUser(uint32(id), m.service, userGroups, true)
+		u, err = NewUdcpUser(uint32(id), m.service, userGroups)
 	} else {
 		u, err = NewUser(userPath, m.service, true)
 	}
