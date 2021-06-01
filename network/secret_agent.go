@@ -367,7 +367,10 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 		return nil, err
 	}
 	var reply getSecretsReply
-	err = json.Unmarshal(cmdOutBuf.Bytes(), &reply)
+	jsonbytes := bytes.TrimLeftFunc(cmdOutBuf.Bytes(), func(r rune) bool {
+		return r != 0x7B
+	})
+	err = json.Unmarshal(jsonbytes, &reply)
 	if err != nil {
 		return nil, err
 	}
