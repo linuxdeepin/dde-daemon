@@ -20,18 +20,16 @@
 package network
 
 import (
-	"net"
-
 	dbus "github.com/godbus/dbus"
 	"pkg.deepin.io/dde/daemon/network/nm"
 )
 
-func newUnsavedWiredConnectionForDevice(id, uuid string, devPath dbus.ObjectPath, active bool) (cpath dbus.ObjectPath, err error) {
+func newWiredConnectionForDevice(id, uuid string, devPath dbus.ObjectPath, active bool) (cpath dbus.ObjectPath, err error) {
 	logger.Infof("new wired connection, id=%s, uuid=%s, devPath=%s", id, uuid, devPath)
 	data := newWiredConnectionData(id, uuid, devPath)
 
 	setSettingConnectionAutoconnect(data, true)
-	cpath, err = nmAddConnectionUnsaved(data)
+	cpath, err = nmAddConnection(data)
 	if err != nil {
 		return "/", err
 	}
@@ -53,6 +51,7 @@ func newWiredConnectionData(id, uuid string, devPath dbus.ObjectPath) (data conn
 	setSettingConnectionUuid(data, uuid)
 	setSettingConnectionType(data, nm.NM_SETTING_WIRED_SETTING_NAME)
 
+	// dont set mac
 	initSettingSectionWired(data, devPath)
 
 	initSettingSectionIpv4(data)
@@ -64,15 +63,10 @@ func initSettingSectionWired(data connectionData, devPath dbus.ObjectPath) {
 	addSetting(data, nm.NM_SETTING_WIRED_SETTING_NAME)
 	setSettingWiredDuplex(data, "full")
 
-	hwAddr, err := nmGeneralGetDeviceHwAddr(devPath, true)
-	if err != nil {
+	ifc := nmGetDeviceInterface(devPath)
+	if ifc == "" {
+		logger.Debug("cant get interface name, ignore name")
 		return
 	}
-
-	macAddr, err := net.ParseMAC(hwAddr)
-	if err != nil {
-		return
-	}
-
-	setSettingWiredMacAddress(data, macAddr)
+	setSettingConnectionInterfaceName(data, ifc)
 }
