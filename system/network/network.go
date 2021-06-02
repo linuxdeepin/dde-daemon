@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/dde/daemon/network/nm"
@@ -96,6 +97,7 @@ type Network struct {
 	devicesMu  sync.Mutex
 	nmManager  *networkmanager.Manager
 	nmSettings *networkmanager.Settings
+	dbusDaemon *ofdbus.DBus
 	sigLoop    *dbusutil.SignalLoop
 	methods    *struct {
 		IsDeviceEnabled       func() `in:"pathOrIface" out:"enabled"`
@@ -118,9 +120,10 @@ func (n *Network) init() error {
 	n.sigLoop.Start()
 	n.nmManager = networkmanager.NewManager(sysBus)
 	n.nmSettings = networkmanager.NewSettings(sysBus)
+	n.dbusDaemon = ofdbus.NewDBus(sysBus)
 	// retry get all devices
-	n.addDevicesWithRetry()
 	n.connectSignal()
+	n.addDevicesWithRetry()
 	// get vpn enable state from config
 	n.VpnEnabled = n.config.VpnEnabled
 
@@ -142,6 +145,14 @@ func (n *Network) connectSignal() {
 		PathNamespace("/org/freedesktop/NetworkManager/Devices").
 		Interface("org.freedesktop.NetworkManager.Device").
 		Member("StateChanged").Build().AddTo(n.getSysBus())
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	err = dbusutil.NewMatchRuleBuilder().Type("signal").
+		PathNamespace("/org/freedesktop/NetworkManager").
+		Interface("org.freedesktop.NetworkManager").
+		Member("DeviceRemoved").Build().AddTo(n.getSysBus())
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -170,17 +181,56 @@ func (n *Network) connectSignal() {
 		logger.Warning(err)
 	}
 
-	_, err = n.nmManager.ConnectDeviceRemoved(func(devPath dbus.ObjectPath) {
+	n.sigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "org.freedesktop.NetworkManager.DeviceRemoved",
+	}, func(sig *dbus.Signal) {
+		var devPath dbus.ObjectPath
+		err := dbus.Store(sig.Body, &devPath)
+		if err != nil {
+			logger.Warning("store devPath failed err:", err)
+			return
+		}
+
 		logger.Debug("device removed", devPath)
+
 		n.devicesMu.Lock()
-
-		n.removeDevice(devPath)
-
+		dev := n.devices[devPath]
+		if dev != nil {
+			dev.nmDevice.RemoveAllHandlers()
+			delete(n.devices, devPath)
+		}
 		n.devicesMu.Unlock()
+
+		if !strings.HasPrefix(sig.Sender, ":") {
+			logger.Debugf("sender is %s, return", sig.Sender)
+			return
+		}
+
+		if dev != nil && dev.iface != "" {
+			n.configMu.Lock()
+			if _, ok := n.config.Devices[dev.iface]; ok {
+				time.AfterFunc(5*time.Second, func() {
+					has, err := n.dbusDaemon.NameHasOwner(0, sig.Sender)
+					if err != nil {
+						logger.Warning("call NameHasOwner failed err:", err)
+					}
+					if has {
+						// 是有效的 DeviceRemoved 信号
+						n.configMu.Lock()
+						delete(n.config.Devices, dev.iface)
+						err := n.saveConfig()
+						n.configMu.Unlock()
+						if err != nil {
+							logger.Warning("save config failed err:", err)
+						}
+					} else {
+						logger.Debugf("sender %s lost, ignore device %q removed signal", sig.Sender, dev.iface)
+					}
+				})
+			}
+			n.configMu.Unlock()
+		}
 	})
-	if err != nil {
-		logger.Warning(err)
-	}
 
 	n.sigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "org.freedesktop.NetworkManager.VPN.Connection.VpnStateChanged",
@@ -715,27 +765,22 @@ func (n *Network) addDevicesWithRetry() {
 			// sleep for 1 seconds, and retry get devices
 			time.Sleep(1 * time.Second)
 		} else {
-			n.addAndCheckDevices(devicePaths)
+			n.addDevices(devicePaths)
 			// if success, break
 			break
 		}
 	}
 }
 
-// add and check devices
-func (n *Network) addAndCheckDevices(devicePaths []dbus.ObjectPath) {
+func (n *Network) addDevices(devicePaths []dbus.ObjectPath) {
 	// add device
 	for _, devPath := range devicePaths {
+		n.devicesMu.Lock()
 		err := n.addDevice(devPath)
+		n.devicesMu.Unlock()
 		if err != nil {
 			logger.Warning(err)
 			continue
-		}
-	}
-	// check if device is legal
-	for iface := range n.config.Devices {
-		if n.getDeviceByIface(iface) == nil {
-			delete(n.config.Devices, iface)
 		}
 	}
 }
