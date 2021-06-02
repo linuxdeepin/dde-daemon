@@ -22,7 +22,10 @@
 #include <crypt.h>
 #include <shadow.h>
 
-#include "passwd.h"
+#include <pwd.h> 
+#include <grp.h>
+#include <string.h>
+#include <stdlib.h>
 
 char *
 mkpasswd (const char *words)
@@ -60,4 +63,46 @@ int
 unlock_shadow_file()
 {
 	return ulckpwdf();
+}
+
+char *
+get_pw_name(__uid_t uid)
+{
+    return getpwuid(uid)->pw_name;
+}
+
+char *
+get_pw_gecos(__uid_t uid)
+{
+    return getpwuid(uid)->pw_gecos;
+}
+
+__uid_t
+get_pw_uid(__uid_t uid)
+{
+    return getpwuid(uid)->pw_uid;
+}
+
+__gid_t
+get_pw_gid(__uid_t uid)
+{
+    return getpwuid(uid)->pw_gid;
+}
+
+char *
+get_pw_dir(__uid_t uid)
+{
+    return getpwuid(uid)->pw_dir;
+}
+
+char *
+get_pw_shell(__uid_t uid)
+{
+    return getpwuid(uid)->pw_shell;
+}
+
+char *
+get_group_name_by_gid(__gid_t gid)
+{
+    return getgrgid(gid)->gr_name;
 }

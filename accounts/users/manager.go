@@ -44,6 +44,7 @@ const (
 const (
 	UserTypeStandard = iota
 	UserTypeAdmin
+	UserTypeNetwork
 )
 
 func CreateUser(username, fullname, shell string) error {

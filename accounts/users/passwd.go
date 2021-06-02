@@ -32,6 +32,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"unsafe"
@@ -46,6 +47,37 @@ func EncodePasswd(words string) string {
 	defer C.free(unsafe.Pointer(cwords))
 
 	return C.GoString(C.mkpasswd(cwords))
+}
+
+func GetPwName(uid uint32) string {
+	return C.GoString(C.get_pw_name(C.uint(uid)))
+}
+
+func GetPwGecos(uid uint32) string {
+	var pwGecos string
+	pwGecos = C.GoString(C.get_pw_gecos(C.uint(uid)))
+
+	return strings.Split(pwGecos, ",")[0]
+}
+
+func GetPwUid(uid uint32) string {
+	return strconv.FormatUint(uint64(C.get_pw_uid(C.uint(uid))), 10)
+}
+
+func GetPwGid(uid uint32) string {
+	return strconv.FormatUint(uint64(C.get_pw_gid(C.uint(uid))), 10)
+}
+
+func GetPwDir(uid uint32) string {
+	return C.GoString(C.get_pw_dir(C.uint(uid)))
+}
+
+func GetPwShell(uid uint32) string {
+	return C.GoString(C.get_pw_shell(C.uint(uid)))
+}
+
+func GetGroupsByGid(gid uint32) string {
+	return C.GoString(C.get_group_name_by_gid(C.uint(gid)))
 }
 
 // password: has been crypt

@@ -26,16 +26,17 @@ import (
 	"path"
 	"path/filepath"
 
+	"strconv"
+	"time"
+
 	"pkg.deepin.io/dde/api/lang_info"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/lib/dbus1"
+	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gdkpixbuf"
 	"pkg.deepin.io/lib/imgutil"
 	"pkg.deepin.io/lib/strv"
 	dutils "pkg.deepin.io/lib/utils"
-	"strconv"
-	"time"
 )
 
 const (
@@ -183,6 +184,9 @@ func (u *User) SetMaxPasswordAge(sender dbus.Sender, nDays int32) *dbus.Error {
 }
 
 func (u *User) IsPasswordExpired() (bool, *dbus.Error) {
+	if IsDomainUserID(u.Uid) {
+		return false, nil
+	}
 	v, err := users.IsPasswordExpired(u.UserName)
 	return v, dbusutil.ToError(err)
 }
@@ -400,7 +404,7 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 		logger.Debug("[SetIconFile] access denied:", err)
 		return dbusutil.ToError(err)
 	}
-	
+
 	iconURI = dutils.EncodeURI(iconURI, dutils.SCHEME_FILE)
 	iconFile := dutils.DecodeURI(iconURI)
 
