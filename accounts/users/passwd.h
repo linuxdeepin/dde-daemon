@@ -39,5 +39,8 @@ char *
 get_pw_dir(__uid_t uid);
 char *
 get_pw_shell(__uid_t uid);
+char *
+get_group_name_by_gid(__gid_t gid);
+
 
 #endif

@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"os"
 	"time"
 
 	"pkg.deepin.io/dde/daemon/accounts/checkers"
@@ -163,6 +164,25 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 			logger.Warning(err)
 		}
 		return dbusutil.ToError(err)
+
+	} else if IsDomainUserID(user.Uid) { // 删除配置文件中对应的网络账户信息
+		userPath := userDBusPathPrefix + user.Uid
+		delete(m.userConfig, userPath)
+		m.domainUserMapMu.Lock()
+		m.saveDomainUserConfig(m.userConfig)
+		m.domainUserMapMu.Unlock()
+
+		m.deleteUser(user.Uid)
+
+		m.updatePropUserList()
+
+		//delete user config and icons
+		if rmFiles {
+			user.clearData()
+		}
+
+		return nil
+
 	}
 
 	if err := users.DeleteUser(rmFiles, name); err != nil {
@@ -334,4 +354,45 @@ func (m *Manager) GetPresetGroups(accountType int32) ([]string, *dbus.Error) {
 
 	groups := users.GetPresetGroups(int(accountType))
 	return groups, nil
+}
+
+// 在点击切换用户时, 重新获取网络账户的状态,更新用户列表
+func (m *Manager) UpdateADDomainUserList() *dbus.Error {
+	logger.Warning("UpdateADDomainUserList")
+	m.domainUserMapMu.Lock()
+	defer m.domainUserMapMu.Unlock()
+
+	m.usersMapMu.Lock()
+	defer m.usersMapMu.Unlock()
+
+	for _, u := range m.usersMap {
+		userPath := userDBusPathPrefix + u.Uid
+		// 之前成功登录的AD域账号现在找不到了,说明该账户已经退域或远程服务器已将该账户删除, 从用户列表中删除该账户
+		if config, ok := m.userConfig[userPath]; ok {
+			if config.IsLogined {
+				if !IsDomainUserID(u.Uid) {
+					delete(m.userConfig, userPath)
+					err := m.saveDomainUserConfig(m.userConfig)
+					if err != nil {
+						return dbusutil.ToError(err)
+					}
+
+					m.deleteUser(u.Uid)
+					m.updatePropUserList()
+
+					//delete user config and icons
+					u.clearData()
+
+					// delete user home dir
+					err = os.RemoveAll(u.HomeDir)
+					if err != nil {
+						logger.Warning(err)
+						return dbusutil.ToError(err)
+					}
+				}
+			}
+		}
+	}
+
+	return nil
 }

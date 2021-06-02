@@ -82,6 +82,10 @@ func GetPwShell(uid uint32) string {
 	return C.GoString(C.get_pw_shell(C.uint(uid)))
 }
 
+func GetGroupsByGid(gid uint32) string {
+	return C.GoString(C.get_group_name_by_gid(C.uint(gid)))
+}
+
 // password: has been crypt
 func updatePasswd(password, username string) error {
 	status := C.lock_shadow_file()

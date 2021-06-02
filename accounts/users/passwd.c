@@ -26,7 +26,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "passwd.h"
+#include <pwd.h> 
+#include <grp.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define ERROR_NULLPOINTER -1;
 #define ERROR_NOERROR 0;
@@ -113,3 +116,10 @@ get_pw_shell(__uid_t uid)
 {
     return getpwuid(uid)->pw_shell;
 }
+
+char *
+get_group_name_by_gid(__gid_t gid)
+{
+    return getgrgid(gid)->gr_name;
+}
+

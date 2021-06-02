@@ -119,7 +119,7 @@ func (m *Manager) handleFilePasswdChanged() {
 			u.updatePropsPasswd(uInfo)
 		} else {
 			// 域账户没有保存在本地，无需删除
-			if !m.isUdcpUserID(u.Uid) {
+			if !IsDomainUserID(u.Uid) || !m.isUdcpUserID(u.Uid) {
 				uidsDelete = append(uidsDelete, u.Uid)
 			}
 		}
@@ -218,6 +218,25 @@ func (m *Manager) addUdcpUser(uId uint32) error {
 	if err != nil {
 		logger.Warning(err)
 	}
+	return err
+}
+
+func (m *Manager) addDomainUser(uId uint32) error {
+	logger.Debug("addDomainUser", uId)
+	domainUserUId := strconv.FormatUint(uint64(uId), 10)
+	err := m.exportUserByUid(domainUserUId)
+
+	if err != nil {
+		logger.Warningf("failed to export user %d: %v", uId, err)
+		return err
+	}
+
+	m.updatePropUserList()
+	err = m.service.Emit(m, "UserAdded", userDBusPathPrefix+domainUserUId)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	return err
 }
 
