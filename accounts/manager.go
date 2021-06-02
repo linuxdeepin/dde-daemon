@@ -20,10 +20,16 @@
 package accounts
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"sort"
+	"strconv"
 	"sync"
 
 	dbus "github.com/godbus/dbus"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/dde/daemon/accounts/users"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/tasker"
@@ -42,11 +48,23 @@ const (
 	actConfigKeyGuest   = "AllowGuest"
 )
 
+type domainUserConfig struct {
+	Name      string
+	Uid       string
+	IsLogined bool
+}
+
+type DefaultDomainUserConfig map[string]*domainUserConfig
+
+var configFile = filepath.Join(actConfigDir, "domainUser.json")
+
 //go:generate dbusutil-gen -type Manager,User manager.go user.go
 
 type Manager struct {
-	service *dbusutil.Service
-	PropsMu sync.RWMutex
+	service       *dbusutil.Service
+	sysSigLoop    *dbusutil.SignalLoop
+	login1Manager *login1.Manager
+	PropsMu       sync.RWMutex
 
 	UserList   []string
 	UserListMu sync.RWMutex
@@ -61,6 +79,8 @@ type Manager struct {
 
 	delayTaskManager *tasker.DelayTaskManager
 	userAddedChanMap map[string]chan string
+	userConfig       map[string]*domainUserConfig
+	domainUserMapMu  sync.Mutex
 	//                    ^ username
 	//nolint
 	signals *struct {
@@ -74,31 +94,44 @@ type Manager struct {
 	}
 	//nolint
 	methods *struct {
-		CreateUser         func() `in:"name,fullName,accountType" out:"user"`
-		DeleteUser         func() `in:"name,rmFiles"`
-		FindUserById       func() `in:"uid" out:"user"`
-		FindUserByName     func() `in:"name" out:"user"`
-		RandUserIcon       func() `out:"iconFile"`
-		IsUsernameValid    func() `in:"name" out:"ok,errReason,errCode"`
-		IsPasswordValid    func() `in:"password" out:"ok,errReason,errCode"`
-		AllowGuestAccount  func() `in:"allow"`
-		CreateGuestAccount func() `out:"user"`
-		GetGroups          func() `out:"groups"`
-		GetPresetGroups    func() `in:"accountType" out:"groups"`
+		CreateUser             func() `in:"name,fullName,accountType" out:"user"`
+		DeleteUser             func() `in:"name,rmFiles"`
+		FindUserById           func() `in:"uid" out:"user"`
+		FindUserByName         func() `in:"name" out:"user"`
+		RandUserIcon           func() `out:"iconFile"`
+		IsUsernameValid        func() `in:"name" out:"ok,errReason,errCode"`
+		IsPasswordValid        func() `in:"password" out:"ok,errReason,errCode"`
+		AllowGuestAccount      func() `in:"allow"`
+		CreateGuestAccount     func() `out:"user"`
+		GetGroups              func() `out:"groups"`
+		GetPresetGroups        func() `in:"accountType" out:"groups"`
+		UpdateADDomainUserList func()
 	}
 }
 
 func NewManager(service *dbusutil.Service) *Manager {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return nil
+	}
+	login1Manager := login1.NewManager(systemBus)
+	sysSigLoop := dbusutil.NewSignalLoop(systemBus, 10)
+	sysSigLoop.Start()
+
 	var m = &Manager{
-		service: service,
+		service:       service,
+		login1Manager: login1Manager,
+		sysSigLoop:    sysSigLoop,
 	}
 
 	m.usersMap = make(map[string]*User)
 	m.userAddedChanMap = make(map[string]chan string)
+	m.userConfig = make(map[string]*domainUserConfig)
 
 	m.GuestIcon = userIconGuest
 	m.AllowGuest = isGuestUserEnabled()
 	m.initUsers(getUserPaths())
+	m.initDomainUsers()
 
 	m.watcher = dutils.NewWatchProxy()
 	if m.watcher != nil {
@@ -113,6 +146,30 @@ func NewManager(service *dbusutil.Service) *Manager {
 		go m.watcher.StartWatch()
 	}
 
+	m.login1Manager.InitSignalExt(m.sysSigLoop, true)
+	_, _ = m.login1Manager.ConnectSessionNew(func(id string, sessionPath dbus.ObjectPath) {
+		core, err := login1.NewSession(systemBus, sessionPath)
+		if err != nil {
+			logger.Warningf("new login1 session failed:%v", err)
+			return
+		}
+
+		userInfo, err := core.User().Get(0)
+		if err != nil {
+			logger.Warningf("get user info failed:%v", err)
+			return
+		}
+
+		if !IsDomainUserID(strconv.FormatUint(uint64(userInfo.UID), 10)) {
+			return
+		}
+
+		err = m.addDomainUser(userInfo.UID)
+		if err != nil {
+			logger.Warningf("add login session failed:%v", err)
+		}
+	})
+
 	return m
 }
 
@@ -122,6 +179,7 @@ func (m *Manager) destroy() {
 		m.watcher = nil
 	}
 
+	m.sysSigLoop.Stop()
 	m.stopExportUsers(m.UserList)
 	_ = m.service.StopExport(m)
 }
@@ -159,6 +217,152 @@ func (m *Manager) exportUsers() {
 	}
 
 	m.usersMapMu.Unlock()
+}
+
+func (m *Manager) exportUserByUid(uId string) error {
+	var u *User
+	var err error
+	var domainUserGroups []string
+	userPath := userDBusPathPrefix + uId
+	id, _ := strconv.Atoi(uId)
+
+	domainUserGroups, err = GetUserGroupsByUID(uint32(id))
+	if err != nil {
+		logger.Warningf("failed to get domain user groups %s", uId)
+	}
+
+	if domainUserGroups != nil && IsDomainUserID(uId) {
+		u, err = NewDomainUser(uint32(id), m.service)
+		if err != nil {
+			logger.Warningf("failed to new domain user: %s", u.UserName)
+			return err
+		}
+
+		var config = &domainUserConfig{
+			Name:      u.UserName,
+			Uid:       u.Uid,
+			IsLogined: true,
+		}
+		m.domainUserMapMu.Lock()
+		m.userConfig[userPath] = config
+		m.saveDomainUserConfig(m.userConfig)
+		m.domainUserMapMu.Unlock()
+	} else {
+		u, err = NewUser(userPath, m.service,true)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	m.usersMapMu.Lock()
+	ch := m.userAddedChanMap[u.UserName]
+	m.usersMapMu.Unlock()
+
+	err = m.service.Export(dbus.ObjectPath(userPath), u)
+	logger.Debugf("export user %q err: %v", userPath, err)
+	if ch != nil {
+		if err != nil {
+			ch <- ""
+		} else {
+			ch <- userPath
+		}
+		logger.Debug("after ch <- userPath")
+	}
+
+	if err != nil {
+		return err
+	}
+
+	m.usersMapMu.Lock()
+	m.usersMap[userPath] = u
+	m.usersMapMu.Unlock()
+
+	return nil
+}
+
+func (m *Manager) initDomainUsers() {
+	var domainUserList []string
+	// 解析json文件,获取所有之前登录过的域账号
+	config, err := m.loadDomainUserConfig()
+	if config != nil {
+		m.userConfig = config
+	}
+
+	if err != nil {
+		logger.Errorf("init domain user config failed: %v", err)
+		return
+	}
+
+	for _, v := range config {
+		if IsDomainUserID(v.Uid) && (v.IsLogined == true) {
+			domainUserList = append(domainUserList, v.Uid)
+		}
+	}
+
+	// 构造User服务对象
+	var userList = m.UserList
+	for _, uId := range domainUserList {
+		id, _ := strconv.Atoi(uId)
+		u, err := NewDomainUser(uint32(id), m.service)
+		if err != nil {
+			logger.Errorf("New domain user '%s' failed: %v", uId, err)
+			continue
+		}
+
+		userDBusPath := userDBusPathPrefix + uId
+		userList = append(userList, userDBusPath)
+		m.usersMapMu.Lock()
+		m.usersMap[userDBusPath] = u
+		m.usersMapMu.Unlock()
+	}
+	sort.Strings(userList)
+	m.UserList = userList
+}
+
+func (m *Manager) loadDomainUserConfig() (DefaultDomainUserConfig, error) {
+	logger.Debug("loadDomainUserConfig")
+	var config DefaultDomainUserConfig
+	if !dutils.IsFileExist(configFile) {
+		err := dutils.CreateFile(configFile)
+		if err != nil {
+			return config, err
+		}
+	} else {
+		data, err := ioutil.ReadFile(configFile)
+		if err != nil {
+			return config, err
+		}
+
+		if len(data) == 0 {
+			logger.Warningf("domain user config file is empty")
+			return config, nil
+		}
+
+		err = json.Unmarshal(data, &config)
+		if err != nil {
+			return config, err
+		}
+
+	}
+
+	return config, nil
+}
+
+func (m *Manager) saveDomainUserConfig(config DefaultDomainUserConfig) error {
+	data, err := json.Marshal(config)
+	if err != nil {
+		return err
+	}
+
+	dir := filepath.Dir(configFile)
+	err = os.MkdirAll(dir, 0755)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(configFile, data, 0644)
+	return err
 }
 
 func (m *Manager) stopExportUsers(list []string) {

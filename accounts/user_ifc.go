@@ -198,6 +198,9 @@ func (u *User) SetMaxPasswordAge(sender dbus.Sender, nDays int32) *dbus.Error {
 }
 
 func (u *User) IsPasswordExpired() (bool, *dbus.Error) {
+	if IsDomainUserID(u.Uid) {
+		return false, nil
+	}
 	v, err := users.IsPasswordExpired(u.UserName)
 	return v, dbusutil.ToError(err)
 }

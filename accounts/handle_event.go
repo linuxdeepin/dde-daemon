@@ -22,6 +22,7 @@ package accounts
 import (
 	"path/filepath"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -113,7 +114,10 @@ func (m *Manager) handleFilePasswdChanged() {
 		if ok {
 			u.updatePropsPasswd(uInfo)
 		} else {
-			uidsDelete = append(uidsDelete, u.Uid)
+			// 域账户没有保存在本地，无需删除
+			if !IsDomainUserID(u.Uid) {
+				uidsDelete = append(uidsDelete, u.Uid)
+			}
 		}
 		delete(infosMap, u.Uid)
 	}
@@ -186,16 +190,34 @@ func (m *Manager) handleDMConfigChanged() {
 
 func (m *Manager) addUser(uInfo *users.UserInfo) {
 	logger.Debug("addUser", uInfo.Uid)
-	userPath := userDBusPathPrefix + uInfo.Uid
-	err := m.exportUserByPath(userPath)
+	err := m.exportUserByUid(uInfo.Uid)
 	if err != nil {
 		logger.Warningf("failed to export user %s: %v", uInfo.Uid, err)
 		return
 	}
-	err = m.service.Emit(m, "UserAdded", userPath)
+	err = m.service.Emit(m, "UserAdded", userDBusPathPrefix+uInfo.Uid)
 	if err != nil {
 		logger.Warning(err)
 	}
+}
+
+func (m *Manager) addDomainUser(uId uint32) error {
+	logger.Debug("addDomainUser", uId)
+	domainUserUId := strconv.FormatUint(uint64(uId), 10)
+	err := m.exportUserByUid(domainUserUId)
+
+	if err != nil {
+		logger.Warningf("failed to export user %d: %v", uId, err)
+		return err
+	}
+
+	m.updatePropUserList()
+	err = m.service.Emit(m, "UserAdded", userDBusPathPrefix+domainUserUId)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	return err
 }
 
 func (m *Manager) deleteUser(uid string) {
