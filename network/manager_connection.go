@@ -40,9 +40,10 @@ type connection struct {
 	nmConn   nmdbus.ConnectionSettings
 	connType string
 
-	Path dbus.ObjectPath
-	Uuid string
-	Id   string
+	Path    dbus.ObjectPath
+	Uuid    string
+	Id      string
+	IfcName string
 
 	// if not empty, the connection will only apply to special device,
 	// works for wired, wireless, infiniband, wimax devices
@@ -148,6 +149,7 @@ func (conn *connection) updateProps() connectionData {
 
 	conn.Uuid = getSettingConnectionUuid(cdata)
 	conn.Id = getSettingConnectionId(cdata)
+	conn.IfcName = getSettingConnectionInterfaceName(cdata)
 
 	switch getSettingConnectionType(cdata) {
 	case nm.NM_SETTING_GSM_SETTING_NAME, nm.NM_SETTING_CDMA_SETTING_NAME:
