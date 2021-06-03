@@ -346,27 +346,44 @@ func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float
 		logger.Error(err)
 	}
 	obj := sessionBus.Object("com.deepin.daemon.Display", "/com/deepin/daemon/Display")
-	var ret dbus.Variant
-	var ret1 dbus.Variant
-	err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display", "Monitors").Store(&ret)
+	var dbusMonitors dbus.Variant
+	var dbusTouchMap dbus.Variant
+	var dbusTouchscreens dbus.Variant
+	err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display", "Monitors").Store(&dbusMonitors)
 	if err != nil {
 		logger.Error(err)
+		return err
 	}
-	err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display", "TouchMap").Store(&ret1)
+	err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display", "TouchMap").Store(&dbusTouchMap)
 	if err != nil {
 		logger.Error(err)
+		return err
 	}
-	dbusObjectPathArray := ret.Value().([]dbus.ObjectPath)
-	mapTouchName := ret1.Value().(map[string]string)
+	err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.daemon.Display", "Touchscreens").Store(&dbusTouchscreens)
+	if err != nil {
+		logger.Error(err)
+		return err
+	}
+	dbusObjectPathArray := dbusMonitors.Value().([]dbus.ObjectPath)
+	mapTouchName := dbusTouchMap.Value().(map[string]string)
+	touchscreensInfo := dbusTouchscreens.Value().([][]interface{})
 	var screenName string
-	if len(mapTouchName) > 0 {
-		for _, screenName = range mapTouchName {
-			break
+	var ok bool
+	if len(touchscreensInfo) > 0 {
+		if len(touchscreensInfo[0]) < 4 {
+			logger.Warning("no touch screen name.")
+			return fmt.Errorf("No touch screen name")
+		}
+		screenName, ok = mapTouchName[touchscreensInfo[0][3].(string)]
+		if !ok {
+			logger.Warning("no touch screen.")
+			return fmt.Errorf("No touch screen.")
 		}
 	} else {
-		logger.Warning("The number of touch screen cannot be 0 or less. ")
-		return nil
+		logger.Warning("No touch screen.")
+		return fmt.Errorf("No touch screen.")
 	}
+
 	var rotation uint16
 
 	for _, dbusObjectPath := range dbusObjectPathArray {
