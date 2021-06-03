@@ -290,6 +290,10 @@ func (d *device) connectProperties() {
 		logger.Debugf("%s Connected: %v", d, connected)
 		d.connected = connected
 
+		//音频设备主动发起连接时也断开之前的音频连接
+		if d.connected && d.Paired{
+			go d.audioA2DPWorkaround()
+		}
 		// check if device need to be removed, if is, remove device
 		needRemove := d.getAndResetNeedRemove()
 		if needRemove {
@@ -558,6 +562,7 @@ func (d *device) doConnect(hasNotify bool) error {
 		}
 		return err
 	}
+
 	d.audioA2DPWorkaround()
 
 	err = d.doRealConnect()
