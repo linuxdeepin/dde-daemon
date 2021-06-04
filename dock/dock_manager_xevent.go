@@ -21,6 +21,7 @@ package dock
 
 import (
 	"sort"
+	"strings"
 	"time"
 
 	x "github.com/linuxdeepin/go-x11-client"
@@ -76,11 +77,12 @@ func (m *Manager) handleClientListChanged() {
 		for _, win := range add {
 			window0 := win
 			addFunc := func() {
-				logger.Debugf("client list add: %x", window0)
+				logger.Debugf("client list add: %d", window0)
 				winInfo := m.registerWindow(window0)
 				repeatCount := 0
 				for {
 					if repeatCount > 10 {
+						logger.Debugf("give up identify window %d", window0)
 						return
 					}
 					good := isGoodWindow(window0)
@@ -89,7 +91,9 @@ func (m *Manager) handleClientListChanged() {
 					}
 					pid := getWmPid(window0)
 					wmClass, _ := getWmClass(window0)
-					if pid != 0 || wmClass != nil {
+					wmName := getWmName(window0)
+					wmCmd, _ := getWmCommand(window0)
+					if pid != 0 || wmClass != nil || wmName != "" || strings.Join(wmCmd, "") != "" {
 						m.attachOrDetachWindow(winInfo)
 						return
 					}
@@ -105,7 +109,7 @@ func (m *Manager) handleClientListChanged() {
 		for _, win := range remove {
 			window0 := win
 			removeFunc := func() {
-				logger.Debugf("client list remove: %x", window0)
+				logger.Debugf("client list remove: %d", window0)
 				m.windowInfoMapMutex.RLock()
 				winInfo := m.windowInfoMap[window0]
 				m.windowInfoMapMutex.RUnlock()
@@ -113,7 +117,7 @@ func (m *Manager) handleClientListChanged() {
 					m.detachWindow(winInfo)
 					winInfo.entryInnerId = ""
 				} else {
-					logger.Warningf("window info of '%x' is nil", window0)
+					logger.Warningf("window info of %d is nil", window0)
 					entry := m.Entries.getByWindowId(window0)
 					m.removeAppEntry(entry)
 				}
@@ -196,6 +200,7 @@ func (m *Manager) handleMapNotifyEvent(ev *x.MapNotifyEvent) {
 	logger.Debug("MapNotifyEvent window:", ev.Window)
 	winInfo := m.registerWindow(ev.Window)
 	time.AfterFunc(2*time.Second, func() {
+		logger.Warningf("mapNotifyEvent after 2s, call identifyWindow, win: %d", winInfo.window)
 		_, appInfo := m.identifyWindow(winInfo)
 		m.markAppLaunched(appInfo)
 	})
