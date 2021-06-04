@@ -770,17 +770,20 @@ func (b *Bluetooth) tryConnectPairedDevice(dev *device) bool {
 		return false
 	}
 	logger.Debug("Will auto connect device:", dev.String(), dev.adapter.address, dev.Address)
-	err := dev.doConnect(false)
-	if err != nil {
-		logger.Debug("failed to connect:", dev.String(), err)
-		return false
-	} else {
-		// if auto connect success, add device into map connectedDevices
-		if dev.ConnectState {
-			b.addConnectedDevice(dev)
+	for i := 0; i < 3; i++ {
+		err := dev.doConnect(false)
+		if err == nil {
+			// if auto connect success, add device into map connectedDevices
+			if dev.ConnectState {
+				b.addConnectedDevice(dev)
+			}
+			return true
+		} else {
+			logger.Debug("failed to connect:", dev.String(), err, i)
 		}
 	}
-	return true
+
+	return false
 }
 
 // get paired device list
