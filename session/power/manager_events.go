@@ -95,9 +95,6 @@ func (m *Manager) handleBeforeSuspend() {
 func (m *Manager) handleWakeup() {
 	m.setPrepareSuspend(suspendStateWakeup)
 	logger.Debug("wakeup")
-	if m.SleepLock.Get() {
-		m.doLock(true)
-	}
 
 	// Fix wayland sometimes no dpms event after wakeup
 	if m.UseWayland {
