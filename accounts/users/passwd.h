@@ -25,6 +25,8 @@ char *mkpasswd(const char *words);
 int lock_shadow_file();
 int unlock_shadow_file();
 
+int exist_pw_uid(__uid_t uid);
+
 char *
 get_pw_name(__uid_t uid);
 char *
