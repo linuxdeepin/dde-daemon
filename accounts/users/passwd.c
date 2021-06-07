@@ -28,6 +28,9 @@
 
 #include "passwd.h"
 
+#define ERROR_NULLPOINTER -1;
+#define ERROR_NOERROR 0;
+
 char *
 mkpasswd (const char *words)
 {
@@ -64,6 +67,15 @@ int
 unlock_shadow_file()
 {
 	return ulckpwdf();
+}
+
+int 
+exist_pw_uid(__uid_t uid)
+{
+    if (!getpwuid(uid)) {
+        return ERROR_NULLPOINTER;
+    }
+    return ERROR_NOERROR;
 }
 
 char *
