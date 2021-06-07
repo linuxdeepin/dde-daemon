@@ -134,7 +134,7 @@ func (s *SessionDaemon) initModules() {
 		"clipboard",
 		"keybinding",
 		"inputdevices",
-		"gesture",
+		// "gesture",
 		"housekeeping",
 		"timedate",
 		"bluetooth",
