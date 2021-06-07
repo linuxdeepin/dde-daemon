@@ -49,6 +49,10 @@ func EncodePasswd(words string) string {
 	return C.GoString(C.mkpasswd(cwords))
 }
 
+func ExistPwUid(uid uint32) int {
+	return int(C.exist_pw_uid(C.uint(uid)))
+}
+
 func GetPwName(uid uint32) string {
 	return C.GoString(C.get_pw_name(C.uint(uid)))
 }

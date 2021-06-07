@@ -21,12 +21,13 @@ package accounts
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"sort"
 	"strconv"
 	"sync"
 
-	"github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus"
 	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/dde/daemon/accounts/users"
@@ -142,10 +143,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 
 	m.login1Manager.InitSignalExt(m.sysSigLoop, true)
 	_, _ = m.login1Manager.ConnectSessionNew(func(id string, sessionPath dbus.ObjectPath) {
-		if !m.isUserJoinUdcp() {
-			return
-		}
-
 		core, err := login1.NewSession(systemBus, sessionPath)
 		if err != nil {
 			logger.Warningf("new login1 session failed:%v", err)
@@ -155,6 +152,10 @@ func NewManager(service *dbusutil.Service) *Manager {
 		userInfo, err := core.User().Get(0)
 		if err != nil {
 			logger.Warningf("get user info failed:%v", err)
+			return
+		}
+
+		if userInfo.UID < 10000 {
 			return
 		}
 
@@ -201,11 +202,6 @@ func (m *Manager) initUsers(list []string) {
 	m.UserList = userList
 }
 
-func (m *Manager) isUserJoinUdcp() bool {
-	// 临时代码，固定返回true
-	return true
-}
-
 func (m *Manager) initUdcpCache() error {
 	// 解析json文件 新建udcp-cache对象
 	var ifcCfg InterfaceConfig
@@ -239,10 +235,6 @@ func (m *Manager) initUdcpCache() error {
 }
 
 func (m *Manager) initUdcpUsers() {
-	// 判断 udcpg服务是否存在
-	if !m.isUserJoinUdcp() {
-		return
-	}
 	// 解析json文件 新建udcp-cache对象,获取所有加域账户ID
 	err := m.initUdcpCache()
 	if err != nil {
@@ -256,16 +248,29 @@ func (m *Manager) initUdcpUsers() {
 		return
 	}
 
+	isJoinUdcp, err := m.udcpCache.Enable().Get(0)
+	if err != nil {
+		logger.Errorf("Udcp cache get Enable failed: %v", err)
+		return
+	}
+
+	if !isJoinUdcp {
+		return
+	}
+
 	// 构造User服务对象
 	var userList = m.UserList
 	for _, uId := range userIdList {
+		if users.ExistPwUid(uId) != 0 {
+			continue
+		}
 		userGroups, err := m.udcpCache.GetUserGroups(0, users.GetPwName(uId))
 		if err != nil {
 			logger.Errorf("Udcp cache getUserGroups failed: %v", err)
 			continue
 		}
 
-		u, err := NewUdcpUser(uId, m.service, userGroups, false)
+		u, err := NewUdcpUser(uId, m.service, userGroups)
 		if err != nil {
 			logger.Errorf("New udcp user '%d' failed: %v", uId, err)
 			continue
@@ -310,13 +315,16 @@ func (m *Manager) exportUserByUid(uId string) error {
 	id, _ := strconv.Atoi(uId)
 
 	if /*m.isUserJoinUdcp()*/ id > 10000 {
+		if users.ExistPwUid(uint32(id)) != 0 {
+			return errors.New("No such user id")
+		}
 		userGroups, err = m.udcpCache.GetUserGroups(0, users.GetPwName(uint32(id)))
 		if err != nil {
 			logger.Errorf("Udcp cache getUserGroups failed: %v", err)
 			return err
 		}
 
-		u, err = NewUdcpUser(uint32(id), m.service, userGroups, true)
+		u, err = NewUdcpUser(uint32(id), m.service, userGroups)
 	} else {
 		u, err = NewUser(userPath, m.service, true)
 	}

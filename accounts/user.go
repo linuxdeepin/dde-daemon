@@ -29,10 +29,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/gir/glib-2.0"
+	glib "pkg.deepin.io/gir/glib-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gdkpixbuf"
 	"pkg.deepin.io/lib/strv"
@@ -382,8 +382,12 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 	return u, nil
 }
 
-func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string, ignoreErr bool) (*User, error) {
+func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*User, error) {
 	var err error
+	if users.ExistPwUid(usrId) != 0 {
+		return nil, errors.New("No such user id")
+	}
+
 	var u = &User{
 		service:            service,
 		UserName:           users.GetPwName(usrId),
