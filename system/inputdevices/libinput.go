@@ -139,7 +139,6 @@ func (d *libinputDevice) GetPhys() string {
 	if v == nil {
 		parent := C.udev_device_get_parent(udev)
 		v = C.udev_device_get_sysattr_value(parent, C.CString("phys"))
-		C.udev_device_unref(parent)
 	}
 	C.udev_device_unref(udev)
 
