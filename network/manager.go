@@ -114,6 +114,8 @@ type Manager struct {
 	checkAPStrengthTimer    *time.Timer
 	protalAuthBrowserOpened bool // PORTAL认证中状态
 
+	acinfosJSON string
+
 	//nolint
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {
@@ -122,6 +124,8 @@ type Manager struct {
 		DeviceEnabled struct {
 			devPath string
 			enabled bool
+		}
+		ActiveConnectionInfoChanged struct {
 		}
 	}
 

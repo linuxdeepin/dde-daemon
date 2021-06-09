@@ -113,6 +113,17 @@ func (m *Manager) initActiveConnectionManage() {
 	err = dbusutil.NewMatchRuleBuilder().
 		Type("signal").
 		Sender(senderNm).
+		Interface(interfaceDBusProps).
+		Member(memberPropsChanged).
+		ArgNamespace(0, "org.freedesktop.NetworkManager").Build().
+		AddTo(m.sysSigLoop.Conn())
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	err = dbusutil.NewMatchRuleBuilder().
+		Type("signal").
+		Sender(senderNm).
 		Interface(interfaceVpnConnection).
 		Member(memberVpnStateChanged).Build().
 		AddTo(m.sysSigLoop.Conn())
@@ -170,6 +181,24 @@ func (m *Manager) initActiveConnectionManage() {
 				}
 				if connectivity == nm.NM_CONNECTIVITY_PORTAL {
 					go m.doPortalAuthentication()
+				}
+			}
+		}
+		if strings.HasPrefix(string(sig.Path),
+			"/org/freedesktop/NetworkManager/IP") && len(sig.Body) == 3 {
+			ifc, ok := sig.Body[0].(string)
+			if !ok {
+				logger.Warning("interface must string type")
+				return
+			}
+
+			switch ifc {
+			case "org.freedesktop.NetworkManager.IP4Config":
+				fallthrough
+			case "org.freedesktop.NetworkManager.IP6Config":
+				{
+					// ipconfig changed
+					go m.updateActiveConnectionInfo()
 				}
 			}
 		}
@@ -314,6 +343,7 @@ func (m *Manager) GetActiveConnectionInfo() (acinfosJSON string, busErr *dbus.Er
 	}
 	acinfosJSON, err := marshalJSON(acinfos)
 	busErr = dbusutil.ToError(err)
+	m.acinfosJSON = acinfosJSON
 	return
 }
 
@@ -470,4 +500,32 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 		Hotspot:             hotspotInfo,
 	}
 	return
+}
+
+func (m *Manager) updateActiveConnectionInfo() {
+	var acinfos []activeConnectionInfo
+	// get activated devices' connection information
+	for _, devPath := range nmGetDevices() {
+		if isDeviceStateActivated(nmGetDeviceState(devPath)) {
+			if info, err := m.doGetActiveConnectionInfo(nmGetDeviceActiveConnection(devPath), devPath); err == nil {
+				acinfos = append(acinfos, info)
+			}
+		}
+	}
+	// get activated vpn connection information
+	for _, apath := range nmGetVpnActiveConnections() {
+		if nmAConn, err := nmNewActiveConnection(apath); err == nil {
+			if devs, _ := nmAConn.Devices().Get(0); len(devs) > 0 {
+				devPath := devs[0]
+				if info, err := m.doGetActiveConnectionInfo(apath, devPath); err == nil {
+					acinfos = append(acinfos, info)
+				}
+			}
+		}
+	}
+	acinfosJSON, _ := marshalJSON(acinfos)
+	if acinfosJSON != m.acinfosJSON {
+		logger.Debug("ActiveConnectionInfoChanged...")
+		m.service.Emit(m, "ActiveConnectionInfoChanged")
+	}
 }
