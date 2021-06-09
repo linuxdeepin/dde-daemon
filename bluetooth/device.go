@@ -291,8 +291,14 @@ func (d *device) connectProperties() {
 		d.connected = connected
 
 		//音频设备主动发起连接时也断开之前的音频连接
-		if d.connected && d.Paired{
+		if d.connected && d.Paired {
 			go d.audioA2DPWorkaround()
+		}
+
+		a := d.adapter
+		if a.waitDiscovery {
+			a.startDiscovery()
+			a.waitDiscovery = false
 		}
 		// check if device need to be removed, if is, remove device
 		needRemove := d.getAndResetNeedRemove()

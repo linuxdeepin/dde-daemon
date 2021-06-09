@@ -47,6 +47,7 @@ type adapter struct {
 	discoveringTimeoutFlag              bool
 	scanReadyToConnectDeviceTimeout     *time.Timer
 	scanReadyToConnectDeviceTimeoutFlag bool
+	waitDiscovery                       bool
 }
 
 var defaultDiscoveringTimeout = 1 * time.Minute
@@ -198,17 +199,16 @@ func (a *adapter) connectProperties() {
 			go func() {
 				time.Sleep(1 * time.Second)
 				err = a.core.Adapter().StopDiscovery(0)
-				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
-				globalBluetooth.tryConnectPairedDevices()
-
-				a.discoveringTimeoutFlag = false
-				// start discovery
-				err = a.core.Adapter().StartDiscovery(0)
 				if err != nil {
-					logger.Warningf("failed to start discovery for %s: %v", a, err)
+					logger.Warningf("failed to stop discovery for %s: %v", a, err)
 				}
-				// dont need to start discovering, according to blueZ, scan will be called, when power is set on
-				a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
+				if !globalBluetooth.tryConnectPairedDevices() {
+					a.startDiscovery()
+				} else {
+					//蓝牙打开后如果处于连接状态，开始扫描会导致出错
+					a.waitDiscovery = true
+				}
 			}()
 		} else {
 			// if power off, stop discovering time out
@@ -268,6 +268,7 @@ func (a *adapter) connectProperties() {
 }
 func (a *adapter) startDiscovery() {
 	a.discoveringTimeoutFlag = false
+	logger.Debugf("start discovery")
 	err := a.core.Adapter().StartDiscovery(0)
 	if err != nil {
 		logger.Warningf("failed to start discovery for %s: %v", a, err)
