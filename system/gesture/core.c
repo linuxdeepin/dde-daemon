@@ -83,6 +83,10 @@ static double long_press_distance = LONG_PRESS_MAX_DISTANCE;
 static int short_press_duration = 200;
 static int dblclick_duration = 0; // 判断两次单击的间隔，是否为双击
 
+static uint64_t _prev_ev_time; // 前一个非 TOUCH_FRAME 事件的时间，单位 usec
+static int _prev_ev_type; // 前一个非 TOUCH_FRAME 事件的类型
+static uint64_t _prev_frame_ev_time; // 前一个 TOUCH_FRAME 事件的时间，单位 usec
+
 int
 start_loop(int verbose, double distance)
 {
@@ -492,6 +496,29 @@ handle_touch_events(struct libinput_event *ev, int ty,struct movement *m)
     rme = g_hash_table_lookup(ev_table, node);
     if (rme && rme->ignore) {
         return;
+    }
+
+    struct libinput_event_touch *tevent = libinput_event_get_touch_event(ev);
+    uint64_t time_usec = libinput_event_touch_get_time_usec(tevent);
+    g_debug("touch event %d time usec: %llu", ty, time_usec);
+
+    // 为修复 pms bug 64939，发现从 libinput 获取到的事件被重复了一遍，比如一次按下，
+    // 会出现 TOUCH_DOWN,TOUCH_FRAME,TOUCH_DOWN,TOUCH_FRAME 这样的，于是写了规避的代码。
+    // 具体原因可能是 libinput 的 bug，有待调查。
+    if (_prev_ev_type == ty && _prev_ev_time == time_usec && _prev_frame_ev_time == time_usec) {
+        // 主要特征是时间是相同的
+        g_debug("ignore repeat event");
+        _prev_ev_type = 0;
+        _prev_ev_time = 0;
+        _prev_frame_ev_time = 0;
+        return;
+    }
+
+    if (ty == LIBINPUT_EVENT_TOUCH_FRAME) {
+       _prev_frame_ev_time = time_usec;
+    } else {
+        _prev_ev_time = time_usec;
+        _prev_ev_type = ty;
     }
 
     switch (ty) {
