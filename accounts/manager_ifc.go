@@ -154,6 +154,12 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		userPath := userDBusPathPrefix + user.Uid
 		m.stopExportUser(userPath)
 		m.updatePropUserList()
+
+		// 清楚域账户本地缓存
+		if rmFiles {
+			user.clearData()
+		}
+
 		err = m.service.Emit(m, "UserDeleted", userPath)
 		if err != nil {
 			logger.Warning(err)
