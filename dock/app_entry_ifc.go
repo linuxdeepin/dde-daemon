@@ -215,10 +215,9 @@ func killProcess(pid uint) error {
 
 func (entry *AppEntry) GetAllowedCloseWindows() (windows []uint32, busErr *dbus.Error) {
 	entry.PropsMu.RLock()
-	windows = make([]uint32, len(entry.windows))
 	winIds := entry.getAllowedCloseWindows()
-	for idx, winId := range winIds {
-		windows[idx] = uint32(winId)
+	for _, id := range winIds {
+		windows = append(windows, uint32(id))
 	}
 	entry.PropsMu.RUnlock()
 	return windows, nil

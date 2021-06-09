@@ -187,6 +187,11 @@ const (
 )
 
 func (h *MotifWmHints) allowedClose() bool {
+	// 允许关闭的条件：
+	// 1. 不设置 Functions 字段，即 h.Flags 没有设置 MotifHintFunctions 标志位；
+	// 2. 或者设置了 Functions 字段并且 h.Functions 设置了 MotifFunctionAll 标志位；
+	// 3. 或者设置了 Functions 字段并且 h.Functions 设置了 MotifFunctionClose 标志位。
+	// 相关定义在 motif-2.3.8/lib/Xm/MwmUtil.h 。
 	return h.Flags&MotifHintFunctions == 0 ||
 		h.Functions&MotifFunctionAll != 0 ||
 		h.Functions&MotifFunctionClose != 0
