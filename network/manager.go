@@ -58,8 +58,9 @@ type Manager struct {
 	nmObjManager *nmdbus.ObjectManager
 	PropsMu      sync.RWMutex
 	// update by manager.go
-	State        uint32 // global networking state
-	Connectivity uint32
+	State            uint32 // global networking state
+	connectivityLock sync.Mutex
+	Connectivity     uint32
 
 	NetworkingEnabled bool `prop:"access:rw"` // airplane mode for NetworkManager
 	VpnEnabled        bool `prop:"access:rw"`

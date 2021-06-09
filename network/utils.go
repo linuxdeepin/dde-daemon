@@ -23,14 +23,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	dbus "github.com/godbus/dbus"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"pkg.deepin.io/dde/daemon/iw"
 	"pkg.deepin.io/dde/daemon/network/nm"
+	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/utils"
 )
 
@@ -236,4 +239,25 @@ func enableNetworking() error {
 	}
 
 	return nmManager.Enable(0, true)
+}
+
+func isConnectivityByHttp() bool {
+	client := &http.Client{
+		Timeout: time.Duration(15 * time.Second),
+	}
+	gs := gio.NewSettings("com.deepin.dde.network-utils")
+	defer gs.Unref()
+
+	urls := gs.GetStrv("network-checker-urls")
+	if len(urls) == 0 {
+		urls = append(urls, "https://www.chinauos.com")
+	}
+	for _, url := range urls {
+		if resp, err := client.Head(url); err == nil {
+			if resp.StatusCode >= 200 && resp.StatusCode <= 206 {
+				return true
+			}
+		}
+	}
+	return false
 }
