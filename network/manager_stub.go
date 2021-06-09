@@ -21,6 +21,7 @@ package network
 
 import (
 	"errors"
+	"time"
 
 	dbus "github.com/godbus/dbus"
 	"pkg.deepin.io/dde/daemon/network/nm"
@@ -71,7 +72,34 @@ func (m *Manager) updatePropState() {
 
 func (m *Manager) updatePropConnectivity() {
 	connectivity, _ := nmManager.Connectivity().Get(0)
-	m.setPropConnectivity(connectivity)
+	if connectivity != nm.NM_CONNECTIVITY_FULL {
+		c := make(chan bool, 1)
+		go func() {
+			c <- m.isConnectivityByHttp()
+		}()
+		go func() {
+			select {
+			case <-time.After(5 * time.Second):
+				// 联通性检测可能要等待多个测试，一般网络不行，基本也不行，所以给个短暂的测试，后面可以纠错
+				m.setPropConnectivity(connectivity)
+				if <-c {
+					connectivity = nm.NM_CONNECTIVITY_FULL
+				} else {
+					connectivity = nm.NM_CONNECTIVITY_NONE
+				}
+			case r := <-c:
+				if r {
+					connectivity = nm.NM_CONNECTIVITY_FULL
+				} else {
+					connectivity = nm.NM_CONNECTIVITY_NONE
+				}
+			}
+			logger.Debug("final connectivity is:", connectivity)
+			m.setPropConnectivity(connectivity)
+		}()
+	} else {
+		m.setPropConnectivity(connectivity)
+	}
 }
 
 func (m *Manager) updatePropDevices() {

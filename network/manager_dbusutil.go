@@ -16,6 +16,8 @@ func (v *Manager) emitPropChangedState(value uint32) error {
 }
 
 func (v *Manager) setPropConnectivity(value uint32) (changed bool) {
+	v.connectivityLock.Lock()
+	defer v.connectivityLock.Unlock()
 	if v.Connectivity != value {
 		v.Connectivity = value
 		v.emitPropChangedConnectivity(value)
