@@ -123,17 +123,17 @@ func (m *Manager) start() {
 			if !m.isUnitEnable(timesyncdService) {
 				return
 			}
-			server, err = m.timesyncd.ServerName().Get(0)
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
 			ntp, err := m.core.NTP().Get(0)
 			if err != nil {
 				logger.Warning(err)
 				return
 			}
 			if !ntp {
+				return
+			}
+			server, err = m.timesyncd.ServerName().Get(dbus.FlagNoAutoStart)
+			if err != nil {
+				logger.Warning(err)
 				return
 			}
 			if server != "" {
