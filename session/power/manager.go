@@ -51,6 +51,7 @@ type Manager struct {
 	inhibitFd            dbus.UnixFD
 	systemPower          systemPower.Power
 	display              display.Display
+	lightSensorEnabled   bool
 
 	PropsMu sync.RWMutex
 	// 是否有盖子，一般笔记本电脑才有
@@ -187,6 +188,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.initGSettingsConnectChanged()
 	m.AmbientLightAdjustBrightness.Bind(m.settings,
 		settingKeyAmbientLightAdjuestBrightness)
+	m.lightSensorEnabled = m.settings.GetBoolean(settingLightSensorEnabled)
 
 	power := m.helper.Power
 	err = common.ActivateSysDaemonService(power.ServiceName_())
@@ -205,10 +207,13 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 
 	logger.Info("LidIsPresent", m.LidIsPresent)
-	m.HasAmbientLightSensor, _ = helper.SensorProxy.HasAmbientLight().Get(0)
-	logger.Debug("HasAmbientLightSensor:", m.HasAmbientLightSensor)
-	if m.HasAmbientLightSensor {
-		m.lightLevelUnit, _ = helper.SensorProxy.LightLevelUnit().Get(0)
+
+	if m.lightSensorEnabled {
+		m.HasAmbientLightSensor, _ = helper.SensorProxy.HasAmbientLight().Get(0)
+		logger.Debug("HasAmbientLightSensor:", m.HasAmbientLightSensor)
+		if m.HasAmbientLightSensor {
+			m.lightLevelUnit, _ = helper.SensorProxy.LightLevelUnit().Get(0)
+		}
 	}
 
 	m.sessionActive, _ = helper.SessionWatcher.IsActive().Get(0)
@@ -263,34 +268,38 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	}
 
-	err = m.helper.SensorProxy.LightLevel().ConnectChanged(func(hasValue bool, value float64) {
-		if !hasValue {
-			return
+	if m.lightSensorEnabled {
+		err = m.helper.SensorProxy.LightLevel().ConnectChanged(func(hasValue bool, value float64) {
+			if !hasValue {
+				return
+			}
+			m.handleLightLevelChanged(value)
+		})
+		if err != nil {
+			logger.Warning(err)
 		}
-		m.handleLightLevelChanged(value)
-	})
-	if err != nil {
-		logger.Warning(err)
 	}
 
 	_, err = m.helper.SysDBusDaemon.ConnectNameOwnerChanged(
 		func(name string, oldOwner string, newOwner string) {
-			serviceName := m.helper.SensorProxy.ServiceName_()
-			if name == serviceName && newOwner != "" {
-				logger.Debug("sensorProxy restarted")
-				hasSensor, _ := m.helper.SensorProxy.HasAmbientLight().Get(0)
-				var lightLevelUnit string
-				if hasSensor {
-					lightLevelUnit, _ = m.helper.SensorProxy.LightLevelUnit().Get(0)
+			if m.lightSensorEnabled {
+				serviceName := m.helper.SensorProxy.ServiceName_()
+				if name == serviceName && newOwner != "" {
+					logger.Debug("sensorProxy restarted")
+					hasSensor, _ := m.helper.SensorProxy.HasAmbientLight().Get(0)
+					var lightLevelUnit string
+					if hasSensor {
+						lightLevelUnit, _ = m.helper.SensorProxy.LightLevelUnit().Get(0)
+					}
+
+					m.PropsMu.Lock()
+					m.setPropHasAmbientLightSensor(hasSensor)
+					m.ambientLightClaimed = false
+					m.lightLevelUnit = lightLevelUnit
+					m.PropsMu.Unlock()
+
+					m.claimOrReleaseAmbientLight()
 				}
-
-				m.PropsMu.Lock()
-				m.setPropHasAmbientLightSensor(hasSensor)
-				m.ambientLightClaimed = false
-				m.lightLevelUnit = lightLevelUnit
-				m.PropsMu.Unlock()
-
-				m.claimOrReleaseAmbientLight()
 			}
 			if name == m.helper.LoginManager.ServiceName_() && oldOwner != "" && newOwner == "" {
 				if m.prepareSuspend == suspendStatePrepare {

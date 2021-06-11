@@ -5,6 +5,10 @@ import (
 )
 
 func (m *Manager) claimOrReleaseAmbientLight() {
+	if !m.lightSensorEnabled {
+		return
+	}
+
 	logger.Debug("call claimOrReleaseAmbientLight")
 	var shouldClaim bool
 
@@ -71,6 +75,7 @@ func (m *Manager) releaseAmbientLight() {
 		logger.Warning(err)
 		return
 	}
+
 	m.ambientLightClaimed = false
 }
 

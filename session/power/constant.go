@@ -65,7 +65,8 @@ const (
 
 	settingKeySaveBrightnessWhilePsm = "save-brightness-while-psm"
 
-	settingKeyMode = "mode"
+	settingLightSensorEnabled = "light-sensor-enabled"
+	settingKeyMode            = "mode"
 
 	// cmd
 	cmdDDELowPower = "/usr/lib/deepin-daemon/dde-lowpower"
