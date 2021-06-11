@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -378,7 +379,18 @@ func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float
 }
 
 func (m *Manager) handleTouchMovementEvent(direction string, fingers int32, startScaleX float64, startScaleY float64, endScaleX float64, endScaleY float64) error {
+	// left-up (0,0), right-down (1,1)
+
 	if fingers == 1 {
+		// sensitivity check
+		// TODO maybe write a function for this
+		sensitivityThreshold := 0.05
+
+		if math.Abs(startScaleX-endScaleX) < sensitivityThreshold {
+			logger.Debug("sensitivity check fail, gesture will not be triggered")
+			return nil
+		}
+
 		switch direction {
 		case "left":
 			return m.clipboard.Hide(0)
