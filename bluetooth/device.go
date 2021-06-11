@@ -295,11 +295,6 @@ func (d *device) connectProperties() {
 			go d.audioA2DPWorkaround()
 		}
 
-		a := d.adapter
-		if a.waitDiscovery {
-			a.startDiscovery()
-			a.waitDiscovery = false
-		}
 		// check if device need to be removed, if is, remove device
 		needRemove := d.getAndResetNeedRemove()
 		if needRemove {
@@ -358,6 +353,8 @@ func (d *device) connectProperties() {
 		if d.needNotify && d.Paired && d.State == deviceStateConnected && d.ConnectState {
 			d.notifyConnectedChanged()
 		}
+
+		d.adapter.minusConnectingCount()
 	})
 	if err != nil {
 		logger.Warning(err)

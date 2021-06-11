@@ -48,6 +48,7 @@ type adapter struct {
 	scanReadyToConnectDeviceTimeout     *time.Timer
 	scanReadyToConnectDeviceTimeoutFlag bool
 	waitDiscovery                       bool
+	connectingCount                     int
 }
 
 var defaultDiscoveringTimeout = 1 * time.Minute
@@ -203,12 +204,9 @@ func (a *adapter) connectProperties() {
 					logger.Warningf("failed to stop discovery for %s: %v", a, err)
 				}
 				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
-				if !globalBluetooth.tryConnectPairedDevices() {
-					a.startDiscovery()
-				} else {
-					//蓝牙打开后如果处于连接状态，开始扫描会导致出错
-					a.waitDiscovery = true
-				}
+				globalBluetooth.tryConnectPairedDevices()
+				a.waitDiscovery = true
+				a.startDiscovery()
 			}()
 		} else {
 			// if power off, stop discovering time out
@@ -267,6 +265,11 @@ func (a *adapter) connectProperties() {
 	}
 }
 func (a *adapter) startDiscovery() {
+	if a.connectingCount > 0 {
+		logger.Info("some devices connecting, can not start discovery")
+		return
+	}
+
 	a.discoveringTimeoutFlag = false
 	logger.Debugf("start discovery")
 	err := a.core.Adapter().StartDiscovery(0)
@@ -274,7 +277,25 @@ func (a *adapter) startDiscovery() {
 		logger.Warningf("failed to start discovery for %s: %v", a, err)
 	} else {
 		logger.Debug("reset timer for stop scan")
+		a.waitDiscovery = false
 		// start discovering success, reset discovering timer
 		a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+	}
+}
+
+func (a *adapter) addConnectingCount() {
+	logger.Debug("add connecting count")
+	a.connectingCount++
+}
+
+func (a *adapter) minusConnectingCount() {
+	if a.connectingCount > 0 {
+		logger.Debug("had device connecting, return")
+		a.connectingCount--
+	}
+
+	if a.waitDiscovery && a.connectingCount == 0 {
+		a.waitDiscovery = false
+		a.startDiscovery()
 	}
 }

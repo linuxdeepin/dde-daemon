@@ -725,7 +725,7 @@ func (b *Bluetooth) updateState() {
 	b.PropsMu.Unlock()
 }
 
-func (b *Bluetooth) tryConnectPairedDevices() bool {
+func (b *Bluetooth) tryConnectPairedDevices() {
 	//input and audio devices counter
 	typeMap := make(map[string]uint8)
 	typeMap["audio-card"] = 0
@@ -733,7 +733,6 @@ func (b *Bluetooth) tryConnectPairedDevices() bool {
 	typeMap["input-mouse"] = 0
 	typeMap["input-tablet"] = 0
 
-	var startConnect = false
 	var devList = b.getPairedDeviceList()
 	for _, dev := range devList {
 		// make sure dev always exist
@@ -746,17 +745,21 @@ func (b *Bluetooth) tryConnectPairedDevices() bool {
 			if typeMap[dev.Icon] == 0 {
 				if b.tryConnectPairedDevice(dev) {
 					typeMap[dev.Icon]++
-					startConnect = true
+					c, _ := dev.core.Connected().Get(0)
+					if !c {
+						dev.adapter.addConnectingCount()
+					}
 				}
 			}
 		default:
 			if b.tryConnectPairedDevice(dev) {
-				startConnect = true
+				c, _ := dev.core.Connected().Get(0)
+				if !c {
+					dev.adapter.addConnectingCount()
+				}
 			}
 		}
 	}
-
-	return startConnect
 }
 
 func (b *Bluetooth) tryConnectPairedDevice(dev *device) bool {
