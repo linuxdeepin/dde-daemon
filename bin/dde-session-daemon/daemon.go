@@ -140,7 +140,7 @@ func (s *SessionDaemon) initModules() {
 		"bluetooth",
 		"screenedge",
 		"mime",
-		"calendar",
+		//"calendar",
 		"miracast", // need network
 		"systeminfo",
 		"lastore",

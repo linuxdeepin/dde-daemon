@@ -57,7 +57,7 @@ import (
 	_ "pkg.deepin.io/dde/daemon/bluetooth"
 	_ "pkg.deepin.io/dde/daemon/screenedge"
 
-	_ "pkg.deepin.io/dde/daemon/calendar"
+	//_ "pkg.deepin.io/dde/daemon/calendar"
 	_ "pkg.deepin.io/dde/daemon/mime"
 
 	// depends: network
