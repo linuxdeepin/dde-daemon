@@ -107,8 +107,6 @@ const (
 	defaultGtkTheme       = "deepin"
 	autoGtkTheme          = "deepin-auto"
 	defaultCursorTheme    = "bloom"
-	defaultStandardFont   = "Noto Sans"
-	defaultMonospaceFont  = "Noto Mono"
 	defaultFontConfigFile = "/usr/share/deepin-default-settings/fontconfig.json"
 
 	dbusServiceName = "com.deepin.daemon.Appearance"
@@ -1090,10 +1088,38 @@ func (m *Manager) getDefaultFonts() (standard string, monospace string) {
 	cfg := m.defaultFontConfig
 	m.defaultFontConfigMu.Unlock()
 
+	standardSet := fonts.GetFamilyTable().ListStandard()
+	monospaceSet := fonts.GetFamilyTable().ListMonospace()
+
 	if cfg == nil {
-		return defaultStandardFont, defaultMonospaceFont
+		// 找到第一个已经安装的标准字体和等宽字体
+		return standardSet[0], monospaceSet[0]
 	}
-	return cfg.Get()
+	standard, monospace = cfg.Get()
+
+	var installedStandard, installedMonospace bool
+	// 检查当前标准字体是否安装
+	for _, _standard := range standardSet {
+		if _standard == standard {
+			installedStandard = true
+		}
+	}
+	// 检查当前等宽字体是否安装
+	for _, _monospace := range monospaceSet {
+		if _monospace == monospace {
+			installedMonospace = true
+		}
+	}
+
+	if !installedStandard {
+		standard = standardSet[0]
+	}
+	if !installedMonospace {
+		monospace = monospaceSet[0]
+	}
+
+	logger.Debugf("default standardFont: %s  default monospaceFont: %s\n", standard, monospace)
+	return
 }
 
 func (m *Manager) writeDQtTheme(key, value string) error {
