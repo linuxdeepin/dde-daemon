@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"os"
 	"time"
 
 	"pkg.deepin.io/dde/daemon/accounts/checkers"
@@ -152,6 +153,11 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		//delete user config and icons
 		if rmFiles {
 			user.clearData()
+			err := os.RemoveAll(user.HomeDir)
+			if err != nil {
+				logger.Warning(err)
+				return dbusutil.ToError(err)
+			}
 		}
 
 		return nil
