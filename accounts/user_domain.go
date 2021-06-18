@@ -21,12 +21,14 @@ package accounts
 
 import (
 	"fmt"
+	"path"
 	"sort"
 	"strconv"
 	"strings"
 
 	"pkg.deepin.io/dde/daemon/accounts/users"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/strv"
 	dutils "pkg.deepin.io/lib/utils"
 )
 
@@ -142,23 +144,114 @@ func NewDomainUser(uid uint32, service *dbusutil.Service) (*User, error) {
 
 	updateConfigPath(userInfo.Name)
 
-	xSession, _ := users.GetDefaultXSession()
-	u.XSession = xSession
-
-	u.SystemAccount = false
-	u.Layout = getDefaultLayout()
-	u.Locale = getDefaultLocale()
-	u.IconFile = defaultUserIcon
-	defaultUserBackground := getDefaultUserBackground()
-	u.DesktopBackgrounds = []string{defaultUserBackground}
-	u.GreeterBackground = defaultUserBackground
-	u.Use24HourFormat = defaultUse24HourFormat
-	u.UUID = dutils.GenUuid()
-	err = u.writeUserConfig()
+	kf, err := dutils.NewKeyFileFromFile(
+		path.Join(userConfigDir, userInfo.Name))
 	if err != nil {
-		logger.Warning(err)
+		xSession, _ := users.GetDefaultXSession()
+		u.XSession = xSession
+		u.SystemAccount = false
+		u.Layout = getDefaultLayout()
+		u.Locale = getDefaultLocale()
+		u.IconFile = defaultUserIcon
+		defaultUserBackground := getDefaultUserBackground()
+		u.DesktopBackgrounds = []string{defaultUserBackground}
+		u.GreeterBackground = defaultUserBackground
+		u.Use24HourFormat = defaultUse24HourFormat
+		u.UUID = dutils.GenUuid()
+		err = u.writeUserConfig()
+		if err != nil {
+			logger.Warning(err)
+		}
+		return u, nil
+	}
+	defer kf.Free()
+
+	var isSave = false
+	xSession, _ := kf.GetString(confGroupUser, confKeyXSession)
+	u.XSession = xSession
+	if u.XSession == "" {
+		xSession, _ = users.GetDefaultXSession()
+		u.XSession = xSession
+		isSave = true
+	}
+	_, err = kf.GetBoolean(confGroupUser, confKeySystemAccount)
+	// only show non system account
+	u.SystemAccount = false
+	if err != nil {
+		isSave = true
+	}
+	locale, _ := kf.GetString(confGroupUser, confKeyLocale)
+	u.Locale = locale
+	if locale == "" {
+		u.Locale = getDefaultLocale()
+		isSave = true
+	}
+	layout, _ := kf.GetString(confGroupUser, confKeyLayout)
+	u.Layout = layout
+	if layout == "" {
+		u.Layout = getDefaultLayout()
+		isSave = true
+	}
+	icon, _ := kf.GetString(confGroupUser, confKeyIcon)
+	u.IconFile = icon
+	if u.IconFile == "" {
+		u.IconFile = defaultUserIcon
+		isSave = true
+	}
+
+	u.customIcon, _ = kf.GetString(confGroupUser, confKeyCustomIcon)
+
+	// CustomIcon is the newly added field in the configuration file
+	if u.customIcon == "" {
+		if u.IconFile != defaultUserIcon && !isStrInArray(u.IconFile, u.IconList) {
+			// u.IconFile is a custom icon, not a standard icon
+			u.customIcon = u.IconFile
+			isSave = true
+		}
+	}
+
+	u.IconList = u.getAllIcons()
+
+	_, desktopBgs, _ := kf.GetStringList(confGroupUser, confKeyDesktopBackgrounds)
+	u.DesktopBackgrounds = desktopBgs
+	if len(desktopBgs) == 0 {
+		u.DesktopBackgrounds = []string{getDefaultUserBackground()}
+		isSave = true
+	}
+
+	greeterBg, ok := getUserGreeterBackground(kf)
+	if ok {
+		u.GreeterBackground = greeterBg
+	} else {
+		u.GreeterBackground = getDefaultUserBackground()
+		isSave = true
+	}
+
+	_, u.HistoryLayout, _ = kf.GetStringList(confGroupUser, confKeyHistoryLayout)
+	if !strv.Strv(u.HistoryLayout).Contains(u.Layout) {
+		u.HistoryLayout = append(u.HistoryLayout, u.Layout)
+		isSave = true
+	}
+
+	u.Use24HourFormat, err = kf.GetBoolean(confGroupUser, confKeyUse24HourFormat)
+	if err != nil {
+		u.Use24HourFormat = defaultUse24HourFormat
+		isSave = true
+	}
+
+	u.UUID, err = kf.GetString(confGroupUser, confKeyUUID)
+	if err != nil || u.UUID == "" {
+		u.UUID = dutils.GenUuid()
+		isSave = true
+	}
+
+	if isSave {
+		err := u.writeUserConfig()
+		if err != nil {
+			logger.Warning(err)
+		}
 	}
 
 	u.checkLeftSpace()
-	return u, err
+	return u, nil
 }
