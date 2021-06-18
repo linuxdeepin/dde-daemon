@@ -297,7 +297,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 	}
 	iface, err := d.Interface().Get(0)
 	if err != nil {
-		return err
+		logger.Warningf("get device %s interface failed: %v", d.Path_(), err)
 	}
 
 	deviceType, err := d.DeviceType().Get(0)
@@ -308,6 +308,11 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 	d.InitSignalExt(n.sigLoop, true)
 	_, err = d.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
 		//logger.Debugf("device state changed %v newState %d", d.Path_(), newState)
+		iface, err := d.Interface().Get(0)
+		if err != nil {
+			logger.Warningf("get device %s interface failed: %v", d.Path_(), err)
+			return
+		}
 
 		enabled := n.isIfaceEnabled(iface)
 		state, err := d.State().Get(0)
