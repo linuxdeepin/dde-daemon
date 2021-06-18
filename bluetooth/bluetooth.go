@@ -55,7 +55,6 @@ const (
 const (
 	bluetoothSchema = "com.deepin.dde.bluetooth"
 	displaySwitch   = "display-switch"
-	bluetoothSwitch = "bluetooth-switch"
 )
 
 const (
@@ -146,7 +145,6 @@ type Bluetooth struct {
 
 	settings      *gio.Settings
 	DisplaySwitch gsprop.Bool `prop:"access:rw"`
-	BluetoothSwitch gsprop.Bool `prop:"access:r"`
 
 	// nolint
 	methods *struct {
@@ -336,7 +334,6 @@ func (b *Bluetooth) init() {
 
 	b.settings = gio.NewSettings(bluetoothSchema)
 	b.DisplaySwitch.Bind(b.settings, displaySwitch)
-	b.BluetoothSwitch.Bind(b.settings, bluetoothSwitch)
 
 	// initialize dbus object manager
 	b.objectManager = bluez.NewObjectManager(systemBus)

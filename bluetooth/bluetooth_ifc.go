@@ -200,8 +200,6 @@ func (b *Bluetooth) SetAdapterPowered(apath dbus.ObjectPath,
 	}
 	globalBluetooth.config.setAdapterConfigPowered(a.address, powered)
 
-	// 平板项目 gsettings 中保存蓝牙开关状态
-	b.BluetoothSwitch.Set(powered)
 	return nil
 }
 

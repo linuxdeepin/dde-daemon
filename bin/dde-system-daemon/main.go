@@ -37,7 +37,6 @@ import (
 	_ "pkg.deepin.io/dde/daemon/system/systeminfo"
 	_ "pkg.deepin.io/dde/daemon/system/timedated"
 	_ "pkg.deepin.io/dde/daemon/system/uadp"
-	_ "pkg.deepin.io/dde/daemon/system/bluetooth"
 
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/dde/daemon/loader"
