@@ -384,6 +384,10 @@ func (m *Manager) handlePowerActionCode(actionCode int32) {
 	}
 }
 
+func (m *Manager) handleTouchInput() {
+	m.wakeUpScreen = false
+}
+
 func (m *Manager) interceptScreenshotChord() {
 	// TODO： 目前volumeUpKeyTriggered的值一直是false。之后可能会用到，先保留。
 	if m.volumeDownKeyTriggered && m.powerKeyTriggered && !m.volumeUpKeyTriggered {

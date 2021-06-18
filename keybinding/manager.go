@@ -278,6 +278,11 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		logger.Warning("connect PowerActionCode signal failed:", err)
 	}
 
+	_, err = m.sysPower.ConnectTouchInput(m.handleTouchInput)
+	if err != nil {
+		logger.Warning("connect TouchInput signal failed:", err)
+	}
+
 	if shouldUseDDEKwin() {
 		logger.Debug("Use DDE KWin")
 		m.shortcutManager.AddKWin(m.wm)

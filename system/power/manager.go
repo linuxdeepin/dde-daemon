@@ -47,7 +47,8 @@ const (
 	POWER_PRESS         = 1 // 电源键按下
 	POWER_RELEASE_LONG  = 2 // 电源键长按松开
 
-	ueventName = "rk29-keypad"
+	power_ueventName = "rk29-keypad"
+	touch_ueventName = "ft5x26_ts"
 )
 
 var noUEvent bool
@@ -141,6 +142,8 @@ type Manager struct {
 		PowerActionCode struct {
 			actionCode int32
 		}
+
+		TouchInput struct {}
 	}
 }
 
@@ -232,6 +235,7 @@ func (m *Manager) init() error {
 	m.Mode = cfg.Mode
 
 	m.initPowerButtonEventMonitor()
+	m.initTouchEventMonitor()
 	m.initAC(devices)
 	m.initBatteries(devices)
 	for _, dev := range devices {
@@ -560,8 +564,8 @@ func (m *Manager) doSetCpuGovernor(governor string) error {
 	return err
 }
 
-// 获取平板环境下电源按钮事件路径（/dev/input/目录下的具体event名）
-func getPowerButtonEventPath() string {
+// 获取平板环境下事件路径（/dev/input/目录下的具体event名）
+func getEventPath(eventName string) string {
 	subsystems := []string{"input"}
 	gudevClient := gudev.NewClient(subsystems)
 	if gudevClient == nil {
@@ -586,7 +590,7 @@ func getPowerButtonEventPath() string {
 		}
 
 		event := device.GetSysfsAttr("../name")
-		if strings.Contains(event, ueventName) {
+		if strings.Contains(event, eventName) {
 			eventPath = device.GetProperty("DEVNAME")
 			break
 		}
@@ -594,7 +598,7 @@ func getPowerButtonEventPath() string {
 	return eventPath
 }
 
-func readPowerButtonEvent(f *os.File) ([]InputEvent, error) {
+func readEvent(f *os.File) ([]InputEvent, error) {
 	// read
 	count := 16
 
@@ -616,7 +620,6 @@ func readPowerButtonEvent(f *os.File) ([]InputEvent, error) {
 
 	// remove trailing structures
 	for i := range events {
-		//logger.Debug("i", i)
 		if events[i].Time.Sec == 0 {
 			events = events[:i]
 			break
@@ -626,7 +629,7 @@ func readPowerButtonEvent(f *os.File) ([]InputEvent, error) {
 }
 
 func (m *Manager) initPowerButtonEventMonitor() {
-	event := getPowerButtonEventPath()
+	event := getEventPath(power_ueventName)
 	if event == "" {
 		logger.Info("get power button event path failed")
 		return
@@ -641,7 +644,7 @@ func (m *Manager) initPowerButtonEventMonitor() {
 
 	go func() {
 		for {
-			events, err := readPowerButtonEvent(f)
+			events, err := readEvent(f)
 			if err != nil {
 				logger.Info(err)
 				continue
@@ -653,6 +656,35 @@ func (m *Manager) initPowerButtonEventMonitor() {
 						logger.Warning(err)
 					}
 				}
+			}
+		}
+	}()
+}
+
+func (m *Manager) initTouchEventMonitor() {
+	event := getEventPath(touch_ueventName)
+	if event == "" {
+		logger.Info("get touch event path failed")
+		return
+	}
+
+	// open
+	f, err := os.Open(event)
+	if err != nil {
+		logger.Info("err:", err)
+		return
+	}
+
+	go func() {
+		for {
+			_, err := readEvent(f)
+			if err != nil {
+				logger.Info(err)
+				continue
+			}
+			err = m.service.Emit(m, "TouchInput")
+			if err != nil {
+				logger.Warning(err)
 			}
 		}
 	}()
