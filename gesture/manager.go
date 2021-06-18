@@ -322,7 +322,43 @@ func (*Manager) GetInterfaceName() string {
 
 //param @edge: swipe to touchscreen edge
 func (m *Manager) handleTouchEdgeMoveStopLeave(edge string, scaleX float64, scaleY float64, duration int32) error {
-	if edge == "bot" {
+	logger.Debugf("edge:%s scaleX:%f scaleY:%f", edge, scaleX, scaleY)
+	screenHeight, err := m.display.ScreenHeight().Get(0)
+	if err != nil {
+		logger.Error("get display.ScreenHeight failed:", err)
+		return err
+	}
+
+	screenWidth, err := m.display.ScreenWidth().Get(0)
+	if err != nil {
+		logger.Error("get display.ScreenWidth failed:", err)
+		return err
+	}
+
+	rotation := m.getTouchScreenRotation()
+	bot := "bot"
+	scale := scaleY
+	scaleBase := screenHeight
+	switch rotation {
+	case 1:
+		bot = "bot"
+		scale = scaleY
+		scaleBase = screenHeight
+	case 2:
+		bot = "right"
+		scale = 1 - scaleX
+		scaleBase = screenWidth
+	case 4:
+		bot = "top"
+		scale = 1 - scaleY
+		scaleBase = screenHeight
+	case 8:
+		bot = "left"
+		scale = scaleX
+		scaleBase = screenWidth
+	}
+
+	if edge == bot {
 		position, err := m.dock.Position().Get(0)
 		if err != nil {
 			logger.Error("get dock.Position failed:", err)
@@ -343,13 +379,8 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(edge string, scaleX float64, scal
 				dockPly = rect.Width
 			}
 
-			screenHeight, err := m.display.ScreenHeight().Get(0)
-			if err != nil {
-				logger.Error("get display.ScreenHeight failed:", err)
-				return err
-			}
-
-			if screenHeight > 0 && float64(dockPly)/float64(screenHeight)+scaleY < 1 {
+			if scaleBase > 0 && scale*float64(scaleBase) > float64(dockPly) {
+				logger.Debug("show work space")
 				return m.handleBuiltinAction("ShowWorkspace")
 			}
 		}
@@ -357,20 +388,125 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(edge string, scaleX float64, scal
 	return nil
 }
 
+// 获取触摸屏的旋转
+// 1:0  2:90  4:180  8:270
+func (m *Manager) getTouchScreenRotation() uint16 {
+	// 读取触屏列表，取第一个触屏（目前触摸手势事件中不包含所属屏幕，因此不支持多个触摸屏）
+	touchScreens, err := m.display.Touchscreens().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	// 读取触摸屏映射
+	touchMap, err := m.display.TouchMap().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	// 读取触摸屏的名字
+	var touchScreen string
+	if len(touchScreens) > 0 && len(touchMap) > 0 {
+		touchScreen = touchMap[touchScreens[0].Serial]
+	}
+
+	// 读取失败，把主屏当做触摸屏
+	if touchScreen == "" {
+		logger.Warning("failed to find the touch screen, assume the primary as the touch screen")
+		touchScreen, err = m.display.Primary().Get(0)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+
+	// 遍历显示器，查找触摸屏的旋转角度
+	monitors, err := m.display.Monitors().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return 1
+	}
+	for _, path := range monitors {
+		monitor, err := display.NewMonitor(sessionBus, path)
+		if err != nil {
+			logger.Warning(err)
+			continue
+		}
+
+		name, err := monitor.Name().Get(0)
+		if err != nil {
+			logger.Warning(err)
+			continue
+		}
+
+		if name == touchScreen {
+			rotation, err := monitor.Rotation().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				break
+			}
+
+			return rotation
+		}
+	}
+
+	// 查找失败，当做没有旋转
+	return 1
+}
+
 func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float64) error {
-	screenWight, err := m.display.ScreenWidth().Get(0)
+	screenWidth, err := m.display.ScreenWidth().Get(0)
 	if err != nil {
 		logger.Error("get display.ScreenWidth failed:", err)
 		return err
 	}
 
+	screenHeight, err := m.display.ScreenHeight().Get(0)
+	if err != nil {
+		logger.Error("get display.ScreenWidth failed:", err)
+		return err
+	}
+
+	var scale float64
+	var scaleBase uint16
+	var left string
+	var right string
+	rotation := m.getTouchScreenRotation()
+	switch rotation {
+	case 1:
+		scale = scaleX
+		scaleBase = screenWidth
+		left = "left"
+		right = "right"
+	case 2: // 逆时针90度
+		scale = 1 - scaleY
+		scaleBase = screenHeight
+		left = "bot"
+		right = "top"
+	case 4: // 倒置
+		scale = 1 - scaleX
+		scaleBase = screenWidth
+		left = "right"
+		right = "left"
+	case 8: // 顺时针90度
+		scale = scaleY
+		scaleBase = screenHeight
+		left = "top"
+		right = "bot"
+	}
+
+	logger.Debugf("rotation:%d scale:%f base:%d left:%s right:%s",
+		rotation, scale, scaleBase, left, right)
+
 	switch edge {
-	case "left":
-		if scaleX*float64(screenWight) > 100 {
+	case left:
+		if scale*float64(scaleBase) > 100 {
 			return m.clipboard.Show(0)
 		}
-	case "right":
-		if (1-scaleX)*float64(screenWight) > 100 {
+	case right:
+		if (1-scale)*float64(scaleBase) > 100 {
 			return m.notification.Show(0)
 		}
 	}
