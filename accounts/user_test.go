@@ -1,7 +1,9 @@
 /*
- * Copyright (C) 2014 ~ 2018 Deepin Technology Co., Ltd.
+ * Copyright (C) 2019 ~ 2021 Uniontech Software Technology Co.,Ltd
  *
- * Author:     jouyouyun <jouyouwen717@gmail.com>
+ * Author:     zsien <i@zsien.cn>
+ *
+ * Maintainer: zsien <i@zsien.cn>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,39 +18,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package appinfo
+package accounts
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestConfigFilePath(t *testing.T) {
-	type args struct {
-		name string
-	}
+func Test_getUidFromUserPath(t *testing.T) {
 	tests := []struct {
-		name       string
-		configHome string
-		args       args
-		want       string
+		name     string
+		userPath string
+		want     string
 	}{
 		{
-			name:       "ConfigFilePath",
-			configHome: "../testdata/.config",
-			args:       args{name: "launcher/test.ini"},
-			want:       "../testdata/.config/launcher/test.ini",
+			name:     "getUidFromUserPath",
+			userPath: "/com/deepin/daemon/Accounts/User1000",
+			want:     "1000",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			os.Setenv("XDG_CONFIG_HOME", tt.configHome)
-			defer os.Unsetenv("XDG_CONFIG_HOME")
-
-			got := ConfigFilePath(tt.args.name)
+			got := getUidFromUserPath(tt.userPath)
 			assert.Equal(t, tt.want, got)
 		})
 	}
