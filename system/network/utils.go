@@ -84,33 +84,18 @@ func setDeviceManaged(d *networkmanager.Device, val bool) error {
 	return nil
 }
 
-func initNetwork() {
-	insertKernelModule()
-	initHotspot()
-}
-
-func insertKernelModule() {
+func insertKernelModule() error {
 	_, err := os.Stat(kernelNetworkModuleFile)
 	if err != nil {
-		logger.Error("stat kernelNetworkModuleFile is err:", err)
-		return
+		return err
 	}
 
 	err = exec.Command("insmod", kernelNetworkModuleFile).Run()
 	if err != nil {
 		logger.Error("insertKernelModule err:", err)
-		return
+		return err
 	}
 
 	logger.Info("insertKernelModule success")
-}
-
-func initHotspot() {
-	err := exec.Command("/bin/sh", hotspotScript, "init").Run()
-	if err != nil {
-		logger.Error("init hotspot err:", err)
-		return
-	}
-
-	logger.Info("init hotspot success")
+	return nil
 }

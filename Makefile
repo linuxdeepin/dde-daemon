@@ -37,9 +37,6 @@ out/bin/default-file-manager: bin/default-file-manager/main.c
 out/bin/desktop-toggle: bin/desktop-toggle/main.c
 	gcc $^ $(shell pkg-config --cflags --libs x11) -o $@
 
-out/bin/pad-hotspot: bin/pad-hotspot/main.c
-	gcc $^ -o $@
-
 out/locale/%/LC_MESSAGES/dde-daemon.mo: misc/po/%.po
 	mkdir -p $(@D)
 	msgfmt -o $@ $<
@@ -60,7 +57,7 @@ ts_to_policy:
 	deepin-policy-ts-convert ts2policy misc/polkit-action/com.deepin.daemon.$$i.policy.in misc/ts/com.deepin.daemon.$$i.policy misc/polkit-action/com.deepin.daemon.$$i.policy; \
 	done
 
-build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle out/bin/pad-hotspot $(addprefix out/bin/, ${BINARIES}) ts_to_policy
+build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle $(addprefix out/bin/, ${BINARIES}) ts_to_policy
 
 test: prepare
 	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -v ./...

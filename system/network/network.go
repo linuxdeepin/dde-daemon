@@ -2,7 +2,6 @@ package network
 
 import (
 	"errors"
-	"os/exec"
 	"strings"
 	"sync"
 	"time"
@@ -22,7 +21,6 @@ const (
 	dbusInterface   = dbusServiceName
 
 	kernelNetworkModuleFile = "/lib/modules/bcmdhd.ko"
-	hotspotScript = "/usr/share/dde-daemon/network/hotspot.sh"
 )
 
 type Module struct {
@@ -69,7 +67,7 @@ func (m *Module) Start() error {
 		return err
 	}
 
-	go initNetwork()
+	go insertKernelModule()
 	return nil
 }
 
@@ -108,7 +106,6 @@ type Network struct {
 		EnableDevice          func() `in:"pathOrIface,enabled" out:"cpath"`
 		Ping                  func() `in:"host"`
 		ToggleWirelessEnabled func() `out:"enabled"`
-		ToggleHotspot         func() `in:"enabled"`
 	}
 
 	// nolint
@@ -580,23 +577,6 @@ func (n *Network) toggleWirelessEnabled() (bool, error) {
 	}
 
 	return enabled, nil
-}
-
-func (n *Network) ToggleHotspot(enabled bool) *dbus.Error {
-	var err error
-	if enabled {
-		err = exec.Command("/bin/sh", hotspotScript, "open").Run()
-		if err != nil {
-			logger.Error("hotspot open err: ", err)
-		}
-	} else {
-		err = exec.Command("/bin/sh", hotspotScript, "close").Run()
-		if err != nil {
-			logger.Error("hotspot close err: ", err)
-		}
-	}
-
-	return dbusutil.ToError(err)
 }
 
 type connSettings struct {
