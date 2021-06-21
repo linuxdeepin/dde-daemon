@@ -355,7 +355,7 @@ func isUserInGroup(user, group string) bool {
 	return isStrInArray(user, v.Users)
 }
 
-func GetUserGroups(user string) ([]string, error) {
+func GetUserGroups(user, gid string) ([]string, error) {
 	groupFileLocker.Lock()
 	defer groupFileLocker.Unlock()
 	infos, err := getGroupInfoWithCache(userFileGroup)
@@ -365,7 +365,7 @@ func GetUserGroups(user string) ([]string, error) {
 
 	var result []string
 	for groupName, groupInfo := range infos {
-		if groupName == user {
+		if groupInfo.Gid == gid {
 			result = append(result, groupName)
 			continue
 		}
