@@ -3,8 +3,6 @@ package network
 import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
-	"os"
-	"os/exec"
 )
 
 func getSettingConnectionTimestamp(settings map[string]map[string]dbus.Variant) uint64 {
@@ -81,21 +79,5 @@ func setDeviceManaged(d *networkmanager.Device, val bool) error {
 			return err
 		}
 	}
-	return nil
-}
-
-func insertKernelModule() error {
-	_, err := os.Stat(kernelNetworkModuleFile)
-	if err != nil {
-		return err
-	}
-
-	err = exec.Command("insmod", kernelNetworkModuleFile).Run()
-	if err != nil {
-		logger.Error("insertKernelModule err:", err)
-		return err
-	}
-
-	logger.Info("insertKernelModule success")
 	return nil
 }
