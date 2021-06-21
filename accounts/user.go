@@ -441,7 +441,7 @@ func (u *User) getAllIcons() []string {
 }
 
 func (u *User) getGroups() []string {
-	groups, err := users.GetUserGroups(u.UserName)
+	groups, err := users.GetUserGroups(u.UserName, u.Gid)
 	if err != nil {
 		logger.Warning("failed to get user groups:", err)
 		return nil
@@ -576,6 +576,11 @@ func (u *User) updatePropGroups() {
 	u.PropsMu.Unlock()
 }
 
+func (u *User) updatePropGroupsNoLock() {
+	newVal := u.getGroups()
+	u.setPropGroups(newVal)
+}
+
 func (u *User) updatePropAutomaticLogin() {
 	newVal := users.IsAutoLoginUser(u.UserName)
 	u.PropsMu.Lock()
@@ -588,7 +593,11 @@ func (u *User) updatePropsPasswd(uInfo *users.UserInfo) {
 	var oldUserName string
 
 	u.PropsMu.Lock()
-	u.setPropGid(uInfo.Gid)
+	if u.Gid != uInfo.Gid {
+		// gid 被修改
+		u.setPropGid(uInfo.Gid)
+		u.updatePropGroupsNoLock()
+	}
 
 	if u.UserName != uInfo.Name {
 		oldUserName = u.UserName
