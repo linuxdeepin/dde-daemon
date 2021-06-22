@@ -240,7 +240,7 @@ func (m *Manager) removeConnection(cpath dbus.ObjectPath) {
 }
 
 func (m *Manager) doRemoveConnection(conns connectionSlice, i int) connectionSlice {
-	logger.Infof("remove connection %#v", conns[i])
+	logger.Debugf("remove connection %#v", conns[i])
 	m.destroyConnection(conns[i])
 	copy(conns[i:], conns[i+1:])
 	conns = conns[:len(conns)-1]
@@ -257,7 +257,7 @@ func (m *Manager) updateConnection(cpath dbus.ObjectPath) {
 	m.connectionsLock.Lock()
 	defer m.connectionsLock.Unlock()
 	conn.updateProps()
-	logger.Infof("update connection %#v", conn)
+	logger.Debugf("update connection %#v", conn)
 	m.updatePropConnections()
 }
 
