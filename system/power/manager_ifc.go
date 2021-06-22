@@ -128,6 +128,7 @@ func (m *Manager) SetMode(mode string) *dbus.Error {
 func (m *Manager) LockCpuFreq(governor string, lockTime int32) *dbus.Error {
 	if !m.isCpuGovernorSupported(governor) {
 		logger.Warningf("cpu can not support this governor:%s", governor)
+		return nil
 	}
 
 	currentGovernor, err := m.cpus.GetGovernor()
