@@ -132,6 +132,7 @@ func NewDomainUser(uid uint32, service *dbusutil.Service) (*User, error) {
 	}
 
 	u.AccountType = users.UserTypeNetwork
+	u.IconList = u.getAllIcons()
 	u.Groups, err = GetUserGroupsByUID(userInfo.Uid)
 	if err != nil {
 		return nil, err
