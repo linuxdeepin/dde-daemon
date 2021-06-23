@@ -103,9 +103,9 @@ type User struct {
 	Locked bool
 	// 是否允许此用户自动登录
 	AutomaticLogin bool
-	
+
 	// deprecated property
-	SystemAccount  bool
+	SystemAccount bool
 
 	NoPasswdLogin bool
 
@@ -506,6 +506,8 @@ func (u *User) updatePropsShadow(shadowInfo *users.ShadowInfo) {
 func (u *User) getAccountType() int32 {
 	if users.IsAdminUser(u.UserName) {
 		return users.UserTypeAdmin
+	} else if IsDomainUserID(u.Uid) {
+		return users.UserTypeNetwork
 	}
 	return users.UserTypeStandard
 }
