@@ -340,25 +340,31 @@ func (m *Manager) UpdateADDomainUserList() *dbus.Error {
 	m.domainUserMapMu.Lock()
 	defer m.domainUserMapMu.Unlock()
 
-	m.usersMapMu.Lock()
-
 	for _, u := range m.usersMap {
 		userPath := userDBusPathPrefix + u.Uid
 		// 之前成功登录的AD域账号现在找不到了,说明该账户已经退域或远程服务器已将该账户删除, 从用户列表中删除该账户
-		if m.userConfig[userPath].IsLogined {
-			if !IsDomainUserID(u.Uid) {
-				delete(m.userConfig, userPath)
-				err := m.saveDomainUserConfig(m.userConfig)
-				if err != nil {
-					return dbusutil.ToError(err)
+		if config, ok := m.userConfig[userPath]; ok {
+			if config.IsLogined {
+				if !IsDomainUserID(u.Uid) {
+					delete(m.userConfig, userPath)
+					err := m.saveDomainUserConfig(m.userConfig)
+					if err != nil {
+						return dbusutil.ToError(err)
+					}
+
+					m.deleteUser(u.Uid)
+					m.updatePropUserList()
+
+					//delete user config and icons
+					u.clearData()
+
+					// delete user home dir
+					err = os.RemoveAll(u.HomeDir)
+					if err != nil {
+						logger.Warning(err)
+						return dbusutil.ToError(err)
+					}
 				}
-
-				m.deleteUser(u.Uid)
-
-				m.updatePropUserList()
-
-				//delete user config and icons
-				u.clearData()
 			}
 		}
 	}
