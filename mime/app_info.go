@@ -21,8 +21,10 @@ package mime
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 
 	"pkg.deepin.io/lib/appinfo/desktopappinfo"
 	"pkg.deepin.io/lib/mime"
@@ -62,6 +64,19 @@ func GetDefaultAppInfo(mimeType string) (*AppInfo, error) {
 	return info, nil
 }
 
+func GetDefaultAppInfoAux(mimeType string, list []string) (*AppInfo, error) {
+	id, err := mime.GetDefaultApp(mimeType, false)
+	if err != nil {
+		return nil, err
+	}
+
+	info, err := newAppInfoById3(id, list, mimeType)
+	if err != nil {
+		return nil, err
+	}
+	return info, nil
+}
+
 func (infos AppInfos) Add(id string) (AppInfos, error) {
 	for _, info := range infos {
 		if info.Id == id {
@@ -95,6 +110,19 @@ func GetAppInfos(mimeType string) AppInfos {
 	var infos AppInfos
 	for _, id := range mime.GetAppList(mimeType) {
 		appInfo, err := newAppInfoById2(id, mimeType)
+		if err != nil {
+			logger.Warning(err)
+			continue
+		}
+		infos = append(infos, appInfo)
+	}
+	return infos
+}
+
+func GetAppInfosAux(mimeType string, list []string) AppInfos {
+	var infos AppInfos
+	for _, id := range mime.GetAppList(mimeType) {
+		appInfo, err := newAppInfoById3(id, list, mimeType)
 		if err != nil {
 			logger.Warning(err)
 			continue
@@ -144,6 +172,39 @@ func newAppInfoByIdAux(id string, fn func(dai *desktopappinfo.DesktopAppInfo, ap
 	return appInfo, nil
 }
 
+func newAppInfoByIdAux2(id string, list []string, fn func(dai *desktopappinfo.DesktopAppInfo, appInfo *AppInfo)) (*AppInfo, error) {
+	dai := desktopappinfo.NewDesktopAppInfo(id)
+	if dai == nil {
+		return nil, fmt.Errorf("NewDesktopAppInfo failed: id %v", id)
+	}
+	if !dai.ShouldShow() && !contains(id, list) {
+		return nil, fmt.Errorf("app %q should not show", id)
+	}
+	name := getAppName(dai)
+	var appInfo = &AppInfo{
+		Id:          id,
+		Name:        name,
+		DisplayName: name,
+		Description: dai.GetComment(),
+		Exec:        dai.GetCommandline(),
+		fileName:    dai.GetFileName(),
+		Icon:        dai.GetIcon(),
+	}
+
+	if fn != nil {
+		fn(dai, appInfo)
+	}
+
+	return appInfo, nil
+}
+
+func newAppInfoById3(id string, list []string, mimeType string) (*AppInfo, error) {
+	gInfo, err := newAppInfoByIdAux2(id, list, func(dai *desktopappinfo.DesktopAppInfo, appInfo *AppInfo) {
+		appInfo.CanDelete = canDeleteAssociation(dai, mimeType)
+	})
+	return gInfo, err
+}
+
 func newAppInfoById2(id string, mimeType string) (*AppInfo, error) {
 	// 可以填写 CanDelete 字段
 	gInfo, err := newAppInfoByIdAux(id, func(dai *desktopappinfo.DesktopAppInfo, appInfo *AppInfo) {
@@ -178,4 +239,26 @@ func findFilePath(file string) string {
 	}
 
 	return path.Join("/usr/share", file)
+}
+
+// 获取只在控制中心默认程序里显示，但不在桌面上显示的应用列表
+func getFilterList(fileName string) []string {
+	contentByte, err := ioutil.ReadFile(fileName)
+	logger.Warning(err)
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+	// 过滤多余的空格，并按逗号分割
+	content := strings.Replace(string(contentByte), " ", "", -1)
+	return strings.Split(content, ",")
+}
+
+func contains(target string, list []string) bool {
+	for _, s := range list {
+		if target == s {
+			return true
+		}
+	}
+	return false
 }

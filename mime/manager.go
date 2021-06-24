@@ -43,6 +43,9 @@ const (
 	dbusServiceName = "com.deepin.daemon.Mime"
 	dbusPath        = "/com/deepin/daemon/Mime"
 	dbusInterface   = dbusServiceName
+
+	padEnv          = "Deepin-tablet"
+	defaultAppsFile = "/usr/share/dde-daemon/mime/defaultApps.cfg"
 )
 
 type Manager struct {
@@ -50,6 +53,8 @@ type Manager struct {
 	userManager *userAppManager
 	fsWatcher   *fsnotify.Watcher
 	changeTimer *time.Timer
+	// 只在控制中心默认程序中显示（不会在桌面显示图标）的应用名列表
+	defaultApps []string
 
 	done     chan struct{}
 	doneResp chan struct{}
@@ -101,6 +106,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 		logger.Warning("new fs watcher failed:", err)
 	}
 
+	m.defaultApps = getFilterList(defaultAppsFile)
 	return m
 }
 
@@ -230,7 +236,11 @@ func (m *Manager) GetDefaultApp(mimeType string) (string, *dbus.Error) {
 	if mimeType == AppMimeTerminal {
 		info, err = getDefaultTerminal()
 	} else {
-		info, err = GetDefaultAppInfo(mimeType)
+		if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+			info, err = GetDefaultAppInfoAux(mimeType, m.defaultApps)
+		} else {
+			info, err = GetDefaultAppInfo(mimeType)
+		}
 	}
 	if err != nil {
 		return "", dbusutil.ToError(err)
@@ -273,7 +283,11 @@ func (m *Manager) ListApps(ty string) (string, *dbus.Error) {
 	if ty == AppMimeTerminal {
 		infos = getTerminalInfos()
 	} else {
-		infos = GetAppInfos(ty)
+		if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+			infos = GetAppInfosAux(ty, m.defaultApps)
+		} else {
+			infos = GetAppInfos(ty)
+		}
 	}
 
 	// filter out deepin custom desktop file
