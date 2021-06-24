@@ -117,7 +117,7 @@ func (s *SessionDaemon) register(service *dbusutil.Service) error {
 func (s *SessionDaemon) initModules() {
 	part1ModuleNames := []string{
 		"dock",
-		"trayicon",
+		//"trayicon",
 		"launcher",
 		"x-event-monitor",
 	}
@@ -131,17 +131,17 @@ func (s *SessionDaemon) initModules() {
 		"power", // need screensaver and sessionwatcher
 		"uadpagent",
 		"service-trigger",
-		"clipboard",
+		//"clipboard",
 		"keybinding",
 		"inputdevices",
-		"gesture",
+		//"gesture",
 		"housekeeping",
 		"timedate",
 		"bluetooth",
 		"screenedge",
 		"mime",
 		//"calendar",
-		"miracast", // need network
+		//"miracast", // need network
 		"systeminfo",
 		"lastore",
 		"grub-gfx",

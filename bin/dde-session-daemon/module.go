@@ -28,7 +28,7 @@ import (
 	"pkg.deepin.io/lib/gsettings"
 
 	_ "pkg.deepin.io/dde/daemon/dock"
-	_ "pkg.deepin.io/dde/daemon/trayicon"
+	//_ "pkg.deepin.io/dde/daemon/trayicon"
 	_ "pkg.deepin.io/dde/daemon/x_event_monitor"
 
 	_ "pkg.deepin.io/dde/daemon/network"
@@ -44,13 +44,13 @@ import (
 	_ "pkg.deepin.io/dde/daemon/launcher"
 	_ "pkg.deepin.io/dde/daemon/service_trigger"
 
-	_ "pkg.deepin.io/dde/daemon/clipboard"
+	//_ "pkg.deepin.io/dde/daemon/clipboard"
 	_ "pkg.deepin.io/dde/daemon/keybinding"
 
 	_ "pkg.deepin.io/dde/daemon/appearance"
 	_ "pkg.deepin.io/dde/daemon/inputdevices"
 
-	_ "pkg.deepin.io/dde/daemon/gesture"
+	//_ "pkg.deepin.io/dde/daemon/gesture"
 	_ "pkg.deepin.io/dde/daemon/housekeeping"
 	_ "pkg.deepin.io/dde/daemon/timedate"
 
@@ -61,7 +61,7 @@ import (
 	_ "pkg.deepin.io/dde/daemon/mime"
 
 	// depends: network
-	_ "pkg.deepin.io/dde/daemon/miracast"
+	//_ "pkg.deepin.io/dde/daemon/miracast"
 	_ "pkg.deepin.io/dde/daemon/systeminfo"
 
 	_ "pkg.deepin.io/dde/daemon/calltrace"
