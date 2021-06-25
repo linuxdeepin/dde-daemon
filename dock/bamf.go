@@ -21,15 +21,8 @@ package dock
 
 import (
 	"github.com/godbus/dbus"
+	bamf "github.com/linuxdeepin/go-dbus-factory/org.ayatana.bamf"
 	x "github.com/linuxdeepin/go-x11-client"
-)
-
-const (
-	bamfDBusServiceName   = "org.ayatana.bamf"
-	bamfDBusObjPathPrefix = "/org/ayatana/bamf"
-	bamfMatcherObjPath    = bamfDBusObjPathPrefix + "/matcher"
-	bamfMatcherInterface  = bamfDBusServiceName + ".matcher"
-	bamfAppInterface      = bamfDBusServiceName + ".application"
 )
 
 func getDesktopFromWindowByBamf(win x.Window) (string, error) {
@@ -37,10 +30,8 @@ func getDesktopFromWindowByBamf(win x.Window) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	matcher := bus.Object(bamfDBusServiceName, bamfMatcherObjPath)
-	var applicationObjPathStr string
-	err = matcher.Call(bamfMatcherInterface+".ApplicationForXid", 0,
-		uint32(win)).Store(&applicationObjPathStr)
+	matcher := bamf.NewMatcher(bus)
+	applicationObjPathStr, err := matcher.ApplicationForXid(0, uint32(win))
 	if err != nil {
 		return "", err
 	}
@@ -48,9 +39,11 @@ func getDesktopFromWindowByBamf(win x.Window) (string, error) {
 	if !applicationObjPath.IsValid() {
 		return "", nil
 	}
-	application := bus.Object(bamfDBusServiceName, applicationObjPath)
-	var desktopFile string
-	err = application.Call(bamfAppInterface+".DesktopFile", 0).Store(&desktopFile)
+	application, err := bamf.NewApplication(bus, applicationObjPath)
+	if err != nil {
+		return "", err
+	}
+	desktopFile, err := application.Application().DesktopFile(0)
 	if err != nil {
 		return "", err
 	}
