@@ -127,6 +127,9 @@ install: build translate install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/etc/NetworkManager/conf.d
 	cp -f misc/etc/NetworkManager/conf.d/* ${DESTDIR}/etc/NetworkManager/conf.d/
 
+	mkdir -pv ${DESTDIR}/etc/lightdm/deepin/
+	cp -f misc/xsettings/xsettingsd.conf ${DESTDIR}/etc/lightdm/deepin/
+
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
 	cp -r misc/data ${DESTDIR}${PREFIX}/share/dde/
