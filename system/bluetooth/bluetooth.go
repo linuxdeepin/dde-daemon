@@ -25,50 +25,32 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"pkg.deepin.io/lib/log"
-	gio "pkg.deepin.io/gir/gio-2.0"
-	"strconv"
 )
 
 const (
 	dbusServiceName = "com.deepin.daemon.Bluetooth"
 	dbusPath        = "/com/deepin/daemon/Bluetooth"
 	dbusInterface   = "com.deepin.daemon.Bluetooth"
-	gsSchemaBluetooth = "com.deepin.dde.bluetooth"
-	bluetoothSwitch = "bluetooth-switch"
 
 	bluetoothInitScript = "/usr/share/dde-daemon/bluetooth/bluetooth_init.sh"
 )
 
 type Bluetooth struct {
 	service 		*dbusutil.Service
-	settings     	*gio.Settings
 	BluetoothSwitch	gsprop.Bool `prop:"access:r"`
 }
 
-func newBluetooth(service *dbusutil.Service) (b *Bluetooth) {
-	b = &Bluetooth{
+func newBluetooth(service *dbusutil.Service) *Bluetooth {
+	return &Bluetooth{
 		service: service,
-		settings: gio.NewSettings(gsSchemaBluetooth),
 	}
-	b.BluetoothSwitch.Bind(b.settings, bluetoothSwitch)
-
-	return
 }
 
 func (b *Bluetooth) bluetoothInit() {
-	initArg := 0
-	if b.BluetoothSwitch.Get() {
-		initArg = 1
-	}
-
-	err := exec.Command("/bin/sh",  bluetoothInitScript, strconv.Itoa(initArg)).Run()
+	err := exec.Command("/bin/sh",  bluetoothInitScript, "1").Run()
 	if err != nil {
 		logger.Error("bluetoothInit err: ", err)
 	}
-}
-
-func (b *Bluetooth) destory() {
-	b.settings.Unref()
 }
 
 func (d *Bluetooth) GetInterfaceName() string {
@@ -115,12 +97,6 @@ func (d *Daemon) Start() error {
 
 	go _m.bluetoothInit()
 
-	/*
-	err = d.Stop()
-	if err != nil {
-		return err
-	}
-	 */
 	return nil
 }
 
@@ -136,7 +112,6 @@ func (d *Daemon) Stop() error {
 		return err
 	}
 
-	_m.destory()
 	_m = nil
 	return nil
 }
