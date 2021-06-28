@@ -20,6 +20,7 @@
 package bluetooth
 
 import (
+	"os"
 	"sort"
 	"strings"
 	"time"
@@ -82,8 +83,8 @@ func (c *config) save() {
 	}
 }
 
-func newAdapterConfig() (ac *adapterConfig) {
-	ac = &adapterConfig{Powered: true}
+func newAdapterConfig(powered bool) (ac *adapterConfig) {
+	ac = &adapterConfig{Powered: powered}
 	return
 }
 
@@ -139,12 +140,18 @@ func (c *config) clearSpareConfig(b *Bluetooth) {
 }
 
 func (c *config) addAdapterConfig(address string) {
+	logger.Debugf("adapter address: %s len(adapters):%d\n", address, len(c.Adapters))
 	if c.isAdapterConfigExists(address) {
 		return
 	}
 
 	c.core.Lock()
-	c.Adapters[address] = newAdapterConfig()
+	if len(c.Adapters) == 0 && os.Getenv("XDG_SESSION_DESKTOP") == "deepin-tablet" {
+		// E人E本上蓝牙适配器默认打开蓝牙，检查若是初次打开系统则关闭蓝牙
+		c.Adapters[address] = newAdapterConfig(false)
+	} else {
+		c.Adapters[address] = newAdapterConfig(true)
+	}
 	c.core.Unlock()
 	c.save()
 }

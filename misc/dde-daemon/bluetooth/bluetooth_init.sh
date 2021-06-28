@@ -24,8 +24,4 @@ handlebluetooth() {
 	done
 }
 
-if [ $1 -eq 1 ]; then
-	handlebluetooth up
-else
-	handlebluetooth down
-fi
+handlebluetooth $1

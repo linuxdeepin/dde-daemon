@@ -67,7 +67,11 @@ func Test_config(t *testing.T) {
 
 	c.load()
 
-	assert.Equal(t, c.Adapters, configAdapters)
+	if os.Getenv("XDG_SESSION_DESKTOP") != "deepin-tablet" {
+		assert.Equal(t, c.Adapters, configAdapters)
+	} else {
+		assert.NotEqual(t, c.Adapters, configAdapters)
+	}
 	assert.Equal(t, c.Devices, configDevices)
 	assert.True(t, c.Discoverable)
 

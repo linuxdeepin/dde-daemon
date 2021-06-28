@@ -20,6 +20,7 @@
 package bluetooth
 
 import (
+	"os"
 	"os/exec"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/dbusutil"
@@ -35,6 +36,10 @@ const (
 	bluetoothInitScript = "/usr/share/dde-daemon/bluetooth/bluetooth_init.sh"
 )
 
+var (
+	bluetoothConfig   = os.Getenv("HOME") + "/.config/deepin/bluetooth.json"
+)
+
 type Bluetooth struct {
 	service 		*dbusutil.Service
 	BluetoothSwitch	gsprop.Bool `prop:"access:r"`
@@ -47,9 +52,17 @@ func newBluetooth(service *dbusutil.Service) *Bluetooth {
 }
 
 func (b *Bluetooth) bluetoothInit() {
-	err := exec.Command("/bin/sh",  bluetoothInitScript, "1").Run()
+	var handle = "up"
+	_, err := os.Stat(bluetoothConfig)
 	if err != nil {
-		logger.Error("bluetoothInit err: ", err)
+		if os.IsNotExist(err) {
+			handle = "down"
+		}
+	}
+
+	err = exec.Command("/bin/sh",  bluetoothInitScript, handle).Run()
+	if err != nil {
+		logger.Errorf("init bluetooth %s err: %s\n", handle, err)
 	}
 }
 
