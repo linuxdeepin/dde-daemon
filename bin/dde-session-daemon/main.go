@@ -37,6 +37,8 @@ import (
 	"strings"
 	"time"
 
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+
 	"github.com/godbus/dbus"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
 	"pkg.deepin.io/dde/api/soundutils"
@@ -52,6 +54,22 @@ import (
 
 var logger = log.NewLogger("daemon/dde-session-daemon")
 var hasDDECookie bool
+
+func isInShutdown() bool {
+	bus, err := dbus.SystemBus()
+	if err != nil {
+		return false
+	}
+
+	manager := login1.NewManager(bus)
+
+	val, err := manager.PreparingForShutdown().Get(0)
+	if err != nil {
+		return false
+	}
+
+	return val
+}
 
 func allowRun() bool {
 	if os.Getenv("DDE_SESSION_PROCESS_COOKIE_ID") != "" {
@@ -153,6 +171,11 @@ func main() {
 	logger.SetLogLevel(log.LevelInfo)
 	if !allowRun() {
 		logger.Warning("session manager does not allow me to run")
+		os.Exit(1)
+	}
+
+	if isInShutdown() {
+		logger.Warning("system is in shutdown, no need to run")
 		os.Exit(1)
 	}
 
