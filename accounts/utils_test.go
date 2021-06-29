@@ -22,6 +22,7 @@ package accounts
 import (
 	"testing"
 
+	"github.com/godbus/dbus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -73,4 +74,51 @@ func TestIsStrvEqual(t *testing.T) {
 func TestGetValueFromLine(t *testing.T) {
 	ret := getValueFromLine("testdata/shells", "/")
 	assert.Equal(t, ret, "shells")
+}
+
+func Test_getDetailsKey(t *testing.T) {
+	type args struct {
+		details map[string]dbus.Variant
+		key     string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    interface{}
+		wantErr bool
+	}{
+		{
+			name: "getDetailsKey",
+			args: args{
+				details: map[string]dbus.Variant{
+					"te": dbus.MakeVariant(true),
+				},
+				key: "te",
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "getDetailsKey not found",
+			args: args{
+				details: map[string]dbus.Variant{
+					"te": dbus.MakeVariant(true),
+				},
+				key: "te1",
+			},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := getDetailsKey(tt.args.details, tt.args.key)
+			if tt.wantErr {
+				assert.NotNil(t, err)
+				return
+			}
+
+			assert.Equal(t, tt.want, got)
+		})
+	}
 }
