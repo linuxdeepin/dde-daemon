@@ -631,6 +631,9 @@ func (m *Manager) init() error {
 			logger.Warning("Failed to save deepin qt theme:", err)
 			return
 		}
+
+		// 将appearance中字体大小同步到xsettings
+		m.Set(TypeFontSize, strconv.FormatFloat(m.FontSize.Get(), 'f', 1, 64))
 	})
 
 	return nil
