@@ -3,24 +3,22 @@ package audio
 import (
 	"encoding/json"
 	"io/ioutil"
-	"path/filepath"
 	"strings"
 
 	"pkg.deepin.io/lib/pulse"
-	"pkg.deepin.io/lib/xdg/basedir"
 )
 
-const (
-	PortTypeBluetooth    = iota // 蓝牙音频
-	PortTypeHeadset             // USB和3.5mm 耳麦
-	PortTypeBuiltin             // 内置扬声器和话筒
-	PortTypeHdmi                // HDMI
-	PortTypeLineIO              // 线缆输入输出
-	PortTypeMultiChannel        // 多声道
-	PortTypeUnknown             // 其他类型
+// const (
+// 	PortTypeBluetooth    = iota // 蓝牙音频
+// 	PortTypeHeadset             // USB和3.5mm 耳麦
+// 	PortTypeBuiltin             // 内置扬声器和话筒
+// 	PortTypeHdmi                // HDMI
+// 	PortTypeLineIO              // 线缆输入输出
+// 	PortTypeMultiChannel        // 多声道
+// 	PortTypeUnknown             // 其他类型
 
-	PortTypeCount // 类型数量
-)
+// 	PortTypeCount // 类型数量
+// )
 
 type PortToken struct {
 	CardName string
@@ -37,8 +35,7 @@ type Priorities struct {
 type Skipper func(cardName string, portName string) bool
 
 var (
-	priorities               = NewPriorities()
-	globalPrioritiesFilePath = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/priorities.json")
+	priorities = NewPriorities()
 )
 
 func hasElement(slice []int, value int) bool {
@@ -230,7 +227,7 @@ func (pr *Priorities) AddAvailable(cards CardList) {
 				continue
 			}
 
-			_, portConfig := configKeeper.GetCardAndPortConfig(card.core.Name, port.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
 			if !portConfig.Enabled {
 				logger.Debugf("disabled port %s %s", card.core.Name, port.Name)
 				continue
@@ -447,11 +444,11 @@ func (pr *Priorities) checkAvailable(cards CardList, cardName string, portName s
 			}
 
 			if port.Available == pulse.AvailableTypeYes {
-				_, portConfig := configKeeper.GetCardAndPortConfig(cardName, portName)
+				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardName, portName)
 				return portConfig.Enabled
 			} else if port.Available == pulse.AvailableTypeUnknow {
 				logger.Warningf("port(%s %s) available is unknown", cardName, portName)
-				_, portConfig := configKeeper.GetCardAndPortConfig(cardName, portName)
+				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardName, portName)
 				return portConfig.Enabled
 			} else {
 				return false
