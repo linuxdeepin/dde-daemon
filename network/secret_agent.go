@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
 	"pkg.deepin.io/dde/daemon/network/nm"
@@ -112,10 +112,6 @@ func (sa *SecretAgent) getDefaultCollection() (secrets.Collection, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = sa.tryUnlockCollection(col)
-	if err != nil {
-		return nil, err
-	}
 	return col, nil
 }
 
@@ -155,20 +151,12 @@ func newSecretAgent(secServiceObj secrets.Service, manager *Manager) (*SecretAge
 	}
 
 	sa := &SecretAgent{}
-	sa.sessionSigLoop = manager.sessionSigLoop
 	sa.secretSessionPath = sessionPath
 	sa.secretService = secServiceObj
 	sa.saveSecretsTasks = make(map[saveSecretsTaskKey]saveSecretsTask)
 	sa.m = manager
 	sa.needSleep = true
 	logger.Debug("session path:", sessionPath)
-
-	// 尽早解锁密钥环
-	_, err = sa.getDefaultCollection()
-	if err != nil {
-		logger.Warning(err)
-	}
-
 	return sa, nil
 }
 
@@ -406,7 +394,6 @@ func (sa *SecretAgent) set(label, uuid, settingName, settingKey, value string) e
 	if err != nil {
 		return err
 	}
-
 	_, _, err = defaultCollection.CreateItem(0, properties, itemSecret, true)
 	return err
 }

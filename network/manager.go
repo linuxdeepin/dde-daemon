@@ -295,6 +295,8 @@ func (m *Manager) init() {
 	// 	logger.Warning(err)
 	// }
 
+	m.sessionSigLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)
+	m.sessionSigLoop.Start()
 	m.syncConfig = dsync.NewConfig("network", &syncConfig{m: m},
 		m.sessionSigLoop, dbusPath, logger)
 	m.localeFirstConnection() // TODO: 如果安装器在系统服务启动前配置系统语言,则该方法的调用可以移除
