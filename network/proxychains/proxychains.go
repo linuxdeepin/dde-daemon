@@ -121,30 +121,28 @@ func (m *Manager) init() {
 		}
 	}
 
-	if isCommunity() {
-		if m.IP != "" && m.Port != 0 {
-			settings := proxy.Proxy{
-				ProtoType: m.Type,
-				Name:      "default",
-				Server:    m.IP,
-				Port:      int(m.Port),
-				UserName:  m.User,
-				Password:  m.Password,
-			}
-			buf, err := json.Marshal(settings)
-			if err != nil {
-				return
-			}
-			err = m.appProxy.AddProxy(0, m.Type, "default", buf)
-			if err != nil {
-				logger.Warningf("add proxy failed, err: %v", err)
-				return
-			}
-			err = m.appProxy.StartProxy(0, m.Type, "default", false)
-			if err != nil {
-				logger.Warningf("start proxy failed, err: %v", err)
-				return
-			}
+	if m.IP != "" && m.Port != 0 {
+		settings := proxy.Proxy{
+			ProtoType: m.Type,
+			Name:      "default",
+			Server:    m.IP,
+			Port:      int(m.Port),
+			UserName:  m.User,
+			Password:  m.Password,
+		}
+		buf, err := json.Marshal(settings)
+		if err != nil {
+			return
+		}
+		err = m.appProxy.AddProxy(0, m.Type, "default", buf)
+		if err != nil {
+			logger.Warningf("add proxy failed, err: %v", err)
+			return
+		}
+		err = m.appProxy.StartProxy(0, m.Type, "default", false)
+		if err != nil {
+			logger.Warningf("start proxy failed, err: %v", err)
+			return
 		}
 	}
 }
@@ -296,17 +294,15 @@ func (m *Manager) set(type0, ip string, port uint32, user, password string) erro
 	}
 
 	if disable {
-		if isCommunity() {
-			err = m.appProxy.StopProxy(0)
-			if err != nil {
-				logger.Warningf("stop proxy failed, err: %v", err)
-				return err
-			}
-			err = m.appProxy.ClearProxy(0)
-			if err != nil {
-				logger.Warningf("clear proxy failed, err: %v", err)
-				return err
-			}
+		err = m.appProxy.StopProxy(0)
+		if err != nil {
+			logger.Warningf("stop proxy failed, err: %v", err)
+			return err
+		}
+		err = m.appProxy.ClearProxy(0)
+		if err != nil {
+			logger.Warningf("clear proxy failed, err: %v", err)
+			return err
 		}
 		return m.removeConf()
 	}
@@ -318,29 +314,27 @@ func (m *Manager) set(type0, ip string, port uint32, user, password string) erro
 	} else {
 		notifyAppProxyEnabled()
 	}
-	if isCommunity() {
-		settings := proxy.Proxy{
-			ProtoType: type0,
-			Name:      "default",
-			Server:    ip,
-			Port:      int(port),
-			UserName:  user,
-			Password:  password,
-		}
-		buf, err := json.Marshal(settings)
-		if err != nil {
-			return err
-		}
-		err = m.appProxy.AddProxy(0, type0, "default", buf)
-		if err != nil {
-			logger.Warningf("add proxy failed, err: %v", err)
-			return err
-		}
-		err = m.appProxy.StartProxy(0, type0, "default", false)
-		if err != nil {
-			logger.Warningf("start proxy failed, err: %v", err)
-			return err
-		}
+	settings := proxy.Proxy{
+		ProtoType: type0,
+		Name:      "default",
+		Server:    ip,
+		Port:      int(port),
+		UserName:  user,
+		Password:  password,
+	}
+	buf, err := json.Marshal(settings)
+	if err != nil {
+		return err
+	}
+	err = m.appProxy.AddProxy(0, type0, "default", buf)
+	if err != nil {
+		logger.Warningf("add proxy failed, err: %v", err)
+		return err
+	}
+	err = m.appProxy.StartProxy(0, type0, "default", false)
+	if err != nil {
+		logger.Warningf("start proxy failed, err: %v", err)
+		return err
 	}
 	return err
 }
