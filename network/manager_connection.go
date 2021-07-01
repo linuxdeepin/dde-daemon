@@ -20,6 +20,7 @@
 package network
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 
@@ -600,6 +601,21 @@ func (m *Manager) IsWirelessHotspotModeEnabled(devPath dbus.ObjectPath) (enabled
 		enabled = true
 	}
 	return
+}
+
+func (m *Manager) GetSecrets(path dbus.ObjectPath, settingName string) (map[string]map[string]dbus.Variant, *dbus.Error) {
+	conn := m.getConnection(path)
+	if conn == nil {
+		return nil, dbusutil.ToError(errors.New("path not exist"))
+	}
+	// begin to get data
+	data, err := conn.nmConn.GetSecrets(0, settingName)
+	if err != nil {
+		logger.Warningf("get secrets failed, err: %v", err)
+		return nil, dbusutil.ToError(err)
+	}
+	logger.Debugf("get secretes success, data: #%v", data)
+	return data, nil
 }
 
 // DisconnectDevice will disconnect all connection in target device,

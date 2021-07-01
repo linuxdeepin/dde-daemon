@@ -121,6 +121,7 @@ type Manager struct {
 		GetSupportedConnectionTypes  func() `out:"types"`
 		IsDeviceEnabled              func() `in:"devPath" out:"enabled"`
 		IsWirelessHotspotModeEnabled func() `in:"devPath" out:"enabled"`
+		GetSecrets                   func() `in:"conPath,settingName" out:"secrets"`
 		ListDeviceConnections        func() `in:"devPath" out:"connections"`
 		SetAutoProxy                 func() `in:"proxyAuto"`
 		SetDeviceManaged             func() `in:"devPathOrIfc,managed"`
