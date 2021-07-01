@@ -347,6 +347,7 @@ func (pp *PriorityPolicy) SetTheFirstType(portType int) bool {
 		}
 	}
 
+	pp.Types = newTypes
 	return true
 }
 
