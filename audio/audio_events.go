@@ -82,6 +82,7 @@ func (a *Audio) handleEvent() {
 			events = append(events, tail...)
 			a.refresh()
 			GetPriorityManager().SetPorts(a.cards)
+			GetPriorityManager().Save()
 			a.dispatchEvents(events)
 
 		case <-a.quit:
@@ -131,6 +132,7 @@ func (a *Audio) isCardIdValid(cardId uint32) bool {
 func (a *Audio) needAutoSwitchInputPort() bool {
 	// 同端口切换次数超出限制(切换失败时反复切换同一端口)
 	if a.inputAutoSwitchCount >= 10 {
+		logger.Debug("input auto switch tried too many times")
 		return false
 	}
 
@@ -166,6 +168,7 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 func (a *Audio) needAutoSwitchOutputPort() bool {
 	// 同端口切换次数超出限制(切换失败时反复切换同一端口)
 	if a.outputAutoSwitchCount >= 10 {
+		logger.Debug("input auto switch tried too many times")
 		return false
 	}
 
@@ -600,5 +603,6 @@ func (a *Audio) listenGSettingReduceNoiseChanged() {
 			GetConfigKeeper().SetReduceNoise(a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
 			logger.Debugf("GetConfigKeeper().SetReduceNoise %s %s %v", a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
 		}
+
 	})
 }

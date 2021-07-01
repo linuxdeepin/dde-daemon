@@ -283,21 +283,29 @@ func (pp *PriorityPolicy) RemovePort(port *PriorityPort) bool {
 // 因此需要删除无效端口，添加新的有效端口
 func (pp *PriorityPolicy) SetPorts(ports PriorityPortList) {
 	// 清除无效的端口
-	for _, port := range pp.Ports {
+	count := len(pp.Ports)
+	for i := 0; i < count; {
+		port := pp.Ports[i]
 		if !ports.hasElement(port) {
 			pp.RemovePort(port)
 			logger.Debugf("remove port <%s:%s>", port.CardName, port.PortName)
+			count--
+		} else {
+			i++
 		}
 	}
 
 	// 添加缺少的有效端口
-	for _, port := range ports {
+	count = len(pp.Ports)
+	for i := 0; i < count; i++ {
+		port := ports[i]
 		if !pp.Ports.hasElement(port) {
 			pp.AddPort(port)
 			logger.Debugf("add port <%s:%s>", port.CardName, port.PortName)
 			if port.PortType < 0 || port.PortType >= PortTypeCount {
 				logger.Warningf("unexpected port type <%d> of port <%s:%s>", port.PortType, port.CardName, port.PortName)
 			}
+			count++
 		}
 	}
 }
