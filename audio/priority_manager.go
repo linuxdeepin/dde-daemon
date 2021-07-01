@@ -138,8 +138,10 @@ func (pm *PriorityManager) SetPorts(cards CardList) {
 
 			if port.Direction == pulse.DirectionSink {
 				outputPorts = append(outputPorts, &p)
+				logger.Debugf("append output port %s:%s", p.CardName, p.PortName)
 			} else {
-				inputPorts = append(outputPorts, &p)
+				inputPorts = append(inputPorts, &p)
+				logger.Debugf("append input port %s:%s", p.CardName, p.PortName)
 			}
 		}
 	}
@@ -200,7 +202,7 @@ func (pm *PriorityManager) SetFirstOutputPort(cardName string, portName string) 
 // 形似："alsa_card.pci-0000_00_1f.3" 和 "hdmi-output-0"
 // 而不是: "HDA Intel PCH" 和 "HDMI / DisplayPort"
 func (pm *PriorityManager) SetFirstInputPort(cardName string, portName string) {
-	pm.Output.SetTheFirstPort(cardName, portName)
+	pm.Input.SetTheFirstPort(cardName, portName)
 	pm.Print()
 	pm.Save()
 }
