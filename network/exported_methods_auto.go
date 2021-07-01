@@ -88,6 +88,12 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"proxyMode"},
 		},
 		{
+			Name:    "GetSecrets",
+			Fn:      v.GetSecrets,
+			InArgs:  []string{"path", "settingName"},
+			OutArgs: []string{"outArg0"},
+		},
+		{
 			Name:    "GetSupportedConnectionTypes",
 			Fn:      v.GetSupportedConnectionTypes,
 			OutArgs: []string{"types"},
