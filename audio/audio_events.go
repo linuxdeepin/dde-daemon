@@ -604,5 +604,6 @@ func (a *Audio) listenGSettingReduceNoiseChanged() {
 			logger.Debugf("GetConfigKeeper().SetReduceNoise %s %s %v", a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
 		}
 
+		a.inputAutoSwitchCount = 0
 	})
 }
