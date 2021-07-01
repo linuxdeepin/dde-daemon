@@ -168,14 +168,10 @@ func (n *Network) connectSignal() {
 	n.nmManager.InitSignalExt(n.sigLoop, true)
 	_, err = n.nmManager.ConnectDeviceAdded(func(devPath dbus.ObjectPath) {
 		logger.Debug("device added", devPath)
-		n.devicesMu.Lock()
-
 		err := n.addDevice(devPath)
 		if err != nil {
 			logger.Warning(err)
 		}
-
-		n.devicesMu.Unlock()
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -286,13 +282,16 @@ func (n *Network) handleVpnStateChanged(state uint32) {
 }
 
 func (n *Network) addDevice(devPath dbus.ObjectPath) error {
+	n.devicesMu.Lock()
 	_, ok := n.devices[devPath]
 	if ok {
+		n.devicesMu.Unlock()
 		return nil
 	}
 
 	d, err := networkmanager.NewDevice(n.getSysBus(), devPath)
 	if err != nil {
+		n.devicesMu.Unlock()
 		return err
 	}
 	iface, err := d.Interface().Get(0)
@@ -302,8 +301,16 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 
 	deviceType, err := d.DeviceType().Get(0)
 	if err != nil {
-		return err
+		logger.Warningf("get device %s type failed: %v", d.Path_(), err)
 	}
+
+	n.devices[devPath] = &device{
+		iface:    iface,
+		nmDevice: d,
+		type0:    deviceType,
+	}
+
+	n.devicesMu.Unlock()
 
 	d.InitSignalExt(n.sigLoop, true)
 	_, err = d.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
@@ -361,10 +368,11 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		logger.Warning(err)
 	}
 
-	n.devices[devPath] = &device{
-		iface:    iface,
-		nmDevice: d,
-		type0:    deviceType,
+	n.configMu.Lock()
+	config, ok := n.config.Devices[iface]
+	n.configMu.Unlock()
+	if ok {
+		n.enableDevice(iface, config.Enabled)
 	}
 
 	return nil
@@ -780,9 +788,7 @@ func (n *Network) addDevicesWithRetry() {
 func (n *Network) addDevices(devicePaths []dbus.ObjectPath) {
 	// add device
 	for _, devPath := range devicePaths {
-		n.devicesMu.Lock()
 		err := n.addDevice(devPath)
-		n.devicesMu.Unlock()
 		if err != nil {
 			logger.Warning(err)
 			continue
