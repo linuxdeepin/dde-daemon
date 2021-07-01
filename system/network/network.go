@@ -157,7 +157,6 @@ func (n *Network) connectSignal() {
 		if err != nil {
 			logger.Warning(err)
 		}
-
 	})
 	if err != nil {
 		logger.Warning(err)
