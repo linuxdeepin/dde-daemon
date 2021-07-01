@@ -749,6 +749,14 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 	GetPriorityManager().SetPorts(a.cards)
 	a.autoSwitchPort()
 
+	if a.defaultSink.Card == cardId && a.defaultSink.ActivePort.Name == portName {
+		a.defaultSink.setMute(!enabled)
+	}
+
+	if a.defaultSource.Card == cardId && a.defaultSource.ActivePort.Name == portName {
+		a.defaultSource.setMute(!enabled)
+	}
+
 	return nil
 }
 
