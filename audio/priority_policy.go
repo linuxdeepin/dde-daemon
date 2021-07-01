@@ -358,7 +358,7 @@ func (pp *PriorityPolicy) SetTheFirstPort(cardName string, portName string) bool
 	pp.InsertPortBeforeIndex(port, 0)
 
 	// 提升相同类型端口的优先级
-	insertPos := 1
+	insertPos := 0
 	for i, p := range pp.Ports {
 		if p.PortType == portType {
 			pp.RemovePortByIndex(i)
