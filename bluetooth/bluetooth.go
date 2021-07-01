@@ -356,11 +356,13 @@ func (b *Bluetooth) init() {
 
 	b.obexAgent.init()
 
-	b.config.clearSpareConfig(b)
-	b.config.save()
-	go b.tryConnectPairedDevices()
-	// move to power module
-	// b.wakeupWorkaround()
+	// E人上蓝牙适配器识别较慢, 在清除冗余配置前保证默认适配器已经启动
+	time.AfterFunc(time.Second * 5, func() {
+		b.config.clearSpareConfig(b)
+		b.config.save()
+
+		b.tryConnectPairedDevices()
+	})
 }
 
 func (b *Bluetooth) unblockBluetoothDevice() {
