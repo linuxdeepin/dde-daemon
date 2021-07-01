@@ -58,7 +58,7 @@ func (m *BluezAudioManager) Save() {
 		return
 	}
 
-	err = ioutil.WriteFile(m.file, data, 644)
+	err = ioutil.WriteFile(m.file, data, 0644)
 	if err != nil {
 		logger.Warning(err)
 		return
