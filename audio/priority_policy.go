@@ -291,12 +291,13 @@ func (pp *PriorityPolicy) SetPorts(ports PriorityPortList) {
 			logger.Debugf("remove port <%s:%s>", port.CardName, port.PortName)
 			count--
 		} else {
+			logger.Debugf("valid port <%s:%s>", port.CardName, port.PortName)
 			i++
 		}
 	}
 
 	// 添加缺少的有效端口
-	count = len(pp.Ports)
+	count = len(ports)
 	for i := 0; i < count; i++ {
 		port := ports[i]
 		if !pp.Ports.hasElement(port) {
@@ -305,7 +306,8 @@ func (pp *PriorityPolicy) SetPorts(ports PriorityPortList) {
 			if port.PortType < 0 || port.PortType >= PortTypeCount {
 				logger.Warningf("unexpected port type <%d> of port <%s:%s>", port.PortType, port.CardName, port.PortName)
 			}
-			count++
+		} else {
+			logger.Debugf("exist port <%s:%s>", port.CardName, port.PortName)
 		}
 	}
 }
