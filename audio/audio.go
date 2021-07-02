@@ -961,9 +961,13 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 
 	s.setMute(portConfig.Mute)
 
+	// 不要在降噪通道上重复开启降噪
 	if isPhyDev {
 		a.ReduceNoise.Set(portConfig.ReduceNoise)
 		logger.Debugf("physical source, set reduce noise %v", portConfig.ReduceNoise)
+	} else if !portConfig.ReduceNoise {
+		a.ReduceNoise.Set(portConfig.ReduceNoise)
+		logger.Debugf("reduce noise source, set reduce noise %v", portConfig.ReduceNoise)
 	}
 
 	if !portConfig.Enabled {
