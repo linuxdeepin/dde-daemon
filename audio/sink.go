@@ -232,6 +232,11 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 	s.props = sinkInfo.PropList
 	s.PropsMu.Unlock()
 
+	if activePortChanged && s.audio.defaultSinkName == s.Name {
+		logger.Debugf("default sink update active port %s", sinkInfo.ActivePort.Name)
+		s.audio.resumeSinkConfig(s)
+	}
+
 	// TODO(jouyouyun): Sometimes the default sink not in the same card, so the activePortChanged inaccurate.
 	// The right way is saved the last default sink active port, then judge whether equal.
 	if s.audio.headphoneUnplugAutoPause && activePortChanged {

@@ -249,9 +249,14 @@ func (s *Source) update(sourceInfo *pulse.Source) {
 	}
 
 	s.setPropPorts(ports)
-	s.setPropActivePort(toPort(sourceInfo.ActivePort))
+	activePortChanged := s.setPropActivePort(toPort(sourceInfo.ActivePort))
 
 	s.PropsMu.Unlock()
+
+	if activePortChanged && s.audio.defaultSourceName == s.Name {
+		logger.Debugf("default source update active port %s", sourceInfo.ActivePort.Name)
+		s.audio.resumeSourceConfig(s, isPhysicalDevice(s.Name))
+	}
 }
 
 func (s *Source) setMute(v bool) {
