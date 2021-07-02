@@ -119,7 +119,13 @@ func (m *Manager) handleClientListChanged() {
 				} else {
 					logger.Warningf("window info of %d is nil", window0)
 					entry := m.Entries.getByWindowId(window0)
-					m.removeAppEntry(entry)
+					if entry != nil {
+						entry.PropsMu.RLock()
+						if !entry.IsDocked {
+							m.removeAppEntry(entry)
+						}
+						entry.PropsMu.RUnlock()
+					}
 				}
 			}
 			m.entryDealChan <- removeFunc
