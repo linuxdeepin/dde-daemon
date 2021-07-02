@@ -70,7 +70,7 @@ print_gopath: prepare
 
 install: build translate install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
-	cp out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
+	cp -f out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/locale
 	cp -r out/locale/* ${DESTDIR}${PREFIX}/share/locale
