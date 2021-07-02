@@ -45,7 +45,6 @@ var globalBluetooth *Bluetooth
 var globalAgent *agent
 
 func HandlePrepareForSleep(sleep bool) {
-	logger.Warning("------------------- HandlePrepareForSleep : ", sleep)
 	if globalBluetooth == nil {
 		logger.Warning("Module 'bluetooth' has not start")
 		return

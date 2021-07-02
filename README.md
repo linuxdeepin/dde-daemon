@@ -20,7 +20,6 @@ DDE Daemon is a daemon for handling  the deepin session settings
 
 ### Runtime dependencies
 
-
 * upower
 * udisks2
 * systemd
