@@ -247,7 +247,6 @@ func getCtx() (ctx *pulse.Context, err error) {
 }
 
 func (a *Audio) refreshCards() {
-	a.oldCards = a.cards
 	a.cards = newCardList(a.ctx.GetCardList())
 	a.setPropCards(a.cards.string())
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())

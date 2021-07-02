@@ -261,6 +261,9 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 
 	// 这里写所有类型的card事件都需要触发的逻辑
 
+	// 保存旧的cards
+	a.oldCards = a.cards
+
 	// 触发自动切换
 	a.autoSwitchPort()
 }
