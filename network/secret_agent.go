@@ -84,6 +84,8 @@ func (sa *SecretAgent) addSaveSecretsTask(connPath dbus.ObjectPath,
 		settingName: settingName,
 	}] = saveSecretsTask{process: process}
 
+	logger.Debugf("add secrets task success, #%v", sa.saveSecretsTasks)
+
 	sa.saveSecretsTasksMu.Unlock()
 }
 
@@ -94,6 +96,7 @@ func (sa *SecretAgent) removeSaveSecretsTask(connPath dbus.ObjectPath,
 		connPath:    connPath,
 		settingName: settingName,
 	})
+	logger.Debugf("delete secrets task success, #%v", sa.saveSecretsTasks)
 	sa.saveSecretsTasksMu.Unlock()
 }
 
@@ -105,7 +108,7 @@ func (sa *SecretAgent) getSaveSecretsTaskProcess(connPath dbus.ObjectPath,
 		connPath:    connPath,
 		settingName: settingName,
 	}]
-
+	logger.Debugf("get secrets task success, #%v", sa.saveSecretsTasks)
 	sa.saveSecretsTasksMu.Unlock()
 	return task.process
 }
@@ -348,9 +351,14 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	}
 	logger.Debugf("reqJSON: %s", reqJSON)
 	//true : exist -> return
-	if isSecretDialogExist() {
+	sa.saveSecretsTasksMu.Lock()
+
+	// check if has secret exist
+	if len(sa.saveSecretsTasks) != 0 {
+		sa.saveSecretsTasksMu.Unlock()
 		return nil, err
 	}
+
 	// set GetSecrets timeout, default 25 seconds, now set 60 seconds
 	// https://developer.gnome.org/gio/stable/GDBusProxy.html#GDBusProxy--g-default-timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
@@ -361,9 +369,15 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	cmd.Stdout = &cmdOutBuf
 	err = cmd.Start()
 	if err != nil {
+		sa.saveSecretsTasksMu.Unlock()
 		return nil, err
 	}
-	sa.addSaveSecretsTask(connPath, settingName, cmd.Process)
+	// add tasks
+	sa.saveSecretsTasks[saveSecretsTaskKey{
+		connPath:    connPath,
+		settingName: settingName,
+	}] = saveSecretsTask{process: cmd.Process}
+	sa.saveSecretsTasksMu.Unlock()
 	err = cmd.Wait()
 	sa.removeSaveSecretsTask(connPath, settingName)
 	if err != nil {
