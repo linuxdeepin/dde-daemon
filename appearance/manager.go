@@ -633,7 +633,12 @@ func (m *Manager) init() error {
 		}
 
 		// 将appearance中字体大小同步到xsettings
-		m.Set(TypeFontSize, strconv.FormatFloat(m.FontSize.Get(), 'f', 1, 64))
+		err = m.xSettings.SetString(0, "Qt/FontPointSize",
+			strconv.FormatFloat(m.FontSize.Get(), 'f', -1, 64))
+		if err != nil {
+			logger.Warning("Failed to sync fontsize to XSettings:", err)
+			return
+		}
 	})
 
 	return nil

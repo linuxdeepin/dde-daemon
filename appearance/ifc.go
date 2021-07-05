@@ -133,7 +133,7 @@ func (m *Manager) show(ty string, names []string) (string, error) {
 
 // Set set to the special 'value'
 func (m *Manager) Set(ty, value string) *dbus.Error {
-	logger.Debugf("Set '%s' for type '%s'", value, ty)
+	logger.Infof("Set '%s' for type '%s'", value, ty)
 	err := m.set(ty, value)
 	return dbusutil.ToError(err)
 }
