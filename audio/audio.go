@@ -925,18 +925,19 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 	logger.Debugf("resume sink %s %s", a.getCardNameById(s.Card), s.ActivePort.Name)
 	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
 
-	err := s.setVBF(portConfig.Volume, portConfig.Balance, 0.0)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	s.setMute(portConfig.Mute)
 	a.IncreaseVolume.Set(portConfig.IncreaseVolume)
 	if portConfig.IncreaseVolume {
 		a.MaxUIVolume = increaseMaxVolume
 	} else {
 		a.MaxUIVolume = normalMaxVolume
 	}
+
+	err := s.setVBF(portConfig.Volume, portConfig.Balance, 0.0)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	s.setMute(portConfig.Mute)
 
 	if !portConfig.Enabled {
 		// 意外原因切换到被禁用的端口上，例如没有可用端口

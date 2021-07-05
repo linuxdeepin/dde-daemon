@@ -155,7 +155,7 @@ func (s *Sink) SetFade(value float64) *dbus.Error {
 // f: fade前后平衡值
 //
 func (s *Sink) setVBF(v, b, f float64) *dbus.Error {
-	if v < -1.00 || v > 1.00 {
+	if !isVolumeValid(v) {
 		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", v))
 	}
 
