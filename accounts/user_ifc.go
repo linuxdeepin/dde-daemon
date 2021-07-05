@@ -19,6 +19,11 @@
 
 package accounts
 
+/*
+#include <shadow.h>
+typedef struct spwd cspwd;
+*/
+import "C"
 import (
 	"errors"
 	"fmt"
@@ -934,4 +939,31 @@ func (u *User) SetWeekBegins(sender dbus.Sender, value int32) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 	return nil
+}
+
+type ExpiredStatus int
+
+const (
+	expiredStatusNormal ExpiredStatus = iota
+	expiredStatusExpiredSoon
+	expiredStatusExpiredAlready
+)
+
+func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64, busErr *dbus.Error) {
+	var pw *C.cspwd
+	pw = C.getspnam(C.CString(u.UserName))
+	if pw == nil {
+		return expiredStatusNormal, 0, dbusutil.ToError(fmt.Errorf("get passwd for %s failed", u.UserName))
+	}
+
+	var spMax = int64(pw.sp_max)
+	var spWarn = int64(pw.sp_warn)
+	var spLastChg = int64(pw.sp_lstchg)
+	relevantDay := spLastChg + 1 + spMax - time.Now().Unix()/24/60/60
+	if relevantDay <= 0 {
+		return expiredStatusExpiredAlready, 0, nil
+	} else if relevantDay <= spWarn {
+		return expiredStatusExpiredSoon, relevantDay, nil
+	}
+	return expiredStatusNormal, relevantDay, nil
 }
