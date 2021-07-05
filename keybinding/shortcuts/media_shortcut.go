@@ -110,8 +110,6 @@ var mediaIdActionMap = map[string]*Action{
 	"touchpad-off":    NewTouchpadCtrlAction(TouchpadOff),
 
 	// power
-	"suspend": &Action{Type: ActionTypeSystemSuspend},
-	"sleep":   &Action{Type: ActionTypeSystemSuspend},
 	"log-off": &Action{Type: ActionTypeSystemLogOff},
 	"away":    &Action{Type: ActionTypeSystemAway},
 

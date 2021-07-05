@@ -30,6 +30,8 @@ import (
 const (
 	KEY_TOUCHPAD_TOGGLE = 0x212
 	KEY_POWER           = 116
+	KEY_SLEEP           = 142
+	KEY_SUSPEND         = 205
 )
 
 type SpecialKeycodeMapKey struct {
@@ -73,6 +75,14 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// 电源键，松开时触发
 	key = createSpecialKeycodeIndex(KEY_POWER, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handlePower
+
+	// sleep键，松开时触发
+	key = createSpecialKeycodeIndex(KEY_SLEEP, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleSleep
+
+	// suspend建，松开时触发
+	key = createSpecialKeycodeIndex(KEY_SUSPEND, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleSleep
 }
 
 // 处理函数的总入口
@@ -152,4 +162,9 @@ func (m *Manager) handlePower() {
 			}
 		}()
 	}
+}
+
+// 待机
+func (m *Manager) handleSleep() {
+	m.systemSuspend()
 }
