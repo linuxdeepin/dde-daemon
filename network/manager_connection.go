@@ -52,7 +52,8 @@ type connection struct {
 	ClonedAddress string
 
 	// works for wireless, olpc-mesh connections
-	Ssid string
+	Ssid   string
+	Hidden bool
 }
 
 func (m *Manager) initConnectionManage() {
@@ -185,6 +186,7 @@ func (conn *connection) updateProps() connectionData {
 		} else {
 			conn.ClonedAddress = ""
 		}
+		conn.Hidden = getSettingWirelessHidden(cdata)
 	}
 	return cdata
 }
