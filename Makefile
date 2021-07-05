@@ -57,7 +57,7 @@ ts_to_policy:
 	deepin-policy-ts-convert ts2policy misc/polkit-action/com.deepin.daemon.$$i.policy.in misc/ts/com.deepin.daemon.$$i.policy misc/polkit-action/com.deepin.daemon.$$i.policy; \
 	done
 
-build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle $(addprefix out/bin/, ${BINARIES}) ts_to_policy
+build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle $(addprefix out/bin/, ${BINARIES}) ts_to_policy icons translate
 
 test: prepare
 	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -v ./...
@@ -68,7 +68,7 @@ test-coverage: prepare
 print_gopath: prepare
 	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
 
-install: build translate install-dde-data install-icons
+install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
 	cp out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 
@@ -128,8 +128,10 @@ install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
 	cp -r misc/data ${DESTDIR}${PREFIX}/share/dde/
 
-install-icons:
+icons:
 	python3 misc/icons/install_to_hicolor.py -d status -o out/icons misc/icons/status
+
+install-icons: icons
 	mkdir -pv ${DESTDIR}${PREFIX}/share/icons/
 	cp -r out/icons/hicolor ${DESTDIR}${PREFIX}/share/icons/
 
