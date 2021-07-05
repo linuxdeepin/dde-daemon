@@ -182,7 +182,13 @@ func (s *Sink) SetMute(value bool) *dbus.Error {
 	logger.Debugf("Sink #%d SetMute %v", s.index, value)
 	s.audio.context().SetSinkMuteByIndex(s.index, value)
 
-	GetConfigKeeper().SetMuteAll(value)
+	for _, card := range s.audio.cards {
+		for _, port := range card.Ports {
+			if port.Direction == pulse.DirectionSink {
+				GetConfigKeeper().SetMute(card.core.Name, port.Name, value)
+			}
+		}
+	}
 
 	if !value {
 		s.playFeedback()
