@@ -19,6 +19,11 @@
 
 package accounts
 
+/*
+#include <shadow.h>
+typedef struct spwd cspwd;
+*/
+import "C"
 import (
 	"errors"
 	"fmt"
@@ -934,4 +939,46 @@ func (u *User) SetWeekBegins(sender dbus.Sender, value int32) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 	return nil
+}
+
+type ExpiredStatus int
+
+const (
+	expiredStatusNormal ExpiredStatus = iota
+	expiredStatusExpiredSoon
+	expiredStatusExpiredAlready
+)
+
+const secondsPerDay = 60 * 60 * 24
+
+func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64, busErr *dbus.Error) {
+	var pw *C.cspwd
+	pw = C.getspnam(C.CString(u.UserName))
+	if pw == nil {
+		return expiredStatusNormal, 0, dbusutil.ToError(fmt.Errorf("get passwd for %s failed", u.UserName))
+	}
+
+	var spMax = int64(pw.sp_max)
+	var spWarn = int64(pw.sp_warn)
+	var spLastChg = int64(pw.sp_lstchg)
+
+	if spLastChg == 0 {
+		// expired
+		return expiredStatusExpiredAlready, 0, nil
+	}
+	if spMax == -1 {
+		// never expired
+		return expiredStatusNormal, -1, nil
+	}
+
+	// pam_unix/passverify.c
+	curDays := time.Now().Unix() / secondsPerDay
+	daysLeft := spLastChg + spMax - curDays
+
+	if daysLeft < 0 {
+		return expiredStatusExpiredAlready, daysLeft, nil
+	} else if spWarn > daysLeft {
+		return expiredStatusExpiredSoon, daysLeft, nil
+	}
+	return expiredStatusNormal, daysLeft, nil
 }
