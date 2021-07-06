@@ -24,7 +24,6 @@ import (
 	"os/exec"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/gsprop"
 	"pkg.deepin.io/lib/log"
 )
 
@@ -42,7 +41,6 @@ var (
 
 type Bluetooth struct {
 	service 		*dbusutil.Service
-	BluetoothSwitch	gsprop.Bool `prop:"access:r"`
 }
 
 func newBluetooth(service *dbusutil.Service) *Bluetooth {
