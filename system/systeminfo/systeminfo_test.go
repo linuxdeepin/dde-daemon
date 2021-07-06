@@ -3,7 +3,7 @@ package systeminfo
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 var xmlData string = `<?xml version="1.0" standalone="yes" ?>
@@ -113,37 +113,31 @@ Processor Information
 `
 
 func Test_parseXml(t *testing.T) {
-	Convey("parseXml", t, func(c C) {
-		value, err := parseXml([]byte(xmlData))
-		v := value.Size
-		t.Log(v)
-		c.So(v, ShouldEqual, uint64(3221225472))
-		c.So(err, ShouldBeNil)
-	})
+	value, err := parseXml([]byte(xmlData))
+	v := value.Size
+	t.Log(v)
+	assert.Equal(t, v, uint64(3221225472))
+	assert.Nil(t, err)
 }
 
 func Test_parseCurrentSpeed(t *testing.T) {
-	Convey("parseCurrentSpeed", t, func(c C) {
-		value, err := parseCurrentSpeed(dmidecodeData, 64)
-		v := value
-		t.Log(v)
-		c.So(v, ShouldEqual, 3200)
-		c.So(err, ShouldBeNil)
-	})
+	value, err := parseCurrentSpeed(dmidecodeData, 64)
+	v := value
+	t.Log(v)
+	assert.Equal(t, v, uint64(3200))
+	assert.Nil(t, err)
 }
 
 func Test_filterUnNumber(t *testing.T) {
-	Convey("filterUnNumber", t, func(c C) {
-		str := "Current Speed: 3200 MHz"
-		value := filterUnNumber(str)
-		t.Log(value)
-		c.So(value, ShouldEqual, "3200")
-	})
+	str := "Current Speed: 3200 MHz"
+	value := filterUnNumber(str)
+	t.Log(value)
+	assert.Equal(t, value, "3200")
 }
 
 func Test_formatFileSize(t *testing.T) {
 	var infos = []struct {
-		sizeInt uint64
+		sizeInt    uint64
 		sizeString string
 	}{
 		{(1 << 10) - 1, "1023.00B"},
@@ -154,11 +148,9 @@ func Test_formatFileSize(t *testing.T) {
 		{(1 << 60) - (1 << 50), "1023.00EB"},
 	}
 
-	Convey("formatFileSize", t, func(c C) {
-		for _, info := range infos {
-			value := formatFileSize(info.sizeInt)
-			t.Log(value)
-			c.So(value, ShouldEqual, info.sizeString)
-		}
-	})
+	for _, info := range infos {
+		value := formatFileSize(info.sizeInt)
+		t.Log(value)
+		assert.Equal(t, value, info.sizeString)
+	}
 }

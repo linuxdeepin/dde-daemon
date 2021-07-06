@@ -23,16 +23,14 @@ import (
 	"testing"
 
 	"github.com/godbus/dbus"
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_getValidName(t *testing.T) {
-	Convey("getValidName", t, func(c C) {
-		names := []string{"BAT0", "test.t", "test:t", "test-t", "test.1:2-3.4:5-6"}
-		for _, name := range names {
-			path := dbus.ObjectPath("/battery_" + getValidName(name))
-			t.Log(path)
-			c.So(path.IsValid(), ShouldBeTrue)
-		}
-	})
+	names := []string{"BAT0", "test.t", "test:t", "test-t", "test.1:2-3.4:5-6"}
+	for _, name := range names {
+		path := dbus.ObjectPath("/battery_" + getValidName(name))
+		t.Log(path)
+		assert.True(t, path.IsValid())
+	}
 }

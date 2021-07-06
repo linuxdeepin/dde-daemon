@@ -22,32 +22,24 @@ package power
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_checkTimeStabilized(t *testing.T) {
-	Convey("checkTimeStabilized", t, func(c C) {
-		data := []uint64{
-			9455,
-			5467,
-			3840,
-			2962,
-			2408,
-			2408,
-			1754,
-			1698,
-			1710,
-			1675,
-		}
+	data := []uint64{
+		9455,
+		5467,
+		3840,
+		2962,
+		2408,
+		2408,
+		1754,
+		1698,
+		1710,
+		1675,
+	}
 
-		c.Convey("fewer than 3", func() {
-			c.So(checkTimeStabilized(data[:2], data[2]), ShouldBeFalse)
-		})
-		c.Convey("not stablized", func() {
-			c.So(checkTimeStabilized(data[:6], data[6]), ShouldBeFalse)
-		})
-		c.Convey("stablized", func() {
-			c.So(checkTimeStabilized(data[:9], data[9]), ShouldBeTrue)
-		})
-	})
+	assert.False(t, checkTimeStabilized(data[:2], data[2]))
+	assert.False(t, checkTimeStabilized(data[:6], data[6]))
+	assert.True(t, checkTimeStabilized(data[:9], data[9]))
 }

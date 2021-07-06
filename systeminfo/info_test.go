@@ -24,131 +24,111 @@ import (
 	"strconv"
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCPUInfo(t *testing.T) {
-	Convey("Test cpu info", t, func(c C) {
-		cpu, err := GetCPUInfo("testdata/cpuinfo")
-		c.So(cpu, ShouldEqual,
-			"Intel(R) Core(TM) i3 CPU M 330 @ 2.13GHz x 4")
-		c.So(err, ShouldBeNil)
+	cpu, err := GetCPUInfo("testdata/cpuinfo")
+	assert.Equal(t, cpu,
+		"Intel(R) Core(TM) i3 CPU M 330 @ 2.13GHz x 4")
+	assert.Nil(t, err)
 
-		cpu, err = GetCPUInfo("testdata/sw-cpuinfo")
-		c.So(cpu, ShouldEqual, "sw 1.40GHz x 4")
-		c.So(err, ShouldBeNil)
+	cpu, err = GetCPUInfo("testdata/sw-cpuinfo")
+	assert.Equal(t, cpu, "sw 1.40GHz x 4")
+	assert.Nil(t, err)
 
-		cpu, err = GetCPUInfo("testdata/arm-cpuinfo")
-		c.So(cpu, ShouldEqual, "NANOPI2 x 4")
-		c.So(err, ShouldBeNil)
+	cpu, err = GetCPUInfo("testdata/arm-cpuinfo")
+	assert.Equal(t, cpu, "NANOPI2 x 4")
+	assert.Nil(t, err)
 
-		cpu, err = GetCPUInfo("testdata/hw_kirin-cpuinfo")
-		c.So(cpu, ShouldEqual, "HUAWEI Kirin 990 x 8")
-		c.So(err, ShouldBeNil)
-	})
+	cpu, err = GetCPUInfo("testdata/hw_kirin-cpuinfo")
+	assert.Equal(t, cpu, "HUAWEI Kirin 990 x 8")
+	assert.Nil(t, err)
 }
 
 func TestMemInfo(t *testing.T) {
-	Convey("Test memory info", t, func(c C) {
-		mem, err := getMemoryFromFile("testdata/meminfo")
-		c.So(mem, ShouldEqual, uint64(4005441536))
-		c.So(err, ShouldBeNil)
-	})
+	mem, err := getMemoryFromFile("testdata/meminfo")
+	assert.Equal(t, mem, uint64(4005441536))
+	assert.Nil(t, err)
 }
 
 func TestVersion(t *testing.T) {
-	Convey("Test os version", t, func(c C) {
-		lang := os.Getenv("LANGUAGE")
-		os.Setenv("LANGUAGE", "en_US")
-		defer os.Setenv("LANGUAGE", lang)
+	lang := os.Getenv("LANGUAGE")
+	os.Setenv("LANGUAGE", "en_US")
+	defer os.Setenv("LANGUAGE", lang)
 
-		deepin, err := getVersionFromDeepin("testdata/deepin-version")
-		c.So(deepin, ShouldEqual, "2015 Desktop Alpha1")
-		c.So(err, ShouldBeNil)
+	deepin, err := getVersionFromDeepin("testdata/deepin-version")
+	assert.Equal(t, deepin, "2015 Desktop Alpha1")
+	assert.Nil(t, err)
 
-		lsb, err := getVersionFromLSB("testdata/lsb-release")
-		c.So(lsb, ShouldEqual, "2014.3")
-		c.So(err, ShouldBeNil)
-	})
+	lsb, err := getVersionFromLSB("testdata/lsb-release")
+	assert.Equal(t, lsb, "2014.3")
+	assert.Nil(t, err)
 }
 
 func TestDistro(t *testing.T) {
-	Convey("Test os distro", t, func(c C) {
-		lang := os.Getenv("LANGUAGE")
-		os.Setenv("LANGUAGE", "en_US")
-		defer os.Setenv("LANGUAGE", lang)
+	lang := os.Getenv("LANGUAGE")
+	os.Setenv("LANGUAGE", "en_US")
+	defer os.Setenv("LANGUAGE", lang)
 
-		distroId, distroDesc, distroVer, err := getDistroFromLSB("testdata/lsb-release")
-		c.So(distroId, ShouldEqual, "Deepin")
-		c.So(distroDesc, ShouldEqual, "Deepin 2014.3")
-		c.So(distroVer, ShouldEqual, "2014.3")
-		c.So(err, ShouldBeNil)
-	})
+	distroId, distroDesc, distroVer, err := getDistroFromLSB("testdata/lsb-release")
+	assert.Equal(t, distroId, "Deepin")
+	assert.Equal(t, distroDesc, "Deepin 2014.3")
+	assert.Equal(t, distroVer, "2014.3")
+	assert.Nil(t, err)
 }
 
 func TestSystemBit(t *testing.T) {
-	Convey("Test getconf", t, func(c C) {
-		v := systemBit()
-		if v != "32" {
-			c.So(v, ShouldEqual, "64")
-		}
+	v := systemBit()
+	if v != "32" {
+		assert.Equal(t, v, "64")
+	}
 
-		if v != "64" {
-			c.So(v, ShouldEqual, "32")
-		}
-	})
+	if v != "64" {
+		assert.Equal(t, v, "32")
+	}
 }
 
 func TestIsFloatEqual(t *testing.T) {
-	Convey("Test memory info", t, func(c C) {
-		c.So(isFloatEqual(0.001, 0.0), ShouldEqual, false)
-		c.So(isFloatEqual(0.001, 0.001), ShouldEqual, true)
-	})
+	assert.Equal(t, isFloatEqual(0.001, 0.0), false)
+	assert.Equal(t, isFloatEqual(0.001, 0.001), true)
 }
 
 func TestParseInfoFile(t *testing.T) {
-	Convey("Test ParseInfoFile", t, func(c C) {
-		v, err := parseInfoFile("testdata/lsb-release", "=")
-		c.So(err, ShouldBeNil)
-		c.So(v["DISTRIB_ID"], ShouldEqual, "Deepin")
-		c.So(v["DISTRIB_RELEASE"], ShouldEqual, "2014.3")
-		c.So(v["DISTRIB_DESCRIPTION"], ShouldEqual, strconv.Quote("Deepin 2014.3"))
-	})
+	v, err := parseInfoFile("testdata/lsb-release", "=")
+	assert.Nil(t, err)
+	assert.Equal(t, v["DISTRIB_ID"], "Deepin")
+	assert.Equal(t, v["DISTRIB_RELEASE"], "2014.3")
+	assert.Equal(t, v["DISTRIB_DESCRIPTION"], strconv.Quote("Deepin 2014.3"))
 }
 
 func TestGetCPUMaxMHzByLscpu(t *testing.T) {
-	Convey("Test GetCPUMaxMHzByLscpu", t, func(c C) {
-		ret, err := parseInfoFile("testdata/lsCPU", ":")
-		c.So(err, ShouldBeNil)
-		v, err := getCPUMaxMHzByLscpu(ret)
-		c.So(err, ShouldBeNil)
-		c.So(v, ShouldEqual, 3600.0000)
-	})
+	ret, err := parseInfoFile("testdata/lsCPU", ":")
+	assert.Nil(t, err)
+	v, err := getCPUMaxMHzByLscpu(ret)
+	assert.Nil(t, err)
+	assert.Equal(t, v, 3600.0000)
 }
 
 func TestGetProcessorByLscpuu(t *testing.T) {
-	Convey("Test GetProcessorByLscpu", t, func(c C) {
-		ret, err := parseInfoFile("testdata/lsCPU", ":")
-		c.So(err, ShouldBeNil)
-		v, err := getProcessorByLscpu(ret)
-		c.So(err, ShouldBeNil)
-		c.So(v, ShouldEqual,"Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz x 4")
-	})
+	ret, err := parseInfoFile("testdata/lsCPU", ":")
+	assert.Nil(t, err)
+	v, err := getProcessorByLscpu(ret)
+	assert.Nil(t, err)
+	assert.Equal(t, v, "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz x 4")
 }
 
 func TestDoReadCache(t *testing.T) {
-	Convey("Test DoReadCache", t, func(c C) {
-		ret, err := doReadCache("testdata/systeminfo.cache")
-		c.So(err, ShouldBeNil)
-		c.So(ret.Version, ShouldEqual, "20 专业版")
-		c.So(ret.DistroID, ShouldEqual, "uos")
-		c.So(ret.DistroDesc, ShouldEqual, "UnionTech OS 20")
-		c.So(ret.DistroVer, ShouldEqual, "20")
-		c.So(ret.Processor, ShouldEqual, "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz x 4")
-		c.So(ret.DiskCap, ShouldEqual, uint64(500107862016))
-		c.So(ret.MemoryCap, ShouldEqual, uint64(8280711168))
-		c.So(ret.SystemType, ShouldEqual, 64)
-		c.So(ret.CPUMaxMHz, ShouldEqual, 3600)
-		c.So(ret.CurrentSpeed, ShouldEqual, 0)
-	})
+	ret, err := doReadCache("testdata/systeminfo.cache")
+	assert.Nil(t, err)
+	assert.Equal(t, ret.Version, "20 专业版")
+	assert.Equal(t, ret.DistroID, "uos")
+	assert.Equal(t, ret.DistroDesc, "UnionTech OS 20")
+	assert.Equal(t, ret.DistroVer, "20")
+	assert.Equal(t, ret.Processor, "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz x 4")
+	assert.Equal(t, ret.DiskCap, uint64(500107862016))
+	assert.Equal(t, ret.MemoryCap, uint64(8280711168))
+	assert.Equal(t, ret.SystemType, int64(64))
+	assert.Equal(t, ret.CPUMaxMHz, float64(3600))
+	assert.Equal(t, ret.CurrentSpeed, uint64(0))
 }

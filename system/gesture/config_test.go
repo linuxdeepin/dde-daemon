@@ -22,7 +22,7 @@ package gesture
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -30,11 +30,9 @@ var (
 )
 
 func Test_loadConfig(t *testing.T) {
-	Convey("loadConfig", t, func(c C) {
-		config, err := loadConfig(configPath)
-		c.So(err, ShouldBeNil)
+	config, err := loadConfig(configPath)
+	assert.Nil(t, err)
 
-		c.So(config.LongPressDistance, ShouldEqual, 1)
-		c.So(config.Verbose, ShouldEqual, 0)
-	})
+	assert.Equal(t, config.LongPressDistance, float64(1))
+	assert.Equal(t, config.Verbose, 0)
 }
