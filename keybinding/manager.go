@@ -137,9 +137,6 @@ type Manager struct {
 	powerKeyConsumedByScreenshotChord      bool // 按下电源键事件是否被消耗,用来阻止事件继续往下传递
 	volumeDownKeyConsumedByScreenshotChord bool // 按下音量-键事件是否被消耗,用来阻止事件继续往下传递
 
-	// 息屏亮屏标识
-	wakeUpScreen bool
-
 	// 过滤电源短按release事件标识
 	interceptPowerReleaseEvent bool
 

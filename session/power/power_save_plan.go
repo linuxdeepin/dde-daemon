@@ -549,6 +549,7 @@ func (psp *powerSavePlan) screenBlack() {
 			manager.setDisplayBrightness(brightnessTable)
 		}
 		manager.setDPMSModeOff()
+		psp.manager.settings.SetBoolean("wakeupscreen", true)
 		err := manager.service.Emit(manager, "ScreenFullBlack")
 		if err != nil {
 			logger.Warning(err)

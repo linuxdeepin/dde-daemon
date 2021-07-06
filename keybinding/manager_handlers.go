@@ -357,8 +357,8 @@ func (m *Manager) handlePowerActionCode(actionCode int32) {
 
 			time.AfterFunc(350*time.Millisecond, func() {
 				if !m.powerKeyConsumedByScreenshotChord {
-					m.handleWakeUpScreen(m.wakeUpScreen)
-					m.wakeUpScreen = !m.wakeUpScreen
+					m.handleWakeUpScreen(m.gsPower.GetBoolean("wakeupscreen"))
+					m.gsPower.SetBoolean("wakeupscreen", !m.gsPower.GetBoolean("wakeupscreen"))
 				}
 				m.resetScreenShotComboFlags()
 			})
@@ -385,7 +385,7 @@ func (m *Manager) handlePowerActionCode(actionCode int32) {
 }
 
 func (m *Manager) handleTouchInput() {
-	m.wakeUpScreen = false
+	m.gsPower.SetBoolean("wakeupscreen", false)
 }
 
 func (m *Manager) interceptScreenshotChord() {
