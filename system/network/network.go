@@ -707,15 +707,15 @@ func (n *Network) getConnSettingsListByConnType(connType string) ([]*connSetting
 }
 
 // get devices may failed because dde-system-daemon and NetworkManager are started very nearly,
-// need call method 5 times.
+// need call method 10 times.
 func (n *Network) addDevicesWithRetry() {
-	// try get all devices 5 times
-	for i := 0; i < 5; i++ {
+	// try get all devices 10 times
+	for i := 0; i < 10; i++ {
 		devicePaths, err := n.nmManager.GetDevices(0)
 		if err != nil {
 			logger.Warning(err)
-			// sleep for 1 seconds, and retry get devices
-			time.Sleep(1 * time.Second)
+			// sleep for 0.5 seconds, and retry get devices
+			time.Sleep(time.Millisecond * 500)
 		} else {
 			n.addAndCheckDevices(devicePaths)
 			// if success, break
