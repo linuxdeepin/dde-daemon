@@ -959,6 +959,16 @@ func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64
 	var spMax = int64(pw.sp_max)
 	var spWarn = int64(pw.sp_warn)
 	var spLastChg = int64(pw.sp_lstchg)
+
+	if spLastChg == 0 {
+		// expired
+		return expiredStatusExpiredAlready, 0, nil
+	}
+	if spMax == -1 {
+		// never expired
+		return expiredStatusNormal, -1, nil
+	}
+
 	relevantDay := spLastChg + 1 + spMax - time.Now().Unix()/24/60/60
 	if relevantDay <= 0 {
 		return expiredStatusExpiredAlready, 0, nil
