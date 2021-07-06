@@ -23,6 +23,7 @@ import (
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
+	"time"
 )
 
 func init() {
@@ -53,32 +54,37 @@ func (d *Daemon) Start() error {
 	if d.manager != nil {
 		return nil
 	}
-	var err error
 
-	service := loader.GetService()
-
-	loadConfig()
-
-	d.manager, err = newManager(service)
-	if err != nil {
-		return err
-	}
-
-	err = service.Export(dbusPath, d.manager)
-	if err != nil {
-		d.manager.destroy()
-		d.manager = nil
-		return err
-	}
-
-	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		d.manager.destroy()
-		d.manager = nil
-		return err
-	}
-
+	// 启动过程比较耗时，协程处理
 	go func() {
+		t0 := time.Now()
+		service := loader.GetService()
+
+		loadConfig()
+
+		var err error
+		d.manager, err = newManager(service)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+
+		err = service.Export(dbusPath, d.manager)
+		if err != nil {
+			d.manager.destroy()
+			d.manager = nil
+			logger.Warning(err)
+			return
+		}
+
+		err = service.RequestName(dbusServiceName)
+		if err != nil {
+			d.manager.destroy()
+			d.manager = nil
+			logger.Warning(err)
+			return
+		}
+
 		m := d.manager
 		m.initHandlers()
 
@@ -89,6 +95,8 @@ func (d *Daemon) Start() error {
 
 		m.eliminateKeystrokeConflict()
 		m.shortcutManager.EventLoop()
+
+		logger.Info("start keybinding module cost", time.Since(t0))
 	}()
 
 	return nil
