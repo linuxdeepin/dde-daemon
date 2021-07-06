@@ -256,10 +256,10 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 		s.setPropPorts(createBluezVirtualSinkPorts(toPorts(sinkInfo.Ports)))
 
 		//此处获取的profile可能不是最新的，导致设置相应端口信息错误，改为Name去判断
-		if strings.Contains(sinkInfo.Name, "headset_head_unit"){
+		if strings.Contains(sinkInfo.Name, "headset_head_unit") {
 			newActivePort.Name += "(headset_head_unit)"
 			newActivePort.Description += "(Headset)"
-		} else if strings.Contains(sinkInfo.Name, "a2dp_sink"){
+		} else if strings.Contains(sinkInfo.Name, "a2dp_sink") {
 			newActivePort.Name += "(a2dp_sink)"
 			newActivePort.Description += "(A2DP)"
 		} else {
@@ -298,18 +298,18 @@ func handleUnplugedEvent(oldActivePort, newActivePort Port, oldPortUnavailable b
 	logger.Debug("[handleUnplugedEvent] Old port:", oldActivePort.String(), oldPortUnavailable)
 	logger.Debug("[handleUnplugedEvent] New port:", newActivePort.String())
 	// old active port is headphone or bluetooth
-	if isHeadphoneOrHeadsetPort(oldActivePort.Name) &&
+	if isHeadphoneHeadsetOrLineoutPort(oldActivePort.Name) &&
 		// old active port available is yes or unknown, not no
 		int(oldActivePort.Available) != pulse.AvailableTypeNo &&
 		// new port is not headphone and bluetooth
-		!isHeadphoneOrHeadsetPort(newActivePort.Name) && oldPortUnavailable {
+		!isHeadphoneHeadsetOrLineoutPort(newActivePort.Name) && oldPortUnavailable {
 		pauseAllPlayers()
 	}
 }
 
-func isHeadphoneOrHeadsetPort(portName string) bool {
+func isHeadphoneHeadsetOrLineoutPort(portName string) bool {
 	name := strings.ToLower(portName)
-	return strings.Contains(name, "headphone") || strings.Contains(name, "headset-output")
+	return strings.Contains(name, "headphone") || strings.Contains(name, "headset-output") || strings.Contains(name, "lineout")
 }
 
 func (s *Sink) GetMeter() (dbus.ObjectPath, *dbus.Error) {
