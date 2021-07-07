@@ -3,6 +3,7 @@ package lastore
 import (
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
+	"time"
 )
 
 const (
@@ -31,7 +32,7 @@ func (*Daemon) GetDependencies() []string {
 	return []string{}
 }
 
-func (d *Daemon) Start() error {
+func (d *Daemon) start() error {
 	service := loader.GetService()
 
 	lastore, err := newLastore(service)
@@ -54,6 +55,19 @@ func (d *Daemon) Start() error {
 	if err != nil {
 		logger.Warning("Failed to register sync service:", err)
 	}
+
+	return nil
+}
+func (d *Daemon) Start() error {
+	go func() {
+		t0 := time.Now()
+		err := d.start()
+		if err != nil {
+			logger.Warning("start lastore err:", err)
+		}
+		logger.Info("start lastore module cost", time.Since(t0))
+	}()
+
 	return nil
 }
 
