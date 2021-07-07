@@ -386,6 +386,16 @@ func (a *Audio) handleSinkRemoved(idx uint32) {
 func (a *Audio) handleSinkChanged(idx uint32) {
 	// 数据更新在refreshSinks中统一处理，这里只做业务逻辑上的响应
 	logger.Debugf("sink %d changed", idx)
+
+	// 蓝牙模式切换、触发sink change
+	if a.defaultSink.index == idx && isBluezAudio(a.defaultSink.Name) {
+		card, err := a.cards.get(a.defaultSink.Card)
+		if err == nil {
+			a.setPropBluetoothAudioMode(card.BluezMode())
+		} else {
+			logger.Warningf("%d card not found", a.defaultSink.Card)
+		}
+	}
 }
 
 func (a *Audio) handleSourceEvent(eventType int, idx uint32) {

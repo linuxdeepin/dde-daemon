@@ -8,7 +8,6 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
-	"pkg.deepin.io/lib/pulse"
 	"pkg.deepin.io/lib/xdg/basedir"
 )
 
@@ -128,7 +127,8 @@ func isBluezDeviceValid(bluezPath string) bool {
 func (card *Card) SetBluezMode(mode string) {
 	for _, profile := range card.Profiles {
 		if strings.Contains(strings.ToLower(profile.Name), strings.ToLower(mode)) &&
-			profile.Available != pulse.AvailableTypeNo {
+			profile.Available != 0 {
+			logger.Debugf("set %s to %s", card.core.Name, profile.Name)
 			card.core.SetProfile(profile.Name)
 			return
 		}
