@@ -22,6 +22,7 @@ package dock
 import (
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
+	"time"
 
 	x "github.com/linuxdeepin/go-x11-client"
 )
@@ -59,7 +60,7 @@ func (d *Daemon) startFailed() {
 	}
 }
 
-func (d *Daemon) Start() error {
+func (d *Daemon) start () error {
 	if dockManager != nil {
 		return nil
 	}
@@ -105,6 +106,19 @@ func (d *Daemon) Start() error {
 	if err != nil {
 		logger.Warning(err)
 	}
+	return nil
+}
+
+func (d *Daemon) Start() error {
+	go func() {
+		t0 := time.Now()
+		err := d.start()
+		if err != nil {
+			logger.Info("start dock err:", err)
+		}
+		logger.Info("start dock module cost", time.Since(t0))
+	}()
+
 	return nil
 }
 
