@@ -22,6 +22,7 @@ package inputdevices
 import (
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
+	"time"
 )
 
 //go:generate dbusutil-gen -type Keyboard,Mouse,Touchpad,TrackPoint,Wacom keyboard.go mouse.go touchpad.go trackpoint.go wacom.go
@@ -44,11 +45,11 @@ func NewInputdevicesDaemon(logger *log.Logger) *Daemon {
 	return d
 }
 
-func (*Daemon) GetDependencies() []string {
+func (d *Daemon) GetDependencies() []string {
 	return []string{}
 }
 
-func (*Daemon) Start() error {
+func (d *Daemon) start() error {
 	if _manager != nil {
 		return nil
 	}
@@ -93,22 +94,33 @@ func (*Daemon) Start() error {
 		return err
 	}
 
+	_manager.init()
+	err = _manager.syncConfig.Register()
+	if err != nil {
+		logger.Warning(err)
+	}
+	if globalWayland {
+		handleInputDeviceChanged(service, false)
+		return nil
+	}
+	startDeviceListener()
+
+	return nil
+}
+
+func (d *Daemon) Start() error {
 	go func() {
-		_manager.init()
-		err := _manager.syncConfig.Register()
+		t0 := time.Now()
+		err := d.start()
 		if err != nil {
-			logger.Warning(err)
+			logger.Info("start inputdevices err:", err)
 		}
-		if globalWayland {
-			handleInputDeviceChanged(service, false)
-			return
-		}
-		startDeviceListener()
+		logger.Info("start inputdevices module cost", time.Since(t0))
 	}()
 	return nil
 }
 
-func (*Daemon) Stop() error {
+func (d *Daemon) Stop() error {
 	if _manager == nil {
 		return nil
 	}
