@@ -1009,11 +1009,13 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 	}
 	a.mu.Lock()
 	sink, ok := a.sinks[sinkInfo.Index]
+	a.mu.Unlock()
 	if !ok {
 		// a.sinks 是缓存的 sink 信息，未查到 sink 信息，需要重新通过 pulseaudio 查询 sink 信息
+		logger.Warningf("update sink %d", sinkInfo.Index)
 		sink = a.updateSinks(sinkInfo.Index)
+		logger.Debugf("updated sink %d", sinkInfo.Index)
 		if sink == nil {
-			a.mu.Unlock()
 			logger.Warningf("not found sink #%d", sinkInfo.Index)
 			a.setPropDefaultSink("/")
 			return
@@ -1022,7 +1024,6 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 
 	a.defaultSink = sink
 	defaultSinkPath := sink.getPath()
-	a.mu.Unlock()
 
 	a.PropsMu.Lock()
 	a.setPropDefaultSink(defaultSinkPath)
@@ -1063,7 +1064,10 @@ func (a *Audio) updateSinks(index uint32) (sink *Sink) {
 		if sinkInfo.Index == index {
 			logger.Debug("get same sink index:", index)
 			sink := newSink(sinkInfo, a)
+			logger.Debug("done")
+			a.mu.Lock()
 			a.sinks[index] = sink
+			a.mu.Unlock()
 			sinkPath := sink.getPath()
 			err := a.service.Export(sinkPath, sink)
 			if err != nil {
