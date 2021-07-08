@@ -30,7 +30,7 @@ func (m *Module) GetDependencies() []string {
 	return nil
 }
 
-func (m *Module) Start() error {
+func (m *Module) start() error {
 	if m.network != nil {
 		return nil
 	}
@@ -64,6 +64,19 @@ func (m *Module) Start() error {
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (m *Module) Start() error {
+	go func() {
+		t0 := time.Now()
+		err := m.start()
+		if err != nil {
+			logger.Warning(err)
+		}
+		logger.Info("start network module cost", time.Since(t0))
+	}()
 
 	return nil
 }

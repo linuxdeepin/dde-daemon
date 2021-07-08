@@ -23,6 +23,9 @@ import (
 	"os"
 
 	// modules:
+	_ "pkg.deepin.io/dde/daemon/system/network"
+	_ "pkg.deepin.io/dde/daemon/system/power"
+	
 	_ "pkg.deepin.io/dde/daemon/accounts"
 	_ "pkg.deepin.io/dde/daemon/apps"
 	_ "pkg.deepin.io/dde/daemon/fprintd"
@@ -30,8 +33,6 @@ import (
 	_ "pkg.deepin.io/dde/daemon/system/airplane_mode"
 	_ "pkg.deepin.io/dde/daemon/system/gesture"
 	_ "pkg.deepin.io/dde/daemon/system/keyevent"
-	_ "pkg.deepin.io/dde/daemon/system/network"
-	_ "pkg.deepin.io/dde/daemon/system/power"
 	_ "pkg.deepin.io/dde/daemon/system/power_manager"
 	_ "pkg.deepin.io/dde/daemon/system/swapsched"
 	_ "pkg.deepin.io/dde/daemon/system/systeminfo"
