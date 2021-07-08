@@ -52,7 +52,9 @@ FOR:
 
 // 事件分发
 func (a *Audio) dispatchEvents(events []*pulse.Event) {
-	for _, event := range events {
+	logger.Debugf("dispatch %d events", len(events))
+	for i, event := range events {
+		logger.Debugf("dispatch %dth event: type<%d> index<%d>", i, event.Type, event.Index)
 		switch event.Facility {
 		case pulse.FacilityServer:
 			a.handleServerEvent(event.Type)
@@ -70,6 +72,7 @@ func (a *Audio) dispatchEvents(events []*pulse.Event) {
 			a.handleSinkInputEvent(event.Type, event.Index)
 		}
 	}
+	logger.Debug("dispatch events done")
 }
 
 func (a *Audio) handleEvent() {

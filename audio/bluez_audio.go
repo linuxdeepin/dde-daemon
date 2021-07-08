@@ -72,7 +72,7 @@ func (m *BluezAudioManager) Load() {
 		return
 	}
 
-	err = json.Unmarshal(data, m.BluezAudioConfig)
+	err = json.Unmarshal(data, &m.BluezAudioConfig)
 	if err != nil {
 		logger.Warning(err)
 		return
@@ -85,6 +85,7 @@ func (m *BluezAudioManager) GetMode(cardName string) string {
 	if ok {
 		return mode
 	} else {
+		logger.Warningf("use the default mode %s", bluezModeDefault)
 		return bluezModeDefault
 	}
 }
