@@ -22,6 +22,7 @@ package launcher
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -51,7 +52,12 @@ func Test_getAppIdByFilePath(t *testing.T) {
 func Test_getUserAppDir(t *testing.T) {
 	Convey("getUserAppDir", t, func(c C) {
 		home := os.Getenv("HOME")
-		c.So(getUserAppDir(), ShouldEqual, filepath.Join(home, ".local/share/applications"))
+
+		userAppDir := getUserAppDir()
+		data := filepath.Join(home, ".local/share/applications")
+		t.Log(" Test_getUserAppDir getUserAppDir : ", userAppDir, runtime.GOARCH)
+		t.Log(" Test_getUserAppDir filepath : ", data)
+		c.So(userAppDir, ShouldEqual, data)
 	})
 }
 
