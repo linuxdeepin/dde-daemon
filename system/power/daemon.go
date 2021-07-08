@@ -23,6 +23,7 @@ import (
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/log"
+	"time"
 )
 
 var logger = log.NewLogger("daemon/system/power")
@@ -45,8 +46,20 @@ func NewDaemon(logger *log.Logger) *Daemon {
 func (d *Daemon) GetDependencies() []string {
 	return []string{}
 }
-
 func (d *Daemon) Start() (err error) {
+	go func() {
+		t0 := time.Now()
+		err := d.start()
+		if err != nil {
+			logger.Warning(err)
+		}
+		logger.Info("start power module cost", time.Since(t0))
+	}()
+
+	return nil
+}
+
+func (d *Daemon) start() (err error) {
 	service := loader.GetService()
 	d.manager, err = newManager(service)
 	if err != nil {
