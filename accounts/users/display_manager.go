@@ -24,8 +24,9 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	dutils "pkg.deepin.io/lib/utils"
 	"strings"
+
+	dutils "pkg.deepin.io/lib/utils"
 )
 
 const (
@@ -218,7 +219,10 @@ func GetDefaultXSession() (string, error) {
 func GetDMConfig() (string, error) {
 	dm, err := getDefaultDM(defaultDMFile)
 	if err != nil {
-		return "", err
+		dm, err = getDMFromSystemService(defaultDisplayService)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	switch dm {
