@@ -578,15 +578,17 @@ func (a *Audio) listenGSettingReduceNoiseChanged() {
 			a.ReduceNoise.Set(false)
 			return
 		}
+
+		// 这个配置属性本来应该放在降噪设置成功之后再设置的
+		// 但是在开启降噪，切换到降噪的虚拟通道时，需要用对应主设备的配置进行配置恢复
+		// 如果不放在前面，配置恢复时，主设备的配置里降噪还处于关闭状态
+		// 配置恢复会自动关闭降噪
+		source := a.defaultSource
+		GetConfigKeeper().SetReduceNoise(a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
 		err := a.setReduceNoise(reduce)
 		if err != nil {
 			logger.Warning("set Reduce Noise failed: ", err)
-		} else {
-			source := a.defaultSource
-			GetConfigKeeper().SetReduceNoise(a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
-			logger.Debugf("GetConfigKeeper().SetReduceNoise %s %s %v", a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
 		}
-
 		a.inputAutoSwitchCount = 0
 	})
 }

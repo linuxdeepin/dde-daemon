@@ -768,7 +768,11 @@ func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, bus
 
 func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 	if a.ReduceNoise.Get() {
-		a.ReduceNoise.Set(false)
+		// 切端口时要关闭降噪，但是设置属性会触发回调
+		// 导致此关闭写入到配置文件中
+		// 由于进行了端口切换，此时写配置文件时写的是新端口的配置
+		// 属性交给配置恢复的流程处理改写
+		a.setReduceNoise(false)
 	}
 	a.portLocker.Lock()
 	defer a.portLocker.Unlock()
