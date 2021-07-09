@@ -317,44 +317,11 @@ func (a *Audio) handleCardChanged(idx uint32) {
 		} else if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeHeadset) {
 			a.setPropBluetoothAudioMode(bluezModeHeadset)
 		}
-
 		GetPriorityManager().Input.SetTheFirstType(PortTypeBluetooth)
 	}
 
 	// Port插入时(从AvailableTypeNo变成其它)，如果端口处于禁用状态，显示横幅提示
-	for _, card := range a.cards {
-		oldCard, err := a.oldCards.getByName(card.core.Name)
-		if err != nil {
-			// oldCard不存在，在 handleCardAdded 中处理
-			logger.Warning(err)
-			continue
-		}
-		for _, port := range card.Ports {
-			if port.Available == pulse.AvailableTypeNo {
-				// 当前状态为AvailableTypeNo，忽略
-				continue
-			}
-
-			isInsert := false
-			oldPort, err := oldCard.getPortByName(port.Name)
-			if err != nil {
-				// oldPort不存在，当做插入
-				// 理论上不会发生，应该会有bug，发生时需要注意
-				logger.Warning(err)
-				isInsert = true
-			} else if oldPort.Available == pulse.AvailableTypeNo {
-				isInsert = true
-			}
-
-			if isInsert {
-				logger.Warningf("port<%s,%s> inserted", card.core.Name, port.Name)
-				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
-				if !portConfig.Enabled {
-					a.notifyPortDisabled(idx, port)
-				}
-			}
-		}
-	}
+	a.notifyCardPortInsert(card)
 }
 
 func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
@@ -622,4 +589,47 @@ func (a *Audio) listenGSettingReduceNoiseChanged() {
 
 		a.inputAutoSwitchCount = 0
 	})
+}
+
+func (a *Audio) notifyCardPortInsert(card *Card) {
+	logger.Debugf("notify card %d:%s", card.Id, card.core.Name)
+	oldCard, err := a.oldCards.getByName(card.core.Name)
+	if err != nil {
+		// oldCard不存在，在 handleCardAdded 中处理
+		logger.Warning(err)
+		return
+	}
+
+	for _, port := range card.Ports {
+		if port.Available == pulse.AvailableTypeNo {
+			// 当前状态为AvailableTypeNo，忽略
+			logger.Debugf("port %s not insert", port.Name)
+			continue
+		}
+
+		isInsert := false
+		oldPort, err := oldCard.getPortByName(port.Name)
+		if err != nil {
+			// oldPort不存在，例如A2DP切换到headset
+			isInsert = true
+
+			// 但是pulseaudio事件时序是乱的，所以可能会因为其它原因进来，导致bug
+			logger.Warning(err)
+
+		} else if oldPort.Available == pulse.AvailableTypeNo {
+			logger.Debugf("port %s from AvailableTypeNo to %d", port.Name, port.Available)
+			isInsert = true
+		} else if oldPort.Available == pulse.AvailableTypeUnknow && port.Available == pulse.AvailableTypeYes {
+			logger.Debugf("port %s from AvailableTypeUnknow to AvailableTypeYes", port.Name)
+			isInsert = true
+		}
+
+		if isInsert {
+			logger.Warningf("port<%s,%s> inserted", card.core.Name, port.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
+			if !portConfig.Enabled {
+				a.notifyPortDisabled(card.Id, port)
+			}
+		}
+	}
 }
