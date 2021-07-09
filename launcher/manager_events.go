@@ -245,6 +245,11 @@ func (m *Manager) checkDesktopFile(file string) {
 
 			// remove desktop file in user's desktop direcotry
 			os.Remove(appInDesktop(appId))
+
+			err := m.service.Emit(m, "UninstallSuccess", appId)
+			if err != nil {
+				logger.Warning("emit UninstallSuccess Failed:", err)
+			}
 		}
 	} else {
 		// appInfo is not nil
