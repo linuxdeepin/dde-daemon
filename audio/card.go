@@ -99,8 +99,14 @@ func (c *Card) update(card *pulse.Card) {
 		for _, port := range card.Ports {
 			if c.BluezMode() == bluezModeA2dp && port.Direction == pulse.DirectionSource {
 				// a2dp模式过滤输入端口
-				logger.Debugf("skip bluez input port %s", port.Name)
-				continue
+				logger.Debugf("filter bluez input port %s", port.Name)
+				port.Available = pulse.AvailableTypeNo
+			}
+
+			if c.ActiveProfile.Name == "off" {
+				// off模式过滤所有端口
+				logger.Debugf("filter bluez input port %s", port.Name)
+				port.Available = pulse.AvailableTypeNo
 			}
 
 			c.Ports = append(c.Ports, port)
