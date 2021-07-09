@@ -435,10 +435,16 @@ func (m *Manager) handleKeyEvent(ev *shortcuts.KeyEvent) {
 
 	logger.Debugf("handleKeyEvent ev: %#v", ev)
 	action := ev.Shortcut.GetAction()
+	shortcutId := ev.Shortcut.GetId()
 	logger.Debugf("shortcut id: %s, type: %v, action: %#v",
-		ev.Shortcut.GetId(), ev.Shortcut.GetType(), action)
+		shortcutId, ev.Shortcut.GetType(), action)
 	if action == nil {
 		logger.Warning("action is nil")
+		return
+	}
+
+	//添加虚拟机判断
+	if m.shortcutManager.IsBlockShortcutKey(shortcutId) {
 		return
 	}
 
