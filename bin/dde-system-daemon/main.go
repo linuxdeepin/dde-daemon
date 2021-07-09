@@ -60,6 +60,7 @@ type Daemon struct {
 		ClearTtys                      func()
 		ClearTty                       func() `in:"number"`
 		IsPidVirtualMachine            func() `in:"pid" out:"ret"`
+		IsIgnoreCheckVirtual           func() `in:"pid" out:"ret"`
 	}
 	signals *struct { //nolint
 		HandleForSleep struct {
