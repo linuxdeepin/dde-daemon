@@ -272,8 +272,8 @@ func (r *ALRecorder) WatchDirs(sender dbus.Sender, dataDirs []string) *dbus.Erro
 	}
 
 	logger.Debugf("WatchDirs uid: %d, data dirs: %#v", uid, dataDirs)
-	// check uid
-	if uid < minUid {
+	// check uid， root登录时，session-daemon以root启动，sender的uid为0
+	if uid < minUid && uid != 0 {
 		return dbusutil.ToError(errors.New("invalid uid"))
 	}
 
