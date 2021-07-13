@@ -443,11 +443,6 @@ func (m *Manager) handleKeyEvent(ev *shortcuts.KeyEvent) {
 		return
 	}
 
-	//添加虚拟机判断
-	if m.shortcutManager.IsBlockShortcutKey(shortcutId) {
-		return
-	}
-
 	if handler := m.handlers[int(action.Type)]; handler != nil {
 		handler(ev)
 	} else {
