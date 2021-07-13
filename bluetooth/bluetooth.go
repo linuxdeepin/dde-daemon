@@ -28,6 +28,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	apidevice "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.device"
+	systembt "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.bluetooth"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
@@ -339,30 +340,44 @@ func (b *Bluetooth) init() {
 	// initialize dbus object manager
 	b.objectManager = bluez.NewObjectManager(systemBus)
 
-	// connect signals
-	b.objectManager.InitSignalExt(b.systemSigLoop, true)
-	_, err = b.objectManager.ConnectInterfacesAdded(b.handleInterfacesAdded)
-	if err != nil {
-		logger.Warning(err)
-	}
+	// E人E本平板上手动启动蓝牙比较慢，需等蓝牙识别完成再进行初始化操作
+	go func() {
+		bt := systembt.NewBluetooth(systemBus)
+		for {
+			endLoad, err := bt.EndLoad().Get(0)
+			if err != nil {
+				logger.Warning("get system bluetooth EndLoad err:", err)
+			}
 
-	_, err = b.objectManager.ConnectInterfacesRemoved(b.handleInterfacesRemoved)
-	if err != nil {
-		logger.Warning(err)
-	}
+			if endLoad || os.Getenv("XDG_CURRENT_DESKTOP") == "Deepin-tablet" {
+				logger.Debug("bluetooth core inited")
+				break
+			}
 
-	b.agent.init()
-	b.loadObjects()
+			logger.Debug("bluetooth core initing")
+			time.Sleep(time.Second * 2)
+		}
 
-	b.obexAgent.init()
+		// connect signals
+		b.objectManager.InitSignalExt(b.systemSigLoop, true)
+		_, err = b.objectManager.ConnectInterfacesAdded(b.handleInterfacesAdded)
+		if err != nil {
+			logger.Warning(err)
+		}
 
-	// E人上蓝牙适配器识别较慢, 在清除冗余配置前保证默认适配器已经启动
-	time.AfterFunc(time.Second * 5, func() {
+		_, err = b.objectManager.ConnectInterfacesRemoved(b.handleInterfacesRemoved)
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		b.agent.init()
+		b.loadObjects()
+
+		b.obexAgent.init()
 		b.config.clearSpareConfig(b)
 		b.config.save()
-
 		b.tryConnectPairedDevices()
-	})
+	}()
 }
 
 func (b *Bluetooth) unblockBluetoothDevice() {

@@ -144,7 +144,7 @@ func (c *config) addAdapterConfig(address string) {
 	if c.isAdapterConfigExists(address) {
 		return
 	}
-
+	
 	c.core.Lock()
 	if len(c.Adapters) == 0 && os.Getenv("XDG_SESSION_DESKTOP") == "deepin-tablet" {
 		// E人E本上蓝牙适配器默认打开蓝牙，检查若是初次打开系统则关闭蓝牙

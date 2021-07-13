@@ -35,23 +35,23 @@ const (
 	bluetoothInitScript = "/usr/share/dde-daemon/bluetooth/bluetooth_init.sh"
 )
 
-var (
-	bluetoothConfig   = os.Getenv("HOME") + "/.config/deepin/bluetooth.json"
-)
-
 type Bluetooth struct {
 	service 		*dbusutil.Service
+	//手动加载蓝牙到内核模块比较慢，session bluetooth必须等蓝牙加载完成后执行初始化
+	EndLoad		bool
 }
 
 func newBluetooth(service *dbusutil.Service) *Bluetooth {
 	return &Bluetooth{
 		service: service,
+		EndLoad: false,
 	}
 }
 
 func (b *Bluetooth) bluetoothInit() {
 	var handle = "up"
-	_, err := os.Stat(bluetoothConfig)
+	// 通过用户配置文件判断系统初次启动时是否打开蓝牙
+	_, err := os.Stat("/home/user/.config/deepin/bluetooth.json")
 	if err != nil {
 		if os.IsNotExist(err) {
 			handle = "down"
@@ -62,9 +62,13 @@ func (b *Bluetooth) bluetoothInit() {
 	if err != nil {
 		logger.Errorf("init bluetooth %s err: %s\n", handle, err)
 	}
+
+	// 结束加载蓝牙到内核，不管是否加载成功
+	b.EndLoad = true
+	logger.Info("init bluetooth core over")
 }
 
-func (d *Bluetooth) GetInterfaceName() string {
+func (b *Bluetooth) GetInterfaceName() string {
 	return dbusInterface
 }
 
