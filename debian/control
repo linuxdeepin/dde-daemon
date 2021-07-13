@@ -73,6 +73,7 @@ Depends:
  gvfs-bin,
  hwinfo,
  imwheel,
+ ipwatchd (>> 1.2.1+),
  iso-codes,
  lastore-daemon,
  libfprint0,
