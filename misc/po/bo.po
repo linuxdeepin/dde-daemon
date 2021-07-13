@@ -5,17 +5,17 @@
 # 
 # Translators:
 # tsewang baljor <bdcwbj@163.com>, 2020
-# yeshe lhamo <981611630@qq.com>, 2021
 # Cindy0514, 2021
+# yeshe lhamo <981611630@qq.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"Last-Translator: yeshe lhamo <981611630@qq.com>, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +82,15 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་སྒྲ
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "ཁ་ཕྱེ་བ།"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -209,6 +218,8 @@ msgstr "%qཁ་ཕྱེ་བ་མ་ཟད་འཕྲིན་སྐྱེ�
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%qའདི་%qདང་ཡང་བསྐྱར་སྦྲེལ་ཐབས་བྲལ། "
+"སྒྲིག་ཆས་འདི་ཉིད་སྣང་མེད་དུ་བཏང་ནས་ཡང་བསྐྱར་ཆ་སྡེབ་བྱེད།"
 
 #: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
@@ -235,15 +246,15 @@ msgstr "སང་ཉིན།"
 msgid "%s to %s"
 msgstr "%sནས་%sབར།"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "ལས་ཀ"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "འཆོ་བ།"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "གཞན་དག"
 
@@ -272,10 +283,6 @@ msgstr "ཉིན་རེའི་ལས་རིམ་དྲན་སྐུལ
 msgid "Festival"
 msgstr "དུས་ཆེན།"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "ཁ་ཕྱེ་བ།"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "ཆ་ཚང་སྒོ་རྒྱོབ།"
@@ -296,7 +303,7 @@ msgstr "བསྡད་པ་གཙང་སེལ།"
 msgid "All Windows"
 msgstr "སྒེའུ་ཁུང་ཆ་ཚང་།"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "རྒྱུད་ཁོངས་ཀྱི་ཤོང་ཚད་མི་འདང་བས་དུས་ཐོག་ཏུ་གཙང་སེལ་བྱེད་རོགས།"
 
@@ -484,26 +491,26 @@ msgstr "ལས་ཀ་བྱེད་ཁུལ་མངོན་སྟོན།
 msgid "Switch monitors"
 msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "སྐད་ཡིག་བརྗེ་སྐབས་བདེན་དཔང་བྱ་དགོས།"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་པ་མ་ཟད་སྐད་ཡིག་མེད་པ་དག་ཀྱང་སྒྲིག་སྦྱོར་བྱེད་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr "སྐད་ཡིག་བརྗེས་ཟིན་པས་ཐོ་བསུབས་རྗེས་ཡང་བསྐྱར་ནང་འཇུག་བྱེད་རོགས།"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr ""
 "རྒྱུད་ཁོངས་སྐད་ཡིག་བརྗེ་མི་ཐུབ་པས་ཏོག་ཙམ་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་རོགས།"
@@ -596,7 +603,7 @@ msgstr "ཕུག་ལམ་TLS"
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
@@ -980,7 +987,7 @@ msgstr "%qའབྲེལ་བར་གསང་ཨང་དགོས།"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLANདྲ་རྒྱ་རྙེད་ཐབས་མེད།"
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "རྒྱུ་མཚན་མ་ཤེས།"
 
@@ -1024,47 +1031,47 @@ msgstr ""
 "“%s”རྒྱུད་ཁོངས་བརྒྱུད་དེ་བདེ་འཇགས་ར་སྤྲོད་བྱས་མེད་པས། "
 "འཁོར་སྐྱོད་བྱེད་ཐབས་བྲལ།"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "གློག་རྫོགས་ཟིན།"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་རོགས།"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "གློག་ཁུངས་སྒྲིག་འགོད་སྒྱུར་བ།"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "ལག་ཁྱེར་གློག་ཀླད་ཁ་བརྒྱབ་སྐབས།"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "གློག་ཁུངས་ཀྱི་བསད་སྤར་མནན་སྐབས།"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "སྒུག་སྡོད་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "མལ་གསོ་ཞེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "མངོན་ཆས་སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "བཀོལ་སྤྱོད་གང་ཡང་བྱས་མེད་པར་བཟོ་བཅོས་བྱེད།"
 

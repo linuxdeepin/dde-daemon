@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2021\n"
 "Language-Team: Albanian (https://www.transifex.com/linuxdeepin/teams/3617/sq/)\n"
@@ -83,6 +83,15 @@ msgstr "Po ujdiset ripërmasim ekrani"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Ripërmasim ekrani"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Hap"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -238,15 +247,15 @@ msgstr "nesër"
 msgid "%s to %s"
 msgstr "%s në %s"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Pune"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Jete"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Tjetër"
 
@@ -275,10 +284,6 @@ msgstr "Kujtues Planesh"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Hap"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Mbylli Krejt"
@@ -299,7 +304,7 @@ msgstr "Hiqe nga paneli"
 msgid "All Windows"
 msgstr "Tërë Dritaret"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr ""
 "Hapësirë e pamjaftueshme disku, ju lutemi, ka ardhur koha të bëni pastrim!"
@@ -488,11 +493,11 @@ msgstr "Shfaq hapësirë pune"
 msgid "Switch monitors"
 msgstr "Ndërroni monitorë"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Që të këmbehet gjuha, lypset mirëfilltësim"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -500,15 +505,15 @@ msgstr ""
 "Po ndryshohet gjuhë sistemi dhe po instalohen paketat e domosdoshme të "
 "gjuhës, ju lutemi, pritni…"
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "Po ndryshohet gjuhë sistemi, ju lutemi, pritni…"
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr "Gjuha e sistemit u ndryshua, ju lutemi, dilni dhe mandej hyni"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "S’u arrit të ndryshohej gjuhë sistemi, ju lutemi, provoni më vonë"
 
@@ -561,7 +566,7 @@ msgstr "S’u arrit të çinstalohej %q"
 
 #: ../../network/manager.go:326
 msgid "Wired connection"
-msgstr ""
+msgstr "Lidhje me fill"
 
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
@@ -600,7 +605,7 @@ msgstr "TLS përmes tuneli"
 msgid "Protected EAP"
 msgstr "EAP i mbrojtur"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Lidhje Me Fill"
 
@@ -990,7 +995,7 @@ msgstr "Për lidhjen e %q lypset fjalëkalim"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "S’u gjet dot rrjeti %q 802.11 WLAN"
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "E panjohur"
 
@@ -1034,47 +1039,47 @@ msgstr ""
 "\"%s\" s’e kaloi verifikimin e sigurisë së sistemit, dhe s’mund të xhirohet "
 "këtë herë"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Bateri e pakët në nivel kritik"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Bateri e pakët, ju lutemi, vëreni në prizë"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "Rregullimet për energjinë ndryshuan"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Kur mbyllet kapaku,"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "Kur shtypet butoni i energjisë,"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "kompjuteri juaj do të fiket"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "kompjuteri juaj do të pezullohet"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "kompjuteri juaj do të plogështohet"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "monitori juaj do të fiket"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "s’do të ndodhë gjë në kompjuterin tuaj"
 

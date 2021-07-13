@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Marcin Kozioł <koziol.martin@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/linuxdeepin/teams/3617/pl/)\n"
@@ -87,6 +87,15 @@ msgstr "Ustawienie skalowania ekranu"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Skalowanie ekranu"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Otwórz"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -242,15 +251,15 @@ msgstr "jutro"
 msgid "%s to %s"
 msgstr "%s do %s"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Praca"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Życie"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Inne"
 
@@ -279,10 +288,6 @@ msgstr "Przypomnienie o harmonogramie"
 msgid "Festival"
 msgstr "Festiwal"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Otwórz"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Zamknij wszystko"
@@ -303,7 +308,7 @@ msgstr "Odepnij"
 msgid "All Windows"
 msgstr "Wszystkie okna"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr ""
 "Brak wystarczającego miejsca na dysku: Prosimy go niezwłocznie uprzątnąć!"
@@ -492,11 +497,11 @@ msgstr "Wyświetl przestrzeń roboczą"
 msgid "Switch monitors"
 msgstr "Przełącz monitory"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Wymagane jest uwierzytelnienie, aby móc przełączyć język"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -504,15 +509,15 @@ msgstr ""
 "Trwa zmiana języka systemu oraz instalacja wymaganych pakietów językowych, "
 "proszę czekać..."
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "Trwa zmiana języka systemu, proszę czekać..."
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr "Zmieniono język systemu, proszę zalogować się ponownie"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Nie można zmienić języka systemu, proszę spróbować później"
 
@@ -604,7 +609,7 @@ msgstr "Tunelowany TLS"
 msgid "Protected EAP"
 msgstr "Zabezpieczony EAP"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Połączenie przewodowe"
 
@@ -994,7 +999,7 @@ msgstr "Aby połączyć się z %q wymagane jest hasło"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Nie można znaleźć sieci WLAN %q 802.11"
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "Nieznany"
 
@@ -1038,47 +1043,47 @@ msgstr ""
 "\"%s\" nie przeszedł weryfikacji bezpieczeństwa systemu i nie może teraz "
 "działać"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Krytycznie niski poziom baterii"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Niski stan baterii, prosimy podłączyć do zasilania"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "Ustawienia zasilania uległy zmianie"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Kiedy pokrywa jest zamknięta,"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "Po naciśnięciu przycisku zasilania,"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "twój komputer zostanie zamknięty"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "Twój komputer zawiesi się"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "komputer przejdzie w stan hibernacji"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "monitor wyłączy się"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "nie zrobi nic z twoim komputerem"
 

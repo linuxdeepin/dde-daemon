@@ -7,7 +7,7 @@
 # 李洪武 <lihongwu1987@gmail.com>, 2020
 # LNDDYL, 2020
 # Julian Lai <laichiaheng@outlook.com>, 2020
-# jjzrh2 <jjzrh2@126.com>, 2020
+# Zhou Rh <jjzrh2@126.com>, 2020
 # 凡凡不想平凡 <freddy4212@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # byStarTW (pan93412) <pan93412@gmail.com>, 2020
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
@@ -85,6 +85,15 @@ msgstr "設定螢幕縮放率"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "畫面縮放"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr "%s已被禁用"
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "開放"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -238,15 +247,15 @@ msgstr "明天"
 msgid "%s to %s"
 msgstr "自 %s 到 %s"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "工作"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "生活"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "其他"
 
@@ -257,7 +266,7 @@ msgstr "開始前一天"
 #: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
 #: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
 msgid "Close"
-msgstr "離開"
+msgstr "關閉"
 
 #: ../../calendar/scheduler.go:575
 msgid "Remind me tomorrow"
@@ -274,10 +283,6 @@ msgstr "排程提醒工具"
 #: ../../calendar/type.go:40
 msgid "Festival"
 msgstr "節日"
-
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "開放"
 
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
@@ -299,7 +304,7 @@ msgstr "解除駐停"
 msgid "All Windows"
 msgstr "所有視窗"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "磁碟機空間不足，請趕快清理！"
 
@@ -487,25 +492,25 @@ msgstr "顯示工作區"
 msgid "Switch monitors"
 msgstr "多屏切換"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "切換語言需要授權"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "正在變更系統語言並安裝所需語言包，請稍候…"
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "正在變更系統語言，請稍候…"
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr "已變更系統語言，請重新登入以套用變更"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "無法變更系統語言，請稍候再試"
 
@@ -595,7 +600,7 @@ msgstr "隧道 TLS"
 msgid "Protected EAP"
 msgstr "受保護 EAP"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "有線網路"
 
@@ -975,7 +980,7 @@ msgstr "連線至 %q 需要密碼"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "找不到%q 802.11 WLAN 網路"
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "未知"
 
@@ -1015,47 +1020,47 @@ msgstr "已連線"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”沒有通過系統安全驗證，無法執行"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "電量耗盡"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "電量剩餘不多，請接上電源"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "電源設定更改"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "“筆記本合蓋時”"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "“按電源按鈕時”"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "修改為關機"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "修改為待機"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "修改為休眠"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "修改為關閉顯示器"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "修改為無任何操作"
 

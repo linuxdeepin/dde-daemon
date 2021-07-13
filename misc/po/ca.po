@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Davidmp <medipas@gmail.com>, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/linuxdeepin/teams/3617/ca/)\n"
@@ -85,6 +85,15 @@ msgstr "Establiment de l'escalat de la pantalla"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Escalatge de la pantalla"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Obre"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -240,15 +249,15 @@ msgstr "demà"
 msgid "%s to %s"
 msgstr "%s a %s"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Feina"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Vida"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Altres"
 
@@ -277,10 +286,6 @@ msgstr "Programació del recrdatori"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Obre"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Tanca-ho tot"
@@ -301,7 +306,7 @@ msgstr "Treu de l'acoblador"
 msgid "All Windows"
 msgstr "Totes les finestres"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Espai de disc insuficient. Si us plau, feu-ne neteja!"
 
@@ -489,11 +494,11 @@ msgstr "Mostra l'espai de treball"
 msgid "Switch monitors"
 msgstr "Commuta els monitors"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Cal autenticació per canviar la llengua."
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -501,17 +506,17 @@ msgstr ""
 "Es canvia la llengua del sistema i s'instal·len els paquets de llengua "
 "necessaris. Espereu, si us plau..."
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "Es canvia la llengua del sistema. Espereu, si us plau..."
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "S'ha canviat la llengua del sistema. Si us plau, sortiu de la sessió i "
 "torneu-hi a entrar."
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr ""
 "Ha fallat canviar la llengua del sistema. Si us plau, torneu-ho a provar més"
@@ -566,7 +571,7 @@ msgstr "Ha fallat desinstal·lar %q."
 
 #: ../../network/manager.go:326
 msgid "Wired connection"
-msgstr ""
+msgstr "Connexió amb fil"
 
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
@@ -605,7 +610,7 @@ msgstr "TLS per túnel"
 msgid "Protected EAP"
 msgstr "EAP protegit"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Connexió amb fil"
 
@@ -1004,7 +1009,7 @@ msgstr "Cal la contrasenya per connectar amb %q"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "No s'ha pogut trobar la xarxa WLAN 802.11 %q "
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "Desconegut"
 
@@ -1048,47 +1053,47 @@ msgstr ""
 "\"%s\" no ha superat el sistema de verificació de seguretat i no es pot "
 "executar ara."
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Bateria molt baixa"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Bateria baixa, endolleu-lo, si us plau."
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "S'ha canviat la configuració de l'energia."
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Quan la tapa estigui tancada,"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "Quan es premi el botó d'engegar,"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "l'ordinador s'aturarà."
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "l'ordinador es posarà en suspens."
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "l'ordinador hibernarà."
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "el monitor s'aturarà."
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "no significarà res per a l'ordinador."
 

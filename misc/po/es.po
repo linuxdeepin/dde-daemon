@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Zaraza, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/linuxdeepin/teams/3617/es/)\n"
@@ -94,6 +94,15 @@ msgstr "Configurar escalado de pantalla"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Escalado de pantalla"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Abrir"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -221,6 +230,8 @@ msgstr "Asegúrese de que %q está encendido y dentro del rango de alcance"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%q ya no puede conectarse a%q. Intente olvidar este dispositivo y vuelva a "
+"vincularlo."
 
 #: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
@@ -247,15 +258,15 @@ msgstr "mañana"
 msgid "%s to %s"
 msgstr "%s a %s"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Trabajo"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Vida"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Otro"
 
@@ -284,10 +295,6 @@ msgstr "Programar Recordatorio"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Abrir"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Cerrar todo"
@@ -308,7 +315,7 @@ msgstr "Desanclar"
 msgid "All Windows"
 msgstr "Todas las ventanas"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Espacio en disco insuficiente, ¡limpie a tiempo por favor!"
 
@@ -496,11 +503,11 @@ msgstr "Mostrar espacio de trabajo"
 msgid "Switch monitors"
 msgstr "Cambiar entre monitores"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Se requiere autenticación para cambiar el idioma"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -508,15 +515,15 @@ msgstr ""
 "Cambiando el idioma del sistema e instalando los paquetes requeridos, por "
 "favor espere..."
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "Cambiando el idioma del sistema, por favor espere..."
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr "El idioma del sistema cambió, por favor reinicie la sesión"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Error al cambiar el idioma del sistema, por favor intente más tarde"
 
@@ -569,7 +576,7 @@ msgstr "Falló la desinstalación de %q"
 
 #: ../../network/manager.go:326
 msgid "Wired connection"
-msgstr ""
+msgstr "Conexión cableada"
 
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
@@ -608,7 +615,7 @@ msgstr "TLS tunelizado"
 msgid "Protected EAP"
 msgstr "EAP protegido"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Conexión cableada"
 
@@ -1002,9 +1009,9 @@ msgstr "Se requiere contraseña para conectarse %q"
 
 #: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "No se pudo encontrar la red WLAN%q 802.11"
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "Desconocido"
 
@@ -1048,47 +1055,47 @@ msgstr ""
 "\"%s\" no pasó la verificación de seguridad del sistema, y no puede "
 "ejecutarse ahora"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Batería críticamente baja"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Batería baja, por favor, conéctela"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "Modificar configuraciones de energía"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Cuando la tapa está cerrada,"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "Al presionar el botón de encendido,"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "su equipo se apagará"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "su equipo se suspenderá"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "su equipo hibernará"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "su monitor se apagará"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "no cambiará nada a su equipo"
 
