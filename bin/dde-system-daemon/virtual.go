@@ -32,8 +32,6 @@ const (
 	supportVirsConf  = "/usr/share/dde-daemon/supportVirsConf.ini"
 	virsGroupAppName = "AppName"
 	virsKeySupport   = "support"
-	whitelistKey     = "WhiteList"
-	whitelistName    = "name"
 )
 
 var (
@@ -54,15 +52,6 @@ func init() {
 			supportedVirtualMachines = defaultSupportedVirtualMachines
 		}
 		logger.Info("support virtual : ", supportedVirtualMachines)
-
-		//将白名单数据放入whitelistDatas，以供后面截图的时候直接调用
-		data = getValidSupData(readSupConfigFile(whitelistKey, whitelistName))
-		if data != nil {
-			whitelistDatas = getValidSupData(data)
-		} else {
-			whitelistDatas = defaultWhiteListDatas
-		}
-		logger.Info("white list data : ", whitelistDatas)
 	}()
 }
 
@@ -155,34 +144,6 @@ func (d *Daemon) IsPidVirtualMachine(pid uint32) (isVM bool, busErr *dbus.Error)
 		return false, nil
 	}
 	logger.Info("IsPidVirtualMachine, ret:", ret)
-
-	return ret, dbusutil.ToError(err)
-}
-
-func isIgnoreCheckVirtual(pid uint32) (bool, error) {
-	execPath, err := getActivePidInfo(pid)
-	if err != nil {
-		logger.Warning(err)
-		return false, err
-	}
-	execPath = strings.ToLower(execPath)
-
-	for _, data := range whitelistDatas {
-		//exe中是否包含，去掉空格的虚拟机相关字段
-		if strings.Contains(execPath, data) {
-			logger.Info("current top app in whitelist")
-			return true, nil
-		}
-	}
-	return false, nil
-}
-
-func (d *Daemon) IsIgnoreCheckVirtual(pid uint32) (bool, *dbus.Error) {
-	ret, err := isIgnoreCheckVirtual(pid)
-	if err != nil {
-		return false, nil
-	}
-	logger.Info("IsIgnoreCheckVirtual, ret:", ret)
 
 	return ret, dbusutil.ToError(err)
 }

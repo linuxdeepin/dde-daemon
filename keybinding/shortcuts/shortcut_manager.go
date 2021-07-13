@@ -670,17 +670,6 @@ func (sm *ShortcutManager) isPidVirtualMachine(pid uint32) (bool, error) {
 	return ret, nil
 }
 
-//返回值 : true , 表示在白名单不阻塞
-func (sm *ShortcutManager) isIgnoreCheckVirtual(pid uint32) (bool, error) {
-	ret, err := sm.daemonDaemon.IsIgnoreCheckVirtual(0, pid)
-	if err != nil {
-		logger.Warning(err)
-		return ret, err
-	}
-
-	return ret, nil
-}
-
 //初始化go-dbus-factory system DBUS : com.deepin.daemon.Daemon
 func (sm *ShortcutManager) initSysDaemon() error {
 	sysBus, err := dbus.SystemBus()
@@ -690,42 +679,6 @@ func (sm *ShortcutManager) initSysDaemon() error {
 	}
 	sm.daemonDaemon = daemon.NewDaemon(sysBus)
 	return nil
-}
-
-//是否阻塞这个快捷键, true : 阻塞
-func (sm *ShortcutManager) IsBlockShortcutKey(id string) bool {
-	logger.Debug(" IsBlockShortcutKey, shortcut id : ", id)
-	switch id {
-	case "screenshot":
-		pid, err := sm.getActiveWindowPid()
-		if err != nil {
-			return false
-		}
-
-		isIgnoreCheckVirtual, err := sm.isIgnoreCheckVirtual(pid)
-		//isIgnoreCheckVirtual : true , 表示在白名单不阻塞
-		if err != nil || isIgnoreCheckVirtual {
-			return false
-		}
-
-		isVirtualMachine, err := sm.isPidVirtualMachine(pid)
-		logger.Info("handleXRecordKeyEvent, isVirtualMachine:", isVirtualMachine)
-		//获取出错时，当做非虚拟机
-		if err != nil {
-			logger.Warning(err)
-		} else {
-			//true:表示当前是 虚拟机/云平台，要过滤掉
-			if isVirtualMachine {
-				logger.Info("current active window is virtual or cloud")
-				return true
-			}
-		}
-
-	default:
-		return false
-	}
-
-	return false
 }
 
 func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state uint16) {
@@ -742,11 +695,6 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 			if shortcut != nil && shortcut.GetType() == ShortcutTypeSystem &&
 				(strings.HasPrefix(shortcut.GetId(), "screenshot") ||
 					strings.HasPrefix(shortcut.GetId(), "deepin-screen-recorder")) {
-				//判断是否要阻塞该快捷键
-				if sm.IsBlockShortcutKey(shortcut.GetId()) {
-					return
-				}
-
 				keyEvent := &KeyEvent{
 					Mods:     key.Mods,
 					Code:     key.Code,
