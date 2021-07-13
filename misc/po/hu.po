@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Béla Bajza, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/linuxdeepin/teams/3617/hu/)\n"
@@ -97,6 +97,15 @@ msgstr "Képernyő méretezésének beállítása"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Képernyő méretezése"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Megnyitás"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -254,15 +263,15 @@ msgstr "Holnap"
 msgid "%s to %s"
 msgstr "%s és %s között"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Munka"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Magánélet"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Egyéb"
 
@@ -291,10 +300,6 @@ msgstr "Ütemezési emlékeztető"
 msgid "Festival"
 msgstr "Fesztivál"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Megnyitás"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Összes bezárása"
@@ -315,7 +320,7 @@ msgstr "Eltávolítás a Dokkolóról"
 msgid "All Windows"
 msgstr "Összes ablak"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Nincs elég lemezterület, kérjük takarítsa ki a fájlokat időben!"
 
@@ -503,11 +508,11 @@ msgstr "Munkaterület megjelenítése"
 msgid "Switch monitors"
 msgstr "Monitor váltása"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Hitelesítés szükség a nyelvi beállítások módosításához"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -515,17 +520,17 @@ msgstr ""
 "A rendszer nyelv változtatása, és a szükséges nyelvi csomagok telepítése "
 "folyamatban van, kérjük várjon..."
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "A rendszer nyelv változtatása folyamatban, kérjük várjon..."
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "A rendszer nyelvének változtatása megtörtént, kérjük jelentkezzen ki, majd "
 "újra be az életbe lépéshez"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "A rendszer nyelv változtatása sikertelen, kérjük próbálja meg később"
 
@@ -617,7 +622,7 @@ msgstr "Elrejtett TLS"
 msgid "Protected EAP"
 msgstr "Védett EAP"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Vezetékes kapcsolat"
 
@@ -1018,7 +1023,7 @@ msgstr "Jelszó szükséges a %q csatlakoztatásához"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "A %q 802.11 vezeték nélküli hálózat nem található"
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "Ismeretlen"
 
@@ -1062,47 +1067,47 @@ msgstr ""
 "\"%s\" nem felelt meg a a rendszerbiztonsági ellenőrzésnek és jelenleg nem "
 "futtatható"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Az akkumlátor töltöttsége kritikusan alacsony"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Akkutöltöttség alacsony, kérjük csatlakoztassa a töltőt"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "Energiagazdálkodási beállítások megváltoztatva"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "A képernyő lecsukásakor"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "Főkapcsoló gomb megnyomásakor"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "A számítógépe le fog állni"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "A számítógép alvó állapotba kerül"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "A számítógép hibernált állapotba kerül"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "A képernyője ki fog kapcsolni"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "Semmit sem fog tenni a számítógépével"
 

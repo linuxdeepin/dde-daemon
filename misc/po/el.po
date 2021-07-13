@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Jim Gios <jgpers@gmail.com>, 2020\n"
 "Language-Team: Greek (https://www.transifex.com/linuxdeepin/teams/3617/el/)\n"
@@ -87,6 +87,15 @@ msgstr "Ορισμός κλίμακας οθόνης"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Κλίμακα οθόνης"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Άνοιγμα"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -240,15 +249,15 @@ msgstr "αύριο"
 msgid "%s to %s"
 msgstr ""
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Εργασία"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Ζωή"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Άλλο"
 
@@ -277,10 +286,6 @@ msgstr ""
 msgid "Festival"
 msgstr "Γιορτή"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Άνοιγμα"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Κλείσιμο Όλων"
@@ -301,7 +306,7 @@ msgstr ""
 msgid "All Windows"
 msgstr "Όλα τα Παράθυρα"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Ανεπαρκής χώρος στο δίσκο, παρακαλώ καθαρίστε εγκαίρως!"
 
@@ -489,11 +494,11 @@ msgstr "Εμφάνιση χώρου εργασίας"
 msgid "Switch monitors"
 msgstr ""
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Απαιτείται πιστοποίηση για εναλλαγή γλώσσας"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -501,16 +506,16 @@ msgstr ""
 "Αλλάζει η γλώσσα συστήματος και εγκατάσταση των απαραίτητων πακέτων γλώσσας,"
 " παρακαλώ περιμένετε..."
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "Αλλάζει η γλώσσα συστήματος, παρακαλώ περιμένετε..."
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "Έχει αλλάξει η γλώσσα συστήματος, παρακαλώ αποσυνδεθείτε και μετά συνδεθείτε"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Αποτυχία αλλαγής γλώσσας συστήματος, παρακαλούμε προσπαθήστε αργότερα"
 
@@ -602,7 +607,7 @@ msgstr "TLS"
 msgid "Protected EAP"
 msgstr "Προστατευόμενη EAP"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Ενσύρματη Σύνδεση"
 
@@ -992,7 +997,7 @@ msgstr "Απαιτείται κωδικός για σύνδεση του %q"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "Άγνωστο"
 
@@ -1035,47 +1040,47 @@ msgstr "Συνδέθηκε"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Κρίσιμα χαμηλή μπαταρία"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Χαμηλή μπαταρία, παρακαλώ συνδέστε"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr ""
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr ""
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr ""
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr ""
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr ""
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr ""
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr ""
 

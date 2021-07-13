@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Hoan Chu Đình <chudinhhoan277@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/linuxdeepin/teams/3617/vi/)\n"
@@ -85,6 +85,15 @@ msgstr "Điều chỉnh tỉ lệ màn hình"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Tỉ lệ màn hình"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Mở"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -238,15 +247,15 @@ msgstr "Ngày mai"
 msgid "%s to %s"
 msgstr "%s đến %s"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Công việc"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Cuộc sống"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Khác"
 
@@ -275,10 +284,6 @@ msgstr "Lịch trình nhắc nhở"
 msgid "Festival"
 msgstr "Lễ hội"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Mở"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Đóng tất cả"
@@ -299,7 +304,7 @@ msgstr "Gỡ khỏi dock"
 msgid "All Windows"
 msgstr "Tất cả Cửa sổ"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Không đủ dung lượng đĩa, xin hãy dọn sạch đúng lúc!"
 
@@ -487,11 +492,11 @@ msgstr "Hiển thị không gian làm việc"
 msgid "Switch monitors"
 msgstr "Chuyển màn hình"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Chứng thực được đòi hỏi để đổi ngôn ngữ"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -499,15 +504,15 @@ msgstr ""
 "Thay đổi ngôn ngữ hệ thống và cài đặt các gói ngôn ngữ cần thiết, vui lòng "
 "đợi ..."
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "Thay đổi ngôn ngữ hệ thống, vui lòng đợi ..."
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr "Ngôn ngữ hệ thống đã thay đổi, vui lòng đăng xuất và sau đó đăng nhập"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Không thể thay đổi ngôn ngữ hệ thống, vui lòng thử lại sau"
 
@@ -597,7 +602,7 @@ msgstr "TLS được tạo đường"
 msgid "Protected EAP"
 msgstr "EAP được bảo vệ"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Kết nối Có dây"
 
@@ -981,7 +986,7 @@ msgstr "Mật khẩu là bắt buộc để kết nối %q"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "Không rõ"
 
@@ -1021,47 +1026,47 @@ msgstr "Đã kết nối"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" đã không vượt qua xác minh bảo mật hệ thống và không thể chạy"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Pin cực kỳ thấp"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Pin yếu,vui lòng cắm sạc"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "Cài đặt nguồn đã được thay đổi"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Dùng khi dóng nắp"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "Khi bấm vào nút nguồn"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "máy tính của bạn sẽ tắt"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "máy tính của bạn sẽ dừng"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "Máy tính của bạn sẽ vào chế độ ngủ dông"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "màn hình máy tính sẽ tắt"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "nó sẽ không làm gì cho máy tính của bạn"
 

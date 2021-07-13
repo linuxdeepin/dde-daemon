@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Manuela Silva <manuelarodsilva@gmail.com>, 2020
+# Manuela Silva <mmsrs@sky.com>, 2020
 # Luís Lima <geral@liqensoft.com>, 2020
 # Ricardo Simões <xmcorporation@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>, 2021\n"
 "Language-Team: Portuguese (https://www.transifex.com/linuxdeepin/teams/3617/pt/)\n"
@@ -88,6 +88,15 @@ msgstr "A definir escala de visualização"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Escala de visualização"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Abrir"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -243,15 +252,15 @@ msgstr "amanhã"
 msgid "%s to %s"
 msgstr "%s às %s"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Trabalho"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Vida"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Outro"
 
@@ -280,10 +289,6 @@ msgstr "Agendar lembrete"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Abrir"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Fechar tudo"
@@ -304,7 +309,7 @@ msgstr "Remover da doca"
 msgid "All Windows"
 msgstr "Todas as janelas"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Espaço insuficiente no disco, limpe-o atempadamente!"
 
@@ -492,11 +497,11 @@ msgstr "Mostrar área de trabalho virtual"
 msgid "Switch monitors"
 msgstr "Alternar monitores"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "É necessária a autenticação para alterar o idioma"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -504,15 +509,15 @@ msgstr ""
 "A alterar o idioma do sistema e a instalar os pacotes de idioma necessários,"
 " aguarde..."
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "A alterar o idioma do sistema, aguarde..."
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr "Idioma do sistema alterado, termine sessão e depois inicie novamente"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Falha ao alterar o idioma do sistema, tente novamente mais tarde"
 
@@ -565,7 +570,7 @@ msgstr "Falha ao desinstalar %q"
 
 #: ../../network/manager.go:326
 msgid "Wired connection"
-msgstr ""
+msgstr "Ligação por cabo"
 
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
@@ -604,7 +609,7 @@ msgstr "TLS Tunelado"
 msgid "Protected EAP"
 msgstr "EAP Protegido"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Ligação por cabo"
 
@@ -995,7 +1000,7 @@ msgstr "A palavra-passe é necessária para ligar a %q"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Não foi possível encontrar a rede %q 802.11 WLAN"
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "Desconhecido"
 
@@ -1039,47 +1044,47 @@ msgstr ""
 "O \"%s\" não passou na verificação de segurança do sistema e não pode ser "
 "executado agora"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Bateria em estado crítico"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Bateria fraca, ligue à corrente"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "Definições de energia alteradas"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Ao fechar a tampa, "
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "Ao pressionar o botão de energia, "
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "o computador será encerrado"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "o computador irá suspender"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "o computador irá hibernar"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "o monitor será desligado"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "não fará nada ao computador"
 

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 13:23+0800\n"
+"POT-Creation-Date: 2021-07-13 17:12+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Marian c <dark1ro@yahoo.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/linuxdeepin/teams/3617/ro/)\n"
@@ -86,6 +86,15 @@ msgstr "Setare scalare afișare"
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
 msgstr "Redimensionați afișajul"
+
+#: ../../audio/audio_events.go:473
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+msgid "Open"
+msgstr "Deschide"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -239,15 +248,15 @@ msgstr "mâine"
 msgid "%s to %s"
 msgstr "%sla%s"
 
-#: ../../calendar/module.go:126 ../../calendar/type.go:25
+#: ../../calendar/module.go:118 ../../calendar/type.go:25
 msgid "Work"
 msgstr "Serviciu"
 
-#: ../../calendar/module.go:127 ../../calendar/type.go:30
+#: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
 msgstr "Viaţă"
 
-#: ../../calendar/module.go:128 ../../calendar/type.go:35
+#: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
 msgstr "Altul"
 
@@ -276,10 +285,6 @@ msgstr "Programare Reminder"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Deschide"
-
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
 msgstr "Închide Tot"
@@ -300,7 +305,7 @@ msgstr "Detaşaţi"
 msgid "All Windows"
 msgstr "Toate Ferestrele"
 
-#: ../../housekeeping/init.go:98
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Spaţiu disc insufucient, curățați în timp util!"
 
@@ -488,11 +493,11 @@ msgstr "Afișează spațiu de lucru"
 msgid "Switch monitors"
 msgstr "Schimbați monitoarele"
 
-#: ../../langselector/locale.go:62
+#: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
 msgstr "Autentificarea este necesară pentru a schimba limba"
 
-#: ../../langselector/locale.go:151
+#: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -500,15 +505,15 @@ msgstr ""
 "Schimbarea limbii sistemului și instalarea pachetelor lingvistice necesare, "
 "vă rugăm așteptați ..."
 
-#: ../../langselector/locale.go:152
+#: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
 msgstr "Schimbarea limbii sistemului, vă rugăm să așteptați..."
 
-#: ../../langselector/locale.go:153
+#: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
 msgstr "Limbajul sistemului a fost modificat, rugăm delogare şi relogare"
 
-#: ../../langselector/locale.go:394
+#: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Schimbare limba sistem eşuat , reîncercați mai târziu"
 
@@ -600,7 +605,7 @@ msgstr "TLS tunelizat"
 msgid "Protected EAP"
 msgstr "EAP Protejat"
 
-#: ../../network/manager_connection.go:295
+#: ../../network/manager_connection.go:336
 msgid "Wired Connection"
 msgstr "Conexiune prin cablu"
 
@@ -988,7 +993,7 @@ msgstr "Parolă necesară pentru conectare la %q"
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:256
+#: ../../network/utils_dbus_nm.go:297
 msgid "Unknown"
 msgstr "Necunoscut"
 
@@ -1032,47 +1037,47 @@ msgstr ""
 "\"%s\"  nu a trecut verificarea de securitate a sistemului și nu poate fi "
 "executat acum"
 
-#: ../../session/power/manager_events.go:197
+#: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Baterie critic scăzută"
 
-#: ../../session/power/manager_events.go:218
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:222
+#: ../../session/power/manager_events.go:227
+#: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
 msgstr "Baterie scăzută, vă rugăm conectați"
 
-#: ../../session/power/utils.go:379 ../../session/power/utils.go:383
-#: ../../session/power/utils.go:387 ../../session/power/utils.go:391
+#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
+#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
 msgid "Power settings changed"
 msgstr "Setările de alimentare s-au schimbat"
 
-#: ../../session/power/utils.go:406 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Când este închis capacul,"
 
-#: ../../session/power/utils.go:410
+#: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
 msgstr "Când este apăsat butonul de pornire,"
 
-#: ../../session/power/utils.go:420 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "computerul se va închide"
 
-#: ../../session/power/utils.go:422 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "computerul se va suspenda"
 
-#: ../../session/power/utils.go:424
+#: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
 msgstr "computerul va hiberna"
 
-#: ../../session/power/utils.go:426
+#: ../../session/power/utils.go:425
 msgid "your monitor will turn off"
 msgstr "monitorul se va închide"
 
-#: ../../session/power/utils.go:428
+#: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "nu va face nimic computerului dvs."
 
