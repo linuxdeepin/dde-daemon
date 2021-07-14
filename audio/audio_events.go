@@ -317,7 +317,6 @@ func (a *Audio) handleCardChanged(idx uint32) {
 		} else if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeHeadset) {
 			a.setPropBluetoothAudioMode(bluezModeHeadset)
 		}
-		GetPriorityManager().Input.SetTheFirstType(PortTypeBluetooth)
 	}
 
 	// Port插入时(从AvailableTypeNo变成其它)，如果端口处于禁用状态，显示横幅提示

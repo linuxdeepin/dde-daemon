@@ -1293,7 +1293,12 @@ func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
 			GetBluezAudioManager().SetMode(card.core.Name, mode)
 			logger.Debugf("set profile %s", profile.Name)
 			card.core.SetProfile(profile.Name)
-			// 后续流程在 handleCardChanged
+
+			// 手动切换蓝牙模式为headset，
+			if mode == bluezModeHeadset {
+				a.inputAutoSwitchCount = 0
+				GetPriorityManager().Input.SetTheFirstType(PortTypeBluetooth)
+			}
 			return nil
 		}
 	}
