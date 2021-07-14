@@ -78,8 +78,13 @@ func (u *Uadp) SetDataKey(sender dbus.Sender, exePath, keyName, dataKey, keyring
 	if !pass {
 		return dbusutil.ToError(errors.New("not be authorized"))
 	}
+	uid, err := u.service.GetConnUID(string(sender))
+	if err != nil {
+		logger.Warning("failed to get uid:", err)
+		return dbusutil.ToError(err)
+	}
 
-	err = u.setDataKey(exePath, keyName, dataKey, keyringKey)
+	err = u.setDataKey(exePath, keyName, dataKey, keyringKey, uid)
 	if err != nil {
 		logger.Warning("failed to encrypt key:", err)
 		return dbusutil.ToError(err)
@@ -87,7 +92,7 @@ func (u *Uadp) SetDataKey(sender dbus.Sender, exePath, keyName, dataKey, keyring
 	return nil
 }
 
-func (u *Uadp) setDataKey(exePath, keyName, dataKey, keyringKey string) error {
+func (u *Uadp) setDataKey(exePath, keyName, dataKey, keyringKey string, uid uint32) error {
 	encryptedKey, err := aesEncryptKey(dataKey, keyringKey)
 	if err != nil {
 		logger.Warning("failed to encryptKey by aes:", err)
@@ -97,7 +102,7 @@ func (u *Uadp) setDataKey(exePath, keyName, dataKey, keyringKey string) error {
 	if u.appDataMap[exePath] == nil {
 		u.appDataMap[exePath] = make(map[string][]byte)
 	}
-	u.appDataMap[exePath][keyName] = encryptedKey
+	u.appDataMap[exePath][keyName+string(uid)] = encryptedKey
 	u.secretMu.Unlock()
 
 	err = u.updateDataFile(exePath)
@@ -154,7 +159,12 @@ func (u *Uadp) GetDataKey(sender dbus.Sender, exePath, keyName, keyringKey strin
 		return "", dbusutil.ToError(errors.New("not authorized"))
 	}
 
-	dataKey, err = u.getDataKey(exePath, keyName, keyringKey)
+	uid, err := u.service.GetConnUID(string(sender))
+	if err != nil {
+		logger.Warning("failed to get uid:", err)
+		return "", dbusutil.ToError(err)
+	}
+	dataKey, err = u.getDataKey(exePath, keyName, keyringKey, uid)
 	if err != nil {
 		logger.Warning("failed to decrypt Key:", err)
 		return "", dbusutil.ToError(err)
@@ -162,8 +172,8 @@ func (u *Uadp) GetDataKey(sender dbus.Sender, exePath, keyName, keyringKey strin
 	return dataKey, nil
 }
 
-func (u *Uadp) getDataKey(exePath, keyName, keyringKey string) (string, error) {
-	encryptedKey := u.findKeyFromCacheOrFile(exePath, keyName)
+func (u *Uadp) getDataKey(exePath, keyName, keyringKey string, uid uint32) (string, error) {
+	encryptedKey := u.findKeyFromCacheOrFile(exePath, keyName+string(uid))
 	if encryptedKey == nil {
 		return "", errors.New("failed to find data used to be decrypted")
 	}
