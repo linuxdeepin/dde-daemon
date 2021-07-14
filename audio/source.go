@@ -161,14 +161,7 @@ func (s *Source) setVBF(v, b, f float64) *dbus.Error {
 
 func (s *Source) SetMute(value bool) *dbus.Error {
 	s.audio.context().SetSourceMuteByIndex(s.index, value)
-
-	for _, card := range s.audio.cards {
-		for _, port := range card.Ports {
-			if port.Direction == pulse.DirectionSource {
-				GetConfigKeeper().SetMute(card.core.Name, port.Name, value)
-			}
-		}
-	}
+	GetConfigKeeper().SetMuteInput(value)
 
 	if !value {
 		playFeedback()

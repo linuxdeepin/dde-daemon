@@ -969,7 +969,7 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 		logger.Warning(err)
 	}
 
-	s.setMute(portConfig.Mute)
+	s.setMute(GetConfigKeeper().Mute.MuteOutput)
 
 	if !portConfig.Enabled {
 		// 意外原因切换到被禁用的端口上，例如没有可用端口
@@ -991,7 +991,7 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 		logger.Warning(err)
 	}
 
-	s.setMute(portConfig.Mute)
+	s.setMute(GetConfigKeeper().Mute.MuteInput)
 
 	// 不要在降噪通道上重复开启降噪
 	if isPhyDev {

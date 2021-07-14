@@ -15,7 +15,7 @@ type PortConfig struct {
 	IncreaseVolume bool
 	Balance        float64
 	ReduceNoise    bool
-	Mute           bool
+	Mute           bool // 静音改为全局，此配置废弃
 }
 
 type CardConfig struct {
@@ -23,18 +23,24 @@ type CardConfig struct {
 	Ports map[string]*PortConfig // Name => PortConfig
 }
 
-type ConfigKeeper struct {
-	Cards map[string]*CardConfig // Name => CardConfig
+type MuteConfig struct {
+	MuteOutput bool
+	MuteInput  bool
+}
 
-	file string // 配置文件路径
+type ConfigKeeper struct {
+	Cards    map[string]*CardConfig // Name => CardConfig
+	Mute     *MuteConfig            // 全局静音
+	file     string                 // 配置文件路径
+	muteFile string                 // 静音配置文件路径
 }
 
 // 创建单例
-func createConfigKeeperSingleton(path string) func() *ConfigKeeper {
+func createConfigKeeperSingleton(path string, mutePath string) func() *ConfigKeeper {
 	var ck *ConfigKeeper = nil
 	return func() *ConfigKeeper {
 		if ck == nil {
-			ck = NewConfigKeeper(path)
+			ck = NewConfigKeeper(path, mutePath)
 		}
 		return ck
 	}
@@ -43,12 +49,22 @@ func createConfigKeeperSingleton(path string) func() *ConfigKeeper {
 // 获取单例
 // 由于优先级管理需要在很多个对象中使用，放在Audio对象中需要添加额外参数传递到各个模块很不方便，因此在此创建一个全局的单例
 var globalConfigKeeperFile = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/audio-config-keeper.json")
-var GetConfigKeeper = createConfigKeeperSingleton(globalConfigKeeperFile)
+var globalConfigKeeperMuteFile = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/audio-config-keeper-mute.json")
+var GetConfigKeeper = createConfigKeeperSingleton(globalConfigKeeperFile, globalConfigKeeperMuteFile)
 
-func NewConfigKeeper(path string) *ConfigKeeper {
+func NewConfigKeeper(path string, mutePath string) *ConfigKeeper {
 	return &ConfigKeeper{
-		Cards: make(map[string]*CardConfig),
-		file:  path,
+		Cards:    make(map[string]*CardConfig),
+		Mute:     NewMuteConfig(),
+		file:     path,
+		muteFile: mutePath,
+	}
+}
+
+func NewMuteConfig() *MuteConfig {
+	return &MuteConfig{
+		MuteOutput: false,
+		MuteInput:  false,
 	}
 }
 
@@ -78,7 +94,25 @@ func (ck *ConfigKeeper) Save() error {
 		return err
 	}
 
-	return ioutil.WriteFile(ck.file, data, 0644)
+	err = ioutil.WriteFile(ck.file, data, 0644)
+	if err != nil {
+		logger.Warning(err)
+		// 这里不返回，因为可能可以写另一个配置
+	}
+
+	data, err = json.MarshalIndent(ck.Mute, "", "  ")
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	err = ioutil.WriteFile(ck.muteFile, data, 0644)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	return nil
 }
 
 func (ck *ConfigKeeper) Load() error {
@@ -88,7 +122,24 @@ func (ck *ConfigKeeper) Load() error {
 		return err
 	}
 
-	return json.Unmarshal(data, &ck.Cards)
+	err = json.Unmarshal(data, &ck.Cards)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	data, err = ioutil.ReadFile(ck.muteFile)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	err = json.Unmarshal(data, &ck.Mute)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	return nil
 }
 
 func (ck *ConfigKeeper) Print() {
@@ -157,9 +208,13 @@ func (ck *ConfigKeeper) SetReduceNoise(cardName string, portName string, reduce 
 	ck.Save()
 }
 
-func (ck *ConfigKeeper) SetMute(cardName string, portName string, mute bool) {
-	_, port := ck.GetCardAndPortConfig(cardName, portName)
-	port.Mute = mute
+func (ck *ConfigKeeper) SetMuteOutput(mute bool) {
+	ck.Mute.MuteOutput = mute
+	ck.Save()
+}
+
+func (ck *ConfigKeeper) SetMuteInput(mute bool) {
+	ck.Mute.MuteInput = mute
 	ck.Save()
 }
 
