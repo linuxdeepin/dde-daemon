@@ -768,18 +768,16 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 	GetPriorityManager().SetPorts(a.cards)
 	a.autoSwitchPort()
 
-	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
-
 	sink := a.findSink(cardId, portName)
 	if sink != nil && sink == a.defaultSink {
-		sink.setMute(!enabled || portConfig.Mute)
+		sink.setMute(!enabled || GetConfigKeeper().Mute.MuteOutput)
 	} else if sink != nil && sink != a.defaultSink {
 		sink.setMute(!enabled)
 	}
 
 	source := a.findSource(cardId, portName)
 	if source != nil && source == a.defaultSource {
-		source.setMute(!enabled || portConfig.Mute)
+		source.setMute(!enabled || GetConfigKeeper().Mute.MuteInput)
 	} else if source != nil && source != a.defaultSource {
 		source.setMute(!enabled)
 	}
