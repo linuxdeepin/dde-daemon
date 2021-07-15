@@ -189,7 +189,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.keyEvent = keyevent.NewKeyEvent(sysBus)
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
-	m.shortcutManager.AddSpecial()
 	m.shortcutManager.AddSystem(m.gsSystem, m.wm)
 	m.shortcutManager.AddMedia(m.gsMediaKey)
 

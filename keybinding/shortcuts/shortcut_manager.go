@@ -922,21 +922,6 @@ func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager) {
 	}
 }
 
-func (sm *ShortcutManager) AddSpecial() {
-	idNameMap := getSpecialIdNameMap()
-
-	// add SwitchKbdLayout <Super>space
-	s0 := NewFakeShortcut(&Action{Type: ActionTypeSwitchKbdLayout, Arg: SKLSuperSpace})
-	ks, err := ParseKeystroke("<Super>space")
-	if err != nil {
-		panic(err)
-	}
-	s0.Id = "switch-kbd-layout"
-	s0.Name = idNameMap[s0.Id]
-	s0.Keystrokes = []*Keystroke{ks}
-	sm.addWithoutLock(s0)
-}
-
 func (sm *ShortcutManager) AddKWin(wmObj wm.Wm) {
 	logger.Debug("AddKWin")
 	accels, err := util.GetAllKWinAccels(wmObj)
