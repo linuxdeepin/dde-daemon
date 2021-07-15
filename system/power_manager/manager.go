@@ -31,10 +31,12 @@ type Manager struct {
 
 	// nolint
 	methods *struct {
-		CanShutdown  func() `out:"can"`
-		CanReboot    func() `out:"can"`
-		CanSuspend   func() `out:"can"`
-		CanHibernate func() `out:"can"`
+		CanShutdown               func() `out:"can"`
+		CanReboot                 func() `out:"can"`
+		CanSuspend                func() `out:"can"`
+		CanHibernate              func() `out:"can"`
+		CanSuspendToHibernate     func() `out:"can"`
+		SetSuspendToHibernateTime func() `in:"timeMinute"`
 	}
 }
 
@@ -92,4 +94,25 @@ func (m *Manager) CanHibernate() (bool, *dbus.Error) {
 
 	str, _ := m.objLogin.CanHibernate(0)
 	return str == "yes", nil
+}
+
+func (m *Manager) CanSuspendToHibernate() (bool, *dbus.Error) {
+
+	if !canSuspendToHibernate() {
+		logger.Debug("The system does not support Suspend To Hibernate")
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (m *Manager) SetSuspendToHibernateTime(timeMinute int32) *dbus.Error {
+
+	err := setSuspendToHibernateTime(timeMinute)
+	if err != nil {
+		logger.Debug("Set Suspend To HibernateTime fail", err)
+		return dbusutil.ToError(err)
+	}
+
+	return nil
 }

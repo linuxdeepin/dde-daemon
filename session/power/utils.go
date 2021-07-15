@@ -26,6 +26,7 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 	"pkg.deepin.io/dde/api/soundutils"
 	. "pkg.deepin.io/lib/gettext"
@@ -147,6 +148,25 @@ func (m *Manager) doSuspend() {
 	}
 }
 
+func (m *Manager) doSetSuspendToHibernateTime(timeMinute int32) {
+	logger.Infof("doSetSuspendToHibernateTime :%v", timeMinute)
+	powerManager := m.helper.PowerManager
+	can, err := powerManager.CanSuspendToHibernate(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	if !can {
+		logger.Info("can not suspend")
+		return
+	}
+
+	err = powerManager.SetSuspendToHibernateTime(0, timeMinute)
+	if err != nil {
+		logger.Warning("failed to SetSuspendToHibernateTime:", err)
+	}
+}
 func (m *Manager) doShutdown() {
 	sessionManager := m.helper.SessionManager
 	can, err := sessionManager.CanShutdown(0)

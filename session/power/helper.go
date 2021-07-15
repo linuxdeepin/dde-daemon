@@ -25,18 +25,19 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 
 	// system bus
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
+	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	libpower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
-	"github.com/linuxdeepin/go-dbus-factory/net.hadess.sensorproxy"
+	sensorproxy "github.com/linuxdeepin/go-dbus-factory/net.hadess.sensorproxy"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 
 	// session bus
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.screensaver"
-	"github.com/linuxdeepin/go-x11-client"
+	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
+	powermanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.powermanager"
+	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	screensaver "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.screensaver"
+	x "github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/lib/dbusutil"
 )
 
@@ -51,6 +52,7 @@ type Helper struct {
 
 	SessionManager *sessionmanager.SessionManager
 	SessionWatcher *sessionwatcher.SessionWatcher
+	PowerManager   *powermanager.PowerManager
 	ScreenSaver    *screensaver.ScreenSaver // sig
 	Display        *display.Display
 
@@ -76,6 +78,7 @@ func (h *Helper) init(sysBus, sessionBus *dbus.Conn) error {
 	h.SensorProxy = sensorproxy.NewSensorProxy(sysBus)
 	h.SysDBusDaemon = ofdbus.NewDBus(sysBus)
 	h.Daemon = daemon.NewDaemon(sysBus)
+	h.PowerManager = powermanager.NewPowerManager(sysBus)
 	h.SessionManager = sessionmanager.NewSessionManager(sessionBus)
 	h.ScreenSaver = screensaver.NewScreenSaver(sessionBus)
 	h.Display = display.NewDisplay(sessionBus)

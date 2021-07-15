@@ -75,6 +75,8 @@ type Manager struct {
 	LinePowerScreenBlackDelay gsprop.Int `prop:"access:rw"`
 	// 接通电源时，不做任何操作，到睡眠的时间
 	LinePowerSleepDelay gsprop.Int `prop:"access:rw"`
+	// 接通电源时，不做任何操作，到休眠的时间
+	LinePowerHibernateDelay gsprop.Int `prop:"access:rw"`
 
 	// 使用电池时，不做任何操作，到显示屏保的时间
 	BatteryScreensaverDelay gsprop.Int `prop:"access:rw"`
@@ -82,6 +84,8 @@ type Manager struct {
 	BatteryScreenBlackDelay gsprop.Int `prop:"access:rw"`
 	// 使用电池时，不做任何操作，到睡眠的时间
 	BatterySleepDelay gsprop.Int `prop:"access:rw"`
+	// 使用电池时，不做任何操作，到休眠的时间
+	BatteryHibernateDelay gsprop.Int `prop:"access:rw"`
 
 	// 关闭屏幕前是否锁定
 	ScreenBlackLock gsprop.Bool `prop:"access:rw"`
@@ -170,10 +174,12 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.LinePowerScreenBlackDelay.Bind(m.settings, settingKeyLinePowerScreenBlackDelay)
 	m.LinePowerSleepDelay.Bind(m.settings, settingKeyLinePowerSleepDelay)
 	m.LinePowerLockDelay.Bind(m.settings, settingKeyLinePowerLockDelay)
+	m.LinePowerHibernateDelay.Bind(m.settings, settingKeyLinePowerHibernateDelay)
 	m.BatteryScreensaverDelay.Bind(m.settings, settingKeyBatteryScreensaverDelay)
 	m.BatteryScreenBlackDelay.Bind(m.settings, settingKeyBatteryScreenBlackDelay)
 	m.BatterySleepDelay.Bind(m.settings, settingKeyBatterySleepDelay)
 	m.BatteryLockDelay.Bind(m.settings, settingKeyBatteryLockDelay)
+	m.BatteryHibernateDelay.Bind(m.settings, settingKeyBatteryHibernateDelay)
 	m.ScreenBlackLock.Bind(m.settings, settingKeyScreenBlackLock)
 	m.SleepLock.Bind(m.settings, settingKeySleepLock)
 
@@ -363,11 +369,13 @@ func (m *Manager) Reset() *dbus.Error {
 		settingKeyLinePowerScreenBlackDelay,
 		settingKeyLinePowerSleepDelay,
 		settingKeyLinePowerLockDelay,
+		settingKeyLinePowerHibernateDelay,
 		settingKeyLinePowerLidClosedAction,
 		settingKeyLinePowerPressPowerBtnAction,
 
 		settingKeyBatteryScreenBlackDelay,
 		settingKeyBatterySleepDelay,
+		settingKeyBatteryHibernateDelay,
 		settingKeyBatteryLockDelay,
 		settingKeyBatteryLidClosedAction,
 		settingKeyBatteryPressPowerBtnAction,
@@ -413,4 +421,15 @@ func (m *Manager) permitLogind() {
 func (m *Manager) SetPrepareSuspend(v int) *dbus.Error {
 	m.setPrepareSuspend(v)
 	return nil
+}
+
+func (m *Manager) CanSuspendToHibernate() bool {
+	powerManager := m.helper.PowerManager
+	can, err := powerManager.CanSuspendToHibernate(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	return can
 }

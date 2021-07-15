@@ -214,6 +214,11 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 			} else if count == 5 {
 				// after 5 seconds, force suspend
 				m.disableWarnLevelCountTicker()
+				if m.OnBattery {
+					m.doSetSuspendToHibernateTime(m.BatteryHibernateDelay.Get() / 60)
+				} else {
+					m.doSetSuspendToHibernateTime(m.LinePowerHibernateDelay.Get() / 60)
+				}
 				m.doSuspend()
 			}
 		})

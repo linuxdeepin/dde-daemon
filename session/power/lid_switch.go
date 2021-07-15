@@ -80,6 +80,11 @@ func (h *LidSwitchHandler) onLidClosed() {
 	case powerActionShutdown:
 		m.doShutdown()
 	case powerActionSuspend:
+		if m.OnBattery {
+			m.doSetSuspendToHibernateTime(m.BatteryHibernateDelay.Get() / 60)
+		} else {
+			m.doSetSuspendToHibernateTime(m.LinePowerHibernateDelay.Get() / 60)
+		}
 		m.doSuspend()
 	case powerActionHibernate:
 		m.doHibernate()
