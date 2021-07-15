@@ -31,8 +31,9 @@ import (
 
 func TestConfigKeeper_Save(t *testing.T) {
 	type fields struct {
-		file  string
-		Cards map[string]*CardConfig
+		file     string
+		muteFile string
+		Cards    map[string]*CardConfig
 	}
 	tests := []struct {
 		name        string
@@ -43,7 +44,8 @@ func TestConfigKeeper_Save(t *testing.T) {
 		{
 			name: "ConfigKeeper_Save",
 			fields: fields{
-				file: "./testdata/ConfigKeeper_Save",
+				file:     "./testdata/ConfigKeeper_Save",
+				muteFile: "./testdata/ConfigKeeperMute_Save",
 				Cards: map[string]*CardConfig{
 					"one": {
 						Name:  "xxx",
@@ -62,8 +64,9 @@ func TestConfigKeeper_Save(t *testing.T) {
 		{
 			name: "ConfigKeeper_Save empty",
 			fields: fields{
-				file:  "./testdata/ConfigKeeper_Save",
-				Cards: map[string]*CardConfig{},
+				file:     "./testdata/ConfigKeeper_Save",
+				muteFile: "./testdata/ConfigKeeperMute_Save",
+				Cards:    map[string]*CardConfig{},
 			},
 			wantErr:     false,
 			fileContent: "{}",
@@ -72,8 +75,9 @@ func TestConfigKeeper_Save(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ck := &ConfigKeeper{
-				file:  tt.fields.file,
-				Cards: tt.fields.Cards,
+				file:     tt.fields.file,
+				muteFile: tt.fields.muteFile,
+				Cards:    tt.fields.Cards,
 			}
 			err := ck.Save()
 			if tt.wantErr {
