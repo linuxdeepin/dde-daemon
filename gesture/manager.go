@@ -353,7 +353,7 @@ const (
 )
 
 // 获取触摸屏的旋转
-func (m *Manager) getTouchScreenRotation() TouchScreensRotation {
+func (m *Manager) getTouchScreenRotation() (display.Monitor, TouchScreensRotation) {
 	// 读取触屏列表，取第一个触屏（目前触摸手势事件中不包含所属屏幕，因此不支持多个触摸屏）
 	touchScreens, err := m.display.Touchscreens().Get(0)
 	if err != nil {
@@ -389,7 +389,7 @@ func (m *Manager) getTouchScreenRotation() TouchScreensRotation {
 	sessionBus, err := dbus.SessionBus()
 	if err != nil {
 		logger.Warning(err)
-		return Normal
+		return nil, Normal
 	}
 	for _, path := range monitors {
 		monitor, err := display.NewMonitor(sessionBus, path)
@@ -410,13 +410,12 @@ func (m *Manager) getTouchScreenRotation() TouchScreensRotation {
 				logger.Warning(err)
 				break
 			}
-
-			return TouchScreensRotation(rotation)
+			return monitor, TouchScreensRotation(rotation)
 		}
 	}
 
 	// 查找失败，当做没有旋转
-	return Normal
+	return nil, Normal
 }
 
 // struct point represents a point on a touchScreen
@@ -438,17 +437,33 @@ type touchEventContext struct {
 
 // func getTouchScreenRotationContext return a context represents the current touchScreen's rotation, and a func to transform point
 func (m *Manager) getTouchScreenRotationContext() (context *touchEventContext, pointTransformFn func(*point), err error) {
-	rotation := m.getTouchScreenRotation()
-	screenWidth, err := m.display.ScreenWidth().Get(0)
-	if err != nil {
-		logger.Error("get display.ScreenWidth failed:", err)
-		return
+	monitor, rotation := m.getTouchScreenRotation()
+
+	var screenWidth, screenHeight uint16
+	if monitor == nil { // 如果获取失败则当作用户只有一个显示屏, 直接使用 x 的画布大小当作触摸屏大小
+		screenWidth, err = m.display.ScreenWidth().Get(0)
+		if err != nil {
+			logger.Error("get display.ScreenWidth failed:", err)
+			return
+		}
+		screenHeight, err = m.display.ScreenHeight().Get(0)
+		if err != nil {
+			logger.Error("get display.ScreenWidth failed:", err)
+			return
+		}
+	} else {
+		screenWidth, err = monitor.Width().Get(0)
+		if err != nil {
+			logger.Error("get monitor.Width failed:", err)
+			return
+		}
+		screenHeight, err = monitor.Height().Get(0)
+		if err != nil {
+			logger.Error("get monitor.Height failed:", err)
+			return
+		}
 	}
-	screenHeight, err := m.display.ScreenHeight().Get(0)
-	if err != nil {
-		logger.Error("get display.ScreenWidth failed:", err)
-		return
-	}
+
 	pointFn := func(p *point) {}
 	top, bot, left, right := "top", "bot", "left", "right"
 	switch rotation {
