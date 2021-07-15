@@ -530,6 +530,7 @@ func (psp *powerSavePlan) screenBlack() {
 	taskF := newDelayedTask("screenFullBlack", fullBlackTime, func() {
 		psp.stopScreensaver()
 		logger.Info("Screen full black")
+		psp.manager.settings.SetBoolean("wakeupscreen", true)
 		if manager.ScreenBlackLock.Get() {
 			manager.lockWaitShow(5*time.Second, true)
 		}
@@ -548,11 +549,12 @@ func (psp *powerSavePlan) screenBlack() {
 			}
 			manager.setDisplayBrightness(brightnessTable)
 		}
-		manager.setDPMSModeOff()
-		psp.manager.settings.SetBoolean("wakeupscreen", true)
-		err := manager.service.Emit(manager, "ScreenFullBlack")
-		if err != nil {
-			logger.Warning(err)
+		if psp.manager.settings.GetBoolean("wakeupscreen") {
+			manager.setDPMSModeOff()
+			err := manager.service.Emit(manager, "ScreenFullBlack")
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 	})
 	psp.addTask(taskF)
