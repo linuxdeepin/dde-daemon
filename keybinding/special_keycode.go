@@ -32,6 +32,7 @@ const (
 	KEY_POWER           = 116
 	KEY_SLEEP           = 142
 	KEY_SUSPEND         = 205
+	KEY_MICMUTE         = 248
 )
 
 type SpecialKeycodeMapKey struct {
@@ -83,6 +84,10 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// suspend建，松开时触发
 	key = createSpecialKeycodeIndex(KEY_SUSPEND, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handleSleep
+
+	// 开关麦克风
+	key = createSpecialKeycodeIndex(KEY_MICMUTE, true, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleMicMute
 }
 
 // 处理函数的总入口
@@ -167,4 +172,33 @@ func (m *Manager) handlePower() {
 // 待机
 func (m *Manager) handleSleep() {
 	m.systemSuspend()
+}
+
+// 开关麦克风
+func (m *Manager) handleMicMute() {
+	source, err := m.audioController.getDefaultSource()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	mute, err := source.Mute().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	mute = !mute
+	err = source.SetMute(0, mute)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	var osd string
+	if mute {
+		osd = "AudioMicMuteOn"
+	} else {
+		osd = "AudioMicMuteOff"
+	}
+	showOSD(osd)
 }
