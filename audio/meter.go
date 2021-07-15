@@ -69,7 +69,8 @@ func (m *Meter) quit() {
 func (m *Meter) tryQuit() {
 	defer m.quit()
 
-	for range time.After(time.Second * 10) {
+	for {
+		time.Sleep(time.Second * 10)
 		m.PropsMu.Lock()
 		if !m.alive {
 			m.PropsMu.Unlock()
