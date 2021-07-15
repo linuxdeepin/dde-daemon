@@ -186,7 +186,14 @@ func (m *Manager) init() {
 			return
 		}
 
-		err = m.handleTouchEdgeMoveStopLeave(direction, scaleX, scaleY, duration)
+		context, pointFn, err := m.getTouchScreenRotationContext()
+		if err != nil {
+			logger.Error("getTouchScreenRotationContext failed:", err)
+		}
+		p := &point{X: scaleX, Y: scaleY}
+		pointFn(p)
+
+		err = m.handleTouchEdgeMoveStopLeave(context, direction, p, duration)
 		if err != nil {
 			logger.Error("handleTouchEdgeMoveStopLeave failed:", err)
 		}
@@ -204,8 +211,13 @@ func (m *Manager) init() {
 		if !should {
 			return
 		}
-
-		err = m.handleTouchEdgeEvent(direction, scaleX, scaleY)
+		context, pointFn, err := m.getTouchScreenRotationContext()
+		if err != nil {
+			logger.Error("getTouchScreenRotationContext failed:", err)
+		}
+		p := &point{X: scaleX, Y: scaleY}
+		pointFn(p)
+		err = m.handleTouchEdgeEvent(context, direction, p)
 		if err != nil {
 			logger.Error("handleTouchEdgeEvent failed:", err)
 		}
@@ -224,7 +236,17 @@ func (m *Manager) init() {
 			return
 		}
 
-		err = m.handleTouchMovementEvent(direction, fingers, startScaleX, startScaleY, endScaleX, endScaleY)
+		context, pointFn, err := m.getTouchScreenRotationContext()
+		if err != nil {
+			logger.Error("getTouchScreenRotationContext failed:", err)
+		}
+
+		startP := &point{X: startScaleX, Y: startScaleY}
+		endP := &point{X: endScaleX, Y: endScaleY}
+		pointFn(startP)
+		pointFn(endP)
+
+		err = m.handleTouchMovementEvent(context, direction, fingers, startP, endP)
 		if err != nil {
 			logger.Error("handleTouchMovementEvent failed:", err)
 		}
@@ -320,77 +342,18 @@ func (*Manager) GetInterfaceName() string {
 	return dbusServiceIFC
 }
 
-//param @edge: swipe to touchscreen edge
-func (m *Manager) handleTouchEdgeMoveStopLeave(edge string, scaleX float64, scaleY float64, duration int32) error {
-	logger.Debugf("edge:%s scaleX:%f scaleY:%f", edge, scaleX, scaleY)
-	screenHeight, err := m.display.ScreenHeight().Get(0)
-	if err != nil {
-		logger.Error("get display.ScreenHeight failed:", err)
-		return err
-	}
+type TouchScreensRotation uint16
 
-	screenWidth, err := m.display.ScreenWidth().Get(0)
-	if err != nil {
-		logger.Error("get display.ScreenWidth failed:", err)
-		return err
-	}
-
-	rotation := m.getTouchScreenRotation()
-	bot := "bot"
-	scale := scaleY
-	scaleBase := screenHeight
-	switch rotation {
-	case 1:
-		bot = "bot"
-		scale = scaleY
-		scaleBase = screenHeight
-	case 2:
-		bot = "right"
-		scale = 1 - scaleX
-		scaleBase = screenWidth
-	case 4:
-		bot = "top"
-		scale = 1 - scaleY
-		scaleBase = screenHeight
-	case 8:
-		bot = "left"
-		scale = scaleX
-		scaleBase = screenWidth
-	}
-
-	if edge == bot {
-		position, err := m.dock.Position().Get(0)
-		if err != nil {
-			logger.Error("get dock.Position failed:", err)
-			return err
-		}
-
-		if position >= 0 {
-			rect, err := m.dock.FrontendWindowRect().Get(0)
-			if err != nil {
-				logger.Error("get dock.FrontendWindowRect failed:", err)
-				return err
-			}
-
-			var dockPly uint32 = 0
-			if position == positionTop || position == positionBottom {
-				dockPly = rect.Height
-			} else if position == positionRight || position == positionLeft {
-				dockPly = rect.Width
-			}
-
-			if scaleBase > 0 && scale*float64(scaleBase) > float64(dockPly) {
-				logger.Debug("show work space")
-				return m.handleBuiltinAction("ShowWorkspace")
-			}
-		}
-	}
-	return nil
-}
+// counterclockwise
+const (
+	Normal       TouchScreensRotation = 1
+	Rotation_90  TouchScreensRotation = 2
+	Rotation_180 TouchScreensRotation = 4
+	Rotation_270 TouchScreensRotation = 8
+)
 
 // 获取触摸屏的旋转
-// 1:0  2:90  4:180  8:270
-func (m *Manager) getTouchScreenRotation() uint16 {
+func (m *Manager) getTouchScreenRotation() TouchScreensRotation {
 	// 读取触屏列表，取第一个触屏（目前触摸手势事件中不包含所属屏幕，因此不支持多个触摸屏）
 	touchScreens, err := m.display.Touchscreens().Get(0)
 	if err != nil {
@@ -426,7 +389,7 @@ func (m *Manager) getTouchScreenRotation() uint16 {
 	sessionBus, err := dbus.SessionBus()
 	if err != nil {
 		logger.Warning(err)
-		return 1
+		return Normal
 	}
 	for _, path := range monitors {
 		monitor, err := display.NewMonitor(sessionBus, path)
@@ -448,89 +411,143 @@ func (m *Manager) getTouchScreenRotation() uint16 {
 				break
 			}
 
-			return rotation
+			return TouchScreensRotation(rotation)
 		}
 	}
 
 	// 查找失败，当做没有旋转
-	return 1
+	return Normal
 }
 
-func (m *Manager) handleTouchEdgeEvent(edge string, scaleX float64, scaleY float64) error {
+// struct point represents a point on a touchScreen
+// X is a float64 in [0,1], which is the horizontal index
+// Y is a float64 in [0,1], which is the vertical index
+// left-top corner represents in struct point is{X:0,Y:0}
+type point struct {
+	X float64
+	Y float64
+}
+
+// struct touchEventContext is a struct try to handle the context of touchScreen Gesture after rotation
+// for example after Rotation_90 context.top is "left", and context.screenHeight is always the vertical height of screen
+// see func getTouchScreenRotationContext for details
+type touchEventContext struct {
+	top, bot, left, right     string
+	screenWidth, screenHeight uint16
+}
+
+// func getTouchScreenRotationContext return a context represents the current touchScreen's rotation, and a func to transform point
+func (m *Manager) getTouchScreenRotationContext() (context *touchEventContext, pointTransformFn func(*point), err error) {
+	rotation := m.getTouchScreenRotation()
 	screenWidth, err := m.display.ScreenWidth().Get(0)
 	if err != nil {
 		logger.Error("get display.ScreenWidth failed:", err)
-		return err
+		return
 	}
-
 	screenHeight, err := m.display.ScreenHeight().Get(0)
 	if err != nil {
 		logger.Error("get display.ScreenWidth failed:", err)
-		return err
+		return
 	}
-
-	var scale float64
-	var scaleBase uint16
-	var left string
-	var right string
-	rotation := m.getTouchScreenRotation()
+	pointFn := func(p *point) {}
+	top, bot, left, right := "top", "bot", "left", "right"
 	switch rotation {
-	case 1:
-		scale = scaleX
-		scaleBase = screenWidth
-		left = "left"
-		right = "right"
-	case 2: // 逆时针90度
-		scale = 1 - scaleY
-		scaleBase = screenHeight
-		left = "bot"
-		right = "top"
-	case 4: // 倒置
-		scale = 1 - scaleX
-		scaleBase = screenWidth
-		left = "right"
-		right = "left"
-	case 8: // 顺时针90度
-		scale = scaleY
-		scaleBase = screenHeight
-		left = "top"
-		right = "bot"
-	}
-
-	logger.Debugf("rotation:%d scale:%f base:%d left:%s right:%s",
-		rotation, scale, scaleBase, left, right)
-
-	switch edge {
-	case left:
-		if scale*float64(scaleBase) > 100 {
-			return m.clipboard.Show(0)
+	case Rotation_90:
+		top, bot, left, right = "left", "right", "bot", "top"
+		screenHeight, screenWidth = screenWidth, screenHeight
+		pointFn = func(p *point) {
+			p.X, p.Y = 1-p.Y, p.X
 		}
-	case right:
-		if (1-scale)*float64(scaleBase) > 100 {
-			return m.notification.Show(0)
+	case Rotation_180:
+		top, bot, left, right = "bot", "top", "right", "left"
+		pointFn = func(p *point) {
+			p.X, p.Y = 1-p.X, 1-p.Y
+		}
+	case Rotation_270:
+		top, bot, left, right = "right", "left", "top", "bot"
+		screenHeight, screenWidth = screenWidth, screenHeight
+		pointFn = func(p *point) {
+			p.X, p.Y = p.Y, 1-p.X
 		}
 	}
+	context = &touchEventContext{
+		screenWidth:  screenWidth,
+		screenHeight: screenHeight,
+		top:          top,
+		bot:          bot,
+		left:         left,
+		right:        right,
+	}
+	pointTransformFn = pointFn
+	return
+}
 
+//param @edge: swipe to touchscreen edge
+func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge string, p *point, duration int32) error {
+	logger.Debugf("handleTouchEdgeMoveStopLeave: context:%+v edge:%s p: %+v", *context, edge, *p)
+
+	if edge == context.bot {
+		position, err := m.dock.Position().Get(0)
+		if err != nil {
+			logger.Error("get dock.Position failed:", err)
+			return err
+		}
+
+		if position >= 0 {
+			rect, err := m.dock.FrontendWindowRect().Get(0)
+			if err != nil {
+				logger.Error("get dock.FrontendWindowRect failed:", err)
+				return err
+			}
+
+			var dockPly uint32 = 0
+			if position == positionTop || position == positionBottom {
+				dockPly = rect.Height
+			} else if position == positionRight || position == positionLeft {
+				dockPly = rect.Width
+			}
+
+			if p.Y > 0 && p.Y*float64(context.screenHeight) > float64(dockPly) {
+				logger.Debug("show work space")
+				return m.handleBuiltinAction("ShowWorkspace")
+			}
+		}
+	}
 	return nil
 }
 
-func (m *Manager) handleTouchMovementEvent(direction string, fingers int32, startScaleX float64, startScaleY float64, endScaleX float64, endScaleY float64) error {
-	// left-up (0,0), right-down (1,1)
+func (m *Manager) handleTouchEdgeEvent(context *touchEventContext, edge string, p *point) error {
+	logger.Debugf("handleTouchEdgeEvent: context:%+v edge:%s p:%+v", *context, edge, *p)
+	switch edge {
+	case context.left:
+		if p.X*float64(context.screenHeight) > 100 {
+			return m.clipboard.Show(0)
+		}
+	case context.right:
+		if (1-p.X)*float64(context.screenWidth) > 100 {
+			return m.notification.Show(0)
+		}
+	}
+	return nil
+}
+
+func (m *Manager) handleTouchMovementEvent(context *touchEventContext, direction string, fingers int32, startP *point, endP *point) error {
+	logger.Debugf("handleTouchMovementEvent: context:%+v direction:%s startP:%+v endP:%+v", *context, direction, *startP, *endP)
 
 	if fingers == 1 {
 		// sensitivity check
 		// TODO maybe write a function for this
 		sensitivityThreshold := 0.05
 
-		if math.Abs(startScaleX-endScaleX) < sensitivityThreshold {
+		if math.Abs(startP.X-endP.X) < sensitivityThreshold {
 			logger.Debug("sensitivity check fail, gesture will not be triggered")
 			return nil
 		}
 
 		switch direction {
-		case "left":
+		case context.left:
 			return m.clipboard.Hide(0)
-		case "right":
+		case context.right:
 			return m.notification.Hide(0)
 		}
 	}
