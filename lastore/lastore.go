@@ -1,6 +1,7 @@
 package lastore
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -15,6 +16,7 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/gettext"
+	"pkg.deepin.io/dde/api/powersupply/battery"
 )
 
 type Lastore struct {
@@ -424,7 +426,13 @@ func (l *Lastore) checkBattery() {
 		return
 	}
 	hasBattery, _ := l.power.HasBattery().Get(0)
-	onBattery, _ := l.power.OnBattery().Get(0)
+	var onBattery bool
+	if os.Getenv("XDG_CURRENT_DESKTOP") == "Deepin-tablet" {
+		batteryStatus, _ := l.power.BatteryStatus().Get(0)
+		onBattery = batteryStatus != uint32(battery.StatusCharging) && batteryStatus != uint32(battery.StatusFullCharging)
+	} else {
+		onBattery, _ = l.power.OnBattery().Get(0)
+	}
 	percent, _ := l.power.BatteryPercentage().Get(0)
 	if hasBattery && onBattery && percent <= MinBatteryPercent {
 		l.notifiedBattery = true

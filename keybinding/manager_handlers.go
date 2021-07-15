@@ -28,6 +28,7 @@ import (
 	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	"pkg.deepin.io/dde/api/powersupply/battery"
 )
 
 const (
@@ -200,9 +201,19 @@ func (m *Manager) initHandlers() {
 
 		systemBus, _ := dbus.SystemBus()
 		systemPower := power.NewPower(systemBus)
-		onBattery, err := systemPower.OnBattery().Get(0)
-		if err != nil {
-			logger.Error(err)
+		var onBattery bool
+		if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+			batteryStatus, err := systemPower.BatteryStatus().Get(0)
+			if err != nil {
+				logger.Error(err)
+			}
+			onBattery = batteryStatus != uint32(battery.StatusCharging) && batteryStatus != uint32(battery.StatusFullCharging)
+		} else {
+			isOnBattery, err := systemPower.OnBattery().Get(0)
+			if err != nil {
+				logger.Error(err)
+			}
+			onBattery = isOnBattery
 		}
 
 		screenBlackLock := m.gsPower.GetBoolean("screen-black-lock")

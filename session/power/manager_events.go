@@ -26,6 +26,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	"pkg.deepin.io/dde/api/soundutils"
 	. "pkg.deepin.io/lib/gettext"
+	"pkg.deepin.io/dde/api/powersupply/battery"
 )
 
 // nolint
@@ -68,15 +69,11 @@ func (m *Manager) shouldIgnoreIdleOff() bool {
 // 处理有线电源插入拔出事件
 func (m *Manager) initOnBatteryChangedHandler() {
 	power := m.helper.Power
-	err := power.OnBattery().ConnectChanged(func(hasValue bool, onBattery bool) {
-		if !hasValue {
-			return
-		}
+	handleConnectChanged := func(onBattery bool) {
 		logger.Debug("property OnBattery changed to", onBattery)
 		m.PropsMu.Lock()
 		changed := m.setPropOnBattery(onBattery)
 		m.PropsMu.Unlock()
-
 		if changed {
 			if onBattery {
 				playSound(soundutils.EventPowerUnplug)
@@ -84,7 +81,24 @@ func (m *Manager) initOnBatteryChangedHandler() {
 				playSound(soundutils.EventPowerPlug)
 			}
 		}
-	})
+	}
+	var err error
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		err = power.BatteryStatus().ConnectChanged(func(hasValue bool, batteryStatus uint32) {
+			if !hasValue {
+				return
+			}
+			onBattery := batteryStatus != uint32(battery.StatusCharging) && batteryStatus != uint32(battery.StatusFullCharging)
+			handleConnectChanged(onBattery)
+		})
+	} else {
+		err = power.OnBattery().ConnectChanged(func(hasValue bool, onBattery bool) {
+			if !hasValue {
+				return
+			}
+			handleConnectChanged(onBattery)
+		})
+	}
 
 	if err != nil {
 		logger.Warning(err)
@@ -214,10 +228,22 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 			if count == 3 {
 				// after 3 seconds, lock and then show dde low power
 				go func() {
-					if m.SleepLock.Get() {
-						m.lockWaitShow(5*time.Second, false)
+					if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+						if m.SleepLock.Get() {
+							m.lockWaitShow(time.Second, false)
+						}
+						batteryStatus, _ := m.systemPower.BatteryStatus().Get(0)
+						if  batteryStatus != uint32(battery.StatusCharging) && batteryStatus != uint32(battery.StatusFullCharging) {							
+							doShowDDELowPower()
+						} else {
+							m.disableWarnLevelCountTicker()
+						}
+					} else {
+						if m.SleepLock.Get() {
+							m.lockWaitShow(5*time.Second, false)
+						}
+						doShowDDELowPower()
 					}
-					doShowDDELowPower()
 				}()
 			} else if count == 5 {
 				// after 5 seconds, force suspend
@@ -225,10 +251,15 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 					m.disableWarnLevelCountTicker()
 					m.doSuspend()
 				}
-			} else if count == 15 {
-				// In pad environment, after 15 seconds, force shutdown
+			} else if count == 10 {
+				// In pad environment, after 10 seconds, force shutdown
 				if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
-					m.doShutdown()
+					batteryStatus, _ := m.systemPower.BatteryStatus().Get(0)
+					if batteryStatus != uint32(battery.StatusCharging) && batteryStatus != uint32(battery.StatusFullCharging) {
+						m.doShutdown()
+					} else {
+						m.disableWarnLevelCountTicker()
+					}
 				}
 			}
 		})
@@ -251,6 +282,9 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 	case WarnLevelNone:
 		logger.Debug("Power sufficient")
 		doCloseDDELowPower()
+		if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+			m.settings.SetBoolean("low-power-ui-show", false)
+		}
 		// 由 低电量 到 电量充足，必然需要有线电源插入
 	}
 }

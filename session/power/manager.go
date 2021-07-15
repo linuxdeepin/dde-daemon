@@ -31,6 +31,7 @@ import (
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
+	"pkg.deepin.io/dde/api/powersupply/battery"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
@@ -210,7 +211,15 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		logger.Warning(err)
 	}
 
-	m.OnBattery, err = power.OnBattery().Get(0)
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		batteryStatus, err := power.BatteryStatus().Get(0)
+		m.OnBattery = (batteryStatus != uint32(battery.StatusCharging) && batteryStatus != uint32(battery.StatusFullCharging))
+		if err != nil {
+			logger.Warning(err)
+		}
+	} else {
+		m.OnBattery, err = power.OnBattery().Get(0)
+	}
 	if err != nil {
 		logger.Warning(err)
 	}

@@ -154,9 +154,16 @@ func (psp *powerSavePlan) Start() error {
 	display := helper.Display
 	screenSaver := helper.ScreenSaver
 	//OnBattery changed will effect current PowerSavePlan
-	err := power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
-		psp.Reset()
-	})
+	var err error
+	if os.Getenv("XDG_CURRENT_DESKTOP") == padEnv {
+		err = power.BatteryStatus().ConnectChanged(func(hasValue bool, batteryStatus uint32) {
+			psp.Reset()
+		})
+	} else {
+		err = power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
+			psp.Reset()
+		})
+	}
 	if err != nil {
 		logger.Warning("failed to connectChanged OnBattery:", err)
 	}
