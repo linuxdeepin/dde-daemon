@@ -84,10 +84,16 @@ func (m *Manager) SetNTP(sender dbus.Sender, enabled bool, message string) *dbus
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
+
 	if currentNTPEnabled == enabled {
 		return nil
 	}
+
 	err = m.core.SetNTP(0, enabled, false)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
 	// 关闭NTP时删除clock文件，使systemd以RTC时间为准
 	if !enabled {
 		err := os.Remove("/var/lib/systemd/timesync/clock")
