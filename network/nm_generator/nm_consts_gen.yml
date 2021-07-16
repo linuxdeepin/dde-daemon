@@ -2290,6 +2290,16 @@ NMEnums:
       Value: 25
     - Name: NM_DEVICE_TYPE_OVS_BRIDGE
       Value: 26
+    - Name: NM_DEVICE_TYPE_WPAN
+      Value: 27
+    - Name: NM_DEVICE_TYPE_6LOWPAN
+      Value: 28
+    - Name: NM_DEVICE_TYPE_WIREGUARD
+      Value: 29
+    - Name: NM_DEVICE_TYPE_WIFI_P2P
+      Value: 30
+    - Name: NM_DEVICE_TYPE_VRF
+      Value: 31
   - EnumClass: IPTunnelMode
     Members:
     - Name: NM_IP_TUNNEL_MODE_UNKNOWN
