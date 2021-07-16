@@ -43,6 +43,7 @@ const (
 	deviceGeneric    = "generic"
 	deviceTeam       = "team"
 	deviceTun        = "tun"
+	deviceWifiP2p    = "wifip2p"
 )
 
 func getCustomDeviceType(devType uint32) (customDevType string) {
@@ -79,6 +80,8 @@ func getCustomDeviceType(devType uint32) (customDevType string) {
 		return deviceTeam
 	case nm.NM_DEVICE_TYPE_TUN:
 		return deviceTun
+	case nm.NM_DEVICE_TYPE_WIFI_P2P:
+		return deviceWifiP2p
 	case nm.NM_DEVICE_TYPE_UNKNOWN:
 	default:
 		logger.Error("unknown device type", devType)
