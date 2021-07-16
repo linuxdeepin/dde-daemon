@@ -40,9 +40,9 @@ import (
 // nolint
 const (
 	suspendStateUnknown = iota + 1
+	suspendStateLidOpen
 	suspendStateFinish
 	suspendStateWakeup
-	suspendStateLidOpen
 	suspendStatePrepare
 	suspendStateLidClose
 	suspendStateButtonClick
