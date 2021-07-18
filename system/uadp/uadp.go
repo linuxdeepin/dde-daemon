@@ -99,10 +99,13 @@ func (u *Uadp) setDataKey(exePath, keyName, dataKey, keyringKey string, uid uint
 		return err
 	}
 	u.secretMu.Lock()
+	if u.appDataMap[uid] == nil {
+		u.appDataMap[uid] = make(map[string]map[string][]byte)
+	}
 	if u.appDataMap[uid][exePath] == nil {
 		u.appDataMap[uid][exePath] = make(map[string][]byte)
 	}
-	u.appDataMap[uid][exePath][keyName+string(uid)] = encryptedKey
+	u.appDataMap[uid][exePath][keyName] = encryptedKey
 	u.secretMu.Unlock()
 
 	err = u.updateDataFile(exePath, uid)
@@ -215,13 +218,17 @@ func pkcs7UnPadding(originData []byte) []byte {
 }
 
 func (u *Uadp) findKeyFromCacheOrFile(exePath, keyName string, uid uint32) []byte {
+	if _, ok := u.appDataMap[uid]; !ok {
+		return nil
+	}
+
 	if secretData, ok := u.appDataMap[uid][exePath]; ok {
 		if value, ok := secretData[keyName]; ok {
 			return value
 		}
 	}
 
-	secretData, err := u.loadDataFromFile(exePath)
+	secretData, err := u.loadDataFromFile(exePath, uid)
 	if err != nil {
 		logger.Warning("failed to loadDataFromFile:", err)
 		return nil
@@ -235,8 +242,8 @@ func (u *Uadp) findKeyFromCacheOrFile(exePath, keyName string, uid uint32) []byt
 	return u.appDataMap[uid][exePath][keyName]
 }
 
-func (u *Uadp) loadDataFromFile(exePath string) (map[string][]byte, error) {
-	fileName, err := u.getFileName(exePath)
+func (u *Uadp) loadDataFromFile(exePath string, uid uint32) (map[string][]byte, error) {
+	fileName, err := u.getFileName(exePath, uid)
 	if err != nil {
 		logger.Warning("failed to get filename:", err)
 		return nil, err
@@ -258,7 +265,7 @@ func (u *Uadp) loadDataFromFile(exePath string) (map[string][]byte, error) {
 
 func (u *Uadp) updateDataFile(exePath string, uid uint32) error {
 	secretData := u.appDataMap[uid][exePath]
-	fileName, err := u.getFileName(exePath)
+	fileName, err := u.getFileName(exePath, uid)
 	if err != nil {
 		logger.Warning("failed to get filename:", err)
 		return err
@@ -284,8 +291,10 @@ func (u *Uadp) updateDataFile(exePath string, uid uint32) error {
 	return nil
 }
 
-func (u *Uadp) getFileName(exePath string) (string, error) {
-	err := os.MkdirAll(UadpDataDir, 0755)
+func (u *Uadp) getFileName(exePath string, uid uint32) (string, error) {
+	userDir := filepath.Join(UadpDataDir, fmt.Sprint(uid))
+
+	err := os.MkdirAll(userDir, 0755)
 	if err != nil {
 		logger.Warning(err)
 		return "", err
@@ -296,7 +305,7 @@ func (u *Uadp) getFileName(exePath string) (string, error) {
 	var fileNames map[string]string
 
 	if fileName == "" {
-		fileMap := filepath.Join(UadpDataDir, "filemap")
+		fileMap := filepath.Join(userDir, "filemap")
 		content, err := ioutil.ReadFile(fileMap)
 		if err == nil {
 			err = json.Unmarshal(content, &fileNames)
@@ -329,7 +338,7 @@ func (u *Uadp) getFileName(exePath string) (string, error) {
 		}
 	}
 
-	file := filepath.Join(UadpDataDir, fileName)
+	file := filepath.Join(userDir, fileName)
 	return file, nil
 }
 
