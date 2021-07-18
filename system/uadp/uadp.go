@@ -44,8 +44,8 @@ func (*Uadp) GetInterfaceName() string {
 
 type Uadp struct {
 	service    *dbusutil.Service
-	appDataMap map[string]map[string][]byte // 应用加密数据缓存
-	fileNames  map[string]string            // 文件索引缓存
+	appDataMap map[uint32]map[string]map[string][]byte // 应用加密数据缓存
+	fileNames  map[string]string                       // 文件索引缓存
 
 	secretMu sync.Mutex
 	mu       sync.Mutex
@@ -54,7 +54,7 @@ type Uadp struct {
 func newUadp(service *dbusutil.Service) (*Uadp, error) {
 	u := &Uadp{
 		service:    service,
-		appDataMap: make(map[string]map[string][]byte),
+		appDataMap: make(map[uint32]map[string]map[string][]byte),
 		fileNames:  make(map[string]string),
 	}
 	return u, nil
@@ -99,13 +99,13 @@ func (u *Uadp) setDataKey(exePath, keyName, dataKey, keyringKey string, uid uint
 		return err
 	}
 	u.secretMu.Lock()
-	if u.appDataMap[exePath] == nil {
-		u.appDataMap[exePath] = make(map[string][]byte)
+	if u.appDataMap[uid][exePath] == nil {
+		u.appDataMap[uid][exePath] = make(map[string][]byte)
 	}
-	u.appDataMap[exePath][keyName+string(uid)] = encryptedKey
+	u.appDataMap[uid][exePath][keyName+string(uid)] = encryptedKey
 	u.secretMu.Unlock()
 
-	err = u.updateDataFile(exePath)
+	err = u.updateDataFile(exePath, uid)
 	if err != nil {
 		logger.Warning("failed to updateDataFile:", err)
 		return err
@@ -173,7 +173,7 @@ func (u *Uadp) GetDataKey(sender dbus.Sender, exePath, keyName, keyringKey strin
 }
 
 func (u *Uadp) getDataKey(exePath, keyName, keyringKey string, uid uint32) (string, error) {
-	encryptedKey := u.findKeyFromCacheOrFile(exePath, keyName+string(uid))
+	encryptedKey := u.findKeyFromCacheOrFile(exePath, keyName, uid)
 	if encryptedKey == nil {
 		return "", errors.New("failed to find data used to be decrypted")
 	}
@@ -214,8 +214,8 @@ func pkcs7UnPadding(originData []byte) []byte {
 	return originData[:(length - unpadding)]
 }
 
-func (u *Uadp) findKeyFromCacheOrFile(exePath, keyName string) []byte {
-	if secretData, ok := u.appDataMap[exePath]; ok {
+func (u *Uadp) findKeyFromCacheOrFile(exePath, keyName string, uid uint32) []byte {
+	if secretData, ok := u.appDataMap[uid][exePath]; ok {
 		if value, ok := secretData[keyName]; ok {
 			return value
 		}
@@ -230,9 +230,9 @@ func (u *Uadp) findKeyFromCacheOrFile(exePath, keyName string) []byte {
 	u.secretMu.Lock()
 	defer u.secretMu.Unlock()
 
-	u.appDataMap[exePath] = secretData
+	u.appDataMap[uid][exePath] = secretData
 
-	return u.appDataMap[exePath][keyName]
+	return u.appDataMap[uid][exePath][keyName]
 }
 
 func (u *Uadp) loadDataFromFile(exePath string) (map[string][]byte, error) {
@@ -256,8 +256,8 @@ func (u *Uadp) loadDataFromFile(exePath string) (map[string][]byte, error) {
 	return secretData, nil
 }
 
-func (u *Uadp) updateDataFile(exePath string) error {
-	secretData := u.appDataMap[exePath]
+func (u *Uadp) updateDataFile(exePath string, uid uint32) error {
+	secretData := u.appDataMap[uid][exePath]
 	fileName, err := u.getFileName(exePath)
 	if err != nil {
 		logger.Warning("failed to get filename:", err)
