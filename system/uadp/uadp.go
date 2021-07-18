@@ -218,9 +218,19 @@ func pkcs7UnPadding(originData []byte) []byte {
 }
 
 func (u *Uadp) findKeyFromCacheOrFile(exePath, keyName string, uid uint32) []byte {
+	u.secretMu.Lock()
 	if _, ok := u.appDataMap[uid]; !ok {
-		return nil
+		u.appDataMap[uid] = make(map[string]map[string][]byte)
+		secretData, err := u.loadDataFromFile(exePath, uid)
+		if err != nil {
+			logger.Warning("failed to loadDataFromFile:", err)
+			u.secretMu.Unlock()
+			return nil
+		}
+
+		u.appDataMap[uid][exePath] = secretData
 	}
+	u.secretMu.Unlock()
 
 	if secretData, ok := u.appDataMap[uid][exePath]; ok {
 		if value, ok := secretData[keyName]; ok {
@@ -228,18 +238,7 @@ func (u *Uadp) findKeyFromCacheOrFile(exePath, keyName string, uid uint32) []byt
 		}
 	}
 
-	secretData, err := u.loadDataFromFile(exePath, uid)
-	if err != nil {
-		logger.Warning("failed to loadDataFromFile:", err)
-		return nil
-	}
-
-	u.secretMu.Lock()
-	defer u.secretMu.Unlock()
-
-	u.appDataMap[uid][exePath] = secretData
-
-	return u.appDataMap[uid][exePath][keyName]
+	return nil
 }
 
 func (u *Uadp) loadDataFromFile(exePath string, uid uint32) (map[string][]byte, error) {
