@@ -46,7 +46,7 @@ func (m *Manager) setPrepareSuspend(v int) {
 
 func (m *Manager) shouldIgnoreIdleOn() bool {
 	m.prepareSuspendLocker.Lock()
-	v := (m.prepareSuspend > suspendStateFinish)
+	v := (m.prepareSuspend >= suspendStateFinish)
 	m.prepareSuspendLocker.Unlock()
 	return v
 }
