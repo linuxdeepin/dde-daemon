@@ -140,7 +140,8 @@ type Manager struct {
 
 	// nolint
 	methods *struct {
-		SetPrepareSuspend func() `in:"suspendState"`
+		SetPrepareSuspend     func() `in:"suspendState"`
+		CanSuspendToHibernate func() `out:"can"`
 	}
 }
 
@@ -423,13 +424,13 @@ func (m *Manager) SetPrepareSuspend(v int) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) CanSuspendToHibernate() bool {
+func (m *Manager) CanSuspendToHibernate() (bool, *dbus.Error) {
 	powerManager := m.helper.PowerManager
 	can, err := powerManager.CanSuspendToHibernate(0)
 	if err != nil {
 		logger.Warning(err)
-		return false
+		return false, dbusutil.ToError(err)
 	}
 
-	return can
+	return can, nil
 }
