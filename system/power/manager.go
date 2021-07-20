@@ -74,6 +74,9 @@ type Manager struct {
 	// 初始化是否完成
 	initDone bool
 
+	// 是否是平板环境
+	isPadEnv bool
+
 	// CPU操作接口
 	cpus *CpuHandlers
 
@@ -178,10 +181,28 @@ func (ac *AC) newDevice() *gudev.Device {
 	return ac.gudevClient.QueryBySysfsPath(ac.sysfsPath)
 }
 
+func pathExists(path string) (bool, error) {
+    _, err := os.Stat(path)
+    if err == nil {
+        return true, nil
+    }
+    if os.IsNotExist(err) {
+        return false, nil
+    }
+    return false, err
+}
+
 func (m *Manager) refreshAC(ac *gudev.Device) { // 拔插电源时候触发
-	online := ac.GetPropertyAsBoolean("POWER_SUPPLY_ONLINE")
-	logger.Debug("ac online:", online)
-	onBattery := !online
+	var onBattery bool
+	if m.isPadEnv {
+		statusBefore := m.BatteryStatus != battery.StatusCharging && m.BatteryStatus != battery.StatusFullCharging
+		// 状态改变之前执行，所以要取反
+		onBattery = !statusBefore
+	} else {
+		online := ac.GetPropertyAsBoolean("POWER_SUPPLY_ONLINE")
+		logger.Debug("ac online:", online)
+		onBattery = !online
+	}
 
 	m.PropsMu.Lock()
 	m.setPropOnBattery(onBattery)
@@ -225,6 +246,8 @@ func (m *Manager) init() error {
 
 	m.initLidSwitch()
 	devices := powersupply.GetDevices(m.gudevClient)
+
+	m.isPadEnv, _ = pathExists("/usr/share/xsessions/deepin-tablet.desktop")
 
 	cfg := loadConfigSafe()
 	// 将config.json中的配置完成初始化

@@ -99,6 +99,9 @@ func (m *Manager) refreshBatteryDisplay() {
 	m.changeBatteryLowByBatteryPercentage(percentage)
 	// report
 	m.PropsMu.Lock()
+	if m.isPadEnv {
+		m.setPropOnBattery(status != battery.StatusCharging && status != battery.StatusFullCharging)
+	}
 	m.setPropHasBattery(true)
 	m.setPropBatteryPercentage(percentage)
 	m.setPropBatteryStatus(status)

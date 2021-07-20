@@ -212,26 +212,34 @@ func (m *Manager) updatePowerSavingMode() { // 根据用户设置以及当前状
 	var enable bool
 	var lmtCfgChanged bool
 	var err error
-	if m.PowerSavingModeAuto && m.PowerSavingModeAutoWhenBatteryLow {
-		if m.OnBattery || m.batteryLow {
-			enable = true
-		} else {
-			enable = false
-		}
-	} else if m.PowerSavingModeAuto && !m.PowerSavingModeAutoWhenBatteryLow {
-		if m.OnBattery {
-			enable = true
-		} else {
-			enable = false
-		}
-	} else if !m.PowerSavingModeAuto && m.PowerSavingModeAutoWhenBatteryLow {
-		if m.batteryLow {
+	if m.isPadEnv {
+		if m.batteryLow && m.OnBattery {
 			enable = true
 		} else {
 			enable = false
 		}
 	} else {
-		return // 未开启两个自动节能开关
+		if m.PowerSavingModeAuto && m.PowerSavingModeAutoWhenBatteryLow {
+			if m.OnBattery || m.batteryLow {
+				enable = true
+			} else {
+				enable = false
+			}
+		} else if m.PowerSavingModeAuto && !m.PowerSavingModeAutoWhenBatteryLow {
+			if m.OnBattery {
+				enable = true
+			} else {
+				enable = false
+			}
+		} else if !m.PowerSavingModeAuto && m.PowerSavingModeAutoWhenBatteryLow {
+			if m.batteryLow {
+				enable = true
+			} else {
+				enable = false
+			}
+		} else {
+			return // 未开启两个自动节能开关
+		}
 	}
 
 	if enable {
