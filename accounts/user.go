@@ -423,7 +423,7 @@ func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*Use
 	u.setLocale(getDefaultLocale())
 	u.Layout = getDefaultLayout()
 	u.IconFile = defaultUserIcon
-	u.customIcon = u.IconFile
+	u.customIcon = ""
 	u.IconList = u.getAllIcons()
 	u.DesktopBackgrounds = []string{getDefaultUserBackground()}
 	u.GreeterBackground = getDefaultUserBackground()
