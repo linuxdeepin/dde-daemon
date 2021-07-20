@@ -14,7 +14,7 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus"
-	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
+	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/log"
 	"pkg.deepin.io/lib/procfs"
@@ -33,9 +33,7 @@ const (
 const (
 	allowedProcess = "/usr/lib/deepin-daemon/dde-session-daemon"
 
-	polkitActionUadp = "com.deepin.daemon.uadp.call"
-
-	UadpDataDir = "/var/lib/dde-daemon/uadp"
+	UadpDataDir = ".local/share/uadp"
 )
 
 func (*Uadp) GetInterfaceName() string {
@@ -44,8 +42,9 @@ func (*Uadp) GetInterfaceName() string {
 
 type Uadp struct {
 	service    *dbusutil.Service
-	appDataMap map[string]map[string][]byte // 应用加密数据缓存
-	fileNames  map[string]string            // 文件索引缓存
+	account    accounts.Accounts
+	appDataMap map[uint32]map[string]map[string][]byte // 应用加密数据缓存
+	fileNames  map[uint32]map[string]string            // 文件索引缓存
 
 	secretMu sync.Mutex
 	mu       sync.Mutex
@@ -54,8 +53,9 @@ type Uadp struct {
 func newUadp(service *dbusutil.Service) (*Uadp, error) {
 	u := &Uadp{
 		service:    service,
-		appDataMap: make(map[string]map[string][]byte),
-		fileNames:  make(map[string]string),
+		account:    accounts.NewAccounts(service.Conn()),
+		appDataMap: make(map[uint32]map[string]map[string][]byte),
+		fileNames:  make(map[uint32]map[string]string),
 	}
 	return u, nil
 }
@@ -67,24 +67,13 @@ func (u *Uadp) SetDataKey(sender dbus.Sender, exePath, keyName, dataKey, keyring
 		logger.Warning("failed to verify:", err)
 		return dbusutil.ToError(err)
 	}
-
-	// 通过polkit，防止远程访问
-	pass, err := u.checkAuth(string(sender), polkitActionUadp)
-	if err != nil {
-		logger.Warning("failed to pass authentication:", err)
-		return dbusutil.ToError(err)
-	}
-
-	if !pass {
-		return dbusutil.ToError(errors.New("not be authorized"))
-	}
+	logger.Debug("invoker has been verified")
 	uid, err := u.service.GetConnUID(string(sender))
 	if err != nil {
 		logger.Warning("failed to get uid:", err)
 		return dbusutil.ToError(err)
 	}
-
-	err = u.setDataKey(exePath, keyName, dataKey, keyringKey, uid)
+	err = u.setDataKey(uid, exePath, keyName, dataKey, keyringKey)
 	if err != nil {
 		logger.Warning("failed to encrypt key:", err)
 		return dbusutil.ToError(err)
@@ -92,20 +81,25 @@ func (u *Uadp) SetDataKey(sender dbus.Sender, exePath, keyName, dataKey, keyring
 	return nil
 }
 
-func (u *Uadp) setDataKey(exePath, keyName, dataKey, keyringKey string, uid uint32) error {
+func (u *Uadp) setDataKey(uid uint32, exePath, keyName, dataKey, keyringKey string) error {
 	encryptedKey, err := aesEncryptKey(dataKey, keyringKey)
 	if err != nil {
 		logger.Warning("failed to encryptKey by aes:", err)
 		return err
 	}
 	u.secretMu.Lock()
-	if u.appDataMap[exePath] == nil {
-		u.appDataMap[exePath] = make(map[string][]byte)
+	if u.appDataMap[uid] == nil {
+		u.appDataMap[uid] = make(map[string]map[string][]byte)
 	}
-	u.appDataMap[exePath][keyName+string(uid)] = encryptedKey
-	u.secretMu.Unlock()
+	if u.appDataMap[uid][exePath] == nil {
+		u.appDataMap[uid][exePath] = make(map[string][]byte)
+	}
 
-	err = u.updateDataFile(exePath)
+	u.appDataMap[uid][exePath][keyName] = encryptedKey
+	u.secretMu.Unlock()
+	logger.Debug("get secret map:", u.appDataMap)
+
+	err = u.updateDataFile(uid, exePath)
 	if err != nil {
 		logger.Warning("failed to updateDataFile:", err)
 		return err
@@ -148,23 +142,13 @@ func (u *Uadp) GetDataKey(sender dbus.Sender, exePath, keyName, keyringKey strin
 		return "", dbusutil.ToError(err)
 	}
 
-	// 通过polkit授权防止被远程访问
-	pass, err := u.checkAuth(string(sender), polkitActionUadp)
-	if err != nil {
-		logger.Warning("failed to pass authentication:", err)
-		return "", dbusutil.ToError(err)
-	}
-
-	if !pass {
-		return "", dbusutil.ToError(errors.New("not authorized"))
-	}
-
 	uid, err := u.service.GetConnUID(string(sender))
 	if err != nil {
 		logger.Warning("failed to get uid:", err)
 		return "", dbusutil.ToError(err)
 	}
-	dataKey, err = u.getDataKey(exePath, keyName, keyringKey, uid)
+
+	dataKey, err = u.getDataKey(uid, exePath, keyName, keyringKey)
 	if err != nil {
 		logger.Warning("failed to decrypt Key:", err)
 		return "", dbusutil.ToError(err)
@@ -172,8 +156,8 @@ func (u *Uadp) GetDataKey(sender dbus.Sender, exePath, keyName, keyringKey strin
 	return dataKey, nil
 }
 
-func (u *Uadp) getDataKey(exePath, keyName, keyringKey string, uid uint32) (string, error) {
-	encryptedKey := u.findKeyFromCacheOrFile(exePath, keyName+string(uid))
+func (u *Uadp) getDataKey(uid uint32, exePath, keyName, keyringKey string) (string, error) {
+	encryptedKey := u.findKeyFromCacheOrFile(uid, exePath, keyName)
 	if encryptedKey == nil {
 		return "", errors.New("failed to find data used to be decrypted")
 	}
@@ -214,29 +198,31 @@ func pkcs7UnPadding(originData []byte) []byte {
 	return originData[:(length - unpadding)]
 }
 
-func (u *Uadp) findKeyFromCacheOrFile(exePath, keyName string) []byte {
-	if secretData, ok := u.appDataMap[exePath]; ok {
-		if value, ok := secretData[keyName]; ok {
-			return value
-		}
-	}
-
-	secretData, err := u.loadDataFromFile(exePath)
-	if err != nil {
-		logger.Warning("failed to loadDataFromFile:", err)
-		return nil
-	}
-
+func (u *Uadp) findKeyFromCacheOrFile(uid uint32, exePath, keyName string) []byte {
 	u.secretMu.Lock()
-	defer u.secretMu.Unlock()
+	if _, ok := u.appDataMap[uid]; !ok {
+		u.appDataMap[uid] = make(map[string]map[string][]byte)
+	}
+	if _, ok := u.appDataMap[uid][exePath]; !ok {
+		secretData, err := u.loadDataFromFile(uid, exePath)
+		if err != nil {
+			logger.Warning("failed to loadDataFromFile:", err)
+			u.secretMu.Unlock()
+			return nil
+		}
+		u.appDataMap[uid][exePath] = secretData
+	}
+	if value, ok := u.appDataMap[uid][exePath][keyName]; ok {
+		u.secretMu.Unlock()
+		return value
+	}
+	u.secretMu.Unlock()
 
-	u.appDataMap[exePath] = secretData
-
-	return u.appDataMap[exePath][keyName]
+	return nil
 }
 
-func (u *Uadp) loadDataFromFile(exePath string) (map[string][]byte, error) {
-	fileName, err := u.getFileName(exePath)
+func (u *Uadp) loadDataFromFile(uid uint32, exePath string) (map[string][]byte, error) {
+	fileName, err := u.getFileName(uid, exePath, false)
 	if err != nil {
 		logger.Warning("failed to get filename:", err)
 		return nil, err
@@ -256,13 +242,15 @@ func (u *Uadp) loadDataFromFile(exePath string) (map[string][]byte, error) {
 	return secretData, nil
 }
 
-func (u *Uadp) updateDataFile(exePath string) error {
-	secretData := u.appDataMap[exePath]
-	fileName, err := u.getFileName(exePath)
+func (u *Uadp) updateDataFile(uid uint32, exePath string) error {
+	secretData := u.appDataMap[uid][exePath]
+	logger.Debug("begin to get file name")
+	fileName, err := u.getFileName(uid, exePath, true)
 	if err != nil {
 		logger.Warning("failed to get filename:", err)
 		return err
 	}
+	logger.Debug("update data file, get file name:", fileName)
 
 	newFileName := fileName + "-1"
 	content, err := marshalGob(secretData)
@@ -284,19 +272,26 @@ func (u *Uadp) updateDataFile(exePath string) error {
 	return nil
 }
 
-func (u *Uadp) getFileName(exePath string) (string, error) {
-	err := os.MkdirAll(UadpDataDir, 0755)
+func (u *Uadp) getFileName(uid uint32, exePath string, createFileMap bool) (string, error) {
+	homeDir, err := u.getHomeDir(fmt.Sprint(uid))
+	if err != nil {
+		return "", err
+	}
+	uadpDataFileDir := filepath.Join(homeDir, UadpDataDir)
+	err = os.MkdirAll(uadpDataFileDir, 0755)
 	if err != nil {
 		logger.Warning(err)
 		return "", err
 	}
 	var fileName string
-	fileName = u.fileNames[exePath]
-
+	if _, ok := u.fileNames[uid]; !ok {
+		u.fileNames[uid] = make(map[string]string)
+	}
+	fileName = u.fileNames[uid][exePath]
 	var fileNames map[string]string
 
 	if fileName == "" {
-		fileMap := filepath.Join(UadpDataDir, "filemap")
+		fileMap := filepath.Join(uadpDataFileDir, "filemap")
 		content, err := ioutil.ReadFile(fileMap)
 		if err == nil {
 			err = json.Unmarshal(content, &fileNames)
@@ -305,32 +300,51 @@ func (u *Uadp) getFileName(exePath string) (string, error) {
 				return "", err
 			}
 			u.mu.Lock()
-			u.fileNames = fileNames
-			fileName = u.fileNames[exePath]
+			u.fileNames[uid] = fileNames
+			fileName = u.fileNames[uid][exePath]
 			u.mu.Unlock()
 		}
-
 		if fileName == "" {
 			// 新增文件索引
-			fileName = fmt.Sprintf("%d", len(fileNames))
-			u.mu.Lock()
-			u.fileNames[exePath] = fileName
-			u.mu.Unlock()
-			content, err := json.Marshal(u.fileNames)
-			if err != nil {
-				logger.Warning(err)
-				return "", err
-			}
-			err = writeFile(fileMap, content, 0600)
-			if err != nil {
-				logger.Warning(err)
-				return "", err
+			if createFileMap {
+				fileName = fmt.Sprintf("%d", len(u.fileNames[uid]))
+				u.mu.Lock()
+				u.fileNames[uid][exePath] = fileName
+				u.mu.Unlock()
+				content, err := json.Marshal(u.fileNames[uid])
+				if err != nil {
+					logger.Warning(err)
+					return "", err
+				}
+				err = writeFile(fileMap, content, 0600)
+				if err != nil {
+					logger.Warning(err)
+					return "", err
+				}
+			} else {
+				return "", errors.New("this file is not exist")
 			}
 		}
 	}
 
-	file := filepath.Join(UadpDataDir, fileName)
+	file := filepath.Join(uadpDataFileDir, fileName)
 	return file, nil
+}
+
+func (u *Uadp) getHomeDir(uid string) (string, error) {
+	userObjPath, err := u.account.FindUserById(0, uid)
+	if err != nil {
+		return "", err
+	}
+	user, err := accounts.NewUser(u.service.Conn(), dbus.ObjectPath(userObjPath))
+	if err != nil {
+		return "", err
+	}
+	homeDir, err := user.HomeDir().Get(0)
+	if err != nil {
+		return "", err
+	}
+	return homeDir, nil
 }
 
 func (u *Uadp) verifyIdentity(sender dbus.Sender) (bool, error) {
@@ -352,24 +366,6 @@ func (u *Uadp) verifyIdentity(sender dbus.Sender) (bool, error) {
 	}
 
 	return false, errors.New("process is not allowed to access")
-}
-
-func (u *Uadp) checkAuth(sysBusName, actionId string) (bool, error) {
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		return false, err
-	}
-	authority := polkit.NewAuthority(systemBus)
-	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
-	subject.SetDetail("name", sysBusName)
-
-	ret, err := authority.CheckAuthorization(0, subject,
-		actionId, nil,
-		polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
-	if err != nil {
-		return false, err
-	}
-	return ret.IsAuthorized, nil
 }
 
 func writeFile(filename string, data []byte, perm os.FileMode) error {

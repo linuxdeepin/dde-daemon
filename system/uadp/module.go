@@ -24,29 +24,29 @@ func (m *Module) GetDependencies() []string {
 }
 
 func (m *Module) Start() error {
-	service := loader.GetService()
+	// service := loader.GetService()
 
-	if m.uadp != nil {
-		return nil
-	}
-	var err error
-	m.uadp, err = newUadp(service)
-	if err != nil {
-		logger.Warning("failed to newUadp:", err)
-		return err
-	}
+	// if m.uadp != nil {
+	// 	return nil
+	// }
+	// var err error
+	// m.uadp, err = newUadp(service)
+	// if err != nil {
+	// 	logger.Warning("failed to newUadp:", err)
+	// 	return err
+	// }
 
-	err = service.Export(dbusPath, m.uadp)
-	if err != nil {
-		logger.Warning("failed to Export uadp:", err)
-		return err
-	}
+	// err = service.Export(dbusPath, m.uadp)
+	// if err != nil {
+	// 	logger.Warning("failed to Export uadp:", err)
+	// 	return err
+	// }
 
-	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		logger.Warning("failed to RequestName:", err)
-		return err
-	}
+	// err = service.RequestName(dbusServiceName)
+	// if err != nil {
+	// 	logger.Warning("failed to RequestName:", err)
+	// 	return err
+	// }
 
 	return nil
 }
