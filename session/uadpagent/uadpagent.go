@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"os"
 	"sync"
 
 	dbus "github.com/godbus/dbus"
@@ -27,7 +28,7 @@ const (
 )
 
 const (
-	keyringTagExePath = "executablePath"
+	userUid = "userUid"
 )
 
 func (*UadpAgent) GetInterfaceName() string {
@@ -41,9 +42,8 @@ type UadpAgent struct {
 	defaultCollection   secrets.Collection
 	defaultCollectionMu sync.Mutex
 	uadpDaemon          uadp.Uadp // 提供加解密接口
+	keyringKey          string    // 密钥缓存
 	mu                  sync.Mutex
-
-	secretData map[string]string // 密钥缓存
 }
 
 func newUadpAgent(service *dbusutil.Service) (*UadpAgent, error) {
@@ -61,7 +61,6 @@ func newUadpAgent(service *dbusutil.Service) (*UadpAgent, error) {
 	uadpDaemon := uadp.NewUadp(sysBus)
 	u := &UadpAgent{
 		service:           service,
-		secretData:        make(map[string]string),
 		secretService:     secretsObj,
 		secretSessionPath: sessionPath,
 		uadpDaemon:        uadpDaemon,
@@ -82,6 +81,7 @@ func (u *UadpAgent) SetDataKey(sender dbus.Sender, keyName string, dataKey strin
 		return dbusutil.ToError(err)
 	}
 	// 将用户希望存储的密钥加密存储
+	logger.Debug("begin to set data key")
 	err = u.uadpDaemon.SetDataKey(0, executablePath, keyName, dataKey, keyringKey)
 	if err != nil {
 		logger.Warning("failed to save data key:", err)
@@ -110,48 +110,43 @@ func (u *UadpAgent) GetDataKey(sender dbus.Sender, keyName string) (dataKey stri
 func (u *UadpAgent) getExePathAndKeyringKey(sender dbus.Sender, createIfNotExist bool) (string, string, error) {
 	executablePath, err := u.getExePath(sender)
 	if err != nil {
-		logger.Warning("failed to get exePath:", err)
 		return "", "", err
 	}
 
-	keyringKey, err := u.getKeyringKey(executablePath, createIfNotExist)
+	keyringKey, err := u.getKeyringKey(os.Getuid(), createIfNotExist)
 	if err != nil {
-		logger.Warning("failed to get keyringKey:", err)
 		return "", "", err
 	}
 	return executablePath, keyringKey, nil
 }
 
-func (u *UadpAgent) getKeyringKey(exePath string, createIfNotExist bool) (string, error) {
-	var keyringKey string
+func (u *UadpAgent) getKeyringKey(uid int, createIfNotExist bool) (string, error) {
+	u.mu.Lock()
+	defer u.mu.Unlock()
 	var err error
-	keyringKey = u.secretData[exePath]
-
-	if keyringKey == "" {
-		keyringKey, err = u.getExeKeyringKey(exePath)
+	if u.keyringKey == "" {
+		u.keyringKey, err = u.getUserKeyringKey(uid)
 		if err != nil {
 			logger.Warning(err)
 		}
-		if keyringKey == "" {
-			if createIfNotExist {
-				keyringKey, err = getRandKey(16)
-				if err != nil {
-					logger.Warning(err)
-					return "", err
-				}
-				err = u.saveExeKeyringKey(exePath, keyringKey)
-				if err != nil {
-					logger.Warning("failed to save secret to keyring:", err)
-				}
-				u.mu.Lock()
-				u.secretData[exePath] = keyringKey
-				u.mu.Unlock()
-			} else {
-				return "", errors.New("unable to retrieve the password, please store the password first")
+		if u.keyringKey == "" && !createIfNotExist {
+			return "", errors.New("keyringKey is not exist")
+		}
+		if u.keyringKey == "" {
+			randKey, err := getRandKey(16)
+			if err != nil {
+				logger.Warning(err)
+				return "", err
 			}
+			err = u.saveExeKeyringKey(uid, randKey)
+			if err != nil {
+				return "", err
+			}
+			u.keyringKey = randKey
 		}
 	}
-	return keyringKey, nil
+
+	return u.keyringKey, nil
 }
 
 func (u *UadpAgent) getExePath(sender dbus.Sender) (string, error) {
@@ -170,9 +165,9 @@ func (u *UadpAgent) getExePath(sender dbus.Sender) (string, error) {
 	return executablePath, nil
 }
 
-func (u *UadpAgent) saveExeKeyringKey(exePath, keyringKey string) error {
-	label := fmt.Sprintf("UadpAgent code/decode secret for %s", exePath)
-	logger.Debugf("set label: %q, exePath: %q, keyringKey: %q", label, exePath, keyringKey)
+func (u *UadpAgent) saveExeKeyringKey(uid int, keyringKey string) error {
+	label := fmt.Sprintf("UadpAgent code/decode secret for %d", uid)
+	logger.Debugf("set label: %q, uid: %d, keyringKey: %q", label, uid, keyringKey)
 	itemSecret := secrets.Secret{
 		Session:     u.secretSessionPath,
 		Value:       []byte(keyringKey),
@@ -183,7 +178,7 @@ func (u *UadpAgent) saveExeKeyringKey(exePath, keyringKey string) error {
 		"org.freedesktop.Secret.Item.Label": dbus.MakeVariant(label),
 		"org.freedesktop.Secret.Item.Type":  dbus.MakeVariant("org.freedesktop.Secret.Generic"),
 		"org.freedesktop.Secret.Item.Attributes": dbus.MakeVariant(map[string]string{
-			keyringTagExePath: exePath,
+			userUid: fmt.Sprintf("%d", uid),
 		}),
 	}
 
@@ -198,9 +193,9 @@ func (u *UadpAgent) saveExeKeyringKey(exePath, keyringKey string) error {
 	return err
 }
 
-func (u *UadpAgent) getExeKeyringKey(exePath string) (string, error) {
+func (u *UadpAgent) getUserKeyringKey(uid int) (string, error) {
 	attributes := map[string]string{
-		keyringTagExePath: exePath,
+		userUid: fmt.Sprintf("%d", uid),
 	}
 
 	defaultCollection, err := u.getDefaultCollection()
@@ -232,7 +227,7 @@ func (u *UadpAgent) getExeKeyringKey(exePath string) (string, error) {
 			return "", err
 		}
 		attributes, _ := itemObj.Attributes().Get(0)
-		if attributes[keyringTagExePath] != "" {
+		if attributes[userUid] != "" {
 			keyringKey = string(secret.Value)
 		}
 	}
