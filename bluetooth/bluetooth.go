@@ -349,7 +349,7 @@ func (b *Bluetooth) init() {
 				logger.Warning("get system bluetooth EndLoad err:", err)
 			}
 
-			if endLoad || os.Getenv("XDG_CURRENT_DESKTOP") == "Deepin-tablet" {
+			if endLoad || os.Getenv("XDG_CURRENT_DESKTOP") != "Deepin-tablet" {
 				logger.Debug("bluetooth core inited")
 				break
 			}
