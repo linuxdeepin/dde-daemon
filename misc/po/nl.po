@@ -4,14 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# ba9c8d1b207d8f5ea706a592d740a01a, 2020
 # b619f8b7eb226a70bc7d5cadcfa79734_230f6d0 <5e8718ab95c3ca367d12d9e77a5e9072_4743>, 2020
 # dragnadh, 2020
+# ba9c8d1b207d8f5ea706a592d740a01a, 2020
 # closeddoors1559 <mrvnp@msn.com>, 2020
+# b9b0d258fa591da5350b6e67cf68cd68_9fecbb4 <28506b9ff23f99a34b566250ce31bbad_250479>, 2020
 # Lars Acou <lars.acou@gmail.com>, 2020
+# Jan Wesselink <wesselaar@gmail.com>, 2020
 # Hans van Schooten <hans@schootenvan.nl>, 2020
 # Cindy0514, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
+# Bernard Flach <bernard@deepin.nl>, 2020
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Heimen Stoffels <vistausss@fastmail.com>, 2021
 # 
 #, fuzzy
@@ -19,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/linuxdeepin/teams/3617/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -31,37 +34,33 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
-msgstr "Voer een wachtwoord in dat minimaal 8 tekens bevat"
+msgstr "Vul alstublieft een wachtwoord in met niet minder dan 8 tekens"
 
 #: ../../accounts/checkers/password.go:55
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"Het wachtwoord moet Nederlandstalige letters (hoofdlettergevoelig), cijfers "
-"en speciale tekens bevatten (~!@#$%^&*()[]{}\\|/?,.<>)"
+"Het wachtwoord moet letters (hoofdlettergevoelig), cijfers en speciale "
+"tekens bevatten (~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
-msgstr "Voer een gebruikersnaam in"
+msgstr "Gebruikersnaam mag niet leeg zijn"
 
 #: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "Het eerste teken moet een letter of cijfer zijn"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
-msgstr "Deze gebruikersnaam is al in gebruik"
+msgstr "De gebruikersnaam bestaat al"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "Deze naam is al in gebruik"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Deze gebruikersnaam wordt gebruikt door het systeem"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "De gebruikersnaam moet tussen de 3 en 32 tekens lang zijn"
 
@@ -71,7 +70,7 @@ msgstr "Meld je af en weer aan om de beeldgrootte-instellingen toe te passen"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
-msgstr "Instellen voltooid"
+msgstr "Succesvol ingesteld"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
@@ -87,24 +86,24 @@ msgstr "Beeldgrootte instellen"
 
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
-msgstr "Beeldgrootte"
+msgstr "Schaling weergeven"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s is uitgeschakeld"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Openen"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "Vingerafdrukverificatie mislukt"
+msgstr "Vingerafdruk verificatie mislukt"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
-msgstr "De vingerafdrukverificatie is verlopen"
+msgstr "Vingerafdrukauthenticatie is verlopen"
 
 #: ../../bluetooth/bluez_profile.go:30
 msgid "Serial port"
@@ -116,19 +115,19 @@ msgstr "Netwerk via inbelverbinding"
 
 #: ../../bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
-msgstr "Handsfree-apparaat"
+msgstr "Handenvrij apparaat"
 
 #: ../../bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
-msgstr "Handsfree-stemgateway"
+msgstr "Handenvrije stemgateway"
 
 #: ../../bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
-msgstr "Hoofdtelefoon-stemgateway"
+msgstr "Hoofdtelefoon stemgateway"
 
 #: ../../bluetooth/bluez_profile.go:35
 msgid "Object push"
-msgstr "Item versturen"
+msgstr "Object doordrukken"
 
 #: ../../bluetooth/bluez_profile.go:36
 msgid "File transfer"
@@ -144,7 +143,7 @@ msgstr "Telefoonboektoegang"
 
 #: ../../bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
-msgstr "Client voor telefoonboektoegang"
+msgstr "Cliënt voor telefoonboektoegang"
 
 #: ../../bluetooth/bluez_profile.go:40
 msgid "Message access"
@@ -159,8 +158,8 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Bezig met ontvangen van %q bestanden van %q"
+msgid "Receiving %q from %q"
+msgstr "Bezig met ontvangen van %q van %q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -209,16 +208,16 @@ msgstr "De verbinding met %q is verlopen"
 
 #: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
-msgstr "Verbonden met %q"
+msgstr "Verbinden %q succesvol"
 
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
 #: ../../network/state_handler.go:357
 msgid "%q disconnected"
-msgstr "Verbinding verbroken met %q"
+msgstr "%q ontkoppeld"
 
 #: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
-msgstr "Zorg dat %q is ingeschakeld en binnen bereik is"
+msgstr "Zorg ervoor dat %q ingeschakeld en binnen bereik is."
 
 #: ../../bluetooth/utils_notify.go:117
 msgid ""
@@ -262,11 +261,11 @@ msgstr "Privé"
 
 #: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
-msgstr "Overig"
+msgstr "Overige"
 
 #: ../../calendar/scheduler.go:570
 msgid "One day before start"
-msgstr "Eén dag van tevoren"
+msgstr "Een dag voor aanvang"
 
 #: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
 #: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
@@ -275,15 +274,15 @@ msgstr "Sluiten"
 
 #: ../../calendar/scheduler.go:575
 msgid "Remind me tomorrow"
-msgstr "Herinner me morgen"
+msgstr "Herinner me er morgen aan"
 
 #: ../../calendar/scheduler.go:583
 msgid "Remind me later"
-msgstr "Herinner me later"
+msgstr "Herinner me er later aan"
 
 #: ../../calendar/scheduler.go:593
 msgid "Schedule Reminder"
-msgstr "Herinnering inplannen"
+msgstr "Herinnering planning"
 
 #: ../../calendar/type.go:40
 msgid "Festival"
@@ -299,11 +298,11 @@ msgstr "Afsluiten forceren"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
-msgstr "Vastmaken"
+msgstr "Dock"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr "Losmaken"
+msgstr "Undock"
 
 #: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
@@ -315,7 +314,7 @@ msgstr "Onvoldoende schijfruimte. Tijd om bestanden op te ruimen!"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
-msgstr "Programmastarter"
+msgstr "Starter"
 
 #: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Terminal"
@@ -331,15 +330,15 @@ msgstr "Scherm vergrendelen"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Dock tonen/verbergen"
+msgstr "Dock weergeven/verbergen"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
-msgstr "Afsluitscherm"
+msgstr "Interface voor het afsluiten"
 
 #: ../../keybinding/shortcuts/id_name_map.go:34
 msgid "Terminal Quake Window"
-msgstr "Terminal: Quake-venster"
+msgstr "Terminal Quake Venster"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
@@ -351,7 +350,7 @@ msgstr "Volledig scherm"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
-msgstr "Venster"
+msgstr "Schermopname venster"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
@@ -367,11 +366,11 @@ msgstr "Touchpad uitschakelen"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "Switch window effects"
-msgstr "Vensteranimaties in-/uitschakelen"
+msgstr "Wissel tussen venstereffecten"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Fast Screen Off"
-msgstr "Scherm snel uitschakelen"
+msgstr "Snel scherm uit"
 
 #: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "System Monitor"
@@ -379,23 +378,23 @@ msgstr "Systeemmonitor"
 
 #: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Deepin Picker"
-msgstr "Deepin Kiezer"
+msgstr "Deepin Kiezen"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
-msgstr "Slimme assistent"
+msgstr "Bureaublad AI Assistent"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Text to Speech"
-msgstr "Tekst-naar-spraak"
+msgstr "Tekst naar spraak"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Speech to Text"
-msgstr "Spraak-naar-tekst"
+msgstr "Spraak naar tekst"
 
 #: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Clipboard"
-msgstr "Klembord"
+msgstr "klembord"
 
 #: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Translation"
@@ -403,15 +402,15 @@ msgstr "Vertaling"
 
 #: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
-msgstr "Schakelen tussen indelingen"
+msgstr "Wissel Lay-out"
 
 #: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
-msgstr "Ga naar linkerwerkruimte"
+msgstr "Ga naar linker werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
-msgstr "Ga naar rechterwerkruimte"
+msgstr "Ga naar rechter werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
@@ -423,23 +422,23 @@ msgstr "Ga naar onderste werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
-msgstr "Schakelen tussen vergelijkbare vensters"
+msgstr "Verwissel gelijkaardige vensters"
 
 #: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
-msgstr "Schakelen tussen vergelijkbare vensters in omgekeerde volgorde"
+msgstr "Verwissel gelijkaardige vensters in omgekeerde volgorde"
 
 #: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
-msgstr "Schakelen tussen vensters"
+msgstr "Verwissel vensters"
 
 #: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
-msgstr "Schakelen tussen vensters in omgekeerde volgorde"
+msgstr "Verwissel vensters in omgekeerde volgorde"
 
 #: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
-msgstr "Bureaublad tonen"
+msgstr "Toon bureaublad"
 
 #: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
@@ -455,11 +454,11 @@ msgstr "Venster minimaliseren"
 
 #: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
-msgstr "Venster sluiten"
+msgstr "Sluit venster"
 
 #: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
-msgstr "Venster verplaatsen"
+msgstr "Verplaats venster"
 
 #: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
@@ -467,31 +466,31 @@ msgstr "Venstergrootte aanpassen"
 
 #: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
-msgstr "Verplaatsen naar linkerwerkruimte"
+msgstr "Verplaats naar linker werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
-msgstr "Verplaatsen naar rechterwerkruimte"
+msgstr "Verplaats naar rechter werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
-msgstr "Verplaatsen naar bovenste werkruimte"
+msgstr "Verplaats naar bovenste werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
-msgstr "Verplaatsen naar onderste werkruimte"
+msgstr "Verplaats naar onderste werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
-msgstr "Vensters van alle werkruimtes tonen"
+msgstr "Toon vensters van alle werkruimtes"
 
 #: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
-msgstr "Vensters van huidige werkruimte tonen"
+msgstr "Toon vensters van de huidige werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
-msgstr "Werkruimte tonen"
+msgstr "Toon werkruimte"
 
 #: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
@@ -499,27 +498,27 @@ msgstr "Schakelen tussen beeldschermen"
 
 #: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
-msgstr "Voer je wachtwoord in om de taal te wijzigen"
+msgstr "Authenticatie is vereist om taal te wijzigen"
 
 #: ../../langselector/locale.go:152
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
-"De systeemtaal wordt gewijzigd en de vereiste taalpakketten worden "
-"geïnstalleerd - even geduld..."
+"Systeemtaal wordt gewijzigd en de vereiste taalpaketten worden "
+"geïnstalleerd, even geduld ..."
 
 #: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
-msgstr "De systeemtaal wordt gewijzigd - even geduld..."
+msgstr "Systeemtaal wordt gewijzigd, even geduld ..."
 
 #: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
-msgstr "Meld je opnieuw aan om de wijziging door te voeren"
+msgstr "Systeemtaal werd gewijzigd, gelieve opnieuw in te loggen"
 
 #: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
-msgstr "De systeemtaal kan niet worden gewijzigd - probeer het later opnieuw"
+msgstr "Wijzigen van systeemtaal mislukt, probeer later opnieuw"
 
 #: ../../lastore/lastore.go:244
 msgid "Retry"
@@ -531,11 +530,11 @@ msgstr "Nu bijwerken"
 
 #: ../../lastore/notify.go:96
 msgid "%q installed successfully."
-msgstr "%q is geïnstalleerd."
+msgstr "%q is succesvol geïnstalleerd."
 
 #: ../../lastore/notify.go:99
 msgid "%q failed to install."
-msgstr "%q kan niet worden geïnstalleerd."
+msgstr "Het installeren van %q is mislukt."
 
 #: ../../lastore/notify.go:107
 msgid "Removed successfully"
@@ -549,8 +548,8 @@ msgstr "Het programma kan niet worden verwijderd"
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
-"Sluit de computer aan op netstroom om te voorkomen dat deze automatisch "
-"wordt afgesloten."
+"Om te voorkomen dat de computer automatisch wordt afgesloten, moet u deze op"
+" de netstroom aansluiten."
 
 #: ../../lastore/notify.go:121
 msgid "Package cache wiped"
@@ -562,13 +561,13 @@ msgstr "Nieuwe besturingssysteemversie beschikbaar"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
-msgstr "%q is verwijderd"
+msgstr "%q succesvol verplaatst"
 
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
-msgstr "%q kan niet worden verwijderd"
+msgstr "%q mislukt om te verwijderen"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Bekabelde verbinding"
 
@@ -630,11 +629,11 @@ msgstr "De programmaproxy kan niet worden ingesteld"
 
 #: ../../network/state_handler.go:38
 msgid "Device state changed"
-msgstr "De apparaatstatus is gewijzigd"
+msgstr "Apparaatstatus is gewijzigd"
 
 #: ../../network/state_handler.go:39
 msgid "Device state changed, reason unknown"
-msgstr "De apparaatstatus is om onbekende reden gewijzigd"
+msgstr "Status van toestel gewijzigd, reden onbekend"
 
 #: ../../network/state_handler.go:40
 msgid "The device is now managed"
@@ -646,50 +645,50 @@ msgstr "Het apparaat wordt niet meer beheerd"
 
 #: ../../network/state_handler.go:42
 msgid "The device has not been ready for configuration"
-msgstr "Het apparaat is niet klaar om te worden ingesteld"
+msgstr "Het apparaat is niet klaar voor configuratie"
 
 #: ../../network/state_handler.go:43
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
 msgstr ""
-"De ip-configuratie kan niet worden gereserveerd (geen beschikbaar adres, "
-"time-out, enz.)"
+"IP-configuratie kan niet gereserveerd worden (geen beschikbaar adres, time-"
+"out, enz.)"
 
 #: ../../network/state_handler.go:44
 msgid "The IP configuration is no longer valid"
-msgstr "De ip-configuratie is niet meer geldig"
+msgstr "De IP-configuratie is niet langer geldig"
 
 #: ../../network/state_handler.go:45
 msgid "Passwords were required but not provided"
-msgstr "Er zijn wachtwoorden vereist, maar niet verstrekt"
+msgstr "Wachtwoorden zijn vereist, maar niet verstrekt"
 
 #: ../../network/state_handler.go:46
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
 msgstr ""
-"De 802.1X-aanvrager is losgekoppeld van het toegangspunt van de "
+"De 802.1X aanvrager werd losgekoppeld van het toegangspunt van de "
 "authenticatieserver"
 
 #: ../../network/state_handler.go:47
 msgid "Configuration of the 802.1X supplicant failed"
-msgstr "De 802.1X-aanvrager kan niet worden ingesteld"
+msgstr "Configuratie van de 802.1X-aanvrager mislukt"
 
 #: ../../network/state_handler.go:48
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "De 802.1X-aanvrager is onverwacht afgesloten of mislukt"
+msgstr "De 802.1X supplicant is onverwacht afgesloten of mislukt"
 
 #: ../../network/state_handler.go:49
 msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "De 802.1X-aanvrager nam te veel tijd om te authenticeren"
+msgstr "De 802.1X-aanvrager nam teveel tijd om zich te authenticeren"
 
 #: ../../network/state_handler.go:50
 msgid "The PPP service failed to start within the allowed time"
-msgstr "De PPP-dienst kan niet binnen de toegestane tijd beginnen"
+msgstr "De PPP-dienst kon niet binnen de toegestane tijd beginnen"
 
 #: ../../network/state_handler.go:51
 msgid "The PPP service disconnected unexpectedly"
-msgstr "De PPP-dienst is onverwacht afgebroken"
+msgstr "De PPP-dienst is onverwacht verbroken"
 
 #: ../../network/state_handler.go:52
 msgid "The PPP service quitted or failed unexpectedly"
@@ -697,7 +696,7 @@ msgstr "De PPP-dienst is onverwacht afgesloten of mislukt"
 
 #: ../../network/state_handler.go:53
 msgid "The DHCP service failed to start within the allowed time"
-msgstr "De DHCP-dienst kan niet binnen de toegestane tijd beginnen"
+msgstr "De DHCP-service kon niet binnen de toegestane tijd beginnen"
 
 #: ../../network/state_handler.go:54
 msgid "The DHCP service reported an unexpected error"
@@ -709,15 +708,15 @@ msgstr "De DHCP-dienst is onverwacht afgesloten of mislukt"
 
 #: ../../network/state_handler.go:56
 msgid "The shared connection service failed to start"
-msgstr "De gedeelde verbindingsdienst kan niet worden gestart"
+msgstr "De gedeelde verbindingsdienst kan niet starten"
 
 #: ../../network/state_handler.go:57
 msgid "The shared connection service quitted or failed unexpectedly"
-msgstr "De gedeelde verbindingsdienst is onverwacht afgesloten of mislukt"
+msgstr "De gedeelde verbinding service is onverwacht afgesloten of mislukt"
 
 #: ../../network/state_handler.go:58
 msgid "The AutoIP service failed to start"
-msgstr "De AutoIP-dienst kan niet worden gestart"
+msgstr "De AutoIP-service kon niet starten"
 
 #: ../../network/state_handler.go:59
 msgid "The AutoIP service reported an unexpected error"
@@ -729,55 +728,55 @@ msgstr "De AutoIP-dienst is onverwacht afgesloten of mislukt"
 
 #: ../../network/state_handler.go:61
 msgid "Dialing failed due to busy lines"
-msgstr "Het inbellen is mislukt omdat de lijnen overbelast zijn"
+msgstr "Kiezen mislukt door drukke lijnen"
 
 #: ../../network/state_handler.go:62
 msgid "Dialing failed due to no dial tone"
-msgstr "Het inbellen is mislukt omdat er geen kiestoon is"
+msgstr "Kiezen mislukt door geen kiestoon"
 
 #: ../../network/state_handler.go:63
 msgid "Dialing failed due to the carrier"
-msgstr "Het inbellen is tegengehouden door de provider"
+msgstr "Kiezen mislukt door de aanbieder"
 
 #: ../../network/state_handler.go:64
 msgid "Dialing timed out"
-msgstr "De inbelpoging is verlopen"
+msgstr "Kiezen timed out"
 
 #: ../../network/state_handler.go:65
 msgid "Dialing failed"
-msgstr "Het inbellen is mislukt"
+msgstr "Kiezen mislukt"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
-msgstr "Het modem kan niet worden geïnitialiseerd "
+msgstr "Modem initialisatie mislukt"
 
 #: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
-msgstr "De opgegeven gsm-apn kan niet worden geselecteerd"
+msgstr "Het geselecteerde GSM APN kan niet worden geselecteerd"
 
 #: ../../network/state_handler.go:68
 msgid "No networks searched"
-msgstr "Er is niet gezocht naar netwerken"
+msgstr "Geen netwerken gezocht"
 
 #: ../../network/state_handler.go:69
 msgid "Network registration was denied"
-msgstr "De netwerkregistratie is geweigerd"
+msgstr "Netwerkregistratie werd geweigerd"
 
 #: ../../network/state_handler.go:70
 msgid "Network registration timed out"
-msgstr "De netwerkregistratie is verlopen"
+msgstr "Netwerk registratie timed out"
 
 #: ../../network/state_handler.go:71
 msgid "Failed to register to the requested GSM network"
-msgstr "Het registreren bij het gevraagde gsm-netwerk is mislukt"
+msgstr "Registreren bij het gevraagde GSM netwerk mislukt"
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "De pincontrole is mislukt"
+msgstr "PIN controle mislukt"
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
-msgstr "Er ontbreekt mogelijk noodzakelijke apparaatfirmware"
+msgstr "Noodzakelijke firmware voor het apparaat mogelijk gemist"
 
 #: ../../network/state_handler.go:74
 msgid "The device was removed"
@@ -785,19 +784,19 @@ msgstr "Het apparaat is verwijderd"
 
 #: ../../network/state_handler.go:75
 msgid "NetworkManager went to sleep"
-msgstr "Netwerkbeheer is in slaap gevallen"
+msgstr "Netwerkbeheer ging slapen"
 
 #: ../../network/state_handler.go:76
 msgid "The device's active connection was removed or disappeared"
-msgstr "De actieve apparaatverbinding is verwijderd of verdwenen"
+msgstr "De actieve verbinding van het apparaat is verwijderd of verdwenen"
 
 #: ../../network/state_handler.go:77
 msgid "A user or client requested to disconnect"
-msgstr "Een gebruiker of klant heeft verzocht de verbinding te verbreken"
+msgstr "Een gebruiker of klant verzocht om verbinding te verbreken"
 
 #: ../../network/state_handler.go:78
 msgid "The device's carrier/link changed"
-msgstr "De provider/link van het apparaat is veranderd"
+msgstr "De aanbieder/link van het apparaat is veranderd"
 
 #: ../../network/state_handler.go:79
 msgid "The device's existing connection was assumed"
@@ -805,11 +804,11 @@ msgstr "De bestaande verbinding van het toestel werd aangenomen"
 
 #: ../../network/state_handler.go:80
 msgid "The 802.1x supplicant is now available"
-msgstr "De 802.1x-aanvrager is nu beschikbaar"
+msgstr "De 802.1x aanvrager is nu beschikbaar"
 
 #: ../../network/state_handler.go:81
 msgid "The modem could not be found"
-msgstr "Er is geen modem aangetroffen"
+msgstr "De modem kon niet gevonden worden"
 
 #: ../../network/state_handler.go:82
 msgid "The Bluetooth connection timed out or failed"
@@ -817,27 +816,27 @@ msgstr "De Bluetooth-verbinding is uitgesteld of mislukt"
 
 #: ../../network/state_handler.go:83
 msgid "GSM Modem's SIM Card was not inserted"
-msgstr "Er is geen simkaart in het modem geplaatst"
+msgstr "GSM Modem's SIM Card is niet geplaatst"
 
 #: ../../network/state_handler.go:84
 msgid "GSM Modem's SIM PIN required"
-msgstr "Het modem vereist een simkaartpincode"
+msgstr "GSM Modem's SIM PIN vereist"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
-msgstr "Het modem vereist een simkaartpukcode"
+msgstr "GSM Modem's SIM PUK vereist"
 
 #: ../../network/state_handler.go:86
 msgid "SIM card error in GSM Modem"
-msgstr "Simkaartfout in gsm-modem"
+msgstr "Simkaartfout in GSM-modem"
 
 #: ../../network/state_handler.go:87
 msgid "InfiniBand device does not support connected mode"
-msgstr "Het InfiniBand-apparaat ondersteunt geen aangesloten modus"
+msgstr "InfiniBand-apparaat ondersteunt geen aangesloten modus"
 
 #: ../../network/state_handler.go:88
 msgid "A dependency of the connection failed"
-msgstr "Er is niet voldaan aan een afhankelijkheid van de verbinding"
+msgstr "Een afhankelijkheid van de verbinding is niet voldaan"
 
 #: ../../network/state_handler.go:89
 msgid "RFC 2684 Ethernet bridging error to ADSL"
@@ -845,11 +844,11 @@ msgstr "RFC 2684 Ethernet-brugfout naar ADSL"
 
 #: ../../network/state_handler.go:90
 msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "Modembeheer is onverwacht afgesloten of niet ingeschakeld"
+msgstr "Modembeheer is onverwacht afgesloten of was niet aan"
 
 #: ../../network/state_handler.go:91
 msgid "The 802.11 WLAN network could not be found"
-msgstr "Het 802.11 wlan-netwerk is niet aangetroffen"
+msgstr "Het 802.11 WLAN netwerk kon niet gevonden worden"
 
 #: ../../network/state_handler.go:92
 msgid "A secondary connection of the base connection failed"
@@ -857,109 +856,108 @@ msgstr "Een secundaire verbinding van de basisverbinding is mislukt"
 
 #: ../../network/state_handler.go:95
 msgid "DCB or FCoE setup failed"
-msgstr "DCB- of FCoE-instelling mislukt"
+msgstr "DCB of FCoE instelling mislukt"
 
 #: ../../network/state_handler.go:96
 msgid "Network teaming control failed"
-msgstr "Netwerkteamingcontrole mislukt"
+msgstr "Netwerk teaming controle mislukt"
 
 #: ../../network/state_handler.go:97
 msgid "Modem failed to run or not available"
-msgstr "Het modem kan niet worden opgestart of is niet beschikbaar"
+msgstr "Modem kan niet worden uitgevoerd of niet beschikbaar"
 
 #: ../../network/state_handler.go:98
 msgid "Modem now ready and available"
-msgstr "Het modem is opgestart en beschikbaar"
+msgstr "Modem is klaar en beschikbaar"
 
 #: ../../network/state_handler.go:99
 msgid "SIM PIN is incorrect"
-msgstr "De simkaartpincode is onjuist"
+msgstr "SIM PIN is onjuist"
 
 #: ../../network/state_handler.go:100
 msgid "New connection activation is enqueuing"
-msgstr "De nieuwe verbindingsactivering staat niet in de wachtrij"
+msgstr "Nieuwe verbindingsactivering is niet in lijn"
 
 #: ../../network/state_handler.go:101
 msgid "Parent device changed"
-msgstr "Hef hoofdapparaat is veranderd"
+msgstr "Ouderapparaat is gewijzigd"
 
 #: ../../network/state_handler.go:102
 msgid "Management status of parent device changed"
-msgstr "De beheerstatus van het hoofdapparaat is veranderd"
+msgstr "Beheerstatus van ouderapparaat is gewijzigd"
 
 #: ../../network/state_handler.go:105
 msgid "Network cable is unplugged"
-msgstr "Er is geen netwerkkabel aangesloten"
+msgstr "Netwerkkabel is niet aangesloten."
 
 #: ../../network/state_handler.go:106
 msgid "Please make sure SIM card has been inserted with mobile network signal"
 msgstr ""
-"Zorg er voor dat er een simkaart is geplaatst met een mobiele "
-"netwerkverbinding"
+"Zorg ervoor dat er een SIM-kaart is geplaatst met een mobiel netwerk signaal"
 
 #: ../../network/state_handler.go:107
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
 msgstr ""
-"Zorg er voor dat het juiste abonnement is gekozen zonder achterstand van de "
-"simkaart"
+"Zorg ervoor dat de juiste plan werd gekozen zonder achterstand van de SIM-"
+"kaart"
 
 #: ../../network/state_handler.go:110
 msgid "Failed to activate VPN connection, reason unknown"
-msgstr "De vpn-verbinding kan om onbekende reden niet worden geactiveerd"
+msgstr "Activatie van VPN verbinding mislukt, reden onbekend"
 
 #: ../../network/state_handler.go:111
 msgid "Failed to activate VPN connection"
-msgstr "De vpn-verbinding kan niet worden geactiveerd"
+msgstr "Activatie van VPN verbinding mislukt"
 
 #: ../../network/state_handler.go:112
 msgid "The VPN connection state changed due to being disconnected by users"
 msgstr ""
-"De VPN-verbindingsstatus is gewijzigd ten gevolge van verbreking door "
+"De VPN verbindingsstatus is gewijzigd ten gevolge van verbreking door "
 "gebruikers"
 
 #: ../../network/state_handler.go:113
 msgid ""
 "The VPN connection state changed due to being disconnected from devices"
 msgstr ""
-"De VPNs-verbindingsstatus is gewijzigd ten gevolge van verbreken van "
-"apparaten"
+"De VPN verbindingsstatus is gewijzigd ten gevolge van verbreken van "
+"toetstellen"
 
 #: ../../network/state_handler.go:114
 msgid "VPN service stopped"
-msgstr "De vpn-dienst is gestopt"
+msgstr "VPN-dienst is gestopt"
 
 #: ../../network/state_handler.go:115
 msgid "The IP config of VPN connection was invalid"
-msgstr "De ip-configuratie van de vpn-verbinding is ongeldig"
+msgstr "De IP-configuratie van de VPN-verbinding was ongeldig"
 
 #: ../../network/state_handler.go:116
 msgid "The connection attempt to VPN service timed out"
-msgstr "De verbindingspoging van de vpn-dienst is verlopen"
+msgstr "De verbindingspoging voor VPN-dienst werd uitgesteld"
 
 #: ../../network/state_handler.go:117
 msgid "The VPN service start timed out"
-msgstr "Het opstarten van de vpn-dienst is verlopen"
+msgstr "De VPN-dienst opstart time-out"
 
 #: ../../network/state_handler.go:118
 msgid "The VPN service failed to start"
-msgstr "De vpn-dienst kan niet worden gestart"
+msgstr "De VPN-dienst kon niet starten"
 
 #: ../../network/state_handler.go:119
 msgid "The VPN connection password was not provided"
-msgstr "Er is geen vpn-verbindingswachtwoord opgegeven"
+msgstr "Het VPN verbindingswachtwoord werd niet opgegeven"
 
 #: ../../network/state_handler.go:120
 msgid "Authentication to VPN server failed"
-msgstr "De authenticatie met de vpn-server is mislukt"
+msgstr "Authenticatie naar VPN-server is mislukt"
 
 #: ../../network/state_handler.go:121
 msgid "The connection was deleted from settings"
-msgstr "De verbinding is verwijderd uit het instellingencentrum"
+msgstr "De verbinding is verwijderd van instellingen"
 
 #: ../../network/state_handler.go:252
 msgid "Enabling hotspot"
-msgstr "Hotspot opzetten"
+msgstr "Hotspot inschakelen"
 
 #: ../../network/state_handler.go:256
 msgid "Connecting %q"
@@ -967,7 +965,7 @@ msgstr "Verbinden met %q"
 
 #: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
-msgstr "De hotspot is opgezet"
+msgstr "Hotspot ingeschakeld"
 
 #: ../../network/state_handler.go:267
 msgid "%q connected"
@@ -975,30 +973,28 @@ msgstr "%q verbonden"
 
 #: ../../network/state_handler.go:278 ../../network/state_handler.go:333
 msgid "Hotspot disabled"
-msgstr "De hotspot is uitgeschakeld"
+msgstr "Hotspot uitgeschakeld"
 
 #: ../../network/state_handler.go:341
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr ""
-"De hotspot kan niet worden gedeeld - controleer de dnswasq-instellingen"
+msgstr "Kan hotspot niet delen, controleer de instellingen van dnsmasq"
 
 #: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
-"Kan geen verbinding maken met %q - blijf in de buurt van de draadloze router"
+msgstr "Kon %q niet verbinden, blijf dichter bij de draadloze router"
 
 #: ../../network/state_handler.go:345
 msgid "Unable to connect %q, please check your router or net cable."
-msgstr ""
-"Kan geen verbinding maken met %q - controleer de router of netwerkkabel"
+msgstr "Kan %q niet verbinden, controleer uw router of netwerk kabel"
 
 #: ../../network/state_handler.go:349
 msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Kan geen verbinding maken met %q: onjuist wachtwoord"
+msgstr ""
+"Verbinding mislukt, kan geen verbinding maken met %q, verkeerd wachtwoord"
 
 #: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
-msgstr "Wachtwoord vereist om verbinding te maken met %q"
+msgstr "Wachtwoord is nodig om verbinding te maken met %q"
 
 #: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
@@ -1010,32 +1006,32 @@ msgstr "Onbekend"
 
 #: ../../network/utils_notify.go:185
 msgid "Airplane mode enabled."
-msgstr "De vliegtuigstand is ingeschakeld."
+msgstr "Vliegtuigstand ingeschakeld."
 
 #: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
 #: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
 #: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
-msgstr "Verbinding verbroken"
+msgstr "Ontkoppeld"
 
 #: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
-msgstr "De toegangspuntmodus wordt niet ondersteund door dit apparaat."
+msgstr "Access Point modus wordt niet ondersteund door dit apparaat."
 
 #: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
-"De hardwareschakelaar van de draadloze kaart staat op 'Uit' - zet deze op "
-"'Aan'."
+"De hardwareswitch van de WLAN-kaart is uitgeschakeld, gelieve in te "
+"schakelen indien nodig."
 
 #: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
-msgstr "De systeemproxy is ingesteld."
+msgstr "Systeemproxy met succes ingesteld."
 
 #: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
-msgstr "Het instellen van de systeemproxy is afgebroken."
+msgstr "Systeemproxy werd geannuleerd."
 
 #: ../../network/utils_notify.go:208
 msgid "Connected"
@@ -1046,7 +1042,7 @@ msgstr "Verbonden"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" voldeed niet aan de systeemveiligheidsvereisten en kan momenteel niet"
-" worden uitgevoerd"
+" draaien"
 
 #: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
@@ -1056,7 +1052,7 @@ msgstr "Het accuniveau is zeer laag"
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
-msgstr "De accu is bijna leeg - sluit de netstroomadapter aan"
+msgstr "Batterij is bijna leeg, sluit aan op netstroom"
 
 #: ../../session/power/utils.go:378 ../../session/power/utils.go:382
 #: ../../session/power/utils.go:386 ../../session/power/utils.go:390
@@ -1094,27 +1090,28 @@ msgstr "wordt er geen actie ondernomen"
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
-msgstr "Voer je wachtwoord in om de systeemtijd in te stellen"
+msgstr "Authenticatie vereist om gebruikersgegevens te kunnen veranderen"
 
 #: ../../timedate/manager_ifc.go:79
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
-"Voer je wachtwoord in om te bepalen of netwerktijdsynchronisatie moet worden"
-" ingeschakeld"
+"Authenticatie is vereist om te bepalen of netwerktijdsynchronisatie moet "
+"worden ingeschakeld"
 
 #: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"
-msgstr "Voer je wachtwoord in om de ntp-server te wijzigen"
+msgstr "Authenticatie is vereist om de NTP-server te wijzigen"
 
 #: ../../timedate/manager_ifc.go:129
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
-"Voer je wachtwoord in om te bepalen of RTC de lokale of UTC-tijd opslaat"
+"Authenticatie is vereist om te bepalen of de RTC de lokale tijd of UTC-tijd "
+"opslaat"
 
 #: ../../timedate/manager_ifc.go:148
 msgid "Authentication is required to set the system timezone"
-msgstr "Voer je wachtwoord in om de systeemtijdzone in te stellen"
+msgstr "Authenticatie is vereist om de systeemtijdzone in te stellen"

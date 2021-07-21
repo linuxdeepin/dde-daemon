@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: yeshe lhamo <981611630@qq.com>, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
@@ -43,19 +43,15 @@ msgstr "སྤྱོད་མཁན་མིང་སྟོང་པ་ཡིན
 msgid "The first character must be a letter or number"
 msgstr "ཡིག་འབྲུ་ཐོག་མ་དེ་ངེས་པར་དུ་གསལ་བྱེད་དམ་ཨང་ཀི་ཡིན་དགོས། "
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "སྤྱོད་མཁན་མིང་འདི་འདུག"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "མིང་ཡོད་པ།"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "སྤྱོད་མཁན་མིང་འདི་རྒྱུད་ཁོངས་ཀྱིས་སྤྱད་ཟིན།"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "སྤྱོད་མཁན་མིང་གི་རིང་ཚད་ངེས་པར་དུ་ཡིག་འབྲུ་3ནས་32བར་ཡིན་དགོས། "
 
@@ -83,12 +79,12 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་སྒྲ
 msgid "Display scaling"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%sབཀག་ཟིན།"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "ཁ་ཕྱེ་བ།"
 
@@ -150,10 +146,10 @@ msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 
 #: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
-msgstr "འདོར་བ། "
+msgstr "ཕྱིར་འཐེན།"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr "%qཡི་ཡིག་ཆ་%qལེན་བཞིན་པ།"
 
 #: ../../bluetooth/obex_agent.go:355
@@ -504,7 +500,7 @@ msgstr ""
 
 #: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
-msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
+msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་གཏོགས་ཙམ་སྒུག་རོགས།"
 
 #: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
@@ -556,13 +552,13 @@ msgstr "རྒྱུད་ཁོངས་ཀྱི་པར་གཞི་གས
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
-msgstr "%qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
+msgstr " %qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
@@ -655,7 +651,7 @@ msgstr "IPསྒྲིག་འགོད་གོ་མི་ཆོད།"
 
 #: ../../network/state_handler.go:45
 msgid "Passwords were required but not provided"
-msgstr "གསང་ཨང་དགོས་པས་མཁོ་འདོན་བྱས་མི་འདུག"
+msgstr "གསང་ཨང་དགོས་ཀྱི་འདུག་པས་མཁོ་འདོན་བྱས་མི་འདུག"
 
 #: ../../network/state_handler.go:46
 msgid ""
@@ -669,7 +665,7 @@ msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་སྡེབ་སྒྲ
 
 #: ../../network/state_handler.go:48
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་རྒྱུན་འགལ་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
+msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་ནམ་རྒྱུན་དང་མི་འདྲ་བར་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
 
 #: ../../network/state_handler.go:49
 msgid "The 802.1X supplicant took too long time to authenticate"
@@ -685,7 +681,7 @@ msgstr "PPPཞབས་ཞུ་ཆད་པ།"
 
 #: ../../network/state_handler.go:52
 msgid "The PPP service quitted or failed unexpectedly"
-msgstr "PPPཞབས་ཞུ་རྒྱུན་འགལ་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
+msgstr "PPPཞབས་ཞུ་ནམ་རྒྱུན་དང་མི་འདྲ་བར་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
 
 #: ../../network/state_handler.go:53
 msgid "The DHCP service failed to start within the allowed time"
@@ -693,7 +689,7 @@ msgstr "DHCPཞབས་ཞུ་དུས་བཅད་ནང་འགོ་�
 
 #: ../../network/state_handler.go:54
 msgid "The DHCP service reported an unexpected error"
-msgstr "DHCPཞབས་ཞུས་རྒྱུན་འགལ་ནོར་འཁྲུལ་ཞིག་སྙན་ཞུ་བྱས་འདུག"
+msgstr "DHCPཞབས་ཞུས་ནམ་རྒྱུན་དང་མི་འདྲ་བའི་ནོར་འཁྲུལ་ཞིག་སྙན་ཞུ་བྱས་འདུག"
 
 #: ../../network/state_handler.go:55
 msgid "The DHCP service quitted or failed unexpectedly"
@@ -741,7 +737,7 @@ msgstr "འབྲེལ་མཐུད་བྱེད་མ་ཐུབ།"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
-msgstr "ལེགས་སྒྲིག་དཀྲོལ་ཆས་འགོ་འཛུགས་བྱེད་མ་ཐུབ་པ།"
+msgstr "དཀྲོལ་ཆས་འགོ་འཛུགས་ལེགས་སྒྲིག་བྱེད་མ་ཐུབ་པ།"
 
 #: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
@@ -765,7 +761,7 @@ msgstr "GSMདྲ་རྒྱ་ཐོ་འགོད་བྱེད་མ་ཐ
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "PINཨང་གྲངས་ཞིབ་བཤེར་བྱེད་མ་ཐུབ།"
+msgstr "PINཞིབ་བཤེར་བྱེད་མ་ཐུབ།"
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
@@ -801,7 +797,7 @@ msgstr "802.1xསྤྱོད་མཁན་ཕྱོགས་ད་ལྟ་ས
 
 #: ../../network/state_handler.go:81
 msgid "The modem could not be found"
-msgstr "ལེགས་སྒྲིག་དཀྲོལ་ཆས་མ་རྙེད་པ།"
+msgstr "དཀྲོལ་ཆས་ལེགས་སྒྲིག་མ་རྙེད་པ།"
 
 #: ../../network/state_handler.go:82
 msgid "The Bluetooth connection timed out or failed"
@@ -813,7 +809,7 @@ msgstr "GSMབཅུག་མེད་པའི་ལེགས་སྒྲིག
 
 #: ../../network/state_handler.go:84
 msgid "GSM Modem's SIM PIN required"
-msgstr "GSMལེགས་སྒྲིག་དཀྲོལ་ཆས་ཀྱི་SIMགཱ་ཡི་PINཨང་གྲངས་དགོས།"
+msgstr "GSMལེགས་སྒྲིག་དཀྲོལ་ཆས་ཀྱི་SIMགཱ་ཡི་PINདགོས།"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
@@ -1039,7 +1035,7 @@ msgstr "གློག་རྫོགས་ཟིན།"
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
 msgid "Battery low, please plug in"
-msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་རོགས།"
+msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་དགོས།"
 
 #: ../../session/power/utils.go:378 ../../session/power/utils.go:382
 #: ../../session/power/utils.go:386 ../../session/power/utils.go:390

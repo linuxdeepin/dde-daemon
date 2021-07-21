@@ -6,17 +6,17 @@
 # Translators:
 # Ldm Public <ldmpub@gmail.com>, 2020
 # FFXP <jeremy.pfenning@ironmail.fr>, 2020
-# Neltus <neltus1@gmail.com>, 2020
-# zwpwjwtz <zwpwjwtz@126.com>, 2020
-# Aestan <anthony.margerand@protonmail.com>, 2020
-# Joselito 8, 2020
 # Charles Monzat <c.monzat@laposte.net>, 2020
+# Aestan <anthony.margerand@protonmail.com>, 2020
 # Tristan Denni <tristan.denni@viacesi.fr>, 2020
+# Neltus <neltus1@gmail.com>, 2020
 # Sami G.-D., 2020
+# zwpwjwtz <zwpwjwtz@126.com>, 2020
 # Kristien <kristien@mailo.com>, 2020
+# Joselito 8, 2020
 # Jean-Philippe Paumier <paumierj@hotmail.com>, 2020
-# Cindy0514, 2020
-# ba56da5c479245883255d97580e861b5_327de87 <cc1517672f7d7ecc8d2a76b655e9f30b_134975>, 2020
+# ba56da5c479245883255d97580e861b5_327de87 <cc1517672f7d7ecc8d2a76b655e9f30b_134975>, 2021
+# Cindy0514, 2021
 # roxfr <roxfr@outlook.fr>, 2021
 # n1coc4cola <n1coc4cola@gmail.com>, 2021
 # 
@@ -25,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: n1coc4cola <n1coc4cola@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/linuxdeepin/teams/3617/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -55,19 +55,15 @@ msgstr "Le nom d'utilisateur ne peut pas être vide"
 msgid "The first character must be a letter or number"
 msgstr "Le premier caractère doit être une lettre ou un chiffre"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "Ce nom d'utilisateur existe déjà"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "Le nom existe déjà"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Le nom d'utilisateur a été utilisé par le système"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Le nom d'utilisateur doit être entre 3 et 32 caractères"
 
@@ -97,12 +93,12 @@ msgstr "Mise à l'échelle de l'affichage"
 msgid "Display scaling"
 msgstr "Échelle d'affichage"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -167,8 +163,8 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Réception des fichiers %q de %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -319,7 +315,7 @@ msgstr "Toutes les fenêtres"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
-msgstr "Espace disque insuffisant, nettoyer de temps en temps!"
+msgstr "Espace disque insuffisant, nettoyez de temps en temps!"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
@@ -379,7 +375,7 @@ msgstr "Basculer entre les effets de fenêtres"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Fast Screen Off"
-msgstr "Extinction d'écran rapide"
+msgstr "Extinction rapide écran"
 
 #: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "System Monitor"
@@ -419,7 +415,7 @@ msgstr "Basculer à l'espace de travail de gauche"
 
 #: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
-msgstr "Basculer sur l'espace de travail de droite"
+msgstr "Basculer à l'espace de travail de droite"
 
 #: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
@@ -427,7 +423,7 @@ msgstr "Basculer à l'espace de travail supérieur"
 
 #: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
-msgstr "Basculer sur l'espace de travail inférieur"
+msgstr "Basculer à l'espace de travail inférieur"
 
 #: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
@@ -435,7 +431,7 @@ msgstr "Basculer entre les fenêtres similaires"
 
 #: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
-msgstr "Basculer entre les fenêtres similaires dans le sens inverse"
+msgstr "Basculer entre les fenêtres similaires en le sens inverse"
 
 #: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
@@ -578,7 +574,7 @@ msgstr "%q désinstallé avec succès"
 msgid "Failed to uninstall %q"
 msgstr "Échec de la désinstallation de %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Connexion filaire"
 
@@ -784,7 +780,7 @@ msgstr "Impossible de s'associer au réseau GSM demandé"
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "Échec de la vérification du code PIN"
+msgstr "Échec de la vérification du NIP"
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
@@ -833,7 +829,7 @@ msgstr "La carte SIM du modem GSM n'est pas insérée"
 
 #: ../../network/state_handler.go:84
 msgid "GSM Modem's SIM PIN required"
-msgstr "Le code PIN de la carte SIM du modem GSM est requis"
+msgstr "Le NIP de la carte SIM du modem GSM est requis"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
@@ -887,7 +883,7 @@ msgstr "Modem prêt"
 
 #: ../../network/state_handler.go:99
 msgid "SIM PIN is incorrect"
-msgstr "Le code PIN de la carte SIM est incorrect"
+msgstr "Le NIP de la carte SIM est incorrect"
 
 #: ../../network/state_handler.go:100
 msgid "New connection activation is enqueuing"
@@ -1015,7 +1011,7 @@ msgstr ""
 
 #: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
-msgstr "Mot de passe requis pour se connecter à %q"
+msgstr "Mot de passe requis pour se connecter %q"
 
 #: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"

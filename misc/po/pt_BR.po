@@ -4,16 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Kayo Martins <kayomfreire@gmail.com>, 2020
-# Cleber Teixeira, 2020
-# Bruno Gama <brunnogama@gmail.com>, 2020
-# RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2020
+# Bruno Melnic Incao <brunomelnic@gmail.com>, 2020
 # JeffWagen <jeff.wagen@yahoo.com>, 2020
+# Cleber Teixeira, 2020
+# Felipe André Alves Santos <lip.dre@gmail.com>, 2020
+# RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2020
+# Kayo Martins <kayomfreire@gmail.com>, 2020
 # Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2020
 # Paulo Schopf, 2020
-# Felipe André Alves Santos <lip.dre@gmail.com>, 2020
-# Cindy0514, 2020
-# Raphael Miquelis <raphaelmiquelis@gmail.com>, 2020
+# Bruno Gama <brunnogama@gmail.com>, 2020
+# Raphael Miquelis <raphaelmiquelis@gmail.com>, 2021
+# Cindy0514, 2021
 # Cassiano Molinari <chano2808a@gmail.com>, 2021
 # Alex, 2021
 # 
@@ -22,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Alex, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -52,19 +53,15 @@ msgstr "O nome de usuário não pode ficar em branco"
 msgid "The first character must be a letter or number"
 msgstr "O primeiro caractere deve ser uma letra ou um número"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "O nome de usuário já existe"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "O nome já existe"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "O nome de usuário foi usado pelo sistema"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 
@@ -92,12 +89,12 @@ msgstr "Configurando a escala de exibição"
 msgid "Display scaling"
 msgstr "Escala de Exibição"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s estava desativado"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Abrir"
 
@@ -162,8 +159,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Recebendo o arquivo %q de %q"
+msgid "Receiving %q from %q"
+msgstr "Recebendo %q de %q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -382,7 +379,7 @@ msgstr "Monitor de Sistema"
 
 #: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Deepin Picker"
-msgstr "deepin Seletor de Cores"
+msgstr "Deepin Picker"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
@@ -458,7 +455,7 @@ msgstr "Minimizar Janela"
 
 #: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
-msgstr "Fechar Janela"
+msgstr "Fechar janela"
 
 #: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
@@ -526,7 +523,7 @@ msgstr "Falha ao alterar o idioma do sistema; tente novamente"
 
 #: ../../lastore/lastore.go:244
 msgid "Retry"
-msgstr "Tentar novamente"
+msgstr "Tentar Novamente"
 
 #: ../../lastore/lastore.go:266
 msgid "Update Now"
@@ -569,7 +566,7 @@ msgstr "%q foi desinstalado"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao remover %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Conexão Cabeada"
 

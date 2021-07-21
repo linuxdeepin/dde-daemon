@@ -4,13 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+# Wiktor Jezioro <wikjezioro@op.pl>, 2020
 # Marcin Pianka <marcin.pianka@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Wiktor Jezioro <wikjezioro@op.pl>, 2020
-# Pyroxar <kacper-paczos@linux.pl>, 2020
-# Cindy0514, 2020
-# Piotr Strębski <strebski@gmail.com>, 2020
 # Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2020
+# Pyroxar <kacper-paczos@linux.pl>, 2020
+# Piotr Strębski <strebski@gmail.com>, 2021
+# Cindy0514, 2021
 # Marcin Kozioł <koziol.martin@gmail.com>, 2021
 # 
 #, fuzzy
@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Marcin Kozioł <koziol.martin@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/linuxdeepin/teams/3617/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -48,19 +48,15 @@ msgstr "Nazwa użytkownika nie może być pusta"
 msgid "The first character must be a letter or number"
 msgstr "Pierwszy znak musi być literą lub cyfrą"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "Nazwa użytkownika już istnieje"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "Taka nazwa już istnieje"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Nazwa użytkownika jest używana przez system."
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nazwa użytkownika musi mieć od 3 do 32 znaków"
 
@@ -88,12 +84,12 @@ msgstr "Ustawienie skalowania ekranu"
 msgid "Display scaling"
 msgstr "Skalowanie ekranu"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Otwórz"
 
@@ -158,8 +154,8 @@ msgid "Cancel"
 msgstr "Anuluj"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Odbieranie plików %q z %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -568,7 +564,7 @@ msgstr "%q pomyślnie usunięte"
 msgid "Failed to uninstall %q"
 msgstr "Błąd odinstalowania %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr ""
 

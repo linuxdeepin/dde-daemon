@@ -4,10 +4,9 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# 李洪武 <lihongwu1987@gmail.com>, 2020
 # Wyatt <wkyung@outlook.com>, 2020
-# iceleaf <iceleaf916@gmail.com>, 2020
-# Philip CHEUNG, 2020
+# 李洪武 <lihongwu1987@gmail.com>, 2020
+# Philip CHEUNG, 2021
 # Cindy0514, 2021
 # 
 #, fuzzy
@@ -15,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Hong Kong) (https://www.transifex.com/linuxdeepin/teams/3617/zh_HK/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +32,7 @@ msgstr "請輸入長度不小於8位的密碼 "
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "密碼必須包含英文（區分大小寫）、數字或特殊符號（~!@#$%^&*()[]{}\\|/?,.<>）"
+msgstr "密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
@@ -43,19 +42,15 @@ msgstr "用戶名不能為空"
 msgid "The first character must be a letter or number"
 msgstr "首字符必須為字母或數字"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "此用戶名已存在"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "該名稱已存在"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "此用戶名已被系統使用"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "用戶名長度必須介於3到32個字符之間"
 
@@ -83,12 +78,12 @@ msgstr "即將設置屏幕縮放"
 msgid "Display scaling"
 msgstr "屏幕縮放"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "開啟"
 
@@ -126,7 +121,7 @@ msgstr "對象交換"
 
 #: ../../bluetooth/bluez_profile.go:36
 msgid "File transfer"
-msgstr "檔案傳輸程式"
+msgstr "檔案傳輸"
 
 #: ../../bluetooth/bluez_profile.go:37
 msgid "Synchronization"
@@ -153,7 +148,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr "正在接收來自%q的%q文件"
 
 #: ../../bluetooth/obex_agent.go:355
@@ -307,11 +302,11 @@ msgstr "系統磁盤空間不足，請及時清理！"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
-msgstr "啟動器"
+msgstr "启动器"
 
 #: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Terminal"
-msgstr "終端"
+msgstr "终端"
 
 #: ../../keybinding/shortcuts/id_name_map.go:30
 msgid "Screen Recorder"
@@ -491,7 +486,7 @@ msgstr "多屏切換"
 
 #: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
-msgstr "切換語言需要認證"
+msgstr "切换语言需要认证"
 
 #: ../../langselector/locale.go:152
 msgid ""
@@ -556,7 +551,7 @@ msgstr "成功卸載 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸載失敗"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "有線連接"
 
@@ -571,7 +566,7 @@ msgstr "WEP 40/128位 密鑰"
 
 #: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
-msgstr "WPA/WPA2 個人版"
+msgstr "WPA/WPA2个人版"
 
 #: ../../network/manager_active_conn.go:416
 msgid "TLS"
@@ -595,7 +590,7 @@ msgstr "隧道TLS"
 
 #: ../../network/manager_active_conn.go:426
 msgid "Protected EAP"
-msgstr "受保護的EAP"
+msgstr "受保护的EAP"
 
 #: ../../network/manager_connection.go:336
 msgid "Wired Connection"
@@ -610,7 +605,7 @@ msgstr "應用代理設置成功"
 #: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
 #: ../../network/utils_notify.go:204
 msgid "Network"
-msgstr "網路"
+msgstr "网络"
 
 #: ../../network/proxychains/utils_notify.go:48
 msgid "Failed to set the application proxy"
@@ -809,7 +804,7 @@ msgstr "需要GSM調制解調器的SIM卡PIN碼"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
-msgstr "需要GSM調制解調器的SIM卡PUK碼"
+msgstr "需要GSM调制解调器的SIM卡PUK码"
 
 #: ../../network/state_handler.go:86
 msgid "SIM card error in GSM Modem"
@@ -1010,7 +1005,7 @@ msgstr "系統代理已取消。"
 
 #: ../../network/utils_notify.go:208
 msgid "Connected"
-msgstr "已連接"
+msgstr "已连接"
 
 #: ../../service_trigger/msg.go:7
 #, c-format

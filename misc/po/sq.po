@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Cindy0514, 2020
+# Cindy0514, 2021
 # Besnik Bleta <besnik@programeshqip.org>, 2021
 # 
 #, fuzzy
@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2021\n"
 "Language-Team: Albanian (https://www.transifex.com/linuxdeepin/teams/3617/sq/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
-msgstr "Ju lutemi, jepni një fjalëkalim jo më të pakët se 8 shenja"
+msgstr "Ju lutemi, jepni një fjalëkalim jo më pak se 8 shenja"
 
 #: ../../accounts/checkers/password.go:55
 msgid ""
@@ -43,19 +43,15 @@ msgstr "Emri i përdoruesit s’mund të jetë i zbrazët"
 msgid "The first character must be a letter or number"
 msgstr "Shenja e parë duhet të jetë shkronjë ose numër"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "Emri i përdoruesi ekziston tashmë"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "Emri ekziston tashmë"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Emri i përdoruesit është përdorur nga sistemi"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Emri i përdoruesit duhet të jetë mes 3 dhe 32 shenja i gjatë"
 
@@ -84,12 +80,12 @@ msgstr "Po ujdiset ripërmasim ekrani"
 msgid "Display scaling"
 msgstr "Ripërmasim ekrani"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s është çaktivizuar"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Hap"
 
@@ -154,8 +150,8 @@ msgid "Cancel"
 msgstr "Anuloje"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Po merren kartela %q nga %q"
+msgid "Receiving %q from %q"
+msgstr "Po merret %q nga %q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -564,7 +560,7 @@ msgstr "%q u hoq me sukses"
 msgid "Failed to uninstall %q"
 msgstr "S’u arrit të çinstalohej %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Lidhje me fill"
 
@@ -1030,7 +1026,7 @@ msgstr "Ndërmjetësi i sistemit është anuluar."
 
 #: ../../network/utils_notify.go:208
 msgid "Connected"
-msgstr "E lidhur"
+msgstr "I lidhur"
 
 #: ../../service_trigger/msg.go:7
 #, c-format

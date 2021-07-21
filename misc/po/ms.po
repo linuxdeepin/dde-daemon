@@ -5,17 +5,17 @@
 # 
 # Translators:
 # inashdeen <inashdeen@gmail.com>, 2020
-# Cindy0514, 2020
-# abuyop <abuyop@gmail.com>, 2020
+# abuyop <abuyop@gmail.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: abuyop <abuyop@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Malay (https://www.transifex.com/linuxdeepin/teams/3617/ms/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,19 +43,15 @@ msgstr "Nama pengguna tidak boleh kosong"
 msgid "The first character must be a letter or number"
 msgstr "Aksara pertama mesti satu abjad atau angka"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "Nama pengguna sudah wujud"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "Nama sudah wujud"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Nama pengguna telah digunakan oleh sistem"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nama pengguna mestilah antara 3 hingga 32 aksara"
 
@@ -83,26 +79,26 @@ msgstr "Menetapkan penskalaan paparan"
 msgid "Display scaling"
 msgstr "Penskalaan paparan"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Buka"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "Pengesahan cap jari gagal"
+msgstr "Pengecaman cap jari gagal"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
-msgstr "Pengesahan cap jari telah tamat masa"
+msgstr "Pengecaman cap jari telah tamat masa"
 
 #: ../../bluetooth/bluez_profile.go:30
 msgid "Serial port"
-msgstr "Port bersiri"
+msgstr "Port serial"
 
 #: ../../bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
@@ -110,11 +106,11 @@ msgstr "Perangkaian dailan"
 
 #: ../../bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
-msgstr "Peranti bebas-tangan"
+msgstr "Peranti Bebas-Tangan"
 
 #: ../../bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
-msgstr "Get laluan suara bebas-tangan"
+msgstr "Get laluan suara Bebas-Tangan"
 
 #: ../../bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
@@ -153,8 +149,8 @@ msgid "Cancel"
 msgstr "Batal"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Menerima fail %q daripada %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -212,7 +208,7 @@ msgstr "%q terputus"
 
 #: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
-msgstr "Pastikan %q dihidupkan dan berada dalam jangkauan"
+msgstr "Pastikan %q dihidupkan dan berada dalam julat"
 
 #: ../../bluetooth/utils_notify.go:117
 msgid ""
@@ -295,7 +291,7 @@ msgstr "Labuh"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr "Tanggal"
+msgstr "Nyahlabuh"
 
 #: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
@@ -327,7 +323,7 @@ msgstr "Tunjuk/Sembunyi labuh"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
-msgstr "Antara muka Matikan Komputer"
+msgstr "Antaramuka Matikan Komputer"
 
 #: ../../keybinding/shortcuts/id_name_map.go:34
 msgid "Terminal Quake Window"
@@ -335,19 +331,19 @@ msgstr "Tetingkap Terminal Quake"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "Tangkap layar"
+msgstr "Cekupan skrin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "Tangkap layar penuh"
+msgstr "Cekupan skrin penuh"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
-msgstr "Tangkap layar bertetingkap"
+msgstr "Cekupan skrin bertetingkap"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "Lengah tangkap layar"
+msgstr "Lengah cekupan skrin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "File manager"
@@ -375,7 +371,7 @@ msgstr "Pemilih Deepin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
-msgstr "Pembantu AI Atas Meja"
+msgstr "Pembantu AI Desktop"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Text to Speech"
@@ -431,7 +427,7 @@ msgstr "Tukar tetingkap secara songsang"
 
 #: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
-msgstr "Tunjuk atas meja"
+msgstr "Tunjuk desktop"
 
 #: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
@@ -541,8 +537,8 @@ msgstr "Gagal membuang apl"
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
-"Untuk menghindari komputer dimatikan secara automatik, sila palamkan kuasa "
-"untuk kemas kini biasa."
+"Untuk menghindari komputer dimatikan secara automatik, sila palamkan bagi "
+"kemaskini biasa."
 
 #: ../../lastore/notify.go:121
 msgid "Package cache wiped"
@@ -560,7 +556,7 @@ msgstr "%q berjaya dibuang"
 msgid "Failed to uninstall %q"
 msgstr "Gagal menyahpasang %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr ""
 
@@ -575,7 +571,7 @@ msgstr "Kunci WEP 40/128-bit"
 
 #: ../../network/manager_active_conn.go:408
 msgid "WPA/WPA2 Personal"
-msgstr "WPA/WPA2 Peribadi"
+msgstr "WPA/WPA2 Persendirian"
 
 #: ../../network/manager_active_conn.go:416
 msgid "TLS"
@@ -630,7 +626,7 @@ msgstr "Keadaan peranti berubah, sebab tidak diketahui"
 
 #: ../../network/state_handler.go:40
 msgid "The device is now managed"
-msgstr "Peranti kini terurus"
+msgstr "Peranti kini diurus"
 
 #: ../../network/state_handler.go:41
 msgid "The device is no longer managed"

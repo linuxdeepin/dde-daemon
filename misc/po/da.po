@@ -5,18 +5,18 @@
 # 
 # Translators:
 # Morten Juhl-Johansen Zölde-Fejér <morten@writtenandread.net>, 2020
-# 31c8ff7daf246c6bd598eefe84c1433c, 2020
-# Cindy0514, 2020
-# scootergrisen, 2020
+# 31c8ff7daf246c6bd598eefe84c1433c, 2021
+# scootergrisen, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: scootergrisen, 2020\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/linuxdeepin/teams/3617/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,19 +44,15 @@ msgstr "Brugernavnet må ikke være tomt"
 msgid "The first character must be a letter or number"
 msgstr "Det første tegn skal være et bogstav eller et tal"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "Brugernavnet findes allerede"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Brugernavnet er blevet brugt af systemet"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Brugernavnet skal være mellem 3-32 tegn langt"
 
@@ -84,12 +80,12 @@ msgstr "Sætter skærmskalering"
 msgid "Display scaling"
 msgstr "Skærmskalering"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Åbn"
 
@@ -154,7 +150,7 @@ msgid "Cancel"
 msgstr "Annuller"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -561,7 +557,7 @@ msgstr "%q fjernet"
 msgid "Failed to uninstall %q"
 msgstr "Kunne ikke afinstallere %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr ""
 

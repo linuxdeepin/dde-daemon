@@ -5,30 +5,30 @@
 # 
 # Translators:
 # كريم أولاد الشلحة <herr.linux88@gmail.com>, 2020
-# alibacha19 <alibacha19@gmail.com>, 2020
 # Khodr Abdallah <khodr000@gmail.com>, 2020
-# ahmad nourallah <ahmadnurallah@gmail.com>, 2020
-# mo-hd <mo-hd@windowslive.com>, 2020
-# monzerissa169 <monzerissa169@yahoo.com>, 2020
 # Oukiki Saleh <salehoukiki@gmail.com>, 2020
 # Mahmoud Abdelsalam <mahmoud.ad@tutanota.com>, 2020
 # ea5b6e8c30cf815b1aed3e5f880f4a98_908896e <4b97d4cb8da17abbf68d43a364316c10_700866>, 2020
-# أشرف بصرى <ashrafmn2008@gmail.com>, 2020
 # Hussain Alramadhan <psvitamine1@gmail.com>, 2020
 # Mohammed Alotaibi <mx_202@hotmail.com>, 2020
-# MUHAAB SHAAM <muhaab.org@gmail.com>, 2020
-# Cindy0514, 2020
-# AhmedAyman <ahmedayman321@yahoo.com>, 2020
+# mo-hd <mo-hd@windowslive.com>, 2020
+# monzerissa169 <monzerissa169@yahoo.com>, 2020
+# alibacha19 <alibacha19@gmail.com>, 2020
+# ahmad nourallah <ahmadnurallah@gmail.com>, 2020
+# أشرف بصرى <ashrafmn2008@gmail.com>, 2020
 # Idir Benkhellat <benkhellat.idir@gmail.com>, 2020
+# AhmedAyman <ahmedayman321@yahoo.com>, 2021
+# MUHAAB SHAAM <muhaab.org@gmail.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Idir Benkhellat <benkhellat.idir@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/linuxdeepin/teams/3617/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,19 +56,15 @@ msgstr "اسم المستخدم لا يمكن أن يكون فارغاً"
 msgid "The first character must be a letter or number"
 msgstr "المحرف اﻷول يجب أن يكون رقم أو حرف"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "إسم المستخدم موجود مسبقاً"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "اسم المستخدم مستخدم من قبل النظام"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "يجب أن يكون اسم المستخدم بين 3-32 حرفاً"
 
@@ -96,12 +92,12 @@ msgstr "إعدادات تحجيم العرض"
 msgid "Display scaling"
 msgstr "عرض الشاشة"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "فتح"
 
@@ -166,7 +162,7 @@ msgid "Cancel"
 msgstr "إلغاء"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -570,7 +566,7 @@ msgstr "تمت إزالة %q بنجاح"
 msgid "Failed to uninstall %q"
 msgstr "تعذر إلغاء تثبيت %q "
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr ""
 

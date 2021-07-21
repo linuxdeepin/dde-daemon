@@ -4,11 +4,11 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Marc Sancho <msgsistemes@gmail.com>, 2020
 # el_libre como el chaval <el.libre@gmail.com>, 2020
 # deepin_transifex <xiabin@linuxdeepin.com>, 2020
-# Jaime Muñoz Martín <jmmartin_5@outlook.com>, 2020
-# Cindy0514, 2020
+# Marc Sancho <msgsistemes@gmail.com>, 2020
+# Jaime Muñoz Martín <jmmartin_5@outlook.com>, 2021
+# Cindy0514, 2021
 # Davidmp <medipas@gmail.com>, 2021
 # 
 #, fuzzy
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Davidmp <medipas@gmail.com>, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/linuxdeepin/teams/3617/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -40,25 +40,21 @@ msgstr ""
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
-msgstr "El nom d'usuari no es pot deixar en blanc"
+msgstr "El nom d'usuari no es pot deixar en blanc."
 
 #: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "El primer caràcter ha de ser una lletra o un número."
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "El nom d'usuari ja existeix."
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "El nom ja existeix."
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "El nom d'usuari ja l'ha usat el sistema."
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nom d'usuari ha de tenir de 3 a 32 caràcters de llargada."
 
@@ -86,12 +82,12 @@ msgstr "Establiment de l'escalat de la pantalla"
 msgid "Display scaling"
 msgstr "Escalatge de la pantalla"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Obre"
 
@@ -156,8 +152,8 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Es reben %q fitxers de %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -234,7 +230,7 @@ msgstr "Afegeix dispositius Bluetooth"
 
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
-msgstr "Aparella"
+msgstr "Enllaça"
 
 #: ../../calendar/job.go:509 ../../calendar/job.go:516
 msgid "today"
@@ -569,7 +565,7 @@ msgstr "%q eliminada correctament"
 msgid "Failed to uninstall %q"
 msgstr "Ha fallat desinstal·lar %q."
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Connexió amb fil"
 

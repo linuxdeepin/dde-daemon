@@ -7,17 +7,17 @@
 # Adrián Ramos García <adrian.ramos.garcia.93@gmail.com>, 2020
 # Rubén <feiticeiro2010@hotmail.es>, 2020
 # Cindy0514, 2020
-# David Rebolo Magariños <drgaga345@gmail.com>, 2020
-# Xurxo Guerra Perez <xguerrap@gmail.com>, 2020
+# Xurxo Guerra Perez <xguerrap@gmail.com>, 2021
+# David Rebolo Magariños <drgaga345@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Xurxo Guerra Perez <xguerrap@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: David Rebolo Magariños <drgaga345@gmail.com>, 2021\n"
 "Language-Team: Galician (Spain) (https://www.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
-msgstr "Por favor, insira un contrasinal de máis de 8 caracteres"
+msgstr "Por favor, introduce un contrasinal de máis de 8 caracteres"
 
 #: ../../accounts/checkers/password.go:55
 msgid ""
@@ -39,27 +39,23 @@ msgstr ""
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
-msgstr "O nome de usuario non pode estar baleiro"
+msgstr "O nome de usuario non pode estar vacío"
 
 #: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
 msgstr "O primeiro caracter debe ser unha letra ou número"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "O nome de usuario xa existe"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "O nome xa existe"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "O nome de usuario está en uso polo sistema"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
-msgstr "O nome de usuario ten de ter entre 3 e 32 caracteres"
+msgstr "O nome de usuario debe estar entre 3 e 32 caracteres"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -86,18 +82,18 @@ msgstr "Configuración da escala de visualización"
 msgid "Display scaling"
 msgstr "Escala de visualización"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Abrir"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "Fallou a verificación da pegada dixital"
+msgstr "Erro na verificación por pegada dixital"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
@@ -156,8 +152,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Recibindo o ficheiro %q de %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -253,7 +249,7 @@ msgstr "Traballo"
 
 #: ../../calendar/module.go:119 ../../calendar/type.go:30
 msgid "Life"
-msgstr "Persoal"
+msgstr "Vida"
 
 #: ../../calendar/module.go:120 ../../calendar/type.go:35
 msgid "Other"
@@ -261,7 +257,7 @@ msgstr "Outros"
 
 #: ../../calendar/scheduler.go:570
 msgid "One day before start"
-msgstr "Un día antes do comezo"
+msgstr "Un día antes de comezar"
 
 #: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
 #: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
@@ -270,19 +266,19 @@ msgstr "Pechar"
 
 #: ../../calendar/scheduler.go:575
 msgid "Remind me tomorrow"
-msgstr "Lembrarme mañá"
+msgstr "Recórdame mañá"
 
 #: ../../calendar/scheduler.go:583
 msgid "Remind me later"
-msgstr "Lembrarme máis tarde"
+msgstr "Recórdamo máis tarde"
 
 #: ../../calendar/scheduler.go:593
 msgid "Schedule Reminder"
-msgstr "Programar recordatorio"
+msgstr "Recordatorio da programación"
 
 #: ../../calendar/type.go:40
 msgid "Festival"
-msgstr "Festival"
+msgstr "Festividade"
 
 #: ../../dock/app_entry_menu.go:109
 msgid "Close All"
@@ -290,7 +286,7 @@ msgstr "Pechar todo"
 
 #: ../../dock/app_entry_menu.go:125
 msgid "Force Quit"
-msgstr "Forzar a saída"
+msgstr "Forzar a saír"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
@@ -298,7 +294,7 @@ msgstr "Doca"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr "Quitar da doca"
+msgstr "Desbordar"
 
 #: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
@@ -562,7 +558,7 @@ msgstr "%q eliminouse correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Erro ao desinstalar %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr ""
 

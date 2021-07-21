@@ -6,10 +6,10 @@
 # Translators:
 # Vahap Karataş <k.vahap@gmail.com>, 2020
 # Kaya Zeren <kayazeren@gmail.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Cindy0514, 2020
-# yakup <mutouk@yandex.ru>, 2020
-# Serdar Sağlam <teknomobil@msn.com>, 2020
+# yakup <mutouk@yandex.ru>, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Cindy0514, 2021
+# Serdar Sağlam <teknomobil@msn.com>, 2021
 # meda <ademcal@yahoo.com>, 2021
 # 
 #, fuzzy
@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: meda <ademcal@yahoo.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -47,19 +47,15 @@ msgstr "Kullanıcı adı boş olamaz"
 msgid "The first character must be a letter or number"
 msgstr "İlk karakter bir harf veya sayı olmalıdır"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "Bu kullanıcı adı zaten var"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "İsim zaten var"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Bu kullanıcı adı sistem tarafından kullanılıyor"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Kullanıcı adı 3 ile 32 karakter arasında olmalıdır"
 
@@ -87,12 +83,12 @@ msgstr "Görüntü ölçeği ayarı"
 msgid "Display scaling"
 msgstr "Görüntü ölçeği"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Aç"
 
@@ -157,8 +153,8 @@ msgid "Cancel"
 msgstr "İptal"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "%q üstünden %q üstüne dosya alınıyor"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -564,7 +560,7 @@ msgstr "%q kaldırıldı"
 msgid "Failed to uninstall %q"
 msgstr "%q kaldırılamadı"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Kablolu bağlantı"
 
@@ -728,7 +724,7 @@ msgstr "AutoIP hizmeti sonlandırıldı veya başarısız oldu"
 
 #: ../../network/state_handler.go:61
 msgid "Dialing failed due to busy lines"
-msgstr "Meşgul hatlar nedeniyle arama başarısız"
+msgstr "Hatlar meşgul olduğundan arama başarısız"
 
 #: ../../network/state_handler.go:62
 msgid "Dialing failed due to no dial tone"
@@ -756,7 +752,7 @@ msgstr "Belirtilen GSM APN seçilemedi"
 
 #: ../../network/state_handler.go:68
 msgid "No networks searched"
-msgstr "Herhangi bir şebeke aranmadı"
+msgstr "Hiçbir ağ aranmadı"
 
 #: ../../network/state_handler.go:69
 msgid "Network registration was denied"

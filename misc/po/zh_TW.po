@@ -8,9 +8,9 @@
 # LNDDYL, 2020
 # Julian Lai <laichiaheng@outlook.com>, 2020
 # Zhou Rh <jjzrh2@126.com>, 2020
-# 凡凡不想平凡 <freddy4212@gmail.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
 # byStarTW (pan93412) <pan93412@gmail.com>, 2020
+# 凡凡不想平凡 <freddy4212@gmail.com>, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Cindy0514, 2021
 # 
 #, fuzzy
@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -46,19 +46,15 @@ msgstr "使用者名稱不能空白"
 msgid "The first character must be a letter or number"
 msgstr "首字元必須為字母或數字"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "使用者名稱已經存在"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "該名稱已存在"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "此使用者名稱已被系統使用"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "使用者名稱長度必須介於 3 至 32 個字元之間"
 
@@ -86,12 +82,12 @@ msgstr "設定螢幕縮放率"
 msgid "Display scaling"
 msgstr "畫面縮放"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "開放"
 
@@ -156,7 +152,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr "正在接收來自%q的%q文件"
 
 #: ../../bluetooth/obex_agent.go:355
@@ -559,7 +555,7 @@ msgstr "%q 解除安裝成功"
 msgid "Failed to uninstall %q"
 msgstr "%q 解除安裝失敗"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "有線連接"
 
@@ -744,7 +740,7 @@ msgstr "無法選擇指定的 GSM APN。"
 
 #: ../../network/state_handler.go:68
 msgid "No networks searched"
-msgstr "找不到網路"
+msgstr "找不到網路。"
 
 #: ../../network/state_handler.go:69
 msgid "Network registration was denied"
@@ -760,7 +756,7 @@ msgstr "無法註冊請求的 GSM 網路"
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "PIN 檢查失敗。"
+msgstr "PIN 檢查失敗"
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
@@ -768,11 +764,11 @@ msgstr "設備必要韌體可能已丟失"
 
 #: ../../network/state_handler.go:74
 msgid "The device was removed"
-msgstr "裝置已移除。"
+msgstr "裝置已移除"
 
 #: ../../network/state_handler.go:75
 msgid "NetworkManager went to sleep"
-msgstr "NetworkManager 進入休眠狀態。"
+msgstr "NetworkManager 進入休眠狀態"
 
 #: ../../network/state_handler.go:76
 msgid "The device's active connection was removed or disappeared"

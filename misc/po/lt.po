@@ -6,17 +6,17 @@
 # Translators:
 # Mantas Kriaučiūnas Baltix <mantas@akl.lt>, 2020
 # Jonas Motiejūnas <exjonas@gmail.com>, 2020
-# Cindy0514, 2020
-# Moo, 2020
+# Moo, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Moo, 2020\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/linuxdeepin/teams/3617/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,19 +44,15 @@ msgstr "Naudotojo vardas negali būti tuščias"
 msgid "The first character must be a letter or number"
 msgstr "Pirmasis simbolis privalo būti raidė arba skaitmuo"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "Naudotojo vardas jau yra"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Naudotojo vardas naudojamas sistemos"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Naudotojo vardas privalo būti nuo 3 iki 32 simbolių"
 
@@ -84,12 +80,12 @@ msgstr "Nustatomas ekrano mastelis"
 msgid "Display scaling"
 msgstr "Ekrano mastelis"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Atverti"
 
@@ -154,7 +150,7 @@ msgid "Cancel"
 msgstr "Atsisakyti"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -560,7 +556,7 @@ msgstr "%q sėkmingai pašalintas"
 msgid "Failed to uninstall %q"
 msgstr "Nepavyko pašalinti %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr ""
 

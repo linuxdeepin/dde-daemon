@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,19 +37,15 @@ msgstr "Username cannot be empty"
 msgid "The first character must be a letter or number"
 msgstr "The first character must be a letter or number"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "The username already exists"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "The name already exists"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "The username has been used by system"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Username must be between 3 and 32 characters"
 
@@ -77,12 +73,12 @@ msgstr "Setting display scaling"
 msgid "Display scaling"
 msgstr "Display scaling"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s had been disabled"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Open"
 
@@ -147,8 +143,8 @@ msgid "Cancel"
 msgstr "Cancel"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Receiving %q files from %q"
+msgid "Receiving %q from %q"
+msgstr "Receiving %q from %q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -554,7 +550,7 @@ msgstr "%q removed successfully"
 msgid "Failed to uninstall %q"
 msgstr "Failed to uninstall %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Wired connection"
 

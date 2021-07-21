@@ -4,12 +4,12 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Slobodan Simić <slsimic@gmail.com>, 2020
-# kolera <koleramilan@gmail.com>, 2020
 # Boki Ball <superdodgeballer@gmail.com>, 2020
-# Cindy0514, 2020
-# Smarty <kidsmart33@gmail.com>, 2020
-# Marko Joksimovic <pauspapir@yahoo.com>, 2020
+# kolera <koleramilan@gmail.com>, 2020
+# Slobodan Simić <slsimic@gmail.com>, 2020
+# Smarty <kidsmart33@gmail.com>, 2021
+# Cindy0514, 2021
+# Marko Joksimovic <pauspapir@yahoo.com>, 2021
 # Марко Пејовић <markopejovic@tutanota.com>, 2021
 # 
 #, fuzzy
@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2021\n"
 "Language-Team: Serbian (https://www.transifex.com/linuxdeepin/teams/3617/sr/)\n"
 "MIME-Version: 1.0\n"
@@ -47,19 +47,15 @@ msgstr "Корисничко име не може бити празно"
 msgid "The first character must be a letter or number"
 msgstr "Први карактер мора бити слово или број"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "Корисничко име већ постоји"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "Име већ постоји"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Корисничко име се већ користи"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "Корисничко име мора садржати између 3-32 карактера"
 
@@ -87,12 +83,12 @@ msgstr "Подешавање скалираног приказа"
 msgid "Display scaling"
 msgstr "Скалирање приказа"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s је искључен"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Покрени"
 
@@ -157,8 +153,8 @@ msgid "Cancel"
 msgstr "Откажи"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Преузимање %q датотеке од %q"
+msgid "Receiving %q from %q"
+msgstr "Преузимање %q од %q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -393,11 +389,11 @@ msgstr "Говор у текст"
 
 #: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Clipboard"
-msgstr "Остава"
+msgstr "Бележница"
 
 #: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Translation"
-msgstr "Превод"
+msgstr " Превод"
 
 #: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
@@ -564,7 +560,7 @@ msgstr "%q уклањање успешно"
 msgid "Failed to uninstall %q"
 msgstr "Уклањање %q неуспешно"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Жичана веза"
 
@@ -984,7 +980,7 @@ msgstr "Неуспешно повезивање на %q, погрешна лоз
 
 #: ../../network/state_handler.go:360
 msgid "Password is required to connect %q"
-msgstr "Потребна је лозинка за повезивање %q"
+msgstr "Лозинка је потребна за повезивање %q"
 
 #: ../../network/state_handler.go:362
 msgid "The %q 802.11 WLAN network could not be found"
@@ -1011,11 +1007,12 @@ msgstr "Режим приступне тачке није подржан на о
 #: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr "Физички прекидач ВЛАН картице је искључен, укључите по потреби."
+msgstr ""
+"Хардверски прекидач ВЛАН картице је искључен, молимо укључите по потреби."
 
 #: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
-msgstr "Системски посредник је успешно подешен."
+msgstr "Системски посредник успешно подешен."
 
 #: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
@@ -1050,7 +1047,7 @@ msgstr "Подешавања напајања су промењена"
 #: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
-msgstr "Када је поклопац затворен, "
+msgstr "Када је поклопац затворен,"
 
 #: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
@@ -1085,7 +1082,8 @@ msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
-"Идентификација је неопходна да контролишете мрежну синхронизацију времена"
+"Идентификација је неопходна да контролишете опцију мрежне синхронизације "
+"времена"
 
 #: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"

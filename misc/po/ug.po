@@ -4,21 +4,21 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# مۇختەر مەخمۇت <yeganaaa@163.com>, 2020
 # Abdusalam Huxur <2250907458@qq.com>, 2020
-# Muhammadali Abliz <ordam2@163.com>, 2020
 # 伊力亚斯 伊德日斯 <2032517177@qq.com>, 2020
-# 阿迪力 买买提明 <251078110@qq.com>, 2021
+# مۇختەر مەخمۇت <yeganaaa@163.com>, 2020
+# Muhammadali Abliz <ordam2@163.com>, 2020
 # Cindy0514, 2021
+# 阿迪力 买买提明 <251078110@qq.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2021\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,19 +47,15 @@ msgstr "ئىشلەتكۈچى ئىسمى قۇرۇق قالسا بولمايدۇ"
 msgid "The first character must be a letter or number"
 msgstr "بىرىنچى ھەرپ چوقۇم بىر ھەرپ ياكى سان بولۇشى كېرەك"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "بۇ ئەزالىق نامى سىستېما تەرىپىدىن ئىشلىتىلىپ بولغان"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "ئىشلەتكۈچى ئىسمى 3 دىن 32 ھەرپ ئارىلىقىدا بولۇشى كېرەك"
 
@@ -88,18 +84,18 @@ msgstr "كۆرۈنۈش نىسبىتىنى تەڭشىمەكچى"
 msgid "Display scaling"
 msgstr "كۆرۈنىش كىچىكلىتىش"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s چەكلەنگەن"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "ئوچۇق"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "بارماق ئىزىنى دەلىللەش مەغلۇپ بولدى"
+msgstr "بارماق ئىزىنى دەلىللەش مەغلۇب بولدى"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
@@ -158,7 +154,7 @@ msgid "Cancel"
 msgstr "بىكار قىلىش"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr "%q دىن كەلگەن %q دانە ھۆججەت قوبۇللىنىۋاتىدۇ"
 
 #: ../../bluetooth/obex_agent.go:355
@@ -565,7 +561,7 @@ msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
 msgid "Failed to uninstall %q"
 msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "سىملىق تور ئۇلىنىشى"
 
@@ -664,8 +660,7 @@ msgstr "پارول تەلەپ قىلىنغان، ئەمما تەمىنلەنمى
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
-msgstr ""
-"802.1X تېرمىنالىنىڭ زىيارەت نۇقتىسى ياكى دەلىللەش مۇلازىمىتىرىدىن ئۈزۈلدى"
+msgstr "802.1X客户端从接入点或认证服务器断开连接"
 
 #: ../../network/state_handler.go:47
 msgid "Configuration of the 802.1X supplicant failed"
@@ -677,7 +672,7 @@ msgstr "802.1X تېرمىنالى بىنورمال چېكىندى ياكى مە�
 
 #: ../../network/state_handler.go:49
 msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "802.1X تېرمىنالىنىڭ دەلىللەش ۋاقتى ئۇزۇن بولۇپ كەتتى"
+msgstr "802.1X تېرمىنالىنىڭ دەلىللەش ۋاقتى ئۇزۇن"
 
 #: ../../network/state_handler.go:50
 msgid "The PPP service failed to start within the allowed time"
@@ -745,7 +740,7 @@ msgstr "ئۇلانمىدى"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
-msgstr "مودېلنى  دەسلەپكى قوزغىتىش مەغلۇپ بولدى"
+msgstr "مودېلنى  دەسلەپكى قوزغىتىش مەغلۇب بولدى"
 
 #: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
@@ -869,7 +864,7 @@ msgstr "مودېل تەييار بولدى"
 
 #: ../../network/state_handler.go:99
 msgid "SIM PIN is incorrect"
-msgstr "SIM كارتىنىڭ PIN كودى خاتا"
+msgstr "SIM كارتىنىڭ PIN نومۇرى خاتا"
 
 #: ../../network/state_handler.go:100
 msgid "New connection activation is enqueuing"
@@ -890,7 +885,7 @@ msgstr "تور سىمى چىقىرىۋېتىلدى"
 #: ../../network/state_handler.go:106
 msgid "Please make sure SIM card has been inserted with mobile network signal"
 msgstr ""
-"SIM كارتىنىڭ سېلىنغانلىقىنى ۋە كۆچمە تور سىگنالى بارلىقىنى جەزملەشتۈرۈڭ"
+"SIM كارتىنىڭ قىستۇرۇلغانلىقىنى ۋە كۆچمە تور سىگنالى بارلىقىنى جەزملەشتۈرۈڭ"
 
 #: ../../network/state_handler.go:107
 msgid ""

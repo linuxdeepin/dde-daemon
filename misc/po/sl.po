@@ -4,14 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# RokX, 2020
-# andrej55 <andrej.marsetic@gmail.com>, 2020
-# Eva Černi <mini.muca000@gmail.com>, 2020
 # Tadej Logar <tadej.logar.101@gmail.com>, 2020
 # kloki <klokimass@gmail.com>, 2020
+# RokX, 2020
 # worm <thewormhole@gmail.com>, 2020
+# andrej55 <andrej.marsetic@gmail.com>, 2020
+# Eva Černi <mini.muca000@gmail.com>, 2020
 # Cindy0514, 2020
-# Gorzy Gorup <gorupgorazd@gmail.com>, 2020
+# Gorzy Gorup <gorupgorazd@gmail.com>, 2021
 # Arnold Marko <arnold.marko@gmail.com>, 2021
 # 
 #, fuzzy
@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/linuxdeepin/teams/3617/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"Geslo mora vsebovati angleške črke (velikost črk je pomembna), številke ali "
+"Geslo mora vsebovati angleške črke (veliksot črk je pomembna), številke ali "
 "posebne simbole (~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts/checkers/username.go:64
@@ -49,21 +49,17 @@ msgstr "Uporabniško ime ne more biti prazno"
 msgid "The first character must be a letter or number"
 msgstr "Prvi znak mora biti črka ali številka"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "To uporabniško ime že obstaja"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "Ime že obstaja"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Uporabniško ime je uporabil sistem"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
-msgstr "Uporabniško ime mora imeti od 3 do 32 znakov"
+msgstr "Uporabniško ime mora vsebovati od 3 do 32 znakov"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -83,18 +79,18 @@ msgstr "Odjavi se sedaj"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
-msgstr "Nastavitve merila zaslona"
+msgstr "Nastavljanje spreminjanja velikosti"
 
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
-msgstr "Spreminjanje merila zaslona"
+msgstr "Spreminjanje velikosti prikaza"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Odpri"
 
@@ -108,7 +104,7 @@ msgstr "Čas za preverjanje prstnih odtisov se je izteklo"
 
 #: ../../bluetooth/bluez_profile.go:30
 msgid "Serial port"
-msgstr "Serijski vmesnik"
+msgstr "Serijska vrata"
 
 #: ../../bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
@@ -144,11 +140,11 @@ msgstr "Dostop do imenika"
 
 #: ../../bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
-msgstr "Odjemalni strežnik telefonskega imenika"
+msgstr "Dostop do imenika stranke"
 
 #: ../../bluetooth/bluez_profile.go:40
 msgid "Message access"
-msgstr "Dostop do sporočil"
+msgstr "Prejeto sporočilo"
 
 #: ../../bluetooth/bluez_profile.go:41
 msgid "Message notification"
@@ -159,8 +155,8 @@ msgid "Cancel"
 msgstr "Prekliči"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Prejemam %q datotek od %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -214,11 +210,11 @@ msgstr "Povezovanje z %q je uspelo"
 #: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
 #: ../../network/state_handler.go:357
 msgid "%q disconnected"
-msgstr "%q ni več povezan"
+msgstr "%q ni več povezano"
 
 #: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
-msgstr "Preveri, da %q je vklopljen in v dosegu."
+msgstr "Preveri, da %q je vklopen in v dosegu."
 
 #: ../../bluetooth/utils_notify.go:117
 msgid ""
@@ -311,7 +307,7 @@ msgstr "Vsa okna"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
-msgstr "Premalo prostora na disku. Pravočasno ga očistite!"
+msgstr "Premajhen prostor na disku, prosim pravočasno očistite!"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
@@ -331,7 +327,7 @@ msgstr "Zakleni zaslon"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Prikaži/skrij sidrišče"
+msgstr "Prikaži/skrij pristan"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -343,19 +339,19 @@ msgstr "Okno terminala Quake"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "Posnetek zaslona"
+msgstr "Slika zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "Posnetek celega zaslona"
+msgstr "Slika celega zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
-msgstr "Posnetek okna"
+msgstr "Slika okna"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "Zajem zaslona z zamikom"
+msgstr "Zamakni zajem zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "File manager"
@@ -363,11 +359,11 @@ msgstr "Upravitelj datotek"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Disable Touchpad"
-msgstr "Onemogoči sledilno ploščico"
+msgstr "Onemogoči drsno ploščico"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "Switch window effects"
-msgstr "Preklopi učinke oken"
+msgstr "Preklopi okenske učinke"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Fast Screen Off"
@@ -379,7 +375,7 @@ msgstr "Nadzornik sistema"
 
 #: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Deepin Picker"
-msgstr "Deepin kapalka"
+msgstr "Kapalka Deepin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
@@ -491,7 +487,7 @@ msgstr "Prikaži okna na trenutni delovni površini."
 
 #: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
-msgstr "Prikaži delovne površine"
+msgstr "Prikaži delovna mesta."
 
 #: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
@@ -523,7 +519,7 @@ msgstr "Neuspešno spreminjanje jezika sistema. Poskusite znova kasneje"
 
 #: ../../lastore/lastore.go:244
 msgid "Retry"
-msgstr "Ponovi"
+msgstr "Poskusi ponovno"
 
 #: ../../lastore/lastore.go:266
 msgid "Update Now"
@@ -548,9 +544,7 @@ msgstr "Neuspešno odstranjevanje programa"
 #: ../../lastore/notify.go:116
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
-msgstr ""
-"Da se izognete samodejnemu izklopu, se priklopite na električno omrežje za "
-"normalno posodobitev."
+msgstr "Da se izognete samodejnemu izklopu, vključite običajne posodobitve."
 
 #: ../../lastore/notify.go:121
 msgid "Package cache wiped"
@@ -568,14 +562,14 @@ msgstr "%q je uspešno odstranjen"
 msgid "Failed to uninstall %q"
 msgstr "Ni uspelo odstraniti %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr ""
 
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
-msgstr "brez"
+msgstr "Nič"
 
 #: ../../network/manager_active_conn.go:406
 msgid "WEP 40/128-bit Key"
@@ -638,15 +632,15 @@ msgstr "Stanje naprave se je iz neznanih razlogov spremenilo"
 
 #: ../../network/state_handler.go:40
 msgid "The device is now managed"
-msgstr "Naprava je sedaj upravljena"
+msgstr "Naprava se zdaj upravlja"
 
 #: ../../network/state_handler.go:41
 msgid "The device is no longer managed"
-msgstr "Naprave se več ne upravlja"
+msgstr "Naprava se ne upravlja več"
 
 #: ../../network/state_handler.go:42
 msgid "The device has not been ready for configuration"
-msgstr "Naprava ni bila pripravljena za nastavljanje"
+msgstr "Naprava ni bila pripravljena na konfiguracijo"
 
 #: ../../network/state_handler.go:43
 msgid ""
@@ -911,7 +905,7 @@ msgstr "Neuspešna aktivacija VPN povezave"
 #: ../../network/state_handler.go:112
 msgid "The VPN connection state changed due to being disconnected by users"
 msgstr ""
-"Stanje VPN povezave se je spremenilo zaradi odklopa s strani uporabnikov"
+"Stanje VPN povezave se je spremenilo zaradi odklopa s strani upporabnikov"
 
 #: ../../network/state_handler.go:113
 msgid ""
@@ -960,7 +954,7 @@ msgstr "Povezovanje %q"
 
 #: ../../network/state_handler.go:265
 msgid "Hotspot enabled"
-msgstr "Dostopna točka je vklopljena"
+msgstr "Dostopna točka je omogočena"
 
 #: ../../network/state_handler.go:267
 msgid "%q connected"

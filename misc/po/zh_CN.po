@@ -4,13 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Michael Jay Tong <michaeljayt@gmail.com>, 2020
-# 李洪武 <lihongwu1987@gmail.com>, 2020
-# cxbii <mycxbii@gmail.com>, 2020
 # electricface <songwentai@linuxdeepin.com>, 2020
+# 李洪武 <lihongwu1987@gmail.com>, 2020
+# Michael Jay Tong <michaeljayt@gmail.com>, 2020
+# cxbii <mycxbii@gmail.com>, 2020
 # hualet <mr.asianwang@gmail.com>, 2020
 # transifex deepin <transifex@deepin.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Cindy0514, 2021
 # 
 #, fuzzy
@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -46,19 +46,15 @@ msgstr "用户名不能为空"
 msgid "The first character must be a letter or number"
 msgstr "首字符必须为字母或数字"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "此用户名已存在"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "该名称已存在"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "此用户名已被系统使用"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "用户名长度必须介于3到32个字符之间"
 
@@ -86,12 +82,12 @@ msgstr "即将设置屏幕缩放"
 msgid "Display scaling"
 msgstr "屏幕缩放"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "打开"
 
@@ -156,7 +152,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr "正在接收来自%q的%q文件"
 
 #: ../../bluetooth/obex_agent.go:355
@@ -524,7 +520,7 @@ msgstr "立即更新"
 
 #: ../../lastore/notify.go:96
 msgid "%q installed successfully."
-msgstr "%q 安装成功"
+msgstr "%q 安装成功。"
 
 #: ../../lastore/notify.go:99
 msgid "%q failed to install."
@@ -559,7 +555,7 @@ msgstr "成功卸载 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸载失败"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "有线连接"
 

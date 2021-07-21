@@ -4,25 +4,25 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# pej A, 2020
-# Maahyar Motevakel <mahyar.motevakel@gmail.com>, 2020
-# mohammad raufzahed <mohammadraufzahed1389@gmail.com>, 2020
 # Hootan Baraary <h.baraary@yahoo.com>, 2020
-# Hadi Kamell <beemeyl@gmail.com>, 2020
+# pej A, 2020
 # Amir Dadash <dadashamir25@gmail.com>, 2020
+# mohammad raufzahed <mohammadraufzahed1389@gmail.com>, 2020
+# Hadi Kamell <beemeyl@gmail.com>, 2020
+# Maahyar Motevakel <mahyar.motevakel@gmail.com>, 2020
 # Alik Miankoli <alikmiankoliid@gmail.com>, 2020
 # amirhosein lesani <xenups@gmail.com>, 2020
-# Cindy0514, 2020
-# AmirHosein Lesani <xenups@outlook.com>, 2020
+# Cindy0514, 2021
+# AmirHosein Lesani <xenups@outlook.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: AmirHosein Lesani <xenups@outlook.com>, 2020\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: AmirHosein Lesani <xenups@outlook.com>, 2021\n"
 "Language-Team: Persian (https://www.transifex.com/linuxdeepin/teams/3617/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,19 +50,15 @@ msgstr "نام کاربری نمیتواند خالی باشد."
 msgid "The first character must be a letter or number"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "این نام کاربری  از قبل وجود دارد"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "نام کاربری توسط سیستم استفاده شده است."
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "نام کاربری باید بین 3 تا 32 نویسه باشد"
 
@@ -90,12 +86,12 @@ msgstr "تنظیم نمایش مقیاس"
 msgid "Display scaling"
 msgstr "نمایش مقیاس"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "باز کردن"
 
@@ -160,7 +156,7 @@ msgid "Cancel"
 msgstr "انصراف"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -565,7 +561,7 @@ msgstr "%q با موفقیت حذف شد"
 msgid "Failed to uninstall %q"
 msgstr "%q حذف انجام نشد"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr ""
 

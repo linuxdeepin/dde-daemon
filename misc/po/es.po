@@ -4,20 +4,20 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# roberto lopez <riscogordo@gmail.com>, 2020
-# Chema Ramirez <josemrf1996@gmail.com>, 2020
-# Luis Castillo <castilloluis2005@gmail.com>, 2020
 # efedezeta <pocodance@gmail.com>, 2020
 # deepin_transifex <xiabin@linuxdeepin.com>, 2020
+# Chema Ramirez <josemrf1996@gmail.com>, 2020
+# Luis Castillo <castilloluis2005@gmail.com>, 2020
 # Pablo Alejandro Hamann <linkstat@gmail.com>, 2020
+# roberto lopez <riscogordo@gmail.com>, 2020
 # jhalo <jhalo@protonmail.com>, 2020
-# Cindy0514, 2020
-# Martín Josemaría <martin.vuelta@gmail.com>, 2020
-# jose luis <josemdance@outlook.com>, 2020
-# Alvaro Samudio <alvarosamudio@protonmail.com>, 2020
-# Isaías Gätjens M <igatjens@gmail.com>, 2020
-# Tomás Warynyca <tomas.warynyca@outlook.com>, 2020
-# Diego Sanguinetti, 2021
+# Diego Sanguinetti, 2020
+# jose luis <josemdance@outlook.com>, 2021
+# Alvaro Samudio <alvarosamudio@protonmail.com>, 2021
+# Cindy0514, 2021
+# Tomás Warynyca <tomas.warynyca@outlook.com>, 2021
+# Isaías Gätjens M <igatjens@gmail.com>, 2021
+# Martín Josemaría <martin.vuelta@gmail.com>, 2021
 # Zaraza, 2021
 # 
 #, fuzzy
@@ -25,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Zaraza, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/linuxdeepin/teams/3617/es/)\n"
 "MIME-Version: 1.0\n"
@@ -55,19 +55,15 @@ msgstr "El nombre de usuario no puede estar vacío"
 msgid "The first character must be a letter or number"
 msgstr "El primer carácter debe ser una letra o número"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "El nombre de usuario ya existe"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "El nombre ya existe"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "El nombre de usuario ha sido usado por el sistema"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nombre de usuario debe tener entre 3 y 32 caracteres"
 
@@ -85,7 +81,7 @@ msgstr "Luego"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr "Cerrar sesión ahora"
+msgstr "Cerrar sesión"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -95,12 +91,12 @@ msgstr "Configurar escalado de pantalla"
 msgid "Display scaling"
 msgstr "Escalado de pantalla"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Abrir"
 
@@ -165,8 +161,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Recibiendo %q archivos de %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -272,7 +268,7 @@ msgstr "Otro"
 
 #: ../../calendar/scheduler.go:570
 msgid "One day before start"
-msgstr "El día anterior al evento"
+msgstr "El día siguiente al inicio"
 
 #: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
 #: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
@@ -365,7 +361,7 @@ msgstr "Captura de pantalla temporizada"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "File manager"
-msgstr "Administrador de archivos"
+msgstr "Gestor de archivos"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Disable Touchpad"
@@ -574,7 +570,7 @@ msgstr "%q eliminado correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Falló la desinstalación de %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Conexión cableada"
 

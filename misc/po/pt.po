@@ -4,12 +4,12 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+# Maggie Liu <maggie.liufei@gmail.com>, 2020
+# Jesse Brandao <www.jwb@gmail.com>, 2020
 # Manuela Silva <mmsrs@sky.com>, 2020
 # Luís Lima <geral@liqensoft.com>, 2020
 # Ricardo Simões <xmcorporation@gmail.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Jesse Brandao <www.jwb@gmail.com>, 2020
-# Cindy0514, 2020
+# Cindy0514, 2021
 # Hugo Carvalho <hugokarvalho@hotmail.com>, 2021
 # 
 #, fuzzy
@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>, 2021\n"
 "Language-Team: Portuguese (https://www.transifex.com/linuxdeepin/teams/3617/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -47,19 +47,15 @@ msgstr "O nome de utilizador não pode estar em branco"
 msgid "The first character must be a letter or number"
 msgstr "O primeiro caracter deve ser uma letra ou número"
 
-#: ../../accounts/checkers/username.go:71
+#: ../../accounts/checkers/username.go:72
 msgid "The username already exists"
 msgstr "O nome de utilizador já existe"
 
-#: ../../accounts/checkers/username.go:74
+#: ../../accounts/checkers/username.go:75
 msgid "The name already exists"
 msgstr "O nome de já existe"
 
-#: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "O nome de utilizador foi usado pelo sistema"
-
-#: ../../accounts/checkers/username.go:78
+#: ../../accounts/checkers/username.go:77
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de utilizador deve ter entre 3 e 32 caracteres"
 
@@ -89,12 +85,12 @@ msgstr "A definir escala de visualização"
 msgid "Display scaling"
 msgstr "Escala de visualização"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:459
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s foi desativado"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Abrir"
 
@@ -159,8 +155,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "A receber ficheiros de %q do %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -295,11 +291,11 @@ msgstr "Fechar tudo"
 
 #: ../../dock/app_entry_menu.go:125
 msgid "Force Quit"
-msgstr "Forçar fecho"
+msgstr "Forçar o terminar"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
-msgstr "Afixar na doca"
+msgstr "Doca"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
@@ -568,7 +564,7 @@ msgstr "%q removido com sucesso"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao desinstalar %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:362
 msgid "Wired connection"
 msgstr "Ligação por cabo"
 
