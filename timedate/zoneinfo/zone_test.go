@@ -63,10 +63,12 @@ func (*testWrapper) TestZoneValid(c *C.C) {
 	var infos = []struct {
 		zone  string
 		valid bool
+		err   error
 	}{
 		{
 			zone:  "Asia/Shanghai",
 			valid: true,
+			err:   nil,
 		},
 		//{
 		//zone:  "Asia/Beijing",
@@ -75,11 +77,14 @@ func (*testWrapper) TestZoneValid(c *C.C) {
 		{
 			zone:  "Asia/xxxx",
 			valid: false,
+			err:   nil,
 		},
 	}
 
 	for _, info := range infos {
-		c.Check(IsZoneValid(info.zone), C.Equals, info.valid)
+		valid, err := IsZoneValid(info.zone)
+		c.Check(valid, C.Equals, info.valid)
+		c.Check(err, C.Equals, info.err)
 	}
 }
 

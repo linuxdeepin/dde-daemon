@@ -22,11 +22,9 @@ package zoneinfo
 import (
 	"fmt"
 	"io/ioutil"
-	"path"
 	"regexp"
 	"strings"
-
-	dutils "pkg.deepin.io/lib/utils"
+	"sync"
 )
 
 type DSTInfo struct {
@@ -52,7 +50,9 @@ type ZoneInfo struct {
 }
 
 var (
-	_zoneList []string
+	_zoneListMux sync.Mutex
+	_zoneList    []string
+	_zoneListMap map[string]struct{}
 
 	// Error, invalid timezone
 	ErrZoneInvalid = fmt.Errorf("Invalid time zone")
@@ -61,38 +61,52 @@ var (
 	defaultZoneDir = "/usr/share/zoneinfo"
 )
 
-/*
-func init() {
-	if _zoneList != nil {
+// Check timezone validity
+func IsZoneValid(zone string) (ret bool, err error) {
+	if len(zone) == 0 {
+		ret = false
 		return
 	}
 
-	_zoneList = GetAllZones()
-}
-*/
+	_zoneListMux.Lock()
+	defer _zoneListMux.Unlock()
 
-// Check timezone validity
-func IsZoneValid(zone string) bool {
-	if len(zone) == 0 {
-		return false
+	if _zoneList == nil {
+		err = loadZoneListWithoutLock()
 	}
 
-	file := path.Join(defaultZoneDir, zone)
-	return dutils.IsFileExist(file)
+	_, ret = _zoneListMap[zone]
+	return
 }
 
-func GetAllZones() []string {
-	if _zoneList != nil {
-		return _zoneList
+func loadZoneListWithoutLock() (err error) {
+
+	_zoneList, err = getZoneListFromFile(defaultZoneTab)
+	_zoneListMap = make(map[string]struct{})
+
+	for _, zone := range _zoneList {
+		_zoneListMap[zone] = struct{}{}
 	}
 
-	list, _ := getZoneListFromFile(defaultZoneTab)
-	return list
+	return
+}
+
+func GetAllZones() (ret []string, err error) {
+	_zoneListMux.Lock()
+	defer _zoneListMux.Unlock()
+	if _zoneList == nil {
+		err = loadZoneListWithoutLock()
+	}
+	return _zoneList, err
 }
 
 // Query timezone detail info by timezone
 func GetZoneInfo(zone string) (*ZoneInfo, error) {
-	if !IsZoneValid(zone) {
+	ok, err := IsZoneValid(zone)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
 		return nil, ErrZoneInvalid
 	}
 
@@ -116,6 +130,7 @@ func getZoneListFromFile(file string) ([]string, error) {
 	return list, nil
 }
 
+// when error occurs, return nil,error
 func getUncommentedZoneLines(file string) ([]string, error) {
 	content, err := ioutil.ReadFile(file)
 	if err != nil {
