@@ -729,24 +729,26 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 	return dbusutil.ToError(err)
 }
 
-func (a *Audio) findSink(cardId uint32, activePortName string) *Sink {
+func (a *Audio) findSinks(cardId uint32, activePortName string) []*Sink {
+	sinks := make([]*Sink, 0)
 	for _, sink := range a.sinks {
 		if sink.Card == cardId && sink.ActivePort.Name == activePortName {
-			return sink
+			sinks = append(sinks, sink)
 		}
 	}
 
-	return nil
+	return sinks
 }
 
-func (a *Audio) findSource(cardId uint32, activePortName string) *Source {
+func (a *Audio) findSources(cardId uint32, activePortName string) []*Source {
+	sources := make([]*Source, 0)
 	for _, source := range a.sources {
 		if source.Card == cardId && source.ActivePort.Name == activePortName {
-			return source
+			sources = append(sources, source)
 		}
 	}
 
-	return nil
+	return sources
 }
 
 func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *dbus.Error {
@@ -768,18 +770,14 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 	GetPriorityManager().SetPorts(a.cards)
 	a.autoSwitchPort()
 
-	sink := a.findSink(cardId, portName)
-	if sink != nil && sink == a.defaultSink {
+	sinks := a.findSinks(cardId, portName)
+	for _, sink := range sinks {
 		sink.setMute(!enabled || GetConfigKeeper().Mute.MuteOutput)
-	} else if sink != nil && sink != a.defaultSink {
-		sink.setMute(!enabled)
 	}
 
-	source := a.findSource(cardId, portName)
-	if source != nil && source == a.defaultSource {
+	sources := a.findSources(cardId, portName)
+	for _, source := range sources {
 		source.setMute(!enabled || GetConfigKeeper().Mute.MuteInput)
-	} else if source != nil && source != a.defaultSource {
-		source.setMute(!enabled)
 	}
 
 	return nil
