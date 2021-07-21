@@ -498,6 +498,8 @@ func (m *Manager) getTouchScreenRotationContext() (context *touchEventContext, p
 }
 
 //param @edge: swipe to touchscreen edge
+// edge: 该手势来自屏幕的哪条边
+// p:    该手势的终点
 func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge string, p *point, duration int32) error {
 	logger.Debugf("handleTouchEdgeMoveStopLeave: context:%+v edge:%s p: %+v", *context, edge, *p)
 
@@ -531,6 +533,8 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge 
 	return nil
 }
 
+// edge: 该手势来自屏幕的哪条边
+// p:    该手势的终点
 func (m *Manager) handleTouchEdgeEvent(context *touchEventContext, edge string, p *point) error {
 	logger.Debugf("handleTouchEdgeEvent: context:%+v edge:%s p:%+v", *context, edge, *p)
 	switch edge {
@@ -546,6 +550,10 @@ func (m *Manager) handleTouchEdgeEvent(context *touchEventContext, edge string, 
 	return nil
 }
 
+// direction: 该手势的方向
+// fingers:   手指的数量
+// startP:    该手势的起点
+// endP:      该手势的终点
 func (m *Manager) handleTouchMovementEvent(context *touchEventContext, direction string, fingers int32, startP *point, endP *point) error {
 	logger.Debugf("handleTouchMovementEvent: context:%+v direction:%s startP:%+v endP:%+v", *context, direction, *startP, *endP)
 
