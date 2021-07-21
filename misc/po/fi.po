@@ -11,7 +11,7 @@
 # Puppelimies, 2020
 # Deathmist, 2020
 # Cindy0514, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Kimmo Kujansuu <mrkujansuu@gmail.com>, 2021
 # 
 #, fuzzy
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/linuxdeepin/teams/3617/fi/)\n"
@@ -92,7 +92,7 @@ msgstr "Näytön skaalaus"
 #: ../../audio/audio_events.go:473
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s poistettu käytöstä"
 
 #: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
 msgid "Open"
@@ -159,8 +159,8 @@ msgid "Cancel"
 msgstr "Peruuta"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Vastaanotetaan %q tiedostoa kohteesta %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"

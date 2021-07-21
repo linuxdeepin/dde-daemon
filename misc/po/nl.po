@@ -9,9 +9,9 @@
 # dragnadh, 2020
 # closeddoors1559 <mrvnp@msn.com>, 2020
 # Lars Acou <lars.acou@gmail.com>, 2020
-# Hans van Schooten <hans@schootenvan.nl>, 2020
 # Cindy0514, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
+# Hans van Schooten <hans@schootenvan.nl>, 2021
 # Heimen Stoffels <vistausss@fastmail.com>, 2021
 # 
 #, fuzzy
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/linuxdeepin/teams/3617/nl/)\n"
@@ -92,7 +92,7 @@ msgstr "Beeldgrootte"
 #: ../../audio/audio_events.go:473
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s is uitgeschakeld"
 
 #: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
 msgid "Open"
@@ -159,8 +159,8 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Bezig met ontvangen van %q bestanden van %q"
+msgid "Receiving %q from %q"
+msgstr "Bezig met ontvangen van %q van %q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"

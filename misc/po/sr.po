@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2021\n"
 "Language-Team: Serbian (https://www.transifex.com/linuxdeepin/teams/3617/sr/)\n"
@@ -90,7 +90,7 @@ msgstr "Скалирање приказа"
 #: ../../audio/audio_events.go:473
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s је искључен"
 
 #: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
 msgid "Open"
@@ -157,8 +157,8 @@ msgid "Cancel"
 msgstr "Откажи"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Преузимање %q датотеке од %q"
+msgid "Receiving %q from %q"
+msgstr "Преузимање %q од %q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"

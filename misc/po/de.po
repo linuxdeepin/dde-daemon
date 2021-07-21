@@ -13,10 +13,10 @@
 # webcrush <chris.plescher@yahoo.de>, 2020
 # Matthäus Beyrle <transifex.com@mmb.entwanderer.de>, 2020
 # Marcel Pa <marcelpaluch@me.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Cindy0514, 2020
 # Timo Kröning, 2020
 # 7db8a9134ffa67446d66162ab0aeea61_98ecb95, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Ettore Atalan <atalanttore@googlemail.com>, 2021
 # 
 #, fuzzy
@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
@@ -165,8 +165,8 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "%q Dateien von %q werden empfangen"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"

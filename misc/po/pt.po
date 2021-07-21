@@ -9,17 +9,17 @@
 # Ricardo Simões <xmcorporation@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Jesse Brandao <www.jwb@gmail.com>, 2020
-# Cindy0514, 2020
 # Hugo Carvalho <hugokarvalho@hotmail.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>, 2021\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Portuguese (https://www.transifex.com/linuxdeepin/teams/3617/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +92,7 @@ msgstr "Escala de visualização"
 #: ../../audio/audio_events.go:473
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s foi desativado"
 
 #: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
 msgid "Open"
@@ -159,8 +159,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "A receber ficheiros de %q do %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"

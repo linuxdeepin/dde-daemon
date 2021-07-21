@@ -7,10 +7,10 @@
 # Michael Jay Tong <michaeljayt@gmail.com>, 2020
 # 李洪武 <lihongwu1987@gmail.com>, 2020
 # cxbii <mycxbii@gmail.com>, 2020
-# electricface <songwentai@linuxdeepin.com>, 2020
 # hualet <mr.asianwang@gmail.com>, 2020
 # transifex deepin <transifex@deepin.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
+# electricface <songwentai@linuxdeepin.com>, 2021
 # Cindy0514, 2021
 # 
 #, fuzzy
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
@@ -156,7 +156,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr "正在接收来自%q的%q文件"
 
 #: ../../bluetooth/obex_agent.go:355

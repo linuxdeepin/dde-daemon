@@ -7,16 +7,16 @@
 # Morten Juhl-Johansen Zölde-Fejér <morten@writtenandread.net>, 2020
 # 31c8ff7daf246c6bd598eefe84c1433c, 2020
 # Cindy0514, 2020
-# scootergrisen, 2020
+# scootergrisen, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: scootergrisen, 2020\n"
+"Last-Translator: scootergrisen, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/linuxdeepin/teams/3617/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +154,7 @@ msgid "Cancel"
 msgstr "Annuller"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355

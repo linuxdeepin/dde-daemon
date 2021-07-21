@@ -11,7 +11,7 @@
 # kloki <klokimass@gmail.com>, 2020
 # worm <thewormhole@gmail.com>, 2020
 # Cindy0514, 2020
-# Gorzy Gorup <gorupgorazd@gmail.com>, 2020
+# Gorzy Gorup <gorupgorazd@gmail.com>, 2021
 # Arnold Marko <arnold.marko@gmail.com>, 2021
 # 
 #, fuzzy
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/linuxdeepin/teams/3617/sl/)\n"
@@ -159,8 +159,8 @@ msgid "Cancel"
 msgstr "Prekliči"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
-msgstr "Prejemam %q datotek od %q"
+msgid "Receiving %q from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"

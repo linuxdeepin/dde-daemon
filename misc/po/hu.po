@@ -11,7 +11,6 @@
 # Walton Henry <waltonh@mail.com>, 2020
 # Jack Howell <jack.howell@protonmail.com>, 2020
 # vmarci21 <vmarci21@msn.com>, 2020
-# ddabrahim <ddabrahim@googlemail.com>, 2020
 # kdavid97 <kdavid97@gmail.hu>, 2020
 # SlazO <blum1866@gmail.com>, 2020
 # Imre Klész <eschungary@gmail.com>, 2020
@@ -20,6 +19,7 @@
 # e7b367b198a92ab3e6fd7f551a36a082, 2020
 # Cindy0514, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
+# ddabrahim <ddabrahim@googlemail.com>, 2021
 # Béla Bajza, 2021
 # 
 #, fuzzy
@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-13 17:12+0800\n"
+"POT-Creation-Date: 2021-07-20 18:01+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Béla Bajza, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/linuxdeepin/teams/3617/hu/)\n"
@@ -101,7 +101,7 @@ msgstr "Képernyő méretezése"
 #: ../../audio/audio_events.go:473
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s le volt tiltva"
 
 #: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
 msgid "Open"
@@ -168,7 +168,7 @@ msgid "Cancel"
 msgstr "Mégsem"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q files from %q"
+msgid "Receiving %q from %q"
 msgstr "%q fájl fogadása %q-tól"
 
 #: ../../bluetooth/obex_agent.go:355
