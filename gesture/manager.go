@@ -522,7 +522,7 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge 
 				dockPly = rect.Width
 			}
 
-			if p.Y > 0 && p.Y*float64(context.screenHeight) > float64(dockPly) {
+			if (1-p.Y)*float64(context.screenHeight) > float64(dockPly) {
 				logger.Debug("show work space")
 				return m.handleBuiltinAction("ShowWorkspace")
 			}
