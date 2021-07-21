@@ -23,15 +23,16 @@ import (
 	"os"
 	"sync"
 	"syscall"
+	"time"
 
 	dbus "github.com/godbus/dbus"
 	systemPower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	"pkg.deepin.io/dde/api/powersupply/battery"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/dde/daemon/session/common"
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
-	"pkg.deepin.io/dde/api/powersupply/battery"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
@@ -147,7 +148,7 @@ type Manager struct {
 		SuspendState struct {
 			state int
 		}
-		ScreenFullBlack struct {}
+		ScreenFullBlack struct{}
 	}
 }
 
@@ -437,14 +438,37 @@ func (m *Manager) SetPrepareSuspend(v int) *dbus.Error {
 func (m *Manager) WakeUpScreen(wakeUp bool) *dbus.Error {
 	if v := m.submodules[submodulePSP]; v != nil {
 		if psp := v.(*powerSavePlan); psp != nil {
+			// 先中断之前的delay task
+			psp.interruptTasks()
+
 			// 息屏
 			if !wakeUp {
-				m.setPrepareSuspend(suspendStateButtonClick)
-				psp.quickScreenBlack()
-				m.setPrepareSuspend(suspendStateFinish)
+				psp.manager.setPrepareSuspend(suspendStateButtonClick)
+				psp.manager.setDPMSModeOff()
+				psp.manager.setPrepareSuspend(suspendStateFinish)
 			} else { // 亮屏
 				psp.manager.setDPMSModeOn()
-				psp.resetBrightness()
+				taskF := newDelayedTask("screenBlackRefresh", time.Duration(psp.manager.BatteryScreenBlackDelay.Get())*time.Second, func() {
+					psp.stopScreensaver()
+					psp.manager.settings.SetBoolean("wakeupscreen", true)
+					if psp.manager.ScreenBlackLock.Get() {
+						psp.manager.lockWaitShow(5*time.Second, true)
+					}
+
+					// 防止平板自然息屏后进入IdleOn状态
+					if os.Getenv("XDG_CURRENT_DESKTOP") != padEnv {
+						psp.manager.setPrepareSuspend(suspendStateLidClose)
+						defer psp.manager.setPrepareSuspend(suspendStateFinish)
+					}
+					if m.settings.GetBoolean("wakeupscreen") {
+						psp.manager.setDPMSModeOff()
+						err := psp.manager.service.Emit(psp.manager, "ScreenFullBlack")
+						if err != nil {
+							logger.Warning(err)
+						}
+					}
+				})
+				psp.addTask(taskF)
 			}
 		}
 	}

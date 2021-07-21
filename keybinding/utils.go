@@ -37,17 +37,6 @@ import (
 	"pkg.deepin.io/lib/strv"
 )
 
-// nolint
-const (
-	suspendStateUnknown = iota + 1
-	suspendStateFinish
-	suspendStateWakeup
-	suspendStateLidOpen
-	suspendStatePrepare
-	suspendStateLidClose
-	suspendStateButtonClick
-)
-
 const (
 	ddeOsdServiceName = "com.deepin.dde.osd"
 	dueOsdServiceName = "com.deepin.due.shell"
@@ -190,7 +179,6 @@ func (m *Manager) systemTurnOffScreen() {
 		m.doLock(true)
 	}
 
-	doPrepareSuspend()
 	if useWayland {
 		err = exec.Command("dde_wldpms", "-s", "Off").Run()
 	} else {
@@ -199,7 +187,6 @@ func (m *Manager) systemTurnOffScreen() {
 	if err != nil {
 		logger.Warning("Set DPMS off error:", err)
 	}
-	undoPrepareSuspend()
 }
 
 func (m *Manager) systemLogout() {
@@ -229,41 +216,14 @@ func (m *Manager) systemAway() {
 }
 
 func (m *Manager) handleWakeUpScreen(wakeUp bool) {
-	var err error
-	var useWayland bool
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
-		useWayland = true
-	} else {
-		useWayland = false
-	}
-
 	// 息屏
 	if !wakeUp {
 		// 息屏前先锁屏
 		if !getLockState() {
 			lockPad()
 		}
-
-		doPrepareSuspend()
-		if useWayland {
-			err = exec.Command("dde_wldpms", "-s", "Off").Run()
-		} else {
-			err = dpms.ForceLevelChecked(m.conn, dpms.DPMSModeOff).Check(m.conn)
-		}
-		if err != nil {
-			logger.Warning("handleWakeUpScreen -------> Set DPMS off error:", err)
-		}
-		undoPrepareSuspend()
-	} else { // 亮屏
-		if useWayland {
-			_, err = exec.Command("dde_wldpms", "-s", "On").Output()
-		} else {
-			err = dpms.ForceLevelChecked(m.conn, dpms.DPMSModeOn).Check(m.conn)
-		}
-		if err != nil {
-			logger.Warning("handleWakeUpScreen -------> Set DPMS on error:", err)
-		}
 	}
+	doWakeUpScreen(wakeUp)
 }
 
 func queryCommandByMime(mime string) string {
@@ -334,19 +294,10 @@ func (m *Manager) doLock(autoStartAuth bool) {
 	}
 }
 
-func doPrepareSuspend() {
+func doWakeUpScreen(flag bool) {
 	sessionDBus, _ := dbus.SessionBus()
 	obj := sessionDBus.Object("com.deepin.daemon.Power", "/com/deepin/daemon/Power")
-	err := obj.Call("com.deepin.daemon.Power.SetPrepareSuspend", 0, suspendStateButtonClick).Err
-	if err != nil {
-		logger.Warning(err)
-	}
-}
-
-func undoPrepareSuspend() {
-	sessionDBus, _ := dbus.SessionBus()
-	obj := sessionDBus.Object("com.deepin.daemon.Power", "/com/deepin/daemon/Power")
-	err := obj.Call("com.deepin.daemon.Power.SetPrepareSuspend", 0, suspendStateFinish).Err
+	err := obj.Call("com.deepin.daemon.Power.WakeUpScreen", 0, flag).Err
 	if err != nil {
 		logger.Warning(err)
 	}
