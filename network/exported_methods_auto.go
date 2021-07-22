@@ -111,10 +111,9 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"connections"},
 		},
 		{
-			Name:    "RequestIPConflictCheck",
-			Fn:      v.RequestIPConflictCheck,
-			InArgs:  []string{"ip", "ifc"},
-			OutArgs: []string{"outArg0"},
+			Name:   "RequestIPConflictCheck",
+			Fn:     v.RequestIPConflictCheck,
+			InArgs: []string{"ip", "ifc"},
 		},
 		{
 			Name: "RequestWirelessScan",

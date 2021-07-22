@@ -27,6 +27,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
 	sysNetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
@@ -60,6 +61,7 @@ type Manager struct {
 	sysSigLoop         *dbusutil.SignalLoop
 	service            *dbusutil.Service
 	sysNetwork         sysNetwork.Network
+	sysIPWatchD        ipwatchd.IPWatchD
 	nmObjManager       nmdbus.ObjectManager
 	PropsMu            sync.RWMutex
 	sessionManager     sessionmanager.SessionManager
@@ -128,35 +130,6 @@ type Manager struct {
 			ip  string
 			mac string
 		}
-	}
-
-	//nolint
-	methods *struct {
-		ActivateAccessPoint          func() `in:"uuid,apPath,devPath" out:"cPath"`
-		ActivateConnection           func() `in:"uuid,devPath" out:"cPath"`
-		DeactivateConnection         func() `in:"uuid"`
-		DebugChangeAPChannel         func() `in:"band"`
-		DeleteConnection             func() `in:"uuid"`
-		DisableWirelessHotspotMode   func() `in:"devPath"`
-		DisconnectDevice             func() `in:"devPath"`
-		EnableDevice                 func() `in:"devPath,enabled"`
-		EnableWirelessHotspotMode    func() `in:"devPath"`
-		GetAccessPoints              func() `in:"path" out:"apsJSON"`
-		GetActiveConnectionInfo      func() `out:"acInfosJSON"`
-		GetAutoProxy                 func() `out:"proxyAuto"`
-		GetProxy                     func() `in:"proxyType" out:"host,port"`
-		GetProxyIgnoreHosts          func() `out:"ignoreHosts"`
-		GetProxyMethod               func() `out:"proxyMode"`
-		GetSupportedConnectionTypes  func() `out:"types"`
-		IsDeviceEnabled              func() `in:"devPath" out:"enabled"`
-		IsWirelessHotspotModeEnabled func() `in:"devPath" out:"enabled"`
-		ListDeviceConnections        func() `in:"devPath" out:"connections"`
-		SetAutoProxy                 func() `in:"proxyAuto"`
-		SetDeviceManaged             func() `in:"devPathOrIfc,managed"`
-		SetProxy                     func() `in:"proxyType,host,port"`
-		SetProxyIgnoreHosts          func() `in:"ignoreHosts"`
-		SetProxyMethod               func() `in:"proxyMode"`
-		RequestIPConflictCheck       func() `in:"ip,ifc" out:"mac"`
 	}
 }
 
@@ -247,7 +220,7 @@ func (m *Manager) init() {
 	m.initNMObjManager(systemBus)
 	m.stateHandler = newStateHandler(m.sysSigLoop, m)
 	m.initSysNetwork(systemBus)
-	m.initIPConflictManager()
+	m.initIPConflictManager(systemBus)
 
 	// update property "State"
 	err = nmManager.PropState().ConnectChanged(func(hasValue bool, value uint32) {
