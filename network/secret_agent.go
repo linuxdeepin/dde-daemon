@@ -699,10 +699,13 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 				} else {
 					resultSaved, err := sa.getAll(connUUID, settingName)
 					if err != nil {
-						return nil, err
+						logger.Warningf("getAll resultSaved failed, err: %v", err)
+					} else {
+						logger.Debugf("getAll resultSaved success: %#v", resultSaved)
 					}
-					logger.Debugf("getAll resultSaved: %#v", resultSaved)
-					if len(resultSaved) == 0 && allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
+					// if get unexpected password or get saved password error, request a new one
+					if (len(resultSaved) == 0 && allowInteraction && isMustAsk(connectionData, settingName, secretKey)) || err != nil {
+						logger.Debug("secret has not exist in keyring, need request new one")
 						askItems = append(askItems, secretKey)
 					}
 				}
