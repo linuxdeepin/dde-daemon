@@ -215,6 +215,8 @@ func (m *Manager) initUdcpCache() error {
 		return err
 	}
 
+	udcpCache.SetInterfaceName_(ifcCfg.Interface)
+
 	m.udcpCache = udcpCache
 	return nil
 
