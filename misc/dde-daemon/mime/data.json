@@ -82,22 +82,18 @@
 		    },
 		    {
 			      "AppId":[
-                "google-chrome.desktop",
-                "firefox.desktop"
-            ],
+				        "org.deepin.browser.desktop",
+				        "uos-browser.desktop"
+			      ],
 			      "AppType":"broswer",
 			      "SupportedType":[
-				        "image/webp",
 				        "text/html",
-				        "application/xhtml+xml",
-				        "application/rss+xml",
-				        "application/rdf+xml",
+				        "text/xml",
+				        "text/xhtml_xml",
+				        "text/xhtml+xml",
 				        "x-scheme-handler/http",
 				        "x-scheme-handler/https",
-				        "x-scheme-handler/ftp",
-				        "x-scheme-handler/chrome",
-				        "video/webm",
-				        "application/x-xpinstall"
+				        "x-scheme-handler/ftp"
 			      ]
 		    },
 		    {
