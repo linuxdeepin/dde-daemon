@@ -63,6 +63,8 @@ type accessPoint struct {
 	SecuredInEap bool
 	Strength     uint8
 	Path         dbus.ObjectPath
+
+	Hidden bool
 }
 
 func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoint, err error) {
@@ -82,6 +84,11 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 		err = fmt.Errorf("ignore hidden access point")
 		logger.Warningf("ssid is nil, err: %v", err)
 		return
+	}
+
+	// add hidden
+	if m.isHidden(ap.Ssid) {
+		ap.Hidden = true
 	}
 
 	// connect property changed signals
@@ -216,6 +223,19 @@ func (m *Manager) clearAccessPoints() {
 		}
 	}
 	m.accessPoints = make(map[dbus.ObjectPath][]*accessPoint)
+}
+
+func (m *Manager) isHidden(ssid string) bool {
+	m.connectionsLock.Lock()
+	wirelessCon := m.connections[connectionWireless]
+	m.connectionsLock.Unlock()
+	for _, conn := range wirelessCon {
+		if conn.Ssid == ssid && conn.Hidden {
+			logger.Debugf("access point %s is hidden ", ssid)
+			return true
+		}
+	}
+	return false
 }
 
 func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
