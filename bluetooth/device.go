@@ -353,8 +353,6 @@ func (d *device) connectProperties() {
 		if d.needNotify && d.Paired && d.State == deviceStateConnected && d.ConnectState {
 			d.notifyConnectedChanged()
 		}
-
-		d.adapter.minusConnectingCount()
 	})
 	if err != nil {
 		logger.Warning(err)

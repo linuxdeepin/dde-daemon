@@ -61,6 +61,7 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 	a.core.InitSignalExt(systemSigLoop, true)
 	a.connectProperties()
 	a.address, _ = a.core.Adapter().Address().Get(0)
+	a.waitDiscovery = true
 	// 用于定时停止扫描
 	a.discoveringTimeout = time.AfterFunc(defaultDiscoveringTimeout, func() {
 		logger.Debug("discovery time out, stop discovering")
@@ -203,10 +204,9 @@ func (a *adapter) connectProperties() {
 				if err != nil {
 					logger.Warningf("failed to stop discovery for %s: %v", a, err)
 				}
+				a.waitDiscovery = true
 				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
 				globalBluetooth.tryConnectPairedDevices()
-				a.waitDiscovery = true
-				a.startDiscovery()
 			}()
 		} else {
 			// if power off, stop discovering time out
@@ -280,22 +280,5 @@ func (a *adapter) startDiscovery() {
 		a.waitDiscovery = false
 		// start discovering success, reset discovering timer
 		a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
-	}
-}
-
-func (a *adapter) addConnectingCount() {
-	logger.Debug("add connecting count")
-	a.connectingCount++
-}
-
-func (a *adapter) minusConnectingCount() {
-	if a.connectingCount > 0 {
-		logger.Debug("had device connecting, return")
-		a.connectingCount--
-	}
-
-	if a.waitDiscovery && a.connectingCount == 0 {
-		a.waitDiscovery = false
-		a.startDiscovery()
 	}
 }
