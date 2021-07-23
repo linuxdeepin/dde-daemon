@@ -295,6 +295,15 @@ func (entry *AppEntry) updateIcon() {
 	entry.setPropIcon(icon)
 }
 
+func (entry *AppEntry) forceUpdateIcon() {
+	icon := entry.getIcon()
+	entry.Icon = icon
+	err := entry.emitPropChangedIcon(icon)
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
 func (entry *AppEntry) getIcon() string {
 	var icon string
 	appInfo := entry.appInfo

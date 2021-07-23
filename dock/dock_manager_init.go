@@ -31,7 +31,7 @@ import (
 	wmswitcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
 	x "github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/dde/daemon/common/dsync"
-	"pkg.deepin.io/gir/gio-2.0"
+	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gsettings"
 )
@@ -154,7 +154,7 @@ func (m *Manager) handleLauncherItemUpdated(itemInfo launcher.ItemInfo) {
 	entry.innerId = appInfo.innerId
 	entry.updateName()
 	entry.updateMenu()
-	entry.updateIcon()
+	entry.forceUpdateIcon() // 可能存在Icon图片改变,但Icon名称未改变的情况,因此强制发Icon的属性改变信号
 }
 
 func (m *Manager) listenLauncherSignal() {
