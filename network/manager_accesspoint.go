@@ -75,6 +75,8 @@ type accessPoint struct {
 	Strength     uint8
 	Path         dbus.ObjectPath
 	Frequency    uint32
+	// add hidden property
+	Hidden bool
 }
 
 func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoint, err error) {
@@ -92,6 +94,11 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 	if len(ap.Ssid) == 0 {
 		err = fmt.Errorf("ignore hidden access point")
 		return
+	}
+
+	// add hidden
+	if m.isHidden(ap.Ssid) {
+		ap.Hidden = true
 	}
 
 	// connect property changed signals
@@ -204,6 +211,19 @@ func (m *Manager) initAccessPoints(devPath dbus.ObjectPath, apPaths []dbus.Objec
 	m.accessPointsLock.Lock()
 	m.accessPoints[devPath] = accessPoints
 	m.accessPointsLock.Unlock()
+}
+
+func (m *Manager) isHidden(ssid string) bool {
+	m.connectionsLock.Lock()
+	wirelessCon := m.connections[connectionWireless]
+	m.connectionsLock.Unlock()
+	for _, conn := range wirelessCon {
+		if conn.Ssid == ssid && conn.Hidden {
+			logger.Debugf("access point %s is hidden ", ssid)
+			return true
+		}
+	}
+	return false
 }
 
 func (m *Manager) addAccessPoint(devPath, apPath dbus.ObjectPath) {
@@ -357,8 +377,11 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 			logger.Warning("failed to get Ap Ssid:", err)
 			return
 		}
-
 		data := newWirelessConnectionData(decodeSsid(ssid), uuid, ssid, secType)
+		// check if need add hidden
+		if m.isHidden(string(ssid)) {
+			setSettingWirelessHidden(data, true)
+		}
 		cpath, _, err = nmAddAndActivateConnection(data, devPath, true)
 		if err != nil {
 			return

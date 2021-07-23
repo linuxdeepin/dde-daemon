@@ -49,7 +49,7 @@ func getApSecTypeFromConnData(data connectionData) (apSecType, error) {
 		return apSecNone, nil
 	}
 	keyMgmt := getSettingWirelessSecurityKeyMgmt(data)
-	authAlg := getSettingWirelessSecurityAuthAlg(data) 
+	authAlg := getSettingWirelessSecurityAuthAlg(data)
 	switch keyMgmt {
 	case "none":
 		if authAlg == "open" || authAlg == "shared" {
@@ -86,7 +86,7 @@ func logicSetSettingVkWirelessSecurityKeyMgmt(data connectionData, value string)
 		)
 		setSettingWirelessSecurityKeyMgmt(data, "none")
 		setSettingWirelessSecurityAuthAlg(data, "open")
-		setSettingWirelessSecurityWepKeyFlags(data, nm.NM_SETTING_SECRET_FLAG_AGENT_OWNED)
+		setSettingWirelessSecurityWepKeyFlags(data, nm.NM_SETTING_SECRET_FLAG_NONE)
 		setSettingWirelessSecurityWepKeyType(data, nm.NM_WEP_KEY_TYPE_KEY)
 	case "wpa-psk":
 		addSetting(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME)
@@ -98,7 +98,7 @@ func logicSetSettingVkWirelessSecurityKeyMgmt(data connectionData, value string)
 			nm.NM_SETTING_WIRELESS_SECURITY_PSK_FLAGS,
 		)
 		setSettingWirelessSecurityKeyMgmt(data, "wpa-psk")
-		setSettingWirelessSecurityPskFlags(data, nm.NM_SETTING_SECRET_FLAG_AGENT_OWNED)
+		setSettingWirelessSecurityPskFlags(data, nm.NM_SETTING_SECRET_FLAG_NONE)
 	case "wpa-eap":
 		addSetting(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME)
 		addSetting(data, nm.NM_SETTING_802_1X_SETTING_NAME)
