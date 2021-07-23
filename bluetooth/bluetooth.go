@@ -745,21 +745,19 @@ func (b *Bluetooth) tryConnectPairedDevices() {
 			if typeMap[dev.Icon] == 0 {
 				if b.tryConnectPairedDevice(dev) {
 					typeMap[dev.Icon]++
-					c, _ := dev.core.Connected().Get(0)
-					if !c {
-						dev.adapter.addConnectingCount()
-					}
 				}
 			}
 		default:
-			if b.tryConnectPairedDevice(dev) {
-				c, _ := dev.core.Connected().Get(0)
-				if !c {
-					dev.adapter.addConnectingCount()
-				}
-			}
+			b.tryConnectPairedDevice(dev)
 		}
 	}
+	b.adaptersLock.Lock()
+	for _, adapter := range b.adapters {
+		if adapter.waitDiscovery && adapter.Powered {
+			adapter.startDiscovery()
+		}
+	}
+	b.adaptersLock.Unlock()
 }
 
 func (b *Bluetooth) tryConnectPairedDevice(dev *device) bool {
