@@ -61,5 +61,5 @@ func Test_GenerateMenuJson(t *testing.T) {
 
 	var parseResult interface{}
 	err := json.Unmarshal([]byte(menuJSON), &parseResult)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }

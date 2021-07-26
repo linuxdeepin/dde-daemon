@@ -117,7 +117,7 @@ func Test_parseXml(t *testing.T) {
 	v := value.Size
 	t.Log(v)
 	assert.Equal(t, v, uint64(3221225472))
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func Test_parseCurrentSpeed(t *testing.T) {
@@ -125,7 +125,7 @@ func Test_parseCurrentSpeed(t *testing.T) {
 	v := value
 	t.Log(v)
 	assert.Equal(t, v, uint64(3200))
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func Test_filterUnNumber(t *testing.T) {

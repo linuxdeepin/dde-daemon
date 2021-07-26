@@ -81,18 +81,18 @@ func TestConfigKeeper_Save(t *testing.T) {
 			}
 			err := ck.Save()
 			if tt.wantErr {
-				assert.NotNil(t, err)
+				assert.Error(t, err)
 				return
 			}
 
-			assert.Nil(t, err)
+			assert.NoError(t, err)
 
 			s, err := os.Stat(tt.fields.file)
-			require.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, 0644, int(s.Mode())&0777)
 
 			content, err := ioutil.ReadFile(tt.fields.file)
-			require.Nil(t, err)
+			require.NoError(t, err)
 			assert.Equal(t, tt.fileContent, string(content))
 
 			os.Remove(tt.fields.file)

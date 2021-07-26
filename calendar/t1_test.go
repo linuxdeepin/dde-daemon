@@ -84,18 +84,18 @@ func TestParseRemind(t *testing.T) {
 
 func TestGetRemindAdvanceDays(t *testing.T) {
 	n, err := getRemindAdvanceDays("0;09:00")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 0, n)
 	n, err = getRemindAdvanceDays("1;09:00")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 1, n)
 
 	n, err = getRemindAdvanceDays("0")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 0, n)
 
 	n, err = getRemindAdvanceDays("2880")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, 2, n)
 }
 
@@ -154,20 +154,20 @@ func TestBetween(t *testing.T) {
 	startDate := libdate.New(2019, 9, 1)
 	endDate := libdate.New(2019, 9, 10)
 	jobTimes, err := job.between(startDate, endDate)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Len(t, jobTimes, 1)
 	assert.Equal(t, jobTime{start: newTimeYMDHM(2019, 9, 1, 9, 0)}, jobTimes[0])
 
 	startDate = libdate.New(2019, 8, 1)
 	endDate = libdate.New(2019, 8, 31)
 	jobTimes, err = job.between(startDate, endDate)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Len(t, jobTimes, 0)
 
 	startDate = libdate.New(2019, 9, 2)
 	endDate = libdate.New(2019, 9, 31)
 	jobTimes, err = job.between(startDate, endDate)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Len(t, jobTimes, 0)
 
 	// 单日任务，重复：每天
@@ -179,7 +179,7 @@ func TestBetween(t *testing.T) {
 	startDate = libdate.New(2019, 9, 1)
 	endDate = libdate.New(2019, 9, 10)
 	jobTimes, err = job.between(startDate, endDate)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, len(jobTimes), 10)
 	assert.Equal(t, jobTimes[0], jobTime{start: newTimeYMDHM(2019, 9, 1, 9, 0)})
 	assert.Equal(t, jobTimes[1], jobTime{start: newTimeYMDHM(2019, 9, 2, 9, 0), recurID: 1})
@@ -193,27 +193,27 @@ func TestBetween(t *testing.T) {
 	startDate = libdate.New(2019, 9, 1)
 	endDate = libdate.New(2019, 9, 12)
 	jobTimes, err = job.between(startDate, endDate)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Len(t, jobTimes, 1)
 	assert.Equal(t, jobTimes[0], jobTime{start: newTimeYMDHM(2019, 9, 1, 9, 0)})
 
 	startDate = libdate.New(2019, 9, 5)
 	endDate = libdate.New(2019, 9, 12)
 	jobTimes, err = job.between(startDate, endDate)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Len(t, jobTimes, 1)
 	assert.Equal(t, jobTimes[0], jobTime{start: newTimeYMDHM(2019, 9, 1, 9, 0)})
 
 	startDate = libdate.New(2019, 8, 1)
 	endDate = libdate.New(2019, 8, 31)
 	jobTimes, err = job.between(startDate, endDate)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Len(t, jobTimes, 0)
 
 	startDate = libdate.New(2019, 9, 11)
 	endDate = libdate.New(2019, 9, 30)
 	jobTimes, err = job.between(startDate, endDate)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Len(t, jobTimes, 0)
 }
 

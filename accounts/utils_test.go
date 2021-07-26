@@ -37,7 +37,7 @@ func Test_GetLocaleFromFile(t *testing.T) {
 
 func Test_SystemLayout(t *testing.T) {
 	layout, err := getSystemLayout("testdata/keyboard_us")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, layout, "us;")
 	layout, _ = getSystemLayout("testdata/keyboard_us_chr")
 	assert.Equal(t, layout, "us;chr")
@@ -114,7 +114,7 @@ func Test_getDetailsKey(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := getDetailsKey(tt.args.details, tt.args.key)
 			if tt.wantErr {
-				assert.NotNil(t, err)
+				assert.Error(t, err)
 				return
 			}
 

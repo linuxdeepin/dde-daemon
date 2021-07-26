@@ -110,7 +110,7 @@ func Test_runeSliceDiff(t *testing.T) {
 
 func Test_parseFlatpakAppCmdline(t *testing.T) {
 	info, err := parseFlatpakAppCmdline(`/usr/bin/flatpak run --branch=master --arch=x86_64 --command=blender --file-forwarding org.blender.Blender @@ %f @@`)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, info, &flatpakAppInfo{
 		name:   "org.blender.Blender",
 		arch:   "x86_64",

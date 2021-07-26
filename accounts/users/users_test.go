@@ -31,7 +31,7 @@ import (
 func Test_GetUserInfos(t *testing.T) {
 	var names = []string{"test1", "test2", "vbox"}
 	infos, err := getUserInfosFromFile("testdata/passwd")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, len(infos), 3)
 	for i, info := range infos {
 		assert.Equal(t, info.Name, names[i])
@@ -88,21 +88,21 @@ func Test_UserInfoValid(t *testing.T) {
 
 func Test_FoundUserInfo(t *testing.T) {
 	info, err := getUserInfo(UserInfo{Name: "test1"}, "testdata/passwd")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, info.Name, "test1")
 
 	info, err = getUserInfo(UserInfo{Uid: "1001"}, "testdata/passwd")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, info.Name, "test1")
 
 	info, err = getUserInfo(UserInfo{Name: "1006"}, "testdata/passwd")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	info, err = getUserInfo(UserInfo{Uid: "1006"}, "testdata/passwd")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	info, err = getUserInfo(UserInfo{Uid: "1006"}, "testdata/xxxxx")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func Test_AdminUser(t *testing.T) {
@@ -125,7 +125,7 @@ func Test_AdminUser(t *testing.T) {
 	}
 
 	list, err := getAdminUserList("testdata/group", "testdata/sudoers_deepin")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	for _, data := range datas {
 		assert.Equal(t, isStrInArray(data.name, list), data.admin)
@@ -137,71 +137,71 @@ func TestGetAutoLoginUser(t *testing.T) {
 	name, err := getIniKeys("testdata/autologin/lightdm_autologin.conf",
 		kfGroupLightdmSeat,
 		[]string{kfKeyLightdmAutoLoginUser}, []string{""})
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/lightdm.conf",
 		kfGroupLightdmSeat,
 		[]string{kfKeyLightdmAutoLoginUser}, []string{""})
-	assert.Nil(t, err, nil)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "")
 	_, err = getIniKeys("testdata/autologin/xxxxx.conf", "", nil, nil)
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	// gdm
 	name, err = getIniKeys("testdata/autologin/custom_autologin.conf",
 		kfGroupGDM3Daemon, []string{kfKeyGDM3AutomaticEnable,
 			kfKeyGDM3AutomaticLogin}, []string{"True", ""})
-	assert.Nil(t, err, nil)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/custom.conf",
 		kfGroupGDM3Daemon, []string{kfKeyGDM3AutomaticEnable,
 			kfKeyGDM3AutomaticLogin}, []string{"True", ""})
-	assert.Nil(t, err, nil)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "")
 
 	// kdm
 	name, err = getIniKeys("testdata/autologin/kdmrc_autologin",
 		kfGroupKDMXCore, []string{kfKeyKDMAutoLoginEnable,
 			kfKeyKDMAutoLoginUser}, []string{"true", ""})
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/kdmrc",
 		kfGroupKDMXCore, []string{kfKeyKDMAutoLoginEnable,
 			kfKeyKDMAutoLoginUser}, []string{"true", ""})
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "")
 
 	// sddm
 	name, err = getIniKeys("testdata/autologin/sddm_autologin.conf",
 		kfGroupSDDMAutologin,
 		[]string{kfKeySDDMUser}, []string{""})
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/sddm.conf",
 		kfGroupSDDMAutologin,
 		[]string{kfKeySDDMUser}, []string{""})
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "")
 
 	// lxdm
 	name, err = getIniKeys("testdata/autologin/lxdm_autologin.conf",
 		kfGroupLXDMBase,
 		[]string{kfKeyLXDMAutologin}, []string{""})
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "wen")
 	name, err = getIniKeys("testdata/autologin/lxdm.conf",
 		kfGroupLXDMBase,
 		[]string{kfKeyLXDMAutologin}, []string{""})
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "")
 
 	// slim
 	name, err = parseSlimConfig("testdata/autologin/slim_autologin.conf",
 		"", false)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "wen")
 	name, err = parseSlimConfig("testdata/autologin/slim.conf", "", false)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, name, "")
 	// cp 'testdata/autologin/slim.conf' to '/tmp/slim_tmp.conf'
 	// _, err = parseSlimConfig("/tmp/slim_tmp.conf", "wen", true)
@@ -211,10 +211,10 @@ func TestGetAutoLoginUser(t *testing.T) {
 	// c.Check(name, C.Equals, "wen")
 
 	m, err := getDefaultDM("testdata/autologin/default-display-manager")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, m, "lightdm")
 	_, err = getDefaultDM("testdata/autologin/xxxxx")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func Test_XSession(t *testing.T) {
@@ -232,7 +232,7 @@ func Test_WriteStrvData(t *testing.T) {
 		file  = "/tmp/write_strv"
 	)
 	err := writeStrvToFile(datas, file, 0644)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	md5, _ := dutils.SumFileMd5(file)
 	assert.Equal(t, md5, "0b188e42e5f8d5bc5a6560ce68d5fbc6")
@@ -240,15 +240,15 @@ func Test_WriteStrvData(t *testing.T) {
 
 func Test_GetDefaultShell(t *testing.T) {
 	shell, err := getDefaultShell("testdata/adduser.conf")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, shell, "/bin/zsh")
 
 	shell, err = getDefaultShell("testdata/adduser1.conf")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, shell, "")
 
 	_, err = getDefaultShell("testdata/xxxxx.conf")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func Test_StrInArray(t *testing.T) {
@@ -279,12 +279,12 @@ func Test_StrInArray(t *testing.T) {
 
 func Test_GetAdmGroup(t *testing.T) {
 	groups, users, err := getAdmGroupAndUser("testdata/sudoers_deepin")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, isStrInArray("sudo", groups), true)
 	assert.Equal(t, isStrInArray("root", users), true)
 
 	groups, users, err = getAdmGroupAndUser("testdata/sudoers_arch")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, isStrInArray("sudo", groups), true)
 	assert.Equal(t, isStrInArray("wheel", groups), true)
 	assert.Equal(t, isStrInArray("root", users), true)

@@ -44,7 +44,7 @@ func TestAppInfos(t *testing.T) {
 
 func TestUnmarshal(t *testing.T) {
 	table, err := unmarshal("testdata/data.json")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, len(table.Apps), 2)
 
 	assert.ElementsMatch(t, table.Apps[0].AppId, []string{"org.gnome.Nautilus.desktop"})
@@ -99,7 +99,7 @@ func TestUserAppInfo(t *testing.T) {
 	assert.Nil(t, manager.Get("application/test.xml"))
 	assert.Nil(t, manager.Write())
 	tmp, err := newUserAppManager(file)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Nil(t, tmp.Get("application/test.xml"))
 	assert.Equal(t, tmp.Get("application/test.ppt")[0].DesktopId, "test-doc.desktop")
 	os.Remove(file)

@@ -37,7 +37,7 @@ LC_TIME="zh_CN.UTF-8"
 
 func Test_GetLocale(t *testing.T) {
 	l, err := getLocaleFromFile("testdata/pam_environment")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, l, "zh_CN.UTF-8")
 
 	l = getCurrentUserLocale()

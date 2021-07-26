@@ -30,37 +30,37 @@ func TestSplitKeystroke(t *testing.T) {
 	var keys []string
 	var err error
 	keys, err = splitKeystroke("<Super>L")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.ElementsMatch(t, keys, []string{"Super", "L"})
 
 	// single key
 	keys, err = splitKeystroke("<Super>")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.ElementsMatch(t, keys, []string{"Super"})
 
 	keys, err = splitKeystroke("Super_L")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.ElementsMatch(t, keys, []string{"Super_L"})
 
 	keys, err = splitKeystroke("<Shift><Super>T")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.ElementsMatch(t, keys, []string{"Shift", "Super", "T"})
 
 	// abnormal situation:
 	_, err = splitKeystroke("<Super>>")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, err = splitKeystroke("<Super><")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, err = splitKeystroke("Super<")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, err = splitKeystroke("<Super><shiftT")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, err = splitKeystroke("<Super><Shift><>T")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func TestParseKeystroke(t *testing.T) {
@@ -68,21 +68,21 @@ func TestParseKeystroke(t *testing.T) {
 	var err error
 
 	ks, err = ParseKeystroke("Super_L")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, ks, &Keystroke{
 		Keystr: "Super_L",
 		Keysym: keysyms.XK_Super_L,
 	})
 
 	ks, err = ParseKeystroke("Num_Lock")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, ks, &Keystroke{
 		Keystr: "Num_Lock",
 		Keysym: keysyms.XK_Num_Lock,
 	})
 
 	ks, err = ParseKeystroke("<Control><Super>T")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, ks, &Keystroke{
 		Keystr: "T",
 		Keysym: keysyms.XK_T,
@@ -90,7 +90,7 @@ func TestParseKeystroke(t *testing.T) {
 	})
 
 	ks, err = ParseKeystroke("<Control><Alt><Shift><Super>T")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, ks, &Keystroke{
 		Keystr: "T",
 		Keysym: keysyms.XK_T,
@@ -99,13 +99,13 @@ func TestParseKeystroke(t *testing.T) {
 
 	// abnormal situation:
 	_, err = ParseKeystroke("<Shift>XXXXX")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, err = ParseKeystroke("")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, err = ParseKeystroke("<lock><Shift>A")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func TestParseKeystrokes(t *testing.T) {
@@ -134,11 +134,11 @@ func TestKeystrokeMethodString(t *testing.T) {
 
 func TestParseLoopback(t *testing.T) {
 	ks, err := ParseKeystroke("<SHIFT><CONTROL><ALT><SUPER>T")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, ks.String(), "<Shift><Control><Alt><Super>T")
 
 	ks, err = ParseKeystroke("<shift><control><alt><super>t")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, ks.String(), "<Shift><Control><Alt><Super>t")
 }
 
@@ -200,7 +200,7 @@ func TestParseMediaKey(t *testing.T) {
 
 	for _, key := range keys {
 		ks, err := ParseKeystroke(key)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 		assert.Equal(t, ks.String(), key)
 	}
 }

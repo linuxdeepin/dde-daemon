@@ -31,7 +31,7 @@ var (
 
 func Test_loadConfig(t *testing.T) {
 	config, err := loadConfig(configPath)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	assert.Equal(t, config.LongPressDistance, float64(1))
 	assert.Equal(t, config.Verbose, 0)

@@ -80,7 +80,7 @@ func Test_parseHexColor(t *testing.T) {
 
 	for _, test := range tests {
 		byteArray, err := parseHexColor(test.hex)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 		assert.Equal(t, byteArray, test.byteArray)
 	}
 }

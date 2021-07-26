@@ -31,25 +31,25 @@ func TestCPUInfo(t *testing.T) {
 	cpu, err := GetCPUInfo("testdata/cpuinfo")
 	assert.Equal(t, cpu,
 		"Intel(R) Core(TM) i3 CPU M 330 @ 2.13GHz x 4")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	cpu, err = GetCPUInfo("testdata/sw-cpuinfo")
 	assert.Equal(t, cpu, "sw 1.40GHz x 4")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	cpu, err = GetCPUInfo("testdata/arm-cpuinfo")
 	assert.Equal(t, cpu, "NANOPI2 x 4")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	cpu, err = GetCPUInfo("testdata/hw_kirin-cpuinfo")
 	assert.Equal(t, cpu, "HUAWEI Kirin 990 x 8")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestMemInfo(t *testing.T) {
 	mem, err := getMemoryFromFile("testdata/meminfo")
 	assert.Equal(t, mem, uint64(4005441536))
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestVersion(t *testing.T) {
@@ -59,11 +59,11 @@ func TestVersion(t *testing.T) {
 
 	deepin, err := getVersionFromDeepin("testdata/deepin-version")
 	assert.Equal(t, deepin, "2015 Desktop Alpha1")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	lsb, err := getVersionFromLSB("testdata/lsb-release")
 	assert.Equal(t, lsb, "2014.3")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestDistro(t *testing.T) {
@@ -75,7 +75,7 @@ func TestDistro(t *testing.T) {
 	assert.Equal(t, distroId, "Deepin")
 	assert.Equal(t, distroDesc, "Deepin 2014.3")
 	assert.Equal(t, distroVer, "2014.3")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestSystemBit(t *testing.T) {
@@ -96,7 +96,7 @@ func TestIsFloatEqual(t *testing.T) {
 
 func TestParseInfoFile(t *testing.T) {
 	v, err := parseInfoFile("testdata/lsb-release", "=")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, v["DISTRIB_ID"], "Deepin")
 	assert.Equal(t, v["DISTRIB_RELEASE"], "2014.3")
 	assert.Equal(t, v["DISTRIB_DESCRIPTION"], strconv.Quote("Deepin 2014.3"))
@@ -104,23 +104,23 @@ func TestParseInfoFile(t *testing.T) {
 
 func TestGetCPUMaxMHzByLscpu(t *testing.T) {
 	ret, err := parseInfoFile("testdata/lsCPU", ":")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	v, err := getCPUMaxMHzByLscpu(ret)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, v, 3600.0000)
 }
 
 func TestGetProcessorByLscpuu(t *testing.T) {
 	ret, err := parseInfoFile("testdata/lsCPU", ":")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	v, err := getProcessorByLscpu(ret)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, v, "Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz x 4")
 }
 
 func TestDoReadCache(t *testing.T) {
 	ret, err := doReadCache("testdata/systeminfo.cache")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, ret.Version, "20 专业版")
 	assert.Equal(t, ret.DistroID, "uos")
 	assert.Equal(t, ret.DistroDesc, "UnionTech OS 20")

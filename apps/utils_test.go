@@ -29,7 +29,7 @@ import (
 func Test_getHomeByUid(t *testing.T) {
 	uid := os.Getuid()
 	home, err := getHomeByUid(uid)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, home, os.Getenv("HOME"))
 }
 

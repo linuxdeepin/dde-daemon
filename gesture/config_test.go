@@ -42,7 +42,7 @@ func findGestureInfo(evInfo EventInfo, infos gestureInfos) bool {
 // 测试: 从文件读取手势信息
 func Test_newGestureInfosFromFile(t *testing.T) {
 	infos, err := newGestureInfosFromFile(configPath)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	assert.True(t, findGestureInfo(EventInfo{Name:"swipe", Direction:"up", Fingers:3}, infos))
 	assert.True(t, findGestureInfo(EventInfo{Name:"swipe", Direction:"down", Fingers:3}, infos))
@@ -61,7 +61,7 @@ func Test_newGestureInfosFromFile(t *testing.T) {
 // 测试：Get接口
 func Test_Get(t *testing.T) {
 	infos, err := newGestureInfosFromFile(configPath)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	// for touch long press
 	infos = append(infos, &gestureInfo{
@@ -87,7 +87,7 @@ func Test_Get(t *testing.T) {
 		},
 	})
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.NotNil(t, infos.Get(EventInfo{Name:"touch right button", Direction:"down", Fingers:0}))
 	assert.NotNil(t, infos.Get(EventInfo{Name:"touch right button", Direction:"up", Fingers:0}),)
 	assert.NotNil(t, infos.Get(EventInfo{Name:"swipe", Direction:"up", Fingers:3}))
@@ -107,7 +107,7 @@ func Test_Get(t *testing.T) {
 // 测试：Set接口
 func Test_Set(t *testing.T) {
 	infos, err := newGestureInfosFromFile(configPath)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	action1 := ActionInfo{
 		Type:   "shortcut",

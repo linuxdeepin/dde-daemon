@@ -28,13 +28,13 @@ import (
 
 func Test_SystemLayout(t *testing.T) {
 	layout, err := getSystemLayout("testdata/keyboard")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, layout, "us;")
 }
 
 func Test_ParseXKBFile(t *testing.T) {
 	handler, err := getLayoutsFromFile("testdata/base.xml")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.NotNil(t, handler)
 }
 

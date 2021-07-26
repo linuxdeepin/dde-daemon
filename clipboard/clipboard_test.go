@@ -22,11 +22,11 @@ func TestEventCaptor(t *testing.T) {
 	}()
 
 	win, err := createWindow(conn)
-	require.Nil(t, err, "%v", err)
+	require.NoError(t, err)
 	assert.NotZero(t, win)
 
 	err = changeWindowEventMask(conn, win, x.EventMaskPropertyChange)
-	require.Nil(t, err, "%v", err)
+	require.NoError(t, err)
 
 	eventChan := make(chan x.GenericEvent, 10)
 	conn.AddEventChan(eventChan)
@@ -44,7 +44,7 @@ func TestEventCaptor(t *testing.T) {
 	}()
 
 	prop, err := conn.GetAtom("PROP_1")
-	require.Nil(t, err, "%v", err)
+	require.NoError(t, err)
 
 	pne, err := ec.capturePropertyNotifyEvent(func() error {
 		return x.ChangePropertyChecked(conn, x.PropModeReplace, win, prop, x.AtomCardinal, 32, nil).Check(conn)
@@ -53,7 +53,7 @@ func TestEventCaptor(t *testing.T) {
 			event.Atom == prop &&
 			event.State == x.PropertyNewValue
 	})
-	require.Nil(t, err, "%v", err)
+	require.NoError(t, err)
 	assert.Equal(t, win, pne.Window)
 	assert.Equal(t, prop, pne.Atom)
 	assert.EqualValues(t, x.PropertyNewValue, pne.State)
@@ -70,19 +70,19 @@ func Test_getSelectionOwner(t *testing.T) {
 	}()
 
 	win, err := createWindow(conn)
-	require.Nil(t, nil, "%v", err)
+	require.NoError(t, err)
 	assert.NotZero(t, win)
 
 	sel, err := conn.GetAtom("CLIPBOARD_test")
-	require.Nil(t, err, "%v", err)
+	require.NoError(t, err)
 	assert.NotZero(t, sel)
 
 	err = x.SetSelectionOwnerChecked(conn, win, sel, x.CurrentTime).Check(conn)
-	require.Nil(t, err, "%v", err)
+	require.NoError(t, err)
 
 	owner, err := getSelectionOwner(conn, sel)
 	assert.Equal(t, win, owner)
-	assert.Nil(t, err, "%v", err)
+	assert.NoError(t, err)
 }
 
 func Test_getBytesMd5sum(t *testing.T) {
@@ -97,19 +97,19 @@ func Test_emptyDir(t *testing.T) {
 	}
 	t.Log("dir:", dir)
 	err = ioutil.WriteFile(filepath.Join(dir, "1"), []byte("abc"), 0644)
-	assert.Nil(t, err, "%v", err)
+	assert.NoError(t, err)
 
 	err = os.Mkdir(filepath.Join(dir, "d1"), 0755)
-	assert.Nil(t, err, "%v", err)
+	assert.NoError(t, err)
 
 	err = ioutil.WriteFile(filepath.Join(dir, "d1/1"), []byte("abc"), 0644)
-	assert.Nil(t, err, "%v", err)
+	assert.NoError(t, err)
 
 	err = emptyDir(dir)
-	assert.Nil(t, err, "%v", err)
+	assert.NoError(t, err)
 
 	err = os.Remove(dir)
-	assert.Nil(t, err, "%v", err)
+	assert.NoError(t, err)
 }
 
 func Test_setSelectionOwner(t *testing.T) {
@@ -121,11 +121,11 @@ func Test_setSelectionOwner(t *testing.T) {
 	xc.On("GetSelectionOwner", selection).Return(win, nil).Once()
 
 	err := setSelectionOwner(xc, win, selection, ts)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	xc.On("GetSelectionOwner", selection).Return(x.Window(2), nil).Once()
 	err = setSelectionOwner(xc, win, selection, ts)
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 	xc.AssertExpectations(t)
 }
 
@@ -143,10 +143,10 @@ func Test_getAtomListFormReply(t *testing.T) {
 
 	atomList, err := getAtomListFormReply(reply)
 	assert.Equal(t, []x.Atom{1, 2, 3}, atomList)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 
 	reply.Format = 0
 	atomList, err = getAtomListFormReply(reply)
 	assert.Nil(t, atomList)
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }

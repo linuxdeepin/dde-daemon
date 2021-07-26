@@ -42,19 +42,19 @@ func TestGfxmodesMax(t *testing.T) {
 
 func TestParseGfxmode(t *testing.T) {
 	mode, err := ParseGfxmode("1024x768")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, Gfxmode{1024, 768}, mode)
 
 	_, err = ParseGfxmode("auto")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, err = ParseGfxmode("1024x768x32")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func Test_parseBootArgDeepinGfxmode(t *testing.T) {
 	cur, all, err := parseBootArgDeepinGfxmode("1,1280x1024,1366x768,1024x768")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, cur, Gfxmode{1366, 768})
 	assert.Equal(t, all, Gfxmodes{
 		{1280, 1024},
@@ -63,21 +63,21 @@ func Test_parseBootArgDeepinGfxmode(t *testing.T) {
 	})
 
 	cur, all, err = parseBootArgDeepinGfxmode("0,1280x1024")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, cur, Gfxmode{1280, 1024})
 	assert.Equal(t, all, Gfxmodes{
 		{1280, 1024},
 	})
 
 	_, _, err = parseBootArgDeepinGfxmode("")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, _, err = parseBootArgDeepinGfxmode("3,1280x1024,1366x768,1024x768")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, _, err = parseBootArgDeepinGfxmode("-1,1280x1024,1366x768,1024x768")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
 	_, _, err = parseBootArgDeepinGfxmode("1,1280x1024,1366x768,1024x768,auto")
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
