@@ -48,7 +48,6 @@ type adapter struct {
 	scanReadyToConnectDeviceTimeout     *time.Timer
 	scanReadyToConnectDeviceTimeoutFlag bool
 	waitDiscovery                       bool
-	connectingCount                     int
 }
 
 var defaultDiscoveringTimeout = 1 * time.Minute
@@ -227,6 +226,9 @@ func (a *adapter) connectProperties() {
 		a.Discovering = value
 		logger.Debugf("%s Discovering: %v", a, value)
 		//Scan timeout and send attribute change signal directly
+		if value {
+			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+		}
 		if a.discoveringTimeoutFlag {
 			a.notifyPropertiesChanged()
 		} else {
@@ -265,12 +267,12 @@ func (a *adapter) connectProperties() {
 	}
 }
 func (a *adapter) startDiscovery() {
-	if a.connectingCount > 0 {
-		logger.Info("some devices connecting, can not start discovery")
+	a.discoveringTimeoutFlag = false
+	//已经开始扫描
+	if a.Discovering {
 		return
 	}
 
-	a.discoveringTimeoutFlag = false
 	logger.Debugf("start discovery")
 	err := a.core.Adapter().StartDiscovery(0)
 	if err != nil {
