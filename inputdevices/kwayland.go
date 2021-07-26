@@ -94,6 +94,7 @@ func doHandleKWinDeviceAdded(sysName string) {
 
 func doHandleKWinDeviceRemoved(sysName string) {
 	str := strings.TrimLeft(sysName, kwayland.SysNamePrefix) //nolint
+	// #nosec G109
 	id, _ := strconv.Atoi(str)
 	logger.Debug("----------------items:", sysName, str, id)
 

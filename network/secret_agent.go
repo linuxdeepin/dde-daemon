@@ -22,6 +22,7 @@ import (
 )
 
 const (
+	// #nosec
 	nmSecretDialogBin              = "/usr/lib/deepin-daemon/dnetwork-secret-dialog"
 	getSecretsFlagAllowInteraction = 0x1
 	getSecretsFlagRequestNew       = 0x2

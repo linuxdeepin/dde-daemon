@@ -52,7 +52,7 @@ func getGuestUserName() string {
 
 	for i := 0; i < 6; i++ {
 		rand.Seed(time.Now().UnixNano())
-		index := rand.Intn(l)
+		index := rand.Intn(l) // #nosec G404
 		name += string(seedStr[index])
 	}
 

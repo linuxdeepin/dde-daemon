@@ -118,6 +118,7 @@ func getThumbBg() string {
 	}
 
 	rand.Seed(time.Now().UnixNano())
+	// #nosec G404
 	idx := rand.Intn(len(imgs))
 	return imgs[idx]
 }
