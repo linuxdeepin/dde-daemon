@@ -643,7 +643,7 @@ func (m *Manager) handleWmWorkspaceCountChanged(count int32) {
 
 		numAdded := int(count) - len(bgs)
 		for i := 0; i < numAdded; i++ {
-			idx := rand.Intn(len(allBgs))
+			idx := rand.Intn(len(allBgs)) // #nosec G404
 			// Id is file url
 			bgs = append(bgs, allBgs[idx].Id)
 		}

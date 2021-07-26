@@ -218,7 +218,7 @@ func (m *Manager) RandUserIcon() (iconFile string, busErr *dbus.Error) {
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	idx := rand.Intn(len(icons))
+	idx := rand.Intn(len(icons)) // #nosec G404
 	return icons[idx], nil
 }
 

@@ -41,6 +41,7 @@ import (
 	"pkg.deepin.io/lib/utils"
 )
 
+// #nosec G101
 const (
 	polkitActionUserAdministration     = "com.deepin.daemon.accounts.user-administration"
 	polkitActionChangeOwnData          = "com.deepin.daemon.accounts.change-own-user-data"

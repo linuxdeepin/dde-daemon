@@ -129,6 +129,7 @@ func (sc *backgroundSyncConfig) Get() (interface{}, error) {
 		if len(keySlice) < 2 {
 			continue
 		}
+		// #nosec G109
 		index, err := strconv.Atoi(keySlice[1])
 		if err != nil {
 			logger.Warning(err)
@@ -244,6 +245,7 @@ func (sc *backgroundSyncConfig) Set(data []byte) error {
 			continue
 		}
 		monitorName := reverseMonitorMap[keySlice[0]] //将主屏幕或副屏幕(Primary或Subsidiary0/Subsidiary1等)转换为具体的屏幕名称(例如"HDMI-0"或"VGA-0")
+		// #nosec G109
 		index, err := strconv.Atoi(keySlice[1])
 		if err != nil {
 			logger.Warning(err)
@@ -272,6 +274,7 @@ func (sc *backgroundSyncConfig) Set(data []byte) error {
 			continue
 		}
 		monitorName := reverseMonitorMap[keySlice[0]] // 将主屏幕或副屏幕(Primary或Subsidiary0/Subsidiary1等)转换为具体的屏幕名称(例如"HDMI-0"或"VGA-0")
+		// #nosec G109
 		index, err := strconv.Atoi(keySlice[1])
 		if err != nil {
 			logger.Warning(err)

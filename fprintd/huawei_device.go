@@ -467,6 +467,7 @@ func (*HuaweiDevice) GetInterfaceName() string {
 	return dbusDeviceInterface
 }
 
+// #nosec G101
 const (
 	fprintdEnrollStatusCompleted   = "enroll-completed"
 	fprintdEnrollStatusFailed      = "enroll-failed"

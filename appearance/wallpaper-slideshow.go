@@ -150,6 +150,7 @@ type WSLoop struct {
 }
 
 func newWSLoop() *WSLoop {
+	// #nosec G404
 	return &WSLoop{
 		rand:      rand.New(rand.NewSource(time.Now().UnixNano())),
 		showed:    make(map[string]struct{}),
@@ -202,7 +203,7 @@ func (wrl *WSLoop) getNext() string {
 
 func (wrl *WSLoop) reset() {
 	logger.Debug("WSLoop.reset")
-	wrl.rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+	wrl.rand = rand.New(rand.NewSource(time.Now().UnixNano())) // #nosec
 	// clear showed
 	for key := range wrl.showed {
 		delete(wrl.showed, key)
