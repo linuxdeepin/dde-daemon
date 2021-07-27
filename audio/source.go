@@ -75,8 +75,27 @@ func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 	return s
 }
 
+// 检测端口是否被禁用
+func (s *Source) CheckPort() *dbus.Error {
+	enabled, err := s.audio.IsPortEnabled(s.Card, s.ActivePort.Name)
+	if err != nil {
+		return err
+	}
+
+	if !enabled {
+		return dbusutil.ToError(fmt.Errorf("port<%d:%s> is disabled", s.Card, s.ActivePort.Name))
+	}
+
+	return nil
+}
+
 // 如何反馈输入音量？
 func (s *Source) SetVolume(value float64, isPlay bool) *dbus.Error {
+	err := s.CheckPort()
+	if err != nil {
+		return err
+	}
+
 	logger.Debugf("set source %q volume %f", s.Name, value)
 	if !isVolumeValid(value) {
 		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
@@ -99,6 +118,11 @@ func (s *Source) SetVolume(value float64, isPlay bool) *dbus.Error {
 }
 
 func (s *Source) SetBalance(value float64, isPlay bool) *dbus.Error {
+	err := s.CheckPort()
+	if err != nil {
+		return err
+	}
+
 	if value < -1.00 || value > 1.00 {
 		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
@@ -117,6 +141,11 @@ func (s *Source) SetBalance(value float64, isPlay bool) *dbus.Error {
 }
 
 func (s *Source) SetFade(value float64) *dbus.Error {
+	err := s.CheckPort()
+	if err != nil {
+		return err
+	}
+
 	if value < -1.00 || value > 1.00 {
 		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
@@ -160,6 +189,11 @@ func (s *Source) setVBF(v, b, f float64) *dbus.Error {
 }
 
 func (s *Source) SetMute(value bool) *dbus.Error {
+	err := s.CheckPort()
+	if err != nil {
+		return err
+	}
+
 	s.audio.context().SetSourceMuteByIndex(s.index, value)
 	GetConfigKeeper().SetMuteInput(value)
 
