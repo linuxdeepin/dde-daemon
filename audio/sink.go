@@ -80,12 +80,31 @@ func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {
 	return s
 }
 
+// 检测端口是否被禁用
+func (s *Sink) CheckPort() *dbus.Error {
+	enabled, err := s.audio.IsPortEnabled(s.Card, s.ActivePort.Name)
+	if err != nil {
+		return err
+	}
+
+	if !enabled {
+		return dbusutil.ToError(fmt.Errorf("port<%d:%s> is disabled", s.Card, s.ActivePort.Name))
+	}
+
+	return nil
+}
+
 // 设置音量大小
 //
 // v: 音量大小
 //
 // isPlay: 是否播放声音反馈
 func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
+	err := s.CheckPort()
+	if err != nil {
+		return err
+	}
+
 	logger.Debugf("set #%d sink %q volume %f", s.index, s.Name, value)
 	if !isVolumeValid(value) {
 		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
@@ -113,6 +132,11 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 //
 // isPlay: 是否播放声音反馈
 func (s *Sink) SetBalance(value float64, isPlay bool) *dbus.Error {
+	err := s.CheckPort()
+	if err != nil {
+		return err
+	}
+
 	if value < -1.00 || value > 1.00 {
 		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
@@ -136,6 +160,11 @@ func (s *Sink) SetBalance(value float64, isPlay bool) *dbus.Error {
 //
 // isPlay: 是否播放声音反馈
 func (s *Sink) SetFade(value float64) *dbus.Error {
+	err := s.CheckPort()
+	if err != nil {
+		return err
+	}
+
 	if value < -1.00 || value > 1.00 {
 		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
 	}
@@ -179,6 +208,11 @@ func (s *Sink) setVBF(v, b, f float64) *dbus.Error {
 
 // 是否静音
 func (s *Sink) SetMute(value bool) *dbus.Error {
+	err := s.CheckPort()
+	if err != nil {
+		return err
+	}
+
 	logger.Debugf("Sink #%d SetMute %v", s.index, value)
 	s.audio.context().SetSinkMuteByIndex(s.index, value)
 	GetConfigKeeper().SetMuteOutput(value)
