@@ -126,7 +126,7 @@ func (m *Manager) selectXInputEvents() {
 		input.XIEventMaskRawTouchBegin |
 		input.XIEventMaskRawTouchEnd
 	err := m.doXISelectEvents(evMask)
-	if errAreasRegistered != nil {
+	if err != nil {
 		logger.Warning(err)
 	}
 }
