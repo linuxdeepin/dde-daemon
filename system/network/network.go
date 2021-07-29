@@ -161,6 +161,7 @@ func (n *Network) connectSignal() {
 		}
 
 		n.devicesMu.Unlock()
+		restartIPWatchD()
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -173,6 +174,7 @@ func (n *Network) connectSignal() {
 		n.removeDevice(devPath)
 
 		n.devicesMu.Unlock()
+		restartIPWatchD()
 	})
 	if err != nil {
 		logger.Warning(err)
