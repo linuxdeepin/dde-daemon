@@ -21,6 +21,8 @@ package accounts
 
 import (
 	"os"
+	"path"
+
 	"pkg.deepin.io/lib/utils"
 )
 
@@ -46,7 +48,7 @@ func (u *User) checkLeftSpace() {
 }
 
 func (u *User) removeCache() {
-	var file = u.HomeDir + "/.cache"
+	var file = path.Join(u.HomeDir + ".cache")
 	logger.Debug("-------Will remove:", file)
 	err := os.RemoveAll(file)
 	if err != nil {
