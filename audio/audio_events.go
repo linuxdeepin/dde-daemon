@@ -263,6 +263,19 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 	}
 
 	// 这里写所有类型的card事件都需要触发的逻辑
+	/* 新增声卡上的端口如果被处于禁用状态，进行横幅提示 */
+	card, err := a.cards.get(idx)
+	if err == nil {
+		if isBluezAudio(card.core.Name) {
+			logger.Debugf("notify bluez card %s", card.core.Name)
+			a.notifyBluezCardPortInsert(card)
+		} else {
+			logger.Debugf("notify normal card %s", card.core.Name)
+			a.notifyCardPortInsert(card)
+		}
+	} else {
+		logger.Warning(err)
+	}
 
 	// 保存旧的cards
 	a.oldCards = a.cards
@@ -283,14 +296,6 @@ func (a *Audio) handleCardAdded(idx uint32) {
 
 	if isBluezAudio(card.core.Name) {
 		card.AutoSetBluezMode()
-	}
-
-	/* 新增声卡上的端口如果被处于禁用状态，进行横幅提示 */
-	for _, port := range card.Ports {
-		_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
-		if port.Available != pulse.AvailableTypeNo && !portConfig.Enabled {
-			a.notifyPortDisabled(idx, port)
-		}
 	}
 }
 
@@ -318,9 +323,6 @@ func (a *Audio) handleCardChanged(idx uint32) {
 			a.setPropBluetoothAudioMode(bluezModeHeadset)
 		}
 	}
-
-	// Port插入时(从AvailableTypeNo变成其它)，如果端口处于禁用状态，显示横幅提示
-	a.notifyCardPortInsert(card)
 }
 
 func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
@@ -592,13 +594,56 @@ func (a *Audio) listenGSettingReduceNoiseChanged() {
 	})
 }
 
+func (a *Audio) notifyBluezCardPortInsert(card *Card) {
+	logger.Debugf("notify bluez card %d:%s", card.Id, card.core.Name)
+	oldCard, err := a.oldCards.getByName(card.core.Name)
+	if err != nil {
+		// oldCard不存在
+		logger.Warning(err)
+	}
+
+	// 蓝牙会根据模式过滤端口，因此忽略unknown状态
+	for _, port := range card.Ports {
+		if port.Available == pulse.AvailableTypeNo {
+			// 当前状态为AvailableTypeNo，忽略
+			logger.Debugf("port %s not insert", port.Name)
+			continue
+		}
+
+		isInsert := false
+		if oldCard == nil {
+			// oldCard不存在，即新增声卡
+			isInsert = true
+		} else {
+			oldPort, err := oldCard.getPortByName(port.Name)
+			if err != nil {
+				// oldPort不存在，例如A2DP切换到headset
+				isInsert = true
+
+				// 但是pulseaudio事件时序是乱的，所以可能会因为其它原因进来，导致bug
+				logger.Warning(err)
+			} else if oldPort.Available == pulse.AvailableTypeNo {
+				isInsert = true
+			}
+		}
+
+		if isInsert {
+			logger.Debugf("port<%s,%s> inserted", card.core.Name, port.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
+			if !portConfig.Enabled {
+				logger.Debugf("port<%s,%s> notify", card.core.Name, port.Name)
+				a.notifyPortDisabled(card.Id, port)
+			}
+		}
+	}
+}
+
 func (a *Audio) notifyCardPortInsert(card *Card) {
 	logger.Debugf("notify card %d:%s", card.Id, card.core.Name)
 	oldCard, err := a.oldCards.getByName(card.core.Name)
 	if err != nil {
-		// oldCard不存在，在 handleCardAdded 中处理
+		// oldCard不存在
 		logger.Warning(err)
-		return
 	}
 
 	for _, port := range card.Ports {
@@ -609,26 +654,32 @@ func (a *Audio) notifyCardPortInsert(card *Card) {
 		}
 
 		isInsert := false
-		oldPort, err := oldCard.getPortByName(port.Name)
-		if err != nil {
-			// oldPort不存在，例如A2DP切换到headset
+		if oldCard == nil {
+			// oldCard不存在，即新增声卡
 			isInsert = true
+		} else {
+			oldPort, err := oldCard.getPortByName(port.Name)
+			if err != nil {
+				// oldPort不存在，例如A2DP切换到headset
+				isInsert = true
 
-			// 但是pulseaudio事件时序是乱的，所以可能会因为其它原因进来，导致bug
-			logger.Warning(err)
+				// 但是pulseaudio事件时序是乱的，所以可能会因为其它原因进来，导致bug
+				logger.Warning(err)
 
-		} else if oldPort.Available == pulse.AvailableTypeNo {
-			logger.Debugf("port %s from AvailableTypeNo to %d", port.Name, port.Available)
-			isInsert = true
-		} else if oldPort.Available == pulse.AvailableTypeUnknow && port.Available == pulse.AvailableTypeYes {
-			logger.Debugf("port %s from AvailableTypeUnknow to AvailableTypeYes", port.Name)
-			isInsert = true
+			} else if oldPort.Available == pulse.AvailableTypeNo {
+				logger.Debugf("port %s from AvailableTypeNo to %d", port.Name, port.Available)
+				isInsert = true
+			} else if oldPort.Available == pulse.AvailableTypeUnknow && port.Available == pulse.AvailableTypeYes {
+				logger.Debugf("port %s from AvailableTypeUnknow to AvailableTypeYes", port.Name)
+				isInsert = true
+			}
 		}
 
 		if isInsert {
-			logger.Warningf("port<%s,%s> inserted", card.core.Name, port.Name)
+			logger.Debugf("port<%s,%s> inserted", card.core.Name, port.Name)
 			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
 			if !portConfig.Enabled {
+				logger.Debugf("port<%s,%s> notify", card.core.Name, port.Name)
 				a.notifyPortDisabled(card.Id, port)
 			}
 		}
