@@ -447,6 +447,11 @@ func (a *Audio) init() error {
 
 	// 更新本地数据
 	a.refresh()
+	for _, card := range a.cards {
+		if isBluezAudio(card.core.Name) {
+			card.AutoSetBluezMode()
+		}
+	}
 
 	serverInfo, err := a.ctx.GetServer()
 	if err == nil {
