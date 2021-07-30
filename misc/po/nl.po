@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/linuxdeepin/teams/3617/nl/)\n"
@@ -52,15 +52,15 @@ msgstr "Gebruikersnaam mag niet leeg zijn"
 msgid "The first character must be a letter or number"
 msgstr "Het eerste teken moet een letter of cijfer zijn"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "De gebruikersnaam bestaat al"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "Deze naam is al in gebruik"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "De gebruikersnaam moet tussen de 3 en 32 tekens lang zijn"
 
@@ -88,12 +88,12 @@ msgstr "Beeldgrootte instellen"
 msgid "Display scaling"
 msgstr "Schaling weergeven"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s is uitgeschakeld"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Openen"
 
@@ -158,8 +158,8 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "Bezig met ontvangen van %q van %q"
+msgid "Receiving %v from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -567,7 +567,7 @@ msgstr "%q succesvol verplaatst"
 msgid "Failed to uninstall %q"
 msgstr "%q mislukt om te verwijderen"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "Bekabelde verbinding"
 
@@ -1112,6 +1112,6 @@ msgstr ""
 "Authenticatie is vereist om te bepalen of de RTC de lokale tijd of UTC-tijd "
 "opslaat"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Authenticatie is vereist om de systeemtijdzone in te stellen"

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>, 2021\n"
 "Language-Team: Portuguese (https://www.transifex.com/linuxdeepin/teams/3617/pt/)\n"
@@ -47,15 +47,15 @@ msgstr "O nome de utilizador não pode estar em branco"
 msgid "The first character must be a letter or number"
 msgstr "O primeiro caracter deve ser uma letra ou número"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "O nome de utilizador já existe"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "O nome de já existe"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de utilizador deve ter entre 3 e 32 caracteres"
 
@@ -85,12 +85,12 @@ msgstr "A definir escala de visualização"
 msgid "Display scaling"
 msgstr "Escala de visualização"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s foi desativado"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Abrir"
 
@@ -155,7 +155,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -564,7 +564,7 @@ msgstr "%q removido com sucesso"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao desinstalar %q"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "Ligação por cabo"
 
@@ -1108,6 +1108,6 @@ msgstr ""
 "É necessária a autenticação para controlar se o RTC guarda UTC ou a hora "
 "local"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "É necessária a autenticação para definir o fuso horário do sistema"

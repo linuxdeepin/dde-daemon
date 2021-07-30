@@ -5,17 +5,17 @@
 # 
 # Translators:
 # tsewang baljor <bdcwbj@163.com>, 2020
-# Cindy0514, 2021
 # yeshe lhamo <981611630@qq.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: yeshe lhamo <981611630@qq.com>, 2021\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,15 +43,15 @@ msgstr "སྤྱོད་མཁན་མིང་སྟོང་པ་ཡིན
 msgid "The first character must be a letter or number"
 msgstr "ཡིག་འབྲུ་ཐོག་མ་དེ་ངེས་པར་དུ་གསལ་བྱེད་དམ་ཨང་ཀི་ཡིན་དགོས། "
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "སྤྱོད་མཁན་མིང་འདི་འདུག"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "མིང་ཡོད་པ།"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "སྤྱོད་མཁན་མིང་གི་རིང་ཚད་ངེས་པར་དུ་ཡིག་འབྲུ་3ནས་32བར་ཡིན་དགོས། "
 
@@ -79,12 +79,12 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་སྒྲ
 msgid "Display scaling"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%sབཀག་ཟིན།"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "ཁ་ཕྱེ་བ།"
 
@@ -149,8 +149,8 @@ msgid "Cancel"
 msgstr "ཕྱིར་འཐེན།"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "%qཡི་ཡིག་ཆ་%qལེན་བཞིན་པ།"
+msgid "Receiving %v from %q"
+msgstr "%vཡི་ཡིག་ཆ་%qལེན་བཞིན་པ།"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -558,7 +558,7 @@ msgstr " %qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
@@ -1092,6 +1092,6 @@ msgid ""
 msgstr ""
 "སྲ་ཆས་སྒྲིག་འགོད་བྱས་ཏེ་རང་སའི་དུས་ཚོད་དམ་UTC སྤྱོད་པར་ར་སྤྲོད་བྱེད་དགོས།"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "རྒྱུད་ཁོངས་ཀྱི་དུས་ཁུལ་སྒྲིག་འགོད་བྱེད་པར་ར་སྤྲོད་བྱེད་དགོས།"

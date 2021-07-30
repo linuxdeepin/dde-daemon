@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
@@ -46,15 +46,15 @@ msgstr "用户名不能为空"
 msgid "The first character must be a letter or number"
 msgstr "首字符必须为字母或数字"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "此用户名已存在"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "该名称已存在"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "用户名长度必须介于3到32个字符之间"
 
@@ -82,12 +82,12 @@ msgstr "即将设置屏幕缩放"
 msgid "Display scaling"
 msgstr "屏幕缩放"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "打开"
 
@@ -152,8 +152,8 @@ msgid "Cancel"
 msgstr "取消"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "正在接收来自%q的%q文件"
+msgid "Receiving %v from %q"
+msgstr "正在接收来自%q的%v文件"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -555,7 +555,7 @@ msgstr "成功卸载 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸载失败"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "有线连接"
 
@@ -1080,6 +1080,6 @@ msgid ""
 "UTC time"
 msgstr "设置硬件时钟使用本地时间或 UTC 需要认证"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "设置系统时区需要认证"

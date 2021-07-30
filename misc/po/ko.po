@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: JungHee Lee <daemul72@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/linuxdeepin/teams/3617/ko/)\n"
@@ -43,15 +43,15 @@ msgstr "사용자 이름은 비워 둘 수 없습니다"
 msgid "The first character must be a letter or number"
 msgstr "첫 번째 문자는 문자 또는 숫자여야 합니다."
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "사용자 이름이 이미 존재합니다"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "사용자 이름은 3 ~ 32 자 사이 여야합니다"
 
@@ -79,12 +79,12 @@ msgstr "디스플레이 크기조정 설정"
 msgid "Display scaling"
 msgstr "디스플레이 크기조정"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "열기"
 
@@ -149,7 +149,7 @@ msgid "Cancel"
 msgstr "취소"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -552,7 +552,7 @@ msgstr "%q을(를) 성공적으로 제거했습니다"
 msgid "Failed to uninstall %q"
 msgstr "%q을(를) 제거하지 못했습니다"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr ""
 
@@ -1077,6 +1077,6 @@ msgid ""
 "UTC time"
 msgstr "RTC가 로컬 또는 UTC 시간을 저장하는지 제어하려면 인증이 필요합니다"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "시스템 시간대를 설정하려면 인증이 필요합니다"

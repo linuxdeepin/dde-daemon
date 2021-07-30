@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Xəyyam Qocayev <xxmn77@gmail.com>, 2021\n"
 "Language-Team: Azerbaijani (https://www.transifex.com/linuxdeepin/teams/3617/az/)\n"
@@ -46,15 +46,15 @@ msgstr "İstifadəçi adı boş ola bilməz."
 msgid "The first character must be a letter or number"
 msgstr "İlk simvol hərf və ya rəqəm olmalıdır"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Bu ad artıq mövcuddur"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "Bu ad artıq var"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "İstifadəçi adı 3-dən 32-yədək simvollar arasında olmalıdır"
 
@@ -82,12 +82,12 @@ msgstr "Ekran miqyasını ayarlamaq"
 msgid "Display scaling"
 msgstr "Ekran miqyası"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s söndürülüb"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Aç"
 
@@ -152,7 +152,7 @@ msgid "Cancel"
 msgstr "İmtina"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -562,7 +562,7 @@ msgstr "%q uğurla silindi"
 msgid "Failed to uninstall %q"
 msgstr "%q silinməsi baş tutmadı"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "Simli bağlantı"
 
@@ -1105,6 +1105,6 @@ msgstr ""
 "RTS tərəfindən, yerli yoxsa UTP vaxtının saxlanılmasını idarə etmək üçün "
 "doğrulama tələb olunur"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Sistem ssat qurşağının təyin olunması üçün doğrulama tələb olunur"

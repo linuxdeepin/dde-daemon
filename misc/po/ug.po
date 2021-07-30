@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2021\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
@@ -47,15 +47,15 @@ msgstr "ئىشلەتكۈچى ئىسمى قۇرۇق قالسا بولمايدۇ"
 msgid "The first character must be a letter or number"
 msgstr "بىرىنچى ھەرپ چوقۇم بىر ھەرپ ياكى سان بولۇشى كېرەك"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "ئىشلەتكۈچى ئىسمى 3 دىن 32 ھەرپ ئارىلىقىدا بولۇشى كېرەك"
 
@@ -84,12 +84,12 @@ msgstr "كۆرۈنۈش نىسبىتىنى تەڭشىمەكچى"
 msgid "Display scaling"
 msgstr "كۆرۈنىش كىچىكلىتىش"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s چەكلەنگەن"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "ئوچۇق"
 
@@ -154,8 +154,8 @@ msgid "Cancel"
 msgstr "بىكار قىلىش"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "%q دىن كەلگەن %q دانە ھۆججەت قوبۇللىنىۋاتىدۇ"
+msgid "Receiving %v from %q"
+msgstr "%q دىن كەلگەن %v ھۆججەت قوبۇللىنىۋاتىدۇ"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -561,7 +561,7 @@ msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
 msgid "Failed to uninstall %q"
 msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "سىملىق تور ئۇلىنىشى"
 
@@ -1098,6 +1098,6 @@ msgstr ""
 "قاتتىق دېتال سائىتىنى يەرلىك ۋاقىت ياكى UTC ئىشلىتىش ئۈچۈن دەلىللەش تەلەپ "
 "قىلىنىدۇ"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "سىستېما ۋاقىت رايونىنى بەلگىلەش ئۈچۈن دەلىللەش تەلەپ قىلىنىدۇ"

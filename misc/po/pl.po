@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Marcin Kozioł <koziol.martin@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/linuxdeepin/teams/3617/pl/)\n"
@@ -48,15 +48,15 @@ msgstr "Nazwa użytkownika nie może być pusta"
 msgid "The first character must be a letter or number"
 msgstr "Pierwszy znak musi być literą lub cyfrą"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Nazwa użytkownika już istnieje"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "Taka nazwa już istnieje"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nazwa użytkownika musi mieć od 3 do 32 znaków"
 
@@ -84,12 +84,12 @@ msgstr "Ustawienie skalowania ekranu"
 msgid "Display scaling"
 msgstr "Skalowanie ekranu"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Otwórz"
 
@@ -154,7 +154,7 @@ msgid "Cancel"
 msgstr "Anuluj"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -564,7 +564,7 @@ msgstr "%q pomyślnie usunięte"
 msgid "Failed to uninstall %q"
 msgstr "Błąd odinstalowania %q"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr ""
 
@@ -1107,6 +1107,6 @@ msgstr ""
 "Aby kontrolować zasoby lokalne RTC lub czas UTC konieczne jest "
 "uwierzytelnienie."
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Aby ustawić strefę czasową systemu wymagane jest uwierzytelnienie"

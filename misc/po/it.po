@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Massimo A. Carofano <real.massimo@hotmail.it>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/linuxdeepin/teams/3617/it/)\n"
@@ -44,15 +44,15 @@ msgstr "Il nome utente non può essere assente"
 msgid "The first character must be a letter or number"
 msgstr "Il primo carattere deve essere una lettera o un numero"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Questo Username esiste già"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "Questo nome esiste già"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "L'username deve esser compresa tra 3 e 32 caratteri"
 
@@ -80,12 +80,12 @@ msgstr "Imposta scala di visualizzazione"
 msgid "Display scaling"
 msgstr "Scala di visualizzazione"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s è stato disattivato"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Apri"
 
@@ -150,7 +150,7 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -558,7 +558,7 @@ msgstr "%q rimossa con successo"
 msgid "Failed to uninstall %q"
 msgstr "Disinstallazione di %q fallita"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "Connessione cablata"
 
@@ -1104,6 +1104,6 @@ msgstr ""
 "Autenticazione richiesta per verificare se lo store RTC utilizza l'orario "
 "Locale o UTC."
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Autenticazione richiesta per impostare l'orario di Sistema."

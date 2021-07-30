@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/linuxdeepin/teams/3617/cs/)\n"
@@ -46,15 +46,15 @@ msgstr "Uživatelské jméno nemůže být prázdné"
 msgid "The first character must be a letter or number"
 msgstr "Je třeba, aby první znak bylo písmeno nebo číslice"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Toto uživatelské jméno už je v počítači používáno"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "Jméno už existuje"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "Je třeba, aby uživatelské jméno mělo délku 3 až 32 znaků"
 
@@ -84,12 +84,12 @@ msgstr "Nastavení měřítka zobrazení"
 msgid "Display scaling"
 msgstr "Měřítko zobrazení"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Otevřít"
 
@@ -154,7 +154,7 @@ msgid "Cancel"
 msgstr "Storno"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -561,7 +561,7 @@ msgstr "%q úspěšně odstraněno"
 msgid "Failed to uninstall %q"
 msgstr "Nepodařilo se odinstalovat %q"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr ""
 
@@ -1100,6 +1100,6 @@ msgstr ""
 "Pro ovládání toho, zda mají hardwarové hodiny počítače být nařízené na "
 "místní nebo univerzální čas (UTC) je vyžadováno ověření se"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Pro nastavení časového pásma systému je požadováno ověření se"

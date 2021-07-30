@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2021\n"
 "Language-Team: Sinhala (https://www.transifex.com/linuxdeepin/teams/3617/si/)\n"
@@ -42,15 +42,15 @@ msgstr "පරිශීලක නාමය හිස් විය නොහැ�
 msgid "The first character must be a letter or number"
 msgstr "පළමු අක්‍ෂරය අකුරක් හෝ අංකයක් විය යුතුය"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "පරිශීලක නාමය දැනටමත් පවතී"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "පරිශීලක නාමය අක්ෂර 3 ත් 32 ත් අතර විය යුතුය"
 
@@ -78,12 +78,12 @@ msgstr "දර්ශන පරිමාණ සකසමින් පවතී"
 msgid "Display scaling"
 msgstr "දර්ශන පරිමාණය"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "විවෘත කරන්න"
 
@@ -148,7 +148,7 @@ msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -555,7 +555,7 @@ msgstr "%q සාර්ථකව ඉවත් කර ඇත."
 msgid "Failed to uninstall %q"
 msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr ""
 
@@ -1095,6 +1095,6 @@ msgstr ""
 "RTC-තත් කාල ඔරලෝසුවෙහි දේශීය හෝ UTC-සමායෝත සාර්වත්‍ර වේලාව ගබඩා කරන්නේද යන්න"
 " පාලනය කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "පද්ධතියේ වේලා කලාපය සකස් කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"

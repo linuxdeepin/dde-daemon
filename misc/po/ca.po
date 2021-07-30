@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Davidmp <medipas@gmail.com>, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/linuxdeepin/teams/3617/ca/)\n"
@@ -46,15 +46,15 @@ msgstr "El nom d'usuari no es pot deixar en blanc."
 msgid "The first character must be a letter or number"
 msgstr "El primer caràcter ha de ser una lletra o un número."
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "El nom d'usuari ja existeix."
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "El nom ja existeix."
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nom d'usuari ha de tenir de 3 a 32 caràcters de llargada."
 
@@ -82,12 +82,12 @@ msgstr "Establiment de l'escalat de la pantalla"
 msgid "Display scaling"
 msgstr "Escalatge de la pantalla"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s s'ha inhabilitat"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Obre"
 
@@ -152,7 +152,7 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -565,7 +565,7 @@ msgstr "%q eliminada correctament"
 msgid "Failed to uninstall %q"
 msgstr "Ha fallat desinstal·lar %q."
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "Connexió amb fil"
 
@@ -1117,6 +1117,6 @@ msgstr ""
 "Cal autenticació per controlar si l'RTC (rellotge de temps real) desa l'hora"
 " local o l'hora UTC."
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Cal autenticació per establir la zona horària del sistema."

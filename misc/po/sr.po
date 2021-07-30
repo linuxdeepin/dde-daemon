@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2021\n"
 "Language-Team: Serbian (https://www.transifex.com/linuxdeepin/teams/3617/sr/)\n"
@@ -47,15 +47,15 @@ msgstr "Корисничко име не може бити празно"
 msgid "The first character must be a letter or number"
 msgstr "Први карактер мора бити слово или број"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Корисничко име већ постоји"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "Име већ постоји"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "Корисничко име мора садржати између 3-32 карактера"
 
@@ -83,12 +83,12 @@ msgstr "Подешавање скалираног приказа"
 msgid "Display scaling"
 msgstr "Скалирање приказа"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s је искључен"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Покрени"
 
@@ -153,8 +153,8 @@ msgid "Cancel"
 msgstr "Откажи"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "Преузимање %q од %q"
+msgid "Receiving %v from %q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -560,7 +560,7 @@ msgstr "%q уклањање успешно"
 msgid "Failed to uninstall %q"
 msgstr "Уклањање %q неуспешно"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "Жичана веза"
 
@@ -1097,6 +1097,6 @@ msgstr ""
 "Идентификација је неопходна да контролишете да ли RTC памти локално или UTC "
 "време"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Идентификација је неопходна за поставку временске зоне"

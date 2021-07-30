@@ -18,16 +18,16 @@
 # Tomás Warynyca <tomas.warynyca@outlook.com>, 2021
 # Isaías Gätjens M <igatjens@gmail.com>, 2021
 # Martín Josemaría <martin.vuelta@gmail.com>, 2021
-# Zaraza, 2021
+# 555de6651697fc2a607c30c9bb431b88_60731db, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Zaraza, 2021\n"
+"Last-Translator: 555de6651697fc2a607c30c9bb431b88_60731db, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/linuxdeepin/teams/3617/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,15 +55,15 @@ msgstr "El nombre de usuario no puede estar vacío"
 msgid "The first character must be a letter or number"
 msgstr "El primer carácter debe ser una letra o número"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "El nombre de usuario ya existe"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "El nombre ya existe"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nombre de usuario debe tener entre 3 y 32 caracteres"
 
@@ -91,12 +91,12 @@ msgstr "Configurar escalado de pantalla"
 msgid "Display scaling"
 msgstr "Escalado de pantalla"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Abrir"
 
@@ -161,7 +161,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -570,7 +570,7 @@ msgstr "%q eliminado correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Falló la desinstalación de %q"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr "Conexión cableada"
 
@@ -1119,7 +1119,7 @@ msgstr ""
 "Se requiere autenticación para controlar si el RTC almacena la hora local o "
 "UTC."
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr ""
 "Se requiere autenticación para configurar la zona horaria del sistema."

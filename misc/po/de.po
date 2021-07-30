@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 17:56+0800\n"
+"POT-Creation-Date: 2021-07-30 15:28+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
@@ -55,15 +55,15 @@ msgstr "Benutzername darf nicht leer sein"
 msgid "The first character must be a letter or number"
 msgstr "Das erste Zeichen muss ein Buchstabe oder eine Zahl sein"
 
-#: ../../accounts/checkers/username.go:72
+#: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
 msgstr "Der Benutzername existiert bereits"
 
-#: ../../accounts/checkers/username.go:75
+#: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
 msgstr "Der Name existiert bereits"
 
-#: ../../accounts/checkers/username.go:77
+#: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
 msgstr "Benutzername muss zwischen 3 und 32 Zeichen lang sein"
 
@@ -92,12 +92,12 @@ msgstr "Anzeigeskalierung wird festgelegt"
 msgid "Display scaling"
 msgstr "Anzeigeskalierung"
 
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Öffnen"
 
@@ -162,7 +162,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %v from %q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -572,7 +572,7 @@ msgstr "%q erfolgreich entfernt"
 msgid "Failed to uninstall %q"
 msgstr "%q konnte nicht deinstalliert werden"
 
-#: ../../network/manager.go:362
+#: ../../network/manager.go:335
 msgid "Wired connection"
 msgstr ""
 
@@ -1129,7 +1129,7 @@ msgstr ""
 "Zum Einrichten der Echtzeituhr auf die lokale oder UTC-Uhrzeit ist eine "
 "Authentifizierung notwendig."
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr ""
 "Zum Festlegen der System-Zeitzone ist eine Authentifizierung notwendig"
