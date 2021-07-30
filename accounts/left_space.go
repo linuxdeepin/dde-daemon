@@ -29,7 +29,7 @@ const (
 	filesystemMinFreeSize = 50 * 1024 * 1024
 )
 
-// checkLeftSpace Check disk left space, if no space left, then remove '~/.cache/deepin'
+// checkLeftSpace Check disk left space, if no space left, then remove '~/.cache'
 func (u *User) checkLeftSpace() {
 	info, err := utils.QueryFilesytemInfo(u.HomeDir)
 	if err != nil {
@@ -41,7 +41,7 @@ func (u *User) checkLeftSpace() {
 		return
 	}
 
-	logger.Debug("No space left, will remove deepin cache")
+	logger.Debugf("No space left, will remove %s's .cache", u.UserName)
 	u.removeCache()
 }
 
@@ -50,6 +50,6 @@ func (u *User) removeCache() {
 	logger.Debug("-------Will remove:", file)
 	err := os.RemoveAll(file)
 	if err != nil {
-		logger.Warning("Failed to remove cache:", err)
+		logger.Warningf("Failed to remove %s's .cache: %s", u.UserName, err.Error())
 	}
 }
