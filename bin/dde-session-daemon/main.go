@@ -33,7 +33,6 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-	"regexp"
 	"runtime"
 	"strings"
 	"time"
@@ -179,11 +178,6 @@ func main() {
 		logger.Warning("system is in shutdown, no need to run")
 		os.Exit(1)
 	}
-
-	// always use UTF-8 character set
-	lang := os.Getenv("LANG")
-	lang = regexp.MustCompile(`(^.*)\..*$`).ReplaceAllString(lang, "$1.UTF-8")
-	_ = os.Setenv("LANG", lang)
 
 	flag.Parse()
 	InitI18n()
