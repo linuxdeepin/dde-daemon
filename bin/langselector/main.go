@@ -26,6 +26,7 @@ import (
 
 func main() {
 	gettext.InitI18n()
+	gettext.BindTextdomainCodeset("dde-daemon", "UTF-8")
 	gettext.Textdomain("dde-daemon")
 	langselector.Run()
 }
