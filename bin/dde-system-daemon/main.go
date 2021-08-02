@@ -111,6 +111,7 @@ func main() {
 	_ = os.Setenv("LANGUAGE", "")
 
 	InitI18n()
+	BindTextdomainCodeset("dde-daemon", "UTF-8")
 	Textdomain("dde-daemon")
 
 	logger.SetRestartCommand("/usr/lib/deepin-daemon/dde-system-daemon")
