@@ -181,6 +181,7 @@ func main() {
 
 	flag.Parse()
 	InitI18n()
+	BindTextdomainCodeset("dde-daemon", "UTF-8")
 	Textdomain("dde-daemon")
 
 	if _options.verbose {
