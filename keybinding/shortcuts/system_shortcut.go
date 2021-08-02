@@ -93,7 +93,7 @@ var defaultSysActionCmdMap = map[string]string{
 	"launcher":               "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle",
 	"terminal":               "/usr/lib/deepin-daemon/default-terminal",
 	"terminal-quake":         "deepin-terminal --quake-mode",
-	"lock-screen":            "dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show",
+	"lock-screen":            "/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show",
 	"logout":                 "dbus-send --print-reply --dest=com.deepin.dde.shutdownFront /com/deepin/dde/shutdownFront com.deepin.dde.shutdownFront.Show",
 	"deepin-screen-recorder": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord",
 	"system-monitor":         "/usr/bin/deepin-system-monitor",
@@ -107,7 +107,7 @@ var defaultSysActionCmdMap = map[string]string{
 	"disable-touchpad":      "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
 	"wm-switcher":           "dbus-send --type=method_call --dest=com.deepin.WMSwitcher /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM",
 	"turn-off-screen":       "sleep 0.5; xset dpms force off",
-	"notification-center":    "dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle",
+	"notification-center":   "dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle",
 	"clipboard":             "dbus-send --print-reply --dest=com.deepin.dde.Clipboard /com/deepin/dde/Clipboard com.deepin.dde.Clipboard.Toggle",
 }
 
