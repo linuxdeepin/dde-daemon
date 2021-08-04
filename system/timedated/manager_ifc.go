@@ -21,8 +21,6 @@ package timedated
 
 import (
 	"os"
-	"os/exec"
-	"time"
 
 	"github.com/godbus/dbus"
 	"pkg.deepin.io/dde/daemon/timedate/zoneinfo"
@@ -108,34 +106,6 @@ func (m *Manager) SetNTP(sender dbus.Sender, enabled bool, message string) *dbus
 				logger.Warning("delete [/var/lib/systemd/timesync/clock] err:", err)
 			}
 		}
-	} else {
-		go func() {
-			ticker := time.NewTicker(time.Second)
-			cnt := 0
-			for range ticker.C {
-				// > "/run/systemd/timesync/synchronized"
-				// > A file that is touched on each successful synchronization, to
-				// > assist systemd-time-wait-sync and other applications to
-				// > detecting synchronization with accurate reference clocks.
-				// from man systemd-timesyncd.service
-				// 此处通过检查该文件确定 ntp 时间是否已经同步到 local time
-				if _, err := os.Stat("/run/systemd/timesync/synchronized"); err == nil {
-					logger.Info("write ntp synchronized time to rtc time")
-					err = exec.Command("hwclock", "-w").Run()
-					if err != nil {
-						logger.Warningf("write ntp synchronized time to rtc time fail: %v", err)
-					}
-					break
-				}
-				cnt++
-				if cnt >= 10 {
-					logger.Warning("wait for ntp response ... timeup")
-					break
-				}
-			}
-			ticker.Stop()
-			return
-		}()
 	}
 
 	return dbusutil.ToError(err)
