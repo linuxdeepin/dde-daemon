@@ -37,12 +37,16 @@ func (m *Manager) SetTime(sender dbus.Sender, usec int64, relative bool, message
 
 // SetTimezone set the system time zone, the value from /usr/share/zoneinfo/zone.tab
 func (m *Manager) SetTimezone(sender dbus.Sender, timezone, message string) *dbus.Error {
-	if !zoneinfo.IsZoneValid(timezone) {
+	ok, err := zoneinfo.IsZoneValid(timezone)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	if !ok {
 		logger.Warning("invalid zone:", timezone)
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
 	}
 
-	err := m.checkAuthorization("SetTimezone", message, sender)
+	err = m.checkAuthorization("SetTimezone", message, sender)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -84,10 +88,16 @@ func (m *Manager) SetNTP(sender dbus.Sender, enabled bool, message string) *dbus
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
+
 	if currentNTPEnabled == enabled {
 		return nil
 	}
+
 	err = m.core.SetNTP(0, enabled, false)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
 	// 关闭NTP时删除clock文件，使systemd以RTC时间为准
 	if !enabled {
 		err := os.Remove("/var/lib/systemd/timesync/clock")

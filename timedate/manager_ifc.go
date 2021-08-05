@@ -139,12 +139,16 @@ func (m *Manager) SetLocalRTC(localRTC, fixSystem bool) *dbus.Error {
 //
 // zone: pass a value like "Asia/Shanghai" to set the timezone.
 func (m *Manager) SetTimezone(zone string) *dbus.Error {
-	if !zoneinfo.IsZoneValid(zone) {
+	ok, err := zoneinfo.IsZoneValid(zone)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	if !ok {
 		logger.Debug("Invalid zone:", zone)
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
 	}
 
-	err := m.setter.SetTimezone(0, zone,
+	err = m.setter.SetTimezone(0, zone,
 		Tr("Authentication is required to set the system timezone"))
 	if err != nil {
 		logger.Debug("SetTimezone failed:", err)
@@ -156,7 +160,11 @@ func (m *Manager) SetTimezone(zone string) *dbus.Error {
 
 // Add the specified time zone to user time zone list.
 func (m *Manager) AddUserTimezone(zone string) *dbus.Error {
-	if !zoneinfo.IsZoneValid(zone) {
+	ok, err := zoneinfo.IsZoneValid(zone)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	if !ok {
 		logger.Debug("Invalid zone:", zone)
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
 	}
@@ -171,7 +179,11 @@ func (m *Manager) AddUserTimezone(zone string) *dbus.Error {
 
 // Delete the specified time zone from user time zone list.
 func (m *Manager) DeleteUserTimezone(zone string) *dbus.Error {
-	if !zoneinfo.IsZoneValid(zone) {
+	ok, err := zoneinfo.IsZoneValid(zone)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	if !ok {
 		logger.Debug("Invalid zone:", zone)
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
 	}
@@ -197,5 +209,6 @@ func (m *Manager) GetZoneInfo(zone string) (zoneInfo zoneinfo.ZoneInfo, busErr *
 
 // GetZoneList returns all the valid timezones.
 func (m *Manager) GetZoneList() (zoneList []string, busErr *dbus.Error) {
-	return zoneinfo.GetAllZones(), nil
+	zoneList, err := zoneinfo.GetAllZones()
+	return zoneList, dbusutil.ToError(err)
 }

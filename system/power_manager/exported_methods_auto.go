@@ -28,5 +28,15 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:      v.CanSuspend,
 			OutArgs: []string{"can"},
 		},
+		{
+			Name:    "CanSuspendToHibernate",
+			Fn:      v.CanSuspendToHibernate,
+			OutArgs: []string{"can"},
+		},
+		{
+			Name:   "SetSuspendToHibernateTime",
+			Fn:     v.SetSuspendToHibernateTime,
+			InArgs: []string{"timeMinute"},
+		},
 	}
 }

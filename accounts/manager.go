@@ -104,9 +104,9 @@ func NewManager(service *dbusutil.Service) *Manager {
 	sysSigLoop.Start()
 
 	var m = &Manager{
-		service:       service,
-		login1Manager: login1Manager,
-		sysSigLoop:    sysSigLoop,
+		service:                    service,
+		login1Manager:              login1Manager,
+		sysSigLoop:                 sysSigLoop,
 		enablePasswdChangedHandler: true,
 	}
 
@@ -146,10 +146,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 		}
 
 		if userInfo.UID < 10000 {
-			return
-		}
-
-		if !users.IsHumanUdcpUserUid(userInfo.UID) {
 			return
 		}
 
@@ -218,6 +214,8 @@ func (m *Manager) initUdcpCache() error {
 	if err != nil {
 		return err
 	}
+
+	udcpCache.SetInterfaceName_(ifcCfg.Interface)
 
 	m.udcpCache = udcpCache
 	return nil
@@ -306,7 +304,7 @@ func (m *Manager) exportUserByUid(uId string) error {
 
 	if /*m.isUserJoinUdcp()*/ id > 10000 {
 		if users.ExistPwUid(uint32(id)) != 0 {
-			return errors.New("No such user id")
+			return errors.New("no such user id")
 		}
 		userGroups, err = m.udcpCache.GetUserGroups(0, users.GetPwName(uint32(id)))
 		if err != nil {

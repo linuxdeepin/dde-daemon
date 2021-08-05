@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Moo, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/linuxdeepin/teams/3617/lt/)\n"
@@ -53,10 +53,6 @@ msgid "The name already exists"
 msgstr ""
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Naudotojo vardas naudojamas sistemos"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Naudotojo vardas privalo būti nuo 3 iki 32 simbolių"
 
@@ -84,12 +80,12 @@ msgstr "Nustatomas ekrano mastelis"
 msgid "Display scaling"
 msgstr "Ekrano mastelis"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Atverti"
 
@@ -154,7 +150,7 @@ msgid "Cancel"
 msgstr "Atsisakyti"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -206,8 +202,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "%q sėkmingai prijungta"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q atjungtas"
 
@@ -282,23 +278,24 @@ msgstr "Planuoti priminimą"
 msgid "Festival"
 msgstr ""
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Užverti visus"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "Priverstinai išjungti"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "Dokas"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "Atskirti nuo doko"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "Visi langai"
 
@@ -560,7 +557,7 @@ msgstr "%q sėkmingai pašalintas"
 msgid "Failed to uninstall %q"
 msgstr "Nepavyko pašalinti %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr ""
 
@@ -943,53 +940,53 @@ msgstr "Tapatybės nustatymas su VPN serveriu patyrė nesėkmę"
 msgid "The connection was deleted from settings"
 msgstr "Ryšys buvo ištrintas iš nustatymų"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Įjungiamas prieigos taškas"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Prijungiama %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Prieigos taškas įjungtas"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q prijungtas"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Prieigos taškas išjungtas"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Nepavyko bendrinti prieigos taško, patikrinkite dnsmasq nustatymus"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Nepavyko prijungti %q, laikykite arčiau belaidžio maršrutizatoriaus"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nepavyko prijungti %q, patikrinkite savo maršrutizatorių ar tinklo laidą."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Ryšys patyrė nesėkmę, nepavyko prisijungti prie %q, neteisingas slaptažodis"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "Norint prijungti %q, reikalingas slaptažodis"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Nežinoma"
 
@@ -1100,7 +1097,7 @@ msgstr ""
 "Norint valdyti ar RTC bus laikomas vietinis ar suderintasis pasaulinis "
 "laikas (UTC), reikalingas tapatybės nustatymas"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr ""
 "Norint nustatyti sistemos laiko juostą, reikalingas tapatybės nustatymas"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Massimo A. Carofano <real.massimo@hotmail.it>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/linuxdeepin/teams/3617/it/)\n"
@@ -53,10 +53,6 @@ msgid "The name already exists"
 msgstr "Questo nome esiste già"
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "L'username è utilizzata dal sistema."
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "L'username deve esser compresa tra 3 e 32 caratteri"
 
@@ -84,12 +80,12 @@ msgstr "Imposta scala di visualizzazione"
 msgid "Display scaling"
 msgstr "Scala di visualizzazione"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s è stato disattivato"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Apri"
 
@@ -154,7 +150,7 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -206,8 +202,8 @@ msgstr "Ricezione da %q scaduta"
 msgid "Connect %q successfully"
 msgstr "Connesso con successo a %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q disconnesso"
 
@@ -284,23 +280,24 @@ msgstr "Pianifica promemoria"
 msgid "Festival"
 msgstr "Festivo"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Chiudi tutto"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "Forza chiusura"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "Dock"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "Sgancia"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "Tutte le finestre"
 
@@ -562,7 +559,7 @@ msgstr "%q rimossa con successo"
 msgid "Failed to uninstall %q"
 msgstr "Disinstallazione di %q fallita"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr "Connessione cablata"
 
@@ -951,53 +948,53 @@ msgstr "Autentificazione server VPN fallita"
 msgid "The connection was deleted from settings"
 msgstr "La connessione è stata eliminata dalle impostazioni"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Attiva l'hotspot"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Connessione a %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot attivato"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q connesso"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Hotspot disattivato"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Impossibile condividere l'hotspot, controllare le impostazioni dnsmasq"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Impossibile collegarsi a %q, avvicinati al router wireless"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Impossibile connettersi a %q, controlla il tuo router o il cavo di rete."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Connessione fallita, impossibile connettersi a %q, password errata"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "Password richiesta per connettersi a %q"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Il %q 802.11 WLAN non è stato trovato"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Sconosciuto"
 
@@ -1108,6 +1105,6 @@ msgstr ""
 "Autenticazione richiesta per verificare se lo store RTC utilizza l'orario "
 "Locale o UTC."
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Autenticazione richiesta per impostare l'orario di Sistema."

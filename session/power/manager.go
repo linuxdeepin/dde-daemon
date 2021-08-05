@@ -80,14 +80,16 @@ type Manager struct {
 	LinePowerScreenBlackDelay gsprop.Int `prop:"access:rw"`
 	// 接通电源时，不做任何操作，到睡眠的时间
 	LinePowerSleepDelay gsprop.Int `prop:"access:rw"`
-
+	// 接通电源时，不做任何操作，到休眠的时间
+	LinePowerHibernateDelay gsprop.Int `prop:"access:rw"`
 	// 使用电池时，不做任何操作，到显示屏保的时间
 	BatteryScreensaverDelay gsprop.Int `prop:"access:rw"`
 	// 使用电池时，不做任何操作，到关闭屏幕的时间
 	BatteryScreenBlackDelay gsprop.Int `prop:"access:rw"`
 	// 使用电池时，不做任何操作，到睡眠的时间
 	BatterySleepDelay gsprop.Int `prop:"access:rw"`
-
+	// 使用电池时，不做任何操作，到休眠的时间
+	BatteryHibernateDelay gsprop.Int `prop:"access:rw"`
 	// 关闭屏幕前是否锁定
 	ScreenBlackLock gsprop.Bool `prop:"access:rw"`
 	// 睡眠前是否锁定
@@ -170,10 +172,12 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.LinePowerScreenBlackDelay.Bind(m.settings, settingKeyLinePowerScreenBlackDelay)
 	m.LinePowerSleepDelay.Bind(m.settings, settingKeyLinePowerSleepDelay)
 	m.LinePowerLockDelay.Bind(m.settings, settingKeyLinePowerLockDelay)
+	m.LinePowerHibernateDelay.Bind(m.settings, settingKeyLinePowerHibernateDelay)
 	m.BatteryScreensaverDelay.Bind(m.settings, settingKeyBatteryScreensaverDelay)
 	m.BatteryScreenBlackDelay.Bind(m.settings, settingKeyBatteryScreenBlackDelay)
 	m.BatterySleepDelay.Bind(m.settings, settingKeyBatterySleepDelay)
 	m.BatteryLockDelay.Bind(m.settings, settingKeyBatteryLockDelay)
+	m.BatteryHibernateDelay.Bind(m.settings, settingKeyBatteryHibernateDelay)
 	m.ScreenBlackLock.Bind(m.settings, settingKeyScreenBlackLock)
 	m.SleepLock.Bind(m.settings, settingKeySleepLock)
 
@@ -376,12 +380,14 @@ func (m *Manager) Reset() *dbus.Error {
 		settingKeyLinePowerLockDelay,
 		settingKeyLinePowerLidClosedAction,
 		settingKeyLinePowerPressPowerBtnAction,
+		settingKeyLinePowerHibernateDelay,
 
 		settingKeyBatteryScreenBlackDelay,
 		settingKeyBatterySleepDelay,
 		settingKeyBatteryLockDelay,
 		settingKeyBatteryLidClosedAction,
 		settingKeyBatteryPressPowerBtnAction,
+		settingKeyBatteryHibernateDelay,
 
 		settingKeyScreenBlackLock,
 		settingKeySleepLock,
@@ -423,5 +429,17 @@ func (m *Manager) permitLogind() {
 
 func (m *Manager) SetPrepareSuspend(suspendState int) *dbus.Error {
 	m.setPrepareSuspend(suspendState)
+	return nil
+}
+
+// 处理dde-session-shell 发过来的休眠请求
+func (m *Manager) RequestSuspend() *dbus.Error {
+
+	if m.OnBattery {
+		m.doSetSuspendToHibernateTime(m.BatteryHibernateDelay.Get() / 60)
+	} else {
+		m.doSetSuspendToHibernateTime(m.LinePowerHibernateDelay.Get() / 60)
+	}
+	m.doSuspend()
 	return nil
 }

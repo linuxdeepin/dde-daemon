@@ -119,6 +119,11 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"expired"},
 		},
 		{
+			Name:    "PasswordExpiredInfo",
+			Fn:      v.PasswordExpiredInfo,
+			OutArgs: []string{"expiredStatus", "dayLeft"},
+		},
+		{
 			Name:   "SetAutomaticLogin",
 			Fn:     v.SetAutomaticLogin,
 			InArgs: []string{"enabled"},
@@ -197,6 +202,11 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:   "SetPassword",
 			Fn:     v.SetPassword,
 			InArgs: []string{"password"},
+		},
+		{
+			Name:   "SetPasswordHint",
+			Fn:     v.SetPasswordHint,
+			InArgs: []string{"hint"},
 		},
 		{
 			Name:   "SetShell",

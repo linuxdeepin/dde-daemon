@@ -37,7 +37,7 @@ const (
 	userNameMinLength = 3
 
 	passwdFile = "/etc/passwd"
-	groupFile = "/etc/group"
+	groupFile  = "/etc/group"
 )
 
 type ErrorCode int32
@@ -67,13 +67,11 @@ func (code ErrorCode) Error() *ErrorInfo {
 		err = errors.New("Username must only contain a~z, A-Z, 0~9, - or _")
 	case ErrCodeFirstCharInvalid:
 		err = errors.New(Tr("The first character must be a letter or number"))
-	case ErrCodeExist:
+	case ErrCodeExist, ErrCodeSystemUsed:
 		err = errors.New(Tr("The username already exists"))
 	case ErrCodeNameExist:
 		//提示校验项目与全名、组名或用户名是否相同
 		err = errors.New(Tr("The name already exists"))
-	case ErrCodeSystemUsed:
-		err = errors.New(Tr("The username has been used by system"))
 	case ErrCodeLen:
 		err = errors.New(Tr("Username must be between 3 and 32 characters"))
 	default:

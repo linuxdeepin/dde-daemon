@@ -226,8 +226,6 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 	// connect signals
 	nmDev.InitSignalExt(sh.sysSigLoop, true)
 	_, err = nmDev.Device().ConnectStateChanged(func(newState, oldState, reason uint32) {
-		globalSessionActive = sh.m.isSessionActive()
-
 		logger.Debugf("device state changed, %d => %d, reason[%d] %s", oldState, newState, reason, deviceErrorTable[reason])
 		sh.locker.Lock()
 		defer sh.locker.Unlock()

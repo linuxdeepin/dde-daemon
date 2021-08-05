@@ -22,6 +22,7 @@ package dock
 import (
 	"fmt"
 	"path/filepath"
+	"pkg.deepin.io/lib/appinfo/desktopappinfo"
 	"strconv"
 	"strings"
 	"time"
@@ -37,6 +38,7 @@ type IdentifyWindowFunc struct {
 type _IdentifyWindowFunc func(*Manager, *WindowInfo) (string, *AppInfo)
 
 func (m *Manager) registerIdentifyWindowFuncs() {
+	m.registerIdentifyWindowFunc("Android",identifyWindowAndroid)
 	m.registerIdentifyWindowFunc("PidEnv", identifyWindowByPidEnv)
 	m.registerIdentifyWindowFunc("CmdlineTurboBooster", identifyWindowByCmdlineTurboBooster)
 	m.registerIdentifyWindowFunc("Cmdline-XWalk", identifyWindowByCmdlineXWalk)
@@ -87,6 +89,7 @@ func (m *Manager) identifyWindow(winInfo *WindowInfo) (innerId string, appInfo *
 			return
 		}
 	}
+
 	// fail
 	logger.Debugf("identifyWindow: failed")
 	return winInfo.innerId, nil
@@ -263,6 +266,27 @@ func identifyWindowByCmdlineTurboBooster(m *Manager, winInfo *WindowInfo) (strin
 	// fail
 	return "", nil
 }
+
+func identifyWindowAndroid(m *Manager, winInfo *WindowInfo) (string, *AppInfo){
+	androidId := getAndroidUengineId(winInfo.window)
+	androidName := getAndroidUengineName(winInfo.window)
+	if -1 != androidId && "" != androidName {
+		desktopPath := "/usr/share/applications/"+"uengine."+androidName+".desktop"
+		deskappInfo, _ := desktopappinfo.NewDesktopAppInfoFromFile(desktopPath)
+		if deskappInfo == nil {
+			logger.Info("Not Exist DesktopFile")
+			return "",nil
+		}
+
+		appInfo := newAppInfo(deskappInfo)
+		appInfo.identifyMethod = "Android"
+
+		return appInfo.innerId,appInfo
+	}
+
+	return "",nil
+}
+
 
 func identifyWindowByPidEnv(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	msgPrefix := fmt.Sprintf("identifyWindowByPidEnv win: %d ", winInfo.window)

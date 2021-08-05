@@ -1,6 +1,8 @@
 package network
 
 import (
+	"os/exec"
+
 	"github.com/godbus/dbus"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 )
@@ -80,4 +82,13 @@ func setDeviceManaged(d networkmanager.Device, val bool) error {
 		}
 	}
 	return nil
+}
+
+func restartIPWatchD() {
+	go func() {
+		err := exec.Command("systemctl", "restart", "ipwatchd.service").Run()
+		if err != nil {
+			logger.Warning(err)
+		}
+	}()
 }

@@ -340,6 +340,30 @@ func getWindowFlatpakAppID(win x.Window) string {
 	return id
 }
 
+func getAndroidUengineId(win x.Window) int32 {
+	atom := atomAndroidUengineId
+
+	reply, err := x.GetProperty(globalXConn, false, win,
+		atom, atomInteger, 0, lengthMax).Reply(globalXConn)
+
+	if err != nil || reply.ValueLen == 0 {
+		return -1
+        }
+
+	return int32(x.Get32(reply.Value))
+}
+
+func getAndroidUengineName(win x.Window) string {
+	reply, err := x.GetProperty(globalXConn, false, win,
+		atomAndroidUengineName, atomString, 0, lengthMax).Reply(globalXConn)
+	if err != nil {
+		return ""
+	}
+
+	name := string(reply.Value)
+	return name
+}
+
 const lengthMax = 0xffff
 
 func getWmWindowRole(win x.Window) string {

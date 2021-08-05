@@ -191,6 +191,22 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			dev.HwAddress = dev.ClonedAddress
 		}
 
+		// wired device should always create non-tmp connections, nm will create tmp connection sometimes when device first plugin in
+		err = nmDev.Device().ActiveConnection().ConnectChanged(func(hasValue bool, value dbus.ObjectPath) {
+			// if has not value or value is not expected, ignore changes
+			if !hasValue || value == "/" || value == "" {
+				return
+			}
+			// try to get active connection
+			_, _, err = m.ensureWiredConnectionExists(devPath, true)
+			if err != nil {
+				logger.Warningf("ensure wired connection failed, err: %v", err)
+			}
+		})
+		if err != nil {
+			logger.Warningf("connect to ActivateConnection failed, err: %v", err)
+		}
+
 		if nmHasSystemSettingsModifyPermission() {
 			carrierChanged := func(hasValue, value bool) {
 				if !hasValue || !value {
@@ -234,12 +250,9 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			dev.ActiveAp = value
 			m.updatePropDevices()
 
-			// Re-active connection if wireless 'ActiveAccessPoint' not equal active connection 'SpecificObject'
-			// such as wifi roaming, but the active connection state is activated
-			err := m.wirelessReActiveConnection(nmDev)
-			if err != nil {
-				logger.Warning("Failed to re-active connection:", err)
-			}
+			// when wifi is roaming, wpa and network-manager will deal this situation,
+			// dde dont need try to re active connection or may cause error connection in OPT env
+			// this case always means nm or wpa has bug, fix nm or wpa is better
 		})
 		if err != nil {
 			logger.Warning(err)
@@ -434,11 +447,11 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 	enabled, _ := m.sysNetwork.IsDeviceEnabled(0, dev.Interface)
 	// adjust device enable state
 	// due to script in pre-up and pre-down, device will be always set as true or false,
-	// in this situation, the config kept in local file is not exact, config need be adjusted
-	if dev.State > nm.NM_DEVICE_STATE_DISCONNECTED && !enabled {
-		_, enableErr := m.sysNetwork.EnableDevice(0, dev.Interface, true)
-		if enableErr != nil {
-			logger.Warningf("set device enable failed, err: %v", enableErr)
+	// in this situation, the config kept in local file is not exact, device state should be adjust
+	if isDeviceStateInActivating(dev.State) && !enabled {
+		err = dev.nmDev.Device().Disconnect(0)
+		if err != nil {
+			logger.Warningf("device disconnected failed, err: %v", err)
 		}
 	}
 	dev.Managed = nmGeneralIsDeviceManaged(devPath)

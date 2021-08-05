@@ -23,10 +23,8 @@ all: build
 
 prepare:
 	@mkdir -p out/bin
-	@if [ ! -d ${GOPATH_DIR}/src/${GOPKG_PREFIX} ]; then \
-		mkdir -p ${GOPATH_DIR}/src/$(dir ${GOPKG_PREFIX}); \
-		ln -sf ../../../.. ${GOPATH_DIR}/src/${GOPKG_PREFIX}; \
-		fi
+	@mkdir -p ${GOPATH_DIR}/src/$(dir ${GOPKG_PREFIX});
+	@ln -snf ../../../.. ${GOPATH_DIR}/src/${GOPKG_PREFIX};
 
 out/bin/%: prepare
 	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@  ${GOPKG_PREFIX}/bin/${@F}

@@ -19,7 +19,13 @@
 
 package accounts
 
+/*
+#include <shadow.h>
+typedef struct spwd cspwd;
+*/
+import "C"
 import (
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"os"
@@ -157,7 +163,7 @@ func (u *User) SetPassword(sender dbus.Sender, password string) *dbus.Error {
 		}
 		count--
 		if count == 0 {
-			return dbusutil.ToError(errors.New("shadow file error"))
+			return dbusutil.ToError(err)
 		}
 		time.Sleep(time.Second)
 	}
@@ -934,4 +940,55 @@ func (u *User) SetWeekBegins(sender dbus.Sender, value int32) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 	return nil
+}
+
+type ExpiredStatus int
+
+const (
+	expiredStatusNormal ExpiredStatus = iota
+	expiredStatusExpiredSoon
+	expiredStatusExpiredAlready
+)
+
+const secondsPerDay = 60 * 60 * 24
+
+func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64, busErr *dbus.Error) {
+	var pw *C.cspwd
+	pw = C.getspnam(C.CString(u.UserName))
+	if pw == nil {
+		return expiredStatusNormal, 0, dbusutil.ToError(fmt.Errorf("get passwd for %s failed", u.UserName))
+	}
+
+	var spMax = int64(pw.sp_max)
+	var spWarn = int64(pw.sp_warn)
+	var spLastChg = int64(pw.sp_lstchg)
+
+	if spLastChg == 0 {
+		// expired
+		return expiredStatusExpiredAlready, 0, nil
+	}
+	if spMax == -1 {
+		// never expired
+		return expiredStatusNormal, -1, nil
+	}
+
+	// pam_unix/passverify.c
+	curDays := time.Now().Unix() / secondsPerDay
+	daysLeft := spLastChg + spMax - curDays
+
+	if daysLeft < 0 {
+		return expiredStatusExpiredAlready, daysLeft, nil
+	} else if spWarn > daysLeft {
+		return expiredStatusExpiredSoon, daysLeft, nil
+	}
+	return expiredStatusNormal, daysLeft, nil
+}
+
+func (u *User) SetPasswordHint(hint string) (busErr *dbus.Error) {
+	encodeHint := base64.StdEncoding.EncodeToString([]byte(hint))
+	err := u.writeUserConfigWithChange(confKeyPasswordHint, encodeHint)
+	if err == nil {
+		u.setPropPasswordHint(hint)
+	}
+	return dbusutil.ToError(err)
 }

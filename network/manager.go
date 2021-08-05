@@ -27,6 +27,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
+	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
 	sysNetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
@@ -60,6 +61,7 @@ type Manager struct {
 	sysSigLoop         *dbusutil.SignalLoop
 	service            *dbusutil.Service
 	sysNetwork         sysNetwork.Network
+	sysIPWatchD        ipwatchd.IPWatchD
 	nmObjManager       nmdbus.ObjectManager
 	PropsMu            sync.RWMutex
 	sessionManager     sessionmanager.SessionManager
@@ -67,8 +69,9 @@ type Manager struct {
 	currentSession     login1.Session
 
 	// update by manager.go
-	State        uint32 // global networking state
-	Connectivity uint32
+	State            uint32 // global networking state
+	connectivityLock sync.Mutex
+	Connectivity     uint32
 
 	NetworkingEnabled bool `prop:"access:rw"` // airplane mode for NetworkManager
 	VpnEnabled        bool `prop:"access:rw"`
@@ -121,6 +124,12 @@ type Manager struct {
 		DeviceEnabled struct {
 			devPath string
 			enabled bool
+		}
+		ActiveConnectionInfoChanged struct {
+		}
+		IPConflict struct {
+			ip  string
+			mac string
 		}
 	}
 }
@@ -204,6 +213,9 @@ func (m *Manager) init() {
 		}
 	}()
 
+	globalSessionActive = m.isSessionActive()
+	logger.Debugf("current session activated state: %v", globalSessionActive)
+
 	// initialize device and connection handlers
 	m.sysNetwork = sysNetwork.NewNetwork(systemBus)
 	m.initConnectionManage()
@@ -212,6 +224,7 @@ func (m *Manager) init() {
 	m.initNMObjManager(systemBus)
 	m.stateHandler = newStateHandler(m.sysSigLoop, m)
 	m.initSysNetwork(systemBus)
+	m.initIPConflictManager(systemBus)
 
 	// update property "State"
 	err = nmManager.PropState().ConnectChanged(func(hasValue bool, value uint32) {

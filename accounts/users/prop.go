@@ -45,45 +45,29 @@ var (
 	groupFileLocker    sync.Mutex
 
 	groupNameNoPasswdLogin = "nopasswdlogin"
-
-	shadowCache = newCache(userFileShadow, shadowCacheProvider)
 )
 
 type CacheProviderFn func(filename string) (interface{}, error)
 
-func shadowCacheProvider(filename string) (interface{}, error) {
-	content, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-
-	data := parseShadow(content)
-	return data, nil
-}
-
-func getShadowWithCache() (map[string]ShadowInfo, error) {
-	data, err := shadowCache.get()
-	if err != nil {
-		return nil, err
-	}
-	v, ok := data.(map[string]ShadowInfo)
-	if !ok {
-		return nil, fmt.Errorf("invalid data type %T", data)
-	}
-	return v, nil
-}
-
 func GetShadowInfo(username string) (*ShadowInfo, error) {
-	shadowMap, err := getShadowWithCache()
+	originInfo, err := getSpwd(username)
 	if err != nil {
 		return nil, err
 	}
-
-	v, ok := shadowMap[username]
-	if !ok {
-		return nil, fmt.Errorf("not found user %q", username)
+	sInfo := ShadowInfo{
+		Name:       originInfo.Name,
+		LastChange: originInfo.LastChange,
+		MaxDays:    originInfo.MaxDays,
 	}
-	return &v, nil
+	shadowPwdp := originInfo.ShadowPwdp
+	if len(shadowPwdp) == 0 {
+		sInfo.Status = PasswordStatusNoPassword
+	} else if []byte(shadowPwdp)[0] == '!' || []byte(shadowPwdp)[0] == '*' {
+		sInfo.Status = PasswordStatusLocked
+	} else {
+		sInfo.Status = PasswordStatusUsable
+	}
+	return &sInfo, nil
 }
 
 func IsPasswordExpired(username string) (bool, error) {
@@ -108,43 +92,6 @@ func isPasswordExpired(shadowInfo *ShadowInfo, today libdate.Date) bool {
 	expireDate := libdate.New(1970, 1, 1).Add(
 		libdate.PeriodOfDays(shadowInfo.LastChange + shadowInfo.MaxDays))
 	return today.After(expireDate)
-}
-
-type Cache struct {
-	mu       sync.Mutex
-	ts       int64
-	filename string
-	data     interface{}
-	provider CacheProviderFn
-}
-
-func newCache(filename string, provider CacheProviderFn) *Cache {
-	return &Cache{
-		filename: filename,
-		provider: provider,
-	}
-}
-
-func (c *Cache) get() (interface{}, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	fileInfo, err := os.Stat(c.filename)
-	if err != nil {
-		return nil, err
-	}
-	ts := fileInfo.ModTime().UnixNano()
-	if c.ts == 0 || c.ts != ts {
-		// file modified
-		fmt.Println("load source", c.filename)
-		data, err := c.provider(c.filename)
-		if err != nil {
-			return nil, err
-		}
-		c.ts = ts
-		c.data = data
-	}
-	return c.data, nil
 }
 
 const CommentFieldsLen = 5
@@ -496,43 +443,6 @@ func parseGroup(data []byte) map[string]GroupInfo {
 		result[gInfo.Name] = gInfo
 	}
 
-	return result
-}
-
-func parseShadow(data []byte) map[string]ShadowInfo {
-	result := make(map[string]ShadowInfo)
-	lines := bytes.Split(data, []byte{'\n'})
-	for _, line := range lines {
-		if len(line) == 0 {
-			continue
-		}
-
-		items := bytes.Split(line, []byte{':'})
-		if len(items) < 5 {
-			continue
-		}
-
-		var sInfo ShadowInfo
-		sInfo.Name = string(items[0])
-
-		pw := items[1]
-		if len(pw) == 0 {
-			sInfo.Status = PasswordStatusNoPassword
-		} else if pw[0] == '!' || pw[0] == '*' {
-			sInfo.Status = PasswordStatusLocked
-		} else {
-			sInfo.Status = PasswordStatusUsable
-		}
-
-		lastDateStr := string(items[2])
-		sInfo.LastChange = strToInt(lastDateStr, -1)
-		//minPasswordAge := string(items[3])
-
-		maxPasswordAgeStr := string(items[4])
-		sInfo.MaxDays = strToInt(maxPasswordAgeStr, -1)
-
-		result[sInfo.Name] = sInfo
-	}
 	return result
 }
 

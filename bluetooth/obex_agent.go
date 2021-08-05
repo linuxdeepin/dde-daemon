@@ -343,7 +343,7 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 			"dde-control-center",
 			replaceID,
 			notifyIconBluetoothConnected,
-			fmt.Sprintf(gettext.Tr("Receiving %q from %q"), filename, device),
+			fmt.Sprintf(gettext.Tr("Receiving %[1]q from %[2]q"), filename, device),
 			fmt.Sprintf("%d%%", progress),
 			actions,
 			hints,

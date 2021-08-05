@@ -48,7 +48,6 @@ type adapter struct {
 	scanReadyToConnectDeviceTimeout     *time.Timer
 	scanReadyToConnectDeviceTimeoutFlag bool
 	waitDiscovery                       bool
-	connectingCount                     int
 }
 
 var defaultDiscoveringTimeout = 1 * time.Minute
@@ -61,6 +60,7 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *a
 	a.core.InitSignalExt(systemSigLoop, true)
 	a.connectProperties()
 	a.address, _ = a.core.Adapter().Address().Get(0)
+	a.waitDiscovery = true
 	// 用于定时停止扫描
 	a.discoveringTimeout = time.AfterFunc(defaultDiscoveringTimeout, func() {
 		logger.Debug("discovery time out, stop discovering")
@@ -203,10 +203,9 @@ func (a *adapter) connectProperties() {
 				if err != nil {
 					logger.Warningf("failed to stop discovery for %s: %v", a, err)
 				}
+				a.waitDiscovery = true
 				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
 				globalBluetooth.tryConnectPairedDevices()
-				a.waitDiscovery = true
-				a.startDiscovery()
 			}()
 		} else {
 			// if power off, stop discovering time out
@@ -227,6 +226,9 @@ func (a *adapter) connectProperties() {
 		a.Discovering = value
 		logger.Debugf("%s Discovering: %v", a, value)
 		//Scan timeout and send attribute change signal directly
+		if value {
+			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+		}
 		if a.discoveringTimeoutFlag {
 			a.notifyPropertiesChanged()
 		} else {
@@ -265,12 +267,12 @@ func (a *adapter) connectProperties() {
 	}
 }
 func (a *adapter) startDiscovery() {
-	if a.connectingCount > 0 {
-		logger.Info("some devices connecting, can not start discovery")
+	a.discoveringTimeoutFlag = false
+	//已经开始扫描
+	if a.Discovering {
 		return
 	}
 
-	a.discoveringTimeoutFlag = false
 	logger.Debugf("start discovery")
 	err := a.core.Adapter().StartDiscovery(0)
 	if err != nil {
@@ -280,22 +282,5 @@ func (a *adapter) startDiscovery() {
 		a.waitDiscovery = false
 		// start discovering success, reset discovering timer
 		a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
-	}
-}
-
-func (a *adapter) addConnectingCount() {
-	logger.Debug("add connecting count")
-	a.connectingCount++
-}
-
-func (a *adapter) minusConnectingCount() {
-	if a.connectingCount > 0 {
-		logger.Debug("had device connecting, return")
-		a.connectingCount--
-	}
-
-	if a.waitDiscovery && a.connectingCount == 0 {
-		a.waitDiscovery = false
-		a.startDiscovery()
 	}
 }

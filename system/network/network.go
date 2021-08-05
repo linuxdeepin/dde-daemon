@@ -115,8 +115,8 @@ func (n *Network) init() error {
 	n.nmManager = networkmanager.NewManager(sysBus)
 	n.nmSettings = networkmanager.NewSettings(sysBus)
 	// retry get all devices
-	n.addDevicesWithRetry()
 	n.connectSignal()
+	n.addDevicesWithRetry()
 	// get vpn enable state from config
 	n.VpnEnabled = n.config.VpnEnabled
 
@@ -153,14 +153,12 @@ func (n *Network) connectSignal() {
 	n.nmManager.InitSignalExt(n.sigLoop, true)
 	_, err = n.nmManager.ConnectDeviceAdded(func(devPath dbus.ObjectPath) {
 		logger.Debug("device added", devPath)
-		n.devicesMu.Lock()
-
 		err := n.addDevice(devPath)
 		if err != nil {
 			logger.Warning(err)
 		}
 
-		n.devicesMu.Unlock()
+		restartIPWatchD()
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -173,6 +171,7 @@ func (n *Network) connectSignal() {
 		n.removeDevice(devPath)
 
 		n.devicesMu.Unlock()
+		restartIPWatchD()
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -232,25 +231,37 @@ func (n *Network) handleVpnStateChanged(state uint32) {
 }
 
 func (n *Network) addDevice(devPath dbus.ObjectPath) error {
+	n.devicesMu.Lock()
 	_, ok := n.devices[devPath]
 	if ok {
+		n.devicesMu.Unlock()
 		return nil
 	}
 
 	dev, err := networkmanager.NewDevice(n.getSysBus(), devPath)
 	if err != nil {
+		n.devicesMu.Unlock()
 		return err
 	}
 	d := dev.Device()
 	iface, err := d.Interface().Get(0)
 	if err != nil {
+		n.devicesMu.Unlock()
 		return err
 	}
 
 	deviceType, err := d.DeviceType().Get(0)
 	if err != nil {
-		return err
+		logger.Warningf("get device %s type failed: %v", dev.Path_(), err)
 	}
+
+	n.devices[devPath] = &device{
+		iface:    iface,
+		nmDevice: dev,
+		type0:    deviceType,
+	}
+
+	n.devicesMu.Unlock()
 
 	dev.InitSignalExt(n.sigLoop, true)
 	_, err = d.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
@@ -279,22 +290,39 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		logger.Warning(err)
 	}
 
-	err = d.Interface().ConnectChanged(func(hasValue bool, iface string) {
+	err = d.Interface().ConnectChanged(func(hasValue bool, new_iface string) {
 		if !hasValue {
 			return
 		}
+		logger.Debugf("recv interface changed signal, old iface: %s, new iface: %s", iface, new_iface)
+		// update dev interface
+		dev, ok := n.devices[devPath]
+		if !ok {
+			logger.Warningf("device not exist, devPath: %s", devPath)
+			return
+		}
+		dev.iface = new_iface
+		// check new interface is legal, if is not, delete config
+		if new_iface == "" || new_iface == "/" {
+			n.configMu.Lock()
+			delete(n.config.Devices, iface)
+			n.configMu.Unlock()
+			err = n.saveConfig()
+			if err != nil {
+				logger.Warningf("save config failed, err: %v", err)
+			}
+			return
+		}
 
-		for _, device := range n.devices {
-			if device.nmDevice == dev {
-				if config, ok := n.config.Devices[device.iface]; ok {
-					n.configMu.Lock()
-					n.config.Devices[iface] = config
-					delete(n.config.Devices, device.iface)
-					n.configMu.Unlock()
-				}
-
-				device.iface = iface
-				break
+		// if is legal, reset dev state according to config file
+		n.configMu.Lock()
+		config, ok := n.config.Devices[dev.iface]
+		logger.Debugf("devices config is #%v, iface is: %s", n.config.Devices, dev.iface)
+		n.configMu.Unlock()
+		if ok {
+			_, err = n.enableDevice(dev.iface, config.Enabled)
+			if err != nil {
+				logger.Warningf("enable dev failed, err: %v", err)
 			}
 		}
 	})
@@ -303,10 +331,12 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		logger.Warning(err)
 	}
 
-	n.devices[devPath] = &device{
-		iface:    iface,
-		nmDevice: dev,
-		type0:    deviceType,
+	n.configMu.Lock()
+	config, ok := n.config.Devices[iface]
+	logger.Debugf("devices config is #%v, iface is: %s", n.config.Devices, iface)
+	n.configMu.Unlock()
+	if ok {
+		n.enableDevice(iface, config.Enabled)
 	}
 
 	return nil
@@ -342,6 +372,7 @@ func (n *Network) EnableDevice(pathOrIface string, enabled bool) (cpath dbus.Obj
 func (n *Network) enableDevice(pathOrIface string, enabled bool) (cpath dbus.ObjectPath, err error) {
 	d := n.findDevice(pathOrIface)
 	if d == nil {
+		logger.Warningf("cant find device, pathOrIface: %s", pathOrIface)
 		return "/", errors.New("not found device")
 	}
 
@@ -349,7 +380,7 @@ func (n *Network) enableDevice(pathOrIface string, enabled bool) (cpath dbus.Obj
 
 	err = n.service.Emit(n, "DeviceEnabled", d.nmDevice.Path_(), enabled)
 	if err != nil {
-		logger.Warning(err)
+		logger.Warningf("emit device enabled failed, err: %v", err)
 	}
 
 	if enabled {
@@ -727,12 +758,6 @@ func (n *Network) addAndCheckDevices(devicePaths []dbus.ObjectPath) {
 		if err != nil {
 			logger.Warning(err)
 			continue
-		}
-	}
-	// check if device is legal
-	for iface := range n.config.Devices {
-		if n.getDeviceByIface(iface) == nil {
-			delete(n.config.Devices, iface)
 		}
 	}
 }

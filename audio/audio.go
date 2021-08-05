@@ -447,6 +447,7 @@ func (a *Audio) init() error {
 
 	// 更新本地数据
 	a.refresh()
+	a.oldCards = a.cards
 	for _, card := range a.cards {
 		if isBluezAudio(card.core.Name) {
 			card.AutoSetBluezMode()

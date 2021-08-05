@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Béla Bajza, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/linuxdeepin/teams/3617/hu/)\n"
@@ -66,10 +66,6 @@ msgid "The name already exists"
 msgstr "A név már létezik"
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Ez a felhasználónév már használatban van a rendszer által"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "A felhasználónév hosszának 3 és 32 karakter között kell lennie"
 
@@ -98,12 +94,12 @@ msgstr "Képernyő méretezésének beállítása"
 msgid "Display scaling"
 msgstr "Képernyő méretezése"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s le volt tiltva"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Megnyitás"
 
@@ -168,8 +164,8 @@ msgid "Cancel"
 msgstr "Mégsem"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "%q fájl fogadása %q-tól"
+msgid "Receiving %[1]q from %[2]q"
+msgstr "%[1]q fájl fogadása %[2]q -tól"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -220,8 +216,8 @@ msgstr "% q fogadásának időtúllépése"
 msgid "Connect %q successfully"
 msgstr "%q csatlakoztatása sikeres"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q szétkapcsolva"
 
@@ -300,23 +296,24 @@ msgstr "Ütemezési emlékeztető"
 msgid "Festival"
 msgstr "Fesztivál"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Összes bezárása"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "Kényszerített kilépés"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "Kitűzés a Dokkolóra"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "Eltávolítás a Dokkolóról"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "Összes ablak"
 
@@ -581,7 +578,7 @@ msgstr "A %q sikeresen eltávolítva"
 msgid "Failed to uninstall %q"
 msgstr "A %q eltávolítása sikertelen"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr "Vezetékes kapcsolat"
 
@@ -971,59 +968,59 @@ msgstr "A VPN kiszolgáló hitelesítése sikertelen"
 msgid "The connection was deleted from settings"
 msgstr "A kapcsolat eltávolításra került a beállításokból"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Hotspot engedélyezése"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Csatlakozás %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot bekapcsolva"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q csatlakozva"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Hotspot kikapcsolva"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Nem sikerült a hotspot megosztása, kérjük ellenőrizze a nDNS maszk "
 "beállítást"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Nem sikerült csatlakozni a %q -eszközhöz, kérjük próbálja meg közelebb vinni"
 " a Routerhez"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nem sikerült csatlakozni a %q eszközhöz, kérjük ellenőrizze a Routert, vagy "
 "a hálózati kábelt."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "A csatlakozás sikertelen, nem sikerült csatlakozni a %q-hoz, helytelen "
 "jelszó"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "Jelszó szükséges a %q csatlakoztatásához"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "A %q 802.11 vezeték nélküli hálózat nem található"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Ismeretlen"
 
@@ -1135,6 +1132,6 @@ msgstr ""
 "Hitelesítés szükséges annak ellenőrzéséhez, hogy az RTC tárolja-e a helyi "
 "vagy az UTC időt"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Hitelesítés szükséges a rendszer időzónájának beállításához"

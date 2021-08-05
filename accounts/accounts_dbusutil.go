@@ -145,6 +145,19 @@ func (v *User) emitPropChangedIconFile(value string) error {
 	return v.service.EmitPropertyChanged(v, "IconFile", value)
 }
 
+func (v *User) setPropPasswordHint(value string) (changed bool) {
+	if v.PasswordHint != value {
+		v.PasswordHint = value
+		v.emitPropChangedPasswordHint(value)
+		return true
+	}
+	return false
+}
+
+func (v *User) emitPropChangedPasswordHint(value string) error {
+	return v.service.EmitPropertyChanged(v, "PasswordHint", value)
+}
+
 func (v *User) setPropUse24HourFormat(value bool) (changed bool) {
 	if v.Use24HourFormat != value {
 		v.Use24HourFormat = value

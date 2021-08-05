@@ -20,6 +20,7 @@
 package accounts
 
 import (
+	"encoding/base64"
 	"errors"
 	"io/ioutil"
 	"os"
@@ -67,6 +68,7 @@ const (
 	confKeyShortTimeFormat    = "ShortTimeFormat"
 	confKeyLongTimeFormat     = "LongTimeFormat"
 	confKeyWeekBegins         = "WeekBegins"
+	confKeyPasswordHint       = "PasswordHint"
 
 	defaultUse24HourFormat = true
 	defaultWeekdayFormat   = 0
@@ -101,6 +103,7 @@ type User struct {
 	Locale          string
 	Layout          string
 	IconFile        string
+	PasswordHint    string
 	Use24HourFormat bool
 	WeekdayFormat   int32
 	ShortDateFormat int32
@@ -338,6 +341,19 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 		isSave = true
 	}
 
+	passwordHint, err := kf.GetString(confGroupUser, confKeyPasswordHint)
+	if err != nil {
+		u.PasswordHint = ""
+	} else {
+		decodeHint, err := base64.StdEncoding.DecodeString(passwordHint)
+		if err != nil {
+			logger.Warning(err)
+			u.PasswordHint = ""
+		} else {
+			u.PasswordHint = string(decodeHint)
+		}
+	}
+
 	if isSave {
 		err := u.writeUserConfig()
 		if err != nil {
@@ -352,7 +368,7 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*User, error) {
 	var err error
 	if users.ExistPwUid(usrId) != 0 {
-		return nil, errors.New("No such user id")
+		return nil, errors.New("no such user id")
 	}
 
 	var u = &User{

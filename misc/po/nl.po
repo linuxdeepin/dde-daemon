@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/linuxdeepin/teams/3617/nl/)\n"
@@ -58,10 +58,6 @@ msgid "The name already exists"
 msgstr "Deze naam is al in gebruik"
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Deze gebruikersnaam wordt gebruikt door het systeem"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "De gebruikersnaam moet tussen de 3 en 32 tekens lang zijn"
 
@@ -89,12 +85,12 @@ msgstr "Beeldgrootte instellen"
 msgid "Display scaling"
 msgstr "Beeldgrootte"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s is uitgeschakeld"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Openen"
 
@@ -159,8 +155,8 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "Bezig met ontvangen van %q van %q"
+msgid "Receiving %[1]q from %[2]q"
+msgstr "Bezig met ontvangen van %[1]q van %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -211,8 +207,8 @@ msgstr "De verbinding met %q is verlopen"
 msgid "Connect %q successfully"
 msgstr "Verbonden met %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "Verbinding verbroken met %q"
 
@@ -289,23 +285,24 @@ msgstr "Herinnering inplannen"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Alles sluiten"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "Afsluiten forceren"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "Vastmaken"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "Losmaken"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "Alle vensters"
 
@@ -568,7 +565,7 @@ msgstr "%q is verwijderd"
 msgid "Failed to uninstall %q"
 msgstr "%q kan niet worden verwijderd"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr "Bekabelde verbinding"
 
@@ -957,54 +954,54 @@ msgstr "De authenticatie met de vpn-server is mislukt"
 msgid "The connection was deleted from settings"
 msgstr "De verbinding is verwijderd uit het instellingencentrum"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Hotspot opzetten"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Verbinden met %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "De hotspot is opgezet"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q verbonden"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "De hotspot is uitgeschakeld"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "De hotspot kan niet worden gedeeld - controleer de dnswasq-instellingen"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Kan geen verbinding maken met %q - blijf in de buurt van de draadloze router"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Kan geen verbinding maken met %q - controleer de router of netwerkkabel"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Kan geen verbinding maken met %q: onjuist wachtwoord"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "Wachtwoord vereist om verbinding te maken met %q"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Het 802.11 wlan-netwerk is niet aangetroffen"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Onbekend"
 
@@ -1115,6 +1112,6 @@ msgid ""
 msgstr ""
 "Voer je wachtwoord in om te bepalen of RTC de lokale of UTC-tijd opslaat"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Voer je wachtwoord in om de systeemtijdzone in te stellen"
