@@ -215,6 +215,11 @@ func (m *Manager) initHandlers() {
 		}
 	}
 
+
+	if m.shortcutManager == nil {
+		m.shortcutManager = NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
+	}
+
 	m.shortcutManager.SetAllModKeysReleasedCallback(func() {
 		switch m.switchKbdLayoutState {
 		case SKLStateWait:

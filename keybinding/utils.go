@@ -155,6 +155,11 @@ func (m *Manager) canHibernate() bool {
 	return can
 }
 
+func systemSuspend() {
+	sessionDBus, _ := dbus.SessionBus()
+	go sessionDBus.Object(sessionManagerDest, sessionManagerObjPath).Call(sessionManagerDest+".RequestSuspend", 0)
+}
+
 func (m *Manager) systemHibernate() {
 	if !m.canHibernate() {
 		logger.Info("can not Hibernate")
@@ -218,7 +223,13 @@ func (m *Manager) systemTurnOffScreen() {
 
 	doPrepareSuspend()
 	if useWayland {
-		err = exec.Command("dde_wldpms", "-s", "Off").Run()
+		if m.dpmsIsOff == false {
+			err = exec.Command("dde_wldpms", "-s", "Off").Run()
+			m.dpmsIsOff = true
+		} else {
+			err = exec.Command("dde_wldpms", "-s", "On").Run()
+			m.dpmsIsOff = false
+		}
 	} else {
 		err = dpms.ForceLevelChecked(m.conn, dpms.DPMSModeOff).Check(m.conn)
 	}
