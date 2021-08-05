@@ -20,6 +20,8 @@
 package inputdevices
 
 import (
+	"github.com/godbus/dbus"
+	"os"
 	"pkg.deepin.io/dde/api/dxinput"
 	"pkg.deepin.io/lib/gsettings"
 )
@@ -35,7 +37,31 @@ func (kbd *Keyboard) handleGSettings() {
 		switch key {
 		case kbdKeyRepeatEnable, kbdKeyRepeatDelay,
 			kbdKeyRepeatInterval:
-			kbd.applyRepeat()
+			if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+				if kbd.shouldUseDDEKwin() {
+					sessionBus, err := dbus.SessionBus()
+					if err != nil {
+						logger.Warning(err)
+						return
+					}
+					var (
+						delay    = kbd.RepeatDelay.Get()
+						interval = kbd.RepeatInterval.Get()
+					)
+					//+ 前端interval范围是20-100,kwin中值是相反的,kwin无法得知范围,故后端处理下
+					interval = 120 - interval
+					obj := sessionBus.Object("org.kde.KWin", "/KWin")
+					err = obj.Call("org.kde.KWin.setRepeatRateAndDelay", 0, int32(interval), int32(delay)).Err
+					if err != nil {
+						logger.Warning(err)
+						return
+					}
+				} else {
+					kbd.applyRepeat()
+				}
+			} else {
+				kbd.applyRepeat()
+			}
 		case kbdKeyCursorBlink:
 			kbd.applyCursorBlink()
 		case kbdKeyLayoutOptions:

@@ -22,7 +22,11 @@ package keybinding
 import (
 	"errors"
 	"fmt"
+	"github.com/godbus/dbus"
+	"os"
+	"time"
 
+	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/test"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
@@ -90,6 +94,48 @@ func queryCapsLockState(conn *x.Conn) (CapsLockState, error) {
 	} else {
 		return CapsLockOff, nil
 	}
+}
+
+func setNumLockWl(wl kwayland.OutputManagement, conn *x.Conn, state NumLockState) error {
+	if !(state == NumLockOff || state == NumLockOn) {
+		return errors.New("invalid num lock state")
+	}
+
+	logger.Debug("setNumLockWl", state)
+
+	var state0 NumLockState
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		sessionBus, err := dbus.SessionBus()
+		if err != nil {
+			return err
+		}
+		time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
+		sessionObj := sessionBus.Object("org.kde.KWin", "/Xkb")
+		var ret int32
+		err = sessionObj.Call("org.kde.kwin.Xkb.getLeds", 0).Store(&ret)
+		if err != nil {
+			logger.Warning(err)
+			return err
+		}
+		if 0 == (ret & 0x1) {
+			state0 = NumLockOff
+		} else {
+			state0 = NumLockOn
+		}
+	} else {
+		var err error
+		state0, err = queryNumLockState(conn)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	if state0 != state {
+		return wl.WlSimulateKey(0, 69) //69-kwin对应的NumLock
+	}
+
+	return nil
 }
 
 // 设置 NumLock 数字锁定键状态

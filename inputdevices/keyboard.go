@@ -682,3 +682,8 @@ func (kbd *Keyboard) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 		kbd.handleActiveWindowChanged()
 	}
 }
+
+func (kbd *Keyboard) shouldUseDDEKwin() bool {
+	_, err := os.Stat("/usr/bin/kwin_no_scale")
+	return err == nil
+}
