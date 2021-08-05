@@ -204,6 +204,9 @@ func (m *Manager) init() {
 		}
 	}()
 
+	globalSessionActive = m.isSessionActive()
+	logger.Debugf("current session activated state: %v", globalSessionActive)
+
 	// initialize device and connection handlers
 	m.sysNetwork = sysNetwork.NewNetwork(systemBus)
 	m.initConnectionManage()
