@@ -115,8 +115,8 @@ func (n *Network) init() error {
 	n.nmManager = networkmanager.NewManager(sysBus)
 	n.nmSettings = networkmanager.NewSettings(sysBus)
 	// retry get all devices
-	n.addDevicesWithRetry()
 	n.connectSignal()
+	n.addDevicesWithRetry()
 	// get vpn enable state from config
 	n.VpnEnabled = n.config.VpnEnabled
 
