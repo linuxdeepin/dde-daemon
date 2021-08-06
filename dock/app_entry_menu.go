@@ -50,7 +50,12 @@ func (entry *AppEntry) updateMenu() {
 	}
 
 	if hasWin {
-		menu.AppendItem(entry.getMenuItemForceQuit())
+		if entry.appInfo != nil && entry.appInfo.identifyMethod == "Android" {
+			menu.AppendItem(entry.getMenuItemForceQuitAndroid())
+		} else {
+			menu.AppendItem(entry.getMenuItemForceQuit())
+		}
+
 		if entry.hasAllowedCloseWindow() {
 			menu.AppendItem(entry.getMenuItemCloseAll())
 		}
@@ -129,6 +134,27 @@ func (entry *AppEntry) getMenuItemForceQuit() *MenuItem {
 			logger.Warning("ForceQuit error:",err)
 		}
 	}, true)
+}
+
+//dock栏上Android程序的Force Quit功能
+func (entry *AppEntry) getMenuItemForceQuitAndroid() *MenuItem {
+	if entry.hasAllowedCloseWindow() {
+		return NewMenuItem(Tr("Force Quit"), func(timestamp uint32) {
+			logger.Debug("Force Quit")
+			entry.PropsMu.RLock()
+			winIds := entry.getAllowedCloseWindows()
+			entry.PropsMu.RUnlock()
+
+			for _, win := range winIds {
+				err := closeWindow(win, x.Timestamp(timestamp))
+				if err != nil {
+					logger.Warningf("failed to close window %d: %v", win, err)
+				}
+			}
+		}, true)
+	}
+
+	return NewMenuItem(Tr("Force Quit"), func(timestamp uint32) {}, true)
 }
 
 func (entry *AppEntry) getMenuItemDock() *MenuItem {
