@@ -54,6 +54,8 @@ var (
 	atomNetWmStateHidden        x.Atom
 	atomWmWindowRole            x.Atom
 	atomUTF8String              x.Atom
+	atomString                  x.Atom
+	atomInteger                 x.Atom
 	atomFlatpakAppId            x.Atom
 	atomGtkApplicationId        x.Atom
 	atomNetWmWindowOpacity      x.Atom
@@ -73,6 +75,9 @@ var (
 	atomNetWmAllowedActions     x.Atom
 	atomNetWmPid                x.Atom
 	atomMotifWmHints            x.Atom
+
+	atomAndroidUengineId        x.Atom
+	atomAndroidUengineName      x.Atom
 )
 
 func initDir() {
@@ -95,6 +100,8 @@ func initAtom() {
 	atomNetWmStateHidden, _ = getAtom("_NET_WM_STATE_HIDDEN")
 	atomWmWindowRole, _ = getAtom("WM_WINDOW_ROLE")
 	atomUTF8String, _ = getAtom("UTF8_STRING")
+	atomString, _ = getAtom("STRING")
+	atomInteger, _ = getAtom("INTEGER")
 	atomFlatpakAppId, _ = getAtom("FLATPAK_APPID")
 	atomGtkApplicationId, _ = getAtom("_GTK_APPLICATION_ID")
 	atomNetWmWindowOpacity, _ = getAtom("_NET_WM_WINDOW_OPACITY")
@@ -114,4 +121,6 @@ func initAtom() {
 	atomNetWmAllowedActions, _ = getAtom("_NET_WM_ALLOWED_ACTIONS")
 	atomNetWmPid, _ = getAtom("_NET_WM_PID")
 	atomMotifWmHints, _ = getAtom("_MOTIF_WM_HINTS")
+	atomAndroidUengineId, _ = getAtom("UENGINE_TASK_ID")
+	atomAndroidUengineName, _ = getAtom("UENGINE_TASK_NAME")
 }
