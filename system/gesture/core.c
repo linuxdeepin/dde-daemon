@@ -18,8 +18,11 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <math.h>
 #include <errno.h>
+#include <syslog.h>
+#include <libinput.h>
 #include <string.h>
 
 #include <glib.h>
@@ -605,6 +608,38 @@ handle_touch_events(struct libinput_event *ev, int ty,struct movement *m)
 }
 
 static void
+handle_mouse_events(struct libinput_event *ev, int type)
+{
+    struct libinput_device *dev = libinput_event_get_device(ev);
+    if (!dev) {
+        fprintf(stderr, "Get device from event failure\n");
+        return ;
+    }
+
+    struct libinput_event_pointer *mouse = libinput_event_get_pointer_event(ev);
+    enum libinput_pointer_axis_source source = libinput_event_pointer_get_axis_source(mouse);
+    double value = libinput_event_pointer_get_axis_value(mouse, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL);
+
+    handleMouseEvent(type, source,value);
+}
+
+static void
+handle_keyboard_events(struct libinput_event *ev, int type)
+{
+    struct libinput_device *dev = libinput_event_get_device(ev);
+    if (!dev) {
+        fprintf(stderr, "Get device from event failure\n");
+        return ;
+    }
+
+    struct libinput_event_keyboard *keyboard = libinput_event_get_keyboard_event(ev);
+    uint32_t key = libinput_event_keyboard_get_key(keyboard);
+    enum libinput_key_state state = libinput_event_keyboard_get_key_state(keyboard);
+
+    handleKeyboardEvent(key,(uint32_t)state);
+}
+
+static void
 handle_events(struct libinput *li, struct movement *m)
 {
     struct libinput_event *ev;
@@ -647,6 +682,21 @@ handle_events(struct libinput *li, struct movement *m)
         case LIBINPUT_EVENT_TOUCH_CANCEL:
         case LIBINPUT_EVENT_TOUCH_FRAME:{
             handle_touch_events(ev, type, m);
+            break;
+        }
+        case LIBINPUT_EVENT_KEYBOARD_KEY: {
+            if (NULL != getenv("WAYLAND_DISPLAY")) {
+                handle_keyboard_events(ev, type);
+            }
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_MOTION:
+        case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
+        case LIBINPUT_EVENT_POINTER_BUTTON:
+        case LIBINPUT_EVENT_POINTER_AXIS: {
+            if (NULL != getenv("WAYLAND_DISPLAY")) {
+                handle_mouse_events(ev, type);
+            }
             break;
         }
         default:

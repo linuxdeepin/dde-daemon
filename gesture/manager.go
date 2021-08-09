@@ -15,6 +15,7 @@ import (
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	gesture "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.gesture"
+	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
 	clipboard "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.clipboard"
 	dock "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.dock"
 	notification "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.notification"
@@ -63,11 +64,13 @@ type Manager struct {
 	clipboard          clipboard.Clipboard
 	notification       notification.Notification
 
-	longPressEnable        bool
+	longPressEnable       bool
 	oneFingerBottomEnable bool
 	oneFingerLeftEnable   bool
 	oneFingerRightEnable  bool
-	configManagerPath       dbus.ObjectPath
+	configManagerPath     dbus.ObjectPath
+	enabled               bool
+	sessionWatcher        sessionwatcher.SessionWatcher
 }
 
 func newManager() (*Manager, error) {
@@ -152,6 +155,10 @@ func newManager() (*Manager, error) {
 
 	m.gesture = gesture.NewGesture(systemConn)
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemConn, 10)
+
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		m.sessionWatcher = sessionwatcher.NewSessionWatcher(sessionConn)
+	}
 	return m, nil
 }
 
@@ -343,6 +350,20 @@ func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
 }
 
 func (m *Manager) Exec(evInfo EventInfo) error {
+	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		if !m.enabled {
+			logger.Debug("Gesture had been disabled or session inactive")
+			return nil
+		}
+		if !isSessionActive("/org/freedesktop/login1/session/self") {
+			active,err := m.sessionWatcher.IsActive().Get(0)
+			if err != nil || !active {
+				logger.Debug("Gesture had been disabled or session inactive")
+				return nil
+			}
+		}
+	}
+
 	info := m.Infos.Get(evInfo)
 	if info == nil {
 		return fmt.Errorf("not found event info: %s", evInfo.toString())
