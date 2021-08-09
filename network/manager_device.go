@@ -191,6 +191,22 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			dev.HwAddress = dev.ClonedAddress
 		}
 
+		// wired device should always create non-tmp connections, nm will create tmp connection sometimes when device first plugin in
+		err = nmDev.Device().ActiveConnection().ConnectChanged(func(hasValue bool, value dbus.ObjectPath) {
+			// if has not value or value is not expected, ignore changes
+			if hasValue || value == "/" || value == "" {
+				return
+			}
+			// try to get active connection
+			_, _, err = m.ensureWiredConnectionExists(devPath, true)
+			if err != nil {
+				logger.Warningf("ensure wired connection failed, err: %v", err)
+			}
+		})
+		if err != nil {
+			logger.Warningf("connect to ActivateConnection failed, err: %v", err)
+		}
+
 		if nmHasSystemSettingsModifyPermission() {
 			carrierChanged := func(hasValue, value bool) {
 				if !hasValue || !value {
