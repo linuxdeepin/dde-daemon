@@ -37,6 +37,12 @@ const (
 	OpcodeSystemTrayCancelMessage
 )
 
+//在SNI注册过且Xwin还会发送信号的加入黑名单
+var FilteredApplicationName = []string{
+	"electron-ssr",
+	"skypeforlinux",
+}
+
 //go:generate dbusutil-gen -type TrayManager,StatusNotifierWatcher -import pkg.deepin.io/lib/strv traymanager.go status-notifier-watcher.go
 //go:generate dbusutil-gen em -type TrayManager,StatusNotifierWatcher
 
@@ -47,6 +53,8 @@ type TrayManager struct {
 	visual  x.VisualID
 	icons   map[x.Window]*TrayIcon
 	mutex   sync.Mutex
+
+	needFilteredMap map[string]bool
 
 	damageNotifyEventHandler DamageNotifyEventHandler
 
@@ -290,6 +298,8 @@ func (m *TrayManager) eventHandleLoop() {
 	eventChan := make(chan x.GenericEvent, 500)
 	XConn.AddEventChan(eventChan)
 
+	m.needFilteredMap = make(map[string]bool)
+
 	for ev := range eventChan {
 		switch ev.GetEventCode() {
 		case x.ClientMessageEventCode:
@@ -302,7 +312,20 @@ func (m *TrayManager) eventHandleLoop() {
 				if opcode == OpcodeSystemTrayRequestDock {
 					win := x.Window(data32[2])
 					logger.Debug("ClientMessageEvent: system tray request dock", win)
-					m.addIcon(win)
+
+					icon := NewTrayIcon(win)
+					iconName := icon.getName()
+
+					m.needFilteredMap[iconName] = false
+
+					for _, filteredApplication := range FilteredApplicationName {
+						if iconName == filteredApplication {
+							m.needFilteredMap[iconName] = true
+						}
+					}
+					if !m.needFilteredMap[iconName] {
+						m.addIcon(win)
+					}
 				}
 			}
 		case damage.NotifyEventCode + damageFirstEvent:
@@ -317,7 +340,15 @@ func (m *TrayManager) eventHandleLoop() {
 		case x.DestroyNotifyEventCode:
 			event, _ := x.NewDestroyNotifyEvent(ev)
 			logger.Debug("DestroyNotifyEvent", event.Window)
-			m.removeIcon(event.Window)
+
+			icon := NewTrayIcon(event.Window)
+			iconName := icon.getName()
+
+			needFiltered, ok := m.needFilteredMap[iconName]
+			if ok && needFiltered {
+				m.removeIcon(event.Window)
+				delete(m.needFilteredMap, iconName)
+			}
 
 		default:
 			logger.Debug(ev)
