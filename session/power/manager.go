@@ -50,6 +50,9 @@ type Manager struct {
 	inhibitFd            dbus.UnixFD
 	systemPower          *systemPower.Power
 
+	// 按电源键后需要取消锁屏计划
+	isInterrupt bool
+
 	PropsMu sync.RWMutex
 	// 是否有盖子，一般笔记本电脑才有
 	LidIsPresent bool
@@ -241,6 +244,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	// 初始化电源模式
 	m.systemPower = systemPower.NewPower(systemBus)
+	m.systemPower.InitSignalExt(m.systemSigLoop, true)
 	m.IsHighPerformanceSupported, err = m.systemPower.IsBoostSupported().Get(0)
 	if err != nil {
 		logger.Warning(err)
@@ -332,6 +336,20 @@ func (m *Manager) init() {
 
 		logger.Debug("session active changed to:", value)
 		m.claimOrReleaseAmbientLight()
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	_, err = m.systemPower.ConnectTouchInput(func() {
+		if m.isInterrupt {
+			if v := m.submodules[submodulePSP]; v != nil {
+				if psp := v.(*powerSavePlan); psp != nil {
+					psp.interruptTasks()
+				}
+			}
+		}
+		m.isInterrupt = false
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -447,6 +465,7 @@ func (m *Manager) WakeUpScreen(wakeUp bool) *dbus.Error {
 				psp.manager.setDPMSModeOff()
 				psp.manager.setPrepareSuspend(suspendStateFinish)
 			} else { // 亮屏
+				m.isInterrupt = true
 				psp.manager.setDPMSModeOn()
 				taskF := newDelayedTask("screenBlackRefresh", time.Duration(psp.manager.BatteryScreenBlackDelay.Get())*time.Second, func() {
 					psp.stopScreensaver()
