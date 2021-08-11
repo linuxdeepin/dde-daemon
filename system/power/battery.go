@@ -24,11 +24,12 @@ import (
 	"sync"
 	"time"
 
+	dbus "pkg.deepin.io/lib/dbus1"
+
 	"path/filepath"
 
 	"pkg.deepin.io/dde/api/powersupply/battery"
 	"pkg.deepin.io/gir/gudev-1.0"
-	dbus "pkg.deepin.io/lib/dbus1"
 	"pkg.deepin.io/lib/dbusutil"
 )
 
@@ -55,29 +56,20 @@ type Battery struct {
 	EnergyFullDesign float64
 	EnergyRate       float64
 
-	Voltage     float64
-	Percentage  float64
-	Capacity    float64
-	Status      battery.Status
-	TimeToEmpty uint64
-	TimeToFull  uint64
-	UpdateTime  int64
-
-	timeToFullHistory []uint64
-
+	Voltage        float64
+	Percentage     float64
+	Capacity       float64
+	Status         battery.Status
+	TimeToEmpty    uint64
+	TimeToFull     uint64
+	UpdateTime     int64
 	batteryHistory []float64
-
-	refreshDone func()
+	refreshDone    func()
 
 	methods *struct {
 		Debug func() `in:"cmd"`
 	}
 }
-
-const (
-	checkTimeSliceCount = 2
-	checkTimeFloatRange = 120
-)
 
 func newBattery(manager *Manager, device *gudev.Device) *Battery {
 	sysfsPath := device.GetSysfsPath()
@@ -119,28 +111,6 @@ func getValidName(n string) string {
 	return n
 }
 
-func checkTimeStabilized(s []uint64, t uint64) bool {
-	if len(s) <= checkTimeSliceCount {
-		// 记录少于 3
-		return false
-	}
-
-	// 循环最后三次记录
-	length := len(s)
-	for i := 1; i <= checkTimeSliceCount; i++ {
-		if t+checkTimeFloatRange <= s[length-i] {
-			// 所处记录大于 t+允许浮动值
-			return false
-		}
-		if t-checkTimeFloatRange >= s[length-i] {
-			// 所处记录小于 t-允许浮动值
-			return false
-		}
-	}
-
-	return true
-}
-
 func (bat *Battery) setRefreshDoneCallback(fn func()) {
 	bat.refreshDone = fn
 }
@@ -156,30 +126,7 @@ func (bat *Battery) notifyChange(propNames ...string) {
 func (bat *Battery) refresh(dev *gudev.Device) (ok bool) {
 	endDelay := bat.service.DelayEmitPropertyChanged(bat)
 	batInfo := battery.GetBatteryInfo(dev)
-	if batInfo == nil {
-		return
-	}
-
-	setTimeToFull := true
-	if batInfo.Status == battery.StatusCharging {
-		if bat.Status == battery.StatusDischarging {
-			logger.Debug("Just started charging")
-			setTimeToFull = false
-			bat.timeToFullHistory = bat.timeToFullHistory[:0]
-			bat.timeToFullHistory = append(bat.timeToFullHistory, batInfo.TimeToFull)
-			time.AfterFunc(1*time.Second, bat.Refresh)
-		} else if len(bat.timeToFullHistory) != 0 {
-			if checkTimeStabilized(bat.timeToFullHistory, batInfo.TimeToFull) {
-				bat.timeToFullHistory = bat.timeToFullHistory[:0]
-			} else {
-				setTimeToFull = false
-				bat.timeToFullHistory = append(bat.timeToFullHistory, batInfo.TimeToFull)
-				time.AfterFunc(1*time.Second, bat.Refresh)
-			}
-		}
-	}
-
-	bat._refresh(batInfo, setTimeToFull)
+	bat._refresh(batInfo)
 	if endDelay != nil {
 		err := endDelay()
 		if err != nil {
@@ -190,7 +137,7 @@ func (bat *Battery) refresh(dev *gudev.Device) (ok bool) {
 	return
 }
 
-func (bat *Battery) _refresh(info *battery.BatteryInfo, setTimeToFull bool) {
+func (bat *Battery) _refresh(info *battery.BatteryInfo) {
 	logger.Debug("Refresh", bat.Name)
 	isPresent := true
 	var updateTime int64
@@ -247,11 +194,7 @@ func (bat *Battery) _refresh(info *battery.BatteryInfo, setTimeToFull bool) {
 	bat.setPropCapacity(info.Capacity)
 	bat.setPropStatus(info.Status)
 	bat.setPropTimeToEmpty(info.TimeToEmpty)
-	if setTimeToFull {
-		bat.setPropTimeToFull(info.TimeToFull)
-	} else {
-		bat.setPropTimeToFull(0)
-	}
+	bat.setPropTimeToFull(info.TimeToFull)
 	bat.PropsMu.Unlock()
 
 	logger.Debugf("Refresh %v done", bat.Name)

@@ -1,8 +1,10 @@
 Source: dde-daemon
 Section: devel
-Priority: extra
+Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
-Build-Depends: debhelper (>= 9), golang-go,
+Build-Depends:
+ debhelper-compat (= 11),
+ golang-go,
  golang-dlib-dev(>> 5.1.0+), golang-gir-gobject-2.0-dev (>> 1.2.0+),
  golang-gir-gio-2.0-dev (>> 1.2.0+), golang-gir-glib-2.0-dev (>> 1.2.0+),
  golang-gir-gudev-1.0-dev (>> 1.2.0+),
@@ -82,8 +84,9 @@ Depends: ${shlibs:Depends},
  libnotify-bin,
  rfkill,
  hwinfo,
- geoclue-2.0
-Breaks: dde-daemon(<< 2.92.2), dde-workspace, lastore-daemon(<< 0.9.64)
+ geoclue-2.0,
+ dmidecode
+Breaks: lastore-daemon(<< 0.9.64)
 Replaces: lastore-daemon(<< 0.9.64)
 Conflicts: dde-workspace, lastore-daemon-migration
 Provides: lastore-daemon-migration
