@@ -163,9 +163,7 @@ func nmGeneralGetDeviceHwAddr(devPath dbus.ObjectPath, perm bool) (hwAddr string
 		devWired := dev.Wired()
 		hwAddr = ""
 		if perm {
-			hwAddr, err = devWired.PermHwAddress().Get(0)
-			hwAddr = strings.ToUpper(hwAddr)
-			return
+			hwAddr, _ = devWired.PermHwAddress().Get(0)
 		}
 		if hwAddr == "" {
 			// may get PermHwAddress failed under NetworkManager 1.4.1
