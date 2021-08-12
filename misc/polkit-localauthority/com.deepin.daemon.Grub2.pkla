@@ -1,5 +1,5 @@
 [Prepare grub2 gfxmode deletection]
-Identity=unix-group:sudo
+Identity=unix-group:sudo;unix-group:dmcg
 Action=com.deepin.daemon.grub2.prepare-gfxmode-detect
 ResultAny=no
 ResultInactive=no
