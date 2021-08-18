@@ -94,7 +94,8 @@ func (psp *powerSavePlan) initSettingsChangedHandler() {
 		case settingKeyLinePowerScreensaverDelay,
 			settingKeyLinePowerScreenBlackDelay,
 			settingKeyLinePowerLockDelay,
-			settingKeyLinePowerSleepDelay:
+			settingKeyLinePowerSleepDelay,
+			settingKeyLinePowerHibernateDelay:
 			if !m.OnBattery {
 				logger.Debug("Change OnLinePower plan")
 				psp.OnLinePower()
@@ -103,7 +104,8 @@ func (psp *powerSavePlan) initSettingsChangedHandler() {
 		case settingKeyBatteryScreensaverDelay,
 			settingKeyBatteryScreenBlackDelay,
 			settingKeyBatteryLockDelay,
-			settingKeyBatterySleepDelay:
+			settingKeyBatterySleepDelay,
+			settingKeyBatteryHibernateDelay:
 			if m.OnBattery {
 				logger.Debug("Change OnBattery plan")
 				psp.OnBattery()
@@ -120,7 +122,7 @@ func (psp *powerSavePlan) OnBattery() {
 	m := psp.manager
 	psp.Update(m.BatteryScreensaverDelay.Get(), m.BatteryLockDelay.Get(),
 		m.BatteryScreenBlackDelay.Get(),
-		m.BatterySleepDelay.Get())
+		m.BatterySleepDelay.Get(), m.BatteryHibernateDelay.Get())
 }
 
 func (psp *powerSavePlan) OnLinePower() {
@@ -128,7 +130,7 @@ func (psp *powerSavePlan) OnLinePower() {
 	m := psp.manager
 	psp.Update(m.LinePowerScreensaverDelay.Get(), m.LinePowerLockDelay.Get(),
 		m.LinePowerScreenBlackDelay.Get(),
-		m.LinePowerSleepDelay.Get())
+		m.LinePowerSleepDelay.Get(), m.LinePowerHibernateDelay.Get())
 }
 
 func (psp *powerSavePlan) Reset() {
@@ -376,14 +378,14 @@ func (mts metaTasks) setRealDelay(min int32) {
 }
 
 func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
-	screenBlackDelay, sleepDelay int32) {
+	screenBlackDelay, sleepDelay, hibernateDelay int32) {
 	psp.mu.Lock()
 	defer psp.mu.Unlock()
 
 	psp.interruptTasks()
 	logger.Debugf("update(screenSaverStartDelay=%vs, lockDelay=%vs,"+
-		" screenBlackDelay=%vs, sleepDelay=%vs)",
-		screenSaverStartDelay, lockDelay, screenBlackDelay, sleepDelay)
+		" screenBlackDelay=%vs, sleepDelay=%vs,hibernateDelay=%vs)",
+		screenSaverStartDelay, lockDelay, screenBlackDelay, sleepDelay, hibernateDelay)
 
 	tasks := make(metaTasks, 0, 4)
 	if screenSaverStartDelay > 0 {
@@ -417,6 +419,13 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 			fn:    psp.makeSystemSleep,
 		})
 	}
+	if hibernateDelay > 0 {
+		tasks = append(tasks, metaTask{
+			name:  "hibernate",
+			delay: hibernateDelay,
+			fn:    psp.makeSystemHibernate,
+		})
+	}
 
 	min := tasks.min()
 	tasks.setRealDelay(min)
@@ -426,6 +435,13 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 	}
 
 	psp.metaTasks = tasks
+	// 待机时间为0,代表从不待机
+	if sleepDelay == 0 {
+		psp.manager.doSetSuspendToHibernateTime(0)
+	} else {
+		psp.manager.doSetSuspendToHibernateTime((hibernateDelay - sleepDelay) / 60)
+	}
+
 }
 
 func (psp *powerSavePlan) setScreenSaverTimeout(seconds int32) error {
@@ -488,6 +504,12 @@ func (psp *powerSavePlan) makeSystemSleep() {
 
 func (psp *powerSavePlan) lock() {
 	psp.manager.doLock(true)
+}
+
+// 使系统进入休眠
+func (psp *powerSavePlan) makeSystemHibernate() {
+	logger.Info("Hibernate")
+	psp.manager.doHibernate()
 }
 
 // 降低显示器亮度，最终关闭显示器
