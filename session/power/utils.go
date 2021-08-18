@@ -432,3 +432,23 @@ func getPowerActionString(action int32) string {
 func isFloatEqual(f1, f2 float64) bool {
 	return math.Abs(f1-f2) < 1e-6
 }
+
+func (m *Manager) doSetSuspendToHibernateTime(timeMinute int32) {
+	logger.Infof("doSetSuspendToHibernateTime :%v", timeMinute)
+	powerManager := m.helper.PowerManager
+	can, err := powerManager.CanSuspendToHibernate(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	if !can {
+		logger.Info("can not support suspend to hibernateTime")
+		return
+	}
+
+	err = powerManager.SetSuspendToHibernateTime(0, timeMinute)
+	if err != nil {
+		logger.Warning("failed to SetSuspendToHibernateTime:", err)
+	}
+}

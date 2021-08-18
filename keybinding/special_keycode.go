@@ -129,6 +129,13 @@ func (m *Manager) handlePower() {
 	case powerActionShutdown:
 		m.systemShutdown()
 	case powerActionSuspend:
+		var suspendToHibernateTime int32
+		if onBattery {
+			suspendToHibernateTime = m.gsPower.GetInt("battery-hibernate-delay")
+		} else {
+			suspendToHibernateTime = m.gsPower.GetInt("line-power-hibernate-delay")
+		}
+		m.doSetSuspendToHibernateTime(suspendToHibernateTime / 60)
 		m.systemSuspendByFront()
 	case powerActionHibernate:
 		m.systemHibernateByFront()
