@@ -424,6 +424,9 @@ func (m *Manager) initNMObjManager(systemBus *dbus.Conn) {
 }
 
 func (m *Manager) doPortalAuthentication() {
+	logger.Info("bank not use portal authentication.")
+	return
+
 	err := exec.Command("pgrep", "startdde").Run()
 	if err != nil {
 		return
