@@ -40,7 +40,6 @@ const (
 //在SNI注册过且Xwin还会发送信号的加入黑名单
 var FilteredApplicationName = []string{
 	"electron-ssr",
-	"skypeforlinux",
 }
 
 //go:generate dbusutil-gen -type TrayManager,StatusNotifierWatcher -import pkg.deepin.io/lib/strv traymanager.go status-notifier-watcher.go
@@ -345,7 +344,7 @@ func (m *TrayManager) eventHandleLoop() {
 			iconName := icon.getName()
 
 			needFiltered, ok := m.needFilteredMap[iconName]
-			if ok && needFiltered {
+			if (ok && needFiltered) || !ok {
 				m.removeIcon(event.Window)
 				delete(m.needFilteredMap, iconName)
 			}
