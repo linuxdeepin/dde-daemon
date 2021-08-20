@@ -53,3 +53,13 @@ func Test_getBestPort(t *testing.T) {
 	ret1 := getBestPort(tests)
 	assert.Equal(t, ret1, ret)
 }
+
+func Test_isStrvEqual(t *testing.T) {
+	var str = []string{"test1", "test2", "test3", "test4"}
+	var str1 = []string{"test1", "test2", "test4", "test3"}
+	var str2 = []string{"test1", "test2", "test3", "Test4"}
+
+	assert.Equal(t, isStrvEqual(str, str1), true)
+	assert.Equal(t, isStrvEqual(str, str2), false)
+
+}
