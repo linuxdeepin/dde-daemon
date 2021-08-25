@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 	"time"
 
@@ -196,7 +195,7 @@ func deleteOld(notDeleteFiles strv.Strv) {
 	}
 	logger.Debugf("need delete %d file(s)", count)
 
-	sort.Sort(byModTime(fileInfos))
+	sortByTimeEarlyFirst(fileInfos)
 	for _, fileInfo := range fileInfos {
 		if count == 0 {
 			break
@@ -223,12 +222,4 @@ func deleteOld(notDeleteFiles strv.Strv) {
 			}
 		}
 	}
-}
-
-type byModTime []os.FileInfo
-
-func (a byModTime) Len() int      { return len(a) }
-func (a byModTime) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-func (a byModTime) Less(i, j int) bool {
-	return a[i].ModTime().Unix() < a[j].ModTime().Unix()
 }

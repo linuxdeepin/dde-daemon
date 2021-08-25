@@ -58,6 +58,28 @@ func sortByTime(fileInfoList []os.FileInfo) []os.FileInfo {
 	return fileInfoList
 }
 
+// 根据时间排序文件,时间早的在前面
+func sortByTimeEarlyFirst(fileInfoList []os.FileInfo) []os.FileInfo {
+	sort.Slice(fileInfoList, func(i, j int) bool {
+		fileInfoI := fileInfoList[i]
+		fileInfoJ := fileInfoList[j]
+		if fileInfoI.ModTime().After(fileInfoJ.ModTime()) {
+			return false
+		} else if fileInfoI.ModTime().Equal(fileInfoJ.ModTime()) {
+			if fileInfoI.Name() < fileInfoJ.Name() {
+				return true
+			} else {
+				return false
+			}
+		} else {
+			return true
+		}
+
+	})
+
+	return fileInfoList
+}
+
 func getSysBgFiles() []string {
 	var files []string
 	for _, dir := range systemWallpapersDir {
