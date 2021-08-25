@@ -25,12 +25,40 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	testSessionInfo1 = &SessionInfo{Uid: 1, Desktop: "deepin", Display: ":0", sessionPath: "/org/freedesktop/login1/session/self_1"}
+	testSessionInfo2 = &SessionInfo{Uid: 1, Desktop: "deepin", Display: ":0", sessionPath: "/org/freedesktop/login1/session/self"}
+	testSessionInfo3 = &SessionInfo{Uid: 1, Desktop: "uos", Display: ":0", sessionPath: "/org/freedesktop/login1/session/self"}
+	testSessionInfo4 = &SessionInfo{Uid: 1, Desktop: "uos1", Display: ":0", sessionPath: "/org/freedesktop/login1/session/self"}
+	testSessionInfo5 = &SessionInfo{Uid: 1, Desktop: "uos1", Display: ":0", sessionPath: "/org/freedesktop/login1/session/self"}
+	sessionInfos     SessionInfos
+)
+
+func Test_Add(t *testing.T) {
+
+	sessionInfos, err := sessionInfos.Add(testSessionInfo1)
+	assert.Equal(t, err, true)
+
+	sessionInfos, err = sessionInfos.Add(testSessionInfo2)
+	assert.Equal(t, err, true)
+
+	sessionInfos, err = sessionInfos.Add(testSessionInfo3)
+	assert.Equal(t, err, true)
+
+	assert.Equal(t, len(sessionInfos), 2)
+
+	sessionInfos, err = sessionInfos.Add(testSessionInfo3)
+	assert.Equal(t, err, false)
+
+	assert.Equal(t, len(sessionInfos), 2)
+
+	sessionInfos, err = sessionInfos.Delete(testSessionInfo4.sessionPath)
+	assert.Equal(t, err, true)
+	assert.Equal(t, len(sessionInfos), 1)
+
+}
 func Test_Equal(t *testing.T) {
 
-	var testSessionInfo1 = &SessionInfo{Uid: 1, Desktop: "deepin", Display: ":0", sessionPath: "/org/freedesktop/login1/session/self"}
-	var testSessionInfo2 = &SessionInfo{Uid: 1, Desktop: "deepin", Display: ":0", sessionPath: "/org/freedesktop/login1/session/self"}
-	var testSessionInfo3 = &SessionInfo{Uid: 1, Desktop: "uos", Display: ":0", sessionPath: "/org/freedesktop/login1/session/self"}
-
-	assert.Equal(t, testSessionInfo1.Equal(testSessionInfo2), true)
+	assert.Equal(t, testSessionInfo1.Equal(testSessionInfo5), false)
 	assert.Equal(t, testSessionInfo1.Equal(testSessionInfo3), false)
 }
