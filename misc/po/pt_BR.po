@@ -9,12 +9,12 @@
 # Bruno Gama <brunnogama@gmail.com>, 2020
 # JeffWagen <jeff.wagen@yahoo.com>, 2020
 # Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2020
+# Paulo Schopf, 2020
 # Felipe André Alves Santos <lip.dre@gmail.com>, 2020
 # Cindy0514, 2020
 # Raphael Miquelis <raphaelmiquelis@gmail.com>, 2020
 # RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2021
 # Cassiano Molinari <chano2808a@gmail.com>, 2021
-# Paulo Schopf, 2021
 # Alex, 2021
 # 
 #, fuzzy
@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Alex, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
@@ -61,10 +61,6 @@ msgid "The name already exists"
 msgstr "O nome já existe"
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "O nome de usuário foi usado pelo sistema"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 
@@ -92,12 +88,12 @@ msgstr "Configurando a escala de exibição"
 msgid "Display scaling"
 msgstr "Escala de Exibição"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s estava desativado"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Abrir"
 
@@ -162,8 +158,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "Recebendo %q de %q"
+msgid "Receiving %[1]q from %[2]q"
+msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -214,8 +210,8 @@ msgstr "O recebimento de %s expirou"
 msgid "Connect %q successfully"
 msgstr "Conectado à %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q desconectado"
 
@@ -292,23 +288,24 @@ msgstr "Agendar Lembrete"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Fechar Tudo"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "Forçar Saída"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "Dock"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "Remover da Dock"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "Todas as Janelas"
 
@@ -569,7 +566,7 @@ msgstr "%q foi desinstalado"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao remover %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr "Conexão Cabeada"
 
@@ -956,56 +953,56 @@ msgstr "Falha na autenticação no servidor VPN"
 msgid "The connection was deleted from settings"
 msgstr "A conexão foi excluída das configurações"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Ativando o Hotspot"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Conectando %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot ativado"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q conectada"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Hotspot desativado"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Não foi possível compartilhar o Hotspot; verifique as configurações do "
 "dnsmasq"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Não é possível conectar-se à %q; verifique a intensidade do sinal Wi-Fi"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Não foi possível conectar-se à %q; verifique as conexões ou os dispositivos "
 "de rede."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "A conexão falhou, senha incorreta. Incapaz de conectar-se à %q"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "Uma senha é necessária para conectar-se à %q"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "A rede %q 802.11 WLAN não pode ser encontrada"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Desconhecido"
 
@@ -1113,6 +1110,6 @@ msgstr ""
 "A autenticação é necessária para controlar se o RTC armazena a hora local ou"
 " UTC"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "A autenticação é necessária para alterar o fuso horário"

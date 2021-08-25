@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Xurxo Guerra Perez <xguerrap@gmail.com>, 2021\n"
 "Language-Team: Galician (Spain) (https://www.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
@@ -54,10 +54,6 @@ msgid "The name already exists"
 msgstr "O nome xa existe"
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "O nome de usuario está en uso polo sistema"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuario ten de ter entre 3 e 32 caracteres"
 
@@ -86,12 +82,12 @@ msgstr "Configuración da escala de visualización"
 msgid "Display scaling"
 msgstr "Escala de visualización"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Abrir"
 
@@ -156,7 +152,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -208,8 +204,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "Conectar %q correctamente"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q desconectado"
 
@@ -284,23 +280,24 @@ msgstr "Programar recordatorio"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Pechar todo"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "Forzar a saída"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "Doca"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "Quitar da doca"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "Todas as xanelas"
 
@@ -562,7 +559,7 @@ msgstr "%q eliminouse correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Erro ao desinstalar %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr ""
 
@@ -947,53 +944,53 @@ msgstr "Fallou a autenticación ao servidor VPN"
 msgid "The connection was deleted from settings"
 msgstr "A conexión eliminouse da configuración"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Habilitar punto de acceso"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Conectando %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Punto de acceso habilitado"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q conectado"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Punto de acceso desactivado"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Non se pode compartir un punto de acceso, comprobe a configuración de "
 "dnsmasq"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Non se puido conectar% q, mantéñase máis preto do router sen fíos"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Non se puido conectar% q, comproba o enrutador ou o cable neto."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Fallou a conexión e non se puido conectar% q, contrasinal incorrecto"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "O contrasinal é necesario para conectar% q"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Descoñecido"
 
@@ -1102,7 +1099,7 @@ msgstr ""
 "A autentificación é necesaria para controlar se o RTC almacena a hora local "
 "ou a UTC"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr ""
 "A autentificación é necesaria para configurar o fuso horario do sistema"

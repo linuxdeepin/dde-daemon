@@ -10,17 +10,17 @@
 # Zhou Rh <jjzrh2@126.com>, 2020
 # 凡凡不想平凡 <freddy4212@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Cindy0514, 2021
 # byStarTW (pan93412) <pan93412@gmail.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: byStarTW (pan93412) <pan93412@gmail.com>, 2021\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,10 +55,6 @@ msgid "The name already exists"
 msgstr "該名稱已存在"
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "此使用者名稱已被系統使用"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "使用者名稱長度必須介於 3 至 32 個字元之間"
 
@@ -86,12 +82,12 @@ msgstr "設定螢幕縮放率"
 msgid "Display scaling"
 msgstr "畫面縮放"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "開放"
 
@@ -156,8 +152,8 @@ msgid "Cancel"
 msgstr "取消"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
-msgstr "正在接收來自%q的%q文件"
+msgid "Receiving %[1]q from %[2]q"
+msgstr "正在接收來自%[2]q的%[1]q文件"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -208,8 +204,8 @@ msgstr "接收%q超時"
 msgid "Connect %q successfully"
 msgstr "成功連線至 %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "已斷開到 %q 的連線"
 
@@ -284,23 +280,24 @@ msgstr "排程提醒工具"
 msgid "Festival"
 msgstr "節日"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "全部關閉"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "強制離開"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "駐停"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "解除駐停"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "所有視窗"
 
@@ -559,7 +556,7 @@ msgstr "%q 解除安裝成功"
 msgid "Failed to uninstall %q"
 msgstr "%q 解除安裝失敗"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr "有線連接"
 
@@ -936,51 +933,51 @@ msgstr "驗證 VPN 伺服器失敗"
 msgid "The connection was deleted from settings"
 msgstr "此連線已從設定中刪除"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "正在啟用熱點"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "正在連線至 %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "已啟用熱點"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "已連線到 %q 網路"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "已停用熱點"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "無法分享熱點，請檢查 dnsmasq 設定"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "無法連線到 %q 網路，請離無線網路路由器更近點"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "無法連線到 %q 網路，請檢查路由器或網路線"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "連線失敗：無法連線到 %q 網路，原因：密碼錯誤"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "連線至 %q 需要密碼"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "找不到%q 802.11 WLAN 網路"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "未知"
 
@@ -1084,6 +1081,6 @@ msgid ""
 "UTC time"
 msgstr "控制 RTC 儲存本機還是 UTC 時間需要身份驗證"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "設定系統時區需要身份驗證"

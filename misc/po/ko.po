@@ -7,17 +7,17 @@
 # Thomas Sungjin Kang <potopro@gmail.com>, 2020
 # Sangmin Lee <sangminlee7648@gmail.com>, 2020
 # Cindy0514, 2020
+# JungHee Lee <daemul72@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
-# JungHee Lee <daemul72@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: JungHee Lee <daemul72@gmail.com>, 2021\n"
+"Last-Translator: Maggie Liu <maggie.liufei@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/linuxdeepin/teams/3617/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,10 +52,6 @@ msgid "The name already exists"
 msgstr ""
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "사용자 이름이 시스템에서 사용되었습니다"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "사용자 이름은 3 ~ 32 자 사이 여야합니다"
 
@@ -83,12 +79,12 @@ msgstr "디스플레이 크기조정 설정"
 msgid "Display scaling"
 msgstr "디스플레이 크기조정"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "열기"
 
@@ -153,7 +149,7 @@ msgid "Cancel"
 msgstr "취소"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -205,8 +201,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "%q 연결 성공"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q 연결 끊김"
 
@@ -281,23 +277,24 @@ msgstr "일정 알림"
 msgid "Festival"
 msgstr "페스티벌"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "모두 닫기"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "강제 종료"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "도구집"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "도구집 해제"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "모든 창"
 
@@ -556,7 +553,7 @@ msgstr "%q을(를) 성공적으로 제거했습니다"
 msgid "Failed to uninstall %q"
 msgstr "%q을(를) 제거하지 못했습니다"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr ""
 
@@ -933,51 +930,51 @@ msgstr "VPN 서버에 대한 인증에 실패했습니다"
 msgid "The connection was deleted from settings"
 msgstr "설정이 연결에서 삭제되었습니다"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "핫스팟 활성화"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "%q 연결중"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "핫스팟 사용"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q 연결됨"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "핫스팟 사용안함"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "핫스팟을 공유할 수 없습니다. dnsmasq 설정을 확인하십시오"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%q을(를) 연결할 수 없습니다. 무선 라우터에 가까이 있어야 합니다"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%q을(를) 연결할 수 없습니다. 라우터 또는 인터넷 케이블을 확인하십시오."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "연결 실패, %q을(를) 연결할 수 없습니다. 비밀번호가 잘못되었습니다"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "%q을(를) 연결하려면 비밀번호가 필요합니다"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "알 수 없음"
 
@@ -1081,6 +1078,6 @@ msgid ""
 "UTC time"
 msgstr "RTC가 로컬 또는 UTC 시간을 저장하는지 제어하려면 인증이 필요합니다"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "시스템 시간대를 설정하려면 인증이 필요합니다"

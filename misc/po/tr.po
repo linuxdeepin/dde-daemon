@@ -5,21 +5,21 @@
 # 
 # Translators:
 # Vahap Karataş <k.vahap@gmail.com>, 2020
+# Kaya Zeren <kayazeren@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Cindy0514, 2020
 # yakup <mutouk@yandex.ru>, 2020
-# meda <ademcal@yahoo.com>, 2021
 # Serdar Sağlam <teknomobil@msn.com>, 2021
-# Kaya Zeren <kayazeren@gmail.com>, 2021
+# meda <ademcal@yahoo.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2021\n"
+"Last-Translator: meda <ademcal@yahoo.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,10 +56,6 @@ msgid "The name already exists"
 msgstr "İsim zaten var"
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Bu kullanıcı adı sistem tarafından kullanılıyor"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Kullanıcı adı 3 ile 32 karakter arasında olmalıdır"
 
@@ -87,12 +83,12 @@ msgstr "Görüntü ölçeği ayarı"
 msgid "Display scaling"
 msgstr "Görüntü ölçeği"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s devre dışı bırakılmıştı"
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Aç"
 
@@ -157,7 +153,7 @@ msgid "Cancel"
 msgstr "İptal"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -209,8 +205,8 @@ msgstr "%q alım zaman aşımına uğradı"
 msgid "Connect %q successfully"
 msgstr "%q bağlantısı başarılı"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q bağlantısı kesildi"
 
@@ -287,23 +283,24 @@ msgstr "Zamanlamalı Hatırlatıcı"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Tümünü Kapat"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "Zorla Çık"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "Görev Çubuğu"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "Ayır"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "Tüm Pencereler"
 
@@ -564,7 +561,7 @@ msgstr "%q kaldırıldı"
 msgid "Failed to uninstall %q"
 msgstr "%q kaldırılamadı"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr "Kablolu bağlantı"
 
@@ -954,54 +951,54 @@ msgstr "VPN sunucusunda kimlik doğrulanamadı"
 msgid "The connection was deleted from settings"
 msgstr "Bağlantı ayarlardan silindi"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Erişim noktasını etkinleşir"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Bağlanıyor %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Erişim noktası etkin"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q bağlı"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Erişim noktası devre dışı"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Erişim noktası paylaşılamadı, dnsmasq ayarlarını denetle"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%q bağlanılamıyor, lütfen kablosuz yönlendiriciye yakın tutun"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q bağlantısı kurulamadı, lütfen erişim noktanızı ya da ağ kablonuzu "
 "denetleyin."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Bağlantı kurulamadı, parola yanlış olduğundan %q bağlantısı kurulamadı"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "%q bağlanmak için parola gerekli"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q  802.11 WLAN ağı bulunamadı"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
@@ -1107,6 +1104,6 @@ msgstr ""
 "RTC'nin yerel veya UTC saatini depolayıp depolamayacağını kontrol etmek için"
 " kimlik doğrulama gerekir"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Sistem saat dilimini ayarlamak için kimlik doğrulaması gerekli"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: scootergrisen, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/linuxdeepin/teams/3617/da/)\n"
@@ -53,10 +53,6 @@ msgid "The name already exists"
 msgstr ""
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "Brugernavnet er blevet brugt af systemet"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "Brugernavnet skal være mellem 3-32 tegn langt"
 
@@ -84,12 +80,12 @@ msgstr "Sætter skærmskalering"
 msgid "Display scaling"
 msgstr "Skærmskalering"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Åbn"
 
@@ -154,7 +150,7 @@ msgid "Cancel"
 msgstr "Annuller"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -206,8 +202,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "Tilslutning af %q lykkedes"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q afbrudt"
 
@@ -282,23 +278,24 @@ msgstr "Planlæg påmindelse"
 msgid "Festival"
 msgstr ""
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Luk alle"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "Gennemtving afslut"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "Dok"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "Fjern fra dok"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "Alle vinduer"
 
@@ -561,7 +558,7 @@ msgstr "%q fjernet"
 msgid "Failed to uninstall %q"
 msgstr "Kunne ikke afinstallere %q"
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr ""
 
@@ -947,55 +944,55 @@ msgstr "Autentificering til VPN-server mislykkedes"
 msgid "The connection was deleted from settings"
 msgstr "Forbindelsen blev slettet fra indstillingerne"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Aktiverer hotspot"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Opretter forbindelse til %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspottet blev aktiveret"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q tilsluttet"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Hotspottet blev deaktiveret"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Kan ikke dele hotspot, tjek venligst dnsmasq-indstillinger"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Kan ikke oprette forbindelse til %q, vær venligst tættere på den trådlåse "
 "router"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Kan ikke forbinde %q, check din router eller netværkskabel."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Forbindelsen mislykkedes, kan ikke oprette forbindelse til %q, forkert "
 "adgangskode"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "Der kræves adgangskode for at oprette forbindelse til %q"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Ukendt"
 
@@ -1104,6 +1101,6 @@ msgstr ""
 "Der kræves autentifikation for at styre om RTC'en lagre den lokale tid eller"
 " UTC-tiden"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "Autentifikation kræves for at sætte systemets tidszone"

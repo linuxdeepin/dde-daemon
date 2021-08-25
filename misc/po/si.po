@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-20 18:01+0800\n"
+"POT-Creation-Date: 2021-08-25 15:24+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2021\n"
 "Language-Team: Sinhala (https://www.transifex.com/linuxdeepin/teams/3617/si/)\n"
@@ -51,10 +51,6 @@ msgid "The name already exists"
 msgstr ""
 
 #: ../../accounts/checkers/username.go:76
-msgid "The username has been used by system"
-msgstr "පරිශීලක නාමය පද්ධතිය විසින් භාවිතා කර ඇත"
-
-#: ../../accounts/checkers/username.go:78
 msgid "Username must be between 3 and 32 characters"
 msgstr "පරිශීලක නාමය අක්ෂර 3 ත් 32 ත් අතර විය යුතුය"
 
@@ -82,12 +78,12 @@ msgstr "දර්ශන පරිමාණ සකසමින් පවතී"
 msgid "Display scaling"
 msgstr "දර්ශන පරිමාණය"
 
-#: ../../audio/audio_events.go:473
+#: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:474 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "විවෘත කරන්න"
 
@@ -152,7 +148,7 @@ msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
 #: ../../bluetooth/obex_agent.go:346
-msgid "Receiving %q from %q"
+msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
@@ -204,8 +200,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "%q සාර්ථකව සම්බන්ධ කර ඇත."
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q විසන්ධි විය"
 
@@ -280,23 +276,24 @@ msgstr "මතක් කිරීමක් සකසන්න"
 msgid "Festival"
 msgstr "උත්සවය"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "සියල්ල වසා දමන්න"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
+#: ../../dock/app_entry_menu.go:157
 msgid "Force Quit"
 msgstr "බලෙන් ඉවත් වන්න"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:161
 msgid "Dock"
 msgstr "ඩොක් එක"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:171
 msgid "Undock"
 msgstr "අහෝසි කරන්න"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
 msgstr "සියලුම කවුළු"
 
@@ -559,7 +556,7 @@ msgstr "%q සාර්ථකව ඉවත් කර ඇත."
 msgid "Failed to uninstall %q"
 msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
 
-#: ../../network/manager.go:326
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr ""
 
@@ -943,53 +940,53 @@ msgstr "VPN සේවාදායකය-server සත්‍යාපනය ක�
 msgid "The connection was deleted from settings"
 msgstr "සැකසුම් වලින් සම්බන්ධතාවය මකා දමන ලදි"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "හොට්ස්පොට් සක්‍රීය කරමින්"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "%q සම්බන්ධ වෙමින් පවතී"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "හොට්ස්පොට් සක්‍රීයයි"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q සම්බන්ධයි"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "හොට්ස්පොට් අක්‍රීයයි"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "හොට්ස්පොට් බෙදා ගැනීමට නොහැක, කරුණාකර dnsmasq සැකසුම් පරීක්ෂා කරන්න"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර රැහැන් රහිත රවුටරයට සමීපව සිටින්න"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර ඔබේ රවුටරය හෝ ජාල කේබලය පරීක්ෂා කරන්න."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "සම්බන්ධතාවය අසාර්ථක විය, %q සම්බන්ධ කිරීමට නොහැකි විය, වැරදි මුරපදයකි"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "%q සම්බන්ධ කිරීමට මුරපදය අවශ්‍ය වේ"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "නොදත් "
 
@@ -1099,6 +1096,6 @@ msgstr ""
 "RTC-තත් කාල ඔරලෝසුවෙහි දේශීය හෝ UTC-සමායෝත සාර්වත්‍ර වේලාව ගබඩා කරන්නේද යන්න"
 " පාලනය කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate/manager_ifc.go:148
+#: ../../timedate/manager_ifc.go:152
 msgid "Authentication is required to set the system timezone"
 msgstr "පද්ධතියේ වේලා කලාපය සකස් කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
