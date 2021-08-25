@@ -131,6 +131,13 @@ func (nm *NotifyManager) addMsg(msg *notifyMsg) {
 	nm.mu.Unlock()
 }
 
+func (nm *NotifyManager) count() int {
+	nm.mu.Lock()
+	defer nm.mu.Unlock()
+
+	return nm.queue.toList().Len()
+}
+
 func (nm *NotifyManager) loop() {
 	for {
 		nm.mu.Lock()
