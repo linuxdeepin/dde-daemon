@@ -1,7 +1,6 @@
 package power
 
 import (
-	"os"
 	"strconv"
 	"syscall"
 	"testing"
@@ -33,7 +32,7 @@ func Test_OFF(t *testing.T) {
 }
 
 func Test_testBit(t *testing.T) {
-	array := []int{2,4}
+	array := []int{2, 4}
 	ok := testBit(1, array)
 	assert.True(t, ok)
 
@@ -49,26 +48,16 @@ func Test_upInputStrToBitmask(t *testing.T) {
 
 func Test_String(t *testing.T) {
 	time := syscall.Timeval{
-		Sec: 1,
+		Sec:  1,
 		Usec: 1,
 	}
 	ev := InputEvent{
-		Time: time,
-		Type: 1,
-		Code: 1,
+		Time:  time,
+		Type:  1,
+		Code:  1,
 		Value: 1,
 	}
 
 	evString := ev.String()
 	assert.Equal(t, "event at 1.1, code 01, type 01, val 01", evString)
-}
-
-func Test_readLidSwitchEvent(t *testing.T) {
-	f, _ := os.Open("./testdata/scaling_governor")
-	events, err := readLidSwitchEvent(f)
-	var expect uint16 = 0x0
-
-	assert.Nil(t, err)
-	assert.Equal(t, expect, events[0].Type)
-	assert.Equal(t, expect, events[0].Code)
 }
