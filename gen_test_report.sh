@@ -5,7 +5,7 @@
 gThirdpartPath="gopath"
 #gThirdpartPath="gobuild"
 # 设置忽略目录列表，列表的目录及其子目录不统计
-gIgnorePaths=("gobuild" "gopath" "vendor" "calendar)
+gIgnorePaths=("gobuild" "gopath" "vendor" "calendar")
 
 
 # 生成的测试报告文件
