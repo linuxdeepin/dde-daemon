@@ -39,7 +39,7 @@ const (
 	// dialog use for show pinCode
 	notifyDdeDialogPath = "/usr/lib/deepin-daemon/dde-bluetooth-dialog"
 	// notification window stay time
-	notifyTimerDuration = 5 * time.Second
+	notifyTimerDuration = 30 * time.Second
 )
 
 const bluetoothDialog string = "dde-bluetooth-dialog"
@@ -65,6 +65,12 @@ func initNotifications() error {
 	_, err = globalNotifications.ConnectActionInvoked(func(id uint32, actionKey string) {
 		// has received signal, use id to compare with last globalNotifyId
 		if id == globalNotifyId {
+			if actionKey == "cancel" {
+				err = globalBluetooth.agent.Cancel()
+				if err != nil {
+					logger.Warning("Cancel error:", err)
+				}
+			}
 			// if it is the same, then send chan to instance chan to close window
 			globalTimerNotifier.actionInvokedChan <- true
 		}
@@ -159,7 +165,7 @@ func notifyPassiveConnect(dev *device, pinCode string) error {
 		logger.Info("Passive is not exist")
 		return nil
 	}
-	var as = []string{"pair", Tr("Pair")}
+	var as = []string{"pair", Tr("Pair"), "cancel", Tr("Cancel")}
 	var timestamp = strconv.FormatInt(time.Now().UnixNano(), 10)
 	cmd := notifyDdeDialogPath + "," + pinCode + "," + string(dev.Path) + "," + timestamp
 	hints := map[string]dbus.Variant{"x-deepin-action-pair": dbus.MakeVariant(cmd)}
@@ -173,7 +179,7 @@ func notifyPassiveConnect(dev *device, pinCode string) error {
 	// notify connect request to dde-control-center
 	// set notify time out as -1, default time out is 5 seconds
 	nid, err = globalNotifications.Notify(0, "dde-control-center", nid, notifyIconBluetoothConnected,
-		summary, body, as, hints, -1)
+		summary, body, as, hints, 30*1000)
 	if err != nil {
 		logger.Warningf("notify message failed,err:%v", err)
 		return err
