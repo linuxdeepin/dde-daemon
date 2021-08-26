@@ -25,6 +25,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestSessionDaemon_GetInterfaceName(t *testing.T) {
+	s := SessionDaemon{}
+	assert.Equal(t, dbusInterface, s.GetInterfaceName())
+}
+
 func TestFilterList(t *testing.T) {
 	var infos = []struct {
 		origin    []string
@@ -49,6 +54,6 @@ func TestFilterList(t *testing.T) {
 	}
 
 	for _, info := range infos {
-		assert.ElementsMatch(t, filterList(info.origin, info.condition), info.ret)
+		assert.ElementsMatch(t, info.ret, filterList(info.origin, info.condition))
 	}
 }
