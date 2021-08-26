@@ -22,7 +22,6 @@ package audio
 import (
 	"fmt"
 	"strconv"
-	"strings"
 	"sync"
 
 	dbus "github.com/godbus/dbus"
@@ -255,7 +254,6 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 	s.setPropSupportBalance(true)
 	s.setPropBalance(sinkInfo.Volume.Balance(sinkInfo.ChannelMap))
 
-	oldActivePort := s.ActivePort
 	newActivePort := toPort(sinkInfo.ActivePort)
 	var activePortChanged bool
 
@@ -269,43 +267,6 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 		logger.Debugf("default sink update active port %s", sinkInfo.ActivePort.Name)
 		s.audio.resumeSinkConfig(s)
 	}
-
-	// TODO(jouyouyun): Sometimes the default sink not in the same card, so the activePortChanged inaccurate.
-	// The right way is saved the last default sink active port, then judge whether equal.
-	if s.audio.headphoneUnplugAutoPause && activePortChanged {
-		logger.Debugf("sink #%d active port changed, old %v, new %v",
-			s.index, oldActivePort, newActivePort)
-		// old port but has new available state
-		oldPort, foundOldPort := getPortByName(s.Ports, oldActivePort.Name)
-		var oldPortUnavailable bool
-		if !foundOldPort {
-			logger.Debug("Sink.update not found old port")
-			oldPortUnavailable = true
-		} else {
-			oldPortUnavailable = int(oldPort.Available) == pulse.AvailableTypeNo
-		}
-		logger.Debugf("oldPortUnavailable: %v", oldPortUnavailable)
-
-		handleUnplugedEvent(oldActivePort, newActivePort, oldPortUnavailable)
-	}
-}
-
-func handleUnplugedEvent(oldActivePort, newActivePort Port, oldPortUnavailable bool) {
-	logger.Debug("[handleUnplugedEvent] Old port:", oldActivePort.String(), oldPortUnavailable)
-	logger.Debug("[handleUnplugedEvent] New port:", newActivePort.String())
-	// old active port is headphone or bluetooth
-	if isHeadphoneHeadsetOrLineoutPort(oldActivePort.Name) &&
-		// old active port available is yes or unknown, not no
-		int(oldActivePort.Available) != pulse.AvailableTypeNo &&
-		// new port is not headphone and bluetooth
-		!isHeadphoneHeadsetOrLineoutPort(newActivePort.Name) && oldPortUnavailable {
-		pauseAllPlayers()
-	}
-}
-
-func isHeadphoneHeadsetOrLineoutPort(portName string) bool {
-	name := strings.ToLower(portName)
-	return strings.Contains(name, "headphone") || strings.Contains(name, "headset-output") || strings.Contains(name, "lineout")
 }
 
 func (s *Sink) GetMeter() (meter dbus.ObjectPath, busErr *dbus.Error) {
