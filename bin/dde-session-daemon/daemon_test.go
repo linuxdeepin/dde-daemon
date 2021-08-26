@@ -22,8 +22,13 @@ package main
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
+
+func TestSessionDaemon_GetInterfaceName(t *testing.T) {
+	s := SessionDaemon{}
+	assert.Equal(t, dbusInterface, s.GetInterfaceName())
+}
 
 func TestFilterList(t *testing.T) {
 	var infos = []struct {
@@ -48,10 +53,7 @@ func TestFilterList(t *testing.T) {
 		},
 	}
 
-	Convey("Test filterList", t, func(c C) {
-		for _, info := range infos {
-			c.So(filterList(info.origin, info.condition),
-				ShouldResemble, info.ret)
-		}
-	})
+	for _, info := range infos {
+		assert.ElementsMatch(t, info.ret, filterList(info.origin, info.condition))
+	}
 }
