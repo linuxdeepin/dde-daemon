@@ -20,14 +20,15 @@
 package power
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_GetAvailableGovernors(t *testing.T) {
 	expect := map[string]bool{
-		"performance":true,
-		"powersave":true,
+		"performance": true,
+		"powersave":   true,
 	}
 
 	cpu := CpuHandler{}
@@ -40,8 +41,8 @@ func Test_GetAvailableGovernors(t *testing.T) {
 
 	cpu.path = "./testdata"
 	availableGovernors, err := cpu.GetAvailableGovernors(true)
-	assert.Equal(t,expect["performance"], availableGovernors["performance"])
-	assert.Equal(t,expect["powersave"], availableGovernors["powersave"])
+	assert.Equal(t, expect["performance"], availableGovernors["performance"])
+	assert.Equal(t, expect["powersave"], availableGovernors["powersave"])
 }
 
 func Test_GetGovernor(t *testing.T) {
@@ -66,7 +67,7 @@ func Test_SetGovernor(t *testing.T) {
 	assert.NotNil(t, err)
 
 	cpu.availableGovernors = map[string]bool{
-		"scaling_governor":true,
+		"scaling_governor": true,
 	}
 	cpu.path = "./testdata/setGovernor"
 	err = cpu.SetGovernor("scaling_governor")
@@ -82,31 +83,31 @@ func Test_GetAvailableGovernors1(t *testing.T) {
 	cpus.GetAvailableGovernors()
 
 	expect := map[string]bool{
-		"performance":true,
-		"powersave":true,
+		"performance": true,
+		"powersave":   true,
 	}
 
 	availableGovernors1 := map[string]bool{
-		"performance":true,
-		"powersave":true,
-		"invalid":false,
+		"performance": true,
+		"powersave":   true,
+		"invalid":     false,
 	}
 
 	availableGovernors2 := map[string]bool{
-		"performance":true,
-		"powersave":true,
+		"performance": true,
+		"powersave":   true,
 	}
 
 	cpu1 := CpuHandler{
-		path: "./testdata",
-		availableGovernors:availableGovernors1,
-		governor: "scaling_governor",
+		path:               "./testdata",
+		availableGovernors: availableGovernors1,
+		governor:           "scaling_governor",
 	}
 
 	cpu2 := CpuHandler{
-		path: "./testdata",
-		availableGovernors:availableGovernors2,
-		governor: "scaling_governor",
+		path:               "./testdata",
+		availableGovernors: availableGovernors2,
+		governor:           "scaling_governor",
 	}
 	cpus = CpuHandlers{
 		cpu1,
@@ -124,26 +125,26 @@ func Test_GetGovernor1(t *testing.T) {
 
 	expectGovernor := "performance"
 	availableGovernors1 := map[string]bool{
-		"performance":true,
-		"powersave":true,
-		"invalid":false,
+		"performance": true,
+		"powersave":   true,
+		"invalid":     false,
 	}
 
 	availableGovernors2 := map[string]bool{
-		"performance":true,
-		"powersave":true,
+		"performance": true,
+		"powersave":   true,
 	}
 
 	cpu1 := CpuHandler{
-		path: "./testdata",
-		availableGovernors:availableGovernors1,
-		governor: "scaling_governor",
+		path:               "./testdata",
+		availableGovernors: availableGovernors1,
+		governor:           "scaling_governor",
 	}
 
 	cpu2 := CpuHandler{
-		path: "./testdata",
-		availableGovernors:availableGovernors2,
-		governor: "scaling_governor",
+		path:               "./testdata",
+		availableGovernors: availableGovernors2,
+		governor:           "scaling_governor",
 	}
 	cpus = CpuHandlers{
 		cpu1,
@@ -155,9 +156,9 @@ func Test_GetGovernor1(t *testing.T) {
 	assert.Nil(t, err)
 
 	cpu2 = CpuHandler{
-		path: "./setGovernor2",
-		availableGovernors:availableGovernors2,
-		governor: "scaling_governor",
+		path:               "./setGovernor2",
+		availableGovernors: availableGovernors2,
+		governor:           "scaling_governor",
 	}
 	cpus = CpuHandlers{
 		cpu1,
@@ -169,26 +170,26 @@ func Test_GetGovernor1(t *testing.T) {
 
 func Test_SetGovernor1(t *testing.T) {
 	availableGovernors1 := map[string]bool{
-		"performance":true,
-		"powersave":true,
-		"invalid":false,
+		"performance": true,
+		"powersave":   true,
+		"invalid":     false,
 	}
 
 	availableGovernors2 := map[string]bool{
-		"performance":true,
-		"powersave":true,
+		"performance": true,
+		"powersave":   true,
 	}
 
 	cpu1 := CpuHandler{
-		path: "./testdata/setGovernor",
-		availableGovernors:availableGovernors1,
-		governor: "scaling_governor",
+		path:               "./testdata/setGovernor",
+		availableGovernors: availableGovernors1,
+		governor:           "scaling_governor",
 	}
 
 	cpu2 := CpuHandler{
-		path: "./testdata/setGovernor",
-		availableGovernors:availableGovernors2,
-		governor: "scaling_governor",
+		path:               "./testdata/setGovernor",
+		availableGovernors: availableGovernors2,
+		governor:           "scaling_governor",
 	}
 	cpus := CpuHandlers{
 		cpu1,
