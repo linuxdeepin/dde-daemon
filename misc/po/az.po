@@ -9,16 +9,16 @@
 # manymous <many.mous.hacking@gmail.com>, 2020
 # Cindy0514, 2020
 # Nicat Məmmədov <n1c4t97@gmail.com>, 2020
-# Xəyyam Qocayev <xxmn77@gmail.com>, 2021
+# xxmn77 <xxmn77@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-02 16:20+0800\n"
+"POT-Creation-Date: 2021-08-27 09:53+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Xəyyam Qocayev <xxmn77@gmail.com>, 2021\n"
+"Last-Translator: xxmn77 <xxmn77@gmail.com>, 2021\n"
 "Language-Team: Azerbaijani (https://www.transifex.com/linuxdeepin/teams/3617/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -204,8 +204,8 @@ msgstr "%q qəbul edilmə vaxtı bitdi"
 msgid "Connect %q successfully"
 msgstr "%q uğurla qoşuldu"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q ayrıldı"
 
@@ -394,99 +394,103 @@ msgstr "Mübadilə yaddaşı"
 msgid "Translation"
 msgstr "Tərcümə"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:50
+msgid "Global Search"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:57
 msgid "Switch Layout"
 msgstr "Qatı dəyişmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to left workspace"
 msgstr "Soldakı iş sahəsinə keçid"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to right workspace"
 msgstr "Sağdakı iş sahəsinə keçid"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to upper workspace"
 msgstr "Yuxar iş sahəsinə keçid"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to lower workspace"
 msgstr "Aşağı iş sahəsinə keçid"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows"
 msgstr "Oxşar pəncərələr keçid"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows in reverse"
 msgstr "Oxşar pəncərələrə əksinə keçid"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows"
 msgstr "Pəncərələrə keçid"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows in reverse"
 msgstr "Pəncərələrə əksinə keçid"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:95
 msgid "Show desktop"
 msgstr "İş Masasını göstərmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Maximize window"
 msgstr "Pəncərəni genişləndirmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Restore window"
 msgstr "Pəncərəni bərpa etmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Minimize window"
 msgstr "Pəncərəni yığmaq"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Close window"
 msgstr "Pəncərəni bağlamaq"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Move window"
 msgstr "Pəncərəni köçürmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Resize window"
 msgstr "Pəncərənin ölçüsünü dəyişmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to left workspace"
 msgstr "Sol iş sahəsinə köçürmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to right workspace"
 msgstr "Sağ iş sahəsinə köçürmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to upper workspace"
 msgstr "Yuxarı iş sahəsinə keçirmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to lower workspace"
 msgstr "Aşağı iş sahəsinə keçirmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of all workspaces"
 msgstr "Bütün sahələrindəki iş sahələri"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of current workspace"
 msgstr "Cari iş sahəsi pəncərələrini göstərmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display workspace"
 msgstr "İş sahələrini göstərmək"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:215
 msgid "Switch monitors"
 msgstr "Monitorlar arası keçid"
 
@@ -562,7 +566,7 @@ msgstr "%q uğurla silindi"
 msgid "Failed to uninstall %q"
 msgstr "%q silinməsi baş tutmadı"
 
-#: ../../network/manager.go:335
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr "Simli bağlantı"
 
@@ -947,55 +951,55 @@ msgstr "VPN xidmətinin doğrulanması alınmadı"
 msgid "The connection was deleted from settings"
 msgstr "Bağlantı, ayarlardan silindi"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Qöşulma nöqtəsin aktivləşməsi"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "%1 qoşulur"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Qoşulma nöqtəsi açıqdır"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q qoşuldu"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Qoşulma nöqtəsi söndü"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Qoşulma nöqtəsinin paylaşılması mümkün olmadı, dnsmasq ayarlarını yoxlayın"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "%q bağlantısı mümkün deyil, lütfən, simsiz routerin yaxınlığında durun"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q bağlantısı mümkün olmadı, routerinizin və ya şəbəkənizin kabelini "
 "yoxlayın"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Bağlantı alınmadı, %q qoşula bilmir, şifrə səhvdir"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "%q qoşulmaq üçün şifrə tələb olunur"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN şəbəkəsi tapılmadı"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Naməlum"
 

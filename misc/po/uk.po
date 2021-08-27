@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuriy Moskalchuk <termosyura@ukr.net>, 2020
+# Yuriy, 2020
 # Roman <dejitaru.tiger@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Marck Hrin, 2021
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-02 16:20+0800\n"
+"POT-Creation-Date: 2021-08-27 09:53+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
@@ -154,7 +154,7 @@ msgstr "Скасувати"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Отримуємо %[1]q з %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -205,8 +205,8 @@ msgstr "Перевищено час очікування на отримання
 msgid "Connect %q successfully"
 msgstr "Підключення %q успішне"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q відключено"
 
@@ -395,99 +395,103 @@ msgstr "Буфер обміну"
 msgid "Translation"
 msgstr "Переклад"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:50
+msgid "Global Search"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:57
 msgid "Switch Layout"
 msgstr "Переключити компонування"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to left workspace"
 msgstr "Перемикання на ліву робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to right workspace"
 msgstr "Перемикання на правий робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to upper workspace"
 msgstr "Перемикання на верхнє робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to lower workspace"
 msgstr "Перемикання на нижчій робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows"
 msgstr "Замінити схожі вікна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows in reverse"
 msgstr "Перемикання між подібними вікнами у зворотному порядку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows"
 msgstr "Перехід між вікнами"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows in reverse"
 msgstr "Перемикання між вікнами у зворотному порядку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:95
 msgid "Show desktop"
 msgstr "Показати стільницю"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Maximize window"
 msgstr "Розгорнути вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Restore window"
 msgstr "Відновити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Minimize window"
 msgstr "Згорнути вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Close window"
 msgstr "Закрити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Move window"
 msgstr "Перемістити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Resize window"
 msgstr "Змінити розмір вікна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to left workspace"
 msgstr "Перемістити на лівий робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to right workspace"
 msgstr "Перемістити на правий робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to upper workspace"
 msgstr "Перемістити на верхній робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to lower workspace"
 msgstr "Перемістити на нижчій робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of all workspaces"
 msgstr "Відображати вікна всіх робочих просторів"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of current workspace"
 msgstr "Показати вікна поточного робочого простору"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display workspace"
 msgstr "Показати робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:215
 msgid "Switch monitors"
 msgstr "Перемкнути монітори"
 
@@ -562,7 +566,7 @@ msgstr "%q успішно видалено"
 msgid "Failed to uninstall %q"
 msgstr "Не вдалося встановити %q"
 
-#: ../../network/manager.go:335
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr "Дротове з'єднання"
 
@@ -948,55 +952,55 @@ msgstr "Аутентифікація при доступі до VPN-сервер
 msgid "The connection was deleted from settings"
 msgstr "З'єднання було видалено з налаштувань."
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Увімкнути точку доступу"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Підключити %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Точка доступу увімкнена"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q підключено"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Точка доступу вимкнена"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Неможливо поділитися точкою доступу, перевірте налаштування dnsmasq"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Неможливо підключити %q, будь ласка, тримайтеся ближче до бездротового "
 "маршрутизатора"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не вдалося з'єднатися із %q. Будь ласка, перевірте, чи працює ваш "
 "маршрутизатор або мережевий кабель."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Помилка підключення, неможливо підключити %q, невірний пароль"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "Пароль, необхідний для підключення %q"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Не вдалося знайти мережу WLAN 802.11 %q"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Невідомо"
 

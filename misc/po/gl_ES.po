@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-02 16:20+0800\n"
+"POT-Creation-Date: 2021-08-27 09:53+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: David Rebolo Magariños <drgaga345@gmail.com>, 2021\n"
 "Language-Team: Galician (Spain) (https://www.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
@@ -204,8 +204,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "Conectar %q correctamente"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q desconectado"
 
@@ -392,99 +392,103 @@ msgstr "Portapapeis"
 msgid "Translation"
 msgstr "Tradución"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:50
+msgid "Global Search"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:57
 msgid "Switch Layout"
 msgstr "Cambiar Distribución de Teclado"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to left workspace"
 msgstr "Cambiar ao espazo de traballo esquerdo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to right workspace"
 msgstr "Cambiar ao espazo de traballo dereito"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to upper workspace"
 msgstr "Cambiar ao espazo de traballo superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to lower workspace"
 msgstr "Cambiar para reducir o espazo de traballo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows"
 msgstr "Cambiar xanelas semellantes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows in reverse"
 msgstr "Cambiar xanelas semellantes en orde inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows"
 msgstr "Cambiar xanelas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows in reverse"
 msgstr "Cambiar xanelas en orde inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:95
 msgid "Show desktop"
 msgstr "Amosar escritorio"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Maximize window"
 msgstr "Maximizar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Restore window"
 msgstr "Restaurar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Minimize window"
 msgstr "Minimizar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Close window"
 msgstr "Pechar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Move window"
 msgstr "Mover a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Resize window"
 msgstr "Redimensionar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to left workspace"
 msgstr "Mover ao espazo de traballo da esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to right workspace"
 msgstr "Mover ao espazo de traballo da dereita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to upper workspace"
 msgstr "Mover ao espazo de traballo superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to lower workspace"
 msgstr "Mover ao espazo de traballo inferior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of all workspaces"
 msgstr "Amosar as xanelas de todos os espazos de traballo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of current workspace"
 msgstr "Amosar as xanelas do espazo de traballo actual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display workspace"
 msgstr "Amosar o espazo de traballo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:215
 msgid "Switch monitors"
 msgstr "Cambiar monitores"
 
@@ -558,7 +562,7 @@ msgstr "%q eliminouse correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Erro ao desinstalar %q"
 
-#: ../../network/manager.go:335
+#: ../../network/manager.go:338
 msgid "Wired connection"
 msgstr ""
 
@@ -943,53 +947,53 @@ msgstr "Fallou a autenticación ao servidor VPN"
 msgid "The connection was deleted from settings"
 msgstr "A conexión eliminouse da configuración"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Habilitar punto de acceso"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "Conectando %q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Punto de acceso habilitado"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q conectado"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Punto de acceso desactivado"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Non se pode compartir un punto de acceso, comprobe a configuración de "
 "dnsmasq"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Non se puido conectar% q, mantéñase máis preto do router sen fíos"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Non se puido conectar% q, comproba o enrutador ou o cable neto."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Fallou a conexión e non se puido conectar% q, contrasinal incorrecto"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "O contrasinal é necesario para conectar% q"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Descoñecido"
 
