@@ -22,8 +22,11 @@
 package trayicon
 
 import (
+	"fmt"
 	"testing"
 
+	dbus "github.com/godbus/dbus"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,25 +35,68 @@ func TestStatusNotifierWatcher_GetInterfaceName(t *testing.T) {
 	assert.Equal(t, snwDBusServiceName, s.GetInterfaceName())
 }
 
-/*
 func TestStatusNotifierWatcher_isDBusServiceRegistered(t *testing.T) {
 	type args struct {
 		serviceName string
 	}
-	tests := []struct {
+	type test struct {
 		name string
 		snw  *StatusNotifierWatcher
 		args args
 		want bool
-	}{
-		{
-			name: "isDBusServiceRegistered",
-			snw: &StatusNotifierWatcher{
-				dbusDaemon: &ofdbus.MockDBus{},
-			},
-			args: args{},
-			want: true,
-		},
+	}
+	tests := []test{
+		func() test {
+			serviceName := "xxx"
+
+			m := new(ofdbus.MockDBus)
+			m.MockInterfaceDbusIfc.On("GetNameOwner", dbus.Flags(0), serviceName).Return("aaa", nil)
+
+			return test{
+				name: "isDBusServiceRegistered succ",
+				snw: &StatusNotifierWatcher{
+					dbusDaemon: m,
+				},
+				args: args{
+					serviceName: serviceName,
+				},
+				want: true,
+			}
+		}(),
+		func() test {
+			serviceName := "xxx"
+
+			m := new(ofdbus.MockDBus)
+			m.MockInterfaceDbusIfc.On("GetNameOwner", dbus.Flags(0), serviceName).Return("", nil)
+
+			return test{
+				name: "isDBusServiceRegistered empty",
+				snw: &StatusNotifierWatcher{
+					dbusDaemon: m,
+				},
+				args: args{
+					serviceName: serviceName,
+				},
+				want: false,
+			}
+		}(),
+		func() test {
+			serviceName := "xxx"
+
+			m := new(ofdbus.MockDBus)
+			m.MockInterfaceDbusIfc.On("GetNameOwner", dbus.Flags(0), serviceName).Return("", fmt.Errorf("xxx"))
+
+			return test{
+				name: "isDBusServiceRegistered error",
+				snw: &StatusNotifierWatcher{
+					dbusDaemon: m,
+				},
+				args: args{
+					serviceName: serviceName,
+				},
+				want: false,
+			}
+		}(),
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -59,4 +105,3 @@ func TestStatusNotifierWatcher_isDBusServiceRegistered(t *testing.T) {
 		})
 	}
 }
-*/
