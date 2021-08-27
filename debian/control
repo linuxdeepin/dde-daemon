@@ -82,6 +82,7 @@ Depends:
  libnotify-bin,
  libpam-runtime (>= 1.1.3-2~),
  libpam0g,
+ libnss-myhostname,
  mobile-broadband-provider-info,
  network-manager,
  procps,
