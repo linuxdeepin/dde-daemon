@@ -159,10 +159,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 			return
 		}
 
-		if !users.IsHumanUdcpUserUid(userInfo.UID) {
-			return
-		}
-
 		err = m.addUdcpUser(userInfo.UID)
 		if err != nil {
 			logger.Warningf("add login session failed:%v", err)
