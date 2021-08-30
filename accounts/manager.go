@@ -104,9 +104,9 @@ func NewManager(service *dbusutil.Service) *Manager {
 	sysSigLoop.Start()
 
 	var m = &Manager{
-		service:       service,
-		login1Manager: login1Manager,
-		sysSigLoop:    sysSigLoop,
+		service:                    service,
+		login1Manager:              login1Manager,
+		sysSigLoop:                 sysSigLoop,
 		enablePasswdChangedHandler: true,
 	}
 
@@ -146,10 +146,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 		}
 
 		if userInfo.UID < 10000 {
-			return
-		}
-
-		if !users.IsHumanUdcpUserUid(userInfo.UID) {
 			return
 		}
 
