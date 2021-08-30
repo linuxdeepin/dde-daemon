@@ -977,3 +977,7 @@ func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64
 	}
 	return expiredStatusNormal, relevantDay, nil
 }
+
+func (u *User) GetReminderInfo() (info LoginReminderInfo, dbusErr *dbus.Error) {
+	return getLoginReminderInfo(u.UserName), nil
+}
