@@ -28,7 +28,10 @@ type LoginReminderInfo struct {
 	Username string
 	Spent    struct {
 		LastChange int
+		Min        int
+		Max        int
 		Warn       int
+		Inactive   int
 		Expire     int
 	}
 	CurrentLogin            LoginUtmpx
@@ -44,8 +47,11 @@ func getLoginReminderInfo(user string) (res LoginReminderInfo) {
 	C.endspent()
 
 	res.Spent.LastChange = int(spent.sp_lstchg)
-	res.Spent.Expire = int(spent.sp_expire)
+	res.Spent.Min = int(spent.sp_min)
+	res.Spent.Max = int(spent.sp_max)
 	res.Spent.Warn = int(spent.sp_warn)
+	res.Spent.Inactive = int(spent.sp_inact)
+	res.Spent.Expire = int(spent.sp_expire)
 
 	var current C.struct_utmpx
 	var last C.struct_utmpx
