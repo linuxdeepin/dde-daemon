@@ -1,0 +1,54 @@
+Name:	startdde
+Umask:	0022
+State:	S (sleeping)
+Tgid:	2835
+Ngid:	0
+Pid:	2835
+PPid:	2723
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	64
+Groups:	7 27 100 109 116 119 123 1000 
+NStgid:	2835
+NSpid:	2835
+NSpgid:	2835
+NSsid:	2835
+VmPeak:	 4569280 kB
+VmSize:	 4569280 kB
+VmLck:	      16 kB
+VmPin:	       0 kB
+VmHWM:	   50032 kB
+VmRSS:	   48716 kB
+RssAnon:	   28516 kB
+RssFile:	   20200 kB
+RssShmem:	       0 kB
+VmData:	  607524 kB
+VmStk:	     132 kB
+VmExe:	    5172 kB
+VmLib:	   14264 kB
+VmPTE:	     664 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+CoreDumping:	0
+Threads:	61
+SigQ:	0/63240
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001001
+SigCgt:	ffffffffffc1eefe
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Speculation_Store_Bypass:	thread vulnerable
+Cpus_allowed:	ffff
+Cpus_allowed_list:	0-15
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	266
+nonvoluntary_ctxt_switches:	189
