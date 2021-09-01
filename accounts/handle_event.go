@@ -119,7 +119,7 @@ func (m *Manager) handleFilePasswdChanged() {
 			u.updatePropsPasswd(uInfo)
 		} else {
 			// 域账户没有保存在本地，无需删除
-			if !IsDomainUserID(u.Uid) || !m.isUdcpUserID(u.Uid) {
+			if !IsDomainUserID(u.Uid) && !m.isUdcpUserID(u.Uid) {
 				uidsDelete = append(uidsDelete, u.Uid)
 			}
 		}
@@ -243,12 +243,12 @@ func (m *Manager) addDomainUser(uId uint32) error {
 // 判断用户缓存UID列表中是否有域账户，域账户信息只能由web端设置，本地没有保存。
 // 因此，本地/etc/passwd更新不能删除域账户服务
 func (m *Manager) isUdcpUserID(uid string) bool {
-        // 未加域账户不存在iam服务，无法获取GetUserIdList返回结果
+	// 未加域账户不存在iam服务，无法获取GetUserIdList返回结果
 	err := m.initUdcpCache()
 	if err != nil {
 		logger.Errorf("Udcp cache service not exist: %v", err)
 		return false
-	}  
+	}
 	// 域账号不会保存在本地文件，所以需要排除
 	userIdList, err := m.udcpCache.GetUserIdList(0)
 	if err != nil {

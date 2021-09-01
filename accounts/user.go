@@ -569,10 +569,10 @@ func (u *User) updatePropsShadow(shadowInfo *users.ShadowInfo) {
 }
 
 func (u *User) getAccountType() int32 {
-	if users.IsAdminUser(u.UserName) {
-		return users.UserTypeAdmin
-	} else if IsDomainUserID(u.Uid) {
+	if IsDomainUserID(u.Uid) {
 		return users.UserTypeNetwork
+	} else if users.IsAdminUser(u.UserName) {
+		return users.UserTypeAdmin
 	}
 	return users.UserTypeStandard
 }
