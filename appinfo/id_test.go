@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 ~ 2018 Deepin Technology Co., Ltd.
  *
- * Author:     jouyouyun <jouyouwen717@gmail.com>
+ * Author:     hubenchang <hubenchang@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package audio
+package appinfo
 
 import (
 	"testing"
@@ -25,19 +24,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_isVolumeValid(t *testing.T) {
-	assert.True(t, isVolumeValid(0))
-	assert.False(t, isVolumeValid(-1))
-}
-func Test_floatPrecision(t *testing.T) {
-	assert.Equal(t, 3.14, floatPrecision(3.1415926))
-	assert.Equal(t, 2.72, floatPrecision(2.718281828))
+func Test_NormalizeAppIDWithCaseSensitive(t *testing.T) {
+	assert.Equal(t, "Ab-Cd-Ef-Gh", NormalizeAppIDWithCaseSensitive("Ab_Cd_Ef_Gh"))
 }
 
-func Test_toJSON(t *testing.T) {
-	str1 := make(map[string]string)
-	str1["name"] = "uniontech"
-	str1["addr"] = "wuhan"
-	ret := toJSON(str1)
-	assert.Equal(t, ret, `{"addr":"wuhan","name":"uniontech"}`)
+func Test_NormalizeAppID(t *testing.T) {
+	assert.Equal(t, "ab-cd-ef-gh", NormalizeAppID("Ab_Cd_Ef_Gh"))
 }

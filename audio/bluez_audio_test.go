@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2016 ~ 2018 Deepin Technology Co., Ltd.
  *
- * Author:     jouyouyun <jouyouwen717@gmail.com>
+ * Author:     hubenchang <hubenchang@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,19 +25,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_isVolumeValid(t *testing.T) {
-	assert.True(t, isVolumeValid(0))
-	assert.False(t, isVolumeValid(-1))
-}
-func Test_floatPrecision(t *testing.T) {
-	assert.Equal(t, 3.14, floatPrecision(3.1415926))
-	assert.Equal(t, 2.72, floatPrecision(2.718281828))
+func Test_NewBluezAudioManager(t *testing.T) {
+	bam := NewBluezAudioManager("testdata/bluez_audio.json")
+	assert.NotNil(t, bam)
 }
 
-func Test_toJSON(t *testing.T) {
-	str1 := make(map[string]string)
-	str1["name"] = "uniontech"
-	str1["addr"] = "wuhan"
-	ret := toJSON(str1)
-	assert.Equal(t, ret, `{"addr":"wuhan","name":"uniontech"}`)
+func Test_SetMode(t *testing.T) {
+	bam := NewBluezAudioManager("testdata/bluez_audio.json")
+	assert.Equal(t, bluezModeA2dp, bluezModeDefault)
+
+	bam.SetMode("test-card", bluezModeA2dp)
+	assert.Equal(t, bluezModeA2dp, bam.GetMode("test-card"))
+	bam.SetMode("test-card", bluezModeHeadset)
+	assert.Equal(t, bluezModeHeadset, bam.GetMode("test-card"))
+	bam.SetMode("test-card", bluezModeDefault)
+	assert.Equal(t, bluezModeDefault, bam.GetMode("test-card"))
 }

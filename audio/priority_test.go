@@ -74,3 +74,66 @@ func Test_IsOutputTypeAfter(t *testing.T) {
 	assert.True(t, pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeBuiltin))
 	assert.True(t, pr.IsOutputTypeAfter(PortTypeBuiltin, PortTypeHdmi))
 }
+
+func Test_NewPriorityManager(t *testing.T) {
+	pm := NewPriorityManager("testdata/priorities.json")
+	assert.NotNil(t, pm)
+}
+
+func Test_DefaultInit(t *testing.T) {
+	pm := NewPriorityManager("testdata/priorities.json")
+	pm.Init(CardList{})
+
+	for t1 := 0; t1 < PortTypeCount; t1++ {
+		for t2 := t1 + 1; t2 < PortTypeCount; t2++ {
+			assert.Equal(t, t1, pm.Output.GetPreferType(t1, t2))
+			assert.Equal(t, t1, pm.Output.GetPreferType(t2, t1))
+			assert.Equal(t, t1, pm.Input.GetPreferType(t1, t2))
+			assert.Equal(t, t1, pm.Input.GetPreferType(t2, t1))
+		}
+	}
+}
+
+func Test_SetFirstType(t *testing.T) {
+	pm := NewPriorityManager("testdata/priorities.json")
+	pm.Init(CardList{})
+
+	pm.Output.SetTheFirstType(PortTypeMultiChannel)
+	for t1 := 0; t1 < PortTypeCount; t1++ {
+		assert.Equal(t, PortTypeMultiChannel, pm.Output.GetPreferType(t1, PortTypeMultiChannel))
+		assert.Equal(t, PortTypeMultiChannel, pm.Output.GetPreferType(PortTypeMultiChannel, t1))
+	}
+
+	pm.Output.SetTheFirstType(PortTypeHdmi)
+	for t1 := 0; t1 < PortTypeCount; t1++ {
+		assert.Equal(t, PortTypeHdmi, pm.Output.GetPreferType(t1, PortTypeHdmi))
+		assert.Equal(t, PortTypeHdmi, pm.Output.GetPreferType(PortTypeHdmi, t1))
+	}
+}
+
+func Test_AddPort(t *testing.T) {
+	pm := NewPriorityManager("testdata/priorities.json")
+	pm.Init(CardList{})
+
+	port1 := PriorityPort{
+		CardName: "test-card1",
+		PortName: "test-port1",
+		PortType: PortTypeBluetooth,
+	}
+
+	port2 := PriorityPort{
+		CardName: "test-card2",
+		PortName: "test-port2",
+		PortType: PortTypeHdmi,
+	}
+
+	port3 := PriorityPort{
+		CardName: "test-card3",
+		PortName: "test-port3",
+		PortType: PortTypeBluetooth,
+	}
+
+	assert.Equal(t, 0, pm.Output.AddPort(&port1))
+	assert.Equal(t, 1, pm.Output.AddPort(&port2))
+	assert.Equal(t, 0, pm.Output.AddPort(&port3))
+}
