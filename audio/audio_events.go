@@ -20,6 +20,7 @@
 package audio
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strconv"
@@ -27,6 +28,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/gsettings"
 	"pkg.deepin.io/lib/pulse"
@@ -570,28 +572,32 @@ func (a *Audio) listenGSettingVolumeIncreaseChanged() {
 	})
 }
 
-func (a *Audio) listenGSettingReduceNoiseChanged() {
-	gsettings.ConnectChanged(gsSchemaAudio, gsKeyReduceNoise, func(val string) {
-		reduce := a.ReduceNoise.Get()
-		logger.Debugf("gsettings reduce noise changed to %v", reduce)
-		if reduce && isBluezAudio(a.defaultSource.Name) {
-			logger.Debug("bluetooth audio device cannot open reduce-noise")
-			a.ReduceNoise.Set(false)
-			return
-		}
+// 外部修改ReducecNoise时触发回调，响应实际降噪开关
+func (a *Audio) writeReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
+	reduce, ok := write.Value.(bool)
+	if !ok {
+		return dbusutil.ToError(errors.New("type is not bool"))
+	}
 
-		// 这个配置属性本来应该放在降噪设置成功之后再设置的
-		// 但是在开启降噪，切换到降噪的虚拟通道时，需要用对应主设备的配置进行配置恢复
-		// 如果不放在前面，配置恢复时，主设备的配置里降噪还处于关闭状态
-		// 配置恢复会自动关闭降噪
-		source := a.defaultSource
-		GetConfigKeeper().SetReduceNoise(a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
-		err := a.setReduceNoise(reduce)
-		if err != nil {
-			logger.Warning("set Reduce Noise failed: ", err)
-		}
-		a.inputAutoSwitchCount = 0
-	})
+	if reduce && isBluezAudio(a.defaultSource.Name) {
+		logger.Debug("bluetooth audio device cannot open reduce-noise")
+		a.ReduceNoise = false
+		a.emitPropChangedReduceNoise(a.ReduceNoise)
+		return dbusutil.ToError(errors.New("bluetooth audio device cannot open reduce-noise"))
+	}
+
+	// 这个配置属性本来应该放在降噪设置成功之后再设置的
+	// 但是在开启降噪，切换到降噪的虚拟通道时，需要用对应主设备的配置进行配置恢复
+	// 如果不放在前面，配置恢复时，主设备的配置里降噪还处于关闭状态
+	// 配置恢复会自动关闭降噪
+	source := a.defaultSource
+	GetConfigKeeper().SetReduceNoise(a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
+	err := a.setReduceNoise(reduce)
+	if err != nil {
+		logger.Warning("set Reduce Noise failed: ", err)
+	}
+	a.inputAutoSwitchCount = 0
+	return nil
 }
 
 func (a *Audio) notifyBluezCardPortInsert(card *Card) {

@@ -119,8 +119,8 @@ type Audio struct {
 
 	// dbusutil-gen: ignore
 	IncreaseVolume gsprop.Bool `prop:"access:rw"`
-	// dbusutil-gen: ignore
-	ReduceNoise  gsprop.Bool `prop:"access:rw"`
+
+	ReduceNoise  bool `prop:"access:rw"`
 	defaultPaCfg defaultPaConfig
 
 	// 最大音量
@@ -193,7 +193,8 @@ func newAudio(service *dbusutil.Service) *Audio {
 	a.settings.Reset(gsKeyInputVolume)
 	a.settings.Reset(gsKeyOutputVolume)
 	a.IncreaseVolume.Bind(a.settings, gsKeyVolumeIncrease)
-	a.ReduceNoise.Bind(a.settings, gsKeyReduceNoise)
+	a.ReduceNoise = false
+	a.emitPropChangedReduceNoise(a.ReduceNoise)
 	a.headphoneUnplugAutoPause = a.settings.GetBoolean(gsKeyHeadphoneUnplugAutoPause)
 	if a.IncreaseVolume.Get() {
 		a.MaxUIVolume = increaseMaxVolume
@@ -201,7 +202,6 @@ func newAudio(service *dbusutil.Service) *Audio {
 		a.MaxUIVolume = normalMaxVolume
 	}
 	gMaxUIVolume = a.MaxUIVolume
-	a.listenGSettingReduceNoiseChanged()
 	a.listenGSettingVolumeIncreaseChanged()
 	a.sessionSigLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
 	a.syncConfig = dsync.NewConfig("audio", &syncConfig{a: a},
@@ -521,11 +521,6 @@ func (a *Audio) init() error {
 	a.fixActivePortNotAvailable()
 	a.moveSinkInputsToDefaultSink()
 
-	err = a.setReduceNoise(a.ReduceNoise.Get())
-	if err != nil {
-		logger.Warning("set reduce noise fail:", err)
-	}
-
 	// 蓝牙支持的模式
 	a.setPropBluetoothAudioModeOpts([]string{"a2dp", "headset"})
 
@@ -797,12 +792,15 @@ func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, bus
 }
 
 func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
-	if a.ReduceNoise.Get() {
+	logger.Debugf("set port %d %s", cardId, portName)
+	if a.ReduceNoise {
 		// 切端口时要关闭降噪，但是设置属性会触发回调
 		// 导致此关闭写入到配置文件中
 		// 由于进行了端口切换，此时写配置文件时写的是新端口的配置
 		// 属性交给配置恢复的流程处理改写
 		a.setReduceNoise(false)
+		a.ReduceNoise = false
+		a.emitPropChangedReduceNoise(a.ReduceNoise)
 	}
 	a.portLocker.Lock()
 	defer a.portLocker.Unlock()
@@ -997,11 +995,19 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 
 	// 不要在降噪通道上重复开启降噪
 	if isPhyDev {
-		a.ReduceNoise.Set(portConfig.ReduceNoise)
 		logger.Debugf("physical source, set reduce noise %v", portConfig.ReduceNoise)
-	} else if !portConfig.ReduceNoise {
-		a.ReduceNoise.Set(portConfig.ReduceNoise)
+		err := a.setReduceNoise(portConfig.ReduceNoise)
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			a.ReduceNoise = portConfig.ReduceNoise
+			a.emitPropChangedReduceNoise(a.ReduceNoise)
+		}
+
+	} else {
 		logger.Debugf("reduce noise source, set reduce noise %v", portConfig.ReduceNoise)
+		a.ReduceNoise = portConfig.ReduceNoise
+		a.emitPropChangedReduceNoise(a.ReduceNoise)
 	}
 
 	if !portConfig.Enabled {
@@ -1121,22 +1127,25 @@ func (a *Audio) updateDefaultSource(sourceName string) {
 		return
 	}
 	logger.Debugf("updateDefaultSource #%d %s", sourceInfo.Index, sourceName)
-	a.mu.Lock()
 
+	a.mu.Lock()
 	source, ok := a.sources[sourceInfo.Index]
+	a.mu.Unlock()
 	if !ok {
 		// a.sources 是缓存的 source 信息，未查到 source 信息，需要重新通过 pulseaudio 查询 source 信息
 		source = a.updateSources(sourceInfo.Index)
 		if source == nil {
-			a.mu.Unlock()
 			logger.Warningf("not found source #%d", sourceInfo.Index)
 			a.setPropDefaultSource("/")
 			return
 		}
 	}
+
+	a.mu.Lock()
 	a.defaultSource = source
-	defaultSourcePath := source.getPath()
 	a.mu.Unlock()
+
+	defaultSourcePath := source.getPath()
 
 	a.PropsMu.Lock()
 	a.setPropDefaultSource(defaultSourcePath)
