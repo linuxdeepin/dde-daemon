@@ -203,7 +203,7 @@ func (a *Audio) autoSwitchPort() {
 				a.outputAutoSwitchCount = 0
 			}
 			// 切换次数超出限制，停止自动切换
-			if a.outputAutoSwitchCount < 10 {
+			if a.outputAutoSwitchCount < a.outputAutoSwitchCountMax {
 				logger.Debugf("output port auto switch to %s %s ", cardName, portName)
 				card, err := a.cards.getByName(cardName)
 				if err == nil {
