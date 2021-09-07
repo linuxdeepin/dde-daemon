@@ -634,22 +634,17 @@ func (psp *powerSavePlan) HandleIdleOn() {
 	logger.Info("HandleIdleOn")
 
 	idleTime := psp.metaTasks.min()
-	xConn, err := x.NewConn()
-	if err == nil {
-		xDefaultScreen := xConn.GetDefaultScreen()
-		if xDefaultScreen != nil {
-			xInfo, err := xscreensaver.QueryInfo(xConn, x.Drawable(xDefaultScreen.Root)).Reply(xConn)
-			if err == nil {
-				idleTime = int32(xInfo.MsSinceUserInput / 1000)
-			} else {
-				logger.Warning(err)
-			}
+	xConn := psp.manager.helper.xConn
+	xDefaultScreen := xConn.GetDefaultScreen()
+	if xDefaultScreen != nil {
+		xInfo, err := xscreensaver.QueryInfo(xConn, x.Drawable(xDefaultScreen.Root)).Reply(xConn)
+		if err == nil {
+			idleTime = int32(xInfo.MsSinceUserInput / 1000)
 		} else {
-			logger.Warning("cannot get X11 default screen")
+			logger.Warning(err)
 		}
-		xConn.Close()
 	} else {
-		logger.Warning(err)
+		logger.Warning("cannot get X11 default screen")
 	}
 
 	logger.Debugf("idle time: %d ms", idleTime)
