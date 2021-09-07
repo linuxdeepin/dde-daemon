@@ -387,8 +387,24 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 		" screenBlackDelay=%vs, sleepDelay=%vs,hibernateDelay=%vs)",
 		screenSaverStartDelay, lockDelay, screenBlackDelay, sleepDelay, hibernateDelay)
 
-	tasks := make(metaTasks, 0, 4)
-	if screenSaverStartDelay > 0 {
+	// 按照优先级 休眠>待机=屏保>关闭显示器=自动锁屏
+	tasks := make(metaTasks, 0, 5)
+	if hibernateDelay > 0 {
+		tasks = append(tasks, metaTask{
+			name:  "hibernate",
+			delay: hibernateDelay,
+			fn:    psp.makeSystemHibernate,
+		})
+	}
+
+	if sleepDelay > 0 && canAddToTasks("sleep", sleepDelay, tasks) {
+		tasks = append(tasks, metaTask{
+			name:  "sleep",
+			delay: sleepDelay,
+			fn:    psp.makeSystemSleep,
+		})
+	}
+	if screenSaverStartDelay > 0 && canAddToTasks("screenSaverStart", screenSaverStartDelay, tasks) {
 		tasks = append(tasks, metaTask{
 			name:  "screenSaverStart",
 			delay: screenSaverStartDelay,
@@ -396,7 +412,7 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 		})
 	}
 
-	if lockDelay > 0 {
+	if lockDelay > 0 && canAddToTasks("lock", lockDelay, tasks) {
 		tasks = append(tasks, metaTask{
 			name:  "lock",
 			delay: lockDelay,
@@ -404,26 +420,11 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 		})
 	}
 
-	if screenBlackDelay > 0 {
+	if screenBlackDelay > 0 && canAddToTasks("screenBlack", screenBlackDelay, tasks) {
 		tasks = append(tasks, metaTask{
 			name:  "screenBlack",
 			delay: screenBlackDelay,
 			fn:    psp.screenBlack,
-		})
-	}
-
-	if sleepDelay > 0 {
-		tasks = append(tasks, metaTask{
-			name:  "sleep",
-			delay: sleepDelay,
-			fn:    psp.makeSystemSleep,
-		})
-	}
-	if hibernateDelay > 0 {
-		tasks = append(tasks, metaTask{
-			name:  "hibernate",
-			delay: hibernateDelay,
-			fn:    psp.makeSystemHibernate,
 		})
 	}
 
@@ -871,4 +872,48 @@ func (mb *multiBrightnessWithPsm) getReferenceBrightnessWhilePsmPercentChanged(k
 		}
 	}
 	return 0, fmt.Errorf("not find Monitor %s's Brightness", key)
+}
+
+// 判断休眠、待机、屏保、锁屏、关闭显示器等任务能否加入任务队列
+// 优先级为：休眠 > 待机=屏保 > 锁屏=关闭显示器
+func canAddToTasks(sType string, delay int32, tasks metaTasks) bool {
+	if len(tasks) == 0 {
+		return true
+	}
+
+	switch sType {
+	case "hibernate":
+		return true
+	case "sleep":
+		if delay < tasks.min() {
+			return true
+		} else {
+			return false
+		}
+	case "screenSaverStart":
+		if delay < tasks.min() {
+			return true
+		} else if delay == tasks.min() && tasks[len(tasks)-1].name == "sleep" {
+			return true
+		} else {
+			return false
+		}
+
+	case "lock":
+		if delay < tasks.min() {
+			return true
+		} else {
+			return false
+		}
+	case "screenBlack":
+		if delay < tasks.min() {
+			return true
+		} else if delay == tasks.min() && tasks[len(tasks)-1].name == "lock" {
+			return true
+		} else {
+			return false
+		}
+	default:
+		return false
+	}
 }
