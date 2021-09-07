@@ -510,7 +510,7 @@ func (psp *powerSavePlan) lock() {
 // 使系统进入休眠
 func (psp *powerSavePlan) makeSystemHibernate() {
 	logger.Info("Hibernate")
-	psp.manager.doHibernate()
+	psp.manager.doHibernateByFront()
 }
 
 // 降低显示器亮度，最终关闭显示器
