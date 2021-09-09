@@ -189,10 +189,6 @@ func notifyPassiveConnect(dev *device, pinCode string) error {
 	globalNotifyId = nid
 	globalNotifyMu.Unlock()
 
-	// to avoid to show more than one window and fix notification time out incorrect
-	// need to reset timer
-	globalTimerNotifier.timeout.Reset(notifyTimerDuration)
-
 	return nil
 }
 
@@ -202,7 +198,6 @@ var globalTimerNotifier *timerNotify
 // notify timer instance
 // use chan bool instead of timer, but in case to fit new requirements of future flexibly, we keep element timer
 type timerNotify struct {
-	timeout           *time.Timer
 	actionInvokedChan chan bool
 }
 
@@ -210,24 +205,15 @@ type timerNotify struct {
 func GetTimerNotifyInstance() *timerNotify {
 	// create a global timer notify object
 	timerNotifier := &timerNotify{
-		timeout:           time.NewTimer(notifyTimerDuration),
 		actionInvokedChan: make(chan bool),
 	}
-	timerNotifier.timeout.Stop()
 	return timerNotifier
 }
 
-// begin timer routine to monitor window click notification window or notification time out signal
+// begin timer routine to monitor window click notification window
 func beginTimerNotify(notifyTimer *timerNotify) {
 	for {
 		select {
-		case <-notifyTimer.timeout.C:
-			// monitor time out signal
-			logger.Info("user no response,close notify when time out")
-			err := globalNotifications.CloseNotification(0, globalNotifyId)
-			if err != nil {
-				logger.Warningf("time out close notify icon failed,err:%v", err)
-			}
 		case <-notifyTimer.actionInvokedChan:
 			// monitor click window signal
 			logger.Info("user click notify,close notify")
@@ -235,8 +221,6 @@ func beginTimerNotify(notifyTimer *timerNotify) {
 			if err != nil {
 				logger.Warningf("click event close notify icon failed,err:%v", err)
 			}
-			// if window is clicked, then stop timer
-			notifyTimer.timeout.Stop()
 		}
 	}
 }
