@@ -109,7 +109,7 @@ var defaultSysActionCmdMap = map[string]string{
 	"turn-off-screen":       "sleep 0.5; xset dpms force off",
 	"notification-center":   "dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle",
 	"clipboard":             "dbus-send --print-reply --dest=com.deepin.dde.Clipboard /com/deepin/dde/Clipboard com.deepin.dde.Clipboard.Toggle",
-	"global-search":         "", // TODO: 等文管给接口
+	"global-search":         "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
 }
 
 type actionHandler struct {

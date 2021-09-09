@@ -124,6 +124,10 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/etc/lightdm/deepin/
 	cp -f misc/xsettings/xsettingsd.conf ${DESTDIR}/etc/lightdm/deepin/
 
+	mkdir -pv ${DESTDIR}${PREFIX}/libexec/dde-daemon/
+	cp -r misc/libexec/dde-daemon/* ${DESTDIR}${PREFIX}/libexec/dde-daemon/
+
+
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
 	cp -r misc/data ${DESTDIR}${PREFIX}/share/dde/
