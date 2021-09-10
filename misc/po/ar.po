@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-27 09:53+0800\n"
+"POT-Creation-Date: 2021-09-10 17:21+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/linuxdeepin/teams/3617/ar/)\n"
@@ -92,12 +92,12 @@ msgstr "إعدادات تحجيم العرض"
 msgid "Display scaling"
 msgstr "عرض الشاشة"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "فتح"
 
@@ -157,7 +157,8 @@ msgstr "الوصول الى الرسائل"
 msgid "Message notification"
 msgstr "إشعار الرسائل"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
+#: ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "إلغاء"
 
@@ -185,8 +186,8 @@ msgstr ""
 msgid "You have cancelled the file transfer"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth/utils_notify.go:124
 msgid "Bluetooth connection failed"
 msgstr "فشل الاتصال بالبلوتوث"
 
@@ -210,33 +211,33 @@ msgstr ""
 msgid "Receiving %q timed out"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:98
+#: ../../bluetooth/utils_notify.go:104
 msgid "Connect %q successfully"
 msgstr "توصيل q% تم بنجاح"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q غير متصل"
 
-#: ../../bluetooth/utils_notify.go:108
+#: ../../bluetooth/utils_notify.go:114
 msgid "Make sure %q is turned on and in range"
 msgstr "تأكد أن %q مشغل و بالمدى نفسه"
 
-#: ../../bluetooth/utils_notify.go:117
+#: ../../bluetooth/utils_notify.go:123
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:157
 msgid "Click here to connect to %q"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:158
 msgid "Add Bluetooth devices"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:168
 msgid "Pair"
 msgstr ""
 
@@ -403,7 +404,7 @@ msgid "Translation"
 msgstr "الترجمة"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global Search"
+msgid "Global search"
 msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
@@ -570,7 +571,7 @@ msgstr "تمت إزالة %q بنجاح"
 msgid "Failed to uninstall %q"
 msgstr "تعذر إلغاء تثبيت %q "
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:339
 msgid "Wired connection"
 msgstr ""
 

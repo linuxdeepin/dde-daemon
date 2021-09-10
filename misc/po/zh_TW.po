@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-27 09:53+0800\n"
+"POT-Creation-Date: 2021-09-10 17:21+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
@@ -82,12 +82,12 @@ msgstr "設定螢幕縮放率"
 msgid "Display scaling"
 msgstr "畫面縮放"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "開放"
 
@@ -147,7 +147,8 @@ msgstr "存取訊息"
 msgid "Message notification"
 msgstr "訊息通知"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
+#: ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "取消"
 
@@ -175,8 +176,8 @@ msgstr "文件接收中止"
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth/utils_notify.go:124
 msgid "Bluetooth connection failed"
 msgstr "藍牙連線失敗"
 
@@ -200,33 +201,33 @@ msgstr "您收到%q發送給您的文件，是否接收？"
 msgid "Receiving %q timed out"
 msgstr "接收%q超時"
 
-#: ../../bluetooth/utils_notify.go:98
+#: ../../bluetooth/utils_notify.go:104
 msgid "Connect %q successfully"
 msgstr "成功連線至 %q"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "已斷開到 %q 的連線"
 
-#: ../../bluetooth/utils_notify.go:108
+#: ../../bluetooth/utils_notify.go:114
 msgid "Make sure %q is turned on and in range"
 msgstr "確認 %q 已開啟且在範圍內"
 
-#: ../../bluetooth/utils_notify.go:117
+#: ../../bluetooth/utils_notify.go:123
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr "%q無法與%q再連接，請嘗試忽略此裝置並再次配對。"
 
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:157
 msgid "Click here to connect to %q"
 msgstr "點擊以設定添加%q"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:158
 msgid "Add Bluetooth devices"
 msgstr "添加藍牙裝置"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:168
 msgid "Pair"
 msgstr "配對"
 
@@ -286,7 +287,7 @@ msgstr "全部關閉"
 
 #: ../../dock/app_entry_menu.go:125
 msgid "Force Quit"
-msgstr "強制離開"
+msgstr "強制退出"
 
 #: ../../dock/app_entry_menu.go:135
 msgid "Dock"
@@ -393,7 +394,7 @@ msgid "Translation"
 msgstr "文字翻譯"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global Search"
+msgid "Global search"
 msgstr "全域搜尋"
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
@@ -559,7 +560,7 @@ msgstr "%q 解除安裝成功"
 msgid "Failed to uninstall %q"
 msgstr "%q 解除安裝失敗"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:339
 msgid "Wired connection"
 msgstr "有線連接"
 

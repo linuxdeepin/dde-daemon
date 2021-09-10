@@ -5,17 +5,17 @@
 # 
 # Translators:
 # inashdeen <inashdeen@gmail.com>, 2020
-# abuyop <abuyop@gmail.com>, 2021
 # Cindy0514, 2021
+# abuyop <abuyop@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-27 09:53+0800\n"
+"POT-Creation-Date: 2021-09-10 17:21+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"Last-Translator: abuyop <abuyop@gmail.com>, 2021\n"
 "Language-Team: Malay (https://www.transifex.com/linuxdeepin/teams/3617/ms/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,12 +79,12 @@ msgstr "Menetapkan penskalaan paparan"
 msgid "Display scaling"
 msgstr "Penskalaan paparan"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s telah dilumpuhkan"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "Buka"
 
@@ -144,13 +144,14 @@ msgstr "Capaian mesej"
 msgid "Message notification"
 msgstr "Pemberitahuan mesej"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
+#: ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "Batal"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Menerima %[1]q daripada %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -172,8 +173,8 @@ msgstr "Berhenti Menerima Fail"
 msgid "You have cancelled the file transfer"
 msgstr "Anda telah membatalkan pemindahan fail"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth/utils_notify.go:124
 msgid "Bluetooth connection failed"
 msgstr "Sambungan Bluetooth telah gagal"
 
@@ -197,33 +198,35 @@ msgstr "%q mahu menghantar fail kepada anda. Mahu terima?"
 msgid "Receiving %q timed out"
 msgstr "Penerimaan %q telah tamat masa"
 
-#: ../../bluetooth/utils_notify.go:98
+#: ../../bluetooth/utils_notify.go:104
 msgid "Connect %q successfully"
 msgstr "Sambungan %q berjaya"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q terputus"
 
-#: ../../bluetooth/utils_notify.go:108
+#: ../../bluetooth/utils_notify.go:114
 msgid "Make sure %q is turned on and in range"
 msgstr "Pastikan %q dihidupkan dan berada dalam julat"
 
-#: ../../bluetooth/utils_notify.go:117
+#: ../../bluetooth/utils_notify.go:123
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%q tidak lagi bersambung dengan %q. Cuba lupakan peranti ini dan padankan "
+"sekali lagi."
 
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:157
 msgid "Click here to connect to %q"
 msgstr "Klik di sini untuk bersambung dengan %q"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:158
 msgid "Add Bluetooth devices"
 msgstr "Tambah peranti Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:168
 msgid "Pair"
 msgstr "Pasangkan"
 
@@ -390,7 +393,7 @@ msgid "Translation"
 msgstr "Terjemahan"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global Search"
+msgid "Global search"
 msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
@@ -560,9 +563,9 @@ msgstr "%q berjaya dibuang"
 msgid "Failed to uninstall %q"
 msgstr "Gagal menyahpasang %q"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:339
 msgid "Wired connection"
-msgstr ""
+msgstr "Sambungan berwayar"
 
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
@@ -991,7 +994,7 @@ msgstr "Kata laluan diperlukan untuk bersambung dengan %q"
 
 #: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "Rangkaian WLAN 802.11 %q tidak ditemui"
 
 #: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"

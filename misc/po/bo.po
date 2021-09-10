@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-27 09:53+0800\n"
+"POT-Creation-Date: 2021-09-10 17:21+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
@@ -79,12 +79,12 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་སྒྲ
 msgid "Display scaling"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%sབཀག་ཟིན།"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
 msgid "Open"
 msgstr "ཁ་ཕྱེ་བ།"
 
@@ -144,7 +144,8 @@ msgstr "བརྡ་འཕྲིན་ལྟ་སྤྱོད།"
 msgid "Message notification"
 msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
+#: ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "ཕྱིར་འཐེན།"
 
@@ -172,8 +173,8 @@ msgstr "ཡིག་ཆ་ལེན་མཚམས་བཞག་པ།"
 msgid "You have cancelled the file transfer"
 msgstr "ཁྱེད་ཀྱིས་ཡིག་ཆ་ལེན་རྒྱུ་རྩིས་མེད་དུ་བཏང་བ།"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth/utils_notify.go:124
 msgid "Bluetooth connection failed"
 msgstr "སོ་སྔོན་འབྲེལ་མཐུད་ཆད་པ།"
 
@@ -197,35 +198,35 @@ msgstr "ཁྱེད་ལ་%qཀྱིས་བསྐུར་བའི་ཡ�
 msgid "Receiving %q timed out"
 msgstr "%qལེན་པ་དུས་ཚོད་ལས་བརྒལ་བ།"
 
-#: ../../bluetooth/utils_notify.go:98
+#: ../../bluetooth/utils_notify.go:104
 msgid "Connect %q successfully"
 msgstr "%qའབྲེལ་ཐུབ་པ།"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%qབཅད་ཟིན།"
 
-#: ../../bluetooth/utils_notify.go:108
+#: ../../bluetooth/utils_notify.go:114
 msgid "Make sure %q is turned on and in range"
 msgstr "%qཁ་ཕྱེ་བ་མ་ཟད་འཕྲིན་སྐྱེལ་གྱི་ཁྱབ་ཁོངས་ནང་ཡོད་མིན་གཏན་ཁེལ་བྱེད་རོགས།"
 
-#: ../../bluetooth/utils_notify.go:117
+#: ../../bluetooth/utils_notify.go:123
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 "%qའདི་%qདང་ཡང་བསྐྱར་སྦྲེལ་ཐབས་བྲལ། "
 "སྒྲིག་ཆས་འདི་ཉིད་སྣང་མེད་དུ་བཏང་ནས་ཡང་བསྐྱར་ཆ་སྡེབ་བྱེད།"
 
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:157
 msgid "Click here to connect to %q"
 msgstr "མནན་ནས་སྒྲིག་འགོད་བྱས་ཏེ་%qསྣོན་པ།"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:158
 msgid "Add Bluetooth devices"
 msgstr "སོ་སྔོན་སྒྲིག་ཆས་སྣོན་པ།"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:168
 msgid "Pair"
 msgstr "ཆ་སྒྲིག་པ།"
 
@@ -392,7 +393,7 @@ msgid "Translation"
 msgstr "ཡིག་ཆ་ཡིག་སྒྱུར།"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global Search"
+msgid "Global search"
 msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
@@ -562,7 +563,7 @@ msgstr " %qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:339
 msgid "Wired connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
