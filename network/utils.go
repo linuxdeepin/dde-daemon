@@ -304,7 +304,7 @@ func (m *Manager) isConnectivityByHttp() bool {
 
 	urls := gs.GetStrv("network-checker-urls")
 	if len(urls) == 0 {
-		urls = append(urls, "https://www.chinauos.com")
+		urls = append(urls, "http://detect.uniontech.com/")
 	}
 	for _, url := range urls {
 		if resp, err := client.Head(url); err == nil {
