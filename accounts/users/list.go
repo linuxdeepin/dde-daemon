@@ -93,8 +93,9 @@ func GetHumanUserInfos() (UserInfos, error) {
 }
 
 func IsHumanUdcpUserUid(uid uint32) bool {
-	userInfo := UserInfo{Uid: strconv.FormatUint(uint64(uid), 10)}
-	return userInfo.isHumanViaLoginDefs(userFileLoginDefs)
+	//userInfo := UserInfo{Uid: strconv.FormatUint(uint64(uid), 10)}
+	//return userInfo.isHumanViaLoginDefs(userFileLoginDefs)
+	return uid > 10000
 }
 
 func GetUserInfoByName(name string) (UserInfo, error) {

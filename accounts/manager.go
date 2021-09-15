@@ -182,26 +182,22 @@ func NewManager(service *dbusutil.Service) *Manager {
 			return
 		}
 
-		if users.IsHumanUdcpUserUid(userInfo.UID) {
-			if userInfo.UID > 10000 {
+		if IsDomainUserID(strconv.FormatUint(uint64(userInfo.UID), 10)) {
+			err = m.addDomainUser(userInfo.UID)
+			if err != nil {
+				logger.Warningf("add login session failed:%v", err)
+			}
+			return
+		} else if users.IsHumanUdcpUserUid(userInfo.UID) {
+			if userInfo.UID < 10000 {
 				logger.Warning("userInfo.UID < 10000", userInfo.UID)
 				return
 			}
-
 			err = m.addUdcpUser(userInfo.UID)
-		} else if IsDomainUserID(strconv.FormatUint(uint64(userInfo.UID), 10)) {
-			err = m.addDomainUser(userInfo.UID)
+			if err != nil {
+				logger.Warningf("add login session failed:%v", err)
+			}
 		}
-		if !users.IsHumanUdcpUserUid(userInfo.UID) {
-			return
-		}
-
-		if err != nil {
-			logger.Warningf("add login session failed:%v", err)
-		}
-
-		return
-
 	})
 
 	return m
@@ -339,7 +335,6 @@ func (m *Manager) exportUsers() {
 func (m *Manager) exportUserByUid(uId string) error {
 	var err error
 	var u *User
-	var userGroups []string
 	var domainUserGroups []string
 	userPath := userDBusPathPrefix + uId
 	id, _ := strconv.Atoi(uId)
@@ -366,23 +361,27 @@ func (m *Manager) exportUserByUid(uId string) error {
 		m.saveDomainUserConfig(m.userConfig)
 		m.domainUserMapMu.Unlock()
 
-	} else if id > 10000 && m.isUdcpUserID(uId) {
+	} else if m.isUdcpUserID(uId) {
 		if users.ExistPwUid(uint32(id)) != 0 {
 			return errors.New("No such user id")
 		}
-		userGroups, err = m.udcpCache.GetUserGroups(0, users.GetPwName(uint32(id)))
+		userGroups, err := m.udcpCache.GetUserGroups(0, users.GetPwName(uint32(id)))
 		if err != nil {
 			logger.Errorf("Udcp cache getUserGroups failed: %v", err)
 			return err
 		}
 
 		u, err = NewUdcpUser(uint32(id), m.service, userGroups, true)
+
+		if err != nil {
+			return err
+		}
+
 	} else {
 		u, err = NewUser(userPath, m.service)
-	}
-
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
 	}
 
 	m.usersMapMu.Lock()
