@@ -25,26 +25,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_GetAvailableGovernors(t *testing.T) {
-	expect := map[string]bool{
-		"performance": true,
-		"powersave":   true,
-	}
-
-	cpu := CpuHandler{}
-	_, err := cpu.GetAvailableGovernors(false)
-	assert.Nil(t, err)
-
-	cpu.path = "./testdata1"
-	_, err = cpu.GetAvailableGovernors(true)
-	assert.NotNil(t, err)
-
-	cpu.path = "./testdata"
-	availableGovernors, err := cpu.GetAvailableGovernors(true)
-	assert.Equal(t, expect["performance"], availableGovernors["performance"])
-	assert.Equal(t, expect["powersave"], availableGovernors["powersave"])
-}
-
 func Test_GetGovernor(t *testing.T) {
 	expectGovernor := "performance"
 	cpu := CpuHandler{}
@@ -63,14 +43,8 @@ func Test_GetGovernor(t *testing.T) {
 
 func Test_SetGovernor(t *testing.T) {
 	cpu := CpuHandler{}
-	err := cpu.SetGovernor("scaling_governor")
-	assert.NotNil(t, err)
-
-	cpu.availableGovernors = map[string]bool{
-		"scaling_governor": true,
-	}
 	cpu.path = "./testdata/setGovernor"
-	err = cpu.SetGovernor("scaling_governor")
+	err := cpu.SetGovernor("scaling_governor")
 	assert.Nil(t, err)
 
 	cpu.path = "./testdata/setGovernor1"
@@ -78,73 +52,19 @@ func Test_SetGovernor(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func Test_GetAvailableGovernors1(t *testing.T) {
-	cpus := CpuHandlers{}
-	cpus.GetAvailableGovernors()
-
-	expect := map[string]bool{
-		"performance": true,
-		"powersave":   true,
-	}
-
-	availableGovernors1 := map[string]bool{
-		"performance": true,
-		"powersave":   true,
-		"invalid":     false,
-	}
-
-	availableGovernors2 := map[string]bool{
-		"performance": true,
-		"powersave":   true,
-	}
-
-	cpu1 := CpuHandler{
-		path:               "./testdata",
-		availableGovernors: availableGovernors1,
-		governor:           "scaling_governor",
-	}
-
-	cpu2 := CpuHandler{
-		path:               "./testdata",
-		availableGovernors: availableGovernors2,
-		governor:           "scaling_governor",
-	}
-	cpus = CpuHandlers{
-		cpu1,
-		cpu2,
-	}
-	availableGovernors, err := cpus.GetAvailableGovernors()
-	assert.Nil(t, err)
-	assert.Equal(t, expect["performance"], availableGovernors["performance"])
-	assert.Equal(t, expect["powersave"], availableGovernors["powersave"])
-}
-
 func Test_GetGovernor1(t *testing.T) {
 	cpus := CpuHandlers{}
 	cpus.GetGovernor()
 
 	expectGovernor := "performance"
-	availableGovernors1 := map[string]bool{
-		"performance": true,
-		"powersave":   true,
-		"invalid":     false,
-	}
-
-	availableGovernors2 := map[string]bool{
-		"performance": true,
-		"powersave":   true,
-	}
-
 	cpu1 := CpuHandler{
-		path:               "./testdata",
-		availableGovernors: availableGovernors1,
-		governor:           "scaling_governor",
+		path:     "./testdata",
+		governor: "scaling_governor",
 	}
 
 	cpu2 := CpuHandler{
-		path:               "./testdata",
-		availableGovernors: availableGovernors2,
-		governor:           "scaling_governor",
+		path:     "./testdata",
+		governor: "scaling_governor",
 	}
 	cpus = CpuHandlers{
 		cpu1,
@@ -156,9 +76,8 @@ func Test_GetGovernor1(t *testing.T) {
 	assert.Nil(t, err)
 
 	cpu2 = CpuHandler{
-		path:               "./setGovernor2",
-		availableGovernors: availableGovernors2,
-		governor:           "scaling_governor",
+		path:     "./setGovernor2",
+		governor: "scaling_governor",
 	}
 	cpus = CpuHandlers{
 		cpu1,
@@ -169,27 +88,14 @@ func Test_GetGovernor1(t *testing.T) {
 }
 
 func Test_SetGovernor1(t *testing.T) {
-	availableGovernors1 := map[string]bool{
-		"performance": true,
-		"powersave":   true,
-		"invalid":     false,
-	}
-
-	availableGovernors2 := map[string]bool{
-		"performance": true,
-		"powersave":   true,
-	}
-
 	cpu1 := CpuHandler{
-		path:               "./testdata/setGovernor",
-		availableGovernors: availableGovernors1,
-		governor:           "scaling_governor",
+		path:     "./testdata/setGovernor",
+		governor: "scaling_governor",
 	}
 
 	cpu2 := CpuHandler{
-		path:               "./testdata/setGovernor",
-		availableGovernors: availableGovernors2,
-		governor:           "scaling_governor",
+		path:     "./testdata/setGovernor",
+		governor: "scaling_governor",
 	}
 	cpus := CpuHandlers{
 		cpu1,
@@ -200,7 +106,7 @@ func Test_SetGovernor1(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = cpus.SetGovernor("scaling_governor")
-	assert.NotNil(t, err)
+	assert.Nil(t, err)
 }
 
 func Test_IsBoostFileExist(t *testing.T) {

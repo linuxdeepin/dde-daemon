@@ -37,9 +37,8 @@ const (
 )
 
 type CpuHandler struct {
-	path               string
-	availableGovernors map[string]bool
-	governor           string
+	path     string
+	governor string
 }
 
 type CpuHandlers []CpuHandler
@@ -63,10 +62,6 @@ func NewCpuHandlers() *CpuHandlers {
 			cpu := CpuHandler{
 				path: freqPath,
 			}
-			_, err = cpu.GetAvailableGovernors(true)
-			if err != nil {
-				logger.Warning(err)
-			}
 			_, err = cpu.GetGovernor(true)
 			if err != nil {
 				logger.Warning(err)
@@ -79,25 +74,6 @@ func NewCpuHandlers() *CpuHandlers {
 
 	logger.Debugf("total %d cpus", len(cpus))
 	return &cpus
-}
-
-func (cpu *CpuHandler) GetAvailableGovernors(force bool) (map[string]bool, error) {
-	if force {
-		governors := make(map[string]bool)
-		data, err := ioutil.ReadFile(filepath.Join(cpu.path, globalAvailableGovernorFileName))
-		if err != nil {
-			logger.Warning(err)
-			return governors, err
-		}
-
-		for _, g := range strings.Split(string(data), " ") {
-			g = strings.TrimSpace(g)
-			governors[g] = true
-		}
-		cpu.availableGovernors = governors
-	}
-
-	return cpu.availableGovernors, nil
 }
 
 func (cpu *CpuHandler) GetGovernor(force bool) (string, error) {
@@ -114,40 +90,13 @@ func (cpu *CpuHandler) GetGovernor(force bool) (string, error) {
 }
 
 func (cpu *CpuHandler) SetGovernor(governor string) error {
-	_, ok := cpu.availableGovernors[governor]
-	if ok {
-		err := ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
-		if err != nil {
-			logger.Warning(err)
-			return err
-		}
-		return nil
-	} else {
-		logger.Warningf("governor %q is unavailable.", governor)
-		return fmt.Errorf("governor %q is unavailable.", governor)
-	}
-}
 
-func (cpus *CpuHandlers) GetAvailableGovernors() (map[string]bool, error) {
-	if len(*cpus) < 1 {
-		return nil, fmt.Errorf("cannot find cpu files")
-	}
+	err := ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
+	if err != nil {
+		logger.Warning(err)
 
-	// 理论上应该都是一样的，但是这里求交集
-	availableGovernors, _ := (*cpus)[0].GetAvailableGovernors(false)
-	for i := 1; i < len(*cpus); i++ {
-		buff := make(map[string]bool)
-		available, _ := (*cpus)[i].GetAvailableGovernors(false)
-		for key := range availableGovernors {
-			_, ok := available[key]
-			if ok {
-				buff[key] = true
-			}
-		}
-		availableGovernors = buff
 	}
-
-	return availableGovernors, nil
+	return err
 }
 
 func (cpus *CpuHandlers) GetGovernor() (string, error) {
