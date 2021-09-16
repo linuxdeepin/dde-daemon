@@ -473,18 +473,18 @@ func (m *Manager) doSetMode(mode string) error {
 	switch mode {
 	case "balance": // governor=performance boost=false
 		m.setPropPowerSavingModeEnabled(false)
-		if m.isCpuGovernorSupported("performance") {
-			err = m.doSetCpuGovernor("performance")
-		}
-		if err == nil && m.IsHighPerformanceSupported {
+
+		m.doSetCpuGovernor("performance")
+
+		if m.IsHighPerformanceSupported {
 			err = m.doSetCpuBoost(false)
 		}
 	case "powersave": // governor=powersave boost=false
 		m.setPropPowerSavingModeEnabled(true)
-		if m.isCpuGovernorSupported("powersave") {
-			err = m.doSetCpuGovernor("powersave")
-		}
-		if err == nil && m.IsHighPerformanceSupported {
+
+		m.doSetCpuGovernor("powersave")
+
+		if m.IsHighPerformanceSupported {
 			err = m.doSetCpuBoost(false)
 		}
 	case "performance": // governor=performance boost=true
@@ -493,12 +493,10 @@ func (m *Manager) doSetMode(mode string) error {
 			break
 		}
 		m.setPropPowerSavingModeEnabled(false)
-		if m.isCpuGovernorSupported("performance") {
-			err = m.doSetCpuGovernor("performance")
-		}
-		if err == nil {
-			err = m.doSetCpuBoost(true)
-		}
+
+		m.doSetCpuGovernor("performance")
+
+		err = m.doSetCpuBoost(true)
 
 	default:
 		err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
@@ -509,27 +507,6 @@ func (m *Manager) doSetMode(mode string) error {
 	}
 
 	return err
-}
-
-func (m *Manager) isCpuGovernorSupported(governor string) bool {
-	availableGovernors, err := m.cpus.GetAvailableGovernors()
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	if availableGovernors == nil {
-		logger.Warning("no available governor")
-		return false
-	}
-
-	_, ok := availableGovernors[governor]
-	if !ok {
-		logger.Warningf("%q governor is not available", governor)
-		return false
-	}
-
-	return true
 }
 
 func (m *Manager) doSetCpuBoost(enabled bool) error {
