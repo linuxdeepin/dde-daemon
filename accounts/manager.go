@@ -363,7 +363,7 @@ func (m *Manager) exportUserByUid(uId string) error {
 
 	} else if m.isUdcpUserID(uId) {
 		if users.ExistPwUid(uint32(id)) != 0 {
-			return errors.New("No such user id")
+			return errors.New("no such user id")
 		}
 		userGroups, err := m.udcpCache.GetUserGroups(0, users.GetPwName(uint32(id)))
 		if err != nil {
