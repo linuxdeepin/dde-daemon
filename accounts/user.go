@@ -385,7 +385,7 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*User, error) {
 	var err error
 	if users.ExistPwUid(usrId) != 0 {
-		return nil, errors.New("No such user id")
+		return nil, errors.New("no such user id")
 	}
 
 	var u = &User{

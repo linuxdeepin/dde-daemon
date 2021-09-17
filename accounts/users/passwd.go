@@ -24,6 +24,7 @@ package users
 #cgo LDFLAGS: -lcrypt
 
 #include <stdlib.h>
+#include <shadow.h>
 #include "passwd.h"
 */
 import "C"
@@ -78,6 +79,29 @@ func GetPwDir(uid uint32) string {
 
 func GetPwShell(uid uint32) string {
 	return C.GoString(C.get_pw_shell(C.uint(uid)))
+}
+
+type originShadowInfo struct {
+	Name       string
+	LastChange int
+	MaxDays    int
+	ShadowPwdp string // password status
+}
+
+func getSpwd(username string) (*originShadowInfo, error) {
+	cname := C.CString(username)
+	defer C.free(unsafe.Pointer(cname))
+	spwd := C.getspnam(cname)
+	if spwd == nil {
+		return &originShadowInfo{}, fmt.Errorf("no such user name: %v", username)
+	}
+	sInfo := originShadowInfo{
+		Name:       C.GoString(spwd.sp_namp),
+		LastChange: int(spwd.sp_lstchg),
+		MaxDays:    int(spwd.sp_max),
+		ShadowPwdp: C.GoString(spwd.sp_pwdp),
+	}
+	return &sInfo, nil
 }
 
 // password: has been crypt
