@@ -162,7 +162,7 @@ func (u *User) SetPassword(sender dbus.Sender, password string) *dbus.Error {
 		}
 		count--
 		if count == 0 {
-			return dbusutil.ToError(errors.New("shadow file error"))
+			return dbusutil.ToError(err)
 		}
 		time.Sleep(time.Second)
 	}
