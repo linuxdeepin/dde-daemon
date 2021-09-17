@@ -20,25 +20,11 @@
 package users
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_GetShadowInfo(t *testing.T) {
-	shadowCache = newCache("testdata/shadow", shadowCacheProvider)
-	testShadowInfo := &ShadowInfo{"test1", 16435, 99999, PasswordStatusUsable}
-
-	shadowInfo, err := GetShadowInfo("test1")
-
-	assert.Nil(t, err)
-
-	bTrue := reflect.DeepEqual(testShadowInfo, shadowInfo)
-
-	assert.Equal(t, bTrue, true)
-
-}
 func Test_getGroupInfoWithCache(t *testing.T) {
 	groupFileInfo := GroupInfo{Name: "audio", Gid: "29", Users: []string{"pulse", "wen"}}
 	groupFileInfoMap, err := getGroupInfoWithCache("testdata/group")
