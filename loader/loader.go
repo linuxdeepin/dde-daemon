@@ -176,7 +176,7 @@ func (l *Loader) EnableModules(enablingModules []string, disableModules []string
 			endTime = time.Now()
 			duration = endTime.Sub(startTime)
 			if err != nil {
-				l.log.Fatalf("enable module %s failed: %s, cost %s", name, err, duration)
+				l.log.Infof("enable module %s failed: %s, cost %s", name, err, duration)
 			} else {
 				l.log.Infof("enable module %s done cost %s", name, duration)
 			}
