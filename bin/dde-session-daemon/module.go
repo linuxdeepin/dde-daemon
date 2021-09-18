@@ -32,11 +32,9 @@ import (
 	_ "pkg.deepin.io/dde/daemon/bluetooth"
 	_ "pkg.deepin.io/dde/daemon/screenedge"
 
-	//_ "pkg.deepin.io/dde/daemon/calendar"
 	_ "pkg.deepin.io/dde/daemon/mime"
 
 	// depends: network
-	_ "pkg.deepin.io/dde/daemon/miracast"
 	_ "pkg.deepin.io/dde/daemon/systeminfo"
 
 	_ "pkg.deepin.io/dde/daemon/calltrace"
@@ -51,7 +49,6 @@ import (
 	_ "pkg.deepin.io/dde/daemon/lastore"
 	_ "pkg.deepin.io/dde/daemon/launcher"
 	_ "pkg.deepin.io/dde/daemon/mime"
-	_ "pkg.deepin.io/dde/daemon/miracast"
 	_ "pkg.deepin.io/dde/daemon/network"
 	_ "pkg.deepin.io/dde/daemon/screenedge"
 	_ "pkg.deepin.io/dde/daemon/screensaver"
