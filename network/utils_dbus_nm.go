@@ -685,6 +685,15 @@ func nmGetConnectionId(cpath dbus.ObjectPath) (id string) {
 	return
 }
 
+func nmGetConnectionVpnType(cpath dbus.ObjectPath) (service string) {
+	data, err := nmGetConnectionData(cpath)
+	if err != nil {
+		return
+	}
+	service = getSettingVpnServiceType(data)
+	return
+}
+
 func nmGetConnectionUuid(cpath dbus.ObjectPath) (uuid string, err error) {
 	data, err := nmGetConnectionData(cpath)
 	if err != nil {

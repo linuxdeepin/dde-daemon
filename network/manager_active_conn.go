@@ -32,6 +32,7 @@ type activeConnection struct {
 	path      dbus.ObjectPath
 	typ       string
 	vpnFailed bool
+	vpnType   string
 
 	Devices        []dbus.ObjectPath
 	Id             string
@@ -278,6 +279,7 @@ func (m *Manager) newActiveConnection(path dbus.ObjectPath) (aconn *activeConnec
 	aconn.Vpn, _ = nmAConn.Vpn().Get(0)
 	if cpath, err := nmGetConnectionByUuid(aconn.Uuid); err == nil {
 		aconn.Id = nmGetConnectionId(cpath)
+		aconn.vpnType = nmGetConnectionVpnType(cpath)
 	}
 	aconn.SpecificObject, _ = nmAConn.SpecificObject().Get(0)
 

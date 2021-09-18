@@ -21,6 +21,7 @@ package network
 
 import (
 	"net/http"
+	"os"
 	"os/exec"
 	"sync"
 	"time"
@@ -39,6 +40,7 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	. "pkg.deepin.io/lib/gettext"
+	"pkg.deepin.io/lib/keyfile"
 	"pkg.deepin.io/lib/strv"
 )
 
@@ -116,6 +118,9 @@ type Manager struct {
 	checkAPStrengthTimer    *time.Timer
 	protalAuthBrowserOpened bool // PORTAL认证中状态
 
+	// to identify if vpn support multi connections
+	multiVpn map[string]bool
+
 	//nolint
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {
@@ -158,6 +163,8 @@ func (m *Manager) init() {
 	if err != nil {
 		return
 	}
+
+	m.multiVpn = make(map[string]bool)
 
 	sessionBus := m.service.Conn()
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
@@ -218,6 +225,7 @@ func (m *Manager) init() {
 
 	// initialize device and connection handlers
 	m.sysNetwork = sysNetwork.NewNetwork(systemBus)
+	m.loadMultiVpn()
 	m.initConnectionManage()
 	m.initDeviceManage()
 	m.initActiveConnectionManage()
@@ -356,6 +364,7 @@ func (m *Manager) localeFirstConnection() {
 
 func (m *Manager) destroy() {
 	logger.Info("destroy network")
+	m.multiVpn = nil
 	m.sessionSigLoop.Stop()
 	m.syncConfig.Destroy()
 	m.nmObjManager.RemoveHandler(proxy.RemoveAllHandlers)
@@ -563,6 +572,38 @@ func (m *Manager) setVpnEnable(vpnEnabled bool) {
 		logger.Debug("set vpn enable false")
 		// reset delay enable vpn as false
 		m.setDelayEnableVpn(false)
+	}
+}
+
+// load if vpn support multi connections
+func (m *Manager) loadMultiVpn() {
+	// all vpn plugins dir
+	pathSl := []string{os.Getenv("NM_VPN_PLUGIN_DIR"), "/usr/lib/NetworkManager/VPN", "/etc/NetworkManager/VPN"}
+
+	// read file
+	kf := keyfile.NewKeyFile()
+	for _, path := range pathSl {
+		// dont care about read error
+		if err := kf.LoadFromFile(path); err != nil {
+			continue
+		}
+		// get service name, service must exist
+		service, err := kf.GetString("VPN Connection", "service")
+		if err != nil {
+			logger.Warningf("cant read service from file %s, err: %v", path, err)
+			continue
+		}
+		// if service exist already, should ignore
+		if _, ok := m.multiVpn[service]; ok {
+			continue
+		}
+		// get if support vpn multi connections, key may not exist
+		exist, err := kf.GetBool("VPN Connection", "supports-multiple-connections")
+		if err != nil {
+			continue
+		}
+		// store
+		m.multiVpn[service] = exist
 	}
 }
 

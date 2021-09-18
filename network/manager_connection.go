@@ -498,6 +498,29 @@ func (m *Manager) activateConnection(uuid string, devPath dbus.ObjectPath) (cpat
 				return
 			}
 		}
+	} else {
+		// check if support multi connections
+		service := getSettingVpnServiceType(connData)
+		multi, ok := m.multiVpn[service]
+		// if not support, should close old one first
+		var multiUuid string
+		if !multi || !ok {
+			m.activeConnectionsLock.Lock()
+			// looking for vpn uuid
+			for _, actCon := range m.activeConnections {
+				// check if type is the same
+				if actCon.vpnType != service {
+					continue
+				}
+				// save uuid
+				multiUuid = actCon.Uuid
+				break
+			}
+			m.activeConnectionsLock.Unlock()
+		}
+		if multiUuid != "" {
+			m.deactivateConnection(multiUuid)
+		}
 	}
 
 	_, err = nmActivateConnection(cpath, devPath)
