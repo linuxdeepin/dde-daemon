@@ -40,6 +40,7 @@ func getAppStoreAppName() string {
 
 const (
 	notifyExpireTimeoutDefault = -1
+	systemUpdatedIcon          = "system-updated"
 )
 
 func (l *Lastore) sendNotify(icon string, msg string, actions []NotifyAction, expireTimeout int32, appName string) {
@@ -125,4 +126,30 @@ func (l *Lastore) notifyAutoClean() {
 func (l *Lastore) notifyUpdateSource(actions []NotifyAction) {
 	msg := gettext.Tr("Updates Available")
 	l.sendNotify("preferences-system", msg, actions, notifyExpireTimeoutDefault, "dde-control-center")
+}
+
+func (l *Lastore) lowBatteryInUpdatingNotify() {
+	msg := gettext.Tr("Your system is being updated, but the capacity is lower than 50%, please plug in to avoid power outage")
+	actions := []string{"ok", gettext.Tr("OK")}
+	notifyID, err := l.notifications.Notify(0,
+		"dde-control-center",
+		0,
+		systemUpdatedIcon,
+		"",
+		msg,
+		actions,
+		nil,
+		0,
+	)
+
+	if err != nil {
+		logger.Warning("failed to send notify:", err)
+		return
+	}
+	l.updateNotifyId = notifyID
+}
+
+func (l *Lastore) removeLowBatteryInUpdatingNotify() {
+	l.notifications.CloseNotification(0, l.updateNotifyId)
+	l.updateNotifyId = 0
 }

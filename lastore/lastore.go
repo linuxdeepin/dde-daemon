@@ -7,14 +7,18 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	abrecovery "github.com/linuxdeepin/go-dbus-factory/com.deepin.abrecovery"
 	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	"pkg.deepin.io/dde/api/powersupply/battery"
 	"pkg.deepin.io/dde/daemon/common/dsync"
+	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/gettext"
+	"pkg.deepin.io/lib/gsettings"
 )
 
 //go:generate dbusutil-gen em -type Lastore
@@ -32,7 +36,12 @@ type Lastore struct {
 	sysDBusDaemon ofdbus.DBus
 	notifications notifications.Notifications
 
-	syncConfig *dsync.Config
+	syncConfig              *dsync.Config
+	settings                *gio.Settings
+	updatingLowPowerPercent float64
+	updateNotifyId          uint32
+	isBackuping             bool
+	isUpdating              bool
 
 	notifiedBattery     bool
 	notifyIdHidMap      map[uint32]dbusutil.SignalHandlerId
@@ -52,12 +61,19 @@ type CacheJobInfo struct {
 	Type     string
 }
 
+const (
+	gsSchemaPower                = "com.deepin.dde.power"
+	gsKeyUpdatingLowPowerPercent = "low-power-percent-in-updating-notify"
+)
+
 func newLastore(service *dbusutil.Service) (*Lastore, error) {
 	l := &Lastore{
-		service:   service,
-		jobStatus: make(map[dbus.ObjectPath]CacheJobInfo),
-		inhibitFd: -1,
-		lang:      QueryLang(),
+		service:        service,
+		jobStatus:      make(map[dbus.ObjectPath]CacheJobInfo),
+		inhibitFd:      -1,
+		lang:           QueryLang(),
+		isUpdating:     false,
+		updateNotifyId: 0,
 	}
 
 	logger.Debugf("CurrentLang: %q", l.lang)
@@ -76,10 +92,15 @@ func newLastore(service *dbusutil.Service) (*Lastore, error) {
 	l.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	l.sessionSigLoop.Start()
 
+	l.settings = gio.NewSettings(gsSchemaPower)
+	l.updatingLowPowerPercent = l.settings.GetDouble(gsKeyUpdatingLowPowerPercent)
+	l.notifyGSettingsChanged()
 	l.initCore(systemBus)
 	l.initNotify(sessionBus)
 	l.initSysDBusDaemon(systemBus)
 	l.initPower(systemBus)
+	l.initABRecovery(systemBus)
+	l.listenBattery()
 
 	l.syncConfig = dsync.NewConfig("updater", &syncConfig{l: l},
 		l.sessionSigLoop, dbusPath, logger)
@@ -92,6 +113,54 @@ func (l *Lastore) initPower(systemBus *dbus.Conn) {
 	err := l.power.HasBattery().ConnectChanged(func(hasValue bool, hasBattery bool) {
 		if !hasBattery {
 			l.notifiedBattery = false
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	err = l.power.OnBattery().ConnectChanged(func(hasValue bool, onBattery bool) {
+		// 充电状态时，清除低电量横幅提示
+		if hasValue && !onBattery {
+			l.removeLowBatteryInUpdatingNotify()
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
+func (l *Lastore) initABRecovery(systemBus *dbus.Conn) {
+	abRecovery := abrecovery.NewABRecovery(systemBus)
+	abRecovery.InitSignalExt(l.sysSigLoop, true)
+
+	err := abRecovery.BackingUp().ConnectChanged(func(hasValue bool, hasBackup bool) {
+		if hasValue {
+			if hasBackup {
+				l.isBackuping = true
+				if ok := l.checkLowBatteryNotify(); ok {
+					l.lowBatteryInUpdatingNotify()
+				}
+			} else {
+				l.isBackuping = false
+			}
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
+func (l *Lastore) listenBattery() {
+	err := l.power.BatteryPercentage().ConnectChanged(func(hasValue bool, value float64) {
+		if hasValue {
+			if value > l.updatingLowPowerPercent {
+				return
+			}
+
+			if ok := l.checkLowBatteryNotify(); ok {
+				l.lowBatteryInUpdatingNotify()
+			}
 		}
 	})
 	if err != nil {
@@ -140,6 +209,26 @@ func (l *Lastore) initSysDBusDaemon(systemBus *dbus.Conn) {
 	}
 }
 
+func (l *Lastore) checkLowBatteryNotify() bool {
+	if l.updateNotifyId != 0 {
+		return false
+	}
+
+	// 横幅未弹出，且处于ABRecovery或update状态时才弹出横幅
+	if l.isUpdating || l.isBackuping {
+		batteryStatus, _ := l.power.BatteryStatus().Get(0)
+		hasBattery, _ := l.power.HasBattery().Get(0)
+		onBattery, _ := l.power.OnBattery().Get(0)
+		percent, _ := l.power.BatteryPercentage().Get(0)
+		if hasBattery && onBattery && percent < l.updatingLowPowerPercent &&
+			batteryStatus != uint32(battery.StatusCharging) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (l *Lastore) initCore(systemBus *dbus.Conn) {
 	l.core = lastore.NewLastore(systemBus)
 	l.lastoreRule = dbusutil.NewMatchRuleBuilder().
@@ -174,6 +263,21 @@ func (l *Lastore) initCore(systemBus *dbus.Conn) {
 		ifc, _ := sig.Body[0].(string)
 		if ifc == "com.deepin.lastore.Job" {
 			l.updateCacheJobInfo(sig.Path, props)
+			status := guestJobTypeFromPath(sig.Path)
+			if (status != DownloadJobType) && (status != DistUpgradeJobType) {
+				return
+			}
+
+			if l.jobStatus[sig.Path].Status == EndStatus && status == DistUpgradeJobType {
+				// 更新完成后，将横幅show置为false并close横幅，下次更新重新弹出横幅
+				l.removeLowBatteryInUpdatingNotify()
+				l.isUpdating = false
+			} else {
+				l.isUpdating = true
+				if ok := l.checkLowBatteryNotify(); ok {
+					l.lowBatteryInUpdatingNotify()
+				}
+			}
 		}
 	})
 
@@ -427,4 +531,22 @@ func (l *Lastore) checkBattery() {
 		l.notifiedBattery = true
 		l.notifyLowPower()
 	}
+}
+
+func (l *Lastore) notifyGSettingsChanged() {
+	if l.settings == nil {
+		l.updatingLowPowerPercent = 50
+		logger.Warning("failed to get gsetting")
+		return
+	}
+
+	gsettings.ConnectChanged(gsSchemaPower, "*", func(key string) {
+		switch key {
+		case gsKeyUpdatingLowPowerPercent:
+			l.updatingLowPowerPercent = l.settings.GetDouble(key)
+			return
+		default:
+			return
+		}
+	})
 }
