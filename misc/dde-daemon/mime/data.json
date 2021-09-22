@@ -65,11 +65,10 @@
 			      ]
 		    },
 		    {
-			      "AppId":["org.gnome.gedit.desktop"],
+			      "AppId":["deepin-editor.desktop"],
 			      "AppType":"editor",
 			      "SupportedType":[
-				        "text/plain",
-				        "application/xml"
+				        "text/plain"
 			      ]
 		    },
 		    {
@@ -119,26 +118,22 @@
 				        "audio/x-musepack",
 				        "application/x-musepack",
 				        "audio/x-mp3",
-				        "application/x-id3",
 				        "audio/mpeg",
 				        "audio/x-mpeg",
 				        "audio/x-mpeg-3",
 				        "audio/mpeg3",
 				        "audio/mp3",
-				        "audio/x-m4a",
 				        "audio/mpc",
 				        "audio/x-mpc",
-				        "audio/mp",
-				        "audio/x-mp",
-				        "application/ogg",
-				        "application/x-ogg",
 				        "audio/vorbis",
 				        "audio/x-vorbis",
 				        "audio/ogg",
 				        "audio/x-ogg",
 				        "audio/x-flac",
 				        "application/x-flac",
-				        "audio/flac"
+				        "audio/flac",
+				        "audio/x-wav",
+				        "audio/x-ms-wma"
 			      ]
 		    },
 		    {
@@ -179,15 +174,15 @@
 				        "video/x-ms-asf",
 				        "video/x-msvideo",
 				        "video/x-ms-wmv",
-				        "video/x-nsv",
-				        "video/x-ogm+ogg",
-				        "video/x-theora+ogg",
-				        "x-content/video-dvd",
-				        "x-content/video-svcd",
-				        "x-content/video-vcd",
-				        "x-scheme-handler/mms",
-				        "x-scheme-handler/rtmp",
-				        "x-scheme-handler/rtsp"
+				        "audio/mp4",
+				        "audio/x-matroska",
+				        "video/avi",
+				        "video/3gpp2",
+				        "video/flv",
+				        "video/x-flic",
+				        "video/x-ogm",
+				        "application/x-shockwave-flash",
+				        "video/x-theora"
 			      ]
 		    },
 		    {
