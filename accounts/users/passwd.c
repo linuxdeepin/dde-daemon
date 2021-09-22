@@ -21,7 +21,7 @@
 #include <unistd.h>
 #include <crypt.h>
 #include <shadow.h>
-#include <pwd.h> 
+#include <pwd.h>
 #include <grp.h>
 #include <string.h>
 #include <stdlib.h>
@@ -31,14 +31,11 @@
 #define ERROR_NULLPOINTER -1;
 #define ERROR_NOERROR 0;
 
-char *
-mkpasswd (const char *words)
-{
+char *mkpasswd(const char *words) {
     unsigned long seed[2];
     char salt[] = "$6$........";
-    const char *const seedchars =
-        "./0123456789ABCDEFGHIJKLMNOPQRST"
-        "UVWXYZabcdefghijklmnopqrstuvwxyz";
+    const char *const seedchars = "./0123456789ABCDEFGHIJKLMNOPQRST"
+                                  "UVWXYZabcdefghijklmnopqrstuvwxyz";
     char *password;
     int i;
 
@@ -57,59 +54,41 @@ mkpasswd (const char *words)
     return password;
 }
 
-int
-lock_shadow_file()
-{
-	return lckpwdf();
+int lock_shadow_file() {
+    return lckpwdf();
 }
 
-int
-unlock_shadow_file()
-{
-	return ulckpwdf();
+int unlock_shadow_file() {
+    return ulckpwdf();
 }
 
-int 
-exist_pw_uid(__uid_t uid)
-{
+int exist_pw_uid(__uid_t uid) {
     if (!getpwuid(uid)) {
         return ERROR_NULLPOINTER;
     }
     return ERROR_NOERROR;
 }
 
-char *
-get_pw_name(__uid_t uid)
-{
+char *get_pw_name(__uid_t uid) {
     return getpwuid(uid)->pw_name;
 }
 
-char *
-get_pw_gecos(__uid_t uid)
-{
+char *get_pw_gecos(__uid_t uid) {
     return getpwuid(uid)->pw_gecos;
 }
 
-__uid_t
-get_pw_uid(__uid_t uid)
-{
+__uid_t get_pw_uid(__uid_t uid) {
     return getpwuid(uid)->pw_uid;
 }
 
-__gid_t
-get_pw_gid(__uid_t uid)
-{
+__gid_t get_pw_gid(__uid_t uid) {
     return getpwuid(uid)->pw_gid;
 }
 
-char *
-get_pw_dir(__uid_t uid)
-{
+char *get_pw_dir(__uid_t uid) {
     return getpwuid(uid)->pw_dir;
 }
 
-char *
-get_pw_shell(__uid_t uid)
-{
+char *get_pw_shell(__uid_t uid) {
     return getpwuid(uid)->pw_shell;
 }
