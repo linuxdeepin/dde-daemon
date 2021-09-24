@@ -157,12 +157,17 @@ func NewDomainUser(uid uint32, service *dbusutil.Service) (*User, error) {
 
 	u.SystemAccount = false
 	u.Layout = getDefaultLayout()
-	u.Locale = getDefaultLocale()
 	u.IconFile = defaultUserIcon
 	defaultUserBackground := getDefaultUserBackground()
 	u.DesktopBackgrounds = []string{defaultUserBackground}
 	u.GreeterBackground = defaultUserBackground
 	u.Use24HourFormat = defaultUse24HourFormat
+
+	locale, _ := kf.GetString(confGroupUser, confKeyLocale)
+	u.Locale = locale
+	if locale == "" {
+		u.Locale = getDefaultLocale()
+	}
 
 	u.UUID, err = kf.GetString(confGroupUser, confKeyUUID)
 	if err != nil || u.UUID == "" {
