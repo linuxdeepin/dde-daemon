@@ -24,6 +24,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -377,7 +378,29 @@ func (m *Manager) queryPkgName(itemID string, itemPath string) (string, error) {
 			}
 			match := regOptApps.FindStringSubmatch(linkDst)
 			if match != nil {
-				return match[1], nil
+				args := []string{
+					"-s",
+					match[1],
+				}
+				err := exec.Command("dpkg", args...).Run() // 判断通过路径匹配的包名是否真实存在
+				if err == nil {
+					return match[1], nil
+				} else { // 匹配的包不存在,需要用 dpkg -S 来查找包
+					args := []string{
+						"-S",
+						match[0],
+					}
+					result, err := exec.Command("dpkg", args...).Output()
+					if err != nil {
+						return "", fmt.Errorf("match package by path %v failed: %v", itemPath, err)
+					}
+					splitContent := strings.SplitN(string(result), ":", 2)
+					if len(splitContent) < 2 {
+						return "", fmt.Errorf("match package by path %v failed", itemPath)
+					} else {
+						return strings.TrimSpace(splitContent[0]), nil
+					}
+				}
 			}
 		}
 	}
