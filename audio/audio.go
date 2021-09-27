@@ -564,8 +564,15 @@ func (a *Audio) init() error {
 		a.settings.SetBoolean(gsKeyFirstRun, false)
 	}
 
-	a.resumeSinkConfig(a.defaultSink)
-	a.resumeSourceConfig(a.defaultSource, isPhysicalDevice(a.defaultSourceName))
+	if !a.needAutoSwitchOutputPort() {
+		a.resumeSinkConfig(a.defaultSink)
+	}
+
+	if !a.needAutoSwitchInputPort() {
+		a.resumeSourceConfig(a.defaultSource, isPhysicalDevice(a.defaultSourceName))
+	}
+
+	// 自动切换会在切换后触发配置恢复
 	a.autoSwitchPort()
 
 	a.fixActivePortNotAvailable()
