@@ -198,7 +198,9 @@ func (m *Manager) DeleteUserTimezone(zone string) *dbus.Error {
 
 // GetZoneInfo returns the information of the specified time zone.
 func (m *Manager) GetZoneInfo(zone string) (zoneInfo zoneinfo.ZoneInfo, busErr *dbus.Error) {
+	m.PropsMu.Lock()
 	info, err := zoneinfo.GetZoneInfo(zone)
+	m.PropsMu.Unlock()
 	if err != nil {
 		logger.Debugf("Get zone info for '%s' failed: %v", zone, err)
 		return zoneinfo.ZoneInfo{}, dbusutil.ToError(err)
