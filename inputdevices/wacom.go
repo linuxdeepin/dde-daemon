@@ -182,7 +182,7 @@ func newWacom(service *dbusutil.Service) *Wacom {
 
 	err := w.initX()
 	if err != nil {
-		logger.Warning("initX error:",err)
+		logger.Warning("initX error:", err)
 	}
 	w.handleScreenChanged()
 	go w.listenXRandrEvents()
@@ -223,6 +223,7 @@ func (w *Wacom) initX() error {
 }
 
 func (w *Wacom) listenXRandrEvents() {
+	logger.Debug("listenXRnadrEvents")
 	conn := w.xConn
 	root := conn.GetDefaultScreen().Root
 	err := randr.SelectInputChecked(conn, root, randr.NotifyMaskScreenChange).Check(conn)
@@ -235,6 +236,10 @@ func (w *Wacom) listenXRandrEvents() {
 	eventChan := make(chan x.GenericEvent, 10)
 	conn.AddEventChan(eventChan)
 	for ev := range eventChan {
+		if !w.Exist {
+			logger.Debug("[listenXRandrEvents]no Wacom device!")
+			return
+		}
 		switch ev.GetEventCode() {
 		case randr.ScreenChangeNotifyEventCode + rrExtData.FirstEvent:
 			event, _ := randr.NewScreenChangeNotifyEvent(ev)
@@ -245,6 +250,10 @@ func (w *Wacom) listenXRandrEvents() {
 }
 
 func (w *Wacom) handleScreenChanged() {
+	if !w.Exist {
+		logger.Debug("[listenXRandrEvents]no Wacom device!")
+		return
+	}
 	conn := w.xConn
 	root := conn.GetDefaultScreen().Root
 	resources, err := randr.GetScreenResources(conn, root).Reply(conn)
