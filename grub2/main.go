@@ -53,6 +53,11 @@ func RunAsDaemon() {
 		logger.Fatal("failed to export grub2 theme:", err)
 	}
 
+	err = service.Export(editAuthDBusPath, _g.editAuth)
+	if err != nil {
+		logger.Fatal("failed to export grub2 edit auth:", err)
+	}
+
 	err = ihObj.Export(service)
 	if err != nil {
 		logger.Warning("failed to export inhibit hint:", err)

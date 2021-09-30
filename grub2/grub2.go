@@ -55,14 +55,15 @@ const (
 	gfxmodeDetectStateFailed
 )
 
-//go:generate dbusutil-gen -type Grub2,Theme grub2.go theme.go
-//go:generate dbusutil-gen em -type Grub2,Theme
+//go:generate dbusutil-gen -type Grub2,Theme,EditAuth grub2.go theme.go edit_auth.go
+//go:generate dbusutil-gen em -type Grub2,Theme,EditAuth
 
 type Grub2 struct {
 	service            *dbusutil.Service
 	modifyManager      *modifyManager
 	entries            []Entry
 	theme              *Theme
+	editAuth           *EditAuth
 	gfxmodeDetectState gfxmodeDetectState
 	inhibitFd          dbus.UnixFD
 	PropsMu            sync.RWMutex
@@ -361,6 +362,10 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 			}
 		}
 	}
+
+	// init edit auth
+	g.editAuth = NewEditAuth(g)
+	g.editAuth.init()
 
 	return g
 }

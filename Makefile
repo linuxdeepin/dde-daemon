@@ -101,6 +101,9 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/etc/grub.d
 	cp -f misc/etc/grub.d/* ${DESTDIR}/etc/grub.d
 
+	mkdir -pv ${DESTDIR}/etc/deepin
+	cp -f misc/etc/deepin/* ${DESTDIR}/etc/deepin
+
 	mkdir -pv ${DESTDIR}/etc/acpi/events
 	cp -f misc/etc/acpi/events/* ${DESTDIR}/etc/acpi/events/
 
