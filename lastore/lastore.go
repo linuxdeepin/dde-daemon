@@ -20,6 +20,7 @@ import (
 	"pkg.deepin.io/lib/dbusutil/proxy"
 	"pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/gsettings"
+	"pkg.deepin.io/lib/strv"
 )
 
 //go:generate dbusutil-gen em -type Lastore
@@ -46,7 +47,8 @@ type Lastore struct {
 	isBackuping             bool
 	isUpdating              bool
 	// 默认间隔时间2小时,但当设置了稍后提醒时间后,需要修改默认时间,单位分钟
-	intervalTime            uint16
+	intervalTime                  uint16
+	needShowUpgradeFinishedNotify bool
 
 	notifiedBattery     bool
 	notifyIdHidMap      map[uint32]dbusutil.SignalHandlerId
@@ -77,13 +79,14 @@ const (
 
 func newLastore(service *dbusutil.Service) (*Lastore, error) {
 	l := &Lastore{
-		service:              service,
-		jobStatus:            make(map[dbus.ObjectPath]CacheJobInfo),
-		inhibitFd:            -1,
-		lang:                 QueryLang(),
-		updateNotifyId:       0,
-		isUpdating:           false,
-		intervalTime:         intervalTime120Min,
+		service:                       service,
+		jobStatus:                     make(map[dbus.ObjectPath]CacheJobInfo),
+		inhibitFd:                     -1,
+		lang:                          QueryLang(),
+		updateNotifyId:                0,
+		isUpdating:                    false,
+		intervalTime:                  intervalTime120Min,
+		needShowUpgradeFinishedNotify: false,
 	}
 
 	logger.Debugf("CurrentLang: %q", l.lang)
@@ -221,10 +224,35 @@ func (l *Lastore) initSysDBusDaemon(systemBus *dbus.Conn) {
 	}
 }
 
+var allowPathList = []string{
+	"/com/deepin/lastore/Jobprepare_system_upgrade",
+	"/com/deepin/lastore/Jobprepare_appstore_upgrade",
+	"/com/deepin/lastore/Jobprepare_security_upgrade",
+	"/com/deepin/lastore/Jobprepare_unknown_upgrade",
+	"/com/deepin/lastore/Jobsystem_upgrade",
+	"/com/deepin/lastore/Jobappstore_upgrade",
+	"/com/deepin/lastore/Jobsecurity_upgrade",
+	"/com/deepin/lastore/Jobunknown_upgrade",
+	"/com/deepin/lastore/Jobdist_upgrade",
+	"/com/deepin/lastore/Jobprepare_dist_upgrade",
+}
+
+func (l *Lastore) isUpgradeJobType(path dbus.ObjectPath) bool {
+	job, ok := l.jobStatus[path]
+	if !ok {
+		return false
+	}
+	if !strv.Strv(allowPathList).Contains(string(path)) {
+		return false
+	}
+	if strings.Contains(string(path), "prepare") && strings.Contains(job.Name, "OnlyDownload") {
+		return false
+	}
+	return true
+}
+
 func (l *Lastore) checkUpdateNotify(path dbus.ObjectPath) {
-	jobType := l.jobStatus[path].Type
-	if (jobType != DownloadJobType) && (jobType != DistUpgradeJobType) &&
-		(jobType != PrepareDistUpgradeJobType) && (jobType != InstallJobType) {
+	if !l.isUpgradeJobType(path) {
 		return
 	}
 
@@ -235,18 +263,13 @@ func (l *Lastore) checkUpdateNotify(path dbus.ObjectPath) {
 		return
 	}
 
-	// jobName 包含 OnlyDownload 表示自动下载，此时不属于更新，不弹出低电量横幅
-	if strings.Contains(l.jobStatus[path].Name, "OnlyDownload") {
-		l.isUpdating = false
-		return
-	}
-
 	if l.needLowBatteryNotify() {
 		l.lowBatteryInUpdatingNotify()
 	}
-
-	// 当更新类型为DistUpgradeJobType 或 类型为应用且id为appstore_upgrade才弹更新完成横幅
-	if jobType != DistUpgradeJobType && (jobType != InstallJobType || l.jobStatus[path].Id != AppStoreUpgradeJobType) {
+	if l.jobStatus[path].Id == SystemUpgradeJobType {
+		l.needShowUpgradeFinishedNotify = true
+	}
+	if !l.needShowUpgradeFinishedNotify {
 		return
 	}
 
@@ -258,14 +281,13 @@ func (l *Lastore) checkUpdateNotify(path dbus.ObjectPath) {
 	if l.jobStatus[path].Status == SucceedStatus {
 		for _, jobPath := range jobList {
 			if job, ok := l.jobStatus[jobPath]; ok {
-				// 如果jobList 内存在非更新type类型，直接跳过
-				if (jobType != DistUpgradeJobType && (jobType != InstallJobType || l.jobStatus[path].Id != AppStoreUpgradeJobType)) ||
-					strings.Contains(job.Name, "OnlyDownload") {
-					continue
-				}
-
-				if job.Status != SucceedStatus && job.Status != EndStatus {
-					return
+				if l.isUpgradeJobType(jobPath) {
+					if job.Status != SucceedStatus && job.Status != EndStatus && job.Status != FailedStatus {
+						return
+					}
+					if strings.Contains(string(jobPath), "prepare") {
+						return
+					}
 				}
 			}
 		}
@@ -273,6 +295,7 @@ func (l *Lastore) checkUpdateNotify(path dbus.ObjectPath) {
 		l.removeLowBatteryInUpdatingNotify()
 		l.updateSucceedNotify(l.createUpdateSucceedActions())
 		l.isUpdating = false
+		l.needShowUpgradeFinishedNotify = false
 	}
 }
 
