@@ -704,10 +704,25 @@ func nmGetConnectionUuid(cpath dbus.ObjectPath) (uuid string, err error) {
 }
 
 func nmGetConnectionList() (connections []dbus.ObjectPath) {
-	connections, err := nmSettings.ListConnections(0)
-	if err != nil {
-		logger.Error(err)
-		return
+	var err error
+	retry := 0
+	for {
+		if retry > 3 {
+			logger.Warningf("has retry to get connection max time, err: %v", err)
+			break
+		}
+		// get connections list
+		connections, err = nmSettings.ListConnections(0)
+		if err != nil {
+			// if failed, just retry to get 2 times, so it is debus log here
+			logger.Debugf("get connection list failed, retry to get, err: %v", err)
+			retry++
+			time.Sleep(2 * time.Second)
+			continue
+		}
+		// get connection success
+		logger.Debugf("get all connection success, %v", connections)
+		break
 	}
 	return
 }
