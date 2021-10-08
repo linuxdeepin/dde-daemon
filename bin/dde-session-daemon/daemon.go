@@ -142,7 +142,7 @@ func (s *SessionDaemon) initModules() {
 		"screenedge",
 		"mime",
 		//"calendar",
-		"miracast", // need network
+		//"miracast", // need network
 		"systeminfo",
 		"lastore",
 		"grub-gfx",
