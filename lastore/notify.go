@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/godbus/dbus"
 	"pkg.deepin.io/lib/gettext"
 )
 
@@ -39,11 +40,19 @@ func getAppStoreAppName() string {
 }
 
 const (
-	notifyExpireTimeoutDefault = -1
-	systemUpdatedIcon          = "system-updated"
+	notifyExpireTimeoutDefault  = -1
+	notifyExpireTimeoutReboot   = 30 * 1000
+	systemUpdatedIcon           = "system-updated"
+	notifyActKeyRebootNow       = "RebootNow"
+	notifyActKeyRebootLater     = "Later"
+	notifyActKeyReboot10Minutes = "10Min"
+	notifyActKeyReboot30Minutes = "30Min"
+	notifyActKeyReboot2Hours    = "2Hr"
+	notifyActKeyReboot6Hours    = "6Hr"
 )
 
-func (l *Lastore) sendNotify(icon string, msg string, actions []NotifyAction, expireTimeout int32, appName string) {
+func (l *Lastore) sendNotify(icon string, summary string, msg string, actions []NotifyAction,
+	hints map[string]dbus.Variant, expireTimeout int32, appName string) {
 	logger.Infof("sendNotify icon: %s, msg: %q, actions: %v, timeout: %d",
 		icon, msg, actions, expireTimeout)
 	n := l.notifications
@@ -55,8 +64,8 @@ func (l *Lastore) sendNotify(icon string, msg string, actions []NotifyAction, ex
 	if icon == "" {
 		icon = "deepin-appstore"
 	}
-	id, err := n.Notify(0, appName, 0, icon, "",
-		msg, as, nil, expireTimeout)
+	id, err := n.Notify(0, appName, 0, icon, summary,
+		msg, as, hints, expireTimeout)
 	if err != nil {
 		logger.Warningf("Notify failed: %q: %v\n", msg, err)
 		return
@@ -95,10 +104,10 @@ func (l *Lastore) notifyInstall(pkgId string, succeed bool, ac []NotifyAction) {
 	var msg string
 	if succeed {
 		msg = fmt.Sprintf(gettext.Tr("%q installed successfully."), pkgId)
-		l.sendNotify("package_install_succeed", msg, ac, notifyExpireTimeoutDefault, getAppStoreAppName())
+		l.sendNotify("package_install_succeed", "", msg, ac, nil, notifyExpireTimeoutDefault, getAppStoreAppName())
 	} else {
 		msg = fmt.Sprintf(gettext.Tr("%q failed to install."), pkgId)
-		l.sendNotify("package_install_failed", msg, ac, notifyExpireTimeoutDefault, getAppStoreAppName())
+		l.sendNotify("package_install_failed", "", msg, ac, nil, notifyExpireTimeoutDefault, getAppStoreAppName())
 	}
 }
 
@@ -109,23 +118,34 @@ func (l *Lastore) notifyRemove(pkgId string, succeed bool, ac []NotifyAction) {
 	} else {
 		msg = gettext.Tr("Failed to remove the app")
 	}
-	l.sendNotify("deepin-appstore", msg, ac, notifyExpireTimeoutDefault, getAppStoreAppName())
+	l.sendNotify("deepin-appstore", "", msg, ac, nil, notifyExpireTimeoutDefault, getAppStoreAppName())
 }
 
 //NotifyLowPower send notify for low power
 func (l *Lastore) notifyLowPower() {
 	msg := gettext.Tr("In order to prevent automatic shutdown, please plug in for normal update.")
-	l.sendNotify("notification-battery_low", msg, nil, notifyExpireTimeoutDefault, getAppStoreAppName())
+	l.sendNotify("notification-battery_low", "", msg, nil, nil, notifyExpireTimeoutDefault, getAppStoreAppName())
 }
 
 func (l *Lastore) notifyAutoClean() {
 	msg := gettext.Tr("Package cache wiped")
-	l.sendNotify("deepin-appstore", msg, nil, notifyExpireTimeoutDefault, "dde-control-center")
+	l.sendNotify("deepin-appstore", "", msg, nil, nil, notifyExpireTimeoutDefault, "dde-control-center")
 }
 
 func (l *Lastore) notifyUpdateSource(actions []NotifyAction) {
-	msg := gettext.Tr("Updates Available")
-	l.sendNotify("preferences-system", msg, actions, notifyExpireTimeoutDefault, "dde-control-center")
+	msg := gettext.Tr("New system edition available")
+	l.sendNotify("preferences-system", "", msg, actions, nil, notifyExpireTimeoutDefault, "dde-control-center")
+}
+
+func (l *Lastore) updateSucceedNotify(actions []NotifyAction) {
+	summary := gettext.Tr("Reboot after Updates")
+	msg := gettext.Tr("Restart the computer to use the system and applications properly")
+	hints := map[string]dbus.Variant{"x-deepin-action-RebootNow": dbus.MakeVariant("busctl,--user,call,com.deepin.SessionManager," +
+		"/com/deepin/SessionManager,com.deepin.SessionManager,RequestReboot")}
+	l.sendNotify(systemUpdatedIcon, summary, msg, actions, hints, notifyExpireTimeoutReboot, "dde-control-center")
+
+	// 默认弹出横幅时间为每2小时
+	l.resetUpdateSucceedNotifyTimer(l.intervalTime)
 }
 
 func (l *Lastore) lowBatteryInUpdatingNotify() {

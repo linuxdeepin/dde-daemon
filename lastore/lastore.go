@@ -9,6 +9,7 @@ import (
 	"github.com/godbus/dbus"
 	abrecovery "github.com/linuxdeepin/go-dbus-factory/com.deepin.abrecovery"
 	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
@@ -31,17 +32,21 @@ type Lastore struct {
 	lang           string
 	inhibitFd      dbus.UnixFD
 
-	power         power.Power
-	core          lastore.Lastore
-	sysDBusDaemon ofdbus.DBus
-	notifications notifications.Notifications
+	power          power.Power
+	core           lastore.Lastore
+	sysDBusDaemon  ofdbus.DBus
+	notifications  notifications.Notifications
+	sessionManager sessionmanager.SessionManager
 
 	syncConfig              *dsync.Config
 	settings                *gio.Settings
+	rebootTimer             *time.Timer
 	updatingLowPowerPercent float64
 	updateNotifyId          uint32
 	isBackuping             bool
 	isUpdating              bool
+	// 默认间隔时间2小时,但当设置了稍后提醒时间后,需要修改默认时间,单位分钟
+	intervalTime            uint16
 
 	notifiedBattery     bool
 	notifyIdHidMap      map[uint32]dbusutil.SignalHandlerId
@@ -64,6 +69,10 @@ type CacheJobInfo struct {
 const (
 	gsSchemaPower                = "com.deepin.dde.power"
 	gsKeyUpdatingLowPowerPercent = "low-power-percent-in-updating-notify"
+	intervalTime10Min            = 10
+	intervalTime30Min            = 30
+	intervalTime120Min           = 120
+	intervalTime360Min           = 360
 )
 
 func newLastore(service *dbusutil.Service) (*Lastore, error) {
@@ -74,6 +83,7 @@ func newLastore(service *dbusutil.Service) (*Lastore, error) {
 		lang:           QueryLang(),
 		isUpdating:     false,
 		updateNotifyId: 0,
+		intervalTime:   intervalTime120Min,
 	}
 
 	logger.Debugf("CurrentLang: %q", l.lang)
@@ -91,6 +101,8 @@ func newLastore(service *dbusutil.Service) (*Lastore, error) {
 
 	l.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	l.sessionSigLoop.Start()
+
+	l.sessionManager = sessionmanager.NewSessionManager(sessionBus)
 
 	l.settings = gio.NewSettings(gsSchemaPower)
 	l.updatingLowPowerPercent = l.settings.GetDouble(gsKeyUpdatingLowPowerPercent)
@@ -263,12 +275,18 @@ func (l *Lastore) initCore(systemBus *dbus.Conn) {
 		ifc, _ := sig.Body[0].(string)
 		if ifc == "com.deepin.lastore.Job" {
 			l.updateCacheJobInfo(sig.Path, props)
-			status := guestJobTypeFromPath(sig.Path)
-			if (status != DownloadJobType) && (status != DistUpgradeJobType) {
+			// guestJobTypeFromPath函数解析时会将PrepareDistUpgradeJobType解析成DistUpgradeJobType状态
+			// 导致更新成功完成状态提前到预下载完成状态；
+			jobType := l.jobStatus[sig.Path].Type
+			if (jobType != DownloadJobType) && (jobType != DistUpgradeJobType) &&
+				(jobType != PrepareDistUpgradeJobType) {
 				return
 			}
 
-			if l.jobStatus[sig.Path].Status == EndStatus && status == DistUpgradeJobType {
+			// 更新完成并成功后，弹出重启横幅
+			if l.jobStatus[sig.Path].Status == SucceedStatus && jobType == DistUpgradeJobType {
+				l.updateSucceedNotify(l.createUpdateSucceedActions())
+			} else if l.jobStatus[sig.Path].Status == EndStatus && jobType == DistUpgradeJobType {
 				// 更新完成后，将横幅show置为false并close横幅，下次更新重新弹出横幅
 				l.removeLowBatteryInUpdatingNotify()
 				l.isUpdating = false
@@ -375,6 +393,63 @@ func (l *Lastore) createUpdateActions() []NotifyAction {
 						logger.Warningf("createUpdateActions: %v", err)
 					}
 				}()
+			},
+		},
+	}
+
+	return ac
+}
+
+func (l *Lastore) resetUpdateSucceedNotifyTimer(intervalTimeMinute uint16) {
+	l.intervalTime = intervalTimeMinute
+	if l.rebootTimer == nil {
+		l.rebootTimer = time.AfterFunc(time.Minute*time.Duration(intervalTimeMinute), func() {
+			l.updateSucceedNotify(l.createUpdateSucceedActions())
+		})
+	} else {
+		l.rebootTimer.Reset(time.Minute * time.Duration(intervalTimeMinute))
+	}
+}
+
+func (l *Lastore) createUpdateSucceedActions() []NotifyAction {
+	ac := []NotifyAction{
+		{
+			Id:   notifyActKeyRebootNow,
+			Name: gettext.Tr("Reboot Now"),
+		},
+		{
+			Id:   notifyActKeyRebootLater,
+			Name: gettext.Tr("Remind Me Later"),
+			Callback: func() {
+				l.resetUpdateSucceedNotifyTimer(intervalTime120Min)
+			},
+		},
+		{
+			Id:   notifyActKeyReboot10Minutes,
+			Name: gettext.Tr("10 mins later"),
+			Callback: func() {
+				l.resetUpdateSucceedNotifyTimer(intervalTime10Min)
+			},
+		},
+		{
+			Id:   notifyActKeyReboot30Minutes,
+			Name: gettext.Tr("30 mins later"),
+			Callback: func() {
+				l.resetUpdateSucceedNotifyTimer(intervalTime30Min)
+			},
+		},
+		{
+			Id:   notifyActKeyReboot2Hours,
+			Name: gettext.Tr("2h later"),
+			Callback: func() {
+				l.resetUpdateSucceedNotifyTimer(intervalTime120Min)
+			},
+		},
+		{
+			Id:   notifyActKeyReboot6Hours,
+			Name: gettext.Tr("6h later"),
+			Callback: func() {
+				l.resetUpdateSucceedNotifyTimer(intervalTime360Min)
 			},
 		},
 	}
