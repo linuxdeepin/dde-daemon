@@ -72,9 +72,9 @@ const (
 	gsSchemaSessionPower   = "com.deepin.dde.power"
 
 	customConfigFile = "deepin/dde-daemon/keybinding/custom.ini"
-	CapslockKey = 58
-	NumlockKey = 69
-	KeyPress = 1
+	CapslockKey      = 58
+	NumlockKey       = 69
+	KeyPress         = 1
 )
 
 const ( // power按键事件的响应
@@ -102,14 +102,14 @@ type Manager struct {
 	gsGnomeWM        *gio.Settings
 	gsPower          *gio.Settings
 
-	enableListenGSettings bool
+	enableListenGSettings   bool
 	delayNetworkStateChange bool
 	dpmsIsOff               bool
 	clickNum                uint32
 	shortcutCmd             string
 	shortcutKey             string
 	shortcutKeyCmd          string
-	customShortcutManager *shortcuts.CustomShortcutManager
+	customShortcutManager   *shortcuts.CustomShortcutManager
 
 	lockFront     lockfront.LockFront
 	shutdownFront shutdownfront.ShutdownFront
@@ -196,6 +196,8 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		m.login1Manager = login1.NewManager(sysBus)
 	}
 
+	m.init()
+
 	m.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
 	m.NumLockState.Bind(m.gsKeyboard, gsKeyNumLockState)
 	m.ShortcutSwitchLayout.Bind(m.gsKeyboard, gsKeyShortcutSwitchLayout)
@@ -262,7 +264,6 @@ func (m *Manager) init() {
 			m.shortcutManager.AddWM(m.gsGnomeWM)
 		}
 	}
-
 
 	// init custom shortcuts
 	customConfigFilePath := filepath.Join(basedir.GetUserConfigDir(), customConfigFile)
@@ -424,7 +425,10 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 					if m.shortcutCmd == "" {
 						m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
 					} else {
-						m.execCmd(m.shortcutCmd, true)
+						err := m.execCmd(m.shortcutCmd, true)
+						if err != nil {
+							logger.Warning(err)
+						}
 					}
 				}
 			}
@@ -1108,6 +1112,7 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 	}
 	if strings.HasPrefix(cmd, "dbus-send ") || !viaStartdde {
 		logger.Debug("run cmd:", cmd)
+		// #nosec G204
 		return exec.Command("/bin/sh", "-c", cmd).Run()
 	}
 
