@@ -37,23 +37,31 @@ const (
 	tsSchemaKeyBlacklist    = "longpress-blacklist"
 )
 
+type deviceType int32 // 设备类型(触摸屏，触摸板)
+
+const (
+	deviceTouchPad deviceType = iota
+	deviceTouchScreen
+)
+
 type Manager struct {
-	wm             wm.Wm
-	sysDaemon      daemon.Daemon
-	systemSigLoop  *dbusutil.SignalLoop
-	mu             sync.RWMutex
-	userFile       string
-	builtinSets    map[string]func() error
-	gesture        gesture.Gesture
-	dock           dock.Dock
-	display        display.Display
-	setting        *gio.Settings
-	tsSetting      *gio.Settings
-	enabled        bool
-	Infos          gestureInfos
-	sessionmanager sessionmanager.SessionManager
-	clipboard      clipboard.Clipboard
-	notification   notification.Notification
+	wm                 wm.Wm
+	sysDaemon          daemon.Daemon
+	systemSigLoop      *dbusutil.SignalLoop
+	mu                 sync.RWMutex
+	userFile           string
+	builtinSets        map[string]func() error
+	gesture            gesture.Gesture
+	dock               dock.Dock
+	display            display.Display
+	setting            *gio.Settings
+	tsSetting          *gio.Settings
+	touchPadEnabled    bool
+	touchScreenEnabled bool
+	Infos              gestureInfos
+	sessionmanager     sessionmanager.SessionManager
+	clipboard          clipboard.Clipboard
+	notification       notification.Notification
 }
 
 func newManager() (*Manager, error) {
@@ -111,18 +119,19 @@ func newManager() (*Manager, error) {
 	}
 
 	m := &Manager{
-		userFile:       configUserPath,
-		Infos:          infos,
-		setting:        setting,
-		tsSetting:      tsSetting,
-		enabled:        setting.GetBoolean(gsKeyEnabled),
-		wm:             wm.NewWm(sessionConn),
-		dock:           dock.NewDock(sessionConn),
-		display:        display.NewDisplay(sessionConn),
-		sysDaemon:      daemon.NewDaemon(systemConn),
-		sessionmanager: sessionmanager.NewSessionManager(sessionConn),
-		clipboard:      clipboard.NewClipboard(sessionConn),
-		notification:   notification.NewNotification(sessionConn),
+		userFile:           configUserPath,
+		Infos:              infos,
+		setting:            setting,
+		tsSetting:          tsSetting,
+		touchPadEnabled:    setting.GetBoolean(gsKeyTouchPadEnabled),
+		touchScreenEnabled: setting.GetBoolean(gsKeyTouchScreenEnabled),
+		wm:                 wm.NewWm(sessionConn),
+		dock:               dock.NewDock(sessionConn),
+		display:            display.NewDisplay(sessionConn),
+		sysDaemon:          daemon.NewDaemon(systemConn),
+		sessionmanager:     sessionmanager.NewSessionManager(sessionConn),
+		clipboard:          clipboard.NewClipboard(sessionConn),
+		notification:       notification.NewNotification(sessionConn),
 	}
 
 	m.gesture = gesture.NewGesture(systemConn)
@@ -154,7 +163,7 @@ func (m *Manager) init() {
 	m.systemSigLoop.Start()
 	m.gesture.InitSignalExt(m.systemSigLoop, true)
 	_, err = m.gesture.ConnectEvent(func(name string, direction string, fingers int32) {
-		should, err := m.shouldHandleEvent()
+		should, err := m.shouldHandleEvent(deviceTouchPad)
 		if err != nil {
 			logger.Error("shouldHandleEvent failed:", err)
 			return
@@ -177,7 +186,7 @@ func (m *Manager) init() {
 	}
 
 	_, err = m.gesture.ConnectTouchEdgeMoveStopLeave(func(direction string, scaleX float64, scaleY float64, duration int32) {
-		should, err := m.shouldHandleEvent()
+		should, err := m.shouldHandleEvent(deviceTouchScreen)
 		if err != nil {
 			logger.Error("shouldHandleEvent failed:", err)
 			return
@@ -203,7 +212,7 @@ func (m *Manager) init() {
 	}
 
 	_, err = m.gesture.ConnectTouchEdgeEvent(func(direction string, scaleX float64, scaleY float64) {
-		should, err := m.shouldHandleEvent()
+		should, err := m.shouldHandleEvent(deviceTouchScreen)
 		if err != nil {
 			logger.Error("shouldHandleEvent failed:", err)
 			return
@@ -227,7 +236,7 @@ func (m *Manager) init() {
 	}
 
 	_, err = m.gesture.ConnectTouchMovementEvent(func(direction string, fingers int32, startScaleX float64, startScaleY float64, endScaleX float64, endScaleY float64) {
-		should, err := m.shouldHandleEvent()
+		should, err := m.shouldHandleEvent(deviceTouchScreen)
 		if err != nil {
 			logger.Error("shouldHandleEvent failed:", err)
 			return
@@ -323,9 +332,15 @@ func (m *Manager) Write() error {
 }
 
 func (m *Manager) listenGSettingsChanged() {
-	gsettings.ConnectChanged(gestureSchemaId, gsKeyEnabled, func(key string) {
+	gsettings.ConnectChanged(gestureSchemaId, gsKeyTouchPadEnabled, func(key string) {
 		m.mu.Lock()
-		m.enabled = m.setting.GetBoolean(key)
+		m.touchPadEnabled = m.setting.GetBoolean(key)
+		m.mu.Unlock()
+	})
+
+	gsettings.ConnectChanged(gestureSchemaId, gsKeyTouchScreenEnabled, func(key string) {
+		m.mu.Lock()
+		m.touchScreenEnabled = m.setting.GetBoolean(key)
 		m.mu.Unlock()
 	})
 }
@@ -603,11 +618,23 @@ func (m *Manager) handleSwipeStop(fingers int32) error {
 }
 
 // 多用户存在，防止非当前用户响应触摸屏手势
-func (m *Manager) shouldHandleEvent() (bool, error) {
+func (m *Manager) shouldHandleEvent(devType deviceType) (bool, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	if !m.enabled {
+	switch devType {
+	case deviceTouchPad:
+		if !m.touchPadEnabled {
+			logger.Debug("touch pad is disabled, do not handle touchpad gesture event")
+			return false, nil
+		}
+	case deviceTouchScreen:
+		if !m.touchScreenEnabled {
+			logger.Debug("touch screen is disabled, do not handle touchscreen gesture event")
+			return false, nil
+		}
+	default:
+		logger.Warningf("Unknown device type: %v, do not handle gesture event", devType)
 		return false, nil
 	}
 

@@ -38,8 +38,9 @@ var (
 	configSystemPath = "/usr/share/dde-daemon/gesture.json"
 	configUserPath   = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/gesture.json")
 
-	gestureSchemaId = "com.deepin.dde.gesture"
-	gsKeyEnabled    = "enabled"
+	gestureSchemaId         = "com.deepin.dde.gesture"
+	gsKeyTouchPadEnabled    = "touch-pad-enabled"
+	gsKeyTouchScreenEnabled = "touch-screen-enabled"
 )
 
 type ActionInfo struct {
@@ -48,17 +49,16 @@ type ActionInfo struct {
 }
 
 type EventInfo struct {
-	Name string
+	Name      string
 	Direction string
-	Fingers int32
+	Fingers   int32
 }
 
 type gestureInfo struct {
-	Event 	EventInfo
-	Action  ActionInfo
+	Event  EventInfo
+	Action ActionInfo
 }
 type gestureInfos []*gestureInfo
-
 
 func (action ActionInfo) toString() string {
 	return fmt.Sprintf("Type:%s, Action=%s", action.Type, action.Action)
@@ -77,7 +77,7 @@ func (infos gestureInfos) Get(evInfo EventInfo) *gestureInfo {
 	return nil
 }
 
-func (infos gestureInfos) Set (evInfo EventInfo, action ActionInfo) error {
+func (infos gestureInfos) Set(evInfo EventInfo, action ActionInfo) error {
 	info := infos.Get(evInfo)
 	if info == nil {
 		return fmt.Errorf("not found gesture info for: %s, %s, %d", evInfo.Name, evInfo.Direction, evInfo.Fingers)
