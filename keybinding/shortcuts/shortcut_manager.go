@@ -1001,7 +1001,7 @@ func (sm *ShortcutManager) AddSystem(gsettings, gsPlatform, gsEnable *gio.Settin
 		logger.Warning(err)
 		allow = false
 	}
-	session := os.Getenv("XDG_SESSION_TYPE")
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	for _, id := range gsettings.ListKeys() {
 		if id == "deepin-screen-recorder" || id == "wm-switcher" {
 			if !allow && id == "wm-switcher" {
@@ -1009,8 +1009,8 @@ func (sm *ShortcutManager) AddSystem(gsettings, gsPlatform, gsEnable *gio.Settin
 				continue
 			}
 
-			if strings.Contains(session, "wayland") {
-				logger.Debugf("XDG_SESSION_TYPE is %s, filter %s", session, id)
+			if strings.Contains(sessionType, "wayland") {
+				logger.Debugf("XDG_SESSION_TYPE is %s, filter %s", sessionType, id)
 				continue
 			}
 		}

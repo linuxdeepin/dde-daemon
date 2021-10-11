@@ -20,6 +20,8 @@
 package x_event_monitor
 
 import (
+	"os"
+	"strings"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/lib/log"
 )
@@ -66,6 +68,13 @@ func (d *Daemon) Start() error {
 	}
 	m.initXExtensions()
 	go m.handleXEvent()
+
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		go m.listenGlobalCursorPressed()
+		go m.listenGlobalCursorRelease()
+		go m.listenGlobalCursorMove()
+	}
 
 	err = service.Export(dbusPath, m)
 	if err != nil {

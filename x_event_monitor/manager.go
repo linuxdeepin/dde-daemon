@@ -64,6 +64,7 @@ type Manager struct {
 	xConn               *x.Conn
 	keySymbols          *keysyms.KeySymbols
 	service             *dbusutil.Service
+	sessionSigLoop      *dbusutil.SignalLoop
 	//nolint
 	signals *struct {
 		CancelAllArea                     struct{}
@@ -87,9 +88,21 @@ type Manager struct {
 	idAreaInfoMap         map[string]*coordinateInfo
 	idReferCountMap       map[string]int32
 	fullscreenMotionCount int32
+	cursorMask      uint32
 
 	mu sync.Mutex
 }
+
+const (
+	buttonLeft  = 272
+	buttonRight = 273
+	leftBit     = 0
+	rightBit    = 1
+	midBit      = 2
+	x11BtnLeft  = 1
+	x11BtnRight = 3
+	x11BtnMid   = 2
+)
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	xConn, err := x.NewConn()
@@ -107,6 +120,10 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		idAreaInfoMap:       make(map[string]*coordinateInfo),
 		idReferCountMap:     make(map[string]int32),
 	}
+	sessionBus := m.service.Conn()
+	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
+	m.sessionSigLoop.Start()
+	m.cursorMask = 0
 	return m, nil
 }
 
@@ -132,6 +149,101 @@ func (m *Manager) selectXInputEvents() {
 }
 
 const evMaskForHideCursor uint32 = input.XIEventMaskRawMotion | input.XIEventMaskRawTouchBegin
+
+func (m *Manager) listenGlobalCursorPressed() error {
+	sessionBus := m.service.Conn()
+	logger.Debug("[test global key] sessionBus", sessionBus)
+	err := sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonPress").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.ButtonPress",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			key := sig.Body[0].(uint32)
+			x := sig.Body[1].(uint32)
+			y := sig.Body[2].(uint32)
+			if key == buttonLeft {
+				m.cursorMask |= uint32(uint32(1) << leftBit)
+				key = x11BtnLeft
+			} else if key == buttonRight {
+				m.cursorMask |= uint32(uint32(1) << rightBit)
+				key = x11BtnRight
+			} else {
+				m.cursorMask |= uint32(uint32(1) << midBit)
+				key = x11BtnMid
+			}
+			m.handleButtonEvent(int32(key), true, int32(x), int32(y))
+		}
+	})
+	return nil
+}
+
+func (m *Manager) listenGlobalCursorRelease() error {
+	sessionBus := m.service.Conn()
+	err := sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonRelease").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.ButtonRelease",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			key := sig.Body[0].(uint32)
+			x := sig.Body[1].(uint32)
+			y := sig.Body[2].(uint32)
+
+			if key == buttonLeft {
+				m.cursorMask &= ^(uint32(1) << leftBit)
+				key = x11BtnLeft
+			} else if key == buttonRight {
+				m.cursorMask &= ^(uint32(1) << rightBit)
+				key = x11BtnRight
+			} else {
+				m.cursorMask &= ^(uint32(1) << midBit)
+				key = x11BtnMid
+			}
+			m.handleButtonEvent(int32(key), false, int32(x), int32(y))
+		}
+	})
+	return nil
+}
+
+func (m *Manager) listenGlobalCursorMove() error {
+	sessionBus := m.service.Conn()
+	err := sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.CursorMove",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			x := sig.Body[0].(uint32)
+			y := sig.Body[1].(uint32)
+
+			//m.cursorMask |= (1 << cursorBit)
+			var hasPress = false
+			if m.cursorMask > 0 {
+				hasPress = true
+			}
+
+			//logger.Debug("[test global cursor] get CursorMove", x, y)
+			m.handleCursorEvent(int32(x), int32(y), hasPress)
+		}
+	})
+	return nil
+}
 
 func (m *Manager) deselectXInputEvents() {
 	var evMask uint32
