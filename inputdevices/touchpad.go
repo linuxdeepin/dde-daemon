@@ -423,10 +423,10 @@ func enableGesture(enabled bool) {
 	if err != nil {
 		return
 	}
-	if s.GetBoolean("enabled") == enabled {
+	if s.GetBoolean("touch-pad-enabled") == enabled {
 		return
 	}
 
-	s.SetBoolean("enabled", enabled)
+	s.SetBoolean("touch-pad-enabled", enabled)
 	s.Unref()
 }
