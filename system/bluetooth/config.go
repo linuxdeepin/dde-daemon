@@ -24,6 +24,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
+	"pkg.deepin.io/lib/log"
 	"pkg.deepin.io/lib/utils"
 )
 
@@ -33,7 +35,7 @@ type config struct {
 	Adapters map[string]*adapterConfig // use adapter hardware address as key
 	Devices  map[string]*deviceConfig  // use adapter address/device address as key
 
-	Discoverable bool `json:"discoverable"`
+	//Discoverable bool `json:"discoverable"`
 }
 
 type adapterConfig struct {
@@ -59,12 +61,11 @@ type deviceConfigWithAddress struct {
 
 func newConfig() (c *config) {
 	c = &config{}
-	c.core.SetConfigName("bluetooth")
+	c.core.SetConfigFile("/var/lib/dde-daemon/bluetooth/config.json")
 	logger.Info("load bluetooth config file:", c.core.GetConfigFile())
 	c.Adapters = make(map[string]*adapterConfig)
 	c.Devices = make(map[string]*deviceConfig)
-	c.Discoverable = true
-	c.load()
+	//c.Discoverable = true
 	return
 }
 
@@ -72,6 +73,9 @@ func (c *config) load() {
 	err := c.core.Load(c)
 	if err != nil {
 		logger.Warning(err)
+	}
+	if logger.GetLogLevel() == log.LevelDebug {
+		logger.Debugf("load config, adapters: %v, devices: %v", spew.Sdump(c.Adapters), spew.Sdump(c.Devices))
 	}
 }
 
@@ -87,29 +91,23 @@ func newAdapterConfig() (ac *adapterConfig) {
 	return
 }
 
-func (c *config) clearSpareConfig(b *Bluetooth) {
+func (c *config) clearSpareConfig(b *SysBluetooth) {
 	var adapterAddresses []string
 	// key is adapter address
 	var adapterDevicesMap = make(map[string][]*device)
 
-	b.adaptersLock.Lock()
+	b.adaptersMu.Lock()
 	for _, adapter := range b.adapters {
-		adapterAddresses = append(adapterAddresses, adapter.address)
+		adapterAddresses = append(adapterAddresses, adapter.Address)
 	}
-	b.adaptersLock.Unlock()
+	b.adaptersMu.Unlock()
 
 	for _, adapterAddr := range adapterAddresses {
 		adapterDevicesMap[adapterAddr] = b.getAdapterDevices(adapterAddr)
 	}
 
 	c.core.Lock()
-	// remove spare adapters
-	for addr := range c.Adapters {
-		if !isStringInArray(addr, adapterAddresses) {
-			delete(c.Adapters, addr)
-		}
-	}
-
+	// NOTE: 最好不要删除适配器的配置，因为有时候获取不到适配器，然后调用了本方法，就把适配器关闭了。
 	// remove spare devices
 	for addr := range c.Devices {
 		addrParts := strings.SplitN(addr, "/", 2)
@@ -136,6 +134,7 @@ func (c *config) clearSpareConfig(b *Bluetooth) {
 	}
 
 	c.core.Unlock()
+	c.save()
 }
 
 func (c *config) addAdapterConfig(address string) {
@@ -234,7 +233,7 @@ func (c *config) setDeviceConfigConnected(device *device, connected bool) {
 
 	c.core.Lock()
 	dc.Connected = connected
-	// when status is connect, set connected status as true, update latest time
+	// when status is connected, set connected status as true, update the latest time
 	dc.Connected = connected
 	dc.Icon = device.Icon
 	if connected {
@@ -246,52 +245,25 @@ func (c *config) setDeviceConfigConnected(device *device, connected bool) {
 	c.save()
 }
 
-// select latest devices from devAddressMap, each type only contain one device
-func (c *config) filterDemandedTypeDevices(devAddressMap map[string]*device) []*device {
-	var typeDeviceConfigSlice []*deviceConfigWithAddress
+// 根据配置文件中的最后连接时间 LatestTime 排序设备列表，最后连接时间越近（大），位置越前。
+func (c *config) softDevices(devices []*device) {
+	c.core.Lock()
+	defer c.core.Unlock()
 
-	// find latest devices to fill ordered type device
-	for _, deviceUnit := range devAddressMap {
-		// if device's address is empty, ignore this device
-		if deviceUnit.getAddress() == "" {
-			continue
+	sort.SliceStable(devices, func(i, j int) bool {
+		di := devices[i]
+		dj := devices[j]
+		ci := c.Devices[di.getAddress()]
+		cj := c.Devices[dj.getAddress()]
+		var latestTimeI int64 = 0
+		var latestTimeJ int64 = 0
+		if ci != nil {
+			latestTimeI = ci.LatestTime
 		}
-
-		// get device info from config devices according to address
-		devConfig := c.Devices[deviceUnit.getAddress()]
-		if devConfig == nil {
-			continue
+		if cj != nil {
+			latestTimeJ = cj.LatestTime
 		}
-
-		// only paired but not connected devices allowed to auto connect
-		if !deviceUnit.Paired || deviceUnit.connected {
-			continue
-		}
-		typeDeviceConfigSlice = append(typeDeviceConfigSlice, &deviceConfigWithAddress{
-			Icon:       devConfig.Icon,
-			Connected:  devConfig.Connected,
-			LatestTime: devConfig.LatestTime,
-			Address:    deviceUnit.getAddress(),
-		})
-	}
-
-	// sort device according to latest connected time
-	sort.SliceStable(typeDeviceConfigSlice, func(pre, next int) bool {
-		return typeDeviceConfigSlice[pre].LatestTime > typeDeviceConfigSlice[next].LatestTime
+		// LatestTime 越大的越在前面，设备配置（ci，cj）为 nil 的排在最后面。
+		return latestTimeI > latestTimeJ
 	})
-
-	// add all filtered devices to device list
-	var deviceList []*device
-	for _, devCfg := range typeDeviceConfigSlice {
-		// check if type devices is nil
-		if devCfg == nil {
-			continue
-		}
-		logger.Debug("devAddressMap", devCfg.LatestTime, devCfg.Address, devCfg.Connected)
-		// add auto connect device to list
-		deviceList = append(deviceList, devAddressMap[devCfg.Address])
-	}
-	logger.Debugf("all auto connect device is %v", deviceList)
-
-	return deviceList
 }

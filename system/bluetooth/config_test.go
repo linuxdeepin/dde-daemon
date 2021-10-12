@@ -11,7 +11,7 @@ const adapteraddress = "00:1A:7D:DA:71:13"
 const deviceaddress = "00:1A:7D:DA:71:13/00:1A:7D:DA:71:11"
 const testfile = "testfile"
 
-var deviceconfig = &deviceConfig{
+var _deviceConfig = &deviceConfig{
 	Icon:       "computer",
 	Connected:  false,
 	LatestTime: 0,
@@ -57,7 +57,7 @@ func Test_config(t *testing.T) {
 	logger.Info("load bluetooth config file:", c.core.GetConfigFile())
 	c.Adapters = make(map[string]*adapterConfig)
 	c.Devices = make(map[string]*deviceConfig)
-	c.Discoverable = true
+	//c.Discoverable = true
 
 	c.addAdapterConfig(adapteraddress)
 
@@ -69,7 +69,7 @@ func Test_config(t *testing.T) {
 
 	assert.Equal(t, c.Adapters, configAdapters)
 	assert.Equal(t, c.Devices, configDevices)
-	assert.True(t, c.Discoverable)
+	//assert.True(t, c.Discoverable)
 
 	c.setAdapterConfigPowered(adapteraddress, false)
 	assert.False(t, c.getAdapterConfigPowered(adapteraddress))
@@ -77,10 +77,10 @@ func Test_config(t *testing.T) {
 	c.setAdapterConfigPowered(adapteraddress, true)
 	assert.True(t, c.getAdapterConfigPowered(adapteraddress))
 
-	c.setConfigDeviceConnected(deviceaddress, deviceconfig, true)
+	c.setConfigDeviceConnected(deviceaddress, _deviceConfig, true)
 	assert.True(t, c.getDeviceConfigConnected(deviceaddress))
 
-	c.setConfigDeviceConnected(deviceaddress, deviceconfig, false)
+	c.setConfigDeviceConnected(deviceaddress, _deviceConfig, false)
 	assert.False(t, c.getDeviceConfigConnected(deviceaddress))
 
 	err := os.Remove(testfile)

@@ -20,20 +20,14 @@
 package bluetooth
 
 import (
-	"fmt"
-	"os"
-	"time"
+	"encoding/json"
+	"sync"
 
-	dbus "github.com/godbus/dbus"
-	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
+	"github.com/godbus/dbus"
 )
 
-type adapter struct {
-	core    bluez.HCI
-	address string
-
+type AdapterInfo struct {
+	Address             string
 	Path                dbus.ObjectPath
 	Name                string
 	Alias               string
@@ -41,246 +35,69 @@ type adapter struct {
 	Discovering         bool
 	Discoverable        bool
 	DiscoverableTimeout uint32
-	// discovering timer, when time is up, stop discovering until start button is clicked next time
-	discoveringTimeout *time.Timer
-	//Scan timeout flag
-	discoveringTimeoutFlag              bool
-	scanReadyToConnectDeviceTimeout     *time.Timer
-	scanReadyToConnectDeviceTimeoutFlag bool
-	waitDiscovery                       bool
 }
 
-var defaultDiscoveringTimeout = 1 * time.Minute
-var defaultFindDeviceTimeout = 1 * time.Second
-
-func newAdapter(systemSigLoop *dbusutil.SignalLoop, apath dbus.ObjectPath) (a *adapter) {
-	a = &adapter{Path: apath}
-	systemConn := systemSigLoop.Conn()
-	a.core, _ = bluez.NewHCI(systemConn, apath)
-	a.core.InitSignalExt(systemSigLoop, true)
-	a.connectProperties()
-	a.address, _ = a.core.Adapter().Address().Get(0)
-	a.waitDiscovery = true
-	// 用于定时停止扫描
-	a.discoveringTimeout = time.AfterFunc(defaultDiscoveringTimeout, func() {
-		logger.Debug("discovery time out, stop discovering")
-		//扫描结束后更新备份
-		globalBluetooth.backupDeviceLock.Lock()
-		globalBluetooth.backupDevices = make(map[dbus.ObjectPath][]*backupDevice)
-		for adapterpath, devices := range globalBluetooth.devices {
-			for _, device := range devices {
-				globalBluetooth.backupDevices[adapterpath] = append(globalBluetooth.backupDevices[adapterpath], newBackupDevice(device))
-			}
-		}
-		globalBluetooth.backupDeviceLock.Unlock()
-		//Scan timeout
-		a.discoveringTimeoutFlag = true
-		if err := a.core.Adapter().StopDiscovery(0); err != nil {
-			logger.Warningf("stop discovery failed, err:%v", err)
-		}
-		globalBluetooth.prepareToConnectedDevice = ""
-	})
-	//扫描1S钟，未扫描到该设备弹出通知
-	a.scanReadyToConnectDeviceTimeout = time.AfterFunc(defaultFindDeviceTimeout, func() {
-		a.scanReadyToConnectDeviceTimeoutFlag = false
-		_, err := globalBluetooth.getDevice(globalBluetooth.prepareToConnectedDevice)
-		if err != nil {
-			backupdevice, err1 := globalBluetooth.getBackupDevice(globalBluetooth.prepareToConnectedDevice)
-			if err1 != nil {
-				logger.Debug("getBackupDevice Failed:", err1)
-				return
-			}
-			notifyConnectFailedHostDown(backupdevice.Alias)
-		}
-		//清空备份
-		globalBluetooth.backupDeviceLock.Lock()
-		globalBluetooth.backupDevices = make(map[dbus.ObjectPath][]*backupDevice)
-		globalBluetooth.backupDeviceLock.Unlock()
-	})
-	// stop timer at first
-	a.discoveringTimeout.Stop()
-	a.scanReadyToConnectDeviceTimeout.Stop()
-	// fix alias
-	alias, _ := a.core.Adapter().Alias().Get(0)
-	if alias == "first-boot-hostname" {
-		hostname, err := os.Hostname()
-		if err == nil {
-			if hostname != "first-boot-hostname" {
-				// reset alias
-				err = a.core.Adapter().Alias().Set(0, "")
-				if err != nil {
-					logger.Warning(err)
-				}
-			}
-		} else {
-			logger.Warning("failed to get hostname:", err)
-		}
+func unmarshalAdapterInfo(data string) (*AdapterInfo, error) {
+	var adapter AdapterInfo
+	err := json.Unmarshal([]byte(data), &adapter)
+	if err != nil {
+		return nil, err
 	}
-
-	a.Alias, _ = a.core.Adapter().Alias().Get(0)
-	a.Name, _ = a.core.Adapter().Name().Get(0)
-	a.Powered, _ = a.core.Adapter().Powered().Get(0)
-	a.Discovering, _ = a.core.Adapter().Discovering().Get(0)
-	a.Discoverable, _ = a.core.Adapter().Discoverable().Get(0)
-	a.DiscoverableTimeout, _ = a.core.Adapter().DiscoverableTimeout().Get(0)
-	return
+	return &adapter, nil
 }
 
-func (a *adapter) destroy() {
-	a.core.RemoveHandler(proxy.RemoveAllHandlers)
+type AdapterInfos struct {
+	mu    sync.Mutex
+	infos []AdapterInfo
 }
 
-func (a *adapter) String() string {
-	return fmt.Sprintf("adapter %s [%s]", a.Alias, a.address)
+func (a *AdapterInfos) getAdapter(path dbus.ObjectPath) (int, *AdapterInfo) {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	return a.getAdapterNoLock(path)
 }
 
-func (a *adapter) notifyAdapterAdded() {
-	logger.Info("AdapterAdded", a)
-	err := globalBluetooth.service.Emit(globalBluetooth, "AdapterAdded", marshalJSON(a))
-	if err != nil {
-		logger.Warning(err)
+func (a *AdapterInfos) getAdapterNoLock(path dbus.ObjectPath) (int, *AdapterInfo) {
+	for idx, info := range a.infos {
+		if info.Path == path {
+			return idx, &info
+		}
 	}
-	globalBluetooth.updateState()
+	return -1, nil
 }
 
-func (a *adapter) notifyAdapterRemoved() {
-	logger.Info("AdapterRemoved", a)
-	err := globalBluetooth.service.Emit(globalBluetooth, "AdapterRemoved", marshalJSON(a))
-	if err != nil {
-		logger.Warning(err)
-	}
-	globalBluetooth.updateState()
-}
+func (a *AdapterInfos) addOrUpdateAdapter(adapterInfo *AdapterInfo) {
+	a.mu.Lock()
+	defer a.mu.Unlock()
 
-func (a *adapter) notifyPropertiesChanged() {
-	err := globalBluetooth.service.Emit(globalBluetooth, "AdapterPropertiesChanged", marshalJSON(a))
-	if err != nil {
-		logger.Warning(err)
-	}
-	globalBluetooth.updateState()
-}
-
-func (a *adapter) connectProperties() {
-	err := a.core.Adapter().Name().ConnectChanged(func(hasValue bool, value string) {
-		if !hasValue {
-			return
-		}
-		a.Name = value
-		logger.Debugf("%s Name: %v", a, value)
-		a.notifyPropertiesChanged()
-	})
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	err = a.core.Adapter().Alias().ConnectChanged(func(hasValue bool, value string) {
-		if !hasValue {
-			return
-		}
-		a.Alias = value
-		logger.Debugf("%s Alias: %v", a, value)
-		a.notifyPropertiesChanged()
-	})
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	err = a.core.Adapter().Powered().ConnectChanged(func(hasValue bool, value bool) {
-		if !hasValue {
-			return
-		}
-		a.Powered = value
-		logger.Debugf("%s Powered: %v", a, value)
-
-		if a.Powered {
-			err := a.core.Adapter().Discoverable().Set(0, globalBluetooth.config.Discoverable)
-			if err != nil {
-				logger.Warningf("failed to set discoverable for %s: %v", a, err)
-			}
-			go func() {
-				time.Sleep(1 * time.Second)
-				err = a.core.Adapter().StopDiscovery(0)
-				if err != nil {
-					logger.Warningf("failed to stop discovery for %s: %v", a, err)
-				}
-				a.waitDiscovery = true
-				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
-				globalBluetooth.tryConnectPairedDevices()
-			}()
-		} else {
-			// if power off, stop discovering time out
-			a.discoveringTimeout.Stop()
-		}
-		// Sleep for 1s and wait for bluez to set the attributes before sending the attribute change signal
-		time.Sleep(1 * time.Second)
-		a.notifyPropertiesChanged()
-	})
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	err = a.core.Adapter().Discovering().ConnectChanged(func(hasValue bool, value bool) {
-		if !hasValue {
-			return
-		}
-		a.Discovering = value
-		logger.Debugf("%s Discovering: %v", a, value)
-		//Scan timeout and send attribute change signal directly
-		if value {
-			a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
-		}
-		if a.discoveringTimeoutFlag {
-			a.notifyPropertiesChanged()
-		} else {
-			if value != a.Powered {
-				return
-			}
-			a.notifyPropertiesChanged()
-		}
-	})
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	err = a.core.Adapter().Discoverable().ConnectChanged(func(hasValue bool, value bool) {
-		if !hasValue {
-			return
-		}
-		a.Discoverable = value
-		logger.Debugf("%s Discoverable: %v", a, value)
-		a.notifyPropertiesChanged()
-	})
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	err = a.core.Adapter().DiscoverableTimeout().ConnectChanged(func(hasValue bool, value uint32) {
-		if !hasValue {
-			return
-		}
-		a.DiscoverableTimeout = value
-		logger.Debugf("%s DiscoverableTimeout: %v", a, value)
-		a.notifyPropertiesChanged()
-	})
-	if err != nil {
-		logger.Warning(err)
-	}
-}
-func (a *adapter) startDiscovery() {
-	a.discoveringTimeoutFlag = false
-	//已经开始扫描
-	if a.Discovering {
+	idx, _ := a.getAdapterNoLock(adapterInfo.Path)
+	if idx != -1 {
+		// 更新
+		a.infos[idx] = *adapterInfo
 		return
 	}
+	a.infos = append(a.infos, *adapterInfo)
+}
 
-	logger.Debugf("start discovery")
-	err := a.core.Adapter().StartDiscovery(0)
-	if err != nil {
-		logger.Warningf("failed to start discovery for %s: %v", a, err)
-	} else {
-		logger.Debug("reset timer for stop scan")
-		a.waitDiscovery = false
-		// start discovering success, reset discovering timer
-		a.discoveringTimeout.Reset(defaultDiscoveringTimeout)
+func (a *AdapterInfos) removeAdapter(path dbus.ObjectPath) {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+
+	idx, _ := a.getAdapterNoLock(path)
+	if idx == -1 {
+		return
 	}
+	a.infos = append(a.infos[:idx], a.infos[idx+1:]...)
+}
+
+func (a *AdapterInfos) toJSON() string {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	return marshalJSON(a.infos)
+}
+
+func (a *AdapterInfos) clear() {
+	a.mu.Lock()
+	a.infos = nil
+	a.mu.Unlock()
 }

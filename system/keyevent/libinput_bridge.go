@@ -23,7 +23,7 @@ package keyevent
 // #cgo LDFLAGS: -ludev -lm
 import "C"
 
-// nolint
+//nolint
 // 按键状态
 const (
 	KEY_STATE_RELEASED = 0 // 松开

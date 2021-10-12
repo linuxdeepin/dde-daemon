@@ -20,41 +20,38 @@
 package bluetooth
 
 import (
-	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/log"
 )
 
-type daemon struct {
+type module struct {
 	*loader.ModuleBase
 }
 
-func newBluetoothDaemon(logger *log.Logger) *daemon {
-	var d = new(daemon)
+func newBluetoothModule(logger *log.Logger) *module {
+	var d = new(module)
 	d.ModuleBase = loader.NewModuleBase("bluetooth", d, logger)
 	return d
 }
 
-func (*daemon) GetDependencies() []string {
-	return []string{"audio"}
+func (*module) GetDependencies() []string {
+	return nil
 }
 
-var globalBluetooth *Bluetooth
-var globalAgent *agent
+var _bt *SysBluetooth
 
-func (d *daemon) Start() error {
-	if globalBluetooth != nil {
+func (m *module) Start() error {
+	if _bt != nil {
 		return nil
 	}
 
 	service := loader.GetService()
-	globalBluetooth = newBluetooth(service)
+	_bt = newSysBluetooth(service)
 
-	err := service.Export(dbusPath, globalBluetooth)
+	err := service.Export(dbusPath, _bt)
 	if err != nil {
 		logger.Warning("failed to export bluetooth:", err)
-		globalBluetooth = nil
+		_bt = nil
 		return err
 	}
 
@@ -63,40 +60,22 @@ func (d *daemon) Start() error {
 		return err
 	}
 
-	sysService, err := dbusutil.NewSystemService()
-	if err != nil {
-		return err
-	}
+	_bt.agent = newAgent(service)
+	_bt.agent.b = _bt
 
-	globalAgent = newAgent(sysService)
-	globalAgent.b = globalBluetooth
-	globalBluetooth.agent = globalAgent
-
-	err = sysService.Export(btcommon.SessionAgentPath, globalAgent)
+	err = service.Export(agentDBusPath, _bt.agent)
 	if err != nil {
 		logger.Warning("failed to export agent:", err)
 		return err
 	}
 
-	obexAgent := newObexAgent(service, globalBluetooth)
-	err = service.Export(obexAgentDBusPath, obexAgent)
-	if err != nil {
-		logger.Warning("failed to export obex agent:", err)
-		return err
-	}
-	globalBluetooth.obexAgent = obexAgent
-
-	err = initNotifications()
-	if err != nil {
-		return err
-	}
 	// initialize bluetooth after dbus interface installed
-	go globalBluetooth.init()
+	go _bt.init()
 	return nil
 }
 
-func (*daemon) Stop() error {
-	if globalBluetooth == nil {
+func (*module) Stop() error {
+	if _bt == nil {
 		return nil
 	}
 
@@ -106,7 +85,7 @@ func (*daemon) Stop() error {
 		logger.Warning(err)
 	}
 
-	globalBluetooth.destroy()
-	globalBluetooth = nil
+	_bt.destroy()
+	_bt = nil
 	return nil
 }

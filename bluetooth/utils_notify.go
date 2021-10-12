@@ -26,7 +26,7 @@ import (
 	"sync"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	"github.com/godbus/dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"pkg.deepin.io/lib/dbusutil"
 	. "pkg.deepin.io/lib/gettext"
@@ -94,33 +94,9 @@ func notify(icon, summary, body string) {
 	globalNotifyMu.Unlock()
 }
 
-func notifyConnected(alias string) {
-	format := Tr("Connect %q successfully")
-	notify(notifyIconBluetoothConnected, "", fmt.Sprintf(format, alias))
-}
-
-func notifyDisconnected(alias string) {
-	format := Tr("%q disconnected")
-	notify(notifyIconBluetoothDisconnected, "", fmt.Sprintf(format, alias))
-}
-
-func notifyConnectFailedHostDown(alias string) {
-	format := Tr("Make sure %q is turned on and in range")
-	notifyConnectFailedAux(alias, format)
-}
-
-func notifyConnectFailedAux(alias, format string) {
-	notify(notifyIconBluetoothConnectFailed, Tr("Bluetooth connection failed"), fmt.Sprintf(format, alias))
-}
-
-func notifyConnectFailedResourceUnavailable(alias, adapterAlias string) {
-	format := Tr("%q can no longer connect to %q. Try to forget this device and pair it again.")
-	notify(notifyIconBluetoothConnectFailed, Tr("Bluetooth connection failed"), fmt.Sprintf(format, adapterAlias, alias))
-}
-
 // notify pc initiative connect to device
-// so dont need to show notification window
-func notifyInitiativeConnect(dev *device, pinCode string) error {
+// so do not need to show notification window
+func notifyInitiativeConnect(dev *DeviceInfo, pinCode string) error {
 	if checkProcessExists(bluetoothDialog) {
 		logger.Info("initiative already exist")
 		return nil
@@ -128,6 +104,7 @@ func notifyInitiativeConnect(dev *device, pinCode string) error {
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano(), 10)
 	//use command to open osd window to show pin code
+	// #nosec G204
 	cmd := exec.Command(notifyDdeDialogPath, pinCode, string(dev.Path), timestamp)
 	err := cmd.Start()
 	if err != nil {
@@ -147,7 +124,7 @@ func notifyInitiativeConnect(dev *device, pinCode string) error {
 
 // device passive connect to pc
 // so need to show notification window
-func notifyPassiveConnect(dev *device, pinCode string) error {
+func notifyPassiveConnect(dev *DeviceInfo, pinCode string) error {
 	format := Tr("Click here to connect to %q")
 	summary := Tr("Add Bluetooth devices")
 	body := fmt.Sprintf(format, dev.Name)
@@ -195,7 +172,7 @@ type timerNotify struct {
 	actionInvokedChan chan bool
 }
 
-// get timer instance
+// GetTimerNotifyInstance get timer instance
 func GetTimerNotifyInstance() *timerNotify {
 	// create a global timer notify object
 	timerNotifier := &timerNotify{

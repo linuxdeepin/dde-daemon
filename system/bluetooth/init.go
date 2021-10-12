@@ -20,12 +20,12 @@
 package bluetooth
 
 import (
-	"errors"
+	"pkg.deepin.io/dde/daemon/loader"
+	"pkg.deepin.io/lib/log"
 )
 
-// nolint
-var (
-	bluezErrorInvalidKey = errors.New("org.bluez.Error.Failed:Resource temporarily unavailable")
-	errBluezRejected     = errors.New("org.bluez.Error.Rejected")
-	errBluezCanceled     = errors.New("org.bluez.Error.Canceled")
-)
+var logger = log.NewLogger("daemon/bluetooth")
+
+func init() {
+	loader.Register(newBluetoothModule(logger))
+}

@@ -25,7 +25,6 @@ import (
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/dde/daemon/appearance"
-	"pkg.deepin.io/dde/daemon/bluetooth"
 	"pkg.deepin.io/dde/daemon/network"
 )
 
@@ -55,7 +54,6 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 			// TODO(jouyouyun): implement 'HandleForSleep' register
 			appearance.HandlePrepareForSleep(true)
 			network.HandlePrepareForSleep(true)
-			bluetooth.HandlePrepareForSleep(true)
 			if inhibitor.OnBeforeSuspend != nil {
 				inhibitor.OnBeforeSuspend()
 			}
@@ -75,7 +73,6 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 				_manager.handleBatteryDisplayUpdate()
 			}
 			network.HandlePrepareForSleep(false)
-			bluetooth.HandlePrepareForSleep(false)
 			appearance.HandlePrepareForSleep(false)
 			err := inhibitor.block()
 			if err != nil {

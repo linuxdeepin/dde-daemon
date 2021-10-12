@@ -20,19 +20,20 @@
 package bluetooth
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"sync"
 	"time"
 
-	dbus "github.com/godbus/dbus"
-	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
+	"github.com/godbus/dbus"
+	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/gettext"
 )
 
 const (
-	agentDBusPath      = dbusPath + "/Agent"
-	agentDBusInterface = "org.bluez.Agent1"
+	sessionAgentInterface = "com.deepin.system.Bluetooth.Agent"
 )
 
 type authorize struct {
@@ -42,8 +43,7 @@ type authorize struct {
 }
 
 type agent struct {
-	service      *dbusutil.Service
-	bluezManager bluez.Manager
+	service *dbusutil.Service
 
 	b       *Bluetooth
 	rspChan chan authorize
@@ -53,7 +53,7 @@ type agent struct {
 }
 
 func (*agent) GetInterfaceName() string {
-	return agentDBusInterface
+	return sessionAgentInterface
 }
 
 /*****************************************************************************/
@@ -73,18 +73,9 @@ func (a *agent) Release() *dbus.Error {
 func (a *agent) RequestPinCode(device dbus.ObjectPath) (pinCode string, busErr *dbus.Error) {
 	logger.Info("RequestPinCode()")
 
-	d, err := a.b.getDevice(device)
-	if err != nil {
-		logger.Warning(err)
-		return "", dbusutil.ToError(err)
-	}
-	d.agentWorkStart()
-	defer d.agentWorkEnd()
-
-	//return utils.RandString(8), nil
 	auth, err := a.emitRequest(device, "RequestPinCode")
 	if err != nil {
-		return "", dbusutil.ToError(err)
+		return "", toBusErrForAgent(err)
 	}
 	return auth.key, nil
 }
@@ -112,18 +103,9 @@ func (a *agent) DisplayPinCode(device dbus.ObjectPath, pinCode string) (err *dbu
 func (a *agent) RequestPasskey(device dbus.ObjectPath) (passkey uint32, busErr *dbus.Error) {
 	logger.Info("RequestPasskey()")
 
-	d, err := a.b.getDevice(device)
-	if err != nil {
-		logger.Warning(err)
-		return 0, dbusutil.ToError(err)
-	}
-	d.agentWorkStart()
-	defer d.agentWorkEnd()
-
-	//passkey = rand.Uint32() % 999999
 	auth, err := a.emitRequest(device, "RequestPasskey")
 	if err != nil {
-		return 0, dbusutil.ToError(err)
+		return 0, toBusErrForAgent(err)
 	}
 
 	key, err := strconv.ParseUint(auth.key, 10, 32)
@@ -147,9 +129,9 @@ func (a *agent) DisplayPasskey(device dbus.ObjectPath, passkey uint32,
 	logger.Info("DisplayPasskey()", passkey, entered)
 	err := a.b.service.Emit(a.b, "DisplayPasskey", device, passkey, uint32(entered))
 	if err != nil {
-		logger.Warning("Failed to emit signal 'DisplayPasskey':", err, device, passkey, entered)
+		logger.Warning("failed to emit signal 'DisplayPasskey':", err, device, passkey, entered)
 	}
-	return nil
+	return dbusutil.ToError(err)
 }
 
 //RequestConfirmation This method gets called when the service daemon needs to confirm a passkey for an authentication.
@@ -161,17 +143,9 @@ func (a *agent) DisplayPasskey(device dbus.ObjectPath, passkey uint32,
 func (a *agent) RequestConfirmation(device dbus.ObjectPath, passkey uint32) *dbus.Error {
 	logger.Info("RequestConfirmation", device, passkey)
 
-	d, err := a.b.getDevice(device)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
-	d.agentWorkStart()
-	defer d.agentWorkEnd()
-
 	key := fmt.Sprintf("%06d", passkey)
-	_, err = a.emitRequest(device, "RequestConfirmation", key)
-	return dbusutil.ToError(err)
+	_, err := a.emitRequest(device, "RequestConfirmation", key)
+	return toBusErrForAgent(err)
 }
 
 //RequestAuthorization method gets called to request the user to authorize an incoming pairing attempt which
@@ -181,16 +155,8 @@ func (a *agent) RequestConfirmation(device dbus.ObjectPath, passkey uint32) *dbu
 func (a *agent) RequestAuthorization(device dbus.ObjectPath) *dbus.Error {
 	logger.Info("RequestAuthorization()")
 
-	d, err := a.b.getDevice(device)
-	if err != nil {
-		logger.Warning(err)
-		return dbusutil.ToError(err)
-	}
-	d.agentWorkStart()
-	defer d.agentWorkEnd()
-
-	_, err = a.emitRequest(device, "RequestAuthorization")
-	return dbusutil.ToError(err)
+	_, err := a.emitRequest(device, "RequestAuthorization")
+	return toBusErrForAgent(err)
 }
 
 //AuthorizeService method gets called when the service daemon needs to authorize a connection/service request.
@@ -198,9 +164,7 @@ func (a *agent) RequestAuthorization(device dbus.ObjectPath) *dbus.Error {
 //				   org.bluez.Error.Canceled
 func (a *agent) AuthorizeService(device dbus.ObjectPath, uuid string) *dbus.Error {
 	logger.Info("AuthorizeService()")
-	// TODO: DO NOT forbiden device connect service
-	//dbus.Emit(a.b, "AuthorizeService")
-	//return a.emitRequest(device, uuid, "AuthorizeService")
+	// TODO: DO NOT forbid device connect service
 	return nil
 }
 
@@ -210,6 +174,42 @@ func (a *agent) Cancel() *dbus.Error {
 	a.rspChan <- authorize{path: a.requestDevice, accept: false, key: ""}
 	a.emitCancelled()
 	return nil
+}
+
+// toBusErrForAgent 把错误转换为 dbus 错误。
+// 对于已经是 dbus 错误的不经过转换。
+func toBusErrForAgent(err error) *dbus.Error {
+	v, ok := err.(*dbus.Error)
+	if ok {
+		return v
+	}
+	// NOTE: *dbus.Error 没有实现 dbusutil.DBusError 接口
+	return dbusutil.ToError(err)
+}
+
+func (a *agent) SendNotify(arg string) *dbus.Error {
+	logger.Debug("agent SendNotify", arg)
+	var msg btcommon.NotifyMsg
+	err := json.Unmarshal([]byte(arg), &msg)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
+	notify(msg.Icon, localizeStrToStr(msg.Summary), localizeStrToStr(msg.Body))
+	return nil
+}
+
+func localizeStrToStr(str *btcommon.LocalizeStr) string {
+	if str == nil {
+		return ""
+	}
+
+	args := make([]interface{}, len(str.Args))
+	for idx, arg := range str.Args {
+		args[idx] = arg
+	}
+	return fmt.Sprintf(gettext.Tr(str.Format), args...)
 }
 
 /*****************************************************************************/
@@ -223,33 +223,20 @@ func newAgent(service *dbusutil.Service) (a *agent) {
 }
 
 func (a *agent) init() {
-	sysBus := a.service.Conn()
-	a.bluezManager = bluez.NewManager(sysBus)
-	a.registerDefaultAgent()
+	a.register()
 }
 
-func (a *agent) registerDefaultAgent() {
-	// register agent
-	err := a.bluezManager.AgentManager().RegisterAgent(0, agentDBusPath, "DisplayYesNo")
+func (a *agent) register() {
+	err := a.b.sysBt.RegisterAgent(0, btcommon.SessionAgentPath)
 	if err != nil {
-		logger.Warning("failed to register agent:", err)
-		return
-	}
-
-	// request default agent
-	err = a.bluezManager.AgentManager().RequestDefaultAgent(0, agentDBusPath)
-	if err != nil {
-		logger.Warning("failed to become the default agent:", err)
-		err = a.bluezManager.AgentManager().UnregisterAgent(0, agentDBusPath)
-		if err != nil {
-			logger.Warning(err)
-		}
-		return
+		logger.Warning(err)
+	} else {
+		logger.Debug("register agent done")
 	}
 }
 
 func (a *agent) destroy() {
-	err := a.bluezManager.AgentManager().UnregisterAgent(0, agentDBusPath)
+	err := a.b.sysBt.UnregisterAgent(0, btcommon.SessionAgentPath)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -274,7 +261,7 @@ func (a *agent) waitResponse() (auth authorize, err error) {
 	case auth = <-a.rspChan:
 		logger.Info("receive", auth)
 		if !auth.accept {
-			err = errBluezRejected
+			err = btcommon.ErrRejected
 			logger.Warningf("emitRequest return with: %v", err)
 			return
 		}
@@ -282,7 +269,7 @@ func (a *agent) waitResponse() (auth authorize, err error) {
 		return
 	case <-t.C:
 		logger.Info("timeout")
-		err = errBluezCanceled
+		err = btcommon.ErrCanceled
 		logger.Warningf("emitRequest return with: %v", err)
 		a.emitCancelled()
 		return
@@ -311,6 +298,14 @@ func (a *agent) emitCancelled() {
 	}
 }
 
+func (b *Bluetooth) getInitiativeConnect(devPath dbus.ObjectPath) bool {
+	return b.initiativeConnectMap.get(devPath)
+}
+
+func (b *Bluetooth) setInitiativeConnect(devPath dbus.ObjectPath, val bool) {
+	b.initiativeConnectMap.set(devPath, val)
+}
+
 func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...interface{}) (auth authorize, err error) {
 	logger.Info("emitRequest", devPath, signal, args)
 
@@ -321,16 +316,16 @@ func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...inte
 	d, err := a.b.getDevice(devPath)
 	if nil != err {
 		logger.Warningf("emitRequest can not find device: %v, %v", devPath, err)
-		return auth, errBluezCanceled
+		return auth, btcommon.ErrCanceled
 	}
 
 	// if signal is request confirmation, we deal signal self
 	if signal == "RequestConfirmation" {
 		// judge ensure state, if is true, means pc request a connection
 		// dont need to show notification window
-		if d.GetInitiativeConnect() {
+		if a.b.getInitiativeConnect(d.Path) {
 			// reset state
-			d.SetInitiativeConnect(false)
+			a.b.setInitiativeConnect(d.Path, false)
 			//if true, means pc active invoke the connect request
 			err = notifyInitiativeConnect(d, args[0].(string))
 			if err != nil {

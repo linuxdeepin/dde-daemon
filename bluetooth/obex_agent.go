@@ -30,7 +30,7 @@ import (
 	"sync"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	"github.com/godbus/dbus"
 	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"pkg.deepin.io/lib/dbusutil"

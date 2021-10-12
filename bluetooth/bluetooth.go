@@ -20,17 +20,18 @@
 package bluetooth
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"sync"
 	"time"
 
-	dbus "github.com/godbus/dbus"
-	apidevice "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.device"
-	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
+	"github.com/godbus/dbus"
+	sysbt "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth"
 	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
@@ -38,45 +39,14 @@ import (
 )
 
 const (
-	bluezDBusServiceName      = "org.bluez"
-	bluezAdapterDBusInterface = "org.bluez.Adapter1"
-	bluezDeviceDBusInterface  = "org.bluez.Device1"
-
 	dbusServiceName = "com.deepin.daemon.Bluetooth"
 	dbusPath        = "/com/deepin/daemon/Bluetooth"
 	dbusInterface   = dbusServiceName
-
-	daemonSysService = "com.deepin.daemon.Daemon"
-	daemonSysPath    = "/com/deepin/daemon/Daemon"
-	daemonSysIFC     = daemonSysService
-
-	methodSysBlueGetDeviceTech = daemonSysIFC + ".BluetoothGetDeviceTechnologies"
 )
+
 const (
 	bluetoothSchema = "com.deepin.dde.bluetooth"
 	displaySwitch   = "display-switch"
-)
-
-const (
-	StateUnavailable = 0
-	StateAvailable   = 1
-	StateConnected   = 2
-)
-
-// device type index
-const (
-	Computer = iota
-	Phone
-	Modem
-	NetworkWireless
-	AudioCard
-	CameraVideo
-	InputGaming
-	InputKeyboard
-	InputTablet
-	InputMouse
-	Printer
-	CameraPhone
 )
 
 // nolint
@@ -88,58 +58,27 @@ const (
 	transferStatusError     = "error"
 )
 
-var DeviceTypes []string = []string{
-	"computer",
-	"phone",
-	"modem",
-	"network-wireless",
-	"audio-card",
-	"camera-video",
-	"input-gaming",
-	"input-keyboard",
-	"input-tablet",
-	"input-mouse",
-	"printer",
-	"camera-photo",
-}
-
 //go:generate dbusutil-gen -type Bluetooth bluetooth.go
 //go:generate dbusutil-gen em -type Bluetooth,agent,obexAgent
 
 type Bluetooth struct {
 	service       *dbusutil.Service
+	sysBt         sysbt.Bluetooth
 	sigLoop       *dbusutil.SignalLoop
 	systemSigLoop *dbusutil.SignalLoop
-	config        *config
-	objectManager bluez.ObjectManager
 	sysDBusDaemon ofdbus.DBus
-	apiDevice     apidevice.Device
 	agent         *agent
 	obexAgent     *obexAgent
 	obexManager   obex.Manager
 
-	// adapter
-	adaptersLock sync.Mutex
-	adapters     map[dbus.ObjectPath]*adapter
+	adapters AdapterInfos
+	devices  DeviceInfoMap
 
-	// device
-	devicesLock sync.Mutex
-	devices     map[dbus.ObjectPath][]*device
-
-	//backupdevice
-	backupDeviceLock sync.Mutex
-	backupDevices    map[dbus.ObjectPath][]*backupDevice
+	initiativeConnectMap *initiativeConnectMap
 
 	PropsMu       sync.RWMutex
 	State         uint32 // StateUnavailable/StateAvailable/StateConnected
 	Transportable bool   //能否传输 True可以传输 false不能传输
-
-	// 当发起设备连接成功后，应该把连接的设备添加进设备列表
-	connectedDevices map[dbus.ObjectPath][]*device
-	connectedLock    sync.RWMutex
-	//设备被清空后需要连接的设备路径
-	prepareToConnectedDevice dbus.ObjectPath
-	prepareToConnectedLock   sync.Mutex
 
 	sessionCancelChMap   map[dbus.ObjectPath]chan struct{}
 	sessionCancelChMapMu sync.Mutex
@@ -231,7 +170,7 @@ type Bluetooth struct {
 }
 
 func newBluetooth(service *dbusutil.Service) (b *Bluetooth) {
-	systemConn, err := dbus.SystemBus()
+	sysBus, err := dbus.SystemBus()
 	if err != nil {
 		logger.Warning(err)
 		return nil
@@ -240,34 +179,21 @@ func newBluetooth(service *dbusutil.Service) (b *Bluetooth) {
 	b = &Bluetooth{
 		service:       service,
 		sigLoop:       dbusutil.NewSignalLoop(service.Conn(), 0),
-		systemSigLoop: dbusutil.NewSignalLoop(systemConn, 10),
+		systemSigLoop: dbusutil.NewSignalLoop(sysBus, 10),
 		obexManager:   obex.NewManager(service.Conn()),
 		Transportable: true,
 	}
 
-	b.adapters = make(map[dbus.ObjectPath]*adapter)
+	b.sysBt = sysbt.NewBluetooth(sysBus)
+	b.devices.infos = make(map[dbus.ObjectPath]DeviceInfos)
+	b.initiativeConnectMap = newInitiativeConnectMap()
+
 	return
 }
 
 func (b *Bluetooth) destroy() {
 	b.agent.destroy()
-
-	b.objectManager.RemoveHandler(proxy.RemoveAllHandlers)
 	b.sysDBusDaemon.RemoveHandler(proxy.RemoveAllHandlers)
-
-	b.devicesLock.Lock()
-	for _, devices := range b.devices {
-		for _, device := range devices {
-			device.destroy()
-		}
-	}
-	b.devicesLock.Unlock()
-
-	b.adaptersLock.Lock()
-	for _, adapter := range b.adapters {
-		adapter.destroy()
-	}
-	b.adaptersLock.Unlock()
 
 	err := b.service.StopExport(b)
 	if err != nil {
@@ -282,31 +208,176 @@ func (*Bluetooth) GetInterfaceName() string {
 
 func (b *Bluetooth) init() {
 	b.sigLoop.Start()
-
 	b.systemSigLoop.Start()
-	b.config = newConfig()
-	b.devices = make(map[dbus.ObjectPath][]*device)
-
-	b.backupDeviceLock.Lock()
-	b.backupDevices = make(map[dbus.ObjectPath][]*backupDevice)
-	b.backupDeviceLock.Unlock()
-
 	systemBus := b.systemSigLoop.Conn()
-
-	b.connectedLock.Lock()
-	b.connectedDevices = make(map[dbus.ObjectPath][]*device, len(DeviceTypes))
-	b.connectedLock.Unlock()
-
 	b.sessionCancelChMap = make(map[dbus.ObjectPath]chan struct{})
 
 	// start bluetooth goroutine
 	// monitor click signal or time out signal to close notification window
 	go beginTimerNotify(globalTimerNotifier)
 
-	b.apiDevice = apidevice.NewDevice(systemBus)
+	b.sysBt.InitSignalExt(b.systemSigLoop, true)
+
+	var err error
+	err = b.sysBt.State().ConnectChanged(func(hasValue bool, value uint32) {
+		if !hasValue {
+			return
+		}
+		b.setPropState(value)
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+	state, err := b.sysBt.State().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+	b.setPropState(state)
+
+	_, err = b.sysBt.ConnectAdapterAdded(func(adapterJSON string) {
+		adapterInfo, err := unmarshalAdapterInfo(adapterJSON)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+
+		b.adapters.addOrUpdateAdapter(adapterInfo)
+		err = b.service.Emit(b, "AdapterAdded", adapterJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	_, err = b.sysBt.ConnectAdapterRemoved(func(adapterJSON string) {
+		adapterInfo, err := unmarshalAdapterInfo(adapterJSON)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		b.adapters.removeAdapter(adapterInfo.Path)
+		err = b.service.Emit(b, "AdapterRemoved", adapterJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	_, err = b.sysBt.ConnectAdapterPropertiesChanged(func(adapterJSON string) {
+		adapterInfo, err := unmarshalAdapterInfo(adapterJSON)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+
+		b.adapters.addOrUpdateAdapter(adapterInfo)
+		err = b.service.Emit(b, "AdapterPropertiesChanged", adapterJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	// 初始化 b.adapters
+	adaptersJSON, err := b.sysBt.GetAdapters(0)
+	if err == nil {
+		var adapterInfos []AdapterInfo
+		err := json.Unmarshal([]byte(adaptersJSON), &adapterInfos)
+		if err == nil {
+			b.adapters.mu.Lock()
+			b.adapters.infos = adapterInfos
+			b.adapters.mu.Unlock()
+		} else {
+			logger.Warning(err)
+		}
+	} else {
+		logger.Warning(err)
+	}
+
+	_, err = b.sysBt.ConnectDeviceAdded(func(deviceJSON string) {
+		devInfo, err := unmarshalDeviceInfo(deviceJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+		logger.Debug("DeviceAdded", devInfo.Alias, devInfo.Path)
+		b.devices.addOrUpdateDevice(devInfo)
+		err = b.service.Emit(b, "DeviceAdded", deviceJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	_, err = b.sysBt.ConnectDeviceRemoved(func(deviceJSON string) {
+		devInfo, err := unmarshalDeviceInfo(deviceJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+		logger.Debug("DeviceRemoved", devInfo.Alias, devInfo.Path)
+		b.initiativeConnectMap.del(devInfo.Path)
+		b.devices.removeDevice(devInfo.AdapterPath, devInfo.Path)
+		err = b.service.Emit(b, "DeviceRemoved", deviceJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	_, err = b.sysBt.ConnectDevicePropertiesChanged(func(deviceJSON string) {
+		devInfo, err := unmarshalDeviceInfo(deviceJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+		b.devices.addOrUpdateDevice(devInfo)
+		err = b.service.Emit(b, "DevicePropertiesChanged", deviceJSON)
+		if err != nil {
+			logger.Warning(err)
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	// 初始化 b.devices
+	var adapterPaths []dbus.ObjectPath
+	b.adapters.mu.Lock()
+	for _, info := range b.adapters.infos {
+		adapterPaths = append(adapterPaths, info.Path)
+	}
+	b.adapters.mu.Unlock()
+
+	for _, adapterPath := range adapterPaths {
+		devicesJSON, err := b.sysBt.GetDevices(0, adapterPath)
+		if err == nil {
+			var devices DeviceInfos
+			err = json.Unmarshal([]byte(devicesJSON), &devices)
+			if err == nil {
+				b.devices.mu.Lock()
+				b.devices.infos[adapterPath] = devices
+				b.devices.mu.Unlock()
+			} else {
+				logger.Warning(err)
+			}
+
+		} else {
+			logger.Warning(err)
+		}
+
+	}
+
 	b.sysDBusDaemon = ofdbus.NewDBus(systemBus)
 	b.sysDBusDaemon.InitSignalExt(b.systemSigLoop, true)
-	_, err := b.sysDBusDaemon.ConnectNameOwnerChanged(b.handleDBusNameOwnerChanged)
+	_, err = b.sysDBusDaemon.ConnectNameOwnerChanged(b.handleDBusNameOwnerChanged)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -314,372 +385,61 @@ func (b *Bluetooth) init() {
 	b.settings = gio.NewSettings(bluetoothSchema)
 	b.DisplaySwitch.Bind(b.settings, displaySwitch)
 
-	// initialize dbus object manager
-	b.objectManager = bluez.NewObjectManager(systemBus)
-
-	// connect signals
-	b.objectManager.InitSignalExt(b.systemSigLoop, true)
-	_, err = b.objectManager.ConnectInterfacesAdded(b.handleInterfacesAdded)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	_, err = b.objectManager.ConnectInterfacesRemoved(b.handleInterfacesRemoved)
-	if err != nil {
-		logger.Warning(err)
-	}
-
 	b.agent.init()
-	b.loadObjects()
 	b.obexAgent.init()
-
-	b.config.clearSpareConfig(b)
-	b.config.save()
-	go b.tryConnectPairedDevices()
-	// move to power module
-	// b.wakeupWorkaround()
-}
-
-func (b *Bluetooth) unblockBluetoothDevice() {
-	has, err := b.apiDevice.HasBluetoothDeviceBlocked(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	if has {
-		err = b.apiDevice.UnblockBluetoothDevices(0)
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-}
-
-func (b *Bluetooth) loadObjects() {
-	// add exists adapters and devices
-	objects, err := b.objectManager.GetManagedObjects(0)
-	if err != nil {
-		logger.Error(err)
-		return
-	}
-
-	b.unblockBluetoothDevice()
-	// add adapters
-	for path, obj := range objects {
-		if _, ok := obj[bluezAdapterDBusInterface]; ok {
-			b.addAdapter(path)
-		}
-	}
-
-	// then add devices
-	for path, obj := range objects {
-		if _, ok := obj[bluezDeviceDBusInterface]; ok {
-			b.addDevice(path)
-		}
-	}
-}
-
-func (b *Bluetooth) removeAllObjects() {
-	b.devicesLock.Lock()
-	for _, devices := range b.devices {
-		for _, device := range devices {
-			device.notifyDeviceRemoved()
-			device.destroy()
-		}
-	}
-	b.devices = make(map[dbus.ObjectPath][]*device)
-	b.devicesLock.Unlock()
-
-	b.adaptersLock.Lock()
-	for _, adapter := range b.adapters {
-		adapter.notifyAdapterRemoved()
-		adapter.destroy()
-	}
-	b.adapters = make(map[dbus.ObjectPath]*adapter)
-	b.adaptersLock.Unlock()
-}
-
-func (b *Bluetooth) handleInterfacesAdded(path dbus.ObjectPath, data map[string]map[string]dbus.Variant) {
-	if _, ok := data[bluezAdapterDBusInterface]; ok {
-		b.unblockBluetoothDevice()
-		b.addAdapter(path)
-	}
-	if _, ok := data[bluezDeviceDBusInterface]; ok {
-		b.addDevice(path)
-	}
-}
-
-func (b *Bluetooth) handleInterfacesRemoved(path dbus.ObjectPath, interfaces []string) {
-	if isStringInArray(bluezAdapterDBusInterface, interfaces) {
-		b.removeAdapter(path)
-	}
-	if isStringInArray(bluezDeviceDBusInterface, interfaces) {
-		b.removeDevice(path)
-	}
 }
 
 func (b *Bluetooth) handleDBusNameOwnerChanged(name, oldOwner, newOwner string) {
-	// if a new dbus session was installed, the name and newOwner
-	// will be not empty, if a dbus session was uninstalled, the
-	// name and oldOwner will be not empty
-	if name != bluezDBusServiceName {
+	if name != b.sysBt.ServiceName_() {
 		return
 	}
 	if newOwner != "" {
-		logger.Info("bluetooth is starting")
+		logger.Info("sys bluetooth is starting")
 		time.AfterFunc(1*time.Second, func() {
-			b.loadObjects()
-			b.agent.registerDefaultAgent()
+			b.agent.register()
 		})
 	} else {
-		logger.Info("bluetooth stopped")
-		b.removeAllObjects()
+		logger.Info("sys bluetooth stopped")
+		b.devices.clear()
+		b.adapters.clear()
 	}
 }
 
-func (b *Bluetooth) addDevice(dpath dbus.ObjectPath) {
-	if b.isDeviceExists(dpath) {
-		logger.Warning("repeat add device", dpath)
-		return
-	}
+type initiativeConnectMap struct {
+	mu sync.Mutex
+	m  map[dbus.ObjectPath]bool
+}
 
-	d := newDevice(b.systemSigLoop, dpath)
-	b.adaptersLock.Lock()
-	d.adapter = b.adapters[d.AdapterPath]
-	b.adaptersLock.Unlock()
-
-	if d.adapter == nil {
-		logger.Warningf("failed to add device %s, not found adapter", dpath)
-		return
-	}
-
-	// device detail info is needed to write into config file
-	b.config.addDeviceConfig(d)
-
-	b.devicesLock.Lock()
-	b.devices[d.AdapterPath] = append(b.devices[d.AdapterPath], d)
-	b.devicesLock.Unlock()
-
-	d.notifyDeviceAdded()
-
-	//扫描1S钟，若扫描需要连接的设备，直接连接
-	if d.adapter.scanReadyToConnectDeviceTimeoutFlag {
-		if b.prepareToConnectedDevice == d.Path {
-			go d.Connect()
-		}
+func newInitiativeConnectMap() *initiativeConnectMap {
+	return &initiativeConnectMap{
+		m: make(map[dbus.ObjectPath]bool),
 	}
 }
 
-func (b *Bluetooth) removeDevice(dpath dbus.ObjectPath) {
-	apath, i := b.getDeviceIndex(dpath)
-	if i < 0 {
-		logger.Error("repeat remove device", dpath)
-		return
-	}
-
-	b.devicesLock.Lock()
-	defer b.devicesLock.Unlock()
-	b.devices[apath] = b.doRemoveDevice(b.devices[apath], i)
+func (icm *initiativeConnectMap) set(path dbus.ObjectPath, val bool) {
+	icm.mu.Lock()
+	defer icm.mu.Unlock()
+	icm.m[path] = val
 }
 
-func (b *Bluetooth) doRemoveDevice(devices []*device, i int) []*device {
-	// NOTE: do not remove device from config
-	d := devices[i]
-	if d.adapter.Discovering || d.Paired {
-		d.notifyDeviceRemoved()
-	}
-	d.destroy()
-	copy(devices[i:], devices[i+1:])
-	devices[len(devices)-1] = nil
-	devices = devices[:len(devices)-1]
-	return devices
+func (icm *initiativeConnectMap) get(path dbus.ObjectPath) bool {
+	icm.mu.Lock()
+	defer icm.mu.Unlock()
+	return icm.m[path]
 }
 
-func (b *Bluetooth) removeBackupDevice(dpath dbus.ObjectPath) {
-	b.backupDeviceLock.Lock()
-	defer b.backupDeviceLock.Unlock()
-
-	apath, i := b.findBackupDevice(dpath)
-	if i < 0 {
-		logger.Error("repeat remove device", dpath)
-		return
-	}
-
-	b.backupDevices[apath] = b.doRemoveBackupDevice(b.backupDevices[apath], i)
+func (icm *initiativeConnectMap) del(path dbus.ObjectPath) {
+	icm.mu.Lock()
+	defer icm.mu.Unlock()
+	delete(icm.m, path)
 }
 
-func (b *Bluetooth) doRemoveBackupDevice(devices []*backupDevice, i int) []*backupDevice {
-	copy(devices[i:], devices[i+1:])
-	devices[len(devices)-1] = nil
-	devices = devices[:len(devices)-1]
-	return devices
-}
-
-func (b *Bluetooth) isDeviceExists(dpath dbus.ObjectPath) bool {
-	_, i := b.getDeviceIndex(dpath)
-	return i >= 0
-}
-
-func (b *Bluetooth) findDevice(dpath dbus.ObjectPath) (apath dbus.ObjectPath, index int) {
-	for p, devices := range b.devices {
-		for i, d := range devices {
-			if d.Path == dpath {
-				return p, i
-			}
-		}
+func (b *Bluetooth) getDevice(devPath dbus.ObjectPath) (*DeviceInfo, error) {
+	info := b.devices.getDeviceWithPath(devPath)
+	if info == nil {
+		return nil, errors.New("device not found")
 	}
-	return "", -1
-}
-
-func (b *Bluetooth) findBackupDevice(dpath dbus.ObjectPath) (apath dbus.ObjectPath, index int) {
-	for p, devices := range b.backupDevices {
-		for i, d := range devices {
-			if d.Path == dpath {
-				return p, i
-			}
-		}
-	}
-	return "", -1
-}
-
-func (b *Bluetooth) getDeviceIndex(dpath dbus.ObjectPath) (apath dbus.ObjectPath, index int) {
-	b.devicesLock.Lock()
-	defer b.devicesLock.Unlock()
-	return b.findDevice(dpath)
-}
-
-func (b *Bluetooth) getDevice(dpath dbus.ObjectPath) (*device, error) {
-	b.devicesLock.Lock()
-	defer b.devicesLock.Unlock()
-	apath, index := b.findDevice(dpath)
-	if index < 0 {
-		return nil, errInvalidDevicePath
-	}
-	return b.devices[apath][index], nil
-}
-
-func (b *Bluetooth) getBackupDevice(dpath dbus.ObjectPath) (*backupDevice, error) {
-	b.backupDeviceLock.Lock()
-	defer b.backupDeviceLock.Unlock()
-	apath, index := b.findBackupDevice(dpath)
-	if index < 0 {
-		return nil, errInvalidDevicePath
-	}
-	return b.backupDevices[apath][index], nil
-}
-
-// 更新backupDevices数据
-func (b *Bluetooth) updateBackupDevices(adapter dbus.ObjectPath) {
-	devices := b.devices[adapter]
-	for _, device := range devices {
-		apath, index := b.findBackupDevice(device.Path)
-		if index < 0 {
-			logger.Warning("invalid device path: ", device.Path)
-			break
-		} else {
-			b.backupDevices[apath][index] = newBackupDevice(device)
-		}
-	}
-}
-
-func (b *Bluetooth) getAdapterDevices(adapterAddress string) []*device {
-	var aPath dbus.ObjectPath
-	b.adaptersLock.Lock()
-	for adapterPath, adapter := range b.adapters {
-		if adapter.address == adapterAddress {
-			aPath = adapterPath
-			break
-		}
-	}
-	b.adaptersLock.Unlock()
-
-	if aPath == "" {
-		return nil
-	}
-
-	b.devicesLock.Lock()
-	defer b.devicesLock.Unlock()
-
-	devices := b.devices[aPath]
-	if devices == nil {
-		return nil
-	}
-
-	result := make([]*device, 0, len(devices))
-	result = append(result, devices...)
-	return result
-}
-
-func (b *Bluetooth) addAdapter(apath dbus.ObjectPath) {
-	if b.isAdapterExists(apath) {
-		logger.Warning("repeat add adapter", apath)
-		return
-	}
-
-	a := newAdapter(b.systemSigLoop, apath)
-	// initialize adapter power state
-	b.config.addAdapterConfig(a.address)
-	cfgPowered := b.config.getAdapterConfigPowered(a.address)
-	err := a.core.Adapter().Powered().Set(0, cfgPowered)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	err = a.core.Adapter().DiscoverableTimeout().Set(0, 0)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	if cfgPowered {
-		err = a.core.Adapter().Discoverable().Set(0, b.config.Discoverable)
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
-	b.adaptersLock.Lock()
-	b.adapters[apath] = a
-	b.adaptersLock.Unlock()
-
-	a.notifyAdapterAdded()
-}
-
-func (b *Bluetooth) removeAdapter(apath dbus.ObjectPath) {
-	b.adaptersLock.Lock()
-	defer b.adaptersLock.Unlock()
-
-	if b.adapters[apath] == nil {
-		logger.Warning("repeat remove adapter", apath)
-		return
-	}
-
-	b.doRemoveAdapter(apath)
-}
-
-func (b *Bluetooth) doRemoveAdapter(apath dbus.ObjectPath) {
-	// NOTE: do not remove adapter from config file
-	removeAdapter := b.adapters[apath]
-	delete(b.adapters, apath)
-	removeAdapter.notifyAdapterRemoved()
-	removeAdapter.destroy()
-}
-
-func (b *Bluetooth) getAdapter(apath dbus.ObjectPath) (a *adapter, err error) {
-	b.adaptersLock.Lock()
-	defer b.adaptersLock.Unlock()
-
-	a = b.adapters[apath]
-	if a == nil {
-		err = fmt.Errorf("adapter not exists %s", apath)
-		logger.Error(err)
-		return
-	}
-	return
-}
-func (b *Bluetooth) isAdapterExists(apath dbus.ObjectPath) bool {
-	b.adaptersLock.Lock()
-	defer b.adaptersLock.Unlock()
-	return b.adapters[apath] != nil
+	return info, nil
 }
 
 func (b *Bluetooth) feed(devPath dbus.ObjectPath, accept bool, key string) (err error) {
@@ -693,7 +453,7 @@ func (b *Bluetooth) feed(devPath dbus.ObjectPath, accept bool, key string) (err 
 	if b.agent.requestDevice != devPath {
 		b.agent.mu.Unlock()
 		logger.Warningf("FeedRequest can not find match device: %q, %q", b.agent.requestDevice, devPath)
-		return errBluezCanceled
+		return btcommon.ErrCanceled
 	}
 	b.agent.mu.Unlock()
 
@@ -705,199 +465,32 @@ func (b *Bluetooth) feed(devPath dbus.ObjectPath, accept bool, key string) (err 
 	}
 }
 
-func (b *Bluetooth) updateState() {
-	newState := StateUnavailable
-	if len(b.adapters) > 0 {
-		newState = StateAvailable
-	}
-
-	for _, devices := range b.devices {
-		for _, d := range devices {
-			if d.connected && d.Paired {
-				newState = StateConnected
-				break
-			}
-		}
-	}
-
-	b.PropsMu.Lock()
-	b.setPropState(uint32(newState))
-	b.PropsMu.Unlock()
+func (b *Bluetooth) getConnectedDeviceByAddress(address string) *DeviceInfo {
+	devInfo := b.devices.findFirst(func(devInfo *DeviceInfo) bool {
+		return devInfo.ConnectState && devInfo.Address == address
+	})
+	return devInfo
 }
 
-func (b *Bluetooth) tryConnectPairedDevices() {
-	//input and audio devices counter
-	typeMap := make(map[string]uint8)
-	typeMap["audio-card"] = 0
-	typeMap["input-keyboard"] = 0
-	typeMap["input-mouse"] = 0
-	typeMap["input-tablet"] = 0
-
-	var devList = b.getPairedDeviceList()
-	for _, dev := range devList {
-		// make sure dev always exist
-		if dev == nil {
-			continue
-		}
-		//connect back to a device
-		switch dev.Icon {
-		case "audio-card", "input-keyboard", "input-mouse", "input-tablet":
-			if typeMap[dev.Icon] == 0 {
-				if b.tryConnectPairedDevice(dev) {
-					typeMap[dev.Icon]++
-				}
-			}
-		default:
-			b.tryConnectPairedDevice(dev)
-		}
-	}
-	b.adaptersLock.Lock()
-	for _, adapter := range b.adapters {
-		if adapter.waitDiscovery && adapter.Powered {
-			adapter.startDiscovery()
-		}
-	}
-	b.adaptersLock.Unlock()
-}
-
-func (b *Bluetooth) tryConnectPairedDevice(dev *device) bool {
-	logger.Info("[DEBUG] Auto connect device:", dev.Path)
-
-	// if device using LE mode, will suspend, try connect should be failed, filter it.
-	if !b.isBREDRDevice(dev) {
-		return false
-	}
-	logger.Debug("Will auto connect device:", dev.String(), dev.adapter.address, dev.Address)
-	for i := 0; i < 3; i++ {
-		err := dev.doConnect(false)
-		if err == nil {
-			// if auto connect success, add device into map connectedDevices
-			if dev.ConnectState {
-				b.addConnectedDevice(dev)
-			}
-			return true
-		} else {
-			logger.Debug("failed to connect:", dev.String(), err, i)
-		}
-	}
-
-	return false
-}
-
-// get paired device list
-func (b *Bluetooth) getPairedDeviceList() []*device {
-	// memory lock
-	b.adaptersLock.Lock()
-	defer b.adaptersLock.Unlock()
-	b.devicesLock.Lock()
-	defer b.devicesLock.Unlock()
-
-	// get all paired devices list from adapters
-	var devAddressMap = make(map[string]*device)
-	for _, aobj := range b.adapters {
-		logger.Info("[DEBUG] Auto connect adapter:", aobj.Path)
-
-		// check if devices list in current adapter is legal
-		list := b.devices[aobj.Path]
-		if len(list) == 0 || !b.config.getAdapterConfigPowered(aobj.address) {
-			continue
-		}
-
-		// add devices info to list
-		for _, value := range list {
-			// select already paired but not connected device from list
-			if value == nil || !value.Paired || value.connected {
-				continue
-			}
-			devAddressMap[value.getAddress()] = value
-			logger.Debug("devAddressMap", value)
-		}
-	}
-	// select the latest devices of each deviceType and add them into list
-	devList := b.config.filterDemandedTypeDevices(devAddressMap)
-
-	return devList
-}
-
-func (b *Bluetooth) getTechnologies(dev *device) ([]string, error) {
-	var technologies []string
-	err := b.systemSigLoop.Conn().Object(daemonSysService,
-		daemonSysPath).Call(methodSysBlueGetDeviceTech, 0,
-		dev.adapter.address, dev.Address).Store(&technologies)
-	if err != nil {
-		return nil, err
-	}
-	return technologies, nil
-}
-
-// 判断设备是否为经典蓝牙设备
-func (b *Bluetooth) isBREDRDevice(dev *device) bool {
-	technologies, err := b.getTechnologies(dev)
-	if err != nil {
-		logger.Warningf("failed to get device(%s -- %s) technologies: %v",
-			dev.adapter.address, dev.Address, err)
-		return false
-	}
-	for _, tech := range technologies {
-		if tech == "BR/EDR" {
-			return true
-		}
-	}
-	return false
-}
-
-func (b *Bluetooth) addConnectedDevice(connectedDev *device) {
-	b.connectedLock.Lock()
-	b.connectedDevices[connectedDev.AdapterPath] = append(b.connectedDevices[connectedDev.AdapterPath], connectedDev)
-	b.connectedLock.Unlock()
-}
-
-func (b *Bluetooth) removeConnectedDevice(disconnectedDev *device) {
-	b.connectedLock.Lock()
-	// check if dev exist in connectedDevices map, if exist, remove device
-	if connectedDevices, ok := globalBluetooth.connectedDevices[disconnectedDev.AdapterPath]; ok {
-		var tempDevices []*device
-		for _, dev := range connectedDevices {
-			// check if disconnected device exist in connected devices, if exist, abandon this
-			if dev.Address != disconnectedDev.Address {
-				tempDevices = append(tempDevices, dev)
-			}
-		}
-		globalBluetooth.connectedDevices[disconnectedDev.AdapterPath] = tempDevices
-	}
-	b.connectedLock.Unlock()
-}
-
-func (b *Bluetooth) getConnectedDeviceByAddress(address string) *device {
-	b.connectedLock.Lock()
-	defer b.connectedLock.Unlock()
-
-	for _, v := range b.connectedDevices {
-		for _, dev := range v {
-			if dev.Address == address {
-				return dev
-			}
-		}
-	}
-
-	return nil
-}
-
-func (b *Bluetooth) sendFiles(dev *device, files []string) (dbus.ObjectPath, error) {
+func (b *Bluetooth) sendFiles(dev *DeviceInfo, files []string) (dbus.ObjectPath, error) {
 	var totalSize uint64
 
 	for _, f := range files {
 		info, err := os.Stat(f)
 		if err != nil {
-			return "", err
+			return "/", err
 		}
 
 		totalSize += uint64(info.Size())
 	}
 	// 创建 OBEX session
 	args := make(map[string]dbus.Variant)
-	args["Source"] = dbus.MakeVariant(dev.adapter.address) // 蓝牙适配器地址
-	args["Target"] = dbus.MakeVariant("opp")               // 连接方式「OPP」
+	_, adapter := b.adapters.getAdapter(dev.AdapterPath)
+	if adapter == nil {
+		return "/", fmt.Errorf("not found adapter with path: %q", dev.AdapterPath)
+	}
+	args["Source"] = dbus.MakeVariant(adapter.Address) // 蓝牙适配器地址
+	args["Target"] = dbus.MakeVariant("opp")           // 连接方式「OPP」
 	sessionPath, err := b.obexManager.Client().CreateSession(0, dev.Address, args)
 	if err != nil {
 		logger.Warning("failed to create obex session:", err)
