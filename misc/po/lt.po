@@ -6,17 +6,17 @@
 # Translators:
 # Mantas Kriaučiūnas Baltix <mantas@akl.lt>, 2020
 # Jonas Motiejūnas <exjonas@gmail.com>, 2020
-# Cindy0514, 2020
 # Moo, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Moo, 2021\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Lithuanian (https://www.transifex.com/linuxdeepin/teams/3617/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +50,7 @@ msgstr "Naudotojo vardas jau yra"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "Pavadinimas jau yra"
 
 #: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
@@ -163,7 +163,7 @@ msgstr ""
 
 #: ../../bluetooth/obex_agent.go:362
 msgid "Done"
-msgstr ""
+msgstr "Atlikta"
 
 #: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
@@ -226,56 +226,6 @@ msgstr ""
 
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
-msgstr ""
-
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "šiandien"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "rytoj"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%s iki %s"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "Darbas"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "Gyvenimas"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "Kita"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "Vieną dieną prieš įvykį"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "Užverti"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "Priminti rytoj"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "Priminti vėliau"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "Planuoti priminimą"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
 msgstr ""
 
 #: ../../dock/app_entry_menu.go:114
@@ -557,50 +507,55 @@ msgstr "%q sėkmingai pašalintas"
 msgid "Failed to uninstall %q"
 msgstr "Nepavyko pašalinti %q"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
-msgstr ""
+msgstr "Laidinis ryšys"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "Nėra"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bitų raktas"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 asmeninis"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "Tuneliuotas TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "Apsaugota EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "Laidinis ryšys"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1033,9 +988,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Kritiškai žema baterijos įkrova"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Baterija baigia išsikrauti, prijunkite maitinimą"
 

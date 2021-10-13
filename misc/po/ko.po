@@ -6,18 +6,18 @@
 # Translators:
 # Thomas Sungjin Kang <potopro@gmail.com>, 2020
 # Sangmin Lee <sangminlee7648@gmail.com>, 2020
-# Cindy0514, 2020
-# JungHee Lee <daemul72@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Cindy0514, 2021
+# 이정희 <daemul72@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Maggie Liu <maggie.liufei@gmail.com>, 2021\n"
+"Last-Translator: 이정희 <daemul72@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/linuxdeepin/teams/3617/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "사용자 이름이 이미 존재합니다"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "이름이 이미 존재합니다"
 
 #: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
@@ -162,7 +162,7 @@ msgstr ""
 
 #: ../../bluetooth/obex_agent.go:362
 msgid "Done"
-msgstr ""
+msgstr "완료"
 
 #: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
@@ -226,56 +226,6 @@ msgstr "블루투스 장치 추가"
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "페어링"
-
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "오늘"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "내일"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%s - %s"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "작업"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "생활"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "기타"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "시작 하루 전"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "닫기"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "내일 알림"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "나중에 알림"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "일정 알림"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
-msgstr "페스티벌"
 
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
@@ -553,50 +503,55 @@ msgstr "%q을(를) 성공적으로 제거했습니다"
 msgid "Failed to uninstall %q"
 msgstr "%q을(를) 제거하지 못했습니다"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
-msgstr ""
+msgstr "유선 연결"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "없음"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit Key"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "개인 WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "보호된 EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "유선 연결"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1018,9 +973,9 @@ msgstr "\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 
 msgid "Battery critically low"
 msgstr "배터리 잔량 부족"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "배터리 부족,. 전원을 연결하세요"
 

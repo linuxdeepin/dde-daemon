@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
@@ -232,56 +232,6 @@ msgstr "Додайте пристрої Bluetooth"
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "З'єднати"
-
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "сьогодні"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "завтра"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%s до %s"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "Робота"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "Життя"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "Інше"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "За день до початку"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "Закрити"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "Нагадати мені завтра"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "Нагадати мені пізніше"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "Розклад нагадування"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
-msgstr "Фестиваль"
 
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
@@ -563,50 +513,55 @@ msgstr "%q успішно видалено"
 msgid "Failed to uninstall %q"
 msgstr "Не вдалося встановити %q"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
 msgstr "Дротове з'єднання"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "Нічого"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "Ключ WEP 40/128-біт"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "Режим WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "ІНТЕРВАЛ"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "ШВИДКО"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "Тунельований TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "Захищений EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "Дротове підключення"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1045,9 +1000,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Акумулятор критично розряджено"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "

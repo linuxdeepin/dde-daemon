@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Massimo A. Carofano <real.massimo@hotmail.it>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/linuxdeepin/teams/3617/it/)\n"
@@ -151,7 +151,7 @@ msgstr "Annulla"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Ricezione %[1]q da %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -229,56 +229,6 @@ msgstr "Aggiungi dispositivi Bluetooth"
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Abbina"
-
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "oggi"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "domani"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%s a %s"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "Lavoro"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "Personale"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "Altro"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "Un giorno prima di iniziare"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "Chiudi"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "Ricordamelo domani"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "Ricordamelo piu tardi"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "Pianifica promemoria"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
-msgstr "Festivo"
 
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
@@ -559,50 +509,55 @@ msgstr "%q rimossa con successo"
 msgid "Failed to uninstall %q"
 msgstr "Disinstallazione di %q fallita"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
 msgstr "Connessione cablata"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "No"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit Key"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "Tunneled TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "Protected EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "Connessione cablata"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1041,9 +996,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Batteria molto scarica"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Livello batteria basso, collega il PC all'alimentazione"
 

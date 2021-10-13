@@ -4,21 +4,21 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Abdusalam Huxur <2250907458@qq.com>, 2020
 # Muhammadali Abliz <ordam2@163.com>, 2020
+# Abdusalam Huxur <2250907458@qq.com>, 2020
 # 伊力亚斯 伊德日斯 <2032517177@qq.com>, 2020
 # مۇختەر مەخمۇت <yeganaaa@163.com>, 2021
-# Cindy0514, 2021
 # 阿迪力 买买提明 <251078110@qq.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2021\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,7 +155,7 @@ msgstr "بىكار قىلىش"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "%[2]q دىن كەلگەن %[1]q ھۆججەت قوبۇللىنىۋاتىدۇ"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -233,56 +233,6 @@ msgstr "كۆك چىش ئۈسكۈنىسىنى قوشۇڭ"
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "جۈپلەش"
-
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "بۈگۈن"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "ئەتە"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%sدىن %sگىچە"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "Work"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "Life"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "Other"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "1 كۈن بۇرۇن ئەسكەرتىش"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "تاقاش"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "ئەتە ئەسكەرتسۇن"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "ھېلىغىچە ئەسكەرتسۇن"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "كۈنتەرتىپ ئەسكەرتىشى"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
-msgstr "بايرام"
 
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
@@ -562,50 +512,55 @@ msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
 msgid "Failed to uninstall %q"
 msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
 msgstr "سىملىق تور ئۇلىنىشى"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "قۇرۇق"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit پارول"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "شەخسىي"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "تونېلللانغان TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "قوغدالغان EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "سىملىق تور ئۇلىنىشى"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr "سىملىق ئۇلىنىش%v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1038,9 +993,9 @@ msgstr "«%s»سىستېما بىخەتەرلىك تەكشۈرۈشىدىن ئۆ�
 msgid "Battery critically low"
 msgstr "باتارېيەدە توك تۈگىدى"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "باتارېيەدە توك ئاز قالدى، توكقا چېتىڭ"
 

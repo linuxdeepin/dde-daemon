@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/linuxdeepin/teams/3617/fi/)\n"
@@ -156,7 +156,7 @@ msgstr "Peruuta"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Vastaanotto %[1]q kohteesta %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -235,56 +235,6 @@ msgstr "Lisää Bluetooth-laitteita"
 msgid "Pair"
 msgstr "Pari"
 
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "tänään"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "huomenna"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%s/ %s"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "Työ"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "Oma"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "Muut"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "Yksi päivä ennen lähtöä"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "Sulje"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "Muistuta huomenna"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "Muistuta myöhemmin"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "Aikatauluta muistutus"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
-msgstr "Juhlapäivä"
-
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
 msgstr "Sulje kaikki"
@@ -300,7 +250,7 @@ msgstr "Telakka"
 
 #: ../../dock/app_entry_menu.go:171
 msgid "Undock"
-msgstr "Irrota"
+msgstr "Poista"
 
 #: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
@@ -564,50 +514,55 @@ msgstr "%q poistettu onnistuneesti"
 msgid "Failed to uninstall %q"
 msgstr "Kohteen %q poistaminen epäonnistui"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
 msgstr "Yhteys kaapelilla"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "Mitään"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit-avain"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "Oma WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "Tunneloitu TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "Suojattu EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "Yhteys kaapelilla"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1037,9 +992,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Akku kriittisesti alhainen"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Virtataso alhainen, ole hyvä ja yhdistä verkkovirtaan"
 

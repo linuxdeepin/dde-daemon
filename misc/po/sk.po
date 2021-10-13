@@ -5,19 +5,19 @@
 # 
 # Translators:
 # Microtus <hrabosmartin@gmail.com>, 2020
-# Cindy0514, 2020
 # Marek Bujko <marek.bujko@gmail.com>, 2020
-# Jozef Gaal <preklady@mayday.sk>, 2020
 # fasier <matus.ravas@outlook.com>, 2021
+# Jozef Gaal <preklady@mayday.sk>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: fasier <matus.ravas@outlook.com>, 2021\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/linuxdeepin/teams/3617/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,7 +164,7 @@ msgstr ""
 
 #: ../../bluetooth/obex_agent.go:362
 msgid "Done"
-msgstr ""
+msgstr "Hotovo"
 
 #: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
@@ -228,56 +228,6 @@ msgstr "Pridať Bluetooth zariadenia"
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Spárovať"
-
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "dnes"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "zajtra"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%s do %s"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "Práca"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "Život"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "Ostatné"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "Jeden deň pred začiatkom"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "Zavrieť"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "Pripomenúť zajtra"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "Pripomenúť neskôr"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "Nastaviť pripomienku"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
-msgstr "Festival"
 
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
@@ -559,50 +509,55 @@ msgstr "%q úspešne odstránené"
 msgid "Failed to uninstall %q"
 msgstr "Nepodarilo sa odinštalovať %q"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
-msgstr ""
+msgstr "Káblové pripojenie"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "Nič"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit kľúč"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "Tunelované TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "Chránené EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "Káblové pripojenie"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1032,9 +987,9 @@ msgstr "\"%s\" neprešiel overením zabezpečenia systému a teraz ho nemožno s
 msgid "Battery critically low"
 msgstr "Kriticky nízka úroveň batérie"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Vybitá batéria, prosím pripojte kábel napájania"
 

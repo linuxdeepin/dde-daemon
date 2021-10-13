@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: abuyop <abuyop@gmail.com>, 2021\n"
 "Language-Team: Malay (https://www.transifex.com/linuxdeepin/teams/3617/ms/)\n"
@@ -82,7 +82,7 @@ msgstr "Penskalaan paparan"
 #: ../../audio/audio_events.go:460
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s telah dilumpuhkan"
 
 #: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
 msgid "Open"
@@ -150,7 +150,7 @@ msgstr "Batal"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Menerima %[1]q daripada %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -214,6 +214,8 @@ msgstr "Pastikan %q dihidupkan dan berada dalam jangkauan"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%q tidak lagi bersambung dengan %q. Cuba lupakan peranti ini dan padankan "
+"sekali lagi."
 
 #: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
@@ -226,56 +228,6 @@ msgstr "Tambah peranti Bluetooth"
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Pasangkan"
-
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "hari ini"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "semalam"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%s hingga %s"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "Kerja"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "Lapang"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "Lain-lain"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "Satu hari sebelum mula"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "Tutup"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "Ingatkan saya esok hari"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "Ingatkan saya kemudian"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "Peringatan Berjadual"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
-msgstr "Festival"
 
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
@@ -557,50 +509,55 @@ msgstr "%q berjaya dibuang"
 msgid "Failed to uninstall %q"
 msgstr "Gagal menyahpasang %q"
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
-msgstr ""
+msgstr "Sambungan berwayar"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "Tiada"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "Kunci WEP 40/128-bit"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Peribadi"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "TLS Berterowong"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "EAP Terlindung"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "Sambungan Berwayar"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -988,7 +945,7 @@ msgstr "Kata laluan diperlukan untuk bersambung dengan %q"
 
 #: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "Rangkaian WLAN 802.11 %q tidak ditemui"
 
 #: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
@@ -1036,9 +993,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Kuasa bateri sangat rendah"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Kuasa bateri lemah, sila palamkan kuasa"
 

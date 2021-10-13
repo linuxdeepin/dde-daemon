@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 15:24+0800\n"
+"POT-Creation-Date: 2021-10-13 16:37+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2021\n"
 "Language-Team: Sinhala (https://www.transifex.com/linuxdeepin/teams/3617/si/)\n"
@@ -48,7 +48,7 @@ msgstr "පරිශීලක නාමය දැනටමත් පවතී"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "නම දැනටමත් පවතී"
 
 #: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
@@ -153,7 +153,7 @@ msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
-msgstr ""
+msgstr "දැක්ම"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
@@ -161,7 +161,7 @@ msgstr ""
 
 #: ../../bluetooth/obex_agent.go:362
 msgid "Done"
-msgstr ""
+msgstr "සම්පූර්ණයි"
 
 #: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
@@ -225,56 +225,6 @@ msgstr "බ්ලූටූත් උපාංග එක් කරන්න"
 #: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "එකිනෙක සම්බන්ධ කරන්න"
-
-#: ../../calendar/job.go:509 ../../calendar/job.go:516
-msgid "today"
-msgstr "අද"
-
-#: ../../calendar/job.go:511 ../../calendar/job.go:518
-msgid "tomorrow"
-msgstr "හෙට"
-
-#: ../../calendar/job.go:531
-#, c-format
-msgid "%s to %s"
-msgstr "%s සිට %s දක්වා"
-
-#: ../../calendar/module.go:118 ../../calendar/type.go:25
-msgid "Work"
-msgstr "කාර්යය"
-
-#: ../../calendar/module.go:119 ../../calendar/type.go:30
-msgid "Life"
-msgstr "ජීවිතය"
-
-#: ../../calendar/module.go:120 ../../calendar/type.go:35
-msgid "Other"
-msgstr "වෙනත්"
-
-#: ../../calendar/scheduler.go:570
-msgid "One day before start"
-msgstr "ආරම්භ කිරීමට ඇත්තේ එක් දිනක් පමණි"
-
-#: ../../calendar/scheduler.go:571 ../../calendar/scheduler.go:576
-#: ../../calendar/scheduler.go:584 ../../calendar/scheduler.go:588
-msgid "Close"
-msgstr "වසා දමන්න"
-
-#: ../../calendar/scheduler.go:575
-msgid "Remind me tomorrow"
-msgstr "මට හෙට මතක් කරන්න"
-
-#: ../../calendar/scheduler.go:583
-msgid "Remind me later"
-msgstr "මට පසුව මතක් කරන්න"
-
-#: ../../calendar/scheduler.go:593
-msgid "Schedule Reminder"
-msgstr "මතක් කිරීමක් සකසන්න"
-
-#: ../../calendar/type.go:40
-msgid "Festival"
-msgstr "උත්සවය"
 
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
@@ -556,50 +506,55 @@ msgstr "%q සාර්ථකව ඉවත් කර ඇත."
 msgid "Failed to uninstall %q"
 msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
 
-#: ../../network/manager.go:338
+#: ../../network/manager.go:347
 msgid "Wired connection"
-msgstr ""
+msgstr "රැහැන් සම්බන්ධතාවය"
 
-#: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "කිසිවක් නැත"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:408
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit යතුර"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:410
 msgid "WPA/WPA2 Personal"
 msgstr "WPA / WPA2 පුද්ගලික"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:418
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:420
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:422
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:424
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:426
 msgid "Tunneled TLS"
 msgstr "උමං TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:428
 msgid "Protected EAP"
 msgstr "ආරක්ෂිත EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:357
+#: ../../network/manager_connection.go:361
 msgid "Wired Connection"
 msgstr "රැහැන් සම්බන්ධතාවය"
+
+#: ../../network/manager_connection.go:405
+msgid "Wired Connection %v"
+msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1032,9 +987,9 @@ msgstr "\"%s\" සත්‍යාපනය සමත් නොවූ අතර �
 msgid "Battery critically low"
 msgstr "බැටරි ධාරිතාවය ඉතා අඩුය"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "අඩු බැටරි ධාරිතාවක් පවතී, කරුණාකර විදුලි සැපයුමක් ලබා දෙන්න"
 
