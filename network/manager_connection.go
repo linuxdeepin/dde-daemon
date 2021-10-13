@@ -22,6 +22,8 @@ package network
 import (
 	"fmt"
 	"sort"
+	"strconv"
+	"strings"
 
 	dbus "github.com/godbus/dbus"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
@@ -333,10 +335,71 @@ func (m *Manager) ensureWiredConnectionExists(wiredDevPath dbus.ObjectPath, acti
 	if nmGeneralIsUsbDevice(wiredDevPath) {
 		id = nmGeneralGetDeviceDesc(wiredDevPath)
 	} else {
-		id = Tr("Wired Connection")
+		id = m.getCreateConnectionName()
 	}
 	cpath, err = newWiredConnectionForDevice(id, uuid, wiredDevPath, active)
 	return
+}
+
+// lock connection
+func (m *Manager) getCreateConnectionName() string {
+	m.connectionsLock.Lock()
+	defer m.connectionsLock.Unlock()
+	// get all wired connection
+	wiredConnSl := m.connections[deviceEthernet]
+	var numSl []int
+	// add 0, make sure at least elem
+	numSl = append(numSl, 0)
+	// get all connection index
+	for _, conn := range wiredConnSl {
+		// if current id dont contains Tr, ignore
+		if !strings.Contains(conn.Id, Tr("Wired Connection")) {
+			continue
+		}
+		// trim left, " 1"
+		numStr := strings.TrimLeft(conn.Id, Tr("Wired Connection"))
+		// id is Wired Connection, add 0 to sl
+		if numStr == "" {
+			numSl = append(numSl, 0)
+			continue
+		}
+		// trim " "
+		numStr = strings.Trim(numStr, " ")
+		// convert num string to int
+		num, err := strconv.Atoi(numStr)
+		// could fail here, such as id is "Wired Connection A/B"
+		if err != nil {
+			logger.Debugf("connection index convert unexpected happens %v", err)
+			continue
+		}
+		// append
+		numSl = append(numSl, num)
+	}
+
+	// sort num sl
+	sort.Ints(numSl)
+
+	logger.Debugf("num Sl is %v", numSl)
+
+	var num int
+	for index := 0; index < len(numSl); index++ {
+		// already in the last one, such as numSl is [0,0], num is  0+1
+		if index == len(numSl)-1 {
+			num = numSl[index] + 1
+			break
+		}
+		// check if equal next or larger
+		if numSl[index] == numSl[index+1] || numSl[index]+1 == numSl[index+1] {
+			continue
+		}
+		num = numSl[index] + 1
+		break
+	}
+
+	name := fmt.Sprintf(Tr("Wired Connection %v"), num)
+	logger.Debugf("create name is %v", name)
+
+	return name
 }
 
 func isTempWiredConnectionPath(connPath dbus.ObjectPath) (isTemp bool, uuid string, err error) {
