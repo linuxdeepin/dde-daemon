@@ -116,6 +116,8 @@ type Manager struct {
 	checkAPStrengthTimer    *time.Timer
 	protalAuthBrowserOpened bool // PORTAL认证中状态
 
+	connectionSettingsLock sync.Mutex
+
 	//nolint
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {

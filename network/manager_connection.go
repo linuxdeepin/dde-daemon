@@ -307,6 +307,9 @@ func (m *Manager) ensureUniqueConnectionExists(devPath dbus.ObjectPath, active b
 // ensureWiredConnectionExists will check if wired connection for
 // target device exists, if not, create one.
 func (m *Manager) ensureWiredConnectionExists(wiredDevPath dbus.ObjectPath, active bool) (cpath dbus.ObjectPath, exists bool, err error) {
+	m.connectionSettingsLock.Lock()
+	defer m.connectionSettingsLock.Unlock()
+
 	uuid := nmGeneralGetDeviceUniqueUuid(wiredDevPath)
 	logger.Debug("uuid:", uuid)
 
