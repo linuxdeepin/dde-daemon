@@ -121,6 +121,8 @@ type Manager struct {
 	// to identify if vpn support multi connections
 	multiVpn map[string]bool
 
+	connectionSettingsLock sync.Mutex
+
 	//nolint
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {
