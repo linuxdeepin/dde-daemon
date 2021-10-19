@@ -35,6 +35,7 @@ type activeConnection struct {
 	vpnType   string
 
 	Devices        []dbus.ObjectPath
+	conn           dbus.ObjectPath
 	Id             string
 	Uuid           string
 	State          uint32
@@ -265,6 +266,7 @@ func (m *Manager) newActiveConnection(path dbus.ObjectPath) (aconn *activeConnec
 		return
 	}
 
+	aconn.conn, _ = nmAConn.Connection().Get(0)
 	aconn.State, _ = nmAConn.State().Get(0)
 	aconn.Devices, _ = nmAConn.Devices().Get(0)
 	aconn.typ, _ = nmAConn.Type().Get(0)

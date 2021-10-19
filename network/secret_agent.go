@@ -415,6 +415,8 @@ func (*SecretAgent) GetInterfaceName() string {
 }
 
 type getSecretsRequest struct {
+	DevPaths    []string `json:"devices"`
+	SpcPath     string   `json:"specific"`
 	ConnId      string   `json:"connId"`
 	ConnType    string   `json:"connType"`
 	ConnUUID    string   `json:"connUUID"`
@@ -422,6 +424,7 @@ type getSecretsRequest struct {
 	SettingName string   `json:"settingName"`
 	Secrets     []string `json:"secrets"`
 	RequestNew  bool     `json:"requestNew"`
+	Flag        int      `json:"secretFlag"`
 }
 
 type getSecretsReply struct {
@@ -439,7 +442,7 @@ func isSecretDialogExist() bool {
 
 func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	connectionData map[string]map[string]dbus.Variant,
-	connUUID, settingName string, settingKeys []string, requestNew bool) (map[string]string, error) {
+	connUUID, settingName string, settingKeys []string, requestNew bool, secretFlag uint32) (map[string]string, error) {
 
 	logger.Debugf("askPasswords settingName: %v, settingKeys: %v",
 		settingName, settingKeys)
@@ -449,6 +452,30 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 
 	vpnService, _ := getConnectionDataString(connectionData, "vpn", "service")
 
+	// search connection in active connections
+	// if found, record device paths and specific object of this active connection
+	var devPaths []dbus.ObjectPath
+	var specific dbus.ObjectPath
+	sa.m.activeConnectionsLock.Lock()
+	for _, active := range sa.m.activeConnections {
+		if active.conn != connPath {
+			continue
+		}
+		// copy device path slice
+		devPaths = make([]dbus.ObjectPath, len(active.Devices))
+		copy(devPaths, active.Devices)
+		// copy specific obj
+		specific = active.SpecificObject
+		break
+	}
+	sa.m.activeConnectionsLock.Unlock()
+
+	// convert object path slice to string slice
+	var paths []string
+	for _, value := range devPaths {
+		paths = append(paths, string(value))
+	}
+
 	var req getSecretsRequest
 	req.ConnId = connId
 	req.ConnType = connType
@@ -457,6 +484,10 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	req.SettingName = settingName
 	req.Secrets = settingKeys
 	req.RequestNew = requestNew
+	req.SpcPath = string(specific)
+	req.DevPaths = paths
+	req.Flag = int(secretFlag)
+
 	reqJSON, err := json.Marshal(&req)
 	if err != nil {
 		return nil, err
@@ -609,6 +640,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 	setting := make(map[string]dbus.Variant)
 	secretsData[settingName] = setting
 	var vpnSecretsData map[string]string
+	var secretFlag uint32
 	if settingName == "vpn" {
 		if getSettingVpnServiceType(connectionData) == nmOpenConnectServiceType {
 			vpnSecretsData, ok = <-sa.createPendingKey(connectionData, hints, flags)
@@ -632,7 +664,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 
 			if allowInteraction && len(askItems) > 0 {
 				resultAsk, err := sa.askPasswords(connectionPath, connectionData, connUUID,
-					settingName, askItems, requestNew)
+					settingName, askItems, requestNew, secretFlag)
 				if err != nil {
 					logger.Debug("waring askPasswords error:", err)
 					return nil, err
@@ -664,6 +696,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 		for _, secretKey := range secretKeys {
 			secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
 				getSecretFlagsKeyName(secretKey))
+			secretFlag = secretFlags
 
 			if secretFlags == secretFlagAsk {
 				if allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
@@ -704,7 +737,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 		}
 		if allowInteraction && len(askItems) > 0 {
 			resultAsk, err := sa.askPasswords(connectionPath, connectionData, connUUID,
-				settingName, askItems, requestNew)
+				settingName, askItems, requestNew, secretFlag)
 			if err != nil {
 				logger.Warning("askPasswords error:", err)
 				return nil, errSecretAgentUserCanceled
