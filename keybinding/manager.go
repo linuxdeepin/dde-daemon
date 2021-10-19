@@ -219,8 +219,6 @@ func (m *Manager) init() {
 	m.keyEvent = keyevent.NewKeyEvent(sysBus)
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
-	m.shortcutManager.AddSystem(m.gsSystem, m.wm)
-	m.shortcutManager.AddMedia(m.gsMediaKey)
 
 	// when session is locked, we need handle some keyboard function event
 	m.lockFront = lockfront.NewLockFront(sessionBus)
@@ -240,7 +238,7 @@ func (m *Manager) init() {
 			m.shortcutManager.AddSpecialToKwin(m.wm)
 			m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
 			m.shortcutManager.AddMediaToKwin(m.gsMediaKey, m.wm)
-			m.shortcutManager.AddKWin(m.wm)
+			m.shortcutManager.AddKWinForWayland(m.wm)
 		} else {
 			m.shortcutManager.AddSpecial()
 			m.shortcutManager.AddSystem(m.gsSystem, m.wm)
@@ -249,6 +247,8 @@ func (m *Manager) init() {
 			m.shortcutManager.AddWM(m.gsGnomeWM)
 		}
 	} else {
+		m.shortcutManager.AddSystem(m.gsSystem, m.wm)
+		m.shortcutManager.AddMedia(m.gsMediaKey)
 		if shouldUseDDEKwin() {
 			logger.Debug("Use DDE KWin")
 			m.shortcutManager.AddKWin(m.wm)

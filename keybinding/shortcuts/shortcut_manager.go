@@ -1025,6 +1025,60 @@ func (sm *ShortcutManager) AddKWin(wmObj wm.Wm) {
 	}
 }
 
+func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
+	logger.Debug("AddKWinForWayland")
+	accels, err := util.GetAllKWinAccels(wmObj)
+	if err != nil {
+		logger.Warning("failed to get all KWin accels:", err)
+		return
+	}
+	idNameMap := getWMIdNameMap()
+	for _, accel := range accels {
+		// 'preview-workspace' unsupported in wayland, so filter it
+		if accel.Id == "preview-workspace" || accel.Id == "color-picker" {
+			continue
+		}
+		name := idNameMap[accel.Id]
+		if name == "" {
+			name = getSystemIdNameMap()[accel.Id]
+			logger.Debug("action", accel.Id, name)
+		}
+		if name == "" {
+			name = accel.Id
+		}
+		keystrokes := accel.Keystrokes
+		if keystrokes == nil {
+			keystrokes = accel.DefaultKeystrokes
+		}
+		//Del
+		if accel.Id == "logout" {
+			for i := 0; i < len(keystrokes); i++ {
+				keystrokes[i] = strings.Replace(keystrokes[i], "Del", "Delete", 1)
+			}
+		}
+		//minimize
+		if accel.Id == "minimize" {
+			if accel.DefaultKeystrokes != nil {
+				keystrokes = accel.DefaultKeystrokes
+			}
+		}
+		//launcher
+		if accel.Id == "launcher" {
+			if keystrokes == nil {
+				keystrokes = append(keystrokes, "<Super_L>")
+			}
+		}
+		//system-monitor
+		if accel.Id == "system-monitor" {
+			for i := 0; i < len(keystrokes); i++ {
+				keystrokes[i] = strings.Replace(keystrokes[i], "Esc", "Escape", 1)
+			}
+		}
+		ks := newKWinShortcut(accel.Id, name, keystrokes, wmObj)
+		sm.addWithoutLock(ks)
+	}
+}
+
 func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj wm.Wm) {
 	logger.Debug("AddSystemToKwin")
 	idNameMap := getSystemIdNameMap()
