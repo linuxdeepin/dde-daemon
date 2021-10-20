@@ -38,7 +38,7 @@ type IdentifyWindowFunc struct {
 type _IdentifyWindowFunc func(*Manager, *WindowInfo) (string, *AppInfo)
 
 func (m *Manager) registerIdentifyWindowFuncs() {
-	m.registerIdentifyWindowFunc("Android",identifyWindowAndroid)
+	m.registerIdentifyWindowFunc("Android", identifyWindowAndroid)
 	m.registerIdentifyWindowFunc("PidEnv", identifyWindowByPidEnv)
 	m.registerIdentifyWindowFunc("CmdlineTurboBooster", identifyWindowByCmdlineTurboBooster)
 	m.registerIdentifyWindowFunc("Cmdline-XWalk", identifyWindowByCmdlineXWalk)
@@ -59,22 +59,113 @@ func (m *Manager) registerIdentifyWindowFunc(name string, fn _IdentifyWindowFunc
 	})
 }
 
-func (m *Manager) identifyWindow(winInfo *WindowInfo) (innerId string, appInfo *AppInfo) {
+func (m *Manager) identifyWindow(winInfo WindowInfoImp) (innerId string, appInfo *AppInfo) {
+	switch winType := winInfo.(type) {
+	case *WindowInfo:
+		return m.identifyWindowX(winType)
+	case *KWindowInfo:
+		return m.identifyWindowK(winType)
+	default:
+		return "", nil
+	}
+}
+
+func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo *AppInfo) {
+	// TODO: 对桌面调起的文管应用做规避处理，需要在此处添加，因为初始化时appId和title为空
+	if winInfo.appId == "dde-desktop" && m.shouldShowOnDock(winInfo) {
+		winInfo.appId = "dde-file-manager"
+	}
+	appId := winInfo.appId
+	// TODO: 对于appId为空的情况，使用title过滤，此项修改针对浏览器下载窗口
+	title := winInfo.getTitle()
+	if title == "下载" {
+		appId = "uos-browser"
+	}
+	// 先使用appId获取appInfo,如果不能成功获取再使用GIO_LAUNCHED_DESKTOP_FILE环境变量获取
+	appInfo = NewAppInfo(appId)
+	if appInfo == nil {
+		// 防止出现指针为空调用后崩溃问题
+		if winInfo.process != nil {
+			desktopNamePath := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
+			logger.Info("desktopNamePath: ", desktopNamePath, "appId: ", appId, "appInfo: ", appInfo)
+			if strings.Contains(desktopNamePath, ".desktop") {
+				appInfo = NewAppInfo(desktopNamePath)
+			}
+		}
+	}
+	if appInfo != nil {
+		innerId = appInfo.innerId
+		fixedAppInfo := fixAutostartAppInfo(appInfo)
+		if fixedAppInfo != nil {
+			appInfo = fixedAppInfo
+			appInfo.identifyMethod = "FixAutostart"
+			innerId = fixedAppInfo.innerId
+			return
+		}
+	} else {
+		// bamf
+		win := winInfo.xid
+		desktop, err := getDesktopFromWindowByBamf(win)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+
+		if desktop != "" {
+			appInfo = NewAppInfoFromFile(desktop)
+			if appInfo != nil {
+				// success
+				innerId = appInfo.innerId
+				return
+			}
+		}
+
+		wmClass, _ := getWmClass(win)
+		if wmClass != nil {
+			instance := wmClass.Instance
+			if instance != "" {
+				appInfo = NewAppInfo("org.deepin.flatdeb." + strings.ToLower(instance))
+				if appInfo != nil {
+					innerId = appInfo.innerId
+					return
+				}
+
+				appInfo = NewAppInfo(instance)
+				if appInfo != nil {
+					innerId = appInfo.innerId
+					return
+				}
+			}
+
+			class := wmClass.Class
+			if class != "" {
+				appInfo = NewAppInfo(class)
+				if appInfo != nil {
+					innerId = appInfo.innerId
+					return
+				}
+			}
+		}
+	}
+	return
+}
+
+func (m *Manager) identifyWindowX(winInfo *WindowInfo) (innerId string, appInfo *AppInfo) {
 	logger.Debugf("identifyWindow: window id: %v, window innerId: %q",
-		winInfo.window, winInfo.innerId)
+		winInfo.xid, winInfo.innerId)
 	if winInfo.innerId == "" {
-		logger.Debugf("identifyWindow: win %d winInfo.innerId is empty", winInfo.window)
+		logger.Debug("identifyWindow: winInfo.innerId is empty")
 		return
 	}
 
 	for idx, item := range m.identifyWindowFuns {
 		name := item.Name
-		logger.Debugf("identifyWindow %d try %s:%d", winInfo.window, name, idx)
+		logger.Debugf("identifyWindow: try %s:%d", name, idx)
 		innerId, appInfo = item.Fn(m, winInfo)
 		if innerId != "" {
 			// success
-			logger.Debugf("identifyWindow %d by %s success, innerId: %q, appInfo: %v",
-				winInfo.window, name, innerId, appInfo)
+			logger.Debugf("identifyWindow by %s success, innerId: %q, appInfo: %v",
+				name, innerId, appInfo)
 			// NOTE: if name == "Pid", appInfo may be nil
 			if appInfo != nil {
 				fixedAppInfo := fixAutostartAppInfo(appInfo)
@@ -89,7 +180,6 @@ func (m *Manager) identifyWindow(winInfo *WindowInfo) (innerId string, appInfo *
 			return
 		}
 	}
-
 	// fail
 	logger.Debugf("identifyWindow: failed")
 	return winInfo.innerId, nil
@@ -267,26 +357,25 @@ func identifyWindowByCmdlineTurboBooster(m *Manager, winInfo *WindowInfo) (strin
 	return "", nil
 }
 
-func identifyWindowAndroid(m *Manager, winInfo *WindowInfo) (string, *AppInfo){
+func identifyWindowAndroid(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	androidId := getAndroidUengineId(winInfo.window)
 	androidName := getAndroidUengineName(winInfo.window)
 	if -1 != androidId && "" != androidName {
-		desktopPath := "/usr/share/applications/"+"uengine."+androidName+".desktop"
+		desktopPath := "/usr/share/applications/" + "uengine." + androidName + ".desktop"
 		deskappInfo, _ := desktopappinfo.NewDesktopAppInfoFromFile(desktopPath)
 		if deskappInfo == nil {
 			logger.Info("Not Exist DesktopFile")
-			return "",nil
+			return "", nil
 		}
 
 		appInfo := newAppInfo(deskappInfo)
 		appInfo.identifyMethod = "Android"
 
-		return appInfo.innerId,appInfo
+		return appInfo.innerId, appInfo
 	}
 
-	return "",nil
+	return "", nil
 }
-
 
 func identifyWindowByPidEnv(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	msgPrefix := fmt.Sprintf("identifyWindowByPidEnv win: %d ", winInfo.window)

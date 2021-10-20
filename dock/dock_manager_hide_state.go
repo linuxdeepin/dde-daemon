@@ -163,9 +163,9 @@ func isDDELauncher(win x.Window) (bool, error) {
 	return winClass.Instance == ddeLauncherWMClass, nil
 }
 
-func (m *Manager) getActiveWindow() (activeWin x.Window) {
+func (m *Manager) getActiveWindow() (activeWin WindowInfoImp) {
 	m.activeWindowMu.Lock()
-	if m.activeWindow == 0 {
+	if m.activeWindow == nil {
 		activeWin = m.activeWindowOld
 	} else {
 		activeWin = m.activeWindow
@@ -174,17 +174,7 @@ func (m *Manager) getActiveWindow() (activeWin x.Window) {
 	return
 }
 
-func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
-	activeWin := m.getActiveWindow()
-	if activeWin == 0 {
-		logger.Debug("shouldHideOnSmartHideMode: activeWindow is 0")
-		return false, errors.New("activeWindow is 0")
-	}
-	if m.isDDELauncherVisible() {
-		logger.Debug("shouldHideOnSmartHideMode: dde launcher is visible")
-		return false, nil
-	}
-
+func (m *Manager) shouldHideOnSmartHideModeX(activeWin x.Window) (bool, error) {
 	isLauncher, err := isDDELauncher(activeWin)
 	if err != nil {
 		logger.Warning(err)
@@ -208,6 +198,33 @@ func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, error) {
+	return m.isWindowDockOverlapK(activeWin)
+}
+
+func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
+	activeWinInfo := m.getActiveWindow()
+	if activeWinInfo == nil {
+		logger.Debug("shouldHideOnSmartHideMode: activeWinInfo is nil")
+		return false, errors.New("activeWinInfo is nil")
+	}
+	if m.isDDELauncherVisible() {
+		logger.Debug("shouldHideOnSmartHideMode: dde launcher is visible")
+		return false, nil
+	}
+
+	switch winInfo := activeWinInfo.(type) {
+	case *WindowInfo:
+		activeWin := winInfo.getXid()
+		return m.shouldHideOnSmartHideModeX(activeWin)
+
+	case *KWindowInfo:
+		return m.shouldHideOnSmartHideModeK(winInfo)
+	default:
+		return false, errors.New("invalid type WindowInfo")
+	}
 }
 
 func (m *Manager) smartHideModeTimerExpired() {
@@ -273,4 +290,36 @@ func (m *Manager) setPropHideState(hideState HideStateType) {
 		_ = m.service.EmitPropertyChanged(m, "HideState", m.HideState)
 	}
 	m.PropsMu.Unlock()
+}
+
+func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
+	geo := winInfo.geometry
+	winRect := &Rect{
+		X:      geo.X,
+		Y:      geo.Y,
+		Width:  uint32(geo.Width),
+		Height: uint32(geo.Height),
+	}
+	logger.Debugf("window [%s] rect: %v", winInfo.appId, winRect)
+	logger.Debug("dock rect:", m.FrontendWindowRect)
+
+	isActiveWin, err := winInfo.winObj.IsActive(0)
+	if err != nil {
+		logger.Warning(err)
+		return false, nil
+	}
+
+	if !isActiveWin {
+		logger.Debugf("check window [%s] InActive && return isWindowDockOverlapK false", winInfo.appId)
+		return false, nil
+	}
+
+	if winInfo.appId == "dde-desktop" ||
+		winInfo.appId == "dde-lock" ||
+		winInfo.appId == "dde-shutdown" {
+		logger.Debug("Active Window is dde-desktop/dde-lock/dde-shutdowm && return isWindowDockOverlapK false")
+		return false, nil
+	}
+
+	return hasIntersection(winRect, m.FrontendWindowRect), nil
 }

@@ -24,7 +24,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-x11-client"
+	_ "github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/lib/appinfo/desktopappinfo"
 	. "pkg.deepin.io/lib/gettext"
 )
@@ -114,13 +114,13 @@ func (entry *AppEntry) getMenuItemCloseAll() *MenuItem {
 	return NewMenuItem(Tr("Close All"), func(timestamp uint32) {
 		logger.Debug("Close All")
 		entry.PropsMu.RLock()
-		winIds := entry.getAllowedCloseWindows()
+		winInfos := entry.getAllowedCloseWindows()
 		entry.PropsMu.RUnlock()
 
-		for _, win := range winIds {
-			err := closeWindow(win, x.Timestamp(timestamp))
+		for _, winInfo := range winInfos {
+			err := winInfo.close(timestamp)
 			if err != nil {
-				logger.Warningf("failed to close window %d: %v", win, err)
+				logger.Warningf("failed to close window %d: %v", winInfo.getXid(), err)
 			}
 		}
 	}, true)
@@ -131,7 +131,7 @@ func (entry *AppEntry) getMenuItemForceQuit() *MenuItem {
 		logger.Debug("Force Quit")
 		err := entry.ForceQuit()
 		if err != nil {
-			logger.Warning("ForceQuit error:",err)
+			logger.Warning("ForceQuit error:", err)
 		}
 	}, true)
 }
@@ -142,13 +142,13 @@ func (entry *AppEntry) getMenuItemForceQuitAndroid() *MenuItem {
 		return NewMenuItem(Tr("Force Quit"), func(timestamp uint32) {
 			logger.Debug("Force Quit")
 			entry.PropsMu.RLock()
-			winIds := entry.getAllowedCloseWindows()
+			winInfos := entry.getAllowedCloseWindows()
 			entry.PropsMu.RUnlock()
 
-			for _, win := range winIds {
-				err := closeWindow(win, x.Timestamp(timestamp))
+			for _, winInfo := range winInfos {
+				err := winInfo.close(timestamp)
 				if err != nil {
-					logger.Warningf("failed to close window %d: %v", win, err)
+					logger.Warningf("failed to close window %d: %v", winInfo.getXid(), err)
 				}
 			}
 		}, true)
@@ -162,7 +162,7 @@ func (entry *AppEntry) getMenuItemDock() *MenuItem {
 		logger.Debug("menu action dock entry")
 		err := entry.RequestDock()
 		if err != nil {
-			logger.Warning("RequestDock error:",err)
+			logger.Warning("RequestDock error:", err)
 		}
 	}, true)
 }
@@ -172,7 +172,7 @@ func (entry *AppEntry) getMenuItemUndock() *MenuItem {
 		logger.Debug("menu action undock entry")
 		err := entry.RequestUndock()
 		if err != nil {
-			logger.Warning("RequestUndock error:",err)
+			logger.Warning("RequestUndock error:", err)
 		}
 	}, true)
 }
@@ -182,7 +182,7 @@ func (entry *AppEntry) getMenuItemAllWindows() *MenuItem {
 		logger.Debug("menu action all windows")
 		err := entry.PresentWindows()
 		if err != nil {
-			logger.Warning("PresentWindows error:",err)
+			logger.Warning("PresentWindows error:", err)
 		}
 	}, true)
 	menuItem.hint = menuItemHintShowAllWindows

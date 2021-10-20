@@ -20,7 +20,6 @@
 package dock
 
 import (
-	"fmt"
 	"sort"
 	"sync"
 	"unicode/utf8"
@@ -54,8 +53,8 @@ type AppEntry struct {
 	service          *dbusutil.Service
 	manager          *Manager
 	innerId          string
-	windows          map[x.Window]*WindowInfo
-	current          *WindowInfo
+	windows          map[x.Window]WindowInfoImp
+	current          WindowInfoImp
 	appInfo          *AppInfo
 	winIconPreferred bool
 }
@@ -66,7 +65,7 @@ func newAppEntry(dockManager *Manager, innerId string, appInfo *AppInfo) *AppEnt
 		service: dockManager.service,
 		Id:      dockManager.allocEntryId(),
 		innerId: innerId,
-		windows: make(map[x.Window]*WindowInfo),
+		windows: make(map[x.Window]WindowInfoImp),
 	}
 	entry.Menu.manager = dockManager
 	entry.setAppInfo(appInfo)
@@ -106,25 +105,15 @@ func (entry *AppEntry) hasWindow() bool {
 }
 
 func (entry *AppEntry) hasAllowedCloseWindow() bool {
-	winIds := entry.getAllowedCloseWindows()
-	return len(winIds) > 0
+	winInfos := entry.getAllowedCloseWindows()
+	return len(winInfos) > 0
 }
 
-func (entry *AppEntry) getAllowedCloseWindows() []x.Window {
-	ret := make([]x.Window, 0, len(entry.windows))
+func (entry *AppEntry) getAllowedCloseWindows() []WindowInfoImp {
+	ret := make([]WindowInfoImp, 0, len(entry.windows))
 	for _, winInfo := range entry.windows {
-		if winInfo.motifWmHints != nil {
-			if winInfo.motifWmHints.allowedClose() {
-				ret = append(ret, winInfo.window)
-			}
-			continue
-		}
-
-		for _, action := range winInfo.wmAllowedActions {
-			if action == atomNetWmActionClose {
-				ret = append(ret, winInfo.window)
-				break
-			}
+		if winInfo.allowClose() {
+			ret = append(ret, winInfo)
 		}
 	}
 	return ret
@@ -133,13 +122,13 @@ func (entry *AppEntry) getAllowedCloseWindows() []x.Window {
 func (entry *AppEntry) getWindowIds() []uint32 {
 	list := make([]uint32, 0, len(entry.windows))
 	for _, winInfo := range entry.windows {
-		list = append(list, uint32(winInfo.window))
+		list = append(list, uint32(winInfo.getXid()))
 	}
 	return list
 }
 
-func (entry *AppEntry) getWindowInfoSlice() []*WindowInfo {
-	winInfoSlice := make([]*WindowInfo, 0, len(entry.windows))
+func (entry *AppEntry) getWindowInfoSlice() []WindowInfoImp {
+	winInfoSlice := make([]WindowInfoImp, 0, len(entry.windows))
 	for _, winInfo := range entry.windows {
 		winInfoSlice = append(winInfoSlice, winInfo)
 	}
@@ -150,7 +139,7 @@ func (entry *AppEntry) getExec(oneLine bool) string {
 	if entry.current == nil {
 		return ""
 	}
-	winProcess := entry.current.process
+	winProcess := entry.current.getProcess()
 	if winProcess != nil {
 		if oneLine {
 			return winProcess.GetOneCommandLine()
@@ -161,22 +150,22 @@ func (entry *AppEntry) getExec(oneLine bool) string {
 	return ""
 }
 
-func (entry *AppEntry) setCurrentWindowInfo(winInfo *WindowInfo) {
+func (entry *AppEntry) setCurrentWindowInfo(winInfo WindowInfoImp) {
 	entry.current = winInfo
 	if winInfo == nil {
 		entry.setPropCurrentWindow(0)
 	} else {
-		entry.setPropCurrentWindow(winInfo.window)
+		entry.setPropCurrentWindow(winInfo.getXid())
 	}
 }
 
-func (entry *AppEntry) findNextLeader() x.Window {
+func (entry *AppEntry) findNextLeader() WindowInfoImp {
 	winSlice := make(windowSlice, 0, len(entry.windows))
 	for win := range entry.windows {
 		winSlice = append(winSlice, win)
 	}
 	sort.Sort(winSlice)
-	currentWin := entry.current.window
+	currentWin := entry.current.getXid()
 	logger.Debug("sorted window slice:", winSlice)
 	logger.Debug("current window:", currentWin)
 	currentIndex := -1
@@ -187,7 +176,7 @@ func (entry *AppEntry) findNextLeader() x.Window {
 	}
 	if currentIndex == -1 {
 		logger.Warning("findNextLeader unexpect, return 0")
-		return 0
+		return nil
 	}
 	// if current window is max, return min: winSlice[0]
 	// else return winSlice[currentIndex+1]
@@ -196,14 +185,19 @@ func (entry *AppEntry) findNextLeader() x.Window {
 		nextIndex = currentIndex + 1
 	}
 	logger.Debug("next window:", winSlice[nextIndex])
-	return winSlice[nextIndex]
+	for _, winInfo := range entry.windows {
+		if winInfo.getXid() == winSlice[nextIndex] {
+			return winInfo
+		}
+	}
+	return nil
 }
 
-func (entry *AppEntry) attachWindow(winInfo *WindowInfo) bool {
-	win := winInfo.window
+func (entry *AppEntry) attachWindow(winInfo WindowInfoImp) bool {
+	win := winInfo.getXid()
 	logger.Debugf("attach win %v to entry", win)
 
-	winInfo.entry = entry
+	winInfo.setEntry(entry)
 
 	entry.PropsMu.Lock()
 	defer entry.PropsMu.Unlock()
@@ -225,23 +219,15 @@ func (entry *AppEntry) attachWindow(winInfo *WindowInfo) bool {
 	entry.updateMenu()
 
 	// print window info
-	wmClassStr := "-"
-	if winInfo.wmClass != nil {
-		wmClassStr = fmt.Sprintf("%q %q", winInfo.wmClass.Class, winInfo.wmClass.Instance)
-	}
-	logger.Infof("attach window id: %d, wmClass: %s, wmState: %v,"+
-		" wmWindowType: %v, wmAllowedActions: %v, hasXEmbedInfo: %v, hasWmTransientFor: %v",
-		winInfo.window, wmClassStr,
-		winInfo.wmState, winInfo.wmWindowType, winInfo.wmAllowedActions, winInfo.hasXEmbedInfo,
-		winInfo.hasWmTransientFor)
+	winInfo.print()
 
 	return true
 }
 
 // return need remove?
-func (entry *AppEntry) detachWindow(winInfo *WindowInfo) bool {
-	winInfo.entry = nil
-	win := winInfo.window
+func (entry *AppEntry) detachWindow(winInfo WindowInfoImp) bool {
+	winInfo.setEntry(nil)
+	win := winInfo.getXid()
 	logger.Debug("detach window ", win)
 
 	entry.PropsMu.Lock()
@@ -340,16 +326,20 @@ func (entry *AppEntry) getIcon() string {
 
 func (e *AppEntry) updateWindowInfos() {
 	windowInfos := newWindowInfos()
-	for win, winInfo := range e.windows {
-		windowInfos[win] = ExportWindowInfo{
-			Title: winInfo.Title,
-			Flash: winInfo.hasWmStateDemandsAttention(),
+	for _, winInfo := range e.windows {
+		windowInfos[winInfo.getXid()] = ExportWindowInfo{
+			Title: winInfo.getTitle(),
+			Flash: winInfo.isDemandingAttention(),
 		}
 	}
 	e.setPropWindowInfos(windowInfos)
 }
 
 func (e *AppEntry) updateIsActive() {
-	_, ok := e.windows[e.manager.getActiveWindow()]
-	e.setPropIsActive(ok)
+	isActive := false
+	activeWin := e.manager.getActiveWindow()
+	if activeWin != nil {
+		_, isActive = e.windows[activeWin.getXid()]
+	}
+	e.setPropIsActive(isActive)
 }
