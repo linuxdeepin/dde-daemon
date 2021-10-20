@@ -305,6 +305,10 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			for _, a := range shouldAdd {
 				m.addAccessPoint(devPath, a)
 			}
+
+			m.PropsMu.Lock()
+			m.updatePropWirelessAccessPoints()
+			m.PropsMu.Unlock()
 			m.accessPointsLock.Unlock()
 		})
 		if err != nil {
