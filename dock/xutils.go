@@ -348,7 +348,7 @@ func getAndroidUengineId(win x.Window) int32 {
 
 	if err != nil || reply.ValueLen == 0 {
 		return -1
-        }
+	}
 
 	return int32(x.Get32(reply.Value))
 }
@@ -660,9 +660,6 @@ func isGoodWindow(win x.Window) bool {
 	return err == nil
 }
 
-func killClient(win x.Window) {
-	err := x.KillClientChecked(globalXConn, uint32(win)).Check(globalXConn)
-	if err != nil {
-		logger.Warning(err)
-	}
+func killClient(win x.Window) error {
+	return x.KillClientChecked(globalXConn, uint32(win)).Check(globalXConn)
 }

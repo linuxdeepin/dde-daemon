@@ -22,6 +22,7 @@ package dock
 import (
 	"errors"
 	"os"
+	"strings"
 	"syscall"
 	"time"
 
@@ -37,6 +38,8 @@ func (e *AppEntry) GetInterfaceName() string {
 
 func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 	logger.Debug("Activate timestamp:", timestamp)
+	var err error
+
 	m := entry.manager
 	if HideModeType(m.HideMode.Get()) == HideModeSmartHide {
 		m.setPropHideState(HideStateShow)
@@ -53,38 +56,63 @@ func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 	}
 
 	if entry.current == nil {
-		err := errors.New("entry.current is nil")
+		err = errors.New("entry.current is nil")
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-	win := entry.current.window
-	state, err := ewmh.GetWMState(globalXConn, win).Reply(globalXConn)
-	if err != nil {
-		logger.Warningf("failed to get ewmh WMState for win %d: %v", win, err)
-		return dbusutil.ToError(err)
-	}
 
-	activeWin := entry.manager.getActiveWindow()
+	winInfo := entry.current
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
 
-	if win == activeWin {
-		if atomsContains(state, atomNetWmStateHidden) {
-			err = activateWindow(win)
-		} else {
-			if len(entry.windows) == 1 {
-				err = minimizeWindow(win)
-			} else if entry.manager.getActiveWindow() == win {
-				nextWin := entry.findNextLeader()
-				err = activateWindow(nextWin)
+	if strings.Contains(sessionType, "wayland") {
+		if m.isActiveWindow(winInfo) {
+			showing, _ := m.waylandWM.IsShowingDesktop(0)
+			if winInfo.isMinimized() || showing {
+				err = winInfo.activate()
+			} else {
+				if len(entry.windows) == 1 {
+					err = winInfo.minimize()
+				} else {
+					nextWinInfo := entry.findNextLeader()
+					if nextWinInfo != nil {
+						err = nextWinInfo.activate()
+					} else {
+						err = errors.New("nextWinInfo is nil")
+					}
+				}
 			}
+		} else {
+			err = winInfo.activate()
 		}
 	} else {
-		err = activateWindow(win)
+		win := winInfo.getXid()
+		state, err0 := ewmh.GetWMState(globalXConn, win).Reply(globalXConn)
+		if err0 != nil {
+			logger.Warningf("failed to get ewmh WMState for win %d: %v", win, err0)
+			return dbusutil.ToError(err0)
+		}
+
+		activeWin := entry.manager.getActiveWindow()
+
+		if win == activeWin.getXid() {
+			if atomsContains(state, atomNetWmStateHidden) {
+				err = activateWindow(win)
+			} else {
+				if len(entry.windows) == 1 {
+					err = minimizeWindow(win)
+				} else if entry.manager.getActiveWindow().getXid() == win {
+					nextWin := entry.findNextLeader()
+					err = nextWin.activate()
+				}
+			}
+		} else {
+			err = activateWindow(win)
+		}
 	}
 
 	if err != nil {
 		logger.Warning(err)
 	}
-
 	return dbusutil.ToError(err)
 }
 
@@ -163,12 +191,16 @@ func (entry *AppEntry) ForceQuit() *dbus.Error {
 	winInfoSlice := entry.getWindowInfoSlice()
 	entry.PropsMu.RUnlock()
 
-	pidWinInfosMap := make(map[uint][]*WindowInfo)
+	pidWinInfosMap := make(map[uint][]WindowInfoImp)
 	for _, winInfo := range winInfoSlice {
-		if winInfo.pid != 0 && winInfo.process != nil {
-			pidWinInfosMap[winInfo.pid] = append(pidWinInfosMap[winInfo.pid], winInfo)
+		pid := winInfo.getPid()
+		if pid != 0 && isProcessAlive(pid) {
+			pidWinInfosMap[pid] = append(pidWinInfosMap[pid], winInfo)
 		} else {
-			killClient(winInfo.window)
+			err := winInfo.killClient()
+			if err != nil {
+				dbusutil.ToError(err)
+			}
 		}
 	}
 
@@ -178,7 +210,10 @@ func (entry *AppEntry) ForceQuit() *dbus.Error {
 			logger.Warning(err)
 			if os.IsPermission(err) {
 				for _, winInfo := range winInfoSlice {
-					killClient(winInfo.window)
+					err = winInfo.killClient()
+					if err != nil {
+						dbusutil.ToError(err)
+					}
 				}
 			}
 		}
@@ -215,10 +250,23 @@ func killProcess(pid uint) error {
 
 func (entry *AppEntry) GetAllowedCloseWindows() (windows []uint32, busErr *dbus.Error) {
 	entry.PropsMu.RLock()
-	winIds := entry.getAllowedCloseWindows()
-	for _, id := range winIds {
-		windows = append(windows, uint32(id))
+	ret := make([]uint32, len(entry.windows))
+	winInfos := entry.getAllowedCloseWindows()
+	for idx, winInfo := range winInfos {
+		ret[idx] = uint32(winInfo.getXid())
 	}
 	entry.PropsMu.RUnlock()
-	return windows, nil
+	return ret, nil
+}
+
+func isProcessAlive(pid uint) bool {
+	p, err := os.FindProcess(int(pid))
+	if err != nil {
+		return false
+	}
+	err = p.Signal(syscall.Signal(0))
+	if err != nil {
+		return false
+	}
+	return true
 }

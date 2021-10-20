@@ -28,6 +28,7 @@ import (
 
 	"github.com/godbus/dbus"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
 	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.launcher"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
@@ -62,7 +63,7 @@ type Manager struct {
 	syncConfig         *dsync.Config
 	clientList         windowSlice
 	clientListInitEnd  bool
-	windowInfoMap      map[x.Window]*WindowInfo
+	windowInfoMap      map[x.Window]WindowInfoImp
 	windowInfoMapMutex sync.RWMutex
 	settings           *gio.Settings
 	appearanceSettings *gio.Settings
@@ -70,9 +71,11 @@ type Manager struct {
 
 	entryDealChan   chan func()
 	rootWindow      x.Window
-	activeWindow    x.Window
-	activeWindowOld x.Window
+	activeWindow    WindowInfoImp
+	activeWindowOld WindowInfoImp
 	activeWindowMu  sync.Mutex
+
+	waylandManager *WaylandManager
 
 	ddeLauncherVisible   bool
 	ddeLauncherVisibleMu sync.Mutex
@@ -93,6 +96,7 @@ type Manager struct {
 	appsObj      libApps.Apps
 	startManager sessionmanager.StartManager
 	wmSwitcher   wmswitcher.WMSwitcher
+	waylandWM    kwayland.WindowManager
 	wmName       string
 	//nolint
 	signals *struct {
@@ -389,8 +393,9 @@ func (m *Manager) QueryWindowIdentifyMethod(wid uint32) (method string, busErr *
 	for _, entry := range m.Entries.items {
 		winInfo, ok := entry.windows[x.Window(wid)]
 		if ok {
-			if winInfo.appInfo != nil {
-				return winInfo.appInfo.identifyMethod, nil
+			appInfo := winInfo.getAppInfo()
+			if appInfo != nil {
+				return appInfo.identifyMethod, nil
 			} else {
 				return "Failed", nil
 			}
@@ -450,4 +455,49 @@ func (m *Manager) accessEntries() {
 		fun := <-m.entryDealChan
 		fun()
 	}
+}
+
+func (m *Manager) findWindowByXidX(win x.Window) (winInfo WindowInfoImp) {
+	m.windowInfoMapMutex.RLock()
+	winInfo, ok := m.windowInfoMap[win]
+	m.windowInfoMapMutex.RUnlock()
+	if ok {
+		val, ret := (winInfo).(*WindowInfo)
+		if ret {
+			return val
+		}
+	}
+	return nil
+}
+
+func (m *Manager) findWindowByXidK(win x.Window) (winInfo WindowInfoImp) {
+	m.waylandManager.mu.Lock()
+	for _, windowInfo := range m.waylandManager.windows {
+		if windowInfo.getXid() == win {
+			m.waylandManager.mu.Unlock()
+			return windowInfo
+		}
+	}
+	m.waylandManager.mu.Unlock()
+	return nil
+}
+
+func (m *Manager) findWindowByXid(win x.Window) (winInfo WindowInfoImp) {
+	winInfo = m.findWindowByXidX(win)
+	if winInfo != nil {
+		return
+	}
+
+	return m.findWindowByXidK(win)
+}
+
+func (m *Manager) findXWindowInfo(win x.Window) *WindowInfo {
+	m.windowInfoMapMutex.RLock()
+	winInfo := m.windowInfoMap[win]
+	m.windowInfoMapMutex.RUnlock()
+	val, ok := (winInfo).(*WindowInfo)
+	if ok {
+		return val
+	}
+	return nil
 }

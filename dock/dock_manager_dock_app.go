@@ -49,6 +49,7 @@ func createScratchDesktopFile(id, title, icon, cmd string) (string, error) {
 	dockedItem := dockedItemInfo{title, icon, cmd}
 	logger.Debugf("dockedItem: %#v", dockedItem)
 	content := fmt.Sprintf(dockedItemTemplate, dockedItem.Name, dockedItem.Exec, dockedItem.Icon)
+	// #nosec G306
 	err := ioutil.WriteFile(filename, []byte(content), 0644)
 	if err != nil {
 		return "", err
@@ -73,6 +74,7 @@ func removeScratchFiles(desktopFile string) {
 }
 
 func createScratchDesktopFileWithAppEntry(entry *AppEntry) (string, error) {
+	// #nosec G301
 	err := os.MkdirAll(scratchDir, 0755)
 	if err != nil {
 		return "", err
@@ -91,7 +93,7 @@ func createScratchDesktopFileWithAppEntry(entry *AppEntry) (string, error) {
 	if entry.current == nil {
 		return "", errors.New("entry.current is nil")
 	}
-	appId := entry.current.innerId
+	appId := entry.current.getInnerId()
 	title := entry.current.getDisplayName()
 	// icon
 	icon := entry.current.getIcon()
@@ -111,6 +113,7 @@ func createScratchDesktopFileWithAppEntry(entry *AppEntry) (string, error) {
 	// cmd
 	scriptContent := entry.getExec(false)
 	scriptFile := filepath.Join(scratchDir, appId+".sh")
+	// #nosec G306
 	err = ioutil.WriteFile(scriptFile, []byte(scriptContent), 0744)
 	if err != nil {
 		return "", err
@@ -221,12 +224,12 @@ func (m *Manager) undockEntry(entry *AppEntry) {
 			if strings.HasPrefix(filepath.Base(desktop), windowHashPrefix) {
 				// desktop base starts with w:
 				// 由于有 Pid 识别方法在，在这里不能用 m.identifyWindow 再次识别
-				entry.innerId = entry.current.innerId
+				entry.innerId = entry.current.getInnerId()
 				entry.setAppInfo(nil)
 			} else {
 				// desktop base starts with d:
 				var newAppInfo *AppInfo
-				logger.Debug("re-identify window", entry.current.innerId)
+				logger.Debug("re-identify window", entry.current.getInnerId())
 				entry.innerId, newAppInfo = m.identifyWindow(entry.current)
 				entry.setAppInfo(newAppInfo)
 			}

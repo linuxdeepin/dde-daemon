@@ -37,6 +37,8 @@ import (
 const windowHashPrefix = "w:"
 
 type WindowInfo struct {
+	baseWindowInfo
+
 	innerId string
 	window  x.Window
 	Title   string
@@ -77,6 +79,7 @@ func NewWindowInfo(win x.Window) *WindowInfo {
 	winInfo := &WindowInfo{
 		window: win,
 	}
+	winInfo.xid = win
 	return winInfo
 }
 
@@ -393,13 +396,69 @@ func genInnerId(winInfo *WindowInfo) string {
 		str = fmt.Sprintf("wmInstance:%q,wmClass:%q,exe:%q,args:%q,hasPid:%v,gtkAppId:%q",
 			wmInstance, wmClass, exe, args, hasPid, winInfo.gtkAppId)
 	}
-
+	// #nosec G401
 	md5hash := md5.New()
 	_, err := md5hash.Write([]byte(str))
 	if err != nil {
-		logger.Warning("Write error:",err)
+		logger.Warning("Write error:", err)
 	}
 	innerId := windowHashPrefix + hex.EncodeToString(md5hash.Sum(nil))
 	logger.Debugf("genInnerId win: %v str: %s, innerId: %s", win, str, innerId)
 	return innerId
+}
+
+func (winInfo *WindowInfo) isDemandingAttention() bool {
+	return winInfo.hasWmStateDemandsAttention()
+}
+
+func (winInfo *WindowInfo) isMinimized() bool {
+	return atomsContains(winInfo.wmState, atomNetWmStateHidden)
+}
+
+func (winInfo *WindowInfo) activate() error {
+	return activateWindow(winInfo.xid)
+}
+
+func (winInfo *WindowInfo) minimize() error {
+	return minimizeWindow(winInfo.xid)
+}
+
+func (winInfo *WindowInfo) close(timestamp uint32) error {
+	return closeWindow(winInfo.xid, x.Timestamp(timestamp))
+}
+
+func (winInfo *WindowInfo) killClient() error {
+	return killClient(winInfo.xid)
+}
+
+func (winInfo *WindowInfo) changeXid(xid x.Window) bool {
+	logger.Warning("XWindowInfo should not change xid!")
+	return false
+}
+
+func (winInfo *WindowInfo) print() {
+	wmClassStr := "-"
+	if winInfo.wmClass != nil {
+		wmClassStr = fmt.Sprintf("%q %q", winInfo.wmClass.Class, winInfo.wmClass.Instance)
+	}
+	logger.Infof("id: %d, wmClass: %s, wmState: %v,"+
+		" wmWindowType: %v, wmAllowedActions: %v, hasXEmbedInfo: %v, hasWmTransientFor: %v",
+		winInfo.xid, wmClassStr,
+		winInfo.wmState, winInfo.wmWindowType, winInfo.wmAllowedActions, winInfo.hasXEmbedInfo,
+		winInfo.hasWmTransientFor)
+}
+
+func (winInfo *WindowInfo) allowClose() bool {
+	if winInfo.motifWmHints != nil {
+		if winInfo.motifWmHints.allowedClose() {
+			return true
+		}
+	}
+
+	for _, action := range winInfo.wmAllowedActions {
+		if action == atomNetWmActionClose {
+			return true
+		}
+	}
+	return false
 }
