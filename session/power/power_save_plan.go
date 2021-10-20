@@ -664,6 +664,13 @@ func (psp *powerSavePlan) HandleIdleOff() {
 	psp.manager.setPrepareSuspend(suspendStateFinish)
 	logger.Info("HandleIdleOff")
 	psp.interruptTasks()
+
+	// 龙芯3A500机器会出现待机时未拉起锁屏，导致在系统唤醒时直接进入桌面的问题
+	// 此处在系统唤醒时重新拉起一次锁屏界面
+	if psp.manager.SleepLock.Get() {
+		psp.manager.lockWaitShow(5*time.Second, false)
+	}
+
 	psp.manager.setDPMSModeOn()
 	psp.resetBrightness()
 }
