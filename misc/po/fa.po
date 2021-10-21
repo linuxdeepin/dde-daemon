@@ -6,12 +6,12 @@
 # Translators:
 # Maahyar Motevakel <mahyar.motevakel@gmail.com>, 2020
 # mohammad raufzahed <mohammadraufzahed1389@gmail.com>, 2020
-# Hadi Kamell <beemeyl@gmail.com>, 2020
 # Amir Dadash <dadashamir25@gmail.com>, 2020
 # Alik Miankoli <alikmiankoliid@gmail.com>, 2020
 # amirhosein lesani <xenups@gmail.com>, 2020
 # AmirHosein Lesani <xenups@outlook.com>, 2020
 # Hootan Baraary <h.baraary@yahoo.com>, 2021
+# Hadi Kamell <beemeyl@gmail.com>, 2021
 # Cindy0514, 2021
 # 
 #, fuzzy
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 16:37+0800\n"
+"POT-Creation-Date: 2021-10-22 09:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Persian (https://www.transifex.com/linuxdeepin/teams/3617/fa/)\n"
@@ -150,7 +150,7 @@ msgstr "دسترسی پیام"
 msgid "Message notification"
 msgstr "مدیریت اعلان"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
 msgid "Cancel"
 msgstr "انصراف"
 
@@ -303,142 +303,150 @@ msgid "Delay screenshot"
 msgstr "تصویر از صفحه با تاخیر"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
+msgid "OCR (Image to Text)"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:40
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
 msgstr "مدیریت فایل"
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
 msgstr "غیرفعال کردن صفحه لمسی"
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
 msgstr "تغییر جلوه های پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
 msgstr "خاموش کردن سریع صفحه"
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "System Monitor"
 msgstr "پایشگر سیستم"
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
 msgstr "دیپین پیکر"
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
 msgstr "دستیار هوشمند دسکتاپ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
 msgstr "متن به گفتار"
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Speech to Text"
 msgstr "گفتار به متن"
 
-#: ../../keybinding/shortcuts/id_name_map.go:48
+#: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Clipboard"
 msgstr "کلیپ بورد"
 
-#: ../../keybinding/shortcuts/id_name_map.go:49
+#: ../../keybinding/shortcuts/id_name_map.go:51
 msgid "Translation"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:58
 msgid "Switch Layout"
 msgstr "تغییر صفحه کلید"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to left workspace"
 msgstr "رفتن به فضای کار سمت چپ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to right workspace"
 msgstr "رفتن به فضای کار سمت راست"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to upper workspace"
 msgstr "رفتن به فضای کار بالا"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to lower workspace"
 msgstr "رفتن به فضای کار پایین"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows"
 msgstr "تغییر پنجره های مشابه"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows in reverse"
 msgstr "تعویض پنجره های مشابه بصورت معکوس"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows"
 msgstr "تغییر پنجره ها"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows in reverse"
 msgstr "تغییر پنجره ها بصورت معکوس"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Show desktop"
 msgstr "نمایش دسکتاپ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Maximize window"
 msgstr "بزرگ کردن پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Restore window"
 msgstr "بازگردانی پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Minimize window"
 msgstr "پایین بردن پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Close window"
 msgstr "بستن پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Move window"
 msgstr "جابجایی پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Resize window"
 msgstr "تغییر سایز پنجره"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to left workspace"
 msgstr "انتقال به فضای کار سمت چپ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to right workspace"
 msgstr "انتقال به فضای کار سمت راست"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to upper workspace"
 msgstr "انتقال به فضای کار بالا"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to lower workspace"
 msgstr "انتقال به فضای کار سمت پایین"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of all workspaces"
 msgstr "نمایش پنجره های تمام فضاهای کار"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of current workspace"
 msgstr "نمایش پنجره های فضای کار جاری"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display workspace"
 msgstr "نمایش فضای کار"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr ""
 
@@ -464,44 +472,86 @@ msgstr "زبان سیستم تغییر کرده است ، لطفاً  خارج �
 msgid "Failed to change system language, please try later"
 msgstr "تغییر زبان سیستم انجام نشد ، لطفاً بعداً امتحان کنید"
 
-#: ../../lastore/lastore.go:244
+#: ../../lastore/lastore.go:366
 msgid "Retry"
 msgstr "سعی مجدد"
 
-#: ../../lastore/lastore.go:266
+#: ../../lastore/lastore.go:388
 msgid "Update Now"
 msgstr "اکنون بروزرسانی کن"
 
-#: ../../lastore/notify.go:96
+#: ../../lastore/lastore.go:418
+msgid "Reboot Now"
+msgstr "هم اکنون راه اندازی مجدد شود"
+
+#: ../../lastore/lastore.go:422
+msgid "Remind Me Later"
+msgstr ""
+
+#: ../../lastore/lastore.go:429
+msgid "10 mins later"
+msgstr ""
+
+#: ../../lastore/lastore.go:436
+msgid "30 mins later"
+msgstr ""
+
+#: ../../lastore/lastore.go:443
+msgid "2h later"
+msgstr ""
+
+#: ../../lastore/lastore.go:450
+msgid "6h later"
+msgstr ""
+
+#: ../../lastore/notify.go:106
 msgid "%q installed successfully."
 msgstr "%q با موفقیت نصب شد."
 
-#: ../../lastore/notify.go:99
+#: ../../lastore/notify.go:109
 msgid "%q failed to install."
 msgstr "%q نصب نشد."
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:117
 msgid "Removed successfully"
 msgstr ""
 
-#: ../../lastore/notify.go:109
+#: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
 msgstr ""
 
-#: ../../lastore/notify.go:116
+#: ../../lastore/notify.go:126
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
 "برای جلوگیری از خاموش شدن خودکار و برای بروزرسانی عادی، سیستم را به برق متصل"
 " کنید "
 
-#: ../../lastore/notify.go:121
+#: ../../lastore/notify.go:131
 msgid "Package cache wiped"
 msgstr "حافظه پنهان بسته پاک شد"
 
-#: ../../lastore/notify.go:126
+#: ../../lastore/notify.go:136
 msgid "New system edition available"
 msgstr "نسخه جدید سیستم شناسایی شد"
+
+#: ../../lastore/notify.go:141
+msgid "Reboot after Updates"
+msgstr ""
+
+#: ../../lastore/notify.go:142
+msgid "Restart the computer to use the system and applications properly"
+msgstr ""
+
+#: ../../lastore/notify.go:152
+msgid ""
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
+msgstr ""
+
+#: ../../lastore/notify.go:153
+msgid "OK"
+msgstr "تایید"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
@@ -510,10 +560,6 @@ msgstr "%q با موفقیت حذف شد"
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q حذف انجام نشد"
-
-#: ../../network/manager.go:347
-msgid "Wired connection"
-msgstr ""
 
 #: ../../network/manager_active_conn.go:401
 #: ../../network/manager_active_conn.go:406
@@ -552,12 +598,12 @@ msgstr "Tunneled TLS"
 msgid "Protected EAP"
 msgstr "Protected EAP"
 
-#: ../../network/manager_connection.go:357
-#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:356
+#: ../../network/manager_connection.go:360
 msgid "Wired Connection"
 msgstr "اتصال سیمی"
 
-#: ../../network/manager_connection.go:405
+#: ../../network/manager_connection.go:399
 msgid "Wired Connection %v"
 msgstr ""
 

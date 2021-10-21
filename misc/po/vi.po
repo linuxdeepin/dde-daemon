@@ -6,9 +6,9 @@
 # Translators:
 # Nam Anh <phamnamanh25@gmail.com>, 2020
 # Vu Thanh An <banzin123@gmail.com>, 2020
-# Phạm Đông Giang <ginise99@yahoo.com>, 2020
 # mousewis <mousewis@gmail.com>, 2021
 # Cindy0514, 2021
+# Phạm Đông Giang <ginise99@yahoo.com>, 2021
 # Hoan Chu Đình <chudinhhoan277@gmail.com>, 2021
 # 
 #, fuzzy
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 16:37+0800\n"
+"POT-Creation-Date: 2021-10-22 09:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Hoan Chu Đình <chudinhhoan277@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/linuxdeepin/teams/3617/vi/)\n"
@@ -147,7 +147,7 @@ msgstr "Truy cập tin nhắn"
 msgid "Message notification"
 msgstr "Thông báo tin nhắn"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
 msgid "Cancel"
 msgstr "Hủy"
 
@@ -300,142 +300,150 @@ msgid "Delay screenshot"
 msgstr "Ảnh chụp màn hình chậm trễ"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
+msgid "OCR (Image to Text)"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:40
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
 msgstr "Quản lý tệp tin"
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
 msgstr "Vô hiệu hóa Bản cảm ứng"
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
 msgstr "Đổi các hiệu ứng cửa sổ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
 msgstr "Tắt Màn hình Nhanh"
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "System Monitor"
 msgstr "Giám sát hệ thống"
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
 msgstr "Deepin Picker"
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
 msgstr "Trợ lý Desktop AI"
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
 msgstr "Chuyển văn bản thành giọng nói"
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Speech to Text"
 msgstr "Phát biểu thành văn bản"
 
-#: ../../keybinding/shortcuts/id_name_map.go:48
+#: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Clipboard"
 msgstr "Bộ nhớ Clipboard"
 
-#: ../../keybinding/shortcuts/id_name_map.go:49
+#: ../../keybinding/shortcuts/id_name_map.go:51
 msgid "Translation"
 msgstr "Dịch"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:58
 msgid "Switch Layout"
 msgstr "Bố trí Bộ chuyển đổi"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to left workspace"
 msgstr "Chuyển sang không gian làm việc bên trái"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to right workspace"
 msgstr "Chuyển sang không gian làm việc bên phải"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to upper workspace"
 msgstr "Chuyển sang không gian làm việc ở trên"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to lower workspace"
 msgstr "Chuyển sang không gian làm việc ở dưới"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows"
 msgstr "Chuyển sang các cửa sổ tương tự"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows in reverse"
 msgstr "Chuyển sang các cửa sổ tương tự theo thứ tự ngược lại"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows"
 msgstr "Chuyển cửa sổ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows in reverse"
 msgstr "Chuyển cửa sổ theo thứ tự ngược lại"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Show desktop"
 msgstr "Hiện màn hình ngoài"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Maximize window"
 msgstr "Mở hết cửa sổ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Restore window"
 msgstr "Khôi phục cửa sổ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Minimize window"
 msgstr "Thu nhỏ nhất cửa sổ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Close window"
 msgstr "Đóng cửa sổ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Move window"
 msgstr "Di chuyển cửa sổ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Resize window"
 msgstr "Đổi kích thước cửa sổ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to left workspace"
 msgstr "Di chuyển tới không gian làm việc bên trái"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to right workspace"
 msgstr "Di chuyển tới không gian làm việc bên phải"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to upper workspace"
 msgstr "Di chuyển tới không gian làm việc ở trên"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to lower workspace"
 msgstr "Di chuyển tới không gian làm việc ở dưới"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of all workspaces"
 msgstr "Hiển thị cửa sổ của tất cả không gian làm việc"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of current workspace"
 msgstr "Hiển thị cửa sổ của không gian làm việc hiện tại"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display workspace"
 msgstr "Hiển thị không gian làm việc"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "Chuyển màn hình"
 
@@ -463,42 +471,84 @@ msgstr "Ngôn ngữ hệ thống đã thay đổi, vui lòng đăng xuất và s
 msgid "Failed to change system language, please try later"
 msgstr "Không thể thay đổi ngôn ngữ hệ thống, vui lòng thử lại sau"
 
-#: ../../lastore/lastore.go:244
+#: ../../lastore/lastore.go:366
 msgid "Retry"
 msgstr "Thử lại"
 
-#: ../../lastore/lastore.go:266
+#: ../../lastore/lastore.go:388
 msgid "Update Now"
 msgstr "Cập nhật Bây giờ"
 
-#: ../../lastore/notify.go:96
+#: ../../lastore/lastore.go:418
+msgid "Reboot Now"
+msgstr "Khởi động lại ngay"
+
+#: ../../lastore/lastore.go:422
+msgid "Remind Me Later"
+msgstr ""
+
+#: ../../lastore/lastore.go:429
+msgid "10 mins later"
+msgstr ""
+
+#: ../../lastore/lastore.go:436
+msgid "30 mins later"
+msgstr ""
+
+#: ../../lastore/lastore.go:443
+msgid "2h later"
+msgstr ""
+
+#: ../../lastore/lastore.go:450
+msgid "6h later"
+msgstr ""
+
+#: ../../lastore/notify.go:106
 msgid "%q installed successfully."
 msgstr "%q cài đặt thành công."
 
-#: ../../lastore/notify.go:99
+#: ../../lastore/notify.go:109
 msgid "%q failed to install."
 msgstr "%q cài đặt thất bại."
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:117
 msgid "Removed successfully"
 msgstr "Xóa thành công"
 
-#: ../../lastore/notify.go:109
+#: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
 msgstr "Lỗi không thể xóa ứng dụng"
 
-#: ../../lastore/notify.go:116
+#: ../../lastore/notify.go:126
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr "Để ngăn chặn tự động tắt, vui lòng cắm vào để cập nhật bình thường."
 
-#: ../../lastore/notify.go:121
+#: ../../lastore/notify.go:131
 msgid "Package cache wiped"
 msgstr "Đã xóa Package cache"
 
-#: ../../lastore/notify.go:126
+#: ../../lastore/notify.go:136
 msgid "New system edition available"
 msgstr "Phiên bản hệ thống mới được phát hiện"
+
+#: ../../lastore/notify.go:141
+msgid "Reboot after Updates"
+msgstr ""
+
+#: ../../lastore/notify.go:142
+msgid "Restart the computer to use the system and applications properly"
+msgstr ""
+
+#: ../../lastore/notify.go:152
+msgid ""
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
+msgstr ""
+
+#: ../../lastore/notify.go:153
+msgid "OK"
+msgstr "OK"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
@@ -507,10 +557,6 @@ msgstr "%q đã được xóa thành công"
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "Gỡ bỏ %q đã thất bại"
-
-#: ../../network/manager.go:347
-msgid "Wired connection"
-msgstr "Kết nối có dây"
 
 #: ../../network/manager_active_conn.go:401
 #: ../../network/manager_active_conn.go:406
@@ -549,12 +595,12 @@ msgstr "TLS được tạo đường"
 msgid "Protected EAP"
 msgstr "EAP được bảo vệ"
 
-#: ../../network/manager_connection.go:357
-#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:356
+#: ../../network/manager_connection.go:360
 msgid "Wired Connection"
 msgstr "Kết nối Có dây"
 
-#: ../../network/manager_connection.go:405
+#: ../../network/manager_connection.go:399
 msgid "Wired Connection %v"
 msgstr ""
 

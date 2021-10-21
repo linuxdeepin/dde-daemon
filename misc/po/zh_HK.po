@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 16:37+0800\n"
+"POT-Creation-Date: 2021-10-22 09:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Hong Kong) (https://www.transifex.com/linuxdeepin/teams/3617/zh_HK/)\n"
@@ -144,7 +144,7 @@ msgstr "訊息存取"
 msgid "Message notification"
 msgstr "訊息通知"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
 msgid "Cancel"
 msgstr "取消"
 
@@ -297,142 +297,150 @@ msgid "Delay screenshot"
 msgstr "延時截圖"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
+msgid "OCR (Image to Text)"
+msgstr "圖文識別"
+
+#: ../../keybinding/shortcuts/id_name_map.go:40
+msgid "Scrollshot"
+msgstr "滾動截圖"
+
+#: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
 msgstr "檔案管理員"
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
 msgstr "禁用觸控板 "
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
 msgstr "切換窗口特效 "
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
 msgstr "快速黑屏"
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "System Monitor"
 msgstr "系統監視器"
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
 msgstr "深度取色器"
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
 msgstr "桌面智能助手"
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
 msgstr "語音朗讀"
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Speech to Text"
 msgstr "語音聽寫"
 
-#: ../../keybinding/shortcuts/id_name_map.go:48
+#: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Clipboard"
 msgstr "剪貼簿"
 
-#: ../../keybinding/shortcuts/id_name_map.go:49
+#: ../../keybinding/shortcuts/id_name_map.go:51
 msgid "Translation"
 msgstr "文本翻譯"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:58
 msgid "Switch Layout"
 msgstr "切換鍵盤佈局"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to left workspace"
 msgstr "切換到左邊工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to right workspace"
 msgstr "切換到右邊工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to upper workspace"
 msgstr "切換到上方工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to lower workspace"
 msgstr "切換到下方工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows"
 msgstr "切換至類似視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows in reverse"
 msgstr "反向切換同類型窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows"
 msgstr "切換視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows in reverse"
 msgstr "反向切換窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Show desktop"
 msgstr "顯示桌面"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Maximize window"
 msgstr "最大化視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Restore window"
 msgstr "還原視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Minimize window"
 msgstr "最小化視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Close window"
 msgstr "關閉視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Move window"
 msgstr "移動視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Resize window"
 msgstr "調整視窗大小"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to left workspace"
 msgstr "移至左邊工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to right workspace"
 msgstr "移至右邊工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to upper workspace"
 msgstr "移至上方工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to lower workspace"
 msgstr "移至下方工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of all workspaces"
 msgstr "顯示所有工作區的視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of current workspace"
 msgstr "顯示目前工作區的視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display workspace"
 msgstr "顯示工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "多屏切換"
 
@@ -458,42 +466,84 @@ msgstr "語言切換成功，請註銷後重新登錄"
 msgid "Failed to change system language, please try later"
 msgstr "系統語言切換失敗，請稍後重試"
 
-#: ../../lastore/lastore.go:244
+#: ../../lastore/lastore.go:366
 msgid "Retry"
 msgstr "重試"
 
-#: ../../lastore/lastore.go:266
+#: ../../lastore/lastore.go:388
 msgid "Update Now"
 msgstr "立即更新"
 
-#: ../../lastore/notify.go:96
+#: ../../lastore/lastore.go:418
+msgid "Reboot Now"
+msgstr "立刻重啟"
+
+#: ../../lastore/lastore.go:422
+msgid "Remind Me Later"
+msgstr "稍後提醒"
+
+#: ../../lastore/lastore.go:429
+msgid "10 mins later"
+msgstr "10分鐘後提醒"
+
+#: ../../lastore/lastore.go:436
+msgid "30 mins later"
+msgstr "30分鐘後提醒"
+
+#: ../../lastore/lastore.go:443
+msgid "2h later"
+msgstr "2小時後提醒"
+
+#: ../../lastore/lastore.go:450
+msgid "6h later"
+msgstr "6小時後提醒"
+
+#: ../../lastore/notify.go:106
 msgid "%q installed successfully."
 msgstr "%q 已成功安裝。"
 
-#: ../../lastore/notify.go:99
+#: ../../lastore/notify.go:109
 msgid "%q failed to install."
 msgstr "無法安裝%q。"
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:117
 msgid "Removed successfully"
 msgstr "卸載成功"
 
-#: ../../lastore/notify.go:109
+#: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
 msgstr "卸載失敗"
 
-#: ../../lastore/notify.go:116
+#: ../../lastore/notify.go:126
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr "為免自動關機，更新時請接上電源。"
 
-#: ../../lastore/notify.go:121
+#: ../../lastore/notify.go:131
 msgid "Package cache wiped"
 msgstr "已成功清理軟件包緩存 "
 
-#: ../../lastore/notify.go:126
+#: ../../lastore/notify.go:136
 msgid "New system edition available"
 msgstr "檢測到有新系統版本"
+
+#: ../../lastore/notify.go:141
+msgid "Reboot after Updates"
+msgstr "更新重啟"
+
+#: ../../lastore/notify.go:142
+msgid "Restart the computer to use the system and applications properly"
+msgstr "為了您能夠正常地使用系統和應用，更新後請重新啟動系統"
+
+#: ../../lastore/notify.go:152
+msgid ""
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
+msgstr "檢測到版本正在更新中，您的電量已低於50%，請及時接入電源"
+
+#: ../../lastore/notify.go:153
+msgid "OK"
+msgstr "確 定"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
@@ -502,10 +552,6 @@ msgstr "成功卸載 %q "
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q 卸載失敗"
-
-#: ../../network/manager.go:347
-msgid "Wired connection"
-msgstr "有線連接"
 
 #: ../../network/manager_active_conn.go:401
 #: ../../network/manager_active_conn.go:406
@@ -544,12 +590,12 @@ msgstr "隧道TLS"
 msgid "Protected EAP"
 msgstr "受保護的EAP"
 
-#: ../../network/manager_connection.go:357
-#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:356
+#: ../../network/manager_connection.go:360
 msgid "Wired Connection"
 msgstr "有線連接"
 
-#: ../../network/manager_connection.go:405
+#: ../../network/manager_connection.go:399
 msgid "Wired Connection %v"
 msgstr "有線連接 %v"
 

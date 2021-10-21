@@ -103,6 +103,8 @@ var defaultSysActionCmdMap = map[string]string{
 	"screenshot-fullscreen": screenshotCmdPrefix + "FullscreenScreenshot",
 	"screenshot-window":     screenshotCmdPrefix + "TopWindowScreenshot",
 	"screenshot-delayed":    screenshotCmdPrefix + "DelayScreenshot int64:5",
+	"screenshot-ocr":        screenshotCmdPrefix + "OcrScreenshot",
+	"screenshot-scroll":     screenshotCmdPrefix + "ScrollScreenshot",
 	"file-manager":          "/usr/lib/deepin-daemon/default-file-manager",
 	"disable-touchpad":      "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
 	"wm-switcher":           "dbus-send --type=method_call --dest=com.deepin.WMSwitcher /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM",
@@ -130,6 +132,7 @@ func (a *actionHandler) getCmd(id string) (cmd string, ok bool) {
 func loadSystemActionsFile(file string) (*actionHandler, error) {
 	logger.Debug("load system action file:", file)
 
+	// #nosec G304
 	content, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, err

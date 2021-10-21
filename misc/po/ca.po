@@ -8,17 +8,17 @@
 # el_libre como el chaval <el.libre@gmail.com>, 2020
 # deepin_transifex <xiabin@linuxdeepin.com>, 2020
 # Jaime Muñoz Martín <jmmartin_5@outlook.com>, 2020
-# Cindy0514, 2020
 # Davidmp <medipas@gmail.com>, 2021
+# Cindy0514, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 16:37+0800\n"
+"POT-Creation-Date: 2021-10-22 09:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Davidmp <medipas@gmail.com>, 2021\n"
+"Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/linuxdeepin/teams/3617/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +147,7 @@ msgstr "Accés a missatges"
 msgid "Message notification"
 msgstr "Notificació de missatge"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
 msgid "Cancel"
 msgstr "Cancel·la"
 
@@ -302,142 +302,150 @@ msgid "Delay screenshot"
 msgstr "Ajorna la captura"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
+msgid "OCR (Image to Text)"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:40
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
 msgstr "Gestor de fitxers"
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
 msgstr "Inhabilita el ratolí tàctil"
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
 msgstr "Commuta els efectes de les finestres"
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
 msgstr "Desactiva la pantalla ràpida"
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "System Monitor"
 msgstr "Monitor del sistema"
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
 msgstr "Selector del Deepin"
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
 msgstr "Assistent d'IA per a l'escriptori"
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
 msgstr "De text a discurs"
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Speech to Text"
 msgstr "De discurs a text"
 
-#: ../../keybinding/shortcuts/id_name_map.go:48
+#: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Clipboard"
 msgstr "Porta-retalls"
 
-#: ../../keybinding/shortcuts/id_name_map.go:49
+#: ../../keybinding/shortcuts/id_name_map.go:51
 msgid "Translation"
 msgstr "Traducció"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:58
 msgid "Switch Layout"
 msgstr "Commuta la disposició"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to left workspace"
 msgstr "Ves a l'espai de treball de l'esquerra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to right workspace"
 msgstr "Ves a l'espai de treball de la dreta"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to upper workspace"
 msgstr "Ves a l'espai de treball de dalt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to lower workspace"
 msgstr "Ves a l'espai de treball de baix"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows"
 msgstr "Commuta finestres semblants"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows in reverse"
 msgstr "Commuta finestres semblants a la inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows"
 msgstr "Commuta finestres"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows in reverse"
 msgstr "Commuta finestres a la inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Show desktop"
 msgstr "Mostra l'escriptori"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Maximize window"
 msgstr "Maximitza la finestra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Restore window"
 msgstr "Restaura la finestra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Minimize window"
 msgstr "Minimitza la finestra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Close window"
 msgstr "Tanca la finestra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Move window"
 msgstr "Mou la finestra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Resize window"
 msgstr "Canvia la mida de la finestra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to left workspace"
 msgstr "Mou a l'espai de treball de l'esquerra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to right workspace"
 msgstr "Mou a l'espai de treball de la dreta"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to upper workspace"
 msgstr "Mou a l'espai de treball de dalt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to lower workspace"
 msgstr "Mou a l'espai de treball de baix"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of all workspaces"
 msgstr "Mostra les finestres de tots els espais de treball"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of current workspace"
 msgstr "Mostra les finestres de l'espai de treball actual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display workspace"
 msgstr "Mostra l'espai de treball"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "Commuta els monitors"
 
@@ -469,44 +477,86 @@ msgstr ""
 "Ha fallat canviar la llengua del sistema. Si us plau, torneu-ho a provar més"
 " tard."
 
-#: ../../lastore/lastore.go:244
+#: ../../lastore/lastore.go:366
 msgid "Retry"
 msgstr "Torna-ho a provar"
 
-#: ../../lastore/lastore.go:266
+#: ../../lastore/lastore.go:388
 msgid "Update Now"
 msgstr "Actualitza ara"
 
-#: ../../lastore/notify.go:96
+#: ../../lastore/lastore.go:418
+msgid "Reboot Now"
+msgstr "Reinicia ara"
+
+#: ../../lastore/lastore.go:422
+msgid "Remind Me Later"
+msgstr ""
+
+#: ../../lastore/lastore.go:429
+msgid "10 mins later"
+msgstr ""
+
+#: ../../lastore/lastore.go:436
+msgid "30 mins later"
+msgstr ""
+
+#: ../../lastore/lastore.go:443
+msgid "2h later"
+msgstr ""
+
+#: ../../lastore/lastore.go:450
+msgid "6h later"
+msgstr ""
+
+#: ../../lastore/notify.go:106
 msgid "%q installed successfully."
 msgstr "%q s'ha instal·lat correctament."
 
-#: ../../lastore/notify.go:99
+#: ../../lastore/notify.go:109
 msgid "%q failed to install."
 msgstr "Ha fallat la instal·lació de %q"
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:117
 msgid "Removed successfully"
 msgstr "S'ha eliminat correctament."
 
-#: ../../lastore/notify.go:109
+#: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
 msgstr "Ha fallat eliminar l'aplicació."
 
-#: ../../lastore/notify.go:116
+#: ../../lastore/notify.go:126
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
 "Per tal d'evitar l'aturada automàtica, connecteu-vos per a l'actualització "
 "normal."
 
-#: ../../lastore/notify.go:121
+#: ../../lastore/notify.go:131
 msgid "Package cache wiped"
 msgstr "S'ha netejat la cau de paquets."
 
-#: ../../lastore/notify.go:126
+#: ../../lastore/notify.go:136
 msgid "New system edition available"
 msgstr "Hi ha disponible una edició nova del sistema."
+
+#: ../../lastore/notify.go:141
+msgid "Reboot after Updates"
+msgstr ""
+
+#: ../../lastore/notify.go:142
+msgid "Restart the computer to use the system and applications properly"
+msgstr ""
+
+#: ../../lastore/notify.go:152
+msgid ""
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
+msgstr ""
+
+#: ../../lastore/notify.go:153
+msgid "OK"
+msgstr "D'acord"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
@@ -515,10 +565,6 @@ msgstr "%q eliminada correctament"
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "Ha fallat desinstal·lar %q."
-
-#: ../../network/manager.go:347
-msgid "Wired connection"
-msgstr "Connexió amb fil"
 
 #: ../../network/manager_active_conn.go:401
 #: ../../network/manager_active_conn.go:406
@@ -557,12 +603,12 @@ msgstr "TLS per túnel"
 msgid "Protected EAP"
 msgstr "EAP protegit"
 
-#: ../../network/manager_connection.go:357
-#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:356
+#: ../../network/manager_connection.go:360
 msgid "Wired Connection"
 msgstr "Connexió amb fil"
 
-#: ../../network/manager_connection.go:405
+#: ../../network/manager_connection.go:399
 msgid "Wired Connection %v"
 msgstr ""
 

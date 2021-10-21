@@ -5,13 +5,13 @@
 # 
 # Translators:
 # RokX, 2020
-# andrej55 <andrej.marsetic@gmail.com>, 2020
 # Eva Černi <mini.muca000@gmail.com>, 2020
 # Tadej Logar <tadej.logar.101@gmail.com>, 2020
 # kloki <klokimass@gmail.com>, 2020
 # worm <thewormhole@gmail.com>, 2020
 # Cindy0514, 2020
 # Gorzy Gorup <gorupgorazd@gmail.com>, 2021
+# andrej55 <andrej.marsetic@gmail.com>, 2021
 # Arnold Marko <arnold.marko@gmail.com>, 2021
 # 
 #, fuzzy
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 16:37+0800\n"
+"POT-Creation-Date: 2021-10-22 09:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/linuxdeepin/teams/3617/sl/)\n"
@@ -150,7 +150,7 @@ msgstr "Dostop do sporočil"
 msgid "Message notification"
 msgstr "Obvestilo o sporočilu"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
 msgid "Cancel"
 msgstr "Prekliči"
 
@@ -305,142 +305,150 @@ msgid "Delay screenshot"
 msgstr "Zajem zaslona z zamikom"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
+msgid "OCR (Image to Text)"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:40
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
 msgstr "Upravitelj datotek"
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
 msgstr "Onemogoči sledilno ploščico"
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
 msgstr "Preklopi učinke oken"
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
 msgstr "Hitri izklop zaslona"
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "System Monitor"
 msgstr "Nadzornik sistema"
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
 msgstr "Deepin kapalka"
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
 msgstr "Namizni AI pomočnik"
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
 msgstr "Besedilo v govor"
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Speech to Text"
 msgstr "Govor v besedilo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:48
+#: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Clipboard"
 msgstr "Odložišče"
 
-#: ../../keybinding/shortcuts/id_name_map.go:49
+#: ../../keybinding/shortcuts/id_name_map.go:51
 msgid "Translation"
 msgstr "Prevod"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:58
 msgid "Switch Layout"
 msgstr "Zamenjaj postavitev"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to left workspace"
 msgstr "Preklopi na levo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to right workspace"
 msgstr "Preklopi na desno delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to upper workspace"
 msgstr "Preklopi na zgornjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to lower workspace"
 msgstr "Preklopi na spodnjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows"
 msgstr "Preklopi podobna okna."
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows in reverse"
 msgstr "Preklopi podobna okna v obratnem vrstnem redu."
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows"
 msgstr "Preklopi okna."
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows in reverse"
 msgstr "Preklopi okna v obratnem redu."
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Show desktop"
 msgstr "Prikaži namizje"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Maximize window"
 msgstr "Povečaj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Restore window"
 msgstr "Obnovi okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Minimize window"
 msgstr "Pomanjšaj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Close window"
 msgstr "Zapri okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Move window"
 msgstr "Premakni okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Resize window"
 msgstr "Spremeni velikost okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to left workspace"
 msgstr "Premakni se na levo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to right workspace"
 msgstr "Premakni se na desno delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to upper workspace"
 msgstr "Premakni se na zgornjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to lower workspace"
 msgstr "Premakni se na spodnjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of all workspaces"
 msgstr "Prikaži okna na vseh delovnih mestih."
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of current workspace"
 msgstr "Prikaži okna na trenutni delovni površini."
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display workspace"
 msgstr "Prikaži delovne površine"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "Preklopi monitor"
 
@@ -468,44 +476,88 @@ msgstr "Jezik sistema je bil spremenjen. Odjavite se in ponovno prijavite"
 msgid "Failed to change system language, please try later"
 msgstr "Neuspešno spreminjanje jezika sistema. Poskusite znova kasneje"
 
-#: ../../lastore/lastore.go:244
+#: ../../lastore/lastore.go:366
 msgid "Retry"
 msgstr "Ponovi"
 
-#: ../../lastore/lastore.go:266
+#: ../../lastore/lastore.go:388
 msgid "Update Now"
 msgstr "Posodobi zdaj"
 
-#: ../../lastore/notify.go:96
+#: ../../lastore/lastore.go:418
+msgid "Reboot Now"
+msgstr "Ponovni zagon zdaj"
+
+#: ../../lastore/lastore.go:422
+msgid "Remind Me Later"
+msgstr "Opomni me kasneje"
+
+#: ../../lastore/lastore.go:429
+msgid "10 mins later"
+msgstr "10 minut kasneje"
+
+#: ../../lastore/lastore.go:436
+msgid "30 mins later"
+msgstr "30 minut kasneje"
+
+#: ../../lastore/lastore.go:443
+msgid "2h later"
+msgstr "2 uri kasneje"
+
+#: ../../lastore/lastore.go:450
+msgid "6h later"
+msgstr "6 ur kasneje"
+
+#: ../../lastore/notify.go:106
 msgid "%q installed successfully."
 msgstr "%q je uspešno nameščen."
 
-#: ../../lastore/notify.go:99
+#: ../../lastore/notify.go:109
 msgid "%q failed to install."
 msgstr "Namestitev %q je spodletela."
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:117
 msgid "Removed successfully"
 msgstr "Uspešno odstranjeno"
 
-#: ../../lastore/notify.go:109
+#: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
 msgstr "Neuspešno odstranjevanje programa"
 
-#: ../../lastore/notify.go:116
+#: ../../lastore/notify.go:126
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
 "Da se izognete samodejnemu izklopu, se priklopite na električno omrežje za "
 "normalno posodobitev."
 
-#: ../../lastore/notify.go:121
+#: ../../lastore/notify.go:131
 msgid "Package cache wiped"
 msgstr "Predpomnilnik paketa izbrisan"
 
-#: ../../lastore/notify.go:126
+#: ../../lastore/notify.go:136
 msgid "New system edition available"
 msgstr "Na voljo je nova izdaja sistema"
+
+#: ../../lastore/notify.go:141
+msgid "Reboot after Updates"
+msgstr "Ponovno zaženi po posodobitvi"
+
+#: ../../lastore/notify.go:142
+msgid "Restart the computer to use the system and applications properly"
+msgstr "Za pravilno rabo sistema in aplikacij ponovno zaženite računalnik"
+
+#: ../../lastore/notify.go:152
+msgid ""
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
+msgstr ""
+"Vaš sistem se nadgrajuje, a ima baterija manj kot 50%. Priključite "
+"računalnik na električno omrežje, da se izognete izklopu."
+
+#: ../../lastore/notify.go:153
+msgid "OK"
+msgstr "V redu"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
@@ -514,10 +566,6 @@ msgstr "%q je uspešno odstranjen"
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "Ni uspelo odstraniti %q"
-
-#: ../../network/manager.go:347
-msgid "Wired connection"
-msgstr "Ožičena povezava"
 
 #: ../../network/manager_active_conn.go:401
 #: ../../network/manager_active_conn.go:406
@@ -556,12 +604,12 @@ msgstr "Tunelirani TLS"
 msgid "Protected EAP"
 msgstr "Zaščiten EAP"
 
-#: ../../network/manager_connection.go:357
-#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:356
+#: ../../network/manager_connection.go:360
 msgid "Wired Connection"
 msgstr "Žična povezava"
 
-#: ../../network/manager_connection.go:405
+#: ../../network/manager_connection.go:399
 msgid "Wired Connection %v"
 msgstr ""
 

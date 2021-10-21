@@ -5,20 +5,20 @@
 # 
 # Translators:
 # Muhammadali Abliz <ordam2@163.com>, 2020
-# Abdusalam Huxur <2250907458@qq.com>, 2020
 # 伊力亚斯 伊德日斯 <2032517177@qq.com>, 2020
 # مۇختەر مەخمۇت <yeganaaa@163.com>, 2021
-# 阿迪力 买买提明 <251078110@qq.com>, 2021
 # Cindy0514, 2021
+# Abdusalam Huxur <2250907458@qq.com>, 2021
+# 阿迪力 买买提明 <251078110@qq.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 16:37+0800\n"
+"POT-Creation-Date: 2021-10-22 09:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2021\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -149,7 +149,7 @@ msgstr "ئۇچۇرلارنى زىيارەت قىلىش"
 msgid "Message notification"
 msgstr "ئۇچۇر ئەسكەرتىشى"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
 msgid "Cancel"
 msgstr "بىكار قىلىش"
 
@@ -304,142 +304,150 @@ msgid "Delay screenshot"
 msgstr "ۋاقىت بەلگىلەپ رەسىمگە تۇتۇش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
+msgid "OCR (Image to Text)"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:40
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
 msgstr "ھۆججەت باشقۇرغۇچ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
 msgstr "سېزىمچان تاختىنى توختىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
 msgstr "كۆزنەك ئالمىشىش ئۈنۈمى"
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
 msgstr "تىزلا ئېكراننى ئۆچۈرۈش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "System Monitor"
 msgstr "سىستېما نازارەتچىسى"
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
 msgstr "Deepin تاللىغۇچى"
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
 msgstr "ئۈستەل يۈزى ئەقلىي ياردەمچىسى"
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
 msgstr "ئاۋازلىق ئوقۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Speech to Text"
 msgstr "ئاۋازلىق ئاڭلاپ يېزىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:48
+#: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Clipboard"
 msgstr "چاپلاش تاختىسى"
 
-#: ../../keybinding/shortcuts/id_name_map.go:49
+#: ../../keybinding/shortcuts/id_name_map.go:51
 msgid "Translation"
 msgstr "تېكىست تەرجىمىسى"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:58
 msgid "Switch Layout"
 msgstr "ئورۇنلاشتۇرۇشنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to left workspace"
 msgstr "سول تەرەپتىكى خىزمەت رايونىنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to right workspace"
 msgstr "ئوڭ تەرەپتىكى خىزمەت رايونىنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to upper workspace"
 msgstr "ئۈستى تەرەپتىكى خىزمەت رايونىنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to lower workspace"
 msgstr "ئاستى تەرەپتىكى خىزمەت رايونىنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows"
 msgstr "ئوخشاش كۆزنەكلەرنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows in reverse"
 msgstr "ئوخشاش كۆزنەكلەرنى تەتۈرسىگە ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows"
 msgstr "كۆزنەكلەرنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows in reverse"
 msgstr "كۆزنەكلەرنى تەتۈرسىگە ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Show desktop"
 msgstr "ئۈستەليۈزىنى كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Maximize window"
 msgstr "كۆزنەكنى چوڭايتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Restore window"
 msgstr "كۆزنەكنى ئەسلى چوڭلۇقىغا قايتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Minimize window"
 msgstr "كۆزنەكنى كىچىكلىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Close window"
 msgstr "كۆزنەكنى تاقاش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Move window"
 msgstr "كۆزنەكنى يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Resize window"
 msgstr "كۆزنەكنىڭ چوڭلۇقىنى ئۆزگەرتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to left workspace"
 msgstr "سول خىزمەت رايونىغا يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to right workspace"
 msgstr "ئوڭ خىزمەت رايونىغا يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to upper workspace"
 msgstr "ئۈستى خىزمەت رايونىغا يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to lower workspace"
 msgstr "ئاستى خىزمەت رايونىغا يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of all workspaces"
 msgstr "كۆزنەكنى بارلىق خىزمەت رايونلىرىدا كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of current workspace"
 msgstr "كۆزنەكنى نۆۋەتتىكى خىزمەت رايونلىرىدا كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display workspace"
 msgstr "خىزمەت رايونىنى كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "كۆپ ئېكران ئالماشتۇرۇش"
 
@@ -467,42 +475,88 @@ msgstr "سىستېما تىلى ئۆزگەرتىلدى، چېكىنىپ قايت
 msgid "Failed to change system language, please try later"
 msgstr "سىستېما تىلىنى ئۆزگەرتىش مەغلۇپ بولدى، قايتا سىناپ بېقىڭ."
 
-#: ../../lastore/lastore.go:244
+#: ../../lastore/lastore.go:366
 msgid "Retry"
 msgstr "قايتا سىناش"
 
-#: ../../lastore/lastore.go:266
+#: ../../lastore/lastore.go:388
 msgid "Update Now"
 msgstr "يېڭىلايمەن"
 
-#: ../../lastore/notify.go:96
+#: ../../lastore/lastore.go:418
+msgid "Reboot Now"
+msgstr "ھازىلار قايتا قوزغىتىش"
+
+#: ../../lastore/lastore.go:422
+msgid "Remind Me Later"
+msgstr "ھېلىغىچە ئەسكەرتسۇن"
+
+#: ../../lastore/lastore.go:429
+msgid "10 mins later"
+msgstr "10 مىنۇتتىن كېيىن ئەسكەرتسۇن"
+
+#: ../../lastore/lastore.go:436
+msgid "30 mins later"
+msgstr "30 مىنۇتتىن كېيىن ئەسكەرتسۇن"
+
+#: ../../lastore/lastore.go:443
+msgid "2h later"
+msgstr "2 سائەتتىن كېيىن ئەسكەرتسۇن"
+
+#: ../../lastore/lastore.go:450
+msgid "6h later"
+msgstr "6 سائەتتىن كېيىن ئەسكەرتسۇن"
+
+#: ../../lastore/notify.go:106
 msgid "%q installed successfully."
 msgstr "%q قاچىلاش مۇۋەپپەقيەتلىك بولدى"
 
-#: ../../lastore/notify.go:99
+#: ../../lastore/notify.go:109
 msgid "%q failed to install."
 msgstr "%q قاچىلاش مەغلۇپ بولدى"
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:117
 msgid "Removed successfully"
 msgstr "ئۆچۈرۈلدى"
 
-#: ../../lastore/notify.go:109
+#: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
 msgstr "ئۆچۈرۈلمىدى"
 
-#: ../../lastore/notify.go:116
+#: ../../lastore/notify.go:126
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr "ئاپتۇماتىك ئېتىشلىنىڭ ئالدىنى ئېلىش ئۈچۈن ، نورمال يېڭىلاشقا كىرگۈزۈڭ"
 
-#: ../../lastore/notify.go:121
+#: ../../lastore/notify.go:131
 msgid "Package cache wiped"
 msgstr "بوغچا قالدۇقىنى تازىلاش"
 
-#: ../../lastore/notify.go:126
+#: ../../lastore/notify.go:136
 msgid "New system edition available"
 msgstr "سىستېمىنىڭ يېڭى نەشرى بايقالدى"
+
+#: ../../lastore/notify.go:141
+msgid "Reboot after Updates"
+msgstr "قايتا قوزغىتىشقا تورا كېلىدۇ"
+
+#: ../../lastore/notify.go:142
+msgid "Restart the computer to use the system and applications properly"
+msgstr ""
+"سىستېما ۋە ئەپلەرنى نورمال ئىشلىتىشىڭىز ئۈچۈن، يېڭىلانغاندىن كېيىن سىستېمىنى"
+" قايتا قوزغىتىڭ"
+
+#: ../../lastore/notify.go:152
+msgid ""
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
+msgstr ""
+"نەشر يېڭىلىنىۋاتقانلىقى بايقالدى، توك مىقدارى 50% تىن تۆۋەن، ۋاقتىدا توك "
+"مەنبەسىگە ئۇلاڭ"
+
+#: ../../lastore/notify.go:153
+msgid "OK"
+msgstr "جەزىملەشتۈرۈش"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
@@ -511,10 +565,6 @@ msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
-
-#: ../../network/manager.go:347
-msgid "Wired connection"
-msgstr "سىملىق تور ئۇلىنىشى"
 
 #: ../../network/manager_active_conn.go:401
 #: ../../network/manager_active_conn.go:406
@@ -553,12 +603,12 @@ msgstr "تونېلللانغان TLS"
 msgid "Protected EAP"
 msgstr "قوغدالغان EAP"
 
-#: ../../network/manager_connection.go:357
-#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:356
+#: ../../network/manager_connection.go:360
 msgid "Wired Connection"
 msgstr "سىملىق تور ئۇلىنىشى"
 
-#: ../../network/manager_connection.go:405
+#: ../../network/manager_connection.go:399
 msgid "Wired Connection %v"
 msgstr "سىملىق ئۇلىنىش%v"
 

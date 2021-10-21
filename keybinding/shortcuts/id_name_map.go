@@ -36,6 +36,8 @@ func getSystemIdNameMap() map[string]string {
 		"screenshot-fullscreen":  gettext.Tr("Full screenshot"),
 		"screenshot-window":      gettext.Tr("Window screenshot"),
 		"screenshot-delayed":     gettext.Tr("Delay screenshot"),
+		"screenshot-ocr":         gettext.Tr("OCR (Image to Text)"),
+		"screenshot-scroll":	  gettext.Tr("Scrollshot"),
 		"file-manager":           gettext.Tr("File manager"),
 		"disable-touchpad":       gettext.Tr("Disable Touchpad"),
 		"wm-switcher":            gettext.Tr("Switch window effects"),

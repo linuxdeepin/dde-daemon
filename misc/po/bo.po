@@ -4,18 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# tsewang baljor <bdcwbj@163.com>, 2020
-# yeshe lhamo <981611630@qq.com>, 2021
 # Cindy0514, 2021
+# tsewang baljor <bdcwbj@163.com>, 2021
+# yeshe lhamo <981611630@qq.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 16:37+0800\n"
+"POT-Creation-Date: 2021-10-22 09:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"Last-Translator: yeshe lhamo <981611630@qq.com>, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -144,7 +144,7 @@ msgstr "བརྡ་འཕྲིན་ལྟ་སྤྱོད།"
 msgid "Message notification"
 msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
 msgid "Cancel"
 msgstr "འདོར་བ། "
 
@@ -299,142 +299,150 @@ msgid "Delay screenshot"
 msgstr "དུས་འགྱངས་བཅད་ལེན།"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
+msgid "OCR (Image to Text)"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:40
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
 msgstr "ཡིག་ཆ་དོ་དམ་བྱེད་ཆས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
 msgstr "ཐུག་རེག་བརྙན་ཡོལ་སྤྱོད་མི་ཆོག"
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
 msgstr "སྒེའུ་ཁུང་གི་དམིགས་བསལ་ནུས་པ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
 msgstr "མྱུར་མགྱོགས་ཡོལ་ནག"
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "System Monitor"
 msgstr "རྒྱུད་ཁོངས་ལྟ་ཆས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
 msgstr "གཏིང་མདོག་ལེན་ཆས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
 msgstr "ཅོག་ངོས་རིག་ནུས་ལས་རོགས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
 msgstr "ཀློག་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:49
 msgid "Speech to Text"
 msgstr "དཔོད་བྲིས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:48
+#: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Clipboard"
 msgstr "དྲས་སྦྱར་པང་།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:49
+#: ../../keybinding/shortcuts/id_name_map.go:51
 msgid "Translation"
 msgstr "ཡིག་ཆ་ཡིག་སྒྱུར།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:56
+#: ../../keybinding/shortcuts/id_name_map.go:58
 msgid "Switch Layout"
 msgstr "མཐེབ་གཞོང་བཀོད་པ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch similar windows"
 msgstr "རིགས་གཅིག་འདྲའི་སྒེའུ་ཁུང་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows in reverse"
 msgstr "རིགས་གཅིག་འདྲའི་སྒེའུ་ཁུང་ལྡོག་ཕྱོགས་སུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch windows"
 msgstr "སྒེའུ་ཁུང་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows in reverse"
 msgstr "སྒེའུ་ཁུང་ལྡོག་ཕྱོགས་སུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Show desktop"
 msgstr "མངོན་སྟོན་ཅོག་ངོས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:103
+#: ../../keybinding/shortcuts/id_name_map.go:105
 msgid "Maximize window"
 msgstr "སྒེའུ་ཁུང་ཆེ་ཤོས་སུ་ཕྱེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Restore window"
 msgstr "སྒེའུ་ཁུང་སོར་ཆུད་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Minimize window"
 msgstr "སྒེའུ་ཁུང་ཆུང་ཤོས་སུ་འགྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Close window"
 msgstr "སྒེའུ་ཁུང་བརྒྱབ་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Move window"
 msgstr "སྒེའུ་ཁུང་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Resize window"
 msgstr "སྒེའུ་ཁུང་གི་ཆེ་ཆུང་སྒྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display windows of all workspaces"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་ཆ་ཚང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of current workspace"
 msgstr "མིག་སྔའི་ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display workspace"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:214
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 
@@ -462,44 +470,87 @@ msgid "Failed to change system language, please try later"
 msgstr ""
 "རྒྱུད་ཁོངས་སྐད་ཡིག་བརྗེ་མི་ཐུབ་པས་ཏོག་ཙམ་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་རོགས།"
 
-#: ../../lastore/lastore.go:244
+#: ../../lastore/lastore.go:366
 msgid "Retry"
 msgstr "ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་པ།"
 
-#: ../../lastore/lastore.go:266
+#: ../../lastore/lastore.go:388
 msgid "Update Now"
 msgstr "ལམ་སེང་གསར་སྒྱུར་བྱེད།"
 
-#: ../../lastore/notify.go:96
+#: ../../lastore/lastore.go:418
+msgid "Reboot Now"
+msgstr "ལམ་སེང་བསྐྱར་སློང་བྱེད།"
+
+#: ../../lastore/lastore.go:422
+msgid "Remind Me Later"
+msgstr ""
+
+#: ../../lastore/lastore.go:429
+msgid "10 mins later"
+msgstr ""
+
+#: ../../lastore/lastore.go:436
+msgid "30 mins later"
+msgstr ""
+
+#: ../../lastore/lastore.go:443
+msgid "2h later"
+msgstr ""
+
+#: ../../lastore/lastore.go:450
+msgid "6h later"
+msgstr ""
+
+#: ../../lastore/notify.go:106
 msgid "%q installed successfully."
 msgstr "%q ལྷུ་སྒྲིག་བྱས་ཟིན།"
 
-#: ../../lastore/notify.go:99
+#: ../../lastore/notify.go:109
 msgid "%q failed to install."
 msgstr "%q སྒྲིག་འཇུག་བྱེད་མ་ཐུབ།"
 
-#: ../../lastore/notify.go:107
+#: ../../lastore/notify.go:117
 msgid "Removed successfully"
 msgstr "བཤིག་འདོན་ལེགས་གྲུབ་བྱུང་།"
 
-#: ../../lastore/notify.go:109
+#: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
 msgstr "བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../lastore/notify.go:116
+#: ../../lastore/notify.go:126
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
 "གློག་མི་ཆད་པའི་ཆེད། "
 "གློག་ཁུངས་དང་འབྲེལ་ནས་བདེ་འཇགས་ངང་གསར་བརྗེ་བྱེད་པའི་འགན་ལེན་བྱེད་དགོས།"
 
-#: ../../lastore/notify.go:121
+#: ../../lastore/notify.go:131
 msgid "Package cache wiped"
 msgstr "མཉེན་ཆས་ཐུམ་བུ་གཙང་སེལ་ལེགས་གྲུབ་བྱུང་།"
 
-#: ../../lastore/notify.go:126
+#: ../../lastore/notify.go:136
 msgid "New system edition available"
 msgstr "རྒྱུད་ཁོངས་ཀྱི་པར་གཞི་གསར་པ་འདུག"
+
+#: ../../lastore/notify.go:141
+msgid "Reboot after Updates"
+msgstr ""
+
+#: ../../lastore/notify.go:142
+msgid "Restart the computer to use the system and applications properly"
+msgstr ""
+"ཁྱོད་ཀྱིས་རྒྱུད་ཁོངས་དང་ཉེར་སྤྱོད་རྒྱུན་ལྡན་ངང་བེད་སྤྱོད་བྱ་ཐུབ་ཆེད་གསར་སྒྱུར་བྱས་རྗེས་ཡང་བསྐྱར་འགོ་སློང་དགོས།"
+
+#: ../../lastore/notify.go:152
+msgid ""
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
+msgstr ""
+
+#: ../../lastore/notify.go:153
+msgid "OK"
+msgstr "གཏན་ཁེལ།"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
@@ -508,10 +559,6 @@ msgstr "%qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
-
-#: ../../network/manager.go:347
-msgid "Wired connection"
-msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
 #: ../../network/manager_active_conn.go:401
 #: ../../network/manager_active_conn.go:406
@@ -550,12 +597,12 @@ msgstr "ཕུག་ལམ་TLS"
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
-#: ../../network/manager_connection.go:357
-#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:356
+#: ../../network/manager_connection.go:360
 msgid "Wired Connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
-#: ../../network/manager_connection.go:405
+#: ../../network/manager_connection.go:399
 msgid "Wired Connection %v"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད་%v"
 
