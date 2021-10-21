@@ -26,7 +26,7 @@ func (b *SysBluetooth) disconnectA2DPDeviceExcept(d *device) {
 				continue
 			}
 			for _, uuid := range device.UUIDs {
-				if uuid == A2DP_SINK_UUID {
+				if uuid == A2DP_SINK_UUID && device.connected {
 					logger.Infof("disconnect A2DP %s", device)
 					device.Disconnect()
 				}

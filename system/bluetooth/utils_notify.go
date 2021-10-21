@@ -39,7 +39,7 @@ func notify(icon string, summary, body *btcommon.LocalizeStr) {
 	})
 	ua := _bt.getActiveUserAgent()
 	if ua == nil {
-		logger.Warning("ua is nil")
+		logger.Debug("ua is nil")
 		return
 	}
 	err := ua.SendNotify(0, args)

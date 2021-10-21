@@ -20,8 +20,10 @@
 package bluetooth
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -103,8 +105,10 @@ type device struct {
 	isInitiativeConnect bool
 	// remove device when device state is connecting or disconnecting may cause blueZ crash
 	// to avoid this situation, remove device only allowed when connected or disconnected finished
-	needRemove bool
-	removeLock sync.Mutex
+	needRemove         bool
+	removeLock         sync.Mutex
+	inputReconnectMode string
+	blocked            bool
 }
 
 //设备的备份，扫描结束3分钟后保存设备
@@ -239,7 +243,13 @@ func newDevice(systemSigLoop *dbusutil.SignalLoop, dpath dbus.ObjectPath) (d *de
 	d.ServicesResolved, _ = d.core.ServicesResolved().Get(0)
 	d.Icon, _ = d.core.Icon().Get(0)
 	d.RSSI, _ = d.core.RSSI().Get(0)
+	d.blocked, _ = d.core.Blocked().Get(0)
 	d.needNotify = true
+	var err error
+	d.inputReconnectMode, err = d.getInputReconnectModeRaw()
+	if err != nil {
+		logger.Warning(err)
+	}
 	d.updateState()
 	if d.Paired && d.connected {
 		d.ConnectState = true
@@ -313,6 +323,7 @@ func (d *device) connectProperties() {
 			d.ConnectState = true
 			d.connectedTime = time.Now()
 			_bt.config.setDeviceConfigConnected(d, true)
+			_bt.acm.handleDeviceEvent(d)
 			dev := _bt.getConnectedDeviceByAddress(d.Address)
 			if dev == nil {
 				_bt.addConnectedDevice(d)
@@ -353,7 +364,6 @@ func (d *device) connectProperties() {
 			default:
 			}
 		}
-
 		d.updateState()
 		d.notifyDevicePropertiesChanged()
 
@@ -440,6 +450,11 @@ func (d *device) connectProperties() {
 		d.Icon = value
 		logger.Debugf("%s Icon: %v", d, value)
 		d.notifyDevicePropertiesChanged()
+		var err error
+		d.inputReconnectMode, err = d.getInputReconnectModeRaw()
+		if err != nil {
+			logger.Warning(err)
+		}
 	})
 
 	_ = d.core.UUIDs().ConnectChanged(func(hasValue bool, value []string) {
@@ -474,6 +489,7 @@ func (d *device) connectProperties() {
 			return
 		}
 		logger.Debugf("%s Blocked: %v", d, value)
+		d.blocked = value
 	})
 }
 
@@ -729,11 +745,11 @@ func (d *device) Disconnect() {
 		return
 	}
 
-	// 判断是否为经典设备, 如果非经典设备, 则先设置trusted为false, 防止回连
-	if !_bt.isBREDRDevice(d) {
-		err := d.core.Trusted().Set(0, false)
+	// 如果是 LE 或由设备主动重连接的设备, 则先设置 Trusted 为 false, 防止很快地重连接。
+	if d.maybeReconnectByDevice() {
+		err = d.core.Trusted().Set(0, false)
 		if err != nil {
-			logger.Warningf("set trust failed, err: %v", err)
+			logger.Warning("set trusted failed:", err)
 		}
 	}
 
@@ -755,6 +771,73 @@ func (d *device) Disconnect() {
 	d.needNotify = true
 }
 
+func (d *device) maybeReconnectByDevice() bool {
+	reconnectMode, err := d.getInputReconnectMode()
+	if err != nil {
+		logger.Warning(err)
+	}
+	if (reconnectMode == inputReconnectModeDevice || reconnectMode == inputReconnectModeAny) ||
+		!d.isBREDRDevice() {
+		return true
+	}
+	return false
+}
+
+func (d *device) shouldReconnectByHost() bool {
+	reconnectMode, err := d.getInputReconnectMode()
+	if err != nil {
+		logger.Warning(err)
+	}
+	if reconnectMode == inputReconnectModeDevice {
+		return false
+	}
+	if (reconnectMode == inputReconnectModeHost || reconnectMode == inputReconnectModeAny) ||
+		d.isBREDRDevice() {
+		return true
+	}
+	return false
+}
+
+//nolint
+const (
+	inputReconnectModeNone   = "none"
+	inputReconnectModeHost   = "host"
+	inputReconnectModeDevice = "device"
+	inputReconnectModeAny    = "any"
+)
+
+func (d *device) getInputReconnectMode() (string, error) {
+	if d.inputReconnectMode != "" {
+		return d.inputReconnectMode, nil
+	}
+	return d.getInputReconnectModeRaw()
+}
+
+func (d *device) getInputReconnectModeRaw() (string, error) {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return "", err
+	}
+	obj := sysBus.Object(d.core.ServiceName_(), d.core.Path_())
+	if strings.HasPrefix(d.Icon, "input") {
+		propVar, err := obj.GetProperty("org.bluez.Input1.ReconnectMode")
+		if err != nil {
+			busErr, ok := err.(dbus.Error)
+			if ok && strings.Contains(strings.ToLower(busErr.Error()), "no such interface") {
+				// 这个接口不是一定存在的，所以忽略这种错误。
+				return "", nil
+			}
+			return "", err
+		}
+		mode, ok := propVar.Value().(string)
+		if !ok {
+			return "", errors.New("type of the property value is not string")
+		}
+		return mode, nil
+	}
+	return "", nil
+}
+
 func (d *device) goWaitDisconnect() chan struct{} {
 	ch := make(chan struct{})
 	go func() {
@@ -770,8 +853,12 @@ func (d *device) goWaitDisconnect() chan struct{} {
 }
 
 func (d *device) getTechnologies() ([]string, error) {
+	if d.adapter == nil {
+		return nil, errors.New("d.adapter is nil")
+	}
 	var filename = filepath.Join(bluetoothPrefixDir, d.adapter.Address, d.Address, "info")
-	return doGetDeviceTechnologies(filename)
+	techs, err := doGetDeviceTechnologies(filename)
+	return techs, err
 }
 
 // 按条件过滤出期望的设备，fn 返回 true 表示需要。

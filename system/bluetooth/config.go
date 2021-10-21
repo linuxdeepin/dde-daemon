@@ -251,19 +251,55 @@ func (c *config) softDevices(devices []*device) {
 	defer c.core.Unlock()
 
 	sort.SliceStable(devices, func(i, j int) bool {
-		di := devices[i]
-		dj := devices[j]
-		ci := c.Devices[di.getAddress()]
-		cj := c.Devices[dj.getAddress()]
+		devI := devices[i]
+		devJ := devices[j]
+
+		priorityI := getPriorityWithIcon(devI.Icon)
+		priorityJ := getPriorityWithIcon(devJ.Icon)
+		if priorityI < priorityJ {
+			return true
+		} else if priorityI > priorityJ {
+			return false
+		}
+		// iconPriority 相等
+
+		cfgI := c.Devices[devI.getAddress()]
+		cfgJ := c.Devices[devJ.getAddress()]
 		var latestTimeI int64 = 0
 		var latestTimeJ int64 = 0
-		if ci != nil {
-			latestTimeI = ci.LatestTime
+		if cfgI != nil {
+			latestTimeI = cfgI.LatestTime
 		}
-		if cj != nil {
-			latestTimeJ = cj.LatestTime
+		if cfgJ != nil {
+			latestTimeJ = cfgJ.LatestTime
 		}
-		// LatestTime 越大的越在前面，设备配置（ci，cj）为 nil 的排在最后面。
+		// LatestTime 越大的越在前面，设备配置（cfgI，cfgJ）为 nil 的排在最后面。
 		return latestTimeI > latestTimeJ
 	})
 }
+
+var _iconPriorityMap = map[string]int{
+	devIconInputMouse:      0, // 最高
+	devIconInputKeyboard:   1,
+	devIconInputTablet:     2,
+	devIconInputGaming:     2,
+	devIconAudioCard:       3,
+	devIconPhone:           4,
+	devIconComputer:        4,
+	devIconCameraPhoto:     5,
+	devIconCameraVideo:     5,
+	devIconModem:           6,
+	devIconNetworkWireless: 6,
+	devIconPrinter:         7,
+}
+
+func getPriorityWithIcon(icon string) int {
+	p, ok := _iconPriorityMap[icon]
+	if ok {
+		return p
+	}
+	return priorityLowest
+}
+
+// 最低优先级
+const priorityLowest = 99

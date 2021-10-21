@@ -445,17 +445,18 @@ func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
 	b.devicesMu.Unlock()
 
 	// 设备加入的同时进行备份
-	_, idx := b.findBackupDevice(devPath)
+	b.backupDevicesMu.Lock()
+	idx := b.indexBackupDeviceNoLock(d.AdapterPath, devPath)
 	if idx == -1 {
-		b.backupDevicesMu.Lock()
 		b.backupDevices[d.AdapterPath] = append(b.backupDevices[d.AdapterPath], newBackupDevice(d))
-		b.backupDevicesMu.Unlock()
 	}
+	b.backupDevicesMu.Unlock()
 
 	d.notifyDeviceAdded()
 
 	// 若扫描到需要连接的设备，直接连接
 	if b.prepareToConnectedDevice == d.Path {
+		b.prepareToConnectedDevice = ""
 		go func() {
 			err := d.Connect()
 			if err != nil {
@@ -478,10 +479,19 @@ func (b *SysBluetooth) removeDevice(devPath dbus.ObjectPath) {
 	b.devices[adapterPath], removedDev = b.doRemoveDevice(b.devices[adapterPath], idx)
 	b.devicesMu.Unlock()
 
-	_, idx = b.findBackupDevice(devPath)
+	b.acm.handleDeviceEvent(removedDev)
+
+	idx = b.indexBackupDevice(adapterPath, devPath)
 	if idx == -1 {
 		// 未找到备份设备，需要发送设备移除信号
 		removedDev.notifyDeviceRemoved()
+	} else {
+		// 找得到备份设备，但是是已经配对的设备，一般是通过 bluetoothctl remove 命令删除已经配对的设备。
+		// 备份设备也删除，并发送信号。
+		if removedDev.Paired {
+			b.removeBackupDevice(devPath)
+			removedDev.notifyDeviceRemoved()
+		}
 	}
 }
 
@@ -499,7 +509,7 @@ func (b *SysBluetooth) removeBackupDevice(devPath dbus.ObjectPath) {
 	b.backupDevicesMu.Lock()
 	defer b.backupDevicesMu.Unlock()
 
-	adapterPath, i := b.findBackupDevice(devPath)
+	adapterPath, i := b.findBackupDeviceNoLock(devPath)
 	if i < 0 {
 		logger.Debug("repeat remove device", devPath)
 		return
@@ -566,6 +576,12 @@ func (b *SysBluetooth) findDevice(devPath dbus.ObjectPath) (adapterPath dbus.Obj
 }
 
 func (b *SysBluetooth) findBackupDevice(devPath dbus.ObjectPath) (adapterPath dbus.ObjectPath, index int) {
+	b.backupDevicesMu.Lock()
+	defer b.backupDevicesMu.Unlock()
+	return b.findBackupDeviceNoLock(devPath)
+}
+
+func (b *SysBluetooth) findBackupDeviceNoLock(devPath dbus.ObjectPath) (adapterPath dbus.ObjectPath, index int) {
 	for p, devices := range b.backupDevices {
 		for i, d := range devices {
 			if d.Path == devPath {
@@ -574,6 +590,25 @@ func (b *SysBluetooth) findBackupDevice(devPath dbus.ObjectPath) (adapterPath db
 		}
 	}
 	return "", -1
+}
+
+func (b *SysBluetooth) indexBackupDevice(adapterPath, devPath dbus.ObjectPath) (index int) {
+	b.backupDevicesMu.Lock()
+	defer b.backupDevicesMu.Unlock()
+	return b.indexBackupDeviceNoLock(adapterPath, devPath)
+}
+
+func (b *SysBluetooth) indexBackupDeviceNoLock(adapterPath, devPath dbus.ObjectPath) (index int) {
+	devices, ok := b.backupDevices[adapterPath]
+	if !ok {
+		return -1
+	}
+	for idx, d := range devices {
+		if d.Path == devPath {
+			return idx
+		}
+	}
+	return -1
 }
 
 func (b *SysBluetooth) getDeviceIndex(devPath dbus.ObjectPath) (adapterPath dbus.ObjectPath, index int) {
@@ -595,23 +630,25 @@ func (b *SysBluetooth) getDevice(devPath dbus.ObjectPath) (*device, error) {
 func (b *SysBluetooth) getBackupDevice(devPath dbus.ObjectPath) (*backupDevice, error) {
 	b.backupDevicesMu.Lock()
 	defer b.backupDevicesMu.Unlock()
-	adapterPath, index := b.findBackupDevice(devPath)
+	adapterPath, index := b.findBackupDeviceNoLock(devPath)
 	if index < 0 {
 		return nil, errInvalidDevicePath
 	}
 	return b.backupDevices[adapterPath][index], nil
 }
 
-// 更新backupDevices数据
+// 更新 backupDevices
 func (b *SysBluetooth) updateBackupDevices(adapterPath dbus.ObjectPath) {
-	devices := b.devices[adapterPath]
+	logger.Debug("updateBackupDevices", adapterPath)
+	devices := b.getDevices(adapterPath)
+	b.backupDevicesMu.Lock()
+	defer b.backupDevicesMu.Unlock()
 	for _, device := range devices {
-		aPath, index := b.findBackupDevice(device.Path)
+		index := b.indexBackupDeviceNoLock(adapterPath, device.Path)
 		if index < 0 {
-			logger.Warning("invalid device path: ", device.Path)
-			break
+			logger.Warning("[updateBackupDevices] invalid device path: ", device.Path)
 		} else {
-			b.backupDevices[aPath][index] = newBackupDevice(device)
+			b.backupDevices[adapterPath][index] = newBackupDevice(device)
 		}
 	}
 }
@@ -771,13 +808,16 @@ func (b *SysBluetooth) getDevices(adapterPath dbus.ObjectPath) []*device {
 
 func (b *SysBluetooth) tryConnectPairedDevices(adapterPath dbus.ObjectPath) {
 	inputOnly := true
-	connectDuration := 2 * time.Minute
+	// 自动连接时长
+	defaultConnectDuration := 2 * time.Minute
 	if b.getActiveUserAgent() != nil {
 		// 表示用户已经登录
 		inputOnly = false
+		// 可能有用户控制，为便于用户控制，缩短自动连接时长。
+		defaultConnectDuration = 1 * time.Minute
 	}
 	logger.Debugf("tryConnectPairedDevices adapterPath: %q, inputOnly: %v", adapterPath, inputOnly)
-	adapterDevicesMap := b.getPairedAndNotConnectedDevices(adapterPath)
+	adapterDevicesMap := b.getPairedDevicesForAutoConnect(adapterPath)
 
 	for adapterPath, devices := range adapterDevicesMap {
 		if inputOnly {
@@ -791,19 +831,39 @@ func (b *SysBluetooth) tryConnectPairedDevices(adapterPath dbus.ObjectPath) {
 		logger.Debug("after soft devices:", devices)
 		var deviceInfos []autoDeviceInfo
 		priority := 0
-		now := time.Now()
+		// 可能由设备主动连接的设备
+		var activeReconnectDevices []*device
 		for _, d := range devices {
-			logger.Debug("try auto connect", d.String())
+			if d.maybeReconnectByDevice() {
+				activeReconnectDevices = append(activeReconnectDevices, d)
+			}
+			connectDuration := defaultConnectDuration
+			if d.shouldReconnectByHost() {
+				logger.Debug("try auto connect", d)
+			} else {
+				logger.Debugf("do not auto connect %v, but try connect once", d)
+				connectDuration = 1 * time.Second
+				if !d.Trusted {
+					err := d.core.Trusted().Set(0, true)
+					if err != nil {
+						logger.Warning(err)
+					}
+				}
+				err := d.cancelBlock()
+				if err != nil {
+					logger.Warning(err)
+				}
+			}
 			deviceInfos = append(deviceInfos, autoDeviceInfo{
-				adapter:       adapterPath,
-				device:        d.Path,
-				alias:         d.Alias,
-				priority:      priority,
-				retryDeadline: now.Add(connectDuration),
+				adapter:            adapterPath,
+				device:             d.Path,
+				alias:              d.Alias,
+				priority:           priority,
+				connectDurationMax: connectDuration,
 			})
 			priority++
 		}
-		b.acm.addDevices(adapterPath, deviceInfos, now)
+		b.acm.addDevices(adapterPath, deviceInfos, activeReconnectDevices)
 	}
 }
 
@@ -813,9 +873,8 @@ func (b *SysBluetooth) autoConnectPairedDevice(devPath dbus.ObjectPath, adapterP
 		return err
 	}
 
-	// if device using LE mode, will suspend, try to connect it should be failed, filter it.
-	if !b.isBREDRDevice(device) {
-		logger.Debugf("%v using LE mode, do not auto connect it", device)
+	if device.connected {
+		logger.Debugf("%v is already connected", device)
 		return nil
 	}
 
@@ -844,7 +903,7 @@ func (b *SysBluetooth) autoConnectPairedDevice(devPath dbus.ObjectPath, adapterP
 
 // 当 adapterPath 为空时，获取所有适配器的配对，但未连接的设备。
 // 当 adapterPath 不为空时，或者获取指定适配器的配对，但未连接的设备。
-func (b *SysBluetooth) getPairedAndNotConnectedDevices(adapterPath dbus.ObjectPath) map[dbus.ObjectPath][]*device {
+func (b *SysBluetooth) getPairedDevicesForAutoConnect(adapterPath dbus.ObjectPath) map[dbus.ObjectPath][]*device {
 	adapters := b.getAdapters()
 	if adapterPath != "" {
 		var theAdapter *adapter
@@ -880,11 +939,11 @@ func (b *SysBluetooth) getPairedAndNotConnectedDevices(adapterPath dbus.ObjectPa
 }
 
 // 判断设备是否为经典蓝牙设备
-func (b *SysBluetooth) isBREDRDevice(dev *device) bool {
-	technologies, err := dev.getTechnologies()
+func (d *device) isBREDRDevice() bool {
+	technologies, err := d.getTechnologies()
 	if err != nil {
-		logger.Warningf("failed to get device(%s -- %s) technologies: %v",
-			dev.adapter.Address, dev.Address, err)
+		logger.Warningf("failed to get %v technologies: %v",
+			d, err)
 		return false
 	}
 	for _, tech := range technologies {

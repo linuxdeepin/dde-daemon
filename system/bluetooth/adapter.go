@@ -204,6 +204,9 @@ func (a *adapter) connectProperties() {
 			if value {
 				a.bt.syncCommonToBackupDevices(a.Path)
 				a.discoveringTimer.Reset(defaultDiscoveringTimeout)
+			} else {
+				// 停止扫描了，设备属性不会再更新了，于是更新设备到备份设备
+				a.bt.updateBackupDevices(a.Path)
 			}
 			a.notifyPropertiesChanged()
 		}

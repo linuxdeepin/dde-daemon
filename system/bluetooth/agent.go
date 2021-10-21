@@ -392,13 +392,19 @@ func (a *agent) RequestAuthorization(device dbus.ObjectPath) *dbus.Error {
 //Possible errors: org.bluez.Error.Rejected
 //				   org.bluez.Error.Canceled
 func (a *agent) AuthorizeService(device dbus.ObjectPath, uuid string) *dbus.Error {
-	logger.Info("AuthorizeService()")
+	logger.Infof("AuthorizeService %q %q", device, uuid)
+	_, err := a.b.getDevice(device)
+	if err != nil {
+		logger.Warning(err)
+		return btcommon.ErrRejected
+	}
+
 	ua := a.b.getActiveUserAgent()
 	if ua == nil {
 		logger.Warning("ua is nil")
 		return btcommon.ErrRejected
 	}
-	err := ua.AuthorizeService(0, device, uuid)
+	err = ua.AuthorizeService(0, device, uuid)
 	return toErrFromAgent(err)
 }
 
