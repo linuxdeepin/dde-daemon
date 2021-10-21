@@ -79,6 +79,7 @@ type Bluetooth struct {
 	PropsMu       sync.RWMutex
 	State         uint32 // StateUnavailable/StateAvailable/StateConnected
 	Transportable bool   //能否传输 True可以传输 false不能传输
+	CanSendFile   bool
 
 	sessionCancelChMap   map[dbus.ObjectPath]chan struct{}
 	sessionCancelChMapMu sync.Mutex
@@ -217,8 +218,12 @@ func (b *Bluetooth) init() {
 	go beginTimerNotify(globalTimerNotifier)
 
 	b.sysBt.InitSignalExt(b.systemSigLoop, true)
+	canSendFile, err := b.sysBt.CanSendFile().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+	b.setPropCanSendFile(canSendFile)
 
-	var err error
 	err = b.sysBt.State().ConnectChanged(func(hasValue bool, value uint32) {
 		if !hasValue {
 			return

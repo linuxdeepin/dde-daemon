@@ -21,6 +21,7 @@ package bluetooth
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -92,8 +93,9 @@ type SysBluetooth struct {
 
 	acm *autoConnectManager
 
-	PropsMu sync.RWMutex
-	State   uint32 // StateUnavailable/StateAvailable/StateConnected
+	PropsMu     sync.RWMutex
+	State       uint32 // StateUnavailable/StateAvailable/StateConnected
+	CanSendFile bool
 
 	// 当发起设备连接成功后，应该把连接的设备添加进设备列表
 	connectedDevices map[dbus.ObjectPath][]*device
@@ -182,10 +184,16 @@ func (*SysBluetooth) GetInterfaceName() string {
 }
 
 func (b *SysBluetooth) init() {
+	var err error
+	b.CanSendFile, err = canSendFile()
+	if err != nil {
+		logger.Warning("canSendFile err:", err)
+	}
+
 	b.sigLoop.Start()
 	b.config.load()
 	b.sysDBusDaemon.InitSignalExt(b.sigLoop, true)
-	_, err := b.sysDBusDaemon.ConnectNameOwnerChanged(b.handleDBusNameOwnerChanged)
+	_, err = b.sysDBusDaemon.ConnectNameOwnerChanged(b.handleDBusNameOwnerChanged)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -227,6 +235,22 @@ func (b *SysBluetooth) init() {
 
 	b.config.clearSpareConfig(b)
 	go b.tryConnectPairedDevices("")
+}
+
+const btAvailableFile = "/sys/kernel/security/bluetooth/available"
+
+func canSendFile() (can bool, err error) {
+	_, err = os.Stat(btAvailableFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// 表示没有加载限制性的内核模块
+			return true, nil
+		}
+		return false, err
+	}
+
+	can, err = readBoolFile(btAvailableFile)
+	return
 }
 
 func (b *SysBluetooth) handleSessionNew(sessionId string, sessionPath dbus.ObjectPath) {

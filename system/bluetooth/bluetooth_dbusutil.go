@@ -14,3 +14,16 @@ func (v *SysBluetooth) setPropState(value uint32) (changed bool) {
 func (v *SysBluetooth) emitPropChangedState(value uint32) error {
 	return v.service.EmitPropertyChanged(v, "State", value)
 }
+
+func (v *SysBluetooth) setPropCanSendFile(value bool) (changed bool) {
+	if v.CanSendFile != value {
+		v.CanSendFile = value
+		v.emitPropChangedCanSendFile(value)
+		return true
+	}
+	return false
+}
+
+func (v *SysBluetooth) emitPropChangedCanSendFile(value bool) error {
+	return v.service.EmitPropertyChanged(v, "CanSendFile", value)
+}

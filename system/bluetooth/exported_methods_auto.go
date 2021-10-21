@@ -9,11 +9,6 @@ import (
 func (v *SysBluetooth) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
-			Name:    "CanSendFile",
-			Fn:      v.CanSendFile,
-			OutArgs: []string{"can"},
-		},
-		{
 			Name: "ClearUnpairedDevice",
 			Fn:   v.ClearUnpairedDevice,
 		},

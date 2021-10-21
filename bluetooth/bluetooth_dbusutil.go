@@ -27,3 +27,16 @@ func (v *Bluetooth) setPropTransportable(value bool) (changed bool) {
 func (v *Bluetooth) emitPropChangedTransportable(value bool) error {
 	return v.service.EmitPropertyChanged(v, "Transportable", value)
 }
+
+func (v *Bluetooth) setPropCanSendFile(value bool) (changed bool) {
+	if v.CanSendFile != value {
+		v.CanSendFile = value
+		v.emitPropChangedCanSendFile(value)
+		return true
+	}
+	return false
+}
+
+func (v *Bluetooth) emitPropChangedCanSendFile(value bool) error {
+	return v.service.EmitPropertyChanged(v, "CanSendFile", value)
+}

@@ -2,7 +2,6 @@ package bluetooth
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/godbus/dbus"
@@ -329,26 +328,6 @@ func (b *SysBluetooth) UnregisterAgent(sender dbus.Sender, agentPath dbus.Object
 	}
 	logger.Debugf("agent unregistered, sender: %q, agentPath: %q", sender, agentPath)
 	return nil
-}
-
-const btAvailableFile = "/sys/kernel/security/bluetooth/available"
-
-func (b *SysBluetooth) CanSendFile() (can bool, busErr *dbus.Error) {
-	_, err := os.Stat(btAvailableFile)
-	if err != nil {
-		if os.IsNotExist(err) {
-			// 表示没有加载限制性的内核模块
-			return true, nil
-		}
-		logger.Warning(err)
-		return false, dbusutil.ToError(err)
-	}
-
-	can, err = readBoolFile(btAvailableFile)
-	if err != nil {
-		logger.Warning(err)
-	}
-	return can, dbusutil.ToError(err)
 }
 
 func (b *SysBluetooth) DebugInfo() (info string, busErr *dbus.Error) {

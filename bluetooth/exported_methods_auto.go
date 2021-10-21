@@ -9,11 +9,6 @@ import (
 func (v *Bluetooth) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
-			Name:    "CanSendFile",
-			Fn:      v.CanSendFile,
-			OutArgs: []string{"can"},
-		},
-		{
 			Name:   "CancelTransferSession",
 			Fn:     v.CancelTransferSession,
 			InArgs: []string{"sessionPath"},

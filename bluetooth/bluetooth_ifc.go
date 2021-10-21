@@ -65,11 +65,8 @@ func (b *Bluetooth) SendFiles(devAddress string, files []string) (sessionPath db
 	if len(files) == 0 {
 		return "", dbusutil.ToError(errors.New("files is empty"))
 	}
-	can, err := b.sysBt.CanSendFile(0)
-	if err != nil {
-		return "", dbusutil.ToError(err)
-	}
-	if !can {
+
+	if !b.CanSendFile {
 		return "", dbusutil.ToError(errors.New("no permission"))
 	}
 
@@ -80,6 +77,7 @@ func (b *Bluetooth) SendFiles(devAddress string, files []string) (sessionPath db
 		return "", dbusutil.ToError(errors.New("device not connected"))
 	}
 
+	var err error
 	sessionPath, err = b.sendFiles(dev, files)
 	return sessionPath, dbusutil.ToError(err)
 }
@@ -173,10 +171,4 @@ func (b *Bluetooth) ClearUnpairedDevice() *dbus.Error {
 	logger.Debug("ClearUnpairedDevice")
 	err := b.sysBt.ClearUnpairedDevice(0)
 	return dbusutil.ToError(err)
-}
-
-func (b *Bluetooth) CanSendFile() (can bool, busErr *dbus.Error) {
-	logger.Debug("CanSendFile")
-	can, err := b.sysBt.CanSendFile(0)
-	return can, dbusutil.ToError(err)
 }
