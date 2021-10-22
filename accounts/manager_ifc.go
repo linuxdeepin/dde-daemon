@@ -32,6 +32,7 @@ import (
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/procfs"
+	"pkg.deepin.io/lib/users/passwd"
 	dutils "pkg.deepin.io/lib/utils"
 )
 
@@ -196,16 +197,21 @@ func (m *Manager) FindUserById(uid string) (user string, busErr *dbus.Error) {
 }
 
 func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) {
+	pwd, err := passwd.GetPasswdByName(name)
+	if err != nil {
+		return "", dbusutil.ToError(err)
+	}
+
 	m.usersMapMu.Lock()
 	defer m.usersMapMu.Unlock()
 
 	for p, u := range m.usersMap {
-		if u.UserName == name {
+		if u.UserName == pwd.Name {
 			return p, nil
 		}
 	}
 
-	return "", dbusutil.ToError(fmt.Errorf("Invalid username: %s", name))
+	return "", dbusutil.ToError(fmt.Errorf("Invalid username: %s", pwd.Name))
 }
 
 // 随机得到一个用户头像
