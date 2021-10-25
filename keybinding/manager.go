@@ -60,10 +60,12 @@ const (
 	gsKeyShowCapsLockOSD      = "capslock-toggle"
 	gsKeyUpperLayerWLAN       = "upper-layer-wlan"
 
-	gsSchemaSystem       = "com.deepin.dde.keybinding.system"
-	gsSchemaMediaKey     = "com.deepin.dde.keybinding.mediakey"
-	gsSchemaGnomeWM      = "com.deepin.wrap.gnome.desktop.wm.keybindings"
-	gsSchemaSessionPower = "com.deepin.dde.power"
+	gsSchemaSystem         = "com.deepin.dde.keybinding.system"
+	gsSchemaSystemPlatform = "com.deepin.dde.keybinding.system.platform"
+	gsSchemaSystemEnable   = "com.deepin.dde.keybinding.system.enable"
+	gsSchemaMediaKey       = "com.deepin.dde.keybinding.mediakey"
+	gsSchemaGnomeWM        = "com.deepin.wrap.gnome.desktop.wm.keybindings"
+	gsSchemaSessionPower   = "com.deepin.dde.power"
 
 	customConfigFile = "deepin/dde-daemon/keybinding/custom.ini"
 )
@@ -85,11 +87,13 @@ type Manager struct {
 	conn       *x.Conn
 	keySymbols *keysyms.KeySymbols
 
-	gsKeyboard *gio.Settings
-	gsSystem   *gio.Settings
-	gsMediaKey *gio.Settings
-	gsGnomeWM  *gio.Settings
-	gsPower    *gio.Settings
+	gsKeyboard       *gio.Settings
+	gsSystem         *gio.Settings
+	gsSystemPlatform *gio.Settings
+	gsSystemEnable   *gio.Settings
+	gsMediaKey       *gio.Settings
+	gsGnomeWM        *gio.Settings
+	gsPower          *gio.Settings
 
 	enableListenGSettings bool
 
@@ -183,13 +187,15 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
+	m.gsSystemPlatform = gio.NewSettings(gsSchemaSystemPlatform)
+	m.gsSystemEnable = gio.NewSettings(gsSchemaSystemEnable)
 	m.gsMediaKey = gio.NewSettings(gsSchemaMediaKey)
 	m.gsPower = gio.NewSettings(gsSchemaSessionPower)
 	m.wm = wm.NewWm(sessionBus)
 	m.keyEvent = keyevent.NewKeyEvent(sysBus)
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
-	m.shortcutManager.AddSystem(m.gsSystem, m.wm)
+	m.shortcutManager.AddSystem(m.gsSystem, m.gsSystemPlatform, m.gsSystemEnable, m.wm)
 	m.shortcutManager.AddMedia(m.gsMediaKey)
 
 	// when session is locked, we need handle some keyboard function event
@@ -475,6 +481,34 @@ func (m *Manager) listenGSettingsChanged(schema string, settings *gio.Settings, 
 		keystrokes := settings.GetStrv(key)
 		m.shortcutManager.ModifyShortcutKeystrokes(shortcut, shortcuts.ParseKeystrokes(keystrokes))
 		m.emitShortcutSignal(shortcutSignalChanged, shortcut)
+	})
+}
+
+func (m *Manager) listenSystemEnableChanged() {
+	gsettings.ConnectChanged(gsSchemaSystemEnable, "*", func(key string) {
+		if !m.enableListenGSettings {
+			return
+		}
+
+		if m.shortcutManager.CheckSystem(m.gsSystemPlatform, m.gsSystemEnable, key) {
+			m.shortcutManager.AddSystemById(m.gsSystem, key)
+		} else {
+			m.shortcutManager.DelSystemById(key)
+		}
+	})
+}
+
+func (m *Manager) listenSystemPlatformChanged() {
+	gsettings.ConnectChanged(gsSchemaSystemPlatform, "*", func(key string) {
+		if !m.enableListenGSettings {
+			return
+		}
+
+		if m.shortcutManager.CheckSystem(m.gsSystemPlatform, m.gsSystemEnable, key) {
+			m.shortcutManager.AddSystemById(m.gsSystem, key)
+		} else {
+			m.shortcutManager.DelSystemById(key)
+		}
 	})
 }
 

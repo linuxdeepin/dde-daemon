@@ -20,6 +20,7 @@
 package shortcuts
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -37,6 +38,7 @@ import (
 	"pkg.deepin.io/dde/daemon/keybinding/util"
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/gettext"
+	"pkg.deepin.io/lib/keyfile"
 	"pkg.deepin.io/lib/log"
 	"pkg.deepin.io/lib/pinyin_search"
 	dutils "pkg.deepin.io/lib/utils"
@@ -831,9 +833,107 @@ func (sm *ShortcutManager) FindConflictingKeystroke(ks *Keystroke) (*Keystroke, 
 	return nil, nil
 }
 
-func (sm *ShortcutManager) AddSystem(gsettings *gio.Settings, wmObj wm.Wm) {
-	logger.Debug("AddSystem")
+func systemType() string {
+	kf := keyfile.NewKeyFile()
+	err := kf.LoadFromFile("/etc/os-version")
+	if err != nil {
+		fmt.Println("load version file failed, err: ", err)
+		return ""
+	}
+	typ, err := kf.GetString("Version", "EditionName")
+	if err != nil {
+		fmt.Println("get version type failed, err: ", err)
+		return ""
+	}
+
+	return typ
+}
+
+func arr2set(in []string) map[string]bool {
+	out := make(map[string]bool)
+	for _, v := range in {
+		out[v] = true
+	}
+
+	return out
+}
+
+func strvLower(in []string) []string {
+	out := make([]string, len(in))
+	for i, v := range in {
+		out[i] = strings.ToLower(v)
+	}
+	return out
+}
+
+// 检测一个系统快捷键是否配置为可用，true可用，false不可用
+func (sm *ShortcutManager) CheckSystem(gsPlatform, gsEnable *gio.Settings, id string) bool {
+	platformSet := arr2set(gsPlatform.ListKeys())
+	enableSet := arr2set(gsEnable.ListKeys())
+	sysType := strings.ToLower(systemType())
+
+	// 判断是否是支持的平台
+	if platformSet[id] {
+		plats := gsPlatform.GetStrv(id)
+
+		platSet := arr2set(strvLower(plats))
+		if !platSet["all"] && !platSet[sysType] {
+			return false
+		}
+	}
+
+	// 判断是否配置开启
+	if enableSet[id] && !gsEnable.GetBoolean(id) {
+		logger.Debugf("%s is disabled", id)
+		return false
+	}
+
+	return true
+}
+
+func (sm *ShortcutManager) AddSystemById(gsettings *gio.Settings, id string) {
+	shortcut := sm.GetByIdType(id, ShortcutTypeSystem)
+	if shortcut != nil {
+		logger.Debugf("%s is exist", id)
+		return
+	}
+
 	idNameMap := getSystemIdNameMap()
+	name := idNameMap[id]
+	if name == "" {
+		name = id
+	}
+
+	cmd := getSystemActionCmd(id)
+	if id == "terminal-quake" && strings.Contains(cmd, "deepin-terminal") {
+		termPath, _ := exec.LookPath("deepin-terminal")
+		if termPath == "" {
+			return
+		}
+	}
+
+	keystrokes := gsettings.GetStrv(id)
+	gs := NewGSettingsShortcut(gsettings, id, ShortcutTypeSystem, keystrokes, name)
+	sysShortcut := &SystemShortcut{
+		GSettingsShortcut: gs,
+		arg: &ActionExecCmdArg{
+			Cmd: cmd,
+		},
+	}
+	sm.addWithoutLock(sysShortcut)
+}
+
+func (sm *ShortcutManager) DelSystemById(id string) {
+	shortcut := sm.GetByIdType(id, ShortcutTypeSystem)
+	if shortcut == nil {
+		logger.Debugf("%s is not exist", id)
+		return
+	}
+	sm.Delete(shortcut)
+}
+
+func (sm *ShortcutManager) AddSystem(gsettings, gsPlatform, gsEnable *gio.Settings, wmObj wm.Wm) {
+	logger.Debug("AddSystem")
 	allow, err := wmObj.CompositingAllowSwitch().Get(0)
 	if err != nil {
 		logger.Warning(err)
@@ -853,28 +953,11 @@ func (sm *ShortcutManager) AddSystem(gsettings *gio.Settings, wmObj wm.Wm) {
 			}
 		}
 
-		name := idNameMap[id]
-		if name == "" {
-			name = id
+		if !sm.CheckSystem(gsPlatform, gsEnable, id) {
+			continue
 		}
 
-		cmd := getSystemActionCmd(id)
-		if id == "terminal-quake" && strings.Contains(cmd, "deepin-terminal") {
-			termPath, _ := exec.LookPath("deepin-terminal")
-			if termPath == "" {
-				continue
-			}
-		}
-
-		keystrokes := gsettings.GetStrv(id)
-		gs := NewGSettingsShortcut(gsettings, id, ShortcutTypeSystem, keystrokes, name)
-		sysShortcut := &SystemShortcut{
-			GSettingsShortcut: gs,
-			arg: &ActionExecCmdArg{
-				Cmd: cmd,
-			},
-		}
-		sm.addWithoutLock(sysShortcut)
+		sm.AddSystemById(gsettings, id)
 	}
 }
 

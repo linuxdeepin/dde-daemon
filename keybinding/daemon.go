@@ -87,6 +87,9 @@ func (d *Daemon) Start() error {
 		m.listenGSettingsChanged(gsSchemaMediaKey, d.manager.gsMediaKey, shortcuts.ShortcutTypeMedia)
 		m.listenGSettingsChanged(gsSchemaGnomeWM, d.manager.gsGnomeWM, shortcuts.ShortcutTypeWM)
 
+		m.listenSystemEnableChanged()
+		m.listenSystemPlatformChanged()
+
 		m.eliminateKeystrokeConflict()
 		m.shortcutManager.EventLoop()
 	}()
