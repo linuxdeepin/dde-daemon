@@ -21,6 +21,7 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
+	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 )
 
@@ -32,6 +33,12 @@ const (
 	KEY_TOUCHPAD_ON     = 0x213
 	KEY_TOUCHPAD_OFF    = 0x214
 	KEY_POWER           = 116
+	KEY_FN_ESC          = 0x1d1
+	KEY_MICMUTE         = 248
+	KEY_SWITCHVIDEOMODE = 227
+	KEY_SETUP           = 141
+	KEY_CYCLEWINDOWS    = 154
+	KEY_MODE            = 0x175
 )
 
 type SpecialKeycodeMapKey struct {
@@ -83,6 +90,30 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// 电源键，松开时触发
 	key = createSpecialKeycodeIndex(KEY_POWER, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handlePower
+
+	// FnLock
+	key = createSpecialKeycodeIndex(KEY_FN_ESC, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleFnLock
+
+	// 开关麦克风
+	key = createSpecialKeycodeIndex(KEY_MICMUTE, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleMicMute
+
+	// 切换显示模式
+	key = createSpecialKeycodeIndex(KEY_SWITCHVIDEOMODE, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleSwitchDisplay
+
+	// 打开控制中心
+	key = createSpecialKeycodeIndex(KEY_SETUP, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleOpenControlCenter
+
+	// 打开多任务视图
+	key = createSpecialKeycodeIndex(KEY_CYCLEWINDOWS, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleWorkspace
+
+	// 切换性能模式
+	key = createSpecialKeycodeIndex(KEY_MODE, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleSwitchPowerMode
 }
 
 // 处理函数的总入口
@@ -108,6 +139,61 @@ func (m *Manager) handleSpecialKeycode(keycode uint32,
 	}
 }
 
+// 开关FnLock
+func (m *Manager) handleFnLock() {
+	showOSD("FnToggle")
+}
+
+// 开关麦克风
+func (m *Manager) handleMicMute() {
+	source, err := m.audioController.getDefaultSource()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	mute, err := source.Mute().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	mute = !mute
+	err = source.SetMute(0, mute)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	var osd string
+	if mute {
+		osd = "AudioMicMuteOn"
+	} else {
+		osd = "AudioMicMuteOff"
+	}
+	showOSD(osd)
+}
+
+// 打开控制中心
+func (m *Manager) handleOpenControlCenter() {
+	cmd := "dde-control-center -s"
+	m.execCmd(cmd, false)
+}
+
+// 切换显示器
+func (m *Manager) handleSwitchDisplay() {
+	sessionBus := m.service.Conn()
+	disp := display.NewDisplay(sessionBus)
+	displayList, err := disp.ListOutputNames(0)
+	if err == nil && len(displayList) > 1 {
+		showOSD("SwitchMonitors")
+	}
+}
+
+// 打开任务视图
+func (m *Manager) handleWorkspace() {
+	m.wm.ShowWorkspace(0)
+}
+
 // 切换触摸板状态
 func (m *Manager) handleTouchpadToggle() {
 	showOSD("TouchpadToggle")
@@ -119,6 +205,32 @@ func (m *Manager) handleTouchpadOn() {
 
 func (m *Manager) handleTouchpadOff() {
 	showOSD("TouchpadOff")
+}
+
+// 切换性能模式
+func (m *Manager) handleSwitchPowerMode() {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("connect to system bus failed:", err)
+		return
+	}
+
+	pwr := power.NewPower(systemBus)
+	mode, err := pwr.Mode().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	if mode == "balance" {
+		err = pwr.SetMode(0, "powersave")
+	} else if mode == "powersave" {
+		err = pwr.SetMode(0, "balance")
+	}
+
+	if err != nil {
+		logger.Warning(err)
+	}
 }
 
 // 电源键的处理

@@ -124,6 +124,12 @@ var mediaIdActionMap = map[string]*Action{
 	"tools": &Action{Type: ActionTypeShowControlCenter},
 }
 
+func showOSD(signal string) {
+	logger.Debug("show OSD", signal)
+	sessionDBus, _ := dbus.SessionBus()
+	go sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
+}
+
 func airplaneModeToggle(ev *KeyEvent) {
 	systemBus, err := dbus.SystemBus()
 	if err != nil {
@@ -140,6 +146,12 @@ func airplaneModeToggle(ev *KeyEvent) {
 	if err != nil {
 		logger.Warning(err)
 		return
+	}
+
+	if !enabled {
+		showOSD("AirplaneModeOn")
+	} else {
+		showOSD("AirplaneModeOff")
 	}
 	logger.Debugf("toggle airplane mode from %v to %v", enabled, !enabled)
 }
