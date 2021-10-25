@@ -75,6 +75,10 @@ func (m *Module) start() error {
 	if err != nil {
 		return err
 	}
+
+	so := service.GetServerObject(m.audio)
+	err = so.SetWriteCallback(m.audio, "ReduceNoise", m.audio.writeReduceNoise)
+
 	err = m.audio.syncConfig.Register()
 	if err != nil {
 		logger.Warning("failed to register for deepin sync:", err)
