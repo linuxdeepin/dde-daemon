@@ -158,7 +158,6 @@ func (n *Network) connectSignal() {
 			logger.Warning(err)
 		}
 
-		restartIPWatchD()
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -171,7 +170,6 @@ func (n *Network) connectSignal() {
 		n.removeDevice(devPath)
 
 		n.devicesMu.Unlock()
-		restartIPWatchD()
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -266,6 +264,10 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 	dev.InitSignalExt(n.sigLoop, true)
 	_, err = d.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
 		//logger.Debugf("device state changed %v newState %d", d.Path_(), newState)
+		if (oldState >= nm.NM_DEVICE_STATE_ACTIVATED && reason == nm.NM_DEVICE_STATE_REASON_REMOVED) ||
+			(newState > oldState && newState == nm.NM_DEVICE_STATE_ACTIVATED) {
+			restartIPWatchD()
+		}
 
 		enabled := n.isIfaceEnabled(iface)
 		state, err := d.State().Get(0)
