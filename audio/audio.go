@@ -395,6 +395,49 @@ func (a *Audio) refershSinkInputs() {
 	}
 }
 
+func (a *Audio) shouldAutoPause() bool {
+	if a.defaultSink == nil {
+		logger.Debug("default sink is nil")
+		return false
+	}
+
+	card, err := a.cards.get(a.defaultSink.Card)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	port, err := card.Ports.Get(a.defaultSink.ActivePort.Name, pulse.DirectionSink)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	switch DetectPortType(card.core, &port) {
+	case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO:
+		return true
+	default:
+		return false
+	}
+}
+
+func (a *Audio) autoPause() {
+	if !a.shouldAutoPause() {
+		return
+	}
+
+	var port pulse.CardPortInfo
+	card, err := a.ctx.GetCard(a.defaultSink.Card)
+	if err == nil {
+		port, err = card.Ports.Get(a.defaultSink.ActivePort.Name, pulse.DirectionSink)
+	}
+
+	if err != nil || port.Available == pulse.AvailableTypeNo {
+		logger.Warning(err)
+		pauseAllPlayers()
+	}
+}
+
 func (a *Audio) refreshDefaultSinkSource() {
 	defaultSink := a.ctx.GetDefaultSink()
 	defaultSource := a.ctx.GetDefaultSource()
@@ -414,7 +457,13 @@ func (a *Audio) refreshDefaultSinkSource() {
 	}
 }
 
+func (a *Audio) prepareRefresh() {
+	a.autoPause()
+}
+
 func (a *Audio) refresh() {
+	logger.Debug("prepareRefresh")
+	a.prepareRefresh()
 	logger.Debug("refresh cards")
 	a.refreshCards()
 	logger.Debug("refresh sinks")
