@@ -992,3 +992,7 @@ func (u *User) SetPasswordHint(hint string) (busErr *dbus.Error) {
 	}
 	return dbusutil.ToError(err)
 }
+
+func (u *User) GetReminderInfo() (info LoginReminderInfo, dbusErr *dbus.Error) {
+	return getLoginReminderInfo(u.UserName), nil
+}

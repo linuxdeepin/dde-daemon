@@ -57,6 +57,7 @@ type InterfaceConfig struct {
 }
 
 //go:generate dbusutil-gen -type Manager,User manager.go user.go
+//go:generate dbusutil-gen em -type Manager,User,ImageBlur
 
 type Manager struct {
 	service       *dbusutil.Service

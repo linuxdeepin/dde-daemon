@@ -114,6 +114,11 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"enabled"},
 		},
 		{
+			Name:    "GetReminderInfo",
+			Fn:      v.GetReminderInfo,
+			OutArgs: []string{"info"},
+		},
+		{
 			Name:    "IsPasswordExpired",
 			Fn:      v.IsPasswordExpired,
 			OutArgs: []string{"expired"},
