@@ -29,6 +29,8 @@ import (
 // nolint
 const (
 	KEY_TOUCHPAD_TOGGLE = 0x212
+	KEY_TOUCHPAD_ON     = 0x213
+	KEY_TOUCHPAD_OFF    = 0x214
 	KEY_POWER           = 116
 )
 
@@ -70,6 +72,14 @@ func (m *Manager) initSpecialKeycodeMap() {
 	key := createSpecialKeycodeIndex(KEY_TOUCHPAD_TOGGLE, true, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handleTouchpadToggle
 
+	// 触摸板开键
+	key = createSpecialKeycodeIndex(KEY_TOUCHPAD_ON, true, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleTouchpadOn
+
+	// 触摸板关键
+	key = createSpecialKeycodeIndex(KEY_TOUCHPAD_OFF, true, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleTouchpadOff
+
 	// 电源键，松开时触发
 	key = createSpecialKeycodeIndex(KEY_POWER, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handlePower
@@ -101,6 +111,14 @@ func (m *Manager) handleSpecialKeycode(keycode uint32,
 // 切换触摸板状态
 func (m *Manager) handleTouchpadToggle() {
 	showOSD("TouchpadToggle")
+}
+
+func (m *Manager) handleTouchpadOn() {
+	showOSD("TouchpadOn")
+}
+
+func (m *Manager) handleTouchpadOff() {
+	showOSD("TouchpadOff")
 }
 
 // 电源键的处理

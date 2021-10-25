@@ -57,6 +57,8 @@ type Manager struct {
 var allowList = map[uint32]bool{
 	KEY_TOUCHPAD_TOGGLE: true,
 	KEY_POWER:           true,
+	KEY_TOUCHPAD_ON:     true,
+	KEY_TOUCHPAD_OFF:    true,
 }
 
 func newManager(service *dbusutil.Service) *Manager {
