@@ -20,7 +20,7 @@
 package users
 
 /*
-#cgo CFLAGS: -Wall -g
+#cgo CFLAGS: -Wall -g  -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 #cgo LDFLAGS: -lcrypt
 
 #include <stdlib.h>

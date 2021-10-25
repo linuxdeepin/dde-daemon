@@ -21,6 +21,7 @@
 package inputdevices
 
 // #cgo pkg-config: libinput libudev
+// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #include <libinput.h>
 // #include <libudev.h>
 // #include "dde-libinput.h"

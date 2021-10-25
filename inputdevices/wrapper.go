@@ -20,6 +20,7 @@
 package inputdevices
 
 // #cgo pkg-config: x11 xi
+// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #cgo LDFLAGS: -lpthread
 // #include "listen.h"
 import "C"

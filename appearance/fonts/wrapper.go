@@ -20,6 +20,7 @@
 package fonts
 
 // #cgo pkg-config: fontconfig
+// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #include <stdlib.h>
 // #include "font_list.h"
 import "C"
@@ -27,10 +28,11 @@ import "C"
 import (
 	"fmt"
 	"os"
-	"pkg.deepin.io/lib/strv"
 	"regexp"
 	"strings"
 	"unsafe"
+
+	"pkg.deepin.io/lib/strv"
 )
 
 const (

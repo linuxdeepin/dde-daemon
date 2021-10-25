@@ -19,7 +19,7 @@
 
 package zoneinfo
 
-// #cgo CFLAGS: -Wall -g
+// #cgo CFLAGS: -Wall -g -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #include <stdlib.h>
 // #include "timestamp.h"
 import "C"

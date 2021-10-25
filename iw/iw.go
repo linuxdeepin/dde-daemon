@@ -19,7 +19,7 @@
 
 package iw
 
-// #cgo CFLAGS: -Wall -g
+// #cgo CFLAGS: -Wall -g -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #cgo pkg-config: libnl-3.0 libnl-genl-3.0
 // #include <stdlib.h>
 // #include "core.h"

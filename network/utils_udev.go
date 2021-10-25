@@ -20,12 +20,14 @@
 package network
 
 // #cgo pkg-config: libudev
+// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #include <stdlib.h>
 // #include "utils_udev.h"
 import "C"
-import "strings"
-
-import "unsafe"
+import (
+	"strings"
+	"unsafe"
+)
 
 var deviceDescIgnoredWords = []string{
 	"Semiconductor",

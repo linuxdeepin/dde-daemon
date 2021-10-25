@@ -20,6 +20,7 @@
 package appinfo
 
 // #cgo pkg-config: glib-2.0
+// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #include <glib.h>
 import "C"
 import (
