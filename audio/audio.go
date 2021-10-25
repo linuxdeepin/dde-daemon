@@ -47,6 +47,7 @@ const (
 	gsKeyHeadphoneUnplugAutoPause = "headphone-unplug-auto-pause"
 	gsKeyVolumeIncrease           = "volume-increase"
 	gsKeyReduceNoise              = "reduce-input-noise"
+	gsKeyOutputAutoSwitchCountMax = "output-auto-switch-count-max"
 
 	gsSchemaSoundEffect  = "com.deepin.dde.sound-effect"
 	gsKeyEnabled         = "enabled"
@@ -170,6 +171,7 @@ type Audio struct {
 	outputPortName string
 	// 输出端口切换计数器
 	outputAutoSwitchCount int
+	outputAutoSwitchCountMax int
 
 	// nolint
 	signals *struct {
@@ -195,6 +197,7 @@ func newAudio(service *dbusutil.Service) *Audio {
 	a.IncreaseVolume.Bind(a.settings, gsKeyVolumeIncrease)
 	a.ReduceNoise.Bind(a.settings, gsKeyReduceNoise)
 	a.headphoneUnplugAutoPause = a.settings.GetBoolean(gsKeyHeadphoneUnplugAutoPause)
+	a.outputAutoSwitchCountMax = int(a.settings.GetInt(gsKeyOutputAutoSwitchCountMax))
 	if a.IncreaseVolume.Get() {
 		a.MaxUIVolume = increaseMaxVolume
 	} else {

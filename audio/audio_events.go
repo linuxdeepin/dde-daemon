@@ -170,7 +170,7 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 
 func (a *Audio) needAutoSwitchOutputPort() bool {
 	// 同端口切换次数超出限制(切换失败时反复切换同一端口)
-	if a.outputAutoSwitchCount >= 10 {
+	if a.outputAutoSwitchCount >= a.outputAutoSwitchCountMax {
 		logger.Debug("input auto switch tried too many times")
 		return false
 	}
