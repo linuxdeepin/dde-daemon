@@ -428,11 +428,12 @@ func (a *Audio) autoPause() {
 
 	var port pulse.CardPortInfo
 	card, err := a.ctx.GetCard(a.defaultSink.Card)
+
 	if err == nil {
 		port, err = card.Ports.Get(a.defaultSink.ActivePort.Name, pulse.DirectionSink)
 	}
 
-	if err != nil || port.Available == pulse.AvailableTypeNo {
+	if err != nil || port.Available == pulse.AvailableTypeNo || card.ActiveProfile.Name == "off" {
 		logger.Warning(err)
 		pauseAllPlayers()
 	}
