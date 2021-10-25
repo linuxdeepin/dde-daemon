@@ -274,14 +274,7 @@ func (m *Manager) init() {
 	m.updatePropConnectivity()
 	go func() {
 		time.Sleep(3 * time.Second)
-		connectivity, err := nmManager.CheckConnectivity(0)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		if connectivity == nm.NM_CONNECTIVITY_PORTAL {
-			m.doPortalAuthentication()
-		}
+		m.checkConnectivity()
 	}()
 
 	// 调整nmDev的状态
@@ -565,4 +558,17 @@ func (m *Manager) getDelayEnableVpn() bool {
 	enable := m.delayEnableVpn
 	m.delayVpnLock.Unlock()
 	return enable
+}
+
+// checkConnectivity This function may block for a long time，
+// is recommended for use in Goroutine
+func (m *Manager) checkConnectivity() {
+	connectivity, err := nmManager.CheckConnectivity(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	if connectivity == nm.NM_CONNECTIVITY_PORTAL {
+		m.doPortalAuthentication()
+	}
 }
