@@ -20,6 +20,10 @@
 package grub2
 
 import (
+	"fmt"
+	"strings"
+	"unicode"
+
 	dbus "github.com/godbus/dbus"
 	"pkg.deepin.io/lib/dbusutil"
 )
@@ -39,6 +43,13 @@ func (e *EditAuth) Enable(sender dbus.Sender, username, password string) *dbus.E
 	err := e.g.checkAuth(sender, polikitActionIdCommon)
 	if err != nil {
 		return dbusutil.ToError(err)
+	}
+
+	if len(username) == 0 ||
+		len(password) == 0 ||
+		!e.reg.MatchString(username) ||
+		strings.IndexFunc(password, unicode.IsSpace) >= 0 {
+		return dbusutil.ToError(fmt.Errorf("username or password invalid"))
 	}
 
 	err = e.setGrubEditShellAuth(username, password)

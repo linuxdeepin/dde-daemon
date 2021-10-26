@@ -25,6 +25,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"sync"
 
 	"pkg.deepin.io/lib/dbusutil"
@@ -42,6 +43,7 @@ type EditAuth struct {
 	configMu        sync.Mutex
 	configFile      string
 	testMode        bool
+	reg             *regexp.Regexp
 	// dbusutil-gen: equal=nil
 	EnabledUsers []string
 }
@@ -60,6 +62,7 @@ func NewEditAuth(g *Grub2) *EditAuth {
 		userAuthInfoMap: map[string][]byte{},
 		configFile:      uosMenuCryptoFile,
 		testMode:        false,
+		reg:             regexp.MustCompile(`^[a-zA-Z0-9_-]+$`),
 		EnabledUsers:    []string{},
 	}
 }
