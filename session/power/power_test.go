@@ -36,6 +36,7 @@ func TestWarnLevelConfig(t *testing.T) {
 			ActionTime:   300,
 
 			LowPowerNotifyThreshold: 20,
+			remindPercentage:        25,
 			LowPercentage:           20,
 			DangerPercentage:        15,
 			CriticalPercentage:      10,
@@ -62,6 +63,7 @@ func Test_getWarnLevel(t *testing.T) {
 			ActionTime:   300,
 
 			LowPowerNotifyThreshold: 20,
+			remindPercentage:        25,
 			LowPercentage:           20,
 			DangerPercentage:        15,
 			CriticalPercentage:      10,

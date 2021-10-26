@@ -234,6 +234,11 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 		m.sendNotify(iconBatteryLow, "",
 			Tr("Battery low, please plug in"))
 
+	case WarnLevelRemind:
+		playSound(soundutils.EventBatteryLow)
+		m.sendNotify(iconBatteryLow, "",
+			Tr("Battery low, please plug in"))
+
 	case WarnLevelNone:
 		logger.Debug("Power sufficient")
 		doCloseDDELowPower()
