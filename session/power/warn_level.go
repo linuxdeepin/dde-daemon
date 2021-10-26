@@ -23,6 +23,7 @@ type WarnLevel uint32
 
 const (
 	WarnLevelNone WarnLevel = iota
+	WarnLevelRemind
 	WarnLevelLow
 	WarnLevelDanger
 	WarnLevelCritical
@@ -33,6 +34,8 @@ func (lv WarnLevel) String() string {
 	switch lv {
 	case WarnLevelNone:
 		return "None"
+	case WarnLevelRemind:
+		return "Remind"
 	case WarnLevelLow:
 		return "Low"
 	case WarnLevelDanger:
@@ -75,8 +78,12 @@ func getWarnLevel(config *warnLevelConfig, onBattery bool,
 				return WarnLevelDanger
 			}
 
-			if percentage <= config.LowPercentage && config.LowPercentage <= config.LowPowerNotifyThreshold {
+			if percentage <= config.LowPercentage {
 				return WarnLevelLow
+			}
+
+			if percentage <= config.remindPercentage {
+				return WarnLevelRemind
 			}
 
 			return WarnLevelNone
