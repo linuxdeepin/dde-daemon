@@ -21,6 +21,7 @@ package screensaver
 
 import (
 	"errors"
+	"os"
 	"strings"
 	"sync"
 
@@ -144,6 +145,8 @@ func (ss *ScreenSaver) unInhibit(cookie uint32) {
 		if ss.lastVals != nil {
 			logger.Info("recover from ", ss.lastVals)
 			ss.setTimeout(ss.lastVals.seconds, ss.lastVals.interval, ss.lastVals.blank)
+			//同步最新的setTimeout 调用设置的值，避免在影院播放时，设置休眠值，播放完毕后，idleTime没有更新
+			ss.idleTime = ss.lastVals.seconds
 			ss.lastVals = nil
 		} else {
 			ss.setTimeout(ss.idleTime, ss.idleInterval, ss.blank == 1)
@@ -186,18 +189,34 @@ func (ss *ScreenSaver) setTimeout(seconds, interval uint32, blank bool) {
 		ss.blank = x.BlankingNotPreferred
 	}
 
-	err := x.SetScreenSaverChecked(ss.xConn, int16(seconds), int16(interval), ss.blank,
-		x.ExposuresNotAllowed).Check(ss.xConn)
-	if err != nil {
-		logger.Warning(err)
-	}
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		sessionBus, err := dbus.SessionBus()
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		err = sessionBus.Object("com.deepin.daemon.KWayland",
+			"/com/deepin/daemon/KWayland/Output").Call("com.deepin.daemon.KWayland.Idle.SetIdleTimeout", 0, seconds*1000).Err
 
-	err = dpms.SetTimeoutsChecked(ss.xConn, 0, 0,
-		0).Check(ss.xConn)
-	if err != nil {
-		logger.Warning(err)
-	}
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
 
+	} else {
+		err := x.SetScreenSaverChecked(ss.xConn, int16(seconds), int16(interval), ss.blank,
+			x.ExposuresNotAllowed).Check(ss.xConn)
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		err = dpms.SetTimeoutsChecked(ss.xConn, 0, 0,
+			0).Check(ss.xConn)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
 	logger.Info("SetTimeout to ", seconds, interval, blank)
 }
 

@@ -32,9 +32,11 @@ import (
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
 
+	"github.com/godbus/dbus"
 	x "github.com/linuxdeepin/go-x11-client"
 	xscreensaver "github.com/linuxdeepin/go-x11-client/ext/screensaver"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
+	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gsettings"
 	"pkg.deepin.io/lib/procfs"
 )
@@ -169,13 +171,21 @@ func (psp *powerSavePlan) Start() error {
 	if err != nil {
 		logger.Warning("failed to connectChanged PowerSavingModeBrightnessDropPercent:", err)
 	}
-	_, err = screenSaver.ConnectIdleOn(psp.HandleIdleOn)
-	if err != nil {
-		logger.Warning("failed to ConnectIdleOn:", err)
-	}
-	_, err = screenSaver.ConnectIdleOff(psp.HandleIdleOff)
-	if err != nil {
-		logger.Warning("failed to ConnectIdleOff:", err)
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		err = psp.ConnectIdle()
+		if err != nil {
+			logger.Warning("failed to ConnectIdleOn:", err)
+		}
+	} else {
+		_, err = screenSaver.ConnectIdleOn(psp.HandleIdleOn)
+		if err != nil {
+			logger.Warning("failed to ConnectIdleOn:", err)
+		}
+		_, err = screenSaver.ConnectIdleOff(psp.HandleIdleOff)
+		if err != nil {
+			logger.Warning("failed to ConnectIdleOff:", err)
+		}
 	}
 	err = display.Brightness().ConnectChanged(psp.handleBrightnessPropertyChanged)
 	if err != nil {
@@ -889,4 +899,39 @@ func canAddToTasks(sType string, delay int32, tasks metaTasks) bool {
 	default:
 		return false
 	}
+}
+
+func (psp *powerSavePlan) ConnectIdle() error {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	err = sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Idle", "IdleTimeout").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	sessionSigLoop := dbusutil.NewSignalLoop(sessionBus, 10)
+	sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Idle.IdleTimeout",
+	}, func(sig *dbus.Signal) {
+		if strings.HasPrefix(string(sig.Path),
+			"/com/deepin/daemon/KWayland/") &&
+			len(sig.Body) == 1 {
+			bIdle, ok := sig.Body[0].(bool)
+			if !ok {
+				return
+			}
+			if bIdle {
+				psp.HandleIdleOn()
+			} else {
+				psp.HandleIdleOff()
+			}
+		}
+	})
+	sessionSigLoop.Start()
+
+	return nil
 }
