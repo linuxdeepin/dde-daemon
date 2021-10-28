@@ -395,7 +395,7 @@ func (m *Manager) Reset() *dbus.Error {
 
 func (m *Manager) inhibitLogind() {
 	fd, err := m.helper.LoginManager.Inhibit(0,
-		"handle-power-key:handle-lid-switch", dbusServiceName,
+		"handle-power-key:handle-lid-switch:handle-suspend-key", dbusServiceName,
 		"handling key press and lid switch close", "block")
 	logger.Debug("inhibitLogind fd:", fd)
 	if err != nil {
