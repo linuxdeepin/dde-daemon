@@ -40,6 +40,7 @@ const (
 //在SNI注册过且Xwin还会发送信号的加入黑名单
 var FilteredApplicationName = []string{
 	"electron-ssr",
+	"onboard",
 }
 
 //go:generate dbusutil-gen -type TrayManager,StatusNotifierWatcher -import pkg.deepin.io/lib/strv traymanager.go status-notifier-watcher.go
