@@ -77,13 +77,13 @@ const (
 
 func newLastore(service *dbusutil.Service) (*Lastore, error) {
 	l := &Lastore{
-		service:        service,
-		jobStatus:      make(map[dbus.ObjectPath]CacheJobInfo),
-		inhibitFd:      -1,
-		lang:           QueryLang(),
-		isUpdating:     false,
-		updateNotifyId: 0,
-		intervalTime:   intervalTime120Min,
+		service:              service,
+		jobStatus:            make(map[dbus.ObjectPath]CacheJobInfo),
+		inhibitFd:            -1,
+		lang:                 QueryLang(),
+		updateNotifyId:       0,
+		isUpdating:           false,
+		intervalTime:         intervalTime120Min,
 	}
 
 	logger.Debugf("CurrentLang: %q", l.lang)
@@ -150,7 +150,7 @@ func (l *Lastore) initABRecovery(systemBus *dbus.Conn) {
 		if hasValue {
 			if hasBackup {
 				l.isBackuping = true
-				if ok := l.checkLowBatteryNotify(); ok {
+				if l.needLowBatteryNotify() {
 					l.lowBatteryInUpdatingNotify()
 				}
 			} else {
@@ -170,7 +170,7 @@ func (l *Lastore) listenBattery() {
 				return
 			}
 
-			if ok := l.checkLowBatteryNotify(); ok {
+			if l.needLowBatteryNotify() {
 				l.lowBatteryInUpdatingNotify()
 			}
 		}
@@ -221,7 +221,62 @@ func (l *Lastore) initSysDBusDaemon(systemBus *dbus.Conn) {
 	}
 }
 
-func (l *Lastore) checkLowBatteryNotify() bool {
+func (l *Lastore) checkUpdateNotify(path dbus.ObjectPath) {
+	jobType := l.jobStatus[path].Type
+	if (jobType != DownloadJobType) && (jobType != DistUpgradeJobType) &&
+		(jobType != PrepareDistUpgradeJobType) && (jobType != InstallJobType) {
+		return
+	}
+
+	l.isUpdating = true
+	// 当前job处于 end 状态时，不处理
+	if l.jobStatus[path].Status == EndStatus {
+		l.isUpdating = false
+		return
+	}
+
+	// jobName 包含 OnlyDownload 表示自动下载，此时不属于更新，不弹出低电量横幅
+	if strings.Contains(l.jobStatus[path].Name, "OnlyDownload") {
+		l.isUpdating = false
+		return
+	}
+
+	if l.needLowBatteryNotify() {
+		l.lowBatteryInUpdatingNotify()
+	}
+
+	// 当更新类型为DistUpgradeJobType 或 类型为应用且id为appstore_upgrade才弹更新完成横幅
+	if jobType != DistUpgradeJobType && (jobType != InstallJobType || l.jobStatus[path].Id != AppStoreUpgradeJobType) {
+		return
+	}
+
+	jobList, err := l.core.Manager().JobList().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	if l.jobStatus[path].Status == SucceedStatus {
+		for _, jobPath := range jobList {
+			if job, ok := l.jobStatus[jobPath]; ok {
+				// 如果jobList 内存在非更新type类型，直接跳过
+				if (jobType != DistUpgradeJobType && (jobType != InstallJobType || l.jobStatus[path].Id != AppStoreUpgradeJobType)) ||
+					strings.Contains(job.Name, "OnlyDownload") {
+					continue
+				}
+
+				if job.Status != SucceedStatus && job.Status != EndStatus {
+					return
+				}
+			}
+		}
+
+		l.removeLowBatteryInUpdatingNotify()
+		l.updateSucceedNotify(l.createUpdateSucceedActions())
+		l.isUpdating = false
+	}
+}
+
+func (l *Lastore) needLowBatteryNotify() bool {
 	if l.updateNotifyId != 0 {
 		return false
 	}
@@ -275,27 +330,7 @@ func (l *Lastore) initCore(systemBus *dbus.Conn) {
 		ifc, _ := sig.Body[0].(string)
 		if ifc == "com.deepin.lastore.Job" {
 			l.updateCacheJobInfo(sig.Path, props)
-			// guestJobTypeFromPath函数解析时会将PrepareDistUpgradeJobType解析成DistUpgradeJobType状态
-			// 导致更新成功完成状态提前到预下载完成状态；
-			jobType := l.jobStatus[sig.Path].Type
-			if (jobType != DownloadJobType) && (jobType != DistUpgradeJobType) &&
-				(jobType != PrepareDistUpgradeJobType) {
-				return
-			}
-
-			// 更新完成并成功后，弹出重启横幅
-			if l.jobStatus[sig.Path].Status == SucceedStatus && jobType == DistUpgradeJobType {
-				l.updateSucceedNotify(l.createUpdateSucceedActions())
-			} else if l.jobStatus[sig.Path].Status == EndStatus && jobType == DistUpgradeJobType {
-				// 更新完成后，将横幅show置为false并close横幅，下次更新重新弹出横幅
-				l.removeLowBatteryInUpdatingNotify()
-				l.isUpdating = false
-			} else {
-				l.isUpdating = true
-				if ok := l.checkLowBatteryNotify(); ok {
-					l.lowBatteryInUpdatingNotify()
-				}
-			}
+			l.checkUpdateNotify(sig.Path)
 		}
 	})
 

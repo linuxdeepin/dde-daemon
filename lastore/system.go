@@ -10,6 +10,7 @@ const (
 	InstallJobType            = "install"
 	RemoveJobType             = "remove"
 	UpdateJobType             = "update"
+	AppStoreUpgradeJobType    = "appstore_upgrade"
 	DistUpgradeJobType        = "dist_upgrade"
 	PrepareDistUpgradeJobType = "prepare_dist_upgrade"
 	UpdateSourceJobType       = "update_source"

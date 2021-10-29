@@ -133,7 +133,7 @@ func (l *Lastore) notifyAutoClean() {
 }
 
 func (l *Lastore) notifyUpdateSource(actions []NotifyAction) {
-	msg := gettext.Tr("New system edition available")
+	msg := gettext.Tr("Updates Available")
 	l.sendNotify("preferences-system", "", msg, actions, nil, notifyExpireTimeoutDefault, "dde-control-center")
 }
 
@@ -170,6 +170,9 @@ func (l *Lastore) lowBatteryInUpdatingNotify() {
 }
 
 func (l *Lastore) removeLowBatteryInUpdatingNotify() {
-	l.notifications.CloseNotification(0, l.updateNotifyId)
+	err := l.notifications.CloseNotification(0, l.updateNotifyId)
+	if err != nil {
+		logger.Warningf("close low battery in updating notification failed,err:%v", err)
+	}
 	l.updateNotifyId = 0
 }
