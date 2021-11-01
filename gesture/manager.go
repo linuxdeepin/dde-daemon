@@ -62,6 +62,12 @@ type Manager struct {
 	sessionmanager     sessionmanager.SessionManager
 	clipboard          clipboard.Clipboard
 	notification       notification.Notification
+
+	longPressEnable        bool
+	oneFingerBottomEnable bool
+	oneFingerLeftEnable   bool
+	oneFingerRightEnable  bool
+	configManagerPath       dbus.ObjectPath
 }
 
 func newManager() (*Manager, error) {
@@ -134,9 +140,34 @@ func newManager() (*Manager, error) {
 		notification:       notification.NewNotification(sessionConn),
 	}
 
+	systemConnObj := systemConn.Object(configManagerId, "/")
+	err = systemConnObj.Call(configManagerId + ".acquireManager", 0, "dde-session-daemon", "gesture","").Store(&m.configManagerPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+	m.longPressEnable = m.getGestureConfigValue("long-press-enable")
+	m.oneFingerBottomEnable = m.getGestureConfigValue("one-finger-bottom-enable")
+	m.oneFingerLeftEnable = m.getGestureConfigValue("one-finger-left-enable")
+	m.oneFingerRightEnable = m.getGestureConfigValue("one-finger-right-enable")
+
 	m.gesture = gesture.NewGesture(systemConn)
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemConn, 10)
 	return m, nil
+}
+
+func (m *Manager) getGestureConfigValue(key string) bool {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		return true
+	}
+	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
+	var val bool
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&val)
+	if err != nil {
+		logger.Warning(err)
+		return true
+	}
+	return val
 }
 
 func (m *Manager) destroy() {
@@ -160,6 +191,18 @@ func (m *Manager) init() {
 		logger.Warning("call SetEdgeMoveStopDuration failed:", err)
 	}
 
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Error(err)
+	}
+	err = dbusutil.NewMatchRuleBuilder().Type("signal").
+		PathNamespace(string(m.configManagerPath)).
+		Interface("org.desktopspec.ConfigManager.Manager").
+		Member("valueChanged").Build().AddTo(systemConn)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	m.systemSigLoop.Start()
 	m.gesture.InitSignalExt(m.systemSigLoop, true)
 	_, err = m.gesture.ConnectEvent(func(name string, direction string, fingers int32) {
@@ -181,6 +224,18 @@ func (m *Manager) init() {
 			logger.Error("Exec failed:", err)
 		}
 	})
+
+	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
+	}, func(sig *dbus.Signal) {
+		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
+			m.longPressEnable = m.getGestureConfigValue("long-press-enable")
+			m.oneFingerBottomEnable = m.getGestureConfigValue("one-finger-bottom-enable")
+			m.oneFingerLeftEnable = m.getGestureConfigValue("one-finger-left-enable")
+			m.oneFingerRightEnable = m.getGestureConfigValue("one-finger-right-enable")
+		}
+	})
+
 	if err != nil {
 		logger.Error("connect gesture event failed:", err)
 	}
@@ -298,6 +353,10 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 		return nil
 	}
 
+	if !m.longPressEnable && strings.Contains(string(info.Event.Name), "touch right button") {
+		return nil
+	}
+
 	var cmd = info.Action.Action
 	switch info.Action.Type {
 	case ActionTypeCommandline:
@@ -310,6 +369,7 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 		return fmt.Errorf("invalid action type: %s", info.Action.Type)
 	}
 
+	// #nosec G204
 	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("%s", string(out))
@@ -320,6 +380,8 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 func (m *Manager) Write() error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
+
+	// #nosec G301
 	err := os.MkdirAll(filepath.Dir(m.userFile), 0755)
 	if err != nil {
 		return err
@@ -328,6 +390,7 @@ func (m *Manager) Write() error {
 	if err != nil {
 		return err
 	}
+	// #nosec G306
 	return ioutil.WriteFile(m.userFile, data, 0644)
 }
 
@@ -518,7 +581,7 @@ func (m *Manager) getTouchScreenRotationContext() (context *touchEventContext, p
 func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge string, p *point, duration int32) error {
 	logger.Debugf("handleTouchEdgeMoveStopLeave: context:%+v edge:%s p: %+v", *context, edge, *p)
 
-	if edge == context.bot {
+	if edge == context.bot && m.oneFingerBottomEnable {
 		position, err := m.dock.Position().Get(0)
 		if err != nil {
 			logger.Error("get dock.Position failed:", err)
@@ -554,11 +617,11 @@ func (m *Manager) handleTouchEdgeEvent(context *touchEventContext, edge string, 
 	logger.Debugf("handleTouchEdgeEvent: context:%+v edge:%s p:%+v", *context, edge, *p)
 	switch edge {
 	case context.left:
-		if p.X*float64(context.screenHeight) > 100 {
+		if p.X*float64(context.screenHeight) > 100 && m.oneFingerLeftEnable {
 			return m.clipboard.Show(0)
 		}
 	case context.right:
-		if (1-p.X)*float64(context.screenWidth) > 100 {
+		if (1-p.X)*float64(context.screenWidth) > 100 && m.oneFingerRightEnable {
 			return m.notification.Show(0)
 		}
 	}
@@ -584,9 +647,13 @@ func (m *Manager) handleTouchMovementEvent(context *touchEventContext, direction
 
 		switch direction {
 		case context.left:
-			return m.clipboard.Hide(0)
+			if m.oneFingerLeftEnable {
+				return m.clipboard.Hide(0)
+			}
 		case context.right:
-			return m.notification.Hide(0)
+			if m.oneFingerRightEnable {
+				return m.notification.Hide(0)
+			}
 		}
 	}
 

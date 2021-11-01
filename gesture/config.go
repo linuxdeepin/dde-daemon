@@ -41,6 +41,8 @@ var (
 	gestureSchemaId         = "com.deepin.dde.gesture"
 	gsKeyTouchPadEnabled    = "touch-pad-enabled"
 	gsKeyTouchScreenEnabled = "touch-screen-enabled"
+
+	configManagerId     = "org.desktopspec.ConfigManager"
 )
 
 type ActionInfo struct {

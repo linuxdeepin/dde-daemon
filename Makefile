@@ -128,6 +128,9 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/libexec/dde-daemon/
 	cp -r misc/libexec/dde-daemon/* ${DESTDIR}${PREFIX}/libexec/dde-daemon/
 
+	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/apps/dde-session-daemon/configs
+	cp -r gesture/*.json ${DESTDIR}${PREFIX}/share/dsg/apps/dde-session-daemon/configs/
+
 
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
