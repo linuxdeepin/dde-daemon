@@ -148,6 +148,16 @@ func (u *User) SetShell(sender dbus.Sender, shell string) *dbus.Error {
 func (u *User) SetPassword(sender dbus.Sender, password string) *dbus.Error {
 	logger.Debug("[SetPassword] start ...")
 
+	// set password from UnionID
+	if password == "" {
+		err := u.setPwdWithUnionID(sender)
+		if err != nil {
+			return dbusutil.ToError(err)
+		} else {
+			return nil
+		}
+	}
+
 	err := u.checkAuth(sender, false, "")
 	if err != nil {
 		logger.Debug("[SetPassword] access denied:", err)
