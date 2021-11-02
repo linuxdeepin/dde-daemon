@@ -84,6 +84,8 @@ type Manager struct {
 	identifyWindowFuns []*IdentifyWindowFunc
 	windowPatterns     WindowPatterns
 
+	forceQuitAppStatus forceQuitAppType
+
 	// dbus objects:
 	launcher     launcher.Launcher
 	ddeLauncher  libDDELauncher.Launcher
@@ -124,6 +126,7 @@ const (
 	settingKeyWinIconPreferredApps = "win-icon-preferred-apps"
 	settingKeyOpacity              = "opacity"
 	settingKeyPluginSettings       = "plugin-settings"
+	settingKeyForceQuitApp         = "force-quit-app"
 
 	frontendWindowWmClass = "dde-dock"
 
