@@ -119,3 +119,11 @@ func NewRect() *Rect {
 func (r *Rect) Pieces() (int, int, int, int) {
 	return int(r.X), int(r.Y), int(r.Width), int(r.Height)
 }
+
+type forceQuitAppType uint8
+
+const (
+	forceQuitAppEnabled     forceQuitAppType = iota // 开启
+	forceQuitAppDisabled                            // 关闭
+	forceQuitAppDeactivated                         // 置灰
+)

@@ -24,7 +24,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-x11-client"
+	x "github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/lib/appinfo/desktopappinfo"
 	. "pkg.deepin.io/lib/gettext"
 )
@@ -50,7 +50,10 @@ func (entry *AppEntry) updateMenu() {
 	}
 
 	if hasWin {
-		menu.AppendItem(entry.getMenuItemForceQuit())
+		if entry.manager.forceQuitAppStatus != forceQuitAppDisabled {
+			menu.AppendItem(entry.getMenuItemForceQuit())
+		}
+
 		if entry.hasAllowedCloseWindow() {
 			menu.AppendItem(entry.getMenuItemCloseAll())
 		}
@@ -122,13 +125,15 @@ func (entry *AppEntry) getMenuItemCloseAll() *MenuItem {
 }
 
 func (entry *AppEntry) getMenuItemForceQuit() *MenuItem {
+	active := entry.manager.forceQuitAppStatus != forceQuitAppDeactivated
+
 	return NewMenuItem(Tr("Force Quit"), func(timestamp uint32) {
 		logger.Debug("Force Quit")
 		err := entry.ForceQuit()
 		if err != nil {
-			logger.Warning("ForceQuit error:",err)
+			logger.Warning("ForceQuit error:", err)
 		}
-	}, true)
+	}, active)
 }
 
 func (entry *AppEntry) getMenuItemDock() *MenuItem {
@@ -136,7 +141,7 @@ func (entry *AppEntry) getMenuItemDock() *MenuItem {
 		logger.Debug("menu action dock entry")
 		err := entry.RequestDock()
 		if err != nil {
-			logger.Warning("RequestDock error:",err)
+			logger.Warning("RequestDock error:", err)
 		}
 	}, true)
 }
@@ -146,7 +151,7 @@ func (entry *AppEntry) getMenuItemUndock() *MenuItem {
 		logger.Debug("menu action undock entry")
 		err := entry.RequestUndock()
 		if err != nil {
-			logger.Warning("RequestUndock error:",err)
+			logger.Warning("RequestUndock error:", err)
 		}
 	}, true)
 }
@@ -156,7 +161,7 @@ func (entry *AppEntry) getMenuItemAllWindows() *MenuItem {
 		logger.Debug("menu action all windows")
 		err := entry.PresentWindows()
 		if err != nil {
-			logger.Warning("PresentWindows error:",err)
+			logger.Warning("PresentWindows error:", err)
 		}
 	}, true)
 	menuItem.hint = menuItemHintShowAllWindows
