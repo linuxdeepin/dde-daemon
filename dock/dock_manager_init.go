@@ -85,6 +85,18 @@ func (m *Manager) listenSettingsChanged() {
 		position := positionType(m.settings.GetEnum(key))
 		logger.Debug(key, "changed to", position)
 	})
+
+	// listen force quit
+	m.connectSettingKeyChanged(settingKeyForceQuitApp, func(key string) {
+		m.forceQuitAppStatus = forceQuitAppType(m.settings.GetEnum(key))
+		logger.Debug(key, "changed to", m.forceQuitAppStatus)
+
+		m.Entries.mu.Lock()
+		for _, entry := range m.Entries.items {
+			entry.updateMenu()
+		}
+		m.Entries.mu.Unlock()
+	})
 }
 
 func (m *Manager) listenWMSwitcherSignal() {
@@ -217,6 +229,8 @@ func (m *Manager) init() error {
 	m.DockedApps.Bind(m.settings, settingKeyDockedApps)
 	m.appearanceSettings = gio.NewSettings(appearanceSchema)
 	m.Opacity.Bind(m.appearanceSettings, settingKeyOpacity)
+
+	m.forceQuitAppStatus = forceQuitAppType(m.settings.GetEnum(settingKeyForceQuitApp))
 
 	m.FrontendWindowRect = NewRect()
 	m.smartHideModeTimer = time.AfterFunc(10*time.Second, m.smartHideModeTimerExpired)
