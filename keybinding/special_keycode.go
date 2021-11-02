@@ -222,14 +222,40 @@ func (m *Manager) handleSwitchPowerMode() {
 		return
 	}
 
-	if mode == "balance" {
-		err = pwr.SetMode(0, "powersave")
-	} else if mode == "powersave" {
-		err = pwr.SetMode(0, "balance")
-	}
-
+	isHighPerformanceSupported, err := pwr.IsHighPerformanceSupported().Get(0)
 	if err != nil {
 		logger.Warning(err)
+		return
+	}
+
+	targetMode := ""
+	//平衡 balance, 节能 powersave, 高性能 performance
+	if isHighPerformanceSupported {
+		if mode == "balance" {
+			targetMode = "powersave"
+		} else if mode == "powersave" {
+			targetMode = "performance"
+		}  else if mode == "performance" {
+			targetMode = "balance"
+		}
+	} else {
+		if mode == "balance" {
+			targetMode = "powersave"
+		} else if mode == "powersave" {
+			targetMode = "balance"
+		}
+	}
+
+	if targetMode == "" {
+		return
+	}
+	err = pwr.SetMode(0, targetMode)
+
+	logger.Infof("[handleSwitchPowerMode] from %s to %s", mode, targetMode)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		showOSD(targetMode)
 	}
 }
 
