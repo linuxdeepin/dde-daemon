@@ -9,18 +9,18 @@
 # Ricardo Simões <xmcorporation@gmail.com>, 2020
 # Jesse Brandao <www.jwb@gmail.com>, 2020
 # Cindy0514, 2020
-# Galvanize87 <ajg.silva@hotmail.com>, 2021
-# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021
+# Galvanize87 <ajg.silva@hotmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-22 09:30+0800\n"
+"POT-Creation-Date: 2021-11-03 15:14+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Maggie Liu <maggie.liufei@gmail.com>, 2021\n"
+"Last-Translator: Galvanize87 <ajg.silva@hotmail.com>, 2021\n"
 "Language-Team: Portuguese (https://www.transifex.com/linuxdeepin/teams/3617/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,12 +86,12 @@ msgstr "A definir escala de visualização"
 msgid "Display scaling"
 msgstr "Escala de visualização"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s foi desativado"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Abrir"
 
@@ -104,60 +104,73 @@ msgid "Fingerprint verification timed out"
 msgstr "A verificação de impressão digital expirou"
 
 #: ../../bluetooth/bluez_profile.go:30
+#: ../../system/bluetooth/bluez_profile.go:30
 msgid "Serial port"
 msgstr "Porta de série"
 
 #: ../../bluetooth/bluez_profile.go:31
+#: ../../system/bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
 msgstr "Ligação em rede dial-up"
 
 #: ../../bluetooth/bluez_profile.go:32
+#: ../../system/bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
 msgstr "Dispositivo mãos-livres"
 
 #: ../../bluetooth/bluez_profile.go:33
+#: ../../system/bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
 msgstr "Gateway de voz para mãos-livres"
 
 #: ../../bluetooth/bluez_profile.go:34
+#: ../../system/bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
 msgstr "Gateway de voz para auscultadores"
 
 #: ../../bluetooth/bluez_profile.go:35
+#: ../../system/bluetooth/bluez_profile.go:35
 msgid "Object push"
 msgstr "Objeto carregado"
 
 #: ../../bluetooth/bluez_profile.go:36
+#: ../../system/bluetooth/bluez_profile.go:36
 msgid "File transfer"
 msgstr "Transferência de ficheiros"
 
 #: ../../bluetooth/bluez_profile.go:37
+#: ../../system/bluetooth/bluez_profile.go:37
 msgid "Synchronization"
 msgstr "Sincronização"
 
 #: ../../bluetooth/bluez_profile.go:38
+#: ../../system/bluetooth/bluez_profile.go:38
 msgid "Phone book access"
 msgstr "Acesso de lista telefónica"
 
 #: ../../bluetooth/bluez_profile.go:39
+#: ../../system/bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
 msgstr "Cliente de acesso de lista telefónica"
 
 #: ../../bluetooth/bluez_profile.go:40
+#: ../../system/bluetooth/bluez_profile.go:40
 msgid "Message access"
 msgstr "Acesso de mensagem"
 
 #: ../../bluetooth/bluez_profile.go:41
+#: ../../system/bluetooth/bluez_profile.go:41
 msgid "Message notification"
 msgstr "Notificação de mensagem"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
+#: ../../lastore/lastore.go:409
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr "Recebendo %[1]q de %[2]q"
+msgstr "A receber %[1]q de %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -179,8 +192,8 @@ msgstr "Parar de receber ficheiros"
 msgid "You have cancelled the file transfer"
 msgstr "Cancelou a transferência de ficheiros"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../system/bluetooth/utils_notify.go:78
+#: ../../system/bluetooth/utils_notify.go:87
 msgid "Bluetooth connection failed"
 msgstr "Falha na ligação por Bluetooth"
 
@@ -204,35 +217,15 @@ msgstr "%q quer enviar ficheiros para si. Receber?"
 msgid "Receiving %q timed out"
 msgstr "Tempo limite da recepção de %q esgotado"
 
-#: ../../bluetooth/utils_notify.go:98
-msgid "Connect %q successfully"
-msgstr "Ligar a %q com sucesso"
-
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
-#: ../../network/state_handler.go:355
-msgid "%q disconnected"
-msgstr "%q desligado"
-
-#: ../../bluetooth/utils_notify.go:108
-msgid "Make sure %q is turned on and in range"
-msgstr "Certifique-se que %q está ligado e dentro do alcance"
-
-#: ../../bluetooth/utils_notify.go:117
-msgid ""
-"%q can no longer connect to %q. Try to forget this device and pair it again."
-msgstr ""
-"%q já não se pode ligar a %q. Tente esquecer este dispositivo e emparelhe-o "
-"novamente."
-
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
 msgstr "Clique aqui para ligar a %q"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:135
 msgid "Add Bluetooth devices"
 msgstr "Adicionar dispositivos Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "Emparelhar"
 
@@ -307,11 +300,11 @@ msgstr "Captura de ecrã com atraso"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (Imagem para Texto)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
-msgstr ""
+msgstr "Scrollshot"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
@@ -357,99 +350,103 @@ msgstr "Área de transferência"
 msgid "Translation"
 msgstr "Tradução"
 
-#: ../../keybinding/shortcuts/id_name_map.go:58
+#: ../../keybinding/shortcuts/id_name_map.go:52
+msgid "Global search"
+msgstr "Pesquisa global"
+
+#: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
 msgstr "Alterar esquema"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to left workspace"
 msgstr "Mudar para área de trabalho à esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to right workspace"
 msgstr "Mudar para área de trabalho à direita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to upper workspace"
 msgstr "Mudar para área de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to lower workspace"
 msgstr "Mudar para área de trabalho abaixo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows"
 msgstr "Alternar janelas semelhantes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows in reverse"
 msgstr "Alternar inversamente janelas semelhantes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows"
 msgstr "Alternar janelas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows in reverse"
 msgstr "Alternar janelas em ordem inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Show desktop"
 msgstr "Mostrar ambiente de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Maximize window"
 msgstr "Maximizar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Restore window"
 msgstr "Restaurar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Minimize window"
 msgstr "Minimizar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Close window"
 msgstr "Fechar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Move window"
 msgstr "Mover janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Resize window"
 msgstr "Redimensionar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to left workspace"
 msgstr "Mover para área de trabalho à esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to right workspace"
 msgstr "Mover para área de trabalho à direita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to upper workspace"
 msgstr "Mover para área de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to lower workspace"
 msgstr "Mover para área de trabalho abaixo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of all workspaces"
 msgstr "Mostrar janelas de todas as áreas de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of current workspace"
 msgstr "Mostrar janelas da atual área de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display workspace"
 msgstr "Mostrar área de trabalho virtual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Alternar monitores"
 
@@ -477,37 +474,37 @@ msgstr "Idioma do sistema alterado, termine sessão e depois inicie novamente"
 msgid "Failed to change system language, please try later"
 msgstr "Falha ao alterar o idioma do sistema, tente novamente mais tarde"
 
-#: ../../lastore/lastore.go:366
+#: ../../lastore/lastore.go:401
 msgid "Retry"
 msgstr "Tentar Novamente"
 
-#: ../../lastore/lastore.go:388
+#: ../../lastore/lastore.go:423
 msgid "Update Now"
 msgstr "Atualizar agora"
 
-#: ../../lastore/lastore.go:418
+#: ../../lastore/lastore.go:453
 msgid "Reboot Now"
 msgstr "Reiniciar Agora"
 
-#: ../../lastore/lastore.go:422
+#: ../../lastore/lastore.go:457
 msgid "Remind Me Later"
-msgstr ""
+msgstr "Lembrar-me mais tarde"
 
-#: ../../lastore/lastore.go:429
+#: ../../lastore/lastore.go:464
 msgid "10 mins later"
-msgstr ""
+msgstr "10 mins depois"
 
-#: ../../lastore/lastore.go:436
+#: ../../lastore/lastore.go:471
 msgid "30 mins later"
-msgstr ""
+msgstr "30 mins depois"
 
-#: ../../lastore/lastore.go:443
+#: ../../lastore/lastore.go:478
 msgid "2h later"
-msgstr ""
+msgstr "2h depois"
 
-#: ../../lastore/lastore.go:450
+#: ../../lastore/lastore.go:485
 msgid "6h later"
-msgstr ""
+msgstr "6h depois"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
@@ -537,22 +534,25 @@ msgid "Package cache wiped"
 msgstr "Cache dos pacotes apagada"
 
 #: ../../lastore/notify.go:136
-msgid "New system edition available"
-msgstr "Nova edição do sistema disponível"
+msgid "Updates Available"
+msgstr ""
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
-msgstr ""
+msgstr "Reiniciar após atualizações"
 
 #: ../../lastore/notify.go:142
 msgid "Restart the computer to use the system and applications properly"
 msgstr ""
+"Reinicie o computador para utilizar o sistema e as aplicações corretamente"
 
 #: ../../lastore/notify.go:152
 msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
+"O sistema está a ser atualizado, mas a capacidade é inferior a 50%. Ligue-o "
+"para evitar cortes de energia"
 
 #: ../../lastore/notify.go:153
 msgid "OK"
@@ -566,51 +566,51 @@ msgstr "%q removido com sucesso"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao desinstalar %q"
 
+#: ../../network/manager_active_conn.go:396
 #: ../../network/manager_active_conn.go:401
-#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "Nenhum"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WEP 40/128-bit Key"
 msgstr "Chave WEP 40/128-bit"
 
-#: ../../network/manager_active_conn.go:410
+#: ../../network/manager_active_conn.go:405
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Pessoal"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Tunneled TLS"
 msgstr "TLS Tunelado"
 
-#: ../../network/manager_active_conn.go:428
+#: ../../network/manager_active_conn.go:423
 msgid "Protected EAP"
 msgstr "EAP Protegido"
 
-#: ../../network/manager_connection.go:356
-#: ../../network/manager_connection.go:360
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "Ligação por cabo"
 
-#: ../../network/manager_connection.go:399
+#: ../../network/manager_connection.go:402
 msgid "Wired Connection %v"
-msgstr ""
+msgstr "Ligação por cabo %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -975,6 +975,11 @@ msgstr "%q ligado"
 msgid "Hotspot disabled"
 msgstr "Hotspot desativado"
 
+#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../system/bluetooth/utils_notify.go:65
+msgid "%q disconnected"
+msgstr "%q desligado"
+
 #: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Incapaz de partilhar hotspot, verificar definições dnsmasq"
@@ -1086,6 +1091,21 @@ msgstr "o monitor será desligado"
 #: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "não fará nada ao computador"
+
+#: ../../system/bluetooth/utils_notify.go:58
+msgid "Connect %q successfully"
+msgstr "Ligar a %q com sucesso"
+
+#: ../../system/bluetooth/utils_notify.go:71
+msgid "Make sure %q is turned on and in range"
+msgstr "Certifique-se que %q está ligado e dentro do alcance"
+
+#: ../../system/bluetooth/utils_notify.go:89
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+"%q já não se pode ligar a %q. Tente esquecer este dispositivo e emparelhe-o "
+"novamente."
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

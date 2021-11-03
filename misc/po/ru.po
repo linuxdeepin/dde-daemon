@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-22 09:30+0800\n"
+"POT-Creation-Date: 2021-11-03 15:14+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Dober Man, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/linuxdeepin/teams/3617/ru/)\n"
@@ -90,12 +90,12 @@ msgstr "Настройка масштабирования дисплея"
 msgid "Display scaling"
 msgstr "Масштабирование дисплея"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Открыть"
 
@@ -108,54 +108,67 @@ msgid "Fingerprint verification timed out"
 msgstr "Время проверки отпечатка пальца вышло"
 
 #: ../../bluetooth/bluez_profile.go:30
+#: ../../system/bluetooth/bluez_profile.go:30
 msgid "Serial port"
 msgstr "Последовательный порт"
 
 #: ../../bluetooth/bluez_profile.go:31
+#: ../../system/bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
 msgstr "Коммутируемая сеть"
 
 #: ../../bluetooth/bluez_profile.go:32
+#: ../../system/bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
 msgstr "Устройство громкой связи"
 
 #: ../../bluetooth/bluez_profile.go:33
+#: ../../system/bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
 msgstr "Голосовой вход громкой связи"
 
 #: ../../bluetooth/bluez_profile.go:34
+#: ../../system/bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
 msgstr "Голосовой вход наушников"
 
 #: ../../bluetooth/bluez_profile.go:35
+#: ../../system/bluetooth/bluez_profile.go:35
 msgid "Object push"
 msgstr "Загрузка объекта"
 
 #: ../../bluetooth/bluez_profile.go:36
+#: ../../system/bluetooth/bluez_profile.go:36
 msgid "File transfer"
 msgstr "Передача файлов"
 
 #: ../../bluetooth/bluez_profile.go:37
+#: ../../system/bluetooth/bluez_profile.go:37
 msgid "Synchronization"
 msgstr "Синхронизация"
 
 #: ../../bluetooth/bluez_profile.go:38
+#: ../../system/bluetooth/bluez_profile.go:38
 msgid "Phone book access"
 msgstr "Доступ к телефонной книге"
 
 #: ../../bluetooth/bluez_profile.go:39
+#: ../../system/bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
 msgstr "Клиент доступа к телефонной книге"
 
 #: ../../bluetooth/bluez_profile.go:40
+#: ../../system/bluetooth/bluez_profile.go:40
 msgid "Message access"
 msgstr "Доступ  к сообщениям"
 
 #: ../../bluetooth/bluez_profile.go:41
+#: ../../system/bluetooth/bluez_profile.go:41
 msgid "Message notification"
 msgstr "Уведомление о сообщении"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
+#: ../../lastore/lastore.go:409
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -183,8 +196,8 @@ msgstr "Остановить получение файлов"
 msgid "You have cancelled the file transfer"
 msgstr "Вы прервали процесс отправки файла"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../system/bluetooth/utils_notify.go:78
+#: ../../system/bluetooth/utils_notify.go:87
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth-подключение не удалось"
 
@@ -208,35 +221,15 @@ msgstr "%q  хочет отправить вам файлы. Принять?"
 msgid "Receiving %q timed out"
 msgstr "Время получения %q  истекло"
 
-#: ../../bluetooth/utils_notify.go:98
-msgid "Connect %q successfully"
-msgstr "%q соединено успешно"
-
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
-#: ../../network/state_handler.go:355
-msgid "%q disconnected"
-msgstr "%q отсоединено"
-
-#: ../../bluetooth/utils_notify.go:108
-msgid "Make sure %q is turned on and in range"
-msgstr "Убедитесь, что %q включено и доступно"
-
-#: ../../bluetooth/utils_notify.go:117
-msgid ""
-"%q can no longer connect to %q. Try to forget this device and pair it again."
-msgstr ""
-"%q больше не может подключено к %q. Попробуйте забыть это устройство и снова"
-" выполнить сопряжение."
-
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
 msgstr "Нажмите здесь, что подсоединиться к %q"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:135
 msgid "Add Bluetooth devices"
 msgstr "Добавить Bluetooth устройство"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "Пара"
 
@@ -361,99 +354,103 @@ msgstr "Буфер обмена"
 msgid "Translation"
 msgstr "Перевод"
 
-#: ../../keybinding/shortcuts/id_name_map.go:58
+#: ../../keybinding/shortcuts/id_name_map.go:52
+msgid "Global search"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
 msgstr "Переключить Раскладку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to left workspace"
 msgstr "Переключиться на левый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to right workspace"
 msgstr "Переключиться на правый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to upper workspace"
 msgstr "Переключиться на верхний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to lower workspace"
 msgstr "Переключиться на нижний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows"
 msgstr "Переключить похожие окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows in reverse"
 msgstr "Переключить похожие окна в обратном порядке"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows"
 msgstr "Переключить окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows in reverse"
 msgstr "Переключить окна в обратном порядке"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Show desktop"
 msgstr "Показать рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Maximize window"
 msgstr "Развернуть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Restore window"
 msgstr "Восстановить окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Minimize window"
 msgstr "Свернуть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Close window"
 msgstr "Закрыть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Move window"
 msgstr "Переместить окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Resize window"
 msgstr "Изменить размер окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to left workspace"
 msgstr "Переместить на левый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to right workspace"
 msgstr "Переместить на правый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to upper workspace"
 msgstr "Переместить на верхний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to lower workspace"
 msgstr "Переместить на нижний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of all workspaces"
 msgstr "Показать окна всех рабочих столов"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of current workspace"
 msgstr "Показать окна текущего рабочего стола"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display workspace"
 msgstr "Отобразить рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Переключить мониторы"
 
@@ -482,35 +479,35 @@ msgstr ""
 msgid "Failed to change system language, please try later"
 msgstr "Не удалось изменить язык системы, попробуйте позже."
 
-#: ../../lastore/lastore.go:366
+#: ../../lastore/lastore.go:401
 msgid "Retry"
 msgstr "Повторить"
 
-#: ../../lastore/lastore.go:388
+#: ../../lastore/lastore.go:423
 msgid "Update Now"
 msgstr "Обновить Сейчас"
 
-#: ../../lastore/lastore.go:418
+#: ../../lastore/lastore.go:453
 msgid "Reboot Now"
 msgstr "Перезагрузить Сейчас"
 
-#: ../../lastore/lastore.go:422
+#: ../../lastore/lastore.go:457
 msgid "Remind Me Later"
 msgstr ""
 
-#: ../../lastore/lastore.go:429
+#: ../../lastore/lastore.go:464
 msgid "10 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:436
+#: ../../lastore/lastore.go:471
 msgid "30 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:443
+#: ../../lastore/lastore.go:478
 msgid "2h later"
 msgstr ""
 
-#: ../../lastore/lastore.go:450
+#: ../../lastore/lastore.go:485
 msgid "6h later"
 msgstr ""
 
@@ -542,8 +539,8 @@ msgid "Package cache wiped"
 msgstr "Сброс кэша пакета"
 
 #: ../../lastore/notify.go:136
-msgid "New system edition available"
-msgstr "Обнаружена новая версия системы"
+msgid "Updates Available"
+msgstr ""
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
@@ -571,49 +568,49 @@ msgstr "%q успешно удалён"
 msgid "Failed to uninstall %q"
 msgstr "Не удалось удалить %q"
 
+#: ../../network/manager_active_conn.go:396
 #: ../../network/manager_active_conn.go:401
-#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "Ничего"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-бит. ключ"
 
-#: ../../network/manager_active_conn.go:410
+#: ../../network/manager_active_conn.go:405
 msgid "WPA/WPA2 Personal"
 msgstr "Персональный WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Tunneled TLS"
 msgstr "Туннельный TLS "
 
-#: ../../network/manager_active_conn.go:428
+#: ../../network/manager_active_conn.go:423
 msgid "Protected EAP"
 msgstr "Защищенный EAP"
 
-#: ../../network/manager_connection.go:356
-#: ../../network/manager_connection.go:360
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "Проводное Соединение"
 
-#: ../../network/manager_connection.go:399
+#: ../../network/manager_connection.go:402
 msgid "Wired Connection %v"
 msgstr ""
 
@@ -970,6 +967,11 @@ msgstr "%q соединено"
 msgid "Hotspot disabled"
 msgstr "Точка доступа отключена"
 
+#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../system/bluetooth/utils_notify.go:65
+msgid "%q disconnected"
+msgstr "%q отсоединено"
+
 #: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Не удалось предоставить точку доступа, проверьте настройки dnsmasq"
@@ -1084,6 +1086,21 @@ msgstr "Ваш монитор будет выключен"
 #: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "Ничего не делать с компьютером"
+
+#: ../../system/bluetooth/utils_notify.go:58
+msgid "Connect %q successfully"
+msgstr "%q соединено успешно"
+
+#: ../../system/bluetooth/utils_notify.go:71
+msgid "Make sure %q is turned on and in range"
+msgstr "Убедитесь, что %q включено и доступно"
+
+#: ../../system/bluetooth/utils_notify.go:89
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+"%q больше не может подключено к %q. Попробуйте забыть это устройство и снова"
+" выполнить сопряжение."
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

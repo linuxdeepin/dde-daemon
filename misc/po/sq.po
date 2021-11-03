@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-22 09:30+0800\n"
+"POT-Creation-Date: 2021-11-03 15:14+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2021\n"
 "Language-Team: Albanian (https://www.transifex.com/linuxdeepin/teams/3617/sq/)\n"
@@ -80,12 +80,12 @@ msgstr "Po ujdiset ripërmasim ekrani"
 msgid "Display scaling"
 msgstr "Ripërmasim ekrani"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s është çaktivizuar"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "Hap"
 
@@ -98,54 +98,67 @@ msgid "Fingerprint verification timed out"
 msgstr "Verifikimit të shenjave të gishtit"
 
 #: ../../bluetooth/bluez_profile.go:30
+#: ../../system/bluetooth/bluez_profile.go:30
 msgid "Serial port"
 msgstr "Portë seriale"
 
 #: ../../bluetooth/bluez_profile.go:31
+#: ../../system/bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
 msgstr "Rrjet dial-up"
 
 #: ../../bluetooth/bluez_profile.go:32
+#: ../../system/bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
 msgstr "Pajisje hands-free"
 
 #: ../../bluetooth/bluez_profile.go:33
+#: ../../system/bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
 msgstr "Kanal zëri për hands-free"
 
 #: ../../bluetooth/bluez_profile.go:34
+#: ../../system/bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
 msgstr "Kanal zëri për headset"
 
 #: ../../bluetooth/bluez_profile.go:35
+#: ../../system/bluetooth/bluez_profile.go:35
 msgid "Object push"
 msgstr ""
 
 #: ../../bluetooth/bluez_profile.go:36
+#: ../../system/bluetooth/bluez_profile.go:36
 msgid "File transfer"
 msgstr "Shpërngulje kartelash"
 
 #: ../../bluetooth/bluez_profile.go:37
+#: ../../system/bluetooth/bluez_profile.go:37
 msgid "Synchronization"
 msgstr "Njëkohësim"
 
 #: ../../bluetooth/bluez_profile.go:38
+#: ../../system/bluetooth/bluez_profile.go:38
 msgid "Phone book access"
 msgstr "Hyrje në libër telefonash"
 
 #: ../../bluetooth/bluez_profile.go:39
+#: ../../system/bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
 msgstr "Klient hyrjeje në libër telefonash"
 
 #: ../../bluetooth/bluez_profile.go:40
+#: ../../system/bluetooth/bluez_profile.go:40
 msgid "Message access"
 msgstr "Hyrje në mesazhe"
 
 #: ../../bluetooth/bluez_profile.go:41
+#: ../../system/bluetooth/bluez_profile.go:41
 msgid "Message notification"
 msgstr "Njoftim mesazhesh"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
+#: ../../lastore/lastore.go:409
 msgid "Cancel"
 msgstr "Anuloje"
 
@@ -173,8 +186,8 @@ msgstr "Resht Së Marri Kartela"
 msgid "You have cancelled the file transfer"
 msgstr "E keni anuluar shpërnguljen e kartelave"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../system/bluetooth/utils_notify.go:78
+#: ../../system/bluetooth/utils_notify.go:87
 msgid "Bluetooth connection failed"
 msgstr "Lidhja përmes Bluetooth-it dështoi"
 
@@ -198,35 +211,15 @@ msgstr "%q dëshiron t’ju dërgojë kartela. Të merren?"
 msgid "Receiving %q timed out"
 msgstr "Marrjes së %q i mbaroi koha"
 
-#: ../../bluetooth/utils_notify.go:98
-msgid "Connect %q successfully"
-msgstr "%q u lidh me sukses"
-
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
-#: ../../network/state_handler.go:355
-msgid "%q disconnected"
-msgstr "%q u shkëput"
-
-#: ../../bluetooth/utils_notify.go:108
-msgid "Make sure %q is turned on and in range"
-msgstr "Sigurohuni që %q është hapur dhe brenda intervali"
-
-#: ../../bluetooth/utils_notify.go:117
-msgid ""
-"%q can no longer connect to %q. Try to forget this device and pair it again."
-msgstr ""
-"%q s’mund të lidhet më me %q. Provoni të harrohet kjo pajisje dhe ta çiftoni"
-" sërish."
-
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
 msgstr "Klikoni këtu që të lidhet me %q"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:135
 msgid "Add Bluetooth devices"
 msgstr "Shtoni pajisje Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "Çiftoje"
 
@@ -302,7 +295,7 @@ msgstr "Vonesë fotoje ekrani"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (Nga Figurë në Tekst)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
@@ -352,99 +345,103 @@ msgstr "E papastër"
 msgid "Translation"
 msgstr "Përkthim"
 
-#: ../../keybinding/shortcuts/id_name_map.go:58
+#: ../../keybinding/shortcuts/id_name_map.go:52
+msgid "Global search"
+msgstr "Kërkim global"
+
+#: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
 msgstr "Ndërroni Skemë"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to left workspace"
 msgstr "Kalo te hapësira e punës majtas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to right workspace"
 msgstr "Kalo te hapësira e punës djathtas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to upper workspace"
 msgstr "Kaloje dritaren te hapësira e sipërme e punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to lower workspace"
 msgstr "Kalo te hapësira e poshtme e punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows"
 msgstr "Këmbe dritare të ngjashme"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows in reverse"
 msgstr "Këmbe dritare të ngjashme në të kundërt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows"
 msgstr "Këmbe dritare"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows in reverse"
 msgstr "Këmbe dritare në të kundërt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Show desktop"
 msgstr "Shfaq desktop"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Maximize window"
 msgstr "Maksimizo dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Restore window"
 msgstr "Riktheje dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Minimize window"
 msgstr "Minimizoje dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Close window"
 msgstr "Mbylle dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Move window"
 msgstr "Lëvizeni dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Resize window"
 msgstr "Ripërmasojeni dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to left workspace"
 msgstr "Kaloje te hapësira e punës majtas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to right workspace"
 msgstr "Kaloje te hapësira e punës djathtas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to upper workspace"
 msgstr "Kaloje te hapësira e sipërme e punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to lower workspace"
 msgstr "Kaloje te hapësira e poshtme e punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of all workspaces"
 msgstr "Shfaq dritaret e krejt hapësirave të punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of current workspace"
 msgstr "Shfaq dritaret e hapësirës së tanishme të punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display workspace"
 msgstr "Shfaq hapësirë pune"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Ndërroni monitorë"
 
@@ -472,35 +469,35 @@ msgstr "Gjuha e sistemit u ndryshua, ju lutemi, dilni dhe mandej hyni"
 msgid "Failed to change system language, please try later"
 msgstr "S’u arrit të ndryshohej gjuhë sistemi, ju lutemi, provoni më vonë"
 
-#: ../../lastore/lastore.go:366
+#: ../../lastore/lastore.go:401
 msgid "Retry"
 msgstr "Riprovo"
 
-#: ../../lastore/lastore.go:388
+#: ../../lastore/lastore.go:423
 msgid "Update Now"
 msgstr "Përditësojeni Tani"
 
-#: ../../lastore/lastore.go:418
+#: ../../lastore/lastore.go:453
 msgid "Reboot Now"
 msgstr "Rinisu Tani"
 
-#: ../../lastore/lastore.go:422
+#: ../../lastore/lastore.go:457
 msgid "Remind Me Later"
 msgstr "Kujtoma Më Vonë"
 
-#: ../../lastore/lastore.go:429
+#: ../../lastore/lastore.go:464
 msgid "10 mins later"
 msgstr "10 minuta më vonë"
 
-#: ../../lastore/lastore.go:436
+#: ../../lastore/lastore.go:471
 msgid "30 mins later"
 msgstr "30 minuta më vonë"
 
-#: ../../lastore/lastore.go:443
+#: ../../lastore/lastore.go:478
 msgid "2h later"
 msgstr "2h më vonë"
 
-#: ../../lastore/lastore.go:450
+#: ../../lastore/lastore.go:485
 msgid "6h later"
 msgstr "6h më vonë"
 
@@ -532,8 +529,8 @@ msgid "Package cache wiped"
 msgstr "U spastrua fshehtinë pakete"
 
 #: ../../lastore/notify.go:136
-msgid "New system edition available"
-msgstr "Edicion i ri sistemi gati"
+msgid "Updates Available"
+msgstr ""
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
@@ -564,49 +561,49 @@ msgstr "%q u hoq me sukses"
 msgid "Failed to uninstall %q"
 msgstr "S’u arrit të çinstalohej %q"
 
+#: ../../network/manager_active_conn.go:396
 #: ../../network/manager_active_conn.go:401
-#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "Asnjë"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WEP 40/128-bit Key"
 msgstr "Kyç WEP 40/128-bit"
 
-#: ../../network/manager_active_conn.go:410
+#: ../../network/manager_active_conn.go:405
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Tunneled TLS"
 msgstr "TLS përmes tuneli"
 
-#: ../../network/manager_active_conn.go:428
+#: ../../network/manager_active_conn.go:423
 msgid "Protected EAP"
 msgstr "EAP i mbrojtur"
 
-#: ../../network/manager_connection.go:356
-#: ../../network/manager_connection.go:360
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "Lidhje Me Fill"
 
-#: ../../network/manager_connection.go:399
+#: ../../network/manager_connection.go:402
 msgid "Wired Connection %v"
 msgstr "Lidhje Me Fill %v"
 
@@ -968,6 +965,11 @@ msgstr "%q u lidh"
 msgid "Hotspot disabled"
 msgstr "Hotspot-i u çaktivizua"
 
+#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../system/bluetooth/utils_notify.go:65
+msgid "%q disconnected"
+msgstr "%q u shkëput"
+
 #: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
@@ -1083,6 +1085,21 @@ msgstr "monitori juaj do të fiket"
 #: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "s’do të ndodhë gjë në kompjuterin tuaj"
+
+#: ../../system/bluetooth/utils_notify.go:58
+msgid "Connect %q successfully"
+msgstr "%q u lidh me sukses"
+
+#: ../../system/bluetooth/utils_notify.go:71
+msgid "Make sure %q is turned on and in range"
+msgstr "Sigurohuni që %q është hapur dhe brenda intervali"
+
+#: ../../system/bluetooth/utils_notify.go:89
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+"%q s’mund të lidhet më me %q. Provoni të harrohet kjo pajisje dhe ta çiftoni"
+" sërish."
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-22 09:30+0800\n"
+"POT-Creation-Date: 2021-11-03 15:14+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2021\n"
 "Language-Team: Sinhala (https://www.transifex.com/linuxdeepin/teams/3617/si/)\n"
@@ -78,12 +78,12 @@ msgstr "දර්ශන පරිමාණ සකසමින් පවතී"
 msgid "Display scaling"
 msgstr "දර්ශන පරිමාණය"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "විවෘත කරන්න"
 
@@ -96,54 +96,67 @@ msgid "Fingerprint verification timed out"
 msgstr "ඇඟිලි සලකුණු සත්‍යාපනය කල් ඉකුත් විය"
 
 #: ../../bluetooth/bluez_profile.go:30
+#: ../../system/bluetooth/bluez_profile.go:30
 msgid "Serial port"
 msgstr "ශ්‍රේණිගත කෙවෙනිය - Serial port"
 
 #: ../../bluetooth/bluez_profile.go:31
+#: ../../system/bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
 msgstr "Dial-Up ජාලකරණය"
 
 #: ../../bluetooth/bluez_profile.go:32
+#: ../../system/bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
 msgstr "ඇල්ලීමෙන් තොර- Hands-Free උපාංගය"
 
 #: ../../bluetooth/bluez_profile.go:33
+#: ../../system/bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
 msgstr "ඇල්ලීමෙන් තොර- Hands-Free හඬ ද්වාරය"
 
 #: ../../bluetooth/bluez_profile.go:34
+#: ../../system/bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
 msgstr "හිස මත දරන-headset හඬ ද්වාරය"
 
 #: ../../bluetooth/bluez_profile.go:35
+#: ../../system/bluetooth/bluez_profile.go:35
 msgid "Object push"
 msgstr "වස්තු තල්ලු කරන්න"
 
 #: ../../bluetooth/bluez_profile.go:36
+#: ../../system/bluetooth/bluez_profile.go:36
 msgid "File transfer"
 msgstr "ගොනු හුවමාරුව"
 
 #: ../../bluetooth/bluez_profile.go:37
+#: ../../system/bluetooth/bluez_profile.go:37
 msgid "Synchronization"
 msgstr "සමමුහුර්තකරණය"
 
 #: ../../bluetooth/bluez_profile.go:38
+#: ../../system/bluetooth/bluez_profile.go:38
 msgid "Phone book access"
 msgstr "දුරකථන අංක ප්‍රවේශය"
 
 #: ../../bluetooth/bluez_profile.go:39
+#: ../../system/bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
 msgstr "දුරකථන අංක ප්‍රවේශ සේවාදායකයා"
 
 #: ../../bluetooth/bluez_profile.go:40
+#: ../../system/bluetooth/bluez_profile.go:40
 msgid "Message access"
 msgstr "පණිවිඩ ප්‍රවේශය"
 
 #: ../../bluetooth/bluez_profile.go:41
+#: ../../system/bluetooth/bluez_profile.go:41
 msgid "Message notification"
 msgstr "පණිවිඩ දැනුම්දීම්"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
+#: ../../lastore/lastore.go:409
 msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
@@ -171,8 +184,8 @@ msgstr ""
 msgid "You have cancelled the file transfer"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../system/bluetooth/utils_notify.go:78
+#: ../../system/bluetooth/utils_notify.go:87
 msgid "Bluetooth connection failed"
 msgstr "බ්ලූටූත් සම්බන්ධතාවය අසාර්ථක විය"
 
@@ -196,33 +209,15 @@ msgstr ""
 msgid "Receiving %q timed out"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:98
-msgid "Connect %q successfully"
-msgstr "%q සාර්ථකව සම්බන්ධ කර ඇත."
-
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
-#: ../../network/state_handler.go:355
-msgid "%q disconnected"
-msgstr "%q විසන්ධි විය"
-
-#: ../../bluetooth/utils_notify.go:108
-msgid "Make sure %q is turned on and in range"
-msgstr "%q සක්‍රිය බව සහ පරාසය තුළ ඇති බවට වග බලා ගන්න"
-
-#: ../../bluetooth/utils_notify.go:117
-msgid ""
-"%q can no longer connect to %q. Try to forget this device and pair it again."
-msgstr ""
-
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
 msgstr "%q හා සම්බන්ධ වීමට මෙතන ක්ලික් කරන්න"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:135
 msgid "Add Bluetooth devices"
 msgstr "බ්ලූටූත් උපාංග එක් කරන්න"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "එකිනෙක සම්බන්ධ කරන්න"
 
@@ -347,99 +342,103 @@ msgstr "පසුරු පුවරුව"
 msgid "Translation"
 msgstr "පරිවර්තනය"
 
-#: ../../keybinding/shortcuts/id_name_map.go:58
+#: ../../keybinding/shortcuts/id_name_map.go:52
+msgid "Global search"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
 msgstr "පිරිසැලසුම මාරු කරන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to left workspace"
 msgstr "වම් වැඩ අවකාශය වෙත මාරු වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to right workspace"
 msgstr "දකුණු වැඩ අවකාශය වෙත මාරු වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to upper workspace"
 msgstr "ඉහළ වැඩ අවකාශය වෙත මාරු වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to lower workspace"
 msgstr "පහළ වැඩ අවකාශය වෙත මාරු වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows"
 msgstr "සමාන කවුළු මාරු කරන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows in reverse"
 msgstr "සමාන කවුළු ආපසු හරවන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows"
 msgstr "කවුළු මාරු කරන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows in reverse"
 msgstr "කවුළු ආපසු හරවන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Show desktop"
 msgstr "ඩෙස්ක්ටොප් එක පෙන්වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Maximize window"
 msgstr "කවුළුව දිග හරින්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Restore window"
 msgstr "කවුළුව ප්‍රතිස්ථාපනය කරන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Minimize window"
 msgstr "කවුළුව හකුලවන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Close window"
 msgstr "කවුළුව වසාදමන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Move window"
 msgstr "කවුළුව චලනය කරන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Resize window"
 msgstr "කවුළු පරිමාණ වෙනස් කරන"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to left workspace"
 msgstr "වම් වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to right workspace"
 msgstr "දකුණු වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to upper workspace"
 msgstr "ඉහළ වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to lower workspace"
 msgstr "පහළ වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of all workspaces"
 msgstr "සියලුම වැඩ අවකාශයන්ගේ පවතින කවුළු පෙන්වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of current workspace"
 msgstr "වත්මන් වැඩ අවකාශයේ පවතින කවුළු පෙන්වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display workspace"
 msgstr "වැඩ අවකාශය පෙන්වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr ""
 
@@ -467,35 +466,35 @@ msgstr "පද්ධති භාෂාව වෙනස් වී ඇත, කර
 msgid "Failed to change system language, please try later"
 msgstr "පද්ධති භාෂාව වෙනස් කිරීමට අපොහොසත් විය, කරුණාකර පසුව උත්සාහ කරන්න"
 
-#: ../../lastore/lastore.go:366
+#: ../../lastore/lastore.go:401
 msgid "Retry"
 msgstr "නැවත උත්සාහ කරන්න"
 
-#: ../../lastore/lastore.go:388
+#: ../../lastore/lastore.go:423
 msgid "Update Now"
 msgstr "දැන් යාවත්කාලීන කරන්න"
 
-#: ../../lastore/lastore.go:418
+#: ../../lastore/lastore.go:453
 msgid "Reboot Now"
 msgstr "පද්ධතිය දැන් නැවත අරඹන්න"
 
-#: ../../lastore/lastore.go:422
+#: ../../lastore/lastore.go:457
 msgid "Remind Me Later"
 msgstr ""
 
-#: ../../lastore/lastore.go:429
+#: ../../lastore/lastore.go:464
 msgid "10 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:436
+#: ../../lastore/lastore.go:471
 msgid "30 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:443
+#: ../../lastore/lastore.go:478
 msgid "2h later"
 msgstr ""
 
-#: ../../lastore/lastore.go:450
+#: ../../lastore/lastore.go:485
 msgid "6h later"
 msgstr ""
 
@@ -527,8 +526,8 @@ msgid "Package cache wiped"
 msgstr "පැකේජ වාරක/කෑෂ් මතකය ඉවත් කරන ලදි"
 
 #: ../../lastore/notify.go:136
-msgid "New system edition available"
-msgstr "නව පද්ධති සංස්කරණය ලබා ගත හැක"
+msgid "Updates Available"
+msgstr ""
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
@@ -556,49 +555,49 @@ msgstr "%q සාර්ථකව ඉවත් කර ඇත."
 msgid "Failed to uninstall %q"
 msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
 
+#: ../../network/manager_active_conn.go:396
 #: ../../network/manager_active_conn.go:401
-#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "කිසිවක් නැත"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit යතුර"
 
-#: ../../network/manager_active_conn.go:410
+#: ../../network/manager_active_conn.go:405
 msgid "WPA/WPA2 Personal"
 msgstr "WPA / WPA2 පුද්ගලික"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Tunneled TLS"
 msgstr "උමං TLS"
 
-#: ../../network/manager_active_conn.go:428
+#: ../../network/manager_active_conn.go:423
 msgid "Protected EAP"
 msgstr "ආරක්ෂිත EAP"
 
-#: ../../network/manager_connection.go:356
-#: ../../network/manager_connection.go:360
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "රැහැන් සම්බන්ධතාවය"
 
-#: ../../network/manager_connection.go:399
+#: ../../network/manager_connection.go:402
 msgid "Wired Connection %v"
 msgstr ""
 
@@ -961,6 +960,11 @@ msgstr "%q සම්බන්ධයි"
 msgid "Hotspot disabled"
 msgstr "හොට්ස්පොට් අක්‍රීයයි"
 
+#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../system/bluetooth/utils_notify.go:65
+msgid "%q disconnected"
+msgstr "%q විසන්ධි විය"
+
 #: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "හොට්ස්පොට් බෙදා ගැනීමට නොහැක, කරුණාකර dnsmasq සැකසුම් පරීක්ෂා කරන්න"
@@ -1072,6 +1076,19 @@ msgstr "ඔබගේ මොනිටරය ක්‍රියා විරහි
 #: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "එය ඔබේ පරිගණකයට කිසිවක් නොකරනු ඇත"
+
+#: ../../system/bluetooth/utils_notify.go:58
+msgid "Connect %q successfully"
+msgstr "%q සාර්ථකව සම්බන්ධ කර ඇත."
+
+#: ../../system/bluetooth/utils_notify.go:71
+msgid "Make sure %q is turned on and in range"
+msgstr "%q සක්‍රිය බව සහ පරාසය තුළ ඇති බවට වග බලා ගන්න"
+
+#: ../../system/bluetooth/utils_notify.go:89
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

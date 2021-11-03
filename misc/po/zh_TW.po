@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-22 09:30+0800\n"
+"POT-Creation-Date: 2021-11-03 15:14+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
@@ -82,12 +82,12 @@ msgstr "設定螢幕縮放率"
 msgid "Display scaling"
 msgstr "畫面縮放"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "開放"
 
@@ -100,54 +100,67 @@ msgid "Fingerprint verification timed out"
 msgstr "指紋驗證逾時"
 
 #: ../../bluetooth/bluez_profile.go:30
+#: ../../system/bluetooth/bluez_profile.go:30
 msgid "Serial port"
 msgstr "串列埠"
 
 #: ../../bluetooth/bluez_profile.go:31
+#: ../../system/bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
 msgstr "撥號連線"
 
 #: ../../bluetooth/bluez_profile.go:32
+#: ../../system/bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
 msgstr "免持裝置"
 
 #: ../../bluetooth/bluez_profile.go:33
+#: ../../system/bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
 msgstr "免提語音裝置"
 
 #: ../../bluetooth/bluez_profile.go:34
+#: ../../system/bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
 msgstr "耳機語音裝置"
 
 #: ../../bluetooth/bluez_profile.go:35
+#: ../../system/bluetooth/bluez_profile.go:35
 msgid "Object push"
 msgstr "傳送檔案"
 
 #: ../../bluetooth/bluez_profile.go:36
+#: ../../system/bluetooth/bluez_profile.go:36
 msgid "File transfer"
 msgstr "檔案傳輸"
 
 #: ../../bluetooth/bluez_profile.go:37
+#: ../../system/bluetooth/bluez_profile.go:37
 msgid "Synchronization"
 msgstr "同步"
 
 #: ../../bluetooth/bluez_profile.go:38
+#: ../../system/bluetooth/bluez_profile.go:38
 msgid "Phone book access"
 msgstr "存取電話簿"
 
 #: ../../bluetooth/bluez_profile.go:39
+#: ../../system/bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
 msgstr "電話簿存取客戶端"
 
 #: ../../bluetooth/bluez_profile.go:40
+#: ../../system/bluetooth/bluez_profile.go:40
 msgid "Message access"
 msgstr "存取訊息"
 
 #: ../../bluetooth/bluez_profile.go:41
+#: ../../system/bluetooth/bluez_profile.go:41
 msgid "Message notification"
 msgstr "訊息通知"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
+#: ../../lastore/lastore.go:409
 msgid "Cancel"
 msgstr "取消"
 
@@ -175,8 +188,8 @@ msgstr "文件接收中止"
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../system/bluetooth/utils_notify.go:78
+#: ../../system/bluetooth/utils_notify.go:87
 msgid "Bluetooth connection failed"
 msgstr "藍牙連線失敗"
 
@@ -200,33 +213,15 @@ msgstr "您收到%q發送給您的文件，是否接收？"
 msgid "Receiving %q timed out"
 msgstr "接收%q超時"
 
-#: ../../bluetooth/utils_notify.go:98
-msgid "Connect %q successfully"
-msgstr "成功連線至 %q"
-
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
-#: ../../network/state_handler.go:355
-msgid "%q disconnected"
-msgstr "已斷開到 %q 的連線"
-
-#: ../../bluetooth/utils_notify.go:108
-msgid "Make sure %q is turned on and in range"
-msgstr "確認 %q 已開啟且在範圍內"
-
-#: ../../bluetooth/utils_notify.go:117
-msgid ""
-"%q can no longer connect to %q. Try to forget this device and pair it again."
-msgstr "%q無法與%q再連接，請嘗試忽略此裝置並再次配對。"
-
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
 msgstr "點擊以設定添加%q"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:135
 msgid "Add Bluetooth devices"
 msgstr "添加藍牙裝置"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "配對"
 
@@ -351,99 +346,103 @@ msgstr "剪貼簿"
 msgid "Translation"
 msgstr "文字翻譯"
 
-#: ../../keybinding/shortcuts/id_name_map.go:58
+#: ../../keybinding/shortcuts/id_name_map.go:52
+msgid "Global search"
+msgstr "全域搜尋"
+
+#: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
 msgstr "切換佈局"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to left workspace"
 msgstr "切換到左側工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to right workspace"
 msgstr "切換到右側工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to upper workspace"
 msgstr "切換到頂部工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to lower workspace"
 msgstr "切換到底部工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows"
 msgstr "順向切換相似視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows in reverse"
 msgstr "逆向切換相似視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows"
 msgstr "順向切換視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows in reverse"
 msgstr "逆向切換視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Show desktop"
 msgstr "顯示桌面"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Maximize window"
 msgstr "最大化視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Restore window"
 msgstr "還原視窗大小"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Minimize window"
 msgstr "最小化視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Close window"
 msgstr "關閉視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Move window"
 msgstr "移動視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Resize window"
 msgstr "調整視窗大小"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to left workspace"
 msgstr "移動到左側工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to right workspace"
 msgstr "移動到右側工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to upper workspace"
 msgstr "移動到頂部工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to lower workspace"
 msgstr "移動到底部工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of all workspaces"
 msgstr "檢視所有工作區的視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of current workspace"
 msgstr "僅顯示目前工作區視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display workspace"
 msgstr "顯示工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "多屏切換"
 
@@ -469,35 +468,35 @@ msgstr "已變更系統語言，請重新登入以套用變更"
 msgid "Failed to change system language, please try later"
 msgstr "無法變更系統語言，請稍候再試"
 
-#: ../../lastore/lastore.go:366
+#: ../../lastore/lastore.go:401
 msgid "Retry"
 msgstr "重試"
 
-#: ../../lastore/lastore.go:388
+#: ../../lastore/lastore.go:423
 msgid "Update Now"
 msgstr "立刻更新"
 
-#: ../../lastore/lastore.go:418
+#: ../../lastore/lastore.go:453
 msgid "Reboot Now"
 msgstr "立刻重啟"
 
-#: ../../lastore/lastore.go:422
+#: ../../lastore/lastore.go:457
 msgid "Remind Me Later"
 msgstr "稍後提醒"
 
-#: ../../lastore/lastore.go:429
+#: ../../lastore/lastore.go:464
 msgid "10 mins later"
 msgstr "10分鐘後提醒"
 
-#: ../../lastore/lastore.go:436
+#: ../../lastore/lastore.go:471
 msgid "30 mins later"
 msgstr "30分鐘後提醒"
 
-#: ../../lastore/lastore.go:443
+#: ../../lastore/lastore.go:478
 msgid "2h later"
 msgstr "2小時後提醒"
 
-#: ../../lastore/lastore.go:450
+#: ../../lastore/lastore.go:485
 msgid "6h later"
 msgstr "6小時後提醒"
 
@@ -527,8 +526,8 @@ msgid "Package cache wiped"
 msgstr "已清除軟體包快取"
 
 #: ../../lastore/notify.go:136
-msgid "New system edition available"
-msgstr "有新系統版本可供使用"
+msgid "Updates Available"
+msgstr "檢測到有更新可用"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
@@ -556,49 +555,49 @@ msgstr "%q 解除安裝成功"
 msgid "Failed to uninstall %q"
 msgstr "%q 解除安裝失敗"
 
+#: ../../network/manager_active_conn.go:396
 #: ../../network/manager_active_conn.go:401
-#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "無"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit 金鑰"
 
-#: ../../network/manager_active_conn.go:410
+#: ../../network/manager_active_conn.go:405
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 個人使用者"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Tunneled TLS"
 msgstr "隧道 TLS"
 
-#: ../../network/manager_active_conn.go:428
+#: ../../network/manager_active_conn.go:423
 msgid "Protected EAP"
 msgstr "受保護 EAP"
 
-#: ../../network/manager_connection.go:356
-#: ../../network/manager_connection.go:360
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "有線網路"
 
-#: ../../network/manager_connection.go:399
+#: ../../network/manager_connection.go:402
 msgid "Wired Connection %v"
 msgstr "有線網路 %v"
 
@@ -954,6 +953,11 @@ msgstr "已連線到 %q 網路"
 msgid "Hotspot disabled"
 msgstr "已停用熱點"
 
+#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../system/bluetooth/utils_notify.go:65
+msgid "%q disconnected"
+msgstr "已斷開到 %q 的連線"
+
 #: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "無法分享熱點，請檢查 dnsmasq 設定"
@@ -1061,6 +1065,19 @@ msgstr "修改為關閉顯示器"
 #: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "修改為無任何操作"
+
+#: ../../system/bluetooth/utils_notify.go:58
+msgid "Connect %q successfully"
+msgstr "成功連線至 %q"
+
+#: ../../system/bluetooth/utils_notify.go:71
+msgid "Make sure %q is turned on and in range"
+msgstr "確認 %q 已開啟且在範圍內"
+
+#: ../../system/bluetooth/utils_notify.go:89
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr "%q無法與%q再連接，請嘗試忽略此裝置並再次配對。"
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

@@ -6,6 +6,7 @@
 # Translators:
 # Cindy0514, 2021
 # tsewang baljor <bdcwbj@163.com>, 2021
+# Thupten 123 <2389588952@qq.com>, 2021
 # yeshe lhamo <981611630@qq.com>, 2021
 # 
 #, fuzzy
@@ -13,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-22 09:30+0800\n"
+"POT-Creation-Date: 2021-11-03 15:14+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: yeshe lhamo <981611630@qq.com>, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
@@ -79,12 +80,12 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་སྒྲ
 msgid "Display scaling"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%sབཀག་ཟིན།"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
 msgid "Open"
 msgstr "ཁ་ཕྱེ་བ།"
 
@@ -97,54 +98,67 @@ msgid "Fingerprint verification timed out"
 msgstr "མཛུབ་རིས་ར་སྤྲོད་ཀྱི་དུས་ཡུན་བརྒལ་སོང་།"
 
 #: ../../bluetooth/bluez_profile.go:30
+#: ../../system/bluetooth/bluez_profile.go:30
 msgid "Serial port"
 msgstr "ཕྲེང་བགྲོད་མཐུད་སྣེ།"
 
 #: ../../bluetooth/bluez_profile.go:31
+#: ../../system/bluetooth/bluez_profile.go:31
 msgid "Dial-Up networking"
 msgstr "ཨང་གནོན་དྲ་རྒྱ།"
 
 #: ../../bluetooth/bluez_profile.go:32
+#: ../../system/bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
 msgstr "རྒྱང་ཉན་སྒྲིག་ཆས།"
 
 #: ../../bluetooth/bluez_profile.go:33
+#: ../../system/bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
 msgstr "རྒྱང་ཉན་དྲ་སྒོ།"
 
 #: ../../bluetooth/bluez_profile.go:34
+#: ../../system/bluetooth/bluez_profile.go:34
 msgid "Headset voice gateway"
 msgstr "ཉན་ཆས་དྲ་སྒོ།"
 
 #: ../../bluetooth/bluez_profile.go:35
+#: ../../system/bluetooth/bluez_profile.go:35
 msgid "Object push"
 msgstr "དམིགས་ཡུལ་བརྗེ་བ།"
 
 #: ../../bluetooth/bluez_profile.go:36
+#: ../../system/bluetooth/bluez_profile.go:36
 msgid "File transfer"
 msgstr "ཡིག་ཆ་སྐྱེལ་གཏོང་།"
 
 #: ../../bluetooth/bluez_profile.go:37
+#: ../../system/bluetooth/bluez_profile.go:37
 msgid "Synchronization"
 msgstr "མཉམ་བགྲོད།"
 
 #: ../../bluetooth/bluez_profile.go:38
+#: ../../system/bluetooth/bluez_profile.go:38
 msgid "Phone book access"
 msgstr "ཁ་པར་ཨང་དེབ་ལྟ་སྤྱོད།"
 
 #: ../../bluetooth/bluez_profile.go:39
+#: ../../system/bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
 msgstr "ཁ་པར་ཨང་དེབ་ལྟ་སྤྱོད་ཀྱི་མཁོ་མཁན་ཕྱོགས།"
 
 #: ../../bluetooth/bluez_profile.go:40
+#: ../../system/bluetooth/bluez_profile.go:40
 msgid "Message access"
 msgstr "བརྡ་འཕྲིན་ལྟ་སྤྱོད།"
 
 #: ../../bluetooth/bluez_profile.go:41
+#: ../../system/bluetooth/bluez_profile.go:41
 msgid "Message notification"
 msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 
-#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:374
+#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
+#: ../../lastore/lastore.go:409
 msgid "Cancel"
 msgstr "འདོར་བ། "
 
@@ -172,8 +186,8 @@ msgstr "ཡིག་ཆ་ལེན་མཚམས་བཞག་པ།"
 msgid "You have cancelled the file transfer"
 msgstr "ཁྱེད་ཀྱིས་ཡིག་ཆ་ལེན་རྒྱུ་རྩིས་མེད་དུ་བཏང་བ།"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
-#: ../../bluetooth/utils_notify.go:118
+#: ../../bluetooth/obex_agent.go:381 ../../system/bluetooth/utils_notify.go:78
+#: ../../system/bluetooth/utils_notify.go:87
 msgid "Bluetooth connection failed"
 msgstr "སོ་སྔོན་འབྲེལ་མཐུད་ཆད་པ།"
 
@@ -197,35 +211,15 @@ msgstr "ཁྱེད་ལ་%qཀྱིས་བསྐུར་བའི་ཡ�
 msgid "Receiving %q timed out"
 msgstr "%qལེན་པ་དུས་ཚོད་ལས་བརྒལ་བ།"
 
-#: ../../bluetooth/utils_notify.go:98
-msgid "Connect %q successfully"
-msgstr "%qའབྲེལ་ཐུབ་པ།"
-
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
-#: ../../network/state_handler.go:355
-msgid "%q disconnected"
-msgstr "%qབཅད་ཟིན།"
-
-#: ../../bluetooth/utils_notify.go:108
-msgid "Make sure %q is turned on and in range"
-msgstr "%qཁ་ཕྱེ་བ་མ་ཟད་འཕྲིན་སྐྱེལ་གྱི་ཁྱབ་ཁོངས་ནང་ཡོད་མིན་གཏན་ཁེལ་བྱེད་རོགས།"
-
-#: ../../bluetooth/utils_notify.go:117
-msgid ""
-"%q can no longer connect to %q. Try to forget this device and pair it again."
-msgstr ""
-"%qའདི་%qདང་ཡང་བསྐྱར་སྦྲེལ་ཐབས་བྲལ། "
-"སྒྲིག་ཆས་འདི་ཉིད་སྣང་མེད་དུ་བཏང་ནས་ཡང་བསྐྱར་ཆ་སྡེབ་བྱེད།"
-
-#: ../../bluetooth/utils_notify.go:151
+#: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
 msgstr "མནན་ནས་སྒྲིག་འགོད་བྱས་ཏེ་%qསྣོན་པ།"
 
-#: ../../bluetooth/utils_notify.go:152
+#: ../../bluetooth/utils_notify.go:135
 msgid "Add Bluetooth devices"
 msgstr "སོ་སྔོན་སྒྲིག་ཆས་སྣོན་པ།"
 
-#: ../../bluetooth/utils_notify.go:162
+#: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "ཆ་སྒྲིག་པ།"
 
@@ -300,11 +294,11 @@ msgstr "དུས་འགྱངས་བཅད་ལེན།"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "པར་རིས་ངོས་འཛིན།(Image to Text)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
-msgstr ""
+msgstr "དྲས་རིས་འགྲིལ་བ།"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
@@ -350,99 +344,103 @@ msgstr "དྲས་སྦྱར་པང་།"
 msgid "Translation"
 msgstr "ཡིག་ཆ་ཡིག་སྒྱུར།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:58
+#: ../../keybinding/shortcuts/id_name_map.go:52
+msgid "Global search"
+msgstr "ཁྱོན་ཡོངས་ནས་འཚོལ་བ།"
+
+#: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
 msgstr "མཐེབ་གཞོང་བཀོད་པ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch similar windows"
 msgstr "རིགས་གཅིག་འདྲའི་སྒེའུ་ཁུང་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows in reverse"
 msgstr "རིགས་གཅིག་འདྲའི་སྒེའུ་ཁུང་ལྡོག་ཕྱོགས་སུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows"
 msgstr "སྒེའུ་ཁུང་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows in reverse"
 msgstr "སྒེའུ་ཁུང་ལྡོག་ཕྱོགས་སུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Show desktop"
 msgstr "མངོན་སྟོན་ཅོག་ངོས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Maximize window"
 msgstr "སྒེའུ་ཁུང་ཆེ་ཤོས་སུ་ཕྱེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Restore window"
 msgstr "སྒེའུ་ཁུང་སོར་ཆུད་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Minimize window"
 msgstr "སྒེའུ་ཁུང་ཆུང་ཤོས་སུ་འགྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Close window"
 msgstr "སྒེའུ་ཁུང་བརྒྱབ་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Move window"
 msgstr "སྒེའུ་ཁུང་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Resize window"
 msgstr "སྒེའུ་ཁུང་གི་ཆེ་ཆུང་སྒྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of all workspaces"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་ཆ་ཚང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of current workspace"
 msgstr "མིག་སྔའི་ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display workspace"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 
@@ -470,37 +468,37 @@ msgid "Failed to change system language, please try later"
 msgstr ""
 "རྒྱུད་ཁོངས་སྐད་ཡིག་བརྗེ་མི་ཐུབ་པས་ཏོག་ཙམ་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་རོགས།"
 
-#: ../../lastore/lastore.go:366
+#: ../../lastore/lastore.go:401
 msgid "Retry"
 msgstr "ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་པ།"
 
-#: ../../lastore/lastore.go:388
+#: ../../lastore/lastore.go:423
 msgid "Update Now"
 msgstr "ལམ་སེང་གསར་སྒྱུར་བྱེད།"
 
-#: ../../lastore/lastore.go:418
+#: ../../lastore/lastore.go:453
 msgid "Reboot Now"
 msgstr "ལམ་སེང་བསྐྱར་སློང་བྱེད།"
 
-#: ../../lastore/lastore.go:422
+#: ../../lastore/lastore.go:457
 msgid "Remind Me Later"
-msgstr ""
+msgstr "ཏོག་ཙམ་ནས་དྲན་སྐུལ་བྱེད།"
 
-#: ../../lastore/lastore.go:429
+#: ../../lastore/lastore.go:464
 msgid "10 mins later"
-msgstr ""
+msgstr "སྐར་མ་10རྗེས་དྲན་སྐུལ་བྱེད།"
 
-#: ../../lastore/lastore.go:436
+#: ../../lastore/lastore.go:471
 msgid "30 mins later"
-msgstr ""
+msgstr "སྐར་མ་30རྗེས་དྲན་སྐུལ་བྱེད།"
 
-#: ../../lastore/lastore.go:443
+#: ../../lastore/lastore.go:478
 msgid "2h later"
-msgstr ""
+msgstr "ཆུ་ཚོད་2རྗེས་དྲན་སྐུལ་བྱེད།"
 
-#: ../../lastore/lastore.go:450
+#: ../../lastore/lastore.go:485
 msgid "6h later"
-msgstr ""
+msgstr "ཆུ་ཚོད་6རྗེས་དྲན་སྐུལ་བྱེད།"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
@@ -530,12 +528,12 @@ msgid "Package cache wiped"
 msgstr "མཉེན་ཆས་ཐུམ་བུ་གཙང་སེལ་ལེགས་གྲུབ་བྱུང་།"
 
 #: ../../lastore/notify.go:136
-msgid "New system edition available"
-msgstr "རྒྱུད་ཁོངས་ཀྱི་པར་གཞི་གསར་པ་འདུག"
+msgid "Updates Available"
+msgstr ""
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
-msgstr ""
+msgstr "གསར་དུ་སྒྱུར་རྗེས་ཡང་བསྐྱར་འགོ་སློང་བ།"
 
 #: ../../lastore/notify.go:142
 msgid "Restart the computer to use the system and applications properly"
@@ -547,6 +545,8 @@ msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
+"པར་གཞི་གསར་དུ་སྒྱུར་བཞིན་ཡོད། ཁྱེད་ཀྱི་གློག་50%ལས་མེད་པས། "
+"གློག་ཁུངས་དང་གཏུག་རོགས།"
 
 #: ../../lastore/notify.go:153
 msgid "OK"
@@ -560,49 +560,49 @@ msgstr "%qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
+#: ../../network/manager_active_conn.go:396
 #: ../../network/manager_active_conn.go:401
-#: ../../network/manager_active_conn.go:406
 msgid "None"
 msgstr "མེད།"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WEP 40/128-bit Key"
 msgstr "གསང་ལྡེ་གནས་WEP40/128"
 
-#: ../../network/manager_active_conn.go:410
+#: ../../network/manager_active_conn.go:405
 msgid "WPA/WPA2 Personal"
 msgstr "སྒེར་གྱི་པར་གཞི་WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Tunneled TLS"
 msgstr "ཕུག་ལམ་TLS"
 
-#: ../../network/manager_active_conn.go:428
+#: ../../network/manager_active_conn.go:423
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
-#: ../../network/manager_connection.go:356
-#: ../../network/manager_connection.go:360
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
-#: ../../network/manager_connection.go:399
+#: ../../network/manager_connection.go:402
 msgid "Wired Connection %v"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད་%v"
 
@@ -960,6 +960,11 @@ msgstr "འབྲེལ་མཐུད་ཟིན་%q"
 msgid "Hotspot disabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་བརྒྱབ་ཟིན།"
 
+#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../system/bluetooth/utils_notify.go:65
+msgid "%q disconnected"
+msgstr "%qབཅད་ཟིན།"
+
 #: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
@@ -1073,6 +1078,21 @@ msgstr "མངོན་ཆས་སྒོ་བརྒྱབ་ཅེས་པར
 #: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
 msgstr "བཀོལ་སྤྱོད་གང་ཡང་བྱས་མེད་པར་བཟོ་བཅོས་བྱེད།"
+
+#: ../../system/bluetooth/utils_notify.go:58
+msgid "Connect %q successfully"
+msgstr "%qའབྲེལ་ཐུབ་པ།"
+
+#: ../../system/bluetooth/utils_notify.go:71
+msgid "Make sure %q is turned on and in range"
+msgstr "%qཁ་ཕྱེ་བ་མ་ཟད་འཕྲིན་སྐྱེལ་གྱི་ཁྱབ་ཁོངས་ནང་ཡོད་མིན་གཏན་ཁེལ་བྱེད་རོགས།"
+
+#: ../../system/bluetooth/utils_notify.go:89
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+"%qའདི་%qདང་ཡང་བསྐྱར་སྦྲེལ་ཐབས་བྲལ། "
+"སྒྲིག་ཆས་འདི་ཉིད་སྣང་མེད་དུ་བཏང་ནས་ཡང་བསྐྱར་ཆ་སྡེབ་བྱེད།"
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
