@@ -2,8 +2,10 @@ package accounts
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/user"
@@ -161,14 +163,16 @@ func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
 	path := filepath.Join("/run", "user", user.Uid)
 	err = os.Mkdir(path, os.FileMode(0700))
 	if err != nil {
-		if err == os.ErrExist {
+		if os.IsExist(err) {
 			logger.Warningf("path %s existed, remove it now", path)
 			err = os.RemoveAll(path)
 			if err != nil {
 				err = fmt.Errorf("fail to remove existed dir that hold .Xauthority: %v", err)
 				return
 			}
-		} else {
+			err = os.Mkdir(path, os.FileMode(0700))
+		}
+		if err != nil {
 			err = fmt.Errorf("fail to create dir that hold .Xauthority: %v", err)
 			return
 		}
@@ -227,13 +231,20 @@ func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
 		return
 	}
 
-	args := append(
-		[]string{"-u", pwdChangerUserName, "--", "xauth", "add"},
-		strings.FieldsFunc(
-			lines[len(lines)-2], // last line is an extra '\n'
-			func(c rune) bool {
-				return c == ' '
-			})...)
+	args := []string{"-u", pwdChangerUserName, "--", "xauth", "add"}
+	found := false
+	for _, line := range lines {
+		fields := strings.Split(line, "  ")
+		if strings.HasSuffix(fields[0], caller.display) {
+			found = true
+			args = append(args, fields...)
+			break
+		}
+	}
+	if !found {
+		err = fmt.Errorf("fail to get xauth cookie of caller, no display match")
+		return
+	}
 
 	cmd = exec.Command("runuser", args...) //#nosec G204
 	cmd.Env = append(cmd.Env, "XAUTHORITY="+xauthPath)
@@ -302,17 +313,23 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 	// -u 用户的 UUID
 	// -a 应用类型
 
-	cmd := exec.Command("runuser", "-u", "--", pwdChanger.user.Username, "/usr/lib/dde-control-center/reset-password-dialog", "-u", u.UUID, "-a", caller.app) //#nosec G204
+	cmd := exec.Command("runuser", "-u", pwdChanger.user.Username, "--", "/usr/lib/dde-control-center/reset-password-dialog", "-u", u.UUID, "-a", caller.app) //#nosec G204
 
-	in, err := cmd.StdinPipe()
+	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		err = fmt.Errorf("get stdinpipe failed: %v", err)
 		return
 	}
 
-	out, err := cmd.StdoutPipe()
+	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		err = fmt.Errorf("get stdoutpipe failed: %v", err)
+		return
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		err = fmt.Errorf("get stderrpipe failed: %v", err)
 		return
 	}
 
@@ -332,8 +349,19 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 		return
 	}
 
-	r := bufio.NewReader(out)
-	w := bufio.NewWriter(in)
+	r := bufio.NewReader(stdout)
+	w := bufio.NewWriter(stdin)
+	e := bufio.NewReader(stderr)
+
+	buf := bytes.NewBuffer([]byte{})
+	end := make(chan struct{}, 1)
+	go func() {
+		_, err := io.Copy(buf, e)
+		if err != nil {
+			logger.Warningf("fail to get stderr of reset-password-dialog: %v", err)
+		}
+		end <- struct{}{}
+	}()
 
 	// 如果以上的过程失败了, defer 会将刚创建的文件夹删掉.
 	// 如果成功了, 那么我们将 pwdChanger 置为空, 延迟到对话框结束运行再删除资源.
@@ -350,7 +378,8 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 			}
 			err = cmd.Wait()
 			if err != nil {
-				logger.Warningf("reset-password-dialog exited with %v", err)
+				<-end
+				logger.Warningf("reset-password-dialog exited: %v\nstderr:\n%v", err, buf)
 			}
 		}()
 		line, err := r.ReadString('\n')
