@@ -2,6 +2,7 @@ PREFIX = /usr
 GOPATH_DIR = gopath
 GOPKG_PREFIX = pkg.deepin.io/dde/daemon
 GOBUILD = go build $(GO_BUILD_FLAGS)
+export GO111MODULE=off
 
 BINARIES =  \
 	    dde-session-daemon \
