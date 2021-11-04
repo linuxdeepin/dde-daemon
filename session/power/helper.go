@@ -26,7 +26,6 @@ import (
 
 	// system bus
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
-	powermanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.powermanager"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	libpower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	sensorproxy "github.com/linuxdeepin/go-dbus-factory/net.hadess.sensorproxy"
@@ -56,7 +55,6 @@ type Helper struct {
 	ShutdownFront  shutdownfront.ShutdownFront
 	ScreenSaver    screensaver.ScreenSaver // sig
 	Display        display.Display
-	PowerManager   powermanager.PowerManager
 
 	xConn *x.Conn
 }
@@ -85,7 +83,6 @@ func (h *Helper) init(sysBus, sessionBus *dbus.Conn) error {
 	h.Display = display.NewDisplay(sessionBus)
 	h.SessionWatcher = sessionwatcher.NewSessionWatcher(sessionBus)
 	h.ShutdownFront = shutdownfront.NewShutdownFront(sessionBus)
-	h.PowerManager = powermanager.NewPowerManager(sysBus)
 
 	// init X conn
 	h.xConn, err = x.NewConn()

@@ -29,9 +29,9 @@ import (
 	"strconv"
 
 	dbus "github.com/godbus/dbus"
-	powermanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.powermanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
+
 	"pkg.deepin.io/dde/daemon/keybinding/util"
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/strv"
@@ -337,30 +337,5 @@ func undoPrepareSuspend() {
 	err := obj.Call("com.deepin.daemon.Power.SetPrepareSuspend", 0, suspendStateFinish).Err
 	if err != nil {
 		logger.Warning(err)
-	}
-}
-
-func (m *Manager) doSetSuspendToHibernateTime(timeMinute int32) {
-	logger.Infof("doSetSuspendToHibernateTime :%v", timeMinute)
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		logger.Warning("connect to system bus failed:", err)
-		return
-	}
-	powerManager := powermanager.NewPowerManager(systemBus)
-	can, err := powerManager.CanSuspendToHibernate(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	if !can {
-		logger.Info("can not support suspend to hibernateTime")
-		return
-	}
-
-	err = powerManager.SetSuspendToHibernateTime(0, timeMinute)
-	if err != nil {
-		logger.Warning("failed to SetSuspendToHibernateTime:", err)
 	}
 }
