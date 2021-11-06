@@ -31,13 +31,13 @@ import (
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
 	keyevent "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.keyevent"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
-	ses_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.network"
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
@@ -118,6 +118,7 @@ type Manager struct {
 	systemSigLoop             *dbusutil.SignalLoop
 	startManager              sessionmanager.StartManager
 	sessionManager            sessionmanager.SessionManager
+	nmManager                 networkmanager.Manager
 	backlightHelper           backlight.Backlight
 	keyboard                  inputdevices.Keyboard
 	keyboardLayout            string
@@ -276,6 +277,7 @@ func (m *Manager) init() {
 	m.mediaPlayerController = NewMediaPlayerController(m.systemSigLoop, sessionBus)
 
 	m.startManager = sessionmanager.NewStartManager(sessionBus)
+	m.nmManager = networkmanager.NewManager(sysBus)
 	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
 	m.keyboard = inputdevices.NewKeyboard(sessionBus)
 	m.keyboard.InitSignalExt(m.sessionSigLoop, true)
@@ -293,6 +295,21 @@ func (m *Manager) init() {
 	if err != nil {
 		logger.Warning("connect CurrentLayout property changed failed:", err)
 	}
+
+	// check wireless enabled state change
+	m.nmManager.InitSignalExt(m.systemSigLoop, true)
+	err = m.nmManager.WirelessEnabled().ConnectChanged(func(hasValue bool, value bool) {
+		if !hasValue {
+			logger.Warningf("wireless enabled state changed without value")
+			return
+		}
+		// wireless enabled
+		if value {
+			showOSD("WLANOn")
+		} else {
+			showOSD("WLANOff")
+		}
+	})
 
 	m.displayController = NewDisplayController(m.backlightHelper, sessionBus)
 	m.kbdLightController = NewKbdLightController(m.backlightHelper)
@@ -674,60 +691,14 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 		}
 
 	} else if action.Type == shortcuts.ActionTypeToggleWireless {
+		// check if allow set wireless
 		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) {
-			sessionBus, err := dbus.SessionBus()
+			err := m.nmManager.WirelessEnabled().Set(0, false)
 			if err != nil {
-				logger.Warning(err)
+				logger.Warningf("set wireless enabled failed, err: %v", err)
 				return
-			}
-			obj := ses_network.NewNetwork(sessionBus)
-			connWifi, err := obj.Devices().Get(0)
-			wifiPre := "\"wireless\":[{\"Path\":\"/org/freedesktop/NetworkManager/Devices/"
-			i := strings.Index(connWifi, wifiPre)
-			if i < 0 {
-				return
-			}
-
-			lenwifi := "\"wireless\":[{\"Path\":\""
-			devpath := connWifi[i+len(lenwifi) : i+len(wifiPre)+1]
-			enabled := false
-			if ret, err := obj.IsDeviceEnabled(0, dbus.ObjectPath(devpath)); ret {
-				enabled = true
-				if err != nil {
-					logger.Warning(err)
-					return
-				}
-			}
-
-			if false == m.delayNetworkStateChange {
-				return
-			}
-			m.delayNetworkStateChange = false
-			time.Sleep(500 * time.Millisecond) //+ 与前端的延时对应
-			m.delayNetworkStateChange = true
-
-			if enabled {
-				//add to avoid conflict with contorl-center
-				time.Sleep(500 * time.Millisecond)
-				obj.EnableDevice(0, dbus.ObjectPath(devpath), false)
-				showOSD("WLANOff")
-			} else {
-				obj.EnableDevice(0, dbus.ObjectPath(devpath), true)
-				showOSD("WLANOn")
-			}
-		} else {
-			state, err := getRfkillWlanState()
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-			if state == 0 {
-				showOSD("WLANOff")
-			} else {
-				showOSD("WLANOn")
 			}
 		}
-
 	} else if action.Type == shortcuts.ActionTypeShowNumLockOSD {
 		var state NumLockState
 		if !isWaylandGrabed {
