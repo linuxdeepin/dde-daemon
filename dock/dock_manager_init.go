@@ -275,7 +275,7 @@ func (m *Manager) init() error {
 	m.entryDealChan = make(chan func(), 64)
 	go m.accessEntries()
 
-	if strings.Contains(sessionType, "X11") {
+	if strings.Contains(sessionType, "x11") {
 		go m.eventHandleLoop()
 		m.listenRootWindowXEvent()
 	}
