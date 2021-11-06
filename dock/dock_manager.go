@@ -23,6 +23,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -485,10 +487,14 @@ func (m *Manager) findWindowByXidK(win x.Window) (winInfo WindowInfoImp) {
 func (m *Manager) findWindowByXid(win x.Window) (winInfo WindowInfoImp) {
 	winInfo = m.findWindowByXidX(win)
 	if winInfo != nil {
-		return
+		return winInfo
 	}
 
-	return m.findWindowByXidK(win)
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		return m.findWindowByXidK(win)
+	}
+	return
 }
 
 func (m *Manager) findXWindowInfo(win x.Window) *WindowInfo {
