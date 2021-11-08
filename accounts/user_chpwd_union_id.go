@@ -15,6 +15,7 @@ import (
 	"syscall"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
 	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/dde/daemon/accounts/users"
 	"pkg.deepin.io/lib/dbusutil"
@@ -399,6 +400,14 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 			return
 		}
 
+		auth := authenticate.NewAuthenticate(u.service.Conn())
+		err = auth.ResetLimits(0, u.UserName)
+		if err != nil {
+			logger.Warningf("set password with union ID: fail to reset limits: %v", err)
+			_, _ = w.Write([]byte(fmt.Sprintf("fail to reset limits: %v\n", err)))
+			_ = w.Flush()
+			return
+		}
 		_, err = w.Write([]byte("success\n"))
 		_ = w.Flush()
 		if err != nil {
