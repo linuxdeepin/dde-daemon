@@ -38,6 +38,18 @@ func (b *Bluetooth) DisconnectDevice(device dbus.ObjectPath) *dbus.Error {
 	return nil
 }
 
+func (b *Bluetooth) DisconnectAllDevices() *dbus.Error {
+	for aPath, _ := range b.adapters {
+		for _, d := range b.connectedDevices[aPath] {
+			if d.connected {
+				d.Disconnect()
+			}
+		}
+	}
+
+	return nil
+}
+
 func (b *Bluetooth) RemoveDevice(adapter, device dbus.ObjectPath) *dbus.Error {
 	a, err := b.getAdapter(adapter)
 	if err != nil {

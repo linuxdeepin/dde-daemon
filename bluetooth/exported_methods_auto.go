@@ -33,6 +33,10 @@ func (v *Bluetooth) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"info"},
 		},
 		{
+			Name: "DisconnectAllDevices",
+			Fn:   v.DisconnectAllDevices,
+		},
+		{
 			Name:   "DisconnectDevice",
 			Fn:     v.DisconnectDevice,
 			InArgs: []string{"device"},
