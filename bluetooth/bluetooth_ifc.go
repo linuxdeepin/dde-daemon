@@ -38,7 +38,7 @@ func (b *Bluetooth) DisconnectDevice(device dbus.ObjectPath) *dbus.Error {
 	return nil
 }
 
-func (b *Bluetooth) DisConnectAllDevices() *dbus.Error {
+func (b *Bluetooth) DisconnectAllDevices() *dbus.Error {
 	for aPath, _ := range b.adapters {
 		for _, d := range b.connectedDevices[aPath] {
 			if d.connected {
