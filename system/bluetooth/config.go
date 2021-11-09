@@ -40,6 +40,7 @@ type config struct {
 
 type adapterConfig struct {
 	Powered bool
+	Discoverable bool
 }
 
 type deviceConfig struct {
@@ -87,7 +88,7 @@ func (c *config) save() {
 }
 
 func newAdapterConfig() (ac *adapterConfig) {
-	ac = &adapterConfig{Powered: false}
+	ac = &adapterConfig{Powered: false, Discoverable: true}
 	return
 }
 
@@ -168,6 +169,24 @@ func (c *config) setAdapterConfigPowered(address string, powered bool) {
 	c.core.Lock()
 	if ac, ok := c.Adapters[address]; ok {
 		ac.Powered = powered
+	}
+	c.core.Unlock()
+	c.save()
+}
+
+func (c *config) getAdapterConfigDiscoverable(address string) (discoverable bool) {
+	c.core.Lock()
+	defer c.core.Unlock()
+	if ac, ok := c.Adapters[address]; ok {
+		return ac.Discoverable
+	}
+	return false
+}
+
+func (c *config) setAdapterConfigDiscoverable(address string, discoverable bool) {
+	c.core.Lock()
+	if ac, ok := c.Adapters[address]; ok {
+		ac.Discoverable = discoverable
 	}
 	c.core.Unlock()
 	c.save()

@@ -702,12 +702,12 @@ func (b *SysBluetooth) addAdapter(adapterPath dbus.ObjectPath) {
 		logger.Warning(err)
 	}
 
-	//if cfgPowered {
-	//err = a.core.Adapter().Discoverable().Set(0, b.config.Discoverable)
-	//if err != nil {
-	//	logger.Warning(err)
-	//}
-	//}
+	// 读取配置文件中可被发现状态值，并修改Discoverable属性值，默认为true
+	discoverable := b.config.getAdapterConfigDiscoverable(a.Address)
+	err = a.core.Adapter().Discoverable().Set(0, discoverable)
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	b.adaptersMu.Lock()
 	b.adapters[adapterPath] = a

@@ -47,7 +47,8 @@ type adapter struct {
 	// 扫描完成
 	discoveringFinished                 bool
 	scanReadyToConnectDeviceTimeoutFlag bool
-	waitDiscovery                       bool
+	// waitDiscovery未使用
+	// waitDiscovery                       bool
 }
 
 var defaultDiscoveringTimeout = 1 * time.Minute
@@ -59,7 +60,7 @@ func newAdapter(systemSigLoop *dbusutil.SignalLoop, objPath dbus.ObjectPath) (a 
 	a.core.InitSignalExt(systemSigLoop, true)
 	a.connectProperties()
 	a.Address, _ = a.core.Adapter().Address().Get(0)
-	a.waitDiscovery = true
+	// a.waitDiscovery = true
 	// 用于定时停止扫描
 	a.discoveringTimer = time.AfterFunc(defaultDiscoveringTimeout, func() {
 		logger.Debug("discovery time out, stop discovering")
@@ -176,9 +177,11 @@ func (a *adapter) connectProperties() {
 				if err != nil {
 					logger.Warningf("failed to stop discovery for %s: %v", a, err)
 				}
-				a.waitDiscovery = true
+				// a.waitDiscovery = true
 				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
 				_bt.tryConnectPairedDevices(a.Path)
+				// 需要在我的设备全部重连完成后，才开始扫描，当前tryConnectPairedDevices异步，后续需要修改
+				// a.startDiscovery()
 			}()
 		} else {
 			// if power off, stop discovering time out
@@ -253,7 +256,7 @@ func (a *adapter) startDiscovery() {
 		logger.Warningf("failed to start discovery for %s: %v", a, err)
 	} else {
 		logger.Debug("reset timer for stop scan")
-		a.waitDiscovery = false
+		// a.waitDiscovery = false
 		// start discovering success, reset discovering timer
 		a.discoveringTimer.Reset(defaultDiscoveringTimeout)
 	}
