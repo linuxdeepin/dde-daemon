@@ -102,10 +102,11 @@ func (m *Manager) initUserSessions() {
 	}
 
 	for _, session := range sessions {
-		m.addSession(session.SessionId, session.Path)
+		if session.SeatId != "" {
+			m.addSession(session.SessionId, session.Path)
+		}
 	}
 	m.handleSessionChanged()
-
 	_, err = m.loginManager.ConnectSessionNew(func(id string, path dbus.ObjectPath) {
 		logger.Debug("Session added:", id, path)
 		m.addSession(id, path)
@@ -200,6 +201,7 @@ func (m *Manager) handleSessionChanged() {
 			logger.Warning(err)
 		}
 	}
+
 	m.activeSessionType = sessionType
 	m.PropsMu.Lock()
 	changed := m.setIsActive(isActive)
@@ -241,13 +243,21 @@ func (m *Manager) setIsActive(val bool) bool {
 
 func (m *Manager) getActiveSession() login1.Session {
 	for _, session := range m.sessions {
-		active, err := session.Active().Get(0)
+		seatInfo, err := session.Seat().Get(0)
 		if err != nil {
 			logger.Warning(err)
 			continue
 		}
-		if active {
-			return session
+
+		if seatInfo.Id != "" && seatInfo.Path != "/" {
+			active, err := session.Active().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				continue
+			}
+			if active {
+				return session
+			}
 		}
 	}
 	return nil
@@ -262,6 +272,7 @@ func (m *Manager) IsX11SessionActive() (active bool, busErr *dbus.Error) {
 			return true, nil
 		}
 	}
+
 	return false, nil
 }
 
