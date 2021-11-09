@@ -24,7 +24,7 @@ import (
 
 	"github.com/godbus/dbus"
 	libdisplay "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/proxy"
 )
@@ -47,7 +47,7 @@ type Manager struct {
 	PropsMu  sync.RWMutex
 	IsActive bool
 	//nolint
-	methods  *struct {
+	methods *struct {
 		GetSessions        func() `out:"sessions"`
 		IsX11SessionActive func() `out:"is_active"`
 	}
@@ -105,17 +105,18 @@ func (m *Manager) initUserSessions() {
 	}
 
 	for _, session := range sessions {
-		m.addSession(session.SessionId, session.Path)
+		if session.SeatId != "" {
+			m.addSession(session.SessionId, session.Path)
+		}
 	}
 	m.handleSessionChanged()
-
 	_, err = m.loginManager.ConnectSessionNew(func(id string, path dbus.ObjectPath) {
 		logger.Debug("Session added:", id, path)
 		m.addSession(id, path)
 		m.handleSessionChanged()
 	})
 	if err != nil {
-		logger.Warning("ConnectSessionNew error:",err)
+		logger.Warning("ConnectSessionNew error:", err)
 	}
 
 	_, err = m.loginManager.ConnectSessionRemoved(func(id string, path dbus.ObjectPath) {
@@ -124,7 +125,7 @@ func (m *Manager) initUserSessions() {
 		m.handleSessionChanged()
 	})
 	if err != nil {
-		logger.Warning("ConnectSessionRemoved error:",err)
+		logger.Warning("ConnectSessionRemoved error:", err)
 	}
 }
 
@@ -167,7 +168,7 @@ func (m *Manager) addSession(id string, path dbus.ObjectPath) {
 		m.handleSessionChanged()
 	})
 	if err != nil {
-		logger.Warning("ConnectChanged error:",err)
+		logger.Warning("ConnectChanged error:", err)
 	}
 }
 
@@ -203,6 +204,7 @@ func (m *Manager) handleSessionChanged() {
 			logger.Warning(err)
 		}
 	}
+
 	m.activeSessionType = sessionType
 	m.PropsMu.Lock()
 	changed := m.setIsActive(isActive)
@@ -235,7 +237,7 @@ func (m *Manager) setIsActive(val bool) bool {
 		logger.Debug("[setIsActive] IsActive changed:", val)
 		err := m.service.EmitPropertyChanged(m, "IsActive", val)
 		if err != nil {
-			logger.Warning("EmitPropertyChanged error:",err)
+			logger.Warning("EmitPropertyChanged error:", err)
 		}
 		return true
 	}
@@ -244,13 +246,21 @@ func (m *Manager) setIsActive(val bool) bool {
 
 func (m *Manager) getActiveSession() *login1.Session {
 	for _, session := range m.sessions {
-		active, err := session.Active().Get(0)
+		seatInfo, err := session.Seat().Get(0)
 		if err != nil {
 			logger.Warning(err)
 			continue
 		}
-		if active {
-			return session
+
+		if seatInfo.Id != "" && seatInfo.Path != "/" {
+			active, err := session.Active().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				continue
+			}
+			if active {
+				return session
+			}
 		}
 	}
 	return nil
@@ -265,6 +275,7 @@ func (m *Manager) IsX11SessionActive() (bool, *dbus.Error) {
 			return true, nil
 		}
 	}
+
 	return false, nil
 }
 
