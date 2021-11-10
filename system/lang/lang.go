@@ -66,14 +66,16 @@ func init() {
 //go:generate dbusutil-gen em -type Lang
 
 type Lang struct {
-	sessionMap    map[string]login1.SessionDetail
-	sessionMapMux sync.Mutex
-	service       *dbusutil.Service
-	sigLoop       *dbusutil.SignalLoop
+	sessionPathHomeMapMu sync.Mutex
+	service              *dbusutil.Service
+	sigLoop              *dbusutil.SignalLoop
+	sessionPathHomeMap   map[dbus.ObjectPath]string // 存放每个图形session以及其对应的家目录路径
 }
 
 func newLang() *Lang {
-	return &Lang{sessionMap: make(map[string]login1.SessionDetail)}
+	return &Lang{
+		sessionPathHomeMap: make(map[dbus.ObjectPath]string),
+	}
 }
 
 func (l *Lang) init() {
@@ -85,52 +87,34 @@ func (l *Lang) init() {
 	l.updateAllUserLocale(true)
 }
 
-func (l *Lang) updateLocaleBySessionPath(sessionId string, sessionPath dbus.ObjectPath) {
-	var sessionDetail login1.SessionDetail
+func (l *Lang) updateLocaleBySessionPath(_ string, sessionPath dbus.ObjectPath) {
+	var homeDir string
 	var ok bool
 
-	l.sessionMapMux.Lock()
-	if sessionDetail, ok = l.sessionMap[string(sessionPath)]; !ok {
+	l.sessionPathHomeMapMu.Lock()
+	if homeDir, ok = l.sessionPathHomeMap[sessionPath]; !ok { // 当sessionPath未保存到map中,则无需处理
 		logger.Debugf("can not find sessionPath %s, return", sessionPath)
-		l.sessionMapMux.Unlock()
+		l.sessionPathHomeMapMu.Unlock()
 		return
 	}
-	l.sessionMapMux.Unlock()
+	l.sessionPathHomeMapMu.Unlock()
 
-	account := accounts.NewAccounts(l.service.Conn())
-
-	userPath, err := account.FindUserByName(0, sessionDetail.UserName)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	l.updateLocaleByUserPath(dbus.ObjectPath(userPath))
-	l.deleteSessionMap(sessionPath)
+	l.updateLocaleByHomeDir(homeDir)
+	l.deleteSessionPathHomeMap(sessionPath)
 }
 
-func (l *Lang) updateLocaleByUserPath(userPath dbus.ObjectPath) {
-	user, err := accounts.NewUser(l.service.Conn(), userPath)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	homeDir, err := user.HomeDir().Get(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
+func (l *Lang) updateLocaleByHomeDir(homeDir string) {
 	localeConfigFile := filepath.Join(homeDir, userLocaleConfigFile)
 	localeConfigFileTmp := filepath.Join(homeDir, userLocaleConfigFileTmp)
+	l.updateLocaleFile(localeConfigFileTmp, localeConfigFile)
+}
 
-	_, err = os.Stat(localeConfigFileTmp)
+func (l *Lang) updateLocaleFile(tempLocaleFilePath, localeFilePath string) {
+	_, err := os.Stat(tempLocaleFilePath)
 	if err != nil {
 		return
 	}
-
-	err = os.Rename(localeConfigFileTmp, localeConfigFile)
+	err = os.Rename(tempLocaleFilePath, localeFilePath)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -140,39 +124,32 @@ func (l *Lang) updateAllUserLocale(start bool) {
 	if !start {
 		return
 	}
-
 	manager := login1.NewManager(l.service.Conn())
-
-	account := accounts.NewAccounts(l.service.Conn())
-	userList, err := account.UserList().Get(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
 	inhibit, err := manager.Inhibit(0, "shutdown", langService, "to write language config file", "delay")
 	if err != nil {
 		logger.Warning(err)
 	}
+	defer func() {
+		err = syscall.Close(int(inhibit))
+		if err != nil {
+			logger.Warning(err)
+		}
+	}()
 
-	for _, user := range userList {
-		l.updateLocaleByUserPath(dbus.ObjectPath(user))
-	}
-
-	err = syscall.Close(int(inhibit))
-	if err != nil {
-		logger.Warning(err)
+	l.sessionPathHomeMapMu.Lock()
+	defer l.sessionPathHomeMapMu.Unlock()
+	for _, homeDir := range l.sessionPathHomeMap {
+		l.updateLocaleByHomeDir(homeDir)
 	}
 }
 
-func (l *Lang) deleteSessionMap(sessionPath dbus.ObjectPath) {
-	l.sessionMapMux.Lock()
-	defer l.sessionMapMux.Unlock()
-
-	delete(l.sessionMap, string(sessionPath))
+func (l *Lang) deleteSessionPathHomeMap(sessionPath dbus.ObjectPath) {
+	l.sessionPathHomeMapMu.Lock()
+	defer l.sessionPathHomeMapMu.Unlock()
+	delete(l.sessionPathHomeMap, sessionPath)
 }
 
-func (l *Lang) addSessionMap(sessionId string, sessionPath dbus.ObjectPath) {
+func (l *Lang) addSessionMap(_ string, _ dbus.ObjectPath) {
 	l.loadSessionList()
 }
 
@@ -207,10 +184,43 @@ func (l *Lang) loadSessionList() {
 		return
 	}
 
-	l.sessionMapMux.Lock()
-	defer l.sessionMapMux.Unlock()
+	l.sessionPathHomeMapMu.Lock()
+	defer l.sessionPathHomeMapMu.Unlock()
 
 	for _, sessionDetail := range sessions {
-		l.sessionMap[string(sessionDetail.Path)] = sessionDetail
+		session, err := login1.NewSession(l.service.Conn(), sessionDetail.Path)
+		if err != nil {
+			continue
+		}
+		display, err := session.Display().Get(0) // 远程登录或者tty登录时创建的session无需保存到map中
+		if err != nil {
+			continue
+		}
+		if display == "" {
+			continue
+		}
+		l.sessionPathHomeMap[sessionDetail.Path] = l.getHomeDirBySessionDetail(sessionDetail)
 	}
+}
+
+func (l *Lang) getHomeDirBySessionDetail(sessionDetail login1.SessionDetail) string {
+	account := accounts.NewAccounts(l.service.Conn())
+
+	userPath, err := account.FindUserByName(0, sessionDetail.UserName)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	user, err := accounts.NewUser(l.service.Conn(), dbus.ObjectPath(userPath))
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+
+	homeDir, err := user.HomeDir().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	return homeDir
 }
