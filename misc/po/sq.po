@@ -530,7 +530,7 @@ msgstr "U spastrua fshehtinë pakete"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Ka Përditësime"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"

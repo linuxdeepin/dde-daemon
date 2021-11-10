@@ -532,7 +532,7 @@ msgstr "Paket keşi təmizləndi"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Yenilənmələr var"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"

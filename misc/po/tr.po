@@ -9,6 +9,7 @@
 # yakup <mutouk@yandex.ru>, 2020
 # Serdar Sağlam <teknomobil@msn.com>, 2021
 # Cindy0514, 2021
+# abc Def <hdogan1974@gmail.com>, 2021
 # meda <ademcal@yahoo.com>, 2021
 # 
 #, fuzzy
@@ -296,11 +297,11 @@ msgstr "Gecikmeli ekran görüntüsü"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (Görüntüden Metine)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
-msgstr ""
+msgstr "Kaydırma görüntüsü"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
@@ -484,23 +485,23 @@ msgstr "Şimdi Yeniden Başlat"
 
 #: ../../lastore/lastore.go:457
 msgid "Remind Me Later"
-msgstr ""
+msgstr "Sonradan hatırlat"
 
 #: ../../lastore/lastore.go:464
 msgid "10 mins later"
-msgstr ""
+msgstr "10 dakika sonradan"
 
 #: ../../lastore/lastore.go:471
 msgid "30 mins later"
-msgstr ""
+msgstr "30 dakika sonradan"
 
 #: ../../lastore/lastore.go:478
 msgid "2h later"
-msgstr ""
+msgstr "2 saat sonradan"
 
 #: ../../lastore/lastore.go:485
 msgid "6h later"
-msgstr ""
+msgstr "6 saat sonradan"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
@@ -529,21 +530,24 @@ msgstr "Paket ön belleği silindi"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Güncelleme Kullanılabilir"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
-msgstr ""
+msgstr "Güncelleme sonrası Yeniden başlatın"
 
 #: ../../lastore/notify.go:142
 msgid "Restart the computer to use the system and applications properly"
 msgstr ""
+"Sistemi ve uygulamaları düzgün kullanmak için bilgisayarı yeniden başlatın"
 
 #: ../../lastore/notify.go:152
 msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
+"Sisteminiz güncelleniyor, ancak kapasite %50'den düşük, lütfen elektrik "
+"kesintisini önlemek için fişe takın."
 
 #: ../../lastore/notify.go:153
 msgid "OK"
@@ -601,7 +605,7 @@ msgstr "Kablolu Bağlantı"
 
 #: ../../network/manager_connection.go:402
 msgid "Wired Connection %v"
-msgstr ""
+msgstr "Kablolu Bağlantı %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"

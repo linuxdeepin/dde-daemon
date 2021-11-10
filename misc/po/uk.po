@@ -532,7 +532,7 @@ msgstr "Очищення кешу пакету"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Доступні оновлення"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"

@@ -534,7 +534,7 @@ msgstr "Pakketcache opgeschoond"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Updates beschikbaar"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"

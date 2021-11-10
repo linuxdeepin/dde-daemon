@@ -175,7 +175,7 @@ msgstr "Abbrechen"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "%[1]q von %[2]q wird empfangen"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -306,7 +306,7 @@ msgstr "Bildschirmfoto verzögern"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (Bild zu Text)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
@@ -500,19 +500,19 @@ msgstr ""
 
 #: ../../lastore/lastore.go:464
 msgid "10 mins later"
-msgstr ""
+msgstr "10 Min. später"
 
 #: ../../lastore/lastore.go:471
 msgid "30 mins later"
-msgstr ""
+msgstr "30 Min. später"
 
 #: ../../lastore/lastore.go:478
 msgid "2h later"
-msgstr ""
+msgstr "2 Std. später"
 
 #: ../../lastore/lastore.go:485
 msgid "6h later"
-msgstr ""
+msgstr "6 Std. später"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
@@ -528,7 +528,7 @@ msgstr "Erfolgreich entfernt"
 
 #: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
-msgstr ""
+msgstr "Entfernen der App ist fehlgeschlagen"
 
 #: ../../lastore/notify.go:126
 msgid ""
@@ -543,11 +543,11 @@ msgstr "Programmzwischenspeicher gelöscht"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Aktualisierungen verfügbar"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
-msgstr ""
+msgstr "Neustart nach Aktualisierungen"
 
 #: ../../lastore/notify.go:142
 msgid "Restart the computer to use the system and applications properly"

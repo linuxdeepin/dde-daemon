@@ -29,12 +29,12 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!description" line="0"/>
 			<source>Enable Auto Login</source>
-			<translation>ئېچىلغاندا ئاپتۇماتىك كىرىش</translation>
+			<translation>ئاپتۇماتىك كىرىشنى ئېچىش</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!message" line="0"/>
 			<source>Authentication is required to disable auto login</source>
-			<translation>ئاپتۇماتىك كىرىشنى چەكلەش ئۈچۈن سالاھىيەت دەلىللەش كىرەك</translation>
+			<translation>ئاپتۇماتىك كىرىشنى تاقاش ئۈچۈن سالاھىيەت دەلىللەش كېرەك</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!description" line="0"/>

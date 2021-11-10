@@ -5,10 +5,9 @@
 # 
 # Translators:
 # Muhammadali Abliz <ordam2@163.com>, 2020
-# 伊力亚斯 伊德日斯 <2032517177@qq.com>, 2020
 # مۇختەر مەخمۇت <yeganaaa@163.com>, 2021
 # Cindy0514, 2021
-# Abdusalam Huxur <2250907458@qq.com>, 2021
+# Bashqut <2250907458@qq.com>, 2021
 # Ug HushBeg <HushBeg@163.com>, 2021
 # 阿迪力 买买提明 <251078110@qq.com>, 2021
 # 
@@ -50,7 +49,7 @@ msgstr "بىرىنچى ھەرپ چوقۇم بىر ھەرپ ياكى سان بو�
 
 #: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
-msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
+msgstr "بۇ ئابۇنت ئىسىمى مەۋجۇت"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
@@ -92,7 +91,7 @@ msgstr "%s چەكلەنگەن"
 
 #: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
 msgid "Open"
-msgstr "ئوچۇق"
+msgstr "ئېچىش"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
@@ -140,7 +139,7 @@ msgstr "ھۆججەت ئەۋەتىش"
 #: ../../bluetooth/bluez_profile.go:37
 #: ../../system/bluetooth/bluez_profile.go:37
 msgid "Synchronization"
-msgstr "ماس قەدەملىك"
+msgstr "ماسقەدەم"
 
 #: ../../bluetooth/bluez_profile.go:38
 #: ../../system/bluetooth/bluez_profile.go:38
@@ -160,7 +159,7 @@ msgstr "ئۇچۇرلارنى زىيارەت قىلىش"
 #: ../../bluetooth/bluez_profile.go:41
 #: ../../system/bluetooth/bluez_profile.go:41
 msgid "Message notification"
-msgstr "ئۇچۇر ئەسكەرتىشى"
+msgstr "ئۇچۇر ئۇقتۇرۇشى"
 
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
 #: ../../lastore/lastore.go:409
@@ -243,7 +242,7 @@ msgstr "ۋەزىپە ئىستونى"
 
 #: ../../dock/app_entry_menu.go:171
 msgid "Undock"
-msgstr "تۇرغۇنلارنى چىقىرىۋېتىش"
+msgstr "قالدۇقلىرىنى چىقىرىۋېتىش"
 
 #: ../../dock/app_entry_menu.go:181
 msgid "All Windows"
@@ -271,7 +270,7 @@ msgstr "قۇلۇپ ئېكرانى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "ۋەزىپە بالدىقىنى كۆرسىتىش ياكى يوشۇرۇش"
+msgstr "ۋەزىپە بالدىقىنى كۆرسىتىش / يوشۇرۇش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -283,11 +282,11 @@ msgstr "تېرمىنال كۆزنىكى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "ئېكران رەسىمى"
+msgstr "ئېكران رەسىم كېسىش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "پۈتۈن ئېكران رەسىمگە تۇتۇش"
+msgstr "پۈتۈن ئېكران رەسىم كېسىش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
@@ -295,7 +294,7 @@ msgstr "كۆزنەك رەسىمگە تۇتۇش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "ۋاقىت بەلگىلەپ رەسىمگە تۇتۇش"
+msgstr "كىچىكتۈرۈپ  ئېكران رەسىم كېسىش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
@@ -327,11 +326,11 @@ msgstr "سىستېما نازارەتچىسى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
-msgstr "Deepin تاللىغۇچى"
+msgstr "Deepin رەڭ ئالغۇ"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
-msgstr "ئۈستەل يۈزى ئەقلىي ياردەمچىسى"
+msgstr "ئۈستەليۈزى ئەقلىي ياردەمچىسى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
@@ -435,7 +434,7 @@ msgstr "ئاستى خىزمەت رايونىغا يۆتكەش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:152
 msgid "Display windows of all workspaces"
-msgstr "كۆزنەكنى بارلىق خىزمەت رايونلىرىدا كۆرسىتىش"
+msgstr "خىزمەت رايوندىكى ھەممە كۆزنەكنى كۆرسىتىش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of current workspace"
@@ -451,7 +450,7 @@ msgstr "كۆپ ئېكران ئالماشتۇرۇش"
 
 #: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
-msgstr "سىستېما تىلىنى ئۆزگەرتىش ئاۋۋال سالاھىيەت دەلىللەشنى تەلەپ قىلىدۇ"
+msgstr "سىستېما تىلىنى ئۆزگەرتىش ئۈچۈن سالاھىيەت دەلىللەش كېرەك"
 
 #: ../../langselector/locale.go:152
 msgid ""
@@ -507,7 +506,7 @@ msgstr "6 سائەتتىن كېيىن ئەسكەرتسۇن"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
-msgstr "%q قاچىلاش مۇۋەپپەقيەتلىك بولدى"
+msgstr "%q قاچىلاندى"
 
 #: ../../lastore/notify.go:109
 msgid "%q failed to install."
@@ -519,7 +518,7 @@ msgstr "ئۆچۈرۈلدى"
 
 #: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
-msgstr "ئۆچۈرۈلمىدى"
+msgstr "ئۆچۈرەلمىدى"
 
 #: ../../lastore/notify.go:126
 msgid ""
@@ -532,7 +531,7 @@ msgstr "بوغچا قالدۇقىنى تازىلاش"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "يېڭىلاشقا بولىدىغنى  تىپىلدى"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
@@ -575,7 +574,7 @@ msgstr "WEP 40/128-bit پارول"
 
 #: ../../network/manager_active_conn.go:405
 msgid "WPA/WPA2 Personal"
-msgstr "شەخسىي"
+msgstr "WPA/WPA2شەخسى نۇسخىسى"
 
 #: ../../network/manager_active_conn.go:413
 msgid "TLS"
@@ -952,15 +951,15 @@ msgstr "بۇ ئۇلىنىش تەڭشەكتىن ئۆچۈرۋىتىلىپتۇ"
 
 #: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
-msgstr "قىزىق نۇقتىا ئېچىلىۋاتىدۇ"
+msgstr "تور تارقىتىشنى ئېچىۋاتىدۇ "
 
 #: ../../network/state_handler.go:254
 msgid "Connecting %q"
-msgstr "%qغا ئۇلىنىۋاتىدۇ"
+msgstr "%q غا ئۇلىنىۋاتىدۇ"
 
 #: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
-msgstr "قىزىق نۇقتا ھەمبەھرىلەندى"
+msgstr "تور تارقىتىلدى "
 
 #: ../../network/state_handler.go:265
 msgid "%q connected"
@@ -968,7 +967,7 @@ msgstr "%qغا ئۇلاندى"
 
 #: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
-msgstr "قىزىق نۇقتا تاقالدى"
+msgstr "تور تارقىتىش تاقالدى "
 
 #: ../../network/state_handler.go:333 ../../network/state_handler.go:355
 #: ../../system/bluetooth/utils_notify.go:65
@@ -977,9 +976,7 @@ msgstr "%qدىن ئۈزۈلدى"
 
 #: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr ""
-"قىزىق نۇقتىنى ئورتاقلىشالمىدى ،dnsmasq غا مۇناسىۋەتلىك تەڭشەكلەرنى تەكشۈرۈپ "
-"بېقىڭ"
+msgstr "تور تارقىتالمىدى ،dnsmasq غا مۇناسىۋەتلىك تەڭشەكلەرنى تەكشۈرۈپ بېقىڭ"
 
 #: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
@@ -1013,7 +1010,7 @@ msgstr "ئايروپىلان ھالىتى قوزغىتىلدى."
 #: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
 #: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
-msgstr "ئۇلانمىدى"
+msgstr "ئۈزۈلدى "
 
 #: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."

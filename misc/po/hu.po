@@ -544,7 +544,7 @@ msgstr "A csomag gyorsítótár kiürítve"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Frissítések érhetőek el"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"

@@ -309,7 +309,7 @@ msgstr "OCR (imagen a texto)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
-msgstr ""
+msgstr "Captura larga"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
@@ -357,7 +357,7 @@ msgstr "Traducción"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
 msgid "Global search"
-msgstr ""
+msgstr "Búsqueda global"
 
 #: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
@@ -540,7 +540,7 @@ msgstr "Borrado del caché de paquetes"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Actualizaciones disponibles"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"

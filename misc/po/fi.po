@@ -533,7 +533,7 @@ msgstr "Pakettien välimuisti tyhjennettiin"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Päivityksiä saatavilla"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"

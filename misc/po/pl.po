@@ -8,10 +8,11 @@
 # Wiktor Jezioro <wikjezioro@op.pl>, 2020
 # Pyroxar <kacper-paczos@linux.pl>, 2020
 # Cindy0514, 2020
+# Piotr Strębski <strebski@gmail.com>, 2020
 # Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2020
-# Piotr Strębski <strebski@gmail.com>, 2021
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Hubert Ożga <hubert.ozga@outlook.com>, 2021
+# Janusz Ruchała, 2021
 # Marcin Kozioł <koziol.martin@gmail.com>, 2021
 # 
 #, fuzzy
@@ -230,7 +231,7 @@ msgstr "Paruj"
 
 #: ../../dock/app_entry_menu.go:114
 msgid "Close All"
-msgstr "Zamknij wszystko"
+msgstr "Zamknij"
 
 #: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
 #: ../../dock/app_entry_menu.go:157
@@ -239,7 +240,7 @@ msgstr "Wymuś zamknięcie"
 
 #: ../../dock/app_entry_menu.go:161
 msgid "Dock"
-msgstr "Dock"
+msgstr "Zadokuj"
 
 #: ../../dock/app_entry_menu.go:171
 msgid "Undock"
@@ -300,15 +301,15 @@ msgstr "Opóźnienie zrzutu ekranu"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (Tekst ze zdjęcia)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
-msgstr ""
+msgstr "Scrollshot"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
-msgstr "Zarządzanie plikami"
+msgstr "Menedżer plików"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
@@ -488,23 +489,23 @@ msgstr "Uruchom ponownie teraz"
 
 #: ../../lastore/lastore.go:457
 msgid "Remind Me Later"
-msgstr ""
+msgstr "Przypomnij mi później"
 
 #: ../../lastore/lastore.go:464
 msgid "10 mins later"
-msgstr ""
+msgstr "10 minut później"
 
 #: ../../lastore/lastore.go:471
 msgid "30 mins later"
-msgstr ""
+msgstr "30 minut później"
 
 #: ../../lastore/lastore.go:478
 msgid "2h later"
-msgstr ""
+msgstr "2 godziny później"
 
 #: ../../lastore/lastore.go:485
 msgid "6h later"
-msgstr ""
+msgstr "6 godzin później"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
@@ -535,21 +536,24 @@ msgstr "Wyczyszczono pamięć podręczną pakietów"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Aktualizacje są dostępne"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
-msgstr ""
+msgstr "Uruchom ponownie po aktualizacji"
 
 #: ../../lastore/notify.go:142
 msgid "Restart the computer to use the system and applications properly"
 msgstr ""
+"Zresetuj komputer, żeby móc korzystać prawidłowo z systemu i aplikacji"
 
 #: ../../lastore/notify.go:152
 msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
+"Twój system jest w trakcje aktualizacji, jednakże pojemność baterii spadła "
+"poniżej 50%, proszę podłącz komputer do źródła zasilania"
 
 #: ../../lastore/notify.go:153
 msgid "OK"
@@ -607,7 +611,7 @@ msgstr "Połączenie przewodowe"
 
 #: ../../network/manager_connection.go:402
 msgid "Wired Connection %v"
-msgstr ""
+msgstr "Połączenie przewodowe %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1027,11 +1031,11 @@ msgstr ""
 
 #: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
-msgstr "Pośrednik systemu został pomyślnie ustawiony."
+msgstr "Proxy systemowe zostało ustawione prawidłowo."
 
 #: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
-msgstr "Pośrednik systemu został anulowany."
+msgstr "Proxy systemowe zostało anulowane."
 
 #: ../../network/utils_notify.go:208
 msgid "Connected"
