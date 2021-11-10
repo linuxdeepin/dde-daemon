@@ -314,7 +314,7 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 	// -u 用户的 UUID
 	// -a 应用类型
 
-	cmd := exec.Command("runuser", "-u", pwdChanger.user.Username, "--", "/usr/lib/dde-control-center/reset-password-dialog", "-u", u.UUID, "-a", caller.app) //#nosec G204
+	cmd := exec.Command("runuser", "-u", pwdChanger.user.Username, "--", "/usr/lib/dde-control-center/reset-password-dialog", "-u", u.UserName, "-a", caller.app) //#nosec G204
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
