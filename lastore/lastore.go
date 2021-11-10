@@ -521,8 +521,8 @@ func (l *Lastore) notifyJob(path dbus.ObjectPath) {
 	info := l.jobStatus[path]
 	status := info.Status
 	logger.Debugf("notifyJob: %q %q --> %v", path, status, info)
-	if info.Name == "uos-release-note" {
-		logger.Debug("do not notify when package name is uos-release-note")
+	if info.Name == "uos-release-note" || info.Name == "deepin-deepinid-client" {
+		logger.Debugf("do not notify when package name is %s", info.Name)
 		return
 	}
 	switch guestJobTypeFromPath(path) {
