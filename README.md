@@ -4,7 +4,6 @@ DDE Daemon is a daemon for handling  the deepin session settings
 
 ### Dependencies
 
-
 ### Build dependencies
 
 * [dde-api](https://github.com/linuxdeepin/dde-api)
