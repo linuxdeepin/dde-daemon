@@ -107,6 +107,8 @@ func (h *LidSwitchHandler) onLidOpened() {
 	if err != nil {
 		logger.Warning(err)
 	}
+
+	m.setWmBlackScreenVisible(false)
 }
 
 func (h *LidSwitchHandler) stopAskUser() error {

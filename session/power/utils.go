@@ -72,6 +72,21 @@ func (m *Manager) lockWaitShow(timeout time.Duration, autoStartAuth bool) {
 	m.waitLockShowing(timeout)
 }
 
+func (m *Manager) setWmBlackScreenVisible(visible bool) {
+	logger.Info("set Wm BlackScreen visible: ", visible)
+	var cmd string
+	if visible {
+		cmd = "dbus-send --print-reply --dest=org.kde.KWin /BlackScreen org.kde.kwin.BlackScreen.setActive boolean:true"
+	} else {
+		cmd = "dbus-send --print-reply --dest=org.kde.KWin /BlackScreen org.kde.kwin.BlackScreen.setActive boolean:false"
+	}
+	c := exec.Command("/bin/bash", "-c", cmd)
+	err := c.Run()
+	if err != nil {
+		logger.Warning("update Wm BlackScreen visible failed:", err)
+	}
+}
+
 func (m *Manager) setDPMSModeOn() {
 	logger.Info("DPMS On")
 	var err error
@@ -222,8 +237,11 @@ func (m *Manager) doHibernateByFront() {
 
 func (m *Manager) doTurnOffScreen() {
 	if m.ScreenBlackLock.Get() {
+		logger.Info("Show lock")
 		m.doLock(true)
+		time.Sleep(1 * time.Second)
 	}
+
 	logger.Info("Turn off screen")
 	m.setDPMSModeOff()
 }
