@@ -135,9 +135,9 @@ func (cpus *CpuHandlers) IsBoostFileExist() bool {
 func (cpus *CpuHandlers) SetBoostEnabled(enabled bool) error {
 	var err error
 	if enabled {
-		err = ioutil.WriteFile(globalBoostFilePath, []byte("0"), 0644)
-	} else {
 		err = ioutil.WriteFile(globalBoostFilePath, []byte("1"), 0644)
+	} else {
+		err = ioutil.WriteFile(globalBoostFilePath, []byte("0"), 0644)
 	}
 	return err
 }
