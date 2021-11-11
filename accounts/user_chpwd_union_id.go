@@ -22,8 +22,7 @@ import (
 	"pkg.deepin.io/lib/procfs"
 )
 
-const pwdChangerUserName = "pwd_changer"
-
+const pwdChangerUserName = "deepin_pwd_changer" //#nosec G101
 // copy from golang 1.17, comment out some code because of unexported member
 // String returns a human-readable description of c.
 // It is intended only for debugging.
@@ -152,7 +151,7 @@ type pwdChanger struct {
 	display string
 }
 
-// 此函数负责初始化用于更改密码的用户, 主要是要将来自 caller 的 xauth 凭证发送给 pwd_changer
+// 此函数负责初始化用于更改密码的用户, 主要是要将来自 caller 的 xauth 凭证发送给 deepin_pwd_changer
 func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
 
 	user, err := user.Lookup(pwdChangerUserName)
