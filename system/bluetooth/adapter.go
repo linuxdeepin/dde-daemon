@@ -180,8 +180,6 @@ func (a *adapter) connectProperties() {
 				// a.waitDiscovery = true
 				// in case auto connect to device failed, only when signal power on is received, try to auto connect device
 				_bt.tryConnectPairedDevices(a.Path)
-				// 需要在我的设备全部重连完成后，才开始扫描，当前tryConnectPairedDevices异步，后续需要修改
-				// a.startDiscovery()
 			}()
 		} else {
 			// if power off, stop discovering time out
@@ -245,8 +243,8 @@ func (a *adapter) connectProperties() {
 
 func (a *adapter) startDiscovery() {
 	a.discoveringFinished = false
-	//已经开始扫描
-	if a.Discovering {
+	//已经开始扫描 或者 我的设备回连未结束
+	if a.Discovering || !a.bt.acm.adapters[a.Path].isAutoConnectFinished {
 		return
 	}
 

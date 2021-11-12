@@ -14,15 +14,17 @@ const maxNumWorkerPerAdapter = 2
 
 // 自动连接管理器
 type autoConnectManager struct {
-	mu        sync.Mutex
-	devices   map[dbus.ObjectPath]*autoDeviceInfo // key 是 device path
-	adapters  map[dbus.ObjectPath]*acmAdapterData // key 是 adapter path
-	connectCb func(adapter, device dbus.ObjectPath, wId int) error
+	mu               sync.Mutex
+	devices          map[dbus.ObjectPath]*autoDeviceInfo // key 是 device path
+	adapters         map[dbus.ObjectPath]*acmAdapterData // key 是 adapter path
+	connectCb        func(adapter, device dbus.ObjectPath, wId int) error
+	startDiscoveryCb func(adapter dbus.ObjectPath)
 }
 
 // 和单个适配器相关的数据
 type acmAdapterData struct {
-	workers map[int]bool
+	workers               map[int]bool
+	isAutoConnectFinished bool
 	// 需要等待的由设备主动重连接的设备集合
 	activeReconnectDevices map[dbus.ObjectPath]struct{}
 	timer                  *time.Timer
@@ -250,6 +252,7 @@ func (acm *autoConnectManager) evalNumWorkers(adapterPath dbus.ObjectPath) int {
 			num = limit
 		}
 	}
+	adapterData.isAutoConnectFinished = false
 	return num
 }
 
@@ -316,7 +319,8 @@ func (acm *autoConnectManager) addAdapter(adapterPath dbus.ObjectPath) {
 	}
 
 	acm.adapters[adapterPath] = &acmAdapterData{
-		workers: make(map[int]bool),
+		workers:               make(map[int]bool),
+		isAutoConnectFinished: false,
 	}
 }
 
@@ -392,6 +396,19 @@ func (w *autoConnectWorker) start() {
 			// 无工作可做，退出，回收资源。
 			logger.Debugf("[%d] quit", w.id)
 			w.m.putId(w.adapter, w.id)
+
+			// 如果启用多个work，需要等待所有work全部回连结束再开始扫描其他设备
+			idMap := w.m.adapters[w.adapter].workers
+			if idMap != nil {
+				for _, exist := range idMap {
+					if exist {
+						return
+					}
+				}
+
+				w.m.adapters[w.adapter].isAutoConnectFinished = true
+				w.m.startDiscoveryCb(w.adapter)
+			}
 			return
 		}
 	}()

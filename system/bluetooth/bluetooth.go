@@ -148,6 +148,23 @@ func newSysBluetooth(service *dbusutil.Service) (b *SysBluetooth) {
 		return b.autoConnectPairedDevice(devicePath, adapterPath)
 	}
 
+	b.acm.startDiscoveryCb = func(adapterPath dbus.ObjectPath) {
+		adapter, err := b.getAdapter(adapterPath)
+		if err != nil {
+			// 可能是适配器被移除了，不需要开始扫描
+			logger.Warningf("call getAdapter failed; adapterPath:[%s] err:[%s]", adapterPath, err)
+			return
+		}
+
+		if !adapter.Powered {
+			// 适配器电源关闭了，不需要开始扫描
+			logger.Warningf("adapter： [%s] is power off", adapterPath)
+			return
+		}
+
+		adapter.startDiscovery()
+	}
+
 	return
 }
 
@@ -814,7 +831,7 @@ func (b *SysBluetooth) tryConnectPairedDevices(adapterPath dbus.ObjectPath) {
 		// 表示用户已经登录
 		inputOnly = false
 		// 可能有用户控制，为便于用户控制，缩短自动连接时长。
-		defaultConnectDuration = 1 * time.Minute
+		defaultConnectDuration = 20 * time.Second
 	}
 	logger.Debugf("tryConnectPairedDevices adapterPath: %q, inputOnly: %v", adapterPath, inputOnly)
 	adapterDevicesMap := b.getPairedDevicesForAutoConnect(adapterPath)
