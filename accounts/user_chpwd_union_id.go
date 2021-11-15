@@ -226,34 +226,22 @@ func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
 	}
 
 	lines := strings.Split(string(xauths), "\n")
-	if len(lines) < 2 {
-		err = fmt.Errorf("fail to get .Xauthority content of sender, result too short")
-		return
-	}
-
-	args := []string{"-u", pwdChangerUserName, "--", "xauth", "add"}
-	found := false
 	for _, line := range lines {
+		args := []string{"-u", pwdChangerUserName, "--", "xauth", "add"}
 		fields := strings.Split(line, "  ")
-		if strings.HasSuffix(fields[0], caller.display) {
-			found = true
-			args = append(args, fields...)
-			break
+		if fields[0] == "" {
+			continue
 		}
-	}
-	if !found {
-		err = fmt.Errorf("fail to get xauth cookie of caller, no display match")
-		return
-	}
+		args = append(args, fields...)
+		cmd = exec.Command("runuser", args...) //#nosec G204
+		cmd.Env = append(cmd.Env, "XAUTHORITY="+xauthPath)
+		logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
 
-	cmd = exec.Command("runuser", args...) //#nosec G204
-	cmd.Env = append(cmd.Env, "XAUTHORITY="+xauthPath)
-	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
-
-	err = cmd.Run()
-	if err != nil {
-		err = fmt.Errorf("add xauth fail: %v", err)
-		return
+		err = cmd.Run()
+		if err != nil {
+			err = fmt.Errorf("add xauth fail: %v", err)
+			return
+		}
 	}
 
 	ret = &pwdChanger{
