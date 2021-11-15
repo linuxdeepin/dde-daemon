@@ -121,7 +121,7 @@ Recommends:     google-noto-sans-fonts
 Daemon handling the DDE session settings
 
 %prep
-%autosetup -p1 -n %{repo}-%{version}
+%autosetup -p1 -n %{name}-%{version}
 patch langselector/locale.go < rpm/locale.go.patch
 
 # Fix library exec path
@@ -205,7 +205,7 @@ install -Dm644 %{SOURCE1} \
     %{buildroot}%{_datadir}/deepin-default-settings/fontconfig.json
 %endif
 
-%find_lang %{repo}
+%find_lang %{name}
 
 %post
 if [ $1 -ge 1 ]; then
@@ -229,7 +229,7 @@ if [ $1 -eq 0 ]; then
 fi
 %systemd_postun_with_restart deepin-accounts-daemon.service
 
-%files -f %{repo}.lang
+%files -f %{name}.lang
 %doc README.md
 %license LICENSE
 %{_sysconfdir}/pam.d/deepin-auth-keyboard
@@ -240,7 +240,7 @@ fi
 %{_datadir}/dbus-1/system-services/*.service
 %{_datadir}/dbus-1/system.d/*.conf
 %{_datadir}/icons/hicolor/*/status/*
-%{_datadir}/%{repo}/
+%{_datadir}/%{name}/
 %{_datadir}/dde/
 %{_datadir}/polkit-1/actions/*.policy
 %{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla
