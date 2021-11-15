@@ -16,7 +16,7 @@
 %if 0%{?fedora}
 Name:           %{sname}
 %else
-Name:           %{repo}
+Name:           dde-daemon
 %endif
 Version:        5.13.78
 Release:        1
