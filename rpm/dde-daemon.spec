@@ -31,7 +31,7 @@ Source1:        fontconfig.json
 Source2:        %{sname}.sysusers
 %else
 URL:            http://shuttle.corp.deepin.com/cache/tasks/18802/unstable-amd64/
-Source0:        %{repo}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.gz
 %endif
 Source1:        99-deepin-accounts-daemon.preset
 
