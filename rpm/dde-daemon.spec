@@ -35,9 +35,10 @@ Source0:        %{name}-%{version}.tar.gz
 %endif
 
 BuildRequires:  python3
-BuildRequires:  systemd-rpm-macros
+
 %if 0%{?fedora}
 ExclusiveArch:  %{?go_arches:%{go_arches}}%{!?go_arches:%{ix86} x86_64 aarch64 %{arm}}
+BuildRequires:  systemd-rpm-macros
 BuildRequires:  golang(pkg.deepin.io/dde/api/dxinput) >= 3.1.26
 BuildRequires:  golang(github.com/linuxdeepin/go-dbus-factory/org.bluez)
 BuildRequires:  golang(github.com/linuxdeepin/go-x11-client)
@@ -56,11 +57,17 @@ BuildRequires:  golang(github.com/kelvins/sunrisesunset)
 BuildRequires:  golang(github.com/rickb777/date)
 BuildRequires:  golang(github.com/teambition/rrule-go)
 BuildRequires:  golang(github.com/davecgh/go-spew/spew)
+BuildRequires:  golang-dbus
+BuildRequires:  golang-github-fsnotify-fsnotify-devel
+BuildRequires: 	golang-github-mozillazg-pinyin
+BuildRequires: 	golang-github-lofanmi-pinyin
+BuildRequires:  golang-github-stretchr-testify-devel
+BuildRequires:  golang-x-sys-devel
+BuildRequires:  golang-x-xerrors-devel
+BuildRequires:  golang-x-image-devel
 %else
-#BuildRequires:  gocode
-BuildRequires:  resize-devel
-BuildRequires:  gorm-devel
-BuildRequires:  inflection-devel
+BuildRequires:  gocode
+
 %endif
 BuildRequires:  compiler(go-compiler)
 BuildRequires:  deepin-gettext-tools
@@ -79,30 +86,16 @@ BuildRequires:  libinput-devel
 BuildRequires:  librsvg2-devel
 BuildRequires:  libXcursor-devel
 BuildRequires:  pkgconfig(sqlite3)
+BuildRequires:  go-lib-devel
+BuildRequires:  libX11-devel
+BuildRequires:  dde-api-devel
+BuildRequires:	golang-github-linuxdeepin-go-x11-client-devel
+BuildRequires:  golang-github-linuxdeepin-go-dbus-factory-devel
 BuildRequires:  golang(gir/gio-2.0)
 BuildRequires:  golang(gir/glib-2.0)
 BuildRequires:  golang(gir/gobject-2.0)
 BuildRequires:  golang(gir/gudev-1.0)
-BuildRequires:  go-lib-devel
-BuildRequires:  golang-github-fsnotify-fsnotify-devel
-BuildRequires:  golang-github-linuxdeepin-go-dbus-factory-devel 
-BuildRequires:  golang-x-sys-devel 
-BuildRequires:  golang-x-xerrors-devel 
-BuildRequires:  libX11-devel
-BuildRequires:  golang-dbus
-BuildRequires:  golang-github-linuxdeepin-go-x11-client-devel  
-BuildRequires:  golang-github-stretchr-testify-devel 
-BuildRequires:  dde-api-devel
-BuildRequires: 	golang-github-mozillazg-pinyin 
-BuildRequires: 	golang-github-lofanmi-pinyin
-BuildRequires:  golang-github-kelvins-sunrisesunset-devel	
-BuildRequires:  golang-github-axgle-mahonia-devel	
-BuildRequires:  golang-github-cryptix-wav-devel 
-BuildRequires:  golang-x-image-devel 
-BuildRequires:  golang-github-rickb777-date-devel 
-BuildRequires:  golang-github-gosexy-gettext-devel 
-BuildRequires:  golang-github-msteinert-pam-devel 
- 
+
 Requires:       bluez-libs
 Requires:       deepin-desktop-base
 Requires:       deepin-desktop-schemas
@@ -213,21 +206,29 @@ if [ $1 -ge 1 ]; then
   %{_sbindir}/alternatives --install %{_bindir}/x-terminal-emulator \
     x-terminal-emulator %{_libexecdir}/%{sname}/default-terminal 30
 fi
+%if 0%{?fedora}
 %systemd_post deepin-accounts-daemon.service
+%endif
+
 
 %preun
 if [ $1 -eq 0 ]; then
   %{_sbindir}/alternatives --remove x-terminal-emulator \
     %{_libexecdir}/%{sname}/default-terminal
 fi
+%if 0%{?fedora}
 %systemd_preun deepin-accounts-daemon.service
+%endif
+
 
 %postun
 if [ $1 -eq 0 ]; then
   rm -f /var/cache/deepin/mark-setup-network-services
   rm -f /var/log/deepin.log 
 fi
+%if 0%{?fedora}
 %systemd_postun_with_restart deepin-accounts-daemon.service
+%endif
 
 %files -f %{name}.lang
 %doc README.md
