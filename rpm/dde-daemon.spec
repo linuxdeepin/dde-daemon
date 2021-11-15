@@ -33,7 +33,6 @@ Source2:        %{sname}.sysusers
 URL:            http://shuttle.corp.deepin.com/cache/tasks/18802/unstable-amd64/
 Source0:        %{name}-%{version}.tar.gz
 %endif
-Source1:        99-deepin-accounts-daemon.preset
 
 BuildRequires:  python3
 BuildRequires:  systemd-rpm-macros
@@ -190,7 +189,7 @@ export GOPATH=/usr/share/gocode
 install -Dm644 %{SOURCE2} %{buildroot}/usr/lib/sysusers.d/%{name}.conf
 %endif
 
-install -Dm0644 %{SOURCE1} -t %{buildroot}/%{_presetdir}
+install -Dm0644 rpm/99-deepin-accounts-daemon.preset -t %{buildroot}/%{_presetdir}
 
 # fix systemd/logind config
 install -d %{buildroot}/usr/lib/systemd/logind.conf.d/
