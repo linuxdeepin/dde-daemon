@@ -5,7 +5,7 @@ Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends:
  dde-api-dev (>> 3.17.1+),
  debhelper-compat (= 11),
- deepin-desktop-schemas,
+ deepin-desktop-schemas (>=5.9.42),
  deepin-gettext-tools,
  deepin-proxy,
  golang-dlib-dev(>> 5.1.0+),
