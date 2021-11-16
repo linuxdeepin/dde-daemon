@@ -28,9 +28,12 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	apidevice "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.device"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
@@ -107,9 +110,11 @@ var DeviceTypes []string = []string{
 //go:generate dbusutil-gen em -type Bluetooth,agent,obexAgent
 
 type Bluetooth struct {
-	service       *dbusutil.Service
-	sigLoop       *dbusutil.SignalLoop
-	systemSigLoop *dbusutil.SignalLoop
+	service        *dbusutil.Service
+	sigLoop        *dbusutil.SignalLoop
+	systemSigLoop  *dbusutil.SignalLoop
+	sessionSigLoop *dbusutil.SignalLoop
+
 	config        *config
 	objectManager bluez.ObjectManager
 	sysDBusDaemon ofdbus.DBus
@@ -143,6 +148,10 @@ type Bluetooth struct {
 
 	sessionCancelChMap   map[dbus.ObjectPath]chan struct{}
 	sessionCancelChMapMu sync.Mutex
+
+	sessionManager     sessionmanager.SessionManager
+	currentSessionPath dbus.ObjectPath
+	currentSession     login1.Session
 
 	settings *gio.Settings
 	//dbusutil-gen: ignore
@@ -284,6 +293,7 @@ func (b *Bluetooth) init() {
 	b.sigLoop.Start()
 
 	b.systemSigLoop.Start()
+
 	b.config = newConfig()
 	b.devices = make(map[dbus.ObjectPath][]*device)
 
@@ -292,6 +302,8 @@ func (b *Bluetooth) init() {
 	b.backupDeviceLock.Unlock()
 
 	systemBus := b.systemSigLoop.Conn()
+
+	sessionBus := b.sigLoop.Conn()
 
 	b.connectedLock.Lock()
 	b.connectedDevices = make(map[dbus.ObjectPath][]*device, len(DeviceTypes))
@@ -313,6 +325,16 @@ func (b *Bluetooth) init() {
 
 	b.settings = gio.NewSettings(bluetoothSchema)
 	b.DisplaySwitch.Bind(b.settings, displaySwitch)
+
+	b.sessionManager = sessionmanager.NewSessionManager(sessionBus)
+	b.currentSessionPath, err = b.sessionManager.CurrentSessionPath().Get(0)
+	if err != nil {
+		logger.Warning("get sessionManager CurrentSessionPath failed:", err)
+	}
+	b.currentSession, err = login1.NewSession(systemBus, b.currentSessionPath)
+	if err != nil {
+		logger.Error("Failed to connect self session:", err)
+	}
 
 	// initialize dbus object manager
 	b.objectManager = bluez.NewObjectManager(systemBus)
@@ -1074,4 +1096,13 @@ func (b *Bluetooth) emitTransferFailed(file string, sessionPath dbus.ObjectPath,
 	if err != nil {
 		logger.Warning("failed to emit TransferFailed:", err)
 	}
+}
+
+func (b *Bluetooth) isSessionActive() bool {
+	active, err := b.currentSession.Active().Get(dbus.FlagNoAutoStart)
+	if err != nil {
+		logger.Error("Failed to get self active:", err)
+		return false
+	}
+	return active
 }
