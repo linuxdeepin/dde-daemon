@@ -31,7 +31,7 @@ prepare:
 		fi
 
 out/bin/%: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@  ${GOPKG_PREFIX}/bin/${@F}
+	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@ ${GOBUILD_OPTIONS} ${GOPKG_PREFIX}/bin/${@F}
 
 out/bin/default-file-manager: bin/default-file-manager/main.c
 	gcc $^ $(shell pkg-config --cflags --libs gio-unix-2.0) $(CFLAGS) -o $@
