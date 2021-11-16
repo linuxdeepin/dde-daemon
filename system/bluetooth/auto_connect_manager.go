@@ -10,7 +10,7 @@ import (
 )
 
 // 每个适配器最大 worker 数量，最大同时连接设备数。
-const maxNumWorkerPerAdapter = 2
+const maxNumWorkerPerAdapter = 1
 
 // 自动连接管理器
 type autoConnectManager struct {

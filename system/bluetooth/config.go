@@ -272,16 +272,6 @@ func (c *config) softDevices(devices []*device) {
 	sort.SliceStable(devices, func(i, j int) bool {
 		devI := devices[i]
 		devJ := devices[j]
-
-		priorityI := getPriorityWithIcon(devI.Icon)
-		priorityJ := getPriorityWithIcon(devJ.Icon)
-		if priorityI < priorityJ {
-			return true
-		} else if priorityI > priorityJ {
-			return false
-		}
-		// iconPriority 相等
-
 		cfgI := c.Devices[devI.getAddress()]
 		cfgJ := c.Devices[devJ.getAddress()]
 		var latestTimeI int64 = 0
