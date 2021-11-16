@@ -192,11 +192,13 @@ func (a *adapter) connectProperties() {
 		a.Powered = value
 		logger.Debugf("%s Powered: %v", a, value)
 
-		power := globalBluetooth.config.getAdapterConfigPowered(a.address)
-		if power != a.Powered {
-			err = a.core.Adapter().Powered().Set(0, power)
-			if err != nil {
-				logger.Warning("set Adapter Powered failed:", err)
+		if globalBluetooth.isSessionActive() {
+			power := globalBluetooth.config.getAdapterConfigPowered(a.address)
+			if power != a.Powered {
+				err = a.core.Adapter().Powered().Set(0, power)
+				if err != nil {
+					logger.Warning("set Adapter Powered failed:", err)
+				}
 			}
 		}
 
