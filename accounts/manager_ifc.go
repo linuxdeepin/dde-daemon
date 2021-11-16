@@ -151,6 +151,11 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 			return dbusutil.ToError(errors.New("failed to remove user cache files"))
 		}
 
+		// 删除账户前先删除生物特征，避免删除账户后，用户数据找不到
+		if rmFiles {
+			user.clearBiometricChara()
+		}
+
 		// 删除服务，更新UserList
 		userPath := userDBusPathPrefix + user.Uid
 		m.stopExportUser(userPath)
@@ -168,6 +173,10 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		return dbusutil.ToError(err)
 	}
 
+	// 删除账户前先删除生物特征，避免删除账户后，用户数据找不到
+	if rmFiles {
+		user.clearBiometricChara()
+	}
 	if err := users.DeleteUser(rmFiles, name); err != nil {
 		logger.Warningf("DoAction: delete user '%s' failed: %v\n",
 			name, err)

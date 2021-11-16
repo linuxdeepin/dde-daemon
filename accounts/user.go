@@ -719,9 +719,13 @@ func (u *User) clearData() {
 		}
 	}
 
-	u.clearFingers()
 }
 
+// 删除生物认证信息,TODO (人脸，虹膜)
+func (u *User) clearBiometricChara() {
+	u.clearFingers()
+
+}
 func (u *User) clearFingers() {
 	logger.Debug("clearFingers")
 
