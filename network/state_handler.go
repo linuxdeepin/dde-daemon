@@ -226,16 +226,32 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 	// connect signals
 	nmDev.InitSignalExt(sh.sysSigLoop, true)
 	_, err = nmDev.Device().ConnectStateChanged(func(newState, oldState, reason uint32) {
+		var id string
+		sh.m.activeConnectionsLock.Lock()
+		for _, ac := range sh.m.activeConnections {
+			// search dev
+			for _, dev := range ac.Devices {
+				// check if type is equal
+				if dev == path {
+					id = ac.Id
+					break
+				}
+			}
+		}
+		sh.m.activeConnectionsLock.Unlock()
 		logger.Debugf("device state changed, %d => %d, reason[%d] %s", oldState, newState, reason, deviceErrorTable[reason])
 		sh.locker.Lock()
 		defer sh.locker.Unlock()
+		// update id here
+		if id != "" && id != "/" {
+			sh.devices[path].aconnId = id
+		}
 		if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
-			// update active connection id and type if exists
-			sh.devices[path].aconnId = getSettingConnectionId(data)
+			// update active connection and type if exists
 			sh.devices[path].connectionType = getCustomConnectionType(data)
 		}
 		dsi, ok := sh.devices[path]
-		if !ok {
+		if !ok || (sh.devices[path].aconnId == "") {
 			// the device already been removed
 			return
 		}
