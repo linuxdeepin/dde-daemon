@@ -33,6 +33,7 @@ type activeConnection struct {
 	typ       string
 	vpnFailed bool
 	vpnType   string
+	vpnState  uint32
 
 	Devices        []dbus.ObjectPath
 	conn           dbus.ObjectPath
@@ -211,6 +212,13 @@ func (m *Manager) doHandleVpnNotification(apath dbus.ObjectPath, state, reason u
 	if !ok {
 		return
 	}
+
+	// if is already state, ignore
+	if aConn.vpnState == state {
+		return
+	}
+	// save current state
+	aConn.vpnState = state
 
 	// notification for vpn
 	switch state {
