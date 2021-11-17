@@ -1,4 +1,4 @@
-package displaycfg
+package display
 
 import (
 	"pkg.deepin.io/dde/daemon/loader"
@@ -14,10 +14,10 @@ func (m *module) GetDependencies() []string {
 }
 
 func (m *module) Start() error {
-	logger.Debug("module displaycfg start")
+	logger.Debug("module display start")
 	service := loader.GetService()
 
-	d := newDisplayCfg(service)
+	d := newDisplay(service)
 	err := service.Export(dbusPath, d)
 	if err != nil {
 		return err
@@ -34,14 +34,14 @@ func (m *module) Stop() error {
 	return nil
 }
 
-func newDisplayCfgModule(logger *log.Logger) *module {
+func newDisplayModule(logger *log.Logger) *module {
 	m := new(module)
-	m.ModuleBase = loader.NewModuleBase("displaycfg", m, logger)
+	m.ModuleBase = loader.NewModuleBase("display", m, logger)
 	return m
 }
 
-var logger = log.NewLogger("daemon/displaycfg")
+var logger = log.NewLogger("daemon/display")
 
 func init() {
-	loader.Register(newDisplayCfgModule(logger))
+	loader.Register(newDisplayModule(logger))
 }

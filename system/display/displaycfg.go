@@ -1,36 +1,38 @@
-package displaycfg
+package display
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/godbus/dbus"
 	"pkg.deepin.io/lib/dbusutil"
 )
 
 const (
-	dbusServiceName   = "com.deepin.system.DisplayCfg"
+	dbusServiceName   = "com.deepin.system.Display"
 	dbusInterfaceName = dbusServiceName
-	dbusPath          = "/com/deepin/system/DisplayCfg"
+	dbusPath          = "/com/deepin/system/Display"
 	configFilePath    = "/var/lib/dde-daemon/display/config.json"
 )
 
-//go:generate dbusutil-gen em -type DisplayCfg
+//go:generate dbusutil-gen em -type Display
 
-type DisplayCfg struct {
+type Display struct {
 	service *dbusutil.Service
 	cfg     *Config
+	cfgMu   sync.Mutex
 	signals *struct {
-		Updated struct {
+		ConfigUpdated struct {
 			updateAt string
 		}
 	}
 }
 
-func newDisplayCfg(service *dbusutil.Service) *DisplayCfg {
-	d := &DisplayCfg{
+func newDisplay(service *dbusutil.Service) *Display {
+	d := &Display{
 		service: service,
 	}
 	cfg, err := loadConfig(configFilePath)
@@ -43,31 +45,41 @@ func newDisplayCfg(service *dbusutil.Service) *DisplayCfg {
 	return d
 }
 
-func (d *DisplayCfg) GetInterfaceName() string {
+func (d *Display) GetInterfaceName() string {
 	return dbusInterfaceName
 }
 
-func (d *DisplayCfg) Get() (cfgStr string, busErr *dbus.Error) {
+func (d *Display) GetConfig() (cfgStr string, busErr *dbus.Error) {
+	var err error
+	cfgStr, err = d.getConfig()
+	return cfgStr, dbusutil.ToError(err)
+}
+
+func (d *Display) getConfig() (string, error) {
+	d.cfgMu.Lock()
+	defer d.cfgMu.Unlock()
+
 	data, err := json.Marshal(d.cfg)
 	if err != nil {
-		return "", dbusutil.ToError(err)
+		return "", err
 	}
-
 	return string(data), nil
 }
 
-func (d *DisplayCfg) Set(cfgStr string) *dbus.Error {
-	err := d.set(cfgStr)
+func (d *Display) SetConfig(cfgStr string) *dbus.Error {
+	err := d.setConfig(cfgStr)
 	return dbusutil.ToError(err)
 }
 
-func (d *DisplayCfg) set(cfgStr string) error {
+func (d *Display) setConfig(cfgStr string) error {
 	var cfg Config
 	err := json.Unmarshal([]byte(cfgStr), &cfg)
 	if err != nil {
 		return err
 	}
 
+	d.cfgMu.Lock()
+	defer d.cfgMu.Unlock()
 	d.cfg = &cfg
 
 	err = saveConfig(&cfg, configFilePath)
@@ -75,7 +87,7 @@ func (d *DisplayCfg) set(cfgStr string) error {
 		return err
 	}
 
-	err = d.service.Emit(d, "Updated", cfg.UpdateAt)
+	err = d.service.Emit(d, "ConfigUpdated", cfg.UpdateAt)
 	if err != nil {
 		logger.Warning(err)
 	}

@@ -1,4 +1,4 @@
 [D-BUS Service]
-Name=com.deepin.system.DisplayCfg
+Name=com.deepin.system.Display
 Exec=/usr/lib/deepin-daemon/dde-system-daemon
 User=root
