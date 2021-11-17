@@ -308,6 +308,9 @@ func (b *SysBluetooth) RegisterAgent(sender dbus.Sender, agentPath dbus.ObjectPa
 		return dbusutil.ToError(err)
 	}
 	b.userAgents.addAgent(uidStr, agent)
+	// 防止第一次进入系统，此时无设备连接，但是 needFixBtPoweredStatus 为true，此时打开蓝牙添加设备后paired为true
+	// 此时在调用addDevice接口后，会走不必要的逻辑，因此将此标志位置为false规避
+	b.needFixBtPoweredStatus = false
 	go b.tryConnectPairedDevices("")
 
 	logger.Debugf("agent registered, sender: %q, agentPath: %q", sender, agentPath)

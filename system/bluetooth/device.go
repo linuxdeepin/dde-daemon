@@ -251,6 +251,21 @@ func newDevice(systemSigLoop *dbusutil.SignalLoop, dpath dbus.ObjectPath) (d *de
 		logger.Warning(err)
 	}
 	d.updateState()
+
+	// 升级后第一次进入系统，登录界面时，当之前有蓝牙连接时，打开蓝牙开关（蓝牙可被发现状态 为默认状态），否则关闭
+	if d.Paired && _bt.needFixBtPoweredStatus {
+		// 防止多个设备反复打开蓝牙
+		adapter, err := _bt.getAdapter(d.AdapterPath)
+		if err != nil {
+			return
+		}
+
+		if !adapter.Powered {
+			_bt.SetAdapterPowered(d.AdapterPath, true)
+			_bt.needFixBtPoweredStatus = false
+		}
+	}
+
 	if d.Paired && d.connected {
 		d.ConnectState = true
 		//切換用户时添加设备到connectedDevices列表中

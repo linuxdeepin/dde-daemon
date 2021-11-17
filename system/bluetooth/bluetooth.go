@@ -103,6 +103,8 @@ type SysBluetooth struct {
 	//设备被清空后需要连接的设备路径
 	prepareToConnectedDevice dbus.ObjectPath
 	prepareToConnectedMu     sync.Mutex
+	// 升级后第一次进系统，此时需要根据之前有蓝牙连接时，打开蓝牙开关
+	needFixBtPoweredStatus bool
 
 	// nolint
 	signals *struct {
@@ -120,9 +122,10 @@ type SysBluetooth struct {
 func newSysBluetooth(service *dbusutil.Service) (b *SysBluetooth) {
 	sysBus := service.Conn()
 	b = &SysBluetooth{
-		service:    service,
-		sigLoop:    dbusutil.NewSignalLoop(sysBus, 10),
-		userAgents: newUserAgentMap(),
+		service:                service,
+		sigLoop:                dbusutil.NewSignalLoop(sysBus, 10),
+		userAgents:             newUserAgentMap(),
+		needFixBtPoweredStatus: false,
 	}
 
 	b.config = newConfig()
@@ -207,6 +210,8 @@ func (b *SysBluetooth) init() {
 		logger.Warning("canSendFile err:", err)
 	}
 
+	// 需要在Load加载之前判断系统级蓝牙配置文件是否存在
+	b.needFixBtPoweredStatus = !b.config.core.IsConfigFileExists()
 	b.sigLoop.Start()
 	b.config.load()
 	b.sysDBusDaemon.InitSignalExt(b.sigLoop, true)
