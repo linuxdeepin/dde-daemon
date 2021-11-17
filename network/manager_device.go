@@ -38,7 +38,7 @@ type device struct {
 	mmDevModem mmdbus.Modem
 	nmDevType  uint32
 	id         string
-	udi        string
+	Udi        string
 
 	Path          dbus.ObjectPath
 	State         uint32
@@ -156,7 +156,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		nmDevType: devType,
 		Path:      nmDev.Path_(),
 	}
-	dev.udi, _ = nmDev.Device().Udi().Get(0)
+	dev.Udi, _ = nmDev.Device().Udi().Get(0)
 	dev.Driver, _ = nmDev.Device().Driver().Get(0)
 
 	dev.Vendor = nmGeneralGetDeviceDesc(devPath)
@@ -348,7 +348,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			time.Sleep(3 * time.Second)
 			nmSetDeviceAutoconnect(dev.Path, false)
 		}()
-		if mmDevModem, err := mmNewModem(dbus.ObjectPath(dev.udi)); err == nil {
+		if mmDevModem, err := mmNewModem(dbus.ObjectPath(dev.Udi)); err == nil {
 			mmDevModem.InitSignalExt(m.sysSigLoop, true)
 			dev.mmDevModem = mmDevModem
 
