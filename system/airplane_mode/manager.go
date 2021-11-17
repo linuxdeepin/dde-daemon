@@ -1,18 +1,16 @@
 package airplane_mode
 
 import (
-	"bufio"
-	"bytes"
 	"errors"
-	"io"
 	"os"
-	"os/exec"
 	"sync"
 
 	dbus "github.com/godbus/dbus"
+	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	"pkg.deepin.io/lib/dbusutil"
+	"pkg.deepin.io/lib/strv"
 )
 
 const (
@@ -116,36 +114,28 @@ func (m *Manager) listenDBusSignals() {
 }
 
 func (m *Manager) listenRfkillEvents() {
-	cmd := exec.Command("rfkill", "event")
-	outPipe, err := cmd.StdoutPipe()
+	const bluezAdapterDBusInterface = "org.bluez.Adapter1"
+	objectManager := bluez.NewObjectManager(m.service.Conn())
+	objectManager.InitSignalExt(m.sigLoop, true)
+	_, err := objectManager.ConnectInterfacesAdded(func(path dbus.ObjectPath, data map[string]map[string]dbus.Variant) {
+		if _, ok := data[bluezAdapterDBusInterface]; ok {
+			m.handleBluezInterfacesChanged()
+		}
+	})
 	if err != nil {
 		logger.Warning(err)
-		return
 	}
-	err = cmd.Start()
+	_, err = objectManager.ConnectInterfacesRemoved(func(path dbus.ObjectPath, data []string) {
+		if strv.Strv(data).Contains(bluezAdapterDBusInterface) {
+			m.handleBluezInterfacesChanged()
+		}
+	})
 	if err != nil {
 		logger.Warning(err)
-		return
 	}
-
-	go func() {
-		rd := bufio.NewReader(outPipe)
-		for {
-			line, err := rd.ReadBytes('\n')
-			if err == io.EOF {
-				break
-			}
-			logger.Debugf("rfkill event: %s", bytes.TrimSpace(line))
-			m.handleRfkillEvent()
-		}
-		err = cmd.Wait()
-		if err != nil {
-			logger.Warning(err)
-		}
-	}()
 }
 
-func (m *Manager) handleRfkillEvent() {
+func (m *Manager) handleBluezInterfacesChanged() {
 	enabled, err := getBtEnabled()
 	if err != nil {
 		logger.Warning(err)
