@@ -339,8 +339,9 @@ var kwinSysActionCmdMap = map[string]string{
 	"Show/Hide the dock":    "show-dock",
 
 	// cmd
-	"Calculator": "calculator", // XF86Calculator
-	"Search":     "search",     // XF86Search
+	"Calculator":         "calculator",          // XF86Calculator
+	"Search":             "search",              // XF86Search
+	"NotificationCenter": "notification-center", // Meta M
 }
 
 var waylandMediaIdMap = map[string]string{
