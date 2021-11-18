@@ -67,6 +67,7 @@ BuildRequires:  golang-x-xerrors-devel
 BuildRequires:  golang-x-image-devel
 %else
 BuildRequires:  gocode
+%systemd_requires
 
 %endif
 BuildRequires:  compiler(go-compiler)
@@ -206,9 +207,7 @@ if [ $1 -ge 1 ]; then
   %{_sbindir}/alternatives --install %{_bindir}/x-terminal-emulator \
     x-terminal-emulator %{_libexecdir}/%{sname}/default-terminal 30
 fi
-%if 0%{?fedora}
 %systemd_post deepin-accounts-daemon.service
-%endif
 
 
 %preun
@@ -216,9 +215,7 @@ if [ $1 -eq 0 ]; then
   %{_sbindir}/alternatives --remove x-terminal-emulator \
     %{_libexecdir}/%{sname}/default-terminal
 fi
-%if 0%{?fedora}
 %systemd_preun deepin-accounts-daemon.service
-%endif
 
 
 %postun
@@ -226,9 +223,7 @@ if [ $1 -eq 0 ]; then
   rm -f /var/cache/deepin/mark-setup-network-services
   rm -f /var/log/deepin.log 
 fi
-%if 0%{?fedora}
 %systemd_postun_with_restart deepin-accounts-daemon.service
-%endif
 
 %files -f %{name}.lang
 %doc README.md
