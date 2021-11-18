@@ -243,8 +243,8 @@ func (a *adapter) connectProperties() {
 
 func (a *adapter) startDiscovery() {
 	a.discoveringFinished = false
-	//已经开始扫描 或者 我的设备回连未结束
-	if a.Discovering || !a.bt.acm.adapters[a.Path].isAutoConnectFinished {
+	// 已经开始扫描
+	if a.Discovering {
 		return
 	}
 
