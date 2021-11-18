@@ -183,7 +183,7 @@ export GOPATH=/usr/share/gocode
 install -Dm644 %{SOURCE2} %{buildroot}/usr/lib/sysusers.d/%{name}.conf
 %endif
 
-install -Dm0644 rpm/99-deepin-accounts-daemon.preset -t %{buildroot}/%{_presetdir}
+install -Dm0644 rpm/85-deepin-accounts-daemon.preset -t %{buildroot}/%{_presetdir}
 
 # fix systemd/logind config
 install -d %{buildroot}/usr/lib/systemd/logind.conf.d/
@@ -250,7 +250,7 @@ fi
 %{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla
 %{_unitdir}/dbus-com.deepin.dde.lockservice.service
 %{_unitdir}/deepin-accounts-daemon.service
-%{_presetdir}/99-deepin-accounts-daemon.preset
+%{_presetdir}/85-deepin-accounts-daemon.preset
 %if 0%{?fedora}
 %{_sysusersdir}/%{name}.conf
 %{_datadir}/deepin-default-settings/
