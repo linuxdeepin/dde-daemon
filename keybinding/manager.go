@@ -436,49 +436,6 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 		}
 	})
 
-	//+ 监听锁屏信号
-	err = sessionBus.Object("com.deepin.dde.lockFront",
-		"/com/deepin/dde/lockFront").AddMatchSignal("com.deepin.dde.lockFront", "Visible").Err
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.dde.lockFront.Visible",
-	}, func(sig *dbus.Signal) {
-		if len(sig.Body) > 0 {
-			isLocked := sig.Body[0].(bool)
-			if isLocked {
-				sessionBus, err := dbus.SessionBus()
-				if err != nil {
-					return
-				}
-				obj := sessionBus.Object("org.kde.kglobalaccel", "/kglobalaccel")
-				err = obj.Call("org.kde.KGlobalAccel.blockGlobalShortcuts", 0, true).Err
-				if err != nil {
-					return
-				} else {
-					var stringList = [...]string{"PowerOff", "CapsLock", "MonBrightnessDown", "MonBrightnessUp",
-						"VolumeMute", "VolumeDown", "VolumeUp", "AudioMicMute", "WLAN", "Tools", "Full screenshot",
-						"PowerOff"}
-					for _, str := range stringList {
-						err = obj.Call("org.kde.KGlobalAccel.setActiveByUniqueName", 0, str, true).Err
-						if err != nil {
-							return
-						}
-						time.Sleep(10 * time.Millisecond)
-					}
-				}
-			} else {
-				obj := sessionBus.Object("org.kde.kglobalaccel", "/kglobalaccel")
-				err = obj.Call("org.kde.KGlobalAccel.blockGlobalShortcuts", 0, false).Err
-				if err != nil {
-					return
-				}
-			}
-		}
-	})
-
 	//+ 监控鼠标移动事件
 	err = sessionBus.Object("com.deepin.daemon.KWayland",
 		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
