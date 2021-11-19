@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-19 11:11+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
@@ -87,7 +87,7 @@ msgstr "屏幕缩放"
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:105
 msgid "Open"
 msgstr "打开"
 
@@ -147,8 +147,7 @@ msgstr "消息访问"
 msgid "Message notification"
 msgstr "消息通知"
 
-#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
-#: ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "取消"
 
@@ -176,8 +175,8 @@ msgstr "文件接收中止"
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
-#: ../../bluetooth/utils_notify.go:124
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "蓝牙连接失败"
 
@@ -201,33 +200,33 @@ msgstr "您收到%q发送给您的文件，是否接收？"
 msgid "Receiving %q timed out"
 msgstr "接收%q超时"
 
-#: ../../bluetooth/utils_notify.go:104
+#: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "连接%q成功"
 
-#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q已断开"
 
-#: ../../bluetooth/utils_notify.go:114
+#: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
 msgstr "请确定%q已打开而且在通讯范围内"
 
-#: ../../bluetooth/utils_notify.go:123
+#: ../../bluetooth/utils_notify.go:117
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr "%q无法与%q再连接，请尝试忽略此设备并再次配对。"
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "点击以设置添加%q"
 
-#: ../../bluetooth/utils_notify.go:158
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "添加蓝牙设备"
 
-#: ../../bluetooth/utils_notify.go:168
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "配对"
 
@@ -281,23 +280,23 @@ msgstr "日程提醒"
 msgid "Festival"
 msgstr "节日"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:112
 msgid "Close All"
 msgstr "关闭所有"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130
 msgid "Force Quit"
 msgstr "强制退出"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:140
 msgid "Dock"
 msgstr "驻留"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:150
 msgid "Undock"
 msgstr "移除驻留"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:160
 msgid "All Windows"
 msgstr "所有窗口"
 
@@ -393,103 +392,99 @@ msgstr "剪贴板"
 msgid "Translation"
 msgstr "文本翻译"
 
-#: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global search"
-msgstr "全局搜索"
-
-#: ../../keybinding/shortcuts/id_name_map.go:57
+#: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
 msgstr "切换键盘布局"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
 msgstr "切换到左边工作区"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
 msgstr "切换到右边工作区"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
 msgstr "切换到上方工作区"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
 msgstr "切换到下方工作区"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
 msgstr "切换同类型窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
 msgstr "反向切换同类型窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
 msgstr "切换窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
 msgstr "反向切换窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:95
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
 msgstr "显示桌面"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
 msgstr "最大化窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Restore window"
 msgstr "恢复窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Minimize window"
 msgstr "最小化窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
 msgstr "关闭窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
 msgstr "移动窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
 msgstr "改变窗口大小"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
 msgstr "移动到左边工作区"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
 msgstr "移动到右边工作区"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
 msgstr "移动到上方工作区"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
 msgstr "移动到下方工作区"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
 msgstr "显示所有工作区的窗口  "
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
 msgstr "显示当前工作区的窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
 msgstr "显示工作区 "
 
-#: ../../keybinding/shortcuts/id_name_map.go:215
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "多屏切换"
 
@@ -560,10 +555,6 @@ msgstr "成功卸载 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸载失败"
 
-#: ../../network/manager.go:339
-msgid "Wired connection"
-msgstr "有线连接"
-
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -601,9 +592,14 @@ msgstr "隧道TLS"
 msgid "Protected EAP"
 msgstr "受保护的EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "有线连接"
+
+#: ../../network/manager_connection.go:402
+msgid "Wired Connection %v"
+msgstr "有线连接 %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -611,8 +607,8 @@ msgstr "应用代理设置成功"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:204 ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:211
 msgid "Network"
 msgstr "网络"
 
@@ -985,34 +981,34 @@ msgstr "%q 802.11 WLAN网络无法找到"
 msgid "Unknown"
 msgstr "未知"
 
-#: ../../network/utils_notify.go:185
+#: ../../network/utils_notify.go:192
 msgid "Airplane mode enabled."
 msgstr "飞行模式已启用"
 
-#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
-#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
-#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
+#: ../../network/utils_notify.go:192 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:200 ../../network/utils_notify.go:218
+#: ../../network/utils_notify.go:221 ../../network/utils_notify.go:310
 msgid "Disconnected"
 msgstr "已断开"
 
-#: ../../network/utils_notify.go:193
+#: ../../network/utils_notify.go:200
 msgid "Access Point mode is not supported by this device."
 msgstr "此设备不支持热点模式。"
 
-#: ../../network/utils_notify.go:197
+#: ../../network/utils_notify.go:204
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "无线网卡的硬件开关已关闭，如需使用无线请先打开开关。"
 
-#: ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:208
 msgid "System proxy is set successfully."
 msgstr "系统代理设置成功。"
 
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:211
 msgid "System proxy has been cancelled."
 msgstr "系统代理已取消。"
 
-#: ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:215
 msgid "Connected"
 msgstr "已连接"
 
@@ -1025,9 +1021,9 @@ msgstr "“%s”没有通过系统安全验证，无法运行"
 msgid "Battery critically low"
 msgstr "电池电量耗尽"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "电池电量低，请连接电源"
 

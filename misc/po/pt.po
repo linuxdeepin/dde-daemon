@@ -5,22 +5,22 @@
 # 
 # Translators:
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
-# Jesse Brandao <www.jwb@gmail.com>, 2020
+# 00101f7862160fbf8a065655a48ad879_875972c <c486e5cdf80c8fbbc1127ec062b107b4_205162>, 2020
 # Manuela Silva <mmsrs@sky.com>, 2020
 # Luís Lima <geral@liqensoft.com>, 2020
 # Ricardo Simões <xmcorporation@gmail.com>, 2020
 # Cindy0514, 2021
-# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021
 # Galvanize87 <ajg.silva@hotmail.com>, 2021
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-19 11:11+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Galvanize87 <ajg.silva@hotmail.com>, 2021\n"
+"Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>, 2021\n"
 "Language-Team: Portuguese (https://www.transifex.com/linuxdeepin/teams/3617/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +91,7 @@ msgstr "Escala de visualização"
 msgid "%s had been disabled"
 msgstr "%s foi desativado"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:105
 msgid "Open"
 msgstr "Abrir"
 
@@ -151,8 +151,7 @@ msgstr "Acesso de mensagem"
 msgid "Message notification"
 msgstr "Notificação de mensagem"
 
-#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
-#: ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -180,8 +179,8 @@ msgstr "Parar de receber ficheiros"
 msgid "You have cancelled the file transfer"
 msgstr "Cancelou a transferência de ficheiros"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
-#: ../../bluetooth/utils_notify.go:124
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Falha na ligação por Bluetooth"
 
@@ -205,35 +204,35 @@ msgstr "%q quer enviar ficheiros para si. Receber?"
 msgid "Receiving %q timed out"
 msgstr "Tempo limite da recepção de %q esgotado"
 
-#: ../../bluetooth/utils_notify.go:104
+#: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "Ligar a %q com sucesso"
 
-#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q desligado"
 
-#: ../../bluetooth/utils_notify.go:114
+#: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
 msgstr "Certifique-se que %q está ligado e dentro do alcance"
 
-#: ../../bluetooth/utils_notify.go:123
+#: ../../bluetooth/utils_notify.go:117
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 "%q já não se pode ligar a %q. Tente esquecer este dispositivo e emparelhe-o "
 "novamente."
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "Clique aqui para ligar a %q"
 
-#: ../../bluetooth/utils_notify.go:158
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Adicionar dispositivos Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:168
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Emparelhar"
 
@@ -287,23 +286,23 @@ msgstr "Agendar lembrete"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:112
 msgid "Close All"
 msgstr "Fechar tudo"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130
 msgid "Force Quit"
 msgstr "Forçar o terminar"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:140
 msgid "Dock"
 msgstr "Doca"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:150
 msgid "Undock"
 msgstr "Remover da doca"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:160
 msgid "All Windows"
 msgstr "Todas as janelas"
 
@@ -399,103 +398,99 @@ msgstr "Área de transferência"
 msgid "Translation"
 msgstr "Tradução"
 
-#: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global search"
-msgstr ""
-
-#: ../../keybinding/shortcuts/id_name_map.go:57
+#: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
 msgstr "Alterar esquema"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
 msgstr "Mudar para área de trabalho à esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
 msgstr "Mudar para área de trabalho à direita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
 msgstr "Mudar para área de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
 msgstr "Mudar para área de trabalho abaixo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
 msgstr "Alternar janelas semelhantes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
 msgstr "Alternar inversamente janelas semelhantes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
 msgstr "Alternar janelas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
 msgstr "Alternar janelas em ordem inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:95
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
 msgstr "Mostrar ambiente de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
 msgstr "Maximizar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Restore window"
 msgstr "Restaurar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Minimize window"
 msgstr "Minimizar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
 msgstr "Fechar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
 msgstr "Mover janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
 msgstr "Redimensionar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
 msgstr "Mover para área de trabalho à esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
 msgstr "Mover para área de trabalho à direita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
 msgstr "Mover para área de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
 msgstr "Mover para área de trabalho abaixo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
 msgstr "Mostrar janelas de todas as áreas de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
 msgstr "Mostrar janelas da atual área de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
 msgstr "Mostrar área de trabalho virtual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:215
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Alternar monitores"
 
@@ -570,10 +565,6 @@ msgstr "%q removido com sucesso"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao desinstalar %q"
 
-#: ../../network/manager.go:339
-msgid "Wired connection"
-msgstr "Ligação por cabo"
-
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -611,9 +602,14 @@ msgstr "TLS Tunelado"
 msgid "Protected EAP"
 msgstr "EAP Protegido"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "Ligação por cabo"
+
+#: ../../network/manager_connection.go:402
+msgid "Wired Connection %v"
+msgstr "Ligação por cabo %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -621,8 +617,8 @@ msgstr "O proxy da aplicação está definido com sucesso"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:204 ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:211
 msgid "Network"
 msgstr "Rede"
 
@@ -1006,36 +1002,36 @@ msgstr "Não foi possível encontrar a rede %q 802.11 WLAN"
 msgid "Unknown"
 msgstr "Desconhecido"
 
-#: ../../network/utils_notify.go:185
+#: ../../network/utils_notify.go:192
 msgid "Airplane mode enabled."
 msgstr "Modo de avião ativado."
 
-#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
-#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
-#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
+#: ../../network/utils_notify.go:192 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:200 ../../network/utils_notify.go:218
+#: ../../network/utils_notify.go:221 ../../network/utils_notify.go:310
 msgid "Disconnected"
 msgstr "Desligado"
 
-#: ../../network/utils_notify.go:193
+#: ../../network/utils_notify.go:200
 msgid "Access Point mode is not supported by this device."
 msgstr "Modo de ponto de acesso não é suportado por este dispositivo."
 
-#: ../../network/utils_notify.go:197
+#: ../../network/utils_notify.go:204
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "O interruptor da placa de rede sem fios está desligado, ligue conforme "
 "necessário."
 
-#: ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:208
 msgid "System proxy is set successfully."
 msgstr "O proxy do sistema está definido com sucesso."
 
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:211
 msgid "System proxy has been cancelled."
 msgstr "O proxy de sistema foi cancelado."
 
-#: ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:215
 msgid "Connected"
 msgstr "Ligado"
 
@@ -1050,9 +1046,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Bateria em estado crítico"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Bateria fraca, ligue à corrente"
 

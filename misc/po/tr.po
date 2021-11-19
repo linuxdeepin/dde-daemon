@@ -11,15 +11,16 @@
 # Cindy0514, 2021
 # Serdar Sağlam <teknomobil@msn.com>, 2021
 # meda <ademcal@yahoo.com>, 2021
+# abc Def <hdogan1974@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-19 11:11+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: meda <ademcal@yahoo.com>, 2021\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,7 +89,7 @@ msgstr "Görüntü ölçeği"
 msgid "%s had been disabled"
 msgstr "%s devre dışı bırakılmıştı"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:105
 msgid "Open"
 msgstr "Aç"
 
@@ -148,8 +149,7 @@ msgstr "İleti erişimi"
 msgid "Message notification"
 msgstr "İleti bildirimi"
 
-#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
-#: ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "İptal"
 
@@ -177,8 +177,8 @@ msgstr "Dosya Almayı Durdur"
 msgid "You have cancelled the file transfer"
 msgstr "Dosya aktarımını iptal ettiniz"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
-#: ../../bluetooth/utils_notify.go:124
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth bağlantısı kurulamadı"
 
@@ -202,35 +202,35 @@ msgstr "%q size dosya göndermek istiyor. Teslim alınsın mı?"
 msgid "Receiving %q timed out"
 msgstr "%q alım zaman aşımına uğradı"
 
-#: ../../bluetooth/utils_notify.go:104
+#: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "%q bağlantısı başarılı"
 
-#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q bağlantısı kesildi"
 
-#: ../../bluetooth/utils_notify.go:114
+#: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
 msgstr "%q ağının açık ve aralıkta olduğundan emin olun"
 
-#: ../../bluetooth/utils_notify.go:123
+#: ../../bluetooth/utils_notify.go:117
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 "%q artık %q ile bağlantı kuramıyor. Bu cihazı unutup yeniden eşleştirmeyi "
 "deneyin. "
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "%q ağına bağlanmak için tıkla"
 
-#: ../../bluetooth/utils_notify.go:158
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Bluetooth aygıtları ekle"
 
-#: ../../bluetooth/utils_notify.go:168
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Eşleştir"
 
@@ -284,23 +284,23 @@ msgstr "Zamanlamalı Hatırlatıcı"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:112
 msgid "Close All"
 msgstr "Tümünü Kapat"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130
 msgid "Force Quit"
 msgstr "Zorla Çık"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:140
 msgid "Dock"
-msgstr "Görev Çubuğu"
+msgstr "Rıhtım"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:150
 msgid "Undock"
 msgstr "Ayır"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:160
 msgid "All Windows"
 msgstr "Tüm Pencereler"
 
@@ -326,7 +326,7 @@ msgstr "Ekranı kilitle"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Görev çubuğunu görüntüle/gizle"
+msgstr "Rıhtımda Göster/Gizle"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -396,103 +396,99 @@ msgstr "Pano"
 msgid "Translation"
 msgstr "Çeviri"
 
-#: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global search"
-msgstr ""
-
-#: ../../keybinding/shortcuts/id_name_map.go:57
+#: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
 msgstr "Görünümü Değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
 msgstr "Sol çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
 msgstr "Sağ çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
 msgstr "Üst çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
 msgstr "Alt çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
 msgstr "Benzer pencereleri değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
 msgstr "Benzer pencereleri tersine değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
 msgstr "Pencereleri değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
 msgstr "Pencereleri ters çevir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:95
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
 msgstr "Masaüstünü görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
 msgstr "Pencereyi büyüt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Restore window"
 msgstr "Pencereyi geri yükle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Minimize window"
 msgstr "Pencereyi küçült"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
 msgstr "Pencereyi kapat"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
 msgstr "Pencereyi taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
 msgstr "Pencereyi boyutlandır"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
 msgstr "Sol çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
 msgstr "Sağ çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
 msgstr "Üst çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
 msgstr "Alt çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
 msgstr "Çalışma alanlarındaki pencereleri görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
 msgstr "Mevcut çalışma alanının pencerelerini görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
 msgstr "Çalışma alanını görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:215
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Monitörleri değiştir"
 
@@ -565,10 +561,6 @@ msgstr "%q kaldırıldı"
 msgid "Failed to uninstall %q"
 msgstr "%q kaldırılamadı"
 
-#: ../../network/manager.go:339
-msgid "Wired connection"
-msgstr "Kablolu bağlantı"
-
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -606,9 +598,14 @@ msgstr "Tünellenmiş TLS"
 msgid "Protected EAP"
 msgstr "Korumalı EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "Kablolu Bağlantı"
+
+#: ../../network/manager_connection.go:402
+msgid "Wired Connection %v"
+msgstr "Kablolu Bağlantı %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -616,8 +613,8 @@ msgstr "Uygulama vekil sunucusu başarıyla ayarlandı"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:204 ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:211
 msgid "Network"
 msgstr "Ağ"
 
@@ -1006,34 +1003,34 @@ msgstr "%q  802.11 WLAN ağı bulunamadı"
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
-#: ../../network/utils_notify.go:185
+#: ../../network/utils_notify.go:192
 msgid "Airplane mode enabled."
 msgstr "Uçak kipi etkinleştirildi."
 
-#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
-#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
-#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
+#: ../../network/utils_notify.go:192 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:200 ../../network/utils_notify.go:218
+#: ../../network/utils_notify.go:221 ../../network/utils_notify.go:310
 msgid "Disconnected"
 msgstr "Bağlantı kesildi"
 
-#: ../../network/utils_notify.go:193
+#: ../../network/utils_notify.go:200
 msgid "Access Point mode is not supported by this device."
 msgstr "Erişim Noktası kipi bu aygıt tarafından desteklenmiyor."
 
-#: ../../network/utils_notify.go:197
+#: ../../network/utils_notify.go:204
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "Kablosuz ağ aygıtının donanım anahtarı kapalı, lütfen açın."
 
-#: ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:208
 msgid "System proxy is set successfully."
 msgstr "Sistem vekil sunucusu ayarlandı."
 
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:211
 msgid "System proxy has been cancelled."
 msgstr "Sistem vekil sunucu iptal edildi."
 
-#: ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:215
 msgid "Connected"
 msgstr "Bağlandı"
 
@@ -1046,9 +1043,9 @@ msgstr "\"%s\" sistem güvenlik doğrulamasını geçemedi ve şimdi çalıştı
 msgid "Battery critically low"
 msgstr "Pil kritik derecede düşük"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Düşük pil düzeyi, lütfen fişe takın"
 

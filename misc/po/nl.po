@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-19 11:11+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/linuxdeepin/teams/3617/nl/)\n"
@@ -93,7 +93,7 @@ msgstr "Schaling weergeven"
 msgid "%s had been disabled"
 msgstr "%s is uitgeschakeld"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:105
 msgid "Open"
 msgstr "Openen"
 
@@ -153,8 +153,7 @@ msgstr "Berichttoegang"
 msgid "Message notification"
 msgstr "Berichtmelding"
 
-#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
-#: ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -182,8 +181,8 @@ msgstr "Bestandsoverdracht afbreken"
 msgid "You have cancelled the file transfer"
 msgstr "Je hebt de bestandsoverdracht afgebroken"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
-#: ../../bluetooth/utils_notify.go:124
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "Bluetoothverbinding mislukt"
 
@@ -207,35 +206,35 @@ msgstr "%q wil je bestanden sturen. Wil je dit toestaan?"
 msgid "Receiving %q timed out"
 msgstr "De verbinding met %q is verlopen"
 
-#: ../../bluetooth/utils_notify.go:104
+#: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "Verbinden %q succesvol"
 
-#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q ontkoppeld"
 
-#: ../../bluetooth/utils_notify.go:114
+#: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
 msgstr "Zorg ervoor dat %q ingeschakeld en binnen bereik is."
 
-#: ../../bluetooth/utils_notify.go:123
+#: ../../bluetooth/utils_notify.go:117
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 "%q kan geen verbinding meer maken met %q. 'Vergeet' het apparaat en koppel "
 "het opnieuw."
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "Klik hier om verbinding te maken met %q"
 
-#: ../../bluetooth/utils_notify.go:158
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "Bluetooth-apparaten toevoegen"
 
-#: ../../bluetooth/utils_notify.go:168
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "Koppelen"
 
@@ -289,23 +288,23 @@ msgstr "Herinnering planning"
 msgid "Festival"
 msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:112
 msgid "Close All"
 msgstr "Alles sluiten"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130
 msgid "Force Quit"
 msgstr "Afsluiten forceren"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:140
 msgid "Dock"
 msgstr "Dock"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:150
 msgid "Undock"
 msgstr "Undock"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:160
 msgid "All Windows"
 msgstr "Alle vensters"
 
@@ -401,103 +400,99 @@ msgstr "klembord"
 msgid "Translation"
 msgstr "Vertaling"
 
-#: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global search"
-msgstr ""
-
-#: ../../keybinding/shortcuts/id_name_map.go:57
+#: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
 msgstr "Wissel Lay-out"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
 msgstr "Ga naar linker werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
 msgstr "Ga naar rechter werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
 msgstr "Ga naar bovenste werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
 msgstr "Ga naar onderste werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
 msgstr "Verwissel gelijkaardige vensters"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
 msgstr "Verwissel gelijkaardige vensters in omgekeerde volgorde"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
 msgstr "Verwissel vensters"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
 msgstr "Verwissel vensters in omgekeerde volgorde"
 
-#: ../../keybinding/shortcuts/id_name_map.go:95
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
 msgstr "Toon bureaublad"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
 msgstr "Venster maximaliseren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Restore window"
 msgstr "Venster herstellen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Minimize window"
 msgstr "Venster minimaliseren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
 msgstr "Sluit venster"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
 msgstr "Verplaats venster"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
 msgstr "Venstergrootte aanpassen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
 msgstr "Verplaats naar linker werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
 msgstr "Verplaats naar rechter werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
 msgstr "Verplaats naar bovenste werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
 msgstr "Verplaats naar onderste werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
 msgstr "Toon vensters van alle werkruimtes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
 msgstr "Toon vensters van de huidige werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
 msgstr "Toon werkruimte"
 
-#: ../../keybinding/shortcuts/id_name_map.go:215
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "Schakelen tussen beeldschermen"
 
@@ -572,10 +567,6 @@ msgstr "%q succesvol verplaatst"
 msgid "Failed to uninstall %q"
 msgstr "%q mislukt om te verwijderen"
 
-#: ../../network/manager.go:339
-msgid "Wired connection"
-msgstr "Bekabelde verbinding"
-
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -613,9 +604,14 @@ msgstr "Tunneled TLS"
 msgid "Protected EAP"
 msgstr "Beschermd EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "Bekabelde verbinding"
+
+#: ../../network/manager_connection.go:402
+msgid "Wired Connection %v"
+msgstr "Bekabelde verbinding %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -623,8 +619,8 @@ msgstr "De programmaproxy is ingesteld"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:204 ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:211
 msgid "Network"
 msgstr "Netwerk"
 
@@ -1009,36 +1005,36 @@ msgstr "Het 802.11 wlan-netwerk is niet aangetroffen"
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: ../../network/utils_notify.go:185
+#: ../../network/utils_notify.go:192
 msgid "Airplane mode enabled."
 msgstr "Vliegtuigstand ingeschakeld."
 
-#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
-#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
-#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
+#: ../../network/utils_notify.go:192 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:200 ../../network/utils_notify.go:218
+#: ../../network/utils_notify.go:221 ../../network/utils_notify.go:310
 msgid "Disconnected"
 msgstr "Ontkoppeld"
 
-#: ../../network/utils_notify.go:193
+#: ../../network/utils_notify.go:200
 msgid "Access Point mode is not supported by this device."
 msgstr "Access Point modus wordt niet ondersteund door dit apparaat."
 
-#: ../../network/utils_notify.go:197
+#: ../../network/utils_notify.go:204
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "De hardwareswitch van de WLAN-kaart is uitgeschakeld, gelieve in te "
 "schakelen indien nodig."
 
-#: ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:208
 msgid "System proxy is set successfully."
 msgstr "Systeemproxy met succes ingesteld."
 
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:211
 msgid "System proxy has been cancelled."
 msgstr "Systeemproxy werd geannuleerd."
 
-#: ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:215
 msgid "Connected"
 msgstr "Verbonden"
 
@@ -1053,9 +1049,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Het accuniveau is zeer laag"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Batterij is bijna leeg, sluit aan op netstroom"
 

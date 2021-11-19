@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-19 11:11+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
@@ -84,7 +84,7 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 msgid "%s had been disabled"
 msgstr "%sབཀག་ཟིན།"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:105
 msgid "Open"
 msgstr "ཁ་ཕྱེ་བ།"
 
@@ -144,8 +144,7 @@ msgstr "བརྡ་འཕྲིན་ལྟ་སྤྱོད།"
 msgid "Message notification"
 msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 
-#: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:168
-#: ../../lastore/lastore.go:252
+#: ../../bluetooth/obex_agent.go:339 ../../lastore/lastore.go:252
 msgid "Cancel"
 msgstr "ཕྱིར་འཐེན།"
 
@@ -173,8 +172,8 @@ msgstr "ཡིག་ཆ་ལེན་མཚམས་བཞག་པ།"
 msgid "You have cancelled the file transfer"
 msgstr "ཁྱེད་ཀྱིས་ཡིག་ཆ་ལེན་རྒྱུ་རྩིས་མེད་དུ་བཏང་བ།"
 
-#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:119
-#: ../../bluetooth/utils_notify.go:124
+#: ../../bluetooth/obex_agent.go:381 ../../bluetooth/utils_notify.go:113
+#: ../../bluetooth/utils_notify.go:118
 msgid "Bluetooth connection failed"
 msgstr "སོ་སྔོན་འབྲེལ་མཐུད་ཆད་པ།"
 
@@ -198,35 +197,35 @@ msgstr "ཁྱེད་ལ་%qཀྱིས་བསྐུར་བའི་ཡ�
 msgid "Receiving %q timed out"
 msgstr "%qལེན་པ་དུས་ཚོད་ལས་བརྒལ་བ།"
 
-#: ../../bluetooth/utils_notify.go:104
+#: ../../bluetooth/utils_notify.go:98
 msgid "Connect %q successfully"
 msgstr "%qའབྲེལ་ཐུབ་པ།"
 
-#: ../../bluetooth/utils_notify.go:109 ../../network/state_handler.go:333
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
 #: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%qབཅད་ཟིན།"
 
-#: ../../bluetooth/utils_notify.go:114
+#: ../../bluetooth/utils_notify.go:108
 msgid "Make sure %q is turned on and in range"
 msgstr "%qཁ་ཕྱེ་བ་མ་ཟད་འཕྲིན་སྐྱེལ་གྱི་ཁྱབ་ཁོངས་ནང་ཡོད་མིན་གཏན་ཁེལ་བྱེད་རོགས།"
 
-#: ../../bluetooth/utils_notify.go:123
+#: ../../bluetooth/utils_notify.go:117
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 "%qའདི་%qདང་ཡང་བསྐྱར་སྦྲེལ་ཐབས་བྲལ། "
 "སྒྲིག་ཆས་འདི་ཉིད་སྣང་མེད་དུ་བཏང་ནས་ཡང་བསྐྱར་ཆ་སྡེབ་བྱེད།"
 
-#: ../../bluetooth/utils_notify.go:157
+#: ../../bluetooth/utils_notify.go:151
 msgid "Click here to connect to %q"
 msgstr "མནན་ནས་སྒྲིག་འགོད་བྱས་ཏེ་%qསྣོན་པ།"
 
-#: ../../bluetooth/utils_notify.go:158
+#: ../../bluetooth/utils_notify.go:152
 msgid "Add Bluetooth devices"
 msgstr "སོ་སྔོན་སྒྲིག་ཆས་སྣོན་པ།"
 
-#: ../../bluetooth/utils_notify.go:168
+#: ../../bluetooth/utils_notify.go:162
 msgid "Pair"
 msgstr "ཆ་སྒྲིག་པ།"
 
@@ -280,23 +279,23 @@ msgstr "ཉིན་རེའི་ལས་རིམ་དྲན་སྐུལ
 msgid "Festival"
 msgstr "དུས་ཆེན།"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:112
 msgid "Close All"
 msgstr "ཆ་ཚང་སྒོ་རྒྱོབ།"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130
 msgid "Force Quit"
 msgstr "བཙན་ཤེད་ཀྱིས་དོན་དུ་བཅུག་པ།"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:140
 msgid "Dock"
 msgstr "སྡོད་པ།"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:150
 msgid "Undock"
 msgstr "བསྡད་པ་གཙང་སེལ།"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:160
 msgid "All Windows"
 msgstr "སྒེའུ་ཁུང་ཆ་ཚང་།"
 
@@ -392,103 +391,99 @@ msgstr "དྲས་སྦྱར་པང་།"
 msgid "Translation"
 msgstr "ཡིག་ཆ་ཡིག་སྒྱུར།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:50
-msgid "Global search"
-msgstr ""
-
-#: ../../keybinding/shortcuts/id_name_map.go:57
+#: ../../keybinding/shortcuts/id_name_map.go:56
 msgid "Switch Layout"
 msgstr "མཐེབ་གཞོང་བཀོད་པ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:75
 msgid "Switch to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:77
+#: ../../keybinding/shortcuts/id_name_map.go:76
 msgid "Switch to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:77
 msgid "Switch to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:78
 msgid "Switch to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch similar windows"
 msgstr "རིགས་གཅིག་འདྲའི་སྒེའུ་ཁུང་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch similar windows in reverse"
 msgstr "རིགས་གཅིག་འདྲའི་སྒེའུ་ཁུང་ལྡོག་ཕྱོགས་སུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch windows"
 msgstr "སྒེའུ་ཁུང་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch windows in reverse"
 msgstr "སྒེའུ་ཁུང་ལྡོག་ཕྱོགས་སུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:95
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Show desktop"
 msgstr "མངོན་སྟོན་ཅོག་ངོས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:103
 msgid "Maximize window"
 msgstr "སྒེའུ་ཁུང་ཆེ་ཤོས་སུ་ཕྱེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:104
 msgid "Restore window"
 msgstr "སྒེའུ་ཁུང་སོར་ཆུད་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Minimize window"
 msgstr "སྒེའུ་ཁུང་ཆུང་ཤོས་སུ་འགྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Close window"
 msgstr "སྒེའུ་ཁུང་བརྒྱབ་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Move window"
 msgstr "སྒེའུ་ཁུང་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Resize window"
 msgstr "སྒེའུ་ཁུང་གི་ཆེ་ཆུང་སྒྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:124
 msgid "Move to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:126
+#: ../../keybinding/shortcuts/id_name_map.go:125
 msgid "Move to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:126
 msgid "Move to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:127
 msgid "Move to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:150
+#: ../../keybinding/shortcuts/id_name_map.go:149
 msgid "Display windows of all workspaces"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་ཆ་ཚང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:151
+#: ../../keybinding/shortcuts/id_name_map.go:150
 msgid "Display windows of current workspace"
 msgstr "མིག་སྔའི་ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:151
 msgid "Display workspace"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:215
+#: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
 msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 
@@ -563,10 +558,6 @@ msgstr " %qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager.go:339
-msgid "Wired connection"
-msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
-
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -604,9 +595,14 @@ msgstr "ཕུག་ལམ་TLS"
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
+
+#: ../../network/manager_connection.go:402
+msgid "Wired Connection %v"
+msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད་%v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -614,8 +610,8 @@ msgstr "ཉེར་སྤྱོད་ལས་ཚབ་སྒྲིག་འག
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:204 ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:211
 msgid "Network"
 msgstr "དྲ་བ། "
 
@@ -992,36 +988,36 @@ msgstr "%q 802.11 WLANདྲ་རྒྱ་རྙེད་ཐབས་མེད�
 msgid "Unknown"
 msgstr "རྒྱུ་མཚན་མ་ཤེས།"
 
-#: ../../network/utils_notify.go:185
+#: ../../network/utils_notify.go:192
 msgid "Airplane mode enabled."
 msgstr "འཕུར་སྐྱོད་དཔེ་རྣམ་འགོ་བསླངས་པ།"
 
-#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
-#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
-#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
+#: ../../network/utils_notify.go:192 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:200 ../../network/utils_notify.go:218
+#: ../../network/utils_notify.go:221 ../../network/utils_notify.go:310
 msgid "Disconnected"
 msgstr "ཆད་པ།"
 
-#: ../../network/utils_notify.go:193
+#: ../../network/utils_notify.go:200
 msgid "Access Point mode is not supported by this device."
 msgstr "སྒྲིག་ཆས་འདིས་ཚ་གནས་ལ་རྒྱབ་སྐྱོར་མི་བྱེད།"
 
-#: ../../network/utils_notify.go:197
+#: ../../network/utils_notify.go:204
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "སྐུད་མེད་དྲ་གཱ་ཡི་སྲ་ཆས་གློག་སྒོ་བརྒྱབ་ཟིན། "
 "གལ་སྲིད་སྐུད་མེད་བེད་སྤྱོད་བྱེད་ཚེ་སྔོན་ལ་གློག་སྒོ་ཕྱེ།"
 
-#: ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:208
 msgid "System proxy is set successfully."
 msgstr "རྒྱུད་ཁོངས་ལས་ཚབ་སྒྲིག་འགོད་ལེགས་གྲུབ་བྱུང་།"
 
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:211
 msgid "System proxy has been cancelled."
 msgstr "རྒྱུད་ཁོངས་ལས་ཚབ་འདོར་ཟིན།"
 
-#: ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:215
 msgid "Connected"
 msgstr "སྦྲེལ་ཟིན། "
 
@@ -1036,9 +1032,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "གློག་རྫོགས་ཟིན།"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་དགོས།"
 
