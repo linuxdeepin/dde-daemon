@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-02 16:20+0800\n"
+"POT-Creation-Date: 2021-11-19 11:11+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
@@ -92,12 +92,12 @@ msgstr "Anzeigeskalierung wird festgelegt"
 msgid "Display scaling"
 msgstr "Anzeigeskalierung"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s wurde deaktiviert"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:105
 msgid "Open"
 msgstr "Öffnen"
 
@@ -163,7 +163,7 @@ msgstr "Abbrechen"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "%[1]q von %[2]q wird empfangen"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -214,8 +214,8 @@ msgstr ""
 msgid "Connect %q successfully"
 msgstr "%q erfolgreich verbunden"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%q getrennt"
 
@@ -288,25 +288,25 @@ msgstr "Terminerinnerung"
 
 #: ../../calendar/type.go:40
 msgid "Festival"
-msgstr ""
+msgstr "Festival"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:112
 msgid "Close All"
 msgstr "Alle schließen"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130
 msgid "Force Quit"
 msgstr "Beenden erzwingen"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:140
 msgid "Dock"
 msgstr "Dock"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:150
 msgid "Undock"
 msgstr "Abdocken"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:160
 msgid "All Windows"
 msgstr "Alle Fenster"
 
@@ -497,7 +497,7 @@ msgstr "Arbeitsfläche anzeigen"
 
 #: ../../keybinding/shortcuts/id_name_map.go:214
 msgid "Switch monitors"
-msgstr ""
+msgstr "Monitore wechseln"
 
 #: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
@@ -547,7 +547,7 @@ msgstr "Erfolgreich entfernt"
 
 #: ../../lastore/notify.go:109
 msgid "Failed to remove the app"
-msgstr ""
+msgstr "Entfernen der App ist fehlgeschlagen"
 
 #: ../../lastore/notify.go:116
 msgid ""
@@ -571,10 +571,6 @@ msgstr "%q erfolgreich entfernt"
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q konnte nicht deinstalliert werden"
-
-#: ../../network/manager.go:335
-msgid "Wired connection"
-msgstr ""
 
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
@@ -613,9 +609,14 @@ msgstr "Getunneltes TLS"
 msgid "Protected EAP"
 msgstr "Geschütztes EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "Kabelgebundene Verbindung"
+
+#: ../../network/manager_connection.go:402
+msgid "Wired Connection %v"
+msgstr "Kabelgebundene Verbindung %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -623,8 +624,8 @@ msgstr ""
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:204 ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:211
 msgid "Network"
 msgstr "Netzwerk"
 
@@ -968,88 +969,88 @@ msgstr "Die Authentifizierung beim VPN Server schlug fehl."
 msgid "The connection was deleted from settings"
 msgstr "Die Verbindung wurde aus den Einstellungen entfernt."
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "Hotspot aktivieren"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "%q wird verbunden"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "Hotspot aktiviert"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "%q verbunden"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "Hotspot deaktiviert"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Der Hotspot konnte nicht geteilt werden, prüfen Sie bitte die Einstellungen "
 "von dnsmasq"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Keine Verbindung %q, Reichweite zum WLAN Router verringern."
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Kann keine Verbindung mit %q herstellen, bitte überprüfen Sie Ihren Router "
 "und das Netzwerkkabel."
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Verbindung mit %q fehlgeschlagen. Das Passwort ist ungültig"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "Für die Verbindung mit %q ist ein Kennwort erforderlich"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "Das %q 802.11-WLAN-Netzwerk konnte nicht gefunden werden"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: ../../network/utils_notify.go:185
+#: ../../network/utils_notify.go:192
 msgid "Airplane mode enabled."
 msgstr "Flugzeugmodus aktiviert."
 
-#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
-#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
-#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
+#: ../../network/utils_notify.go:192 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:200 ../../network/utils_notify.go:218
+#: ../../network/utils_notify.go:221 ../../network/utils_notify.go:310
 msgid "Disconnected"
 msgstr "Getrennt"
 
-#: ../../network/utils_notify.go:193
+#: ../../network/utils_notify.go:200
 msgid "Access Point mode is not supported by this device."
 msgstr "Access Point Modus wird auf diesem Gerät nicht unterstützt."
 
-#: ../../network/utils_notify.go:197
+#: ../../network/utils_notify.go:204
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "Der Hardware-Schalter der WLAN-Karte ist aus, bitte anschalten, wenn "
 "benötigt."
 
-#: ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:208
 msgid "System proxy is set successfully."
 msgstr "System-Proxy erfolgreich festgelegt."
 
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:211
 msgid "System proxy has been cancelled."
 msgstr "System-Proxy wurde entfernt."
 
-#: ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:215
 msgid "Connected"
 msgstr "Verbunden"
 
@@ -1064,9 +1065,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Akkuladung kritisch niedrig"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "Akkuladung niedrig, bitte anschließen"
 
@@ -1090,11 +1091,11 @@ msgstr "Ihr Computer wird heruntergefahren"
 
 #: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
-msgstr "Ihr Computer wird in den Ruhezustand versetzt"
+msgstr "Ihr Computer wird in den Bereitschaftszustand versetzt"
 
 #: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
-msgstr ""
+msgstr "Ihr Computer wird in den Ruhezustand versetzt"
 
 #: ../../session/power/utils.go:425
 msgid "your monitor will turn off"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-02 16:20+0800\n"
+"POT-Creation-Date: 2021-11-19 11:11+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
@@ -79,12 +79,12 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་སྒྲ
 msgid "Display scaling"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 
-#: ../../audio/audio_events.go:460
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%sབཀག་ཟིན།"
 
-#: ../../audio/audio_events.go:461 ../../dock/app_entry_menu.go:102
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:105
 msgid "Open"
 msgstr "ཁ་ཕྱེ་བ།"
 
@@ -201,8 +201,8 @@ msgstr "%qལེན་པ་དུས་ཚོད་ལས་བརྒལ་བ�
 msgid "Connect %q successfully"
 msgstr "%qའབྲེལ་ཐུབ་པ།"
 
-#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:335
-#: ../../network/state_handler.go:357
+#: ../../bluetooth/utils_notify.go:103 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:355
 msgid "%q disconnected"
 msgstr "%qབཅད་ཟིན།"
 
@@ -279,23 +279,23 @@ msgstr "ཉིན་རེའི་ལས་རིམ་དྲན་སྐུལ
 msgid "Festival"
 msgstr "དུས་ཆེན།"
 
-#: ../../dock/app_entry_menu.go:109
+#: ../../dock/app_entry_menu.go:112
 msgid "Close All"
 msgstr "ཆ་ཚང་སྒོ་རྒྱོབ།"
 
-#: ../../dock/app_entry_menu.go:125
+#: ../../dock/app_entry_menu.go:130
 msgid "Force Quit"
 msgstr "བཙན་ཤེད་ཀྱིས་དོན་དུ་བཅུག་པ།"
 
-#: ../../dock/app_entry_menu.go:135
+#: ../../dock/app_entry_menu.go:140
 msgid "Dock"
 msgstr "སྡོད་པ།"
 
-#: ../../dock/app_entry_menu.go:145
+#: ../../dock/app_entry_menu.go:150
 msgid "Undock"
 msgstr "བསྡད་པ་གཙང་སེལ།"
 
-#: ../../dock/app_entry_menu.go:155
+#: ../../dock/app_entry_menu.go:160
 msgid "All Windows"
 msgstr "སྒེའུ་ཁུང་ཆ་ཚང་།"
 
@@ -558,10 +558,6 @@ msgstr " %qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager.go:335
-msgid "Wired connection"
-msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
-
 #: ../../network/manager_active_conn.go:399
 #: ../../network/manager_active_conn.go:404
 msgid "None"
@@ -599,9 +595,14 @@ msgstr "ཕུག་ལམ་TLS"
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
-#: ../../network/manager_connection.go:336
+#: ../../network/manager_connection.go:359
+#: ../../network/manager_connection.go:363
 msgid "Wired Connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
+
+#: ../../network/manager_connection.go:402
+msgid "Wired Connection %v"
+msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད་%v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -609,8 +610,8 @@ msgstr "ཉེར་སྤྱོད་ལས་ཚབ་སྒྲིག་འག
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
-#: ../../network/utils_notify.go:197 ../../network/utils_notify.go:201
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:204 ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:211
 msgid "Network"
 msgstr "དྲ་བ། "
 
@@ -937,86 +938,86 @@ msgstr "VPNཞབས་ཞུ་འཕྲུལ་ཆས་ཕམ་པའི་
 msgid "The connection was deleted from settings"
 msgstr "འབྲེལ་མཐུད་འདི་སྒྲིག་འགོད་ལས་བསུབས་ཟིན།"
 
-#: ../../network/state_handler.go:252
+#: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
 msgstr "ཚ་གནས་ཁ་འབྱེད་པའི་ཚོད་ལྟ་བྱེད་བཞིན་པ།"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:254
 msgid "Connecting %q"
 msgstr "འབྲེལ་མཐུད་བྱེད་བཞིན་ཡོད་%q"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་ཕྱེ་ཡོད།"
 
-#: ../../network/state_handler.go:267
+#: ../../network/state_handler.go:265
 msgid "%q connected"
 msgstr "འབྲེལ་མཐུད་ཟིན་%q"
 
-#: ../../network/state_handler.go:278 ../../network/state_handler.go:333
+#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་བརྒྱབ་ཟིན།"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "ཚ་གནས་མཉམ་སྤྱོད་བྱེད་མི་ཐུབ་པས་dnsmasq "
 "དང་འབྲེལ་བའི་སྒྲིག་ཆས་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qསྣོན་ཐུབ་མེད་པས། སྐུད་མེད་ལམ་སྟོན་ཆས་དང་ཉེ་འབྲེལ་ཚོད་ལྟ་བྱེད།"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:343
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qསྣོན་ཐུབ་མེད་པས། ལམ་སྟོན་ཆས་སམ་དྲ་སྐུད་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:347
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "འབྲེལ་མཐུད་མི་ཐུབ། %qནང་དུ་བཅུག་མི་ཐུབ། གསང་ཨང་ནོར་འདུག"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:358
 msgid "Password is required to connect %q"
 msgstr "%qའབྲེལ་བར་གསང་ཨང་དགོས།"
 
-#: ../../network/state_handler.go:362
+#: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLANདྲ་རྒྱ་རྙེད་ཐབས་མེད།"
 
-#: ../../network/utils_dbus_nm.go:297
+#: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
 msgstr "རྒྱུ་མཚན་མ་ཤེས།"
 
-#: ../../network/utils_notify.go:185
+#: ../../network/utils_notify.go:192
 msgid "Airplane mode enabled."
 msgstr "འཕུར་སྐྱོད་དཔེ་རྣམ་འགོ་བསླངས་པ།"
 
-#: ../../network/utils_notify.go:185 ../../network/utils_notify.go:189
-#: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
-#: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
+#: ../../network/utils_notify.go:192 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:200 ../../network/utils_notify.go:218
+#: ../../network/utils_notify.go:221 ../../network/utils_notify.go:310
 msgid "Disconnected"
 msgstr "ཆད་པ།"
 
-#: ../../network/utils_notify.go:193
+#: ../../network/utils_notify.go:200
 msgid "Access Point mode is not supported by this device."
 msgstr "སྒྲིག་ཆས་འདིས་ཚ་གནས་ལ་རྒྱབ་སྐྱོར་མི་བྱེད།"
 
-#: ../../network/utils_notify.go:197
+#: ../../network/utils_notify.go:204
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 "སྐུད་མེད་དྲ་གཱ་ཡི་སྲ་ཆས་གློག་སྒོ་བརྒྱབ་ཟིན། "
 "གལ་སྲིད་སྐུད་མེད་བེད་སྤྱོད་བྱེད་ཚེ་སྔོན་ལ་གློག་སྒོ་ཕྱེ།"
 
-#: ../../network/utils_notify.go:201
+#: ../../network/utils_notify.go:208
 msgid "System proxy is set successfully."
 msgstr "རྒྱུད་ཁོངས་ལས་ཚབ་སྒྲིག་འགོད་ལེགས་གྲུབ་བྱུང་།"
 
-#: ../../network/utils_notify.go:204
+#: ../../network/utils_notify.go:211
 msgid "System proxy has been cancelled."
 msgstr "རྒྱུད་ཁོངས་ལས་ཚབ་འདོར་ཟིན།"
 
-#: ../../network/utils_notify.go:208
+#: ../../network/utils_notify.go:215
 msgid "Connected"
 msgstr "སྦྲེལ་ཟིན། "
 
@@ -1031,9 +1032,9 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "གློག་རྫོགས་ཟིན།"
 
-#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
+#: ../../session/power/manager_events.go:237
 msgid "Battery low, please plug in"
 msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་དགོས།"
 
