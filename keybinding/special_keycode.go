@@ -175,7 +175,7 @@ func (m *Manager) handleMicMute() {
 
 // 打开控制中心
 func (m *Manager) handleOpenControlCenter() {
-	cmd := "dde-control-center -s"
+	cmd := "dbus-send --session --dest=com.deepin.dde.ControlCenter --print-reply /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.Show"
 	m.execCmd(cmd, false)
 }
 
