@@ -353,7 +353,6 @@ func (l *Lastore) initCore(systemBus *dbus.Conn) {
 		ifc, _ := sig.Body[0].(string)
 		if ifc == "com.deepin.lastore.Job" {
 			l.updateCacheJobInfo(sig.Path, props)
-			l.checkUpdateNotify(sig.Path)
 		}
 	})
 
@@ -632,6 +631,7 @@ func (l *Lastore) updateCacheJobInfo(path dbus.ObjectPath, props map[string]dbus
 
 	if oldStatus != info.Status {
 		l.notifyJob(path)
+		l.checkUpdateNotify(path)
 	}
 }
 
