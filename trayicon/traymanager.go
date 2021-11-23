@@ -344,7 +344,7 @@ func (m *TrayManager) eventHandleLoop() {
 			iconName := icon.getName()
 
 			needFiltered, ok := m.needFilteredMap[iconName]
-			if (ok && needFiltered) || !ok {
+			if (ok && !needFiltered) || !ok {
 				m.removeIcon(event.Window)
 				delete(m.needFilteredMap, iconName)
 			}
@@ -400,6 +400,7 @@ func (m *TrayManager) addIcon(win x.Window) {
 }
 
 func (m *TrayManager) removeIcon(win x.Window) {
+	logger.Debug("removeIcon")
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
