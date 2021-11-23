@@ -31,6 +31,7 @@ import (
 	_ "pkg.deepin.io/dde/daemon/system/bluetooth"
 	_ "pkg.deepin.io/dde/daemon/system/display"
 	_ "pkg.deepin.io/dde/daemon/system/gesture"
+	_ "pkg.deepin.io/dde/daemon/system/hostname"
 	_ "pkg.deepin.io/dde/daemon/system/inputdevices"
 	_ "pkg.deepin.io/dde/daemon/system/keyevent"
 	_ "pkg.deepin.io/dde/daemon/system/lang"
@@ -44,7 +45,7 @@ import (
 
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/gir/glib-2.0"
+	glib "pkg.deepin.io/gir/glib-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	. "pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/keyfile"
