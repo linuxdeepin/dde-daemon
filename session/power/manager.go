@@ -21,6 +21,7 @@ package power
 
 import (
 	"os"
+	"os/exec"
 	"sync"
 	"syscall"
 
@@ -127,10 +128,11 @@ type Manager struct {
 
 	AmbientLightAdjustBrightness gsprop.Bool `prop:"access:rw"`
 
-	ambientLightClaimed bool
-	lightLevelUnit      string
-	lidSwitchState      uint
-	sessionActive       bool
+	ambientLightClaimed  bool
+	lightLevelUnit       string
+	lidSwitchState       uint
+	sessionActive        bool
+	isMinimizeAllWindows bool // 是否有最小化所有窗口释放焦点(键盘)
 
 	// if prepare suspend, ignore idle off
 	prepareSuspend       int
@@ -138,6 +140,8 @@ type Manager struct {
 
 	// 是否支持高性能模式
 	IsHighPerformanceSupported bool
+	// 是否阻塞锁屏已经被通知
+	IsBlockLockScreenHasNotified bool
 }
 
 var _manager *Manager
@@ -308,6 +312,31 @@ func (m *Manager) init() {
 				}
 			}
 		})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	// 当对应的session解锁后, 恢复之前最小化窗口的状态
+	err = m.helper.SessionManager.Locked().ConnectChanged(func(hasValue bool, value bool) {
+		if !hasValue {
+			return
+		}
+
+		if !value {
+			logger.Debug("session unlock, resume window status", m.isMinimizeAllWindows)
+
+			if m.isMinimizeAllWindows {
+				err := exec.Command("/usr/lib/deepin-daemon/desktop-toggle").Run()
+				if err != nil {
+					logger.Warning("failed to resume window status:", err)
+				}
+
+				// 窗口恢复后, 重置最小化窗口状态
+				m.isMinimizeAllWindows = false
+			}
+		}
+	})
+
 	if err != nil {
 		logger.Warning(err)
 	}
