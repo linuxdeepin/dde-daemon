@@ -105,6 +105,7 @@ func (h *Helper) initSignalExt(systemSigLoop, sessionSigLoop *dbusutil.SignalLoo
 	// session
 	h.ScreenSaver.InitSignalExt(sessionSigLoop, true)
 	h.SessionWatcher.InitSignalExt(sessionSigLoop, true)
+	h.SessionManager.InitSignalExt(sessionSigLoop, true)
 	h.Display.InitSignalExt(sessionSigLoop, true)
 }
 

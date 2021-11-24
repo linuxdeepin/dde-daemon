@@ -20,12 +20,18 @@
 package power
 
 import (
+	"fmt"
 	"math"
 	"os/exec"
+	"strings"
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
+	"github.com/linuxdeepin/go-x11-client/util/keybind"
+	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
+	"github.com/linuxdeepin/go-x11-client/util/wm/icccm"
 	"pkg.deepin.io/dde/api/soundutils"
 	. "pkg.deepin.io/lib/gettext"
 	"pkg.deepin.io/lib/gsettings"
@@ -108,16 +114,31 @@ const (
 )
 
 func (m *Manager) doLock(autoStartAuth bool) {
-	logger.Info("Lock Screen")
-	bus, err := dbus.SessionBus()
+	// 在锁屏前, 判断是否有应用(窗口)一直占用着键盘(鼠标), 如果有, 通过最小化该窗口强制释放键盘(鼠标)
+	// 最小化窗口成功后再去进行锁屏, 否则不锁屏
+	locked, err := m.helper.SessionManager.Locked().Get(0)
 	if err != nil {
 		logger.Warning(err)
-		return
 	}
-	lockFrontObj := bus.Object(lockFrontServiceName, lockFrontObjPath)
-	err = lockFrontObj.Call(lockFrontIfc+".ShowAuth", 0, autoStartAuth).Err
-	if err != nil {
-		logger.Warning("failed to call lockFront ShowAuth:", err)
+
+	if !locked {
+		isMinimizeWindowSuccess := m.canGrabWindowKeyboard(m.helper.xConn)
+		if isMinimizeWindowSuccess {
+			m.IsBlockLockScreenHasNotified = false
+			logger.Info("Lock Screen")
+			bus, err := dbus.SessionBus()
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			lockFrontObj := bus.Object(lockFrontServiceName, lockFrontObjPath)
+			err = lockFrontObj.Call(lockFrontIfc+".ShowAuth", 0, autoStartAuth).Err
+			if err != nil {
+				logger.Warning("failed to call lockFront ShowAuth:", err)
+			}
+		} else {
+			m.IsBlockLockScreenHasNotified = true
+		}
 	}
 }
 
@@ -275,18 +296,13 @@ func doCloseDDELowPower() {
 }
 
 func (m *Manager) sendNotify(icon, summary, body string) {
-	if !m.LowPowerNotifyEnable.Get() {
-		logger.Info("notify switch is off ")
-		return
+	if icon == iconBatteryLow {
+		if !m.LowPowerNotifyEnable.Get() {
+			logger.Info("notify switch is off ")
+			return
+		}
 	}
-	n := m.helper.Notifications
-	_, err := n.Notify(0, "dde-control-center", 0, icon, summary, body, nil, nil, -1)
-	if err != nil {
-		logger.Warning(err)
-	}
-}
 
-func (m *Manager) sendChangeNotify(icon, summary, body string) {
 	n := m.helper.Notifications
 	_, err := n.Notify(0, "dde-control-center", 0, icon, summary, body, nil, nil, -1)
 	if err != nil {
@@ -375,21 +391,97 @@ func (m *Manager) initGSettingsConnectChanged() {
 		case settingKeyLinePowerLidClosedAction:
 			value := m.LinePowerLidClosedAction.Get()
 			notifyString := getNotifyString(settingKeyLinePowerLidClosedAction, value)
-			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
+			m.sendNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyLinePowerPressPowerBtnAction:
 			value := m.LinePowerPressPowerBtnAction.Get()
 			notifyString := getNotifyString(settingKeyLinePowerPressPowerBtnAction, value)
-			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
+			m.sendNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyBatteryLidClosedAction:
 			value := m.BatteryLidClosedAction.Get()
 			notifyString := getNotifyString(settingKeyBatteryLidClosedAction, value)
-			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
+			m.sendNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyBatteryPressPowerBtnAction:
 			value := m.BatteryPressPowerBtnAction.Get()
 			notifyString := getNotifyString(settingKeyBatteryPressPowerBtnAction, value)
-			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
+			m.sendNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		}
 	})
+}
+
+func (m *Manager) canGrabWindowKeyboard(conn *x.Conn) bool {
+	var grabWin x.Window
+	var grabKbdErr error
+
+	rootWin := conn.GetDefaultScreen().Root
+	activeWin, _ := ewmh.GetActiveWindow(conn).Reply(conn)
+	name, _ := ewmh.GetWMName(conn, activeWin).Reply(conn)
+	wmClass, _ := icccm.GetWMClass(conn, activeWin).Reply(conn)
+	class := strings.ToLower(wmClass.Class)
+
+	format := Tr("%q is preventing the computer from locking the screen")
+	body := fmt.Sprintf(format, name)
+
+	if activeWin == 0 {
+		grabWin = rootWin
+	} else {
+		// check viewable
+		attrs, err := x.GetWindowAttributes(conn, activeWin).Reply(conn)
+		if err != nil {
+			grabWin = rootWin
+		} else if attrs.MapState != x.MapStateViewable {
+			// err is nil and activeWin is not viewable
+			grabWin = rootWin
+		} else {
+			// err is nil, activeWin is viewable
+			grabWin = activeWin
+		}
+	}
+
+	// 尝试抓取该激活窗口键盘三次， 确保正确获取抓取窗口的键盘状态
+	for i := 0; i < 3; i++ {
+		grabKbdErr = keybind.GrabKeyboard(conn, grabWin)
+		if grabKbdErr == nil {
+			// grab keyboard successful
+			err := keybind.UngrabKeyboard(conn)
+			if err != nil {
+				logger.Warning("ungrabKeyboard Failed:", err)
+			}
+
+			return true
+		}
+
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	gkErr, ok := grabKbdErr.(keybind.GrabKeyboardError)
+	logger.Debugf("grabKeyboard win %d failed: %v", grabWin, grabKbdErr)
+
+	// 如果键盘已经被某个应用抓取, 将该应用的窗口最小化,使其释放抓取的键盘, 防止dde-lock在锁屏时因抓取键盘失败导致锁屏一直不成功
+	// 如果是桌面右键菜单（不能被最小化释放键盘)或者设置了唤醒显示器需要密码开关(最小化窗口的操作会打断系统空闲处理)，弹提示提醒用户，不去锁屏
+	if ok && gkErr.Status == x.GrabStatusAlreadyGrabbed && class != "dde-desktop" && !m.ScreenBlackLock.Get() {
+		// 保存最小化所有窗口的状态
+		m.isMinimizeAllWindows = true
+
+		err := exec.Command("/usr/lib/deepin-daemon/desktop-toggle").Run()
+		if err != nil {
+			logger.Warning("failed to call desktop-toggle:", err)
+
+			// 最小化所有窗口失败弹提示提醒用户
+			if !m.IsBlockLockScreenHasNotified {
+				m.sendNotify("preferences-system", "", body)
+				return false
+			}
+		}
+
+		return true
+	}
+
+	// 抓取键盘失败弹(“XX（程序）”阻止了屏幕锁定")提醒用户
+	if !m.IsBlockLockScreenHasNotified {
+		m.sendNotify("preferences-system", "", body)
+	}
+
+	return false
 }
 
 func getNotifyString(option string, action int32) string {
