@@ -103,7 +103,6 @@ Requires:       deepin-desktop-schemas
 Requires:       dde-polkit-agent
 Requires:       rfkill
 Requires:       gvfs
-Requires:       iw
 
 Recommends:     iso-codes
 Recommends:     imwheel
