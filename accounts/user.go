@@ -32,6 +32,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
 	"pkg.deepin.io/dde/daemon/accounts/users"
+	"pkg.deepin.io/dde/daemon/session/custom"
 	glib "pkg.deepin.io/gir/glib-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gdkpixbuf"
@@ -824,5 +825,34 @@ func updateConfigPath(username string) {
 	err = dutils.CopyFile(oldConfig, config)
 	if err != nil {
 		logger.Warning("Failed to update config:", username)
+	}
+}
+
+// 定制需求，普通用户开启自动登录和无密码登录
+func (u *User) customizedService() {
+	if !custom.IsNormalUser() {
+		return
+	}
+
+	u.PropsMu.Lock()
+	defer u.PropsMu.Unlock()
+
+	if !u.AutomaticLogin {
+		session := u.XSession
+		if session == "" {
+			session = getUserSession(u.HomeDir)
+		}
+		if err := users.SetAutoLoginUser(u.UserName, session); err != nil {
+			logger.Warning("set auto login failed:", err)
+		}
+
+		u.AutomaticLogin = true
+	}
+
+	if !u.NoPasswdLogin {
+		if err := users.EnableNoPasswdLogin(u.UserName, true); err != nil {
+			logger.Warning("enable no password login failed:", err)
+		}
+		u.NoPasswdLogin = true
 	}
 }

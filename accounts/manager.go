@@ -344,6 +344,9 @@ func (m *Manager) exportUserByUid(uId string) error {
 	m.usersMap[userPath] = u
 	m.usersMapMu.Unlock()
 
+	// 配置定制需求
+	u.customizedService()
+
 	return nil
 }
 
