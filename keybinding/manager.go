@@ -37,6 +37,7 @@ import (
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	"pkg.deepin.io/dde/daemon/session/common"
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
@@ -59,11 +60,14 @@ const (
 	gsKeyShortcutSwitchLayout = "shortcut-switch-layout"
 	gsKeyShowCapsLockOSD      = "capslock-toggle"
 	gsKeyUpperLayerWLAN       = "upper-layer-wlan"
+	gsKeyNormalUser           = "normal-user"
+	gsKeyRootUser             = "root-user"
 
 	gsSchemaSystem         = "com.deepin.dde.keybinding.system"
 	gsSchemaSystemPlatform = "com.deepin.dde.keybinding.system.platform"
 	gsSchemaSystemEnable   = "com.deepin.dde.keybinding.system.enable"
 	gsSchemaMediaKey       = "com.deepin.dde.keybinding.mediakey"
+	gsSchemaRuleWhiteList  = "com.deepin.dde.keybinding.rule.whitelist"
 	gsSchemaGnomeWM        = "com.deepin.wrap.gnome.desktop.wm.keybindings"
 	gsSchemaSessionPower   = "com.deepin.dde.power"
 
@@ -94,6 +98,7 @@ type Manager struct {
 	gsMediaKey       *gio.Settings
 	gsGnomeWM        *gio.Settings
 	gsPower          *gio.Settings
+	gsRuleWhiteList  *gio.Settings
 
 	enableListenGSettings bool
 
@@ -144,6 +149,10 @@ type Manager struct {
 			keystroke string
 		}
 	}
+
+	// for customized product
+	hasWhitelist bool
+	whitelist    gsprop.Strv `prop:"access:rw"`
 }
 
 // SKLState Switch keyboard Layout state
@@ -184,6 +193,20 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.systemSigLoop.Start()
 
 	m.initNumLockState(sysBus)
+
+	// 白名单
+	if gio.SettingsSchemaSourceGetDefault().Lookup(gsSchemaRuleWhiteList, true) != nil {
+		m.gsRuleWhiteList = gio.NewSettings(gsSchemaRuleWhiteList)
+		if common.IsNormalUser() && m.gsRuleWhiteList.GetSchema().HasKey(gsKeyNormalUser) {
+			m.whitelist.Bind(m.gsRuleWhiteList, gsKeyNormalUser)
+			m.hasWhitelist = true
+			logger.Debug("whitelist for normal user", m.whitelist.Get())
+		} else if m.gsRuleWhiteList.GetSchema().HasKey(gsKeyRootUser) {
+			m.whitelist.Bind(m.gsRuleWhiteList, gsKeyRootUser)
+			m.hasWhitelist = true
+			logger.Debug("whitelist for root user", m.whitelist.Get())
+		}
+	}
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
@@ -391,6 +414,11 @@ func (m *Manager) destroy() {
 		m.gsGnomeWM = nil
 	}
 
+	if m.gsRuleWhiteList != nil {
+		m.gsRuleWhiteList.Unref()
+		m.gsRuleWhiteList = nil
+	}
+
 	if m.audioController != nil {
 		m.audioController.Destroy()
 		m.audioController = nil
@@ -446,6 +474,20 @@ func (m *Manager) handleKeyEvent(ev *shortcuts.KeyEvent) {
 	if action == nil {
 		logger.Warning("action is nil")
 		return
+	}
+
+	if m.hasWhitelist {
+		found := false
+		for _, id := range m.whitelist.Get() {
+			if shortcutId == id {
+				found = true
+				break
+			}
+		}
+		if !found {
+			logger.Debugf("screening key event %s", shortcutId)
+			return
+		}
 	}
 
 	if handler := m.handlers[int(action.Type)]; handler != nil {
