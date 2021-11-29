@@ -115,7 +115,7 @@ var mediaIdActionMap = map[string]*Action{
 	"log-off": &Action{Type: ActionTypeSystemLogOff},
 	"away":    &Action{Type: ActionTypeSystemAway},
 
-	"ariplane-mode-toggle": NewCallbackAction(airplaneModeToggle),
+	"airplane-mode-toggle": NewCallbackAction(airplaneModeToggle),
 	"web-cam":              NewExecCmdAction(cmdCamera, false),
 
 	// We do not need to deal with XF86Wlan key default,
