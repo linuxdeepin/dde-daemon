@@ -23,8 +23,8 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	. "github.com/linuxdeepin/go-lib/gettext"
 	"pkg.deepin.io/dde/api/soundutils"
-	. "pkg.deepin.io/lib/gettext"
 )
 
 // nolint

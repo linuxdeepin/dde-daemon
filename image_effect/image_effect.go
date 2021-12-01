@@ -30,9 +30,9 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/procfs"
 	"golang.org/x/xerrors"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/procfs"
 )
 
 //go:generate dbusutil-gen em -type ImageEffect

@@ -22,9 +22,9 @@ package dock
 import (
 	"path/filepath"
 
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/xdg/basedir"
 
 	x "github.com/linuxdeepin/go-x11-client"
 )
@@ -76,8 +76,8 @@ var (
 	atomNetWmPid                x.Atom
 	atomMotifWmHints            x.Atom
 
-	atomAndroidUengineId        x.Atom
-	atomAndroidUengineName      x.Atom
+	atomAndroidUengineId   x.Atom
+	atomAndroidUengineName x.Atom
 )
 
 func initDir() {

@@ -20,8 +20,8 @@
 package gesture
 
 import (
+	"github.com/linuxdeepin/go-lib/log"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/lib/log"
 )
 
 type Daemon struct {

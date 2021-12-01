@@ -25,7 +25,7 @@ import (
 	"path"
 	"sync"
 
-	dutils "pkg.deepin.io/lib/utils"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (

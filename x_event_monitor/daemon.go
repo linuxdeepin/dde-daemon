@@ -22,8 +22,9 @@ package x_event_monitor
 import (
 	"os"
 	"strings"
+
+	"github.com/linuxdeepin/go-lib/log"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/lib/log"
 )
 
 const (

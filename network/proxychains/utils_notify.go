@@ -3,7 +3,7 @@ package proxychains
 import (
 	dbus "github.com/godbus/dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
-	. "pkg.deepin.io/lib/gettext"
+	. "github.com/linuxdeepin/go-lib/gettext"
 )
 
 var (

@@ -27,9 +27,9 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/procfs"
 )
 
 func (e *AppEntry) GetInterfaceName() string {

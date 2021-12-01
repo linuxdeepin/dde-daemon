@@ -25,8 +25,8 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/linuxdeepin/go-lib/pinyin_search"
 	"pkg.deepin.io/dde/daemon/keybinding/util"
-	"pkg.deepin.io/lib/pinyin_search"
 )
 
 type BaseShortcut struct {

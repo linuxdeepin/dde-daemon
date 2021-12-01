@@ -35,10 +35,10 @@ import (
 
 	"github.com/godbus/dbus"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
+	"github.com/linuxdeepin/go-lib/encoding/kv"
+	"github.com/linuxdeepin/go-lib/graphic"
+	"github.com/linuxdeepin/go-lib/utils"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/lib/encoding/kv"
-	"pkg.deepin.io/lib/graphic"
-	"pkg.deepin.io/lib/utils"
 )
 
 // #nosec G101

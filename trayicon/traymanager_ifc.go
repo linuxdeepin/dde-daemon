@@ -23,8 +23,8 @@ import (
 	"errors"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	x "github.com/linuxdeepin/go-x11-client"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 const (

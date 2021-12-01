@@ -29,7 +29,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	dbus "github.com/godbus/dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (

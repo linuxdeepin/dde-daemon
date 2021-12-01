@@ -24,8 +24,9 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	dutils "pkg.deepin.io/lib/utils"
 	"strings"
+
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (

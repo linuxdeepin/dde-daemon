@@ -32,7 +32,7 @@ import (
 	"strings"
 	"unsafe"
 
-	"pkg.deepin.io/lib/strv"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (

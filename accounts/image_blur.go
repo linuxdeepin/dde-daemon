@@ -8,8 +8,8 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	dutils "pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (

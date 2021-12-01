@@ -26,7 +26,7 @@ import (
 	"strconv"
 	"strings"
 
-	"pkg.deepin.io/lib/procfs"
+	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 type ProcessInfo struct {

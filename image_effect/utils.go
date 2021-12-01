@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 func getOutputFile(effect, filename string) (outputFile string) {

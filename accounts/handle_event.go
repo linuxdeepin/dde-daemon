@@ -26,8 +26,8 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/linuxdeepin/go-lib/strv"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/lib/strv"
 )
 
 const (

@@ -22,10 +22,11 @@ package appearance
 import (
 	"fmt"
 	"path"
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/utils"
-	"pkg.deepin.io/lib/xdg/basedir"
 	"sync"
+
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 const (

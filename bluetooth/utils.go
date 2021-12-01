@@ -22,8 +22,9 @@ package bluetooth
 import (
 	"encoding/json"
 	"io/ioutil"
-	"pkg.deepin.io/lib/procfs"
 	"strconv"
+
+	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 func isStringInArray(str string, list []string) bool {

@@ -15,11 +15,11 @@ import (
 	"syscall"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/procfs"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/procfs"
 )
 
 const pwdChangerUserName = "deepin_pwd_changer" //#nosec G101

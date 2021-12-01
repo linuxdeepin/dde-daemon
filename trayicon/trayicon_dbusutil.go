@@ -3,7 +3,7 @@
 package trayicon
 
 import (
-	"pkg.deepin.io/lib/strv"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 func (v *StatusNotifierWatcher) setPropRegisteredStatusNotifierItems(value strv.Strv) {

@@ -36,13 +36,13 @@ import (
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
 	libLastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
+	"github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/strv"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/dde/daemon/session/common"
-	gio "pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/gsprop"
-	"pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/strv"
 )
 
 //go:generate dbusutil-gen em -type Manager

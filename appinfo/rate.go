@@ -20,9 +20,10 @@
 package appinfo
 
 import (
-	"pkg.deepin.io/gir/glib-2.0"
 	"io/ioutil"
 	"os"
+
+	"github.com/linuxdeepin/go-gir/glib-2.0"
 )
 
 const (

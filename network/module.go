@@ -22,10 +22,10 @@ package network
 import (
 	"time"
 
+	"github.com/linuxdeepin/go-lib/log"
+	libnotify "github.com/linuxdeepin/go-lib/notify"
 	"pkg.deepin.io/dde/daemon/loader"
 	"pkg.deepin.io/dde/daemon/network/proxychains"
-	"pkg.deepin.io/lib/log"
-	libnotify "pkg.deepin.io/lib/notify"
 )
 
 var (

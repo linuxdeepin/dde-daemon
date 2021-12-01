@@ -20,7 +20,7 @@
 package power
 
 import (
-	"pkg.deepin.io/lib/arch"
+	"github.com/linuxdeepin/go-lib/arch"
 )
 
 func (m *Manager) initLidSwitch() {

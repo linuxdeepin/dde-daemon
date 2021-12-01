@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/linuxdeepin/go-lib/log"
 	"github.com/stretchr/testify/assert"
-	"pkg.deepin.io/lib/log"
 )
 
 type Test_Module struct {

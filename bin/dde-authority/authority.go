@@ -13,8 +13,8 @@ import (
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	fprint "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.fprintd"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/pam"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/pam"
 )
 
 //go:generate dbusutil-gen em -type Authority,PAMTransaction,FPrintTransaction

@@ -23,8 +23,9 @@ import (
 	"fmt"
 	"os"
 	"path"
-	dutils "pkg.deepin.io/lib/utils"
 	"regexp"
+
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 type dataInfo struct {

@@ -33,14 +33,14 @@ import (
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/strv"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/dde/daemon/network/nm"
 	"pkg.deepin.io/dde/daemon/network/proxychains"
 	"pkg.deepin.io/dde/daemon/session/common"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/strv"
 )
 
 const (

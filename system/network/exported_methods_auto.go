@@ -3,7 +3,7 @@
 package network
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *Network) GetExportedMethods() dbusutil.ExportedMethods {

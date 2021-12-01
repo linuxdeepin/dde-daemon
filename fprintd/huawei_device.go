@@ -10,9 +10,9 @@ import (
 	dbus "github.com/godbus/dbus"
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/com.huawei.fingerprint"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/strv"
 	fprintd_common "pkg.deepin.io/dde/daemon/fprintd/common"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/strv"
 )
 
 const (

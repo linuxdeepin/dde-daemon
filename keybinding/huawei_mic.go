@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 const huaweiMicLedName = "huawei::mic"

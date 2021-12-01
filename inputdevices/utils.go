@@ -24,7 +24,7 @@ import (
 	"os/exec"
 	"sync"
 
-	"pkg.deepin.io/gir/gio-2.0"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 const (

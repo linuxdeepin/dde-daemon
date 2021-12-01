@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/xdg/basedir"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 const (

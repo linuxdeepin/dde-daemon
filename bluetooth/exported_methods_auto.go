@@ -3,7 +3,7 @@
 package bluetooth
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *Bluetooth) GetExportedMethods() dbusutil.ExportedMethods {

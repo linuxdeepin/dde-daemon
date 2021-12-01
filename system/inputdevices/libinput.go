@@ -29,7 +29,7 @@ import "C"
 import (
 	"unsafe"
 
-	"pkg.deepin.io/lib/log"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 //export log_handler_go

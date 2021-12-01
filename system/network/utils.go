@@ -13,17 +13,18 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"pkg.deepin.io/lib/utils"
 	"sort"
 	"strconv"
 	"strings"
 	"unsafe"
 
+	"github.com/linuxdeepin/go-lib/utils"
+
 	"github.com/godbus/dbus"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	"github.com/linuxdeepin/go-lib/gettext"
+	. "github.com/linuxdeepin/go-lib/gettext"
 	"pkg.deepin.io/dde/daemon/network/nm"
-	"pkg.deepin.io/lib/gettext"
-	. "pkg.deepin.io/lib/gettext"
 )
 
 func getSettingConnectionTimestamp(settings map[string]map[string]dbus.Variant) uint64 {

@@ -12,9 +12,9 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/gosexy/gettext"
 	fprint "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.fprintd"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-	"pkg.deepin.io/lib/strv"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 var (

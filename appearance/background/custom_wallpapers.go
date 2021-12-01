@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/graphic"
+	"github.com/linuxdeepin/go-lib/imgutil"
+	"github.com/linuxdeepin/go-lib/strv"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	"github.com/nfnt/resize"
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/graphic"
-	"pkg.deepin.io/lib/imgutil"
-	"pkg.deepin.io/lib/strv"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 func sumFileMd5(filename string) (string, error) {

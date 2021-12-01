@@ -22,7 +22,7 @@ package audio
 import (
 	"fmt"
 
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 type Port struct {

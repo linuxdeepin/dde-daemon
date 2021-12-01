@@ -25,7 +25,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"pkg.deepin.io/lib/xdg/basedir"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 var (

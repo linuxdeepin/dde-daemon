@@ -3,7 +3,8 @@ package gesture
 import (
 	"encoding/json"
 	"io/ioutil"
-	"pkg.deepin.io/lib/utils"
+
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 type Config struct {

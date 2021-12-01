@@ -23,8 +23,8 @@ import (
 	"path/filepath"
 	"unicode/utf8"
 
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
-	"pkg.deepin.io/lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
 
 func (m *Manager) initItems() {

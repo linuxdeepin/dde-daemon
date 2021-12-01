@@ -23,8 +23,8 @@ import (
 	"path"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/pinyin"
-	dutils "pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/pinyin"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 func (*Manager) GetInterfaceName() string {

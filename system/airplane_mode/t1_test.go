@@ -3,8 +3,8 @@ package airplane_mode
 import (
 	"testing"
 
+	"github.com/linuxdeepin/go-lib/log"
 	"github.com/stretchr/testify/assert"
-	"pkg.deepin.io/lib/log"
 )
 
 func assertIt(t *testing.T, opId int, s *AirplaneModeState, enabled, wifiEnabled, btEnable bool) {

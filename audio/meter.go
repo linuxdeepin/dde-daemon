@@ -24,8 +24,8 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 type Meter struct {

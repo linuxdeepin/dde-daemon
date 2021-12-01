@@ -3,7 +3,7 @@
 package apps
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *ALRecorder) GetExportedMethods() dbusutil.ExportedMethods {

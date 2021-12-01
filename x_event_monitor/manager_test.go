@@ -21,13 +21,14 @@ package x_event_monitor
 
 import (
 	"fmt"
+
+	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/stretchr/testify/assert"
-	"pkg.deepin.io/lib/strv"
 
 	"testing"
 )
 
-func Test_isPidAreaRegistered (t *testing.T) {
+func Test_isPidAreaRegistered(t *testing.T) {
 	m := Manager{}
 	str0 := []string{"tong", "xin"}
 	str1 := []string{"ruan", "jian"}
@@ -39,19 +40,19 @@ func Test_isPidAreaRegistered (t *testing.T) {
 	assert.True(t, m.isPidAreaRegistered(0, "tong"))
 }
 
-func Test_getIdList (t *testing.T) {
+func Test_getIdList(t *testing.T) {
 	m := Manager{}
-	var area = []coordinateRange {
+	var area = []coordinateRange{
 		{100, 100, 200, 200},
 	}
 	var key = "tongxin"
 
-	var coordinateInfo_ = coordinateInfo {
-		areas: area,
+	var coordinateInfo_ = coordinateInfo{
+		areas:        area,
 		moveIntoFlag: false,
-		motionFlag: false,
-		buttonFlag: false,
-		keyFlag: false,
+		motionFlag:   false,
+		buttonFlag:   false,
+		keyFlag:      false,
 	}
 
 	m.idAreaInfoMap = map[string]*coordinateInfo{
@@ -72,7 +73,7 @@ func Test_getIdList (t *testing.T) {
 	}
 }
 
-func Test_sumAreasMd5 (t *testing.T) {
+func Test_sumAreasMd5(t *testing.T) {
 	m := Manager{}
 	var areasNil []coordinateRange
 	var expectMd5 = "eef73b4ff31a5d5e32c54719fee950c7"
@@ -90,7 +91,7 @@ func Test_sumAreasMd5 (t *testing.T) {
 	assert.True(t, ok)
 }
 
-func Test_DebugGetPidAreasMap (t *testing.T) {
+func Test_DebugGetPidAreasMap(t *testing.T) {
 	m := Manager{}
 	str0 := []string{"tong", "xin"}
 	str1 := []string{"ruan", "jian"}
@@ -107,7 +108,7 @@ func Test_DebugGetPidAreasMap (t *testing.T) {
 	fmt.Printf("rtnStr:%s\n", rtnStr)
 }
 
-func Test_SimpleFunc (t *testing.T) {
+func Test_SimpleFunc(t *testing.T) {
 	m := Manager{}
 
 	m.GetExportedMethods()

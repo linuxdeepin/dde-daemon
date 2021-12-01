@@ -23,7 +23,7 @@ import (
 	"fmt"
 	"sync"
 
-	"pkg.deepin.io/lib/log"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 type Module interface {

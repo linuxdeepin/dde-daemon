@@ -23,8 +23,8 @@ import (
 	"github.com/godbus/dbus"
 	audio "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
-	"pkg.deepin.io/gir/gio-2.0"
 )
 
 const (

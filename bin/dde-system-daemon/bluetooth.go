@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 
 	dbus "github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/keyfile"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/keyfile"
 )
 
 const (

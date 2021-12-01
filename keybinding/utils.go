@@ -32,9 +32,9 @@ import (
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/strv"
 	"pkg.deepin.io/dde/daemon/keybinding/util"
-	gio "pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/strv"
 )
 
 // nolint

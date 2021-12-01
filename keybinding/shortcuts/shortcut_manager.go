@@ -30,18 +30,18 @@ import (
 	"github.com/godbus/dbus"
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/pinyin_search"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/record"
 	"github.com/linuxdeepin/go-x11-client/util/keybind"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"pkg.deepin.io/dde/daemon/keybinding/util"
-	gio "pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/pinyin_search"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 var logger *log.Logger
@@ -106,7 +106,6 @@ func GetQtKeycodeMap() map[string]string {
 	}
 	return qtKeycodMap
 }
-
 
 const (
 	SKLCtrlShift uint32 = 1 << iota

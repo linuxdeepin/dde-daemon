@@ -28,7 +28,7 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const clearData = "\033\143\n"

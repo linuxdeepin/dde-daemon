@@ -2,8 +2,8 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 // List list all shortcut

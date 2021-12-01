@@ -30,10 +30,10 @@ import (
 	dbus "github.com/godbus/dbus"
 	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/tasker"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/tasker"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 const (

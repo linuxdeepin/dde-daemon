@@ -24,8 +24,8 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/api/language_support"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 const (

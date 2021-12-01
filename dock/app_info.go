@@ -24,7 +24,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 )
 
 const desktopHashPrefix = "d:"
@@ -108,7 +108,7 @@ func (ai *AppInfo) genInnerId() {
 	hasher := md5.New()
 	_, err := hasher.Write([]byte(cmdline))
 	if err != nil {
-		logger.Warning("Write error:",err)
+		logger.Warning("Write error:", err)
 	}
 	ai.innerId = desktopHashPrefix + hex.EncodeToString(hasher.Sum(nil))
 }

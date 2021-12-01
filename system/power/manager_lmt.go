@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 // laptop mode tools config file

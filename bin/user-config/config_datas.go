@@ -25,11 +25,12 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/lib/archive"
-	dutils "pkg.deepin.io/lib/utils"
 	"regexp"
 	"strings"
+
+	"github.com/linuxdeepin/go-lib/archive"
+	dutils "github.com/linuxdeepin/go-lib/utils"
+	"pkg.deepin.io/dde/daemon/accounts/users"
 )
 
 const (

@@ -3,7 +3,7 @@
 package uadpagent
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *UadpAgent) GetExportedMethods() dbusutil.ExportedMethods {

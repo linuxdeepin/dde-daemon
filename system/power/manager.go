@@ -29,11 +29,11 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
+	"github.com/linuxdeepin/go-lib/arch"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/api/powersupply"
 	"pkg.deepin.io/dde/api/powersupply/battery"
-	gudev "pkg.deepin.io/gir/gudev-1.0"
-	"pkg.deepin.io/lib/arch"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 var noUEvent bool

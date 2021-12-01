@@ -9,9 +9,9 @@ import (
 	"github.com/godbus/dbus"
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/log"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/log"
 )
 
 const (

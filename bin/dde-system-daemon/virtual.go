@@ -23,9 +23,9 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/procfs"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 const (

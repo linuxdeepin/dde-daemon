@@ -26,13 +26,13 @@ import (
 	"path"
 	"time"
 
+	"github.com/linuxdeepin/go-lib/graphic"
 	"pkg.deepin.io/dde/api/themes"
 	"pkg.deepin.io/dde/api/thumbnails/cursor"
 	"pkg.deepin.io/dde/api/thumbnails/gtk"
 	"pkg.deepin.io/dde/api/thumbnails/icon"
 	"pkg.deepin.io/dde/api/thumbnails/images"
 	"pkg.deepin.io/dde/daemon/appearance/background"
-	"pkg.deepin.io/lib/graphic"
 )
 
 const (

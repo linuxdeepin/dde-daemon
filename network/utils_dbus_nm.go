@@ -29,9 +29,9 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	. "github.com/linuxdeepin/go-lib/gettext"
 	"pkg.deepin.io/dde/daemon/network/nm"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-	. "pkg.deepin.io/lib/gettext"
 )
 
 // Wrapper NetworkManger dbus methods to hide

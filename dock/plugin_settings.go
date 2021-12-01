@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 type pluginSettings map[string]map[string]interface{}

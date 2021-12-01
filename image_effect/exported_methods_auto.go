@@ -3,7 +3,7 @@
 package image_effect
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *ImageEffect) GetExportedMethods() dbusutil.ExportedMethods {

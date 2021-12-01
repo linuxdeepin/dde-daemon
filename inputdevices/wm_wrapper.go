@@ -20,7 +20,7 @@
 package inputdevices
 
 import (
-	dutils "pkg.deepin.io/lib/utils"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (

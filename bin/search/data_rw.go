@@ -25,7 +25,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	dutils "pkg.deepin.io/lib/utils"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 func writeDatasToFile(datas interface{}, filename string) {

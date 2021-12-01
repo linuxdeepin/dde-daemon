@@ -3,7 +3,7 @@
 package trayicon
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *StatusNotifierWatcher) GetExportedMethods() dbusutil.ExportedMethods {

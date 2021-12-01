@@ -42,15 +42,15 @@ import (
 
 	"github.com/godbus/dbus"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	. "github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/proxy"
+	"github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	"pkg.deepin.io/dde/api/soundutils"
 	"pkg.deepin.io/dde/api/userenv"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/lib/dbusutil"
-	. "pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/proxy"
-	"pkg.deepin.io/lib/utils"
-	"pkg.deepin.io/lib/xdg/basedir"
 )
 
 var logger = log.NewLogger("daemon/dde-session-daemon")

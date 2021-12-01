@@ -15,9 +15,9 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/procfs"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 //go:generate dbusutil-gen em -type Uadp

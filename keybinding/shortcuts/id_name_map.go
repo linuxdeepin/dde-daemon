@@ -20,7 +20,7 @@
 package shortcuts
 
 import (
-	"pkg.deepin.io/lib/gettext"
+	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 func getSystemIdNameMap() map[string]string {
@@ -37,7 +37,7 @@ func getSystemIdNameMap() map[string]string {
 		"screenshot-window":      gettext.Tr("Window screenshot"),
 		"screenshot-delayed":     gettext.Tr("Delay screenshot"),
 		"screenshot-ocr":         gettext.Tr("OCR (Image to Text)"),
-		"screenshot-scroll":	  gettext.Tr("Scrollshot"),
+		"screenshot-scroll":      gettext.Tr("Scrollshot"),
 		"file-manager":           gettext.Tr("File manager"),
 		"disable-touchpad":       gettext.Tr("Disable Touchpad"),
 		"wm-switcher":            gettext.Tr("Switch window effects"),

@@ -24,7 +24,7 @@ import (
 	"os/exec"
 	"strconv"
 
-	"pkg.deepin.io/lib/keyfile"
+	"github.com/linuxdeepin/go-lib/keyfile"
 )
 
 func isStrInArray(str string, array []string) bool {

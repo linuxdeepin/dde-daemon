@@ -20,8 +20,8 @@
 package loader
 
 import (
+	"github.com/linuxdeepin/go-lib/log"
 	"pkg.deepin.io/dde/daemon/graph"
-	"pkg.deepin.io/lib/log"
 )
 
 type DAGBuilder struct {
@@ -38,7 +38,7 @@ type DAGBuilder struct {
 func NewDAGBuilder(loader *Loader, enablingModules []string, disableModules []string, flag EnableFlag) *DAGBuilder {
 	disableModulesMap := map[string]struct{}{}
 	for _, name := range disableModules {
-		if _,  ok := loader.modules[name]; ok {
+		if _, ok := loader.modules[name]; ok {
 			loader.log.Warningf("disabled module(%s) is no existed", name)
 			continue
 		}
@@ -68,7 +68,7 @@ func (builder *DAGBuilder) buildDAG() error {
 		node := queue[0]
 		queue = queue[1:]
 		name := node.ID
-		module,  ok := builder.modules[name]
+		module, ok := builder.modules[name]
 		if !ok {
 			if builder.flag.HasFlag(EnableFlagIgnoreMissingModule) {
 				if logLevel == log.LevelDebug {

@@ -29,8 +29,8 @@ import (
 	dbus "github.com/godbus/dbus"
 	mmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.modemmanager1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/daemon/network/nm"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 type device struct {

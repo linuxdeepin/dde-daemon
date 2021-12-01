@@ -23,9 +23,9 @@ import (
 	"fmt"
 	"strings"
 
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
-	"pkg.deepin.io/lib/strv"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (

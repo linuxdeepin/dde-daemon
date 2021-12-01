@@ -26,8 +26,8 @@ import (
 
 	"github.com/godbus/dbus"
 	fprint "github.com/linuxdeepin/go-dbus-factory/net.reactivated.fprint"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
 
 const (

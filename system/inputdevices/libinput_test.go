@@ -22,8 +22,8 @@ package inputdevices
 import (
 	"testing"
 
+	"github.com/linuxdeepin/go-lib/log"
 	"github.com/stretchr/testify/assert"
-	"pkg.deepin.io/lib/log"
 )
 
 func Test_newLibinput(t *testing.T) {

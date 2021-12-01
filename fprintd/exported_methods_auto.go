@@ -3,7 +3,7 @@
 package fprintd
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *Device) GetExportedMethods() dbusutil.ExportedMethods {

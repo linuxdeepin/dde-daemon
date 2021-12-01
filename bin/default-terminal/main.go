@@ -7,8 +7,8 @@ import (
 
 	"github.com/godbus/dbus"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 )
 
 const (

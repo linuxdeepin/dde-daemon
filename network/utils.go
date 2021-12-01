@@ -33,10 +33,10 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/utils"
 	"pkg.deepin.io/dde/daemon/iw"
 	"pkg.deepin.io/dde/daemon/network/nm"
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/utils"
 )
 
 func isStringInArray(s string, list []string) bool {

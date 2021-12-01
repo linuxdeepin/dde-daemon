@@ -26,9 +26,9 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/api/powersupply/battery"
-	gudev "pkg.deepin.io/gir/gudev-1.0"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 type Battery struct {

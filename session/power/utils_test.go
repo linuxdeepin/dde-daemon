@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	. "pkg.deepin.io/lib/gettext"
+	. "github.com/linuxdeepin/go-lib/gettext"
 )
 
 func TestGetNotifyString(t *testing.T) {

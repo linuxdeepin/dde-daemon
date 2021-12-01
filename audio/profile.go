@@ -22,7 +22,7 @@ package audio
 import (
 	"sort"
 
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 type Profile struct {

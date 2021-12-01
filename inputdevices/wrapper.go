@@ -29,10 +29,10 @@ import (
 	"encoding/json"
 	"strings"
 
+	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"pkg.deepin.io/dde/api/dxinput"
 	"pkg.deepin.io/dde/api/dxinput/common"
 	dxutils "pkg.deepin.io/dde/api/dxinput/utils"
-	gudev "pkg.deepin.io/gir/gudev-1.0"
 )
 
 type mouseInfo struct {

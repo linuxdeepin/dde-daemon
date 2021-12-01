@@ -3,7 +3,7 @@
 package grub2
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *EditAuth) GetExportedMethods() dbusutil.ExportedMethods {

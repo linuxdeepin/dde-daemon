@@ -3,7 +3,7 @@
 package power
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *Battery) GetExportedMethods() dbusutil.ExportedMethods {

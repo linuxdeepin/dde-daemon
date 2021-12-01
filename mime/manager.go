@@ -28,13 +28,13 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/gsettings"
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/strv"
-	dutils "pkg.deepin.io/lib/utils"
-	"pkg.deepin.io/lib/xdg/basedir"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gsettings"
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/strv"
+	dutils "github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 //go:generate dbusutil-gen em -type Manager

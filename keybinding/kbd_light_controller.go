@@ -23,9 +23,9 @@ import (
 	"errors"
 
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	commonbl "github.com/linuxdeepin/go-lib/backlight/common"
+	kbdbl "github.com/linuxdeepin/go-lib/backlight/keyboard"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
-	commonbl "pkg.deepin.io/lib/backlight/common"
-	kbdbl "pkg.deepin.io/lib/backlight/keyboard"
 )
 
 const backlightTypeKeyboard = 2

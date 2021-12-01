@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 //go:generate dbusutil-gen em -type Manager

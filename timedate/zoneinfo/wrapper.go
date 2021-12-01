@@ -30,7 +30,7 @@ import (
 
 	"strings"
 
-	. "pkg.deepin.io/lib/gettext"
+	. "github.com/linuxdeepin/go-lib/gettext"
 )
 
 func getDSTTime(zone string, year int32) (int64, int64, bool) {

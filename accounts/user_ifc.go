@@ -36,13 +36,13 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gdkpixbuf"
+	"github.com/linuxdeepin/go-lib/imgutil"
+	"github.com/linuxdeepin/go-lib/strv"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	"pkg.deepin.io/dde/api/lang_info"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/gdkpixbuf"
-	"pkg.deepin.io/lib/imgutil"
-	"pkg.deepin.io/lib/strv"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 const (

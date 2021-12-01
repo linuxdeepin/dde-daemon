@@ -23,11 +23,12 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/xdg/basedir"
-	"pkg.deepin.io/lib/xdg/userdir"
 	"strings"
 	"syscall"
+
+	"github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
+	"github.com/linuxdeepin/go-lib/xdg/userdir"
 )
 
 const (

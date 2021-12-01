@@ -25,8 +25,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
-	"pkg.deepin.io/lib/gsettings"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/gsettings"
 )
 
 const (

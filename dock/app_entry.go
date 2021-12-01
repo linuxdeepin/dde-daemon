@@ -24,8 +24,8 @@ import (
 	"sync"
 	"unicode/utf8"
 
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	x "github.com/linuxdeepin/go-x11-client"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 const (

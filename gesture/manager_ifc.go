@@ -2,7 +2,7 @@ package gesture
 
 import (
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (m *Manager) SetLongPressDuration(duration uint32) *dbus.Error {

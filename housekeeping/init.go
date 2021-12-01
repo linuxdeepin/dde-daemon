@@ -25,10 +25,10 @@ import (
 
 	"github.com/godbus/dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	. "github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/utils"
 	"pkg.deepin.io/dde/daemon/loader"
-	. "pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/utils"
 )
 
 const (

@@ -28,10 +28,10 @@ import (
 	"sync/atomic"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/procfs"
 	"pkg.deepin.io/dde/api/soundutils"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/procfs"
 )
 
 const (

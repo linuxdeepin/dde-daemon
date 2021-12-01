@@ -28,8 +28,8 @@ import (
 	sysbtagent "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth.agent"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 const (

@@ -24,9 +24,9 @@ import (
 	"os"
 	"path"
 
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
-	"pkg.deepin.io/lib/mime"
-	dutils "pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/mime"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 type AppInfo struct {

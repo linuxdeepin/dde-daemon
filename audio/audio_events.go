@@ -28,10 +28,10 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/gsettings"
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/gsettings"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 // 一次性读出所有事件

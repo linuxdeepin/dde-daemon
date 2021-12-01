@@ -19,7 +19,7 @@
 
 package timedate
 
-import "pkg.deepin.io/lib/gsettings"
+import "github.com/linuxdeepin/go-lib/gsettings"
 
 func (m *Manager) listenPropChanged() {
 	m.td.InitSignalExt(m.systemSigLoop, true)

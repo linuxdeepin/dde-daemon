@@ -25,8 +25,8 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
-	"pkg.deepin.io/lib/pulse"
-	"pkg.deepin.io/lib/strv"
+	"github.com/linuxdeepin/go-lib/pulse"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (

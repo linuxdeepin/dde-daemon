@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/log"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 type Manager struct {

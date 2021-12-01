@@ -21,7 +21,7 @@ package dbus
 
 import (
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib"
+	"github.com/linuxdeepin/go-lib"
 )
 
 // IsSessionBusActivated check the special session bus name whether activated

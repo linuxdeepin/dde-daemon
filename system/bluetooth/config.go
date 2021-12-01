@@ -25,8 +25,8 @@ import (
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 type config struct {
@@ -39,7 +39,7 @@ type config struct {
 }
 
 type adapterConfig struct {
-	Powered bool
+	Powered      bool
 	Discoverable bool
 }
 

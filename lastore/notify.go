@@ -22,7 +22,7 @@ import (
 	"os"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/gettext"
+	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 type NotifyAction struct {

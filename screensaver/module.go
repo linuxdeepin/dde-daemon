@@ -20,9 +20,9 @@
 package screensaver
 
 import (
+	"github.com/linuxdeepin/go-lib/log"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/lib/log"
 )
 
 func init() {

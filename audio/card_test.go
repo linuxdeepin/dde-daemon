@@ -23,8 +23,8 @@ package audio
 import (
 	"testing"
 
+	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/stretchr/testify/assert"
-	"pkg.deepin.io/lib/pulse"
 )
 
 func Test_getCardName(t *testing.T) {

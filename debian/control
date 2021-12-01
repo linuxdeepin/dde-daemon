@@ -7,7 +7,7 @@ Build-Depends:
  debhelper-compat (= 11),
  deepin-desktop-schemas,
  deepin-gettext-tools,
- golang-dlib-dev(>> 5.1.0+),
+ golang-github-linuxdeepin-go-lib-dev(>> 5.1.0+),
  golang-gir-gio-2.0-dev (>> 1.2.0+),
  golang-gir-glib-2.0-dev (>> 1.2.0+),
  golang-gir-gobject-2.0-dev (>> 1.2.0+),

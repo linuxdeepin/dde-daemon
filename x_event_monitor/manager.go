@@ -26,14 +26,14 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/strv"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/ge"
 	"github.com/linuxdeepin/go-x11-client/ext/input"
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/strv"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -88,7 +88,7 @@ type Manager struct {
 	idAreaInfoMap         map[string]*coordinateInfo
 	idReferCountMap       map[string]int32
 	fullscreenMotionCount int32
-	cursorMask      uint32
+	cursorMask            uint32
 
 	mu sync.Mutex
 }

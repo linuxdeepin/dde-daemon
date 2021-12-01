@@ -32,7 +32,7 @@ import (
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	mpris2 "github.com/linuxdeepin/go-dbus-factory/org.mpris.mediaplayer2"
 	"pkg.deepin.io/dde/api/soundutils"
-	//"pkg.deepin.io/lib/pulse"
+	//"github.com/linuxdeepin/go-lib/pulse"
 )
 
 func isVolumeValid(v float64) bool {

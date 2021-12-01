@@ -27,9 +27,9 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/utils"
-	dutils "pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/utils"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (

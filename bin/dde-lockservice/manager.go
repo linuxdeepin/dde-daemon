@@ -28,8 +28,8 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/msteinert/pam"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 const (

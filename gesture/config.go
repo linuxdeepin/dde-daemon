@@ -25,7 +25,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"pkg.deepin.io/lib/xdg/basedir"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 const (
@@ -42,7 +42,7 @@ var (
 	gsKeyTouchPadEnabled    = "touch-pad-enabled"
 	gsKeyTouchScreenEnabled = "touch-screen-enabled"
 
-	configManagerId     = "org.desktopspec.ConfigManager"
+	configManagerId = "org.desktopspec.ConfigManager"
 )
 
 type ActionInfo struct {

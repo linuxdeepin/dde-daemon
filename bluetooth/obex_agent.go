@@ -33,9 +33,9 @@ import (
 	"github.com/godbus/dbus"
 	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/xdg/userdir"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/xdg/userdir"
 )
 
 const (

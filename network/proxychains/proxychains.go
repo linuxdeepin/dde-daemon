@@ -23,15 +23,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	proxy "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.proxy"
 	"os"
 	"path/filepath"
 	"sync"
 
+	proxy "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.proxy"
+
 	dbus "github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/xdg/basedir"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 //go:generate dbusutil-gen em -type Manager

@@ -24,8 +24,8 @@ import (
 	"path"
 	"testing"
 
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	C "gopkg.in/check.v1"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 type testWrapper struct{}

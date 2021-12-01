@@ -22,7 +22,7 @@ package grub2
 import (
 	"sync"
 
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 // Theme is a dbus object which provide properties and methods to

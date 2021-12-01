@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"pkg.deepin.io/lib/xdg/basedir"
 	"runtime/pprof"
 	"time"
+
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 // Manager manage calltrace files
@@ -136,15 +137,15 @@ func (ct *Manager) recordStack() {
 	}
 	_, _ = ct.stackFile.WriteString("--- DUMP [goroutine] ---\n")
 	_ = pprof.Lookup("goroutine").WriteTo(ct.stackFile, 2)
-	_, _ =ct.stackFile.WriteString("\n--- DUMP [heap] ---\n")
+	_, _ = ct.stackFile.WriteString("\n--- DUMP [heap] ---\n")
 	_ = pprof.Lookup("heap").WriteTo(ct.stackFile, 2)
-	_, _ =ct.stackFile.WriteString("\n--- DUMP [threadcreate] ---\n")
+	_, _ = ct.stackFile.WriteString("\n--- DUMP [threadcreate] ---\n")
 	_ = pprof.Lookup("threadcreate").WriteTo(ct.stackFile, 2)
-	_, _ =ct.stackFile.WriteString("\n--- DUMP [block] ---\n")
+	_, _ = ct.stackFile.WriteString("\n--- DUMP [block] ---\n")
 	_ = pprof.Lookup("block").WriteTo(ct.stackFile, 2)
-	_, _ =ct.stackFile.WriteString("\n--- DUMP [mutex] ---\n")
+	_, _ = ct.stackFile.WriteString("\n--- DUMP [mutex] ---\n")
 	_ = pprof.Lookup("mutex").WriteTo(ct.stackFile, 2)
-	_, _ =ct.stackFile.WriteString("=== END " + time.Now().String() + " ===\n\n\n")
+	_, _ = ct.stackFile.WriteString("=== END " + time.Now().String() + " ===\n\n\n")
 	_ = ct.stackFile.Sync()
 }
 

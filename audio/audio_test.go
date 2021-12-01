@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	dbus "github.com/godbus/dbus"
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 func Test_objectPathSliceEqual(t *testing.T) {

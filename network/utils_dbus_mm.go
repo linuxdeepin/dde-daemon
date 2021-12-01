@@ -22,7 +22,7 @@ package network
 import (
 	"github.com/godbus/dbus"
 	mmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.modemmanager1"
-	"pkg.deepin.io/lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
 
 // modem capabilities

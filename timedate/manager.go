@@ -27,12 +27,12 @@ import (
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	timedated "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedated"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	ddbus "pkg.deepin.io/dde/daemon/dbus"
 	"pkg.deepin.io/dde/daemon/session/common"
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/gsprop"
-	"pkg.deepin.io/lib/dbusutil/proxy"
 )
 
 const (

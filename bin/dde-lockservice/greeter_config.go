@@ -23,8 +23,8 @@ import (
 	"os"
 	"path"
 
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 const (

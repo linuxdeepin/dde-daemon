@@ -32,12 +32,12 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
+	glib "github.com/linuxdeepin/go-gir/glib-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gdkpixbuf"
+	"github.com/linuxdeepin/go-lib/strv"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	glib "pkg.deepin.io/gir/glib-2.0"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/gdkpixbuf"
-	"pkg.deepin.io/lib/strv"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 const (

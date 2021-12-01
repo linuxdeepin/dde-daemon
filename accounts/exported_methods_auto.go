@@ -3,7 +3,7 @@
 package accounts
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *ImageBlur) GetExportedMethods() dbusutil.ExportedMethods {

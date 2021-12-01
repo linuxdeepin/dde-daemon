@@ -22,8 +22,8 @@ package inputdevices
 
 import (
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 type Touchscreen struct {

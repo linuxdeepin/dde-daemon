@@ -30,12 +30,12 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
+	"github.com/linuxdeepin/go-lib/pulse"
 	"golang.org/x/xerrors"
 	"pkg.deepin.io/dde/daemon/common/dsync"
-	gio "pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/gsprop"
-	"pkg.deepin.io/lib/pulse"
 )
 
 const (
@@ -170,7 +170,7 @@ type Audio struct {
 	outputCardName string
 	outputPortName string
 	// 输出端口切换计数器
-	outputAutoSwitchCount int
+	outputAutoSwitchCount    int
 	outputAutoSwitchCountMax int
 
 	// nolint

@@ -15,17 +15,17 @@ import (
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	gesture "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.gesture"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
+	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
 	clipboard "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.clipboard"
 	dock "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.dock"
 	notification "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.notification"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	gio "pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/dbusutil/proxy"
-	"pkg.deepin.io/lib/gsettings"
-	dutils "pkg.deepin.io/lib/utils"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/gsettings"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -144,7 +144,7 @@ func newManager() (*Manager, error) {
 	}
 
 	systemConnObj := systemConn.Object(configManagerId, "/")
-	err = systemConnObj.Call(configManagerId + ".acquireManager", 0, "dde-session-daemon", "gesture","").Store(&m.configManagerPath)
+	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "dde-session-daemon", "gesture", "").Store(&m.configManagerPath)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -356,7 +356,7 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 			return nil
 		}
 		if !isSessionActive("/org/freedesktop/login1/session/self") {
-			active,err := m.sessionWatcher.IsActive().Get(0)
+			active, err := m.sessionWatcher.IsActive().Get(0)
 			if err != nil || !active {
 				logger.Debug("Gesture had been disabled or session inactive")
 				return nil

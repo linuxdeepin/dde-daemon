@@ -21,7 +21,8 @@ package systeminfo
 
 import (
 	"fmt"
-	"pkg.deepin.io/lib/keyfile"
+
+	"github.com/linuxdeepin/go-lib/keyfile"
 )
 
 const (

@@ -27,13 +27,13 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/procfs"
+	"github.com/linuxdeepin/go-lib/users/passwd"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	"pkg.deepin.io/dde/daemon/accounts/checkers"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/procfs"
-	"pkg.deepin.io/lib/users/passwd"
-	dutils "pkg.deepin.io/lib/utils"
 )
 
 const (

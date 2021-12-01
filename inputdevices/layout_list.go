@@ -23,10 +23,10 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 
+	"github.com/linuxdeepin/go-lib/gettext"
+	lib_locale "github.com/linuxdeepin/go-lib/locale"
+	"github.com/linuxdeepin/go-lib/strv"
 	"pkg.deepin.io/dde/daemon/inputdevices/iso639"
-	"pkg.deepin.io/lib/gettext"
-	lib_locale "pkg.deepin.io/lib/locale"
-	"pkg.deepin.io/lib/strv"
 )
 
 const (

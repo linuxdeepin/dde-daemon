@@ -25,9 +25,9 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"golang.org/x/xerrors"
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 const (

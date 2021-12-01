@@ -12,7 +12,7 @@ import (
 
 	"pkg.deepin.io/dde/daemon/appearance/background"
 
-	"pkg.deepin.io/lib/utils"
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 type changeBgFunc func(monitorSpace string, t time.Time)

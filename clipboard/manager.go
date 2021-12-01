@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
-	"pkg.deepin.io/lib/log"
 )
 
 //go:generate dbusutil-gen em -type Manager

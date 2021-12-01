@@ -9,8 +9,8 @@ import (
 	"strconv"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-x11-client"
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	x "github.com/linuxdeepin/go-x11-client"
 )
 
 func (m *Manager) saveClipboard() error {

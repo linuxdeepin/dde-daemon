@@ -28,7 +28,7 @@ import (
 	"regexp"
 	"sync"
 
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 // EditAuth is a dbus object which provide properties and methods to

@@ -31,10 +31,10 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
-	"pkg.deepin.io/lib/dbusutil"
-	. "pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/xdg/basedir"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	. "github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 var chromeShortcurtExecRegexp = regexp.MustCompile(`google-chrome.*--app-id=`)

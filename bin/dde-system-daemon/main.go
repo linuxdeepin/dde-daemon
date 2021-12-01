@@ -44,12 +44,12 @@ import (
 	_ "pkg.deepin.io/dde/daemon/system/uadp"
 
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	glib "github.com/linuxdeepin/go-gir/glib-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	. "github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/log"
 	"pkg.deepin.io/dde/daemon/loader"
-	glib "pkg.deepin.io/gir/glib-2.0"
-	"pkg.deepin.io/lib/dbusutil"
-	. "pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/keyfile"
-	"pkg.deepin.io/lib/log"
 )
 
 //go:generate dbusutil-gen em -type Daemon

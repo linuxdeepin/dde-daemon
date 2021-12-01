@@ -27,7 +27,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	dutils "pkg.deepin.io/lib/utils"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const dockedItemTemplate string = `[Desktop Entry]

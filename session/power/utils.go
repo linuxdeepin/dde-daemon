@@ -25,11 +25,11 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	. "github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/gsettings"
+	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 	"pkg.deepin.io/dde/api/soundutils"
-	. "pkg.deepin.io/lib/gettext"
-	"pkg.deepin.io/lib/gsettings"
-	"pkg.deepin.io/lib/pulse"
 )
 
 func (m *Manager) waitLockShowing(timeout time.Duration) {

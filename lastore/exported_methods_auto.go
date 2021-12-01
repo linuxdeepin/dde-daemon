@@ -3,7 +3,7 @@
 package lastore
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *Lastore) GetExportedMethods() dbusutil.ExportedMethods {

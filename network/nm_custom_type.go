@@ -20,8 +20,8 @@
 package network
 
 import (
+	_ "github.com/linuxdeepin/go-lib/gettext"
 	"pkg.deepin.io/dde/daemon/network/nm"
-	_ "pkg.deepin.io/lib/gettext"
 )
 
 // Custom device types, use string instead of number, used by front-end

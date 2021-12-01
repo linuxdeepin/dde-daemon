@@ -26,8 +26,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/linuxdeepin/go-lib/log"
 	"gopkg.in/yaml.v2"
-	"pkg.deepin.io/lib/log"
 )
 
 var logger = log.NewLogger("daemon/network/nm_generator")

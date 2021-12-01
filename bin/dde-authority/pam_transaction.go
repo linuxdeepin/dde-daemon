@@ -8,8 +8,8 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/pam"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/pam"
 )
 
 type PAMTransaction struct {

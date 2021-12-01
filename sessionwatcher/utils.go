@@ -22,7 +22,7 @@ package sessionwatcher
 import (
 	"os"
 
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 func suspendPulseSinks(suspend int) {

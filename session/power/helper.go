@@ -22,7 +22,7 @@ package power
 import (
 	"github.com/godbus/dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
-	"pkg.deepin.io/lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 
 	// system bus
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
@@ -37,8 +37,8 @@ import (
 	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	screensaver "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.screensaver"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	x "github.com/linuxdeepin/go-x11-client"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 type Helper struct {

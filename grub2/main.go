@@ -25,9 +25,9 @@ import (
 	"os/exec"
 	"time"
 
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/api/inhibit_hint"
 	"pkg.deepin.io/dde/daemon/grub_common"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 var _g *Grub2

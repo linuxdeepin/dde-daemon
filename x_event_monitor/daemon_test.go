@@ -22,10 +22,10 @@ package x_event_monitor
 import (
 	"testing"
 
-	"pkg.deepin.io/lib/log"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
-func Test_simpleFunc (t *testing.T) {
+func Test_simpleFunc(t *testing.T) {
 	d := Daemon{}
 
 	logger = log.NewLogger(moduleName)

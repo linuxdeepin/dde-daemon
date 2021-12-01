@@ -19,7 +19,7 @@
 
 package bluetooth
 
-//import . "pkg.deepin.io/lib/gettext"
+//import . "github.com/linuxdeepin/go-lib/gettext"
 
 type profile struct {
 	uuid, name string

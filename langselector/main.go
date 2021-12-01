@@ -22,11 +22,11 @@ package langselector
 import (
 	"time"
 
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/gsettings"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/strv"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gsettings"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (

@@ -3,7 +3,7 @@
 package audio
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *Audio) GetExportedMethods() dbusutil.ExportedMethods {

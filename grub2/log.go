@@ -25,7 +25,7 @@ import (
 	"os"
 	"time"
 
-	"pkg.deepin.io/lib/encoding/kv"
+	"github.com/linuxdeepin/go-lib/encoding/kv"
 )
 
 const (

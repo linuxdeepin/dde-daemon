@@ -25,7 +25,7 @@ import (
 	libdate "github.com/rickb777/date"
 	"github.com/stretchr/testify/assert"
 
-	dutils "pkg.deepin.io/lib/utils"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 func Test_GetUserInfos(t *testing.T) {

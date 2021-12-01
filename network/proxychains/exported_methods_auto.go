@@ -3,7 +3,7 @@
 package proxychains
 
 import (
-	"pkg.deepin.io/lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {

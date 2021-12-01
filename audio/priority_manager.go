@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"pkg.deepin.io/lib/pulse"
-	"pkg.deepin.io/lib/xdg/basedir"
+	"github.com/linuxdeepin/go-lib/pulse"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 // 优先级策略组，包含输入和输出

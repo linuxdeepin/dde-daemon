@@ -24,9 +24,9 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	. "github.com/linuxdeepin/go-lib/gettext"
 	_ "github.com/linuxdeepin/go-x11-client"
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
-	. "pkg.deepin.io/lib/gettext"
 )
 
 func (entry *AppEntry) updateMenu() {

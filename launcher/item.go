@@ -25,7 +25,7 @@ import (
 	"unicode"
 
 	"github.com/Lofanmi/pinyin-golang/pinyin"
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 )
 
 type SearchScore uint64

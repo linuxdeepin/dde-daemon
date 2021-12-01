@@ -26,12 +26,12 @@ import (
 	"path/filepath"
 	"sync"
 
-	"pkg.deepin.io/lib/imgutil"
+	"github.com/linuxdeepin/go-lib/imgutil"
 
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/strv"
-	dutils "pkg.deepin.io/lib/utils"
-	"pkg.deepin.io/lib/xdg/basedir"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/strv"
+	dutils "github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 var (

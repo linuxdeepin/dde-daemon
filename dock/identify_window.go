@@ -22,12 +22,13 @@ package dock
 import (
 	"fmt"
 	"path/filepath"
-	"pkg.deepin.io/lib/appinfo/desktopappinfo"
 	"strconv"
 	"strings"
 	"time"
 
-	"pkg.deepin.io/lib/procfs"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+
+	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 type IdentifyWindowFunc struct {

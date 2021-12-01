@@ -21,8 +21,8 @@ package screenedge
 
 import (
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/daemon/common/dsync"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 //go:generate dbusutil-gen em -type Manager

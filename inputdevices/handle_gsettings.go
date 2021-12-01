@@ -20,10 +20,11 @@
 package inputdevices
 
 import (
-	"github.com/godbus/dbus"
 	"os"
+
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/gsettings"
 	"pkg.deepin.io/dde/api/dxinput"
-	"pkg.deepin.io/lib/gsettings"
 )
 
 func (m *Manager) handleGSettings() {

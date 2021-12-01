@@ -26,8 +26,8 @@ import (
 
 	"github.com/godbus/dbus"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	. "github.com/linuxdeepin/go-lib/gettext"
 	"pkg.deepin.io/dde/daemon/network/nm"
-	. "pkg.deepin.io/lib/gettext"
 )
 
 const (

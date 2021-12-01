@@ -25,10 +25,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/composite"
 	"github.com/linuxdeepin/go-x11-client/ext/damage"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 const (

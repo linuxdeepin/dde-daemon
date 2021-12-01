@@ -23,9 +23,9 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/gsettings"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/gsettings"
 
 	_ "pkg.deepin.io/dde/daemon/appearance"
 	_ "pkg.deepin.io/dde/daemon/audio"

@@ -3,7 +3,7 @@ package audio
 import (
 	"strings"
 
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 const (

@@ -23,7 +23,7 @@ import (
 	"fmt"
 	"strings"
 
-	"pkg.deepin.io/lib/gsettings"
+	"github.com/linuxdeepin/go-lib/gsettings"
 )
 
 func (m *Manager) listenGSettingChanged() {

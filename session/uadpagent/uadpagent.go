@@ -11,10 +11,10 @@ import (
 	dbus "github.com/godbus/dbus"
 	uadp "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.uadp"
 	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/go-lib/procfs"
 	"pkg.deepin.io/dde/daemon/session/common"
-	"pkg.deepin.io/lib/dbusutil"
-	"pkg.deepin.io/lib/log"
-	"pkg.deepin.io/lib/procfs"
 )
 
 //go:generate dbusutil-gen em -type UadpAgent

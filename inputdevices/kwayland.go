@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	kwin "github.com/linuxdeepin/go-dbus-factory/org.kde.kwin"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/api/dxinput"
 	"pkg.deepin.io/dde/api/dxinput/common"
 	"pkg.deepin.io/dde/api/dxinput/kwayland"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 var (

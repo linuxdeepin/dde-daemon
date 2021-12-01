@@ -23,9 +23,9 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	gio "pkg.deepin.io/gir/gio-2.0"
-	"pkg.deepin.io/lib/dbusutil/gsprop"
-	"pkg.deepin.io/lib/gsettings"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
+	"github.com/linuxdeepin/go-lib/gsettings"
 )
 
 type warnLevelConfig struct {

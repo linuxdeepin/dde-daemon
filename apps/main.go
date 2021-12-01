@@ -20,8 +20,8 @@
 package apps
 
 import (
+	"github.com/linuxdeepin/go-lib/log"
 	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/lib/log"
 )
 
 //go:generate dbusutil-gen em -type ALRecorder,DFWatcher

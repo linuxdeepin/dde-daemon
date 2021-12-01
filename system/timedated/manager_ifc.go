@@ -23,8 +23,8 @@ import (
 	"os"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"pkg.deepin.io/dde/daemon/timedate/zoneinfo"
-	"pkg.deepin.io/lib/dbusutil"
 )
 
 // SetTime set the current time and date,

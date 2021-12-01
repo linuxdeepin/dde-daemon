@@ -26,8 +26,8 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
-	"pkg.deepin.io/lib/asound"
-	"pkg.deepin.io/lib/pulse"
+	"github.com/linuxdeepin/go-lib/asound"
+	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 func (a *Audio) trySelectBestPort() {
@@ -129,7 +129,7 @@ func (a *Audio) doSaveConfig() {
 		if err != nil {
 			logger.Warning("save config file failed:", info.string(), err)
 		}
-        }
+	}
 	err = a.saveAudioState()
 	if err != nil {
 		logger.Warning(err)
