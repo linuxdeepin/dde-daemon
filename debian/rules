@@ -4,6 +4,7 @@ include /usr/share/dpkg/architecture.mk
 
 export GOCACHE = /tmp/gocache
 export GOPATH = /usr/share/gocode
+export GO111MODULE = off
 
 SYSTYPE=Desktop
 SYSTYPE=$(shell cat /etc/deepin-version | grep Type= | awk -F'=' '{print $$2}')
