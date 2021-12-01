@@ -76,7 +76,7 @@ Depends:
  ipwatchd (>> 1.2.1+),
  iso-codes,
  lastore-daemon,
- libfprint0,
+ libfprint0 | libfprint-2-2,
  libnl-3-200,
  libnl-genl-3-200,
  libnotify-bin,
