@@ -23,10 +23,11 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/procfs"
@@ -84,6 +85,10 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 		close(ch)
 	}()
 
+	homeDir := "/home/" + name
+	_, err = os.Stat(homeDir)
+	homeDirExist := err == nil
+
 	if err := users.CreateUser(name, fullName, ""); err != nil {
 		logger.Warningf("DoAction: create user '%s' failed: %v\n",
 			name, err)
@@ -107,6 +112,9 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 		logger.Debug("receive user path", userPath)
 		if userPath == "" {
 			return nilObjPath, dbusutil.ToError(errors.New("failed to install user on session bus"))
+		}
+		if homeDirExist {
+			go chownHomeDir(homeDir, name)
 		}
 		return dbus.ObjectPath(userPath), nil
 	case <-time.After(time.Second * 60):
@@ -202,7 +210,7 @@ func (m *Manager) FindUserById(uid string) (user string, busErr *dbus.Error) {
 		}
 	}
 
-	return "", dbusutil.ToError(fmt.Errorf("Invalid uid: %s", uid))
+	return "", dbusutil.ToError(fmt.Errorf("invalid uid: %s", uid))
 }
 
 func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) {
@@ -220,7 +228,7 @@ func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) 
 		}
 	}
 
-	return "", dbusutil.ToError(fmt.Errorf("Invalid username: %s", pwd.Name))
+	return "", dbusutil.ToError(fmt.Errorf("invalid username: %s", pwd.Name))
 }
 
 // 随机得到一个用户头像

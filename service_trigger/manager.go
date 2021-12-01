@@ -1,42 +1,115 @@
+/*
+ *  Copyright (C) 2019 ~ 2021 Uniontech Software Technology Co.,Ltd
+ *
+ * Author:
+ *
+ * Maintainer:
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package service_trigger
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 )
 
 type Manager struct {
+	service    *dbusutil.Service
 	serviceMap map[string]*Service
+
+	notifications notifications.Notifications
+	sysDBusDaemon ofdbus.DBus
 
 	systemSigMonitor  *DBusSignalMonitor
 	sessionSigMonitor *DBusSignalMonitor
+	sysSigLoop        *dbusutil.SignalLoop
+	agents            map[string]*agent
 }
 
-func newManager() *Manager {
+func newManager(service *dbusutil.Service) *Manager {
 	m := &Manager{
+		service:           service,
 		systemSigMonitor:  newDBusSignalMonitor(busTypeSystem),
 		sessionSigMonitor: newDBusSignalMonitor(busTypeSession),
+		agents:            make(map[string]*agent),
 	}
 	return m
 }
 
-func (m *Manager) start() {
+func (m *Manager) handleSysBusNameOwnerChanged(name, oldOwner, newOwner string) {
+	if name != "" && oldOwner == "" && newOwner != "" && !strings.HasPrefix(name, ":") {
+		// 新服务注册了, 需要重新注册 agent
+		for _, agent := range m.agents {
+			cfg := agent.cfg
+			if cfg.Dest == name {
+				time.AfterFunc(agent.getRegisterDelay(), func() {
+					err := agent.register()
+					if err != nil {
+						logger.Warningf("agent %v register failed: %v", agent.name, err)
+					}
+				})
+			}
+		}
+	}
+}
+
+func (m *Manager) start() error {
 	m.loadServices()
+	m.initAgents()
+
+	sessionBus := m.service.Conn()
+	m.notifications = notifications.NewNotifications(sessionBus)
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+
+	m.sysDBusDaemon = ofdbus.NewDBus(sysBus)
+	m.sysSigLoop = dbusutil.NewSignalLoop(sysBus, 10)
+	m.sysSigLoop.Start()
+
+	m.sysDBusDaemon.InitSignalExt(m.sysSigLoop, true)
+	_, err = m.sysDBusDaemon.ConnectNameOwnerChanged(m.handleSysBusNameOwnerChanged)
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	m.sessionSigMonitor.init()
 	go m.sessionSigMonitor.signalLoop(m)
 
 	m.systemSigMonitor.init()
 	go m.systemSigMonitor.signalLoop(m)
+	return nil
 }
 
 func (m *Manager) stop() error {
+	m.sysSigLoop.Stop()
+
 	err := m.sessionSigMonitor.stop()
 	if err != nil {
 		return err
@@ -45,24 +118,110 @@ func (m *Manager) stop() error {
 	return m.systemSigMonitor.stop()
 }
 
+// 处理从 dde-system-daemon 在 system bus 传递给 session 的消息
+func (m *Manager) handleSysMessage(msgStr string) *dbus.Error {
+	err := m.handleSysMessageAux(msgStr)
+	if err != nil {
+		logger.Warning(err)
+	}
+	return dbusutil.ToError(err)
+}
+
+func (m *Manager) handleSysMessageAux(msgStr string) error {
+	var msg sessionmsg.Message
+	err := json.Unmarshal([]byte(msgStr), &msg)
+	if err != nil {
+		return err
+	}
+
+	if msg.Type == sessionmsg.MessageTypeNotify {
+		body, ok := msg.Body.(*sessionmsg.BodyNotify)
+		if !ok {
+			return fmt.Errorf("invalid message: type of msg.Body is %T", msg.Body)
+		}
+		m.notify(body)
+	}
+	return nil
+}
+
+func (m *Manager) notify(bodyNotify *sessionmsg.BodyNotify) {
+	summary := bodyNotify.Summary.String()
+	body := bodyNotify.Body.String()
+	logger.Debugf("notify %q %q %q", bodyNotify.Icon, summary, body)
+
+	if m.notifications == nil {
+		logger.Warning("notifications is nil")
+		return
+	}
+
+	appName := bodyNotify.AppName
+	if appName == "" {
+		appName = "dde-control-center"
+	}
+
+	_, err := m.notifications.Notify(0, appName, 0, bodyNotify.Icon,
+		summary, body, bodyNotify.Actions, bodyNotify.Hints, int32(bodyNotify.ExpireTimeout))
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+}
+
+func (m *Manager) initAgents() {
+	agentCfgs := []*DBusAgentConfig{
+		{
+			Name:           "main",
+			AgentInterface: sessionmsg.AgentIfc,
+			AgentPath:      sessionmsg.AgentPath,
+			AgentMethods: []DBusAgentMethod{
+				{
+					Name: sessionmsg.MethodSendMessage,
+					fn:   m.handleSysMessage,
+				},
+			},
+		},
+	}
+	for _, agentCfg := range agentCfgs {
+		agent, err := newAgent(agentCfg)
+		if err != nil {
+			logger.Warningf("new agent %v failed: %v", agentCfg.Name, err)
+			continue
+		}
+		m.agents[agent.name] = agent
+		err = agent.register()
+		if err != nil {
+			logger.Warningf("agent %v register failed: %v", agent.name, err)
+		}
+	}
+}
+
 func (m *Manager) loadServices() {
 	m.serviceMap = make(map[string]*Service)
 	m.loadServicesFromDir("/usr/lib/deepin-daemon/" + moduleName)
 	m.loadServicesFromDir("/etc/deepin-daemon/" + moduleName)
 
 	for _, service := range m.serviceMap {
-		if service.Monitor.Type == "DBus" {
+		switch service.Monitor.Type {
+		case typeDBus:
 			dbusField := service.Monitor.DBus
-			if dbusField.BusType == "System" {
+			if dbusField == nil {
+				continue
+			}
+			if dbusField.BusType == busTypeSystemStr {
 				m.systemSigMonitor.appendService(service)
-			} else if dbusField.BusType == "Session" {
+			} else if dbusField.BusType == busTypeSessionStr {
 				m.sessionSigMonitor.appendService(service)
 			}
 		}
 	}
 }
 
-const serviceFileExt = ".service.json"
+const (
+	serviceFileExt    = ".service.json"
+	typeDBus          = "DBus"
+	busTypeSystemStr  = "System"
+	busTypeSessionStr = "Session"
+)
 
 func (m *Manager) loadServicesFromDir(dirname string) {
 	fileInfoList, _ := ioutil.ReadDir(dirname)
@@ -114,7 +273,13 @@ func newReplacer(signal *dbus.Signal) *strings.Replacer {
 	return strings.NewReplacer(oldNewSlice...)
 }
 
-func (m *Manager) execService(service *Service, signal *dbus.Signal) {
+func (m *Manager) execService(service *Service,
+	signal *dbus.Signal) {
+	if service.execFn != nil {
+		service.execFn(signal)
+		return
+	}
+
 	if len(service.Exec) == 0 {
 		logger.Warning("service Exec empty")
 		return

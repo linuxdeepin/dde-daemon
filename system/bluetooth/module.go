@@ -20,8 +20,9 @@
 package bluetooth
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 type module struct {
@@ -47,6 +48,8 @@ func (m *module) Start() error {
 
 	service := loader.GetService()
 	_bt = newSysBluetooth(service)
+
+	sessionmsg.SetAgentInfoPublisher(_bt.userAgents)
 
 	err := service.Export(dbusPath, _bt)
 	if err != nil {
@@ -78,6 +81,8 @@ func (*module) Stop() error {
 	if _bt == nil {
 		return nil
 	}
+
+	sessionmsg.SetAgentInfoPublisher(nil)
 
 	service := loader.GetService()
 	err := service.ReleaseName(dbusServiceName)

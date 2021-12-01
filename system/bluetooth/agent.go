@@ -196,6 +196,28 @@ func (m *userAgentMap) getActiveAgent() sysbtagent.Agent {
 	return item.agents[btcommon.SessionAgentPath]
 }
 
+func (m *userAgentMap) GetActiveAgentName() string {
+	agent := m.getActiveAgent()
+	if agent != nil {
+		return agent.ServiceName_()
+	}
+	return ""
+}
+
+func (m *userAgentMap) GetAllAgentNames() (result []string) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	for _, item := range m.m {
+		// 目前只使用标准的
+		agent := item.agents[btcommon.SessionAgentPath]
+		if agent != nil {
+			result = append(result, agent.ServiceName_())
+		}
+	}
+	return result
+}
+
 type authorize struct {
 	path   dbus.ObjectPath
 	key    string

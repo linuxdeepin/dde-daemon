@@ -58,18 +58,7 @@ type Daemon struct {
 	loginManager  login1.Manager
 	systemSigLoop *dbusutil.SignalLoop
 	service       *dbusutil.Service
-	methods       *struct { //nolint
-		ScalePlymouth                  func() `in:"scale"`
-		SetLongPressDuration           func() `in:"duration"`
-		NetworkGetConnections          func() `out:"data"`
-		NetworkSetConnections          func() `in:"data"`
-		BluetoothGetDeviceTechnologies func() `in:"adapter,device" out:"technologies"`
-		ClearTtys                      func()
-		ClearTty                       func() `in:"number"`
-		IsPidVirtualMachine            func() `in:"pid" out:"ret"`
-		IsIgnoreCheckVirtual           func() `in:"pid" out:"ret"`
-	}
-	signals *struct { //nolint
+	signals       *struct { //nolint
 		HandleForSleep struct {
 			start bool
 		}

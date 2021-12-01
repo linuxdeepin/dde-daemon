@@ -23,17 +23,19 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"os/exec"
 	"sort"
 	"strconv"
 	"sync"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
+	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
 	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/tasker"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const (
@@ -415,4 +417,28 @@ func isGuestUserEnabled() bool {
 
 func (m *Manager) checkAuth(sender dbus.Sender) error {
 	return checkAuth(polkitActionUserAdministration, string(sender))
+}
+
+func chownHomeDir(homeDir string, username string) {
+	logger.Debug("change owner for dir:", homeDir)
+	err := exec.Command("chown", "-hR", username+":"+username, homeDir).Run()
+	if err != nil {
+		logger.Warningf("change owner for dir %v failed: %v", homeDir, err)
+		return
+	}
+	err = sessionmsg.SendMessage(sessionmsg.NewMessage(true, &sessionmsg.BodyNotify{
+		Icon: "preferences-system",
+		Body: &sessionmsg.LocalizeStr{
+			Format: Tr("User \"%s\" existed before and its data is synced"),
+			Args:   []string{username},
+		},
+		ExpireTimeout: -1,
+	}))
+	if err != nil {
+		logger.Warning("send session msg failed:", err)
+	}
+}
+
+func Tr(text string) string {
+	return text
 }
