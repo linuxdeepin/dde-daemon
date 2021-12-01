@@ -794,15 +794,12 @@ func (m *Manager) checkGatewayConnectivity(ipPath dbus.ObjectPath) bool {
 		return false
 	}
 
-	addr, mask, gateways, domains := nmGetIp4ConfigInfo(ipPath)
-	logger.Debugf("The active connection ip4 info: address(%s), mask(%s), gateways(%v), domains(%v)",
-		addr, mask, gateways, domains)
+	ip4Info := nmGetIp4ConfigInfo(ipPath)
+	logger.Debugf("The active connection ip4 info: %v",
+		ip4Info)
 	// check whether the gateway is connected by ping
-	for _, gw := range gateways {
-		if len(gw) == 0 {
-			continue
-		}
-		if !m.doPing(gw, 3) {
+	if len(ip4Info.Gateway) != 0 {
+		if !m.doPing(ip4Info.Gateway, 3) {
 			return false
 		}
 	}

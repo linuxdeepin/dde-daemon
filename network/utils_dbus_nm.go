@@ -778,56 +778,84 @@ func nmAddConnection(data connectionData) (cpath dbus.ObjectPath, err error) {
 	return
 }
 
-func nmGetIp4ConfigInfo(path dbus.ObjectPath) (address, mask string, gateways, nameServers []string) {
-	address = "0.0.0.0"
-	mask = "0.0.0.0"
+func parseAddressDataProp(addressData []map[string]dbus.Variant) (addresses []addressDataItem) {
+	addresses = make([]addressDataItem, 0, len(addressData))
+	for _, v := range addressData {
+		a := v["address"].Value()
+		addr, ok := a.(string)
+		if !ok {
+			logger.Warningf("failed to convert address %v to string", a)
+		}
+
+		p := v["prefix"].Value()
+		prefix, ok := p.(uint32)
+		if !ok {
+			logger.Warningf("failed to convert prefix %v to uint", p)
+		}
+
+		addresses = append(addresses, addressDataItem{
+			Address: addr,
+			Prefix:  prefix,
+		})
+	}
+
+	return addresses
+}
+
+func nmGetIp4ConfigInfo(path dbus.ObjectPath) (ip4Data ipv4Info) {
 	ip4config, err := nmNewIP4Config(path)
 	if err != nil {
 		return
 	}
-	addressProp, _ := ip4config.Addresses().Get(0)
 
-	ipv4Addresses := wrapIpv4Addresses(addressProp)
-	if len(ipv4Addresses) > 0 {
-		address = ipv4Addresses[0].Address
-		mask = ipv4Addresses[0].Mask
-	}
-	for _, address := range ipv4Addresses {
-		gateways = append(gateways, address.Gateway)
+	addressDataProp, _ := ip4config.AddressData().Get(0)
+	ip4Data.Addresses = parseAddressDataProp(addressDataProp)
+	if len(ip4Data.Addresses) == 0 {
+		ip4Data.Addresses = []addressDataItem{
+			{
+				Address: "0.0.0.0",
+				Prefix:  0,
+			},
+		}
 	}
 
-	nameServersProp, _ := ip4config.Nameservers().Get(0)
-	nameServers = wrapIpv4Dns(nameServersProp)
+	ip4Data.Gateway, _ = ip4config.Gateway().Get(0)
+
+	nameserversProp, _ := ip4config.Nameservers().Get(0)
+	ip4Data.Nameservers = wrapIpv4Dns(nameserversProp)
 	return
 }
 
-func nmGetIp6ConfigInfo(path dbus.ObjectPath) (address, prefix string, gateways, nameServers []string) {
-	address = "0::0"
-	prefix = "0"
+func nmGetIp6ConfigInfo(path dbus.ObjectPath) (ip6Data ipv6Info) {
 	ip6config, err := nmNewIP6Config(path)
 	if err != nil {
 		return
 	}
 
-	addressProp, _ := ip6config.Addresses().Get(0)
-	gateway, _ := ip6config.Gateway().Get(0)
-	gateways = append(gateways, gateway)
-	ipv6Addresses := wrapNMDBusIpv6Addresses(addressProp)
-	if len(ipv6Addresses) > 0 {
-		address = ipv6Addresses[0].Address
-		prefix = fmt.Sprintf("%d", ipv6Addresses[0].Prefix)
-	}
-	for _, addr := range ipv6Addresses {
-		gateways = append(gateways, addr.Gateway)
+	addressDataProp, _ := ip6config.AddressData().Get(0)
+	addresses := parseAddressDataProp(addressDataProp)
+
+	ip6Data.Addresses = make([]addressDataItem, 0, len(addresses))
+	for _, addr := range addresses {
 		if addr.Address[:5] != "FE80:" && // link local
 			addr.Address[:5] != "FEC0:" { // site local
-			address = addr.Address
-			prefix = fmt.Sprintf("%d", addr.Prefix)
+			ip6Data.Addresses = append(ip6Data.Addresses, addr)
 		}
 	}
 
-	nameServersProp, _ := ip6config.Nameservers().Get(0)
-	nameServers = wrapIpv6Dns(nameServersProp)
+	if len(ip6Data.Addresses) == 0 {
+		ip6Data.Addresses = []addressDataItem{
+			{
+				Address: "0::0",
+				Prefix:  0,
+			},
+		}
+	}
+
+	ip6Data.Gateway, _ = ip6config.Gateway().Get(0)
+
+	nameserversProp, _ := ip6config.Nameservers().Get(0)
+	ip6Data.Nameservers = wrapIpv6Dns(nameserversProp)
 	return
 }
 

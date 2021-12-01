@@ -20,6 +20,7 @@
 package network
 
 import (
+	"strconv"
 	"strings"
 
 	dbus "github.com/godbus/dbus"
@@ -70,17 +71,37 @@ type activeConnectionInfo struct {
 	DeviceInterface     string
 	HwAddress           string
 	Speed               string
-	Ip4                 ip4ConnectionInfo
-	Ip6                 ip6ConnectionInfo
+	Ip4                 ip4ConnectionInfoDeprecated
+	Ip6                 ip6ConnectionInfoDeprecated
+	IPv4                ipv4Info
+	IPv6                ipv6Info
 	Hotspot             hotspotConnectionInfo
 }
-type ip4ConnectionInfo struct {
+
+type addressDataItem struct {
+	Address string
+	Prefix  uint32
+}
+
+type ipv4Info struct {
+	Addresses   []addressDataItem
+	Gateway     string
+	Nameservers []string
+}
+
+type ipv6Info struct {
+	Addresses   []addressDataItem
+	Gateway     string
+	Nameservers []string
+}
+
+type ip4ConnectionInfoDeprecated struct {
 	Address  string
 	Mask     string
 	Gateways []string
 	Dnses    []string
 }
-type ip6ConnectionInfo struct {
+type ip6ConnectionInfoDeprecated struct {
 	Address  string
 	Prefix   string
 	Gateways []string
@@ -90,6 +111,24 @@ type hotspotConnectionInfo struct {
 	Ssid    string
 	Band    string
 	Channel int32 // wireless channel
+}
+
+func (i ipv4Info) toDeprecatedStruct() ip4ConnectionInfoDeprecated {
+	return ip4ConnectionInfoDeprecated{
+		Address:  i.Addresses[0].Address,
+		Mask:     convertIpv4PrefixToNetMask(i.Addresses[0].Prefix),
+		Gateways: []string{i.Gateway},
+		Dnses:    i.Nameservers,
+	}
+}
+
+func (i ipv6Info) toDeprecatedStruct() ip6ConnectionInfoDeprecated {
+	return ip6ConnectionInfoDeprecated{
+		Address:  i.Addresses[0].Address,
+		Prefix:   strconv.FormatUint(uint64(i.Addresses[0].Prefix), 10),
+		Gateways: []string{i.Gateway},
+		Dnses:    i.Nameservers,
+	}
 }
 
 func (m *Manager) initActiveConnectionManage() {
@@ -324,12 +363,6 @@ func (m *Manager) GetActiveConnectionInfo() (acinfosJSON string, busErr *dbus.Er
 
 func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (acinfo activeConnectionInfo, err error) {
 	var connType, connName, mobileNetworkType, security, devType, devIfc, hwAddress, speed string
-	var ip4Address, ip4Mask string
-	var ip4Gateways, ip4Dnses []string
-	var ip6Address, ip6Prefix string
-	var ip6Gateways, ip6Dnses []string
-	var ip4Info ip4ConnectionInfo
-	var ip6Info ip6ConnectionInfo
 	var hotspotInfo hotspotConnectionInfo
 
 	// active connection
@@ -433,25 +466,15 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 	}
 
 	// ipv4
+	var ip4Data ipv4Info
 	if ip4Path, _ := nmAConn.Ip4Config().Get(0); isNmObjectPathValid(ip4Path) {
-		ip4Address, ip4Mask, ip4Gateways, ip4Dnses = nmGetIp4ConfigInfo(ip4Path)
-	}
-	ip4Info = ip4ConnectionInfo{
-		Address:  ip4Address,
-		Mask:     ip4Mask,
-		Gateways: ip4Gateways,
-		Dnses:    ip4Dnses,
+		ip4Data = nmGetIp4ConfigInfo(ip4Path)
 	}
 
 	// ipv6
+	var ip6Data ipv6Info
 	if ip6Path, _ := nmAConn.Ip6Config().Get(0); isNmObjectPathValid(ip6Path) {
-		ip6Address, ip6Prefix, ip6Gateways, ip6Dnses = nmGetIp6ConfigInfo(ip6Path)
-	}
-	ip6Info = ip6ConnectionInfo{
-		Address:  ip6Address,
-		Prefix:   ip6Prefix,
-		Gateways: ip6Gateways,
-		Dnses:    ip6Dnses,
+		ip6Data = nmGetIp6ConfigInfo(ip6Path)
 	}
 
 	nmAConnUuid, _ := nmAConn.Uuid().Get(0)
@@ -470,8 +493,10 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 		DeviceInterface:     devIfc,
 		HwAddress:           hwAddress,
 		Speed:               speed,
-		Ip4:                 ip4Info,
-		Ip6:                 ip6Info,
+		Ip4:                 ip4Data.toDeprecatedStruct(),
+		Ip6:                 ip6Data.toDeprecatedStruct(),
+		IPv4:                ip4Data,
+		IPv6:                ip6Data,
 		Hotspot:             hotspotInfo,
 	}
 	return

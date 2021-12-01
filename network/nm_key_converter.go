@@ -247,28 +247,15 @@ func interfaceToIpv6Routes(v interface{}) (d ipv6Routes) {
 // Wrappers
 
 func wrapIpv4Dns(data []uint32) (wrapData []string) {
+	wrapData = make([]string, 0, len(data))
 	for _, a := range data {
 		wrapData = append(wrapData, uint32ToIP(ntohl(a)))
 	}
 	return
 }
 
-func wrapIpv4Addresses(data [][]uint32) (wrapData ipv4AddressesWrapper) {
-	for _, d := range data {
-		if len(d) != 3 {
-			logger.Error("ipv4 address invalid", d)
-			continue
-		}
-		ipv4Addr := ipv4AddressWrapper{}
-		ipv4Addr.Address = uint32ToIP(ntohl(d[0]))
-		ipv4Addr.Mask = convertIpv4PrefixToNetMask(d[1])
-		ipv4Addr.Gateway = uint32ToIP(ntohl(d[2]))
-		wrapData = append(wrapData, ipv4Addr)
-	}
-	return
-}
-
 func wrapIpv6Dns(data [][]byte) (wrapData []string) {
+	wrapData = make([]string, 0, len(data))
 	for _, a := range data {
 		wrapData = append(wrapData, convertIpv6AddressToString(a))
 	}
