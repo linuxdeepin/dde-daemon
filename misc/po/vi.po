@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-30 20:35+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Hoan Chu Đình <chudinhhoan277@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/linuxdeepin/teams/3617/vi/)\n"
@@ -52,7 +52,7 @@ msgstr "Tên người dùng đã được sử dụng"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
-msgstr ""
+msgstr "Tên người dùng đã được sử dụng"
 
 #: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
@@ -158,7 +158,7 @@ msgstr ""
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
-msgstr ""
+msgstr "Xem"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
@@ -166,7 +166,7 @@ msgstr ""
 
 #: ../../bluetooth/obex_agent.go:362
 msgid "Done"
-msgstr ""
+msgstr "Xong"
 
 #: ../../bluetooth/obex_agent.go:377 ../../bluetooth/obex_agent.go:476
 msgid "Stop Receiving Files"
@@ -562,44 +562,44 @@ msgstr "%q đã được xóa thành công"
 msgid "Failed to uninstall %q"
 msgstr "Gỡ bỏ %q đã thất bại"
 
-#: ../../network/manager.go:339
+#: ../../network/manager.go:340
 msgid "Wired connection"
-msgstr ""
+msgstr "Kết nối có dây"
 
+#: ../../network/manager_active_conn.go:394
 #: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Không"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:401
 msgid "WEP 40/128-bit Key"
 msgstr "Chìa khóa WEP 40/128-bit"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Cá nhân"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:411
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "Tunneled TLS"
 msgstr "TLS được tạo đường"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Protected EAP"
 msgstr "EAP được bảo vệ"
 
@@ -1037,37 +1037,41 @@ msgstr "Pin cực kỳ thấp"
 msgid "Battery low, please plug in"
 msgstr "Pin yếu,vui lòng cắm sạc"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
+#: ../../session/power/utils.go:402 ../../session/power/utils.go:406
 msgid "Power settings changed"
 msgstr "Cài đặt nguồn đã được thay đổi"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:421
+msgid "%q is preventing the computer from locking the screen"
+msgstr ""
+
+#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Dùng khi dóng nắp"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:501
 msgid "When pressing the power button, "
 msgstr "Khi bấm vào nút nguồn"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:511 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "máy tính của bạn sẽ tắt"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:513 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "máy tính của bạn sẽ dừng"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:515
 msgid "your computer will hibernate"
 msgstr "Máy tính của bạn sẽ vào chế độ ngủ dông"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:517
 msgid "your monitor will turn off"
 msgstr "màn hình máy tính sẽ tắt"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:519
 msgid "it will do nothing to your computer"
 msgstr "nó sẽ không làm gì cho máy tính của bạn"
 

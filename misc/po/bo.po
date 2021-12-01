@@ -5,17 +5,17 @@
 # 
 # Translators:
 # tsewang baljor <bdcwbj@163.com>, 2020
-# yeshe lhamo <981611630@qq.com>, 2021
 # Cindy0514, 2021
+# yeshe lhamo <981611630@qq.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-30 20:35+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"Last-Translator: yeshe lhamo <981611630@qq.com>, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -394,7 +394,7 @@ msgstr "ཡིག་ཆ་ཡིག་སྒྱུར།"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Global search"
-msgstr ""
+msgstr "ཁྱོན་ཡོངས་ནས་འཚོལ་བ།"
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
 msgid "Switch Layout"
@@ -563,44 +563,44 @@ msgstr " %qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager.go:339
+#: ../../network/manager.go:340
 msgid "Wired connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
+#: ../../network/manager_active_conn.go:394
 #: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "མེད།"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:401
 msgid "WEP 40/128-bit Key"
 msgstr "གསང་ལྡེ་གནས་WEP40/128"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WPA/WPA2 Personal"
 msgstr "སྒེར་གྱི་པར་གཞི་WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:411
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "Tunneled TLS"
 msgstr "ཕུག་ལམ་TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
@@ -1042,37 +1042,41 @@ msgstr "གློག་རྫོགས་ཟིན།"
 msgid "Battery low, please plug in"
 msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་དགོས།"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
+#: ../../session/power/utils.go:402 ../../session/power/utils.go:406
 msgid "Power settings changed"
 msgstr "གློག་ཁུངས་སྒྲིག་འགོད་སྒྱུར་བ།"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:421
+msgid "%q is preventing the computer from locking the screen"
+msgstr ""
+
+#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "ལག་ཁྱེར་གློག་ཀླད་ཁ་བརྒྱབ་སྐབས།"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:501
 msgid "When pressing the power button, "
 msgstr "གློག་ཁུངས་ཀྱི་བསད་སྤར་མནན་སྐབས།"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:511 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:513 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "སྒུག་སྡོད་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:515
 msgid "your computer will hibernate"
 msgstr "མལ་གསོ་ཞེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:517
 msgid "your monitor will turn off"
 msgstr "མངོན་ཆས་སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:519
 msgid "it will do nothing to your computer"
 msgstr "བཀོལ་སྤྱོད་གང་ཡང་བྱས་མེད་པར་བཟོ་བཅོས་བྱེད།"
 

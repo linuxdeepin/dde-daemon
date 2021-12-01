@@ -17,15 +17,16 @@
 # Cindy0514, 2021
 # Cassiano Molinari <chano2808a@gmail.com>, 2021
 # Alex, 2021
+# Joel Queiroz <joelcfq@yandex.ru>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-30 20:35+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Alex, 2021\n"
+"Last-Translator: Joel Queiroz <joelcfq@yandex.ru>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -404,7 +405,7 @@ msgstr "Tradução"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Global search"
-msgstr ""
+msgstr "Busca Global"
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
 msgid "Switch Layout"
@@ -571,44 +572,44 @@ msgstr "%q foi desinstalado"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao remover %q"
 
-#: ../../network/manager.go:339
+#: ../../network/manager.go:340
 msgid "Wired connection"
 msgstr "Conexão Cabeada"
 
+#: ../../network/manager_active_conn.go:394
 #: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Nenhum"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:401
 msgid "WEP 40/128-bit Key"
 msgstr "Chave WEP de 40/128-bit"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Pessoal"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:411
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "FAST"
 msgstr "RÁPIDO"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "Tunneled TLS"
 msgstr "TLS em túnel"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Protected EAP"
 msgstr "EAP Protegido"
 
@@ -1059,37 +1060,41 @@ msgstr "Bateria criticamente fraca"
 msgid "Battery low, please plug in"
 msgstr "A bateria está com pouca carga; conecte o carregador"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
+#: ../../session/power/utils.go:402 ../../session/power/utils.go:406
 msgid "Power settings changed"
 msgstr "Configurações de energia alteradas"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:421
+msgid "%q is preventing the computer from locking the screen"
+msgstr ""
+
+#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Quando a tampa é fechada, "
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:501
 msgid "When pressing the power button, "
 msgstr "Ao pressionar o botão de ligar/desligar, "
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:511 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "o computador irá desligar"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:513 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "o computador irá suspender"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:515
 msgid "your computer will hibernate"
 msgstr "o computador irá hibernar"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:517
 msgid "your monitor will turn off"
 msgstr "o monitor irá desligar"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:519
 msgid "it will do nothing to your computer"
 msgstr "não irá fazer nada ao computador"
 

@@ -8,7 +8,7 @@
 # LNDDYL, 2020
 # Julian Lai <laichiaheng@outlook.com>, 2020
 # Zhou Rh <jjzrh2@126.com>, 2020
-# byStarTW (pan93412) <pan93412@gmail.com>, 2020
+# pan93412 <pan93412@gmail.com>, 2020
 # 凡凡不想平凡 <freddy4212@gmail.com>, 2021
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Cindy0514, 2021
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-30 20:35+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
@@ -323,7 +323,7 @@ msgstr "鎖定螢幕"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "顯示╱隱藏 Dock"
+msgstr "顯示╱隱藏任務欄"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -560,44 +560,44 @@ msgstr "%q 解除安裝成功"
 msgid "Failed to uninstall %q"
 msgstr "%q 解除安裝失敗"
 
-#: ../../network/manager.go:339
+#: ../../network/manager.go:340
 msgid "Wired connection"
 msgstr "有線連接"
 
+#: ../../network/manager_active_conn.go:394
 #: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "無"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:401
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit 金鑰"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 個人使用者"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:411
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "Tunneled TLS"
 msgstr "隧道 TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Protected EAP"
 msgstr "受保護 EAP"
 
@@ -1031,37 +1031,41 @@ msgstr "電量耗盡"
 msgid "Battery low, please plug in"
 msgstr "電量剩餘不多，請接上電源"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
+#: ../../session/power/utils.go:402 ../../session/power/utils.go:406
 msgid "Power settings changed"
 msgstr "電源設定更改"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:421
+msgid "%q is preventing the computer from locking the screen"
+msgstr "%q阻止了螢幕鎖定"
+
+#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "“筆記本合蓋時”"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:501
 msgid "When pressing the power button, "
 msgstr "“按電源按鈕時”"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:511 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "修改為關機"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:513 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "修改為待機"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:515
 msgid "your computer will hibernate"
 msgstr "修改為休眠"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:517
 msgid "your monitor will turn off"
 msgstr "修改為關閉顯示器"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:519
 msgid "it will do nothing to your computer"
 msgstr "修改為無任何操作"
 

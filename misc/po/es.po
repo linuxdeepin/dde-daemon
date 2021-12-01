@@ -13,11 +13,11 @@
 # jhalo <jhalo@protonmail.com>, 2020
 # Diego Sanguinetti, 2020
 # jose luis <josemdance@outlook.com>, 2021
-# Alvaro Samudio <alvarosamudio@protonmail.com>, 2021
 # Cindy0514, 2021
 # Tomás Warynyca <tomas.warynyca@outlook.com>, 2021
-# Isaías Gätjens M <igatjens@gmail.com>, 2021
 # Martín Josemaría <martin.vuelta@gmail.com>, 2021
+# Isaías Gätjens M <igatjens@gmail.com>, 2021
+# Alvaro Samudio <alvarosamudio@protonmail.com>, 2021
 # 555de6651697fc2a607c30c9bb431b88_60731db, 2021
 # 
 #, fuzzy
@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-30 20:35+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: 555de6651697fc2a607c30c9bb431b88_60731db, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/linuxdeepin/teams/3617/es/)\n"
@@ -94,7 +94,7 @@ msgstr "Escalado de pantalla"
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s había sido deshabilitado"
 
 #: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
 msgid "Open"
@@ -163,7 +163,7 @@ msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Recibiendo %[1]q de %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -406,7 +406,7 @@ msgstr "Traducción"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Global search"
-msgstr ""
+msgstr "Búsqueda global"
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
 msgid "Switch Layout"
@@ -575,44 +575,44 @@ msgstr "%q eliminado correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Falló la desinstalación de %q"
 
-#: ../../network/manager.go:339
+#: ../../network/manager.go:340
 msgid "Wired connection"
 msgstr "Conexión cableada"
 
+#: ../../network/manager_active_conn.go:394
 #: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Ninguno"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:401
 msgid "WEP 40/128-bit Key"
 msgstr "Clave WEP de 40/128-bit"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:411
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "Tunneled TLS"
 msgstr "TLS tunelizado"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Protected EAP"
 msgstr "EAP protegido"
 
@@ -622,7 +622,7 @@ msgstr "Conexión cableada"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
-msgstr "Proxy de aplicaciones configurado exitósamente"
+msgstr "Proxy de aplicación configurado exitósamente"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
@@ -1066,37 +1066,41 @@ msgstr "Batería críticamente baja"
 msgid "Battery low, please plug in"
 msgstr "Batería baja, por favor, conéctela"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
+#: ../../session/power/utils.go:402 ../../session/power/utils.go:406
 msgid "Power settings changed"
 msgstr "Modificar configuraciones de energía"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:421
+msgid "%q is preventing the computer from locking the screen"
+msgstr ""
+
+#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Cuando la tapa está cerrada,"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:501
 msgid "When pressing the power button, "
 msgstr "Al presionar el botón de encendido,"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:511 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "su equipo se apagará"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:513 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "su equipo se suspenderá"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:515
 msgid "your computer will hibernate"
 msgstr "su equipo hibernará"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:517
 msgid "your monitor will turn off"
 msgstr "su monitor se apagará"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:519
 msgid "it will do nothing to your computer"
 msgstr "no cambiará nada a su equipo"
 

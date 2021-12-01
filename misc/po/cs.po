@@ -7,17 +7,17 @@
 # 李洪武 <lihongwu1987@gmail.com>, 2020
 # op6464 <op64@seznam.cz>, 2020
 # fri, 2021
-# Pavel Borecki <pavel.borecki@gmail.com>, 2021
 # Cindy0514, 2021
+# Pavel Borecki <pavel.borecki@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-30 20:35+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/linuxdeepin/teams/3617/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +87,7 @@ msgstr "Měřítko zobrazení"
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s bylo vypnuto"
 
 #: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:102
 msgid "Open"
@@ -156,7 +156,7 @@ msgstr "Storno"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Získává se %[1]q z %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -220,6 +220,8 @@ msgstr "Ujistěte se, že zařízení %q je zapnuté a v dosahu"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"%q se už nemůže připojit k %q. Zkuste toto zařízení zapomenout a znovu ho "
+"spárovat."
 
 #: ../../bluetooth/utils_notify.go:157
 msgid "Click here to connect to %q"
@@ -297,7 +299,7 @@ msgstr "Panel"
 
 #: ../../dock/app_entry_menu.go:145
 msgid "Undock"
-msgstr "Zrušit ukotvení"
+msgstr "Storno ukotvení"
 
 #: ../../dock/app_entry_menu.go:155
 msgid "All Windows"
@@ -397,7 +399,7 @@ msgstr "Překlady"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Global search"
-msgstr ""
+msgstr "Hledat všude"
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
 msgid "Switch Layout"
@@ -566,44 +568,44 @@ msgstr "%q úspěšně odstraněno"
 msgid "Failed to uninstall %q"
 msgstr "Nepodařilo se odinstalovat %q"
 
-#: ../../network/manager.go:339
+#: ../../network/manager.go:340
 msgid "Wired connection"
-msgstr ""
+msgstr "Drátové připojení"
 
+#: ../../network/manager_active_conn.go:394
 #: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "Žádné"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:401
 msgid "WEP 40/128-bit Key"
 msgstr "WEP klíč 40/128 bitů"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 osobní"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:411
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "Tunneled TLS"
 msgstr "Tunelované TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Protected EAP"
 msgstr "Chráněné EAP"
 
@@ -991,7 +993,7 @@ msgstr "Pro připojení se k %q je požadováno heslo"
 
 #: ../../network/state_handler.go:360
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "%q 802.11 WLAN síť nebyla nalezena"
 
 #: ../../network/utils_dbus_nm.go:295
 msgid "Unknown"
@@ -1047,37 +1049,41 @@ msgid "Battery low, please plug in"
 msgstr ""
 "Akumulátor je téměř vybitý – připojte počítač k napájení z elektrické sítě"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
+#: ../../session/power/utils.go:402 ../../session/power/utils.go:406
 msgid "Power settings changed"
 msgstr "Nastavení správy napájení změněna"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:421
+msgid "%q is preventing the computer from locking the screen"
+msgstr ""
+
+#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Při přiklopení obrazovky,"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:501
 msgid "When pressing the power button, "
 msgstr "Při stisku tlačítka napájení,"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:511 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "váš počítač bude vypnut"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:513 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "váš počítač bude uspán"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:515
 msgid "your computer will hibernate"
 msgstr "počítač bude uspán na disk"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:517
 msgid "your monitor will turn off"
 msgstr "monitor bude vypnut"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:519
 msgid "it will do nothing to your computer"
 msgstr "na vašem počítači nebude dělat nic"
 

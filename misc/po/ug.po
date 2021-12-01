@@ -4,10 +4,11 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Abdusalam Huxur <2250907458@qq.com>, 2020
+# Bashqut <2250907458@qq.com>, 2020
 # 伊力亚斯 伊德日斯 <2032517177@qq.com>, 2020
 # مۇختەر مەخمۇت <yeganaaa@163.com>, 2020
 # Muhammadali Abliz <ordam2@163.com>, 2020
+# Ug HushBeg <HushBeg@163.com>, 2021
 # Cindy0514, 2021
 # 阿迪力 买买提明 <251078110@qq.com>, 2021
 # 
@@ -16,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-10 17:21+0800\n"
+"POT-Creation-Date: 2021-11-30 20:35+0800\n"
 "PO-Revision-Date: 2020-06-08 13:08+0000\n"
 "Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2021\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
@@ -82,7 +83,7 @@ msgstr "كۆرۈنۈش نىسبىتىنى تەڭشىمەكچى"
 
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
-msgstr "كۆرۈنىش كىچىكلىتىش"
+msgstr "ئېكران كىچىكلىتىش"
 
 #: ../../audio/audio_events.go:462
 #, c-format
@@ -275,7 +276,7 @@ msgstr "ئەتە ئەسكەرتسۇن"
 
 #: ../../calendar/scheduler.go:583
 msgid "Remind me later"
-msgstr "ھېلىغىچە ئەسكەرتسۇن"
+msgstr "بىر ئازدىن كېيىن ئەسكەرتىش "
 
 #: ../../calendar/scheduler.go:593
 msgid "Schedule Reminder"
@@ -327,7 +328,7 @@ msgstr "قۇلۇپ ئېكرانى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "ۋەزىپە بالدىقىنى كۆرسىتىش ياكى يوشۇرۇش"
+msgstr "ۋەزىپە بالدىقىنى كۆرسىتىش / يوشۇرۇش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -351,7 +352,7 @@ msgstr "كۆزنەك رەسىمگە تۇتۇش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "ۋاقىت بەلگىلەپ رەسىمگە تۇتۇش"
+msgstr "كىچىكتۈرۈپ  ئېكران رەسىم كېسىش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "File manager"
@@ -379,7 +380,7 @@ msgstr "Deepin تاللىغۇچى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "Desktop AI Assistant"
-msgstr "ئۈستەل يۈزى ئەقلىي ياردەمچىسى"
+msgstr "ئۈستەليۈزى ئەقلىي ياردەمچىسى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Text to Speech"
@@ -399,7 +400,7 @@ msgstr "تېكىست تەرجىمىسى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Global search"
-msgstr ""
+msgstr "تولۇق ئىزدەش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:57
 msgid "Switch Layout"
@@ -566,44 +567,44 @@ msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
 msgid "Failed to uninstall %q"
 msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
 
-#: ../../network/manager.go:339
+#: ../../network/manager.go:340
 msgid "Wired connection"
 msgstr "سىملىق تور ئۇلىنىشى"
 
+#: ../../network/manager_active_conn.go:394
 #: ../../network/manager_active_conn.go:399
-#: ../../network/manager_active_conn.go:404
 msgid "None"
 msgstr "قۇرۇق"
 
-#: ../../network/manager_active_conn.go:406
+#: ../../network/manager_active_conn.go:401
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit پارول"
 
-#: ../../network/manager_active_conn.go:408
+#: ../../network/manager_active_conn.go:403
 msgid "WPA/WPA2 Personal"
-msgstr "شەخسىي"
+msgstr "WPA/WPA2شەخسى نۇسخىسى"
 
-#: ../../network/manager_active_conn.go:416
+#: ../../network/manager_active_conn.go:411
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:418
+#: ../../network/manager_active_conn.go:413
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:420
+#: ../../network/manager_active_conn.go:415
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:422
+#: ../../network/manager_active_conn.go:417
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:424
+#: ../../network/manager_active_conn.go:419
 msgid "Tunneled TLS"
 msgstr "تونېلللانغان TLS"
 
-#: ../../network/manager_active_conn.go:426
+#: ../../network/manager_active_conn.go:421
 msgid "Protected EAP"
 msgstr "قوغدالغان EAP"
 
@@ -952,7 +953,7 @@ msgstr "بۇ ئۇلىنىش تەڭشەكتىن ئۆچۈرۋىتىلىپتۇ"
 
 #: ../../network/state_handler.go:250
 msgid "Enabling hotspot"
-msgstr "قىزىق نۇقتىا ئېچىلىۋاتىدۇ"
+msgstr "تور تارقىتىشنى ئېچىۋاتىدۇ "
 
 #: ../../network/state_handler.go:254
 msgid "Connecting %q"
@@ -960,7 +961,7 @@ msgstr "%qغا ئۇلىنىۋاتىدۇ"
 
 #: ../../network/state_handler.go:263
 msgid "Hotspot enabled"
-msgstr "قىزىق نۇقتا ھەمبەھرىلەندى"
+msgstr "تور تارقىتىلدى"
 
 #: ../../network/state_handler.go:265
 msgid "%q connected"
@@ -968,13 +969,11 @@ msgstr "%qغا ئۇلاندى"
 
 #: ../../network/state_handler.go:276 ../../network/state_handler.go:331
 msgid "Hotspot disabled"
-msgstr "قىزىق نۇقتا تاقالدى"
+msgstr "تور تارقىتىش تاقالدى"
 
 #: ../../network/state_handler.go:339
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr ""
-"قىزىق نۇقتىنى ئورتاقلىشالمىدى ،dnsmasq غا مۇناسىۋەتلىك تەڭشەكلەرنى تەكشۈرۈپ "
-"بېقىڭ"
+msgstr "تور تارقىتالمىدى ،dnsmasq غا مۇناسىۋەتلىك تەڭشەكلەرنى تەكشۈرۈپ بېقىڭ"
 
 #: ../../network/state_handler.go:341
 msgid "Unable to connect %q, please keep closer to the wireless router"
@@ -1047,37 +1046,41 @@ msgstr "باتارېيەدە توك تۈگىدى"
 msgid "Battery low, please plug in"
 msgstr "باتارېيەدە توك ئاز قالدى، توكقا چېتىڭ"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:394 ../../session/power/utils.go:398
+#: ../../session/power/utils.go:402 ../../session/power/utils.go:406
 msgid "Power settings changed"
 msgstr "توك تەڭشىكىدە ئۆزگىرىش بولدى"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:421
+msgid "%q is preventing the computer from locking the screen"
+msgstr ""
+
+#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "«خاتىرە كومپيۇتېرنىڭ ئېكرانى يېپىلغاندا»"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:501
 msgid "When pressing the power button, "
 msgstr "«قوزغىتىش كۇنۇپكىسىنى باسقاندا»"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:511 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "تاقاشقا ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:513 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "كۈتۈش ھالىتىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:515
 msgid "your computer will hibernate"
 msgstr "ئۇيقۇ ھالىتىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:517
 msgid "your monitor will turn off"
 msgstr "ئېكراننى تاقاشقا ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:519
 msgid "it will do nothing to your computer"
 msgstr "ھېچقانداق مەشغۇلات قىلماسلىققا ئۆزگەرتىش"
 
