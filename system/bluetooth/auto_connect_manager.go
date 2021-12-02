@@ -396,6 +396,12 @@ func (w *autoConnectWorker) start() {
 			logger.Debugf("[%d] quit", w.id)
 			w.m.putId(w.adapter, w.id)
 
+			if w.m.adapters[w.adapter] == nil {
+				// 设备被移除后直接返回，防止后续works空指针崩溃
+				logger.Debug("adapter removed")
+				return
+			}
+
 			// 如果启用多个work，需要等待所有work全部回连结束再开始扫描其他设备
 			idMap := w.m.adapters[w.adapter].workers
 			if idMap != nil {
