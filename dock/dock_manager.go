@@ -111,6 +111,7 @@ type Manager struct {
 
 const (
 	dockSchema                     = "com.deepin.dde.dock"
+	mainwindowSchema               = "com.deepin.dde.dock.mainwindow"
 	appearanceSchema               = "com.deepin.dde.appearance"
 	settingKeyHideMode             = "hide-mode"
 	settingKeyDisplayMode          = "display-mode"
@@ -124,6 +125,7 @@ const (
 	settingKeyWinIconPreferredApps = "win-icon-preferred-apps"
 	settingKeyOpacity              = "opacity"
 	settingKeyPluginSettings       = "plugin-settings"
+	settingKeyOnlyShowByWin        = "only-show-by-win"
 
 	frontendWindowWmClass = "dde-dock"
 
