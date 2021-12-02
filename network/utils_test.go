@@ -77,32 +77,6 @@ func (*testWrapper) TestConvertMacAddressToArrayByte(c *C.C) {
 	}
 }
 
-func (*testWrapper) TestConvertIpv4AddressToString(c *C.C) {
-	tests := []struct {
-		test   uint32
-		result string
-	}{
-		{0, "0.0.0.0"},
-		{0x0101a8c0, "192.168.1.1"},
-	}
-	for _, t := range tests {
-		c.Check(t.result, C.Equals, convertIpv4AddressToString(t.test))
-	}
-}
-
-func (*testWrapper) TestConvertIpv4AddressToUint32(c *C.C) {
-	tests := []struct {
-		test   string
-		result uint32
-	}{
-		{"0.0.0.0", 0},
-		{"192.168.1.1", 0x0101a8c0},
-	}
-	for _, t := range tests {
-		c.Check(t.result, C.Equals, convertIpv4AddressToUint32(t.test))
-	}
-}
-
 func (*testWrapper) TestConvertIpv4PrefixToNetMask(c *C.C) {
 	tests := []struct {
 		test   uint32
@@ -199,19 +173,6 @@ func (*testWrapper) TestConvertIpv4NetMaskToPrefix(c *C.C) {
 	c.Check(err, C.NotNil)
 	_, err = convertIpv4NetMaskToPrefixCheck("191.0.0.0")
 	c.Check(err, C.NotNil)
-}
-
-func (*testWrapper) TestReverseOrderUint32(c *C.C) {
-	tests := []struct {
-		test   uint32
-		result uint32
-	}{
-		{0xaabbccdd, 0xddccbbaa},
-		{0x12345678, 0x78563412},
-	}
-	for _, t := range tests {
-		c.Check(t.result, C.Equals, reverseOrderUint32(t.test))
-	}
 }
 
 func (*testWrapper) TestConvertIpv6AddressToString(c *C.C) {

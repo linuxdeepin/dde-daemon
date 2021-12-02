@@ -20,9 +20,12 @@
 package network
 
 import (
+	"encoding/binary"
 	"fmt"
 	"strconv"
 	"strings"
+	"unicode"
+	"unsafe"
 )
 
 const (
@@ -30,6 +33,63 @@ const (
 	ipv4Zero     = "0.0.0.0" //nolint
 	ipv6AddrZero = "0000:0000:0000:0000:0000:0000:0000:0000"
 )
+
+func ntohl(n uint32) uint32 {
+	return binary.BigEndian.Uint32((*(*[4]byte)(unsafe.Pointer(&n)))[:])
+}
+
+func htonl(n uint32) uint32 {
+	bytes := make([]byte, 4)
+	binary.BigEndian.PutUint32(bytes, n)
+	return *(*uint32)(unsafe.Pointer(&bytes[0]))
+}
+
+// ipToUint32 将 IPv4 字符串转换为 uint32。
+// 因此处只处理 NetworkManager 返回的数据，故不处理八进制与十六进制字符串，
+// 并假定所有传入字符串都是合法的 IP。
+func ipToUint32(ip string) uint32 {
+	var ret uint32
+	var part uint32 = 1
+	var val uint32 = 0
+	var base uint32 = 10
+
+	for _, c := range ip {
+		if unicode.IsDigit(c) {
+			val = val*base + uint32(c-'0')
+			continue
+		}
+
+		if c == '.' {
+			ret |= (val << ((4 - part) * 8))
+			val = 0
+			part++
+		}
+	}
+
+	ret |= (val << ((4 - part) * 8))
+
+	return ret
+}
+
+const ipv4MaxSize = 15
+
+// uint32ToIP 将 uint32 转为 IPv4 字符串。
+func uint32ToIP(l uint32) string {
+	var sb strings.Builder
+	sb.Grow(ipv4MaxSize)
+
+	for p := 3; p >= 0; p-- {
+		// 右移后转为 byte（保留最后 8 位）
+		b := byte(l >> (uint(p) * 8))
+
+		sb.WriteString(strconv.FormatUint(uint64(b), 10))
+		if p != 0 {
+			sb.WriteRune('.')
+		}
+	}
+
+	return sb.String()
+}
 
 // []byte{0,0,0,0,0,0} -> "00:00:00:00:00:00"
 func convertMacAddressToString(v []byte) (macAddr string) {
@@ -50,6 +110,7 @@ func convertMacAddressToArrayByte(v string) (macAddr []byte) {
 	}
 	return
 }
+
 func convertMacAddressToArrayByteCheck(v string) (macAddr []byte, err error) {
 	macAddr = make([]byte, 6)
 	a := strings.Split(v, ":")
@@ -73,57 +134,10 @@ func convertMacAddressToArrayByteCheck(v string) (macAddr []byte, err error) {
 	return
 }
 
-func convertIpv4AddressToString(v uint32) (ip4Addr string) {
-	ip4Addr = fmt.Sprintf("%d.%d.%d.%d", byte(v), byte(v>>8), byte(v>>16), byte(v>>24))
-	return
-}
-
-func convertIpv4AddressToUint32(v string) (ip4Addr uint32) {
-	ip4Addr, err := convertIpv4AddressToUint32Check(v)
-	if err != nil {
-		logger.Error(err)
-	}
-	return
-}
-func convertIpv4AddressToUint32Check(v string) (ip4Addr uint32, err error) {
-	a := strings.Split(v, ".")
-	if len(a) != 4 {
-		ip4Addr = 0
-		err = fmt.Errorf("ip address is invalid %s", v)
-		return
-	}
-	for i := 3; i >= 0; i-- {
-		var tmpn uint64
-		tmpn, err = strconv.ParseUint(a[i], 10, 8)
-		if err != nil {
-			err = fmt.Errorf("ip address is invalid %s", v)
-			return
-		}
-		ip4Addr = ip4Addr<<8 + uint32(tmpn)
-	}
-	return
-}
-
-// host order to network order, or network order to host order
-func reverseOrderUint32(net uint32) (host uint32) {
-	host = uint32(byte(net>>24)) << 0
-	host |= uint32(byte(net>>16)) << 8
-	host |= uint32(byte(net>>8)) << 16
-	host |= uint32(byte(net>>0)) << 24
-	return
-}
-
 // 24 -> "255.255.255.0"(string format)
 func convertIpv4PrefixToNetMask(prefix uint32) (maskAddress string) {
-	var mask uint32
-	for i := uint32(0); i < prefix; i++ {
-		mask = mask<<1 + 1
-	}
-	for i := prefix; i < 32; i++ {
-		mask = mask<<1 + 0
-	}
-	mask = reverseOrderUint32(mask)
-	maskAddress = convertIpv4AddressToString(mask)
+	mask := uint32(0xFFFFFFFF << (32 - prefix))
+	maskAddress = uint32ToIP(mask)
 	return
 }
 
@@ -135,13 +149,13 @@ func convertIpv4NetMaskToPrefix(maskAddress string) (prefix uint32) {
 	}
 	return
 }
+
 func convertIpv4NetMaskToPrefixCheck(maskAddress string) (prefix uint32, err error) {
 	var mask uint32 // network order
-	mask, err = convertIpv4AddressToUint32Check(maskAddress)
+	mask = ipToUint32(maskAddress)
 	if err != nil {
 		return
 	}
-	mask = reverseOrderUint32(mask)
 	foundZerorBit := false
 	for i := uint32(0); i < 32; i++ {
 		if mask>>(32-i-1)&0x01 == 1 {
@@ -192,6 +206,7 @@ func convertIpv6AddressToArrayByte(v string) (ipv6Addr []byte) {
 	}
 	return
 }
+
 func convertIpv6AddressToArrayByteCheck(v string) (ipv6Addr []byte, err error) {
 	v, err = expandIpv6Address(v)
 	if err != nil {

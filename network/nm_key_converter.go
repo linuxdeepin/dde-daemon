@@ -32,6 +32,7 @@ func interfaceToString(v interface{}) (d string) {
 	}
 	return
 }
+
 //nolint
 func interfaceToByte(v interface{}) (d byte) {
 	if isInterfaceNil(v) {
@@ -68,6 +69,7 @@ func interfaceToUint32(v interface{}) (d uint32) {
 	}
 	return
 }
+
 //nolint
 func interfaceToInt64(v interface{}) (d int64) {
 	if isInterfaceNil(v) {
@@ -80,6 +82,7 @@ func interfaceToInt64(v interface{}) (d int64) {
 	}
 	return
 }
+
 //nolint
 func interfaceToUint64(v interface{}) (d uint64) {
 	if isInterfaceNil(v) {
@@ -128,6 +131,7 @@ func interfaceToArrayString(v interface{}) (d []string) {
 	}
 	return
 }
+
 //nolint
 func interfaceToArrayUint32(v interface{}) (d []uint32) {
 	if isInterfaceNil(v) {
@@ -140,6 +144,7 @@ func interfaceToArrayUint32(v interface{}) (d []uint32) {
 	}
 	return
 }
+
 //nolint
 func interfaceToArrayArrayByte(v interface{}) (d [][]byte) {
 	if isInterfaceNil(v) {
@@ -152,6 +157,7 @@ func interfaceToArrayArrayByte(v interface{}) (d [][]byte) {
 	}
 	return
 }
+
 //nolint
 func interfaceToArrayArrayUint32(v interface{}) (d [][]uint32) {
 	if isInterfaceNil(v) {
@@ -242,7 +248,7 @@ func interfaceToIpv6Routes(v interface{}) (d ipv6Routes) {
 
 func wrapIpv4Dns(data []uint32) (wrapData []string) {
 	for _, a := range data {
-		wrapData = append(wrapData, convertIpv4AddressToString(a))
+		wrapData = append(wrapData, uint32ToIP(ntohl(a)))
 	}
 	return
 }
@@ -254,9 +260,9 @@ func wrapIpv4Addresses(data [][]uint32) (wrapData ipv4AddressesWrapper) {
 			continue
 		}
 		ipv4Addr := ipv4AddressWrapper{}
-		ipv4Addr.Address = convertIpv4AddressToString(d[0])
+		ipv4Addr.Address = uint32ToIP(ntohl(d[0]))
 		ipv4Addr.Mask = convertIpv4PrefixToNetMask(d[1])
-		ipv4Addr.Gateway = convertIpv4AddressToString(d[2])
+		ipv4Addr.Gateway = uint32ToIP(ntohl(d[2]))
 		wrapData = append(wrapData, ipv4Addr)
 	}
 	return
