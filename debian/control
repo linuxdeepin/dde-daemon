@@ -50,6 +50,7 @@ Build-Depends:
  libxkbfile-dev,
  libxtst-dev,
  python3,
+ libtc-api,
 Standards-Version: 4.5.1
 Homepage: http://www.deepin.org
 
@@ -93,6 +94,7 @@ Depends:
  ${dist:Depends},
  ${misc:Depends},
  ${shlibs:Depends},
+ libtc-api,
 Breaks:
  lastore-daemon(<< 0.9.64),
 Replaces:
