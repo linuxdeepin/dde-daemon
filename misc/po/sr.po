@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-03 15:14+0800\n"
+"POT-Creation-Date: 2021-12-03 15:25+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2021\n"
 "Language-Team: Serbian (https://www.transifex.com/linuxdeepin/teams/3617/sr/)\n"
@@ -59,6 +59,11 @@ msgstr "Име већ постоји"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Корисничко име мора садржати између 3-32 карактера"
 
+#: ../../accounts/manager.go:432
+#, c-format
+msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr "Одјави се да скалирање приказа ступи на снагу"
@@ -88,7 +93,7 @@ msgstr "Скалирање приказа"
 msgid "%s had been disabled"
 msgstr "%s је искључен"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
 msgid "Open"
 msgstr "Покрени"
 
@@ -161,7 +166,7 @@ msgid "Message notification"
 msgstr "Обавештење о пристиглим порукама"
 
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
-#: ../../lastore/lastore.go:409
+#: ../../lastore/lastore.go:431
 msgid "Cancel"
 msgstr "Откажи"
 
@@ -226,24 +231,24 @@ msgstr "Додај Блутут уређаје"
 msgid "Pair"
 msgstr "Упари"
 
-#: ../../dock/app_entry_menu.go:114
+#: ../../dock/app_entry_menu.go:116
 msgid "Close All"
 msgstr "Затвори све"
 
-#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
-#: ../../dock/app_entry_menu.go:157
+#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
+#: ../../dock/app_entry_menu.go:163
 msgid "Force Quit"
 msgstr "Принудно изађи"
 
-#: ../../dock/app_entry_menu.go:161
+#: ../../dock/app_entry_menu.go:167
 msgid "Dock"
 msgstr "Закачи"
 
-#: ../../dock/app_entry_menu.go:171
+#: ../../dock/app_entry_menu.go:177
 msgid "Undock"
 msgstr "Откачи"
 
-#: ../../dock/app_entry_menu.go:181
+#: ../../dock/app_entry_menu.go:187
 msgid "All Windows"
 msgstr "Сви прозори"
 
@@ -471,35 +476,35 @@ msgstr "Језик система је промењен, одјавите се, 
 msgid "Failed to change system language, please try later"
 msgstr "Неуспешна промена језика система, молимо покушајте касније"
 
-#: ../../lastore/lastore.go:401
+#: ../../lastore/lastore.go:423
 msgid "Retry"
 msgstr "Поново"
 
-#: ../../lastore/lastore.go:423
+#: ../../lastore/lastore.go:445
 msgid "Update Now"
 msgstr "Ажурирај сад"
 
-#: ../../lastore/lastore.go:453
+#: ../../lastore/lastore.go:475
 msgid "Reboot Now"
 msgstr "Рестартуј одмах"
 
-#: ../../lastore/lastore.go:457
+#: ../../lastore/lastore.go:479
 msgid "Remind Me Later"
 msgstr ""
 
-#: ../../lastore/lastore.go:464
+#: ../../lastore/lastore.go:486
 msgid "10 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:471
+#: ../../lastore/lastore.go:493
 msgid "30 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:478
+#: ../../lastore/lastore.go:500
 msgid "2h later"
 msgstr ""
 
-#: ../../lastore/lastore.go:485
+#: ../../lastore/lastore.go:507
 msgid "6h later"
 msgstr ""
 
@@ -558,49 +563,50 @@ msgstr "%q уклањање успешно"
 msgid "Failed to uninstall %q"
 msgstr "Уклањање %q неуспешно"
 
-#: ../../network/manager_active_conn.go:396
-#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:409
 msgid "None"
 msgstr "Ништа"
 
-#: ../../network/manager_active_conn.go:403
+#: ../../network/manager_active_conn.go:411
 msgid "WEP 40/128-bit Key"
 msgstr "ВЕП 40/128-bit Кључ"
 
-#: ../../network/manager_active_conn.go:405
+#: ../../network/manager_active_conn.go:413
 msgid "WPA/WPA2 Personal"
 msgstr "ВПА/ВПА2 Лично"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:421
 msgid "TLS"
 msgstr "ТЛС"
 
-#: ../../network/manager_active_conn.go:415
+#: ../../network/manager_active_conn.go:423
 msgid "MD5"
 msgstr "МД5"
 
-#: ../../network/manager_active_conn.go:417
+#: ../../network/manager_active_conn.go:425
 msgid "LEAP"
 msgstr "ЛЕАП"
 
-#: ../../network/manager_active_conn.go:419
+#: ../../network/manager_active_conn.go:427
 msgid "FAST"
 msgstr "ФАСТ"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:429
 msgid "Tunneled TLS"
 msgstr "Тунелни ТЛС"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:431
 msgid "Protected EAP"
 msgstr "Заштићени ЕАП"
 
-#: ../../network/manager_connection.go:359
-#: ../../network/manager_connection.go:363
+#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
+#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
 msgid "Wired Connection"
 msgstr "Жичана веза"
 
-#: ../../network/manager_connection.go:402
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
 msgid "Wired Connection %v"
 msgstr ""
 
@@ -941,52 +947,52 @@ msgstr "Аутентификација за ВПН сервер је неусп�
 msgid "The connection was deleted from settings"
 msgstr "Веза је обрисана из подешавања"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:266
 msgid "Enabling hotspot"
 msgstr "Укључивање вруће тачке"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:270
 msgid "Connecting %q"
 msgstr "Повезивање %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:279
 msgid "Hotspot enabled"
 msgstr "Врућа тачка укључена"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:281
 msgid "%q connected"
 msgstr "%q повезани сте"
 
-#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
+#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
 msgid "Hotspot disabled"
 msgstr "Врућа тачка искључена"
 
-#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%q нисте поевзани"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Немогуће делити врућу тачку, проверите dnsmasq подешавања"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Неуспешно повезивање на %q, будите ближе бежичном рутеру"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Неуспешно повезивање на %q, проверите ваш рутер или мрежни кабл."
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:363
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Неуспешно повезивање на %q, погрешна лозинка"
 
-#: ../../network/state_handler.go:358
+#: ../../network/state_handler.go:374
 msgid "Password is required to connect %q"
 msgstr "Потребна је лозинка за повезивање %q"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:376
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 ВЛАН мрежа није пронађена"
 
@@ -1025,7 +1031,7 @@ msgstr "Системски посредник је отказан."
 msgid "Connected"
 msgstr "Повезани сте"
 
-#: ../../service_trigger/msg.go:7
+#: ../../service_trigger/msg.go:28
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
@@ -1036,6 +1042,7 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Батерија критично испражњена"
 
+#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
 #: ../../session/power/manager_events.go:237

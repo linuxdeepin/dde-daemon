@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-03 15:14+0800\n"
+"POT-Creation-Date: 2021-12-03 15:25+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/linuxdeepin/teams/3617/cs/)\n"
@@ -59,6 +59,11 @@ msgstr "Jméno už existuje"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Je třeba, aby uživatelské jméno mělo délku 3 až 32 znaků"
 
+#: ../../accounts/manager.go:432
+#, c-format
+msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
@@ -90,7 +95,7 @@ msgstr "Měřítko zobrazení"
 msgid "%s had been disabled"
 msgstr "%s bylo vypnuto"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
 msgid "Open"
 msgstr "Otevřít"
 
@@ -163,7 +168,7 @@ msgid "Message notification"
 msgstr "Upozorňování na zprávy"
 
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
-#: ../../lastore/lastore.go:409
+#: ../../lastore/lastore.go:431
 msgid "Cancel"
 msgstr "Storno"
 
@@ -228,24 +233,24 @@ msgstr "Přidat Bluetooth zařízení"
 msgid "Pair"
 msgstr "Spárovat"
 
-#: ../../dock/app_entry_menu.go:114
+#: ../../dock/app_entry_menu.go:116
 msgid "Close All"
 msgstr "Zavřít vše"
 
-#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
-#: ../../dock/app_entry_menu.go:157
+#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
+#: ../../dock/app_entry_menu.go:163
 msgid "Force Quit"
 msgstr "Vynutit ukončení"
 
-#: ../../dock/app_entry_menu.go:161
+#: ../../dock/app_entry_menu.go:167
 msgid "Dock"
 msgstr "Panel"
 
-#: ../../dock/app_entry_menu.go:171
+#: ../../dock/app_entry_menu.go:177
 msgid "Undock"
 msgstr "Storno ukotvení"
 
-#: ../../dock/app_entry_menu.go:181
+#: ../../dock/app_entry_menu.go:187
 msgid "All Windows"
 msgstr "Všechna okna"
 
@@ -473,35 +478,35 @@ msgstr "Systémový jazyk byl změněn – prosím odhlaste se a přihlaste nazp
 msgid "Failed to change system language, please try later"
 msgstr "Nepodařilo se změnit jazyk systému, zkuste to znovu později"
 
-#: ../../lastore/lastore.go:401
+#: ../../lastore/lastore.go:423
 msgid "Retry"
 msgstr "Zkusit znovu"
 
-#: ../../lastore/lastore.go:423
+#: ../../lastore/lastore.go:445
 msgid "Update Now"
 msgstr "Aktualizovat nyní"
 
-#: ../../lastore/lastore.go:453
+#: ../../lastore/lastore.go:475
 msgid "Reboot Now"
 msgstr "Restartovat nyní"
 
-#: ../../lastore/lastore.go:457
+#: ../../lastore/lastore.go:479
 msgid "Remind Me Later"
 msgstr "Připomenout později"
 
-#: ../../lastore/lastore.go:464
+#: ../../lastore/lastore.go:486
 msgid "10 mins later"
 msgstr "o 10 minut později "
 
-#: ../../lastore/lastore.go:471
+#: ../../lastore/lastore.go:493
 msgid "30 mins later"
 msgstr "o 30 minut později "
 
-#: ../../lastore/lastore.go:478
+#: ../../lastore/lastore.go:500
 msgid "2h later"
 msgstr "o 2 hodiny později "
 
-#: ../../lastore/lastore.go:485
+#: ../../lastore/lastore.go:507
 msgid "6h later"
 msgstr "o 6 hodin později"
 
@@ -564,49 +569,50 @@ msgstr "%q úspěšně odstraněno"
 msgid "Failed to uninstall %q"
 msgstr "Nepodařilo se odinstalovat %q"
 
-#: ../../network/manager_active_conn.go:396
-#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:409
 msgid "None"
 msgstr "Žádné"
 
-#: ../../network/manager_active_conn.go:403
+#: ../../network/manager_active_conn.go:411
 msgid "WEP 40/128-bit Key"
 msgstr "WEP klíč 40/128 bitů"
 
-#: ../../network/manager_active_conn.go:405
+#: ../../network/manager_active_conn.go:413
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 osobní"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:421
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:415
+#: ../../network/manager_active_conn.go:423
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:417
+#: ../../network/manager_active_conn.go:425
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:419
+#: ../../network/manager_active_conn.go:427
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:429
 msgid "Tunneled TLS"
 msgstr "Tunelované TLS"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:431
 msgid "Protected EAP"
 msgstr "Chráněné EAP"
 
-#: ../../network/manager_connection.go:359
-#: ../../network/manager_connection.go:363
+#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
+#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
 msgid "Wired Connection"
 msgstr "Drátové připojení"
 
-#: ../../network/manager_connection.go:402
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
 msgid "Wired Connection %v"
 msgstr "Drátové připojení %v "
 
@@ -946,54 +952,54 @@ msgstr "Ověření se vůči VPN serveru se nezdařilo"
 msgid "The connection was deleted from settings"
 msgstr "Připojení bylo odstraněno z nastavení"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:266
 msgid "Enabling hotspot"
 msgstr "Zapíná se hotspot"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:270
 msgid "Connecting %q"
 msgstr "Připojování k %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:279
 msgid "Hotspot enabled"
 msgstr "Hotspot zapnutý"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:281
 msgid "%q connected"
 msgstr "%q připojeno"
 
-#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
+#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
 msgid "Hotspot disabled"
 msgstr "Hotspot vypnut"
 
-#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%q odpojeno"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Nedaří se sdílet hotspot – prosím zkontrolujte nastavení dnsmasq"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Nelze se připojit k %q. Přesuňte se blíže k bezdrátovému přístupovému bodu"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nedaří se připojit k %q – zkontrolujte síťové zařízení a kabely prosím."
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:363
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Připojení k %q se nezdařilo – chybné heslo"
 
-#: ../../network/state_handler.go:358
+#: ../../network/state_handler.go:374
 msgid "Password is required to connect %q"
 msgstr "Pro připojení se k %q je požadováno heslo"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:376
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN síť nebyla nalezena"
 
@@ -1033,7 +1039,7 @@ msgstr "Systémová proxy byla zrušena."
 msgid "Connected"
 msgstr "Připojeno"
 
-#: ../../service_trigger/msg.go:7
+#: ../../service_trigger/msg.go:28
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
@@ -1044,6 +1050,7 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "Akumulátor téměř vybitý"
 
+#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
 #: ../../session/power/manager_events.go:237

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-03 15:14+0800\n"
+"POT-Creation-Date: 2021-12-03 15:25+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2021\n"
 "Language-Team: Sinhala (https://www.transifex.com/linuxdeepin/teams/3617/si/)\n"
@@ -54,6 +54,11 @@ msgstr "නම දැනටමත් පවතී"
 msgid "Username must be between 3 and 32 characters"
 msgstr "පරිශීලක නාමය අක්ෂර 3 ත් 32 ත් අතර විය යුතුය"
 
+#: ../../accounts/manager.go:432
+#, c-format
+msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
@@ -83,7 +88,7 @@ msgstr "දර්ශන පරිමාණය"
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
 msgid "Open"
 msgstr "විවෘත කරන්න"
 
@@ -156,7 +161,7 @@ msgid "Message notification"
 msgstr "පණිවිඩ දැනුම්දීම්"
 
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
-#: ../../lastore/lastore.go:409
+#: ../../lastore/lastore.go:431
 msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
@@ -221,24 +226,24 @@ msgstr "බ්ලූටූත් උපාංග එක් කරන්න"
 msgid "Pair"
 msgstr "එකිනෙක සම්බන්ධ කරන්න"
 
-#: ../../dock/app_entry_menu.go:114
+#: ../../dock/app_entry_menu.go:116
 msgid "Close All"
 msgstr "සියල්ල වසා දමන්න"
 
-#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
-#: ../../dock/app_entry_menu.go:157
+#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
+#: ../../dock/app_entry_menu.go:163
 msgid "Force Quit"
 msgstr "බලෙන් ඉවත් වන්න"
 
-#: ../../dock/app_entry_menu.go:161
+#: ../../dock/app_entry_menu.go:167
 msgid "Dock"
 msgstr "ඩොක් එක"
 
-#: ../../dock/app_entry_menu.go:171
+#: ../../dock/app_entry_menu.go:177
 msgid "Undock"
 msgstr "අහෝසි කරන්න"
 
-#: ../../dock/app_entry_menu.go:181
+#: ../../dock/app_entry_menu.go:187
 msgid "All Windows"
 msgstr "සියලුම කවුළු"
 
@@ -466,35 +471,35 @@ msgstr "පද්ධති භාෂාව වෙනස් වී ඇත, කර
 msgid "Failed to change system language, please try later"
 msgstr "පද්ධති භාෂාව වෙනස් කිරීමට අපොහොසත් විය, කරුණාකර පසුව උත්සාහ කරන්න"
 
-#: ../../lastore/lastore.go:401
+#: ../../lastore/lastore.go:423
 msgid "Retry"
 msgstr "නැවත උත්සාහ කරන්න"
 
-#: ../../lastore/lastore.go:423
+#: ../../lastore/lastore.go:445
 msgid "Update Now"
 msgstr "දැන් යාවත්කාලීන කරන්න"
 
-#: ../../lastore/lastore.go:453
+#: ../../lastore/lastore.go:475
 msgid "Reboot Now"
 msgstr "පද්ධතිය දැන් නැවත අරඹන්න"
 
-#: ../../lastore/lastore.go:457
+#: ../../lastore/lastore.go:479
 msgid "Remind Me Later"
 msgstr ""
 
-#: ../../lastore/lastore.go:464
+#: ../../lastore/lastore.go:486
 msgid "10 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:471
+#: ../../lastore/lastore.go:493
 msgid "30 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:478
+#: ../../lastore/lastore.go:500
 msgid "2h later"
 msgstr ""
 
-#: ../../lastore/lastore.go:485
+#: ../../lastore/lastore.go:507
 msgid "6h later"
 msgstr ""
 
@@ -555,49 +560,50 @@ msgstr "%q සාර්ථකව ඉවත් කර ඇත."
 msgid "Failed to uninstall %q"
 msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
 
-#: ../../network/manager_active_conn.go:396
-#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:409
 msgid "None"
 msgstr "කිසිවක් නැත"
 
-#: ../../network/manager_active_conn.go:403
+#: ../../network/manager_active_conn.go:411
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit යතුර"
 
-#: ../../network/manager_active_conn.go:405
+#: ../../network/manager_active_conn.go:413
 msgid "WPA/WPA2 Personal"
 msgstr "WPA / WPA2 පුද්ගලික"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:421
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:415
+#: ../../network/manager_active_conn.go:423
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:417
+#: ../../network/manager_active_conn.go:425
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:419
+#: ../../network/manager_active_conn.go:427
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:429
 msgid "Tunneled TLS"
 msgstr "උමං TLS"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:431
 msgid "Protected EAP"
 msgstr "ආරක්ෂිත EAP"
 
-#: ../../network/manager_connection.go:359
-#: ../../network/manager_connection.go:363
+#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
+#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
 msgid "Wired Connection"
 msgstr "රැහැන් සම්බන්ධතාවය"
 
-#: ../../network/manager_connection.go:402
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
 msgid "Wired Connection %v"
 msgstr ""
 
@@ -940,54 +946,54 @@ msgstr "VPN සේවාදායකය-server සත්‍යාපනය ක�
 msgid "The connection was deleted from settings"
 msgstr "සැකසුම් වලින් සම්බන්ධතාවය මකා දමන ලදි"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:266
 msgid "Enabling hotspot"
 msgstr "හොට්ස්පොට් සක්‍රීය කරමින්"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:270
 msgid "Connecting %q"
 msgstr "%q සම්බන්ධ වෙමින් පවතී"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:279
 msgid "Hotspot enabled"
 msgstr "හොට්ස්පොට් සක්‍රීයයි"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:281
 msgid "%q connected"
 msgstr "%q සම්බන්ධයි"
 
-#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
+#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
 msgid "Hotspot disabled"
 msgstr "හොට්ස්පොට් අක්‍රීයයි"
 
-#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%q විසන්ධි විය"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "හොට්ස්පොට් බෙදා ගැනීමට නොහැක, කරුණාකර dnsmasq සැකසුම් පරීක්ෂා කරන්න"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර රැහැන් රහිත රවුටරයට සමීපව සිටින්න"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර ඔබේ රවුටරය හෝ ජාල කේබලය පරීක්ෂා කරන්න."
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:363
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "සම්බන්ධතාවය අසාර්ථක විය, %q සම්බන්ධ කිරීමට නොහැකි විය, වැරදි මුරපදයකි"
 
-#: ../../network/state_handler.go:358
+#: ../../network/state_handler.go:374
 msgid "Password is required to connect %q"
 msgstr "%q සම්බන්ධ කිරීමට මුරපදය අවශ්‍ය වේ"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:376
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
@@ -1028,7 +1034,7 @@ msgstr "පද්ධති ප්‍රොක්සි අවලංගු කර
 msgid "Connected"
 msgstr "සම්බන්ධයි"
 
-#: ../../service_trigger/msg.go:7
+#: ../../service_trigger/msg.go:28
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" සත්‍යාපනය සමත් නොවූ අතර දැන් ක්‍රියාත්මක කළ නොහැක"
@@ -1037,6 +1043,7 @@ msgstr "\"%s\" සත්‍යාපනය සමත් නොවූ අතර �
 msgid "Battery critically low"
 msgstr "බැටරි ධාරිතාවය ඉතා අඩුය"
 
+#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
 #: ../../session/power/manager_events.go:237

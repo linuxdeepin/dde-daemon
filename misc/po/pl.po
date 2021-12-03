@@ -5,12 +5,12 @@
 # 
 # Translators:
 # Marcin Pianka <marcin.pianka@gmail.com>, 2020
+# Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Wiktor Jezioro <wikjezioro@op.pl>, 2020
 # Pyroxar <kacper-paczos@linux.pl>, 2020
 # Cindy0514, 2020
 # Piotr Strębski <strebski@gmail.com>, 2020
 # Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Hubert Ożga <hubert.ozga@outlook.com>, 2021
 # Janusz Ruchała, 2021
 # Marcin Kozioł <koziol.martin@gmail.com>, 2021
@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-03 15:14+0800\n"
+"POT-Creation-Date: 2021-12-03 15:25+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Marcin Kozioł <koziol.martin@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/linuxdeepin/teams/3617/pl/)\n"
@@ -62,13 +62,18 @@ msgstr "Taka nazwa już istnieje"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nazwa użytkownika musi mieć od 3 do 32 znaków"
 
+#: ../../accounts/manager.go:432
+#, c-format
+msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr "Wyloguj się, aby ustawienia skalowania ekranu zaczęły obowiązywać"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
-msgstr "Pomyślnie ustawiono"
+msgstr "Ustawiono pomyślnie"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
@@ -91,7 +96,7 @@ msgstr "Skalowanie ekranu"
 msgid "%s had been disabled"
 msgstr "1%s został wyłączony"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
 msgid "Open"
 msgstr "Otwórz"
 
@@ -101,7 +106,7 @@ msgstr "Weryfikacja odcisku palca nie powiodła się"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
-msgstr "Przekroczono czas weryfikacji odcisku palca"
+msgstr "Przekroczono czas oczekiwania weryfikacji odcisku palca"
 
 #: ../../bluetooth/bluez_profile.go:30
 #: ../../system/bluetooth/bluez_profile.go:30
@@ -164,7 +169,7 @@ msgid "Message notification"
 msgstr "Wiadomości powiadomień"
 
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
-#: ../../lastore/lastore.go:409
+#: ../../lastore/lastore.go:431
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -215,7 +220,7 @@ msgstr "%q chce wysłać do Ciebie pliki. Odebrać?"
 
 #: ../../bluetooth/obex_agent.go:477
 msgid "Receiving %q timed out"
-msgstr "Upłynął limit czasu odbioru %q"
+msgstr "Upłynął limit czasu oczekiwania odbioru %q"
 
 #: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
@@ -229,24 +234,24 @@ msgstr "Dodaj urządzenia Bluetooth"
 msgid "Pair"
 msgstr "Paruj"
 
-#: ../../dock/app_entry_menu.go:114
+#: ../../dock/app_entry_menu.go:116
 msgid "Close All"
 msgstr "Zamknij"
 
-#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
-#: ../../dock/app_entry_menu.go:157
+#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
+#: ../../dock/app_entry_menu.go:163
 msgid "Force Quit"
 msgstr "Wymuś zamknięcie"
 
-#: ../../dock/app_entry_menu.go:161
+#: ../../dock/app_entry_menu.go:167
 msgid "Dock"
 msgstr "Zadokuj"
 
-#: ../../dock/app_entry_menu.go:171
+#: ../../dock/app_entry_menu.go:177
 msgid "Undock"
 msgstr "Odepnij"
 
-#: ../../dock/app_entry_menu.go:181
+#: ../../dock/app_entry_menu.go:187
 msgid "All Windows"
 msgstr "Wszystkie okna"
 
@@ -385,7 +390,7 @@ msgstr "Przełącz podobne okna w odwrotnej kolejności"
 
 #: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch windows"
-msgstr "Przełącz okna"
+msgstr "Przełącz okno"
 
 #: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows in reverse"
@@ -475,35 +480,35 @@ msgstr "Zmieniono język systemu, proszę zalogować się ponownie"
 msgid "Failed to change system language, please try later"
 msgstr "Nie można zmienić języka systemu, proszę spróbować później"
 
-#: ../../lastore/lastore.go:401
+#: ../../lastore/lastore.go:423
 msgid "Retry"
 msgstr "Ponów"
 
-#: ../../lastore/lastore.go:423
+#: ../../lastore/lastore.go:445
 msgid "Update Now"
 msgstr "Aktualizuj teraz"
 
-#: ../../lastore/lastore.go:453
+#: ../../lastore/lastore.go:475
 msgid "Reboot Now"
 msgstr "Uruchom ponownie teraz"
 
-#: ../../lastore/lastore.go:457
+#: ../../lastore/lastore.go:479
 msgid "Remind Me Later"
 msgstr "Przypomnij mi później"
 
-#: ../../lastore/lastore.go:464
+#: ../../lastore/lastore.go:486
 msgid "10 mins later"
 msgstr "10 minut później"
 
-#: ../../lastore/lastore.go:471
+#: ../../lastore/lastore.go:493
 msgid "30 mins later"
 msgstr "30 minut później"
 
-#: ../../lastore/lastore.go:478
+#: ../../lastore/lastore.go:500
 msgid "2h later"
 msgstr "2 godziny później"
 
-#: ../../lastore/lastore.go:485
+#: ../../lastore/lastore.go:507
 msgid "6h later"
 msgstr "6 godzin później"
 
@@ -567,49 +572,50 @@ msgstr "%q pomyślnie usunięte"
 msgid "Failed to uninstall %q"
 msgstr "Błąd odinstalowania %q"
 
-#: ../../network/manager_active_conn.go:396
-#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:409
 msgid "None"
 msgstr "Brak"
 
-#: ../../network/manager_active_conn.go:403
+#: ../../network/manager_active_conn.go:411
 msgid "WEP 40/128-bit Key"
 msgstr "WEP klucz 40/128-bitowy"
 
-#: ../../network/manager_active_conn.go:405
+#: ../../network/manager_active_conn.go:413
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:421
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:415
+#: ../../network/manager_active_conn.go:423
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:417
+#: ../../network/manager_active_conn.go:425
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:419
+#: ../../network/manager_active_conn.go:427
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:429
 msgid "Tunneled TLS"
 msgstr "Tunelowany TLS"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:431
 msgid "Protected EAP"
 msgstr "Zabezpieczony EAP"
 
-#: ../../network/manager_connection.go:359
-#: ../../network/manager_connection.go:363
+#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
+#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
 msgid "Wired Connection"
 msgstr "Połączenie przewodowe"
 
-#: ../../network/manager_connection.go:402
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
 msgid "Wired Connection %v"
 msgstr "Połączenie przewodowe %v"
 
@@ -652,8 +658,8 @@ msgstr "Urządzenie nie jest gotowe do skonfigurowania"
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
 msgstr ""
-"Nie można zarezerwować konfiguracji IP (brak adresu, przekroczony limit "
-"czasu, itp.)"
+"Nie można zarezerwować konfiguracji IP (brak adresu, przekroczony czas "
+"oczekiwania, itp.)"
 
 #: ../../network/state_handler.go:44
 msgid "The IP configuration is no longer valid"
@@ -743,7 +749,7 @@ msgstr "Dodzwonienie nie powiodło się z powodu dostawcy"
 
 #: ../../network/state_handler.go:64
 msgid "Dialing timed out"
-msgstr "Przekroczono czas dodzwaniania"
+msgstr "Przekroczono czas oczekiwania wybierania numeru"
 
 #: ../../network/state_handler.go:65
 msgid "Dialing failed"
@@ -767,7 +773,7 @@ msgstr "Odrzucono rejestrację sieci"
 
 #: ../../network/state_handler.go:70
 msgid "Network registration timed out"
-msgstr "Przekroczono czas rejestracji sieci"
+msgstr "Przekroczono czas oczekiwania rejestracji sieci"
 
 #: ../../network/state_handler.go:71
 msgid "Failed to register to the requested GSM network"
@@ -815,7 +821,9 @@ msgstr "Nie można odnaleźć modemu"
 
 #: ../../network/state_handler.go:82
 msgid "The Bluetooth connection timed out or failed"
-msgstr "Upłynął czas połączenia lub wystąpił błąd Bluetooth"
+msgstr ""
+"Upłynął czas oczekiwania połączenia Bluetooth lub połączenie nie powiodło "
+"się"
 
 #: ../../network/state_handler.go:83
 msgid "GSM Modem's SIM Card was not inserted"
@@ -931,11 +939,11 @@ msgstr "Konfiguracja IP połączenia VPN jest nieprawidłowa"
 
 #: ../../network/state_handler.go:116
 msgid "The connection attempt to VPN service timed out"
-msgstr "Przekroczono czas próby podłączenia do usługi VPN"
+msgstr "Przekroczono czas oczekiwania próby podłączenia do usługi VPN"
 
 #: ../../network/state_handler.go:117
 msgid "The VPN service start timed out"
-msgstr "Przekroczono limit czasu uruchamiania usługi VPN"
+msgstr "Przekroczono limit czasu oczekiwania uruchamiania usługi VPN"
 
 #: ../../network/state_handler.go:118
 msgid "The VPN service failed to start"
@@ -953,54 +961,56 @@ msgstr "Uwierzytelnienie do serwera VPN nie powiodło się"
 msgid "The connection was deleted from settings"
 msgstr "Połączenie zostało usunięte z ustawień"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:266
 msgid "Enabling hotspot"
 msgstr "Włączanie punktu dostępu"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:270
 msgid "Connecting %q"
 msgstr "Połączenie %q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:279
 msgid "Hotspot enabled"
 msgstr "Punkt dostępu włączony"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:281
 msgid "%q connected"
-msgstr "%q jest połączone"
+msgstr "%q połączone"
 
-#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
+#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
 msgid "Hotspot disabled"
 msgstr "Punkt dostępu wyłączony"
 
-#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
-msgstr "%q jest rozłączone"
+msgstr "%q rozłączono "
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Nie można udostępnić hotspotu, należy sprawdzić ustawienia dnsmasq"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Nie można połączyć z %q, prosimy przybliżyć się do routera bezprzewodowego"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Nie można połączyć z %q, prosimy sprawdzić swój router lub kabel sieciowy."
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:363
 msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Połączenie nie powiodło się, nie można połączyć z %q, złe hasło"
+msgstr ""
+"Połączenie nie powiodło się, nie udało połączyć się z %q, nieprawidłowe "
+"hasło"
 
-#: ../../network/state_handler.go:358
+#: ../../network/state_handler.go:374
 msgid "Password is required to connect %q"
 msgstr "Aby połączyć się z %q wymagane jest hasło"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:376
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Nie można znaleźć sieci WLAN %q 802.11"
 
@@ -1041,17 +1051,18 @@ msgstr "Proxy systemowe zostało anulowane."
 msgid "Connected"
 msgstr "Połączono"
 
-#: ../../service_trigger/msg.go:7
+#: ../../service_trigger/msg.go:28
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
-"\"%s\" nie przeszedł weryfikacji bezpieczeństwa systemu i nie może teraz "
-"działać"
+"\"%s\" nie przeszedł weryfikacji bezpieczeństwa systemu i nie można go teraz"
+" włączyć"
 
 #: ../../session/power/manager_events.go:201
 msgid "Battery critically low"
 msgstr "Krytycznie niski poziom baterii"
 
+#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
 #: ../../session/power/manager_events.go:237
@@ -1070,15 +1081,15 @@ msgstr "Kiedy pokrywa jest zamknięta,"
 
 #: ../../session/power/utils.go:409
 msgid "When pressing the power button, "
-msgstr "Po naciśnięciu przycisku zasilania,"
+msgstr "Po naciśnięciu przycisku zasilania, "
 
 #: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
-msgstr "twój komputer zostanie zamknięty"
+msgstr "komputer zostanie wyłączony"
 
 #: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
-msgstr "Twój komputer zawiesi się"
+msgstr "komputer przejdzie w stan uśpienia"
 
 #: ../../session/power/utils.go:423
 msgid "your computer will hibernate"
@@ -1090,7 +1101,7 @@ msgstr "monitor wyłączy się"
 
 #: ../../session/power/utils.go:427
 msgid "it will do nothing to your computer"
-msgstr "nie zrobi nic z twoim komputerem"
+msgstr "nic się nie stanie"
 
 #: ../../system/bluetooth/utils_notify.go:58
 msgid "Connect %q successfully"
@@ -1109,7 +1120,7 @@ msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
-msgstr "Aby ustawić czas systemowy wymagane jest uwierzytelnienie."
+msgstr "Aby ustawić czas systemowy wymagane jest uwierzytelnienie"
 
 #: ../../timedate/manager_ifc.go:79
 msgid ""

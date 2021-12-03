@@ -5,8 +5,8 @@
 # 
 # Translators:
 # Cindy0514, 2021
-# tsewang baljor <bdcwbj@163.com>, 2021
 # Thupten 123 <2389588952@qq.com>, 2021
+# tsewang baljor <bdcwbj@163.com>, 2021
 # yeshe lhamo <981611630@qq.com>, 2021
 # 
 #, fuzzy
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-03 15:14+0800\n"
+"POT-Creation-Date: 2021-12-03 15:25+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: yeshe lhamo <981611630@qq.com>, 2021\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
@@ -56,6 +56,11 @@ msgstr "མིང་ཡོད་པ།"
 msgid "Username must be between 3 and 32 characters"
 msgstr "སྤྱོད་མཁན་མིང་གི་རིང་ཚད་ངེས་པར་དུ་ཡིག་འབྲུ་3ནས་32བར་ཡིན་དགོས། "
 
+#: ../../accounts/manager.go:432
+#, c-format
+msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་བྱེད་པར་ཐོ་འདོར་རྗེས་གཞི་ནས་གོ་ཆོད་པ་ཡིན།"
@@ -85,7 +90,7 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 msgid "%s had been disabled"
 msgstr "%sབཀག་ཟིན།"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:107
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
 msgid "Open"
 msgstr "ཁ་ཕྱེ་བ།"
 
@@ -158,7 +163,7 @@ msgid "Message notification"
 msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
-#: ../../lastore/lastore.go:409
+#: ../../lastore/lastore.go:431
 msgid "Cancel"
 msgstr "འདོར་བ། "
 
@@ -223,24 +228,24 @@ msgstr "སོ་སྔོན་སྒྲིག་ཆས་སྣོན་པ།
 msgid "Pair"
 msgstr "ཆ་སྒྲིག་པ།"
 
-#: ../../dock/app_entry_menu.go:114
+#: ../../dock/app_entry_menu.go:116
 msgid "Close All"
 msgstr "ཆ་ཚང་སྒོ་རྒྱོབ།"
 
-#: ../../dock/app_entry_menu.go:130 ../../dock/app_entry_menu.go:142
-#: ../../dock/app_entry_menu.go:157
+#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
+#: ../../dock/app_entry_menu.go:163
 msgid "Force Quit"
 msgstr "བཙན་ཤེད་ཀྱིས་དོན་དུ་བཅུག་པ།"
 
-#: ../../dock/app_entry_menu.go:161
+#: ../../dock/app_entry_menu.go:167
 msgid "Dock"
 msgstr "སྡོད་པ།"
 
-#: ../../dock/app_entry_menu.go:171
+#: ../../dock/app_entry_menu.go:177
 msgid "Undock"
 msgstr "བསྡད་པ་གཙང་སེལ།"
 
-#: ../../dock/app_entry_menu.go:181
+#: ../../dock/app_entry_menu.go:187
 msgid "All Windows"
 msgstr "སྒེའུ་ཁུང་ཆ་ཚང་།"
 
@@ -468,35 +473,35 @@ msgid "Failed to change system language, please try later"
 msgstr ""
 "རྒྱུད་ཁོངས་སྐད་ཡིག་བརྗེ་མི་ཐུབ་པས་ཏོག་ཙམ་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་རོགས།"
 
-#: ../../lastore/lastore.go:401
+#: ../../lastore/lastore.go:423
 msgid "Retry"
 msgstr "ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་པ།"
 
-#: ../../lastore/lastore.go:423
+#: ../../lastore/lastore.go:445
 msgid "Update Now"
 msgstr "ལམ་སེང་གསར་སྒྱུར་བྱེད།"
 
-#: ../../lastore/lastore.go:453
+#: ../../lastore/lastore.go:475
 msgid "Reboot Now"
 msgstr "ལམ་སེང་བསྐྱར་སློང་བྱེད།"
 
-#: ../../lastore/lastore.go:457
+#: ../../lastore/lastore.go:479
 msgid "Remind Me Later"
 msgstr "ཏོག་ཙམ་ནས་དྲན་སྐུལ་བྱེད།"
 
-#: ../../lastore/lastore.go:464
+#: ../../lastore/lastore.go:486
 msgid "10 mins later"
 msgstr "སྐར་མ་10རྗེས་དྲན་སྐུལ་བྱེད།"
 
-#: ../../lastore/lastore.go:471
+#: ../../lastore/lastore.go:493
 msgid "30 mins later"
 msgstr "སྐར་མ་30རྗེས་དྲན་སྐུལ་བྱེད།"
 
-#: ../../lastore/lastore.go:478
+#: ../../lastore/lastore.go:500
 msgid "2h later"
 msgstr "ཆུ་ཚོད་2རྗེས་དྲན་སྐུལ་བྱེད།"
 
-#: ../../lastore/lastore.go:485
+#: ../../lastore/lastore.go:507
 msgid "6h later"
 msgstr "ཆུ་ཚོད་6རྗེས་དྲན་སྐུལ་བྱེད།"
 
@@ -529,7 +534,7 @@ msgstr "མཉེན་ཆས་ཐུམ་བུ་གཙང་སེལ་ལ
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "གསར་སྒྱུར་ཡོད་མེད་བརྟག་དཔྱད་བྱེད་པ། "
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
@@ -560,49 +565,50 @@ msgstr "%qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager_active_conn.go:396
-#: ../../network/manager_active_conn.go:401
+#: ../../network/manager_active_conn.go:404
+#: ../../network/manager_active_conn.go:409
 msgid "None"
 msgstr "མེད།"
 
-#: ../../network/manager_active_conn.go:403
+#: ../../network/manager_active_conn.go:411
 msgid "WEP 40/128-bit Key"
 msgstr "གསང་ལྡེ་གནས་WEP40/128"
 
-#: ../../network/manager_active_conn.go:405
+#: ../../network/manager_active_conn.go:413
 msgid "WPA/WPA2 Personal"
 msgstr "སྒེར་གྱི་པར་གཞི་WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:421
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:415
+#: ../../network/manager_active_conn.go:423
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:417
+#: ../../network/manager_active_conn.go:425
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:419
+#: ../../network/manager_active_conn.go:427
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:429
 msgid "Tunneled TLS"
 msgstr "ཕུག་ལམ་TLS"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:431
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
-#: ../../network/manager_connection.go:359
-#: ../../network/manager_connection.go:363
+#: ../../network/manager_connection.go:361
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
+#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
 msgid "Wired Connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
-#: ../../network/manager_connection.go:402
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
 msgid "Wired Connection %v"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད་%v"
 
@@ -940,54 +946,54 @@ msgstr "VPNཞབས་ཞུ་འཕྲུལ་ཆས་ཕམ་པའི་
 msgid "The connection was deleted from settings"
 msgstr "འབྲེལ་མཐུད་འདི་སྒྲིག་འགོད་ལས་བསུབས་ཟིན།"
 
-#: ../../network/state_handler.go:250
+#: ../../network/state_handler.go:266
 msgid "Enabling hotspot"
 msgstr "ཚ་གནས་ཁ་འབྱེད་པའི་ཚོད་ལྟ་བྱེད་བཞིན་པ།"
 
-#: ../../network/state_handler.go:254
+#: ../../network/state_handler.go:270
 msgid "Connecting %q"
 msgstr "འབྲེལ་མཐུད་བྱེད་བཞིན་ཡོད་%q"
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:279
 msgid "Hotspot enabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་ཕྱེ་ཡོད།"
 
-#: ../../network/state_handler.go:265
+#: ../../network/state_handler.go:281
 msgid "%q connected"
 msgstr "འབྲེལ་མཐུད་ཟིན་%q"
 
-#: ../../network/state_handler.go:276 ../../network/state_handler.go:331
+#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
 msgid "Hotspot disabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་བརྒྱབ་ཟིན།"
 
-#: ../../network/state_handler.go:333 ../../network/state_handler.go:355
+#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%qབཅད་ཟིན།"
 
-#: ../../network/state_handler.go:339
+#: ../../network/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "ཚ་གནས་མཉམ་སྤྱོད་བྱེད་མི་ཐུབ་པས་dnsmasq "
 "དང་འབྲེལ་བའི་སྒྲིག་ཆས་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:341
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qསྣོན་ཐུབ་མེད་པས། སྐུད་མེད་ལམ་སྟོན་ཆས་དང་ཉེ་འབྲེལ་ཚོད་ལྟ་བྱེད།"
 
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qསྣོན་ཐུབ་མེད་པས། ལམ་སྟོན་ཆས་སམ་དྲ་སྐུད་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:363
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "འབྲེལ་མཐུད་མི་ཐུབ། %qནང་དུ་བཅུག་མི་ཐུབ། གསང་ཨང་ནོར་འདུག"
 
-#: ../../network/state_handler.go:358
+#: ../../network/state_handler.go:374
 msgid "Password is required to connect %q"
 msgstr "%qའབྲེལ་བར་གསང་ཨང་དགོས།"
 
-#: ../../network/state_handler.go:360
+#: ../../network/state_handler.go:376
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLANདྲ་རྒྱ་རྙེད་ཐབས་མེད།"
 
@@ -1028,7 +1034,7 @@ msgstr "རྒྱུད་ཁོངས་ལས་ཚབ་འདོར་ཟི
 msgid "Connected"
 msgstr "སྦྲེལ་ཟིན། "
 
-#: ../../service_trigger/msg.go:7
+#: ../../service_trigger/msg.go:28
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
@@ -1039,6 +1045,7 @@ msgstr ""
 msgid "Battery critically low"
 msgstr "གློག་རྫོགས་ཟིན།"
 
+#: ../../session/power/manager_events.go:222
 #: ../../session/power/manager_events.go:227
 #: ../../session/power/manager_events.go:232
 #: ../../session/power/manager_events.go:237
