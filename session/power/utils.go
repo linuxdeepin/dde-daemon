@@ -25,11 +25,11 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/soundutils"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
-	"github.com/linuxdeepin/dde-api/soundutils"
 )
 
 func (m *Manager) waitLockShowing(timeout time.Duration) {
@@ -70,6 +70,35 @@ func (m *Manager) lockWaitShow(timeout time.Duration, autoStartAuth bool) {
 		return
 	}
 	m.waitLockShowing(timeout)
+}
+
+func (m *Manager) isWmBlackScreenActive() bool {
+	bus, err := dbus.SessionBus()
+	if err == nil {
+		kwinInter := bus.Object("org.kde.KWin", "/BlackScreen")
+		var active bool
+		err = kwinInter.Call("org.kde.kwin.BlackScreen.getActive",
+			dbus.FlagNoAutoStart).Store(&active)
+		if err != nil {
+			logger.Warning("failed to get kwin blackscreen effect active:", err)
+			return false
+		}
+		return active
+	} else {
+		return false
+	}
+}
+
+func (m *Manager) setWmBlackScreenActive(active bool) {
+	logger.Info("set blackScreen effect active: ", active)
+	bus, err := dbus.SessionBus()
+	if err == nil {
+		kwinInter := bus.Object("org.kde.KWin", "/BlackScreen")
+		err = kwinInter.Call("org.kde.kwin.BlackScreen.setActive", 0, active).Err
+		if err != nil {
+			logger.Warning("set blackScreen active failed:", err)
+		}
+	}
 }
 
 func (m *Manager) setDPMSModeOn() {
@@ -222,8 +251,11 @@ func (m *Manager) doHibernateByFront() {
 
 func (m *Manager) doTurnOffScreen() {
 	if m.ScreenBlackLock.Get() {
+		logger.Info("Show lock")
 		m.doLock(true)
+		time.Sleep(1 * time.Second)
 	}
+
 	logger.Info("Turn off screen")
 	m.setDPMSModeOff()
 }

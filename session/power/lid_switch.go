@@ -22,6 +22,7 @@ package power
 import (
 	"os/exec"
 	"strings"
+	"time"
 )
 
 func init() {
@@ -36,13 +37,16 @@ const (
 )
 
 type LidSwitchHandler struct {
-	manager *Manager
-	cmd     *exec.Cmd
+	manager       *Manager
+	cmd           *exec.Cmd
+	cookie        chan struct{}
+	isLidOpenLast bool //上一次有效操作是否是开盖
 }
 
 func newLidSwitchHandler(m *Manager) (string, submodule, error) {
 	h := &LidSwitchHandler{
-		manager: m,
+		manager:       m,
+		isLidOpenLast: true,
 	}
 	return "LidSwitchHandler", h, nil
 }
@@ -61,51 +65,93 @@ func (h *LidSwitchHandler) Start() error {
 }
 
 func (h *LidSwitchHandler) onLidClosed() {
-	logger.Info("Lid closed")
-	var onBattery bool
+	h.onLidDelayOperate(false)
+}
+
+func (h *LidSwitchHandler) onLidOpened() {
+	h.onLidDelayOperate(true)
+}
+
+func (h *LidSwitchHandler) onLidDelayOperate(state bool) {
+	if h.cookie != nil {
+		h.cookie <- struct{}{}
+		close(h.cookie)
+	}
+
+	h.cookie = make(chan struct{}, 1)
+
+	go func() {
+		select {
+		case <-h.cookie:
+			break
+		// 1.5s是为了保证在关闭显示器时，其强制等待的1秒操作被完全执行，否则会带来闪屏问题
+		case <-time.After(time.Millisecond * 1500):
+			h.doLidStateChanged(state)
+			break
+		}
+	}()
+}
+
+func (h *LidSwitchHandler) doLidStateChanged(state bool) {
+	logger.Info("Lid open:", state)
+	if h.isLidOpenLast == state {
+		logger.Info("ignore operate")
+		return
+	}
+	h.isLidOpenLast = state
+
 	m := h.manager
 	m.setPrepareSuspend(suspendStateLidClose)
 	m.PropsMu.Lock()
 	m.lidSwitchState = lidSwitchStateClose
-	onBattery = h.manager.OnBattery
-	m.PropsMu.Unlock()
-	m.claimOrReleaseAmbientLight()
-	var lidCloseAction int32
-	if onBattery {
-		lidCloseAction = m.BatteryLidClosedAction.Get() // 获取合盖操作
-	} else {
-		lidCloseAction = m.LinePowerLidClosedAction.Get() // 获取合盖操作
-	}
-	switch lidCloseAction {
-	case powerActionShutdown:
-		m.doShutdown()
-	case powerActionSuspend:
-		m.doSuspendByFront()
-	case powerActionHibernate:
-		m.doHibernateByFront()
-	case powerActionTurnOffScreen:
-		m.doTurnOffScreen()
-	case powerActionDoNothing:
-		return
-	}
-}
-
-func (h *LidSwitchHandler) onLidOpened() {
-	logger.Info("Lid opened")
-	m := h.manager
-	m.setPrepareSuspend(suspendStateLidOpen)
-	m.PropsMu.Lock()
-	m.lidSwitchState = lidSwitchStateOpen
 	m.PropsMu.Unlock()
 	m.claimOrReleaseAmbientLight()
 
-	if err := h.stopAskUser(); err != nil {
-		logger.Warning("stopAskUser error:", err)
-	}
+	// 合盖
+	if !state {
+		var onBattery bool
+		onBattery = h.manager.OnBattery
+		var lidCloseAction int32
+		if onBattery {
+			lidCloseAction = m.BatteryLidClosedAction.Get() // 获取合盖操作
+		} else {
+			lidCloseAction = m.LinePowerLidClosedAction.Get() // 获取合盖操作
+		}
+		switch lidCloseAction {
+		case powerActionShutdown:
+			m.doShutdown()
+		case powerActionSuspend:
+			m.doSuspendByFront()
+		case powerActionHibernate:
+			m.doHibernateByFront()
+		case powerActionTurnOffScreen:
+			m.doTurnOffScreen()
+		case powerActionDoNothing:
+			return
+		}
+	} else { // 开盖
+		if !m.isWmBlackScreenActive() {
+			m.setWmBlackScreenActive(true)
+		}
 
-	err := m.helper.ScreenSaver.SimulateUserActivity(0)
-	if err != nil {
-		logger.Warning(err)
+		err := h.stopAskUser()
+		if err != nil {
+			logger.Warning("stopAskUser error:", err)
+		}
+
+		err = m.helper.ScreenSaver.SimulateUserActivity(0)
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		if m.ScreenBlackLock.Get() {
+			m.doLock(true)
+			time.Sleep(1 * time.Second)
+		}
+
+		if m.isWmBlackScreenActive() {
+			m.setWmBlackScreenActive(false)
+		}
 	}
 }
 
