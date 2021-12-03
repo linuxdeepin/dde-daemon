@@ -30,7 +30,7 @@ import (
 	mmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.modemmanager1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 type device struct {

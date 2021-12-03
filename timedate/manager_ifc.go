@@ -25,7 +25,7 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"pkg.deepin.io/dde/daemon/timedate/zoneinfo"
+	"github.com/linuxdeepin/dde-daemon/timedate/zoneinfo"
 )
 
 func (m *Manager) Reset() *dbus.Error {

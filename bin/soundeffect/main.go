@@ -20,7 +20,7 @@
 package main
 
 import (
-	"pkg.deepin.io/dde/daemon/soundeffect"
+	"github.com/linuxdeepin/dde-daemon/soundeffect"
 )
 
 func main() {

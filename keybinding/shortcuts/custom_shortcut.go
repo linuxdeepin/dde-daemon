@@ -25,7 +25,7 @@ import (
 	"strings"
 
 	"github.com/linuxdeepin/go-lib/keyfile"
-	"pkg.deepin.io/dde/daemon/keybinding/util"
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 const (

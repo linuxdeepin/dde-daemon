@@ -37,7 +37,7 @@ import (
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"pkg.deepin.io/dde/daemon/accounts/users"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const (

@@ -42,7 +42,7 @@ import (
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"github.com/linuxdeepin/go-x11-client/util/wm/icccm"
 	"github.com/linuxdeepin/dde-api/dxinput"
-	ddbus "pkg.deepin.io/dde/daemon/dbus"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 )
 
 const (

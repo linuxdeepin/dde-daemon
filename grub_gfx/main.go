@@ -3,7 +3,7 @@ package grub_gfx
 import (
 	"github.com/godbus/dbus"
 	ofd "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	"pkg.deepin.io/dde/daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 func detectChange() {

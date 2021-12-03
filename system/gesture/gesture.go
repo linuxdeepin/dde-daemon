@@ -30,7 +30,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type Manager

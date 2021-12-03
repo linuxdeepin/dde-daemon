@@ -22,7 +22,7 @@ package network
 import (
 	"fmt"
 
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 // Logic setter

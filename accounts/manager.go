@@ -33,7 +33,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/tasker"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"pkg.deepin.io/dde/daemon/accounts/users"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const (

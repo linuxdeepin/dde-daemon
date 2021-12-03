@@ -41,8 +41,8 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/strv"
-	"pkg.deepin.io/dde/daemon/common/dsync"
-	"pkg.deepin.io/dde/daemon/session/common"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen em -type Manager

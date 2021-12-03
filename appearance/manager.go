@@ -57,12 +57,12 @@ import (
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
 	"github.com/linuxdeepin/dde-api/theme_thumb"
-	"pkg.deepin.io/dde/daemon/appearance/background"
-	"pkg.deepin.io/dde/daemon/appearance/fonts"
-	"pkg.deepin.io/dde/daemon/appearance/subthemes"
-	"pkg.deepin.io/dde/daemon/common/dsync"
-	ddbus "pkg.deepin.io/dde/daemon/dbus"
-	"pkg.deepin.io/dde/daemon/session/common"
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
+	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen em -type Manager

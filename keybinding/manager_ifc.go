@@ -28,8 +28,8 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
-	"pkg.deepin.io/dde/daemon/keybinding/util"
+	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 const (

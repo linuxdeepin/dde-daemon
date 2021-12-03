@@ -20,7 +20,7 @@ import (
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/dde-api/powersupply/battery"
-	"pkg.deepin.io/dde/daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 //go:generate dbusutil-gen em -type Lastore

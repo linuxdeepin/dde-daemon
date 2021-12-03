@@ -27,7 +27,7 @@ import (
 
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-api/inhibit_hint"
-	"pkg.deepin.io/dde/daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 var _g *Grub2

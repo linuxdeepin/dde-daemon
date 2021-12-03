@@ -38,7 +38,7 @@ import (
 	"github.com/linuxdeepin/go-lib/encoding/kv"
 	"github.com/linuxdeepin/go-lib/graphic"
 	"github.com/linuxdeepin/go-lib/utils"
-	"pkg.deepin.io/dde/daemon/accounts/users"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 // #nosec G101

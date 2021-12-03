@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus"
-	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/dde/daemon/system/gesture"
+	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/system/gesture"
 )
 
 func (*Daemon) SetLongPressDuration(duration uint32) *dbus.Error {

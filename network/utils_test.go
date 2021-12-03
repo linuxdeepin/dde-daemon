@@ -23,7 +23,7 @@ import (
 	"testing"
 
 	C "gopkg.in/check.v1"
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 func Test(t *testing.T) { C.TestingT(t) }

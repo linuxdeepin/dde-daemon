@@ -46,7 +46,7 @@ import (
 	"github.com/linuxdeepin/dde-api/lang_info"
 	"github.com/linuxdeepin/dde-api/language_support"
 	"github.com/linuxdeepin/dde-api/userenv"
-	ddbus "pkg.deepin.io/dde/daemon/dbus"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 )
 
 const (

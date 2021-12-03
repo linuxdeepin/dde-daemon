@@ -24,8 +24,8 @@ import (
 
 	"github.com/linuxdeepin/go-lib/log"
 	libnotify "github.com/linuxdeepin/go-lib/notify"
-	"pkg.deepin.io/dde/daemon/loader"
-	"pkg.deepin.io/dde/daemon/network/proxychains"
+	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/network/proxychains"
 )
 
 var (

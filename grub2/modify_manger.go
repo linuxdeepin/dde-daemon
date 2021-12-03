@@ -25,7 +25,7 @@ import (
 	"strings"
 	"sync"
 
-	"pkg.deepin.io/dde/daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 const (

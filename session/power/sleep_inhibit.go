@@ -24,8 +24,8 @@ import (
 
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	"pkg.deepin.io/dde/daemon/appearance"
-	"pkg.deepin.io/dde/daemon/network"
+	"github.com/linuxdeepin/dde-daemon/appearance"
+	"github.com/linuxdeepin/dde-daemon/network"
 )
 
 type sleepInhibitor struct {

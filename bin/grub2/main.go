@@ -25,7 +25,7 @@ import (
 	"os"
 
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/grub2"
+	"github.com/linuxdeepin/dde-daemon/grub2"
 )
 
 var logger = log.NewLogger("daemon/grub2")

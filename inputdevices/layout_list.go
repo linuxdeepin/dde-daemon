@@ -26,7 +26,7 @@ import (
 	"github.com/linuxdeepin/go-lib/gettext"
 	lib_locale "github.com/linuxdeepin/go-lib/locale"
 	"github.com/linuxdeepin/go-lib/strv"
-	"pkg.deepin.io/dde/daemon/inputdevices/iso639"
+	"github.com/linuxdeepin/dde-daemon/inputdevices/iso639"
 )
 
 const (

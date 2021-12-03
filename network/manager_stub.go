@@ -25,7 +25,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 func (m *Manager) networkingEnabledWriteCb(write *dbusutil.PropertyWrite) *dbus.Error {

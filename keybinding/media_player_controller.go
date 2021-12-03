@@ -29,7 +29,7 @@ import (
 	mpris2 "github.com/linuxdeepin/go-dbus-factory/org.mpris.mediaplayer2"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 const (

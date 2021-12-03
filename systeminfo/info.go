@@ -27,7 +27,7 @@ import (
 	systeminfo "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.systeminfo"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type SystemInfo

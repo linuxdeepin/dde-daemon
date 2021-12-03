@@ -24,7 +24,7 @@ import (
 
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 
 	x "github.com/linuxdeepin/go-x11-client"
 )

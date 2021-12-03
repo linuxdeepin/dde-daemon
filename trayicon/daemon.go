@@ -26,7 +26,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 type Daemon struct {

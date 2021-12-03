@@ -21,8 +21,8 @@ package keybinding
 
 import (
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 func init() {

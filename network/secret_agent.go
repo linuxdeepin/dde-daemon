@@ -18,7 +18,7 @@ import (
 	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 const (

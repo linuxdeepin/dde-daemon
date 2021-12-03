@@ -21,8 +21,8 @@ package accounts
 
 import (
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/accounts/logined"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/accounts/logined"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var (

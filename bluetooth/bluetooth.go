@@ -35,7 +35,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 )
 
 const (

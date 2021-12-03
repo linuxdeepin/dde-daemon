@@ -21,7 +21,7 @@ package loader
 
 import (
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/graph"
+	"github.com/linuxdeepin/dde-daemon/graph"
 )
 
 type DAGBuilder struct {

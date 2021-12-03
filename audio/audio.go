@@ -35,7 +35,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"golang.org/x/xerrors"
-	"pkg.deepin.io/dde/daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (

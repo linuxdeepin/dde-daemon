@@ -22,7 +22,7 @@ package inputdevices
 
 import (
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var logger = log.NewLogger("daemon/system/inputdevices")

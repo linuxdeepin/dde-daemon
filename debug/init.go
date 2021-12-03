@@ -20,7 +20,7 @@
 package debug
 
 import (
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 func init() {

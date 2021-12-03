@@ -11,7 +11,7 @@ import (
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 const (

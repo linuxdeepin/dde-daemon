@@ -27,8 +27,8 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/appearance/background"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var (

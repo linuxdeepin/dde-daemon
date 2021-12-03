@@ -25,7 +25,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
-	"pkg.deepin.io/dde/daemon/session/common"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 func (m *Manager) allocEntryId() string {

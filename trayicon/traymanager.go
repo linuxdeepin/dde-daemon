@@ -37,7 +37,7 @@ const (
 	OpcodeSystemTrayCancelMessage
 )
 
-//go:generate dbusutil-gen -type TrayManager,StatusNotifierWatcher -import pkg.deepin.io/lib/strv traymanager.go status-notifier-watcher.go
+//go:generate dbusutil-gen -type TrayManager,StatusNotifierWatcher -import github.com/linuxdeepin/go-lib/strv traymanager.go status-notifier-watcher.go
 //go:generate dbusutil-gen em -type TrayManager,StatusNotifierWatcher
 
 // TrayManager为系统托盘的管理器。

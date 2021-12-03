@@ -26,7 +26,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 const (

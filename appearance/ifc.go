@@ -28,8 +28,8 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
-	"pkg.deepin.io/dde/daemon/appearance/fonts"
-	"pkg.deepin.io/dde/daemon/appearance/subthemes"
+	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
+	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
 )
 
 // Reset reset all themes and fonts settings to default values

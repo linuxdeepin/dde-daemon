@@ -50,7 +50,7 @@ import (
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	"github.com/linuxdeepin/dde-api/soundutils"
 	"github.com/linuxdeepin/dde-api/userenv"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var logger = log.NewLogger("daemon/dde-session-daemon")

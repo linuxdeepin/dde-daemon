@@ -22,7 +22,7 @@ package keybinding
 import (
 	"github.com/godbus/dbus"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
-	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 type TouchPadController struct {

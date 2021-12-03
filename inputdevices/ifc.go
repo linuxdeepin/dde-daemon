@@ -22,7 +22,7 @@ package inputdevices
 import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/daemon/langselector"
+	"github.com/linuxdeepin/dde-daemon/langselector"
 )
 
 func (m *Mouse) Reset() *dbus.Error {

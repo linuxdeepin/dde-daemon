@@ -22,8 +22,8 @@ package bluetooth
 import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
-	"pkg.deepin.io/dde/daemon/loader"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 type daemon struct {

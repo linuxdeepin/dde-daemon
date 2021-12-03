@@ -29,7 +29,7 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
-	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 )
 
 const (

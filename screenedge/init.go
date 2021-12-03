@@ -19,7 +19,7 @@
 
 package screenedge
 
-import "pkg.deepin.io/dde/daemon/loader"
+import "github.com/linuxdeepin/dde-daemon/loader"
 
 func init() {
 	loader.Register(NewDaemon(logger))

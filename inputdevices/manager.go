@@ -30,7 +30,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
-	"pkg.deepin.io/dde/daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (

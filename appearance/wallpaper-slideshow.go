@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"pkg.deepin.io/dde/daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
 
 	"github.com/linuxdeepin/go-lib/utils"
 )

@@ -20,7 +20,7 @@
 package bluetooth
 
 import (
-	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 )
 
 const (

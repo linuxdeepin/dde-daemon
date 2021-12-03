@@ -28,7 +28,7 @@ import (
 
 	"github.com/godbus/dbus"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
-	"pkg.deepin.io/dde/daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 func quoteString(str string) string {

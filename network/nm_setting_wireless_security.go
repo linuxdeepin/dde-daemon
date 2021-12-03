@@ -23,7 +23,7 @@ import (
 	"errors"
 	"fmt"
 
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 // Virtual key getter and setter

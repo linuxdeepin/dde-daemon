@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	"pkg.deepin.io/dde/daemon/keybinding/util"
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 type kWinShortcut struct {

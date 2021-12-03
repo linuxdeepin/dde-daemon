@@ -4,7 +4,7 @@ import (
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 const dbusServiceName = "com.deepin.daemon.ClipboardManager"

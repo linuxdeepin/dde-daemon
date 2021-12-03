@@ -6,7 +6,7 @@ import (
 
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/stretchr/testify/assert"
-	"pkg.deepin.io/dde/daemon/clipboard/mocks"
+	"github.com/linuxdeepin/dde-daemon/clipboard/mocks"
 )
 
 func initAtomsForTest() {

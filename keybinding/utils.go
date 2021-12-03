@@ -34,7 +34,7 @@ import (
 
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/strv"
-	"pkg.deepin.io/dde/daemon/keybinding/util"
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 // nolint

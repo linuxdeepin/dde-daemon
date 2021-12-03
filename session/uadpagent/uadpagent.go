@@ -14,7 +14,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"pkg.deepin.io/dde/daemon/session/common"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen em -type UadpAgent

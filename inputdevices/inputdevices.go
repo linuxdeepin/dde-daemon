@@ -21,7 +21,7 @@ package inputdevices
 
 import (
 	"github.com/linuxdeepin/go-lib/log"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen -type Keyboard,Mouse,Touchpad,TrackPoint,Wacom keyboard.go mouse.go touchpad.go trackpoint.go wacom.go

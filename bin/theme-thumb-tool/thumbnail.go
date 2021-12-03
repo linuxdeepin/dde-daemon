@@ -32,7 +32,7 @@ import (
 	"github.com/linuxdeepin/dde-api/thumbnails/gtk"
 	"github.com/linuxdeepin/dde-api/thumbnails/icon"
 	"github.com/linuxdeepin/dde-api/thumbnails/images"
-	"pkg.deepin.io/dde/daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
 )
 
 const (

@@ -29,7 +29,7 @@ import (
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	btcommon "pkg.deepin.io/dde/daemon/common/bluetooth"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 )
 
 const (

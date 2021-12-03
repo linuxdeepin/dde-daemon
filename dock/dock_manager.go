@@ -41,7 +41,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	x "github.com/linuxdeepin/go-x11-client"
-	"pkg.deepin.io/dde/daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 type Manager struct {

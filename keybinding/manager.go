@@ -46,7 +46,7 @@ import (
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
-	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 //go:generate dbusutil-gen em -type Manager

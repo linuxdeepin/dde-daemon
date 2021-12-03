@@ -24,7 +24,7 @@ import (
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/gettext"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 func getSettingConnectionTimestamp(settings map[string]map[string]dbus.Variant) uint64 {

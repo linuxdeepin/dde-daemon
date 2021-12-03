@@ -19,7 +19,7 @@ import (
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"pkg.deepin.io/dde/daemon/accounts/users"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const pwdChangerUserName = "deepin_pwd_changer" //#nosec G101

@@ -37,10 +37,10 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/strv"
-	"pkg.deepin.io/dde/daemon/common/dsync"
-	"pkg.deepin.io/dde/daemon/network/nm"
-	"pkg.deepin.io/dde/daemon/network/proxychains"
-	"pkg.deepin.io/dde/daemon/session/common"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/proxychains"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 const (

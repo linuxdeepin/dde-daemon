@@ -23,7 +23,7 @@ import (
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keybind"
 	"github.com/linuxdeepin/go-x11-client/util/mousebind"
-	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 func (m *Manager) selectKeystroke() error {

@@ -36,7 +36,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"pkg.deepin.io/dde/daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 const grubScriptFile = "/boot/grub/grub.cfg"

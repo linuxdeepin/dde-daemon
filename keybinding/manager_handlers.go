@@ -25,7 +25,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
-	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
+	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 func (m *Manager) shouldShowCapsLockOSD() bool {

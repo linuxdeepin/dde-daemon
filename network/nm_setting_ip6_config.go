@@ -20,7 +20,7 @@
 package network
 
 import (
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 func initSettingSectionIpv6(data connectionData) {

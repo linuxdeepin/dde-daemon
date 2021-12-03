@@ -27,8 +27,8 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
-	"pkg.deepin.io/dde/daemon/appearance/background"
-	"pkg.deepin.io/dde/daemon/appearance/subthemes"
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
 )
 
 var (

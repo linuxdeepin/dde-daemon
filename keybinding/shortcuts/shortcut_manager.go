@@ -41,7 +41,7 @@ import (
 	"github.com/linuxdeepin/go-x11-client/util/keybind"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
-	"pkg.deepin.io/dde/daemon/keybinding/util"
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 var logger *log.Logger

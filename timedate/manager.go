@@ -31,8 +31,8 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	ddbus "pkg.deepin.io/dde/daemon/dbus"
-	"pkg.deepin.io/dde/daemon/session/common"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 const (

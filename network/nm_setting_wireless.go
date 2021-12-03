@@ -23,7 +23,7 @@ import (
 	"os"
 
 	dbus "github.com/godbus/dbus"
-	"pkg.deepin.io/dde/daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 func newWirelessHotspotConnectionForDevice(id, uuid string, devPath dbus.ObjectPath, active bool) (cpath dbus.ObjectPath, err error) {
@@ -57,7 +57,7 @@ func newWirelessConnectionData(id, uuid string, ssid []byte, secType apSecType) 
 		setSettingWirelessSsid(data, ssid)
 	}
 	setSettingWirelessMode(data, nm.NM_SETTING_WIRELESS_MODE_INFRA)
-	var err error 
+	var err error
 	switch secType {
 	case apSecNone:
 		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "none")
@@ -70,7 +70,7 @@ func newWirelessConnectionData(id, uuid string, ssid []byte, secType apSecType) 
 	}
 	if err != nil {
 		logger.Debug("failed to set VKWirelessSecutiryKeyMgmt")
-		return 
+		return
 	}
 
 	initSettingSectionIpv4(data)
@@ -84,7 +84,7 @@ func newWirelessHotspotConnectionData(id, uuid string) (data connectionData) {
 	err := logicSetSettingWirelessMode(data, nm.NM_SETTING_WIRELESS_MODE_AP)
 	if err != nil {
 		logger.Debug("failed to set WirelessMode")
-		return 
+		return
 	}
 	setSettingConnectionAutoconnect(data, false)
 	return
@@ -99,7 +99,7 @@ func logicSetSettingWirelessMode(data connectionData, value string) (err error) 
 			err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "wpa-psk")
 			if err != nil {
 				logger.Debug("failed to set VkWirelessKeyMgmt")
-				return err 
+				return err
 			}
 		}
 		setSettingIP4ConfigMethod(data, nm.NM_SETTING_IP4_CONFIG_METHOD_SHARED)

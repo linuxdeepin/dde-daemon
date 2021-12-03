@@ -73,7 +73,7 @@
 [3.23.1] 2019-03-01
 *   feat(bluetooth): when disconnected quickly after connecting, automatically try to connect
 *   chore(miracast): use go-dbus-factory
-*   chore: use pkg.deepin.io/gir
+*   chore: use github.com/linuxdeepin/go-gir
 *   fix(launcher) lost dbus conn when file name is invalid utf8 string
 *   fix(dock): items removed when application updated
 *   chore: change log level to warn
@@ -271,8 +271,8 @@
 *   feat(keybinding): show osd for audio-mic-mute and wlan
 *   feat(power): add power saving mode
 *   chore(accounts): use lib policykit1 new feature
-*   chore(timedated): no use pkg.deepin.io/lib/polkit
-*   chore(grub2): no use pkg.deepin.io/lib/polkit
+*   chore(timedated): no use github.com/linuxdeepin/go-lib/polkit
+*   chore(grub2): no use github.com/linuxdeepin/go-lib/polkit
 *   chore(accounts): use go-dbus-factory
 *   chore(apps): use go-dbus-factory
 *   chore(timedated): use go-dbus-factory

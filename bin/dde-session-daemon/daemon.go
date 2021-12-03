@@ -31,8 +31,8 @@ import (
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-api/session"
-	"pkg.deepin.io/dde/daemon/calltrace"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/calltrace"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type SessionDaemon

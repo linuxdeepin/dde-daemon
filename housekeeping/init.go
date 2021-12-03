@@ -28,7 +28,7 @@ import (
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/utils"
-	"pkg.deepin.io/dde/daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 const (
