@@ -24,7 +24,7 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/gsettings"
-	"pkg.deepin.io/dde/api/dxinput"
+	"github.com/linuxdeepin/dde-api/dxinput"
 )
 
 func (m *Manager) handleGSettings() {

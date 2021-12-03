@@ -24,7 +24,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"pkg.deepin.io/dde/api/soundutils"
+	"github.com/linuxdeepin/dde-api/soundutils"
 )
 
 // nolint

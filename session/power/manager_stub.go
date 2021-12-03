@@ -20,7 +20,7 @@
 package power
 
 import (
-	"pkg.deepin.io/dde/api/powersupply/battery"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
 )
 
 const (

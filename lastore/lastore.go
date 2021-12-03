@@ -19,7 +19,7 @@ import (
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/strv"
-	"pkg.deepin.io/dde/api/powersupply/battery"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
 	"pkg.deepin.io/dde/daemon/common/dsync"
 )
 

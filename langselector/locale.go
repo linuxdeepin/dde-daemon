@@ -43,9 +43,9 @@ import (
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
-	"pkg.deepin.io/dde/api/lang_info"
-	"pkg.deepin.io/dde/api/language_support"
-	"pkg.deepin.io/dde/api/userenv"
+	"github.com/linuxdeepin/dde-api/lang_info"
+	"github.com/linuxdeepin/dde-api/language_support"
+	"github.com/linuxdeepin/dde-api/userenv"
 	ddbus "pkg.deepin.io/dde/daemon/dbus"
 )
 

@@ -32,7 +32,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/strv"
-	"pkg.deepin.io/dde/api/soundutils"
+	"github.com/linuxdeepin/dde-api/soundutils"
 )
 
 //go:generate dbusutil-gen em -type Manager

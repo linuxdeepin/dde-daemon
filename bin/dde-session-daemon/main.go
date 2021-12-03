@@ -48,8 +48,8 @@ import (
 	"github.com/linuxdeepin/go-lib/proxy"
 	"github.com/linuxdeepin/go-lib/utils"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
-	"pkg.deepin.io/dde/api/soundutils"
-	"pkg.deepin.io/dde/api/userenv"
+	"github.com/linuxdeepin/dde-api/soundutils"
+	"github.com/linuxdeepin/dde-api/userenv"
 	"pkg.deepin.io/dde/daemon/loader"
 )
 

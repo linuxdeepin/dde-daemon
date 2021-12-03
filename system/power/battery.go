@@ -28,7 +28,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/api/powersupply/battery"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
 )
 
 type Battery struct {

@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/api/inhibit_hint"
+	"github.com/linuxdeepin/dde-api/inhibit_hint"
 	"pkg.deepin.io/dde/daemon/grub_common"
 )
 

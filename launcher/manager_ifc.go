@@ -31,7 +31,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"pkg.deepin.io/dde/api/soundutils"
+	"github.com/linuxdeepin/dde-api/soundutils"
 )
 
 const (

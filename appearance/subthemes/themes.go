@@ -28,8 +28,8 @@ import (
 	"github.com/godbus/dbus"
 	cursorhelper "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.cursorhelper"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
-	"pkg.deepin.io/dde/api/theme_thumb"
-	"pkg.deepin.io/dde/api/themes"
+	"github.com/linuxdeepin/dde-api/theme_thumb"
+	"github.com/linuxdeepin/dde-api/themes"
 )
 
 const (

@@ -32,8 +32,8 @@ import (
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/api/powersupply"
-	"pkg.deepin.io/dde/api/powersupply/battery"
+	"github.com/linuxdeepin/dde-api/powersupply"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
 )
 
 var noUEvent bool
@@ -44,7 +44,7 @@ func init() {
 	}
 }
 
-//go:generate dbusutil-gen -type Manager,Battery -import pkg.deepin.io/dde/api/powersupply/battery manager.go battery.go
+//go:generate dbusutil-gen -type Manager,Battery -import github.com/linuxdeepin/dde-api/powersupply/battery manager.go battery.go
 //go:generate dbusutil-gen em -type Manager,Battery
 
 // https://www.kernel.org/doc/Documentation/power/power_supply_class.txt

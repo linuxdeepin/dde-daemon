@@ -41,7 +41,7 @@ import (
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"github.com/linuxdeepin/go-x11-client/util/wm/icccm"
-	"pkg.deepin.io/dde/api/dxinput"
+	"github.com/linuxdeepin/dde-api/dxinput"
 	ddbus "pkg.deepin.io/dde/daemon/dbus"
 )
 

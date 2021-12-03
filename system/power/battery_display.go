@@ -22,7 +22,7 @@ package power
 import (
 	"time"
 
-	"pkg.deepin.io/dde/api/powersupply/battery"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
 )
 
 func (m *Manager) refreshBatteryDisplay() {

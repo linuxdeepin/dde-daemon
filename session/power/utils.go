@@ -29,7 +29,7 @@ import (
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
-	"pkg.deepin.io/dde/api/soundutils"
+	"github.com/linuxdeepin/dde-api/soundutils"
 )
 
 func (m *Manager) waitLockShowing(timeout time.Duration) {

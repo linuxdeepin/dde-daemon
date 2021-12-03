@@ -25,7 +25,7 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"pkg.deepin.io/dde/api/language_support"
+	"github.com/linuxdeepin/dde-api/language_support"
 )
 
 const (

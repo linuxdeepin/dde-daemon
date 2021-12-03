@@ -30,7 +30,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
-	"pkg.deepin.io/dde/api/dxinput"
+	"github.com/linuxdeepin/dde-api/dxinput"
 )
 
 const (

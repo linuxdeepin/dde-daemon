@@ -2,7 +2,7 @@ package grub_common
 
 import (
 	"github.com/linuxdeepin/go-x11-client"
-	"pkg.deepin.io/dde/api/drandr"
+	"github.com/linuxdeepin/dde-api/drandr"
 )
 
 func getGfxmodesWithOutput(modes drandr.ModeInfos, output drandr.OutputInfo) (result Gfxmodes) {

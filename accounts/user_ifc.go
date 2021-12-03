@@ -41,7 +41,7 @@ import (
 	"github.com/linuxdeepin/go-lib/imgutil"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"pkg.deepin.io/dde/api/lang_info"
+	"github.com/linuxdeepin/dde-api/lang_info"
 	"pkg.deepin.io/dde/daemon/accounts/users"
 )
 
