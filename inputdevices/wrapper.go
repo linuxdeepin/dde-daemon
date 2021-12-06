@@ -28,6 +28,7 @@ import "C"
 import (
 	"encoding/json"
 	"strings"
+	"os"
 
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/dde-api/dxinput"
@@ -166,25 +167,29 @@ func getMouseInfos(force bool) Mouses {
 		return _mouseInfos
 	}
 
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	isWaylandSession := strings.Contains(sessionType, "wayland")
 	_mouseInfos = Mouses{}
 	for _, info := range getDeviceInfos(force) {
 		if info.Type == common.DevTypeMouse {
 			tmp, _ := dxinput.NewMouseFromDeviceInfo(info)
 			mouse := getMouseInfoByDxMouse(tmp)
 
-			// phys 用来标识物理设备，若俩设备的 phys 相同，说明是同一物理设备，
-			// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
-			found := false
-			for _, touchpad := range _tpadInfos {
-				if touchpad.phys == mouse.phys {
-					found = true
-					break
+			if !isWaylandSession {
+				// phys 用来标识物理设备，若俩设备的 phys 相同，说明是同一物理设备，
+				// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
+				found := false
+				for _, touchpad := range _tpadInfos {
+					if touchpad.phys == mouse.phys {
+						found = true
+						break
+					}
 				}
-			}
 
-			if found {
-				logger.Debug("mouse device ignored:", tmp.Name)
-				continue
+				if found {
+					logger.Debug("mouse device ignored:", tmp.Name)
+					continue
+				}
 			}
 
 			_mouseInfos = append(_mouseInfos, mouse)
