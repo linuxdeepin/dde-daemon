@@ -85,6 +85,10 @@ func (m *Manager) attachOrDetachWindow(winInfo WindowInfoImp) {
 	showOnDock := m.shouldShowOnDock(winInfo)
 	logger.Debugf("win %v showOnDock? %v", win, showOnDock)
 
+	// attach 或 detach 操作顺序执行
+	m.windowActMu.Lock()
+	defer m.windowActMu.Unlock()
+
 	entry := winInfo.getEntry()
 	if entry != nil {
 		if !showOnDock {

@@ -90,6 +90,7 @@ type Manager struct {
 	windowPatterns     WindowPatterns
 
 	forceQuitAppStatus forceQuitAppType
+	windowActMu        sync.Mutex
 
 	// dbus objects:
 	launcher     launcher.Launcher

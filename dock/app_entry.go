@@ -203,7 +203,7 @@ func (entry *AppEntry) attachWindow(winInfo WindowInfoImp) bool {
 	defer entry.PropsMu.Unlock()
 
 	if _, ok := entry.windows[win]; ok {
-		logger.Debugf("win %v is already attach to entry", win)
+		logger.Infof("win %v is already attach to entry", win)
 		return false
 	}
 
