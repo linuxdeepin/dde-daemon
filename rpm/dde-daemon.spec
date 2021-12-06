@@ -116,6 +116,7 @@ Daemon handling the DDE session settings
 %prep
 %autosetup -p1 -n %{name}-%{version}
 patch langselector/locale.go < rpm/locale.go.patch
+patch accounts/users/passwd.go < rpm/passwd.go.patch
 
 # Fix library exec path
 sed -i '/deepin/s|lib|libexec|' Makefile
