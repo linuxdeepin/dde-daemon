@@ -21,6 +21,7 @@ package power
 
 import (
 	"syscall"
+	"time"
 
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
@@ -77,6 +78,13 @@ func newSleepInhibitor(login1Manager *login1.Manager, daemon *daemon.Daemon) *sl
 			network.HandlePrepareForSleep(false)
 			bluetooth.HandlePrepareForSleep(false)
 			appearance.HandlePrepareForSleep(false)
+
+			// 龙芯3A5000机器会出现待机时未拉起锁屏，导致在系统唤醒时直接进入桌面的问题
+			// 此处在系统唤醒时重新拉起一次锁屏界面
+			if _manager.SleepLock.Get() {
+				_manager.lockWaitShow(5*time.Second, false)
+			}
+
 			err := inhibitor.block()
 			if err != nil {
 				logger.Warning(err)
