@@ -44,7 +44,6 @@ import (
 	_ "pkg.deepin.io/dde/daemon/debug"
 	_ "pkg.deepin.io/dde/daemon/dock"
 	_ "pkg.deepin.io/dde/daemon/gesture"
-	_ "pkg.deepin.io/dde/daemon/grub_gfx"
 	_ "pkg.deepin.io/dde/daemon/housekeeping"
 	_ "pkg.deepin.io/dde/daemon/inputdevices"
 	_ "pkg.deepin.io/dde/daemon/keybinding"
