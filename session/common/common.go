@@ -3,12 +3,9 @@ package common
 import (
 	"errors"
 	"fmt"
-	"os"
-	"os/user"
 	"time"
 
 	"github.com/godbus/dbus"
-	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 )
 
@@ -62,37 +59,4 @@ func ActivateSysDaemonService(serviceName string) error {
 		//fmt.Println("sleep")
 	}
 	return errors.New("reach max number of retires")
-}
-
-func IsStandardUser() (bool, error) {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		return false, err
-	}
-	acct := accounts.NewAccounts(conn)
-	currentUser, err := user.Current()
-	if err != nil {
-		return false, err
-	}
-
-	objPath, err := acct.FindUserById(0, currentUser.Uid)
-	if err != nil {
-		return false, err
-	}
-
-	userObj, err := accounts.NewUser(conn, dbus.ObjectPath(objPath))
-	if err != nil {
-		return false, err
-	}
-
-	accountType, err := userObj.AccountType().Get(0)
-	if err != nil {
-		return false, err
-	}
-
-	return accountType == 0, nil
-}
-
-func IsNormalUser() bool {
-	return os.Geteuid() != 0
 }

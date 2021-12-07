@@ -37,7 +37,7 @@ import (
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"pkg.deepin.io/dde/daemon/keybinding/shortcuts"
-	"pkg.deepin.io/dde/daemon/session/common"
+	"pkg.deepin.io/dde/daemon/session/custom"
 	gio "pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/dbusutil/gsprop"
@@ -196,8 +196,9 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	// 白名单
 	if gio.SettingsSchemaSourceGetDefault().Lookup(gsSchemaRuleWhiteList, true) != nil {
+		custom.InitGSettings()
 		m.gsRuleWhiteList = gio.NewSettings(gsSchemaRuleWhiteList)
-		if common.IsNormalUser() && m.gsRuleWhiteList.GetSchema().HasKey(gsKeyNormalUser) {
+		if custom.IsNormalUser() && m.gsRuleWhiteList.GetSchema().HasKey(gsKeyNormalUser) {
 			m.whitelist.Bind(m.gsRuleWhiteList, gsKeyNormalUser)
 			m.hasWhitelist = true
 			logger.Debug("whitelist for normal user", m.whitelist.Get())

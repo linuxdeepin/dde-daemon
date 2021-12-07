@@ -31,7 +31,6 @@ import (
 	wmswitcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
 	x "github.com/linuxdeepin/go-x11-client"
 	"pkg.deepin.io/dde/daemon/common/dsync"
-	"pkg.deepin.io/dde/daemon/session/common"
 	"pkg.deepin.io/gir/gio-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gsettings"
@@ -224,16 +223,6 @@ func (m *Manager) init() error {
 	m.smartHideModeTimer.Stop()
 
 	m.listenSettingsChanged()
-
-	// 普通用户屏蔽任务栏
-	if common.IsNormalUser() {
-		gs := gio.NewSettings(mainwindowSchema)
-		defer gs.Unref()
-
-		if gs.GetSchema().HasKey(settingKeyOnlyShowByWin) {
-			gs.SetBoolean(settingKeyOnlyShowByWin, true)
-		}
-	}
 
 	m.windowInfoMap = make(map[x.Window]*WindowInfo)
 	m.windowPatterns, err = loadWindowPatterns(windowPatternsFile)
