@@ -180,7 +180,7 @@ func (info UserInfo) isHumanUser(configLoginDefs string) bool {
 		if systemType() == "Server" {
 			return true
 		}
-		return false
+		return systemRootDisplay()
 	}
 
 	if CanNoPasswdLogin(info.Name) {

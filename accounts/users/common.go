@@ -71,3 +71,18 @@ func systemType() string {
 	}
 	return typ
 }
+
+func systemRootDisplay() bool {
+	kf := keyfile.NewKeyFile()
+	err := kf.LoadFromFile("/etc/deepin/dde-system.conf")
+	if err != nil {
+		fmt.Println("load version file failed, err: ", err)
+		return false
+	}
+	ret, err := kf.GetBool("Account", "RootDisplay")
+	if err != nil {
+		fmt.Println("get version root display failed, err: ", err)
+		return false
+	}
+	return ret
+}
