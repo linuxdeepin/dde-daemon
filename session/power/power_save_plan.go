@@ -689,8 +689,6 @@ func (psp *powerSavePlan) HandleIdleOff() {
 	psp.interruptTasks()
 	psp.manager.setDPMSModeOn()
 	psp.resetBrightness()
-
-	psp.manager.IsBlockLockScreenHasNotified = false
 }
 
 func (psp *powerSavePlan) isWindowFullScreenAndFocused(xid x.Window) (bool, error) {
