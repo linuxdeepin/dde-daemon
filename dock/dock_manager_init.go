@@ -261,6 +261,12 @@ func (m *Manager) init() error {
 	m.listenLauncherSignal()
 	m.listenWMSwitcherSignal()
 
+	//systemd拉起bamfdaemon可能会失败，导致阻塞，手动拉一遍
+	err = m.startBAMFDaemon(sessionBus)
+	if err != nil {
+		logger.Warning("startBAMFDaemon failed")
+	}
+
 	m.registerIdentifyWindowFuncs()
 	m.initEntries()
 	m.pluginSettings = newPluginSettingsStorage(m)
@@ -278,5 +284,18 @@ func (m *Manager) init() error {
 
 	go m.eventHandleLoop()
 	m.listenRootWindowXEvent()
+	return nil
+}
+
+func (m *Manager)startBAMFDaemon(bus *dbus.Conn) error {
+	systemdUser := bus.Object("org.freedesktop.systemd1", "/org/freedesktop/systemd1")
+	var jobPath dbus.ObjectPath
+	err := systemdUser.Call("org.freedesktop.systemd1.Manager.StartUnit",
+		dbus.FlagNoAutoStart, "bamfdaemon.service", "replace").Store(&jobPath)
+	if err != nil {
+		logger.Warning("failed to start bamfdaemon.service:", err)
+		return err
+	}
+
 	return nil
 }
