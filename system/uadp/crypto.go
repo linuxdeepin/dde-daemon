@@ -100,7 +100,7 @@ func (ctx *CryptoContext) CreateKey() bool {
 	ctx.UUID = uuid(8)
 	var auth C.TC_BUFFER
 	auth.size = C.uint(len(ctx.UUID))
-	auth.buffer = (*C.uchar)(C.malloc(C.ulong(auth.size)))
+	auth.buffer = (*C.uchar)(C.malloc(C.size_t(auth.size)))
 	if auth.size > 0 {
 		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.ulong(auth.size))
 	}
@@ -140,7 +140,7 @@ func (ctx *CryptoContext) Encrypt(data []byte) []byte {
 	// 输入数据
 	var input C.TC_BUFFER
 	input.size = C.uint(len(data))
-	input.buffer = (*C.uchar)(C.malloc(C.ulong(input.size)))
+	input.buffer = (*C.uchar)(C.malloc(C.size_t(input.size)))
 	if input.size > 0 {
 		C.memcpy(unsafe.Pointer(input.buffer), unsafe.Pointer(&data[0]), C.ulong(input.size))
 	}
@@ -148,7 +148,7 @@ func (ctx *CryptoContext) Encrypt(data []byte) []byte {
 	// 认证信息
 	var auth C.TC_BUFFER
 	auth.size = C.uint(len(ctx.UUID))
-	auth.buffer = (*C.uchar)(C.malloc(C.ulong(auth.size)))
+	auth.buffer = (*C.uchar)(C.malloc(C.size_t(auth.size)))
 	if auth.size > 0 {
 		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.ulong(auth.size))
 	}
@@ -179,7 +179,7 @@ func (ctx *CryptoContext) Decrypt(data []byte) []byte {
 	// 输入数据
 	var input C.TC_BUFFER
 	input.size = C.uint(len(data))
-	input.buffer = (*C.uchar)(C.malloc(C.ulong(input.size)))
+	input.buffer = (*C.uchar)(C.malloc(C.size_t(input.size)))
 	if input.size > 0 {
 		C.memcpy(unsafe.Pointer(input.buffer), unsafe.Pointer(&data[0]), C.ulong(input.size))
 	}
@@ -187,7 +187,7 @@ func (ctx *CryptoContext) Decrypt(data []byte) []byte {
 	// 认证信息
 	var auth C.TC_BUFFER
 	auth.size = C.uint(len(ctx.UUID))
-	auth.buffer = (*C.uchar)(C.malloc(C.ulong(auth.size)))
+	auth.buffer = (*C.uchar)(C.malloc(C.size_t(auth.size)))
 	if auth.size > 0 {
 		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.ulong(auth.size))
 	}
