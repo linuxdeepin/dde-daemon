@@ -150,7 +150,11 @@ func (m *Manager) handleLauncherItemUpdated(itemInfo launcher.ItemInfo) {
 	}
 
 	appInfo := NewAppInfoFromFile(desktopFile)
-	entry.appInfo = appInfo
+	if appInfo == nil {
+		logger.Warningf("failed to new app info from file %q: %v", desktopFile, err)
+		return
+	}
+	entry.setAppInfo(appInfo)
 	entry.innerId = appInfo.innerId
 }
 
