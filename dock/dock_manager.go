@@ -196,7 +196,6 @@ func (m *Manager) ActivateWindow(win uint32) *dbus.Error {
 
 // CloseWindow会将传入id的窗口关闭。
 func (m *Manager) CloseWindow(win uint32) *dbus.Error {
-
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	if strings.Contains(sessionType, "wayland") {
 		winInfo := m.findWindowByXid(x.Window(win))
