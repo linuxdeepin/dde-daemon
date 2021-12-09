@@ -102,7 +102,7 @@ func (ctx *CryptoContext) CreateKey() bool {
 	auth.size = C.uint(len(ctx.UUID))
 	auth.buffer = (*C.uchar)(C.malloc(C.size_t(auth.size)))
 	if auth.size > 0 {
-		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.ulong(auth.size))
+		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.size_t(auth.size))
 	}
 
 	ret := C.cryptoCreateKey(ctx.handle, &ctx.PrimaryIndex, &ctx.KeyIndex, &auth)
@@ -142,7 +142,7 @@ func (ctx *CryptoContext) Encrypt(data []byte) []byte {
 	input.size = C.uint(len(data))
 	input.buffer = (*C.uchar)(C.malloc(C.size_t(input.size)))
 	if input.size > 0 {
-		C.memcpy(unsafe.Pointer(input.buffer), unsafe.Pointer(&data[0]), C.ulong(input.size))
+		C.memcpy(unsafe.Pointer(input.buffer), unsafe.Pointer(&data[0]), C.size_t(input.size))
 	}
 
 	// 认证信息
@@ -150,7 +150,7 @@ func (ctx *CryptoContext) Encrypt(data []byte) []byte {
 	auth.size = C.uint(len(ctx.UUID))
 	auth.buffer = (*C.uchar)(C.malloc(C.size_t(auth.size)))
 	if auth.size > 0 {
-		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.ulong(auth.size))
+		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.size_t(auth.size))
 	}
 
 	// 加密
@@ -181,7 +181,7 @@ func (ctx *CryptoContext) Decrypt(data []byte) []byte {
 	input.size = C.uint(len(data))
 	input.buffer = (*C.uchar)(C.malloc(C.size_t(input.size)))
 	if input.size > 0 {
-		C.memcpy(unsafe.Pointer(input.buffer), unsafe.Pointer(&data[0]), C.ulong(input.size))
+		C.memcpy(unsafe.Pointer(input.buffer), unsafe.Pointer(&data[0]), C.size_t(input.size))
 	}
 
 	// 认证信息
@@ -189,7 +189,7 @@ func (ctx *CryptoContext) Decrypt(data []byte) []byte {
 	auth.size = C.uint(len(ctx.UUID))
 	auth.buffer = (*C.uchar)(C.malloc(C.size_t(auth.size)))
 	if auth.size > 0 {
-		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.ulong(auth.size))
+		C.memcpy(unsafe.Pointer(auth.buffer), unsafe.Pointer(&([]byte)(ctx.UUID)[0]), C.size_t(auth.size))
 	}
 
 	// 解密
