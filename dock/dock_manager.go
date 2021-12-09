@@ -196,10 +196,24 @@ func (m *Manager) ActivateWindow(win uint32) *dbus.Error {
 
 // CloseWindow会将传入id的窗口关闭。
 func (m *Manager) CloseWindow(win uint32) *dbus.Error {
-	err := closeWindow(x.Window(win), 0)
-	if err != nil {
-		logger.Warning("Close window failed:", err)
-		return dbusutil.ToError(err)
+
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		winInfo := m.findWindowByXid(x.Window(win))
+		if winInfo == nil {
+			return dbusutil.ToError(fmt.Errorf("not found window %d", win))
+		}
+		err := winInfo.close(0)
+		if err != nil {
+			logger.Warningf("failed to close window %d: %v", win, err)
+			return dbusutil.ToError(err)
+		}
+	} else {
+		err := closeWindow(x.Window(win), 0)
+		if err != nil {
+			logger.Warning("Close window failed:", err)
+			return dbusutil.ToError(err)
+		}
 	}
 	return nil
 }
