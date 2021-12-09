@@ -27,6 +27,10 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
+	"github.com/linuxdeepin/dde-daemon/network/proxychains"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
 	sysNetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
@@ -37,10 +41,6 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
-	"github.com/linuxdeepin/dde-daemon/network/proxychains"
-	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 const (
@@ -248,6 +248,18 @@ func (m *Manager) init() {
 		if !avail {
 			return
 		}
+		// check if current pri
+		typ, err := nmManager.PrimaryConnectionType().Get(0)
+		if err != nil {
+			logger.Warningf("get primary type failed, err: %v", err)
+			return
+		}
+		// check if primary type is already vpn
+		if typ == nm.NM_SETTING_VPN_SETTING_NAME {
+			logger.Debug("current primary typ is already vpn, dont need to reactive once")
+			return
+		}
+		logger.Debugf("current primary typ is %v, prop changed: %v need to reactive vpn", typ, value)
 		// get delay vpn state
 		delay := m.getDelayEnableVpn()
 		// if vpn enable is true, but network disconnect last time, try to auto connect vpn.
