@@ -32,7 +32,6 @@ import (
 	dbus "github.com/godbus/dbus"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
 	"pkg.deepin.io/dde/daemon/accounts/users"
-	"pkg.deepin.io/dde/daemon/session/custom"
 	glib "pkg.deepin.io/gir/glib-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gdkpixbuf"
@@ -830,7 +829,8 @@ func updateConfigPath(username string) {
 
 // 定制需求，普通用户开启自动登录和无密码登录
 func (u *User) customizedService() {
-	if !custom.IsNormalUser() {
+	if u.Uid == "0" {
+		logger.Debug("user uid is 0")
 		return
 	}
 
