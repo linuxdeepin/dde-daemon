@@ -11,9 +11,11 @@ import (
 )
 
 const (
+	dockSchema                = "com.deepin.dde.dock"
 	dockMainWindowSchema      = "com.deepin.dde.dock.mainwindow"
 	sessionShellSchema        = "com.deepin.dde.session-shell"
 	settingKeyOnlyShowByWin   = "only-show-by-win"
+	settingKeyHideMode        = "hide-mode"
 	settingKeySystemHibernate = "system-hibernate"
 	settingKeySystemShutdown  = "system-shutdown"
 	settingKeySystemSuspend   = "system-suspend"
@@ -55,6 +57,15 @@ func IsNormalUser() bool {
 	return os.Geteuid() != 0
 }
 
+func initDock() {
+	gs := gio.NewSettings(dockSchema)
+	defer gs.Unref()
+
+	if gs.GetSchema().HasKey(settingKeyHideMode) {
+		gs.SetString(settingKeyHideMode, "keep-hidden")
+	}
+}
+
 func initDockMainWindow() {
 	gs := gio.NewSettings(dockMainWindowSchema)
 	defer gs.Unref()
@@ -91,6 +102,7 @@ func initSessionShell() {
 func InitGSettings() {
 	// 普通用户屏蔽任务栏
 	if IsNormalUser() {
+		initDock()
 		initDockMainWindow()
 		initSessionShell()
 	}
