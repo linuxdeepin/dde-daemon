@@ -7,12 +7,12 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 const (
@@ -335,6 +335,11 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		if !hasValue || value == "" || value == "/" {
 			return
 		}
+		// check if type is ethernet,
+		// only ethernet should ensure connection exist
+		if deviceType != nm.NM_DEVICE_TYPE_ETHERNET {
+			return
+		}
 		// create active connection
 		acObj, err := networkmanager.NewActiveConnection(n.service.Conn(), value)
 		if err != nil {
@@ -362,12 +367,20 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		if !unsaved {
 			return
 		}
-		// save
-		err = conObj.Save(0)
+		logger.Infof("current device %v active connection is unsaved", devPath)
+		// make sure exist at least one
+		path, err := ensureWiredConnectionExist(devPath)
 		if err != nil {
-			logger.Warningf("saved failed, err: %v", err)
+			logger.Warningf("ensure wired connection failed, err: %v", err)
 			return
 		}
+		// try to active this connection
+		_, err = n.nmManager.ActivateConnection(0, path, devPath, "/")
+		if err != nil {
+			logger.Warningf("failed to active connection, err: %v", err)
+			return
+		}
+		logger.Infof("make sure wired connection active success, dev: %v, conn: %v", devPath, path)
 	})
 
 	if err != nil {

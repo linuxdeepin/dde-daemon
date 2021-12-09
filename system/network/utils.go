@@ -21,10 +21,10 @@ import (
 	"github.com/linuxdeepin/go-lib/utils"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/gettext"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 func getSettingConnectionTimestamp(settings map[string]map[string]dbus.Variant) uint64 {
@@ -124,6 +124,7 @@ func ensureWiredConnectionExist(devPath dbus.ObjectPath) (dbus.ObjectPath, error
 		logger.Warningf("get dev exist saved connection failed, err: %v", err)
 		return "", err
 	}
+	logger.Infof("make sure wired connection already exist path: %v", connPath)
 	// create system bus
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
@@ -175,6 +176,7 @@ func ensureWiredConnectionExist(devPath dbus.ObjectPath) (dbus.ObjectPath, error
 		}
 		connPath = path
 	}
+	logger.Infof("make sure wired connection result path: %v", connPath)
 	return connPath, nil
 }
 
@@ -208,6 +210,7 @@ func devExistSavedPath(devPath dbus.ObjectPath) (dbus.ObjectPath, error) {
 		logger.Warningf("get available connection failed, err: %v", err)
 		return "", err
 	}
+	logger.Infof("device %v available con: %v", devPath, conSl)
 	var path dbus.ObjectPath
 	var timestamp uint64
 	for _, conPath := range conSl {
@@ -349,7 +352,7 @@ func getCreateConnectionName() string {
 	} else {
 		name = fmt.Sprintf(Tr("Wired Connection %v"), num)
 	}
-	logger.Debugf("create name is %v", name)
+	logger.Infof("create name is %v", name)
 	return name
 }
 
