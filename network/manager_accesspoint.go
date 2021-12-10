@@ -25,10 +25,10 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 type apSecType uint32
@@ -77,6 +77,7 @@ type accessPoint struct {
 	Frequency    uint32
 	// add hidden property
 	Hidden bool
+	Flags  uint32
 }
 
 func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoint, err error) {
@@ -147,6 +148,7 @@ func (a *accessPoint) updateProps() {
 	a.SecuredInEap = getApSecType(a.nmAp) == apSecEap
 	a.Strength, _ = a.nmAp.Strength().Get(0)
 	a.Frequency, _ = a.nmAp.Frequency().Get(0)
+	a.Flags, _ = a.nmAp.Flags().Get(0)
 }
 
 func getApSecType(ap nmdbus.AccessPoint) apSecType {
