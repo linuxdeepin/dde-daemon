@@ -43,6 +43,7 @@ import (
 
 // #nosec G101
 const (
+	polkitActionUserAdministrationKeep = "com.deepin.daemon.accounts.user-administration-keep"
 	polkitActionUserAdministration     = "com.deepin.daemon.accounts.user-administration"
 	polkitActionChangeOwnData          = "com.deepin.daemon.accounts.change-own-user-data"
 	polkitActionEnableAutoLogin        = "com.deepin.daemon.accounts.enable-auto-login"
