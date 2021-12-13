@@ -38,6 +38,7 @@ const (
 	apSecWep
 	apSecPsk
 	apSecEap
+	apSecSae
 )
 const scanWifiDelayTime = 10 * time.Second
 const channelAutoChangeThreshold = 65
@@ -58,6 +59,8 @@ func (v apSecType) String() string {
 		return "wep"
 	case apSecPsk:
 		return "wpa-psk"
+	case apSecSae:
+		return "sae"
 	case apSecEap:
 		return "wpa-eap"
 	default:
@@ -144,18 +147,35 @@ func (m *Manager) destroyAccessPoint(ap *accessPoint) {
 func (a *accessPoint) updateProps() {
 	ssid, _ := a.nmAp.Ssid().Get(0)
 	a.Ssid = decodeSsid(ssid)
-	a.Secured = getApSecType(a.nmAp) != apSecNone
-	a.SecuredInEap = getApSecType(a.nmAp) == apSecEap
+	typ, err := getApSecType(a.nmAp)
+	if err != nil {
+		logger.Warningf("get ap sec type failed, err: %v", err)
+	} else {
+		a.Secured = typ != apSecNone
+		a.SecuredInEap = typ == apSecEap
+	}
 	a.Strength, _ = a.nmAp.Strength().Get(0)
 	a.Frequency, _ = a.nmAp.Frequency().Get(0)
 	a.Flags, _ = a.nmAp.Flags().Get(0)
 }
 
-func getApSecType(ap nmdbus.AccessPoint) apSecType {
-	flags, _ := ap.Flags().Get(0)
-	wpaFlags, _ := ap.WpaFlags().Get(0)
-	rsnFlags, _ := ap.RsnFlags().Get(0)
-	return doParseApSecType(flags, wpaFlags, rsnFlags)
+func getApSecType(ap nmdbus.AccessPoint) (apSecType, error) {
+	flags, err := ap.Flags().Get(0)
+	if err != nil {
+		logger.Warningf("get flags failed, err: %v", err)
+		return apSecNone, err
+	}
+	wpaFlags, err := ap.WpaFlags().Get(0)
+	if err != nil {
+		logger.Warningf("get wpa flags failed, err: %v", err)
+		return apSecNone, err
+	}
+	rsnFlags, err := ap.RsnFlags().Get(0)
+	if err != nil {
+		logger.Warningf("get rsn flags failed, err: %v", err)
+		return apSecNone, err
+	}
+	return doParseApSecType(flags, wpaFlags, rsnFlags), nil
 }
 
 func doParseApSecType(flags, wpaFlags, rsnFlags uint32) apSecType {
@@ -172,6 +192,10 @@ func doParseApSecType(flags, wpaFlags, rsnFlags uint32) apSecType {
 	}
 	if (wpaFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_802_1X != 0) || (rsnFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_802_1X != 0) {
 		r = apSecEap
+	}
+	// prefer sae
+	if wpaFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_SAE != 0 || rsnFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_SAE != 0 {
+		r = apSecSae
 	}
 	return r
 }
@@ -327,6 +351,8 @@ func fixApSecTypeChange(uuid string, secType apSecType) (needUserEdit bool, err 
 		err = logicSetSettingVkWirelessSecurityKeyMgmt(connData, "wep")
 	case apSecPsk:
 		err = logicSetSettingVkWirelessSecurityKeyMgmt(connData, "wpa-psk")
+	case apSecSae:
+		err = logicSetSettingVkWirelessSecurityKeyMgmt(connData, "sae")
 	case apSecEap:
 		needUserEdit = true
 		return
@@ -358,7 +384,12 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 	if err != nil {
 		return
 	}
-	secType := getApSecType(nmAp)
+	secType, err := getApSecType(nmAp)
+	if err != nil {
+		logger.Warningf("get ap sec typ failed, err: %v", err)
+	} else {
+		logger.Debugf("active access point sec %v", secType)
+	}
 	if uuid != "" {
 		var needUserEdit bool
 		needUserEdit, err = fixApSecTypeChange(uuid, secType)

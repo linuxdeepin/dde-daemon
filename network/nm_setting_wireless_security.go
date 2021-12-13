@@ -38,6 +38,8 @@ func getSettingVkWirelessSecurityKeyMgmt(data connectionData) (value string) {
 		value = "wep"
 	case "wpa-psk":
 		value = "wpa-psk"
+	case "sae":
+		value = "sae"
 	case "wpa-eap":
 		value = "wpa-eap"
 	}
@@ -57,7 +59,8 @@ func getApSecTypeFromConnData(data connectionData) (apSecType, error) {
 		}
 	case "wpa-psk":
 		return apSecPsk, nil
-
+	case "sae":
+		return apSecSae, nil
 	case "wpa-eap":
 		return apSecEap, nil
 	}
@@ -98,6 +101,16 @@ func logicSetSettingVkWirelessSecurityKeyMgmt(data connectionData, value string)
 			nm.NM_SETTING_WIRELESS_SECURITY_PSK_FLAGS,
 		)
 		setSettingWirelessSecurityKeyMgmt(data, "wpa-psk")
+		setSettingWirelessSecurityPskFlags(data, nm.NM_SETTING_SECRET_FLAG_NONE)
+	case "sae":
+		addSetting(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME)
+		removeSetting(data, nm.NM_SETTING_802_1X_SETTING_NAME)
+		removeSettingKeyBut(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME,
+			nm.NM_SETTING_WIRELESS_SECURITY_KEY_MGMT,
+			nm.NM_SETTING_WIRELESS_SECURITY_PSK,
+			nm.NM_SETTING_WIRELESS_SECURITY_PSK_FLAGS,
+		)
+		setSettingWirelessSecurityKeyMgmt(data, "sae")
 		setSettingWirelessSecurityPskFlags(data, nm.NM_SETTING_SECRET_FLAG_NONE)
 	case "wpa-eap":
 		addSetting(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME)

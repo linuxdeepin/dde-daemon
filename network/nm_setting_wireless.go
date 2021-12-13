@@ -65,6 +65,8 @@ func newWirelessConnectionData(id, uuid string, ssid []byte, secType apSecType) 
 		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "wep")
 	case apSecPsk:
 		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "wpa-psk")
+	case apSecSae:
+		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "sae")
 	case apSecEap:
 		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "wpa-eap")
 	}

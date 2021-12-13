@@ -680,6 +680,7 @@ const (
 	NM_802_11_AP_SEC_GROUP_CCMP      = 128
 	NM_802_11_AP_SEC_KEY_MGMT_PSK    = 256
 	NM_802_11_AP_SEC_KEY_MGMT_802_1X = 512
+	NM_802_11_AP_SEC_KEY_MGMT_SAE    = 1024
 )
 
 // Enum ActivationStateFlags

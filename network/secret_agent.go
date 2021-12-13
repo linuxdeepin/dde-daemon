@@ -14,11 +14,11 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 const (
@@ -556,6 +556,10 @@ func getSecretFlagsKeyName(key string) string {
 			return "wep-key-flags"
 		}
 	}
+	// case nm dont hve sae-flags, reuse psk-flags at this time
+	if key == "sae" {
+		return "psk-flags"
+	}
 	return key + "-flags"
 }
 
@@ -570,7 +574,10 @@ func isMustAsk(data connectionData, settingName, secretKey string) bool {
 			if secretKey == "psk" {
 				return true
 			}
-
+		case "sae":
+			if secretKey == "sae" {
+				return true
+			}
 		case "none":
 			if secretKey == "wep-key0" && wepTxKeyIdx == 0 {
 				return true
@@ -705,7 +712,6 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 			} else if secretFlags == secretFlagNone {
 				secretStr, _ := getConnectionDataString(connectionData, settingName,
 					secretKey)
-
 				if requestNew {
 					secretStr = ""
 				}
@@ -998,7 +1004,7 @@ func getConnectionDataUint32(connectionData map[string]map[string]dbus.Variant,
 }
 
 var secretSettingKeys = map[string][]string{
-	"802-11-wireless-security": {"psk", "wep-key0", "wep-key1", "wep-key2", "wep-key3",
+	"802-11-wireless-security": {"sae", "psk", "wep-key0", "wep-key1", "wep-key2", "wep-key3",
 		"leap-password"},
 	"802-1x": {"password", "password-raw", "ca-cert-password",
 		"client-cert-password", "phase2-ca-cert-password", "phase2-client-cert-password",
