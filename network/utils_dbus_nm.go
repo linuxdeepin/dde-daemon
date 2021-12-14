@@ -27,11 +27,11 @@ import (
 	"strings"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 // Wrapper NetworkManger dbus methods to hide
@@ -308,18 +308,11 @@ func nmGeneralIsDeviceManaged(devPath dbus.ObjectPath) bool {
 	}
 	dev := d.Device()
 
-	state, _ := dev.State().Get(0)
-	if !isDeviceStateManaged(state) {
-		return false
+	state, err := dev.State().Get(0)
+	if err != nil {
+		logger.Warning(err)
 	}
-	devType, _ := dev.DeviceType().Get(0)
-	switch devType {
-	case nm.NM_DEVICE_TYPE_WIFI:
-		if !nmGetWirelessHardwareEnabled() {
-			return false
-		}
-	}
-	return true
+	return isDeviceStateManaged(state)
 }
 
 func nmGeneralGetDeviceSysPath(devPath dbus.ObjectPath) (sysPath string, err error) {
