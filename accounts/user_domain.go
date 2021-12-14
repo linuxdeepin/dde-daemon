@@ -22,6 +22,7 @@ package accounts
 import (
 	"fmt"
 	"path"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
@@ -107,6 +108,16 @@ func GetUserGroupsByUID(uid uint32) ([]string, error) {
 	sort.Strings(result)
 
 	return result, nil
+}
+
+func NewDomainUserByConfigInfo(userName, userUid string) *User {
+	var u = &User{
+		service:  nil,
+		UserName: userName,
+		Uid:      userUid,
+		HomeDir:  filepath.Join("/home/", userName),
+	}
+	return u
 }
 
 func NewDomainUser(uid uint32, service *dbusutil.Service) (*User, error) {

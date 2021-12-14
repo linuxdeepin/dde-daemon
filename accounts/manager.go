@@ -77,6 +77,9 @@ type Manager struct {
 	usersMap   map[string]*User
 	usersMapMu sync.Mutex
 
+	// sssd
+	fileSSSD string
+
 	delayTaskManager *tasker.DelayTaskManager
 	userAddedChanMap map[string]chan string
 	userConfig       map[string]*domainUserConfig
@@ -140,6 +143,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 		_ = m.delayTaskManager.AddTask(taskNameGroup, fileEventDelay, m.handleFileGroupChanged)
 		_ = m.delayTaskManager.AddTask(taskNameShadow, fileEventDelay, m.handleFileShadowChanged)
 		_ = m.delayTaskManager.AddTask(taskNameDM, fileEventDelay, m.handleDMConfigChanged)
+		_ = m.delayTaskManager.AddTask(taskNameSSSD, fileEventDelay, m.handleSSSDChanged)
 
 		m.watcher.SetFileList(m.getWatchFiles())
 		m.watcher.SetEventHandler(m.handleFileChanged)
@@ -169,6 +173,10 @@ func NewManager(service *dbusutil.Service) *Manager {
 			logger.Warningf("add login session failed:%v", err)
 		}
 	})
+	err = m.updateADDomainUserList()
+	if err != nil {
+		logger.Warning("manager init, update ad user failed:", err)
+	}
 
 	return m
 }
@@ -245,10 +253,14 @@ func (m *Manager) exportUserByUid(uId string) error {
 		}
 		m.domainUserMapMu.Lock()
 		m.userConfig[userPath] = config
-		m.saveDomainUserConfig(m.userConfig)
+		err = m.saveDomainUserConfig(m.userConfig)
 		m.domainUserMapMu.Unlock()
+		if err != nil {
+			logger.Warning("save domain config error: ", err)
+			return err
+		}
 	} else {
-		u, err = NewUser(userPath, m.service,true)
+		u, err = NewUser(userPath, m.service, true)
 	}
 
 	if err != nil {
@@ -329,7 +341,7 @@ func (m *Manager) loadDomainUserConfig() (DefaultDomainUserConfig, error) {
 			return config, err
 		}
 	} else {
-		data, err := ioutil.ReadFile(configFile)
+		data, err := ioutil.ReadFile(configFile) // #nosec G304
 		if err != nil {
 			return config, err
 		}
@@ -356,12 +368,12 @@ func (m *Manager) saveDomainUserConfig(config DefaultDomainUserConfig) error {
 	}
 
 	dir := filepath.Dir(configFile)
-	err = os.MkdirAll(dir, 0755)
+	err = os.MkdirAll(dir, 0755) // #nosec G301
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(configFile, data, 0644)
+	err = ioutil.WriteFile(configFile, data, 0644) // #nosec G306
 	return err
 }
 
@@ -471,4 +483,48 @@ func isGuestUserEnabled() bool {
 
 func (m *Manager) checkAuth(sender dbus.Sender) error {
 	return checkAuth(polkitActionUserAdministration, string(sender))
+}
+
+func (m *Manager) deleteUser(uid string) {
+	logger.Debug("deleteUser", uid)
+
+	user := m.getUserByUid(uid)
+	if user != nil {
+		user.clearFingers()
+	} else {
+		logger.Warningf("uid %s not found", uid)
+	}
+
+	userPath := userDBusPathPrefix + uid
+	m.stopExportUser(userPath)
+	err := m.service.Emit(m, "UserDeleted", userPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
+func (m *Manager) deleteDomainUserData(userName, userUid string, isRmHome bool) error {
+	user := NewDomainUserByConfigInfo(userName, userUid)
+
+	user.clearData()
+
+	if isRmHome {
+		err := os.RemoveAll(user.HomeDir)
+		if err != nil {
+			logger.Warning(err)
+			return err
+		}
+	}
+
+	userExist := m.getUserByUid(user.Uid)
+	if userExist != nil {
+		userPath := userDBusPathPrefix + user.Uid
+		m.stopExportUser(userPath)
+		err := m.service.Emit(m, "UserDeleted", userPath)
+		if err != nil {
+			logger.Warning(err)
+		}
+		m.updatePropUserList()
+	}
+	return nil
 }

@@ -20,14 +20,17 @@
 package accounts
 
 import (
+	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
 	"pkg.deepin.io/dde/daemon/accounts/users"
 	"pkg.deepin.io/lib/strv"
+	dutils "pkg.deepin.io/lib/utils"
 )
 
 const (
@@ -48,13 +51,45 @@ const (
 	taskNameGroup  = "group"
 	taskNameShadow = "shadow"
 	taskNameDM     = "dm"
+	taskNameSSSD   = "sssd"
 )
+
+func (m *Manager) getSSSDUserFile() string {
+	fileSSSD := ""
+
+	filepath := "/etc/sssd/sssd.conf"
+	val, exist := dutils.ReadKeyFromKeyFile(filepath,
+		"sssd", "domains", "")
+	if !exist {
+		return ""
+	}
+
+	domains, ok := val.(string)
+	if !ok {
+		return ""
+	}
+	fileSSSD = domains
+	if val == "" || strings.Contains(domains, "DOMAIN_NAME") {
+		fileSSSD = os.Getenv("DOMAIN_NAME")
+	}
+	if fileSSSD != "" {
+		fileSSSD = "/var/lib/sss/db/" + "cache_" + fileSSSD + ".ldb"
+	}
+
+	return fileSSSD
+}
 
 func (m *Manager) getWatchFiles() []string {
 	list := []string{"/etc"}
 	dmConfig, err := users.GetDMConfig()
 	if err == nil {
 		list = append(list, filepath.Dir(dmConfig))
+	}
+
+	fileSSSD := m.getSSSDUserFile()
+	logger.Debug("sssd file:", fileSSSD)
+	if fileSSSD != "" {
+		list = append(list, fileSSSD)
 	}
 
 	return list
@@ -82,6 +117,13 @@ func (m *Manager) handleFileChanged(ev fsnotify.Event) {
 		logger.Debug("File changed:", ev)
 		if task, _ := m.delayTaskManager.GetTask(taskNameDM); task != nil {
 			err = task.Start()
+		}
+	case m.fileSSSD:
+		logger.Debug("sssd cache file changed:", ev)
+		if m.fileSSSD != "" {
+			if task, _ := m.delayTaskManager.GetTask(taskNameSSSD); task != nil {
+				err = task.Start()
+			}
 		}
 	default:
 		return
@@ -220,20 +262,6 @@ func (m *Manager) addDomainUser(uId uint32) error {
 	return err
 }
 
-func (m *Manager) deleteUser(uid string) {
-	logger.Debug("deleteUser", uid)
-
-	user := m.getUserByUid(uid)
-	if user != nil {
-		user.clearFingers()
-	} else {
-		logger.Warningf("uid %s not found", uid)
-	}
-
-	userPath := userDBusPathPrefix + uid
-	m.stopExportUser(userPath)
-	err := m.service.Emit(m, "UserDeleted", userPath)
-	if err != nil {
-		logger.Warning(err)
-	}
+func (m *Manager) handleSSSDChanged() {
+	m.UpdateADDomainUserList()
 }

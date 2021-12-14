@@ -23,7 +23,6 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
-	"os"
 	"time"
 
 	dbus "github.com/godbus/dbus"
@@ -143,21 +142,17 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		userPath := userDBusPathPrefix + user.Uid
 		delete(m.userConfig, userPath)
 		m.domainUserMapMu.Lock()
-		m.saveDomainUserConfig(m.userConfig)
+		err := m.saveDomainUserConfig(m.userConfig)
 		m.domainUserMapMu.Unlock()
+		if err != nil {
+			logger.Debug("save domain config error:", err)
+			return dbusutil.ToError(err)
+		}
 
-		m.deleteUser(user.Uid)
-
-		m.updatePropUserList()
-
-		//delete user config and icons
-		if rmFiles {
-			user.clearData()
-			err := os.RemoveAll(user.HomeDir)
-			if err != nil {
-				logger.Warning(err)
-				return dbusutil.ToError(err)
-			}
+		err = m.deleteDomainUserData(user.UserName, user.Uid, rmFiles)
+		if err != nil {
+			logger.Debug("delete domain data error:", err)
+			return dbusutil.ToError(err)
 		}
 
 		return nil
@@ -214,7 +209,7 @@ func (m *Manager) RandUserIcon() (string, *dbus.Error) {
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	idx := rand.Intn(len(icons))
+	idx := rand.Intn(len(icons)) // #nosec G404
 	return icons[idx], nil
 }
 
@@ -334,40 +329,36 @@ func (m *Manager) GetPresetGroups(accountType int32) ([]string, *dbus.Error) {
 	return groups, nil
 }
 
-// 在点击切换用户时, 重新获取网络账户的状态,更新用户列表
-func (m *Manager) UpdateADDomainUserList() *dbus.Error {
-	logger.Debug("UpdateADDomainUserList")
+func (m *Manager) updateADDomainUserList() error {
+	logger.Debug("updateADDomainUserList")
 	m.domainUserMapMu.Lock()
 	defer m.domainUserMapMu.Unlock()
 
-	for _, u := range m.usersMap {
-		userPath := userDBusPathPrefix + u.Uid
-		// 之前成功登录的AD域账号现在找不到了,说明该账户已经退域或远程服务器已将该账户删除, 从用户列表中删除该账户
-		if config, ok := m.userConfig[userPath]; ok {
-			if config.IsLogined {
-				if !IsDomainUserID(u.Uid) {
-					delete(m.userConfig, userPath)
-					err := m.saveDomainUserConfig(m.userConfig)
-					if err != nil {
-						return dbusutil.ToError(err)
-					}
-
-					m.deleteUser(u.Uid)
-					m.updatePropUserList()
-
-					//delete user config and icons
-					u.clearData()
-
-					// delete user home dir
-					err = os.RemoveAll(u.HomeDir)
-					if err != nil {
-						logger.Warning(err)
-						return dbusutil.ToError(err)
-					}
+	for _, config := range m.userConfig {
+		if config.IsLogined {
+			if !IsDomainUserID(config.Uid) {
+				// 之前成功登录的AD域账号现在找不到了,说明该账户已经退域或远程服务器已将该账户删除, 从用户列表中删除该账户
+				err := m.deleteDomainUserData(config.Name, config.Uid, true)
+				if err != nil {
+					return err
+				}
+				userPath := userDBusPathPrefix + config.Uid
+				delete(m.userConfig, userPath)
+				err = m.saveDomainUserConfig(m.userConfig)
+				if err != nil {
+					return err
 				}
 			}
 		}
 	}
+	return nil
+}
 
+// 在点击切换用户时, 重新获取网络账户的状态,更新用户列表
+func (m *Manager) UpdateADDomainUserList() *dbus.Error {
+	err := m.updateADDomainUserList()
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	return nil
 }
