@@ -24,9 +24,9 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 type activeConnection struct {
@@ -444,6 +444,8 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 			security = Tr("WEP 40/128-bit Key")
 		case "wpa-psk":
 			security = Tr("WPA/WPA2 Personal")
+		case "sae":
+			security = Tr("WPA3 Personal")
 		case "wpa-eap":
 			use8021xSecurity = true
 		}
