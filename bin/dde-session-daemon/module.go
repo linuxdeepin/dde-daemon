@@ -69,7 +69,6 @@ import (
 
 	_ "pkg.deepin.io/dde/daemon/lastore"
 
-	_ "pkg.deepin.io/dde/daemon/grub_gfx"
 	_ "pkg.deepin.io/dde/daemon/session/uadpagent"
 )
 
