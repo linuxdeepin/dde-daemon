@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 
     /* Open the default display */
     if(!(disp = XOpenDisplay(NULL))) {
-        fprintf(stderr, "Cannot open display \"%s\".\n", XDisplayName(NULL));
+        fprintf(stderr, "Cannot open display.\n");
         return -1;
     }
 

@@ -19,6 +19,8 @@ BINARIES =  \
 
 LANGUAGES = $(basename $(notdir $(wildcard misc/po/*.po)))
 
+CFLAGS = -fno-stack-protector
+
 all: build
 
 prepare:
@@ -32,10 +34,10 @@ out/bin/%: prepare
 	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@  ${GOPKG_PREFIX}/bin/${@F}
 
 out/bin/default-file-manager: bin/default-file-manager/main.c
-	gcc $^ $(shell pkg-config --cflags --libs gio-unix-2.0) -o $@
+	gcc $^ $(shell pkg-config --cflags --libs gio-unix-2.0) $(CFLAGS) -o $@
 
 out/bin/desktop-toggle: bin/desktop-toggle/main.c
-	gcc $^ $(shell pkg-config --cflags --libs x11) -o $@
+	gcc $^ $(shell pkg-config --cflags --libs x11) $(CFLAGS) -o $@
 
 out/locale/%/LC_MESSAGES/dde-daemon.mo: misc/po/%.po
 	mkdir -p $(@D)
