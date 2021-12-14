@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-03 15:25+0800\n"
+"POT-Creation-Date: 2021-12-14 17:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
@@ -61,7 +61,7 @@ msgstr "使用者名稱長度必須介於 3 至 32 個字元之間"
 #: ../../accounts/manager.go:432
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
+msgstr "“%s”使用者為之前已存在的使用者，原資料已同步"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -352,7 +352,7 @@ msgid "Translation"
 msgstr "文字翻譯"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Global search"
+msgid "Grand search"
 msgstr "全域搜尋"
 
 #: ../../keybinding/shortcuts/id_name_map.go:59
@@ -560,50 +560,54 @@ msgstr "%q 解除安裝成功"
 msgid "Failed to uninstall %q"
 msgstr "%q 解除安裝失敗"
 
-#: ../../network/manager_active_conn.go:404
-#: ../../network/manager_active_conn.go:409
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "無"
 
-#: ../../network/manager_active_conn.go:411
+#: ../../network/manager_active_conn.go:444
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit 金鑰"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:446
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 個人使用者"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:448
+msgid "WPA3 Personal"
+msgstr "WPA3 個人使用者"
+
+#: ../../network/manager_active_conn.go:456
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:458
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:425
+#: ../../network/manager_active_conn.go:460
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:427
+#: ../../network/manager_active_conn.go:462
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:429
+#: ../../network/manager_active_conn.go:464
 msgid "Tunneled TLS"
 msgstr "隧道 TLS"
 
-#: ../../network/manager_active_conn.go:431
+#: ../../network/manager_active_conn.go:466
 msgid "Protected EAP"
 msgstr "受保護 EAP"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
-#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
+#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
 msgid "Wired Connection"
 msgstr "有線網路"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
 msgid "Wired Connection %v"
 msgstr "有線網路 %v"
 

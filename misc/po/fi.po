@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-03 15:25+0800\n"
+"POT-Creation-Date: 2021-12-14 17:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/linuxdeepin/teams/3617/fi/)\n"
@@ -64,7 +64,7 @@ msgstr "Käyttäjätunnuksen on oltava 3-32 merkin pituinen"
 #: ../../accounts/manager.go:432
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
+msgstr "Käyttäjä \"%s\" oli aiemmin ja sen tiedot synkronoidaan"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -355,8 +355,8 @@ msgid "Translation"
 msgstr "Käännös"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Global search"
-msgstr "Yleinen haku"
+msgid "Grand search"
+msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
@@ -570,50 +570,54 @@ msgstr "%q poistettu onnistuneesti"
 msgid "Failed to uninstall %q"
 msgstr "Kohteen %q poistaminen epäonnistui"
 
-#: ../../network/manager_active_conn.go:404
-#: ../../network/manager_active_conn.go:409
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Mitään"
 
-#: ../../network/manager_active_conn.go:411
+#: ../../network/manager_active_conn.go:444
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit-avain"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:446
 msgid "WPA/WPA2 Personal"
 msgstr "Oma WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:448
+msgid "WPA3 Personal"
+msgstr ""
+
+#: ../../network/manager_active_conn.go:456
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:458
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:425
+#: ../../network/manager_active_conn.go:460
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:427
+#: ../../network/manager_active_conn.go:462
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:429
+#: ../../network/manager_active_conn.go:464
 msgid "Tunneled TLS"
 msgstr "Tunneloitu TLS"
 
-#: ../../network/manager_active_conn.go:431
+#: ../../network/manager_active_conn.go:466
 msgid "Protected EAP"
 msgstr "Suojattu EAP"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
-#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
+#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
 msgid "Wired Connection"
 msgstr "Yhteys kaapelilla"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
 msgid "Wired Connection %v"
 msgstr "Verkkokaapeli %v"
 

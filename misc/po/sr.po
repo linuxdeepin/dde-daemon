@@ -8,7 +8,7 @@
 # Boki Ball <superdodgeballer@gmail.com>, 2020
 # Cindy0514, 2020
 # Smarty <kidsmart33@gmail.com>, 2020
-# Marko Joksimovic <pauspapir@yahoo.com>, 2020
+# 300fcb8ccee76b8f5263c3c84dca5deb_f77780b <df26a7f04dcc55f05fed89fcf6abce66_942684>, 2020
 # Slobodan Simić <slsimic@gmail.com>, 2021
 # Марко Пејовић <markopejovic@tutanota.com>, 2021
 # 
@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-03 15:25+0800\n"
+"POT-Creation-Date: 2021-12-14 17:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2021\n"
 "Language-Team: Serbian (https://www.transifex.com/linuxdeepin/teams/3617/sr/)\n"
@@ -353,7 +353,7 @@ msgid "Translation"
 msgstr "Превод"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Global search"
+msgid "Grand search"
 msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:59
@@ -563,50 +563,54 @@ msgstr "%q уклањање успешно"
 msgid "Failed to uninstall %q"
 msgstr "Уклањање %q неуспешно"
 
-#: ../../network/manager_active_conn.go:404
-#: ../../network/manager_active_conn.go:409
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Ништа"
 
-#: ../../network/manager_active_conn.go:411
+#: ../../network/manager_active_conn.go:444
 msgid "WEP 40/128-bit Key"
 msgstr "ВЕП 40/128-bit Кључ"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:446
 msgid "WPA/WPA2 Personal"
 msgstr "ВПА/ВПА2 Лично"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:448
+msgid "WPA3 Personal"
+msgstr ""
+
+#: ../../network/manager_active_conn.go:456
 msgid "TLS"
 msgstr "ТЛС"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:458
 msgid "MD5"
 msgstr "МД5"
 
-#: ../../network/manager_active_conn.go:425
+#: ../../network/manager_active_conn.go:460
 msgid "LEAP"
 msgstr "ЛЕАП"
 
-#: ../../network/manager_active_conn.go:427
+#: ../../network/manager_active_conn.go:462
 msgid "FAST"
 msgstr "ФАСТ"
 
-#: ../../network/manager_active_conn.go:429
+#: ../../network/manager_active_conn.go:464
 msgid "Tunneled TLS"
 msgstr "Тунелни ТЛС"
 
-#: ../../network/manager_active_conn.go:431
+#: ../../network/manager_active_conn.go:466
 msgid "Protected EAP"
 msgstr "Заштићени ЕАП"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
-#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
+#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
 msgid "Wired Connection"
 msgstr "Жичана веза"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
 msgid "Wired Connection %v"
 msgstr ""
 

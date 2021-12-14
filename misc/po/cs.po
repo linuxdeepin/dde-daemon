@@ -7,18 +7,18 @@
 # op6464 <op64@seznam.cz>, 2020
 # Cindy0514, 2020
 # 李洪武 <lihongwu1987@gmail.com>, 2021
-# fri, 2021
-# Tomáš Hurta, 2021
 # Pavel Borecki <pavel.borecki@gmail.com>, 2021
+# Tomáš Hurta, 2021
+# fri, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-03 15:25+0800\n"
+"POT-Creation-Date: 2021-12-14 17:30+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2021\n"
+"Last-Translator: fri, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/linuxdeepin/teams/3617/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -170,7 +170,7 @@ msgstr "Upozorňování na zprávy"
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
 #: ../../lastore/lastore.go:431
 msgid "Cancel"
-msgstr "Storno"
+msgstr "Zrušit"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
@@ -223,7 +223,7 @@ msgstr "Překročen časový limit při získávání %q"
 
 #: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
-msgstr "Pro připojení k %q klikněte sem"
+msgstr "Pro připojení k %q klepněte sem"
 
 #: ../../bluetooth/utils_notify.go:135
 msgid "Add Bluetooth devices"
@@ -248,7 +248,7 @@ msgstr "Panel"
 
 #: ../../dock/app_entry_menu.go:177
 msgid "Undock"
-msgstr "Storno ukotvení"
+msgstr "Zrušit ukotvení"
 
 #: ../../dock/app_entry_menu.go:187
 msgid "All Windows"
@@ -276,7 +276,7 @@ msgstr "Uzamknout obrazovku"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Zobrazit/skrýt panel"
+msgstr "Zobrazit/Skrýt panel"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -316,7 +316,7 @@ msgstr "Správce souborů"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
-msgstr "Vypnout touchpad"
+msgstr "Vypnout dotykovou plochu (touchpad)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
@@ -355,8 +355,8 @@ msgid "Translation"
 msgstr "Překlady"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Global search"
-msgstr "Hledat všude"
+msgid "Grand search"
+msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:59
 msgid "Switch Layout"
@@ -400,7 +400,7 @@ msgstr "Zobrazit plochu"
 
 #: ../../keybinding/shortcuts/id_name_map.go:106
 msgid "Maximize window"
-msgstr "Maximalizovat okno"
+msgstr "Zvětšit okno"
 
 #: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Restore window"
@@ -408,7 +408,7 @@ msgstr "Obnovit původní velikost okna"
 
 #: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Minimize window"
-msgstr "Minimalizovat okno"
+msgstr "Zmenšit okno"
 
 #: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Close window"
@@ -535,7 +535,7 @@ msgstr ""
 
 #: ../../lastore/notify.go:131
 msgid "Package cache wiped"
-msgstr "Mezipaměť balíčků vyčištěna"
+msgstr "Vyrovnávací paměť balíčků vyčištěna"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
@@ -569,50 +569,54 @@ msgstr "%q úspěšně odstraněno"
 msgid "Failed to uninstall %q"
 msgstr "Nepodařilo se odinstalovat %q"
 
-#: ../../network/manager_active_conn.go:404
-#: ../../network/manager_active_conn.go:409
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Žádné"
 
-#: ../../network/manager_active_conn.go:411
+#: ../../network/manager_active_conn.go:444
 msgid "WEP 40/128-bit Key"
 msgstr "WEP klíč 40/128 bitů"
 
-#: ../../network/manager_active_conn.go:413
+#: ../../network/manager_active_conn.go:446
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 osobní"
 
-#: ../../network/manager_active_conn.go:421
+#: ../../network/manager_active_conn.go:448
+msgid "WPA3 Personal"
+msgstr ""
+
+#: ../../network/manager_active_conn.go:456
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:423
+#: ../../network/manager_active_conn.go:458
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:425
+#: ../../network/manager_active_conn.go:460
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:427
+#: ../../network/manager_active_conn.go:462
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:429
+#: ../../network/manager_active_conn.go:464
 msgid "Tunneled TLS"
 msgstr "Tunelované TLS"
 
-#: ../../network/manager_active_conn.go:431
+#: ../../network/manager_active_conn.go:466
 msgid "Protected EAP"
 msgstr "Chráněné EAP"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:276
-#: ../../system/network/utils.go:280 ../../system/network/utils.go:348
+#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
+#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
 msgid "Wired Connection"
 msgstr "Drátové připojení"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:350
+#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
 msgid "Wired Connection %v"
 msgstr "Drátové připojení %v "
 
@@ -752,7 +756,7 @@ msgstr "Vytáčení se nezdařilo"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
-msgstr "Inicializace modemu se nezdařila"
+msgstr "Zprovoznění modemu se nezdařilo"
 
 #: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
@@ -954,7 +958,7 @@ msgstr "Připojení bylo odstraněno z nastavení"
 
 #: ../../network/state_handler.go:266
 msgid "Enabling hotspot"
-msgstr "Zapíná se hotspot"
+msgstr "Zapíná se přípojný bod"
 
 #: ../../network/state_handler.go:270
 msgid "Connecting %q"
@@ -962,7 +966,7 @@ msgstr "Připojování k %q"
 
 #: ../../network/state_handler.go:279
 msgid "Hotspot enabled"
-msgstr "Hotspot zapnutý"
+msgstr "Přípojný bod zapnut"
 
 #: ../../network/state_handler.go:281
 msgid "%q connected"
@@ -970,7 +974,7 @@ msgstr "%q připojeno"
 
 #: ../../network/state_handler.go:292 ../../network/state_handler.go:347
 msgid "Hotspot disabled"
-msgstr "Hotspot vypnut"
+msgstr "Přípojný bod vypnut"
 
 #: ../../network/state_handler.go:349 ../../network/state_handler.go:371
 #: ../../system/bluetooth/utils_notify.go:65
@@ -979,7 +983,7 @@ msgstr "%q odpojeno"
 
 #: ../../network/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "Nedaří se sdílet hotspot – prosím zkontrolujte nastavení dnsmasq"
+msgstr "Nedaří se sdílet přípojný bod – prosím zkontrolujte nastavení dnsmasq"
 
 #: ../../network/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
@@ -1043,7 +1047,7 @@ msgstr "Připojeno"
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
-"„%s“ neprošlo systémovým ověřením zabezpečení a proto v tuto chvíli nelze "
+"„%s“ neprošlo systémovým ověřením zabezpečení, a proto v tuto chvíli nelze "
 "spustit"
 
 #: ../../session/power/manager_events.go:201
