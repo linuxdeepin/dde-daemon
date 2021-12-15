@@ -22,15 +22,6 @@
         <defaults>
             <allow_any>no</allow_any>
             <allow_inactive>no</allow_inactive>
-            <allow_active>auth_admin</allow_active>
-        </defaults>
-    </action>
-    <action id="com.deepin.daemon.accounts.user-administration-keep">
-        <description>Manage user accounts</description>
-        <message>Authentication is required to change user data</message>
-        <defaults>
-            <allow_any>no</allow_any>
-            <allow_inactive>no</allow_inactive>
             <allow_active>auth_admin_keep</allow_active>
         </defaults>
     </action>

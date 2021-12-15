@@ -36,13 +36,13 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-api/lang_info"
-	"github.com/linuxdeepin/dde-daemon/accounts/users"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
 	"github.com/linuxdeepin/go-lib/imgutil"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/dde-api/lang_info"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const (
@@ -221,7 +221,7 @@ func (u *User) IsPasswordExpired() (expired bool, busErr *dbus.Error) {
 func (u *User) SetLocked(sender dbus.Sender, locked bool) *dbus.Error {
 	logger.Debug("[SetLocked] locked:", locked)
 
-	err := u.checkAuth(sender, false, polkitActionUserAdministrationKeep)
+	err := u.checkAuth(sender, false, polkitActionUserAdministration)
 	if err != nil {
 		logger.Debug("[SetLocked] access denied:", err)
 		return dbusutil.ToError(err)
