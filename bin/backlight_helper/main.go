@@ -25,6 +25,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -55,6 +56,7 @@ func (*Manager) GetInterfaceName() string {
 }
 
 func (m *Manager) SetBrightness(type0 byte, name string, value int32) *dbus.Error {
+	m.service.DelayAutoQuit()
 	filename, err := getBrightnessFilename(type0, name)
 	if err != nil {
 		return dbusutil.ToError(err)
@@ -114,5 +116,6 @@ func main() {
 		logger.Fatal("failed to request name:", err)
 	}
 
+	service.SetAutoQuitHandler(time.Second*30, nil)
 	service.Wait()
 }
