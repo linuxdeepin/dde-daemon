@@ -2,6 +2,8 @@ package shortcuts
 
 import (
 	"errors"
+	"os"
+	"strings"
 
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
@@ -30,6 +32,22 @@ func (ks *kWinShortcut) ReloadKeystrokes() bool {
 	if err != nil {
 		logger.Warningf("failed to get accel for %s: %v", ks.Id, err)
 		return false
+	}
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") {
+		if len(keystrokes) != 0 && strings.Contains(keystrokes[0], "SysReq") {
+			keystrokes[0] = strings.Replace(keystrokes[0], "SysReq", "<Alt>Print", 1)
+		}
+		//launcher
+		if ks.Id == "launcher" {
+			keystrokes[0] = "<Super_L>"
+		}
+		//system-monitor
+		if ks.Id == "system-monitor" {
+			for i := 0; i < len(keystrokes); i++ {
+				keystrokes[i] = strings.Replace(keystrokes[i], "Esc", "Escape", 1)
+			}
+		}
 	}
 	newVal := ParseKeystrokes(keystrokes)
 	ks.setKeystrokes(newVal)

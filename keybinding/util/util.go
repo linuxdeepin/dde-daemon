@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"strings"
+	"os"
 
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 )
@@ -53,6 +54,10 @@ func GetAllKWinAccels(wm wm.Wm) ([]KWinAccel, error) {
 	allJson, err := wm.GetAllAccels(0)
 	if err != nil {
 		return nil, err
+	}
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	if strings.Contains(sessionType, "wayland") && strings.Contains(allJson, "SysReq") {
+		allJson = strings.Replace(allJson, "SysReq", "<Alt>Print", -1)
 	}
 
 	var result []KWinAccel
