@@ -416,7 +416,7 @@ func isGuestUserEnabled() bool {
 }
 
 func (m *Manager) checkAuth(sender dbus.Sender) error {
-	return checkAuth(polkitActionUserAdministrationKeep, string(sender))
+	return checkAuth(polkitActionUserAdministration, string(sender))
 }
 
 func chownHomeDir(homeDir string, username string) {
