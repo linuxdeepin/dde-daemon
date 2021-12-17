@@ -236,32 +236,26 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		return nil
 	}
 
-	dev, err := networkmanager.NewDevice(n.getSysBus(), devPath)
+	nmDev, err := networkmanager.NewDevice(n.getSysBus(), devPath)
 	if err != nil {
 		n.devicesMu.Unlock()
 		return err
 	}
-	d := dev.Device()
-	iface, err := d.Interface().Get(0)
-	if err != nil {
-		n.devicesMu.Unlock()
-		return err
-	}
-
+	d := nmDev.Device()
 	deviceType, err := d.DeviceType().Get(0)
 	if err != nil {
-		logger.Warningf("get device %s type failed: %v", dev.Path_(), err)
+		logger.Warningf("get device %s type failed: %v", nmDev.Path_(), err)
 	}
 
-	n.devices[devPath] = &device{
-		iface:    iface,
-		nmDevice: dev,
+	dev := &device{
+		nmDevice: nmDev,
 		type0:    deviceType,
 	}
+	n.devices[devPath] = dev
 
 	n.devicesMu.Unlock()
 
-	dev.InitSignalExt(n.sigLoop, true)
+	nmDev.InitSignalExt(n.sigLoop, true)
 	_, err = d.ConnectStateChanged(func(newState uint32, oldState uint32, reason uint32) {
 		//logger.Debugf("device state changed %v newState %d", d.Path_(), newState)
 		if (oldState >= nm.NM_DEVICE_STATE_ACTIVATED && reason == nm.NM_DEVICE_STATE_REASON_REMOVED) ||
@@ -269,7 +263,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 			restartIPWatchD()
 		}
 
-		enabled := n.isIfaceEnabled(iface)
+		enabled := n.isIfaceEnabled(dev.iface)
 		state, err := d.State().Get(0)
 		if err != nil {
 			logger.Warning(err)
@@ -279,7 +273,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		if !enabled {
 			if state >= nm.NM_DEVICE_STATE_PREPARE &&
 				state <= nm.NM_DEVICE_STATE_ACTIVATED {
-				logger.Debug("disconnect device", dev.Path_())
+				logger.Debug("disconnect device", nmDev.Path_())
 				err = d.Disconnect(0)
 				if err != nil {
 					logger.Warning(err)
@@ -296,18 +290,19 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		if !hasValue {
 			return
 		}
-		logger.Debugf("recv interface changed signal, old iface: %s, new iface: %s", iface, new_iface)
+		logger.Debugf("recv interface changed signal, old iface: %s, new iface: %s", dev.iface, new_iface)
 		// update dev interface
 		dev, ok := n.devices[devPath]
 		if !ok {
 			logger.Warningf("device not exist, devPath: %s", devPath)
 			return
 		}
+		oldIface := dev.iface
 		dev.iface = new_iface
 		// check new interface is legal, if is not, delete config
 		if new_iface == "" || new_iface == "/" {
 			n.configMu.Lock()
-			delete(n.config.Devices, iface)
+			delete(n.config.Devices, oldIface)
 			n.configMu.Unlock()
 			err = n.saveConfig()
 			if err != nil {
@@ -387,9 +382,14 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		logger.Warning(err)
 	}
 
+	dev.iface, err = d.Interface().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	n.configMu.Lock()
-	config, ok := n.config.Devices[iface]
-	logger.Debugf("devices config is #%v, iface is: %s", n.config.Devices, iface)
+	config, ok := n.config.Devices[dev.iface]
+	logger.Debugf("devices config is #%v, iface is: %s", n.config.Devices, dev.iface)
 	n.configMu.Unlock()
 	if ok {
 		// if config is enabled
@@ -399,7 +399,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 			_, err = ensureWiredConnectionExist(devPath)
 		}
 
-		n.enableDevice(iface, config.Enabled)
+		n.enableDevice(dev.iface, config.Enabled)
 	}
 
 	return nil
