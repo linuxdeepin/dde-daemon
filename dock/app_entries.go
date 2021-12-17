@@ -223,7 +223,7 @@ func getByDesktopFilePath(entriesItems []*AppEntry, desktopFilePath string) (*Ap
 			return entry, nil
 		}
 	}
-	return nil, errors.New("don't get AppEntry by desktop file path")
+	return nil, nil
 }
 
 func (entries *AppEntries) GetByDesktopFilePath(desktopFilePath string) (*AppEntry, error) {
