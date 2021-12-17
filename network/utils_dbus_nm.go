@@ -805,10 +805,7 @@ func nmGetIp4ConfigInfo(path dbus.ObjectPath) (ip4Data ipv4Info) {
 	ip4Data.Addresses = parseAddressDataProp(addressDataProp)
 	if len(ip4Data.Addresses) == 0 {
 		ip4Data.Addresses = []addressDataItem{
-			{
-				Address: "0.0.0.0",
-				Prefix:  0,
-			},
+			emptyIPv4,
 		}
 	}
 
@@ -838,10 +835,7 @@ func nmGetIp6ConfigInfo(path dbus.ObjectPath) (ip6Data ipv6Info) {
 
 	if len(ip6Data.Addresses) == 0 {
 		ip6Data.Addresses = []addressDataItem{
-			{
-				Address: "0::0",
-				Prefix:  0,
-			},
+			emptyIPv6,
 		}
 	}
 
