@@ -148,7 +148,9 @@ func (m *Manager) handleLauncherItemUpdated(itemInfo launcher.ItemInfo) {
 		logger.Warning(err)
 		return
 	}
-
+	if entry == nil {
+		return
+	}
 	appInfo := NewAppInfoFromFile(desktopFile)
 	if appInfo == nil {
 		logger.Warningf("failed to new app info from file %q: %v", desktopFile, err)
