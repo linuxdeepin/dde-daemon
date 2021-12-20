@@ -321,6 +321,7 @@ func getCreateConnectionName() string {
 	if err != nil {
 		logger.Warningf("read locale failed, err: %v", err)
 	} else {
+		logger.Infof("read local message is %v", string(buf))
 		// create reader
 		buffer := bytes.NewBuffer(buf)
 		reader := bufio.NewReader(buffer)
@@ -328,20 +329,24 @@ func getCreateConnectionName() string {
 			// read line, dont care about error or file end
 			buf, _, err = reader.ReadLine()
 			if err != nil {
+				logger.Infof("read file failed, err: %v", err)
 				break
 			}
 			// split string
 			sl := strings.Split(string(buf), "=")
+			logger.Infof("locale split is %v", sl)
 			if len(sl) < 2 {
 				continue
 			}
+			logger.Info("locale match 2 slice")
 			// find lang
 			if sl[0] == "LANG" {
+				logger.Infof("locale is %v", sl[1])
 				locale = sl[1]
 			}
 		}
 	}
-	logger.Debugf("read lang from file success, lang: %v", locale)
+	logger.Infof("read lang from file success, lang: %v", locale)
 	// make sure lang env exist
 	if locale == "" {
 		locale = os.Getenv("LANG")
