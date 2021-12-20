@@ -58,6 +58,7 @@ Requires:       dde-session-ui
 Requires:       dde-polkit-agent
 Requires:       rfkill
 Requires:       gvfs
+Requires:       xdotool
 
 Recommends:     iso-codes
 Recommends:     imwheel
