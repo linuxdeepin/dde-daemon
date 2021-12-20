@@ -524,7 +524,17 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 func (u *User) DeleteIconFile(sender dbus.Sender, icon string) *dbus.Error {
 	logger.Debug("[DeleteIconFile] icon:", icon)
 
-	err := u.checkAuth(sender, true, "")
+	dir, err := filepath.Abs(filepath.Dir(icon))
+	if err != nil || dir != userCustomIconsDir {
+		return dbusutil.ToError(fmt.Errorf("%s is not in %s", icon, userCustomIconsDir))
+	}
+
+	base := filepath.Base(icon)
+	if !strings.HasPrefix(base, u.UserName) {
+		return dbusutil.ToError(fmt.Errorf("%s is not belong to %s", icon, u.UserName))
+	}
+
+	err = u.checkAuth(sender, true, "")
 	if err != nil {
 		logger.Debug("[DeleteIconFile] access denied:", err)
 		return dbusutil.ToError(err)
