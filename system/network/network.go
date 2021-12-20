@@ -427,7 +427,7 @@ func newNetwork() *Network {
 }
 
 func (n *Network) EnableDevice(pathOrIface string, enabled bool) (cpath dbus.ObjectPath, error *dbus.Error) {
-	logger.Debug("call EnableDevice", pathOrIface, enabled)
+	logger.Infof("call EnableDevice, ifc: %v, enabled: %v", pathOrIface, enabled)
 	cpath, err := n.enableDevice(pathOrIface, enabled)
 	return cpath, dbusutil.ToError(err)
 }
@@ -478,11 +478,6 @@ func (n *Network) enableDevice1(d *device) (cpath dbus.ObjectPath, err error) {
 		if err != nil {
 			return "/", err
 		}
-	}
-
-	err = setDeviceAutoConnect(d.nmDevice, true)
-	if err != nil {
-		return "/", err
 	}
 
 	err = setDeviceManaged(d.nmDevice, true)

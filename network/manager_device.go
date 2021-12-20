@@ -27,10 +27,10 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	mmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.modemmanager1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 type device struct {
@@ -605,6 +605,7 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 	if err != nil {
 		return
 	}
+	logger.Debugf("dev %v, enabled: %v, activate: %v", devPath, enabled, activate)
 	// check if need activate connection
 	if enabled && activate {
 		var uuid string
@@ -617,6 +618,25 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 			logger.Debug("failed to activate a connection")
 			return
 		}
+		logger.Debugf("active connection success, dev: %v, uuid: %v", devPath, uuid)
+
+		// activate connection first, then set auto-connect state,
+		// in case, auto-connect is set, nm cancel block connect and try to auto-activating
+		logger.Debugf("begin to set device auto-connect state, dev: %v", devPath)
+		nmDev, err := nmNewDevice(devPath)
+		if err != nil {
+			logger.Warningf("create device failed, err: %v", err)
+			return err
+		}
+		// set auto-connect state,
+		// when device is enabled, set auto-connect as true
+		// when disconnect, auto-connect is set to false automatic
+		err = nmDev.Device().Autoconnect().Set(0, true)
+		if err != nil {
+			logger.Warningf("set device auto-connect failed, err: %v", err)
+			return err
+		}
+		logger.Debugf("device set auto-connect success, dev: %v", devPath)
 	}
 
 	// set enable device state
