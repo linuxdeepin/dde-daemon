@@ -9,10 +9,6 @@ import (
 func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
-			Name: "RequestSuspend",
-			Fn:   v.RequestSuspend,
-		},
-		{
 			Name: "Reset",
 			Fn:   v.Reset,
 		},

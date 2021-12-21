@@ -83,24 +83,3 @@ func (m *Manager) CanHibernate() (can bool, busErr *dbus.Error) {
 	str, _ := m.objLogin.CanHibernate(0)
 	return str == "yes", nil
 }
-
-func (m *Manager) CanSuspendToHibernate() (can bool, busErr *dbus.Error) {
-
-	if !canSuspendToHibernate() {
-		logger.Debug("The system does not support Suspend To Hibernate")
-		return false, nil
-	}
-
-	return true, nil
-}
-
-func (m *Manager) SetSuspendToHibernateTime(timeMinute int32) *dbus.Error {
-
-	err := setSuspendToHibernateTime(timeMinute)
-	if err != nil {
-		logger.Debug("Set Suspend To HibernateTime fail", err)
-		return dbusutil.ToError(err)
-	}
-
-	return nil
-}

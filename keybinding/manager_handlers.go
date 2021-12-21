@@ -25,7 +25,6 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
-	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	. "pkg.deepin.io/dde/daemon/keybinding/shortcuts"
 )
 
@@ -192,23 +191,6 @@ func (m *Manager) initHandlers() {
 	}
 
 	m.handlers[ActionTypeSystemSuspend] = func(ev *KeyEvent) {
-		systemBus, err := dbus.SystemBus()
-		if err != nil {
-			logger.Warning("connect to system bus failed:", err)
-			return
-		}
-		systemPower := power.NewPower(systemBus)
-		onBattery, err := systemPower.OnBattery().Get(0)
-		if err != nil {
-			logger.Warning(err)
-		}
-		var suspendToHibernateTime int32
-		if onBattery {
-			suspendToHibernateTime = m.gsPower.GetInt("battery-hibernate-delay")
-		} else {
-			suspendToHibernateTime = m.gsPower.GetInt("line-power-hibernate-delay")
-		}
-		m.doSetSuspendToHibernateTime(suspendToHibernateTime / 60)
 		m.systemSuspendByFront()
 	}
 

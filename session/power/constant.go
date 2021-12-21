@@ -27,13 +27,11 @@ const (
 	settingKeyBatteryScreenBlackDelay = "battery-screen-black-delay"
 	settingKeyBatterySleepDelay       = "battery-sleep-delay"
 	settingKeyBatteryLockDelay        = "battery-lock-delay"
-	settingKeyBatteryHibernateDelay   = "battery-hibernate-delay"
 
 	settingKeyLinePowerScreensaverDelay = "line-power-screensaver-delay"
 	settingKeyLinePowerScreenBlackDelay = "line-power-screen-black-delay"
 	settingKeyLinePowerSleepDelay       = "line-power-sleep-delay"
 	settingKeyLinePowerLockDelay        = "line-power-lock-delay"
-	settingKeyLinePowerHibernateDelay   = "line-power-hibernate-delay"
 
 	settingKeyAdjustBrightnessEnabled       = "adjust-brightness-enabled"
 	settingKeyAmbientLightAdjuestBrightness = "ambient-light-adjust-brightness"
