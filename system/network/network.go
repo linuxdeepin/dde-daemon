@@ -329,76 +329,11 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		}
 	})
 
-	// monitor active connection, check if now active connection is saved
-	err = d.ActiveConnection().ConnectChanged(func(hasValue bool, value dbus.ObjectPath) {
-		// check if current value is valid
-		if !hasValue || value == "" || value == "/" {
-			return
-		}
-		// check if type is ethernet,
-		// only ethernet should ensure connection exist
-		if deviceType != nm.NM_DEVICE_TYPE_ETHERNET {
-			return
-		}
-		// create active connection
-		acObj, err := networkmanager.NewActiveConnection(n.service.Conn(), value)
-		if err != nil {
-			logger.Warningf("create active connection failed, err: %v", err)
-			return
-		}
-		// get connection
-		connPath, err := acObj.Connection().Get(0)
-		if err != nil {
-			logger.Warningf("get connection failed, err: %v", err)
-			return
-		}
-		// get current unsaved
-		conObj, err := networkmanager.NewConnectionSettings(n.service.Conn(), connPath)
-		if err != nil {
-			logger.Warningf("create connection failed, err: %v", err)
-			return
-		}
-		// get unsaved state
-		unsaved, err := conObj.Unsaved().Get(0)
-		if err != nil {
-			logger.Warningf("get unsaved state failed, err: %v", err)
-			return
-		}
-		if !unsaved {
-			return
-		}
-		logger.Infof("current device %v active connection is unsaved", devPath)
-		// make sure exist at least one
-		path, err := ensureWiredConnectionExist(devPath)
-		if err != nil {
-			logger.Warningf("ensure wired connection failed, err: %v", err)
-			return
-		}
-		// try to active this connection
-		_, err = n.nmManager.ActivateConnection(0, path, devPath, "/")
-		if err != nil {
-			logger.Warningf("failed to active connection, err: %v", err)
-			return
-		}
-		logger.Infof("make sure wired connection active success, dev: %v, conn: %v", devPath, path)
-	})
-
-	if err != nil {
-		logger.Warning(err)
-	}
-
 	n.configMu.Lock()
 	config, ok := n.config.Devices[iface]
 	logger.Debugf("devices config is #%v, iface is: %s", n.config.Devices, iface)
 	n.configMu.Unlock()
 	if ok {
-		// if config is enabled
-		if config.Enabled && deviceType == nm.NM_DEVICE_TYPE_ETHERNET {
-			logger.Infof("ethernet device %s is enabled, make sure connection exist", devPath)
-			// just make sure connection exist here then enabled auto-connect
-			_, err = ensureWiredConnectionExist(devPath)
-		}
-
 		n.enableDevice(iface, config.Enabled)
 	}
 
