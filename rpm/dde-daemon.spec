@@ -209,7 +209,10 @@ if [ $1 -ge 1 ]; then
     x-terminal-emulator %{_libexecdir}/%{sname}/default-terminal 30
 fi
 %systemd_post deepin-accounts-daemon.service
-
+if [ $1 -eq 2 ] ; then
+        # Upgrade installation 
+        systemctl --no-reload preset deepin-accounts-daemon.service  &>/dev/null || :
+fi
 
 %preun
 if [ $1 -eq 0 ]; then
