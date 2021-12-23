@@ -15,6 +15,7 @@ Build-Depends:
  golang-github-axgle-mahonia-dev,
  golang-github-davecgh-go-spew-dev,
  golang-github-fsnotify-fsnotify-dev,
+ golang-github-google-gopacket-dev,
  golang-github-gosexy-gettext-dev,
  golang-github-jinzhu-gorm-dev,
  golang-github-kelvins-sunrisesunset-dev,

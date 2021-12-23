@@ -33,6 +33,7 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/gesture"
 	_ "github.com/linuxdeepin/dde-daemon/system/hostname"
 	_ "github.com/linuxdeepin/dde-daemon/system/inputdevices"
+	_ "github.com/linuxdeepin/dde-daemon/system/ipwatchd"
 	_ "github.com/linuxdeepin/dde-daemon/system/keyevent"
 	_ "github.com/linuxdeepin/dde-daemon/system/lang"
 	_ "github.com/linuxdeepin/dde-daemon/system/network"
