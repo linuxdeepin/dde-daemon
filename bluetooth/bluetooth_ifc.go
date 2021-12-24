@@ -103,6 +103,9 @@ func (b *Bluetooth) SetAdapterPowered(adapter dbus.ObjectPath,
 	powered bool) *dbus.Error {
 
 	logger.Debugf("SetAdapterPowered %q %v", adapter, powered)
+	b.currentAdapterPowerMu.Lock()
+	b.currentAdapterPower[adapter] = powered
+	b.currentAdapterPowerMu.Unlock()
 	err := b.sysBt.SetAdapterPowered(0, adapter, powered)
 	return dbusutil.ToError(err)
 }

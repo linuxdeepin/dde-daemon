@@ -55,6 +55,13 @@ func (b *SysBluetooth) RemoveDevice(adapterPath, devPath dbus.ObjectPath) *dbus.
 		logger.Warningf("failed to get device, err: %v", err)
 		return dbusutil.ToError(err)
 	}
+
+	// 删除之前先取消配对，无论是否配对状态都应取消，防止配对过程中，关闭蓝牙异常
+	err = removeDev.cancelPairing()
+	if err != nil {
+		logger.Warning("call cancelPairing err: ", err)
+	}
+
 	// check if device connect state is connecting, if is, mark remove state as true
 	deviceState := removeDev.getState()
 	if deviceState == deviceStateConnecting {

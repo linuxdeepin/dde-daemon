@@ -678,6 +678,12 @@ func (d *device) cancelBlock() error {
 	return err
 }
 
+func (d *device) cancelPairing() error {
+	err := d.core.CancelPairing(0)
+
+	return err
+}
+
 func (d *device) doPair() error {
 	paired, err := d.core.Paired().Get(0)
 	if err != nil {
