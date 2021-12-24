@@ -19,6 +19,26 @@ func (b *SysBluetooth) ConnectDevice(devPath dbus.ObjectPath, adapterPath dbus.O
 			logger.Debug("getAdapter failed:", err)
 			return dbusutil.ToError(err)
 		}
+
+		// 当蓝牙在扫描中，打开蓝牙设备，扫描到蓝牙设备后，关闭蓝牙设备，此时bluez该设备已被移除，但backup中依旧存在蓝牙设备
+		// 导致了控制中心第一次手动连接此蓝牙时报错，第二次连接时无响应，因此在第二次连接时直接将此蓝牙设备移除，并弹出横幅
+		// Note Bug 107601
+		bakDevice, err := b.getBackupDevice(devPath)
+		if err != nil {
+			logger.Warning("call getBackupDevice err:", err)
+		} else {
+			b.removeBackupDevice(devPath)
+			bakDevice.notifyDeviceRemoved()
+			notifyConnectFailedHostDown(bakDevice.Alias)
+		}
+
+		// 当处于扫描状态时且无法得到device，将准备连接设备置空，防止自动连接
+		if adapter.Discovering {
+			b.prepareToConnectedDevice = ""
+			return nil
+		}
+
+		// 当扫描一分钟后停止，此时连接设备，会先开始扫描，然后将连接的此设备设为准备连接状态，发现此设备后，直接连接
 		adapter.startDiscovery()
 		adapter.scanReadyToConnectDeviceTimeoutFlag = true
 		b.prepareToConnectedMu.Lock()
