@@ -47,7 +47,6 @@ import (
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
 )
@@ -128,7 +127,6 @@ func main() {
 	// NOTE: system/power module requires glib loop
 	go glib.StartLoop()
 
-	fixDeepinInstallConfig()
 	err = _daemon.forwardPrepareForSleepSignal(service)
 	if err != nil {
 		logger.Warning(err)
@@ -140,30 +138,3 @@ func (*Daemon) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func fixDeepinInstallConfig() {
-	const (
-		filename = "/etc/deepin-installer.conf"
-		section  = "General"
-		key      = "DI_PASSWORD"
-	)
-
-	kf := keyfile.NewKeyFile()
-	err := kf.LoadFromFile(filename)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			logger.Warning("failed to load:", err)
-		}
-		return
-	}
-
-	val, _ := kf.GetValue(section, key)
-	if val == "" {
-		return
-	}
-
-	kf.DeleteKey(section, key)
-	err = kf.SaveToFile(filename)
-	if err != nil {
-		logger.Warning("failed to save:", err)
-	}
-}
