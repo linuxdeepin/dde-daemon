@@ -15,11 +15,11 @@ import (
 	"syscall"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const pwdChangerUserName = "deepin_pwd_changer" //#nosec G101
@@ -358,16 +358,17 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 
 	go func() {
 		defer func() {
+			err = cmd.Wait()
+			if err != nil {
+				<-end
+				logger.Warningf("reset-password-dialog exited: %v\nstderr:\n%v", err, buf)
+			}
+
 			if _pwdChanger != nil {
 				e := os.RemoveAll(filepath.Dir(_pwdChanger.xauth))
 				if e != nil {
 					logger.Warningf("fail to remove tmp auth dir: %v", e)
 				}
-			}
-			err = cmd.Wait()
-			if err != nil {
-				<-end
-				logger.Warningf("reset-password-dialog exited: %v\nstderr:\n%v", err, buf)
 			}
 		}()
 		line, err := r.ReadString('\n')
@@ -387,19 +388,17 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 			return
 		}
 
-		auth := authenticate.NewAuthenticate(u.service.Conn())
-		err = auth.ResetLimits(0, u.UserName)
-		if err != nil {
-			logger.Warningf("set password with union ID: fail to reset limits: %v", err)
-			_, _ = w.Write([]byte(fmt.Sprintf("fail to reset limits: %v\n", err)))
-			_ = w.Flush()
-			return
-		}
 		_, err = w.Write([]byte("success\n"))
 		_ = w.Flush()
 		if err != nil {
 			logger.Warningf("set password with union ID: fail to write success message: %v", err)
-			return
+		}
+
+		// reset limits
+		auth := authenticate.NewAuthenticate(u.service.Conn())
+		err = auth.ResetLimits(0, u.UserName)
+		if err != nil {
+			logger.Warningf("set password with union ID: fail to reset limits: %v", err)
 		}
 	}()
 	return
