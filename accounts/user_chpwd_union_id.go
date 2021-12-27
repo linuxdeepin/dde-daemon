@@ -400,6 +400,20 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 		if err != nil {
 			logger.Warningf("set password with union ID: fail to reset limits: %v", err)
 		}
+
+		err = removeLoginKeyring(u)
+		if err != nil {
+			logger.Warningf("remove login keyring fail: %v", err)
+		}
 	}()
+	return
+}
+
+// 此函数的功能是删除用户的 login keyring
+// 由于重置密码时没有输入原密码, 所以恢复 keyring 中的数据是不可能的, 只能直接移除掉.
+func removeLoginKeyring(user *User) (err error) {
+	// greeter 界面触发该功能时 user 的 session bus 不存在, 所以只能简单地直接删除文件
+	// FIXME
+	err = os.Remove(user.HomeDir + "/.local/share/keyrings/login.keyring")
 	return
 }
