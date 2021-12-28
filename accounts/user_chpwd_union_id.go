@@ -357,6 +357,7 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 	pwdChanger = nil
 
 	go func() {
+		pwdChanged := false
 		defer func() {
 			err = cmd.Wait()
 			if err != nil {
@@ -369,6 +370,36 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 				if e != nil {
 					logger.Warningf("fail to remove tmp auth dir: %v", e)
 				}
+			}
+
+			if !pwdChanged {
+				return
+			}
+
+			// Terminate all sessions of this user, since its password is changed.
+			login1Manager := login1.NewManager(u.service.Conn())
+			uid, err := strconv.Atoi(u.Uid)
+			if err != nil {
+				logger.Warningf("fail to get convert uid==%d: %v", uid, err)
+				return
+			}
+
+			path, err := login1Manager.GetUser(0, uint32(uid))
+			if err != nil {
+				logger.Infof("fail to get user by uid==%d: %v", uid, err)
+				return
+			}
+
+			login1User, err := login1.NewUser(u.service.Conn(), path)
+			if err != nil {
+				logger.Warningf("fail to create login1 User Object: %v", err)
+				return
+			}
+
+			err = login1User.Terminate(0)
+			if err != nil {
+				logger.Warningf("fail to terminate user session: %v", err)
+				return
 			}
 		}()
 		line, err := r.ReadString('\n')
@@ -388,6 +419,7 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 			return
 		}
 
+		pwdChanged = true
 		_, err = w.Write([]byte("success\n"))
 		_ = w.Flush()
 		if err != nil {
