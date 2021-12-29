@@ -279,7 +279,7 @@ func nmGeneralGetDeviceSpeedNumeric(devPath dbus.ObjectPath) (speed uint32) {
 		// TODO: getting device speed for modem device
 	case nm.NM_DEVICE_TYPE_BOND:
 		if ifc, err := dev.Device().Interface().Get(0); err == nil {
-			speed, _ = getEthtoolCmdSpeed(ifc)
+			speed = getEthtoolCmdSpeedCgo(ifc)
 		}
 
 	default: // ignore speed for other device types
