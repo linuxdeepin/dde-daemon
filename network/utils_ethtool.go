@@ -1,5 +1,47 @@
 package network
 
+/*
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <net/if.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <linux/ethtool.h>
+#include <linux/sockios.h>
+#include <linux/netlink.h>
+
+static __u32 get_ethtool_cmd_speed(const char* iface) {
+  int fd;
+  __u32 ret = 0;
+
+  struct ifreq ifr;
+  strncpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
+
+  struct ethtool_cmd ecmd;
+  memset(&ecmd, 0, sizeof(ecmd));
+  ecmd.cmd = ETHTOOL_GSET;
+  ifr.ifr_data = (void *)&ecmd;
+
+  fd = socket(AF_INET, SOCK_DGRAM, 0);
+  if (fd < 0)
+    fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_GENERIC);
+  if (fd < 0) {
+    printf("Cannot get control socket");
+    return 0;
+  }
+  if (ioctl(fd, SIOCETHTOOL, &ifr) == 0) {
+    ret = (ecmd.speed_hi << 16) | ecmd.speed;
+    if (ret == (__u16)(-1) || ret == (__u32)(-1))
+      ret = 0;
+  }
+
+  close(fd);
+  return ret;
+}
+*/
+import "C"
 import (
 	"errors"
 	"fmt"
@@ -115,9 +157,17 @@ func getEthtoolCmdSpeed(intf string) (uint32, error) {
 
 	var speedval = (uint32(ecmd.Speed_hi) << 16) |
 		(uint32(ecmd.Speed) & 0xffff)
-	if speedval == math.MaxUint16 {
-		speedval = math.MaxUint32
+	if speedval == math.MaxUint16 || speedval == math.MaxUint32 {
+		speedval = 0
 	}
 
 	return speedval, nil
+}
+
+func getEthtoolCmdSpeedCgo(intf string) uint32 {
+	cName := C.CString(intf)
+	ret := uint32(C.get_ethtool_cmd_speed(cName))
+	C.free(unsafe.Pointer(cName))
+
+	return ret
 }
