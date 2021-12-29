@@ -1,6 +1,7 @@
 package bluetooth
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -102,10 +103,26 @@ func (b *Bluetooth) CancelTransferSession(sessionPath dbus.ObjectPath) *dbus.Err
 func (b *Bluetooth) SetAdapterPowered(adapter dbus.ObjectPath,
 	powered bool) *dbus.Error {
 
+	// 当蓝牙开关打开时，需要同步session蓝牙中devices
+	if powered {
+		devicesJSON, err := b.sysBt.GetDevices(0, adapter)
+		if err == nil {
+			var devices DeviceInfos
+			err = json.Unmarshal([]byte(devicesJSON), &devices)
+			if err == nil {
+				b.devices.mu.Lock()
+				b.devices.infos[adapter] = devices
+				b.devices.mu.Unlock()
+			} else {
+				logger.Warning(err)
+			}
+
+		} else {
+			logger.Warning(err)
+		}
+	}
+
 	logger.Debugf("SetAdapterPowered %q %v", adapter, powered)
-	b.currentAdapterPowerMu.Lock()
-	b.currentAdapterPower[adapter] = powered
-	b.currentAdapterPowerMu.Unlock()
 	err := b.sysBt.SetAdapterPowered(0, adapter, powered)
 	return dbusutil.ToError(err)
 }

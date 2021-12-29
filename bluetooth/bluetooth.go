@@ -81,8 +81,6 @@ type Bluetooth struct {
 	Transportable bool   //能否传输 True可以传输 false不能传输
 	CanSendFile   bool
 
-	currentAdapterPower   map[dbus.ObjectPath]bool
-	currentAdapterPowerMu sync.Mutex
 	sessionCancelChMap    map[dbus.ObjectPath]chan struct{}
 	sessionCancelChMapMu  sync.Mutex
 
@@ -214,7 +212,6 @@ func (b *Bluetooth) init() {
 	b.systemSigLoop.Start()
 	systemBus := b.systemSigLoop.Conn()
 	b.sessionCancelChMap = make(map[dbus.ObjectPath]chan struct{})
-	b.currentAdapterPower = make(map[dbus.ObjectPath]bool)
 
 	// start bluetooth goroutine
 	// monitor click signal or time out signal to close notification window
@@ -250,9 +247,6 @@ func (b *Bluetooth) init() {
 		}
 
 		b.adapters.addOrUpdateAdapter(adapterInfo)
-		b.currentAdapterPowerMu.Lock()
-		b.currentAdapterPower[adapterInfo.Path] = adapterInfo.Powered
-		b.currentAdapterPowerMu.Unlock()
 		err = b.service.Emit(b, "AdapterAdded", adapterJSON)
 		if err != nil {
 			logger.Warning(err)
@@ -348,15 +342,6 @@ func (b *Bluetooth) init() {
 		devInfo, err := unmarshalDeviceInfo(deviceJSON)
 		if err != nil {
 			logger.Warning(err)
-		}
-		// 存在连接过程中关闭蓝牙，此时蓝牙设备被删除后。又收到蓝牙设备的属性信息，导致session-daemon重新添加蓝牙设备
-		// 但此时system-daemon和bluez设备均将此设备移除，此时界面点击连接、忽略均无响应
-		// 当此时蓝牙开关状态为 false 时，不去处理后续的device属性改变信号
-		b.currentAdapterPowerMu.Lock()
-		powered, ok := b.currentAdapterPower[devInfo.AdapterPath]
-		b.currentAdapterPowerMu.Unlock()
-		if ok && !powered {
-			return
 		}
 
 		b.devices.addOrUpdateDevice(devInfo)
