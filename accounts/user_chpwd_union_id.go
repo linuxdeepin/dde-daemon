@@ -298,20 +298,19 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 		return err
 	}
 
+	_r, _w, err := os.Pipe()
+	r := bufio.NewReader(_r)
+
 	// -u 用户名
 	// -a 应用类型
 
-	cmd := exec.Command("runuser", "-u", pwdChanger.user.Username, "--", "/usr/lib/dde-control-center/reset-password-dialog", "-u", u.UserName, "-a", caller.app) //#nosec G204
+	cmd := exec.Command("runuser", "-u", pwdChanger.user.Username, "--", "/usr/lib/dde-control-center/reset-password-dialog", "-u", u.UserName, "-a", caller.app, "--fd", "3") //#nosec G204
+
+	cmd.ExtraFiles = append(cmd.ExtraFiles, _w)
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		err = fmt.Errorf("get stdinpipe failed: %v", err)
-		return
-	}
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		err = fmt.Errorf("get stdoutpipe failed: %v", err)
 		return
 	}
 
@@ -337,7 +336,12 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 		return
 	}
 
-	r := bufio.NewReader(stdout)
+	err = _w.Close()
+	if err != nil {
+		err = fmt.Errorf("fail to close write side of pipe: %v", err)
+		return
+	}
+
 	w := bufio.NewWriter(stdin)
 	e := bufio.NewReader(stderr)
 
@@ -363,6 +367,10 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 			if err != nil {
 				<-end
 				logger.Warningf("reset-password-dialog exited: %v\nstderr:\n%v", err, buf)
+			}
+			err := _r.Close()
+			if err != nil {
+				logger.Warningf("failed to close read side of pipe: %v", err)
 			}
 
 			if _pwdChanger != nil {
