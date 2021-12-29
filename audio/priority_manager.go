@@ -124,12 +124,6 @@ func (pm *PriorityManager) SetPorts(cards CardList) {
 				continue
 			}
 
-			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
-			if !portConfig.Enabled {
-				logger.Debugf("diabled port '%s(%s)' card:<%s> port:<%s>", port.Description, card.Name, card.core.Name, port.Name)
-				continue
-			}
-
 			p := PriorityPort{
 				CardName: card.core.Name,
 				PortName: port.Name,

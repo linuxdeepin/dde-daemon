@@ -164,10 +164,9 @@ func (cards CardList) string() string {
 	for _, cardInfo := range cards {
 		var ports []CardPortExport
 		for _, portInfo := range cardInfo.Ports {
-			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardInfo.core.Name, portInfo.Name)
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
-				Enabled:     portConfig.Enabled,
+				Enabled:     true,
 				Bluetooth:   isBluetoothCard(cardInfo.core),
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
@@ -192,10 +191,9 @@ func (cards CardList) stringWithoutUnavailable() string {
 				logger.Debugf("port '%s(%s)' is unavailable", portInfo.Name, portInfo.Description)
 				continue
 			}
-			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardInfo.core.Name, portInfo.Name)
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
-				Enabled:     portConfig.Enabled,
+				Enabled:     true,
 				Bluetooth:   isBluetoothCard(cardInfo.core),
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
