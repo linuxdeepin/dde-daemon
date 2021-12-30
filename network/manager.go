@@ -269,9 +269,14 @@ func (m *Manager) init() {
 		if hasValue && value == nm.NM_CONNECTIVITY_PORTAL {
 			go m.doPortalAuthentication()
 		}
-		m.updatePropConnectivity()
+		m.setPropConnectivity(value)
 	})
-	m.updatePropConnectivity()
+	// get connectivity
+	connectivity, err := nmManager.Connectivity().Get(0)
+	if err != nil {
+		logger.Warningf("get connectivity failed, err: %v", err)
+	}
+	m.setPropConnectivity(connectivity)
 	go func() {
 		time.Sleep(3 * time.Second)
 		m.checkConnectivity()
