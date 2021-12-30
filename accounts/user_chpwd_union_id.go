@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"syscall"
 
 	"github.com/godbus/dbus"
@@ -22,8 +23,15 @@ import (
 	"github.com/linuxdeepin/go-lib/procfs"
 )
 
-const pwdChangerUserName = "deepin_pwd_changer" //#nosec G101
+// 这里出于安全考虑, 一方面为了防止被 debug, 另一方面为了防止环境变量被篡改,
+// 所以需要将重置密码的对话框 (文件位于 resetPwdDialogPath)
+// 以一个特殊的用户的身份运行, 这个用户只做运行对话框这一件事情.
+
+const pwdChangerUserName = "deepin_pwd_changer"                                //#nosec G101
+const resetPwdDialogPath = "/usr/lib/dde-control-center/reset-password-dialog" //#nosec G101
+
 // copy from golang 1.17, comment out some code because of unexported member
+//
 // String returns a human-readable description of c.
 // It is intended only for debugging.
 // In particular, it is not suitable for use as input to a shell.
@@ -45,16 +53,18 @@ func cmdToString(c *exec.Cmd) string {
 	return b.String()
 }
 
-// 表示启动短信验证码更改密码过程的调用者
+// caller 表示启动短信验证码更改密码过程的调用者
 type caller struct {
 	display string
 	xauth   string
 	app     string
 	proc    procfs.Process
-	user    *user.User
+	user    *user.User // 启动更改密码过程的用户, 不是被改密码的用户
 }
 
-// 验证调用者二进制文件路径, 并获得其 X 凭证位置, 以及 DISPLAY, 创建 caller 对象
+// 创建 caller 对象
+// 此函数主要负责验证调用者身份 (通过验证其二进制路径), 并获得其 .Xauthority 文件位置, 以及 DISPLAY 变量
+// note: 尽量避免从调用者的环境变量中获取数值
 func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err error) {
 	pid, err := service.GetConnPID(string(sender))
 	if err != nil {
@@ -144,23 +154,158 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 }
 
 type pwdChanger struct {
-	user    *user.User
-	uid     int
-	lang    string
-	xauth   string
-	display string
+	targetUser *User
+	cmd        *exec.Cmd
+	stdin      io.WriteCloser
+	stdout     io.ReadCloser
+	stderr     io.ReadCloser
+	readPipe   *os.File
+	writePipe  *os.File
+	xauthDir   string
 }
 
-// 此函数负责初始化用于更改密码的用户, 主要是要将来自 caller 的 xauth 凭证发送给 deepin_pwd_changer
-func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
+func (pcr *pwdChanger) runDialog(errch chan error) {
 
-	user, err := user.Lookup(pwdChangerUserName)
+	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(pcr.cmd), pcr.cmd.Env)
+
+	err := pcr.cmd.Start()
+	if err != nil {
+		err = fmt.Errorf("fail to start reset-password-dialog: %v", err)
+		errch <- err
+		return
+	} else {
+		errch <- nil
+	}
+
+	err = pcr.writePipe.Close()
+	if err != nil {
+		logger.Warningf("fail to close write side of pipe: %v", err)
+	}
+
+	rpipeReader := bufio.NewReader(pcr.readPipe)
+	stdinWriter := bufio.NewWriter(pcr.stdin)
+
+	// read shadowed pwd from dialog, this input should end with a '\n'
+	line, err := rpipeReader.ReadString('\n')
+	if err != nil {
+		logger.Warningf("set password with union ID: read line from reset-password-dialog failed: %v", err)
+		_, _ = stdinWriter.Write([]byte(fmt.Sprintf("fail to read from reset-password-dialog: %v\n", err)))
+		_ = stdinWriter.Flush()
+		return
+	}
+
+	line = line[:len(line)-1]
+	err = users.ModifyPasswd(line, pcr.targetUser.UserName)
+	if err != nil {
+		logger.Warningf("set password with union ID: fail to modify password: %v", err)
+		_, _ = stdinWriter.Write([]byte(fmt.Sprintf("fail to modify password: %v\n", err)))
+		_ = stdinWriter.Flush()
+		return
+	}
+
+	_, err = stdinWriter.Write([]byte("success\n"))
+	_ = stdinWriter.Flush()
+	if err != nil {
+		logger.Warningf("set password with union ID: fail to write success message: %v", err)
+	}
+
+	// reset limits
+	auth := authenticate.NewAuthenticate(pcr.targetUser.service.Conn())
+	err = auth.ResetLimits(0, pcr.targetUser.UserName)
+	if err != nil {
+		logger.Warningf("set password with union ID: fail to reset limits: %v", err)
+	}
+
+	// force remove user's login keyring, since the data inside is useless
+	err = removeLoginKeyring(pcr.targetUser)
+	if err != nil {
+		logger.Warningf("remove login keyring fail: %v", err)
+	}
+
+	stderrBuf := new(bytes.Buffer)
+	stdoutBuf := new(bytes.Buffer)
+
+	stdoutReader := bufio.NewReader(pcr.stdout)
+	stderrReader := bufio.NewReader(pcr.stderr)
+
+	_, err = io.Copy(stderrBuf, stderrReader)
+	if err != nil {
+		logger.Warningf("fail to get stderr of reset-password-dialog: %v", err)
+	}
+
+	_, err = io.Copy(stdoutBuf, stdoutReader)
+	if err != nil {
+		logger.Warningf("fail to get stdout of reset-password-dialog: %v", err)
+	}
+
+	err = pcr.cmd.Wait()
+	if err != nil {
+		logger.Warningf("reset-password-dialog exited: %v\nstderr:\n%v\nstdout:\n%v", err, stderrBuf, stdoutBuf)
+	}
+
+	// Terminate all sessions of this user, since its password is changed, and keyring has been force removed
+	login1Manager := login1.NewManager(pcr.targetUser.service.Conn())
+	uid, err := strconv.Atoi(pcr.targetUser.Uid)
+	if err != nil {
+		logger.Warningf("fail to get convert uid==%d: %v", uid, err)
+		return
+	}
+
+	path, err := login1Manager.GetUser(0, uint32(uid))
+	if err != nil {
+		logger.Infof("fail to get user by uid==%d: %v", uid, err)
+		return
+	}
+
+	login1User, err := login1.NewUser(pcr.targetUser.service.Conn(), path)
+	if err != nil {
+		logger.Warningf("fail to create login1 User Object: %v", err)
+		return
+	}
+
+	err = login1User.Terminate(0)
+	if err != nil {
+		logger.Warningf("fail to terminate user session: %v", err)
+		return
+	}
+
+	return
+}
+
+// clean all stuff relay to pwdChanger
+func (pcr *pwdChanger) clean() {
+	err := pcr.readPipe.Close()
+	if err != nil {
+		logger.Warningf("fail to close read end of pipe: %v", err)
+	}
+
+	err = os.RemoveAll(pcr.xauthDir)
+	if err != nil {
+		logger.Warningf("fail to remove tmp xauth dir: %v", err)
+	}
+}
+
+// 此函数负责初始化用于更改密码的用户
+// 主要是要将来自 caller 的 xauth 凭证发送给 deepin_pwd_changer 用户
+// FIXME this hack not working on wayland
+// 对话框的语言和被修改密码的用户的语言设置保持一致
+func newPwdChanger(caller *caller, u *User) (ret *pwdChanger, err error) {
+	pwdChangerUser, err := user.Lookup(pwdChangerUserName)
 	if err != nil {
 		err = fmt.Errorf("fail to get user info of %s: %v", pwdChangerUserName, err)
 		return
 	}
 
-	path := filepath.Join("/run", "user", user.Uid)
+	path := filepath.Join("/run", "user", pwdChangerUser.Uid)
+	defer func() {
+		if err != nil {
+			err := os.RemoveAll(path)
+			if err != nil {
+				logger.Warningf("fail to remove tmp xauth dir: %v", err)
+			}
+		}
+	}()
+
 	err = os.Mkdir(path, os.FileMode(0700))
 	if err != nil {
 		if os.IsExist(err) {
@@ -178,13 +323,13 @@ func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
 		}
 	}
 
-	uid, err := strconv.Atoi(user.Uid)
+	uid, err := strconv.Atoi(pwdChangerUser.Uid)
 	if err != nil {
 		err = fmt.Errorf("fail to convert uid to int: %v", err)
 		return
 	}
 
-	gid, err := strconv.Atoi(user.Gid)
+	gid, err := strconv.Atoi(pwdChangerUser.Gid)
 	if err != nil {
 		err = fmt.Errorf("fail to convert gid to int: %v", err)
 		return
@@ -215,6 +360,7 @@ func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
 		return
 	}
 
+	// get caller's xauth
 	cmd := exec.Command("runuser", "-u", caller.user.Username, "--", "xauth", "list") //#nosec G204
 	cmd.Env = append(cmd.Env, "XAUTHORITY="+caller.xauth)
 	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
@@ -225,15 +371,18 @@ func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
 		return
 	}
 
+	// Add all xauth entries from caller to pwdChanger
+	// After change hostname, some werid things happen to .Xauthority before a reboot
+	// The prefix match not working here. So we have to add all entries to pwdChanger's .Xauthority file
 	lines := strings.Split(string(xauths), "\n")
+	args := []string{"-u", pwdChangerUserName, "--", "xauth", "add"}
 	for _, line := range lines {
-		args := []string{"-u", pwdChangerUserName, "--", "xauth", "add"}
 		fields := strings.Split(line, "  ")
 		if fields[0] == "" {
 			continue
 		}
-		args = append(args, fields...)
-		cmd = exec.Command("runuser", args...) //#nosec G204
+		arg := append(args, fields...)
+		cmd = exec.Command("runuser", arg...) //#nosec G204
 		cmd.Env = append(cmd.Env, "XAUTHORITY="+xauthPath)
 		logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
 
@@ -244,48 +393,14 @@ func setupPwdChanger(caller *caller, lang string) (ret *pwdChanger, err error) {
 		}
 	}
 
-	ret = &pwdChanger{
-		user:    user,
-		uid:     uid,
-		lang:    lang,
-		xauth:   xauthPath,
-		display: caller.display,
-	}
-	return
-}
-
-func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
-	// TODO lock?
-
-	caller, err := newCaller(u.service, sender)
-	if err != nil {
-		err = fmt.Errorf("newCaller failed: %v", err)
-		return
-	}
-
-	pwdChanger, err := setupPwdChanger(caller, u.Locale)
-	defer func() {
-		if pwdChanger != nil {
-			e := os.RemoveAll(filepath.Dir(pwdChanger.xauth))
-			if e != nil {
-				logger.Warningf("fail to remove tmp xauth dir: %v", e)
-			}
-		}
-	}()
-	if err != nil {
-		err = fmt.Errorf("setup pwdChanger fail: %v", err)
-		return
-	}
-
 	// 检验可执行文件的属性
-
-	finfo, err := os.Stat("/usr/lib/dde-control-center/reset-password-dialog")
+	fInfo, err := os.Stat(resetPwdDialogPath)
 	if err != nil {
 		err = fmt.Errorf("get reset-password-dislog stat fail: %v", err)
 		return
 	}
 
-	fileSys := finfo.Sys()
+	fileSys := fInfo.Sys()
 	stat, ok := fileSys.(*syscall.Stat_t)
 	if !ok {
 		err = errors.New("fail to get stat of reset-password-dialog")
@@ -293,24 +408,38 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 	}
 
 	// TODO does this convert to uint32 safe?
-	if !(finfo.Mode() == 0500 && stat.Uid == uint32(pwdChanger.uid)) {
+	if !(fInfo.Mode() == 0500 && stat.Uid == uint32(uid)) {
 		err = errors.New("reset-password-dialog permission check failed")
-		return err
+		return
 	}
 
-	_r, _w, err := os.Pipe()
-	r := bufio.NewReader(_r)
+	// create pipe for dialog to send shadowed pwd
+	readPipe, writePipe, err := os.Pipe()
+	if err != nil {
+		err = fmt.Errorf("fail to create pipe: %v", err)
+		return
+	}
 
 	// -u 用户名
 	// -a 应用类型
+	// --fd 传递密码使用的文件描述符
 
-	cmd := exec.Command("runuser", "-u", pwdChanger.user.Username, "--", "/usr/lib/dde-control-center/reset-password-dialog", "-u", u.UserName, "-a", caller.app, "--fd", "3") //#nosec G204
+	cmd = exec.Command(
+		"runuser", "-u", pwdChangerUser.Username, "--",
+		resetPwdDialogPath, "-u", u.UserName, "-a", caller.app,
+		"--fd", "3") //#nosec G204
 
-	cmd.ExtraFiles = append(cmd.ExtraFiles, _w)
+	cmd.ExtraFiles = append(cmd.ExtraFiles, writePipe)
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		err = fmt.Errorf("get stdinpipe failed: %v", err)
+		return
+	}
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		err = fmt.Errorf("get stdoutpipe failed: %v", err)
 		return
 	}
 
@@ -322,138 +451,66 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 
 	cmd.Env = append(
 		cmd.Env,
-		"XAUTHORITY="+pwdChanger.xauth,
-		"DISPLAY="+pwdChanger.display,
-		"LANG="+pwdChanger.lang,
-		"LANGUAGE="+pwdChanger.lang,
+		"XAUTHORITY="+xauthPath,
+		"DISPLAY="+caller.display,
+		"LANG="+u.Locale,
+		"LANGUAGE="+u.Locale,
 	)
 
-	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
-
-	err = cmd.Start()
-	if err != nil {
-		err = fmt.Errorf("fail to start reset-password-dialog: %v", err)
-		return
+	ret = &pwdChanger{
+		targetUser: u,
+		cmd:        cmd,
+		stdin:      stdin,
+		stdout:     stdout,
+		stderr:     stderr,
+		readPipe:   readPipe,
+		writePipe:  writePipe,
+		xauthDir:   path,
 	}
-
-	err = _w.Close()
-	if err != nil {
-		err = fmt.Errorf("fail to close write side of pipe: %v", err)
-		return
-	}
-
-	w := bufio.NewWriter(stdin)
-	e := bufio.NewReader(stderr)
-
-	buf := bytes.NewBuffer([]byte{})
-	end := make(chan struct{}, 1)
-	go func() {
-		_, err := io.Copy(buf, e)
-		if err != nil {
-			logger.Warningf("fail to get stderr of reset-password-dialog: %v", err)
-		}
-		end <- struct{}{}
-	}()
-
-	// 如果以上的过程失败了, defer 会将刚创建的文件夹删掉.
-	// 如果成功了, 那么我们将 pwdChanger 置为空, 延迟到对话框结束运行再删除资源.
-	_pwdChanger := pwdChanger
-	pwdChanger = nil
-
-	go func() {
-		pwdChanged := false
-		defer func() {
-			err = cmd.Wait()
-			if err != nil {
-				<-end
-				logger.Warningf("reset-password-dialog exited: %v\nstderr:\n%v", err, buf)
-			}
-			err := _r.Close()
-			if err != nil {
-				logger.Warningf("failed to close read side of pipe: %v", err)
-			}
-
-			if _pwdChanger != nil {
-				e := os.RemoveAll(filepath.Dir(_pwdChanger.xauth))
-				if e != nil {
-					logger.Warningf("fail to remove tmp auth dir: %v", e)
-				}
-			}
-
-			if !pwdChanged {
-				return
-			}
-
-			// Terminate all sessions of this user, since its password is changed.
-			login1Manager := login1.NewManager(u.service.Conn())
-			uid, err := strconv.Atoi(u.Uid)
-			if err != nil {
-				logger.Warningf("fail to get convert uid==%d: %v", uid, err)
-				return
-			}
-
-			path, err := login1Manager.GetUser(0, uint32(uid))
-			if err != nil {
-				logger.Infof("fail to get user by uid==%d: %v", uid, err)
-				return
-			}
-
-			login1User, err := login1.NewUser(u.service.Conn(), path)
-			if err != nil {
-				logger.Warningf("fail to create login1 User Object: %v", err)
-				return
-			}
-
-			err = login1User.Terminate(0)
-			if err != nil {
-				logger.Warningf("fail to terminate user session: %v", err)
-				return
-			}
-		}()
-		line, err := r.ReadString('\n')
-		if err != nil {
-			logger.Warningf("set password with union ID: read line from reset-password-dialog failed: %v", err)
-			_, _ = w.Write([]byte(fmt.Sprintf("fail to read from reset-password-dialog: %v\n", err)))
-			_ = w.Flush()
-			return
-		}
-
-		line = line[:len(line)-1]
-		err = users.ModifyPasswd(line, u.UserName)
-		if err != nil {
-			logger.Warningf("set password with union ID: fail to modify password: %v", err)
-			_, _ = w.Write([]byte(fmt.Sprintf("fail to modify password: %v\n", err)))
-			_ = w.Flush()
-			return
-		}
-
-		pwdChanged = true
-		_, err = w.Write([]byte("success\n"))
-		_ = w.Flush()
-		if err != nil {
-			logger.Warningf("set password with union ID: fail to write success message: %v", err)
-		}
-
-		// reset limits
-		auth := authenticate.NewAuthenticate(u.service.Conn())
-		err = auth.ResetLimits(0, u.UserName)
-		if err != nil {
-			logger.Warningf("set password with union ID: fail to reset limits: %v", err)
-		}
-
-		err = removeLoginKeyring(u)
-		if err != nil {
-			logger.Warningf("remove login keyring fail: %v", err)
-		}
-	}()
 	return
 }
 
-// 此函数的功能是删除用户的 login keyring
+func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
+	errCh := make(chan error)
+	go doSetPwdWithUnionID(u, sender, errCh)
+	err = <-errCh
+	return
+}
+
+var pwdChangerLock sync.Mutex
+
+func doSetPwdWithUnionID(u *User, sender dbus.Sender, errCh chan error) {
+	pwdChangerLock.Lock()
+	defer pwdChangerLock.Unlock()
+
+	caller, err := newCaller(u.service, sender)
+	if err != nil {
+		err = fmt.Errorf("newCaller failed: %v", err)
+		errCh <- err
+		return
+	}
+
+	pcr, err := newPwdChanger(caller, u)
+	if err != nil {
+		err = fmt.Errorf("setup pwdChanger fail: %v", err)
+		errCh <- err
+		return
+	}
+
+	defer pcr.clean()
+
+	pcr.runDialog(errCh)
+
+	return
+}
+
+// 删除用户的 login keyring
 // 由于重置密码时没有输入原密码, 所以恢复 keyring 中的数据是不可能的, 只能直接移除掉.
 func removeLoginKeyring(user *User) (err error) {
-	// greeter 界面触发该功能时 user 的 session bus 不存在, 所以只能简单地直接删除文件
 	// FIXME
+	// greeter 界面触发该功能时 user 的 session bus 不存在,
+	// 所以只能简单地直接删除文件, 而不可能通过 keyring 的 daemon 删除密钥环
+	// FIXME login keyring 的位置有没可能变化?
 	err = os.Remove(user.HomeDir + "/.local/share/keyrings/login.keyring")
 	return
 }
