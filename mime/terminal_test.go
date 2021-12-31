@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package main
+package mime
 
 import (
 	"os"
@@ -28,7 +28,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_getTerminalPath(t *testing.T) {
+func Test_getPresetTerminalPath(t *testing.T) {
 	type env struct {
 		name  string
 		value string
@@ -75,7 +75,7 @@ func Test_getTerminalPath(t *testing.T) {
 				os.Setenv(e.name, e.value)
 			}
 
-			got := getTerminalPath()
+			got := GetPresetTerminalPath()
 			assert.Equal(t, tt.want, got)
 
 			for _, e := range tt.env {

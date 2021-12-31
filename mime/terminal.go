@@ -21,6 +21,7 @@ package mime
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
 
 	"github.com/linuxdeepin/go-gir/gio-2.0"
@@ -83,6 +84,25 @@ var execArgMap = map[string]string{
 	//"vala-terminal": "-e",
 }
 
+var terms = []string{
+	"deepin-terminal",
+	"gnome-terminal",
+	"terminator",
+	"xfce4-terminal",
+	"rxvt",
+	"xterm",
+}
+
+func GetPresetTerminalPath() string {
+	for _, exe := range terms {
+		file, _ := exec.LookPath(exe)
+		if file != "" {
+			return file
+		}
+	}
+	return ""
+}
+
 func getExecArg(exec string) string {
 	execArg := execArgMap[exec]
 	if execArg != "" {
@@ -117,9 +137,19 @@ func getDefaultTerminal() (*AppInfo, error) {
 		appId = appId + desktopExt
 	}
 	settings.Unref()
-	for _, info := range getTerminalInfos() {
+	list := getTerminalInfos()
+	// gs获取默认程序
+	for _, info := range list {
 		if info.Id == appId {
 			return info, nil
+		}
+	}
+	// gs没有,用预设默认程序
+	for _, term := range terms {
+		for _, info := range list {
+			if info.Exec == term {
+				return info, nil
+			}
 		}
 	}
 
