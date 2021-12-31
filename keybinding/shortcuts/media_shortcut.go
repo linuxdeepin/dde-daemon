@@ -120,6 +120,9 @@ var mediaIdActionMap = map[string]*Action{
 	// but can be specially by 'EnableNetworkController'
 	"wlan":  &Action{Type: ActionTypeToggleWireless},
 	"tools": &Action{Type: ActionTypeShowControlCenter},
+
+	// sleep
+	"sleep": &Action{Type: ActionTypeSystemSuspend},
 }
 
 func showOSD(signal string) {
