@@ -2,12 +2,11 @@ package bluetooth
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/godbus/dbus"
 	sysbtagent "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth.agent"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	"strconv"
 )
 
 func (b *SysBluetooth) ConnectDevice(devPath dbus.ObjectPath, adapterPath dbus.ObjectPath) *dbus.Error {
@@ -387,5 +386,31 @@ func (b *SysBluetooth) ClearUnpairedDevice() *dbus.Error {
 			logger.Warning(err)
 		}
 	}
+	return nil
+}
+
+// 断开所有音频设备
+func (b *SysBluetooth) DisconnectAudioDevices() *dbus.Error {
+	logger.Debug("call DisconnectAudioDevices")
+	b.adaptersMu.Lock()
+	devices := make([]*device, 0, len(b.adapters))
+	for aPath, _ := range b.adapters {
+		b.connectedMu.Lock()
+		for _, d := range b.connectedDevices[aPath] {
+			for _, uuid := range d.UUIDs {
+				if uuid == A2DP_SINK_UUID && d.connected {
+					logger.Infof("disconnect A2DP %s", d)
+					devices = append(devices, d)
+				}
+			}
+		}
+		b.connectedMu.Unlock()
+	}
+	b.adaptersMu.Unlock()
+
+	for _, device := range devices {
+		device.Disconnect()
+	}
+
 	return nil
 }
