@@ -33,7 +33,7 @@
 #include "_cgo_export.h"
 
 #define ALARM_TIMEOUT_DEFAULT 700 // 700ms
-#define LONG_PRESS_MAX_DISTANCE 1
+#define LONG_PRESS_MAX_DISTANCE 3
 #define SCREEN_WIDTH 100
 #define SCREEN_HEIGHT 100
 
