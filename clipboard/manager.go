@@ -476,6 +476,10 @@ func (m *Manager) finishSelectionRequest(ev *x.SelectionRequestEvent, success bo
 }
 
 func (m *Manager) saveTargets(targets []x.Atom, ts x.Timestamp) {
+	m.contentMu.Lock()
+	m.content = nil
+	m.contentMu.Unlock()
+
 	for _, target := range targets {
 		targetName, err := m.xc.GetAtomName(target)
 		if err != nil {
