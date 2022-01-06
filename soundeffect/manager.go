@@ -27,12 +27,12 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/soundutils"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-api/soundutils"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -170,14 +170,14 @@ func (m *Manager) canQuit() bool {
 	return count == 0
 }
 
-func (m *Manager) syncConfigToSoundThemePlayer(enabled bool) error {
+func (m *Manager) syncConfigToSoundThemePlayer(name string, enabled bool) error {
 	logger.Debug("sync config to sound-theme-player")
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
 		return err
 	}
 	player := soundthemeplayer.NewSoundThemePlayer(sysBus)
-	err = player.EnableSoundDesktopLogin(0, enabled)
+	err = player.EnableSound(0, name, enabled)
 	if err != nil {
 		return err
 	}
@@ -191,8 +191,9 @@ func (m *Manager) EnableSound(name string, enabled bool) *dbus.Error {
 		return dbusutil.ToError(errors.New("invalid sound event"))
 	}
 
-	if name == soundutils.EventDesktopLogin {
-		err := m.syncConfigToSoundThemePlayer(enabled)
+	if name == soundutils.EventDesktopLogin ||
+		name == soundutils.EventSystemShutdown {
+		err := m.syncConfigToSoundThemePlayer(name, enabled)
 		if err != nil {
 			return dbusutil.ToError(err)
 		}
@@ -221,11 +222,8 @@ func (m *Manager) GetSoundEnabledMap() (result map[string]bool, busErr *dbus.Err
 func (m *Manager) enabledWriteCb(write *dbusutil.PropertyWrite) *dbus.Error {
 	enabled := write.Value.(bool)
 
-	loginEnabled := false
-	if enabled {
-		loginEnabled = m.soundEffectGs.GetBoolean(soundutils.EventDesktopLogin)
-	}
-	err := m.syncConfigToSoundThemePlayer(loginEnabled)
+	// NOTE: 已经约定 name 为空表示控制总开关
+	err := m.syncConfigToSoundThemePlayer("", enabled)
 	if err != nil {
 		logger.Warning(err)
 	}
