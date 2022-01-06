@@ -47,6 +47,8 @@ type adapter struct {
 	// 扫描完成
 	discoveringFinished                 bool
 	scanReadyToConnectDeviceTimeoutFlag bool
+	// 自动回连完成标志位
+	autoConnectFinished bool
 	// waitDiscovery未使用
 	// waitDiscovery                       bool
 }
@@ -54,7 +56,7 @@ type adapter struct {
 var defaultDiscoveringTimeout = 1 * time.Minute
 
 func newAdapter(systemSigLoop *dbusutil.SignalLoop, objPath dbus.ObjectPath) (a *adapter) {
-	a = &adapter{Path: objPath}
+	a = &adapter{Path: objPath, autoConnectFinished: false}
 	systemConn := systemSigLoop.Conn()
 	a.core, _ = bluez.NewHCI(systemConn, objPath)
 	a.core.InitSignalExt(systemSigLoop, true)
@@ -243,8 +245,8 @@ func (a *adapter) connectProperties() {
 
 func (a *adapter) startDiscovery() {
 	a.discoveringFinished = false
-	// 已经开始扫描
-	if a.Discovering {
+	// 已经开始扫描 或 回连未结束 禁止开始扫描
+	if a.Discovering || !a.autoConnectFinished {
 		return
 	}
 

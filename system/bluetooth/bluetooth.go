@@ -148,6 +148,7 @@ func newSysBluetooth(service *dbusutil.Service) (b *SysBluetooth) {
 			return nil
 		}
 
+		adapter.autoConnectFinished = false
 		return b.autoConnectPairedDevice(devicePath, adapterPath)
 	}
 
@@ -165,6 +166,7 @@ func newSysBluetooth(service *dbusutil.Service) (b *SysBluetooth) {
 			return
 		}
 
+		adapter.autoConnectFinished = true
 		adapter.startDiscovery()
 	}
 
