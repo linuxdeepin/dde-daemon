@@ -575,7 +575,7 @@ func isMustAsk(data connectionData, settingName, secretKey string) bool {
 				return true
 			}
 		case "sae":
-			if secretKey == "sae" {
+			if secretKey == "psk" {
 				return true
 			}
 		case "none":
@@ -1004,7 +1004,7 @@ func getConnectionDataUint32(connectionData map[string]map[string]dbus.Variant,
 }
 
 var secretSettingKeys = map[string][]string{
-	"802-11-wireless-security": {"sae", "psk", "wep-key0", "wep-key1", "wep-key2", "wep-key3",
+	"802-11-wireless-security": {"psk", "wep-key0", "wep-key1", "wep-key2", "wep-key3",
 		"leap-password"},
 	"802-1x": {"password", "password-raw", "ca-cert-password",
 		"client-cert-password", "phase2-ca-cert-password", "phase2-client-cert-password",
