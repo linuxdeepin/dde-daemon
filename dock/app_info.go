@@ -30,17 +30,26 @@ import (
 const desktopHashPrefix = "d:"
 
 type AppInfo struct {
-	*desktopappinfo.DesktopAppInfo
+	filename       string
+	id             string
+	icon           string
 	identifyMethod string
 	innerId        string
 	name           string
+	actions        []desktopAction
+	isInstalled    bool
+}
+
+type desktopAction struct {
+	Section string
+	Name    string
 }
 
 func newAppInfo(dai *desktopappinfo.DesktopAppInfo) *AppInfo {
 	if dai == nil {
 		return nil
 	}
-	ai := &AppInfo{DesktopAppInfo: dai}
+	ai := &AppInfo{}
 	xDeepinVendor, _ := dai.GetString(desktopappinfo.MainSection, "X-Deepin-Vendor")
 	if xDeepinVendor == "deepin" {
 		ai.name = dai.GetGenericName()
@@ -50,7 +59,18 @@ func newAppInfo(dai *desktopappinfo.DesktopAppInfo) *AppInfo {
 	} else {
 		ai.name = dai.GetName()
 	}
-	ai.genInnerId()
+	ai.innerId = genInnerIdWithDesktopAppInfo(dai)
+	ai.filename = dai.GetFileName()
+	ai.id = dai.GetId()
+	ai.icon = dai.GetIcon()
+	ai.isInstalled = dai.IsInstalled()
+	actions := dai.GetActions()
+	for _, act := range actions {
+		ai.actions = append(ai.actions, desktopAction{
+			Section: act.Section,
+			Name:    act.Name,
+		})
+	}
 	return ai
 }
 
@@ -103,14 +123,34 @@ func NewAppInfoFromFile(file string) *AppInfo {
 	return newAppInfo(dai)
 }
 
-func (ai *AppInfo) genInnerId() {
-	cmdline := ai.GetCommandline()
+func (ai *AppInfo) GetFileName() string {
+	return ai.filename
+}
+
+func (ai *AppInfo) GetIcon() string {
+	return ai.icon
+}
+
+func (ai *AppInfo) GetId() string {
+	return ai.id
+}
+
+func (ai *AppInfo) GetActions() []desktopAction {
+	return ai.actions
+}
+
+func (ai *AppInfo) IsInstalled() bool {
+	return ai.isInstalled
+}
+
+func genInnerIdWithDesktopAppInfo(dai *desktopappinfo.DesktopAppInfo) string {
+	cmdline := dai.GetCommandline()
 	hasher := md5.New()
 	_, err := hasher.Write([]byte(cmdline))
 	if err != nil {
 		logger.Warning("Write error:", err)
 	}
-	ai.innerId = desktopHashPrefix + hex.EncodeToString(hasher.Sum(nil))
+	return desktopHashPrefix + hex.EncodeToString(hasher.Sum(nil))
 }
 
 func (ai *AppInfo) String() string {

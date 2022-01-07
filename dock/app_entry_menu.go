@@ -24,7 +24,6 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	_ "github.com/linuxdeepin/go-x11-client"
 )
@@ -72,7 +71,7 @@ func (entry *AppEntry) getMenuItemDesktopActions() []*MenuItem {
 	}
 
 	var items []*MenuItem
-	launchAction := func(action desktopappinfo.DesktopAction) func(timestamp uint32) {
+	launchAction := func(action desktopAction) func(timestamp uint32) {
 		return func(timestamp uint32) {
 			logger.Debugf("launch action %+v", action)
 			err := entry.manager.startManager.LaunchAppAction(dbus.FlagNoAutoStart,
