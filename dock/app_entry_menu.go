@@ -118,7 +118,16 @@ func (entry *AppEntry) getMenuItemCloseAll() *MenuItem {
 		winInfos := entry.getAllowedCloseWindows()
 		entry.PropsMu.RUnlock()
 
+		for i := 0; i < len(winInfos)-1; i++ {
+			for j := i + 1; j < len(winInfos); j++ {
+				if winInfos[i].getCreatedTime() < winInfos[j].getCreatedTime() {
+					winInfos[i], winInfos[j] = winInfos[j], winInfos[i]
+				}
+			}
+		}
+
 		for _, winInfo := range winInfos {
+			logger.Debug("to close win, xid:", winInfo.getXid(), ", created time:", winInfo.getCreatedTime())
 			err := winInfo.close(timestamp)
 			if err != nil {
 				logger.Warningf("failed to close window %d: %v", winInfo.getXid(), err)

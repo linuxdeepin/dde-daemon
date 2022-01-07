@@ -20,7 +20,7 @@
 package dock
 
 import (
-	"crypto/md5"
+	"crypto/md5" //#nosec G501
 	"encoding/hex"
 	"fmt"
 	"path/filepath"
@@ -80,6 +80,7 @@ func NewWindowInfo(win x.Window) *WindowInfo {
 		window: win,
 	}
 	winInfo.xid = win
+	winInfo.createdTime = time.Now().UnixNano()
 	return winInfo
 }
 

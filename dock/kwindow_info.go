@@ -1,6 +1,8 @@
 package dock
 
 import (
+	"time"
+
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	x "github.com/linuxdeepin/go-x11-client"
 )
@@ -29,6 +31,7 @@ type WindowInfoImp interface {
 	isMinimized() bool
 	killClient() error
 	changeXid(x.Window) bool
+	getCreatedTime() int64
 }
 
 type KWindowInfo struct {
@@ -54,6 +57,7 @@ type baseWindowInfo struct {
 	entry        *AppEntry
 	appInfo      *AppInfo
 	process      *ProcessInfo
+	createdTime  int64
 }
 
 func (winInfo *KWindowInfo) print() {
@@ -134,11 +138,16 @@ func (winInfo *baseWindowInfo) getXid() x.Window {
 	return winInfo.xid
 }
 
+func (winInfo *baseWindowInfo) getCreatedTime() int64 {
+	return winInfo.createdTime
+}
+
 func newKWindowInfo(winObj kwayland.Window, xid uint32) *KWindowInfo {
 	winInfo := &KWindowInfo{
 		winObj: winObj,
 	}
 	winInfo.xid = x.Window(xid)
+	winInfo.createdTime = time.Now().UnixNano()
 	return winInfo
 }
 
