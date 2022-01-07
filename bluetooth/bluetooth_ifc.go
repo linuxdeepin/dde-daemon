@@ -120,6 +120,11 @@ func (b *Bluetooth) SetAdapterPowered(adapter dbus.ObjectPath,
 		} else {
 			logger.Warning(err)
 		}
+	} else {
+		err := b.handleBluezPort(powered)
+		if err != nil {
+			logger.Warning(err)
+		}
 	}
 
 	logger.Debugf("SetAdapterPowered %q %v", adapter, powered)

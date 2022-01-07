@@ -24,14 +24,17 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/godbus/dbus"
 	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
+	audio "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
 	sysbt "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth"
 	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	mpris2 "github.com/linuxdeepin/go-dbus-factory/org.mpris.mediaplayer2"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -81,12 +84,15 @@ type Bluetooth struct {
 	Transportable bool   //能否传输 True可以传输 false不能传输
 	CanSendFile   bool
 
-	sessionCancelChMap    map[dbus.ObjectPath]chan struct{}
-	sessionCancelChMapMu  sync.Mutex
+	sessionCancelChMap   map[dbus.ObjectPath]chan struct{}
+	sessionCancelChMapMu sync.Mutex
 
 	settings *gio.Settings
 	//dbusutil-gen: ignore
 	DisplaySwitch gsprop.Bool `prop:"access:rw"`
+
+	sessionCon   *dbus.Conn
+	sessionAudio audio.Audio
 
 	// nolint
 	signals *struct {
@@ -189,6 +195,13 @@ func newBluetooth(service *dbusutil.Service) (b *Bluetooth) {
 	b.devices.infos = make(map[dbus.ObjectPath]DeviceInfos)
 	b.initiativeConnectMap = newInitiativeConnectMap()
 
+	b.sessionCon, err = dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+	b.sessionAudio = audio.NewAudio(b.sessionCon)
+
 	return
 }
 
@@ -262,6 +275,12 @@ func (b *Bluetooth) init() {
 			logger.Warning(err)
 			return
 		}
+
+		err = b.handleBluezPort(false)
+		if err != nil {
+			logger.Warning(err)
+		}
+
 		b.adapters.removeAdapter(adapterInfo.Path)
 		err = b.service.Emit(b, "AdapterRemoved", adapterJSON)
 		if err != nil {
@@ -393,6 +412,77 @@ func (b *Bluetooth) init() {
 
 	b.agent.init()
 	b.obexAgent.init()
+}
+
+func getMprisPlayers(sessionConn *dbus.Conn) ([]string, error) {
+	var playerNames []string
+	dbusDaemon := ofdbus.NewDBus(sessionConn)
+	names, err := dbusDaemon.ListNames(0)
+	if err != nil {
+		return nil, err
+	}
+	for _, name := range names {
+		if strings.HasPrefix(name, "org.mpris.MediaPlayer2") {
+			// is mpris player
+			playerNames = append(playerNames, name)
+		}
+	}
+	return playerNames, nil
+}
+
+//true ： play; false : pause
+func setAllPlayers(value bool) {
+	sessionConn, err := dbus.SessionBus()
+	if err != nil {
+		return
+	}
+	playerNames, err := getMprisPlayers(sessionConn)
+	if err != nil {
+		logger.Warning("getMprisPlayers failed:", err)
+		return
+	}
+
+	logger.Debug("pause all players")
+	for _, playerName := range playerNames {
+		player := mpris2.NewMediaPlayer(sessionConn, playerName)
+		if value {
+			err := player.Player().Play(0)
+			if err != nil {
+				logger.Warningf("failed to pause player %s: %v", playerName, err)
+			}
+		} else {
+			err := player.Player().Pause(0)
+			if err != nil {
+				logger.Warningf("failed to pause player %s: %v", playerName, err)
+			}
+		}
+
+	}
+}
+
+//获取当前是否为蓝牙端口音频，是：暂停音乐
+func (b *Bluetooth) handleBluezPort(value bool) error {
+	//get defaultSink Name
+	sinkPath, err := b.sessionAudio.DefaultSink().Get(0)
+	if err != nil {
+		return err
+	}
+
+	sink, err := audio.NewSink(b.sessionCon, sinkPath)
+	if err != nil {
+		return err
+	}
+	sinkName, err := sink.Name().Get(0)
+	if err != nil {
+		return err
+	}
+	isBluePort := strings.Contains(strings.ToLower(sinkName), "blue")
+	logger.Info(" handleBluezPort sinkName : ", sinkName, isBluePort)
+	if isBluePort {
+		//stop music
+		setAllPlayers(value)
+	}
+	return nil
 }
 
 func (b *Bluetooth) handleDBusNameOwnerChanged(name, oldOwner, newOwner string) {
