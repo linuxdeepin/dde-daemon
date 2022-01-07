@@ -38,19 +38,19 @@ import (
 	"strings"
 	"time"
 
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/soundutils"
+	"github.com/linuxdeepin/dde-api/userenv"
+	"github.com/linuxdeepin/dde-daemon/loader"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/proxy"
 	"github.com/linuxdeepin/go-lib/utils"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
-	"github.com/linuxdeepin/dde-api/soundutils"
-	"github.com/linuxdeepin/dde-api/userenv"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var logger = log.NewLogger("daemon/dde-session-daemon")
@@ -367,13 +367,30 @@ func savePamEnv(filename string, pamEnv []pamEnvKeyValue) error {
 	return err
 }
 
+// 同步所有涉及系统级设置的音效开关
 func syncConfigToSoundThemePlayer() error {
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
 		return err
 	}
-	loginEnabled := soundutils.CanPlayEvent(soundutils.EventDesktopLogin)
 	player := soundthemeplayer.NewSoundThemePlayer(sysBus)
-	err = player.EnableSoundDesktopLogin(0, loginEnabled)
+	soundEffectGs := gio.NewSettings("com.deepin.dde.sound-effect")
+	defer soundEffectGs.Unref()
+
+	for _, name := range []string{"", soundutils.EventDesktopLogin,
+		soundutils.EventSystemShutdown} {
+		gsKey := name
+		if name == "" {
+			// name 为空表示音效总开关
+			gsKey = "enabled"
+		}
+
+		enabled := soundEffectGs.GetBoolean(gsKey)
+		err = player.EnableSound(0, name, enabled)
+		if err != nil {
+			return err
+		}
+	}
+
 	return err
 }

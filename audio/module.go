@@ -22,10 +22,10 @@ package audio
 import (
 	"time"
 
+	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"golang.org/x/xerrors"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var (
