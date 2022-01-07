@@ -149,7 +149,7 @@ func (a *accessPoint) updateProps() {
 	a.Ssid = decodeSsid(ssid)
 	typ, err := getApSecType(a.nmAp)
 	if err != nil {
-		logger.Warningf("get ap sec type failed, err: %v", err)
+		logger.Debugf("get ap sec type failed, err: %v", err)
 	} else {
 		a.Secured = typ != apSecNone
 		a.SecuredInEap = typ == apSecEap
@@ -162,17 +162,17 @@ func (a *accessPoint) updateProps() {
 func getApSecType(ap nmdbus.AccessPoint) (apSecType, error) {
 	flags, err := ap.Flags().Get(0)
 	if err != nil {
-		logger.Warningf("get flags failed, err: %v", err)
+		logger.Debugf("get flags failed, err: %v", err)
 		return apSecNone, err
 	}
 	wpaFlags, err := ap.WpaFlags().Get(0)
 	if err != nil {
-		logger.Warningf("get wpa flags failed, err: %v", err)
+		logger.Debugf("get wpa flags failed, err: %v", err)
 		return apSecNone, err
 	}
 	rsnFlags, err := ap.RsnFlags().Get(0)
 	if err != nil {
-		logger.Warningf("get rsn flags failed, err: %v", err)
+		logger.Debugf("get rsn flags failed, err: %v", err)
 		return apSecNone, err
 	}
 	return doParseApSecType(flags, wpaFlags, rsnFlags), nil
