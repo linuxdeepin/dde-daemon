@@ -31,6 +31,7 @@ import (
 	"github.com/linuxdeepin/dde-daemon/network/nm"
 	"github.com/linuxdeepin/dde-daemon/network/proxychains"
 	"github.com/linuxdeepin/dde-daemon/session/common"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
 	sysNetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
@@ -62,6 +63,7 @@ type Manager struct {
 	sysSigLoop         *dbusutil.SignalLoop
 	service            *dbusutil.Service
 	sysNetwork         sysNetwork.Network
+	airplane           airplanemode.AirplaneMode
 	sysIPWatchD        ipwatchd.IPWatchD
 	nmObjManager       nmdbus.ObjectManager
 	PropsMu            sync.RWMutex
@@ -226,6 +228,7 @@ func (m *Manager) init() {
 
 	// initialize device and connection handlers
 	m.sysNetwork = sysNetwork.NewNetwork(systemBus)
+	m.airplane = airplanemode.NewAirplaneMode(systemBus)
 	m.loadMultiVpn()
 	m.initConnectionManage()
 	m.initDeviceManage()
@@ -234,6 +237,22 @@ func (m *Manager) init() {
 	m.stateHandler = newStateHandler(m.sysSigLoop, m)
 	m.initSysNetwork(systemBus)
 	m.initIPConflictManager(systemBus)
+
+	// monitor enable state
+	m.airplane.InitSignalExt(m.sysSigLoop, true)
+	err = m.airplane.Enabled().ConnectChanged(func(hasValue bool, value bool) {
+		// has value
+		if !hasValue {
+			return
+		}
+		// if enabled is true, airplane is on
+		if value {
+			showOSD("AirplaneModeOn")
+			// if enabled is false, airplane is off
+		} else {
+			showOSD("AirplaneModeOff")
+		}
+	})
 
 	// update property "State"
 	err = nmManager.PropState().ConnectChanged(func(hasValue bool, value uint32) {

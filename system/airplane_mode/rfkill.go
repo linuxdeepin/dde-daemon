@@ -1,7 +1,6 @@
 package airplane_mode
 
 import (
-	"bytes"
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
@@ -20,86 +19,109 @@ type RfkillDev struct {
 	devicePath  string
 }
 
+// isBlocked check if device is blocked
 func (d *RfkillDev) isBlocked() bool {
 	return d.hardBlocked || d.softBlocked
 }
 
-func enableBt(enabled bool) error {
-	action := "block"
-	if enabled {
-		action = "unblock"
+type RfkillModule int
+
+const (
+	RfkillBluetooth RfkillModule = iota
+	RfkillWlan
+	RfkillAll
+)
+
+// String module name
+func (module RfkillModule) String() string {
+	var name string
+	switch module {
+	case RfkillBluetooth:
+		name = "bluetooth"
+	case RfkillWlan:
+		name = "wlan"
+	case RfkillAll:
+		name = "all"
 	}
-	err := exec.Command("rfkill", action, "bluetooth").Run()
-	return err
+	return name
 }
 
-func getBtEnabled() (bool, error) {
-	devices, err := listBt()
+// rfkillAction use to block or unblock rfkill
+func rfkillAction(module RfkillModule, blocked bool) error {
+	// check if is block or unblock
+	action := "unblock"
+	if blocked {
+		action = "block"
+	}
+	// create
+	cmd := exec.Command("rfkill", action, module.String())
+	logger.Debugf("run rfkill command, command: %v", cmd.String())
+	// run and wait
+	buf, err := cmd.CombinedOutput()
 	if err != nil {
-		return false, err
+		logger.Warningf("run rfkill failed, msg: %v, err: %v", string(buf), err)
+		return err
 	}
-
-	blockedCount := 0
-	for _, device := range devices {
-		if device.isBlocked() {
-			blockedCount++
-		}
-	}
-	return blockedCount < len(devices), nil
+	return nil
 }
 
-func listBt() ([]*RfkillDev, error) {
-	var devices []*RfkillDev
-	fileInfoList, err := ioutil.ReadDir(classRfkillDir)
+// check if module is block
+// at least exist one rfkill config is non-block, this module is not block
+func isModuleBlocked(module RfkillModule) bool {
+	// check current dir
+	fileInfoSl, err := ioutil.ReadDir(classRfkillDir)
 	if err != nil {
-		return nil, err
+		return false
 	}
-	for _, fileInfo := range fileInfoList {
-		d, err := newRfkillDev(filepath.Join(classRfkillDir, fileInfo.Name()))
+	logger.Debugf("rfkill dir: %v", fileInfoSl)
+	// check every class
+	for _, fileInfo := range fileInfoSl {
+		// read rfkill device file info
+		dev, err := newRfkillDev(filepath.Join(classRfkillDir, fileInfo.Name()))
 		if err != nil {
-			return nil, err
-		}
-		if d.Type != "bluetooth" {
+			logger.Debugf("read rfkill state failed, filename: %v, err: %v", fileInfo.Name(), err)
 			continue
 		}
-		devices = append(devices, d)
+		// check type
+		if dev.Type != module.String() {
+			continue
+		}
+		logger.Debugf("dev name is %v, dev type is %v, block: %v", dev.name, dev.Type, dev.isBlocked())
+		// check if is block, if is non-block
+		// means this module is not blocked
+		if !dev.isBlocked() {
+			return false
+		}
 	}
-	return devices, nil
-}
-
-func readFile(filename string) (string, error) {
-	content, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return "", err
-	}
-	return string(bytes.TrimSpace(content)), nil
+	return true
 }
 
 const (
 	activeBlock = "1"
 )
 
-func newRfkillDev(p string) (*RfkillDev, error) {
+func newRfkillDev(devDir string) (*RfkillDev, error) {
+	logger.Debugf("read rfkill file: %v", devDir)
 	var d RfkillDev
-	buf, err := readFile(filepath.Join(p, "name"))
+	buf, err := readFile(filepath.Join(devDir, "name"))
 	if err != nil {
 		return nil, err
 	}
 	d.name = buf
 
-	buf, err = readFile(filepath.Join(p, "index"))
+	buf, err = readFile(filepath.Join(devDir, "index"))
 	if err != nil {
 		return nil, err
 	}
 	d.index = buf
 
-	buf, err = readFile(filepath.Join(p, "type"))
+	buf, err = readFile(filepath.Join(devDir, "type"))
 	if err != nil {
 		return nil, err
 	}
 	d.Type = buf
 
-	buf, err = readFile(filepath.Join(p, "hard"))
+	buf, err = readFile(filepath.Join(devDir, "hard"))
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +129,7 @@ func newRfkillDev(p string) (*RfkillDev, error) {
 		d.hardBlocked = true
 	}
 
-	buf, err = readFile(filepath.Join(p, "soft"))
+	buf, err = readFile(filepath.Join(devDir, "soft"))
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +137,7 @@ func newRfkillDev(p string) (*RfkillDev, error) {
 		d.softBlocked = true
 	}
 
-	d.devicePath, err = filepath.EvalSymlinks(filepath.Join(p, "device"))
+	d.devicePath, err = filepath.EvalSymlinks(filepath.Join(devDir, "device"))
 	if err != nil {
 		return nil, err
 	}

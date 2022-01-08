@@ -21,7 +21,6 @@ package shortcuts
 
 import (
 	"github.com/godbus/dbus"
-	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
 )
 
 type MediaShortcut struct {
@@ -115,7 +114,6 @@ var mediaIdActionMap = map[string]*Action{
 	"log-off": &Action{Type: ActionTypeSystemLogOff},
 	"away":    &Action{Type: ActionTypeSystemAway},
 
-	"airplane-mode-toggle": NewCallbackAction(airplaneModeToggle),
 	"web-cam":              NewExecCmdAction(cmdCamera, false),
 
 	// We do not need to deal with XF86Wlan key default,
@@ -128,32 +126,6 @@ func showOSD(signal string) {
 	logger.Debug("show OSD", signal)
 	sessionDBus, _ := dbus.SessionBus()
 	go sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
-}
-
-func airplaneModeToggle(ev *KeyEvent) {
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-	air := airplanemode.NewAirplaneMode(systemBus)
-	enabled, err := air.Enabled().Get(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-	err = air.Enable(0, !enabled)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	if !enabled {
-		showOSD("AirplaneModeOn")
-	} else {
-		showOSD("AirplaneModeOff")
-	}
-	logger.Debugf("toggle airplane mode from %v to %v", enabled, !enabled)
 }
 
 func (ms *MediaShortcut) GetAction() *Action {

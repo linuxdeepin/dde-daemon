@@ -212,7 +212,6 @@ func getMediaIdNameMap() map[string]string {
 		"meeting":              "Meeting",           // XF86Meeting
 		"touchpad-toggle":      "ToggleTouchpad",    // XF86TouchpadToggle
 		"away":                 "Away",              // XF86Away
-		"airplane-mode-toggle": "Airplane Mode",     // XF86RFKill
 		"web-cam":              "Camera",            // XF86WebCam
 		"switch-monitors":      gettext.Tr("Switch monitors"),
 	}

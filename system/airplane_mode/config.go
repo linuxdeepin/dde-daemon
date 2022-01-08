@@ -5,38 +5,81 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sync"
 )
 
 const (
 	configFile = "/var/lib/dde-daemon/airplane_mode/config.json"
 )
 
-type config struct {
-	Enabled bool
+// Config indicate each module config state
+// when config is not set in the beginning, block is false as default
+type Config struct {
+	// config store all rfkill module config
+	config map[RfkillModule]bool
+
+	mu sync.Mutex
 }
 
-func loadConfig(filename string, cfg *config) error {
-	content, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return err
+// NewConfig create config obj
+func NewConfig() *Config {
+	cfg := &Config{
+		config: make(map[RfkillModule]bool),
 	}
-	return json.Unmarshal(content, cfg)
+	return cfg
 }
 
-func saveConfig(filename string, cfg *config) error {
-	content, err := json.Marshal(cfg)
+// LoadConfig load config from file
+func (cfg *Config) LoadConfig() error {
+	// read file
+	buf, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		return err
 	}
-	dir := filepath.Dir(filename)
-	err = os.MkdirAll(dir, 0755)
-	if err != nil {
-		return err
-	}
-
-	err = ioutil.WriteFile(filename, content, 0644)
+	// marshal file to state
+	err = json.Unmarshal(buf, &cfg.config)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+// SaveConfig save config to file
+func (cfg *Config) SaveConfig() error {
+	// marshal config to buf
+	buf, err := json.Marshal(&cfg.config)
+	if err != nil {
+		return err
+	}
+	// make dir
+	err = os.MkdirAll(filepath.Dir(configFile), 0755)
+	if err != nil {
+		return err
+	}
+	// write config to file
+	err = ioutil.WriteFile(configFile, buf, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// SetBlocked set ref config state
+func (cfg *Config) SetBlocked(module RfkillModule, blocked bool) {
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
+	cfg.config[module] = blocked
+}
+
+// GetBlocked get ref config state
+// if config is not stored, rfkill is unblocked as default
+func (cfg *Config) GetBlocked(module RfkillModule) bool {
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
+	// get blocked state, if not exist, is blocked
+	blocked, ok := cfg.config[module]
+	if !ok {
+		return false
+	}
+	return blocked
 }
