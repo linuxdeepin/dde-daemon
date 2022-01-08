@@ -584,17 +584,19 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 	logger.Debugf("dev %v, enabled: %v, activate: %v", devPath, enabled, activate)
 	// check if need activate connection
 	if enabled && activate {
-		var uuid string
-		uuid, err = nmGetConnectionUuid(cpath)
-		if err != nil {
-			return
+		if cpath != "/" {
+			var uuid string
+			uuid, err = nmGetConnectionUuid(cpath)
+			if err != nil {
+				return
+			}
+			_, err = m.activateConnection(uuid, devPath)
+			if err != nil {
+				logger.Debug("failed to activate a connection")
+				return
+			}
+			logger.Debugf("active connection success, dev: %v, uuid: %v", devPath, uuid)
 		}
-		_, err = m.activateConnection(uuid, devPath)
-		if err != nil {
-			logger.Debug("failed to activate a connection")
-			return
-		}
-		logger.Debugf("active connection success, dev: %v, uuid: %v", devPath, uuid)
 
 		// activate connection first, then set auto-connect state,
 		// in case, auto-connect is set, nm cancel block connect and try to auto-activating
