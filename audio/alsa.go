@@ -2,7 +2,7 @@ package audio
 
 /*
 #cgo pkg-config: alsa
-#cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+#cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 #include <stdio.h>
 #include <stdlib.h>
 #include <alsa/asoundlib.h>

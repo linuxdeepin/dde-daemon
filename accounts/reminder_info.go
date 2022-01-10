@@ -1,6 +1,6 @@
 package accounts
 
-// #cgo CFLAGS: -D_GNU_SOURCE
+// #cgo CFLAGS: -W -Wall -D_GNU_SOURCE
 // #include "reminder_info.h"
 // #include <string.h>
 // #include <utmpx.h>

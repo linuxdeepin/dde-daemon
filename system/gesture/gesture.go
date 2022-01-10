@@ -20,7 +20,7 @@
 package gesture
 
 // #cgo pkg-config: libinput glib-2.0
-// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+// #cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #cgo LDFLAGS: -ludev -lm
 // #include <stdlib.h>
 // #include "core.h"
@@ -28,9 +28,9 @@ import "C"
 
 import (
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type Manager

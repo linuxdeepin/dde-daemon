@@ -20,20 +20,20 @@
 package inputdevices
 
 // #cgo pkg-config: x11 xi
-// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+// #cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 // #cgo LDFLAGS: -lpthread
 // #include "listen.h"
 import "C"
 
 import (
 	"encoding/json"
-	"strings"
 	"os"
+	"strings"
 
-	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/dde-api/dxinput"
 	"github.com/linuxdeepin/dde-api/dxinput/common"
 	dxutils "github.com/linuxdeepin/dde-api/dxinput/utils"
+	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 )
 
 type mouseInfo struct {

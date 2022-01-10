@@ -14,7 +14,7 @@ import (
 // #include <string.h>
 // #include <stdlib.h>
 // #cgo LDFLAGS: -ltc-api
-// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+// #cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 import "C"
 
 const uadpDir = "/usr/share/uadp/"

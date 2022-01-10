@@ -21,7 +21,7 @@ package keyevent
 // #include "libinput_bridge.h"
 // #cgo pkg-config: libinput glib-2.0
 // #cgo LDFLAGS: -ludev -lm
-// #cgo CFLAGS: -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+// #cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 import "C"
 
 //nolint

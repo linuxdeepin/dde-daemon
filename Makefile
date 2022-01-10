@@ -21,7 +21,7 @@ BINARIES =  \
 
 LANGUAGES = $(basename $(notdir $(wildcard misc/po/*.po)))
 
-CFLAGS = -fno-stack-protector
+CFLAGS = -W -Wall -fno-stack-protector
 
 all: build
 
