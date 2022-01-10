@@ -33,7 +33,6 @@ const (
 	userFilePasswd    = "/etc/passwd"
 	userFileShadow    = "/etc/shadow"
 	userFileGroup     = "/etc/group"
-	userFileLoginDefs = "/etc/login.defs"
 	userFileSudoers   = "/etc/sudoers"
 
 	itemLenPasswd    = 7
@@ -47,6 +46,32 @@ var (
 		"nologin",
 	}
 )
+
+func userFileLoginDefs() string {
+	userFileLoginDefs := "/etc/login.defs"
+	userFileLoginDefsFallback := "/usr/etc/login.defs"
+
+	exists := func(name string) bool {
+		_, err := os.Stat(name)
+		if err == nil {
+			return true
+		}
+		if errors.Is(err, os.ErrNotExist) {
+			return false
+		}
+		return false
+	}
+
+	if exists(userFileLoginDefs) {
+		return userFileLoginDefs
+	}
+
+	if exists(userFileLoginDefsFallback) {
+		return userFileLoginDefsFallback
+	}
+
+	return ""
+}
 
 type UserInfo struct {
 	Name    string
@@ -93,7 +118,7 @@ func GetHumanUserInfos() (UserInfos, error) {
 
 func IsHumanUdcpUserUid(uid uint32) bool {
 	userInfo := UserInfo{Uid: strconv.FormatUint(uint64(uid), 10)}
-	return userInfo.isHumanViaLoginDefs(userFileLoginDefs)
+	return userInfo.isHumanViaLoginDefs(userFileLoginDefs())
 }
 
 func GetUserInfoByName(name string) (UserInfo, error) {
@@ -165,7 +190,7 @@ func (infos UserInfos) GetUserNames() []string {
 func (infos UserInfos) filterUserInfos() UserInfos {
 	var tmp UserInfos
 	for _, info := range infos {
-		if !info.isHumanUser(userFileLoginDefs) {
+		if !info.isHumanUser(userFileLoginDefs()) {
 			continue
 		}
 
