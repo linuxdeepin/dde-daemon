@@ -23,6 +23,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 
@@ -150,4 +151,30 @@ func readEnvFile(file string) (envInfos, error) {
 	}
 
 	return infos, nil
+}
+
+func getTempDir() (string, error) {
+	return ioutil.TempDir("", "grub2_theme_*")
+}
+
+func replaceAndbackupDir(src string, dest string) error {
+	bakDir := src + ".bak"
+	err := os.RemoveAll(bakDir)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	err = os.Rename(src, bakDir)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	cmd := exec.Command("mv", dest, src)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		os.Rename(bakDir, src)
+		return err
+	}
+
+	return nil
 }

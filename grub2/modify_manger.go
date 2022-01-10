@@ -114,18 +114,34 @@ func (m *modifyManager) start(tasks ...modifyTask) {
 func (m *modifyManager) update(adjustTheme bool, adjustThemeLang string) {
 	if adjustTheme {
 		logJobStart(logJobAdjustTheme)
-		var args []string
-		if adjustThemeLang != "" {
-			args = append(args, "-lang", adjustThemeLang)
-		}
-		cmd := exec.Command(adjustThemeCmd, args...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-
-		logger.Debugf("$ %s %s", adjustThemeCmd, strings.Join(args, " "))
-		err := cmd.Run()
+		tempDir, err := getTempDir()
 		if err != nil {
-			logger.Warning("failed to adjust theme:", err)
+			logger.Warning("failed to get temp dir:", err)
+		} else {
+			var args []string
+			if adjustThemeLang != "" {
+				args = append(args, "-lang", adjustThemeLang)
+			}
+			args = append(args, "-theme-output", tempDir)
+			cmd := exec.Command(adjustThemeCmd, args...)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+
+			logger.Debugf("$ %s %s", adjustThemeCmd, strings.Join(args, " "))
+			err = cmd.Run()
+			if err != nil {
+				logger.Warning("failed to adjust theme:", err)
+			} else {
+				err = exec.Command("sync").Run()
+				if err != nil {
+					logger.Warning("failed to sync:", err)
+				} else {
+					err = replaceAndbackupDir(themesDir, tempDir)
+					if err != nil {
+						logger.Warning("failed to replace and backup dir:", err)
+					}
+				}
+			}
 		}
 		logJobEnd(logJobAdjustTheme, err)
 		m.g.theme.emitSignalBackgroundChanged()
