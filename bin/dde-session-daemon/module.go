@@ -42,7 +42,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/debug"
 	_ "github.com/linuxdeepin/dde-daemon/dock"
 	_ "github.com/linuxdeepin/dde-daemon/gesture"
-	_ "github.com/linuxdeepin/dde-daemon/grub_gfx"
 	_ "github.com/linuxdeepin/dde-daemon/housekeeping"
 	_ "github.com/linuxdeepin/dde-daemon/inputdevices"
 	_ "github.com/linuxdeepin/dde-daemon/keybinding"
