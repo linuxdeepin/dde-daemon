@@ -27,11 +27,16 @@ import (
 
 //go:generate dbusutil-gen em -type Manager
 
+// RSA-2048
+const uadpEncryptMaxSize = 256 - 11
+const uadpDecryptMaxSize = 256
+
 type Manager struct {
 	service *dbusutil.Service
 
-	ctx *CryptoContext
-	dm  *DataManager
+	ctx    *CryptoContext
+	aesCtx *AesContext
+	dm     *DataManager
 }
 
 func newManager(service *dbusutil.Service) *Manager {
@@ -39,6 +44,7 @@ func newManager(service *dbusutil.Service) *Manager {
 	m := &Manager{
 		service: service,
 		ctx:     NewCryptoContext(),
+		aesCtx:  NewAesContext(),
 		dm:      NewDataManager(uadpDataDir),
 	}
 
@@ -85,7 +91,17 @@ func (m *Manager) Set(sender dbus.Sender, name string, data []byte) *dbus.Error 
 		return dbusutil.ToError(err)
 	}
 
-	err = m.dm.SetData(uadpDataDir, exec, name, data)
+	aesKey := m.aesCtx.GenKey()
+	encryptedData, err := m.aesCtx.Encrypt(data, aesKey)
+	if err != nil {
+		logger.Warning(err)
+	}
+	encryptedKey := m.ctx.Encrypt(aesKey)
+	if len(encryptedKey) == 0 {
+		encryptedKey = aesKey
+	}
+
+	err = m.dm.SetData(uadpDataDir, exec, name, encryptedKey, encryptedData)
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
@@ -107,12 +123,18 @@ func (m *Manager) Get(sender dbus.Sender, name string) ([]byte, *dbus.Error) {
 		return []byte{}, dbusutil.ToError(err)
 	}
 
-	data, err := m.dm.GetData(exec, name)
+	key, data, err := m.dm.GetData(exec, name)
 	if err != nil {
 		logger.Warning(err)
 	}
 
-	return data, dbusutil.ToError(err)
+	decryptedKey := m.ctx.Decrypt(key)
+	if len(decryptedKey) == 0 {
+		decryptedKey = key
+	}
+	decryptedData, _ := m.aesCtx.Decrypt(data, decryptedKey)
+
+	return decryptedData, dbusutil.ToError(err)
 }
 
 func (m *Manager) Delete(sender dbus.Sender, name string) *dbus.Error {

@@ -38,7 +38,9 @@ func uuid(n int) string {
 // 创建一个加解密上下文
 func NewCryptoContext() *CryptoContext {
 	ctx := CryptoContext{nil, 0, 0, ""}
-	C.cryptoInit(&ctx.handle)
+	if !C.cryptoInit(&ctx.handle) {
+		ctx.handle = nil
+	}
 
 	return &ctx
 }

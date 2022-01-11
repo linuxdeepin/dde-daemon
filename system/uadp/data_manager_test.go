@@ -14,17 +14,19 @@ func Test_DataManager(t *testing.T) {
 
 	const uadpDataDir = "testdata/data/"
 	const uadpDataMap = "testdata/data.json"
+	const aesKey = "0123456789abcdef"
 
 	dm := NewDataManager(uadpDataDir)
 
 	for k, v := range testData {
-		err := dm.SetData(uadpDataDir, "dde.out", k, []byte(v))
+		err := dm.SetData(uadpDataDir, "dde.out", k, []byte(aesKey), []byte(v))
 		assert.NoError(t, err)
 	}
 
 	for k, v := range testData {
-		data, err := dm.GetData("dde.out", k)
+		key, data, err := dm.GetData("dde.out", k)
 		assert.NoError(t, err)
+		assert.Equal(t, aesKey, string(key))
 		assert.Equal(t, v, string(data))
 	}
 
@@ -32,8 +34,9 @@ func Test_DataManager(t *testing.T) {
 	dm.Load(uadpDataMap)
 
 	for k, v := range testData {
-		data, err := dm.GetData("dde.out", k)
+		key, data, err := dm.GetData("dde.out", k)
 		assert.NoError(t, err)
+		assert.Equal(t, aesKey, string(key))
 		assert.Equal(t, v, string(data))
 	}
 

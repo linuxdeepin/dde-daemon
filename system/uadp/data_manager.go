@@ -12,8 +12,13 @@ import (
 const uadpDataDir = uadpDir + "data/"
 const uadpDataMap = uadpDir + "data.json"
 
+type Data struct {
+	AesKey []byte
+	File   string
+}
+
 // data name => data file path
-type ProcessData = map[string]string
+type ProcessData = map[string]Data
 
 // process exe path => ProcessData
 type ProcessMap = map[string]ProcessData
@@ -83,9 +88,9 @@ func (dm *DataManager) ListName(process string) []string {
 	return nameList
 }
 
-func (dm *DataManager) SetData(dir string, process string, name string, data []byte) error {
+func (dm *DataManager) SetData(dir string, process string, name string, aesKey []byte, data []byte) error {
 	dm.makeProcessData(process)
-	file := dm.Data[process][name]
+	file := dm.Data[process][name].File
 	if len(file) != 0 {
 		os.Remove(file)
 	}
@@ -96,24 +101,28 @@ func (dm *DataManager) SetData(dir string, process string, name string, data []b
 		return err
 	}
 
-	dm.Data[process][name] = file
+	dm.Data[process][name] = Data{
+		AesKey: aesKey,
+		File:   file,
+	}
 	return nil
 }
 
-func (dm *DataManager) GetData(process string, name string) ([]byte, error) {
+func (dm *DataManager) GetData(process string, name string) ([]byte, []byte, error) {
 	dm.makeProcessData(process)
-	file := dm.Data[process][name]
+	aesKey := dm.Data[process][name].AesKey
+	file := dm.Data[process][name].File
 	if len(file) == 0 {
-		return []byte{}, fmt.Errorf("'%s' not exist", name)
+		return []byte{}, []byte{}, fmt.Errorf("'%s' not exist", name)
 	}
 
 	data, err := ioutil.ReadFile(file)
-	return data, err
+	return aesKey, data, err
 }
 
 func (dm *DataManager) DeleteData(process string, name string) {
 	dm.makeProcessData(process)
-	file := dm.Data[process][name]
+	file := dm.Data[process][name].File
 	if len(file) != 0 {
 		os.Remove(file)
 	}
@@ -123,9 +132,9 @@ func (dm *DataManager) DeleteData(process string, name string) {
 
 func (dm *DataManager) DeleteProcess(process string) {
 	dm.makeProcessData(process)
-	for _, file := range dm.Data[process] {
-		if len(file) != 0 {
-			os.Remove(file)
+	for _, data := range dm.Data[process] {
+		if len(data.File) != 0 {
+			os.Remove(data.File)
 		}
 	}
 
