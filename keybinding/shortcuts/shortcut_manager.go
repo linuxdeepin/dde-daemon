@@ -63,7 +63,6 @@ func GetQtKeycodeMap() map[string]string {
 		"audio-mic-mute":      "Qt::Key_MicMute",               // XF86AudioMicMute
 		"audio-pause":         "Qt::Key_MediaPause",            // XF86AudioPause
 		"audio-stop":          "Qt::Key_AudioStop",             // XF86AudioStop
-		"power-off":           "Qt::Key_PowerOff",              // XF86PowerOff
 		"documents":           "Qt::Key_Documents",             // XF86Documents
 		"game":                "Qt::Key_Game",                  // XF86Game
 		"search":              "<Super><Shift>Touchpad Toggle", // XF86Search

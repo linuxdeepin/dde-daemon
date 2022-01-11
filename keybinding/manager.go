@@ -377,7 +377,6 @@ var waylandMediaIdMap = map[string]string{
 	"AudioMicMute":      "audio-mic-mute",      // XF86AudioMicMute
 	"AudioPause":        "audio-pause",         // XF86AudioPause
 	"AudioStop":         "audio-stop",          // XF86AudioStop
-	"PowerOff":          "power-off",           // XF86PowerOff
 	"documents":         "Documents",           // XF86Documents
 	"game":              "Game",                // XF86Game
 	"AudioRecord":       "audio-record",        // XF86AudioRecord

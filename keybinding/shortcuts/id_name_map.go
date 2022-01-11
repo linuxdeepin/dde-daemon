@@ -173,7 +173,6 @@ func getMediaIdNameMap() map[string]string {
 		"audio-mic-mute":       "AudioMicMute",      // XF86AudioMicMute
 		"audio-pause":          "AudioPause",        // XF86AudioPause
 		"audio-stop":           "AudioStop",         // XF86AudioStop
-		"power-off":            "PowerOff",          // XF86PowerOff
 		"documents":            "Documents",         // XF86Documents
 		"game":                 "Game",              // XF86Game
 		"search":               "Search",            // XF86Search
