@@ -454,6 +454,11 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		if err != nil {
 			logger.Warningf("device disconnected failed, err: %v", err)
 		}
+	} else if enabled {
+		err = dev.nmDev.Device().Autoconnect().Set(0, true)
+		if err != nil {
+			logger.Warningf("init set auto-connect state failed, err: %v", err)
+		}
 	}
 	dev.Managed = nmGeneralIsDeviceManaged(devPath)
 
@@ -512,6 +517,7 @@ func (m *Manager) addDevice(devPath dbus.ObjectPath) {
 	if err != nil {
 		return
 	}
+
 	logger.Debug("add device", devPath)
 	devType := getCustomDeviceType(dev.nmDevType)
 	m.devices[devType] = append(m.devices[devType], dev)
