@@ -20,7 +20,7 @@
 package fonts
 
 // #cgo pkg-config: fontconfig
-// #cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+// #cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
 // #include <stdlib.h>
 // #include "font_list.h"
 import "C"

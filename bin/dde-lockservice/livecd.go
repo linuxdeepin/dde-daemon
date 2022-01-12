@@ -24,7 +24,7 @@ package main
 //#include <shadow.h>
 //#include <crypt.h>
 //#cgo LDFLAGS: -lcrypt
-//#cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+//#cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
 //int is_livecd(const char *username)\
 //{\
 //    if (strcmp("deepin", username) != 0) {\

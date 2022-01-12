@@ -1,7 +1,7 @@
 package network
 
 // #cgo pkg-config: libudev
-// #cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+// #cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
 // #include <stdlib.h>
 // #include "utils_udev.h"
 import "C"

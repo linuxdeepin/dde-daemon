@@ -20,7 +20,7 @@
 package gesture
 
 // #cgo pkg-config: libinput glib-2.0
-// #cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
+// #cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
 // #cgo LDFLAGS: -ludev -lm
 // #include <stdlib.h>
 // #include "core.h"
