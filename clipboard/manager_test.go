@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/linuxdeepin/dde-daemon/clipboard/mocks"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/stretchr/testify/assert"
-	"github.com/linuxdeepin/dde-daemon/clipboard/mocks"
 )
 
 func initAtomsForTest() {
@@ -193,25 +193,4 @@ func Test_shouldIgnoreSaveTarget(t *testing.T) {
 
 	assert.False(t, fn(200, "text/plain"))
 	assert.False(t, fn(200, "application/x-qt-image"))
-}
-
-func TestManagerAddGetTargetData(t *testing.T) {
-	m := &Manager{}
-	td0 := &TargetData{
-		Target: 1,
-		Type:   x.AtomAtom,
-		Data:   []byte{1, 2, 3, 4},
-	}
-	m.addTargetData(td0)
-	assert.Equal(t, td0, m.getTargetData(1))
-	assert.Len(t, m.content, 1)
-
-	td1 := &TargetData{
-		Target: 1,
-		Type:   x.AtomAtom,
-		Data:   []byte{1, 2, 3, 4, 5, 6, 7, 8},
-	}
-	m.addTargetData(td1)
-	assert.Equal(t, td1, m.getTargetData(1))
-	assert.Len(t, m.content, 1)
 }

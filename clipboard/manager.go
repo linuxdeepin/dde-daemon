@@ -65,13 +65,20 @@ func (td *TargetData) needINCR() bool {
 }
 
 type Manager struct {
-	xc        XClient
-	window    x.Window
-	ec        *eventCaptor
-	timestamp x.Timestamp
+	xc                        XClient
+	window                    x.Window
+	ec                        *eventCaptor
+	clipboardManagerAcquireTs x.Timestamp // 获取 CLIPBOARD_MANAGER selection 的时间戳
+	clipboardManagerLostTs    x.Timestamp // 丢失 CLIPBOARD_MANAGER selection 的时间戳
+	clipboardAcquireTs        x.Timestamp // 获取 CLIPBOARD selection 的时间戳
+	clipboardLostTs           x.Timestamp // 丢失 CLIPBOARD selection 的时间戳
 
 	contentMu sync.Mutex
 	content   []*TargetData
+
+	saveTargetsMu          sync.Mutex
+	saveTargetsSuccessTime time.Time
+	saveTargetsRequestor   x.Window
 }
 
 func (m *Manager) getTargetData(target x.Atom) *TargetData {
@@ -86,17 +93,30 @@ func (m *Manager) getTargetData(target x.Atom) *TargetData {
 	return nil
 }
 
-func (m *Manager) addTargetData(targetData *TargetData) {
-	m.contentMu.Lock()
-	defer m.contentMu.Unlock()
-
-	for idx, td := range m.content {
-		if td.Target == targetData.Target {
-			m.content[idx] = targetData
-			return
-		}
+func (m *Manager) setContent(targetDataMap map[x.Atom]*TargetData) {
+	// 给剪贴板数据带上特殊标记，为了让前端 dde-clipboard 知道是本程序给出的剪贴板数据
+	targetDataMap[atomFromClipboardManager] = &TargetData{
+		Target: atomFromClipboardManager,
+		Type:   x.AtomString,
+		Format: 8,
+		Data:   []byte("1"),
 	}
-	m.content = append(m.content, targetData)
+	for _, data := range targetDataMap {
+		logger.Debugf("content target %s len: %v",
+			getAtomDesc(m.xc.Conn(), data.Target), len(data.Data))
+	}
+	targetDataSlice := mapToSliceTargetData(targetDataMap)
+	m.contentMu.Lock()
+	m.content = targetDataSlice
+	m.contentMu.Unlock()
+}
+
+func mapToSliceTargetData(dataMap map[x.Atom]*TargetData) []*TargetData {
+	result := make([]*TargetData, 0, len(dataMap))
+	for _, data := range dataMap {
+		result = append(result, data)
+	}
+	return result
 }
 
 func (m *Manager) start() error {
@@ -122,6 +142,12 @@ func (m *Manager) start() error {
 		logger.Warning(err)
 	}
 
+	err = m.xc.SelectSelectionInputE(m.window, atomClipboardManager,
+		xfixes.SelectionEventMaskSetSelectionOwner)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	m.ec = newEventCaptor()
 	eventChan := make(chan x.GenericEvent, 50)
 	m.xc.Conn().AddEventChan(eventChan)
@@ -135,7 +161,6 @@ func (m *Manager) start() error {
 	if err != nil {
 		return err
 	}
-	m.timestamp = ts
 
 	logger.Debug("ts:", ts)
 	err = setSelectionOwner(m.xc, m.window, atomClipboardManager, ts)
@@ -152,12 +177,13 @@ func (m *Manager) start() error {
 }
 
 func (m *Manager) handleEvent(ev x.GenericEvent) {
-	xfixesExtData := m.xc.Conn().GetExtensionData(xfixes.Ext())
+	xConn := m.xc.Conn()
+	xfixesExtData := xConn.GetExtensionData(xfixes.Ext())
 	code := ev.GetEventCode()
 	switch code {
 	case x.SelectionRequestEventCode:
 		event, _ := x.NewSelectionRequestEvent(ev)
-		logger.Debug(selReqEventToString(event))
+		logger.Debug(selReqEventToString(event, xConn))
 
 		if event.Selection == atomClipboardManager {
 			go m.convertClipboardManager(event)
@@ -169,19 +195,19 @@ func (m *Manager) handleEvent(ev x.GenericEvent) {
 		event, _ := x.NewPropertyNotifyEvent(ev)
 
 		if m.ec.handleEvent(event) {
-			logger.Debug("->", propNotifyEventToString(event))
+			logger.Debug("->", propNotifyEventToString(event, xConn))
 			return
 		}
-		logger.Debug(">>", propNotifyEventToString(event))
+		logger.Debug(">>", propNotifyEventToString(event, xConn))
 
 	case x.SelectionNotifyEventCode:
 		event, _ := x.NewSelectionNotifyEvent(ev)
 
 		if m.ec.handleEvent(event) {
-			logger.Debug("->", selNotifyEventToString(event))
+			logger.Debug("->", selNotifyEventToString(event, xConn))
 			return
 		}
-		logger.Debug(">>", selNotifyEventToString(event))
+		logger.Debug(">>", selNotifyEventToString(event, xConn))
 
 	case x.DestroyNotifyEventCode:
 		event, _ := x.NewDestroyNotifyEvent(ev)
@@ -199,19 +225,73 @@ func (m *Manager) handleEvent(ev x.GenericEvent) {
 		case xfixes.SelectionEventSetSelectionOwner:
 			if event.Selection == atomClipboard {
 				if event.Owner == m.window {
-					logger.Debug("i have become the owner of CLIPBOARD")
+					logger.Debug("i have become the owner of CLIPBOARD selection, ts:", event.SelectionTimestamp)
+					m.clipboardAcquireTs = event.SelectionTimestamp
+					m.clipboardLostTs = 0
 				} else {
-					logger.Debug("other app have become the owner of CLIPBOARD")
+					logger.Debug("other app have become the owner of CLIPBOARD selection, ts:", event.SelectionTimestamp)
+					if event.SelectionTimestamp >= m.clipboardAcquireTs {
+						m.clipboardLostTs = event.SelectionTimestamp
+					}
+					const delay = 300 * time.Millisecond
+					time.AfterFunc(delay, func() {
+						// 等300ms，等 clipboard manager 的 SAVE_TARGETS 转换开始, 如果已经开始了则不再进行主动的数据保存。
+						m.saveTargetsMu.Lock()
+						defer func() {
+							m.saveTargetsRequestor = 0
+							m.saveTargetsMu.Unlock()
+						}()
+
+						shouldIgnore := m.saveTargetsRequestor == event.Owner &&
+							time.Since(m.saveTargetsSuccessTime) < time.Second
+
+						if shouldIgnore {
+							logger.Debug("do not call handleClipboardUpdated")
+							return
+						}
+						err := m.handleClipboardUpdated(event.SelectionTimestamp)
+						if err != nil {
+							logger.Warning("handle clipboard updated err:", err)
+						}
+					})
+				}
+			} else if event.Selection == atomClipboardManager {
+				if event.Owner == m.window {
+					logger.Debug("i have become the owner of CLIPBOARD_MANAGER selection, ts:", event.SelectionTimestamp)
+					m.clipboardManagerAcquireTs = event.SelectionTimestamp
+					m.clipboardManagerLostTs = 0
+				} else {
+					if event.SelectionTimestamp >= m.clipboardManagerAcquireTs {
+						m.clipboardManagerLostTs = event.SelectionTimestamp
+					}
 				}
 			}
 
 		case xfixes.SelectionEventSelectionWindowDestroy, xfixes.SelectionEventSelectionClientClose:
-			err := m.becomeClipboardOwner(event.Timestamp)
-			if err != nil {
-				logger.Warning(err)
+			if event.Selection == atomClipboard {
+				err := m.becomeClipboardOwner(event.Timestamp)
+				if err != nil {
+					logger.Warning(err)
+				}
 			}
 		}
 	}
+}
+
+// 处理剪贴板数据更新
+func (m *Manager) handleClipboardUpdated(ts x.Timestamp) error {
+	logger.Debug("handleClipboardUpdated", ts)
+
+	targets, err := m.getClipboardTargets(ts)
+	if err != nil {
+		return err
+	}
+	logger.Debug("targets:", targets)
+	targetDataMap := m.saveTargets(targets, ts)
+	m.setContent(targetDataMap)
+
+	logger.Debug("handleClipboardUpdated finish", ts)
+	return nil
 }
 
 func setSelectionOwner(xc XClient, win x.Window, selection x.Atom, ts x.Timestamp) error {
@@ -235,6 +315,7 @@ func (m *Manager) becomeClipboardOwner(ts x.Timestamp) error {
 	return nil
 }
 
+// 转换 CLIPBOARD selection 的 TARGETS target，剪贴板获取支持的所有 targets。
 func (m *Manager) getClipboardTargets(ts x.Timestamp) ([]x.Atom, error) {
 	selNotifyEvent, err := m.ec.captureSelectionNotifyEvent(func() error {
 		m.xc.ConvertSelection(m.window, atomClipboard,
@@ -266,61 +347,50 @@ func (m *Manager) getClipboardTargets(ts x.Timestamp) ([]x.Atom, error) {
 	return targets, nil
 }
 
-// convert CLIPBOARD_MANAGER selection
+func canConvertSelection(acquireTs, lostTs, evTs x.Timestamp) bool {
+	logger.Debug("canConvertSelection", acquireTs, lostTs, evTs)
+	// evTs == 0 表示现在
+	if acquireTs == 0 {
+		// 未获取
+		return false
+	}
+
+	if lostTs == 0 {
+		// 现在未失去
+		if acquireTs <= evTs || evTs == 0 {
+			return true
+		}
+
+	} else {
+		// 现在已经失去
+		if evTs == 0 {
+			return false
+		}
+
+		if acquireTs <= evTs && evTs < lostTs {
+			return true
+		}
+	}
+	return false
+}
+
+// 处理 CLIPBOARD_MANAGER selection 的转换请求,
+// target 支持：SAVE_TARGETS, TARGETS, TIMESTAMP
 func (m *Manager) convertClipboardManager(ev *x.SelectionRequestEvent) {
 	logger.Debug("convert CLIPBOARD_MANAGER selection")
+	if !canConvertSelection(m.clipboardManagerAcquireTs, m.clipboardManagerLostTs, ev.Time) {
+		logger.Debug("can not covert selection, ts invalid")
+		m.finishSelectionRequest(ev, false)
+		return
+	}
+
 	switch ev.Target {
 	case atomSaveTargets:
-		logger.Debug("SAVE_TARGETS")
-		err := m.xc.ChangeWindowEventMask(ev.Requestor, x.EventMaskStructureNotify)
+		err := m.covertClipboardManagerSaveTargets(ev)
 		if err != nil {
-			logger.Warning(err)
-			m.finishSelectionRequest(ev, false)
-			return
+			logger.Warning("covert ClipboardManager saveTargets err:", err)
 		}
-
-		var targets []x.Atom
-		var replyType x.Atom
-		if ev.Property != x.None {
-			reply, err := m.xc.GetProperty(true, ev.Requestor, ev.Property,
-				x.AtomAtom, 0, 0x1FFFFFFF)
-			if err != nil {
-				logger.Warning(err)
-				m.finishSelectionRequest(ev, false)
-				return
-			}
-
-			replyType = reply.Type
-			if reply.Type != x.None {
-				targets, err = getAtomListFormReply(reply)
-				if err != nil {
-					logger.Warning(err)
-					m.finishSelectionRequest(ev, false)
-					return
-				}
-			}
-		}
-
-		if replyType == x.None {
-			logger.Debugf("need convert clipboard targets")
-			targets, err = m.getClipboardTargets(ev.Time)
-			if err != nil {
-				logger.Warning(err)
-				m.finishSelectionRequest(ev, false)
-				return
-			}
-		}
-
-		m.saveTargets(targets, ev.Time)
-		// add special target
-		m.addTargetData(&TargetData{
-			Target: atomFromClipboardManager,
-			Type:   x.AtomString,
-			Format: 8,
-			Data:   []byte("1"),
-		})
-
-		m.finishSelectionRequest(ev, true)
+		m.finishSelectionRequest(ev, err == nil)
 
 	case atomTargets:
 		w := x.NewWriter()
@@ -336,7 +406,7 @@ func (m *Manager) convertClipboardManager(ev *x.SelectionRequestEvent) {
 
 	case atomTimestamp:
 		w := x.NewWriter()
-		w.Write4b(uint32(m.timestamp))
+		w.Write4b(uint32(m.clipboardManagerAcquireTs))
 		err := m.xc.ChangePropertyE(x.PropModeReplace, ev.Requestor,
 			ev.Property, x.AtomInteger, 32, w.Bytes())
 		if err != nil {
@@ -345,18 +415,71 @@ func (m *Manager) convertClipboardManager(ev *x.SelectionRequestEvent) {
 		m.finishSelectionRequest(ev, err == nil)
 
 	default:
+		// 不支持的 target
 		m.finishSelectionRequest(ev, false)
 	}
 }
 
-// convert CLIPBOARD selection
+func (m *Manager) covertClipboardManagerSaveTargets(ev *x.SelectionRequestEvent) error {
+	m.saveTargetsMu.Lock()
+	defer m.saveTargetsMu.Unlock()
+
+	err := m.xc.ChangeWindowEventMask(ev.Requestor, x.EventMaskStructureNotify)
+	if err != nil {
+		return err
+	}
+
+	var targets []x.Atom
+	var replyType x.Atom
+	if ev.Property != x.None {
+		reply, err := m.xc.GetProperty(true, ev.Requestor, ev.Property,
+			x.AtomAtom, 0, 0x1FFFFFFF)
+		if err != nil {
+			return err
+		}
+
+		replyType = reply.Type
+		if reply.Type != x.None {
+			targets, err = getAtomListFormReply(reply)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if replyType == x.None {
+		logger.Debug("need convert clipboard targets")
+		targets, err = m.getClipboardTargets(ev.Time)
+		if err != nil {
+			return err
+		}
+	}
+
+	targetDataMap := m.saveTargets(targets, ev.Time)
+	m.setContent(targetDataMap)
+
+	m.saveTargetsRequestor = ev.Requestor
+	m.saveTargetsSuccessTime = time.Now()
+	return nil
+}
+
+// 处理 CLIPBOARD selection 的转换请求
 func (m *Manager) convertClipboard(ev *x.SelectionRequestEvent) {
 	targetName, _ := m.xc.GetAtomName(ev.Target)
-	logger.Debugf("convert clipboard target %s %d", targetName, ev.Target)
+	logger.Debugf("convert clipboard target %s|%d", targetName, ev.Target)
 
-	if ev.Target == atomTargets {
+	if !canConvertSelection(m.clipboardAcquireTs, m.clipboardLostTs, ev.Time) {
+		logger.Debug("can not covert selection, ts invalid")
+		m.finishSelectionRequest(ev, false)
+		return
+	}
+
+	switch ev.Target {
+	case atomTargets:
+		// TARGETS
 		w := x.NewWriter()
 		w.Write4b(uint32(atomTargets))
+		w.Write4b(uint32(atomTimestamp))
 		m.contentMu.Lock()
 		for _, targetData := range m.content {
 			w.Write4b(uint32(targetData.Target))
@@ -369,13 +492,25 @@ func (m *Manager) convertClipboard(ev *x.SelectionRequestEvent) {
 			logger.Warning(err)
 		}
 		m.finishSelectionRequest(ev, err == nil)
-
-	} else {
+	case atomTimestamp:
+		// TIMESTAMP
+		w := x.NewWriter()
+		w.Write4b(uint32(m.clipboardAcquireTs))
+		err := m.xc.ChangePropertyE(x.PropModeReplace, ev.Requestor,
+			ev.Property, x.AtomInteger, 32, w.Bytes())
+		if err != nil {
+			logger.Warning(err)
+		}
+		m.finishSelectionRequest(ev, err == nil)
+		// TODO 支持 MULTIPLE target
+	default:
 		targetData := m.getTargetData(ev.Target)
 		if targetData == nil {
 			m.finishSelectionRequest(ev, false)
 			return
 		}
+		logger.Debugf("target %d len: %v, needINCR: %v", targetData.Target, len(targetData.Data),
+			targetData.needINCR())
 
 		if targetData.needINCR() {
 			err := m.sendTargetIncr(targetData, ev)
@@ -393,13 +528,24 @@ func (m *Manager) convertClipboard(ev *x.SelectionRequestEvent) {
 	}
 }
 
+// NOTE: 需要在这个函数调用 finishSelectionRequest
 func (m *Manager) sendTargetIncr(targetData *TargetData, ev *x.SelectionRequestEvent) error {
 	err := m.xc.ChangeWindowEventMask(ev.Requestor, x.EventMaskPropertyChange)
 	if err != nil {
+		m.finishSelectionRequest(ev, false)
 		return err
 	}
 
+	// 函数返回时还原请求窗口的 event mask
+	defer func() {
+		err := m.xc.ChangeWindowEventMask(ev.Requestor, 0)
+		if err != nil {
+			logger.Warning("reset requestor window event mask err:", err)
+		}
+	}()
+
 	_, err = m.ec.capturePropertyNotifyEvent(func() error {
+		// 把 target 数据长度通过属性 ev.Property 告知请求者。
 		w := x.NewWriter()
 		w.Write4b(uint32(len(targetData.Data)))
 		err = m.xc.ChangePropertyE(x.PropModeReplace, ev.Requestor, ev.Property,
@@ -407,6 +553,7 @@ func (m *Manager) sendTargetIncr(targetData *TargetData, ev *x.SelectionRequestE
 		if err != nil {
 			logger.Warning(err)
 		}
+		// NOTE: 一定要在开始传输具体数据之前 finish selection request
 		m.finishSelectionRequest(ev, err == nil)
 		return err
 	}, func(pev *x.PropertyNotifyEvent) bool {
@@ -441,6 +588,9 @@ func (m *Manager) sendTargetIncr(targetData *TargetData, ev *x.SelectionRequestE
 				pev.State == x.PropertyDelete &&
 				pev.Atom == ev.Property
 		})
+		if err != nil {
+			return err
+		}
 
 		if length == 0 {
 			break
@@ -470,15 +620,23 @@ func (m *Manager) finishSelectionRequest(ev *x.SelectionRequestEvent, success bo
 		logger.Warning(err)
 	}
 
-	logger.Debugf("finish selection request %v {Requestor: %d, Selection: %d,"+
-		" Target: %d, Property: %d}",
-		success, ev.Requestor, ev.Selection, ev.Target, ev.Property)
+	if logger.GetLogLevel() == log.LevelDebug {
+		successStr := "success"
+		if !success {
+			successStr = "fail"
+		}
+		xConn := m.xc.Conn()
+		logger.Debugf("finish selection request %s {Requestor: %d, Selection: %s,"+
+			" Target: %s, Property: %s}",
+			successStr, ev.Requestor,
+			getAtomDesc(xConn, ev.Selection),
+			getAtomDesc(xConn, ev.Target),
+			getAtomDesc(xConn, ev.Property))
+	}
 }
 
-func (m *Manager) saveTargets(targets []x.Atom, ts x.Timestamp) {
-	m.contentMu.Lock()
-	m.content = nil
-	m.contentMu.Unlock()
+func (m *Manager) saveTargets(targets []x.Atom, ts x.Timestamp) map[x.Atom]*TargetData {
+	result := make(map[x.Atom]*TargetData, len(targets))
 
 	for _, target := range targets {
 		targetName, err := m.xc.GetAtomName(target)
@@ -487,16 +645,20 @@ func (m *Manager) saveTargets(targets []x.Atom, ts x.Timestamp) {
 			continue
 		}
 		if shouldIgnoreSaveTarget(target, targetName) {
-			logger.Debug("ignore target", target, targetName)
+			logger.Debugf("ignore target %s|%d", targetName, target)
 			continue
 		}
 
-		logger.Debug("save target", target, targetName)
-		err = m.saveTarget(target, ts)
+		logger.Debugf("save target %s|%d", targetName, target)
+		td, err := m.saveTarget(target, ts)
 		if err != nil {
-			logger.Warning(err)
+			logger.Warningf("save target failed %s|%d, err: %v", targetName, target, err)
+		} else {
+			result[td.Target] = td
+			logger.Debugf("save target success %s|%d", targetName, target)
 		}
 	}
+	return result
 }
 
 func shouldIgnoreSaveTarget(target x.Atom, targetName string) bool {
@@ -518,7 +680,7 @@ func shouldIgnoreSaveTarget(target x.Atom, targetName string) bool {
 	return false
 }
 
-func (m *Manager) saveTarget(target x.Atom, ts x.Timestamp) error {
+func (m *Manager) saveTarget(target x.Atom, ts x.Timestamp) (targetData *TargetData, err error) {
 	selNotifyEvent, err := m.ec.captureSelectionNotifyEvent(func() error {
 		m.xc.ConvertSelection(m.window, atomClipboard, target, target, ts)
 		return m.xc.Flush()
@@ -528,36 +690,34 @@ func (m *Manager) saveTarget(target x.Atom, ts x.Timestamp) error {
 			event.Target == target
 	})
 	if err != nil {
-		return err
+		return
 	}
 	if selNotifyEvent.Property == x.None {
-		return errors.New("failed to convert target")
+		err = errors.New("failed to convert target")
+		return
 	}
 
 	propReply, err := m.getProperty(m.window, selNotifyEvent.Property, false)
 	if err != nil {
-		return err
+		return
 	}
 
 	if propReply.Type == atomIncr {
-		err := m.recvTargetIncr(target, selNotifyEvent.Property)
-		if err != nil {
-			return err
-		}
+		targetData, err = m.receiveTargetIncr(target, selNotifyEvent.Property)
 	} else {
 		err = m.xc.DeletePropertyE(m.window, selNotifyEvent.Property)
 		if err != nil {
-			return err
+			return
 		}
 		logger.Debug("data len:", len(propReply.Value))
-		m.addTargetData(&TargetData{
+		targetData = &TargetData{
 			Target: target,
 			Type:   propReply.Type,
 			Format: propReply.Format,
 			Data:   propReply.Value,
-		})
+		}
 	}
-	return nil
+	return
 }
 
 func (m *Manager) getProperty(win x.Window, propertyAtom x.Atom, delete bool) (*x.GetPropertyReply, error) {
@@ -578,13 +738,14 @@ func (m *Manager) getProperty(win x.Window, propertyAtom x.Atom, delete bool) (*
 	return propReply, nil
 }
 
-func (m *Manager) recvTargetIncr(target, prop x.Atom) error {
-	logger.Debug("start recvTargetIncr", target)
+func (m *Manager) receiveTargetIncr(target, prop x.Atom) (targetData *TargetData, err error) {
+	logger.Debug("start receiveTargetIncr", target)
 	var data [][]byte
 	t0 := time.Now()
 	total := 0
 	for {
-		propNotifyEvent, err := m.ec.capturePropertyNotifyEvent(func() error {
+		var propNotifyEvent *x.PropertyNotifyEvent
+		propNotifyEvent, err = m.ec.capturePropertyNotifyEvent(func() error {
 			err := m.xc.DeletePropertyE(m.window, prop)
 			if err != nil {
 				logger.Warning(err)
@@ -597,15 +758,16 @@ func (m *Manager) recvTargetIncr(target, prop x.Atom) error {
 		})
 		if err != nil {
 			logger.Warning(err)
-			return err
+			return
 		}
 
-		propReply, err := m.xc.GetProperty(false, propNotifyEvent.Window, propNotifyEvent.Atom,
+		var propReply *x.GetPropertyReply
+		propReply, err = m.xc.GetProperty(false, propNotifyEvent.Window, propNotifyEvent.Atom,
 			x.GetPropertyTypeAny,
 			0, 0)
 		if err != nil {
 			logger.Warning(err)
-			return err
+			return
 		}
 		propReply, err = m.xc.GetProperty(false, propNotifyEvent.Window, propNotifyEvent.Atom,
 			x.GetPropertyTypeAny, 0,
@@ -613,29 +775,29 @@ func (m *Manager) recvTargetIncr(target, prop x.Atom) error {
 		)
 		if err != nil {
 			logger.Warning(err)
-			return err
+			return
 		}
 
 		if propReply.ValueLen == 0 {
-			logger.Debugf("end recvTargetIncr %d, took %v, total size: %d",
+			logger.Debugf("end receiveTargetIncr %d, took %v, total size: %d",
 				target, time.Since(t0), total)
 
 			err = m.xc.DeletePropertyE(propNotifyEvent.Window, propNotifyEvent.Atom)
 			if err != nil {
 				logger.Warning(err)
-				return err
+				return
 			}
 
-			m.addTargetData(&TargetData{
+			targetData = &TargetData{
 				Target: target,
 				Type:   propReply.Type,
 				Format: propReply.Format,
 				Data:   bytes.Join(data, nil),
-			})
-			return nil
+			}
+			return
 		}
 		if logger.GetLogLevel() == log.LevelDebug {
-			logger.Debugf("recv data size: %d, md5sum: %s", len(propReply.Value), getBytesMd5sum(propReply.Value))
+			logger.Debugf("incr receive data size: %d", len(propReply.Value))
 		}
 		total += len(propReply.Value)
 		data = append(data, propReply.Value)

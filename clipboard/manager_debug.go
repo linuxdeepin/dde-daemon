@@ -32,7 +32,8 @@ func (m *Manager) saveClipboard() error {
 	}
 	logger.Debug("targets:", targets)
 
-	m.saveTargets(targets, ts)
+	targetDataMap := m.saveTargets(targets, ts)
+	m.setContent(targetDataMap)
 	m.contentMu.Lock()
 	for _, targetData := range m.content {
 		logger.Debugf("target %d type: %v", targetData.Target, targetData.Type)

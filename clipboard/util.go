@@ -7,8 +7,10 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 
-	"github.com/linuxdeepin/go-x11-client"
+	"github.com/linuxdeepin/go-lib/log"
+	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
 )
 
@@ -81,14 +83,34 @@ func announceManageSelection(xConn *x.Conn, owner x.Window, selection x.Atom, ti
 	return sendClientMsg(xConn, rootWin, atomManager, data)
 }
 
-func selReqEventToString(ev *x.SelectionRequestEvent) string {
-	return fmt.Sprintf("SelectionRequest{ Time: %d, Owner: %d, Requestor: %d, Selection: %d, Target: %d, Property: %d}",
-		ev.Time, ev.Owner, ev.Requestor, ev.Selection, ev.Target, ev.Property)
+// 获取有关 atom 的良好描述
+func getAtomDesc(xConn *x.Conn, atom x.Atom) string {
+	numStr := strconv.Itoa(int(atom))
+	if logger.GetLogLevel() < log.LevelDebug {
+		return numStr
+	}
+	name, err := xConn.GetAtomName(atom)
+	if err != nil {
+		logger.Warning(err)
+		return numStr
+	}
+	return name + "|" + numStr
 }
 
-func selNotifyEventToString(ev *x.SelectionNotifyEvent) string {
-	return fmt.Sprintf("SelectionNotify{ Time: %d, Requestor: %d, Selection: %d, Target: %d, Property: %d}",
-		ev.Time, ev.Requestor, ev.Selection, ev.Target, ev.Property)
+func selReqEventToString(ev *x.SelectionRequestEvent, xConn *x.Conn) string {
+	return fmt.Sprintf("SelectionRequest{ Time: %d, Owner: %d, Requestor: %d, Selection: %s, Target: %s, Property: %s}",
+		ev.Time, ev.Owner, ev.Requestor,
+		getAtomDesc(xConn, ev.Selection),
+		getAtomDesc(xConn, ev.Target),
+		getAtomDesc(xConn, ev.Property))
+}
+
+func selNotifyEventToString(ev *x.SelectionNotifyEvent, xConn *x.Conn) string {
+	return fmt.Sprintf("SelectionNotify{ Time: %d, Requestor: %d, Selection: %s, Target: %s, Property: %s}",
+		ev.Time, ev.Requestor,
+		getAtomDesc(xConn, ev.Selection),
+		getAtomDesc(xConn, ev.Target),
+		getAtomDesc(xConn, ev.Property))
 }
 
 func destroyNotifyEventToString(ev *x.DestroyNotifyEvent) string {
@@ -114,7 +136,7 @@ func xfixesSelNotifyEventToString(ev *xfixes.SelectionNotifyEvent) string {
 		ev.Timestamp, ev.SelectionTimestamp, ev.Window, ev.Owner, ev.Selection, subtypeStr)
 }
 
-func propNotifyEventToString(ev *x.PropertyNotifyEvent) string {
+func propNotifyEventToString(ev *x.PropertyNotifyEvent, xConn *x.Conn) string {
 	var stateStr string
 	switch ev.State {
 	case x.PropertyNewValue:
@@ -124,8 +146,8 @@ func propNotifyEventToString(ev *x.PropertyNotifyEvent) string {
 	default:
 		stateStr = "?"
 	}
-	return fmt.Sprintf("PropertyNotify{ Time: %d, State: %s,  Window: %d , Atom: %d }",
-		ev.Time, stateStr, ev.Window, ev.Atom)
+	return fmt.Sprintf("PropertyNotify{ Time: %d, State: %s,  Window: %d , Atom: %s }",
+		ev.Time, stateStr, ev.Window, getAtomDesc(xConn, ev.Atom))
 }
 
 func getAtomListFormReply(reply *x.GetPropertyReply) ([]x.Atom, error) {
@@ -145,7 +167,7 @@ func getBytesMd5sum(data []byte) string {
 	h := md5.New()
 	_, err := h.Write(data)
 	if err != nil {
-		logger.Warning("Write error:",err)
+		logger.Warning("Write error:", err)
 	}
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
