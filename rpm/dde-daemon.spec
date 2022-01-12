@@ -58,7 +58,9 @@ Requires:       dde-session-ui
 Requires:       dde-polkit-agent
 Requires:       rfkill
 Requires:       gvfs
+Requires:       iw
 Requires:       xdotool
+Requires:       gnome-keyring-pam
 
 Recommends:     iso-codes
 Recommends:     imwheel
