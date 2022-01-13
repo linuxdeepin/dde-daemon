@@ -137,6 +137,8 @@ func (m *Manager) destroy() {
 }
 
 func (m *Manager) init() {
+	return
+
 	m.initBuiltinSets()
 	err := m.sysDaemon.SetLongPressDuration(0, uint32(m.tsSetting.GetInt(tsSchemaKeyLongPress)))
 	if err != nil {
