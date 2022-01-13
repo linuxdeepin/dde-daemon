@@ -127,13 +127,12 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 		case powerActionTurnOffScreen:
 			m.doTurnOffScreen()
 		case powerActionDoNothing:
-			return
 		}
-	} else { // 开盖
+
 		if !m.isWmBlackScreenActive() {
 			m.setWmBlackScreenActive(true)
 		}
-
+	} else { // 开盖
 		err := h.stopAskUser()
 		if err != nil {
 			logger.Warning("stopAskUser error:", err)
@@ -142,11 +141,6 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 		err = m.helper.ScreenSaver.SimulateUserActivity(0)
 		if err != nil {
 			logger.Warning(err)
-		}
-
-		if m.ScreenBlackLock.Get() {
-			m.doLock(true)
-			time.Sleep(1 * time.Second)
 		}
 
 		if m.isWmBlackScreenActive() {
