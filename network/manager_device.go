@@ -267,6 +267,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 				return
 			}
 
+			m.accessPointsLock.Lock()
 			shouldRemove := make([]dbus.ObjectPath, 0, len(m.accessPoints[devPath]))
 			for _, a := range m.accessPoints[devPath] {
 				var found bool
@@ -297,7 +298,6 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 				}
 			}
 
-			m.accessPointsLock.Lock()
 			for _, a := range shouldRemove {
 				m.removeAccessPoint(devPath, a)
 			}
