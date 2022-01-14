@@ -63,6 +63,11 @@ func (u *User) SetFullName(sender dbus.Sender, name string) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
+	if !u.checkIsControlCenter(sender) {
+		logger.Debug("[SetLocale] access denied: only dde-control-center allowed")
+		return dbusutil.ToError(fmt.Errorf("only dde-control-center allowed to call this method"))
+	}
+
 	u.PropsMu.Lock()
 	defer u.PropsMu.Unlock()
 
@@ -384,6 +389,11 @@ func (u *User) SetLocale(sender dbus.Sender, locale string) *dbus.Error {
 	if err != nil {
 		logger.Debug("[SetLocale] access denied:", err)
 		return dbusutil.ToError(err)
+	}
+
+	if !u.checkIsDeepinDaemon(sender) {
+		logger.Debug("[SetLocale] access denied: only deepin daemons allowed")
+		return dbusutil.ToError(fmt.Errorf("only deepin daemons allowed to call this method"))
 	}
 
 	if !lang_info.IsSupportedLocale(locale) {

@@ -31,18 +31,22 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
+	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const (
 	defaultUserIcon          = "file:///var/lib/AccountsService/icons/default.png"
 	defaultUserBackgroundDir = "/usr/share/wallpapers/deepin/"
+
+	controlCenterPath = "/usr/bin/dde-control-center"
+	deepinDaemonDir   = "/usr/lib/deepin-daemon/"
 
 	maxWidth  = 200
 	maxHeight = 200
@@ -653,6 +657,54 @@ func (u *User) getAccountType() int32 {
 		return users.UserTypeAdmin
 	}
 	return users.UserTypeStandard
+}
+
+func (u *User) checkIsControlCenter(sender dbus.Sender) bool {
+	pid, err := u.service.GetConnPID(string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	p := procfs.Process(pid)
+	exe, err := p.Exe()
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	if exe == controlCenterPath {
+		return true
+	}
+
+	return false
+}
+
+func (u *User) checkIsDeepinDaemon(sender dbus.Sender) bool {
+	pid, err := u.service.GetConnPID(string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	p := procfs.Process(pid)
+	exe, err := p.Exe()
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	abs, err := filepath.Abs(exe)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	if strings.HasPrefix(abs, deepinDaemonDir) {
+		return true
+	}
+
+	return false
 }
 
 func (u *User) checkAuth(sender dbus.Sender, selfPass bool, actionId string) error {
