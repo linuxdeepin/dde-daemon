@@ -35,6 +35,7 @@ import (
 	glib "pkg.deepin.io/gir/glib-2.0"
 	"pkg.deepin.io/lib/dbusutil"
 	"pkg.deepin.io/lib/gdkpixbuf"
+	"pkg.deepin.io/lib/procfs"
 	"pkg.deepin.io/lib/strv"
 	dutils "pkg.deepin.io/lib/utils"
 )
@@ -42,6 +43,9 @@ import (
 const (
 	defaultUserIcon          = "file:///var/lib/AccountsService/icons/default.png"
 	defaultUserBackgroundDir = "/usr/share/wallpapers/deepin/"
+
+	controlCenterPath = "/usr/bin/dde-control-center"
+	deepinDaemonDir   = "/usr/lib/deepin-daemon/"
 
 	maxWidth  = 200
 	maxHeight = 200
@@ -637,6 +641,54 @@ func (u *User) getAccountType() int32 {
 		return users.UserTypeAdmin
 	}
 	return users.UserTypeStandard
+}
+
+func (u *User) checkIsControlCenter(sender dbus.Sender) bool {
+	pid, err := u.service.GetConnPID(string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	p := procfs.Process(pid)
+	exe, err := p.Exe()
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	if exe == controlCenterPath {
+		return true
+	}
+
+	return false
+}
+
+func (u *User) checkIsDeepinDaemon(sender dbus.Sender) bool {
+	pid, err := u.service.GetConnPID(string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	p := procfs.Process(pid)
+	exe, err := p.Exe()
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	abs, err := filepath.Abs(exe)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	if strings.HasPrefix(abs, deepinDaemonDir) {
+		return true
+	}
+
+	return false
 }
 
 func (u *User) checkAuth(sender dbus.Sender, selfPass bool, actionId string) error {
