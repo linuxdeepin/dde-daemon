@@ -60,16 +60,17 @@ var globalSessionActive bool
 
 // Manager is the main DBus object for network module.
 type Manager struct {
-	sysSigLoop         *dbusutil.SignalLoop
-	service            *dbusutil.Service
-	sysNetwork         sysNetwork.Network
-	airplane           airplanemode.AirplaneMode
-	sysIPWatchD        ipwatchd.IPWatchD
-	nmObjManager       nmdbus.ObjectManager
-	PropsMu            sync.RWMutex
-	sessionManager     sessionmanager.SessionManager
-	currentSessionPath dbus.ObjectPath
-	currentSession     login1.Session
+	sysSigLoop              *dbusutil.SignalLoop
+	service                 *dbusutil.Service
+	sysNetwork              sysNetwork.Network
+	airplaneWlanOriginState map[dbus.ObjectPath]bool
+	airplane                airplanemode.AirplaneMode
+	sysIPWatchD             ipwatchd.IPWatchD
+	nmObjManager            nmdbus.ObjectManager
+	PropsMu                 sync.RWMutex
+	sessionManager          sessionmanager.SessionManager
+	currentSessionPath      dbus.ObjectPath
+	currentSession          login1.Session
 
 	// update by manager.go
 	State            uint32 // global networking state
@@ -228,6 +229,7 @@ func (m *Manager) init() {
 
 	// initialize device and connection handlers
 	m.sysNetwork = sysNetwork.NewNetwork(systemBus)
+	m.airplaneWlanOriginState = make(map[dbus.ObjectPath]bool)
 	m.airplane = airplanemode.NewAirplaneMode(systemBus)
 	m.loadMultiVpn()
 	m.initConnectionManage()
@@ -240,6 +242,8 @@ func (m *Manager) init() {
 
 	// monitor enable state
 	m.airplane.InitSignalExt(m.sysSigLoop, true)
+
+	// airplane osd
 	err = m.airplane.Enabled().ConnectChanged(func(hasValue bool, value bool) {
 		// has value
 		if !hasValue {
@@ -247,10 +251,52 @@ func (m *Manager) init() {
 		}
 		// if enabled is true, airplane is on
 		if value {
+			m.airplaneWlanOriginState = make(map[dbus.ObjectPath]bool)
+			m.devicesLock.Lock()
+			wirelessDevSl := m.devices[deviceWifi]
+			m.devicesLock.Unlock()
+			for _, dev := range wirelessDevSl {
+				// get device state here, store last state
+				enabled, err := m.sysNetwork.IsDeviceEnabled(0, string(dev.Path))
+				if err != nil {
+					logger.Warningf("get enabled state failed, interface: %v, err: %v", dev.Interface, err)
+					continue
+				}
+				// save state
+				m.airplaneWlanOriginState[dev.Path] = enabled
+				// close device
+				err = m.enableDevice(dev.Path, false, false)
+				if err != nil {
+					logger.Debugf("close wireless device failed, path: %v. err: %v", dev.Path, err)
+				}
+			}
+			logger.Debugf("airplane is on, save wlan origin state, %v", m.airplaneWlanOriginState)
 			showOSD("AirplaneModeOn")
 			// if enabled is false, airplane is off
 		} else {
 			showOSD("AirplaneModeOff")
+			for path, enabled := range m.airplaneWlanOriginState {
+				// recover origin state
+				err = m.enableDevice(path, enabled, true)
+				if err != nil {
+					logger.Debugf("recover wireless device state failed, path: %v, enabled: %v, err: %v", path, enabled, err)
+				}
+			}
+		}
+	})
+
+	// wlan osd
+	err = m.airplane.WifiEnabled().ConnectChanged(func(hasValue bool, value bool) {
+		if !hasValue {
+			return
+		}
+		// if enabled is true, wifi rfkill block is true
+		// so wlan is off
+		if value {
+			showOSD("WLANOff")
+			// if enabled is false, wifi is off
+		} else {
+			showOSD("WLANOn")
 		}
 	})
 

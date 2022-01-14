@@ -1,12 +1,10 @@
 package airplane_mode
 
 import (
-	"bufio"
 	"errors"
-	"os/exec"
-	"strings"
 
 	"github.com/godbus/dbus"
+	keyevent "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.keyevent"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -24,6 +22,7 @@ const (
 
 type Manager struct {
 	service *dbusutil.Service
+	sigLoop *dbusutil.SignalLoop
 
 	Enabled          bool
 	WifiEnabled      bool
@@ -37,18 +36,88 @@ type Manager struct {
 func newManager(service *dbusutil.Service) *Manager {
 	mgr := &Manager{
 		service: service,
+		sigLoop: dbusutil.NewSignalLoop(service.Conn(), 10),
 		config:  NewConfig(),
 	}
 	err := mgr.init()
 	if err != nil {
 		logger.Warningf("init manager failed, err: %v", err)
 	}
-
 	return mgr
 }
 
 func (mgr *Manager) GetInterfaceName() string {
 	return dbusInterface
+}
+
+func (mgr *Manager) DumpState() *dbus.Error {
+	return nil
+}
+
+// Enable enable or disable all rfkill type
+func (mgr *Manager) Enable(sender dbus.Sender, blocked bool) *dbus.Error {
+	// check auth
+	err := checkAuthorization(actionId, string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	// try to block
+	err = mgr.block(AllRadioType, blocked)
+	if err != nil {
+		logger.Warningf("block all radio failed, err: %v", err)
+		return dbusutil.ToError(err)
+	}
+	// set and emit signal
+	mgr.setPropEnabled(blocked)
+	// it is ok, if save config failed
+	err = mgr.config.SaveConfig()
+	if err != nil {
+		logger.Warningf("save config failed, err: %v", err)
+	}
+	return nil
+}
+
+// EnableWifi enable or disable rfkill wlan
+func (mgr *Manager) EnableWifi(sender dbus.Sender, blocked bool) *dbus.Error {
+	err := checkAuthorization(actionId, string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	// try to block
+	err = mgr.block(WlanRadioType, blocked)
+	if err != nil {
+		logger.Warningf("block wifi radio failed, err: %v", err)
+		return dbusutil.ToError(err)
+	}
+	// set and emit signal
+	mgr.setPropWifiEnabled(blocked)
+	// it is ok, if save config failed
+	err = mgr.config.SaveConfig()
+	if err != nil {
+		logger.Warningf("save config failed, err: %v", err)
+	}
+	return nil
+}
+
+func (mgr *Manager) EnableBluetooth(sender dbus.Sender, blocked bool) *dbus.Error {
+	err := checkAuthorization(actionId, string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	// try to block
+	err = mgr.block(BluetoothRadioType, blocked)
+	if err != nil {
+		logger.Warningf("block bluetooth radio failed, err: %v", err)
+		return dbusutil.ToError(err)
+	}
+	// set and emit signal
+	mgr.setPropBluetoothEnabled(blocked)
+	// it is ok, if save config failed
+	err = mgr.config.SaveConfig()
+	if err != nil {
+		logger.Warningf("save config failed, err: %v", err)
+	}
+	return nil
 }
 
 // init use to init manager
@@ -63,7 +132,10 @@ func (mgr *Manager) init() error {
 	mgr.recover()
 
 	// use goroutine to monitor rfkill event
-	go mgr.monitor()
+	mgr.monitor()
+
+	// loop start
+	mgr.sigLoop.Start()
 	return nil
 }
 
@@ -71,141 +143,119 @@ func (mgr *Manager) init() error {
 func (mgr *Manager) recover() {
 	logger.Debug("recover last state")
 	// bluetooth
-	mgr.BluetoothEnabled = mgr.config.GetBlocked(RfkillBluetooth)
-	err := rfkillAction(RfkillBluetooth, mgr.BluetoothEnabled)
+	mgr.BluetoothEnabled = mgr.config.GetBlocked(BluetoothRadioType)
+	// bluetooth enabled, means bluetooth soft/hard block is enabled last time
+	// should recover block state here
+	err := mgr.block(BluetoothRadioType, mgr.BluetoothEnabled)
 	if err != nil {
-		logger.Warningf("recover all action failed, err: %v", err)
+		logger.Warningf("recover bluetooth failed, state: %v, err: %v", mgr.WifiEnabled, err)
 	}
+
 	// wlan
-	mgr.WifiEnabled = mgr.config.GetBlocked(RfkillWlan)
-	err = rfkillAction(RfkillWlan, mgr.WifiEnabled)
+	mgr.WifiEnabled = mgr.config.GetBlocked(WlanRadioType)
+	// wifi enabled, means wlan soft/hard block is enabled last time
+	// should recover block state here
+	err = mgr.block(WlanRadioType, mgr.WifiEnabled)
 	if err != nil {
-		logger.Warningf("recover all action failed, err: %v", err)
+		logger.Warningf("recover wifi failed, state: %v, err: %v", mgr.WifiEnabled, err)
 	}
+
 	// all
-	mgr.Enabled = mgr.config.GetBlocked(RfkillAll)
+	mgr.Enabled = mgr.config.GetBlocked(AllRadioType)
+	// enabled, means all soft/hard block is enabled last time
+	// should recover block state here
+	err = mgr.block(AllRadioType, mgr.Enabled)
+	if err != nil {
+		logger.Warningf("recover all failed, state: %v, err: %v", mgr.WifiEnabled, err)
+	}
+
 	return
+}
+
+// block use rfkill to block wifi
+func (mgr *Manager) block(typ RadioType, block bool) error {
+	var err error
+	// get operator
+	module := getRadioModule(typ)
+	// check if type is legal
+	if module == nil {
+		return errors.New("operation not support")
+	}
+	// try to un/block
+	if block {
+		err = module.Block()
+	} else {
+		err = module.Unblock()
+	}
+	// if un/block failed, dont try to update block state
+	if err != nil {
+		return err
+	}
+	mgr.config.SetBlocked(typ, block)
+	return nil
 }
 
 // monitor use to monitor udev event
 func (mgr *Manager) monitor() {
-	logger.Debug("begin monitor")
-	// monitor udev event
-	args := []string{"rfkill", "event"}
-	cmd := exec.Command("/bin/bash", "-c", strings.Join(args, " "))
-	output, err := cmd.StdoutPipe()
+	logger.Info("begin monitor radio key event")
+	// create system bus
+	sysBus, err := dbus.SystemBus()
 	if err != nil {
-		logger.Warningf("out pipe failed, err: %v", err)
+		logger.Warningf("create system bus failed, err: %v", err)
 		return
 	}
-	logger.Debug("open rfkill event std out successfully")
-	// begin to read rfkill event
-	reader := bufio.NewReader(output)
-	go func() {
-		for {
-			// read output
-			buf, _, err := reader.ReadLine()
-			if err != nil {
-				logger.Warningf("read rfkill event failed, msg: %v err: %v", string(buf), err)
-				return
-			}
-			logger.Debug(">>>>>> rfkill event received, need update rfkill state")
-			// once receive event, should update list
-			mgr.update()
+	// create key event
+	keyMonitor := keyevent.NewKeyEvent(sysBus)
+	keyMonitor.InitSignalExt(mgr.sigLoop, true)
+	// monitor key event
+	_, err = keyMonitor.ConnectKeyEvent(func(keycode uint32, pressed bool, ctrlPressed bool, shiftPressed bool, altPressed bool, superPressed bool) {
+		logger.Debugf("key: %v, pressed: %v", keycode, pressed)
+		// only monitor rfkill pressed release event
+		key := RadioKey(keycode)
+		if key.Ignore() || pressed {
+			return
 		}
-	}()
-
-	// run rfkill command
-	err = cmd.Run()
-	if err != nil {
-		logger.Warningf("run rfkill event, err: %v", err)
-	}
+		// once wlan bluetooth or rfkill key event is received
+		// should refresh state here
+		mgr.refresh(key.ToRadioType())
+	})
 }
 
-func (mgr *Manager) DumpState() *dbus.Error {
-	return nil
-}
-
-// Enable enable or disable all rfkill type
-func (mgr *Manager) Enable(sender dbus.Sender, blocked bool) *dbus.Error {
-	// check auth
-	err := checkAuthorization(actionId, string(sender))
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
-
-	// rfkill action
-	err = rfkillAction(RfkillAll, blocked)
-	if err != nil {
-		logger.Warningf("rfkill action failed, err: %v", err)
-		return dbusutil.ToError(err)
-	}
-	return nil
-}
-
-// EnableWifi enable or disable rfkill wlan
-func (mgr *Manager) EnableWifi(sender dbus.Sender, blocked bool) *dbus.Error {
-	err := checkAuthorization(actionId, string(sender))
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
-	// rfkill action
-	err = rfkillAction(RfkillWlan, blocked)
-	if err != nil {
-		logger.Warningf("rfkill action failed, err: %v", err)
-		return dbusutil.ToError(err)
-	}
-	return nil
-}
-
-func (m *Manager) EnableBluetooth(sender dbus.Sender, blocked bool) *dbus.Error {
-	err := checkAuthorization(actionId, string(sender))
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
-	// rfkill action
-	err = rfkillAction(RfkillBluetooth, blocked)
-	if err != nil {
-		logger.Warningf("rfkill action failed, err: %v", err)
-		return dbusutil.ToError(err)
-	}
-	return nil
-}
-
-// update when rfkill event arrived,
+// refresh when rfkill event arrived,
 // should check all rfkill state
-func (mgr *Manager) update() {
-	// check bluetooth state
-	bltBlocked := isModuleBlocked(RfkillBluetooth)
-	logger.Debugf("bluetooth enabled state: %v", bltBlocked)
-	// check wifi state
-	wlanBlocked := isModuleBlocked(RfkillWlan)
-	logger.Debugf("wlan enabled state: %v", wlanBlocked)
-
-	// set bluetooth enabled state
-	mgr.setPropBluetoothEnabled(bltBlocked)
-	mgr.config.SetBlocked(RfkillBluetooth, bltBlocked)
-	// set wlan enabled state
-	mgr.setPropWifiEnabled(wlanBlocked)
-	mgr.config.SetBlocked(RfkillWlan, wlanBlocked)
-
-	// if current bluetooth is disabled and wifi is also disabled
-	// the state is diff with last time
-	if bltBlocked && wlanBlocked && !mgr.Enabled {
-		mgr.setPropEnabled(true)
-		mgr.config.SetBlocked(RfkillAll, true)
-	} else if (!bltBlocked || !wlanBlocked) && mgr.Enabled {
-		mgr.setPropEnabled(false)
-		mgr.config.SetBlocked(RfkillAll, false)
+func (mgr *Manager) refresh(typ RadioType) {
+	// get operator
+	module := getRadioModule(typ)
+	// check if type is legal
+	if module == nil {
+		return
 	}
-
-	logger.Debugf("rfkill state, bluetooth: %v, wifi: %v, airplane: %v", mgr.BluetoothEnabled, mgr.WifiEnabled, mgr.Enabled)
-
-	// save current config to file
+	// check module len first, if dont exist any device,
+	// should ignore this command
+	if module.Len() <= 0 {
+		logger.Debugf("current module %v has no devices, should ignore", module)
+		return
+	}
+	// check is module is blocked
+	isBlocked := module.IsBlocked()
+	switch typ {
+	case BluetoothRadioType:
+		mgr.setPropBluetoothEnabled(isBlocked)
+		logger.Debugf("refresh bluetooth blocked state: %v", isBlocked)
+	case WlanRadioType:
+		mgr.setPropWifiEnabled(isBlocked)
+		logger.Debugf("refresh wifi blocked state: %v", isBlocked)
+	case AllRadioType:
+		mgr.setPropEnabled(isBlocked)
+		logger.Debugf("refresh all blocked state: %v", isBlocked)
+	}
+	mgr.config.SetBlocked(typ, isBlocked)
+	// save rfkill key event result to config file
 	err := mgr.config.SaveConfig()
 	if err != nil {
 		logger.Warningf("save rfkill config file failed, err: %v", err)
 	}
+	logger.Debugf("rfkill state, bluetooth: %v, wifi: %v, airplane: %v", mgr.BluetoothEnabled, mgr.WifiEnabled, mgr.Enabled)
 }
 
 func checkAuthorization(actionId string, sysBusName string) error {

@@ -27,6 +27,8 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
 	keyevent "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.keyevent"
@@ -37,7 +39,6 @@ import (
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -46,7 +47,6 @@ import (
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
-	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -118,7 +118,7 @@ type Manager struct {
 	systemSigLoop             *dbusutil.SignalLoop
 	startManager              sessionmanager.StartManager
 	sessionManager            sessionmanager.SessionManager
-	nmManager                 networkmanager.Manager
+	airplane                  airplanemode.AirplaneMode
 	backlightHelper           backlight.Backlight
 	keyboard                  inputdevices.Keyboard
 	keyboardLayout            string
@@ -277,7 +277,7 @@ func (m *Manager) init() {
 	m.mediaPlayerController = NewMediaPlayerController(m.systemSigLoop, sessionBus)
 
 	m.startManager = sessionmanager.NewStartManager(sessionBus)
-	m.nmManager = networkmanager.NewManager(sysBus)
+	m.airplane = airplanemode.NewAirplaneMode(sysBus)
 	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
 	m.keyboard = inputdevices.NewKeyboard(sessionBus)
 	m.keyboard.InitSignalExt(m.sessionSigLoop, true)
@@ -295,21 +295,6 @@ func (m *Manager) init() {
 	if err != nil {
 		logger.Warning("connect CurrentLayout property changed failed:", err)
 	}
-
-	// check wireless enabled state change
-	m.nmManager.InitSignalExt(m.systemSigLoop, true)
-	err = m.nmManager.WirelessEnabled().ConnectChanged(func(hasValue bool, value bool) {
-		if !hasValue {
-			logger.Warningf("wireless enabled state changed without value")
-			return
-		}
-		// wireless enabled
-		if value {
-			showOSD("WLANOn")
-		} else {
-			showOSD("WLANOff")
-		}
-	})
 
 	m.displayController = NewDisplayController(m.backlightHelper, sessionBus)
 	m.kbdLightController = NewKbdLightController(m.backlightHelper)
@@ -692,7 +677,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 	} else if action.Type == shortcuts.ActionTypeToggleWireless {
 		// check if allow set wireless
 		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) {
-			err := m.nmManager.WirelessEnabled().Set(0, false)
+			err := m.airplane.EnableWifi(0, false)
 			if err != nil {
 				logger.Warningf("set wireless enabled failed, err: %v", err)
 				return

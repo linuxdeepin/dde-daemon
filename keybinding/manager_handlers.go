@@ -23,8 +23,6 @@ import (
 	"fmt"
 	"time"
 
-	dbus "github.com/godbus/dbus"
-	sys_network "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
@@ -157,38 +155,6 @@ func (m *Manager) initHandlers() {
 	m.handlers[ActionTypeDisplayCtrl] = buildHandlerFromController(m.displayController)
 	m.handlers[ActionTypeKbdLightCtrl] = buildHandlerFromController(m.kbdLightController)
 	m.handlers[ActionTypeTouchpadCtrl] = buildHandlerFromController(m.touchPadController)
-	m.handlers[ActionTypeToggleWireless] = func(ev *KeyEvent) {
-		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) {
-			sysBus, err := dbus.SystemBus()
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-			sysNetwork := sys_network.NewNetwork(sysBus)
-			enabled, err := sysNetwork.ToggleWirelessEnabled(0)
-			if err != nil {
-				logger.Warning("failed to toggle wireless enabled:", err)
-				return
-			}
-			if enabled {
-				showOSD("WLANOn")
-			} else {
-				showOSD("WLANOff")
-			}
-
-		} else {
-			state, err := getRfkillWlanState()
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-			if state == 0 {
-				showOSD("WLANOff")
-			} else {
-				showOSD("WLANOn")
-			}
-		}
-	}
 
 	m.handlers[ActionTypeSystemSuspend] = func(ev *KeyEvent) {
 		m.systemSuspendByFront()

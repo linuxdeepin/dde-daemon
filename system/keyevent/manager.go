@@ -57,6 +57,9 @@ type Manager struct {
 var allowList = map[uint32]bool{
 	KEY_TOUCHPAD_TOGGLE: true,
 	KEY_POWER:           true,
+	KEY_BLUETOOTH:       true,
+	KEY_WLAN:            true,
+	KEY_RFKILL:          true,
 	KEY_TOUCHPAD_ON:     true,
 	KEY_TOUCHPAD_OFF:    true,
 	KEY_FN_ESC:          true,

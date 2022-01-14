@@ -16,7 +16,7 @@ const (
 // when config is not set in the beginning, block is false as default
 type Config struct {
 	// config store all rfkill module config
-	config map[RfkillModule]bool
+	config map[RadioType]bool
 
 	mu sync.Mutex
 }
@@ -24,7 +24,7 @@ type Config struct {
 // NewConfig create config obj
 func NewConfig() *Config {
 	cfg := &Config{
-		config: make(map[RfkillModule]bool),
+		config: make(map[RadioType]bool),
 	}
 	return cfg
 }
@@ -65,7 +65,7 @@ func (cfg *Config) SaveConfig() error {
 }
 
 // SetBlocked set ref config state
-func (cfg *Config) SetBlocked(module RfkillModule, blocked bool) {
+func (cfg *Config) SetBlocked(module RadioType, blocked bool) {
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
 	cfg.config[module] = blocked
@@ -73,7 +73,7 @@ func (cfg *Config) SetBlocked(module RfkillModule, blocked bool) {
 
 // GetBlocked get ref config state
 // if config is not stored, rfkill is unblocked as default
-func (cfg *Config) GetBlocked(module RfkillModule) bool {
+func (cfg *Config) GetBlocked(module RadioType) bool {
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
 	// get blocked state, if not exist, is blocked
