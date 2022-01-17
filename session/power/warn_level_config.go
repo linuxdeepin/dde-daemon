@@ -70,7 +70,7 @@ type WarnLevelConfigManager struct {
 	LowPercentage      gsprop.Int `prop:"access:rw"` // 废弃
 	DangerPercentage   gsprop.Int `prop:"access:rw"` // 废弃
 	CriticalPercentage gsprop.Int `prop:"access:rw"` // 废弃
-	ActionPercentage   gsprop.Int `prop:"access:rw"` // 废弃
+	ActionPercentage   gsprop.Int `prop:"access:rw"`
 
 	settings    *gio.Settings
 	changeTimer *time.Timer
@@ -93,7 +93,7 @@ func NewWarnLevelConfigManager(gs *gio.Settings) *WarnLevelConfigManager {
 	m.LowPercentage.Bind(gs, settingKeyLowPercentage)           // 废弃
 	m.DangerPercentage.Bind(gs, settingKeyDangerlPercentage)    // 废弃
 	m.CriticalPercentage.Bind(gs, settingKeyCriticalPercentage) // 废弃
-	m.ActionPercentage.Bind(gs, settingKeyActionPercentage)     // 废弃
+	m.ActionPercentage.Bind(gs, settingKeyActionPercentage)
 
 	m.connectSettingsChanged()
 	return m
@@ -112,7 +112,7 @@ func (m *WarnLevelConfigManager) getWarnLevelConfig() *warnLevelConfig {
 		LowPercentage:           float64(20),
 		DangerPercentage:        float64(15),
 		CriticalPercentage:      float64(10),
-		ActionPercentage:        float64(5),
+		ActionPercentage:        float64(m.ActionPercentage.Get()),
 	}
 }
 
@@ -154,7 +154,7 @@ func (m *WarnLevelConfigManager) connectSettingsChanged() {
 			settingKeyLowPercentage,      // 废弃
 			settingKeyDangerlPercentage,  // 废弃
 			settingKeyCriticalPercentage, // 废弃
-			settingKeyActionPercentage,   // 废弃
+			settingKeyActionPercentage,
 
 			settingKeyLowTime,
 			settingKeyDangerTime,
