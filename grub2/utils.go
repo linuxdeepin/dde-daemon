@@ -21,15 +21,17 @@ package grub2
 
 import (
 	"errors"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
-	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/godbus/dbus"
-	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 )
 
 func quoteString(str string) string {
@@ -157,7 +159,47 @@ func getTempDir() (string, error) {
 	return ioutil.TempDir("", "grub2_theme_*")
 }
 
-func replaceAndbackupDir(src string, dest string) error {
+func copyBgSource(src, dst string) error {
+	srcFile := filepath.Join(src, "background_source")
+	dstFile := filepath.Join(dst, "background_source")
+	err := os.Remove(dstFile)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	err = os.MkdirAll(filepath.Dir(dstFile), 0755)
+	if err != nil {
+		return err
+	}
+	_, err = copyFile(srcFile, dstFile)
+	return err
+}
+
+func copyFile(src, dst string) (int64, error) {
+	sourceFileStat, err := os.Stat(src)
+	if err != nil {
+		return 0, err
+	}
+
+	if !sourceFileStat.Mode().IsRegular() {
+		return 0, fmt.Errorf("%s is not a regular file", src)
+	}
+
+	source, err := os.Open(src)
+	if err != nil {
+		return 0, err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return 0, err
+	}
+	defer destination.Close()
+	nBytes, err := io.Copy(destination, source)
+	return nBytes, err
+}
+
+func replaceAndBackupDir(src, dst string) error {
 	bakDir := src + ".bak"
 	err := os.RemoveAll(bakDir)
 	if err != nil && !os.IsNotExist(err) {
@@ -167,10 +209,7 @@ func replaceAndbackupDir(src string, dest string) error {
 	if err != nil && !os.IsNotExist(err) {
 		return err
 	}
-	cmd := exec.Command("mv", dest, src)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = os.Rename(dst, src)
 	if err != nil {
 		os.Rename(bakDir, src)
 		return err

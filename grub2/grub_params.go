@@ -10,10 +10,12 @@ import (
 )
 
 const (
-	grubParamsFile   = "/etc/default/grub"
-	themesDir        = "/boot/grub/themes"
-	defaultThemeDir  = themesDir + "/deepin"
-	fallbackThemeDir = defaultThemeDir + "-fallback"
+	grubParamsFile     = "/etc/default/grub"
+	themesDir          = "/boot/grub/themes"
+	themesTmpDir       = themesDir + ".tmp"
+	defaultThemeDir    = themesDir + "/deepin"
+	defaultThemeTmpDir = themesTmpDir + "/deepin"
+	fallbackThemeDir   = defaultThemeDir + "-fallback"
 
 	grubBackground = "GRUB_BACKGROUND"
 	grubDefault    = "GRUB_DEFAULT"

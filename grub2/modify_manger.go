@@ -24,6 +24,7 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"syscall"
 
 	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
@@ -114,15 +115,15 @@ func (m *modifyManager) start(tasks ...modifyTask) {
 func (m *modifyManager) update(adjustTheme bool, adjustThemeLang string) {
 	if adjustTheme {
 		logJobStart(logJobAdjustTheme)
-		tempDir, err := getTempDir()
-		if err != nil {
-			logger.Warning("failed to get temp dir:", err)
+		err := copyBgSource(defaultThemeDir, defaultThemeTmpDir)
+		if err != nil && !os.IsNotExist(err) {
+			logger.Warning("failed to copy background source:", err)
 		} else {
 			var args []string
 			if adjustThemeLang != "" {
 				args = append(args, "-lang", adjustThemeLang)
 			}
-			args = append(args, "-theme-output", tempDir)
+			args = append(args, "-theme-output", themesTmpDir)
 			cmd := exec.Command(adjustThemeCmd, args...)
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
@@ -132,14 +133,10 @@ func (m *modifyManager) update(adjustTheme bool, adjustThemeLang string) {
 			if err != nil {
 				logger.Warning("failed to adjust theme:", err)
 			} else {
-				err = exec.Command("sync").Run()
+				syscall.Sync()
+				err = replaceAndBackupDir(themesDir, themesTmpDir)
 				if err != nil {
-					logger.Warning("failed to sync:", err)
-				} else {
-					err = replaceAndbackupDir(themesDir, tempDir)
-					if err != nil {
-						logger.Warning("failed to replace and backup dir:", err)
-					}
+					logger.Warning("failed to replace and backup dir:", err)
 				}
 			}
 		}

@@ -21,6 +21,7 @@ package grub2
 
 import (
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -43,7 +44,7 @@ func Test_replaceAndbackupDir(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(tmpDirB, "test"), dataB, 0755)
 	require.NoError(t, err)
 
-	err = replaceAndbackupDir(tmpDirA, tmpDirB)
+	err = replaceAndBackupDir(tmpDirA, tmpDirB)
 	require.NoError(t, err)
 
 	get, err := ioutil.ReadFile(testFile)
@@ -54,4 +55,19 @@ func Test_replaceAndbackupDir(t *testing.T) {
 	get, err = ioutil.ReadFile(filepath.Join(bakDir, "test"))
 	require.NoError(t, err)
 	require.Equal(t, dataA, get)
+
+	_ = os.RemoveAll(bakDir)
+	_ = os.RemoveAll(tmpDirA)
+}
+
+func Test_copyBgSource(t *testing.T) {
+	src := "testdata/theme/deepin"
+	dst, err := getTempDir()
+	require.NoError(t, err)
+
+	err = copyBgSource(src, dst)
+	require.NoError(t, err)
+	require.FileExists(t, filepath.Join(dst, "background_source"))
+
+	_ = os.RemoveAll(dst)
 }
