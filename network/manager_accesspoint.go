@@ -156,7 +156,10 @@ func (a *accessPoint) updateProps() {
 	}
 	a.Strength, _ = a.nmAp.Strength().Get(0)
 	a.Frequency, _ = a.nmAp.Frequency().Get(0)
-	a.Flags, _ = a.nmAp.Flags().Get(0)
+	flags, err := a.nmAp.Flags().Get(0)
+	if err == nil {
+		a.Flags = flags
+	}
 }
 
 func getApSecType(ap nmdbus.AccessPoint) (apSecType, error) {
