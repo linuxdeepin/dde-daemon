@@ -21,7 +21,6 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
-	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 )
 
@@ -35,7 +34,6 @@ const (
 	KEY_POWER           = 116
 	KEY_FN_ESC          = 0x1d1
 	KEY_MICMUTE         = 248
-	KEY_SWITCHVIDEOMODE = 227
 	KEY_SETUP           = 141
 	KEY_CYCLEWINDOWS    = 154
 	KEY_MODE            = 0x175
@@ -98,10 +96,6 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// 开关麦克风
 	key = createSpecialKeycodeIndex(KEY_MICMUTE, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handleMicMute
-
-	// 切换显示模式
-	key = createSpecialKeycodeIndex(KEY_SWITCHVIDEOMODE, false, MODIFY_NONE)
-	m.specialKeycodeBindingList[key] = m.handleSwitchDisplay
 
 	// 打开控制中心
 	key = createSpecialKeycodeIndex(KEY_SETUP, false, MODIFY_NONE)
@@ -179,16 +173,6 @@ func (m *Manager) handleOpenControlCenter() {
 	m.execCmd(cmd, false)
 }
 
-// 切换显示器
-func (m *Manager) handleSwitchDisplay() {
-	sessionBus := m.service.Conn()
-	disp := display.NewDisplay(sessionBus)
-	displayList, err := disp.ListOutputNames(0)
-	if err == nil && len(displayList) > 1 {
-		showOSD("SwitchMonitors")
-	}
-}
-
 // 打开任务视图
 func (m *Manager) handleWorkspace() {
 	m.wm.ShowWorkspace(0)
@@ -235,7 +219,7 @@ func (m *Manager) handleSwitchPowerMode() {
 			targetMode = "powersave"
 		} else if mode == "powersave" {
 			targetMode = "performance"
-		}  else if mode == "performance" {
+		} else if mode == "performance" {
 			targetMode = "balance"
 		}
 	} else {
