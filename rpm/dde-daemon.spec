@@ -106,9 +106,9 @@ Requires:       gvfs
 Requires:       iw
 Requires:       xdotool
 Requires:       gnome-keyring-pam
+Requires:       imwheel
 
 Recommends:     iso-codes
-Recommends:     imwheel
 Recommends:     mobile-broadband-provider-info
 Recommends:     google-noto-mono-fonts
 Recommends:     google-noto-sans-fonts
