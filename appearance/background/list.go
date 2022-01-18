@@ -22,8 +22,12 @@ package background
 import (
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
 	"sort"
+
+	"github.com/godbus/dbus"
+	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 )
 
 var (
@@ -67,7 +71,25 @@ func getSysBgFiles() []string {
 }
 
 func getCustomBgFiles() []string {
-	return getCustomBgFilesInDir(CustomWallpapersConfigDir)
+	bus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return []string{}
+	}
+
+	dm := daemon.NewDaemon(bus)
+	cur, err := user.Current()
+	if err != nil {
+		logger.Warning(err)
+		return []string{}
+	}
+
+	files, err := dm.GetCustomWallPapers(0, cur.Username)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	return files
 }
 
 func getCustomBgFilesInDir(dir string) []string {

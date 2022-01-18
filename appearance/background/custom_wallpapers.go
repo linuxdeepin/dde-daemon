@@ -6,11 +6,14 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
 	"sort"
 	"strings"
 	"time"
 
+	"github.com/godbus/dbus"
+	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/graphic"
 	"github.com/linuxdeepin/go-lib/imgutil"
@@ -109,63 +112,22 @@ func resizeImage(filename, cacheDir string) (outFilename, ext string, isResized 
 }
 
 func prepare(filename string) (string, error) {
-	// image is not uri
-	logger.Debug("prepare", filename)
-	if strings.HasPrefix(filename, CustomWallpapersConfigDir) {
-		updateModTime(filename)
-		return filename, nil
-	}
-
-	filename, resizeExt, isResized := resizeImage(filename, CustomWallpapersConfigDir)
-
-	md5sum, err := sumFileMd5(filename)
+	bus, err := dbus.SystemBus()
 	if err != nil {
 		return "", err
 	}
-	var ext string
-	if isResized {
-		ext = "." + resizeExt
-	} else {
-		ext = filepath.Ext(filename)
-	}
 
-	baseName := md5sum + ext
-	dstFile := filepath.Join(CustomWallpapersConfigDir, baseName)
-	_, err = os.Stat(dstFile)
+	file, _, _ := resizeImage(filename, CustomWallpapersConfigDir)
+
+	dm := daemon.NewDaemon(bus)
+	cur, err := user.Current()
 	if err != nil {
-		// copy image to cacheFile
-		err = os.MkdirAll(CustomWallpapersConfigDir, 0755)
-		if err != nil {
-			return "", err
-		}
-
-		if isResized {
-			err = os.Rename(filename, dstFile)
-			if err != nil {
-				return "", err
-			}
-		} else {
-			err = dutils.CopyFile(filename, dstFile)
-			if err != nil {
-				return "", err
-			}
-		}
-
-		time.AfterFunc(time.Second, func() {
-			shrinkCache(baseName)
-		})
-	} else {
-		updateModTime(dstFile)
-		if isResized {
-			// remove temp file
-			err := os.Remove(filename)
-			if err != nil && !os.IsNotExist(err) {
-				_, _ = fmt.Fprintln(os.Stderr, "failed to remove temp file:", err)
-			}
-		}
+		return "", err
 	}
 
-	return dstFile, nil
+	NotifyChanged()
+
+	return dm.SaveCustomWallPaper(0, cur.Username, file)
 }
 
 func shrinkCache(cacheFileBaseName string) {

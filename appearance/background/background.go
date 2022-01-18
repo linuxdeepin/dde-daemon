@@ -23,9 +23,12 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/user"
 	"path/filepath"
 	"sync"
 
+	"github.com/godbus/dbus"
+	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	"github.com/linuxdeepin/go-lib/imgutil"
 
 	"github.com/linuxdeepin/go-lib/log"
@@ -77,6 +80,7 @@ func refreshBackground() {
 	var bgs Backgrounds
 	// add custom
 	for _, file := range getCustomBgFiles() {
+		logger.Debugf("custom: %s", file)
 		bgs = append(bgs, &Background{
 			Id:        dutils.EncodeURI(file, dutils.SCHEME_FILE),
 			Deletable: true,
@@ -85,6 +89,7 @@ func refreshBackground() {
 
 	// add system
 	for _, file := range getSysBgFiles() {
+		logger.Debugf("system: %s", file)
 		bgs = append(bgs, &Background{
 			Id:        dutils.EncodeURI(file, dutils.SCHEME_FILE),
 			Deletable: false,
@@ -154,6 +159,7 @@ func (bgs Backgrounds) Delete(uri string) error {
 		return fmt.Errorf("not found '%s'", uri)
 	}
 
+	NotifyChanged()
 	return info.Delete()
 }
 
@@ -166,8 +172,25 @@ func (info *Background) Delete() error {
 		return fmt.Errorf("not custom")
 	}
 
+	bus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	dm := daemon.NewDaemon(bus)
+	cur, err := user.Current()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
 	file := dutils.DecodeURI(info.Id)
-	err := os.Remove(file)
+	err = dm.DeleteCustomWallPaper(0, cur.Username, file)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
 
 	if customWallpaperDeleteCallback != nil {
 		customWallpaperDeleteCallback(file)

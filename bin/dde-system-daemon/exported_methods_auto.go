@@ -24,6 +24,17 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:   v.ClearTtys,
 		},
 		{
+			Name:   "DeleteCustomWallPaper",
+			Fn:     v.DeleteCustomWallPaper,
+			InArgs: []string{"username", "file"},
+		},
+		{
+			Name:    "GetCustomWallPapers",
+			Fn:      v.GetCustomWallPapers,
+			InArgs:  []string{"username"},
+			OutArgs: []string{"outArg0"},
+		},
+		{
 			Name:    "IsPidVirtualMachine",
 			Fn:      v.IsPidVirtualMachine,
 			InArgs:  []string{"pid"},
@@ -38,6 +49,12 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:   "NetworkSetConnections",
 			Fn:     v.NetworkSetConnections,
 			InArgs: []string{"data"},
+		},
+		{
+			Name:    "SaveCustomWallPaper",
+			Fn:      v.SaveCustomWallPaper,
+			InArgs:  []string{"username", "file"},
+			OutArgs: []string{"outArg0"},
 		},
 		{
 			Name:   "ScalePlymouth",
