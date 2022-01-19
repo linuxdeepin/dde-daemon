@@ -35,6 +35,7 @@ const (
 	KEY_FN_ESC          = 0x1d1
 	KEY_MICMUTE         = 248
 	KEY_SETUP           = 141
+	KEY_SCREENLOCK      = 152
 	KEY_CYCLEWINDOWS    = 154
 	KEY_MODE            = 0x175
 )
@@ -100,6 +101,10 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// 打开控制中心
 	key = createSpecialKeycodeIndex(KEY_SETUP, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handleOpenControlCenter
+
+	// 锁屏
+	key = createSpecialKeycodeIndex(KEY_SCREENLOCK, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleScreenlock
 
 	// 打开多任务视图
 	key = createSpecialKeycodeIndex(KEY_CYCLEWINDOWS, false, MODIFY_NONE)
@@ -171,6 +176,11 @@ func (m *Manager) handleMicMute() {
 func (m *Manager) handleOpenControlCenter() {
 	cmd := "dbus-send --session --dest=com.deepin.dde.ControlCenter --print-reply /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.Show"
 	m.execCmd(cmd, false)
+}
+
+// 锁屏
+func (m *Manager) handleScreenlock() {
+	m.lockFront.Show(0)
 }
 
 // 打开任务视图
