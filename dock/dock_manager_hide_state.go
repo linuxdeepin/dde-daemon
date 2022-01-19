@@ -46,13 +46,35 @@ func hasIntersection(rectA, rectB *Rect) bool {
 		logger.Warning("hasIntersection rectA or rectB is nil")
 		return false
 	}
-	X, y, w, h := rectA.Pieces()
+	x, y, w, h := rectA.Pieces()
 	x1, y1, w1, h1 := rectB.Pieces()
-	ax := max(X, x1)
+	ax := max(x, x1)
 	ay := max(y, y1)
-	bx := min(X+w, x1+w1)
-	by := min(y+h, y1+h1)
+	bx := min(x + w, x1 + w1)
+	by := min(y + h, y1 + h1)
 	return ax < bx && ay < by
+}
+
+func (m *Manager) hasIntersectionK(rectA, rectB *Rect) bool {
+	if rectA == nil || rectB == nil {
+		logger.Warning("hasIntersectionK rectA or rectB is nil")
+		return false
+	}
+	x, y, w, h := rectA.Pieces()
+	x1, y1, w1, h1 := rectB.Pieces()
+	ax := max(x, x1)
+	ay := max(y, y1)
+	bx := min(x + w, x1 + w1)
+	by := min(y + h, y1 + h1)
+	position_val := m.Position.Get()
+	logger.Debug("position_val=", position_val)
+	if position_val == int32(positionRight) || position_val == int32(positionLeft) {
+		return ax <= bx && ay < by
+	} else if position_val == int32(positionTop) || position_val == int32(positionBottom) {
+		return ax < bx && ay <= by
+	} else {
+		return ax < bx && ay < by
+	}
 }
 
 func (m *Manager) getActiveWinGroup(activeWin x.Window) (ret []x.Window) {
@@ -321,5 +343,5 @@ func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
 		return false, nil
 	}
 
-	return hasIntersection(winRect, m.FrontendWindowRect), nil
+	return m.hasIntersectionK(winRect, m.FrontendWindowRect), nil
 }
