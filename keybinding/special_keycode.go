@@ -230,9 +230,12 @@ func (m *Manager) handleSwitchPowerMode() {
 		return
 	}
 
+	bHighPerformanceEnabled := m.gsPower.GetBoolean("high-performance-enabled")
+	logger.Info(" handleSwitchPowerMode, isHighPerformanceSupported : ", isHighPerformanceSupported)
+
 	targetMode := ""
 	//平衡 balance, 节能 powersave, 高性能 performance
-	if isHighPerformanceSupported {
+	if isHighPerformanceSupported && bHighPerformanceEnabled {
 		if mode == "balance" {
 			targetMode = "powersave"
 		} else if mode == "powersave" {
