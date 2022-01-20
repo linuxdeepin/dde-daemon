@@ -48,7 +48,7 @@ func newManager(service *dbusutil.Service) *Manager {
 		dm:      NewDataManager(uadpDataDir),
 	}
 
-	if !m.ctx.Load(uadpKeyFile) {
+	if m.ctx.handle != nil && !m.ctx.Load(uadpKeyFile) {
 		m.ctx.CreateKey()
 		m.ctx.Save(uadpKeyFile)
 	}
