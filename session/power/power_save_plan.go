@@ -670,6 +670,7 @@ func (psp *powerSavePlan) HandleIdleOff() {
 	psp.manager.setPrepareSuspend(suspendStateFinish)
 	logger.Info("HandleIdleOff")
 	psp.interruptTasks()
+	psp.manager.setDPMSModeOn()
 	psp.manager.setWmBlackScreenActive(false)
 	psp.resetBrightness()
 }
