@@ -107,7 +107,8 @@ func (m *Manager) attachOrDetachWindow(winInfo WindowInfoImp) {
 			logger.Debugf("win %v identified", win)
 		}
 
-		if showOnDock {
+		// winInfo初始化后影响判断是否在任务栏显示图标
+		if m.shouldShowOnDock(winInfo) {
 			m.attachWindow(winInfo)
 		}
 	}
