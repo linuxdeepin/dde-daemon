@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -58,6 +59,7 @@ type caller struct {
 	display string
 	xauth   string
 	app     string
+	wayland string // wayland socket, almost "/run/user/{UID}/wayland-0"
 	proc    procfs.Process
 	user    *user.User // 启动更改密码过程的用户, 不是被改密码的用户
 }
@@ -89,6 +91,7 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 	display, err := session.Display().Get(0)
 	if err != nil {
 		err = fmt.Errorf("fail to get sender display: %v", err)
+		return
 	}
 
 	exe, err := proc.Exe()
@@ -137,6 +140,19 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 		return
 	}
 
+	sessionType, err := session.Type().Get(0)
+	if err != nil {
+		err = fmt.Errorf("fail to get sender session type: %v", err)
+		return
+	}
+
+	waylandSocket := getWaylandSocket(envs)
+
+	if sessionType == "wayland" && waylandSocket == "" {
+		err = fmt.Errorf("failed to get wayland socket")
+		return
+	}
+
 	xauth, found := envs.Lookup("XAUTHORITY")
 	if !found {
 		// $HOME/.Xauthority is default authority file if XAUTHORITY isn't defined.
@@ -149,35 +165,66 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 		proc:    proc,
 		user:    user,
 		app:     app,
+		wayland: waylandSocket,
 	}
 	return
 }
 
-type pwdChanger struct {
+func getWaylandSocket(envs procfs.EnvVars) (waylandSocket string) {
+	run, found := envs.Lookup("XDG_RUNTIME_DIR")
+	if !found {
+		return ""
+	}
+
+	display, found := envs.Lookup("WAYLAND_DISPLAY")
+	if !found {
+		return ""
+	}
+
+	return path.Join(run, display)
+}
+
+type pwdChanger interface {
+	clean()           // clean all stuff relay to pwdChanger
+	runDialog() error // run the dialog
+	wait()            // wait dialog close
+}
+
+type pwdChangerBase struct {
 	targetUser *User
+	selfUid    int
+	selfGid    int
 	cmd        *exec.Cmd
 	stdin      io.WriteCloser
 	stdout     io.ReadCloser
 	stderr     io.ReadCloser
 	readPipe   *os.File
 	writePipe  *os.File
-	xauthDir   string
 }
 
-func (pcr *pwdChanger) runDialog(errch chan error) {
+type pwdChangerX struct {
+	*pwdChangerBase
+	xauthDir string
+}
 
+type pwdChangerWayland struct {
+	*pwdChangerBase
+	waylandSocket string
+}
+
+func (pcr *pwdChangerBase) runDialog() (err error) {
+	// start dialog
 	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(pcr.cmd), pcr.cmd.Env)
-
-	err := pcr.cmd.Start()
+	err = pcr.cmd.Start()
 	if err != nil {
 		err = fmt.Errorf("fail to start reset-password-dialog: %v", err)
-		errch <- err
-		return
-	} else {
-		errch <- nil
 	}
+	return
+}
 
-	err = pcr.writePipe.Close()
+func (pcr *pwdChangerBase) wait() {
+	// close writePipe which is the write end fd has been passed to and used by dialog
+	err := pcr.writePipe.Close()
 	if err != nil {
 		logger.Warningf("fail to close write side of pipe: %v", err)
 	}
@@ -194,7 +241,10 @@ func (pcr *pwdChanger) runDialog(errch chan error) {
 		return
 	}
 
+	// remove '\n'
 	line = line[:len(line)-1]
+
+	// modify password
 	err = users.ModifyPasswd(line, pcr.targetUser.UserName)
 	if err != nil {
 		logger.Warningf("set password with union ID: fail to modify password: %v", err)
@@ -203,6 +253,7 @@ func (pcr *pwdChanger) runDialog(errch chan error) {
 		return
 	}
 
+	// send success message to dialog
 	_, err = stdinWriter.Write([]byte("success\n"))
 	_ = stdinWriter.Flush()
 	if err != nil {
@@ -251,13 +302,13 @@ func (pcr *pwdChanger) runDialog(errch chan error) {
 		return
 	}
 
-	path, err := login1Manager.GetUser(0, uint32(uid))
+	userPath, err := login1Manager.GetUser(0, uint32(uid))
 	if err != nil {
 		logger.Infof("fail to get user by uid==%d: %v", uid, err)
 		return
 	}
 
-	login1User, err := login1.NewUser(pcr.targetUser.service.Conn(), path)
+	login1User, err := login1.NewUser(pcr.targetUser.service.Conn(), userPath)
 	if err != nil {
 		logger.Warningf("fail to create login1 User Object: %v", err)
 		return
@@ -273,49 +324,166 @@ func (pcr *pwdChanger) runDialog(errch chan error) {
 }
 
 // clean all stuff relay to pwdChanger
-func (pcr *pwdChanger) clean() {
-	err := pcr.readPipe.Close()
+func (pcrb *pwdChangerBase) clean() {
+	err := pcrb.readPipe.Close()
 	if err != nil {
 		logger.Warningf("fail to close read end of pipe: %v", err)
 	}
+}
 
-	err = os.RemoveAll(pcr.xauthDir)
+func (pcrx *pwdChangerX) clean() {
+	pcrx.pwdChangerBase.clean()
+
+	err := os.RemoveAll(pcrx.xauthDir)
 	if err != nil {
 		logger.Warningf("fail to remove tmp xauth dir: %v", err)
 	}
 }
 
-// 此函数负责初始化用于更改密码的用户
-// 主要是要将来自 caller 的 xauth 凭证发送给 deepin_pwd_changer 用户
-// FIXME this hack not working on wayland
-// 对话框的语言和被修改密码的用户的语言设置保持一致
-func newPwdChanger(caller *caller, u *User) (ret *pwdChanger, err error) {
+func (pcrw *pwdChangerWayland) clean() {
+	pcrw.pwdChangerBase.clean()
+
+	if err := runSetfacl(pwdChangerUserName, pcrw.waylandSocket, false); err != nil {
+		logger.Warningf("fail to clean acl for wayland socket: %v", err)
+	}
+
+	if err := runSetfacl(pwdChangerUserName, filepath.Dir(pcrw.waylandSocket), false); err != nil {
+		logger.Warningf("fail to clean acl for wayland socket directory: %v", err)
+	}
+
+	return
+}
+
+func newPwdChangerBase(caller *caller, u *User) (ret *pwdChangerBase, err error) {
 	pwdChangerUser, err := user.Lookup(pwdChangerUserName)
 	if err != nil {
 		err = fmt.Errorf("fail to get user info of %s: %v", pwdChangerUserName, err)
 		return
 	}
 
-	path := filepath.Join("/run", "user", pwdChangerUser.Uid)
+	selfUid, err := strconv.Atoi(pwdChangerUser.Uid)
+	if err != nil {
+		err = fmt.Errorf("fail to convert uid to int: %v", err)
+		return
+	}
+
+	selfGid, err := strconv.Atoi(pwdChangerUser.Gid)
+	if err != nil {
+		err = fmt.Errorf("fail to convert gid to int: %v", err)
+		return
+	}
+
+	// 检验可执行文件的属性
+	fInfo, err := os.Stat(resetPwdDialogPath)
+	if err != nil {
+		err = fmt.Errorf("get reset-password-dislog stat fail: %v", err)
+		return
+	}
+
+	fileSys := fInfo.Sys()
+	stat, ok := fileSys.(*syscall.Stat_t)
+	if !ok {
+		err = errors.New("fail to get stat of reset-password-dialog")
+		return
+	}
+
+	// TODO does this convert to uint32 safe?
+	if !(fInfo.Mode() == 0500 && stat.Uid == uint32(selfUid)) {
+		err = errors.New("reset-password-dialog permission check failed")
+		return
+	}
+
+	// create pipe for dialog to send shadowed pwd
+	readPipe, writePipe, err := os.Pipe()
+	if err != nil {
+		err = fmt.Errorf("fail to create pipe: %v", err)
+		return
+	}
+
+	// -u 用户名
+	// -a 应用类型
+	// --fd 传递密码使用的文件描述符
+
+	cmd := exec.Command(
+		"runuser", "-u", pwdChangerUser.Username, "--",
+		resetPwdDialogPath, "-u", u.UserName, "-a", caller.app,
+		"--fd", "3") //#nosec G204
+
+	cmd.ExtraFiles = append(cmd.ExtraFiles, writePipe)
+
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		err = fmt.Errorf("get stdinpipe failed: %v", err)
+		return
+	}
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		err = fmt.Errorf("get stdoutpipe failed: %v", err)
+		return
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		err = fmt.Errorf("get stderrpipe failed: %v", err)
+		return
+	}
+
+	cmd.Env = append(
+		cmd.Env,
+		"LANG="+u.Locale,
+		"LANGUAGE="+u.Locale,
+	)
+
+	ret = &pwdChangerBase{
+		targetUser: u,
+		selfUid:    selfUid,
+		selfGid:    selfGid,
+		cmd:        cmd,
+		stdin:      stdin,
+		stdout:     stdout,
+		stderr:     stderr,
+		readPipe:   readPipe,
+		writePipe:  writePipe,
+	}
+	return
+}
+
+// 此函数负责初始化用于更改密码的用户
+// 对话框的语言和被修改密码的用户的语言设置保持一致
+func newPwdChanger(caller *caller, u *User) (ret pwdChanger, err error) {
+	pcrb, err := newPwdChangerBase(caller, u)
+	if caller.wayland == "" {
+		ret, err = newPwdChangerX(caller, u, pcrb)
+	} else {
+		ret, err = newPwdChangerWayland(caller, u, pcrb)
+	}
+
+	return
+}
+
+// 此函数负责将来自 caller 的 xauth 凭证发送给 deepin_pwd_changer 用户
+func newPwdChangerX(caller *caller, u *User, base *pwdChangerBase) (ret *pwdChangerX, err error) {
+	xAuthDir := filepath.Join("/run", "user", fmt.Sprint(base.selfUid))
 	defer func() {
 		if err != nil {
-			err := os.RemoveAll(path)
+			err := os.RemoveAll(xAuthDir)
 			if err != nil {
 				logger.Warningf("fail to remove tmp xauth dir: %v", err)
 			}
 		}
 	}()
 
-	err = os.Mkdir(path, os.FileMode(0700))
+	err = os.Mkdir(xAuthDir, os.FileMode(0700))
 	if err != nil {
 		if os.IsExist(err) {
-			logger.Warningf("path %s existed, remove it now", path)
-			err = os.RemoveAll(path)
+			logger.Warningf("path %s existed, remove it now", xAuthDir)
+			err = os.RemoveAll(xAuthDir)
 			if err != nil {
 				err = fmt.Errorf("fail to remove existed dir that hold .Xauthority: %v", err)
 				return
 			}
-			err = os.Mkdir(path, os.FileMode(0700))
+			err = os.Mkdir(xAuthDir, os.FileMode(0700))
 		}
 		if err != nil {
 			err = fmt.Errorf("fail to create dir that hold .Xauthority: %v", err)
@@ -323,32 +491,20 @@ func newPwdChanger(caller *caller, u *User) (ret *pwdChanger, err error) {
 		}
 	}
 
-	uid, err := strconv.Atoi(pwdChangerUser.Uid)
-	if err != nil {
-		err = fmt.Errorf("fail to convert uid to int: %v", err)
-		return
-	}
-
-	gid, err := strconv.Atoi(pwdChangerUser.Gid)
-	if err != nil {
-		err = fmt.Errorf("fail to convert gid to int: %v", err)
-		return
-	}
-
-	err = os.Chown(path, uid, gid)
+	err = os.Chown(xAuthDir, base.selfUid, base.selfGid)
 	if err != nil {
 		err = fmt.Errorf("fail to chown dir that hold .Xauthority: %v", err)
 		return
 	}
 
-	xauthPath := filepath.Join(path, ".Xauthority")
+	xauthPath := filepath.Join(xAuthDir, ".Xauthority")
 	file, err := os.Create(xauthPath)
 	if err != nil {
 		err = fmt.Errorf("fail to create .Xauthority: %v", err)
 		return
 	}
 
-	err = file.Chown(uid, gid)
+	err = file.Chown(base.selfUid, base.selfGid)
 	if err != nil {
 		err = fmt.Errorf("fail to chown .Xauthority: %v", err)
 		return
@@ -393,84 +549,57 @@ func newPwdChanger(caller *caller, u *User) (ret *pwdChanger, err error) {
 		}
 	}
 
-	// 检验可执行文件的属性
-	fInfo, err := os.Stat(resetPwdDialogPath)
-	if err != nil {
-		err = fmt.Errorf("get reset-password-dislog stat fail: %v", err)
-		return
-	}
-
-	fileSys := fInfo.Sys()
-	stat, ok := fileSys.(*syscall.Stat_t)
-	if !ok {
-		err = errors.New("fail to get stat of reset-password-dialog")
-		return
-	}
-
-	// TODO does this convert to uint32 safe?
-	if !(fInfo.Mode() == 0500 && stat.Uid == uint32(uid)) {
-		err = errors.New("reset-password-dialog permission check failed")
-		return
-	}
-
-	// create pipe for dialog to send shadowed pwd
-	readPipe, writePipe, err := os.Pipe()
-	if err != nil {
-		err = fmt.Errorf("fail to create pipe: %v", err)
-		return
-	}
-
-	// -u 用户名
-	// -a 应用类型
-	// --fd 传递密码使用的文件描述符
-
-	cmd = exec.Command(
-		"runuser", "-u", pwdChangerUser.Username, "--",
-		resetPwdDialogPath, "-u", u.UserName, "-a", caller.app,
-		"--fd", "3") //#nosec G204
-
-	cmd.ExtraFiles = append(cmd.ExtraFiles, writePipe)
-
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		err = fmt.Errorf("get stdinpipe failed: %v", err)
-		return
-	}
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		err = fmt.Errorf("get stdoutpipe failed: %v", err)
-		return
-	}
-
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		err = fmt.Errorf("get stderrpipe failed: %v", err)
-		return
-	}
-
-	cmd.Env = append(
-		cmd.Env,
+	base.cmd.Env = append(base.cmd.Env,
 		"XAUTHORITY="+xauthPath,
 		"DISPLAY="+caller.display,
-		"LANG="+u.Locale,
-		"LANGUAGE="+u.Locale,
 	)
 
-	ret = &pwdChanger{
-		targetUser: u,
-		cmd:        cmd,
-		stdin:      stdin,
-		stdout:     stdout,
-		stderr:     stderr,
-		readPipe:   readPipe,
-		writePipe:  writePipe,
-		xauthDir:   path,
+	ret = &pwdChangerX{
+		pwdChangerBase: base,
+		xauthDir:       xAuthDir,
 	}
 	return
 }
 
+func runSetfacl(user string, filePath string, isEnable bool) (err error) {
+	flag := "-x"
+	if isEnable {
+		flag = "-m"
+	}
+	cmd := exec.Command("setfacl", flag, "u:"+user+":rwx", filePath) //#nosec G204
+	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
+	err = cmd.Run()
+	return
+}
+
+// 此函数负责临时允许 deepin_pwd_changer 用户访问目标用户的 wayland socket
+func newPwdChangerWayland(caller *caller, u *User, base *pwdChangerBase) (ret *pwdChangerWayland, err error) {
+	if err = runSetfacl(pwdChangerUserName, caller.wayland, true); err != nil {
+		return
+	}
+
+	if err = runSetfacl(pwdChangerUserName, filepath.Dir(caller.wayland), true); err != nil {
+		return
+	}
+
+	base.cmd.Env = append(base.cmd.Env,
+		"XDG_SESSION_TYPE=wayland",
+		"QT_WAYLAND_SHELL_INTEGRATION=kwayland-shell", // env copy from startdde-wayland
+		"WAYLAND_DISPLAY="+caller.wayland,
+	)
+
+	ret = &pwdChangerWayland{
+		pwdChangerBase: base,
+		waylandSocket:  caller.wayland,
+	}
+
+	return
+}
+
 func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
+	// 在应用真实启动前发生的错误, 应该要和 dbus 方法一起返回
+	// 在应用启动后发生的错误, 会输出在后端的日志中.
+	// 这里使用一个管道来传递错误信息
 	errCh := make(chan error)
 	go doSetPwdWithUnionID(u, sender, errCh)
 	err = <-errCh
@@ -499,7 +628,9 @@ func doSetPwdWithUnionID(u *User, sender dbus.Sender, errCh chan error) {
 
 	defer pcr.clean()
 
-	pcr.runDialog(errCh)
+	errCh <- pcr.runDialog()
+
+	pcr.wait()
 
 	return
 }
