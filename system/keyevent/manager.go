@@ -65,6 +65,7 @@ var allowList = map[uint32]bool{
 	KEY_SETUP:           true,
 	KEY_CYCLEWINDOWS:    true,
 	KEY_MODE:            true,
+	KEY_KBDILLUMTOGGLE:  true,
 	KEY_SCREENLOCK:      true,
 }
 
