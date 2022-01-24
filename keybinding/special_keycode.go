@@ -5,6 +5,9 @@
 package keybinding
 
 import (
+	"io/ioutil"
+	"strings"
+
 	"github.com/godbus/dbus"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 )
@@ -23,6 +26,7 @@ const (
 	KEY_SCREENLOCK      = 152
 	KEY_CYCLEWINDOWS    = 154
 	KEY_MODE            = 0x175
+	KEY_KBDILLUMTOGGLE  = 228
 )
 
 type SpecialKeycodeMapKey struct {
@@ -98,6 +102,10 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// 切换性能模式
 	key = createSpecialKeycodeIndex(KEY_MODE, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handleSwitchPowerMode
+
+	// 切换键盘背光模式
+	key = createSpecialKeycodeIndex(KEY_KBDILLUMTOGGLE, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleKbdLight
 }
 
 // 处理函数的总入口
@@ -290,4 +298,26 @@ func (m *Manager) handlePower() {
 			}
 		}()
 	}
+}
+
+// 响应键盘背光模式切换
+func (m *Manager) handleKbdLight() {
+	data, err := ioutil.ReadFile("/sys/class/backlight/n70z/n70z_kbbacklight")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	mode := strings.TrimSpace(string(data))
+	switch mode {
+	case "0":
+		showOSD("KbLightClose")
+	case "1":
+		showOSD("KbLightAuto")
+	case "2":
+		showOSD("KbLightLow")
+	case "3":
+		showOSD("KbLightHigh")
+	}
+	logger.Debugf("switch kbd light mode to %v", mode)
 }
