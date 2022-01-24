@@ -202,8 +202,7 @@ func (m *Manager) setProxy(proxyType, host, port string) (err error) {
 	if port == "" {
 		port = "0"
 	}
-	// #nosec G109
-	portInt, err := strconv.Atoi(port)
+	portInt, err := strconv.ParseInt(port, 10, 32)
 	if err != nil {
 		logger.Error(err)
 		return

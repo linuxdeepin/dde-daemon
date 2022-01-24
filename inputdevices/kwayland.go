@@ -93,9 +93,11 @@ func doHandleKWinDeviceAdded(sysName string) {
 }
 
 func doHandleKWinDeviceRemoved(sysName string) {
-	str := strings.TrimLeft(sysName, kwayland.SysNamePrefix) //nolint
-	// #nosec G109
-	id, _ := strconv.Atoi(str)
+	str := strings.TrimLeft(sysName, kwayland.SysNamePrefix) //nolint 9
+	id, err := strconv.ParseInt(str, 10, 32)
+	if err != nil {
+		logger.Warning(err)
+	}
 	logger.Debug("----------------items:", sysName, str, id)
 
 	var minfos Mouses
