@@ -47,7 +47,6 @@ ifeq ($(DEB_BUILD_ARCH), mips64el)
 override_dh_auto_install:
 	dh_auto_install
 	rm debian/dde-daemon/etc/default/grub.d/10_deepin.cfg
-	rm debian/dde-daemon/etc/grub.d/35_deepin_gfxmode
 	install -d debian/dde-daemon/lib/systemd/system-sleep/
 	install misc/scripts/dde-system-daemon-power-refresh.sh debian/dde-daemon/lib/systemd/system-sleep/
 endif
