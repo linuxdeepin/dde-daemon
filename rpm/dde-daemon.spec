@@ -50,6 +50,7 @@ BuildRequires:  golang-github-linuxdeepin-go-dbus-factory-devel
 BuildRequires:  go-lib-devel
 BuildRequires:  go-gir-generator
 BuildRequires:  dde-api-devel
+BuildRequires:  deepin-installer-timezones
 
 Requires:       bluez-libs
 Requires:       deepin-desktop-base
