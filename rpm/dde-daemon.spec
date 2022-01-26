@@ -50,7 +50,6 @@ BuildRequires:  golang-github-linuxdeepin-go-dbus-factory-devel
 BuildRequires:  go-lib-devel
 BuildRequires:  go-gir-generator
 BuildRequires:  dde-api-devel
-BuildRequires:  deepin-installer-timezones
 
 Requires:       bluez-libs
 Requires:       deepin-desktop-base
@@ -63,6 +62,7 @@ Requires:       iw
 Requires:       xdotool
 Requires:       gnome-keyring-pam
 Requires:       imwheel
+Requires:       deepin-installer-timezones
 
 Recommends:     iso-codes
 Recommends:     mobile-broadband-provider-info
