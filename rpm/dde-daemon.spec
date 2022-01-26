@@ -96,6 +96,7 @@ BuildRequires:  golang(gir/gio-2.0)
 BuildRequires:  golang(gir/glib-2.0)
 BuildRequires:  golang(gir/gobject-2.0)
 BuildRequires:  golang(gir/gudev-1.0)
+BuildRequires:  go-gir-generator
 
 Requires:       bluez-libs
 Requires:       deepin-desktop-base
@@ -107,6 +108,7 @@ Requires:       iw
 Requires:       xdotool
 Requires:       gnome-keyring-pam
 Requires:       imwheel
+Requires:       deepin-installer-timezones
 
 Recommends:     iso-codes
 Recommends:     mobile-broadband-provider-info
