@@ -50,6 +50,10 @@ BuildRequires:  golang-github-linuxdeepin-go-dbus-factory-devel
 BuildRequires:  go-lib-devel
 BuildRequires:  go-gir-generator
 BuildRequires:  dde-api-devel
+BuildRequires:  golang(gir/gio-2.0)
+BuildRequires:  golang(gir/glib-2.0)
+BuildRequires:  golang(gir/gobject-2.0)
+BuildRequires:  golang(gir/gudev-1.0)
 
 Requires:       bluez-libs
 Requires:       deepin-desktop-base
@@ -61,9 +65,10 @@ Requires:       gvfs
 Requires:       iw
 Requires:       xdotool
 Requires:       gnome-keyring-pam
+Requires:       imwheel
+Requires:       deepin-installer-timezones
 
 Recommends:     iso-codes
-Recommends:     imwheel
 Recommends:     mobile-broadband-provider-info
 Recommends:     google-noto-mono-fonts
 Recommends:     google-noto-sans-fonts
