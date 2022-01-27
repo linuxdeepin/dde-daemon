@@ -236,7 +236,10 @@ func (m *Manager) checkDesktopFile(file string) {
 
 	item := m.getItemById(appId)
 
-	appInfo := desktopappinfo.NewDesktopAppInfo(appId)
+	appInfo, err := desktopappinfo.NewDesktopAppInfoFromFile(file)
+	if err != nil {
+		logger.Debug("call NewDesktopAppInfoFromFile failed", err)
+	}
 	if appInfo == nil {
 		logger.Warningf("appId %q appInfo is nil", appId)
 		if item != nil {
