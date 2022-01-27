@@ -66,3 +66,16 @@ func (v *Manager) setPropHasAmbientLightSensor(value bool) (changed bool) {
 func (v *Manager) emitPropChangedHasAmbientLightSensor(value bool) error {
 	return v.service.EmitPropertyChanged(v, "HasAmbientLightSensor", value)
 }
+
+func (v *Manager) setPropIsHighPerformanceSupported(value bool) (changed bool) {
+	if v.IsHighPerformanceSupported != value {
+		v.IsHighPerformanceSupported = value
+		v.emitPropChangedIsHighPerformanceSupported(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedIsHighPerformanceSupported(value bool) error {
+	return v.service.EmitPropertyChanged(v, "IsHighPerformanceSupported", value)
+}

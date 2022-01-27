@@ -68,6 +68,8 @@ const (
 	settingLightSensorEnabled = "light-sensor-enabled"
 	settingKeyMode            = "mode"
 
+	settingKeyHighPerformanceEnabled = "high-performance-enabled"
+
 	// cmd
 	cmdDDELowPower = "/usr/lib/deepin-daemon/dde-lowpower"
 

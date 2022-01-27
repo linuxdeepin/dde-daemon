@@ -138,6 +138,7 @@ type Manager struct {
 
 	// 是否支持高性能模式
 	IsHighPerformanceSupported bool
+	gsHighPerformanceEnabled   bool
 }
 
 var _manager *Manager
@@ -189,6 +190,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.AmbientLightAdjustBrightness.Bind(m.settings,
 		settingKeyAmbientLightAdjuestBrightness)
 	m.lightSensorEnabled = m.settings.GetBoolean(settingLightSensorEnabled)
+	m.gsHighPerformanceEnabled = m.settings.GetBoolean(settingKeyHighPerformanceEnabled)
 
 	power := m.helper.Power
 	err = common.ActivateSysDaemonService(power.ServiceName_())
@@ -225,10 +227,11 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	// 初始化电源模式
 	m.systemPower = systemPower.NewPower(systemBus)
-	m.IsHighPerformanceSupported, err = m.systemPower.IsBoostSupported().Get(0)
+	isHighPerformanceSupported, err := m.systemPower.IsHighPerformanceSupported().Get(0)
 	if err != nil {
-		logger.Warning(err)
+		logger.Warning("Get systemPower.IsHighPerformanceSupported err :", err)
 	}
+	m.setPropIsHighPerformanceSupported(isHighPerformanceSupported && m.settings.GetBoolean(settingKeyHighPerformanceEnabled))
 
 	// 绑定com.deepin.daemon.Display的DBus
 	m.display = display.NewDisplay(sessionBus)

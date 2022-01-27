@@ -420,6 +420,15 @@ func (m *Manager) initGSettingsConnectChanged() {
 			value := m.BatteryPressPowerBtnAction.Get()
 			notifyString := getNotifyString(settingKeyBatteryPressPowerBtnAction, value)
 			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
+		case settingKeyHighPerformanceEnabled:
+			//根据systemPower::IsHighPerformanceEnabled GSetting::settingKeyHighPerformanceEnabled
+			bSettingKeyHighPerformanceEnabled := m.settings.GetBoolean(settingKeyHighPerformanceEnabled)
+			if bSettingKeyHighPerformanceEnabled == m.gsHighPerformanceEnabled {
+				return
+			}
+			m.gsHighPerformanceEnabled = bSettingKeyHighPerformanceEnabled
+			isHighPerformanceSupported, _ := m.systemPower.IsHighPerformanceSupported().Get(0)
+			m.setPropIsHighPerformanceSupported(isHighPerformanceSupported && bSettingKeyHighPerformanceEnabled)
 		}
 	})
 }
