@@ -107,6 +107,7 @@ Requires:       iw
 Requires:       xdotool
 Requires:       gnome-keyring-pam
 Requires:       imwheel
+Requires:       proxychains-ng
 
 Recommends:     iso-codes
 Recommends:     mobile-broadband-provider-info
