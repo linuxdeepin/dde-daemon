@@ -562,11 +562,13 @@ func newPwdChangerX(caller *caller, u *User, base *pwdChangerBase) (ret *pwdChan
 }
 
 func runSetfacl(user string, filePath string, isEnable bool) (err error) {
-	flag := "-x"
+	flag := "-x" // remove
+	perms := ""
 	if isEnable {
-		flag = "-m"
+		flag = "-m" // modify
+		perms = ":rwx"
 	}
-	cmd := exec.Command("setfacl", flag, "u:"+user+":rwx", filePath) //#nosec G204
+	cmd := exec.Command("setfacl", flag, "u:"+user+perms, filePath) //#nosec G204
 	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
 	err = cmd.Run()
 	return
