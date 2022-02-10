@@ -197,7 +197,7 @@ func fixAutostartAppInfo(appInfo *AppInfo) *AppInfo {
 }
 
 func identifyWindowByScratch(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByScratch win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByScratch win: %d ", winInfo.xid)
 	desktopFile := filepath.Join(scratchDir, addDesktopExt(winInfo.innerId))
 	logger.Debugf("%s try scratch desktop file: %q", msgPrefix, desktopFile)
 	appInfo := NewAppInfoFromFile(desktopFile)
@@ -210,7 +210,7 @@ func identifyWindowByScratch(m *Manager, winInfo *WindowInfo) (string, *AppInfo)
 }
 
 func identifyWindowByPid(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByPid win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByPid win: %d ", winInfo.xid)
 	if winInfo.pid > 10 {
 		logger.Debugf("%s pid: %d", msgPrefix, winInfo.pid)
 		entry := m.Entries.GetByWindowPid(winInfo.pid)
@@ -224,7 +224,7 @@ func identifyWindowByPid(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 }
 
 func identifyWindowByGtkAppId(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByGtkAppId win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByGtkAppId win: %d ", winInfo.xid)
 	gtkAppId := winInfo.gtkAppId
 	logger.Debugf("%s gtkAppId: %q", msgPrefix, gtkAppId)
 	if gtkAppId != "" {
@@ -239,7 +239,7 @@ func identifyWindowByGtkAppId(m *Manager, winInfo *WindowInfo) (string, *AppInfo
 }
 
 func identifyWindowByFlatpakAppID(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByFlatpakAppID win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByFlatpakAppID win: %d ", winInfo.xid)
 	flatpakRef := winInfo.flatpakAppID
 	logger.Debugf("%s flatpak ref is %q", msgPrefix, flatpakRef)
 	if strings.HasPrefix(flatpakRef, "app/") {
@@ -304,7 +304,7 @@ var crxAppIdMap = map[string]string{
 }
 
 func identifyWindowByCrxId(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByCrxId win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByCrxId win: %d ", winInfo.xid)
 	if winInfo.wmClass != nil &&
 		strings.EqualFold(winInfo.wmClass.Class, "chromium-browser") &&
 		strings.HasPrefix(winInfo.wmClass.Instance, "crx_") {
@@ -324,7 +324,7 @@ func identifyWindowByCrxId(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 }
 
 func identifyWindowByCmdlineTurboBooster(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByCmdlineTurboBooster win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByCmdlineTurboBooster win: %d ", winInfo.xid)
 	pid := winInfo.pid
 	process := winInfo.process
 	if process != nil && pid != 0 {
@@ -359,8 +359,8 @@ func identifyWindowByCmdlineTurboBooster(m *Manager, winInfo *WindowInfo) (strin
 }
 
 func identifyWindowAndroid(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	androidId := getAndroidUengineId(winInfo.window)
-	androidName := getAndroidUengineName(winInfo.window)
+	androidId := getAndroidUengineId(winInfo.xid)
+	androidName := getAndroidUengineName(winInfo.xid)
 	if -1 != androidId && "" != androidName {
 		desktopPath := "/usr/share/applications/" + "uengine." + androidName + ".desktop"
 		deskappInfo, _ := desktopappinfo.NewDesktopAppInfoFromFile(desktopPath)
@@ -379,7 +379,7 @@ func identifyWindowAndroid(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 }
 
 func identifyWindowByPidEnv(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByPidEnv win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByPidEnv win: %d ", winInfo.xid)
 	pid := winInfo.pid
 	process := winInfo.process
 	if process != nil && pid != 0 {
@@ -423,7 +423,7 @@ func identifyWindowByPidEnv(m *Manager, winInfo *WindowInfo) (string, *AppInfo) 
 }
 
 func identifyWindowByRule(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByRule win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByRule win: %d ", winInfo.xid)
 	ret := m.windowPatterns.Match(winInfo)
 	if ret == "" {
 		return "", nil
@@ -484,8 +484,8 @@ func identifyWindowByWmClass(m *Manager, winInfo *WindowInfo) (string, *AppInfo)
 }
 
 func identifyWindowByBamf(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByBamf win: %d ", winInfo.window)
-	win := winInfo.window
+	msgPrefix := fmt.Sprintf("identifyWindowByBamf win: %d ", winInfo.xid)
+	win := winInfo.xid
 	desktop := ""
 	// 重试 bamf 识别，yozo office 的窗口经常要第二次时才能识别到。
 	for i := 0; i < 3; i++ {
@@ -512,7 +512,7 @@ func identifyWindowByBamf(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 }
 
 func identifyWindowByCmdlineXWalk(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-	msgPrefix := fmt.Sprintf("identifyWindowByCmdlineXWalk win: %d ", winInfo.window)
+	msgPrefix := fmt.Sprintf("identifyWindowByCmdlineXWalk win: %d ", winInfo.xid)
 	process := winInfo.process
 	if process == nil || winInfo.pid == 0 {
 		return "", nil

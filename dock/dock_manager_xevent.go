@@ -193,7 +193,7 @@ func (m *Manager) listenRootWindowXEvent() {
 
 func (m *Manager) listenWindowXEvent(winInfo *WindowInfo) {
 	const eventMask = x.EventMaskPropertyChange | x.EventMaskStructureNotify | x.EventMaskVisibilityChange
-	err := x.ChangeWindowAttributesChecked(globalXConn, winInfo.window, x.CWEventMask,
+	err := x.ChangeWindowAttributesChecked(globalXConn, winInfo.xid, x.CWEventMask,
 		[]uint32{eventMask}).Check(globalXConn)
 	if err != nil {
 		logger.Warning(err)
@@ -315,7 +315,7 @@ func (m *Manager) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 		needAttachOrDetach = true
 
 	case atomGtkApplicationId:
-		winInfo.gtkAppId = getWindowGtkApplicationId(winInfo.window)
+		winInfo.gtkAppId = getWindowGtkApplicationId(winInfo.xid)
 		newInnerId = genInnerId(winInfo)
 
 	case atomNetWmPid:
@@ -355,7 +355,7 @@ func (m *Manager) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 
 	if winInfo.updateCalled && newInnerId != "" && winInfo.innerId != newInnerId {
 		// winInfo.innerId changed
-		logger.Debugf("window %v innerId changed to %s", winInfo.window, newInnerId)
+		logger.Debugf("window %v innerId changed to %s", winInfo.xid, newInnerId)
 		m.detachWindow(winInfo)
 		winInfo.innerId = newInnerId
 		winInfo.entryInnerId = ""
