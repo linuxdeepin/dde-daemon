@@ -12,9 +12,11 @@ import (
 )
 
 const (
-	typeEchoReply     = 0
-	typeEchoRequest   = 8
-	typeNetUnrechable = 3
+	typeEchoRequest     = 8
+	typeEchoReply       = 0
+	typeEchoRequestIPV6 = 128
+	typeEchoReplyIPV6   = 129
+	typeNetUnrechable   = 3
 
 	codeNetUnrechable      = 0
 	codeHostUnrechable     = 1
@@ -256,15 +258,25 @@ func (n *Network) Ping(host string) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
-	icmp, err := recvEchoReply(conn)
-	if err != nil {
-		return dbusutil.ToError(err)
+	for {
+		icmp, err := recvEchoReply(conn)
+		if err != nil {
+			return dbusutil.ToError(err)
+		}
+
+		switch icmp.Type {
+		// 使用ICMP协议ping本机会接受到两条信息, 处理第二条返回信息
+		case typeEchoRequest, typeEchoRequestIPV6:
+			continue
+		}
+
+		logger.Infof("Reply: %#v", icmp)
+		err = handleICMPReply(icmp)
+		if err != nil {
+			return dbusutil.ToError(err)
+		}
+		break
 	}
 
-	logger.Debugf("Reply: %#v", icmp)
-	err = handleICMPReply(icmp)
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
 	return nil
 }
