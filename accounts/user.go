@@ -175,177 +175,11 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 		PasswordLastChange: int32(shadowInfo.LastChange),
 	}
 
-	u.AccountType = u.getAccountType()
-	u.IconList = u.getAllIcons()
-	u.Groups = u.getGroups()
-
-	// NOTICE(jouyouyun): Got created time,  not accurate, can only be used as a reference
-	u.CreatedTime, err = u.getCreatedTime()
-	if err != nil {
-		logger.Warning("Failed to get created time:", err)
-	}
-
 	updateConfigPath(userInfo.Name)
+	u.AccountType = u.getAccountType()
+	u.Groups = u.getGroups()
+	loadUserConfigInfo(u)
 
-	kf, err := dutils.NewKeyFileFromFile(
-		path.Join(userConfigDir, userInfo.Name))
-	if err != nil {
-		xSession, _ := users.GetDefaultXSession()
-		u.XSession = xSession
-		u.SystemAccount = false
-		u.Layout = getDefaultLayout()
-		u.setLocale(getDefaultLocale())
-		u.IconFile = defaultUserIcon
-		defaultUserBackground := getDefaultUserBackground()
-		u.DesktopBackgrounds = []string{defaultUserBackground}
-		u.GreeterBackground = defaultUserBackground
-		u.Use24HourFormat = defaultUse24HourFormat
-		u.UUID = dutils.GenUuid()
-		u.WeekdayFormat = defaultWeekdayFormat
-		u.ShortDateFormat = defaultShortDateFormat
-		u.LongDateFormat = defaultLongDateFormat
-		u.ShortTimeFormat = defaultShortTimeFormat
-		u.LongTimeFormat = defaultLongTimeFormat
-		u.WeekBegins = defaultWeekBegins
-		u.Workspace = defaultWorkspace
-
-		err = u.writeUserConfig()
-		if err != nil {
-			logger.Warning(err)
-		}
-		return u, nil
-	}
-	defer kf.Free()
-
-	var isSave = false
-	xSession, _ := kf.GetString(confGroupUser, confKeyXSession)
-	u.XSession = xSession
-	if u.XSession == "" {
-		xSession, _ = users.GetDefaultXSession()
-		u.XSession = xSession
-		isSave = true
-	}
-	_, err = kf.GetBoolean(confGroupUser, confKeySystemAccount)
-	// only show non system account
-	u.SystemAccount = false
-	if err != nil {
-		isSave = true
-	}
-	locale, _ := kf.GetString(confGroupUser, confKeyLocale)
-	u.setLocale(locale)
-	if locale == "" {
-		u.setLocale(getDefaultLocale())
-		isSave = true
-	}
-	layout, _ := kf.GetString(confGroupUser, confKeyLayout)
-	u.Layout = layout
-	if layout == "" {
-		u.Layout = getDefaultLayout()
-		isSave = true
-	}
-	icon, _ := kf.GetString(confGroupUser, confKeyIcon)
-	u.IconFile = icon
-	if u.IconFile == "" {
-		u.IconFile = defaultUserIcon
-		isSave = true
-	}
-
-	u.customIcon, _ = kf.GetString(confGroupUser, confKeyCustomIcon)
-
-	// CustomIcon is the newly added field in the configuration file
-	if u.customIcon == "" {
-		if u.IconFile != defaultUserIcon && !isStrInArray(u.IconFile, u.IconList) {
-			// u.IconFile is a custom icon, not a standard icon
-			u.customIcon = u.IconFile
-			isSave = true
-		}
-	}
-
-	u.IconList = u.getAllIcons()
-
-	_, desktopBgs, _ := kf.GetStringList(confGroupUser, confKeyDesktopBackgrounds)
-	u.DesktopBackgrounds = desktopBgs
-	if len(desktopBgs) == 0 {
-		u.DesktopBackgrounds = []string{getDefaultUserBackground()}
-		isSave = true
-	}
-
-	greeterBg, ok := getUserGreeterBackground(kf)
-	if ok {
-		u.GreeterBackground = greeterBg
-	} else {
-		u.GreeterBackground = getDefaultUserBackground()
-		isSave = true
-	}
-
-	_, u.HistoryLayout, _ = kf.GetStringList(confGroupUser, confKeyHistoryLayout)
-	if !strv.Strv(u.HistoryLayout).Contains(u.Layout) {
-		u.HistoryLayout = append(u.HistoryLayout, u.Layout)
-		isSave = true
-	}
-
-	u.Use24HourFormat, err = kf.GetBoolean(confGroupUser, confKeyUse24HourFormat)
-	if err != nil {
-		u.Use24HourFormat = defaultUse24HourFormat
-		isSave = true
-	}
-
-	u.WeekdayFormat, err = kf.GetInteger(confGroupUser, confKeyWeekdayFormat)
-	if err != nil {
-		u.WeekdayFormat = defaultWeekdayFormat
-		isSave = true
-	}
-
-	u.ShortDateFormat, err = kf.GetInteger(confGroupUser, confKeyShortDateFormat)
-	if err != nil {
-		u.ShortDateFormat = defaultShortDateFormat
-		isSave = true
-	}
-
-	u.LongDateFormat, err = kf.GetInteger(confGroupUser, confKeyLongDateFormat)
-	if err != nil {
-		u.LongDateFormat = defaultLongDateFormat
-		isSave = true
-	}
-
-	u.ShortTimeFormat, err = kf.GetInteger(confGroupUser, confKeyShortTimeFormat)
-	if err != nil {
-		u.ShortTimeFormat = defaultShortTimeFormat
-		isSave = true
-	}
-
-	u.LongTimeFormat, err = kf.GetInteger(confGroupUser, confKeyLongTimeFormat)
-	if err != nil {
-		u.LongTimeFormat = defaultLongTimeFormat
-		isSave = true
-	}
-
-	u.WeekBegins, err = kf.GetInteger(confGroupUser, confKeyWeekBegins)
-	if err != nil {
-		u.WeekBegins = defaultWeekBegins
-		isSave = true
-	}
-
-	u.UUID, err = kf.GetString(confGroupUser, confKeyUUID)
-	if err != nil || u.UUID == "" {
-		u.UUID = dutils.GenUuid()
-		isSave = true
-	}
-
-	u.Workspace, err = kf.GetInteger(confGroupUser, confKeyWorkspace)
-	if err != nil || u.Workspace == 0 {
-		u.Workspace = defaultWorkspace
-		isSave = true
-	}
-
-	if isSave {
-		err := u.writeUserConfig()
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
-	u.checkLeftSpace()
 	return u, nil
 }
 
@@ -374,43 +208,7 @@ func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*Use
 	u.AccountType = users.UserTypeUdcp
 	u.Groups = groups
 
-	// NOTICE(jouyouyun): Got created time,  not accurate, can only be used as a reference
-	u.CreatedTime, err = u.getCreatedTime()
-	if err != nil {
-		logger.Warning("Failed to get created time:", err)
-	}
-
-	updateConfigPath(users.GetPwName(usrId))
-
-	xSession, _ := users.GetDefaultXSession()
-	u.XSession = xSession
-
-	// only show non system account
-	u.SystemAccount = false
-	u.setLocale(getDefaultLocale())
-	u.Layout = getDefaultLayout()
-	u.IconFile = defaultUserIcon
-	u.customIcon = ""
-	u.IconList = u.getAllIcons()
-	u.DesktopBackgrounds = []string{getDefaultUserBackground()}
-	u.GreeterBackground = getDefaultUserBackground()
-	u.HistoryLayout = append(u.HistoryLayout, u.Layout)
-	u.Use24HourFormat = defaultUse24HourFormat
-	u.WeekdayFormat = defaultWeekdayFormat
-	u.ShortDateFormat = defaultShortDateFormat
-	u.LongDateFormat = defaultLongDateFormat
-	u.ShortTimeFormat = defaultShortTimeFormat
-	u.LongTimeFormat = defaultLongTimeFormat
-	u.WeekBegins = defaultWeekBegins
-	u.UUID = dutils.GenUuid()
-	u.Workspace = defaultWorkspace
-
-	err = u.writeUserConfig()
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	u.checkLeftSpace()
+	loadUserConfigInfo(u)
 	return u, err
 }
 
@@ -825,4 +623,178 @@ func updateConfigPath(username string) {
 	if err != nil {
 		logger.Warning("Failed to update config:", username)
 	}
+}
+
+// 从配置文件中加载用户的配置信息
+func loadUserConfigInfo(u *User) {
+	var err error
+
+	u.IconList = u.getAllIcons()
+
+	// NOTICE(jouyouyun): Got created time,  not accurate, can only be used as a reference
+	u.CreatedTime, err = u.getCreatedTime()
+	if err != nil {
+		logger.Warning("Failed to get created time:", err)
+	}
+
+	kf, err := dutils.NewKeyFileFromFile(
+		path.Join(userConfigDir, u.UserName))
+	if err != nil {
+		xSession, _ := users.GetDefaultXSession()
+		u.XSession = xSession
+		u.SystemAccount = false
+		u.Layout = getDefaultLayout()
+		u.setLocale(getDefaultLocale())
+		u.IconFile = defaultUserIcon
+		defaultUserBackground := getDefaultUserBackground()
+		u.DesktopBackgrounds = []string{defaultUserBackground}
+		u.GreeterBackground = defaultUserBackground
+		u.Use24HourFormat = defaultUse24HourFormat
+		u.UUID = dutils.GenUuid()
+		u.WeekdayFormat = defaultWeekdayFormat
+		u.ShortDateFormat = defaultShortDateFormat
+		u.LongDateFormat = defaultLongDateFormat
+		u.ShortTimeFormat = defaultShortTimeFormat
+		u.LongTimeFormat = defaultLongTimeFormat
+		u.WeekBegins = defaultWeekBegins
+		u.Workspace = defaultWorkspace
+
+		err = u.writeUserConfig()
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		return
+	}
+	defer kf.Free()
+
+	var isSave = false
+	xSession, _ := kf.GetString(confGroupUser, confKeyXSession)
+	u.XSession = xSession
+	if u.XSession == "" {
+		xSession, _ = users.GetDefaultXSession()
+		u.XSession = xSession
+		isSave = true
+	}
+	_, err = kf.GetBoolean(confGroupUser, confKeySystemAccount)
+	// only show non system account
+	u.SystemAccount = false
+	if err != nil {
+		isSave = true
+	}
+	locale, _ := kf.GetString(confGroupUser, confKeyLocale)
+	u.setLocale(locale)
+	if locale == "" {
+		u.setLocale(getDefaultLocale())
+		isSave = true
+	}
+	layout, _ := kf.GetString(confGroupUser, confKeyLayout)
+	u.Layout = layout
+	if layout == "" {
+		u.Layout = getDefaultLayout()
+		isSave = true
+	}
+	icon, _ := kf.GetString(confGroupUser, confKeyIcon)
+	u.IconFile = icon
+	if u.IconFile == "" {
+		u.IconFile = defaultUserIcon
+		isSave = true
+	}
+
+	u.customIcon, _ = kf.GetString(confGroupUser, confKeyCustomIcon)
+
+	// CustomIcon is the newly added field in the configuration file
+	if u.customIcon == "" {
+		if u.IconFile != defaultUserIcon && !isStrInArray(u.IconFile, u.IconList) {
+			// u.IconFile is a custom icon, not a standard icon
+			u.customIcon = u.IconFile
+			isSave = true
+		}
+	}
+
+	u.IconList = u.getAllIcons()
+
+	_, desktopBgs, _ := kf.GetStringList(confGroupUser, confKeyDesktopBackgrounds)
+	u.DesktopBackgrounds = desktopBgs
+	if len(desktopBgs) == 0 {
+		u.DesktopBackgrounds = []string{getDefaultUserBackground()}
+		isSave = true
+	}
+
+	greeterBg, ok := getUserGreeterBackground(kf)
+	if ok {
+		u.GreeterBackground = greeterBg
+	} else {
+		u.GreeterBackground = getDefaultUserBackground()
+		isSave = true
+	}
+
+	_, u.HistoryLayout, _ = kf.GetStringList(confGroupUser, confKeyHistoryLayout)
+	if !strv.Strv(u.HistoryLayout).Contains(u.Layout) {
+		u.HistoryLayout = append(u.HistoryLayout, u.Layout)
+		isSave = true
+	}
+
+	u.Use24HourFormat, err = kf.GetBoolean(confGroupUser, confKeyUse24HourFormat)
+	if err != nil {
+		u.Use24HourFormat = defaultUse24HourFormat
+		isSave = true
+	}
+
+	u.WeekdayFormat, err = kf.GetInteger(confGroupUser, confKeyWeekdayFormat)
+	if err != nil {
+		u.WeekdayFormat = defaultWeekdayFormat
+		isSave = true
+	}
+
+	u.ShortDateFormat, err = kf.GetInteger(confGroupUser, confKeyShortDateFormat)
+	if err != nil {
+		u.ShortDateFormat = defaultShortDateFormat
+		isSave = true
+	}
+
+	u.LongDateFormat, err = kf.GetInteger(confGroupUser, confKeyLongDateFormat)
+	if err != nil {
+		u.LongDateFormat = defaultLongDateFormat
+		isSave = true
+	}
+
+	u.ShortTimeFormat, err = kf.GetInteger(confGroupUser, confKeyShortTimeFormat)
+	if err != nil {
+		u.ShortTimeFormat = defaultShortTimeFormat
+		isSave = true
+	}
+
+	u.LongTimeFormat, err = kf.GetInteger(confGroupUser, confKeyLongTimeFormat)
+	if err != nil {
+		u.LongTimeFormat = defaultLongTimeFormat
+		isSave = true
+	}
+
+	u.WeekBegins, err = kf.GetInteger(confGroupUser, confKeyWeekBegins)
+	if err != nil {
+		u.WeekBegins = defaultWeekBegins
+		isSave = true
+	}
+
+	u.UUID, err = kf.GetString(confGroupUser, confKeyUUID)
+	if err != nil || u.UUID == "" {
+		u.UUID = dutils.GenUuid()
+		isSave = true
+	}
+
+	u.Workspace, err = kf.GetInteger(confGroupUser, confKeyWorkspace)
+	if err != nil || u.Workspace == 0 {
+		u.Workspace = defaultWorkspace
+		isSave = true
+	}
+
+	if isSave {
+		err := u.writeUserConfig()
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+
+	u.checkLeftSpace()
 }
