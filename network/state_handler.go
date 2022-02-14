@@ -24,10 +24,10 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 var vpnErrorTable = make(map[uint32]string)
@@ -197,6 +197,11 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 
 	nmDev, err := nmNewDevice(path)
 	if err != nil {
+		return
+	}
+
+	// dont notify message when virtual device state changed
+	if isVirtualDeviceIfc(nmDev) {
 		return
 	}
 

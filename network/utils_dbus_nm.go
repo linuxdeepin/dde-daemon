@@ -135,7 +135,7 @@ func isVirtualDeviceIfc(d nmdbus.Device) bool {
 	}
 
 	switch driver {
-	case "dummy", "veth", "vboxnet", "vmnet":
+	case "dummy", "veth", "vboxnet", "vmnet", "bridge":
 		return true
 	case "unknown", "vmxnet", "vmxnet2", "vmxnet3":
 		// sometimes we could not get vmnet dirver name, so check the
