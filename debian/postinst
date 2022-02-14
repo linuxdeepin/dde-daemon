@@ -20,9 +20,9 @@ linkJavaFallbackFont () {
 }
 
 prepareGfxmodeDetect () {
+    [ -f /etc/grub.d/35_deepin_gfxmode ] && rm /etc/grub.d/35_deepin_gfxmode
     if echo $arch | grep -q ^mips; then
         [ -f /etc/default/grub.d/10_deepin.cfg ] && rm /etc/default/grub.d/10_deepin.cfg
-        [ -f /etc/grub.d/35_deepin_gfxmode ] && rm /etc/grub.d/35_deepin_gfxmode
         return 0
     fi
 
