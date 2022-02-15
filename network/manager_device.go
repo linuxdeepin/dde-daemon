@@ -589,8 +589,8 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 	}
 	logger.Debugf("dev %v, enabled: %v, activate: %v", devPath, enabled, activate)
 	// check if need activate connection
-	if enabled && activate {
-		if cpath != "/" {
+	if enabled {
+		if cpath != "/" && activate {
 			var uuid string
 			uuid, err = nmGetConnectionUuid(cpath)
 			if err != nil {
