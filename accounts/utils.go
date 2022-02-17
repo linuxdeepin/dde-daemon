@@ -319,3 +319,21 @@ func getAvailableShells(file string) []string {
 	}
 	return shells
 }
+
+// 修复目录 ownership
+func recoverOwnership(u *User) error {
+	uid, err := strconv.Atoi(u.Uid)
+	if err != nil {
+		return err
+	}
+	gid, err := strconv.Atoi(u.Gid)
+	if err != nil {
+		return err
+	}
+	return filepath.Walk(u.HomeDir, func(name string, info os.FileInfo, err error) error {
+		if err == nil {
+			err = os.Chown(name, uid, gid)
+		}
+		return err
+	})
+}
