@@ -26,6 +26,7 @@ import (
 	"sort"
 	"strconv"
 	"sync"
+	"syscall"
 
 	dbus "github.com/godbus/dbus"
 	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
@@ -319,6 +320,17 @@ func (m *Manager) exportUserByUid(uId string) error {
 	}
 	if err != nil {
 		return err
+	}
+
+	var stat = &syscall.Stat_t{}
+	if err := syscall.Stat(u.HomeDir, stat); err != nil {
+		logger.Warning(err)
+	} else if strconv.Itoa(int(stat.Uid)) != u.Uid {
+		logger.Debug("incorrect ownership")
+		err = recoverOwnership(u)
+		if err != nil {
+			logger.Warning(err)
+		}
 	}
 
 	m.usersMapMu.Lock()
