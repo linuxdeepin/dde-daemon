@@ -188,7 +188,7 @@ func getMediaIdNameMap() map[string]string {
 		"copy":                 "Copy",              // XF86Copy
 		"tools":                "Tools",             // XF86Tools
 		"audio-raise-volume":   "AudioRaiseVolume",  // XF86AudioRaiseVolume
-		"close":                "Close",             // XF86Close
+		"media-close":          "media-Close",       // XF86Close
 		"www":                  "WWW",               // XF86WWW
 		"home-page":            "HomePage",          // XF86HomePage
 		"sleep":                "Sleep",             // XF86Sleep

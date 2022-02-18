@@ -375,7 +375,7 @@ var waylandMediaIdMap = map[string]string{
 	"Copy":              "copy",                // XF86Copy
 	"Tools":             "tools",               // XF86Tools
 	"VolumeUp":          "audio-raise-volume",  // XF86AudioRaiseVolume "AudioRaiseVolume":  "audio-raise-volume",
-	"close":             "Close",               // XF86Close
+	"media-close":       "media-Close",         // XF86Close
 	"WWW":               "www",                 // XF86WWW
 	"HomePage":          "home-page",           // XF86HomePage
 	"sleep":             "Sleep",               // XF86Sleep

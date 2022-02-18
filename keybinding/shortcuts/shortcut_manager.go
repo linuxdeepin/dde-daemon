@@ -78,7 +78,7 @@ func GetQtKeycodeMap() map[string]string {
 		"copy":                "Qt::Key_Copy",                  // XF86Copy
 		"tools":               "Qt::Key_Tools",                 // XF86Tools
 		"audio-raise-volume":  "Qt::Key_VolumeUp",              // XF86AudioRaiseVolume
-		"close":               "Qt::Key_Close",                 // XF86Close
+		"media-close":         "Qt::Key_Close",                 // XF86Close
 		"www":                 "Qt::Key_WWW",                   // XF86WWW
 		"home-page":           "Qt::Key_HomePage",              // XF86HomePage
 		"sleep":               "Qt::Key_Sleep",                 // XF86Sleep
