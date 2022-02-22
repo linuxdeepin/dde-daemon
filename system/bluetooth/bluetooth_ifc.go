@@ -197,6 +197,12 @@ func (b *SysBluetooth) SetAdapterPowered(adapterPath dbus.ObjectPath,
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
+	// 将DDE和前端的蓝牙 power 状态在设置时,立马保持同步
+	// 为了避免，在下发power off给bluez后 bluez返回属性值中携带，power、discovering、class值，DDE在监听时，
+	// 当先收到 discovering，后收到power时
+	// 在discovering改变时，此时power状态依旧为true，当时此时power是false状态，导致闪开后关闭
+	// Note: BUG102434
+	adapter.Powered = powered
 	adapter.discoveringFinished = false
 
 	err = adapter.core.Adapter().Powered().Set(0, powered)
