@@ -21,6 +21,7 @@ package power_manager
 
 import (
 	"os"
+	"os/exec"
 
 	"github.com/godbus/dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
@@ -31,6 +32,8 @@ import (
 type Manager struct {
 	service  *dbusutil.Service
 	objLogin login1.Manager
+
+	virtualMachineName string
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
@@ -41,6 +44,16 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	name, err := detectVirtualMachine()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.setPropVirtualMachineName(name)
+
+	enable, _ := m.isMaskSleepSuspendOnVM()
+	m.maskOnVM(enable)
 	return m, nil
 }
 
@@ -82,4 +95,54 @@ func (m *Manager) CanSuspend() (can bool, busErr *dbus.Error) {
 func (m *Manager) CanHibernate() (can bool, busErr *dbus.Error) {
 	str, _ := m.objLogin.CanHibernate(0)
 	return str == "yes", nil
+}
+
+const disableAutoMaskFile = "/usr/share/dde-daemon/disable-auto-mask-on-virt"
+
+func (m *Manager) isMaskSleepSuspendOnVM() (enable bool, busErr *dbus.Error) {
+	_, err := os.Stat(disableAutoMaskFile)
+	if os.IsNotExist(err) {
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
+
+func (m *Manager) setMaskSleepSuspendOnVM(enable bool) *dbus.Error {
+	if !enable {
+		_, err := os.Create(disableAutoMaskFile)
+		if err != nil {
+			return dbusutil.ToError(err)
+		}
+	} else {
+		err := os.Remove(disableAutoMaskFile)
+		if err != nil {
+			return dbusutil.ToError(err)
+		}
+	}
+
+	m.maskOnVM(enable)
+	return nil
+}
+
+var autoConfigTargets = []string{
+	"suspend.target",
+	"sleep.target",
+	"suspend-then-hibernate.target",
+	"hibernate.target",
+	"hybrid-sleep.target",
+}
+
+func (m *Manager) maskOnVM(enable bool) {
+	var oper string
+	if enable && m.virtualMachineName != "" {
+		oper = "mask"
+	} else {
+		oper = "unmask"
+	}
+
+	for _, target := range autoConfigTargets {
+		logger.Debug("auto mask on virt")
+		exec.Command("systemctl", oper, target).Run()
+	}
 }

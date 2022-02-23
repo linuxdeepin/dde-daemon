@@ -2,6 +2,7 @@ package power_manager
 
 import (
 	"io/ioutil"
+	"os/exec"
 	"strings"
 )
 
@@ -25,4 +26,18 @@ func canSuspend() bool {
 	}
 
 	return true
+}
+
+func detectVirtualMachine() (string, error) {
+	out, err := exec.Command("/usr/bin/systemd-detect-virt").Output()
+	if err != nil {
+		return "", err
+	}
+
+	name := strings.TrimSpace(string(out))
+	if name == "none" {
+		name = ""
+	}
+
+	return name, nil
 }
