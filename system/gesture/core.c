@@ -129,7 +129,6 @@ start_loop(int verbose, double distance)
     while(!quit) {
         if(poll(&fds, 1, -1) < 0)
         {
-            fprintf(stderr, "poll failed: %s\n", strerror(errno));
             continue;
         }
 

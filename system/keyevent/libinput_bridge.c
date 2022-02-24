@@ -107,8 +107,6 @@ int loop_startup(void)
         {
                 if(poll(&fds, 1, -1) > -1)
                         handle_keyboard_event(li);
-                else
-                        fprintf(stderr, "poll failed: %s\n", strerror(errno));
         }
 
         libinput_unref(li);
