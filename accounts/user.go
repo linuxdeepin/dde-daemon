@@ -193,6 +193,8 @@ func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*Use
 		return nil, errors.New("no such user id")
 	}
 
+	userName := users.GetPwName(usrId)
+
 	var u = &User{
 		service:            service,
 		UserName:           users.GetPwName(usrId),
@@ -201,8 +203,8 @@ func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*Use
 		Gid:                users.GetPwGid(usrId),
 		HomeDir:            users.GetPwDir(usrId),
 		Shell:              users.GetPwShell(usrId),
-		AutomaticLogin:     false,
-		NoPasswdLogin:      false,
+		AutomaticLogin:     users.IsAutoLoginUser(userName),
+		NoPasswdLogin:      users.CanNoPasswdLogin(userName),
 		Locked:             false,
 		PasswordStatus:     users.PasswordStatusUsable,
 		MaxPasswordAge:     30,
