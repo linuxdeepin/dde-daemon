@@ -25,13 +25,15 @@ import (
 	"syscall"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	systemPower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
-	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
@@ -52,6 +54,10 @@ type Manager struct {
 	systemPower          systemPower.Power
 	display              display.Display
 	lightSensorEnabled   bool
+
+	sessionManager     sessionmanager.SessionManager
+	currentSessionPath dbus.ObjectPath
+	currentSession     login1.Session
 
 	PropsMu sync.RWMutex
 	// 是否有盖子，一般笔记本电脑才有
@@ -163,6 +169,18 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		return nil, err
 	}
 	m.helper = helper
+
+	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
+	m.currentSessionPath, err = m.sessionManager.CurrentSessionPath().Get(0)
+	if err != nil || m.currentSessionPath == "" {
+		logger.Warning("get sessionManager CurrentSessionPath failed:", err)
+		return nil, err
+	}
+	m.currentSession, err = login1.NewSession(systemBus, m.currentSessionPath)
+	if err != nil || m.currentSession == nil {
+		logger.Error("Failed to connect self session:", err)
+		return nil, err
+	}
 
 	m.settings = gio.NewSettings(gsSchemaPower)
 	m.warnLevelConfig = NewWarnLevelConfigManager(m.settings)
@@ -427,4 +445,13 @@ func (m *Manager) permitLogind() {
 func (m *Manager) SetPrepareSuspend(suspendState int) *dbus.Error {
 	m.setPrepareSuspend(suspendState)
 	return nil
+}
+
+func (m *Manager) isSessionActive() bool {
+	active, err := m.currentSession.Active().Get(dbus.FlagNoAutoStart)
+	if err != nil {
+		logger.Error("Failed to get self active:", err)
+		return false
+	}
+	return active
 }
