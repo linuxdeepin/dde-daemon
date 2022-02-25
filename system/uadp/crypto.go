@@ -13,7 +13,7 @@ import (
 // #include "crypto.h"
 // #include <string.h>
 // #include <stdlib.h>
-// #cgo LDFLAGS: -ltc-api
+// #cgo LDFLAGS: -ldl
 // #cgo CFLAGS: -W -Wall -fstack-protector-strong -D_FORTITY_SOURCE=1 -fPIC
 import "C"
 

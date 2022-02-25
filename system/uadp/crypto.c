@@ -27,6 +27,7 @@
  * ***************************************/
 bool cryptoInit(TC_HANDLE* handle)
 {
+    ddeTcInit();
     // 初始化可信环境
     DDE_TC_CHECK(TC_Start, "tabrmd", handle);
 
@@ -84,6 +85,7 @@ bool cryptoDeleteKey(TC_HANDLE handle, uint32_t keyIndex)
 bool cryptoFree(TC_HANDLE* handle)
 {
     DDE_TC_CHECK(TC_End, handle);
+    ddeTcClose();
 
     return true;
 }
@@ -114,7 +116,7 @@ bool cryptoEncrypt(TC_HANDLE handle, uint32_t keyIndex, const TC_BUFFER* input, 
  * ***************************************/
 bool cryptoDecrypt(TC_HANDLE handle, uint32_t keyIndex, const TC_BUFFER* input, TC_BUFFER* output, const TC_BUFFER* auth)
 {
-    // 加密
+    // 解密
     DDE_TC_CHECK(TC_Decrypt, handle, keyIndex, auth, TC_RSA, input, output);
 
     return true;

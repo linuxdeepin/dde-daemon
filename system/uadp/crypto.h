@@ -5,9 +5,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#include <tc/tc_api.h>
-#include <tc/tc_type.h>
-#include <tc/tc_errcode.h>
+#include "dde_tc.h"
 
 /*****************************************
  * @brief 初始化加解密环境
