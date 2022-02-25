@@ -258,6 +258,9 @@ func (psp *powerSavePlan) handlePowerSavingModeBrightnessDropPercentChanged(hasV
 
 //节能模式变化后的亮度修改
 func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bool) {
+	if !psp.manager.isSessionActive() {
+		return
+	}
 	const (
 		multiLevelAdjustmentScale     = 0.2 // 分级调节时，默认按照20%亮度调节值调整亮度，并在亮度显示的设置分级中，归到所在分级
 		multiLevelAdjustmentThreshold = 100 // 分级调节判断阈值，最大亮度值小于该值且不为0时，调节方式为分级调节
