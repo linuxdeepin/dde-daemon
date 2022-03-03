@@ -584,6 +584,15 @@ func (u *User) clearFingers() {
 	logger.Debug("clear fingers succesed")
 }
 
+func (u *User) clearSecretQuestions() {
+	path := filepath.Join(secretQuestionDirectory, u.UserName)
+
+	err := os.Remove(path)
+	if err != nil && !os.IsNotExist(err) {
+		logger.Warning(err)
+	}
+}
+
 // userPath must be composed with 'userDBusPath + uid'
 func getUidFromUserPath(userPath string) string {
 	items := strings.Split(userPath, userDBusPathPrefix)

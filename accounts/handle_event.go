@@ -26,8 +26,8 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (
@@ -251,6 +251,7 @@ func (m *Manager) deleteUser(uid string) {
 	user := m.getUserByUid(uid)
 	if user != nil {
 		user.clearFingers()
+		user.clearSecretQuestions()
 	} else {
 		logger.Warningf("uid %s not found", uid)
 	}

@@ -119,6 +119,11 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"info"},
 		},
 		{
+			Name:    "GetSecretQuestions",
+			Fn:      v.GetSecretQuestions,
+			OutArgs: []string{"list"},
+		},
+		{
 			Name:    "IsPasswordExpired",
 			Fn:      v.IsPasswordExpired,
 			OutArgs: []string{"expired"},
@@ -214,6 +219,11 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"hint"},
 		},
 		{
+			Name:   "SetSecretQuestions",
+			Fn:     v.SetSecretQuestions,
+			InArgs: []string{"list"},
+		},
+		{
 			Name:   "SetShell",
 			Fn:     v.SetShell,
 			InArgs: []string{"shell"},
@@ -242,6 +252,12 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:   "SetWeekdayFormat",
 			Fn:     v.SetWeekdayFormat,
 			InArgs: []string{"value"},
+		},
+		{
+			Name:    "VerifySecretQuestions",
+			Fn:      v.VerifySecretQuestions,
+			InArgs:  []string{"answers"},
+			OutArgs: []string{"failed"},
 		},
 	}
 }
