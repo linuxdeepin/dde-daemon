@@ -127,6 +127,7 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 		case powerActionTurnOffScreen:
 			m.doTurnOffScreen()
 		case powerActionDoNothing:
+			return
 		}
 
 		if !m.isWmBlackScreenActive() {
