@@ -3,8 +3,8 @@
 package power_manager
 
 func (v *Manager) setPropVirtualMachineName(value string) (changed bool) {
-	if v.virtualMachineName != value {
-		v.virtualMachineName = value
+	if v.VirtualMachineName != value {
+		v.VirtualMachineName = value
 		v.emitPropChangedVirtualMachineName(value)
 		return true
 	}

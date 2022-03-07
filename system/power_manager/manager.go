@@ -33,7 +33,7 @@ type Manager struct {
 	service  *dbusutil.Service
 	objLogin login1.Manager
 
-	virtualMachineName string
+	VirtualMachineName string
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
@@ -52,7 +52,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.setPropVirtualMachineName(name)
 
-	enable, _ := m.isMaskSleepSuspendOnVM()
+	enable := m.isMaskSleepSuspendOnVM()
 	m.maskOnVM(enable)
 	return m, nil
 }
@@ -99,25 +99,25 @@ func (m *Manager) CanHibernate() (can bool, busErr *dbus.Error) {
 
 const disableAutoMaskFile = "/usr/share/dde-daemon/disable-auto-mask-on-virt"
 
-func (m *Manager) isMaskSleepSuspendOnVM() (enable bool, busErr *dbus.Error) {
+func (m *Manager) isMaskSleepSuspendOnVM() bool {
 	_, err := os.Stat(disableAutoMaskFile)
 	if os.IsNotExist(err) {
-		return true, nil
+		return true
 	} else {
-		return false, nil
+		return false
 	}
 }
 
-func (m *Manager) setMaskSleepSuspendOnVM(enable bool) *dbus.Error {
+func (m *Manager) setMaskSleepSuspendOnVM(enable bool) error {
 	if !enable {
 		_, err := os.Create(disableAutoMaskFile)
 		if err != nil {
-			return dbusutil.ToError(err)
+			return err
 		}
 	} else {
 		err := os.Remove(disableAutoMaskFile)
 		if err != nil {
-			return dbusutil.ToError(err)
+			return err
 		}
 	}
 
@@ -135,7 +135,7 @@ var autoConfigTargets = []string{
 
 func (m *Manager) maskOnVM(enable bool) {
 	var oper string
-	if enable && m.virtualMachineName != "" {
+	if enable && m.VirtualMachineName != "" {
 		oper = "mask"
 	} else {
 		oper = "unmask"
