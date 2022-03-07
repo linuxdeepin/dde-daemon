@@ -107,6 +107,7 @@ Recommends:
  iio-sensor-proxy,
  laptop-mode-tools,
  proxychains4,
+ mesa-utils,
 Suggests:
  bluez (>=5.4),
  miraclecast,

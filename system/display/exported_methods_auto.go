@@ -18,5 +18,10 @@ func (v *Display) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetConfig,
 			InArgs: []string{"cfgStr"},
 		},
+		{
+			Name:    "SupportWayland",
+			Fn:      v.SupportWayland,
+			OutArgs: []string{"outArg0"},
+		},
 	}
 }
