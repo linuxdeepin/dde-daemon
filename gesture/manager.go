@@ -144,14 +144,14 @@ func newManager() (*Manager, error) {
 	}
 
 	systemConnObj := systemConn.Object(configManagerId, "/")
-	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "dde-session-daemon", "gesture", "").Store(&m.configManagerPath)
+	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "dde-session-daemon", "org.deepin.daemon.gesture", "").Store(&m.configManagerPath)
 	if err != nil {
 		logger.Warning(err)
 	}
-	m.longPressEnable = m.getGestureConfigValue("long-press-enable")
-	m.oneFingerBottomEnable = m.getGestureConfigValue("one-finger-bottom-enable")
-	m.oneFingerLeftEnable = m.getGestureConfigValue("one-finger-left-enable")
-	m.oneFingerRightEnable = m.getGestureConfigValue("one-finger-right-enable")
+	m.longPressEnable = m.getGestureConfigValue("longPressEnable")
+	m.oneFingerBottomEnable = m.getGestureConfigValue("oneFingerBottomEnable")
+	m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
+	m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
 
 	m.gesture = gesture.NewGesture(systemConn)
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemConn, 10)
@@ -236,10 +236,10 @@ func (m *Manager) init() {
 		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
 	}, func(sig *dbus.Signal) {
 		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
-			m.longPressEnable = m.getGestureConfigValue("long-press-enable")
-			m.oneFingerBottomEnable = m.getGestureConfigValue("one-finger-bottom-enable")
-			m.oneFingerLeftEnable = m.getGestureConfigValue("one-finger-left-enable")
-			m.oneFingerRightEnable = m.getGestureConfigValue("one-finger-right-enable")
+			m.longPressEnable = m.getGestureConfigValue("longPressEnable")
+			m.oneFingerBottomEnable = m.getGestureConfigValue("oneFingerBottomEnable")
+			m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
+			m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
 		}
 	})
 
