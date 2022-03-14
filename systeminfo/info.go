@@ -218,12 +218,6 @@ func (info *SystemInfo) init() {
 		info.CPUMaxMHz, err = getCPUMaxMHzByLscpu(lscpuRes)
 		if err != nil {
 			logger.Warning(err)
-		}
-
-		info.Processor, err = getProcessorByLscpu(lscpuRes)
-		if err != nil {
-			logger.Warning("get CPU Max MHz failed:", err)
-			return
 		} else {
 			if isFloatEqual(info.CPUMaxMHz, 0.0) {
 				//关联信号,接收system的信号 : line139
@@ -231,6 +225,13 @@ func (info *SystemInfo) init() {
 				if info.CurrentSpeed != 0 {
 					info.CPUMaxMHz = float64(info.CurrentSpeed)
 				}
+			}
+		}
+
+		if info.Processor == "" {
+			info.Processor, err = getProcessorByLscpu(lscpuRes)
+			if err != nil {
+				logger.Warning(err)
 			}
 		}
 	}
