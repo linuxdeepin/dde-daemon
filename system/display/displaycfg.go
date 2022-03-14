@@ -256,6 +256,7 @@ func (d *Display) doDetectSupportWayland(sender dbus.Sender) (bool, error) {
 		} else {
 			cmd = exec.Command("glxinfo")
 		}
+		environ = append(environ, "LC_ALL=C")
 		cmd.Env = environ
 		outPipe, err := cmd.StdoutPipe()
 		if err != nil {
@@ -287,7 +288,7 @@ func (d *Display) doDetectSupportWayland(sender dbus.Sender) (bool, error) {
 				renderer := string(bytes.TrimSpace(bytes.Replace(line, []byte("OpenGL renderer string:"), []byte(""), 1)))
 				logger.Debug("renderer: ", renderer)
 				if renderer == "" {
-					return false, nil
+					break
 				}
 				for i, blackRenderer := range blackList {
 					if strings.Contains(renderer, blackRenderer) { // 该renderer包含黑名单的显卡，表示该renderer不支持wayland
