@@ -144,7 +144,7 @@ func newManager() (*Manager, error) {
 	}
 
 	systemConnObj := systemConn.Object(configManagerId, "/")
-	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "dde-session-daemon", "org.deepin.daemon.gesture", "").Store(&m.configManagerPath)
+	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.gesture", "").Store(&m.configManagerPath)
 	if err != nil {
 		logger.Warning(err)
 	}
