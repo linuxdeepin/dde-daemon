@@ -26,6 +26,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-api/soundutils"
+	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/pulse"
@@ -400,6 +401,16 @@ func suspendPulseSources(suspend int) {
 
 func (m *Manager) initGSettingsConnectChanged() {
 	const powerSettingsIcon = "preferences-system"
+	// gsetting默认配置选择待机/休眠，但实际机器不支持，调整gsetting 为合适的值。
+	actions := []gsprop.Enum{m.LinePowerLidClosedAction, m.LinePowerPressPowerBtnAction, m.BatteryLidClosedAction, m.BatteryPressPowerBtnAction}
+	for i := range actions {
+		action := actions[i].Get()
+		if (action == powerActionSuspend && !m.canSuspend()) ||
+			(action == powerActionHibernate && !m.canHibernate()) {
+			actions[i].Set(powerActionDoNothing)
+		}
+	}
+
 	// 监听 session power 的属性的改变,并发送通知
 	gsettings.ConnectChanged(gsSchemaPower, "*", func(key string) {
 		logger.Debug("Power Settings Changed :", key)
