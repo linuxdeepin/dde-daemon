@@ -91,6 +91,9 @@ type Manager struct {
 	cursorMask            uint32
 
 	mu sync.Mutex
+
+	CursorX               int32
+	CursorY               int32
 }
 
 const (
@@ -240,6 +243,8 @@ func (m *Manager) listenGlobalCursorMove() error {
 
 			//logger.Debug("[test global cursor] get CursorMove", x, y)
 			m.handleCursorEvent(int32(x), int32(y), hasPress)
+			m.CursorX = int32(x)
+			m.CursorY = int32(y)
 		}
 	})
 	return nil
@@ -819,4 +824,33 @@ func (m *Manager) DebugGetPidAreasMap() (pidAreasMapJSON string, busErr *dbus.Er
 		return "", dbusutil.ToError(err)
 	}
 	return string(data), nil
+}
+
+func (m *Manager) listenGlobalAxisChanged() error {
+	sessionBus := m.service.Conn()
+	err := sessionBus.Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "AxisChanged").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.AxisChanged",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			x := sig.Body[1].(float64)
+			up := 4
+			down := 5
+
+			if x < 0 {
+				m.handleButtonEvent(int32(up), true, m.CursorX, m.CursorY)
+				m.handleButtonEvent(int32(up), false, m.CursorX, m.CursorY)
+			} else {
+				m.handleButtonEvent(int32(down), true, m.CursorX, m.CursorY)
+				m.handleButtonEvent(int32(down), false, m.CursorX, m.CursorY)
+			}
+		}
+	})
+	return nil
 }

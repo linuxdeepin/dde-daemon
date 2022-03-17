@@ -75,6 +75,7 @@ func (d *Daemon) Start() error {
 		go m.listenGlobalCursorPressed()
 		go m.listenGlobalCursorRelease()
 		go m.listenGlobalCursorMove()
+		go m.listenGlobalAxisChanged()
 	}
 
 	err = service.Export(dbusPath, m)
