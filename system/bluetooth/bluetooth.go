@@ -409,7 +409,7 @@ func (b *SysBluetooth) handleInterfacesAdded(path dbus.ObjectPath, data map[stri
 		b.addAdapter(path)
 	}
 	if _, ok := data[bluezDeviceDBusInterface]; ok {
-		b.addDevice(path)
+		b.addDeviceWithCount(path, 3)
 	}
 }
 
@@ -445,7 +445,7 @@ func (b *SysBluetooth) handleDBusNameOwnerChanged(name, oldOwner, newOwner strin
 	}
 }
 
-func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
+func (b *SysBluetooth) addDeviceWithCount(devPath dbus.ObjectPath, count int) {
 	logger.Debug("receive signal device added", devPath)
 	if b.isDeviceExists(devPath) {
 		return
@@ -458,6 +458,12 @@ func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
 
 	if d.adapter == nil {
 		logger.Warningf("failed to add device %s, not found adapter", devPath)
+		if count > 0 {
+			logger.Debugf("retry add device %s after 100ms", devPath)
+			time.AfterFunc(100*time.Millisecond, func() {
+				b.addDeviceWithCount(devPath, count-1)
+			})
+		}
 		return
 	}
 
@@ -488,6 +494,10 @@ func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
 			}
 		}()
 	}
+}
+
+func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
+	b.addDeviceWithCount(devPath, 0)
 }
 
 func (b *SysBluetooth) removeDevice(devPath dbus.ObjectPath) {
