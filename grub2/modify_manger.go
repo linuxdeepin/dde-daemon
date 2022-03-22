@@ -190,6 +190,7 @@ func (m *modifyManager) updateEnd() {
 		m.modifyTasks = nil
 	} else {
 		// loop end
+		syscall.Sync()
 		m.running = false
 		m.notifyStateChange()
 	}
