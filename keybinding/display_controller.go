@@ -21,10 +21,10 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
+	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
-	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 const (
@@ -111,6 +111,45 @@ func (c *DisplayController) changeBrightness(raised bool) error {
 		return nil
 	}
 
-	showOSD(osd)
+	// 如果正在使用的显示器都不支持调节亮度，则不进行osd显示
+	pathList, err := c.display.Monitors().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	conn, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	for _, path := range pathList {
+		m, err := display.NewMonitor(conn, path)
+		if err != nil {
+			logger.Warning(err)
+			return err
+		}
+		enable, err := m.Enabled().Get(0)
+		if err != nil {
+			logger.Warning(err)
+			return err
+		}
+		if enable {
+			name, err := m.Name().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				return err
+			}
+			canSet, err := c.display.CanSetBrightness(0, name)
+			if err != nil {
+				logger.Warning(err)
+				return err
+			}
+			if canSet {
+				showOSD(osd)
+				return nil
+			}
+		}
+	}
+
 	return nil
 }
