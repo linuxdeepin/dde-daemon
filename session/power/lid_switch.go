@@ -130,7 +130,7 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 			return
 		}
 
-		if !m.isWmBlackScreenActive() {
+		if lidCloseAction != powerActionTurnOffScreen && !m.isWmBlackScreenActive() {
 			m.setWmBlackScreenActive(true)
 		}
 	} else { // 开盖
