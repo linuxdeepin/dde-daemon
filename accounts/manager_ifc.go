@@ -28,13 +28,13 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/accounts/checkers"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/users/passwd"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/accounts/checkers"
-	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const (
@@ -363,6 +363,7 @@ func (m *Manager) GetPresetGroups(accountType int32) (groups []string, busErr *d
 
 // 是否使能accounts服务在监听到/etc/passwd文件变化后,执行对应的属性更新和服务导出,只允许root用户操作该接口
 func (m *Manager) EnablePasswdChangedHandler(sender dbus.Sender, enable bool) *dbus.Error {
+	const rootUid = "0"
 	uid, err := m.service.GetConnUID(string(sender))
 	if err != nil {
 		return dbusutil.ToError(err)
@@ -378,6 +379,18 @@ func (m *Manager) EnablePasswdChangedHandler(sender dbus.Sender, enable bool) *d
 	m.enablePasswdChangedHandler = enable
 	if enable {
 		m.handleFilePasswdChanged()
+		m.modifyUserConfig(userDBusPathPrefix + rootUid) // root账户的信息需要更新（deepin安装器会在后配置界面修改语言）
 	}
+	return nil
+}
+
+func (m *Manager) modifyUserConfig(path string) error {
+	m.usersMapMu.Lock()
+	root, ok := m.usersMap[path]
+	m.usersMapMu.Unlock()
+	if ok {
+		loadUserConfigInfo(root)
+	}
+
 	return nil
 }
