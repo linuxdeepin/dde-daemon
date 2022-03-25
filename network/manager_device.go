@@ -63,6 +63,7 @@ type device struct {
 	// used for wireless device
 	ActiveAp       dbus.ObjectPath
 	SupportHotspot bool
+	Mode           uint32
 
 	// used for mobile device
 	MobileNetworkType   string
@@ -255,6 +256,21 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			logger.Warning(err)
 		}
 		dev.ActiveAp, _ = nmDevWireless.ActiveAccessPoint().Get(0)
+
+		err = nmDevWireless.Mode().ConnectChanged(func(hasValue bool, value uint32) {
+			if !hasValue {
+				return
+			}
+			m.devicesLock.Lock()
+			defer m.devicesLock.Unlock()
+			dev.Mode = value
+			m.updatePropDevices()
+		})
+		if err != nil {
+			logger.Warning(err)
+		}
+		dev.Mode, _ = nmDevWireless.Mode().Get(0)
+
 		permHwAddress, _ := nmDevWireless.PermHwAddress().Get(0)
 		dev.SupportHotspot = isWirelessDeviceSupportHotspot(permHwAddress)
 
