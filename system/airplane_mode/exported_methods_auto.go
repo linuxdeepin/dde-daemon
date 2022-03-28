@@ -15,17 +15,17 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 		{
 			Name:   "Enable",
 			Fn:     v.Enable,
-			InArgs: []string{"enabled"},
+			InArgs: []string{"enableAirplaneMode"},
 		},
 		{
 			Name:   "EnableBluetooth",
 			Fn:     v.EnableBluetooth,
-			InArgs: []string{"enabled"},
+			InArgs: []string{"enableAirplaneMode"},
 		},
 		{
 			Name:   "EnableWifi",
 			Fn:     v.EnableWifi,
-			InArgs: []string{"enabled"},
+			InArgs: []string{"enableAirplaneMode"},
 		},
 	}
 }
