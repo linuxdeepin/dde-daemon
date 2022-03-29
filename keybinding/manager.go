@@ -344,6 +344,10 @@ var kwinSysActionCmdMap = map[string]string{
 	"Calculator":         "calculator",          // XF86Calculator
 	"Search":             "search",              // XF86Search
 	"NotificationCenter": "notification-center", // Meta M
+
+	"ScreenshotScroll": "screenshot-scroll",
+	"ScreenshotOcr":    "screenshot-ocr",
+	"GlobalSearch":     "global-search",
 }
 
 var waylandMediaIdMap = map[string]string{
