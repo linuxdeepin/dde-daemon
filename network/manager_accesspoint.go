@@ -489,7 +489,11 @@ func (m *Manager) checkAPStrength() {
 	if devices, ok := m.devices[deviceWifi]; ok {
 		for _, dev := range devices {
 			apPath, _ := dev.nmDev.Wireless().ActiveAccessPoint().Get(0)
-			nmAp, _ := nmNewAccessPoint(apPath)
+			nmAp, err := nmNewAccessPoint(apPath)
+			if err != nil {
+				continue
+			}
+
 			frequency, _ := nmAp.Frequency().Get(0)
 			strength, _ := nmAp.Strength().Get(0)
 			ssid, _ := nmAp.Ssid().Get(0)
