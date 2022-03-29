@@ -383,31 +383,33 @@ func (m *Manager) GetActiveConnectionInfo() (acinfosJSON string, busErr *dbus.Er
 	return
 }
 
-func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (acinfo activeConnectionInfo, err error) {
+func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (activeConnectionInfo, error) {
 	var connType, connName, mobileNetworkType, security, devType, devIfc, hwAddress, speed string
 	var hotspotInfo hotspotConnectionInfo
+	var acInfo activeConnectionInfo
+	var err error
 
 	// active connection
 	nmAConn, err := nmNewActiveConnection(apath)
 	if err != nil {
-		return
+		return acInfo, err
 	}
 
 	nmAConnConnection, _ := nmAConn.Connection().Get(0)
 	nmConn, err := nmNewSettingsConnection(nmAConnConnection)
 	if err != nil {
-		return
+		return acInfo, err
 	}
 
 	// device
 	nmDev, err := nmNewDevice(devPath)
 	if err != nil {
-		return
+		return acInfo, err
 	}
 
 	specificObject, err := nmAConn.SpecificObject().Get(0)
 	if err != nil {
-		return
+		return acInfo, err
 	}
 
 	deviceType, _ := nmDev.Device().DeviceType().Get(0)
@@ -427,16 +429,23 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 
 	cdata, err := nmConn.GetSettings(0)
 	if err != nil {
-		return
+		return acInfo, err
 	}
+
 	connName = getSettingConnectionId(cdata)
 	connType = getCustomConnectionType(cdata)
+
 	if connType == connectionWirelessHotspot || connType == connectionWireless {
 		apPath, _ := nmDev.Wireless().ActiveAccessPoint().Get(0)
-		nmAp, _ := nmNewAccessPoint(apPath)
+		nmAp, err := nmNewAccessPoint(apPath)
+		if err != nil {
+			return acInfo, err
+		}
+
 		ssid, _ := nmAp.Ssid().Get(0)
 		hotspotInfo.Ssid = decodeSsid(ssid)
 		frequency, _ := nmAp.Frequency().Get(0)
+
 		if frequency >= 4915 && frequency <= 5825 {
 			hotspotInfo.Band = "a"
 		} else if frequency >= 2412 && frequency <= 2484 {
@@ -444,6 +453,7 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 		} else {
 			hotspotInfo.Band = "unknown"
 		}
+
 		hotspotInfo.Channel = frequencyChannelMap[frequency]
 	}
 
@@ -502,7 +512,7 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 	}
 
 	nmAConnUuid, _ := nmAConn.Uuid().Get(0)
-	acinfo = activeConnectionInfo{
+	acInfo = activeConnectionInfo{
 		IsPrimaryConnection: nmGetPrimaryConnection() == apath,
 		Device:              devPath,
 		SettingPath:         nmConn.Path_(),
@@ -523,5 +533,6 @@ func (m *Manager) doGetActiveConnectionInfo(apath, devPath dbus.ObjectPath) (aci
 		IPv6:                ip6Data,
 		Hotspot:             hotspotInfo,
 	}
-	return
+
+	return acInfo, err
 }
