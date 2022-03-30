@@ -52,8 +52,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.setPropVirtualMachineName(name)
 
-	enable := m.isMaskSleepSuspendOnVM()
-	m.maskOnVM(enable)
 	return m, nil
 }
 
@@ -95,34 +93,6 @@ func (m *Manager) CanSuspend() (can bool, busErr *dbus.Error) {
 func (m *Manager) CanHibernate() (can bool, busErr *dbus.Error) {
 	str, _ := m.objLogin.CanHibernate(0)
 	return str == "yes", nil
-}
-
-const disableAutoMaskFile = "/usr/share/dde-daemon/disable-auto-mask-on-virt"
-
-func (m *Manager) isMaskSleepSuspendOnVM() bool {
-	_, err := os.Stat(disableAutoMaskFile)
-	if os.IsNotExist(err) {
-		return true
-	} else {
-		return false
-	}
-}
-
-func (m *Manager) setMaskSleepSuspendOnVM(enable bool) error {
-	if !enable {
-		_, err := os.Create(disableAutoMaskFile)
-		if err != nil {
-			return err
-		}
-	} else {
-		err := os.Remove(disableAutoMaskFile)
-		if err != nil {
-			return err
-		}
-	}
-
-	m.maskOnVM(enable)
-	return nil
 }
 
 var autoConfigTargets = []string{
