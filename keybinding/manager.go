@@ -559,9 +559,11 @@ func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
 		}
 	} else {
 		if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
-			err := setNumLockWl(m.waylandOutputMgr, m.conn, nlState)
-			if err != nil {
-				logger.Warning("setNumLockWl failed:", err)
+			if saveStateEnabled {
+				err := setNumLockWl(m.waylandOutputMgr, m.conn, nlState)
+				if err != nil {
+					logger.Warning("setNumLockWl failed:", err)
+				}
 			}
 		} else {
 			if saveStateEnabled {
