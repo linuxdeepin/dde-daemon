@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"sort"
 	"strconv"
@@ -230,6 +231,9 @@ func (m *Manager) initUdcpUsers() {
 	// 解析json文件 新建udcp-cache对象,获取所有加域账户ID
 	err := m.initUdcpCache()
 	if err != nil {
+		if os.IsNotExist(err) {
+			return
+		}
 		logger.Errorf("New udcp cache object failed: %v", err)
 		return
 	}
