@@ -81,6 +81,10 @@ func (m *Manager) CanReboot() (can bool, busErr *dbus.Error) {
 }
 
 func (m *Manager) CanSuspend() (can bool, busErr *dbus.Error) {
+	// 虚拟机屏蔽待机
+	if m.VirtualMachineName != "" {
+		return false, nil
+	}
 	_, err := os.Stat("/sys/power/mem_sleep")
 	if os.IsNotExist(err) {
 		return false, nil
@@ -91,6 +95,10 @@ func (m *Manager) CanSuspend() (can bool, busErr *dbus.Error) {
 }
 
 func (m *Manager) CanHibernate() (can bool, busErr *dbus.Error) {
+	// 虚拟机屏蔽休眠
+	if m.VirtualMachineName != "" {
+		return false, nil
+	}
 	str, _ := m.objLogin.CanHibernate(0)
 	return str == "yes", nil
 }
