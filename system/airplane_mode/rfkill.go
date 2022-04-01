@@ -115,10 +115,19 @@ func (mgr *Manager) handleRfkillEvent(event *RfkillEvent) {
 		}
 	}
 
-	allBlocked := blockCnt == deviceCnt
-	allSoftBlocked := softBlockCnt == blockCnt
-	curTypeBlocked := curTypeBlockCnt == curTypeDeviceCnt
-	curTypeSoftBlocked := curTypeSoftBlockCnt == curTypeDeviceCnt
+	allBlocked := false
+	allSoftBlocked := false
+	if deviceCnt != 0 {
+		allBlocked = blockCnt == deviceCnt
+		allSoftBlocked = softBlockCnt == blockCnt
+	}
+
+	curTypeBlocked := false
+	curTypeSoftBlocked := false
+	if curTypeDeviceCnt != 0 {
+		curTypeBlocked = curTypeBlockCnt == curTypeDeviceCnt
+		curTypeSoftBlocked = curTypeSoftBlockCnt == curTypeDeviceCnt
+	}
 
 	mgr.setPropEnabled(allBlocked)
 	logger.Debug("refresh all blocked state:", allBlocked)
