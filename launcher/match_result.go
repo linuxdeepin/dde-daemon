@@ -39,9 +39,14 @@ func (r *MatchResult) String() string {
 type MatchResults []*MatchResult
 
 // impl sort interface
-func (p MatchResults) Len() int           { return len(p) }
-func (p MatchResults) Less(i, j int) bool { return p[i].score < p[j].score }
-func (p MatchResults) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p MatchResults) Len() int { return len(p) }
+func (p MatchResults) Less(i, j int) bool {
+	if p[i].score == p[j].score {
+		return p[i].item.ID < p[j].item.ID
+	}
+	return p[i].score < p[j].score
+}
+func (p MatchResults) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
 func (results MatchResults) GetTruncatedOrderedIDs() []string {
 	sort.Sort(sort.Reverse(results))
