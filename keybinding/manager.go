@@ -85,6 +85,12 @@ const ( // power按键事件的响应
 	powerActionShowUI
 )
 
+var _useWayland bool
+
+func setUseWayland(value bool) {
+	_useWayland = value
+}
+
 type Manager struct {
 	service *dbusutil.Service
 	// properties
@@ -171,6 +177,7 @@ const (
 )
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
+	setUseWayland(strings.Contains(os.Getenv("XDG_SESSION_TYPE"), "wayland"))
 	conn, err := x.NewConn()
 	if err != nil {
 		return nil, err
@@ -192,7 +199,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	m.systemSigLoop = dbusutil.NewSignalLoop(sysBus, 10)
 
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if _useWayland {
 		m.waylandOutputMgr = kwayland.NewOutputManagement(sessionBus)
 		m.login1Manager = login1.NewManager(sysBus)
 	}
@@ -240,7 +247,7 @@ func (m *Manager) init() {
 		m.handleKeyEventFromShutdownFront(changKey)
 	})
 
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if _useWayland {
 		if shouldUseDDEKwin() {
 			m.shortcutManager.AddSpecialToKwin(m.wm)
 			m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
@@ -307,7 +314,7 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	}
 
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if _useWayland {
 		m.initHandlers()
 		m.clickNum = 0
 
@@ -513,7 +520,7 @@ func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
 				}
 			}
 
-			if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+			if _useWayland {
 				if key == CapslockKey && value == KeyPress {
 					m.handleKeyEventByWayland("capslock")
 				} else if key == NumlockKey && value == KeyPress {
@@ -560,7 +567,7 @@ func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
 			logger.Warning("setNumLockState failed:", err)
 		}
 	} else {
-		if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+		if _useWayland {
 			if saveStateEnabled {
 				err := setNumLockWl(m.waylandOutputMgr, m.conn, nlState)
 				if err != nil {
@@ -626,7 +633,7 @@ func (m *Manager) handleKeyEventFromLockFront(changKey string) {
 func (m *Manager) handleKeyEventByWayland(changKey string) {
 	action := shortcuts.GetAction(changKey)
 	var isWaylandGrabed bool = false
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if _useWayland {
 		isWaylandGrabed = true
 		if action.Type == shortcuts.ActionTypeShowNumLockOSD || action.Type == shortcuts.ActionTypeShowCapsLockOSD {
 			sessionBus, err := dbus.SessionBus()
@@ -694,7 +701,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 	} else if action.Type == shortcuts.ActionTypeShowNumLockOSD {
 		var state NumLockState
 		if !isWaylandGrabed {
-			if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+			if _useWayland {
 				sessionBus, err := dbus.SessionBus()
 				if err != nil {
 					return
@@ -743,7 +750,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 
 		if !isWaylandGrabed {
 			var state CapsLockState
-			if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+			if _useWayland {
 				sessionBus, err := dbus.SessionBus()
 				if err != nil {
 					return

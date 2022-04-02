@@ -22,7 +22,6 @@ package keybinding
 import (
 	"errors"
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
@@ -354,6 +353,15 @@ func (m *Manager) AddShortcutKeystroke(id string, type0 int32, keystroke string)
 	} else if conflictKeystroke.Shortcut != shortcut {
 		return dbusutil.ToError(errKeystrokeUsed)
 	}
+
+	if _useWayland {
+		keystrokesStrv := make([]string, 0, len(keystroke))
+		for _, ks := range shortcut.GetKeystrokes() {
+			keystrokesStrv = append(keystrokesStrv, ks.String())
+		}
+		m.gsSystem.SetStrv(id, keystrokesStrv)
+	}
+
 	return nil
 }
 
@@ -405,7 +413,7 @@ func (m *Manager) SelectKeystroke() *dbus.Error {
 
 func (m *Manager) SetNumLockState(state int32) *dbus.Error {
 	logger.Debug("SetNumLockState", state)
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if _useWayland {
 		err := setNumLockWl(m.waylandOutputMgr, m.conn, NumLockState(state))
 		m.handleKeyEventByWayland("numlock")
 		return dbusutil.ToError(err)
