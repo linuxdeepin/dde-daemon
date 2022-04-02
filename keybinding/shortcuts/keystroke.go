@@ -233,6 +233,9 @@ func ParseKeystroke(keystroke string) (*Keystroke, error) {
 	}
 
 	str := parts[len(parts)-1]
+	if str == "Space" {
+		str = "space"
+	}
 	// check key valid
 	var sym x.Keysym
 	var isKeystrAboveTab bool
