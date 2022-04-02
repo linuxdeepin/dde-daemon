@@ -330,6 +330,14 @@ func (m *Manager) init() {
 func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
 	// allow right button up when kbd grabbed
 	if (info.Event.Name != "touch right button" || info.Event.Direction != "up") && isKbdAlreadyGrabbed() {
+		// 多任务窗口下，不应该忽略手势操作
+		isShowMultiTask, err := m.wm.GetMultiTaskingStatus(0)
+		if err != nil {
+			logger.Warning(err)
+		} else if isShowMultiTask && info.Event.Name == "swipe" {
+			logger.Debug("should not ignore swipe event, because we are in multi task")
+			return false
+		}
 		logger.Debug("another process grabbed keyboard, not exec action")
 		return true
 	}

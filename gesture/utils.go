@@ -56,22 +56,9 @@ func isKbdAlreadyGrabbed() bool {
 
 	var grabWin x.Window
 
+	// 如果是防止安全问题只抓取rootWin就可以了，抓取激活窗口会导致多任务等窗口响应失效。
 	rootWin := xconn.GetDefaultScreen().Root
-	if activeWin, _ := ewmh.GetActiveWindow(xconn).Reply(xconn); activeWin == 0 {
-		grabWin = rootWin
-	} else {
-		// check viewable
-		attrs, err := x.GetWindowAttributes(xconn, activeWin).Reply(xconn)
-		if err != nil {
-			grabWin = rootWin
-		} else if attrs.MapState != x.MapStateViewable {
-			// err is nil and activeWin is not viewable
-			grabWin = rootWin
-		} else {
-			// err is nil, activeWin is viewable
-			grabWin = activeWin
-		}
-	}
+	grabWin = rootWin
 
 	err := keybind.GrabKeyboard(xconn, grabWin)
 	if err == nil {
