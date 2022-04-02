@@ -22,7 +22,6 @@ package bluetooth
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
@@ -345,20 +344,6 @@ func (b *SysBluetooth) watchSession(uid string, session login1.Session) {
 	}
 }
 
-func (b *SysBluetooth) unblockBluetoothDevice() {
-	has, err := hasBluetoothDeviceBlocked()
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-	if has {
-		err := exec.Command(rfkillBin, "unblock", rfkillDeviceTypeBluetooth).Run()
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-}
-
 func (b *SysBluetooth) loadObjects() {
 	// add exists adapters and devices
 	objects, err := b.objectManager.GetManagedObjects(0)
@@ -367,7 +352,6 @@ func (b *SysBluetooth) loadObjects() {
 		return
 	}
 
-	b.unblockBluetoothDevice()
 	// add adapters
 	for path, obj := range objects {
 		if _, ok := obj[bluezAdapterDBusInterface]; ok {
@@ -405,7 +389,6 @@ func (b *SysBluetooth) removeAllObjects() {
 
 func (b *SysBluetooth) handleInterfacesAdded(path dbus.ObjectPath, data map[string]map[string]dbus.Variant) {
 	if _, ok := data[bluezAdapterDBusInterface]; ok {
-		b.unblockBluetoothDevice()
 		b.addAdapter(path)
 	}
 	if _, ok := data[bluezDeviceDBusInterface]; ok {
