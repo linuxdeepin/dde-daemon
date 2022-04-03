@@ -820,13 +820,17 @@ func nmGetIp6ConfigInfo(path dbus.ObjectPath) (ip6Data ipv6Info) {
 		return
 	}
 
-	addressDataProp, _ := ip6config.AddressData().Get(0)
+	addressDataProp, err := ip6config.AddressData().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
 	addresses := parseAddressDataProp(addressDataProp)
 
 	ip6Data.Addresses = make([]addressDataItem, 0, len(addresses))
 	for _, addr := range addresses {
-		if addr.Address[:5] != "FE80:" && // link local
-			addr.Address[:5] != "FEC0:" { // site local
+		if !strings.HasPrefix(addr.Address, "FE80:") && // link local
+			!strings.HasPrefix(addr.Address, "FEC0:") { // site local
 			ip6Data.Addresses = append(ip6Data.Addresses, addr)
 		}
 	}
