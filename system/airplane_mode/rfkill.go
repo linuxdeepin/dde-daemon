@@ -119,7 +119,7 @@ func (mgr *Manager) handleRfkillEvent(event *RfkillEvent) {
 	allSoftBlocked := false
 	if deviceCnt != 0 {
 		allBlocked = blockCnt == deviceCnt
-		allSoftBlocked = softBlockCnt == blockCnt
+		allSoftBlocked = softBlockCnt == deviceCnt
 	}
 
 	curTypeBlocked := false
