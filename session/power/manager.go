@@ -196,23 +196,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.ScreenBlackLock.Bind(m.settings, settingKeyScreenBlackLock)
 	m.SleepLock.Bind(m.settings, settingKeySleepLock)
 
-	// gsetting默认配置选择待机/休眠，但实际机器不支持，调整gsetting 为合适的值。
-	canHibernate := m.canHibernate()
-	canSuspend := m.canSuspend()
-	keys := []string{
-		settingKeyLinePowerLidClosedAction,
-		settingKeyLinePowerPressPowerBtnAction,
-		settingKeyBatteryLidClosedAction,
-		settingKeyBatteryPressPowerBtnAction,
-	}
-	for _, key := range keys {
-		action := m.settings.GetEnum(key)
-		if (!canHibernate && action == powerActionHibernate) ||
-			(!canSuspend && action == powerActionSuspend) {
-			m.settings.SetEnum(key, powerActionDoNothing)
-		}
-	}
-
 	m.LinePowerLidClosedAction.Bind(m.settings, settingKeyLinePowerLidClosedAction)
 	m.LinePowerPressPowerBtnAction.Bind(m.settings, settingKeyLinePowerPressPowerBtnAction)
 	m.BatteryLidClosedAction.Bind(m.settings, settingKeyBatteryLidClosedAction)

@@ -401,24 +401,41 @@ func suspendPulseSources(suspend int) {
 func (m *Manager) initGSettingsConnectChanged() {
 	const powerSettingsIcon = "preferences-system"
 
+	isIllegalAction := func(action int32) bool {
+		return (action == powerActionHibernate && !m.canHibernate()) ||
+			(action == powerActionSuspend && !m.canSuspend())
+	}
+
 	// 监听 session power 的属性的改变,并发送通知
 	gsettings.ConnectChanged(gsSchemaPower, "*", func(key string) {
 		logger.Debug("Power Settings Changed :", key)
 		switch key {
 		case settingKeyLinePowerLidClosedAction:
 			value := m.LinePowerLidClosedAction.Get()
+			if isIllegalAction(value) {
+				break
+			}
 			notifyString := getNotifyString(settingKeyLinePowerLidClosedAction, value)
 			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyLinePowerPressPowerBtnAction:
 			value := m.LinePowerPressPowerBtnAction.Get()
+			if isIllegalAction(value) {
+				break
+			}
 			notifyString := getNotifyString(settingKeyLinePowerPressPowerBtnAction, value)
 			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyBatteryLidClosedAction:
 			value := m.BatteryLidClosedAction.Get()
+			if isIllegalAction(value) {
+				break
+			}
 			notifyString := getNotifyString(settingKeyBatteryLidClosedAction, value)
 			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyBatteryPressPowerBtnAction:
 			value := m.BatteryPressPowerBtnAction.Get()
+			if isIllegalAction(value) {
+				break
+			}
 			notifyString := getNotifyString(settingKeyBatteryPressPowerBtnAction, value)
 			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyHighPerformanceEnabled:
