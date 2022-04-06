@@ -15,6 +15,19 @@ func (v *Manager) emitPropChangedEnabled(value bool) error {
 	return v.service.EmitPropertyChanged(v, "Enabled", value)
 }
 
+func (v *Manager) setPropHasAirplaneMode(value bool) (changed bool) {
+	if v.HasAirplaneMode != value {
+		v.HasAirplaneMode = value
+		v.emitPropChangedHasAirplaneMode(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedHasAirplaneMode(value bool) error {
+	return v.service.EmitPropertyChanged(v, "HasAirplaneMode", value)
+}
+
 func (v *Manager) setPropWifiEnabled(value bool) (changed bool) {
 	if v.WifiEnabled != value {
 		v.WifiEnabled = value

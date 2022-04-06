@@ -129,6 +129,8 @@ func (mgr *Manager) handleRfkillEvent(event *RfkillEvent) {
 		curTypeSoftBlocked = curTypeSoftBlockCnt == curTypeDeviceCnt
 	}
 
+	mgr.setPropHasAirplaneMode(deviceCnt != 0)
+
 	mgr.setPropEnabled(allBlocked)
 	logger.Debug("refresh all blocked state:", allBlocked)
 

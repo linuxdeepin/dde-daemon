@@ -31,6 +31,7 @@ type Manager struct {
 
 	// Airplane Mode status
 	Enabled          bool
+	HasAirplaneMode  bool
 	WifiEnabled      bool
 	BluetoothEnabled bool
 
