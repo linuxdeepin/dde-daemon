@@ -205,6 +205,10 @@ func (b *SysBluetooth) SetAdapterPowered(adapterPath dbus.ObjectPath,
 	adapter.Powered = powered
 	adapter.discoveringFinished = false
 
+	if powered {
+		b.unblockBluetoothDevice()
+	}
+
 	err = adapter.core.Adapter().Powered().Set(0, powered)
 	if err != nil {
 		logger.Warningf("failed to set %s powered: %v", adapter, err)
