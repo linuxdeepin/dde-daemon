@@ -635,6 +635,11 @@ func (a *Audio) notifyBluezCardPortInsert(card *Card) {
 
 		if isInsert {
 			logger.Debugf("port<%s,%s> inserted", card.core.Name, port.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
+			if !portConfig.Enabled {
+				logger.Debugf("port<%s,%s> notify", card.core.Name, port.Name)
+				a.notifyPortDisabled(card.Id, port)
+			}
 		}
 	}
 }
@@ -678,6 +683,11 @@ func (a *Audio) notifyCardPortInsert(card *Card) {
 
 		if isInsert {
 			logger.Debugf("port<%s,%s> inserted", card.core.Name, port.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
+			if !portConfig.Enabled {
+				logger.Debugf("port<%s,%s> notify", card.core.Name, port.Name)
+				a.notifyPortDisabled(card.Id, port)
+			}
 		}
 	}
 }

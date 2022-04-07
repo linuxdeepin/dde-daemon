@@ -81,6 +81,15 @@ func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {
 
 // 检测端口是否被禁用
 func (s *Sink) CheckPort() *dbus.Error {
+	enabled, err := s.audio.IsPortEnabled(s.Card, s.ActivePort.Name)
+	if err != nil {
+		return err
+	}
+
+	if !enabled {
+		return dbusutil.ToError(fmt.Errorf("port<%d:%s> is disabled", s.Card, s.ActivePort.Name))
+	}
+
 	return nil
 }
 

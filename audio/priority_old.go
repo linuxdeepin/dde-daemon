@@ -227,6 +227,12 @@ func (pr *Priorities) AddAvailable(cards CardList) {
 				continue
 			}
 
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
+			if !portConfig.Enabled {
+				logger.Debugf("disabled port %s %s", card.core.Name, port.Name)
+				continue
+			}
+
 			if port.Direction == pulse.DirectionSink && pr.findOutput(card.core.Name, port.Name) < 0 {
 				logger.Debugf("add output port %s %s", card.core.Name, port.Name)
 				pr.AddOutputPort(card.core.Name, port.Name)

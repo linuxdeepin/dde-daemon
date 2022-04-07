@@ -663,6 +663,10 @@ func (a *Audio) findSourceByCardIndexPortName(cardId uint32, portName string) *p
 
 // set default sink and sink active port
 func (a *Audio) setDefaultSinkWithPort(cardId uint32, portName string) error {
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
+	if !portConfig.Enabled {
+		return fmt.Errorf("card #%d port %q is disabled", cardId, portName)
+	}
 	logger.Debugf("setDefaultSinkWithPort card #%d port %q", cardId, portName)
 	sink := a.findSinkByCardIndexPortName(cardId, portName)
 	if sink == nil {
@@ -706,6 +710,10 @@ func (a *Audio) getDefaultSourceActivePortName() string {
 
 // set default source and source active port
 func (a *Audio) setDefaultSourceWithPort(cardId uint32, portName string) error {
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
+	if !portConfig.Enabled {
+		return fmt.Errorf("card #%d port %q is disabled", cardId, portName)
+	}
 	logger.Debugf("setDefault card #%d port %q", cardId, portName)
 	source := a.findSourceByCardIndexPortName(cardId, portName)
 	if source == nil {
@@ -805,11 +813,42 @@ func (a *Audio) findSources(cardId uint32, activePortName string) []*Source {
 }
 
 func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *dbus.Error {
-	return dbusutil.ToError(fmt.Errorf("deprecated"))
+	if enabled {
+		logger.Debugf("enable port<%d,%s>", cardId, portName)
+	} else {
+		logger.Debugf("disable port<%d,%s>", cardId, portName)
+	}
+	GetConfigKeeper().SetEnabled(a.getCardNameById(cardId), portName, enabled)
+
+	err := a.service.Emit(a, "PortEnabledChanged", cardId, portName, enabled)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
+	a.setPropCards(a.cards.string())
+	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
+	GetPriorityManager().SetPorts(a.cards)
+	a.autoSwitchPort()
+
+	sinks := a.findSinks(cardId, portName)
+	for _, sink := range sinks {
+		sink.setMute(!enabled || GetConfigKeeper().Mute.MuteOutput)
+	}
+
+	sources := a.findSources(cardId, portName)
+	for _, source := range sources {
+		source.setMute(!enabled || GetConfigKeeper().Mute.MuteInput)
+	}
+
+	return nil
 }
 
 func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, busErr *dbus.Error) {
-	return true, dbusutil.ToError(fmt.Errorf("deprecated"))
+	// 不建议使用这个接口，可以从Cards和CardsWithoutUnavailable属性中获取此状态
+	logger.Debugf("check is port<%d,%s> enabled", cardId, portName)
+	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
+	return portConfig.Enabled, nil
 }
 
 func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
@@ -991,6 +1030,11 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 	}
 
 	s.setMute(GetConfigKeeper().Mute.MuteOutput)
+
+	if !portConfig.Enabled {
+		// 意外原因切换到被禁用的端口上，例如没有可用端口
+		s.setMute(true)
+	}
 }
 
 func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
@@ -1024,6 +1068,11 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 		logger.Debugf("reduce noise source, set reduce noise %v", portConfig.ReduceNoise)
 		a.ReduceNoise = portConfig.ReduceNoise
 		a.emitPropChangedReduceNoise(a.ReduceNoise)
+	}
+
+	if !portConfig.Enabled {
+		// 意外原因切换到被禁用的端口上，例如没有可用端口
+		s.setMute(true)
 	}
 }
 
