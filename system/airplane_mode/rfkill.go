@@ -45,7 +45,8 @@ type RfkillEvent struct {
 func (mgr *Manager) listenRfkill() {
 	fd, err := syscall.Open("/dev/rfkill", syscall.O_RDWR, 0777)
 	if err != nil {
-		panic(err)
+		logger.Warning("failed to open /dev/rfkill:", err)
+		return
 	}
 	defer syscall.Close(fd)
 
