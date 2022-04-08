@@ -427,22 +427,20 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 		if len(sig.Body) > 1 {
 			m.shortcutKey = sig.Body[0].(string)
 			m.shortcutKeyCmd = sig.Body[1].(string)
-			locked, _ := m.sessionManager.Locked().Get(0)
-			if m.shortcutKeyCmd == "Screenshot" || !locked {
-				if m.shortcutKey == "kwin" {
-					logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
-					m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
-					if m.shortcutKeyCmd == "" {
-						//+ 把响应一次的逻辑放到协程外执行，防止协程响应延迟
+			ok := strings.Compare(string("kwin"), m.shortcutKey)
+			if ok == 0 {
+				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
+				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
+				if m.shortcutKeyCmd == "" {
+					//+ 把响应一次的逻辑放到协程外执行，防止协程响应延迟
+					m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
+				} else {
+					if m.shortcutCmd == "" {
 						m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
 					} else {
-						if m.shortcutCmd == "" {
-							m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
-						} else {
-							err := m.execCmd(m.shortcutCmd, true)
-							if err != nil {
-								logger.Warning(err)
-							}
+						err := m.execCmd(m.shortcutCmd, true)
+						if err != nil {
+							logger.Warning(err)
 						}
 					}
 				}
