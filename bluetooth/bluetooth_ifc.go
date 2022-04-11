@@ -255,7 +255,7 @@ func (b *Bluetooth) SetAdapterDiscoverable(adapter dbus.ObjectPath,
 		logger.Warningf("failed to set %s discoverable: %v", a, err)
 		return dbusutil.ToError(err)
 	}
-
+	globalBluetooth.config.setAdapterConfigDiscoverable(discoverable)
 	return nil
 }
 

@@ -63,7 +63,6 @@ func newConfig() (c *config) {
 	logger.Info("load bluetooth config file:", c.core.GetConfigFile())
 	c.Adapters = make(map[string]*adapterConfig)
 	c.Devices = make(map[string]*deviceConfig)
-	c.Discoverable = true
 	c.load()
 	return
 }
@@ -170,6 +169,13 @@ func (c *config) setAdapterConfigPowered(address string, powered bool) {
 	if ac, ok := c.Adapters[address]; ok {
 		ac.Powered = powered
 	}
+	c.core.Unlock()
+	c.save()
+}
+
+func (c *config) setAdapterConfigDiscoverable(discoverable bool) {
+	c.core.Lock()
+	c.Discoverable = discoverable
 	c.core.Unlock()
 	c.save()
 }
