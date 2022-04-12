@@ -170,6 +170,8 @@ func (m *Manager) listenGlobalCursorPressed() error {
 			key := sig.Body[0].(uint32)
 			x := sig.Body[1].(uint32)
 			y := sig.Body[2].(uint32)
+			m.CursorX = int32(x)
+			m.CursorY = int32(y)
 			if key == buttonLeft {
 				m.cursorMask |= uint32(uint32(1) << leftBit)
 				key = x11BtnLeft
@@ -202,6 +204,8 @@ func (m *Manager) listenGlobalCursorRelease() error {
 			key := sig.Body[0].(uint32)
 			x := sig.Body[1].(uint32)
 			y := sig.Body[2].(uint32)
+			m.CursorX = int32(x)
+			m.CursorY = int32(y)
 
 			if key == buttonLeft {
 				m.cursorMask &= ^(uint32(1) << leftBit)
@@ -234,6 +238,8 @@ func (m *Manager) listenGlobalCursorMove() error {
 		if len(sig.Body) > 1 {
 			x := sig.Body[0].(uint32)
 			y := sig.Body[1].(uint32)
+			m.CursorX = int32(x)
+			m.CursorY = int32(y)
 
 			//m.cursorMask |= (1 << cursorBit)
 			var hasPress = false
@@ -243,8 +249,6 @@ func (m *Manager) listenGlobalCursorMove() error {
 
 			//logger.Debug("[test global cursor] get CursorMove", x, y)
 			m.handleCursorEvent(int32(x), int32(y), hasPress)
-			m.CursorX = int32(x)
-			m.CursorY = int32(y)
 		}
 	})
 	return nil
