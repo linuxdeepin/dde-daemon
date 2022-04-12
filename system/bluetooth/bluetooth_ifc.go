@@ -2,11 +2,12 @@ package bluetooth
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/godbus/dbus"
 	sysbtagent "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth.agent"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"strconv"
 )
 
 func (b *SysBluetooth) ConnectDevice(devPath dbus.ObjectPath, adapterPath dbus.ObjectPath) *dbus.Error {
@@ -204,10 +205,6 @@ func (b *SysBluetooth) SetAdapterPowered(adapterPath dbus.ObjectPath,
 	// Note: BUG102434
 	adapter.Powered = powered
 	adapter.discoveringFinished = false
-
-	if powered {
-		b.unblockBluetoothDevice()
-	}
 
 	err = adapter.core.Adapter().Powered().Set(0, powered)
 	if err != nil {

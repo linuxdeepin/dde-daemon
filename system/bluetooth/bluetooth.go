@@ -711,11 +711,6 @@ func (b *SysBluetooth) addAdapter(adapterPath dbus.ObjectPath) {
 
 	cfgPowered := b.config.getAdapterConfigPowered(a.Address)
 
-	// 如果此次蓝牙需要打开，应先做解锁处理
-	if cfgPowered {
-		b.unblockBluetoothDevice()
-	}
-
 	err := a.core.Adapter().Powered().Set(0, cfgPowered)
 	if err != nil {
 		logger.Warning(err)
