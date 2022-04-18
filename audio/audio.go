@@ -30,12 +30,12 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"golang.org/x/xerrors"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (
@@ -957,10 +957,12 @@ func (a *Audio) resetSinksVolume() {
 func (a *Audio) resetSourceVolume() {
 	logger.Debug("reset source volume", defaultInputVolume)
 	for _, s := range a.ctx.GetSourceList() {
-		a.ctx.SetSourceMuteByIndex(s.Index, false)
-		cv := s.Volume.SetAvg(defaultInputVolume).SetBalance(s.ChannelMap,
-			0).SetFade(s.ChannelMap, 0)
-		a.ctx.SetSourceVolumeByIndex(s.Index, cv)
+		if s.ActivePort.Name != "" {
+			a.ctx.SetSourceMuteByIndex(s.Index, false)
+			cv := s.Volume.SetAvg(defaultInputVolume).SetBalance(s.ChannelMap,
+				0).SetFade(s.ChannelMap, 0)
+			a.ctx.SetSourceVolumeByIndex(s.Index, cv)
+		}
 	}
 }
 
@@ -1013,6 +1015,10 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 		logger.Warning("nil sink")
 		return
 	}
+	if s.ActivePort.Name == "" {
+		logger.Debug("no active port")
+		return
+	}
 
 	logger.Debugf("resume sink %s %s", a.getCardNameById(s.Card), s.ActivePort.Name)
 	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(s.Card), s.ActivePort.Name)
@@ -1040,6 +1046,10 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 	if s == nil {
 		logger.Warning("nil source")
+		return
+	}
+	if s.ActivePort.Name == "" {
+		logger.Debug("no active port")
 		return
 	}
 
