@@ -54,8 +54,7 @@ func DetectPortType(card *pulse.Card, port *pulse.CardPortInfo) int {
 		return PortTypeBluetooth
 	}
 
-	if hasKeyword(stringList, "usb") ||
-		hasKeyword(stringList, "rear-mic") ||
+	if hasKeyword(stringList, "rear-mic") ||
 		hasKeyword(stringList, "front-mic") ||
 		hasKeyword(stringList, "headphone") {
 		return PortTypeHeadset
