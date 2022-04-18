@@ -68,7 +68,6 @@ func (d *Daemon) Start() error {
 		return err
 	}
 	m.initXExtensions()
-	go m.handleXEvent()
 
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	if strings.Contains(sessionType, "wayland") {
@@ -76,6 +75,8 @@ func (d *Daemon) Start() error {
 		go m.listenGlobalCursorRelease()
 		go m.listenGlobalCursorMove()
 		go m.listenGlobalAxisChanged()
+	} else {
+		go m.handleXEvent()
 	}
 
 	err = service.Export(dbusPath, m)
