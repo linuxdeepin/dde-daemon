@@ -413,6 +413,11 @@ func (a *Audio) shouldAutoPause() bool {
 		return false
 	}
 
+	logger.Debugf("default sink active port: %v %v", port.Name, port.Available)
+	if a.defaultSink.ActivePort.Available == 1 {
+		return false
+	}
+
 	switch DetectPortType(card.core, &port) {
 	case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO:
 		return true
