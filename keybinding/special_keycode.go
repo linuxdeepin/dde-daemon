@@ -291,7 +291,7 @@ func (m *Manager) handlePower() {
 		}
 		m.systemTurnOffScreen()
 	case powerActionShowUI:
-		cmd := "dde-lock -t"
+		cmd := "/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab && dde-lock -t"
 		go func() {
 			locked, err := m.sessionManager.Locked().Get(0)
 			if err != nil {
