@@ -1115,8 +1115,7 @@ func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
 	}
 	idNameMap := getWMIdNameMap()
 	for _, accel := range accels {
-		// 'preview-workspace' unsupported in wayland, so filter it
-		if accel.Id == "preview-workspace" || accel.Id == "color-picker" {
+		if accel.Id == "color-picker" {
 			continue
 		}
 		name := idNameMap[accel.Id]
