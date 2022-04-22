@@ -1,0 +1,17 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "supportDdcci": {
+            "value": false,
+            "serial": 0,
+            "flags": [],
+            "global": true,
+            "name": "SupportDdcci",
+            "name[zh_CN]": "支持ddcci亮度调节",
+            "description": "brightness ddcci support",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}  

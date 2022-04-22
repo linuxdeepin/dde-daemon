@@ -28,6 +28,7 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/bin/backlight_helper/ddcci"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 )
@@ -109,6 +110,16 @@ func main() {
 	err = service.Export(dbusPath, m)
 	if err != nil {
 		logger.Fatal("failed to export:", err)
+	}
+
+	ddcciManager, err := ddcci.NewManager(service)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		err = service.Export(ddcci.DbusPath, ddcciManager)
+		if err != nil {
+			logger.Warning("failed to export:", err)
+		}
 	}
 
 	err = service.RequestName(dbusServiceName)
