@@ -84,42 +84,50 @@ func (m *Manager) initHandlers() {
 	}
 
 	m.handlers[ActionTypeShowNumLockOSD] = func(ev *KeyEvent) {
-		state, err := queryNumLockState(m.conn)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		save := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
-		switch state {
-		case NumLockOn:
-			if save {
-				m.NumLockState.Set(int32(NumLockOn))
+		if _useWayland {
+			m.handleKeyEventByWayland("numlock")
+		} else {
+			state, err := queryNumLockState(m.conn)
+			if err != nil {
+				logger.Warning(err)
+				return
 			}
-			showOSD("NumLockOn")
-		case NumLockOff:
-			if save {
-				m.NumLockState.Set(int32(NumLockOff))
+			save := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
+			switch state {
+			case NumLockOn:
+				if save {
+					m.NumLockState.Set(int32(NumLockOn))
+				}
+				showOSD("NumLockOn")
+			case NumLockOff:
+				if save {
+					m.NumLockState.Set(int32(NumLockOff))
+				}
+				showOSD("NumLockOff")
 			}
-			showOSD("NumLockOff")
 		}
 	}
 
 	m.handlers[ActionTypeShowCapsLockOSD] = func(ev *KeyEvent) {
-		if !m.shouldShowCapsLockOSD() {
-			return
-		}
+		if _useWayland {
+			m.handleKeyEventByWayland("capslock")
+		} else {
+			if !m.shouldShowCapsLockOSD() {
+				return
+			}
 
-		state, err := queryCapsLockState(m.conn)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
+			state, err := queryCapsLockState(m.conn)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
 
-		switch state {
-		case CapsLockOff:
-			showOSD("CapsLockOff")
-		case CapsLockOn:
-			showOSD("CapsLockOn")
+			switch state {
+			case CapsLockOff:
+				showOSD("CapsLockOff")
+			case CapsLockOn:
+				showOSD("CapsLockOn")
+			}
 		}
 	}
 
@@ -180,7 +188,6 @@ func (m *Manager) initHandlers() {
 			logger.Warning("failed to show control center:", err)
 		}
 	}
-
 
 	if m.shortcutManager == nil {
 		m.shortcutManager = NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
