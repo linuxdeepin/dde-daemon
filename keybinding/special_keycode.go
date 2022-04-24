@@ -268,7 +268,7 @@ func (m *Manager) handlePower() {
 		}
 		m.systemTurnOffScreen()
 	case powerActionShowUI:
-		cmd := "dde-lock -t"
+		cmd := "/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/shutdownFront com.deepin.dde.shutdownFront.Show&&/usr/bin/setxkbmap -option"
 		go func() {
 			locked, err := m.sessionManager.Locked().Get(0)
 			if err != nil {
