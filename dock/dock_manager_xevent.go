@@ -20,6 +20,7 @@
 package dock
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 	"time"
@@ -202,10 +203,11 @@ func (m *Manager) listenWindowXEvent(winInfo *WindowInfo) {
 
 func (m *Manager) handleDestroyNotifyEvent(ev *x.DestroyNotifyEvent) {
 	logger.Debug("DestroyNotifyEvent window:", ev.Window)
-	winInfo := m.getWindowInfo(ev.Window)
-	if winInfo != nil {
+	winInfo, err := m.getWindowInfo(ev.Window)
+	if err == nil {
 		m.detachWindow(winInfo)
 	}
+
 	m.unregisterWindow(ev.Window)
 }
 
@@ -219,11 +221,17 @@ func (m *Manager) handleMapNotifyEvent(ev *x.MapNotifyEvent) {
 	})
 }
 
-func (m *Manager) getWindowInfo(win x.Window) WindowInfoImp {
+func (m *Manager) getWindowInfo(win x.Window) (WindowInfoImp, error) {
 	m.windowInfoMapMutex.RLock()
-	v := m.windowInfoMap[win]
+	v, ok := m.windowInfoMap[win]
+	if !ok {
+		err := fmt.Errorf("can not get %d window info", win)
+		m.windowInfoMapMutex.RUnlock()
+		return nil, err
+	}
+
 	m.windowInfoMapMutex.RUnlock()
-	return v
+	return v, nil
 }
 
 func (m *Manager) handleConfigureNotifyEvent(ev *x.ConfigureNotifyEvent) {

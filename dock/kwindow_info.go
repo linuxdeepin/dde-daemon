@@ -28,6 +28,8 @@ type WindowInfoImp interface {
 	getProcess() *ProcessInfo
 	activate() error
 	minimize() error
+	maximize() error
+	makeWindowAbove() error
 	isMinimized() bool
 	killClient() error
 	changeXid(x.Window) bool
@@ -89,7 +91,7 @@ func (winInfo *KWindowInfo) shouldSkip() bool {
 
 	if skip {
 		//+ 白名单(临时方案，待窗口增加wayland下窗口规则后再修改)： 修复类似欢迎应用没有最小化窗口,但是需要在任务栏显示图标
-		for _, app := range []string {"dde-introduction"} {
+		for _, app := range []string{"dde-introduction"} {
 			if app == winInfo.appId {
 				skip = false
 			}
@@ -284,6 +286,14 @@ func (winInfo *KWindowInfo) activate() error {
 
 func (winInfo *KWindowInfo) minimize() error {
 	return winInfo.winObj.RequestToggleMinimized(0)
+}
+
+func (winInfo *KWindowInfo) maximize() error {
+	return winInfo.winObj.RequestToggleMaximized(0)
+}
+
+func (winInfo *KWindowInfo) makeWindowAbove() error {
+	return winInfo.winObj.RequestToggleKeepAbove(0)
 }
 
 func (winInfo *KWindowInfo) close(timestamp uint32) error {

@@ -29,6 +29,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
@@ -41,7 +42,6 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	x "github.com/linuxdeepin/go-x11-client"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 type Manager struct {
@@ -93,14 +93,15 @@ type Manager struct {
 	windowActMu        sync.Mutex
 
 	// dbus objects:
-	launcher     launcher.Launcher
-	ddeLauncher  libDDELauncher.Launcher
-	wm           wm.Wm
-	appsObj      libApps.Apps
-	startManager sessionmanager.StartManager
-	wmSwitcher   wmswitcher.WMSwitcher
-	waylandWM    kwayland.WindowManager
-	wmName       string
+	launcher         launcher.Launcher
+	ddeLauncher      libDDELauncher.Launcher
+	wm               wm.Wm
+	appsObj          libApps.Apps
+	startManager     sessionmanager.StartManager
+	wmSwitcher       wmswitcher.WMSwitcher
+	waylandWM        kwayland.WindowManager
+	wmName           string
+	isWaylandSession bool
 	//nolint
 	signals *struct {
 		ServiceRestarted struct{}
@@ -187,7 +188,13 @@ func (m *Manager) launch(desktopFile string, timestamp uint32, files []string) {
 
 // ActivateWindow会激活给定id的窗口，被激活的窗口通常会成为焦点窗口。
 func (m *Manager) ActivateWindow(win uint32) *dbus.Error {
-	err := activateWindow(x.Window(win))
+	winInfo, err := m.getWindowInfo(x.Window(win))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
+	err = winInfo.activate()
+
 	if err != nil {
 		logger.Warning("Activate window failed:", err)
 		return dbusutil.ToError(err)
@@ -197,42 +204,54 @@ func (m *Manager) ActivateWindow(win uint32) *dbus.Error {
 
 // CloseWindow会将传入id的窗口关闭。
 func (m *Manager) CloseWindow(win uint32) *dbus.Error {
-	sessionType := os.Getenv("XDG_SESSION_TYPE")
-	if strings.Contains(sessionType, "wayland") {
-		winInfo := m.findWindowByXid(x.Window(win))
-		if winInfo == nil {
-			return dbusutil.ToError(fmt.Errorf("not found window %d", win))
-		}
-		err := winInfo.close(0)
-		if err != nil {
-			logger.Warningf("failed to close window %d: %v", win, err)
-			return dbusutil.ToError(err)
-		}
-	} else {
-		err := closeWindow(x.Window(win), 0)
-		if err != nil {
-			logger.Warning("Close window failed:", err)
-			return dbusutil.ToError(err)
-		}
+	winInfo, err := m.getWindowInfo(x.Window(win))
+	if err != nil {
+		return dbusutil.ToError(err)
 	}
+
+	err = winInfo.activate()
+	if err != nil {
+		logger.Warning("Activate window failed:", err)
+		return dbusutil.ToError(err)
+	}
+
+	err = winInfo.close(0)
+	if err != nil {
+		logger.Warning("Close window failed:", err)
+		return dbusutil.ToError(err)
+	}
+
 	return nil
 }
 
 func (m *Manager) MaximizeWindow(win uint32) *dbus.Error {
-	err := m.ActivateWindow(win)
+	winInfo, err := m.getWindowInfo(x.Window(win))
 	if err != nil {
-		return err
+		return dbusutil.ToError(err)
 	}
-	err1 := maximizeWindow(x.Window(win))
-	if err1 != nil {
+
+	err = winInfo.activate()
+	if err != nil {
+		logger.Warning("active window failed:", err)
+		return dbusutil.ToError(err)
+	}
+
+	err = winInfo.maximize()
+
+	if err != nil {
 		logger.Warning("maximize window failed:", err)
-		return dbusutil.ToError(err1)
+		return dbusutil.ToError(err)
 	}
 	return nil
 }
 
 func (m *Manager) MinimizeWindow(win uint32) *dbus.Error {
-	err := minimizeWindow(x.Window(win))
+	winInfo, err := m.getWindowInfo(x.Window(win))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
+	err = winInfo.minimize()
 	if err != nil {
 		logger.Warning("minimize window failed:", err)
 		return dbusutil.ToError(err)
@@ -241,15 +260,22 @@ func (m *Manager) MinimizeWindow(win uint32) *dbus.Error {
 }
 
 func (m *Manager) MakeWindowAbove(win uint32) *dbus.Error {
-	err := m.ActivateWindow(win)
+	winInfo, err := m.getWindowInfo(x.Window(win))
 	if err != nil {
-		return err
+		return dbusutil.ToError(err)
 	}
 
-	err1 := makeWindowAbove(x.Window(win))
-	if err1 != nil {
+	err = winInfo.activate()
+	if err != nil {
+		logger.Warning("active window failed:", err)
+		return dbusutil.ToError(err)
+	}
+
+	err = winInfo.makeWindowAbove()
+
+	if err != nil {
 		logger.Warning("make window above failed:", err)
-		return dbusutil.ToError(err1)
+		return dbusutil.ToError(err)
 	}
 	return nil
 }

@@ -22,7 +22,6 @@ package dock
 import (
 	"errors"
 	"os"
-	"strings"
 	"syscall"
 	"time"
 
@@ -62,9 +61,8 @@ func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 	}
 
 	winInfo := entry.current
-	sessionType := os.Getenv("XDG_SESSION_TYPE")
 
-	if strings.Contains(sessionType, "wayland") {
+	if m.isWaylandSession {
 		if m.isActiveWindow(winInfo) {
 			showing, _ := m.waylandWM.IsShowingDesktop(0)
 			if winInfo.isMinimized() || showing {

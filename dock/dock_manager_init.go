@@ -25,6 +25,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
@@ -36,7 +37,6 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	x "github.com/linuxdeepin/go-x11-client"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (
@@ -262,6 +262,10 @@ func (m *Manager) init() error {
 
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	if strings.Contains(sessionType, "wayland") {
+		m.isWaylandSession = true
+	}
+
+	if m.isWaylandSession {
 		m.waylandWM = kwayland.NewWindowManager(sessionBus)
 		m.waylandManager = newWaylandManager()
 	}
@@ -302,7 +306,7 @@ func (m *Manager) init() error {
 	return nil
 }
 
-func (m *Manager)startBAMFDaemon(bus *dbus.Conn) error {
+func (m *Manager) startBAMFDaemon(bus *dbus.Conn) error {
 	systemdUser := bus.Object("org.freedesktop.systemd1", "/org/freedesktop/systemd1")
 	var jobPath dbus.ObjectPath
 	err := systemdUser.Call("org.freedesktop.systemd1.Manager.StartUnit",

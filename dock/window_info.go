@@ -411,6 +411,14 @@ func (winInfo *WindowInfo) minimize() error {
 	return minimizeWindow(winInfo.xid)
 }
 
+func (winInfo *WindowInfo) maximize() error {
+	return maximizeWindow(winInfo.xid)
+}
+
+func (winInfo *WindowInfo) makeWindowAbove() error {
+	return makeWindowAbove(winInfo.xid)
+}
+
 func (winInfo *WindowInfo) close(timestamp uint32) error {
 	return closeWindow(winInfo.xid, x.Timestamp(timestamp))
 }
