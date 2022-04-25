@@ -684,18 +684,14 @@ handle_events(struct libinput *li, struct movement *m)
             break;
         }
         case LIBINPUT_EVENT_KEYBOARD_KEY: {
-            if (NULL != getenv("WAYLAND_DISPLAY")) {
                 handle_keyboard_events(ev, type);
-            }
             break;
         }
         case LIBINPUT_EVENT_POINTER_MOTION:
         case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
         case LIBINPUT_EVENT_POINTER_BUTTON:
         case LIBINPUT_EVENT_POINTER_AXIS: {
-            if (NULL != getenv("WAYLAND_DISPLAY")) {
                 handle_mouse_events(ev, type);
-            }
             break;
         }
         default:

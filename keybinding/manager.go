@@ -318,8 +318,9 @@ func (m *Manager) init() {
 		m.initHandlers()
 		m.clickNum = 0
 
-		go m.ListenGlobalAccel(sessionBus)
-		go m.ListenKeyboardEvent(sysBus)
+		go m.listenGlobalAccel(sessionBus)
+		go m.listenKeyboardEvent(sysBus)
+		go m.listenMouseEvent(sysBus)
 	}
 }
 
@@ -413,7 +414,7 @@ var waylandMediaIdMap = map[string]string{
 	"Switch kbd layout": "switch-kbd-layout",
 }
 
-func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
+func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 	err := sessionBus.Object("org.kde.kglobalaccel",
 		"/component/kwin").AddMatchSignal("org.kde.kglobalaccel.Component", "globalShortcutPressed").Err
 	if err != nil {
@@ -494,7 +495,7 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 	return nil
 }
 
-func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
+func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) error {
 	err := systemBus.Object("com.deepin.daemon.Gesture",
 		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "KeyboardEvent").Err
 	if err != nil {
@@ -523,6 +524,31 @@ func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
 					m.handleKeyEventByWayland("capslock")
 				} else if key == NumlockKey && value == KeyPress {
 					m.handleKeyEventByWayland("numlock")
+				}
+			}
+		}
+	})
+	return nil
+}
+
+func (m *Manager) listenMouseEvent(systemBus *dbus.Conn) error {
+	err := systemBus.Object("com.deepin.daemon.Gesture",
+		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "MouseEvent").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.Gesture.MouseEvent",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			if m.dpmsIsOff {
+				logger.Debug("MouseEvent: dpms on")
+				err := exec.Command("dde_wldpms", "-s", "On").Run()
+				if err != nil {
+					logger.Warningf("failed to exec dde_wldpms: %s", err)
+				} else {
+					m.dpmsIsOff = false
 				}
 			}
 		}
