@@ -55,7 +55,6 @@
 #define LIBINPUT_EVENT_GESTURE_TAP_END 808
 #endif
 
-
 int start_loop(int verbose, double distance);
 void quit_loop(void);
 void set_timer_duration(int duration);
