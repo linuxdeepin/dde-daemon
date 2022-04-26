@@ -23,8 +23,8 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/dde-api/soundutils"
+	. "github.com/linuxdeepin/go-lib/gettext"
 )
 
 // nolint
@@ -203,12 +203,11 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 		m.warnLevelCountTicker = newCountTicker(time.Second, func(count int) {
 			if count == 3 {
 				// after 3 seconds, lock and then show dde low power
-				go func() {
-					if m.SleepLock.Get() {
-						m.lockWaitShow(5*time.Second, false)
-					}
-					doShowDDELowPower()
-				}()
+				if m.SleepLock.Get() {
+					m.lockWaitShow(5*time.Second, false)
+				}
+			} else if count == 4 {
+				doShowDDELowPower()
 			} else if count == 5 {
 				// after 5 seconds, force suspend
 				m.disableWarnLevelCountTicker()
