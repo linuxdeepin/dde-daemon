@@ -720,8 +720,8 @@ func (m *Manager) initDsg() {
 		// 如果重复一次，重置nextShutdownTime
 		if m.ScheduledShutdownState {
 			m.setNextShutdownTime(0)
-			m.scheduledShutdown(Init)
 		}
+		m.scheduledShutdown(Init)
 	})
 
 	if m.nextShutdownTime == 0 {
