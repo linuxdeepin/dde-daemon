@@ -1168,10 +1168,6 @@ func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj wm.Wm)
 			name = id
 		}
 
-		if id == "launcher" || id == "system_monitor" {
-			continue
-		}
-
 		accelJson, err := util.MarshalJSON(util.KWinAccel{
 			Id:         id,
 			Keystrokes: gsettings.GetStrv(id),
@@ -1179,6 +1175,12 @@ func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj wm.Wm)
 
 		if id == "screenshot-window" {
 			accelJson = `{"Id":"screenshot-window","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
+		}
+		if id == "launcher" {
+			accelJson = `{"Id":"launcher","Accels":["Super_L"]}`
+		}
+		if id == "system_monitor" {
+			accelJson = `{"Id":"system_monitor","Accels":["<Crtl><Alt>Escape"]}`
 		}
 		if err != nil {
 			logger.Warning("failed to get json:", err)
