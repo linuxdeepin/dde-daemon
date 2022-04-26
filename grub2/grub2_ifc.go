@@ -25,8 +25,9 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 const (
@@ -64,17 +65,37 @@ func (grub *Grub2) GetSimpleEntryTitles() (titles []string, busErr *dbus.Error) 
 }
 
 func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) (gfxModes []string, busErr *dbus.Error) {
-	g.service.DelayAutoQuit()
-	modes, err := g.getAvailableGfxmodes(sender)
+	pid, err := g.service.GetConnPID(string(sender))
 	if err != nil {
-		logger.Warning(err)
 		return nil, dbusutil.ToError(err)
 	}
-	modes.SortDesc()
-	gfxModes = make([]string, len(modes))
-	for idx, m := range modes {
-		gfxModes[idx] = m.String()
+
+	p := procfs.Process(pid)
+	envVars, err := p.Environ()
+	if err != nil {
+		return nil, dbusutil.ToError(err)
 	}
+
+	sessionType := envVars.Get("XDG_SESSION_TYPE")
+
+	if sessionType == "wayland" {
+		logger.Debug("wayland desktop environment, can not acquire output info")
+	} else if sessionType == "x11" {
+		g.service.DelayAutoQuit()
+		modes, err := g.getAvailableGfxmodes(sender)
+		if err != nil {
+			logger.Warning(err)
+			return nil, dbusutil.ToError(err)
+		}
+		modes.SortDesc()
+		gfxModes = make([]string, len(modes))
+		for idx, m := range modes {
+			gfxModes[idx] = m.String()
+		}
+	} else {
+		logger.Debug("unkown session type, can not acquire output info")
+	}
+
 	return gfxModes, nil
 }
 
