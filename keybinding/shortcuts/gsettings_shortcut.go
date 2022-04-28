@@ -20,15 +20,17 @@
 package shortcuts
 
 import (
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 type GSettingsShortcut struct {
 	BaseShortcut
 	gsettings *gio.Settings
+	wm        wm.Wm
 }
 
-func NewGSettingsShortcut(gsettings *gio.Settings, id string, type0 int32,
+func NewGSettingsShortcut(gsettings *gio.Settings, wm wm.Wm, id string, type0 int32,
 	keystrokes []string, name string) *GSettingsShortcut {
 	gs := &GSettingsShortcut{
 		BaseShortcut: BaseShortcut{
@@ -38,6 +40,7 @@ func NewGSettingsShortcut(gsettings *gio.Settings, id string, type0 int32,
 			Name:       name,
 		},
 		gsettings: gsettings,
+		wm:        wm,
 	}
 
 	return gs
@@ -47,6 +50,12 @@ func (gs *GSettingsShortcut) SaveKeystrokes() error {
 	keystrokesStrv := make([]string, 0, len(gs.Keystrokes))
 	for _, ks := range gs.Keystrokes {
 		keystrokesStrv = append(keystrokesStrv, ks.String())
+	}
+	if _useWayland {
+		ok, err := setShortForWayland(gs, gs.wm)
+		if !ok {
+			return err
+		}
 	}
 	gs.gsettings.SetStrv(gs.Id, keystrokesStrv)
 	gio.SettingsSync()

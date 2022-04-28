@@ -24,8 +24,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	"github.com/linuxdeepin/go-lib/keyfile"
 )
 
 const (
@@ -38,6 +39,7 @@ type CustomShortcut struct {
 	BaseShortcut
 	manager *CustomShortcutManager
 	Cmd     string `json:"Exec"`
+	wm      wm.Wm
 }
 
 func (cs *CustomShortcut) Marshal() (string, error) {
@@ -48,6 +50,12 @@ func (cs *CustomShortcut) Marshal() (string, error) {
 
 func (cs *CustomShortcut) SaveKeystrokes() error {
 	section := cs.GetId()
+	if _useWayland {
+		ok, err := setShortForWayland(cs, cs.wm)
+		if !ok {
+			return err
+		}
+	}
 	csm := cs.manager
 	csm.kfile.SetStringList(section, kfKeyKeystrokes, cs.getKeystrokesStrv())
 	return csm.Save()
@@ -105,6 +113,19 @@ type CustomShortcutManager struct {
 	file          string
 	kfile         *keyfile.KeyFile
 	pinyinEnabled bool
+}
+
+func newCustomShort(id, name string, keystrokes []string, wm wm.Wm, csm *CustomShortcutManager) *CustomShortcut {
+	return &CustomShortcut{
+		BaseShortcut: BaseShortcut{
+			Id:         id,
+			Type:       ShortcutTypeCustom,
+			Name:       name,
+			Keystrokes: ParseKeystrokes(keystrokes),
+		},
+		manager: csm,
+		wm: wm,
+	}
 }
 
 func NewCustomShortcutManager(file string) *CustomShortcutManager {
