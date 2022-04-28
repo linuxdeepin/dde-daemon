@@ -256,27 +256,27 @@ func (m *Manager) init() {
 		} else {
 			m.shortcutManager.AddSpecial()
 			m.shortcutManager.AddSystem(m.gsSystem, m.gsSystemPlatform, m.gsSystemEnable, m.wm)
-			m.shortcutManager.AddMedia(m.gsMediaKey)
+			m.shortcutManager.AddMedia(m.gsMediaKey, m.wm)
 			m.gsGnomeWM = gio.NewSettings(gsSchemaGnomeWM)
-			m.shortcutManager.AddWM(m.gsGnomeWM)
+			m.shortcutManager.AddWM(m.gsGnomeWM, m.wm)
 		}
 	} else {
 		m.shortcutManager.AddSystem(m.gsSystem, m.gsSystemPlatform, m.gsSystemEnable, m.wm)
-		m.shortcutManager.AddMedia(m.gsMediaKey)
+		m.shortcutManager.AddMedia(m.gsMediaKey, m.wm)
 		if shouldUseDDEKwin() {
 			logger.Debug("Use DDE KWin")
 			m.shortcutManager.AddKWin(m.wm)
 		} else {
 			logger.Debug("Use gnome WM")
 			m.gsGnomeWM = gio.NewSettings(gsSchemaGnomeWM)
-			m.shortcutManager.AddWM(m.gsGnomeWM)
+			m.shortcutManager.AddWM(m.gsGnomeWM, m.wm)
 		}
 	}
 
 	// init custom shortcuts
 	customConfigFilePath := filepath.Join(basedir.GetUserConfigDir(), customConfigFile)
 	m.customShortcutManager = shortcuts.NewCustomShortcutManager(customConfigFilePath)
-	m.shortcutManager.AddCustom(m.customShortcutManager)
+	m.shortcutManager.AddCustom(m.customShortcutManager, m.wm)
 
 	// init controllers
 	m.backlightHelper = backlight.NewBacklight(sysBus)
@@ -431,11 +431,14 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 			ok := strings.Compare(string("kwin"), m.shortcutKey)
 			if ok == 0 {
 				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
-				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
 				if m.shortcutKeyCmd == "" {
 					//+ 把响应一次的逻辑放到协程外执行，防止协程响应延迟
 					m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
 				} else {
+					m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
+					if m.shortcutCmd == "" {
+						m.shortcutCmd = m.shortcutManager.WaylandCustomShortMap[m.shortcutKeyCmd]
+					}
 					if m.shortcutCmd == "" {
 						m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
 					} else {
@@ -1036,7 +1039,7 @@ func (m *Manager) listenSystemEnableChanged() {
 		}
 
 		if m.shortcutManager.CheckSystem(m.gsSystemPlatform, m.gsSystemEnable, key) {
-			m.shortcutManager.AddSystemById(m.gsSystem, key)
+			m.shortcutManager.AddSystemById(m.gsSystem, m.wm, key)
 		} else {
 			m.shortcutManager.DelSystemById(key)
 		}
@@ -1050,7 +1053,7 @@ func (m *Manager) listenSystemPlatformChanged() {
 		}
 
 		if m.shortcutManager.CheckSystem(m.gsSystemPlatform, m.gsSystemEnable, key) {
-			m.shortcutManager.AddSystemById(m.gsSystem, key)
+			m.shortcutManager.AddSystemById(m.gsSystem, m.wm, key)
 		} else {
 			m.shortcutManager.DelSystemById(key)
 		}

@@ -26,9 +26,11 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (
@@ -77,6 +79,34 @@ func (m *Manager) isIgnoreRepeat(name string) bool {
 	return false
 }
 
+func (m *Manager) setAccelForWayland(gsettings *gio.Settings, wmObj wm.Wm) {
+	for _, id := range gsettings.ListKeys() {
+        var accelJson string
+		var err error
+		if id == "screenshot-window" {
+			accelJson = `{"Id":"screenshot-window","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
+		} else if id == "launcher" {
+			accelJson = `{"Id":"launcher","Accels":["Super_L"]}`  // wayland左右super对应的都是Super_L
+		} else if id == "system_monitor" {
+			accelJson = `{"Id":"system_monitor","Accels":["<Crtl><Alt>Escape"]}`
+		} else {
+				accelJson, err = util.MarshalJSON(util.KWinAccel{
+					Id:         id,
+					Keystrokes: gsettings.GetStrv(id),
+				})
+				if err != nil {
+				logger.Warning("failed to get json:", err)
+				continue
+			}
+		}
+		
+		ok, err := wmObj.SetAccel(0, accelJson)
+		if !ok {
+			logger.Warning("failed to set KWin accels:", id, gsettings.GetStrv(id), err)
+		}
+	}
+}
+
 // Reset reset all shortcut
 func (m *Manager) Reset() *dbus.Error {
 	if m.isIgnoreRepeat("Reset") {
@@ -92,6 +122,13 @@ func (m *Manager) Reset() *dbus.Error {
 	resetGSettings(m.gsMediaKey)
 	if m.gsGnomeWM != nil {
 		resetGSettings(m.gsGnomeWM)
+	}
+	if _useWayland {
+		m.setAccelForWayland(m.gsSystem, m.wm)
+		m.setAccelForWayland(m.gsMediaKey, m.wm)
+		if m.gsGnomeWM != nil {
+			m.setAccelForWayland(m.gsGnomeWM, m.wm)
+		}
 	}
 
 	// reset for KWin
@@ -209,6 +246,40 @@ func (m *Manager) AddCustomShortcut(name, action, keystroke string) (id string,
 		busErr = dbusutil.ToError(err)
 		return
 	}
+	if _useWayland {
+		keystrokeStrv := make([]string, 0)
+		keystrokeStrv = append(keystrokeStrv, keystroke)
+		accelJson, err := util.MarshalJSON(util.KWinAccel{
+			Id:         name,
+			Keystrokes: keystrokeStrv,
+		})
+		if err != nil {
+			logger.Warning("accelJson failed: ", accelJson)
+			busErr = dbusutil.ToError(err)
+			return
+		}
+		logger.Debug("SetAccel: ", name, keystrokeStrv)
+		ok, err := m.wm.SetAccel(0, accelJson)
+		if !ok {
+			logger.Warning("SetAccel failed, accelJson: ", accelJson)
+			busErr = dbusutil.ToError(err)
+			return
+		}
+		sessionBus, err := dbus.SessionBus()
+		if err != nil {
+			logger.Warning("sessionBus creat failed", err)
+			busErr = dbusutil.ToError(err)
+			return
+		}
+		obj := sessionBus.Object("org.kde.kglobalaccel", "/kglobalaccel")
+		err = obj.Call("org.kde.KGlobalAccel.setActiveByUniqueName", 0, name, true).Err
+		if err != nil {
+			logger.Warning("setActiveByUniqueName failed")
+			busErr = dbusutil.ToError(err)
+			return
+		}
+		m.shortcutManager.WaylandCustomShortMap[name] = action
+	}
 	m.shortcutManager.Add(shortcut)
 	m.emitShortcutSignal(shortcutSignalAdded, shortcut)
 	id = shortcut.GetId()
@@ -217,11 +288,20 @@ func (m *Manager) AddCustomShortcut(name, action, keystroke string) (id string,
 }
 
 func (m *Manager) DeleteCustomShortcut(id string) *dbus.Error {
+	logger.Debug("DeleteCustomShortcut", id)
 	shortcut := m.shortcutManager.GetByIdType(id, shortcuts.ShortcutTypeCustom)
 	if err := m.customShortcutManager.Delete(shortcut.GetId()); err != nil {
 		return dbusutil.ToError(err)
 	}
 	m.shortcutManager.Delete(shortcut)
+	if _useWayland {
+		logger.Debug("RemoveAccel id: ", id)
+		err := m.wm.RemoveAccel(0, id)
+		if err != nil {
+			return dbusutil.ToError(errors.New("RemoveAccel failed, id: " + id))
+		}
+		delete(m.shortcutManager.WaylandCustomShortMap, id)
+	}
 	m.emitShortcutSignal(shortcutSignalDeleted, shortcut)
 	return nil
 }
@@ -352,14 +432,6 @@ func (m *Manager) AddShortcutKeystroke(id string, type0 int32, keystroke string)
 		}
 	} else if conflictKeystroke.Shortcut != shortcut {
 		return dbusutil.ToError(errKeystrokeUsed)
-	}
-
-	if _useWayland {
-		keystrokesStrv := make([]string, 0, len(keystroke))
-		for _, ks := range shortcut.GetKeystrokes() {
-			keystrokesStrv = append(keystrokesStrv, ks.String())
-		}
-		m.gsSystem.SetStrv(id, keystrokesStrv)
 	}
 
 	return nil
