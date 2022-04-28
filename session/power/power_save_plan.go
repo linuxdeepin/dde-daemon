@@ -609,18 +609,20 @@ func (psp *powerSavePlan) HandleIdleOn() {
 		return
 	}
 
-	// check window
-	preventIdle, err := psp.shouldPreventIdle()
-	if err != nil {
-		logger.Warning(err)
-	}
-	if preventIdle {
-		logger.Debug("prevent idle")
-		err := psp.manager.helper.ScreenSaver.SimulateUserActivity(0)
+	// check window, only x11 is supported, not apply to wayland
+	if !psp.manager.UseWayland {
+		preventIdle, err := psp.shouldPreventIdle()
 		if err != nil {
 			logger.Warning(err)
 		}
-		return
+		if preventIdle {
+			logger.Debug("prevent idle")
+			err := psp.manager.helper.ScreenSaver.SimulateUserActivity(0)
+			if err != nil {
+				logger.Warning(err)
+			}
+			return
+		}
 	}
 
 	logger.Info("HandleIdleOn")
@@ -648,7 +650,7 @@ func (psp *powerSavePlan) HandleIdleOn() {
 		psp.addTaskNoLock(task)
 	}
 
-	_, err = os.Stat("/etc/deepin/no_suspend")
+	_, err := os.Stat("/etc/deepin/no_suspend")
 	if err == nil {
 		if psp.manager.ScreenBlackLock.Get() {
 			//m.setDPMSModeOn()

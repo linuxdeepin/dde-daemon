@@ -139,6 +139,12 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 			logger.Warning("stopAskUser error:", err)
 		}
 
+		// x11环境在待机唤醒后，会接收到screensaver的ConnectIdleOff信息将待机状态更新为suspendStateFinish状态
+		// wayland环境下，并没有做这个处理，此处在开盖后手动更新状态为suspendStateFinish
+		if m.UseWayland {
+			m.setPrepareSuspend(suspendStateFinish)
+		}
+
 		err = m.helper.ScreenSaver.SimulateUserActivity(0)
 		if err != nil {
 			logger.Warning(err)
