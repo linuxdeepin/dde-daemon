@@ -294,7 +294,7 @@ func nmGeneralGetDeviceSpeed(devPath dbus.ObjectPath) (speedStr string) {
 
 	speed := nmGeneralGetDeviceSpeedNumeric(devPath)
 	if speed != 0 {
-		speedStr = fmt.Sprintf("%d Mb/s", speed)
+		speedStr = fmt.Sprintf("%d Mbps", speed)
 	}
 	return
 }
