@@ -31,6 +31,8 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/dxinput"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -41,8 +43,6 @@ import (
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
 	"github.com/linuxdeepin/go-x11-client/util/wm/icccm"
-	"github.com/linuxdeepin/dde-api/dxinput"
-	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 )
 
 const (
@@ -483,17 +483,52 @@ func (kbd *Keyboard) setLayoutListForAccountsUser(layoutList []string) {
 	}
 }
 
-func (kbd *Keyboard) applyRepeat() {
+func (kbd *Keyboard) applyKwinWaylandRepeat() {
+	var (
+		delay    = kbd.RepeatDelay.Get()
+		interval = kbd.RepeatInterval.Get()
+	)
+
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	//+ 前端interval范围是20-100,kwin中值是相反的,kwin无法得知范围,故后端处理下
+	interval = 120 - interval
+	obj := sessionBus.Object("org.kde.KWin", "/KWin")
+	err = obj.Call("org.kde.KWin.setRepeatRateAndDelay", 0, int32(interval), int32(delay)).Err
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+}
+
+func (kbd *Keyboard) applyX11Repeat() {
 	var (
 		repeat   = kbd.RepeatEnabled.Get()
 		delay    = kbd.RepeatDelay.Get()
 		interval = kbd.RepeatInterval.Get()
 	)
+
 	err := dxinput.SetKeyboardRepeat(repeat, delay, interval)
 	if err != nil {
 		logger.Debug("failed to set repeat:", err, repeat, delay, interval)
 	}
 	setWMKeyboardRepeat(repeat, delay, interval)
+}
+
+func (kbd *Keyboard) applyRepeat() {
+	if globalWayland {
+		if kbd.shouldUseDDEKwin() {
+			kbd.applyKwinWaylandRepeat()
+		} else {
+			kbd.applyX11Repeat()
+		}
+	} else {
+		kbd.applyX11Repeat()
+	}
 }
 
 func applyLayout(value string) error {
