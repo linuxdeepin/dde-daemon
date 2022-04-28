@@ -28,6 +28,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
@@ -41,7 +42,6 @@ import (
 	"github.com/linuxdeepin/go-x11-client/util/keybind"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
-	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 var logger *log.Logger
@@ -120,6 +120,12 @@ func SetLogger(l *log.Logger) {
 	logger = l
 }
 
+var _useWayland bool
+
+func setUseWayland(value bool) {
+	_useWayland = value
+}
+
 type KeyEventFunc func(ev *KeyEvent)
 
 type ShortcutManager struct {
@@ -144,6 +150,8 @@ type ShortcutManager struct {
 
 	ConflictingKeystrokes []*Keystroke
 	EliminateConflictDone bool
+
+	WaylandCustomShortMap map[string]string
 }
 
 type KeyEvent struct {
@@ -153,15 +161,17 @@ type KeyEvent struct {
 }
 
 func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb KeyEventFunc) *ShortcutManager {
+	setUseWayland(strings.Contains(os.Getenv("XDG_SESSION_TYPE"), "wayland"))
 	ss := &ShortcutManager{
-		idShortcutMap:   make(map[string]Shortcut),
-		eventCb:         eventCb,
-		conn:            conn,
-		keySymbols:      keySymbols,
-		recordEnable:    true,
-		keyKeystrokeMap: make(map[Key]*Keystroke),
-		layoutChanged:   make(chan struct{}),
-		pinyinEnabled:   isZH(),
+		idShortcutMap:         make(map[string]Shortcut),
+		eventCb:               eventCb,
+		conn:                  conn,
+		keySymbols:            keySymbols,
+		recordEnable:          true,
+		keyKeystrokeMap:       make(map[Key]*Keystroke),
+		layoutChanged:         make(chan struct{}),
+		pinyinEnabled:         isZH(),
+		WaylandCustomShortMap: make(map[string]string),
 	}
 
 	ss.xRecordEventHandler = NewXRecordEventHandler(keySymbols)
@@ -951,7 +961,7 @@ func (sm *ShortcutManager) CheckSystem(gsPlatform, gsEnable *gio.Settings, id st
 	return true
 }
 
-func (sm *ShortcutManager) AddSystemById(gsettings *gio.Settings, id string) {
+func (sm *ShortcutManager) AddSystemById(gsettings *gio.Settings, wmObj wm.Wm, id string) {
 	shortcut := sm.GetByIdType(id, ShortcutTypeSystem)
 	if shortcut != nil {
 		logger.Debugf("%s is exist", id)
@@ -973,7 +983,7 @@ func (sm *ShortcutManager) AddSystemById(gsettings *gio.Settings, id string) {
 	}
 
 	keystrokes := gsettings.GetStrv(id)
-	gs := NewGSettingsShortcut(gsettings, id, ShortcutTypeSystem, keystrokes, name)
+	gs := NewGSettingsShortcut(gsettings, wmObj, id, ShortcutTypeSystem, keystrokes, name)
 	sysShortcut := &SystemShortcut{
 		GSettingsShortcut: gs,
 		arg: &ActionExecCmdArg{
@@ -999,7 +1009,6 @@ func (sm *ShortcutManager) AddSystem(gsettings, gsPlatform, gsEnable *gio.Settin
 		logger.Warning(err)
 		allow = false
 	}
-	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	for _, id := range gsettings.ListKeys() {
 		if id == "deepin-screen-recorder" || id == "wm-switcher" {
 			if !allow && id == "wm-switcher" {
@@ -1007,8 +1016,8 @@ func (sm *ShortcutManager) AddSystem(gsettings, gsPlatform, gsEnable *gio.Settin
 				continue
 			}
 
-			if strings.Contains(sessionType, "wayland") {
-				logger.Debugf("XDG_SESSION_TYPE is %s, filter %s", sessionType, id)
+			if _useWayland {
+				logger.Debugf("XDG_SESSION_TYPE is wayland, filter %s", id)
 				continue
 			}
 		}
@@ -1017,11 +1026,11 @@ func (sm *ShortcutManager) AddSystem(gsettings, gsPlatform, gsEnable *gio.Settin
 			continue
 		}
 
-		sm.AddSystemById(gsettings, id)
+		sm.AddSystemById(gsettings, wmObj, id)
 	}
 }
 
-func (sm *ShortcutManager) AddWM(gsettings *gio.Settings) {
+func (sm *ShortcutManager) AddWM(gsettings *gio.Settings, wmObj wm.Wm) {
 	logger.Debug("AddWM")
 	idNameMap := getWMIdNameMap()
 	releaseType := getDeepinReleaseType()
@@ -1035,12 +1044,12 @@ func (sm *ShortcutManager) AddWM(gsettings *gio.Settings) {
 			name = id
 		}
 		keystrokes := gsettings.GetStrv(id)
-		gs := NewGSettingsShortcut(gsettings, id, ShortcutTypeWM, keystrokes, name)
+		gs := NewGSettingsShortcut(gsettings, wmObj, id, ShortcutTypeWM, keystrokes, name)
 		sm.addWithoutLock(gs)
 	}
 }
 
-func (sm *ShortcutManager) AddMedia(gsettings *gio.Settings) {
+func (sm *ShortcutManager) AddMedia(gsettings *gio.Settings, wmObj wm.Wm) {
 	logger.Debug("AddMedia")
 	idNameMap := getMediaIdNameMap()
 	for _, id := range gsettings.ListKeys() {
@@ -1049,7 +1058,7 @@ func (sm *ShortcutManager) AddMedia(gsettings *gio.Settings) {
 			name = id
 		}
 		keystrokes := gsettings.GetStrv(id)
-		gs := NewGSettingsShortcut(gsettings, id, ShortcutTypeMedia, keystrokes, name)
+		gs := NewGSettingsShortcut(gsettings, wmObj, id, ShortcutTypeMedia, keystrokes, name)
 		mediaShortcut := &MediaShortcut{
 			GSettingsShortcut: gs,
 		}
@@ -1057,12 +1066,62 @@ func (sm *ShortcutManager) AddMedia(gsettings *gio.Settings) {
 	}
 }
 
-func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager) {
+func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager, wmObj wm.Wm) {
 	csm.pinyinEnabled = sm.pinyinEnabled
 	logger.Debug("AddCustom")
-	for _, shortcut := range csm.List() {
-		sm.addWithoutLock(shortcut)
+	if _useWayland {
+		for _, shortcut := range csm.List() {
+			id := shortcut.GetId()
+			keystrokesStrv := shortcut.getKeystrokesStrv()
+			action := shortcut.GetAction()
+			arg, _ := action.Arg.(*ActionExecCmdArg)
+			logger.Debugf("customshort: %+v", arg.Cmd)
+			ok, err := setShortForWayland(shortcut, wmObj)
+			if !ok {
+				logger.Warning("failed to setShortForWayland:", err)
+				return
+			}
+			sm.WaylandCustomShortMap[id] = arg.Cmd
+			cs := newCustomShort(id, id, keystrokesStrv, wmObj, csm)
+			sm.addWithoutLock(cs)
+		}
+	} else {
+		for _, shortcut := range csm.List() {
+			sm.addWithoutLock(shortcut)
+		}
 	}
+}
+
+func setShortForWayland(shortcut Shortcut, wmObj wm.Wm) (bool, error) {
+	id := shortcut.GetId()
+	keystrokesStrv := shortcut.getKeystrokesStrv()
+	logger.Debugf("Id: %+v, keystrokesStrv: %+v", id, keystrokesStrv)
+	accelJson, err := util.MarshalJSON(util.KWinAccel{
+		Id:         id,
+		Keystrokes: keystrokesStrv,
+	})
+	if err != nil {
+		return false, err
+	}
+	ok, err := wmObj.SetAccel(0, accelJson)
+	if !ok {
+		logger.Warning("failed to set KWin accels:", id, keystrokesStrv, err)
+		return false, err
+	}
+	if shortcut.GetType() == ShortcutTypeCustom {
+		sessionBus, err := dbus.SessionBus()
+		if err != nil {
+			logger.Warning(err)
+			return false, err
+		}
+		obj := sessionBus.Object("org.kde.kglobalaccel", "/kglobalaccel")
+		err = obj.Call("org.kde.KGlobalAccel.setActiveByUniqueName", 0, id, true).Err
+		if err != nil {
+			logger.Warning(err)
+			return false, err
+		}
+	}
+	return true, nil
 }
 
 func (sm *ShortcutManager) AddSpecial() {
@@ -1115,14 +1174,14 @@ func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
 	}
 	idNameMap := getWMIdNameMap()
 	for _, accel := range accels {
-		if accel.Id == "color-picker" {
+		if accel.Id == "color-picker" || accel.Id == "switch-kbd-layout" {
 			continue
 		}
-		name := idNameMap[accel.Id]
-		if name == "" {
-			name = getSystemIdNameMap()[accel.Id]
-			logger.Debug("action", accel.Id, name)
+		if getSystemIdNameMap()[accel.Id] != "" || getMediaIdNameMap()[accel.Id] != "" {
+			continue
 		}
+
+		name := idNameMap[accel.Id]
 		if name == "" {
 			name = accel.Id
 		}
@@ -1190,6 +1249,7 @@ func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj wm.Wm)
 		if !ok {
 			logger.Warning("failed to set KWin accels:", id, gsettings.GetStrv(id), err)
 		}
+		sm.AddSystemById(gsettings, wmObj, id)
 	}
 }
 
@@ -1222,6 +1282,12 @@ func (sm *ShortcutManager) AddMediaToKwin(gsettings *gio.Settings, wmObj wm.Wm) 
 		if !ok {
 			logger.Warning("failed to set KWin accels:", accelJson, err)
 		}
+		keystrokes := gsettings.GetStrv(id)
+		gs := NewGSettingsShortcut(gsettings, wmObj, id, ShortcutTypeMedia, keystrokes, name)
+		mediaShortcut := &MediaShortcut{
+			GSettingsShortcut: gs,
+		}
+		sm.addWithoutLock(mediaShortcut)
 	}
 }
 

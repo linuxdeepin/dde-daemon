@@ -25,8 +25,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/linuxdeepin/go-lib/pinyin_search"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
+	"github.com/linuxdeepin/go-lib/pinyin_search"
 )
 
 type BaseShortcut struct {
@@ -136,6 +136,7 @@ type Shortcut interface {
 	GetNameBlocks() pinyin_search.Blocks
 
 	GetKeystrokesModifiable() bool
+	getKeystrokesStrv() []string
 	GetKeystrokes() []*Keystroke
 	setKeystrokes([]*Keystroke)
 	SaveKeystrokes() error
