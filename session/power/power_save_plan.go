@@ -416,7 +416,7 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 		})
 	}
 
-	if lockDelay > 0 && canAddToTasks("lock", lockDelay, tasks) {
+	if lockDelay > 0 {
 		tasks = append(tasks, metaTask{
 			name:  "lock",
 			delay: lockDelay,
@@ -424,7 +424,7 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 		})
 	}
 
-	if screenBlackDelay > 0 && canAddToTasks("screenBlack", screenBlackDelay, tasks) {
+	if screenBlackDelay > 0 {
 		tasks = append(tasks, metaTask{
 			name:  "screenBlack",
 			delay: screenBlackDelay,
