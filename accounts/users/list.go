@@ -30,10 +30,10 @@ import (
 )
 
 const (
-	userFilePasswd    = "/etc/passwd"
-	userFileShadow    = "/etc/shadow"
-	userFileGroup     = "/etc/group"
-	userFileSudoers   = "/etc/sudoers"
+	userFilePasswd  = "/etc/passwd"
+	userFileShadow  = "/etc/shadow"
+	userFileGroup   = "/etc/group"
+	userFileSudoers = "/etc/sudoers"
 
 	itemLenPasswd    = 7
 	itemLenGroup     = 4
@@ -208,12 +208,12 @@ func (info UserInfo) isHumanUser(configLoginDefs string) bool {
 		return false
 	}
 
-	if CanNoPasswdLogin(info.Name) {
-		return true
-	}
-
 	if !info.isHumanViaShell() {
 		return false
+	}
+
+	if CanNoPasswdLogin(info.Name) {
+		return true
 	}
 
 	if !info.isHumanViaLoginDefs(configLoginDefs) {
