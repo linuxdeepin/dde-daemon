@@ -172,7 +172,7 @@ func (m *Manager) listenGlobalCursorPressed() error {
 			y := sig.Body[2].(uint32)
 			m.CursorX = int32(x)
 			m.CursorY = int32(y)
-			if key == buttonLeft {
+			if key == buttonLeft || key == 0 {
 				m.cursorMask |= uint32(uint32(1) << leftBit)
 				key = x11BtnLeft
 			} else if key == buttonRight {
@@ -207,7 +207,7 @@ func (m *Manager) listenGlobalCursorRelease() error {
 			m.CursorX = int32(x)
 			m.CursorY = int32(y)
 
-			if key == buttonLeft {
+			if key == buttonLeft || key == 0 {
 				m.cursorMask &= ^(uint32(1) << leftBit)
 				key = x11BtnLeft
 			} else if key == buttonRight {
