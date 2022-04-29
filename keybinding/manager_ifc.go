@@ -99,7 +99,7 @@ func (m *Manager) setAccelForWayland(gsettings *gio.Settings, wmObj wm.Wm) {
 				continue
 			}
 		}
-		
+
 		ok, err := wmObj.SetAccel(0, accelJson)
 		if !ok {
 			logger.Warning("failed to set KWin accels:", id, gsettings.GetStrv(id), err)
