@@ -130,7 +130,7 @@ install: build install-dde-data install-icons
 	cp -r misc/libexec/dde-daemon/* ${DESTDIR}${PREFIX}/libexec/dde-daemon/
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
-	cp -r gesture/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
+	cp -r misc/dsg-configs/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
 
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
