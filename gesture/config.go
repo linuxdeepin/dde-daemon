@@ -35,8 +35,11 @@ const (
 )
 
 var (
+	configUserPath = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/gesture.json")
+)
+
+const (
 	configSystemPath = "/usr/share/dde-daemon/gesture.json"
-	configUserPath   = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/gesture.json")
 
 	gestureSchemaId         = "com.deepin.dde.gesture"
 	gsKeyTouchPadEnabled    = "touch-pad-enabled"
