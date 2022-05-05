@@ -59,6 +59,10 @@ type Manager struct {
 		UserChanged struct {
 			username string
 		}
+
+		AuthenticateRquest struct {
+			username string
+		}
 	}
 }
 
@@ -137,6 +141,16 @@ func (m *Manager) SwitchToUser(username string) *dbus.Error {
 	}
 	if current != "" {
 		err = m.service.Emit(m, "UserChanged", username)
+		if err != nil {
+			return dbusutil.ToError(err)
+		}
+	}
+	return nil
+}
+
+func (m *Manager) ResetAuthenticate(username string) *dbus.Error {
+	if username != "" {
+		err := m.service.Emit(m, "AuthenticateRquest", username)
 		if err != nil {
 			return dbusutil.ToError(err)
 		}

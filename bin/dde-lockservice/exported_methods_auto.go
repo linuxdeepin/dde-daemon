@@ -30,6 +30,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"username"},
 		},
 		{
+			Name:   "ResetAuthenticate",
+			Fn:     v.ResetAuthenticate,
+			InArgs: []string{"username"},
+		},
+		{
 			Name:   "UnlockCheck",
 			Fn:     v.UnlockCheck,
 			InArgs: []string{"username", "password"},
