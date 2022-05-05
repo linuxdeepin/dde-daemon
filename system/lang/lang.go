@@ -7,11 +7,12 @@ import (
 	"syscall"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/loader"
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (
@@ -20,6 +21,8 @@ const (
 	userLocaleConfigFile    = ".config/locale.conf"
 	userLocaleConfigFileTmp = ".config/.locale.conf"
 )
+
+var _desktopType = strv.Strv{"x11", "wayland"}
 
 type Module struct {
 	*loader.ModuleBase
@@ -192,11 +195,11 @@ func (l *Lang) loadSessionList() {
 		if err != nil {
 			continue
 		}
-		display, err := session.Display().Get(0) // 远程登录或者tty登录时创建的session无需保存到map中
+		type0, err := session.Type().Get(0) // 远程登录或者tty登录时创建的session无需保存到map中
 		if err != nil {
 			continue
 		}
-		if display == "" {
+		if !_desktopType.Contains(type0) {
 			continue
 		}
 		l.sessionPathHomeMap[sessionDetail.Path] = l.getHomeDirBySessionDetail(sessionDetail)
