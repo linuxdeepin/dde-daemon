@@ -609,6 +609,8 @@ func (psp *powerSavePlan) HandleIdleOn() {
 		return
 	}
 
+	logger.Info("HandleIdleOn")
+
 	// check window, only x11 is supported, not apply to wayland
 	if !psp.manager.UseWayland {
 		preventIdle, err := psp.shouldPreventIdle()
@@ -623,26 +625,24 @@ func (psp *powerSavePlan) HandleIdleOn() {
 			}
 			return
 		}
-	}
 
-	logger.Info("HandleIdleOn")
-
-	idleTime := psp.metaTasks.min()
-	xConn := psp.manager.helper.xConn
-	xDefaultScreen := xConn.GetDefaultScreen()
-	if xDefaultScreen != nil {
-		xInfo, err := xscreensaver.QueryInfo(xConn, x.Drawable(xDefaultScreen.Root)).Reply(xConn)
-		if err == nil {
-			idleTime = int32(xInfo.MsSinceUserInput / 1000)
+		idleTime := psp.metaTasks.min()
+		xConn := psp.manager.helper.xConn
+		xDefaultScreen := xConn.GetDefaultScreen()
+		if xDefaultScreen != nil {
+			xInfo, err := xscreensaver.QueryInfo(xConn, x.Drawable(xDefaultScreen.Root)).Reply(xConn)
+			if err == nil {
+				idleTime = int32(xInfo.MsSinceUserInput / 1000)
+			} else {
+				logger.Warning(err)
+			}
 		} else {
-			logger.Warning(err)
+			logger.Warning("cannot get X11 default screen")
 		}
-	} else {
-		logger.Warning("cannot get X11 default screen")
-	}
 
-	logger.Debugf("idle time: %d ms", idleTime)
-	psp.metaTasks.setRealDelay(idleTime)
+		logger.Debugf("idle time: %d ms", idleTime)
+		psp.metaTasks.setRealDelay(idleTime)
+	}
 
 	for _, t := range psp.metaTasks {
 		logger.Debugf("do %s after %v", t.name, t.realDelay)
