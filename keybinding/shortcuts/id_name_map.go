@@ -49,8 +49,8 @@ func getSystemIdNameMap() map[string]string {
 		"speech-to-text":         gettext.Tr("Speech to Text"),
 		"clipboard":              gettext.Tr("Clipboard"),
 		"translation":            gettext.Tr("Translation"),
-		"global-search":          gettext.Tr("Grand search"),
-		"notification-center":    gettext.Tr("NotificationCenter"),
+		"global-search":          gettext.Tr("Grand Search"),
+		"notification-center":    gettext.Tr("Notification Center"),
 	}
 	return idNameMap
 }
