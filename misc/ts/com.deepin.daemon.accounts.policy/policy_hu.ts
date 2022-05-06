@@ -4,12 +4,12 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!message" line="0"/>
 			<source>Authentication is required to change your own user data</source>
-			<translation>Hitelesítés szükséges a felhasználói adatainak módosításához</translation>
+			<translation>Hitelesítés szükséges az adataid módosításához.</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!description" line="0"/>
 			<source>Change your own user data</source>
-			<translation>Saját felhasználói adatainak módosítása</translation>
+			<translation>Saját adataid módosítása</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!message" line="0"/>
@@ -64,12 +64,12 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!message" line="0"/>
 			<source>Authentication is required to set keyboard layout</source>
-			<translation>Hitelesítés szükséges a billentyűzetkiosztás beállításához</translation>
+			<translation>Hitelesítés szükséges a billentyűzet-kiosztás beállításához</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!description" line="0"/>
 			<source>Set keyboard layout</source>
-			<translation>Billentyűzetkiosztás beállítása</translation>
+			<translation>Billentyűzet-kiosztás beállítása</translation>
 		</message>
 	</context>
 </TS>

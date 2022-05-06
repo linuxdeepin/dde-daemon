@@ -14,12 +14,12 @@
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!message" line="0"/>
 			<source>Authentication is required to prepare grub2 display resolution detection</source>
-			<translation>Pengesahihan diperlukan untuk menyediakan pengecaman resolusi paparan grub2</translation>
+			<translation>Pengesahihan diperlukan untuk persediaan pengecaman resolusi paparan grub2</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!description" line="0"/>
 			<source>Prepare grub2 display resolution detection</source>
-			<translation>Sedia pengecaman resolusi paparan grub2</translation>
+			<translation>Persediaan pengecaman resolusi paparan grub2</translation>
 		</message>
 	</context>
 </TS>

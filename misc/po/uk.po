@@ -6,19 +6,19 @@
 # Translators:
 # Yuriy, 2020
 # Roman <dejitaru.tiger@gmail.com>, 2020
-# Cindy0514, 2020
-# Marck Hrin, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
-# Yuri Chornoivan <yurchor@ukr.net>, 2021
+# Marck Hrin, 2021
+# Cindy0514, 2021
+# Yuri Chornoivan <yurchor@ukr.net>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-14 17:30+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
+"POT-Creation-Date: 2022-05-06 15:51+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "Таке ім'я вже існує"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
 
-#: ../../accounts/manager.go:432
+#: ../../accounts/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -94,7 +94,7 @@ msgstr "Маштабування дисплею"
 msgid "%s had been disabled"
 msgstr "%s вимкнено"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Відкрити"
 
@@ -232,24 +232,24 @@ msgstr "Додайте пристрої Bluetooth"
 msgid "Pair"
 msgstr "З'єднати"
 
-#: ../../dock/app_entry_menu.go:116
+#: ../../dock/app_entry_menu.go:115
 msgid "Close All"
 msgstr "Закрити всі"
 
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
+#: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:171
 msgid "Force Quit"
 msgstr "Примусово Вийти"
 
-#: ../../dock/app_entry_menu.go:167
+#: ../../dock/app_entry_menu.go:175
 msgid "Dock"
 msgstr "Док"
 
-#: ../../dock/app_entry_menu.go:177
+#: ../../dock/app_entry_menu.go:185
 msgid "Undock"
 msgstr "Розстикуватись"
 
-#: ../../dock/app_entry_menu.go:187
+#: ../../dock/app_entry_menu.go:195
 msgid "All Windows"
 msgstr "Усі вікна"
 
@@ -354,102 +354,106 @@ msgid "Translation"
 msgstr "Переклад"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Grand search"
+msgid "Grand Search"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:59
+#: ../../keybinding/shortcuts/id_name_map.go:53
+msgid "Notification Center"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:60
 msgid "Switch Layout"
 msgstr "Переключити компонування"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to left workspace"
 msgstr "Перемикання на ліву робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to right workspace"
 msgstr "Перемикання на правий робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to upper workspace"
 msgstr "Перемикання на верхнє робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to lower workspace"
 msgstr "Перемикання на нижчій робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows"
 msgstr "Замінити схожі вікна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows in reverse"
 msgstr "Перемикання між подібними вікнами у зворотному порядку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows"
 msgstr "Перехід між вікнами"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows in reverse"
 msgstr "Перемикання між вікнами у зворотному порядку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Show desktop"
 msgstr "Показати стільницю"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Maximize window"
 msgstr "Розгорнути вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Restore window"
 msgstr "Відновити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Minimize window"
 msgstr "Згорнути вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Close window"
 msgstr "Закрити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Move window"
 msgstr "Перемістити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Resize window"
 msgstr "Змінити розмір вікна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to left workspace"
 msgstr "Перемістити на лівий робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to right workspace"
 msgstr "Перемістити на правий робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to upper workspace"
 msgstr "Перемістити на верхній робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to lower workspace"
 msgstr "Перемістити на нижчій робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of all workspaces"
 msgstr "Відображати вікна всіх робочих просторів"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of current workspace"
 msgstr "Показати вікна поточного робочого простору"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display workspace"
 msgstr "Показати робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:217
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "Перемкнути монітори"
 
@@ -570,54 +574,53 @@ msgstr "%q успішно видалено"
 msgid "Failed to uninstall %q"
 msgstr "Не вдалося встановити %q"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:469
+#: ../../network/manager_active_conn.go:474
 msgid "None"
 msgstr "Нічого"
 
-#: ../../network/manager_active_conn.go:444
+#: ../../network/manager_active_conn.go:476
 msgid "WEP 40/128-bit Key"
 msgstr "Ключ WEP 40/128-біт"
 
-#: ../../network/manager_active_conn.go:446
+#: ../../network/manager_active_conn.go:478
 msgid "WPA/WPA2 Personal"
 msgstr "Режим WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:448
+#: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
 msgstr "Особистий WPA3"
 
-#: ../../network/manager_active_conn.go:456
+#: ../../network/manager_active_conn.go:488
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:458
+#: ../../network/manager_active_conn.go:490
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:460
+#: ../../network/manager_active_conn.go:492
 msgid "LEAP"
 msgstr "ІНТЕРВАЛ"
 
-#: ../../network/manager_active_conn.go:462
+#: ../../network/manager_active_conn.go:494
 msgid "FAST"
 msgstr "ШВИДКО"
 
-#: ../../network/manager_active_conn.go:464
+#: ../../network/manager_active_conn.go:496
 msgid "Tunneled TLS"
 msgstr "Тунельований TLS"
 
-#: ../../network/manager_active_conn.go:466
+#: ../../network/manager_active_conn.go:498
 msgid "Protected EAP"
 msgstr "Захищений EAP"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
-#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
+#: ../../network/manager_connection.go:365
 msgid "Wired Connection"
 msgstr "Дротове підключення"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
+#: ../../network/manager_connection.go:404
 msgid "Wired Connection %v"
 msgstr "Дротове з'єднання %v"
 
@@ -962,60 +965,60 @@ msgstr "Аутентифікація при доступі до VPN-сервер
 msgid "The connection was deleted from settings"
 msgstr "З'єднання було видалено з налаштувань."
 
-#: ../../network/state_handler.go:266
+#: ../../network/state_handler.go:271
 msgid "Enabling hotspot"
 msgstr "Увімкнути точку доступу"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:275
 msgid "Connecting %q"
 msgstr "Підключити %q"
 
-#: ../../network/state_handler.go:279
+#: ../../network/state_handler.go:284
 msgid "Hotspot enabled"
 msgstr "Точка доступу увімкнена"
 
-#: ../../network/state_handler.go:281
+#: ../../network/state_handler.go:286
 msgid "%q connected"
 msgstr "%q підключено"
 
-#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:297 ../../network/state_handler.go:352
 msgid "Hotspot disabled"
 msgstr "Точка доступу вимкнена"
 
-#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
+#: ../../network/state_handler.go:354 ../../network/state_handler.go:376
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%q відключено"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:360
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Неможливо поділитися точкою доступу, перевірте налаштування dnsmasq"
 
-#: ../../network/state_handler.go:357
+#: ../../network/state_handler.go:362
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Неможливо підключити %q, будь ласка, тримайтеся ближче до бездротового "
 "маршрутизатора"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:364
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не вдалося з'єднатися із %q. Будь ласка, перевірте, чи працює ваш "
 "маршрутизатор або мережевий кабель."
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:368
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Помилка підключення, неможливо підключити %q, невірний пароль"
 
-#: ../../network/state_handler.go:374
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "Пароль, необхідний для підключення %q"
 
-#: ../../network/state_handler.go:376
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Не вдалося знайти мережу WLAN 802.11 %q"
 
-#: ../../network/utils_dbus_nm.go:295
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Невідомо"
 
@@ -1059,50 +1062,50 @@ msgstr ""
 "«%s» не пройдено перевіркою засобів захисту системи. Цю програму зараз не "
 "можна запускати."
 
-#: ../../session/power/manager_events.go:201
+#: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Акумулятор критично розряджено"
 
-#: ../../session/power/manager_events.go:222
-#: ../../session/power/manager_events.go:227
-#: ../../session/power/manager_events.go:232
-#: ../../session/power/manager_events.go:237
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
 "мережі живлення"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:419 ../../session/power/utils.go:426
+#: ../../session/power/utils.go:433 ../../session/power/utils.go:440
 msgid "Power settings changed"
 msgstr "Параметри живлення змінено"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:464 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Якщо закрито кришку,"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:468
 msgid "When pressing the power button, "
 msgstr "Якщо натиснуто кнопку живлення,"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:478 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "ваш комп'ютер буде вимкнено"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:480 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "ваш комп'ютер буде призупинено"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:482
 msgid "your computer will hibernate"
 msgstr "ваш комп'ютер буде приспано"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:484
 msgid "your monitor will turn off"
 msgstr "монітор буде вимкнено"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:486
 msgid "it will do nothing to your computer"
 msgstr "ніяких дій із комп'ютером не буде виконано"
 

@@ -4,19 +4,19 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Thupten 123 <2389588952@qq.com>, 2021
-# tsewang baljor <bdcwbj@163.com>, 2021
-# yeshe lhamo <981611630@qq.com>, 2021
-# Cindy0514, 2021
+# Thupten 123 <2389588952@qq.com>, 2022
+# tsewang baljor <bdcwbj@163.com>, 2022
+# Cindy0514, 2022
+# yeshe lhamo <981611630@qq.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-14 17:30+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"POT-Creation-Date: 2022-05-06 15:51+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: yeshe lhamo <981611630@qq.com>, 2022\n"
 "Language-Team: Tibetan (https://www.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgstr "མིང་ཡོད་པ།"
 msgid "Username must be between 3 and 32 characters"
 msgstr "སྤྱོད་མཁན་མིང་གི་རིང་ཚད་ངེས་པར་དུ་ཡིག་འབྲུ་3ནས་32བར་ཡིན་དགོས། "
 
-#: ../../accounts/manager.go:432
+#: ../../accounts/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -92,7 +92,7 @@ msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 msgid "%s had been disabled"
 msgstr "%sབཀག་ཟིན།"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "ཁ་ཕྱེ་བ།"
 
@@ -167,7 +167,7 @@ msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
 #: ../../lastore/lastore.go:431
 msgid "Cancel"
-msgstr "འདོར་བ། "
+msgstr "ཕྱིར་འཐེན།"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
@@ -230,24 +230,24 @@ msgstr "སོ་སྔོན་སྒྲིག་ཆས་སྣོན་པ།
 msgid "Pair"
 msgstr "ཆ་སྒྲིག་པ།"
 
-#: ../../dock/app_entry_menu.go:116
+#: ../../dock/app_entry_menu.go:115
 msgid "Close All"
 msgstr "ཆ་ཚང་སྒོ་རྒྱོབ།"
 
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
+#: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:171
 msgid "Force Quit"
 msgstr "བཙན་ཤེད་ཀྱིས་དོན་དུ་བཅུག་པ།"
 
-#: ../../dock/app_entry_menu.go:167
+#: ../../dock/app_entry_menu.go:175
 msgid "Dock"
 msgstr "སྡོད་པ།"
 
-#: ../../dock/app_entry_menu.go:177
+#: ../../dock/app_entry_menu.go:185
 msgid "Undock"
 msgstr "བསྡད་པ་གཙང་སེལ།"
 
-#: ../../dock/app_entry_menu.go:187
+#: ../../dock/app_entry_menu.go:195
 msgid "All Windows"
 msgstr "སྒེའུ་ཁུང་ཆ་ཚང་།"
 
@@ -352,102 +352,106 @@ msgid "Translation"
 msgstr "ཡིག་ཆ་ཡིག་སྒྱུར།"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Grand search"
+msgid "Grand Search"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:59
+#: ../../keybinding/shortcuts/id_name_map.go:53
+msgid "Notification Center"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:60
 msgid "Switch Layout"
 msgstr "མཐེབ་གཞོང་བཀོད་པ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows"
 msgstr "རིགས་གཅིག་འདྲའི་སྒེའུ་ཁུང་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows in reverse"
 msgstr "རིགས་གཅིག་འདྲའི་སྒེའུ་ཁུང་ལྡོག་ཕྱོགས་སུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows"
 msgstr "སྒེའུ་ཁུང་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows in reverse"
 msgstr "སྒེའུ་ཁུང་ལྡོག་ཕྱོགས་སུ་བརྗེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Show desktop"
 msgstr "མངོན་སྟོན་ཅོག་ངོས།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Maximize window"
 msgstr "སྒེའུ་ཁུང་ཆེ་ཤོས་སུ་ཕྱེ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Restore window"
 msgstr "སྒེའུ་ཁུང་སོར་ཆུད་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Minimize window"
 msgstr "སྒེའུ་ཁུང་ཆུང་ཤོས་སུ་འགྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Close window"
 msgstr "སྒེའུ་ཁུང་བརྒྱབ་པ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Move window"
 msgstr "སྒེའུ་ཁུང་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Resize window"
 msgstr "སྒེའུ་ཁུང་གི་ཆེ་ཆུང་སྒྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of all workspaces"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་ཆ་ཚང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of current workspace"
 msgstr "མིག་སྔའི་ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display workspace"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:217
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 
@@ -464,7 +468,7 @@ msgstr ""
 
 #: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
-msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
+msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་གཏོགས་ཙམ་སྒུག་རོགས།"
 
 #: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
@@ -561,60 +565,59 @@ msgstr "གཏན་ཁེལ།"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
-msgstr "%qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
+msgstr " %qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 
 #: ../../launcher/manager_uninstall.go:73
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:469
+#: ../../network/manager_active_conn.go:474
 msgid "None"
 msgstr "མེད།"
 
-#: ../../network/manager_active_conn.go:444
+#: ../../network/manager_active_conn.go:476
 msgid "WEP 40/128-bit Key"
 msgstr "གསང་ལྡེ་གནས་WEP40/128"
 
-#: ../../network/manager_active_conn.go:446
+#: ../../network/manager_active_conn.go:478
 msgid "WPA/WPA2 Personal"
 msgstr "སྒེར་གྱི་པར་གཞི་WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:448
+#: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
 msgstr "WPA3མི་སྒེར་གྱི་པར་གཞི།"
 
-#: ../../network/manager_active_conn.go:456
+#: ../../network/manager_active_conn.go:488
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:458
+#: ../../network/manager_active_conn.go:490
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:460
+#: ../../network/manager_active_conn.go:492
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:462
+#: ../../network/manager_active_conn.go:494
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:464
+#: ../../network/manager_active_conn.go:496
 msgid "Tunneled TLS"
 msgstr "ཕུག་ལམ་TLS"
 
-#: ../../network/manager_active_conn.go:466
+#: ../../network/manager_active_conn.go:498
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
-#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
+#: ../../network/manager_connection.go:365
 msgid "Wired Connection"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད།"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
+#: ../../network/manager_connection.go:404
 msgid "Wired Connection %v"
 msgstr "སྐུད་ཡོད་འབྲེལ་མཐུད་%v"
 
@@ -666,7 +669,7 @@ msgstr "IPསྒྲིག་འགོད་གོ་མི་ཆོད།"
 
 #: ../../network/state_handler.go:45
 msgid "Passwords were required but not provided"
-msgstr "གསང་ཨང་དགོས་པས་མཁོ་འདོན་བྱས་མི་འདུག"
+msgstr "གསང་ཨང་དགོས་ཀྱི་འདུག་པས་མཁོ་འདོན་བྱས་མི་འདུག"
 
 #: ../../network/state_handler.go:46
 msgid ""
@@ -680,7 +683,7 @@ msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་སྡེབ་སྒྲ
 
 #: ../../network/state_handler.go:48
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་རྒྱུན་འགལ་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
+msgstr "802.1Xམཁོ་མཁན་ཕྱོགས་ནམ་རྒྱུན་དང་མི་འདྲ་བར་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
 
 #: ../../network/state_handler.go:49
 msgid "The 802.1X supplicant took too long time to authenticate"
@@ -696,7 +699,7 @@ msgstr "PPPཞབས་ཞུ་ཆད་པ།"
 
 #: ../../network/state_handler.go:52
 msgid "The PPP service quitted or failed unexpectedly"
-msgstr "PPPཞབས་ཞུ་རྒྱུན་འགལ་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
+msgstr "PPPཞབས་ཞུ་ནམ་རྒྱུན་དང་མི་འདྲ་བར་ཕྱིར་འཐོན་པའམ་ཕམ་པ།"
 
 #: ../../network/state_handler.go:53
 msgid "The DHCP service failed to start within the allowed time"
@@ -704,7 +707,7 @@ msgstr "DHCPཞབས་ཞུ་དུས་བཅད་ནང་འགོ་�
 
 #: ../../network/state_handler.go:54
 msgid "The DHCP service reported an unexpected error"
-msgstr "DHCPཞབས་ཞུས་རྒྱུན་འགལ་ནོར་འཁྲུལ་ཞིག་སྙན་ཞུ་བྱས་འདུག"
+msgstr "DHCPཞབས་ཞུས་ནམ་རྒྱུན་དང་མི་འདྲ་བའི་ནོར་འཁྲུལ་ཞིག་སྙན་ཞུ་བྱས་འདུག"
 
 #: ../../network/state_handler.go:55
 msgid "The DHCP service quitted or failed unexpectedly"
@@ -752,7 +755,7 @@ msgstr "འབྲེལ་མཐུད་བྱེད་མ་ཐུབ།"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
-msgstr "ལེགས་སྒྲིག་དཀྲོལ་ཆས་འགོ་འཛུགས་བྱེད་མ་ཐུབ་པ།"
+msgstr "དཀྲོལ་ཆས་འགོ་འཛུགས་ལེགས་སྒྲིག་བྱེད་མ་ཐུབ་པ།"
 
 #: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
@@ -776,7 +779,7 @@ msgstr "GSMདྲ་རྒྱ་ཐོ་འགོད་བྱེད་མ་ཐ
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "PINཨང་གྲངས་ཞིབ་བཤེར་བྱེད་མ་ཐུབ།"
+msgstr "PINཞིབ་བཤེར་བྱེད་མ་ཐུབ།"
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
@@ -812,7 +815,7 @@ msgstr "802.1xསྤྱོད་མཁན་ཕྱོགས་ད་ལྟ་ས
 
 #: ../../network/state_handler.go:81
 msgid "The modem could not be found"
-msgstr "ལེགས་སྒྲིག་དཀྲོལ་ཆས་མ་རྙེད་པ།"
+msgstr "དཀྲོལ་ཆས་ལེགས་སྒྲིག་མ་རྙེད་པ།"
 
 #: ../../network/state_handler.go:82
 msgid "The Bluetooth connection timed out or failed"
@@ -824,7 +827,7 @@ msgstr "GSMབཅུག་མེད་པའི་ལེགས་སྒྲིག
 
 #: ../../network/state_handler.go:84
 msgid "GSM Modem's SIM PIN required"
-msgstr "GSMལེགས་སྒྲིག་དཀྲོལ་ཆས་ཀྱི་SIMགཱ་ཡི་PINཨང་གྲངས་དགོས།"
+msgstr "GSMལེགས་སྒྲིག་དཀྲོལ་ཆས་ཀྱི་SIMགཱ་ཡི་PINདགོས།"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
@@ -952,57 +955,57 @@ msgstr "VPNཞབས་ཞུ་འཕྲུལ་ཆས་ཕམ་པའི་
 msgid "The connection was deleted from settings"
 msgstr "འབྲེལ་མཐུད་འདི་སྒྲིག་འགོད་ལས་བསུབས་ཟིན།"
 
-#: ../../network/state_handler.go:266
+#: ../../network/state_handler.go:271
 msgid "Enabling hotspot"
 msgstr "ཚ་གནས་ཁ་འབྱེད་པའི་ཚོད་ལྟ་བྱེད་བཞིན་པ།"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:275
 msgid "Connecting %q"
 msgstr "འབྲེལ་མཐུད་བྱེད་བཞིན་ཡོད་%q"
 
-#: ../../network/state_handler.go:279
+#: ../../network/state_handler.go:284
 msgid "Hotspot enabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་ཕྱེ་ཡོད།"
 
-#: ../../network/state_handler.go:281
+#: ../../network/state_handler.go:286
 msgid "%q connected"
 msgstr "འབྲེལ་མཐུད་ཟིན་%q"
 
-#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:297 ../../network/state_handler.go:352
 msgid "Hotspot disabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་བརྒྱབ་ཟིན།"
 
-#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
+#: ../../network/state_handler.go:354 ../../network/state_handler.go:376
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%qབཅད་ཟིན།"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:360
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "ཚ་གནས་མཉམ་སྤྱོད་བྱེད་མི་ཐུབ་པས་dnsmasq དང་འབྲེལ་བའི་སྒྲིག་ཆས་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:357
+#: ../../network/state_handler.go:362
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qསྣོན་ཐུབ་མེད་པས། སྐུད་མེད་ལམ་སྟོན་ཆས་དང་ཉེ་འབྲེལ་ཚོད་ལྟ་བྱེད།"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:364
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qསྣོན་ཐུབ་མེད་པས། ལམ་སྟོན་ཆས་སམ་དྲ་སྐུད་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:368
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "འབྲེལ་མཐུད་མི་ཐུབ། %qནང་དུ་བཅུག་མི་ཐུབ། གསང་ཨང་ནོར་འདུག"
 
-#: ../../network/state_handler.go:374
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "%qའབྲེལ་བར་གསང་ཨང་དགོས།"
 
-#: ../../network/state_handler.go:376
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLANདྲ་རྒྱ་རྙེད་ཐབས་མེད།"
 
-#: ../../network/utils_dbus_nm.go:295
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "རྒྱུ་མཚན་མ་ཤེས།"
 
@@ -1046,48 +1049,48 @@ msgstr ""
 "“%s”རྒྱུད་ཁོངས་བརྒྱུད་དེ་བདེ་འཇགས་ར་སྤྲོད་བྱས་མེད་པས། "
 "འཁོར་སྐྱོད་བྱེད་ཐབས་བྲལ།"
 
-#: ../../session/power/manager_events.go:201
+#: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "གློག་རྫོགས་ཟིན།"
 
-#: ../../session/power/manager_events.go:222
-#: ../../session/power/manager_events.go:227
-#: ../../session/power/manager_events.go:232
-#: ../../session/power/manager_events.go:237
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
-msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་རོགས།"
+msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་དགོས།"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:419 ../../session/power/utils.go:426
+#: ../../session/power/utils.go:433 ../../session/power/utils.go:440
 msgid "Power settings changed"
 msgstr "གློག་ཁུངས་སྒྲིག་འགོད་སྒྱུར་བ།"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:464 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "ལག་ཁྱེར་གློག་ཀླད་ཁ་བརྒྱབ་སྐབས།"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:468
 msgid "When pressing the power button, "
 msgstr "གློག་ཁུངས་ཀྱི་བསད་སྤར་མནན་སྐབས།"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:478 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:480 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "སྒུག་སྡོད་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:482
 msgid "your computer will hibernate"
 msgstr "མལ་གསོ་ཞེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:484
 msgid "your monitor will turn off"
 msgstr "མངོན་ཆས་སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:486
 msgid "it will do nothing to your computer"
 msgstr "བཀོལ་སྤྱོད་གང་ཡང་བྱས་མེད་པར་བཟོ་བཅོས་བྱེད།"
 
