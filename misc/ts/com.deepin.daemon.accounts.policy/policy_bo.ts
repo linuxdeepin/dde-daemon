@@ -64,7 +64,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!message" line="0"/>
 			<source>Authentication is required to set keyboard layout</source>
-			<translation>མཐེབ་གཞོང་བཀོད་པ་སྒྲིག་འགོད་བྱེད་ཚེ་ར་སྤྲོད་བྱེད་དགོས།</translation>
+			<translation>མཐེབ་གཞོང་སྒྲིག་འགོད་བྱེད་ཚེ་ར་སྤྲོད་བྱེད་དགོས།</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!description" line="0"/>

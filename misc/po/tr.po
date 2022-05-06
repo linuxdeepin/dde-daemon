@@ -5,21 +5,21 @@
 # 
 # Translators:
 # Kaya Zeren <kayazeren@gmail.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
-# yakup <mutouk@yandex.ru>, 2020
+# yakup <mutouk@yandex.ru>, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Serdar Sağlam <teknomobil@msn.com>, 2021
-# meda <ademcal@yahoo.com>, 2021
-# Cindy0514, 2021
-# abc Def <hdogan1974@gmail.com>, 2021
+# Cindy0514, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
+# meda <ademcal@yahoo.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-14 17:30+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"POT-Creation-Date: 2022-05-06 15:51+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: meda <ademcal@yahoo.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,10 +59,10 @@ msgstr "İsim zaten var"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Kullanıcı adı 3 ile 32 karakter arasında olmalıdır"
 
-#: ../../accounts/manager.go:432
+#: ../../accounts/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
+msgstr "\"%s\" kullanıcısı daha önce vardı ve verileri senkronize edildi"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -93,7 +93,7 @@ msgstr "Görüntü ölçeği"
 msgid "%s had been disabled"
 msgstr "%s devre dışı bırakılmıştı"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Aç"
 
@@ -231,24 +231,24 @@ msgstr "Bluetooth aygıtları ekle"
 msgid "Pair"
 msgstr "Eşleştir"
 
-#: ../../dock/app_entry_menu.go:116
+#: ../../dock/app_entry_menu.go:115
 msgid "Close All"
 msgstr "Tümünü Kapat"
 
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
+#: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:171
 msgid "Force Quit"
 msgstr "Zorla Çık"
 
-#: ../../dock/app_entry_menu.go:167
+#: ../../dock/app_entry_menu.go:175
 msgid "Dock"
 msgstr "Rıhtım"
 
-#: ../../dock/app_entry_menu.go:177
+#: ../../dock/app_entry_menu.go:185
 msgid "Undock"
 msgstr "Ayır"
 
-#: ../../dock/app_entry_menu.go:187
+#: ../../dock/app_entry_menu.go:195
 msgid "All Windows"
 msgstr "Tüm Pencereler"
 
@@ -353,102 +353,106 @@ msgid "Translation"
 msgstr "Çeviri"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Grand search"
+msgid "Grand Search"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:59
+#: ../../keybinding/shortcuts/id_name_map.go:53
+msgid "Notification Center"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:60
 msgid "Switch Layout"
 msgstr "Görünümü Değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to left workspace"
 msgstr "Sol çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to right workspace"
 msgstr "Sağ çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to upper workspace"
 msgstr "Üst çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to lower workspace"
 msgstr "Alt çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows"
 msgstr "Benzer pencereleri değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows in reverse"
 msgstr "Benzer pencereleri tersine değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows"
 msgstr "Pencereleri değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows in reverse"
 msgstr "Pencereleri ters çevir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Show desktop"
 msgstr "Masaüstünü görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Maximize window"
 msgstr "Pencereyi büyüt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Restore window"
 msgstr "Pencereyi geri yükle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Minimize window"
 msgstr "Pencereyi küçült"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Close window"
 msgstr "Pencereyi kapat"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Move window"
 msgstr "Pencereyi taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Resize window"
 msgstr "Pencereyi boyutlandır"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to left workspace"
 msgstr "Sol çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to right workspace"
 msgstr "Sağ çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to upper workspace"
 msgstr "Üst çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to lower workspace"
 msgstr "Alt çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of all workspaces"
 msgstr "Çalışma alanlarındaki pencereleri görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of current workspace"
 msgstr "Mevcut çalışma alanının pencerelerini görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display workspace"
 msgstr "Çalışma alanını görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:217
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "Monitörleri değiştir"
 
@@ -566,54 +570,53 @@ msgstr "%q kaldırıldı"
 msgid "Failed to uninstall %q"
 msgstr "%q kaldırılamadı"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:469
+#: ../../network/manager_active_conn.go:474
 msgid "None"
 msgstr "Yok"
 
-#: ../../network/manager_active_conn.go:444
+#: ../../network/manager_active_conn.go:476
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit Anahtar"
 
-#: ../../network/manager_active_conn.go:446
+#: ../../network/manager_active_conn.go:478
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Kişisel"
 
-#: ../../network/manager_active_conn.go:448
+#: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
-msgstr ""
+msgstr "WPA3 Kişisel"
 
-#: ../../network/manager_active_conn.go:456
+#: ../../network/manager_active_conn.go:488
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:458
+#: ../../network/manager_active_conn.go:490
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:460
+#: ../../network/manager_active_conn.go:492
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:462
+#: ../../network/manager_active_conn.go:494
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:464
+#: ../../network/manager_active_conn.go:496
 msgid "Tunneled TLS"
 msgstr "Tünellenmiş TLS"
 
-#: ../../network/manager_active_conn.go:466
+#: ../../network/manager_active_conn.go:498
 msgid "Protected EAP"
 msgstr "Korumalı EAP"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
-#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
+#: ../../network/manager_connection.go:365
 msgid "Wired Connection"
 msgstr "Kablolu Bağlantı"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
+#: ../../network/manager_connection.go:404
 msgid "Wired Connection %v"
 msgstr "Kablolu Bağlantı %v"
 
@@ -736,7 +739,7 @@ msgstr "AutoIP hizmeti sonlandırıldı veya başarısız oldu"
 
 #: ../../network/state_handler.go:61
 msgid "Dialing failed due to busy lines"
-msgstr "Meşgul hatlar nedeniyle arama başarısız"
+msgstr "Hatlar meşgul olduğundan arama başarısız"
 
 #: ../../network/state_handler.go:62
 msgid "Dialing failed due to no dial tone"
@@ -764,7 +767,7 @@ msgstr "Belirtilen GSM APN seçilemedi"
 
 #: ../../network/state_handler.go:68
 msgid "No networks searched"
-msgstr "Herhangi bir şebeke aranmadı"
+msgstr "Hiçbir ağ aranmadı"
 
 #: ../../network/state_handler.go:69
 msgid "Network registration was denied"
@@ -962,59 +965,59 @@ msgstr "VPN sunucusunda kimlik doğrulanamadı"
 msgid "The connection was deleted from settings"
 msgstr "Bağlantı ayarlardan silindi"
 
-#: ../../network/state_handler.go:266
+#: ../../network/state_handler.go:271
 msgid "Enabling hotspot"
 msgstr "Erişim noktasını etkinleşir"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:275
 msgid "Connecting %q"
 msgstr "Bağlanıyor %q"
 
-#: ../../network/state_handler.go:279
+#: ../../network/state_handler.go:284
 msgid "Hotspot enabled"
 msgstr "Erişim noktası etkin"
 
-#: ../../network/state_handler.go:281
+#: ../../network/state_handler.go:286
 msgid "%q connected"
 msgstr "%q bağlı"
 
-#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:297 ../../network/state_handler.go:352
 msgid "Hotspot disabled"
 msgstr "Erişim noktası devre dışı"
 
-#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
+#: ../../network/state_handler.go:354 ../../network/state_handler.go:376
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%q bağlantısı kesildi"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:360
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Erişim noktası paylaşılamadı, dnsmasq ayarlarını denetle"
 
-#: ../../network/state_handler.go:357
+#: ../../network/state_handler.go:362
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%q bağlanılamıyor, lütfen kablosuz yönlendiriciye yakın tutun"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:364
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "%q bağlantısı kurulamadı, lütfen erişim noktanızı ya da ağ kablonuzu "
 "denetleyin."
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:368
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 "Bağlantı kurulamadı, parola yanlış olduğundan %q bağlantısı kurulamadı"
 
-#: ../../network/state_handler.go:374
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "%q bağlanmak için parola gerekli"
 
-#: ../../network/state_handler.go:376
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q  802.11 WLAN ağı bulunamadı"
 
-#: ../../network/utils_dbus_nm.go:295
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
@@ -1054,48 +1057,48 @@ msgstr "Bağlandı"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" sistem güvenlik doğrulamasını geçemedi ve şimdi çalıştırılamıyor"
 
-#: ../../session/power/manager_events.go:201
+#: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Pil kritik derecede düşük"
 
-#: ../../session/power/manager_events.go:222
-#: ../../session/power/manager_events.go:227
-#: ../../session/power/manager_events.go:232
-#: ../../session/power/manager_events.go:237
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Düşük pil düzeyi, lütfen fişe takın"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:419 ../../session/power/utils.go:426
+#: ../../session/power/utils.go:433 ../../session/power/utils.go:440
 msgid "Power settings changed"
 msgstr "Güç ayarları değişti"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:464 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Kapak kapatıldığında,"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:468
 msgid "When pressing the power button, "
 msgstr "Güç düğmesine basılınca,"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:478 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "bilgisayarınız kapanacak"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:480 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "bilgisayarınız askıya alınacak"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:482
 msgid "your computer will hibernate"
 msgstr "bilgisayarınız hazırda bekleyecek"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:484
 msgid "your monitor will turn off"
 msgstr "ekranınız kapanacak"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:486
 msgid "it will do nothing to your computer"
 msgstr "bilgisayarınıza hiçbir şey yapmaz"
 

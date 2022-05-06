@@ -7,17 +7,17 @@
 # Adrián Ramos García <adrian.ramos.garcia.93@gmail.com>, 2020
 # Rubén <feiticeiro2010@hotmail.es>, 2020
 # Cindy0514, 2020
-# David Rebolo Magariños <drgaga345@gmail.com>, 2020
-# Xurxo Guerra Perez <xguerrap@gmail.com>, 2021
+# David Rebolo Magariños <drgaga345@gmail.com>, 2021
+# 55794061bc336d90de42969fbdc28df8_7437f78 <f3b318f732e51e2854926463b55b3f0e_42535>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-14 17:30+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Xurxo Guerra Perez <xguerrap@gmail.com>, 2021\n"
+"POT-Creation-Date: 2022-05-06 15:51+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: 55794061bc336d90de42969fbdc28df8_7437f78 <f3b318f732e51e2854926463b55b3f0e_42535>, 2022\n"
 "Language-Team: Galician (Spain) (https://www.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
-msgstr "Por favor, insira un contrasinal de máis de 8 caracteres"
+msgstr "Por favor, introduce un contrasinal de máis de 8 caracteres"
 
 #: ../../accounts/checkers/password.go:55
 msgid ""
@@ -39,7 +39,7 @@ msgstr ""
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
-msgstr "O nome de usuario non pode estar baleiro"
+msgstr "O nome de usuario non pode estar vacío"
 
 #: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
@@ -55,9 +55,9 @@ msgstr "O nome xa existe"
 
 #: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
-msgstr "O nome de usuario ten de ter entre 3 e 32 caracteres"
+msgstr "O nome de usuario debe estar entre 3 e 32 caracteres"
 
-#: ../../accounts/manager.go:432
+#: ../../accounts/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -92,13 +92,13 @@ msgstr "Escala de visualización"
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Abrir"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "Fallou a verificación da pegada dixital"
+msgstr "Erro na verificación por pegada dixital"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
@@ -230,24 +230,24 @@ msgstr "Engadir dispositivos Bluetooth"
 msgid "Pair"
 msgstr "Emparellar"
 
-#: ../../dock/app_entry_menu.go:116
+#: ../../dock/app_entry_menu.go:115
 msgid "Close All"
 msgstr "Pechar todo"
 
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
+#: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:171
 msgid "Force Quit"
-msgstr "Forzar a saída"
+msgstr "Forzar a saír"
 
-#: ../../dock/app_entry_menu.go:167
+#: ../../dock/app_entry_menu.go:175
 msgid "Dock"
 msgstr "Doca"
 
-#: ../../dock/app_entry_menu.go:177
+#: ../../dock/app_entry_menu.go:185
 msgid "Undock"
-msgstr "Quitar da doca"
+msgstr "Desbordar"
 
-#: ../../dock/app_entry_menu.go:187
+#: ../../dock/app_entry_menu.go:195
 msgid "All Windows"
 msgstr "Todas as xanelas"
 
@@ -352,102 +352,106 @@ msgid "Translation"
 msgstr "Tradución"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Grand search"
+msgid "Grand Search"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:59
+#: ../../keybinding/shortcuts/id_name_map.go:53
+msgid "Notification Center"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:60
 msgid "Switch Layout"
 msgstr "Cambiar Distribución de Teclado"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to left workspace"
 msgstr "Cambiar ao espazo de traballo esquerdo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to right workspace"
 msgstr "Cambiar ao espazo de traballo dereito"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to upper workspace"
 msgstr "Cambiar ao espazo de traballo superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to lower workspace"
 msgstr "Cambiar para reducir o espazo de traballo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows"
 msgstr "Cambiar xanelas semellantes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows in reverse"
 msgstr "Cambiar xanelas semellantes en orde inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows"
 msgstr "Cambiar xanelas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows in reverse"
 msgstr "Cambiar xanelas en orde inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Show desktop"
 msgstr "Amosar escritorio"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Maximize window"
 msgstr "Maximizar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Restore window"
 msgstr "Restaurar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Minimize window"
 msgstr "Minimizar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Close window"
 msgstr "Pechar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Move window"
 msgstr "Mover a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Resize window"
 msgstr "Redimensionar a xanela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to left workspace"
 msgstr "Mover ao espazo de traballo da esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to right workspace"
 msgstr "Mover ao espazo de traballo da dereita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to upper workspace"
 msgstr "Mover ao espazo de traballo superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to lower workspace"
 msgstr "Mover ao espazo de traballo inferior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of all workspaces"
 msgstr "Amosar as xanelas de todos os espazos de traballo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of current workspace"
 msgstr "Amosar as xanelas do espazo de traballo actual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display workspace"
 msgstr "Amosar o espazo de traballo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:217
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "Cambiar monitores"
 
@@ -563,54 +567,53 @@ msgstr "%q eliminouse correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Erro ao desinstalar %q"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:469
+#: ../../network/manager_active_conn.go:474
 msgid "None"
 msgstr "Ningún"
 
-#: ../../network/manager_active_conn.go:444
+#: ../../network/manager_active_conn.go:476
 msgid "WEP 40/128-bit Key"
 msgstr "Chave WEP 40/128-bit"
 
-#: ../../network/manager_active_conn.go:446
+#: ../../network/manager_active_conn.go:478
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Persoal"
 
-#: ../../network/manager_active_conn.go:448
+#: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:456
+#: ../../network/manager_active_conn.go:488
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:458
+#: ../../network/manager_active_conn.go:490
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:460
+#: ../../network/manager_active_conn.go:492
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:462
+#: ../../network/manager_active_conn.go:494
 msgid "FAST"
 msgstr "RÁPIDO"
 
-#: ../../network/manager_active_conn.go:464
+#: ../../network/manager_active_conn.go:496
 msgid "Tunneled TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:466
+#: ../../network/manager_active_conn.go:498
 msgid "Protected EAP"
 msgstr "EAP protexido"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
-#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
+#: ../../network/manager_connection.go:365
 msgid "Wired Connection"
 msgstr "Conexión con fíos"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
+#: ../../network/manager_connection.go:404
 msgid "Wired Connection %v"
 msgstr ""
 
@@ -954,58 +957,58 @@ msgstr "Fallou a autenticación ao servidor VPN"
 msgid "The connection was deleted from settings"
 msgstr "A conexión eliminouse da configuración"
 
-#: ../../network/state_handler.go:266
+#: ../../network/state_handler.go:271
 msgid "Enabling hotspot"
 msgstr "Habilitar punto de acceso"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:275
 msgid "Connecting %q"
 msgstr "Conectando %q"
 
-#: ../../network/state_handler.go:279
+#: ../../network/state_handler.go:284
 msgid "Hotspot enabled"
 msgstr "Punto de acceso habilitado"
 
-#: ../../network/state_handler.go:281
+#: ../../network/state_handler.go:286
 msgid "%q connected"
 msgstr "%q conectado"
 
-#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:297 ../../network/state_handler.go:352
 msgid "Hotspot disabled"
 msgstr "Punto de acceso desactivado"
 
-#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
+#: ../../network/state_handler.go:354 ../../network/state_handler.go:376
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%q desconectado"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:360
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "Non se pode compartir un punto de acceso, comprobe a configuración de "
 "dnsmasq"
 
-#: ../../network/state_handler.go:357
+#: ../../network/state_handler.go:362
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "Non se puido conectar% q, mantéñase máis preto do router sen fíos"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:364
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "Non se puido conectar% q, comproba o enrutador ou o cable neto."
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:368
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Fallou a conexión e non se puido conectar% q, contrasinal incorrecto"
 
-#: ../../network/state_handler.go:374
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "O contrasinal é necesario para conectar% q"
 
-#: ../../network/state_handler.go:376
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:295
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Descoñecido"
 
@@ -1048,48 +1051,48 @@ msgstr ""
 "\"%s\" non superou a verificación de seguridade do sistema e non se pode "
 "executar agora"
 
-#: ../../session/power/manager_events.go:201
+#: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Batería moi baixa"
 
-#: ../../session/power/manager_events.go:222
-#: ../../session/power/manager_events.go:227
-#: ../../session/power/manager_events.go:232
-#: ../../session/power/manager_events.go:237
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Batería baixa, conécteo"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:419 ../../session/power/utils.go:426
+#: ../../session/power/utils.go:433 ../../session/power/utils.go:440
 msgid "Power settings changed"
 msgstr "A configuración de enerxía cambiou"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:464 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Cando a tapa está pechada,"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:468
 msgid "When pressing the power button, "
 msgstr "Cando presionas o botón de acendido,"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:478 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "o teu computador apagarase"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:480 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "o teu computador suspenderase"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:482
 msgid "your computer will hibernate"
 msgstr "o teu computador hibernará"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:484
 msgid "your monitor will turn off"
 msgstr "o teu monitor apagarase"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:486
 msgid "it will do nothing to your computer"
 msgstr "Non fará nada ao teu computador"
 

@@ -4,7 +4,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>Uwierzytelnienie jest wymagane do dodania hasła linii papilarnych</translation>
+			<translation>Do dodania hasła linii papilarnych wymagane jest uwierzytelnienie</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!description" line="0"/>
@@ -14,7 +14,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>Uwierzytelnienie jest wymagane do wyczyszczenia haseł odcisków palców</translation>
+			<translation>Do wyczyszczenia haseł odcisków palców wymagane jest uwierzytelnienie</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>

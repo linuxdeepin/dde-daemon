@@ -4,22 +4,22 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!message" line="0"/>
 			<source>Authentication is required to change your own user data</source>
-			<translation>თქვენი პირადი მონაცემების შესაცვლელად აუცილებელია ავთენტიფიკაციის გავლა.</translation>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!description" line="0"/>
 			<source>Change your own user data</source>
-			<translation>თქვენი პირადი ინფორმაციის შეცვლა</translation>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!message" line="0"/>
 			<source>Authentication is required to change user data</source>
-			<translation>მოხმარებლის მონაცემების შესაცვლელად აუცილებელია ავთენტიფიკაციის გავლა.</translation>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!description" line="0"/>
 			<source>Manage user accounts</source>
-			<translation>მოხმარებლების ანგარიშების მართვა</translation>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!message" line="0"/>
