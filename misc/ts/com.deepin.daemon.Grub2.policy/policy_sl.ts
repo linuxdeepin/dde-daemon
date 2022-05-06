@@ -4,12 +4,12 @@
 		<message>
 			<location filename="com.deepin.daemon.Grub2!message" line="0"/>
 			<source>Authentication is required to change the grub2 configuration</source>
-			<translation>Spreminjanje grub2 konfiguracije zahteva overitev</translation>
+			<translation>Za spreminjanje konfiguracije grub2 je potrebna avtentikacija</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!description" line="0"/>
 			<source>Change the grub2 configuration</source>
-			<translation>Spreminjanje grub2 konfiguracije</translation>
+			<translation>Spremenite konfiguracijo grub2</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!message" line="0"/>

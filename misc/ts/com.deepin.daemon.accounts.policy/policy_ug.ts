@@ -29,12 +29,12 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!description" line="0"/>
 			<source>Enable Auto Login</source>
-			<translation>ئاپتۇماتىك كىرىشنى ئېچىش</translation>
+			<translation>ئېچىلغاندا ئاپتۇماتىك كىرىش</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!message" line="0"/>
 			<source>Authentication is required to disable auto login</source>
-			<translation>ئاپتۇماتىك كىرىشنى تاقاش ئۈچۈن سالاھىيەت دەلىللەش كېرەك</translation>
+			<translation>ئاپتۇماتىك كىرىشنى چەكلەش ئۈچۈن سالاھىيەت دەلىللەش كىرەك</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!description" line="0"/>
@@ -49,7 +49,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!description" line="0"/>
 			<source>Enable Login without password</source>
-			<translation> ئابونىت مەخپى شىفىرسىز كىرىش</translation>
+			<translation>  مەخپى شىفىرسىز كىرىش</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-nopass-login!message" line="0"/>
@@ -64,7 +64,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!message" line="0"/>
 			<source>Authentication is required to set keyboard layout</source>
-			<translation>كۇنۇپكا تاختىسى ئورۇنلاشتۇرۇش ئۈچۈن سالاھىيىتىنى تەكشۈرۈشكە توغرا كېلىدۇ</translation>
+			<translation>كۇنۇپكا تاختىسى تەڭشەش ئۈچۈن سالاھىيىتىنى دەللەللەشكە توغرا كېلىدۇ</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!description" line="0"/>

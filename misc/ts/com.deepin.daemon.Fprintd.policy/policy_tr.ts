@@ -34,7 +34,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!message" line="0"/>
 			<source>Password is required to perform this action</source>
-			<translation>Bu işlemi gerçekleştirmek için parola gerekli</translation>
+			<translation>Bu işlemi gerçekleştirmek için parola gerekir</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!description" line="0"/>

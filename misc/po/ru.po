@@ -4,28 +4,28 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Transifex Bot <>, 2020
 # Артем Рудаковский <crja72@gmail.com>, 2020
+# Transifex Bot <>, 2020
+# Анатолий Валерианович <ffox909@mail.ru>, 2020
 # Serge Kukharski, 2020
-# Cindy0514, 2020
-# gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2020
-# Basil Russu <basil_russu@hotmail.com>, 2020
-# Artem Kulikov <artem.job.kulikov@gmail.com>, 2020
-# Анатолий Валерианович <ffox909@mail.ru>, 2021
-# Владимир Киреев <vovan_kireev@mail.ru>, 2021
+# Basil Russu <basil_russu@hotmail.com>, 2021
+# Artem Kulikov <artem.job.kulikov@gmail.com>, 2021
+# Cindy0514, 2021
 # Vladislav Evseev <poryvay.vladik@gmail.com>, 2021
+# gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2021
 # Snow fire R <iceler75@gmail.com>, 2021
-# Валерий Владимирович, 2021
-# Dober Man, 2021
+# Владимир Киреев <vovan_kireev@mail.ru>, 2021
+# Droid Man, 2022
+# Валерий Владимирович, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-14 17:30+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Dober Man, 2021\n"
+"POT-Creation-Date: 2022-05-06 15:51+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: Валерий Владимирович, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +65,7 @@ msgstr "Имя уже существует."
 msgid "Username must be between 3 and 32 characters"
 msgstr "Имя пользователя должно быть длинной 3-32 символа"
 
-#: ../../accounts/manager.go:432
+#: ../../accounts/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -100,7 +100,7 @@ msgstr "Масштабирование дисплея"
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Открыть"
 
@@ -238,24 +238,24 @@ msgstr "Добавить Bluetooth устройство"
 msgid "Pair"
 msgstr "Пара"
 
-#: ../../dock/app_entry_menu.go:116
+#: ../../dock/app_entry_menu.go:115
 msgid "Close All"
 msgstr "Закрыть Всё"
 
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
+#: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:171
 msgid "Force Quit"
 msgstr "Принудительный Выход"
 
-#: ../../dock/app_entry_menu.go:167
+#: ../../dock/app_entry_menu.go:175
 msgid "Dock"
-msgstr "Закрепить"
+msgstr "Док"
 
-#: ../../dock/app_entry_menu.go:177
+#: ../../dock/app_entry_menu.go:185
 msgid "Undock"
 msgstr "Открепить"
 
-#: ../../dock/app_entry_menu.go:187
+#: ../../dock/app_entry_menu.go:195
 msgid "All Windows"
 msgstr "Все Окна"
 
@@ -265,7 +265,7 @@ msgstr "Недостаточно места на диске, пожалуйст�
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
-msgstr "Выбор Программ"
+msgstr "Запуск программ"
 
 #: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Terminal"
@@ -360,102 +360,106 @@ msgid "Translation"
 msgstr "Перевод"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Grand search"
+msgid "Grand Search"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:59
+#: ../../keybinding/shortcuts/id_name_map.go:53
+msgid "Notification Center"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:60
 msgid "Switch Layout"
 msgstr "Переключить Раскладку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to left workspace"
 msgstr "Переключиться на левый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to right workspace"
 msgstr "Переключиться на правый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to upper workspace"
 msgstr "Переключиться на верхний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to lower workspace"
 msgstr "Переключиться на нижний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows"
 msgstr "Переключить похожие окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows in reverse"
 msgstr "Переключить похожие окна в обратном порядке"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows"
 msgstr "Переключить окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows in reverse"
 msgstr "Переключить окна в обратном порядке"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Show desktop"
 msgstr "Показать рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Maximize window"
 msgstr "Развернуть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Restore window"
 msgstr "Восстановить окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Minimize window"
 msgstr "Свернуть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Close window"
 msgstr "Закрыть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Move window"
 msgstr "Переместить окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Resize window"
 msgstr "Изменить размер окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to left workspace"
 msgstr "Переместить на левый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to right workspace"
 msgstr "Переместить на правый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to upper workspace"
 msgstr "Переместить на верхний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to lower workspace"
 msgstr "Переместить на нижний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
+#: ../../keybinding/shortcuts/id_name_map.go:153
 msgid "Display windows of all workspaces"
 msgstr "Показать окна всех рабочих столов"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of current workspace"
 msgstr "Показать окна текущего рабочего стола"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display workspace"
 msgstr "Отобразить рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:217
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "Переключить мониторы"
 
@@ -573,54 +577,53 @@ msgstr "%q успешно удалён"
 msgid "Failed to uninstall %q"
 msgstr "Не удалось удалить %q"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:469
+#: ../../network/manager_active_conn.go:474
 msgid "None"
 msgstr "Ничего"
 
-#: ../../network/manager_active_conn.go:444
+#: ../../network/manager_active_conn.go:476
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-бит. ключ"
 
-#: ../../network/manager_active_conn.go:446
+#: ../../network/manager_active_conn.go:478
 msgid "WPA/WPA2 Personal"
 msgstr "Персональный WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:448
+#: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:456
+#: ../../network/manager_active_conn.go:488
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:458
+#: ../../network/manager_active_conn.go:490
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:460
+#: ../../network/manager_active_conn.go:492
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:462
+#: ../../network/manager_active_conn.go:494
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:464
+#: ../../network/manager_active_conn.go:496
 msgid "Tunneled TLS"
 msgstr "Туннельный TLS "
 
-#: ../../network/manager_active_conn.go:466
+#: ../../network/manager_active_conn.go:498
 msgid "Protected EAP"
 msgstr "Защищенный EAP"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
-#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
+#: ../../network/manager_connection.go:365
 msgid "Wired Connection"
 msgstr "Проводное Соединение"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
+#: ../../network/manager_connection.go:404
 msgid "Wired Connection %v"
 msgstr ""
 
@@ -957,60 +960,60 @@ msgstr "Аутентификация на VPN-сервере не удалась
 msgid "The connection was deleted from settings"
 msgstr "Соединение было удалено из настроек."
 
-#: ../../network/state_handler.go:266
+#: ../../network/state_handler.go:271
 msgid "Enabling hotspot"
 msgstr "Включение точки доступа"
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:275
 msgid "Connecting %q"
 msgstr "Подключение %q"
 
-#: ../../network/state_handler.go:279
+#: ../../network/state_handler.go:284
 msgid "Hotspot enabled"
 msgstr "Точка доступа включена"
 
-#: ../../network/state_handler.go:281
+#: ../../network/state_handler.go:286
 msgid "%q connected"
 msgstr "%q соединено"
 
-#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:297 ../../network/state_handler.go:352
 msgid "Hotspot disabled"
 msgstr "Точка доступа отключена"
 
-#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
+#: ../../network/state_handler.go:354 ../../network/state_handler.go:376
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%q отсоединено"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:360
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Не удалось предоставить точку доступа, проверьте настройки dnsmasq"
 
-#: ../../network/state_handler.go:357
+#: ../../network/state_handler.go:362
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Не удалось соединить %q, пожалуйста держитесь ближе к беспроводному "
 "маршрутизатору."
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:364
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не удалось соединить %q, пожалуйста проверьте ваш беспроводной маршрутизатор"
 " или сетевой кабель."
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:368
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Не удалось подключиться, не удалось соединить %q, неправильный пароль"
 
-#: ../../network/state_handler.go:374
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "Для подключения к %q требуется пароль"
 
-#: ../../network/state_handler.go:376
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN сеть не найдена"
 
-#: ../../network/utils_dbus_nm.go:295
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "Неизвестный"
 
@@ -1053,48 +1056,48 @@ msgstr ""
 "\"%s\" не прошел проверку безопасности системы и не может быть запущен "
 "сейчас"
 
-#: ../../session/power/manager_events.go:201
+#: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Критически низкий заряд батареи"
 
-#: ../../session/power/manager_events.go:222
-#: ../../session/power/manager_events.go:227
-#: ../../session/power/manager_events.go:232
-#: ../../session/power/manager_events.go:237
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Низкий заряд батареи, пожалуйста подключите питание"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:419 ../../session/power/utils.go:426
+#: ../../session/power/utils.go:433 ../../session/power/utils.go:440
 msgid "Power settings changed"
 msgstr "Настройки питания изменены"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:464 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "Когда крышка закрыта,"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:468
 msgid "When pressing the power button, "
 msgstr "При нажатии на кнопку питания,"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:478 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "Ваш компьютер выключится"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:480 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "Ваш компьютер перейдет в режим ожидания"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:482
 msgid "your computer will hibernate"
 msgstr "Ваш компьютер будет находится в спящем режиме"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:484
 msgid "your monitor will turn off"
 msgstr "Ваш монитор будет выключен"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:486
 msgid "it will do nothing to your computer"
 msgstr "Ничего не делать с компьютером"
 

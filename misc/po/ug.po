@@ -4,21 +4,22 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+# 伊力亚斯 伊德日斯 <2032517177@qq.com>, 2020
+# مۇختەر مەخمۇت <yeganaaa@163.com>, 2020
 # Muhammadali Abliz <ordam2@163.com>, 2020
-# مۇختەر مەخمۇت <yeganaaa@163.com>, 2021
-# Bashqut <2250907458@qq.com>, 2021
-# 阿迪力 买买提明 <251078110@qq.com>, 2021
-# Ug HushBeg <HushBeg@163.com>, 2021
-# Cindy0514, 2021
+# Bashqut <2250907458@qq.com>, 2022
+# Ug HushBeg <HushBeg@163.com>, 2022
+# Cindy0514, 2022
+# 阿迪力 买买提明 <251078110@qq.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-14 17:30+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2021\n"
+"POT-Creation-Date: 2022-05-06 15:51+0800\n"
+"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2022\n"
 "Language-Team: Uyghur (https://www.transifex.com/linuxdeepin/teams/3617/ug/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgstr "بىرىنچى ھەرپ چوقۇم بىر ھەرپ ياكى سان بو�
 
 #: ../../accounts/checkers/username.go:71
 msgid "The username already exists"
-msgstr "بۇ ئابۇنت ئىسىمى مەۋجۇت"
+msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 
 #: ../../accounts/checkers/username.go:74
 msgid "The name already exists"
@@ -59,10 +60,11 @@ msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 msgid "Username must be between 3 and 32 characters"
 msgstr "ئىشلەتكۈچى ئىسمى 3 دىن 32 ھەرپ ئارىلىقىدا بولۇشى كېرەك"
 
-#: ../../accounts/manager.go:432
+#: ../../accounts/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
+"ئىشلەتكۈچى %sئاللىبۇرۇن مەۋجۇت، بۇرۇنقى سانلىق مەلۇماتلار ماس قەدەملەندى"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -87,20 +89,20 @@ msgstr "كۆرۈنۈش نىسبىتىنى تەڭشىمەكچى"
 
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
-msgstr "كۆرۈنىش كىچىكلىتىش"
+msgstr "ئېكران كىچىكلىتىش"
 
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s چەكلەنگەن"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
 msgid "Open"
-msgstr "ئېچىش"
+msgstr "ئوچۇق"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "بارماق ئىزىنى دەلىللەش مەغلۇپ بولدى"
+msgstr "بارماق ئىزىنى دەلىللەش مەغلۇب بولدى"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
@@ -144,7 +146,7 @@ msgstr "ھۆججەت ئەۋەتىش"
 #: ../../bluetooth/bluez_profile.go:37
 #: ../../system/bluetooth/bluez_profile.go:37
 msgid "Synchronization"
-msgstr "ماسقەدەم"
+msgstr "ماس قەدەملىك"
 
 #: ../../bluetooth/bluez_profile.go:38
 #: ../../system/bluetooth/bluez_profile.go:38
@@ -164,7 +166,7 @@ msgstr "ئۇچۇرلارنى زىيارەت قىلىش"
 #: ../../bluetooth/bluez_profile.go:41
 #: ../../system/bluetooth/bluez_profile.go:41
 msgid "Message notification"
-msgstr "ئۇچۇر ئۇقتۇرۇشى"
+msgstr "ئۇچۇر ئەسكەرتىشى"
 
 #: ../../bluetooth/obex_agent.go:339 ../../bluetooth/utils_notify.go:145
 #: ../../lastore/lastore.go:431
@@ -232,24 +234,24 @@ msgstr "كۆك چىش ئۈسكۈنىسىنى قوشۇڭ"
 msgid "Pair"
 msgstr "جۈپلەش"
 
-#: ../../dock/app_entry_menu.go:116
+#: ../../dock/app_entry_menu.go:115
 msgid "Close All"
 msgstr "ھەممىسىنى ئۆچۈرۈش"
 
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
+#: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:171
 msgid "Force Quit"
 msgstr "مەجبۇرىي چېكىنىش"
 
-#: ../../dock/app_entry_menu.go:167
+#: ../../dock/app_entry_menu.go:175
 msgid "Dock"
 msgstr "ۋەزىپە ئىستونى"
 
-#: ../../dock/app_entry_menu.go:177
+#: ../../dock/app_entry_menu.go:185
 msgid "Undock"
-msgstr "قالدۇقلىرىنى چىقىرىۋېتىش"
+msgstr "تۇرغۇنلارنى چىقىرىۋېتىش"
 
-#: ../../dock/app_entry_menu.go:187
+#: ../../dock/app_entry_menu.go:195
 msgid "All Windows"
 msgstr "بارلىق كۆزنەكلەر"
 
@@ -287,11 +289,11 @@ msgstr "تېرمىنال كۆزنىكى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "ئېكران رەسىم كېسىش"
+msgstr "ئېكران رەسىمى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "پۈتۈن ئېكران رەسىم كېسىش"
+msgstr "پۈتۈن ئېكران رەسىمگە تۇتۇش"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
@@ -331,7 +333,7 @@ msgstr "سىستېما نازارەتچىسى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
-msgstr "Deepin رەڭ ئالغۇ"
+msgstr "Deepin تاللىغۇچى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
@@ -354,108 +356,112 @@ msgid "Translation"
 msgstr "تېكىست تەرجىمىسى"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
-msgid "Grand search"
+msgid "Grand Search"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:59
+#: ../../keybinding/shortcuts/id_name_map.go:53
+msgid "Notification Center"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:60
 msgid "Switch Layout"
 msgstr "ئورۇنلاشتۇرۇشنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to left workspace"
 msgstr "سول تەرەپتىكى خىزمەت رايونىنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to right workspace"
 msgstr "ئوڭ تەرەپتىكى خىزمەت رايونىنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to upper workspace"
 msgstr "ئۈستى تەرەپتىكى خىزمەت رايونىنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to lower workspace"
 msgstr "ئاستى تەرەپتىكى خىزمەت رايونىنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:83
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Switch similar windows"
 msgstr "ئوخشاش كۆزنەكلەرنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows in reverse"
 msgstr "ئوخشاش كۆزنەكلەرنى تەتۈرسىگە ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch windows"
 msgstr "كۆزنەكلەرنى ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows in reverse"
 msgstr "كۆزنەكلەرنى تەتۈرسىگە ئالماشتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Show desktop"
 msgstr "ئۈستەليۈزىنى كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:107
 msgid "Maximize window"
 msgstr "كۆزنەكنى چوڭايتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Restore window"
 msgstr "كۆزنەكنى ئەسلى چوڭلۇقىغا قايتۇرۇش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:109
+#: ../../keybinding/shortcuts/id_name_map.go:110
 msgid "Minimize window"
 msgstr "كۆزنەكنى كىچىكلىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Close window"
 msgstr "كۆزنەكنى تاقاش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Move window"
 msgstr "كۆزنەكنى يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Resize window"
 msgstr "كۆزنەكنىڭ چوڭلۇقىنى ئۆزگەرتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:127
+#: ../../keybinding/shortcuts/id_name_map.go:128
 msgid "Move to left workspace"
 msgstr "سول خىزمەت رايونىغا يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to right workspace"
 msgstr "ئوڭ خىزمەت رايونىغا يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to upper workspace"
 msgstr "ئۈستى خىزمەت رايونىغا يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to lower workspace"
 msgstr "ئاستى خىزمەت رايونىغا يۆتكەش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:152
-msgid "Display windows of all workspaces"
-msgstr "خىزمەت رايوندىكى ھەممە كۆزنەكنى كۆرسىتىش"
-
 #: ../../keybinding/shortcuts/id_name_map.go:153
+msgid "Display windows of all workspaces"
+msgstr "كۆزنەكنى بارلىق خىزمەت رايونلىرىدا كۆرسىتىش"
+
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of current workspace"
 msgstr "كۆزنەكنى نۆۋەتتىكى خىزمەت رايونلىرىدا كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display workspace"
 msgstr "خىزمەت رايونىنى كۆرسىتىش"
 
-#: ../../keybinding/shortcuts/id_name_map.go:217
+#: ../../keybinding/shortcuts/id_name_map.go:216
 msgid "Switch monitors"
 msgstr "كۆپ ئېكران ئالماشتۇرۇش"
 
 #: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
-msgstr "سىستېما تىلىنى ئۆزگەرتىش ئۈچۈن سالاھىيەت دەلىللەش كېرەك"
+msgstr "سىستېما تىلىنى ئۆزگەرتىش ئاۋۋال سالاھىيەت دەلىللەشنى تەلەپ قىلىدۇ"
 
 #: ../../langselector/locale.go:152
 msgid ""
@@ -511,7 +517,7 @@ msgstr "6 سائەتتىن كېيىن ئەسكەرتسۇن"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
-msgstr "%q قاچىلاندى"
+msgstr "%q قاچىلاش مۇۋەپپەقيەتلىك بولدى"
 
 #: ../../lastore/notify.go:109
 msgid "%q failed to install."
@@ -523,7 +529,7 @@ msgstr "ئۆچۈرۈلدى"
 
 #: ../../lastore/notify.go:119
 msgid "Failed to remove the app"
-msgstr "ئۆچۈرەلمىدى"
+msgstr "ئۆچۈرۈلمىدى"
 
 #: ../../lastore/notify.go:126
 msgid ""
@@ -568,54 +574,53 @@ msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
 msgid "Failed to uninstall %q"
 msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:469
+#: ../../network/manager_active_conn.go:474
 msgid "None"
 msgstr "قۇرۇق"
 
-#: ../../network/manager_active_conn.go:444
+#: ../../network/manager_active_conn.go:476
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit پارول"
 
-#: ../../network/manager_active_conn.go:446
+#: ../../network/manager_active_conn.go:478
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2شەخسى نۇسخىسى"
 
-#: ../../network/manager_active_conn.go:448
+#: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
 msgstr "WPA3شەخسى نۇسخىسى"
 
-#: ../../network/manager_active_conn.go:456
+#: ../../network/manager_active_conn.go:488
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:458
+#: ../../network/manager_active_conn.go:490
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:460
+#: ../../network/manager_active_conn.go:492
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:462
+#: ../../network/manager_active_conn.go:494
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:464
+#: ../../network/manager_active_conn.go:496
 msgid "Tunneled TLS"
 msgstr "تونېلللانغان TLS"
 
-#: ../../network/manager_active_conn.go:466
+#: ../../network/manager_active_conn.go:498
 msgid "Protected EAP"
 msgstr "قوغدالغان EAP"
 
 #: ../../network/manager_connection.go:361
-#: ../../network/manager_connection.go:365 ../../system/network/utils.go:279
-#: ../../system/network/utils.go:283 ../../system/network/utils.go:351
+#: ../../network/manager_connection.go:365
 msgid "Wired Connection"
 msgstr "سىملىق تور ئۇلىنىشى"
 
-#: ../../network/manager_connection.go:404 ../../system/network/utils.go:353
+#: ../../network/manager_connection.go:404
 msgid "Wired Connection %v"
 msgstr "سىملىق ئۇلىنىش%v"
 
@@ -673,8 +678,7 @@ msgstr "پارول تەلەپ قىلىنغان، ئەمما تەمىنلەنمى
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
-msgstr ""
-"802.1X تېرمىنالىنىڭ زىيارەت نۇقتىسى ياكى دەلىللەش مۇلازىمىتىرىدىن ئۈزۈلدى"
+msgstr "802.1X客户端从接入点或认证服务器断开连接"
 
 #: ../../network/state_handler.go:47
 msgid "Configuration of the 802.1X supplicant failed"
@@ -686,7 +690,7 @@ msgstr "802.1X تېرمىنالى بىنورمال چېكىندى ياكى مە�
 
 #: ../../network/state_handler.go:49
 msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "802.1X تېرمىنالىنىڭ دەلىللەش ۋاقتى ئۇزۇن بولۇپ كەتتى"
+msgstr "802.1X تېرمىنالىنىڭ دەلىللەش ۋاقتى ئۇزۇن"
 
 #: ../../network/state_handler.go:50
 msgid "The PPP service failed to start within the allowed time"
@@ -754,7 +758,7 @@ msgstr "ئۇلانمىدى"
 
 #: ../../network/state_handler.go:66
 msgid "Modem initialization failed"
-msgstr "مودېلنى  دەسلەپكى قوزغىتىش مەغلۇپ بولدى"
+msgstr "مودېلنى  دەسلەپكى قوزغىتىش مەغلۇب بولدى"
 
 #: ../../network/state_handler.go:67
 msgid "Failed to select the specified GSM APN"
@@ -878,7 +882,7 @@ msgstr "مودېل تەييار بولدى"
 
 #: ../../network/state_handler.go:99
 msgid "SIM PIN is incorrect"
-msgstr "SIM كارتىنىڭ PIN كودى خاتا"
+msgstr "SIM كارتىنىڭ PIN نومۇرى خاتا"
 
 #: ../../network/state_handler.go:100
 msgid "New connection activation is enqueuing"
@@ -899,7 +903,7 @@ msgstr "تور سىمى چىقىرىۋېتىلدى"
 #: ../../network/state_handler.go:106
 msgid "Please make sure SIM card has been inserted with mobile network signal"
 msgstr ""
-"SIM كارتىنىڭ سېلىنغانلىقىنى ۋە كۆچمە تور سىگنالى بارلىقىنى جەزملەشتۈرۈڭ"
+"SIM كارتىنىڭ قىستۇرۇلغانلىقىنى ۋە كۆچمە تور سىگنالى بارلىقىنى جەزملەشتۈرۈڭ"
 
 #: ../../network/state_handler.go:107
 msgid ""
@@ -959,56 +963,56 @@ msgstr "VPN مۇلازىمىتېرىغا دەلىللەش مەغلۇپ بولد�
 msgid "The connection was deleted from settings"
 msgstr "بۇ ئۇلىنىش تەڭشەكتىن ئۆچۈرۋىتىلىپتۇ"
 
-#: ../../network/state_handler.go:266
+#: ../../network/state_handler.go:271
 msgid "Enabling hotspot"
 msgstr "تور تارقىتىشنى ئېچىۋاتىدۇ "
 
-#: ../../network/state_handler.go:270
+#: ../../network/state_handler.go:275
 msgid "Connecting %q"
-msgstr "%q غا ئۇلىنىۋاتىدۇ"
+msgstr "%qغا ئۇلىنىۋاتىدۇ"
 
-#: ../../network/state_handler.go:279
+#: ../../network/state_handler.go:284
 msgid "Hotspot enabled"
-msgstr "تور تارقىتىلدى "
+msgstr "تور تارقىتىلدى"
 
-#: ../../network/state_handler.go:281
+#: ../../network/state_handler.go:286
 msgid "%q connected"
 msgstr "%qغا ئۇلاندى"
 
-#: ../../network/state_handler.go:292 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:297 ../../network/state_handler.go:352
 msgid "Hotspot disabled"
-msgstr "تور تارقىتىش تاقالدى "
+msgstr "تور تارقىتىش تاقالدى"
 
-#: ../../network/state_handler.go:349 ../../network/state_handler.go:371
+#: ../../network/state_handler.go:354 ../../network/state_handler.go:376
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
 msgstr "%qدىن ئۈزۈلدى"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:360
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "تور تارقىتالمىدى ،dnsmasq غا مۇناسىۋەتلىك تەڭشەكلەرنى تەكشۈرۈپ بېقىڭ"
 
-#: ../../network/state_handler.go:357
+#: ../../network/state_handler.go:362
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qغا ئۇلانمىدى، سىمسىز روتېرغا يېقىنلىشىپ سىناپ بېقىڭ"
 
-#: ../../network/state_handler.go:359
+#: ../../network/state_handler.go:364
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qغا ئۇلانمىدى. روتېرنى ياكى تور سىمىنى تەكشۈرۈڭ"
 
-#: ../../network/state_handler.go:363
+#: ../../network/state_handler.go:368
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "ئۇلانمىدى، %qغا كىرەلمىدى، پارول خاتا"
 
-#: ../../network/state_handler.go:374
+#: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr "%qغا ئۇلاش ئۈچۈن پارول كېتىدۇ"
 
-#: ../../network/state_handler.go:376
+#: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN تورنى تاپالمىدى"
 
-#: ../../network/utils_dbus_nm.go:295
+#: ../../network/utils_dbus_nm.go:293
 msgid "Unknown"
 msgstr "نامەلۇم"
 
@@ -1020,7 +1024,7 @@ msgstr "ئايروپىلان ھالىتى قوزغىتىلدى."
 #: ../../network/utils_notify.go:193 ../../network/utils_notify.go:211
 #: ../../network/utils_notify.go:214 ../../network/utils_notify.go:303
 msgid "Disconnected"
-msgstr "ئۈزۈلدى "
+msgstr "ئۇلانمىدى"
 
 #: ../../network/utils_notify.go:193
 msgid "Access Point mode is not supported by this device."
@@ -1049,48 +1053,48 @@ msgstr "ئۇلاندى"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "«%s»سىستېما بىخەتەرلىك تەكشۈرۈشىدىن ئۆتەلمىدى، ئىجرا قىلغىلى بولمايدۇ"
 
-#: ../../session/power/manager_events.go:201
+#: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "باتارېيەدە توك تۈگىدى"
 
-#: ../../session/power/manager_events.go:222
-#: ../../session/power/manager_events.go:227
-#: ../../session/power/manager_events.go:232
-#: ../../session/power/manager_events.go:237
+#: ../../session/power/manager_events.go:223
+#: ../../session/power/manager_events.go:228
+#: ../../session/power/manager_events.go:233
+#: ../../session/power/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "باتارېيەدە توك ئاز قالدى، توكقا چېتىڭ"
 
-#: ../../session/power/utils.go:378 ../../session/power/utils.go:382
-#: ../../session/power/utils.go:386 ../../session/power/utils.go:390
+#: ../../session/power/utils.go:419 ../../session/power/utils.go:426
+#: ../../session/power/utils.go:433 ../../session/power/utils.go:440
 msgid "Power settings changed"
 msgstr "توك تەڭشىكىدە ئۆزگىرىش بولدى"
 
-#: ../../session/power/utils.go:405 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:464 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
 msgstr "«خاتىرە كومپيۇتېرنىڭ ئېكرانى يېپىلغاندا»"
 
-#: ../../session/power/utils.go:409
+#: ../../session/power/utils.go:468
 msgid "When pressing the power button, "
 msgstr "«قوزغىتىش كۇنۇپكىسىنى باسقاندا»"
 
-#: ../../session/power/utils.go:419 ../../session/power/utils_test.go:12
+#: ../../session/power/utils.go:478 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
 msgstr "تاقاشقا ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:421 ../../session/power/utils_test.go:13
+#: ../../session/power/utils.go:480 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
 msgstr "كۈتۈش ھالىتىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:423
+#: ../../session/power/utils.go:482
 msgid "your computer will hibernate"
 msgstr "ئۇيقۇ ھالىتىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:425
+#: ../../session/power/utils.go:484
 msgid "your monitor will turn off"
 msgstr "ئېكراننى تاقاشقا ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:427
+#: ../../session/power/utils.go:486
 msgid "it will do nothing to your computer"
 msgstr "ھېچقانداق مەشغۇلات قىلماسلىققا ئۆزگەرتىش"
 

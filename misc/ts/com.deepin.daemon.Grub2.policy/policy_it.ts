@@ -4,7 +4,7 @@
 		<message>
 			<location filename="com.deepin.daemon.Grub2!message" line="0"/>
 			<source>Authentication is required to change the grub2 configuration</source>
-			<translation>Autentificazione necessaria per modificare la configurazione di Grub2</translation>
+			<translation>Autenticazione necessaria per modificare la configurazione di Grub2</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!description" line="0"/>
