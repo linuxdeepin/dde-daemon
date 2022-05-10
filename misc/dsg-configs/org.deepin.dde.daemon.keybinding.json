@@ -1,0 +1,16 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+      "wirelessControlEnable": {
+          "value": false,
+          "serial": 0,
+          "flags": [],
+          "name": "wirelessControlEnable",
+          "name[zh_CN]": "通过DDE控制实现wifi热键功能",
+          "description": "Wifi shortcut effected by DDE software",
+          "permissions": "readwrite",
+          "visibility": "private"
+      }
+  }
+}

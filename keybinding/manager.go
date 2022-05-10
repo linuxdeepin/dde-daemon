@@ -75,6 +75,8 @@ const (
 	CapslockKey      = 58
 	NumlockKey       = 69
 	KeyPress         = 1
+
+	configManagerId = "org.desktopspec.ConfigManager"
 )
 
 const ( // power按键事件的响应
@@ -153,6 +155,11 @@ type Manager struct {
 	switchKbdLayoutState SKLState
 	sklWaitQuit          chan int
 
+	// dsg config
+	wifiControlEnable bool
+
+	configManagerPath dbus.ObjectPath
+
 	//nolint
 	signals *struct {
 		Added, Deleted, Changed struct {
@@ -203,6 +210,23 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		m.waylandOutputMgr = kwayland.NewOutputManagement(sessionBus)
 		m.login1Manager = login1.NewManager(sysBus)
 	}
+
+	// 加载dsg配置
+	systemConnObj := sysBus.Object(configManagerId, "/")
+	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.keybinding", "").Store(&m.configManagerPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	err = dbusutil.NewMatchRuleBuilder().Type("signal").
+		PathNamespace(string(m.configManagerPath)).
+		Interface("org.desktopspec.ConfigManager.Manager").
+		Member("valueChanged").Build().AddTo(sysBus)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.wifiControlEnable = m.getwirelessControlEnable()
 
 	m.init()
 
@@ -349,8 +373,8 @@ var kwinSysActionCmdMap = map[string]string{
 	"Show/Hide the dock":    "show-dock",
 
 	// cmd
-	"Calculator":         "calculator",          // XF86Calculator
-	"Search":             "search",              // XF86Search
+	"Calculator":          "calculator",          // XF86Calculator
+	"Search":              "search",              // XF86Search
 	"Notification Center": "notification-center", // Meta M
 
 	"ScreenshotScroll": "screenshot-scroll",
@@ -453,7 +477,7 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 							if err != nil {
 								logger.Warning(err)
 							}
-						}					
+						}
 					}
 				}
 			}
@@ -537,6 +561,15 @@ func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) error {
 					m.handleKeyEventByWayland("numlock")
 				}
 			}
+		}
+	})
+
+	// 监听dsg配置变化
+	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
+	}, func(sig *dbus.Signal) {
+		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
+			m.wifiControlEnable = m.getwirelessControlEnable()
 		}
 	})
 	return nil
@@ -718,8 +751,14 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 
 	} else if action.Type == shortcuts.ActionTypeToggleWireless {
 		// check if allow set wireless
-		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) {
-			err := m.airplane.EnableWifi(0, false)
+		// and check if Wifi shortcut effected by DDE software
+		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) && m.wifiControlEnable {
+			enabled, err := m.airplane.WifiEnabled().Get(0)
+			if err != nil {
+				logger.Warningf("get wireless enabled failed, err: %v", err)
+				return
+			}
+			err = m.airplane.EnableWifi(0, !enabled)
 			if err != nil {
 				logger.Warningf("set wireless enabled failed, err: %v", err)
 				return
@@ -1092,4 +1131,19 @@ func (m *Manager) eliminateKeystrokeConflict() {
 
 	m.shortcutManager.ConflictingKeystrokes = nil
 	m.shortcutManager.EliminateConflictDone = true
+}
+
+func (m *Manager) getwirelessControlEnable() bool {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		return true
+	}
+	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
+	var value bool
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, "wirelessControlEnable").Store(&value)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return value
 }
