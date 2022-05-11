@@ -478,6 +478,9 @@ func (sm *ShortcutManager) ungrabKeystroke(ks *Keystroke, dummy bool) {
 }
 
 func (sm *ShortcutManager) grabShortcut(shortcut Shortcut) {
+	if _useWayland && shortcut.GetId() == "launcher" {
+		return
+	}
 	//logger.Debug("grabShortcut shortcut id:", shortcut.GetId())
 	for _, ks := range shortcut.GetKeystrokes() {
 		dummy := dummyGrab(shortcut, ks)
