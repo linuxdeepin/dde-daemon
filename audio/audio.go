@@ -213,7 +213,7 @@ func newAudio(service *dbusutil.Service) *Audio {
 	return a
 }
 
-func startPulseaudio() error {
+func startPulseaudio(count int) error {
 	var errBuf bytes.Buffer
 	cmd := exec.Command(cmdSystemctl, "--user", "start", "pulseaudio")
 	cmd.Stderr = &errBuf
@@ -225,18 +225,16 @@ func startPulseaudio() error {
 	errBuf.Reset()
 
 	err = exec.Command(cmdPulseaudio, "--check").Run()
-	if err == nil {
-		return nil
+	if err != nil {
+		logger.Warning("pulseaudio check error", err)
+		if count > 0 {
+			logger.Info("retry start pulseaudio after 500ms")
+			time.Sleep(500 * time.Millisecond)
+			return startPulseaudio(count - 1)
+		}
+		return errors.New("failed to start pulseaudio")
 	}
 
-	cmd = exec.Command(cmdPulseaudio, "--start")
-	cmd.Stderr = &errBuf
-	err = cmd.Run()
-	if err != nil {
-		logger.Warningf("failed to start pulseaudio via `pulseaudio --start`: err: %v, stderr: %s",
-			err, errBuf.Bytes())
-		return xerrors.Errorf("cmd `pulseaudio --start` error: %w", err)
-	}
 	return nil
 }
 

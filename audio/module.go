@@ -52,7 +52,7 @@ func (*Module) GetDependencies() []string {
 }
 
 func (m *Module) start() error {
-	err := startPulseaudio() // 为了保证蓝牙模块依赖audio模块,并且audio模块启动pulseaudio完成.
+	err := startPulseaudio(5) // 为了保证蓝牙模块依赖audio模块,并且audio模块启动pulseaudio完成.
 	if err != nil {
 		err = xerrors.Errorf("failed to start pulseaudio: %w", err)
 		logger.Warning(err)
