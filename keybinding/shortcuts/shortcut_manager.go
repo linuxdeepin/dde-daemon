@@ -1077,7 +1077,12 @@ func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager, wmObj wm.Wm) {
 			id := shortcut.GetId()
 			keystrokesStrv := shortcut.getKeystrokesStrv()
 			action := shortcut.GetAction()
-			arg, _ := action.Arg.(*ActionExecCmdArg)
+			arg, ok := action.Arg.(*ActionExecCmdArg)
+			if !ok {
+				logger.Warning(ErrTypeAssertionFail)
+				return
+			}
+
 			logger.Debugf("customshort: %+v", arg.Cmd)
 			ok, err := setShortForWayland(shortcut, wmObj)
 			if !ok {
