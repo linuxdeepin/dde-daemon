@@ -1021,11 +1021,11 @@ func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64
 
 	// pam_unix/passverify.c
 	curDays := time.Now().Unix() / secondsPerDay
-	daysLeft := spLastChg + spMax - curDays
+	daysLeft := spLastChg + spMax - curDays + 1
 
-	if daysLeft < 0 {
+	if daysLeft <= 0 {
 		return expiredStatusExpiredAlready, daysLeft, nil
-	} else if spWarn > daysLeft {
+	} else if spWarn >= daysLeft {
 		return expiredStatusExpiredSoon, daysLeft, nil
 	}
 	return expiredStatusNormal, daysLeft, nil
