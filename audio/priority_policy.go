@@ -8,7 +8,8 @@ import (
 
 const (
 	PortTypeBluetooth    int = iota // 蓝牙音频
-	PortTypeHeadset                 // USB和3.5mm 耳麦
+	PortTypeHeadset                 // 3.5mm 耳麦
+	PortTypeUsb                     // USB
 	PortTypeBuiltin                 // 内置扬声器和话筒
 	PortTypeHdmi                    // HDMI
 	PortTypeLineIO                  // 线缆输入输出
@@ -58,6 +59,10 @@ func DetectPortType(card *pulse.Card, port *pulse.CardPortInfo) int {
 		hasKeyword(stringList, "front-mic") ||
 		hasKeyword(stringList, "headphone") {
 		return PortTypeHeadset
+	}
+
+	if hasKeyword(stringList, "usb") {
+		return PortTypeUsb
 	}
 
 	if hasKeyword(stringList, "hdmi") {

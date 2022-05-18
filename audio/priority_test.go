@@ -51,12 +51,14 @@ func Test_IsInputTypeAfter(t *testing.T) {
 	assert.False(t, pr.IsInputTypeAfter(PortTypeHdmi, PortTypeBluetooth))
 	assert.False(t, pr.IsInputTypeAfter(PortTypeBuiltin, PortTypeHeadset))
 	assert.False(t, pr.IsInputTypeAfter(PortTypeHdmi, PortTypeBuiltin))
+	assert.False(t, pr.IsInputTypeAfter(PortTypeBuiltin, PortTypeUsb))
 
 	assert.True(t, pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeHeadset))
 	assert.True(t, pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeBuiltin))
 	assert.True(t, pr.IsInputTypeAfter(PortTypeBluetooth, PortTypeHdmi))
 	assert.True(t, pr.IsInputTypeAfter(PortTypeHeadset, PortTypeBuiltin))
 	assert.True(t, pr.IsInputTypeAfter(PortTypeBuiltin, PortTypeHdmi))
+	assert.True(t, pr.IsInputTypeAfter(PortTypeUsb, PortTypeBuiltin))
 }
 
 func Test_IsOutputTypeAfter(t *testing.T) {
@@ -67,10 +69,12 @@ func Test_IsOutputTypeAfter(t *testing.T) {
 	assert.False(t, pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeBluetooth))
 	assert.False(t, pr.IsOutputTypeAfter(PortTypeBuiltin, PortTypeHeadset))
 	assert.False(t, pr.IsOutputTypeAfter(PortTypeHdmi, PortTypeBuiltin))
+	assert.False(t, pr.IsOutputTypeAfter(PortTypeBuiltin, PortTypeUsb))
 
 	assert.True(t, pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeHeadset))
 	assert.True(t, pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeBuiltin))
 	assert.True(t, pr.IsOutputTypeAfter(PortTypeBluetooth, PortTypeHdmi))
 	assert.True(t, pr.IsOutputTypeAfter(PortTypeHeadset, PortTypeBuiltin))
 	assert.True(t, pr.IsOutputTypeAfter(PortTypeBuiltin, PortTypeHdmi))
+	assert.True(t, pr.IsOutputTypeAfter(PortTypeUsb, PortTypeBuiltin))
 }
