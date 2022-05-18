@@ -417,7 +417,7 @@ func (a *Audio) shouldAutoPause() bool {
 	}
 
 	switch DetectPortType(card.core, &port) {
-	case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO:
+	case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO, PortTypeUsb:
 		return true
 	default:
 		return false
