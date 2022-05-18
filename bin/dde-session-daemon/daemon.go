@@ -25,14 +25,14 @@ import (
 	"os"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
-	"github.com/linuxdeepin/go-gir/glib-2.0"
-	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/gsettings"
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-api/session"
 	"github.com/linuxdeepin/dde-daemon/calltrace"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	glib "github.com/linuxdeepin/go-gir/glib-2.0"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gsettings"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 //go:generate dbusutil-gen em -type SessionDaemon
@@ -126,10 +126,12 @@ func (s *SessionDaemon) initModules() {
 	part2ModuleNames := []string{
 		"network",
 		"audio",
+		"audio1",
 		"appearance",
 		"screensaver",
 		"sessionwatcher",
-		"power", // need screensaver and sessionwatcher
+		"power",  // need screensaver and sessionwatcher
+		"power1", // need screensaver and sessionwatcher
 		"uadpagent",
 		"service-trigger",
 		"clipboard",

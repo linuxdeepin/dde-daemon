@@ -33,13 +33,12 @@ import (
 )
 
 const (
-	themeDBusPath      = dbusPath + "/Theme"
-	themeDBusInterface = dbusInterface + ".Theme"
-)
+	themeDBusPathV20      = dbusPathV20 + "/Theme"
+	themeDBusInterfaceV20 = dbusInterfaceV20 + ".Theme"
 
-func (*Theme) GetInterfaceName() string {
-	return themeDBusInterface
-}
+	themeDBusPathV23      = dbusPathV23 + "/Theme"
+	themeDBusInterfaceV23 = dbusInterfaceV23 + ".Theme"
+)
 
 func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string) *dbus.Error {
 	theme.service.DelayAutoQuit()

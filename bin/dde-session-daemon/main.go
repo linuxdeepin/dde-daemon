@@ -32,6 +32,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"runtime"
@@ -44,7 +45,7 @@ import (
 	"github.com/linuxdeepin/dde-daemon/loader"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
@@ -236,7 +237,6 @@ func main() {
 	// Ensure each module and mainloop in the same thread
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-
 	if _options.list != "" {
 		err = app.listModule(_options.list)
 		if err != nil {
@@ -251,10 +251,15 @@ func main() {
 	} else {
 		app.execDefaultAction()
 	}
-
 	if err != nil {
 		logger.Warning(err)
 		os.Exit(1)
+	}
+	logger.Info("systemd-notify --ready")
+	cmd := exec.Command("systemd-notify", "--ready")
+	err = cmd.Start()
+	if err != nil {
+		logger.Warning(err)
 	}
 
 	err = migrateUserEnv()
@@ -324,7 +329,7 @@ type pamEnvKeyValue struct {
 }
 
 func loadPamEnv(filename string) ([]pamEnvKeyValue, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := ioutil.ReadFile(filename) //#nosec G304
 	if err != nil {
 		return nil, err
 	}
@@ -353,7 +358,7 @@ func savePamEnv(filename string, pamEnv []pamEnvKeyValue) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer f.Close() //#nosec G307
 
 	bw := bufio.NewWriterSize(f, 256)
 	for _, kv := range pamEnv {

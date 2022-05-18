@@ -42,22 +42,31 @@ func run() error {
 
 	_ = gsettings.StartMonitor()
 
-	serverObj, err := service.NewServerObject(dbusPath, m)
+	err = service.ExportExt(dbusPathV20, dbusInterfaceV20, m)
+	if err != nil {
+		logger.Error("failed to export:", err)
+		return err
+	}
+
+	err = service.ExportExt(dbusPathV23, dbusInterfaceV23, m)
+	if err != nil {
+		logger.Error("failed to export:", err)
+		return err
+	}
+
+	err = service.SetWriteCallback(m, "Enabled", m.enabledWriteCb)
 	if err != nil {
 		return err
 	}
 
-	err = serverObj.SetWriteCallback(m, "Enabled", m.enabledWriteCb)
+	err = service.RequestName(DBusServiceNameV20)
 	if err != nil {
+		logger.Error("failed to request name:", err)
 		return err
 	}
-	err = serverObj.Export()
+	err = service.RequestName(DBusServiceNameV23)
 	if err != nil {
-		return err
-	}
-
-	err = service.RequestName(DBusServiceName)
-	if err != nil {
+		logger.Error("failed to request name:", err)
 		return err
 	}
 

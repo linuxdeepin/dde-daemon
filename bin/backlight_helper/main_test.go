@@ -27,11 +27,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestManager_GetInterfaceName(t *testing.T) {
-	m := Manager{}
-	assert.Equal(t, dbusInterface, m.GetInterfaceName())
-}
-
 func Test_getBrightnessFilename(t *testing.T) {
 	type args struct {
 		type0 byte

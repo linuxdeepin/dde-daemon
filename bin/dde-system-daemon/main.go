@@ -24,11 +24,13 @@ import (
 
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts"
+	_ "github.com/linuxdeepin/dde-daemon/accounts1"
 	_ "github.com/linuxdeepin/dde-daemon/apps"
 	_ "github.com/linuxdeepin/dde-daemon/fprintd"
 	_ "github.com/linuxdeepin/dde-daemon/image_effect"
 	_ "github.com/linuxdeepin/dde-daemon/system/airplane_mode"
 	_ "github.com/linuxdeepin/dde-daemon/system/bluetooth"
+	_ "github.com/linuxdeepin/dde-daemon/system/bluetooth1"
 	_ "github.com/linuxdeepin/dde-daemon/system/display"
 	_ "github.com/linuxdeepin/dde-daemon/system/gesture"
 	_ "github.com/linuxdeepin/dde-daemon/system/hostname"
@@ -37,18 +39,19 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/lang"
 	_ "github.com/linuxdeepin/dde-daemon/system/network"
 	_ "github.com/linuxdeepin/dde-daemon/system/power"
+	_ "github.com/linuxdeepin/dde-daemon/system/power1"
 	_ "github.com/linuxdeepin/dde-daemon/system/power_manager"
 	_ "github.com/linuxdeepin/dde-daemon/system/swapsched"
 	_ "github.com/linuxdeepin/dde-daemon/system/systeminfo"
 	_ "github.com/linuxdeepin/dde-daemon/system/timedated"
 	_ "github.com/linuxdeepin/dde-daemon/system/uadp"
 
+	"github.com/linuxdeepin/dde-daemon/loader"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type Daemon
@@ -137,4 +140,3 @@ func main() {
 func (*Daemon) GetInterfaceName() string {
 	return dbusInterface
 }
-

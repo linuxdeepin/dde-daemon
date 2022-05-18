@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.deepin.daemon.Power1
+Exec=/usr/lib/deepin-daemon/dde-session-daemon
+SystemdService=dde-session-daemon.service

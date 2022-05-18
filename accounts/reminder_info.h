@@ -8,7 +8,7 @@
 #define BTMPX_FILE "/var/log/btmp"
 #endif
 
-int count_utmpx(const char *file,
+int _count_utmpx(const char *file,
                 const char *user,
                 struct timeval *since,
                 struct utmpx *current,

@@ -35,9 +35,13 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "com.deepin.daemon.helper.Backlight"
-	dbusPath        = "/com/deepin/daemon/helper/Backlight"
-	dbusInterface   = "com.deepin.daemon.helper.Backlight"
+	dbusServiceNameV20 = "com.deepin.daemon.helper.Backlight"
+	dbusPathV20        = "/com/deepin/daemon/helper/Backlight"
+	dbusInterfaceV20   = "com.deepin.daemon.helper.Backlight"
+
+	dbusServiceNameV23 = "org.deepin.daemon.helper.Backlight1"
+	dbusPathV23        = "/org/deepin/daemon/helper/Backlight1"
+	dbusInterfaceV23   = "org.deepin.daemon.helper.Backlight1"
 )
 
 const (
@@ -50,10 +54,6 @@ type Manager struct {
 }
 
 var logger = log.NewLogger("backlight_helper")
-
-func (*Manager) GetInterfaceName() string {
-	return dbusInterface
-}
 
 func (m *Manager) SetBrightness(type0 byte, name string, value int32) *dbus.Error {
 	m.service.DelayAutoQuit()
@@ -98,20 +98,29 @@ func getBrightnessFilename(type0 byte, name string) (string, error) {
 }
 
 func main() {
+	m := &Manager{}
 	service, err := dbusutil.NewSystemService()
 	if err != nil {
 		logger.Fatal("failed to new system service:", err)
 	}
+	m.service = service
 
-	m := &Manager{
-		service: service,
-	}
-	err = service.Export(dbusPath, m)
+	// v20
+	err = service.ExportExt(dbusPathV20, dbusInterfaceV20, m)
 	if err != nil {
 		logger.Fatal("failed to export:", err)
 	}
+	err = service.RequestName(dbusServiceNameV20)
+	if err != nil {
+		logger.Fatal("failed to request name:", err)
+	}
 
-	err = service.RequestName(dbusServiceName)
+	// v23
+	err = service.ExportExt(dbusPathV23, dbusInterfaceV23, m)
+	if err != nil {
+		logger.Fatal("failed to export:", err)
+	}
+	err = service.RequestName(dbusServiceNameV23)
 	if err != nil {
 		logger.Fatal("failed to request name:", err)
 	}

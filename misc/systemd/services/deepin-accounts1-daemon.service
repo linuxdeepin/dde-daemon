@@ -1,5 +1,5 @@
 [Unit]
-Description=Accounts Service
+Description=Accounts1 Service
 
 # In order to avoid races with identity-providing services like SSSD or
 # winbind, we need to ensure that Accounts Service starts after
@@ -9,7 +9,7 @@ Wants=nss-user-lookup.target
 
 [Service]
 Type=dbus
-BusName=com.deepin.daemon.Accounts
+BusName=org.deepin.daemon.Accounts1
 ExecStart=/usr/lib/deepin-daemon/dde-system-daemon
 StandardOutput=syslog
 Environment=GVFS_DISABLE_FUSE=1

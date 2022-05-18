@@ -25,9 +25,9 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-api/inhibit_hint"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 var _g *Grub2
@@ -43,27 +43,57 @@ func RunAsDaemon() {
 	ihObj.SetName("Control Center")
 	ihObj.SetIcon("preferences-system")
 
-	err = service.Export(dbusPath, _g)
+	err = service.ExportExt(dbusPathV20, dbusInterfaceV20, _g)
 	if err != nil {
 		logger.Fatal("failed to export grub2:", err)
 	}
 
-	err = service.Export(themeDBusPath, _g.theme)
+	err = service.ExportExt(dbusPathV23, dbusInterfaceV23, _g)
+	if err != nil {
+		logger.Fatal("failed to export grub2:", err)
+	}
+
+	err = service.ExportExt(themeDBusPathV20, themeDBusInterfaceV20, _g.theme)
 	if err != nil {
 		logger.Fatal("failed to export grub2 theme:", err)
 	}
 
-	err = service.Export(editAuthDBusPath, _g.editAuth)
+	err = service.ExportExt(themeDBusPathV23, themeDBusInterfaceV23, _g.theme)
+	if err != nil {
+		logger.Fatal("failed to export grub2 theme:", err)
+	}
+
+	err = service.ExportExt(editAuthDBusPathV20, editAuthDBusInterfaceV20, _g.editAuth)
 	if err != nil {
 		logger.Fatal("failed to export grub2 edit auth:", err)
 	}
 
-	err = ihObj.Export(service)
+	err = service.ExportExt(editAuthDBusPathV23, editAuthDBusInterfaceV23, _g.editAuth)
+	if err != nil {
+		logger.Fatal("failed to export grub2 edit auth:", err)
+	}
+
+	// err = ihObj.Export(service)
+	// if err != nil {
+	// 	logger.Warning("failed to export inhibit hint:", err)
+	// }
+
+	err = service.ExportExt(dbusInhibitorPathV20, dbusInhibitorInterfaceV20, ihObj)
 	if err != nil {
 		logger.Warning("failed to export inhibit hint:", err)
 	}
 
-	err = service.RequestName(dbusServiceName)
+	err = service.ExportExt(dbusInhibitorPathV23, dbusInhibitorInterfaceV23, ihObj)
+	if err != nil {
+		logger.Warning("failed to export inhibit hint:", err)
+	}
+
+	err = service.RequestName(dbusServiceNameV20)
+	if err != nil {
+		logger.Fatal("failed to request name:", err)
+	}
+
+	err = service.RequestName(dbusServiceNameV23)
 	if err != nil {
 		logger.Fatal("failed to request name:", err)
 	}

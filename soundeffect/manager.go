@@ -29,7 +29,7 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-api/soundutils"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/strv"
@@ -43,9 +43,13 @@ const (
 	gsKeyEnabled        = "enabled"
 	gsKeySoundTheme     = "sound-theme"
 
-	DBusServiceName        = "com.deepin.daemon.SoundEffect"
-	dbusPath               = "/com/deepin/daemon/SoundEffect"
-	dbusInterface          = DBusServiceName
+	DBusServiceNameV20 = "com.deepin.daemon.SoundEffect"
+	dbusPathV20        = "/com/deepin/daemon/SoundEffect"
+	dbusInterfaceV20   = DBusServiceNameV20
+	DBusServiceNameV23 = "org.deepin.daemon.SoundEffect1"
+	dbusPathV23        = "/org/deepin/daemon/SoundEffect1"
+	dbusInterfaceV23   = DBusServiceNameV23
+
 	allowPlaySoundMaxCount = 3
 )
 
@@ -106,10 +110,6 @@ func getSoundNames() ([]string, error) {
 	}
 
 	return result, nil
-}
-
-func (*Manager) GetInterfaceName() string {
-	return dbusInterface
 }
 
 // deprecated

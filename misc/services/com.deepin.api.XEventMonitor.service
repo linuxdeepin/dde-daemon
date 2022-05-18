@@ -1,3 +1,4 @@
 [D-BUS Service]
 Name=com.deepin.api.XEventMonitor
-Exec=/usr/lib/deepin-daemon/dde-session-daemon
+Exec=/usr/lib/deepin-daemon/dde-session-daemon -l info
+SystemdService=dde-session-daemon.service

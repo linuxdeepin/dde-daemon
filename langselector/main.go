@@ -22,7 +22,7 @@ package langselector
 import (
 	"time"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/log"
@@ -30,7 +30,8 @@ import (
 )
 
 const (
-	dbusServiceName = "com.deepin.daemon.LangSelector"
+	dbusServiceNameV20 = "com.deepin.daemon.LangSelector"
+	dbusServiceNameV23 = "org.deepin.daemon.LangSelector1"
 )
 
 var (
@@ -47,12 +48,23 @@ func Run() {
 	if err != nil {
 		logger.Fatal("failed to new langSelector:", err)
 	}
-	err = service.Export(dbusPath, lang)
+	// v20
+	err = service.ExportExt(dbusPathV20, dbusInterfaceV20, lang)
 	if err != nil {
 		logger.Fatal("failed to export:", err)
 	}
 
-	err = service.RequestName(dbusServiceName)
+	err = service.RequestName(dbusServiceNameV20)
+	if err != nil {
+		logger.Fatal("failed to request name:", err)
+	}
+	// v23
+	err = service.ExportExt(dbusPathV23, dbusInterfaceV23, lang)
+	if err != nil {
+		logger.Fatal("failed to export:", err)
+	}
+
+	err = service.RequestName(dbusServiceNameV23)
 	if err != nil {
 		logger.Fatal("failed to request name:", err)
 	}

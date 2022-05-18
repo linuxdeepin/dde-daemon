@@ -24,22 +24,21 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-api/language_support"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (
-	dbusPath      = "/com/deepin/daemon/LangSelector"
-	dbusInterface = "com.deepin.daemon.LangSelector"
+	dbusPathV20      = "/com/deepin/daemon/LangSelector"
+	dbusInterfaceV20 = "com.deepin.daemon.LangSelector"
+
+	dbusPathV23      = "/org/deepin/daemon/LangSelector1"
+	dbusInterfaceV23 = "org.deepin.daemon.LangSelector1"
 
 	localeIconStart    = "notification-change-language-start"
 	localeIconFailed   = "notification-change-language-failed"
 	localeIconFinished = "notification-change-language-finished"
 )
-
-func (*LangSelector) GetInterfaceName() string {
-	return dbusInterface
-}
 
 // Set user desktop environment locale, the new locale will work after relogin.
 // (Notice: this locale is only for the current user.)

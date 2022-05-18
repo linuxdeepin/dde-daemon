@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.deepin.daemon.Accounts1
+Exec=/usr/lib/deepin-daemon/dde-system-daemon
+User=root
+SystemdService=deepin-accounts1-daemon.service

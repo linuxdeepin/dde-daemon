@@ -4,7 +4,15 @@ import (
 	"syscall"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+)
+
+const (
+	dbusInhibitorPathV20      = "/com/deepin/InhibitHint"
+	dbusInhibitorInterfaceV20 = "com.deepin.InhibitHint"
+
+	dbusInhibitorPathV23      = "/org/deepin/InhibitHint1"
+	dbusInhibitorInterfaceV23 = "org.deepin.InhibitHint1"
 )
 
 func (m *Grub2) enableShutdown() {
@@ -21,7 +29,7 @@ func (m *Grub2) enableShutdown() {
 
 func (m *Grub2) preventShutdown() {
 	if m.inhibitFd == -1 {
-		fd, err := inhibit("shutdown", dbusServiceName,
+		fd, err := inhibit("shutdown", dbusServiceNameV23,
 			"Updating the system, please shut down or reboot later.")
 		logger.Infof("prevent shutdown: fd:%v\n", fd)
 		if err != nil {

@@ -34,9 +34,13 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "com.deepin.daemon.Greeter"
-	dbusPath        = "/com/deepin/daemon/Greeter"
-	dbusInterface   = dbusServiceName
+	dbusServiceNameV20 = "com.deepin.daemon.Greeter"
+	dbusPathV20        = "/com/deepin/daemon/Greeter"
+	dbusInterfaceV20   = "com.deepin.daemon.Greeter"
+
+	dbusServiceNameV23 = "org.deepin.daemon.Greeter1"
+	dbusPathV23        = "/org/deepin/daemon/Greeter1"
+	dbusInterfaceV23   = "org.deepin.daemon.Greeter1"
 )
 
 const (
@@ -171,10 +175,6 @@ func updateXSettingsConfig() {
 	if err != nil {
 		logger.Warning(err)
 	}
-}
-
-func (*Manager) GetInterfaceName() string {
-	return dbusInterface
 }
 
 func isInteger(str string) bool {

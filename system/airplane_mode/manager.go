@@ -9,9 +9,13 @@ import (
 )
 
 const (
-	dbusServiceName = "com.deepin.daemon.AirplaneMode"
-	dbusPath        = "/com/deepin/daemon/AirplaneMode"
-	dbusInterface   = dbusServiceName
+	dbusServiceNameV20 = "com.deepin.daemon.AirplaneMode"
+	dbusPathV20        = "/com/deepin/daemon/AirplaneMode"
+	dbusInterfaceV20   = dbusServiceNameV20
+
+	dbusServiceNameV23 = "org.deepin.daemon.AirplaneMode1"
+	dbusPathV23        = "/org/deepin/daemon/AirplaneMode1"
+	dbusInterfaceV23   = dbusServiceNameV23
 
 	actionId = "com.deepin.daemon.airplane-mode.enable-disable-any"
 )
@@ -51,10 +55,6 @@ func newManager(service *dbusutil.Service) *Manager {
 		logger.Warningf("init manager failed, err: %v", err)
 	}
 	return mgr
-}
-
-func (mgr *Manager) GetInterfaceName() string {
-	return dbusInterface
 }
 
 func (mgr *Manager) DumpState() *dbus.Error {

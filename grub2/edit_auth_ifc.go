@@ -29,13 +29,12 @@ import (
 )
 
 const (
-	editAuthDBusPath      = dbusPath + "/EditAuthentication"
-	editAuthDBusInterface = dbusInterface + ".EditAuthentication"
-)
+	editAuthDBusPathV20      = dbusPathV20 + "/EditAuthentication"
+	editAuthDBusInterfaceV20 = dbusInterfaceV20 + ".EditAuthentication"
 
-func (e *EditAuth) GetInterfaceName() string {
-	return editAuthDBusInterface
-}
+	editAuthDBusPathV23      = dbusPathV23 + "/EditAuthentication"
+	editAuthDBusInterfaceV23 = dbusInterfaceV23 + ".EditAuthentication"
+)
 
 func (e *EditAuth) Enable(sender dbus.Sender, username, password string) *dbus.Error {
 	e.service.DelayAutoQuit()

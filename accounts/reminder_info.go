@@ -56,7 +56,7 @@ func getLoginReminderInfo(user string) (res LoginReminderInfo) {
 	var current C.struct_utmpx
 	var last C.struct_utmpx
 
-	C.count_utmpx(C.CString(C.WTMPX_FILE), C.CString(user), nil, &current, &last)
+	C._count_utmpx(C.CString(C.WTMPX_FILE), C.CString(user), nil, &current, &last)
 
 	var last_tv C.struct_timeval
 	var last_tv_p *C.struct_timeval
@@ -65,7 +65,7 @@ func getLoginReminderInfo(user string) (res LoginReminderInfo) {
 		last_tv.tv_usec = C.long(last.ut_tv.tv_usec)
 		last_tv_p = &last_tv
 	}
-	res.FailCountSinceLastLogin = int(C.count_utmpx(C.CString(C.BTMPX_FILE), C.CString(user), last_tv_p, nil, nil))
+	res.FailCountSinceLastLogin = int(C._count_utmpx(C.CString(C.BTMPX_FILE), C.CString(user), last_tv_p, nil, nil))
 
 	res.CurrentLogin = genLoginUtmpx(current)
 	res.LastLogin = genLoginUtmpx(last)

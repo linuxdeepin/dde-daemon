@@ -25,24 +25,24 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (
-	dbusServiceName = "com.deepin.daemon.Grub2"
-	dbusPath        = "/com/deepin/daemon/Grub2"
-	dbusInterface   = "com.deepin.daemon.Grub2"
+	dbusServiceNameV20 = "com.deepin.daemon.Grub2"
+	dbusPathV20        = "/com/deepin/daemon/Grub2"
+	dbusInterfaceV20   = "com.deepin.daemon.Grub2"
+
+	dbusServiceNameV23 = "org.deepin.daemon.Grub2"
+	dbusPathV23        = "/org/deepin/daemon/Grub2"
+	dbusInterfaceV23   = "org.deepin.daemon.Grub2"
 
 	polikitActionIdCommon               = "com.deepin.daemon.Grub2"
 	polikitActionIdPrepareGfxmodeDetect = "com.deepin.daemon.grub2.prepare-gfxmode-detect"
 
 	timeoutMax = 10
 )
-
-func (*Grub2) GetInterfaceName() string {
-	return dbusInterface
-}
 
 // GetSimpleEntryTitles return entry titles only in level one and will
 // filter out some useless entries such as sub-menus and "memtest86+".
