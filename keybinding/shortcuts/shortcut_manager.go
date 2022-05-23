@@ -151,7 +151,7 @@ type ShortcutManager struct {
 	ConflictingKeystrokes []*Keystroke
 	EliminateConflictDone bool
 
-	WaylandCustomShortMap map[string]string
+	WaylandCustomShortCutMap map[string]string
 }
 
 type KeyEvent struct {
@@ -171,7 +171,7 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		keyKeystrokeMap:       make(map[Key]*Keystroke),
 		layoutChanged:         make(chan struct{}),
 		pinyinEnabled:         isZH(),
-		WaylandCustomShortMap: make(map[string]string),
+		WaylandCustomShortCutMap: make(map[string]string),
 	}
 
 	ss.xRecordEventHandler = NewXRecordEventHandler(keySymbols)
@@ -1077,19 +1077,24 @@ func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager, wmObj wm.Wm) {
 			id := shortcut.GetId()
 			keystrokesStrv := shortcut.getKeystrokesStrv()
 			action := shortcut.GetAction()
-			arg, ok := action.Arg.(*ActionExecCmdArg)
-			if !ok {
-				logger.Warning(ErrTypeAssertionFail)
-				return
+			var cmd string
+			switch arg := action.Arg.(type) {
+			case *ActionExecCmdArg:
+				cmd = arg.Cmd
+			case string:
+				cmd = arg
 			}
-
-			logger.Debugf("customshort: %+v", arg.Cmd)
+			if cmd == "" {
+				logger.Warning(ErrTypeAssertionFail, id, action)
+				continue
+			}
+			logger.Debugf("customshort: %+v", cmd)
 			ok, err := setShortForWayland(shortcut, wmObj)
 			if !ok {
 				logger.Warning("failed to setShortForWayland:", err)
-				return
+				continue
 			}
-			sm.WaylandCustomShortMap[id] = arg.Cmd
+			sm.WaylandCustomShortCutMap[id] = cmd
 			cs := newCustomShort(id, id, keystrokesStrv, wmObj, csm)
 			sm.addWithoutLock(cs)
 		}

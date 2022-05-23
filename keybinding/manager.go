@@ -437,15 +437,23 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 				} else {
 					m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
 					if m.shortcutCmd == "" {
-						m.shortcutCmd = m.shortcutManager.WaylandCustomShortMap[m.shortcutKeyCmd]
+						m.shortcutCmd = m.shortcutManager.WaylandCustomShortCutMap[m.shortcutKeyCmd]
 					}
+					logger.Debug("WaylandCustomShortCutMap", m.shortcutCmd)
 					if m.shortcutCmd == "" {
 						m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
 					} else {
-						err := m.execCmd(m.shortcutCmd, true)
-						if err != nil {
-							logger.Warning(err)
-						}
+						if strings.HasSuffix(m.shortcutCmd, ".desktop") {
+							err := m.runDesktopFile(m.shortcutCmd)
+							if err != nil {
+								logger.Warning(err)
+							}
+						} else {
+							err := m.execCmd(m.shortcutCmd, true)
+							if err != nil {
+								logger.Warning(err)
+							}
+						}					
 					}
 				}
 			}
