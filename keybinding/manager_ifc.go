@@ -278,7 +278,8 @@ func (m *Manager) AddCustomShortcut(name, action, keystroke string) (id string,
 			busErr = dbusutil.ToError(err)
 			return
 		}
-		m.shortcutManager.WaylandCustomShortMap[name] = action
+		logger.Debug("WaylandCustomShortCutMap add", name)
+		m.shortcutManager.WaylandCustomShortCutMap[name] = action
 	}
 	m.shortcutManager.Add(shortcut)
 	m.emitShortcutSignal(shortcutSignalAdded, shortcut)
@@ -300,7 +301,7 @@ func (m *Manager) DeleteCustomShortcut(id string) *dbus.Error {
 		if err != nil {
 			return dbusutil.ToError(errors.New("RemoveAccel failed, id: " + id))
 		}
-		delete(m.shortcutManager.WaylandCustomShortMap, id)
+		delete(m.shortcutManager.WaylandCustomShortCutMap, id)
 	}
 	m.emitShortcutSignal(shortcutSignalDeleted, shortcut)
 	return nil
