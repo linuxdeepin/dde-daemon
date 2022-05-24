@@ -276,6 +276,22 @@ func (m *Manager) doAuthenticate(username, password string, pid uint32) {
 	}
 
 	err = handler.Authenticate(0)
+	if err != nil {
+		log.Println("Failed to authenticate:", err)
+		m.sendEvent(Failure, pid, username, err.Error())
+		handler = nil
+		debug.FreeOSMemory()
+		return
+	}
+
+	err = handler.AcctMgmt(0)
+	if err != nil {
+		log.Println("Failed to authenticate:", err)
+		m.sendEvent(Failure, pid, username, err.Error())
+	} else {
+		log.Println("Authenticate success")
+		m.sendEvent(Success, pid, username, "Authenticated")
+	}
 
 	id := getId(pid, username)
 	m.authLocker.Lock()
@@ -285,13 +301,7 @@ func (m *Manager) doAuthenticate(username, password string, pid uint32) {
 		delete(m.authUserTable, id)
 	}
 	m.authLocker.Unlock()
-	if err != nil {
-		log.Println("Failed to authenticate:", err)
-		m.sendEvent(Failure, pid, username, err.Error())
-	} else {
-		log.Println("Authenticate success")
-		m.sendEvent(Success, pid, username, "Authenticated")
-	}
+
 	handler = nil
 	debug.FreeOSMemory()
 }
