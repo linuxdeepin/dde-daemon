@@ -274,6 +274,15 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		permHwAddress, _ := nmDevWireless.PermHwAddress().Get(0)
 		dev.SupportHotspot = isWirelessDeviceSupportHotspot(permHwAddress)
 
+		if !dev.SupportHotspot {
+			//WirelessCapabilities: The capabililities of wireless device 此属性包含了wifi网卡的所有特性
+			//根据nm手册和源码，此处判断网卡是否支持ap模式修改为此方式判断
+			wirelessCapabilities, _ := nmDevWireless.WirelessCapabilities().Get(0)
+			if wirelessCapabilities&nm.NM_WIFI_DEVICE_CAP_AP != 0 {
+				dev.SupportHotspot = true
+			}
+		}
+
 		err = nmDevWireless.HwAddress().ConnectChanged(func(hasValue bool, value string) {
 			if !hasValue {
 				return
