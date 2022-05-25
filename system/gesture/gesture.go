@@ -316,7 +316,6 @@ func handleKeyboardEvent(key, state C.uint) {
 
 //export handleMouseEvent
 func handleMouseEvent(ty uint32, state C.uint, value C.double) {
-	logger.Info("handleMouseEvent========")
 	err := _m.service.Emit(_m, "MouseEvent", uint32(state), uint32(ty))
 	if err != nil {
 		logger.Warning("Failed to handleMouseEvent:", err)
