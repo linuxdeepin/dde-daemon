@@ -216,7 +216,10 @@ func (m *Manager) FindUserById(uid string) (user string, busErr *dbus.Error) {
 func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) {
 	pwd, err := passwd.GetPasswdByName(name)
 	if err != nil {
-		return "", dbusutil.ToError(err)
+		logger.Warning(err)
+		pwd = &passwd.Passwd{
+			Name: name,
+		}
 	}
 
 	m.usersMapMu.Lock()
