@@ -18,8 +18,8 @@ Name:           %{sname}
 %else
 Name:           dde-daemon
 %endif
-Version:        5.13.78
-Release:        1
+Version:        5.13.85.9
+Release:        1%{?dist}.02
 Summary:        Daemon handling the DDE session settings
 License:        GPLv3
 %if 0%{?fedora}
@@ -66,9 +66,10 @@ BuildRequires:  golang-x-sys-devel
 BuildRequires:  golang-x-xerrors-devel
 BuildRequires:  golang-x-image-devel
 %else
-BuildRequires:  gocode
-%systemd_requires
-
+BuildRequires:  libddcutil-devel
+BuildRequires:  resize-devel
+BuildRequires:  gorm-devel
+BuildRequires:  inflection-devel
 %endif
 BuildRequires:  compiler(go-compiler)
 BuildRequires:  deepin-gettext-tools
@@ -96,6 +97,28 @@ BuildRequires:  golang(gir/gio-2.0)
 BuildRequires:  golang(gir/glib-2.0)
 BuildRequires:  golang(gir/gobject-2.0)
 BuildRequires:  golang(gir/gudev-1.0)
+BuildRequires:  golang-github-fsnotify-fsnotify-devel
+BuildRequires:  golang-x-sys-devel
+BuildRequires:  golang-x-xerrors-devel
+BuildRequires:  golang-dbus
+BuildRequires:  golang-github-stretchr-testify-devel
+BuildRequires:  dde-api-devel
+BuildRequires:  golang-github-mozillazg-pinyin
+BuildRequires:  golang-github-lofanmi-pinyin
+BuildRequires:  golang-github-kelvins-sunrisesunset-devel
+BuildRequires:  golang-github-axgle-mahonia-devel
+BuildRequires:  golang-github-cryptix-wav-devel
+BuildRequires:  golang-x-image-devel
+BuildRequires:  golang-github-rickb777-date-devel
+BuildRequires:  golang-github-gosexy-gettext-devel
+BuildRequires:  golang-github-msteinert-pam-devel
+BuildRequires:  golang-github-davecgh-go-spew-devel
+BuildRequires:  golang-github-mattn-go-sqlite3-devel
+BuildRequires:  golang-github-smartystreets-goconvey-devel
+BuildRequires:  golang-github-teambition-rrule-go-devel
+BUildRequires:  deepin-desktop-schemas
+BUildRequires:  dde-api-devel
+
 
 Requires:       bluez-libs
 Requires:       deepin-desktop-base
@@ -166,6 +189,11 @@ EOF
 sed -i 's/google-chrome/chromium-browser/g' misc/dde-daemon/mime/data.json
 
 %build
+%ifarch loongarch64
+export CGO_ENABLED=1
+export GOOS=linux
+%endif
+
 BUILDID="0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \n')"
 %if 0%{?fedora}
 export GOPATH="$(pwd)/build:%{gopath}"
@@ -175,6 +203,11 @@ export GOPATH=/usr/share/gocode
 %make_build GO_BUILD_FLAGS=-trimpath GOBUILD="go build -compiler gc -ldflags \"-B $BUILDID\""
 
 %install
+%ifarch loongarch64
+export CGO_ENABLED=1
+export GOOS=linux
+%endif
+
 BUILDID="0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \n')"
 %if 0%{?fedora}
 export GOPATH="$(pwd)/build:%{gopath}"
@@ -275,9 +308,12 @@ fi
 %endif
 
 %changelog
-* Wed Oct 27 2021 Zhang taikun <zhangtaikun@uniontech.com> - 5.13.78-1.01
+* Fri Apr 29 2022 liuzhilin <liuzhilin@uniontech.com> - 5.13.85.8-1.02
+- rebuild: support for c8-dde
+
+* Wed Oct 27 2021 Zhang taikun <zhangtaikun@uniontech.com> - 5.13.85.8-1.01
 - Remove requires option dde-session-ui
 
-* Wed Oct 13 2021 Zhang taikun <zhangtaikun@uniontech.com> - 5.13.78-1
-- Update to 5.13.78
+* Wed Oct 13 2021 Zhang taikun <zhangtaikun@uniontech.com> - 5.13.85.8-1
+- Update to 5.13.85.8
 
