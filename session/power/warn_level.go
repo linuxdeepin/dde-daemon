@@ -60,10 +60,10 @@ func getWarnLevel(config *warnLevelConfig, onBattery bool,
 	logger.Debugf("_getWarnLevel onBattery %v, percentage %v, timeToEmpty %v, usePercentage %v",
 		onBattery, percentage, timeToEmpty, usePercentageForPolicy)
 	if usePercentageForPolicy {
+		// 电源管理模块异常时获取到百分比会一直为0，此时设置告警等级为WarnLevelNone
 		if percentage == 0.0 {
 			return WarnLevelNone
 		}
-
 		// 当电池电量到达低电量阈值且达到系统固定低电量提醒值时，才去弹低电量提醒通知
 		if percentage <= config.LowPowerNotifyThreshold {
 			if percentage <= config.ActionPercentage {
