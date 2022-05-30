@@ -135,12 +135,6 @@ func (a *Audio) isCardIdValid(cardId uint32) bool {
 }
 
 func (a *Audio) needAutoSwitchInputPort() bool {
-	// 同端口切换次数超出限制(切换失败时反复切换同一端口)
-	if a.inputAutoSwitchCount >= 10 {
-		logger.Debug("input auto switch tried too many times")
-		return false
-	}
-
 	inputs := GetPriorityManager().Input
 	firstPort := inputs.GetTheFirstPort()
 
@@ -154,6 +148,13 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 	if a.defaultSource == nil {
 		logger.Debug("current source is nil")
 		return true
+	}
+
+	// 同端口切换次数超出限制(切换失败时反复切换同一端口)
+	if a.inputAutoSwitchCount >= 10 &&
+		(a.inputCardName == firstPort.CardName && a.inputPortName == firstPort.PortName) {
+		logger.Debug("input auto switch tried too many times")
+		return false
 	}
 
 	// 当前端口就是优先级最高的端口
@@ -171,12 +172,6 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 }
 
 func (a *Audio) needAutoSwitchOutputPort() bool {
-	// 同端口切换次数超出限制(切换失败时反复切换同一端口)
-	if a.outputAutoSwitchCount >= a.outputAutoSwitchCountMax {
-		logger.Debug("input auto switch tried too many times")
-		return false
-	}
-
 	outputs := GetPriorityManager().Output
 	firstPort := outputs.GetTheFirstPort()
 
@@ -190,6 +185,13 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 	if a.defaultSink == nil {
 		logger.Debug("default sink is nil")
 		return true
+	}
+
+	// 同端口切换次数超出限制(切换失败时反复切换同一端口)
+	if a.outputAutoSwitchCount >= a.outputAutoSwitchCountMax &&
+		(a.outputCardName == firstPort.CardName && a.outputPortName == firstPort.PortName) {
+		logger.Debug("output auto switch tried too many times")
+		return false
 	}
 
 	// 当前端口就是优先级最高的端口
