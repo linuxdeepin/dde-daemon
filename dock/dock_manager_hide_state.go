@@ -50,8 +50,8 @@ func hasIntersection(rectA, rectB *Rect) bool {
 	x1, y1, w1, h1 := rectB.Pieces()
 	ax := max(x, x1)
 	ay := max(y, y1)
-	bx := min(x + w, x1 + w1)
-	by := min(y + h, y1 + h1)
+	bx := min(x+w, x1+w1)
+	by := min(y+h, y1+h1)
 	return ax < bx && ay < by
 }
 
@@ -64,13 +64,13 @@ func (m *Manager) hasIntersectionK(rectA, rectB *Rect) bool {
 	x1, y1, w1, h1 := rectB.Pieces()
 	ax := max(x, x1)
 	ay := max(y, y1)
-	bx := min(x + w, x1 + w1)
-	by := min(y + h, y1 + h1)
-	position_val := m.Position.Get()
-	logger.Debug("position_val=", position_val)
-	if position_val == int32(positionRight) || position_val == int32(positionLeft) {
+	bx := min(x+w, x1+w1)
+	by := min(y+h, y1+h1)
+	positionVal := m.Position.Get()
+	logger.Debug("positionVal=", positionVal)
+	if positionVal == int32(positionRight) || positionVal == int32(positionLeft) {
 		return ax <= bx && ay < by
-	} else if position_val == int32(positionTop) || position_val == int32(positionBottom) {
+	} else if positionVal == int32(positionTop) || positionVal == int32(positionBottom) {
 		return ax < bx && ay <= by
 	} else {
 		return ax < bx && ay < by
@@ -207,8 +207,24 @@ func (m *Manager) shouldHideOnSmartHideModeX(activeWin x.Window) (bool, error) {
 		return false, nil
 	}
 
-	list := m.getActiveWinGroup(activeWin)
-	logger.Debug("shouldHideOnSmartHideMode: activeWinGroup is", list)
+	isShowDesktop, err := ewmh.GetShowingDesktop(globalXConn).Reply(globalXConn)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	// 当显示桌面时，不去隐藏任务栏
+	if isShowDesktop {
+		return false, nil
+	}
+
+	list, err := ewmh.GetClientListStacking(globalXConn).Reply(globalXConn)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	logger.Debug("shouldHideOnSmartHideMode: current window stack list", list)
+
+	// 当激活的窗口有变化时，去遍历当前的窗口栈中的窗口，而不只是激活的窗口，看是否有窗口和任务栏显示有重叠
 	for _, win := range list {
 		over, err := m.isWindowDockOverlap(win)
 		if err != nil {
