@@ -29,7 +29,7 @@ import (
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -81,20 +81,20 @@ func (m *Manager) isIgnoreRepeat(name string) bool {
 
 func (m *Manager) setAccelForWayland(gsettings *gio.Settings, wmObj wm.Wm) {
 	for _, id := range gsettings.ListKeys() {
-        var accelJson string
+		var accelJson string
 		var err error
 		if id == "screenshot-window" {
 			accelJson = `{"Id":"screenshot-window","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
 		} else if id == "launcher" {
-			accelJson = `{"Id":"launcher","Accels":["Super_L"]}`  // wayland左右super对应的都是Super_L
+			accelJson = `{"Id":"launcher","Accels":["Super_L"]}` // wayland左右super对应的都是Super_L
 		} else if id == "system_monitor" {
 			accelJson = `{"Id":"system_monitor","Accels":["<Crtl><Alt>Escape"]}`
 		} else {
-				accelJson, err = util.MarshalJSON(util.KWinAccel{
-					Id:         id,
-					Keystrokes: gsettings.GetStrv(id),
-				})
-				if err != nil {
+			accelJson, err = util.MarshalJSON(util.KWinAccel{
+				Id:         id,
+				Keystrokes: gsettings.GetStrv(id),
+			})
+			if err != nil {
 				logger.Warning("failed to get json:", err)
 				continue
 			}
@@ -492,8 +492,7 @@ func (m *Manager) SetNumLockState(state int32) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
-	err := setNumLockState(m.conn, m.keySymbols, NumLockState(state))
-	return dbusutil.ToError(err)
+	return dbusutil.ToError(setNumLockX11(m.conn, m.keySymbols, NumLockState(state)))
 }
 
 func (m *Manager) SearchShortcuts(query string) (shortcuts string, busErr *dbus.Error) {

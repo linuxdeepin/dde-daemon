@@ -22,15 +22,16 @@ package keybinding
 import (
 	"errors"
 	"fmt"
-	"github.com/godbus/dbus"
 	"os"
 	"time"
 
+	"github.com/godbus/dbus"
+
+	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/test"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
-	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 // NumLockState 数字锁定键状态
@@ -139,7 +140,7 @@ func setNumLockWl(wl kwayland.OutputManagement, conn *x.Conn, state NumLockState
 }
 
 // 设置 NumLock 数字锁定键状态
-func setNumLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols, state NumLockState) error {
+func setNumLockX11(conn *x.Conn, keySymbols *keysyms.KeySymbols, state NumLockState) error {
 	logger.Debug("setNumLockState", state)
 	if !(state == NumLockOff || state == NumLockOn) {
 		return errors.New("invalid num lock state")
@@ -154,6 +155,15 @@ func setNumLockState(conn *x.Conn, keySymbols *keysyms.KeySymbols, state NumLock
 		return changeNumLockState(conn, keySymbols)
 	}
 	return nil
+}
+
+// 设置 NumLock 数字锁定键状态
+func setNumLockState(wl kwayland.OutputManagement, conn *x.Conn, keySymbols *keysyms.KeySymbols, state NumLockState) error {
+	if _useWayland {
+		return setNumLockWl(wl, conn, state)
+	}
+
+	return setNumLockX11(conn, keySymbols, state)
 }
 
 // 设置 CapsLock 大小写锁定键状态
