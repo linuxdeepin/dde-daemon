@@ -1,3 +1,9 @@
+dde-daemon (6.0.0.0) UNRELEASED; urgency=medium
+
+  * 6.0.0.0 pre-release
+
+ --  <tanfeng@uniontech.com>  Wed, 01 Jun 2022 11:14:28 +0800
+
 dde-daemon (3.0.18) unstable; urgency=low
 
   * Autobuild Tag 3.0.18 
