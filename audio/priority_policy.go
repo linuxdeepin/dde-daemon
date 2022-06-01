@@ -158,7 +158,7 @@ func (pp *PriorityPolicy) sortPorts() {
 			type2 := port2.PortType
 
 			// type1优先级比type2低，交换
-			if pp.GetPreferType(type1, type2) == type2 {
+			if type1 != type2 && pp.GetPreferType(type1, type2) == type2 {
 				pp.Ports[j], pp.Ports[j+1] = pp.Ports[j+1], pp.Ports[j]
 				logger.Debugf("swap <%s:%s> and <%s:%s>",
 					pp.Ports[j].CardName, pp.Ports[j].PortName,
