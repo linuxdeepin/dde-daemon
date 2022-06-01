@@ -597,24 +597,16 @@ func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
 			// 保存新状态到 gsettings
 			m.NumLockState.Set(int32(state))
 		}
-		err = setNumLockState(m.conn, m.keySymbols, state)
+
+		err = setNumLockState(m.waylandOutputMgr, m.conn, m.keySymbols, state)
 		if err != nil {
 			logger.Warning("setNumLockState failed:", err)
 		}
 	} else {
-		if _useWayland {
-			if saveStateEnabled {
-				err := setNumLockWl(m.waylandOutputMgr, m.conn, nlState)
-				if err != nil {
-					logger.Warning("setNumLockWl failed:", err)
-				}
-			}
-		} else {
-			if saveStateEnabled {
-				err := setNumLockState(m.conn, m.keySymbols, nlState)
-				if err != nil {
-					logger.Warning("setNumLockState failed:", err)
-				}
+		if saveStateEnabled {
+			err := setNumLockState(m.waylandOutputMgr, m.conn, m.keySymbols, nlState)
+			if err != nil {
+				logger.Warning("setNumLockState failed:", err)
 			}
 		}
 	}
