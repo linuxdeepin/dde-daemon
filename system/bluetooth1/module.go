@@ -42,6 +42,8 @@ func (*module) GetDependencies() []string {
 var _bt *SysBluetooth
 
 func (m *module) Start() error {
+	return nil
+
 	if _bt != nil {
 		return nil
 	}
