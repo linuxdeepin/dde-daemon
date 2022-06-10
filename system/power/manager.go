@@ -29,11 +29,11 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/powersupply"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/dde-api/powersupply"
-	"github.com/linuxdeepin/dde-api/powersupply/battery"
 )
 
 var noUEvent bool
@@ -86,6 +86,9 @@ type Manager struct {
 
 	// 开启节能模式时降低亮度的百分比值
 	PowerSavingModeBrightnessDropPercent uint32 `prop:"access:rw"`
+
+	// 开启节能模式时保存的数据
+	PowerSavingModeBrightnessData string `prop:"access:rw"`
 
 	// CPU频率调节模式，支持powersave和performance
 	CpuGovernor string
@@ -448,7 +451,7 @@ func (m *Manager) saveConfig() error {
 	m.PropsMu.RUnlock()
 
 	dir := filepath.Dir(configFile)
-	err := os.MkdirAll(dir, 0755)
+	err := os.MkdirAll(dir, 0755) // #nosec G301
 	if err != nil {
 		return err
 	}
@@ -457,7 +460,7 @@ func (m *Manager) saveConfig() error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(configFile, content, 0644)
+	return ioutil.WriteFile(configFile, content, 0644) // #nosec G306
 }
 
 func (m *Manager) doSetMode(mode string) error {
@@ -466,7 +469,10 @@ func (m *Manager) doSetMode(mode string) error {
 	case "balance": // governor=performance boost=false
 		m.setPropPowerSavingModeEnabled(false)
 
-		m.doSetCpuGovernor("performance")
+		err = m.doSetCpuGovernor("performance")
+		if err != nil {
+			logger.Warning(err)
+		}
 
 		if m.IsHighPerformanceSupported {
 			err = m.doSetCpuBoost(false)
@@ -474,7 +480,10 @@ func (m *Manager) doSetMode(mode string) error {
 	case "powersave": // governor=powersave boost=false
 		m.setPropPowerSavingModeEnabled(true)
 
-		m.doSetCpuGovernor("powersave")
+		err = m.doSetCpuGovernor("powersave")
+		if err != nil {
+			logger.Warning(err)
+		}
 
 		if m.IsHighPerformanceSupported {
 			err = m.doSetCpuBoost(false)
@@ -486,7 +495,10 @@ func (m *Manager) doSetMode(mode string) error {
 		}
 		m.setPropPowerSavingModeEnabled(false)
 
-		m.doSetCpuGovernor("performance")
+		err = m.doSetCpuGovernor("performance")
+		if err != nil {
+			logger.Warning(err)
+		}
 
 		err = m.doSetCpuBoost(true)
 
