@@ -23,6 +23,7 @@ import (
 	"os"
 	"sync"
 	"syscall"
+	"time"
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
@@ -137,6 +138,7 @@ type Manager struct {
 	lightLevelUnit      string
 	lidSwitchState      uint
 	sessionActive       bool
+	sessionActiveTime   time.Time
 
 	// if prepare suspend, ignore idle off
 	prepareSuspend       int
@@ -340,6 +342,7 @@ func (m *Manager) init() {
 
 		m.PropsMu.Lock()
 		m.sessionActive = value
+		m.sessionActiveTime = time.Now()
 		m.PropsMu.Unlock()
 
 		logger.Debug("session active changed to:", value)
