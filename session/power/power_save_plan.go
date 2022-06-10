@@ -143,6 +143,15 @@ func (psp *powerSavePlan) Reset() {
 	}
 }
 
+func (psp *powerSavePlan) syncBrightnessData(value string) {
+	psp.multiBrightnessWithPsm.init()
+	err := psp.multiBrightnessWithPsm.toObject(value)
+	if err != nil {
+		logger.Warning(err)
+	}
+	psp.brightnessSave.Set(value)
+}
+
 func (psp *powerSavePlan) Start() error {
 	psp.Reset()
 	psp.initSettingsChangedHandler()
@@ -171,6 +180,19 @@ func (psp *powerSavePlan) Start() error {
 	if err != nil {
 		logger.Warning("failed to connectChanged PowerSavingModeBrightnessDropPercent:", err)
 	}
+	err = power.PowerSavingModeBrightnessData().ConnectChanged(func(hasValue bool, value string) {
+		if !hasValue {
+			return
+		}
+		if psp.manager.isSessionActive() {
+			return
+		}
+		// 非激活用户通过此属性同步激活用户配置的数据
+		psp.syncBrightnessData(value)
+	})
+	if err != nil {
+		logger.Warning("failed to connectChanged PowerSavingModeBrightnessData:", err)
+	}
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	if strings.Contains(sessionType, "wayland") {
 		err = psp.ConnectIdle()
@@ -191,7 +213,15 @@ func (psp *powerSavePlan) Start() error {
 	if err != nil {
 		logger.Warning("failed to connectChanged Brightness:", err)
 	}
-	psp.dealWithPowerSavingModeWhenSystemBoot()
+
+	data, _ := power.PowerSavingModeBrightnessData().Get(0)
+	if data != "" {
+		psp.syncBrightnessData(data)
+		state, _ := power.PowerSavingModeEnabled().Get(0)
+		psp.manager.settings.SetBoolean(settingKeyPowerSavingEnabled, state)
+	} else {
+		psp.dealWithPowerSavingModeWhenSystemBoot()
+	}
 	return nil
 }
 
@@ -229,6 +259,9 @@ func (psp *powerSavePlan) handlePowerSavingModeBrightnessDropPercentChanged(hasV
 		logger.Warning(err)
 		return
 	}
+	if !psp.manager.isSessionActive() { // 系统级的调节保证只有激活用户才能做逻辑
+		return
+	}
 
 	if savingModeEnable {
 		// adjust brightness by lowerBrightnessScale
@@ -258,9 +291,6 @@ func (psp *powerSavePlan) handlePowerSavingModeBrightnessDropPercentChanged(hasV
 
 //节能模式变化后的亮度修改
 func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bool) {
-	if !psp.manager.isSessionActive() {
-		return
-	}
 	const (
 		multiLevelAdjustmentScale     = 0.2 // 分级调节时，默认按照20%亮度调节值调整亮度，并在亮度显示的设置分级中，归到所在分级
 		multiLevelAdjustmentThreshold = 100 // 分级调节判断阈值，最大亮度值小于该值且不为0时，调节方式为分级调节
@@ -271,6 +301,10 @@ func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bo
 	logger.Debug("power saving mode enabled changed to", enabled)
 
 	psp.manager.settings.SetBoolean(settingKeyPowerSavingEnabled, enabled)
+
+	if !psp.manager.isSessionActive() { // 系统级的调节保证只有激活用户才能做逻辑
+		return
+	}
 
 	psp.manager.PropsMu.RLock()
 	hasLightSensor := psp.manager.HasAmbientLightSensor
@@ -725,7 +759,7 @@ func (psp *powerSavePlan) initMultiBrightnessWithPsm() {
 		return
 	}
 	for _, val := range psp.multiBrightnessWithPsm.MultiBrightness {
-		if val.ManuallyModified == true {
+		if val.ManuallyModified {
 			val.ManuallyModified = false
 			val.BrightnessSaved = val.BrightnessLatest / (1 - float64(brightnessDropPercent)/100)
 			if val.BrightnessSaved > 1 {
@@ -742,6 +776,7 @@ func (psp *powerSavePlan) setToBrightnessSave() {
 		logger.Warning(err)
 	}
 	psp.brightnessSave.Set(data)
+	psp.manager.helper.Power.PowerSavingModeBrightnessData().Set(0, data)
 }
 
 func (psp *powerSavePlan) handleBrightnessPropertyChanged(value bool, value2 map[string]float64) {
@@ -761,18 +796,29 @@ func (psp *powerSavePlan) handleBrightnessPropertyChanged(value bool, value2 map
 			psp.multiBrightnessWithPsm.valueTmp = value2
 		}()
 
-		if time.Now().Sub(psp.psmEnabledTime) < time.Second*2 {
+		now := time.Now()
+		if now.Sub(psp.psmEnabledTime) < time.Second*2 {
 			return
-		} else {
-			if time.Now().Sub(psp.psmPercentChangedTime) < time.Second*2 {
-				return
-			}
-
-			changed := psp.multiBrightnessWithPsm.checkBrightnessChanged(value2)
-			if changed {
-				psp.setToBrightnessSave()
-			}
 		}
+		if now.Sub(psp.psmPercentChangedTime) < time.Second*2 {
+			return
+		}
+
+		// 切换用户会配置亮度，这里加上会话激活的时间做为是否手动调节亮度的判断
+		var t time.Time
+		psp.manager.PropsMu.Lock()
+		t = psp.manager.sessionActiveTime
+		psp.manager.PropsMu.Unlock()
+
+		if now.Sub(t) < time.Second*3 {
+			return
+		}
+
+		changed := psp.multiBrightnessWithPsm.checkBrightnessChanged(value2)
+		if changed {
+			psp.setToBrightnessSave()
+		}
+
 	}
 }
 
