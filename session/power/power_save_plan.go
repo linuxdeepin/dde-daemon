@@ -601,10 +601,7 @@ func (psp *powerSavePlan) HandleIdleOn() {
 		return
 	}
 
-	if isActive, err := psp.manager.isX11SessionActive(); err != nil {
-		logger.Warning(err)
-		return
-	} else if !isActive {
+	if !psp.manager.isSessionActive() {
 		logger.Info("X11 session is inactive, don't HandleIdleOn")
 		return
 	}
