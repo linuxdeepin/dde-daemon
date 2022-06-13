@@ -53,7 +53,6 @@ func run() error {
 		logger.Error("failed to export:", err)
 		return err
 	}
-
 	err = service.SetWriteCallback(m, "Enabled", m.enabledWriteCb)
 	if err != nil {
 		return err
