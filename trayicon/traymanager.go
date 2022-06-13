@@ -302,7 +302,11 @@ func (m *TrayManager) eventHandleLoop() {
 				if opcode == OpcodeSystemTrayRequestDock {
 					win := x.Window(data32[2])
 					logger.Debug("ClientMessageEvent: system tray request dock", win)
-					m.addIcon(win)
+					// 虚拟键盘注册插件时,任务栏调用XGetWindowProperty函数,wayland下会导致崩溃
+					// 此处过滤掉虚拟键盘的注册信号
+					if (NewTrayIcon(win).getName() != "onboard") {
+						m.addIcon(win)
+					}
 				}
 			}
 		case damage.NotifyEventCode + damageFirstEvent:
