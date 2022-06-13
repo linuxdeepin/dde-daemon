@@ -357,10 +357,6 @@ func (m *Manager) init() {
 	m.inhibitLogind()
 }
 
-func (m *Manager) isX11SessionActive() (bool, error) {
-	return m.helper.SessionWatcher.IsX11SessionActive(0)
-}
-
 func (m *Manager) destroy() {
 	m.destroySubmodules()
 	m.releaseAmbientLight()
@@ -450,7 +446,7 @@ func (m *Manager) SetPrepareSuspend(suspendState int) *dbus.Error {
 func (m *Manager) isSessionActive() bool {
 	active, err := m.currentSession.Active().Get(dbus.FlagNoAutoStart)
 	if err != nil {
-		logger.Error("Failed to get self active:", err)
+		logger.Error("failed to get session active status:", err)
 		return false
 	}
 	return active

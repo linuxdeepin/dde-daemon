@@ -102,9 +102,7 @@ func (m *Manager) initUserSessions() {
 	}
 
 	for _, session := range sessions {
-		if session.SeatId != "" {
-			m.addSession(session.SessionId, session.Path)
-		}
+		m.addSession(session.SessionId, session.Path)
 	}
 	m.handleSessionChanged()
 	_, err = m.loginManager.ConnectSessionNew(func(id string, path dbus.ObjectPath) {
@@ -264,13 +262,21 @@ func (m *Manager) getActiveSession() login1.Session {
 }
 
 func (m *Manager) IsX11SessionActive() (active bool, busErr *dbus.Error) {
-	m.mu.Lock()
-	ty := m.activeSessionType
-	m.mu.Unlock()
-	for _, session := range _validSessionList {
-		if session == ty {
-			return true, nil
-		}
+	// 从login1获取当前登录的用户是否激活
+	self, err := login1.NewSession(m.systemSigLoop.Conn(), "/org/freedesktop/login1/session/self")
+	if err != nil {
+		logger.Warning(err)
+		return false, dbusutil.ToError(err)
+	}
+
+	isActive, err := self.Active().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return false, dbusutil.ToError(err)
+	}
+
+	if isActive {
+		return true, nil
 	}
 
 	return false, nil
