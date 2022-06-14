@@ -51,6 +51,7 @@ func getSystemIdNameMap() map[string]string {
 		"translation":            gettext.Tr("Translation"),
 		"global-search":          gettext.Tr("Grand Search"),
 		"notification-center":    gettext.Tr("Notification Center"),
+		"switch-next-kbd-layout": gettext.Tr("Swicth next keyboard layout"),
 	}
 	return idNameMap
 }

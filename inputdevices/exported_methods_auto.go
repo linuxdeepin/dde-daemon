@@ -47,6 +47,10 @@ func (v *Keyboard) GetExportedMethods() dbusutil.ExportedMethods {
 			Name: "Reset",
 			Fn:   v.Reset,
 		},
+		{
+			Name: "ToggleNextLayout",
+			Fn:   v.ToggleNextLayout,
+		},
 	}
 }
 func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {

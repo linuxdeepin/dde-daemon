@@ -116,6 +116,7 @@ var defaultSysActionCmdMap = map[string]string{
 	"notification-center":   "dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle",
 	"clipboard":             "dbus-send --print-reply --dest=com.deepin.dde.Clipboard /com/deepin/dde/Clipboard com.deepin.dde.Clipboard.Toggle",
 	"global-search":         "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
+	"switch-next-kbd-layout":"dbus-send --print-reply --dest=com.deepin.daemon.Keybinding /com/deepin/daemon/InputDevice/Keyboard com.deepin.daemon.InputDevice.Keyboard.ToggleNextLayout",
 }
 
 type actionHandler struct {

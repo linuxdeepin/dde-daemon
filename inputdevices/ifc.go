@@ -122,3 +122,8 @@ func (kbd *Keyboard) ClearLayoutOption() *dbus.Error {
 	kbd.UserOptionList.Set([]string{})
 	return nil
 }
+
+func (kbd *Keyboard) ToggleNextLayout() *dbus.Error {
+	kbd.toggleNextLayout()
+	return nil
+}
