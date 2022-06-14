@@ -617,6 +617,9 @@ handle_mouse_events(struct libinput_event *ev, int type)
 
     struct libinput_event_pointer *mouse = libinput_event_get_pointer_event(ev);
     enum libinput_pointer_axis_source source = libinput_event_pointer_get_axis_source(mouse);
+    if (!libinput_event_pointer_has_axis(mouse, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL)) {
+        return;
+    }
     double value = libinput_event_pointer_get_axis_value(mouse, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL);
 
     handleMouseEvent(type, source,value);
@@ -684,14 +687,11 @@ handle_events(struct libinput *li, struct movement *m)
             break;
         }
         case LIBINPUT_EVENT_KEYBOARD_KEY: {
-                handle_keyboard_events(ev, type);
+            handle_keyboard_events(ev, type);
             break;
         }
-        case LIBINPUT_EVENT_POINTER_MOTION:
-        case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
-        case LIBINPUT_EVENT_POINTER_BUTTON:
         case LIBINPUT_EVENT_POINTER_AXIS: {
-                handle_mouse_events(ev, type);
+            handle_mouse_events(ev, type);
             break;
         }
         default:
