@@ -722,3 +722,13 @@ func (kbd *Keyboard) shouldUseDDEKwin() bool {
 	_, err := os.Stat("/usr/bin/kwin_no_scale")
 	return err == nil
 }
+
+func (kbd *Keyboard) toggleNextLayout() {
+	for idx, item := range kbd.UserLayoutList {
+		if kbd.CurrentLayout == item {
+			var index = (idx + 1) % len(kbd.UserLayoutList)
+			kbd.setLayout(kbd.UserLayoutList[index])
+			return
+		}
+	}
+}
