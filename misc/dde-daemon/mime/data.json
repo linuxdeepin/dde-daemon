@@ -96,13 +96,17 @@
 			      ]
 		    },
 		    {
-			      "AppId":["thunderbird.desktop"],
-			      "AppType":"email",
-			      "SupportedType":[
-				        "x-scheme-handler/mailto",
-				        "application/x-xpinstall"
-			      ]
-		    },
+				  "AppId":["deepin-mail.desktop"],
+				  "AppType":"email",
+				  "SupportedType":[
+					    "x-scheme-handler/mailto",
+					    "application/x-xpinstall",
+						"application/x-extension-eml",
+					    "message/rfc822",
+					    "text/calendar",
+					    "text/x-vcard"
+				  ]
+		  },
 		    {
 			      "AppId":[
                 "deepin-music.desktop",
