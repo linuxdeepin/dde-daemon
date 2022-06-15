@@ -45,6 +45,12 @@ const (
 	deviceTouchScreen
 )
 
+var _useWayland bool
+
+func setUseWayland(value bool) {
+	_useWayland = value
+}
+
 type Manager struct {
 	wm                 wm.Wm
 	sysDaemon          daemon.Daemon
@@ -73,6 +79,7 @@ type Manager struct {
 }
 
 func newManager() (*Manager, error) {
+	setUseWayland(len(os.Getenv("WAYLAND_DISPLAY")) != 0)
 	sessionConn, err := dbus.SessionBus()
 	if err != nil {
 		return nil, err
@@ -155,7 +162,7 @@ func newManager() (*Manager, error) {
 	m.gesture = gesture.NewGesture(systemConn)
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemConn, 10)
 
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if _useWayland {
 		m.sessionWatcher = sessionwatcher.NewSessionWatcher(sessionConn)
 	}
 	return m, nil
@@ -357,7 +364,7 @@ func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
 }
 
 func (m *Manager) Exec(evInfo EventInfo) error {
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if _useWayland {
 		if !isSessionActive("/org/freedesktop/login1/session/self") {
 			active, err := m.sessionWatcher.IsActive().Get(0)
 			if err != nil || !active {
@@ -377,7 +384,7 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 		return nil
 	}
 
-	if !m.longPressEnable && strings.Contains(string(info.Event.Name), "touch right button") {
+	if (!m.longPressEnable  || _useWayland) && strings.Contains(string(info.Event.Name), "touch right button") {
 		return nil
 	}
 
