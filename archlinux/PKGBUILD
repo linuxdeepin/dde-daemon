@@ -21,8 +21,8 @@ optdepends=('networkmanager: for network management support'
 conflicts=('deepin-daemon')
 provides=('deepin-daemon')
 groups=('deepin-git')
-install="$pkgname.install"
-source=("$pkgname-$pkgver::source.tar.gz"
+install="$deepin_source_name.install"
+source=("source.tar.gz"
         dde-daemon.patch
         remove-tc.patch
         'deepin-daemon.sysusers')
@@ -30,13 +30,9 @@ sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             '808c02d4fec4cbbb01119bbb10499090199e738b7dd72c28a57dde098eef6132723f3434c151f79e21d9f788c7f7bae8046573ac93ba917afe0e803fbffa6d5a')
-pkgver() {
-    cd $pkgname-$pkgver
-    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-}
 
 prepare() {
-  cd $pkgname-$pkgver
+ cd $deepin_source_name
   patch -p1 -i ../remove-tc.patch
   patch -p1 -i ../dde-daemon.patch
   rm -rf system/uadp
@@ -45,9 +41,17 @@ prepare() {
   export GO111MODULE=off
   # golang-deepin-lib's dependency, remove when go packaging resumes
   go get -v github.com/cryptix/wav
-  go get -v github.com/axgle/mahonia github.com/msteinert/pam github.com/gosexy/gettext github.com/rickb777/date \
-         github.com/jinzhu/gorm github.com/kelvins/sunrisesunset github.com/mozillazg/go-pinyin github.com/teambition/rrule-go \
-         golang.org/x/xerrors github.com/mattn/go-sqlite3 github.com/fsnotify/fsnotify
+  go get -v github.com/axgle/mahonia
+  go get -v github.com/msteinert/pam
+  go get -v github.com/gosexy/gettext
+  go get -v github.com/rickb777/date
+  go get -v github.com/jinzhu/gorm
+  go get -v github.com/kelvins/sunrisesunset
+  go get -v github.com/mozillazg/go-pinyin
+  go get -v github.com/teambition/rrule-go
+  go get -v golang.org/x/xerrors
+  go get -v github.com/mattn/go-sqlite3
+  go get -v github.com/fsnotify/fsnotify
   go get -v github.com/godbus/dbus
   go get -v github.com/godbus/dbus/introspect
   go get -v github.com/godbus/dbus/prop
@@ -58,27 +62,21 @@ prepare() {
 }
 
 build() {
-  export CGO_CPPFLAGS="${CPPFLAGS}
-"
-  export CGO_CFLAGS="${CFLAGS}
-"
-  export CGO_CXXFLAGS="${CXXFLAGS}
-"
-  export CGO_LDFLAGS="${LDFLAGS}
-"
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-  cd $pkgname-$pkgver
+  cd $deepin_source_name
 #  make -C network/nm_generator gen-nm-code
   make
 }
 
 package() {
-  cd $pkgname-$pkgver
+  cd $deepin_source_name
   make DESTDIR="$pkgdir" PAM_MODULE_DIR=usr/lib/security install
-  mv "$pkgdir"{,/usr}
-/lib/systemd
-  mv "$pkgdir"{,/usr}
-/lib/udev
+  mv "$pkgdir"{,/usr} /lib/systemd
+  mv "$pkgdir"{,/usr} /lib/udev
   rmdir "$pkgdir"/lib
   install -Dm644 ../deepin-daemon.sysusers "$pkgdir/usr/lib/sysusers.d/deepin-daemon.conf"
 }
