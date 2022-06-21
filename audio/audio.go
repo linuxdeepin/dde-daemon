@@ -1138,12 +1138,13 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 	a.defaultSink = sink
 	defaultSinkPath := sink.getPath()
 
+	a.resumeSinkConfig(sink)
+
 	a.PropsMu.Lock()
 	a.setPropDefaultSink(defaultSinkPath)
 	a.PropsMu.Unlock()
 
 	logger.Debug("set prop default sink:", defaultSinkPath)
-	a.resumeSinkConfig(sink)
 }
 
 func (a *Audio) updateSources(index uint32) (source *Source) {
@@ -1220,12 +1221,13 @@ func (a *Audio) updateDefaultSource(sourceName string) {
 
 	defaultSourcePath := source.getPath()
 
+	a.resumeSourceConfig(source, isPhysicalDevice(sourceName))
+
 	a.PropsMu.Lock()
 	a.setPropDefaultSource(defaultSourcePath)
 	a.PropsMu.Unlock()
 
 	logger.Debug("set prop default source:", defaultSourcePath)
-	a.resumeSourceConfig(source, isPhysicalDevice(sourceName))
 }
 
 func (a *Audio) context() *pulse.Context {
