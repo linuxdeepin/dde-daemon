@@ -1,4 +1,10 @@
-dde-daemon (6.0.0.0) UNRELEASED; urgency=medium
+dde-daemon (6.0.1) unstable; urgency=medium
+
+  * dde-flow-sprint1
+
+ -- Tan Feng <tanfeng@uniontech.com>  Tue, 21 Jun 2022 16:45:26 +0800
+
+dde-daemon (6.0.0.0) unstable; urgency=medium
 
   * 6.0.0.0 pre-release
 
