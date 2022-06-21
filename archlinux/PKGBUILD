@@ -21,7 +21,7 @@ optdepends=('networkmanager: for network management support'
 conflicts=('deepin-daemon')
 provides=('deepin-daemon')
 groups=('deepin-git')
-install="$deepin_source_name.install"
+install="$pkgname.install"
 source=("source.tar.gz"
         dde-daemon.patch
         remove-tc.patch

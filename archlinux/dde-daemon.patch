@@ -5,7 +5,6 @@ index 85902af6..e1f0df64 100644
 @@ -355,12 +355,12 @@ handle_gesture_events(struct libinput_event *ev, int type)
          return ;
      }
-
      struct libinput_event_gesture *gesture = libinput_event_get_gesture_event(ev);
 -    if (raw->dblclick
 +    if (raw->dblclick /*
@@ -19,7 +18,7 @@ index 85902af6..e1f0df64 100644
          handleSwipeStop(raw->fingers);
          raw->dblclick = false;
 @@ -438,7 +438,7 @@ handle_gesture_events(struct libinput_event *ev, int type)
-
+ 
          raw_event_reset(raw, true);
          break;
 -    case LIBINPUT_EVENT_GESTURE_TAP_BEGIN:
@@ -28,18 +27,14 @@ index 85902af6..e1f0df64 100644
          if (raw->t_start_tap > 0
          &&  (libinput_event_gesture_get_time_usec(gesture) - raw->t_start_tap) / 1000 <= dblclick_duration
 @@ -462,7 +462,7 @@ handle_gesture_events(struct libinput_event *ev, int type)
-         }
- else {
+         } else {
              raw_event_reset(raw, true);
          }
-
 -        break;
 +        break;*/
      }
-
  }
-
-
+ 
 @@ -592,9 +592,9 @@ handle_events(struct libinput *li, struct movement *m)
          case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
          case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
