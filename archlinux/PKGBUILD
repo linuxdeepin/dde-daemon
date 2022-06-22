@@ -75,8 +75,10 @@ build() {
 package() {
   cd $deepin_source_name
   make DESTDIR="$pkgdir" PAM_MODULE_DIR=usr/lib/security install
-  mv "$pkgdir"{,/usr} /lib/systemd
-  mv "$pkgdir"{,/usr} /lib/udev
+
+  mv "$pkgdir"{,/usr}/lib/systemd
+  mv "$pkgdir"{,/usr}/lib/udev
   rmdir "$pkgdir"/lib
+
   install -Dm644 ../deepin-daemon.sysusers "$pkgdir/usr/lib/sysusers.d/deepin-daemon.conf"
 }
