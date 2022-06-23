@@ -33,6 +33,10 @@ func Test_Scanner(t *testing.T) {
 	assert.Nil(t, getBgFilesInDir("testdata/Theme2/wallpapers"))
 }
 
+func Test_getLicenseAuthorizationProperty(t *testing.T) {
+	t.Log(getLicenseAuthorizationProperty())
+}
+
 func Test_FileInDirs(t *testing.T) {
 	var dirs = []string{
 		"/tmp/backgrounds",
@@ -48,6 +52,6 @@ func Test_FileInDirs(t *testing.T) {
 }
 
 func Test_GetBgFiles(t *testing.T) {
-	files := getSysBgFiles()
+	files := getSysBgFiles("/usr/share/wallpapers/deepin")
 	t.Log(files)
 }

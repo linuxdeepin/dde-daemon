@@ -28,18 +28,16 @@ import (
 
 	"github.com/godbus/dbus"
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
-)
-
-var (
-	systemWallpapersDir = []string{
-		"/usr/share/wallpapers/deepin",
-	}
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 // ListDirs list all background dirs
 func ListDirs() []string {
 	var result []string
-	result = append(result, systemWallpapersDir...)
+	result = append(result, _wallpapersPathMap[Professional])
+	if _licenseAuthorizationProperty > Professional && _licenseAuthorizationProperty < uint32(len(_wallpapersPathMap)) {
+		result = append(result, _wallpapersPathMap[_licenseAuthorizationProperty])
+	}
 	result = append(result, CustomWallpapersConfigDir)
 	return result
 }
@@ -62,10 +60,10 @@ func sortByTime(fileInfoList []os.FileInfo) []os.FileInfo {
 	return fileInfoList
 }
 
-func getSysBgFiles() []string {
+func getSysBgFiles(path string) []string {
 	var files []string
-	for _, dir := range systemWallpapersDir {
-		files = append(files, getBgFilesInDir(dir)...)
+	if dutils.IsFileExist(path) {
+		files = append(files, getBgFilesInDir(path)...)
 	}
 	return files
 }
