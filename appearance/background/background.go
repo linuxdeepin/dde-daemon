@@ -49,6 +49,17 @@ var (
 
 const customWallpapersLimit = 10
 
+//0：专业版  1： 政务授权 2： 企业授权
+const (
+	Professional uint32 = iota
+	Government
+	Enterprise
+	Count
+)
+var _licenseAuthorizationProperty uint32 = 0
+
+var _wallpapersPathMap = make(map[uint32]string)
+
 func SetLogger(value *log.Logger) {
 	logger = value
 }
@@ -58,12 +69,41 @@ func SetCustomWallpaperDeleteCallback(fn func(file string)) {
 }
 
 func init() {
+	logger = log.NewLogger("background")
+	SetLogger(logger)
 	CustomWallpapersConfigDir = filepath.Join(basedir.GetUserConfigDir(),
 		"deepin/dde-daemon/appearance/custom-wallpapers")
 	err := os.MkdirAll(CustomWallpapersConfigDir, 0755)
 	if err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, err)
 	}
+
+	//get com.deepin.license Authorization type
+	_licenseAuthorizationProperty = getLicenseAuthorizationProperty()
+
+	_wallpapersPathMap[Professional] = "/usr/share/wallpapers/deepin"
+	_wallpapersPathMap[Government] = "/usr/share/wallpapers/deepin/deepin-government"
+	_wallpapersPathMap[Enterprise] = "/usr/share/wallpapers/deepin/deepin-enterprise"
+}
+
+func getLicenseAuthorizationProperty() uint32 {
+	conn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return 0
+	}
+	var variant dbus.Variant
+	err = conn.Object("com.deepin.license", "/com/deepin/license/Info").Call(
+		"org.freedesktop.DBus.Properties.Get", 0, "com.deepin.license.Info", "AuthorizationProperty").Store(&variant)
+	if err != nil {
+		logger.Warning(err)
+		return 0
+	}
+	if variant.Signature().String() != "u" {
+		logger.Warning("not excepted value type")
+		return 0
+	}
+	return variant.Value().(uint32)
 }
 
 type Background struct {
@@ -87,13 +127,24 @@ func refreshBackground() {
 		})
 	}
 
-	// add system
-	for _, file := range getSysBgFiles() {
+	// add system, get default systemWallpapers
+	for _, file := range getSysBgFiles(_wallpapersPathMap[Professional]) {
 		logger.Debugf("system: %s", file)
 		bgs = append(bgs, &Background{
 			Id:        dutils.EncodeURI(file, dutils.SCHEME_FILE),
 			Deletable: false,
 		})
+	}
+
+	// add system, get  enterprise or government systemWallpapers
+	if _licenseAuthorizationProperty > Professional && _licenseAuthorizationProperty < uint32(len(_wallpapersPathMap)) {
+		for _, file := range getSysBgFiles(_wallpapersPathMap[_licenseAuthorizationProperty]) {
+			logger.Debugf("system: %s", file)
+			bgs = append(bgs, &Background{
+				Id:        dutils.EncodeURI(file, dutils.SCHEME_FILE),
+				Deletable: false,
+			})
+		}
 	}
 
 	backgroundsCache = bgs
@@ -203,6 +254,13 @@ func (info *Background) Thumbnail() (string, error) {
 }
 
 func Prepare(file string) (string, error) {
+	var systemWallpapersDir = []string {
+		_wallpapersPathMap[Professional],
+	}
+	if _licenseAuthorizationProperty > Professional && _licenseAuthorizationProperty < uint32(len(_wallpapersPathMap)) {
+		systemWallpapersDir = append(systemWallpapersDir, _wallpapersPathMap[_licenseAuthorizationProperty])
+	}
+
 	file = dutils.DecodeURI(file)
 	if isFileInDirs(file, systemWallpapersDir) {
 		logger.Debug("is system")
