@@ -147,6 +147,8 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 		if m.isWmBlackScreenActive() {
 			m.setWmBlackScreenActive(false)
 		}
+
+		m.setDPMSModeOn()
 	}
 }
 
