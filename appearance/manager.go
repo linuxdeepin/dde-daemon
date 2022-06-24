@@ -38,6 +38,13 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/theme_thumb"
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
+	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	imageeffect "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.imageeffect"
@@ -56,13 +63,6 @@ import (
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
-	"github.com/linuxdeepin/dde-api/theme_thumb"
-	"github.com/linuxdeepin/dde-daemon/appearance/background"
-	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
-	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
-	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
-	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -1517,12 +1517,18 @@ func (m *Manager) updateNewVersionData() error {
 
 	// V20对应SP3, SP2阶段gsettings background-uris中部分数据丢失，SP2升到SP3通过窗管接口获取壁纸
 	monitorWorkspaceWallpaperURIs := make(mapMonitorWorkspaceWallpaperURIs)
-	for monitorName, convertMonitorName := range m.monitorMap {
+	for _, convertMonitorName := range m.monitorMap {
 		for i := int32(0); i < workspaceCount; i++ {
-			uri, err := m.wm.GetWorkspaceBackgroundForMonitor(0, i+1, monitorName)
-			if err != nil {
-				logger.Warningf("failed to get monitor:%v workspace:%v background:%v", monitorName, i+1, err)
-				continue
+			// uri, err := m.wm.GetWorkspaceBackgroundForMonitor(0, i+1, monitorName)
+			// if err != nil {
+			// 	logger.Warningf("failed to get monitor:%v workspace:%v background:%v", monitorName, i+1, err)
+			// 	continue
+			// }
+			uri := ""
+			if i == 1 {
+				uri = "file:///usr/share/wallpapers/deepin/desktop.jpg"
+			} else {
+				uri = "file:///usr/share/wallpapers/deepin/francesco-ungaro-1fzbUyzsHV8-unsplash.jpg"
 			}
 
 			key := genMonitorKeyString(convertMonitorName, i+1)
