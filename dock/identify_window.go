@@ -40,7 +40,9 @@ type _IdentifyWindowFunc func(*Manager, *WindowInfo) (string, *AppInfo)
 
 func (m *Manager) registerIdentifyWindowFuncs() {
 	m.registerIdentifyWindowFunc("Android", identifyWindowAndroid)
-	m.registerIdentifyWindowFunc("PidEnv", identifyWindowByPidEnv)
+	m.registerIdentifyWindowFunc("PidEnv", func(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
+		return identifyWindowByPidEnv(m, &winInfo.baseWindowInfo)
+	})
 	m.registerIdentifyWindowFunc("CmdlineTurboBooster", identifyWindowByCmdlineTurboBooster)
 	m.registerIdentifyWindowFunc("Cmdline-XWalk", identifyWindowByCmdlineXWalk)
 	m.registerIdentifyWindowFunc("FlatpakAppID", identifyWindowByFlatpakAppID)
@@ -82,18 +84,15 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 	if title == "下载" {
 		appId = "uos-browser"
 	}
-	// 先使用appId获取appInfo,如果不能成功获取再使用GIO_LAUNCHED_DESKTOP_FILE环境变量获取
+	// 先使用appId获取appInfo,如果不能成功获取再使用pidenv环境变量获取
 	appInfo = NewAppInfo(appId)
 	if appInfo == nil {
 		// 防止出现指针为空调用后崩溃问题
 		if winInfo.process != nil {
-			desktopNamePath := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
-			logger.Info("desktopNamePath: ", desktopNamePath, "appId: ", appId, "appInfo: ", appInfo)
-			if strings.Contains(desktopNamePath, ".desktop") {
-				appInfo = NewAppInfo(desktopNamePath)
-			}
+			_, appInfo = identifyWindowByPidEnv(m, &winInfo.baseWindowInfo)
 		}
 	}
+
 	if appInfo != nil {
 		innerId = appInfo.innerId
 		fixedAppInfo := fixAutostartAppInfo(appInfo)
@@ -378,7 +377,7 @@ func identifyWindowAndroid(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	return "", nil
 }
 
-func identifyWindowByPidEnv(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
+func identifyWindowByPidEnv(m *Manager, winInfo *baseWindowInfo) (string, *AppInfo) {
 	msgPrefix := fmt.Sprintf("identifyWindowByPidEnv win: %d ", winInfo.xid)
 	pid := winInfo.pid
 	process := winInfo.process
