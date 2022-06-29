@@ -106,6 +106,7 @@ Recommends:
  laptop-mode-tools,
  proxychains4,
  mesa-utils,
+ systemd-timesyncd,
 Suggests:
  bluez (>=5.4),
  miraclecast,
