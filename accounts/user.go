@@ -76,7 +76,7 @@ const (
 
 	defaultUse24HourFormat = true
 	defaultWeekdayFormat   = 0
-	defaultShortDateFormat = 0
+	defaultShortDateFormat = 3
 	defaultLongDateFormat  = 0
 	defaultShortTimeFormat = 0
 	defaultLongTimeFormat  = 0
