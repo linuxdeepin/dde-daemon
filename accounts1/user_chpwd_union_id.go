@@ -28,7 +28,7 @@ import (
 // 所以需要将重置密码的对话框 (文件位于 resetPwdDialogPath)
 // 以一个特殊的用户的身份运行, 这个用户只做运行对话框这一件事情.
 
-const pwdChangerUserName = "deepin_pwd_changer"                                //#nosec G101
+const pwdChangerUserName = "nobody"                                            //#nosec G101
 const resetPwdDialogPath = "/usr/lib/dde-control-center/reset-password-dialog" //#nosec G101
 
 // copy from golang 1.17, comment out some code because of unexported member
@@ -75,24 +75,6 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 	}
 
 	proc := procfs.Process(pid)
-	login1Manager := login1.NewManager(service.Conn())
-	sessionPath, err := login1Manager.GetSessionByPID(0, pid)
-	if err != nil {
-		err = fmt.Errorf("fail to get sender session path: %v", err)
-		return
-	}
-
-	session, err := login1.NewSession(service.Conn(), sessionPath)
-	if err != nil {
-		err = fmt.Errorf("fail to create session object proxy: %v", err)
-		return
-	}
-
-	display, err := session.Display().Get(0)
-	if err != nil {
-		err = fmt.Errorf("fail to get sender display: %v", err)
-		return
-	}
 
 	exe, err := proc.Exe()
 	if err != nil {
@@ -137,6 +119,36 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 	envs, err := proc.Environ()
 	if err != nil {
 		err = fmt.Errorf("failed to get sender environment variables: %v", err)
+		return
+	}
+
+	login1Manager := login1.NewManager(service.Conn())
+	userObjectPath, err := login1Manager.GetUserByPID(0, pid)
+	if err != nil {
+		err = fmt.Errorf("fail to get sender user path: %v", err)
+		return
+	}
+
+	userDbus, err := login1.NewUser(service.Conn(), userObjectPath)
+	if err != nil {
+		err = fmt.Errorf("new user failed: %v", err)
+		return
+	}
+	sessionInfo, err := userDbus.Display().Get(0)
+	if err != nil {
+		err = fmt.Errorf("fail to get display session info: %v", err)
+		return
+	}
+
+	session, err := login1.NewSession(service.Conn(), sessionInfo.Path)
+	if err != nil {
+		err = fmt.Errorf("fail to create session object proxy: %v", err)
+		return
+	}
+
+	display, err := session.Display().Get(0)
+	if err != nil {
+		err = fmt.Errorf("fail to get sender display: %v", err)
 		return
 	}
 
@@ -453,6 +465,11 @@ func newPwdChangerBase(caller *caller, u *User) (ret *pwdChangerBase, err error)
 // 对话框的语言和被修改密码的用户的语言设置保持一致
 func newPwdChanger(caller *caller, u *User) (ret pwdChanger, err error) {
 	pcrb, err := newPwdChangerBase(caller, u)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
 	if caller.wayland == "" {
 		ret, err = newPwdChangerX(caller, u, pcrb)
 	} else {
