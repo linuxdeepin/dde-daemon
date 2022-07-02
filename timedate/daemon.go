@@ -31,6 +31,7 @@ var (
 type Daemon struct {
 	*loader.ModuleBase
 	manager *Manager
+	managerFormat *ManagerFormat
 }
 
 func NewDaemon(logger *log.Logger) *Daemon {
@@ -61,6 +62,28 @@ func (d *Daemon) Start() error {
 		return err
 	}
 
+	d.managerFormat, err = newManagerFormat(service)
+	if err != nil {
+		return err
+	}
+
+	err = service.Export(dbusFormatPath, d.managerFormat)
+	if err != nil {
+		return err
+	}
+
+	err = d.managerFormat.initPropertyWriteCallback(service)
+	if err != nil {
+		logger.Warning("call SetWriteCallback err:", err)
+	} else {
+		logger.Info("call SetWriteCallback successful.")
+	}
+
+	err = service.RequestName(dbusFormatServiceName)
+	if err != nil {
+		return err
+	}
+
 	err = service.RequestName(dbusServiceName)
 	if err != nil {
 		return err
@@ -69,6 +92,11 @@ func (d *Daemon) Start() error {
 	go func() {
 		d.manager.init()
 	}()
+
+	go func() {
+		d.managerFormat.init()
+	}()
+
 	return nil
 }
 
@@ -91,5 +119,8 @@ func (d *Daemon) Stop() error {
 
 	d.manager.destroy()
 	d.manager = nil
+
+	d.managerFormat.destroy()
+	d.managerFormat = nil
 	return nil
 }
