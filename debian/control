@@ -88,6 +88,7 @@ Depends:
  user-setup,
  xdotool,
  xkb-data,
+ systemd-timesyncd,
  ${dist:Depends},
  ${misc:Depends},
  ${shlibs:Depends},
@@ -106,7 +107,6 @@ Recommends:
  laptop-mode-tools,
  proxychains4,
  mesa-utils,
- systemd-timesyncd,
 Suggests:
  bluez (>=5.4),
  miraclecast,
