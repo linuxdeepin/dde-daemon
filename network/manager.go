@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 	"sync"
 	"time"
 
@@ -48,6 +49,8 @@ const (
 	dbusServiceName = "com.deepin.daemon.Network"
 	dbusPath        = "/com/deepin/daemon/Network"
 	dbusInterface   = "com.deepin.daemon.Network"
+
+	configManagerId = "org.desktopspec.ConfigManager"
 )
 
 const checkRepeatTime = 1 * time.Second
@@ -124,6 +127,10 @@ type Manager struct {
 
 	connectionSettingsLock sync.Mutex
 
+	// dsg config
+	protalAuthEnable  bool
+	configManagerPath dbus.ObjectPath
+
 	//nolint
 	signals *struct {
 		AccessPointAdded, AccessPointRemoved, AccessPointPropertiesChanged struct {
@@ -156,6 +163,29 @@ func NewManager(service *dbusutil.Service) (m *Manager) {
 	m = &Manager{
 		service: service,
 	}
+
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+
+	// 加载dsg配置
+	systemConnObj := sysBus.Object(configManagerId, "/")
+	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.network", "").Store(&m.configManagerPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	err = dbusutil.NewMatchRuleBuilder().Type("signal").
+		PathNamespace(string(m.configManagerPath)).
+		Interface("org.desktopspec.ConfigManager.Manager").
+		Member("valueChanged").Build().AddTo(sysBus)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.protalAuthEnable = m.getProtalAuthEnable()
+
 	return
 }
 
@@ -221,6 +251,15 @@ func (m *Manager) init() {
 		} else {
 			logger.Debug("register secret agent ok")
 		}
+
+		// 监听dsg配置变化
+		m.sysSigLoop.AddHandler(&dbusutil.SignalRule{
+			Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
+		}, func(sig *dbus.Signal) {
+			if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
+				m.protalAuthEnable = m.getProtalAuthEnable()
+			}
+		})
 	}()
 
 	globalSessionActive = m.isSessionActive()
@@ -320,7 +359,7 @@ func (m *Manager) init() {
 	// update property Connectivity
 	_ = nmManager.Connectivity().ConnectChanged(func(hasValue bool, value uint32) {
 		logger.Debug("connectivity state changed ", hasValue, value)
-		if hasValue && value == nm.NM_CONNECTIVITY_PORTAL {
+		if hasValue && value == nm.NM_CONNECTIVITY_PORTAL && m.protalAuthEnable {
 			go m.doPortalAuthentication()
 		}
 		m.setPropConnectivity(value)
@@ -627,7 +666,22 @@ func (m *Manager) checkConnectivity() {
 		logger.Warning(err)
 		return
 	}
-	if connectivity == nm.NM_CONNECTIVITY_PORTAL {
+	if connectivity == nm.NM_CONNECTIVITY_PORTAL && m.protalAuthEnable {
 		m.doPortalAuthentication()
 	}
+}
+
+func (m *Manager) getProtalAuthEnable() bool {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		return true
+	}
+	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
+	var value bool
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, "protalAuthEnable").Store(&value)
+	if err != nil {
+		logger.Warning(err)
+		return true
+	}
+	return value
 }
