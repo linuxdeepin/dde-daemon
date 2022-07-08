@@ -31,6 +31,7 @@ Build-Depends:
  golang-go,
  golang-golang-x-sys-dev,
  golang-golang-x-xerrors-dev,
+ golang-golang-x-sync-dev,
  golang-gopkg-check.v1-dev,
  golang-gopkg-yaml.v2-dev,
  libfontconfig1-dev,

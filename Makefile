@@ -31,7 +31,7 @@ prepare:
 	@ln -snf ../../../.. ${GOPATH_DIR}/src/${GOPKG_PREFIX};
 
 out/bin/%: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@ ${GOBUILD_OPTIONS} ${GOPKG_PREFIX}/bin/${@F}
+	env GOPATH="${CURDIR}/vendor-dir:${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@ ${GOBUILD_OPTIONS} ${GOPKG_PREFIX}/bin/${@F}
 
 out/bin/default-file-manager: bin/default-file-manager/main.c
 	gcc $^ $(shell pkg-config --cflags --libs gio-unix-2.0) $(CFLAGS) -o $@
@@ -62,13 +62,13 @@ ts_to_policy:
 build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle $(addprefix out/bin/, ${BINARIES}) ts_to_policy icons translate
 
 test: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -v ./...
+	env GOPATH="${CURDIR}/vendor-dir:${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -v ./...
 
 test-coverage: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -cover -v ./... | awk '$$2 ~ "_${CURDIR}" {print $$2","$$5}' | sed "s:${CURDIR}::g" | sed 's/files\]/0\.0%/g' > coverage.csv
+	env GOPATH="${CURDIR}/vendor-dir:${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -cover -v ./... | awk '$$2 ~ "_${CURDIR}" {print $$2","$$5}' | sed "s:${CURDIR}::g" | sed 's/files\]/0\.0%/g' > coverage.csv
 
 print_gopath: prepare
-	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
+	GOPATH="${CURDIR}/vendor-dir:${CURDIR}/${GOPATH_DIR}:${GOPATH}"
 
 install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
@@ -92,6 +92,7 @@ install: build install-dde-data install-icons
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde-daemon
 	cp -r misc/dde-daemon/*   ${DESTDIR}${PREFIX}/share/dde-daemon/
+	cp -r misc/usr/share/deepin ${DESTDIR}${PREFIX}/share/
 
 	mkdir -pv ${DESTDIR}/lib/systemd/system/
 	cp -f misc/systemd/services/* ${DESTDIR}/lib/systemd/system/
@@ -150,4 +151,4 @@ clean:
 rebuild: clean build
 
 check_code_quality: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go vet ./...
+	env GOPATH="${CURDIR}/vendor-dir:${CURDIR}/${GOPATH_DIR}:${GOPATH}" go vet ./...
