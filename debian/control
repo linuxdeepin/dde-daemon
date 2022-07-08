@@ -33,6 +33,7 @@ Build-Depends:
  golang-golang-x-xerrors-dev,
  golang-gopkg-check.v1-dev,
  golang-gopkg-yaml.v2-dev,
+ golang-github-mdlayher-netlink-dev,
  libfontconfig1-dev,
  libglib2.0-dev,
  libgtk-3-dev,
