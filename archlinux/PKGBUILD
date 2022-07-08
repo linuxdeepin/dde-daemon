@@ -10,10 +10,10 @@ depends=('deepin-desktop-schemas-git' 'ddcutil' 'deepin-api-git' 'gvfs' 'iso-cod
          'mobile-broadband-provider-info' 'deepin-polkit-agent-git'
          'deepin-polkit-agent-ext-gnomekeyring-git' 'udisks2' 'upower'
          'libxkbfile' 'accountsservice' 'deepin-desktop-base-git' 'bamf' 'pulseaudio'
-         'org.freedesktop.secrets' 'noto-fonts' 'imwheel')
+         'org.freedesktop.secrets' 'noto-fonts' 'imwheel' 'ddcutil')
 makedepends=('golang-github-linuxdeepin-go-dbus-factory-git' 'golang-deepin-gir-git' 'golang-deepin-lib-git'
              'deepin-api-git' 'golang-github-nfnt-resize' 'golang-gopkg-yaml.v2' 'sqlite' 'deepin-gettext-tools-git'
-             'git' 'mercurial' 'python-gobject' 'networkmanager' 'bluez' 'go')
+             'git' 'mercurial' 'python-gobject' 'networkmanager' 'bluez' 'go' 'ddcutil')
 optdepends=('networkmanager: for network management support'
             'bluez: for bluetooth support'
             'iw: for miracast module'
@@ -61,6 +61,8 @@ prepare() {
   go get -v github.com/Lofanmi/pinyin-golang/pinyin
   go get -v gopkg.in/yaml.v3
   go get -v github.com/youpy/go-wav
+  env GOPATH="$srcdir/build" go get -v golang.org/x/sys/unix
+  go get -v github.com/mdlayher/netlink
   sed -i 's#/usr/share/backgrounds/default_background.jpg#/usr/share/backgrounds/deepin/desktop.jpg#' accounts/user.go
 }
 
