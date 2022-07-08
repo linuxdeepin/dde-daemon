@@ -92,6 +92,7 @@ install: build install-dde-data install-icons
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde-daemon
 	cp -r misc/dde-daemon/*   ${DESTDIR}${PREFIX}/share/dde-daemon/
+	cp -r misc/usr/share/deepin ${DESTDIR}${PREFIX}/share/
 
 	mkdir -pv ${DESTDIR}/lib/systemd/system/
 	cp -f misc/systemd/services/* ${DESTDIR}/lib/systemd/system/

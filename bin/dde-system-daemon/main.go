@@ -38,17 +38,18 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/network"
 	_ "github.com/linuxdeepin/dde-daemon/system/power"
 	_ "github.com/linuxdeepin/dde-daemon/system/power_manager"
+	_ "github.com/linuxdeepin/dde-daemon/system/scheduler"
 	_ "github.com/linuxdeepin/dde-daemon/system/swapsched"
 	_ "github.com/linuxdeepin/dde-daemon/system/systeminfo"
 	_ "github.com/linuxdeepin/dde-daemon/system/timedated"
 	_ "github.com/linuxdeepin/dde-daemon/system/uadp"
 
+	"github.com/linuxdeepin/dde-daemon/loader"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type Daemon
@@ -137,4 +138,3 @@ func main() {
 func (*Daemon) GetInterfaceName() string {
 	return dbusInterface
 }
-
