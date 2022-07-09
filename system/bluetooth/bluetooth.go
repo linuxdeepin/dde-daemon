@@ -505,7 +505,8 @@ func (b *SysBluetooth) removeDevice(devPath dbus.ObjectPath) {
 	} else {
 		// 找得到备份设备，但是是已经配对的设备，一般是通过 bluetoothctl remove 命令删除已经配对的设备。
 		// 备份设备也删除，并发送信号。
-		if removedDev.Paired {
+		adapter := b.adapters[adapterPath]
+		if removedDev.Paired || (adapter != nil && adapter.Discovering) {
 			b.removeBackupDevice(devPath)
 			removedDev.notifyDeviceRemoved()
 		}
