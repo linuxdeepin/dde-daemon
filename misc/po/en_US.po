@@ -356,7 +356,7 @@ msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:60
 msgid "Switch Layout"
-msgstr "Switch Layout"
+msgstr "Switch Keyboard Layout"
 
 #: ../../keybinding/shortcuts/id_name_map.go:79
 msgid "Switch to left workspace"
