@@ -346,8 +346,8 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 			icon = generalGetNotifyDisconnectedIcon(dsi.devType, path)
 			if len(msg) == 0 {
 				switch reason {
-				case nm.NM_DEVICE_STATE_REASON_USER_REQUESTED:
-					if newState == nm.NM_DEVICE_STATE_DISCONNECTED {
+				case nm.NM_DEVICE_STATE_REASON_NONE, nm.NM_DEVICE_STATE_REASON_USER_REQUESTED:
+					if newState == nm.NM_DEVICE_STATE_DISCONNECTED || newState == nm.NM_DEVICE_STATE_UNAVAILABLE {
 						if dsi.connectionType == connectionWirelessHotspot {
 							notify(icon, "", Tr("Hotspot disabled"))
 						} else {
