@@ -316,6 +316,17 @@ func (pp *PriorityPolicy) SetPorts(ports PriorityPortList) {
 	}
 }
 
+// 获取对应端口的类型
+func (pp *PriorityPolicy) GetPortType(cname, pname string) int {
+	for _, port := range pp.Ports {
+		if port.CardName == cname && port.PortName == pname {
+			return port.PortType
+		}
+	}
+
+	return PortTypeInvalid
+}
+
 // 获取优先级最高的端口
 func (pp *PriorityPolicy) GetTheFirstPort() PriorityPort {
 	if len(pp.Ports) > 0 {
