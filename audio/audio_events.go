@@ -135,6 +135,11 @@ func (a *Audio) isCardIdValid(cardId uint32) bool {
 }
 
 func (a *Audio) needAutoSwitchInputPort() bool {
+	// 不支持自动切换端口
+	if !a.canAutoSwitchPort() {
+		return false
+	}
+
 	inputs := GetPriorityManager().Input
 	firstPort := inputs.GetTheFirstPort()
 
@@ -172,6 +177,11 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 }
 
 func (a *Audio) needAutoSwitchOutputPort() bool {
+	// 不支持自动切换端口
+	if !a.canAutoSwitchPort() {
+		return false
+	}
+
 	outputs := GetPriorityManager().Output
 	firstPort := outputs.GetTheFirstPort()
 

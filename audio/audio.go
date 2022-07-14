@@ -62,6 +62,8 @@ const (
 
 	increaseMaxVolume = 1.5
 	normalMaxVolume   = 1.0
+
+	dsgKeyAutoSwitchPort = "autoSwitchPort"
 )
 
 var (
@@ -172,6 +174,9 @@ type Audio struct {
 	// 输出端口切换计数器
 	outputAutoSwitchCount    int
 	outputAutoSwitchCountMax int
+	// 自动端口切换
+	enableAutoSwitchPort bool
+	systemSigLoop        *dbusutil.SignalLoop
 
 	// nolint
 	signals *struct {
@@ -210,6 +215,7 @@ func newAudio(service *dbusutil.Service) *Audio {
 	a.syncConfig = dsync.NewConfig("audio", &syncConfig{a: a},
 		a.sessionSigLoop, dbusPath, logger)
 	a.sessionSigLoop.Start()
+
 	return a
 }
 
@@ -501,6 +507,11 @@ func (a *Audio) init() error {
 
 	a.ctx = ctx
 
+	err = a.initDsgProp()
+	if err != nil {
+		return err
+	}
+
 	// 更新本地数据
 	a.refresh()
 	a.oldCards = a.cards
@@ -633,6 +644,7 @@ func (a *Audio) destroyCtxRelated() {
 func (a *Audio) destroy() {
 	a.settings.Unref()
 	a.sessionSigLoop.Stop()
+	a.systemSigLoop.Stop()
 	a.syncConfig.Destroy()
 	a.destroyCtxRelated()
 }
@@ -1418,4 +1430,77 @@ func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
 	}
 
 	return dbusutil.ToError(fmt.Errorf("%s cannot support %s mode", card.core.Name, mode))
+}
+
+// 初始化 dsg 配置的属性
+func (a *Audio) initDsgProp() error {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+
+	a.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
+
+	var configManagerPath dbus.ObjectPath
+	systemConnObj := systemBus.Object("org.desktopspec.ConfigManager", "/")
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.audio", "").Store(&configManagerPath)
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+
+	err = dbusutil.NewMatchRuleBuilder().Type("signal").
+		PathNamespace(string(configManagerPath)).
+		Interface("org.desktopspec.ConfigManager.Manager").
+		Member("valueChanged").Build().AddTo(systemBus)
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+
+	var val bool
+	systemConnObj = systemBus.Object("org.desktopspec.ConfigManager", configManagerPath)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyAutoSwitchPort).Store(&val)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		logger.Info("auto switch port:", val)
+		a.PropsMu.Lock()
+		a.enableAutoSwitchPort = val
+		a.PropsMu.Unlock()
+	}
+
+	// 监听dsg配置变化
+	a.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
+	}, func(sig *dbus.Signal) {
+		if strings.Contains(sig.Name, "org.desktopspec.ConfigManager.Manager.valueChanged") && len(sig.Body) == 1 {
+			key, ok := sig.Body[0].(string)
+			if ok && key == dsgKeyAutoSwitchPort {
+				var val bool
+				err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&val)
+				if err != nil {
+					logger.Warning(err)
+				} else {
+					logger.Info("auto switch port:", val)
+					a.PropsMu.Lock()
+					a.enableAutoSwitchPort = val
+					a.PropsMu.Unlock()
+				}
+			}
+
+		}
+	})
+
+	a.systemSigLoop.Start()
+
+	return nil
+}
+
+// 是否支持自动端口切换策略
+func (a *Audio) canAutoSwitchPort() bool {
+	a.PropsMu.RLock()
+	defer a.PropsMu.RUnlock()
+
+	return a.enableAutoSwitchPort
 }
