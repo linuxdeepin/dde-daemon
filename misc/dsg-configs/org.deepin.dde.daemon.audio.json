@@ -1,0 +1,17 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "autoSwitchPort": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "global": true,
+            "name": "AutoSwitchPort",
+            "name[zh_CN]": "根据dde优先级管理自动切换端口",
+            "description": "auto switch pulse port",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}
