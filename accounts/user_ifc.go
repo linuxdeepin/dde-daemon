@@ -1045,6 +1045,7 @@ func (u *User) GetReminderInfo() (info LoginReminderInfo, dbusErr *dbus.Error) {
 }
 
 /* secret question */
+// #nosec G101
 const secretQuestionDirectory = "/var/lib/dde-daemon/secret-question/"
 
 func walkQuestions(username string, f func(id int, salt string) error) error {
