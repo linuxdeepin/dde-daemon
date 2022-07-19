@@ -248,6 +248,41 @@ func newManager(service *dbusutil.Service) *Manager {
 	return m
 }
 
+func getLicenseAuthorizationProperty(conn *dbus.Conn) uint32 {
+	var variant dbus.Variant
+	err := conn.Object("com.deepin.license", "/com/deepin/license/Info").Call(
+		"org.freedesktop.DBus.Properties.Get", 0, "com.deepin.license.Info", "AuthorizationProperty").Store(&variant)
+	if err != nil {
+		logger.Warning(err)
+		return 0
+	}
+	if variant.Signature().String() != "u" {
+		logger.Warning("not excepted value type")
+		return 0
+	}
+	return variant.Value().(uint32)
+}
+
+func listenLicenseInfoDBusPropChanged(conn *dbus.Conn, sigLoop *dbusutil.SignalLoop) {
+	err := conn.Object("com.deepin.license.Info",
+		"/com/deepin/license/Info").AddMatchSignal("com.deepin.license.Info", "LicenseStateChange").Err
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	sigLoop.AddHandler(&dbusutil.SignalRule {
+		Name: "com.deepin.license.Info.LicenseStateChange",
+	}, func(sig *dbus.Signal) {
+		if strings.Contains(string(sig.Name), "com.deepin.license.Info.LicenseStateChange") {
+			licenseState := getLicenseAuthorizationProperty(conn)
+			background.SetLicenseAuthorizationProperty(licenseState)
+			background.UpdateLicenseAuthorizationProperty()
+			logger.Info("[listenLicenseInfoDBusPropChanged] com.deepin.license.Info.LicenseStateChange : ", licenseState)
+		}
+	})
+}
+
 func (m *Manager) initCurrentBgs() {
 	m.desktopBgs = m.getBackgroundURIs()
 
@@ -492,6 +527,9 @@ func (m *Manager) init() error {
 
 	m.timeDate = timedate.NewTimedate(systemBus)
 	m.timeDate.InitSignalExt(m.sysSigLoop, true)
+
+	background.SetLicenseAuthorizationProperty(getLicenseAuthorizationProperty(systemBus))
+	listenLicenseInfoDBusPropChanged(systemBus, m.sysSigLoop)
 
 	m.sessionTimeDate = sessiontimedate.NewTimedate(sessionBus)
 	m.sessionTimeDate.InitSignalExt(m.sessionSigLoop, true)
