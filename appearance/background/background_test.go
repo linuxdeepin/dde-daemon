@@ -25,16 +25,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func Test_LicenseAuthorizationProperty(t *testing.T) {
+	t.Log(LicenseAuthorizationProperty())
+}
+
+func Test_SetLicenseAuthorizationProperty(t *testing.T) {
+	SetLicenseAuthorizationProperty(30)
+	t.Log(_licenseAuthorizationProperty)
+	assert.Equal(t, _licenseAuthorizationProperty, uint32(30))
+}
+
 func Test_Scanner(t *testing.T) {
 	assert.ElementsMatch(t, getBgFilesInDir("testdata/Theme1/wallpapers"),
 		[]string{
 			"testdata/Theme1/wallpapers/desktop.jpg",
 		})
 	assert.Nil(t, getBgFilesInDir("testdata/Theme2/wallpapers"))
-}
-
-func Test_getLicenseAuthorizationProperty(t *testing.T) {
-	t.Log(getLicenseAuthorizationProperty())
 }
 
 func Test_FileInDirs(t *testing.T) {

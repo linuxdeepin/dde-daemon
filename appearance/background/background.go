@@ -68,6 +68,20 @@ func SetCustomWallpaperDeleteCallback(fn func(file string)) {
 	customWallpaperDeleteCallback = fn
 }
 
+func LicenseAuthorizationProperty() uint32 {
+	return _licenseAuthorizationProperty
+}
+
+func SetLicenseAuthorizationProperty(value uint32) {
+	if value != _licenseAuthorizationProperty {
+		_licenseAuthorizationProperty = value
+	}
+}
+
+func UpdateLicenseAuthorizationProperty() {
+	refreshBackground()
+}
+
 func init() {
 	logger = log.NewLogger("background")
 	SetLogger(logger)
@@ -78,32 +92,9 @@ func init() {
 		_, _ = fmt.Fprintln(os.Stderr, err)
 	}
 
-	//get com.deepin.license Authorization type
-	_licenseAuthorizationProperty = getLicenseAuthorizationProperty()
-
 	_wallpapersPathMap[Professional] = "/usr/share/wallpapers/deepin"
 	_wallpapersPathMap[Government] = "/usr/share/wallpapers/deepin/deepin-government"
 	_wallpapersPathMap[Enterprise] = "/usr/share/wallpapers/deepin/deepin-enterprise"
-}
-
-func getLicenseAuthorizationProperty() uint32 {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		logger.Warning(err)
-		return 0
-	}
-	var variant dbus.Variant
-	err = conn.Object("com.deepin.license", "/com/deepin/license/Info").Call(
-		"org.freedesktop.DBus.Properties.Get", 0, "com.deepin.license.Info", "AuthorizationProperty").Store(&variant)
-	if err != nil {
-		logger.Warning(err)
-		return 0
-	}
-	if variant.Signature().String() != "u" {
-		logger.Warning("not excepted value type")
-		return 0
-	}
-	return variant.Value().(uint32)
 }
 
 type Background struct {
