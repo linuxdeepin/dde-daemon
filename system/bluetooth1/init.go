@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bluetooth1
+package bluetooth
 
 import (
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/log"
 )
 
-var logger = log.NewLogger("daemon/bluetooth1")
+var logger = log.NewLogger("daemon/bluetooth")
 
 func init() {
 	loader.Register(newBluetoothModule(logger))

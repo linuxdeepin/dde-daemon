@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bluetooth1
+package bluetooth
 
 const (
 	GENERIC_AUDIO_UUID = "00001203-0000-1000-8000-00805f9b34fb"

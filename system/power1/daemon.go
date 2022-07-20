@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
-	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
-var logger = log.NewLogger("daemon/system/power1")
+var logger = log.NewLogger("daemon/system/power")
 
 func init() {
 	loader.Register(NewDaemon(logger))
@@ -38,7 +38,7 @@ type Daemon struct {
 
 func NewDaemon(logger *log.Logger) *Daemon {
 	daemon := new(Daemon)
-	daemon.ModuleBase = loader.NewModuleBase("power1", daemon, logger)
+	daemon.ModuleBase = loader.NewModuleBase("power", daemon, logger)
 	return daemon
 }
 

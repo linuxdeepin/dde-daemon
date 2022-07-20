@@ -1,4 +1,4 @@
-package audio1
+package audio
 
 import (
 	"strings"
@@ -8,7 +8,8 @@ import (
 
 const (
 	PortTypeBluetooth    int = iota // 蓝牙音频
-	PortTypeHeadset                 // USB和3.5mm 耳麦
+	PortTypeHeadset                 // 3.5mm 耳麦
+	PortTypeUsb                     // USB
 	PortTypeBuiltin                 // 内置扬声器和话筒
 	PortTypeHdmi                    // HDMI
 	PortTypeLineIO                  // 线缆输入输出
@@ -54,11 +55,14 @@ func DetectPortType(card *pulse.Card, port *pulse.CardPortInfo) int {
 		return PortTypeBluetooth
 	}
 
-	if hasKeyword(stringList, "usb") ||
-		hasKeyword(stringList, "rear-mic") ||
+	if hasKeyword(stringList, "rear-mic") ||
 		hasKeyword(stringList, "front-mic") ||
 		hasKeyword(stringList, "headphone") {
 		return PortTypeHeadset
+	}
+
+	if hasKeyword(stringList, "usb") {
+		return PortTypeUsb
 	}
 
 	if hasKeyword(stringList, "hdmi") {
@@ -310,6 +314,17 @@ func (pp *PriorityPolicy) SetPorts(ports PriorityPortList) {
 			logger.Debugf("exist port <%s:%s>", port.CardName, port.PortName)
 		}
 	}
+}
+
+// 获取对应端口的类型
+func (pp *PriorityPolicy) GetPortType(cname, pname string) int {
+	for _, port := range pp.Ports {
+		if port.CardName == cname && port.PortName == pname {
+			return port.PortType
+		}
+	}
+
+	return PortTypeInvalid
 }
 
 // 获取优先级最高的端口

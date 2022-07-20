@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
 	"os/exec"
@@ -130,7 +130,7 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 			return
 		}
 
-		if !m.isWmBlackScreenActive() {
+		if lidCloseAction != powerActionTurnOffScreen && !m.isWmBlackScreenActive() {
 			m.setWmBlackScreenActive(true)
 		}
 	} else { // 开盖

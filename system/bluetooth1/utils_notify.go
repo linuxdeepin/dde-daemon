@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bluetooth1
+package bluetooth
 
 import (
 	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"

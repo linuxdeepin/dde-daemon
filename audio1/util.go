@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package audio1
+package audio
 
 import (
 	"bufio"
@@ -29,9 +29,9 @@ import (
 	"unicode"
 
 	dbus "github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-api/soundutils"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	mpris2 "github.com/linuxdeepin/go-dbus-factory/org.mpris.mediaplayer2"
+	"github.com/linuxdeepin/dde-api/soundutils"
 	//"github.com/linuxdeepin/go-lib/pulse"
 )
 

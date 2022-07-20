@@ -8,11 +8,8 @@ import (
 )
 
 const (
-	dbusInhibitorPathV20      = "/com/deepin/InhibitHint"
-	dbusInhibitorInterfaceV20 = "com.deepin.InhibitHint"
-
-	dbusInhibitorPathV23      = "/org/deepin/InhibitHint1"
-	dbusInhibitorInterfaceV23 = "org.deepin.InhibitHint1"
+	dbusInhibitorPath      = "/org/deepin/InhibitHint1"
+	dbusInhibitorInterface = "org.deepin.InhibitHint1"
 )
 
 func (m *Grub2) enableShutdown() {
@@ -29,7 +26,7 @@ func (m *Grub2) enableShutdown() {
 
 func (m *Grub2) preventShutdown() {
 	if m.inhibitFd == -1 {
-		fd, err := inhibit("shutdown", dbusServiceNameV23,
+		fd, err := inhibit("shutdown", dbusServiceName,
 			"Updating the system, please shut down or reboot later.")
 		logger.Infof("prevent shutdown: fd:%v\n", fd)
 		if err != nil {

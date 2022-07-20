@@ -17,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bluetooth1
+package bluetooth
 
 import (
 	"bytes"
 	"encoding/json"
 	"os"
-	"os/exec"
 
 	"github.com/linuxdeepin/go-lib/keyfile"
 )
@@ -45,47 +44,6 @@ func marshalJSON(v interface{}) (strJSON string) {
 	}
 	strJSON = string(byteJSON)
 	return
-}
-
-const (
-	rfkillBin                 = "rfkill"
-	rfkillDeviceTypeBluetooth = "bluetooth"
-)
-
-type rfkillItem struct {
-	Id     json.RawMessage `json:"id"`
-	Type   string          `json:"type"`
-	Device string          `json:"device"`
-	Soft   string          `json:"soft"`
-	Hard   string          `json:"hard"`
-}
-
-func getRfkillItems() ([]rfkillItem, error) {
-	output, err := exec.Command(rfkillBin, "-J").Output()
-	if err != nil {
-		return nil, err
-	}
-	var v map[string][]rfkillItem
-	err = json.Unmarshal(output, &v)
-	if err != nil {
-		return nil, err
-	}
-	return v[""], nil
-}
-
-func hasBluetoothDeviceBlocked() (bool, error) {
-	items, err := getRfkillItems()
-	if err != nil {
-		logger.Warning(err)
-		return false, err
-	}
-	logger.Debug(items)
-	for _, item := range items {
-		if item.Type == rfkillDeviceTypeBluetooth && item.Soft == "blocked" {
-			return true, nil
-		}
-	}
-	return false, nil
 }
 
 // readBoolFile 读取一个很小的文件，一般情况下内容只有 0 和 1。

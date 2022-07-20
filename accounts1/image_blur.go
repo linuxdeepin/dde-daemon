@@ -1,4 +1,4 @@
-package accounts1
+package accounts
 
 import (
 	"errors"

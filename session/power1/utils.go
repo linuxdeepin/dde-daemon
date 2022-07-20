@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
 	"math"
@@ -339,8 +339,8 @@ func playSound(name string) {
 }
 
 const (
-	deepinScreensaverDBusServiceName = "com.deepin.ScreenSaver"
-	deepinScreensaverDBusPath        = "/com/deepin/ScreenSaver"
+	deepinScreensaverDBusServiceName = "org.deepin.ScreenSaver1"
+	deepinScreensaverDBusPath        = "/org/deepin/ScreenSaver1"
 	deepinScreensaverDBusInterface   = deepinScreensaverDBusServiceName
 )
 
@@ -400,6 +400,7 @@ func suspendPulseSources(suspend int) {
 
 func (m *Manager) initGSettingsConnectChanged() {
 	const powerSettingsIcon = "preferences-system"
+
 	// 监听 session power 的属性的改变,并发送通知
 	gsettings.ConnectChanged(gsSchemaPower, "*", func(key string) {
 		logger.Debug("Power Settings Changed :", key)

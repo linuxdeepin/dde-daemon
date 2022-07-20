@@ -1,4 +1,4 @@
-package bluetooth1
+package bluetooth
 
 import (
 	"testing"

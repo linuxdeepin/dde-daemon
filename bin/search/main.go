@@ -35,9 +35,9 @@ type Manager struct {
 }
 
 const (
-	dbusServiceName = "com.deepin.daemon.Search"
-	dbusPath        = "/com/deepin/daemon/Search"
-	dbusInterface   = "com.deepin.daemon.Search"
+	dbusServiceName = "org.deepin.daemon.Search1"
+	dbusPath        = "/org/deepin/daemon/Search1"
+	dbusInterface   = "org.deepin.daemon.Search1"
 )
 
 var (

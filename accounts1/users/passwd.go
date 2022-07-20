@@ -49,38 +49,38 @@ func EncodePasswd(words string) string {
 	cwords := C.CString(words)
 	defer C.free(unsafe.Pointer(cwords))
 
-	return C.GoString(C.mkpasswd(cwords))
+	return C.GoString(C._mkpasswd(cwords))
 }
 
 func ExistPwUid(uid uint32) int {
-	return int(C.exist_pw_uid(C.uint(uid)))
+	return int(C._exist_pw_uid(C.uint(uid)))
 }
 
 func GetPwName(uid uint32) string {
-	return C.GoString(C.get_pw_name(C.uint(uid)))
+	return C.GoString(C._get_pw_name(C.uint(uid)))
 }
 
 func GetPwGecos(uid uint32) string {
 	var pwGecos string
-	pwGecos = C.GoString(C.get_pw_gecos(C.uint(uid)))
+	pwGecos = C.GoString(C._get_pw_gecos(C.uint(uid)))
 
 	return strings.Split(pwGecos, ",")[0]
 }
 
 func GetPwUid(uid uint32) string {
-	return strconv.FormatUint(uint64(C.get_pw_uid(C.uint(uid))), 10)
+	return strconv.FormatUint(uint64(C._get_pw_uid(C.uint(uid))), 10)
 }
 
 func GetPwGid(uid uint32) string {
-	return strconv.FormatUint(uint64(C.get_pw_gid(C.uint(uid))), 10)
+	return strconv.FormatUint(uint64(C._get_pw_gid(C.uint(uid))), 10)
 }
 
 func GetPwDir(uid uint32) string {
-	return C.GoString(C.get_pw_dir(C.uint(uid)))
+	return C.GoString(C._get_pw_dir(C.uint(uid)))
 }
 
 func GetPwShell(uid uint32) string {
-	return C.GoString(C.get_pw_shell(C.uint(uid)))
+	return C.GoString(C._get_pw_shell(C.uint(uid)))
 }
 
 type originShadowInfo struct {
@@ -108,11 +108,11 @@ func getSpwd(username string) (*originShadowInfo, error) {
 
 // password: has been crypt
 func updatePasswd(password, username string) error {
-	status := C.lock_shadow_file()
+	status := C._lock_shadow_file()
 	if status != 0 {
 		return fmt.Errorf("Lock shadow file failed")
 	}
-	defer C.unlock_shadow_file()
+	defer C._unlock_shadow_file()
 
 	content, err := ioutil.ReadFile(userFileShadow)
 	if err != nil {

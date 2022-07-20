@@ -39,6 +39,10 @@ type Theme struct {
 	}
 }
 
+func (*Theme) GetInterfaceName() string {
+	return themeDBusInterface
+}
+
 // NewTheme create Theme object.
 func NewTheme(g *Grub2) *Theme {
 	theme := &Theme{}

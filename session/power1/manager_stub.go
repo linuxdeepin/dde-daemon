@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
 	"github.com/linuxdeepin/dde-api/powersupply/battery"

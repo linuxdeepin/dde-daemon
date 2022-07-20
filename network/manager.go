@@ -31,7 +31,7 @@ import (
 	"github.com/linuxdeepin/dde-daemon/network/nm"
 	"github.com/linuxdeepin/dde-daemon/network/proxychains"
 	"github.com/linuxdeepin/dde-daemon/session/common"
-	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.airplanemode1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
 	sysNetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"

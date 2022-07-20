@@ -33,11 +33,8 @@ import (
 )
 
 const (
-	themeDBusPathV20      = dbusPathV20 + "/Theme"
-	themeDBusInterfaceV20 = dbusInterfaceV20 + ".Theme"
-
-	themeDBusPathV23      = dbusPathV23 + "/Theme"
-	themeDBusInterfaceV23 = dbusInterfaceV23 + ".Theme"
+	themeDBusPath      = dbusPath + "/Theme"
+	themeDBusInterface = dbusInterface + ".Theme"
 )
 
 func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string) *dbus.Error {

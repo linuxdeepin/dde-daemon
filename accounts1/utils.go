@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package accounts1
+package accounts
 
 import (
 	"bufio"
@@ -34,11 +34,11 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/encoding/kv"
 	"github.com/linuxdeepin/go-lib/graphic"
 	"github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 )
 
 // #nosec G101

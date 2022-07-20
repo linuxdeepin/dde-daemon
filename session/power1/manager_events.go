@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-api/soundutils"
 	. "github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/dde-api/soundutils"
 )
 
 // nolint

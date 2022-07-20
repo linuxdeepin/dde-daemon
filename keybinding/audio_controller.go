@@ -21,8 +21,8 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
-	audio "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
-	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	audio "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.audio1"
+	backlight "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.helper.backlight1"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )

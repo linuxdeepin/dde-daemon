@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bluetooth1
+package bluetooth
 
 import (
 	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
@@ -31,7 +31,7 @@ type module struct {
 
 func newBluetoothModule(logger *log.Logger) *module {
 	var d = new(module)
-	d.ModuleBase = loader.NewModuleBase("bluetooth1", d, logger)
+	d.ModuleBase = loader.NewModuleBase("bluetooth", d, logger)
 	return d
 }
 
@@ -42,8 +42,6 @@ func (*module) GetDependencies() []string {
 var _bt *SysBluetooth
 
 func (m *module) Start() error {
-	return nil
-
 	if _bt != nil {
 		return nil
 	}

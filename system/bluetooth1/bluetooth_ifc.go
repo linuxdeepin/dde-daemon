@@ -1,11 +1,11 @@
-package bluetooth1
+package bluetooth
 
 import (
 	"fmt"
 	"strconv"
 
 	"github.com/godbus/dbus"
-	sysbtagent "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth.agent"
+	sysbtagent "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.bluetooth1.agent"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )

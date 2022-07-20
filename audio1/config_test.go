@@ -1,4 +1,4 @@
-package audio1
+package audio
 
 import (
 	"testing"

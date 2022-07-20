@@ -21,7 +21,7 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
-	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	power "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
 )
 
 // 按键码

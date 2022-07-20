@@ -93,7 +93,7 @@ func startSysGrubService() error {
 	}
 	sysBusDaemon := ofd.NewDBus(sysBus)
 	_, err = sysBusDaemon.StartServiceByName(dbus.FlagNoAutoStart,
-		"com.deepin.daemon.Grub2", 0)
+		"org.deepin.daemon.Grub2", 0)
 	return err
 }
 
@@ -103,7 +103,7 @@ func getSysGrubObj() (dbus.BusObject, error) {
 		return nil, err
 	}
 
-	obj := sysBus.Object("com.deepin.daemon.Grub2", "/com/deepin/daemon/Grub2")
+	obj := sysBus.Object("org.deepin.daemon.Grub2", "/org/deepin/daemon/Grub2")
 	return obj, nil
 }
 
@@ -114,5 +114,5 @@ func prepareGfxmodeDetect() error {
 		return err
 	}
 
-	return sysGrubObj.Call("com.deepin.daemon.Grub2.PrepareGfxmodeDetect", 0).Err
+	return sysGrubObj.Call("org.deepin.daemon.Grub2.PrepareGfxmodeDetect", 0).Err
 }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bluetooth1
+package bluetooth
 
 import (
 	"errors"
@@ -25,11 +25,11 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
-	sysbtagent "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth.agent"
+	sysbtagent "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.bluetooth1.agent"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 )
 
 const (

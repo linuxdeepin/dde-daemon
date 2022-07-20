@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package audio1
+package audio
 
 import (
 	"time"
@@ -29,7 +29,7 @@ import (
 )
 
 var (
-	logger = log.NewLogger("daemon/audio1")
+	logger = log.NewLogger("daemon/audio")
 )
 
 func init() {
@@ -43,7 +43,7 @@ type Module struct {
 
 func NewModule(logger *log.Logger) *Module {
 	var d = new(Module)
-	d.ModuleBase = loader.NewModuleBase("audio1", d, logger)
+	d.ModuleBase = loader.NewModuleBase("audio", d, logger)
 	return d
 }
 
@@ -52,8 +52,6 @@ func (*Module) GetDependencies() []string {
 }
 
 func (m *Module) start() error {
-	// TODO
-	return nil
 	err := startPulseaudio() // 为了保证蓝牙模块依赖audio模块,并且audio模块启动pulseaudio完成.
 	if err != nil {
 		err = xerrors.Errorf("failed to start pulseaudio: %w", err)
@@ -131,7 +129,7 @@ func waitSoundThemePlayerExit() {
 
 	for {
 		var owner string
-		owner, err = srv.GetNameOwner("org.deepin.api.SoundThemePlayer1")
+		owner, err = srv.GetNameOwner("com.deepin.api.SoundThemePlayer")
 		if err != nil {
 			return
 		}

@@ -31,7 +31,7 @@
 #define ERROR_NULLPOINTER -1;
 #define ERROR_NOERROR 0;
 
-char *mkpasswd(const char *words) {
+char *_mkpasswd(const char *words) {
     unsigned long seed[2];
     char salt[] = "$6$........";
     const char *const seedchars = "./0123456789ABCDEFGHIJKLMNOPQRST"
@@ -54,41 +54,41 @@ char *mkpasswd(const char *words) {
     return password;
 }
 
-int lock_shadow_file() {
+int _lock_shadow_file() {
     return lckpwdf();
 }
 
-int unlock_shadow_file() {
+int _unlock_shadow_file() {
     return ulckpwdf();
 }
 
-int exist_pw_uid(__uid_t uid) {
+int _exist_pw_uid(__uid_t uid) {
     if (!getpwuid(uid)) {
         return ERROR_NULLPOINTER;
     }
     return ERROR_NOERROR;
 }
 
-char *get_pw_name(__uid_t uid) {
+char *_get_pw_name(__uid_t uid) {
     return getpwuid(uid)->pw_name;
 }
 
-char *get_pw_gecos(__uid_t uid) {
+char *_get_pw_gecos(__uid_t uid) {
     return getpwuid(uid)->pw_gecos;
 }
 
-__uid_t get_pw_uid(__uid_t uid) {
+__uid_t _get_pw_uid(__uid_t uid) {
     return getpwuid(uid)->pw_uid;
 }
 
-__gid_t get_pw_gid(__uid_t uid) {
+__gid_t _get_pw_gid(__uid_t uid) {
     return getpwuid(uid)->pw_gid;
 }
 
-char *get_pw_dir(__uid_t uid) {
+char *_get_pw_dir(__uid_t uid) {
     return getpwuid(uid)->pw_dir;
 }
 
-char *get_pw_shell(__uid_t uid) {
+char *_get_pw_shell(__uid_t uid) {
     return getpwuid(uid)->pw_shell;
 }

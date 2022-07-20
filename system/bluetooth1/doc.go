@@ -24,4 +24,4 @@ the interface of Bluetooth.
 The dbus interface of bluetooth to operate bluez is designed to asynchronous, and all result is returned by signal.
 Other interface to get adapter/device information will return immediately, because it was cached.
 */
-package bluetooth1
+package bluetooth

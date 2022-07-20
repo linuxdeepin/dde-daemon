@@ -1,4 +1,4 @@
-package bluetooth1
+package bluetooth
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ type autoConnectManager struct {
 
 // 和单个适配器相关的数据
 type acmAdapterData struct {
-	workers map[int]bool
+	workers               map[int]bool
 	// 需要等待的由设备主动重连接的设备集合
 	activeReconnectDevices map[dbus.ObjectPath]struct{}
 	timer                  *time.Timer
@@ -319,7 +319,7 @@ func (acm *autoConnectManager) addAdapter(adapterPath dbus.ObjectPath) {
 	}
 
 	acm.adapters[adapterPath] = &acmAdapterData{
-		workers: make(map[int]bool),
+		workers:               make(map[int]bool),
 	}
 }
 

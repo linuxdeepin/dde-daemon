@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 
-int count_utmpx(const char *file,
+int _count_utmpx(const char *file,
                 const char *user,
                 struct timeval *since,
                 struct utmpx *current,

@@ -43,32 +43,17 @@ func RunAsDaemon() {
 	ihObj.SetName("Control Center")
 	ihObj.SetIcon("preferences-system")
 
-	err = service.ExportExt(dbusPathV20, dbusInterfaceV20, _g)
+	err = service.Export(dbusPath, _g)
 	if err != nil {
 		logger.Fatal("failed to export grub2:", err)
 	}
 
-	err = service.ExportExt(dbusPathV23, dbusInterfaceV23, _g)
-	if err != nil {
-		logger.Fatal("failed to export grub2:", err)
-	}
-
-	err = service.ExportExt(themeDBusPathV20, themeDBusInterfaceV20, _g.theme)
+	err = service.Export(themeDBusPath, _g.theme)
 	if err != nil {
 		logger.Fatal("failed to export grub2 theme:", err)
 	}
 
-	err = service.ExportExt(themeDBusPathV23, themeDBusInterfaceV23, _g.theme)
-	if err != nil {
-		logger.Fatal("failed to export grub2 theme:", err)
-	}
-
-	err = service.ExportExt(editAuthDBusPathV20, editAuthDBusInterfaceV20, _g.editAuth)
-	if err != nil {
-		logger.Fatal("failed to export grub2 edit auth:", err)
-	}
-
-	err = service.ExportExt(editAuthDBusPathV23, editAuthDBusInterfaceV23, _g.editAuth)
+	err = service.Export(editAuthDBusPath, _g.editAuth)
 	if err != nil {
 		logger.Fatal("failed to export grub2 edit auth:", err)
 	}
@@ -78,22 +63,23 @@ func RunAsDaemon() {
 	// 	logger.Warning("failed to export inhibit hint:", err)
 	// }
 
-	err = service.ExportExt(dbusInhibitorPathV20, dbusInhibitorInterfaceV20, ihObj)
+	err = service.Export(dbusInhibitorPath, ihObj)
 	if err != nil {
 		logger.Warning("failed to export inhibit hint:", err)
 	}
 
-	err = service.ExportExt(dbusInhibitorPathV23, dbusInhibitorInterfaceV23, ihObj)
-	if err != nil {
-		logger.Warning("failed to export inhibit hint:", err)
-	}
-
-	err = service.RequestName(dbusServiceNameV20)
+	err = service.RequestName(dbusServiceName)
 	if err != nil {
 		logger.Fatal("failed to request name:", err)
 	}
 
-	err = service.RequestName(dbusServiceNameV23)
+	// 兼容V20接口
+	err = service.Export(themeDbusPathV20, _g.themeV20)
+	if err != nil {
+		logger.Fatal("failed to export grub2 themeV20:", err)
+	}
+
+	err = service.RequestName(DbusServiceNameV20)
 	if err != nil {
 		logger.Fatal("failed to request name:", err)
 	}

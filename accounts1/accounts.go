@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package accounts1
+package accounts
 
 import (
+	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/accounts1/logined"
 	"github.com/linuxdeepin/dde-daemon/loader"
-	"github.com/linuxdeepin/go-lib/log"
 )
 
 var (
 	_imageBlur *ImageBlur
-	logger     = log.NewLogger("daemon/accounts1")
+	logger     = log.NewLogger("daemon/accounts")
 )
 
 func init() {
@@ -43,7 +43,7 @@ type Daemon struct {
 
 func NewDaemon() *Daemon {
 	daemon := new(Daemon)
-	daemon.ModuleBase = loader.NewModuleBase("accounts1", daemon, logger)
+	daemon.ModuleBase = loader.NewModuleBase("accounts", daemon, logger)
 	return daemon
 }
 
@@ -58,6 +58,8 @@ func (d *Daemon) Start() error {
 
 	service := loader.GetService()
 	d.manager = NewManager(service)
+	// init V20 manager
+	d.manager.managerV20 = NewManagerV20(d.manager)
 
 	err := service.Export(dbusPath, d.manager)
 	if err != nil {
@@ -69,6 +71,8 @@ func (d *Daemon) Start() error {
 	}
 
 	d.manager.exportUsers()
+	// init V20 Users
+	d.manager.managerV20.exportUsers()
 
 	d.imageBlur = newImageBlur(service)
 	_imageBlur = d.imageBlur
@@ -91,6 +95,15 @@ func (d *Daemon) Start() error {
 	}
 
 	err = service.RequestName(dbusServiceName)
+	if err != nil {
+		return err
+	}
+
+	err = service.Export(dbusPathV20, d.manager.managerV20)
+	if err != nil {
+		return err
+	}
+	err = service.RequestName(dbusServiceNameV20)
 	if err != nil {
 		return err
 	}

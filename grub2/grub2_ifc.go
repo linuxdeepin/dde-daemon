@@ -30,19 +30,19 @@ import (
 )
 
 const (
-	dbusServiceNameV20 = "com.deepin.daemon.Grub2"
-	dbusPathV20        = "/com/deepin/daemon/Grub2"
-	dbusInterfaceV20   = "com.deepin.daemon.Grub2"
-
-	dbusServiceNameV23 = "org.deepin.daemon.Grub2"
-	dbusPathV23        = "/org/deepin/daemon/Grub2"
-	dbusInterfaceV23   = "org.deepin.daemon.Grub2"
+	dbusServiceName = "org.deepin.daemon.Grub2"
+	dbusPath        = "/org/deepin/daemon/Grub2"
+	dbusInterface   = "org.deepin.daemon.Grub2"
 
 	polikitActionIdCommon               = "com.deepin.daemon.Grub2"
 	polikitActionIdPrepareGfxmodeDetect = "com.deepin.daemon.grub2.prepare-gfxmode-detect"
 
 	timeoutMax = 10
 )
+
+func (*Grub2) GetInterfaceName() string {
+	return dbusInterface
+}
 
 // GetSimpleEntryTitles return entry titles only in level one and will
 // filter out some useless entries such as sub-menus and "memtest86+".

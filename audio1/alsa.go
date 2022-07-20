@@ -1,4 +1,4 @@
-package audio1
+package audio
 
 /*
 #cgo pkg-config: alsa

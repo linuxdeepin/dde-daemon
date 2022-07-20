@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
 	"syscall"
 
+	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/dde-daemon/appearance"
 	"github.com/linuxdeepin/dde-daemon/network"
-	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 )
 
 type sleepInhibitor struct {

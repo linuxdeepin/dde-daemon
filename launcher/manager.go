@@ -34,7 +34,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/godbus/dbus"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
-	libLastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
+	libLastore "github.com/linuxdeepin/go-dbus-factory/org.deepin.lastore1"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"

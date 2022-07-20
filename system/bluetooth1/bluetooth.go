@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bluetooth1
+package bluetooth
 
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
@@ -345,20 +344,6 @@ func (b *SysBluetooth) watchSession(uid string, session login1.Session) {
 	}
 }
 
-func (b *SysBluetooth) unblockBluetoothDevice() {
-	has, err := hasBluetoothDeviceBlocked()
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-	if has {
-		err := exec.Command(rfkillBin, "unblock", rfkillDeviceTypeBluetooth).Run()
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-}
-
 func (b *SysBluetooth) loadObjects() {
 	// add exists adapters and devices
 	objects, err := b.objectManager.GetManagedObjects(0)
@@ -367,7 +352,6 @@ func (b *SysBluetooth) loadObjects() {
 		return
 	}
 
-	b.unblockBluetoothDevice()
 	// add adapters
 	for path, obj := range objects {
 		if _, ok := obj[bluezAdapterDBusInterface]; ok {
@@ -405,11 +389,10 @@ func (b *SysBluetooth) removeAllObjects() {
 
 func (b *SysBluetooth) handleInterfacesAdded(path dbus.ObjectPath, data map[string]map[string]dbus.Variant) {
 	if _, ok := data[bluezAdapterDBusInterface]; ok {
-		b.unblockBluetoothDevice()
 		b.addAdapter(path)
 	}
 	if _, ok := data[bluezDeviceDBusInterface]; ok {
-		b.addDevice(path)
+		b.addDeviceWithCount(path, 3)
 	}
 }
 
@@ -445,7 +428,7 @@ func (b *SysBluetooth) handleDBusNameOwnerChanged(name, oldOwner, newOwner strin
 	}
 }
 
-func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
+func (b *SysBluetooth) addDeviceWithCount(devPath dbus.ObjectPath, count int) {
 	logger.Debug("receive signal device added", devPath)
 	if b.isDeviceExists(devPath) {
 		return
@@ -458,6 +441,12 @@ func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
 
 	if d.adapter == nil {
 		logger.Warningf("failed to add device %s, not found adapter", devPath)
+		if count > 0 {
+			logger.Debugf("retry add device %s after 100ms", devPath)
+			time.AfterFunc(100*time.Millisecond, func() {
+				b.addDeviceWithCount(devPath, count-1)
+			})
+		}
 		return
 	}
 
@@ -488,6 +477,10 @@ func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
 			}
 		}()
 	}
+}
+
+func (b *SysBluetooth) addDevice(devPath dbus.ObjectPath) {
+	b.addDeviceWithCount(devPath, 0)
 }
 
 func (b *SysBluetooth) removeDevice(devPath dbus.ObjectPath) {
@@ -716,6 +709,7 @@ func (b *SysBluetooth) addAdapter(adapterPath dbus.ObjectPath) {
 	// initialize adapter power state
 	b.config.addAdapterConfig(a.Address)
 	cfgPowered := b.config.getAdapterConfigPowered(a.Address)
+
 	err := a.core.Adapter().Powered().Set(0, cfgPowered)
 	if err != nil {
 		logger.Warning(err)

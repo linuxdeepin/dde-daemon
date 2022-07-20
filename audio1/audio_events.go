@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package audio1
+package audio
 
 import (
 	"errors"
@@ -165,7 +165,13 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 		return false
 	}
 
-	logger.Debugf("will auto switch from input<%s,%s> to input<%s,%s>",
+	// 同一级别的不切换
+	if inputs.GetPortType(currentCardName, currentPortName) == firstPort.PortType {
+		logger.Debugf("current input<%s,%s> has the same type with first port", currentCardName, currentPortName)
+		return false
+	}
+
+	logger.Infof("will auto switch from input<%s,%s> to input<%s,%s>",
 		currentCardName, currentPortName, firstPort.CardName, firstPort.PortName)
 	return true
 }
@@ -201,7 +207,13 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 		return false
 	}
 
-	logger.Debugf("will auto switch from output<%s,%s> to output<%s,%s>",
+	// 同一级别的不切换
+	if outputs.GetPortType(currentCardName, currentPortName) == firstPort.PortType {
+		logger.Debugf("current input<%s,%s> has the same type with first port", currentCardName, currentPortName)
+		return false
+	}
+
+	logger.Infof("will auto switch from output<%s,%s> to output<%s,%s>",
 		currentCardName, currentPortName, firstPort.CardName, firstPort.PortName)
 	return true
 }
@@ -213,7 +225,7 @@ func (a *Audio) autoSwitchPort() {
 		card, err := a.cards.getByName(firstOutput.CardName)
 
 		if err == nil {
-			logger.Debugf("auto switch output to #%d %s:%s", card.Id, card.core.Name, firstOutput.PortName)
+			logger.Infof("auto switch output to #%d %s:%s", card.Id, card.core.Name, firstOutput.PortName)
 			a.setPort(card.Id, firstOutput.PortName, pulse.DirectionSink)
 		} else {
 			logger.Warning(err)
@@ -235,7 +247,7 @@ func (a *Audio) autoSwitchPort() {
 		card, err := a.cards.getByName(firstInput.CardName)
 
 		if err == nil {
-			logger.Debugf("auto switch input to #%d %s:%s", card.Id, card.core.Name, firstInput.PortName)
+			logger.Infof("auto switch input to #%d %s:%s", card.Id, card.core.Name, firstInput.PortName)
 			a.setPort(card.Id, firstInput.PortName, pulse.DirectionSource)
 		} else {
 			logger.Warning(err)

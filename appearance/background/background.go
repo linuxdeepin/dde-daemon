@@ -28,7 +28,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
+	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
 	"github.com/linuxdeepin/go-lib/imgutil"
 
 	"github.com/linuxdeepin/go-lib/log"

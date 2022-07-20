@@ -22,7 +22,7 @@ package keybinding
 import (
 	"errors"
 
-	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	backlight "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.helper.backlight1"
 	commonbl "github.com/linuxdeepin/go-lib/backlight/common"
 	kbdbl "github.com/linuxdeepin/go-lib/backlight/keyboard"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"

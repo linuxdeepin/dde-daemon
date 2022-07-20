@@ -17,23 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package accounts1
+package accounts
 
 /*
+#cgo LDFLAGS: -lcrypt
+
+#include <unistd.h>
+#include <crypt.h>
+#include <stdlib.h>
+
 #include <shadow.h>
 typedef struct spwd cspwd;
 */
 import "C"
 import (
+	"bufio"
+	"bytes"
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
+	"unsafe"
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-api/lang_info"
@@ -43,6 +54,7 @@ import (
 	"github.com/linuxdeepin/go-lib/imgutil"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+	"golang.org/x/xerrors"
 )
 
 const (
@@ -1009,11 +1021,11 @@ func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64
 
 	// pam_unix/passverify.c
 	curDays := time.Now().Unix() / secondsPerDay
-	daysLeft := spLastChg + spMax - curDays
+	daysLeft := spLastChg + spMax - curDays + 1
 
-	if daysLeft < 0 {
+	if daysLeft <= 0 {
 		return expiredStatusExpiredAlready, daysLeft, nil
-	} else if spWarn > daysLeft {
+	} else if spWarn >= daysLeft {
 		return expiredStatusExpiredSoon, daysLeft, nil
 	}
 	return expiredStatusNormal, daysLeft, nil
@@ -1030,4 +1042,136 @@ func (u *User) SetPasswordHint(hint string) (busErr *dbus.Error) {
 
 func (u *User) GetReminderInfo() (info LoginReminderInfo, dbusErr *dbus.Error) {
 	return getLoginReminderInfo(u.UserName), nil
+}
+
+/* secret question */
+const secretQuestionDirectory = "/var/lib/dde-daemon/secret-question/" //#nosec G101
+
+func walkQuestions(username string, f func(id int, salt string) error) error {
+	path := filepath.Join(secretQuestionDirectory, username)
+
+	file, err := os.Open(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+
+		return err
+	}
+	defer file.Close()
+
+	reader := bufio.NewReader(file)
+	for {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+
+			return err
+		}
+
+		line = strings.TrimSpace(line)
+		if len(line) == 0 {
+			return nil
+		}
+
+		item := strings.SplitN(line, ":", 2)
+		if len(item) != 2 {
+			return xerrors.New("wrong format")
+		}
+
+		id, err := strconv.Atoi(item[0])
+		if err != nil {
+			return err
+		}
+
+		salt := item[1]
+
+		err = f(id, salt)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (u *User) GetSecretQuestions() (list []int, err *dbus.Error) {
+	err1 := walkQuestions(u.UserName, func(id int, salt string) error {
+		list = append(list, id)
+
+		return nil
+	})
+	if err1 != nil {
+		err = dbusutil.ToError(err1)
+	}
+
+	return
+}
+
+func (u *User) VerifySecretQuestions(answers map[int]string) (failed []int, err *dbus.Error) {
+	err1 := walkQuestions(u.UserName, func(id int, salt string) error {
+		answer, ok := answers[id]
+		if !ok || len(answer) == 0 {
+			return xerrors.New("empty answer")
+		}
+
+		answerCStr := C.CString(answer)
+		defer C.free(unsafe.Pointer(answerCStr))
+
+		saltCStr := C.CString(salt)
+		defer C.free(unsafe.Pointer(saltCStr))
+
+		data := C.struct_crypt_data{}
+		data.initialized = 0
+
+		// salt 格式：$类型$salt&encrypted，无需去除 encrypted
+		res := C.crypt_r(answerCStr, saltCStr, &data)
+		if res == nil {
+			return fmt.Errorf("encrypt failed")
+		}
+
+		resStr := C.GoString(res)
+		if resStr != salt {
+			failed = append(failed, id)
+		}
+
+		return nil
+	})
+	if err1 != nil {
+		err = dbusutil.ToError(err1)
+		return
+	}
+
+	return
+}
+
+func (u *User) SetSecretQuestions(sender dbus.Sender, list map[int][]byte) *dbus.Error {
+	if len(list) != 3 {
+		return &dbus.ErrMsgInvalidArg
+	}
+
+	err := u.checkAuth(sender, false, polkitActionChangeOwnData)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
+	err = os.MkdirAll(secretQuestionDirectory, os.ModePerm)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
+	path := filepath.Join(secretQuestionDirectory, u.UserName)
+
+	var content bytes.Buffer
+	for id, encryptedAnswer := range list {
+		content.WriteString(strconv.Itoa(id))
+		content.WriteRune(':')
+		content.Write(encryptedAnswer)
+		content.WriteRune('\n')
+	}
+
+	err = ioutil.WriteFile(path, content.Bytes(), 0600)
+	return dbusutil.ToError(err)
 }

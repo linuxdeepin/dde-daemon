@@ -26,3 +26,4 @@ file_filter = misc/ts/com.deepin.daemon.Fprintd.policy/policy_<lang>.ts
 source_file = misc/ts/com.deepin.daemon.Fprintd.policy/policy.ts
 source_lang = en
 type = QT
+

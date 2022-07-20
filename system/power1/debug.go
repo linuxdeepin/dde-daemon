@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 //func (m *Manager) Debug(cmd string) *dbus.Error {
 //	logger.Debug("Debug", cmd)

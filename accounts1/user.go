@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package accounts1
+package accounts
 
 import (
 	"encoding/base64"
@@ -149,6 +149,8 @@ type User struct {
 	HistoryLayout []string
 
 	configLocker sync.Mutex
+
+	userV20 *UserV20
 }
 
 func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User, error) {
@@ -582,6 +584,15 @@ func (u *User) clearFingers() {
 	}
 
 	logger.Debug("clear fingers succesed")
+}
+
+func (u *User) clearSecretQuestions() {
+	path := filepath.Join(secretQuestionDirectory, u.UserName)
+
+	err := os.Remove(path)
+	if err != nil && !os.IsNotExist(err) {
+		logger.Warning(err)
+	}
 }
 
 // userPath must be composed with 'userDBusPath + uid'

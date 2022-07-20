@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
 	"encoding/json"
@@ -29,11 +29,11 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-api/powersupply"
-	"github.com/linuxdeepin/dde-api/powersupply/battery"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/dde-api/powersupply"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
 )
 
 var noUEvent bool

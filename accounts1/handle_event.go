@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package accounts1
+package accounts
 
 import (
 	"path/filepath"
@@ -159,6 +159,7 @@ func (m *Manager) updatePropUserList() {
 		if err != nil {
 			logger.Warning(err)
 		}
+		m.managerV20.syncUserList(m.UserList)
 	}
 	m.UserListMu.Unlock()
 }
@@ -251,6 +252,7 @@ func (m *Manager) deleteUser(uid string) {
 	user := m.getUserByUid(uid)
 	if user != nil {
 		user.clearFingers()
+		user.clearSecretQuestions()
 	} else {
 		logger.Warningf("uid %s not found", uid)
 	}

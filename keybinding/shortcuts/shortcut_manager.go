@@ -28,7 +28,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
+	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/gettext"

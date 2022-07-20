@@ -1,4 +1,4 @@
-package power1
+package power
 
 import (
 	"sort"

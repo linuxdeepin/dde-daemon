@@ -39,24 +39,12 @@ func main() {
 		service: service,
 	}
 
-	// v20
-	err = service.ExportExt(dbusPathV20, dbusInterfaceV20, m)
+	err = service.Export(dbusPath, m)
 	if err != nil {
 		logger.Error("failed to export:", err)
 		return
 	}
-	err = service.RequestName(dbusServiceNameV20)
-	if err != nil {
-		logger.Error("failed to request name:", err)
-		return
-	}
-	// v23
-	err = service.ExportExt(dbusPathV23, dbusInterfaceV23, m)
-	if err != nil {
-		logger.Error("failed to export:", err)
-		return
-	}
-	err = service.RequestName(dbusServiceNameV23)
+	err = service.RequestName(dbusServiceName)
 	if err != nil {
 		logger.Error("failed to request name:", err)
 		return

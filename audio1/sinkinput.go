@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package audio1
+package audio
 
 import (
 	"fmt"
@@ -84,7 +84,7 @@ func (s *SinkInput) getPropSinkIndex() uint32 {
 func getSinkInputVisible(sinkInputInfo *pulse.SinkInput) bool {
 	appName := sinkInputInfo.PropList[pulse.PA_PROP_APPLICATION_NAME]
 	switch appName {
-	case "org.deepin.SoundEffect1", "deepin-notifications":
+	case "com.deepin.SoundEffect", "deepin-notifications":
 		return false
 	}
 

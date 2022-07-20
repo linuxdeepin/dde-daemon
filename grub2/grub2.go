@@ -63,6 +63,7 @@ type Grub2 struct {
 	modifyManager      *modifyManager
 	entries            []Entry
 	theme              *Theme
+	themeV20		   *ThemeV20
 	editAuth           *EditAuth
 	gfxmodeDetectState gfxmodeDetectState
 	inhibitFd          dbus.UnixFD
@@ -340,6 +341,7 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 
 	// init theme
 	g.theme = NewTheme(g)
+	g.themeV20 = NewThemeV20(g)
 
 	jobLog, err := loadLog()
 	if err != nil {

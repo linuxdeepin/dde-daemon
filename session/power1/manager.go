@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
 	"os"
@@ -29,7 +29,7 @@ import (
 	"github.com/linuxdeepin/dde-daemon/session/common"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	systemPower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	systemPower "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -195,6 +195,23 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.BatteryLockDelay.Bind(m.settings, settingKeyBatteryLockDelay)
 	m.ScreenBlackLock.Bind(m.settings, settingKeyScreenBlackLock)
 	m.SleepLock.Bind(m.settings, settingKeySleepLock)
+
+	// gsetting默认配置选择待机/休眠，但实际机器不支持，调整gsetting 为合适的值。
+	canHibernate := m.canHibernate()
+	canSuspend := m.canSuspend()
+	keys := []string{
+		settingKeyLinePowerLidClosedAction,
+		settingKeyLinePowerPressPowerBtnAction,
+		settingKeyBatteryLidClosedAction,
+		settingKeyBatteryPressPowerBtnAction,
+	}
+	for _, key := range keys {
+		action := m.settings.GetEnum(key)
+		if (!canHibernate && action == powerActionHibernate) ||
+			(!canSuspend && action == powerActionSuspend) {
+			m.settings.SetEnum(key, powerActionDoNothing)
+		}
+	}
 
 	m.LinePowerLidClosedAction.Bind(m.settings, settingKeyLinePowerLidClosedAction)
 	m.LinePowerPressPowerBtnAction.Bind(m.settings, settingKeyLinePowerPressPowerBtnAction)

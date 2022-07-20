@@ -41,8 +41,8 @@ const (
 	ProfTypeCPU = "cpu"    //nolint
 	ProfTypeMem = "memory" //nolint
 
-	dbusPath        = "/com/deepin/daemon/Daemon"
-	dbusServiceName = "com.deepin.daemon.Daemon"
+	dbusPath        = "/org/deepin/daemon/Daemon1"
+	dbusServiceName = "org.deepin.daemon.Daemon1"
 	dbusInterface   = dbusServiceName
 )
 
@@ -126,12 +126,10 @@ func (s *SessionDaemon) initModules() {
 	part2ModuleNames := []string{
 		"network",
 		"audio",
-		"audio1",
 		"appearance",
 		"screensaver",
 		"sessionwatcher",
 		"power",  // need screensaver and sessionwatcher
-		"power1", // need screensaver and sessionwatcher
 		"uadpagent",
 		"service-trigger",
 		"clipboard",
@@ -143,8 +141,6 @@ func (s *SessionDaemon) initModules() {
 		"bluetooth",
 		"screenedge",
 		"mime",
-		//"calendar",
-		//"miracast", // need network
 		"systeminfo",
 		"lastore",
 		"calltrace",

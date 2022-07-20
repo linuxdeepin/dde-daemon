@@ -23,7 +23,7 @@ import (
 	"github.com/godbus/dbus"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	backlight "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.helper.backlight1"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 )
 

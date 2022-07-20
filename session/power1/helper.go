@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package power1
+package power
 
 import (
 	"github.com/godbus/dbus"
@@ -25,16 +25,16 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 
 	// system bus
-	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
+	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
-	libpower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	libpower "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
 	sensorproxy "github.com/linuxdeepin/go-dbus-factory/net.hadess.sensorproxy"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 
 	// session bus
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
+	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.sessionwatcher1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	screensaver "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.screensaver"
 	"github.com/linuxdeepin/go-lib/dbusutil"
