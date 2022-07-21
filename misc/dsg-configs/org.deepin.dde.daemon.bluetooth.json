@@ -1,0 +1,16 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+      "airplaneBltOriginState": {
+          "value":"",
+          "serial": 0,
+          "flags": ["global"],
+          "name": "airplaneBltOriginState",
+          "name[zh_CN]": "保存飞行模式中蓝牙的状态",
+          "description": "Save Airplane Mode for Bluetooth",
+          "permissions": "readwrite",
+          "visibility": "private"
+      }
+  }
+}

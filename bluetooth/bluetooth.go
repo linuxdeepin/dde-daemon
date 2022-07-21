@@ -46,6 +46,7 @@ const (
 	dbusServiceName = "com.deepin.daemon.Bluetooth"
 	dbusPath        = "/com/deepin/daemon/Bluetooth"
 	dbusInterface   = dbusServiceName
+	configManagerId = "org.desktopspec.ConfigManager"
 )
 
 const (
@@ -99,6 +100,7 @@ type Bluetooth struct {
 	sessionCon   *dbus.Conn
 	sessionAudio audio.Audio
 
+	configManagerPath dbus.ObjectPath
 	// nolint
 	signals *struct {
 		// adapter/device properties changed signals
@@ -259,8 +261,29 @@ func (b *Bluetooth) init() {
 	}
 	b.setPropState(state)
 
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+
+	// 加载dsg配置
+	systemConnObj := sysBus.Object(configManagerId, "/")
+	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.bluetooth", "").Store(&b.configManagerPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	// monitor airplane mode enabled state change
 	b.airplaneBltOriginState = make(map[dbus.ObjectPath]bool)
+
+	value := b.getAirplaneBltOriginStateConfig()
+	if value != "" {
+		err := json.Unmarshal([]byte(value), &b.airplaneBltOriginState)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+
 	b.airplane.InitSignalExt(b.systemSigLoop, true)
 	err = b.airplane.Enabled().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
@@ -278,6 +301,7 @@ func (b *Bluetooth) init() {
 					logger.Debugf("close bluetooth adapter powered failed, path: %v, err: %v", adapter.Path, err)
 				}
 			}
+			b.setAirplaneBltOriginStateConfig(marshalJSON(b.airplaneBltOriginState))
 			logger.Debugf("airplane is on, save bluetooth origin state, %v", b.airplaneBltOriginState)
 		} else {
 			// recover origin state
@@ -444,7 +468,6 @@ func (b *Bluetooth) init() {
 	if err != nil {
 		logger.Warning(err)
 	}
-
 	b.settings = gio.NewSettings(bluetoothSchema)
 	b.DisplaySwitch.Bind(b.settings, displaySwitch)
 
@@ -801,4 +824,37 @@ func (b *Bluetooth) emitTransferFailed(file string, sessionPath dbus.ObjectPath,
 	if err != nil {
 		logger.Warning("failed to emit TransferFailed:", err)
 	}
+}
+
+func (b *Bluetooth) getAirplaneBltOriginStateConfig() string {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		return ""
+	}
+	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", b.configManagerPath)
+	var value string
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, "airplaneBltOriginState").Store(&value)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	return value
+}
+
+func (b *Bluetooth) setAirplaneBltOriginStateConfig(value string) {
+	if value == "" {
+		return
+	}
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", b.configManagerPath)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.setValue", 0, "airplaneBltOriginState", dbus.MakeVariant(value)).Err
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	return
 }
