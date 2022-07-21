@@ -1270,6 +1270,9 @@ func (sm *ShortcutManager) AddMediaToKwin(gsettings *gio.Settings, wmObj wm.Wm) 
 	logger.Debug("AddMediaToKwin")
 	idNameMap := getMediaIdNameMap()
 	for _, id := range gsettings.ListKeys() {
+		if id == "close" {
+			continue
+		}
 		name := idNameMap[id]
 		logger.Warning("+++ gsetting KWin accels ID , NANE:", id, name)
 
