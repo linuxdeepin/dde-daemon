@@ -1,0 +1,16 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "BalanceCpuGovernor": {
+            "value": "ondemand",
+            "serial": 0,
+            "flags": ["global"],
+            "name": "BalanceCpuGovernor",
+            "name[zh_CN]": "电源设置-性能模式-平衡模式状态",
+            "description": "balance cpu governor",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}
