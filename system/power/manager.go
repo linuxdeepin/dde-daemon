@@ -34,9 +34,21 @@ import (
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 var noUEvent bool
+
+const configManagerId = "org.desktopspec.ConfigManager"
+//内核文档：https://docs.kernel.org/admin-guide/pm/cpufreq.html#generic-scaling-governors
+var cpupowerArr = []string {
+	"performance",
+	"powersave",
+	"userspace",
+	"ondemand",
+	"conservative",
+	"schedutil",
+}
 
 func init() {
 	if arch.Get() == arch.Sunway {
@@ -49,11 +61,12 @@ func init() {
 
 // https://www.kernel.org/doc/Documentation/power/power_supply_class.txt
 type Manager struct {
-	service     *dbusutil.Service
-	batteries   map[string]*Battery
-	batteriesMu sync.Mutex
-	ac          *AC
-	gudevClient *gudev.Client
+	service       *dbusutil.Service
+	systemSigLoop *dbusutil.SignalLoop
+	batteries     map[string]*Battery
+	batteriesMu   sync.Mutex
+	ac            *AC
+	gudevClient   *gudev.Client
 
 	// 电池是否电量低
 	batteryLow bool
@@ -99,6 +112,10 @@ type Manager struct {
 	// 是否支持Boost
 	IsHighPerformanceSupported bool
 
+	// 性能模式-平衡模式dsg
+	balanceScalingGovernor     string
+	configManagerPath          dbus.ObjectPath
+
 	// 当前模式
 	Mode string
 
@@ -121,6 +138,42 @@ type Manager struct {
 	}
 }
 
+func (m *Manager) initDsgConfig(conn *dbus.Conn) error {
+	// 加载dsg配置
+	systemConnObj := conn.Object(configManagerId, "/")
+	err := systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.power", "").Store(&m.configManagerPath)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	err = dbusutil.NewMatchRuleBuilder().Type("signal").
+		PathNamespace(string(m.configManagerPath)).
+		Interface("org.desktopspec.ConfigManager.Manager").
+		Member("valueChanged").Build().AddTo(conn)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	return nil
+}
+
+func (m *Manager) getDsgData(key string) string {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("getDsgData systemConn err: ", err)
+		return ""
+	}
+	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
+	var value string
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value",0, key).Store(&value)
+	if err != nil {
+		logger.Warningf("getDsgData key : %s. err : %s", key, err)
+		return ""
+	}
+	logger.Infof(" systemPowerManager getDsgData key : %s , value : %s", key, value)
+	return value
+}
+
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	m := &Manager{
 		service:           service,
@@ -131,6 +184,21 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		m.destroy()
 		return nil, err
+	}
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return nil, err
+	}
+	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
+	m.systemSigLoop.Start()
+	m.initDsgConfig(systemBus)
+
+	cpuGovernor := m.getDsgData("BalanceCpuGovernor")
+	if strv.Strv(cpupowerArr).Contains(cpuGovernor) {
+		m.balanceScalingGovernor = cpuGovernor
+	} else {
+		m.balanceScalingGovernor = "ondemand"
+		logger.Warning(" illegal string cpuGovernor : ", cpuGovernor)
 	}
 	return m, nil
 }
@@ -383,6 +451,7 @@ func (m *Manager) destroy() {
 		m.gudevClient.Unref()
 		m.gudevClient = nil
 	}
+	m.systemSigLoop.Stop()
 }
 
 const configFile = "/var/lib/dde-daemon/power/config.json"
@@ -468,8 +537,8 @@ func (m *Manager) doSetMode(mode string) error {
 	switch mode {
 	case "balance": // governor=performance boost=false
 		m.setPropPowerSavingModeEnabled(false)
-
-		err = m.doSetCpuGovernor("performance")
+		logger.Info("[doSetMode] balanceScalingGovernor : ", m.balanceScalingGovernor)
+		err = m.doSetCpuGovernor(m.balanceScalingGovernor)
 		if err != nil {
 			logger.Warning(err)
 		}
