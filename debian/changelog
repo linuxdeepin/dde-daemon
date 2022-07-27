@@ -1,3 +1,9 @@
+dde-daemon (6.0.4) unstable; urgency=medium
+
+  * dde-flow-sprint2
+
+ -- Tan Feng <tanfeng@uniontech.com>  Wed, 27 Jul 2022 18:06:31 +0800
+
 dde-daemon (6.0.2) unstable; urgency=medium
 
   * tag 6.0.2
