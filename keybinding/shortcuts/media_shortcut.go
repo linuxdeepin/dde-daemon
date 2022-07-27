@@ -44,7 +44,7 @@ const (
 	cmdCalendar   = "dde-calendar"
 	cmdMeeting    = "deepin-contacts"
 	cmdTerminal   = "/usr/lib/deepin-daemon/default-terminal"
-	cmdMessenger  = "dbus-send --print-reply --dest=com.deepin.dde.osd /com/deepin/dde/Notification com.deepin.dde.Notification.Toggle"
+	cmdMessenger  = "dbus-send --print-reply --dest=org.deepin.dde.Widgets / org.deepin.dde.Widgets.Show"
 	cmdLauncher   = "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle"
 	cmdCamera     = "deepin-camera"
 )
@@ -114,7 +114,7 @@ var mediaIdActionMap = map[string]*Action{
 	"log-off": &Action{Type: ActionTypeSystemLogOff},
 	"away":    &Action{Type: ActionTypeSystemAway},
 
-	"web-cam":              NewExecCmdAction(cmdCamera, false),
+	"web-cam": NewExecCmdAction(cmdCamera, false),
 
 	// We do not need to deal with XF86Wlan key default,
 	// but can be specially by 'EnableNetworkController'

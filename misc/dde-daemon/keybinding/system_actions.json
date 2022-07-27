@@ -86,7 +86,7 @@
         },
 		{
             "key":"notification-center",
-            "Action":"dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
+            "Action":"dbus-send --print-reply --dest=org.deepin.dde.Widgets / org.deepin.dde.Widgets.Show"
         },
         {
             "Key": "screenshot-ocr",
