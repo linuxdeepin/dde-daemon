@@ -86,7 +86,7 @@
         },
 		{
             "key":"notification-center",
-            "Action":"dbus-send --print-reply --dest=org.deepin.dde.Widgets / org.deepin.dde.Widgets.Show"
+            "Action":"dbus-send --print-reply --dest=org.deepin.dde.Widgets / org.deepin.dde.Widgets.Toggle"
         },
         {
             "Key": "screenshot-ocr",

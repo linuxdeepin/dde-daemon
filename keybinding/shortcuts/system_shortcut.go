@@ -113,7 +113,7 @@ var defaultSysActionCmdMap = map[string]string{
 	"disable-touchpad":      "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
 	"wm-switcher":           "dbus-send --type=method_call --dest=com.deepin.WMSwitcher /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM",
 	"turn-off-screen":       "sleep 0.5; xset dpms force off",
-	"notification-center":   "dbus-send --print-reply --dest=org.deepin.dde.Widgets / org.deepin.dde.Widgets.Show",
+	"notification-center":   "dbus-send --print-reply --dest=org.deepin.dde.Widgets / org.deepin.dde.Widgets.Toggle",
 	"clipboard":             "dbus-send --print-reply --dest=com.deepin.dde.Clipboard /com/deepin/dde/Clipboard com.deepin.dde.Clipboard.Toggle",
 	"global-search":         "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
 }
