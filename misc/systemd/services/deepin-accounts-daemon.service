@@ -5,7 +5,7 @@ Description=Accounts Service
 # winbind, we need to ensure that Accounts Service starts after
 # nss-user-lookup.target
 After=nss-user-lookup.target lightdm.service
-Wants=nss-user-lookup.target
+Wants=nss-user-lookup.target fprintd.service
 
 [Service]
 Type=dbus
