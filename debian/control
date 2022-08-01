@@ -71,7 +71,7 @@ Depends:
  dmidecode,
  dnsmasq-base,
  gnome-keyring,
- gvfs-bin,
+ libglib2.0-bin,
  hwinfo,
  imwheel,
  ipwatchd,

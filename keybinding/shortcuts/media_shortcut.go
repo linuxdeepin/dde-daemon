@@ -37,8 +37,8 @@ const (
 )
 
 const (
-	cmdMyComputer = "gvfs-open computer:///"
-	cmdDocuments  = "gvfs-open ~/Documents"
+	cmdMyComputer = "gio open computer:///"
+	cmdDocuments  = "gio open ~/Documents"
 	cmdEject      = "eject -r"
 	cmdCalculator = "deepin-calculator"
 	cmdCalendar   = "dde-calendar"
@@ -114,7 +114,7 @@ var mediaIdActionMap = map[string]*Action{
 	"log-off": &Action{Type: ActionTypeSystemLogOff},
 	"away":    &Action{Type: ActionTypeSystemAway},
 
-	"web-cam":              NewExecCmdAction(cmdCamera, false),
+	"web-cam": NewExecCmdAction(cmdCamera, false),
 
 	// We do not need to deal with XF86Wlan key default,
 	// but can be specially by 'EnableNetworkController'
