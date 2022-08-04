@@ -20,6 +20,9 @@
 package keyevent
 
 import (
+	"os"
+	"io/ioutil"
+	"strings"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -52,6 +55,10 @@ type Manager struct {
 		}
 	}
 }
+
+const(
+	touchpadSwitchFile = "/proc/uos/touchpad_switch"
+)
 
 // 允许发送的按键列表
 var allowList = map[uint32]bool{
@@ -136,6 +143,31 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 	allow := allowList[ev.Keycode]
 	if allow {
 		m.emitKeyEvent(ev)
+		if ev.Keycode == KEY_TOUCHPAD_TOGGLE && pressed {
+			go func() {
+				_, err := os.Stat(touchpadSwitchFile)
+				if err != nil {
+					logger.Warning(err)
+					return
+				}
+				content, err := ioutil.ReadFile(touchpadSwitchFile)
+				if err != nil {
+					logger.Warning(err)
+					return
+				}
+				arg := string(content)
+				if strings.Contains(arg, "enable") {
+					arg = "disable"
+				} else {
+					arg = "enable"
+				}
+				err = ioutil.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
+				if err != nil{
+					logger.Warning(err)
+					return
+				}
+			}()
+		}
 	}
 }
 
