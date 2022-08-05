@@ -159,12 +159,18 @@ func (psp *powerSavePlan) Start() error {
 	gs := gio.NewSettings(gsSchemaPower)
 	psp.brightnessSave.Bind(gs, settingKeySaveBrightnessWhilePsm)
 	psp.multiBrightnessWithPsm = newMultiBrightnessWithPsm()
-	psp.initMultiBrightnessWithPsm()
 
 	helper := psp.manager.helper
 	power := helper.Power
 	display := helper.Display
 	screenSaver := helper.ScreenSaver
+
+	data, _ := power.PowerSavingModeBrightnessData().Get(0)
+	if data == "" {
+		// 有system级缓存数据时不需要从本地读，后面会同步。
+		psp.initMultiBrightnessWithPsm()
+	}
+
 	//OnBattery changed will effect current PowerSavePlan
 	err := power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
 		psp.Reset()
@@ -214,7 +220,6 @@ func (psp *powerSavePlan) Start() error {
 		logger.Warning("failed to connectChanged Brightness:", err)
 	}
 
-	data, _ := power.PowerSavingModeBrightnessData().Get(0)
 	if data != "" {
 		psp.syncBrightnessData(data)
 		state, _ := power.PowerSavingModeEnabled().Get(0)
