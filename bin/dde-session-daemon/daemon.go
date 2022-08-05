@@ -221,6 +221,7 @@ func (s *SessionDaemon) initModules() {
 		"lastore",
 		"calltrace",
 		"debug",
+		"eventlog",
 	}
 
 	allModules := loader.List()

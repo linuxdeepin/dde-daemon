@@ -63,6 +63,7 @@ prepare() {
   go get -v github.com/youpy/go-wav
   env GOPATH="$srcdir/build" go get -v golang.org/x/sys/unix
   go get -v github.com/mdlayher/netlink
+  go get -v github.com/golang/protobuf/proto
   sed -i 's#/usr/share/backgrounds/default_background.jpg#/usr/share/backgrounds/deepin/desktop.jpg#' accounts/user.go
 }
 

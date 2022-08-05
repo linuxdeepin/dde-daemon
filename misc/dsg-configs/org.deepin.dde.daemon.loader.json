@@ -301,6 +301,16 @@
           "description": "Allow x-event-monitor module start",
           "permissions": "readwrite",
           "visibility": "private"
+        },
+        "eventlog": {
+          "value": true,
+          "serial": 0,
+          "flags": [],
+          "name": "eventlogEnable",
+          "name[zh_CN]": "用户体验计划模块启动",
+          "description": "Allow eventlog module start",
+          "permissions": "readwrite",
+          "visibility": "private"
         }
     }
 }
