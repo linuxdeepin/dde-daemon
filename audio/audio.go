@@ -23,6 +23,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"math"
 	"os/exec"
 	"sort"
 	"strings"
@@ -402,6 +403,11 @@ func (a *Audio) refershSinkInputs() {
 func (a *Audio) shouldAutoPause() bool {
 	if a.defaultSink == nil {
 		logger.Debug("default sink is nil")
+		return false
+	}
+
+	// 云平台无card
+	if a.defaultSink.Card == math.MaxUint32 {
 		return false
 	}
 
@@ -1103,6 +1109,10 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 
 func (a *Audio) refreshBluetoothOpts() {
 	if a.defaultSink == nil {
+		return
+	}
+	// 云平台无card
+	if a.defaultSink.Card == math.MaxUint32 {
 		return
 	}
 	card, err := a.cards.get(a.defaultSink.Card)
