@@ -21,6 +21,7 @@ package audio
 
 import (
 	"fmt"
+	"math"
 	"sort"
 
 	"github.com/linuxdeepin/go-lib/pulse"
@@ -75,7 +76,9 @@ func (a *Audio) getCardNameById(cardId uint32) string {
 		// 出现这个报错通常是非常严重的问题，说明PulseAudio数据同步更新的重构没有完全实现，
 		// 出现此问题务必要清理掉
 		// 注意：有一种情况下属于正常现象，那就是调用IsPortEnabled的时候，但是不建议调用这个接口
-		logger.Warningf("invalid card ID %d", cardId)
+		if cardId != math.MaxUint32 { // 云平台没有card是正常的
+			logger.Warningf("invalid card ID %d", cardId)
+		}
 		return ""
 	}
 	card, err := a.ctx.GetCard(cardId)
