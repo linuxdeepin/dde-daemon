@@ -50,6 +50,7 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/screenedge"
 	_ "github.com/linuxdeepin/dde-daemon/screensaver"
 	_ "github.com/linuxdeepin/dde-daemon/service_trigger"
+	_ "github.com/linuxdeepin/dde-daemon/session/eventlog"
 	_ "github.com/linuxdeepin/dde-daemon/session/power"
 	_ "github.com/linuxdeepin/dde-daemon/session/uadpagent"
 	_ "github.com/linuxdeepin/dde-daemon/sessionwatcher"
