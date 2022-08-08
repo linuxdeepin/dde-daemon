@@ -11,6 +11,16 @@
           "description": "Save Airplane Mode for Bluetooth",
           "permissions": "readwrite",
           "visibility": "private"
+      },
+      "sendFileEnable": {
+          "value": true,
+          "serial": 0,
+          "flags": [],
+          "name": "sendFileEnable",
+          "name[zh_CN]": "是否允许蓝牙发送文件",
+          "description": "Allow send file by bluetooth",
+          "permissions": "readwrite",
+          "visibility": "private"
       }
   }
 }
