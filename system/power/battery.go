@@ -26,9 +26,9 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/dde-api/powersupply/battery"
 )
 
 type Battery struct {
@@ -144,6 +144,12 @@ func (bat *Battery) refresh(dev *gudev.Device) (ok bool) {
 	endDelay := bat.service.DelayEmitPropertyChanged(bat)
 	batInfo := battery.GetBatteryInfo(dev)
 	if batInfo == nil {
+		if endDelay != nil {
+			err := endDelay()
+			if err != nil {
+				logger.Warning(err)
+			}
+		}
 		return
 	}
 
