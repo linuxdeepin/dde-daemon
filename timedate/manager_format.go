@@ -26,6 +26,7 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 const (
@@ -83,6 +84,25 @@ func newManagerFormat(service *dbusutil.Service) (*ManagerFormat, error) {
 		logger.Warning(err)
 	}
 
+	//初始化的时候，根据环境变量修改dsg中"Space"的翻译内容
+	digitGroupingSymbol := m.getDsgData("digitGroupingSymbol")
+	decimalSymbol := m.getDsgData("decimalSymbol")
+	space := gettext.Tr("Space")
+	logger.Infof(" [newManagerFormat] space : %v, digitGroupingSymbol : %v", space, digitGroupingSymbol)
+	if digitGroupingSymbol == string("Space") || digitGroupingSymbol == space {
+		if m.setPropDigitGroupingSymbol(space) {
+			m.setDsgData("digitGroupingSymbol", space)
+		}
+	}
+
+	logger.Infof(" [newManagerFormat] space : %v, decimalSymbol : %v", space, decimalSymbol)
+	if decimalSymbol == string("Space") || decimalSymbol == space {
+		if m.setPropDecimalSymbol(space){
+			m.setDsgData("decimalSymbol", space)
+		}
+	}
+
+	logger.Infof(" [newManagerFormat] digitGroupingSymbol : %v, decimalSymbol : %v", digitGroupingSymbol, decimalSymbol)
 	return m, nil
 }
 
