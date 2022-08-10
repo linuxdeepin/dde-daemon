@@ -4,28 +4,30 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Артем Рудаковский <crja72@gmail.com>, 2020
 # Transifex Bot <>, 2020
-# Анатолий Валерианович <ffox909@mail.ru>, 2020
+# Артем Рудаковский <crja72@gmail.com>, 2020
 # Serge Kukharski, 2020
-# Basil Russu <basil_russu@hotmail.com>, 2021
-# Artem Kulikov <artem.job.kulikov@gmail.com>, 2021
-# Cindy0514, 2021
-# Vladislav Evseev <poryvay.vladik@gmail.com>, 2021
-# gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2021
-# Snow fire R <iceler75@gmail.com>, 2021
+# Cindy0514, 2020
+# gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2020
+# Basil Russu <basil_russu@hotmail.com>, 2020
+# Artem Kulikov <artem.job.kulikov@gmail.com>, 2020
+# Анатолий Валерианович <ffox909@mail.ru>, 2021
 # Владимир Киреев <vovan_kireev@mail.ru>, 2021
-# Droid Man, 2022
-# Валерий Владимирович, 2022
+# Vladislav Evseev <poryvay.vladik@gmail.com>, 2021
+# Snow fire R <iceler75@gmail.com>, 2021
+# Валерий Владимирович, 2021
+# Droid Man, 2021
+# Caarmi, 2022
+# Vladimir Eloshin, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Валерий Владимирович, 2022\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Vladimir Eloshin, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,12 +97,12 @@ msgstr "Настройка масштабирования дисплея"
 msgid "Display scaling"
 msgstr "Масштабирование дисплея"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s был отключен"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Открыть"
 
@@ -249,7 +251,7 @@ msgstr "Принудительный Выход"
 
 #: ../../dock/app_entry_menu.go:175
 msgid "Dock"
-msgstr "Док"
+msgstr "Закрепить"
 
 #: ../../dock/app_entry_menu.go:185
 msgid "Undock"
@@ -265,7 +267,7 @@ msgstr "Недостаточно места на диске, пожалуйст�
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
-msgstr "Запуск программ"
+msgstr "Выбор Программ"
 
 #: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Terminal"
@@ -367,99 +369,100 @@ msgstr ""
 msgid "Notification Center"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Переключить Раскладку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Переключиться на левый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Переключиться на правый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Переключиться на верхний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Переключиться на нижний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Переключить похожие окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Переключить похожие окна в обратном порядке"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Переключить окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Переключить окна в обратном порядке"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Показать рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Развернуть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Восстановить окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Свернуть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Закрыть окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Переместить окно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Изменить размер окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Переместить на левый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Переместить на правый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Переместить на верхний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Переместить на нижний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Показать окна всех рабочих столов"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Показать окна текущего рабочего стола"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Отобразить рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Переключить мониторы"
 
@@ -510,11 +513,11 @@ msgstr ""
 
 #: ../../lastore/lastore.go:493
 msgid "30 mins later"
-msgstr ""
+msgstr "через 30 минут"
 
 #: ../../lastore/lastore.go:500
 msgid "2h later"
-msgstr ""
+msgstr "через 2 часа"
 
 #: ../../lastore/lastore.go:507
 msgid "6h later"
@@ -549,11 +552,11 @@ msgstr "Сброс кэша пакета"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Доступны обновления"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
-msgstr ""
+msgstr "Перезагрузка после обновления"
 
 #: ../../lastore/notify.go:142
 msgid "Restart the computer to use the system and applications properly"
@@ -625,7 +628,7 @@ msgstr "Проводное Соединение"
 
 #: ../../network/manager_connection.go:404
 msgid "Wired Connection %v"
-msgstr ""
+msgstr "Проводное соединение %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -1056,14 +1059,14 @@ msgstr ""
 "\"%s\" не прошел проверку безопасности системы и не может быть запущен "
 "сейчас"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Критически низкий заряд батареи"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Низкий заряд батареи, пожалуйста подключите питание"
 
@@ -1115,6 +1118,10 @@ msgid ""
 msgstr ""
 "%q больше не может подключено к %q. Попробуйте забыть это устройство и снова"
 " выполнить сопряжение."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

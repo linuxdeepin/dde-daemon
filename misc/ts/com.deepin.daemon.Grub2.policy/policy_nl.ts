@@ -4,22 +4,22 @@
 		<message>
 			<location filename="com.deepin.daemon.Grub2!message" line="0"/>
 			<source>Authentication is required to change the grub2 configuration</source>
-			<translation>Authenticatie is vereist om de configuratie van grub2 te wijzigen</translation>
+			<translation>Authenticatie vereist om de grub2-instellingen aan te passen</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!description" line="0"/>
 			<source>Change the grub2 configuration</source>
-			<translation>Wijzig de grub2-configuratie</translation>
+			<translation>Grub2-instellingen aanpassen</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!message" line="0"/>
 			<source>Authentication is required to prepare grub2 display resolution detection</source>
-			<translation>Authenticatie is vereist om de grub2 schermresolutie detectie voor te bereiden</translation>
+			<translation>Authenticatie vereist om de grub2-schermresolutiedetectie voor te bereiden</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!description" line="0"/>
 			<source>Prepare grub2 display resolution detection</source>
-			<translation>Grub2 schermresolutie detectie voorbereiden</translation>
+			<translation>Grub2-schermresolutiedetectie voorbereiden</translation>
 		</message>
 	</context>
 </TS>

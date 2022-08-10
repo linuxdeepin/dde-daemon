@@ -4,22 +4,22 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Boki Ball <superdodgeballer@gmail.com>, 2020
 # kolera <koleramilan@gmail.com>, 2020
-# Smarty <kidsmart33@gmail.com>, 2021
-# Cindy0514, 2021
-# 300fcb8ccee76b8f5263c3c84dca5deb_f77780b <df26a7f04dcc55f05fed89fcf6abce66_942684>, 2021
-# Марко Пејовић <markopejovic@tutanota.com>, 2022
-# Slobodan Simić <slsimic@gmail.com>, 2022
+# Boki Ball <superdodgeballer@gmail.com>, 2020
+# Cindy0514, 2020
+# Smarty <kidsmart33@gmail.com>, 2020
+# 300fcb8ccee76b8f5263c3c84dca5deb_f77780b <df26a7f04dcc55f05fed89fcf6abce66_942684>, 2020
+# Slobodan Simić <slsimic@gmail.com>, 2021
+# Марко Пејовић <markopejovic@tutanota.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Slobodan Simić <slsimic@gmail.com>, 2022\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2021\n"
 "Language-Team: Serbian (https://www.transifex.com/linuxdeepin/teams/3617/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,12 +88,12 @@ msgstr "Подешавање скалираног приказа"
 msgid "Display scaling"
 msgstr "Скалирање приказа"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s је искључен"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Покрени"
 
@@ -346,11 +346,11 @@ msgstr "Говор у текст"
 
 #: ../../keybinding/shortcuts/id_name_map.go:50
 msgid "Clipboard"
-msgstr "Бележница"
+msgstr "Остава"
 
 #: ../../keybinding/shortcuts/id_name_map.go:51
 msgid "Translation"
-msgstr " Превод"
+msgstr "Превод"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
 msgid "Grand Search"
@@ -360,99 +360,100 @@ msgstr ""
 msgid "Notification Center"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Промени распоред"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Премести се на леви радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Премести се на десни радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Премести се на горњи радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Премести се на доњи радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Промена између прозора истог програма"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Промена између прозора истог програма обрнутим редоследом"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Промена прозора"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Промена прозора обрнутим редоследом"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Приказ радне површине"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Максимализуј прозор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Врати прозор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Минимализуј прозор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Затвори прозор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Помери прозор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Промени величину прозора"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Премести на леви радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Премести на десни радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Премести на горњи радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Премести на доњи радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Приказ прозора свих радних површина"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Приказ прозора тренутне радне површине"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Приказ активности"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Промена екрана"
 
@@ -997,7 +998,7 @@ msgstr "Неуспешно повезивање на %q, погрешна лоз
 
 #: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
-msgstr "Лозинка је потребна за повезивање %q"
+msgstr "Потребна је лозинка за повезивање %q"
 
 #: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
@@ -1024,12 +1025,11 @@ msgstr "Режим приступне тачке није подржан на о
 #: ../../network/utils_notify.go:197
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr ""
-"Хардверски прекидач ВЛАН картице је искључен, молимо укључите по потреби."
+msgstr "Физички прекидач ВЛАН картице је искључен, укључите по потреби."
 
 #: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
-msgstr "Системски посредник успешно подешен."
+msgstr "Системски посредник је успешно подешен."
 
 #: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
@@ -1046,14 +1046,14 @@ msgstr ""
 "\"%s\" није успешно прошао безбедносну проверу и тренутно се не може "
 "покренути"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Батерија критично испражњена"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Батерија при крају, прикључите пуњач"
 
@@ -1065,7 +1065,7 @@ msgstr "Подешавања напајања су промењена"
 #: ../../session/power/utils.go:464 ../../session/power/utils_test.go:12
 #: ../../session/power/utils_test.go:13
 msgid "When the lid is closed, "
-msgstr "Када је поклопац затворен,"
+msgstr "Када је поклопац затворен, "
 
 #: ../../session/power/utils.go:468
 msgid "When pressing the power button, "
@@ -1106,6 +1106,10 @@ msgstr ""
 "%q се не може више повезати са %q. Покушајте да заборавите овај уређај и "
 "поново га упарите."
 
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
+
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
 msgstr "Идентификација је неопходна за подешавање времена система"
@@ -1115,8 +1119,7 @@ msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
-"Идентификација је неопходна да контролишете опцију мрежне синхронизације "
-"времена"
+"Идентификација је неопходна да контролишете мрежну синхронизацију времена"
 
 #: ../../timedate/manager_ifc.go:89
 msgid "Authentication is required to change NTP server"

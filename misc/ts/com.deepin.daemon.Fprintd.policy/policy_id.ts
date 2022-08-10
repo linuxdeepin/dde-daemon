@@ -4,12 +4,12 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>Otentikasi diperlukan untuk menambahkan kata sandi sidik jari</translation>
+			<translation>Otentikasi diperlukan untuk menambahkan password sidik jari</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!description" line="0"/>
 			<source>Add fingerprint password</source>
-			<translation>Tambah sidik jari kata sandi</translation>
+			<translation>Tambah password sidik jari</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>

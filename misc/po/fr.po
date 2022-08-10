@@ -6,34 +6,34 @@
 # Translators:
 # Ldm Public <ldmpub@gmail.com>, 2020
 # FFXP <jeremy.pfenning@ironmail.fr>, 2020
-# Charles Monzat <c.monzat@laposte.net>, 2020
-# Aestan <anthony.margerand@protonmail.com>, 2020
-# Tristan Denni <tristan.denni@viacesi.fr>, 2020
 # Neltus <neltus1@gmail.com>, 2020
-# Sami G.-D., 2020
 # zwpwjwtz <zwpwjwtz@126.com>, 2020
-# Kristien <kristien@mailo.com>, 2020
+# Aestan <anthony.margerand@protonmail.com>, 2020
 # Joselito 8, 2020
+# Charles Monzat <c.monzat@laposte.net>, 2020
+# Tristan Denni <tristan.denni@viacesi.fr>, 2020
+# Sami G.-D., 2020
+# Kristien <kristien@mailo.com>, 2020
 # Jean-Philippe Paumier <paumierj@hotmail.com>, 2020
-# Cindy0514, 2021
+# Cindy0514, 2020
 # n1coc4cola <n1coc4cola@gmail.com>, 2021
+# ba56da5c479245883255d97580e861b5_327de87 <cc1517672f7d7ecc8d2a76b655e9f30b_134975>, 2021
 # roxfr <roxfr@outlook.fr>, 2022
-# ba56da5c479245883255d97580e861b5_327de87 <cc1517672f7d7ecc8d2a76b655e9f30b_134975>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: ba56da5c479245883255d97580e861b5_327de87 <cc1517672f7d7ecc8d2a76b655e9f30b_134975>, 2022\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: roxfr <roxfr@outlook.fr>, 2022\n"
 "Language-Team: French (https://www.transifex.com/linuxdeepin/teams/3617/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
@@ -71,6 +71,7 @@ msgstr "Le nom d'utilisateur doit être entre 3 et 32 caractères"
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
+"L'utilisateur \"%s\" existait auparavant et ses données sont synchronisées"
 
 #: ../../appearance/scale.go:56
 msgid "Log out for display scaling settings to take effect"
@@ -98,12 +99,12 @@ msgstr "Mise à l'échelle de l'affichage"
 msgid "Display scaling"
 msgstr "Échelle d'affichage"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s avait été désactivé"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -182,7 +183,7 @@ msgstr "Annuler"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Réception de %[1]q de %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -231,7 +232,7 @@ msgstr "Réception de %q a expiré"
 
 #: ../../bluetooth/utils_notify.go:134
 msgid "Click here to connect to %q"
-msgstr "Cliquez ici pour vous connecter à %q"
+msgstr "Cliquer ici pour vous connecter à %q"
 
 #: ../../bluetooth/utils_notify.go:135
 msgid "Add Bluetooth devices"
@@ -264,7 +265,7 @@ msgstr "Toutes les fenêtres"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
-msgstr "Espace disque insuffisant, nettoyez de temps en temps!"
+msgstr "Espace disque insuffisant, nettoyer de temps en temps!"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
@@ -312,11 +313,11 @@ msgstr "Délai de capture d'écran"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (image vers texte)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
-msgstr ""
+msgstr "Parchemin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
@@ -332,7 +333,7 @@ msgstr "Basculer entre les effets de fenêtres"
 
 #: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
-msgstr "Extinction rapide écran"
+msgstr "Extinction d'écran rapide"
 
 #: ../../keybinding/shortcuts/id_name_map.go:45
 msgid "System Monitor"
@@ -370,99 +371,100 @@ msgstr ""
 msgid "Notification Center"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Changer de périphérique "
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Basculer à l'espace de travail de gauche"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
-msgid "Switch to right workspace"
-msgstr "Basculer à l'espace de travail de droite"
-
 #: ../../keybinding/shortcuts/id_name_map.go:81
+msgid "Switch to right workspace"
+msgstr "Basculer sur l'espace de travail de droite"
+
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Basculer à l'espace de travail supérieur"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
-msgstr "Basculer à l'espace de travail inférieur"
+msgstr "Basculer sur l'espace de travail inférieur"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Basculer entre les fenêtres similaires"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
-msgid "Switch similar windows in reverse"
-msgstr "Basculer entre les fenêtres similaires en le sens inverse"
-
 #: ../../keybinding/shortcuts/id_name_map.go:86
+msgid "Switch similar windows in reverse"
+msgstr "Basculer entre les fenêtres similaires dans le sens inverse"
+
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Basculer entre les fenêtres"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Alterner les fenêtres en sens inverse"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Afficher le bureau"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Agrandir la fenêtre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Restaurer la fenêtre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Réduire la fenêtre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Fermer la fenêtre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Déplacer la fenêtre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Redimensionner la fenêtre"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Aller à l'espace de travail de gauche"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Aller à l'espace de travail de droite"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Aller à l'espace de travail supérieur"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Aller à l'espace de travail inférieur"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Afficher tous les espaces de travail"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Afficher l'espace de travail actuel"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Afficher l'espace de travail"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Changer de moniteur"
 
@@ -506,23 +508,23 @@ msgstr "Redémarrer "
 
 #: ../../lastore/lastore.go:479
 msgid "Remind Me Later"
-msgstr ""
+msgstr "Rappelez-moi plus tard"
 
 #: ../../lastore/lastore.go:486
 msgid "10 mins later"
-msgstr ""
+msgstr "10 minutes plus tard"
 
 #: ../../lastore/lastore.go:493
 msgid "30 mins later"
-msgstr ""
+msgstr "30 minutes plus tard"
 
 #: ../../lastore/lastore.go:500
 msgid "2h later"
-msgstr ""
+msgstr "2h plus tard"
 
 #: ../../lastore/lastore.go:507
 msgid "6h later"
-msgstr ""
+msgstr "6h plus tard"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
@@ -553,25 +555,29 @@ msgstr "Cache de paquets effacé"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
-msgstr ""
+msgstr "Mises à jour disponibles"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
-msgstr ""
+msgstr "Redémarrer après les mises à jour"
 
 #: ../../lastore/notify.go:142
 msgid "Restart the computer to use the system and applications properly"
 msgstr ""
+"Redémarrer l'ordinateur pour utiliser correctement le système et les "
+"applications"
 
 #: ../../lastore/notify.go:152
 msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
+"Votre système est en cours de mise à jour, mais la capacité est inférieure à"
+" 50 %, veuillez le brancher pour éviter une panne de courant"
 
 #: ../../lastore/notify.go:153
 msgid "OK"
-msgstr "D'accord"
+msgstr "OK"
 
 #: ../../launcher/manager_uninstall.go:71
 msgid "%q removed successfully"
@@ -596,7 +602,7 @@ msgstr "WPA/WPA2 Personnel"
 
 #: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
-msgstr ""
+msgstr "WPA3 Personnel"
 
 #: ../../network/manager_active_conn.go:488
 msgid "TLS"
@@ -629,7 +635,7 @@ msgstr "Connexion filaire"
 
 #: ../../network/manager_connection.go:404
 msgid "Wired Connection %v"
-msgstr ""
+msgstr "Connexion filaire %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
@@ -792,7 +798,7 @@ msgstr "Impossible de s'associer au réseau GSM demandé"
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "Échec de la vérification du NIP"
+msgstr "Échec de la vérification du code PIN"
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
@@ -841,7 +847,7 @@ msgstr "La carte SIM du modem GSM n'est pas insérée"
 
 #: ../../network/state_handler.go:84
 msgid "GSM Modem's SIM PIN required"
-msgstr "Le NIP de la carte SIM du modem GSM est requis"
+msgstr "Le code PIN de la carte SIM du modem GSM est requis"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
@@ -895,7 +901,7 @@ msgstr "Modem prêt"
 
 #: ../../network/state_handler.go:99
 msgid "SIM PIN is incorrect"
-msgstr "Le NIP de la carte SIM est incorrect"
+msgstr "Le code PIN de la carte SIM est incorrect"
 
 #: ../../network/state_handler.go:100
 msgid "New connection activation is enqueuing"
@@ -1028,7 +1034,7 @@ msgstr ""
 
 #: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
-msgstr "Mot de passe requis pour se connecter %q"
+msgstr "Mot de passe requis pour se connecter à %q"
 
 #: ../../network/state_handler.go:381
 msgid "The %q 802.11 WLAN network could not be found"
@@ -1078,14 +1084,14 @@ msgstr ""
 "\"%s\" n'a pas passé la vérification de sécurité du système et ne peut pas "
 "s'exécuter maintenant"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Niveau de batterie critique"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Batterie faible, veuillez brancher votre appareil"
 
@@ -1137,6 +1143,10 @@ msgid ""
 msgstr ""
 "%q ne peut plus se connecter à %q. Essayez d'oublier cet appareil et "
 "associez-le à nouveau."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

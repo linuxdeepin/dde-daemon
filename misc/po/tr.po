@@ -5,21 +5,22 @@
 # 
 # Translators:
 # Kaya Zeren <kayazeren@gmail.com>, 2020
-# yakup <mutouk@yandex.ru>, 2021
-# Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Maggie Liu <maggie.liufei@gmail.com>, 2020
+# yakup <mutouk@yandex.ru>, 2020
 # Serdar Sağlam <teknomobil@msn.com>, 2021
-# Cindy0514, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
+# Cindy0514, 2021
+# abc Def <hdogan1974@gmail.com>, 2021
 # meda <ademcal@yahoo.com>, 2022
+# Sabri Ünal <libreajans@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: meda <ademcal@yahoo.com>, 2022\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/linuxdeepin/teams/3617/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,12 +89,12 @@ msgstr "Görüntü ölçeği ayarı"
 msgid "Display scaling"
 msgstr "Görüntü ölçeği"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s devre dışı bırakılmıştı"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Aç"
 
@@ -354,105 +355,106 @@ msgstr "Çeviri"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
 msgid "Grand Search"
-msgstr ""
+msgstr "Büyük Ara"
 
 #: ../../keybinding/shortcuts/id_name_map.go:53
 msgid "Notification Center"
-msgstr ""
+msgstr "Bildirim Merkezi"
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Görünümü Değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Sol çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Sağ çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Üst çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Alt çalışma alanına geç"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Benzer pencereleri değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Benzer pencereleri tersine değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Pencereleri değiştir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Pencereleri ters çevir"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Masaüstünü görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Pencereyi büyüt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Pencereyi geri yükle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Pencereyi küçült"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Pencereyi kapat"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Pencereyi taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Pencereyi boyutlandır"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Sol çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Sağ çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Üst çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Alt çalışma alanına taşı"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Çalışma alanlarındaki pencereleri görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Mevcut çalışma alanının pencerelerini görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Çalışma alanını görüntüle"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Monitörleri değiştir"
 
@@ -739,7 +741,7 @@ msgstr "AutoIP hizmeti sonlandırıldı veya başarısız oldu"
 
 #: ../../network/state_handler.go:61
 msgid "Dialing failed due to busy lines"
-msgstr "Hatlar meşgul olduğundan arama başarısız"
+msgstr "Meşgul hatlar nedeniyle arama başarısız"
 
 #: ../../network/state_handler.go:62
 msgid "Dialing failed due to no dial tone"
@@ -767,7 +769,7 @@ msgstr "Belirtilen GSM APN seçilemedi"
 
 #: ../../network/state_handler.go:68
 msgid "No networks searched"
-msgstr "Hiçbir ağ aranmadı"
+msgstr "Herhangi bir şebeke aranmadı"
 
 #: ../../network/state_handler.go:69
 msgid "Network registration was denied"
@@ -1057,14 +1059,14 @@ msgstr "Bağlandı"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" sistem güvenlik doğrulamasını geçemedi ve şimdi çalıştırılamıyor"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Pil kritik derecede düşük"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Düşük pil düzeyi, lütfen fişe takın"
 
@@ -1116,6 +1118,10 @@ msgid ""
 msgstr ""
 "%q artık %q ile bağlantı kuramıyor. Bu cihazı unutup yeniden eşleştirmeyi "
 "deneyin. "
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

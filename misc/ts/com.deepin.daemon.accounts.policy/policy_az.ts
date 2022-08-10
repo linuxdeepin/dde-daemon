@@ -4,7 +4,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!message" line="0"/>
 			<source>Authentication is required to change your own user data</source>
-			<translation>Sizə aid istifadəçi məlumatlarınızı dəyişmək üçün kimlik doğrulaması tələb edilir</translation>
+			<translation>Sizə aid istifadəçi məlumatlarınızı dəyişmək üçün doğrulama tələb edilir</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!description" line="0"/>
@@ -14,7 +14,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!message" line="0"/>
 			<source>Authentication is required to change user data</source>
-			<translation>İstifadəçi məlumatlarını dəyişmək üçün kimlik doğrulaması tələb edilir</translation>
+			<translation>İstifadəçi məlumatlarını dəyişmək üçün doğrulama tələb edilir</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!description" line="0"/>
@@ -24,7 +24,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!message" line="0"/>
 			<source>Authentication is required to enable auto login</source>
-			<translation>Avtomatik giriş üçün kimlik doğrulaması tələb edilir</translation>
+			<translation>Avtomatik giriş üçün doğrulama tələb edilir</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!description" line="0"/>

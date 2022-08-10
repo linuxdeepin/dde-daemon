@@ -4,14 +4,13 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# 00101f7862160fbf8a065655a48ad879_875972c <c486e5cdf80c8fbbc1127ec062b107b4_205162>, 2020
 # Manuela Silva <mmsrs@sky.com>, 2020
 # Luís Lima <geral@liqensoft.com>, 2020
 # Ricardo Simões <xmcorporation@gmail.com>, 2020
-# Cindy0514, 2021
-# Galvanize87 <ajg.silva@hotmail.com>, 2021
-# Maggie Liu <maggie.liufei@gmail.com>, 2022
-# Hugo Carvalho <hugokarvalho@hotmail.com>, 2022
+# 00101f7862160fbf8a065655a48ad879_875972c <c486e5cdf80c8fbbc1127ec062b107b4_205162>, 2020
+# Cindy0514, 2020
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021
 # Francisco Jesus <franciscocjesus@outlook.com>, 2022
 # 
 #, fuzzy
@@ -19,15 +18,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Francisco Jesus <franciscocjesus@outlook.com>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/linuxdeepin/teams/3617/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
@@ -92,12 +91,12 @@ msgstr "A definir escala de visualização"
 msgid "Display scaling"
 msgstr "Escala de visualização"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s foi desativado"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Abrir"
 
@@ -176,7 +175,7 @@ msgstr "Cancelar"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr "Recebendo %[1]q de %[2]q"
+msgstr "A receber %[1]q de %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -242,11 +241,11 @@ msgstr "Fechar tudo"
 #: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
 #: ../../dock/app_entry_menu.go:171
 msgid "Force Quit"
-msgstr "Forçar o terminar"
+msgstr "Forçar fecho"
 
 #: ../../dock/app_entry_menu.go:175
 msgid "Dock"
-msgstr "Doca"
+msgstr "Afixar na doca"
 
 #: ../../dock/app_entry_menu.go:185
 msgid "Undock"
@@ -364,99 +363,100 @@ msgstr ""
 msgid "Notification Center"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Alterar esquema"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Mudar para área de trabalho à esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Mudar para área de trabalho à direita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Mudar para área de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Mudar para área de trabalho abaixo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Alternar janelas semelhantes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Alternar inversamente janelas semelhantes"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Alternar janelas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Alternar janelas em ordem inversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Mostrar ambiente de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Maximizar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Restaurar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Minimizar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Fechar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Mover janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Redimensionar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Mover para área de trabalho à esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Mover para área de trabalho à direita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Mover para área de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Mover para área de trabalho abaixo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Mostrar janelas de todas as áreas de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Mostrar janelas da atual área de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Mostrar área de trabalho virtual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Alternar monitores"
 
@@ -1062,14 +1062,14 @@ msgstr ""
 "O \"%s\" não passou na verificação de segurança do sistema e não pode ser "
 "executado agora"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Bateria em estado crítico"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Bateria fraca, ligue à corrente"
 
@@ -1121,6 +1121,10 @@ msgid ""
 msgstr ""
 "%q já não se pode ligar a %q. Tente esquecer este dispositivo e emparelhe-o "
 "novamente."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

@@ -4,42 +4,42 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>A autenticación é necesaria para engadir contrasinal de pegada dixital</translation>
+			<translation>Requírese autenticación para engadir un contrasinal para a pegada dixital</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.enroll!description" line="0"/>
 			<source>Add fingerprint password</source>
-			<translation>Engade un contrasinal de pegada dixital</translation>
+			<translation>Engadir un contrasinal para a pegada dixital</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>A autenticación é necesaria para limpar os contrasinais de impresión dixital</translation>
+			<translation>Requírese autenticación para eliminar os contrasinais das pegadas dixitais</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>
 			<source>Clear fingerprint passwords</source>
-			<translation>Borrar os contrasinais de pegada dixital</translation>
+			<translation>Eliminar os contrasinais das pegadas dixitais</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!message" line="0"/>
 			<source>Authentication is required to rename fingerprint password</source>
-			<translation>A autenticación é necesaria para cambiar o nome do contrasinal da marca dixital</translation>
+			<translation>Requírese autenticación para mudar o contrasinal da pegada dixital</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!description" line="0"/>
 			<source>Rename fingerprint password</source>
-			<translation>Cambie o nome do contrasinal da pegada dixital</translation>
+			<translation>Mudar o contrasinal da pegada dixital</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!message" line="0"/>
 			<source>Password is required to perform this action</source>
-			<translation>Para realizar esta acción é necesario contrasinal</translation>
+			<translation>Requírese un contrasinal para realizar esta acción</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!description" line="0"/>
 			<source>Manage fingerprint passwords</source>
-			<translation>Xestionar contrasinais de impresión dixital</translation>
+			<translation>Xestionar contrasinais de pegadas dixitais</translation>
 		</message>
 	</context>
 </TS>

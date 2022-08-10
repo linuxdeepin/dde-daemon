@@ -19,17 +19,17 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>
 			<source>Clear fingerprint passwords</source>
-			<translation>Wis vingerafdrukken</translation>
+			<translation>Vingerafdrukken wissen</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!message" line="0"/>
 			<source>Authentication is required to rename fingerprint password</source>
-			<translation>Authenticatie is vereist om vingerafdrukken te hernoemen</translation>
+			<translation>Authenticatie is vereist om vingerafdruknamen te wijzigen</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!description" line="0"/>
 			<source>Rename fingerprint password</source>
-			<translation>Hernoem vingerafdrukken</translation>
+			<translation>Vingerafdruknamen wijzigen</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!message" line="0"/>
