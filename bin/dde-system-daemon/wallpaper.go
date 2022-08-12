@@ -127,21 +127,23 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		err = fmt.Errorf("%s not allowed to set %s wallpaper", user.Username, username)
 		return "", dbusutil.ToError(err)
 	}
-	err = exec.Command("runuser", []string{
-		"-u",
-		username,
-		"--",
-		"head",
-		"-c",
-		"0",
-		file,
-	}...).Run()
-	if err != nil {
-		err = fmt.Errorf("permission denied, %s is not allowed to read this file:%s", username, file)
-		return "", dbusutil.ToError(err)
+	if uid != 0 {
+		err = exec.Command("runuser", []string{
+			"-u",
+			username,
+			"--",
+			"head",
+			"-c",
+			"0",
+			file,
+		}...).Run()
+		if err != nil {
+			err = fmt.Errorf("permission denied, %s is not allowed to read this file:%s", username, file)
+			return "", dbusutil.ToError(err)
+		}
 	}
-	md5sum, _ := dutils.SumFileMd5(file)
 
+	md5sum, _ := dutils.SumFileMd5(file)
 	destFile := filepath.Join(dir, md5sum)
 	destFile = destFile + filepath.Ext(file)
 	src, err := os.Open(file)
