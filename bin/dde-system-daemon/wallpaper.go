@@ -5,8 +5,11 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/exec"
+	"os/user"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	dbus "github.com/godbus/dbus"
@@ -89,7 +92,7 @@ func DeleteWallPaper(username string, file string) error {
 	return os.Remove(path)
 }
 
-func (*Daemon) SaveCustomWallPaper(username string, file string) (string, *dbus.Error) {
+func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file string) (string, *dbus.Error) {
 	info, err := os.Stat(file)
 	if err != nil {
 		logger.Warning(err)
@@ -112,6 +115,31 @@ func (*Daemon) SaveCustomWallPaper(username string, file string) (string, *dbus.
 		return file, nil
 	}
 
+	uid, err := d.service.GetConnUID(string(sender))
+	if err != nil {
+		return "", dbusutil.ToError(err)
+	}
+	user, err := user.LookupId(strconv.Itoa(int(uid)))
+	if err != nil {
+		return "", dbusutil.ToError(err)
+	}
+	if user.Username != username && uid != 0 {
+		err = fmt.Errorf("%s not allowed to set %s wallpaper", user.Username, username)
+		return "", dbusutil.ToError(err)
+	}
+	err = exec.Command("runuser", []string{
+		"-u",
+		username,
+		"--",
+		"head",
+		"-c",
+		"0",
+		file,
+	}...).Run()
+	if err != nil {
+		err = fmt.Errorf("permission denied, %s is not allowed to read this file:%s", username, file)
+		return "", dbusutil.ToError(err)
+	}
 	md5sum, _ := dutils.SumFileMd5(file)
 
 	destFile := filepath.Join(dir, md5sum)
