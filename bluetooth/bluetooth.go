@@ -211,6 +211,23 @@ func newBluetooth(service *dbusutil.Service) (b *Bluetooth) {
 	}
 	b.sessionAudio = audio.NewAudio(b.sessionCon)
 
+	// 加载dsg配置
+	systemConnObj := sysBus.Object(configManagerId, "/")
+	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.bluetooth", "").Store(&b.configManagerPath)
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+
+	err = dbusutil.NewMatchRuleBuilder().Type("signal").
+		PathNamespace(string(b.configManagerPath)).
+		Interface("org.desktopspec.ConfigManager.Manager").
+		Member("valueChanged").Build().AddTo(sysBus)
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+
 	return
 }
 
@@ -244,6 +261,8 @@ func (b *Bluetooth) init() {
 	if err != nil {
 		logger.Warning(err)
 	}
+
+	canSendFile = b.getSendFileEnable()
 	b.setPropCanSendFile(canSendFile)
 
 	err = b.sysBt.State().ConnectChanged(func(hasValue bool, value uint32) {
@@ -857,4 +876,19 @@ func (b *Bluetooth) setAirplaneBltOriginStateConfig(value string) {
 	}
 
 	return
+}
+
+func (b *Bluetooth) getSendFileEnable() bool {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		return true
+	}
+	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", b.configManagerPath)
+	var value bool
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, "sendFileEnable").Store(&value)
+	if err != nil {
+		logger.Warning(err)
+		return true
+	}
+	return value
 }
