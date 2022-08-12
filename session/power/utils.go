@@ -32,6 +32,13 @@ import (
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 )
 
+const (
+	dpmsStateOn int32 = iota
+	dpmsStateStandBy
+	dpmsStateSuspend
+	dpmsStateOff
+)
+
 func (m *Manager) waitLockShowing(timeout time.Duration) {
 	ticker := time.NewTicker(time.Millisecond * 300)
 	timer := time.NewTimer(timeout)
@@ -106,7 +113,7 @@ func (m *Manager) setDPMSModeOn() {
 	var err error
 
 	if m.UseWayland {
-		_, err = exec.Command("dde_wldpms", "-s", "On").Output()
+		m.setDpmsModeByKwin(dpmsStateOn)
 	} else {
 		c := m.helper.xConn
 		err = dpms.ForceLevelChecked(c, dpms.DPMSModeOn).Check(c)
@@ -120,7 +127,7 @@ func (m *Manager) setDPMSModeOff() {
 	logger.Info("DPMS Off")
 	var err error
 	if m.UseWayland {
-		_, err = exec.Command("dde_wldpms", "-s", "Off").Output()
+		m.setDpmsModeByKwin(dpmsStateOff)
 	} else {
 		c := m.helper.xConn
 		err = dpms.ForceLevelChecked(c, dpms.DPMSModeOff).Check(c)
@@ -490,4 +497,29 @@ func getPowerActionString(action int32) string {
 
 func isFloatEqual(f1, f2 float64) bool {
 	return math.Abs(f1-f2) < 1e-6
+}
+
+func (m *Manager) setDpmsModeByKwin(mode int32) {
+	logger.Info("Set DPMS State", mode)
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	sessionObj := sessionBus.Object("com.deepin.daemon.KWayland", "/com/deepin/daemon/KWayland/DpmsManager")
+	var ret []dbus.Variant
+	err = sessionObj.Call("com.deepin.daemon.KWayland.DpmsManager.dpmsList", 0).Store(&ret)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	for i := 0; i < len(ret); i++ {
+		v := ret[i].Value().(string)
+		sessionObj := sessionBus.Object("com.deepin.daemon.KWayland", dbus.ObjectPath(v))
+		err = sessionObj.Call("com.deepin.daemon.KWayland.Dpms.setDpmsMode", 0, int32(mode)).Err
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+	}
 }
