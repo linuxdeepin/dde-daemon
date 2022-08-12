@@ -5,8 +5,9 @@
 # 
 # Translators:
 # Wyatt <wkyung@outlook.com>, 2020
-# 李洪武 <lihongwu1987@gmail.com>, 2020
-# Philip CHEUNG, 2021
+# iceleaf <iceleaf916@gmail.com>, 2020
+# Philip CHEUNG, 2020
+# 李洪武 <lihongwu1987@gmail.com>, 2021
 # Cindy0514, 2022
 # 
 #, fuzzy
@@ -14,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2022\n"
 "Language-Team: Chinese (Hong Kong) (https://www.transifex.com/linuxdeepin/teams/3617/zh_HK/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +33,7 @@ msgstr "請輸入長度不小於8位的密碼 "
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
+msgstr "密碼必須包含英文（區分大小寫）、數字或特殊符號（~!@#$%^&*()[]{}\\|/?,.<>）"
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
@@ -83,12 +84,12 @@ msgstr "即將設置屏幕縮放"
 msgid "Display scaling"
 msgstr "屏幕縮放"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "開啟"
 
@@ -133,7 +134,7 @@ msgstr "對象交換"
 #: ../../bluetooth/bluez_profile.go:36
 #: ../../system/bluetooth/bluez_profile.go:36
 msgid "File transfer"
-msgstr "檔案傳輸"
+msgstr "檔案傳輸程式"
 
 #: ../../bluetooth/bluez_profile.go:37
 #: ../../system/bluetooth/bluez_profile.go:37
@@ -253,11 +254,11 @@ msgstr "系統磁盤空間不足，請及時清理！"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
-msgstr "启动器"
+msgstr "啟動器"
 
 #: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Terminal"
-msgstr "终端"
+msgstr "終端"
 
 #: ../../keybinding/shortcuts/id_name_map.go:30
 msgid "Screen Recorder"
@@ -355,105 +356,106 @@ msgstr "全局搜索"
 msgid "Notification Center"
 msgstr "通知中心"
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "切換鍵盤佈局"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "切換到左邊工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "切換到右邊工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "切換到上方工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "切換到下方工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "切換至類似視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "反向切換同類型窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "切換視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "反向切換窗口"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "顯示桌面"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "最大化視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "還原視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "最小化視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "關閉視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "移動視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "調整視窗大小"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "移至左邊工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "移至右邊工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "移至上方工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "移至下方工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "顯示所有工作區的視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "顯示目前工作區的視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "顯示工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "多屏切換"
 
 #: ../../langselector/locale.go:63
 msgid "Authentication is required to switch language"
-msgstr "切换语言需要认证"
+msgstr "切換語言需要認證"
 
 #: ../../langselector/locale.go:152
 msgid ""
@@ -571,7 +573,7 @@ msgstr "WEP 40/128位 密鑰"
 
 #: ../../network/manager_active_conn.go:478
 msgid "WPA/WPA2 Personal"
-msgstr "WPA/WPA2个人版"
+msgstr "WPA/WPA2 個人版"
 
 #: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
@@ -599,7 +601,7 @@ msgstr "隧道TLS"
 
 #: ../../network/manager_active_conn.go:498
 msgid "Protected EAP"
-msgstr "受保护的EAP"
+msgstr "受保護的EAP"
 
 #: ../../network/manager_connection.go:361
 #: ../../network/manager_connection.go:365
@@ -818,7 +820,7 @@ msgstr "需要GSM調制解調器的SIM卡PIN碼"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
-msgstr "需要GSM调制解调器的SIM卡PUK码"
+msgstr "需要GSM調制解調器的SIM卡PUK碼"
 
 #: ../../network/state_handler.go:86
 msgid "SIM card error in GSM Modem"
@@ -1024,21 +1026,21 @@ msgstr "系統代理已取消。"
 
 #: ../../network/utils_notify.go:208
 msgid "Connected"
-msgstr "已连接"
+msgstr "已連接"
 
 #: ../../service_trigger/msg.go:28
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”沒有通過系統安全驗證，無法運行"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "電池電量耗盡"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "電池電量低，請連接電源"
 
@@ -1088,6 +1090,10 @@ msgstr "確認 %q 已開啟且在範圍內"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr "%q無法與%q再連接，請嘗試忽略此設備並再次配對。"
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr "空格"
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

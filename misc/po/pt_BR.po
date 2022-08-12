@@ -4,37 +4,36 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Bruno Melnic Incao <brunomelnic@gmail.com>, 2020
-# JeffWagen <jeff.wagen@yahoo.com>, 2020
-# Cleber Teixeira, 2020
-# Felipe André Alves Santos <lip.dre@gmail.com>, 2020
-# RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2020
 # Kayo Martins <kayomfreire@gmail.com>, 2020
+# Cleber Teixeira, 2020
+# Bruno Gama <brunnogama@gmail.com>, 2020
+# JeffWagen <jeff.wagen@yahoo.com>, 2020
 # Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2020
 # Paulo Schopf, 2020
-# Bruno Gama <brunnogama@gmail.com>, 2020
+# Felipe André Alves Santos <lip.dre@gmail.com>, 2020
+# Raphael Miquelis <raphaelmiquelis@gmail.com>, 2020
+# RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2021
 # Cassiano Molinari <chano2808a@gmail.com>, 2021
-# Alex, 2021
-# Cindy0514, 2022
-# Raphael Miquelis <raphaelmiquelis@gmail.com>, 2022
-# Marcelo Filho, 2022
-# Joel Queiroz <joelcfq@yandex.ru>, 2022
+# Marcelo Filho, 2021
+# Cindy0514, 2021
+# Joel Queiroz <joelcfq@yandex.ru>, 2021
 # Flavio Lima <flaviolimaviolinista@gmail.com>, 2022
+# Alex, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Flavio Lima <flaviolimaviolinista@gmail.com>, 2022\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Alex, 2022\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
@@ -97,12 +96,12 @@ msgstr "Configurando a escala de exibição"
 msgid "Display scaling"
 msgstr "Escala de Exibição"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
-msgstr "%s estava desativado"
+msgstr "%s foi desativado"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Abrir"
 
@@ -339,7 +338,7 @@ msgstr "Monitor de Sistema"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
-msgstr "Deepin Picker"
+msgstr "deepin Seletor de Cores"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
@@ -369,99 +368,100 @@ msgstr ""
 msgid "Notification Center"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Alternar Layout"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Alternar para Área de Trabalho à esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Alternar para Área de Trabalho à direita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Alternar para Área de Trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Alternar para Área de Trabalho inferior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Alternar entre janelas similares"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Alternar entre janelas semelhantes em reverso"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Alternar entre janelas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Alternar entre janelas em reverso"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Área de Trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Maximizar Janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Restaurar Janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Minimizar Janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
-msgid "Close window"
-msgstr "Fechar janela"
-
 #: ../../keybinding/shortcuts/id_name_map.go:112
+msgid "Close window"
+msgstr "Fechar Janela"
+
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Mover Janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Redimensionar Janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Mover para o espaço de trabalho esquerdo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Mover para o espaço de trabalho direito"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Mover para o espaço de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Mover para o espaço de trabalho inferior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Exibir as janelas de todas as áreas de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Exibir as janelas da área de trabalho atual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Exibir área de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Alternar monitores"
 
@@ -491,7 +491,7 @@ msgstr "Falha ao alterar o idioma do sistema; tente novamente"
 
 #: ../../lastore/lastore.go:423
 msgid "Retry"
-msgstr "Tentar Novamente"
+msgstr "Tentar novamente"
 
 #: ../../lastore/lastore.go:445
 msgid "Update Now"
@@ -499,11 +499,11 @@ msgstr "Atualizar agora"
 
 #: ../../lastore/lastore.go:475
 msgid "Reboot Now"
-msgstr "Reiniciar agora"
+msgstr "Reiniciar"
 
 #: ../../lastore/lastore.go:479
 msgid "Remind Me Later"
-msgstr ""
+msgstr "Lembre-me mais tarde"
 
 #: ../../lastore/lastore.go:486
 msgid "10 mins later"
@@ -552,7 +552,7 @@ msgstr "Há atualizações disponíveis"
 
 #: ../../lastore/notify.go:141
 msgid "Reboot after Updates"
-msgstr ""
+msgstr "Reiniciar após atualizar"
 
 #: ../../lastore/notify.go:142
 msgid "Restart the computer to use the system and applications properly"
@@ -1064,14 +1064,14 @@ msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" não passou na verificação de segurança e não pode ser executado agora"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Bateria criticamente fraca"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "A bateria está com pouca carga; conecte o carregador"
 
@@ -1123,6 +1123,10 @@ msgid ""
 msgstr ""
 "%q não pode mais conectar-se à %q. Esqueça este dispositivo e tente "
 "emparelhá-lo novamente."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

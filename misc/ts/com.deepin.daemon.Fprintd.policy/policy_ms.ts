@@ -19,7 +19,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>
 			<source>Clear fingerprint passwords</source>
-			<translation>Kosingkan kata laluan cap jari</translation>
+			<translation>Kosongkan kata laluan cap jari</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!message" line="0"/>
@@ -29,7 +29,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.rename-enrolled-finger!description" line="0"/>
 			<source>Rename fingerprint password</source>
-			<translation>Namakan smeula kata laluan cap jari</translation>
+			<translation>Namakan semula kata laluan cap jari</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!message" line="0"/>

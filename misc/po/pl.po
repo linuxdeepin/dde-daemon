@@ -4,16 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Wiktor Jezioro <wikjezioro@op.pl>, 2020
-# Marcin Pianka <marcin.pianka@gmail.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
+# Wiktor Jezioro <wikjezioro@op.pl>, 2020
 # Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2020
 # Pyroxar <kacper-paczos@linux.pl>, 2020
-# Piotr Strębski <strebski@gmail.com>, 2021
-# Cindy0514, 2021
+# Cindy0514, 2020
+# Piotr Strębski <strebski@gmail.com>, 2020
 # Marcin Kozioł <koziol.martin@gmail.com>, 2021
-# Maciej Błędkowski <mble@tuta.io>, 2021
-# Hubert Ożga <hubert.ozga@outlook.com>, 2022
+# Hubert Ożga <hubert.ozga@outlook.com>, 2021
 # Janusz Ruchała, 2022
 # 
 #, fuzzy
@@ -21,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Janusz Ruchała, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/linuxdeepin/teams/3617/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +31,7 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
-msgstr "Proszę wpisać hasło o długości nie krótszej niż 8 znaków"
+msgstr "Prosimy wpisać hasło o długości nie krótszej niż 8 znaków"
 
 #: ../../accounts/checkers/password.go:55
 msgid ""
@@ -45,7 +43,7 @@ msgstr ""
 
 #: ../../accounts/checkers/username.go:64
 msgid "Username cannot be empty"
-msgstr "Nazwa użytkownika nie może być pusta"
+msgstr "Pole nazwy użytkownika nie może być puste"
 
 #: ../../accounts/checkers/username.go:69
 msgid "The first character must be a letter or number"
@@ -76,7 +74,7 @@ msgstr "Wyloguj się, aby ustawienia skalowania ekranu zaczęły obowiązywać"
 
 #: ../../appearance/scale.go:57
 msgid "Set successfully"
-msgstr "Pomyślnie ustawiono"
+msgstr "Ustawiono pomyślnie"
 
 #: ../../appearance/scale.go:67
 msgid "Later"
@@ -94,12 +92,12 @@ msgstr "Ustawienie skalowania ekranu"
 msgid "Display scaling"
 msgstr "Skalowanie ekranu"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "1%s został wyłączony"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Otwórz"
 
@@ -178,7 +176,7 @@ msgstr "Anuluj"
 
 #: ../../bluetooth/obex_agent.go:346
 msgid "Receiving %[1]q from %[2]q"
-msgstr "Odbieranie %[1]q z %[2]q"
+msgstr "Odbieranie %[1]q od %[2]q"
 
 #: ../../bluetooth/obex_agent.go:355
 msgid "View"
@@ -186,7 +184,7 @@ msgstr "Podgląd"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
-msgstr "Pomyślnie otrzymałeś pliki od %q"
+msgstr "Pomyślnie odebrano pliki od %q"
 
 #: ../../bluetooth/obex_agent.go:362
 msgid "Done"
@@ -198,7 +196,7 @@ msgstr "Zatrzymaj odbieranie plików"
 
 #: ../../bluetooth/obex_agent.go:379
 msgid "You have cancelled the file transfer"
-msgstr "Anulowałeś przesyłanie plików"
+msgstr "Anulowano przesyłanie plików"
 
 #: ../../bluetooth/obex_agent.go:381 ../../system/bluetooth/utils_notify.go:78
 #: ../../system/bluetooth/utils_notify.go:87
@@ -207,7 +205,7 @@ msgstr "Błąd połączenia Bluetooth"
 
 #: ../../bluetooth/obex_agent.go:416
 msgid "Decline"
-msgstr "Odmowa"
+msgstr "Odmów"
 
 #: ../../bluetooth/obex_agent.go:416
 msgid "Receive"
@@ -215,7 +213,7 @@ msgstr "Odbierz"
 
 #: ../../bluetooth/obex_agent.go:421
 msgid "Bluetooth File Transfer"
-msgstr "Transfer pliku Bluetooth"
+msgstr "Transfer plików Bluetooth"
 
 #: ../../bluetooth/obex_agent.go:422
 msgid "%q wants to send files to you. Receive?"
@@ -239,12 +237,12 @@ msgstr "Paruj"
 
 #: ../../dock/app_entry_menu.go:115
 msgid "Close All"
-msgstr "Zamknij"
+msgstr "Zamknij wszystkie"
 
 #: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
 #: ../../dock/app_entry_menu.go:171
 msgid "Force Quit"
-msgstr "Wymuś zamknięcie"
+msgstr "Wymuś zakończenie"
 
 #: ../../dock/app_entry_menu.go:175
 msgid "Dock"
@@ -309,7 +307,7 @@ msgstr "Opóźniony zrzutu ekranu"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
-msgstr "OCR (Tekst ze zdjęcia)"
+msgstr "OCR (Tekst z obrazu)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
 msgid "Scrollshot"
@@ -317,11 +315,11 @@ msgstr "Pionowy zrzut ekranu"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
-msgstr "Zarządzanie plikami"
+msgstr "Menedżer plików"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
-msgstr "Wyłącz panel dotykowy"
+msgstr "Wyłącz touchpad"
 
 #: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
@@ -361,105 +359,106 @@ msgstr "Tłumaczenie"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
 msgid "Grand Search"
-msgstr ""
+msgstr "Wyszukiwarka"
 
 #: ../../keybinding/shortcuts/id_name_map.go:53
 msgid "Notification Center"
-msgstr ""
+msgstr "Centrum powiadomień"
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Przełącz układ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Przełącz na lewą przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Przełącz na prawą przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Przełącz na wyższą przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Przełącz na niższą przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Przełącz podobne okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Przełącz podobne okna w odwrotnej kolejności"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Przełącz okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Przełącz okna w odwrotnej kolejności"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Wyświetl pulpit"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Maksymalizuj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Przywróć okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Minimalizuj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Zamknij okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Przenieś okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Zmień rozmiar okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Przenieś na lewą przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Przenieś na prawą przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Przenieś na wyższą przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Przenieś na niższą przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Wyświetl okna ze wszystkich przestrzeni roboczych"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Wyświetl okna z bieżącej przestrzeni roboczej"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Wyświetl przestrzeń roboczą"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Przełącz monitory"
 
@@ -521,11 +520,11 @@ msgstr "za 6 godzin"
 
 #: ../../lastore/notify.go:106
 msgid "%q installed successfully."
-msgstr "%q pomyślnie zainstalowano."
+msgstr "%q zainstalowano pomyślnie."
 
 #: ../../lastore/notify.go:109
 msgid "%q failed to install."
-msgstr "Błąd instalacji %q."
+msgstr "Nie udało się zainstalować %q."
 
 #: ../../lastore/notify.go:117
 msgid "Removed successfully"
@@ -539,8 +538,8 @@ msgstr "Nie udało się usunąć aplikacji"
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
-"Aby zapobiec nagłemu wyłączeniu komputera podczas aktualizacji podłącz się "
-"do źródła zasilania."
+"Aby zapobiec nagłemu wyłączeniu komputera podczas aktualizacji podłącz go do"
+" źródła zasilania."
 
 #: ../../lastore/notify.go:131
 msgid "Package cache wiped"
@@ -564,8 +563,8 @@ msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
-"Twój system jest w trakcje aktualizacji, jednakże pojemność baterii spadła "
-"poniżej 50%, proszę podłącz komputer do źródła zasilania"
+"System jest w trakcie aktualizacji, jednakże pojemność baterii spadła "
+"poniżej 50%, prosimy o podłączenie komputera do źródła zasilania"
 
 #: ../../lastore/notify.go:153
 msgid "OK"
@@ -759,7 +758,7 @@ msgstr "Dodzwonienie nie powiodło się z powodu dostawcy"
 
 #: ../../network/state_handler.go:64
 msgid "Dialing timed out"
-msgstr "Przekroczono czas oczekiwania wybierania numeru"
+msgstr "Przekroczono limit czasu oczekiwania wybierania numeru"
 
 #: ../../network/state_handler.go:65
 msgid "Dialing failed"
@@ -886,7 +885,7 @@ msgstr "Błąd kontroli sieci zespołowej"
 
 #: ../../network/state_handler.go:97
 msgid "Modem failed to run or not available"
-msgstr "Błąd uruchomienia modemu lub nie jest dostępny"
+msgstr "Nie udało się uruchomić modemu lub nie jest dostępny"
 
 #: ../../network/state_handler.go:98
 msgid "Modem now ready and available"
@@ -902,7 +901,7 @@ msgstr "Aktywacja nowego połączenia dodana do kolejki"
 
 #: ../../network/state_handler.go:101
 msgid "Parent device changed"
-msgstr "Zmieniono nadrzędne urządzenie"
+msgstr "Zmieniono urządzenie nadrzędne"
 
 #: ../../network/state_handler.go:102
 msgid "Management status of parent device changed"
@@ -973,7 +972,7 @@ msgstr "Połączenie zostało usunięte z ustawień"
 
 #: ../../network/state_handler.go:271
 msgid "Enabling hotspot"
-msgstr "Włączanie hotspota"
+msgstr "Włączanie Hotspota"
 
 #: ../../network/state_handler.go:275
 msgid "Connecting %q"
@@ -998,7 +997,7 @@ msgstr "%q rozłączono"
 
 #: ../../network/state_handler.go:360
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "Nie można udostępnić hotspotu, należy sprawdzić ustawienia dnsmasq"
+msgstr "Nie można udostępnić hotspotu, sprawdź ustawienia dnsmasq"
 
 #: ../../network/state_handler.go:362
 msgid "Unable to connect %q, please keep closer to the wireless router"
@@ -1013,8 +1012,7 @@ msgstr ""
 #: ../../network/state_handler.go:368
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
-"Połączenie nie powiodło się, nie udało połączyć się z %q, nieprawidłowe "
-"hasło"
+"Połączenie nie powiodło się, nie można połączyć z %q, nieprawidłowe hasło"
 
 #: ../../network/state_handler.go:379
 msgid "Password is required to connect %q"
@@ -1068,16 +1066,16 @@ msgstr ""
 "\"%s\" nie przeszedł weryfikacji bezpieczeństwa systemu i nie można go teraz"
 " włączyć"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Krytycznie niski poziom baterii"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
-msgstr "Niski stan baterii, prosimy podłączyć komputer do zasilania"
+msgstr "Niski stan poziomu baterii, podłącz komputer do zasilania"
 
 #: ../../session/power/utils.go:419 ../../session/power/utils.go:426
 #: ../../session/power/utils.go:433 ../../session/power/utils.go:440
@@ -1115,7 +1113,7 @@ msgstr "nic się nie stanie"
 
 #: ../../system/bluetooth/utils_notify.go:58
 msgid "Connect %q successfully"
-msgstr "Połączenie %q gotowe. "
+msgstr "Połączenie %q gotowe"
 
 #: ../../system/bluetooth/utils_notify.go:71
 msgid "Make sure %q is turned on and in range"
@@ -1128,9 +1126,13 @@ msgstr ""
 "%q nie może się już połączyć z %q. Spróbuj zapomnieć te urządzenie i sparuj "
 "je ponownie."
 
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
+
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
-msgstr "Aby ustawić czas systemowy wymagane jest uwierzytelnienie."
+msgstr "Aby ustawić czas systemowy wymagane jest uwierzytelnienie"
 
 #: ../../timedate/manager_ifc.go:79
 msgid ""

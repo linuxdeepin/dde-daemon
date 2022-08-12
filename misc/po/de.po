@@ -4,30 +4,29 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+# Eduard Gotwig <eduardgotwig@gmail.com>, 2020
 # corEr <baracus.de@gmail.com>, 2020
-# Antisound <antisound@gmail.com>, 2020
-# webcrush <chris.plescher@yahoo.de>, 2020
+# valsu <valsu@hylia.de>, 2020
 # C Phan <saochi09@googlemail.com>, 2020
 # Adalbert Saric <saric.adalbert349@gmail.com>, 2020
-# Eduard Gotwig <eduardgotwig@gmail.com>, 2020
-# valsu <valsu@hylia.de>, 2020
+# Antisound <antisound@gmail.com>, 2020
+# webcrush <chris.plescher@yahoo.de>, 2020
 # Matthäus Beyrle <transifex.com@mmb.entwanderer.de>, 2020
-# Timo Kröning, 2020
 # Marcel Pa <marcelpaluch@me.com>, 2020
-# 7db8a9134ffa67446d66162ab0aeea61_98ecb95, 2021
-# Cindy0514, 2022
-# Maggie Liu <maggie.liufei@gmail.com>, 2022
-# Ettore Atalan <atalanttore@googlemail.com>, 2022
+# Timo Kröning, 2020
+# Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Cindy0514, 2021
 # Sebastian Rettig, 2022
+# Ettore Atalan <atalanttore@googlemail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Sebastian Rettig, 2022\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>, 2022\n"
 "Language-Team: German (https://www.transifex.com/linuxdeepin/teams/3617/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,12 +96,12 @@ msgstr "Anzeigeskalierung wird festgelegt"
 msgid "Display scaling"
 msgstr "Anzeigeskalierung"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s wurde deaktiviert"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Öffnen"
 
@@ -147,7 +146,7 @@ msgstr "Object Push"
 #: ../../bluetooth/bluez_profile.go:36
 #: ../../system/bluetooth/bluez_profile.go:36
 msgid "File transfer"
-msgstr "Dateitransfer"
+msgstr "Dateiübertragung"
 
 #: ../../bluetooth/bluez_profile.go:37
 #: ../../system/bluetooth/bluez_profile.go:37
@@ -162,7 +161,7 @@ msgstr "Telefonbuchzugriff"
 #: ../../bluetooth/bluez_profile.go:39
 #: ../../system/bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
-msgstr "Client für Telefonbuchzugriff"
+msgstr "Telefonbuchzugriff-Client"
 
 #: ../../bluetooth/bluez_profile.go:40
 #: ../../system/bluetooth/bluez_profile.go:40
@@ -189,7 +188,7 @@ msgstr "Ansicht"
 
 #: ../../bluetooth/obex_agent.go:361
 msgid "You have received files from %q successfully"
-msgstr "Sie haben erfolgreich Dateien von %q erhalten"
+msgstr "Sie haben erfolgreich Dateien von %q empfangen"
 
 #: ../../bluetooth/obex_agent.go:362
 msgid "Done"
@@ -370,99 +369,100 @@ msgstr ""
 msgid "Notification Center"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Belegung wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Zur linken Arbeitfläche wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Zur rechten Arbeitsfläche wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Zur oberen Arbeitsfläche wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Zur unteren Arbeitsfläche wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Ähnliche Fenster wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Ähnliche Fenster in umgekehrter Reihenfolge wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Fenster wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Fenster in umgekehrter Reihenfolge wechseln"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Desktop anzeigen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Fenster maximieren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Fenster wiederherstellen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Fenster minimieren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Fenster schließen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Fenster verschieben"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Fenstergröße ändern"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Auf linke Arbeitsfläche verschieben"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Auf rechte Arbeitsfläche verschieben"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Auf obere Arbeitsfläche verschieben"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Auf untere Arbeitsfläche verschieben"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Fenster auf allen Arbeitsflächen anzeigen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Fenster auf aktueller Arbeitsfläche anzeigen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Arbeitsfläche anzeigen"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Monitore wechseln"
 
@@ -480,11 +480,11 @@ msgstr ""
 
 #: ../../langselector/locale.go:153
 msgid "Changing system language, please wait..."
-msgstr "Systemsprache wird geändert, bitte warten ..."
+msgstr "Systemsprache wird geändert, bitte warten..."
 
 #: ../../langselector/locale.go:154
 msgid "System language changed, please log out and then log in"
-msgstr "Systemsprache geändert, bitte abmelden und wieder anmelden"
+msgstr "Systemsprache wurde geändert. Bitte Ab- und wieder Anmelden."
 
 #: ../../langselector/locale.go:396
 msgid "Failed to change system language, please try later"
@@ -549,7 +549,7 @@ msgstr ""
 
 #: ../../lastore/notify.go:131
 msgid "Package cache wiped"
-msgstr "Paketzwischenspeicher gelöscht"
+msgstr "Programmzwischenspeicher gelöscht"
 
 #: ../../lastore/notify.go:136
 msgid "Updates Available"
@@ -656,30 +656,30 @@ msgstr "Gerätestatus geändert"
 
 #: ../../network/state_handler.go:39
 msgid "Device state changed, reason unknown"
-msgstr "Gerätestatus geändert, unbekannte Ursache"
+msgstr "Gerätestatus geändert, unbekannte Ursache."
 
 #: ../../network/state_handler.go:40
 msgid "The device is now managed"
-msgstr "Das Gerät wird nun verwaltet"
+msgstr "Das Gerät wird nun verwaltet."
 
 #: ../../network/state_handler.go:41
 msgid "The device is no longer managed"
-msgstr "Das Gerät wird nicht länger verwaltet"
+msgstr "Das Gerät wird nicht länger verwaltet."
 
 #: ../../network/state_handler.go:42
 msgid "The device has not been ready for configuration"
-msgstr "Das Gerät war für die Konfiguration noch nicht bereit"
+msgstr "Das Gerät war für die Konfiguration noch nicht bereit."
 
 #: ../../network/state_handler.go:43
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
 msgstr ""
 "IP-Konfiguration konnte nicht belegt werden (keine verfügbaren Adressen, "
-"Zeitüberschreitung, usw.)"
+"Zeitüberschreitung, usw.)."
 
 #: ../../network/state_handler.go:44
 msgid "The IP configuration is no longer valid"
-msgstr "Die IP-Konfiguration ist nicht mehr gültig"
+msgstr "Die IP-Konfiguration ist nicht mehr gültig."
 
 #: ../../network/state_handler.go:45
 msgid "Passwords were required but not provided"
@@ -769,7 +769,7 @@ msgstr "Anwahl wegen dem Netzbetreiber gescheitert."
 
 #: ../../network/state_handler.go:64
 msgid "Dialing timed out"
-msgstr "Wählzeitüberschreitung."
+msgstr "Wählzeitüberschreitung"
 
 #: ../../network/state_handler.go:65
 msgid "Dialing failed"
@@ -789,7 +789,7 @@ msgstr "Keine Netzwerke gesucht"
 
 #: ../../network/state_handler.go:69
 msgid "Network registration was denied"
-msgstr "Netzwerkregistrierung wurde verweigert."
+msgstr "Netzwerkregistrierung wurde verweigert"
 
 #: ../../network/state_handler.go:70
 msgid "Network registration timed out"
@@ -802,7 +802,7 @@ msgstr ""
 
 #: ../../network/state_handler.go:72
 msgid "PIN check failed"
-msgstr "PIN-Überprüfung fehlgeschlagen"
+msgstr "PIN-Überprüfung fehlgeschlagen."
 
 #: ../../network/state_handler.go:73
 msgid "Necessary firmware for the device may be missed"
@@ -810,7 +810,7 @@ msgstr "Die nötige Firmware für das Gerät konnte nicht gefunden werden."
 
 #: ../../network/state_handler.go:74
 msgid "The device was removed"
-msgstr "Das Gerät wurde entfernt"
+msgstr "Das Gerät wurde entfernt."
 
 #: ../../network/state_handler.go:75
 msgid "NetworkManager went to sleep"
@@ -846,7 +846,7 @@ msgstr "Bluetooth-Verbindung timeout oder fehlgeschlagen"
 
 #: ../../network/state_handler.go:83
 msgid "GSM Modem's SIM Card was not inserted"
-msgstr "Die SIM-Karte des GSM-Modems wurde nicht eingelegt"
+msgstr "SIM-Karte wurde nicht eingelegt"
 
 #: ../../network/state_handler.go:84
 msgid "GSM Modem's SIM PIN required"
@@ -854,7 +854,7 @@ msgstr "SIM-PIN des GSM-Modems erforderlich"
 
 #: ../../network/state_handler.go:85
 msgid "GSM Modem's SIM PUK required"
-msgstr "SIM-PUK des GSM-Modems erforderlich"
+msgstr "PUK der SIM im GSM-Modem erforderlich"
 
 #: ../../network/state_handler.go:86
 msgid "SIM card error in GSM Modem"
@@ -1066,7 +1066,7 @@ msgstr ""
 
 #: ../../network/utils_notify.go:201
 msgid "System proxy is set successfully."
-msgstr "System-Proxy wurde erfolgreich festgelegt."
+msgstr "System-Proxy erfolgreich festgelegt."
 
 #: ../../network/utils_notify.go:204
 msgid "System proxy has been cancelled."
@@ -1083,14 +1083,14 @@ msgstr ""
 "\"%s\" hat die Sicherheitsüberprüfung des Systems nicht bestanden und kann "
 "jetzt nicht ausgeführt werden"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Akkuladung kritisch niedrig"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Akkuladung niedrig, bitte anschließen"
 
@@ -1110,23 +1110,23 @@ msgstr "Beim Drücken des Ein/Aus-Schalters, "
 
 #: ../../session/power/utils.go:478 ../../session/power/utils_test.go:12
 msgid "your computer will shut down"
-msgstr "Ihr Computer wird heruntergefahren"
+msgstr "wird ihr Computer heruntergefahren"
 
 #: ../../session/power/utils.go:480 ../../session/power/utils_test.go:13
 msgid "your computer will suspend"
-msgstr "Ihr Computer wird in den Bereitschaftszustand versetzt"
+msgstr "wird Ihr Computer in den Bereitschaftszustand versetzt"
 
 #: ../../session/power/utils.go:482
 msgid "your computer will hibernate"
-msgstr "Ihr Computer wird in den Ruhezustand versetzt"
+msgstr "wird Ihr Computer in den Ruhezustand versetzt"
 
 #: ../../session/power/utils.go:484
 msgid "your monitor will turn off"
-msgstr "Ihr Monitor wird sich ausschalten"
+msgstr "wird sich Ihr Monitor ausschalten"
 
 #: ../../session/power/utils.go:486
 msgid "it will do nothing to your computer"
-msgstr "es wird Ihrem Computer nichts anhaben können"
+msgstr "wird mit Ihrem Computer nichts passieren"
 
 #: ../../system/bluetooth/utils_notify.go:58
 msgid "Connect %q successfully"
@@ -1139,6 +1139,10 @@ msgstr "Stellen Sie sicher, dass %q eingeschaltet und in Reichweite ist"
 #: ../../system/bluetooth/utils_notify.go:89
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
 msgstr ""
 
 #: ../../timedate/manager_ifc.go:66

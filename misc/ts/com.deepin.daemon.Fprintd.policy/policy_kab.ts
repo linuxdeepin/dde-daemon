@@ -14,7 +14,7 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>Asesteb yettusra i tukksa n wawalen uffiren n udsil umḍin</translation>
+			<translation>Asesteb yettusra i usfaḍ n wawalen uffiren n udsil umḍin</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.delete-enrolled-fingers!description" line="0"/>

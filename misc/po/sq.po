@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Cindy0514, 2021
-# Besnik Bleta <besnik@programeshqip.org>, 2022
+# Cindy0514, 2020
+# Besnik Bleta <besnik@programeshqip.org>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2022\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2021\n"
 "Language-Team: Albanian (https://www.transifex.com/linuxdeepin/teams/3617/sq/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
-msgstr "Ju lutemi, jepni një fjalëkalim jo më pak se 8 shenja"
+msgstr "Ju lutemi, jepni një fjalëkalim jo më të pakët se 8 shenja"
 
 #: ../../accounts/checkers/password.go:55
 msgid ""
@@ -86,12 +86,12 @@ msgstr "Po ujdiset ripërmasim ekrani"
 msgid "Display scaling"
 msgstr "Ripërmasim ekrani"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s është çaktivizuar"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Hap"
 
@@ -359,99 +359,100 @@ msgstr ""
 msgid "Notification Center"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Ndërroni Skemë"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Kalo te hapësira e punës majtas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Kalo te hapësira e punës djathtas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Kaloje dritaren te hapësira e sipërme e punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Kalo te hapësira e poshtme e punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Këmbe dritare të ngjashme"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Këmbe dritare të ngjashme në të kundërt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Këmbe dritare"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Këmbe dritare në të kundërt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Shfaq desktop"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Maksimizo dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Riktheje dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Minimizoje dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Mbylle dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Lëvizeni dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Ripërmasojeni dritaren"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Kaloje te hapësira e punës majtas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Kaloje te hapësira e punës djathtas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Kaloje te hapësira e sipërme e punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Kaloje te hapësira e poshtme e punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Shfaq dritaret e krejt hapësirave të punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Shfaq dritaret e hapësirës së tanishme të punës"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Shfaq hapësirë pune"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Ndërroni monitorë"
 
@@ -1047,7 +1048,7 @@ msgstr "Ndërmjetësi i sistemit është anuluar."
 
 #: ../../network/utils_notify.go:208
 msgid "Connected"
-msgstr "I lidhur"
+msgstr "E lidhur"
 
 #: ../../service_trigger/msg.go:28
 #, c-format
@@ -1056,14 +1057,14 @@ msgstr ""
 "\"%s\" s’e kaloi verifikimin e sigurisë së sistemit, dhe s’mund të xhirohet "
 "këtë herë"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Bateri e pakët në nivel kritik"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Bateri e pakët, ju lutemi, vëreni në prizë"
 
@@ -1115,6 +1116,10 @@ msgid ""
 msgstr ""
 "%q s’mund të lidhet më me %q. Provoni të harrohet kjo pajisje dhe ta çiftoni"
 " sërish."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

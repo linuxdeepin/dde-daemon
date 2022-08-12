@@ -6,9 +6,9 @@
 # Translators:
 # Yuriy, 2020
 # Roman <dejitaru.tiger@gmail.com>, 2020
+# Cindy0514, 2020
+# Marck Hrin, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
-# Marck Hrin, 2021
-# Cindy0514, 2021
 # Yuri Chornoivan <yurchor@ukr.net>, 2022
 # 
 #, fuzzy
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -89,12 +89,12 @@ msgstr "Налаштування масштабування зображення
 msgid "Display scaling"
 msgstr "Маштабування дисплею"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s вимкнено"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Відкрити"
 
@@ -355,105 +355,106 @@ msgstr "Переклад"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
 msgid "Grand Search"
-msgstr ""
+msgstr "Великий пошук"
 
 #: ../../keybinding/shortcuts/id_name_map.go:53
 msgid "Notification Center"
-msgstr ""
+msgstr "Центр сповіщень"
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Переключити компонування"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Перемикання на ліву робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Перемикання на правий робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Перемикання на верхнє робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Перемикання на нижчій робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Замінити схожі вікна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Перемикання між подібними вікнами у зворотному порядку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Перехід між вікнами"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Перемикання між вікнами у зворотному порядку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Показати стільницю"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Розгорнути вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Відновити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Згорнути вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Закрити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Перемістити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Змінити розмір вікна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Перемістити на лівий робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Перемістити на правий робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Перемістити на верхній робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Перемістити на нижчій робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Відображати вікна всіх робочих просторів"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Показати вікна поточного робочого простору"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Показати робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Перемкнути монітори"
 
@@ -1062,14 +1063,14 @@ msgstr ""
 "«%s» не пройдено перевіркою засобів захисту системи. Цю програму зараз не "
 "можна запускати."
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Акумулятор критично розряджено"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
@@ -1123,6 +1124,10 @@ msgid ""
 msgstr ""
 "%q більше не може з'єднатися із %q. Спробуйте наказати системі забути про "
 "цей пристрій і повторіть спробу пов'язати його."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
