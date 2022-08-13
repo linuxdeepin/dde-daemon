@@ -25,6 +25,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -40,15 +41,6 @@ import (
 var noUEvent bool
 
 const configManagerId = "org.desktopspec.ConfigManager"
-//内核文档：https://docs.kernel.org/admin-guide/pm/cpufreq.html#generic-scaling-governors
-var cpupowerArr = []string {
-	"performance",
-	"powersave",
-	"userspace",
-	"ondemand",
-	"conservative",
-	"schedutil",
-}
 
 func init() {
 	if arch.Get() == arch.Sunway {
@@ -112,6 +104,12 @@ type Manager struct {
 	// 是否支持Boost
 	IsHighPerformanceSupported bool
 
+	// 是否支持平衡模式
+	IsBalanceSupported bool
+
+	// 是否支持节能模式
+	IsPowerSaveSupported bool
+
 	// 性能模式-平衡模式dsg
 	balanceScalingGovernor     string
 	configManagerPath          dbus.ObjectPath
@@ -138,42 +136,6 @@ type Manager struct {
 	}
 }
 
-func (m *Manager) initDsgConfig(conn *dbus.Conn) error {
-	// 加载dsg配置
-	systemConnObj := conn.Object(configManagerId, "/")
-	err := systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.power", "").Store(&m.configManagerPath)
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-	err = dbusutil.NewMatchRuleBuilder().Type("signal").
-		PathNamespace(string(m.configManagerPath)).
-		Interface("org.desktopspec.ConfigManager.Manager").
-		Member("valueChanged").Build().AddTo(conn)
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-	return nil
-}
-
-func (m *Manager) getDsgData(key string) string {
-	systemConn, err := dbus.SystemBus()
-	if err != nil {
-		logger.Warning("getDsgData systemConn err: ", err)
-		return ""
-	}
-	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
-	var value string
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value",0, key).Store(&value)
-	if err != nil {
-		logger.Warningf("getDsgData key : %s. err : %s", key, err)
-		return ""
-	}
-	logger.Infof(" systemPowerManager getDsgData key : %s , value : %s", key, value)
-	return value
-}
-
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	m := &Manager{
 		service:           service,
@@ -193,13 +155,70 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.systemSigLoop.Start()
 	m.initDsgConfig(systemBus)
 
-	cpuGovernor := m.getDsgData("BalanceCpuGovernor")
-	if strv.Strv(cpupowerArr).Contains(cpuGovernor) {
-		m.balanceScalingGovernor = cpuGovernor
-	} else {
-		m.balanceScalingGovernor = "ondemand"
-		logger.Warning(" illegal string cpuGovernor : ", cpuGovernor)
+	path := m.cpus.getCpuGovernorPath()
+	if "" == path {
+		m.IsHighPerformanceSupported = false
+		m.IsBalanceSupported = false
+		m.IsPowerSaveSupported = false
+		return m, nil
 	}
+
+	dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
+
+	// 装机第一次才会进去，或者手动修改了dconfig的值
+	if interfaceToBool(m.getDsgData("isFirstGetCpuGovernor")) {
+		m.setDsgData("isFirstGetCpuGovernor", false)
+
+		if len(*m.cpus) <= 0 {
+			return m, nil
+		}
+		value, err := m.cpus.getAvailableGovernors()
+		if err != nil {
+			logger.Warning(err)
+			return m, err
+		}
+		value = strings.TrimSpace(string(value))
+		lines := strings.Split(value, " ")
+		// 全部模式都支持的时候,不需要进行写入文件验证
+		if len(lines) != 6 {
+			lines = m.cpus.tryWriteGovernor(lines)
+		}
+		logger.Info(" First. available cpuGovernors : ", lines)
+		m.setDsgData("supportCpuGovernors", setSupportGovernors(lines))
+
+		err, targetGovernor := trySetBalanceCpuGovernor(dsgCpuGovernor)
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			if dsgCpuGovernor != targetGovernor && targetGovernor != "" {
+				m.setDsgData("BalanceCpuGovernor", targetGovernor)
+				logger.Info(" DConfig BalanceCpuGovernor not support. Set Governor : ", targetGovernor)
+			}
+		}
+	} else {
+		supportCpuGovernors := m.getDsgData("supportCpuGovernors")
+		cpuGovernors := interfaceToArrayString(supportCpuGovernors)
+		logger.Info(" dsg translate to Arr cpuGovernors : ", cpuGovernors)
+
+		supportGovernors := make([]string, len(cpuGovernors))
+		for i, v := range cpuGovernors {
+			supportGovernors[i] = v.(string)
+		}
+		setSupportGovernors(supportGovernors)
+	}
+
+	m.IsBalanceSupported = getIsBalanceSupported()
+	m.IsHighPerformanceSupported = getIsHighPerformanceSupported()
+	m.IsPowerSaveSupported = getIsPowerSaveSupported()
+
+	if strv.Strv(getSupportGovernors()).Contains(dsgCpuGovernor) {
+		m.balanceScalingGovernor = dsgCpuGovernor
+	} else {
+		_, m.balanceScalingGovernor = trySetBalanceCpuGovernor(dsgCpuGovernor)
+	}
+
+	logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)
+
 	return m, nil
 }
 
@@ -295,7 +314,6 @@ func (m *Manager) init() error {
 	// init LMT config
 	m.updatePowerSavingMode()
 
-	m.IsHighPerformanceSupported = m.cpus.IsBoostFileExist()
 	m.CpuBoost, err = m.cpus.GetBoostEnabled()
 	if err != nil {
 		logger.Warning(err)
@@ -536,9 +554,31 @@ func (m *Manager) doSetMode(mode string) error {
 	var err error
 	switch mode {
 	case "balance": // governor=performance boost=false
+		if !m.IsBalanceSupported {
+			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
+			break
+		}
+
 		m.setPropPowerSavingModeEnabled(false)
-		logger.Info("[doSetMode] balanceScalingGovernor : ", m.balanceScalingGovernor)
-		err = m.doSetCpuGovernor(m.balanceScalingGovernor)
+		balanceScalingGovernor := m.balanceScalingGovernor
+		err, targetGovernor := trySetBalanceCpuGovernor(balanceScalingGovernor)
+		if  err != nil {
+			logger.Warning(err)
+			return err
+		}
+		dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
+		logger.Infof(" [doSetMode] dsgCpuGovernor : %s, targetGovernor : %s, balanceScalingGovernor : %s ", dsgCpuGovernor, targetGovernor, balanceScalingGovernor)
+		if balanceScalingGovernor != targetGovernor {
+			balanceScalingGovernor = targetGovernor
+			logger.Info("[doSetMode] BalanceCpuGovernor not support. Set available governor : ", targetGovernor)
+		}
+
+		if balanceScalingGovernor != dsgCpuGovernor {
+			m.setDsgData("BalanceCpuGovernor", balanceScalingGovernor)
+		}
+
+		logger.Info("[doSetMode] Set Governor, balanceScalingGovernor : ", balanceScalingGovernor)
+		err = m.doSetCpuGovernor(balanceScalingGovernor)
 		if err != nil {
 			logger.Warning(err)
 		}
@@ -547,6 +587,11 @@ func (m *Manager) doSetMode(mode string) error {
 			err = m.doSetCpuBoost(false)
 		}
 	case "powersave": // governor=powersave boost=false
+		if !m.IsPowerSaveSupported {
+			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
+			break
+		}
+
 		m.setPropPowerSavingModeEnabled(true)
 
 		err = m.doSetCpuGovernor("powersave")
