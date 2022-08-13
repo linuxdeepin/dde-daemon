@@ -109,6 +109,39 @@ func Test_SetGovernor1(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func Test_getScalingAvailableGovernors(t *testing.T) {
+	cpuGovernors := getScalingAvailableGovernors()
+	assert.NotEqual(t, len(cpuGovernors), 0)
+}
+
+func Test_getScalingBalanceAvailableGovernors(t *testing.T) {
+	cpuGovernors := getScalingBalanceAvailableGovernors()
+	assert.NotEqual(t, len(cpuGovernors), 0)
+	assert.Equal(t, len(cpuGovernors), 4)
+}
+
+func Test_getSupportGovernors(t *testing.T) {
+	cpuGovernors := getSupportGovernors()
+	assert.Equal(t, len(cpuGovernors), 0)
+}
+
+func Test_setSupportGovernors(t *testing.T) {
+	var lines = []string {"1", "2", "3"}
+	assert.NotEqual(t, len(setSupportGovernors(lines)), 10)
+}
+
+func Test_trySetBalanceCpuGovernor(t *testing.T)  {
+	err, target := trySetBalanceCpuGovernor("powersave")
+	assert.NotEqual(t, err, nil)
+	assert.NotEqual(t, target, "powersave")
+}
+
+func Test_getCpuGovernorPath(t *testing.T) {
+	cpus := CpuHandlers{}
+
+	assert.NotEqual(t, cpus.getCpuGovernorPath(), "/a/b/c/d")
+}
+
 func Test_IsBoostFileExist(t *testing.T) {
 	cpus := CpuHandlers{}
 

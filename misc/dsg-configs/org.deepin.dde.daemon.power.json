@@ -11,6 +11,29 @@
             "description": "balance cpu governor",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "isFirstGetCpuGovernor": {
+            "value": true,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "isFirstGetCpuGovernor",
+            "name[zh_CN]": "是否第一次获取Cpu支持的Governor模式",
+            "description": "is first get cpu governor",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "supportCpuGovernors": {
+            "value": [
+                "performance", "powersave", "userspace", "ondemand", "conservative", "schedutil"
+            ],
+            "serial": 0,
+            "flags": ["global"],
+            "name": "supportCpuGovernors",
+            "name[zh_CN]": "Cpu支持的Governor模式",
+            "description": "",
+            "description[zh_CN]": "",
+            "permissions": "readwrite",
+            "visibility": "public"
         }
     }
 }
