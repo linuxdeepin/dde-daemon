@@ -153,9 +153,9 @@ func (dev *HuaweiDevice) doClose() error {
 func (dev *HuaweiDevice) Claim(sender dbus.Sender, username string) *dbus.Error {
 	err := dev.claim(string(sender), username)
 	if err != nil {
-		logger.Debugf("claim() sender: %q, username: %q, err %v", sender, username, err)
+		logger.Debugf("claim() sender: %q, UserName, err %v", sender, err)
 	} else {
-		logger.Debugf("claim() sender: %q, username: %q, ok", sender, username)
+		logger.Debugf("claim() sender: %q, UserName, ok", sender)
 	}
 	return dbusutil.ToError(err)
 }
@@ -163,9 +163,9 @@ func (dev *HuaweiDevice) Claim(sender dbus.Sender, username string) *dbus.Error 
 func (dev *HuaweiDevice) ClaimForce(sender dbus.Sender, username string) *dbus.Error {
 	err := dev.claimForce(string(sender), username)
 	if err != nil {
-		logger.Debugf("claimForce() sender: %q, username: %q, err %v", sender, username, err)
+		logger.Debugf("claimForce() sender: %q, UserName, err %v", sender, err)
 	} else {
-		logger.Debugf("claimForce() sender: %q, username: %q, ok", sender, username)
+		logger.Debugf("claimForce() sender: %q, UserName, ok", sender)
 	}
 	return dbusutil.ToError(err)
 }

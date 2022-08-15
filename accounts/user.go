@@ -691,7 +691,7 @@ func updateConfigPath(username string) {
 	oldConfig := path.Join(actConfigDir, "users", username)
 	err = dutils.CopyFile(oldConfig, config)
 	if err != nil {
-		logger.Warning("Failed to update config:", username)
+		logger.Warning("Failed to update config.")
 	}
 }
 
