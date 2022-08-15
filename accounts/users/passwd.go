@@ -30,6 +30,7 @@ package users
 import "C"
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"math"
@@ -95,7 +96,7 @@ func getSpwd(username string) (*originShadowInfo, error) {
 	defer C.free(unsafe.Pointer(cname))
 	spwd := C.getspnam(cname)
 	if spwd == nil {
-		return &originShadowInfo{}, fmt.Errorf("no such user name: %v", username)
+		return &originShadowInfo{}, errors.New("no such user name")
 	}
 	sInfo := originShadowInfo{
 		Name:       C.GoString(spwd.sp_namp),

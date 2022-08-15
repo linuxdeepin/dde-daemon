@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -27,7 +28,7 @@ func GetUserDir(username string) (string, error) {
 	}
 
 	if !strings.HasPrefix(dir, wallPaperDir) {
-		return "", fmt.Errorf("%s is not in %s", username, wallPaperDir)
+		return "", fmt.Errorf("UserName is not in %s", wallPaperDir)
 	}
 
 	info, err := os.Stat(dir)
@@ -37,7 +38,7 @@ func GetUserDir(username string) (string, error) {
 	}
 
 	if info != nil && !info.IsDir() {
-		return "", fmt.Errorf("%s is not a dir", username)
+		return "", errors.New("UsernName is not a dir")
 	}
 
 	return dir, nil
