@@ -9,6 +9,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
@@ -98,6 +99,7 @@ type Network struct {
 	nmManager  networkmanager.Manager
 	nmSettings networkmanager.Settings
 	sigLoop    *dbusutil.SignalLoop
+	airplane   airplanemode.AirplaneMode
 
 	// nolint
 	signals *struct {
@@ -112,6 +114,8 @@ func (n *Network) init() error {
 	sysBus := n.service.Conn()
 	n.sigLoop = dbusutil.NewSignalLoop(sysBus, 10)
 	n.sigLoop.Start()
+	// airplane
+	n.airplane = airplanemode.NewAirplaneMode(sysBus)
 	n.nmManager = networkmanager.NewManager(sysBus)
 	n.nmSettings = networkmanager.NewSettings(sysBus)
 	// retry get all devices
@@ -334,7 +338,17 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 	logger.Debugf("devices config is #%v, iface is: %s", n.config.Devices, dev.iface)
 	n.configMu.Unlock()
 	if ok {
-		n.enableDevice(dev.iface, config.Enabled)
+		enabled := config.Enabled
+		// wifi 设备，先查看飞行模式的状态，避免冲突。
+		if enabled && dev.type0 == nm.NM_DEVICE_TYPE_WIFI {
+			if v, err := n.airplane.WifiEnabled().Get(0); err != nil {
+				logger.Warning(err)
+			} else if v {
+				logger.Debug("disable wifi because airplane mode is on")
+				enabled = false
+			}
+		}
+		n.enableDevice(dev.iface, enabled)
 	}
 
 	return nil
