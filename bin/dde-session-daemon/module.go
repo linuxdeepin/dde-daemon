@@ -23,8 +23,6 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/dde-daemon/loader"
 
 	_ "github.com/linuxdeepin/dde-daemon/appearance"
@@ -62,42 +60,14 @@ import (
 )
 
 var (
-	moduleLocker   sync.Mutex
-	daemonSchema   = "com.deepin.dde.daemon"
-	daemonSettings = gio.NewSettings(daemonSchema)
+	moduleLocker sync.Mutex
 )
 
-func listenDaemonSettings() {
-	gsettings.ConnectChanged(daemonSchema, "*", func(name string) {
-		// gsettings key names must keep consistent with module names
-		moduleLocker.Lock()
-		defer moduleLocker.Unlock()
-		module := loader.GetModule(name)
-		if module == nil {
-			logger.Error("Invalid module name:", name)
-			return
-		}
-
-		enable := daemonSettings.GetBoolean(name)
-		err := checkDependencies(daemonSettings, module, enable)
-		if err != nil {
-			logger.Error(err)
-			return
-		}
-
-		err = module.Enable(enable)
-		if err != nil {
-			logger.Warningf("Enable '%s' failed: %v", name, err)
-			return
-		}
-	})
-}
-
-func checkDependencies(s *gio.Settings, module loader.Module, enabled bool) error {
+func (s *SessionDaemon) checkDependencies(module loader.Module, enabled bool) error {
 	if enabled {
 		depends := module.GetDependencies()
 		for _, n := range depends {
-			if !s.GetBoolean(n) {
+			if !s.getConfigValue(n) {
 				return fmt.Errorf("Dependency lose: %v", n)
 			}
 		}

@@ -23,16 +23,16 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/dde-api/session"
+	"github.com/linuxdeepin/dde-daemon/calltrace"
+	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-api/session"
-	"github.com/linuxdeepin/dde-daemon/calltrace"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type SessionDaemon
@@ -44,6 +44,7 @@ const (
 	dbusPath        = "/com/deepin/daemon/Daemon"
 	dbusServiceName = "com.deepin.daemon.Daemon"
 	dbusInterface   = dbusServiceName
+	configManagerId = "org.desktopspec.ConfigManager"
 )
 
 func runMainLoop() {
@@ -51,8 +52,6 @@ func runMainLoop() {
 	if err != nil {
 		logger.Fatal(err)
 	}
-
-	listenDaemonSettings()
 
 	glib.StartLoop()
 	logger.Info("Loop has been terminated!")
@@ -76,30 +75,105 @@ func getEnableFlag(flag *Flags) loader.EnableFlag {
 type SessionDaemon struct {
 	flags                *Flags
 	log                  *log.Logger
-	settings             *gio.Settings
 	part1EnabledModules  []string
 	part1DisabledModules []string
 	part2EnabledModules  []string
 	part2DisabledModules []string
+
+	configManagerPath dbus.ObjectPath
+	systemSigLoop     *dbusutil.SignalLoop
 }
 
 func (*SessionDaemon) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func NewSessionDaemon(settings *gio.Settings, logger *log.Logger) *SessionDaemon {
+func NewSessionDaemon(logger *log.Logger) *SessionDaemon {
 	daemon := &SessionDaemon{
 		flags: &Flags{
 			IgnoreMissingModules: _options.ignore,
 			ForceStart:           _options.force,
 		},
-		settings: settings,
-		log:      logger,
+		log: logger,
+	}
+	err := daemon.initDsgConfig()
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+	daemon.initModules()
+	return daemon
+}
+
+func (s *SessionDaemon) initDsgConfig() error {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+	s.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 100)
+	systemConnObj := systemBus.Object(configManagerId, "/")
+	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.loader", "").Store(&s.configManagerPath)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	err = dbusutil.NewMatchRuleBuilder().Type("signal").
+		PathNamespace(string(s.configManagerPath)).
+		Interface("org.desktopspec.ConfigManager.Manager").
+		Member("valueChanged").Build().AddTo(systemBus)
+	if err != nil {
+		logger.Warning(err)
+		return err
 	}
 
-	daemon.initModules()
+	s.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
+	}, func(sig *dbus.Signal) {
+		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") && len(sig.Body) >= 1 {
+			key, ok := sig.Body[0].(string)
+			if ok {
+				// dconfig key names must keep consistent with module names
+				moduleLocker.Lock()
+				defer moduleLocker.Unlock()
+				module := loader.GetModule(key)
+				if module == nil {
+					logger.Error("Invalid module name:", key)
+					return
+				}
 
-	return daemon
+				enable := s.getConfigValue(key)
+				err := s.checkDependencies(module, enable)
+				if err != nil {
+					logger.Error(err)
+					return
+				}
+				logger.Info("valueChanged:", module.Name(), enable)
+				err = module.Enable(enable)
+				if err != nil {
+					logger.Warningf("Enable '%s' failed: %v", key, err)
+					return
+				}
+			}
+		}
+	})
+	s.systemSigLoop.Start()
+	return nil
+}
+
+func (s *SessionDaemon) getConfigValue(key string) bool {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", s.configManagerPath)
+	var val bool
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&val)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return val
 }
 
 func (s *SessionDaemon) register(service *dbusutil.Service) error {
@@ -176,8 +250,7 @@ func (s *SessionDaemon) isModuleDefaultEnabled(moduleName string) bool {
 	if mod == nil {
 		panic(fmt.Errorf("not found module %q", moduleName))
 	}
-
-	return s.settings.GetBoolean(moduleName)
+	return s.getConfigValue(moduleName)
 }
 
 func (s *SessionDaemon) getAllDefaultEnabledModules() []string {

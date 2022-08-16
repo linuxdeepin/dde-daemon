@@ -167,8 +167,10 @@ func (m *Manager) emitSignalChange() {
 }
 
 func (m *Manager) destroy() {
-	m.changeTimer.Stop()
-	m.changeTimer = nil
+	if m.changeTimer != nil {
+		m.changeTimer.Stop()
+		m.changeTimer = nil
+	}
 
 	// send close signal to handleFileEvents goroutine
 	close(m.done)

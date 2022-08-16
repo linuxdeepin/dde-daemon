@@ -210,8 +210,10 @@ func main() {
 	C.init()
 	proxy.SetupProxy()
 
-	app := NewSessionDaemon(daemonSettings, logger)
-
+	app := NewSessionDaemon(logger)
+	if app == nil {
+		return
+	}
 	service, err := dbusutil.NewSessionService()
 	if err != nil {
 		logger.Fatal(err)
