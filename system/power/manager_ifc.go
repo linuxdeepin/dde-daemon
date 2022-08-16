@@ -121,7 +121,10 @@ func (m *Manager) SetMode(mode string) *dbus.Error {
 		err = m.saveConfig()
 	}
 
-	logger.Warning(err)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	return dbusutil.ToError(err)
 }
 
