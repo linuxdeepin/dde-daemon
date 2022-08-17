@@ -45,7 +45,7 @@ const (
 	cmdMeeting    = "deepin-contacts"
 	cmdTerminal   = "/usr/lib/deepin-daemon/default-terminal"
 	cmdMessenger  = "dbus-send --print-reply --dest=org.deepin.dde.Widgets / org.deepin.dde.Widgets.Toggle"
-	cmdLauncher   = "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle"
+	cmdLauncher   = "dbus-send --print-reply --dest=org.deepin.dde.Launcher /org/deepin/dde/Launcher org.deepin.dde.Launcher.Toggle"
 	cmdCamera     = "deepin-camera"
 )
 
