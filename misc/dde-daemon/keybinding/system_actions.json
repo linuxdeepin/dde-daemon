@@ -1,7 +1,7 @@
 {
     "Actions": [
         {
-            "Action": "dbus-send --print-reply --dest=org.deepin.dde.Launcher /org/deepin/dde/Launcher org.deepin.dde.Launcher.Toggle",
+            "Action": "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle",
             "Key": "launcher"
         },
         {
