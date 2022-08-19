@@ -20,6 +20,8 @@
 package keybinding
 
 import (
+	"sync"
+
 	"github.com/godbus/dbus"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
@@ -44,6 +46,8 @@ type DisplayController struct {
 	display         display.Display
 	backlightHelper backlight.Backlight
 	gsKeyboard      *gio.Settings
+	brightStatus    bool
+	brightStatusMu  sync.Mutex
 }
 
 func NewDisplayController(backlightHelper backlight.Backlight, sessionConn *dbus.Conn) *DisplayController {
@@ -59,24 +63,41 @@ func (*DisplayController) Name() string {
 	return "Display"
 }
 
+func (c *DisplayController) SetBrightStatus() {
+	c.brightStatusMu.Lock()
+	c.brightStatus = false
+	c.brightStatusMu.Unlock()
+}
+
 func (c *DisplayController) ExecCmd(cmd ActionCmd) error {
-	switch cmd {
-	case DisplayModeSwitch:
-		displayList, err := c.display.ListOutputNames(0)
-		if err == nil && len(displayList) > 1 {
-			showOSD("SwitchMonitors")
-		}
-		return err
-
-	case MonitorBrightnessUp:
-		return c.changeBrightness(true)
-
-	case MonitorBrightnessDown:
-		return c.changeBrightness(false)
-
-	default:
-		return ErrInvalidActionCmd{cmd}
+	c.brightStatusMu.Lock()
+	if !c.brightStatus {
+		go func() {
+			defer c.SetBrightStatus()
+			c.brightStatus = true
+			c.brightStatusMu.Unlock()
+			var err error
+			switch cmd {
+			case DisplayModeSwitch:
+				var displayList []string
+				displayList, err = c.display.ListOutputNames(0)
+				if err == nil && len(displayList) > 1 {
+					showOSD("SwitchMonitors")
+				}
+			case MonitorBrightnessUp:
+				err = c.changeBrightness(true)
+			case MonitorBrightnessDown:
+				err = c.changeBrightness(false)
+			default:
+				err = ErrInvalidActionCmd{cmd}
+			}
+			logger.Warning("Controller exec cmd err:", err)
+		}()
+	} else {
+		c.brightStatusMu.Unlock()
 	}
+
+	return nil
 }
 
 const gsKeyAmbientLightAdjustBrightness = "ambient-light-adjust-brightness"
