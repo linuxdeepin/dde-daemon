@@ -260,7 +260,9 @@ func getLicenseAuthorizationProperty(conn *dbus.Conn) uint32 {
 		logger.Warning("not excepted value type")
 		return 0
 	}
-	return variant.Value().(uint32)
+	ret := variant.Value().(uint32)
+	logger.Debug(" [getLicenseAuthorizationProperty] com.deepin.license.Info.AuthorizationProperty : ", ret)
+	return ret
 }
 
 func listenLicenseInfoDBusPropChanged(conn *dbus.Conn, sigLoop *dbusutil.SignalLoop) {
@@ -453,7 +455,7 @@ func (m *Manager) init() error {
 	if err != nil {
 		return err
 	}
-
+	go background.SetLicenseAuthorizationProperty(getLicenseAuthorizationProperty(systemBus))
 	m.xConn, err = x.NewConn()
 	if err != nil {
 		return err
@@ -530,7 +532,6 @@ func (m *Manager) init() error {
 	m.timeDate = timedate.NewTimedate(systemBus)
 	m.timeDate.InitSignalExt(m.sysSigLoop, true)
 
-	go background.SetLicenseAuthorizationProperty(getLicenseAuthorizationProperty(systemBus))
 	listenLicenseInfoDBusPropChanged(systemBus, m.sysSigLoop)
 
 	m.sessionTimeDate = sessiontimedate.NewTimedate(sessionBus)

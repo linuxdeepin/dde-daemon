@@ -127,6 +127,7 @@ func refreshBackground() {
 		})
 	}
 
+	logger.Debug("[refreshBackground] _licenseAuthorizationProperty : ", _licenseAuthorizationProperty)
 	// add system, get  enterprise or government systemWallpapers
 	if _licenseAuthorizationProperty > Professional && _licenseAuthorizationProperty < uint32(len(_wallpapersPathMap)) {
 		for _, file := range getSysBgFiles(_wallpapersPathMap[_licenseAuthorizationProperty]) {
