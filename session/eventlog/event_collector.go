@@ -43,7 +43,7 @@ const (
 
 var (
 	userExpPath    = "/var/public/deepin-user-experience/user"
-	defaultExpPath = "/etc/deepin/deepin-user-experience "
+	defaultExpPath = "/etc/deepin/deepin-user-experience"
 )
 
 type EventLog struct {
