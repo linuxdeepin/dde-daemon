@@ -338,17 +338,7 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 	logger.Debugf("devices config is #%v, iface is: %s", n.config.Devices, dev.iface)
 	n.configMu.Unlock()
 	if ok {
-		enabled := config.Enabled
-		// wifi 设备，先查看飞行模式的状态，避免冲突。
-		if enabled && dev.type0 == nm.NM_DEVICE_TYPE_WIFI {
-			if v, err := n.airplane.WifiEnabled().Get(0); err != nil {
-				logger.Warning(err)
-			} else if v {
-				logger.Debug("disable wifi because airplane mode is on")
-				enabled = false
-			}
-		}
-		n.enableDevice(dev.iface, enabled)
+		n.enableDevice(dev.iface, config.Enabled)
 	}
 
 	return nil
@@ -574,6 +564,14 @@ func (n *Network) enableWireless() error {
 	}
 
 	if enabled {
+		return nil
+	}
+
+	// 飞行模式开启，不激活wifi
+	if v, err := n.airplane.WifiEnabled().Get(0); err != nil {
+		logger.Warning(err)
+	} else if v {
+		logger.Debug("disable wifi because airplane mode is on")
 		return nil
 	}
 
