@@ -86,6 +86,7 @@ func (m *Manager) initOnBatteryChangedHandler() {
 
 func (m *Manager) handleBeforeSuspend() {
 	m.setPrepareSuspend(suspendStatePrepare)
+	m.setDPMSModeOff()
 	logger.Debug("before sleep")
 }
 
