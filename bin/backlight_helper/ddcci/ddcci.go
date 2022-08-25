@@ -1,13 +1,20 @@
 package ddcci
 
-// #cgo pkg-config: ddcutil
-// #include <ddcutil_c_api.h>
+//#cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
+//#cgo LDFLAGS:-ldl
+//#cgo pkg-config: ddcutil
+//#include <ddcutil_c_api.h>
+//#include <stdlib.h>
+//#include "ddcci_wrapper.h"
 import "C"
 import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"os/exec"
+	"path/filepath"
 	"reflect"
+	"strings"
 	"sync"
 	"unsafe"
 
@@ -102,6 +109,20 @@ func newDDCCI() (*ddcci, error) {
 		return nil, err
 	}
 
+	content, err := exec.Command("pkg-config", "ddcutil", "--variable=libdir").Output()
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		libdir := strings.TrimSpace(string(content))
+		path := filepath.Join(libdir, "libddcutil.so")
+		cStr := C.CString(path)
+		defer C.free(unsafe.Pointer(cStr))
+		ret := C.InitDDCCISo(cStr)
+		if ret == -2 {
+			logger.Debug("failed to initialize ddca_free_all_displays sym")
+		}
+	}
+
 	return ddc, nil
 }
 
@@ -115,7 +136,7 @@ func (d *ddcci) freeList() {
 
 	if d.listPointer != nil {
 		C.ddca_free_display_info_list(d.listPointer)
-		C.ddca_free_all_displays()
+		_ = C.freeAllDisplaysWrapper()
 		d.listPointer = nil
 	}
 }
