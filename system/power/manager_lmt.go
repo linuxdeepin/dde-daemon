@@ -212,7 +212,10 @@ func (m *Manager) updatePowerSavingMode() { // 根据用户设置以及当前状
 	var enable bool
 	var lmtCfgChanged bool
 	var err error
-	if m.PowerSavingModeAuto && m.PowerSavingModeAutoWhenBatteryLow {
+	if !m.IsPowerSaveSupported {
+		enable = false
+		logger.Debug("IsPowerSaveSupported is false.")
+	} else if m.PowerSavingModeAuto && m.PowerSavingModeAutoWhenBatteryLow {
 		if m.OnBattery || m.batteryLow {
 			enable = true
 		} else {
@@ -235,11 +238,13 @@ func (m *Manager) updatePowerSavingMode() { // 根据用户设置以及当前状
 	}
 
 	if enable {
-		logger.Debugf("auto switch to powersave mode")
+		logger.Debug("auto switch to powersave mode")
 		err = m.doSetMode("powersave")
 	} else {
-		logger.Debugf("auto switch to balance mode")
-		err = m.doSetMode("balance")
+		if m.IsBalanceSupported {
+			logger.Debug("auto switch to balance mode")
+			err = m.doSetMode("balance")
+		}
 	}
 
 	if err != nil {

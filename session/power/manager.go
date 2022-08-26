@@ -147,6 +147,9 @@ type Manager struct {
 	// 是否支持高性能模式
 	IsHighPerformanceSupported bool
 	gsHighPerformanceEnabled   bool
+
+	// 是否支持节能模式
+	isPowerSaveSupported bool
 }
 
 var _manager *Manager
@@ -252,6 +255,10 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		logger.Warning("Get systemPower.IsHighPerformanceSupported err :", err)
 	}
 	m.setPropIsHighPerformanceSupported(isHighPerformanceSupported && m.settings.GetBoolean(settingKeyHighPerformanceEnabled))
+	m.isPowerSaveSupported, err = m.systemPower.IsPowerSaveSupported().Get(0)
+	if err != nil {
+		logger.Warning("Get systemPower.IsPowerSaveSupported err :", err)
+	}
 
 	// 绑定com.deepin.daemon.Display的DBus
 	m.display = display.NewDisplay(sessionBus)
