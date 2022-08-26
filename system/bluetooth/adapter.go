@@ -51,6 +51,7 @@ type adapter struct {
 	autoConnectFinished bool
 	// waitDiscovery未使用
 	// waitDiscovery                       bool
+	poweredActionTime time.Time
 }
 
 var defaultDiscoveringTimeout = 1 * time.Minute
@@ -163,6 +164,12 @@ func (a *adapter) connectProperties() {
 
 	err = a.core.Adapter().Powered().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
+			return
+		}
+		// 接口操作时效内，按接口配置状态配置蓝牙状态。
+		if a.Powered != value && time.Since(a.poweredActionTime) < time.Second {
+			logger.Debug("sync power status because dde power status opt is working")
+			go a.core.Adapter().Powered().Set(0, a.Powered)
 			return
 		}
 		a.Powered = value
