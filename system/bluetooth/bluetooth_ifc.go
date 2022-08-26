@@ -3,6 +3,7 @@ package bluetooth
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/godbus/dbus"
 	sysbtagent "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth.agent"
@@ -203,6 +204,7 @@ func (b *SysBluetooth) SetAdapterPowered(adapterPath dbus.ObjectPath,
 	// 当先收到 discovering，后收到power时
 	// 在discovering改变时，此时power状态依旧为true，当时此时power是false状态，导致闪开后关闭
 	// Note: BUG102434
+	adapter.poweredActionTime = time.Now()
 	adapter.Powered = powered
 	adapter.discoveringFinished = false
 
