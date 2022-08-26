@@ -32,9 +32,9 @@ import (
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 // nolint
@@ -200,8 +200,19 @@ func (m *Manager) systemShutdown() {
 		logger.Info("can not Shutdown")
 		return
 	}
+
+	locked, err := m.sessionManager.Locked().Get(0)
+	if err != nil {
+		logger.Warning("sessionManager get locked error:", err)
+		return
+	}
+	if locked {
+		logger.Info("session is locked")
+		return
+	}
+
 	logger.Debug("Shutdown")
-	err := m.sessionManager.RequestShutdown(0)
+	err = m.sessionManager.RequestShutdown(0)
 	if err != nil {
 		logger.Warning("failed to Shutdown:", err)
 	}
