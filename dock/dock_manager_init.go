@@ -115,21 +115,55 @@ func (m *Manager) listenWMSwitcherSignal() {
 	}
 }
 
+const (
+	wmName3D = "deepin wm"
+	wmName2D = "deepin metacity"
+)
+
+func (m *Manager) listenWMSignal() {
+	m.wm.InitSignalExt(m.sessionSigLoop, true)
+	_, err := m.wm.ConnectCompositingEnabledChanged(func(enabled bool) {
+		m.PropsMu.Lock()
+		defer m.PropsMu.Unlock()
+		if enabled {
+			m.wmName = wmName3D
+		} else {
+			m.wmName = wmName2D
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
+// 代码逻辑源自startdde wm_kwin.go
+func (m *Manager) currentWM() string {
+	enabled, err := m.wm.CompositingEnabled().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+
+	wmName := wmName2D
+	if enabled {
+		wmName = wmName3D
+	}
+	return wmName
+}
+
 func (m *Manager) is3DWM() (ret bool) {
 	m.PropsMu.Lock()
-
+	defer m.PropsMu.Unlock()
 	if m.wmName == "" {
 		var err error
-		m.wmName, err = m.wmSwitcher.CurrentWM(0)
+		m.wmName = m.currentWM()
 		if err != nil {
 			logger.Warning("failed to get wmSwitcher.CurrentWM:", err)
 		}
 	}
-	if m.wmName == "deepin wm" {
+	if m.wmName == wmName3D {
 		ret = true
 	}
-
-	m.PropsMu.Unlock()
 	return
 }
 
@@ -274,6 +308,7 @@ func (m *Manager) init() error {
 	m.sessionSigLoop.Start()
 	m.listenLauncherSignal()
 	m.listenWMSwitcherSignal()
+	m.listenWMSignal()
 	if strings.Contains(sessionType, "wayland") {
 		m.listenWaylandWMSignals()
 	}
