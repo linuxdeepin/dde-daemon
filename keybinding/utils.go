@@ -32,9 +32,9 @@ import (
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 // nolint
@@ -201,6 +201,10 @@ func (m *Manager) systemShutdown() {
 		return
 	}
 	logger.Debug("Shutdown")
+	locked, _ := m.sessionManager.Locked().Get(0)
+	if locked {
+		return
+	}
 	err := m.sessionManager.RequestShutdown(0)
 	if err != nil {
 		logger.Warning("failed to Shutdown:", err)
