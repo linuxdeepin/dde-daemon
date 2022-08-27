@@ -1056,6 +1056,9 @@ func (sm *ShortcutManager) AddMedia(gsettings *gio.Settings, wmObj wm.Wm) {
 	logger.Debug("AddMedia")
 	idNameMap := getMediaIdNameMap()
 	for _, id := range gsettings.ListKeys() {
+		if id == "media-close" {
+			continue
+		}
 		name := idNameMap[id]
 		if name == "" {
 			name = id
