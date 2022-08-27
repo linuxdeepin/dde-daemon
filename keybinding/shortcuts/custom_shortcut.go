@@ -176,7 +176,7 @@ func (csm *CustomShortcutManager) Save() error {
 	return csm.kfile.SaveToFile(csm.file)
 }
 
-func (csm *CustomShortcutManager) Add(name, action string, keystrokes []*Keystroke) (Shortcut, error) {
+func (csm *CustomShortcutManager) Add(name, action string, keystrokes []*Keystroke, wm wm.Wm) (Shortcut, error) {
 	id := name
 	csm.kfile.SetString(id, kfKeyName, name)
 	csm.kfile.SetString(id, kfKeyAction, action)
@@ -196,6 +196,7 @@ func (csm *CustomShortcutManager) Add(name, action string, keystrokes []*Keystro
 		},
 		manager: csm,
 		Cmd:     action,
+		wm:      wm,
 	}
 	return shortcut, csm.Save()
 }
