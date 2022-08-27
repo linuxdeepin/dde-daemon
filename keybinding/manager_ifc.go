@@ -240,7 +240,7 @@ func (m *Manager) AddCustomShortcut(name, action, keystroke string) (id string,
 		return
 	}
 
-	shortcut, err := m.customShortcutManager.Add(name, action, []*shortcuts.Keystroke{ks})
+	shortcut, err := m.customShortcutManager.Add(name, action, []*shortcuts.Keystroke{ks}, m.wm)
 	if err != nil {
 		logger.Warning(err)
 		busErr = dbusutil.ToError(err)
