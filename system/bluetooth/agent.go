@@ -22,14 +22,15 @@ package bluetooth
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/godbus/dbus"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 	sysbtagent "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.bluetooth.agent"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 )
 
 const (
@@ -381,6 +382,11 @@ func (a *agent) RequestConfirmation(device dbus.ObjectPath, passkey uint32) *dbu
 	}
 	d.agentWorkStart()
 	defer d.agentWorkEnd()
+
+	if d.Icon == "audio-card" && strings.Contains(strings.ToLower(d.Name), "huawei") {
+		logger.Warning("audio-card device don't need confirm")
+		return nil
+	}
 
 	err = ua.RequestConfirmation(0, device, passkey)
 	return toErrFromAgent(err)
