@@ -126,7 +126,8 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to request name:", err)
 	}
-
-	service.SetAutoQuitHandler(time.Second*30, nil)
+	if !ddcciManager.GsSupportDdcci {
+		service.SetAutoQuitHandler(time.Second*30, nil)
+	}
 	service.Wait()
 }

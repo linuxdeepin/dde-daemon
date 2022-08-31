@@ -27,7 +27,7 @@ type Manager struct {
 	configTimestamp x.Timestamp
 
 	// 亮度调节方式，策略组配置
-	supportDdcci bool
+	GsSupportDdcci bool
 
 	configManagerPath dbus.ObjectPath
 }
@@ -41,9 +41,9 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		logger.Warning(err)
 	}
-	m.supportDdcci = m.getSupportDdcci()
+	m.GsSupportDdcci = m.getSupportDdcci()
 
-	if m.supportDdcci {
+	if m.GsSupportDdcci {
 		var err error
 		m.ddcci, err = newDDCCI()
 		if err != nil {
