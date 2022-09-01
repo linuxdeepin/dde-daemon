@@ -9,6 +9,12 @@ import (
 func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
+			Name:    "CheckCfgSupport",
+			Fn:      v.CheckCfgSupport,
+			InArgs:  []string{"name"},
+			OutArgs: []string{"outArg0"},
+		},
+		{
 			Name:   "SetBrightness",
 			Fn:     v.SetBrightness,
 			InArgs: []string{"type0", "name", "value"},
