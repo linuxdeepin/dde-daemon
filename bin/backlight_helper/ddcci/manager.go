@@ -11,9 +11,8 @@ import (
 )
 
 const (
-	DbusPath        = "/com/deepin/daemon/helper/Backlight/DDCCI"
-	dbusInterface   = "com.deepin.daemon.helper.Backlight.DDCCI"
-	configManagerId = "org.desktopspec.ConfigManager"
+	DbusPath      = "/com/deepin/daemon/helper/Backlight/DDCCI"
+	dbusInterface = "com.deepin.daemon.helper.Backlight.DDCCI"
 )
 
 var logger = log.NewLogger("backlight_helper/ddcci")
@@ -25,44 +24,19 @@ type Manager struct {
 
 	PropsMu         sync.RWMutex
 	configTimestamp x.Timestamp
-
-	// 亮度调节方式，策略组配置
-	supportDdcci bool
-
-	configManagerPath dbus.ObjectPath
 }
 
 func NewManager(service *dbusutil.Service) (*Manager, error) {
 	m := &Manager{}
 	m.service = service
 
-	systemConnObj := service.Conn().Object(configManagerId, "/")
-	err := systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.brightness", "").Store(&m.configManagerPath)
+	var err error
+	m.ddcci, err = newDDCCI()
 	if err != nil {
-		logger.Warning(err)
-	}
-	m.supportDdcci = m.getSupportDdcci()
-
-	if m.supportDdcci {
-		var err error
-		m.ddcci, err = newDDCCI()
-		if err != nil {
-			return nil, fmt.Errorf("brightness: failed to init ddc/ci: %s", err)
-		}
+		return nil, fmt.Errorf("brightness: failed to init ddc/ci: %s", err)
 	}
 
 	return m, nil
-}
-
-func (m *Manager) getSupportDdcci() bool {
-	systemConnObj := m.service.Conn().Object("org.desktopspec.ConfigManager", m.configManagerPath)
-	var value bool
-	err := systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, "supportDdcci").Store(&value)
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-	return value
 }
 
 func (*Manager) GetInterfaceName() string {
