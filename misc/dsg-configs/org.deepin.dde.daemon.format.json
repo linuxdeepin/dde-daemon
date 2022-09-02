@@ -23,7 +23,7 @@
           "visibility": "private"
       },
       "negativeCurrencyFormat": {
-          "value": "-¥1.1",
+          "value": "¥-1.1",
           "serial": 0,
           "flags": [],
           "name": "negativeCurrencyFormat",
