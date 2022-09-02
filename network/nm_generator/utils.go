@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/linuxdeepin/go-lib/log"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 var logger = log.NewLogger("daemon/network/nm_generator")
