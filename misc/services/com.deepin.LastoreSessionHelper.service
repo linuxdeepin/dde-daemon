@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name=com.deepin.LastoreSessionHelper
-Exec=/usr/bin/dbus-send --session --print-reply --dest=com.deepin.SessionManager /com/deepin/StartManager com.deepin.StartManager.RunCommand string:'/usr/lib/deepin-daemon/dde-session-daemon' array:string:''
+Exec=/usr/lib/deepin-daemon/dde-session-daemon
 
