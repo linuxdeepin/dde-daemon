@@ -147,7 +147,7 @@ func main() {
 	m.configManagerPath, err = cfgManger.AcquireManager(0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.brightness", "")
 	if err != nil {
 		// 即使配置服务或者接口不存在，也要设置默认配置，不能影响基本亮度调节
-		logger.Warningf("failed to get config Manager:", err)
+		logger.Warning("failed to get config Manager:", err)
 		m.gsSupportDdcci = false
 		m.gsBackendHold = false
 	} else {
