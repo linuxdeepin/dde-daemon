@@ -192,7 +192,6 @@ func (s *SessionDaemon) register(service *dbusutil.Service) error {
 func (s *SessionDaemon) initModules() {
 	part1ModuleNames := []string{
 		"dock",
-		"eventlog",
 		"trayicon",
 		"launcher",
 		"x-event-monitor",
@@ -220,6 +219,7 @@ func (s *SessionDaemon) initModules() {
 		//"miracast", // need network
 		"systeminfo",
 		"lastore",
+		"eventlog",
 		"calltrace",
 		"debug",
 	}
