@@ -28,16 +28,16 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
-	airplanemode "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.airplanemode1"
-	backlight "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.helper.backlight1"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
 	keyevent "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.keyevent"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	power "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.airplanemode1"
+	backlight "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.helper.backlight1"
+	power "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -415,7 +415,7 @@ var waylandMediaIdMap = map[string]string{
 
 func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 	err := sessionBus.Object("org.kde.kglobalaccel",
-		"/component/kwin").AddMatchSignal("org.kde.kglobalaccel.Component", "globalShortcutPressed").Err
+		"/component/deepin_kwin").AddMatchSignal("org.kde.kglobalaccel.Component", "globalShortcutPressed").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
@@ -427,7 +427,7 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 		if len(sig.Body) > 1 {
 			m.shortcutKey = sig.Body[0].(string)
 			m.shortcutKeyCmd = sig.Body[1].(string)
-			ok := strings.Compare(string("kwin"), m.shortcutKey)
+			ok := strings.Compare(string("deepin-kwin"), m.shortcutKey)
 			if ok == 0 {
 				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
 				m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
