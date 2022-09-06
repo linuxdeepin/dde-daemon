@@ -15,6 +15,7 @@ import (
 	"strings"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
@@ -185,9 +186,9 @@ func getWaylandSocket(envs procfs.EnvVars) (waylandSocket string) {
 }
 
 type pwdChanger interface {
-	clean()           // clean all stuff relay to pwdChanger
-	runDialog() error // run the dialog
-	wait()            // wait dialog close
+	clean()                          // clean all stuff relay to pwdChanger
+	runDialog() (*os.Process, error) // run the dialog
+	wait()                           // wait dialog close
 }
 
 type pwdChangerBase struct {
@@ -212,14 +213,15 @@ type pwdChangerWayland struct {
 	waylandSocket string
 }
 
-func (pcr *pwdChangerBase) runDialog() (err error) {
+func (pcr *pwdChangerBase) runDialog() (*os.Process, error) {
 	// start dialog
 	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(pcr.cmd), pcr.cmd.Env)
-	err = pcr.cmd.Start()
+	pcr.cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	err := pcr.cmd.Start()
 	if err != nil {
 		err = fmt.Errorf("fail to start reset-password-dialog: %v", err)
 	}
-	return
+	return pcr.cmd.Process, err
 }
 
 func (pcr *pwdChangerBase) wait() {
@@ -602,39 +604,62 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 	// 在应用真实启动前发生的错误, 应该要和 dbus 方法一起返回
 	// 在应用启动后发生的错误, 会输出在后端的日志中.
 	// 这里使用一个管道来传递错误信息
-	errCh := make(chan error)
-	go doSetPwdWithUnionID(u, sender, errCh)
-	err = <-errCh
-	return
+	return doSetPwdWithUnionID(u, sender, 3)
 }
 
 var pwdChangerLock sync.Mutex
+var pwdChangerProcess *os.Process
 
-func doSetPwdWithUnionID(u *User, sender dbus.Sender, errCh chan error) {
+func doSetPwdWithUnionID(u *User, sender dbus.Sender, count int) error {
 	pwdChangerLock.Lock()
-	defer pwdChangerLock.Unlock()
+
+	if pwdChangerProcess != nil {
+		err := syscall.Kill(-pwdChangerProcess.Pid, syscall.SIGKILL)
+		if err != nil {
+			logger.Warning(err)
+		}
+		pwdChangerLock.Unlock()
+
+		// 等待协程结束
+		if count > 0 {
+			logger.Debug("retry after 100ms")
+			time.Sleep(100 * time.Millisecond)
+			return doSetPwdWithUnionID(u, sender, count-1)
+		} else {
+			return fmt.Errorf("kill pwd changer process failed")
+		}
+	}
 
 	caller, err := newCaller(u.service, sender)
 	if err != nil {
-		err = fmt.Errorf("newCaller failed: %v", err)
-		errCh <- err
-		return
+		pwdChangerLock.Unlock()
+		return fmt.Errorf("newCaller failed: %v", err)
 	}
 
 	pcr, err := newPwdChanger(caller, u)
 	if err != nil {
-		err = fmt.Errorf("setup pwdChanger fail: %v", err)
-		errCh <- err
-		return
+		pwdChangerLock.Unlock()
+		return fmt.Errorf("setup pwdChanger fail: %v", err)
 	}
 
-	defer pcr.clean()
+	pwdChangerProcess, err = pcr.runDialog()
+	pwdChangerLock.Unlock()
+	if err != nil {
+		pcr.clean()
+		return err
+	}
 
-	errCh <- pcr.runDialog()
+	go func() {
+		defer func() {
+			pwdChangerLock.Lock()
+			pwdChangerProcess = nil
+			pwdChangerLock.Unlock()
+		}()
+		pcr.wait()
+		pcr.clean()
+	}()
 
-	pcr.wait()
-
-	return
+	return nil
 }
 
 // 删除用户的 login keyring
