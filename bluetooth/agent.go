@@ -22,14 +22,16 @@ package bluetooth
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/linuxdeepin/go-lib/strv"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/godbus/dbus"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
-	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 )
 
 const (
@@ -89,11 +91,14 @@ func (a *agent) RequestPinCode(device dbus.ObjectPath) (pinCode string, busErr *
 //the later specification.
 //Possible errors: org.bluez.Error.Rejected
 //				   org.bluez.Error.Canceled
-func (a *agent) DisplayPinCode(device dbus.ObjectPath, pinCode string) (err *dbus.Error) {
+func (a *agent) DisplayPinCode(device dbus.ObjectPath, pinCode string) *dbus.Error {
 	logger.Info("DisplayPinCode()", pinCode)
-	err1 := a.b.service.Emit(a.b, "DisplayPinCode", device, pinCode)
-	err = dbusutil.ToError(err1)
-	return
+	_, err := a.emitRequest(device, "DisplayPinCode", pinCode)
+	if err != nil {
+		return toBusErrForAgent(err)
+	}
+	return nil
+
 }
 
 //RequestPasskey method gets called when the service daemon needs to get the passkey for an authentication.
@@ -123,15 +128,15 @@ func (a *agent) RequestPasskey(device dbus.ObjectPath) (passkey uint32, busErr *
 //During the pairing process this method might be called multiple times to update the entered value.
 //Note that the passkey will always be a 6-digit number, so the display should be zero-padded at the start if
 //the value contains less than 6 digits.
-func (a *agent) DisplayPasskey(device dbus.ObjectPath, passkey uint32,
-	entered uint16) *dbus.Error {
+func (a *agent) DisplayPasskey(device dbus.ObjectPath, passkey uint32, entered uint16) *dbus.Error {
 
 	logger.Info("DisplayPasskey()", passkey, entered)
-	err := a.b.service.Emit(a.b, "DisplayPasskey", device, passkey, uint32(entered))
+	key := fmt.Sprintf("%06d", passkey)
+	_, err := a.emitRequest(device, "DisplayPasskey", key)
 	if err != nil {
-		logger.Warning("failed to emit signal 'DisplayPasskey':", err, device, passkey, entered)
+		return toBusErrForAgent(err)
 	}
-	return dbusutil.ToError(err)
+	return nil
 }
 
 //RequestConfirmation This method gets called when the service daemon needs to confirm a passkey for an authentication.
@@ -148,8 +153,10 @@ func (a *agent) RequestConfirmation(device dbus.ObjectPath, passkey uint32) *dbu
 	return toBusErrForAgent(err)
 }
 
-//RequestAuthorization method gets called to request the user to authorize an incoming pairing attempt which
-//would in other circumstances trigger the just-works model.
+//RequestAuthorization This method gets called to request the user to authorize an incoming pairing attempt
+//which would in other circumstances trigger the just-works model, or when the user plugged in a device that
+//implements cable pairing. In the latter case, the device would not be connected to the adapter via Bluetooth yet.
+//Just-Works 配对适用于点击智能手机/计算机和蓝牙设备上的按钮以启动配对而无需输入密钥。
 //Possible errors: org.bluez.Error.Rejected
 //				   org.bluez.Error.Canceled
 func (a *agent) RequestAuthorization(device dbus.ObjectPath) *dbus.Error {
@@ -318,16 +325,24 @@ func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...inte
 		logger.Warningf("emitRequest can not find device: %v, %v", devPath, err)
 		return auth, btcommon.ErrCanceled
 	}
-
-	// if signal is request confirmation, we deal signal self
-	if signal == "RequestConfirmation" {
+	needConfirmOrShowSignal := strv.Strv{
+		"RequestConfirmation",
+		"DisplayPasskey",
+		"DisplayPinCode",
+	}
+	// if signal is request confirmation or request show, we deal signal self
+	if needConfirmOrShowSignal.Contains(signal) {
 		// judge ensure state, if is true, means pc request a connection
 		// dont need to show notification window
 		if a.b.getInitiativeConnect(d.Path) {
 			// reset state
 			a.b.setInitiativeConnect(d.Path, false)
 			//if true, means pc active invoke the connect request
-			err = notifyInitiativeConnect(d, args[0].(string))
+			needCancel := "true"
+			if strings.Contains(strings.ToLower(signal), "display") {
+				needCancel = "false"
+			}
+			err = notifyInitiativeConnect(d, args[0].(string), needCancel)
 			if err != nil {
 				logger.Warningf("notify initiative connect failed,err:%v", err)
 			}

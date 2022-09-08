@@ -102,7 +102,7 @@ func notify(icon, summary, body string) {
 
 // notify pc initiative connect to device
 // so do not need to show notification window
-func notifyInitiativeConnect(dev *DeviceInfo, pinCode string) error {
+func notifyInitiativeConnect(dev *DeviceInfo, pinCode string, needCancel string) error {
 	if checkProcessExists(bluetoothDialog) {
 		logger.Info("initiative already exist")
 		return nil
@@ -111,7 +111,7 @@ func notifyInitiativeConnect(dev *DeviceInfo, pinCode string) error {
 	timestamp := strconv.FormatInt(time.Now().UnixNano(), 10)
 	//use command to open osd window to show pin code
 	// #nosec G204
-	cmd := exec.Command(notifyDdeDialogPath, pinCode, string(dev.Path), timestamp)
+	cmd := exec.Command(notifyDdeDialogPath, pinCode, string(dev.Path), timestamp, needCancel)
 	err := cmd.Start()
 	if err != nil {
 		logger.Infof("execute cmd command failed,err:%v", err)
