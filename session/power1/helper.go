@@ -25,18 +25,18 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 
 	// system bus
-	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
-	libpower "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
 	sensorproxy "github.com/linuxdeepin/go-dbus-factory/net.hadess.sensorproxy"
+	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
+	libpower "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 
 	// session bus
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.sessionwatcher1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	screensaver "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.screensaver"
+	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.sessionwatcher1"
+	screensaver1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.screensaver1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	x "github.com/linuxdeepin/go-x11-client"
 )
@@ -53,7 +53,7 @@ type Helper struct {
 	SessionManager sessionmanager.SessionManager
 	SessionWatcher sessionwatcher.SessionWatcher
 	ShutdownFront  shutdownfront.ShutdownFront
-	ScreenSaver    screensaver.ScreenSaver // sig
+	ScreenSaver    screensaver1.ScreenSaver // sig
 	Display        display.Display
 
 	xConn *x.Conn
@@ -79,7 +79,7 @@ func (h *Helper) init(sysBus, sessionBus *dbus.Conn) error {
 	h.SysDBusDaemon = ofdbus.NewDBus(sysBus)
 	h.Daemon = daemon.NewDaemon(sysBus)
 	h.SessionManager = sessionmanager.NewSessionManager(sessionBus)
-	h.ScreenSaver = screensaver.NewScreenSaver(sessionBus)
+	h.ScreenSaver = screensaver1.NewScreenSaver(sessionBus)
 	h.Display = display.NewDisplay(sessionBus)
 	h.SessionWatcher = sessionwatcher.NewSessionWatcher(sessionBus)
 	h.ShutdownFront = shutdownfront.NewShutdownFront(sessionBus)
