@@ -366,6 +366,8 @@ func (a *Audio) refreshSources() {
 			delete(a.sources, key)
 		}
 	}
+
+	a.updatePropSources()
 }
 
 func (a *Audio) refershSinkInputs() {
