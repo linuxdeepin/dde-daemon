@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "procMonitorEnabled": true,
+  "procMonitorEnabled": false,
   "processes": {
     "/usr/bin/deepin-anything-tool": {
       "cpu": 19
