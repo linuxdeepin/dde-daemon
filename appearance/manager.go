@@ -1,21 +1,6 @@
-/*
- * Copyright (C) 2014 ~ 2018 Deepin Technology Co., Ltd.
- *
- * Author:     jouyouyun <jouyouwen717@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package appearance
 
@@ -38,6 +23,13 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/theme_thumb"
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
+	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	imageeffect "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.imageeffect"
@@ -56,13 +48,6 @@ import (
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
-	"github.com/linuxdeepin/dde-api/theme_thumb"
-	"github.com/linuxdeepin/dde-daemon/appearance/background"
-	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
-	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
-	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
-	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -273,7 +258,7 @@ func listenLicenseInfoDBusPropChanged(conn *dbus.Conn, sigLoop *dbusutil.SignalL
 		return
 	}
 
-	sigLoop.AddHandler(&dbusutil.SignalRule {
+	sigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "com.deepin.license.Info.LicenseStateChange",
 	}, func(sig *dbus.Signal) {
 		if strings.Contains(string(sig.Name), "com.deepin.license.Info.LicenseStateChange") {
