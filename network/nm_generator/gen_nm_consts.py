@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2016 Deepin Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-
-# See also: ${networkmanager-src}/libnm/generate-setting-docs.py
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import gi
 gi.require_version('NM', '1.0')

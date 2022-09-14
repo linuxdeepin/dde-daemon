@@ -1,9 +1,13 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package ddcci
 
 import (
-"testing"
+	"testing"
 
-"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestManager_GetInterfaceName(t *testing.T) {

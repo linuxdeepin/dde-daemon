@@ -2,8 +2,6 @@
 //nolint
 package network
 
-import ()
-
 // General get setting key default value
 func generalGetSettingDefaultValue(setting, key string) (defvalue interface{}) {
 	switch setting {

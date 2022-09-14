@@ -1,21 +1,6 @@
-/*
- * Copyright (C) 2014 ~ 2018 Deepin Technology Co., Ltd.
- *
- * Author:     jouyouyun <jouyouwen717@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package appearance
 
@@ -26,10 +11,10 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
 	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 // Reset reset all themes and fonts settings to default values

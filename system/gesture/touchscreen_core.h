@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #ifndef __TOUCHSCREEN_CORE_H__
 #define __TOUCHSCREEN_CORE_H__
 

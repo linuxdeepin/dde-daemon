@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package iso639
 
 // 文件 auto.go 是自动生成的，生成工具在 https://gitee.com/electricface/codes/517eok9msxijwpnz6hld462

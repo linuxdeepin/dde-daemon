@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 package audio
 
 /*
@@ -74,51 +77,51 @@ static int find_card_control(char *name, int *card_num, char **control_id) {
 */
 import "C"
 import (
-	"errors"
-	"fmt"
-	"os/exec"
-	"strconv"
-	"unsafe"
+    "errors"
+    "fmt"
+    "os/exec"
+    "strconv"
+    "unsafe"
 )
 
 var errNotFoundControl = errors.New("not found control")
 
 func findCardControl(name string) (card int, controlId string, err error) {
-	var cCard C.int
-	var cControlId *C.char
-	cName := C.CString(name)
+    var cCard C.int
+    var cControlId *C.char
+    cName := C.CString(name)
 
-	cErr := C.find_card_control(cName, &cCard, &cControlId)
-	C.free(unsafe.Pointer(cName))
+    cErr := C.find_card_control(cName, &cCard, &cControlId)
+    C.free(unsafe.Pointer(cName))
 
-	if cErr < 0 {
-		err = fmt.Errorf("find_card_control err code: %d", err)
-		return
-	}
+    if cErr < 0 {
+        err = fmt.Errorf("find_card_control err code: %d", err)
+        return
+    }
 
-	if cControlId != nil {
-		card = int(cCard)
-		controlId = C.GoString(cControlId)
-		C.free(unsafe.Pointer(cControlId))
-		return
-	}
+    if cControlId != nil {
+        card = int(cCard)
+        controlId = C.GoString(cControlId)
+        C.free(unsafe.Pointer(cControlId))
+        return
+    }
 
-	err = errNotFoundControl
-	return
+    err = errNotFoundControl
+    return
 }
 
 func disableAutoMuteMode() error {
-	cardNum, controlId, err := findCardControl("Auto-Mute Mode")
-	if err != nil {
-		if err == errNotFoundControl {
-			err = nil
-		}
-		return err
-	}
-	out, err := exec.Command("amixer", "-c", strconv.Itoa(cardNum), "cset", controlId, "Disabled").Output()
-	if err != nil {
-		return err
-	}
-	logger.Debugf("command amixer -c %d cset %s Disabled\n out: %s", cardNum, controlId, out)
-	return nil
+    cardNum, controlId, err := findCardControl("Auto-Mute Mode")
+    if err != nil {
+        if err == errNotFoundControl {
+            err = nil
+        }
+        return err
+    }
+    out, err := exec.Command("amixer", "-c", strconv.Itoa(cardNum), "cset", controlId, "Disabled").Output()
+    if err != nil {
+        return err
+    }
+    logger.Debugf("command amixer -c %d cset %s Disabled\n out: %s", cardNum, controlId, out)
+    return nil
 }
