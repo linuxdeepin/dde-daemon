@@ -163,6 +163,8 @@ type Audio struct {
 	// 自动端口切换
 	enableAutoSwitchPort bool
 	systemSigLoop        *dbusutil.SignalLoop
+	// 用来进一步断是否需要暂停播放的信息
+	misc uint32
 
 	// nolint
 	signals *struct {
@@ -435,9 +437,12 @@ func (a *Audio) autoPause() {
 		port, err = card.Ports.Get(a.defaultSink.ActivePort.Name, pulse.DirectionSink)
 	}
 
-	if err != nil || port.Available == pulse.AvailableTypeNo || card.ActiveProfile.Name == "off" {
+	if err != nil {
 		logger.Warning(err)
 		pauseAllPlayers()
+	} else if port.Available == pulse.AvailableTypeNo || card.ActiveProfile.Name == "off" {
+		// 先不暂停，后面根据sink信息判断是否需要暂停
+		a.misc = port.Priority
 	}
 }
 
@@ -447,9 +452,23 @@ func (a *Audio) refreshDefaultSinkSource() {
 
 	if a.defaultSink != nil && a.defaultSink.Name != defaultSink {
 		logger.Debugf("update default sink to %s", defaultSink)
+		if a.misc != 0 {
+			a.misc = 0
+			go pauseAllPlayers()
+		}
 		a.updateDefaultSink(defaultSink)
 	} else {
 		logger.Debugf("keep default as %s", defaultSink)
+		if a.misc != 0 {
+			if card, err := a.ctx.GetCard(a.defaultSink.Card); err == nil {
+				port, err := card.Ports.Get(a.defaultSink.ActivePort.Name, pulse.DirectionSink)
+				if err == nil && port.Priority < a.misc {
+					// 优先级变低了才暂停播放
+					go pauseAllPlayers()
+				}
+			}
+			a.misc = 0
+		}
 	}
 
 	if a.defaultSource != nil && a.defaultSource.Name != defaultSource {
