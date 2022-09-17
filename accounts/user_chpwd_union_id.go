@@ -618,7 +618,7 @@ func doSetPwdWithUnionID(u *User, sender dbus.Sender, count int) error {
 	pwdChangerLock.Lock()
 
 	if pwdChangerProcess != nil {
-		err := syscall.Kill(-pwdChangerProcess.Pid, syscall.SIGKILL)
+		err := syscall.Kill(-pwdChangerProcess.Pid, syscall.SIGTERM)
 		if err != nil {
 			logger.Warning(err)
 		}
