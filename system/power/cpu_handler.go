@@ -36,6 +36,7 @@ type CpuHandlers []CpuHandler
 var _scalingAvailableGovernors = []string {"performance", "powersave", "userspace", "ondemand", "conservative", "schedutil"}
 var _scalingBalanceAvailableGovernors = []string {"ondemand", "conservative", "schedutil", "performance"}
 var _supportGovernors []string
+var _localAvailableGovernors []string
 
 func getScalingAvailableGovernors() []string {
 	return _scalingAvailableGovernors
@@ -47,6 +48,15 @@ func getScalingBalanceAvailableGovernors() []string {
 
 func getSupportGovernors() []string {
 	return _supportGovernors
+}
+
+func getLocalAvailableGovernors() []string {
+	return _localAvailableGovernors
+}
+
+func setLocalAvailableGovernors(value []string) []string {
+	_localAvailableGovernors = value
+	return _localAvailableGovernors
 }
 
 func setSupportGovernors(value []string) []string {
@@ -190,6 +200,16 @@ func (cpus *CpuHandlers) getAvailableGovernors() (ret string, err error) {
 	}
 
 	return ret, err
+}
+
+// 获取可用的Governor数组
+func (cpus *CpuHandlers) getAvailableArrGovernors() []string {
+	value, err := cpus.getAvailableGovernors()
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+	return strings.Split(strings.TrimSpace(string(value)), " ")
 }
 
 func (cpus *CpuHandlers) getCpuGovernorPath() string {

@@ -110,9 +110,36 @@ func Test_getSupportGovernors(t *testing.T) {
 	assert.Equal(t, len(cpuGovernors), 0)
 }
 
+func Test_getLocalAvailableGovernors(t *testing.T) {
+	cpuGovernors := getLocalAvailableGovernors()
+	assert.NotEqual(t, len(cpuGovernors), 10)
+}
+
+func Test_setLocalAvailableGovernors(t *testing.T) {
+	var governors []string = []string{"aaaa", "bbbb", "cccc"}
+	setLocalAvailableGovernors(governors)
+	cpuGovernors := getLocalAvailableGovernors()
+	assert.Equal(t, len(cpuGovernors), 3)
+	assert.Equal(t, cpuGovernors[0], governors[0])
+	assert.Equal(t, cpuGovernors[1], governors[1])
+	assert.Equal(t, cpuGovernors[2], governors[2])
+}
+
 func Test_setSupportGovernors(t *testing.T) {
 	var lines = []string {"1", "2", "3"}
 	assert.NotEqual(t, len(setSupportGovernors(lines)), 10)
+}
+
+func Test_getAvailableGovernors(t *testing.T) {
+	cpus := CpuHandlers{}
+	govs, _ := cpus.getAvailableGovernors()
+	assert.NotEqual(t, govs, "/a/b/c/d")
+}
+
+func Test_getAvailableArrGovernors(t *testing.T) {
+	cpus := CpuHandlers{}
+	govs := cpus.getAvailableArrGovernors()
+	assert.NotEqual(t, len(govs), 10)
 }
 
 func Test_trySetBalanceCpuGovernor(t *testing.T)  {
