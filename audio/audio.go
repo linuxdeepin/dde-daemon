@@ -462,9 +462,19 @@ func (a *Audio) refreshDefaultSinkSource() {
 		if a.misc != 0 {
 			if card, err := a.ctx.GetCard(a.defaultSink.Card); err == nil {
 				port, err := card.Ports.Get(a.defaultSink.ActivePort.Name, pulse.DirectionSink)
-				if err == nil && port.Priority < a.misc {
-					// 优先级变低了才暂停播放
+				if err != nil {
+					logger.Warning(err)
 					go pauseAllPlayers()
+				} else {
+					switch DetectPortType(card, &port) {
+					case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO, PortTypeUsb:
+						// 优先级变低了才暂停播放
+						if port.Priority < a.misc {
+							go pauseAllPlayers()
+						}
+					default:
+						go pauseAllPlayers()
+					}
 				}
 			}
 			a.misc = 0
