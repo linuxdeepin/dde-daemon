@@ -5,9 +5,12 @@
 package power
 
 import (
+	"strings"
+
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 func interfaceToArrayString(v interface{}) (d []interface{}) {
@@ -63,6 +66,31 @@ func (m *Manager) initDsgConfig(conn *dbus.Conn) error {
 		logger.Warning(err)
 		return err
 	}
+
+	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
+	}, func(sig *dbus.Signal) {
+		if strings.Contains(sig.Name, "org.desktopspec.ConfigManager.Manager.valueChanged") && len(sig.Body) >= 1 {
+			key, ok := sig.Body[0].(string)
+			if ok && key == "supportCpuGovernors" {
+				// 当supportCpuGovernors被人为改动后，就和availableArrGovernors比较，如果不同则直接设置成availableArrGovernors数据
+				cpuGovernors := interfaceToArrayString(m.getDsgData("supportCpuGovernors"))
+				availableArrGovernors := getLocalAvailableGovernors()
+				if len(cpuGovernors) != len(availableArrGovernors) {
+					m.setDsgData("supportCpuGovernors", availableArrGovernors)
+					logger.Info("Modification availableGovernors not allowed.")
+				} else {
+					for _, v := range cpuGovernors {
+						if !strv.Strv(availableArrGovernors).Contains(v.(string)) {
+							m.setDsgData("supportCpuGovernors", availableArrGovernors)
+							logger.Info("Modification availableGovernors not allowed.")
+							return
+						}
+					}
+				}
+			}
+		}
+	})
 	return nil
 }
 

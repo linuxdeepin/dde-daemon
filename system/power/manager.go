@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 	"time"
 
@@ -137,8 +136,8 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		return nil, err
 	}
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
-	m.systemSigLoop.Start()
 	m.initDsgConfig(systemBus)
+	m.systemSigLoop.Start()
 
 	path := m.cpus.getCpuGovernorPath()
 	if "" == path {
@@ -157,19 +156,14 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		if len(*m.cpus) <= 0 {
 			return m, nil
 		}
-		value, err := m.cpus.getAvailableGovernors()
-		if err != nil {
-			logger.Warning(err)
-			return m, err
-		}
-		value = strings.TrimSpace(string(value))
-		lines := strings.Split(value, " ")
+		lines := m.cpus.getAvailableArrGovernors()
 		// 全部模式都支持的时候,不需要进行写入文件验证
 		if len(lines) != 6 {
 			lines = m.cpus.tryWriteGovernor(lines)
 		}
 		logger.Info(" First. available cpuGovernors : ", lines)
 		m.setDsgData("supportCpuGovernors", setSupportGovernors(lines))
+		setLocalAvailableGovernors(lines)
 
 		err, targetGovernor := trySetBalanceCpuGovernor(dsgCpuGovernor)
 		if err != nil {
@@ -190,6 +184,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 			supportGovernors[i] = v.(string)
 		}
 		setSupportGovernors(supportGovernors)
+		setLocalAvailableGovernors(m.cpus.getAvailableArrGovernors())
 	}
 
 	m.IsBalanceSupported = getIsBalanceSupported()
