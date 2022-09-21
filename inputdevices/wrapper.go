@@ -12,6 +12,7 @@ import "C"
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 
@@ -98,13 +99,20 @@ func getKeyboardNumber() int {
 }
 
 func getExtraInfo(id int32) (devNode string, phys string) {
-	devNodeBytes, length := dxutils.GetProperty(id, "Device Node")
-	if len(devNodeBytes) == 0 {
-		logger.Warningf("could not get DeviceNode for %d", id)
-		return
+	var devNodeBytes []byte
+	var length int32
+	sessionType := os.Getenv("XDG_SESSION_TYPE")
+	isWaylandSession := strings.Contains(sessionType, "wayland")
+	if isWaylandSession {
+		devNode = fmt.Sprint("/dev/input/event", id) // id是从kwayland获取的sysname
+	} else {
+		devNodeBytes, length = dxutils.GetProperty(id, "Device Node")
+		if len(devNodeBytes) == 0 {
+			logger.Warningf("could not get DeviceNode for %d", id)
+			return
+		}
+		devNode = string(devNodeBytes[:length])
 	}
-
-	devNode = string(devNodeBytes[:length])
 	udevDev := _gudevClient.QueryByDeviceFile(devNode)
 	if udevDev == nil {
 		logger.Warning("failed to get device of", devNode)
@@ -152,32 +160,33 @@ func getMouseInfos(force bool) Mouses {
 		return _mouseInfos
 	}
 
-	sessionType := os.Getenv("XDG_SESSION_TYPE")
-	isWaylandSession := strings.Contains(sessionType, "wayland")
 	_mouseInfos = Mouses{}
 	for _, info := range getDeviceInfos(force) {
 		if info.Type == common.DevTypeMouse {
 			tmp, _ := dxinput.NewMouseFromDeviceInfo(info)
 			mouse := getMouseInfoByDxMouse(tmp)
 
-			if !isWaylandSession {
-				// phys 用来标识物理设备，若俩设备的 phys 相同，说明是同一物理设备，
-				// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
-				found := false
-				for _, touchpad := range _tpadInfos {
-					if touchpad.phys == mouse.phys {
-						found = true
-						break
-					}
-				}
-
-				if found {
-					logger.Debug("mouse device ignored:", tmp.Name)
-					continue
+			// phys 用来标识物理设备，若俩设备的 phys 相同，说明是同一物理设备，
+			// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
+			found := false
+			for _, touchpad := range _tpadInfos {
+				logger.Warning(touchpad)
+				if touchpad.phys == mouse.phys {
+					found = true
+					break
 				}
 			}
 
-			_mouseInfos = append(_mouseInfos, mouse)
+			if found {
+				logger.Debug("mouse device ignored:", tmp.Name)
+				continue
+			}
+
+			if mouse.phys != "" {
+				_mouseInfos = append(_mouseInfos, mouse)
+				logger.Debug("mouse device add:", mouse)
+			}
+
 		}
 	}
 
