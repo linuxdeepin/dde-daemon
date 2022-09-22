@@ -82,6 +82,10 @@ func getIsPowerSaveSupported() bool {
 	return strv.Strv(getSupportGovernors()).Contains("powersave")
 }
 
+func isSystemSupportMode(mode string) bool {
+	return strv.Strv(_scalingBalanceAvailableGovernors).Contains(mode) && strv.Strv(_supportGovernors).Contains(mode)
+}
+
 func trySetBalanceCpuGovernor(balanceScalingGovernor string) (error, string) {
 	if "" == balanceScalingGovernor {
 		return nil, ""
