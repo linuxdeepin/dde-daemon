@@ -148,22 +148,21 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 
 	dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
+	availableArrGovernors := m.cpus.getAvailableArrGovernors()
 
-	// 装机第一次才会进去，或者手动修改了dconfig的值
+	// 重启会进去，手动修改了dconfig的值才会进入else
 	if interfaceToBool(m.getDsgData("isFirstGetCpuGovernor")) {
-		m.setDsgData("isFirstGetCpuGovernor", false)
-
 		if len(*m.cpus) <= 0 {
 			return m, nil
 		}
-		lines := m.cpus.getAvailableArrGovernors()
+
 		// 全部模式都支持的时候,不需要进行写入文件验证
-		if len(lines) != 6 {
-			lines = m.cpus.tryWriteGovernor(lines)
+		if len(availableArrGovernors) != 6 {
+			availableArrGovernors = m.cpus.tryWriteGovernor(availableArrGovernors)
 		}
-		logger.Info(" First. available cpuGovernors : ", lines)
-		m.setDsgData("supportCpuGovernors", setSupportGovernors(lines))
-		setLocalAvailableGovernors(lines)
+		logger.Info(" First. available cpuGovernors : ", availableArrGovernors)
+		m.setDsgData("supportCpuGovernors", setSupportGovernors(availableArrGovernors))
+		setLocalAvailableGovernors(availableArrGovernors)
 
 		err, targetGovernor := trySetBalanceCpuGovernor(dsgCpuGovernor)
 		if err != nil {
@@ -184,7 +183,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 			supportGovernors[i] = v.(string)
 		}
 		setSupportGovernors(supportGovernors)
-		setLocalAvailableGovernors(m.cpus.getAvailableArrGovernors())
+		setLocalAvailableGovernors(availableArrGovernors)
 	}
 
 	m.IsBalanceSupported = getIsBalanceSupported()
@@ -195,6 +194,34 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		m.balanceScalingGovernor = dsgCpuGovernor
 	} else {
 		_, m.balanceScalingGovernor = trySetBalanceCpuGovernor(dsgCpuGovernor)
+	}
+
+	 if !m.IsBalanceSupported {
+		logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)
+		return m, nil
+	 }
+
+	// 当支持平衡模式时, 错误将dsg配置设置成""或不支持的值, 则使用默认的平衡模式
+	if m.balanceScalingGovernor == "" || isSystemSupportMode(interfaceToString(m.getDsgData("BalanceCpuGovernor"))) {
+		availableArrGovsLen := len(availableArrGovernors)
+		if availableArrGovsLen <= 0 {
+			m.IsBalanceSupported = false
+			return m, nil
+		} else {
+			for i, v := range availableArrGovernors{
+				if strv.Strv(getScalingBalanceAvailableGovernors()).Contains(v) && !isSystemSupportMode(m.balanceScalingGovernor) {
+					m.balanceScalingGovernor = v
+					m.setDsgData("BalanceCpuGovernor", m.balanceScalingGovernor)
+					break
+				}
+
+				if i == availableArrGovsLen {
+					m.IsBalanceSupported = false
+					break
+				}
+			}
+
+		}
 	}
 
 	logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)

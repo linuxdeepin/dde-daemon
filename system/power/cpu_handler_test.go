@@ -115,6 +115,10 @@ func Test_getLocalAvailableGovernors(t *testing.T) {
 	assert.NotEqual(t, len(cpuGovernors), 10)
 }
 
+func Test_isSystemSupportMode(t *testing.T) {
+	assert.Equal(t, isSystemSupportMode("powersave"), false)
+}
+
 func Test_setLocalAvailableGovernors(t *testing.T) {
 	var governors []string = []string{"aaaa", "bbbb", "cccc"}
 	setLocalAvailableGovernors(governors)
