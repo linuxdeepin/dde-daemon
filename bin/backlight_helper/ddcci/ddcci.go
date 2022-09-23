@@ -113,12 +113,12 @@ func newDDCCI() (*ddcci, error) {
 		return nil, err
 	}
 
-	content, err := exec.Command("/usr/bin/pkg-config", "ddcutil", "--variable=libdir").Output()
+	content, err := exec.Command("/usr/bin/dpkg-architecture", "-qDEB_HOST_MULTIARCH").Output() // TODO: arch和rpm打包需要通过patch修改获取路径的方式
 	if err != nil {
 		logger.Warning(err)
 	} else {
-		libdir := strings.TrimSpace(string(content))
-		path := filepath.Join(libdir, "libddcutil.so")
+		path := filepath.Join("/usr/lib", strings.TrimSpace(string(content)), "libddcutil.so.0")
+		logger.Debug("so path:", path)
 		cStr := C.CString(path)
 		defer C.free(unsafe.Pointer(cStr))
 		ret := C.InitDDCCISo(cStr)
