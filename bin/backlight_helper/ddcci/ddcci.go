@@ -113,7 +113,7 @@ func newDDCCI() (*ddcci, error) {
 		return nil, err
 	}
 
-	content, err := exec.Command("pkg-config", "ddcutil", "--variable=libdir").Output()
+	content, err := exec.Command("/usr/bin/pkg-config", "ddcutil", "--variable=libdir").Output()
 	if err != nil {
 		logger.Warning(err)
 	} else {
