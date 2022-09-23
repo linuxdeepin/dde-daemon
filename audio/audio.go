@@ -440,9 +440,14 @@ func (a *Audio) autoPause() {
 	if err != nil {
 		logger.Warning(err)
 		pauseAllPlayers()
-	} else if port.Available == pulse.AvailableTypeNo || card.ActiveProfile.Name == "off" {
+	} else if card.ActiveProfile.Name == "off" {
+		pauseAllPlayers()
+	} else if port.Available == pulse.AvailableTypeNo {
 		// 先不暂停，后面根据sink信息判断是否需要暂停
 		a.misc = port.Priority
+		if a.misc == 0 {
+			pauseAllPlayers()
+		}
 	}
 }
 
