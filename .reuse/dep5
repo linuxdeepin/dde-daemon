@@ -41,7 +41,7 @@ License: CC0-1.0
 # sh
 Files: gen.sh _tool/prop_gen/gen.sh gen_test_report.sh
 Copyright: None
-License: CC0-1.0
+License: GPL-3.0-or-later
 
 # auto generation files
 Files: *_methods_auto.go *_dbusutil.go *_gen.go
