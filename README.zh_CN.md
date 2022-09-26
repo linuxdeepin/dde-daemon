@@ -125,4 +125,4 @@ disable: Disable modules, ignore settings.
 
 ## 开源协议
 
-dde-daemon项目在LGPL-3.0-or-later开源协议下发布。
+dde-daemon项目在[GPL-3.0-or-later](LICENSE)开源协议下发布。
