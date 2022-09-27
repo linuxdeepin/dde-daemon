@@ -136,20 +136,13 @@ func (m *Manager) currentWM() string {
 	return wmName
 }
 
-func (m *Manager) is3DWM() (ret bool) {
+func (m *Manager) is3DWM() bool {
 	m.PropsMu.Lock()
 	defer m.PropsMu.Unlock()
 	if m.wmName == "" {
-		var err error
 		m.wmName = m.currentWM()
-		if err != nil {
-			logger.Warning("failed to get wmSwitcher.CurrentWM:", err)
-		}
 	}
-	if m.wmName == wmName3D {
-		ret = true
-	}
-	return
+	return m.wmName == wmName3D
 }
 
 func (m *Manager) handleLauncherItemDeleted(itemInfo launcher.ItemInfo) {
