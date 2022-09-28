@@ -735,6 +735,18 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 		}
 
 	} else if action.Type == shortcuts.ActionTypeToggleWireless {
+		// 如果已经开启了飞行模式，则不能通过快捷键去控制wifi的使能
+		enabled, err := m.airplane.Enabled().Get(0)
+		if err != nil {
+			logger.Warningf("get airplane enabled failed, err: %v", err)
+			return
+		}
+
+		if enabled {
+			logger.Debugf("airplane mode enabled, can not enable wireless by key")
+			return
+		}
+
 		// check if allow set wireless
 		// and check if Wifi shortcut effected by DDE software
 		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) && m.wifiControlEnable {
