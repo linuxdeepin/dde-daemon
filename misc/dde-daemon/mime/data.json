@@ -233,8 +233,7 @@
 		    },
 		    {
 			      "AppId":[
-                "foxitreader.desktop",
-                "evince.desktop"
+                "deepin-reader.desktop"
             ],
 			      "AppType":"pdf",
 			      "SupportedType":[
