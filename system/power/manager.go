@@ -24,7 +24,11 @@ import (
 
 var noUEvent bool
 
-const configManagerId = "org.desktopspec.ConfigManager"
+const (
+	configManagerId = "org.desktopspec.ConfigManager"
+	_configHwSystem = "/usr/share/uos-hw-config"
+)
+
 
 func init() {
 	if arch.Get() == arch.Sunway {
@@ -149,6 +153,15 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
 	availableArrGovernors := m.cpus.getAvailableArrGovernors()
+
+	setUseNormalBalance(useNormalBalance())
+	//  如果当前是 平衡模式, 且CpuGovernor不是performance, 则需要将m.CpuGovernor设置为performance
+	if m.Mode == "balance" && m.CpuGovernor != "performance" {
+		err := m.doSetCpuGovernor("performance")
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
 
 	// 重启会进去，手动修改了dconfig的值才会进入else
 	if interfaceToBool(m.getDsgData("isFirstGetCpuGovernor")) {
@@ -643,6 +656,12 @@ func (m *Manager) doSetCpuBoost(enabled bool) error {
 }
 
 func (m *Manager) doSetCpuGovernor(governor string) error {
+	// 节能模式，高性能模式不受影响
+	if governor != "powersave" && governor != "performance" && !getUseNormalBalance() {
+		governor = "performance"
+		logger.Infof("[doSetCpuGovernor] change governor : %s to performance.", governor)
+	}
+
 	err := m.cpus.SetGovernor(governor)
 	if err == nil {
 		m.setPropCpuGovernor(governor)

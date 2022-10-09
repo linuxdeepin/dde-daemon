@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"runtime"
 	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	dutils "github.com/linuxdeepin/go-lib/utils"
@@ -37,6 +38,8 @@ var _scalingAvailableGovernors = []string {"performance", "powersave", "userspac
 var _scalingBalanceAvailableGovernors = []string {"ondemand", "conservative", "schedutil", "performance"}
 var _supportGovernors []string
 var _localAvailableGovernors []string
+var _supportNormalBalanceArch = []string{"amd64", "x86_64", "amd", "x86", "386"}
+var _useNormalBalance bool
 
 func getScalingAvailableGovernors() []string {
 	return _scalingAvailableGovernors
@@ -52,6 +55,16 @@ func getSupportGovernors() []string {
 
 func getLocalAvailableGovernors() []string {
 	return _localAvailableGovernors
+}
+
+func getUseNormalBalance() bool {
+	return _useNormalBalance
+}
+
+func setUseNormalBalance(value bool) {
+	if _useNormalBalance != value {
+		_useNormalBalance = value
+	}
 }
 
 func setLocalAvailableGovernors(value []string) []string {
@@ -111,6 +124,24 @@ func trySetBalanceCpuGovernor(balanceScalingGovernor string) (error, string) {
 
 	logger.Info("[trySetBalanceCpuGovernor] balanceScalingGovernor : ", balanceScalingGovernor)
 	return nil, balanceScalingGovernor
+}
+
+// true : 平衡模式使用 ondemand > conservative > schedutil > performance
+// false: 平衡模式使用 performance
+func useNormalBalance() (ret bool) {
+	goArch := runtime.GOARCH
+	for _, value := range _supportNormalBalanceArch {
+		if strings.Contains(goArch, value) {
+			ret = true
+			return ret
+		}
+	}
+
+	if dutils.IsFileExist(_configHwSystem) {
+		ret = true
+	}
+
+	return ret
 }
 
 func NewCpuHandlers() *CpuHandlers {
