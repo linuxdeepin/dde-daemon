@@ -155,8 +155,8 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	availableArrGovernors := m.cpus.getAvailableArrGovernors()
 
 	setUseNormalBalance(useNormalBalance())
-	//  如果当前是 平衡模式, 且CpuGovernor不是performance, 则需要将m.CpuGovernor设置为performance
-	if m.Mode == "balance" && m.CpuGovernor != "performance" {
+	//  如果当前是 平衡模式, 且不走正常平衡模式，且CpuGovernor不是performance, 则需要将m.CpuGovernor设置为performance
+	if m.Mode == "balance" && !getUseNormalBalance() && m.CpuGovernor != "performance" {
 		err := m.doSetCpuGovernor("performance")
 		if err != nil {
 			logger.Warning(err)
