@@ -130,11 +130,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		BatteryPercentage: 100,
 		cpus:              NewCpuHandlers(),
 	}
-	err := m.init()
-	if err != nil {
-		m.destroy()
-		return nil, err
-	}
+
 	systemBus, err := dbus.SystemBus()
 	if err != nil {
 		return nil, err
@@ -238,6 +234,12 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 
 	logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)
+
+	err = m.init()
+	if err != nil {
+		m.destroy()
+		return nil, err
+	}
 
 	return m, nil
 }
