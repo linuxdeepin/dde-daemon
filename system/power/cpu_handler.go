@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -24,6 +25,7 @@ const (
 	globalAvailableGovernorFileName = "scaling_available_governors"
 	globalBoostFilePath             = "/sys/devices/system/cpu/cpufreq/boost"
 	globalDefaultPath               = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+	_isHuaWei                       = `dmidecode -t 1 | awk "/Product Name:/{print $NF}" | cut -d ":" -f 2`
 )
 
 type CpuHandler struct {
@@ -40,6 +42,7 @@ var _supportGovernors []string
 var _localAvailableGovernors []string
 var _supportNormalBalanceArch = []string{"amd64", "x86_64", "amd", "x86", "386"}
 var _useNormalBalance bool
+var _supportHuaweiType = []string{"KLVU", "KLVV", "PGUV", "PGUW", "klvu", "klvv", "pguv", "pguw"}
 
 func getScalingAvailableGovernors() []string {
 	return _scalingAvailableGovernors
@@ -137,11 +140,28 @@ func useNormalBalance() (ret bool) {
 		}
 	}
 
-	if dutils.IsFileExist(_configHwSystem) {
+	if dutils.IsFileExist(_configHwSystem) && isHuaWei() {
 		ret = true
 	}
 
 	return ret
+}
+
+func isHuaWei() bool {
+	out, err := exec.Command("/bin/sh", "-c", _isHuaWei).CombinedOutput()
+	if err != nil {
+		logger.Warning("[isHuawei] err : ", err, out)
+		return false
+	}
+	execRet := string(out)
+	logger.Info("[isHuawei] out : ", execRet)
+	for _, value := range _supportHuaweiType {
+		if strings.Contains(execRet, value) {
+			logger.Info("[isHuawei] The computer is HuaWei.")
+			return true
+		}
+	}
+	return false
 }
 
 func NewCpuHandlers() *CpuHandlers {
