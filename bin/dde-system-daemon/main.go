@@ -28,6 +28,7 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/systeminfo"
 	_ "github.com/linuxdeepin/dde-daemon/system/timedated"
 	_ "github.com/linuxdeepin/dde-daemon/system/uadp"
+        _ "github.com/linuxdeepin/dde-daemon/system/resource_ctl"
 
 	"github.com/linuxdeepin/dde-daemon/loader"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
