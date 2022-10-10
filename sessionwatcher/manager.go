@@ -246,15 +246,46 @@ func (m *Manager) getActiveSession() login1.Session {
 	return nil
 }
 
-func (m *Manager) IsX11SessionActive() (active bool, busErr *dbus.Error) {
+func (m *Manager) IsX11SessionActive(sender dbus.Sender) (active bool, busErr *dbus.Error) {
 	// 从login1获取当前登录的用户是否激活
-	self, err := login1.NewSession(m.systemSigLoop.Conn(), "/org/freedesktop/login1/session/self")
+	pid, err := m.service.GetConnPID(string(sender))
 	if err != nil {
 		logger.Warning(err)
 		return false, dbusutil.ToError(err)
 	}
 
-	isActive, err := self.Active().Get(0)
+	service, err := dbusutil.NewSystemService()
+	if err != nil {
+		logger.Warning(err)
+		return false, dbusutil.ToError(err)
+	}
+
+	login1Manager := login1.NewManager(service.Conn())
+	userObjectPath, err := login1Manager.GetUserByPID(0, pid)
+	if err != nil {
+		logger.Warning(err)
+		return false, dbusutil.ToError(err)
+	}
+
+	userDbus, err := login1.NewUser(service.Conn(), userObjectPath)
+	if err != nil {
+		logger.Warning(err)
+		return false, dbusutil.ToError(err)
+	}
+
+	sessionInfo, err := userDbus.Display().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return false, dbusutil.ToError(err)
+	}
+
+	session, err := login1.NewSession(service.Conn(), sessionInfo.Path)
+	if err != nil {
+		logger.Warning(err)
+		return false, dbusutil.ToError(err)
+	}
+
+	isActive, err := session.Active().Get(0)
 	if err != nil {
 		logger.Warning(err)
 		return false, dbusutil.ToError(err)
