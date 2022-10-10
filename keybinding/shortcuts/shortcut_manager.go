@@ -21,6 +21,7 @@ import (
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/pinyin_search"
+	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/record"
@@ -148,14 +149,14 @@ type KeyEvent struct {
 func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb KeyEventFunc) *ShortcutManager {
 	setUseWayland(strings.Contains(os.Getenv("XDG_SESSION_TYPE"), "wayland"))
 	ss := &ShortcutManager{
-		idShortcutMap:         make(map[string]Shortcut),
-		eventCb:               eventCb,
-		conn:                  conn,
-		keySymbols:            keySymbols,
-		recordEnable:          true,
-		keyKeystrokeMap:       make(map[Key]*Keystroke),
-		layoutChanged:         make(chan struct{}),
-		pinyinEnabled:         isZH(),
+		idShortcutMap:            make(map[string]Shortcut),
+		eventCb:                  eventCb,
+		conn:                     conn,
+		keySymbols:               keySymbols,
+		recordEnable:             true,
+		keyKeystrokeMap:          make(map[Key]*Keystroke),
+		layoutChanged:            make(chan struct{}),
+		pinyinEnabled:            isZH(),
 		WaylandCustomShortCutMap: make(map[string]string),
 	}
 
@@ -929,7 +930,12 @@ func (sm *ShortcutManager) CheckSystem(gsPlatform, gsEnable *gio.Settings, id st
 	platformSet := arr2set(gsPlatform.ListKeys())
 	enableSet := arr2set(gsEnable.ListKeys())
 	sysType := strings.ToLower(systemType())
-
+	assistiveToolsShortcut := []string{
+		"ai-assistant",
+		"speech-to-text",
+		"text-to-speech",
+		"translation",
+	}
 	// 判断是否是支持的平台
 	if platformSet[id] {
 		plats := gsPlatform.GetStrv(id)
@@ -938,6 +944,9 @@ func (sm *ShortcutManager) CheckSystem(gsPlatform, gsEnable *gio.Settings, id st
 		if !platSet["all"] && !platSet[sysType] {
 			return false
 		}
+	}
+	if sysType == "community" && strv.Strv(assistiveToolsShortcut).Contains(id) {
+		return false
 	}
 
 	// 判断是否配置开启
