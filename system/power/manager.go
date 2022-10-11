@@ -131,111 +131,9 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		cpus:              NewCpuHandlers(),
 	}
 
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		return nil, err
-	}
-	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
-	m.initDsgConfig(systemBus)
-	m.systemSigLoop.Start()
+	m.refreshSystemPowerPerformance()
 
-	path := m.cpus.getCpuGovernorPath()
-	if "" == path {
-		m.IsHighPerformanceSupported = false
-		m.IsBalanceSupported = false
-		m.IsPowerSaveSupported = false
-		return m, nil
-	}
-
-	dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
-	availableArrGovernors := m.cpus.getAvailableArrGovernors()
-
-	setUseNormalBalance(useNormalBalance())
-	//  如果当前是 平衡模式, 且不走正常平衡模式，且CpuGovernor不是performance, 则需要将m.CpuGovernor设置为performance
-	if m.Mode == "balance" && !getUseNormalBalance() && m.CpuGovernor != "performance" {
-		err := m.doSetCpuGovernor("performance")
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
-	// 重启会进去，手动修改了dconfig的值才会进入else
-	if interfaceToBool(m.getDsgData("isFirstGetCpuGovernor")) {
-		if len(*m.cpus) <= 0 {
-			return m, nil
-		}
-
-		// 全部模式都支持的时候,不需要进行写入文件验证
-		if len(availableArrGovernors) != 6 {
-			availableArrGovernors = m.cpus.tryWriteGovernor(availableArrGovernors)
-		}
-		logger.Info(" First. available cpuGovernors : ", availableArrGovernors)
-		m.setDsgData("supportCpuGovernors", setSupportGovernors(availableArrGovernors))
-		setLocalAvailableGovernors(availableArrGovernors)
-
-		err, targetGovernor := trySetBalanceCpuGovernor(dsgCpuGovernor)
-		if err != nil {
-			logger.Warning(err)
-		} else {
-			if dsgCpuGovernor != targetGovernor && targetGovernor != "" {
-				m.setDsgData("BalanceCpuGovernor", targetGovernor)
-				logger.Info(" DConfig BalanceCpuGovernor not support. Set Governor : ", targetGovernor)
-			}
-		}
-	} else {
-		supportCpuGovernors := m.getDsgData("supportCpuGovernors")
-		cpuGovernors := interfaceToArrayString(supportCpuGovernors)
-		logger.Info(" dsg translate to Arr cpuGovernors : ", cpuGovernors)
-
-		supportGovernors := make([]string, len(cpuGovernors))
-		for i, v := range cpuGovernors {
-			supportGovernors[i] = v.(string)
-		}
-		setSupportGovernors(supportGovernors)
-		setLocalAvailableGovernors(availableArrGovernors)
-	}
-
-	m.IsBalanceSupported = getIsBalanceSupported()
-	m.IsHighPerformanceSupported = getIsHighPerformanceSupported()
-	m.IsPowerSaveSupported = getIsPowerSaveSupported()
-
-	if strv.Strv(getSupportGovernors()).Contains(dsgCpuGovernor) {
-		m.balanceScalingGovernor = dsgCpuGovernor
-	} else {
-		_, m.balanceScalingGovernor = trySetBalanceCpuGovernor(dsgCpuGovernor)
-	}
-
-	 if !m.IsBalanceSupported {
-		logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)
-		return m, nil
-	 }
-
-	// 当支持平衡模式时, 错误将dsg配置设置成""或不支持的值, 则使用默认的平衡模式
-	if m.balanceScalingGovernor == "" || isSystemSupportMode(interfaceToString(m.getDsgData("BalanceCpuGovernor"))) {
-		availableArrGovsLen := len(availableArrGovernors)
-		if availableArrGovsLen <= 0 {
-			m.IsBalanceSupported = false
-			return m, nil
-		} else {
-			for i, v := range availableArrGovernors{
-				if strv.Strv(getScalingBalanceAvailableGovernors()).Contains(v) && !isSystemSupportMode(m.balanceScalingGovernor) {
-					m.balanceScalingGovernor = v
-					m.setDsgData("BalanceCpuGovernor", m.balanceScalingGovernor)
-					break
-				}
-
-				if i == availableArrGovsLen {
-					m.IsBalanceSupported = false
-					break
-				}
-			}
-
-		}
-	}
-
-	logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)
-
-	err = m.init()
+	err := m.init()
 	if err != nil {
 		m.destroy()
 		return nil, err
@@ -347,6 +245,112 @@ func (m *Manager) init() error {
 	}
 
 	return nil
+}
+
+func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性能模式
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
+	m.initDsgConfig(systemBus)
+	m.systemSigLoop.Start()
+
+	path := m.cpus.getCpuGovernorPath()
+	if "" == path {
+		m.IsHighPerformanceSupported = false
+		m.IsBalanceSupported = false
+		m.IsPowerSaveSupported = false
+		return
+	}
+
+	dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
+	availableArrGovernors := m.cpus.getAvailableArrGovernors()
+
+	setUseNormalBalance(useNormalBalance())
+	//  如果当前是 平衡模式, 且不走正常平衡模式，且CpuGovernor不是performance, 则需要将m.CpuGovernor设置为performance
+	if m.Mode == "balance" && !getUseNormalBalance() && m.CpuGovernor != "performance" {
+		err := m.doSetCpuGovernor("performance")
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+
+	// 重启会进去，手动修改了dconfig的值才会进入else
+	if interfaceToBool(m.getDsgData("isFirstGetCpuGovernor")) {
+		if len(*m.cpus) <= 0 {
+			return
+		}
+
+		// 全部模式都支持的时候,不需要进行写入文件验证
+		if len(availableArrGovernors) != 6 {
+			availableArrGovernors = m.cpus.tryWriteGovernor(availableArrGovernors)
+		}
+		logger.Info(" First. available cpuGovernors : ", availableArrGovernors)
+		m.setDsgData("supportCpuGovernors", setSupportGovernors(availableArrGovernors))
+		setLocalAvailableGovernors(availableArrGovernors)
+
+		err, targetGovernor := trySetBalanceCpuGovernor(dsgCpuGovernor)
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			if dsgCpuGovernor != targetGovernor && targetGovernor != "" {
+				m.setDsgData("BalanceCpuGovernor", targetGovernor)
+				logger.Info(" DConfig BalanceCpuGovernor not support. Set Governor : ", targetGovernor)
+			}
+		}
+	} else {
+		supportCpuGovernors := m.getDsgData("supportCpuGovernors")
+		cpuGovernors := interfaceToArrayString(supportCpuGovernors)
+		logger.Info(" dsg translate to Arr cpuGovernors : ", cpuGovernors)
+
+		supportGovernors := make([]string, len(cpuGovernors))
+		for i, v := range cpuGovernors {
+			supportGovernors[i] = v.(string)
+		}
+		setSupportGovernors(supportGovernors)
+		setLocalAvailableGovernors(availableArrGovernors)
+	}
+
+	m.IsBalanceSupported = getIsBalanceSupported()
+	m.IsHighPerformanceSupported = getIsHighPerformanceSupported()
+	m.IsPowerSaveSupported = getIsPowerSaveSupported()
+
+	if strv.Strv(getSupportGovernors()).Contains(dsgCpuGovernor) {
+		m.balanceScalingGovernor = dsgCpuGovernor
+	} else {
+		_, m.balanceScalingGovernor = trySetBalanceCpuGovernor(dsgCpuGovernor)
+	}
+
+	if !m.IsBalanceSupported {
+		logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)
+		return
+	}
+
+	// 当支持平衡模式时, 错误将dsg配置设置成""或不支持的值, 则使用默认的平衡模式
+	if m.balanceScalingGovernor == "" || isSystemSupportMode(interfaceToString(m.getDsgData("BalanceCpuGovernor"))) {
+		availableArrGovsLen := len(availableArrGovernors)
+		if availableArrGovsLen <= 0 {
+			m.IsBalanceSupported = false
+			return
+		} else {
+			for i, v := range availableArrGovernors{
+				if strv.Strv(getScalingBalanceAvailableGovernors()).Contains(v) && !isSystemSupportMode(m.balanceScalingGovernor) {
+					m.balanceScalingGovernor = v
+					m.setDsgData("BalanceCpuGovernor", m.balanceScalingGovernor)
+					break
+				}
+
+				if i == availableArrGovsLen {
+					m.IsBalanceSupported = false
+					break
+				}
+			}
+
+		}
+	}
+
+	logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)
 }
 
 func (m *Manager) handleUEvent(client *gudev.Client, action string, device *gudev.Device) {
