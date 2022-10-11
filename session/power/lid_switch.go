@@ -58,6 +58,9 @@ func (h *LidSwitchHandler) onLidOpened() {
 }
 
 func (h *LidSwitchHandler) onLidDelayOperate(state bool) {
+	if _manager != nil && !_manager.sessionActive { // session未激活状态不处理
+		return
+	}
 	if h.cookie != nil {
 		h.cookie <- struct{}{}
 		close(h.cookie)
