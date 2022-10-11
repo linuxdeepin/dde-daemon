@@ -114,6 +114,15 @@ func (m *Manager) handleWakeup() {
 	playSound(soundutils.EventWakeup)
 }
 
+func (m *Manager) handleRefreshMains() {
+	logger.Debug("handleRefreshMains")
+	power := m.helper.Power
+	err := power.RefreshMains(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
 func (m *Manager) handleBatteryDisplayUpdate() {
 	logger.Debug("handleBatteryDisplayUpdate")
 	power := m.helper.Power

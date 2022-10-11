@@ -55,6 +55,7 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 				inhibitor.OnWakeup()
 			}
 			if _manager != nil {
+				_manager.handleRefreshMains()
 				_manager.handleBatteryDisplayUpdate()
 			}
 			network.HandlePrepareForSleep(false)
