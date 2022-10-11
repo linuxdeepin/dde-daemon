@@ -199,8 +199,14 @@ func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*Use
 		PasswordLastChange: 18737,
 	}
 
-	u.AccountType = users.UserTypeUdcp
 	u.Groups = groups
+
+	// 解析对应域管用户是否有添加到sudo组里面，有为管理员用户，否则为标准用户
+	if strv.Strv(groups).Contains("sudo") {
+		u.AccountType = users.UserTypeAdmin
+	} else {
+		u.AccountType = users.UserTypeStandard
+	}
 
 	loadUserConfigInfo(u)
 	return u, err
