@@ -4,14 +4,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+# RokX, 2020
+# Eva Černi <mini.muca000@gmail.com>, 2020
 # Tadej Logar <tadej.logar.101@gmail.com>, 2020
 # kloki <klokimass@gmail.com>, 2020
-# RokX, 2020
 # worm <thewormhole@gmail.com>, 2020
-# Eva Černi <mini.muca000@gmail.com>, 2020
 # Cindy0514, 2020
 # Gorzy Gorup <gorupgorazd@gmail.com>, 2021
-# andrej55 <andrej.marsetic@gmail.com>, 2022
+# andrej55 <andrej.marsetic@gmail.com>, 2021
 # Arnold Marko <arnold.marko@gmail.com>, 2022
 # 
 #, fuzzy
@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2022\n"
 "Language-Team: Slovenian (https://www.transifex.com/linuxdeepin/teams/3617/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"Geslo mora vsebovati angleške črke (veliksot črk je pomembna), številke ali "
+"Geslo mora vsebovati angleške črke (velikost črk je pomembna), številke ali "
 "posebne simbole (~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts/checkers/username.go:64
@@ -59,7 +59,7 @@ msgstr "Ime že obstaja"
 
 #: ../../accounts/checkers/username.go:76
 msgid "Username must be between 3 and 32 characters"
-msgstr "Uporabniško ime mora vsebovati od 3 do 32 znakov"
+msgstr "Uporabniško ime mora imeti od 3 do 32 znakov"
 
 #: ../../accounts/manager.go:448
 #, c-format
@@ -84,18 +84,18 @@ msgstr "Odjavi se sedaj"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
-msgstr "Nastavljanje spreminjanja velikosti"
+msgstr "Nastavitve merila zaslona"
 
 #: ../../appearance/scale.go:82
 msgid "Display scaling"
-msgstr "Spreminjanje velikosti prikaza"
+msgstr "Spreminjanje merila zaslona"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s je onemogočen"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Odpri"
 
@@ -110,7 +110,7 @@ msgstr "Čas za preverjanje prstnih odtisov se je izteklo"
 #: ../../bluetooth/bluez_profile.go:30
 #: ../../system/bluetooth/bluez_profile.go:30
 msgid "Serial port"
-msgstr "Serijska vrata"
+msgstr "Serijski vmesnik"
 
 #: ../../bluetooth/bluez_profile.go:31
 #: ../../system/bluetooth/bluez_profile.go:31
@@ -155,12 +155,12 @@ msgstr "Dostop do imenika"
 #: ../../bluetooth/bluez_profile.go:39
 #: ../../system/bluetooth/bluez_profile.go:39
 msgid "Phone book access client"
-msgstr "Dostop do imenika stranke"
+msgstr "Odjemalni strežnik telefonskega imenika"
 
 #: ../../bluetooth/bluez_profile.go:40
 #: ../../system/bluetooth/bluez_profile.go:40
 msgid "Message access"
-msgstr "Prejeto sporočilo"
+msgstr "Dostop do sporočil"
 
 #: ../../bluetooth/bluez_profile.go:41
 #: ../../system/bluetooth/bluez_profile.go:41
@@ -256,7 +256,7 @@ msgstr "Vsa okna"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
-msgstr "Premajhen prostor na disku, prosim pravočasno očistite!"
+msgstr "Premalo prostora na disku. Pravočasno ga očistite!"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Launcher"
@@ -276,7 +276,7 @@ msgstr "Zakleni zaslon"
 
 #: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Show/Hide the dock"
-msgstr "Prikaži/skrij pristan"
+msgstr "Prikaži/skrij sidrišče"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
@@ -288,19 +288,19 @@ msgstr "Okno terminala Quake"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "Slika zaslona"
+msgstr "Posnetek zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "Slika celega zaslona"
+msgstr "Posnetek celega zaslona"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
-msgstr "Slika okna"
+msgstr "Posnetek okna"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "Zamakni zajem zaslona"
+msgstr "Zajem zaslona z zamikom"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
@@ -316,11 +316,11 @@ msgstr "Upravitelj datotek"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
-msgstr "Onemogoči drsno ploščico"
+msgstr "Onemogoči sledilno ploščico"
 
 #: ../../keybinding/shortcuts/id_name_map.go:43
 msgid "Switch window effects"
-msgstr "Preklopi okenske učinke"
+msgstr "Preklopi učinke oken"
 
 #: ../../keybinding/shortcuts/id_name_map.go:44
 msgid "Fast Screen Off"
@@ -332,7 +332,7 @@ msgstr "Nadzornik sistema"
 
 #: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Deepin Picker"
-msgstr "Kapalka Deepin"
+msgstr "Deepin kapalka"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
@@ -360,101 +360,102 @@ msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:53
 msgid "Notification Center"
-msgstr ""
+msgstr "Center za obveščanje"
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Zamenjaj postavitev"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Preklopi na levo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Preklopi na desno delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Preklopi na zgornjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Preklopi na spodnjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Preklopi podobna okna."
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Preklopi podobna okna v obratnem vrstnem redu."
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Preklopi okna."
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Preklopi okna v obratnem redu."
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Prikaži namizje"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Povečaj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Obnovi okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Pomanjšaj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Zapri okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Premakni okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Spremeni velikost okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Premakni se na levo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Premakni se na desno delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Premakni se na zgornjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Premakni se na spodnjo delovno površino"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Prikaži okna na vseh delovnih mestih."
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Prikaži okna na trenutni delovni površini."
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
-msgstr "Prikaži delovna mesta."
+msgstr "Prikaži delovne površine"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Preklopi monitor"
 
@@ -484,7 +485,7 @@ msgstr "Neuspešno spreminjanje jezika sistema. Poskusite znova kasneje"
 
 #: ../../lastore/lastore.go:423
 msgid "Retry"
-msgstr "Poskusi ponovno"
+msgstr "Ponovi"
 
 #: ../../lastore/lastore.go:445
 msgid "Update Now"
@@ -533,7 +534,9 @@ msgstr "Neuspešno odstranjevanje programa"
 #: ../../lastore/notify.go:126
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
-msgstr "Da se izognete samodejnemu izklopu, vključite običajne posodobitve."
+msgstr ""
+"Da se izognete samodejnemu izklopu, se priklopite na električno omrežje za "
+"normalno posodobitev."
 
 #: ../../lastore/notify.go:131
 msgid "Package cache wiped"
@@ -574,7 +577,7 @@ msgstr "Ni uspelo odstraniti %q"
 #: ../../network/manager_active_conn.go:469
 #: ../../network/manager_active_conn.go:474
 msgid "None"
-msgstr "Nič"
+msgstr "brez"
 
 #: ../../network/manager_active_conn.go:476
 msgid "WEP 40/128-bit Key"
@@ -646,15 +649,15 @@ msgstr "Stanje naprave se je iz neznanih razlogov spremenilo"
 
 #: ../../network/state_handler.go:40
 msgid "The device is now managed"
-msgstr "Naprava se zdaj upravlja"
+msgstr "Naprava je sedaj upravljena"
 
 #: ../../network/state_handler.go:41
 msgid "The device is no longer managed"
-msgstr "Naprava se ne upravlja več"
+msgstr "Naprave se več ne upravlja"
 
 #: ../../network/state_handler.go:42
 msgid "The device has not been ready for configuration"
-msgstr "Naprava ni bila pripravljena na konfiguracijo"
+msgstr "Naprava ni bila pripravljena za nastavljanje"
 
 #: ../../network/state_handler.go:43
 msgid ""
@@ -919,7 +922,7 @@ msgstr "Neuspešna aktivacija VPN povezave"
 #: ../../network/state_handler.go:112
 msgid "The VPN connection state changed due to being disconnected by users"
 msgstr ""
-"Stanje VPN povezave se je spremenilo zaradi odklopa s strani upporabnikov"
+"Stanje VPN povezave se je spremenilo zaradi odklopa s strani uporabnikov"
 
 #: ../../network/state_handler.go:113
 msgid ""
@@ -968,7 +971,7 @@ msgstr "Povezovanje %q"
 
 #: ../../network/state_handler.go:284
 msgid "Hotspot enabled"
-msgstr "Dostopna točka je omogočena"
+msgstr "Dostopna točka je vklopljena"
 
 #: ../../network/state_handler.go:286
 msgid "%q connected"
@@ -981,7 +984,7 @@ msgstr "Dostopna točka je izklopljena"
 #: ../../network/state_handler.go:354 ../../network/state_handler.go:376
 #: ../../system/bluetooth/utils_notify.go:65
 msgid "%q disconnected"
-msgstr "%q ni več povezano"
+msgstr "%q ni več povezan"
 
 #: ../../network/state_handler.go:360
 msgid "Unable to share hotspot, please check dnsmasq settings"
@@ -1050,14 +1053,14 @@ msgstr ""
 "\"%s\" ni prestalo sistemskega varnostnega preverjanje, zato ne more biti "
 "zagnana "
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Akumulator je kritično prazen"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Akumulator je skoraj prazen. Priključite napajalnik"
 
@@ -1101,7 +1104,7 @@ msgstr "Povezovanje z %q je uspelo"
 
 #: ../../system/bluetooth/utils_notify.go:71
 msgid "Make sure %q is turned on and in range"
-msgstr "Preveri, da %q je vklopen in v dosegu."
+msgstr "Preveri, da %q je vklopljen in v dosegu."
 
 #: ../../system/bluetooth/utils_notify.go:89
 msgid ""
@@ -1109,6 +1112,10 @@ msgid ""
 msgstr ""
 "%q sen ne more več priključiti na %q. Poskusite pozabiti napravo in jo nato "
 "znova povežite."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

@@ -5,7 +5,7 @@
 # 
 # Translators:
 # inashdeen <inashdeen@gmail.com>, 2020
-# Cindy0514, 2021
+# Cindy0514, 2020
 # abuyop <abuyop@gmail.com>, 2022
 # 
 #, fuzzy
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: abuyop <abuyop@gmail.com>, 2022\n"
 "Language-Team: Malay (https://www.transifex.com/linuxdeepin/teams/3617/ms/)\n"
 "MIME-Version: 1.0\n"
@@ -84,27 +84,27 @@ msgstr "Menetapkan penskalaan paparan"
 msgid "Display scaling"
 msgstr "Penskalaan paparan"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s telah dilumpuhkan"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Buka"
 
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
-msgstr "Pengecaman cap jari gagal"
+msgstr "Pengesahan cap jari gagal"
 
 #: ../../bin/dde-authority/fprint_transaction.go:22
 msgid "Fingerprint verification timed out"
-msgstr "Pengecaman cap jari telah tamat masa"
+msgstr "Pengesahan cap jari telah tamat masa"
 
 #: ../../bluetooth/bluez_profile.go:30
 #: ../../system/bluetooth/bluez_profile.go:30
 msgid "Serial port"
-msgstr "Port serial"
+msgstr "Port bersiri"
 
 #: ../../bluetooth/bluez_profile.go:31
 #: ../../system/bluetooth/bluez_profile.go:31
@@ -114,12 +114,12 @@ msgstr "Perangkaian dailan"
 #: ../../bluetooth/bluez_profile.go:32
 #: ../../system/bluetooth/bluez_profile.go:32
 msgid "Hands-Free device"
-msgstr "Peranti Bebas-Tangan"
+msgstr "Peranti bebas-tangan"
 
 #: ../../bluetooth/bluez_profile.go:33
 #: ../../system/bluetooth/bluez_profile.go:33
 msgid "Hands-Free voice gateway"
-msgstr "Get laluan suara Bebas-Tangan"
+msgstr "Get laluan suara bebas-tangan"
 
 #: ../../bluetooth/bluez_profile.go:34
 #: ../../system/bluetooth/bluez_profile.go:34
@@ -242,7 +242,7 @@ msgstr "Labuh"
 
 #: ../../dock/app_entry_menu.go:185
 msgid "Undock"
-msgstr "Nyahlabuh"
+msgstr "Tanggal"
 
 #: ../../dock/app_entry_menu.go:195
 msgid "All Windows"
@@ -274,7 +274,7 @@ msgstr "Tunjuk/Sembunyi labuh"
 
 #: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Shutdown interface"
-msgstr "Antaramuka Matikan Komputer"
+msgstr "Antara muka Matikan Komputer"
 
 #: ../../keybinding/shortcuts/id_name_map.go:34
 msgid "Terminal Quake Window"
@@ -282,19 +282,19 @@ msgstr "Tetingkap Terminal Quake"
 
 #: ../../keybinding/shortcuts/id_name_map.go:35
 msgid "Screenshot"
-msgstr "Cekupan skrin"
+msgstr "Tangkap layar"
 
 #: ../../keybinding/shortcuts/id_name_map.go:36
 msgid "Full screenshot"
-msgstr "Cekupan skrin penuh"
+msgstr "Tangkap layar penuh"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Window screenshot"
-msgstr "Cekupan skrin bertetingkap"
+msgstr "Tangkap layar bertetingkap"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Delay screenshot"
-msgstr "Lengah cekupan skrin"
+msgstr "Lengah tangkap layar"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
 msgid "OCR (Image to Text)"
@@ -330,7 +330,7 @@ msgstr "Pemilih Deepin"
 
 #: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Desktop AI Assistant"
-msgstr "Pembantu AI Desktop"
+msgstr "Pembantu AI Atas Meja"
 
 #: ../../keybinding/shortcuts/id_name_map.go:48
 msgid "Text to Speech"
@@ -354,101 +354,102 @@ msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:53
 msgid "Notification Center"
-msgstr ""
+msgstr "Pusat Pemberitahuan"
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Tukar Bentangan"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Tukar ke ruang kerja kiri"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Tukar ke ruang kerja kanan"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Tukar ke ruang kerja atas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Tukar ke ruang kerja bawah"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Tukar tetingkap yang serupa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Tukar tetingkap yang serupa secara songsang"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Tukar tetingkap"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Tukar tetingkap secara songsang"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
-msgstr "Tunjuk desktop"
+msgstr "Tunjuk atas meja"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Maksimumkan tetingkap"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Pulih tetingkap"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Minimumkan tetingkap"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Tutup tetingkap"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Alih tetingkap"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Saiz semula tetingkap"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Alih ke ruang kerja kiri"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Alih ke ruang kerja kanan"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Alih ke ruang kerja aras"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Alih ke ruang kerja bawah"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Papar tetingkap pada semua ruang kerja"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Papar tetingkap pada ruang kerja semasa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Papar ruang kerja"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Tukar monitor"
 
@@ -528,8 +529,8 @@ msgstr "Gagal membuang apl"
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
-"Untuk menghindari komputer dimatikan secara automatik, sila palamkan bagi "
-"kemaskini biasa."
+"Untuk menghindari komputer dimatikan secara automatik, sila palamkan kuasa "
+"untuk kemas kini biasa."
 
 #: ../../lastore/notify.go:131
 msgid "Package cache wiped"
@@ -576,7 +577,7 @@ msgstr "Kunci WEP 40/128-bit"
 
 #: ../../network/manager_active_conn.go:478
 msgid "WPA/WPA2 Personal"
-msgstr "WPA/WPA2 Persendirian"
+msgstr "WPA/WPA2 Peribadi"
 
 #: ../../network/manager_active_conn.go:480
 msgid "WPA3 Personal"
@@ -640,7 +641,7 @@ msgstr "Keadaan peranti berubah, sebab tidak diketahui"
 
 #: ../../network/state_handler.go:40
 msgid "The device is now managed"
-msgstr "Peranti kini diurus"
+msgstr "Peranti kini terurus"
 
 #: ../../network/state_handler.go:41
 msgid "The device is no longer managed"
@@ -1050,14 +1051,14 @@ msgstr ""
 "\"%s\" tidak melepasi pengesahan keselamatan sistem, dan kini tidak dapat "
 "dijalankan"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Kuasa bateri sangat rendah"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Kuasa bateri lemah, sila palamkan kuasa"
 
@@ -1101,7 +1102,7 @@ msgstr "Sambungan %q berjaya"
 
 #: ../../system/bluetooth/utils_notify.go:71
 msgid "Make sure %q is turned on and in range"
-msgstr "Pastikan %q dihidupkan dan berada dalam julat"
+msgstr "Pastikan %q dihidupkan dan berada dalam jangkauan"
 
 #: ../../system/bluetooth/utils_notify.go:89
 msgid ""
@@ -1109,6 +1110,10 @@ msgid ""
 msgstr ""
 "%q tidak lagi bersambung dengan %q. Cuba lupakan peranti ini dan padankan "
 "sekali lagi."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"

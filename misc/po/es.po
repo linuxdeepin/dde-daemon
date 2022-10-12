@@ -4,36 +4,37 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# efedezeta <pocodance@gmail.com>, 2020
-# deepin_transifex <xiabin@linuxdeepin.com>, 2020
+# roberto lopez <riscogordo@gmail.com>, 2020
 # Chema Ramirez <josemrf1996@gmail.com>, 2020
 # Luis Castillo <castilloluis2005@gmail.com>, 2020
+# efedezeta <pocodance@gmail.com>, 2020
+# deepin_transifex <xiabin@linuxdeepin.com>, 2020
 # Pablo Alejandro Hamann <linkstat@gmail.com>, 2020
-# roberto lopez <riscogordo@gmail.com>, 2020
 # jhalo <jhalo@protonmail.com>, 2020
 # Diego Sanguinetti, 2020
-# Tomás Warynyca <tomas.warynyca@outlook.com>, 2021
-# Martín Josemaría <martin.vuelta@gmail.com>, 2021
+# Martín Josemaría <martin.vuelta@gmail.com>, 2020
 # 555de6651697fc2a607c30c9bb431b88_60731db, 2021
+# Tomás Warynyca <tomas.warynyca@outlook.com>, 2021
 # Isaías Gätjens M <igatjens@gmail.com>, 2021
-# Cindy0514, 2022
-# jose luis <josemdance@outlook.com>, 2022
+# jose luis <josemdance@outlook.com>, 2021
+# Cindy0514, 2021
 # Alvaro Samudio <alvarosamudio@protonmail.com>, 2022
+# Zaraza, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
-"Last-Translator: Alvaro Samudio <alvarosamudio@protonmail.com>, 2022\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Zaraza, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/linuxdeepin/teams/3617/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: ../../accounts/checkers/password.go:53
 msgid "Please enter a password not less than 8 characters"
@@ -86,7 +87,7 @@ msgstr "Luego"
 
 #: ../../appearance/scale.go:67
 msgid "Log Out Now"
-msgstr "Cerrar sesión"
+msgstr "Cerrar sesión ahora"
 
 #: ../../appearance/scale.go:81
 msgid "Setting display scaling"
@@ -96,12 +97,12 @@ msgstr "Configurar escalado de pantalla"
 msgid "Display scaling"
 msgstr "Escalado de pantalla"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s había sido deshabilitado"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "Abrir"
 
@@ -318,7 +319,7 @@ msgstr "Captura de desplazamineto"
 
 #: ../../keybinding/shortcuts/id_name_map.go:41
 msgid "File manager"
-msgstr "Gestor de archivos"
+msgstr "Administrador de archivos"
 
 #: ../../keybinding/shortcuts/id_name_map.go:42
 msgid "Disable Touchpad"
@@ -362,105 +363,106 @@ msgstr "Traducción"
 
 #: ../../keybinding/shortcuts/id_name_map.go:52
 msgid "Grand Search"
-msgstr ""
+msgstr "Búsqueda general"
 
 #: ../../keybinding/shortcuts/id_name_map.go:53
 msgid "Notification Center"
-msgstr ""
+msgstr "Centro de notificaciones"
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "Cambiar distribución de teclado"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "Cambiar al espacio de trabajo izquierdo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "Cambiar al espacio de trabajo derecho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "Cambiar al espacio de trabajo superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "Cambie para reducir el espacio de trabajo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "Cambiar ventanas similares"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "Cambiar ventanas similares en reversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "Cambiar ventanas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "Cambiar ventanas en reversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "Mostrar escritorio"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "Maximizar ventana "
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "Restaurar ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "Minimizar ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "Cerrar ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "Mover ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "Cambiar tamaño de ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "Mover al espacio de trabajo izquierdo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "Mover al espacio de trabajo derecho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "Mover al espacio de trabajo superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "Mover al espacio de trabajo inferior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "Mostrar ventanas de todos los espacios de trabajo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "Mostrar ventanas del espacio de trabajo actual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "Mostrar espacio de trabajo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr "Cambiar entre monitores"
 
@@ -633,7 +635,7 @@ msgstr "Conexión por cable %v"
 
 #: ../../network/proxychains/utils_notify.go:45
 msgid "Application proxy is set successfully"
-msgstr "Proxy de aplicación configurado exitósamente"
+msgstr "Proxy de aplicaciones configurado exitósamente"
 
 #: ../../network/proxychains/utils_notify.go:45
 #: ../../network/proxychains/utils_notify.go:48
@@ -1072,14 +1074,14 @@ msgstr ""
 "\"%s\" no pasó la verificación de seguridad del sistema, y no puede "
 "ejecutarse ahora"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "Batería críticamente baja"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "Batería baja, por favor, conéctela"
 
@@ -1131,6 +1133,10 @@ msgid ""
 msgstr ""
 "%q ya no puede conectarse a%q. Intente olvidar este dispositivo y vuelva a "
 "vincularlo."
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
+msgstr "Espacio"
 
 #: ../../timedate/manager_ifc.go:66
 msgid "Authentication is required to set the system time"
