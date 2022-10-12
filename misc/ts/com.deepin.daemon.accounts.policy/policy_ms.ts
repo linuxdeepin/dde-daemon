@@ -29,7 +29,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!description" line="0"/>
 			<source>Enable Auto Login</source>
-			<translation>Benarkan Auto Daftar Masuk</translation>
+			<translation>Benarkan Daftar Masuk Automatik</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!message" line="0"/>
@@ -39,7 +39,7 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!description" line="0"/>
 			<source>Disable Auto Login</source>
-			<translation>Lumpuhkan Auto Daftar Masuk</translation>
+			<translation>Lumpuhkan Daftar Masuk Automatik</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!message" line="0"/>

@@ -5,20 +5,20 @@
 # 
 # Translators:
 # كريم أولاد الشلحة <herr.linux88@gmail.com>, 2020
+# alibacha19 <alibacha19@gmail.com>, 2020
 # Khodr Abdallah <khodr000@gmail.com>, 2020
+# ahmad nourallah <ahmadnurallah@gmail.com>, 2020
+# monzerissa169 <monzerissa169@yahoo.com>, 2020
 # Oukiki Saleh <salehoukiki@gmail.com>, 2020
 # Mahmoud Abdelsalam <mahmoud.ad@tutanota.com>, 2020
 # ea5b6e8c30cf815b1aed3e5f880f4a98_908896e <4b97d4cb8da17abbf68d43a364316c10_700866>, 2020
+# أشرف بصرى <ashrafmn2008@gmail.com>, 2020
 # Hussain Alramadhan <psvitamine1@gmail.com>, 2020
 # Mohammed Alotaibi <mx_202@hotmail.com>, 2020
-# mo-hd <mo-hd@windowslive.com>, 2020
-# monzerissa169 <monzerissa169@yahoo.com>, 2020
-# alibacha19 <alibacha19@gmail.com>, 2020
-# ahmad nourallah <ahmadnurallah@gmail.com>, 2020
-# أشرف بصرى <ashrafmn2008@gmail.com>, 2020
+# AhmedAyman <ahmedayman321@yahoo.com>, 2020
 # Idir Benkhellat <benkhellat.idir@gmail.com>, 2020
-# AhmedAyman <ahmedayman321@yahoo.com>, 2021
-# Cindy0514, 2022
+# mo-hd <mo-hd@windowslive.com>, 2021
+# Cindy0514, 2021
 # MUHAAB SHAAM <muhaab.org@gmail.com>, 2022
 # 
 #, fuzzy
@@ -26,8 +26,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 15:51+0800\n"
-"PO-Revision-Date: 2020-06-08 13:08+0000\n"
+"POT-Creation-Date: 2022-08-09 21:28+0800\n"
+"PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: MUHAAB SHAAM <muhaab.org@gmail.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/linuxdeepin/teams/3617/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -97,12 +97,12 @@ msgstr "إعدادات تحجيم العرض"
 msgid "Display scaling"
 msgstr "عرض الشاشة"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio/audio_events.go:474
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
 msgid "Open"
 msgstr "فتح"
 
@@ -367,101 +367,102 @@ msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:53
 msgid "Notification Center"
-msgstr ""
+msgstr "مركز اﻹشعارات"
 
-#: ../../keybinding/shortcuts/id_name_map.go:60
+#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:61
 msgid "Switch Layout"
 msgstr "تبديل التخطيط"
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:80
 msgid "Switch to left workspace"
 msgstr "تبديل إلى مساحة العمل اليمنى"
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:81
 msgid "Switch to right workspace"
 msgstr "تبديل إلى مساحة العمل اليسرى "
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:82
 msgid "Switch to upper workspace"
 msgstr "تبديل إلى مساحة العمل العليا "
 
-#: ../../keybinding/shortcuts/id_name_map.go:82
+#: ../../keybinding/shortcuts/id_name_map.go:83
 msgid "Switch to lower workspace"
 msgstr "تبديل إلى مساحة العمل السفلى"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Switch similar windows"
 msgstr "تبديل النوافذ مماثلةً"
 
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../keybinding/shortcuts/id_name_map.go:86
 msgid "Switch similar windows in reverse"
 msgstr "تبديل النوافذ مماثلة في الاتجاه المعاكس"
 
-#: ../../keybinding/shortcuts/id_name_map.go:86
+#: ../../keybinding/shortcuts/id_name_map.go:87
 msgid "Switch windows"
 msgstr "تبديل النوافذ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:87
+#: ../../keybinding/shortcuts/id_name_map.go:88
 msgid "Switch windows in reverse"
 msgstr "تبديل النوافذ عكسياً"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Show desktop"
 msgstr "إظهار سطح المكتب"
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:108
 msgid "Maximize window"
 msgstr "تكبير النافذة"
 
-#: ../../keybinding/shortcuts/id_name_map.go:108
+#: ../../keybinding/shortcuts/id_name_map.go:109
 msgid "Restore window"
 msgstr "استعادة النافذة"
 
-#: ../../keybinding/shortcuts/id_name_map.go:110
+#: ../../keybinding/shortcuts/id_name_map.go:111
 msgid "Minimize window"
 msgstr "تصغير النافذة"
 
-#: ../../keybinding/shortcuts/id_name_map.go:111
+#: ../../keybinding/shortcuts/id_name_map.go:112
 msgid "Close window"
 msgstr "إغلاق النافذة"
 
-#: ../../keybinding/shortcuts/id_name_map.go:112
+#: ../../keybinding/shortcuts/id_name_map.go:113
 msgid "Move window"
 msgstr "نقل النافذة"
 
-#: ../../keybinding/shortcuts/id_name_map.go:113
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Resize window"
 msgstr "تغيير حجم النافذة"
 
-#: ../../keybinding/shortcuts/id_name_map.go:128
+#: ../../keybinding/shortcuts/id_name_map.go:129
 msgid "Move to left workspace"
 msgstr "نقل إلى يسار منطقة العمل"
 
-#: ../../keybinding/shortcuts/id_name_map.go:129
+#: ../../keybinding/shortcuts/id_name_map.go:130
 msgid "Move to right workspace"
 msgstr "نقل إلى يمين منطقة العمل"
 
-#: ../../keybinding/shortcuts/id_name_map.go:130
+#: ../../keybinding/shortcuts/id_name_map.go:131
 msgid "Move to upper workspace"
 msgstr "نقل إلى أعلى منطقة العمل"
 
-#: ../../keybinding/shortcuts/id_name_map.go:131
+#: ../../keybinding/shortcuts/id_name_map.go:132
 msgid "Move to lower workspace"
 msgstr "نقل إلى أسفل منطقة العمل"
 
-#: ../../keybinding/shortcuts/id_name_map.go:153
+#: ../../keybinding/shortcuts/id_name_map.go:154
 msgid "Display windows of all workspaces"
 msgstr "عرض النوافذ لكافة مساحات العمل"
 
-#: ../../keybinding/shortcuts/id_name_map.go:154
+#: ../../keybinding/shortcuts/id_name_map.go:155
 msgid "Display windows of current workspace"
 msgstr "عرض نوافذ مساحة العمل الحالية"
 
-#: ../../keybinding/shortcuts/id_name_map.go:155
+#: ../../keybinding/shortcuts/id_name_map.go:156
 msgid "Display workspace"
 msgstr "عرض مساحة العمل"
 
-#: ../../keybinding/shortcuts/id_name_map.go:216
+#: ../../keybinding/shortcuts/id_name_map.go:217
 msgid "Switch monitors"
 msgstr ""
 
@@ -1047,14 +1048,14 @@ msgstr "متصل"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" لم يجتز تحقق أمان النظام، ولن يمكن تشغيله الآن"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:208
 msgid "Battery critically low"
 msgstr "مستوى البطارية منخفض"
 
-#: ../../session/power/manager_events.go:223
 #: ../../session/power/manager_events.go:228
 #: ../../session/power/manager_events.go:233
 #: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:243
 msgid "Battery low, please plug in"
 msgstr "البطارية منخفضة، رجاءً اشبك السلك الكهربائي"
 
@@ -1103,6 +1104,10 @@ msgstr "تأكد أن %q مشغل و بالمدى نفسه"
 #: ../../system/bluetooth/utils_notify.go:89
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+
+#: ../../timedate/manager_format.go:90
+msgid "Space"
 msgstr ""
 
 #: ../../timedate/manager_ifc.go:66
