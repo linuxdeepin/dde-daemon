@@ -1,3 +1,15 @@
+dde-daemon (6.0.6) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * feat: 启动器的快捷键响应接口变更(Bug: 146591)(Influence: 启动器的快捷键启动)
+  * feat: 启动器的快捷键响应接口变更(Bug: 146591)(Influence: 启动器的快捷键启动)
+  * feat: 兼容V20接口(Task: 164483)(Influence: 兼容V20)
+  * fix: 单指从触控屏右侧边缘划入打开的不是小组件面板(Bug: 154627)(Influence: 触控屏单指从右侧滑入应弹出小组件面板)
+  * fix: 修复wayland锁屏快捷键无效问题(Bug: 152607)(Influence: wayland快捷键)
+  * fix: 解决关闭显示器于、电脑进入待机模式、自动锁屏功能失效问题(Bug: 157525)(Influence: 控制中心-电源-定时待机/锁屏/关闭显示器)
+
+ -- baodi <baodi@uniontech.com>  Wed, 19 Oct 2022 13:00:23 +0800
+
 dde-daemon (6.0.5) unstable; urgency=medium
 
   * dde-flow-sprint2
