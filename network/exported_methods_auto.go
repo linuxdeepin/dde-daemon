@@ -78,6 +78,12 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"host", "port"},
 		},
 		{
+			Name:    "GetProxyAuthentication",
+			Fn:      v.GetProxyAuthentication,
+			InArgs:  []string{"proxyType"},
+			OutArgs: []string{"user", "password", "enable"},
+		},
+		{
 			Name:    "GetProxyIgnoreHosts",
 			Fn:      v.GetProxyIgnoreHosts,
 			OutArgs: []string{"ignoreHosts"},
@@ -133,6 +139,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:   "SetProxy",
 			Fn:     v.SetProxy,
 			InArgs: []string{"proxyType", "host", "port"},
+		},
+		{
+			Name:   "SetProxyAuthentication",
+			Fn:     v.SetProxyAuthentication,
+			InArgs: []string{"proxyType", "user", "password", "enable"},
 		},
 		{
 			Name:   "SetProxyIgnoreHosts",
