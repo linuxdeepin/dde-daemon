@@ -633,6 +633,13 @@ func (b *Bluetooth) getConnectedDeviceByAddress(address string) *DeviceInfo {
 	return devInfo
 }
 
+func (b *Bluetooth) getDeviceByAddress(address string) *DeviceInfo {
+	devInfo := b.devices.findFirst(func(devInfo *DeviceInfo) bool {
+		return devInfo.Address == address
+	})
+	return devInfo
+}
+
 func (b *Bluetooth) sendFiles(dev *DeviceInfo, files []string) (dbus.ObjectPath, error) {
 	var totalSize uint64
 

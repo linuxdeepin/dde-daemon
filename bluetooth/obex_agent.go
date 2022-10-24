@@ -7,9 +7,12 @@ package bluetooth
 import (
 	"errors"
 	"fmt"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 	"math"
+	"math/rand"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -54,6 +57,14 @@ type obexAgent struct {
 	notifyID uint32
 }
 
+type transferObj struct {
+	obex.Transfer
+	sessionPath  dbus.ObjectPath
+	deviceName   string
+	oriFilename  string
+	tempFileName string
+}
+
 func (*obexAgent) GetInterfaceName() string {
 	return obexAgentDBusInterface
 }
@@ -93,19 +104,19 @@ func (a *obexAgent) unregisterAgent() {
 }
 
 // AuthorizePush 用于请求用户接收文件
-func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (filename string, busErr *dbus.Error) {
+func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName string, busErr *dbus.Error) {
 	transfer, err := obex.NewTransfer(a.service.Conn(), transferPath)
 	if err != nil {
 		logger.Error("failed to new transfer:", err)
 		return "", dbusutil.ToError(err)
 	}
 
-	filename, err = transfer.Name().Get(0)
+	oriFilename, err := transfer.Name().Get(0)
 	if err != nil {
 		logger.Warning("failed to get filename:", err)
 		return "", dbusutil.ToError(err)
 	}
-
+	tempFileName = randFileName(oriFilename)
 	sessionPath, err := transfer.Session().Get(0)
 	if err != nil {
 		logger.Warning("failed to get transfer session path:", err)
@@ -125,7 +136,7 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (filename string
 		return "", dbusutil.ToError(err)
 	}
 
-	dev := a.b.getConnectedDeviceByAddress(deviceAddress)
+	dev := a.b.getDeviceByAddress(deviceAddress)
 	if dev == nil {
 		err = errors.New("failed to get device info")
 		logger.Error(err)
@@ -136,8 +147,14 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (filename string
 	if len(deviceName) == 0 {
 		deviceName = dev.Name
 	}
-
-	accepted, err := a.isSessionAccepted(sessionPath, deviceName, filename, transfer)
+	transferObj := &transferObj{
+		transfer,
+		sessionPath,
+		deviceName,
+		oriFilename,
+		tempFileName,
+	}
+	accepted, err := a.isSessionAccepted(transferObj)
 	if err != nil {
 		logger.Debug("isSessionAccepted err", err)
 		return "", dbusutil.ToError(err)
@@ -148,21 +165,23 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (filename string
 	//设置未文件不能传输状态
 	a.b.setPropTransportable(false)
 
-	return filename, nil
+	return tempFileName, nil
 }
 
-func (a *obexAgent) isSessionAccepted(sessionPath dbus.ObjectPath, deviceName, filename string, transfer obex.Transfer) (bool, error) {
+func (a *obexAgent) isSessionAccepted(transfer *transferObj) (bool, error) {
 	a.acceptedSessionsMu.Lock()
 	defer a.acceptedSessionsMu.Unlock()
-
-	_, accepted := a.acceptedSessions[sessionPath]
+	if transfer == nil {
+		return false, errors.New("valid object")
+	}
+	_, accepted := a.acceptedSessions[transfer.sessionPath]
 	if !accepted {
 		//多个文件传输时只第一次判断可传输状态
 		if !a.b.Transportable {
 			return false, errors.New("declined")
 		}
 		var err error
-		accepted, err = a.requestReceive(deviceName, filename)
+		accepted, err = a.requestReceive(transfer.deviceName, transfer.oriFilename)
 		if err != nil {
 			return false, err
 		}
@@ -170,24 +189,24 @@ func (a *obexAgent) isSessionAccepted(sessionPath dbus.ObjectPath, deviceName, f
 		if !accepted {
 			return false, nil
 		}
-		a.acceptedSessions[sessionPath] = 0
+		a.acceptedSessions[transfer.sessionPath] = 0
 		a.notify = notifications.NewNotifications(a.service.Conn())
 		a.notify.InitSignalExt(a.sigLoop, true)
 		a.notifyID = 0
 		a.recevieChMu.Lock()
 		a.receiveCh = make(chan struct{}, 1)
 		a.recevieChMu.Unlock()
-		a.receiveProgress(deviceName, sessionPath, transfer)
+		a.receiveProgress(transfer)
 	} else {
 		<-a.receiveCh
-		a.receiveProgress(deviceName, sessionPath, transfer)
+		a.receiveProgress(transfer)
 	}
 
-	a.acceptedSessions[sessionPath]++
+	a.acceptedSessions[transfer.sessionPath]++
 	return true, nil
 }
 
-func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, transfer obex.Transfer) {
+func (a *obexAgent) receiveProgress(transfer *transferObj) {
 	transfer.InitSignalExt(a.sigLoop, true)
 
 	fileSize, err := transfer.Size().Get(0)
@@ -196,26 +215,10 @@ func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, 
 	}
 
 	var notifyMu sync.Mutex
-	var oriFilepath string
-	var basename string
 
 	err = transfer.Status().ConnectChanged(func(hasValue bool, value string) {
 		if !hasValue {
 			return
-		}
-
-		// 传送开始，获取到保存的绝对路径
-		if value == transferStatusActive {
-			oriFilepath, err = transfer.Filename().Get(0)
-			if err != nil {
-				logger.Error("failed to get received filename:", err)
-				return
-			}
-
-			basename = filepath.Base(oriFilepath)
-			notifyMu.Lock()
-			a.notifyID = a.notifyProgress(a.notify, a.notifyID, basename, device, 0)
-			notifyMu.Unlock()
 		}
 
 		if value != transferStatusComplete && value != transferStatusError {
@@ -228,15 +231,16 @@ func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, 
 		a.notify.RemoveAllHandlers()
 
 		if value == transferStatusComplete {
-			// 传送完成，移动到下载目录
-			dest := filepath.Join(receiveBaseDir, basename)
-			err = os.Rename(oriFilepath, dest)
-			if err != nil {
-				logger.Error("failed to move file:", err)
+			// 如果获取不到FileName时，文件应该在~/.cache/obexd下
+			oriFilepath, err := transfer.Filename().Get(0)
+			if err != nil || oriFilepath == "" {
+				oriFilepath = filepath.Join(dutils.GetCacheDir(), "obexd", transfer.tempFileName)
 			}
+			// 传送完成，移动到下载目录
+			moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
 
 			notifyMu.Lock()
-			a.notifyID = a.notifyProgress(a.notify, a.notifyID, basename, device, 100)
+			a.notifyID = a.notifyProgress(a.notify, a.notifyID, transfer.oriFilename, transfer.deviceName, 100)
 			notifyMu.Unlock()
 		} else {
 			// 区分点击取消的传输失败和蓝牙断开的传输失败
@@ -259,9 +263,9 @@ func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, 
 		// 避免下个传输还没开始就被清空，导致需要重新询问，故加上一秒的延迟
 		time.AfterFunc(time.Second, func() {
 			a.acceptedSessionsMu.Lock()
-			a.acceptedSessions[sessionPath]--
-			if a.acceptedSessions[sessionPath] == 0 {
-				delete(a.acceptedSessions, sessionPath)
+			a.acceptedSessions[transfer.sessionPath]--
+			if a.acceptedSessions[transfer.sessionPath] == 0 {
+				delete(a.acceptedSessions, transfer.sessionPath)
 			}
 			a.acceptedSessionsMu.Unlock()
 		})
@@ -275,7 +279,17 @@ func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, 
 		if !hasValue {
 			return
 		}
-
+		if value == 0 {
+			return
+		}
+		status, err := transfer.Status().Get(0)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		if status == transferStatusComplete || status == transferStatusError {
+			return
+		}
 		newProgress := value * 100 / fileSize
 		if progress == newProgress || value == fileSize {
 			return
@@ -285,7 +299,7 @@ func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, 
 		logger.Infof("transferPath: %q, progress: %d", transfer.Path_(), progress)
 
 		notifyMu.Lock()
-		a.notifyID = a.notifyProgress(a.notify, a.notifyID, basename, device, progress)
+		a.notifyID = a.notifyProgress(a.notify, a.notifyID, transfer.oriFilename, transfer.deviceName, progress)
 		notifyMu.Unlock()
 	})
 	if err != nil {
@@ -311,6 +325,46 @@ func (a *obexAgent) receiveProgress(device string, sessionPath dbus.ObjectPath, 
 	if err != nil {
 		logger.Warning("connect action invoked failed:", err)
 	}
+}
+
+func moveTempFile(src, dest string) {
+	count := 0
+	suffix := filepath.Ext(dest)
+	fileName := strings.TrimSuffix(dest, suffix)
+	for {
+		if dutils.IsFileExist(dest) {
+			count++
+			dest = fmt.Sprintf("%v(%v)%v", fileName, count, suffix)
+		} else {
+			err := os.Rename(src, dest)
+			if err != nil {
+				fmt.Println("failed to move file:", err)
+			}
+			break
+		}
+	}
+}
+
+// 获取随机字母+数字组合字符串
+func getRandstring(length int) string {
+	if length < 1 {
+		return ""
+	}
+	char := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	charArr := strings.Split(char, "")
+	charlen := len(charArr)
+	ran := rand.New(rand.NewSource(time.Now().Unix()))
+	var rchar string = ""
+	for i := 1; i <= length; i++ {
+		rchar = rchar + charArr[ran.Intn(charlen)]
+	}
+	return rchar
+}
+
+// 随机文件名
+func randFileName(fileName string) string {
+	randStr := getRandstring(16)
+	return strings.TrimSuffix(filepath.Base(fileName), filepath.Ext(fileName)) + "_" + randStr + filepath.Ext(fileName)
 }
 
 // notifyProgress 发送文件传输进度通知
