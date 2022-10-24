@@ -27,8 +27,8 @@ var noUEvent bool
 const (
 	configManagerId = "org.desktopspec.ConfigManager"
 	_configHwSystem = "/usr/share/uos-hw-config"
+	pstatePath = "/sys/devices/system/cpu/intel_pstate"
 )
-
 
 func init() {
 	if arch.Get() == arch.Sunway {
@@ -54,7 +54,8 @@ type Manager struct {
 	initDone bool
 
 	// CPU操作接口
-	cpus *CpuHandlers
+	cpus      *CpuHandlers
+	haspstate bool
 
 	PropsMu      sync.RWMutex
 	OnBattery    bool
@@ -99,8 +100,8 @@ type Manager struct {
 	IsPowerSaveSupported bool
 
 	// 性能模式-平衡模式dsg
-	balanceScalingGovernor     string
-	configManagerPath          dbus.ObjectPath
+	balanceScalingGovernor string
+	configManagerPath      dbus.ObjectPath
 
 	// 当前模式
 	Mode string
@@ -133,6 +134,10 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.refreshSystemPowerPerformance()
 
+	// check pstate , if has pstate, it is intel pstate mode , then
+	// we need another logic
+	_, errp := os.Lstat(pstatePath)
+	m.haspstate = !(errp == nil)
 	err := m.init()
 	if err != nil {
 		m.destroy()
@@ -256,7 +261,7 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 	m.initDsgConfig(systemBus)
 	m.systemSigLoop.Start()
 
-	path := m.cpus.getCpuGovernorPath()
+	path := m.cpus.getCpuGovernorPath(m.haspstate)
 	if "" == path {
 		m.IsHighPerformanceSupported = false
 		m.IsBalanceSupported = false
@@ -265,7 +270,7 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 	}
 
 	dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
-	availableArrGovernors := m.cpus.getAvailableArrGovernors()
+	availableArrGovernors := m.cpus.getAvailableArrGovernors(m.haspstate)
 
 	setUseNormalBalance(useNormalBalance())
 	//  如果当前是 平衡模式, 且不走正常平衡模式，且CpuGovernor不是performance, 则需要将m.CpuGovernor设置为performance
@@ -283,8 +288,9 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 		}
 
 		// 全部模式都支持的时候,不需要进行写入文件验证
-		if len(availableArrGovernors) != 6 {
-			availableArrGovernors = m.cpus.tryWriteGovernor(availableArrGovernors)
+		// TODO: 如果有pstate跳过检查
+		if len(availableArrGovernors) != 6 && !m.haspstate {
+			availableArrGovernors = m.cpus.tryWriteGovernor(availableArrGovernors,m.haspstate)
 		}
 		logger.Info(" First. available cpuGovernors : ", availableArrGovernors)
 		m.setDsgData("supportCpuGovernors", setSupportGovernors(availableArrGovernors))
@@ -312,9 +318,9 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 		setLocalAvailableGovernors(availableArrGovernors)
 	}
 
-	m.IsBalanceSupported = getIsBalanceSupported()
-	m.IsHighPerformanceSupported = getIsHighPerformanceSupported()
-	m.IsPowerSaveSupported = getIsPowerSaveSupported()
+	m.IsBalanceSupported = getIsBalanceSupported(m.haspstate)
+	m.IsHighPerformanceSupported = getIsHighPerformanceSupported(m.haspstate)
+	m.IsPowerSaveSupported = getIsPowerSaveSupported(m.haspstate)
 
 	if strv.Strv(getSupportGovernors()).Contains(dsgCpuGovernor) {
 		m.balanceScalingGovernor = dsgCpuGovernor
@@ -588,7 +594,7 @@ func (m *Manager) doSetMode(mode string) error {
 		m.setPropPowerSavingModeEnabled(false)
 		balanceScalingGovernor := m.balanceScalingGovernor
 		err, targetGovernor := trySetBalanceCpuGovernor(balanceScalingGovernor)
-		if  err != nil {
+		if err != nil {
 			logger.Warning(err)
 			return err
 		}
@@ -608,9 +614,9 @@ func (m *Manager) doSetMode(mode string) error {
 		if err != nil {
 			logger.Warning(err)
 		}
-
+		// TODO remove it later
 		if m.IsHighPerformanceSupported {
-			err = m.doSetCpuBoost(false)
+			err = m.doSetCpuBoost(true)
 		}
 	case "powersave": // governor=powersave boost=false
 		if !m.IsPowerSaveSupported {
@@ -624,9 +630,9 @@ func (m *Manager) doSetMode(mode string) error {
 		if err != nil {
 			logger.Warning(err)
 		}
-
+		// TODO remove it later
 		if m.IsHighPerformanceSupported {
-			err = m.doSetCpuBoost(false)
+			err = m.doSetCpuBoost(true)
 		}
 	case "performance": // governor=performance boost=true
 		if !m.IsHighPerformanceSupported {
@@ -640,6 +646,7 @@ func (m *Manager) doSetMode(mode string) error {
 			logger.Warning(err)
 		}
 
+		// TODO remove it later
 		err = m.doSetCpuBoost(true)
 
 	default:
@@ -668,7 +675,7 @@ func (m *Manager) doSetCpuGovernor(governor string) error {
 		logger.Infof("[doSetCpuGovernor] change governor : %s to performance.", governor)
 	}
 
-	err := m.cpus.SetGovernor(governor)
+	err := m.cpus.SetGovernor(governor, m.haspstate)
 	if err == nil {
 		m.setPropCpuGovernor(governor)
 	}
