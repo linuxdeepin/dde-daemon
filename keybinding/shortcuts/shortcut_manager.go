@@ -1091,7 +1091,7 @@ func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager, wmObj wm.Wm) {
 				logger.Warning("failed to setShortForWayland:", err)
 				continue
 			}
-			sm.WaylandCustomShortCutMap[id] = cmd
+			sm.WaylandCustomShortCutMap[id + "-cs"] = cmd
 			cs := newCustomShort(id, id, keystrokesStrv, wmObj, csm)
 			sm.addWithoutLock(cs)
 		}
@@ -1104,6 +1104,10 @@ func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager, wmObj wm.Wm) {
 
 func setShortForWayland(shortcut Shortcut, wmObj wm.Wm) (bool, error) {
 	id := shortcut.GetId()
+	isCustom := shortcut.GetType() == ShortcutTypeCustom
+	if isCustom {
+		id += "-cs"
+	}
 	keystrokesStrv := shortcut.getKeystrokesStrv()
 	logger.Debugf("Id: %+v, keystrokesStrv: %+v", id, keystrokesStrv)
 	accelJson, err := util.MarshalJSON(util.KWinAccel{
@@ -1118,7 +1122,7 @@ func setShortForWayland(shortcut Shortcut, wmObj wm.Wm) (bool, error) {
 		logger.Warning("failed to set KWin accels:", id, keystrokesStrv, err)
 		return false, err
 	}
-	if shortcut.GetType() == ShortcutTypeCustom {
+	if isCustom {
 		sessionBus, err := dbus.SessionBus()
 		if err != nil {
 			logger.Warning(err)
