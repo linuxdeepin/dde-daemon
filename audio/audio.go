@@ -419,8 +419,11 @@ func (a *Audio) shouldAutoPause() bool {
 
 	switch DetectPortType(card.core, &port) {
 	case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO, PortTypeUsb:
+		// 先缓存sink 是否为可插拔信息，防止后面整个card丢失，缺少判断信息。
+		a.defaultSink.pluggable = true
 		return true
 	default:
+		a.defaultSink.pluggable = false
 		return false
 	}
 }
@@ -460,6 +463,11 @@ func (a *Audio) refreshDefaultSinkSource() {
 		if a.misc != 0 {
 			a.misc = 0
 			go pauseAllPlayers()
+		} else if a.defaultSink.pluggable {
+			// 异步状况下，可能整个card不存在(比如蓝牙)，可插拔sink切换, 需再判断下card信息。
+			if _, err := a.ctx.GetCard(a.defaultSink.Card); err != nil {
+				go pauseAllPlayers()
+			}
 		}
 		a.updateDefaultSink(defaultSink)
 	} else {
@@ -471,13 +479,8 @@ func (a *Audio) refreshDefaultSinkSource() {
 					logger.Warning(err)
 					go pauseAllPlayers()
 				} else {
-					switch DetectPortType(card, &port) {
-					case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO, PortTypeUsb:
-						// 优先级变低了才暂停播放
-						if port.Priority < a.misc {
-							go pauseAllPlayers()
-						}
-					default:
+					// 非可插拔sink 和 可插拔sink的port优先级变低了才暂停。
+					if !a.defaultSink.pluggable || port.Priority < a.misc {
 						go pauseAllPlayers()
 					}
 				}
