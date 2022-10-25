@@ -232,6 +232,7 @@ func (m *Manager) AddCustomShortcut(name, action, keystroke string) (id string,
 		return
 	}
 	if _useWayland {
+		name += "-cs"
 		keystrokeStrv := make([]string, 0)
 		keystrokeStrv = append(keystrokeStrv, keystroke)
 		accelJson, err := util.MarshalJSON(util.KWinAccel{
@@ -281,6 +282,7 @@ func (m *Manager) DeleteCustomShortcut(id string) *dbus.Error {
 	}
 	m.shortcutManager.Delete(shortcut)
 	if _useWayland {
+		id += "-cs"
 		logger.Debug("RemoveAccel id: ", id)
 		err := m.wm.RemoveAccel(0, id)
 		if err != nil {
