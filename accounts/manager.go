@@ -145,6 +145,22 @@ func NewManager(service *dbusutil.Service) *Manager {
 		}
 	})
 
+	_, _ = m.login1Manager.ConnectPrepareForSleep(func(before bool) {
+		if before {
+			return
+		}
+
+		pwdChangerLock.Lock()
+		defer pwdChangerLock.Unlock()
+
+		if pwdChangerProcess != nil {
+			err := syscall.Kill(-pwdChangerProcess.Pid, syscall.SIGTERM)
+			if err != nil {
+				logger.Warning(err)
+			}
+		}
+	})
+
 	return m
 }
 
