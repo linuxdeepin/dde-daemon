@@ -75,84 +75,54 @@ func (mgr *Manager) listenRfkill() {
 			continue
 		}
 
-		mgr.handleRfkillEvent(event)
+		mgr.handleBTRfkillEvent(event)
 	}
 }
 
-// handleRfkillEvent when rfkill event arrived, should refresh all rfkill state
-func (mgr *Manager) handleRfkillEvent(event *RfkillEvent) {
+// 只处理bluetooth设备
+func (mgr *Manager) handleBTRfkillEvent(event *RfkillEvent) {
+	if event.Typ != rfkillTypeBT {
+		return
+	}
+	mgr.btDevicesMu.Lock()
+	defer mgr.btDevicesMu.Unlock()
 	if event.Op == rfkillOpDel {
-		delete(mgr.devices, event.Index)
+		delete(mgr.btRfkillDevices, event.Index)
 	} else {
-		mgr.devices[event.Index] = device{
-			typ:  event.Typ,
+		mgr.btRfkillDevices[event.Index] = device{
+			typ:  rfkillTypeBT,
 			soft: event.Soft,
 			hard: event.Hard,
 		}
 	}
-
-	deviceCnt := len(mgr.devices)
-	blockCnt := 0
-	softBlockCnt := 0
-	curTypeDeviceCnt := 0
-	curTypeBlockCnt := 0
-	curTypeSoftBlockCnt := 0
-	for _, device := range mgr.devices {
+	btCnt := len(mgr.btRfkillDevices)
+	blockBtCnt := 0
+	softBtBlockCnt := 0
+	for _, device := range mgr.btRfkillDevices {
 		if device.soft == rfkillStateBlock || device.hard == rfkillStateBlock {
-			blockCnt++
-
+			blockBtCnt++
 			if device.soft == rfkillStateBlock {
-				softBlockCnt++
-			}
-		}
-
-		if device.typ != event.Typ {
-			continue
-		}
-
-		curTypeDeviceCnt++
-		if device.soft == rfkillStateBlock || device.hard == rfkillStateBlock {
-			curTypeBlockCnt++
-
-			if device.soft == rfkillStateBlock {
-				curTypeSoftBlockCnt++
+				softBtBlockCnt++
 			}
 		}
 	}
-
-	allBlocked := false
-	allSoftBlocked := false
-	if deviceCnt != 0 {
-		allBlocked = blockCnt == deviceCnt
-		allSoftBlocked = softBlockCnt == deviceCnt
+	btBlocked := btCnt != 0 && (btCnt == blockBtCnt)
+	btSoftBlocked := btCnt != 0 && (btCnt == softBtBlockCnt)
+	mgr.setPropHasAirplaneMode(btCnt != 0 || mgr.hasNmWirelessDevices)
+	mgr.setPropBluetoothEnabled(btBlocked)
+	logger.Debug("refresh bluetooth blocked state:", btBlocked)
+	if mgr.hasNmWirelessDevices {
+		mgr.setPropEnabled(btBlocked && mgr.WifiEnabled)
+		logger.Debug("refresh all blocked state:", btBlocked && mgr.WifiEnabled)
+		// 仅保存 soft block 的状态
+		mgr.config.SetBlocked(rfkillTypeAll, btSoftBlocked && mgr.WifiEnabled)
+	} else {
+		mgr.setPropEnabled(btBlocked)
+		logger.Debug("refresh all blocked state:", btBlocked)
+		// 仅保存 soft block 的状态
+		mgr.config.SetBlocked(rfkillTypeAll, btSoftBlocked)
 	}
-
-	curTypeBlocked := false
-	curTypeSoftBlocked := false
-	if curTypeDeviceCnt != 0 {
-		curTypeBlocked = curTypeBlockCnt == curTypeDeviceCnt
-		curTypeSoftBlocked = curTypeSoftBlockCnt == curTypeDeviceCnt
-	}
-
-	mgr.setPropHasAirplaneMode(deviceCnt != 0)
-
-	mgr.setPropEnabled(allBlocked)
-	logger.Debug("refresh all blocked state:", allBlocked)
-
-	// check is module is blocked
-	switch event.Typ {
-	case rfkillTypeWifi:
-		mgr.setPropWifiEnabled(curTypeBlocked)
-		logger.Debug("refresh wifi blocked state:", curTypeBlocked)
-	case rfkillTypeBT:
-		mgr.setPropBluetoothEnabled(curTypeBlocked)
-		logger.Debug("refresh bluetooth blocked state:", curTypeBlocked)
-	default:
-		logger.Info("unsupported type:", event.Typ)
-	}
-	// 仅保存 soft block 的状态
-	mgr.config.SetBlocked(rfkillTypeAll, allSoftBlocked)
-	mgr.config.SetBlocked(event.Typ, curTypeSoftBlocked)
+	mgr.config.SetBlocked(rfkillTypeBT, btSoftBlocked)
 	// save rfkill key event result to config file
 	err := mgr.config.SaveConfig()
 	if err != nil {
