@@ -6,8 +6,11 @@ package airplane_mode
 
 import (
 	"errors"
+	"sync"
+	"time"
 
 	"github.com/godbus/dbus"
+	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -30,15 +33,19 @@ type device struct {
 //go:generate dbusutil-gen em -type Manager
 
 type Manager struct {
-	service *dbusutil.Service
-	devices map[uint32]device
-
+	service         *dbusutil.Service
+	btRfkillDevices map[uint32]device
+	btDevicesMu     sync.RWMutex
 	// Airplane Mode status
 	Enabled          bool
 	HasAirplaneMode  bool
 	WifiEnabled      bool
 	BluetoothEnabled bool
 
+	nmManager            networkmanager.Manager
+	hasNmWirelessDevices bool
+
+	sigLoop *dbusutil.SignalLoop
 	// all rfkill module config
 	config *Config
 }
@@ -46,9 +53,9 @@ type Manager struct {
 // NewManager create manager
 func newManager(service *dbusutil.Service) *Manager {
 	mgr := &Manager{
-		service: service,
-		devices: make(map[uint32]device),
-		config:  NewConfig(),
+		service:         service,
+		btRfkillDevices: make(map[uint32]device),
+		config:          NewConfig(),
 	}
 	err := mgr.init()
 	if err != nil {
@@ -118,13 +125,18 @@ func (mgr *Manager) init() error {
 	if err != nil {
 		logger.Debugf("load airplane module config failed, err: %v", err)
 	}
-
+	mgr.nmManager = networkmanager.NewManager(mgr.service.Conn())
+	mgr.sigLoop = dbusutil.NewSignalLoop(mgr.service.Conn(), 10)
+	mgr.sigLoop.Start()
+	mgr.nmManager.InitSignalExt(mgr.sigLoop, true)
+	mgr.hasNmWirelessDevices = mgr.hasWirelessDevicesWithRetry()
 	// recover
 	mgr.recover()
 
 	// use goroutine to monitor rfkill event
 	go mgr.listenRfkill()
-
+	mgr.listenWirelessEnabled()
+	mgr.listenNMDevicesChanged()
 	return nil
 }
 
@@ -167,6 +179,14 @@ func (mgr *Manager) block(typ rfkillType, enableAirplaneMode bool) error {
 	if enableAirplaneMode {
 		state = rfkillStateBlock
 	}
+	if typ < 2 { // 无线网卡飞行模式通过NM管控
+		if mgr.hasNmWirelessDevices {
+			err := mgr.nmManager.WirelessEnabled().Set(0, !enableAirplaneMode)
+			if err != nil {
+				logger.Warning(err)
+			}
+		}
+	}
 	return rfkillAction(typ, state)
 }
 
@@ -188,4 +208,78 @@ func checkAuthorization(actionId string, sysBusName string) error {
 		return errors.New("not authorized")
 	}
 	return nil
+}
+
+func (mgr *Manager) listenWirelessEnabled() {
+	_ = mgr.nmManager.WirelessEnabled().ConnectChanged(func(hasValue bool, wifiEnable bool) {
+		if !hasValue {
+			return
+		}
+		wifiAirplaneMode := !wifiEnable
+		mgr.setPropWifiEnabled(wifiAirplaneMode)
+		mgr.config.SetBlocked(rfkillTypeWifi, wifiAirplaneMode) // 无法判断wifi是否为soft block
+		mgr.btDevicesMu.RLock()
+		defer mgr.btDevicesMu.RUnlock()
+		var enabled = false
+		if len(mgr.btRfkillDevices) > 0 {
+			enabled = wifiAirplaneMode && mgr.BluetoothEnabled
+		} else {
+			enabled = wifiAirplaneMode
+		}
+		mgr.setPropEnabled(enabled)
+		logger.Debug("refresh all blocked state:", enabled)
+
+		// 仅保存 soft block 的状态
+		btSoftBlocked := mgr.config.GetBlocked(rfkillTypeBT)
+		mgr.config.SetBlocked(rfkillTypeAll, btSoftBlocked && wifiAirplaneMode)
+	})
+}
+
+func (mgr *Manager) listenNMDevicesChanged() {
+	_ = mgr.nmManager.Devices().ConnectChanged(func(hasValue bool, value []dbus.ObjectPath) {
+		if !hasValue {
+			return
+		}
+		mgr.hasNmWirelessDevices = mgr.hasWirelessDevices(value)
+		mgr.btDevicesMu.RLock()
+		defer mgr.btDevicesMu.RUnlock()
+		mgr.setPropHasAirplaneMode(len(mgr.btRfkillDevices) > 0 || mgr.hasNmWirelessDevices)
+	})
+}
+
+func (mgr *Manager) hasWirelessDevicesWithRetry() bool {
+	// try get all devices 5 times
+	for i := 0; i < 5; i++ {
+		devicePaths, err := mgr.nmManager.GetDevices(0)
+		if err != nil {
+			logger.Warning(err)
+			// sleep for 1 seconds, and retry get devices
+			time.Sleep(1 * time.Second)
+		} else {
+			return mgr.hasWirelessDevices(devicePaths)
+		}
+	}
+	return false
+}
+
+const NM_DEVICE_TYPE_WIFI = 2
+
+// add and check devices
+func (mgr *Manager) hasWirelessDevices(devicePaths []dbus.ObjectPath) bool {
+	for _, devPath := range devicePaths {
+		nmDev, err := networkmanager.NewDevice(mgr.service.Conn(), devPath)
+		if err != nil {
+			logger.Warning(err)
+			continue
+		}
+		d := nmDev.Device()
+		deviceType, err := d.DeviceType().Get(0)
+		if err != nil {
+			logger.Warningf("get device %s type failed: %v", nmDev.Path_(), err)
+		}
+		if deviceType == NM_DEVICE_TYPE_WIFI {
+			return true
+		}
+	}
+	return false
 }
