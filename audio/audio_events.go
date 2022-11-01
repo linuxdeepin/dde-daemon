@@ -605,6 +605,12 @@ func (a *Audio) notifyBluezCardPortInsert(card *Card) {
 		logger.Warning(err)
 	}
 
+	// 蓝牙模式配置出错情况过滤通知
+	if card.ActiveProfile.Name == "off" {
+		logger.Debugf("filter bluez notify, beacuse profile is off")
+		return
+	}
+
 	// 蓝牙会根据模式过滤端口，因此忽略unknown状态
 	for _, port := range card.Ports {
 		if port.Available == pulse.AvailableTypeNo {

@@ -100,12 +100,6 @@ func (c *Card) update(card *pulse.Card) {
 					logger.Debugf("filter bluez input port %s", port.Name)
 					port.Available = pulse.AvailableTypeNo
 				}
-
-				if c.ActiveProfile.Name == "off" {
-					// off模式过滤所有端口
-					logger.Debugf("filter bluez input port %s", port.Name)
-					port.Available = pulse.AvailableTypeNo
-				}
 			}
 		}
 		c.Ports = append(c.Ports, port)

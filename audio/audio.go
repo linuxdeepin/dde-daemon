@@ -946,7 +946,8 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 		return a.setDefaultSourceWithPort(cardId, portName)
 	}
 
-	if targetPortInfo.Profiles.Exists(card.ActiveProfile.Name) {
+	// 蓝牙特殊情况下会出错，导致profile为off, 需要重新寻找合适的
+	if targetPortInfo.Profiles.Exists(card.ActiveProfile.Name) && card.ActiveProfile.Name != "off" {
 		// no need to change profile
 		return setDefaultPort()
 	}
