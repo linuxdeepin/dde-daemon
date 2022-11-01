@@ -71,14 +71,25 @@ func (m *Manager) refreshBatteryDisplay() {
 				timeToFull = uint64(3600 * ((energyFullTotal - energyTotal) / energyRateTotal))
 			}
 		}
-
-		/* check the remaining thime is under a set limit, to deal with broken
+		/* check the remaining time is under a set limit, to deal with broken
 		primary batteries rate */
 		if timeToEmpty > 240*60*60 { /* ten days for discharging */
 			timeToEmpty = 0
 		}
 		if timeToFull > 20*60*60 { /* 20 hours for charging */
 			timeToFull = 0
+		}
+	}
+	if status == battery.StatusUnknown {
+		if m.OnBattery {
+			status = battery.StatusDischarging
+		} else {
+			if percentage == 100 {
+				status = battery.StatusFull
+				timeToFull = 0
+			} else {
+				status = battery.StatusNotCharging
+			}
 		}
 	}
 	m.changeBatteryLowByBatteryPercentage(percentage)
