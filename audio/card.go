@@ -56,6 +56,10 @@ func getCardName(card *pulse.Card) (name string) {
 	return
 }
 
+var (
+	portFilterList = []string{"phone_input", "phone_output"}
+)
+
 func (a *Audio) getCardNameById(cardId uint32) string {
 	if !a.isCardIdValid(cardId) {
 		// 出现这个报错通常是非常严重的问题，说明PulseAudio数据同步更新的重构没有完全实现，
