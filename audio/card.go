@@ -10,6 +10,7 @@ import (
 	"sort"
 
 	"github.com/linuxdeepin/go-lib/pulse"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 type Card struct {
@@ -57,7 +58,7 @@ func getCardName(card *pulse.Card) (name string) {
 }
 
 var (
-	portFilterList = []string{"phone_input", "phone_output"}
+	portFilterList = []string{"phone-input", "phone-output"}
 )
 
 func (a *Audio) getCardNameById(cardId uint32) string {
@@ -86,25 +87,28 @@ func (c *Card) update(card *pulse.Card) {
 	c.Profiles = newProfileList(card.Profiles)
 	c.filterProfile(card)
 
-	/* 蓝牙声卡的端口需要过滤 */
-	if isBluetoothCard(card) {
-		for _, port := range card.Ports {
-			if c.BluezMode() == bluezModeA2dp && port.Direction == pulse.DirectionSource {
-				// a2dp模式过滤输入端口
-				logger.Debugf("filter bluez input port %s", port.Name)
-				port.Available = pulse.AvailableTypeNo
-			}
+	filterList := strv.Strv(portFilterList)
+	for _, port := range card.Ports {
+		if filterList.Contains(port.Name) {
+			logger.Debug("filter port", port.Name)
+			port.Available = pulse.AvailableTypeNo
+		} else {
+			/* 蓝牙声卡的端口需要过滤 */
+			if isBluetoothCard(card) {
+				if c.BluezMode() == bluezModeA2dp && port.Direction == pulse.DirectionSource {
+					// a2dp模式过滤输入端口
+					logger.Debugf("filter bluez input port %s", port.Name)
+					port.Available = pulse.AvailableTypeNo
+				}
 
-			if c.ActiveProfile.Name == "off" {
-				// off模式过滤所有端口
-				logger.Debugf("filter bluez input port %s", port.Name)
-				port.Available = pulse.AvailableTypeNo
+				if c.ActiveProfile.Name == "off" {
+					// off模式过滤所有端口
+					logger.Debugf("filter bluez input port %s", port.Name)
+					port.Available = pulse.AvailableTypeNo
+				}
 			}
-
-			c.Ports = append(c.Ports, port)
 		}
-	} else {
-		c.Ports = card.Ports
+		c.Ports = append(c.Ports, port)
 	}
 }
 
