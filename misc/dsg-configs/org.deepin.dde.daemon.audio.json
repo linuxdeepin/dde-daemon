@@ -25,7 +25,7 @@
       "visibility": "private"
     },
     "portFilterList": {
-      "value": ["phone"],
+      "value": ["phone-input", "phone-output"],
       "serial": 0,
       "flags": [],
       "global": true,
