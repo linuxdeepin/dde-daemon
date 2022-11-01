@@ -12,6 +12,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
+	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
@@ -19,6 +20,10 @@ const (
 	bluezModeA2dp    = "a2dp"
 	bluezModeHeadset = "headset"
 	bluezModeDefault = bluezModeA2dp
+)
+
+var (
+	bluezModeFilterList = []string{"a2dp_source"}
 )
 
 /* 蓝牙音频管理器 */
@@ -130,9 +135,16 @@ func isBluezDeviceValid(bluezPath string) bool {
 
 /* 设置蓝牙声卡模式 */
 func (card *Card) SetBluezMode(mode string) {
+	mode = strings.ToLower(mode)
+	filterList := strv.Strv(bluezModeFilterList)
+
 	for _, profile := range card.Profiles {
-		if strings.Contains(strings.ToLower(profile.Name), strings.ToLower(mode)) &&
-			profile.Available != 0 {
+		v := strings.ToLower(profile.Name)
+		if filterList.Contains(v) {
+			logger.Debug("filter blue mode", v)
+			continue
+		}
+		if profile.Available != 0 && strings.Contains(v, mode) {
 			logger.Debugf("set %s to %s", card.core.Name, profile.Name)
 			card.core.SetProfile(profile.Name)
 			return
@@ -162,9 +174,17 @@ func (card *Card) BluezMode() string {
 /* 获取蓝牙声卡的可用模式 */
 func (card *Card) BluezModeOpts() []string {
 	opts := []string{}
+	filterList := strv.Strv(bluezModeFilterList)
 	for _, profile := range card.Profiles {
 		if profile.Available == 0 {
 			logger.Debugf("%s %s is unavailable", card.core.Name, profile.Name)
+			continue
+		}
+
+		v := strings.ToLower(profile.Name)
+
+		if filterList.Contains(v) {
+			logger.Debugf("filter bluez mode", v)
 			continue
 		}
 
