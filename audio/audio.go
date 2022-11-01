@@ -49,7 +49,9 @@ const (
 	increaseMaxVolume = 1.5
 	normalMaxVolume   = 1.0
 
-	dsgKeyAutoSwitchPort = "autoSwitchPort"
+	dsgKeyAutoSwitchPort      = "autoSwitchPort"
+	dsgKeyBluezModeFilterList = "bluezModeFilterList"
+	dsgKeyPortFilterList      = "portFilterList"
 )
 
 var (
@@ -1502,6 +1504,33 @@ func (a *Audio) initDsgProp() error {
 		a.PropsMu.Lock()
 		a.enableAutoSwitchPort = val
 		a.PropsMu.Unlock()
+	}
+
+	var ret []dbus.Variant
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyBluezModeFilterList).Store(&ret)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		bluezModeFilterList = bluezModeFilterList[:0]
+		for i := range ret {
+			if v, ok := ret[i].Value().(string); ok {
+				bluezModeFilterList = append(bluezModeFilterList, v)
+			}
+		}
+		logger.Info("bluez filter audio mode opts", bluezModeFilterList)
+	}
+
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyPortFilterList).Store(&ret)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		portFilterList = portFilterList[:0]
+		for i := range ret {
+			if v, ok := ret[i].Value().(string); ok {
+				portFilterList = append(portFilterList, v)
+			}
+		}
+		logger.Info("port filter list", portFilterList)
 	}
 
 	// 监听dsg配置变化
