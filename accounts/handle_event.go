@@ -152,6 +152,11 @@ func (m *Manager) handleFileGroupChanged() {
 	m.usersMapMu.Lock()
 	defer m.usersMapMu.Unlock()
 	for _, u := range m.usersMap {
+		// 域管用户的组由域管服务器统一管理，本地账户修改用户组文件后不应该更新域管相关账户属性
+		if m.isUdcpUserID(u.Uid) {
+			continue
+		}
+
 		u.updatePropAccountType()
 		u.updatePropCanNoPasswdLogin()
 		u.updatePropGroups()
