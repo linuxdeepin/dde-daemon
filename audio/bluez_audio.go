@@ -184,7 +184,7 @@ func (card *Card) BluezModeOpts() []string {
 		v := strings.ToLower(profile.Name)
 
 		if filterList.Contains(v) {
-			logger.Debugf("filter bluez mode", v)
+			logger.Debug("filter bluez mode", v)
 			continue
 		}
 
