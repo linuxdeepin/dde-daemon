@@ -353,10 +353,13 @@ func (u *User) writeUserConfig() error {
 	return u.writeUserConfigWithChanges(nil)
 }
 
-func (u *User) updatePropAccountType() {
-	newVal := u.getAccountType()
+func (u *User) updatePropAccountType(accountType int32) {
+	if accountType == u.AccountType {
+		return
+	}
+
 	u.PropsMu.Lock()
-	u.setPropAccountType(newVal)
+	u.setPropAccountType(accountType)
 	u.PropsMu.Unlock()
 }
 

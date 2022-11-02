@@ -151,13 +151,16 @@ func (m *Manager) updatePropUserList() {
 func (m *Manager) handleFileGroupChanged() {
 	m.usersMapMu.Lock()
 	defer m.usersMapMu.Unlock()
+	var accountType int32
+
 	for _, u := range m.usersMap {
-		// 域管用户的组由域管服务器统一管理，本地账户修改用户组文件后不应该更新域管相关账户属性
 		if m.isUdcpUserID(u.Uid) {
-			continue
+			accountType = m.getDomainUserAccountType(u.UserName)
+		} else {
+			accountType = u.getAccountType()
 		}
 
-		u.updatePropAccountType()
+		u.updatePropAccountType(accountType)
 		u.updatePropCanNoPasswdLogin()
 		u.updatePropGroups()
 	}
@@ -208,6 +211,25 @@ func (m *Manager) addUdcpUser(uId uint32) error {
 		logger.Warning(err)
 	}
 	return err
+}
+
+// 从域管服务器获取域用户组，判断该域管用户是否是管理员用户
+func (m *Manager) getDomainUserAccountType(userName string) int32 {
+	accountType := int32(users.UserTypeStandard)
+
+	if m.udcpCache != nil {
+		userGroups, err := m.udcpCache.GetUserGroups(0, userName)
+		if err != nil {
+			logger.Warningf("Udcp cache getUserGroups failed: %v", err)
+			return accountType
+		}
+
+		if strv.Strv(userGroups).Contains("sudo") {
+			accountType = users.UserTypeAdmin
+		}
+	}
+
+	return accountType
 }
 
 // 判断用户缓存UID列表中是否有域账户，域账户信息只能由web端设置，本地没有保存。
