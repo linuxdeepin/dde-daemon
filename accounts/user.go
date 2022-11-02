@@ -353,10 +353,9 @@ func (u *User) writeUserConfig() error {
 	return u.writeUserConfigWithChanges(nil)
 }
 
-func (u *User) updatePropAccountType() {
-	newVal := u.getAccountType()
+func (u *User) updatePropAccountType(accountType int32) {
 	u.PropsMu.Lock()
-	u.setPropAccountType(newVal)
+	u.setPropAccountType(accountType)
 	u.PropsMu.Unlock()
 }
 
@@ -367,10 +366,9 @@ func (u *User) updatePropCanNoPasswdLogin() {
 	u.PropsMu.Unlock()
 }
 
-func (u *User) updatePropGroups() {
-	newVal := u.getGroups()
+func (u *User) updatePropGroups(groups []string) {
 	u.PropsMu.Lock()
-	u.setPropGroups(newVal)
+	u.setPropGroups(groups)
 	u.PropsMu.Unlock()
 }
 
