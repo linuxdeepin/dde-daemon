@@ -153,6 +153,14 @@ func (m *Manager) isWindowDockOverlap(win x.Window) (bool, error) {
 		return false, err
 	}
 
+	// 与dock区域完全重合的情况认为就是dock本身
+	if winRect.X == m.FrontendWindowRect.X &&
+		winRect.Y == m.FrontendWindowRect.Y &&
+		winRect.Height == m.FrontendWindowRect.Height &&
+		winRect.Width == m.FrontendWindowRect.Width {
+		logger.Warning("FrontendWindowRect' geometry is the same as winRect' geometry")
+		return false, nil
+	}
 	logger.Debug("window rect:", winRect)
 	logger.Debug("dock rect:", m.FrontendWindowRect)
 	return hasIntersection(winRect, m.FrontendWindowRect), nil
