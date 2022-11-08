@@ -231,7 +231,7 @@ func (u *User) updateIconList() {
 }
 
 func (u *User) getAllIcons() []string {
-	icons := getUserStandardIcons()
+	icons := _userStandardIcons
 	if u.customIcon != "" {
 		icons = append(icons, u.customIcon)
 	}

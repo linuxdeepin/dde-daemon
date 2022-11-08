@@ -11,8 +11,9 @@ import (
 )
 
 var (
-	_imageBlur *ImageBlur
-	logger     = log.NewLogger("daemon/accounts")
+	_imageBlur         *ImageBlur
+	_userStandardIcons []string
+	logger             = log.NewLogger("daemon/accounts")
 )
 
 func init() {
@@ -57,6 +58,7 @@ func (d *Daemon) Start() error {
 
 	d.imageBlur = newImageBlur(service)
 	_imageBlur = d.imageBlur
+	_userStandardIcons = getUserStandardIcons()
 	err = service.Export(imageBlurDBusPath, d.imageBlur)
 	if err != nil {
 		d.imageBlur = nil
