@@ -259,6 +259,10 @@ func (m *Manager) deleteUser(uid string) {
 		logger.Warningf("uid %s not found", uid)
 	}
 
+	if users.IsAutoLoginUser(user.UserName) {
+		_ = users.SetAutoLoginUser("", "")
+	}
+
 	userPath := userDBusPathPrefix + uid
 	m.stopExportUser(userPath)
 	err := m.service.Emit(m, "UserDeleted", userPath)
