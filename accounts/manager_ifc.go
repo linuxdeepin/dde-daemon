@@ -176,10 +176,6 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		return dbusutil.ToError(err)
 	}
 
-	if users.IsAutoLoginUser(name) {
-		_ = users.SetAutoLoginUser("", "")
-	}
-
 	//delete user config and icons
 	if rmFiles {
 		user.clearData()
