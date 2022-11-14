@@ -167,7 +167,7 @@ func (m *Manager) SetProxyIgnoreHosts(ignoreHosts string) (busErr *dbus.Error) {
 func (m *Manager) GetProxy(proxyType string) (host, port string, busErr *dbus.Error) {
 	childSettings, err := getProxyChildSettings(proxyType)
 	if err != nil {
-		busErr = dbusutil.ToError(busErr)
+		busErr = dbusutil.ToError(err)
 		return
 	}
 	host = childSettings.GetString(gkeyProxyHost)
