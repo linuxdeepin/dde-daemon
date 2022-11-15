@@ -625,6 +625,7 @@ handle_mouse_events(struct libinput_event *ev, int type)
 static void
 handle_keyboard_events(struct libinput_event *ev, int type)
 {
+    g_debug("handle_keyboard_events");
     struct libinput_device *dev = libinput_event_get_device(ev);
     if (!dev) {
         fprintf(stderr, "Get device from event failure\n");
@@ -645,6 +646,7 @@ handle_events(struct libinput *li, struct movement *m)
     libinput_dispatch(li);
     while ((ev = libinput_get_event(li))) {
         int type =libinput_event_get_type(ev);
+        g_debug("handle_events type : %d",type);
         switch (type) {
         case LIBINPUT_EVENT_DEVICE_ADDED:{
             const char *path = get_multitouch_device_node(ev);
@@ -684,18 +686,15 @@ handle_events(struct libinput *li, struct movement *m)
             break;
         }
         case LIBINPUT_EVENT_KEYBOARD_KEY: {
-            if (NULL != getenv("WAYLAND_DISPLAY")) {
-                handle_keyboard_events(ev, type);
-            }
+
+            handle_keyboard_events(ev, type);
             break;
         }
         case LIBINPUT_EVENT_POINTER_MOTION:
         case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
         case LIBINPUT_EVENT_POINTER_BUTTON:
         case LIBINPUT_EVENT_POINTER_AXIS: {
-            if (NULL != getenv("WAYLAND_DISPLAY")) {
-                handle_mouse_events(ev, type);
-            }
+            handle_mouse_events(ev, type);
             break;
         }
         default:
