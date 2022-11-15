@@ -535,9 +535,6 @@ func (psp *powerSavePlan) screenBlack() {
 	taskF := newDelayedTask("screenFullBlack", fullBlackTime, func() {
 		psp.stopScreensaver()
 		logger.Info("Screen full black")
-		if manager.ScreenBlackLock.Get() {
-			manager.lockWaitShow(5*time.Second, true)
-		}
 
 		if adjustBrightnessEnabled {
 			// set min brightness for all outputs
