@@ -135,6 +135,7 @@ type Manager struct {
 
 	// 是否支持节能模式
 	isPowerSaveSupported bool
+	kwinHanleIdleOffCh   chan bool
 }
 
 var _manager *Manager
@@ -350,6 +351,25 @@ func (m *Manager) init() {
 	m.initSubmodules()
 	m.startSubmodules()
 	m.inhibitLogind()
+
+	if m.UseWayland {
+		m.kwinHanleIdleOffCh = make(chan bool, 10)
+		go m.listenEventToHandleIdleOff()
+
+		go func() {
+			for ch := range m.kwinHanleIdleOffCh {
+				if ch {
+					logger.Info("kwin handle idle off")
+
+					if v := m.submodules[submodulePSP]; v != nil {
+						if psp := v.(*powerSavePlan); psp != nil {
+							psp.HandleIdleOff()
+						}
+					}
+				}
+			}
+		}()
+	}
 }
 
 func (m *Manager) destroy() {
@@ -445,4 +465,65 @@ func (m *Manager) isSessionActive() bool {
 		return false
 	}
 	return active
+}
+
+// wayland下在收到键盘或者鼠标事件后，需要进行系统空闲处理（主要是唤醒屏幕）
+func (m *Manager) listenEventToHandleIdleOff() error {
+	//+ 监控按键事件
+	err := m.systemSigLoop.Conn().Object("com.deepin.daemon.Gesture",
+		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "KeyboardEvent").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.Gesture.KeyboardEvent",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			value := sig.Body[1].(uint32)
+			if m.getDPMSMode() != dpmsStateOn && value == 1 {
+				logger.Debug("receive keyboard event to handle idle off")
+				m.kwinHanleIdleOffCh <- true
+			}
+		}
+	})
+
+	//+ 监控鼠标移动事件
+	err = m.sessionSigLoop.Conn().Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.CursorMove",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			if m.getDPMSMode() != dpmsStateOn {
+				logger.Debug("receive cursor move event to handle idle off")
+				m.kwinHanleIdleOffCh <- true
+			}
+		}
+	})
+
+	//+ 监控鼠标按下事件
+	err = m.sessionSigLoop.Conn().Object("com.deepin.daemon.KWayland",
+		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonPress").Err
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
+		Name: "com.deepin.daemon.KWayland.Output.ButtonPress",
+	}, func(sig *dbus.Signal) {
+		if len(sig.Body) > 1 {
+			if m.getDPMSMode() != dpmsStateOn {
+				logger.Debug("acquire button press to handle idle off")
+				m.kwinHanleIdleOffCh <- true
+			}
+		}
+	})
+
+	return nil
 }
