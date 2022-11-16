@@ -93,32 +93,59 @@ func (m *Manager) setWmBlackScreenActive(active bool) {
 	}
 }
 
+func (m *Manager) getDPMSMode() int32 {
+	logger.Debug("get DPMS Mode")
+
+	var err error
+	var mode int32
+
+	if m.UseWayland {
+		mode, err = m.getDpmsModeByKwin()
+	} else {
+		var dpmsInfo *dpms.InfoReply
+		c := m.helper.xConn
+		dpmsInfo, err = dpms.Info(c).Reply(c)
+		if err != nil {
+			mode = int32(dpmsInfo.PowerLevel)
+		}
+	}
+
+	if err != nil {
+		logger.Warning("get DPMS mode error:", err)
+	}
+
+	return mode
+}
+
 func (m *Manager) setDPMSModeOn() {
 	logger.Info("DPMS On")
+
 	var err error
 
 	if m.UseWayland {
-		m.setDpmsModeByKwin(dpmsStateOn)
+		err = m.setDpmsModeByKwin(dpmsStateOn)
 	} else {
 		c := m.helper.xConn
 		err = dpms.ForceLevelChecked(c, dpms.DPMSModeOn).Check(c)
 	}
+
 	if err != nil {
-		logger.Warning("Set DPMS on error:", err)
+		logger.Warning("set DPMS on error:", err)
 	}
 }
 
 func (m *Manager) setDPMSModeOff() {
 	logger.Info("DPMS Off")
+
 	var err error
 	if m.UseWayland {
-		m.setDpmsModeByKwin(dpmsStateOff)
+		err = m.setDpmsModeByKwin(dpmsStateOff)
 	} else {
 		c := m.helper.xConn
 		err = dpms.ForceLevelChecked(c, dpms.DPMSModeOff).Check(c)
 	}
 	if err != nil {
-		logger.Warning("Set DPMS off error:", err)
+		logger.Warning("set DPMS off error:", err)
 	}
 }
 
@@ -484,27 +511,56 @@ func isFloatEqual(f1, f2 float64) bool {
 	return math.Abs(f1-f2) < 1e-6
 }
 
-func (m *Manager) setDpmsModeByKwin(mode int32) {
-	logger.Info("Set DPMS State", mode)
-	sessionBus, err := dbus.SessionBus()
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
+func (m *Manager) getDpmsList() ([]dbus.Variant, error) {
+	sessionBus := m.sessionSigLoop.Conn()
 	sessionObj := sessionBus.Object("com.deepin.daemon.KWayland", "/com/deepin/daemon/KWayland/DpmsManager")
 	var ret []dbus.Variant
-	err = sessionObj.Call("com.deepin.daemon.KWayland.DpmsManager.dpmsList", 0).Store(&ret)
+	err := sessionObj.Call("com.deepin.daemon.KWayland.DpmsManager.dpmsList", 0).Store(&ret)
 	if err != nil {
 		logger.Warning(err)
-		return
+		return nil, err
 	}
-	for i := 0; i < len(ret); i++ {
-		v := ret[i].Value().(string)
-		sessionObj := sessionBus.Object("com.deepin.daemon.KWayland", dbus.ObjectPath(v))
+
+	return ret, nil
+}
+
+func (m *Manager) getDpmsModeByKwin() (int32, error) {
+	list, err := m.getDpmsList()
+	if err != nil {
+		logger.Warning(err)
+		return dpmsStateOn, err
+	}
+
+	var dpmsMode int32
+	for i := 0; i < len(list); i++ {
+		v := list[i].Value().(string)
+		sessionObj := m.sessionSigLoop.Conn().Object("com.deepin.daemon.KWayland", dbus.ObjectPath(v))
+		err = sessionObj.Call("com.deepin.daemon.KWayland.Dpms.getDpmsMode", 0).Store(&dpmsMode)
+		if err != nil {
+			logger.Warning(err)
+			return dpmsStateOn, err
+		}
+	}
+
+	return dpmsMode, nil
+}
+
+func (m *Manager) setDpmsModeByKwin(mode int32) error {
+	list, err := m.getDpmsList()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	for i := 0; i < len(list); i++ {
+		v := list[i].Value().(string)
+		sessionObj := m.sessionSigLoop.Conn().Object("com.deepin.daemon.KWayland", dbus.ObjectPath(v))
 		err = sessionObj.Call("com.deepin.daemon.KWayland.Dpms.setDpmsMode", 0, int32(mode)).Err
 		if err != nil {
 			logger.Warning(err)
-			return
+			return err
 		}
 	}
+
+	return nil
 }
