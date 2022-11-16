@@ -97,7 +97,6 @@ type Manager struct {
 
 	enableListenGSettings   bool
 	delayNetworkStateChange bool
-	dpmsIsOff               bool
 	clickNum                uint32
 	shortcutCmd             string
 	shortcutKey             string
@@ -230,7 +229,6 @@ func (m *Manager) init() {
 	sessionBus := m.service.Conn()
 	sysBus, _ := dbus.SystemBus()
 	m.delayNetworkStateChange = true
-	m.dpmsIsOff = false
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)
@@ -329,7 +327,6 @@ func (m *Manager) init() {
 
 		go m.listenGlobalAccel(sessionBus)
 		go m.listenKeyboardEvent(sysBus)
-		go m.listenMouseEvent(sysBus)
 	}
 }
 
@@ -469,49 +466,6 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 		}
 	})
 
-	//+ 监控鼠标移动事件
-	err = sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Output.CursorMove",
-	}, func(sig *dbus.Signal) {
-		if len(sig.Body) > 1 {
-			if m.dpmsIsOff {
-				err := exec.Command("dde_wldpms", "-s", "On").Run()
-				if err != nil {
-					logger.Warningf("failed to exec dde_wldpms: %s", err)
-				} else {
-					m.dpmsIsOff = false
-				}
-			}
-		}
-	})
-
-	//+ 监控鼠标按下事件
-	err = sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonPress").Err
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Output.ButtonPress",
-	}, func(sig *dbus.Signal) {
-		if len(sig.Body) > 1 {
-			if m.dpmsIsOff {
-				err := exec.Command("dde_wldpms", "-s", "On").Run()
-				if err != nil {
-					logger.Warningf("failed to exec dde_wldpms: %s", err)
-				} else {
-					m.dpmsIsOff = false
-				}
-			}
-		}
-	})
 	return nil
 }
 
@@ -528,23 +482,11 @@ func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) error {
 		if len(sig.Body) > 1 {
 			key := sig.Body[0].(uint32)
 			value := sig.Body[1].(uint32)
-			//+ 短按电源键同时出发kwin快捷键逻辑和libinput逻辑有冲突，先屏蔽
-			if m.dpmsIsOff && value == 1 && key != 116 {
-				logger.Debug("Keyboard:", key, value)
-				err := exec.Command("dde_wldpms", "-s", "On").Run()
-				if err != nil {
-					logger.Warningf("failed to exec dde_wldpms: %s", err)
-				} else {
-					m.dpmsIsOff = false
-				}
-			}
 
-			if _useWayland {
-				if key == CapslockKey && value == KeyPress {
-					m.handleKeyEventByWayland("capslock")
-				} else if key == NumlockKey && value == KeyPress {
-					m.handleKeyEventByWayland("numlock")
-				}
+			if key == CapslockKey && value == KeyPress {
+				m.handleKeyEventByWayland("capslock")
+			} else if key == NumlockKey && value == KeyPress {
+				m.handleKeyEventByWayland("numlock")
 			}
 		}
 	})
@@ -555,31 +497,6 @@ func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) error {
 	}, func(sig *dbus.Signal) {
 		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
 			m.wifiControlEnable = m.getwirelessControlEnable()
-		}
-	})
-	return nil
-}
-
-func (m *Manager) listenMouseEvent(systemBus *dbus.Conn) error {
-	err := systemBus.Object("com.deepin.daemon.Gesture",
-		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "MouseEvent").Err
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.Gesture.MouseEvent",
-	}, func(sig *dbus.Signal) {
-		if len(sig.Body) > 1 {
-			if m.dpmsIsOff {
-				logger.Debug("MouseEvent: dpms on")
-				err := exec.Command("dde_wldpms", "-s", "On").Run()
-				if err != nil {
-					logger.Warningf("failed to exec dde_wldpms: %s", err)
-				} else {
-					m.dpmsIsOff = false
-				}
-			}
 		}
 	})
 	return nil

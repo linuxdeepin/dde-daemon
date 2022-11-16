@@ -219,13 +219,7 @@ func (m *Manager) systemTurnOffScreen() {
 
 	doPrepareSuspend()
 	if useWayland {
-		if m.dpmsIsOff == false {
-			err = exec.Command("dde_wldpms", "-s", "Off").Run()
-			m.dpmsIsOff = true
-		} else {
-			err = exec.Command("dde_wldpms", "-s", "On").Run()
-			m.dpmsIsOff = false
-		}
+		err = exec.Command("dde_wldpms", "-s", "Off").Run()
 	} else {
 		err = dpms.ForceLevelChecked(m.conn, dpms.DPMSModeOff).Check(m.conn)
 	}
