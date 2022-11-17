@@ -32,6 +32,7 @@ func log_handler_go(priority C.enum_libinput_log_priority, cstr *C.char) {
 //export handle_device_added
 func handle_device_added(event *C.struct_libinput_event, userdata unsafe.Pointer) {
 	dev := C.libinput_event_get_device(event)
+	notify_device_changed(event, userdata, true)
 	if C.libinput_device_has_capability(dev, C.LIBINPUT_DEVICE_CAP_TOUCH) == 0 {
 		return
 	}
@@ -43,12 +44,29 @@ func handle_device_added(event *C.struct_libinput_event, userdata unsafe.Pointer
 //export handle_device_removed
 func handle_device_removed(event *C.struct_libinput_event, userdata unsafe.Pointer) {
 	dev := C.libinput_event_get_device(event)
+	notify_device_changed(event, userdata, false)
 	if C.libinput_device_has_capability(dev, C.LIBINPUT_DEVICE_CAP_TOUCH) == 0 {
 		return
 	}
 
 	l := (*libinput)(userdata)
 	l.i.removeTouchscreen(newLibinputDevice(dev))
+}
+
+func notify_device_changed(event *C.struct_libinput_event, userdata unsafe.Pointer, state bool) {
+	dev := C.libinput_event_get_device(event)
+	devName :=  C.GoString(C.libinput_device_get_name(dev))
+	udev := C.libinput_device_get_udev_device(dev)
+	devNode := C.GoString(C.udev_device_get_devnode(udev))
+	devPath := C.GoString(C.udev_device_get_property_value(udev, C.CString("DEVPATH")))
+	l := (*libinput)(userdata)
+	err := l.i.service.Emit(l.i, "EventChanged", devNode, devName, devPath, state)
+	if err != nil {
+		logger.Warning(" [notify_device_changed] err : ", err)
+	} else {
+		logger.Debugf(" [notify_device_changed] devNode : %s; devName : %s; dir : %s; state : %v ", devNode, devName, devPath, state)
+		l.i.updateSupportWakeupDevices()
+	}
 }
 
 type libinput struct {
