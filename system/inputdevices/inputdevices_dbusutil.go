@@ -18,3 +18,22 @@ func (v *InputDevices) setPropTouchscreens(value []dbus.ObjectPath) (changed boo
 func (v *InputDevices) emitPropChangedTouchscreens(value []dbus.ObjectPath) error {
 	return v.service.EmitPropertyChanged(v, "Touchscreens", value)
 }
+
+func (v *InputDevices) setPropSupportWakeupDevices(path string, value string) (changed bool) {
+	if v.SupportWakeupDevices[path] != value {
+		err := v.saveDeviceFile(path, value, false)
+		if err != nil {
+			logger.Debug("[setPropSupportWakeupDevices] saveDeviceFile : ", err)
+			return false
+		}
+		v.SupportWakeupDevices[path] = value
+		logger.Debug("[setPropSupportWakeupDevices] Add devices SupportWakeupDevices : ", v.SupportWakeupDevices)
+		v.emitPropChangedSupportWakeupDevices(v.SupportWakeupDevices)
+		return true
+	}
+	return false
+}
+
+func (v *InputDevices) emitPropChangedSupportWakeupDevices(value map[string]string) error {
+	return v.service.EmitPropertyChanged(v, "SupportWakeupDevices", v.SupportWakeupDevices)
+}
