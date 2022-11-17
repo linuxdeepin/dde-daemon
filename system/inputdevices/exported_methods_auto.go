@@ -7,5 +7,11 @@ import (
 )
 
 func (v *InputDevices) GetExportedMethods() dbusutil.ExportedMethods {
-	return nil
+	return dbusutil.ExportedMethods{
+		{
+			Name:   "SetWakeupDevices",
+			Fn:     v.SetWakeupDevices,
+			InArgs: []string{"path", "value"},
+		},
+	}
 }
