@@ -49,7 +49,9 @@ const (
 	increaseMaxVolume = 1.5
 	normalMaxVolume   = 1.0
 
-	dsgKeyAutoSwitchPort = "autoSwitchPort"
+	dsgKeyAutoSwitchPort      = "autoSwitchPort"
+	dsgKeyBluezModeFilterList = "bluezModeFilterList"
+	dsgKeyPortFilterList      = "portFilterList"
 )
 
 var (
@@ -419,8 +421,11 @@ func (a *Audio) shouldAutoPause() bool {
 
 	switch DetectPortType(card.core, &port) {
 	case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO, PortTypeUsb:
+		// 先缓存sink 是否为可插拔信息，防止后面整个card丢失，缺少判断信息。
+		a.defaultSink.pluggable = true
 		return true
 	default:
+		a.defaultSink.pluggable = false
 		return false
 	}
 }
@@ -460,6 +465,11 @@ func (a *Audio) refreshDefaultSinkSource() {
 		if a.misc != 0 {
 			a.misc = 0
 			go pauseAllPlayers()
+		} else if a.defaultSink.pluggable {
+			// 异步状况下，可能整个card不存在(比如蓝牙)，可插拔sink切换, 需再判断下card信息。
+			if _, err := a.ctx.GetCard(a.defaultSink.Card); err != nil {
+				go pauseAllPlayers()
+			}
 		}
 		a.updateDefaultSink(defaultSink)
 	} else {
@@ -471,13 +481,8 @@ func (a *Audio) refreshDefaultSinkSource() {
 					logger.Warning(err)
 					go pauseAllPlayers()
 				} else {
-					switch DetectPortType(card, &port) {
-					case PortTypeBluetooth, PortTypeHeadset, PortTypeLineIO, PortTypeUsb:
-						// 优先级变低了才暂停播放
-						if port.Priority < a.misc {
-							go pauseAllPlayers()
-						}
-					default:
+					// 非可插拔sink 和 可插拔sink的port优先级变低了才暂停。
+					if !a.defaultSink.pluggable || port.Priority < a.misc {
 						go pauseAllPlayers()
 					}
 				}
@@ -941,7 +946,8 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 		return a.setDefaultSourceWithPort(cardId, portName)
 	}
 
-	if targetPortInfo.Profiles.Exists(card.ActiveProfile.Name) {
+	// 蓝牙特殊情况下会出错，导致profile为off, 需要重新寻找合适的
+	if targetPortInfo.Profiles.Exists(card.ActiveProfile.Name) && card.ActiveProfile.Name != "off" {
 		// no need to change profile
 		return setDefaultPort()
 	}
@@ -1499,6 +1505,33 @@ func (a *Audio) initDsgProp() error {
 		a.PropsMu.Lock()
 		a.enableAutoSwitchPort = val
 		a.PropsMu.Unlock()
+	}
+
+	var ret []dbus.Variant
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyBluezModeFilterList).Store(&ret)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		bluezModeFilterList = bluezModeFilterList[:0]
+		for i := range ret {
+			if v, ok := ret[i].Value().(string); ok {
+				bluezModeFilterList = append(bluezModeFilterList, v)
+			}
+		}
+		logger.Info("bluez filter audio mode opts", bluezModeFilterList)
+	}
+
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyPortFilterList).Store(&ret)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		portFilterList = portFilterList[:0]
+		for i := range ret {
+			if v, ok := ret[i].Value().(string); ok {
+				portFilterList = append(portFilterList, v)
+			}
+		}
+		logger.Info("port filter list", portFilterList)
 	}
 
 	// 监听dsg配置变化

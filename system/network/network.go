@@ -479,7 +479,15 @@ func (n *Network) disableDevice(d *device) error {
 	//TODO:
 	//cause of nm'bug, sometimes accessapoints list is nil
 	//so add a judge in system network, if get nil in GetAllAccessPoints func, set wirelessEnable down.
-	if d.type0 == nm.NM_DEVICE_TYPE_WIFI {
+	state, err := d.nmDevice.Device().State().Get(0)
+	if err != nil {
+		return err
+	}
+	oldWirelessEnabled, err := n.nmManager.WirelessEnabled().Get(0)
+	if err != nil {
+		return err
+	}
+	if d.type0 == nm.NM_DEVICE_TYPE_WIFI && state > nm.NM_DEVICE_STATE_UNAVAILABLE {
 		accessPointsList, err := d.nmDevice.Wireless().GetAllAccessPoints(0)
 		if err != nil {
 			logger.Debug("GetAllAccessPoints in system network ", err)
@@ -492,13 +500,15 @@ func (n *Network) disableDevice(d *device) error {
 				logger.Debug("set WirelessEnabled in system network failed ", err)
 				return err
 			}
+			if oldWirelessEnabled {
+				err = n.nmManager.WirelessEnabled().Set(0, true)
+				if err != nil {
+					logger.Debug("set WirelessEnabled in system network failed ", err)
+					return err
+				}
+			}
 			return nil
 		}
-	}
-
-	state, err := d.nmDevice.Device().State().Get(0)
-	if err != nil {
-		return err
 	}
 
 	if state >= nm.NM_DEVICE_STATE_PREPARE &&

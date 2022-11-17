@@ -151,10 +151,28 @@ func (m *Manager) updatePropUserList() {
 func (m *Manager) handleFileGroupChanged() {
 	m.usersMapMu.Lock()
 	defer m.usersMapMu.Unlock()
+	accountType := int32(users.UserTypeStandard)
+	var groups []string
+
 	for _, u := range m.usersMap {
-		u.updatePropAccountType()
+		if m.isUdcpUserID(u.Uid) {
+			groups, err := m.udcpCache.GetUserGroups(0, u.UserName)
+			if err != nil {
+				logger.Warningf("Udcp cache getUserGroups failed: %v", err)
+				return
+			}
+
+			if strv.Strv(groups).Contains("sudo") {
+				accountType = users.UserTypeAdmin
+			}
+		} else {
+			accountType = u.getAccountType()
+			groups = u.getGroups()
+		}
+
+		u.updatePropAccountType(accountType)
 		u.updatePropCanNoPasswdLogin()
-		u.updatePropGroups()
+		u.updatePropGroups(groups)
 	}
 }
 
@@ -239,6 +257,10 @@ func (m *Manager) deleteUser(uid string) {
 		user.clearSecretQuestions()
 	} else {
 		logger.Warningf("uid %s not found", uid)
+	}
+
+	if users.IsAutoLoginUser(user.UserName) {
+		_ = users.SetAutoLoginUser("", "")
 	}
 
 	userPath := userDBusPathPrefix + uid

@@ -69,6 +69,22 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 	if title == "下载" {
 		appId = "uos-browser"
 	}
+
+	// wayland环境下，如果是Wine应用（微信，企业微信等），appId为wine，根据进程环境变量去需要获取具体应用的appId
+	if appId == "wine" {
+		if winInfo.process != nil {
+			launchedDesktopFile := winInfo.process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
+			logger.Debugf("%s launchedDesktopFile: %s", appId, launchedDesktopFile)
+
+			parts := strings.Split(launchedDesktopFile, "/")
+			partsLen := len(parts)
+			if partsLen >= 1 {
+				appId = parts[partsLen-1]
+				logger.Debugf("identifyWindowK: actual wine application appid: %s", appId)
+			}
+		}
+	}
+
 	// 先使用appId获取appInfo,如果不能成功获取再使用pidenv环境变量获取
 	appInfo = NewAppInfo(appId)
 	if appInfo == nil {

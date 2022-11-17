@@ -51,6 +51,9 @@ type Sink struct {
 	Card uint32
 
 	props map[string]string
+
+	// 当前是否是可插拔sink
+	pluggable bool
 }
 
 func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {

@@ -1,17 +1,39 @@
 {
-    "magic": "dsg.config.meta",
-    "version": "1.0",
-    "contents": {
-        "autoSwitchPort": {
-            "value": true,
-            "serial": 0,
-            "flags": [],
-            "global": true,
-            "name": "AutoSwitchPort",
-            "name[zh_CN]": "根据dde优先级管理自动切换端口",
-            "description": "auto switch pulse port",
-            "permissions": "readwrite",
-            "visibility": "private"
-        }
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+    "autoSwitchPort": {
+      "value": true,
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "AutoSwitchPort",
+      "name[zh_CN]": "根据dde优先级管理自动切换端口",
+      "description": "auto switch pulse port",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "bluezModeFilterList": {
+      "value": ["a2dp_source"],
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "BluezModeFilterList",
+      "name[zh_CN]": "需要过滤的蓝牙音频模式",
+      "description": "bluetooth audio mode that requires filtering",
+      "permissions": "read",
+      "visibility": "private"
+    },
+    "portFilterList": {
+      "value": ["phone-input", "phone-output"],
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "PortFilterList",
+      "name[zh_CN]": "需要过滤的端口",
+      "description": "port filter list",
+      "permissions": "read",
+      "visibility": "private"
     }
+  }
 }
