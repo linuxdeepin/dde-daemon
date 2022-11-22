@@ -32,10 +32,13 @@ const (
 	proxyModeManual = "manual"
 	proxyModeAuto   = "auto"
 
-	gkeyProxyAuto        = "autoconfig-url"
-	gkeyProxyIgnoreHosts = "ignore-hosts"
-	gkeyProxyHost        = "host"
-	gkeyProxyPort        = "port"
+	gkeyProxyAuto                   = "autoconfig-url"
+	gkeyProxyIgnoreHosts            = "ignore-hosts"
+	gkeyProxyHost                   = "host"
+	gkeyProxyPort                   = "port"
+	gkeyProxyUseAuthentication      = "use-authentication"
+	gkeyProxyAuthenticationUser     = "authentication-user"
+	gkeyProxyAuthenticationPassword = "authentication-password"
 
 	gchildProxyHttp  = "http"
 	gchildProxyHttps = "https"
@@ -211,4 +214,43 @@ func (m *Manager) setProxy(proxyType, host, port string) (err error) {
 	}
 
 	return
+}
+
+func (m *Manager) GetProxyAuthentication(proxyType string) (user, password string, enable bool, busErr *dbus.Error) {
+	childSettings, err := getProxyChildSettings(proxyType)
+	if err != nil {
+		busErr = dbusutil.ToError(busErr)
+		return
+	}
+
+	if !childSettings.GetSchema().HasKey(gkeyProxyUseAuthentication) {
+		busErr = dbusutil.ToError(fmt.Errorf("%s is not support authentication", proxyType))
+		return
+	}
+
+	enable = childSettings.GetBoolean(gkeyProxyUseAuthentication)
+	user = childSettings.GetString(gkeyProxyAuthenticationUser)
+	password = childSettings.GetString(gkeyProxyAuthenticationPassword)
+
+	return
+}
+
+func (m *Manager) SetProxyAuthentication(proxyType, user, password string, enable bool) *dbus.Error {
+	logger.Debugf("Manager.SetProxyAuthentication proxyType: %s, host: %s, port: %s, use: %v", proxyType, user, password, enable)
+	childSettings, err := getProxyChildSettings(proxyType)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
+	if !childSettings.GetSchema().HasKey(gkeyProxyUseAuthentication) {
+		return dbusutil.ToError(fmt.Errorf("%s is not support authentication", proxyType))
+	}
+
+	if !childSettings.SetBoolean(gkeyProxyUseAuthentication, enable) ||
+		!childSettings.SetString(gkeyProxyAuthenticationUser, user) ||
+		!childSettings.SetString(gkeyProxyAuthenticationPassword, password) {
+		dbusutil.ToError(fmt.Errorf("set proxy authentication value to gsettings failed: %s, %s:%s", proxyType, user, password))
+	}
+
+	return nil
 }
