@@ -11,10 +11,11 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"strings"
 	"runtime"
-	"github.com/linuxdeepin/go-lib/strv"
+	"strings"
+
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -28,6 +29,13 @@ const (
 	_isHuaWei                       = `dmidecode -t 1 | awk "/Product Name:/{print $NF}" | cut -d ":" -f 2`
 )
 
+// pstate
+const (
+	globalPstateGovernorFileName          = "energy_performance_preference"
+	globalPstateAvailableGovernorFileName = "energy_performance_available_preferences"
+	globalPstateDefaultPath               = "/sys/devices/system/cpu/cpu0/cpufreq/energy_performance_preference"
+)
+
 type CpuHandler struct {
 	path     string
 	governor string
@@ -35,11 +43,14 @@ type CpuHandler struct {
 
 type CpuHandlers []CpuHandler
 
-//内核文档：https://docs.kernel.org/admin-guide/pm/cpufreq.html#generic-scaling-governors
-var _scalingAvailableGovernors = []string {"performance", "powersave", "userspace", "ondemand", "conservative", "schedutil"}
-var _scalingBalanceAvailableGovernors = []string {"ondemand", "conservative", "schedutil", "performance"}
+// 内核文档：https://docs.kernel.org/admin-guide/pm/cpufreq.html#generic-scaling-governors
+var _scalingAvailableGovernors = []string{"performance", "powersave", "userspace", "ondemand", "conservative", "schedutil"}
+var _scalingBalanceAvailableGovernors = []string{"ondemand", "conservative", "schedutil", "performance"}
+
+var _pstateAvailableGovernors = []string{"performance", "balance_performance", "balance_power", "power"}
 var _supportGovernors []string
 var _localAvailableGovernors []string
+
 var _supportNormalBalanceArch = []string{"amd64", "x86_64", "amd", "x86", "386"}
 var _useNormalBalance bool
 var _supportHuaweiType = []string{"KLVU", "KLVV", "PGUV", "PGUW", "klvu", "klvv", "pguv", "pguw"}
@@ -79,22 +90,34 @@ func setSupportGovernors(value []string) []string {
 	_supportGovernors = value
 	return _supportGovernors
 }
-
-func getIsBalanceSupported() bool {
-	for _, balance := range getScalingBalanceAvailableGovernors() {
-		if strv.Strv(getSupportGovernors()).Contains(balance) {
-			return true
+func getIsBalanceSupported(isPstate bool) bool {
+	if isPstate {
+		return strv.Strv(getSupportGovernors()).Contains("balance_performance")
+	} else {
+		for _, balance := range getScalingBalanceAvailableGovernors() {
+			if strv.Strv(getSupportGovernors()).Contains(balance) {
+				return true
+			}
 		}
+		return false
 	}
-	return false
 }
 
-func getIsHighPerformanceSupported() bool {
+// TODO: 之后是否需要判断boost 的逻辑需要讨论
+func getIsHighPerformanceSupported(isPstate bool) bool {
 	cpus := CpuHandlers{}
-	return  cpus.IsBoostFileExist() && strv.Strv(getSupportGovernors()).Contains("performance")
+	if isPstate {
+		return strv.Strv(getSupportGovernors()).Contains("performance")
+	}
+	return cpus.IsBoostFileExist() && strv.Strv(getSupportGovernors()).Contains("performance")
 }
 
-func getIsPowerSaveSupported() bool {
+func getIsPowerSaveSupported(isPstate bool) bool {
+	// intel pstate does not support powersave
+	// maybe should use another logic
+	if isPstate {
+		return strv.Strv(getSupportGovernors()).Contains("power")
+	}
 	return strv.Strv(getSupportGovernors()).Contains("powersave")
 }
 
@@ -174,9 +197,9 @@ func NewCpuHandlers() *CpuHandlers {
 
 	pattern, _ := regexp.Compile(`cpu[0-9]+`)
 	for _, dir := range dirs {
-		dirNane := dir.Name()
-		cpuPath := filepath.Join(globalCpuDirPath, dirNane)
-		isMatch := pattern.MatchString(dirNane)
+		dirName := dir.Name()
+		cpuPath := filepath.Join(globalCpuDirPath, dirName)
+		isMatch := pattern.MatchString(dirName)
 		if isMatch {
 			logger.Debugf("append %s", cpuPath)
 			freqPath := filepath.Join(cpuPath, globalCpuFreqDirName)
@@ -210,8 +233,22 @@ func (cpu *CpuHandler) GetGovernor(force bool) (string, error) {
 	return cpu.governor, nil
 }
 
-func (cpu *CpuHandler) SetGovernor(governor string) error {
-	err := ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
+func (cpu *CpuHandler) SetGovernor(governor string, isPstate bool) error {
+	err := func() (err error) {
+		if isPstate {
+			if governor == "performance" {
+				return ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
+			} else {
+				errPstate := ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte("powersave"), 0644)
+				if errPstate != nil {
+					return errPstate
+				}
+				return ioutil.WriteFile(filepath.Join(cpu.path, globalPstateGovernorFileName), []byte(governor), 0644)
+			}
+		} else {
+			return ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
+		}
+	}()
 	if err != nil {
 		logger.Warning(err)
 
@@ -237,12 +274,19 @@ func (cpus *CpuHandlers) GetGovernor() (string, error) {
 }
 
 // 获取可用的Governor字符串
-func (cpus *CpuHandlers) getAvailableGovernors() (ret string, err error) {
+// if isPstate then use pstate else us ....
+func (cpus *CpuHandlers) getAvailableGovernors(isPstate bool) (ret string, err error) {
 	for i, cpu := range *cpus {
-		data, err := ioutil.ReadFile(filepath.Join(cpu.path, globalAvailableGovernorFileName))
+		data, err := func() (ret []byte, err error) {
+			if isPstate {
+				return ioutil.ReadFile(filepath.Join(cpu.path, globalPstateAvailableGovernorFileName))
+			} else {
+				return ioutil.ReadFile(filepath.Join(cpu.path, globalAvailableGovernorFileName))
+			}
+		}()
 		if err != nil {
 			logger.Warning(err)
-			return  ret, err
+			return ret, err
 		}
 		path := string(data)
 		if ret != path {
@@ -258,8 +302,8 @@ func (cpus *CpuHandlers) getAvailableGovernors() (ret string, err error) {
 }
 
 // 获取可用的Governor数组
-func (cpus *CpuHandlers) getAvailableArrGovernors() []string {
-	value, err := cpus.getAvailableGovernors()
+func (cpus *CpuHandlers) getAvailableArrGovernors(hasPstate bool) []string {
+	value, err := cpus.getAvailableGovernors(hasPstate)
 	if err != nil {
 		logger.Warning(err)
 		return nil
@@ -267,7 +311,7 @@ func (cpus *CpuHandlers) getAvailableArrGovernors() []string {
 	return strings.Split(strings.TrimSpace(string(value)), " ")
 }
 
-func (cpus *CpuHandlers) getCpuGovernorPath() string {
+func (cpus *CpuHandlers) getCpuGovernorPath(isPstate bool) string {
 	if len(*cpus) <= 0 {
 		return ""
 	}
@@ -275,9 +319,18 @@ func (cpus *CpuHandlers) getCpuGovernorPath() string {
 	if !dutils.IsFileExist((*cpus)[0].path) {
 		return ""
 	}
-	path := filepath.Join((*cpus)[0].path, globalGovernorFileName)
+	var path string
+	if isPstate {
+		path = filepath.Join((*cpus)[0].path, globalPstateGovernorFileName)
+	} else {
+		path = filepath.Join((*cpus)[0].path, globalGovernorFileName)
+	}
 	if "" == path {
-		path = globalDefaultPath
+		if isPstate {
+			path = globalPstateDefaultPath
+		} else {
+			path = globalDefaultPath
+		}
 	}
 
 	if !dutils.IsFileExist(path) {
@@ -288,12 +341,15 @@ func (cpus *CpuHandlers) getCpuGovernorPath() string {
 }
 
 // 通过写文件的返回情况，获取非scaling_available_governors的值是否支持
-func (cpus *CpuHandlers) tryWriteGovernor(lines []string) []string {
-	path := cpus.getCpuGovernorPath()
+func (cpus *CpuHandlers) tryWriteGovernor(lines []string, isPstate bool) []string {
+	path := cpus.getCpuGovernorPath(isPstate)
 	if "" == path {
 		return nil
 	}
-
+	// TODO: Pstate暂时不做处理直接返回
+	if isPstate {
+		return _pstateAvailableGovernors
+	}
 	//获取当前系统的governor值
 	oldGovernor, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -321,10 +377,10 @@ func (cpus *CpuHandlers) tryWriteGovernor(lines []string) []string {
 	return lines
 }
 
-func (cpus *CpuHandlers) SetGovernor(governor string) error {
+func (cpus *CpuHandlers) SetGovernor(governor string, isPstate bool) error {
 	logger.Info(" SetGovernor governor ： ", governor)
 	for _, cpu := range *cpus {
-		err := cpu.SetGovernor(governor)
+		err := cpu.SetGovernor(governor, isPstate)
 		if err != nil {
 			return err
 		}
