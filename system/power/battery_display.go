@@ -37,14 +37,16 @@ func (m *Manager) refreshBatteryDisplay() {
 		}
 
 		// copy from bat0
-		bat0.PropsMu.RLock()
-		percentage = bat0.Percentage
-		status = bat0.Status
-		timeToEmpty = bat0.TimeToEmpty
-		timeToFull = bat0.TimeToFull
-		energyFullTotal = bat0.EnergyFull
-		energyFullDesignTotal = bat0.EnergyFullDesign
-		bat0.PropsMu.RUnlock()
+		if bat0 != nil {
+			bat0.PropsMu.RLock()
+			percentage = bat0.Percentage
+			status = bat0.Status
+			timeToEmpty = bat0.TimeToEmpty
+			timeToFull = bat0.TimeToFull
+			energyFullTotal = bat0.EnergyFull
+			energyFullDesignTotal = bat0.EnergyFullDesign
+			bat0.PropsMu.RUnlock()
+		}
 	} else {
 		var energyTotal, energyRateTotal float64
 		statusSlice := make([]battery.Status, 0, batteryCount)
@@ -80,6 +82,7 @@ func (m *Manager) refreshBatteryDisplay() {
 			timeToFull = 0
 		}
 	}
+	// 更新manager的battery status
 	if status == battery.StatusUnknown {
 		if m.OnBattery {
 			status = battery.StatusDischarging
@@ -112,6 +115,10 @@ func (m *Manager) refreshBatteryDisplay() {
 		timeToEmpty,
 		time.Duration(timeToFull)*time.Second,
 		timeToFull)
+	// callback中修改所有电池的状态
+	for _, bat := range m.batteries {
+		bat.setPropStatus(status)
+	}
 }
 
 func (m *Manager) changeBatteryLowByBatteryPercentage(percentage float64) {
