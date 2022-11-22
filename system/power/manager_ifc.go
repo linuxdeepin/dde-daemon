@@ -86,7 +86,7 @@ func (m *Manager) SetCpuBoost(enabled bool) *dbus.Error {
 }
 
 func (m *Manager) SetCpuGovernor(governor string) *dbus.Error {
-	err := m.cpus.SetGovernor(governor)
+	err := m.cpus.SetGovernor(governor, false)
 	if err == nil {
 		m.setPropCpuGovernor(governor)
 	}
@@ -122,13 +122,13 @@ func (m *Manager) LockCpuFreq(governor string, lockTime int32) *dbus.Error {
 
 	// change cpu governor
 	if governor != currentGovernor {
-		err = m.cpus.SetGovernor(governor)
+		err = m.cpus.SetGovernor(governor, false)
 		if err != nil {
 			return dbusutil.ToError(err)
 		}
 
 		time.AfterFunc(time.Second*time.Duration(lockTime), func() {
-			err := m.cpus.SetGovernor(currentGovernor)
+			err := m.cpus.SetGovernor(currentGovernor, false)
 			if err != nil {
 				logger.Warningf("rewrite cpu scaling_governor file failed:%v", err)
 			}

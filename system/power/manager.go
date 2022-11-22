@@ -20,6 +20,7 @@ import (
 	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 var noUEvent bool
@@ -27,8 +28,9 @@ var noUEvent bool
 const (
 	configManagerId = "org.desktopspec.ConfigManager"
 	_configHwSystem = "/usr/share/uos-hw-config"
+	pstatePath      = "/sys/devices/system/cpu/intel_pstate"
+	amdGPUPath      = "/sys/class/drm/card0/device/power_dpm_force_performance_level"
 )
-
 
 func init() {
 	if arch.Get() == arch.Sunway {
@@ -55,6 +57,9 @@ type Manager struct {
 
 	// CPU操作接口
 	cpus *CpuHandlers
+	// INFO: pstate中，可选项是performance balance_performance balance_power power
+	hasPstate bool
+	hasAmddpm bool
 
 	PropsMu      sync.RWMutex
 	OnBattery    bool
@@ -99,8 +104,8 @@ type Manager struct {
 	IsPowerSaveSupported bool
 
 	// 性能模式-平衡模式dsg
-	balanceScalingGovernor     string
-	configManagerPath          dbus.ObjectPath
+	balanceScalingGovernor string
+	configManagerPath      dbus.ObjectPath
 
 	// 当前模式
 	Mode string
@@ -130,6 +135,11 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		BatteryPercentage: 100,
 		cpus:              NewCpuHandlers(),
 	}
+	// check pstate , if has pstate, it is intel pstate mode , then
+	// we need another logic
+	m.hasPstate = dutils.IsFileExist(pstatePath)
+	// check if amd is used
+	m.hasAmddpm = dutils.IsFileExist(amdGPUPath)
 
 	m.refreshSystemPowerPerformance()
 
@@ -256,7 +266,7 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 	m.initDsgConfig(systemBus)
 	m.systemSigLoop.Start()
 
-	path := m.cpus.getCpuGovernorPath()
+	path := m.cpus.getCpuGovernorPath(m.hasPstate)
 	if "" == path {
 		m.IsHighPerformanceSupported = false
 		m.IsBalanceSupported = false
@@ -265,7 +275,7 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 	}
 
 	dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
-	availableArrGovernors := m.cpus.getAvailableArrGovernors()
+	availableArrGovernors := m.cpus.getAvailableArrGovernors(m.hasPstate)
 
 	setUseNormalBalance(useNormalBalance())
 	//  如果当前是 平衡模式, 且不走正常平衡模式，且CpuGovernor不是performance, 则需要将m.CpuGovernor设置为performance
@@ -283,8 +293,9 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 		}
 
 		// 全部模式都支持的时候,不需要进行写入文件验证
-		if len(availableArrGovernors) != 6 {
-			availableArrGovernors = m.cpus.tryWriteGovernor(availableArrGovernors)
+		// TODO: 如果有pstate跳过检查
+		if len(availableArrGovernors) != 6 && !m.hasPstate {
+			availableArrGovernors = m.cpus.tryWriteGovernor(availableArrGovernors, m.hasPstate)
 		}
 		logger.Info(" First. available cpuGovernors : ", availableArrGovernors)
 		m.setDsgData("supportCpuGovernors", setSupportGovernors(availableArrGovernors))
@@ -312,11 +323,14 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 		setLocalAvailableGovernors(availableArrGovernors)
 	}
 
-	m.IsBalanceSupported = getIsBalanceSupported()
-	m.IsHighPerformanceSupported = getIsHighPerformanceSupported()
-	m.IsPowerSaveSupported = getIsPowerSaveSupported()
+	m.IsBalanceSupported = getIsBalanceSupported(m.hasPstate)
+	m.IsHighPerformanceSupported = getIsHighPerformanceSupported(m.hasPstate)
+	m.IsPowerSaveSupported = getIsPowerSaveSupported(m.hasPstate)
 
-	if strv.Strv(getSupportGovernors()).Contains(dsgCpuGovernor) {
+	if m.hasPstate {
+		// INFO: balance_performance or balance_power?
+		m.balanceScalingGovernor = "balance_performance"
+	} else if strv.Strv(getSupportGovernors()).Contains(dsgCpuGovernor) {
 		m.balanceScalingGovernor = dsgCpuGovernor
 	} else {
 		_, m.balanceScalingGovernor = trySetBalanceCpuGovernor(dsgCpuGovernor)
@@ -328,13 +342,13 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 	}
 
 	// 当支持平衡模式时, 错误将dsg配置设置成""或不支持的值, 则使用默认的平衡模式
-	if m.balanceScalingGovernor == "" || isSystemSupportMode(interfaceToString(m.getDsgData("BalanceCpuGovernor"))) {
+	if !m.hasPstate && (m.balanceScalingGovernor == "" || isSystemSupportMode(interfaceToString(m.getDsgData("BalanceCpuGovernor")))) {
 		availableArrGovsLen := len(availableArrGovernors)
 		if availableArrGovsLen <= 0 {
 			m.IsBalanceSupported = false
 			return
 		} else {
-			for i, v := range availableArrGovernors{
+			for i, v := range availableArrGovernors {
 				if strv.Strv(getScalingBalanceAvailableGovernors()).Contains(v) && !isSystemSupportMode(m.balanceScalingGovernor) {
 					m.balanceScalingGovernor = v
 					m.setDsgData("BalanceCpuGovernor", m.balanceScalingGovernor)
@@ -580,6 +594,12 @@ func (m *Manager) doSetMode(mode string) error {
 	var err error
 	switch mode {
 	case "balance": // governor=performance boost=false
+		if m.hasAmddpm {
+			err := ioutil.WriteFile(amdGPUPath, []byte("manual"), 0644)
+			if err != nil {
+				logger.Warning(err)
+			}
+		}
 		if !m.IsBalanceSupported {
 			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
 			break
@@ -587,60 +607,79 @@ func (m *Manager) doSetMode(mode string) error {
 
 		m.setPropPowerSavingModeEnabled(false)
 		balanceScalingGovernor := m.balanceScalingGovernor
-		err, targetGovernor := trySetBalanceCpuGovernor(balanceScalingGovernor)
-		if  err != nil {
-			logger.Warning(err)
-			return err
-		}
-		dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
-		logger.Infof(" [doSetMode] dsgCpuGovernor : %s, targetGovernor : %s, balanceScalingGovernor : %s ", dsgCpuGovernor, targetGovernor, balanceScalingGovernor)
-		if balanceScalingGovernor != targetGovernor {
-			balanceScalingGovernor = targetGovernor
-			logger.Info("[doSetMode] BalanceCpuGovernor not support. Set available governor : ", targetGovernor)
-		}
+		// if do not have pstate, go to the logic below
+		if !m.hasPstate {
+			err, targetGovernor := trySetBalanceCpuGovernor(balanceScalingGovernor)
+			if err != nil {
+				logger.Warning(err)
+				return err
+			}
+			dsgCpuGovernor := interfaceToString(m.getDsgData("BalanceCpuGovernor"))
+			logger.Infof(" [doSetMode] dsgCpuGovernor : %s, targetGovernor : %s, balanceScalingGovernor : %s ", dsgCpuGovernor, targetGovernor, balanceScalingGovernor)
+			if balanceScalingGovernor != targetGovernor {
+				balanceScalingGovernor = targetGovernor
+				logger.Info("[doSetMode] BalanceCpuGovernor not support. Set available governor : ", targetGovernor)
+			}
 
-		if balanceScalingGovernor != dsgCpuGovernor {
-			m.setDsgData("BalanceCpuGovernor", balanceScalingGovernor)
-		}
+			if balanceScalingGovernor != dsgCpuGovernor {
+				m.setDsgData("BalanceCpuGovernor", balanceScalingGovernor)
+			}
 
-		logger.Info("[doSetMode] Set Governor, balanceScalingGovernor : ", balanceScalingGovernor)
+			logger.Info("[doSetMode] Set Governor, balanceScalingGovernor : ", balanceScalingGovernor)
+		}
 		err = m.doSetCpuGovernor(balanceScalingGovernor)
 		if err != nil {
 			logger.Warning(err)
 		}
-
-		if m.IsHighPerformanceSupported {
-			err = m.doSetCpuBoost(false)
+		// TODO remove it later
+		if m.cpus.IsBoostFileExist() {
+			err = m.doSetCpuBoost(true)
 		}
 	case "powersave": // governor=powersave boost=false
+		if m.hasAmddpm {
+			err := ioutil.WriteFile(amdGPUPath, []byte("low"), 0644)
+			if err != nil {
+				logger.Warning(err)
+			}
+		}
 		if !m.IsPowerSaveSupported {
 			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
 			break
 		}
 
 		m.setPropPowerSavingModeEnabled(true)
-
-		err = m.doSetCpuGovernor("powersave")
+		if m.hasPstate {
+			err = m.doSetCpuGovernor("power")
+		} else {
+			err = m.doSetCpuGovernor("powersave")
+		}
 		if err != nil {
 			logger.Warning(err)
 		}
-
-		if m.IsHighPerformanceSupported {
-			err = m.doSetCpuBoost(false)
+		// TODO remove it later
+		if m.cpus.IsBoostFileExist() {
+			err = m.doSetCpuBoost(true)
 		}
 	case "performance": // governor=performance boost=true
+		if m.hasAmddpm {
+			err := ioutil.WriteFile(amdGPUPath, []byte("high"), 0644)
+			if err != nil {
+				logger.Warning(err)
+			}
+		}
 		if !m.IsHighPerformanceSupported {
 			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
 			break
 		}
 		m.setPropPowerSavingModeEnabled(false)
-
 		err = m.doSetCpuGovernor("performance")
 		if err != nil {
 			logger.Warning(err)
 		}
 
-		err = m.doSetCpuBoost(true)
+		if m.cpus.IsBoostFileExist() {
+			err = m.doSetCpuBoost(true)
+		}
 
 	default:
 		err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
@@ -668,7 +707,7 @@ func (m *Manager) doSetCpuGovernor(governor string) error {
 		logger.Infof("[doSetCpuGovernor] change governor : %s to performance.", governor)
 	}
 
-	err := m.cpus.SetGovernor(governor)
+	err := m.cpus.SetGovernor(governor, m.hasPstate)
 	if err == nil {
 		m.setPropCpuGovernor(governor)
 	}
