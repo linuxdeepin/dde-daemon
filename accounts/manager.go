@@ -315,6 +315,11 @@ func (m *Manager) exportUserByUid(uId string) error {
 		if users.ExistPwUid(uint32(id)) != 0 {
 			return errors.New("no such user id")
 		}
+
+		if m.udcpCache == nil {
+			return errors.New("Udcp cache is nil")
+		}
+
 		userGroups, err = m.udcpCache.GetUserGroups(0, users.GetPwName(uint32(id)))
 		if err != nil {
 			logger.Errorf("Udcp cache getUserGroups failed: %v", err)
