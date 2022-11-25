@@ -1161,3 +1161,36 @@ func (u *User) SetSecretQuestions(sender dbus.Sender, list map[int][]byte) *dbus
 	err = ioutil.WriteFile(path, content.Bytes(), 0600)
 	return dbusutil.ToError(err)
 }
+
+func (u *User) SetSecretKey(sender dbus.Sender, username, secretKey string) *dbus.Error {
+	if u.uadpInterface == nil {
+		return nil
+	}
+	err := u.uadpInterface.Set(0, username, []uint8(secretKey))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	return nil
+}
+
+func (u *User) GetSecretKey(sender dbus.Sender, username string) (string, *dbus.Error) {
+	if u.uadpInterface == nil {
+		return "", nil
+	}
+	key, err := u.uadpInterface.Get(0, username)
+	if err != nil {
+		return string(key), dbusutil.ToError(err)
+	}
+	return string(key), nil
+}
+
+func (u *User) DeleteSecretKey(sender dbus.Sender, username string) *dbus.Error {
+	if u.uadpInterface == nil {
+		return nil
+	}
+	err := u.uadpInterface.Delete(0, username)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	return nil
+}

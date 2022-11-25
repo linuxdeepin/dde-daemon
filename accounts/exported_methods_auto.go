@@ -224,6 +224,22 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"list"},
 		},
 		{
+			Name:   "SetSecretKey",
+			Fn:     v.SetSecretKey,
+			InArgs: []string{"username", "secretKey"},
+		},
+		{
+			Name:   "GetSecretKey",
+			Fn:     v.GetSecretKey,
+			InArgs: []string{"username"},
+			OutArgs: []string{"secretKey"},
+		},
+		{
+			Name:   "DeleteSecretKey",
+			Fn:     v.DeleteSecretKey,
+			InArgs: []string{"username"},
+		},
+		{
 			Name:   "SetShell",
 			Fn:     v.SetShell,
 			InArgs: []string{"shell"},
