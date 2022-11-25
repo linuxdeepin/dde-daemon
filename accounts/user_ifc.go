@@ -45,6 +45,8 @@ import (
 const (
 	userDBusPathPrefix = "/com/deepin/daemon/Accounts/User"
 	userDBusInterface  = "com.deepin.daemon.Accounts.User"
+	controlCenter      = "dde-control-center"
+	resetPasswordDia   = "reset-password-dialog"
 )
 
 func (*User) GetInterfaceName() string {
@@ -1160,4 +1162,54 @@ func (u *User) SetSecretQuestions(sender dbus.Sender, list map[int][]byte) *dbus
 
 	err = ioutil.WriteFile(path, content.Bytes(), 0600)
 	return dbusutil.ToError(err)
+}
+
+func (u *User) SetSecretKey(sender dbus.Sender, secretKey string) *dbus.Error {
+	senderName := u.getSenderDBus(sender)
+	logger.Debugf("[SetSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, u.UserName)
+	if !strings.Contains(senderName, controlCenter) {
+		return dbusutil.ToError(errors.New("invalid sender"))
+	}
+
+	if u.uadpInterface == nil {
+		return nil
+	}
+	err := u.uadpInterface.Set(0, u.UserName, []uint8(secretKey))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	return nil
+}
+
+func (u *User) GetSecretKey(sender dbus.Sender) (string, *dbus.Error) {
+	senderName := u.getSenderDBus(sender)
+	logger.Debugf("[GetSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, u.UserName)
+	if !(strings.Contains(senderName, resetPasswordDia) || strings.Contains(senderName, controlCenter)) {
+		return "", dbusutil.ToError(errors.New("invalid sender"))
+	}
+	if u.uadpInterface == nil {
+		return "", nil
+	}
+	key, err := u.uadpInterface.Get(0, u.UserName)
+	if err != nil {
+		return string(key), dbusutil.ToError(err)
+	}
+	return string(key), nil
+}
+
+func (u *User) DeleteSecretKey(sender dbus.Sender) *dbus.Error {
+	senderName := u.getSenderDBus(sender)
+	logger.Debugf("[DeleteSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, u.UserName)
+	if !strings.Contains(senderName, controlCenter) {
+		return dbusutil.ToError(errors.New("invalid sender"))
+	}
+
+	if u.uadpInterface == nil {
+		return nil
+	}
+	err := u.uadpInterface.Delete(0, u.UserName)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	return nil
 }
