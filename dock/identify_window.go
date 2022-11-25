@@ -179,6 +179,10 @@ func (m *Manager) identifyWindowX(winInfo *WindowInfo) (innerId string, appInfo 
 				}
 			}
 			return
+		} else {
+			if appInfo != nil && appInfo.identifyMethod == "Android" {
+				break
+			}
 		}
 	}
 	// fail
@@ -365,8 +369,9 @@ func identifyWindowAndroid(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 		desktopPath := "/usr/share/applications/" + "uengine." + androidName + ".desktop"
 		deskappInfo, _ := desktopappinfo.NewDesktopAppInfoFromFile(desktopPath)
 		if deskappInfo == nil {
+			appinfo := &AppInfo{"","Android","","","","",nil,true}
 			logger.Info("Not Exist DesktopFile")
-			return "", nil
+			return "",appinfo
 		}
 
 		appInfo := newAppInfo(deskappInfo)
