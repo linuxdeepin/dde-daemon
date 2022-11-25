@@ -66,5 +66,6 @@ const (
 	powerActionSuspend
 	powerActionHibernate
 	powerActionTurnOffScreen
+	powerActionShowShutdownInterface
 	powerActionDoNothing
 )
