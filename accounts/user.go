@@ -18,6 +18,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
+	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.uadp"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
@@ -82,6 +83,7 @@ func getDefaultUserBackground() string {
 type User struct {
 	service         *dbusutil.Service
 	PropsMu         sync.RWMutex
+	uadpInterface	uadp.Uadp
 	UserName        string
 	UUID            string
 	FullName        string
@@ -153,6 +155,7 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 
 	var u = &User{
 		service:            service,
+		uadpInterface:      uadp.NewUadp(service.Conn()),
 		UserName:           userInfo.Name,
 		FullName:           userInfo.Comment().FullName(),
 		Uid:                userInfo.Uid,
@@ -223,6 +226,22 @@ func getUserGreeterBackground(kf *glib.KeyFile) (string, bool) {
 		return "", false
 	}
 	return greeterBg, true
+}
+
+func (u *User) getSenderDBus(sender dbus.Sender) string {
+	pid, err := u.service.GetConnPID(string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	proc := procfs.Process(pid)
+	exe, err := proc.Exe()
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	logger.Debug(" [getSenderDBus] sender exe : ", exe)
+	return exe
 }
 
 func (u *User) updateIconList() {
