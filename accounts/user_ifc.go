@@ -1181,16 +1181,16 @@ func (u *User) SetSecretKey(sender dbus.Sender, secretKey string) *dbus.Error {
 	return nil
 }
 
-func (u *User) GetSecretKey(sender dbus.Sender) (string, *dbus.Error) {
+func (u *User) GetSecretKey(sender dbus.Sender, username string) (string, *dbus.Error) {
 	senderName := u.getSenderDBus(sender)
-	logger.Debugf("[GetSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, u.UserName)
+	logger.Debugf("[GetSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, username)
 	if !(strings.Contains(senderName, resetPasswordDia) || strings.Contains(senderName, controlCenter)) {
 		return "", dbusutil.ToError(errors.New("invalid sender"))
 	}
 	if u.uadpInterface == nil {
 		return "", nil
 	}
-	key, err := u.uadpInterface.Get(0, u.UserName)
+	key, err := u.uadpInterface.Get(0, username)
 	if err != nil {
 		return string(key), dbusutil.ToError(err)
 	}

@@ -231,7 +231,7 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 		{
 			Name:   "GetSecretKey",
 			Fn:     v.GetSecretKey,
-			InArgs: []string{},
+			InArgs: []string{"username"},
 			OutArgs: []string{"secretKey"},
 		},
 		{
