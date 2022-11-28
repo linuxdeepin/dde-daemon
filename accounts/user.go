@@ -24,6 +24,7 @@ import (
 	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.uadp"
 )
 
 const (
@@ -82,6 +83,7 @@ func getDefaultUserBackground() string {
 type User struct {
 	service         *dbusutil.Service
 	PropsMu         sync.RWMutex
+	uadpInterface	uadp.Uadp
 	UserName        string
 	UUID            string
 	FullName        string
@@ -171,6 +173,12 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 	u.AccountType = u.getAccountType()
 	u.Groups = u.getGroups()
 	loadUserConfigInfo(u)
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("connect to system bus failed:", err)
+		return u, err
+	}
+	u.uadpInterface = uadp.NewUadp(sysBus)
 
 	return u, nil
 }
