@@ -27,10 +27,14 @@ func (*Theme) GetInterfaceName() string {
 }
 
 func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string) *dbus.Error {
+	err := checkInvokePermission(theme.service, sender)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	theme.service.DelayAutoQuit()
 
 	logger.Debugf("SetBackgroundSourceFile: %q", filename)
-	err := theme.g.checkAuth(sender, polikitActionIdCommon)
+	err = theme.g.checkAuth(sender, polikitActionIdCommon)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -48,7 +52,11 @@ func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string)
 	return nil
 }
 
-func (theme *Theme) GetBackground() (background string, busErr *dbus.Error) {
+func (theme *Theme) GetBackground(sender dbus.Sender) (background string, busErr *dbus.Error) {
+	err := checkInvokePermission(theme.service, sender)
+	if err != nil {
+		return "", dbusutil.ToError(err)
+	}
 	theme.service.DelayAutoQuit()
 
 	theme.g.PropsMu.RLock()
