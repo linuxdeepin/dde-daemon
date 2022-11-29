@@ -5,8 +5,9 @@
 package systeminfo
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
+	"github.com/jouyouyun/hardware/dmi"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 var logger = log.NewLogger("daemon/systeminfo")
@@ -57,6 +58,13 @@ func (m *Module) Start() error {
 			return
 		}
 		m.m.setPropCurrentSpeed(currentSpeed)
+		info, err := dmi.GetDMI()
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			m.m.setPropDMIInfo(info)
+		}
+
 	}()
 	return nil
 }
