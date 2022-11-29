@@ -1058,6 +1058,24 @@ func (m *Manager) listenSystemPlatformChanged() {
 	})
 }
 
+func runCommand(cmd string) (string, error) {
+	result, err := exec.Command("/bin/sh", "-c", cmd).Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(result)), err
+}
+
+func checkProRunning(serverName string) bool {
+	cmd := `ps ux | awk '/` + serverName + `/ && !/awk/ {print $2}'`
+	pid, err := runCommand(cmd)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return pid != ""
+}
+
 func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 	if cmd == "" {
 		logger.Debug("cmd is empty")
@@ -1070,6 +1088,14 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 	}
 
 	logger.Debug("startdde run cmd:", cmd)
+	return m.startManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
+}
+
+func (m *Manager) handleCheckCamera() error {
+	cmd := "deepin-camera"
+	if checkProRunning(cmd) {
+		cmd = "killall deepin-camera"
+	}
 	return m.startManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
 }
 

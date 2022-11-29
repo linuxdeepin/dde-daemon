@@ -61,10 +61,16 @@ func (m *Manager) initHandlers() {
 		}
 
 		go func() {
-			err := m.execCmd(arg.Cmd, true)
-			if err != nil {
-				logger.Warning("execCmd error:", err)
+			var err error
+			if arg.Cmd == "deepin-camera" {
+				err = m.handleCheckCamera()
+			} else {
+				err = m.execCmd(arg.Cmd, true)
+				if err != nil {
+					logger.Warning("execCmd error:", err)
+				}
 			}
+			
 		}()
 	}
 
