@@ -63,6 +63,7 @@ prepare() {
   go get -v github.com/mdlayher/netlink
   go get -v github.com/golang/protobuf/proto
   go get -v github.com/stretchr/testify
+  go get -v github.com/jouyouyun/hardware
   sed -i 's#/usr/share/backgrounds/default_background.jpg#/usr/share/backgrounds/deepin/desktop.jpg#' accounts/user.go
 }
 

@@ -13,6 +13,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/jouyouyun/hardware/dmi"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -36,6 +37,7 @@ type Manager struct {
 	MemorySize      uint64
 	MemorySizeHuman string
 	CurrentSpeed    uint64
+	DMIInfo         *dmi.DMI
 }
 
 type lshwXmlList struct {
@@ -212,22 +214,4 @@ func (m *Manager) systemBit() string {
 
 	v := strings.TrimRight(string(output), "\n")
 	return v
-}
-
-func (m *Manager) setPropCurrentSpeed(value uint64) (changed bool) {
-	if m.CurrentSpeed != value {
-		m.CurrentSpeed = value
-		err := m.emitPropChangedsetPropCurrentSpeed(value)
-		if err != nil {
-			logger.Warning("emitPropChangedsetPropCurrentSpeed err : ", err)
-			changed = false
-		} else {
-			changed = true
-		}
-	}
-	return changed
-}
-
-func (m *Manager) emitPropChangedsetPropCurrentSpeed(value uint64) error {
-	return m.service.EmitPropertyChanged(m, "CurrentSpeed", value)
 }
