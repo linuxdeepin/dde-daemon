@@ -592,3 +592,26 @@ func getOSNum(entries []Entry) uint32 {
 	}
 	return systemNum
 }
+
+func checkInvokePermission(service *dbusutil.Service, sender dbus.Sender) error {
+	pid, err := service.GetConnPID(string(sender))
+	if err != nil {
+		return err
+	}
+	p := procfs.Process(pid)
+	cmd, err := p.Exe()
+	if err != nil {
+		return err
+	}
+	if cmd == "/usr/bin/dde-control-center" {
+		return nil
+	}
+	uid, err := service.GetConnUID(string(sender))
+	if err != nil {
+		return err
+	}
+	if uid != 0 {
+		return fmt.Errorf("not allow %v call this method", sender)
+	}
+	return nil
+}
