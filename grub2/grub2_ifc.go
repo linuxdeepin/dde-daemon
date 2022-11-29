@@ -32,7 +32,11 @@ func (*Grub2) GetInterfaceName() string {
 
 // GetSimpleEntryTitles return entry titles only in level one and will
 // filter out some useless entries such as sub-menus and "memtest86+".
-func (grub *Grub2) GetSimpleEntryTitles() (titles []string, busErr *dbus.Error) {
+func (grub *Grub2) GetSimpleEntryTitles(sender dbus.Sender) (titles []string, busErr *dbus.Error) {
+	err := checkInvokePermission(grub.service, sender)
+	if err != nil {
+		return nil, dbusutil.ToError(err)
+	}
 	grub.service.DelayAutoQuit()
 
 	for _, entry := range grub.entries {
@@ -50,6 +54,10 @@ func (grub *Grub2) GetSimpleEntryTitles() (titles []string, busErr *dbus.Error) 
 }
 
 func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) (gfxModes []string, busErr *dbus.Error) {
+	err := checkInvokePermission(g.service, sender)
+	if err != nil {
+		return nil, dbusutil.ToError(err)
+	}
 	pid, err := g.service.GetConnPID(string(sender))
 	if err != nil {
 		return nil, dbusutil.ToError(err)
@@ -85,9 +93,13 @@ func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) (gfxModes []string, bus
 }
 
 func (g *Grub2) SetDefaultEntry(sender dbus.Sender, entry string) *dbus.Error {
+	err := checkInvokePermission(g.service, sender)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	g.service.DelayAutoQuit()
 
-	err := g.checkAuth(sender, polikitActionIdCommon)
+	err = g.checkAuth(sender, polikitActionIdCommon)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -108,9 +120,13 @@ func (g *Grub2) SetDefaultEntry(sender dbus.Sender, entry string) *dbus.Error {
 var errInGfxmodeDetect = errors.New("in gfxmode detection mode")
 
 func (g *Grub2) SetEnableTheme(sender dbus.Sender, enabled bool) *dbus.Error {
+	err := checkInvokePermission(g.service, sender)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	g.service.DelayAutoQuit()
 
-	err := g.checkAuth(sender, polikitActionIdCommon)
+	err = g.checkAuth(sender, polikitActionIdCommon)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -142,9 +158,13 @@ func (g *Grub2) SetEnableTheme(sender dbus.Sender, enabled bool) *dbus.Error {
 }
 
 func (g *Grub2) SetGfxmode(sender dbus.Sender, gfxmode string) *dbus.Error {
+	err := checkInvokePermission(g.service, sender)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	g.service.DelayAutoQuit()
 
-	err := g.checkAuth(sender, polikitActionIdCommon)
+	err = g.checkAuth(sender, polikitActionIdCommon)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -173,6 +193,10 @@ func (g *Grub2) SetGfxmode(sender dbus.Sender, gfxmode string) *dbus.Error {
 }
 
 func (g *Grub2) SetTimeout(sender dbus.Sender, timeout uint32) *dbus.Error {
+	err := checkInvokePermission(g.service, sender)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	g.service.DelayAutoQuit()
 
 	/*
