@@ -64,8 +64,9 @@ type accessPoint struct {
 	Path         dbus.ObjectPath
 	Frequency    uint32
 	// add hidden property
-	Hidden bool
-	Flags  uint32
+	Hidden  bool
+	Flags   uint32
+	KeyMgmt string // 直接表明推荐的 keymgmt，不要让前后端两套逻辑
 }
 
 func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoint, err error) {
@@ -162,8 +163,56 @@ func (a *accessPoint) updateProps() bool {
 	a.Strength = strength
 	a.Frequency = frequency
 	a.Flags = flags
+	a.KeyMgmt = getKeyMgmtFromAP(a.nmAp)
 
 	return true
+}
+
+func getKeyMgmtFromAP(ap nmdbus.AccessPoint) string {
+	keymgmt := "none"
+
+	apflags, err := ap.Flags().Get(0)
+	if err != nil {
+		logger.Warning("get flags failed, err:", err)
+	}
+	wpaFlags, err := ap.WpaFlags().Get(0)
+	if err != nil {
+		logger.Warning("get wpa flags failed, err:", err)
+	}
+	rsnFlags, err := ap.RsnFlags().Get(0)
+	if err != nil {
+		logger.Warning("get rsn flags failed, err:", err)
+	}
+
+	// WEP, Dynamic WEP, or LEAP
+	if (apflags&nm.NM_802_11_AP_FLAGS_PRIVACY != 0) &&
+		(wpaFlags == nm.NM_802_11_AP_SEC_NONE) &&
+		(rsnFlags == nm.NM_802_11_AP_SEC_NONE) {
+		return "wep"
+	}
+
+	// WPA/RSN
+	if wpaFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_PSK != 0 ||
+		rsnFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_PSK != 0 {
+		keymgmt = "wpa-psk"
+	}
+
+	// 优先sae
+	if rsnFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_SAE != 0 {
+		keymgmt = "sae"
+	}
+
+	if wpaFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_802_1X != 0 ||
+		rsnFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_802_1X != 0 {
+		keymgmt = "wpa-eap"
+	}
+
+	if wpaFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_EAP_SUITE_B_192 != 0 ||
+		rsnFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_EAP_SUITE_B_192 != 0 {
+		keymgmt = "wpa-eap-suite-b-192"
+	}
+
+	return keymgmt
 }
 
 func getApSecType(ap nmdbus.AccessPoint) (apSecType, error) {
@@ -203,6 +252,9 @@ func doParseApSecType(flags, wpaFlags, rsnFlags uint32) apSecType {
 	// prefer sae
 	if wpaFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_SAE != 0 || rsnFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_SAE != 0 {
 		r = apSecSae
+	}
+	if (wpaFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_EAP_SUITE_B_192 != 0) || (rsnFlags&nm.NM_802_11_AP_SEC_KEY_MGMT_EAP_SUITE_B_192 != 0) {
+		r = apSecEap
 	}
 	return r
 }
@@ -322,6 +374,52 @@ func (m *Manager) ActivateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 	return cpath, nil
 }
 
+func fixApKeyMgmtChange(uuid string, keymgmt string) (needUserEdit bool, err error) {
+	var cpath dbus.ObjectPath
+	cpath, err = nmGetConnectionByUuid(uuid)
+	if err != nil {
+		return
+	}
+
+	var conn nmdbus.ConnectionSettings
+	conn, err = nmNewSettingsConnection(cpath)
+	if err != nil {
+		return
+	}
+	var connData connectionData
+	connData, err = conn.GetSettings(0)
+	if err != nil {
+		return
+	}
+
+	current := getSettingWirelessSecurityKeyMgmt(connData)
+	if keymgmt == current {
+		return
+	}
+	logger.Infof("keymgmt change from %v to %v", current, keymgmt)
+
+	if keymgmt == "wpa-eap" || keymgmt == "wpa-eap-suite-b-192" {
+		needUserEdit = true
+	} else {
+		err = logicSetSettingVkWirelessSecurityKeyMgmt(connData, keymgmt)
+		if err != nil {
+			logger.Warning("failed to set VKWirelessSecutiryKeyMgmt")
+			return
+		}
+	}
+
+	// fix ipv6 addresses and routes data structure, interface{}
+	if isSettingIP6ConfigAddressesExists(connData) {
+		setSettingIP6ConfigAddresses(connData, getSettingIP6ConfigAddresses(connData))
+	}
+	if isSettingIP6ConfigRoutesExists(connData) {
+		setSettingIP6ConfigRoutes(connData, getSettingIP6ConfigRoutes(connData))
+	}
+
+	err = conn.Update(0, connData)
+	return
+}
+
 func fixApSecTypeChange(uuid string, secType apSecType) (needUserEdit bool, err error) {
 	var cpath dbus.ObjectPath
 	cpath, err = nmGetConnectionByUuid(uuid)
@@ -391,15 +489,10 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 	if err != nil {
 		return
 	}
-	secType, err := getApSecType(nmAp)
-	if err != nil {
-		logger.Warningf("get ap sec typ failed, err: %v", err)
-	} else {
-		logger.Debugf("active access point sec %v", secType)
-	}
+	keymgmt := getKeyMgmtFromAP(nmAp)
 	if uuid != "" {
 		var needUserEdit bool
-		needUserEdit, err = fixApSecTypeChange(uuid, secType)
+		needUserEdit, err = fixApKeyMgmtChange(uuid, keymgmt)
 		if err != nil {
 			return
 		}
@@ -417,7 +510,7 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 			logger.Warning("failed to get Ap Ssid:", err)
 			return
 		}
-		data := newWirelessConnectionData(decodeSsid(ssid), uuid, ssid, secType)
+		data := newWirelessConnectionData(decodeSsid(ssid), uuid, ssid, keymgmt)
 		// check if need add hidden
 		if m.isHidden(string(ssid)) {
 			setSettingWirelessHidden(data, true)

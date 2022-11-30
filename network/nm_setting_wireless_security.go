@@ -85,6 +85,7 @@ func logicSetSettingVkWirelessSecurityKeyMgmt(data connectionData, value string)
 			nm.NM_SETTING_WIRELESS_SECURITY_PSK_FLAGS,
 		)
 		setSettingWirelessSecurityKeyMgmt(data, "wpa-psk")
+		setSettingWirelessSecurityAuthAlg(data, "open")
 		setSettingWirelessSecurityPskFlags(data, nm.NM_SETTING_SECRET_FLAG_NONE)
 	case "sae":
 		addSetting(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME)
@@ -96,14 +97,14 @@ func logicSetSettingVkWirelessSecurityKeyMgmt(data connectionData, value string)
 		)
 		setSettingWirelessSecurityKeyMgmt(data, "sae")
 		setSettingWirelessSecurityPskFlags(data, nm.NM_SETTING_SECRET_FLAG_NONE)
-	case "wpa-eap":
+	case "wpa-eap", "wpa-eap-suite-b-192":
 		addSetting(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME)
 		addSetting(data, nm.NM_SETTING_802_1X_SETTING_NAME)
 
 		removeSettingKeyBut(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME,
 			nm.NM_SETTING_WIRELESS_SECURITY_KEY_MGMT,
 		)
-		setSettingWirelessSecurityKeyMgmt(data, "wpa-eap")
+		setSettingWirelessSecurityKeyMgmt(data, value)
 		err = logicSetSetting8021xEap(data, []string{"tls"})
 	}
 	return
