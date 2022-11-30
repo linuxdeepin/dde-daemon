@@ -7,8 +7,8 @@ package network
 import (
 	"testing"
 
-	C "gopkg.in/check.v1"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
+	C "gopkg.in/check.v1"
 )
 
 func Test(t *testing.T) { C.TestingT(t) }
@@ -214,7 +214,7 @@ func (*testWrapper) TestExpandIpv6Address(c *C.C) {
 }
 
 func (*testWrapper) TestGetterAndSetterForVirtualKey(c *C.C) {
-	data := newWirelessConnectionData("", "", nil, apSecNone)
+	data := newWirelessConnectionData("", "", nil, "none")
 
 	err := logicSetSettingVkWirelessSecurityKeyMgmt(data, "none")
 	if err != nil {

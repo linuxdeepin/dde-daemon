@@ -28,8 +28,8 @@ func newWirelessHotspotConnectionForDevice(id, uuid string, devPath dbus.ObjectP
 }
 
 // new connection data
-func newWirelessConnectionData(id, uuid string, ssid []byte, secType apSecType) (data connectionData) {
-	logger.Debug("newWirelessConnectionData: secType:", secType)
+func newWirelessConnectionData(id, uuid string, ssid []byte, keymgmt string) (data connectionData) {
+	logger.Debug("newWirelessConnectionData: keymgmt:", keymgmt)
 	data = make(connectionData)
 
 	addSetting(data, nm.NM_SETTING_CONNECTION_SETTING_NAME)
@@ -42,19 +42,8 @@ func newWirelessConnectionData(id, uuid string, ssid []byte, secType apSecType) 
 		setSettingWirelessSsid(data, ssid)
 	}
 	setSettingWirelessMode(data, nm.NM_SETTING_WIRELESS_MODE_INFRA)
-	var err error
-	switch secType {
-	case apSecNone:
-		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "none")
-	case apSecWep:
-		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "wep")
-	case apSecPsk:
-		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "wpa-psk")
-	case apSecSae:
-		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "sae")
-	case apSecEap:
-		err = logicSetSettingVkWirelessSecurityKeyMgmt(data, "wpa-eap")
-	}
+
+	err := logicSetSettingVkWirelessSecurityKeyMgmt(data, keymgmt)
 	if err != nil {
 		logger.Debug("failed to set VKWirelessSecutiryKeyMgmt")
 		return
@@ -67,7 +56,7 @@ func newWirelessConnectionData(id, uuid string, ssid []byte, secType apSecType) 
 }
 
 func newWirelessHotspotConnectionData(id, uuid string) (data connectionData) {
-	data = newWirelessConnectionData(id, uuid, nil, apSecNone)
+	data = newWirelessConnectionData(id, uuid, nil, "none")
 	err := logicSetSettingWirelessMode(data, nm.NM_SETTING_WIRELESS_MODE_AP)
 	if err != nil {
 		logger.Debug("failed to set WirelessMode")
