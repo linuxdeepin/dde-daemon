@@ -7,6 +7,7 @@ package lastore
 import (
 	"errors"
 	"fmt"
+
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -83,4 +84,12 @@ func (a *Agent) CloseNotification(sender dbus.Sender, id uint32) *dbus.Error {
 	}
 	logger.Info("receive close notify from lastore daemon")
 	return dbusutil.ToError(a.lastoreObj.notifications.CloseNotification(0, id))
+}
+
+func (a *Agent) ReportLog(sender dbus.Sender, msg string) *dbus.Error {
+	if !a.checkCallerAuth(sender) {
+		return dbusutil.ToError(fmt.Errorf("not allow %v call this method", sender))
+	}
+	logger.Info("report log from lastore daemon")
+	return dbusutil.ToError(a.lastoreObj.eventLog.ReportLog(0, msg))
 }

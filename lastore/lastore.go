@@ -5,13 +5,15 @@
 package lastore
 
 import (
+	"sync"
+
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	eventLog "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.EventLog"
 	network "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.network"
 	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"sync"
 )
 
 //go:generate dbusutil-gen em -type Lastore
@@ -23,6 +25,7 @@ type Lastore struct {
 
 	core          lastore.Lastore
 	notifications notifications.Notifications
+	eventLog      eventLog.EventLog
 
 	syncConfig *dsync.Config
 
@@ -53,6 +56,7 @@ func newLastore(service *dbusutil.Service) (*Lastore, error) {
 
 	l.initCore(systemBus)
 	l.initNotify(sessionBus)
+	l.initEventLog(sessionBus)
 
 	l.syncConfig = dsync.NewConfig("updater", &syncConfig{l: l}, l.sessionSigLoop, dbusPath, logger)
 	return l, nil
@@ -64,6 +68,10 @@ func (l *Lastore) initNotify(sessionBus *dbus.Conn) {
 
 func (l *Lastore) initCore(systemBus *dbus.Conn) {
 	l.core = lastore.NewLastore(systemBus)
+}
+
+func (l *Lastore) initEventLog(sessionBus *dbus.Conn) {
+	l.eventLog = eventLog.NewEventLog(sessionBus)
 }
 
 func (l *Lastore) destroy() {

@@ -19,6 +19,11 @@ func (v *Agent) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"outArg0"},
 		},
 		{
+			Name:   "ReportLog",
+			Fn:     v.ReportLog,
+			InArgs: []string{"msg"},
+		},
+		{
 			Name:    "SendNotify",
 			Fn:      v.SendNotify,
 			InArgs:  []string{"appName", "replacesId", "appIcon", "summary", "body", "actions", "hints", "expireTimeout"},

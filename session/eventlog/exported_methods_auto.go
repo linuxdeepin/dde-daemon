@@ -13,5 +13,10 @@ func (v *EventLog) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.Enable,
 			InArgs: []string{"enable"},
 		},
+		{
+			Name:   "ReportLog",
+			Fn:     v.ReportLog,
+			InArgs: []string{"log"},
+		},
 	}
 }
