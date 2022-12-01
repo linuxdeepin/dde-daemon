@@ -30,12 +30,12 @@ import (
 
 	"github.com/godbus/dbus"
 	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
-	airplanemode "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.airplanemode1"
-	audio "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.audio1"
-	sysbt "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.bluetooth1"
-	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	mpris2 "github.com/linuxdeepin/go-dbus-factory/org.mpris.mediaplayer2"
+	obex "github.com/linuxdeepin/go-dbus-factory/session/org.bluez.obex"
+	audio "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.audio1"
+	mpris2 "github.com/linuxdeepin/go-dbus-factory/session/org.mpris.mediaplayer2"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.airplanemode1"
+	sysbt "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.bluetooth1"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -43,8 +43,8 @@ import (
 )
 
 const (
-	dbusServiceName = "org.deepin.daemon.Bluetooth1"
-	dbusPath        = "/org/deepin/daemon/Bluetooth1"
+	dbusServiceName = "org.deepin.dde.Bluetooth1"
+	dbusPath        = "/org/deepin/dde/Bluetooth1"
 	dbusInterface   = dbusServiceName
 )
 

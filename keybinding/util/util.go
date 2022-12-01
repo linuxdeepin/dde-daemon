@@ -6,7 +6,7 @@ import (
 	"strings"
 	"os"
 
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 )
 
 func MarshalJSON(v interface{}) (string, error) {

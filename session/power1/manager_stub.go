@@ -24,8 +24,8 @@ import (
 )
 
 const (
-	dbusServiceName = "org.deepin.daemon.Power1"
-	dbusPath        = "/org/deepin/daemon/Power1"
+	dbusServiceName = "org.deepin.dde.Power1"
+	dbusPath        = "/org/deepin/dde/Power1"
 	dbusInterface   = dbusServiceName
 )
 

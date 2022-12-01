@@ -32,7 +32,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
-	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
+	authenticate "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.authenticate1"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
@@ -149,8 +149,6 @@ type User struct {
 	HistoryLayout []string
 
 	configLocker sync.Mutex
-
-	userV20 *UserV20
 }
 
 func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User, error) {

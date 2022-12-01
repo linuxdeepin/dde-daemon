@@ -20,8 +20,8 @@
 package mime
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 var logger = log.NewLogger("daemon/mime")
@@ -54,10 +54,10 @@ func (d *Daemon) Start() error {
 		return err
 	}
 
-	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		return err
-	}
+	// err = service.RequestName(dbusServiceName) // TODO 不和AM抢占
+	// if err != nil {
+	// 	return err
+	// }
 
 	d.manager.initConfigData()
 	return nil

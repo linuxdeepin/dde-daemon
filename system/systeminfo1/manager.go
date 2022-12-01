@@ -15,8 +15,8 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "org.deepin.system.SystemInfo1"
-	dbusPath        = "/org/deepin/system/SystemInfo1"
+	dbusServiceName = "org.deepin.dde.SystemInfo1"
+	dbusPath        = "/org/deepin/dde/SystemInfo1"
 	dbusInterface   = dbusServiceName
 
 	KB = 1 << 10

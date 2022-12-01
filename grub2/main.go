@@ -73,17 +73,6 @@ func RunAsDaemon() {
 		logger.Fatal("failed to request name:", err)
 	}
 
-	// 兼容V20接口
-	err = service.Export(themeDbusPathV20, _g.themeV20)
-	if err != nil {
-		logger.Fatal("failed to export grub2 themeV20:", err)
-	}
-
-	err = service.RequestName(DbusServiceNameV20)
-	if err != nil {
-		logger.Fatal("failed to request name:", err)
-	}
-
 	service.SetAutoQuitHandler(5*time.Minute, _g.canSafelyExit)
 	service.Wait()
 }

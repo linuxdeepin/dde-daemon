@@ -28,7 +28,7 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-api/soundutils"
-	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
+	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -43,8 +43,8 @@ const (
 	gsKeyEnabled        = "enabled"
 	gsKeySoundTheme     = "sound-theme"
 
-	DBusServiceName = "org.deepin.daemon.SoundEffect1"
-	dbusPath        = "/org/deepin/daemon/SoundEffect1"
+	DBusServiceName = "org.deepin.dde.SoundEffect1"
+	dbusPath        = "/org/deepin/dde/SoundEffect1"
 	dbusInterface   = DBusServiceName
 
 	allowPlaySoundMaxCount = 3

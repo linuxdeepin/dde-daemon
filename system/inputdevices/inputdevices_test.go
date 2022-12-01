@@ -33,13 +33,13 @@ func Test_touchscreenSliceEqual(t *testing.T) {
 	}
 
 	v2 := []dbus.ObjectPath{
-		"/com/deepin/api/Device",
+		"/org/deepin/dde/Device1",
 	}
 	ok := touchscreenSliceEqual(v1, v2)
 	assert.False(t, ok)
 
 	v3 := []dbus.ObjectPath{
-		"/com/deepin/api/Device",
+		"/org/deepin/dde/Device1",
 		"/com/deepin/anything",
 	}
 	ok = touchscreenSliceEqual(v1, v3)

@@ -306,7 +306,7 @@ func (m *Manager) monitorJobStatusChange(jobPath string) error {
 	}
 
 	rule := dbusutil.NewMatchRuleBuilder().ExtPropertiesChanged(jobPath,
-		"com.deepin.lastore.Job").Sender(lastoreDBusDest).Build()
+		"org.deepin.dde.Lastore1.Job").Sender(lastoreDBusDest).Build()
 	err = rule.AddTo(sysBus)
 	if err != nil {
 		return err

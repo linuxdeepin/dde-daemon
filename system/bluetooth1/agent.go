@@ -25,11 +25,11 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	sysbtagent "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.bluetooth1.agent"
-	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
+	bluez "github.com/linuxdeepin/go-dbus-factory/system/org.bluez"
+	sysbtagent "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.bluetooth1.agent"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (

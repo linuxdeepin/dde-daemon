@@ -24,12 +24,12 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	mpris2 "github.com/linuxdeepin/go-dbus-factory/org.mpris.mediaplayer2"
+	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.dbus"
+	mpris2 "github.com/linuxdeepin/go-dbus-factory/session/org.mpris.mediaplayer2"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 const (

@@ -1,13 +1,13 @@
 package lastore
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 const (
-	dbusPath        = "/org/deepin/LastoreSessionHelper1"
-	dbusServiceName = "org.deepin.LastoreSessionHelper1"
+	dbusPath        = "/org/deepin/dde/LastoreSessionHelper1"
+	dbusServiceName = "org.deepin.dde.LastoreSessionHelper1"
 )
 
 var logger = log.NewLogger("daemon/lastore")

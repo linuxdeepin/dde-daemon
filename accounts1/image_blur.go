@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	imageBlurDBusPath      = "/org/deepin/daemon/ImageBlur1"
-	imageBlurDBusInterface = "org.deepin.daemon.ImageBlur1"
+	imageBlurDBusService   = "org.deepin.dde.ImageBlur1"
+	imageBlurDBusPath      = "/org/deepin/dde/ImageBlur1"
+	imageBlurDBusInterface = "org.deepin.dde.ImageBlur1"
 )
 
 type ImageBlur struct {

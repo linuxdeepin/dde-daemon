@@ -29,12 +29,12 @@ import (
 	"strconv"
 
 	dbus "github.com/godbus/dbus"
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 
+	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 )
 
 // nolint
@@ -95,11 +95,11 @@ func resetKWin(wmObj wm.Wm) error {
 func showOSD(signal string) {
 	logger.Debug("show OSD", signal)
 	sessionDBus, _ := dbus.SessionBus()
-	go sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
+	go sessionDBus.Object("org.deepin.dde.Osd1", "/").Call("org.deepin.dde.Osd1.ShowOSD", 0, signal)
 }
 
-const sessionManagerDest = "com.deepin.SessionManager"
-const sessionManagerObjPath = "/com/deepin/SessionManager"
+const sessionManagerDest = "org.deepin.dde.SessionManager1"
+const sessionManagerObjPath = "/org/deepin/dde/SessionManager1"
 
 func systemLock() {
 	sessionDBus, err := dbus.SessionBus()
@@ -335,8 +335,8 @@ func (m *Manager) doLock(autoStartAuth bool) {
 
 func doPrepareSuspend() {
 	sessionDBus, _ := dbus.SessionBus()
-	obj := sessionDBus.Object("com.deepin.daemon.Power", "/com/deepin/daemon/Power")
-	err := obj.Call("com.deepin.daemon.Power.SetPrepareSuspend", 0, suspendStateButtonClick).Err
+	obj := sessionDBus.Object("org.deepin.dde.Power1", "/org/deepin/dde/Power1")
+	err := obj.Call("org.deepin.dde.Power1.SetPrepareSuspend", 0, suspendStateButtonClick).Err
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -344,8 +344,8 @@ func doPrepareSuspend() {
 
 func undoPrepareSuspend() {
 	sessionDBus, _ := dbus.SessionBus()
-	obj := sessionDBus.Object("com.deepin.daemon.Power", "/com/deepin/daemon/Power")
-	err := obj.Call("com.deepin.daemon.Power.SetPrepareSuspend", 0, suspendStateFinish).Err
+	obj := sessionDBus.Object("org.deepin.dde.Power1", "/org/deepin/dde/Power1")
+	err := obj.Call("org.deepin.dde.Power1.SetPrepareSuspend", 0, suspendStateFinish).Err
 	if err != nil {
 		logger.Warning(err)
 	}

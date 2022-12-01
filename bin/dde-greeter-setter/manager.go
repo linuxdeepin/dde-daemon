@@ -34,9 +34,9 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "org.deepin.daemon.Greeter1"
-	dbusPath        = "/org/deepin/daemon/Greeter1"
-	dbusInterface   = "org.deepin.daemon.Greeter1"
+	dbusServiceName = "org.deepin.dde.Greeter1"
+	dbusPath        = "/org/deepin/dde/Greeter1"
+	dbusInterface   = "org.deepin.dde.Greeter1"
 )
 
 const (

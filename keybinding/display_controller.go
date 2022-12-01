@@ -22,9 +22,9 @@ package keybinding
 import (
 	"github.com/godbus/dbus"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
-	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	backlight "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.helper.backlight1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
+	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 const (

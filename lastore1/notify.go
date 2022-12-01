@@ -140,8 +140,8 @@ func (l *Lastore) notifyUpdateSource(actions []NotifyAction) {
 func (l *Lastore) updateSucceedNotify(actions []NotifyAction) {
 	summary := gettext.Tr("Reboot after Updates")
 	msg := gettext.Tr("Restart the computer to use the system and applications properly")
-	hints := map[string]dbus.Variant{"x-deepin-action-RebootNow": dbus.MakeVariant("busctl,--user,call,com.deepin.SessionManager," +
-		"/com/deepin/SessionManager,com.deepin.SessionManager,RequestReboot")}
+	hints := map[string]dbus.Variant{"x-deepin-action-RebootNow": dbus.MakeVariant("busctl,--user,call,org.deepin.dde.SessionManager1," +
+		"/org/deepin/dde/SessionManager1,org.deepin.dde.SessionManager1,RequestReboot")}
 	l.sendNotify(systemUpdatedIcon, summary, msg, actions, hints, notifyExpireTimeoutReboot, "dde-control-center")
 
 	// 默认弹出横幅时间为每2小时

@@ -20,13 +20,13 @@
 package uadp
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 const (
-	dbusServiceName = "org.deepin.daemon.Uadp1"
-	dbusPath        = "/org/deepin/daemon/Uadp1"
+	dbusServiceName = "org.deepin.dde.Uadp1"
+	dbusPath        = "/org/deepin/dde/Uadp1"
 	dbusInterface   = dbusServiceName
 )
 

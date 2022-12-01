@@ -5,14 +5,14 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 const (
-	dScreenSaverPath        = "/org/deepin/daemon/ScreenSaver1"
-	dScreenSaverServiceName = "org.deepin.daemon.ScreenSaver1"
+	dScreenSaverPath        = "/org/deepin/dde/ScreenSaver1"
+	dScreenSaverServiceName = "org.deepin.dde.ScreenSaver1"
 
 	gsSchemaPower                  = "com.deepin.dde.power"
 	gsKeyBatteryScreensaverDelay   = "battery-screensaver-delay"

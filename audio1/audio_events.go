@@ -27,7 +27,7 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/gsettings"
@@ -450,9 +450,9 @@ func (a *Audio) handleSinkInputChanged(idx uint32) {
 
 /* 创建开启端口的命令，提供给notification调用 */
 func makeNotifyCmdEnablePort(cardId uint32, portName string) string {
-	dest := "org.deepin.daemon.Audio1"
-	path := "/org/deepin/daemon/Audio1"
-	method := "org.deepin.daemon.Audio1.SetPortEnabled"
+	dest := "org.deepin.dde.Audio1"
+	path := "/org/deepin/dde/Audio1"
+	method := "org.deepin.dde.Audio1.SetPortEnabled"
 	return fmt.Sprintf("dbus-send,--type=method_call,--dest=%s,%s,%s,uint32:%d,string:%s,boolean:true",
 		dest, path, method, cardId, portName)
 }

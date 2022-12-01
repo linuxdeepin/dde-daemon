@@ -45,14 +45,15 @@ import (
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 	"github.com/linuxdeepin/dde-daemon/session/common"
-	accounts "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.accounts1"
-	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	imageeffect "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.imageeffect"
-	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.timedate1"
-	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	timedate "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
+	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
+	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.timedate1"
+	xsettings "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.xsettings1"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
+	imageBlur "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.imageblur1"
+	imageeffect "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.imageeffect1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
+	timedate "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timedate1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -113,8 +114,8 @@ const (
 	defaultMonospaceFont  = "Noto Mono"
 	defaultFontConfigFile = "/usr/share/deepin-default-settings/fontconfig.json"
 
-	dbusServiceName = "com.deepin.daemon.Appearance"
-	dbusPath        = "/com/deepin/daemon/Appearance"
+	dbusServiceName = "org.deepin.dde.Appearance1"
+	dbusPath        = "/org/deepin/dde/Appearance1"
 	dbusInterface   = dbusServiceName
 )
 
@@ -150,11 +151,11 @@ type Manager struct {
 	coordinateMap  map[string]*coordinate
 
 	userObj             accounts.User
-	imageBlur           accounts.ImageBlur
+	imageBlur           imageBlur.ImageBlur
 	timeDate            timedate.Timedate
 	sessionTimeDate     sessiontimedate.Timedate
 	imageEffect         imageeffect.ImageEffect
-	xSettings           sessionmanager.XSettings
+	xSettings           xsettings.XSettings
 	login1Manager       login1.Manager
 	themeAutoTimer      *time.Timer
 	display             display.Display
@@ -372,7 +373,7 @@ func (m *Manager) initUserObj(systemConn *dbus.Conn) {
 		return
 	}
 
-	err = common.ActivateSysDaemonService("com.deepin.daemon.Accounts")
+	err = common.ActivateSysDaemonService("org.deepin.dde.Accounts1")
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -441,10 +442,10 @@ func (m *Manager) init() error {
 	if err != nil {
 		logger.Warning(err)
 	}
-	m.imageBlur = accounts.NewImageBlur(systemBus)
+	m.imageBlur = imageBlur.NewImageBlur(systemBus)
 	m.imageEffect = imageeffect.NewImageEffect(systemBus)
 
-	m.xSettings = sessionmanager.NewXSettings(sessionBus)
+	m.xSettings = xsettings.NewXSettings(sessionBus)
 	theme_thumb.Init(m.getScaleFactor())
 
 	m.xSettings.InitSignalExt(m.sessionSigLoop, true)

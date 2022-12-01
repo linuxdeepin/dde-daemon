@@ -24,17 +24,17 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	systeminfo "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.systeminfo1"
+	"github.com/linuxdeepin/dde-daemon/loader"
+	systeminfo "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.systeminfo1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type SystemInfo
 
 const (
-	dbusServiceName = "org.deepin.daemon.SystemInfo1"
-	dbusPath        = "/org/deepin/daemon/SystemInfo1"
+	dbusServiceName = "org.deepin.dde.SystemInfo1"
+	dbusPath        = "/org/deepin/dde/SystemInfo1"
 	dbusInterface   = dbusServiceName
 )
 
@@ -127,7 +127,7 @@ func (d *Daemon) initSysSystemInfo() {
 	d.sigSystemLoop.Start()
 	d.systeminfo.InitSignalExt(d.sigSystemLoop, true)
 
-	// 通过 demicode 获取 "CPU 频率", 接收 com.deepin.daemon.SystemInfo 的属性 CurrentSpeed 改变信号
+	// 通过 demicode 获取 "CPU 频率", 接收 org.deepin.dde.SystemInfo1 的属性 CurrentSpeed 改变信号
 	err = d.systeminfo.CurrentSpeed().ConnectChanged(func(hasValue bool, value uint64) {
 		logger.Infof("demicode hasValue : %t, CurrentSpeed : %d", hasValue, value)
 		if !hasValue {

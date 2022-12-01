@@ -42,8 +42,8 @@ import (
 const (
 	AppMimeTerminal = "application/x-terminal"
 
-	dbusServiceName = "com.deepin.daemon.Mime"
-	dbusPath        = "/com/deepin/daemon/Mime"
+	dbusServiceName = "org.deepin.dde.Mime1"
+	dbusPath        = "/org/deepin/dde/Mime1"
 	dbusInterface   = dbusServiceName
 )
 

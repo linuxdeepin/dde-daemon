@@ -33,10 +33,10 @@ import (
 	"unicode"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 const grubScriptFile = "/boot/grub/grub.cfg"
@@ -63,7 +63,6 @@ type Grub2 struct {
 	modifyManager      *modifyManager
 	entries            []Entry
 	theme              *Theme
-	themeV20		   *ThemeV20
 	editAuth           *EditAuth
 	gfxmodeDetectState gfxmodeDetectState
 	inhibitFd          dbus.UnixFD
@@ -341,7 +340,6 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 
 	// init theme
 	g.theme = NewTheme(g)
-	g.themeV20 = NewThemeV20(g)
 
 	jobLog, err := loadLog()
 	if err != nil {

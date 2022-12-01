@@ -6,9 +6,9 @@ import (
 	"os/exec"
 
 	"github.com/godbus/dbus"
-	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	"github.com/linuxdeepin/dde-daemon/mime"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	startmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.startmanager1"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 )
 
@@ -35,7 +35,7 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			startManager := sessionmanager.NewStartManager(sessionBus)
+			startManager := startmanager.NewStartManager(sessionBus)
 			filename := appInfo.GetFileName()
 			workDir, err := os.Getwd()
 			if err != nil {
@@ -82,7 +82,7 @@ func runFallbackTerm() {
 		log.Println("failed to get terminal path")
 		return
 	}
-	cmd := exec.Command(termPath)  // #nosec G204
+	cmd := exec.Command(termPath) // #nosec G204
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
 	err := cmd.Run()

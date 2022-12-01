@@ -27,24 +27,25 @@ import (
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/gsettings"
 
-	_ "github.com/linuxdeepin/dde-daemon/appearance"
+	_ "github.com/linuxdeepin/dde-daemon/appearance" // TODO 转移到dde-appearance
 	_ "github.com/linuxdeepin/dde-daemon/audio1"
 	_ "github.com/linuxdeepin/dde-daemon/bluetooth1"
+	_ "github.com/linuxdeepin/dde-daemon/mime" // TODO 转移到am
 	_ "github.com/linuxdeepin/dde-daemon/screenedge1"
-	_ "github.com/linuxdeepin/dde-daemon/mime"
 
 	// depends: network
-	_ "github.com/linuxdeepin/dde-daemon/systeminfo1"
 	_ "github.com/linuxdeepin/dde-daemon/calltrace"
 	_ "github.com/linuxdeepin/dde-daemon/clipboard1"
 	_ "github.com/linuxdeepin/dde-daemon/debug"
-	_ "github.com/linuxdeepin/dde-daemon/dock"
+
+	// _ "github.com/linuxdeepin/dde-daemon/dock" // 转移到am
 	_ "github.com/linuxdeepin/dde-daemon/gesture"
 	_ "github.com/linuxdeepin/dde-daemon/housekeeping"
 	_ "github.com/linuxdeepin/dde-daemon/inputdevices"
 	_ "github.com/linuxdeepin/dde-daemon/keybinding"
 	_ "github.com/linuxdeepin/dde-daemon/lastore1"
-	_ "github.com/linuxdeepin/dde-daemon/launcher"
+
+	// _ "github.com/linuxdeepin/dde-daemon/launcher" // // 转移到am
 	_ "github.com/linuxdeepin/dde-daemon/network"
 	_ "github.com/linuxdeepin/dde-daemon/screensaver1"
 	_ "github.com/linuxdeepin/dde-daemon/service_trigger"

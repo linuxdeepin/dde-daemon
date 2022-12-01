@@ -27,13 +27,13 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
-	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 )
 
 const (
-	sessionAgentInterface = "org.deepin.system.Bluetooth1.Agent"
+	sessionAgentInterface = "org.deepin.dde.Bluetooth1.Agent"
 )
 
 type authorize struct {

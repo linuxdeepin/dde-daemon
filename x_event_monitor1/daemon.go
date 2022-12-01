@@ -23,13 +23,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 const (
-	dbusServiceName = "org.deepin.api.XEventMonitor1"
-	dbusPath        = "/org/deepin/api/XEventMonitor1"
+	dbusServiceName = "org.deepin.dde.XEventMonitor1"
+	dbusPath        = "/org/deepin/dde/XEventMonitor1"
 	dbusInterface   = dbusServiceName
 	moduleName      = "x-event-monitor"
 )

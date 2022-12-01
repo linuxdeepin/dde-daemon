@@ -28,9 +28,9 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	bluez "github.com/linuxdeepin/go-dbus-factory/system/org.bluez"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -39,8 +39,8 @@ const (
 	bluezAdapterDBusInterface = "org.bluez.Adapter1"
 	bluezDeviceDBusInterface  = "org.bluez.Device1"
 
-	dbusServiceName = "org.deepin.system.Bluetooth1"
-	dbusPath        = "/org/deepin/system/Bluetooth1"
+	dbusServiceName = "org.deepin.dde.Bluetooth1"
+	dbusPath        = "/org/deepin/dde/Bluetooth1"
 	dbusInterface   = dbusServiceName
 )
 

@@ -41,8 +41,8 @@ const (
 	ProfTypeCPU = "cpu"    //nolint
 	ProfTypeMem = "memory" //nolint
 
-	dbusPath        = "/org/deepin/daemon/Daemon1"
-	dbusServiceName = "org.deepin.daemon.Daemon1"
+	dbusPath        = "/org/deepin/dde/Daemon1"
+	dbusServiceName = "org.deepin.dde.Daemon1"
 	dbusInterface   = dbusServiceName
 )
 
@@ -117,9 +117,9 @@ func (s *SessionDaemon) register(service *dbusutil.Service) error {
 
 func (s *SessionDaemon) initModules() {
 	part1ModuleNames := []string{
-		"dock",
+		// "dock",
 		"trayicon",
-		"launcher",
+		// "launcher",
 		"x-event-monitor",
 	}
 
@@ -129,7 +129,7 @@ func (s *SessionDaemon) initModules() {
 		"appearance",
 		"screensaver",
 		"sessionwatcher",
-		"power",  // need screensaver and sessionwatcher
+		"power", // need screensaver and sessionwatcher
 		"uadpagent",
 		"service-trigger",
 		"clipboard",

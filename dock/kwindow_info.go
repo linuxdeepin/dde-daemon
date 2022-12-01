@@ -3,7 +3,7 @@ package dock
 import (
 	"time"
 
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
 	x "github.com/linuxdeepin/go-x11-client"
 )
 
@@ -89,7 +89,7 @@ func (winInfo *KWindowInfo) shouldSkip() bool {
 
 	if skip {
 		//+ 白名单(临时方案，待窗口增加wayland下窗口规则后再修改)： 修复类似欢迎应用没有最小化窗口,但是需要在任务栏显示图标
-		for _, app := range []string {"dde-introduction"} {
+		for _, app := range []string{"dde-introduction"} {
 			if app == winInfo.appId {
 				skip = false
 			}

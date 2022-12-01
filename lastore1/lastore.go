@@ -7,20 +7,20 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	abrecovery "github.com/linuxdeepin/go-dbus-factory/com.deepin.abrecovery"
-	lastore "github.com/linuxdeepin/go-dbus-factory/org.deepin.lastore1"
-	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	power "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	"github.com/linuxdeepin/dde-api/powersupply/battery"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
+	abrecovery "github.com/linuxdeepin/go-dbus-factory/system/com.deepin.abrecovery"
+	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
+	power "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-api/powersupply/battery"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 //go:generate dbusutil-gen em -type Lastore
@@ -225,16 +225,16 @@ func (l *Lastore) initSysDBusDaemon(systemBus *dbus.Conn) {
 }
 
 var allowPathList = []string{
-	"/org/deepin/lastore1/Jobprepare_system_upgrade",
-	"/org/deepin/lastore1/Jobprepare_appstore_upgrade",
-	"/org/deepin/lastore1/Jobprepare_security_upgrade",
-	"/org/deepin/lastore1/Jobprepare_unknown_upgrade",
-	"/org/deepin/lastore1/Jobsystem_upgrade",
-	"/org/deepin/lastore1/Jobappstore_upgrade",
-	"/org/deepin/lastore1/Jobsecurity_upgrade",
-	"/org/deepin/lastore1/Jobunknown_upgrade",
-	"/org/deepin/lastore1/Jobdist_upgrade",
-	"/org/deepin/lastore1/Jobprepare_dist_upgrade",
+	"/org/deepin/dde/Lastore1/Jobprepare_system_upgrade",
+	"/org/deepin/dde/Lastore1/Jobprepare_appstore_upgrade",
+	"/org/deepin/dde/Lastore1/Jobprepare_security_upgrade",
+	"/org/deepin/dde/Lastore1/Jobprepare_unknown_upgrade",
+	"/org/deepin/dde/Lastore1/Jobsystem_upgrade",
+	"/org/deepin/dde/Lastore1/Jobappstore_upgrade",
+	"/org/deepin/dde/Lastore1/Jobsecurity_upgrade",
+	"/org/deepin/dde/Lastore1/Jobunknown_upgrade",
+	"/org/deepin/dde/Lastore1/Jobdist_upgrade",
+	"/org/deepin/dde/Lastore1/Jobprepare_dist_upgrade",
 }
 
 func (l *Lastore) isUpgradeJobType(path dbus.ObjectPath) bool {
@@ -351,7 +351,7 @@ func (l *Lastore) initCore(systemBus *dbus.Conn) {
 		}
 		props, _ := sig.Body[1].(map[string]dbus.Variant)
 		ifc, _ := sig.Body[0].(string)
-		if ifc == "org.deepin.lastore1.Job" {
+		if ifc == "org.deepin.dde.Lastore1.Job" {
 			l.updateCacheJobInfo(sig.Path, props)
 		}
 	})
@@ -382,7 +382,7 @@ func (l *Lastore) destroy() {
 }
 
 func (l *Lastore) GetInterfaceName() string {
-	return "org.deepin.LastoreSessionHelper1"
+	return "org.deepin.dde.LastoreSessionHelper1"
 }
 
 // updateJobList clean invalid cached Job status

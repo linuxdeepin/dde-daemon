@@ -10,10 +10,10 @@ import (
 )
 
 func Test_objectPathSliceEqual(t *testing.T) {
-	var str = []dbus.ObjectPath{"/org/deepin/daemon/Bluetooth1", "/org/deepin/daemon/Audio1"}
-	var str1 = []dbus.ObjectPath{"/org/deepin/daemon/Bluetooth1", "/org/deepin/daemon/Audio1"}
-	var str2 = []dbus.ObjectPath{"/org/deepin/daemon/Bluetooth1", "/org/deepin/daemon/Audio1", "/"}
-	var str3 = []dbus.ObjectPath{"/org/deepin/daemon/Bluetooth1", "/org/deepin/daemon/Accounts1"}
+	var str = []dbus.ObjectPath{"/org/deepin/dde/Bluetooth1", "/org/deepin/dde/Audio1"}
+	var str1 = []dbus.ObjectPath{"/org/deepin/dde/Bluetooth1", "/org/deepin/dde/Audio1"}
+	var str2 = []dbus.ObjectPath{"/org/deepin/dde/Bluetooth1", "/org/deepin/dde/Audio1", "/"}
+	var str3 = []dbus.ObjectPath{"/org/deepin/dde/Bluetooth1", "/org/deepin/dde/Accounts1"}
 
 	assert.Equal(t, objectPathSliceEqual(str, str1), true)
 	assert.Equal(t, objectPathSliceEqual(str, str2), false)

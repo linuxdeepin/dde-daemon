@@ -34,22 +34,22 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
+	"github.com/linuxdeepin/dde-daemon/accounts1/users"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/encoding/kv"
 	"github.com/linuxdeepin/go-lib/graphic"
 	"github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 )
 
 // #nosec G101
 const (
-	polkitActionUserAdministration     = "com.deepin.daemon.accounts.user-administration"
-	polkitActionChangeOwnData          = "com.deepin.daemon.accounts.change-own-user-data"
-	polkitActionEnableAutoLogin        = "com.deepin.daemon.accounts.enable-auto-login"
-	polkitActionDisableAutoLogin       = "com.deepin.daemon.accounts.disable-auto-login"
-	polkitActionEnableNoPasswordLogin  = "com.deepin.daemon.accounts.enable-nopass-login"
-	polkitActionDisableNoPasswordLogin = "com.deepin.daemon.accounts.disable-nopass-login"
-	polkitActionSetKeyboardLayout      = "com.deepin.daemon.accounts.set-keyboard-layout"
+	polkitActionUserAdministration     = "org.deepin.dde.accounts.user-administration"
+	polkitActionChangeOwnData          = "org.deepin.dde.accounts.change-own-user-data"
+	polkitActionEnableAutoLogin        = "org.deepin.dde.accounts.enable-auto-login"
+	polkitActionDisableAutoLogin       = "org.deepin.dde.accounts.disable-auto-login"
+	polkitActionEnableNoPasswordLogin  = "org.deepin.dde.accounts.enable-nopass-login"
+	polkitActionDisableNoPasswordLogin = "org.deepin.dde.accounts.disable-nopass-login"
+	polkitActionSetKeyboardLayout      = "org.deepin.dde.accounts.set-keyboard-layout"
 
 	systemLocaleFile  = "/etc/default/locale"
 	systemdLocaleFile = "/etc/locale.conf"

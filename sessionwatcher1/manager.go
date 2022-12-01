@@ -23,8 +23,8 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	libdisplay "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	libdisplay "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
@@ -32,8 +32,8 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "org.deepin.daemon.SessionWatcher1"
-	dbusPath        = "/org/deepin/daemon/SessionWatcher1"
+	dbusServiceName = "org.deepin.dde.SessionWatcher1"
+	dbusPath        = "/org/deepin/dde/SessionWatcher1"
 	dbusInterface   = dbusServiceName
 )
 

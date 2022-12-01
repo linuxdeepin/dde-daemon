@@ -179,13 +179,3 @@ func (v *obexAgent) GetExportedMethods() dbusutil.ExportedMethods {
 		},
 	}
 }
-
-func (v *BluetoothV20) GetExportedMethods() dbusutil.ExportedMethods {
-	return dbusutil.ExportedMethods{
-		{
-			Name:    "GetAdapters",
-			Fn:      v.GetAdapters,
-			OutArgs: []string{"adaptersJSON"},
-		},
-	}
-}

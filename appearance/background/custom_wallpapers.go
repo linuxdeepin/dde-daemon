@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/graphic"
 	"github.com/linuxdeepin/go-lib/imgutil"
 	"github.com/linuxdeepin/go-lib/strv"

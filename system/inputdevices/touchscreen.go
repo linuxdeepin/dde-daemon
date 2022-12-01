@@ -41,8 +41,8 @@ type Touchscreen struct {
 	Height     float64
 }
 
-const touchscreenDBusPath = "/com/deepin/system/InputDevices/Touchscreen/"
-const touchscreenDBusInterface = "com.deepin.system.InputDevices.Touchscreen"
+const touchscreenDBusPath = "/org/deepin/dde/InputDevices1/Touchscreen/"
+const touchscreenDBusInterface = "org.deepin.dde.InputDevices1.Touchscreen"
 
 func newTouchscreen(dev *libinputDevice, service *dbusutil.Service, id uint32) *Touchscreen {
 	t := &Touchscreen{

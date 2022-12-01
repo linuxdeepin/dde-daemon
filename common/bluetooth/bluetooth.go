@@ -29,4 +29,4 @@ var ErrCanceled = &dbus.Error{
 }
 
 // SessionAgentPath 目前唯一支持的标准的 session agent 对象路径
-const SessionAgentPath = "/com/deepin/system/Bluetooth/Agent"
+const SessionAgentPath = "/org/deepin/dde/Bluetooth1/Agent"

@@ -58,8 +58,8 @@ import (
 )
 
 const (
-	userDBusPathPrefix = "/org/deepin/daemon/Accounts1/User"
-	userDBusInterface  = "org.deepin.daemon.Accounts1.User"
+	userDBusPathPrefix = "/org/deepin/dde/Accounts1/User"
+	userDBusInterface  = "org.deepin.dde.Accounts1.User"
 )
 
 func (*User) GetInterfaceName() string {

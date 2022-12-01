@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
-	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
+	bluez "github.com/linuxdeepin/go-dbus-factory/system/org.bluez"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 

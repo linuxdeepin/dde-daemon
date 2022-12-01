@@ -27,7 +27,7 @@ import (
 	"sort"
 
 	"github.com/godbus/dbus"
-	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
+	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 )
 
 var (

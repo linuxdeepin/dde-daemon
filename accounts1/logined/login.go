@@ -25,7 +25,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/log"
@@ -48,7 +48,7 @@ type Manager struct {
 }
 
 const (
-	DBusPath = "/org/deepin/daemon/Logined"
+	DBusPath = "/org/deepin/dde/Logined"
 )
 
 // Register register and install loginedManager on dbus
@@ -216,5 +216,5 @@ func (m *Manager) marshalUserSessions() string {
 }
 
 func (*Manager) GetInterfaceName() string {
-	return "org.deepin.daemon.Logined"
+	return "org.deepin.dde.Logined"
 }

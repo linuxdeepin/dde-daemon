@@ -84,7 +84,7 @@ func (s *SinkInput) getPropSinkIndex() uint32 {
 func getSinkInputVisible(sinkInputInfo *pulse.SinkInput) bool {
 	appName := sinkInputInfo.PropList[pulse.PA_PROP_APPLICATION_NAME]
 	switch appName {
-	case "com.deepin.SoundEffect", "deepin-notifications":
+	case "org.deepin.dde.SoundEffect1", "deepin-notifications":
 		return false
 	}
 

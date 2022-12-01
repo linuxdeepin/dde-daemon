@@ -24,15 +24,15 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	accounts "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.accounts1"
-	timedated "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.timedated1"
-	timedate1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
+	"github.com/linuxdeepin/dde-daemon/session/common"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
+	timedate "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.timedate1"
+	timedate1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timedate1"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
-	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 const (
@@ -47,8 +47,8 @@ const (
 	settingsKeyLongTimeFormat  = "long-time-format"
 	settingsKeyWeekBegins      = "week-begins"
 
-	dbusServiceName = "org.deepin.daemon.Timedate1"
-	dbusPath        = "/org/deepin/daemon/Timedate1"
+	dbusServiceName = "org.deepin.dde.Timedate1"
+	dbusPath        = "/org/deepin/dde/Timedate1"
 	dbusInterface   = dbusServiceName
 )
 
@@ -98,7 +98,7 @@ type Manager struct {
 
 	settings *gio.Settings
 	td       timedate1.Timedate
-	setter   timedated.Timedated
+	setter   timedate.Timedate
 	userObj  accounts.User
 
 	//nolint
@@ -121,7 +121,7 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.systemSigLoop = dbusutil.NewSignalLoop(sysBus, 10)
 	m.td = timedate1.NewTimedate(sysBus)
-	m.setter = timedated.NewTimedated(sysBus)
+	m.setter = timedate.NewTimedate(sysBus)
 
 	m.settings = gio.NewSettings(timeDateSchema)
 	m.Use24HourFormat.Bind(m.settings, settingsKey24Hour)
@@ -212,7 +212,7 @@ func (m *Manager) initUserObj(systemConn *dbus.Conn) {
 		return
 	}
 
-	err = common.ActivateSysDaemonService("org.deepin.daemon.Accounts1")
+	err = common.ActivateSysDaemonService("org.deepin.dde.Accounts1")
 	if err != nil {
 		logger.Warning(err)
 	}

@@ -76,12 +76,3 @@ func (v *Theme) GetExportedMethods() dbusutil.ExportedMethods {
 		},
 	}
 }
-func (v *ThemeV20) GetExportedMethods() dbusutil.ExportedMethods {
-	return dbusutil.ExportedMethods{
-		{
-			Name:   "SetBackgroundSourceFile",
-			Fn:     v.SetBackgroundSourceFile,
-			InArgs: []string{"filename"},
-		},
-	}
-}

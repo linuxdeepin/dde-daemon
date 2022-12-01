@@ -8,7 +8,7 @@ import time
 from dbus_gen.com_deepin_daemon_Network import Network
 from dbus_gen.com_deepin_daemon_Network_ConnectionSession import ConnectionSession
 
-dbus_network = Network('com.deepin.daemon.Network', '/com/deepin/daemon/Network')
+dbus_network = Network('org.deepin.dde.Network1', '/org/deepin/dde/Network1')
 
 def get_network_devices():
     return json.loads(dbus_network.Devices)

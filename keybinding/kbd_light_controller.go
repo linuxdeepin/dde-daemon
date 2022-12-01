@@ -22,10 +22,10 @@ package keybinding
 import (
 	"errors"
 
-	backlight "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.helper.backlight1"
+	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
+	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
 	commonbl "github.com/linuxdeepin/go-lib/backlight/common"
 	kbdbl "github.com/linuxdeepin/go-lib/backlight/keyboard"
-	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 const backlightTypeKeyboard = 2

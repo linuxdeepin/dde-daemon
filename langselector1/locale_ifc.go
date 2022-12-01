@@ -29,8 +29,8 @@ import (
 )
 
 const (
-	dbusPath      = "/org/deepin/daemon/LangSelector1"
-	dbusInterface = "org.deepin.daemon.LangSelector1"
+	dbusPath      = "/org/deepin/dde/LangSelector1"
+	dbusInterface = "org.deepin.dde.LangSelector1"
 
 	localeIconStart    = "notification-change-language-start"
 	localeIconFailed   = "notification-change-language-failed"

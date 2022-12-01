@@ -21,10 +21,10 @@ package network
 
 import (
 	"github.com/godbus/dbus"
-	dbusmgr "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
+	dbusmgr "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
+	nmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )

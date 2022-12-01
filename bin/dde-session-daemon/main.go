@@ -43,11 +43,11 @@ import (
 	"github.com/linuxdeepin/dde-api/soundutils"
 	"github.com/linuxdeepin/dde-api/userenv"
 	"github.com/linuxdeepin/dde-daemon/loader"
-	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
-	accounts "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.accounts1"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.dbus"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
+	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
@@ -87,10 +87,10 @@ func allowRun() bool {
 		logger.Warning(err)
 		os.Exit(1)
 	}
-	sessionManagerObj := systemBus.Object("com.deepin.SessionManager",
-		"/com/deepin/SessionManager")
+	sessionManagerObj := systemBus.Object("org.deepin.dde.SessionManager1",
+		"/org/deepin/dde/SessionManager1")
 	var allowRun bool
-	err = sessionManagerObj.Call("com.deepin.SessionManager.AllowSessionDaemonRun",
+	err = sessionManagerObj.Call("org.deepin.dde.SessionManager1.AllowSessionDaemonRun",
 		dbus.FlagNoAutoStart).Store(&allowRun)
 	if err != nil {
 		logger.Warning(err)
@@ -419,7 +419,7 @@ func processLoginNotify() {
 		return
 	}
 	dbusDaemon := ofdbus.NewDBus(sessionConn)
-	_, err = dbusDaemon.GetNameOwner(0, "com.deepin.dde.osd")
+	_, err = dbusDaemon.GetNameOwner(0, "org.deepin.dde.Osd1")
 	if err != nil {
 		listenSignals()
 	} else {

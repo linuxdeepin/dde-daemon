@@ -9,12 +9,12 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus"
-	uadp "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.uadp1"
-	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
+	"github.com/linuxdeepin/dde-daemon/session/common"
+	secrets "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.secrets"
+	uadp "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.uadp1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen em -type UadpAgent
@@ -22,8 +22,8 @@ import (
 var logger = log.NewLogger("daemon/session/UadpAgent")
 
 const (
-	dbusServiceName = "org.deepin.daemon.UadpAgent1"
-	dbusPath        = "/org/deepin/daemon/UadpAgent1"
+	dbusServiceName = "org.deepin.dde.UadpAgent1"
+	dbusPath        = "/org/deepin/dde/UadpAgent1"
 	dbusInterface   = dbusServiceName
 )
 

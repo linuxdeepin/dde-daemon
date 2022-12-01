@@ -25,10 +25,10 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/appearance/background"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 var (
@@ -106,15 +106,15 @@ func (*Module) start() error {
 		return err
 	}
 
-	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		_m.destroy()
-		err = service.StopExport(_m)
-		if err != nil {
-			return err
-		}
-		return err
-	}
+	// err = service.RequestName(dbusServiceName) // TODO : 不和dde-appearance抢占，后续dde-daemon删除appearance
+	// if err != nil {
+	// 	_m.destroy()
+	// 	err = service.StopExport(_m)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	return err
+	// }
 
 	err = _m.syncConfig.Register()
 	if err != nil {

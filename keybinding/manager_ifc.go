@@ -26,15 +26,15 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (
-	dbusServiceName = "com.deepin.daemon.Keybinding"
-	dbusPath        = "/com/deepin/daemon/Keybinding"
-	dbusInterface   = "com.deepin.daemon.Keybinding"
+	dbusServiceName = "org.deepin.dde.Keybinding1"
+	dbusPath        = "/org/deepin/dde/Keybinding1"
+	dbusInterface   = "org.deepin.dde.Keybinding1"
 )
 
 type ErrInvalidShortcutType struct {

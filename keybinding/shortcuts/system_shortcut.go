@@ -97,8 +97,8 @@ var defaultSysActionCmdMap = map[string]string{
 	"launcher":               "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle",
 	"terminal":               "/usr/lib/deepin-daemon/default-terminal",
 	"terminal-quake":         "deepin-terminal --quake-mode",
-	"lock-screen":            "/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show",
-	"logout":                 "dbus-send --print-reply --dest=com.deepin.dde.shutdownFront /com/deepin/dde/shutdownFront com.deepin.dde.shutdownFront.Show",
+	"lock-screen":            "/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=org.deepin.dde.LockFront1 /org/deepin/dde/LockFront1 org.deepin.dde.LockFront1.Show",
+	"logout":                 "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
 	"deepin-screen-recorder": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord",
 	"system-monitor":         "/usr/bin/deepin-system-monitor",
 	"color-picker":           "dbus-send --print-reply --dest=com.deepin.Picker /com/deepin/Picker com.deepin.Picker.Show",
@@ -111,10 +111,10 @@ var defaultSysActionCmdMap = map[string]string{
 	"screenshot-scroll":     screenshotCmdPrefix + "ScrollScreenshot",
 	"file-manager":          "/usr/lib/deepin-daemon/default-file-manager",
 	"disable-touchpad":      "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
-	"wm-switcher":           "dbus-send --type=method_call --dest=com.deepin.WMSwitcher /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM",
+	"wm-switcher":           "dbus-send --type=method_call --dest=org.deepin.dde.WMSwitcher1 /org/deepin/dde/WMSwitcher1 org.deepin.dde.WMSwitcher1.RequestSwitchWM",
 	"turn-off-screen":       "sleep 0.5; xset dpms force off",
 	"notification-center":   "dbus-send --print-reply --dest=org.deepin.dde.Widgets / org.deepin.dde.Widgets.Toggle",
-	"clipboard":             "dbus-send --print-reply --dest=com.deepin.dde.Clipboard /com/deepin/dde/Clipboard com.deepin.dde.Clipboard.Toggle",
+	"clipboard":             "dbus-send --print-reply --dest=org.deepin.dde.Clipboard1 /org/deepin/dde/Clipboard1 org.deepin.dde.Clipboard1.Toggle",
 	"global-search":         "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
 }
 

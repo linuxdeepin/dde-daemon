@@ -20,8 +20,8 @@
 package power
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 var logger = log.NewLogger("daemon/session/power")
@@ -60,18 +60,6 @@ func (d *Daemon) Start() error {
 	}
 
 	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		return err
-	}
-
-
-	managerV20 := NewManagerV20(d.manager)
-	err = service.Export(dbusPathV20, managerV20)
-	if err != nil {
-		return err
-	}
-
-	err = service.RequestName(dbusServiceNameV20)
 	if err != nil {
 		return err
 	}

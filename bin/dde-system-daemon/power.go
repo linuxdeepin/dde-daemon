@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/godbus/dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 

@@ -7,16 +7,16 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	"github.com/linuxdeepin/dde-daemon/loader"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/cgroup"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 const (
-	dbusServiceName = "org.deepin.daemon.SwapSchedHelper1"
-	dbusPath        = "/org/deepin/daemon/SwapSchedHelper1"
+	dbusServiceName = "org.deepin.dde.SwapSchedHelper1"
+	dbusPath        = "/org/deepin/dde/SwapSchedHelper1"
 	dbusInterface   = dbusServiceName
 )
 

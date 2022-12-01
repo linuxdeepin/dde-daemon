@@ -22,7 +22,7 @@ import dbus
 
 class Network(object):
     '''
-    com.deepin.daemon.Network
+    org.deepin.dde.Network1
 
     Usage:
     ------
@@ -35,7 +35,7 @@ class Network(object):
 
     def __init__(self, bus_name, object_path, interface=None, bus=None):
         '''Constructor'''
-        self._dbus_interface_name = interface or "com.deepin.daemon.Network"
+        self._dbus_interface_name = interface or "org.deepin.dde.Network1"
         self._dbus_object_path = object_path 
         self._dbus_name = bus_name 
 

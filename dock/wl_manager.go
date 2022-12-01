@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus"
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
 	x "github.com/linuxdeepin/go-x11-client"
 )
 
@@ -165,7 +165,7 @@ func init() {
 
 // TODO: remove it
 func (m *Manager) DebugRegisterWW(id uint32) *dbus.Error {
-	objPath := dbus.ObjectPath("/com/deepin/daemon/KWayland/PlasmaWindow_" + strconv.Itoa(int(id)))
+	objPath := dbus.ObjectPath("/org/deepin/dde/KWayland1/PlasmaWindow_" + strconv.Itoa(int(id)))
 	m.registerWindowWayland(objPath)
 	return nil
 }

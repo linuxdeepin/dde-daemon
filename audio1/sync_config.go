@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	dbus "github.com/godbus/dbus"
-	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
+	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 )
 

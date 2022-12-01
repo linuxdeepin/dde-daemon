@@ -31,8 +31,8 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	obex "github.com/linuxdeepin/go-dbus-factory/session/org.bluez.obex"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/xdg/userdir"

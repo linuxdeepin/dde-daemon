@@ -4,16 +4,16 @@ import (
 	"errors"
 
 	"github.com/godbus/dbus"
-	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (
-	dbusServiceName = "org.deepin.daemon.AirplaneMode1"
-	dbusPath        = "/org/deepin/daemon/AirplaneMode1"
+	dbusServiceName = "org.deepin.dde.AirplaneMode1"
+	dbusPath        = "/org/deepin/dde/AirplaneMode1"
 	dbusInterface   = dbusServiceName
 
-	actionId = "com.deepin.daemon.airplane-mode.enable-disable-any"
+	actionId = "org.deepin.dde.airplane-mode.enable-disable-any"
 )
 
 type device struct {

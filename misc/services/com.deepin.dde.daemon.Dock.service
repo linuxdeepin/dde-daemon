@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name=com.deepin.dde.daemon.Dock
-Exec=/usr/lib/deepin-daemon/dde-session-daemon
-SystemdService=dde-session-daemon.service

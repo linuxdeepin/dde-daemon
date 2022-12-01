@@ -39,9 +39,9 @@ import (
 
 const (
 	nilObjPath      = dbus.ObjectPath("/")
-	dbusServiceName = "org.deepin.daemon.Accounts1"
-	dbusPath        = "/org/deepin/daemon/Accounts1"
-	dbusInterface   = "org.deepin.daemon.Accounts1"
+	dbusServiceName = "org.deepin.dde.Accounts1"
+	dbusPath        = "/org/deepin/dde/Accounts1"
+	dbusInterface   = "org.deepin.dde.Accounts1"
 )
 
 func (*Manager) GetInterfaceName() string {

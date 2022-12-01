@@ -21,22 +21,22 @@ package power
 
 import (
 	"github.com/godbus/dbus"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 
 	// system bus
-	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
-	sensorproxy "github.com/linuxdeepin/go-dbus-factory/net.hadess.sensorproxy"
-	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
-	libpower "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
+	shutdownfront "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.shutdownfront1"
+	sensorproxy "github.com/linuxdeepin/go-dbus-factory/system/net.hadess.sensorproxy"
+	libpower "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 
 	// session bus
-	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
-	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.sessionwatcher1"
-	screensaver1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.screensaver1"
+	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
+	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionwatcher1"
+	screensaver1 "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.screensaver"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	x "github.com/linuxdeepin/go-x11-client"
 )

@@ -30,7 +30,7 @@ import (
 )
 
 const (
-	dbusServiceName = "org.deepin.daemon.LangSelector1"
+	dbusServiceName = "org.deepin.dde.LangSelector1"
 )
 
 var (

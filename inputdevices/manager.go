@@ -26,11 +26,11 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (

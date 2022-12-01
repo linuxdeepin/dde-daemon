@@ -92,8 +92,8 @@ type Manager struct {
 
 	mu sync.Mutex
 
-	CursorX               int32
-	CursorY               int32
+	CursorX int32
+	CursorY int32
 }
 
 const (
@@ -156,15 +156,15 @@ const evMaskForHideCursor uint32 = input.XIEventMaskRawMotion | input.XIEventMas
 func (m *Manager) listenGlobalCursorPressed() error {
 	sessionBus := m.service.Conn()
 	logger.Debug("[test global key] sessionBus", sessionBus)
-	err := sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonPress").Err
+	err := sessionBus.Object("org.deepin.dde.KWayland1",
+		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Output", "ButtonPress").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 
 	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Output.ButtonPress",
+		Name: "org.deepin.dde.KWayland1.Output.ButtonPress",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
 			key := sig.Body[0].(uint32)
@@ -190,15 +190,15 @@ func (m *Manager) listenGlobalCursorPressed() error {
 
 func (m *Manager) listenGlobalCursorRelease() error {
 	sessionBus := m.service.Conn()
-	err := sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonRelease").Err
+	err := sessionBus.Object("org.deepin.dde.KWayland1",
+		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Output", "ButtonRelease").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 
 	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Output.ButtonRelease",
+		Name: "org.deepin.dde.KWayland1.Output.ButtonRelease",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
 			key := sig.Body[0].(uint32)
@@ -225,15 +225,15 @@ func (m *Manager) listenGlobalCursorRelease() error {
 
 func (m *Manager) listenGlobalCursorMove() error {
 	sessionBus := m.service.Conn()
-	err := sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
+	err := sessionBus.Object("org.deepin.dde.KWayland1",
+		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Output", "CursorMove").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 
 	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Output.CursorMove",
+		Name: "org.deepin.dde.KWayland1.Output.CursorMove",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
 			x := sig.Body[0].(uint32)
@@ -832,15 +832,15 @@ func (m *Manager) DebugGetPidAreasMap() (pidAreasMapJSON string, busErr *dbus.Er
 
 func (m *Manager) listenGlobalAxisChanged() error {
 	sessionBus := m.service.Conn()
-	err := sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "AxisChanged").Err
+	err := sessionBus.Object("org.deepin.dde.KWayland1",
+		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Output", "AxisChanged").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 
 	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Output.AxisChanged",
+		Name: "org.deepin.dde.KWayland1.Output.AxisChanged",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
 			x := sig.Body[1].(float64)

@@ -30,12 +30,12 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"golang.org/x/xerrors"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (
@@ -53,8 +53,8 @@ const (
 	gsKeyEnabled         = "enabled"
 	gsKeyDisableAutoMute = "disable-auto-mute"
 
-	dbusServiceName = "org.deepin.daemon.Audio1"
-	dbusPath        = "/org/deepin/daemon/Audio1"
+	dbusServiceName = "org.deepin.dde.Audio1"
+	dbusPath        = "/org/deepin/dde/Audio1"
 	dbusInterface   = dbusServiceName
 
 	cmdSystemctl  = "systemctl"

@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	accounts "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.accounts1"
-	fprint "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.fprintd1"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
+	fprint "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.fprintd1"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/pam"
 )

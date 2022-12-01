@@ -12,8 +12,8 @@ type syncConfig struct {
 }
 
 const (
-	daemonSysService = "org.deepin.daemon.Daemon1"
-	daemonSysPath    = "/org/deepin/daemon/Daemon1"
+	daemonSysService = "org.deepin.dde.Daemon1"
+	daemonSysPath    = "/org/deepin/dde/Daemon1"
 	daemonSysIFC     = daemonSysService
 
 	methodSysNetGetConnections = daemonSysIFC + ".NetworkGetConnections"

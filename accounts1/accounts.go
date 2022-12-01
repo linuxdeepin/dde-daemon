@@ -20,9 +20,9 @@
 package accounts
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/accounts1/logined"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 var (
@@ -58,8 +58,6 @@ func (d *Daemon) Start() error {
 
 	service := loader.GetService()
 	d.manager = NewManager(service)
-	// init V20 manager
-	d.manager.managerV20 = NewManagerV20(d.manager)
 
 	err := service.Export(dbusPath, d.manager)
 	if err != nil {
@@ -71,8 +69,6 @@ func (d *Daemon) Start() error {
 	}
 
 	d.manager.exportUsers()
-	// init V20 Users
-	d.manager.managerV20.exportUsers()
 
 	d.imageBlur = newImageBlur(service)
 	_imageBlur = d.imageBlur
@@ -99,14 +95,12 @@ func (d *Daemon) Start() error {
 		return err
 	}
 
-	err = service.Export(dbusPathV20, d.manager.managerV20)
+	//
+	err = service.RequestName(imageBlurDBusService)
 	if err != nil {
 		return err
 	}
-	err = service.RequestName(dbusServiceNameV20)
-	if err != nil {
-		return err
-	}
+
 	return nil
 }
 

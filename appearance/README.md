@@ -29,9 +29,9 @@ Cursor 还需要单独监听 `gtk-cursor-theme-name` 的改变，来让 Gtk 程�
 
 ## DBus 接口简介
 
-*Dest*: com.deepin.daemon.Appearance 
-*Path*: /com/deepin/daemon/Appearance 
-*Interface*: com.deepin.daemon.Appearance 
+*Dest*: org.deepin.dde.Appearance1
+*Path*: /org/deepin/dde/Appearance1 
+*Interface*: org.deepin.dde.Appearance1
 
 
 ### 支持的主题类型

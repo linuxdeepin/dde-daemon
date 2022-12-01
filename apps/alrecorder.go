@@ -28,13 +28,13 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	dbus "github.com/godbus/dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (
-	dbusServiceName         = "com.deepin.daemon.Apps"
-	dbusPath                = "/com/deepin/daemon/Apps"
+	dbusServiceName         = "org.deepin.dde.Apps1"
+	dbusPath                = "/org/deepin/dde/Apps1"
 	alRecorderDBusInterface = dbusServiceName + ".LaunchedRecorder"
 	minUid                  = 1000
 )

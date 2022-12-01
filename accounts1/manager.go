@@ -33,8 +33,8 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
-	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	udcp "github.com/linuxdeepin/go-dbus-factory/system/com.deepin.udcp.iam"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/tasker"
 	dutils "github.com/linuxdeepin/go-lib/utils"
@@ -86,8 +86,6 @@ type Manager struct {
 	delayTaskManager *tasker.DelayTaskManager
 	userAddedChanMap map[string]chan string
 	udcpCache        udcp.UdcpCache
-
-	managerV20 *ManagerV20
 
 	//nolint
 	signals *struct {
@@ -174,9 +172,6 @@ func (m *Manager) destroy() {
 	m.sysSigLoop.Stop()
 	m.stopExportUsers(m.UserList)
 	_ = m.service.StopExport(m)
-
-	// destory V20 manager
-	m.service.StopExport(m.managerV20)
 }
 
 func (m *Manager) initUsers(list []string) {
@@ -363,8 +358,6 @@ func (m *Manager) exportUserByUid(uId string) error {
 		return err
 	}
 
-	m.managerV20.addUser(u)
-
 	m.usersMapMu.Lock()
 	m.usersMap[userPath] = u
 	m.usersMapMu.Unlock()
@@ -383,8 +376,6 @@ func (m *Manager) stopExportUser(userPath string) {
 
 	delete(m.usersMap, userPath)
 	_ = m.service.StopExport(u)
-
-	m.managerV20.stopExportUser(u.Uid)
 }
 
 func (m *Manager) getUserByName(name string) *User {

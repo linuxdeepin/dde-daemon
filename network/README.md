@@ -165,7 +165,7 @@ VPN(已支持 L2TP, PPTP, OpenConnect, OpenVPN, StrongSwan, VPNC等至少6
 - `xxxJSON`: JSON string 类型, 为了方便前后端交互, 同时减少 DBus 参数数
   量, deepin 网络后端用了很多 JSON string 类型的参数
 
-### com.deepin.daemon.Network
+### org.deepin.dde.Network1
 
 - 当前网络状态
   - `GetActiveConnectionInfo() (acinfosJSON string)`
@@ -223,7 +223,7 @@ VPN(已支持 L2TP, PPTP, OpenConnect, OpenVPN, StrongSwan, VPNC等至少6
   - `SetProxyIgnoreHosts(ignoreHosts string)`
   - `SetProxyMethod(proxyMode string)`
 
-### com.deepin.daemon.Network.ConnectionSession
+### org.deepin.dde.Network1.ConnectionSession
 
 - DBus 属性
   - **prop** `ConnectionPath dbus.ObjectPath`
@@ -415,26 +415,26 @@ VPN(已支持 L2TP, PPTP, OpenConnect, OpenVPN, StrongSwan, VPNC等至少6
 1. 获取 deepin 网络后端提供的所有网络设备信息
 
    ```sh
-   dbus-send --print-reply --dest=com.deepin.daemon.Network \
-       /com/deepin/daemon/Network org.freedesktop.DBus.Properties.Get \
-       string:"com.deepin.daemon.Network" string:"Devices"
+   dbus-send --print-reply --dest=org.deepin.dde.Network1 \
+       /org/deepin/dde/Network1 org.freedesktop.DBus.Properties.Get \
+       string:"org.deepin.dde.Network1" string:"Devices"
    ```
 
 1. 设置 deepin 网络后端提供的 WiFi 无线, VPN 等开关状态
 
    ```sh
    dbus-send --print-reply --type=method_call \
-       --dest=com.deepin.daemon.Network /com/deepin/daemon/Network \
+       --dest=org.deepin.dde.Network1 /org/deepin/dde/Network1 \
        org.freedesktop.DBus.Properties.Set \
-       string:"com.deepin.daemon.Network" string:"NetworkingEnabled" variant:boolean:"true"
+       string:"org.deepin.dde.Network1" string:"NetworkingEnabled" variant:boolean:"true"
    dbus-send --print-reply --type=method_call \
-       --dest=com.deepin.daemon.Network /com/deepin/daemon/Network \
+       --dest=org.deepin.dde.Network1 /org/deepin/dde/Network1 \
        org.freedesktop.DBus.Properties.Set \
-       string:"com.deepin.daemon.Network" string:"WirelessEnabled" variant:boolean:"true"
+       string:"org.deepin.dde.Network1" string:"WirelessEnabled" variant:boolean:"true"
     dbus-send --print-reply --type=method_call \
-       --dest=com.deepin.daemon.Network /com/deepin/daemon/Network \
+       --dest=org.deepin.dde.Network1 /org/deepin/dde/Network1 \
        org.freedesktop.DBus.Properties.Set \
-       string:"com.deepin.daemon.Network" string:"VpnEnabled" variant:boolean:"true"
+       string:"org.deepin.dde.Network1" string:"VpnEnabled" variant:boolean:"true"
    ```
 
 ## 相关网络配置文件
@@ -555,7 +555,7 @@ VPN(已支持 L2TP, PPTP, OpenConnect, OpenVPN, StrongSwan, VPNC等至少6
   1. 获取 deepin 网络后端 DBus 接口 XML 配置
 
      ```sh
-     dbus-send --type=method_call --print-reply --dest=com.deepin.daemon.Network /com/deepin/daemon/Network org.freedesktop.DBus.Introspectable.Introspect | sed 1d | sed -e '1s/^   string "//' | sed '$s/"$//'
+     dbus-send --type=method_call --print-reply --dest=org.deepin.dde.Network1 /org/deepin/dde/Network1 org.freedesktop.DBus.Introspectable.Introspect | sed 1d | sed -e '1s/^   string "//' | sed '$s/"$//'
      ```
 
   1. 监听 WiFi 热点信号强度变化

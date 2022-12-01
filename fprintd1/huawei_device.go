@@ -8,11 +8,11 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus"
-	accounts "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.accounts1"
-	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/com.huawei.fingerprint"
+	fprintd_common "github.com/linuxdeepin/dde-daemon/fprintd1/common"
+	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/system/com.huawei.fingerprint"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
-	fprintd_common "github.com/linuxdeepin/dde-daemon/fprintd1/common"
 )
 
 const (

@@ -25,18 +25,18 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
-	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
-	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.launcher"
-	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	wmswitcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
+	launcher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.daemon.launcher1"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
+	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.launcher1"
+	startmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.startmanager1"
+	wmswitcher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.wmswitcher1"
+	libApps "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.apps1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	x "github.com/linuxdeepin/go-x11-client"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (
@@ -257,7 +257,7 @@ func (m *Manager) init() error {
 	m.appsObj = libApps.NewApps(systemBus)
 	m.launcher = launcher.NewLauncher(sessionBus)
 	m.ddeLauncher = libDDELauncher.NewLauncher(sessionBus)
-	m.startManager = sessionmanager.NewStartManager(sessionBus)
+	m.startManager = startmanager.NewStartManager(sessionBus)
 	m.wmSwitcher = wmswitcher.NewWMSwitcher(sessionBus)
 
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
@@ -302,7 +302,7 @@ func (m *Manager) init() error {
 	return nil
 }
 
-func (m *Manager)startBAMFDaemon(bus *dbus.Conn) error {
+func (m *Manager) startBAMFDaemon(bus *dbus.Conn) error {
 	systemdUser := bus.Object("org.freedesktop.systemd1", "/org/freedesktop/systemd1")
 	var jobPath dbus.ObjectPath
 	err := systemdUser.Call("org.freedesktop.systemd1.Manager.StartUnit",

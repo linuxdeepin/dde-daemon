@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 
 	dbus "github.com/godbus/dbus"
-	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/com.huawei.fingerprint"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/system/com.huawei.fingerprint"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 )
 
 const (

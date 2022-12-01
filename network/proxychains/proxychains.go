@@ -27,7 +27,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	proxy "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.proxy"
+	proxy "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.networkproxy1"
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -76,8 +76,8 @@ func NewManager(service *dbusutil.Service) *Manager {
 }
 
 const (
-	DBusPath      = "/com/deepin/daemon/Network/ProxyChains"
-	dbusInterface = "com.deepin.daemon.Network.ProxyChains"
+	DBusPath      = "/org/deepin/dde/Network1/ProxyChains"
+	dbusInterface = "org.deepin.dde.Network1.ProxyChains"
 )
 
 func (*Manager) GetInterfaceName() string {

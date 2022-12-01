@@ -48,15 +48,15 @@ translate: $(addsuffix /LC_MESSAGES/dde-daemon.mo, $(addprefix out/locale/, ${LA
 pot:
 	deepin-update-pot misc/po/locale_config.ini
 
-POLICIES=accounts Grub2 Fprintd
+POLICIES=accounts grub2 fprintd
 ts:
 	for i in $(POLICIES); do \
-		deepin-policy-ts-convert policy2ts misc/polkit-action/com.deepin.daemon.$$i.policy.in misc/ts/com.deepin.daemon.$$i.policy; \
+		deepin-policy-ts-convert policy2ts misc/polkit-action/org.deepin.dde.$$i.policy.in misc/ts/org.deepin.dde.$$i.policy; \
 	done
 
 ts_to_policy:
 	for i in $(POLICIES); do \
-	deepin-policy-ts-convert ts2policy misc/polkit-action/com.deepin.daemon.$$i.policy.in misc/ts/com.deepin.daemon.$$i.policy misc/polkit-action/com.deepin.daemon.$$i.policy; \
+	deepin-policy-ts-convert ts2policy misc/polkit-action/org.deepin.dde.$$i.policy.in misc/ts/org.deepin.dde.$$i.policy misc/polkit-action/org.deepin.dde.$$i.policy; \
 	done
 
 build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle $(addprefix out/bin/, ${BINARIES}) ts_to_policy icons translate

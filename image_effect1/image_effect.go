@@ -38,9 +38,9 @@ import (
 //go:generate dbusutil-gen em -type ImageEffect
 
 const (
-	dbusServiceName = "org.deepin.daemon.ImageEffect1"
+	dbusServiceName = "org.deepin.dde.ImageEffect1"
 	dbusInterface   = dbusServiceName
-	dbusPath        = "/org/deepin/daemon/ImageEffect1"
+	dbusPath        = "/org/deepin/dde/ImageEffect1"
 
 	cacheDir      = "/var/cache/deepin/dde-daemon/image-effect"
 	effectPixmix  = "pixmix"

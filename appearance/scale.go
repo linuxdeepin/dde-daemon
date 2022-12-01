@@ -23,7 +23,7 @@ import (
 	"sync/atomic"
 
 	"github.com/godbus/dbus"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	"github.com/linuxdeepin/go-lib/gettext"
 )
 
@@ -51,7 +51,7 @@ const icon = "dialog-window-scale"
 func handleSetScaleFactorDone() {
 	const (
 		expireTimeout = 15 * 1000
-		requestLogout = "dbus-send,--type=method_call,--dest=com.deepin.SessionManager,/com/deepin/SessionManager,com.deepin.SessionManager.RequestLogout"
+		requestLogout = "dbus-send,--type=method_call,--dest=org.deepin.dde.SessionManager1,/org/deepin/dde/SessionManager1,org.deepin.dde.SessionManager1.RequestLogout"
 	)
 	body := gettext.Tr("Log out for display scaling settings to take effect")
 	summary := gettext.Tr("Set successfully")

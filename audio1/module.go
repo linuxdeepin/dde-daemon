@@ -129,7 +129,7 @@ func waitSoundThemePlayerExit() {
 
 	for {
 		var owner string
-		owner, err = srv.GetNameOwner("com.deepin.api.SoundThemePlayer")
+		owner, err = srv.GetNameOwner("org.deepin.dde.SoundThemePlayer1")
 		if err != nil {
 			return
 		}

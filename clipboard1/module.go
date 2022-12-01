@@ -1,13 +1,13 @@
 package clipboard
 
 import (
+	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
-const dbusServiceName = "org.deepin.daemon.ClipboardManager1"
+const dbusServiceName = "org.deepin.dde.ClipboardManager1"
 
 var logger *log.Logger
 
@@ -56,7 +56,7 @@ func (mo *Module) Start() error {
 	}
 
 	service := loader.GetService()
-	err = service.Export("/org/deepin/daemon/ClipboardManager1", m)
+	err = service.Export("/org/deepin/dde/ClipboardManager1", m)
 	if err != nil {
 		return err
 	}

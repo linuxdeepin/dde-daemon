@@ -20,7 +20,7 @@
 package screenedge
 
 import (
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 type Settings struct {

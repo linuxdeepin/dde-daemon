@@ -131,9 +131,9 @@ func (m *Manager) setDPMSModeOff() {
 }
 
 const (
-	lockFrontServiceName = "com.deepin.dde.lockFront"
+	lockFrontServiceName = "org.deepin.dde.LockFront1"
 	lockFrontIfc         = lockFrontServiceName
-	lockFrontObjPath     = "/com/deepin/dde/lockFront"
+	lockFrontObjPath     = "/org/deepin/dde/LockFront1"
 )
 
 func (m *Manager) doLock(autoStartAuth bool) {
@@ -339,8 +339,9 @@ func playSound(name string) {
 }
 
 const (
-	deepinScreensaverDBusServiceName = "org.deepin.ScreenSaver1"
-	deepinScreensaverDBusPath        = "/org/deepin/ScreenSaver1"
+	// deepin-screensaver dbus
+	deepinScreensaverDBusServiceName = "com.deepin.ScreenSaver"
+	deepinScreensaverDBusPath        = "/com/deepin/ScreenSaver"
 	deepinScreensaverDBusInterface   = deepinScreensaverDBusServiceName
 )
 

@@ -20,13 +20,13 @@
 package keyevent
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 const (
-	dbusServiceName = "com.deepin.daemon.KeyEvent"
-	dbusPath        = "/com/deepin/daemon/KeyEvent"
+	dbusServiceName = "org.deepin.dde.KeyEvent1"
+	dbusPath        = "/org/deepin/dde/KeyEvent1"
 	dbusInterface   = dbusServiceName
 )
 

@@ -11,7 +11,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/gosexy/gettext"
-	fprint "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.fprintd1"
+	fprint "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.fprintd1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/strv"

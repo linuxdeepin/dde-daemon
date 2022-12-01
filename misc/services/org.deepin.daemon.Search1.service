@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=org.deepin.daemon.Search1
-Exec=/usr/lib/deepin-daemon/search

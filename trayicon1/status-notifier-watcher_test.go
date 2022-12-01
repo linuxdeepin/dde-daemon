@@ -26,7 +26,7 @@ import (
 	"testing"
 
 	dbus "github.com/godbus/dbus"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/stretchr/testify/assert"
 )
 

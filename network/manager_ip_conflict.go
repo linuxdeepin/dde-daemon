@@ -4,8 +4,8 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	ipwatch "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.ipwatch1"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 )
 
 func activateSystemService(sysBus *dbus.Conn, serviceName string) error {
@@ -29,7 +29,7 @@ func activateSystemService(sysBus *dbus.Conn, serviceName string) error {
 }
 
 func (m *Manager) initIPConflictManager(sysBus *dbus.Conn) {
-	m.sysIPWatchD = ipwatchd.NewIPWatchD(sysBus)
+	m.sysIPWatchD = ipwatch.NewIPWatch(sysBus)
 	m.sysIPWatchD.InitSignalExt(m.sysSigLoop, true)
 	err := activateSystemService(sysBus, m.sysIPWatchD.ServiceName_())
 	if err != nil {

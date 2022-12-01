@@ -30,8 +30,8 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/airplane_mode1"
 	_ "github.com/linuxdeepin/dde-daemon/system/bluetooth1"
 	_ "github.com/linuxdeepin/dde-daemon/system/display"
-	_ "github.com/linuxdeepin/dde-daemon/system/hostname"
 	_ "github.com/linuxdeepin/dde-daemon/system/gesture"
+	_ "github.com/linuxdeepin/dde-daemon/system/hostname"
 	_ "github.com/linuxdeepin/dde-daemon/system/inputdevices"
 	_ "github.com/linuxdeepin/dde-daemon/system/keyevent"
 	_ "github.com/linuxdeepin/dde-daemon/system/lang"
@@ -40,11 +40,11 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/power_manager1"
 	_ "github.com/linuxdeepin/dde-daemon/system/swapsched1"
 	_ "github.com/linuxdeepin/dde-daemon/system/systeminfo1"
-	_ "github.com/linuxdeepin/dde-daemon/system/timedated1"
+	_ "github.com/linuxdeepin/dde-daemon/system/timedate1"
 	_ "github.com/linuxdeepin/dde-daemon/system/uadp1"
 
 	"github.com/linuxdeepin/dde-daemon/loader"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
@@ -65,8 +65,8 @@ type Daemon struct {
 }
 
 const (
-	dbusServiceName = "org.deepin.daemon.Daemon1"
-	dbusPath        = "/org/deepin/daemon/Daemon1"
+	dbusServiceName = "org.deepin.dde.Daemon1"
+	dbusPath        = "/org/deepin/dde/Daemon1"
 	dbusInterface   = dbusServiceName
 )
 

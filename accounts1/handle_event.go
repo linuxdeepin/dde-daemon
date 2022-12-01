@@ -159,7 +159,6 @@ func (m *Manager) updatePropUserList() {
 		if err != nil {
 			logger.Warning(err)
 		}
-		m.managerV20.syncUserList(m.UserList)
 	}
 	m.UserListMu.Unlock()
 }

@@ -9,7 +9,7 @@ import (
 	"os/exec"
 
 	"github.com/godbus/dbus"
-	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 )
 
 func getSettingConnectionTimestamp(settings map[string]map[string]dbus.Variant) uint64 {

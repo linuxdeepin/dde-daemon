@@ -34,7 +34,7 @@ func Test_getUidFromUserPath(t *testing.T) {
 	}{
 		{
 			name:     "getUidFromUserPath",
-			userPath: "/org/deepin/daemon/Accounts1/User1000",
+			userPath: "/org/deepin/dde/Accounts1/User1000",
 			want:     "1000",
 		},
 	}

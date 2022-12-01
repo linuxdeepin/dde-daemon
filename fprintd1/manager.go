@@ -26,18 +26,18 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/com.huawei.fingerprint"
-	fprint "github.com/linuxdeepin/go-dbus-factory/net.reactivated.fprint"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
+	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/system/com.huawei.fingerprint"
+	fprint "github.com/linuxdeepin/go-dbus-factory/system/net.reactivated.fprint"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
 	"golang.org/x/xerrors"
 )
 
 const (
-	dbusServiceName     = "org.deepin.daemon.Fprintd1"
-	dbusPath            = "/org/deepin/daemon/Fprintd1"
+	dbusServiceName     = "org.deepin.dde.Fprintd1"
+	dbusPath            = "/org/deepin/dde/Fprintd1"
 	dbusInterface       = dbusServiceName
 	dbusDeviceInterface = dbusServiceName + ".Device"
 

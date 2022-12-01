@@ -20,10 +20,10 @@
 package bluetooth
 
 import (
-	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/log"
 	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 type daemon struct {
@@ -42,7 +42,6 @@ func (*daemon) GetDependencies() []string {
 
 var globalBluetooth *Bluetooth
 var globalAgent *agent
-var globalBluetoothV20 *BluetoothV20
 
 func (d *daemon) Start() error {
 	if globalBluetooth != nil {
@@ -51,7 +50,6 @@ func (d *daemon) Start() error {
 
 	service := loader.GetService()
 	globalBluetooth = newBluetooth(service)
-	globalBluetoothV20 = NewBluetoothV20(globalBluetooth)
 
 	err := service.Export(dbusPath, globalBluetooth)
 	if err != nil {
@@ -60,19 +58,7 @@ func (d *daemon) Start() error {
 		return err
 	}
 
-	err = service.Export(dbusPathV20, globalBluetoothV20)
-	if err != nil {
-		logger.Warning("failed to export bluetooth V20:", err)
-		globalBluetoothV20 = nil
-		return err
-	}
-
 	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		return err
-	}
-
-	err = service.RequestName(dbusServiceNameV20)
 	if err != nil {
 		return err
 	}

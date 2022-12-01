@@ -20,13 +20,13 @@
 package power_manager
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 const (
-	dbusServiceName = "org.deepin.daemon.PowerManager1"
-	dbusPath        = "/org/deepin/daemon/PowerManager1"
+	dbusServiceName = "org.deepin.dde.PowerManager1"
+	dbusPath        = "/org/deepin/dde/PowerManager1"
 	dbusInterface   = dbusServiceName
 )
 

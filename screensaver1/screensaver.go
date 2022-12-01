@@ -26,7 +26,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/log"
@@ -196,8 +196,8 @@ func (ss *ScreenSaver) setTimeout(seconds, interval uint32, blank bool) {
 			logger.Warning(err)
 			return
 		}
-		err = sessionBus.Object("com.deepin.daemon.KWayland",
-			"/com/deepin/daemon/KWayland/Output").Call("com.deepin.daemon.KWayland.Idle.SetIdleTimeout", 0, seconds*1000).Err
+		err = sessionBus.Object("org.deepin.dde.KWayland1",
+			"/org/deepin/dde/KWayland1/Output").Call("org.deepin.dde.KWayland1.Idle.SetIdleTimeout", 0, seconds*1000).Err
 
 		if err != nil {
 			logger.Warning(err)

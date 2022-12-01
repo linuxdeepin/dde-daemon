@@ -22,8 +22,8 @@ package power
 import (
 	"syscall"
 
-	daemon "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.daemon1"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/dde-daemon/appearance"
 	"github.com/linuxdeepin/dde-daemon/network"
 )

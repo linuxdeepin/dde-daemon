@@ -261,23 +261,3 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 		},
 	}
 }
-
-func (v *UserV20) GetExportedMethods() dbusutil.ExportedMethods {
-	return dbusutil.ExportedMethods{
-		{
-			Name:   "EnableNoPasswdLogin",
-			Fn:     v.EnableNoPasswdLogin,
-			InArgs: []string{"enabled"},
-		},
-		{
-			Name:   "SetAutomaticLogin",
-			Fn:     v.SetAutomaticLogin,
-			InArgs: []string{"enabled"},
-		},
-		{
-			Name:   "SetLocked",
-			Fn:     v.SetLocked,
-			InArgs: []string{"locked"},
-		},
-	}
-}

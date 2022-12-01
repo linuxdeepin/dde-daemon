@@ -28,7 +28,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
+	bluez "github.com/linuxdeepin/go-dbus-factory/system/org.bluez"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )

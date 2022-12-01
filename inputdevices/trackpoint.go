@@ -22,7 +22,7 @@ package inputdevices
 import (
 	"sync"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 )

@@ -28,15 +28,15 @@ import (
 	"sync/atomic"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-api/soundutils"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"github.com/linuxdeepin/dde-api/soundutils"
 )
 
 const (
-	dbusServiceName    = "com.deepin.dde.daemon.Launcher"
-	dbusObjPath        = "/com/deepin/dde/daemon/Launcher"
+	dbusServiceName    = "org.deepin.dde.daemon.Launcher1"
+	dbusObjPath        = "/org/deepin/dde/daemon/Launcher1"
 	dbusInterface      = dbusServiceName
 	desktopMainSection = "Desktop Entry"
 	launcherExecPath   = "/usr/bin/dde-launcher"

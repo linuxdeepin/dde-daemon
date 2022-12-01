@@ -26,10 +26,10 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
-	cursorhelper "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.cursorhelper"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/dde-api/theme_thumb"
 	"github.com/linuxdeepin/dde-api/themes"
+	cursorhelper "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.cursorhelper1"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 const (

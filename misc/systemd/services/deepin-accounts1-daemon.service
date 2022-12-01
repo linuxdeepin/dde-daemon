@@ -9,7 +9,7 @@ Wants=nss-user-lookup.target
 
 [Service]
 Type=dbus
-BusName=org.deepin.daemon.Accounts1
+BusName=org.deepin.dde.Accounts1
 ExecStart=/usr/lib/deepin-daemon/dde-system-daemon
 StandardOutput=syslog
 Environment=GVFS_DISABLE_FUSE=1

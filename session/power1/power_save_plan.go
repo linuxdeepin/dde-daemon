@@ -908,18 +908,18 @@ func (psp *powerSavePlan) ConnectIdle() error {
 		logger.Warning(err)
 		return err
 	}
-	err = sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Idle", "IdleTimeout").Err
+	err = sessionBus.Object("org.deepin.dde.KWayland1",
+		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Idle", "IdleTimeout").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 	sessionSigLoop := dbusutil.NewSignalLoop(sessionBus, 10)
 	sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Idle.IdleTimeout",
+		Name: "org.deepin.dde.KWayland1.Idle.IdleTimeout",
 	}, func(sig *dbus.Signal) {
 		if strings.HasPrefix(string(sig.Path),
-			"/com/deepin/daemon/KWayland/") &&
+			"/org/deepin/dde/KWayland1/") &&
 			len(sig.Body) == 1 {
 			bIdle, ok := sig.Body[0].(bool)
 			if !ok {

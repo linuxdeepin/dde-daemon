@@ -28,17 +28,18 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
-	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
-	keyevent "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.keyevent"
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
-	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
-	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
-	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	airplanemode "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.airplanemode1"
-	backlight "github.com/linuxdeepin/go-dbus-factory/org.deepin.daemon.helper.backlight1"
-	power "github.com/linuxdeepin/go-dbus-factory/org.deepin.system.power1"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
+	inputdevices "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.inputdevices1"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
+	lockfront "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.lockfront1"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
+	shutdownfront "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.shutdownfront1"
+	startmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.startmanager1"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.airplanemode1"
+	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
+	keyevent "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.keyevent1"
+	power "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -122,7 +123,7 @@ type Manager struct {
 
 	sessionSigLoop            *dbusutil.SignalLoop
 	systemSigLoop             *dbusutil.SignalLoop
-	startManager              sessionmanager.StartManager
+	startManager              startmanager.StartManager
 	sessionManager            sessionmanager.SessionManager
 	airplane                  airplanemode.AirplaneMode
 	backlightHelper           backlight.Backlight
@@ -283,7 +284,7 @@ func (m *Manager) init() {
 	m.audioController = NewAudioController(sessionBus, m.backlightHelper)
 	m.mediaPlayerController = NewMediaPlayerController(m.systemSigLoop, sessionBus)
 
-	m.startManager = sessionmanager.NewStartManager(sessionBus)
+	m.startManager = startmanager.NewStartManager(sessionBus)
 	m.airplane = airplanemode.NewAirplaneMode(sysBus)
 	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
 	m.keyboard = inputdevices.NewKeyboard(sessionBus)
@@ -449,14 +450,14 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 	})
 
 	//+ 监控鼠标移动事件
-	err = sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
+	err = sessionBus.Object("org.deepin.dde.KWayland1",
+		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Output", "CursorMove").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Output.CursorMove",
+		Name: "org.deepin.dde.KWayland1.Output.CursorMove",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
 			if m.dpmsIsOff {
@@ -471,14 +472,14 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 	})
 
 	//+ 监控鼠标按下事件
-	err = sessionBus.Object("com.deepin.daemon.KWayland",
-		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonPress").Err
+	err = sessionBus.Object("org.deepin.dde.KWayland1",
+		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Output", "ButtonPress").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.KWayland.Output.ButtonPress",
+		Name: "org.deepin.dde.KWayland1.Output.ButtonPress",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
 			if m.dpmsIsOff {
@@ -495,14 +496,14 @@ func (m *Manager) ListenGlobalAccel(sessionBus *dbus.Conn) error {
 }
 
 func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
-	err := systemBus.Object("com.deepin.daemon.Gesture",
-		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "KeyboardEvent").Err
+	err := systemBus.Object("org.deepin.dde.Gesture1",
+		"/org/deepin/dde/Gesture1").AddMatchSignal("org.deepin.dde.Gesture1", "KeyboardEvent").Err
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "com.deepin.daemon.Gesture.KeyboardEvent",
+		Name: "org.deepin.dde.Gesture1.KeyboardEvent",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
 			key := sig.Body[0].(uint32)
@@ -681,7 +682,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			}()
 		}
 	} else if action.Type == shortcuts.ActionTypeShowControlCenter {
-		err := m.execCmd("dbus-send --session --dest=com.deepin.dde.ControlCenter  --print-reply /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.Show",
+		err := m.execCmd("dbus-send --session --dest=org.deepin.dde.ControlCenter1  --print-reply /org/deepin/dde/ControlCenter1 org.deepin.dde.ControlCenter1.Show",
 			false)
 		if err != nil {
 			logger.Warning("failed to show control center:", err)

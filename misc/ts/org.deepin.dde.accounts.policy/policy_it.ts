@@ -1,0 +1,75 @@
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="it" version="2.1">
+	<context>
+		<name>policy</name>
+		<message>
+			<location filename="org.deepin.dde.accounts.change-own-user-data!message" line="0"/>
+			<source>Authentication is required to change your own user data</source>
+			<translation>È necessario autenticarsi per cambiare i propri dati utente</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.change-own-user-data!description" line="0"/>
+			<source>Change your own user data</source>
+			<translation>Cambia i dati dell&apos;utente</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.user-administration!message" line="0"/>
+			<source>Authentication is required to change user data</source>
+			<translation>È necessario autenticarsi per cambiare i dati utente</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.user-administration!description" line="0"/>
+			<source>Manage user accounts</source>
+			<translation>Gestisci gli account utente</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.enable-auto-login!message" line="0"/>
+			<source>Authentication is required to enable auto login</source>
+			<translation>Autenticazione richiesta per abilitare il login automatico</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.enable-auto-login!description" line="0"/>
+			<source>Enable Auto Login</source>
+			<translation>Abilita Login automatico</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.disable-auto-login!message" line="0"/>
+			<source>Authentication is required to disable auto login</source>
+			<translation>Autenticazione richiesta per disabilitare il login automatico</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.disable-auto-login!description" line="0"/>
+			<source>Disable Auto Login</source>
+			<translation>Disabilita Login automatico</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>
+			<source>Authentication is required to enable login without password</source>
+			<translation>Autenticazione richiesta per abilitare il login privo di password</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.enable-nopass-login!description" line="0"/>
+			<source>Enable Login without password</source>
+			<translation>Abilita Login senza password</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.disable-nopass-login!message" line="0"/>
+			<source>Authentication is required to disable login without password</source>
+			<translation>Autenticazione richiesta per disabilitare il login privo di password</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.disable-nopass-login!description" line="0"/>
+			<source>Disable Login without password</source>
+			<translation>Disabilita Login senza password</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.set-keyboard-layout!message" line="0"/>
+			<source>Authentication is required to set keyboard layout</source>
+			<translation>Autenticazione necessaria per modificare il layout della tastiera</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.set-keyboard-layout!description" line="0"/>
+			<source>Set keyboard layout</source>
+			<translation>Imposta il layout della tastiera</translation>
+		</message>
+	</context>
+</TS>

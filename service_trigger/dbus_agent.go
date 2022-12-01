@@ -76,7 +76,7 @@ func (a *agent) getRegisterDelay() time.Duration {
 func (a *agent) register() error {
 	agentCfg := a.cfg
 	if agentCfg.Dest == "" {
-		// Dest 为空的特指 Dest 是 dde-system-daemon 的 com.deepin.system.Bluetooth 服务
+		// Dest 为空的特指 Dest 是 dde-system-daemon 的 org.deepin.dde.Bluetooth1 服务
 		// 复用了 system/bluetooth 提供的 agent 机制。
 		return nil
 	}
