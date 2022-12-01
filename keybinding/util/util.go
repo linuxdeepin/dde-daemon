@@ -47,9 +47,6 @@ func (kwa *KWinAccel) fix() {
 		}
 		defaultKeystrokes = append(defaultKeystrokes, ks)
 	}
-	if len(defaultKeystrokes) > 1 {
-		defaultKeystrokes = defaultKeystrokes[len(defaultKeystrokes)-1:]
-	}
 
 	kwa.DefaultKeystrokes = defaultKeystrokes
 }
