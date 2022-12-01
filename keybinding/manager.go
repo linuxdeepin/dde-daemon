@@ -22,7 +22,9 @@ import (
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	systeminfo "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.systeminfo"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -60,8 +62,13 @@ const (
 	CapslockKey      = 58
 	NumlockKey       = 69
 	KeyPress         = 1
+)
 
-	configManagerId = "org.desktopspec.ConfigManager"
+const (
+	DSettingsAppID                    = "org.deepin.dde.daemon"
+	DSettingsKeyBindingName           = "org.deepin.dde.daemon.keybinding"
+	DSettingsKeyWirelessControlEnable = "wirelessControlEnable"
+	DSettingsKeyNeedXrandrQDevices    = "need-xrandr-q-devices"
 )
 
 const ( // power按键事件的响应
@@ -141,8 +148,11 @@ type Manager struct {
 
 	// dsg config
 	wifiControlEnable bool
+	needXrandrQDevice []string
 
 	configManagerPath dbus.ObjectPath
+
+	dmiInfo systeminfo.DMIInfo
 
 	//nolint
 	signals *struct {
@@ -195,23 +205,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		m.login1Manager = login1.NewManager(sysBus)
 	}
 
-	// 加载dsg配置
-	systemConnObj := sysBus.Object(configManagerId, "/")
-	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.keybinding", "").Store(&m.configManagerPath)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	err = dbusutil.NewMatchRuleBuilder().Type("signal").
-		PathNamespace(string(m.configManagerPath)).
-		Interface("org.desktopspec.ConfigManager.Manager").
-		Member("valueChanged").Build().AddTo(sysBus)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	m.wifiControlEnable = m.getwirelessControlEnable()
-
 	m.init()
 
 	m.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
@@ -221,7 +214,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.systemSigLoop.Start()
 
 	m.initNumLockState(sysBus)
-
+	m.initDSettings(sysBus)
 	return &m, nil
 }
 
@@ -310,7 +303,7 @@ func (m *Manager) init() {
 		logger.Warning("connect CurrentLayout property changed failed:", err)
 	}
 
-	m.displayController = NewDisplayController(m.backlightHelper, sessionBus)
+	m.displayController = NewDisplayController(m.backlightHelper, sessionBus, m)
 	m.kbdLightController = NewKbdLightController(m.backlightHelper)
 	m.touchPadController = NewTouchPadController(sessionBus)
 
@@ -321,12 +314,72 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	}
 
+	sysInfo := systeminfo.NewSystemInfo(sysBus)
+	dmiInfo, err := sysInfo.DMIInfo().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		m.dmiInfo = dmiInfo
+	}
+
 	if _useWayland {
 		m.initHandlers()
 		m.clickNum = 0
 
 		go m.listenGlobalAccel(sessionBus)
 		go m.listenKeyboardEvent(sysBus)
+	}
+}
+
+func (m *Manager) initDSettings(bus *dbus.Conn) {
+	ds := configManager.NewConfigManager(bus)
+	dsPath, err := ds.AcquireManager(0, DSettingsAppID, DSettingsKeyBindingName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	keybindingDS, err := configManager.NewManager(bus, dsPath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	getWirelessControlEnableConfig := func() {
+		v, err := keybindingDS.Value(0, DSettingsKeyWirelessControlEnable)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		m.wifiControlEnable = v.Value().(bool)
+	}
+	getNeedXrandrQConfig := func() {
+		v, err := keybindingDS.Value(0, DSettingsKeyNeedXrandrQDevices)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		itemList := v.Value().([]dbus.Variant)
+		for _, i := range itemList {
+			m.needXrandrQDevice = append(m.needXrandrQDevice, i.Value().(string))
+		}
+	}
+
+	getWirelessControlEnableConfig()
+	getNeedXrandrQConfig()
+
+	keybindingDS.InitSignalExt(m.systemSigLoop, true)
+	// 监听dsg配置变化
+	_, err = keybindingDS.ConnectValueChanged(func(key string) {
+		switch key {
+		case DSettingsKeyWirelessControlEnable:
+			getWirelessControlEnableConfig()
+		case DSettingsKeyNeedXrandrQDevices:
+			getNeedXrandrQConfig()
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
 	}
 }
 
@@ -491,14 +544,6 @@ func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) error {
 		}
 	})
 
-	// 监听dsg配置变化
-	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
-	}, func(sig *dbus.Signal) {
-		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
-			m.wifiControlEnable = m.getwirelessControlEnable()
-		}
-	})
 	return nil
 }
 
@@ -1045,19 +1090,4 @@ func (m *Manager) eliminateKeystrokeConflict() {
 
 	m.shortcutManager.ConflictingKeystrokes = nil
 	m.shortcutManager.EliminateConflictDone = true
-}
-
-func (m *Manager) getwirelessControlEnable() bool {
-	systemConn, err := dbus.SystemBus()
-	if err != nil {
-		return true
-	}
-	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
-	var value bool
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, "wirelessControlEnable").Store(&value)
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-	return value
 }
