@@ -7,8 +7,8 @@ package util
 import (
 	"bytes"
 	"encoding/json"
-	"strings"
 	"os"
+	"strings"
 
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 )
