@@ -5,6 +5,7 @@
 package keybinding
 
 import (
+	"os/exec"
 	"sync"
 
 	"github.com/godbus/dbus"
@@ -12,6 +13,7 @@ import (
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (
@@ -33,12 +35,14 @@ type DisplayController struct {
 	gsKeyboard       *gio.Settings
 	brightStatusBusy bool
 	brightStatusMu   sync.Mutex
+	m                *Manager
 }
 
-func NewDisplayController(backlightHelper backlight.Backlight, sessionConn *dbus.Conn) *DisplayController {
+func NewDisplayController(backlightHelper backlight.Backlight, sessionConn *dbus.Conn, m *Manager) *DisplayController {
 	c := &DisplayController{
 		backlightHelper: backlightHelper,
 		display:         display.NewDisplay(sessionConn),
+		m:               m,
 	}
 	c.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
 	return c
@@ -68,6 +72,14 @@ func (c *DisplayController) ExecCmd(cmd ActionCmd) error {
 		var err error
 		switch cmd {
 		case DisplayModeSwitch:
+			// TODO 联想xrandr -q需要修改成X的接口
+			if strv.Strv(c.m.needXrandrQDevice).Contains(c.m.dmiInfo.ProductName) {
+				logger.Info("win+p pressed,need run xrandr -q")
+				err = exec.Command("xrandr", "-q").Run()
+				if err != nil {
+					logger.Warning(err)
+				}
+			}
 			var displayList []string
 			displayList, err = c.display.ListOutputNames(0)
 			if err == nil && len(displayList) > 1 {
