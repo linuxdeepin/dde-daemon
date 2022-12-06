@@ -33,7 +33,9 @@ func (m *Manager) registerIdentifyWindowFuncs() {
 	m.registerIdentifyWindowFunc("FlatpakAppID", identifyWindowByFlatpakAppID)
 	m.registerIdentifyWindowFunc("CrxId", identifyWindowByCrxId)
 	m.registerIdentifyWindowFunc("Rule", identifyWindowByRule)
-	m.registerIdentifyWindowFunc("Bamf", identifyWindowByBamf)
+	m.registerIdentifyWindowFunc("Bamf", func(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
+		return identifyWindowByBamf(m, &winInfo.baseWindowInfo)
+	})
 	m.registerIdentifyWindowFunc("Pid", identifyWindowByPid)
 	m.registerIdentifyWindowFunc("Scratch", identifyWindowByScratch)
 	m.registerIdentifyWindowFunc("GtkAppId", identifyWindowByGtkAppId)
@@ -42,6 +44,31 @@ func (m *Manager) registerIdentifyWindowFuncs() {
 
 func (m *Manager) registerIdentifyWindowFunc(name string, fn _IdentifyWindowFunc) {
 	m.identifyWindowFuns = append(m.identifyWindowFuns, &IdentifyWindowFunc{
+		Name: name,
+		Fn:   fn,
+	})
+}
+
+type IdentifyKWindowFunc struct {
+	Name string
+	Fn   _IdentifyKWindowFunc
+}
+
+type _IdentifyKWindowFunc func(*Manager, *KWindowInfo) (string, *AppInfo)
+
+func (m *Manager) registerIdentifyKWindowFuncs() {
+	m.registerIdentifyKWindowFunc("PidEnv", func(m *Manager, winInfo *KWindowInfo) (string, *AppInfo) {
+		return identifyWindowByPidEnv(m, &winInfo.baseWindowInfo)
+	})
+	m.registerIdentifyKWindowFunc("ExeEnv", identifyKwindowByExeEnv)
+	m.registerIdentifyKWindowFunc("WmClass", identifyKWindowByWMClass)
+	m.registerIdentifyKWindowFunc("Bamf", func(m *Manager, winInfo *KWindowInfo) (string, *AppInfo) {
+		return identifyWindowByBamf(m, &winInfo.baseWindowInfo)
+	})
+}
+
+func (m *Manager) registerIdentifyKWindowFunc(name string, fn _IdentifyKWindowFunc) {
+	m.identifyKWindowFuns = append(m.identifyKWindowFuns, &IdentifyKWindowFunc{
 		Name: name,
 		Fn:   fn,
 	})
@@ -56,6 +83,37 @@ func (m *Manager) identifyWindow(winInfo WindowInfoImp) (innerId string, appInfo
 	default:
 		return "", nil
 	}
+}
+
+func identifyKWindowByWMClass(m *Manager, winInfo *KWindowInfo) (innerId string, appInfo *AppInfo) {
+	wmClass, _ := getWmClass(winInfo.xid)
+	if wmClass != nil {
+		instance := wmClass.Instance
+		if instance != "" {
+			appInfo = NewAppInfo("org.deepin.flatdeb." + strings.ToLower(instance))
+			if appInfo != nil {
+				innerId = appInfo.innerId
+				return
+			}
+
+			appInfo = NewAppInfo(instance)
+			if appInfo != nil {
+				innerId = appInfo.innerId
+				return
+			}
+		}
+
+		class := wmClass.Class
+		if class != "" {
+			appInfo = NewAppInfo(class)
+			if appInfo != nil {
+				innerId = appInfo.innerId
+				return
+			}
+		}
+	}
+
+	return
 }
 
 func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo *AppInfo) {
@@ -85,69 +143,48 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 		}
 	}
 
-	// 先使用appId获取appInfo,如果不能成功获取再使用pidenv环境变量获取
+	// 先使用appId获取appInfo,如果不能成功再通过定义的识别窗口机制去识别
 	appInfo = NewAppInfo(appId)
 	if appInfo == nil {
-		// 防止出现指针为空调用后崩溃问题
-		if winInfo.process != nil {
-			_, appInfo = identifyWindowByPidEnv(m, &winInfo.baseWindowInfo)
-		}
-	}
+		for idx, item := range m.identifyKWindowFuns {
+			name := item.Name
+			logger.Debugf("identifyWindowK: try %s:%d", name, idx)
+			innerId, appInfo = item.Fn(m, winInfo)
+			if innerId != "" {
+				// success
+				logger.Debugf("identifyWindowK by %s success, innerId: %q, appInfo: %v",
+					name, innerId, appInfo)
 
-	if appInfo != nil {
+				// NOTE: if name == "Pid", appInfo may be nil
+				if appInfo != nil {
+					fixedAppInfo := fixAutostartAppInfo(appInfo)
+					if fixedAppInfo != nil {
+						appInfo = fixedAppInfo
+						appInfo.identifyMethod = name + "+FixAutostart"
+						innerId = fixedAppInfo.innerId
+					} else {
+						appInfo.identifyMethod = name
+					}
+				}
+				return
+			}
+		}
+	} else {
 		innerId = appInfo.innerId
 		fixedAppInfo := fixAutostartAppInfo(appInfo)
 		if fixedAppInfo != nil {
 			appInfo = fixedAppInfo
 			appInfo.identifyMethod = "FixAutostart"
 			innerId = fixedAppInfo.innerId
-			return
-		}
-	} else {
-		// bamf
-		win := winInfo.xid
-		desktop, err := getDesktopFromWindowByBamf(win)
-		if err != nil {
-			logger.Warning(err)
-			return
 		}
 
-		if desktop != "" {
-			appInfo = NewAppInfoFromFile(desktop)
-			if appInfo != nil {
-				// success
-				innerId = appInfo.innerId
-				return
-			}
-		}
-
-		wmClass, _ := getWmClass(win)
-		if wmClass != nil {
-			instance := wmClass.Instance
-			if instance != "" {
-				appInfo = NewAppInfo("org.deepin.flatdeb." + strings.ToLower(instance))
-				if appInfo != nil {
-					innerId = appInfo.innerId
-					return
-				}
-
-				appInfo = NewAppInfo(instance)
-				if appInfo != nil {
-					innerId = appInfo.innerId
-					return
-				}
-			}
-
-			class := wmClass.Class
-			if class != "" {
-				appInfo = NewAppInfo(class)
-				if appInfo != nil {
-					innerId = appInfo.innerId
-					return
-				}
-			}
-		}
+		logger.Debugf("identifyWindowK by %s success, innerId: %q, appInfo: %v",
+			"AppId", innerId, appInfo)
+		return
 	}
+
+	// fail
+	logger.Debugf("identifyWindowK: failed")
 	return
 }
 
@@ -422,6 +459,26 @@ func identifyWindowByPidEnv(m *Manager, winInfo *baseWindowInfo) (string, *AppIn
 	return "", nil
 }
 
+func identifyKwindowByExeEnv(m *Manager, winInfo *KWindowInfo) (string, *AppInfo) {
+	appId := winInfo.appId
+	msgPrefix := fmt.Sprintf("identifyKwindowByExeEnv appId: %s ", appId)
+	process := winInfo.process
+	customExecName := filepath.Base(process.exe)
+
+	// 对于一个应用对应多个pid的情况，根据process中的可执行文件名和该应用的appId去识别窗口
+	if strings.Contains(customExecName, appId) {
+		launchedDesktopFile := process.environ.Get("GIO_LAUNCHED_DESKTOP_FILE")
+		logger.Debug(msgPrefix, "launchedDesktopFile: ", launchedDesktopFile)
+		appInfo := NewAppInfoFromFile(launchedDesktopFile)
+		if appInfo != nil {
+			// success
+			return appInfo.innerId, appInfo
+		}
+	}
+
+	return "", nil
+}
+
 func identifyWindowByRule(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 	msgPrefix := fmt.Sprintf("identifyWindowByRule win: %d ", winInfo.xid)
 	ret := m.windowPatterns.Match(winInfo)
@@ -483,7 +540,7 @@ func identifyWindowByWmClass(m *Manager, winInfo *WindowInfo) (string, *AppInfo)
 	return "", nil
 }
 
-func identifyWindowByBamf(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
+func identifyWindowByBamf(m *Manager, winInfo *baseWindowInfo) (string, *AppInfo) {
 	msgPrefix := fmt.Sprintf("identifyWindowByBamf win: %d ", winInfo.xid)
 	win := winInfo.xid
 	desktop := ""

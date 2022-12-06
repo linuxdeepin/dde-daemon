@@ -70,9 +70,10 @@ type Manager struct {
 	smartHideModeTimer *time.Timer
 	smartHideModeMutex sync.Mutex
 
-	entryCount         uint
-	identifyWindowFuns []*IdentifyWindowFunc
-	windowPatterns     WindowPatterns
+	entryCount          uint
+	identifyWindowFuns  []*IdentifyWindowFunc
+	identifyKWindowFuns []*IdentifyKWindowFunc
+	windowPatterns      WindowPatterns
 
 	forceQuitAppStatus forceQuitAppType
 	windowActMu        sync.Mutex
