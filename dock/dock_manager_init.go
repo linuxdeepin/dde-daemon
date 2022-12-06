@@ -297,7 +297,12 @@ func (m *Manager) init() error {
 		logger.Warning("startBAMFDaemon failed")
 	}
 
-	m.registerIdentifyWindowFuncs()
+	if m.isWaylandSession {
+		m.registerIdentifyKWindowFuncs()
+	} else {
+		m.registerIdentifyWindowFuncs()
+	}
+
 	m.initEntries()
 	m.pluginSettings = newPluginSettingsStorage(m)
 
