@@ -37,3 +37,29 @@ func (v *InputDevices) setPropSupportWakeupDevices(path string, value string) (c
 func (v *InputDevices) emitPropChangedSupportWakeupDevices(value map[string]string) error {
 	return v.service.EmitPropertyChanged(v, "SupportWakeupDevices", v.SupportWakeupDevices)
 }
+
+func (v *Touchpad) setPropEnable(value bool) (changed bool) {
+	if v.Enable != value {
+		v.Enable = value
+		v.emitPropChangedEnable(value)
+		return true
+	}
+	return false
+}
+
+func (v *Touchpad) emitPropChangedEnable(value bool) error {
+	return v.service.EmitPropertyChanged(v, "Enable", value)
+}
+
+func (v *Touchpad) setPropIsExist(value bool) (changed bool) {
+	if v.IsExist != value {
+		v.IsExist = value
+		v.emitPropChangedIsExist(value)
+		return true
+	}
+	return false
+}
+
+func (v *Touchpad) emitPropChangedIsExist(value bool) error {
+	return v.service.EmitPropertyChanged(v, "IsExist", value)
+}
