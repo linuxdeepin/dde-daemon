@@ -8,6 +8,7 @@ import (
 	"os"
 	"io/ioutil"
 	"strings"
+	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -140,14 +141,15 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 					logger.Warning(err)
 					return
 				}
-				arg := string(content)
-				if strings.Contains(arg, "enable") {
-					arg = "disable"
-				} else {
-					arg = "enable"
+				enable := strings.Contains(string(content), "enable")
+				systemBus, err := dbus.SystemBus()
+				if err != nil {
+					logger.Warning(err)
+					return
 				}
-				err = ioutil.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
-				if err != nil{
+				obj := systemBus.Object("com.deepin.system.InputDevices", "/com/deepin/system/InputDevices/TouchPad")
+				err = obj.Call("com.deepin.system.InputDevices.TouchPad.SetTouchPadEnable", 0, !enable).Err
+				if err != nil {
 					logger.Warning(err)
 					return
 				}

@@ -13,9 +13,9 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 )
 
 const (
@@ -25,8 +25,8 @@ const (
 	_dsettingsDeviceWakeupStatusKey = "deviceWakeupStatus"
 )
 
-//go:generate dbusutil-gen -type InputDevices inputdevices.go
-//go:generate dbusutil-gen em -type InputDevices
+//go:generate dbusutil-gen -type InputDevices,Touchpad inputdevices.go touchpad.go
+//go:generate dbusutil-gen em -type InputDevices,Touchpad
 type InputDevices struct {
 	service *dbusutil.Service
 	systemSigLoop *dbusutil.SignalLoop
@@ -38,6 +38,9 @@ type InputDevices struct {
 	touchscreens   map[dbus.ObjectPath]*Touchscreen
 	// dbusutil-gen: equal=touchscreenSliceEqual
 	Touchscreens []dbus.ObjectPath
+
+	touchpadMu sync.Mutex
+	touchpad   *Touchpad
 
 	supportWakeupDevices		[]string //所有支持usbhid的设备路径
 	SupportWakeupDevices		map[string]string `prop:"access:rw"` //保存所有支持usbhid设备的power/wakeup状态
@@ -79,6 +82,9 @@ func (m *InputDevices) init() {
 		m.initDSettings(m.service.Conn())
 		m.supportWakeupDevices = getSupportUsbhidDevices()
 		m.updateSupportWakeupDevices()
+		if err := TouchpadExist(touchpadSwitchFile); err == nil {
+			m.newTouchpad()
+		}
 	}()
 }
 
@@ -337,6 +343,20 @@ func (m *InputDevices) newTouchscreen(dev *libinputDevice) {
 	m.setPropTouchscreens(touchscreens)
 
 	m.service.Emit(m, "TouchscreenAdded", path)
+}
+
+func (m *InputDevices) newTouchpad() {
+	m.touchpadMu.Lock()
+	defer m.touchpadMu.Unlock()
+
+	t := newTouchpad(m.service)
+	err := t.export(dbus.ObjectPath(touchpadDBusPath))
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	m.touchpad = t
 }
 
 func (m *InputDevices) removeTouchscreen(dev *libinputDevice) {
