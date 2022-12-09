@@ -107,6 +107,8 @@ type Manager struct {
 	checkAPStrengthTimer    *time.Timer
 	protalAuthBrowserOpened bool // PORTAL认证中状态
 
+	acinfosJSON string
+
 	// to identify if vpn support multi connections
 	multiVpn map[string]bool
 
