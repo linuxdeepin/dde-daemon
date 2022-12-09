@@ -25,9 +25,9 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 
 	// system bus
-	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.shutdownfront1"
 	sensorproxy "github.com/linuxdeepin/go-dbus-factory/system/net.hadess.sensorproxy"
+	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 	libpower "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
@@ -36,7 +36,7 @@ import (
 	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
 	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionwatcher1"
-	screensaver1 "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.screensaver"
+	screensaver "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.screensaver"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	x "github.com/linuxdeepin/go-x11-client"
 )
@@ -53,7 +53,7 @@ type Helper struct {
 	SessionManager sessionmanager.SessionManager
 	SessionWatcher sessionwatcher.SessionWatcher
 	ShutdownFront  shutdownfront.ShutdownFront
-	ScreenSaver    screensaver1.ScreenSaver // sig
+	ScreenSaver    screensaver.ScreenSaver // sig
 	Display        display.Display
 
 	xConn *x.Conn
@@ -79,7 +79,7 @@ func (h *Helper) init(sysBus, sessionBus *dbus.Conn) error {
 	h.SysDBusDaemon = ofdbus.NewDBus(sysBus)
 	h.Daemon = daemon.NewDaemon(sysBus)
 	h.SessionManager = sessionmanager.NewSessionManager(sessionBus)
-	h.ScreenSaver = screensaver1.NewScreenSaver(sessionBus)
+	h.ScreenSaver = screensaver.NewScreenSaver(sessionBus)
 	h.Display = display.NewDisplay(sessionBus)
 	h.SessionWatcher = sessionwatcher.NewSessionWatcher(sessionBus)
 	h.ShutdownFront = shutdownfront.NewShutdownFront(sessionBus)

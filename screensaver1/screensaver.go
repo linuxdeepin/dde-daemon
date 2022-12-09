@@ -221,8 +221,8 @@ func (ss *ScreenSaver) setTimeout(seconds, interval uint32, blank bool) {
 }
 
 const (
-	dbusServiceName = "org.freedesktop.ScreenSaver1"
-	dbusPath        = "/org/freedesktop/ScreenSaver1"
+	dbusServiceName = "org.freedesktop.ScreenSaver"
+	dbusPath        = "/org/freedesktop/ScreenSaver"
 	dbusInterface   = dbusServiceName
 )
 
