@@ -15,11 +15,11 @@ import (
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	clipboard "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.clipboard1"
 	dock "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.daemon.dock1"
-	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
 	notification "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.notification1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
 	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionwatcher1"
+	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 	gesture "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.gesture1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -641,11 +641,11 @@ func (m *Manager) showWidgets(show bool) error {
 		logger.Warning(err)
 		return err
 	}
-	obj := sessionBus.Object("org.deepin.dde.Widgets", "/org/deepin/dde/Widgets")
+	obj := sessionBus.Object("org.deepin.dde.Widgets1", "/org/deepin/dde/Widgets1")
 	if show {
-		err = obj.Call("org.deepin.dde.Widgets.Show", 0).Err
+		err = obj.Call("org.deepin.dde.Widgets1.Show", 0).Err
 	} else {
-		err = obj.Call("org.deepin.dde.Widgets.Hide", 0).Err
+		err = obj.Call("org.deepin.dde.Widgets1.Hide", 0).Err
 	}
 	if err != nil {
 		logger.Warning(err)

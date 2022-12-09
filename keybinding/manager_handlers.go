@@ -78,7 +78,7 @@ func (m *Manager) initHandlers() {
 		go func() {
 			err := m.execCmd(arg.Cmd, true)
 			if err != nil {
-				logger.Warning("execCmd error:", err)
+				logger.Warning("execCmd error:", arg.Cmd, err)
 			}
 		}()
 	}
