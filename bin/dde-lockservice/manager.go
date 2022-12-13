@@ -5,6 +5,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"runtime/debug"
@@ -101,7 +102,7 @@ func newManager(service *dbusutil.Service) *Manager {
 func (m *Manager) CurrentUser() (username string, busErr *dbus.Error) {
 	username, err := getGreeterUser(greeterUserConfig)
 	if err != nil {
-		return "", dbusutil.ToError(err)
+		return "", dbusutil.ToError(errors.New("get greeter user failed"))
 	}
 	return username, nil
 }
