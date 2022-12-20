@@ -368,7 +368,7 @@ func (m *Manager) initDSettings(bus *dbus.Conn) {
 	getWirelessControlEnableConfig()
 	getNeedXrandrQConfig()
 
-	keybindingDS.InitSignalExt(m.sessionSigLoop, true)
+	keybindingDS.InitSignalExt(m.systemSigLoop, true)
 	// 监听dsg配置变化
 	_, err = keybindingDS.ConnectValueChanged(func(key string) {
 		switch key {
