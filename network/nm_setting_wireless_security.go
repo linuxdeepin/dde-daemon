@@ -86,6 +86,7 @@ func logicSetSettingVkWirelessSecurityKeyMgmt(data connectionData, value string)
 			nm.NM_SETTING_WIRELESS_SECURITY_PSK_FLAGS,
 		)
 		setSettingWirelessSecurityKeyMgmt(data, "wpa-psk")
+		setSettingWirelessSecurityAuthAlg(data, "open")
 		setSettingWirelessSecurityPskFlags(data, nm.NM_SETTING_SECRET_FLAG_NONE)
 	case "sae":
 		addSetting(data, nm.NM_SETTING_WIRELESS_SECURITY_SETTING_NAME)
