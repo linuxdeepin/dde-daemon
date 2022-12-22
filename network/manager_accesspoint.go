@@ -99,11 +99,11 @@ func (m *Manager) newAccessPoint(devPath, apPath dbus.ObjectPath) (ap *accessPoi
 			return
 		}
 
-		ap.updateProps()
-
-		m.PropsMu.Lock()
-		m.updatePropWirelessAccessPoints()
-		m.PropsMu.Unlock()
+		if ap.updateProps() {
+			m.PropsMu.Lock()
+			m.updatePropWirelessAccessPoints()
+			m.PropsMu.Unlock()
+		}
 
 	})
 	if err != nil {
@@ -129,22 +129,41 @@ func (m *Manager) destroyAccessPoint(ap *accessPoint) {
 	nmDestroyAccessPoint(ap.nmAp)
 }
 
-func (a *accessPoint) updateProps() {
-	ssid, _ := a.nmAp.Ssid().Get(0)
-	a.Ssid = decodeSsid(ssid)
+func (a *accessPoint) updateProps() bool {
+	ssid, err := a.nmAp.Ssid().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
 	typ, err := getApSecType(a.nmAp)
 	if err != nil {
-		logger.Debugf("get ap sec type failed, err: %v", err)
-	} else {
-		a.Secured = typ != apSecNone
-		a.SecuredInEap = typ == apSecEap
+		logger.Warning(err)
+		return false
 	}
-	a.Strength, _ = a.nmAp.Strength().Get(0)
-	a.Frequency, _ = a.nmAp.Frequency().Get(0)
+	strength, err := a.nmAp.Strength().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	frequency, err := a.nmAp.Frequency().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
 	flags, err := a.nmAp.Flags().Get(0)
-	if err == nil {
-		a.Flags = flags
+	if err != nil {
+		logger.Warning(err)
+		return false
 	}
+
+	a.Ssid = decodeSsid(ssid)
+	a.Secured = typ != apSecNone
+	a.SecuredInEap = typ == apSecEap
+	a.Strength = strength
+	a.Frequency = frequency
+	a.Flags = flags
+
+	return true
 }
 
 func getApSecType(ap nmdbus.AccessPoint) (apSecType, error) {
