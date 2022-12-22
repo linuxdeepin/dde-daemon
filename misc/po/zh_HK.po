@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Wyatt <wkyung@outlook.com>, 2020
 # iceleaf <iceleaf916@gmail.com>, 2020
 # Philip CHEUNG, 2020
 # 李洪武 <lihongwu1987@gmail.com>, 2021
 # Cindy0514, 2022
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -987,7 +987,7 @@ msgstr "連接失敗，未能加入%q，密碼不正確"
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr "無法連接到“%q”"
+msgstr "無法連接到%q"
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
