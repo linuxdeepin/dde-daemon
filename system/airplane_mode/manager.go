@@ -149,7 +149,7 @@ func (mgr *Manager) recover() {
 	// should recover block state here
 	err := mgr.block(rfkillTypeBT, mgr.BluetoothEnabled)
 	if err != nil {
-		logger.Warningf("recover bluetooth failed, state: %v, err: %v", mgr.WifiEnabled, err)
+		logger.Warningf("recover bluetooth failed, state: %v, err: %v", mgr.BluetoothEnabled, err)
 	}
 
 	// wlan
@@ -167,10 +167,8 @@ func (mgr *Manager) recover() {
 	// should recover block state here
 	err = mgr.block(rfkillTypeAll, mgr.Enabled)
 	if err != nil {
-		logger.Warningf("recover all failed, state: %v, err: %v", mgr.WifiEnabled, err)
+		logger.Warningf("recover all failed, state: %v, err: %v", mgr.Enabled, err)
 	}
-
-	return
 }
 
 // block use rfkill to block wifi
