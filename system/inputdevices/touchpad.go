@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -73,18 +74,42 @@ func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 		return err
 	}
 	t.setPropEnable(enabled)
+	err = setDsgConf(enabled)
+	if err != nil{
+		logger.Warning(err)
+		return err
+	}
+	return nil
+}
+
+func setDsgConf(enable bool) error {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+	ds := configManager.NewConfigManager(sysBus)
+	confPath, err := ds.AcquireManager(0, _dsettingsAppID, _dsettingsInputdevicesName, "")
+	if err != nil {
+		return err
+	}
+	dsManager, err := configManager.NewManager(sysBus, confPath)
+	if err != nil {
+		return err
+	}
+	err = dsManager.SetValue(0, _dsettingsTouchpadEnabledKey, dbus.MakeVariant(enable))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func TouchpadEnable(filePath string) (bool, error) {
 	err := TouchpadExist(filePath)
 	if err != nil {
-		logger.Warning(err)
 		return false, err
 	}
 	content, err := ioutil.ReadFile(touchpadSwitchFile)
 	if err != nil {
-		logger.Warning(err)
 		return false, err
 	}
 	return strings.Contains(string(content), "enable"), nil
@@ -107,13 +132,7 @@ func (t *Touchpad) GetInterfaceName() string {
 }
 
 func (t *Touchpad) export(path dbus.ObjectPath) error {
-	err := t.service.Export(path, t)
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-
-	return nil
+	return t.service.Export(path, t)
 }
 
 func (t *Touchpad) stopExport() error {
