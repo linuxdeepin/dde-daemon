@@ -159,7 +159,7 @@ func (m *Manager) handleBatteryDisplayUpdate() {
 		warnLevel = m.getWarnLevel(percentage, timeToEmpty)
 		// 当电池电量从1%->0%时，如果之前的warnLevel不为WarnLevelNone（电池的状态正常），此时不去做warnLevel改变处理
 		// 防止某些机器在电量变为0时低电量屏保被取消，进入锁屏界面
-		if m.warnLevelConfig.getWarnLevelConfig().UsePercentageForPolicy && percentage == 0.0 && m.WarnLevel != WarnLevelNone {
+		if m.warnLevelConfig.getWarnLevelConfig().UsePercentageForPolicy && percentage == 0.0 && m.WarnLevel != WarnLevelNone && m.OnBattery {
 			warnLevelChanged = false
 		} else {
 			warnLevelChanged = m.setPropWarnLevel(warnLevel)
