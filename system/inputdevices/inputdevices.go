@@ -23,6 +23,7 @@ const (
 	_dsettingsAppID                 = "org.deepin.dde.daemon"
 	_dsettingsInputdevicesName      = "org.deepin.dde.daemon.inputdevices"
 	_dsettingsDeviceWakeupStatusKey = "deviceWakeupStatus"
+	_dsettingsTouchpadEnabledKey    = "toupadEnabled"
 )
 
 //go:generate dbusutil-gen -type InputDevices,Touchpad inputdevices.go touchpad.go
@@ -84,6 +85,15 @@ func (m *InputDevices) init() {
 		m.updateSupportWakeupDevices()
 		if err := TouchpadExist(touchpadSwitchFile); err == nil {
 			m.newTouchpad()
+			v, err := m.dsgInputDevices.Value(0, _dsettingsTouchpadEnabledKey)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			err = m.touchpad.setTouchpadEnable(v.Value().(bool))
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 	}()
 }
@@ -353,7 +363,6 @@ func (m *InputDevices) newTouchpad() {
 	err := t.export(dbus.ObjectPath(touchpadDBusPath))
 	if err != nil {
 		logger.Warning(err)
-		return
 	}
 
 	m.touchpad = t
