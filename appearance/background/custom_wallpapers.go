@@ -93,13 +93,13 @@ func resizeImage(filename, cacheDir string) (outFilename, ext string, isResized 
 	}
 
 	if float64(imgWidth)/float64(imgHeight) > float64(stdWidth)/float64(stdHeight) {
-		// use std height
-		imgWidth = 0
-		imgHeight = stdHeight
-	} else {
 		// use std width
 		imgWidth = stdWidth
 		imgHeight = 0
+	} else {
+		// use std height
+		imgWidth = 0
+		imgHeight = stdHeight
 	}
 
 	img = resize.Resize(uint(imgWidth), uint(imgHeight), img, resize.Lanczos3)
