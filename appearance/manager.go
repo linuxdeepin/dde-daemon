@@ -449,14 +449,14 @@ func (m *Manager) init() error {
 	theme_thumb.Init(m.getScaleFactor())
 
 	m.xSettings.InitSignalExt(m.sessionSigLoop, true)
-	_, err = m.xSettings.ConnectSetScaleFactorStarted(handleSetScaleFactorStarted)
-	if err != nil {
-		logger.Warning(err)
-	}
-	_, err = m.xSettings.ConnectSetScaleFactorDone(handleSetScaleFactorDone)
-	if err != nil {
-		logger.Warning(err)
-	}
+	// _, err = m.xSettings.ConnectSetScaleFactorStarted(handleSetScaleFactorStarted)
+	// if err != nil {
+	// 	logger.Warning(err)
+	// }
+	// _, err = m.xSettings.ConnectSetScaleFactorDone(handleSetScaleFactorDone)
+	// if err != nil {
+	// 	logger.Warning(err)
+	// }
 
 	m.initUserObj(systemBus)
 	m.initCurrentBgs()
