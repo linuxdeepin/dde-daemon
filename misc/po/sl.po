@@ -66,30 +66,6 @@ msgstr "Uporabniško ime mora imeti od 3 do 32 znakov"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "Odjavite se, da začnejo nastavitve merila delovati"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Uspešno nastavljeno"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "kasneje"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Odjavi se sedaj"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Nastavitve merila zaslona"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Spreminjanje merila zaslona"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

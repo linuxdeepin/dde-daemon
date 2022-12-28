@@ -63,30 +63,6 @@ msgstr "El nom d'usuari ha de tenir de 3 a 32 caràcters de llargada."
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "L'usuari %s existia abans i les seves dades estan sincronitzades."
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "Sortiu de la sessió perquè l'escalatge de la pantalla tingui efecte."
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Establiment correcte"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Més tard"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Surt-ne ara"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Establiment de l'escalat de la pantalla"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Escalatge de la pantalla"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

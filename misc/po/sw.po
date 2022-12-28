@@ -52,22 +52,6 @@ msgstr "Jina la mtumiaji hiyo imetumika kwa mfumo"
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../appearance/scale.go:61
-msgid "Set successfully"
-msgstr "Umeweka kwa ufanisi"
-
-#: ../../appearance/scale.go:62
-msgid "Please log back in to view the changes"
-msgstr "Tafadhali toka na fungua tena, kuona mageuzi"
-
-#: ../../appearance/scale.go:66
-msgid "Display scaling"
-msgstr "Rekebisha ya uonyesho"
-
-#: ../../appearance/scale.go:67
-msgid "Setting display scaling"
-msgstr "Sifa za rekebisha ya uonyesho"
-
 #: ../../bin/dde-authority/fprint_transaction.go:20
 msgid "Fingerprint verification failed"
 msgstr "Kuthibitisha alama ya kidole imekosa"

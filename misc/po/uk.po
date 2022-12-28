@@ -64,31 +64,6 @@ msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Запис користувача «%s» вже існував. Його дані синхронізовано з попередніми"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"Вийдіть із системи, щоб параметри масштабування дисплея набули чинності"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Успішно встановлено"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Пізніше"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Вийти з системи зараз"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Налаштування масштабування зображення"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Маштабування дисплею"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

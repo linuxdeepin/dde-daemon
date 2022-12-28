@@ -57,22 +57,6 @@ msgstr "ব্যবহারকারীর নাম সিস্টেম দ
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../appearance/scale.go:66
-msgid "Set successfully"
-msgstr "সফলভাবে সেট করা হয়েছে"
-
-#: ../../appearance/scale.go:67
-msgid "Please log back in to view the changes"
-msgstr "পরিবর্তনগুলো দেখতে পুনরায় লগইন করুন"
-
-#: ../../appearance/scale.go:74
-msgid "Display scaling"
-msgstr "প্রদর্শন স্কেলিং"
-
-#: ../../appearance/scale.go:75
-msgid "Setting display scaling"
-msgstr "প্রদর্শন স্কেলিং সেট"
-
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr "আঙুলের ছাপ সনাক্ত করতে বার্থ হয়েছে"

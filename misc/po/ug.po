@@ -64,31 +64,6 @@ msgstr "ئىشلەتكۈچى ئىسمى 3 دىن 32 ھەرپ ئارىلىقىد�
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"كۆرسىتىش ھالىتىنى تەڭشىگەندىن كېيىن  قايتا قوزغاتسىڭىز ئۈنۈملۈك بولىدۇ"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "تەڭشەلدى"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "بىردەمدىن كېيىن"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "ھازىرلا"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "كۆرۈنۈش نىسبىتىنى تەڭشىمەكچى"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "كۆرۈنىش كىچىكلىتىش"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

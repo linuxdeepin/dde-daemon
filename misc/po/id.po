@@ -54,22 +54,6 @@ msgstr ""
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nama pengguna harus terdiri dari 3-32 karakter"
 
-#: ../../appearance/scale.go:61
-msgid "Set successfully"
-msgstr "Set berhasil"
-
-#: ../../appearance/scale.go:62
-msgid "Please log back in to view the changes"
-msgstr ""
-
-#: ../../appearance/scale.go:66
-msgid "Display scaling"
-msgstr "Skaling Tampilan"
-
-#: ../../appearance/scale.go:67
-msgid "Setting display scaling"
-msgstr "Pengaturan penskalaan tampilan"
-
 #: ../../bin/dde-authority/fprint_transaction.go:20
 msgid "Fingerprint verification failed"
 msgstr ""

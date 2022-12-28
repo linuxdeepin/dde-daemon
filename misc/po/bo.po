@@ -63,30 +63,6 @@ msgstr ""
 "སྤྱོད་མཁན་“%s”ནི་དེ་སྔའི་སྤྱོད་མཁན་ཞིག་ཡིན་པས། "
 "ཐོག་མའི་གཞི་གྲངས་མཉམ་བགྲོད་བྱས་ཟིན།"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་བྱེད་པར་ཐོ་འདོར་རྗེས་གཞི་ནས་གོ་ཆོད་པ་ཡིན།"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "སྒྲིག་འགོད་བྱས་ཟིན།"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "ཏོག་ཙམ་ནས་ཐོ་འདོར་བ།"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "ལམ་སེང་ཐོ་འདོར་བ།"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་སྒྲིག་འགོད་བྱ་རྩིས་བྱེད་པ།"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

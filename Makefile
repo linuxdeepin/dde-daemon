@@ -10,7 +10,6 @@ BINARIES =  \
 	    dde-system-daemon \
 	    grub2 \
 	    search \
-	    theme-thumb-tool \
 	    backlight_helper \
 	    langselector \
 	    soundeffect \

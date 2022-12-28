@@ -61,31 +61,6 @@ msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Përdoruesi “%s” ekzistonte më parë dhe të dhënat e tij janë njëkohësuar"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"Që të hyjnë në fuqi rregullimet për përshkallëzim, bëni daljen nga llogaria"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "U caktua me sukses"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Më vonë"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Dilni Tani"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Po ujdiset ripërmasim ekrani"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Ripërmasim ekrani"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

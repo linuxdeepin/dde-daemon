@@ -63,30 +63,6 @@ msgstr "使用者名稱長度必須介於 3 至 32 個字元之間"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "“%s”使用者為之前已存在的使用者，原資料已同步"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "屏幕縮放需登出後才能生效"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "成功設定"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "稍後登出"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "立即登出"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "設定螢幕縮放率"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "畫面縮放"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

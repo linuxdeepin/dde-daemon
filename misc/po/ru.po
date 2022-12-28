@@ -70,31 +70,6 @@ msgstr "Имя пользователя должно быть длинной 3-3
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"Выход для того, чтобы настройки масштабирования дисплея вступили в силу"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Задано успешно"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Позже"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Выход из системы сейчас же"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Настройка масштабирования дисплея"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Масштабирование дисплея"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

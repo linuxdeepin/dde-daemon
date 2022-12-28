@@ -54,30 +54,6 @@ msgstr "Username must be between 3 and 32 characters"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "User \"%s\" existed before and its data is synced"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "Log out for display scaling settings to take effect"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Set successfully"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Later"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Log Out Now"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Setting display scaling"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Display scaling"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

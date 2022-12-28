@@ -64,30 +64,6 @@ msgstr "Numele de utilizator trebuie să aibă între 3 şi 32 caractere"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "Deloghează-te pentru ca setările de scalare să intre în vigoare"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Setat cu succes"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Mai târziu"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Delogare Acum"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Setare scalare afișare"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Redimensionați afișajul"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

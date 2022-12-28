@@ -75,31 +75,6 @@ msgstr ""
 "A \"%s\" felhasználó már korábban létezett, és az adatai szinkronizálva "
 "vannak"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"Jelentkezzen ki, hogy a képernyő méretezési beállításai érvénybe lépjenek"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Sikeresen beállítva"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Később"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Kijelentkezés most"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Képernyő méretezésének beállítása"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Képernyő méretezése"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

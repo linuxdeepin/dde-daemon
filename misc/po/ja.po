@@ -55,22 +55,6 @@ msgstr ""
 msgid "Username must be between 3 and 32 characters"
 msgstr "ユーザー名は3文字以上32文字以下にする必要があります"
 
-#: ../../appearance/scale.go:61
-msgid "Set successfully"
-msgstr "設定しました"
-
-#: ../../appearance/scale.go:62
-msgid "Please log back in to view the changes"
-msgstr ""
-
-#: ../../appearance/scale.go:66
-msgid "Display scaling"
-msgstr "ディスプレイスケーリング"
-
-#: ../../appearance/scale.go:67
-msgid "Setting display scaling"
-msgstr "ディスプレイスケーリングを設定"
-
 #: ../../bin/dde-authority/fprint_transaction.go:20
 msgid "Fingerprint verification failed"
 msgstr ""

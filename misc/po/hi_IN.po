@@ -53,22 +53,6 @@ msgstr ""
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../appearance/scale.go:61
-msgid "Set successfully"
-msgstr "सफलतापूर्वक सेट कर दिया गया"
-
-#: ../../appearance/scale.go:62
-msgid "Please log back in to view the changes"
-msgstr ""
-
-#: ../../appearance/scale.go:66
-msgid "Display scaling"
-msgstr "डिस्प्ले मापन"
-
-#: ../../appearance/scale.go:67
-msgid "Setting display scaling"
-msgstr "डिस्प्ले मापन सेट किया जा रहा है"
-
 #: ../../bin/dde-authority/fprint_transaction.go:20
 msgid "Fingerprint verification failed"
 msgstr ""

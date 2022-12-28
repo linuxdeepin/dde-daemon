@@ -53,22 +53,6 @@ msgstr "Korisničko ime koristi sustav"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Korisničko ime mora sadržavati između 3 i 32 znaka"
 
-#: ../../appearance/scale.go:61
-msgid "Set successfully"
-msgstr "Uspješno postavljeno"
-
-#: ../../appearance/scale.go:62
-msgid "Please log back in to view the changes"
-msgstr "Molim prijavite se ponovno da vidite promjene"
-
-#: ../../appearance/scale.go:66
-msgid "Display scaling"
-msgstr ""
-
-#: ../../appearance/scale.go:67
-msgid "Setting display scaling"
-msgstr ""
-
 #: ../../bin/dde-authority/fprint_transaction.go:20
 msgid "Fingerprint verification failed"
 msgstr ""

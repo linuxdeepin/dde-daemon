@@ -64,32 +64,6 @@ msgstr "O nome de utilizador deve ter entre 3 e 32 caracteres"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"Terminar a sessão para que as definições de escala de visualização tenham "
-"efeito"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Definida com sucesso"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Mais tarde"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Terminar sessão agora"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "A definir escala de visualização"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Escala de visualização"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

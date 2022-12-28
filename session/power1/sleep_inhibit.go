@@ -22,10 +22,9 @@ package power
 import (
 	"syscall"
 
+	"github.com/linuxdeepin/dde-daemon/network"
 	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
-	"github.com/linuxdeepin/dde-daemon/appearance"
-	"github.com/linuxdeepin/dde-daemon/network"
 )
 
 type sleepInhibitor struct {
@@ -52,7 +51,6 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 
 		if before {
 			// TODO(jouyouyun): implement 'HandleForSleep' register
-			appearance.HandlePrepareForSleep(true)
 			network.HandlePrepareForSleep(true)
 			if inhibitor.OnBeforeSuspend != nil {
 				inhibitor.OnBeforeSuspend()
@@ -73,7 +71,6 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 				_manager.handleBatteryDisplayUpdate()
 			}
 			network.HandlePrepareForSleep(false)
-			appearance.HandlePrepareForSleep(false)
 			err := inhibitor.block()
 			if err != nil {
 				logger.Warning(err)

@@ -66,31 +66,6 @@ msgstr "Το όνομα χρήστη πρέπει να έχει μήκος με�
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"Βγείτε από τις ρυθμίσεις κλίμακας οθόνης για να τεθούν σε ισχύ οι αλλάγες"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Ορισμός επιτυχής"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Αργότερα"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Αποσύνδεση Τώρα"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Ορισμός κλίμακας οθόνης"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Κλίμακα οθόνης"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

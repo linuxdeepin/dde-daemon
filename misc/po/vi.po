@@ -63,30 +63,6 @@ msgstr "Tên người dùng phải từ 3 đến 32 kí tự"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Đặt thành công"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr ""
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr ""
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Điều chỉnh tỉ lệ màn hình"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Tỉ lệ màn hình"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

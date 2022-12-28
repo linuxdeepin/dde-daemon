@@ -57,22 +57,6 @@ msgstr "Användarnamnet har redan använts av systemet."
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../appearance/scale.go:66
-msgid "Set successfully"
-msgstr "Ändringar genomförda"
-
-#: ../../appearance/scale.go:67
-msgid "Please log back in to view the changes"
-msgstr "Var god logga ut och in igen för att slutföra ändringarna"
-
-#: ../../appearance/scale.go:74
-msgid "Display scaling"
-msgstr "Skärmskalning"
-
-#: ../../appearance/scale.go:75
-msgid "Setting display scaling"
-msgstr "Inställningar skärmskalning"
-
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr "Fingeravtrycks verifiering misslyckades"

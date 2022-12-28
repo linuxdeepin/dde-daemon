@@ -69,30 +69,6 @@ msgstr ""
 "Użytkownik \"%s\" już istniał wcześniej, więc jego dane zostaną "
 "zsynchronizowane"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "Wyloguj się, aby ustawienia skalowania ekranu zaczęły obowiązywać"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Ustawiono pomyślnie"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Później"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Wyloguj się teraz"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Ustawienie skalowania ekranu"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Skalowanie ekranu"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

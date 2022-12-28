@@ -73,30 +73,6 @@ msgstr "يجب أن يكون اسم المستخدم بين 3-32 حرفاً"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "تم اﻹعداد بنجاح"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr ""
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr ""
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "إعدادات تحجيم العرض"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "عرض الشاشة"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

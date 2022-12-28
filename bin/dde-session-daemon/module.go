@@ -27,7 +27,6 @@ import (
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/gsettings"
 
-	_ "github.com/linuxdeepin/dde-daemon/appearance" // TODO 转移到dde-appearance
 	_ "github.com/linuxdeepin/dde-daemon/audio1"
 	_ "github.com/linuxdeepin/dde-daemon/bluetooth1"
 	_ "github.com/linuxdeepin/dde-daemon/mime" // TODO 转移到am

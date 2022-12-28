@@ -72,30 +72,6 @@ msgstr "El nombre de usuario debe tener entre 3 y 32 caracteres"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "El usuario \"%s\" ya existía y sus datos están sincronizados"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "Cierre sesión para que los ajustes surtan efecto"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Establecida con éxito"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Luego"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Cerrar sesión ahora"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Configurar escalado de pantalla"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Escalado de pantalla"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

@@ -66,30 +66,6 @@ msgstr "Käyttäjätunnuksen on oltava 3-32 merkin pituinen"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "Käyttäjä \"%s\" oli aiemmin ja sen tiedot synkronoidaan"
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "Kirjaudu ulos, jotta näytön skaalaus tulee voimaan"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Asetettu onnistuneesti"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Myöhemmin"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Kirjaudu ulos nyt"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Asetetaan näytön skaalausta"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Näytön skaalaus"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

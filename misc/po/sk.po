@@ -62,30 +62,6 @@ msgstr "Používateľské meno musí mať 3 až 32 znakov"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Úspešne nastavené"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr ""
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr ""
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Nastavenie mierky zobrazenia"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Zobrazenie mierky displeja"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"

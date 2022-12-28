@@ -54,22 +54,6 @@ msgstr "Användarnamnet har blivit använt av systemet."
 msgid "The username's length exceeds the limit"
 msgstr "Användarnamnet har blivit använt av systemet."
 
-#: ../../appearance/scale.go:49
-msgid "Display scaling"
-msgstr ""
-
-#: ../../appearance/scale.go:50
-msgid "Setting display scaling"
-msgstr ""
-
-#: ../../appearance/scale.go:86
-msgid "Set successfully"
-msgstr ""
-
-#: ../../appearance/scale.go:87
-msgid "View by logging out after set display scaling"
-msgstr ""
-
 #: ../../bluetooth/bluez_profile.go:29
 msgid "Serial port"
 msgstr "Seriell port"

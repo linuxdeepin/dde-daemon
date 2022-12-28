@@ -59,22 +59,6 @@ msgstr "Потребителското име е използвано от си�
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../appearance/scale.go:66
-msgid "Set successfully"
-msgstr "Успешно настойване"
-
-#: ../../appearance/scale.go:67
-msgid "Please log back in to view the changes"
-msgstr "Моля, влезте отново, за да видите промените"
-
-#: ../../appearance/scale.go:74
-msgid "Display scaling"
-msgstr "Мащабиране на екрана"
-
-#: ../../appearance/scale.go:75
-msgid "Setting display scaling"
-msgstr "Настройване мащабирането на екрана"
-
 #: ../../bin/dde-authority/fprint_transaction.go:21
 msgid "Fingerprint verification failed"
 msgstr "Проверката на пръстовия отпечатък не бе успешна"

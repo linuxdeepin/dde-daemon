@@ -60,30 +60,6 @@ msgstr "Nama pengguna mestilah antara 3 hingga 32 aksara"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr "Daftar keluar supaya tetapan penskalaan paparan berkesan"
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "Berjaya ditetapkan"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr "Kemudian"
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr "Daftar Keluar Sekarang"
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "Menetapkan penskalaan paparan"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "Penskalaan paparan"
-
 #: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
