@@ -29,7 +29,6 @@ import (
 
 	_ "github.com/linuxdeepin/dde-daemon/audio1"
 	_ "github.com/linuxdeepin/dde-daemon/bluetooth1"
-	_ "github.com/linuxdeepin/dde-daemon/mime" // TODO 转移到am
 	_ "github.com/linuxdeepin/dde-daemon/screenedge1"
 
 	// depends: network

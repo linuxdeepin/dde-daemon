@@ -115,9 +115,6 @@ ExecStart=%{_libexecdir}/%{sname}/dde-lockservice
 WantedBy=graphical.target
 EOF
 
-# Replace reference of google-chrome to chromium-browser
-sed -i 's/google-chrome/chromium-browser/g' misc/dde-daemon/mime/data.json
-
 %build
 BUILDID="0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \n')"
 export GOPATH=/usr/share/gocode

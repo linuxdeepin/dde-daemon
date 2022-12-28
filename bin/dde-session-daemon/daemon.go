@@ -139,7 +139,6 @@ func (s *SessionDaemon) initModules() {
 		"timedate",
 		"bluetooth",
 		"screenedge",
-		"mime",
 		"systeminfo",
 		"lastore",
 		"calltrace",

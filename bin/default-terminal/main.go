@@ -6,7 +6,6 @@ import (
 	"os/exec"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/mime"
 	startmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.startmanager1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
@@ -17,6 +16,25 @@ const (
 	gsKeyAppId              = "app-id"
 	gsKeyExec               = "exec"
 )
+
+var terms = []string{
+	"deepin-terminal",
+	"gnome-terminal",
+	"terminator",
+	"xfce4-terminal",
+	"rxvt",
+	"xterm",
+}
+
+func getPresetTerminalPath() string {
+	for _, exe := range terms {
+		file, _ := exec.LookPath(exe)
+		if file != "" {
+			return file
+		}
+	}
+	return ""
+}
 
 func init() {
 	log.SetFlags(log.Lshortfile)
@@ -59,7 +77,7 @@ func main() {
 		termPath, _ := exec.LookPath(termExec)
 		if termPath == "" {
 			// try again
-			termPath = mime.GetPresetTerminalPath()
+			termPath = getPresetTerminalPath()
 			if termPath == "" {
 				log.Fatal("failed to get terminal path")
 			}
@@ -77,7 +95,7 @@ func main() {
 }
 
 func runFallbackTerm() {
-	termPath := mime.GetPresetTerminalPath()
+	termPath := getPresetTerminalPath()
 	if termPath == "" {
 		log.Println("failed to get terminal path")
 		return
