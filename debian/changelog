@@ -1,3 +1,13 @@
+dde-daemon (6.0.8.1) unstable; urgency=medium
+
+  [ TagBuilder ]
+  * fix: 调整屏幕缩放后会弹出两个注销后生效的横幅通知的问题解决(Task: 231071)(Influence: 调整屏幕缩的横幅通知)
+  * feat: 删除daemon中的个性化(Task: 232145)(Influence: 无)
+  * feat: 删除daemon中的mime模块(Task: 232145)(Influence: 无)
+  * feat: 删除daemon中的dock和launcher(Task: 232145)(Influence: 无)
+
+ -- zhaoyingzhen <zhaoyingzhen@uniontech.com>  Thu, 29 Dec 2022 15:13:17 +0800
+
 dde-daemon (6.0.7) unstable; urgency=medium
 
   [ TagBuilder ]
