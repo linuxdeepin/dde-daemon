@@ -194,30 +194,6 @@ msgstr ""
 msgid "Festival"
 msgstr ""
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "খুলুন"
-
-#: ../../dock/app_entry_menu.go:109
-msgid "Close All"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:125
-msgid "Force Quit"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:132
-msgid "Dock"
-msgstr "ডক"
-
-#: ../../dock/app_entry_menu.go:139
-msgid "Undock"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:146
-msgid "All Windows"
-msgstr ""
-
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "অপর্যাপ্ত ডিস্ক স্থান, নির্দিষ্ট সময়ে পরিষ্কার করুন!"
@@ -480,14 +456,6 @@ msgstr ""
 #: ../../lastore/notify.go:132
 msgid "New system edition available"
 msgstr ""
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "%q সফলভাবে মুছে ফেলা হয়েছে"
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "%q আনইনস্টল করতে ব্যর্থ হয়েছে"
 
 #: ../../network/manager_active_conn.go:351
 #: ../../network/manager_active_conn.go:356

@@ -69,7 +69,7 @@ msgstr ""
 msgid "%s had been disabled"
 msgstr "%s вимкнено"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Відкрити"
 
@@ -206,27 +206,6 @@ msgstr "Додайте пристрої Bluetooth"
 #: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "З'єднати"
-
-#: ../../dock/app_entry_menu.go:116
-msgid "Close All"
-msgstr "Закрити всі"
-
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
-msgid "Force Quit"
-msgstr "Примусово Вийти"
-
-#: ../../dock/app_entry_menu.go:167
-msgid "Dock"
-msgstr "Док"
-
-#: ../../dock/app_entry_menu.go:177
-msgid "Undock"
-msgstr "Розстикуватись"
-
-#: ../../dock/app_entry_menu.go:187
-msgid "All Windows"
-msgstr "Усі вікна"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -536,14 +515,6 @@ msgstr ""
 #: ../../lastore/notify.go:153
 msgid "OK"
 msgstr "Гаразд"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "%q успішно видалено"
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "Не вдалося встановити %q"
 
 #: ../../network/manager_active_conn.go:437
 #: ../../network/manager_active_conn.go:442

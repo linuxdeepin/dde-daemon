@@ -196,30 +196,6 @@ msgstr ""
 msgid "Festival"
 msgstr ""
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Open"
-msgstr "Отваряне"
-
-#: ../../dock/app_entry_menu.go:109
-msgid "Close All"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:125
-msgid "Force Quit"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:132
-msgid "Dock"
-msgstr "Док"
-
-#: ../../dock/app_entry_menu.go:139
-msgid "Undock"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:146
-msgid "All Windows"
-msgstr "Всички прозорци"
-
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr ""
@@ -483,14 +459,6 @@ msgstr ""
 #: ../../lastore/notify.go:132
 msgid "New system edition available"
 msgstr ""
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "%q е успешно премахнат"
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "Неуспешно деинсталиране на %q"
 
 #: ../../network/manager_active_conn.go:351
 #: ../../network/manager_active_conn.go:356

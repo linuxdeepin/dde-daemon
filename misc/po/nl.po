@@ -71,7 +71,7 @@ msgstr "Gebruiker ‘%s’ bestond al en de gegevens zijn gesynchroniseerd"
 msgid "%s had been disabled"
 msgstr "%s is uitgeschakeld"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Openen"
 
@@ -208,27 +208,6 @@ msgstr "Bluetooth-apparaten toevoegen"
 #: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "Koppelen"
-
-#: ../../dock/app_entry_menu.go:116
-msgid "Close All"
-msgstr "Alles sluiten"
-
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
-msgid "Force Quit"
-msgstr "Afsluiten forceren"
-
-#: ../../dock/app_entry_menu.go:167
-msgid "Dock"
-msgstr "Vastmaken"
-
-#: ../../dock/app_entry_menu.go:177
-msgid "Undock"
-msgstr "Losmaken"
-
-#: ../../dock/app_entry_menu.go:187
-msgid "All Windows"
-msgstr "Alle vensters"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -536,14 +515,6 @@ msgstr ""
 #: ../../lastore/notify.go:153
 msgid "OK"
 msgstr "Oké"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "%q is verwijderd"
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "%q kan niet worden verwijderd"
 
 #: ../../network/manager_active_conn.go:437
 #: ../../network/manager_active_conn.go:442

@@ -66,7 +66,7 @@ msgstr ""
 msgid "%s had been disabled"
 msgstr "%s è stato disattivato"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Apri"
 
@@ -203,27 +203,6 @@ msgstr "Aggiungi dispositivi Bluetooth"
 #: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "Abbina"
-
-#: ../../dock/app_entry_menu.go:116
-msgid "Close All"
-msgstr "Chiudi tutto"
-
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
-msgid "Force Quit"
-msgstr "Forza chiusura"
-
-#: ../../dock/app_entry_menu.go:167
-msgid "Dock"
-msgstr "Dock"
-
-#: ../../dock/app_entry_menu.go:177
-msgid "Undock"
-msgstr "Sgancia"
-
-#: ../../dock/app_entry_menu.go:187
-msgid "All Windows"
-msgstr "Tutte le finestre"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -528,14 +507,6 @@ msgstr ""
 #: ../../lastore/notify.go:153
 msgid "OK"
 msgstr "OK"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "%q rimossa con successo"
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "Disinstallazione di %q fallita"
 
 #: ../../network/manager_active_conn.go:437
 #: ../../network/manager_active_conn.go:442

@@ -129,30 +129,6 @@ msgstr ""
 msgid "Bluetooth connection failed"
 msgstr "Die Bluetooth-verbinding het uitgetel of misluk."
 
-#: ../../dock/app_entry_menu.go:101
-msgid "_Open"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:108
-msgid "_Close All"
-msgstr "_Sluit Alles"
-
-#: ../../dock/app_entry_menu.go:117
-msgid "_Force Quit"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:124
-msgid "_Dock"
-msgstr "_Dok"
-
-#: ../../dock/app_entry_menu.go:131
-msgid "_Undock"
-msgstr "_Loskoppel"
-
-#: ../../dock/app_entry_menu.go:138
-msgid "_All windows"
-msgstr ""
-
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr ""
@@ -382,14 +358,6 @@ msgstr ""
 msgid ""
 "Your system source has been modified, please restore to official source for "
 "your normal use"
-msgstr ""
-
-#: ../../launcher/manager_uninstall.go:69
-msgid "%q removed successfully"
-msgstr ""
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "Failed to uninstall %q"
 msgstr ""
 
 #: ../../network/agent.go:395

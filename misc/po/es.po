@@ -77,7 +77,7 @@ msgstr "El usuario \"%s\" ya existía y sus datos están sincronizados"
 msgid "%s had been disabled"
 msgstr "%s había sido deshabilitado"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Abrir"
 
@@ -214,27 +214,6 @@ msgstr "Añadir dispositivos Bluetooth"
 #: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "Emparejar"
-
-#: ../../dock/app_entry_menu.go:116
-msgid "Close All"
-msgstr "Cerrar todo"
-
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
-msgid "Force Quit"
-msgstr "Forzar cierre"
-
-#: ../../dock/app_entry_menu.go:167
-msgid "Dock"
-msgstr "Anclar"
-
-#: ../../dock/app_entry_menu.go:177
-msgid "Undock"
-msgstr "Desanclar"
-
-#: ../../dock/app_entry_menu.go:187
-msgid "All Windows"
-msgstr "Todas las ventanas"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -544,14 +523,6 @@ msgstr ""
 #: ../../lastore/notify.go:153
 msgid "OK"
 msgstr "Aceptar"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "%q eliminado correctamente"
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "Falló la desinstalación de %q"
 
 #: ../../network/manager_active_conn.go:437
 #: ../../network/manager_active_conn.go:442

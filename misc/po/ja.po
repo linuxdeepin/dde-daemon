@@ -180,30 +180,6 @@ msgstr ""
 msgid "Schedule Reminder"
 msgstr ""
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Open"
-msgstr "開く"
-
-#: ../../dock/app_entry_menu.go:107
-msgid "Close All"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:123
-msgid "Force Quit"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:130
-msgid "Dock"
-msgstr "ドック"
-
-#: ../../dock/app_entry_menu.go:137
-msgid "Undock"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:144
-msgid "All Windows"
-msgstr "すべてのウィンドウ"
-
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "ディスク容量が不足しています、クリーンアップしてください！"
@@ -444,14 +420,6 @@ msgid ""
 "Your system source has been modified, please restore to official source for "
 "your normal use"
 msgstr "システムソースが変更されています、通常利用には公式ソースに復元してください"
-
-#: ../../launcher/manager_uninstall.go:69
-msgid "%q removed successfully"
-msgstr "%q は正常に削除されました。"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "Failed to uninstall %q"
-msgstr "%q のアンインストールに失敗しました"
 
 #: ../../network/manager_active_conn.go:318
 msgid "A (5 GHz)"

@@ -64,7 +64,7 @@ msgstr ""
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "විවෘත කරන්න"
 
@@ -201,27 +201,6 @@ msgstr "බ්ලූටූත් උපාංග එක් කරන්න"
 #: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "එකිනෙක සම්බන්ධ කරන්න"
-
-#: ../../dock/app_entry_menu.go:116
-msgid "Close All"
-msgstr "සියල්ල වසා දමන්න"
-
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
-msgid "Force Quit"
-msgstr "බලෙන් ඉවත් වන්න"
-
-#: ../../dock/app_entry_menu.go:167
-msgid "Dock"
-msgstr "ඩොක් එක"
-
-#: ../../dock/app_entry_menu.go:177
-msgid "Undock"
-msgstr "අහෝසි කරන්න"
-
-#: ../../dock/app_entry_menu.go:187
-msgid "All Windows"
-msgstr "සියලුම කවුළු"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -527,14 +506,6 @@ msgstr ""
 #: ../../lastore/notify.go:153
 msgid "OK"
 msgstr "හරි"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "%q සාර්ථකව ඉවත් කර ඇත."
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
 
 #: ../../network/manager_active_conn.go:437
 #: ../../network/manager_active_conn.go:442

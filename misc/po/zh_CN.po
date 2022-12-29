@@ -68,7 +68,7 @@ msgstr "“%s”用户为之前已存在的用户，原数据已同步"
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:463 ../../dock/app_entry_menu.go:109
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "打开"
 
@@ -205,27 +205,6 @@ msgstr "添加蓝牙设备"
 #: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr "配对"
-
-#: ../../dock/app_entry_menu.go:116
-msgid "Close All"
-msgstr "关闭所有"
-
-#: ../../dock/app_entry_menu.go:134 ../../dock/app_entry_menu.go:148
-#: ../../dock/app_entry_menu.go:163
-msgid "Force Quit"
-msgstr "强制退出"
-
-#: ../../dock/app_entry_menu.go:167
-msgid "Dock"
-msgstr "驻留"
-
-#: ../../dock/app_entry_menu.go:177
-msgid "Undock"
-msgstr "移除驻留"
-
-#: ../../dock/app_entry_menu.go:187
-msgid "All Windows"
-msgstr "所有窗口"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -527,14 +506,6 @@ msgstr "检测到版本正在更新中，您的电量已低于50%，请及时接
 #: ../../lastore/notify.go:153
 msgid "OK"
 msgstr "确 定"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "成功卸载 %q "
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "%q 卸载失败"
 
 #: ../../network/manager_active_conn.go:437
 #: ../../network/manager_active_conn.go:442
