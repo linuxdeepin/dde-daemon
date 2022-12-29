@@ -5,8 +5,15 @@
 package lastore
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
+	"sync"
+	"time"
+
+	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 const (
@@ -36,27 +43,52 @@ func (*Daemon) GetDependencies() []string {
 }
 
 func (d *Daemon) Start() error {
+	var lastoreOnce sync.Once
 	service := loader.GetService()
-
-	lastore, err := newLastore(service)
+	sysBus, err := dbus.SystemBus()
 	if err != nil {
+		logger.Warning(err)
 		return err
 	}
-	d.lastore = lastore
-
-	err = service.Export(dbusPath, lastore, lastore.syncConfig)
-	if err != nil {
-		return err
+	sysDBusDaemon := ofdbus.NewDBus(sysBus)
+	systemSigLoop := dbusutil.NewSignalLoop(sysBus, 10)
+	systemSigLoop.Start()
+	initLastore := func() {
+		lastoreObj, err := newLastore(service)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		d.lastore = lastoreObj
+		err = service.Export(dbusPath, lastoreObj, lastoreObj.syncConfig)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		err = service.RequestName(dbusServiceName)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		err = lastoreObj.syncConfig.Register()
+		if err != nil {
+			logger.Warning("Failed to register sync service:", err)
+		}
+		sysDBusDaemon.RemoveAllHandlers()
+		systemSigLoop.Stop()
 	}
-
-	err = service.RequestName(dbusServiceName)
+	time.AfterFunc(10*time.Minute, func() {
+		lastoreOnce.Do(initLastore)
+	})
+	core := lastore.NewLastore(sysBus)
+	sysDBusDaemon.InitSignalExt(systemSigLoop, true)
+	_, err = sysDBusDaemon.ConnectNameOwnerChanged(func(name, oldOwner, newOwner string) {
+		if name == core.ServiceName_() && newOwner != "" {
+			lastoreOnce.Do(initLastore)
+		}
+	})
 	if err != nil {
-		return err
-	}
-
-	err = lastore.syncConfig.Register()
-	if err != nil {
-		logger.Warning("Failed to register sync service:", err)
+		logger.Warning(err)
 	}
 	return nil
 }

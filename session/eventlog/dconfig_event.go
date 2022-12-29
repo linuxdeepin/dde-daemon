@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"sync"
+	"time"
 
 	"github.com/godbus/dbus"
 	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
@@ -69,11 +70,13 @@ func (c *dconfigLogCollector) Init(service *dbusutil.Service, fn writeEventLogFu
 }
 
 func (c *dconfigLogCollector) Collect() error {
-	c.updateLastoreConfig(c.systemService)
-	c.updateSyncConfig(c.systemService)
-	c.infoPropMu.Lock()
-	defer c.infoPropMu.Unlock()
-	c.writeDConfigLog(c.info)
+	time.AfterFunc(10*time.Minute, func() {
+		c.updateLastoreConfig(c.systemService)
+		c.updateSyncConfig(c.systemService)
+		c.infoPropMu.Lock()
+		defer c.infoPropMu.Unlock()
+		c.writeDConfigLog(c.info)
+	})
 	return nil
 }
 
