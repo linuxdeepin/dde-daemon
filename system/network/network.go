@@ -135,6 +135,7 @@ type device struct {
 	iface    string
 	nmDevice networkmanager.Device
 	type0    uint32
+	count    int
 }
 
 func (n *Network) getSysBus() *dbus.Conn {
@@ -488,26 +489,37 @@ func (n *Network) disableDevice(d *device) error {
 		return err
 	}
 	if d.type0 == nm.NM_DEVICE_TYPE_WIFI && state > nm.NM_DEVICE_STATE_UNAVAILABLE {
-		accessPointsList, err := d.nmDevice.Wireless().GetAllAccessPoints(0)
+		mode, err := d.nmDevice.Wireless().Mode().Get(0)
 		if err != nil {
-			logger.Debug("GetAllAccessPoints in system network ", err)
+			logger.Warning(err)
 		}
-		if len(accessPointsList) > 0 {
-			logger.Debug("have aplist existed!!!")
-		} else {
-			err = n.nmManager.WirelessEnabled().Set(0, false)
+
+		if mode != nm.NM_802_11_MODE_AP {
+			accessPointsList, err := d.nmDevice.Wireless().GetAllAccessPoints(0)
 			if err != nil {
-				logger.Debug("set WirelessEnabled in system network failed ", err)
-				return err
+				logger.Warning("GetAllAccessPoints in system network ", err)
 			}
-			if oldWirelessEnabled {
-				err = n.nmManager.WirelessEnabled().Set(0, true)
+
+			if len(accessPointsList) > 0 {
+				d.count = 0
+				logger.Debug("have aplist existed!!!")
+			} else if d.count++; d.count > 2 {
+				d.count = 0
+				logger.Info("try to set wireless-enabled, because ap list is empty")
+				err = n.nmManager.WirelessEnabled().Set(0, false)
 				if err != nil {
 					logger.Debug("set WirelessEnabled in system network failed ", err)
 					return err
 				}
+				if oldWirelessEnabled {
+					err = n.nmManager.WirelessEnabled().Set(0, true)
+					if err != nil {
+						logger.Debug("set WirelessEnabled in system network failed ", err)
+						return err
+					}
+				}
+				return nil
 			}
-			return nil
 		}
 	}
 
