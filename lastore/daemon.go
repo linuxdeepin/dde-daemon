@@ -5,8 +5,8 @@
 package lastore
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 const (
@@ -22,6 +22,7 @@ func init() {
 
 type Daemon struct {
 	lastore *Lastore
+	agent   *Agent
 	*loader.ModuleBase
 }
 
@@ -38,13 +39,12 @@ func (*Daemon) GetDependencies() []string {
 func (d *Daemon) Start() error {
 	service := loader.GetService()
 
-	lastore, err := newLastore(service)
+	lastoreObj, err := newLastore(service)
 	if err != nil {
 		return err
 	}
-	d.lastore = lastore
-
-	err = service.Export(dbusPath, lastore, lastore.syncConfig)
+	d.lastore = lastoreObj
+	err = service.Export(dbusPath, lastoreObj, lastoreObj.syncConfig)
 	if err != nil {
 		return err
 	}
@@ -53,32 +53,44 @@ func (d *Daemon) Start() error {
 	if err != nil {
 		return err
 	}
-
-	err = lastore.syncConfig.Register()
+	err = lastoreObj.syncConfig.Register()
 	if err != nil {
 		logger.Warning("Failed to register sync service:", err)
 	}
+	agent, err := newAgent(lastoreObj)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	d.agent = agent
+	agent.init()
 	return nil
 }
 
 func (d *Daemon) Stop() error {
-	if d.lastore == nil {
-		return nil
+	if d.lastore != nil {
+		service := loader.GetService()
+		err := service.ReleaseName(dbusServiceName)
+		if err != nil {
+			logger.Warning(err)
+		}
+		d.lastore.destroy()
+		err = service.StopExport(d.lastore)
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		d.lastore = nil
 	}
 
-	service := loader.GetService()
-	err := service.ReleaseName(dbusServiceName)
-	if err != nil {
-		logger.Warning(err)
+	if d.agent != nil {
+		service := loader.GetService()
+		d.agent.destroy()
+		err := service.StopExport(d.agent)
+		if err != nil {
+			logger.Warning(err)
+		}
+		d.agent = nil
 	}
-
-	d.lastore.destroy()
-
-	err = service.StopExport(d.lastore)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	d.lastore = nil
 	return nil
 }
