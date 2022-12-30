@@ -73,7 +73,6 @@ func logicSetSettingVkWirelessSecurityKeyMgmt(data connectionData, value string)
 			nm.NM_SETTING_WIRELESS_SECURITY_WEP_KEY_TYPE,
 		)
 		setSettingWirelessSecurityKeyMgmt(data, "none")
-		setSettingWirelessSecurityAuthAlg(data, "open")
 		setSettingWirelessSecurityWepKeyFlags(data, nm.NM_SETTING_SECRET_FLAG_NONE)
 		setSettingWirelessSecurityWepKeyType(data, nm.NM_WEP_KEY_TYPE_KEY)
 	case "wpa-psk":
