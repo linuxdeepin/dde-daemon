@@ -92,7 +92,7 @@ func (m *userAgentMap) removeAgent(uid string, agentPath dbus.ObjectPath) error 
 		return errors.New("invalid uid")
 	}
 
-	if _, ok := item.agents[agentPath]; ok {
+	if _, ok := item.agents[agentPath]; !ok {
 		return errors.New("invalid agent path")
 	}
 	delete(item.agents, agentPath)
