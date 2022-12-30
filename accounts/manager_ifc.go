@@ -4,11 +4,21 @@
 
 package accounts
 
+/*
+#cgo CFLAGS: -W -Wall -g  -fstack-protector-all -fPIC
+#cgo LDFLAGS: -lkeyring
+
+#include <stdlib.h>
+#include <shadow.h>
+#include "keyring/common.h"
+*/
+
 import (
 	"errors"
 	"fmt"
 	"math/rand"
 	"os"
+	"path"
 	"strconv"
 	"time"
 
@@ -20,6 +30,7 @@ import (
 	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/users/passwd"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+	"github.com/linuxdeepin/dde-daemon/accounts/keyring"
 )
 
 const (
@@ -31,6 +42,34 @@ const (
 
 func (*Manager) GetInterfaceName() string {
 	return dbusInterface
+}
+
+func createWhiteBoxUFile(name string) error {
+	keyring.CreateWhiteBoxUFile(name)
+	return nil
+}
+
+func getUserNameList() (list []string) {
+	infos, err := users.GetHumanUserInfos()
+	if err != nil {
+		return nil
+	}
+	for _, v := range infos {
+		list = append(list, v.Name)
+	}
+	return list
+}
+
+// 已经存在的账户，未创建WB_UFile文件，则直接创建
+func (*Manager) createExistAccountWbUFile() {
+	userList := getUserNameList()
+	for _, name := range userList {
+		dir := fmt.Sprintf("/var/lib/keyring/%s", name)
+		filename := path.Join(dir, "WB_UFile")
+		if !dutils.IsFileExist(dir) || !dutils.IsFileExist(filename) {
+			keyring.CreateWhiteBoxUFile(name)
+		}
+	}
 }
 
 // Create new user.
@@ -85,6 +124,11 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 	err = users.SetGroupsForUser(groups, name)
 	if err != nil {
 		logger.Warningf("failed to set groups for user %s: %v", name, err)
+	}
+
+	if err = createWhiteBoxUFile(name); err != nil {
+		logger.Warningf("createWhiteBoxUFile: create user '%s' failed: %v\n", name, err)
+		return nilObjPath, dbusutil.ToError(err)
 	}
 
 	// create user success
@@ -180,6 +224,13 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 	if rmFiles {
 		user.clearData()
 	}
+
+	err = keyring.DeleteWhiteBoxUFile(name)
+	if err != nil {
+		logger.Warningf("DeleteWhiteBoxUFile '%s' failed: %v\n", name, err)
+		return dbusutil.ToError(err)
+	}
+
 	return nil
 }
 
