@@ -5,8 +5,10 @@
 package eventlog
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"sync"
 
@@ -29,24 +31,32 @@ const (
 	dbusInterface   = dbusServiceName
 )
 
-var (
+const (
 	userExpPath    = "/var/public/deepin-user-experience/user"
 	defaultExpPath = "/etc/deepin/deepin-user-experience"
+	varTmpExpPath  = "/var/tmp/deepin/deepin-user-experience/state/"
+)
+
+const (
+	enableUserExp  = "switch=on"
+	disableUserExp = "switch=off"
 )
 
 type EventLog struct {
 	service *dbusutil.Service
 
-	writeEventLogFn writeEventLogFunc
-	Enabled         bool
-	propMu          sync.Mutex
-	fileMu          sync.Mutex
+	writeEventLogFn          writeEventLogFunc
+	Enabled                  bool
+	propMu                   sync.Mutex
+	fileMu                   sync.Mutex
+	currentUserVarTmpExpPath string
 }
 
 func newEventLog(service *dbusutil.Service, fn writeEventLogFunc) *EventLog {
 	m := &EventLog{
-		service:         service,
-		writeEventLogFn: fn,
+		service:                  service,
+		writeEventLogFn:          fn,
+		currentUserVarTmpExpPath: path.Join(varTmpExpPath, fmt.Sprintf("%v/info", os.Getuid())),
 	}
 	return m
 }
@@ -74,16 +84,23 @@ func (e *EventLog) Enable(enable bool) *dbus.Error {
 
 func (e *EventLog) syncUserExpState() {
 	var state bool
-	if !dutils.IsFileExist(userExpPath) {
-		logger.Debugf("%s not exist,should get state in %s", userExpPath, defaultExpPath)
-		state = e.getUserExpStateFromDefaultPath()
-		// 如果从安装器文件获取到状态，则将数据同步回user
+	if dutils.IsFileExist(e.currentUserVarTmpExpPath) {
+		// 从1054标准路径获取
+		state = e.getUserExpStateFromVarTmpExpPath()
+	} else if dutils.IsFileExist(userExpPath) {
+		// 从历史版本获取
+		state = e.getUserExpStateFromUserExpPath()
 		err := e.setUserExpFileState(state)
 		if err != nil {
 			logger.Warning(err)
 		}
 	} else {
-		state = e.getUserExpStateFromUserExpPath()
+		// 从安装器文件获取
+		state = e.getUserExpStateFromDefaultPath()
+		err := e.setUserExpFileState(state)
+		if err != nil {
+			logger.Warning(err)
+		}
 	}
 	e.setPropEnabled(state)
 }
@@ -138,18 +155,39 @@ func (e *EventLog) getUserExpStateFromDefaultPath() bool {
 func (e *EventLog) setUserExpFileState(state bool) error {
 	e.fileMu.Lock()
 	defer e.fileMu.Unlock()
-	if !dutils.IsFileExist(userExpPath) {
-		err := os.MkdirAll(filepath.Dir(userExpPath), 0777)
+	if !dutils.IsFileExist(e.currentUserVarTmpExpPath) {
+		err := os.MkdirAll(filepath.Dir(e.currentUserVarTmpExpPath), 0777)
 		if err != nil {
 			return err
 		}
 	}
-	sys := &SysCfg{
-		UserExp: state,
+	var content []byte
+	if state {
+		content = []byte(enableUserExp)
+	} else {
+		content = []byte(disableUserExp)
 	}
-	content, err := proto.Marshal(sys)
+	return ioutil.WriteFile(e.currentUserVarTmpExpPath, content, 0666)
+}
+
+func (e *EventLog) getUserExpStateFromVarTmpExpPath() bool {
+	e.fileMu.Lock()
+	defer e.fileMu.Unlock()
+	content, err := ioutil.ReadFile(e.currentUserVarTmpExpPath)
 	if err != nil {
-		return err
+		logger.Warning(err)
+		return false
 	}
-	return ioutil.WriteFile(userExpPath, content, 0666)
+	if len(content) == 0 {
+		// 如果info的内容是空的，则默认为false，并将状态写回user
+		e.fileMu.Unlock()
+		err = e.setUserExpFileState(false)
+		if err != nil {
+			logger.Warning(err)
+		}
+		e.fileMu.Lock()
+		return false
+	}
+
+	return string(content) == enableUserExp
 }

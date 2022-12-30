@@ -208,6 +208,7 @@ func (c *appEventCollector) monitor(entryPath dbus.ObjectPath) {
 			if !c.removeEntry(entryId) {
 				return
 			}
+			entryObj.RemoveAllHandlers()
 			entry.Tid = AppCloseTid
 		}
 		c.writeAppEventLog(entry)
