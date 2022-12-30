@@ -5,6 +5,10 @@ GOBUILD = go build $(GO_BUILD_FLAGS)
 export GO111MODULE=off
 export GOPATH=$(shell go env GOPATH)
 
+ifneq (${shell uname -m}, mips64el)
+    GOBUILD_OPTIONS = -ldflags '-linkmode=external -extldflags "-pie"'
+endif
+
 BINARIES =  \
 	    dde-session-daemon \
 	    dde-system-daemon \
