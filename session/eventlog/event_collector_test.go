@@ -5,6 +5,7 @@
 package eventlog
 
 import (
+	"os"
 	"testing"
 
 	dutils "github.com/linuxdeepin/go-lib/utils"
@@ -39,7 +40,8 @@ func Test_getUserExpStateFromDefaultPath(t *testing.T) {
 func Test_setUserExpFileState(t *testing.T) {
 	t.Run("Test setUserExpFileState", func(t *testing.T) {
 		e := new(EventLog)
-		userExpPath = "testdata/testuser"
+		e.currentUserVarTmpExpPath = "testdata/current_testuser"
 		assert.NoError(t, e.setUserExpFileState(true))
+		_ = os.RemoveAll(e.currentUserVarTmpExpPath)
 	})
 }

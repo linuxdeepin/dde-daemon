@@ -31,7 +31,7 @@ const (
 	dbusInterface   = dbusServiceName
 )
 
-const (
+var (
 	userExpPath    = "/var/public/deepin-user-experience/user"
 	defaultExpPath = "/etc/deepin/deepin-user-experience"
 	varTmpExpPath  = "/var/tmp/deepin/deepin-user-experience/state/"
