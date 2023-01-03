@@ -1,3 +1,9 @@
+dde-daemon (5.14.126) unstable; urgency=low
+
+  * bump version to 5.14.126
+
+ -- lichangze <lichangze@uniontech.com>  Tue, 3 Jan 2023 15:04:21 +0000
+
 dde-daemon (3.0.18) unstable; urgency=low
 
   * Autobuild Tag 3.0.18 
