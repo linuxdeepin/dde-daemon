@@ -18,6 +18,9 @@ import (
 	"strings"
 	"syscall"
 	"unsafe"
+
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	upower "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.upower"
 )
 
 const (
@@ -166,6 +169,31 @@ func (m *Manager) initLidSwitchCommon() {
 			}
 		}
 	}()
+}
+
+func (m *Manager) initLidSwitchByUPower() error {
+	const UPowerInterface = "org.freedesktop.UPower"
+	uPowerObj := upower.NewUPower(m.service.Conn())
+	sysBusObj := ofdbus.NewDBus(m.service.Conn())
+	hasOwner, err := sysBusObj.NameHasOwner(0, UPowerInterface)
+	if err != nil {
+		return err
+	}
+	if !hasOwner {
+		return fmt.Errorf("%v not export", UPowerInterface)
+	}
+	uPowerObj.InitSignalExt(m.systemSigLoop, true)
+	err = uPowerObj.LidIsClosed().ConnectChanged(func(hasValue bool, isClosed bool) {
+		if !hasValue {
+			return
+		}
+		m.handleLidSwitchEvent(isClosed)
+	})
+	if err != nil {
+		return err
+	}
+	m.HasLidSwitch = true
+	return nil
 }
 
 func readLidSwitchEvent(f *os.File) ([]InputEvent, error) {
