@@ -12,7 +12,11 @@ func (m *Manager) initLidSwitch() {
 	if arch.Get() == arch.Sunway && isSWLidStateFileExist() {
 		m.initLidSwitchSW()
 	} else {
-		m.initLidSwitchCommon()
+		err := m.initLidSwitchByUPower()
+		if err != nil {
+			logger.Warningf("failed to init watch lid switch by upower(%v),start init watch by gudev", err)
+			m.initLidSwitchCommon()
+		}
 	}
 	logger.Debug("hasLidSwitch:", m.HasLidSwitch)
 }
