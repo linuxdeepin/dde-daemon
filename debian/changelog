@@ -1,3 +1,9 @@
+dde-daemon (5.15.2) UNRELEASED; urgency=medium
+
+  * update changelog for tag 5.15.2
+
+ -- Deepin Packages Builder <packages@deepin.com>  Mon, 01 Jan 2023 15:26:28 +0800
+
 dde-daemon (3.0.18) unstable; urgency=low
 
   * Autobuild Tag 3.0.18 
