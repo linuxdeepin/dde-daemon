@@ -1,3 +1,9 @@
+dde-daemon (5.14.128) unstable; urgency=low
+
+  * bump version to 5.14.128
+
+ -- lichangze <lichangze@uniontech.com>  Fri, 6 Jan 2023 14:20:05 +0000
+
 dde-daemon (5.14.127) unstable; urgency=low
 
   * bump version to 5.14.127
