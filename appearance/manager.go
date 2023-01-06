@@ -84,6 +84,7 @@ const (
 	gsKeyWallpaperURIs      = "wallpaper-uris"
 	gsKeyQtActiveColor      = "qt-active-color"
 	gsKeyDTKWindowRadius    = "dtk-window-radius"
+	gsKeyQtScrollBarPolicy  = "qt-scrollbar-policy"
 
 	propQtActiveColor = "QtActiveColor"
 
@@ -127,7 +128,8 @@ type Manager struct {
 	WallpaperURIs      gsprop.String
 	QtActiveColor      string `prop:"access:rw"`
 	// 社区版定制需求，保存窗口圆角值，默认 18
-	WindowRadius gsprop.Int `prop:"access:rw"`
+	WindowRadius      gsprop.Int `prop:"access:rw"`
+	QtScrollBarPolicy gsprop.Int `prop:"access:rw"`
 
 	wsLoopMap      map[string]*WSLoop
 	wsSchedulerMap map[string]*WSScheduler
@@ -209,6 +211,8 @@ func newManager(service *dbusutil.Service) *Manager {
 	m.WallpaperURIs.Bind(m.setting, gsKeyWallpaperURIs)
 	// 社区版定制需求  保存窗口圆角值
 	m.WindowRadius.Bind(m.xSettingsGs, gsKeyDTKWindowRadius)
+	m.QtScrollBarPolicy.Bind(m.xSettingsGs, gsKeyQtScrollBarPolicy)
+
 	var err error
 	m.QtActiveColor, err = m.getQtActiveColor()
 	if err != nil {
