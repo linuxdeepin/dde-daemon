@@ -1,3 +1,10 @@
+dde-daemon (6.0.9) unstable; urgency=medium
+
+  [ TagBuilder ]
+  * fix: 接上笔提交"1"，解决社区编译问题(Task: 233587)(Influence: 编译)
+
+ -- lvpeilong <lvpeilong@uniontech.com>  Fri, 06 Jan 2023 15:57:00 +0800
+
 dde-daemon (6.0.8.1) unstable; urgency=medium
 
   [ TagBuilder ]
