@@ -11,6 +11,8 @@ package users
 #include <stdlib.h>
 #include <shadow.h>
 #include "passwd.h"
+#include  <pwd.h>
+#include  <grp.h>
 */
 import "C"
 
@@ -21,6 +23,7 @@ import (
 	"math"
 	"os"
 	"os/user"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -67,6 +70,45 @@ func GetPwDir(uid uint32) string {
 
 func GetPwShell(uid uint32) string {
 	return C.GoString(C.get_pw_shell(C.uint(uid)))
+}
+
+// 通过当前用户的uid获取当前账号的Group
+func GetADUserGroupsByUID(uid uint32) ([]string, error) {
+	var result []string
+
+	pwent := C.getpwuid(C.uint(uid))
+	if pwent == nil {
+		return nil, fmt.Errorf("Invalid uuid: %d", uid)
+	}
+
+	gid := C.uint(pwent.pw_gid)
+	groupPtr := C.getgrgid(gid)
+	if groupPtr == nil {
+		return nil, fmt.Errorf("Invalid gid: %d", gid)
+	}
+
+	result = append(result, C.GoString(groupPtr.gr_name))
+	sort.Strings(result)
+
+	return result, nil
+}
+
+// 判断用户是否是LDAP网络账户，LDAP域账户信息只能由服务端设置，本地没有保存
+func IsDomainUserID(uid string) bool {
+	id, _ := strconv.Atoi(uid)
+
+	domainUserGroups, err := GetADUserGroupsByUID(uint32(id))
+	if err != nil {
+		return false
+	}
+
+	for _, v := range domainUserGroups {
+		if strings.Contains(v, "domain") {
+			return true
+		}
+	}
+
+	return false
 }
 
 type originShadowInfo struct {

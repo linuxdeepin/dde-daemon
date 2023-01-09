@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"sync"
@@ -38,6 +39,16 @@ const (
 
 	interfacesFile = "/usr/share/dde-daemon/accounts/dbus-udcp.json"
 )
+
+var configFile = filepath.Join(actConfigDir, "domainUser.json")
+
+type domainUserConfig struct {
+	Name      string
+	Uid       string
+	IsLogined bool
+}
+
+type DefaultDomainUserConfig map[string]*domainUserConfig
 
 type InterfaceConfig struct {
 	Service   string `json:"service"`
@@ -71,6 +82,8 @@ type Manager struct {
 	delayTaskManager *tasker.DelayTaskManager
 	userAddedChanMap map[string]chan string
 	udcpCache        udcp.UdcpCache
+	userConfig       DefaultDomainUserConfig
+	domainUserMapMu  sync.Mutex
 
 	//nolint
 	signals *struct {
@@ -108,6 +121,14 @@ func NewManager(service *dbusutil.Service) *Manager {
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
 
+	// 检测到系统加入LDAP域后，才去初始化域用户信息
+	ret, err := m.isJoinLDAPDoamin()
+	if err == nil {
+		if ret {
+			m.initDomainUsers()
+		}
+	}
+
 	m.watcher = dutils.NewWatchProxy()
 	if m.watcher != nil {
 		m.delayTaskManager = tasker.NewDelayTaskManager()
@@ -139,7 +160,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 			return
 		}
 
-		err = m.addUdcpUser(userInfo.UID)
+		err = m.addDomainUser(userInfo.UID)
 		if err != nil {
 			logger.Warningf("add login session failed:%v", err)
 		}
@@ -232,22 +253,19 @@ func (m *Manager) initUdcpUsers() {
 	// 解析json文件 新建udcp-cache对象,获取所有加域账户ID
 	err := m.initUdcpCache()
 	if err != nil {
-		if os.IsNotExist(err) {
-			return
-		}
-		logger.Errorf("New udcp cache object failed: %v", err)
+		logger.Warningf("New udcp cache object failed: %v", err)
 		return
 	}
 
 	userIdList, err := m.udcpCache.GetUserIdList(0)
 	if err != nil {
-		logger.Errorf("Udcp cache getUserIdList failed: %v", err)
+		logger.Warningf("Udcp cache getUserIdList failed: %v", err)
 		return
 	}
 
 	isJoinUdcp, err := m.udcpCache.Enable().Get(0)
 	if err != nil {
-		logger.Errorf("Udcp cache get Enable failed: %v", err)
+		logger.Warningf("Udcp cache get Enable failed: %v", err)
 		return
 	}
 
@@ -263,16 +281,58 @@ func (m *Manager) initUdcpUsers() {
 		}
 		userGroups, err := m.udcpCache.GetUserGroups(0, users.GetPwName(uId))
 		if err != nil {
-			logger.Errorf("Udcp cache getUserGroups failed: %v", err)
+			logger.Warningf("Udcp cache getUserGroups failed: %v", err)
 			continue
 		}
 
-		u, err := NewUdcpUser(uId, m.service, userGroups)
+		u, err := NewDomainUser(uId, m.service, userGroups)
 		if err != nil {
-			logger.Errorf("New udcp user '%d' failed: %v", uId, err)
+			logger.Warningf("New udcp user '%d' failed: %v", uId, err)
 			continue
 		}
 		userDBusPath := userDBusPathPrefix + strconv.FormatUint(uint64(uId), 10)
+		userList = append(userList, userDBusPath)
+		m.usersMapMu.Lock()
+		m.usersMap[userDBusPath] = u
+		m.usersMapMu.Unlock()
+	}
+	sort.Strings(userList)
+	m.UserList = userList
+}
+
+func (m *Manager) initDomainUsers() {
+	var domainUserList []string
+	// 解析json文件,获取所有之前登录过的域账号
+	err := m.loadDomainUserConfig()
+
+	if err != nil {
+		logger.Warningf("init domain user config failed: %v", err)
+		return
+	}
+
+	for _, v := range m.userConfig {
+		if users.IsDomainUserID(v.Uid) && (v.IsLogined == true) {
+			domainUserList = append(domainUserList, v.Uid)
+		}
+	}
+
+	// 构造User服务对象
+	var userList = m.UserList
+	for _, uId := range domainUserList {
+		id, _ := strconv.Atoi(uId)
+		domainUserGroups, err := users.GetADUserGroupsByUID(uint32(id))
+		if err != nil {
+			logger.Warningf("get domain user groups failed: %v", err)
+			return
+		}
+
+		u, err := NewDomainUser(uint32(id), m.service, domainUserGroups)
+		if err != nil {
+			logger.Errorf("New domain user '%s' failed: %v", uId, err)
+			continue
+		}
+
+		userDBusPath := userDBusPathPrefix + uId
 		userList = append(userList, userDBusPath)
 		m.usersMapMu.Lock()
 		m.usersMap[userDBusPath] = u
@@ -315,13 +375,41 @@ func (m *Manager) exportUserByUid(uId string) error {
 		if users.ExistPwUid(uint32(id)) != 0 {
 			return errors.New("no such user id")
 		}
-		userGroups, err = m.udcpCache.GetUserGroups(0, users.GetPwName(uint32(id)))
+
+		// 域管用户
+		if m.udcpCache != nil {
+			userGroups, err = m.udcpCache.GetUserGroups(0, users.GetPwName(uint32(id)))
+			if err != nil {
+				logger.Warningf("Udcp cache getUserGroups failed: %v", err)
+			}
+		}
+
+		// LDAP 域用户
+		if users.IsDomainUserID(uId) {
+			userGroups, err = users.GetADUserGroupsByUID(uint32(id))
+			if err != nil {
+				logger.Warningf("get domain user groups failed: %v", err)
+			}
+		}
+
 		if err != nil {
-			logger.Errorf("Udcp cache getUserGroups failed: %v", err)
 			return err
 		}
 
-		u, err = NewUdcpUser(uint32(id), m.service, userGroups)
+		u, err = NewDomainUser(uint32(id), m.service, userGroups)
+
+		if users.IsDomainUserID(uId) {
+			var config = &domainUserConfig{
+				Name:      u.UserName,
+				Uid:       u.Uid,
+				IsLogined: true,
+			}
+
+			m.domainUserMapMu.Lock()
+			m.userConfig[userPath] = config
+			m.saveDomainUserConfig(m.userConfig)
+			m.domainUserMapMu.Unlock()
+		}
 	} else {
 		u, err = NewUser(userPath, m.service, true)
 	}
@@ -458,4 +546,62 @@ func chownHomeDir(homeDir string, username string) {
 
 func Tr(text string) string {
 	return text
+}
+
+func (m *Manager) loadDomainUserConfig() error {
+	logger.Debug("loadDomainUserConfig")
+
+	m.userConfig = make(DefaultDomainUserConfig)
+	if !dutils.IsFileExist(configFile) {
+		err := dutils.CreateFile(configFile)
+		if err != nil {
+			return err
+		}
+	} else {
+		data, err := ioutil.ReadFile(configFile)
+		if err != nil {
+			return err
+		}
+
+		if len(data) == 0 {
+			return errors.New("domain user config file is empty")
+		}
+
+		err = json.Unmarshal(data, &m.userConfig)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Manager) saveDomainUserConfig(config DefaultDomainUserConfig) error {
+	data, err := json.Marshal(config)
+	if err != nil {
+		return err
+	}
+
+	dir := filepath.Dir(configFile)
+	err = os.MkdirAll(dir, 0755)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(configFile, data, 0644)
+	return err
+}
+
+func (m *Manager) isJoinLDAPDoamin() (bool, error) {
+	out, err := exec.Command("realm", "list").CombinedOutput()
+	if err != nil {
+		logger.Debugf("failed to execute %s, error: %v", "realm list", err)
+		return false, err
+	}
+
+	if len(out) == 0 {
+		return false, nil
+	}
+
+	return true, nil
 }

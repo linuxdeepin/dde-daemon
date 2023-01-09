@@ -175,7 +175,7 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 	return u, nil
 }
 
-func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*User, error) {
+func NewDomainUser(usrId uint32, service *dbusutil.Service, groups []string) (*User, error) {
 	var err error
 	if users.ExistPwUid(usrId) != 0 {
 		return nil, errors.New("no such user id")
@@ -199,6 +199,7 @@ func NewUdcpUser(usrId uint32, service *dbusutil.Service, groups []string) (*Use
 		PasswordLastChange: 18737,
 	}
 
+	u.AccountType = users.UserTypeDomain
 	u.Groups = groups
 
 	// 解析对应域管用户是否有添加到sudo组里面，有为管理员用户，否则为标准用户

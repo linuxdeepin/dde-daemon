@@ -220,9 +220,14 @@ func (u *User) SetMaxPasswordAge(sender dbus.Sender, nDays int32) *dbus.Error {
 	return nil
 }
 
-func (u *User) IsPasswordExpired() (expired bool, busErr *dbus.Error) {
-	expired, err := users.IsPasswordExpired(u.UserName)
-	return expired, dbusutil.ToError(err)
+func (u *User) IsPasswordExpired() (bool, *dbus.Error) {
+	// LDAP 域用户密码由域服务器控制，系统不去做密码过期检测
+	if users.IsDomainUserID(u.Uid) {
+		return false, nil
+	}
+
+	v, err := users.IsPasswordExpired(u.UserName)
+	return v, dbusutil.ToError(err)
 }
 
 func (u *User) SetLocked(sender dbus.Sender, locked bool) *dbus.Error {
