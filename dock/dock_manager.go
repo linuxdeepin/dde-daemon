@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
@@ -22,11 +21,14 @@ import (
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	wmswitcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.wmswitcher"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	x "github.com/linuxdeepin/go-x11-client"
+
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 type Manager struct {
@@ -46,7 +48,9 @@ type Manager struct {
 	FrontendWindowRect  *Rect
 
 	service            *dbusutil.Service
+	sysService         *dbusutil.Service
 	sessionSigLoop     *dbusutil.SignalLoop
+	sysSigLoop         *dbusutil.SignalLoop
 	syncConfig         *dsync.Config
 	clientList         windowSlice
 	clientListInitEnd  bool
@@ -75,8 +79,9 @@ type Manager struct {
 	identifyKWindowFuns []*IdentifyKWindowFunc
 	windowPatterns      WindowPatterns
 
-	forceQuitAppStatus forceQuitAppType
-	windowActMu        sync.Mutex
+	forceQuitAppStatus                 forceQuitAppType
+	windowActMu                        sync.Mutex
+	hideRequestDockAndUndockByNameList []string
 
 	// dbus objects:
 	launcher         launcher.Launcher
@@ -129,10 +134,21 @@ const (
 	dbusInterface   = dbusServiceName
 )
 
+const (
+	DSettingsAppID                             = "org.deepin.dde.daemon"
+	DSettingsDockName                          = "org.deepin.dde.daemon.dock"
+	DSettingsKeyHideRequestDockAndUndockByName = "hideRequestDockAndUndockByName"
+)
+
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	m := new(Manager)
 	m.service = service
-	err := m.init()
+	var err error
+	m.sysService, err = dbusutil.NewSystemService()
+	if err != nil {
+		return nil, err
+	}
+	err = m.init()
 	if err != nil {
 		return nil, err
 	}
@@ -157,6 +173,7 @@ func (m *Manager) destroy() {
 	m.launcher.RemoveHandler(proxy.RemoveAllHandlers)
 	m.ddeLauncher.RemoveHandler(proxy.RemoveAllHandlers)
 	m.sessionSigLoop.Stop()
+	m.sysSigLoop.Stop()
 	m.syncConfig.Destroy()
 
 	err := m.service.StopExport(m)
@@ -532,4 +549,41 @@ func (m *Manager) findXWindowInfo(win x.Window) *WindowInfo {
 		return val
 	}
 	return nil
+}
+
+func (m *Manager) initDSettings(conn *dbus.Conn) {
+	ds := configManager.NewConfigManager(conn)
+	dsPath, err := ds.AcquireManager(0, DSettingsAppID, DSettingsDockName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	dockDS, err := configManager.NewManager(conn, dsPath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	getHideRequestDockAndUndockByNameList := func() {
+		v, err := dockDS.Value(0, DSettingsKeyHideRequestDockAndUndockByName)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		itemList := v.Value().([]dbus.Variant)
+		for _, i := range itemList {
+			m.hideRequestDockAndUndockByNameList = append(m.hideRequestDockAndUndockByNameList, i.Value().(string))
+		}
+	}
+	getHideRequestDockAndUndockByNameList()
+	dockDS.InitSignalExt(m.sysSigLoop, true)
+	// 监听dsg配置变化
+	_, err = dockDS.ConnectValueChanged(func(key string) {
+		switch key {
+		case DSettingsKeyHideRequestDockAndUndockByName:
+			getHideRequestDockAndUndockByNameList()
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
 }
