@@ -10,6 +10,7 @@ import (
 
 	"github.com/godbus/dbus"
 	. "github.com/linuxdeepin/go-lib/gettext"
+	"github.com/linuxdeepin/go-lib/strv"
 	_ "github.com/linuxdeepin/go-x11-client"
 )
 
@@ -24,13 +25,14 @@ func (entry *AppEntry) updateMenu() {
 	if hasWin {
 		menu.AppendItem(entry.getMenuItemAllWindows())
 	}
-
-	// menu item dock or undock
-	logger.Debug(entry.Id, "Item docked?", entry.IsDocked)
-	if entry.IsDocked {
-		menu.AppendItem(entry.getMenuItemUndock())
-	} else {
-		menu.AppendItem(entry.getMenuItemDock())
+	if !strv.Strv(entry.manager.hideRequestDockAndUndockByNameList).Contains(entry.getName()) {
+		// menu item dock or undock
+		logger.Debug(entry.Id, "Item docked?", entry.IsDocked)
+		if entry.IsDocked {
+			menu.AppendItem(entry.getMenuItemUndock())
+		} else {
+			menu.AppendItem(entry.getMenuItemDock())
+		}
 	}
 
 	if hasWin {

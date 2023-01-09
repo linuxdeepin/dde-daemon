@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
@@ -22,6 +21,8 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	x "github.com/linuxdeepin/go-x11-client"
+
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (
@@ -284,13 +285,15 @@ func (m *Manager) init() error {
 
 	m.sessionSigLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)
 	m.sessionSigLoop.Start()
+	m.sysSigLoop = dbusutil.NewSignalLoop(m.sysService.Conn(), 10)
+	m.sysSigLoop.Start()
 	m.listenLauncherSignal()
 	m.listenWMSwitcherSignal()
 	m.listenWMSignal()
 	if strings.Contains(sessionType, "wayland") {
 		m.listenWaylandWMSignals()
 	}
-
+	m.initDSettings(m.sysService.Conn())
 	//systemd拉起bamfdaemon可能会失败，导致阻塞，手动拉一遍
 	err = m.startBAMFDaemon(sessionBus)
 	if err != nil {
