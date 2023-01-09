@@ -178,16 +178,19 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		return dbusutil.ToError(err)
 	}
 
-	if m.isUdcpUserID(user.Uid) {
+	if m.isUdcpUserID(user.Uid) || users.IsDomainUserID(user.Uid) {
 		id, _ := strconv.Atoi(user.Uid)
-		result, err := m.udcpCache.RemoveCacheFile(0, uint32(id))
-		if err != nil {
-			logger.Errorf("Udcp cache RemoveCacheFile failed: %v", err)
-			return dbusutil.ToError(err)
-		}
 
-		if !result {
-			return dbusutil.ToError(errors.New("failed to remove user cache files"))
+		if m.udcpCache != nil {
+			result, err := m.udcpCache.RemoveCacheFile(0, uint32(id))
+			if err != nil {
+				logger.Errorf("Udcp cache RemoveCacheFile failed: %v", err)
+				return dbusutil.ToError(err)
+			}
+
+			if !result {
+				return dbusutil.ToError(errors.New("failed to remove user cache files"))
+			}
 		}
 
 		// 删除账户前先删除生物特征，避免删除账户后，用户数据找不到
@@ -197,6 +200,14 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 
 		// 删除服务，更新UserList
 		userPath := userDBusPathPrefix + user.Uid
+		// 删除对应AD域账户配置
+		if len(m.userConfig) != 0 {
+			delete(m.userConfig, userPath)
+			m.domainUserMapMu.Lock()
+			m.saveDomainUserConfig(m.userConfig)
+			m.domainUserMapMu.Unlock()
+		}
+
 		m.stopExportUser(userPath)
 		m.updatePropUserList()
 
