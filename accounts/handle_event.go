@@ -207,8 +207,8 @@ func (m *Manager) addUser(uInfo *users.UserInfo) {
 	}
 }
 
-func (m *Manager) addUdcpUser(uId uint32) error {
-	logger.Debug("addUdcpUser", uId)
+func (m *Manager) addDomainUser(uId uint32) error {
+	logger.Debug("addDomainUser", uId)
 	udcpUId := strconv.FormatUint(uint64(uId), 10)
 	err := m.exportUserByUid(udcpUId)
 	if err != nil {
