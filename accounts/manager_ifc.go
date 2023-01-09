@@ -45,8 +45,7 @@ func (*Manager) GetInterfaceName() string {
 }
 
 func createWhiteBoxUFile(name string) error {
-	keyring.CreateWhiteBoxUFile(name)
-	return nil
+	return keyring.CreateWhiteBoxUFile(name)
 }
 
 func getUserNameList() (list []string) {
@@ -67,7 +66,11 @@ func (*Manager) createExistAccountWbUFile() {
 		dir := fmt.Sprintf("/var/lib/keyring/%s", name)
 		filename := path.Join(dir, "WB_UFile")
 		if !dutils.IsFileExist(dir) || !dutils.IsFileExist(filename) {
-			keyring.CreateWhiteBoxUFile(name)
+			err := keyring.CreateWhiteBoxUFile(name)
+			if err != nil {
+				logger.Warning("Keyring crypto so not exist.")
+				return
+			}
 		}
 	}
 }
@@ -128,7 +131,6 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 
 	if err = createWhiteBoxUFile(name); err != nil {
 		logger.Warningf("createWhiteBoxUFile: create user '%s' failed: %v\n", name, err)
-		return nilObjPath, dbusutil.ToError(err)
 	}
 
 	// create user success

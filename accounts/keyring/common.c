@@ -15,25 +15,6 @@ void *dalloc(size_t size) {
     return p;
 }
 
-char *generate_random_str() {
-    static int inited = 0;
-    static char *str =
-        "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    int len = strlen(str);
-    char *masterkey = dalloc(MASTER_KEY_LEN + 1);
-
-    if (!inited) {
-        inited = 1;
-        srand((unsigned)time(NULL));
-    }
-
-    for (int i = 0; i < MASTER_KEY_LEN; i++) {
-        masterkey[i] = str[rand() % len];
-    }
-    masterkey[MASTER_KEY_LEN] = '\0';
-    return masterkey;
-}
-
 char *generate_random_len(unsigned int length) {
     static int inited = 0;
     static char *str = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

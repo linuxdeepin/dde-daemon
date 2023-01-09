@@ -95,7 +95,7 @@ Depends:
  xdotool,
  xkb-data,
  dde-dconfig-daemon,
- dde-crypto,
+ dde-crypto(>= 1.0.2-1~),
  ${dist:Depends},
  ${misc:Depends},
  ${shlibs:Depends},

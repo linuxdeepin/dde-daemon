@@ -10,6 +10,7 @@ package keyring
 import "C"
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -21,6 +22,11 @@ import (
 )
 
 var fileLocker sync.Mutex
+const keyringSoPath = "/usr/lib/libkeyringcrypto.so"
+
+func isFileExist(path string) bool {
+	return dutils.IsFileExist(path)
+}
 
 func ucharToArrayByte(value *C.uchar) string {
 	data := C.GoString((*C.char)(unsafe.Pointer(value)))
@@ -97,12 +103,16 @@ func createWhiteBoxUFile(dir, filePath string) error {
 }
 
 func CreateWhiteBoxUFile(name string) error {
+	if !isFileExist(keyringSoPath) {
+		return errors.New("Not Exist Keyring So ")
+	}
 	C.set_debug_flag(0)
 
 	UKEK := C.GoString(C.generate_random_len(C.MASTER_KEY_LEN))
 	UKEKIV := C.GoString(C.generate_random_len(C.MASTER_KEY_LEN))
-	fmt.Println("[CreateWhiteBoxUFile] UKEK generate_random_str   : ", UKEK)
-	fmt.Println("[CreateWhiteBoxUFile] UKEKIV generate_random_str : ", UKEKIV)
+	//TODO: 待测试通过后删除
+	fmt.Println("[CreateWhiteBoxUFile] UKEK generate_random_len   : ", UKEK)
+	fmt.Println("[CreateWhiteBoxUFile] UKEKIV generate_random_len : ", UKEKIV)
 
 	UKEK_ := unsafe.Pointer(C.CString(UKEK))
 	defer C.free(UKEK_)
@@ -113,21 +123,19 @@ func CreateWhiteBoxUFile(name string) error {
 	key := ""
 	//key：16个0 白盒加密 UKEK --> WB_UKEK
 	WB_UKEK := C.deepin_wb_encrypt((*C.uchar)(UKEK_), (*C.uchar)(unsafe.Pointer(C.CString(key))), false)
-
-	////key：16个0 sm4解密 UKEK --> UKEK
-	//out1 := C.sm4_crypt((*C.uchar)(WB_UKEK), (*C.uchar)(unsafe.Pointer(C.CString(key))), 0)
-	//defer C.free(unsafe.Pointer(out1))
-	//fmt.Println(">>>>>>>>>dec WB_UKEK -> UKEK : ", ucharToString(out1))
+	//string -> []byte,数据中间有00就会直接返回，导致len < 16 : 这种情况重新创建WB_UKEK
+	if len([]byte(ucharToString(WB_UKEK))) != C.MASTER_KEY_LEN {
+		CreateWhiteBoxUFile(name)
+		return errors.New("string to byte failed(len < 16)")
+	}
 
 	//key：UKEK 白盒加密 UKEKIV --> CIPHER_UKEKIV
 	CIPHER_UKEKIV := C.deepin_wb_encrypt((*C.uchar)(UKEKIV_), (*C.uchar)(UKEK_), true)
 	defer C.free(unsafe.Pointer(CIPHER_UKEKIV))
-	//fmt.Println(">>>>>>>>>UKEKIV enc UKEK -> CIPHER_UKEKIV : ", ucharToString(CIPHER_UKEKIV))
-
-	//key：UKEKIV sm4解密 CIPHER_UKEKIV --> UKEK
-	//out2 := C.sm4_crypt((*C.uchar)(CIPHER_UKEKIV), (*C.uchar)(UKEK_), 0)
-	//defer C.free(unsafe.Pointer(out2))
-	//fmt.Println(">>>>>>>>>UKEKIV dec CIPHER_UKEKIV -> UKEKIV : ", ucharToString(out2))
+	if len([]byte(ucharToString(CIPHER_UKEKIV))) != C.MASTER_KEY_LEN {
+		CreateWhiteBoxUFile(name)
+		return errors.New("string to byte failed(len < 16)")
+	}
 
 	//创建新增账户WB_UFile文件
 	dir := fmt.Sprintf("/var/lib/keyring/%s", name)
