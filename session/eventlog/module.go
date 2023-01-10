@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,9 +16,10 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
+
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var logger = log.NewLogger("daemon/session/eventlog")
@@ -45,7 +46,7 @@ type Module struct {
 }
 
 func (m *Module) GetDependencies() []string {
-	return []string{}
+	return []string{"dock"}
 }
 
 func newModule(logger *log.Logger) *Module {
@@ -131,10 +132,16 @@ func stop() error {
 	return nil
 }
 
-func (m *Module) writeEventLog(log string) {
+func (m *Module) writeEventLog(msg string) {
 	m.writeMu.Lock()
 	defer m.writeMu.Unlock()
-	cStr := C.CString(log)
+	cStr := C.CString(msg)
 	defer C.free(unsafe.Pointer(cStr))
-	C.writeEventLog(cStr)
+	var isDebug int
+	if logger.GetLogLevel() == log.LevelDebug {
+		isDebug = 1
+	} else {
+		isDebug = 0
+	}
+	C.writeEventLog(cStr, C.int(isDebug))
 }

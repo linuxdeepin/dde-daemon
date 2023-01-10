@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -37,7 +37,9 @@ void CloseEventLog() {
     dlclose(handler);
 }
 
-void writeEventLog(const char *log) {
-    cout << log << endl;
+void writeEventLog(const char *log,int isDebug) {
+    if (isDebug) {
+        cout << log << endl;
+    }
     if (fp_writeEventLog) fp_writeEventLog(log);
 }
