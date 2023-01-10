@@ -20,7 +20,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <syslog.h>
-#include <systemd/sd-bus.h>
 #include <termios.h>
 #include <unistd.h>
 #include <sys/time.h>
