@@ -1,0 +1,17 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+    "irregularFontWhiteList": {
+      "value": ["GB_SS_GB18030_Extended"],
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "IrregularFontWhiteList",
+      "name[zh_CN]": "不规范字体白名单",
+      "description": "不规范字体白名单,白名单中字体show字段为true",
+      "permissions": "read",
+      "visibility": "private"
+    }
+  }
+}
