@@ -10,10 +10,11 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/appearance/background"
-	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
+
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var (
