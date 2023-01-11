@@ -43,7 +43,6 @@ func (m *Manager) listenGSettingChanged() {
 			value = m.setting.GetString(key)
 			err = m.doSetGtkTheme(value)
 			m.updateThemeAuto(value == autoGtkTheme)
-
 		case gsKeyIconTheme:
 			ty = TypeIconTheme
 			value = m.setting.GetString(key)
@@ -60,22 +59,45 @@ func (m *Manager) listenGSettingChanged() {
 			ty = TypeMonospaceFont
 			value = m.setting.GetString(key)
 			err = m.doSetMonospaceFont(value)
+		case gsKeyDTKSizeMode:
+			ty = TypeDTKSizeMode
+			enabled := m.setting.GetInt(key)
+			value = fmt.Sprint(enabled)
+			err = m.doSetDTKSizeMode(enabled)
+			if err == nil {
+				fontSizeKey := gsKeyFontSize
+				if m.DTKSizeMode.Get() == 1 {
+					fontSizeKey = gsKeyCompactFontSize
+				}
+				m.FontSize.Bind(m.setting, fontSizeKey)
+				m.service.EmitPropertyChanged(m, propFontSize, m.FontSize.Get())
+				err = m.doSetFontSize(m.FontSize.Get())
+			}
 		case gsKeyFontSize:
 			ty = TypeFontSize
 			size := m.setting.GetDouble(key)
 			value = fmt.Sprint(size)
-			err = m.doSetFontSize(size)
+			if m.isHasDTKSizeModeKey() && (m.DTKSizeMode.Get() == 0) {
+				err = m.doSetFontSize(size)
+			} else {
+				m.doSetFontSize(size)
+			}
+		case gsKeyCompactFontSize:
+			ty = TypeCompactFontSize
+			size := m.setting.GetDouble(key)
+			value = fmt.Sprint(size)
+			if m.isHasDTKSizeModeKey() && (m.DTKSizeMode.Get() == 1) {
+				err = m.doSetFontSize(size)
+			}
 		case gsKeyBackgroundURIs:
 			ty = TypeBackground
 			bgs := m.setting.GetStrv(key)
 			m.desktopBgs = bgs
 			m.setDesktopBackgrounds(bgs)
 			value = strings.Join(bgs, ";")
-
 		case gsKeyWallpaperSlideshow:
 			policy := m.setting.GetString(key)
 			m.updateWSPolicy(policy)
-
 		default:
 			return
 		}
