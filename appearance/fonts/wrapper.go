@@ -15,6 +15,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 	"unsafe"
 
 	"github.com/linuxdeepin/go-lib/strv"
@@ -31,6 +32,11 @@ var (
 	curLang string
 	home    = os.Getenv("HOME")
 	langReg = regexp.MustCompile("_")
+)
+
+var (
+	_irregularFontWhiteList   strv.Strv
+	_irregularFontWhiteListMu sync.Mutex
 )
 
 var familyBlacklist = strv.Strv([]string{
@@ -149,15 +155,16 @@ func fcInfoToFamily(cInfo *C.FcInfo) *Family {
 	if familyBlacklist.Contains(family) {
 		return nil
 	}
-
 	// info.Deletable = isDeletable(info.File)
 	langs := strings.Split(C.GoString(cInfo.lang), defaultLangDelim)
+	_irregularFontWhiteListMu.Lock()
+	defer _irregularFontWhiteListMu.Unlock()
 	return &Family{
 		Id:        family,
 		Name:      getItemByIndex(indexOf(getCurLang(), familyLang), families),
 		Styles:    strings.Split(C.GoString(cInfo.style), defaultNameDelim),
 		Monospace: isMonospace(family, C.GoString(cInfo.spacing)),
-		Show:      strv.Strv(langs).Contains(getCurLang()),
+		Show:      _irregularFontWhiteList.Contains(family) || strv.Strv(langs).Contains(getCurLang()),
 	}
 }
 
@@ -232,4 +239,10 @@ func getLangFromLocale(locale string) string {
 		lang = strings.Split(locale, "_")[0]
 	}
 	return lang
+}
+
+func SetIrregularFontWhiteList(whiteList strv.Strv) {
+	_irregularFontWhiteListMu.Lock()
+	_irregularFontWhiteList = whiteList
+	_irregularFontWhiteListMu.Unlock()
 }

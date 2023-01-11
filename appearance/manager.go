@@ -24,18 +24,13 @@ import (
 	"github.com/fsnotify/fsnotify"
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-api/theme_thumb"
-	"github.com/linuxdeepin/dde-daemon/appearance/background"
-	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
-	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
-	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
-	"github.com/linuxdeepin/dde-daemon/session/common"
 	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	imageeffect "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.imageeffect"
 	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedate"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	timedate "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
@@ -48,6 +43,13 @@ import (
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
+
+	"github.com/linuxdeepin/dde-daemon/appearance/background"
+	"github.com/linuxdeepin/dde-daemon/appearance/fonts"
+	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
+	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -108,6 +110,12 @@ const (
 	dbusServiceName = "com.deepin.daemon.Appearance"
 	dbusPath        = "/com/deepin/daemon/Appearance"
 	dbusInterface   = dbusServiceName
+)
+
+const (
+	dsettingsAppID                     = "org.deepin.dde.daemon"
+	dsettingsAppearanceName            = "org.deepin.dde.daemon.appearance"
+	dsettingsIrregularFontWhiteListKey = "irregularFontWhiteList"
 )
 
 var wsConfigFile = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/appearance/wallpaper-slideshow.json")
@@ -633,6 +641,9 @@ func (m *Manager) init() error {
 	if err != nil {
 		logger.Warning("failed to set cursor theme:", err)
 	}
+
+	// Init IrregularFontWhiteList
+	m.initAppearanceDSettings()
 
 	// Init theme list
 	time.AfterFunc(time.Second*10, func() {
@@ -1638,4 +1649,46 @@ func (m *Manager) iso6709Parsing(city, coordinates string) {
 	cdn.longitude = lon
 	cdn.latitude = lat
 	m.coordinateMap[city] = &cdn
+}
+
+func (m *Manager) initAppearanceDSettings() {
+	ds := configManager.NewConfigManager(m.sysSigLoop.Conn())
+
+	appearancePath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsAppearanceName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	dsAppearance, err := configManager.NewManager(m.sysSigLoop.Conn(), appearancePath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	getIrregularFontWhiteListKey := func() {
+		v, err := dsAppearance.Value(0, dsettingsIrregularFontWhiteListKey)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		var irregularFontWhiteListKey strv.Strv
+		itemList := v.Value().([]dbus.Variant)
+		for _, i := range itemList {
+			irregularFontWhiteListKey = append(irregularFontWhiteListKey, i.Value().(string))
+		}
+		fonts.SetIrregularFontWhiteList(irregularFontWhiteListKey)
+	}
+
+	getIrregularFontWhiteListKey()
+
+	dsAppearance.InitSignalExt(m.sysSigLoop, true)
+	_, err = dsAppearance.ConnectValueChanged(func(key string) {
+		if key == dsettingsIrregularFontWhiteListKey {
+			getIrregularFontWhiteListKey()
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
 }
