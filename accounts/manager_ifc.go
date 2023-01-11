@@ -135,7 +135,7 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 	if m.isUdcpUserID(user.Uid) || users.IsDomainUserID(user.Uid) {
 		id, _ := strconv.Atoi(user.Uid)
 
-		if m.udcpCache != nil {
+		if m.udcpCache != nil && m.isUdcpUserID(user.Uid) {
 			result, err := m.udcpCache.RemoveCacheFile(0, uint32(id))
 			if err != nil {
 				logger.Errorf("Udcp cache RemoveCacheFile failed: %v", err)
