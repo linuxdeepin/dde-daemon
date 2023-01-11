@@ -34,9 +34,14 @@ var (
 	langReg = regexp.MustCompile("_")
 )
 
+type fontOverrideProp struct {
+	AppendLang []string
+}
+type IrregularFontOverrideMap map[string]*fontOverrideProp
+
 var (
-	_irregularFontWhiteList   strv.Strv
-	_irregularFontWhiteListMu sync.Mutex
+	_irregularFontOverrideMap   IrregularFontOverrideMap
+	_irregularFontOverrideMapMu sync.Mutex
 )
 
 var familyBlacklist = strv.Strv([]string{
@@ -157,14 +162,18 @@ func fcInfoToFamily(cInfo *C.FcInfo) *Family {
 	}
 	// info.Deletable = isDeletable(info.File)
 	langs := strings.Split(C.GoString(cInfo.lang), defaultLangDelim)
-	_irregularFontWhiteListMu.Lock()
-	defer _irregularFontWhiteListMu.Unlock()
+	_irregularFontOverrideMapMu.Lock()
+	overrideProp, ok := _irregularFontOverrideMap[family]
+	if ok {
+		langs = append(langs, overrideProp.AppendLang...)
+	}
+	_irregularFontOverrideMapMu.Unlock()
 	return &Family{
 		Id:        family,
 		Name:      getItemByIndex(indexOf(getCurLang(), familyLang), families),
 		Styles:    strings.Split(C.GoString(cInfo.style), defaultNameDelim),
 		Monospace: isMonospace(family, C.GoString(cInfo.spacing)),
-		Show:      _irregularFontWhiteList.Contains(family) || strv.Strv(langs).Contains(getCurLang()),
+		Show:      strv.Strv(langs).Contains(getCurLang()),
 	}
 }
 
@@ -241,8 +250,8 @@ func getLangFromLocale(locale string) string {
 	return lang
 }
 
-func SetIrregularFontWhiteList(whiteList strv.Strv) {
-	_irregularFontWhiteListMu.Lock()
-	_irregularFontWhiteList = whiteList
-	_irregularFontWhiteListMu.Unlock()
+func SetIrregularFontWhiteList(overrideMap IrregularFontOverrideMap) {
+	_irregularFontOverrideMapMu.Lock()
+	_irregularFontOverrideMap = overrideMap
+	_irregularFontOverrideMapMu.Unlock()
 }
