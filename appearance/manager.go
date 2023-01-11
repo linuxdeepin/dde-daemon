@@ -112,10 +112,11 @@ const (
 	dbusInterface   = dbusServiceName
 )
 
+// TODO 后续需要设计成用 subpath + 独立的 dconfig 配置来实现,增加可读性
 const (
-	dsettingsAppID                     = "org.deepin.dde.daemon"
-	dsettingsAppearanceName            = "org.deepin.dde.daemon.appearance"
-	dsettingsIrregularFontWhiteListKey = "irregularFontWhiteList"
+	dsettingsAppID                    = "org.deepin.dde.daemon"
+	dsettingsAppearanceName           = "org.deepin.dde.daemon.appearance"
+	dsettingsIrregularFontOverrideKey = "irregularFontOverride"
 )
 
 var wsConfigFile = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/appearance/wallpaper-slideshow.json")
@@ -1689,24 +1690,26 @@ func (m *Manager) initAppearanceDSettings() {
 	}
 
 	getIrregularFontWhiteListKey := func() {
-		v, err := dsAppearance.Value(0, dsettingsIrregularFontWhiteListKey)
+		v, err := dsAppearance.Value(0, dsettingsIrregularFontOverrideKey)
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
-		var irregularFontWhiteListKey strv.Strv
-		itemList := v.Value().([]dbus.Variant)
-		for _, i := range itemList {
-			irregularFontWhiteListKey = append(irregularFontWhiteListKey, i.Value().(string))
+		var overrideMap fonts.IrregularFontOverrideMap
+		overrideMapString := v.Value().(string)
+		err = json.Unmarshal([]byte(overrideMapString), &overrideMap)
+		if err != nil {
+			logger.Warning(err)
+			return
 		}
-		fonts.SetIrregularFontWhiteList(irregularFontWhiteListKey)
+		fonts.SetIrregularFontWhiteList(overrideMap)
 	}
 
 	getIrregularFontWhiteListKey()
 
 	dsAppearance.InitSignalExt(m.sysSigLoop, true)
 	_, err = dsAppearance.ConnectValueChanged(func(key string) {
-		if key == dsettingsIrregularFontWhiteListKey {
+		if key == dsettingsIrregularFontOverrideKey {
 			getIrregularFontWhiteListKey()
 		}
 	})
