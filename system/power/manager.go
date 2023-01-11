@@ -595,7 +595,7 @@ func (m *Manager) doSetMode(mode string) error {
 	switch mode {
 	case "balance": // governor=performance boost=false
 		if m.hasAmddpm {
-			err := ioutil.WriteFile(amdGPUPath, []byte("manual"), 0644)
+			err := ioutil.WriteFile(amdGPUPath, []byte("auto"), 0644)
 			if err != nil {
 				logger.Warning(err)
 			}
