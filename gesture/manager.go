@@ -163,6 +163,10 @@ func newManager() (*Manager, error) {
 	m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
 	m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
 
+	if _useWayland {
+		setLongPressEnable(m.longPressEnable)
+	}
+
 	m.gesture = gesture.NewGesture(systemConn)
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemConn, 10)
 
@@ -170,6 +174,19 @@ func newManager() (*Manager, error) {
 		m.sessionWatcher = sessionwatcher.NewSessionWatcher(sessionConn)
 	}
 	return m, nil
+}
+
+func setLongPressEnable(enable bool) {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	Obj := sessionBus.Object("org.kde.KWin", "/KWin")
+	err = Obj.Call("org.kde.KWin.setEnableTouchLongPress", 0, enable).Err
+	if err != nil {
+		logger.Warning(err)
+	}
 }
 
 func (m *Manager) getGestureConfigValue(key string) bool {
@@ -250,6 +267,9 @@ func (m *Manager) init() {
 			m.oneFingerBottomEnable = m.getGestureConfigValue("oneFingerBottomEnable")
 			m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
 			m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
+			if _useWayland {
+				setLongPressEnable(m.longPressEnable)
+			}
 		}
 	})
 
