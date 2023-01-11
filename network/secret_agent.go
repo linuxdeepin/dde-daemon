@@ -419,16 +419,17 @@ func (*SecretAgent) GetInterfaceName() string {
 }
 
 type getSecretsRequest struct {
-	DevPaths    []string `json:"devices"`
-	SpcPath     string   `json:"specific"`
-	ConnId      string   `json:"connId"`
-	ConnType    string   `json:"connType"`
-	ConnUUID    string   `json:"connUUID"`
-	VpnService  string   `json:"vpnService"`
-	SettingName string   `json:"settingName"`
-	Secrets     []string `json:"secrets"`
-	RequestNew  bool     `json:"requestNew"`
-	Flag        int      `json:"secretFlag"`
+	DevPaths    []string          `json:"devices"`
+	SpcPath     string            `json:"specific"`
+	ConnId      string            `json:"connId"`
+	ConnType    string            `json:"connType"`
+	ConnUUID    string            `json:"connUUID"`
+	VpnService  string            `json:"vpnService"`
+	SettingName string            `json:"settingName"`
+	Secrets     []string          `json:"secrets"`
+	RequestNew  bool              `json:"requestNew"`
+	Flag        int               `json:"secretFlag"`
+	PropMap     map[string]string `json:"props"`
 }
 
 type getSecretsReply struct {
@@ -446,7 +447,7 @@ func isSecretDialogExist() bool {
 
 func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	connectionData map[string]map[string]dbus.Variant,
-	connUUID, settingName string, settingKeys []string, requestNew bool, secretFlag uint32) (map[string]string, error) {
+	connUUID, settingName string, settingKeys []string, requestNew bool, secretFlag uint32, props map[string]string) (map[string]string, error) {
 
 	logger.Debugf("askPasswords settingName: %v, settingKeys: %v",
 		settingName, settingKeys)
@@ -491,6 +492,7 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	req.SpcPath = string(specific)
 	req.DevPaths = paths
 	req.Flag = int(secretFlag)
+	req.PropMap = props
 
 	reqJSON, err := json.Marshal(&req)
 	if err != nil {
@@ -616,6 +618,24 @@ func isMustAsk(data connectionData, settingName, secretKey string) bool {
 	return false
 }
 
+func askProps(data connectionData, settingName string) []string {
+	if settingName == nm.NM_SETTING_802_1X_SETTING_NAME {
+		eap := getSetting8021xEap(data)
+		var eap0 string
+		if len(eap) >= 1 {
+			eap0 = eap[0]
+		}
+		switch eap0 {
+		case "md5", "fast", "ttls", "peap", "leap":
+			return []string{nm.NM_SETTING_802_1X_IDENTITY}
+		case "tls":
+			return []string{nm.NM_SETTING_802_1X_IDENTITY}
+		}
+	}
+
+	return nil
+}
+
 func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Variant,
 	connectionPath dbus.ObjectPath, settingName string, hints []string, flags uint32) (
 	secretsData map[string]map[string]dbus.Variant, err error) {
@@ -652,6 +672,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 	secretsData[settingName] = setting
 	var vpnSecretsData map[string]string
 	var secretFlag uint32
+	propMap := make(map[string]string)
 	if settingName == "vpn" {
 		if getSettingVpnServiceType(connectionData) == nmOpenConnectServiceType {
 			vpnSecretsData, ok = <-sa.createPendingKey(connectionData, hints, flags)
@@ -675,7 +696,7 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 
 			if allowInteraction && len(askItems) > 0 {
 				resultAsk, err := sa.askPasswords(connectionPath, connectionData, connUUID,
-					settingName, askItems, requestNew, secretFlag)
+					settingName, askItems, requestNew, secretFlag, propMap)
 				if err != nil {
 					logger.Debug("waring askPasswords error:", err)
 					return nil, err
@@ -705,28 +726,31 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 	} else if secretKeys, ok := secretSettingKeys[settingName]; ok {
 		var askItems []string
 		for _, secretKey := range secretKeys {
-			secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
+			secretFlags, ok := getConnectionDataUint32(connectionData, settingName,
 				getSecretFlagsKeyName(secretKey))
-			secretFlag = secretFlags
+			if ok {
+				secretFlag = secretFlags
+			}
 
-			if secretFlags == secretFlagAsk {
+			switch secretFlags {
+			case secretFlagAsk:
 				if allowInteraction && isMustAsk(connectionData, settingName, secretKey) {
 					askItems = append(askItems, secretKey)
 				}
-			} else if secretFlags == secretFlagNone {
+			case secretFlagNone:
 				secretStr, _ := getConnectionDataString(connectionData, settingName,
 					secretKey)
-				if requestNew {
-					secretStr = ""
-				}
 
-				if secretStr != "" {
+				if !requestNew && secretStr != "" {
 					setting[secretKey] = dbus.MakeVariant(secretStr)
 				} else if allowInteraction &&
 					isMustAsk(connectionData, settingName, secretKey) {
 					askItems = append(askItems, secretKey)
+					if secretStr != "" {
+						propMap[secretKey] = secretStr
+					}
 				}
-			} else if secretFlags == secretFlagAgentOwned {
+			case secretFlagAgentOwned:
 				if requestNew {
 					// check if NMSecretAgentGetSecretsFlags contains NM_SECRET_AGENT_GET_SECRETS_FLAG_REQUEST_NEW
 					// if is, means the password we set last time is incorrect, new password is needed
@@ -746,14 +770,27 @@ func (sa *SecretAgent) getSecrets(connectionData map[string]map[string]dbus.Vari
 			}
 		}
 		if allowInteraction && len(askItems) > 0 {
+			// 把需要的属性加上去
+			props := askProps(connectionData, settingName)
+			for _, key := range props {
+				if val, ok := getConnectionDataString(connectionData, settingName, key); ok {
+					propMap[key] = val
+				}
+			}
+			// 属性放前面问询
+			props = append(props, askItems...)
+			askItems = props
 			resultAsk, err := sa.askPasswords(connectionPath, connectionData, connUUID,
-				settingName, askItems, requestNew, secretFlag)
+				settingName, askItems, requestNew, secretFlag, propMap)
 			if err != nil {
 				logger.Warning("askPasswords error:", err)
 				return nil, errSecretAgentUserCanceled
 			} else {
 				var items []settingItem
 				for key, value := range resultAsk {
+					if value == propMap[key] {
+						continue
+					}
 					setting[key] = dbus.MakeVariant(value)
 					secretFlags, _ := getConnectionDataUint32(connectionData, settingName,
 						getSecretFlagsKeyName(key))
