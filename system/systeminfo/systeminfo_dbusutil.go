@@ -43,7 +43,7 @@ func (v *Manager) emitPropChangedCurrentSpeed(value uint64) error {
 	return v.service.EmitPropertyChanged(v, "CurrentSpeed", value)
 }
 
-func (v *Manager) setPropDMIInfo(value *dmi.DMI) (changed bool) {
+func (v *Manager) setPropDMIInfo(value dmi.DMI) (changed bool) {
 	if v.DMIInfo != value {
 		v.DMIInfo = value
 		v.emitPropChangedDMIInfo(value)
@@ -52,6 +52,6 @@ func (v *Manager) setPropDMIInfo(value *dmi.DMI) (changed bool) {
 	return false
 }
 
-func (v *Manager) emitPropChangedDMIInfo(value *dmi.DMI) error {
+func (v *Manager) emitPropChangedDMIInfo(value dmi.DMI) error {
 	return v.service.EmitPropertyChanged(v, "DMIInfo", value)
 }

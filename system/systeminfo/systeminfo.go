@@ -6,8 +6,9 @@ package systeminfo
 
 import (
 	"github.com/jouyouyun/hardware/dmi"
-	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/log"
+
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var logger = log.NewLogger("daemon/systeminfo")
@@ -62,7 +63,9 @@ func (m *Module) Start() error {
 		if err != nil {
 			logger.Warning(err)
 		} else {
-			m.m.setPropDMIInfo(info)
+			if info != nil {
+				m.m.setPropDMIInfo(*info)
+			}
 		}
 
 	}()

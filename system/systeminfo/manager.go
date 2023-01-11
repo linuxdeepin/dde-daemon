@@ -37,7 +37,7 @@ type Manager struct {
 	MemorySize      uint64
 	MemorySizeHuman string
 	CurrentSpeed    uint64
-	DMIInfo         *dmi.DMI
+	DMIInfo         dmi.DMI
 }
 
 type lshwXmlList struct {
