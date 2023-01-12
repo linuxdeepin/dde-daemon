@@ -312,7 +312,7 @@ func (m *Manager) initDomainUsers() {
 	}
 
 	for _, v := range m.userConfig {
-		if users.IsDomainUserID(v.Uid) && (v.IsLogined == true) {
+		if users.IsLDAPDomainUserID(v.Uid) && (v.IsLogined == true) {
 			domainUserList = append(domainUserList, v.Uid)
 		}
 	}
@@ -386,7 +386,7 @@ func (m *Manager) exportUserByUid(uId string) error {
 		}
 
 		// LDAP 域用户
-		if users.IsDomainUserID(uId) {
+		if users.IsLDAPDomainUserID(uId) {
 			userGroups, err = users.GetADUserGroupsByUID(uint32(id))
 			if err != nil {
 				logger.Warningf("get domain user groups failed: %v", err)
@@ -399,7 +399,7 @@ func (m *Manager) exportUserByUid(uId string) error {
 
 		u, err = NewDomainUser(uint32(id), m.service, userGroups)
 
-		if users.IsDomainUserID(uId) {
+		if users.IsLDAPDomainUserID(uId) {
 			var config = &domainUserConfig{
 				Name:      u.UserName,
 				Uid:       u.Uid,

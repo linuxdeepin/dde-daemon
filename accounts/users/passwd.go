@@ -94,7 +94,7 @@ func GetADUserGroupsByUID(uid uint32) ([]string, error) {
 }
 
 // 判断用户是否是LDAP网络账户，LDAP域账户信息只能由服务端设置，本地没有保存
-func IsDomainUserID(uid string) bool {
+func IsLDAPDomainUserID(uid string) bool {
 	id, _ := strconv.Atoi(uid)
 
 	domainUserGroups, err := GetADUserGroupsByUID(uint32(id))

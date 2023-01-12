@@ -178,7 +178,7 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		return dbusutil.ToError(err)
 	}
 
-	if m.isUdcpUserID(user.Uid) || users.IsDomainUserID(user.Uid) {
+	if m.isDomainUser(user.Uid) {
 		id, _ := strconv.Atoi(user.Uid)
 
 		if m.udcpCache != nil && m.isUdcpUserID(user.Uid) {
