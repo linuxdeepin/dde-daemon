@@ -103,7 +103,7 @@ func (m *Manager) handleFilePasswdChanged() {
 			u.updatePropsPasswd(uInfo)
 		} else {
 			// 域账户没有保存在本地，无需删除
-			if !m.isUdcpUserID(u.Uid) {
+			if !m.isDomainUser(u.Uid) {
 				uidsDelete = append(uidsDelete, u.Uid)
 			}
 		}
@@ -221,6 +221,10 @@ func (m *Manager) addDomainUser(uId uint32) error {
 		logger.Warning(err)
 	}
 	return err
+}
+
+func (m *Manager) isDomainUser(uid string) bool {
+	return m.isUdcpUserID(uid) || users.IsLDAPDomainUserID(uid)
 }
 
 // 判断用户缓存UID列表中是否有域账户，域账户信息只能由web端设置，本地没有保存。
