@@ -153,17 +153,27 @@ func (m *Manager) handleFileGroupChanged() {
 	defer m.usersMapMu.Unlock()
 	accountType := int32(users.UserTypeStandard)
 	var groups []string
+	var err error
 
 	for _, u := range m.usersMap {
+		// 由于域用户的组信息没有保存在/etc/group文件中，因此，在/etc/group更新时，更新下域用户的组和账户类型
 		if m.isUdcpUserID(u.Uid) {
 			groups, err := m.udcpCache.GetUserGroups(0, u.UserName)
 			if err != nil {
 				logger.Warningf("Udcp cache getUserGroups failed: %v", err)
-				return
+				continue
 			}
 
 			if strv.Strv(groups).Contains("sudo") {
 				accountType = users.UserTypeAdmin
+			}
+		} else if users.IsLDAPDomainUserID(u.Uid) {
+			id, _ := strconv.Atoi(u.Uid)
+			groups, err = users.GetADUserGroupsByUID(uint32(id))
+			accountType = users.UserTypeStandard
+			if err != nil {
+				logger.Warningf("get domain user groups failed: %v", err)
+				continue
 			}
 		} else {
 			accountType = u.getAccountType()
