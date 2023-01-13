@@ -196,6 +196,8 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		// 删除账户前先删除生物特征，避免删除账户后，用户数据找不到
 		if rmFiles {
 			user.clearBiometricChara()
+			// 删除域用户家目录
+			os.RemoveAll(user.HomeDir)
 		}
 
 		// 删除服务，更新UserList
