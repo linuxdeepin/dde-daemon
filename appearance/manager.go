@@ -62,6 +62,8 @@ const (
 	TypeStandardFont      = "standardfont"
 	TypeMonospaceFont     = "monospacefont"
 	TypeFontSize          = "fontsize"
+	TypeCompactFontSize   = "compactfontsize"
+	TypeDTKSizeMode       = "dtksizemode"
 )
 
 const (
@@ -78,6 +80,7 @@ const (
 	gsKeyFontStandard       = "font-standard"
 	gsKeyFontMonospace      = "font-monospace"
 	gsKeyFontSize           = "font-size"
+	gsKeyCompactFontSize    = "compact-font-size"
 	gsKeyBackgroundURIs     = "background-uris"
 	gsKeyOpacity            = "opacity"
 	gsKeyWallpaperSlideshow = "wallpaper-slideshow"
@@ -85,8 +88,11 @@ const (
 	gsKeyQtActiveColor      = "qt-active-color"
 	gsKeyDTKWindowRadius    = "dtk-window-radius"
 	gsKeyQtScrollBarPolicy  = "qt-scrollbar-policy"
+	gsKeyDTKSizeMode        = "dtk-size-mode"
 
 	propQtActiveColor = "QtActiveColor"
+	propFontSize      = "FontSize"
+	propDTKSizeMode   = "DTKSizeMode"
 
 	wsPolicyLogin  = "login"
 	wsPolicyWakeup = "wakeup"
@@ -130,6 +136,7 @@ type Manager struct {
 	// 社区版定制需求，保存窗口圆角值，默认 18
 	WindowRadius      gsprop.Int `prop:"access:rw"`
 	QtScrollBarPolicy gsprop.Int `prop:"access:rw"`
+	DTKSizeMode       gsprop.Int `prop:"access:rw"`
 
 	wsLoopMap      map[string]*WSLoop
 	wsSchedulerMap map[string]*WSScheduler
@@ -205,18 +212,25 @@ func newManager(service *dbusutil.Service) *Manager {
 	m.StandardFont.Bind(m.setting, gsKeyFontStandard)
 	m.MonospaceFont.Bind(m.setting, gsKeyFontMonospace)
 	m.Background.Bind(m.wrapBgSetting, gsKeyBackground)
-	m.FontSize.Bind(m.setting, gsKeyFontSize)
+
 	m.Opacity.Bind(m.setting, gsKeyOpacity)
 	m.WallpaperSlideShow.Bind(m.setting, gsKeyWallpaperSlideshow)
 	m.WallpaperURIs.Bind(m.setting, gsKeyWallpaperURIs)
 	// 社区版定制需求  保存窗口圆角值
 	m.WindowRadius.Bind(m.xSettingsGs, gsKeyDTKWindowRadius)
 	m.QtScrollBarPolicy.Bind(m.xSettingsGs, gsKeyQtScrollBarPolicy)
+	m.DTKSizeMode.Bind(m.setting, gsKeyDTKSizeMode)
 
 	var err error
 	m.QtActiveColor, err = m.getQtActiveColor()
 	if err != nil {
 		logger.Warning(err)
+	}
+
+	if m.isHasDTKSizeModeKey() && (m.DTKSizeMode.Get() == 1) {
+		m.FontSize.Bind(m.setting, gsKeyCompactFontSize)
+	} else {
+		m.FontSize.Bind(m.setting, gsKeyFontSize)
 	}
 
 	m.wsLoopMap = make(map[string]*WSLoop)
@@ -1072,6 +1086,15 @@ func (m *Manager) doSetFontSize(size float64) error {
 	}
 
 	return m.writeDQtTheme(dQtKeyFontSize, strconv.FormatFloat(size, 'f', 1, 64))
+}
+
+func (m *Manager) doSetDTKSizeMode(enabled int32) error {
+	err := m.xSettings.SetInteger(0, "DTK/SizeMode", enabled)
+	return err
+}
+
+func (m *Manager) isHasDTKSizeModeKey() bool {
+	return m.setting.GetSchema().HasKey(gsKeyDTKSizeMode)
 }
 
 func (*Manager) doShow(ifc interface{}) (string, error) {

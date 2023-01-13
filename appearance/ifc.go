@@ -26,6 +26,7 @@ func (m *Manager) Reset() *dbus.Error {
 		gsKeyIconTheme,
 		gsKeyCursorTheme,
 		gsKeyFontSize,
+		gsKeyCompactFontSize,
 	}
 	for _, key := range settingKeys {
 		userVal := m.setting.GetUserValue(key)
@@ -173,6 +174,21 @@ func (m *Manager) set(ty, value string) error {
 		err = m.doSetMonospaceFont(value)
 		if err == nil {
 			m.MonospaceFont.Set(value)
+		}
+	case TypeDTKSizeMode:
+		enabled, err := strconv.ParseInt(value, 10, 30)
+		if err != nil {
+			return err
+		}
+		if m.isHasDTKSizeModeKey() {
+			if m.DTKSizeMode.Get() == int32(enabled) {
+				return nil
+			}
+
+			err = m.doSetDTKSizeMode(int32(enabled))
+			if err == nil {
+				m.DTKSizeMode.Set(int32(enabled))
+			}
 		}
 	case TypeFontSize:
 		size, e := strconv.ParseFloat(value, 64)
