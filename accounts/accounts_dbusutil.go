@@ -15,6 +15,19 @@ func (v *Manager) emitPropChangedAllowGuest(value bool) error {
 	return v.service.EmitPropertyChanged(v, "AllowGuest", value)
 }
 
+func (v *Manager) setPropGroupList(value []string) (changed bool) {
+	if !isStrvEqual(v.GroupList, value) {
+		v.GroupList = value
+		v.emitPropChangedGroupList(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedGroupList(value []string) error {
+	return v.service.EmitPropertyChanged(v, "GroupList", value)
+}
+
 func (v *User) setPropUserName(value string) (changed bool) {
 	if v.UserName != value {
 		v.UserName = value

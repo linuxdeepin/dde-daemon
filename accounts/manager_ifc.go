@@ -18,19 +18,20 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"os/exec"
 	"path"
 	"strconv"
 	"time"
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts/checkers"
+	"github.com/linuxdeepin/dde-daemon/accounts/keyring"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/users/passwd"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/accounts/keyring"
 )
 
 const (
@@ -451,13 +452,95 @@ func (m *Manager) EnablePasswdChangedHandler(sender dbus.Sender, enable bool) *d
 	return nil
 }
 
-func (m *Manager) modifyUserConfig(path string) error {
-	m.usersMapMu.Lock()
-	root, ok := m.usersMap[path]
-	m.usersMapMu.Unlock()
-	if ok {
-		loadUserConfigInfo(root)
-	}
+func (m *Manager) CreateGroup(sender dbus.Sender, groupName string, gid uint32, isSystem bool) *dbus.Error {
+	logger.Debug("[CreateGroup] new group:", groupName)
 
+	err := m.checkAuth(sender)
+	if err != nil {
+		logger.Debug("[CreateGroup] access denied:", err)
+		return dbusutil.ToError(err)
+	}
+	args := []string{
+		groupName,
+		"-f",
+	}
+	if gid > 0 {
+		args = append(args, []string{
+			"-g", fmt.Sprint(gid), "-o",
+		}...)
+	}
+	if isSystem {
+		args = append(args, "-r")
+	}
+	cmd := exec.Command("groupadd", args...)
+	logger.Debug("[CreateGroup] exec cmd is:", cmd.String())
+	err = cmd.Run()
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+	groupList, _ := m.GetGroups()
+	m.setPropGroupList(groupList)
+	return nil
+}
+
+func (m *Manager) DeleteGroup(sender dbus.Sender, groupName string, force bool) *dbus.Error {
+	logger.Debug("[DeleteGroup] del group:", groupName)
+
+	err := m.checkAuth(sender)
+	if err != nil {
+		logger.Debug("[DeleteGroup] access denied:", err)
+		return dbusutil.ToError(err)
+	}
+	args := []string{
+		groupName,
+	}
+	if force {
+		args = append(args, "-f")
+	}
+	cmd := exec.Command("groupdel", args...)
+	logger.Debug("[DeleteGroup] exec cmd is:", cmd.String())
+	err = cmd.Run()
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+	groupList, _ := m.GetGroups()
+	m.setPropGroupList(groupList)
+	return nil
+}
+
+func (m *Manager) ModifyGroup(sender dbus.Sender, currentGroupName string, newGroupName string, newGID uint32) *dbus.Error {
+	logger.Debug("[ModifyGroup] modify group :", currentGroupName)
+	if newGroupName == "" && newGID <= 0 {
+		return dbusutil.ToError(errors.New("invalid modify,need new name or gid"))
+	}
+	err := m.checkAuth(sender)
+	if err != nil {
+		logger.Debug("[ModifyGroup] access denied:", err)
+		return dbusutil.ToError(err)
+	}
+	args := []string{
+		currentGroupName,
+	}
+	if newGroupName != "" {
+		args = append(args, []string{
+			"-n", newGroupName,
+		}...)
+	}
+	if newGID > 0 {
+		args = append(args, []string{
+			"-g", fmt.Sprint(newGID), "-o",
+		}...)
+	}
+	cmd := exec.Command("groupmod", args...)
+	logger.Debug("[ModifyGroup] exec cmd is:", cmd.String())
+	err = cmd.Run()
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+	groupList, _ := m.GetGroups()
+	m.setPropGroupList(groupList)
 	return nil
 }

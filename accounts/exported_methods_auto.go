@@ -29,6 +29,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"allow"},
 		},
 		{
+			Name:   "CreateGroup",
+			Fn:     v.CreateGroup,
+			InArgs: []string{"groupName", "gid", "isSystem"},
+		},
+		{
 			Name:    "CreateGuestAccount",
 			Fn:      v.CreateGuestAccount,
 			OutArgs: []string{"user"},
@@ -38,6 +43,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:      v.CreateUser,
 			InArgs:  []string{"name", "fullName", "accountType"},
 			OutArgs: []string{"userPath"},
+		},
+		{
+			Name:   "DeleteGroup",
+			Fn:     v.DeleteGroup,
+			InArgs: []string{"groupName", "force"},
 		},
 		{
 			Name:   "DeleteUser",
@@ -85,6 +95,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"valid", "msg", "code"},
 		},
 		{
+			Name:   "ModifyGroup",
+			Fn:     v.ModifyGroup,
+			InArgs: []string{"currentGroupName", "newGroupName", "newGID"},
+		},
+		{
 			Name:    "RandUserIcon",
 			Fn:      v.RandUserIcon,
 			OutArgs: []string{"iconFile"},
@@ -126,7 +141,7 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 		{
 			Name:    "IsPasswordExpired",
 			Fn:      v.IsPasswordExpired,
-			OutArgs: []string{"expired"},
+			OutArgs: []string{"outArg0"},
 		},
 		{
 			Name:    "PasswordExpiredInfo",
@@ -229,9 +244,9 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"secretKey"},
 		},
 		{
-			Name:   "GetSecretKey",
-			Fn:     v.GetSecretKey,
-			InArgs: []string{"username"},
+			Name:    "GetSecretKey",
+			Fn:      v.GetSecretKey,
+			InArgs:  []string{"username"},
 			OutArgs: []string{"secretKey"},
 		},
 		{

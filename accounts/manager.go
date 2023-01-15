@@ -71,6 +71,8 @@ type Manager struct {
 	// dbusutil-gen: ignore
 	GuestIcon  string
 	AllowGuest bool
+	// dbusutil-gen: equal=isStrvEqual
+	GroupList []string
 
 	watcher    *dutils.WatchProxy
 	usersMap   map[string]*User
@@ -129,7 +131,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 			m.initDomainUsers()
 		}
 	}
-
+	m.GroupList, _ = m.GetGroups()
 	m.watcher = dutils.NewWatchProxy()
 	if m.watcher != nil {
 		m.delayTaskManager = tasker.NewDelayTaskManager()
@@ -605,4 +607,15 @@ func (m *Manager) isJoinLDAPDoamin() (bool, error) {
 	}
 
 	return true, nil
+}
+
+func (m *Manager) modifyUserConfig(path string) error {
+	m.usersMapMu.Lock()
+	root, ok := m.usersMap[path]
+	m.usersMapMu.Unlock()
+	if ok {
+		loadUserConfigInfo(root)
+	}
+
+	return nil
 }
