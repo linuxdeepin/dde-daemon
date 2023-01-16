@@ -17,13 +17,14 @@ import (
 	"syscall"
 
 	dbus "github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/accounts/users"
-	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
 	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/tasker"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
+	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
 )
 
 const (
@@ -114,7 +115,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 		sysSigLoop:                 sysSigLoop,
 		enablePasswdChangedHandler: true,
 	}
-
 	m.usersMap = make(map[string]*User)
 	m.userAddedChanMap = make(map[string]chan string)
 
@@ -618,4 +618,22 @@ func (m *Manager) modifyUserConfig(path string) error {
 	}
 
 	return nil
+}
+
+func (m *Manager) checkGroupCanChange(name string) bool {
+	groupInfoMap, err := users.GetGroupInfoWithCacheLock()
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	info, ok := groupInfoMap[name]
+	if !ok {
+		return false
+	}
+	gid, err := strconv.Atoi(info.Gid)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return gid >= 1000
 }

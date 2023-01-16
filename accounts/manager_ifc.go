@@ -32,6 +32,9 @@ import (
 	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/users/passwd"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+
+	"github.com/linuxdeepin/dde-daemon/accounts/checkers"
+	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const (
@@ -486,7 +489,9 @@ func (m *Manager) CreateGroup(sender dbus.Sender, groupName string, gid uint32, 
 
 func (m *Manager) DeleteGroup(sender dbus.Sender, groupName string, force bool) *dbus.Error {
 	logger.Debug("[DeleteGroup] del group:", groupName)
-
+	if !m.checkGroupCanChange(groupName) {
+		return dbusutil.ToError(fmt.Errorf("can not delete %v", groupName))
+	}
 	err := m.checkAuth(sender)
 	if err != nil {
 		logger.Debug("[DeleteGroup] access denied:", err)
@@ -514,6 +519,9 @@ func (m *Manager) ModifyGroup(sender dbus.Sender, currentGroupName string, newGr
 	logger.Debug("[ModifyGroup] modify group :", currentGroupName)
 	if newGroupName == "" && newGID <= 0 {
 		return dbusutil.ToError(errors.New("invalid modify,need new name or gid"))
+	}
+	if !m.checkGroupCanChange(currentGroupName) {
+		return dbusutil.ToError(fmt.Errorf("can not modify %v", currentGroupName))
 	}
 	err := m.checkAuth(sender)
 	if err != nil {

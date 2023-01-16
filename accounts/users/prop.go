@@ -365,6 +365,16 @@ func GetUserGroups(user, gid string) ([]string, error) {
 	return result, nil
 }
 
+func GetGroupInfoWithCacheLock() (map[string]GroupInfo, error) {
+	groupFileLocker.Lock()
+	defer groupFileLocker.Unlock()
+	infos, err := getGroupInfoWithCache(userFileGroup)
+	if err != nil {
+		return nil, err
+	}
+	return infos, nil
+}
+
 func GetAllGroups() ([]string, error) {
 	groupFileLocker.Lock()
 	defer groupFileLocker.Unlock()
