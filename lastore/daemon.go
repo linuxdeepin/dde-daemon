@@ -9,11 +9,12 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/loader"
 	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
+
+	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 const (
@@ -29,6 +30,7 @@ func init() {
 
 type Daemon struct {
 	lastore *Lastore
+	agent   *Agent
 	*loader.ModuleBase
 }
 
@@ -53,64 +55,102 @@ func (d *Daemon) Start() error {
 	sysDBusDaemon := ofdbus.NewDBus(sysBus)
 	systemSigLoop := dbusutil.NewSignalLoop(sysBus, 10)
 	systemSigLoop.Start()
-	initLastore := func() {
+	initLastore := func() error {
 		lastoreObj, err := newLastore(service)
 		if err != nil {
 			logger.Warning(err)
-			return
+			return err
 		}
 		d.lastore = lastoreObj
 		err = service.Export(dbusPath, lastoreObj, lastoreObj.syncConfig)
 		if err != nil {
 			logger.Warning(err)
-			return
+			return err
 		}
+
 		err = service.RequestName(dbusServiceName)
 		if err != nil {
 			logger.Warning(err)
-			return
+			return err
 		}
 		err = lastoreObj.syncConfig.Register()
 		if err != nil {
 			logger.Warning("Failed to register sync service:", err)
 		}
-		sysDBusDaemon.RemoveAllHandlers()
-		systemSigLoop.Stop()
+		defer func() {
+			sysDBusDaemon.RemoveAllHandlers()
+			systemSigLoop.Stop()
+		}()
+		agent, err := newAgent(lastoreObj)
+		if err != nil {
+			logger.Warning(err)
+			return err
+		}
+		d.agent = agent
+		return agent.init()
+
 	}
 	time.AfterFunc(10*time.Minute, func() {
-		lastoreOnce.Do(initLastore)
+		lastoreOnce.Do(func() {
+			err := initLastore()
+			if err != nil {
+				logger.Warning(err)
+			}
+		})
 	})
 	core := lastore.NewLastore(sysBus)
 	sysDBusDaemon.InitSignalExt(systemSigLoop, true)
 	_, err = sysDBusDaemon.ConnectNameOwnerChanged(func(name, oldOwner, newOwner string) {
 		if name == core.ServiceName_() && newOwner != "" {
-			lastoreOnce.Do(initLastore)
+			lastoreOnce.Do(func() {
+				err := initLastore()
+				if err != nil {
+					logger.Warning(err)
+				}
+			})
 		}
 	})
 	if err != nil {
 		logger.Warning(err)
 	}
+	hasOwner, err := sysDBusDaemon.NameHasOwner(0, core.ServiceName_())
+	if err != nil {
+		logger.Warning(err)
+	} else if hasOwner {
+		lastoreOnce.Do(func() {
+			err := initLastore()
+			if err != nil {
+				logger.Warning(err)
+			}
+		})
+	}
 	return nil
 }
 
 func (d *Daemon) Stop() error {
-	if d.lastore == nil {
-		return nil
+	if d.lastore != nil {
+		service := loader.GetService()
+		err := service.ReleaseName(dbusServiceName)
+		if err != nil {
+			logger.Warning(err)
+		}
+		d.lastore.destroy()
+		err = service.StopExport(d.lastore)
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		d.lastore = nil
 	}
 
-	service := loader.GetService()
-	err := service.ReleaseName(dbusServiceName)
-	if err != nil {
-		logger.Warning(err)
+	if d.agent != nil {
+		service := loader.GetService()
+		d.agent.destroy()
+		err := service.StopExport(d.agent)
+		if err != nil {
+			logger.Warning(err)
+		}
+		d.agent = nil
 	}
-
-	d.lastore.destroy()
-
-	err = service.StopExport(d.lastore)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	d.lastore = nil
 	return nil
 }
