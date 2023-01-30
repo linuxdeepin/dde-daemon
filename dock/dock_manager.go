@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
@@ -27,6 +26,8 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	x "github.com/linuxdeepin/go-x11-client"
+
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 type Manager struct {
