@@ -237,6 +237,16 @@ func (m *Manager) isDomainUser(uid string) bool {
 	return m.isUdcpUserID(uid) || users.IsLDAPDomainUserID(uid)
 }
 
+func (m *Manager) isUdcpUserExists(name string) bool {
+	_, err := m.udcpCache.GetUserGroups(0, name)
+	if err != nil {
+		logger.Warningf("Udcp cache getUserGroups failed: %v", err)
+		return false
+	}
+
+	return true
+}
+
 // 判断用户缓存UID列表中是否有域账户，域账户信息只能由web端设置，本地没有保存。
 // 因此，本地/etc/passwd更新不能删除域账户服务
 func (m *Manager) isUdcpUserID(uid string) bool {

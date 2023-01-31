@@ -295,6 +295,17 @@ func (m *Manager) RandUserIcon() (iconFile string, busErr *dbus.Error) {
 	return icons[idx], nil
 }
 
+func (m *Manager) isDomainUserExist(name string) bool {
+	pwd, err := passwd.GetPasswdByName(name)
+	if err != nil {
+		return false
+	}
+
+	id := strconv.FormatUint(uint64(pwd.Uid), 10)
+
+	return m.isUdcpUserExists(name) || users.IsLDAPDomainUserID(id)
+}
+
 // 检查用户名是否有效
 //
 // ret0: 是否合法
@@ -304,8 +315,9 @@ func (m *Manager) RandUserIcon() (iconFile string, busErr *dbus.Error) {
 // ret2: 不合法代码
 func (m *Manager) IsUsernameValid(sender dbus.Sender, name string) (valid bool,
 	msg string, code int32, busErr *dbus.Error) {
-
 	var err error
+	var info *checkers.ErrorInfo
+
 	defer func() {
 		busErr = dbusutil.ToError(err)
 	}()
@@ -323,10 +335,15 @@ func (m *Manager) IsUsernameValid(sender dbus.Sender, name string) (valid bool,
 
 	locale := environ.Get("LANG")
 
-	info := checkers.CheckUsernameValid(name)
-	if info == nil {
-		valid = true
-		return
+	// 如果新建用户使用的用户名和域用户名一致，提示用户该用户已经存在
+	if m.isDomainUserExist(name) {
+		info = checkers.ErrCodeExist.Error()
+	} else {
+		info = checkers.CheckUsernameValid(name)
+		if info == nil {
+			valid = true
+			return
+		}
 	}
 
 	msg = info.Error.Error()
