@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=com.deepin.daemon.LangSelector
-Exec=/usr/lib/deepin-daemon/langselector

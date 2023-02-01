@@ -61,10 +61,5 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.ScalePlymouth,
 			InArgs: []string{"scale"},
 		},
-		{
-			Name:   "SetLongPressDuration",
-			Fn:     v.SetLongPressDuration,
-			InArgs: []string{"duration"},
-		},
 	}
 }

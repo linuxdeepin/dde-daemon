@@ -5,22 +5,22 @@
 package inputdevices
 
 const (
-	dbusServiceName = "com.deepin.daemon.InputDevices"
-	dbusPath        = "/com/deepin/daemon/InputDevices"
+	dbusServiceName = "org.deepin.dde.InputDevices1"
+	dbusPath        = "/org/deepin/dde/InputDevices1"
 	dbusInterface   = dbusServiceName
 
-	kbdDBusPath      = "/com/deepin/daemon/InputDevice/Keyboard"
-	kbdDBusInterface = "com.deepin.daemon.InputDevice.Keyboard"
+	kbdDBusPath      = "/org/deepin/dde/InputDevice1/Keyboard"
+	kbdDBusInterface = "org.deepin.dde.InputDevice1.Keyboard"
 
-	mouseDBusPath           = "/com/deepin/daemon/InputDevice/Mouse"
-	mouseDBusInterface      = "com.deepin.daemon.InputDevice.Mouse"
-	trackPointDBusInterface = "com.deepin.daemon.InputDevice.TrackPoint"
+	mouseDBusPath           = "/org/deepin/dde/InputDevice1/Mouse"
+	mouseDBusInterface      = "org.deepin.dde.InputDevice1.Mouse"
+	trackPointDBusInterface = "org.deepin.dde.InputDevice1.TrackPoint"
 
-	touchPadDBusPath      = "/com/deepin/daemon/InputDevice/TouchPad"
-	touchPadDBusInterface = "com.deepin.daemon.InputDevice.TouchPad"
+	touchPadDBusPath      = "/org/deepin/dde/InputDevice1/TouchPad"
+	touchPadDBusInterface = "org.deepin.dde.InputDevice1.TouchPad"
 
-	wacomDBusPath      = "/com/deepin/daemon/InputDevice/Wacom"
-	wacomDBusInterface = "com.deepin.daemon.InputDevice.Wacom"
+	wacomDBusPath      = "/org/deepin/dde/InputDevice1/Wacom"
+	wacomDBusInterface = "org.deepin.dde.InputDevice1.Wacom"
 )
 
 func (*Manager) GetInterfaceName() string {

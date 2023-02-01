@@ -1,4 +1,4 @@
-# com.deepin.daemon.Power 服务
+# org.deepin.dde.Power1 服务
 
 这是个在 Session Bus 上的服务
 
@@ -24,7 +24,7 @@ read/write
 默认为 
 
 ```
-dbus-send --print-reply --dest=com.deepin.SessionManager /com/deepin/SessionManager com.deepin.SessionManager.RequestSuspend
+dbus-send --print-reply --dest=org.deepin.dde.SessionManager1 /org/deepin/dde/SessionManager1 org.deepin.dde.SessionManager1.RequestSuspend
 ```
 
 

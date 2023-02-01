@@ -10,9 +10,9 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-api/inhibit_hint"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 var _g *Grub2
@@ -43,7 +43,12 @@ func RunAsDaemon() {
 		logger.Fatal("failed to export grub2 edit auth:", err)
 	}
 
-	err = ihObj.Export(service)
+	// err = ihObj.Export(service)
+	// if err != nil {
+	// 	logger.Warning("failed to export inhibit hint:", err)
+	// }
+
+	err = service.Export(dbusInhibitorPath, ihObj)
 	if err != nil {
 		logger.Warning("failed to export inhibit hint:", err)
 	}

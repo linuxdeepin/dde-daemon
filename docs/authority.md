@@ -1,4 +1,4 @@
-# com.deepin.daemon.Authority 服务
+# org.deepin.dde.Authority1 服务
 
 这是个在 system bus 上的 DBus 服务，提供给 UI 界面统一的认证服务。可以支持 登录界面、锁屏界面和 policykit 权限认证框的认证。
 
@@ -8,9 +8,9 @@
 
 ## Authority 入口对象
 
-对象路径：/com/deepin/daemon/Authority
+对象路径：/org/deepin/dde/Authority1
 
-### com.deepin.daemon.Authority 接口
+### org.deepin.dde.Authority1 接口
 
 #### 方法
 
@@ -38,9 +38,9 @@ CheckCookie(String user, String cookie) -> (Bool result)
 
 ## 认证事务
 
-对象路径：/com/deepin/daemon/Authority/TranscationN
+对象路径：/org/deepin/dde/Authority1/TranscationN
 
-### com.deepin.daemon.Authority.Transcation 接口
+### org.deepin.dde.Authority1.Transcation 接口
 
 
 #### 方法
@@ -69,9 +69,9 @@ Authenticating Bool 表示是否正在进行认证
 
 ## Agent 对象
 
-UI 程序在 system bus 上导出一个对象，这个对象实现 com.deepin.daemon.Authority.Agent 接口，把对象的路径作为 com.deepin.daemon.Authority.Start 方法的 agentObj 参数。
+UI 程序在 system bus 上导出一个对象，这个对象实现 org.deepin.dde.Authority1.Agent 接口，把对象的路径作为 org.deepin.dde.Authority1.Start 方法的 agentObj 参数。
 
-### com.deepin.daemon.Authority.Agent 接口
+### org.deepin.dde.Authority1.Agent 接口
 
 #### 方法
 

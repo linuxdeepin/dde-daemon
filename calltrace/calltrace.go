@@ -7,9 +7,9 @@ package calltrace
 import (
 	"time"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 var (

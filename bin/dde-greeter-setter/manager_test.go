@@ -10,11 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestManager_GetInterfaceName(t *testing.T) {
-	m := Manager{}
-	assert.Equal(t, dbusInterface, m.GetInterfaceName())
-}
-
 func Test_isInteger(t *testing.T) {
 	type args struct {
 		str string

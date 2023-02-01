@@ -14,8 +14,8 @@ import (
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
-	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
+	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/keyfile"
@@ -731,7 +731,7 @@ func (sm *ShortcutManager) isPidVirtualMachine(pid uint32) (bool, error) {
 	return ret, nil
 }
 
-//初始化go-dbus-factory system DBUS : com.deepin.daemon.Daemon
+//初始化go-dbus-factory system DBUS : org.deepin.dde.Daemon1
 func (sm *ShortcutManager) initSysDaemon() error {
 	sysBus, err := dbus.SystemBus()
 	if err != nil {

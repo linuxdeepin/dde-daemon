@@ -19,9 +19,9 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "com.deepin.daemon.Greeter"
-	dbusPath        = "/com/deepin/daemon/Greeter"
-	dbusInterface   = dbusServiceName
+	dbusServiceName = "org.deepin.dde.Greeter1"
+	dbusPath        = "/org/deepin/dde/Greeter1"
+	dbusInterface   = "org.deepin.dde.Greeter1"
 )
 
 const (
@@ -54,6 +54,10 @@ var globalKeyConvertMap = map[string]string{
 
 type Manager struct {
 	service *dbusutil.Service
+}
+
+func (m *Manager) GetInterfaceName() string {
+	return dbusInterface
 }
 
 func (m *Manager) UpdateGreeterQtTheme(fd dbus.UnixFD) *dbus.Error {
@@ -156,10 +160,6 @@ func updateXSettingsConfig() {
 	if err != nil {
 		logger.Warning(err)
 	}
-}
-
-func (*Manager) GetInterfaceName() string {
-	return dbusInterface
 }
 
 func isInteger(str string) bool {

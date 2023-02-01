@@ -17,11 +17,11 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus"
-	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
-	"github.com/linuxdeepin/go-lib/utils"
 	"github.com/linuxdeepin/dde-daemon/iw"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
+	nmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 func isStringInArray(s string, list []string) bool {
@@ -304,5 +304,5 @@ func (m *Manager) isConnectivityByHttp() bool {
 func showOSD(signal string) {
 	logger.Debug("show OSD", signal)
 	sessionDBus, _ := dbus.SessionBus()
-	go sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
+	go sessionDBus.Object("org.deepin.dde.Osd1", "/").Call("org.deepin.dde.Osd1.ShowOSD", 0, signal)
 }

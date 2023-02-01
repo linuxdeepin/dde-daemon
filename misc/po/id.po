@@ -54,22 +54,6 @@ msgstr ""
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nama pengguna harus terdiri dari 3-32 karakter"
 
-#: ../../appearance/scale.go:61
-msgid "Set successfully"
-msgstr "Set berhasil"
-
-#: ../../appearance/scale.go:62
-msgid "Please log back in to view the changes"
-msgstr ""
-
-#: ../../appearance/scale.go:66
-msgid "Display scaling"
-msgstr "Skaling Tampilan"
-
-#: ../../appearance/scale.go:67
-msgid "Setting display scaling"
-msgstr "Pengaturan penskalaan tampilan"
-
 #: ../../bin/dde-authority/fprint_transaction.go:20
 msgid "Fingerprint verification failed"
 msgstr ""
@@ -194,30 +178,6 @@ msgstr ""
 #: ../../calendar/scheduler.go:500
 msgid "Schedule Reminder"
 msgstr ""
-
-#: ../../dock/app_entry_menu.go:100
-msgid "Open"
-msgstr "Buka"
-
-#: ../../dock/app_entry_menu.go:107
-msgid "Close All"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:123
-msgid "Force Quit"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:130
-msgid "Dock"
-msgstr "Dock"
-
-#: ../../dock/app_entry_menu.go:137
-msgid "Undock"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:144
-msgid "All Windows"
-msgstr "Semua Jendela"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -459,14 +419,6 @@ msgid ""
 "Your system source has been modified, please restore to official source for "
 "your normal use"
 msgstr "Sumber sistem Anda telah di modifikasi, silahkan kembalikan ke sumber resmi untuk penggunaan yang normal"
-
-#: ../../launcher/manager_uninstall.go:69
-msgid "%q removed successfully"
-msgstr "%q berhasil dihapus"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "Failed to uninstall %q"
-msgstr "Gagal untuk melepas %q"
 
 #: ../../network/manager_active_conn.go:318
 msgid "A (5 GHz)"

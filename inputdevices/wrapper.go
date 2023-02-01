@@ -24,14 +24,16 @@ import (
 
 type mouseInfo struct {
 	*dxinput.Mouse
-	devNode string
-	phys    string
+	devNode   string
+	sysfsPath string
+	phys      string
 }
 
 type touchpadInfo struct {
 	*dxinput.Touchpad
-	devNode string
-	phys    string
+	devNode   string
+	sysfsPath string
+	phys      string
 }
 
 type Mouses []*mouseInfo
@@ -98,20 +100,11 @@ func getKeyboardNumber() int {
 	return number
 }
 
-func getExtraInfo(id int32) (devNode string, phys string) {
-	var devNodeBytes []byte
-	var length int32
-	sessionType := os.Getenv("XDG_SESSION_TYPE")
-	isWaylandSession := strings.Contains(sessionType, "wayland")
-	if isWaylandSession {
-		devNode = fmt.Sprint("/dev/input/event", id) // id是从kwayland获取的sysname
-	} else {
-		devNodeBytes, length = dxutils.GetProperty(id, "Device Node")
-		if len(devNodeBytes) == 0 {
-			logger.Warningf("could not get DeviceNode for %d", id)
-			return
-		}
-		devNode = string(devNodeBytes[:length])
+func getExtraInfo(id int32) (devNode string, sysfsPath string, phys string) {
+	devNodeBytes, length := dxutils.GetProperty(id, "Device Node")
+	if len(devNodeBytes) == 0 {
+		logger.Warningf("could not get DeviceNode for %d", id)
+		return
 	}
 	udevDev := _gudevClient.QueryByDeviceFile(devNode)
 	if udevDev == nil {
@@ -119,6 +112,8 @@ func getExtraInfo(id int32) (devNode string, phys string) {
 		return
 	}
 	defer udevDev.Unref()
+
+	sysfsPath = udevDev.GetSysfsPath()
 
 	phys = udevDev.GetSysfsAttr("phys")
 	if phys == "" {
@@ -140,7 +135,7 @@ func getTouchpadInfoByDxTouchpad(tmp *dxinput.Touchpad) *touchpadInfo {
 		Touchpad: tmp,
 	}
 
-	m.devNode, m.phys = getExtraInfo(tmp.Id)
+	m.devNode, m.sysfsPath, m.phys = getExtraInfo(tmp.Id)
 
 	return m
 }
@@ -150,7 +145,7 @@ func getMouseInfoByDxMouse(tmp *dxinput.Mouse) *mouseInfo {
 		Mouse: tmp,
 	}
 
-	m.devNode, m.phys = getExtraInfo(tmp.Id)
+	m.devNode, m.sysfsPath, m.phys = getExtraInfo(tmp.Id)
 
 	return m
 }
@@ -166,14 +161,25 @@ func getMouseInfos(force bool) Mouses {
 			tmp, _ := dxinput.NewMouseFromDeviceInfo(info)
 			mouse := getMouseInfoByDxMouse(tmp)
 
-			// phys 用来标识物理设备，若俩设备的 phys 相同，说明是同一物理设备，
-			// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
-			found := false
-			for _, touchpad := range _tpadInfos {
-				logger.Warning(touchpad)
-				if touchpad.phys == mouse.phys {
-					found = true
-					break
+			if mouse.isVirtual() {
+				logger.Debug("ignore virtial mouse:", tmp.Name)
+				continue
+			}
+
+			if !isWaylandSession {
+				// phys 用来标识物理设备，若俩设备的 phys 相同，说明是同一物理设备，
+				// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
+				found := false
+				for _, touchpad := range _tpadInfos {
+					if touchpad.phys == mouse.phys {
+						found = true
+						break
+					}
+				}
+
+				if found {
+					logger.Debug("mouse device ignored:", tmp.Name)
+					continue
 				}
 			}
 
@@ -202,8 +208,14 @@ func getTPadInfos(force bool) Touchpads {
 	for _, info := range getDeviceInfos(false) {
 		if info.Type == common.DevTypeTouchpad {
 			tmp, _ := dxinput.NewTouchpadFromDevInfo(info)
+			touchpad := getTouchpadInfoByDxTouchpad(tmp)
 
-			_tpadInfos = append(_tpadInfos, getTouchpadInfoByDxTouchpad(tmp))
+			if touchpad.isVirtual() {
+				logger.Debug("ignore virtial mouse:", tmp.Name)
+				continue
+			}
+
+			_tpadInfos = append(_tpadInfos, touchpad)
 		}
 	}
 
@@ -224,6 +236,14 @@ func getWacomInfos(force bool) dxWacoms {
 	}
 
 	return _wacomInfos
+}
+
+func (info mouseInfo) isVirtual() bool {
+	return strings.Contains(info.sysfsPath, "virtual")
+}
+
+func (info touchpadInfo) isVirtual() bool {
+	return strings.Contains(info.sysfsPath, "virtual")
 }
 
 func (infos Mouses) get(id int32) *dxinput.Mouse {

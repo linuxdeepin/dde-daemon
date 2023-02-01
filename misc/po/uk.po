@@ -64,37 +64,12 @@ msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Запис користувача «%s» вже існував. Його дані синхронізовано з попередніми"
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"Вийдіть із системи, щоб параметри масштабування дисплея набули чинності"
-
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "Успішно встановлено"
-
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr "Пізніше"
-
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr "Вийти з системи зараз"
-
-#: ../../appearance/scale.go:66
-msgid "Setting display scaling"
-msgstr "Налаштування масштабування зображення"
-
-#: ../../appearance/scale.go:67
-msgid "Display scaling"
-msgstr "Маштабування дисплею"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s вимкнено"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Відкрити"
 
@@ -232,28 +207,7 @@ msgstr "Додайте пристрої Bluetooth"
 msgid "Pair"
 msgstr "З'єднати"
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Close All"
-msgstr "Закрити всі"
-
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
-msgid "Force Quit"
-msgstr "Примусово Вийти"
-
-#: ../../dock/app_entry_menu.go:160
-msgid "Dock"
-msgstr "Док"
-
-#: ../../dock/app_entry_menu.go:170
-msgid "Undock"
-msgstr "Розстикуватись"
-
-#: ../../dock/app_entry_menu.go:180
-msgid "All Windows"
-msgstr "Усі вікна"
-
-#: ../../housekeeping/init.go:75
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Недостатньо вільного місця на диску, будь-ласка, прибирайте вчасно!"
 
@@ -567,16 +521,8 @@ msgstr ""
 msgid "OK"
 msgstr "Гаразд"
 
-#: ../../launcher/manager_uninstall.go:56
-msgid "%q removed successfully"
-msgstr "%q успішно видалено"
-
-#: ../../launcher/manager_uninstall.go:58
-msgid "Failed to uninstall %q"
-msgstr "Не вдалося встановити %q"
-
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Нічого"
 

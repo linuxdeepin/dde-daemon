@@ -10,7 +10,7 @@ import utils_dbus
 from dbus_gen.com_deepin_daemon_Network import Network
 from dbus_gen.com_deepin_daemon_Network_ConnectionSession import ConnectionSession
 
-dbus_network = Network('com.deepin.daemon.Network', '/com/deepin/daemon/Network')
+dbus_network = Network('org.deepin.dde.Network1', '/org/deepin/dde/Network1')
 
 wifi_ssid = "test"
 wifi_psk = "12345678"
@@ -19,7 +19,7 @@ wifi_psk = "12345678"
 dbus_network.EnableDevice(utils_dbus.get_default_wireless_device(), True)
 
 session_path = utils_dbus.create_connection('wireless', utils_dbus.get_default_wireless_device())
-dbus_session = ConnectionSession('com.deepin.daemon.Network', session_path)
+dbus_session = ConnectionSession('org.deepin.dde.Network1', session_path)
 uuid = dbus_session.Uuid
 dbus_session.SetKey('802-11-wireless', 'ssid', json.dump(wifi_ssid))
 dbus_session.SetKey('802-11-wireless-security', 'vk-key-mgmt', json.dumps("wpa-psk"))

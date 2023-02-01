@@ -6,4 +6,3 @@
 * [bluetooth 常见问题](bluetooth_FAQ.md)
 * [bluetooth 已知设备问题](bluetooth_device-known.md)
 * [network 模块设计](../network/README.md)
-* [appearance 模块设计](../appearance/README.md)

@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
+	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
 	"github.com/linuxdeepin/go-lib/pulse"
 )
 

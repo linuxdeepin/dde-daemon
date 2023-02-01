@@ -1,0 +1,75 @@
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="tr" version="2.1">
+	<context>
+		<name>policy</name>
+		<message>
+			<location filename="org.deepin.dde.accounts.change-own-user-data!message" line="0"/>
+			<source>Authentication is required to change your own user data</source>
+			<translation>Kullanıcı verilerinizi değiştirmek için kimlik doğrulaması gerekli</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.change-own-user-data!description" line="0"/>
+			<source>Change your own user data</source>
+			<translation>Kullanıcı bilgilerinizi değiştirin</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.user-administration!message" line="0"/>
+			<source>Authentication is required to change user data</source>
+			<translation>Kullanıcı verilerini değiştirmek için kimlik doğrulaması gerekli</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.user-administration!description" line="0"/>
+			<source>Manage user accounts</source>
+			<translation>Kullanıcı hesaplarını yönet</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.enable-auto-login!message" line="0"/>
+			<source>Authentication is required to enable auto login</source>
+			<translation>Otomatik oturum açmayı etkinleştirmek için kimlik doğrulaması gerekli</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.enable-auto-login!description" line="0"/>
+			<source>Enable Auto Login</source>
+			<translation>Otomatik Girişi Etkinleştir</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.disable-auto-login!message" line="0"/>
+			<source>Authentication is required to disable auto login</source>
+			<translation>Otomatik girişi devre dışı bırakmak için kimlik doğrulaması gerekli</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.disable-auto-login!description" line="0"/>
+			<source>Disable Auto Login</source>
+			<translation>Otomatik Giriş Devre Dışı</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>
+			<source>Authentication is required to enable login without password</source>
+			<translation>Parola olmadan oturum açmak için kimlik doğrulaması gerekli</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.enable-nopass-login!description" line="0"/>
+			<source>Enable Login without password</source>
+			<translation>Parola olmadan oturum açmayı etkinleştir</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.disable-nopass-login!message" line="0"/>
+			<source>Authentication is required to disable login without password</source>
+			<translation>Parola olmadan oturum açmayı devre dışı bırakmak için kimlik doğrulaması gerekli</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.disable-nopass-login!description" line="0"/>
+			<source>Disable Login without password</source>
+			<translation>Parola olmadan oturum açma devre dışı</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.set-keyboard-layout!message" line="0"/>
+			<source>Authentication is required to set keyboard layout</source>
+			<translation>Klavye düzenini ayarlamak için kimlik doğrulaması gerekli</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.accounts.set-keyboard-layout!description" line="0"/>
+			<source>Set keyboard layout</source>
+			<translation>Klavye düzenini ayarla</translation>
+		</message>
+	</context>
+</TS>

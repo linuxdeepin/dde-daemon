@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus"
-	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	nmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/dde-daemon/network/nm"

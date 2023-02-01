@@ -62,36 +62,12 @@ msgstr "Používateľské meno musí mať 3 až 32 znakov"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "Úspešne nastavené"
-
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr ""
-
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr ""
-
-#: ../../appearance/scale.go:66
-msgid "Setting display scaling"
-msgstr "Nastavenie mierky zobrazenia"
-
-#: ../../appearance/scale.go:67
-msgid "Display scaling"
-msgstr "Zobrazenie mierky displeja"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Otvoriť"
 
@@ -229,28 +205,7 @@ msgstr "Pridať Bluetooth zariadenia"
 msgid "Pair"
 msgstr "Spárovať"
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Close All"
-msgstr "Zavrieť všetko"
-
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
-msgid "Force Quit"
-msgstr "Nútené ukončenie"
-
-#: ../../dock/app_entry_menu.go:160
-msgid "Dock"
-msgstr "Panel"
-
-#: ../../dock/app_entry_menu.go:170
-msgid "Undock"
-msgstr "Odopnúť z panela"
-
-#: ../../dock/app_entry_menu.go:180
-msgid "All Windows"
-msgstr "Všetky okná"
-
-#: ../../housekeeping/init.go:75
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Nedostatok miesta na disku, prosím uvoľníte viac miesta!"
 
@@ -560,16 +515,8 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: ../../launcher/manager_uninstall.go:56
-msgid "%q removed successfully"
-msgstr "%q úspešne odstránené"
-
-#: ../../launcher/manager_uninstall.go:58
-msgid "Failed to uninstall %q"
-msgstr "Nepodarilo sa odinštalovať %q"
-
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Nič"
 

@@ -23,9 +23,9 @@ import (
 )
 
 const (
-	dbusServiceName    = "com.deepin.system.Display"
+	dbusServiceName    = "org.deepin.dde.Display1"
 	dbusInterfaceName  = dbusServiceName
-	dbusPath           = "/com/deepin/system/Display"
+	dbusPath           = "/org/deepin/dde/Display1"
 	configFilePath     = "/var/lib/dde-daemon/display/config.json"
 	rendererConfigPath = "/var/lib/dde-daemon/display/rendererConfig.json"
 )

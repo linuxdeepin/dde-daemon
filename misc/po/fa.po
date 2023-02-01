@@ -66,36 +66,12 @@ msgstr "نام کاربری باید بین 3 تا 32 نویسه باشد"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:56
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-
-#: ../../appearance/scale.go:57
-msgid "Set successfully"
-msgstr "با موفقیت تنظیم شد"
-
-#: ../../appearance/scale.go:67
-msgid "Later"
-msgstr ""
-
-#: ../../appearance/scale.go:67
-msgid "Log Out Now"
-msgstr ""
-
-#: ../../appearance/scale.go:81
-msgid "Setting display scaling"
-msgstr "تنظیم نمایش مقیاس"
-
-#: ../../appearance/scale.go:82
-msgid "Display scaling"
-msgstr "نمایش مقیاس"
-
-#: ../../audio/audio_events.go:474
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:475 ../../dock/app_entry_menu.go:108
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "باز کردن"
 
@@ -232,27 +208,6 @@ msgstr ""
 #: ../../bluetooth/utils_notify.go:145
 msgid "Pair"
 msgstr ""
-
-#: ../../dock/app_entry_menu.go:115
-msgid "Close All"
-msgstr "بستن همه"
-
-#: ../../dock/app_entry_menu.go:142 ../../dock/app_entry_menu.go:156
-#: ../../dock/app_entry_menu.go:171
-msgid "Force Quit"
-msgstr "خروج اجباری"
-
-#: ../../dock/app_entry_menu.go:175
-msgid "Dock"
-msgstr "داک"
-
-#: ../../dock/app_entry_menu.go:185
-msgid "Undock"
-msgstr "باز کردن از داک"
-
-#: ../../dock/app_entry_menu.go:195
-msgid "All Windows"
-msgstr "همه پنجره ها"
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -562,16 +517,8 @@ msgstr ""
 msgid "OK"
 msgstr "تایید"
 
-#: ../../launcher/manager_uninstall.go:71
-msgid "%q removed successfully"
-msgstr "%q با موفقیت حذف شد"
-
-#: ../../launcher/manager_uninstall.go:73
-msgid "Failed to uninstall %q"
-msgstr "%q حذف انجام نشد"
-
-#: ../../network/manager_active_conn.go:469
-#: ../../network/manager_active_conn.go:474
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "هیچ "
 

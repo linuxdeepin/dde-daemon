@@ -5,8 +5,8 @@
 package gesture
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 type Daemon struct {
@@ -15,8 +15,8 @@ type Daemon struct {
 }
 
 const (
-	dbusServiceName = "com.deepin.daemon.Gesture"
-	dbusServicePath = "/com/deepin/daemon/Gesture"
+	dbusServiceName = "org.deepin.dde.Gesture1"
+	dbusServicePath = "/org/deepin/dde/Gesture1"
 	dbusServiceIFC  = dbusServiceName
 )
 

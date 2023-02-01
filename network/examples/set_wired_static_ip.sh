@@ -3,8 +3,8 @@
 # 设置第一块有线网卡的IP地址为10.1.11.231、掩码为255.255.255.0、网关为
 # 10.1.11.1、域名服务器为8.8.8.8
 
-dbus_name="com.deepin.daemon.Network"
-dbus_path="/com/deepin/daemon/Network"
+dbus_name="org.deepin.dde.Network1"
+dbus_path="/org/deepin/dde/Network1"
 dev_name="/org/freedesktop/NetworkManager/Devices/0"
 
 ip_addr='"10.1.11.231"'

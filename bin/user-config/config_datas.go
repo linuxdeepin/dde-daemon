@@ -15,7 +15,7 @@ import (
 
 	"github.com/linuxdeepin/go-lib/archive"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/accounts/users"
+	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 )
 
 const (

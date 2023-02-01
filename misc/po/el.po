@@ -66,37 +66,12 @@ msgstr "Το όνομα χρήστη πρέπει να έχει μήκος με�
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"Βγείτε από τις ρυθμίσεις κλίμακας οθόνης για να τεθούν σε ισχύ οι αλλάγες"
-
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "Ορισμός επιτυχής"
-
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr "Αργότερα"
-
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr "Αποσύνδεση Τώρα"
-
-#: ../../appearance/scale.go:66
-msgid "Setting display scaling"
-msgstr "Ορισμός κλίμακας οθόνης"
-
-#: ../../appearance/scale.go:67
-msgid "Display scaling"
-msgstr "Κλίμακα οθόνης"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s έχει απενεργοποιηθεί"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Άνοιγμα"
 
@@ -234,28 +209,7 @@ msgstr "Προσθήκη συσκευών Bluetooth"
 msgid "Pair"
 msgstr "Σύζευξη"
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Close All"
-msgstr "Κλείσιμο Όλων"
-
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
-msgid "Force Quit"
-msgstr "Δυναμικό Κλείσιμο"
-
-#: ../../dock/app_entry_menu.go:160
-msgid "Dock"
-msgstr "Προσθήκη στην γραμμή εργασιών"
-
-#: ../../dock/app_entry_menu.go:170
-msgid "Undock"
-msgstr "Αφαίρεση απο την γραμμή εργασιών"
-
-#: ../../dock/app_entry_menu.go:180
-msgid "All Windows"
-msgstr "Όλα τα Παράθυρα"
-
-#: ../../housekeeping/init.go:75
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Ανεπαρκής χώρος στο δίσκο, παρακαλώ καθαρίστε εγκαίρως!"
 
@@ -566,16 +520,8 @@ msgstr ""
 msgid "OK"
 msgstr "ΟΚ"
 
-#: ../../launcher/manager_uninstall.go:56
-msgid "%q removed successfully"
-msgstr "Το %q αφαιρέθηκε επιτυχώς"
-
-#: ../../launcher/manager_uninstall.go:58
-msgid "Failed to uninstall %q"
-msgstr "Αποτυχία απεγκατάστασης %q"
-
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Κανένα"
 

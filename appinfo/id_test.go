@@ -17,13 +17,13 @@ func TestNormalizeAppID(t *testing.T) {
 	}{
 		{
 			name:        "NormalizeAppID",
-			candidateID: "com.deepin.Control_Center",
-			want:        "com.deepin.control-center",
+			candidateID: "org.deepin.Control_Center",
+			want:        "org.deepin.control-center",
 		},
 		{
 			name:        "NormalizeAppID",
-			candidateID: "com.deepin.ControlCenter",
-			want:        "com.deepin.controlcenter",
+			candidateID: "org.deepin.ControlCenter",
+			want:        "org.deepin.controlcenter",
 		},
 	}
 	for _, tt := range tests {
@@ -42,13 +42,13 @@ func TestNormalizeAppIDWithCaseSensitive(t *testing.T) {
 	}{
 		{
 			name:        "NormalizeAppIDWithCaseSensitive",
-			candidateID: "com.deepin.Control_Center",
-			want:        "com.deepin.Control-Center",
+			candidateID: "org.deepin.Control_Center",
+			want:        "org.deepin.Control-Center",
 		},
 		{
 			name:        "NormalizeAppIDWithCaseSensitive not change",
-			candidateID: "com.deepin.ControlCenter",
-			want:        "com.deepin.ControlCenter",
+			candidateID: "org.deepin.ControlCenter",
+			want:        "org.deepin.ControlCenter",
 		},
 	}
 	for _, tt := range tests {

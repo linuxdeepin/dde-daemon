@@ -13,10 +13,6 @@ override_dh_gencontrol:
 	dh_gencontrol -- -Vdist:Depends="fprintd, libpam-fprintd"
 endif
 
-ifneq ($(DEB_BUILD_ARCH), mips64el)
-	export GOBUILD_OPTIONS=-ldflags '-linkmode=external -extldflags "-pie"'
-endif
-
 %:
 	dh $@
 

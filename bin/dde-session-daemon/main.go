@@ -17,6 +17,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"runtime"
@@ -27,9 +28,12 @@ import (
 	"github.com/linuxdeepin/dde-api/soundutils"
 	"github.com/linuxdeepin/dde-api/userenv"
 	"github.com/linuxdeepin/dde-daemon/loader"
-	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/com.deepin.api.soundthemeplayer"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.dbus"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
+	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
@@ -68,10 +72,10 @@ func allowRun() bool {
 		logger.Warning(err)
 		os.Exit(1)
 	}
-	sessionManagerObj := systemBus.Object("com.deepin.SessionManager",
-		"/com/deepin/SessionManager")
+	sessionManagerObj := systemBus.Object("org.deepin.dde.SessionManager1",
+		"/org/deepin/dde/SessionManager1")
 	var allowRun bool
-	err = sessionManagerObj.Call("com.deepin.SessionManager.AllowSessionDaemonRun",
+	err = sessionManagerObj.Call("org.deepin.dde.SessionManager1.AllowSessionDaemonRun",
 		dbus.FlagNoAutoStart).Store(&allowRun)
 	if err != nil {
 		logger.Warning(err)
@@ -223,7 +227,6 @@ func main() {
 	// Ensure each module and mainloop in the same thread
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-
 	if _options.list != "" {
 		err = app.listModule(_options.list)
 		if err != nil {
@@ -238,10 +241,15 @@ func main() {
 	} else {
 		app.execDefaultAction()
 	}
-
 	if err != nil {
 		logger.Warning(err)
 		os.Exit(1)
+	}
+	logger.Info("systemd-notify --ready")
+	cmd := exec.Command("systemd-notify", "--ready")
+	err = cmd.Start()
+	if err != nil {
+		logger.Warning(err)
 	}
 
 	err = migrateUserEnv()
@@ -253,7 +261,7 @@ func main() {
 	if err != nil {
 		logger.Warning(err)
 	}
-
+	go processLoginNotify()
 	runMainLoop()
 }
 
@@ -311,7 +319,7 @@ type pamEnvKeyValue struct {
 }
 
 func loadPamEnv(filename string) ([]pamEnvKeyValue, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := ioutil.ReadFile(filename) //#nosec G304
 	if err != nil {
 		return nil, err
 	}
@@ -340,7 +348,7 @@ func savePamEnv(filename string, pamEnv []pamEnvKeyValue) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer f.Close() //#nosec G307
 
 	bw := bufio.NewWriterSize(f, 256)
 	for _, kv := range pamEnv {
@@ -380,4 +388,126 @@ func syncConfigToSoundThemePlayer() error {
 	}
 
 	return err
+}
+
+func processLoginNotify() {
+	dayLeft, err := getExpiredDays()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	if dayLeft <= 0 || dayLeft > 7 {
+		return
+	}
+	sessionConn, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	dbusDaemon := ofdbus.NewDBus(sessionConn)
+	_, err = dbusDaemon.GetNameOwner(0, "org.deepin.dde.Osd1")
+	if err != nil {
+		listenSignals()
+	} else {
+		time.AfterFunc(2*time.Second, sendLoginNotify)
+	}
+}
+
+func getExpiredDays() (int64, error) {
+	usr, err := user.Current()
+	if err != nil {
+		logger.Warning(err)
+		return 0, err
+	}
+
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return 0, err
+	}
+
+	newAccounts := accounts.NewAccounts(systemConn)
+	userPath, err := newAccounts.FindUserByName(0, usr.Username)
+	if err != nil {
+		logger.Warning(err)
+		return 0, err
+	}
+
+	userObj, err := accounts.NewUser(systemConn, dbus.ObjectPath(userPath))
+	if err != nil {
+		logger.Warning(err)
+		return 0, err
+	}
+
+	_, dayLeft, err := userObj.PasswordExpiredInfo(0)
+	if err != nil {
+		logger.Warning(err)
+		return 0, err
+	}
+	logger.Info("getExpiredDays dayLeft", dayLeft)
+	return dayLeft, nil
+}
+
+func sendLoginNotify() {
+	dayLeft, err := getExpiredDays()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	if dayLeft <= 0 || dayLeft > 7 {
+		return
+	}
+
+	logger.Info("sendLoginNotify dayLeft ", dayLeft)
+	session, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	icon := "preferences-system"
+	message := fmt.Sprintf(Tr("Your password will expire in %d days, please change it timely"), dayLeft)
+
+	notify := notifications.NewNotifications(session)
+	_, err = notify.Notify(
+		0,
+		"dde-control-center",
+		0,
+		icon,
+		"",
+		message,
+		nil,
+		nil,
+		5*1000,
+	)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+}
+
+func listenSignals() {
+	sessionConn, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	dbusDaemon := ofdbus.NewDBus(sessionConn)
+	sysSigLoop := dbusutil.NewSignalLoop(sessionConn, 10)
+	dbusDaemon.InitSignalExt(sysSigLoop, true)
+	sysSigLoop.Start()
+	_, err = dbusDaemon.ConnectNameOwnerChanged(func(name string, oldOwner string, newOwner string) {
+		if newOwner != "" &&
+			oldOwner == "" &&
+			name == "org.freedesktop.Notifications" {
+			sendLoginNotify()
+			sysSigLoop.Stop()
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
 }

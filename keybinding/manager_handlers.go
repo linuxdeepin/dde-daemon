@@ -61,14 +61,9 @@ func (m *Manager) initHandlers() {
 		}
 
 		go func() {
-			var err error
-			if arg.Cmd == "deepin-camera" {
-				err = m.handleCheckCamera()
-			} else {
-				err = m.execCmd(arg.Cmd, true)
-				if err != nil {
-					logger.Warning("execCmd error:", err)
-				}
+			err := m.execCmd(arg.Cmd, true)
+			if err != nil {
+				logger.Warning("execCmd error:", arg.Cmd, err)
 			}
 			
 		}()
@@ -173,7 +168,7 @@ func (m *Manager) initHandlers() {
 	}
 
 	m.handlers[ActionTypeShowControlCenter] = func(ev *KeyEvent) {
-		err := m.execCmd("dbus-send --session --dest=com.deepin.dde.ControlCenter  --print-reply /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.Show",
+		err := m.execCmd("dbus-send --session --dest=org.deepin.dde.ControlCenter1  --print-reply /org/deepin/dde/ControlCenter1 org.deepin.dde.ControlCenter1.Show",
 			false)
 		if err != nil {
 			logger.Warning("failed to show control center:", err)

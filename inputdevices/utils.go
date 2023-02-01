@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"sync"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 const (

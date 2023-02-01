@@ -22,10 +22,6 @@ const (
 	themeDBusInterface = dbusInterface + ".Theme"
 )
 
-func (*Theme) GetInterfaceName() string {
-	return themeDBusInterface
-}
-
 func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string) *dbus.Error {
 	err := checkInvokePermission(theme.service, sender)
 	if err != nil {

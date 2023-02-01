@@ -18,10 +18,10 @@ import (
 	"unicode"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 const grubScriptFile = "/boot/grub/grub.cfg"

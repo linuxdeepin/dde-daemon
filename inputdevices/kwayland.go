@@ -9,11 +9,11 @@ import (
 	"strconv"
 	"strings"
 
-	kwin "github.com/linuxdeepin/go-dbus-factory/org.kde.kwin"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-api/dxinput"
 	"github.com/linuxdeepin/dde-api/dxinput/common"
 	"github.com/linuxdeepin/dde-api/dxinput/kwayland"
+	kwin "github.com/linuxdeepin/go-dbus-factory/session/org.kde.kwin"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 var (

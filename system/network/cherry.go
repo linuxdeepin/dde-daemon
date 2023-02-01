@@ -6,7 +6,7 @@ package network
 
 import (
 	"github.com/godbus/dbus"
-	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	nmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 )
 
 type connectionData map[string]map[string]dbus.Variant

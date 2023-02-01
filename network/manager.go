@@ -17,13 +17,13 @@ import (
 	"github.com/linuxdeepin/dde-daemon/network/nm"
 	"github.com/linuxdeepin/dde-daemon/network/proxychains"
 	"github.com/linuxdeepin/dde-daemon/session/common"
-	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
-	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
-	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
-	sysNetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
-	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
-	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
+	secrets "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.secrets"
+	airplanemode "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.airplanemode1"
+	ipwatch "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.ipwatch1"
+	sysNetwork "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.network1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
+	nmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/keyfile"
@@ -31,11 +31,9 @@ import (
 )
 
 const (
-	dbusServiceName = "com.deepin.daemon.Network"
-	dbusPath        = "/com/deepin/daemon/Network"
-	dbusInterface   = "com.deepin.daemon.Network"
-
-	configManagerId = "org.desktopspec.ConfigManager"
+	dbusServiceName = "org.deepin.dde.Network1"
+	dbusPath        = "/org/deepin/dde/Network1"
+	dbusInterface   = "org.deepin.dde.Network1"
 )
 
 const checkRepeatTime = 1 * time.Second
@@ -52,7 +50,7 @@ type Manager struct {
 	service            *dbusutil.Service
 	sysNetwork         sysNetwork.Network
 	airplane           airplanemode.AirplaneMode
-	sysIPWatchD        ipwatchd.IPWatchD
+	sysIPWatchD        ipwatch.IPWatch
 	nmObjManager       nmdbus.ObjectManager
 	PropsMu            sync.RWMutex
 	sessionManager     sessionmanager.SessionManager
@@ -232,7 +230,7 @@ func (m *Manager) init() {
 
 		// register secret agent
 		nmAgentManager := nmdbus.NewAgentManager(systemBus)
-		err = nmAgentManager.Register(0, "com.deepin.daemon.network.SecretAgent")
+		err = nmAgentManager.Register(0, "org.deepin.dde.Network1.SecretAgent")
 		if err != nil {
 			logger.Debug("failed to register secret agent:", err)
 		} else {

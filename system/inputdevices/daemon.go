@@ -6,16 +6,15 @@ package inputdevices
 
 import (
 	"github.com/linuxdeepin/dde-daemon/loader"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 )
 
 var logger = log.NewLogger("daemon/system/inputdevices")
 
 const (
-	dbusServiceName = "com.deepin.system.InputDevices"
-	dbusPath        = "/com/deepin/system/InputDevices"
-	dbusInterface   = "com.deepin.system.InputDevices"
+	dbusServiceName = "org.deepin.dde.InputDevices1"
+	dbusPath        = "/org/deepin/dde/InputDevices1"
+	dbusInterface   = "org.deepin.dde.InputDevices1"
 )
 
 func init() {

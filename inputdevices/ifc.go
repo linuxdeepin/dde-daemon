@@ -7,7 +7,7 @@ package inputdevices
 import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/dde-daemon/langselector"
+	"github.com/linuxdeepin/dde-daemon/langselector1"
 )
 
 func (m *Mouse) Reset() *dbus.Error {

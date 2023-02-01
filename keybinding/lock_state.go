@@ -13,7 +13,7 @@ import (
 	"github.com/godbus/dbus"
 
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
-	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/test"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"

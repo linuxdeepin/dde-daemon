@@ -12,16 +12,15 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 const (
-	dbusServiceName = "com.deepin.daemon.Grub2"
-	dbusPath        = "/com/deepin/daemon/Grub2"
-	dbusInterface   = "com.deepin.daemon.Grub2"
+	dbusServiceName = "org.deepin.dde.Grub2"
+	dbusPath        = "/org/deepin/dde/Grub2"
+	dbusInterface   = "org.deepin.dde.Grub2"
 
-	polikitActionIdCommon               = "com.deepin.daemon.Grub2"
-	polikitActionIdPrepareGfxmodeDetect = "com.deepin.daemon.grub2.prepare-gfxmode-detect"
+	polikitActionIdCommon               = "org.deepin.dde.grub2"
+	polikitActionIdPrepareGfxmodeDetect = "org.deepin.dde.grub2.prepare-gfxmode-detect"
 
 	timeoutMax = 10
 )

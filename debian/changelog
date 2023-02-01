@@ -1,14 +1,72 @@
-dde-daemon (5.15.4) UNRELEASED; urgency=medium
+dde-daemon (6.0.9) unstable; urgency=medium
 
-  * bump version to 5.15.4
+  [ TagBuilder ]
+  * fix: 接上笔提交"1"，解决社区编译问题(Task: 233587)(Influence: 编译)
 
- -- lichangze <lichangze@uniontech.com>  Tue, 10 Jan 2023 13:30:43 +0800
+ -- lvpeilong <lvpeilong@uniontech.com>  Fri, 06 Jan 2023 15:57:00 +0800
 
-dde-daemon (5.15.3) unstable; urgency=low
+dde-daemon (6.0.8.1) unstable; urgency=medium
 
-  * bump version to 5.15.3
+  [ TagBuilder ]
+  * fix: 调整屏幕缩放后会弹出两个注销后生效的横幅通知的问题解决(Task: 231071)(Influence: 调整屏幕缩的横幅通知)
+  * feat: 删除daemon中的个性化(Task: 232145)(Influence: 无)
+  * feat: 删除daemon中的mime模块(Task: 232145)(Influence: 无)
+  * feat: 删除daemon中的dock和launcher(Task: 232145)(Influence: 无)
 
- -- lichangze <lichangze@uniontech.com>  Mon, 9 Jan 2023 16:20:17 +0000
+ -- zhaoyingzhen <zhaoyingzhen@uniontech.com>  Thu, 29 Dec 2022 15:13:17 +0800
+
+dde-daemon (6.0.7) unstable; urgency=medium
+
+  [ TagBuilder ]
+  * fix: 修复设置按电源按钮时为关闭显示器,按物理电源键后,敲击键盘,无法唤醒显示器问题(Bug: 166217)(Influence: wayland环境黑屏唤醒)
+  * fix: 修复设置屏幕与待机设置项时间都为1分钟,系统进入待机的过程中闪现锁屏界面问题(Bug: 166213)(Influence: 锁屏,关闭显示器)
+  * feat: 接口更变，增加V23接口(Task: 207483)(Influence: 接口更变)
+  * fix: 电源管理模块，设置屏幕和待机各设置项为1分钟，没有生效问题解决(Task: 225417)(Influence: 电源管理，设置屏幕和待机时间)
+  * fix: 快捷键super+M不能唤起小组件问题解决(Task: 225417)(Influence: 快捷键super+M唤起小组件)
+
+ -- zhaoyingzhen <zhaoyingzhen@uniontech.com>  Tue, 13 Dec 2022 18:56:06 +0800
+
+dde-daemon (6.0.6) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * feat: 启动器的快捷键响应接口变更(Bug: 146591)(Influence: 启动器的快捷键启动)
+  * feat: 启动器的快捷键响应接口变更(Bug: 146591)(Influence: 启动器的快捷键启动)
+  * feat: 兼容V20接口(Task: 164483)(Influence: 兼容V20)
+  * fix: 单指从触控屏右侧边缘划入打开的不是小组件面板(Bug: 154627)(Influence: 触控屏单指从右侧滑入应弹出小组件面板)
+  * fix: 修复wayland锁屏快捷键无效问题(Bug: 152607)(Influence: wayland快捷键)
+  * fix: 解决关闭显示器于、电脑进入待机模式、自动锁屏功能失效问题(Bug: 157525)(Influence: 控制中心-电源-定时待机/锁屏/关闭显示器)
+
+ -- baodi <baodi@uniontech.com>  Wed, 19 Oct 2022 13:00:23 +0800
+
+dde-daemon (6.0.5) unstable; urgency=medium
+
+  * dde-flow-sprint2
+
+ -- Tan Feng <tanfeng@uniontech.com>  Thu, 28 Jul 2022 10:04:36 +0800
+
+dde-daemon (6.0.4) unstable; urgency=medium
+
+  * dde-flow-sprint2
+
+ -- Tan Feng <tanfeng@uniontech.com>  Wed, 27 Jul 2022 18:06:31 +0800
+
+dde-daemon (6.0.2) unstable; urgency=medium
+
+  * tag 6.0.2
+
+ -- Tan Feng <tanfeng@uniontech.com>  Mon, 27 Jun 2022 14:43:08 +0800
+
+dde-daemon (6.0.1) unstable; urgency=medium
+
+  * dde-flow-sprint1
+
+ -- Tan Feng <tanfeng@uniontech.com>  Tue, 21 Jun 2022 16:45:26 +0800
+
+dde-daemon (6.0.0.0) unstable; urgency=medium
+
+  * 6.0.0.0 pre-release
+
+ --  <tanfeng@uniontech.com>  Wed, 01 Jun 2022 11:14:28 +0800
 
 dde-daemon (3.0.18) unstable; urgency=low
 

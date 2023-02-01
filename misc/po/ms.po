@@ -60,36 +60,12 @@ msgstr "Nama pengguna mestilah antara 3 hingga 32 aksara"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr "Daftar keluar supaya tetapan penskalaan paparan berkesan"
-
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "Berjaya ditetapkan"
-
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr "Kemudian"
-
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr "Daftar Keluar Sekarang"
-
-#: ../../appearance/scale.go:66
-msgid "Setting display scaling"
-msgstr "Menetapkan penskalaan paparan"
-
-#: ../../appearance/scale.go:67
-msgid "Display scaling"
-msgstr "Penskalaan paparan"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s telah dilumpuhkan"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Buka"
 
@@ -227,28 +203,7 @@ msgstr "Tambah peranti Bluetooth"
 msgid "Pair"
 msgstr "Pasangkan"
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Close All"
-msgstr "Tutup Semua"
-
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
-msgid "Force Quit"
-msgstr "Paksa Keluar"
-
-#: ../../dock/app_entry_menu.go:160
-msgid "Dock"
-msgstr "Labuh"
-
-#: ../../dock/app_entry_menu.go:170
-msgid "Undock"
-msgstr "Tanggal"
-
-#: ../../dock/app_entry_menu.go:180
-msgid "All Windows"
-msgstr "Semua Tetingkap"
-
-#: ../../housekeeping/init.go:75
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Ruang Cakera Tidak Mencukupi, sila bersihkan mengikut masa!"
 
@@ -558,16 +513,8 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: ../../launcher/manager_uninstall.go:56
-msgid "%q removed successfully"
-msgstr "%q berjaya dibuang"
-
-#: ../../launcher/manager_uninstall.go:58
-msgid "Failed to uninstall %q"
-msgstr "Gagal menyahpasang %q"
-
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Tiada"
 

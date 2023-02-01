@@ -6,7 +6,7 @@ package proxychains
 
 import (
 	dbus "github.com/godbus/dbus"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	. "github.com/linuxdeepin/go-lib/gettext"
 )
 

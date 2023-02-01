@@ -62,36 +62,12 @@ msgstr "Brugernavnet skal være mellem 3-32 tegn langt"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "Sat"
-
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr ""
-
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr ""
-
-#: ../../appearance/scale.go:66
-msgid "Setting display scaling"
-msgstr "Sætter skærmskalering"
-
-#: ../../appearance/scale.go:67
-msgid "Display scaling"
-msgstr "Skærmskalering"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Åbn"
 
@@ -229,28 +205,7 @@ msgstr ""
 msgid "Pair"
 msgstr ""
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Close All"
-msgstr "Luk alle"
-
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
-msgid "Force Quit"
-msgstr "Gennemtving afslut"
-
-#: ../../dock/app_entry_menu.go:160
-msgid "Dock"
-msgstr "Dok"
-
-#: ../../dock/app_entry_menu.go:170
-msgid "Undock"
-msgstr "Fjern fra dok"
-
-#: ../../dock/app_entry_menu.go:180
-msgid "All Windows"
-msgstr "Alle vinduer"
-
-#: ../../housekeeping/init.go:75
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Utilstrækkelig diskplads, ryd venligt op i tide!"
 
@@ -560,16 +515,8 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: ../../launcher/manager_uninstall.go:56
-msgid "%q removed successfully"
-msgstr "%q fjernet"
-
-#: ../../launcher/manager_uninstall.go:58
-msgid "Failed to uninstall %q"
-msgstr "Kunne ikke afinstallere %q"
-
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Intet"
 

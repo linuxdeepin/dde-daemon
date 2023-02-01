@@ -21,9 +21,9 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "com.deepin.daemon.Gesture"
-	dbusPath        = "/com/deepin/daemon/Gesture"
-	dbusInterface   = "com.deepin.daemon.Gesture"
+	dbusServiceName = "org.deepin.dde.Gesture1"
+	dbusPath        = "/org/deepin/dde/Gesture1"
+	dbusInterface   = "org.deepin.dde.Gesture1"
 )
 
 type GestureType int32

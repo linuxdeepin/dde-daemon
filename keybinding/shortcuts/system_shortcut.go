@@ -79,32 +79,28 @@ func getSystemActionCmd(id string) string {
 
 // key is id, value is commandline.
 var defaultSysActionCmdMap = map[string]string{
-	"launcher":               "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle",
+	"launcher":               "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle",
 	"terminal":               "/usr/lib/deepin-daemon/default-terminal",
 	"terminal-quake":         "deepin-terminal --quake-mode",
-	"lock-screen":            "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option; setxkbmap -option $originmap",
-	"logout":                 "dbus-send --print-reply --dest=com.deepin.dde.shutdownFront /com/deepin/dde/shutdownFront com.deepin.dde.shutdownFront.Show",
+	"lock-screen":            "/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=org.deepin.dde.LockFront1 /org/deepin/dde/LockFront1 org.deepin.dde.LockFront1.Show",
+	"logout":                 "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
 	"deepin-screen-recorder": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord",
 	"system-monitor":         "/usr/bin/deepin-system-monitor",
 	"color-picker":           "dbus-send --print-reply --dest=com.deepin.Picker /com/deepin/Picker com.deepin.Picker.Show",
 	// screenshot actions:
-	"screenshot":             screenshotCmdPrefix + "StartScreenshot",
-	"screenshot-fullscreen":  screenshotCmdPrefix + "FullscreenScreenshot",
-	"screenshot-window":      screenshotCmdPrefix + "TopWindowScreenshot",
-	"screenshot-delayed":     screenshotCmdPrefix + "DelayScreenshot int64:5",
-	"screenshot-ocr":         screenshotCmdPrefix + "OcrScreenshot",
-	"screenshot-scroll":      screenshotCmdPrefix + "ScrollScreenshot",
-	"file-manager":           "/usr/lib/deepin-daemon/default-file-manager",
-	"disable-touchpad":       "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
-	"wm-switcher":            "dbus-send --type=method_call --dest=com.deepin.WMSwitcher /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM",
-	"turn-off-screen":        "sleep 0.5; xset dpms force off",
-	"notification-center":    "dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle",
-	"clipboard":              "dbus-send --print-reply --dest=com.deepin.dde.Clipboard /com/deepin/dde/Clipboard com.deepin.dde.Clipboard.Toggle",
-	"global-search":          "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
-	"switch-next-kbd-layout": "dbus-send --print-reply --dest=com.deepin.daemon.Keybinding /com/deepin/daemon/InputDevice/Keyboard com.deepin.daemon.InputDevice.Keyboard.ToggleNextLayout",
-	// cmd
-	"calculator": "/usr/bin/deepin-calculator",
-	"search":     "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
+	"screenshot":            screenshotCmdPrefix + "StartScreenshot",
+	"screenshot-fullscreen": screenshotCmdPrefix + "FullscreenScreenshot",
+	"screenshot-window":     screenshotCmdPrefix + "TopWindowScreenshot",
+	"screenshot-delayed":    screenshotCmdPrefix + "DelayScreenshot int64:5",
+	"screenshot-ocr":        screenshotCmdPrefix + "OcrScreenshot",
+	"screenshot-scroll":     screenshotCmdPrefix + "ScrollScreenshot",
+	"file-manager":          "/usr/lib/deepin-daemon/default-file-manager",
+	"disable-touchpad":      "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
+	"wm-switcher":           "dbus-send --type=method_call --dest=org.deepin.dde.WMSwitcher1 /org/deepin/dde/WMSwitcher1 org.deepin.dde.WMSwitcher1.RequestSwitchWM",
+	"turn-off-screen":       "sleep 0.5; xset dpms force off",
+	"notification-center":   "dbus-send --print-reply --dest=org.deepin.dde.Widgets1 /org/deepin/dde/Widgets1 org.deepin.dde.Widgets1.Toggle",
+	"clipboard":             "dbus-send --print-reply --dest=org.deepin.dde.Clipboard1 /org/deepin/dde/Clipboard1 org.deepin.dde.Clipboard1.Toggle",
+	"global-search":         "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
 }
 
 type actionHandler struct {

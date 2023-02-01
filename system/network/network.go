@@ -13,16 +13,15 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
-	airplanemode "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.airplanemode"
-	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/log"
 )
 
 const (
-	dbusServiceName = "com.deepin.system.Network"
-	dbusPath        = "/com/deepin/system/Network"
+	dbusServiceName = "org.deepin.dde.Network1"
+	dbusPath        = "/org/deepin/dde/Network1"
 	dbusInterface   = dbusServiceName
 )
 

@@ -6,10 +6,10 @@ package keybinding
 
 import (
 	"github.com/godbus/dbus"
-	audio "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
-	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
+	audio "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.audio1"
+	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 const (

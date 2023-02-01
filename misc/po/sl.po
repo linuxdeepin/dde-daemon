@@ -66,36 +66,12 @@ msgstr "Uporabniško ime mora imeti od 3 do 32 znakov"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr "Odjavite se, da začnejo nastavitve merila delovati"
-
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "Uspešno nastavljeno"
-
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr "kasneje"
-
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr "Odjavi se sedaj"
-
-#: ../../appearance/scale.go:66
-msgid "Setting display scaling"
-msgstr "Nastavitve merila zaslona"
-
-#: ../../appearance/scale.go:67
-msgid "Display scaling"
-msgstr "Spreminjanje merila zaslona"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s je onemogočen"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Odpri"
 
@@ -233,28 +209,7 @@ msgstr "Dodajanje Bluetooth naprav"
 msgid "Pair"
 msgstr "Parjenje"
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Close All"
-msgstr "Zapri vse"
-
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
-msgid "Force Quit"
-msgstr "Prisili zapiranje"
-
-#: ../../dock/app_entry_menu.go:160
-msgid "Dock"
-msgstr "Zasidraj"
-
-#: ../../dock/app_entry_menu.go:170
-msgid "Undock"
-msgstr "Odsidraj"
-
-#: ../../dock/app_entry_menu.go:180
-msgid "All Windows"
-msgstr "Vsa okna"
-
-#: ../../housekeeping/init.go:75
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Premalo prostora na disku. Pravočasno ga očistite!"
 
@@ -566,16 +521,8 @@ msgstr ""
 msgid "OK"
 msgstr "V redu"
 
-#: ../../launcher/manager_uninstall.go:56
-msgid "%q removed successfully"
-msgstr "%q je uspešno odstranjen"
-
-#: ../../launcher/manager_uninstall.go:58
-msgid "Failed to uninstall %q"
-msgstr "Ni uspelo odstraniti %q"
-
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "brez"
 

@@ -6,7 +6,7 @@ package network
 
 import (
 	"github.com/godbus/dbus"
-	mmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.modemmanager1"
+	mmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.modemmanager1"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
 

@@ -53,22 +53,6 @@ msgstr ""
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../appearance/scale.go:61
-msgid "Set successfully"
-msgstr "सफलतापूर्वक सेट कर दिया गया"
-
-#: ../../appearance/scale.go:62
-msgid "Please log back in to view the changes"
-msgstr ""
-
-#: ../../appearance/scale.go:66
-msgid "Display scaling"
-msgstr "डिस्प्ले मापन"
-
-#: ../../appearance/scale.go:67
-msgid "Setting display scaling"
-msgstr "डिस्प्ले मापन सेट किया जा रहा है"
-
 #: ../../bin/dde-authority/fprint_transaction.go:20
 msgid "Fingerprint verification failed"
 msgstr ""
@@ -193,30 +177,6 @@ msgstr ""
 #: ../../calendar/scheduler.go:500
 msgid "Schedule Reminder"
 msgstr ""
-
-#: ../../dock/app_entry_menu.go:100
-msgid "Open"
-msgstr "खोलें"
-
-#: ../../dock/app_entry_menu.go:107
-msgid "Close All"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:123
-msgid "Force Quit"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:130
-msgid "Dock"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:137
-msgid "Undock"
-msgstr ""
-
-#: ../../dock/app_entry_menu.go:144
-msgid "All Windows"
-msgstr "सभी विंडोज "
 
 #: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
@@ -458,14 +418,6 @@ msgid ""
 "Your system source has been modified, please restore to official source for "
 "your normal use"
 msgstr "आपका सिस्टम सोर्स बदला गया है, नॉर्मल इस्तेमाल के लिए कृपा करके सिस्टम सोर्स रिस्टोर कीजिए"
-
-#: ../../launcher/manager_uninstall.go:69
-msgid "%q removed successfully"
-msgstr "%q को सफलतापूर्वक हटा दिया गया"
-
-#: ../../launcher/manager_uninstall.go:71
-msgid "Failed to uninstall %q"
-msgstr "%q को हटाने में विफल"
 
 #: ../../network/manager_active_conn.go:318
 msgid "A (5 GHz)"

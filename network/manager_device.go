@@ -12,8 +12,8 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
-	mmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.modemmanager1"
-	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
+	mmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.modemmanager1"
+	nmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 

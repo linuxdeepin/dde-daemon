@@ -65,37 +65,12 @@ msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "ئىشلەتكۈچى %sئاللىبۇرۇن مەۋجۇت، بۇرۇنقى سانلىق مەلۇماتلار ماس قەدەملەندى"
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
-"كۆرسىتىش ھالىتىنى تەڭشىگەندىن كېيىن  قايتا قوزغاتسىڭىز ئۈنۈملۈك بولىدۇ"
-
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "تەڭشەلدى"
-
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr "بىردەمدىن كېيىن"
-
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr "ھازىرلا"
-
-#: ../../appearance/scale.go:66
-msgid "Setting display scaling"
-msgstr "كۆرۈنۈش نىسبىتىنى تەڭشىمەكچى"
-
-#: ../../appearance/scale.go:67
-msgid "Display scaling"
-msgstr "كۆرۈنىش كىچىكلىتىش"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s چەكلەنگەن"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "ئېچىش"
 
@@ -233,28 +208,7 @@ msgstr "كۆك چىش ئۈسكۈنىسىنى قوشۇڭ"
 msgid "Pair"
 msgstr "جۈپلەش"
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Close All"
-msgstr "ھەممىسىنى ئۆچۈرۈش"
-
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
-msgid "Force Quit"
-msgstr "مەجبۇرىي چېكىنىش"
-
-#: ../../dock/app_entry_menu.go:160
-msgid "Dock"
-msgstr "ۋەزىپە ئىستونى"
-
-#: ../../dock/app_entry_menu.go:170
-msgid "Undock"
-msgstr "قالدۇقلىرىنى چىقىرىۋېتىش"
-
-#: ../../dock/app_entry_menu.go:180
-msgid "All Windows"
-msgstr "بارلىق كۆزنەكلەر"
-
-#: ../../housekeeping/init.go:75
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "دىسكا بوشلۇقى يېتەرسىز، دىسكىڭىزنى تازىلاڭ!"
 
@@ -566,16 +520,8 @@ msgstr ""
 msgid "OK"
 msgstr "جەزىملەشتۈرۈش"
 
-#: ../../launcher/manager_uninstall.go:56
-msgid "%q removed successfully"
-msgstr "%q چىقىرىۋېتىش مۇۋەپپەقىيەتلىك بولدى"
-
-#: ../../launcher/manager_uninstall.go:58
-msgid "Failed to uninstall %q"
-msgstr "%q چىقىرىۋېتىش مەغلۇپ بولدى"
-
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "قۇرۇق"
 

@@ -64,36 +64,12 @@ msgstr "Корисничко име мора садржати између 3-32 
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr "Одјави се да скалирање приказа ступи на снагу"
-
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "Успешно подешено"
-
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr "Одложи"
-
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr "Одјави се сад"
-
-#: ../../appearance/scale.go:66
-msgid "Setting display scaling"
-msgstr "Подешавање скалираног приказа"
-
-#: ../../appearance/scale.go:67
-msgid "Display scaling"
-msgstr "Скалирање приказа"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio/audio_events.go:462
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s је искључен"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:463
 msgid "Open"
 msgstr "Покрени"
 
@@ -231,28 +207,7 @@ msgstr "Додај Блутут уређаје"
 msgid "Pair"
 msgstr "Упари"
 
-#: ../../dock/app_entry_menu.go:100
-msgid "Close All"
-msgstr "Затвори све"
-
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
-msgid "Force Quit"
-msgstr "Принудно изађи"
-
-#: ../../dock/app_entry_menu.go:160
-msgid "Dock"
-msgstr "Закачи"
-
-#: ../../dock/app_entry_menu.go:170
-msgid "Undock"
-msgstr "Откачи"
-
-#: ../../dock/app_entry_menu.go:180
-msgid "All Windows"
-msgstr "Сви прозори"
-
-#: ../../housekeeping/init.go:75
+#: ../../housekeeping/init.go:90
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Недовољно простора на диску, молимо чистите редовно!"
 
@@ -560,16 +515,8 @@ msgstr ""
 msgid "OK"
 msgstr "У реду"
 
-#: ../../launcher/manager_uninstall.go:56
-msgid "%q removed successfully"
-msgstr "%q уклањање успешно"
-
-#: ../../launcher/manager_uninstall.go:58
-msgid "Failed to uninstall %q"
-msgstr "Уклањање %q неуспешно"
-
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:437
+#: ../../network/manager_active_conn.go:442
 msgid "None"
 msgstr "Ништа"
 
