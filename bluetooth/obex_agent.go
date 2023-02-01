@@ -390,7 +390,7 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 		}
 	} else {
 		actions = []string{"_view", gettext.Tr("View")}
-		hints := map[string]dbus.Variant{"x-deepin-action-_view": dbus.MakeVariant("xdg-open," + receiveBaseDir)}
+		hints := map[string]dbus.Variant{"x-deepin-action-_view": dbus.MakeVariant("dde-file-manager,--show-item," + filepath.Join(receiveBaseDir, filename))}
 		notifyID, err = notify.Notify(0,
 			"dde-control-center",
 			replaceID,
