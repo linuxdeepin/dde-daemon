@@ -18,10 +18,10 @@ import (
 	"unicode"
 
 	dbus "github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
-	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 const grubScriptFile = "/boot/grub/grub.cfg"
@@ -594,24 +594,26 @@ func getOSNum(entries []Entry) uint32 {
 }
 
 func checkInvokePermission(service *dbusutil.Service, sender dbus.Sender) error {
-	pid, err := service.GetConnPID(string(sender))
-	if err != nil {
-		return err
-	}
-	p := procfs.Process(pid)
-	cmd, err := p.Exe()
-	if err != nil {
-		return err
-	}
-	if cmd == "/usr/bin/dde-control-center" {
-		return nil
-	}
 	uid, err := service.GetConnUID(string(sender))
 	if err != nil {
 		return err
 	}
 	if uid != 0 {
-		return fmt.Errorf("not allow %v call this method", sender)
+		pid, err := service.GetConnPID(string(sender))
+		if err != nil {
+			return err
+		}
+		p := procfs.Process(pid)
+		cmd, err := p.Exe()
+		if err != nil {
+			return err
+		}
+		if cmd == "/usr/bin/dde-control-center" {
+			return nil
+		} else {
+			return fmt.Errorf("not allow %v call this method", sender)
+		}
+	} else {
+		return nil
 	}
-	return nil
 }
