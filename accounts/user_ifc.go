@@ -1015,12 +1015,13 @@ func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64
 	curDays := time.Now().Unix() / secondsPerDay
 	daysLeft := spLastChg + spMax - curDays
 
+	// daysLeft < 0时为已经过期，等于0时即当天过期时按1天算，因此大于等于0时需要加1天
 	if daysLeft < 0 {
 		return expiredStatusExpiredAlready, daysLeft, nil
 	} else if spWarn > daysLeft {
-		return expiredStatusExpiredSoon, daysLeft, nil
+		return expiredStatusExpiredSoon, daysLeft + 1, nil
 	}
-	return expiredStatusNormal, daysLeft, nil
+	return expiredStatusNormal, daysLeft + 1, nil
 }
 
 func (u *User) SetPasswordHint(hint string) (busErr *dbus.Error) {
