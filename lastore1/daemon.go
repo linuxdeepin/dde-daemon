@@ -5,7 +5,14 @@
 package lastore
 
 import (
+	"sync"
+	"time"
+
+	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.dbus"
+	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 )
 

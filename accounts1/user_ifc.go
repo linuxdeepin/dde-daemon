@@ -45,6 +45,8 @@ import (
 const (
 	userDBusPathPrefix = "/org/deepin/dde/Accounts1/User"
 	userDBusInterface  = "org.deepin.dde.Accounts1.User"
+	controlCenter      = "dde-control-center"
+	resetPasswordDia   = "reset-password-dialog"
 )
 
 func (*User) GetInterfaceName() string {

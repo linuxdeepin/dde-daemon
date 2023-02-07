@@ -13,6 +13,8 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
+	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 

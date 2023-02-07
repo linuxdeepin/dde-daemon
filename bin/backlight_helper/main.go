@@ -25,6 +25,7 @@ const (
 	dbusServiceName = "org.deepin.dde.BacklightHelper1"
 	dbusPath        = "/org/deepin/dde/BacklightHelper1"
 	dbusInterface   = "org.deepin.dde.BacklightHelper1"
+	configManagerId = "org.desktopspec.ConfigManager"
 )
 
 const (
@@ -114,17 +115,43 @@ func (m *Manager) CheckCfgSupport(name string) (bool, *dbus.Error) {
 }
 
 func main() {
-	m := &Manager{}
 	service, err := dbusutil.NewSystemService()
 	if err != nil {
 		logger.Fatal("failed to new system service:", err)
 	}
-	m.service = service
 
+	m := &Manager{
+		service: service,
+	}
 	err = service.Export(dbusPath, m)
 	if err != nil {
 		logger.Fatal("failed to export:", err)
 	}
+
+	cfgManger := ConfigManager.NewConfigManager(service.Conn())
+	m.configManagerPath, err = cfgManger.AcquireManager(0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.brightness", "")
+	if err != nil {
+		// 即使配置服务或者接口不存在，也要设置默认配置，不能影响基本亮度调节
+		logger.Warning("failed to get config Manager:", err)
+		m.gsSupportDdcci = false
+		m.gsBackendHold = false
+	} else {
+		m.gsSupportDdcci = m.getBacklightGs("supportDdcci")
+		m.gsBackendHold = m.getBacklightGs("isBacklightHelperHold")
+	}
+
+	if m.gsSupportDdcci {
+		ddcciManager, err := ddcci.NewManager(service)
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			err = service.Export(ddcci.DbusPath, ddcciManager)
+			if err != nil {
+				logger.Warning("failed to export:", err)
+			}
+		}
+	}
+
 	err = service.RequestName(dbusServiceName)
 	if err != nil {
 		logger.Fatal("failed to request name:", err)

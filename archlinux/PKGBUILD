@@ -24,16 +24,13 @@ groups=('deepin-git')
 install="$pkgname.install"
 source=("source.tar.gz"
         dde-daemon.patch
-        remove-tc.patch
         'deepin-daemon.sysusers')
 sha512sums=('SKIP'
-            'SKIP'
             'SKIP'
             '808c02d4fec4cbbb01119bbb10499090199e738b7dd72c28a57dde098eef6132723f3434c151f79e21d9f788c7f7bae8046573ac93ba917afe0e803fbffa6d5a')
 
 prepare() {
  cd $deepin_source_name
-  patch -p1 -i ../remove-tc.patch
   patch -p1 -i ../dde-daemon.patch
   rm -rf system/uadp
   rm -rf session/uadpagent
@@ -64,7 +61,7 @@ prepare() {
   go get -v github.com/golang/protobuf/proto
   go get -v github.com/stretchr/testify
   go get -v github.com/jouyouyun/hardware
-  sed -i 's#/usr/share/backgrounds/default_background.jpg#/usr/share/backgrounds/deepin/desktop.jpg#' accounts/user.go
+  sed -i 's#/usr/share/backgrounds/default_background.jpg#/usr/share/backgrounds/deepin/desktop.jpg#' accounts1/user.go
 }
 
 build() {

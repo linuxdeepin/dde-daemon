@@ -18,6 +18,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.authenticate1"
+	uadp "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.uadp1"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
@@ -82,7 +83,7 @@ func getDefaultUserBackground() string {
 type User struct {
 	service         *dbusutil.Service
 	PropsMu         sync.RWMutex
-	uadpInterface	uadp.Uadp
+	uadpInterface   uadp.Uadp
 	UserName        string
 	UUID            string
 	FullName        string
