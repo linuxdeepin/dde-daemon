@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
-	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
+	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 

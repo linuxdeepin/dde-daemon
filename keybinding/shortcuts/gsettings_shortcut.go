@@ -5,7 +5,7 @@
 package shortcuts
 
 import (
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
