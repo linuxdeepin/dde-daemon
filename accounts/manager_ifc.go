@@ -32,9 +32,6 @@ import (
 	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/users/passwd"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-
-	"github.com/linuxdeepin/dde-daemon/accounts/checkers"
-	"github.com/linuxdeepin/dde-daemon/accounts/users"
 )
 
 const (
