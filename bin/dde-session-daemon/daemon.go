@@ -198,7 +198,6 @@ func (s *SessionDaemon) initModules() {
 		"screenedge",
 		"systeminfo",
 		"lastore",
-		"eventlog",
 		"calltrace",
 		"debug",
 	}
