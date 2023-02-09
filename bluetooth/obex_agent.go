@@ -7,7 +7,6 @@ package bluetooth
 import (
 	"errors"
 	"fmt"
-	dutils "github.com/linuxdeepin/go-lib/utils"
 	"math"
 	"math/rand"
 	"os"
@@ -15,6 +14,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	dutils "github.com/linuxdeepin/go-lib/utils"
 
 	"github.com/godbus/dbus"
 	obex "github.com/linuxdeepin/go-dbus-factory/org.bluez.obex"
@@ -237,10 +238,10 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 				oriFilepath = filepath.Join(dutils.GetCacheDir(), "obexd", transfer.tempFileName)
 			}
 			// 传送完成，移动到下载目录
-			moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
+			realFileName := moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
 
 			notifyMu.Lock()
-			a.notifyID = a.notifyProgress(a.notify, a.notifyID, transfer.oriFilename, transfer.deviceName, 100)
+			a.notifyID = a.notifyProgress(a.notify, a.notifyID, realFileName, transfer.deviceName, 100)
 			notifyMu.Unlock()
 		} else {
 			// 区分点击取消的传输失败和蓝牙断开的传输失败
@@ -327,7 +328,7 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 	}
 }
 
-func moveTempFile(src, dest string) {
+func moveTempFile(src, dest string) string {
 	count := 0
 	suffix := filepath.Ext(dest)
 	fileName := strings.TrimSuffix(dest, suffix)
@@ -343,6 +344,7 @@ func moveTempFile(src, dest string) {
 			break
 		}
 	}
+	return dest
 }
 
 // 获取随机字母+数字组合字符串
@@ -390,7 +392,7 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 		}
 	} else {
 		actions = []string{"_view", gettext.Tr("View")}
-		hints := map[string]dbus.Variant{"x-deepin-action-_view": dbus.MakeVariant("dde-file-manager,--show-item," + filepath.Join(receiveBaseDir, filename))}
+		hints := map[string]dbus.Variant{"x-deepin-action-_view": dbus.MakeVariant("dde-file-manager,--show-item," + filename)}
 		notifyID, err = notify.Notify(0,
 			"dde-control-center",
 			replaceID,
