@@ -34,6 +34,7 @@ const (
 	dbusServiceName = "org.deepin.dde.Network1"
 	dbusPath        = "/org/deepin/dde/Network1"
 	dbusInterface   = "org.deepin.dde.Network1"
+	configManagerId = "org.desktopspec.ConfigManager"
 )
 
 const checkRepeatTime = 1 * time.Second

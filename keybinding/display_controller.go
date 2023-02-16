@@ -13,6 +13,7 @@ import (
 	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
 	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (

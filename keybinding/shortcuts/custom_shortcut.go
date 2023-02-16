@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	"github.com/linuxdeepin/go-lib/keyfile"
 )
 
@@ -109,7 +109,7 @@ func newCustomShort(id, name string, keystrokes []string, wm wm.Wm, csm *CustomS
 			Keystrokes: ParseKeystrokes(keystrokes),
 		},
 		manager: csm,
-		wm: wm,
+		wm:      wm,
 	}
 }
 

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2021 - 2023 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package keyring
 
 /*
@@ -10,18 +14,20 @@ package keyring
 import "C"
 import (
 	"bufio"
+	"encoding/hex"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"sync"
 	"unsafe"
-	"encoding/hex"
-	"io/ioutil"
+
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 var fileLocker sync.Mutex
+
 const keyringSoPath = "/usr/lib/libkeyringcrypto.so"
 
 func isFileExist(path string) bool {

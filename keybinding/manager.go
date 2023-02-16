@@ -13,6 +13,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.inputdevices1"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
@@ -24,6 +25,7 @@ import (
 	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
 	keyevent "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.keyevent1"
 	power "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
+	systeminfo "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.systeminfo1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -518,53 +520,10 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 		}
 	})
 
-	//+ 监控鼠标移动事件
-	err = sessionBus.Object("org.deepin.dde.KWayland1",
-		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Output", "CursorMove").Err
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "org.deepin.dde.KWayland1.Output.CursorMove",
-	}, func(sig *dbus.Signal) {
-		if len(sig.Body) > 1 {
-			if m.dpmsIsOff {
-				err := exec.Command("dde_wldpms", "-s", "On").Run()
-				if err != nil {
-					logger.Warningf("failed to exec dde_wldpms: %s", err)
-				} else {
-					m.dpmsIsOff = false
-				}
-			}
-		}
-	})
-
-	//+ 监控鼠标按下事件
-	err = sessionBus.Object("org.deepin.dde.KWayland1",
-		"/org/deepin/dde/KWayland1/Output").AddMatchSignal("org.deepin.dde.KWayland1.Output", "ButtonPress").Err
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-	m.sessionSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "org.deepin.dde.KWayland1.Output.ButtonPress",
-	}, func(sig *dbus.Signal) {
-		if len(sig.Body) > 1 {
-			if m.dpmsIsOff {
-				err := exec.Command("dde_wldpms", "-s", "On").Run()
-				if err != nil {
-					logger.Warningf("failed to exec dde_wldpms: %s", err)
-				} else {
-					m.dpmsIsOff = false
-				}
-			}
-		}
-	})
 	return nil
 }
 
-func (m *Manager) ListenKeyboardEvent(systemBus *dbus.Conn) error {
+func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) error {
 	err := systemBus.Object("org.deepin.dde.Gesture1",
 		"/org/deepin/dde/Gesture1").AddMatchSignal("org.deepin.dde.Gesture1", "KeyboardEvent").Err
 	if err != nil {
