@@ -34,6 +34,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-api/lang_info"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
+	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
 	"github.com/linuxdeepin/go-lib/imgutil"
@@ -652,7 +653,17 @@ func (u *User) SetCurrentWorkspace(sender dbus.Sender, currentWorkspace int32) *
 
 func (u *User) SetGreeterBackground(sender dbus.Sender, bg string) *dbus.Error {
 	logger.Debug("[SetGreeterBackground] new background:", bg)
-
+	if dutils.IsFileExist("/var/lib/deepin/permission-manager/wallpaper_locked") {
+		_ = sessionmsg.SendMessage(sessionmsg.NewMessage(true, &sessionmsg.BodyNotify{
+			Icon: "preferences-system",
+			Body: &sessionmsg.LocalizeStr{
+				Format: Tr("This system wallpaper is locked. Please contact your admin."),
+				Args:   []string{},
+			},
+			ExpireTimeout: -1,
+		}))
+		return dbusutil.ToError(errors.New("do not have permission to change greeter background"))
+	}
 	err := u.checkAuth(sender, true, "")
 	if err != nil {
 		logger.Debug("[SetGreeterBackground] access denied:", err)
