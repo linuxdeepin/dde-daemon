@@ -29,9 +29,9 @@ const (
 //go:generate dbusutil-gen -type InputDevices,Touchpad inputdevices.go touchpad.go
 //go:generate dbusutil-gen em -type InputDevices,Touchpad
 type InputDevices struct {
-	service *dbusutil.Service
+	service       *dbusutil.Service
 	systemSigLoop *dbusutil.SignalLoop
-	l       *libinput
+	l             *libinput
 
 	maxTouchscreenId uint32
 
@@ -43,10 +43,10 @@ type InputDevices struct {
 	touchpadMu sync.Mutex
 	touchpad   *Touchpad
 
-	supportWakeupDevices		[]string //所有支持usbhid的设备路径
-	SupportWakeupDevices		map[string]string `prop:"access:rw"` //保存所有支持usbhid设备的power/wakeup状态
-	dsgWakeupDeviceStatus		[]string //用于存储dsg的数据
-	dsgInputDevices				configManager.Manager
+	supportWakeupDevices  []string          //所有支持usbhid的设备路径
+	SupportWakeupDevices  map[string]string `prop:"access:rw"` //保存所有支持usbhid设备的power/wakeup状态
+	dsgWakeupDeviceStatus []string          //用于存储dsg的数据
+	dsgInputDevices       configManager.Manager
 
 	//nolint
 	signals *struct {
@@ -56,12 +56,11 @@ type InputDevices struct {
 
 		// Libinput events state changed
 		EventChanged struct {
-			devNode string	//设备节点
-			devName string  //设备名称
-			path    string	//设备DEVPATH
-			state   bool	//插拔状态，true(插入)， false(拔出)
+			devNode string //设备节点
+			devName string //设备名称
+			path    string //设备DEVPATH
+			state   bool   //插拔状态，true(插入)， false(拔出)
 		}
-
 	}
 }
 
@@ -80,7 +79,7 @@ func (m *InputDevices) init() {
 	m.l.start()
 	go func() {
 		m.SupportWakeupDevices = make(map[string]string)
-		m.initDSettings(m.service.Conn())
+		m.initDSettings(m.service)
 		m.supportWakeupDevices = getSupportUsbhidDevices()
 		m.updateSupportWakeupDevices()
 		if err := TouchpadExist(touchpadSwitchFile); err == nil {
@@ -190,8 +189,11 @@ func (m *InputDevices) dsgSetValue(path, value string) error {
 	return err
 }
 
-func (m *InputDevices) initDSettings(sysBus *dbus.Conn) {
-	dsg := configManager.NewConfigManager(sysBus)
+func (m *InputDevices) initDSettings(sysBus *dbusutil.Service) {
+	if sysBus == nil {
+		return
+	}
+	dsg := configManager.NewConfigManager(sysBus.Conn())
 
 	inputDevicesPath, err := dsg.AcquireManager(0, _dsettingsAppID, _dsettingsInputdevicesName, "")
 	if err != nil {
@@ -199,7 +201,7 @@ func (m *InputDevices) initDSettings(sysBus *dbus.Conn) {
 		return
 	}
 
-	m.dsgInputDevices, err = configManager.NewManager(sysBus, inputDevicesPath)
+	m.dsgInputDevices, err = configManager.NewManager(sysBus.Conn(), inputDevicesPath)
 	if err != nil {
 		logger.Warning(err)
 		return
@@ -433,7 +435,7 @@ func getReadFileValidData(path string) string {
 	}
 
 	var databyte []byte
-	for i := 0; i < len(data) - 1; i++ {
+	for i := 0; i < len(data)-1; i++ {
 		databyte = append(databyte, data[i])
 	}
 	return string(databyte)
@@ -447,7 +449,7 @@ func getSupportUsbhidDevices() []string {
 	}
 	//记录所有类似1-2这样的目录名
 	var listDir []string
-	for _, dir := range dirs  {
+	for _, dir := range dirs {
 		if strings.Contains(dir.Name(), ":") || !strings.Contains(dir.Name(), "-") {
 			continue
 		}
@@ -456,8 +458,8 @@ func getSupportUsbhidDevices() []string {
 
 	// 记录所有包含:,且存在类似1-2名字的目录名
 	var listDirInterface []string
-	for _, path := range listDir  {
-		for _, dir := range dirs  {
+	for _, path := range listDir {
+		for _, dir := range dirs {
 			if strings.Contains(dir.Name(), path) && strings.Contains(dir.Name(), ":") {
 				listDirInterface = append(listDirInterface, dir.Name())
 				continue
@@ -468,8 +470,8 @@ func getSupportUsbhidDevices() []string {
 
 	// 记录类似后面文件值为3，即支持usbhid /sys/bus/usb/devices/1-10:1.0/bInterfaceSubClass
 	var tmp []string
-	for _, dir := range listDirInterface  {
-		bInterfaceClassPath := fmt.Sprintf("%s/%s/%s" ,_usbDevicePath, dir, "bInterfaceClass")
+	for _, dir := range listDirInterface {
+		bInterfaceClassPath := fmt.Sprintf("%s/%s/%s", _usbDevicePath, dir, "bInterfaceClass")
 		if !dutils.IsFileExist(bInterfaceClassPath) {
 			logger.Warningf("[getSupportUsbhidDevices] bInterfaceClassPath : %s not exist.", bInterfaceClassPath)
 			continue
@@ -486,8 +488,8 @@ func getSupportUsbhidDevices() []string {
 	// 支持usbhid的目录名
 	var validList []string
 	bValidData := true
-	for _, dir := range tmp  {//example: 【1-3:1.0
-		for _, dirName := range listDir  {//example: [1-3]
+	for _, dir := range tmp { //example: 【1-3:1.0
+		for _, dirName := range listDir { //example: [1-3]
 			if strings.Contains(dir, dirName) {
 				value := fmt.Sprintf("%s/%s/power/wakeup", _usbDevicePath, dirName)
 				bValidData = true
