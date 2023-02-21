@@ -164,7 +164,7 @@ func (m *Manager) initHandlers() {
 
 	// handle Switch Kbd Layout
 	m.handlers[ActionTypeSwitchKbdLayout] = func(ev *KeyEvent) {
-		logger.Debug("Switch Kbd Layout shortcut was disbaled by TASK-67900")
+		logger.Debug("Switch Kbd Layout shortcut was disabled by TASK-67900")
 	}
 
 	m.handlers[ActionTypeShowControlCenter] = func(ev *KeyEvent) {
