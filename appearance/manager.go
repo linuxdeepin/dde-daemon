@@ -1579,21 +1579,43 @@ func (m *Manager) updateNewVersionData() error {
 		}
 	}
 
-	// V20对应SP3, SP2阶段gsettings background-uris中部分数据丢失，SP2升到SP3通过窗管接口获取壁纸
 	monitorWorkspaceWallpaperURIs := make(mapMonitorWorkspaceWallpaperURIs)
-	for monitorName, convertMonitorName := range m.monitorMap {
-		for i := int32(0); i < workspaceCount; i++ {
-			uri, err := m.wm.GetWorkspaceBackgroundForMonitor(0, i+1, monitorName)
-			if err != nil {
-				logger.Warningf("failed to get monitor:%v workspace:%v background:%v", monitorName, i+1, err)
-				continue
-			}
-
-			key := genMonitorKeyString(convertMonitorName, i+1)
-			monitorWorkspaceWallpaperURIs[key] = uri
+	backgroundURIs := m.getBackgroundURIs()
+	for i, uri := range backgroundURIs {
+		err := m.wm.SetWorkspaceBackgroundForMonitor(0, int32(i+1), primaryMonitor, uri)
+		if err != nil {
+			return fmt.Errorf("failed to set background:%v to workspace%v : %v", uri, i+1, err)
 		}
+		key := genMonitorKeyString("Primary", i+1)
+		monitorWorkspaceWallpaperURIs[key] = uri
 	}
-	return m.setPropertyWallpaperURIs(monitorWorkspaceWallpaperURIs)
+	err = m.setPropertyWallpaperURIs(monitorWorkspaceWallpaperURIs)
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		// V20对应SP3, SP2阶段gsettings background-uris中部分数据丢失，SP2升到SP3通过窗管接口获取壁纸
+		// 目前第一次初始化，wm和appearance存在互相依赖，因此这里同步wm数据只能异步，这属于设计问题，后续可以优化交互逻辑
+		monitorWorkspaceWallpaperURIs := make(mapMonitorWorkspaceWallpaperURIs)
+		for monitorName, convertMonitorName := range m.monitorMap {
+			for i := int32(0); i < workspaceCount; i++ {
+				uri, err := m.wm.GetWorkspaceBackgroundForMonitor(0, i+1, monitorName)
+				if err != nil {
+					logger.Warningf("failed to get monitor:%v workspace:%v background:%v", monitorName, i+1, err)
+					continue
+				}
+
+				key := genMonitorKeyString(convertMonitorName, i+1)
+				monitorWorkspaceWallpaperURIs[key] = uri
+			}
+		}
+		err := m.setPropertyWallpaperURIs(monitorWorkspaceWallpaperURIs)
+		if err != nil {
+			logger.Warning("failed to set wallpaper:", err)
+		}
+	}()
+	return nil
 }
 
 func genMonitorKeyString(monitor string, idx interface{}) string {
