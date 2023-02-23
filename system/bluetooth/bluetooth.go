@@ -14,6 +14,7 @@ import (
 
 	"github.com/godbus/dbus"
 	bluez "github.com/linuxdeepin/go-dbus-factory/org.bluez"
+	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -48,6 +49,12 @@ const (
 	devIconInputKeyboard   = "input-keyboard"
 	devIconInputTablet     = "input-tablet"
 	devIconInputMouse      = "input-mouse"
+)
+
+const (
+	dsettingsAppID             = "org.deepin.dde.daemon"
+	dsettingsBluetoothName     = "org.deepin.dde.daemon.bluetooth"
+	dsettingsAutoPairEnableKey = "autoPairEnable"
 )
 
 //go:generate dbusutil-gen -type SysBluetooth bluetooth.go
@@ -89,6 +96,7 @@ type SysBluetooth struct {
 	prepareToConnectedMu     sync.Mutex
 	// 升级后第一次进系统，此时需要根据之前有蓝牙连接时，打开蓝牙开关
 	needFixBtPoweredStatus bool
+	canAutoPair            func() bool
 
 	// nolint
 	signals *struct {
@@ -205,6 +213,31 @@ func (b *SysBluetooth) init() {
 	if err != nil {
 		logger.Warning(err)
 	}
+
+	ds := ConfigManager.NewConfigManager(b.sigLoop.Conn())
+
+	dsBluetoothPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsBluetoothName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	dsBluetooth, err := ConfigManager.NewManager(b.sigLoop.Conn(), dsBluetoothPath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	b.canAutoPair = func() bool {
+		v, err := dsBluetooth.Value(0, dsettingsAutoPairEnableKey)
+		if err != nil {
+			logger.Warning(err)
+			return true
+		}
+		return v.Value().(bool)
+	}
+
+	logger.Info("====== dsg autoPairEnable is ======", b.canAutoPair())
 
 	b.loginManager.InitSignalExt(b.sigLoop, true)
 	_, err = b.loginManager.ConnectSessionNew(b.handleSessionNew)
@@ -811,6 +844,11 @@ func (b *SysBluetooth) getDevices(adapterPath dbus.ObjectPath) []*device {
 }
 
 func (b *SysBluetooth) tryConnectPairedDevices(adapterPath dbus.ObjectPath) {
+	if !b.canAutoPair() {
+		logger.Info("can't auto pair beacuse autoPairEnable key is unable")
+		return
+	}
+
 	inputOnly := true
 	// 自动连接时长
 	defaultConnectDuration := 2 * time.Minute

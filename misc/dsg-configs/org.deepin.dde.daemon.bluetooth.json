@@ -21,6 +21,16 @@
           "description": "Allow send file by bluetooth",
           "permissions": "readwrite",
           "visibility": "private"
+      },
+      "autoPairEnable": {
+          "value": true,
+          "serial": 0,
+          "flags": ["global"],
+          "name": "autoPairEnable",
+          "name[zh_CN]": "是否允许自动回连",
+          "description": "Allow auto pair",
+          "permissions": "readwrite",
+          "visibility": "private"
       }
   }
 }
