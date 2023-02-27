@@ -10,12 +10,15 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-api/powersupply"
 	"github.com/linuxdeepin/dde-api/powersupply/battery"
+	"github.com/linuxdeepin/dde-daemon/common/cpuinfo"
+	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -31,6 +34,18 @@ const (
 	pstatePath      = "/sys/devices/system/cpu/intel_pstate"
 	amdGPUPath      = "/sys/class/drm/card0/device/power_dpm_force_performance_level"
 )
+
+const (
+	dsettingsAppID              = "org.deepin.dde.daemon"
+	dsettingsPowerName          = "org.deepin.dde.daemon.power"
+	dsettingsSpecialCpuModeJson = "specialCpuModeJson"
+)
+
+type supportMode struct {
+	Balance    bool `json:"balance"`
+	Performace bool `json:"performace"`
+	PowerSave  bool `json:"powersave"`
+}
 
 func init() {
 	if arch.Get() == arch.Sunway {
@@ -109,6 +124,9 @@ type Manager struct {
 
 	// 当前模式
 	Mode string
+
+	// Special Cpu suppoert mode
+	specialCpuMode *supportMode
 
 	// nolint
 	signals *struct {
@@ -257,6 +275,51 @@ func (m *Manager) init() error {
 	return nil
 }
 
+func (m *Manager) initSpecialCpuMode() {
+	// 获取cpu Hardware
+	cpuinfo, err := cpuinfo.ReadCPUInfo("/proc/cpuinfo")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	// dsg 配置
+	ds := ConfigManager.NewConfigManager(m.systemSigLoop.Conn())
+	dsPowerPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsPowerName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	dsPower, err := ConfigManager.NewManager(m.systemSigLoop.Conn(), dsPowerPath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	getSpecialCpuMode := func() {
+		data, err := dsPower.Value(0, dsettingsSpecialCpuModeJson)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		str := data.Value().(string)
+
+		modeMap := make(map[string]*supportMode)
+		if err := json.Unmarshal([]byte(str), &modeMap); err != nil {
+			logger.Warning(err)
+		}
+		for k, v := range modeMap {
+			if strings.HasPrefix(cpuinfo.Hardware, k) {
+				logger.Info("use special cpu mode", v)
+				m.specialCpuMode = v
+				return
+			}
+		}
+	}
+
+	getSpecialCpuMode()
+}
+
 func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性能模式
 	systemBus, err := dbus.SystemBus()
 	if err != nil {
@@ -266,8 +329,10 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 	m.initDsgConfig(systemBus)
 	m.systemSigLoop.Start()
 
+	m.initSpecialCpuMode()
+
 	path := m.cpus.getCpuGovernorPath(m.hasPstate)
-	if "" == path {
+	if path == "" {
 		m.IsHighPerformanceSupported = false
 		m.IsBalanceSupported = false
 		m.IsPowerSaveSupported = false
@@ -323,9 +388,15 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 		setLocalAvailableGovernors(availableArrGovernors)
 	}
 
-	m.IsBalanceSupported = getIsBalanceSupported(m.hasPstate)
-	m.IsHighPerformanceSupported = getIsHighPerformanceSupported(m.hasPstate)
-	m.IsPowerSaveSupported = getIsPowerSaveSupported(m.hasPstate)
+	if m.specialCpuMode != nil {
+		m.IsBalanceSupported = m.specialCpuMode.Balance
+		m.IsHighPerformanceSupported = m.specialCpuMode.Performace
+		m.IsPowerSaveSupported = m.specialCpuMode.PowerSave
+	} else {
+		m.IsBalanceSupported = getIsBalanceSupported(m.hasPstate)
+		m.IsHighPerformanceSupported = getIsHighPerformanceSupported(m.hasPstate)
+		m.IsPowerSaveSupported = getIsPowerSaveSupported(m.hasPstate)
+	}
 
 	if m.hasPstate {
 		// INFO: balance_performance or balance_power?
@@ -696,6 +767,11 @@ func (m *Manager) doSetMode(mode string) error {
 }
 
 func (m *Manager) doSetCpuBoost(enabled bool) error {
+	if m.specialCpuMode != nil {
+		logger.Info("=== special cpu mode is on ===")
+		return nil
+	}
+
 	err := m.cpus.SetBoostEnabled(enabled)
 	if err == nil {
 		m.setPropCpuBoost(enabled)
@@ -710,7 +786,12 @@ func (m *Manager) doSetCpuGovernor(governor string) error {
 		logger.Infof("[doSetCpuGovernor] change governor : %s to performance.", governor)
 	}
 
+	if m.specialCpuMode != nil {
+		logger.Info("=== special cpu mode is on ===")
+		return nil
+	}
 	err := m.cpus.SetGovernor(governor, m.hasPstate)
+
 	if err == nil {
 		m.setPropCpuGovernor(governor)
 	}
