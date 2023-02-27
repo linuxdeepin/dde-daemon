@@ -462,6 +462,10 @@ func identifyWindowByPidEnv(m *Manager, winInfo *baseWindowInfo) (string, *AppIn
 func identifyKwindowByExeEnv(m *Manager, winInfo *KWindowInfo) (string, *AppInfo) {
 	appId := winInfo.appId
 	msgPrefix := fmt.Sprintf("identifyKwindowByExeEnv appId: %s ", appId)
+	if winInfo.process == nil {
+		logger.Warning("identify kwindow error: process is not inited.")
+		return "", nil
+	}
 	process := winInfo.process
 	customExecName := filepath.Base(process.exe)
 
