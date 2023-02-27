@@ -7,6 +7,7 @@ package main
 import (
 	"os"
 
+	"github.com/godbus/dbus"
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts"
 	_ "github.com/linuxdeepin/dde-daemon/apps"
@@ -28,7 +29,7 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/systeminfo"
 	_ "github.com/linuxdeepin/dde-daemon/system/timedated"
 	_ "github.com/linuxdeepin/dde-daemon/system/uadp"
-        _ "github.com/linuxdeepin/dde-daemon/system/resource_ctl"
+	systemd1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.systemd1"
 
 	"github.com/linuxdeepin/dde-daemon/loader"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
@@ -44,6 +45,8 @@ type Daemon struct {
 	loginManager  login1.Manager
 	systemSigLoop *dbusutil.SignalLoop
 	service       *dbusutil.Service
+	systemd       systemd1.Manager
+	inhibitFd     dbus.UnixFD
 	signals       *struct { //nolint
 		HandleForSleep struct {
 			start bool
@@ -118,9 +121,18 @@ func main() {
 	if err != nil {
 		logger.Warning(err)
 	}
+	_daemon.initSystemd()
 	service.Wait()
 }
 
 func (*Daemon) GetInterfaceName() string {
 	return dbusInterface
+}
+
+func (d *Daemon) initSystemd() {
+	d.systemd = systemd1.NewManager(d.service.Conn())
+	err := d.EnableDistUpgradeMode(dbus.Sender(d.service.Conn().Names()[0]), false)
+	if err != nil {
+		logger.Warning(err)
+	}
 }
