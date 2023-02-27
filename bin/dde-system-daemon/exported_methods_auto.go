@@ -29,11 +29,6 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"username", "file"},
 		},
 		{
-			Name:   "EnableDistUpgradeMode",
-			Fn:     v.EnableDistUpgradeMode,
-			InArgs: []string{"enable"},
-		},
-		{
 			Name:    "GetCustomWallPapers",
 			Fn:      v.GetCustomWallPapers,
 			InArgs:  []string{"username"},
