@@ -1023,7 +1023,8 @@ func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64
 	}
 
 	// pam_unix/passverify.c
-	curDays := time.Now().Unix() / secondsPerDay
+	_, offset := time.Now().Zone()
+	curDays := (time.Now().Unix() + int64(offset)) / secondsPerDay
 	daysLeft := spLastChg + spMax - curDays
 
 	// daysLeft < 0时为已经过期，等于0时即当天过期时按1天算，因此大于等于0时需要加1天
