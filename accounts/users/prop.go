@@ -458,6 +458,21 @@ func getGroupByGid(gid string) (*GroupInfo, error) {
 	return nil, fmt.Errorf("not found group with gid %s", gid)
 }
 
+func GetGroupByName(name string) (*GroupInfo, error) {
+	groupFileLocker.Lock()
+	defer groupFileLocker.Unlock()
+
+	gInfos, err := getGroupInfoWithCache(userFileGroup)
+	if err != nil {
+		return nil, err
+	}
+	info, ok := gInfos[name]
+	if ok {
+		return &info, nil
+	}
+	return nil, fmt.Errorf("not found group with name:%v", name)
+}
+
 type ShadowInfo struct {
 	Name       string
 	LastChange int

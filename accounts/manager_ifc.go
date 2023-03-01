@@ -14,6 +14,7 @@ package accounts
 */
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -417,6 +418,20 @@ func (m *Manager) CreateGuestAccount(sender dbus.Sender) (user string, busErr *d
 func (m *Manager) GetGroups() (groups []string, busErr *dbus.Error) {
 	groups, err := users.GetAllGroups()
 	return groups, dbusutil.ToError(err)
+}
+
+func (m *Manager) GetGroupInfoByName(name string) (groupInfo string, busErr *dbus.Error) {
+	info, err := users.GetGroupByName(name)
+	if err != nil {
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
+	}
+	infoJson, err := json.Marshal(info)
+	if err != nil {
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
+	}
+	return string(infoJson), nil
 }
 
 func (m *Manager) GetPresetGroups(accountType int32) (groups []string, busErr *dbus.Error) {

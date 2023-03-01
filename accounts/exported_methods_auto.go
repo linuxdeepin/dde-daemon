@@ -77,6 +77,12 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"groups"},
 		},
 		{
+			Name:    "GetGroupInfoByName",
+			Fn:      v.GetGroupInfoByName,
+			InArgs:  []string{"name"},
+			OutArgs: []string{"groupInfo"},
+		},
+		{
 			Name:    "GetPresetGroups",
 			Fn:      v.GetPresetGroups,
 			InArgs:  []string{"accountType"},
