@@ -22,6 +22,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const grubScriptFile = "/boot/grub/grub.cfg"
@@ -606,7 +607,20 @@ func checkInvokePermission(service *dbusutil.Service, sender dbus.Sender) error 
 		p := procfs.Process(pid)
 		cmd, err := p.Exe()
 		if err != nil {
-			return err
+			// 当调用者在使用过程中发生了更新,则在获取该进程的exe时,会出现lstat xxx (deleted)此类的error,如果发生的是覆盖,则该路径依旧存在,因此增加以下判断
+			pErr, ok := err.(*os.PathError)
+			if ok {
+				if os.IsNotExist(pErr.Err) {
+					errExecPath := strings.Replace(pErr.Path, "(deleted)", "", -1)
+					oldExecPath := strings.TrimSpace(errExecPath)
+					if dutils.IsFileExist(oldExecPath) {
+						cmd = oldExecPath
+						err = nil
+					}
+				}
+			} else {
+				return err
+			}
 		}
 		if cmd == "/usr/bin/dde-control-center" {
 			return nil
