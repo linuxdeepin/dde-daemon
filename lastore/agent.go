@@ -5,9 +5,13 @@
 package lastore
 
 import (
+	"os"
+	"strings"
 	"sync"
 
 	"github.com/godbus/dbus"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
+	ControlCenter "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.ControlCenter"
 	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -34,12 +38,16 @@ const (
 	envAllProxy   = "all_proxy"
 )
 
-// Agent 需要实现GetManualProxy和SendNotify两个接口
+// Agent 需要实现GetManualProxy、SendNotify、CloseNotification、ReportLog四个接口
 type Agent struct {
-	sysService *dbusutil.Service
-	lastoreObj *Lastore
-	sysLastore lastore.Lastore
-	mu         sync.Mutex
+	sysService       *dbusutil.Service
+	sessionService   *dbusutil.Service
+	lastoreObj       *Lastore
+	sysLastore       lastore.Lastore
+	waylandWM        kwayland.WindowManager
+	controlCenter    ControlCenter.ControlCenter
+	mu               sync.Mutex
+	isWaylandSession bool
 }
 
 func newAgent(l *Lastore) (*Agent, error) {
@@ -48,11 +56,22 @@ func newAgent(l *Lastore) (*Agent, error) {
 		logger.Warning(err)
 		return nil, err
 	}
+	sessionBus, err := dbusutil.NewSessionService()
+	if err != nil {
+		logger.Warning(err)
+		return nil, err
+	}
 	a := &Agent{
-		sysService: sysBus,
+		sysService:     sysBus,
+		sessionService: sessionBus,
 	}
 	a.lastoreObj = l
 	a.sysLastore = lastore.NewLastore(a.sysService.Conn())
+	if strings.Contains(os.Getenv("XDG_SESSION_TYPE"), "wayland") {
+		a.isWaylandSession = true
+		a.waylandWM = kwayland.NewWindowManager(a.sessionService.Conn())
+	}
+	a.controlCenter = ControlCenter.NewControlCenter(a.sessionService.Conn())
 	return a, nil
 }
 

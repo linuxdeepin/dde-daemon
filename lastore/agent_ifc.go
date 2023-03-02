@@ -7,8 +7,11 @@ package lastore
 import (
 	"errors"
 	"fmt"
+	"os/exec"
+	"strings"
 
 	"github.com/godbus/dbus"
+	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -69,13 +72,64 @@ func (a *Agent) GetManualProxy(sender dbus.Sender) (map[string]string, *dbus.Err
 	return proxyEnvMap, nil
 }
 
+const (
+	updateNotifyShow         = "dde-control-center"          // 无论控制中心状态，都需要发送的通知
+	updateNotifyShowOptional = "dde-control-center-optional" // 根据控制中心更新模块焦点状态,选择性的发通知(由dde-session-daemon的lastore agent判断后控制)
+)
+
 func (a *Agent) SendNotify(sender dbus.Sender, appName string, replacesId uint32, appIcon string, summary string, body string, actions []string, hints map[string]dbus.Variant, expireTimeout int32) (uint32, *dbus.Error) {
 	if !a.checkCallerAuth(sender) {
 		return 0, dbusutil.ToError(fmt.Errorf("not allow %v call this method", sender))
 	}
-	logger.Info("receive notify from lastore daemon")
-	id, err := a.lastoreObj.notifications.Notify(0, appName, replacesId, appIcon, summary, body, actions, hints, expireTimeout)
-	return id, dbusutil.ToError(err)
+	logger.Info("receive notify from lastore daemon, app name:", appName)
+	needSend := true
+	if appName == updateNotifyShowOptional {
+		appName = updateNotifyShow
+		// 只有当控制中心获取焦点,且控制中心当前为更新模块时,不发通知
+		if a.isWaylandSession {
+			// 从kwayland获取
+			winId, err := a.waylandWM.ActiveWindow(0)
+			if err != nil {
+				logger.Warning(err)
+			} else {
+				wInfo, err := kwayland.NewWindow(a.sessionService.Conn(), dbus.ObjectPath(fmt.Sprintf("/com/deepin/daemon/KWayland/PlasmaWindow_%v", winId)))
+				if err != nil {
+					logger.Warning(err)
+				} else {
+					name, err := wInfo.AppId(0)
+					if err == nil && strings.Contains(name, "dde-control-center") {
+						// 焦点在控制中心上,需要判断是否为更新模块
+						currentModule, err := a.controlCenter.CurrentModule().Get(0)
+						if err != nil {
+							logger.Warning(err)
+						} else if currentModule == "update" {
+							logger.Info("update module of dde-control-center is in the foreground, don't need send notify")
+							needSend = false
+						}
+					}
+				}
+			}
+		} else {
+			output, err := exec.Command("/bin/sh", "-c", "xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d ' ' -f 5) WM_CLASS").Output()
+			if err != nil {
+				logger.Warning(err)
+			} else if strings.Contains(string(output), "dde-control-center") {
+				// 焦点在控制中心上,需要判断是否为更新模块
+				currentModule, err := a.controlCenter.CurrentModule().Get(0)
+				if err != nil {
+					logger.Warning(err)
+				} else if currentModule == "update" {
+					logger.Info("update module of dde-control-center is in the foreground, don't need send notify")
+					needSend = false
+				}
+			}
+		}
+	}
+	if needSend {
+		id, err := a.lastoreObj.notifications.Notify(0, appName, replacesId, appIcon, summary, body, actions, hints, expireTimeout)
+		return id, dbusutil.ToError(err)
+	}
+	return 0, nil
 }
 
 func (a *Agent) CloseNotification(sender dbus.Sender, id uint32) *dbus.Error {
