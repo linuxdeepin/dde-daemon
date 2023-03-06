@@ -62,6 +62,11 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"scale"},
 		},
 		{
+			Name:   "SetLogindTTY",
+			Fn:     v.SetLogindTTY,
+			InArgs: []string{"NAutoVTs", "resetCustom", "live"},
+		},
+		{
 			Name:   "SetLongPressDuration",
 			Fn:     v.SetLongPressDuration,
 			InArgs: []string{"duration"},

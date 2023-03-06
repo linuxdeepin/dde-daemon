@@ -23,12 +23,13 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/network"
 	_ "github.com/linuxdeepin/dde-daemon/system/power"
 	_ "github.com/linuxdeepin/dde-daemon/system/power_manager"
+	_ "github.com/linuxdeepin/dde-daemon/system/resource_ctl"
 	_ "github.com/linuxdeepin/dde-daemon/system/scheduler"
 	_ "github.com/linuxdeepin/dde-daemon/system/swapsched"
 	_ "github.com/linuxdeepin/dde-daemon/system/systeminfo"
 	_ "github.com/linuxdeepin/dde-daemon/system/timedated"
 	_ "github.com/linuxdeepin/dde-daemon/system/uadp"
-        _ "github.com/linuxdeepin/dde-daemon/system/resource_ctl"
+	systemd1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.systemd1"
 
 	"github.com/linuxdeepin/dde-daemon/loader"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
@@ -44,7 +45,8 @@ type Daemon struct {
 	loginManager  login1.Manager
 	systemSigLoop *dbusutil.SignalLoop
 	service       *dbusutil.Service
-	signals       *struct { //nolint
+	systemd       systemd1.Manager
+	signals       *struct { // nolint
 		HandleForSleep struct {
 			start bool
 		}
@@ -94,7 +96,12 @@ func main() {
 
 	logger.SetRestartCommand("/usr/lib/deepin-daemon/dde-system-daemon")
 
-	_daemon = &Daemon{}
+	_daemon = &Daemon{
+		loginManager:  login1.NewManager(service.Conn()),
+		service:       service,
+		systemSigLoop: dbusutil.NewSignalLoop(service.Conn(), 10),
+		systemd:       systemd1.NewManager(service.Conn()),
+	}
 	_daemon.service = service
 	err = service.Export(dbusPath, _daemon)
 	if err != nil {
@@ -113,7 +120,7 @@ func main() {
 
 	// NOTE: system/power module requires glib loop
 	go glib.StartLoop()
-
+	_daemon.systemSigLoop.Start()
 	err = _daemon.forwardPrepareForSleepSignal(service)
 	if err != nil {
 		logger.Warning(err)
