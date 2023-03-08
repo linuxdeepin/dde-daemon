@@ -19,6 +19,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
@@ -53,6 +54,8 @@ type Grub2 struct {
 	gfxmodeDetectState gfxmodeDetectState
 	inhibitFd          dbus.UnixFD
 	PropsMu            sync.RWMutex
+	dbusObj            ofdbus.DBus
+	sysLoop            *dbusutil.SignalLoop
 	// props:
 	ThemeFile    string
 	DefaultEntry string
@@ -88,7 +91,7 @@ func (g *Grub2) applyParams(params map[string]string) {
 		g.gfxmodeDetectState = gfxmodeDetectStateFailed
 	}
 
-	//timeout
+	// timeout
 	timeout := getTimeout(params)
 	if timeout < 0 {
 		timeout = 999
@@ -297,7 +300,10 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 		service:   service,
 		inhibitFd: -1,
 	}
-
+	g.dbusObj = ofdbus.NewDBus(service.Conn())
+	g.sysLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
+	g.sysLoop.Start()
+	g.dbusObj.InitSignalExt(g.sysLoop, true)
 	err := g.readEntries()
 	if err != nil {
 		logger.Warning("readEntries Failed:", err)

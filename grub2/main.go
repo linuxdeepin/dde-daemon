@@ -10,9 +10,9 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-api/inhibit_hint"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 var _g *Grub2

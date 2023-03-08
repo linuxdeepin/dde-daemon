@@ -16,6 +16,7 @@ import (
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	systemPower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -50,7 +51,7 @@ type Manager struct {
 	LidIsPresent bool
 	// 是否使用电池, 接通电源时为 false, 使用电池时为 true
 	OnBattery bool
-	//是否使用Wayland
+	// 是否使用Wayland
 	UseWayland bool
 	// 警告级别
 	WarnLevel WarnLevel
@@ -432,15 +433,37 @@ func (m *Manager) Reset() *dbus.Error {
 }
 
 func (m *Manager) inhibitLogind() {
-	fd, err := m.helper.LoginManager.Inhibit(0,
-		"handle-power-key:handle-lid-switch:handle-suspend-key", dbusServiceName,
-		"handling key press and lid switch close", "block")
-	logger.Debug("inhibitLogind fd:", fd)
-	if err != nil {
-		logger.Warning(err)
-		return
+	inhibit := func() {
+		fd, err := m.helper.LoginManager.Inhibit(0,
+			"handle-power-key:handle-lid-switch:handle-suspend-key", dbusServiceName,
+			"handling key press and lid switch close", "block")
+		logger.Debug("inhibitLogind fd:", fd)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		m.inhibitFd = fd
 	}
-	m.inhibitFd = fd
+	inhibit()
+	// handle login1 restart
+	dbusObj := ofdbus.NewDBus(m.systemSigLoop.Conn())
+	sysLoop := dbusutil.NewSignalLoop(m.systemSigLoop.Conn(), 10)
+	sysLoop.Start()
+	dbusObj.InitSignalExt(sysLoop, true)
+	_, _ = dbusObj.ConnectNameOwnerChanged(func(name string, oldOwner string, newOwner string) {
+		if name == "org.freedesktop.login1" && newOwner != "" && oldOwner == "" {
+			if m.inhibitFd != -1 { // 如果之前存在inhibit时，login1重启需要重新inhibit
+				err := syscall.Close(int(m.inhibitFd))
+				m.inhibitFd = -1
+				if err != nil {
+					logger.Warning("failed to close fd:", err)
+					return
+				}
+				inhibit()
+			}
+		}
+	})
+	// end handle login1 restart
 }
 
 func (m *Manager) permitLogind() {
@@ -469,7 +492,7 @@ func (m *Manager) isSessionActive() bool {
 
 // wayland下在收到键盘或者鼠标事件后，需要进行系统空闲处理（主要是唤醒屏幕）
 func (m *Manager) listenEventToHandleIdleOff() error {
-	//+ 监控按键事件
+	// + 监控按键事件
 	err := m.systemSigLoop.Conn().Object("com.deepin.daemon.Gesture",
 		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "KeyboardEvent").Err
 	if err != nil {
@@ -489,7 +512,7 @@ func (m *Manager) listenEventToHandleIdleOff() error {
 		}
 	})
 
-	//+ 监控鼠标移动事件
+	// + 监控鼠标移动事件
 	err = m.sessionSigLoop.Conn().Object("com.deepin.daemon.KWayland",
 		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "CursorMove").Err
 	if err != nil {
@@ -507,7 +530,7 @@ func (m *Manager) listenEventToHandleIdleOff() error {
 		}
 	})
 
-	//+ 监控鼠标按下事件
+	// + 监控鼠标按下事件
 	err = m.sessionSigLoop.Conn().Object("com.deepin.daemon.KWayland",
 		"/com/deepin/daemon/KWayland/Output").AddMatchSignal("com.deepin.daemon.KWayland.Output", "ButtonPress").Err
 	if err != nil {
