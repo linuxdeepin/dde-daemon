@@ -18,57 +18,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
+"POT-Creation-Date: 2023-03-08 15:59+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Cindy0514, 2022\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/linuxdeepin/"
+"teams/3617/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../../accounts/checkers/password.go:38
+#: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
 msgstr "请输入长度不小于8位的密码"
 
-#: ../../accounts/checkers/password.go:40
+#: ../../accounts1/checkers/password.go:40
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
+msgstr ""
+"密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
 
-#: ../../accounts/checkers/username.go:49
+#: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
 msgstr "用户名不能为空"
 
-#: ../../accounts/checkers/username.go:54
+#: ../../accounts1/checkers/username.go:54
 msgid "The first character must be a letter or number"
 msgstr "首字符必须为字母或数字"
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts1/checkers/username.go:56
 msgid "The username already exists"
 msgstr "此用户名已存在"
 
-#: ../../accounts/checkers/username.go:59
+#: ../../accounts1/checkers/username.go:59
 msgid "The name already exists"
 msgstr "该名称已存在"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts1/checkers/username.go:61
 msgid "Username must be between 3 and 32 characters"
 msgstr "用户名长度必须介于3到32个字符之间"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts1/manager.go:450
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "“%s”用户为之前已存在的用户，原数据已同步"
 
-#: ../../audio/audio_events.go:462
+#: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:463
+#: ../../audio1/audio_events.go:472
 msgid "Open"
 msgstr "打开"
 
@@ -80,133 +82,139 @@ msgstr "指纹验证失败"
 msgid "Fingerprint verification timed out"
 msgstr "指纹验证超时"
 
-#: ../../bluetooth/bluez_profile.go:15
-#: ../../system/bluetooth/bluez_profile.go:15
+#: ../../bin/dde-session-daemon/main.go:471
+#, c-format
+msgid "Your password will expire in %d days, please change it timely"
+msgstr "您的密码将在%d天内过期，请及时修改"
+
+#: ../../bluetooth1/bluez_profile.go:15
+#: ../../system/bluetooth1/bluez_profile.go:15
 msgid "Serial port"
 msgstr "串行端口"
 
-#: ../../bluetooth/bluez_profile.go:16
-#: ../../system/bluetooth/bluez_profile.go:16
+#: ../../bluetooth1/bluez_profile.go:16
+#: ../../system/bluetooth1/bluez_profile.go:16
 msgid "Dial-Up networking"
 msgstr "拨号网络"
 
-#: ../../bluetooth/bluez_profile.go:17
-#: ../../system/bluetooth/bluez_profile.go:17
+#: ../../bluetooth1/bluez_profile.go:17
+#: ../../system/bluetooth1/bluez_profile.go:17
 msgid "Hands-Free device"
 msgstr "免提装置"
 
-#: ../../bluetooth/bluez_profile.go:18
-#: ../../system/bluetooth/bluez_profile.go:18
+#: ../../bluetooth1/bluez_profile.go:18
+#: ../../system/bluetooth1/bluez_profile.go:18
 msgid "Hands-Free voice gateway"
 msgstr "免提语音网关"
 
-#: ../../bluetooth/bluez_profile.go:19
-#: ../../system/bluetooth/bluez_profile.go:19
+#: ../../bluetooth1/bluez_profile.go:19
+#: ../../system/bluetooth1/bluez_profile.go:19
 msgid "Headset voice gateway"
 msgstr "耳机语音网关"
 
-#: ../../bluetooth/bluez_profile.go:20
-#: ../../system/bluetooth/bluez_profile.go:20
+#: ../../bluetooth1/bluez_profile.go:20
+#: ../../system/bluetooth1/bluez_profile.go:20
 msgid "Object push"
 msgstr "对象交换"
 
-#: ../../bluetooth/bluez_profile.go:21
-#: ../../system/bluetooth/bluez_profile.go:21
+#: ../../bluetooth1/bluez_profile.go:21
+#: ../../system/bluetooth1/bluez_profile.go:21
 msgid "File transfer"
 msgstr "文件传输"
 
-#: ../../bluetooth/bluez_profile.go:22
-#: ../../system/bluetooth/bluez_profile.go:22
+#: ../../bluetooth1/bluez_profile.go:22
+#: ../../system/bluetooth1/bluez_profile.go:22
 msgid "Synchronization"
 msgstr "同步"
 
-#: ../../bluetooth/bluez_profile.go:23
-#: ../../system/bluetooth/bluez_profile.go:23
+#: ../../bluetooth1/bluez_profile.go:23
+#: ../../system/bluetooth1/bluez_profile.go:23
 msgid "Phone book access"
 msgstr "电话簿访问"
 
-#: ../../bluetooth/bluez_profile.go:24
-#: ../../system/bluetooth/bluez_profile.go:24
+#: ../../bluetooth1/bluez_profile.go:24
+#: ../../system/bluetooth1/bluez_profile.go:24
 msgid "Phone book access client"
 msgstr "电话簿访问客户端"
 
-#: ../../bluetooth/bluez_profile.go:25
-#: ../../system/bluetooth/bluez_profile.go:25
+#: ../../bluetooth1/bluez_profile.go:25
+#: ../../system/bluetooth1/bluez_profile.go:25
 msgid "Message access"
 msgstr "消息访问"
 
-#: ../../bluetooth/bluez_profile.go:26
-#: ../../system/bluetooth/bluez_profile.go:26
+#: ../../bluetooth1/bluez_profile.go:26
+#: ../../system/bluetooth1/bluez_profile.go:26
 msgid "Message notification"
 msgstr "消息通知"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth1/obex_agent.go:376 ../../bluetooth1/utils_notify.go:130
+#: ../../lastore1/lastore.go:435
 msgid "Cancel"
 msgstr "取消"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth1/obex_agent.go:383
 msgid "Receiving %[1]q from %[2]q"
 msgstr "正在接收来自%[2]q的%[1]q文件"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth1/obex_agent.go:392
 msgid "View"
 msgstr "查看"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth1/obex_agent.go:398
 msgid "You have received files from %q successfully"
 msgstr "您已成功接收来自%q的文件"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth1/obex_agent.go:399
 msgid "Done"
 msgstr "完成"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth1/obex_agent.go:414 ../../bluetooth1/obex_agent.go:513
 msgid "Stop Receiving Files"
 msgstr "文件接收中止"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth1/obex_agent.go:416
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
-#: ../../system/bluetooth/utils_notify.go:72
+#: ../../bluetooth1/obex_agent.go:418
+#: ../../system/bluetooth1/utils_notify.go:63
+#: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "蓝牙连接失败"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth1/obex_agent.go:453
 msgid "Decline"
 msgstr "拒绝"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth1/obex_agent.go:453
 msgid "Receive"
 msgstr "接收"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:458
 msgid "Bluetooth File Transfer"
 msgstr "蓝牙文件传输"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth1/obex_agent.go:459
 msgid "%q wants to send files to you. Receive?"
 msgstr "您收到%q发送给您的文件，是否接收？"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth1/obex_agent.go:514
 msgid "Receiving %q timed out"
 msgstr "接收%q超时"
 
-#: ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
 msgstr "点击以设置添加%q"
 
-#: ../../bluetooth/utils_notify.go:120
+#: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
 msgstr "添加蓝牙设备"
 
-#: ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
 msgstr "配对"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "系统磁盘空间不足，请及时清理！"
 
@@ -411,145 +419,145 @@ msgstr "显示工作区 "
 msgid "Switch monitors"
 msgstr "多屏切换"
 
-#: ../../langselector/locale.go:48
+#: ../../langselector1/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "切换语言需要认证"
 
-#: ../../langselector/locale.go:137
+#: ../../langselector1/locale.go:137
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "正在切换系统语言并安装缺失的语言包，请稍候…"
 
-#: ../../langselector/locale.go:138
+#: ../../langselector1/locale.go:138
 msgid "Changing system language, please wait..."
 msgstr "正在切换系统语言，请稍候…"
 
-#: ../../langselector/locale.go:139
+#: ../../langselector1/locale.go:139
 msgid "System language changed, please log out and then log in"
 msgstr "语言切换成功，请注销后重新登录"
 
-#: ../../langselector/locale.go:381
+#: ../../langselector1/locale.go:385
 msgid "Failed to change system language, please try later"
 msgstr "系统语言切换失败，请稍后重试"
 
-#: ../../lastore/lastore.go:427
+#: ../../lastore1/lastore.go:427
 msgid "Retry"
 msgstr "重试"
 
-#: ../../lastore/lastore.go:449
+#: ../../lastore1/lastore.go:449
 msgid "Update Now"
 msgstr "立即更新"
 
-#: ../../lastore/lastore.go:479
+#: ../../lastore1/lastore.go:479
 msgid "Reboot Now"
 msgstr "立即重启"
 
-#: ../../lastore/lastore.go:483
+#: ../../lastore1/lastore.go:483
 msgid "Remind Me Later"
 msgstr "稍后提醒"
 
-#: ../../lastore/lastore.go:490
+#: ../../lastore1/lastore.go:490
 msgid "10 mins later"
 msgstr "10分钟后提醒"
 
-#: ../../lastore/lastore.go:497
+#: ../../lastore1/lastore.go:497
 msgid "30 mins later"
 msgstr "30分钟后提醒"
 
-#: ../../lastore/lastore.go:504
+#: ../../lastore1/lastore.go:504
 msgid "2h later"
 msgstr "2小时后提醒"
 
-#: ../../lastore/lastore.go:511
+#: ../../lastore1/lastore.go:511
 msgid "6h later"
 msgstr "6小时后提醒"
 
-#: ../../lastore/notify.go:93
+#: ../../lastore1/notify.go:93
 msgid "%q installed successfully."
 msgstr "%q 安装成功"
 
-#: ../../lastore/notify.go:96
+#: ../../lastore1/notify.go:96
 msgid "%q failed to install."
 msgstr "%q 安装失败"
 
-#: ../../lastore/notify.go:104
+#: ../../lastore1/notify.go:104
 msgid "Removed successfully"
 msgstr "卸载成功"
 
-#: ../../lastore/notify.go:106
+#: ../../lastore1/notify.go:106
 msgid "Failed to remove the app"
 msgstr "卸载失败"
 
-#: ../../lastore/notify.go:113
+#: ../../lastore1/notify.go:113
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr "为防止自动关机，请连接电源以保证安全更新。"
 
-#: ../../lastore/notify.go:118
+#: ../../lastore1/notify.go:118
 msgid "Package cache wiped"
 msgstr "已成功清理软件包缓存"
 
-#: ../../lastore/notify.go:123
+#: ../../lastore1/notify.go:123
 msgid "Updates Available"
 msgstr "检测到有更新可用"
 
-#: ../../lastore/notify.go:128
+#: ../../lastore1/notify.go:128
 msgid "Reboot after Updates"
 msgstr "更新重启"
 
-#: ../../lastore/notify.go:129
+#: ../../lastore1/notify.go:129
 msgid "Restart the computer to use the system and applications properly"
 msgstr "为了您能够正常地使用系统和应用，更新后请重新启动系统"
 
-#: ../../lastore/notify.go:139
+#: ../../lastore1/notify.go:139
 msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr "检测到版本正在更新中，您的电量已低于50%，请及时接入电源"
 
-#: ../../lastore/notify.go:140
+#: ../../lastore1/notify.go:140
 msgid "OK"
 msgstr "确 定"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "无"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "WEP40/128位密钥"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2个人版"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr "WPA3个人版"
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "隧道TLS"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "受保护的EAP"
 
@@ -858,8 +866,7 @@ msgid "The VPN connection state changed due to being disconnected by users"
 msgstr "用户断开致使VPN连接状态改变"
 
 #: ../../network/state_handler.go:98
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
+msgid "The VPN connection state changed due to being disconnected from devices"
 msgstr "设备断开致使VPN连接状态改变"
 
 #: ../../network/state_handler.go:99
@@ -915,7 +922,7 @@ msgid "Hotspot disabled"
 msgstr "热点共享已关闭"
 
 #: ../../network/state_handler.go:339 ../../network/state_handler.go:363
-#: ../../system/bluetooth/utils_notify.go:50
+#: ../../system/bluetooth1/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q已断开"
 
@@ -966,8 +973,7 @@ msgid "Access Point mode is not supported by this device."
 msgstr "此设备不支持热点模式。"
 
 #: ../../network/utils_notify.go:182
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
+msgid "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "无线网卡的硬件开关已关闭，如需使用无线请先打开开关。"
 
 #: ../../network/utils_notify.go:186
@@ -984,95 +990,96 @@ msgstr "已连接"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgid ""
+"\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”没有通过系统安全验证，无法运行"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power1/manager_events.go:203
 msgid "Battery critically low"
 msgstr "电池电量耗尽"
 
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
-#: ../../session/power/manager_events.go:233
-#: ../../session/power/manager_events.go:238
+#: ../../session/power1/manager_events.go:223
+#: ../../session/power1/manager_events.go:228
+#: ../../session/power1/manager_events.go:233
+#: ../../session/power1/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "电池电量低，请连接电源"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power1/utils.go:439 ../../session/power1/utils.go:446
+#: ../../session/power1/utils.go:453 ../../session/power1/utils.go:460
 msgid "Power settings changed"
 msgstr "电源设置更改"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
+#: ../../session/power1/utils.go:484 ../../session/power1/utils_test.go:16
+#: ../../session/power1/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "“笔记本合盖时”"
 
-#: ../../session/power/utils.go:487
+#: ../../session/power1/utils.go:488
 msgid "When pressing the power button, "
 msgstr "“按电源按钮时”"
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power1/utils.go:498 ../../session/power1/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "修改为关机"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power1/utils.go:500 ../../session/power1/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "修改为待机"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power1/utils.go:502
 msgid "your computer will hibernate"
 msgstr "修改为休眠"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power1/utils.go:504
 msgid "your monitor will turn off"
 msgstr "修改为关闭显示器"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power1/utils.go:506
 msgid "your monitor will show the shutdown interface"
 msgstr "修改为进入关机界面"
 
-#: ../../session/power/utils.go:507
+#: ../../session/power1/utils.go:508
 msgid "it will do nothing to your computer"
 msgstr "修改为无任何操作"
 
-#: ../../system/bluetooth/utils_notify.go:43
+#: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "连接%q成功"
 
-#: ../../system/bluetooth/utils_notify.go:56
+#: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
 msgstr "请确定%q已打开而且在通讯范围内"
 
-#: ../../system/bluetooth/utils_notify.go:74
+#: ../../system/bluetooth1/utils_notify.go:74
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr "%q无法与%q再连接，请尝试忽略此设备并再次配对。"
 
-#: ../../timedate/manager_format.go:75
+#: ../../timedate1/manager_format.go:75
 msgid "Space"
 msgstr "空格"
 
-#: ../../timedate/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:51
 msgid "Authentication is required to set the system time"
 msgstr "设置系统时间需要认证"
 
-#: ../../timedate/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:64
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "开启或关闭网络时间同步需要认证"
 
-#: ../../timedate/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:74
 msgid "Authentication is required to change NTP server"
 msgstr "修改时间服务器需要认证"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:114
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr "设置硬件时钟使用本地时间或 UTC 需要认证"
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:137
 msgid "Authentication is required to set the system timezone"
 msgstr "设置系统时区需要认证"
