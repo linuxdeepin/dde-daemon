@@ -8,8 +8,11 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	"strings"
 
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 const desktopHashPrefix = "d:"
@@ -43,6 +46,30 @@ func newAppInfo(dai *desktopappinfo.DesktopAppInfo) *AppInfo {
 		}
 	} else {
 		ai.name = dai.GetName()
+	}
+
+	enableLinglongSuffix := true
+	getEnableLinglongSuffix := func() {
+		dc, err := dconfig.NewDConfig("org.deepin.dde.daemon", "org.deepin.dde.daemon.application", "")
+		if err != nil {
+			logger.Warning("new dconfig error:", err)
+			return
+		}
+		if dc == nil {
+			logger.Warning("new dconfig error: dconfig is nil.")
+			return
+		}
+		result, err := dc.GetValueBool("LinglongAppNameSuffixEnable")
+		if err != nil {
+			logger.Warning("failed to get dconfig LinglongAppNameSuffixEnable:", err)
+			return
+		}
+		enableLinglongSuffix = result
+	}
+	getEnableLinglongSuffix()
+
+	if strings.Contains(dai.GetId(), "Linglong") && enableLinglongSuffix {
+		ai.name = ai.name + gettext.Tr("(Linglong)")
 	}
 	ai.innerId = genInnerIdWithDesktopAppInfo(dai)
 	ai.filename = dai.GetFileName()

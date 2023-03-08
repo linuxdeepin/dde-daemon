@@ -9,8 +9,11 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
+
 	"github.com/Lofanmi/pinyin-golang/pinyin"
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 type SearchScore uint64
@@ -50,6 +53,12 @@ func NewItemWithDesktopAppInfo(appInfo *desktopappinfo.DesktopAppInfo) *Item {
 	xDeepinCategory, _ := appInfo.GetString(desktopappinfo.MainSection, "X-Deepin-Category")
 	xDeepinVendor, _ := appInfo.GetString(desktopappinfo.MainSection, "X-Deepin-Vendor")
 
+	filename := appInfo.GetFileName()
+	ctime, err := getFileCTime(filename)
+	if err != nil {
+		logger.Warningf("failed to get file %q ctime: %v", filename, err)
+	}
+
 	var name string
 	if xDeepinVendor == "deepin" {
 		name = appInfo.GetGenericName()
@@ -64,10 +73,28 @@ func NewItemWithDesktopAppInfo(appInfo *desktopappinfo.DesktopAppInfo) *Item {
 		name = appInfo.GetId()
 	}
 
-	filename := appInfo.GetFileName()
-	ctime, err := getFileCTime(filename)
-	if err != nil {
-		logger.Warningf("failed to get file %q ctime: %v", filename, err)
+	enableLinglongSuffix := true
+	getEnableLinglongSuffix := func() {
+		dc, err := dconfig.NewDConfig("org.deepin.dde.daemon", "org.deepin.dde.daemon.application", "")
+		if err != nil {
+			logger.Warning("new dconfig error:", err)
+			return
+		}
+		if dc == nil {
+			logger.Warning("new dconfig error: dconfig is nil.")
+			return
+		}
+		result, err := dc.GetValueBool("LinglongAppNameSuffixEnable")
+		if err != nil {
+			logger.Warning("failed to get dconfig LinglongAppNameSuffixEnable:", err)
+			return
+		}
+		enableLinglongSuffix = result
+	}
+	getEnableLinglongSuffix()
+
+	if strings.Contains(appInfo.GetId(), "Linglong") && enableLinglongSuffix {
+		name = name + gettext.Tr("(Linglong)")
 	}
 
 	item := &Item{

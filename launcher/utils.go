@@ -74,16 +74,24 @@ func getAppDirs() []string {
 func getAppIdByFilePath(file string, appDirs []string) string {
 	file = filepath.Clean(file)
 	var desktopId string
+	isLingLong := false
 	for _, dir := range appDirs {
 		if strings.HasPrefix(file, dir) {
 			desktopId, _ = filepath.Rel(dir, file)
+			if strings.Contains(dir, "linglong") {
+				isLingLong = true
+			}
 			break
 		}
 	}
 	if desktopId == "" {
 		return ""
 	}
-	return strings.TrimSuffix(desktopId, desktopExt)
+	appId := strings.TrimSuffix(desktopId, desktopExt)
+	if isLingLong {
+		appId = appId + "_Linglong"
+	}
+	return appId
 }
 
 func runeSliceDiff(key, current []rune) (popCount int, runesPush []rune) {
