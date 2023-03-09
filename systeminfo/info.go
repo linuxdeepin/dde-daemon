@@ -9,10 +9,11 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/common/cpuinfo"
+	"github.com/linuxdeepin/dde-daemon/loader"
 	systeminfo "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.systeminfo"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 //go:generate dbusutil-gen em -type SystemInfo
@@ -44,6 +45,8 @@ type SystemInfo struct {
 	CPUMaxMHz float64
 	//Current Speed : when cpu max mhz is 0 use
 	CurrentSpeed uint64
+	// Cpu Hardware
+	CPUHardware string
 }
 
 type Daemon struct {
@@ -139,8 +142,15 @@ func (d *Daemon) initSysSystemInfo() {
 		return
 	}
 	d.info.CPUMaxMHz = float64(d.info.CurrentSpeed)
+	d.info.CPUHardware = "null"
+	cpuinfo, err := cpuinfo.ReadCPUInfo("/proc/cpuinfo")
+	if err != nil {
+		logger.Warning(err)
+	} else if cpuinfo.Hardware != "" {
+		d.info.CPUHardware = cpuinfo.Hardware
+	}
 	d.PropsMu.Unlock()
-	logger.Info("d.info.CurrentSpeed : ", d.info.CurrentSpeed, " , d.info.CPUMaxMHz : ", d.info.CPUMaxMHz)
+	logger.Infof("CurrentSpeed: %v CPUMaxMHz: %v CPUHardware: %s", d.info.CurrentSpeed, d.info.CPUMaxMHz, d.info.CPUHardware)
 }
 
 func NewSystemInfo() *SystemInfo {
