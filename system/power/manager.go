@@ -385,7 +385,10 @@ func (m *Manager) handleUEvent(client *gudev.Client, action string, device *gude
 			m.refreshAC(device)
 			time.AfterFunc(1*time.Second, m.refreshBatteries)
 			time.AfterFunc(3*time.Second, m.refreshBatteries)
-
+			// 电源状态变更时，需要一段时间才能稳定，因此在1分钟内，每隔5秒刷新一次，保证数据及时更新
+			for i := 1; i <= 12; i++ {
+				time.AfterFunc(time.Duration(i*5)*time.Second, m.refreshBatteries)
+			}
 		} else if powersupply.IsSystemBattery(device) {
 			m.addAndExportBattery(device)
 		}
