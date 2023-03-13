@@ -118,6 +118,9 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 		return "", dbusutil.ToError(err)
 	}
 	tempFileName = randFileName(oriFilename)
+	if len(tempFileName) > 255 {
+		tempFileName = tempFileName[:255]
+	}
 	sessionPath, err := transfer.Session().Get(0)
 	if err != nil {
 		logger.Warning("failed to get transfer session path:", err)
@@ -163,7 +166,7 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 	if !accepted {
 		return "", dbusutil.ToError(errors.New("declined"))
 	}
-	//设置未文件不能传输状态
+	// 设置未文件不能传输状态
 	a.b.setPropTransportable(false)
 
 	return tempFileName, nil
@@ -177,7 +180,7 @@ func (a *obexAgent) isSessionAccepted(transfer *transferObj) (bool, error) {
 	}
 	_, accepted := a.acceptedSessions[transfer.sessionPath]
 	if !accepted {
-		//多个文件传输时只第一次判断可传输状态
+		// 多个文件传输时只第一次判断可传输状态
 		if !a.b.Transportable {
 			return false, errors.New("declined")
 		}
@@ -366,7 +369,10 @@ func getRandstring(length int) string {
 // 随机文件名
 func randFileName(fileName string) string {
 	randStr := getRandstring(16)
-	return strings.TrimSuffix(filepath.Base(fileName), filepath.Ext(fileName)) + "_" + randStr + filepath.Ext(fileName)
+	return strings.Join([]string{
+		randStr,
+		fileName,
+	}, "_")
 }
 
 // notifyProgress 发送文件传输进度通知
