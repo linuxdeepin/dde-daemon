@@ -277,47 +277,6 @@ func (b *Bluetooth) init() {
 		logger.Warning(err)
 	}
 
-	// monitor airplane mode enabled state change
-	b.airplaneBltOriginState = make(map[dbus.ObjectPath]bool)
-
-	value := b.getAirplaneBltOriginStateConfig()
-	if value != "" {
-		err := json.Unmarshal([]byte(value), &b.airplaneBltOriginState)
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
-	b.airplane.InitSignalExt(b.systemSigLoop, true)
-	err = b.airplane.Enabled().ConnectChanged(func(hasValue bool, value bool) {
-		if !hasValue {
-			return
-		}
-		if value {
-			b.airplaneBltOriginState = make(map[dbus.ObjectPath]bool)
-			// get adapter info
-			for _, adapter := range b.adapters.infos {
-				b.airplaneBltOriginState[adapter.Path] = adapter.Powered
-				// close device
-				err = b.sysBt.SetAdapterPowered(0, adapter.Path, false)
-				// it is ok if set power off failed
-				if err != nil {
-					logger.Debugf("close bluetooth adapter powered failed, path: %v, err: %v", adapter.Path, err)
-				}
-			}
-			b.setAirplaneBltOriginStateConfig(marshalJSON(b.airplaneBltOriginState))
-			logger.Debugf("airplane is on, save bluetooth origin state, %v", b.airplaneBltOriginState)
-		} else {
-			// recover origin state
-			for path, enabled := range b.airplaneBltOriginState {
-				err = b.sysBt.SetAdapterPowered(0, path, enabled)
-				if err != nil {
-					logger.Debugf("recover bluetooth adapter power state failed, path: %v, powered: %v, err: %v", path, enabled, err)
-				}
-			}
-		}
-	})
-
 	_, err = b.sysBt.ConnectAdapterAdded(func(adapterJSON string) {
 		adapterInfo, err := unmarshalAdapterInfo(adapterJSON)
 		if err != nil {
