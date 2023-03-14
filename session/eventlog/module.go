@@ -4,11 +4,11 @@
 
 package eventlog
 
-//#cgo CXXFLAGS:-O2 -std=c++11
-//#cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
-//#cgo LDFLAGS:-ldl
+// #cgo CXXFLAGS:-O2 -std=c++11
+// #cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
+// #cgo LDFLAGS:-ldl
 // #include <stdlib.h>
-//#include "event_sdk.h"
+// #include "event_sdk.h"
 import "C"
 import (
 	"errors"
