@@ -152,8 +152,8 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 			innerId, appInfo = item.Fn(m, winInfo)
 			if innerId != "" {
 				// success
-				logger.Debugf("identifyWindowK by %s success, innerId: %q, appInfo: %v",
-					name, innerId, appInfo)
+				logger.Debugf("identifyWindowK by %s success, innerId: %q",
+					name, innerId)
 
 				// NOTE: if name == "Pid", appInfo may be nil
 				if appInfo != nil {
