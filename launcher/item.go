@@ -73,7 +73,7 @@ func NewItemWithDesktopAppInfo(appInfo *desktopappinfo.DesktopAppInfo) *Item {
 		name = appInfo.GetId()
 	}
 
-	enableLinglongSuffix := true
+	enableLinglongSuffix := false
 	getEnableLinglongSuffix := func() {
 		dc, err := dconfig.NewDConfig("org.deepin.dde.daemon", "org.deepin.dde.daemon.application", "")
 		if err != nil {

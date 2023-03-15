@@ -48,7 +48,7 @@ func newAppInfo(dai *desktopappinfo.DesktopAppInfo) *AppInfo {
 		ai.name = dai.GetName()
 	}
 
-	enableLinglongSuffix := true
+	enableLinglongSuffix := false
 	getEnableLinglongSuffix := func() {
 		dc, err := dconfig.NewDConfig("org.deepin.dde.daemon", "org.deepin.dde.daemon.application", "")
 		if err != nil {
