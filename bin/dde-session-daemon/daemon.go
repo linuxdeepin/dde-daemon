@@ -178,11 +178,11 @@ func (s *SessionDaemon) initModules() {
 	part1ModuleNames := []string{
 		"dock",
 		"trayicon",
-		"launcher",
 		"x-event-monitor",
 	}
 
 	part2ModuleNames := []string{
+		"launcher",
 		"network",
 		"audio",
 		"appearance",
