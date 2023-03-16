@@ -445,16 +445,18 @@ func (lang *LangSelector) setLocale(locale string) {
 	}
 
 	// install language support packages
-	if networkEnabled {
-		err = lang.installLangSupportPackages(locale)
-		if err != nil {
-			logger.Warning("failed to install packages:", err)
-		} else {
-			logger.Debug("install packages success")
-		}
-	}
+	// INFO: Disable it now in v23
+	// if networkEnabled {
+	// 	err = lang.installLangSupportPackages(locale)
+	// 	if err != nil {
+	// 		logger.Warning("failed to install packages:", err)
+	// 	} else {
+	// 		logger.Debug("install packages success")
+	// 	}
+	// }
 
 	sendNotify(localeIconFinished, "", notifyTxtDone)
+	sendNotify(localeIconFinished, "", "Please install the packages of language yourself")
 
 	// end
 	lang.PropsMu.Lock()
