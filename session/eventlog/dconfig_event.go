@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )

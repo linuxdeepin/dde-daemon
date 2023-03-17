@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	fprintd_common "github.com/linuxdeepin/dde-daemon/fprintd1/common"
 	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/system/com.huawei.fingerprint"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"

@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 

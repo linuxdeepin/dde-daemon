@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"sync"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
 	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"

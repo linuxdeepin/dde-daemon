@@ -17,7 +17,7 @@ import (
 	"sync"
 	"unicode"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"

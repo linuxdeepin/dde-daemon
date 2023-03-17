@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 	bluez "github.com/linuxdeepin/go-dbus-factory/system/org.bluez"
 	sysbtagent "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.bluetooth1.agent"

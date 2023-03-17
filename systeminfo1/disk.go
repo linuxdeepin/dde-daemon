@@ -7,7 +7,7 @@ package systeminfo
 import (
 	"fmt"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 )
 //nolint
 type diskInfo struct {

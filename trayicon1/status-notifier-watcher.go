@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"

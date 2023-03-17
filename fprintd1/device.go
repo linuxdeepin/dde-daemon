@@ -9,7 +9,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	fprint "github.com/linuxdeepin/go-dbus-factory/system/net.reactivated.fprint"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"

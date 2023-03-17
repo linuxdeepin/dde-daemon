@@ -13,7 +13,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/gosexy/gettext"
 	fprint "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.fprintd1"
 	"github.com/linuxdeepin/go-lib/dbusutil"

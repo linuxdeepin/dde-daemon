@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	// dbus services:
 	"github.com/linuxdeepin/dde-api/lang_info"
 	"github.com/linuxdeepin/dde-api/language_support"

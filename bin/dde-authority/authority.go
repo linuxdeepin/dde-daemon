@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
 	fprint "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.fprintd1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"

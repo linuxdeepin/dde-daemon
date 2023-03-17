@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/system/com.huawei.fingerprint"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 )

@@ -9,6 +9,93 @@ ifneq (${shell uname -m}, mips64el)
     GOBUILD_OPTIONS = -ldflags '-linkmode=external -extldflags "-pie"'
 endif
 
+
+
+TEST = \
+    ${GOPKG_PREFIX}/accounts/keyring \
+    ${GOPKG_PREFIX}/accounts1 \
+    ${GOPKG_PREFIX}/accounts1/checkers \
+    ${GOPKG_PREFIX}/accounts1/logined \
+    ${GOPKG_PREFIX}/accounts1/users \
+    ${GOPKG_PREFIX}/appinfo \
+    ${GOPKG_PREFIX}/apps \
+    ${GOPKG_PREFIX}/audio1 \
+    ${GOPKG_PREFIX}/bin/backlight_helper \
+    ${GOPKG_PREFIX}/bin/backlight_helper/ddcci \
+    ${GOPKG_PREFIX}/bin/dde-authority \
+    ${GOPKG_PREFIX}/bin/dde-greeter-setter \
+    ${GOPKG_PREFIX}/bin/dde-lockservice \
+    ${GOPKG_PREFIX}/bin/dde-session-daemon \
+    ${GOPKG_PREFIX}/bin/dde-system-daemon \
+    ${GOPKG_PREFIX}/bin/default-terminal \
+    ${GOPKG_PREFIX}/bin/grub2 \
+    ${GOPKG_PREFIX}/bin/langselector \
+    ${GOPKG_PREFIX}/bin/search \
+    ${GOPKG_PREFIX}/bin/soundeffect \
+    ${GOPKG_PREFIX}/bin/user-config \
+    ${GOPKG_PREFIX}/bluetooth1 \
+    ${GOPKG_PREFIX}/calltrace \
+    ${GOPKG_PREFIX}/clipboard1 \
+    ${GOPKG_PREFIX}/clipboard1/mocks \
+    ${GOPKG_PREFIX}/common/bluetooth \
+    ${GOPKG_PREFIX}/common/dsync \
+    ${GOPKG_PREFIX}/common/sessionmsg \
+    ${GOPKG_PREFIX}/dbus \
+    ${GOPKG_PREFIX}/debug \
+    ${GOPKG_PREFIX}/fprintd1 \
+    ${GOPKG_PREFIX}/fprintd1/common \
+    ${GOPKG_PREFIX}/gesture \
+    ${GOPKG_PREFIX}/graph \
+    ${GOPKG_PREFIX}/grub2 \
+    ${GOPKG_PREFIX}/grub_common \
+    ${GOPKG_PREFIX}/grub_gfx \
+    ${GOPKG_PREFIX}/housekeeping \
+    ${GOPKG_PREFIX}/image_effect1 \
+    ${GOPKG_PREFIX}/inputdevices \
+    ${GOPKG_PREFIX}/inputdevices/iso639 \
+    ${GOPKG_PREFIX}/iw \
+    ${GOPKG_PREFIX}/keybinding \
+    ${GOPKG_PREFIX}/keybinding/shortcuts \
+    ${GOPKG_PREFIX}/keybinding/util \
+    ${GOPKG_PREFIX}/langselector1 \
+    ${GOPKG_PREFIX}/lastore1 \
+    ${GOPKG_PREFIX}/loader \
+    ${GOPKG_PREFIX}/network \
+    ${GOPKG_PREFIX}/network/nm \
+    ${GOPKG_PREFIX}/network/nm_generator \
+    ${GOPKG_PREFIX}/network/proxychains \
+    ${GOPKG_PREFIX}/screenedge1 \
+    ${GOPKG_PREFIX}/screensaver1 \
+    ${GOPKG_PREFIX}/service_trigger \
+    ${GOPKG_PREFIX}/session/common \
+    ${GOPKG_PREFIX}/session/eventlog \
+    ${GOPKG_PREFIX}/session/power1 \
+    ${GOPKG_PREFIX}/session/uadpagent1 \
+    ${GOPKG_PREFIX}/sessionwatcher1 \
+    ${GOPKG_PREFIX}/soundeffect1 \
+    ${GOPKG_PREFIX}/system/airplane_mode1 \
+    ${GOPKG_PREFIX}/system/bluetooth1 \
+    ${GOPKG_PREFIX}/system/display \
+    ${GOPKG_PREFIX}/system/gesture \
+    ${GOPKG_PREFIX}/system/hostname \
+    ${GOPKG_PREFIX}/system/inputdevices \
+    ${GOPKG_PREFIX}/system/keyevent \
+    ${GOPKG_PREFIX}/system/lang \
+    ${GOPKG_PREFIX}/system/network \
+    ${GOPKG_PREFIX}/system/power1 \
+    ${GOPKG_PREFIX}/system/power_manager1 \
+    ${GOPKG_PREFIX}/system/resource_ctl \
+    ${GOPKG_PREFIX}/system/scheduler \
+    ${GOPKG_PREFIX}/system/swapsched1 \
+    ${GOPKG_PREFIX}/system/systeminfo1 \
+    ${GOPKG_PREFIX}/system/timedate1 \
+    ${GOPKG_PREFIX}/system/uadp1 \
+    ${GOPKG_PREFIX}/systeminfo1 \
+    ${GOPKG_PREFIX}/timedate1 \
+    ${GOPKG_PREFIX}/trayicon1 \
+    ${GOPKG_PREFIX}/x_event_monitor1
+    #${GOPKG_PREFIX}/timedate1/zoneinfo \
+
 BINARIES =  \
 	    dde-session-daemon \
 	    dde-system-daemon \
@@ -65,8 +152,7 @@ ts_to_policy:
 build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/desktop-toggle $(addprefix out/bin/, ${BINARIES}) ts_to_policy icons translate
 
 test: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -v ./...
-
+	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -v ${TEST}
 test-coverage: prepare
 	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -cover -v ./... | awk '$$2 ~ "_${CURDIR}" {print $$2","$$5}' | sed "s:${CURDIR}::g" | sed 's/files\]/0\.0%/g' > coverage.csv
 

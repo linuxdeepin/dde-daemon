@@ -8,7 +8,7 @@ import (
 	"errors"
 	"strings"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.dbus"
 	mpris2 "github.com/linuxdeepin/go-dbus-factory/session/org.mpris.mediaplayer2"

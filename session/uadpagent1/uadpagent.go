@@ -12,7 +12,7 @@ import (
 	"os"
 	"sync"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/session/common"
 	secrets "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.secrets"
 	uadp "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.uadp1"

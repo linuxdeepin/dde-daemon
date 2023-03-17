@@ -16,7 +16,7 @@ import (
 	"sync"
 	"syscall"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	"github.com/linuxdeepin/dde-daemon/common/sessionmsg"
 	udcp "github.com/linuxdeepin/go-dbus-factory/system/com.deepin.udcp.iam"

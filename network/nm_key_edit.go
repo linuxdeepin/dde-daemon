@@ -5,7 +5,7 @@
 package network
 
 import (
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 )
 
 func getSettingKey(data connectionData, section, key string) (value interface{}) {

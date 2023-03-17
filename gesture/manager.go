@@ -15,7 +15,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	clipboard "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.clipboard1"
 	dock "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.daemon.dock1"

@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 	obex "github.com/linuxdeepin/go-dbus-factory/session/org.bluez.obex"
 	audio "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.audio1"

@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	dock "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.dde.daemon.dock"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )

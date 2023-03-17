@@ -9,7 +9,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	startmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.startmanager1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"

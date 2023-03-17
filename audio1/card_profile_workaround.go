@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sort"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	bluez "github.com/linuxdeepin/go-dbus-factory/system/org.bluez"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-lib/strv"

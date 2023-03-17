@@ -5,7 +5,7 @@
 package network
 
 import (
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 )
 

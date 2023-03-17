@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 )
 
 // 每个适配器最大 worker 数量，最大同时连接设备数。

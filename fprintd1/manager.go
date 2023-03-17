@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	huawei_fprint "github.com/linuxdeepin/go-dbus-factory/system/com.huawei.fingerprint"
 	fprint "github.com/linuxdeepin/go-dbus-factory/system/net.reactivated.fprint"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
@@ -31,7 +31,7 @@ const (
 	systemdDBusInterface   = systemdDBusServiceName + ".Manager"
 )
 
-//go:generate dbusutil-gen -type Manager -import github.com/godbus/dbus manager.go
+//go:generate dbusutil-gen -type Manager -import github.com/godbus/dbus/v5 manager.go
 //go:generate dbusutil-gen em -type Manager,HuaweiDevice,Device
 
 type Manager struct {

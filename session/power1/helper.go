@@ -5,7 +5,7 @@
 package power
 
 import (
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 

@@ -8,7 +8,7 @@ import (
 	"os/user"
 	"sync"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 	"github.com/linuxdeepin/dde-daemon/session/common"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"

@@ -72,3 +72,8 @@ License: GPL-3.0-or-later
 Files: iw/nl80211.h
 Copyright: UnionTech Software Technology Co., Ltd.
 License: ISC
+
+# gomod files
+Files: go.mod go.sum
+Copyright: None
+License: CC0-1.0
