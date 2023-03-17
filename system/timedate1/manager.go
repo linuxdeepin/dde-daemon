@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timedate1"

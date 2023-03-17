@@ -15,7 +15,7 @@ import (
 	"strings"
 	"sync"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.authenticate1"
 	uadp "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.uadp1"

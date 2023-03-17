@@ -7,7 +7,7 @@ package timedate1
 import (
 	"os"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/timedate1/zoneinfo"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )

@@ -7,7 +7,7 @@ package network
 import (
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	ipwatch "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.ipwatch1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 )

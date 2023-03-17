@@ -12,7 +12,7 @@ import "C"
 import (
 	"os/exec"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 )
 

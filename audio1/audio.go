@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -61,7 +61,7 @@ var (
 	gMaxUIVolume                 float64
 )
 
-//go:generate dbusutil-gen -type Audio,Sink,SinkInput,Source,Meter -import github.com/godbus/dbus audio.go sink.go sinkinput.go source.go meter.go
+//go:generate dbusutil-gen -type Audio,Sink,SinkInput,Source,Meter -import github.com/godbus/dbus/v5 audio.go sink.go sinkinput.go source.go meter.go
 //go:generate dbusutil-gen em -type Audio,Sink,SinkInput,Source,Meter
 
 func objectPathSliceEqual(v1, v2 []dbus.ObjectPath) bool {

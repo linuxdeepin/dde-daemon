@@ -5,7 +5,7 @@
 package inputdevices
 
 import (
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-daemon/langselector1"
 )

@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"

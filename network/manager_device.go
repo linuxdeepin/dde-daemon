@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
 	mmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.modemmanager1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"

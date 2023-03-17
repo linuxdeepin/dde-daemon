@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
 	airplanemode "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.airplanemode1"

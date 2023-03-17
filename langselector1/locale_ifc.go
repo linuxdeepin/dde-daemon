@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/language_support"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )

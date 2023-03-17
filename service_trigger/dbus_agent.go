@@ -7,7 +7,7 @@ package service_trigger
 import (
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 )
 
 type DBusAgentConfig struct {
