@@ -204,6 +204,7 @@ func (m *Manager) init() {
 	m.currentSession, err = login1.NewSession(systemBus, m.currentSessionPath)
 	if err != nil {
 		logger.Error("Failed to connect self session:", err)
+		return
 	}
 
 	sysService, err := dbusutil.NewSystemService()

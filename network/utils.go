@@ -229,6 +229,10 @@ func enableNetworking() error {
 }
 
 func (m *Manager) isSessionActive() bool {
+	if m.currentSession == nil {
+		logger.Error("currentSession is null")
+		return false
+	}
 	active, err := m.currentSession.Active().Get(dbus.FlagNoAutoStart)
 	if err != nil {
 		logger.Error("Failed to get self active:", err)
