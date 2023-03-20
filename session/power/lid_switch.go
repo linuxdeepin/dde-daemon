@@ -46,6 +46,22 @@ func (h *LidSwitchHandler) Start() error {
 	if err != nil {
 		return err
 	}
+
+	if h.manager.helper.LoginManager != nil {
+		_, _ = h.manager.helper.LoginManager.ConnectPrepareForSleep(func(isWakeup bool) {
+			//当待机/休眠 : PrepareForSleep(True)信号
+			//唤醒会发送  : PrepareForSleep(False)信号
+			if isWakeup {
+				return
+			}
+			//只要唤醒就当作开盖，避免内核发送开盖事件时，dde还处于冻结状态错过了处理开盖事件(bug:191235)
+			if !h.isLidOpenLast {
+				logger.Info("Lid open: true. systemd-login1 PrepareForSleep(false)")
+				h.isLidOpenLast = true
+			}
+		})
+	}
+
 	return nil
 }
 
