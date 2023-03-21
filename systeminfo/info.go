@@ -141,7 +141,9 @@ func (d *Daemon) initSysSystemInfo() {
 		d.PropsMu.Unlock()
 		return
 	}
-	d.info.CPUMaxMHz = float64(d.info.CurrentSpeed)
+	if isFloatEqual(d.info.CPUMaxMHz, 0.0) {
+		d.info.CPUMaxMHz = float64(d.info.CurrentSpeed)
+	}
 	d.info.CPUHardware = "null"
 	cpuinfo, err := cpuinfo.ReadCPUInfo("/proc/cpuinfo")
 	if err != nil {
