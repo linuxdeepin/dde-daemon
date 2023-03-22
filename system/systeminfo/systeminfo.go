@@ -67,7 +67,14 @@ func (m *Module) Start() error {
 				m.m.setPropDMIInfo(*info)
 			}
 		}
-
+		//get system display driver info
+		if !m.m.setDisplayDriverInfo(getLshwData("display", "driver", "")) {
+			logger.Warning(err)
+		}
+		//get system video driver info
+		if !m.m.setVideoDriverInfo(getLshwData("video", "driver", "")) {
+			logger.Warning(err)
+		}
 	}()
 	return nil
 }

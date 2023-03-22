@@ -5,6 +5,7 @@
 package systeminfo
 
 import (
+	"bytes"
 	"encoding/xml"
 	"fmt"
 	"os/exec"
@@ -18,6 +19,9 @@ import (
 )
 
 //go:generate dbusutil-gen em -type Manager
+
+// 缓存lshw 指令获取到的数据 key/value --> class/data
+var lshwmap map[string]string = make(map[string]string)
 
 const (
 	dbusServiceName = "com.deepin.system.SystemInfo"
@@ -38,6 +42,8 @@ type Manager struct {
 	MemorySizeHuman string
 	CurrentSpeed    uint64
 	DMIInfo         dmi.DMI
+	DisplayDriver   string
+	VideoDriver     string
 }
 
 type lshwXmlList struct {
@@ -76,14 +82,66 @@ func NewManager(service *dbusutil.Service) *Manager {
 	return m
 }
 
-func runLshwMemory() (out []byte, err error) {
-	cmd := exec.Command("lshw", "-c", "memory", "-sanitize", "-xml")
-	out, err = cmd.Output()
-	if err != nil {
-		logger.Error(err)
-		return out, err
+func setCmdStd(cmd *exec.Cmd) (stdOut *bytes.Buffer, stdErr *bytes.Buffer) {
+	stdOut = &bytes.Buffer{}
+	stdErr = &bytes.Buffer{}
+	cmd.Stdout = stdOut
+	cmd.Stderr = stdErr
+	return
+}
+
+func isStrEmpty(str string) (out bool) {
+	return len(str) <= 0 || str == ""
+}
+
+func getLshwData(class string, keyword string, format string) (result string) {
+	if isStrEmpty(class) {
+		logger.Info("class is Empty")
+		return "Input is not allowed to be empty."
 	}
-	return out, err
+
+	if isStrEmpty(lshwmap[class]) {
+		var cmd *exec.Cmd
+		if !isStrEmpty(format) {
+			cmd = exec.Command("lshw", "-c", class, "-sanitize", format)
+		} else {
+			cmd = exec.Command("lshw", "-c", class, "-sanitize")
+		}
+
+		display, cmderr := setCmdStd(cmd)
+		err := cmd.Run()
+		// 缓存
+		lshwmap[class] = display.String()
+
+		if err != nil {
+			logger.Info("lshw error: ", err, cmderr)
+		}
+
+		// 没有手动指定 keyword，无需 grep
+		if isStrEmpty(keyword) {
+			return display.String()
+		}
+
+		// 指定了format
+		if !isStrEmpty(format) && !isStrEmpty(display.String()) {
+			return lshwmap[class]
+		}
+	} else {
+		if isStrEmpty(keyword) {
+			return lshwmap[class]
+		}
+	}
+
+	cmd := exec.Command("grep", keyword)
+	cmd.Stdin = bytes.NewBufferString(lshwmap[class]) // 把上面的执行结果放到grep 的输入中
+	stdout, stderr := setCmdStd(cmd)
+	err := cmd.Run()
+
+	if err != nil {
+		logger.Info("lshw error: ", err, stderr)
+	}
+
+	return stdout.String()
 }
 
 func parseXml(bytes []byte) (result lshwXmlNode, err error) {
@@ -122,11 +180,7 @@ func (m *Manager) setMemorySizeHuman(value string) {
 }
 
 func (m *Manager) calculateMemoryViaLshw() error {
-	cmdOutBuf, err := runLshwMemory()
-	if err != nil {
-		logger.Error(err)
-		return err
-	}
+	cmdOutBuf := []byte(getLshwData("memory", "", "-xml"))
 	ret, err1 := parseXml(cmdOutBuf)
 	if err1 != nil {
 		logger.Error(err1)
