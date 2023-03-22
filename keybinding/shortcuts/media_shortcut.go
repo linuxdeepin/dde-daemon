@@ -31,7 +31,7 @@ const (
 	cmdTerminal   = "/usr/lib/deepin-daemon/default-terminal"
 	cmdMessenger  = "dbus-send --print-reply --dest=com.deepin.dde.osd /com/deepin/dde/Notification com.deepin.dde.Notification.Toggle"
 	cmdLauncher   = "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle"
-	cmdCamera     = "deepin-camera"
+	cmdCamera     = "/usr/share/dde-daemon/keybinding/cameraSwitch.sh"
 )
 
 var mediaIdActionMap = map[string]*Action{
