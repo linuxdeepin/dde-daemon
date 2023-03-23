@@ -14,6 +14,11 @@ func (v *Display) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"cfgStr"},
 		},
 		{
+			Name:   "SetBacklightBrightness",
+			Fn:     v.SetBacklightBrightness,
+			InArgs: []string{"val"},
+		},
+		{
 			Name:   "SetConfig",
 			Fn:     v.SetConfig,
 			InArgs: []string{"cfgStr"},

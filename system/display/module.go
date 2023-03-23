@@ -5,8 +5,8 @@
 package display
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 type module struct {
@@ -22,7 +22,17 @@ func (m *module) Start() error {
 	service := loader.GetService()
 
 	d := newDisplay(service)
-	err := service.Export(dbusPath, d)
+
+	so, err := service.NewServerObject(dbusPath, d)
+	if err != nil {
+		return err
+	}
+
+	err = so.SetWriteCallback(d, "AutoBacklightEnabled", d.autoBacklightEnabledWriteCb)
+	if err != nil {
+		return err
+	}
+	err = so.Export()
 	if err != nil {
 		return err
 	}
