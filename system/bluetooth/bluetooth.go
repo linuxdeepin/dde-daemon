@@ -91,7 +91,7 @@ type SysBluetooth struct {
 	// 当发起设备连接成功后，应该把连接的设备添加进设备列表
 	connectedDevices map[dbus.ObjectPath][]*device
 	connectedMu      sync.RWMutex
-	//设备被清空后需要连接的设备路径
+	// 设备被清空后需要连接的设备路径
 	prepareToConnectedDevice dbus.ObjectPath
 	prepareToConnectedMu     sync.Mutex
 	// 升级后第一次进系统，此时需要根据之前有蓝牙连接时，打开蓝牙开关
@@ -328,12 +328,12 @@ func (b *SysBluetooth) handlePrepareForSleep(beforeSleep bool) {
 	}
 	logger.Debug("Wakeup from sleep, will set adapter and try connect device")
 	time.AfterFunc(time.Second*3, func() {
-		//for _, adapter := range b.adapters {
+		// for _, adapter := range b.adapters {
 		//	if !adapter.Powered {
 		//		continue
 		//	}
 		//	//_ = adapter.core.Adapter().Discoverable().Set(0, b.config.Discoverable)
-		//}
+		// }
 		b.tryConnectPairedDevices("")
 	})
 }
@@ -844,8 +844,12 @@ func (b *SysBluetooth) getDevices(adapterPath dbus.ObjectPath) []*device {
 }
 
 func (b *SysBluetooth) tryConnectPairedDevices(adapterPath dbus.ObjectPath) {
-	if !b.canAutoPair() {
-		logger.Info("can't auto pair beacuse autoPairEnable key is unable")
+	if b.canAutoPair != nil {
+		if !b.canAutoPair() {
+			logger.Info("can't auto pair beacuse autoPairEnable key is unable")
+			return
+		}
+	} else {
 		return
 	}
 

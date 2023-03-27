@@ -116,14 +116,6 @@ Processor Information
                 64-bit capable
 `
 
-func Test_parseXml(t *testing.T) {
-	value, err := parseXml([]byte(xmlData))
-	v := value.Size
-	t.Log(v)
-	assert.Equal(t, v, uint64(3221225472))
-	assert.NoError(t, err)
-}
-
 func Test_parseCurrentSpeed(t *testing.T) {
 	value, err := parseCurrentSpeed(dmidecodeData, 64)
 	v := value

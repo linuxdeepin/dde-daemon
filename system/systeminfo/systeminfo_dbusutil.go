@@ -56,28 +56,28 @@ func (v *Manager) emitPropChangedDMIInfo(value dmi.DMI) error {
 	return v.service.EmitPropertyChanged(v, "DMIInfo", value)
 }
 
-func (v *Manager) setDisplayDriverInfo(value string) (changed bool) {
+func (v *Manager) setPropDisplayDriver(value string) (changed bool) {
 	if v.DisplayDriver != value {
 		v.DisplayDriver = value
-		v.emitDriverInfo(value)
+		v.emitPropChangedDisplayDriver(value)
 		return true
 	}
 	return false
 }
 
-func (v *Manager) emitDriverInfo(value string) error {
+func (v *Manager) emitPropChangedDisplayDriver(value string) error {
 	return v.service.EmitPropertyChanged(v, "DisplayDriver", value)
 }
 
-func (v *Manager) setVideoDriverInfo(value string) (changed bool) {
+func (v *Manager) setPropVideoDriver(value string) (changed bool) {
 	if v.VideoDriver != value {
 		v.VideoDriver = value
-		v.emitVideoInfo(value)
+		v.emitPropChangedVideoDriver(value)
 		return true
 	}
 	return false
 }
 
-func (v *Manager) emitVideoInfo(value string) error {
+func (v *Manager) emitPropChangedVideoDriver(value string) error {
 	return v.service.EmitPropertyChanged(v, "VideoDriver", value)
 }

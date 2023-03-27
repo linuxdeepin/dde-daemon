@@ -5,6 +5,8 @@
 package systeminfo
 
 import (
+	"strings"
+
 	"github.com/jouyouyun/hardware/dmi"
 	"github.com/linuxdeepin/go-lib/log"
 
@@ -42,17 +44,17 @@ func (m *Module) Start() error {
 		return err
 	}
 	go func() {
-		//init get memory
+		// init get memory
 		err = m.m.calculateMemoryViaLshw()
 		if err != nil {
 			logger.Warning(err)
 		}
-		//get system bit
+		// get system bit
 		systemType := 64
 		if "64" != m.m.systemBit() {
 			systemType = 32
 		}
-		//Get CPU MHZ
+		// Get CPU MHZ
 		currentSpeed, err1 := GetCurrentSpeed(systemType)
 		if err1 != nil {
 			logger.Warning(err1)
@@ -67,13 +69,27 @@ func (m *Module) Start() error {
 				m.m.setPropDMIInfo(*info)
 			}
 		}
-		//get system display driver info
-		if !m.m.setDisplayDriverInfo(getLshwData("display", "driver", "")) {
+		// get system display driver info
+		classContent, err := getLshwData("display")
+		if err != nil {
 			logger.Warning(err)
+		} else {
+			var res []string
+			for _, item := range classContent {
+				res = append(res, item.Configuration.Driver)
+			}
+			m.m.setPropDisplayDriver(strings.Join(res, "&&"))
 		}
-		//get system video driver info
-		if !m.m.setVideoDriverInfo(getLshwData("video", "driver", "")) {
+		// get system video driver info
+		classContent, err = getLshwData("video")
+		if err != nil {
 			logger.Warning(err)
+		} else {
+			var res []string
+			for _, item := range classContent {
+				res = append(res, item.Configuration.Driver)
+			}
+			m.m.setPropVideoDriver(strings.Join(res, "&&"))
 		}
 	}()
 	return nil

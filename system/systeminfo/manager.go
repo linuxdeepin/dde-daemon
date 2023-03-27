@@ -5,8 +5,8 @@
 package systeminfo
 
 import (
-	"bytes"
-	"encoding/xml"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"os/exec"
 	"regexp"
@@ -20,8 +20,40 @@ import (
 
 //go:generate dbusutil-gen em -type Manager
 
-// 缓存lshw 指令获取到的数据 key/value --> class/data
-var lshwmap map[string]string = make(map[string]string)
+// 该结构体可能不包含所有的lshw数据类型,如果有缺失需要新增字段
+type lshwItemContent struct {
+	ID            string `json:"id"`
+	Class         string `json:"class"`
+	Claimed       bool   `json:"claimed"`
+	Handle        string `json:"handle"`
+	Description   string `json:"description"`
+	Product       string `json:"product"`
+	Vendor        string `json:"vendor"`
+	PhysID        string `json:"physid"`
+	BusInfo       string `json:"businfo"`
+	Version       string `json:"version"`
+	Width         int    `json:"width"`
+	Clock         int    `json:"clock"`
+	Size          uint64 `json:"size"`
+	Configuration struct {
+		Driver  string `json:"driver"`
+		Latency string `json:"latency"`
+	} `json:"configuration"`
+	Capabilities struct {
+		PCIExpress    string `json:"pciexpress"`
+		MSI           string `json:"msi"`
+		PM            string `json:"pm"`
+		VGAController bool   `json:"vga_controller"`
+		BusMaster     string `json:"bus_master"`
+		Capabilities  string `json:"cap_list"`
+		ROM           string `json:"rom"`
+	} `json:"capabilities"`
+}
+
+type lshwClassContent []lshwItemContent
+
+// 缓存 lshw 指令获取到的数据 key/value --> class/data
+var _lshwContent = make(map[string]lshwClassContent)
 
 const (
 	dbusServiceName = "com.deepin.system.SystemInfo"
@@ -46,15 +78,6 @@ type Manager struct {
 	VideoDriver     string
 }
 
-type lshwXmlList struct {
-	Items []lshwXmlNode `xml:"node"`
-}
-
-type lshwXmlNode struct {
-	Description string `xml:"description"`
-	Size        uint64 `xml:"size"`
-}
-
 func formatFileSize(fileSize uint64) (size string) {
 	if fileSize < KB {
 		return fmt.Sprintf("%.2fB", float64(fileSize)/float64(1))
@@ -66,7 +89,7 @@ func formatFileSize(fileSize uint64) (size string) {
 		return fmt.Sprintf("%.2fGB", float64(fileSize)/float64(GB))
 	} else if fileSize < EB {
 		return fmt.Sprintf("%.2fTB", float64(fileSize)/float64(TB))
-	} else { //if fileSize < (1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+	} else { // if fileSize < (1024 * 1024 * 1024 * 1024 * 1024 * 1024)
 		return fmt.Sprintf("%.2fEB", float64(fileSize)/float64(EB))
 	}
 }
@@ -82,117 +105,51 @@ func NewManager(service *dbusutil.Service) *Manager {
 	return m
 }
 
-func setCmdStd(cmd *exec.Cmd) (stdOut *bytes.Buffer, stdErr *bytes.Buffer) {
-	stdOut = &bytes.Buffer{}
-	stdErr = &bytes.Buffer{}
-	cmd.Stdout = stdOut
-	cmd.Stderr = stdErr
-	return
-}
-
 func isStrEmpty(str string) (out bool) {
 	return len(str) <= 0 || str == ""
 }
 
-func getLshwData(class string, keyword string, format string) (result string) {
+func getLshwData(class string) (lshwClassContent, error) {
 	if isStrEmpty(class) {
 		logger.Info("class is Empty")
-		return "Input is not allowed to be empty."
+		return nil, errors.New("input is not allowed to be empty")
 	}
 
-	if isStrEmpty(lshwmap[class]) {
-		var cmd *exec.Cmd
-		if !isStrEmpty(format) {
-			cmd = exec.Command("lshw", "-c", class, "-sanitize", format)
-		} else {
-			cmd = exec.Command("lshw", "-c", class, "-sanitize")
-		}
-
-		display, cmderr := setCmdStd(cmd)
-		err := cmd.Run()
-		// 缓存
-		lshwmap[class] = display.String()
-
+	_, ok := _lshwContent[class]
+	if !ok {
+		output, err := exec.Command("lshw", "-c", class, "-sanitize", "-quiet", "-json").Output()
 		if err != nil {
-			logger.Info("lshw error: ", err, cmderr)
+			return nil, err
 		}
-
-		// 没有手动指定 keyword，无需 grep
-		if isStrEmpty(keyword) {
-			return display.String()
+		var newClassItemContent lshwClassContent
+		err = json.Unmarshal(output, &newClassItemContent)
+		if err != nil {
+			return nil, err
 		}
-
-		// 指定了format
-		if !isStrEmpty(format) && !isStrEmpty(display.String()) {
-			return lshwmap[class]
-		}
-	} else {
-		if isStrEmpty(keyword) {
-			return lshwmap[class]
-		}
+		_lshwContent[class] = newClassItemContent
 	}
-
-	cmd := exec.Command("grep", keyword)
-	cmd.Stdin = bytes.NewBufferString(lshwmap[class]) // 把上面的执行结果放到grep 的输入中
-	stdout, stderr := setCmdStd(cmd)
-	err := cmd.Run()
-
-	if err != nil {
-		logger.Info("lshw error: ", err, stderr)
-	}
-
-	return stdout.String()
-}
-
-func parseXml(bytes []byte) (result lshwXmlNode, err error) {
-	logger.Debug("ParseXml bytes: ", string(bytes))
-	var list lshwXmlList
-	err = xml.Unmarshal(bytes, &list)
-	if err != nil {
-		logger.Error(err)
-		return result, err
-	}
-	len := len(list.Items)
-	for i := 0; i < len; i++ {
-		data := list.Items[i]
-		logger.Debug("Description : ", data.Description, " , size : ", data.Size)
-		if strings.ToLower(data.Description) == "system memory" {
-			result = data
-		}
-	}
-	return result, err
-}
-
-func (m *Manager) setMemorySize(value uint64) {
-	m.MemorySize = value
-	err := m.service.EmitPropertyChanged(m, "MemorySize", m.MemorySize)
-	if err != nil {
-		logger.Warning(err)
-	}
-}
-
-func (m *Manager) setMemorySizeHuman(value string) {
-	m.MemorySizeHuman = value
-	err := m.service.EmitPropertyChanged(m, "MemorySizeHuman", m.MemorySizeHuman)
-	if err != nil {
-		logger.Warning(err)
-	}
+	return _lshwContent[class], nil
 }
 
 func (m *Manager) calculateMemoryViaLshw() error {
-	cmdOutBuf := []byte(getLshwData("memory", "", "-xml"))
-	ret, err1 := parseXml(cmdOutBuf)
-	if err1 != nil {
-		logger.Error(err1)
-		return err1
+	classContent, err := getLshwData("memory")
+	if err != nil {
+		logger.Warning(err)
+		return err
 	}
-	memory := formatFileSize(ret.Size)
+	var ret uint64
+	for _, item := range classContent {
+		if strings.ToLower(item.Description) == "system memory" {
+			ret = item.Size
+		}
+	}
+	memory := formatFileSize(ret)
 	m.PropsMu.Lock()
-	//set property value
-	m.setMemorySize(ret.Size)
-	m.setMemorySizeHuman(memory)
+	// set property value
+	m.setPropMemorySize(ret)
+	m.setPropMemorySizeHuman(memory)
 	m.PropsMu.Unlock()
-	logger.Debug("system memory : ", ret.Size)
+	logger.Debug("system memory : ", ret)
 	return nil
 }
 
@@ -225,7 +182,7 @@ func runDmidecode() (string, error) {
 	return string(out), err
 }
 
-//From string parse "Current Speed"
+// From string parse "Current Speed"
 func parseCurrentSpeed(bytes string, systemBit int) (result uint64, err error) {
 	logger.Debug("parseCurrentSpeed data: ", bytes)
 	lines := strings.Split(bytes, "\n")
@@ -236,7 +193,7 @@ func parseCurrentSpeed(bytes string, systemBit int) (result uint64, err error) {
 		items := strings.Split(line, "Current Speed:")
 		ret := ""
 		if len(items) == 2 {
-			//Current Speed: 3200 MHz
+			// Current Speed: 3200 MHz
 			ret = items[1]
 			value, err := strconv.ParseUint(strings.TrimSpace(filterUnNumber(ret)), 10, systemBit)
 			if err != nil {
@@ -250,7 +207,7 @@ func parseCurrentSpeed(bytes string, systemBit int) (result uint64, err error) {
 	return result, err
 }
 
-//仅保留字符串中的数字
+// 仅保留字符串中的数字
 func filterUnNumber(value string) string {
 	reg, err := regexp.Compile("[^0-9]+")
 	if err != nil {
@@ -259,7 +216,7 @@ func filterUnNumber(value string) string {
 	return reg.ReplaceAllString(value, "")
 }
 
-//执行命令：/usr/bin/getconf LONG_BIT 获取系统位数
+// 执行命令：/usr/bin/getconf LONG_BIT 获取系统位数
 func (m *Manager) systemBit() string {
 	output, err := exec.Command("/usr/bin/getconf", "LONG_BIT").Output()
 	if err != nil {
