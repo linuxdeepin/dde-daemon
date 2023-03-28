@@ -1,3 +1,11 @@
+dde-daemon (6.0.10) unstable; urgency=medium
+
+  * fix keyoption will reset after lock screen
+  * fix failed to start dde-session-daemon
+  * amdgpu balance use auto
+
+ -- zsien <quezhiyong@uniontech.com>  Tue, 28 Mar 2023 15:22:26 +0800
+
 dde-daemon (6.0.9) unstable; urgency=medium
 
   [ TagBuilder ]
