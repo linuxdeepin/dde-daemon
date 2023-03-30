@@ -42,6 +42,7 @@ func (d *Daemon) Start() error {
 		return nil
 	}
 
+	_userStandardIcons = getUserStandardIcons()
 	service := loader.GetService()
 	d.manager = NewManager(service)
 
@@ -58,7 +59,6 @@ func (d *Daemon) Start() error {
 
 	d.imageBlur = newImageBlur(service)
 	_imageBlur = d.imageBlur
-	_userStandardIcons = getUserStandardIcons()
 	err = service.Export(imageBlurDBusPath, d.imageBlur)
 	if err != nil {
 		d.imageBlur = nil
