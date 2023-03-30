@@ -463,26 +463,6 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
-	// if iconURI not in iconList, need to create temp icon file
-	if !isStrInArray(iconURI, u.IconList) {
-		// copy file to temp file, update icon file
-		iconFile, err = copyTempIconFile(iconFile, u.UserName)
-		if err != nil {
-			logger.Warningf("copy temp file failed, err: %v", err)
-			return dbusutil.ToError(err)
-		}
-		// remove file
-		defer func() {
-			err := os.Remove(iconFile)
-			if err != nil {
-				logger.Warningf("remove temp file failed, err: %v", err)
-				return
-			}
-		}()
-		// if temp icon file is create, update icon URI
-		iconURI = dutils.EncodeURI(iconFile, dutils.SCHEME_FILE)
-	}
-
 	if !gdkpixbuf.IsSupportedImage(iconFile) {
 		err := fmt.Errorf("%q is not a image file", iconFile)
 		logger.Debug(err)
@@ -512,14 +492,6 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 			return dbusutil.ToError(err)
 		}
 
-		// remove old custom icon
-		if u.customIcon != "" {
-			logger.Debugf("remove old custom icon %q", u.customIcon)
-			err := os.Remove(dutils.DecodeURI(u.customIcon))
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
 		u.customIcon = newIconURI
 		u.updateIconList()
 	} else {
@@ -539,8 +511,9 @@ func (u *User) DeleteIconFile(sender dbus.Sender, icon string) *dbus.Error {
 	logger.Debug("[DeleteIconFile] icon:", icon)
 
 	dir, err := filepath.Abs(filepath.Dir(icon))
-	if err != nil || dir != userCustomIconsDir {
-		return dbusutil.ToError(fmt.Errorf("%s is not in %s", icon, userCustomIconsDir))
+	customDir := getUserCustomIconsDir(u.HomeDir)
+	if err != nil || dir != customDir {
+		return dbusutil.ToError(fmt.Errorf("%s is not in %s", icon, customDir))
 	}
 
 	base := filepath.Base(icon)
