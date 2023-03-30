@@ -251,6 +251,11 @@ func main() {
 	if err != nil {
 		logger.Warning(err)
 	}
+	go func() {
+		if err := cmd.Wait(); err != nil {
+			logger.Warning(err)
+		}
+	}()
 
 	err = migrateUserEnv()
 	if err != nil {
