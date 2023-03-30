@@ -10,19 +10,20 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/encoding/kv"
 	"github.com/linuxdeepin/go-lib/graphic"
+	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -79,28 +80,47 @@ func (code ErrCodeType) String() string {
 
 // return icons uris
 func getUserStandardIcons() []string {
-	imgs, err := graphic.GetImagesInDir(userIconsDir)
-	if err != nil {
-		return nil
+	var paths []string
+	var icons []string
+
+	if err := filepath.Walk(userIconsDir,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+
+			subPaths := []string{"dimensional", "flat"}
+
+			if info.IsDir() && strv.Strv(subPaths).Contains(info.Name()) {
+				paths = append(paths, path)
+			}
+
+			return nil
+		},
+	); err != nil {
+		logger.Warning("failed to walk usr icon path", err)
+		return icons
 	}
 
-	var icons []string
-	for _, img := range imgs {
-		img = utils.EncodeURI(img, utils.SCHEME_FILE)
-		if strings.Contains(img, "guest") || img == defaultUserIcon {
-			continue
+	for _, path := range paths {
+		imgs, err := graphic.GetImagesInDir(path)
+		if err != nil {
+			logger.Warning("failed to get user icon images", err)
+			return nil
 		}
 
-		icons = append(icons, img)
+		for _, img := range imgs {
+			img = utils.EncodeURI(img, utils.SCHEME_FILE)
+			icons = append(icons, img)
+		}
 	}
 
 	return icons
 }
 
-func getNewUserCustomIconDest(username string) string {
-	ns := time.Now().UnixNano()
-	base := username + "-" + strconv.FormatInt(ns, 36)
-	return filepath.Join(userCustomIconsDir, base)
+// 从系统的用户头像中随机获取一张用户图片
+func getRandomIcon() string {
+	return _userStandardIcons[rand.Intn(len(_userStandardIcons))]
 }
 
 func isStrInArray(str string, array []string) bool {

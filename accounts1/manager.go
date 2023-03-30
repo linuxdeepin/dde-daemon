@@ -32,12 +32,10 @@ import (
 )
 
 const (
-	actConfigDir       = "/var/lib/AccountsService"
-	userConfigDir      = actConfigDir + "/deepin/users"
-	userIconsDir       = actConfigDir + "/icons"
-	userCustomIconsDir = actConfigDir + "/icons/local"
+	actConfigDir  = "/var/lib/AccountsService"
+	userConfigDir = actConfigDir + "/deepin/users"
+	userIconsDir  = actConfigDir + "/icons"
 
-	userIconGuest       = actConfigDir + "/icons/guest.png"
 	actConfigFile       = actConfigDir + "/accounts.ini"
 	actConfigGroupGroup = "Accounts"
 	actConfigKeyGuest   = "AllowGuest"
@@ -139,7 +137,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 	m.usersMap = make(map[string]*User)
 	m.userAddedChanMap = make(map[string]chan string)
 
-	m.GuestIcon = userIconGuest
+	m.GuestIcon = getRandomIcon()
 	m.AllowGuest = isGuestUserEnabled()
 
 	m.initUsers(getUserPaths())
@@ -553,6 +551,11 @@ func isGuestUserEnabled() bool {
 	}
 
 	return ret
+}
+
+func getUserCustomIconsDir(homeDir string) string {
+	path := "/.local/share/icons"
+	return filepath.Join(homeDir, path)
 }
 
 func (m *Manager) checkAuth(sender dbus.Sender) error {

@@ -46,6 +46,8 @@ func (d *Daemon) Start() error {
 	if d.manager != nil {
 		return nil
 	}
+
+	_userStandardIcons = getUserStandardIcons()
 	_userStandardIcons = getUserStandardIcons()
 	service := loader.GetService()
 	d.manager = NewManager(service)

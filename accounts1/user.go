@@ -7,7 +7,6 @@ package accounts
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -29,7 +28,6 @@ import (
 )
 
 const (
-	defaultUserIcon          = "file:///var/lib/AccountsService/icons/default.png"
 	defaultUserBackgroundDir = "/usr/share/wallpapers/deepin/"
 
 	controlCenterPath = "/usr/bin/dde-control-center"
@@ -298,16 +296,11 @@ func (u *User) setIconFile(iconURI string) (string, bool, error) {
 		}()
 	}
 
-	dest := getNewUserCustomIconDest(u.UserName)
-	err = os.MkdirAll(path.Dir(dest), 0755)
+	err = dutils.CopyFile(tmp, iconFile)
 	if err != nil {
 		return "", false, err
 	}
-	err = dutils.CopyFile(tmp, dest)
-	if err != nil {
-		return "", false, err
-	}
-	return dutils.EncodeURI(dest, dutils.SCHEME_FILE), true, nil
+	return dutils.EncodeURI(iconFile, dutils.SCHEME_FILE), true, nil
 }
 
 type configChange struct {
@@ -752,7 +745,7 @@ func loadUserConfigInfo(u *User) {
 		u.SystemAccount = false
 		u.Layout = getDefaultLayout()
 		u.setLocale(getDefaultLocale())
-		u.IconFile = defaultUserIcon
+		u.IconFile = getRandomIcon()
 		defaultUserBackground := getDefaultUserBackground()
 		u.DesktopBackgrounds = []string{defaultUserBackground}
 		u.GreeterBackground = defaultUserBackground
@@ -804,8 +797,19 @@ func loadUserConfigInfo(u *User) {
 	icon, _ := kf.GetString(confGroupUser, confKeyIcon)
 	u.IconFile = icon
 	if u.IconFile == "" {
-		u.IconFile = defaultUserIcon
+		u.IconFile = getRandomIcon()
 		isSave = true
+	}
+
+	u.customIcon, _ = kf.GetString(confGroupUser, confKeyCustomIcon)
+
+	// CustomIcon is the newly added field in the configuration file
+	if u.customIcon == "" {
+		if !isStrInArray(u.IconFile, u.IconList) {
+			// u.IconFile is a custom icon, not a standard icon
+			u.customIcon = u.IconFile
+			isSave = true
+		}
 	}
 
 	u.IconList = u.getAllIcons()
