@@ -273,6 +273,12 @@ func (d *Display) doDetectSupportWayland(sender dbus.Sender) (bool, error) {
 			logger.Warning(err)
 			return false, err
 		}
+		go func() {
+			if err := cmd.Wait(); err != nil {
+				logger.Warning(err)
+			}
+		}()
+
 		for {
 			line, err := reader.ReadBytes('\n')
 			if err != nil {
