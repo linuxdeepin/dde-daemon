@@ -202,6 +202,7 @@
 				        "image/jpg",
 				        "image/pjpeg",
 				        "image/png",
+				        "image/tif",
 				        "image/tiff",
 				        "image/x-bmp",
 				        "image/x-gray",
