@@ -117,7 +117,18 @@ func (m *Manager) getDPMSMode() int32 {
 	return mode
 }
 
+var prevTimestamp int64
+
 func (m *Manager) setDPMSModeOn() {
+	timestamp := time.Now().UnixNano()
+	tmp := timestamp - prevTimestamp
+	logger.Debug("[setDPMSModeOn] timestamp:", prevTimestamp, timestamp, tmp)
+	prevTimestamp = timestamp
+	if tmp < 300000000 {
+		logger.Debug("[setDPMSModeOn] div < 300ms ignored.")
+		return
+	}
+
 	logger.Info("DPMS On")
 
 	var err error
