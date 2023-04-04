@@ -104,7 +104,10 @@ func (m *Mouse) handleDeviceChanged() {
 
 func (m *Mouse) updateDXMouses() {
 	m.devInfos = Mouses{}
-	for _, info := range getMouseInfos(false) {
+	// 在有鼠标连接下，len(_mouseInfos)不等于0，传参false，
+	// 切换用户后，handleDeviceChanged，getMouseInfos直接返回，未进行忽略触摸板设备的判断
+	// 导致识别到2个鼠标，拔掉鼠标后，还剩一个，在设置‘插入鼠标时禁用触控板’后，触摸板无法使用
+	for _, info := range getMouseInfos(true) {
 		if info.TrackPoint {
 			continue
 		}
