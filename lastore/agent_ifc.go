@@ -97,15 +97,21 @@ func (a *Agent) SendNotify(sender dbus.Sender, appName string, replacesId uint32
 					logger.Warning(err)
 				} else {
 					name, err := wInfo.AppId(0)
-					if err == nil && strings.Contains(name, "dde-control-center") {
-						// 焦点在控制中心上,需要判断是否为更新模块
-						currentModule, err := a.controlCenter.CurrentModule().Get(0)
-						if err != nil {
-							logger.Warning(err)
-						} else if currentModule == "update" {
-							logger.Info("update module of dde-control-center is in the foreground, don't need send notify")
+					if err == nil {
+						if strings.Contains(name, "dde-control-center") {
+							// 焦点在控制中心上,需要判断是否为更新模块
+							currentModule, err := a.controlCenter.CurrentModule().Get(0)
+							if err != nil {
+								logger.Warning(err)
+							} else if currentModule == "update" {
+								logger.Info("update module of dde-control-center is in the foreground, don't need send notify")
+								needSend = false
+							}
+						} else if strings.Contains(name, "dde-lock") {
+							// 前台应用在模态更新界面时,不发送通知(TODO: 如果后台更新时发生了锁屏，需要增加判断是否发通知)
 							needSend = false
 						}
+
 					}
 				}
 			}
@@ -122,6 +128,9 @@ func (a *Agent) SendNotify(sender dbus.Sender, appName string, replacesId uint32
 					logger.Info("update module of dde-control-center is in the foreground, don't need send notify")
 					needSend = false
 				}
+			} else if strings.Contains(string(output), "dde-lock") {
+				// 前台应用在模态更新界面时,不发送通知(TODO: 如果后台更新时发生了锁屏，需要增加判断是否发通知)
+				needSend = false
 			}
 		}
 	}

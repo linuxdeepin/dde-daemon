@@ -53,6 +53,8 @@ const (
 	ErrorUnauthenticatedPackages UpgradeReasonType = "unauthenticatedPackages"
 	ErrorOperationNotPermitted   UpgradeReasonType = "operationNotPermitted"
 	ErrorIndexDownloadFailed     UpgradeReasonType = "IndexDownloadFailed"
+	ErrorIO                      UpgradeReasonType = "ioError"
+	ErrorDamagePackage           UpgradeReasonType = "damagePackage" // 包损坏,需要删除后重新下载或者安装
 )
 
 const (
@@ -166,35 +168,29 @@ func (d *Daemon) Start() error {
 			// running状态,更新被中断
 			case UpgradeRunning:
 				if err != nil || !valid {
-					msg = gettext.Tr("upgrade abort,need try to upgrade again")
+					msg = gettext.Tr("Updates failed: it was interrupted.")
 				} else {
-					msg = gettext.Tr("upgrade abort,need rollback")
+					msg = gettext.Tr("Updates failed: it was interrupted. Please roll back to the old version and try again.")
 				}
 			case UpgradeFailed:
 				switch upgradeStatus.ReasonCode {
 				case ErrorDpkgError:
 					if err != nil || !valid {
-						msg = gettext.Tr("upgrade failed because an error occurred during dpkg installation")
+						msg = gettext.Tr("Updates failed: DPKG error.")
 					} else {
-						msg = gettext.Tr("upgrade failed because an error occurred during dpkg installation, need rollback")
+						msg = gettext.Tr("Updates failed: DPKG error. Please roll back to the old version and try again.")
 					}
-				case ErrorPkgNotFound:
+				case ErrorInsufficientSpace:
 					if err != nil || !valid {
-						msg = gettext.Tr("upgrade failed because unable to locate package")
+						msg = gettext.Tr("Updates failed: insufficient disk space.")
 					} else {
-						msg = gettext.Tr("upgrade failed because unable to locate package, need rollback")
+						msg = gettext.Tr("Updates failed: insufficient disk space. Please roll back to the old version and try again.")
 					}
-				case ErrorNoInstallationCandidate:
+				case ErrorUnknown, ErrorPkgNotFound, ErrorNoInstallationCandidate, ErrorIO, ErrorDamagePackage:
 					if err != nil || !valid {
-						msg = gettext.Tr("upgrade failed because has no installation candidate")
+						msg = gettext.Tr("Updates failed")
 					} else {
-						msg = gettext.Tr("upgrade failed because has no installation candidate, need rollback")
-					}
-				case ErrorUnknown:
-					if err != nil || !valid {
-						msg = gettext.Tr("upgrade failed")
-					} else {
-						msg = gettext.Tr("upgrade failed, need rollback")
+						msg = gettext.Tr("Updates failed. Please roll back to the old version and try again.")
 					}
 				}
 			}
