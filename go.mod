@@ -38,11 +38,11 @@ require (
 	github.com/youpy/go-riff v0.1.0 // indirect
 	github.com/youpy/go-wav v0.3.2 // indirect
 	github.com/zaf/g711 v0.0.0-20220109202201-cf0017bf0359 // indirect
-	golang.org/x/image v0.3.0 // indirect
+	golang.org/x/image v0.5.0 // indirect
 	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
-	golang.org/x/text v0.6.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
 )
 
 replace github.com/linuxdeepin/go-lib => github.com/Decodetalkers/go-lib v0.0.0-20230404025406-a17a10117d09
