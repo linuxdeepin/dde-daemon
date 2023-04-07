@@ -1,3 +1,9 @@
+dde-daemon (6.0.13) unstable; urgency=medium
+
+  * chore: 修复dde-system-daemon崩溃的问题
+
+ -- dengbo <dengbo@uniontech.com>  Fri, 7 Apr 2023 14:56:15 +0800
+
 dde-daemon (6.0.12) unstable; urgency=medium
 
   * chore: add go mod support
