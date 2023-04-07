@@ -1,9 +1,16 @@
-dde-daemon (6.0.11) stable; urgency=medium
+dde-daemon (6.0.12) unstable; urgency=medium
+
+  * chore: add go mod support
+  * feat: 支持控制中心个性化头像设置
+
+ -- dengbo <dengbo@uniontech.com>  Fri, 7 Apr 2023 11:38:30 +0800
+
+dde-daemon (6.0.11) unstable; urgency=medium
 
   * update yaml to v3
   * correct a typo in manager_handlers.go
   * remove dde-kwin runtime dependencies
-  * fix the zombie processes 
+  * fix the zombie processes
 
  -- zsien <quezhiyong@uniontech.com>  Fri, 31 Mar 2023 14:50:15 +0800
 
