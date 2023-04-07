@@ -49,3 +49,5 @@ misc/polkit-action/*.policy
 coverage.csv
 ConfigKeeperMute_Save
 system/uadp1/testdata
+
+/target
