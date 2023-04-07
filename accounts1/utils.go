@@ -119,8 +119,13 @@ func getUserStandardIcons() []string {
 }
 
 // 从系统的用户头像中随机获取一张用户图片
+// NOTE: 此处需要安装新的dde-account-faces包, 否则会造成找不到用户头像的问题
 func getRandomIcon() string {
-	return _userStandardIcons[rand.Intn(len(_userStandardIcons))]
+	if len(_userStandardIcons) > 0 {
+		return _userStandardIcons[rand.Intn(len(_userStandardIcons))]
+	}
+
+	return ""
 }
 
 func isStrInArray(str string, array []string) bool {
