@@ -11,6 +11,16 @@
           "description": "Allow auto open Web for authentication",
           "permissions": "readwrite",
           "visibility": "private"
+      },
+      "wifiOSDEnable": {
+          "value": true,
+          "serial": 0,
+          "flags": ["global"],
+          "name": "wifiOSDEnable",
+          "name[zh_CN]": "是否允许显示网络连接OSD",
+          "description": "Allow display of network connection OSD",
+          "permissions": "readwrite",
+          "visibility": "private"
       }
   }
 }

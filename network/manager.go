@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"strings"
 	"sync"
 	"time"
 
@@ -21,6 +20,7 @@ import (
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
 	sysNetwork "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.network"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	nmdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	secrets "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.secrets"
@@ -34,8 +34,13 @@ const (
 	dbusServiceName = "com.deepin.daemon.Network"
 	dbusPath        = "/com/deepin/daemon/Network"
 	dbusInterface   = "com.deepin.daemon.Network"
+)
 
-	configManagerId = "org.desktopspec.ConfigManager"
+const (
+	daemonConfigPath          = "org.deepin.dde.daemon"
+	networkConfigPath         = "org.deepin.dde.daemon.network"
+	dsettingsProtalAuthEnable = "protalAuthEnable"
+	dsettingsWifiOSDEnable    = "wifiOSDEnable"
 )
 
 const checkRepeatTime = 1 * time.Second
@@ -115,8 +120,8 @@ type Manager struct {
 	connectionSettingsLock sync.Mutex
 
 	// dsg config
-	protalAuthEnable  bool
-	configManagerPath dbus.ObjectPath
+	protalAuthEnable bool
+	wifiOSDEnable    bool
 
 	//nolint
 	signals *struct {
@@ -150,28 +155,6 @@ func NewManager(service *dbusutil.Service) (m *Manager) {
 	m = &Manager{
 		service: service,
 	}
-
-	sysBus, err := dbus.SystemBus()
-	if err != nil {
-		return
-	}
-
-	// 加载dsg配置
-	systemConnObj := sysBus.Object(configManagerId, "/")
-	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.network", "").Store(&m.configManagerPath)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	err = dbusutil.NewMatchRuleBuilder().Type("signal").
-		PathNamespace(string(m.configManagerPath)).
-		Interface("org.desktopspec.ConfigManager.Manager").
-		Member("valueChanged").Build().AddTo(sysBus)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	m.protalAuthEnable = m.getProtalAuthEnable()
 
 	return
 }
@@ -239,16 +222,53 @@ func (m *Manager) init() {
 		} else {
 			logger.Debug("register secret agent ok")
 		}
-
-		// 监听dsg配置变化
-		m.sysSigLoop.AddHandler(&dbusutil.SignalRule{
-			Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
-		}, func(sig *dbus.Signal) {
-			if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
-				m.protalAuthEnable = m.getProtalAuthEnable()
-			}
-		})
 	}()
+
+	// 初始化配置
+	m.wifiOSDEnable = true
+	ds := configManager.NewConfigManager(m.sysSigLoop.Conn())
+	configManagerPath, err := ds.AcquireManager(0, daemonConfigPath, networkConfigPath, "")
+	if err == nil {
+		networkConfigManager, err := configManager.NewManager(m.sysSigLoop.Conn(), configManagerPath)
+		if err == nil {
+			getProtalAuthEnable := func() {
+				v, err := networkConfigManager.Value(0, dsettingsProtalAuthEnable)
+				if err != nil {
+					logger.Warning(err)
+					return
+				}
+				m.protalAuthEnable = v.Value().(bool)
+			}
+
+			getWifiOSDEnable := func() {
+				v, err := networkConfigManager.Value(0, dsettingsWifiOSDEnable)
+				if err != nil {
+					logger.Warning(err)
+				} else {
+					m.wifiOSDEnable = v.Value().(bool)
+				}
+			}
+
+			getProtalAuthEnable()
+			getWifiOSDEnable()
+
+			networkConfigManager.InitSignalExt(m.sysSigLoop, true)
+			_, err = networkConfigManager.ConnectValueChanged(func(key string) {
+				if key == dsettingsProtalAuthEnable {
+					getProtalAuthEnable()
+				} else if key == dsettingsWifiOSDEnable {
+					getWifiOSDEnable()
+				}
+			})
+			if err != nil {
+				logger.Warning(err)
+			}
+		} else {
+			logger.Warning(err)
+		}
+	} else {
+		logger.Warning(err)
+	}
 
 	globalSessionActive = m.isSessionActive()
 	logger.Debugf("current session activated state: %v", globalSessionActive)
@@ -291,6 +311,12 @@ func (m *Manager) init() {
 		if !hasValue {
 			return
 		}
+
+		// 禁用WIFI网络OSD时退出
+		if !m.wifiOSDEnable {
+			return
+		}
+
 		// if enabled is true, wifi rfkill block is true
 		// so wlan is off
 		if value {
@@ -657,19 +683,4 @@ func (m *Manager) checkConnectivity() {
 	if connectivity == nm.NM_CONNECTIVITY_PORTAL && m.protalAuthEnable {
 		m.doPortalAuthentication()
 	}
-}
-
-func (m *Manager) getProtalAuthEnable() bool {
-	systemConn, err := dbus.SystemBus()
-	if err != nil {
-		return true
-	}
-	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
-	var value bool
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, "protalAuthEnable").Store(&value)
-	if err != nil {
-		logger.Warning(err)
-		return true
-	}
-	return value
 }

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -21,6 +22,12 @@ const (
 	dbusInterface   = dbusServiceName
 
 	actionId = "com.deepin.daemon.airplane-mode.enable-disable-any"
+)
+
+const (
+	daemonConfigPath       = "org.deepin.dde.daemon"
+	networkConfigPath      = "org.deepin.dde.daemon.network"
+	dsettingsWifiOSDEnable = "wifiOSDEnable"
 )
 
 type device struct {
@@ -45,10 +52,15 @@ type Manager struct {
 	nmManager            networkmanager.Manager
 	hasNmWirelessDevices bool
 
+	networkConfigManager    configManager.Manager
+	resetWifiOSDEnableTimer *time.Timer
+
 	sigLoop *dbusutil.SignalLoop
 	// all rfkill module config
 	config *Config
 }
+
+var defaultResetWifiOSDEnableTimeout = 200 * time.Millisecond
 
 // NewManager create manager
 func newManager(service *dbusutil.Service) *Manager {
@@ -61,7 +73,16 @@ func newManager(service *dbusutil.Service) *Manager {
 	if err != nil {
 		logger.Warningf("init manager failed, err: %v", err)
 	}
+
 	return mgr
+}
+
+func (mgr *Manager) setWifiOSDEnable(enabled bool) bool {
+	if mgr.networkConfigManager != nil {
+		mgr.networkConfigManager.SetValue(0, dsettingsWifiOSDEnable, dbus.MakeVariant(enabled))
+	}
+
+	return true
 }
 
 func (mgr *Manager) GetInterfaceName() string {
@@ -79,12 +100,19 @@ func (mgr *Manager) Enable(sender dbus.Sender, enableAirplaneMode bool) *dbus.Er
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
+
+	// 开启或关闭飞行模式前禁用WIFI显示OSD
+	mgr.setWifiOSDEnable(false)
+
 	// try to block
 	err = mgr.block(rfkillTypeAll, enableAirplaneMode)
 	if err != nil {
 		logger.Warningf("block all radio failed, err: %v", err)
 		return dbusutil.ToError(err)
 	}
+
+	mgr.resetWifiOSDEnableTimer.Reset(defaultResetWifiOSDEnableTimeout)
+
 	return nil
 }
 
@@ -94,12 +122,19 @@ func (mgr *Manager) EnableWifi(sender dbus.Sender, enableAirplaneMode bool) *dbu
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
+
+	// 开启或关闭飞行模式前禁用WIFI显示OSD
+	mgr.setWifiOSDEnable(false)
+
 	// try to block
 	err = mgr.block(rfkillTypeWifi, enableAirplaneMode)
 	if err != nil {
 		logger.Warningf("block wifi radio failed, err: %v", err)
 		return dbusutil.ToError(err)
 	}
+
+	mgr.resetWifiOSDEnableTimer.Reset(defaultResetWifiOSDEnableTimeout)
+
 	return nil
 }
 
@@ -109,12 +144,19 @@ func (mgr *Manager) EnableBluetooth(sender dbus.Sender, enableAirplaneMode bool)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
+
+	// 开启或关闭飞行模式前禁用WIFI显示OSD
+	mgr.setWifiOSDEnable(false)
+
 	// try to block
 	err = mgr.block(rfkillTypeBT, enableAirplaneMode)
 	if err != nil {
 		logger.Warningf("block bluetooth radio failed, err: %v", err)
 		return dbusutil.ToError(err)
 	}
+
+	mgr.resetWifiOSDEnableTimer.Reset(defaultResetWifiOSDEnableTimeout)
+
 	return nil
 }
 
@@ -130,6 +172,26 @@ func (mgr *Manager) init() error {
 	mgr.sigLoop.Start()
 	mgr.nmManager.InitSignalExt(mgr.sigLoop, true)
 	mgr.hasNmWirelessDevices = mgr.hasWirelessDevicesWithRetry()
+
+	// 初始化定时器
+	mgr.resetWifiOSDEnableTimer = time.AfterFunc(defaultResetWifiOSDEnableTimeout, func() {
+		logger.Debug("reset wifi OSD enable")
+		mgr.setWifiOSDEnable(true)
+	})
+	mgr.resetWifiOSDEnableTimer.Stop()
+
+	// 初始化配置
+	ds := configManager.NewConfigManager(mgr.sigLoop.Conn())
+	configManagerPath, err := ds.AcquireManager(0, daemonConfigPath, networkConfigPath, "")
+	if err == nil {
+		mgr.networkConfigManager, err = configManager.NewManager(mgr.sigLoop.Conn(), configManagerPath)
+		if err != nil {
+			logger.Warning(err)
+		}
+	} else {
+		logger.Warning(err)
+	}
+
 	// recover
 	mgr.recover()
 
@@ -137,6 +199,7 @@ func (mgr *Manager) init() error {
 	go mgr.listenRfkill()
 	mgr.listenWirelessEnabled()
 	mgr.listenNMDevicesChanged()
+
 	return nil
 }
 
