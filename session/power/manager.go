@@ -21,10 +21,18 @@ import (
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
 //go:generate dbusutil-gen em -type Manager,WarnLevelConfigManager
+
+const (
+	DSettingsAppID        = "org.deepin.startdde"
+	DSettingsDisplayName  = "org.deepin.Display"
+	DSettingsAutoChangeWm = "auto-change-deepin-wm"
+)
 
 type Manager struct {
 	service              *dbusutil.Service
@@ -137,6 +145,9 @@ type Manager struct {
 	// 是否支持节能模式
 	isPowerSaveSupported bool
 	kwinHanleIdleOffCh   chan bool
+
+	dsConfigManager 	 configManager.Manager
+	wmDBus               wm.Wm
 }
 
 var _manager *Manager
@@ -249,6 +260,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	// 绑定com.deepin.daemon.Display的DBus
 	m.display = display.NewDisplay(sessionBus)
+	m.wmDBus = wm.NewWm(sessionBus)
 
 	return m, nil
 }
@@ -352,6 +364,7 @@ func (m *Manager) init() {
 	m.initSubmodules()
 	m.startSubmodules()
 	m.inhibitLogind()
+	m.initDsg()
 
 	if m.UseWayland {
 		m.kwinHanleIdleOffCh = make(chan bool, 10)
@@ -428,6 +441,45 @@ func (m *Manager) Reset() *dbus.Error {
 	for _, key := range settingKeys {
 		logger.Debug("reset setting", key)
 		m.settings.Reset(key)
+	}
+	return nil
+}
+
+func (m *Manager) initDsg() {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+
+	dsg := configManager.NewConfigManager(systemBus)
+	displayConfigManagerPath, err := dsg.AcquireManager(0, DSettingsAppID, DSettingsDisplayName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	m.dsConfigManager, err = configManager.NewManager(systemBus, displayConfigManagerPath)
+	if err != nil || displayConfigManagerPath == "" {
+		logger.Warning(err)
+	}
+}
+
+func (m *Manager) getAutoChangeDeepinWm() bool {
+	v, err := m.dsConfigManager.Value(0, DSettingsAutoChangeWm)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	dsAutoChangeDeepinWm := v.Value().(bool)
+	logger.Info("Auto Change Deepin Wm:", dsAutoChangeDeepinWm)
+
+	return dsAutoChangeDeepinWm
+}
+
+func (m *Manager) setAutoChangeDeepinWm(value bool) error {
+	err := m.dsConfigManager.SetValue(0, DSettingsAutoChangeWm, dbus.MakeVariant(value))
+	if err != nil {
+		return err
 	}
 	return nil
 }

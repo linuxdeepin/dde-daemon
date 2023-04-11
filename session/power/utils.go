@@ -131,8 +131,12 @@ func (m *Manager) setDPMSModeOn() {
 
 	logger.Info("DPMS On")
 
-	var err error
+	autoWm := m.getAutoChangeDeepinWm()
+	if autoWm {
+		m.tryChangeDeepinWM()
+	}
 
+	var err error
 	if m.UseWayland {
 		err = m.setDpmsModeByKwin(dpmsStateOn)
 	} else {
@@ -142,6 +146,10 @@ func (m *Manager) setDPMSModeOn() {
 
 	if err != nil {
 		logger.Warning("set DPMS on error:", err)
+	}
+
+	if autoWm {
+		m.setAutoChangeDeepinWm(false)
 	}
 }
 
@@ -165,6 +173,37 @@ const (
 	lockFrontIfc         = lockFrontServiceName
 	lockFrontObjPath     = "/com/deepin/dde/lockFront"
 )
+
+func (m *Manager) tryChangeDeepinWM() bool {
+	ret := false
+	count := 0
+	for {
+		if count > 2 {
+			break
+		}
+		count++
+
+		enabled, err := m.wmDBus.CompositingEnabled().Get(0)
+		if err != nil {
+			logger.Warning("tryChangeDeepinWM get CompositingEnabled err : ", err)
+			continue
+		}
+		if !enabled {
+			err := m.wmDBus.CompositingEnabled().Set(0, true)
+			if err != nil {
+				logger.Warning("tryChangeDeepinWM set CompositingEnabled true, err :", err)
+				continue
+			}
+
+			// dde-osd需要使用该dconfig值，true不弹该特效osd
+			ret = true
+			break
+		}
+	}
+
+	logger.Info(" tryChangeDeepinWM ret : ", ret)
+	return ret
+}
 
 func (m *Manager) doLock(autoStartAuth bool) {
 	logger.Info("Lock Screen")
