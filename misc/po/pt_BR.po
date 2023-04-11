@@ -11,13 +11,12 @@
 # Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2020
 # Paulo Schopf, 2020
 # Felipe André Alves Santos <lip.dre@gmail.com>, 2020
+# deepiner, 2020
 # Raphael Miquelis <raphaelmiquelis@gmail.com>, 2020
 # RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2021
 # Cassiano Molinari <chano2808a@gmail.com>, 2021
 # Fábio C, 2022
-# Joel Queiroz <joelcfq@yandex.ru>, 2022
 # Flavio Lima <flaviolimaviolinista@gmail.com>, 2022
-# Cindy0514, 2022
 # 1d1ce5c8357ff895d313b0cce072591e_46a6b98, 2022
 # Alex, 2022
 # 
@@ -26,10 +25,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
+"POT-Creation-Date: 2023-04-11 17:42+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Alex, 2022\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -68,9 +67,13 @@ msgstr "O nome já existe"
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts/manager.go:540
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
+#: ../../accounts/user_ifc.go:660
+msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
 #: ../../appearance/scale.go:41
@@ -102,7 +105,7 @@ msgstr "Escala de Exibição"
 msgid "%s had been disabled"
 msgstr "%s foi desativado"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:95
 msgid "Open"
 msgstr "Abrir"
 
@@ -174,57 +177,56 @@ msgstr "Acesso às mensagens"
 msgid "Message notification"
 msgstr "Notificação de mensagem"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth/obex_agent.go:391
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Recebendo %[1]q de %[2]q"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth/obex_agent.go:400
 msgid "View"
 msgstr "Visualizar"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth/obex_agent.go:406
 msgid "You have received files from %q successfully"
 msgstr "Os arquivos de %q foram recebidos"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth/obex_agent.go:407
 msgid "Done"
 msgstr "Concluído"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
 msgid "Stop Receiving Files"
 msgstr "Interromper o Recebimento de Arquivos"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth/obex_agent.go:424
 msgid "You have cancelled the file transfer"
 msgstr "A transferência do arquivo foi cancelada"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Falha na conexão Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Decline"
 msgstr "Recusar"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Receive"
 msgstr "Receber"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth/obex_agent.go:466
 msgid "Bluetooth File Transfer"
 msgstr "Transferência de Arquivos por Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth/obex_agent.go:467
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q está enviando arquivos. Receber?"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth/obex_agent.go:522
 msgid "Receiving %q timed out"
 msgstr "O recebimento de %s expirou"
 
@@ -240,26 +242,30 @@ msgstr "Adicionar dispositivos Bluetooth"
 msgid "Pair"
 msgstr "Emparelhar"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../dock/app_entry_menu.go:102
 msgid "Close All"
 msgstr "Fechar Tudo"
 
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:129 ../../dock/app_entry_menu.go:143
+#: ../../dock/app_entry_menu.go:158
 msgid "Force Quit"
 msgstr "Forçar Saída"
 
-#: ../../dock/app_entry_menu.go:160
+#: ../../dock/app_entry_menu.go:162
 msgid "Dock"
 msgstr "Dock"
 
-#: ../../dock/app_entry_menu.go:170
+#: ../../dock/app_entry_menu.go:172
 msgid "Undock"
 msgstr "Remover da Dock"
 
-#: ../../dock/app_entry_menu.go:180
+#: ../../dock/app_entry_menu.go:182
 msgid "All Windows"
 msgstr "Todas as Janelas"
+
+#: ../../dock/app_info.go:72 ../../launcher/item.go:97
+msgid "(Linglong)"
+msgstr ""
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -311,11 +317,11 @@ msgstr "Atrasar captura"
 
 #: ../../keybinding/shortcuts/id_name_map.go:24
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (Imagem em Texto)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:25
 msgid "Scrollshot"
-msgstr ""
+msgstr "Captura de tela estendida"
 
 #: ../../keybinding/shortcuts/id_name_map.go:26
 msgid "File manager"
@@ -490,84 +496,43 @@ msgstr ""
 msgid "Failed to change system language, please try later"
 msgstr "Falha ao alterar o idioma do sistema; tente novamente"
 
-#: ../../lastore/lastore.go:427
-msgid "Retry"
-msgstr "Tentar novamente"
-
-#: ../../lastore/lastore.go:449
-msgid "Update Now"
-msgstr "Atualizar agora"
-
-#: ../../lastore/lastore.go:479
-msgid "Reboot Now"
-msgstr "Reiniciar"
-
-#: ../../lastore/lastore.go:483
-msgid "Remind Me Later"
-msgstr "Lembre-me mais tarde"
-
-#: ../../lastore/lastore.go:490
-msgid "10 mins later"
+#: ../../lastore/daemon.go:171
+msgid "Updates failed: it was interrupted."
 msgstr ""
 
-#: ../../lastore/lastore.go:497
-msgid "30 mins later"
-msgstr ""
-
-#: ../../lastore/lastore.go:504
-msgid "2h later"
-msgstr ""
-
-#: ../../lastore/lastore.go:511
-msgid "6h later"
-msgstr ""
-
-#: ../../lastore/notify.go:93
-msgid "%q installed successfully."
-msgstr "%q foi instalado."
-
-#: ../../lastore/notify.go:96
-msgid "%q failed to install."
-msgstr "Falha ao instalar %q."
-
-#: ../../lastore/notify.go:104
-msgid "Removed successfully"
-msgstr "Removido"
-
-#: ../../lastore/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Falha ao remover o aplicativo"
-
-#: ../../lastore/notify.go:113
+#: ../../lastore/daemon.go:173
 msgid ""
-"In order to prevent automatic shutdown, please plug in for normal update."
-msgstr "Para evitar o desligamento; conecte o carregador."
-
-#: ../../lastore/notify.go:118
-msgid "Package cache wiped"
-msgstr "O cache de pacotes foi esvaziado"
-
-#: ../../lastore/notify.go:123
-msgid "Updates Available"
-msgstr "Há atualizações disponíveis"
-
-#: ../../lastore/notify.go:128
-msgid "Reboot after Updates"
-msgstr "Reiniciar após atualizar"
-
-#: ../../lastore/notify.go:129
-msgid "Restart the computer to use the system and applications properly"
+"Updates failed: it was interrupted. Please roll back to the old version and "
+"try again."
 msgstr ""
 
-#: ../../lastore/notify.go:139
+#: ../../lastore/daemon.go:179
+msgid "Updates failed: DPKG error."
+msgstr ""
+
+#: ../../lastore/daemon.go:181
 msgid ""
-"Your system is being updated, but the capacity is lower than 50%, please "
-"plug in to avoid power outage"
+"Updates failed: DPKG error. Please roll back to the old version and try "
+"again."
 msgstr ""
 
-#: ../../lastore/notify.go:140
-msgid "OK"
-msgstr "Ok"
+#: ../../lastore/daemon.go:185
+msgid "Updates failed: insufficient disk space."
+msgstr ""
+
+#: ../../lastore/daemon.go:187
+msgid ""
+"Updates failed: insufficient disk space. Please roll back to the old version"
+" and try again."
+msgstr ""
+
+#: ../../lastore/daemon.go:191
+msgid "Updates failed"
+msgstr ""
+
+#: ../../lastore/daemon.go:193
+msgid "Updates failed. Please roll back to the old version and try again."
+msgstr ""
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -577,44 +542,44 @@ msgstr "%q foi desinstalado"
 msgid "Failed to uninstall %q"
 msgstr "Falha ao remover %q"
 
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "Nenhum"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "Chave WEP de 40/128-bit"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Pessoal"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr "WPA3 Pessoal"
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "RÁPIDO"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "TLS em túnel"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "EAP Protegido"
 
@@ -997,27 +962,23 @@ msgstr "%q desconectado"
 #: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
-"Não foi possível compartilhar o Hotspot; verifique as configurações do "
-"dnsmasq"
+"Impossível compartilhar o hotspot; verifique as configurações do dnsmasq"
 
 #: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
-"Não é possível conectar-se à %q; verifique a intensidade do sinal Wi-Fi"
+msgstr "Impossível conectar-se à %q; verifique a intensidade do sinal Wi-Fi"
 
 #: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
-msgstr ""
-"Não foi possível conectar-se à %q; verifique as conexões ou os dispositivos "
-"de rede."
+msgstr "Impossível conectar-se à %q; verifique os dispositivos de rede."
 
 #: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "A conexão falhou, senha incorreta. Incapaz de conectar-se à %q"
+msgstr "Impossível conectar-se à %q; verifique a senha informada"
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "Impossível conectar-se à %q"
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
@@ -1080,41 +1041,41 @@ msgstr "Bateria criticamente fraca"
 msgid "Battery low, please plug in"
 msgstr "A bateria está com pouca carga; conecte o carregador"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
+#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
 msgid "Power settings changed"
 msgstr "Configurações de energia alteradas"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Quando a tampa é fechada, "
 
-#: ../../session/power/utils.go:487
+#: ../../session/power/utils.go:498
 msgid "When pressing the power button, "
 msgstr "Ao pressionar o botão de ligar/desligar, "
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "o computador irá desligar"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "o computador irá suspender"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power/utils.go:512
 msgid "your computer will hibernate"
 msgstr "o computador irá hibernar"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power/utils.go:514
 msgid "your monitor will turn off"
 msgstr "o monitor irá desligar"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power/utils.go:516
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "o seu monitor exibirá a tela de desligamento"
 
-#: ../../session/power/utils.go:507
+#: ../../session/power/utils.go:518
 msgid "it will do nothing to your computer"
 msgstr "não irá fazer nada ao computador"
 
@@ -1135,7 +1096,7 @@ msgstr ""
 
 #: ../../timedate/manager_format.go:75
 msgid "Space"
-msgstr ""
+msgstr "Espaço"
 
 #: ../../timedate/manager_ifc.go:51
 msgid "Authentication is required to set the system time"

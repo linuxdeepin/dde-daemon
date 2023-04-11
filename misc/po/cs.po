@@ -5,21 +5,22 @@
 # 
 # Translators:
 # op6464 <op64@seznam.cz>, 2020
-# Cindy0514, 2020
+# deepiner, 2020
 # 李洪武 <lihongwu1987@gmail.com>, 2021
-# fri, 2022
 # Pavel Borecki <pavel.borecki@gmail.com>, 2022
 # Tomáš Hurta, 2022
+# fri, 2022
+# Petr Balvín, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
+"POT-Creation-Date: 2023-04-11 17:42+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Tomáš Hurta, 2022\n"
-"Language-Team: Czech (https://www.transifex.com/linuxdeepin/teams/3617/cs/)\n"
+"Last-Translator: Petr Balvín, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/linuxdeepin/teams/3617/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -59,10 +60,14 @@ msgstr "Jméno už existuje"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Je třeba, aby uživatelské jméno mělo délku 3 až 32 znaků"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts/manager.go:540
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "Uživatel „%s“ existoval předtím a jeho data jsou synchronizována"
+
+#: ../../accounts/user_ifc.go:660
+msgid "This system wallpaper is locked. Please contact your admin."
+msgstr ""
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -95,7 +100,7 @@ msgstr "Měřítko zobrazení"
 msgid "%s had been disabled"
 msgstr "%s bylo vypnuto"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:95
 msgid "Open"
 msgstr "Otevřít"
 
@@ -167,57 +172,56 @@ msgstr "Přístup ke zprávám"
 msgid "Message notification"
 msgstr "Upozorňování na zprávy"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth/obex_agent.go:391
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Získává se %[1]q z %[2]q"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth/obex_agent.go:400
 msgid "View"
 msgstr "Pohled"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth/obex_agent.go:406
 msgid "You have received files from %q successfully"
 msgstr "Úspěšně jste obdrželi soubory z %q"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth/obex_agent.go:407
 msgid "Done"
 msgstr "Hotovo"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
 msgid "Stop Receiving Files"
 msgstr "Zastavit příjem souborů"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth/obex_agent.go:424
 msgid "You have cancelled the file transfer"
 msgstr "Zrušili jste přenos souboru"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth připojení se nezdařilo"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Decline"
 msgstr "Odmítnout"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Receive"
 msgstr "Přijmout"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth/obex_agent.go:466
 msgid "Bluetooth File Transfer"
 msgstr "Přenos souborů přes Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth/obex_agent.go:467
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q vám chce poslat soubory. Přijmout?"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth/obex_agent.go:522
 msgid "Receiving %q timed out"
 msgstr "Překročen časový limit při získávání %q"
 
@@ -233,26 +237,30 @@ msgstr "Přidat Bluetooth zařízení"
 msgid "Pair"
 msgstr "Spárovat"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../dock/app_entry_menu.go:102
 msgid "Close All"
 msgstr "Zavřít vše"
 
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:129 ../../dock/app_entry_menu.go:143
+#: ../../dock/app_entry_menu.go:158
 msgid "Force Quit"
 msgstr "Vynutit ukončení"
 
-#: ../../dock/app_entry_menu.go:160
+#: ../../dock/app_entry_menu.go:162
 msgid "Dock"
 msgstr "Panel"
 
-#: ../../dock/app_entry_menu.go:170
+#: ../../dock/app_entry_menu.go:172
 msgid "Undock"
 msgstr "Zrušit ukotvení"
 
-#: ../../dock/app_entry_menu.go:180
+#: ../../dock/app_entry_menu.go:182
 msgid "All Windows"
 msgstr "Všechna okna"
+
+#: ../../dock/app_info.go:72 ../../launcher/item.go:97
+msgid "(Linglong)"
+msgstr ""
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -483,88 +491,43 @@ msgstr "Systémový jazyk byl změněn – prosím odhlaste se a přihlaste nazp
 msgid "Failed to change system language, please try later"
 msgstr "Nepodařilo se změnit jazyk systému, zkuste to znovu později"
 
-#: ../../lastore/lastore.go:427
-msgid "Retry"
-msgstr "Zkusit znovu"
-
-#: ../../lastore/lastore.go:449
-msgid "Update Now"
-msgstr "Aktualizovat nyní"
-
-#: ../../lastore/lastore.go:479
-msgid "Reboot Now"
-msgstr "Restartovat nyní"
-
-#: ../../lastore/lastore.go:483
-msgid "Remind Me Later"
-msgstr "Připomenout později"
-
-#: ../../lastore/lastore.go:490
-msgid "10 mins later"
-msgstr "o 10 minut později "
-
-#: ../../lastore/lastore.go:497
-msgid "30 mins later"
-msgstr "o 30 minut později "
-
-#: ../../lastore/lastore.go:504
-msgid "2h later"
-msgstr "o 2 hodiny později "
-
-#: ../../lastore/lastore.go:511
-msgid "6h later"
-msgstr "o 6 hodin později"
-
-#: ../../lastore/notify.go:93
-msgid "%q installed successfully."
-msgstr "%q úspěšně nainstalováno."
-
-#: ../../lastore/notify.go:96
-msgid "%q failed to install."
-msgstr "%q se nepodařilo nainstalovat."
-
-#: ../../lastore/notify.go:104
-msgid "Removed successfully"
-msgstr "Úspěšně odebráno"
-
-#: ../../lastore/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Aplikaci se nepodařilo odebrat"
-
-#: ../../lastore/notify.go:113
-msgid ""
-"In order to prevent automatic shutdown, please plug in for normal update."
+#: ../../lastore/daemon.go:171
+msgid "Updates failed: it was interrupted."
 msgstr ""
-"Abyste zabránili automatickému vypnutí, připojte ke zdroji napájení z "
-"elektrické sítě, aby aktualizace proběhla v pořádku."
 
-#: ../../lastore/notify.go:118
-msgid "Package cache wiped"
-msgstr "Vyrovnávací paměť balíčků vyčištěna"
-
-#: ../../lastore/notify.go:123
-msgid "Updates Available"
-msgstr "Jsou k dispozici aktualizace"
-
-#: ../../lastore/notify.go:128
-msgid "Reboot after Updates"
-msgstr "Restartovat po aktualizacích "
-
-#: ../../lastore/notify.go:129
-msgid "Restart the computer to use the system and applications properly"
-msgstr "Pro správné fungování systému a aplikací restartujte počítač "
-
-#: ../../lastore/notify.go:139
+#: ../../lastore/daemon.go:173
 msgid ""
-"Your system is being updated, but the capacity is lower than 50%, please "
-"plug in to avoid power outage"
+"Updates failed: it was interrupted. Please roll back to the old version and "
+"try again."
 msgstr ""
-"Váš systém se aktualizuje, ale úroveň baterie je nižší než 50 %, zapojte "
-"nabíječku, abyste předešli výpadku proudu "
 
-#: ../../lastore/notify.go:140
-msgid "OK"
-msgstr "OK"
+#: ../../lastore/daemon.go:179
+msgid "Updates failed: DPKG error."
+msgstr ""
+
+#: ../../lastore/daemon.go:181
+msgid ""
+"Updates failed: DPKG error. Please roll back to the old version and try "
+"again."
+msgstr ""
+
+#: ../../lastore/daemon.go:185
+msgid "Updates failed: insufficient disk space."
+msgstr ""
+
+#: ../../lastore/daemon.go:187
+msgid ""
+"Updates failed: insufficient disk space. Please roll back to the old version"
+" and try again."
+msgstr ""
+
+#: ../../lastore/daemon.go:191
+msgid "Updates failed"
+msgstr ""
+
+#: ../../lastore/daemon.go:193
+msgid "Updates failed. Please roll back to the old version and try again."
+msgstr ""
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -574,44 +537,44 @@ msgstr "%q úspěšně odstraněno"
 msgid "Failed to uninstall %q"
 msgstr "Nepodařilo se odinstalovat %q"
 
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "Žádné"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "WEP klíč 40/128 bitů"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 osobní"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr "WPA3 Personal"
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "Tunelované TLS"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "Chráněné EAP"
 
@@ -1005,7 +968,7 @@ msgstr "Připojení k %q se nezdařilo – chybné heslo"
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "%q nelze připojit"
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
@@ -1070,41 +1033,41 @@ msgid "Battery low, please plug in"
 msgstr ""
 "Akumulátor je téměř vybitý – připojte počítač k napájení z elektrické sítě"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
+#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
 msgid "Power settings changed"
 msgstr "Nastavení správy napájení změněna"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Při přiklopení obrazovky,"
 
-#: ../../session/power/utils.go:487
+#: ../../session/power/utils.go:498
 msgid "When pressing the power button, "
 msgstr "Při stisku tlačítka napájení,"
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "váš počítač bude vypnut"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "váš počítač bude uspán"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power/utils.go:512
 msgid "your computer will hibernate"
 msgstr "počítač bude uspán na disk"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power/utils.go:514
 msgid "your monitor will turn off"
 msgstr "monitor bude vypnut"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power/utils.go:516
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "na monitoru se zobrazí rozhraní pro vypnutí"
 
-#: ../../session/power/utils.go:507
+#: ../../session/power/utils.go:518
 msgid "it will do nothing to your computer"
 msgstr "na vašem počítači nebude dělat nic"
 
@@ -1125,7 +1088,7 @@ msgstr ""
 
 #: ../../timedate/manager_format.go:75
 msgid "Space"
-msgstr ""
+msgstr "Místo"
 
 #: ../../timedate/manager_ifc.go:51
 msgid "Authentication is required to set the system time"

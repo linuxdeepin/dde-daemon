@@ -6,7 +6,7 @@
 # Translators:
 # Adrián Ramos García <adrian.ramos.garcia.93@gmail.com>, 2020
 # Rubén <feiticeiro2010@hotmail.es>, 2020
-# Cindy0514, 2020
+# deepiner, 2020
 # David Rebolo Magariños <drgaga345@gmail.com>, 2020
 # 55794061bc336d90de42969fbdc28df8_7437f78 <f3b318f732e51e2854926463b55b3f0e_42535>, 2022
 # 
@@ -15,10 +15,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
+"POT-Creation-Date: 2023-04-11 17:42+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: 55794061bc336d90de42969fbdc28df8_7437f78 <f3b318f732e51e2854926463b55b3f0e_42535>, 2022\n"
-"Language-Team: Galician (Spain) (https://www.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
+"Language-Team: Galician (Spain) (https://app.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -57,9 +57,13 @@ msgstr "O nome xa existe"
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuario ten de ter entre 3 e 32 caracteres"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts/manager.go:540
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
+#: ../../accounts/user_ifc.go:660
+msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
 #: ../../appearance/scale.go:41
@@ -92,7 +96,7 @@ msgstr "Escala de visualización"
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:95
 msgid "Open"
 msgstr "Abrir"
 
@@ -164,57 +168,56 @@ msgstr "Acceso a mensaxe"
 msgid "Message notification"
 msgstr "Mensaxe de notificación"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth/obex_agent.go:391
 msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth/obex_agent.go:400
 msgid "View"
 msgstr "Ver"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth/obex_agent.go:406
 msgid "You have received files from %q successfully"
 msgstr "O ficheiros de %q recibíronse con éxito"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth/obex_agent.go:407
 msgid "Done"
 msgstr "Feito"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
 msgid "Stop Receiving Files"
 msgstr "Deter recepción de ficheiros"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth/obex_agent.go:424
 msgid "You have cancelled the file transfer"
 msgstr "Cancelaches a transferencia do ficheiro"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Fallou a conexión Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Decline"
 msgstr "Rexeitar"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Receive"
 msgstr "Recibir"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth/obex_agent.go:466
 msgid "Bluetooth File Transfer"
 msgstr "Transferir un ficheiro por Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth/obex_agent.go:467
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q quere enviarche ficheiros. Recibir?"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth/obex_agent.go:522
 msgid "Receiving %q timed out"
 msgstr ""
 
@@ -230,26 +233,30 @@ msgstr "Engadir dispositivos Bluetooth"
 msgid "Pair"
 msgstr "Emparellar"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../dock/app_entry_menu.go:102
 msgid "Close All"
 msgstr "Pechar todo"
 
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:129 ../../dock/app_entry_menu.go:143
+#: ../../dock/app_entry_menu.go:158
 msgid "Force Quit"
 msgstr "Forzar a saída"
 
-#: ../../dock/app_entry_menu.go:160
+#: ../../dock/app_entry_menu.go:162
 msgid "Dock"
 msgstr "Doca"
 
-#: ../../dock/app_entry_menu.go:170
+#: ../../dock/app_entry_menu.go:172
 msgid "Undock"
 msgstr "Quitar da doca"
 
-#: ../../dock/app_entry_menu.go:180
+#: ../../dock/app_entry_menu.go:182
 msgid "All Windows"
 msgstr "Todas as xanelas"
+
+#: ../../dock/app_info.go:72 ../../launcher/item.go:97
+msgid "(Linglong)"
+msgstr ""
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -480,85 +487,43 @@ msgstr "Cambiouse a lingua do sistema, saia e logo volva a entrar"
 msgid "Failed to change system language, please try later"
 msgstr "Erro ao cambiar a lingua do sistema. Proba máis tarde"
 
-#: ../../lastore/lastore.go:427
-msgid "Retry"
-msgstr "Tentar de novo"
-
-#: ../../lastore/lastore.go:449
-msgid "Update Now"
-msgstr "Actualizar agora"
-
-#: ../../lastore/lastore.go:479
-msgid "Reboot Now"
-msgstr "Reiniciar agora"
-
-#: ../../lastore/lastore.go:483
-msgid "Remind Me Later"
+#: ../../lastore/daemon.go:171
+msgid "Updates failed: it was interrupted."
 msgstr ""
 
-#: ../../lastore/lastore.go:490
-msgid "10 mins later"
-msgstr ""
-
-#: ../../lastore/lastore.go:497
-msgid "30 mins later"
-msgstr ""
-
-#: ../../lastore/lastore.go:504
-msgid "2h later"
-msgstr ""
-
-#: ../../lastore/lastore.go:511
-msgid "6h later"
-msgstr ""
-
-#: ../../lastore/notify.go:93
-msgid "%q installed successfully."
-msgstr "%q instalada con éxito."
-
-#: ../../lastore/notify.go:96
-msgid "%q failed to install."
-msgstr "%q non se puido instalar."
-
-#: ../../lastore/notify.go:104
-msgid "Removed successfully"
-msgstr "Eliminado correctamente"
-
-#: ../../lastore/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Erro ao eliminar o aplicativo"
-
-#: ../../lastore/notify.go:113
+#: ../../lastore/daemon.go:173
 msgid ""
-"In order to prevent automatic shutdown, please plug in for normal update."
-msgstr ""
-"Para previr o apagado automático, por favor conecta á corrente o computador."
-
-#: ../../lastore/notify.go:118
-msgid "Package cache wiped"
-msgstr "Caché do paquete eliminado"
-
-#: ../../lastore/notify.go:123
-msgid "Updates Available"
+"Updates failed: it was interrupted. Please roll back to the old version and "
+"try again."
 msgstr ""
 
-#: ../../lastore/notify.go:128
-msgid "Reboot after Updates"
+#: ../../lastore/daemon.go:179
+msgid "Updates failed: DPKG error."
 msgstr ""
 
-#: ../../lastore/notify.go:129
-msgid "Restart the computer to use the system and applications properly"
-msgstr ""
-
-#: ../../lastore/notify.go:139
+#: ../../lastore/daemon.go:181
 msgid ""
-"Your system is being updated, but the capacity is lower than 50%, please "
-"plug in to avoid power outage"
+"Updates failed: DPKG error. Please roll back to the old version and try "
+"again."
 msgstr ""
 
-#: ../../lastore/notify.go:140
-msgid "OK"
-msgstr "Aceptar"
+#: ../../lastore/daemon.go:185
+msgid "Updates failed: insufficient disk space."
+msgstr ""
+
+#: ../../lastore/daemon.go:187
+msgid ""
+"Updates failed: insufficient disk space. Please roll back to the old version"
+" and try again."
+msgstr ""
+
+#: ../../lastore/daemon.go:191
+msgid "Updates failed"
+msgstr ""
+
+#: ../../lastore/daemon.go:193
+msgid "Updates failed. Please roll back to the old version and try again."
+msgstr ""
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -568,44 +533,44 @@ msgstr "%q eliminouse correctamente"
 msgid "Failed to uninstall %q"
 msgstr "Erro ao desinstalar %q"
 
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "Ningún"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "Chave WEP 40/128-bit"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Persoal"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "RÁPIDO"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "EAP protexido"
 
@@ -1067,41 +1032,41 @@ msgstr "Batería moi baixa"
 msgid "Battery low, please plug in"
 msgstr "Batería baixa, conécteo"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
+#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
 msgid "Power settings changed"
 msgstr "A configuración de enerxía cambiou"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Cando a tapa está pechada,"
 
-#: ../../session/power/utils.go:487
+#: ../../session/power/utils.go:498
 msgid "When pressing the power button, "
 msgstr "Cando presionas o botón de acendido,"
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "o teu computador apagarase"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "o teu computador suspenderase"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power/utils.go:512
 msgid "your computer will hibernate"
 msgstr "o teu computador hibernará"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power/utils.go:514
 msgid "your monitor will turn off"
 msgstr "o teu monitor apagarase"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power/utils.go:516
 msgid "your monitor will show the shutdown interface"
 msgstr ""
 
-#: ../../session/power/utils.go:507
+#: ../../session/power/utils.go:518
 msgid "it will do nothing to your computer"
 msgstr "Non fará nada ao teu computador"
 

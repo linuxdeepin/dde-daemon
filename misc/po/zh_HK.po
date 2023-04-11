@@ -2,23 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Wyatt <wkyung@outlook.com>, 2020
 # iceleaf <iceleaf916@gmail.com>, 2020
 # Philip CHEUNG, 2020
 # 李洪武 <lihongwu1987@gmail.com>, 2021
-# Cindy0514, 2022
-#
+# deepiner, 2023
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
+"POT-Creation-Date: 2023-04-11 17:42+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2022\n"
-"Language-Team: Chinese (Hong Kong) (https://www.transifex.com/linuxdeepin/teams/3617/zh_HK/)\n"
+"Last-Translator: deepiner, 2023\n"
+"Language-Team: Chinese (Hong Kong) (https://app.transifex.com/linuxdeepin/teams/3617/zh_HK/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -55,10 +55,14 @@ msgstr "該名稱已存在"
 msgid "Username must be between 3 and 32 characters"
 msgstr "用戶名長度必須介於3到32個字符之間"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts/manager.go:540
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "“%s”用戶為之前已存在的用戶，原數據已同步"
+
+#: ../../accounts/user_ifc.go:660
+msgid "This system wallpaper is locked. Please contact your admin."
+msgstr "當前系統壁紙已被鎖定，請聯繫管理員"
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -89,7 +93,7 @@ msgstr "屏幕縮放"
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:95
 msgid "Open"
 msgstr "開啟"
 
@@ -161,57 +165,56 @@ msgstr "訊息存取"
 msgid "Message notification"
 msgstr "訊息通知"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "取消"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth/obex_agent.go:391
 msgid "Receiving %[1]q from %[2]q"
 msgstr "正在接收來自%[2]q的%[1]q文件"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth/obex_agent.go:400
 msgid "View"
 msgstr "檢視"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth/obex_agent.go:406
 msgid "You have received files from %q successfully"
 msgstr "您已成功接收來自%q的文件"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth/obex_agent.go:407
 msgid "Done"
 msgstr "完成"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
 msgid "Stop Receiving Files"
 msgstr "文件接收中止"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth/obex_agent.go:424
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "藍牙連接失敗"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Decline"
 msgstr "拒絕"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Receive"
 msgstr "接收"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth/obex_agent.go:466
 msgid "Bluetooth File Transfer"
 msgstr "藍牙文件傳輸"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth/obex_agent.go:467
 msgid "%q wants to send files to you. Receive?"
 msgstr "您收到%q發送給您的文件，是否接收？"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth/obex_agent.go:522
 msgid "Receiving %q timed out"
 msgstr "接收%q超時"
 
@@ -227,26 +230,30 @@ msgstr "添加藍牙設備"
 msgid "Pair"
 msgstr "配對"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../dock/app_entry_menu.go:102
 msgid "Close All"
 msgstr "關閉所有"
 
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:129 ../../dock/app_entry_menu.go:143
+#: ../../dock/app_entry_menu.go:158
 msgid "Force Quit"
 msgstr "強制退出"
 
-#: ../../dock/app_entry_menu.go:160
+#: ../../dock/app_entry_menu.go:162
 msgid "Dock"
 msgstr "駐留 "
 
-#: ../../dock/app_entry_menu.go:170
+#: ../../dock/app_entry_menu.go:172
 msgid "Undock"
 msgstr "移除駐留"
 
-#: ../../dock/app_entry_menu.go:180
+#: ../../dock/app_entry_menu.go:182
 msgid "All Windows"
 msgstr "所有視窗"
+
+#: ../../dock/app_info.go:72 ../../launcher/item.go:97
+msgid "(Linglong)"
+msgstr "(玲瓏)"
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -475,84 +482,43 @@ msgstr "語言切換成功，請註銷後重新登錄"
 msgid "Failed to change system language, please try later"
 msgstr "系統語言切換失敗，請稍後重試"
 
-#: ../../lastore/lastore.go:427
-msgid "Retry"
-msgstr "重試"
+#: ../../lastore/daemon.go:171
+msgid "Updates failed: it was interrupted."
+msgstr "由於更新中斷，此次系統更新失敗"
 
-#: ../../lastore/lastore.go:449
-msgid "Update Now"
-msgstr "立即更新"
-
-#: ../../lastore/lastore.go:479
-msgid "Reboot Now"
-msgstr "立刻重啟"
-
-#: ../../lastore/lastore.go:483
-msgid "Remind Me Later"
-msgstr "稍後提醒"
-
-#: ../../lastore/lastore.go:490
-msgid "10 mins later"
-msgstr "10分鐘後提醒"
-
-#: ../../lastore/lastore.go:497
-msgid "30 mins later"
-msgstr "30分鐘後提醒"
-
-#: ../../lastore/lastore.go:504
-msgid "2h later"
-msgstr "2小時後提醒"
-
-#: ../../lastore/lastore.go:511
-msgid "6h later"
-msgstr "6小時後提醒"
-
-#: ../../lastore/notify.go:93
-msgid "%q installed successfully."
-msgstr "%q 已成功安裝。"
-
-#: ../../lastore/notify.go:96
-msgid "%q failed to install."
-msgstr "無法安裝%q。"
-
-#: ../../lastore/notify.go:104
-msgid "Removed successfully"
-msgstr "卸載成功"
-
-#: ../../lastore/notify.go:106
-msgid "Failed to remove the app"
-msgstr "卸載失敗"
-
-#: ../../lastore/notify.go:113
+#: ../../lastore/daemon.go:173
 msgid ""
-"In order to prevent automatic shutdown, please plug in for normal update."
-msgstr "為免自動關機，更新時請接上電源。"
+"Updates failed: it was interrupted. Please roll back to the old version and "
+"try again."
+msgstr "由於更新中斷，此次系統更新失敗，請回退系統後重試"
 
-#: ../../lastore/notify.go:118
-msgid "Package cache wiped"
-msgstr "已成功清理軟件包緩存 "
+#: ../../lastore/daemon.go:179
+msgid "Updates failed: DPKG error."
+msgstr "由於dpkg錯誤，此次系統更新失敗"
 
-#: ../../lastore/notify.go:123
-msgid "Updates Available"
-msgstr "檢測到有更新可用"
-
-#: ../../lastore/notify.go:128
-msgid "Reboot after Updates"
-msgstr "更新重啟"
-
-#: ../../lastore/notify.go:129
-msgid "Restart the computer to use the system and applications properly"
-msgstr "為了您能夠正常地使用系統和應用，更新後請重新啟動系統"
-
-#: ../../lastore/notify.go:139
+#: ../../lastore/daemon.go:181
 msgid ""
-"Your system is being updated, but the capacity is lower than 50%, please "
-"plug in to avoid power outage"
-msgstr "檢測到版本正在更新中，您的電量已低於50%，請及時接入電源"
+"Updates failed: DPKG error. Please roll back to the old version and try "
+"again."
+msgstr "由於dpkg錯誤，此次系統更新失敗，請回退系統後重試"
 
-#: ../../lastore/notify.go:140
-msgid "OK"
-msgstr "確 定"
+#: ../../lastore/daemon.go:185
+msgid "Updates failed: insufficient disk space."
+msgstr "磁盤空間不足，此次更新失敗"
+
+#: ../../lastore/daemon.go:187
+msgid ""
+"Updates failed: insufficient disk space. Please roll back to the old version"
+" and try again."
+msgstr "由於磁盤空間不足，此次更新失敗，請回退系統後重試"
+
+#: ../../lastore/daemon.go:191
+msgid "Updates failed"
+msgstr "此次更新失敗"
+
+#: ../../lastore/daemon.go:193
+msgid "Updates failed. Please roll back to the old version and try again."
+msgstr "此次系統更新失敗，請回退系統後重試"
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -562,44 +528,44 @@ msgstr "成功卸載 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸載失敗"
 
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "無"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128位 密鑰"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 個人版"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr "WPA3 個人版"
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "隧道TLS"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "受保護的EAP"
 
@@ -1048,41 +1014,41 @@ msgstr "電池電量耗盡"
 msgid "Battery low, please plug in"
 msgstr "電池電量低，請連接電源"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
+#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
 msgid "Power settings changed"
 msgstr "電源設置更改"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "“筆記本合蓋時”"
 
-#: ../../session/power/utils.go:487
+#: ../../session/power/utils.go:498
 msgid "When pressing the power button, "
 msgstr "“按電源按鈕時”"
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "修改為關機"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "修改為待機"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power/utils.go:512
 msgid "your computer will hibernate"
 msgstr "修改為休眠"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power/utils.go:514
 msgid "your monitor will turn off"
 msgstr "修改為關閉顯示器"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power/utils.go:516
 msgid "your monitor will show the shutdown interface"
 msgstr "修改為進入關機界面"
 
-#: ../../session/power/utils.go:507
+#: ../../session/power/utils.go:518
 msgid "it will do nothing to your computer"
 msgstr "修改為無任何操作"
 

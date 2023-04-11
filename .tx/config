@@ -3,25 +3,25 @@ host = https://www.transifex.com
 minimum_perc = 80
 mode = developer
 
-[deepin-desktop-environment.dde-daemonpot]
+[o:linuxdeepin:p:deepin-desktop-environment:r:dde-daemonpot]
 file_filter = misc/po/<lang>.po
 source_file = misc/po/dde-daemon.pot
 source_lang = en
 type = PO
 
-[deepin-desktop-environment.dde-daemon-grub2-policyts]
+[o:linuxdeepin:p:deepin-desktop-environment:r:dde-daemon-grub2-policyts]
 file_filter = misc/ts/com.deepin.daemon.Grub2.policy/policy_<lang>.ts
 source_file = misc/ts/com.deepin.daemon.Grub2.policy/policy.ts
 source_lang = en
 type = QT
 
-[deepin-desktop-environment.dde-daemon-accounts-policyts]
+[o:linuxdeepin:p:deepin-desktop-environment:r:dde-daemon-accounts-policyts]
 file_filter = misc/ts/com.deepin.daemon.accounts.policy/policy_<lang>.ts
 source_file = misc/ts/com.deepin.daemon.accounts.policy/policy.ts
 source_lang = en
 type = QT
 
-[deepin-desktop-environment.dde-daemon-fprintd-policyts]
+[o:linuxdeepin:p:deepin-desktop-environment:r:dde-daemon-fprintd-policyts]
 file_filter = misc/ts/com.deepin.daemon.Fprintd.policy/policy_<lang>.ts
 source_file = misc/ts/com.deepin.daemon.Fprintd.policy/policy.ts
 source_lang = en

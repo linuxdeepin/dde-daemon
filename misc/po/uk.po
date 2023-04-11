@@ -6,7 +6,7 @@
 # Translators:
 # Yuriy, 2020
 # Roman <dejitaru.tiger@gmail.com>, 2020
-# Cindy0514, 2020
+# deepiner, 2020
 # Marck Hrin, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Yuri Chornoivan <yurchor@ukr.net>, 2022
@@ -16,10 +16,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
+"POT-Creation-Date: 2023-04-11 17:42+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2022\n"
-"Language-Team: Ukrainian (https://www.transifex.com/linuxdeepin/teams/3617/uk/)\n"
+"Language-Team: Ukrainian (https://app.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,11 +58,15 @@ msgstr "Таке ім'я вже існує"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts/manager.go:540
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Запис користувача «%s» вже існував. Його дані синхронізовано з попередніми"
+
+#: ../../accounts/user_ifc.go:660
+msgid "This system wallpaper is locked. Please contact your admin."
+msgstr ""
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -94,7 +98,7 @@ msgstr "Маштабування дисплею"
 msgid "%s had been disabled"
 msgstr "%s вимкнено"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:95
 msgid "Open"
 msgstr "Відкрити"
 
@@ -166,57 +170,56 @@ msgstr "Доступ до повідомлень"
 msgid "Message notification"
 msgstr "Сповіщення про повідомлення"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth/obex_agent.go:391
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Отримуємо %[1]q з %[2]q"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth/obex_agent.go:400
 msgid "View"
 msgstr "Переглянути"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth/obex_agent.go:406
 msgid "You have received files from %q successfully"
 msgstr "Вами успішно отримано файли з %q"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth/obex_agent.go:407
 msgid "Done"
 msgstr "Виконано"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
 msgid "Stop Receiving Files"
 msgstr "Припинити отримання файлів"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth/obex_agent.go:424
 msgid "You have cancelled the file transfer"
 msgstr "Вами скасовано передавання файлів"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Збій підключення з Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Decline"
 msgstr "Відхилити"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Receive"
 msgstr "Отримати"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth/obex_agent.go:466
 msgid "Bluetooth File Transfer"
 msgstr "Передавання файлів Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth/obex_agent.go:467
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q хоче надіслати вам файли. Отримати ці файли?"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth/obex_agent.go:522
 msgid "Receiving %q timed out"
 msgstr "Перевищено час очікування на отримання %q"
 
@@ -232,26 +235,30 @@ msgstr "Додайте пристрої Bluetooth"
 msgid "Pair"
 msgstr "З'єднати"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../dock/app_entry_menu.go:102
 msgid "Close All"
 msgstr "Закрити всі"
 
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:129 ../../dock/app_entry_menu.go:143
+#: ../../dock/app_entry_menu.go:158
 msgid "Force Quit"
 msgstr "Примусово Вийти"
 
-#: ../../dock/app_entry_menu.go:160
+#: ../../dock/app_entry_menu.go:162
 msgid "Dock"
 msgstr "Док"
 
-#: ../../dock/app_entry_menu.go:170
+#: ../../dock/app_entry_menu.go:172
 msgid "Undock"
 msgstr "Розстикуватись"
 
-#: ../../dock/app_entry_menu.go:180
+#: ../../dock/app_entry_menu.go:182
 msgid "All Windows"
 msgstr "Усі вікна"
+
+#: ../../dock/app_info.go:72 ../../launcher/item.go:97
+msgid "(Linglong)"
+msgstr ""
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -482,90 +489,43 @@ msgstr "Змінено мову системи, вийдіть із систем
 msgid "Failed to change system language, please try later"
 msgstr "Не вдалося змінити мову системи, спробуйте пізніше"
 
-#: ../../lastore/lastore.go:427
-msgid "Retry"
-msgstr "Спробувати ще раз"
+#: ../../lastore/daemon.go:171
+msgid "Updates failed: it was interrupted."
+msgstr ""
 
-#: ../../lastore/lastore.go:449
-msgid "Update Now"
-msgstr "Оновити зараз"
-
-#: ../../lastore/lastore.go:479
-msgid "Reboot Now"
-msgstr "Перезавантажити зараз"
-
-#: ../../lastore/lastore.go:483
-msgid "Remind Me Later"
-msgstr "Нагадати пізніше"
-
-#: ../../lastore/lastore.go:490
-msgid "10 mins later"
-msgstr "За 10 хвилин"
-
-#: ../../lastore/lastore.go:497
-msgid "30 mins later"
-msgstr "За 30 хвилин"
-
-#: ../../lastore/lastore.go:504
-msgid "2h later"
-msgstr "За 2 години"
-
-#: ../../lastore/lastore.go:511
-msgid "6h later"
-msgstr "За 6 годин"
-
-#: ../../lastore/notify.go:93
-msgid "%q installed successfully."
-msgstr "%q інстальовано успішно."
-
-#: ../../lastore/notify.go:96
-msgid "%q failed to install."
-msgstr "Не вдалося встановити %q."
-
-#: ../../lastore/notify.go:104
-msgid "Removed successfully"
-msgstr "Успішно вилучено"
-
-#: ../../lastore/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Не вдалося вилучити програму"
-
-#: ../../lastore/notify.go:113
+#: ../../lastore/daemon.go:173
 msgid ""
-"In order to prevent automatic shutdown, please plug in for normal update."
+"Updates failed: it was interrupted. Please roll back to the old version and "
+"try again."
 msgstr ""
-"Підключіть, щоб запобігти автоматичному вимкненню й належним чином здійснити"
-" оновлення."
 
-#: ../../lastore/notify.go:118
-msgid "Package cache wiped"
-msgstr "Очищення кешу пакету"
-
-#: ../../lastore/notify.go:123
-msgid "Updates Available"
-msgstr "Доступні оновлення"
-
-#: ../../lastore/notify.go:128
-msgid "Reboot after Updates"
-msgstr "Перезавантажити після оновлень"
-
-#: ../../lastore/notify.go:129
-msgid "Restart the computer to use the system and applications properly"
+#: ../../lastore/daemon.go:179
+msgid "Updates failed: DPKG error."
 msgstr ""
-"Перезавантажте систему, щоб належним чином користуватися нею та програмами"
 
-#: ../../lastore/notify.go:139
+#: ../../lastore/daemon.go:181
 msgid ""
-"Your system is being updated, but the capacity is lower than 50%, please "
-"plug in to avoid power outage"
+"Updates failed: DPKG error. Please roll back to the old version and try "
+"again."
 msgstr ""
-"Відбувається оновлення вашої системи, але заряд акумуляторів є нижчим за "
-"50%. Будь ласка, з'єднайте комп'ютер із джерелом постійного живлення, щоб "
-"уникнути небажаного вимикання у відповідальний момент."
 
-#: ../../lastore/notify.go:140
-msgid "OK"
-msgstr "Гаразд"
+#: ../../lastore/daemon.go:185
+msgid "Updates failed: insufficient disk space."
+msgstr ""
+
+#: ../../lastore/daemon.go:187
+msgid ""
+"Updates failed: insufficient disk space. Please roll back to the old version"
+" and try again."
+msgstr ""
+
+#: ../../lastore/daemon.go:191
+msgid "Updates failed"
+msgstr ""
+
+#: ../../lastore/daemon.go:193
+msgid "Updates failed. Please roll back to the old version and try again."
+msgstr ""
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -575,44 +535,44 @@ msgstr "%q успішно видалено"
 msgid "Failed to uninstall %q"
 msgstr "Не вдалося встановити %q"
 
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "Нічого"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "Ключ WEP 40/128-біт"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "Режим WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr "Особистий WPA3"
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "ІНТЕРВАЛ"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "ШВИДКО"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "Тунельований TLS"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "Захищений EAP"
 
@@ -1013,7 +973,7 @@ msgstr "Помилка підключення, неможливо підключ
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "Не вдалося встановити з'єднання із %q"
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
@@ -1080,41 +1040,41 @@ msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
 "мережі живлення"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
+#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
 msgid "Power settings changed"
 msgstr "Параметри живлення змінено"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Якщо закрито кришку,"
 
-#: ../../session/power/utils.go:487
+#: ../../session/power/utils.go:498
 msgid "When pressing the power button, "
 msgstr "Якщо натиснуто кнопку живлення,"
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "ваш комп'ютер буде вимкнено"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "ваш комп'ютер буде призупинено"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power/utils.go:512
 msgid "your computer will hibernate"
 msgstr "ваш комп'ютер буде приспано"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power/utils.go:514
 msgid "your monitor will turn off"
 msgstr "монітор буде вимкнено"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power/utils.go:516
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "на вашому моніторі буде показано інтерфейс завершення роботи"
 
-#: ../../session/power/utils.go:507
+#: ../../session/power/utils.go:518
 msgid "it will do nothing to your computer"
 msgstr "ніяких дій із комп'ютером не буде виконано"
 

@@ -6,9 +6,8 @@
 # Translators:
 # Marc Sancho <msgsistemes@gmail.com>, 2020
 # el_libre como el chaval <el.libre@gmail.com>, 2020
-# deepin_transifex <xiabin@linuxdeepin.com>, 2020
+# deepiner, 2020
 # Jaime Muñoz Martín <jmmartin_5@outlook.com>, 2020
-# Cindy0514, 2022
 # Davidmp <medipas@gmail.com>, 2022
 # 
 #, fuzzy
@@ -16,10 +15,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
+"POT-Creation-Date: 2023-04-11 17:42+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Davidmp <medipas@gmail.com>, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/linuxdeepin/teams/3617/ca/)\n"
+"Language-Team: Catalan (https://app.transifex.com/linuxdeepin/teams/3617/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,10 +57,14 @@ msgstr "El nom ja existeix."
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nom d'usuari ha de tenir de 3 a 32 caràcters de llargada."
 
-#: ../../accounts/manager.go:449
+#: ../../accounts/manager.go:540
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "L'usuari %s existia abans i les seves dades estan sincronitzades."
+
+#: ../../accounts/user_ifc.go:660
+msgid "This system wallpaper is locked. Please contact your admin."
+msgstr ""
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -92,7 +95,7 @@ msgstr "Escalatge de la pantalla"
 msgid "%s had been disabled"
 msgstr "%s s'ha inhabilitat"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:95
 msgid "Open"
 msgstr "Obre"
 
@@ -164,57 +167,56 @@ msgstr "Accés a missatges"
 msgid "Message notification"
 msgstr "Notificació de missatge"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth/obex_agent.go:391
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Es rep %[1]q de %[2]q"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth/obex_agent.go:400
 msgid "View"
 msgstr "Visualització"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth/obex_agent.go:406
 msgid "You have received files from %q successfully"
 msgstr "Heu rebut fitxers de %q correctament."
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth/obex_agent.go:407
 msgid "Done"
 msgstr "Fet"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
 msgid "Stop Receiving Files"
 msgstr "Interromp la recepció de fitxers"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth/obex_agent.go:424
 msgid "You have cancelled the file transfer"
 msgstr "Heu cancel·lat la transferència."
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Ha fallat la connexió de Bluetooth."
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Decline"
 msgstr "Rebutja-ho"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Receive"
 msgstr "Rep"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth/obex_agent.go:466
 msgid "Bluetooth File Transfer"
 msgstr "Transferència de fitxers per Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth/obex_agent.go:467
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q vol enviar-vos fitxers. Els voleu rebre?"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth/obex_agent.go:522
 msgid "Receiving %q timed out"
 msgstr "S'ha esgotat el temps d'espera per rebre %q."
 
@@ -230,26 +232,30 @@ msgstr "Afegeix dispositius Bluetooth"
 msgid "Pair"
 msgstr "Aparella"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../dock/app_entry_menu.go:102
 msgid "Close All"
 msgstr "Tanca-ho tot"
 
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:129 ../../dock/app_entry_menu.go:143
+#: ../../dock/app_entry_menu.go:158
 msgid "Force Quit"
 msgstr "Força'n la sortida"
 
-#: ../../dock/app_entry_menu.go:160
+#: ../../dock/app_entry_menu.go:162
 msgid "Dock"
 msgstr "Acoblador"
 
-#: ../../dock/app_entry_menu.go:170
+#: ../../dock/app_entry_menu.go:172
 msgid "Undock"
 msgstr "Treu de l'acoblador"
 
-#: ../../dock/app_entry_menu.go:180
+#: ../../dock/app_entry_menu.go:182
 msgid "All Windows"
 msgstr "Totes les finestres"
+
+#: ../../dock/app_info.go:72 ../../launcher/item.go:97
+msgid "(Linglong)"
+msgstr ""
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -484,89 +490,43 @@ msgstr ""
 "Ha fallat canviar la llengua del sistema. Si us plau, torneu-ho a provar més"
 " tard."
 
-#: ../../lastore/lastore.go:427
-msgid "Retry"
-msgstr "Torna-ho a provar"
+#: ../../lastore/daemon.go:171
+msgid "Updates failed: it was interrupted."
+msgstr ""
 
-#: ../../lastore/lastore.go:449
-msgid "Update Now"
-msgstr "Actualitza ara"
-
-#: ../../lastore/lastore.go:479
-msgid "Reboot Now"
-msgstr "Reinicia ara"
-
-#: ../../lastore/lastore.go:483
-msgid "Remind Me Later"
-msgstr "Recorda-m'ho més tard"
-
-#: ../../lastore/lastore.go:490
-msgid "10 mins later"
-msgstr "10 minuts més tard"
-
-#: ../../lastore/lastore.go:497
-msgid "30 mins later"
-msgstr "30 minuts més tard"
-
-#: ../../lastore/lastore.go:504
-msgid "2h later"
-msgstr "2 hores més tard"
-
-#: ../../lastore/lastore.go:511
-msgid "6h later"
-msgstr "6 hores més tard"
-
-#: ../../lastore/notify.go:93
-msgid "%q installed successfully."
-msgstr "%q s'ha instal·lat correctament."
-
-#: ../../lastore/notify.go:96
-msgid "%q failed to install."
-msgstr "Ha fallat la instal·lació de %q"
-
-#: ../../lastore/notify.go:104
-msgid "Removed successfully"
-msgstr "S'ha eliminat correctament."
-
-#: ../../lastore/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Ha fallat eliminar l'aplicació."
-
-#: ../../lastore/notify.go:113
+#: ../../lastore/daemon.go:173
 msgid ""
-"In order to prevent automatic shutdown, please plug in for normal update."
+"Updates failed: it was interrupted. Please roll back to the old version and "
+"try again."
 msgstr ""
-"Per tal d'evitar l'aturada automàtica, connecteu-vos per a l'actualització "
-"normal."
 
-#: ../../lastore/notify.go:118
-msgid "Package cache wiped"
-msgstr "S'ha netejat la cau de paquets."
-
-#: ../../lastore/notify.go:123
-msgid "Updates Available"
-msgstr "Actualitzacions disponibles"
-
-#: ../../lastore/notify.go:128
-msgid "Reboot after Updates"
-msgstr "Reinicia després de les actualitzacions"
-
-#: ../../lastore/notify.go:129
-msgid "Restart the computer to use the system and applications properly"
+#: ../../lastore/daemon.go:179
+msgid "Updates failed: DPKG error."
 msgstr ""
-"Reinicieu l'ordinador per usar el sistema i les aplicacions correctament."
 
-#: ../../lastore/notify.go:139
+#: ../../lastore/daemon.go:181
 msgid ""
-"Your system is being updated, but the capacity is lower than 50%, please "
-"plug in to avoid power outage"
+"Updates failed: DPKG error. Please roll back to the old version and try "
+"again."
 msgstr ""
-"El sistema s'actualitza, però la capacitat és inferior al 50 %, si us plau, "
-"connecteu-vos per evitar talls d'energia."
 
-#: ../../lastore/notify.go:140
-msgid "OK"
-msgstr "D'acord"
+#: ../../lastore/daemon.go:185
+msgid "Updates failed: insufficient disk space."
+msgstr ""
+
+#: ../../lastore/daemon.go:187
+msgid ""
+"Updates failed: insufficient disk space. Please roll back to the old version"
+" and try again."
+msgstr ""
+
+#: ../../lastore/daemon.go:191
+msgid "Updates failed"
+msgstr ""
+
+#: ../../lastore/daemon.go:193
+msgid "Updates failed. Please roll back to the old version and try again."
+msgstr ""
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -576,44 +536,44 @@ msgstr "%q eliminada correctament"
 msgid "Failed to uninstall %q"
 msgstr "Ha fallat desinstal·lar %q."
 
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "Cap"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "Clau WEP de 40/128 bits"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA / WPA2 personal"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr "WPA3 personal"
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "SALT"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "Ràpid"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "TLS per túnel"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "EAP protegit"
 
@@ -1020,7 +980,7 @@ msgstr ""
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "No es pot connectar amb %q."
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
@@ -1084,41 +1044,41 @@ msgstr "Bateria molt baixa"
 msgid "Battery low, please plug in"
 msgstr "Bateria baixa, endolleu-lo, si us plau."
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
+#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
 msgid "Power settings changed"
 msgstr "S'ha canviat la configuració de l'energia."
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Quan la tapa estigui tancada,"
 
-#: ../../session/power/utils.go:487
+#: ../../session/power/utils.go:498
 msgid "When pressing the power button, "
 msgstr "Quan es premi el botó d'engegar,"
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "l'ordinador s'aturarà."
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "l'ordinador es posarà en suspens."
 
-#: ../../session/power/utils.go:501
+#: ../../session/power/utils.go:512
 msgid "your computer will hibernate"
 msgstr "l'ordinador hibernarà."
 
-#: ../../session/power/utils.go:503
+#: ../../session/power/utils.go:514
 msgid "your monitor will turn off"
 msgstr "el monitor s'aturarà."
 
-#: ../../session/power/utils.go:505
+#: ../../session/power/utils.go:516
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "el monitor mostrarà la interfície d'aturada"
 
-#: ../../session/power/utils.go:507
+#: ../../session/power/utils.go:518
 msgid "it will do nothing to your computer"
 msgstr "no significarà res per a l'ordinador."
 

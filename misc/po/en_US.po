@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Cindy0514, 2022
+# deepiner, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
+"POT-Creation-Date: 2023-04-11 17:42+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Cindy0514, 2022\n"
-"Language-Team: English (United States) (https://www.transifex.com/linuxdeepin/teams/3617/en_US/)\n"
+"Last-Translator: deepiner, 2023\n"
+"Language-Team: English (United States) (https://app.transifex.com/linuxdeepin/teams/3617/en_US/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,10 +53,14 @@ msgstr "The name already exists"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Username must be between 3 and 32 characters"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts/manager.go:540
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "User \"%s\" existed before and its data is synced"
+
+#: ../../accounts/user_ifc.go:660
+msgid "This system wallpaper is locked. Please contact your admin."
+msgstr "This system wallpaper is locked. Please contact your admin."
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -87,7 +91,7 @@ msgstr "Display scaling"
 msgid "%s had been disabled"
 msgstr "%s had been disabled"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:93
+#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:95
 msgid "Open"
 msgstr "Open"
 
@@ -159,57 +163,56 @@ msgstr "Message access"
 msgid "Message notification"
 msgstr "Message notification"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Cancel"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth/obex_agent.go:391
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Receiving %[1]q from %[2]q"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth/obex_agent.go:400
 msgid "View"
 msgstr "View"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth/obex_agent.go:406
 msgid "You have received files from %q successfully"
 msgstr "You have received files from %q successfully"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth/obex_agent.go:407
 msgid "Done"
 msgstr "Done"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
 msgid "Stop Receiving Files"
 msgstr "Stop Receiving Files"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth/obex_agent.go:424
 msgid "You have cancelled the file transfer"
 msgstr "You have cancelled the file transfer"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth connection failed"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Decline"
 msgstr "Decline"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth/obex_agent.go:461
 msgid "Receive"
 msgstr "Receive"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth/obex_agent.go:466
 msgid "Bluetooth File Transfer"
 msgstr "Bluetooth File Transfer"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth/obex_agent.go:467
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q wants to send files to you. Receive?"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth/obex_agent.go:522
 msgid "Receiving %q timed out"
 msgstr "Receiving %q timed out"
 
@@ -225,26 +228,30 @@ msgstr "Add Bluetooth devices"
 msgid "Pair"
 msgstr "Pair"
 
-#: ../../dock/app_entry_menu.go:100
+#: ../../dock/app_entry_menu.go:102
 msgid "Close All"
 msgstr "Close All"
 
-#: ../../dock/app_entry_menu.go:127 ../../dock/app_entry_menu.go:141
-#: ../../dock/app_entry_menu.go:156
+#: ../../dock/app_entry_menu.go:129 ../../dock/app_entry_menu.go:143
+#: ../../dock/app_entry_menu.go:158
 msgid "Force Quit"
 msgstr "Force Quit"
 
-#: ../../dock/app_entry_menu.go:160
+#: ../../dock/app_entry_menu.go:162
 msgid "Dock"
 msgstr "Dock"
 
-#: ../../dock/app_entry_menu.go:170
+#: ../../dock/app_entry_menu.go:172
 msgid "Undock"
 msgstr "Undock"
 
-#: ../../dock/app_entry_menu.go:180
+#: ../../dock/app_entry_menu.go:182
 msgid "All Windows"
 msgstr "All Windows"
+
+#: ../../dock/app_info.go:72 ../../launcher/item.go:97
+msgid "(Linglong)"
+msgstr "(Linglong)"
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -475,87 +482,49 @@ msgstr "System language changed, please log out and then log in"
 msgid "Failed to change system language, please try later"
 msgstr "Failed to change system language, please try later"
 
-#: ../../lastore/lastore.go:427
-msgid "Retry"
-msgstr "Retry"
+#: ../../lastore/daemon.go:171
+msgid "Updates failed: it was interrupted."
+msgstr "Updates failed: it was interrupted."
 
-#: ../../lastore/lastore.go:449
-msgid "Update Now"
-msgstr "Update Now"
-
-#: ../../lastore/lastore.go:479
-msgid "Reboot Now"
-msgstr "Reboot Now"
-
-#: ../../lastore/lastore.go:483
-msgid "Remind Me Later"
-msgstr "Remind Me Later"
-
-#: ../../lastore/lastore.go:490
-msgid "10 mins later"
-msgstr "10 mins later"
-
-#: ../../lastore/lastore.go:497
-msgid "30 mins later"
-msgstr "30 mins later"
-
-#: ../../lastore/lastore.go:504
-msgid "2h later"
-msgstr "2h later"
-
-#: ../../lastore/lastore.go:511
-msgid "6h later"
-msgstr "6h later"
-
-#: ../../lastore/notify.go:93
-msgid "%q installed successfully."
-msgstr "%q installed successfully."
-
-#: ../../lastore/notify.go:96
-msgid "%q failed to install."
-msgstr "%q failed to install."
-
-#: ../../lastore/notify.go:104
-msgid "Removed successfully"
-msgstr "Removed successfully"
-
-#: ../../lastore/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Failed to remove the app"
-
-#: ../../lastore/notify.go:113
+#: ../../lastore/daemon.go:173
 msgid ""
-"In order to prevent automatic shutdown, please plug in for normal update."
+"Updates failed: it was interrupted. Please roll back to the old version and "
+"try again."
 msgstr ""
-"In order to prevent automatic shutdown, please plug in for normal update."
+"Updates failed: it was interrupted. Please roll back to the old version and "
+"try again."
 
-#: ../../lastore/notify.go:118
-msgid "Package cache wiped"
-msgstr "Package cache wiped"
+#: ../../lastore/daemon.go:179
+msgid "Updates failed: DPKG error."
+msgstr "Updates failed: DPKG error."
 
-#: ../../lastore/notify.go:123
-msgid "Updates Available"
-msgstr "Updates Available"
-
-#: ../../lastore/notify.go:128
-msgid "Reboot after Updates"
-msgstr "Reboot after Updates"
-
-#: ../../lastore/notify.go:129
-msgid "Restart the computer to use the system and applications properly"
-msgstr "Restart the computer to use the system and applications properly"
-
-#: ../../lastore/notify.go:139
+#: ../../lastore/daemon.go:181
 msgid ""
-"Your system is being updated, but the capacity is lower than 50%, please "
-"plug in to avoid power outage"
+"Updates failed: DPKG error. Please roll back to the old version and try "
+"again."
 msgstr ""
-"Your system is being updated, but the capacity is lower than 50%, please "
-"plug in to avoid power outage"
+"Updates failed: DPKG error. Please roll back to the old version and try "
+"again."
 
-#: ../../lastore/notify.go:140
-msgid "OK"
-msgstr "OK"
+#: ../../lastore/daemon.go:185
+msgid "Updates failed: insufficient disk space."
+msgstr "Updates failed: insufficient disk space."
+
+#: ../../lastore/daemon.go:187
+msgid ""
+"Updates failed: insufficient disk space. Please roll back to the old version"
+" and try again."
+msgstr ""
+"Updates failed: insufficient disk space. Please roll back to the old version"
+" and try again."
+
+#: ../../lastore/daemon.go:191
+msgid "Updates failed"
+msgstr "Updates failed"
+
+#: ../../lastore/daemon.go:193
+msgid "Updates failed. Please roll back to the old version and try again."
+msgstr "Updates failed. Please roll back to the old version and try again."
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -565,44 +534,44 @@ msgstr "%q removed successfully"
 msgid "Failed to uninstall %q"
 msgstr "Failed to uninstall %q"
 
-#: ../../network/manager_active_conn.go:454
-#: ../../network/manager_active_conn.go:459
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "None"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit Key"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr "WPA3 Personal"
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "Tunneled TLS"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "Protected EAP"
 
@@ -996,7 +965,7 @@ msgstr "Connection failed, unable to connect %q, wrong password"
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "Unable to connect %q"
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
@@ -1058,41 +1027,41 @@ msgstr "Battery critically low"
 msgid "Battery low, please plug in"
 msgstr "Battery low, please plug in"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
+#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
 msgid "Power settings changed"
 msgstr "Power settings changed"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "When the lid is closed, "
 
-#: ../../session/power/utils.go:487
+#: ../../session/power/utils.go:498
 msgid "When pressing the power button, "
 msgstr "When pressing the power button, "
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "your computer will shut down"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "your computer will suspend"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power/utils.go:512
 msgid "your computer will hibernate"
 msgstr "your computer will hibernate"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power/utils.go:514
 msgid "your monitor will turn off"
 msgstr "your monitor will turn off"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power/utils.go:516
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "your monitor will show the shutdown interface"
 
-#: ../../session/power/utils.go:507
+#: ../../session/power/utils.go:518
 msgid "it will do nothing to your computer"
 msgstr "it will do nothing to your computer"
 
