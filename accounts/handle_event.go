@@ -158,6 +158,10 @@ func (m *Manager) handleFileGroupChanged() {
 	for _, u := range m.usersMap {
 		// 由于域用户的组信息没有保存在/etc/group文件中，因此，在/etc/group更新时，更新下域用户的组和账户类型
 		if m.isUdcpUserID(u.Uid) {
+			if m.udcpCache == nil {
+				logger.Warning("handleFileGroupChanged m.udcpCache is nil.")
+				return
+			}
 			groups, err := m.udcpCache.GetUserGroups(0, u.UserName)
 			if err != nil {
 				logger.Warningf("Udcp cache getUserGroups failed: %v", err)
@@ -238,6 +242,10 @@ func (m *Manager) isDomainUser(uid string) bool {
 }
 
 func (m *Manager) isUdcpUserExists(name string) bool {
+	if m.udcpCache == nil {
+		logger.Warning("isUdcpUserExists m.udcpCache is nil.")
+		return false
+	}
 	_, err := m.udcpCache.GetUserGroups(0, name)
 	if err != nil {
 		logger.Warningf("Udcp cache getUserGroups failed: %v", err)
