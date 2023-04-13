@@ -42,6 +42,14 @@ func uuid(n int) string {
 // 创建一个加解密上下文
 func NewCryptoContext() *CryptoContext {
 	ctx := CryptoContext{nil, 0, 0, ""}
+
+	// 不能合并，代码使用了 C 语言和 Go 语言混合编程导致类型不匹配
+	// mismatched types bool and _Ctype__Bool
+	if !dutils.IsFileExist("/sys/class/tpm/tpm0/device/description") {
+		ctx.handle = nil
+		return &ctx
+	}
+
 	if !C.cryptoInit(&ctx.handle) {
 		ctx.handle = nil
 	}
