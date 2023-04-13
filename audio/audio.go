@@ -52,6 +52,7 @@ const (
 	dsgKeyAutoSwitchPort      = "autoSwitchPort"
 	dsgKeyBluezModeFilterList = "bluezModeFilterList"
 	dsgKeyPortFilterList      = "portFilterList"
+	dsgKeyReduceNoise         = "reduceNoise"
 )
 
 var (
@@ -59,6 +60,7 @@ var (
 	defaultOutputVolume          = 0.5
 	defaultHeadphoneOutputVolume = 0.17
 	gMaxUIVolume                 float64
+	defaultReduceNoise           = false
 )
 
 //go:generate dbusutil-gen -type Audio,Sink,SinkInput,Source,Meter -import github.com/godbus/dbus audio.go sink.go sinkinput.go source.go meter.go
@@ -1394,7 +1396,7 @@ func (a *Audio) NoRestartPulseAudio() *dbus.Error {
 	return nil
 }
 
-//当蓝牙声卡配置文件选择a2dp时,不支持声音输入,所以需要禁用掉,否则会录入
+// 当蓝牙声卡配置文件选择a2dp时,不支持声音输入,所以需要禁用掉,否则会录入
 func (a *Audio) disableBluezSourceIfProfileIsA2dp() {
 	a.mu.Lock()
 	source, ok := a.sources[a.sourceIdx]
@@ -1532,6 +1534,13 @@ func (a *Audio) initDsgProp() error {
 			}
 		}
 		logger.Info("port filter list", portFilterList)
+	}
+
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyReduceNoise).Store(&defaultReduceNoise)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		logger.Info("default reduce noise status:", defaultReduceNoise)
 	}
 
 	// 监听dsg配置变化

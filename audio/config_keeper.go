@@ -86,7 +86,7 @@ func NewPortConfig(name string) *PortConfig {
 		Volume:         0.5,
 		IncreaseVolume: false,
 		Balance:        0.0,
-		ReduceNoise:    false,
+		ReduceNoise:    defaultReduceNoise,
 		Mute:           false,
 	}
 }

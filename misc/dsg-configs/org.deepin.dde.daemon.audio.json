@@ -34,6 +34,17 @@
       "description": "port filter list",
       "permissions": "read",
       "visibility": "private"
+    },
+    "reduceNoise": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "reduceNoiseEnable",
+      "name[zh_CN]": "噪音抑制启动",
+      "description": "default reduce noise status",
+      "permissions": "read",
+      "visibility": "private"
     }
   }
 }
