@@ -17,6 +17,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
@@ -126,6 +127,12 @@ func getRandomIcon() string {
 	}
 
 	return ""
+}
+
+func getNewUserCustomIconDest(username string) string {
+	ns := time.Now().UnixNano()
+	base := username + "-" + strconv.FormatInt(ns, 36) + ".png"
+	return filepath.Join(userCustomIconsDir, base)
 }
 
 func isStrInArray(str string, array []string) bool {

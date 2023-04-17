@@ -32,9 +32,10 @@ import (
 )
 
 const (
-	actConfigDir  = "/var/lib/AccountsService"
-	userConfigDir = actConfigDir + "/deepin/users"
-	userIconsDir  = actConfigDir + "/icons"
+	actConfigDir       = "/var/lib/AccountsService"
+	userConfigDir      = actConfigDir + "/deepin/users"
+	userIconsDir       = actConfigDir + "/icons"
+	userCustomIconsDir = actConfigDir + "/icons/local"
 
 	actConfigFile       = actConfigDir + "/accounts.ini"
 	actConfigGroupGroup = "Accounts"
@@ -551,11 +552,6 @@ func isGuestUserEnabled() bool {
 	}
 
 	return ret
-}
-
-func getUserCustomIconsDir(homeDir string) string {
-	path := "/.local/share/icons"
-	return filepath.Join(homeDir, path)
 }
 
 func (m *Manager) checkAuth(sender dbus.Sender) error {

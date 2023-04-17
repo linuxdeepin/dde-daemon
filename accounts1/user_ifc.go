@@ -456,6 +456,35 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
+	// 找到要移除的原始用户头像
+	var oldIconPath string
+	for _, icon := range u.customIconList {
+		if strings.Contains(icon, path.Base(iconURI)) {
+			oldIconPath = icon
+			break
+		}
+	}
+
+	// if iconURI not in iconList, need to create temp icon file
+	if !isStrInArray(iconURI, u.IconList) {
+		// copy file to temp file, update icon file
+		iconFile, err = copyTempIconFile(iconFile, u.UserName)
+		if err != nil {
+			logger.Warningf("copy temp file failed, err: %v", err)
+			return dbusutil.ToError(err)
+		}
+		// remove file
+		defer func() {
+			err := os.Remove(iconFile)
+			if err != nil {
+				logger.Warningf("remove temp file failed, err: %v", err)
+				return
+			}
+		}()
+		// if temp icon file is create, update icon URI
+		iconURI = dutils.EncodeURI(iconFile, dutils.SCHEME_FILE)
+	}
+
 	if !gdkpixbuf.IsSupportedImage(iconFile) {
 		err := fmt.Errorf("%q is not a image file", iconFile)
 		logger.Debug(err)
@@ -469,7 +498,7 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 		return nil
 	}
 
-	newIconURI, added, err := u.setIconFile(iconURI)
+	newIconURI, added, err := u.setIconFile(iconURI, len(oldIconPath) > 0)
 	if err != nil {
 		logger.Warning("Set icon failed:", err)
 		return dbusutil.ToError(err)
@@ -481,8 +510,18 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 			{confKeyCustomIcon, newIconURI},
 			{confKeyIcon, newIconURI},
 		})
+
 		if err != nil {
 			return dbusutil.ToError(err)
+		}
+
+		// remove old custom icon
+		if oldIconPath != "" {
+			logger.Debugf("remove old custom icon %q", u.customIcon)
+			err := os.Remove(dutils.DecodeURI(oldIconPath))
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 
 		// 默认的icon如果不是default.png的情况下，会被设置为customIcon,会被误删,
@@ -503,6 +542,7 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 			}
 		}
 		u.customIcon = newIconURI
+		u.customIconList = append(u.customIconList, newIconURI)
 		u.updateIconList()
 	} else {
 		err = u.writeUserConfigWithChange(confKeyIcon, newIconURI)
@@ -521,9 +561,8 @@ func (u *User) DeleteIconFile(sender dbus.Sender, icon string) *dbus.Error {
 	logger.Debug("[DeleteIconFile] icon:", icon)
 
 	dir, err := filepath.Abs(filepath.Dir(icon))
-	customDir := getUserCustomIconsDir(u.HomeDir)
-	if err != nil || dir != customDir {
-		return dbusutil.ToError(fmt.Errorf("%s is not in %s", icon, customDir))
+	if err != nil || dir != userCustomIconsDir {
+		return dbusutil.ToError(fmt.Errorf("%s is not in %s", icon, userCustomIconsDir))
 	}
 
 	base := filepath.Base(icon)
