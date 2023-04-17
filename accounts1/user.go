@@ -29,6 +29,7 @@ import (
 
 const (
 	defaultUserBackgroundDir = "/usr/share/wallpapers/deepin/"
+	defaultUserIcon          = "file:///var/lib/AccountsService/icons/animal/dimensional/panda.png"
 
 	controlCenterPath = "/usr/bin/dde-control-center"
 	deepinDaemonDir   = "/usr/lib/deepin-daemon/"
@@ -134,7 +135,8 @@ type User struct {
 	// dbusutil-gen: equal=nil
 	HistoryLayout []string
 
-	configLocker sync.Mutex
+	configLocker   sync.Mutex
+	customIconList []string
 }
 
 func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User, error) {
@@ -248,11 +250,20 @@ func (u *User) updateIconList() {
 	_ = u.emitPropChangedIconList(u.IconList)
 }
 
+func (u *User) initCustomIcons() {
+	icons := _userStandardIcons
+	customIconPre := u.UserName + "-"
+	for _, icon := range icons {
+		if strings.Contains(icon, customIconPre) {
+			u.customIconList = append(u.customIconList, icon)
+		}
+	}
+}
+
 func (u *User) getAllIcons() []string {
 	icons := _userStandardIcons
-	if u.customIcon != "" {
-		icons = append(icons, u.customIcon)
-	}
+
+	icons = append(icons, u.customIconList...)
 	return icons
 }
 
@@ -268,8 +279,9 @@ func (u *User) getGroups() []string {
 // ret0: new user icon uri
 // ret1: added
 // ret2: error
-func (u *User) setIconFile(iconURI string) (string, bool, error) {
-	if isStrInArray(iconURI, u.IconList) {
+func (u *User) setIconFile(iconURI string, isNewIcon bool) (string, bool, error) {
+	// 通过控制中心修改过的自定义用户头像, 需要重新添加进来, 并将之前的头像删除掉, 否则直接返回系统头像
+	if isStrInArray(iconURI, u.IconList) && !isNewIcon {
 		return iconURI, false, nil
 	}
 
@@ -286,11 +298,18 @@ func (u *User) setIconFile(iconURI string) (string, bool, error) {
 		}()
 	}
 
-	err = dutils.CopyFile(tmp, iconFile)
+	dest := getNewUserCustomIconDest(u.UserName)
+	err = os.MkdirAll(path.Dir(dest), 0755)
 	if err != nil {
 		return "", false, err
 	}
-	return dutils.EncodeURI(iconFile, dutils.SCHEME_FILE), true, nil
+
+	err = dutils.CopyFile(tmp, dest)
+	if err != nil {
+		return "", false, err
+	}
+
+	return dutils.EncodeURI(dest, dutils.SCHEME_FILE), true, nil
 }
 
 type configChange struct {
@@ -697,10 +716,21 @@ func updateConfigPath(username string) {
 	}
 }
 
+func isOldCustomIcon(u *User) bool {
+	if _, err := os.Stat(u.IconFile); os.IsNotExist(err) {
+		if !isStrInArray(u.IconFile, u.IconList) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // 从配置文件中加载用户的配置信息
 func loadUserConfigInfo(u *User) {
 	var err error
 
+	u.initCustomIcons()
 	u.IconList = u.getAllIcons()
 
 	// NOTICE(jouyouyun): Got created time,  not accurate, can only be used as a reference
@@ -717,7 +747,7 @@ func loadUserConfigInfo(u *User) {
 		u.SystemAccount = false
 		u.Layout = getDefaultLayout()
 		u.setLocale(getDefaultLocale())
-		u.IconFile = getRandomIcon()
+		u.IconFile = defaultUserIcon
 		defaultUserBackground := getDefaultUserBackground()
 		u.DesktopBackgrounds = []string{defaultUserBackground}
 		u.GreeterBackground = defaultUserBackground
@@ -768,8 +798,9 @@ func loadUserConfigInfo(u *User) {
 	}
 	icon, _ := kf.GetString(confGroupUser, confKeyIcon)
 	u.IconFile = icon
-	if u.IconFile == "" {
-		u.IconFile = getRandomIcon()
+	// 如果系统升级使用的是原来的头像, 升级后使用当前默认头像
+	if u.IconFile == "" || isOldCustomIcon(u) {
+		u.IconFile = defaultUserIcon
 		isSave = true
 	}
 
@@ -777,14 +808,12 @@ func loadUserConfigInfo(u *User) {
 
 	// CustomIcon is the newly added field in the configuration file
 	if u.customIcon == "" {
-		if !isStrInArray(u.IconFile, u.IconList) {
+		if u.IconFile != defaultUserIcon && isStrInArray(u.IconFile, u.customIconList) {
 			// u.IconFile is a custom icon, not a standard icon
 			u.customIcon = u.IconFile
 			isSave = true
 		}
 	}
-
-	u.IconList = u.getAllIcons()
 
 	_, desktopBgs, _ := kf.GetStringList(confGroupUser, confKeyDesktopBackgrounds)
 	u.DesktopBackgrounds = desktopBgs
