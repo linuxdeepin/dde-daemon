@@ -1,3 +1,9 @@
+dde-daemon (6.0.14) unstable; urgency=medium
+
+  * fix: 登录界面头像显示异常
+
+ -- dengbo <dengbo@uniontech.com>  Tue, 18 Apr 2023 13:48:50 +0800
+
 dde-daemon (6.0.13) unstable; urgency=medium
 
   * chore: 修复dde-system-daemon崩溃的问题
