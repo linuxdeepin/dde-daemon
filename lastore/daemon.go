@@ -160,8 +160,8 @@ func (d *Daemon) Start() error {
 				return
 			}
 			// 记录处理异常更新的通知
-			osd := notifications.NewNotifications(service.Conn())
-			abObj := abrecovery.NewABRecovery(service.Conn())
+			osd := notifications.NewNotifications(sysBus)
+			abObj := abrecovery.NewABRecovery(sysBus)
 			valid, err := abObj.ConfigValid().Get(0) // config失效时,无法回滚,提示重新更新
 			var msg string
 			switch upgradeStatus.Status {
