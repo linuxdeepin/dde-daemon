@@ -173,7 +173,7 @@ func (d *Daemon) Start() error {
 				return
 			}
 			// 记录处理异常更新的通知
-			osd := notifications.NewNotifications(sysBus)
+			osd := notifications.NewNotifications(service.Conn())
 			abObj := abrecovery.NewABRecovery(sysBus)
 			valid, err := abObj.ConfigValid().Get(0) // config失效时,无法回滚,提示重新更新
 			var msg string
@@ -208,7 +208,10 @@ func (d *Daemon) Start() error {
 				}
 			}
 			if len(msg) != 0 {
-				_, _ = osd.Notify(0, "dde-control-center", 0, "preferences-system", "", msg, nil, nil, NotifyExpireTimeoutNoHide)
+				_, err = osd.Notify(0, "dde-control-center", 0, "preferences-system", "", msg, nil, nil, NotifyExpireTimeoutNoHide)
+				if err != nil {
+					logger.Warning(err)
+				}
 			}
 			// 通知发完之后,恢复配置文件的内容
 			upgradeStatus.Status = UpgradeReady
