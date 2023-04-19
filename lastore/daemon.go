@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/loader"
 	abrecovery "github.com/linuxdeepin/go-dbus-factory/com.deepin.abrecovery"
 	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
@@ -18,8 +19,6 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
-
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 const (
@@ -28,15 +27,19 @@ const (
 )
 
 const (
-	dSettingsAppID            = "org.deepin.lastore"
-	dSettingsLastoreName      = "org.deepin.lastore"
-	dSettingsKeyUpgradeStatus = "upgrade-status"
+	dSettingsAppID                  = "org.deepin.lastore"
+	dSettingsLastoreName            = "org.deepin.lastore"
+	dSettingsKeyUpgradeStatus       = "upgrade-status"
+	dSettingsKeyLastoreDaemonStatus = "lastore-daemon-status"
 )
 
 const (
 	UpgradeReady   = "ready"
 	UpgradeRunning = "running"
 	UpgradeFailed  = "failed"
+
+	runningUpgradeBackend = 1 << 2 // 是否处于更新状态
+
 )
 
 type UpgradeReasonType string
@@ -61,6 +64,8 @@ const (
 	NotifyExpireTimeoutDefault = -1
 	NotifyExpireTimeoutNoHide  = 0
 )
+
+const distUpgradeJobPath = "/com/deepin/lastore/Jobdist_upgrade"
 
 var logger = log.NewLogger("daemon/lastore")
 
@@ -130,6 +135,7 @@ func (d *Daemon) Start() error {
 		return agent.init()
 
 	}
+	core := lastore.NewLastore(sysBus)
 	// 处理更新失败/中断的记录
 	go func() {
 		// 获取lastore-daemon记录的更新状态
@@ -149,6 +155,13 @@ func (d *Daemon) Start() error {
 			logger.Warning(err)
 			return
 		} else {
+			jobList, _ := core.Manager().JobList().Get(0)
+			// 如果正常系统更新,那么不需要处理(更新中切换用户场景)
+			for _, path := range jobList {
+				if path == distUpgradeJobPath {
+					return
+				}
+			}
 			upgradeStatus := struct {
 				Status     string
 				ReasonCode UpgradeReasonType
@@ -219,7 +232,7 @@ func (d *Daemon) Start() error {
 			}
 		})
 	})
-	core := lastore.NewLastore(sysBus)
+
 	sysDBusDaemon.InitSignalExt(systemSigLoop, true)
 	_, err = sysDBusDaemon.ConnectNameOwnerChanged(func(name, oldOwner, newOwner string) {
 		if name == core.ServiceName_() && newOwner != "" {
