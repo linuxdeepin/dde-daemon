@@ -30,7 +30,7 @@ import (
 
 const (
 	defaultUserBackgroundDir = "/usr/share/wallpapers/deepin/"
-	defaultUserIcon          = "file:///var/lib/AccountsService/icons/animal/dimensional/panda.png"
+	defaultUserIcon          = "file:///var/lib/AccountsService/icons/default"
 
 	controlCenterPath = "/usr/bin/dde-control-center"
 	deepinDaemonDir   = "/usr/lib/deepin-daemon/"
