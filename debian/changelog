@@ -1,3 +1,9 @@
+dde-daemon (6.0.15) unstable; urgency=medium
+
+  * feat: 更改默认头像
+
+ -- dengbo <dengbo@uniontech.com>  Wed, 19 Apr 2023 18:37:05 +0800
+
 dde-daemon (6.0.14) unstable; urgency=medium
 
   * fix: 登录界面头像显示异常
