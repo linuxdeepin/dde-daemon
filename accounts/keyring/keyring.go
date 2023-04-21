@@ -16,8 +16,10 @@ import (
 	"path"
 	"sync"
 	"unsafe"
+	"strconv"
 	"encoding/hex"
 	"io/ioutil"
+	"os/user"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -83,12 +85,40 @@ func loadFile(filename string) ([]string, error) {
 	return lines, nil
 }
 
-func createWhiteBoxUFile(dir, filePath string) error {
+func createFile(dir, filePath, name string) error {
 	fmt.Println("filePath: ", filePath)
+	uid := -1
+	gid := -1
+	findUser := func() error {
+		if uid >= 0 && gid >= 0 {
+			return nil
+		}
+		userInfo, err := user.Lookup(name)
+		if err != nil {
+			return err
+		}
+		uid, err = strconv.Atoi(userInfo.Uid)
+		if err != nil {
+			return err
+		}
+		gid, err = strconv.Atoi(userInfo.Gid)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 	if !dutils.IsFileExist(dir) {
-		err := os.MkdirAll(dir, 0600)
+		err := os.MkdirAll(dir, 0700)
 		if err != nil {
 			fmt.Println("Mkdir err : ", err)
+			return err
+		}
+		err = findUser()
+		if err != nil {
+			return err
+		}
+		err = os.Chown(dir, uid, gid)
+		if err != nil {
 			return err
 		}
 	}
@@ -98,11 +128,19 @@ func createWhiteBoxUFile(dir, filePath string) error {
 			fmt.Println("CreateFile err : ", err)
 			return err
 		}
+		err = findUser()
+		if err != nil {
+			return err
+		}
+		err = os.Chown(filePath, uid, gid)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-func CreateWhiteBoxUFile(name string) error {
+func CreateWhiteBoxUFile(homeDir, name string) error {
 	if !isFileExist(keyringSoPath) {
 		return errors.New("Not Exist Keyring So ")
 	}
@@ -125,22 +163,22 @@ func CreateWhiteBoxUFile(name string) error {
 	WB_UKEK := C.deepin_wb_encrypt((*C.uchar)(UKEK_), (*C.uchar)(unsafe.Pointer(C.CString(key))), false)
 	//string -> []byte,数据中间有00就会直接返回，导致len < 16 : 这种情况重新创建WB_UKEK
 	if len([]byte(ucharToString(WB_UKEK))) != C.MASTER_KEY_LEN {
-		CreateWhiteBoxUFile(name)
-		return errors.New("string to byte failed(len < 16)")
+		fmt.Println("string to byte failed(len < 16)")
+		return CreateWhiteBoxUFile(homeDir, name)
 	}
 
 	//key：UKEK 白盒加密 UKEKIV --> CIPHER_UKEKIV
 	CIPHER_UKEKIV := C.deepin_wb_encrypt((*C.uchar)(UKEKIV_), (*C.uchar)(UKEK_), true)
 	defer C.free(unsafe.Pointer(CIPHER_UKEKIV))
 	if len([]byte(ucharToString(CIPHER_UKEKIV))) != C.MASTER_KEY_LEN {
-		CreateWhiteBoxUFile(name)
-		return errors.New("string to byte failed(len < 16)")
+		fmt.Println("string to byte failed(len < 16)")
+		return CreateWhiteBoxUFile(homeDir, name)
 	}
 
 	//创建新增账户WB_UFile文件
-	dir := fmt.Sprintf("/var/lib/keyring/%s", name)
+	dir := path.Join(homeDir, "/.local/share/deepin-keyrings-wb")
 	filePath := path.Join(dir, "WB_UFile")
-	createWhiteBoxUFile(dir, filePath)
+	createFile(dir, filePath, name)
 
 	writeFile(filePath, hex.EncodeToString([]byte(ucharToString(WB_UKEK))))
 	writeFile(filePath, hex.EncodeToString([]byte(ucharToString(CIPHER_UKEKIV))))
@@ -156,8 +194,8 @@ func CreateWhiteBoxUFile(name string) error {
 	return nil
 }
 
-func DeleteWhiteBoxUFile(name string) error {
-	filePath := fmt.Sprintf("/var/lib/keyring/%s", name)
+func DeleteWhiteBoxUFile(homeDir, name string) error {
+	filePath := path.Join(homeDir, "/.local/share/deepin-keyrings-wb")
 	if dutils.IsFileExist(filePath) {
 		dirs, err := ioutil.ReadDir(filePath)
 		if err != nil {

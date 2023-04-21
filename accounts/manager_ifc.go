@@ -46,10 +46,6 @@ func (*Manager) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func createWhiteBoxUFile(name string) error {
-	return keyring.CreateWhiteBoxUFile(name)
-}
-
 func getUserNameList() (list []string) {
 	infos, err := users.GetHumanUserInfos()
 	if err != nil {
@@ -62,13 +58,19 @@ func getUserNameList() (list []string) {
 }
 
 // 已经存在的账户，未创建WB_UFile文件，则直接创建
-func (*Manager) createExistAccountWbUFile() {
+func (m *Manager) createExistAccountWbUFile() {
 	userList := getUserNameList()
 	for _, name := range userList {
-		dir := fmt.Sprintf("/var/lib/keyring/%s", name)
+		user := m.getUserByName(name)
+		if user == nil {
+			err := fmt.Errorf("create WBUFile failed, user %q not found", name)
+			logger.Warning(err)
+			continue
+		}
+		dir := user.HomeDir + "/.local/share/deepin-keyrings-wb"
 		filename := path.Join(dir, "WB_UFile")
 		if !dutils.IsFileExist(dir) || !dutils.IsFileExist(filename) {
-			err := keyring.CreateWhiteBoxUFile(name)
+			err := keyring.CreateWhiteBoxUFile(user.HomeDir, name)
 			if err != nil {
 				logger.Warning("Keyring crypto so not exist.")
 				return
@@ -130,16 +132,15 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 	if err != nil {
 		logger.Warningf("failed to set groups for user %s: %v", name, err)
 	}
-
-	if err = createWhiteBoxUFile(name); err != nil {
-		logger.Warningf("createWhiteBoxUFile: create user '%s' failed: %v\n", name, err)
-	}
-
 	// create user success
 	select {
 	case userPath, ok := <-ch:
 		if !ok {
 			return nilObjPath, dbusutil.ToError(errors.New("invalid user path event"))
+		}
+
+		if err = keyring.CreateWhiteBoxUFile(homeDir, name); err != nil {
+			logger.Warningf("keyring.CreateWhiteBoxUFile: create user '%s' failed: %v\n", name, err)
 		}
 
 		logger.Debug("receive user path", userPath)
@@ -242,7 +243,7 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		user.clearData()
 	}
 
-	err = keyring.DeleteWhiteBoxUFile(name)
+	err = keyring.DeleteWhiteBoxUFile(user.HomeDir, name)
 	if err != nil {
 		logger.Warningf("DeleteWhiteBoxUFile '%s' failed: %v\n", name, err)
 		return dbusutil.ToError(err)
