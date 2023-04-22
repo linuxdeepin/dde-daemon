@@ -216,6 +216,15 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.initNumLockState(sysBus)
 	m.initDSettings(sysBus)
+
+	if _useWayland {
+		m.setAccelForWayland(m.gsSystem, m.wm)
+		m.setAccelForWayland(m.gsMediaKey, m.wm)
+		if m.gsGnomeWM != nil {
+			m.setAccelForWayland(m.gsGnomeWM, m.wm)
+		}
+	}
+
 	return &m, nil
 }
 
