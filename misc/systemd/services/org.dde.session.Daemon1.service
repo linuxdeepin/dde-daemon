@@ -1,0 +1,12 @@
+[Unit]
+Description=dde-session-daemon service
+RefuseManualStart=no
+RefuseManualStop=no
+CollectMode=inactive-or-failed
+
+[Service]
+Type=dbus
+BusName=org.deepin.dde.XEventMonitor1
+ExecStart=/usr/lib/deepin-daemon/dde-session-daemon
+Slice=app.slice
+Restart=on-failure

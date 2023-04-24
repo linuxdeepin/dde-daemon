@@ -183,8 +183,11 @@ install: build install-dde-data install-icons
 	cp -r misc/dde-daemon/*   ${DESTDIR}${PREFIX}/share/dde-daemon/
 	cp -r misc/usr/share/deepin ${DESTDIR}${PREFIX}/share/
 
+	mkdir -pv ${DESTDIR}/lib/systemd/user/
+	cp -f misc/systemd/services/* ${DESTDIR}/lib/systemd/user/
+
 	mkdir -pv ${DESTDIR}/lib/systemd/system/
-	cp -f misc/systemd/services/* ${DESTDIR}/lib/systemd/system/
+	cp -f misc/systemd/system-services/* ${DESTDIR}/lib/systemd/system/
 
 	mkdir -pv ${DESTDIR}/etc/pam.d/
 	cp -f misc/etc/pam.d/* ${DESTDIR}/etc/pam.d/
