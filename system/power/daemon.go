@@ -5,9 +5,14 @@
 package power
 
 import (
+	"sync"
+	"time"
+
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/loader"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 var logger = log.NewLogger("daemon/system/power")
@@ -97,6 +102,42 @@ func (d *Daemon) Start() (err error) {
 			logger.Warning(err)
 		}
 	})
+	if err != nil {
+		logger.Warning(err)
+	}
+	if d.manager.enablePerformanceInBoot() {
+		var once sync.Once
+		var handlerId dbusutil.SignalHandlerId
+		var highTimer *time.Timer
+		handlerId, err = d.manager.loginManager.ConnectSessionNew(func(sessionId string, sessionPath dbus.ObjectPath) {
+			session, err := login1.NewSession(service.Conn(), sessionPath)
+			if err == nil {
+				name, err := session.Name().Get(0)
+				if err == nil && name != "lightdm" {
+					// 登录后两分钟内高性能,两分钟后修改回原有的mode
+					once.Do(func() {
+						highTimer = time.AfterFunc(time.Minute*2, func() {
+							_ = d.manager.SetMode(d.manager.recordMode)
+							d.manager.loginManager.RemoveHandler(handlerId)
+							_ = serverObj.SetReadCallback(d.manager, "Mode", nil)
+						})
+					})
+				}
+			}
+		})
+		if err != nil {
+			logger.Warning(err)
+		}
+		// 查看mode时,将mode还原成原有的mode
+		err = serverObj.SetReadCallback(d.manager, "Mode", func(read *dbusutil.PropertyRead) *dbus.Error {
+			logger.Info("change to record mode")
+			highTimer.Stop()
+			defer func() {
+				_ = serverObj.SetReadCallback(d.manager, "Mode", nil)
+			}()
+			return d.manager.SetMode(d.manager.recordMode)
+		})
+	}
 	if err != nil {
 		logger.Warning(err)
 	}

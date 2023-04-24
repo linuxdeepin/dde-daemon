@@ -20,6 +20,7 @@ import (
 	"github.com/linuxdeepin/dde-api/powersupply/battery"
 	"github.com/linuxdeepin/dde-daemon/common/cpuinfo"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -138,6 +139,10 @@ type Manager struct {
 
 	// powersave aspm 状态
 	idlePowersaveAspmEnabled bool
+
+	// 原本的模式
+	recordMode   string
+	loginManager login1.Manager
 
 	// Special Cpu suppoert mode
 	specialCpuMode *supportMode
@@ -285,7 +290,8 @@ func (m *Manager) init() error {
 	if err != nil {
 		logger.Warning(err)
 	}
-
+	m.loginManager = login1.NewManager(m.service.Conn())
+	m.loginManager.InitSignalExt(m.systemSigLoop, true)
 	return nil
 }
 
@@ -715,6 +721,7 @@ func (m *Manager) doSetMode(mode string) error {
 
 	if err == nil {
 		m.setPropMode(mode)
+		m.recordMode = mode
 	}
 
 	return err
@@ -782,4 +789,17 @@ func (m *Manager) startSysPowersave() {
 			logger.Warning(err)
 		}
 	}
+}
+
+func (m *Manager) enablePerformanceInBoot() bool {
+	if m.Mode == "performance" {
+		return false
+	}
+	m.recordMode = m.Mode
+	err := m.doSetMode("performance")
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return true
 }
