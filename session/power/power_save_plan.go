@@ -50,6 +50,7 @@ type powerSavePlan struct {
 	multiBrightnessWithPsm *multiBrightnessWithPsm
 	psmEnabledTime         time.Time
 	psmPercentChangedTime  time.Time
+	modeBeforeIdle         string
 }
 
 func newPowerSavePlan(manager *Manager) (string, submodule, error) {
@@ -664,6 +665,7 @@ func (psp *powerSavePlan) HandleIdleOn() {
 		logger.Debugf("idle time: %d ms", idleTime)
 		psp.metaTasks.setRealDelay(idleTime)
 	}
+	psp.modeBeforeIdle, _ = psp.manager.helper.Power.Mode().Get(0)
 
 	for _, t := range psp.metaTasks {
 		logger.Debugf("do %s after %v", t.name, t.realDelay)
@@ -691,6 +693,14 @@ func (psp *powerSavePlan) HandleIdleOff() {
 		psp.manager.setPrepareSuspend(suspendStateFinish)
 		logger.Info("HandleIdleOff : IGNORE =========")
 		return
+	}
+
+	if psp.modeBeforeIdle != "" && psp.modeBeforeIdle != "performance" {
+		err := psp.manager.helper.Power.SetMode(0, psp.modeBeforeIdle)
+		if err != nil {
+			logger.Warning(err)
+		}
+		psp.modeBeforeIdle = ""
 	}
 
 	psp.manager.setPrepareSuspend(suspendStateFinish)

@@ -103,15 +103,6 @@ func getIsBalanceSupported(isPstate bool) bool {
 	}
 }
 
-// TODO: 之后是否需要判断boost 的逻辑需要讨论
-func getIsHighPerformanceSupported(isPstate bool) bool {
-	cpus := CpuHandlers{}
-	if isPstate {
-		return strv.Strv(getSupportGovernors()).Contains("performance")
-	}
-	return cpus.IsBoostFileExist() && strv.Strv(getSupportGovernors()).Contains("performance")
-}
-
 func getIsPowerSaveSupported(isPstate bool) bool {
 	// intel pstate does not support powersave
 	// maybe should use another logic
@@ -251,7 +242,6 @@ func (cpu *CpuHandler) SetGovernor(governor string, isPstate bool) error {
 	}()
 	if err != nil {
 		logger.Warning(err)
-
 	}
 	return err
 }
@@ -341,40 +331,37 @@ func (cpus *CpuHandlers) getCpuGovernorPath(isPstate bool) string {
 }
 
 // 通过写文件的返回情况，获取非scaling_available_governors的值是否支持
-func (cpus *CpuHandlers) tryWriteGovernor(lines []string, isPstate bool) []string {
+func (cpus *CpuHandlers) tryWriteGovernor(governorSlice strv.Strv, isPstate bool) strv.Strv {
 	path := cpus.getCpuGovernorPath(isPstate)
-	if "" == path {
+	if path == "" {
 		return nil
 	}
 	// TODO: Pstate暂时不做处理直接返回
 	if isPstate {
 		return _pstateAvailableGovernors
 	}
-	//获取当前系统的governor值
+	ret := strv.Strv{}
+
+	// 获取当前系统的governor值
 	oldGovernor, err := ioutil.ReadFile(path)
 	if err != nil {
-		return lines
+		return ret
 	}
 	logger.Infof(" [tryWriteGovernor] Test Path : %s.", path)
-	// 遍历6个内核支持的数据，以及系统支持的数据
-	// 通过是否能写入文件判断不包含在supportGovernors的值是否支持设置
-	for _, value := range getScalingAvailableGovernors() {
-		if !strv.Strv(lines).Contains(value) {
-			err = ioutil.WriteFile(path, []byte(value), 0644)
-			logger.Infof(" Not contain in supportGovernors. Governor : %s.", value)
-			if err != nil {
-				logger.Infof(" Can't use the governor : %s. err : %s", value, err)
-			} else {
-				lines = append(lines, value)
-			}
+	for _, v := range governorSlice {
+		err = ioutil.WriteFile(path, []byte(v), 0644)
+		if err != nil {
+			logger.Infof(" Can't use the governor : %s. err : %s", v, err)
+		} else {
+			ret, _ = ret.Add(v)
 		}
 	}
-	//将当前系统原始的governor值设置回去
+	// 将当前系统原始的governor值设置回去
 	err = ioutil.WriteFile(path, oldGovernor, 0644)
 	if err != nil {
 		logger.Warning(err)
 	}
-	return lines
+	return ret
 }
 
 func (cpus *CpuHandlers) SetGovernor(governor string, isPstate bool) error {
