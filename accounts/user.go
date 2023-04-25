@@ -83,7 +83,7 @@ func getDefaultUserBackground() string {
 type User struct {
 	service         *dbusutil.Service
 	PropsMu         sync.RWMutex
-	uadpInterface	uadp.Uadp
+	uadpInterface   uadp.Uadp
 	UserName        string
 	UUID            string
 	FullName        string
@@ -778,17 +778,6 @@ func loadUserConfigInfo(u *User) {
 	if u.IconFile == "" {
 		u.IconFile = defaultUserIcon
 		isSave = true
-	}
-
-	u.customIcon, _ = kf.GetString(confGroupUser, confKeyCustomIcon)
-
-	// CustomIcon is the newly added field in the configuration file
-	if u.customIcon == "" {
-		if u.IconFile != defaultUserIcon && !isStrInArray(u.IconFile, u.IconList) {
-			// u.IconFile is a custom icon, not a standard icon
-			u.customIcon = u.IconFile
-			isSave = true
-		}
 	}
 
 	u.IconList = u.getAllIcons()

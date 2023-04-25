@@ -518,8 +518,17 @@ func (u *User) SetIconFile(sender dbus.Sender, iconURI string) *dbus.Error {
 			return dbusutil.ToError(err)
 		}
 
+		// 默认的icon如果不是default.png的情况下，会被设置为customIcon,会被误删,
+		// 为规避已经设置为customIcon的历史版本,判断如果是icons目录下的数据,就不删除
+		needRemove := func(uri string) bool {
+			if uri == "" {
+				return true
+			}
+			fPath := dutils.DecodeURI(u.customIcon)
+			return filepath.Dir(fPath) != "/var/lib/AccountsService/icons"
+		}
 		// remove old custom icon
-		if u.customIcon != "" {
+		if needRemove(u.customIcon) {
 			logger.Debugf("remove old custom icon %q", u.customIcon)
 			err := os.Remove(dutils.DecodeURI(u.customIcon))
 			if err != nil {
