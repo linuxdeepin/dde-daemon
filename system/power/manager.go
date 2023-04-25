@@ -140,8 +140,8 @@ type Manager struct {
 	// powersave aspm 状态
 	idlePowersaveAspmEnabled bool
 
-	// 原本的模式
-	recordMode   string
+	// 性能模式的表现模式，不一定和当前实际设置的一致，但和用户期望的模式一致
+	fakeMode     string
 	loginManager login1.Manager
 
 	// Special Cpu suppoert mode
@@ -261,9 +261,10 @@ func (m *Manager) init() error {
 	m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
 	m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
 	m.Mode = cfg.Mode
+	m.fakeMode = cfg.Mode
 
 	// 恢复配置
-	err := m.doSetMode(m.Mode)
+	err := m.doSetMode(m.Mode, m.fakeMode)
 	if err != nil {
 		logger.Warning(err)
 	} else {
@@ -651,7 +652,7 @@ func (m *Manager) saveConfig() error {
 	return ioutil.WriteFile(configFile, content, 0644) // #nosec G306
 }
 
-func (m *Manager) doSetMode(mode string) error {
+func (m *Manager) doSetMode(mode string, fakeMode string) error {
 	var err error
 	switch mode {
 	case "balance": // governor=performance boost=false
@@ -704,10 +705,27 @@ func (m *Manager) doSetMode(mode string) error {
 			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
 			break
 		}
-		m.setPropPowerSavingModeEnabled(false)
-		err = m.doSetCpuGovernor("performance")
-		if err != nil {
-			logger.Warning(err)
+
+		// fakeMode是用户期望的的调整过的模式，Mode是实际设置的模式，但对外表现为fakeMode
+		// 例如为了防止在恢复时亮度有变化，这里设置高性能时对外表现仍然是节能模式
+		if fakeMode == "powersave" {
+			m.setPropPowerSavingModeEnabled(true)
+			err = m.doSetCpuGovernor("performance")
+			if err != nil {
+				logger.Warning(err)
+			}
+		} else if fakeMode == "balance" {
+			m.setPropPowerSavingModeEnabled(false)
+			err = m.doSetCpuGovernor("performance")
+			if err != nil {
+				logger.Warning(err)
+			}
+		} else if fakeMode == "performance" {
+			m.setPropPowerSavingModeEnabled(false)
+			err = m.doSetCpuGovernor("performance")
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 
 	default:
@@ -720,8 +738,7 @@ func (m *Manager) doSetMode(mode string) error {
 	}
 
 	if err == nil {
-		m.setPropMode(mode)
-		m.recordMode = mode
+		m.fakeMode = fakeMode
 	}
 
 	return err
@@ -795,8 +812,8 @@ func (m *Manager) enablePerformanceInBoot() bool {
 	if m.Mode == "performance" {
 		return false
 	}
-	m.recordMode = m.Mode
-	err := m.doSetMode("performance")
+
+	err := m.doSetMode("performance", m.fakeMode)
 	if err != nil {
 		logger.Warning(err)
 		return false

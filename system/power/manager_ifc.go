@@ -101,7 +101,7 @@ func (m *Manager) SetMode(mode string) *dbus.Error {
 	m.setPropPowerSavingModeAutoWhenBatteryLow(false)
 	m.setPropPowerSavingModeAuto(false)
 
-	err := m.doSetMode(mode)
+	err := m.doSetMode(mode, mode)
 	if err == nil {
 		err = m.saveConfig()
 	}

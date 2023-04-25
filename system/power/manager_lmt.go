@@ -243,11 +243,11 @@ func (m *Manager) updatePowerSavingMode() { // 根据用户设置以及当前状
 
 	if enable {
 		logger.Debug("auto switch to powersave mode")
-		err = m.doSetMode("powersave")
+		err = m.doSetMode("powersave", "powersave")
 	} else {
 		if m.IsBalanceSupported {
 			logger.Debug("auto switch to balance mode")
-			err = m.doSetMode("balance")
+			err = m.doSetMode("balance", "balance")
 		}
 	}
 
