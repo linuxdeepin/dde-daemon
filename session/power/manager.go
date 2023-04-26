@@ -5,6 +5,7 @@
 package power
 
 import (
+	"errors"
 	"os"
 	"sync"
 	"syscall"
@@ -23,6 +24,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
@@ -451,6 +453,10 @@ func (m *Manager) initDsg() {
 		return
 	}
 
+	if !dutils.IsFileExist("/usr/share/dsg/configs/org.deepin.startdde/org.deepin.Display.json") {
+		logger.Warning(" [initDsg] dconfig file not exist : /usr/share/dsg/configs/org.deepin.startdde/org.deepin.Display.json.")
+		return
+	}
 	dsg := configManager.NewConfigManager(systemBus)
 	displayConfigManagerPath, err := dsg.AcquireManager(0, DSettingsAppID, DSettingsDisplayName, "")
 	if err != nil {
@@ -465,6 +471,10 @@ func (m *Manager) initDsg() {
 }
 
 func (m *Manager) getAutoChangeDeepinWm() bool {
+	if m.dsConfigManager == nil {
+		logger.Warning("getAutoChangeDeepinWm, dsgConfig org.deepin.startdde auto-change-deepin-wm not exist")
+		return false
+	}
 	v, err := m.dsConfigManager.Value(0, DSettingsAutoChangeWm)
 	if err != nil {
 		logger.Warning(err)
@@ -477,6 +487,9 @@ func (m *Manager) getAutoChangeDeepinWm() bool {
 }
 
 func (m *Manager) setAutoChangeDeepinWm(value bool) error {
+	if m.dsConfigManager == nil {
+		return errors.New("setAutoChangeDeepinWm, dsgConfig org.deepin.startdde auto-change-deepin-wm not exist")
+	}
 	err := m.dsConfigManager.SetValue(0, DSettingsAutoChangeWm, dbus.MakeVariant(value))
 	if err != nil {
 		return err
