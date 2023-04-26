@@ -764,6 +764,16 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 				logger.Debug("handleXRecordKeyEvent: emit key event for screenshot* shortcuts")
 				sm.callEventCallback(keyEvent)
 			}
+			// 显示桌面快捷键是窗管控制，此处需要隐藏启动器
+			if shortcut != nil && shortcut.GetType() == ShortcutTypeWM && shortcut.GetId() == "show-desktop" {
+				go func() {
+					cmd := "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Hide"
+					err := exec.Command("/bin/sh", "-c", cmd).Run()
+					if err != nil {
+						logger.Warning(err)
+					}
+				}()
+			}
 		}
 	}
 }
