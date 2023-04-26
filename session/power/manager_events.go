@@ -125,6 +125,46 @@ func (m *Manager) handleRefreshMains() {
 	}
 }
 
+func (m *Manager) handleWakeupDDELowPowerCheck() {
+	power := m.helper.Power
+	hasBattery, err := power.HasBattery().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	logger.Info(" PrepareForSleep(False) : wakeup, hasBattery : ", hasBattery)
+
+	if hasBattery {
+		// when wakeup update onBattery state
+		onBattery, err := power.OnBattery().Get(0)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		if onBattery != m.OnBattery {
+			m.setPropOnBattery(onBattery)
+		}
+
+		if !onBattery {
+			percentage, err := power.BatteryPercentage().Get(0)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			m.setPropBatteryPercentage(percentage)
+
+			logger.Info(" PrepareForSleep(False) : wakeup,  Battery percentage : ", percentage, m.BatteryPercentage[batteryDisplay], m.warnLevelConfig.ActionPercentage.Get())
+
+			if percentage <= float64(m.warnLevelConfig.ActionPercentage.Get()) {
+				return
+			}
+		}
+
+		doCloseDDELowPower()
+	}
+}
+
 func (m *Manager) handleBatteryDisplayUpdate() {
 	logger.Debug("handleBatteryDisplayUpdate")
 	power := m.helper.Power
