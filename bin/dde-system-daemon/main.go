@@ -73,15 +73,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// fix no PATH when was launched by dbus
-	if os.Getenv("PATH") == "" {
-		logger.Warning("No PATH found, manual special")
-		err = os.Setenv("PATH", "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin")
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
 	// 系统级服务，无需设置LANG和LANGUAGE，保证翻译不受到影响
 	_ = os.Setenv("LANG", "")
 	_ = os.Setenv("LANGUAGE", "")
