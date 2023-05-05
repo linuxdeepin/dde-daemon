@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"os/user"
+	"os/exec"
 	"path"
 	"regexp"
 	"strings"
@@ -704,7 +705,7 @@ func (kbd *Keyboard) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 }
 
 func (kbd *Keyboard) shouldUseDDEKwin() bool {
-	_, err := os.Stat("/usr/bin/kwin_no_scale")
+	_, err := exec.LookPath("deepin-kwin_x11")
 	return err == nil
 }
 
