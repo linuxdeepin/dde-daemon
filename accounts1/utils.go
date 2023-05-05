@@ -80,9 +80,10 @@ func (code ErrCodeType) String() string {
 }
 
 // return icons uris
-func getUserStandardIcons() []string {
+func getUserIcons() ([]string, []string) {
 	var paths []string
 	var icons []string
+	var customIcons []string
 
 	if err := filepath.Walk(userIconsDir,
 		func(path string, info os.FileInfo, err error) error {
@@ -90,7 +91,7 @@ func getUserStandardIcons() []string {
 				return err
 			}
 
-			subPaths := []string{"dimensional", "flat"}
+			subPaths := []string{"dimensional", "flat", "local"}
 
 			if info.IsDir() && strv.Strv(subPaths).Contains(info.Name()) {
 				paths = append(paths, path)
@@ -100,23 +101,27 @@ func getUserStandardIcons() []string {
 		},
 	); err != nil {
 		logger.Warning("failed to walk usr icon path", err)
-		return icons
+		return icons, customIcons
 	}
 
 	for _, path := range paths {
 		imgs, err := graphic.GetImagesInDir(path)
 		if err != nil {
 			logger.Warning("failed to get user icon images", err)
-			return nil
+			return nil, nil
 		}
 
 		for _, img := range imgs {
 			img = utils.EncodeURI(img, utils.SCHEME_FILE)
-			icons = append(icons, img)
+			if strings.Contains(img, userCustomIconsDir) {
+				customIcons = append(customIcons, img)
+			} else {
+				icons = append(icons, img)
+			}
 		}
 	}
 
-	return icons
+	return icons, customIcons
 }
 
 // 从系统的用户头像中随机获取一张用户图片
