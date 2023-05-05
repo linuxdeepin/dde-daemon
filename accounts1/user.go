@@ -251,7 +251,8 @@ func (u *User) updateIconList() {
 }
 
 func (u *User) initCustomIcons() {
-	icons := _userStandardIcons
+	icons := _userCustomIcons
+
 	customIconPre := u.UserName + "-"
 	for _, icon := range icons {
 		if strings.Contains(icon, customIconPre) {
@@ -717,7 +718,8 @@ func updateConfigPath(username string) {
 }
 
 func isOldCustomIcon(u *User) bool {
-	if _, err := os.Stat(u.IconFile); os.IsNotExist(err) {
+	iconFile := dutils.DecodeURI(u.IconFile)
+	if _, err := os.Stat(iconFile); os.IsNotExist(err) {
 		if !isStrInArray(u.IconFile, u.IconList) {
 			return true
 		}

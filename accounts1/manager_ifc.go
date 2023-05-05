@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/accounts/keyring"
 	"github.com/linuxdeepin/dde-daemon/accounts1/checkers"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -30,7 +31,6 @@ import (
 	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/users/passwd"
 	dutils "github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/accounts/keyring"
 )
 
 const (
@@ -272,14 +272,13 @@ func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) 
 //
 // ret0：头像路径，为空则表示获取失败
 func (m *Manager) RandUserIcon() (iconFile string, busErr *dbus.Error) {
-	icons := getUserStandardIcons()
-	if len(icons) == 0 {
+	if len(_userStandardIcons) == 0 {
 		return "", dbusutil.ToError(errors.New("Did not find any user icons"))
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	idx := rand.Intn(len(icons)) // #nosec G404
-	return icons[idx], nil
+	idx := rand.Intn(len(_userStandardIcons)) // #nosec G404
+	return _userStandardIcons[idx], nil
 }
 
 // 检查用户名是否有效
