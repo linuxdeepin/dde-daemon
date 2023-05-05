@@ -13,6 +13,7 @@ import (
 var (
 	_imageBlur         *ImageBlur
 	_userStandardIcons []string
+	_userCustomIcons   []string
 	logger             = log.NewLogger("daemon/accounts")
 )
 
@@ -42,7 +43,7 @@ func (d *Daemon) Start() error {
 		return nil
 	}
 
-	_userStandardIcons = getUserStandardIcons()
+	_userStandardIcons, _userCustomIcons = getUserIcons()
 	service := loader.GetService()
 	d.manager = NewManager(service)
 
