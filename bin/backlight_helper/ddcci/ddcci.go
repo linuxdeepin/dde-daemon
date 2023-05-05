@@ -122,9 +122,15 @@ func newDDCCI() (*ddcci, error) {
 		return nil, err
 	}
 
-	content, err := exec.Command("/usr/bin/dpkg-architecture", "-qDEB_HOST_MULTIARCH").Output() // TODO: arch和rpm打包需要通过patch修改获取路径的方式
+	content, err := exec.Command("/usr/bin/dpkg-architecture", "-qDEB_HOST_MULTIARCH").Output()
 	if err != nil {
-		logger.Warning(err)
+		// use dlopen search library when dpkg-architecture not available
+		cStr := C.CString("libddcutil.so.0")
+		defer C.free(unsafe.Pointer(cStr))
+		ret := C.InitDDCCISo(cStr)
+		if ret == -2 {
+			logger.Debug("failed to initialize ddca_free_all_displays sym")
+		}
 	} else {
 		path := filepath.Join("/usr/lib", strings.TrimSpace(string(content)), "libddcutil.so.0")
 		logger.Debug("so path:", path)
