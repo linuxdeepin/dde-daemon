@@ -311,7 +311,7 @@ func readTinyFile(file string) ([]byte, error) {
 }
 
 func shouldUseDDEKwin() bool {
-	_, err := os.Stat("/usr/bin/kwin_no_scale")
+	_, err := exec.LookPath("deepin-kwin_x11")
 	return err == nil
 }
 
