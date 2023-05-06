@@ -2,7 +2,6 @@ PREFIX = /usr
 GOPATH_DIR = gopath
 GOPKG_PREFIX = github.com/linuxdeepin/dde-daemon
 GOBUILD = go build $(GO_BUILD_FLAGS)
-export GO111MODULE=off
 export GOPATH=$(shell go env GOPATH)
 
 ifneq (${shell uname -m}, mips64el)
