@@ -1,3 +1,12 @@
+dde-daemon (6.0.16) unstable; urgency=medium
+
+  * fix: 用户设置自定义头像后重启系统失效
+  * chore: Override shortcut keys to kwin after startup
+  * chore: provide systemd startup
+  * chore: sync changes in deepin-kwin
+
+ -- dengbo <dengbo@uniontech.com>  Sat, 6 May 2023 10:01:30 +0800
+
 dde-daemon (6.0.15) unstable; urgency=medium
 
   * feat: 更改默认头像
