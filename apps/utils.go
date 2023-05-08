@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+	"github.com/adrg/xdg"
 )
 
 func intSliceContains(slice []int, a int) bool {
@@ -96,7 +97,7 @@ func removeDesktopExt(name string) string {
 }
 
 func getSystemDataDirs() []string {
-	return []string{"/usr/share", "/usr/local/share"}
+	return xdg.DataDirs
 }
 
 // get user home

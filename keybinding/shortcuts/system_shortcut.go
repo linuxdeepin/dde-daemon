@@ -10,6 +10,7 @@ import (
 	"path"
 	"sync"
 
+	"github.com/adrg/xdg"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -148,5 +149,6 @@ func getSystemActionsFile() string {
 		return file
 	}
 
-	return ""
+	filepath, _ := xdg.SearchDataFile(systemActionsFile)
+	return filepath;
 }
