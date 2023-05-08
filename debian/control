@@ -28,6 +28,7 @@ Build-Depends:
  golang-github-rickb777-date-dev,
  golang-github-smartystreets-goconvey-dev,
  golang-github-teambition-rrule-go-dev,
+ golang-github-adrg-xdg-dev,
  golang-go,
  golang-golang-x-sys-dev,
  golang-golang-x-xerrors-dev,
