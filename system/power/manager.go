@@ -738,6 +738,7 @@ func (m *Manager) doSetMode(mode string, fakeMode string) error {
 	}
 
 	if err == nil {
+		m.setPropMode(mode)
 		m.fakeMode = fakeMode
 	}
 
