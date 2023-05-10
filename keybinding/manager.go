@@ -154,7 +154,7 @@ type Manager struct {
 
 	dmiInfo systeminfo.DMIInfo
 
-	//nolint
+	// nolint
 	signals *struct {
 		Added, Deleted, Changed struct {
 			id  string
@@ -384,21 +384,21 @@ func (m *Manager) initDSettings(bus *dbus.Conn) {
 }
 
 var kwinSysActionCmdMap = map[string]string{
-	"Launcher":              "launcher",               //Super_L Super_R
-	"Terminal":              "terminal",               //<Control><Alt>T
+	"Launcher":              "launcher",               // Super_L Super_R
+	"Terminal":              "terminal",               // <Control><Alt>T
 	"Terminal Quake Window": "terminal-quake",         //
-	"Lock screen":           "lock-screen",            //super+l
-	"Shutdown interface":    "logout",                 //ctrl+alt+del
-	"File manager":          "file-manager",           //super+e
-	"Screenshot":            "screenshot",             //ctrl+alt+a
-	"Full screenshot":       "screenshot-fullscreen",  //print
-	"Window screenshot":     "screenshot-window",      //alt+print
-	"Delay screenshot":      "screenshot-delayed",     //ctrl+print
+	"Lock screen":           "lock-screen",            // super+l
+	"Shutdown interface":    "logout",                 // ctrl+alt+del
+	"File manager":          "file-manager",           // super+e
+	"Screenshot":            "screenshot",             // ctrl+alt+a
+	"Full screenshot":       "screenshot-fullscreen",  // print
+	"Window screenshot":     "screenshot-window",      // alt+print
+	"Delay screenshot":      "screenshot-delayed",     // ctrl+print
 	"Disable Touchpad":      "disable-touchpad",       //
-	"Switch window effects": "wm-switcher",            //alt+tab
-	"turn-off-screen":       "Fast Screen Off",        //<Shift><Super>L
-	"Deepin Picker":         "color-picker",           //ctrl+alt+v
-	"System Monitor":        "system-monitor",         //ctrl+alt+escape
+	"Switch window effects": "wm-switcher",            // alt+tab
+	"turn-off-screen":       "Fast Screen Off",        // <Shift><Super>L
+	"Deepin Picker":         "color-picker",           // ctrl+alt+v
+	"System Monitor":        "system-monitor",         // ctrl+alt+escape
 	"Screen Recorder":       "deepin-screen-recorder", // deepin-screen-recorder ctrl+alt+r
 	"Desktop AI Assistant":  "ai-assistant",           // ai-assistant [<Super>Q]q
 	"Text to Speech":        "text-to-speech",
@@ -491,7 +491,7 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 			if ok == 0 {
 				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
 				if m.shortcutKeyCmd == "" {
-					//+ 把响应一次的逻辑放到协程外执行，防止协程响应延迟
+					// + 把响应一次的逻辑放到协程外执行，防止协程响应延迟
 					m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
 				} else {
 					m.shortcutCmd = shortcuts.GetSystemActionCmd(kwinSysActionCmdMap[m.shortcutKeyCmd])
@@ -731,7 +731,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 				if err != nil {
 					return
 				}
-				time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
+				time.Sleep(200 * time.Millisecond) // + 添加200ms延时，保证在dde-system-daemon中先获取状态；
 				sessionObj := sessionBus.Object("org.kde.KWin", "/Xkb")
 				var ret int32
 				err = sessionObj.Call("org.kde.kwin.Xkb.getLeds", 0).Store(&ret)
@@ -780,7 +780,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 				if err != nil {
 					return
 				}
-				time.Sleep(200 * time.Millisecond) //+ 添加200ms延时，保证在dde-system-daemon中先获取状态；
+				time.Sleep(200 * time.Millisecond) // + 添加200ms延时，保证在dde-system-daemon中先获取状态；
 				sessionObj := sessionBus.Object("org.kde.KWin", "/Xkb")
 				var ret int32
 				err = sessionObj.Call("org.kde.kwin.Xkb.getLeds", 0).Store(&ret)
@@ -852,7 +852,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			} else if action.Type == shortcuts.ActionTypeSystemShutdown {
 
 			} else if action.Type == shortcuts.ActionTypeMediaPlayerCtrl {
-				//增蓝牙耳机快捷键的处理
+				// 增蓝牙耳机快捷键的处理
 				if cmd == shortcuts.MediaPlayerPlay {
 					m.clickNum = m.clickNum + 1
 					if m.clickNum == 1 {
@@ -993,7 +993,10 @@ func (m *Manager) handleKeyEvent(ev *shortcuts.KeyEvent) {
 		logger.Warning("action is nil")
 		return
 	}
-
+	if len(m.handlers) == 0 {
+		logger.Warning("handlers is nil")
+		return
+	}
 	if handler := m.handlers[int(action.Type)]; handler != nil {
 		handler(ev)
 	} else {

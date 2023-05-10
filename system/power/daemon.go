@@ -131,7 +131,9 @@ func (d *Daemon) Start() (err error) {
 		// 查看mode时,将mode还原成原有的mode
 		err = serverObj.SetReadCallback(d.manager, "Mode", func(read *dbusutil.PropertyRead) *dbus.Error {
 			logger.Info("change to record mode")
-			highTimer.Stop()
+			if highTimer != nil {
+				highTimer.Stop()
+			}
 			defer func() {
 				_ = serverObj.SetReadCallback(d.manager, "Mode", nil)
 			}()
