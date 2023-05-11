@@ -54,14 +54,16 @@ func (t *Touchpad) SetTouchpadEnable(enabled bool) *dbus.Error {
 
 func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 	if err := TouchpadExist(touchpadSwitchFile); err != nil {
+		logger.Warning(" TouchpadExist err : ", err)
 		return err
 	}
 	current, err := TouchpadEnable(touchpadSwitchFile)
 	if err != nil {
-		logger.Warning(err)
+		logger.Warning(" TouchpadEnable err : ", err)
 		return err
 	}
 	if current == enabled {
+		logger.Info("current touchPad state is same : ", enabled)
 		return nil
 	}
 	arg := "enable"
@@ -70,7 +72,7 @@ func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 	}
 	err = ioutil.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
 	if err != nil{
-		logger.Warning(err)
+		logger.Warning(" ioutil.WriteFile err : ", err)
 		return err
 	}
 	t.setPropEnable(enabled)

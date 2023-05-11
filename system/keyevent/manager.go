@@ -5,19 +5,22 @@
 package keyevent
 
 import (
+	"errors"
 	"os"
 	"io/ioutil"
 	"strings"
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-dbus-factory/com.deepin.system.inputdevices"
 )
 
 //go:generate dbusutil-gen em -type Manager
 
 type Manager struct {
-	service *dbusutil.Service
-	quit    chan bool
-	ch      chan *KeyEvent
+	service     *dbusutil.Service
+	quit        chan bool
+	ch          chan *KeyEvent
+	touchPad    inputdevices.Touchpad
 
 	leftCtrlPressed  bool
 	leftShiftPressed bool
@@ -71,6 +74,14 @@ func newManager(service *dbusutil.Service) *Manager {
 		ch:      make(chan *KeyEvent, 64),
 	}
 
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return m
+	}
+	m.touchPad, err = inputdevices.NewTouchpad(sysBus,"/com/deepin/system/InputDevices/Touchpad")
+	if err != nil {
+		logger.Warning(err)
+	}
 	return m
 }
 
@@ -142,16 +153,27 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 					return
 				}
 				enable := strings.Contains(string(content), "enable")
-				systemBus, err := dbus.SystemBus()
-				if err != nil {
-					logger.Warning(err)
-					return
+
+				if m.touchPad == nil {
+					err = errors.New("m.TouchPad is nil")
+				} else {
+					err = m.touchPad.SetTouchpadEnable(0, !enable)
 				}
-				obj := systemBus.Object("com.deepin.system.InputDevices", "/com/deepin/system/InputDevices/TouchPad")
-				err = obj.Call("com.deepin.system.InputDevices.TouchPad.SetTouchPadEnable", 0, !enable).Err
+
 				if err != nil {
-					logger.Warning(err)
-					return
+					logger.Warning("Set TouchPad state err : ", err)
+
+					// 接口调用异常时，需要保证开关触摸板正常
+					arg := string(content)
+					if strings.Contains(arg, "enable") {
+						arg = "disable"
+					} else {
+						arg = "enable"
+					}
+					err = ioutil.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
+					if err != nil{
+						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
+					}
 				}
 			}()
 		}
