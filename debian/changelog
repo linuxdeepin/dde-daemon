@@ -1,3 +1,11 @@
+dde-daemon (5.15.11.1) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 修复性能模式切换dbus属性不发出改变信号的问题(Task: 251417)(Influence: 可能影响性能模式切换导致的亮度不变的问题)
+  * fix: 增加越界和空指针的判断(Influence: 进程崩溃)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Thu, 11 May 2023 14:47:06 +0800
+
 dde-daemon (5.15.11) unstable; urgency=medium
 
   [ lichangze ]
