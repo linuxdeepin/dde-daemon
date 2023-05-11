@@ -5,7 +5,7 @@
 package dock
 
 import (
-	"crypto/md5" //#nosec G501
+	"crypto/md5" // #nosec G501
 	"encoding/hex"
 	"fmt"
 	"path/filepath"
@@ -299,11 +299,13 @@ func (winInfo *WindowInfo) updateProcessInfo() {
 	var err error
 	winInfo.process, err = NewProcessInfo(winInfo.pid)
 	if err != nil {
-		logger.Debug(err)
+		logger.Warning(err)
 		// Try WM_COMMAND
 		wmCommand, err := getWmCommand(win)
 		if err == nil {
 			winInfo.process = NewProcessInfoWithCmdline(wmCommand)
+		} else {
+			return
 		}
 	}
 	logger.Debugf("process: %#v", winInfo.process)
