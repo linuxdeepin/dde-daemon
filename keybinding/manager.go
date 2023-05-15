@@ -140,6 +140,7 @@ type Manager struct {
 	lastKeyEventTime     time.Time
 	lastExecCmdTime      time.Time
 	lastMethodCalledTime time.Time
+	delayUpdateRfTimer   *time.Timer
 	grabScreenKeystroke  *shortcuts.Keystroke
 
 	// for switch kbd layout
@@ -153,6 +154,8 @@ type Manager struct {
 	configManagerPath dbus.ObjectPath
 
 	dmiInfo systeminfo.DMIInfo
+	rfkillState       bool
+	repeatCount       int
 
 	// nolint
 	signals *struct {
@@ -328,6 +331,13 @@ func (m *Manager) init() {
 
 		go m.listenGlobalAccel(sessionBus)
 		go m.listenKeyboardEvent(sysBus)
+	}
+
+	m.rfkillState, err = m.airplane.Enabled().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		logger.Info("init rfkillState : ", m.rfkillState)
 	}
 }
 

@@ -6,7 +6,9 @@ package keybinding
 
 import (
 	"io/ioutil"
+	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/godbus/dbus"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
@@ -27,6 +29,7 @@ const (
 	KEY_CYCLEWINDOWS    = 154
 	KEY_MODE            = 0x175
 	KEY_KBDILLUMTOGGLE  = 228
+	KEY_RFKILL          = 247
 )
 
 type SpecialKeycodeMapKey struct {
@@ -106,6 +109,10 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// 切换键盘背光模式
 	key = createSpecialKeycodeIndex(KEY_KBDILLUMTOGGLE, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handleKbdLight
+
+	// 切换飞行模式 Hard开/关状态
+	key = createSpecialKeycodeIndex(KEY_RFKILL, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleRFKILL
 }
 
 // 处理函数的总入口
@@ -320,4 +327,59 @@ func (m *Manager) handleKbdLight() {
 		showOSD("KbLightHigh")
 	}
 	logger.Debugf("switch kbd light mode to %v", mode)
+}
+
+const minCallRfkillInterval = 1500 * time.Millisecond
+
+func runRfkillListAll() (bool, error) {
+	cmd := exec.Command("rfkill", "list", "all")
+	out, err := cmd.Output()
+	return strings.Contains(string(out), "Hard blocked: yes"), err
+}
+
+// 监听 rfkill 开关状态
+func (m *Manager) listenRfkill(callback func(status bool)) {
+	for {
+		// 执行 rfkill list 命令
+		out, err := exec.Command("rfkill", "list").Output()
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		// 解析 rfkill 状态
+		status := strings.Contains(string(out), "Hard blocked: yes")
+		if status != m.rfkillState {
+			// 调用回调函数
+			callback(status)
+			m.rfkillState = status
+		}
+		m.repeatCount += 1
+		if m.repeatCount > 5 {
+			m.repeatCount = 0
+			return
+		}
+
+		// 每秒检查一次 rfkill 状态
+		time.Sleep(time.Second)
+	}
+}
+
+func (m *Manager) handleRFKILL() {
+	m.repeatCount = 0
+	if m.delayUpdateRfTimer == nil {
+		m.delayUpdateRfTimer = time.AfterFunc(minCallRfkillInterval, func() {
+			m.listenRfkill(func(state bool) {
+				m.airplane.EnableWifi(0, state)
+				m.airplane.EnableBluetooth(0, state)
+				if state {
+					logger.Info("rfkill is on")
+				} else {
+					logger.Info("rfkill is off")
+				}
+			})
+		})
+	}
+	m.emitSignalKeyEvent(true, "KEY_RFKILL")
+	m.delayUpdateRfTimer.Stop()
+	m.delayUpdateRfTimer.Reset(minCallRfkillInterval)
 }
