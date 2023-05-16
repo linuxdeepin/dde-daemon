@@ -18,6 +18,11 @@ func (v *StatusNotifierWatcher) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.RegisterStatusNotifierItem,
 			InArgs: []string{"serviceOrPath"},
 		},
+		{
+			Name:   "GetHostServiceName",
+			Fn:     v.GetHostServiceName,
+			OutArgs: []string{"hostName"},
+		},
 	}
 }
 func (v *TrayManager) GetExportedMethods() dbusutil.ExportedMethods {

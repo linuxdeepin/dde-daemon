@@ -129,6 +129,13 @@ func (snw *StatusNotifierWatcher) RegisterStatusNotifierHost(serviceName string)
 	return dbusutil.ToError(err)
 }
 
+func (snw *StatusNotifierWatcher) GetHostServiceName(sender dbus.Sender) (hostName string, busErr *dbus.Error) {
+	snw.PropsMu.Lock()
+	defer snw.PropsMu.Unlock()
+
+	return snw.hostServiceName, nil
+}
+
 func (ss *StatusNotifierWatcher) listenDBusNameOwnerChanged() {
 	ss.dbusDaemon.InitSignalExt(ss.sigLoop, true)
 	_, err := ss.dbusDaemon.ConnectNameOwnerChanged(func(name string, oldOwner string, newOwner string) {
