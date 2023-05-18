@@ -4,15 +4,6 @@
 
 package accounts
 
-/*
-#cgo CFLAGS: -W -Wall -g  -fstack-protector-all -fPIC
-#cgo LDFLAGS: -lkeyring
-
-#include <stdlib.h>
-#include <shadow.h>
-#include "keyring/common.h"
-*/
-
 import (
 	"encoding/json"
 	"errors"
@@ -20,13 +11,11 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"path"
 	"strconv"
 	"time"
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts/checkers"
-	"github.com/linuxdeepin/dde-daemon/accounts/keyring"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
@@ -44,39 +33,6 @@ const (
 
 func (*Manager) GetInterfaceName() string {
 	return dbusInterface
-}
-
-func getUserNameList() (list []string) {
-	infos, err := users.GetHumanUserInfos()
-	if err != nil {
-		return nil
-	}
-	for _, v := range infos {
-		list = append(list, v.Name)
-	}
-	return list
-}
-
-// 已经存在的账户，未创建WB_UFile文件，则直接创建
-func (m *Manager) createExistAccountWbUFile() {
-	userList := getUserNameList()
-	for _, name := range userList {
-		user := m.getUserByName(name)
-		if user == nil {
-			err := fmt.Errorf("create WBUFile failed, user %q not found", name)
-			logger.Warning(err)
-			continue
-		}
-		dir := user.HomeDir + "/.local/share/deepin-keyrings-wb"
-		filename := path.Join(dir, "WB_UFile")
-		if !dutils.IsFileExist(dir) || !dutils.IsFileExist(filename) {
-			err := keyring.CreateWhiteBoxUFile(user.HomeDir, name)
-			if err != nil {
-				logger.Warning("Keyring crypto so not exist.")
-				return
-			}
-		}
-	}
 }
 
 // Create new user.
@@ -137,10 +93,6 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 	case userPath, ok := <-ch:
 		if !ok {
 			return nilObjPath, dbusutil.ToError(errors.New("invalid user path event"))
-		}
-
-		if err = keyring.CreateWhiteBoxUFile(homeDir, name); err != nil {
-			logger.Warningf("keyring.CreateWhiteBoxUFile: create user '%s' failed: %v\n", name, err)
 		}
 
 		logger.Debug("receive user path", userPath)
@@ -241,12 +193,6 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 	//delete user config and icons
 	if rmFiles {
 		user.clearData()
-	}
-
-	err = keyring.DeleteWhiteBoxUFile(user.HomeDir, name)
-	if err != nil {
-		logger.Warningf("DeleteWhiteBoxUFile '%s' failed: %v\n", name, err)
-		return dbusutil.ToError(err)
 	}
 
 	return nil

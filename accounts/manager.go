@@ -122,7 +122,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 	m.AllowGuest = isGuestUserEnabled()
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
-	go m.createExistAccountWbUFile()
 
 	// 检测到系统加入LDAP域后，才去初始化域用户信息
 	ret, err := m.isJoinLDAPDoamin()
