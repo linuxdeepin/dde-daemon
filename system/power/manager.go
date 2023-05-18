@@ -418,6 +418,9 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 		if ret.Contains("powersave") {
 			m.IsPowerSaveSupported = true
 		}
+		if ret.Contains("power") && m.hasPstate {
+			m.IsPowerSaveSupported = true
+		}
 	}
 
 	if !m.IsBalanceSupported {
