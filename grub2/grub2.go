@@ -578,7 +578,7 @@ func getGfxmodesFromBootArg() (grub_common.Gfxmodes, error) {
 	return allGfxmodes, nil
 }
 
-var ignoreString = []string{"System setup", "UnionTech OS Restore"}
+var ignoreString = []string{"System setup", "UOS Restore"}
 
 func getOSNum(entries []Entry) uint32 {
 	var systemNum uint32
