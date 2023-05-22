@@ -19,10 +19,8 @@ import "C"
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"math"
 	"os"
-	"os/user"
 	"sort"
 	"strconv"
 	"strings"
@@ -132,74 +130,6 @@ func getSpwd(username string) (*originShadowInfo, error) {
 		ShadowPwdp: C.GoString(spwd.sp_pwdp),
 	}
 	return &sInfo, nil
-}
-
-// password: has been crypt
-func updatePasswd(password, username string) error {
-	status := C.lock_shadow_file()
-	if status != 0 {
-		return fmt.Errorf("Lock shadow file failed")
-	}
-	defer C.unlock_shadow_file()
-
-	content, err := ioutil.ReadFile(userFileShadow)
-	if err != nil {
-		return err
-	}
-
-	lines := strings.Split(string(content), "\n")
-	var datas []string
-	var found bool
-	for _, line := range lines {
-		if len(line) == 0 {
-			datas = append(datas, line)
-			continue
-		}
-
-		items := strings.Split(line, ":")
-		if items[0] != username {
-			datas = append(datas, line)
-			continue
-		}
-
-		found = true
-		if items[1] == password {
-			return nil
-		}
-
-		var tmp string
-		for i, v := range items {
-			if i != 0 {
-				tmp += ":"
-			}
-
-			if i == 1 {
-				tmp += password
-				continue
-			}
-
-			tmp += v
-		}
-
-		datas = append(datas, tmp)
-	}
-
-	if !found {
-		return fmt.Errorf("The username not exist.")
-	}
-
-	err = writeStrvToFile(datas, userFileShadow, math.MaxUint32)
-	if err != nil {
-		return nil
-	}
-
-	usr, _ := user.Lookup("root")
-	grp, _ := user.LookupGroup("shadow")
-	uid, _ := strconv.Atoi(usr.Uid)
-	gid, _ := strconv.Atoi(grp.Gid)
-	err = os.Chown(userFileShadow, uid, gid)
-
-	return err
 }
 
 func writeStrvToFile(datas []string, file string, mode os.FileMode) error {

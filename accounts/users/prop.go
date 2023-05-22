@@ -180,7 +180,7 @@ func ModifyPasswd(words, username string) error {
 		return errInvalidParam
 	}
 
-	return updatePasswd(words, username)
+	return doAction(userCmdModify, []string{"-p", words, username})
 }
 
 func ModifyMaxPasswordAge(username string, nDays int) error {
