@@ -4,69 +4,69 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Thomas Sungjin Kang <potopro@gmail.com>, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2021
-# Junghee Lee <daemul72@gmail.com>, 2022
-# Cindy0514, 2022
-# Sangmin Lee <sangminlee7648@gmail.com>, 2022
-# 박태은 <taeeunp@gmail.com>, 2022
+# 박태은 <taeeunp@gmail.com>, 2023
+# Thomas Sungjin Kang <potopro@gmail.com>, 2023
+# Sangmin Lee <sangminlee7648@gmail.com>, 2023
+# Maggie Liu <maggie.liufei@gmail.com>, 2023
+# deepiner, 2023
+# Junghee Lee <daemul72@gmail.com>, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: 박태은 <taeeunp@gmail.com>, 2022\n"
-"Language-Team: Korean (https://www.transifex.com/linuxdeepin/teams/3617/ko/)\n"
+"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"PO-Revision-Date: 2023-05-23 09:02+0000\n"
+"Last-Translator: Junghee Lee <daemul72@gmail.com>, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/linuxdeepin/teams/3617/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../../accounts/checkers/password.go:38
+#: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
 msgstr "비밀번호를 8자 이상 입력하십시오"
 
-#: ../../accounts/checkers/password.go:40
+#: ../../accounts1/checkers/password.go:40
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr "비밀번호는 영문자(대소문자 구분), 숫자 또는 특수 기호(~!@#$%^&*()[]{}|/?,.<>)만 포함해야 합니다  "
 
-#: ../../accounts/checkers/username.go:49
+#: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
 msgstr "사용자 이름은 비워 둘 수 없습니다"
 
-#: ../../accounts/checkers/username.go:54
+#: ../../accounts1/checkers/username.go:54
 msgid "The first character must be a letter or number"
 msgstr "첫 번째 문자는 문자 또는 숫자여야 합니다."
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts1/checkers/username.go:56
 msgid "The username already exists"
 msgstr "사용자 이름이 이미 존재합니다"
 
-#: ../../accounts/checkers/username.go:59
+#: ../../accounts1/checkers/username.go:59
 msgid "The name already exists"
 msgstr "이름이 이미 존재합니다"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts1/checkers/username.go:61
 msgid "Username must be between 3 and 32 characters"
 msgstr "사용자 이름은 3 ~ 32 자 사이 여야합니다"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts1/manager.go:450
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../audio/audio_events.go:462
+#: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio/audio_events.go:463
+#: ../../audio1/audio_events.go:472
 msgid "Open"
 msgstr "열기"
 
@@ -78,133 +78,139 @@ msgstr "지문 확인에 실패했습니다"
 msgid "Fingerprint verification timed out"
 msgstr "지문 확인 시간이 초과되었습니다"
 
-#: ../../bluetooth/bluez_profile.go:15
-#: ../../system/bluetooth/bluez_profile.go:15
+#: ../../bin/dde-session-daemon/main.go:471
+#, c-format
+msgid "Your password will expire in %d days, please change it timely"
+msgstr ""
+
+#: ../../bluetooth1/bluez_profile.go:15
+#: ../../system/bluetooth1/bluez_profile.go:15
 msgid "Serial port"
 msgstr "직렬 포트"
 
-#: ../../bluetooth/bluez_profile.go:16
-#: ../../system/bluetooth/bluez_profile.go:16
+#: ../../bluetooth1/bluez_profile.go:16
+#: ../../system/bluetooth1/bluez_profile.go:16
 msgid "Dial-Up networking"
 msgstr "다이얼 업 통신망"
 
-#: ../../bluetooth/bluez_profile.go:17
-#: ../../system/bluetooth/bluez_profile.go:17
+#: ../../bluetooth1/bluez_profile.go:17
+#: ../../system/bluetooth1/bluez_profile.go:17
 msgid "Hands-Free device"
 msgstr "핸즈프리 장치"
 
-#: ../../bluetooth/bluez_profile.go:18
-#: ../../system/bluetooth/bluez_profile.go:18
+#: ../../bluetooth1/bluez_profile.go:18
+#: ../../system/bluetooth1/bluez_profile.go:18
 msgid "Hands-Free voice gateway"
 msgstr "핸즈프리 음성 게이트웨이"
 
-#: ../../bluetooth/bluez_profile.go:19
-#: ../../system/bluetooth/bluez_profile.go:19
+#: ../../bluetooth1/bluez_profile.go:19
+#: ../../system/bluetooth1/bluez_profile.go:19
 msgid "Headset voice gateway"
 msgstr "헤드폰 음성 게이트웨이"
 
-#: ../../bluetooth/bluez_profile.go:20
-#: ../../system/bluetooth/bluez_profile.go:20
+#: ../../bluetooth1/bluez_profile.go:20
+#: ../../system/bluetooth1/bluez_profile.go:20
 msgid "Object push"
 msgstr "오브젝트 푸시"
 
-#: ../../bluetooth/bluez_profile.go:21
-#: ../../system/bluetooth/bluez_profile.go:21
+#: ../../bluetooth1/bluez_profile.go:21
+#: ../../system/bluetooth1/bluez_profile.go:21
 msgid "File transfer"
 msgstr "파일 전송"
 
-#: ../../bluetooth/bluez_profile.go:22
-#: ../../system/bluetooth/bluez_profile.go:22
+#: ../../bluetooth1/bluez_profile.go:22
+#: ../../system/bluetooth1/bluez_profile.go:22
 msgid "Synchronization"
 msgstr "동기화"
 
-#: ../../bluetooth/bluez_profile.go:23
-#: ../../system/bluetooth/bluez_profile.go:23
+#: ../../bluetooth1/bluez_profile.go:23
+#: ../../system/bluetooth1/bluez_profile.go:23
 msgid "Phone book access"
 msgstr "전화번호부 접속"
 
-#: ../../bluetooth/bluez_profile.go:24
-#: ../../system/bluetooth/bluez_profile.go:24
+#: ../../bluetooth1/bluez_profile.go:24
+#: ../../system/bluetooth1/bluez_profile.go:24
 msgid "Phone book access client"
 msgstr "전화번호부 접속 클라이언트"
 
-#: ../../bluetooth/bluez_profile.go:25
-#: ../../system/bluetooth/bluez_profile.go:25
+#: ../../bluetooth1/bluez_profile.go:25
+#: ../../system/bluetooth1/bluez_profile.go:25
 msgid "Message access"
 msgstr "메시지 접근"
 
-#: ../../bluetooth/bluez_profile.go:26
-#: ../../system/bluetooth/bluez_profile.go:26
+#: ../../bluetooth1/bluez_profile.go:26
+#: ../../system/bluetooth1/bluez_profile.go:26
 msgid "Message notification"
 msgstr "메시지 알림"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth1/obex_agent.go:376 ../../bluetooth1/utils_notify.go:130
+#: ../../lastore1/lastore.go:435
 msgid "Cancel"
 msgstr "취소"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth1/obex_agent.go:383
 msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth1/obex_agent.go:392
 msgid "View"
 msgstr "ㅂㅗ기"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth1/obex_agent.go:398
 msgid "You have received files from %q successfully"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth1/obex_agent.go:399
 msgid "Done"
 msgstr "완료"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth1/obex_agent.go:414 ../../bluetooth1/obex_agent.go:513
 msgid "Stop Receiving Files"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth1/obex_agent.go:416
 msgid "You have cancelled the file transfer"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
-#: ../../system/bluetooth/utils_notify.go:72
+#: ../../bluetooth1/obex_agent.go:418
+#: ../../system/bluetooth1/utils_notify.go:63
+#: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "블루투스 연결 실패"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth1/obex_agent.go:453
 msgid "Decline"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth1/obex_agent.go:453
 msgid "Receive"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:458
 msgid "Bluetooth File Transfer"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth1/obex_agent.go:459
 msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth1/obex_agent.go:514
 msgid "Receiving %q timed out"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
-msgstr "%q에 연결하려면 여기를 클릭하십시오"
+msgstr "%q에 연결하려면 여기를 클릭"
 
-#: ../../bluetooth/utils_notify.go:120
+#: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
 msgstr "블루투스 장치 추가"
 
-#: ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
 msgstr "페어링"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "디스크 공간이 부족합니다. 정리하십시오!"
 
@@ -409,145 +415,145 @@ msgstr "작업공간 표시"
 msgid "Switch monitors"
 msgstr "모니터 전환"
 
-#: ../../langselector/locale.go:48
+#: ../../langselector1/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "언어를 전화하려면 인증이 필요합니다"
 
-#: ../../langselector/locale.go:137
+#: ../../langselector1/locale.go:137
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "시스템 언어를 변경하고 필요한 언어 패키지를 설치합니다. 잠시 기다려 주십시오..."
 
-#: ../../langselector/locale.go:138
+#: ../../langselector1/locale.go:138
 msgid "Changing system language, please wait..."
 msgstr "시스템 언어를 변경하는 중입니다. 잠시 기다려 주십시오..."
 
-#: ../../langselector/locale.go:139
+#: ../../langselector1/locale.go:139
 msgid "System language changed, please log out and then log in"
 msgstr "시스템 언어가 변경되었습니다. 로그아웃한 후 로그인하십시오"
 
-#: ../../langselector/locale.go:381
+#: ../../langselector1/locale.go:385
 msgid "Failed to change system language, please try later"
 msgstr "시스템 언어를 변경하지 못했습니다. 나중에 시도하십시오"
 
-#: ../../lastore/lastore.go:427
+#: ../../lastore1/lastore.go:427
 msgid "Retry"
 msgstr "재시도"
 
-#: ../../lastore/lastore.go:449
+#: ../../lastore1/lastore.go:449
 msgid "Update Now"
 msgstr "지금 업데이트"
 
-#: ../../lastore/lastore.go:479
+#: ../../lastore1/lastore.go:479
 msgid "Reboot Now"
 msgstr "지금 다시 시작하기"
 
-#: ../../lastore/lastore.go:483
+#: ../../lastore1/lastore.go:483
 msgid "Remind Me Later"
 msgstr ""
 
-#: ../../lastore/lastore.go:490
+#: ../../lastore1/lastore.go:490
 msgid "10 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:497
+#: ../../lastore1/lastore.go:497
 msgid "30 mins later"
 msgstr ""
 
-#: ../../lastore/lastore.go:504
+#: ../../lastore1/lastore.go:504
 msgid "2h later"
 msgstr ""
 
-#: ../../lastore/lastore.go:511
+#: ../../lastore1/lastore.go:511
 msgid "6h later"
 msgstr ""
 
-#: ../../lastore/notify.go:93
+#: ../../lastore1/notify.go:93
 msgid "%q installed successfully."
 msgstr "%q(이)가 성공적으로 설치되었습니다."
 
-#: ../../lastore/notify.go:96
+#: ../../lastore1/notify.go:96
 msgid "%q failed to install."
 msgstr "%q(이)가 설치에 실패하였습니다."
 
-#: ../../lastore/notify.go:104
+#: ../../lastore1/notify.go:104
 msgid "Removed successfully"
 msgstr "성공적으로 제거됨"
 
-#: ../../lastore/notify.go:106
+#: ../../lastore1/notify.go:106
 msgid "Failed to remove the app"
 msgstr "앱을 제거하지 못함"
 
-#: ../../lastore/notify.go:113
+#: ../../lastore1/notify.go:113
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr "자동 종료를 방지하려면, 정상적인 업데이트를 위해 연결하십시오."
 
-#: ../../lastore/notify.go:118
+#: ../../lastore1/notify.go:118
 msgid "Package cache wiped"
 msgstr "패키지 캐시를 지웠습니다"
 
-#: ../../lastore/notify.go:123
+#: ../../lastore1/notify.go:123
 msgid "Updates Available"
 msgstr ""
 
-#: ../../lastore/notify.go:128
+#: ../../lastore1/notify.go:128
 msgid "Reboot after Updates"
 msgstr ""
 
-#: ../../lastore/notify.go:129
+#: ../../lastore1/notify.go:129
 msgid "Restart the computer to use the system and applications properly"
 msgstr ""
 
-#: ../../lastore/notify.go:139
+#: ../../lastore1/notify.go:139
 msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
 
-#: ../../lastore/notify.go:140
+#: ../../lastore1/notify.go:140
 msgid "OK"
 msgstr "확인"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "없음"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit Key"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "개인 WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "보호된 EAP"
 
@@ -913,7 +919,7 @@ msgid "Hotspot disabled"
 msgstr "핫스팟 사용안함"
 
 #: ../../network/state_handler.go:339 ../../network/state_handler.go:363
-#: ../../system/bluetooth/utils_notify.go:50
+#: ../../system/bluetooth1/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q 연결 끊김"
 
@@ -983,94 +989,94 @@ msgstr "연결됨"
 #: ../../service_trigger/msg.go:11
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
-msgstr "\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 실행할 수 없습니다"
+msgstr "\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 실행할 수 없습니다."
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power1/manager_events.go:203
 msgid "Battery critically low"
 msgstr "배터리 잔량 부족"
 
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
-#: ../../session/power/manager_events.go:233
-#: ../../session/power/manager_events.go:238
+#: ../../session/power1/manager_events.go:223
+#: ../../session/power1/manager_events.go:228
+#: ../../session/power1/manager_events.go:233
+#: ../../session/power1/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "배터리 부족,. 전원을 연결하세요"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power1/utils.go:439 ../../session/power1/utils.go:446
+#: ../../session/power1/utils.go:453 ../../session/power1/utils.go:460
 msgid "Power settings changed"
 msgstr "전원 설정이 변경됨"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
+#: ../../session/power1/utils.go:484 ../../session/power1/utils_test.go:16
+#: ../../session/power1/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "뚜껑이 닫히면, "
 
-#: ../../session/power/utils.go:487
+#: ../../session/power1/utils.go:488
 msgid "When pressing the power button, "
 msgstr "전원 버튼을 누르면, "
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power1/utils.go:498 ../../session/power1/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "컴퓨터가 종료됩니다"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power1/utils.go:500 ../../session/power1/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "컴퓨터는 대기모드 상태가 됩니다"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power1/utils.go:502
 msgid "your computer will hibernate"
 msgstr "컴퓨터가 최대 절전 모드임"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power1/utils.go:504
 msgid "your monitor will turn off"
 msgstr "모니터가 꺼집니다"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power1/utils.go:506
 msgid "your monitor will show the shutdown interface"
 msgstr ""
 
-#: ../../session/power/utils.go:507
+#: ../../session/power1/utils.go:508
 msgid "it will do nothing to your computer"
 msgstr "그것은 당신의 컴퓨터에 아무 도움도 되지 않을 것입니다"
 
-#: ../../system/bluetooth/utils_notify.go:43
+#: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "%q 연결 성공"
 
-#: ../../system/bluetooth/utils_notify.go:56
+#: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
 msgstr "%q(이)가 활성화 되어있고 범위 내에 있는지 확인하세요"
 
-#: ../../system/bluetooth/utils_notify.go:74
+#: ../../system/bluetooth1/utils_notify.go:74
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 
-#: ../../timedate/manager_format.go:75
+#: ../../timedate1/manager_format.go:75
 msgid "Space"
 msgstr "공백"
 
-#: ../../timedate/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:51
 msgid "Authentication is required to set the system time"
 msgstr "시스템 시간을 설정하려면 인증이 필요합니다"
 
-#: ../../timedate/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:64
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "네트워크 시간 동기화를 활성화할지 여부를 제어하려면 인증이 필요합니다"
 
-#: ../../timedate/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:74
 msgid "Authentication is required to change NTP server"
 msgstr "NTP 서버를 변경하려면 인증이 필요함"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:114
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr "RTC가 로컬 또는 UTC 시간을 저장하는지 제어하려면 인증이 필요합니다"
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:137
 msgid "Authentication is required to set the system timezone"
 msgstr "시스템 시간대를 설정하려면 인증이 필요합니다"

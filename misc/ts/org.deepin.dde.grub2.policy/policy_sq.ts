@@ -9,7 +9,7 @@
 		<message>
 			<location filename="org.deepin.dde.grub2!description" line="0"/>
 			<source>Change the grub2 configuration</source>
-			<translation>Ndryshoni formësim për grub2</translation>
+			<translation>Ndryshoni formësimin për grub2</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.grub2.prepare-gfxmode-detect!message" line="0"/>

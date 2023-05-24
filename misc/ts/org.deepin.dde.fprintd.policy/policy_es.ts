@@ -14,7 +14,7 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>Se requiere autenticación para borrar contraseñas de huellas dactilares.</translation>
+			<translation>Se requiere autenticación para borrar contraseñas de huellas dactilares</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.delete-enrolled-fingers!description" line="0"/>
