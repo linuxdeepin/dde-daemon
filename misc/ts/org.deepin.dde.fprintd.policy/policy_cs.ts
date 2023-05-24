@@ -4,7 +4,7 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>Pro přidání hesla zastupovaného otiskem prstu je požadováno ověření se</translation>
+			<translation>Pro přidání hesla, zastupovaného otiskem prstu, je požadováno ověření se</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.enroll!description" line="0"/>
@@ -14,7 +14,7 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>Pro smazání hesel zastupovaných otiskem prstu je požadováno ověření se</translation>
+			<translation>Pro smazání hesel, zastupovaných otiskem prstu, je požadováno ověření se</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.delete-enrolled-fingers!description" line="0"/>

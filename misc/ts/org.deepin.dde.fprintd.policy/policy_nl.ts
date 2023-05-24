@@ -9,7 +9,7 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.enroll!description" line="0"/>
 			<source>Add fingerprint password</source>
-			<translation>Wachtwoord voor vingerafdrukken toevoegen</translation>
+			<translation>Vingerafdrukwachtwoord toevoegen</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.delete-enrolled-fingers!message" line="0"/>
@@ -24,7 +24,7 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.rename-enrolled-finger!message" line="0"/>
 			<source>Authentication is required to rename fingerprint password</source>
-			<translation>Authenticatie is vereist om vingerafdruknamen te wijzigen</translation>
+			<translation>Authenticatie vereist om vingerafdruknamen te wijzigen</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.rename-enrolled-finger!description" line="0"/>

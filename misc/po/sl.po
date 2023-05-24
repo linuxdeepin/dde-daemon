@@ -4,36 +4,36 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# RokX, 2020
-# Eva Černi <mini.muca000@gmail.com>, 2020
-# Tadej Logar <tadej.logar.101@gmail.com>, 2020
-# kloki <klokimass@gmail.com>, 2020
-# worm <thewormhole@gmail.com>, 2020
-# Cindy0514, 2020
-# Gorzy Gorup <gorupgorazd@gmail.com>, 2021
-# andrej55 <andrej.marsetic@gmail.com>, 2022
-# Arnold Marko <arnold.marko@gmail.com>, 2022
+# Tadej Logar <tadej.logar.101@gmail.com>, 2023
+# RokX, 2023
+# worm <thewormhole@gmail.com>, 2023
+# Eva Černi <mini.muca000@gmail.com>, 2023
+# andrej55 <andrej.marsetic@gmail.com>, 2023
+# kloki <klokimass@gmail.com>, 2023
+# deepiner, 2023
+# Gorzy Gorup <gorupgorazd@gmail.com>, 2023
+# Arnold Marko <arnold.marko@gmail.com>, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2022\n"
-"Language-Team: Slovenian (https://www.transifex.com/linuxdeepin/teams/3617/sl/)\n"
+"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"PO-Revision-Date: 2023-05-23 09:02+0000\n"
+"Last-Translator: Arnold Marko <arnold.marko@gmail.com>, 2023\n"
+"Language-Team: Slovenian (https://app.transifex.com/linuxdeepin/teams/3617/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
-#: ../../accounts/checkers/password.go:38
+#: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
 msgstr "Prosim, vnesite geslo z več kot 8 znaki."
 
-#: ../../accounts/checkers/password.go:40
+#: ../../accounts1/checkers/password.go:40
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -41,37 +41,37 @@ msgstr ""
 "Geslo mora vsebovati angleške črke (velikost črk je pomembna), številke ali "
 "posebne simbole (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:49
+#: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
 msgstr "Uporabniško ime ne more biti prazno"
 
-#: ../../accounts/checkers/username.go:54
+#: ../../accounts1/checkers/username.go:54
 msgid "The first character must be a letter or number"
 msgstr "Prvi znak mora biti črka ali številka"
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts1/checkers/username.go:56
 msgid "The username already exists"
 msgstr "To uporabniško ime že obstaja"
 
-#: ../../accounts/checkers/username.go:59
+#: ../../accounts1/checkers/username.go:59
 msgid "The name already exists"
 msgstr "Ime že obstaja"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts1/checkers/username.go:61
 msgid "Username must be between 3 and 32 characters"
 msgstr "Uporabniško ime mora imeti od 3 do 32 znakov"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts1/manager.go:450
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../audio/audio_events.go:462
+#: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s je onemogočen"
 
-#: ../../audio/audio_events.go:463
+#: ../../audio1/audio_events.go:472
 msgid "Open"
 msgstr "Odpri"
 
@@ -83,133 +83,139 @@ msgstr "Preverjanje prstnega odtisa ni uspelo"
 msgid "Fingerprint verification timed out"
 msgstr "Čas za preverjanje prstnih odtisov se je izteklo"
 
-#: ../../bluetooth/bluez_profile.go:15
-#: ../../system/bluetooth/bluez_profile.go:15
+#: ../../bin/dde-session-daemon/main.go:471
+#, c-format
+msgid "Your password will expire in %d days, please change it timely"
+msgstr "Vaše geslo bo poteklo v %d dneh. Pravočasno ga zamenjajte"
+
+#: ../../bluetooth1/bluez_profile.go:15
+#: ../../system/bluetooth1/bluez_profile.go:15
 msgid "Serial port"
 msgstr "Serijski vmesnik"
 
-#: ../../bluetooth/bluez_profile.go:16
-#: ../../system/bluetooth/bluez_profile.go:16
+#: ../../bluetooth1/bluez_profile.go:16
+#: ../../system/bluetooth1/bluez_profile.go:16
 msgid "Dial-Up networking"
 msgstr "Klicno povezovanje"
 
-#: ../../bluetooth/bluez_profile.go:17
-#: ../../system/bluetooth/bluez_profile.go:17
+#: ../../bluetooth1/bluez_profile.go:17
+#: ../../system/bluetooth1/bluez_profile.go:17
 msgid "Hands-Free device"
 msgstr "Prostoročna naprava"
 
-#: ../../bluetooth/bluez_profile.go:18
-#: ../../system/bluetooth/bluez_profile.go:18
+#: ../../bluetooth1/bluez_profile.go:18
+#: ../../system/bluetooth1/bluez_profile.go:18
 msgid "Hands-Free voice gateway"
 msgstr "Prostoročna glasovna vstopna točka"
 
-#: ../../bluetooth/bluez_profile.go:19
-#: ../../system/bluetooth/bluez_profile.go:19
+#: ../../bluetooth1/bluez_profile.go:19
+#: ../../system/bluetooth1/bluez_profile.go:19
 msgid "Headset voice gateway"
 msgstr "Glasovna vstopna točka s slušalkami"
 
-#: ../../bluetooth/bluez_profile.go:20
-#: ../../system/bluetooth/bluez_profile.go:20
+#: ../../bluetooth1/bluez_profile.go:20
+#: ../../system/bluetooth1/bluez_profile.go:20
 msgid "Object push"
 msgstr "Pošlji objekt"
 
-#: ../../bluetooth/bluez_profile.go:21
-#: ../../system/bluetooth/bluez_profile.go:21
+#: ../../bluetooth1/bluez_profile.go:21
+#: ../../system/bluetooth1/bluez_profile.go:21
 msgid "File transfer"
 msgstr "Prenos datoteke"
 
-#: ../../bluetooth/bluez_profile.go:22
-#: ../../system/bluetooth/bluez_profile.go:22
+#: ../../bluetooth1/bluez_profile.go:22
+#: ../../system/bluetooth1/bluez_profile.go:22
 msgid "Synchronization"
 msgstr "Sinhronizacija"
 
-#: ../../bluetooth/bluez_profile.go:23
-#: ../../system/bluetooth/bluez_profile.go:23
+#: ../../bluetooth1/bluez_profile.go:23
+#: ../../system/bluetooth1/bluez_profile.go:23
 msgid "Phone book access"
 msgstr "Dostop do imenika"
 
-#: ../../bluetooth/bluez_profile.go:24
-#: ../../system/bluetooth/bluez_profile.go:24
+#: ../../bluetooth1/bluez_profile.go:24
+#: ../../system/bluetooth1/bluez_profile.go:24
 msgid "Phone book access client"
 msgstr "Odjemalni strežnik telefonskega imenika"
 
-#: ../../bluetooth/bluez_profile.go:25
-#: ../../system/bluetooth/bluez_profile.go:25
+#: ../../bluetooth1/bluez_profile.go:25
+#: ../../system/bluetooth1/bluez_profile.go:25
 msgid "Message access"
 msgstr "Dostop do sporočil"
 
-#: ../../bluetooth/bluez_profile.go:26
-#: ../../system/bluetooth/bluez_profile.go:26
+#: ../../bluetooth1/bluez_profile.go:26
+#: ../../system/bluetooth1/bluez_profile.go:26
 msgid "Message notification"
 msgstr "Obvestilo o sporočilu"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth1/obex_agent.go:376 ../../bluetooth1/utils_notify.go:130
+#: ../../lastore1/lastore.go:435
 msgid "Cancel"
 msgstr "Prekliči"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth1/obex_agent.go:383
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Prejemam %[1]q od %[2]q"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth1/obex_agent.go:392
 msgid "View"
 msgstr "Prikaži"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth1/obex_agent.go:398
 msgid "You have received files from %q successfully"
 msgstr "Od %q ste uspešno prejeli datoteke"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth1/obex_agent.go:399
 msgid "Done"
 msgstr "Opravljeno"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth1/obex_agent.go:414 ../../bluetooth1/obex_agent.go:513
 msgid "Stop Receiving Files"
 msgstr "Zaustavi prejemanje datotek"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth1/obex_agent.go:416
 msgid "You have cancelled the file transfer"
 msgstr "Prenos datotek ste prekinili"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
-#: ../../system/bluetooth/utils_notify.go:72
+#: ../../bluetooth1/obex_agent.go:418
+#: ../../system/bluetooth1/utils_notify.go:63
+#: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth povezava ni uspela "
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth1/obex_agent.go:453
 msgid "Decline"
 msgstr "Zavrni"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth1/obex_agent.go:453
 msgid "Receive"
 msgstr "Prejmi"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:458
 msgid "Bluetooth File Transfer"
 msgstr "Bluetooth prenos datotek"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth1/obex_agent.go:459
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q vam želi poslati datoteke. Prejmem?"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth1/obex_agent.go:514
 msgid "Receiving %q timed out"
 msgstr "Prejemanje %q je časovno poteklo"
 
-#: ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
 msgstr "Kliknite tukaj za povezovanje z %q"
 
-#: ../../bluetooth/utils_notify.go:120
+#: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
 msgstr "Dodajanje Bluetooth naprav"
 
-#: ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
 msgstr "Parjenje"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Premalo prostora na disku. Pravočasno ga očistite!"
 
@@ -414,11 +420,11 @@ msgstr "Prikaži delovne površine"
 msgid "Switch monitors"
 msgstr "Preklopi monitor"
 
-#: ../../langselector/locale.go:48
+#: ../../langselector1/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "Za zamenjavo jezika je potrebna avtentikacija"
 
-#: ../../langselector/locale.go:137
+#: ../../langselector1/locale.go:137
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -426,90 +432,90 @@ msgstr ""
 "Spreminjanje sistemskega jezika in nameščanje jezikovnih paketov. "
 "Počakajte..."
 
-#: ../../langselector/locale.go:138
+#: ../../langselector1/locale.go:138
 msgid "Changing system language, please wait..."
 msgstr "Spreminjanje sistemskega jezika. Počakajte..."
 
-#: ../../langselector/locale.go:139
+#: ../../langselector1/locale.go:139
 msgid "System language changed, please log out and then log in"
 msgstr "Jezik sistema je bil spremenjen. Odjavite se in ponovno prijavite"
 
-#: ../../langselector/locale.go:381
+#: ../../langselector1/locale.go:385
 msgid "Failed to change system language, please try later"
 msgstr "Neuspešno spreminjanje jezika sistema. Poskusite znova kasneje"
 
-#: ../../lastore/lastore.go:427
+#: ../../lastore1/lastore.go:427
 msgid "Retry"
 msgstr "Ponovi"
 
-#: ../../lastore/lastore.go:449
+#: ../../lastore1/lastore.go:449
 msgid "Update Now"
 msgstr "Posodobi zdaj"
 
-#: ../../lastore/lastore.go:479
+#: ../../lastore1/lastore.go:479
 msgid "Reboot Now"
 msgstr "Ponovni zagon zdaj"
 
-#: ../../lastore/lastore.go:483
+#: ../../lastore1/lastore.go:483
 msgid "Remind Me Later"
 msgstr "Opomni me kasneje"
 
-#: ../../lastore/lastore.go:490
+#: ../../lastore1/lastore.go:490
 msgid "10 mins later"
 msgstr "10 minut kasneje"
 
-#: ../../lastore/lastore.go:497
+#: ../../lastore1/lastore.go:497
 msgid "30 mins later"
 msgstr "30 minut kasneje"
 
-#: ../../lastore/lastore.go:504
+#: ../../lastore1/lastore.go:504
 msgid "2h later"
 msgstr "2 uri kasneje"
 
-#: ../../lastore/lastore.go:511
+#: ../../lastore1/lastore.go:511
 msgid "6h later"
 msgstr "6 ur kasneje"
 
-#: ../../lastore/notify.go:93
+#: ../../lastore1/notify.go:93
 msgid "%q installed successfully."
 msgstr "%q je uspešno nameščen."
 
-#: ../../lastore/notify.go:96
+#: ../../lastore1/notify.go:96
 msgid "%q failed to install."
 msgstr "Namestitev %q je spodletela."
 
-#: ../../lastore/notify.go:104
+#: ../../lastore1/notify.go:104
 msgid "Removed successfully"
 msgstr "Uspešno odstranjeno"
 
-#: ../../lastore/notify.go:106
+#: ../../lastore1/notify.go:106
 msgid "Failed to remove the app"
 msgstr "Neuspešno odstranjevanje programa"
 
-#: ../../lastore/notify.go:113
+#: ../../lastore1/notify.go:113
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
 "Da se izognete samodejnemu izklopu, se priklopite na električno omrežje za "
 "normalno posodobitev."
 
-#: ../../lastore/notify.go:118
+#: ../../lastore1/notify.go:118
 msgid "Package cache wiped"
 msgstr "Predpomnilnik paketa izbrisan"
 
-#: ../../lastore/notify.go:123
+#: ../../lastore1/notify.go:123
 msgid "Updates Available"
 msgstr ""
 
-#: ../../lastore/notify.go:128
+#: ../../lastore1/notify.go:128
 msgid "Reboot after Updates"
 msgstr "Ponovno zaženi po posodobitvi"
 
-#: ../../lastore/notify.go:129
+#: ../../lastore1/notify.go:129
 msgid "Restart the computer to use the system and applications properly"
 msgstr "Za pravilno rabo sistema in aplikacij ponovno zaženite računalnik"
 
-#: ../../lastore/notify.go:139
+#: ../../lastore1/notify.go:139
 msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
@@ -517,48 +523,48 @@ msgstr ""
 "Vaš sistem se nadgrajuje, a ima baterija manj kot 50%. Priključite "
 "računalnik na električno omrežje, da se izognete izklopu."
 
-#: ../../lastore/notify.go:140
+#: ../../lastore1/notify.go:140
 msgid "OK"
 msgstr "V redu"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "brez"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bit ključ"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Osebno"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "HITRO"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "Tunelirani TLS"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "Zaščiten EAP"
 
@@ -929,7 +935,7 @@ msgid "Hotspot disabled"
 msgstr "Dostopna točka je izklopljena"
 
 #: ../../network/state_handler.go:339 ../../network/state_handler.go:363
-#: ../../system/bluetooth/utils_notify.go:50
+#: ../../system/bluetooth1/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q ni več povezan"
 
@@ -1004,79 +1010,79 @@ msgstr ""
 "\"%s\" ni prestalo sistemskega varnostnega preverjanje, zato ne more biti "
 "zagnana "
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power1/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Akumulator je kritično prazen"
 
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
-#: ../../session/power/manager_events.go:233
-#: ../../session/power/manager_events.go:238
+#: ../../session/power1/manager_events.go:223
+#: ../../session/power1/manager_events.go:228
+#: ../../session/power1/manager_events.go:233
+#: ../../session/power1/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "Akumulator je skoraj prazen. Priključite napajalnik"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power1/utils.go:439 ../../session/power1/utils.go:446
+#: ../../session/power1/utils.go:453 ../../session/power1/utils.go:460
 msgid "Power settings changed"
 msgstr "Nastavitve za rabo energije so se spremenile"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
+#: ../../session/power1/utils.go:484 ../../session/power1/utils_test.go:16
+#: ../../session/power1/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Ko je ohišje zaprto,"
 
-#: ../../session/power/utils.go:487
+#: ../../session/power1/utils.go:488
 msgid "When pressing the power button, "
 msgstr "Ob pritisku na gumb za vklop"
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power1/utils.go:498 ../../session/power1/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "se bo računalnik zaustavil"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power1/utils.go:500 ../../session/power1/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "bo računalnik obmiroval"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power1/utils.go:502
 msgid "your computer will hibernate"
 msgstr "bo računalnik zaspal"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power1/utils.go:504
 msgid "your monitor will turn off"
 msgstr "se bo izklopil zaslon"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power1/utils.go:506
 msgid "your monitor will show the shutdown interface"
 msgstr ""
 
-#: ../../session/power/utils.go:507
+#: ../../session/power1/utils.go:508
 msgid "it will do nothing to your computer"
 msgstr "se ne bo zgodilo nič"
 
-#: ../../system/bluetooth/utils_notify.go:43
+#: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "Povezovanje z %q je uspelo"
 
-#: ../../system/bluetooth/utils_notify.go:56
+#: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
 msgstr "Preveri, da %q je vklopljen in v dosegu."
 
-#: ../../system/bluetooth/utils_notify.go:74
+#: ../../system/bluetooth1/utils_notify.go:74
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 "%q sen ne more več priključiti na %q. Poskusite pozabiti napravo in jo nato "
 "znova povežite."
 
-#: ../../timedate/manager_format.go:75
+#: ../../timedate1/manager_format.go:75
 msgid "Space"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:51
 msgid "Authentication is required to set the system time"
 msgstr "Za nastavljanje sistemske ure je potrebna overitev"
 
-#: ../../timedate/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:64
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1084,16 +1090,16 @@ msgstr ""
 "Za upravljanje vklopa časovne sinhronizacije na omrežju je potrebna "
 "overitev."
 
-#: ../../timedate/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:74
 msgid "Authentication is required to change NTP server"
 msgstr "Za spreminjanje NTP strežnika je potrebna overitev"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:114
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr "Za določanje ali RTC hrani lokalni ali UTC čas je potrebna overitev"
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:137
 msgid "Authentication is required to set the system timezone"
 msgstr "Za določanje časovnega pasu je potrebna overitev"

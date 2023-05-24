@@ -1,973 +1,1089 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Jayesh Vani <jayeshvani@gmail.com>, 2019
-# Panwar108 <caspian7pena@gmail.com>, 2018
+# deepin_transifex <xiabin@linuxdeepin.com>, 2023
+# Maggie Liu <maggie.liufei@gmail.com>, 2023
+# Panwar108 <caspian7pena@gmail.com>, 2023
+# e2f_in_c3 <e2f_in_c3@outlook.com>, 2023
+# deepiner, 2023
+# Jayesh Vani <jayeshvani@gmail.com>, 2023
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Deepin Desktop Environment\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 10:32+0800\n"
-"PO-Revision-Date: 2019-11-13 03:52+0000\n"
-"Last-Translator: transifex deepin <transifex@deepin.com>\n"
-"Language-Team: Hindi (India) (http://www.transifex.com/linuxdeepin/deepin-desktop-environment/language/hi_IN/)\n"
+"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"PO-Revision-Date: 2023-05-23 09:02+0000\n"
+"Last-Translator: Jayesh Vani <jayeshvani@gmail.com>, 2023\n"
+"Language-Team: Hindi (India) (https://app.transifex.com/linuxdeepin/teams/3617/hi_IN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: hi_IN\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../../accounts/checkers/password.go:53
+#: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
 msgstr "कृपया 8 कैरेक्टर  से बड़ा पासवर्ड एंटर करें"
 
-#: ../../accounts/checkers/password.go:55
+#: ../../accounts1/checkers/password.go:40
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr "पासवर्ड में अँग्रेज़ी अक्षर (केस सेन्सिटिव), अंक अथवा विशेष चिन्ह (~!@#$%^&*()[]{}\\|/?,.<>) होने चाईए"
+msgstr ""
+"पासवर्ड में अँग्रेज़ी अक्षर (केस सेन्सिटिव), अंक अथवा विशेष चिन्ह "
+"(~!@#$%^&*()[]{}\\|/?,.<>) होने चाईए"
 
-#: ../../accounts/checkers/username.go:63
+#: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:65
-msgid "Username must only contain a~z, 0~9, - or _"
+#: ../../accounts1/checkers/username.go:54
+msgid "The first character must be a letter or number"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:67
-msgid "The first character must be in lower case"
-msgstr ""
-
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts1/checkers/username.go:56
 msgid "The username already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:71
-msgid "The username has been used by system"
+#: ../../accounts1/checkers/username.go:59
+msgid "The name already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts1/checkers/username.go:61
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../bin/dde-authority/fprint_transaction.go:20
+#: ../../accounts1/manager.go:450
+#, c-format
+msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
+#: ../../audio1/audio_events.go:471
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio1/audio_events.go:472
+msgid "Open"
+msgstr "खोलें"
+
+#: ../../bin/dde-authority/fprint_transaction.go:25
 msgid "Fingerprint verification failed"
 msgstr ""
 
-#: ../../bin/dde-authority/fprint_transaction.go:21
+#: ../../bin/dde-authority/fprint_transaction.go:26
 msgid "Fingerprint verification timed out"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:29
+#: ../../bin/dde-session-daemon/main.go:471
+#, c-format
+msgid "Your password will expire in %d days, please change it timely"
+msgstr ""
+
+#: ../../bluetooth1/bluez_profile.go:15
+#: ../../system/bluetooth1/bluez_profile.go:15
 msgid "Serial port"
 msgstr "सीरियल पोर्ट "
 
-#: ../../bluetooth/bluez_profile.go:30
+#: ../../bluetooth1/bluez_profile.go:16
+#: ../../system/bluetooth1/bluez_profile.go:16
 msgid "Dial-Up networking"
 msgstr "डायल-अप नेटवर्किंग "
 
-#: ../../bluetooth/bluez_profile.go:31
+#: ../../bluetooth1/bluez_profile.go:17
+#: ../../system/bluetooth1/bluez_profile.go:17
 msgid "Hands-Free device"
 msgstr "हैंड्स-फ्री उपकरण "
 
-#: ../../bluetooth/bluez_profile.go:32
+#: ../../bluetooth1/bluez_profile.go:18
+#: ../../system/bluetooth1/bluez_profile.go:18
 msgid "Hands-Free voice gateway"
 msgstr "हैंड्स-फ्री वॉयस गेटवे "
 
-#: ../../bluetooth/bluez_profile.go:33
+#: ../../bluetooth1/bluez_profile.go:19
+#: ../../system/bluetooth1/bluez_profile.go:19
 msgid "Headset voice gateway"
 msgstr "हेडसेट वॉयस गेटवे "
 
-#: ../../bluetooth/bluez_profile.go:34
+#: ../../bluetooth1/bluez_profile.go:20
+#: ../../system/bluetooth1/bluez_profile.go:20
 msgid "Object push"
 msgstr "ऑब्जेक्ट पुश "
 
-#: ../../bluetooth/bluez_profile.go:35
+#: ../../bluetooth1/bluez_profile.go:21
+#: ../../system/bluetooth1/bluez_profile.go:21
 msgid "File transfer"
 msgstr "फ़ाइल स्थानांतरण"
 
-#: ../../bluetooth/bluez_profile.go:36
+#: ../../bluetooth1/bluez_profile.go:22
+#: ../../system/bluetooth1/bluez_profile.go:22
 msgid "Synchronization"
 msgstr "सिंक्रोनाइजेशन "
 
-#: ../../bluetooth/bluez_profile.go:37
+#: ../../bluetooth1/bluez_profile.go:23
+#: ../../system/bluetooth1/bluez_profile.go:23
 msgid "Phone book access"
 msgstr "फोन बुक ऐक्सेस "
 
-#: ../../bluetooth/bluez_profile.go:38
+#: ../../bluetooth1/bluez_profile.go:24
+#: ../../system/bluetooth1/bluez_profile.go:24
 msgid "Phone book access client"
 msgstr "फोन बुक ऐक्सेस क्लाइंट "
 
-#: ../../bluetooth/bluez_profile.go:39
+#: ../../bluetooth1/bluez_profile.go:25
+#: ../../system/bluetooth1/bluez_profile.go:25
 msgid "Message access"
 msgstr "संदेश पहुँच"
 
-#: ../../bluetooth/bluez_profile.go:40
+#: ../../bluetooth1/bluez_profile.go:26
+#: ../../system/bluetooth1/bluez_profile.go:26
 msgid "Message notification"
 msgstr "संदेश अधिसूचना"
 
-#: ../../bluetooth/utils_notify.go:52 ../../network/utils_notify.go:107
-msgid "Connected"
-msgstr "जुड़ा हुआ"
+#: ../../bluetooth1/obex_agent.go:376 ../../bluetooth1/utils_notify.go:130
+#: ../../lastore1/lastore.go:435
+msgid "Cancel"
+msgstr "रद्द करें"
 
-#: ../../bluetooth/utils_notify.go:55 ../../network/utils_notify.go:80
-#: ../../network/utils_notify.go:84 ../../network/utils_notify.go:88
-#: ../../network/utils_notify.go:92 ../../network/utils_notify.go:110
-#: ../../network/utils_notify.go:113 ../../network/utils_notify.go:202
-msgid "Disconnected"
-msgstr "डिस्कनेक्ट हुआ "
+#: ../../bluetooth1/obex_agent.go:383
+msgid "Receiving %[1]q from %[2]q"
+msgstr ""
 
-#: ../../bluetooth/utils_notify.go:59
-msgid "Make sure %q is turned on and in range"
-msgstr "ध्यान रखें कि %q चालू हो और रेंज में हो"
+#: ../../bluetooth1/obex_agent.go:392
+msgid "View"
+msgstr "देखें"
 
-#: ../../bluetooth/utils_notify.go:64
-msgid "Failed to connect %q, pairing failed"
-msgstr "%q से कनेक्ट होने में विफल रहा, पेरिंग विफल"
+#: ../../bluetooth1/obex_agent.go:398
+msgid "You have received files from %q successfully"
+msgstr ""
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth1/obex_agent.go:399
+msgid "Done"
+msgstr "पूर्ण हुआ"
+
+#: ../../bluetooth1/obex_agent.go:414 ../../bluetooth1/obex_agent.go:513
+msgid "Stop Receiving Files"
+msgstr ""
+
+#: ../../bluetooth1/obex_agent.go:416
+msgid "You have cancelled the file transfer"
+msgstr ""
+
+#: ../../bluetooth1/obex_agent.go:418
+#: ../../system/bluetooth1/utils_notify.go:63
+#: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "ब्लूटुथ कनेक्शन विफल हुआ   "
 
-#: ../../calendar/job.go:413 ../../calendar/job.go:420
-msgid "today"
+#: ../../bluetooth1/obex_agent.go:453
+msgid "Decline"
 msgstr ""
 
-#: ../../calendar/job.go:415 ../../calendar/job.go:422
-msgid "tomorrow"
+#: ../../bluetooth1/obex_agent.go:453
+msgid "Receive"
 msgstr ""
 
-#: ../../calendar/job.go:435
-#, c-format
-msgid "%s to %s"
+#: ../../bluetooth1/obex_agent.go:458
+msgid "Bluetooth File Transfer"
 msgstr ""
 
-#: ../../calendar/module.go:126
-msgid "Work"
+#: ../../bluetooth1/obex_agent.go:459
+msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../calendar/module.go:127
-msgid "Life"
+#: ../../bluetooth1/obex_agent.go:514
+msgid "Receiving %q timed out"
 msgstr ""
 
-#: ../../calendar/module.go:128
-msgid "Other"
-msgstr "अन्य"
-
-#: ../../calendar/scheduler.go:477
-msgid "One day before start"
+#: ../../bluetooth1/utils_notify.go:119
+msgid "Click here to connect to %q"
 msgstr ""
 
-#: ../../calendar/scheduler.go:478 ../../calendar/scheduler.go:483
-#: ../../calendar/scheduler.go:491 ../../calendar/scheduler.go:495
-msgid "Close"
-msgstr "बंद"
-
-#: ../../calendar/scheduler.go:482
-msgid "Remind me tomorrow"
+#: ../../bluetooth1/utils_notify.go:120
+msgid "Add Bluetooth devices"
 msgstr ""
 
-#: ../../calendar/scheduler.go:490
-msgid "Remind me later"
+#: ../../bluetooth1/utils_notify.go:130
+msgid "Pair"
 msgstr ""
 
-#: ../../calendar/scheduler.go:500
-msgid "Schedule Reminder"
-msgstr ""
-
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "अपर्याप्त डिस्क स्पेस, समय रहते सिस्टम क्लीन करें!"
 
-#: ../../keybinding/shortcuts/id_name_map.go:28
+#: ../../keybinding/shortcuts/id_name_map.go:13
 msgid "Launcher"
 msgstr "लॉन्चर "
 
-#: ../../keybinding/shortcuts/id_name_map.go:29
+#: ../../keybinding/shortcuts/id_name_map.go:14
 msgid "Terminal"
-msgstr "छोर"
+msgstr "टर्मिनल"
 
-#: ../../keybinding/shortcuts/id_name_map.go:30
+#: ../../keybinding/shortcuts/id_name_map.go:15
 msgid "Screen Recorder"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:31
+#: ../../keybinding/shortcuts/id_name_map.go:16
 msgid "Lock screen"
 msgstr "स्क्रीन लॉक करें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:32
+#: ../../keybinding/shortcuts/id_name_map.go:17
 msgid "Show/Hide the dock"
 msgstr "डॉक दिखाएं/छुपाएं "
 
-#: ../../keybinding/shortcuts/id_name_map.go:33
+#: ../../keybinding/shortcuts/id_name_map.go:18
 msgid "Shutdown interface"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:34
+#: ../../keybinding/shortcuts/id_name_map.go:19
 msgid "Terminal Quake Window"
 msgstr "टर्मिनल क्वैक विंडो "
 
-#: ../../keybinding/shortcuts/id_name_map.go:35
+#: ../../keybinding/shortcuts/id_name_map.go:20
 msgid "Screenshot"
 msgstr "स्क्रीनशॉट"
 
-#: ../../keybinding/shortcuts/id_name_map.go:36
+#: ../../keybinding/shortcuts/id_name_map.go:21
 msgid "Full screenshot"
 msgstr "पूर्ण स्क्रीनशॉट"
 
-#: ../../keybinding/shortcuts/id_name_map.go:37
+#: ../../keybinding/shortcuts/id_name_map.go:22
 msgid "Window screenshot"
 msgstr "विंडो स्क्रीशॉट "
 
-#: ../../keybinding/shortcuts/id_name_map.go:38
+#: ../../keybinding/shortcuts/id_name_map.go:23
 msgid "Delay screenshot"
 msgstr "देरी से स्क्रीनशॉट"
 
-#: ../../keybinding/shortcuts/id_name_map.go:39
+#: ../../keybinding/shortcuts/id_name_map.go:24
+msgid "OCR (Image to Text)"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:25
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:26
 msgid "File manager"
 msgstr "फ़ाइल प्रबन्धक"
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:27
 msgid "Disable Touchpad"
 msgstr "टचपैड को निष्क्रिय करें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
 msgstr "विंडो प्रभाव पर बदलें  "
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Fast Screen Off"
 msgstr "फास्ट स्क्रीन ऑफ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:30
 msgid "System Monitor"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:31
 msgid "Deepin Picker"
 msgstr "डीपइन पिकर"
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Desktop AI Assistant"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:34
 msgid "Speech to Text"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:35
+msgid "Clipboard"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:36
+msgid "Translation"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:37
+msgid "Grand Search"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:38
+msgid "Notification Center"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:39
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr "स्विच ले आउट "
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr "बाएं वर्कस्पेस में बदलें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:74
+#: ../../keybinding/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr "दाएं वर्कस्पेस में बदलें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr "ऊपरी वर्कस्पेस में बदलें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr "निचले वर्कस्पेस में बदलें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr "समान विंडोज में बदलें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr "समान विंडोज को रिवर्स में बदलें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr "विंडोज बदलें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr "विंडोज को रिवर्स में बदलें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:92
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr "डेस्कटॉप दिखाएं "
 
-#: ../../keybinding/shortcuts/id_name_map.go:101
+#: ../../keybinding/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr "विंडो मैक्सिमाइज करें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:102
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr "विंडो फिर से बहाल करें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr "विंडो मिनिमाइज करें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr "विंडो बंद करें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr "विंडो हटाएं "
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr "विंडो को फिर से साइज करें "
 
-#: ../../keybinding/shortcuts/id_name_map.go:122
+#: ../../keybinding/shortcuts/id_name_map.go:114
 msgid "Move to left workspace"
 msgstr "बाएं वर्कस्पेस में जाएं"
 
-#: ../../keybinding/shortcuts/id_name_map.go:123
+#: ../../keybinding/shortcuts/id_name_map.go:115
 msgid "Move to right workspace"
 msgstr "दाएं वर्कस्पेस में जाएं"
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to upper workspace"
 msgstr "ऊपरी वर्कस्पेस में जाएं"
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to lower workspace"
 msgstr "निचले वर्कस्पेस में जाएं"
 
-#: ../../keybinding/shortcuts/id_name_map.go:147
+#: ../../keybinding/shortcuts/id_name_map.go:139
 msgid "Display windows of all workspaces"
 msgstr "सभी वर्कस्पेस के विंडो दिखाएं "
 
-#: ../../keybinding/shortcuts/id_name_map.go:148
+#: ../../keybinding/shortcuts/id_name_map.go:140
 msgid "Display windows of current workspace"
 msgstr "मौजूदा वर्कस्पेस के विंडो दिखाएं "
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display workspace"
 msgstr "वर्कस्पेस दिखाएं"
 
-#: ../../langselector/locale.go:63
+#: ../../keybinding/shortcuts/id_name_map.go:202
+msgid "Switch monitors"
+msgstr ""
+
+#: ../../langselector1/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "भाषा बदलने हेतु प्रमाणीकरण आवश्यक है"
 
-#: ../../langselector/locale.go:390
-msgid "Failed to change system language, please try later"
-msgstr ""
-
-#: ../../langselector/locale.go:414
+#: ../../langselector1/locale.go:137
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 
-#: ../../langselector/locale.go:417
+#: ../../langselector1/locale.go:138
 msgid "Changing system language, please wait..."
 msgstr ""
 
-#: ../../langselector/locale.go:465
+#: ../../langselector1/locale.go:139
 msgid "System language changed, please log out and then log in"
 msgstr ""
 
-#: ../../lastore/check_source.go:51
-msgid "Restore"
-msgstr "पुनः स्थापित करें"
+#: ../../langselector1/locale.go:385
+msgid "Failed to change system language, please try later"
+msgstr ""
 
-#: ../../lastore/check_source.go:70 ../../lastore/lastore.go:248
-msgid "Cancel"
-msgstr "रद्द करो"
-
-#: ../../lastore/lastore.go:240
+#: ../../lastore1/lastore.go:427
 msgid "Retry"
-msgstr "पुनः प्रयास"
+msgstr "पुनः प्रयास करें"
 
-#: ../../lastore/notify.go:82
+#: ../../lastore1/lastore.go:449
+msgid "Update Now"
+msgstr "अभी अद्यतन करें"
+
+#: ../../lastore1/lastore.go:479
+msgid "Reboot Now"
+msgstr "अभी रीबूट करें"
+
+#: ../../lastore1/lastore.go:483
+msgid "Remind Me Later"
+msgstr ""
+
+#: ../../lastore1/lastore.go:490
+msgid "10 mins later"
+msgstr ""
+
+#: ../../lastore1/lastore.go:497
+msgid "30 mins later"
+msgstr ""
+
+#: ../../lastore1/lastore.go:504
+msgid "2h later"
+msgstr ""
+
+#: ../../lastore1/lastore.go:511
+msgid "6h later"
+msgstr ""
+
+#: ../../lastore1/notify.go:93
 msgid "%q installed successfully."
 msgstr "%q सफलतापूर्वक स्थापित हुआ।"
 
-#: ../../lastore/notify.go:85
+#: ../../lastore1/notify.go:96
 msgid "%q failed to install."
 msgstr "%q स्थापित करने में विफल।"
 
-#: ../../lastore/notify.go:93
-msgid "%q removed successfully."
-msgstr "%q सफलतापूर्वक निकाला गया।"
+#: ../../lastore1/notify.go:104
+msgid "Removed successfully"
+msgstr ""
 
-#: ../../lastore/notify.go:95
-msgid "%q failed to remove."
-msgstr "%q निकालने में विफल।"
+#: ../../lastore1/notify.go:106
+msgid "Failed to remove the app"
+msgstr ""
 
-#: ../../lastore/notify.go:102
+#: ../../lastore1/notify.go:113
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr "स्वतः बन्द होने से बचाने के लिए इसे सामान्य अद्यतन हेतु छोड़ दें।"
 
-#: ../../lastore/notify.go:107
+#: ../../lastore1/notify.go:118
 msgid "Package cache wiped"
 msgstr "पॅकेज cache वाइप्ड"
 
-#: ../../lastore/notify.go:112
+#: ../../lastore1/notify.go:123
+msgid "Updates Available"
+msgstr ""
+
+#: ../../lastore1/notify.go:128
+msgid "Reboot after Updates"
+msgstr ""
+
+#: ../../lastore1/notify.go:129
+msgid "Restart the computer to use the system and applications properly"
+msgstr ""
+
+#: ../../lastore1/notify.go:139
 msgid ""
-"Your system source has been modified, please restore to official source for "
-"your normal use"
-msgstr "आपका सिस्टम सोर्स बदला गया है, नॉर्मल इस्तेमाल के लिए कृपा करके सिस्टम सोर्स रिस्टोर कीजिए"
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
+msgstr ""
 
-#: ../../network/manager_active_conn.go:318
-msgid "A (5 GHz)"
-msgstr "A (5 GHz)"
+#: ../../lastore1/notify.go:140
+msgid "OK"
+msgstr "ठीक है"
 
-#: ../../network/manager_active_conn.go:320
-msgid "BG (2.4 GHz)"
-msgstr "BG (2.4 GHz)"
-
-#: ../../network/manager_active_conn.go:322
-msgid "Automatic"
-msgstr "स्वतः"
-
-#: ../../network/manager_active_conn.go:333
-#: ../../network/manager_active_conn.go:338
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
-msgstr "कुछ नहीं"
+msgstr "कोई नहीं"
 
-#: ../../network/manager_active_conn.go:340
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-बिट-की"
 
-#: ../../network/manager_active_conn.go:342
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 पर्सनल "
 
-#: ../../network/manager_active_conn.go:350
+#: ../../network/manager_active_conn.go:495
+msgid "WPA3 Personal"
+msgstr ""
+
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:352
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:354
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:356
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "तीव्र "
 
-#: ../../network/manager_active_conn.go:358
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "टनल युक्त TLS"
 
-#: ../../network/manager_active_conn.go:360
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "सुरक्षित EAP"
 
-#: ../../network/manager_connection.go:278 ../../network/nm_custom_type.go:225
+#: ../../network/manager_connection.go:346
+#: ../../network/manager_connection.go:350
 msgid "Wired Connection"
 msgstr "वायर्ड कनेक्शन "
 
-#: ../../network/nm_custom_type.go:223
-msgid "Connection"
-msgstr "कनेक्शन "
+#: ../../network/manager_connection.go:389
+msgid "Wired Connection %v"
+msgstr ""
 
-#: ../../network/nm_custom_type.go:227
-msgid "Wireless Connection"
-msgstr "वायरलेस कनेक्शन "
+#: ../../network/proxychains/utils_notify.go:49
+msgid "Application proxy is set successfully"
+msgstr ""
 
-#: ../../network/nm_custom_type.go:229
-msgid "Wireless Ad-Hoc"
-msgstr "वायरलेस ऐड-हॉक "
+#: ../../network/proxychains/utils_notify.go:49
+#: ../../network/proxychains/utils_notify.go:52
+#: ../../network/utils_notify.go:182 ../../network/utils_notify.go:186
+#: ../../network/utils_notify.go:189
+msgid "Network"
+msgstr "नेटवर्क "
 
-#: ../../network/nm_custom_type.go:231
-msgid "Wireless Ap-Hotspot"
-msgstr "वायरलेस ऐप-हॉटस्पॉट "
+#: ../../network/proxychains/utils_notify.go:52
+msgid "Failed to set the application proxy"
+msgstr ""
 
-#: ../../network/nm_custom_type.go:233
-msgid "PPPoE Connection"
-msgstr "PPPoE कनेक्शन "
-
-#: ../../network/nm_custom_type.go:235
-msgid "Mobile Connection"
-msgstr "मोबाइल कनेक्शन "
-
-#: ../../network/nm_custom_type.go:237
-msgid "Mobile GSM Connection"
-msgstr "मोबाइल GSM कनेक्शन"
-
-#: ../../network/nm_custom_type.go:239
-msgid "Mobile CDMA Connection"
-msgstr "मोबाइल CDMA कनेक्शन"
-
-#: ../../network/nm_custom_type.go:241
-msgid "VPN Connection"
-msgstr "VPN कनेक्शन "
-
-#: ../../network/nm_custom_type.go:243
-msgid "VPN L2TP"
-msgstr "वीपीएन एल2टीपी"
-
-#: ../../network/nm_custom_type.go:245
-msgid "VPN OpenConnect"
-msgstr "VPN ओपनकनेक्ट "
-
-#: ../../network/nm_custom_type.go:247
-msgid "VPN OpenVPN"
-msgstr "वीपीएन ओपेनवीपीएन"
-
-#: ../../network/nm_custom_type.go:249
-msgid "VPN PPTP"
-msgstr "वीपीएन पीपीटीपी"
-
-#: ../../network/nm_custom_type.go:251
-msgid "VPN StrongSwan"
-msgstr "वीपीएन StrongSwan"
-
-#: ../../network/nm_custom_type.go:253
-msgid "VPN VPNC"
-msgstr "वीपीएन वीपीएनसी"
-
-#: ../../network/state_handler.go:39
+#: ../../network/state_handler.go:23
 msgid "Device state changed"
 msgstr "उपकरण की स्थिति बदल गई"
 
-#: ../../network/state_handler.go:40
+#: ../../network/state_handler.go:24
 msgid "Device state changed, reason unknown"
 msgstr ""
 
-#: ../../network/state_handler.go:41
+#: ../../network/state_handler.go:25
 msgid "The device is now managed"
 msgstr "उपकरण अब प्रबंधित है"
 
-#: ../../network/state_handler.go:42
+#: ../../network/state_handler.go:26
 msgid "The device is no longer managed"
 msgstr "उपकरण अब प्रबंधित नहीं रहा"
 
-#: ../../network/state_handler.go:43
+#: ../../network/state_handler.go:27
 msgid "The device has not been ready for configuration"
 msgstr "उपकरण कंफिगरेशन के लिए तैयार नहीं"
 
-#: ../../network/state_handler.go:44
+#: ../../network/state_handler.go:28
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr "IP कंफिगरेशन आरक्षित नहीं किया जा सकता  (कोई उपलब्ध पता, टाइम आउट इत्यादि नहीं)"
+msgstr ""
+"IP कंफिगरेशन आरक्षित नहीं किया जा सकता  (कोई उपलब्ध पता, टाइम आउट इत्यादि "
+"नहीं)"
 
-#: ../../network/state_handler.go:45
+#: ../../network/state_handler.go:29
 msgid "The IP configuration is no longer valid"
 msgstr "IP कंफिगरेशन अब वैध नहीं रहा"
 
-#: ../../network/state_handler.go:46
+#: ../../network/state_handler.go:30
 msgid "Passwords were required but not provided"
 msgstr "पासवर्ड की आवश्यकता थी पर प्रदान नहीं किया गया"
 
-#: ../../network/state_handler.go:47
+#: ../../network/state_handler.go:31
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
 msgstr "ऐक्सेस प्वाइंट या ऑथेंटिकेशन सर्वर से 802.1X सप्लिकेंट डिसकनेक्ट हुआ"
 
-#: ../../network/state_handler.go:48
+#: ../../network/state_handler.go:32
 msgid "Configuration of the 802.1X supplicant failed"
 msgstr " 802.1X सप्लिकेंट का कंफिगरेशन विफल रहा"
 
-#: ../../network/state_handler.go:49
+#: ../../network/state_handler.go:33
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
 msgstr "802.1X सप्लिकेंट बाहर निकला या अप्रत्याशित रूप से विफल रहा "
 
-#: ../../network/state_handler.go:50
+#: ../../network/state_handler.go:34
 msgid "The 802.1X supplicant took too long time to authenticate"
 msgstr "802.1X सप्लिकेंट ने प्रमाणीकृत किए जाने के लिए लंबा समय लिया "
 
-#: ../../network/state_handler.go:51
+#: ../../network/state_handler.go:35
 msgid "The PPP service failed to start within the allowed time"
 msgstr "PPP सर्विस अनुमति प्राप्त समय के भीतर आरंभ करने में विफल रहा"
 
-#: ../../network/state_handler.go:52
+#: ../../network/state_handler.go:36
 msgid "The PPP service disconnected unexpectedly"
 msgstr "PPP सर्विस अप्रत्याशित रूप डिसकनेक्ट हुआ"
 
-#: ../../network/state_handler.go:53
+#: ../../network/state_handler.go:37
 msgid "The PPP service quitted or failed unexpectedly"
 msgstr "PPP सर्विस बाहर हुआ या अप्रत्याशित रूप से विफल रहा"
 
-#: ../../network/state_handler.go:54
+#: ../../network/state_handler.go:38
 msgid "The DHCP service failed to start within the allowed time"
 msgstr "DHCP सर्विस अनुमति प्राप्त समय के भीतर आरंभ होने में विफल रहा"
 
-#: ../../network/state_handler.go:55
+#: ../../network/state_handler.go:39
 msgid "The DHCP service reported an unexpected error"
 msgstr "DHCP सर्विस ने एक अप्रत्याशित त्रुटि की सूचना दी"
 
-#: ../../network/state_handler.go:56
+#: ../../network/state_handler.go:40
 msgid "The DHCP service quitted or failed unexpectedly"
 msgstr "DHCP सर्विस बाहर निकला या अप्रत्याशित रूप से विफल हुआ"
 
-#: ../../network/state_handler.go:57
+#: ../../network/state_handler.go:41
 msgid "The shared connection service failed to start"
 msgstr "साझा किया कनेक्शन सर्विस आरंभ करने में विफल रहा "
 
-#: ../../network/state_handler.go:58
+#: ../../network/state_handler.go:42
 msgid "The shared connection service quitted or failed unexpectedly"
 msgstr "साझा किया कनेक्शन सर्विस अप्रत्याशित रूप से बाहर निकला या विफल रहा"
 
-#: ../../network/state_handler.go:59
+#: ../../network/state_handler.go:43
 msgid "The AutoIP service failed to start"
 msgstr "AutoIP सर्विस आरंभ करने में विफल रहा"
 
-#: ../../network/state_handler.go:60
+#: ../../network/state_handler.go:44
 msgid "The AutoIP service reported an unexpected error"
 msgstr "AutoIP सर्विस ने एक अप्रत्याशित त्रुटि की सूचना दी"
 
-#: ../../network/state_handler.go:61
+#: ../../network/state_handler.go:45
 msgid "The AutoIP service quitted or failed unexpectedly"
 msgstr "AutoIP सर्विस अप्रत्याशित रूप से बाहर निकला या विफल रहा"
 
-#: ../../network/state_handler.go:62
+#: ../../network/state_handler.go:46
 msgid "Dialing failed due to busy lines"
 msgstr "व्यस्त लाइनों के कारण डाइलिंग विफल रहा "
 
-#: ../../network/state_handler.go:63
+#: ../../network/state_handler.go:47
 msgid "Dialing failed due to no dial tone"
 msgstr "डायल टोन न होने के कारण डाइलिंग विफल रहा "
 
-#: ../../network/state_handler.go:64
+#: ../../network/state_handler.go:48
 msgid "Dialing failed due to the carrier"
 msgstr "कैरियर के कारण डाइलिंग विफल रहा"
 
-#: ../../network/state_handler.go:65
+#: ../../network/state_handler.go:49
 msgid "Dialing timed out"
 msgstr "डायलिंग का समय समाप्त हुआ "
 
-#: ../../network/state_handler.go:66
+#: ../../network/state_handler.go:50
 msgid "Dialing failed"
 msgstr "डायलिंग विफल रहा "
 
-#: ../../network/state_handler.go:67
+#: ../../network/state_handler.go:51
 msgid "Modem initialization failed"
 msgstr "मॉडम प्रारंभीकरण विफल रहा। "
 
-#: ../../network/state_handler.go:68
+#: ../../network/state_handler.go:52
 msgid "Failed to select the specified GSM APN"
 msgstr "विनिर्देशित GSM APN चयनित करने में विफल रहा। "
 
-#: ../../network/state_handler.go:69
+#: ../../network/state_handler.go:53
 msgid "No networks searched"
 msgstr "कोई नेटवर्क नहीं मिले। "
 
-#: ../../network/state_handler.go:70
+#: ../../network/state_handler.go:54
 msgid "Network registration was denied"
 msgstr "नेटवर्क पंजीकरण से इंकार किया। "
 
-#: ../../network/state_handler.go:71
+#: ../../network/state_handler.go:55
 msgid "Network registration timed out"
 msgstr "नेटवर्क पंजीकरण का समय समाप्त हुआ। "
 
-#: ../../network/state_handler.go:72
+#: ../../network/state_handler.go:56
 msgid "Failed to register to the requested GSM network"
 msgstr ""
 
-#: ../../network/state_handler.go:73
+#: ../../network/state_handler.go:57
 msgid "PIN check failed"
 msgstr "PIN जांच विफल रहा। "
 
-#: ../../network/state_handler.go:74
+#: ../../network/state_handler.go:58
 msgid "Necessary firmware for the device may be missed"
 msgstr "उपकरण के लिए आवश्यक फर्मवेयर खो सकता है। "
 
-#: ../../network/state_handler.go:75
+#: ../../network/state_handler.go:59
 msgid "The device was removed"
 msgstr "उपकरण को हटा दिया गया। "
 
-#: ../../network/state_handler.go:76
+#: ../../network/state_handler.go:60
 msgid "NetworkManager went to sleep"
 msgstr "नेटवर्क मैनेजर स्लीप में गया। "
 
-#: ../../network/state_handler.go:77
+#: ../../network/state_handler.go:61
 msgid "The device's active connection was removed or disappeared"
 msgstr "उपकरण का सक्रिय कनेक्शन हटाया गया या गायब हुआ। "
 
-#: ../../network/state_handler.go:78
+#: ../../network/state_handler.go:62
 msgid "A user or client requested to disconnect"
 msgstr "एक प्रयोक्ता या क्लाइंट ने डिस्कनेक्ट करने का अनुरोध किया।"
 
-#: ../../network/state_handler.go:79
+#: ../../network/state_handler.go:63
 msgid "The device's carrier/link changed"
 msgstr "एक उपकरण कैरियर/लिंक बदल गया। "
 
-#: ../../network/state_handler.go:80
+#: ../../network/state_handler.go:64
 msgid "The device's existing connection was assumed"
 msgstr "उपकरण का मौजूदा कनेक्शन स्वीकृत किया गया। "
 
-#: ../../network/state_handler.go:81
+#: ../../network/state_handler.go:65
 msgid "The 802.1x supplicant is now available"
 msgstr "802.1x सप्लिकेंट अब उपलब्ध है।"
 
-#: ../../network/state_handler.go:82
+#: ../../network/state_handler.go:66
 msgid "The modem could not be found"
 msgstr "मॉडम नहीं मिल पाया। "
 
-#: ../../network/state_handler.go:83
+#: ../../network/state_handler.go:67
 msgid "The Bluetooth connection timed out or failed"
 msgstr "ब्लूटुथ कनेक्शन का समय समाप्त हुआ या विफल रहा। "
 
-#: ../../network/state_handler.go:84
+#: ../../network/state_handler.go:68
 msgid "GSM Modem's SIM Card was not inserted"
 msgstr "GSM मॉडम का SIM कार्ड नहीं डाला गया।"
 
-#: ../../network/state_handler.go:85
+#: ../../network/state_handler.go:69
 msgid "GSM Modem's SIM PIN required"
 msgstr "GSM मॉडम के SIM PIN की आवश्यकता।"
 
-#: ../../network/state_handler.go:86
+#: ../../network/state_handler.go:70
 msgid "GSM Modem's SIM PUK required"
 msgstr "GSM मॉडम के सिम SIM PUK की आवश्यकता।"
 
-#: ../../network/state_handler.go:87
+#: ../../network/state_handler.go:71
 msgid "SIM card error in GSM Modem"
 msgstr "SIM कार्ड एरर GSM मोड्म में"
 
-#: ../../network/state_handler.go:88
+#: ../../network/state_handler.go:72
 msgid "InfiniBand device does not support connected mode"
 msgstr "इंफिनीबैंड उपकरण कनेक्टेड मोड को सपोर्ट नहीं करता है। "
 
-#: ../../network/state_handler.go:89
+#: ../../network/state_handler.go:73
 msgid "A dependency of the connection failed"
 msgstr ""
 
-#: ../../network/state_handler.go:90
+#: ../../network/state_handler.go:74
 msgid "RFC 2684 Ethernet bridging error to ADSL"
 msgstr "RFC 2684 Ethernet bridging error to ADSL"
 
-#: ../../network/state_handler.go:91
+#: ../../network/state_handler.go:75
 msgid "ModemManager did not run or quitted unexpectedly"
 msgstr "मॉडममैनेजर रन नहीं किया या अप्रत्याशित रूप से बाहर निकला। "
 
-#: ../../network/state_handler.go:92
-msgid "The 802.11 Wi-Fi network could not be found"
-msgstr "802.11 वाइ-फाइ नेटवर्क नहीं मिल पाया।"
+#: ../../network/state_handler.go:76
+msgid "The 802.11 WLAN network could not be found"
+msgstr ""
 
-#: ../../network/state_handler.go:93
+#: ../../network/state_handler.go:77
 msgid "A secondary connection of the base connection failed"
 msgstr "बेस कनेक्शन का सेकंडरी कनेक्शन विफल रहा। "
 
-#: ../../network/state_handler.go:96
+#: ../../network/state_handler.go:80
 msgid "DCB or FCoE setup failed"
 msgstr "DCB या FCoE सेटअप विफल रहा।"
 
-#: ../../network/state_handler.go:97
+#: ../../network/state_handler.go:81
 msgid "Network teaming control failed"
 msgstr "नेटवर्क टीमिंग कंट्रोल विफल रहा। "
 
-#: ../../network/state_handler.go:98
+#: ../../network/state_handler.go:82
 msgid "Modem failed to run or not available"
 msgstr "मॉडम रन करने में विफल रहा या यह उपलब्ध नहीं है। "
 
-#: ../../network/state_handler.go:99
+#: ../../network/state_handler.go:83
 msgid "Modem now ready and available"
 msgstr "मॉडम अब तैयार है और उपलब्ध है। "
 
-#: ../../network/state_handler.go:100
+#: ../../network/state_handler.go:84
 msgid "SIM PIN is incorrect"
 msgstr "SIM PIN गलत है। "
 
-#: ../../network/state_handler.go:101
+#: ../../network/state_handler.go:85
 msgid "New connection activation is enqueuing"
 msgstr "नया कनेक्शन ऐक्टिवेशन कतार में है। "
 
-#: ../../network/state_handler.go:102
+#: ../../network/state_handler.go:86
 msgid "Parent device changed"
 msgstr "पैरेंट डिवाइस बदल गया "
 
-#: ../../network/state_handler.go:103
+#: ../../network/state_handler.go:87
 msgid "Management status of parent device changed"
 msgstr "पैरेंट डिवाइस की प्रबंधन स्थिति बदल गई"
 
-#: ../../network/state_handler.go:106
+#: ../../network/state_handler.go:90
 msgid "Network cable is unplugged"
 msgstr "नेटवर्क केबल अनप्लग किया हुआ है "
 
-#: ../../network/state_handler.go:107
+#: ../../network/state_handler.go:91
 msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr "कृपया ध्यान रखें कि मोबाइल नेटवर्क सिग्नल के साथ SIM कार्ड डाला गया हो"
+msgstr ""
+"कृपया ध्यान रखें कि मोबाइल नेटवर्क सिग्नल के साथ SIM कार्ड डाला गया हो"
 
-#: ../../network/state_handler.go:108
+#: ../../network/state_handler.go:92
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr "कृपया ध्यान दें कि SIM कार्ड के बकाया के बिना एक सही प्लान चुना जाए।  "
+msgstr ""
+"कृपया ध्यान दें कि SIM कार्ड के बकाया के बिना एक सही प्लान चुना जाए।  "
 
-#: ../../network/state_handler.go:111
+#: ../../network/state_handler.go:95
 msgid "Failed to activate VPN connection, reason unknown"
 msgstr ""
 
-#: ../../network/state_handler.go:112
+#: ../../network/state_handler.go:96
 msgid "Failed to activate VPN connection"
 msgstr ""
 
-#: ../../network/state_handler.go:113
+#: ../../network/state_handler.go:97
 msgid "The VPN connection state changed due to being disconnected by users"
 msgstr ""
 
-#: ../../network/state_handler.go:114
+#: ../../network/state_handler.go:98
 msgid ""
 "The VPN connection state changed due to being disconnected from devices"
 msgstr ""
 
-#: ../../network/state_handler.go:115
+#: ../../network/state_handler.go:99
 msgid "VPN service stopped"
 msgstr "VPN सर्विस बंद हुआ "
 
-#: ../../network/state_handler.go:116
+#: ../../network/state_handler.go:100
 msgid "The IP config of VPN connection was invalid"
 msgstr "VPN कनेक्शन का IP कंफिगरेशन अमान्य था"
 
-#: ../../network/state_handler.go:117
+#: ../../network/state_handler.go:101
 msgid "The connection attempt to VPN service timed out"
 msgstr "VPN सर्विस के लिए कनेक्शन प्रयास का समय समाप्त हुआ"
 
-#: ../../network/state_handler.go:118
+#: ../../network/state_handler.go:102
 msgid "The VPN service start timed out"
 msgstr "VPN सर्विस का समय समाप्त हुआ"
 
-#: ../../network/state_handler.go:119
+#: ../../network/state_handler.go:103
 msgid "The VPN service failed to start"
 msgstr "VPN सर्विस आरंभ करने में विफल रहा"
 
-#: ../../network/state_handler.go:120
+#: ../../network/state_handler.go:104
 msgid "The VPN connection password was not provided"
 msgstr ""
 
-#: ../../network/state_handler.go:121
+#: ../../network/state_handler.go:105
 msgid "Authentication to VPN server failed"
 msgstr "VPN सर्वर के लिए प्रमाणीकरण विफल रहा "
 
-#: ../../network/state_handler.go:122
+#: ../../network/state_handler.go:106
 msgid "The connection was deleted from settings"
 msgstr "सेटिंग्स से कनेक्शन डिलीट हुआ "
 
-#: ../../network/state_handler.go:251
+#: ../../network/state_handler.go:256
 msgid "Enabling hotspot"
 msgstr ""
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:260
 msgid "Connecting %q"
 msgstr ""
 
-#: ../../network/state_handler.go:261
+#: ../../network/state_handler.go:269
 msgid "Hotspot enabled"
 msgstr ""
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:271
 msgid "%q connected"
 msgstr "%q कनेक्टेड है "
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:325
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr ""
 
-#: ../../network/state_handler.go:327 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:339 ../../network/state_handler.go:363
+#: ../../system/bluetooth1/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q दिस-कनेक्टेड है"
 
-#: ../../network/state_handler.go:333
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "हॉटस्पॉट शेर नही हो रहा, कृपा करके अपनी dnsmasq सेट्टिंग्स चेक करें"
 
-#: ../../network/state_handler.go:335
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%q  कनेक्ट नही हो रहा, वाइयर लेस रूटर के नज़दीक रखिए"
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%q  कनेक्ट नही हो रहा,  अपने रूटर अथवा नेट केबल को चेक कीजिए"
 
-#: ../../network/state_handler.go:340
-msgid "Password is required to connect %q"
-msgstr ""
-
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr " कनेक्षन विफल , %q कनेक्ट नही हो रहा, ग़लत पासवर्ड"
 
-#: ../../network/utils_dbus_nm.go:229
+#: ../../network/state_handler.go:355
+msgid "Unable to connect %q"
+msgstr ""
+
+#: ../../network/state_handler.go:366
+msgid "Password is required to connect %q"
+msgstr ""
+
+#: ../../network/state_handler.go:368
+msgid "The %q 802.11 WLAN network could not be found"
+msgstr ""
+
+#: ../../network/utils_dbus_nm.go:278
 msgid "Unknown"
 msgstr "अज्ञात"
 
-#: ../../network/utils_notify.go:80
-msgid "You are now offline."
-msgstr "आप अब ऑफलाइन हैं। "
-
-#: ../../network/utils_notify.go:84
+#: ../../network/utils_notify.go:170
 msgid "Airplane mode enabled."
 msgstr "एयरप्लेन मोड सक्षम हुआ। "
 
-#: ../../network/utils_notify.go:92
+#: ../../network/utils_notify.go:170 ../../network/utils_notify.go:174
+#: ../../network/utils_notify.go:178 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:199 ../../network/utils_notify.go:288
+msgid "Disconnected"
+msgstr "डिस्कनेक्ट है"
+
+#: ../../network/utils_notify.go:178
 msgid "Access Point mode is not supported by this device."
 msgstr "ऐक्सेस प्वाइंट मोड को उपकरण का समर्थन नहीं है।  "
 
-#: ../../network/utils_notify.go:96 ../../network/utils_notify.go:100
-#: ../../network/utils_notify.go:103
-msgid "Network"
-msgstr "संचार"
-
-#: ../../network/utils_notify.go:96
+#: ../../network/utils_notify.go:182
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr "WLAN कार्ड का हार्डवेयर स्विच ऑफ है, कृपया जरूरत पड़ने पर स्विच ऑन करें।"
+msgstr ""
+"WLAN कार्ड का हार्डवेयर स्विच ऑफ है, कृपया जरूरत पड़ने पर स्विच ऑन करें।"
 
-#: ../../network/utils_notify.go:100
+#: ../../network/utils_notify.go:186
 msgid "System proxy is set successfully."
 msgstr "सिस्टम प्रॉक्सी सफलतापूर्वक सेट हुआ। "
 
-#: ../../network/utils_notify.go:103
+#: ../../network/utils_notify.go:189
 msgid "System proxy has been cancelled."
 msgstr "सिस्टम प्रॉक्सी को रद्द कर दिया गया है। "
 
-#: ../../session/power/manager_events.go:151
-msgid "Battery Critically Low"
-msgstr "बैटरी काफी कम "
+#: ../../network/utils_notify.go:193
+msgid "Connected"
+msgstr "कनेक्ट है "
 
-#: ../../session/power/manager_events.go:152
-msgid "Computer will suspend very soon, please plug in now"
-msgstr "कम्यूटर जल्द ही सस्पेंड मोड में होगा, कृपया अब प्लग इन करें"
+#: ../../service_trigger/msg.go:11
+#, c-format
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgstr ""
 
-#: ../../session/power/manager_events.go:175
-#: ../../session/power/manager_events.go:182
-msgid "Battery Low"
-msgstr "बैटरी कम"
+#: ../../session/power1/manager_events.go:203
+msgid "Battery critically low"
+msgstr ""
 
-#: ../../session/power/manager_events.go:176
-msgid "Computer will suspend soon, please plug in"
-msgstr "कम्यूटर जल्द ही सस्पेंड मोड में होगा, कृपया अब प्लग इन करें"
-
-#: ../../session/power/manager_events.go:183
+#: ../../session/power1/manager_events.go:223
+#: ../../session/power1/manager_events.go:228
+#: ../../session/power1/manager_events.go:233
+#: ../../session/power1/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "बैटरी कम है, कृपया चार्ज करें"
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../session/power1/utils.go:439 ../../session/power1/utils.go:446
+#: ../../session/power1/utils.go:453 ../../session/power1/utils.go:460
+msgid "Power settings changed"
+msgstr ""
+
+#: ../../session/power1/utils.go:484 ../../session/power1/utils_test.go:16
+#: ../../session/power1/utils_test.go:17
+msgid "When the lid is closed, "
+msgstr ""
+
+#: ../../session/power1/utils.go:488
+msgid "When pressing the power button, "
+msgstr ""
+
+#: ../../session/power1/utils.go:498 ../../session/power1/utils_test.go:16
+msgid "your computer will shut down"
+msgstr ""
+
+#: ../../session/power1/utils.go:500 ../../session/power1/utils_test.go:17
+msgid "your computer will suspend"
+msgstr ""
+
+#: ../../session/power1/utils.go:502
+msgid "your computer will hibernate"
+msgstr ""
+
+#: ../../session/power1/utils.go:504
+msgid "your monitor will turn off"
+msgstr ""
+
+#: ../../session/power1/utils.go:506
+msgid "your monitor will show the shutdown interface"
+msgstr ""
+
+#: ../../session/power1/utils.go:508
+msgid "it will do nothing to your computer"
+msgstr ""
+
+#: ../../system/bluetooth1/utils_notify.go:43
+msgid "Connect %q successfully"
+msgstr ""
+
+#: ../../system/bluetooth1/utils_notify.go:56
+msgid "Make sure %q is turned on and in range"
+msgstr "ध्यान रखें कि %q चालू हो और रेंज में हो"
+
+#: ../../system/bluetooth1/utils_notify.go:74
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+
+#: ../../timedate1/manager_format.go:75
+msgid "Space"
+msgstr ""
+
+#: ../../timedate1/manager_ifc.go:51
 msgid "Authentication is required to set the system time"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:64
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:74
 msgid "Authentication is required to change NTP server"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate1/manager_ifc.go:114
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate1/manager_ifc.go:137
 msgid "Authentication is required to set the system timezone"
 msgstr ""

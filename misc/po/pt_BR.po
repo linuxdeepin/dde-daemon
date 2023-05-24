@@ -4,43 +4,42 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Kayo Martins <kayomfreire@gmail.com>, 2020
-# Cleber Teixeira, 2020
-# Bruno Gama <brunnogama@gmail.com>, 2020
-# JeffWagen <jeff.wagen@yahoo.com>, 2020
-# Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2020
-# Paulo Schopf, 2020
-# Felipe André Alves Santos <lip.dre@gmail.com>, 2020
-# Raphael Miquelis <raphaelmiquelis@gmail.com>, 2020
-# RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2021
-# Cassiano Molinari <chano2808a@gmail.com>, 2021
-# Fábio C, 2022
-# Joel Queiroz <joelcfq@yandex.ru>, 2022
-# Flavio Lima <flaviolimaviolinista@gmail.com>, 2022
-# Cindy0514, 2022
-# 1d1ce5c8357ff895d313b0cce072591e_46a6b98, 2022
-# Alex, 2022
+# Cleber Teixeira, 2023
+# Bruno Gama <brunnogama@gmail.com>, 2023
+# Flavio Lima <flaviolimaviolinista@gmail.com>, 2023
+# Joel Queiroz <joelcfq@yandex.ru>, 2023
+# 1d1ce5c8357ff895d313b0cce072591e_46a6b98, 2023
+# Fábio C, 2023
+# Cassiano Molinari <chano2808a@gmail.com>, 2023
+# Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2023
+# JeffWagen <jeff.wagen@yahoo.com>, 2023
+# Raphael Miquelis <raphaelmiquelis@gmail.com>, 2023
+# RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2023
+# Felipe André Alves Santos <lip.dre@gmail.com>, 2023
+# deepiner, 2023
+# Paulo Schopf, 2023
+# Alex, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 09:59+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Alex, 2022\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
+"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"PO-Revision-Date: 2023-05-23 09:02+0000\n"
+"Last-Translator: Alex, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: ../../accounts/checkers/password.go:38
+#: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
 msgstr "Digite uma senha com pelo menos 8 caracteres"
 
-#: ../../accounts/checkers/password.go:40
+#: ../../accounts1/checkers/password.go:40
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -48,37 +47,37 @@ msgstr ""
 "A senha deve conter letras em Inglês (sensível a maiúsculas e minúsculas), "
 "números ou símbolos especiais (~!@#$%^&*()[]{}\\|/?,.<>)"
 
-#: ../../accounts/checkers/username.go:49
+#: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
 msgstr "O nome de usuário não pode ficar em branco"
 
-#: ../../accounts/checkers/username.go:54
+#: ../../accounts1/checkers/username.go:54
 msgid "The first character must be a letter or number"
 msgstr "O primeiro caractere deve ser uma letra ou um número"
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts1/checkers/username.go:56
 msgid "The username already exists"
 msgstr "O nome de usuário já existe"
 
-#: ../../accounts/checkers/username.go:59
+#: ../../accounts1/checkers/username.go:59
 msgid "The name already exists"
 msgstr "O nome já existe"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts1/checkers/username.go:61
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 
-#: ../../accounts/manager.go:449
+#: ../../accounts1/manager.go:450
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../audio/audio_events.go:462
+#: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s foi desativado"
 
-#: ../../audio/audio_events.go:463
+#: ../../audio1/audio_events.go:472
 msgid "Open"
 msgstr "Abrir"
 
@@ -90,133 +89,139 @@ msgstr "Falha ao verificar a impressão digital"
 msgid "Fingerprint verification timed out"
 msgstr "O tempo de verificação da impressão digital expirou"
 
-#: ../../bluetooth/bluez_profile.go:15
-#: ../../system/bluetooth/bluez_profile.go:15
+#: ../../bin/dde-session-daemon/main.go:471
+#, c-format
+msgid "Your password will expire in %d days, please change it timely"
+msgstr "A senha expirará em %d dias; altere-a em tempo hábil"
+
+#: ../../bluetooth1/bluez_profile.go:15
+#: ../../system/bluetooth1/bluez_profile.go:15
 msgid "Serial port"
 msgstr "Porta serial"
 
-#: ../../bluetooth/bluez_profile.go:16
-#: ../../system/bluetooth/bluez_profile.go:16
+#: ../../bluetooth1/bluez_profile.go:16
+#: ../../system/bluetooth1/bluez_profile.go:16
 msgid "Dial-Up networking"
 msgstr "Conexão discada"
 
-#: ../../bluetooth/bluez_profile.go:17
-#: ../../system/bluetooth/bluez_profile.go:17
+#: ../../bluetooth1/bluez_profile.go:17
+#: ../../system/bluetooth1/bluez_profile.go:17
 msgid "Hands-Free device"
 msgstr "Dispositivo de Mãos Livres"
 
-#: ../../bluetooth/bluez_profile.go:18
-#: ../../system/bluetooth/bluez_profile.go:18
+#: ../../bluetooth1/bluez_profile.go:18
+#: ../../system/bluetooth1/bluez_profile.go:18
 msgid "Hands-Free voice gateway"
 msgstr "Gateway de voz de mãos-livres"
 
-#: ../../bluetooth/bluez_profile.go:19
-#: ../../system/bluetooth/bluez_profile.go:19
+#: ../../bluetooth1/bluez_profile.go:19
+#: ../../system/bluetooth1/bluez_profile.go:19
 msgid "Headset voice gateway"
 msgstr "Gateway de voz do headset"
 
-#: ../../bluetooth/bluez_profile.go:20
-#: ../../system/bluetooth/bluez_profile.go:20
+#: ../../bluetooth1/bluez_profile.go:20
+#: ../../system/bluetooth1/bluez_profile.go:20
 msgid "Object push"
 msgstr "Envio de objeto"
 
-#: ../../bluetooth/bluez_profile.go:21
-#: ../../system/bluetooth/bluez_profile.go:21
+#: ../../bluetooth1/bluez_profile.go:21
+#: ../../system/bluetooth1/bluez_profile.go:21
 msgid "File transfer"
 msgstr "Transferência de arquivos"
 
-#: ../../bluetooth/bluez_profile.go:22
-#: ../../system/bluetooth/bluez_profile.go:22
+#: ../../bluetooth1/bluez_profile.go:22
+#: ../../system/bluetooth1/bluez_profile.go:22
 msgid "Synchronization"
 msgstr "Sincronização"
 
-#: ../../bluetooth/bluez_profile.go:23
-#: ../../system/bluetooth/bluez_profile.go:23
+#: ../../bluetooth1/bluez_profile.go:23
+#: ../../system/bluetooth1/bluez_profile.go:23
 msgid "Phone book access"
 msgstr "Acesso aos contatos"
 
-#: ../../bluetooth/bluez_profile.go:24
-#: ../../system/bluetooth/bluez_profile.go:24
+#: ../../bluetooth1/bluez_profile.go:24
+#: ../../system/bluetooth1/bluez_profile.go:24
 msgid "Phone book access client"
 msgstr "Cliente de acesso aos contatos"
 
-#: ../../bluetooth/bluez_profile.go:25
-#: ../../system/bluetooth/bluez_profile.go:25
+#: ../../bluetooth1/bluez_profile.go:25
+#: ../../system/bluetooth1/bluez_profile.go:25
 msgid "Message access"
 msgstr "Acesso às mensagens"
 
-#: ../../bluetooth/bluez_profile.go:26
-#: ../../system/bluetooth/bluez_profile.go:26
+#: ../../bluetooth1/bluez_profile.go:26
+#: ../../system/bluetooth1/bluez_profile.go:26
 msgid "Message notification"
 msgstr "Notificação de mensagem"
 
-#: ../../bluetooth/obex_agent.go:376 ../../bluetooth/utils_notify.go:130
-#: ../../lastore/lastore.go:435
+#: ../../bluetooth1/obex_agent.go:376 ../../bluetooth1/utils_notify.go:130
+#: ../../lastore1/lastore.go:435
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../../bluetooth/obex_agent.go:383
+#: ../../bluetooth1/obex_agent.go:383
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Recebendo %[1]q de %[2]q"
 
-#: ../../bluetooth/obex_agent.go:392
+#: ../../bluetooth1/obex_agent.go:392
 msgid "View"
 msgstr "Visualizar"
 
-#: ../../bluetooth/obex_agent.go:398
+#: ../../bluetooth1/obex_agent.go:398
 msgid "You have received files from %q successfully"
 msgstr "Os arquivos de %q foram recebidos"
 
-#: ../../bluetooth/obex_agent.go:399
+#: ../../bluetooth1/obex_agent.go:399
 msgid "Done"
 msgstr "Concluído"
 
-#: ../../bluetooth/obex_agent.go:414 ../../bluetooth/obex_agent.go:513
+#: ../../bluetooth1/obex_agent.go:414 ../../bluetooth1/obex_agent.go:513
 msgid "Stop Receiving Files"
 msgstr "Interromper o Recebimento de Arquivos"
 
-#: ../../bluetooth/obex_agent.go:416
+#: ../../bluetooth1/obex_agent.go:416
 msgid "You have cancelled the file transfer"
 msgstr "A transferência do arquivo foi cancelada"
 
-#: ../../bluetooth/obex_agent.go:418 ../../system/bluetooth/utils_notify.go:63
-#: ../../system/bluetooth/utils_notify.go:72
+#: ../../bluetooth1/obex_agent.go:418
+#: ../../system/bluetooth1/utils_notify.go:63
+#: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Falha na conexão Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth1/obex_agent.go:453
 msgid "Decline"
 msgstr "Recusar"
 
-#: ../../bluetooth/obex_agent.go:453
+#: ../../bluetooth1/obex_agent.go:453
 msgid "Receive"
 msgstr "Receber"
 
-#: ../../bluetooth/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:458
 msgid "Bluetooth File Transfer"
 msgstr "Transferência de Arquivos por Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:459
+#: ../../bluetooth1/obex_agent.go:459
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q está enviando arquivos. Receber?"
 
-#: ../../bluetooth/obex_agent.go:514
+#: ../../bluetooth1/obex_agent.go:514
 msgid "Receiving %q timed out"
 msgstr "O recebimento de %s expirou"
 
-#: ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
 msgstr "Clique aqui para conectar-se à %q"
 
-#: ../../bluetooth/utils_notify.go:120
+#: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
 msgstr "Adicionar dispositivos Bluetooth"
 
-#: ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
 msgstr "Emparelhar"
 
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "Espaço insuficiente em disco; será necessário liberar espaço!"
 
@@ -266,11 +271,11 @@ msgstr "Atrasar captura"
 
 #: ../../keybinding/shortcuts/id_name_map.go:24
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (Imagem em Texto)"
 
 #: ../../keybinding/shortcuts/id_name_map.go:25
 msgid "Scrollshot"
-msgstr ""
+msgstr "Captura de tela estendida"
 
 #: ../../keybinding/shortcuts/id_name_map.go:26
 msgid "File manager"
@@ -379,7 +384,7 @@ msgstr "Minimizar Janela"
 
 #: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Close window"
-msgstr "Fechar Janela"
+msgstr "Fechar janela"
 
 #: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Move window"
@@ -421,147 +426,149 @@ msgstr "Exibir área de trabalho"
 msgid "Switch monitors"
 msgstr "Alternar monitores"
 
-#: ../../langselector/locale.go:48
+#: ../../langselector1/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "A autenticação é necessária para alternar o idioma"
 
-#: ../../langselector/locale.go:137
+#: ../../langselector1/locale.go:137
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "Alterando o idioma do sistema, aguarde..."
 
-#: ../../langselector/locale.go:138
+#: ../../langselector1/locale.go:138
 msgid "Changing system language, please wait..."
 msgstr "Alterando o idioma do sistema, aguarde..."
 
-#: ../../langselector/locale.go:139
+#: ../../langselector1/locale.go:139
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "O idioma do sistema foi alterado; é necessário encerrar a sessão para "
 "efetivá-lo"
 
-#: ../../langselector/locale.go:381
+#: ../../langselector1/locale.go:385
 msgid "Failed to change system language, please try later"
 msgstr "Falha ao alterar o idioma do sistema; tente novamente"
 
-#: ../../lastore/lastore.go:427
+#: ../../lastore1/lastore.go:427
 msgid "Retry"
 msgstr "Tentar novamente"
 
-#: ../../lastore/lastore.go:449
+#: ../../lastore1/lastore.go:449
 msgid "Update Now"
 msgstr "Atualizar agora"
 
-#: ../../lastore/lastore.go:479
+#: ../../lastore1/lastore.go:479
 msgid "Reboot Now"
 msgstr "Reiniciar"
 
-#: ../../lastore/lastore.go:483
+#: ../../lastore1/lastore.go:483
 msgid "Remind Me Later"
 msgstr "Lembre-me mais tarde"
 
-#: ../../lastore/lastore.go:490
+#: ../../lastore1/lastore.go:490
 msgid "10 mins later"
-msgstr ""
+msgstr "10min depois"
 
-#: ../../lastore/lastore.go:497
+#: ../../lastore1/lastore.go:497
 msgid "30 mins later"
-msgstr ""
+msgstr "30min depois"
 
-#: ../../lastore/lastore.go:504
+#: ../../lastore1/lastore.go:504
 msgid "2h later"
-msgstr ""
+msgstr "2h depois"
 
-#: ../../lastore/lastore.go:511
+#: ../../lastore1/lastore.go:511
 msgid "6h later"
-msgstr ""
+msgstr "6h depois"
 
-#: ../../lastore/notify.go:93
+#: ../../lastore1/notify.go:93
 msgid "%q installed successfully."
 msgstr "%q foi instalado."
 
-#: ../../lastore/notify.go:96
+#: ../../lastore1/notify.go:96
 msgid "%q failed to install."
 msgstr "Falha ao instalar %q."
 
-#: ../../lastore/notify.go:104
+#: ../../lastore1/notify.go:104
 msgid "Removed successfully"
 msgstr "Removido"
 
-#: ../../lastore/notify.go:106
+#: ../../lastore1/notify.go:106
 msgid "Failed to remove the app"
 msgstr "Falha ao remover o aplicativo"
 
-#: ../../lastore/notify.go:113
+#: ../../lastore1/notify.go:113
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr "Para evitar o desligamento; conecte o carregador."
 
-#: ../../lastore/notify.go:118
+#: ../../lastore1/notify.go:118
 msgid "Package cache wiped"
 msgstr "O cache de pacotes foi esvaziado"
 
-#: ../../lastore/notify.go:123
+#: ../../lastore1/notify.go:123
 msgid "Updates Available"
 msgstr "Há atualizações disponíveis"
 
-#: ../../lastore/notify.go:128
+#: ../../lastore1/notify.go:128
 msgid "Reboot after Updates"
 msgstr "Reiniciar após atualizar"
 
-#: ../../lastore/notify.go:129
+#: ../../lastore1/notify.go:129
 msgid "Restart the computer to use the system and applications properly"
-msgstr ""
+msgstr "Reinicie o computador para utilizar o sistema normalmente"
 
-#: ../../lastore/notify.go:139
+#: ../../lastore1/notify.go:139
 msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
+"O sistema está sendo atualizado, mas é necessário conectar o carregador; "
+"pois a carga da bateria está abaixo de 50%"
 
-#: ../../lastore/notify.go:140
+#: ../../lastore1/notify.go:140
 msgid "OK"
 msgstr "Ok"
 
-#: ../../network/manager_active_conn.go:437
-#: ../../network/manager_active_conn.go:442
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
 msgstr "Nenhum"
 
-#: ../../network/manager_active_conn.go:461
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr "Chave WEP de 40/128-bit"
 
-#: ../../network/manager_active_conn.go:463
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Pessoal"
 
-#: ../../network/manager_active_conn.go:465
+#: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
 msgstr "WPA3 Pessoal"
 
-#: ../../network/manager_active_conn.go:473
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr "RÁPIDO"
 
-#: ../../network/manager_active_conn.go:481
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr "TLS em túnel"
 
-#: ../../network/manager_active_conn.go:483
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr "EAP Protegido"
 
@@ -937,34 +944,30 @@ msgid "Hotspot disabled"
 msgstr "Hotspot desativado"
 
 #: ../../network/state_handler.go:339 ../../network/state_handler.go:363
-#: ../../system/bluetooth/utils_notify.go:50
+#: ../../system/bluetooth1/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q desconectado"
 
 #: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
-"Não foi possível compartilhar o Hotspot; verifique as configurações do "
-"dnsmasq"
+"Impossível compartilhar o hotspot; verifique as configurações do dnsmasq"
 
 #: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
-"Não é possível conectar-se à %q; verifique a intensidade do sinal Wi-Fi"
+msgstr "Impossível conectar-se à %q; verifique a intensidade do sinal Wi-Fi"
 
 #: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
-msgstr ""
-"Não foi possível conectar-se à %q; verifique as conexões ou os dispositivos "
-"de rede."
+msgstr "Impossível conectar-se à %q; verifique os dispositivos de rede."
 
 #: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "A conexão falhou, senha incorreta. Incapaz de conectar-se à %q"
+msgstr "Impossível conectar-se à %q; verifique a senha informada"
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "Impossível conectar-se à %q"
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
@@ -1016,89 +1019,89 @@ msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" não passou na verificação de segurança e não pode ser executado agora"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power1/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Bateria criticamente fraca"
 
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
-#: ../../session/power/manager_events.go:233
-#: ../../session/power/manager_events.go:238
+#: ../../session/power1/manager_events.go:223
+#: ../../session/power1/manager_events.go:228
+#: ../../session/power1/manager_events.go:233
+#: ../../session/power1/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr "A bateria está com pouca carga; conecte o carregador"
 
-#: ../../session/power/utils.go:438 ../../session/power/utils.go:445
-#: ../../session/power/utils.go:452 ../../session/power/utils.go:459
+#: ../../session/power1/utils.go:439 ../../session/power1/utils.go:446
+#: ../../session/power1/utils.go:453 ../../session/power1/utils.go:460
 msgid "Power settings changed"
 msgstr "Configurações de energia alteradas"
 
-#: ../../session/power/utils.go:483 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
+#: ../../session/power1/utils.go:484 ../../session/power1/utils_test.go:16
+#: ../../session/power1/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Quando a tampa é fechada, "
 
-#: ../../session/power/utils.go:487
+#: ../../session/power1/utils.go:488
 msgid "When pressing the power button, "
 msgstr "Ao pressionar o botão de ligar/desligar, "
 
-#: ../../session/power/utils.go:497 ../../session/power/utils_test.go:16
+#: ../../session/power1/utils.go:498 ../../session/power1/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "o computador irá desligar"
 
-#: ../../session/power/utils.go:499 ../../session/power/utils_test.go:17
+#: ../../session/power1/utils.go:500 ../../session/power1/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "o computador irá suspender"
 
-#: ../../session/power/utils.go:501
+#: ../../session/power1/utils.go:502
 msgid "your computer will hibernate"
 msgstr "o computador irá hibernar"
 
-#: ../../session/power/utils.go:503
+#: ../../session/power1/utils.go:504
 msgid "your monitor will turn off"
 msgstr "o monitor irá desligar"
 
-#: ../../session/power/utils.go:505
+#: ../../session/power1/utils.go:506
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "o seu monitor exibirá a tela de desligamento"
 
-#: ../../session/power/utils.go:507
+#: ../../session/power1/utils.go:508
 msgid "it will do nothing to your computer"
 msgstr "não irá fazer nada ao computador"
 
-#: ../../system/bluetooth/utils_notify.go:43
+#: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "Conectado à %q"
 
-#: ../../system/bluetooth/utils_notify.go:56
+#: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
 msgstr "Verifique se %q está ligado e próximo"
 
-#: ../../system/bluetooth/utils_notify.go:74
+#: ../../system/bluetooth1/utils_notify.go:74
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 "%q não pode mais conectar-se à %q. Esqueça este dispositivo e tente "
 "emparelhá-lo novamente."
 
-#: ../../timedate/manager_format.go:75
+#: ../../timedate1/manager_format.go:75
 msgid "Space"
-msgstr ""
+msgstr "Espaço"
 
-#: ../../timedate/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:51
 msgid "Authentication is required to set the system time"
 msgstr "A autenticação é necessária para alterar a hora do sistema"
 
-#: ../../timedate/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:64
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "A autenticação é necessária para alterar a sincronização da hora"
 
-#: ../../timedate/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:74
 msgid "Authentication is required to change NTP server"
 msgstr "A autenticação é necessária para alterar o Servidor NTP"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:114
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1106,6 +1109,6 @@ msgstr ""
 "A autenticação é necessária para controlar se o RTC armazena a hora local ou"
 " UTC"
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:137
 msgid "Authentication is required to set the system timezone"
 msgstr "A autenticação é necessária para alterar o fuso horário"

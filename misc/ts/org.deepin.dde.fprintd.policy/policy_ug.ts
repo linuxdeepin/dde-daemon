@@ -4,12 +4,12 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>بارماق ئىزىنى قوشۇش دەلىللەشنى تەلەپ قىلىدۇ</translation>
+			<translation>بارماق  ئىزى  قوشۇش ئۈچۈن  سالاھىيەت دەلىىللەڭ </translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.enroll!description" line="0"/>
 			<source>Add fingerprint password</source>
-			<translation>بارماق ئىزى پارولى قوشۇڭ</translation>
+			<translation>بارماق ئىزى پارولى قوشۇش</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.delete-enrolled-fingers!message" line="0"/>
@@ -24,7 +24,7 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.rename-enrolled-finger!message" line="0"/>
 			<source>Authentication is required to rename fingerprint password</source>
-			<translation>بارماق ئىزىنىنىڭ نامىنى ئۆزگەرتىش دەلىللەشنى تەلەپ قىلىدۇ</translation>
+			<translation>بارماق  ئىزى نامىنى ئۆزگەرتىش ئۈچۈن  سالاھىيەت دەلىىللەڭ </translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.rename-enrolled-finger!description" line="0"/>

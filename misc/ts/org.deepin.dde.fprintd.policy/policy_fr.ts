@@ -4,32 +4,32 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.enroll!message" line="0"/>
 			<source>Authentication is required to add fingerprint password</source>
-			<translation>Une authentification est requise pour ajouter une empreinte digitale comme mot de passe</translation>
+			<translation>Une authentification est requise pour ajouter une empreinte comme mot de passe</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.enroll!description" line="0"/>
 			<source>Add fingerprint password</source>
-			<translation>Ajouter une empreinte digitale comme mot de passe</translation>
+			<translation>Ajouter une empreinte comme mot de passe</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.delete-enrolled-fingers!message" line="0"/>
 			<source>Authentication is required to clear fingerprint passwords</source>
-			<translation>Une authentification est requise pour effacer les empreintes digitales enregistrées</translation>
+			<translation>Une authentification est requise pour effacer les empreintes enregistrées</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.delete-enrolled-fingers!description" line="0"/>
 			<source>Clear fingerprint passwords</source>
-			<translation>Effacer les empreintes digitales enregistrées</translation>
+			<translation>Effacer les empreintes enregistrées</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.rename-enrolled-finger!message" line="0"/>
 			<source>Authentication is required to rename fingerprint password</source>
-			<translation>Une authentification est requise pour changer le mot de passe d&apos;une empreinte digitale</translation>
+			<translation>Une authentification est requise pour renommer une empreinte</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.rename-enrolled-finger!description" line="0"/>
 			<source>Rename fingerprint password</source>
-			<translation>Changer le mot de passe d&apos;une empreinte digitale</translation>
+			<translation>Renommer une empreinte digitale</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.fprintd.manager!message" line="0"/>
@@ -39,7 +39,7 @@
 		<message>
 			<location filename="org.deepin.dde.fprintd.manager!description" line="0"/>
 			<source>Manage fingerprint passwords</source>
-			<translation>Gérer les empreintes digitales</translation>
+			<translation>Gérer les empreintes</translation>
 		</message>
 	</context>
 </TS>
