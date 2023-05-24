@@ -10,6 +10,6 @@ func Tr(in string) string {
 
 var _ = Tr("\"%s\" did not pass the system security verification, and cannot run now")
 
-var _ = Tr("The package \"%s\" has not been verified by the system, so you cannot run it now. But you can change the settings in Security Center > Tools > App Security.")
+var _ = Tr("You cannot run the unverified \"%s\", but you can change the settings in Security Center.")
 
 var _ = Tr("Proceed")

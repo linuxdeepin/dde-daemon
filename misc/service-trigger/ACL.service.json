@@ -13,7 +13,7 @@
     "Name": "ACL ELF Denied",
     "Description": "",
     "Exec": ["sh", "-c",
-        "msg=$(gettext -d dde-daemon 'The package \"%s\" has not been verified by the system, so you cannot run it now. But you can change the settings in Security Center > Tools > App Security.');msg=$(printf \"$msg\" $1);gdbus call --session --dest org.freedesktop.Notifications --object-path /org/freedesktop/Notifications --method org.freedesktop.Notifications.Notify dde-control-center 0 preferences-system '' \"$msg\" '[\"actions\",\"'$(gettext -d dde-daemon 'Proceed')'\"]'  '{\"x-deepin-action-actions\":<\"dbus-send,--session,--print-reply,--dest=com.deepin.defender.hmiscreen,/com/deepin/defender/hmiscreen,com.deepin.defender.hmiscreen.ShowPage,string:securitytools,string:application-safety\">}' 5000" ,
+        "msg=$(gettext -d dde-daemon 'You cannot run the unverified \"%s\", but you can change the settings in Security Center.');msg=$(printf \"$msg\" $1);gdbus call --session --dest org.freedesktop.Notifications --object-path /org/freedesktop/Notifications --method org.freedesktop.Notifications.Notify dde-control-center 0 preferences-system '' \"$msg\" '[\"actions\",\"'$(gettext -d dde-daemon 'Proceed')'\"]'  '{\"x-deepin-action-actions\":<\"dbus-send,--session,--print-reply,--dest=com.deepin.defender.hmiscreen,/com/deepin/defender/hmiscreen,com.deepin.defender.hmiscreen.ShowPage,string:securitytools,string:application-safety\">}' 5000" ,
         "",
         "%{arg0}"]
 }
