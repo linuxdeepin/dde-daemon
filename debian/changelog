@@ -1,3 +1,18 @@
+dde-daemon (5.15.12.1) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 处理飞行模式硬按键事件(KEY_RFKILL)(Bug: 196693)(Influence: 飞行模式硬开关)
+  * fix: 修改存在pstate时,是否支持节能模式的判断(Bug: 200513)(Influence: 性能模式)
+  * fix: grub2 获取os num的忽略标题修改(Task: 267459)(Influence: grub get os num)
+  * feat: 扩展org.kde.StatusNotifierWatcher服务，允许托盘获取自身位置(Task: 266755)(Influence: 暂无)
+  * feat: 修改应用管控通知(Task: 268523)(Influence: 应用管控通知)
+  * feat: 新keyring白盒方案解耦dde-daemon，删除相关代码(Task: 262399)(Influence: keyring白盒功能)
+  * feat: 修改应用管控通知内容(Task: 268523)(Influence: 应用管控通知)
+  * chore(power): 性能模式优化，默认开启aspm(Task: 254685)(Influence: 性能模式)
+  * chore: 更新翻译(Task: 267299)(Influence: 翻译)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Thu, 25 May 2023 15:06:33 +0800
+
 dde-daemon (5.15.11.1) unstable; urgency=medium
 
   [ Deepin Packages Builder ]
