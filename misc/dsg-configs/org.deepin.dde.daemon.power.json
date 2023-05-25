@@ -47,7 +47,7 @@
             "visibility": "public"
         },
         "idlePowersaveAspmEnabled": {
-            "value": false,
+            "value": true,
             "serial": 0,
             "flags": ["global"],
             "name": "idle powersave aspm enable",
