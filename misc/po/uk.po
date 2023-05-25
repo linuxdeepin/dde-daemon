@@ -9,16 +9,16 @@
 # deepiner, 2020
 # Marck Hrin, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
-# Yuri Chornoivan <yurchor@ukr.net>, 2022
+# Yuri Chornoivan <yurchor@ukr.net>, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 17:42+0800\n"
+"POT-Creation-Date: 2023-05-25 13:22+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2022\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,15 +58,17 @@ msgstr "Таке ім'я вже існує"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
 
-#: ../../accounts/manager.go:540
+#: ../../accounts/manager.go:539
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Запис користувача «%s» вже існував. Його дані синхронізовано з попередніми"
 
-#: ../../accounts/user_ifc.go:660
+#: ../../accounts/user_ifc.go:669
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
+"Фонове зображення у цій системі заблоковано від змін. Будь ласка, зв'яжіться"
+" з адміністратором вашої системи."
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -258,7 +260,7 @@ msgstr "Усі вікна"
 
 #: ../../dock/app_info.go:72 ../../launcher/item.go:97
 msgid "(Linglong)"
-msgstr ""
+msgstr "(Linglong)"
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -489,43 +491,51 @@ msgstr "Змінено мову системи, вийдіть із систем
 msgid "Failed to change system language, please try later"
 msgstr "Не вдалося змінити мову системи, спробуйте пізніше"
 
-#: ../../lastore/daemon.go:171
+#: ../../lastore/daemon.go:184
 msgid "Updates failed: it was interrupted."
-msgstr ""
+msgstr "Невдале оновлення: процес було перервано."
 
-#: ../../lastore/daemon.go:173
+#: ../../lastore/daemon.go:186
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
+"Невдале оновлення: процес було перервано. Будь ласка, поверніться до старої "
+"версії і повторіть спробу."
 
-#: ../../lastore/daemon.go:179
+#: ../../lastore/daemon.go:192
 msgid "Updates failed: DPKG error."
-msgstr ""
+msgstr "Невдале оновлення: помилка DPKG."
 
-#: ../../lastore/daemon.go:181
+#: ../../lastore/daemon.go:194
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
+"Невдале оновлення: помилка DPKG. Будь ласка, поверніться до старої версії і "
+"повторіть спробу."
 
-#: ../../lastore/daemon.go:185
+#: ../../lastore/daemon.go:198
 msgid "Updates failed: insufficient disk space."
-msgstr ""
+msgstr "Помилка оновлення: недостатньо місця на диску."
 
-#: ../../lastore/daemon.go:187
+#: ../../lastore/daemon.go:200
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
+"Невдале оновлення: недостатньо місця на диску. Будь ласка, поверніться до "
+"старої версії і повторіть спробу."
 
-#: ../../lastore/daemon.go:191
+#: ../../lastore/daemon.go:204
 msgid "Updates failed"
-msgstr ""
+msgstr "Не вдалося оновити"
 
-#: ../../lastore/daemon.go:193
+#: ../../lastore/daemon.go:206
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
+"Невдале оновлення: будь ласка, поверніться до старої версії і повторіть "
+"спробу."
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -1027,6 +1037,17 @@ msgstr ""
 "«%s» не пройдено перевіркою засобів захисту системи. Цю програму зараз не "
 "можна запускати."
 
+#: ../../service_trigger/msg.go:13
+#, c-format
+msgid ""
+"You cannot run the unverified \"%s\", but you can change the settings in "
+"Security Center."
+msgstr ""
+
+#: ../../service_trigger/msg.go:15
+msgid "Proceed"
+msgstr ""
+
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Акумулятор критично розряджено"
@@ -1040,41 +1061,41 @@ msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
 "мережі живлення"
 
-#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
-#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
+#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
+#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
 msgid "Power settings changed"
 msgstr "Параметри живлення змінено"
 
-#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Якщо закрито кришку,"
 
-#: ../../session/power/utils.go:498
+#: ../../session/power/utils.go:537
 msgid "When pressing the power button, "
 msgstr "Якщо натиснуто кнопку живлення,"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "ваш комп'ютер буде вимкнено"
 
-#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "ваш комп'ютер буде призупинено"
 
-#: ../../session/power/utils.go:512
+#: ../../session/power/utils.go:551
 msgid "your computer will hibernate"
 msgstr "ваш комп'ютер буде приспано"
 
-#: ../../session/power/utils.go:514
+#: ../../session/power/utils.go:553
 msgid "your monitor will turn off"
 msgstr "монітор буде вимкнено"
 
-#: ../../session/power/utils.go:516
+#: ../../session/power/utils.go:555
 msgid "your monitor will show the shutdown interface"
 msgstr "на вашому моніторі буде показано інтерфейс завершення роботи"
 
-#: ../../session/power/utils.go:518
+#: ../../session/power/utils.go:557
 msgid "it will do nothing to your computer"
 msgstr "ніяких дій із комп'ютером не буде виконано"
 

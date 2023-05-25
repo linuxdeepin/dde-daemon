@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 17:42+0800\n"
+"POT-Creation-Date: 2023-05-25 13:22+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Janusz Ruchała, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/linuxdeepin/teams/3617/pl/)\n"
@@ -60,14 +60,14 @@ msgstr "Taka nazwa już istnieje"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nazwa użytkownika musi zawierać od 3 do 32 znaków"
 
-#: ../../accounts/manager.go:540
+#: ../../accounts/manager.go:539
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Użytkownik \"%s\" już istniał wcześniej, więc jego dane zostaną "
 "zsynchronizowane"
 
-#: ../../accounts/user_ifc.go:660
+#: ../../accounts/user_ifc.go:669
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Tapeta systemu jest zablokowana. Skontaktuj się ze swoim administratorem."
@@ -493,11 +493,11 @@ msgstr "Zmieniono język systemu, proszę zalogować się ponownie"
 msgid "Failed to change system language, please try later"
 msgstr "Nie można zmienić języka systemu, proszę spróbować później"
 
-#: ../../lastore/daemon.go:171
+#: ../../lastore/daemon.go:184
 msgid "Updates failed: it was interrupted."
 msgstr "Błąd aktualizacji: została przerwana."
 
-#: ../../lastore/daemon.go:173
+#: ../../lastore/daemon.go:186
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
@@ -505,11 +505,11 @@ msgstr ""
 "Błąd aktualizacji: została przerwana. Przywróć system do starszej wersji i "
 "spróbuj ponownie."
 
-#: ../../lastore/daemon.go:179
+#: ../../lastore/daemon.go:192
 msgid "Updates failed: DPKG error."
 msgstr "Błąd aktualizacji: DPKG error."
 
-#: ../../lastore/daemon.go:181
+#: ../../lastore/daemon.go:194
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
@@ -517,11 +517,11 @@ msgstr ""
 "Błąd aktualizacji: DPKG error. Przywróć system do starszej wersji i spróbuj "
 "ponownie."
 
-#: ../../lastore/daemon.go:185
+#: ../../lastore/daemon.go:198
 msgid "Updates failed: insufficient disk space."
 msgstr "Błąd aktualizacji: za mało miejsca na dysku. "
 
-#: ../../lastore/daemon.go:187
+#: ../../lastore/daemon.go:200
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
@@ -529,11 +529,11 @@ msgstr ""
 "Błąd aktualizacji: za mało miejsca na dysku. Przywróć system do starszej "
 "wersji i spróbuj ponownie."
 
-#: ../../lastore/daemon.go:191
+#: ../../lastore/daemon.go:204
 msgid "Updates failed"
 msgstr "Błąd aktualizacji"
 
-#: ../../lastore/daemon.go:193
+#: ../../lastore/daemon.go:206
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
 "Błąd aktualizacji. Przywróć system do starszej wersji i spróbuj ponownie."
@@ -758,7 +758,7 @@ msgstr "Nie udało się zarejestrować w żądanej sieci GSM"
 
 #: ../../network/state_handler.go:57
 msgid "PIN check failed"
-msgstr "Wystąpił błąd przy sprawdzaniu PIN"
+msgstr "Nie udało się sprawdzić kodu PIN"
 
 #: ../../network/state_handler.go:58
 msgid "Necessary firmware for the device may be missed"
@@ -1037,6 +1037,17 @@ msgstr ""
 "\"%s\" nie przeszedł weryfikacji bezpieczeństwa systemu i nie można go teraz"
 " włączyć"
 
+#: ../../service_trigger/msg.go:13
+#, c-format
+msgid ""
+"You cannot run the unverified \"%s\", but you can change the settings in "
+"Security Center."
+msgstr ""
+
+#: ../../service_trigger/msg.go:15
+msgid "Proceed"
+msgstr ""
+
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Krytycznie niski poziom baterii"
@@ -1048,41 +1059,41 @@ msgstr "Krytycznie niski poziom baterii"
 msgid "Battery low, please plug in"
 msgstr "Niski stan poziomu baterii, podłącz komputer do zasilania"
 
-#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
-#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
+#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
+#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
 msgid "Power settings changed"
 msgstr "Ustawienia zasilania uległy zmianie"
 
-#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Kiedy pokrywa jest zamknięta,"
 
-#: ../../session/power/utils.go:498
+#: ../../session/power/utils.go:537
 msgid "When pressing the power button, "
 msgstr "Po naciśnięciu przycisku zasilania, "
 
-#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "komputer zostanie wyłączony"
 
-#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "komputer zostanie wstrzymany"
 
-#: ../../session/power/utils.go:512
+#: ../../session/power/utils.go:551
 msgid "your computer will hibernate"
 msgstr "komputer przejdzie w stan hibernacji"
 
-#: ../../session/power/utils.go:514
+#: ../../session/power/utils.go:553
 msgid "your monitor will turn off"
 msgstr "monitor zostanie wyłączony"
 
-#: ../../session/power/utils.go:516
+#: ../../session/power/utils.go:555
 msgid "your monitor will show the shutdown interface"
 msgstr "monitor wyświetli interfejs wyłączania"
 
-#: ../../session/power/utils.go:518
+#: ../../session/power/utils.go:557
 msgid "it will do nothing to your computer"
 msgstr "nic się nie stanie"
 
@@ -1107,28 +1118,28 @@ msgstr "Space"
 
 #: ../../timedate/manager_ifc.go:51
 msgid "Authentication is required to set the system time"
-msgstr "Aby ustawić czas systemowy wymagane jest uwierzytelnienie"
+msgstr "Wymagane jest uwierzytelnienie, aby ustawić czas systemowy"
 
 #: ../../timedate/manager_ifc.go:64
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
-"Aby kontrolować włączenie synchronizacji z czasu sieciowego wymagane jest "
-"uwierzytelnienie"
+"Wymagane jest uwierzytelnienie, aby kontrolować synchronizację z czasu "
+"sieciowego"
 
 #: ../../timedate/manager_ifc.go:74
 msgid "Authentication is required to change NTP server"
-msgstr "Uwierzytelnienie jest wymagane do zmiany serwera NTP"
+msgstr "Wymagane jest uwierzytelnienie do zmiany serwera NTP"
 
 #: ../../timedate/manager_ifc.go:114
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
-"Aby kontrolować zasoby lokalne RTC lub czas UTC konieczne jest "
-"uwierzytelnienie."
+"Wymagane jest uwierzytelnienie, aby kontrolować, czy RTC będzie przechowywać"
+" czas lokalny lub UTC."
 
 #: ../../timedate/manager_ifc.go:137
 msgid "Authentication is required to set the system timezone"
-msgstr "Aby ustawić strefę czasową systemu wymagane jest uwierzytelnienie"
+msgstr "Wymagane jest uwierzytelnienie, aby ustawić strefę czasową systemu"

@@ -9,16 +9,16 @@
 # مۇختەر مەخمۇت <yeganaaa@163.com>, 2021
 # Ug HushBeg <HushBeg@163.com>, 2022
 # deepiner, 2022
-# 阿迪力 买买提明 <251078110@qq.com>, 2022
+# 阿迪力 买买提明 <251078110@qq.com>, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 17:42+0800\n"
+"POT-Creation-Date: 2023-05-25 13:22+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2022\n"
+"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2023\n"
 "Language-Team: Uyghur (https://app.transifex.com/linuxdeepin/teams/3617/ug/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,15 +59,15 @@ msgstr "بۇ ئىسىم ئاللىبۇرۇن مەۋجۇت"
 msgid "Username must be between 3 and 32 characters"
 msgstr "ئىشلەتكۈچى ئىسمى 3 دىن 32 ھەرپ ئارىلىقىدا بولۇشى كېرەك"
 
-#: ../../accounts/manager.go:540
+#: ../../accounts/manager.go:539
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "ئىشلەتكۈچى %sئاللىبۇرۇن مەۋجۇت، بۇرۇنقى سانلىق مەلۇماتلار ماس قەدەملەندى"
 
-#: ../../accounts/user_ifc.go:660
+#: ../../accounts/user_ifc.go:669
 msgid "This system wallpaper is locked. Please contact your admin."
-msgstr ""
+msgstr "نۆۋەتتىكى تەگلىك قۇلۇپلانغان، باشقۇرغۇچى بىلەن ئالاقىلىشىڭ"
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -259,7 +259,7 @@ msgstr "بارلىق كۆزنەكلەر"
 
 #: ../../dock/app_info.go:72 ../../launcher/item.go:97
 msgid "(Linglong)"
-msgstr ""
+msgstr "(لىڭ لوڭ)"
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -490,43 +490,49 @@ msgstr "سىستېما تىلى ئۆزگەرتىلدى، چېكىنىپ قايت
 msgid "Failed to change system language, please try later"
 msgstr "سىستېما تىلىنى ئۆزگەرتىش مەغلۇپ بولدى، قايتا سىناپ بېقىڭ."
 
-#: ../../lastore/daemon.go:171
+#: ../../lastore/daemon.go:184
 msgid "Updates failed: it was interrupted."
-msgstr ""
+msgstr "يېڭىلاش ئۈزۈلۈپ قالغانلىقتىن بۇ قېتىملىق يېڭىلاش مەغلۇب بولدى"
 
-#: ../../lastore/daemon.go:173
+#: ../../lastore/daemon.go:186
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
+"يېڭىلاش ئۈزۈلۈپ قالغانلىقتىن بۇ قېتىملىق يېڭىلاش مەغلۇب بولدى، سىستېمىغا "
+"قايتىپ قايتا سىناپ بېقىڭ"
 
-#: ../../lastore/daemon.go:179
+#: ../../lastore/daemon.go:192
 msgid "Updates failed: DPKG error."
-msgstr ""
+msgstr "DPKG خاتالىقى تۈپەيلى  بۇ قېتىملىق يېڭىلاش مەغلۇب بولدى"
 
-#: ../../lastore/daemon.go:181
+#: ../../lastore/daemon.go:194
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
+"DPKG خاتالىقى تۈپەيلى بۇ قېتىملىق يېڭىلاش مەغلۇب بولدى، سىستېمىغا قايتىپ "
+"قايتا سىناپ بېقىڭ"
 
-#: ../../lastore/daemon.go:185
+#: ../../lastore/daemon.go:198
 msgid "Updates failed: insufficient disk space."
-msgstr ""
+msgstr "دىسكا سىغىمى يەتمىگەچكە بۇ قېتىملىق يېڭىلاش مەغلۇب بولدى"
 
-#: ../../lastore/daemon.go:187
+#: ../../lastore/daemon.go:200
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
+"دىسكا بوشلۇقى يېتىشمىگەچكە بۇ قېتىملىق يېڭىلاش مەغلۇب بولدى،  سىستېمىغا "
+"قايتىپ قايتا سىناپ بېقىڭ"
 
-#: ../../lastore/daemon.go:191
+#: ../../lastore/daemon.go:204
 msgid "Updates failed"
-msgstr ""
+msgstr "بۇ قېتىملىق يېڭىلاش مەغلۇب بولدى"
 
-#: ../../lastore/daemon.go:193
+#: ../../lastore/daemon.go:206
 msgid "Updates failed. Please roll back to the old version and try again."
-msgstr ""
+msgstr "بۇ قېتىملىق يېڭىلاش مەغلۇب بولدى، سىستېمىغا قايتىپ قايتا سىناپ بېقىڭ"
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -1020,6 +1026,19 @@ msgstr "ئۇلاندى"
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "«%s»سىستېما بىخەتەرلىك تەكشۈرۈشىدىن ئۆتەلمىدى، ئىجرا قىلغىلى بولمايدۇ"
 
+#: ../../service_trigger/msg.go:13
+#, c-format
+msgid ""
+"You cannot run the unverified \"%s\", but you can change the settings in "
+"Security Center."
+msgstr ""
+"«%s» سىستېما بىخەتەرلىك تەكشۈرۈشىدىن ئۆتەلمىدى، ئىجرا قىلغىلى بولمايدۇ، "
+"بىخەتەرلىك مەركىزى- بىخەتەرلىك قورالى-ئەپ بىخەتەرلىكىگە كىرىپ تەڭشەڭ"
+
+#: ../../service_trigger/msg.go:15
+msgid "Proceed"
+msgstr "كىرىش"
+
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "باتارېيەدە توك تۈگىدى"
@@ -1031,41 +1050,41 @@ msgstr "باتارېيەدە توك تۈگىدى"
 msgid "Battery low, please plug in"
 msgstr "باتارېيەدە توك ئاز قالدى، توكقا چېتىڭ"
 
-#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
-#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
+#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
+#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
 msgid "Power settings changed"
 msgstr "توك تەڭشىكىدە ئۆزگىرىش بولدى"
 
-#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "«خاتىرە كومپيۇتېرنىڭ ئېكرانى يېپىلغاندا»"
 
-#: ../../session/power/utils.go:498
+#: ../../session/power/utils.go:537
 msgid "When pressing the power button, "
 msgstr "«قوزغىتىش كۇنۇپكىسىنى باسقاندا»"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "تاقاشقا ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "كۈتۈش ھالىتىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:512
+#: ../../session/power/utils.go:551
 msgid "your computer will hibernate"
 msgstr "ئۇيقۇ ھالىتىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:514
+#: ../../session/power/utils.go:553
 msgid "your monitor will turn off"
 msgstr "ئېكراننى تاقاشقا ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:516
+#: ../../session/power/utils.go:555
 msgid "your monitor will show the shutdown interface"
 msgstr "تاقاش كۆرۈنمە يۈزىگە ئۆزگەرتىش"
 
-#: ../../session/power/utils.go:518
+#: ../../session/power/utils.go:557
 msgid "it will do nothing to your computer"
 msgstr "ھېچقانداق مەشغۇلات قىلماسلىققا ئۆزگەرتىش"
 

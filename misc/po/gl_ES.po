@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 17:42+0800\n"
+"POT-Creation-Date: 2023-05-25 13:22+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: 55794061bc336d90de42969fbdc28df8_7437f78 <f3b318f732e51e2854926463b55b3f0e_42535>, 2022\n"
 "Language-Team: Galician (Spain) (https://app.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
@@ -57,12 +57,12 @@ msgstr "O nome xa existe"
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuario ten de ter entre 3 e 32 caracteres"
 
-#: ../../accounts/manager.go:540
+#: ../../accounts/manager.go:539
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../accounts/user_ifc.go:660
+#: ../../accounts/user_ifc.go:669
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
@@ -487,41 +487,41 @@ msgstr "Cambiouse a lingua do sistema, saia e logo volva a entrar"
 msgid "Failed to change system language, please try later"
 msgstr "Erro ao cambiar a lingua do sistema. Proba máis tarde"
 
-#: ../../lastore/daemon.go:171
+#: ../../lastore/daemon.go:184
 msgid "Updates failed: it was interrupted."
 msgstr ""
 
-#: ../../lastore/daemon.go:173
+#: ../../lastore/daemon.go:186
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
 
-#: ../../lastore/daemon.go:179
+#: ../../lastore/daemon.go:192
 msgid "Updates failed: DPKG error."
 msgstr ""
 
-#: ../../lastore/daemon.go:181
+#: ../../lastore/daemon.go:194
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
 
-#: ../../lastore/daemon.go:185
+#: ../../lastore/daemon.go:198
 msgid "Updates failed: insufficient disk space."
 msgstr ""
 
-#: ../../lastore/daemon.go:187
+#: ../../lastore/daemon.go:200
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
 
-#: ../../lastore/daemon.go:191
+#: ../../lastore/daemon.go:204
 msgid "Updates failed"
 msgstr ""
 
-#: ../../lastore/daemon.go:193
+#: ../../lastore/daemon.go:206
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
 
@@ -1021,6 +1021,17 @@ msgstr ""
 "\"%s\" non superou a verificación de seguridade do sistema e non se pode "
 "executar agora"
 
+#: ../../service_trigger/msg.go:13
+#, c-format
+msgid ""
+"You cannot run the unverified \"%s\", but you can change the settings in "
+"Security Center."
+msgstr ""
+
+#: ../../service_trigger/msg.go:15
+msgid "Proceed"
+msgstr ""
+
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Batería moi baixa"
@@ -1032,41 +1043,41 @@ msgstr "Batería moi baixa"
 msgid "Battery low, please plug in"
 msgstr "Batería baixa, conécteo"
 
-#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
-#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
+#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
+#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
 msgid "Power settings changed"
 msgstr "A configuración de enerxía cambiou"
 
-#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Cando a tapa está pechada,"
 
-#: ../../session/power/utils.go:498
+#: ../../session/power/utils.go:537
 msgid "When pressing the power button, "
 msgstr "Cando presionas o botón de acendido,"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "o teu computador apagarase"
 
-#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "o teu computador suspenderase"
 
-#: ../../session/power/utils.go:512
+#: ../../session/power/utils.go:551
 msgid "your computer will hibernate"
 msgstr "o teu computador hibernará"
 
-#: ../../session/power/utils.go:514
+#: ../../session/power/utils.go:553
 msgid "your monitor will turn off"
 msgstr "o teu monitor apagarase"
 
-#: ../../session/power/utils.go:516
+#: ../../session/power/utils.go:555
 msgid "your monitor will show the shutdown interface"
 msgstr ""
 
-#: ../../session/power/utils.go:518
+#: ../../session/power/utils.go:557
 msgid "it will do nothing to your computer"
 msgstr "Non fará nada ao teu computador"
 

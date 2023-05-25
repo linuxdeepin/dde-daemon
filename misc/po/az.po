@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 17:42+0800\n"
+"POT-Creation-Date: 2023-05-25 13:22+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Xəyyam Qocayev <xxmn77@gmail.com>, 2023\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/linuxdeepin/teams/3617/az/)\n"
@@ -57,14 +57,14 @@ msgstr "Bu ad artıq var"
 msgid "Username must be between 3 and 32 characters"
 msgstr "İstifadəçi adı 3-dən 32-yədək simvollar arasında olmalıdır"
 
-#: ../../accounts/manager.go:540
+#: ../../accounts/manager.go:539
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "\"%s\" istifadəçisi əvvəl var idi və onun məlumatları eyniləşdirildi"
 
-#: ../../accounts/user_ifc.go:660
+#: ../../accounts/user_ifc.go:669
 msgid "This system wallpaper is locked. Please contact your admin."
-msgstr ""
+msgstr "Sistem fon şəkli kilidlənib. İnzibatçınıza müraciət edin."
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -255,7 +255,7 @@ msgstr "Bütün Pəncərələr"
 
 #: ../../dock/app_info.go:72 ../../launcher/item.go:97
 msgid "(Linglong)"
-msgstr ""
+msgstr "(Linglong)"
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -487,43 +487,49 @@ msgstr ""
 msgid "Failed to change system language, please try later"
 msgstr "Sistem dilinin dəyişdirilməsi baş tutmadı, lütfən sonra cəhd edin"
 
-#: ../../lastore/daemon.go:171
+#: ../../lastore/daemon.go:184
 msgid "Updates failed: it was interrupted."
-msgstr ""
+msgstr "Yenilənmə baş tutmadı: yarımçıq kəsildi."
 
-#: ../../lastore/daemon.go:173
+#: ../../lastore/daemon.go:186
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
+"Yenilənmə baş tutmadı: o yarımçıq kəsildi. Köhnə versiyaya qayıtmanız və "
+"yenidən cəhd etməniz xahiş olunur."
 
-#: ../../lastore/daemon.go:179
+#: ../../lastore/daemon.go:192
 msgid "Updates failed: DPKG error."
-msgstr ""
+msgstr "Yenilənmə baş tutmadı: DPKG xətası."
 
-#: ../../lastore/daemon.go:181
+#: ../../lastore/daemon.go:194
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
+"Yenilənmə baş tutmadı: DPKG xətası. Köhnə versiyaya qayıdın və yenidən cəhd "
+"edin."
 
-#: ../../lastore/daemon.go:185
+#: ../../lastore/daemon.go:198
 msgid "Updates failed: insufficient disk space."
-msgstr ""
+msgstr "Yenilənmə baş tutmadı: diskdə boş sahə azdır."
 
-#: ../../lastore/daemon.go:187
+#: ../../lastore/daemon.go:200
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
+"Yenilənmə baş tutmadı: disk sahəsi azdır. Köhnə versiyaya qayıdın və yenidən"
+" cəhd edin."
 
-#: ../../lastore/daemon.go:191
+#: ../../lastore/daemon.go:204
 msgid "Updates failed"
-msgstr ""
+msgstr "Yenilənmə baş tutmadı"
 
-#: ../../lastore/daemon.go:193
+#: ../../lastore/daemon.go:206
 msgid "Updates failed. Please roll back to the old version and try again."
-msgstr ""
+msgstr "Yenilənmə baş tutmadı: Köhnə versiyaya qayıdın və yenidən cəhd edin."
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -1021,6 +1027,17 @@ msgstr ""
 "\"%s\" sistemin təhlükəsizlik yoxlamasından keçmədi və hal-hazırda işə "
 "salına bilməz"
 
+#: ../../service_trigger/msg.go:13
+#, c-format
+msgid ""
+"You cannot run the unverified \"%s\", but you can change the settings in "
+"Security Center."
+msgstr ""
+
+#: ../../service_trigger/msg.go:15
+msgid "Proceed"
+msgstr ""
+
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Batareya çox zəifləyib"
@@ -1032,41 +1049,41 @@ msgstr "Batareya çox zəifləyib"
 msgid "Battery low, please plug in"
 msgstr "Batareya zəifdir, elektrik şəbəkəsinə qoşun"
 
-#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
-#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
+#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
+#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
 msgid "Power settings changed"
 msgstr "Enerji ayarları dəyişdirildi"
 
-#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Qapaq bağlandığında"
 
-#: ../../session/power/utils.go:498
+#: ../../session/power/utils.go:537
 msgid "When pressing the power button, "
 msgstr "Güc düyməsini basdıqda,"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "komputeriniz sönəcəkdir"
 
-#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "komputeriniz dayandırılacaqdır"
 
-#: ../../session/power/utils.go:512
+#: ../../session/power/utils.go:551
 msgid "your computer will hibernate"
 msgstr "komputeriniz yuxu rejiminə keçəcəkdir"
 
-#: ../../session/power/utils.go:514
+#: ../../session/power/utils.go:553
 msgid "your monitor will turn off"
 msgstr "monitor sönəcəkdir"
 
-#: ../../session/power/utils.go:516
+#: ../../session/power/utils.go:555
 msgid "your monitor will show the shutdown interface"
 msgstr "monitorunuz \"söndürmək\" menyusunu göstərəcək"
 
-#: ../../session/power/utils.go:518
+#: ../../session/power/utils.go:557
 msgid "it will do nothing to your computer"
 msgstr "komputerinizlə heç nə etməyəcəkdir"
 

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 17:42+0800\n"
+"POT-Creation-Date: 2023-05-25 13:22+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/linuxdeepin/teams/3617/fi/)\n"
@@ -61,14 +61,16 @@ msgstr "Nimi on jo olemassa"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Käyttäjätunnuksen on oltava 3-32 merkin pituinen"
 
-#: ../../accounts/manager.go:540
+#: ../../accounts/manager.go:539
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "Käyttäjä \"%s\" oli aiemmin ja sen tiedot synkronoidaan"
 
-#: ../../accounts/user_ifc.go:660
+#: ../../accounts/user_ifc.go:669
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
+"Tämä järjestelmän taustakuva on lukittu. Ota yhteyttä "
+"järjestelmänvalvojaasi."
 
 #: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
@@ -259,7 +261,7 @@ msgstr "Kaikki ikkunat"
 
 #: ../../dock/app_info.go:72 ../../launcher/item.go:97
 msgid "(Linglong)"
-msgstr ""
+msgstr "(Linglong)"
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -490,43 +492,50 @@ msgstr "Järjestelmän kieli muuttui, kirjaudu ulos ja kirjaudu sisään"
 msgid "Failed to change system language, please try later"
 msgstr "Järjestelmän kielen vaihtaminen epäonnistui, yritä myöhemmin"
 
-#: ../../lastore/daemon.go:171
+#: ../../lastore/daemon.go:184
 msgid "Updates failed: it was interrupted."
-msgstr ""
+msgstr "Päivitykset epäonnistuivat: toiminta keskeytettiin."
 
-#: ../../lastore/daemon.go:173
+#: ../../lastore/daemon.go:186
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
+"Päivitykset epäonnistuivat: toiminta keskeytettiin. Palaa vanhaan versioon "
+"ja yritä uudelleen."
 
-#: ../../lastore/daemon.go:179
+#: ../../lastore/daemon.go:192
 msgid "Updates failed: DPKG error."
-msgstr ""
+msgstr "Päivitykset epäonnistuivat: DPKG-virhe."
 
-#: ../../lastore/daemon.go:181
+#: ../../lastore/daemon.go:194
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
+"Päivitykset epäonnistuivat: DPKG-virhe. Palaa vanhaan versioon ja yritä "
+"uudelleen."
 
-#: ../../lastore/daemon.go:185
+#: ../../lastore/daemon.go:198
 msgid "Updates failed: insufficient disk space."
-msgstr ""
+msgstr "Päivitykset epäonnistuivat: levytila ei riitä."
 
-#: ../../lastore/daemon.go:187
+#: ../../lastore/daemon.go:200
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
+"Päivitykset epäonnistuivat: levytila ei riitä. Palaa vanhaan versioon ja "
+"yritä uudelleen."
 
-#: ../../lastore/daemon.go:191
+#: ../../lastore/daemon.go:204
 msgid "Updates failed"
-msgstr ""
+msgstr "Päivitykset epäonnistuivat"
 
-#: ../../lastore/daemon.go:193
+#: ../../lastore/daemon.go:206
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
+"Päivitykset epäonnistuivat. Palaa vanhaan versioon ja yritä uudelleen."
 
 #: ../../launcher/manager_uninstall.go:56
 msgid "%q removed successfully"
@@ -1019,6 +1028,17 @@ msgstr ""
 "\"%s\" ei läpäistänyt järjestelmän suojauksen vahvistusta, eikä sitä voi "
 "suorittaa nyt"
 
+#: ../../service_trigger/msg.go:13
+#, c-format
+msgid ""
+"You cannot run the unverified \"%s\", but you can change the settings in "
+"Security Center."
+msgstr ""
+
+#: ../../service_trigger/msg.go:15
+msgid "Proceed"
+msgstr ""
+
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
 msgstr "Akku kriittisesti alhainen"
@@ -1030,41 +1050,41 @@ msgstr "Akku kriittisesti alhainen"
 msgid "Battery low, please plug in"
 msgstr "Virtataso alhainen, ole hyvä ja yhdistä verkkovirtaan"
 
-#: ../../session/power/utils.go:449 ../../session/power/utils.go:456
-#: ../../session/power/utils.go:463 ../../session/power/utils.go:470
+#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
+#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
 msgid "Power settings changed"
 msgstr "Virta-asetukset muuttuneet"
 
-#: ../../session/power/utils.go:494 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Kun kansi on kiinni,"
 
-#: ../../session/power/utils.go:498
+#: ../../session/power/utils.go:537
 msgid "When pressing the power button, "
 msgstr "Kun painat virtapainiketta,"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "tietokoneesi sammuu"
 
-#: ../../session/power/utils.go:510 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "tietokoneesi siirtyy lepotilaan"
 
-#: ../../session/power/utils.go:512
+#: ../../session/power/utils.go:551
 msgid "your computer will hibernate"
 msgstr "tietokoneesi siirtyy valmiustilaan"
 
-#: ../../session/power/utils.go:514
+#: ../../session/power/utils.go:553
 msgid "your monitor will turn off"
 msgstr "näyttö sammuu"
 
-#: ../../session/power/utils.go:516
+#: ../../session/power/utils.go:555
 msgid "your monitor will show the shutdown interface"
 msgstr "näytössäsi näkyy sammutusliittymä"
 
-#: ../../session/power/utils.go:518
+#: ../../session/power/utils.go:557
 msgid "it will do nothing to your computer"
 msgstr "se ei tee mitään"
 
