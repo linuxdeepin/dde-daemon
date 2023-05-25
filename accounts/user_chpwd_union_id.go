@@ -20,6 +20,7 @@ import (
 	"sync"
 	"syscall"
 	"time"
+	"io/ioutil"
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
@@ -672,14 +673,34 @@ func doSetPwdWithUnionID(u *User, sender dbus.Sender, count int) error {
 func removeLoginKeyring(user *User) (err error) {
 	//白盒密钥生效后，就不需要再删除keyring文件
 	dir := path.Join(user.HomeDir, "/.local/share/deepin-keyrings-wb")
-	if dutils.IsFileExist(dir) && dutils.IsFileExist(fmt.Sprintf("%s/MasterKey_File", dir)) && dutils.IsFileExist(fmt.Sprintf("%s/WB_UFile", dir)){
-		logger.Info("[removeLoginKeyring] The WhiteBox keyring password has taken effect.")
-		return
+	isUseWhiteboxFunc := func () bool {
+		statusFile := fmt.Sprintf("%s/status", dir)
+		if dutils.IsFileExist(dir) && dutils.IsFileExist(statusFile) {
+			content, err := ioutil.ReadFile(statusFile)
+			if err != nil {
+				return false
+			}
+			if len(content) < 2 {
+				return false
+			}
+			if content[0] == '1' && content[1] == '1' {
+				logger.Info("[removeLoginKeyring] The WhiteBox keyring password has taken effect.")
+				return true
+			}
+		}
+		return false
 	}
-	// FIXME
-	// greeter 界面触发该功能时 user 的 session bus 不存在,
-	// 所以只能简单地直接删除文件, 而不可能通过 keyring 的 daemon 删除密钥环
-	// FIXME login keyring 的位置有没可能变化?
-	err = os.Remove(path.Join(user.HomeDir + "/.local/share/keyrings/login.keyring"))
+
+	if !isUseWhiteboxFunc() {
+		// FIXME
+		// greeter 界面触发该功能时 user 的 session bus 不存在,
+		// 所以只能简单地直接删除文件, 而不可能通过 keyring 的 daemon 删除密钥环
+		// FIXME login keyring 的位置有没可能变化?
+		loginFile := fmt.Sprintf("%s/login.keyring", dir)
+		if dutils.IsFileExist(loginFile) {
+			err = os.Remove(loginFile)
+		}
+	}
+
 	return
 }
