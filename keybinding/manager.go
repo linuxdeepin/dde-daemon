@@ -104,6 +104,7 @@ type Manager struct {
 
 	enableListenGSettings   bool
 	delayNetworkStateChange bool
+	canExcuteSuspendOrHiberate    bool
 	clickNum                uint32
 	shortcutCmd             string
 	shortcutKey             string
@@ -205,7 +206,24 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	if _useWayland {
 		m.waylandOutputMgr = kwayland.NewOutputManagement(sessionBus)
-		m.login1Manager = login1.NewManager(sysBus)
+	}
+	m.login1Manager = login1.NewManager(sysBus)
+	m.login1Manager.InitSignalExt(m.systemSigLoop, true)
+	_, err = m.login1Manager.ConnectPrepareForSleep(func(isSleep bool) {
+		logger.Debugf("PreparingForSleep status changed, isSleep: %v", isSleep)
+
+		// 待机或休眠时，唤醒后的1秒内不响应待机和休眠操作，避免按电源键唤醒时再次进入待机或休眠
+		if !isSleep {
+			m.canExcuteSuspendOrHiberate = false
+			time.AfterFunc(1*time.Second, func() {
+				m.canExcuteSuspendOrHiberate = true
+			})
+		} else {
+			m.canExcuteSuspendOrHiberate = false
+		}
+	})
+	if err != nil {
+		logger.Warning("failed to connect signal PrepareForSleep:", err)
 	}
 
 	m.init()
@@ -225,6 +243,7 @@ func (m *Manager) init() {
 	sessionBus := m.service.Conn()
 	sysBus, _ := dbus.SystemBus()
 	m.delayNetworkStateChange = true
+	m.canExcuteSuspendOrHiberate = true
 
 	// init settings
 	m.gsSystem = gio.NewSettings(gsSchemaSystem)

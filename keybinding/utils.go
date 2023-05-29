@@ -119,6 +119,11 @@ func (m *Manager) systemSuspend() {
 
 // 为了处理待机闪屏的问题，通过前端进行待机，前端会在待机前显示一个纯黑的界面
 func (m *Manager) systemSuspendByFront() {
+	if !m.canExcuteSuspendOrHiberate {
+		logger.Info("Avoid waking up and immediately going into suspend.")
+		return
+	}
+
 	if !m.canSuspend() {
 		logger.Info("can not suspend")
 		return
@@ -146,6 +151,11 @@ func systemSuspend() {
 }
 
 func (m *Manager) systemHibernate() {
+	if !m.canExcuteSuspendOrHiberate {
+		logger.Info("Avoid waking up and immediately going into suspend.")
+		return
+	}
+
 	if !m.canHibernate() {
 		logger.Info("can not Hibernate")
 		return
