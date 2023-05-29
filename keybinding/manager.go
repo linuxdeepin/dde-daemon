@@ -105,6 +105,7 @@ type Manager struct {
 	enableListenGSettings   bool
 	delayNetworkStateChange bool
 	canExcuteSuspendOrHiberate    bool
+	prepareForSleep			bool
 	clickNum                uint32
 	shortcutCmd             string
 	shortcutKey             string
@@ -211,7 +212,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.login1Manager.InitSignalExt(m.systemSigLoop, true)
 	_, err = m.login1Manager.ConnectPrepareForSleep(func(isSleep bool) {
 		logger.Debugf("PreparingForSleep status changed, isSleep: %v", isSleep)
-
+		m.prepareForSleep = isSleep
 		// 待机或休眠时，唤醒后的1秒内不响应待机和休眠操作，避免按电源键唤醒时再次进入待机或休眠
 		if !isSleep {
 			m.canExcuteSuspendOrHiberate = false
@@ -225,6 +226,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		logger.Warning("failed to connect signal PrepareForSleep:", err)
 	}
+	m.prepareForSleep, _ = m.login1Manager.PreparingForSleep().Get(0)
 
 	m.init()
 
