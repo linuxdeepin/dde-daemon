@@ -37,8 +37,8 @@ const (
 	pstatePath                        = "/sys/devices/system/cpu/intel_pstate"
 	amdGPUPath                        = "/sys/class/drm/card0/device/power_dpm_force_performance_level"
 	configDefaultGovFilePattern       = `config-[0-9\.]+-.*-desktop`
-	configDefaultGovContentDDEPattern = `CONFIG_CPU_FREQ_DEFAULT_GOV_DDE_(\w+)`
-	configDefaultGovContentPattern    = `CONFIG_CPU_FREQ_DEFAULT_GOV_(\w+)`
+	configDefaultGovContentDDEPattern = `^\s*CONFIG_CPU_FREQ_DEFAULT_GOV_DDE_(\w+)`
+	configDefaultGovContentPattern    = `^\s*CONFIG_CPU_FREQ_DEFAULT_GOV_(\w+)`
 )
 
 const (
@@ -423,10 +423,7 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 		}
 	}
 
-	if !m.IsBalanceSupported {
-		logger.Info(" init end. getSupportGovernors ： ", getSupportGovernors(), " , m.balanceScalingGovernor : ", m.balanceScalingGovernor)
-		return
-	}
+	logger.Info(" init end. m.balanceScalingGovernor : ", m.balanceScalingGovernor)
 }
 
 func (m *Manager) handleUEvent(client *gudev.Client, action string, device *gudev.Device) {
