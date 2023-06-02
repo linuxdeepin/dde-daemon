@@ -1011,7 +1011,7 @@ msgstr "“%s”没有通过系统安全验证，无法运行"
 msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
-msgstr "\"%s\"没有通过系统安全验证，无法运行，请请前往安全中心-安全工具-应用安全进行调整"
+msgstr "\"%s\"没有通过系统安全验证，无法运行，请前往安全中心-安全工具-应用安全进行调整"
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"

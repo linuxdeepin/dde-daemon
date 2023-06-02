@@ -1043,10 +1043,12 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Ви не зможете запустити неперевірений «%s», але ви можете змінити параметри "
+"у «Центрі безпеки»."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Продовжити"
 
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"

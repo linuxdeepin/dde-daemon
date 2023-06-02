@@ -1011,7 +1011,7 @@ msgstr "“%s”沒有通過系統安全驗證，無法執行"
 msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
-msgstr "\"%s\"沒有通過系統安全驗證，無法執行，請請前往安全中心-安全工具-應用安全進行調整"
+msgstr "\"%s\"沒有通過系統安全驗證，無法執行，請前往安全中心-安全工具-應用安全進行調整"
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"

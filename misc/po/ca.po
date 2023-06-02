@@ -1049,10 +1049,12 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"No podeu executar %s sense verificar, però podeu canviar-ne la configuració "
+"al Centre de seguretat."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Precedeix-hi"
 
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"

@@ -30,7 +30,7 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr "Prosimy wpisać hasło o długości nie krótszej niż 8 znaków"
+msgstr "Wprowadź hasło, które zawiera co najmniej 8 znaków"
 
 #: ../../accounts/checkers/password.go:40
 msgid ""
@@ -1043,10 +1043,12 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Nie można uruchomić niezweryfikowanej aplikacji \"%s\", możesz zmienić to w "
+"Centrum bezpieczeństwa."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Kontynuuj"
 
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"

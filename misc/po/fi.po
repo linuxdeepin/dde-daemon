@@ -1034,10 +1034,12 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Et voi suorittaa vahvistamatonta ohjelmaa \"%s\", mutta voit muuttaa sen "
+"asetuksia Turvakeskuksessa."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Jatka"
 
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"

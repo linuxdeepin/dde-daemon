@@ -1037,10 +1037,12 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"S’mund të xhironi “%s” e paverifikuar, por mund të ndryshoni rregullimet te "
+"Qendër Sigurie."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Vazhdo"
 
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"

@@ -1046,10 +1046,12 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Je kunt het niet-ondertekende programma “%s” niet uitvoeren, tenzij je de "
+"instellingen in het beveiligingscentrum aanpast."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Doorgaan"
 
 #: ../../session/power/manager_events.go:203
 msgid "Battery critically low"
