@@ -59,6 +59,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 func (v *Mouse) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
+			Name:   "Enable",
+			Fn:     v.Enable,
+			InArgs: []string{"enabled"},
+		},
+		{
 			Name: "Reset",
 			Fn:   v.Reset,
 		},
@@ -66,6 +71,11 @@ func (v *Mouse) GetExportedMethods() dbusutil.ExportedMethods {
 }
 func (v *Touchpad) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
+		{
+			Name:   "Enable",
+			Fn:     v.Enable,
+			InArgs: []string{"enabled"},
+		},
 		{
 			Name: "Reset",
 			Fn:   v.Reset,
