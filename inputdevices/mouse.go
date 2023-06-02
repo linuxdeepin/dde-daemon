@@ -34,6 +34,7 @@ type Mouse struct {
 	Exist      bool
 
 	// dbusutil-gen: ignore-below
+	Enabled               bool        `prop:"access:rw"`
 	LeftHanded            gsprop.Bool `prop:"access:rw"`
 	DisableTpad           gsprop.Bool `prop:"access:rw"`
 	NaturalScroll         gsprop.Bool `prop:"access:rw"`
@@ -109,6 +110,10 @@ func (m *Mouse) updateDXMouses() {
 			continue
 		}
 
+		if info.IsEnabled() {
+			m.Enabled = true
+		}
+
 		if !globalWayland {
 			tmp := m.devInfos.get(info.Id)
 			if tmp != nil {
@@ -163,6 +168,8 @@ func (m *Mouse) enable(enabled bool) error {
 			return err
 		}
 	}
+
+	m.Enabled = enabled
 
 	return nil
 }
