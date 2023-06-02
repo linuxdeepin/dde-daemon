@@ -1,3 +1,14 @@
+dde-daemon (5.15.12.3) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 修复战斗版镜像待机/休眠后无法通过电源键唤醒的问题(Bug: 196477)(Influence: 待机/休眠功能)
+  * fix: 修复待机唤醒后黑屏问题(Bug: 196477)(Influence: 修复待机唤醒后黑屏问题)
+  * fix: 修复平衡模式错误问题(Bug: 199681)(Influence: 无)
+  * chore: 更新翻译(Task: 267299)(Influence: 翻译)
+  * fix: 第一次进入登陆界面界面缩放异常(Bug: 202729)(Influence: 升级之后缩放)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Fri, 02 Jun 2023 17:07:13 +0800
+
 dde-daemon (5.15.12.2) unstable; urgency=medium
 
   [ Deepin Packages Builder ]
