@@ -6,7 +6,7 @@ package inputdevices
 
 import (
 	"github.com/godbus/dbus/v5"
-	"github.com/linuxdeepin/dde-daemon/langselector1"
+	langselector "github.com/linuxdeepin/dde-daemon/langselector1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -14,6 +14,14 @@ func (m *Mouse) Reset() *dbus.Error {
 	for _, key := range m.setting.ListKeys() {
 		m.setting.Reset(key)
 	}
+	return nil
+}
+
+func (m *Mouse) Enable(enabled bool) *dbus.Error {
+	if err := m.enable(enabled); err != nil {
+		return dbusutil.ToError(err)
+	}
+
 	return nil
 }
 
@@ -28,6 +36,11 @@ func (tpad *Touchpad) Reset() *dbus.Error {
 	for _, key := range tpad.setting.ListKeys() {
 		tpad.setting.Reset(key)
 	}
+	return nil
+}
+
+func (tpad *Touchpad) Enable(enabled bool) *dbus.Error {
+	tpad.enable(enabled)
 	return nil
 }
 

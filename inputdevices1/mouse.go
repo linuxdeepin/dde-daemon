@@ -157,6 +157,19 @@ func (m *Mouse) disableTouchPad() {
 	touchPad.enable(false)
 }
 
+func (m *Mouse) enable(enabled bool) error {
+	for _, v := range m.devInfos {
+		err := v.Enable(enabled)
+		if err != nil {
+			logger.Debugf("Enable left handed for '%d - %v' failed: %v",
+				v.Id, v.Name, err)
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Mouse) enableLeftHanded() {
 	enabled := m.LeftHanded.Get()
 	for _, v := range m.devInfos {
