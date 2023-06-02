@@ -252,6 +252,7 @@ func (tpad *Touchpad) enable(enabled bool) {
 	}
 
 	enableGesture(enabled)
+	tpad.TPadEnable.Set(enabled)
 }
 
 func (tpad *Touchpad) enableLeftHanded() {
