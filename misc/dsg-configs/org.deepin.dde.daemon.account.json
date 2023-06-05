@@ -1,0 +1,17 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+    "isTerminalLocked": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "isTerminalLocked",
+      "name[zh_CN]": "终端是否锁定",
+      "description": "终端是否锁定",
+      "permissions": "readwrite",
+      "visibility": "private"
+    }
+  }
+}

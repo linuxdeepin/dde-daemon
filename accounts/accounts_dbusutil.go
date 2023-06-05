@@ -2,32 +2,6 @@
 
 package accounts
 
-func (v *Manager) setPropAllowGuest(value bool) (changed bool) {
-	if v.AllowGuest != value {
-		v.AllowGuest = value
-		v.emitPropChangedAllowGuest(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedAllowGuest(value bool) error {
-	return v.service.EmitPropertyChanged(v, "AllowGuest", value)
-}
-
-func (v *Manager) setPropGroupList(value []string) (changed bool) {
-	if !isStrvEqual(v.GroupList, value) {
-		v.GroupList = value
-		v.emitPropChangedGroupList(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedGroupList(value []string) error {
-	return v.service.EmitPropertyChanged(v, "GroupList", value)
-}
-
 func (v *User) setPropUserName(value string) (changed bool) {
 	if v.UserName != value {
 		v.UserName = value
@@ -469,4 +443,43 @@ func (v *User) setPropHistoryLayout(value []string) {
 
 func (v *User) emitPropChangedHistoryLayout(value []string) error {
 	return v.service.EmitPropertyChanged(v, "HistoryLayout", value)
+}
+
+func (v *Manager) setPropAllowGuest(value bool) (changed bool) {
+	if v.AllowGuest != value {
+		v.AllowGuest = value
+		v.emitPropChangedAllowGuest(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedAllowGuest(value bool) error {
+	return v.service.EmitPropertyChanged(v, "AllowGuest", value)
+}
+
+func (v *Manager) setPropGroupList(value []string) (changed bool) {
+	if !isStrvEqual(v.GroupList, value) {
+		v.GroupList = value
+		v.emitPropChangedGroupList(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedGroupList(value []string) error {
+	return v.service.EmitPropertyChanged(v, "GroupList", value)
+}
+
+func (v *Manager) setPropIsTerminalLocked(value bool) (changed bool) {
+	if v.IsTerminalLocked != value {
+		v.IsTerminalLocked = value
+		v.emitPropChangedIsTerminalLocked(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedIsTerminalLocked(value bool) error {
+	return v.service.EmitPropertyChanged(v, "IsTerminalLocked", value)
 }

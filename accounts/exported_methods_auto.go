@@ -72,15 +72,15 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"user"},
 		},
 		{
-			Name:    "GetGroups",
-			Fn:      v.GetGroups,
-			OutArgs: []string{"groups"},
-		},
-		{
 			Name:    "GetGroupInfoByName",
 			Fn:      v.GetGroupInfoByName,
 			InArgs:  []string{"name"},
 			OutArgs: []string{"groupInfo"},
+		},
+		{
+			Name:    "GetGroups",
+			Fn:      v.GetGroups,
+			OutArgs: []string{"groups"},
 		},
 		{
 			Name:    "GetPresetGroups",
@@ -109,6 +109,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:    "RandUserIcon",
 			Fn:      v.RandUserIcon,
 			OutArgs: []string{"iconFile"},
+		},
+		{
+			Name:   "SetTerminalLocked",
+			Fn:     v.SetTerminalLocked,
+			InArgs: []string{"locked"},
 		},
 	}
 }

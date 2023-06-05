@@ -320,34 +320,7 @@ func (u *User) SetAutomaticLogin(sender dbus.Sender, enabled bool) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
-	u.PropsMu.Lock()
-	defer u.PropsMu.Unlock()
-
-	if u.Locked {
-		return dbusutil.ToError(fmt.Errorf("user %s has been locked", u.UserName))
-	}
-
-	if u.AutomaticLogin == enabled {
-		return nil
-	}
-
-	var name = u.UserName
-	if !enabled {
-		name = ""
-	}
-
-	session := u.XSession
-	if session == "" {
-		session = getUserSession(u.HomeDir)
-	}
-	if err := users.SetAutoLoginUser(name, session); err != nil {
-		logger.Warning("DoAction: set auto login failed:", err)
-		return dbusutil.ToError(err)
-	}
-
-	u.AutomaticLogin = enabled
-	_ = u.emitPropChangedAutomaticLogin(enabled)
-	return nil
+	return u.setAutomaticLogin(enabled)
 }
 
 func (u *User) EnableNoPasswdLogin(sender dbus.Sender, enabled bool) *dbus.Error {

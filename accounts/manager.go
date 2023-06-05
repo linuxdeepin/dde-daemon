@@ -18,6 +18,7 @@ import (
 
 	dbus "github.com/godbus/dbus"
 	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/tasker"
@@ -57,6 +58,14 @@ type InterfaceConfig struct {
 	Interface string `json:"interface"`
 }
 
+const (
+	dsettingsAppID             = "org.deepin.dde.daemon"
+	dsettingsAccountName       = "org.deepin.dde.daemon.account"
+	dsettingsIsTerminalLocked  = "isTerminalLocked"
+	gsSchemaDdeControlCenter   = "com.deepin.dde.control-center"
+	settingKeyAutoLoginVisable = "auto-login-visable"
+)
+
 //go:generate dbusutil-gen -type Manager,User manager.go user.go
 //go:generate dbusutil-gen em -type Manager,User,ImageBlur
 
@@ -87,6 +96,8 @@ type Manager struct {
 	udcpCache        udcp.UdcpCache
 	userConfig       DefaultDomainUserConfig
 	domainUserMapMu  sync.Mutex
+	dsAccount        configManager.Manager
+	IsTerminalLocked bool
 
 	//nolint
 	signals *struct {
@@ -122,6 +133,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 	m.AllowGuest = isGuestUserEnabled()
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
+	m.initAccountDSettings()
 
 	// 检测到系统加入LDAP域后，才去初始化域用户信息
 	ret, err := m.isJoinLDAPDoamin()
@@ -130,6 +142,15 @@ func NewManager(service *dbusutil.Service) *Manager {
 			m.initDomainUsers()
 		}
 	}
+
+	if m.IsTerminalLocked {
+		for _, u := range m.usersMap {
+			if u.AutomaticLogin {
+				u.setAutomaticLogin(false)
+			}
+		}
+	}
+
 	m.GroupList, _ = m.GetGroups()
 	m.watcher = dutils.NewWatchProxy()
 	if m.watcher != nil {
@@ -635,4 +656,30 @@ func (m *Manager) checkGroupCanChange(name string) bool {
 		return false
 	}
 	return gid >= 1000
+}
+
+func (m *Manager) initAccountDSettings() {
+	ds := configManager.NewConfigManager(m.sysSigLoop.Conn())
+
+	accountPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsAccountName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	m.dsAccount, err = configManager.NewManager(m.sysSigLoop.Conn(), accountPath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	v, err := m.dsAccount.Value(0, dsettingsIsTerminalLocked)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	if data, ok := v.Value().(bool); ok {
+		m.IsTerminalLocked = data
+	}
 }

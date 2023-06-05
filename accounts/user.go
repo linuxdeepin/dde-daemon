@@ -7,6 +7,7 @@ package accounts
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -18,7 +19,7 @@ import (
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
 	authenticate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.authenticate"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.uadp"
+	uadp "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.uadp"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
@@ -878,4 +879,35 @@ func loadUserConfigInfo(u *User) {
 	}
 
 	u.checkLeftSpace()
+}
+
+func (u *User) setAutomaticLogin(enabled bool) *dbus.Error {
+	u.PropsMu.Lock()
+	defer u.PropsMu.Unlock()
+
+	if u.Locked {
+		return dbusutil.ToError(fmt.Errorf("user %s has been locked", u.UserName))
+	}
+
+	if u.AutomaticLogin == enabled {
+		return nil
+	}
+
+	var name = u.UserName
+	if !enabled {
+		name = ""
+	}
+
+	session := u.XSession
+	if session == "" {
+		session = getUserSession(u.HomeDir)
+	}
+	if err := users.SetAutoLoginUser(name, session); err != nil {
+		logger.Warning("DoAction: set auto login failed:", err)
+		return dbusutil.ToError(err)
+	}
+
+	u.AutomaticLogin = enabled
+	_ = u.emitPropChangedAutomaticLogin(enabled)
+	return nil
 }

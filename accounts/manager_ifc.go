@@ -17,6 +17,7 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts/checkers"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
+	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/procfs"
@@ -509,5 +510,50 @@ func (m *Manager) ModifyGroup(sender dbus.Sender, currentGroupName string, newGr
 	}
 	groupList, _ := m.GetGroups()
 	m.setPropGroupList(groupList)
+	return nil
+}
+
+func (m *Manager) SetTerminalLocked(sender dbus.Sender, locked bool) *dbus.Error {
+	logger.Infof("SetTerminalLocked  snder: %s, locked: %t", sender, locked)
+	if m.IsTerminalLocked == locked {
+		return dbusutil.ToError(fmt.Errorf("current terminal lock is equal set locked: %t", locked))
+	}
+
+	if locked {
+		sessions, err := m.login1Manager.ListSessions(0)
+		if err != nil {
+			logger.Warning("Failed to list sessions:", err)
+			return dbusutil.ToError(err)
+		}
+
+		for _, session := range sessions {
+			core, err := login1.NewSession(m.service.Conn(), session.Path)
+			if err != nil {
+				logger.Warningf("new login1 session failed:%v", err)
+				return dbusutil.ToError(err)
+			}
+
+			err = core.Terminate(0)
+			if err != nil {
+				logger.Warningf("new login1 session failed:%v", err)
+			}
+		}
+	}
+
+	err := m.dsAccount.SetValue(0, dsettingsIsTerminalLocked, dbus.MakeVariant(locked))
+	if err != nil {
+		logger.Warningf("setDsgData key : %s ,value : %t err : %s", dsettingsIsTerminalLocked, locked, err)
+		return dbusutil.ToError(err)
+	}
+
+	if locked {
+		for _, u := range m.usersMap {
+			if u.AutomaticLogin {
+				u.setAutomaticLogin(false)
+			}
+		}
+	}
+
+	m.setPropIsTerminalLocked(locked)
 	return nil
 }
