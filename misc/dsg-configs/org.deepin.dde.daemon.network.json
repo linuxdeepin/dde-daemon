@@ -12,15 +12,15 @@
           "permissions": "readwrite",
           "visibility": "private"
       },
-      "wifiOSDEnable": {
-          "value": true,
-          "serial": 0,
-          "flags": ["global"],
-          "name": "wifiOSDEnable",
-          "name[zh_CN]": "是否允许显示网络连接OSD",
-          "description": "Allow display of network connection OSD",
-          "permissions": "readwrite",
-          "visibility": "private"
-      }
+      "resetWifiOSDEnableTimeout": {
+        "value": 300,
+        "serial": 0,
+        "flags": ["global"],
+        "name": "resetWifiOSDEnableTimeout",
+        "name[zh_CN]": "重新显示网络连接OSD超时",
+        "description": "Allow display of network connection OSD",
+        "permissions": "readwrite",
+        "visibility": "private"
+    }
   }
 }

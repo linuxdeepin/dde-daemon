@@ -37,10 +37,10 @@ const (
 )
 
 const (
-	daemonConfigPath          = "org.deepin.dde.daemon"
-	networkConfigPath         = "org.deepin.dde.daemon.network"
-	dsettingsProtalAuthEnable = "protalAuthEnable"
-	dsettingsWifiOSDEnable    = "wifiOSDEnable"
+	daemonConfigPath                   = "org.deepin.dde.daemon"
+	networkConfigPath                  = "org.deepin.dde.daemon.network"
+	dsettingsProtalAuthEnable          = "protalAuthEnable"
+	dsettingsResetWifiOSDEnableTimeout = "resetWifiOSDEnableTimeout"
 )
 
 const checkRepeatTime = 1 * time.Second
@@ -120,8 +120,10 @@ type Manager struct {
 	connectionSettingsLock sync.Mutex
 
 	// dsg config
-	protalAuthEnable bool
-	wifiOSDEnable    bool
+	protalAuthEnable          bool
+	wifiOSDEnable             bool
+	resetWifiOSDEnableTimeout uint32
+	resetWifiOSDEnableTimer   *time.Timer
 
 	//nolint
 	signals *struct {
@@ -225,7 +227,7 @@ func (m *Manager) init() {
 	}()
 
 	// 初始化配置
-	m.wifiOSDEnable = true
+	m.resetWifiOSDEnableTimeout = 300
 	ds := configManager.NewConfigManager(m.sysSigLoop.Conn())
 	configManagerPath, err := ds.AcquireManager(0, daemonConfigPath, networkConfigPath, "")
 	if err == nil {
@@ -240,24 +242,24 @@ func (m *Manager) init() {
 				m.protalAuthEnable = v.Value().(bool)
 			}
 
-			getWifiOSDEnable := func() {
-				v, err := networkConfigManager.Value(0, dsettingsWifiOSDEnable)
+			getResetWifiOSDEnableTimeout := func() {
+				v, err := networkConfigManager.Value(0, dsettingsResetWifiOSDEnableTimeout)
 				if err != nil {
 					logger.Warning(err)
-				} else {
-					m.wifiOSDEnable = v.Value().(bool)
+					return
 				}
+				m.resetWifiOSDEnableTimeout = v.Value().(uint32)
 			}
 
 			getProtalAuthEnable()
-			getWifiOSDEnable()
+			getResetWifiOSDEnableTimeout()
 
 			networkConfigManager.InitSignalExt(m.sysSigLoop, true)
 			_, err = networkConfigManager.ConnectValueChanged(func(key string) {
 				if key == dsettingsProtalAuthEnable {
 					getProtalAuthEnable()
-				} else if key == dsettingsWifiOSDEnable {
-					getWifiOSDEnable()
+				} else if key == dsettingsResetWifiOSDEnableTimeout {
+					getResetWifiOSDEnableTimeout()
 				}
 			})
 			if err != nil {
@@ -269,6 +271,13 @@ func (m *Manager) init() {
 	} else {
 		logger.Warning(err)
 	}
+
+	// 初始化配置
+	m.resetWifiOSDEnableTimer = time.AfterFunc(time.Duration(m.resetWifiOSDEnableTimeout)*time.Millisecond, func() {
+		logger.Debug("reset wifi OSD enable")
+		m.wifiOSDEnable = true
+	})
+	m.resetWifiOSDEnableTimer.Stop()
 
 	globalSessionActive = m.isSessionActive()
 	logger.Debugf("current session activated state: %v", globalSessionActive)
@@ -294,6 +303,11 @@ func (m *Manager) init() {
 		if !hasValue {
 			return
 		}
+
+		// 显示飞行模式OSD时不显示WIFI连接OSD,200毫秒后恢复显示WIFI的OSD
+		m.wifiOSDEnable = false
+		m.resetWifiOSDEnableTimer.Reset(time.Duration(m.resetWifiOSDEnableTimeout) * time.Millisecond)
+
 		// if enabled is true, airplane is on
 		if value {
 			showOSD("AirplaneModeOn")
@@ -312,19 +326,22 @@ func (m *Manager) init() {
 			return
 		}
 
-		// 禁用WIFI网络OSD时退出
-		if !m.wifiOSDEnable {
-			return
-		}
+		// 等待150毫秒接收airplane.Enabled改变信号
+		time.AfterFunc(time.Duration(m.resetWifiOSDEnableTimeout-50)*time.Millisecond, func() {
+			// 禁用WIFI网络OSD时退出
+			if !m.wifiOSDEnable {
+				return
+			}
 
-		// if enabled is true, wifi rfkill block is true
-		// so wlan is off
-		if value {
-			showOSD("WLANOff")
-			// if enabled is false, wifi is off
-		} else {
-			showOSD("WLANOn")
-		}
+			// if enabled is true, wifi rfkill block is true
+			// so wlan is off
+			if value {
+				showOSD("WLANOff")
+				// if enabled is false, wifi is off
+			} else {
+				showOSD("WLANOn")
+			}
+		})
 	})
 	if err != nil {
 		logger.Warning(err)
