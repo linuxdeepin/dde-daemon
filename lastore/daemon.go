@@ -12,10 +12,10 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	abrecovery "github.com/linuxdeepin/go-dbus-factory/com.deepin.abrecovery"
+	notifications "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.notification"
 	lastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
@@ -159,6 +159,7 @@ func (d *Daemon) Start() error {
 			// 如果正常系统更新,那么不需要处理(更新中切换用户场景)
 			for _, path := range jobList {
 				if path == distUpgradeJobPath {
+					logger.Info("running dist-upgrade,don't need handle status")
 					return
 				}
 			}
@@ -172,8 +173,9 @@ func (d *Daemon) Start() error {
 				logger.Warning(err)
 				return
 			}
+			logger.Infof("lastore status:%+v", upgradeStatus)
 			// 记录处理异常更新的通知
-			osd := notifications.NewNotifications(service.Conn())
+			osd := notifications.NewNotification(service.Conn())
 			abObj := abrecovery.NewABRecovery(sysBus)
 			valid, err := abObj.ConfigValid().Get(0) // config失效时,无法回滚,提示重新更新
 			var msg string
@@ -207,6 +209,7 @@ func (d *Daemon) Start() error {
 					}
 				}
 			}
+			logger.Infof("notify msg is:%v", msg)
 			if len(msg) != 0 {
 				_, err = osd.Notify(0, "dde-control-center", 0, "preferences-system", "", msg, nil, nil, NotifyExpireTimeoutNoHide)
 				if err != nil {
