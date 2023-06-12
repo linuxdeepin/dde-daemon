@@ -248,7 +248,7 @@ func (m *Manager) init() {
 					logger.Warning(err)
 					return
 				}
-				m.resetWifiOSDEnableTimeout = v.Value().(uint32)
+				m.resetWifiOSDEnableTimeout = uint32(v.Value().(float64))
 			}
 
 			getProtalAuthEnable()
