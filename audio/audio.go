@@ -446,14 +446,14 @@ func (a *Audio) autoPause() {
 
 	if err != nil {
 		logger.Warning(err)
-		pauseAllPlayers()
+		go pauseAllPlayers()
 	} else if card.ActiveProfile.Name == "off" {
-		pauseAllPlayers()
+		go pauseAllPlayers()
 	} else if port.Available == pulse.AvailableTypeNo {
 		// 使用优先级并且未开启自动切换时，先不暂停，后面根据sink信息判断是否需要暂停
 		a.misc = port.Priority
 		if a.misc == 0 || a.canAutoSwitchPort() {
-			pauseAllPlayers()
+			go pauseAllPlayers()
 		}
 	}
 }

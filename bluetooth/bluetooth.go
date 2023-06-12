@@ -504,7 +504,7 @@ func (b *Bluetooth) handleBluezPort(value bool) error {
 	logger.Info(" handleBluezPort sinkName : ", sinkName, isBluePort)
 	if isBluePort {
 		//stop music
-		setAllPlayers(value)
+		go setAllPlayers(value)
 	}
 	return nil
 }
