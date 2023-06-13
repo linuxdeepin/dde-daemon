@@ -6,6 +6,7 @@ package shortcuts
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -742,6 +743,25 @@ func (sm *ShortcutManager) initSysDaemon() error {
 	return nil
 }
 
+func (sm *ShortcutManager) getActiveWindowCmd() string {
+	win, err := ewmh.GetActiveWindow(sm.conn).Reply(sm.conn)
+	if err != nil {
+		logger.Warning("Failed to get current active window:", err)
+		return ""
+	}
+	pid, err := ewmh.GetWMPid(sm.conn, win).Reply(sm.conn)
+	if err != nil {
+		logger.Warning("Failed to get current window pid:", err)
+		return ""
+	}
+	data, err := ioutil.ReadFile(fmt.Sprintf("/proc/%d/cmdline", pid))
+	if err != nil {
+		logger.Warning("Failed to read cmdline:", err)
+		return ""
+	}
+	return string(data)
+}
+
 func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state uint16) {
 	sm.xRecordEventHandler.handleKeyEvent(pressed, code, state)
 
@@ -755,7 +775,8 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 			shortcut := keystroke.Shortcut
 			if shortcut != nil && shortcut.GetType() == ShortcutTypeSystem &&
 				(strings.HasPrefix(shortcut.GetId(), "screenshot") ||
-					strings.HasPrefix(shortcut.GetId(), "deepin-screen-recorder")) {
+					strings.HasPrefix(shortcut.GetId(), "deepin-screen-recorder")) &&
+				!strings.Contains(sm.getActiveWindowCmd(), "/usr/bin/abrecovery") {
 				keyEvent := &KeyEvent{
 					Mods:     key.Mods,
 					Code:     key.Code,
