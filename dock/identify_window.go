@@ -33,13 +33,13 @@ func (m *Manager) registerIdentifyWindowFuncs() {
 	m.registerIdentifyWindowFunc("FlatpakAppID", identifyWindowByFlatpakAppID)
 	m.registerIdentifyWindowFunc("CrxId", identifyWindowByCrxId)
 	m.registerIdentifyWindowFunc("Rule", identifyWindowByRule)
-	m.registerIdentifyWindowFunc("Bamf", func(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
-		return identifyWindowByBamf(m, &winInfo.baseWindowInfo)
-	})
 	m.registerIdentifyWindowFunc("Pid", identifyWindowByPid)
 	m.registerIdentifyWindowFunc("Scratch", identifyWindowByScratch)
 	m.registerIdentifyWindowFunc("GtkAppId", identifyWindowByGtkAppId)
 	m.registerIdentifyWindowFunc("WmClass", identifyWindowByWmClass)
+	m.registerIdentifyWindowFunc("Bamf", func(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
+		return identifyWindowByBamf(m, &winInfo.baseWindowInfo)
+	})
 }
 
 func (m *Manager) registerIdentifyWindowFunc(name string, fn _IdentifyWindowFunc) {
