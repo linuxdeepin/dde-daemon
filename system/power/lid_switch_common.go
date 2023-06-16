@@ -134,11 +134,11 @@ func (m *Manager) initLidSwitchCommon() {
 		logger.Info("Not found lid switch")
 		return
 	}
-	logger.Debugf("find dev file %q", devFile)
+	logger.Infof("find dev file %q", devFile)
 	// open
 	f, err := os.Open(devFile)
 	if err != nil {
-		logger.Debug("err:", err)
+		logger.Warningf("os.Open %q err : %v", devFile, err)
 		return
 	}
 	m.HasLidSwitch = true
@@ -153,7 +153,7 @@ func (m *Manager) initLidSwitchCommon() {
 			for _, ev := range events {
 				logger.Debugf("%v", &ev)
 				if ev.Type == EV_SW && ev.Code == SW_LID {
-					logger.Debugf("lid switch event value: %v", ev.Value)
+					logger.Infof("lid switch event value: %v", ev.Value)
 					var closed bool
 					switch ev.Value {
 					case 1:
@@ -205,14 +205,14 @@ func readLidSwitchEvent(f *os.File) ([]InputEvent, error) {
 
 	_, err := f.Read(buffer)
 	if err != nil {
-		logger.Debug("f read err:", err)
+		logger.Warning("f read err:", err)
 		return nil, err
 	}
 
 	b := bytes.NewBuffer(buffer)
 	err = binary.Read(b, binary.LittleEndian, &events)
 	if err != nil {
-		logger.Debug("binary read err:", err)
+		logger.Warning("binary read err:", err)
 		return nil, err
 	}
 

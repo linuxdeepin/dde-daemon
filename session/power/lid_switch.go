@@ -25,13 +25,11 @@ type LidSwitchHandler struct {
 	manager       *Manager
 	cmd           *exec.Cmd
 	cookie        chan struct{}
-	isLidOpenLast bool //上一次有效操作是否是开盖
 }
 
 func newLidSwitchHandler(m *Manager) (string, submodule, error) {
 	h := &LidSwitchHandler{
 		manager:       m,
-		isLidOpenLast: true,
 	}
 	return "LidSwitchHandler", h, nil
 }
@@ -46,22 +44,6 @@ func (h *LidSwitchHandler) Start() error {
 	if err != nil {
 		return err
 	}
-
-	if h.manager.helper.LoginManager != nil {
-		_, _ = h.manager.helper.LoginManager.ConnectPrepareForSleep(func(isWakeup bool) {
-			//当待机/休眠 : PrepareForSleep(True)信号
-			//唤醒会发送  : PrepareForSleep(False)信号
-			if isWakeup {
-				return
-			}
-			//只要唤醒就当作开盖，避免内核发送开盖事件时，dde还处于冻结状态错过了处理开盖事件(bug:191235)
-			if !h.isLidOpenLast {
-				logger.Info("Lid open: true. systemd-login1 PrepareForSleep(false)")
-				h.isLidOpenLast = true
-			}
-		})
-	}
-
 	return nil
 }
 
@@ -98,11 +80,6 @@ func (h *LidSwitchHandler) onLidDelayOperate(state bool) {
 
 func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 	logger.Info("Lid open:", state)
-	if h.isLidOpenLast == state {
-		logger.Info("ignore operate")
-		return
-	}
-	h.isLidOpenLast = state
 
 	m := h.manager
 	m.setPrepareSuspend(suspendStateLidClose)
