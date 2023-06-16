@@ -179,7 +179,9 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.hasAmddpm = dutils.IsFileExist(amdGPUPath)
 
 	m.refreshSystemPowerPerformance()
-
+	if m.hasPstate {
+		m.balanceScalingGovernor = "balance_performance"
+	}
 	err := m.init()
 	if err != nil {
 		m.destroy()
