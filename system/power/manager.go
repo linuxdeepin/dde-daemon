@@ -671,6 +671,15 @@ func (m *Manager) doSetMode(mode string, fakeMode string) error {
 		err = m.doSetCpuGovernor(m.balanceScalingGovernor)
 		if err != nil {
 			logger.Warning(err)
+			mode := "powersave"
+			if m.hasPstate {
+				mode = "power"
+			}
+			logger.Infof("set %s mode failed, try to set %s mode", m.balanceScalingGovernor, mode)
+			err = m.doSetCpuGovernor(mode)
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 	case "powersave": // governor=powersave boost=false
 		if m.hasAmddpm {
