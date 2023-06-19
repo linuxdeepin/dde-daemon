@@ -5,11 +5,13 @@
 package network
 
 import (
+	"context"
 	"time"
 
 	dbus "github.com/godbus/dbus"
 	ipwatchd "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.ipwatchd"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 func activateSystemService(sysBus *dbus.Conn, serviceName string) error {
@@ -52,21 +54,22 @@ func (m *Manager) initIPConflictManager(sysBus *dbus.Conn) {
 }
 
 func (m *Manager) RequestIPConflictCheck(ip, ifc string) *dbus.Error {
-	ch := make(chan *dbus.Call, 1)
-	m.sysIPWatchD.GoRequestIPConflictCheck(0, ch, ip, ifc)
+	conn, err := dbus.SystemBus()
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
 	go func() {
-		select {
-		case ret := <-ch:
-			mac := ""
-			err := ret.Store(&mac)
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-			m.service.Emit(manager, "IPConflict", ip, mac)
-		case <-time.After(1 * time.Second):
-			return
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+
+		var mac string
+		err = conn.Object("com.deepin.system.IPWatchD", "/com/deepin/system/IPWatchD").CallWithContext(ctx, "com.deepin.system.IPWatchD.RequestIPConflictCheck", 0, ip, ifc).Store(&mac)
+		if err != nil {
+			logger.Warning(err)
 		}
+		logger.Debug("send ip conflict check result: ", ip, mac)
+		m.service.Emit(manager, "IPConflict", ip, mac)
 	}()
 
 	return nil
