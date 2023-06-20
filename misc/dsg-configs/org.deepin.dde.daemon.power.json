@@ -5,7 +5,9 @@
         "BalanceCpuGovernor": {
             "value": "ondemand",
             "serial": 0,
-            "flags": ["global"],
+            "flags": [
+                "global"
+            ],
             "name": "BalanceCpuGovernor",
             "name[zh_CN]": "电源设置-性能模式-平衡模式状态",
             "description": "balance cpu governor",
@@ -15,7 +17,9 @@
         "isFirstGetCpuGovernor": {
             "value": true,
             "serial": 0,
-            "flags": ["global"],
+            "flags": [
+                "global"
+            ],
             "name": "isFirstGetCpuGovernor",
             "name[zh_CN]": "是否第一次获取Cpu支持的Governor模式",
             "description": "is first get cpu governor",
@@ -24,10 +28,17 @@
         },
         "supportCpuGovernors": {
             "value": [
-                "performance", "powersave", "userspace", "ondemand", "conservative", "schedutil"
+                "performance",
+                "powersave",
+                "userspace",
+                "ondemand",
+                "conservative",
+                "schedutil"
             ],
             "serial": 0,
-            "flags": ["global"],
+            "flags": [
+                "global"
+            ],
             "name": "supportCpuGovernors",
             "name[zh_CN]": "Cpu支持的Governor模式",
             "description": "",
@@ -38,7 +49,9 @@
         "specialCpuModeJson": {
             "value": "{\"PANGU\":{\"Balance\":true,\"Performace\":true,\"PowerSave\":true}}",
             "serial": 0,
-            "flags": ["global"],
+            "flags": [
+                "global"
+            ],
             "name": "specialCpuModeJson",
             "name[zh_CN]": "特殊处理的cpu配置",
             "description": "",
@@ -49,12 +62,74 @@
         "idlePowersaveAspmEnabled": {
             "value": true,
             "serial": 0,
-            "flags": ["global"],
+            "flags": [
+                "global"
+            ],
             "name": "idle powersave aspm enable",
             "name[zh_CN]": "idle时节能模式Aspm启动",
             "description": "idle时节能模式Aspm状态",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "powerSavingModeAuto": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode auto",
+            "name[zh_CN]": "低电量自动开启节能模式",
+            "description": "低电量自动开启节能模式",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerSavingModeEnabled": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode enabled",
+            "name[zh_CN]": "是否开启节能模式",
+            "description": "是否开启节能模式",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerSavingModeAutoWhenBatteryLow": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode auto when battery low",
+            "name[zh_CN]": "低电量时自动开启节能模式",
+            "description": "低电量时自动开启节能模式",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerSavingModeBrightnessDropPercent": {
+            "value": 20,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode brightness drop percent",
+            "name[zh_CN]": "节能模式亮度降低百分比",
+            "description": "节能模式亮度降低百分比",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "mode": {
+            "value": "balance",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power mode",
+            "name[zh_CN]": "性能模式",
+            "description": "性能模式",
+            "permissions": "readwrite",
+            "visibility": "public"
         }
     }
 }

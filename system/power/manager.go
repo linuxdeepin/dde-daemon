@@ -42,12 +42,17 @@ const (
 )
 
 const (
-	dsettingsAppID                    = "org.deepin.dde.daemon"
-	dsettingsPowerName                = "org.deepin.dde.daemon.power"
-	dsettingsSpecialCpuModeJson       = "specialCpuModeJson"
-	dsettingsBalanceCpuGovernor       = "BalanceCpuGovernor"
-	dsettingsIsFirstGetCpuGovernor    = "isFirstGetCpuGovernor"
-	dsettingsIdlePowersaveAspmEnabled = "idlePowersaveAspmEnabled"
+	dsettingsAppID                                = "org.deepin.dde.daemon"
+	dsettingsPowerName                            = "org.deepin.dde.daemon.power"
+	dsettingsSpecialCpuModeJson                   = "specialCpuModeJson"
+	dsettingsBalanceCpuGovernor                   = "BalanceCpuGovernor"
+	dsettingsIsFirstGetCpuGovernor                = "isFirstGetCpuGovernor"
+	dsettingsIdlePowersaveAspmEnabled             = "idlePowersaveAspmEnabled"
+	dsettingsPowerSavingModeEnabled               = "powerSavingModeEnabled"
+	dsettingsPowerSavingModeAuto                  = "powerSavingModeAuto"
+	dsettingsPowerSavingModeAutoWhenBatteryLow    = "powerSavingModeAutoWhenBatteryLow"
+	dsettingsPowerSavingModeBrightnessDropPercent = "powerSavingModeBrightnessDropPercent"
+	dsettingsMode                                 = "mode"
 )
 
 type supportMode struct {
@@ -257,13 +262,15 @@ func (m *Manager) init() error {
 	devices := powersupply.GetDevices(m.gudevClient)
 
 	cfg := loadConfigSafe()
-	// 将config.json中的配置完成初始化
-	m.PowerSavingModeEnabled = cfg.PowerSavingModeEnabled                             // 开启和关闭节能模式
-	m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
-	m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
-	m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
-	m.Mode = cfg.Mode
-	m.fakeMode = cfg.Mode
+	if cfg != nil {
+		// 将config.json中的配置完成初始化
+		m.PowerSavingModeEnabled = cfg.PowerSavingModeEnabled                             // 开启和关闭节能模式
+		m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
+		m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
+		m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
+		m.Mode = cfg.Mode
+		m.fakeMode = cfg.Mode
+	}
 
 	// 恢复配置
 	err := m.doSetMode(m.Mode, m.fakeMode)
@@ -357,6 +364,62 @@ func (m *Manager) initDsgConfig() error {
 			getIdlePowersaveAspmEnabled()
 		}
 	})
+
+	getPowerSavingModeAuto := func() {
+		data, err := dsPower.Value(0, dsettingsPowerSavingModeAuto)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		m.PowerSavingModeAuto = data.Value().(bool)
+		logger.Info("Set power saving mode auto", m.PowerSavingModeAuto)
+	}
+
+	getPowerSavingModeEnabled := func() {
+		data, err := dsPower.Value(0, dsettingsPowerSavingModeEnabled)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		m.PowerSavingModeEnabled = data.Value().(bool)
+		logger.Info("Set power saving mode enable", m.PowerSavingModeEnabled)
+	}
+
+	getPowerSavingModeAutoWhenBatteryLow := func() {
+		data, err := dsPower.Value(0, dsettingsPowerSavingModeAutoWhenBatteryLow)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		m.PowerSavingModeAutoWhenBatteryLow = data.Value().(bool)
+		logger.Info("Set power saving mode auto when battery low", m.PowerSavingModeAutoWhenBatteryLow)
+	}
+
+	getPowerSavingModeBrightnessDropPercent := func() {
+		data, err := dsPower.Value(0, dsettingsPowerSavingModeBrightnessDropPercent)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		m.PowerSavingModeBrightnessDropPercent = uint32(data.Value().(float64))
+		logger.Info("Set power saving mode brightness drop percent", m.PowerSavingModeBrightnessDropPercent)
+	}
+
+	getMode := func() {
+		data, err := dsPower.Value(0, dsettingsMode)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		m.Mode = data.Value().(string)
+		logger.Info("Set power mode", m.Mode)
+	}
+
+	getPowerSavingModeAuto()
+	getPowerSavingModeEnabled()
+	getPowerSavingModeAutoWhenBatteryLow()
+	getPowerSavingModeBrightnessDropPercent()
+	getMode()
 
 	return err
 }
@@ -607,14 +670,7 @@ func loadConfigSafe() *Config {
 		if !os.IsNotExist(err) {
 			logger.Warning(err)
 		}
-		return &Config{
-			// default config
-			PowerSavingModeAuto:                  true,
-			PowerSavingModeEnabled:               false,
-			PowerSavingModeAutoWhenBatteryLow:    false,
-			PowerSavingModeBrightnessDropPercent: 20,
-			Mode:                                 "balance",
-		}
+		return nil
 	}
 	// 新增字段后第一次启动时,缺少两个新增字段的json,导致亮度下降百分比字段默认为0,导致与默认值不符,需要处理
 	// 低电量自动待机字段的默认值为false,不会导致错误影响
