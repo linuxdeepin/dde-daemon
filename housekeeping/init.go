@@ -50,7 +50,7 @@ func (d *Daemon) Start() error {
 		return nil
 	}
 
-	d.ticker = time.NewTicker(time.Minute * 1)
+	d.ticker = time.NewTicker(time.Minute * 10)
 	d.stopChan = make(chan struct{})
 	go func() {
 		for {
