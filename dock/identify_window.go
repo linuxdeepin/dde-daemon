@@ -185,7 +185,7 @@ func (m *Manager) identifyWindowK(winInfo *KWindowInfo) (innerId string, appInfo
 
 	// fail
 	logger.Debugf("identifyWindowK: failed")
-	return
+	return winInfo.appId, nil
 }
 
 func (m *Manager) identifyWindowX(winInfo *WindowInfo) (innerId string, appInfo *AppInfo) {
