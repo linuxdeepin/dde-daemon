@@ -87,7 +87,20 @@ func (winInfo *KWindowInfo) shouldSkip() bool {
 		logger.Warning(err)
 		return true
 	}
+	// + 添加窗口能否最小化判断，如果窗口不能最小化则隐藏任务栏图标
+	canMinimize, _ := winInfo.winObj.IsMinimizeable(0)
+	if canMinimize == false {
+		skip = true
+	}
 
+	if skip {
+		// + 白名单(临时方案，待窗口增加wayland下窗口规则后再修改)： 修复类似欢迎应用没有最小化窗口,但是需要在任务栏显示图标
+		for _, app := range []string{"dde-introduction"} {
+			if app == winInfo.appId {
+				skip = false
+			}
+		}
+	}
 	return skip
 }
 
