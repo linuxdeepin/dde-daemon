@@ -52,7 +52,7 @@ const (
 	kbdSystemConfig = "/etc/default/keyboard"
 	qtDefaultConfig = ".config/Trolltech.conf"
 
-	cmdSetKbd = "/usr/bin/setxkbmap"
+	cmdSetKbd = "setxkbmap"
 )
 
 type Keyboard struct {

@@ -207,7 +207,7 @@ func filterUnNumber(value string) string {
 
 //执行命令：/usr/bin/getconf LONG_BIT 获取系统位数
 func (m *Manager) systemBit() string {
-	output, err := exec.Command("/usr/bin/getconf", "LONG_BIT").Output()
+	output, err := exec.Command("getconf", "LONG_BIT").Output()
 	if err != nil {
 		return "64"
 	}

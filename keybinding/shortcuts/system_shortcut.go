@@ -83,10 +83,10 @@ var defaultSysActionCmdMap = map[string]string{
 	"launcher":               "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle",
 	"terminal":               "/usr/lib/deepin-daemon/default-terminal",
 	"terminal-quake":         "deepin-terminal --quake-mode",
-	"lock-screen":            "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=org.deepin.dde.LockFront1 /org/deepin/dde/LockFront1 org.deepin.dde.LockFront1.Show; setxkbmap -option $originmap",
+	"lock-screen":            "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');setxkbmap -option grab:break_actions&&xdotool key XF86Ungrab&&dbus-send --print-reply --dest=org.deepin.dde.LockFront1 /org/deepin/dde/LockFront1 org.deepin.dde.LockFront1.Show; setxkbmap -option $originmap",
 	"logout":                 "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
 	"deepin-screen-recorder": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord",
-	"system-monitor":         "/usr/bin/deepin-system-monitor",
+	"system-monitor":         "deepin-system-monitor",
 	"color-picker":           "dbus-send --print-reply --dest=com.deepin.Picker /com/deepin/Picker com.deepin.Picker.Show",
 	// screenshot actions:
 	"screenshot":            screenshotCmdPrefix + "StartScreenshot",
