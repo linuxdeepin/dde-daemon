@@ -33,7 +33,7 @@ func canSuspend() bool {
 }
 
 func detectVirtualMachine() (string, error) {
-	out, err := exec.Command("/usr/bin/systemd-detect-virt").Output()
+	out, err := exec.Command("systemd-detect-virt").Output()
 	if err != nil {
 		return "", err
 	}

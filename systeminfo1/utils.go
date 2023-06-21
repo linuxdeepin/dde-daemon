@@ -39,7 +39,7 @@ func getMemoryFromFile(file string) (uint64, error) {
 
 //执行命令：/usr/bin/getconf LONG_BIT 获取系统位数
 func systemBit() string {
-	output, err := exec.Command("/usr/bin/getconf", "LONG_BIT").Output()
+	output, err := exec.Command("getconf", "LONG_BIT").Output()
 	if err != nil {
 		return "64"
 	}
