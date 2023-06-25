@@ -14,6 +14,7 @@ import (
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/keyfile"
+	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 //go:generate dbusutil-gen em -type Manager
@@ -56,9 +57,22 @@ type Manager struct {
 	service *dbusutil.Service
 }
 
-func (m *Manager) UpdateGreeterQtTheme(fd dbus.UnixFD) *dbus.Error {
+func (m *Manager) UpdateGreeterQtTheme(sender dbus.Sender, fd dbus.UnixFD) *dbus.Error {
+	pid, err := m.service.GetConnPID(string(sender))
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		p := procfs.Process(pid)
+		cmd, err := p.Exe()
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			logger.Info("Calling UpdateGreeterQtTheme by ", cmd)
+		}
+	}
+
 	m.service.DelayAutoQuit()
-	err := updateGreeterQtTheme(fd)
+	err = updateGreeterQtTheme(fd)
 	if err != nil {
 		logger.Warning(err)
 	}
