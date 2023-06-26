@@ -11,16 +11,56 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 var plymouthLocker sync.Mutex
+
+const (
+	dsettingsAppID                       = "org.deepin.dde.daemon"
+	dsettingsAppearanceName              = "org.deepin.dde.daemon.appearance"
+	dsettingsScaleWithoutPlymouthEnabled = "scaleWithoutPlymouthEnabled"
+)
+
+func (d *Daemon) getScaleWithoutPlymouthEnabled() bool {
+	ds := configManager.NewConfigManager(d.systemSigLoop.Conn())
+
+	appearancePath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsAppearanceName, "")
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	dsAppearance, err := configManager.NewManager(d.systemSigLoop.Conn(), appearancePath)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	v, err := dsAppearance.Value(0, dsettingsScaleWithoutPlymouthEnabled)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	if enabled, ok := v.Value().(bool); ok {
+		return enabled
+	}
+
+	return false
+}
 
 func (d *Daemon) ScalePlymouth(scale uint32) *dbus.Error {
 	return dbusutil.ToError(d.scalePlymouth(scale))
 }
 
 func (d *Daemon) scalePlymouth(scale uint32) error {
+	if d.getScaleWithoutPlymouthEnabled() {
+		logger.Info("skip scale plymouth")
+		return nil
+	}
+
 	plymouthLocker.Lock()
 	defer plymouthLocker.Unlock()
 	defer logger.Debug("end ScalePlymouth", scale)
