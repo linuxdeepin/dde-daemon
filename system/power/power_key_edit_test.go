@@ -31,30 +31,3 @@ func Test_interfaceToArrayString(t *testing.T) {
 		assert.Equal(t, arr, d.result)
 	}
 }
-
-func Test_interfaceToString(t *testing.T) {
-	data := []struct {
-		test   interface{}
-		result string
-	}{
-		{"", ""},
-		{"test", "test"},
-		{"System Power Test", "System Power Test"},
-	}
-	for _, d := range data {
-		assert.Equal(t, interfaceToString(d.test), d.result)
-	}
-}
-
-func Test_interfaceToBool(t *testing.T) {
-	data := []struct {
-		test   interface{}
-		result bool
-	}{
-		{true, true},
-		{false, false},
-	}
-	for _, d := range data {
-		assert.Equal(t, interfaceToBool(d.test), d.result)
-	}
-}

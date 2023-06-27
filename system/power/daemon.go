@@ -5,6 +5,7 @@
 package power
 
 import (
+	"errors"
 	"sync"
 	"time"
 
@@ -65,7 +66,7 @@ func (d *Daemon) Start() (err error) {
 
 	err = serverObj.ConnectChanged(d.manager, "PowerSavingModeAuto", func(change *dbusutil.PropertyChanged) {
 		d.manager.updatePowerSavingMode()
-		err := d.manager.saveConfig()
+		err := d.manager.saveDsgConfig("PowerSavingModeAuto")
 		if err != nil {
 			logger.Warning(err)
 		}
@@ -75,7 +76,7 @@ func (d *Daemon) Start() (err error) {
 	}
 
 	err = serverObj.ConnectChanged(d.manager, "PowerSavingModeEnabled", func(change *dbusutil.PropertyChanged) {
-		err := d.manager.saveConfig()
+		err := d.manager.saveDsgConfig("PowerSavingModeEnabled")
 		if err != nil {
 			logger.Warning(err)
 		}
@@ -87,7 +88,7 @@ func (d *Daemon) Start() (err error) {
 	// 属性改变后的回调函数
 	err = serverObj.ConnectChanged(d.manager, "PowerSavingModeAutoWhenBatteryLow", func(change *dbusutil.PropertyChanged) {
 		d.manager.updatePowerSavingMode()
-		err := d.manager.saveConfig()
+		err := d.manager.saveDsgConfig("PowerSavingModeAutoWhenBatteryLow")
 		if err != nil {
 			logger.Warning(err)
 		}
@@ -97,7 +98,7 @@ func (d *Daemon) Start() (err error) {
 	}
 
 	err = serverObj.ConnectChanged(d.manager, "PowerSavingModeBrightnessDropPercent", func(change *dbusutil.PropertyChanged) {
-		err := d.manager.saveConfig()
+		err := d.manager.saveDsgConfig("PowerSavingModeBrightnessDropPercent")
 		if err != nil {
 			logger.Warning(err)
 		}
@@ -117,9 +118,25 @@ func (d *Daemon) Start() (err error) {
 					// 登录后两分钟内高性能,两分钟后修改回原有的mode
 					once.Do(func() {
 						highTimer = time.AfterFunc(time.Minute*2, func() {
-							_ = d.manager.doSetMode(d.manager.fakeMode, d.manager.fakeMode)
+							if d.manager.dsgPower == nil {
+								return
+							}
+							data, err := d.manager.dsgPower.Value(0, dsettingsMode)
+							if err != nil {
+								logger.Warning(err)
+								return
+							}
+							logger.Infof(" ## time.AfterFunc 2 min manager.Mod : %s, data : %s", d.manager.Mode, data.Value().(string))
+							//② 恢复流程也仅仅写内核性能模式文件，不设置后端属性
+							err = d.manager.doSetMode(data.Value().(string))
+							if err != nil {
+								logger.Warning(err)
+							}
 							d.manager.loginManager.RemoveHandler(handlerId)
-							_ = serverObj.SetReadCallback(d.manager, "Mode", nil)
+							err = serverObj.SetReadCallback(d.manager, "Mode", nil)
+							if err != nil {
+								logger.Warning(err)
+							}
 						})
 					})
 				}
@@ -128,16 +145,29 @@ func (d *Daemon) Start() (err error) {
 		if err != nil {
 			logger.Warning(err)
 		}
-		// 查看mode时,将mode还原成原有的mode
+		//③ 查看mode时, 恢复内核性能模式数据，不设置后端属性
 		err = serverObj.SetReadCallback(d.manager, "Mode", func(read *dbusutil.PropertyRead) *dbus.Error {
 			logger.Info("change to record mode")
 			if highTimer != nil {
 				highTimer.Stop()
 			}
 			defer func() {
-				_ = serverObj.SetReadCallback(d.manager, "Mode", nil)
+				err := serverObj.SetReadCallback(d.manager, "Mode", nil)
+				if err != nil {
+					logger.Warning(err)
+				}
 			}()
-			return dbusutil.ToError(d.manager.doSetMode(d.manager.fakeMode, d.manager.fakeMode))
+			if d.manager.dsgPower == nil {
+				return dbusutil.ToError(errors.New("dsgPower is nil"))
+			}
+			data, err := d.manager.dsgPower.Value(0, dsettingsMode)
+			expectValue := data.Value().(string)
+			if err != nil {
+				logger.Warning(err)
+				return dbusutil.ToError(errors.New("dsg of org.deepin.dde.daemon.power mode failed"))
+			}
+			logger.Infof(" SetReadCallback manager.Mode : %s, data : %s", d.manager.Mode, expectValue)
+			return dbusutil.ToError(d.manager.doSetMode(expectValue))
 		})
 	}
 	if err != nil {
@@ -146,6 +176,7 @@ func (d *Daemon) Start() (err error) {
 
 	err = serverObj.Export()
 	if err != nil {
+		logger.Warning(err)
 		return
 	}
 

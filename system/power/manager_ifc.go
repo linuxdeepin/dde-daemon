@@ -98,14 +98,15 @@ func (m *Manager) SetMode(mode string) *dbus.Error {
 		return dbusutil.ToError(errors.New("Repeat switch"))
 	}
 
-	if "powersave" == m.Mode || "powersave" == mode{
+	if "powersave" == m.Mode || "powersave" == mode {
 		m.setPropPowerSavingModeAutoWhenBatteryLow(false)
 		m.setPropPowerSavingModeAuto(false)
-	} 
+	}
 
-	err := m.doSetMode(mode, mode)
+	logger.Info(" SetMode mode : ", mode)
+	err := m.doSetMode(mode)
 	if err == nil {
-		err = m.saveConfig()
+		err = m.saveDsgConfig("Mode")
 	}
 
 	if err != nil {

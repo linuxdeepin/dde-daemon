@@ -5,6 +5,9 @@
 package power
 
 import (
+	"errors"
+	"github.com/godbus/dbus"
+	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -21,26 +24,15 @@ func interfaceToArrayString(v interface{}) (d []interface{}) {
 	return
 }
 
-func interfaceToString(v interface{}) (d string) {
-	if utils.IsInterfaceNil(v) {
-		return
+func (m *Manager) setDsgData(key string, value interface{}, dsg ConfigManager.Manager) error {
+	if dsg == nil {
+		return errors.New("setDsgData dsg is nil")
 	}
-	d, ok := v.(string)
-	if !ok {
-		logger.Errorf("interfaceToString() failed: %#v", v)
-		return
+	err := dsg.SetValue(0, key, dbus.MakeVariant(value))
+	if err != nil {
+		logger.Warningf("setDsgData key : %s. err : %v", key, err)
+		return err
 	}
-	return
-}
-
-func interfaceToBool(v interface{}) (d bool) {
-	if utils.IsInterfaceNil(v) {
-		return
-	}
-	d, ok := v.(bool)
-	if !ok {
-		logger.Errorf("interfaceToBool() failed: %#v", v)
-		return
-	}
-	return
+	logger.Infof("setDsgData key : %s , value : %v", key, value)
+	return nil
 }

@@ -243,14 +243,14 @@ func (m *Manager) updatePowerSavingMode() { // 根据用户设置以及当前状
 
 	if enable {
 		logger.Debug("auto switch to powersave mode")
-		err = m.doSetMode("powersave", "powersave")
+		err = m.doSetMode("powersave")
 	} else {
 		if "balance" == m.lastMode && m.IsBalanceSupported {
 			logger.Debug("auto switch to balance mode")
-			err = m.doSetMode("balance", "balance")
+			err = m.doSetMode("balance")
 		} else if "performance" == m.lastMode && m.IsHighPerformanceSupported {
 			logger.Debug("auto switch to performance mode")
-			err = m.doSetMode("performance", "performance")
+			err = m.doSetMode("performance")
 		}
 	}
 

@@ -353,10 +353,6 @@ func (v *Manager) setPropPowerSavingModeEnabled(value bool) (changed bool) {
 	return false
 }
 
-func (v *Manager) emitPropChangedPowerSavingModeEnabled(value bool) error {
-	return v.service.EmitPropertyChanged(v, "PowerSavingModeEnabled", value)
-}
-
 func (v *Manager) setPropPowerSavingModeAuto(value bool) (changed bool) {
 	if v.PowerSavingModeAuto != value {
 		v.PowerSavingModeAuto = value
@@ -368,6 +364,10 @@ func (v *Manager) setPropPowerSavingModeAuto(value bool) (changed bool) {
 
 func (v *Manager) emitPropChangedPowerSavingModeAuto(value bool) error {
 	return v.service.EmitPropertyChanged(v, "PowerSavingModeAuto", value)
+}
+
+func (v *Manager) emitPropChangedPowerSavingModeEnabled(value bool) error {
+	return v.service.EmitPropertyChanged(v, "PowerSavingModeEnabled", value)
 }
 
 func (v *Manager) setPropPowerSavingModeAutoWhenBatteryLow(value bool) (changed bool) {

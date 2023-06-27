@@ -365,7 +365,7 @@ func (cpus *CpuHandlers) tryWriteGovernor(governorSlice strv.Strv, isPstate bool
 }
 
 func (cpus *CpuHandlers) SetGovernor(governor string, isPstate bool) error {
-	logger.Info(" SetGovernor governor ： ", governor)
+	logger.Info(" SetGovernor governor : ", governor)
 	for _, cpu := range *cpus {
 		err := cpu.SetGovernor(governor, isPstate)
 		if err != nil {
