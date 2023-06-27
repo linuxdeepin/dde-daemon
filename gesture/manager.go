@@ -408,7 +408,7 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 		return nil
 	}
 
-	if (!m.longPressEnable  || _useWayland) && strings.Contains(string(info.Event.Name), "touch right button") {
+	if (!m.longPressEnable || _useWayland) && strings.Contains(string(info.Event.Name), "touch right button") {
 		return nil
 	}
 
@@ -488,7 +488,7 @@ const (
 // 获取触摸屏的旋转
 func (m *Manager) getTouchScreenRotation() (display.Monitor, TouchScreensRotation) {
 	// 读取触屏列表，取第一个触屏（目前触摸手势事件中不包含所属屏幕，因此不支持多个触摸屏）
-	touchScreens, err := m.display.Touchscreens().Get(0)
+	touchScreens, err := m.display.TouchscreensV2().Get(0)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -502,7 +502,7 @@ func (m *Manager) getTouchScreenRotation() (display.Monitor, TouchScreensRotatio
 	// 读取触摸屏的名字
 	var touchScreen string
 	if len(touchScreens) > 0 && len(touchMap) > 0 {
-		touchScreen = touchMap[touchScreens[0].Serial]
+		touchScreen = touchMap[touchScreens[0].UUID]
 	}
 
 	// 读取失败，把主屏当做触摸屏
