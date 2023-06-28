@@ -44,6 +44,15 @@ var (
 	DeepinFontConfig = path.Join(basedir.GetUserConfigDir(), "fontconfig", "conf.d", "99-deepin.conf")
 )
 
+func Reset() error {
+	err := removeAll(DeepinFontConfig)
+	if err != nil {
+		return err
+    }
+	xsSetting.Reset(gsKeyFontName)
+	return nil
+}
+
 func IsFontFamily(value string) bool {
 	if isVirtualFont(value) {
 		return true

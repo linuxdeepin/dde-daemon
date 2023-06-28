@@ -18,7 +18,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -105,7 +104,6 @@ const (
 	defaultCursorTheme    = "bloom"
 	defaultStandardFont   = "Noto Sans"
 	defaultMonospaceFont  = "Noto Mono"
-	defaultFontConfigFile = "/usr/share/deepin-default-settings/fontconfig.json"
 
 	dbusServiceName = "com.deepin.daemon.Appearance"
 	dbusPath        = "/com/deepin/daemon/Appearance"
@@ -172,9 +170,6 @@ type Manager struct {
 	xSettingsGs    *gio.Settings
 	wrapBgSetting  *gio.Settings
 	gnomeBgSetting *gio.Settings
-
-	defaultFontConfig   DefaultFontConfig
-	defaultFontConfigMu sync.Mutex
 
 	watcher    *fsnotify.Watcher
 	endWatcher chan struct{}
@@ -396,21 +391,9 @@ func (m *Manager) destroy() {
 
 // resetFonts reset StandardFont and MonospaceFont
 func (m *Manager) resetFonts() {
-	defaultStandardFont, defaultMonospaceFont := m.getDefaultFonts()
-	logger.Debugf("getDefaultFonts standard: %q, mono: %q",
-		defaultStandardFont, defaultMonospaceFont)
-	if defaultStandardFont != m.StandardFont.Get() {
-		m.StandardFont.Set(defaultStandardFont)
-	}
-
-	if defaultMonospaceFont != m.MonospaceFont.Get() {
-		m.MonospaceFont.Set(defaultMonospaceFont)
-	}
-
-	err := fonts.SetFamily(defaultStandardFont, defaultMonospaceFont,
-		m.FontSize.Get())
+	err := fonts.Reset()
 	if err != nil {
-		logger.Debug("resetFonts fonts.SetFamily failed", err)
+		logger.Debug("ResetFonts failed", err)
 		return
 	}
 	m.checkFontConfVersion()
@@ -584,11 +567,6 @@ func (m *Manager) init() error {
 		logger.Warning(err)
 	}
 
-	err = m.loadDefaultFontConfig(defaultFontConfigFile)
-	if err != nil {
-		logger.Warning("load default font config failed:", err)
-	}
-
 	//修改时间后通过信号通知自动改变主题
 	_, err = m.sessionTimeDate.ConnectTimeUpdate(func() {
 		time.AfterFunc(2*time.Second, m.handleSysClockChanged)
@@ -646,37 +624,6 @@ func (m *Manager) init() error {
 	// Init IrregularFontWhiteList
 	m.initAppearanceDSettings()
 
-	// Init theme list
-	time.AfterFunc(time.Second*10, func() {
-		if !dutils.IsFileExist(fonts.DeepinFontConfig) {
-			m.resetFonts()
-		} else {
-			m.correctFontName()
-		}
-
-		fonts.GetFamilyTable()
-
-		err = setDQtTheme(dQtFile, dQtSectionTheme,
-			[]string{
-				dQtKeyIcon,
-				dQtKeyFont,
-				dQtKeyMonoFont,
-				dQtKeyFontSize},
-			[]string{
-				m.IconTheme.Get(),
-				m.StandardFont.Get(),
-				m.MonospaceFont.Get(),
-				strconv.FormatFloat(m.FontSize.Get(), 'f', 1, 64)})
-		if err != nil {
-			logger.Warning("failed to set deepin qt theme:", err)
-		}
-		err = saveDQtTheme(dQtFile)
-		if err != nil {
-			logger.Warning("Failed to save deepin qt theme:", err)
-			return
-		}
-	})
-
 	return nil
 }
 
@@ -722,46 +669,6 @@ func (m *Manager) handleWmWorkspaceSwithched(from, to int32) {
 		if err != nil {
 			logger.Warning("call userObj.SetCurrentWorkspace err:", err)
 		}
-	}
-}
-
-func (m *Manager) correctFontName() {
-	defaultStandardFont, defaultMonospaceFont := m.getDefaultFonts()
-
-	var changed = false
-	table := fonts.GetFamilyTable()
-	stand := table.GetFamily(m.StandardFont.Get())
-	if stand != nil {
-		// for virtual font
-		if stand.Id != m.StandardFont.Get() {
-			changed = true
-			m.StandardFont.Set(stand.Id)
-		}
-	} else {
-		changed = true
-		m.StandardFont.Set(defaultStandardFont)
-	}
-
-	mono := table.GetFamily(m.MonospaceFont.Get())
-	if mono != nil {
-		if mono.Id != m.MonospaceFont.Get() {
-			changed = true
-			m.MonospaceFont.Set(mono.Id)
-		}
-	} else {
-		changed = true
-		m.MonospaceFont.Set(defaultMonospaceFont)
-	}
-
-	if !changed && m.checkFontConfVersion() {
-		return
-	}
-
-	err := fonts.SetFamily(m.StandardFont.Get(), m.MonospaceFont.Get(),
-		m.FontSize.Get())
-	if err != nil {
-		logger.Debug("[correctFontName]-----------set font failed:", err)
-		return
 	}
 }
 
@@ -1115,36 +1022,6 @@ func (*Manager) doShow(ifc interface{}) (string, error) {
 	}
 	content, err := json.Marshal(ifc)
 	return string(content), err
-}
-
-func (m *Manager) loadDefaultFontConfig(filename string) error {
-	contents, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return err
-	}
-
-	var defaultFontConfig DefaultFontConfig
-	if err := json.Unmarshal(contents, &defaultFontConfig); err != nil {
-		return err
-	}
-
-	m.defaultFontConfigMu.Lock()
-	m.defaultFontConfig = defaultFontConfig
-	m.defaultFontConfigMu.Unlock()
-
-	logger.Debugf("load default font config ok %#v", defaultFontConfig)
-	return nil
-}
-
-func (m *Manager) getDefaultFonts() (standard string, monospace string) {
-	m.defaultFontConfigMu.Lock()
-	cfg := m.defaultFontConfig
-	m.defaultFontConfigMu.Unlock()
-
-	if cfg == nil {
-		return defaultStandardFont, defaultMonospaceFont
-	}
-	return cfg.Get()
 }
 
 func (m *Manager) writeDQtTheme(key, value string) error {

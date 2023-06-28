@@ -60,6 +60,10 @@ func writeFontConfig(content, file string) error {
 	return ioutil.WriteFile(file, []byte(content), 0644)
 }
 
+func removeAll(path string) error {
+	return os.RemoveAll(path)
+}
+
 // If set pixelsize, wps-office-wps will not show some text.
 //
 //func configContent(standard, mono string, pixel float64) string {
