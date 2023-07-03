@@ -78,8 +78,8 @@
                 "global"
             ],
             "name": "power saving mode auto",
-            "name[zh_CN]": "低电量自动开启节能模式",
-            "description": "低电量自动开启节能模式",
+            "name[zh_CN]": "使用电池自动开启节能模式",
+            "description": "使用电池自动开启节能模式",
             "permissions": "readwrite",
             "visibility": "public"
         },
