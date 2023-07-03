@@ -401,7 +401,14 @@ func (m *Manager) initDsgConfig() error {
 			logger.Warning(err)
 			return
 		}
-		m.PowerSavingModeBrightnessDropPercent = uint32(data.Value().(float64))
+		switch v := data.Value().(type) {
+		case float64:
+			m.PowerSavingModeBrightnessDropPercent = uint32(v)
+		case int64:
+			m.PowerSavingModeBrightnessDropPercent = uint32(v)
+		default:
+			logger.Warning("type is wrong!")
+		}
 		logger.Info("Set power saving mode brightness drop percent", m.PowerSavingModeBrightnessDropPercent)
 	}
 
