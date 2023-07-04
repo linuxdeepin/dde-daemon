@@ -14,7 +14,15 @@ import (
 func Test_GenerateLocaleEnvFile(t *testing.T) {
 	example := `LANG=en_US.UTF-8
 LANGUAGE=en_US
+LC_CTYPE="zh_CN.UTF-8"
+LC_NUMERIC="zh_CN.UTF-8"
+LC_MONETARY="zh_CN.UTF-8"
 LC_TIME="zh_CN.UTF-8"
+LC_PAPER="zh_CN.UTF-8"
+LC_NAME="zh_CN.UTF-8"
+LC_ADDRESS="zh_CN.UTF-8"
+LC_TELEPHONE="zh_CN.UTF-8"
+LC_MEASUREMENT="zh_CN.UTF-8"
 `
 	assert.Equal(t, string(generateLocaleEnvFile("en_US.UTF-8",
 		"testdata/pam_environment")), example)
@@ -32,4 +40,14 @@ func Test_GetLocale(t *testing.T) {
 func Test_WriteUserLocale(t *testing.T) {
 	assert.Nil(t, writeLocaleEnvFile("zh_CN.UTF-8", "testdata/pam_environment", "testdata/pam"))
 	os.RemoveAll("testdata/pam")
+}
+
+func Test_WriteLocaleRegionsEnvFile(t *testing.T) {
+	assert.Nil(t, writeLocaleRegionsEnvFile("zh_CN.UTF-8", "testdata/pam_environment", "testdata/pam"))
+	os.RemoveAll("testdata/pam")
+}
+
+func Test_getCurrentLocaleRegione(t *testing.T) {
+	_, err := getCurrentLocaleRegion()
+	assert.NoError(t, err)
 }
