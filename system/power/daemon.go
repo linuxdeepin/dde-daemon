@@ -117,7 +117,7 @@ func (d *Daemon) Start() (err error) {
 					// 登录后两分钟内高性能,两分钟后修改回原有的mode
 					once.Do(func() {
 						highTimer = time.AfterFunc(time.Minute*2, func() {
-							_ = d.manager.SetMode(d.manager.fakeMode)
+							_ = d.manager.doSetMode(d.manager.fakeMode, d.manager.fakeMode)
 							d.manager.loginManager.RemoveHandler(handlerId)
 							_ = serverObj.SetReadCallback(d.manager, "Mode", nil)
 						})
@@ -137,7 +137,7 @@ func (d *Daemon) Start() (err error) {
 			defer func() {
 				_ = serverObj.SetReadCallback(d.manager, "Mode", nil)
 			}()
-			return d.manager.SetMode(d.manager.fakeMode)
+			return dbusutil.ToError(d.manager.doSetMode(d.manager.fakeMode, d.manager.fakeMode))
 		})
 	}
 	if err != nil {
