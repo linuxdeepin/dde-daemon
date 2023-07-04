@@ -45,7 +45,10 @@ const (
 
 var (
 	// for locale-helper
-	_ = Tr("Authentication is required to switch language")
+	_                    = Tr("Authentication is required to switch language")
+	localeConfigFile     = filepath.Join(basedir.GetUserHomeDir(), userLocaleConfigFile)
+	localeConfigFileTmp  = filepath.Join(basedir.GetUserHomeDir(), userLocaleConfigFileTmp)
+	localeRegionSections = []string{"LC_CTYPE", "LC_NUMERIC", "LC_MONETARY", "LC_TIME", "LC_PAPER", "LC_NAME", "LC_ADDRESS", "LC_TELEPHONE", "LC_MEASUREMENT"}
 )
 
 const (
@@ -286,7 +289,6 @@ func getCurrentUserLocale() (locale string) {
 }
 
 func writeUserLocale(locale string) error {
-	homeDir := basedir.GetUserHomeDir()
 	err := userenv.Modify(func(m map[string]string) {
 		m["LANG"] = locale
 		m["LANGUAGE"] = strings.Split(locale, ".")[0]
@@ -295,8 +297,6 @@ func writeUserLocale(locale string) error {
 		return err
 	}
 
-	localeConfigFile := filepath.Join(homeDir, userLocaleConfigFile)
-	localeConfigFileTmp := filepath.Join(homeDir, userLocaleConfigFileTmp)
 	err = writeLocaleEnvFile(locale, localeConfigFile, localeConfigFileTmp)
 	if err != nil {
 		return err
@@ -307,6 +307,31 @@ func writeUserLocale(locale string) error {
 func writeLocaleEnvFile(locale, originFilename string, destFilename string) error {
 	var content = generateLocaleEnvFile(locale, originFilename)
 	return ioutil.WriteFile(destFilename, content, 0644)
+}
+
+func writeLocaleRegionsEnvFile(locale string, originFilename string, destFilename string) error {
+	var (
+		localeRegionFound bool
+		infos, _          = readEnvFile(originFilename)
+		buf               bytes.Buffer
+	)
+
+	for _, info := range infos {
+		if strv.Strv(localeRegionSections).Contains(info.key) {
+			localeRegionFound = true
+			info.value = locale
+		}
+
+		buf.WriteString(fmt.Sprintf("%s=%s\n", info.key, info.value))
+	}
+
+	if !localeRegionFound {
+		for _, format := range localeRegionSections {
+			buf.WriteString(fmt.Sprintf("%s=%s\n", format, locale))
+		}
+	}
+
+	return ioutil.WriteFile(destFilename, buf.Bytes(), 0644)
 }
 
 func generateLocaleEnvFile(locale, filename string) []byte {
@@ -404,10 +429,20 @@ func (lang *LangSelector) setLocale(locale string) {
 		logger.Warning(err)
 	}
 
-	if networkEnabled {
-		sendNotify(localeIconStart, "", notifyTxtStartWithInstall)
-	} else {
-		sendNotify(localeIconStart, "", notifyTxtStart)
+	pkg, err := lang.getInstallLangSupportPackages(locale)
+	if err != nil {
+		logger.Debug("failed to get support packages", err)
+	}
+
+	// only language support packages not installed and network enabled should install
+	isInstalled := len(pkg) != 0
+
+	if !isInstalled {
+		if networkEnabled {
+			sendNotify(localeIconStart, "", notifyTxtStartWithInstall)
+		} else {
+			sendNotify(localeIconStart, "", notifyTxtStart)
+		}
 	}
 
 	// generate locale
@@ -445,7 +480,7 @@ func (lang *LangSelector) setLocale(locale string) {
 	}
 
 	// install language support packages
-	if networkEnabled {
+	if !isInstalled && networkEnabled {
 		err = lang.installLangSupportPackages(locale)
 		if err != nil {
 			logger.Warning("failed to install packages:", err)
@@ -529,6 +564,17 @@ func (lang *LangSelector) generateLocale(locale string) error {
 			return errors.New(failReason)
 		}
 	}
+}
+
+func (lang *LangSelector) getInstallLangSupportPackages(locale string) ([]string, error) {
+	ls, err := language_support.NewLanguageSupport()
+	if err != nil {
+		return nil, dbusutil.ToError(err)
+	}
+
+	packages := ls.ByLocale(locale, false)
+	ls.Destroy()
+	return packages, nil
 }
 
 func (lang *LangSelector) installLangSupportPackages(locale string) error {
@@ -624,4 +670,108 @@ func (lang *LangSelector) deleteLocale(locale string) error {
 		lang.settings.SetStrv(gsKeyLocales, locales)
 	}
 	return nil
+}
+
+func getCurrentLocaleRegion() (string, error) {
+	var currentLocaleRegion string
+
+	infos, err := readEnvFile(localeConfigFile)
+	if err != nil {
+		return currentLocaleRegion, err
+	}
+
+	for _, info := range infos {
+		if strv.Strv(localeRegionSections).Contains(info.key) {
+			currentLocaleRegion = info.value
+			break
+		}
+	}
+
+	return currentLocaleRegion, nil
+}
+
+// 获取当前用户的locale region, 如果没有设置过，使用系统的locale region
+func (lang *LangSelector) getLocaleRegion() (string, error) {
+	l, err := getCurrentLocaleRegion()
+	if err != nil {
+		logger.Warning("failed to get current locale region", err)
+		return lang.CurrentLocale, nil
+	}
+
+	return l, nil
+}
+
+// 根据用户选择的区域(locale)去设置对应的LC_*环境变量
+func (lang *LangSelector) setLocaleRegion(locale string) {
+	currentRegion, err := lang.getLocaleRegion()
+	if err != nil {
+		logger.Warning("failed to get locale region", err)
+		return
+	}
+
+	if currentRegion == locale {
+		logger.Debugf("the same locale Region %v, not need to set", locale)
+		return
+	}
+
+	lang.PropsMu.Lock()
+	lang.setPropLocaleState(LocaleStateChanging)
+	lang.PropsMu.Unlock()
+
+	networkEnabled, err := isNetworkEnable()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	// check locale language pkg installed
+	pkg, err := lang.getInstallLangSupportPackages(locale)
+	if err != nil {
+		logger.Debug("failed to get language support packages", err)
+	}
+
+	// only language support packages not installed and network enabled should install
+	isInstalled := len(pkg) != 0
+
+	if !isInstalled {
+		if networkEnabled {
+			sendNotify(localeIconStart, "", notifyTxtStartWithInstall)
+		} else {
+			sendNotify(localeIconStart, "", notifyTxtStart)
+		}
+
+		// generate locale
+		err = lang.generateLocale(locale)
+		if err != nil {
+			logger.Warning("failed to generate locale:", err)
+			sendNotify(localeIconFailed, "",
+				Tr("Failed to change locale region, please try later"))
+			lang.PropsMu.Lock()
+			lang.setPropLocaleState(LocaleStateChanged)
+			lang.PropsMu.Unlock()
+			return
+		} else {
+			logger.Debug("generate locale success")
+		}
+	}
+
+	// install language support packages
+	if !isInstalled && networkEnabled {
+		err = lang.installLangSupportPackages(locale)
+		if err != nil {
+			logger.Warning("failed to install packages:", err)
+		} else {
+			logger.Debug("install packages success")
+		}
+	}
+
+	err = writeLocaleRegionsEnvFile(locale, localeConfigFile, localeConfigFileTmp)
+	if err != nil {
+		logger.Warning("failed to write user locale formats:", err)
+	}
+
+	sendNotify(localeIconFinished, "", notifyTxtDone)
+
+	lang.PropsMu.Lock()
+	lang.setPropLocaleState(LocaleStateChanged)
+	lang.PropsMu.Unlock()
 }
