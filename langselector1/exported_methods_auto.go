@@ -36,12 +36,22 @@ func (v *LangSelector) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"locales"},
 		},
 		{
+			Name:    "GetLocaleRegion",
+			Fn:      v.GetLocaleRegion,
+			OutArgs: []string{"region"},
+		},
+		{
 			Name: "Reset",
 			Fn:   v.Reset,
 		},
 		{
 			Name:   "SetLocale",
 			Fn:     v.SetLocale,
+			InArgs: []string{"locale"},
+		},
+		{
+			Name:   "SetLocaleRegion",
+			Fn:     v.SetLocaleRegion,
 			InArgs: []string{"locale"},
 		},
 	}
