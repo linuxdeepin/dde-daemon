@@ -26,7 +26,6 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/utils"
-	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 var noUEvent bool
@@ -179,9 +178,9 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 	// check pstate , if has pstate, it is intel pstate mode , then
 	// we need another logic
-	m.hasPstate = dutils.IsFileExist(pstatePath)
+	m.hasPstate = utils.IsFileExist(pstatePath)
 	// check if amd is used
-	m.hasAmddpm = dutils.IsFileExist(amdGPUPath)
+	m.hasAmddpm = utils.IsFileExist(amdGPUPath)
 
 	m.refreshSystemPowerPerformance()
 	if m.hasPstate {
