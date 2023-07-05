@@ -20,6 +20,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"log"
 	"sync"
 	"unsafe"
 
@@ -43,50 +44,62 @@ func ucharToString(value *C.uchar) string {
 	return C.GoString((*C.char)(unsafe.Pointer(value)))
 }
 
-func writeFile(filename, data string) error {
+func writeFile(filename, data string) (err error) {
 	fileLocker.Lock()
 	defer fileLocker.Unlock()
 
 	fp, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Printf("failed to open %q: %v", filename, err)
-		return err
+		return
 	}
-	defer fp.Close()
-
+	defer func() {
+		closeErr := fp.Close()
+		if err == nil {
+			err = closeErr
+		} else {
+			log.Printf("writeFile Close %v %v", fp.Name(), closeErr)
+		}
+	}()
 	_, err = fp.WriteString(data + "\n")
 	if err != nil {
 		fmt.Println("failed to WriteString err :", err)
-		return err
+		return
 	}
 
 	err = fp.Sync()
 	if err != nil {
 		fmt.Println("fp Sync err :", err)
-		return err
+		return
 	}
 
-	return nil
+	return
 }
 
-func loadFile(filename string) ([]string, error) {
+func loadFile(filename string) (lines []string, err error) {
 	f, err := os.Open(filename)
 	if err != nil {
-		return nil, err
+		return
 	}
-	defer f.Close()
-
-	var lines []string
+	defer func() {
+		closeErr := f.Close()
+		if err == nil {
+			err = closeErr
+		} else {
+			log.Printf("LoadFile Close %v %v", f.Name(), closeErr)
+		}
+	}()
 	scanner := bufio.NewScanner(bufio.NewReader(f))
 	for scanner.Scan() {
 		line := scanner.Text()
 		lines = append(lines, line)
 	}
 	if scanner.Err() != nil {
-		return nil, scanner.Err()
+		err = scanner.Err()
+		return
 	}
 
-	return lines, nil
+	return
 }
 
 func createWhiteBoxUFile(dir, filePath string) error {
