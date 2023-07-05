@@ -1123,7 +1123,7 @@ func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager, wmObj wm.Wm) {
 				continue
 			}
 			sm.WaylandCustomShortCutMap[id + "-cs"] = cmd
-			cs := newCustomShort(id, id, keystrokesStrv, wmObj, csm)
+			cs := newCustomShort(id, id, cmd, keystrokesStrv, wmObj, csm)
 			sm.addWithoutLock(cs)
 		}
 	} else {

@@ -100,7 +100,7 @@ type CustomShortcutManager struct {
 	pinyinEnabled bool
 }
 
-func newCustomShort(id, name string, keystrokes []string, wm wm.Wm, csm *CustomShortcutManager) *CustomShortcut {
+func newCustomShort(id, name, cmd string, keystrokes []string, wm wm.Wm, csm *CustomShortcutManager) *CustomShortcut {
 	return &CustomShortcut{
 		BaseShortcut: BaseShortcut{
 			Id:         id,
@@ -110,6 +110,7 @@ func newCustomShort(id, name string, keystrokes []string, wm wm.Wm, csm *CustomS
 		},
 		manager: csm,
 		wm: wm,
+		Cmd: cmd,
 	}
 }
 

@@ -232,40 +232,12 @@ func (m *Manager) AddCustomShortcut(name, action, keystroke string) (id string,
 		return
 	}
 	if _useWayland {
-		name += "-cs"
-		keystrokeStrv := make([]string, 0)
-		keystrokeStrv = append(keystrokeStrv, keystroke)
-		accelJson, err := util.MarshalJSON(util.KWinAccel{
-			Id:         name,
-			Keystrokes: keystrokeStrv,
-		})
+		err := m.processWaylandCustomShortcut(name, action, keystroke)
 		if err != nil {
-			logger.Warning("accelJson failed: ", accelJson)
+			logger.Warning(err)
 			busErr = dbusutil.ToError(err)
 			return
 		}
-		logger.Debug("SetAccel: ", name, keystrokeStrv)
-		ok, err := m.wm.SetAccel(0, accelJson)
-		if !ok {
-			logger.Warning("SetAccel failed, accelJson: ", accelJson)
-			busErr = dbusutil.ToError(err)
-			return
-		}
-		sessionBus, err := dbus.SessionBus()
-		if err != nil {
-			logger.Warning("sessionBus creat failed", err)
-			busErr = dbusutil.ToError(err)
-			return
-		}
-		obj := sessionBus.Object("org.kde.kglobalaccel", "/kglobalaccel")
-		err = obj.Call("org.kde.KGlobalAccel.setActiveByUniqueName", 0, name, true).Err
-		if err != nil {
-			logger.Warning("setActiveByUniqueName failed")
-			busErr = dbusutil.ToError(err)
-			return
-		}
-		logger.Debug("WaylandCustomShortCutMap add", name)
-		m.shortcutManager.WaylandCustomShortCutMap[name] = action
 	}
 	m.shortcutManager.Add(shortcut)
 	m.emitShortcutSignal(shortcutSignalAdded, shortcut)
@@ -332,6 +304,41 @@ func (m *Manager) LookupConflictingShortcut(keystroke string) (shortcut string, 
 	return "", nil
 }
 
+func (m *Manager) processWaylandCustomShortcut(id, cmd, keystroke string) *dbus.Error {
+	logger.Debugf("WaylandCustomShortcut id: %q, cmd: %q, keystroke: %q", id, cmd, keystroke)
+	wlname := id + "-cs"
+	keystrokeStrv := make([]string, 0)
+	keystrokeStrv = append(keystrokeStrv, keystroke)
+	accelJson, err := util.MarshalJSON(util.KWinAccel{
+		Id:         wlname,
+		Keystrokes: keystrokeStrv,
+	})
+	if err != nil {
+		logger.Warning("accelJson failed: ", accelJson)
+		return dbusutil.ToError(err)
+	}
+	logger.Debug("SetAccel: ", wlname, keystrokeStrv)
+	ok, err := m.wm.SetAccel(0, accelJson)
+	if !ok {
+		logger.Warning("SetAccel failed, accelJson: ", accelJson)
+		return dbusutil.ToError(err)
+	}
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning("sessionBus create failed", err)
+		return dbusutil.ToError(err)
+	}
+	obj := sessionBus.Object("org.kde.kglobalaccel", "/kglobalaccel")
+	err = obj.Call("org.kde.KGlobalAccel.setActiveByUniqueName", 0, wlname, true).Err
+	logger.Debug("setActiveByUniqueName: ", wlname)
+	if err != nil {
+		logger.Warning("setActiveByUniqueName failed")
+		return dbusutil.ToError(err)
+	}
+	logger.Debug("WaylandCustomShortCutMap set", wlname)
+	m.shortcutManager.WaylandCustomShortCutMap[wlname] = cmd
+	return nil
+}
 // ModifyCustomShortcut modify custom shortcut
 //
 // id: shortcut id
@@ -366,6 +373,13 @@ func (m *Manager) ModifyCustomShortcut(id, name, cmd, keystroke string) *dbus.Er
 			return dbusutil.ToError(errKeystrokeUsed)
 		}
 		keystrokes = []*shortcuts.Keystroke{ks}
+	}
+
+	if _useWayland {
+		err := m.processWaylandCustomShortcut(id, cmd, keystroke)
+		if err != nil {
+			return err
+		}
 	}
 
 	// modify then save
