@@ -28,6 +28,7 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/strv"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
@@ -41,6 +42,11 @@ const (
 	networkConfigPath                  = "org.deepin.dde.daemon.network"
 	dsettingsProtalAuthEnable          = "protalAuthEnable"
 	dsettingsResetWifiOSDEnableTimeout = "resetWifiOSDEnableTimeout"
+
+	networkCoreDsgConfigPath           = "/usr/share/dsg/configs/org.deepin.dde.network/org.deepin.dde.network.json"
+	networkCoreConfigPath              = "org.deepin.dde.network"
+	ddeNetworkCoreConfigPath           = networkCoreConfigPath
+	dsettingsLoadServiceFromNM         = "LoadServiceFromNM"
 )
 
 const checkRepeatTime = 1 * time.Second
@@ -119,11 +125,14 @@ type Manager struct {
 
 	connectionSettingsLock sync.Mutex
 
-	// dsg config
+	// dsg config : org.deepin.dde.daemon.network
 	protalAuthEnable          bool
 	wifiOSDEnable             bool
 	resetWifiOSDEnableTimeout uint32
 	resetWifiOSDEnableTimer   *time.Timer
+
+	// dsg config : org.deepin.dde.network : LoadServiceFromNM
+	loadServiceFromNM          bool
 
 	//nolint
 	signals *struct {
@@ -278,6 +287,9 @@ func (m *Manager) init() {
 	} else {
 		logger.Warning(err)
 	}
+
+	m.loadServiceFromNM = m.getLoadServiceFromNM(ds)
+	logger.Info("[init], DConfig data of LoadServiceFromNM : ", m.loadServiceFromNM)
 
 	// 初始化配置
 	m.resetWifiOSDEnableTimer = time.AfterFunc(time.Duration(m.resetWifiOSDEnableTimeout)*time.Millisecond, func() {
@@ -434,6 +446,35 @@ func (m *Manager) init() {
 
 	m.syncConfig = dsync.NewConfig("network", &syncConfig{m: m},
 		m.sessionSigLoop, dbusPath, logger)
+}
+
+func (m *Manager) getLoadServiceFromNM(ds configManager.ConfigManager) (ret bool) {
+	if dutils.IsFileExist(networkCoreDsgConfigPath) {
+		configManagerPath, err := ds.AcquireManager(0, networkCoreConfigPath, ddeNetworkCoreConfigPath, "")
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		ddeNetworkCoreConfigManager, err := configManager.NewManager(m.sysSigLoop.Conn(), configManagerPath)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		getDSettingsLoadServiceFromNM := func() bool {
+			v, err := ddeNetworkCoreConfigManager.Value(0, dsettingsLoadServiceFromNM)
+			if err != nil {
+				logger.Warning(err)
+				return false
+			}
+			return v.Value().(bool)
+		}
+
+		ret = getDSettingsLoadServiceFromNM()
+	} else {
+		logger.Warning("[init] DConfig file not exist : /usr/share/dsg/configs/org.deepin.dde.network/org.deepin.dde.network.json")
+	}
+
+	return
 }
 
 func (m *Manager) destroy() {

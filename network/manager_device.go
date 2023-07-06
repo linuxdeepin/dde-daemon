@@ -282,57 +282,60 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 			logger.Warning(err)
 		}
 
-		err = nmDevWireless.AccessPoints().ConnectChanged(func(hasValue bool, value []dbus.ObjectPath) {
-			if !hasValue {
-				return
-			}
-
-			m.accessPointsLock.Lock()
-			shouldRemove := make([]dbus.ObjectPath, 0, len(m.accessPoints[devPath]))
-			for _, a := range m.accessPoints[devPath] {
-				var found bool
-				for _, v := range value {
-					if v == a.Path {
-						found = true
-						break
-					}
+		logger.Debug("[newDevice] dsg LoadServiceFromNM : ", m.loadServiceFromNM)
+		if m.loadServiceFromNM {
+			err = nmDevWireless.AccessPoints().ConnectChanged(func(hasValue bool, value []dbus.ObjectPath) {
+				if !hasValue {
+					return
 				}
 
-				if !found {
-					shouldRemove = append(shouldRemove, a.Path)
-				}
-			}
-
-			shouldAdd := make([]dbus.ObjectPath, 0, len(value))
-			for _, v := range value {
-				var found bool
+				m.accessPointsLock.Lock()
+				shouldRemove := make([]dbus.ObjectPath, 0, len(m.accessPoints[devPath]))
 				for _, a := range m.accessPoints[devPath] {
-					if v == a.Path {
-						found = true
-						break
+					var found bool
+					for _, v := range value {
+						if v == a.Path {
+							found = true
+							break
+						}
+					}
+
+					if !found {
+						shouldRemove = append(shouldRemove, a.Path)
 					}
 				}
 
-				if !found {
-					shouldAdd = append(shouldAdd, v)
+				shouldAdd := make([]dbus.ObjectPath, 0, len(value))
+				for _, v := range value {
+					var found bool
+					for _, a := range m.accessPoints[devPath] {
+						if v == a.Path {
+							found = true
+							break
+						}
+					}
+
+					if !found {
+						shouldAdd = append(shouldAdd, v)
+					}
 				}
-			}
 
-			for _, a := range shouldRemove {
-				m.removeAccessPoint(devPath, a)
-			}
+				for _, a := range shouldRemove {
+					m.removeAccessPoint(devPath, a)
+				}
 
-			for _, a := range shouldAdd {
-				m.addAccessPoint(devPath, a)
-			}
+				for _, a := range shouldAdd {
+					m.addAccessPoint(devPath, a)
+				}
 
-			m.PropsMu.Lock()
-			m.updatePropWirelessAccessPoints()
-			m.PropsMu.Unlock()
-			m.accessPointsLock.Unlock()
-		})
-		if err != nil {
-			logger.Warning("connect to AccessPoints changed failed:", err)
+				m.PropsMu.Lock()
+				m.updatePropWirelessAccessPoints()
+				m.PropsMu.Unlock()
+				m.accessPointsLock.Unlock()
+			})
+			if err != nil {
+				logger.Warning("connect to AccessPoints changed failed:", err)
+			}
 		}
 
 		accessPoints := nmGetAccessPoints(devPath)
