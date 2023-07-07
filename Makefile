@@ -120,6 +120,7 @@ install: build install-dde-data install-icons
 
 	mkdir -pv ${DESTDIR}/usr/lib/deepin-daemon/service-trigger
 	cp -f misc/service-trigger/*.json ${DESTDIR}/usr/lib/deepin-daemon/service-trigger/
+	cp -f misc/service-trigger/*.sh ${DESTDIR}/usr/lib/deepin-daemon/service-trigger/
 
 	mkdir -pv ${DESTDIR}/etc/NetworkManager/conf.d
 	cp -f misc/etc/NetworkManager/conf.d/* ${DESTDIR}/etc/NetworkManager/conf.d/
