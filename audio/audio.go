@@ -451,6 +451,7 @@ func (a *Audio) autoPause() {
 		go pauseAllPlayers()
 	} else if port.Available == pulse.AvailableTypeNo {
 		// 使用优先级并且未开启自动切换时，先不暂停，后面根据sink信息判断是否需要暂停
+		logger.Debug("wait check priority", port.Priority)
 		a.misc = port.Priority
 		if a.misc == 0 || a.canAutoSwitchPort() {
 			go pauseAllPlayers()
@@ -484,7 +485,9 @@ func (a *Audio) refreshDefaultSinkSource() {
 					go pauseAllPlayers()
 				} else {
 					// 非可插拔sink 和 可插拔sink的port优先级变低了才暂停。
-					if !a.defaultSink.pluggable || port.Priority < a.misc {
+					if !a.defaultSink.pluggable ||
+						port.Priority < a.misc ||
+						port.Available == pulse.AvailableTypeNo {
 						go pauseAllPlayers()
 					}
 				}
