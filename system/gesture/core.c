@@ -408,6 +408,11 @@ handle_gesture_events(struct libinput_event *ev, int type)
         break;
     }
     case LIBINPUT_EVENT_GESTURE_SWIPE_END:
+        if (libinput_event_gesture_get_cancelled(gesture)) {
+            raw_event_reset(raw, true);
+            break;
+        }
+
         raw->fingers = libinput_event_gesture_get_finger_count(gesture);
         if (raw->dblclick) {
             handleSwipeStop(raw->fingers);
