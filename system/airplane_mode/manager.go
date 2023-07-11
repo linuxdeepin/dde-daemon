@@ -237,8 +237,7 @@ func (mgr *Manager) listenWirelessEnabled() {
 		logger.Debug("refresh all blocked state:", enabled)
 
 		// 仅保存 soft block 的状态
-		btSoftBlocked := mgr.config.GetBlocked(rfkillTypeBT)
-		mgr.config.SetBlocked(rfkillTypeAll, btSoftBlocked && wifiAirplaneMode)
+		mgr.config.SetBlocked(rfkillTypeAll, mgr.Enabled)
 		err := mgr.config.SaveConfig()
 		if err != nil {
 			logger.Warningf("save rfkill config file failed, err: %v", err)
