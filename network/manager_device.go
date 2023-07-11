@@ -283,7 +283,7 @@ func (m *Manager) newDevice(devPath dbus.ObjectPath) (dev *device, err error) {
 		}
 
 		logger.Debug("[newDevice] dsg LoadServiceFromNM : ", m.loadServiceFromNM)
-		if m.loadServiceFromNM {
+		if !m.loadServiceFromNM {
 			err = nmDevWireless.AccessPoints().ConnectChanged(func(hasValue bool, value []dbus.ObjectPath) {
 				if !hasValue {
 					return
