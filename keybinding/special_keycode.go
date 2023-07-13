@@ -30,6 +30,7 @@ const (
 	KEY_MODE            = 0x175
 	KEY_KBDILLUMTOGGLE  = 228
 	KEY_RFKILL          = 247
+	KEY_SLEEP           = 142
 )
 
 type SpecialKeycodeMapKey struct {
@@ -113,6 +114,9 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// 切换飞行模式 Hard开/关状态
 	key = createSpecialKeycodeIndex(KEY_RFKILL, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handleRFKILL
+
+	key = createSpecialKeycodeIndex(KEY_SLEEP, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleSleep
 }
 
 // 处理函数的总入口
@@ -382,4 +386,10 @@ func (m *Manager) handleRFKILL() {
 	m.emitSignalKeyEvent(true, "KEY_RFKILL")
 	m.delayUpdateRfTimer.Stop()
 	m.delayUpdateRfTimer.Reset(minCallRfkillInterval)
+}
+
+func (m *Manager) handleSleep() {
+	logger.Info("handleSleep")
+	cmd := "dbus-send --session --dest=com.deepin.SessionManager --print-reply /com/deepin/SessionManager com.deepin.SessionManager.RequestSuspend"
+	m.execCmd(cmd, false)
 }
