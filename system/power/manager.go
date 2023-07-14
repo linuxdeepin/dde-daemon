@@ -138,6 +138,9 @@ type Manager struct {
 	// 当前模式
 	Mode string
 
+	// 上次非低电量时的模式
+	lastMode string
+
 	// 退出函数
 	endSysPowerSave func()
 
@@ -175,6 +178,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		service:           service,
 		BatteryPercentage: 100,
 		cpus:              NewCpuHandlers(),
+		lastMode:          "balance",
 	}
 	// check pstate , if has pstate, it is intel pstate mode , then
 	// we need another logic
@@ -813,6 +817,9 @@ func (m *Manager) doSetMode(mode string, fakeMode string) error {
 	if err == nil {
 		m.setPropMode(mode)
 		m.fakeMode = fakeMode
+		if m.lastMode != mode && mode != "powersave" {
+			m.lastMode = mode
+		}
 	}
 
 	return err
