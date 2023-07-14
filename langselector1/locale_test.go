@@ -48,6 +48,6 @@ func Test_WriteLocaleRegionsEnvFile(t *testing.T) {
 }
 
 func Test_getCurrentLocaleRegione(t *testing.T) {
-	_, err := getCurrentLocaleRegion()
+	_, err := getCurrentLocaleRegion("testdata/pam_environment")
 	assert.NoError(t, err)
 }

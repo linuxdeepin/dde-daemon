@@ -668,10 +668,10 @@ func (lang *LangSelector) deleteLocale(locale string) error {
 	return nil
 }
 
-func getCurrentLocaleRegion() (string, error) {
+func getCurrentLocaleRegion(path string) (string, error) {
 	var currentLocaleRegion string
 
-	infos, err := readEnvFile(localeConfigFile)
+	infos, err := readEnvFile(path)
 	if err != nil {
 		return currentLocaleRegion, err
 	}
@@ -688,7 +688,7 @@ func getCurrentLocaleRegion() (string, error) {
 
 // 获取当前用户的locale region, 如果没有设置过，使用系统的locale region
 func (lang *LangSelector) getLocaleRegion() (string, error) {
-	l, err := getCurrentLocaleRegion()
+	l, err := getCurrentLocaleRegion(localeConfigFile)
 	if err != nil {
 		logger.Warning("failed to get current locale region", err)
 		return lang.CurrentLocale, nil
