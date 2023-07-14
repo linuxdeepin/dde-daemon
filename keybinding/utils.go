@@ -12,11 +12,10 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
-
+	"time"
 	dbus "github.com/godbus/dbus"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
-
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/strv"
@@ -223,11 +222,19 @@ func (m *Manager) systemTurnOffScreen() {
 	} else {
 		useWayland = false
 	}
-	if m.gsPower.GetBoolean(settingKeyScreenBlackLock) {
+
+	bScreenBlackLock := m.gsPower.GetBoolean(settingKeyScreenBlackLock)
+	if bScreenBlackLock {
 		m.doLock(true)
 	}
 
 	doPrepareSuspend()
+	// bug-209669 : 部分厂商机器调用DPMS off后，调用锁屏show会被阻塞,只有当DPMS on了才show锁屏成功，这就导致唤醒闪桌面再进锁屏
+	if bScreenBlackLock && !m.isWmBlackScreenActive() {
+		m.setWmBlackScreenActive(true)
+		time.Sleep(100 * time.Millisecond)
+	}
+
 	if useWayland {
 		err = exec.Command("dde_wldpms", "-s", "Off").Run()
 	} else {
@@ -235,6 +242,10 @@ func (m *Manager) systemTurnOffScreen() {
 	}
 	if err != nil {
 		logger.Warning("Set DPMS off error:", err)
+	}
+
+	if bScreenBlackLock && m.isWmBlackScreenActive() {
+		m.setWmBlackScreenActive(false)
 	}
 	undoPrepareSuspend()
 }

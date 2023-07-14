@@ -260,6 +260,35 @@ func (m *Manager) handleSwitchPowerMode() {
 	}
 }
 
+func (m *Manager) isWmBlackScreenActive() bool {
+	bus, err := dbus.SessionBus()
+	if err == nil {
+		kwinInter := bus.Object("org.kde.KWin", "/BlackScreen")
+		var active bool
+		err = kwinInter.Call("org.kde.kwin.BlackScreen.getActive",
+			dbus.FlagNoAutoStart).Store(&active)
+		if err != nil {
+			logger.Warning("failed to get kwin blackscreen effect active:", err)
+			return false
+		}
+		return active
+	} else {
+		return false
+	}
+}
+
+func (m *Manager) setWmBlackScreenActive(active bool) {
+	logger.Info("set blackScreen effect active: ", active)
+	bus, err := dbus.SessionBus()
+	if err == nil {
+		kwinInter := bus.Object("org.kde.KWin", "/BlackScreen")
+		err = kwinInter.Call("org.kde.kwin.BlackScreen.setActive", 0, active).Err
+		if err != nil {
+			logger.Warning("set blackScreen active failed:", err)
+		}
+	}
+}
+
 // 电源键的处理
 func (m *Manager) handlePower() {
 	var powerPressAction int32
