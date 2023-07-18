@@ -601,6 +601,8 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 		return
 	}
 	logger.Debugf("dev %v, enabled: %v, activate: %v", devPath, enabled, activate)
+	// set enable device state
+	m.setDeviceEnabled(enabled, devPath)
 	// check if need activate connection
 	if enabled {
 		if cpath != "/" && activate {
@@ -636,8 +638,6 @@ func (m *Manager) enableDevice(devPath dbus.ObjectPath, enabled bool, activate b
 		logger.Debugf("device set auto-connect success, dev: %v", devPath)
 	}
 
-	// set enable device state
-	m.setDeviceEnabled(enabled, devPath)
 	return
 }
 
