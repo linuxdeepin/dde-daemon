@@ -240,7 +240,7 @@ func newAudio(service *dbusutil.Service) *Audio {
 	return a
 }
 
-func startAudioServer(count int, service *dbusutil.Service) error {
+func startAudioServer(service *dbusutil.Service) error {
 	var serverPath dbus.ObjectPath
 	audioServers := []string{"pipewire.service", "pluseaudio.service"}
 
@@ -285,12 +285,6 @@ func startAudioServer(count int, service *dbusutil.Service) error {
 	}
 
 	if !has {
-		if count > 0 {
-			logger.Debug("retry start audio server after 500ms")
-
-			time.Sleep(500 * time.Millisecond)
-			return startAudioServer(count-1, service)
-		}
 		return errors.New("failed to start audio server")
 	}
 
