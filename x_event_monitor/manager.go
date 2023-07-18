@@ -77,8 +77,8 @@ type Manager struct {
 
 	mu sync.Mutex
 
-	CursorX               int32
-	CursorY               int32
+	CursorX int32
+	CursorY int32
 }
 
 const (
@@ -355,8 +355,9 @@ func (m *Manager) handleXEvent() {
 					if m.hideCursorWhenTouch {
 						m.beginMoveMouse()
 					}
-
+					m.mu.Lock()
 					_, ok := m.idReferCountMap[fullscreenId]
+					m.mu.Unlock()
 					if len(m.idAreaInfoMap) == 0 && !ok {
 						break
 					}
