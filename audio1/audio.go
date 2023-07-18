@@ -5,11 +5,9 @@
 package audio
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"math"
-	"os/exec"
 	"sort"
 	"strings"
 	"sync"
@@ -17,6 +15,7 @@ import (
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -46,8 +45,7 @@ const (
 	dbusPath        = "/org/deepin/dde/Audio1"
 	dbusInterface   = dbusServiceName
 
-	cmdSystemctl  = "systemctl"
-	cmdPulseaudio = "pulseaudio"
+	dbusPulseaudioServer = "org.pulseaudio.Server"
 
 	increaseMaxVolume = 1.5
 	normalMaxVolume   = 1.0
@@ -242,26 +240,58 @@ func newAudio(service *dbusutil.Service) *Audio {
 	return a
 }
 
-func startPulseaudio(count int) error {
-	var errBuf bytes.Buffer
-	cmd := exec.Command(cmdSystemctl, "--user", "start", "pulseaudio")
-	cmd.Stderr = &errBuf
-	err := cmd.Run()
-	if err != nil {
-		logger.Warningf("failed to start pulseaudio via systemd: err: %v, stderr: %s",
-			err, errBuf.Bytes())
-	}
-	errBuf.Reset()
+func startAudioServer(count int, service *dbusutil.Service) error {
+	var serverPath dbus.ObjectPath
+	audioServers := []string{"pipewire.service", "pluseaudio.service"}
 
-	err = exec.Command(cmdPulseaudio, "--check").Run()
-	if err != nil {
-		logger.Warning("pulseaudio check error", err)
-		if count > 0 {
-			logger.Info("retry start pulseaudio after 500ms")
-			time.Sleep(500 * time.Millisecond)
-			return startPulseaudio(count - 1)
+	systemd := systemd1.NewManager(service.Conn())
+
+	for _, server := range audioServers {
+		path, err := systemd.GetUnit(0, server)
+		if err == nil {
+			serverPath = path
+			break
 		}
-		return errors.New("failed to start pulseaudio")
+	}
+
+	logger.Debug("ready to start audio server", serverPath)
+
+	if len(serverPath) != 0 {
+		serverSystemdUnit, err := systemd1.NewUnit(service.Conn(), serverPath)
+		if err != nil {
+			logger.Warning("failed to create audio server systemd unit", err)
+			return err
+		}
+
+		state, err := serverSystemdUnit.Unit().ActiveState().Get(0)
+		if err != nil {
+			logger.Warning("failed to get audio server active state", err)
+			return err
+		}
+
+		if state != "active" {
+			go func() {
+				_, err := serverSystemdUnit.Unit().Start(0, "replace")
+				if err != nil {
+					logger.Warning("failed to start audio server unit:", err)
+				}
+			}()
+		}
+	}
+
+	has, err := service.NameHasOwner(dbusPulseaudioServer)
+	if err != nil {
+		logger.Warningf("failed to get dbus pulseaudio server owner, err: %v", err)
+	}
+
+	if !has {
+		if count > 0 {
+			logger.Debug("retry start audio server after 500ms")
+
+			time.Sleep(500 * time.Millisecond)
+			return startAudioServer(count-1, service)
+		}
+		return errors.New("failed to start audio server")
 	}
 
 	return nil
