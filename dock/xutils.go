@@ -349,6 +349,17 @@ func getAndroidUengineName(win x.Window) string {
 	return name
 }
 
+func getDSGVirtualAppDesktop(win x.Window) string {
+	reply, err := x.GetProperty(globalXConn, false, win,
+		atomDSGVirtualAppDesktop, atomString, 0, lengthMax).Reply(globalXConn)
+	if err != nil {
+		return ""
+	}
+
+	name := string(reply.Value)
+	return name
+}
+
 const lengthMax = 0xffff
 
 func getWmWindowRole(win x.Window) string {

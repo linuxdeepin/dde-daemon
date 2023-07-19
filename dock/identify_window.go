@@ -24,6 +24,7 @@ type IdentifyWindowFunc struct {
 type _IdentifyWindowFunc func(*Manager, *WindowInfo) (string, *AppInfo)
 
 func (m *Manager) registerIdentifyWindowFuncs() {
+	m.registerIdentifyWindowFunc("DSGVirtualApp", identifyWindowDSGVirtualApp)
 	m.registerIdentifyWindowFunc("Android", identifyWindowAndroid)
 	m.registerIdentifyWindowFunc("PidEnv", func(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
 		return identifyWindowByPidEnv(m, &winInfo.baseWindowInfo)
@@ -392,6 +393,24 @@ func identifyWindowByCmdlineTurboBooster(m *Manager, winInfo *WindowInfo) (strin
 	}
 
 	// fail
+	return "", nil
+}
+
+func identifyWindowDSGVirtualApp(m *Manager, winInfo *WindowInfo) (string, *AppInfo) {
+	desktop := getDSGVirtualAppDesktop(winInfo.xid)
+	if "" != desktop {
+		deskappInfo, _ := desktopappinfo.NewDesktopAppInfoFromFile(desktop)
+		if deskappInfo == nil {
+			logger.Info("Not Exist DesktopFile")
+			return "", nil
+		}
+
+		appInfo := newAppInfo(deskappInfo)
+		appInfo.identifyMethod = "DSGVirtualApp"
+
+		return appInfo.innerId, appInfo
+	}
+
 	return "", nil
 }
 

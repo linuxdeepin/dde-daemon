@@ -63,6 +63,7 @@ var (
 
 	atomAndroidUengineId   x.Atom
 	atomAndroidUengineName x.Atom
+	atomDSGVirtualAppDesktop 	x.Atom
 )
 
 func initDir() {
@@ -108,4 +109,5 @@ func initAtom() {
 	atomMotifWmHints, _ = getAtom("_MOTIF_WM_HINTS")
 	atomAndroidUengineId, _ = getAtom("UENGINE_TASK_ID")
 	atomAndroidUengineName, _ = getAtom("UENGINE_TASK_NAME")
+	atomDSGVirtualAppDesktop, _ = getAtom("_DSG_NET_WM_LAUNCHED_DESKTOP_FILE")
 }

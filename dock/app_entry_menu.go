@@ -37,7 +37,7 @@ func (entry *AppEntry) updateMenu() {
 
 	if hasWin {
 		if entry.manager.forceQuitAppStatus != forceQuitAppDisabled {
-			if entry.appInfo != nil && entry.appInfo.identifyMethod == "Android" {
+			if entry.appInfo != nil && (entry.appInfo.identifyMethod == "Android" || entry.appInfo.identifyMethod == "DSGVirtualApp") {
 				menu.AppendItem(entry.getMenuItemForceQuitAndroid())
 			} else {
 				menu.AppendItem(entry.getMenuItemForceQuit())
