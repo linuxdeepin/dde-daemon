@@ -72,7 +72,7 @@
             "visibility": "private"
         },
         "powerSavingModeAuto": {
-            "value": true,
+            "value": false,
             "serial": 0,
             "flags": [
                 "global"
@@ -96,7 +96,7 @@
             "visibility": "public"
         },
         "powerSavingModeAutoWhenBatteryLow": {
-            "value": false,
+            "value": true,
             "serial": 0,
             "flags": [
                 "global"
