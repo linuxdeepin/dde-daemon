@@ -43,10 +43,10 @@ const (
 	dsettingsProtalAuthEnable          = "protalAuthEnable"
 	dsettingsResetWifiOSDEnableTimeout = "resetWifiOSDEnableTimeout"
 
-	networkCoreDsgConfigPath           = "/usr/share/dsg/configs/org.deepin.dde.network/org.deepin.dde.network.json"
-	networkCoreConfigPath              = "org.deepin.dde.network"
-	ddeNetworkCoreConfigPath           = networkCoreConfigPath
-	dsettingsLoadServiceFromNM         = "LoadServiceFromNM"
+	networkCoreDsgConfigPath   = "/usr/share/dsg/configs/org.deepin.dde.network/org.deepin.dde.network.json"
+	networkCoreConfigPath      = "org.deepin.dde.network"
+	ddeNetworkCoreConfigPath   = networkCoreConfigPath
+	dsettingsLoadServiceFromNM = "LoadServiceFromNM"
 )
 
 const checkRepeatTime = 1 * time.Second
@@ -132,7 +132,7 @@ type Manager struct {
 	resetWifiOSDEnableTimer   *time.Timer
 
 	// dsg config : org.deepin.dde.network : LoadServiceFromNM
-	loadServiceFromNM          bool
+	loadServiceFromNM bool
 
 	//nolint
 	signals *struct {
@@ -292,6 +292,7 @@ func (m *Manager) init() {
 	logger.Info("[init], DConfig data of LoadServiceFromNM : ", m.loadServiceFromNM)
 
 	// 初始化配置
+	m.wifiOSDEnable = true
 	m.resetWifiOSDEnableTimer = time.AfterFunc(time.Duration(m.resetWifiOSDEnableTimeout)*time.Millisecond, func() {
 		logger.Debug("reset wifi OSD enable")
 		m.wifiOSDEnable = true
