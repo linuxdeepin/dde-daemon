@@ -39,9 +39,10 @@ type ModuleBase struct {
 
 func NewModuleBase(name string, impl ModuleImpl, logger *log.Logger) *ModuleBase {
 	m := &ModuleBase{
-		name: name,
-		impl: impl,
-		log:  logger,
+		name: 	name,
+		impl: 	impl,
+		log:  	logger,
+		enabled:false,
 	}
 
 	// 此为等待「enabled」的 WaitGroup，故在 enable 完成之前，需要一直为等待状态。
