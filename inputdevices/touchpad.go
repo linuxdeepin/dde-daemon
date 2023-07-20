@@ -11,14 +11,16 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
-
 	"sync"
 
+	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 )
 
 const (
@@ -40,6 +42,10 @@ const (
 	tpadKeyPalmDetect         = "palm-detect"
 	tpadKeyPalmMinWidth       = "palm-min-width"
 	tpadKeyPalmMinZ           = "palm-min-pressure"
+
+	dsettingsAppID            = "org.deepin.dde.daemon"
+	dsettingsInputdevices     = "org.deepin.dde.daemon.inputdevices"
+	dsettingsData             = "ps2MouseAsTouchPadEnabled"
 )
 
 const (
@@ -50,6 +56,8 @@ type Touchpad struct {
 	service    *dbusutil.Service
 	PropsMu    sync.RWMutex
 	Exist      bool
+	//存储PS/2 Mouse指针对象，用于设置gsetting开启/关闭
+	ps2MousesTouchPad *mouseInfo
 	DeviceList string
 
 	// dbusutil-gen: ignore-below
@@ -108,6 +116,31 @@ func newTouchpad(service *dbusutil.Service) *Touchpad {
 	return tpad
 }
 
+func (tpad *Touchpad) getDsgPS2MouseAsTouchPadEnable() bool {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return false
+	}
+	ds := configManager.NewConfigManager(sysBus)
+
+	inputdevicesPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsInputdevices, "")
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	inputdevicesDsg, err := configManager.NewManager(sysBus, inputdevicesPath)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	value, err := inputdevicesDsg.Value(0, dsettingsData)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return value.Value().(bool)
+}
+
 func (tpad *Touchpad) init() {
 	if !tpad.Exist {
 		return
@@ -132,6 +165,37 @@ func (tpad *Touchpad) handleDeviceChanged() {
 	tpad.init()
 }
 
+func (tpad *Touchpad) isPS2Mouse() bool {
+	if !tpad.getDsgPS2MouseAsTouchPadEnable() {
+		logger.Info("isPS2Mouse Dsg org.deepin.dde.daemon.inputdevices ps2MouseAsTouchPadEnabled is false")
+		return false
+	}
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	sysPower := power.NewPower(sysBus)
+	hasBattery, err := sysPower.HasBattery().Get(0)
+	logger.Info("isPS2Mouse hasBattery : ", hasBattery)
+	if !hasBattery {
+		logger.Warning(err)
+		return false
+	}
+
+	for _, info := range getMouseInfos(false) {
+		if info.TrackPoint {
+			continue
+		}
+		logger.Debugf("isPS2Mouse info : %v, name : %s, devNode : %s, phys : %s", info, info.Name, info.devNode, info.phys)
+		if strings.Contains(info.Name, "PS/2") && strings.Contains(info.Name, "Mouse") {
+			tpad.ps2MousesTouchPad = info
+			break
+		}
+	}
+	return tpad.ps2MousesTouchPad != nil
+}
+
 func (tpad *Touchpad) updateDXTpads() {
 	tpad.devInfos = Touchpads{}
 	for _, info := range getTPadInfos(false) {
@@ -147,7 +211,7 @@ func (tpad *Touchpad) updateDXTpads() {
 	tpad.PropsMu.Lock()
 	var v string
 	if len(tpad.devInfos) == 0 {
-		tpad.setPropExist(false)
+		tpad.setPropExist(tpad.isPS2Mouse())
 	} else {
 		tpad.setPropExist(true)
 		v = tpad.devInfos.string()
@@ -157,13 +221,18 @@ func (tpad *Touchpad) updateDXTpads() {
 }
 
 func (tpad *Touchpad) enable(enabled bool) {
-	for _, v := range tpad.devInfos {
-		err := v.Enable(enabled)
-		if err != nil {
-			logger.Warningf("Enable '%v - %v' failed: %v",
-				v.Id, v.Name, err)
+	if len(tpad.devInfos) > 0 {
+		for _, v := range tpad.devInfos {
+			err := v.Enable(enabled)
+			if err != nil {
+				logger.Warningf("Enable '%v - %v' failed: %v",
+					v.Id, v.Name, err)
+			}
 		}
+	} else if tpad.ps2MousesTouchPad != nil {
+		tpad.ps2MousesTouchPad.Enable(enabled)
 	}
+
 	enableGesture(enabled)
 }
 
