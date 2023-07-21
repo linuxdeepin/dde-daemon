@@ -139,6 +139,9 @@ type Manager struct {
 	// 当前模式
 	Mode string
 
+	//是否在启动阶段，启动阶段不允许调节亮度; 若在启动阶段切换模式后(切节能模式降低亮度)，可以调节亮度.
+	IsInBootTime bool
+
 	// 上次非低电量时的模式
 	lastMode string
 
@@ -873,7 +876,7 @@ func (m *Manager) doSetMode(mode string) error {
 	logger.Info(" doSetMode, mode : ", mode)
 	var err error
 	switch mode {
-	case "balance": // governor=performance boost=false
+	case "balance": // governor=performance
 		if m.hasAmddpm {
 			err := ioutil.WriteFile(amdGPUPath, []byte("auto"), 0644)
 			if err != nil {
@@ -921,7 +924,7 @@ func (m *Manager) doSetMode(mode string) error {
 			logger.Warning(err)
 		}
 
-	case "performance": // governor=performance boost=true
+	case "performance": // governor=performance
 		if m.hasAmddpm {
 			err := ioutil.WriteFile(amdGPUPath, []byte("high"), 0644)
 			if err != nil {
@@ -951,6 +954,7 @@ func (m *Manager) doSetMode(mode string) error {
 	if err == nil {
 		if m.setPropMode(mode) {
 			logger.Info("Set power mode", m.Mode)
+			m.IsInBootTime = false
 		} else {
 			logger.Warningf("Set power mode failed. mode : %s, current mode : %s", mode, m.Mode)
 		}
@@ -1029,12 +1033,12 @@ func (m *Manager) startSysPowersave() {
 //需求: 为了提高启动速度，登录前将性能模式设置为performance
 //① 为了减小耦合性，仅写文件(doSetCpuGovernor)，不修改后端相关属性
 func (m *Manager) enablePerformanceInBoot() bool {
+	m.IsInBootTime = true
 	if m.Mode == "performance" {
 		return false
 	}
 
 	logger.Info("enablePerformanceInBoot performance")
-	//err := m.doSetMode("performance")
 	err := m.doSetCpuGovernor("performance")
 	if err != nil {
 		logger.Warning(err)

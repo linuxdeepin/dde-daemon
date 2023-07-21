@@ -297,6 +297,15 @@ func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bo
 		return
 	}
 
+	bInBootTime, err := psp.manager.helper.Power.IsInBootTime().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+	if bInBootTime {
+		logger.Debug("handlePowerSavingModeChanged InBootTime, Can't change brightness.")
+		return
+	}
+
 	psp.manager.PropsMu.RLock()
 	hasLightSensor := psp.manager.HasAmbientLightSensor
 	psp.manager.PropsMu.RUnlock()

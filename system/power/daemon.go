@@ -127,6 +127,7 @@ func (d *Daemon) Start() (err error) {
 								return
 							}
 							logger.Infof(" ## time.AfterFunc 2 min manager.Mod : %s, data : %s", d.manager.Mode, data.Value().(string))
+							d.manager.IsInBootTime = false
 							//② 恢复流程也仅仅写内核性能模式文件，不设置后端属性
 							err = d.manager.doSetMode(data.Value().(string))
 							if err != nil {
@@ -157,6 +158,7 @@ func (d *Daemon) Start() (err error) {
 					logger.Warning(err)
 				}
 			}()
+			d.manager.IsInBootTime = false
 			if d.manager.dsgPower == nil {
 				return dbusutil.ToError(errors.New("dsgPower is nil"))
 			}
