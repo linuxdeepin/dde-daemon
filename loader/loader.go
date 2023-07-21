@@ -149,9 +149,9 @@ func (l *Loader) EnableModules(enablingModules []string, disableModules []string
 
 		go func() {
 			l.log.Info("enable module", name)
-			if module.IsEnable() == true {
+			if module.IsEnable() {
 				l.log.Infof("module %s has been enabled", name)
-				return;
+				return
 			}
 
 			startTime := time.Now()
@@ -176,7 +176,7 @@ func (l *Loader) EnableModules(enablingModules []string, disableModules []string
 	for _, n := range nodes {
 		m := l.modules[n.ID]
 		if m.IsEnable() == true {
-			continue;
+			continue
 		}
 
 		m.WaitEnable()
