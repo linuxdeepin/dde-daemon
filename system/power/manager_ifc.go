@@ -93,14 +93,23 @@ func (m *Manager) SetCpuGovernor(governor string) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
+func (m *Manager) updatePowerSavingState(state bool) {
+	if m.setPropPowerSavingModeAutoWhenBatteryLow(state) {
+		m.setDsgData(dsettingsPowerSavingModeAutoWhenBatteryLow, state, m.dsgPower)
+	}
+
+	if m.setPropPowerSavingModeAuto(state) {
+		m.setDsgData(dsettingsPowerSavingModeAuto, state, m.dsgPower)
+	}
+}
+
 func (m *Manager) SetMode(mode string) *dbus.Error {
 	if m.Mode == mode {
 		return dbusutil.ToError(errors.New("Repeat switch"))
 	}
 
 	if "powersave" == m.Mode || "powersave" == mode {
-		m.setPropPowerSavingModeAutoWhenBatteryLow(false)
-		m.setPropPowerSavingModeAuto(false)
+		m.updatePowerSavingState(false)
 	}
 
 	logger.Info(" SetMode mode : ", mode)

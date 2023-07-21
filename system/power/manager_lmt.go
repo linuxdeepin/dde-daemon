@@ -184,8 +184,7 @@ func (m *Manager) writePowerSavingModeEnabledCb(write *dbusutil.PropertyWrite) *
 	var lmtCfgChanged bool
 
 	m.PropsMu.Lock()
-	m.setPropPowerSavingModeAuto(false)
-	m.setPropPowerSavingModeAutoWhenBatteryLow(false)
+	m.updatePowerSavingState(false)
 	m.PropsMu.Unlock()
 
 	if enabled {
