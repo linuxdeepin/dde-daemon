@@ -955,6 +955,7 @@ func (m *Manager) doSetMode(mode string) error {
 		if m.setPropMode(mode) {
 			logger.Info("Set power mode", m.Mode)
 			m.IsInBootTime = false
+			m.setDsgData(dsettingsMode, mode, m.dsgPower)
 		} else {
 			logger.Warningf("Set power mode failed. mode : %s, current mode : %s", mode, m.Mode)
 		}
