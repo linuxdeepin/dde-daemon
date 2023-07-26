@@ -188,7 +188,8 @@ func (tpad *Touchpad) isPS2Mouse() bool {
 			continue
 		}
 		logger.Debugf("isPS2Mouse info : %v, name : %s, devNode : %s, phys : %s", info, info.Name, info.devNode, info.phys)
-		if strings.Contains(info.Name, "PS/2") && strings.Contains(info.Name, "Mouse") {
+		name := strings.ToLower(info.Name)
+		if strings.Contains(name, "ps/2") && strings.Contains(name, "mouse") && !strings.Contains(name, "usb") {
 			tpad.ps2MousesTouchPad = info
 			break
 		}
