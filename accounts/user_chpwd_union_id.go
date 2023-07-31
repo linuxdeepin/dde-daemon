@@ -35,7 +35,7 @@ import (
 // 所以需要将重置密码的对话框 (文件位于 resetPwdDialogPath)
 // 以一个特殊的用户的身份运行, 这个用户只做运行对话框这一件事情.
 
-const pwdChangerUserName = "deepin_pwd_changer"                                //#nosec G101
+const pwdChangerUserName = "deepin-password-admin"                                //#nosec G101
 const resetPwdDialogPath = "/usr/lib/dde-control-center/reset-password-dialog" //#nosec G101
 
 // copy from golang 1.17, comment out some code because of unexported member
@@ -470,7 +470,7 @@ func newPwdChanger(caller *caller, u *User) (ret pwdChanger, err error) {
 	return
 }
 
-// 此函数负责将来自 caller 的 xauth 凭证发送给 deepin_pwd_changer 用户
+// 此函数负责将来自 caller 的 xauth 凭证发送给 deepin-password-admin 用户
 func newPwdChangerX(caller *caller, u *User, base *pwdChangerBase) (ret *pwdChangerX, err error) {
 	xAuthDir := filepath.Join("/run", "user", fmt.Sprint(base.selfUid))
 	defer func() {
@@ -582,7 +582,7 @@ func runSetfacl(user string, filePath string, isEnable bool) (err error) {
 	return
 }
 
-// 此函数负责临时允许 deepin_pwd_changer 用户访问目标用户的 wayland socket
+// 此函数负责临时允许 deepin-password-admin 用户访问目标用户的 wayland socket
 func newPwdChangerWayland(caller *caller, u *User, base *pwdChangerBase) (ret *pwdChangerWayland, err error) {
 	if err = runSetfacl(pwdChangerUserName, caller.wayland, true); err != nil {
 		return
