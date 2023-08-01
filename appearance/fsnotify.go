@@ -14,6 +14,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/linuxdeepin/dde-daemon/appearance/background"
 	"github.com/linuxdeepin/dde-daemon/appearance/subthemes"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 var (
@@ -51,6 +52,19 @@ func (m *Manager) handleThemeChanged() {
 
 			if strings.HasPrefix(ev.Name, tmpFilePrefix) {
 				continue
+			}
+			if (ev.Op == fsnotify.Create || ev.Op == fsnotify.Remove) && hasEventOccurred(ev.Name, iconDirs) && dutils.IsDir(ev.Name) {
+				upDir := filepath.Join(ev.Name, "../")
+				for _, v := range iconDirs {
+					if upDir == v {
+						if ev.Op == fsnotify.Create {
+							m.watcher.Add(ev.Name)
+						} else {
+							m.watcher.Remove(ev.Name)
+						}
+						break
+					}
+				}
 			}
 
 			timestamp := time.Now().UnixNano()
