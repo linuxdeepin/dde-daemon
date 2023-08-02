@@ -130,6 +130,7 @@ type Manager struct {
 	wifiOSDEnable             bool
 	resetWifiOSDEnableTimeout uint32
 	resetWifiOSDEnableTimer   *time.Timer
+	delayShowWifiOSD          *time.Timer
 
 	// dsg config : org.deepin.dde.network : LoadServiceFromNM
 	loadServiceFromNM bool
@@ -326,6 +327,10 @@ func (m *Manager) init() {
 
 		// 显示飞行模式OSD时不显示WIFI连接OSD,200毫秒后恢复显示WIFI的OSD
 		m.wifiOSDEnable = false
+		if m.delayShowWifiOSD != nil {
+			m.delayShowWifiOSD.Stop()
+		}
+		m.resetWifiOSDEnableTimer.Stop()
 		m.resetWifiOSDEnableTimer.Reset(time.Duration(m.resetWifiOSDEnableTimeout) * time.Millisecond)
 
 		// if enabled is true, airplane is on
@@ -346,8 +351,18 @@ func (m *Manager) init() {
 			return
 		}
 
+		// 停止上次的定时器
+		if m.delayShowWifiOSD != nil {
+			m.delayShowWifiOSD.Stop()
+		}
+
+		// 如果刚刚显示了飞行模式的OSD则直接退出不显示WIFI的OSD
+		if !m.wifiOSDEnable {
+			return
+		}
+
 		// 等待150毫秒接收airplane.Enabled改变信号
-		time.AfterFunc(time.Duration(m.resetWifiOSDEnableTimeout-50)*time.Millisecond, func() {
+		m.delayShowWifiOSD = time.AfterFunc(time.Duration(m.resetWifiOSDEnableTimeout-50)*time.Millisecond, func() {
 			// 禁用WIFI网络OSD时退出
 			if !m.wifiOSDEnable {
 				return
