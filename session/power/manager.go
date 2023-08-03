@@ -535,6 +535,14 @@ func (m *Manager) init() {
 		go func() {
 			for ch := range m.kwinHanleIdleOffCh {
 				if ch {
+					m.prepareSuspendLocker.Lock()
+					// 如果系统处于suspend状态，不需要在上层通过鼠标键盘事件唤醒系统
+					if m.prepareSuspend >= suspendStatePrepare{
+						m.prepareSuspendLocker.Unlock()
+						continue
+					}
+					m.prepareSuspendLocker.Unlock()
+
 					logger.Info("kwin handle idle off")
 
 					if v := m.submodules[submodulePSP]; v != nil {
