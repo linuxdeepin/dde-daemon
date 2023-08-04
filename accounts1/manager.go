@@ -106,7 +106,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 	m.AllowGuest = isGuestUserEnabled()
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
-	go m.createExistAccountWbUFile()
 
 	m.watcher = dutils.NewWatchProxy()
 	if m.watcher != nil {

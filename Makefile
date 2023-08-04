@@ -11,7 +11,6 @@ endif
 
 
 TEST = \
-    ${GOPKG_PREFIX}/accounts/keyring \
     ${GOPKG_PREFIX}/accounts1 \
     ${GOPKG_PREFIX}/accounts1/checkers \
     ${GOPKG_PREFIX}/accounts1/logined \
