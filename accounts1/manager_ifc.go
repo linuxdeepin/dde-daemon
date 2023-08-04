@@ -16,7 +16,6 @@ import (
 	"time"
 
 	"github.com/godbus/dbus/v5"
-	"github.com/linuxdeepin/dde-daemon/accounts/keyring"
 	"github.com/linuxdeepin/dde-daemon/accounts1/checkers"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
@@ -109,6 +108,7 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 	if err != nil {
 		logger.Warningf("failed to set groups for user %s: %v", name, err)
 	}
+
 	// create user success
 	select {
 	case userPath, ok := <-ch:
