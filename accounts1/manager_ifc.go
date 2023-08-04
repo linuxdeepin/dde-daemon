@@ -4,26 +4,15 @@
 
 package accounts
 
-/*
-#cgo CFLAGS: -W -Wall -g  -fstack-protector-all -fPIC
-#cgo LDFLAGS: -lkeyring
-
-#include <stdlib.h>
-#include <shadow.h>
-#include "keyring/common.h"
-*/
-
 import (
 	"errors"
 	"fmt"
 	"math/rand"
 	"os"
-	"path"
 	"strconv"
 	"time"
 
 	"github.com/godbus/dbus/v5"
-	"github.com/linuxdeepin/dde-daemon/accounts/keyring"
 	"github.com/linuxdeepin/dde-daemon/accounts1/checkers"
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -42,37 +31,6 @@ const (
 
 func (*Manager) GetInterfaceName() string {
 	return dbusInterface
-}
-
-func createWhiteBoxUFile(name string) error {
-	return keyring.CreateWhiteBoxUFile(name)
-}
-
-func getUserNameList() (list []string) {
-	infos, err := users.GetHumanUserInfos()
-	if err != nil {
-		return nil
-	}
-	for _, v := range infos {
-		list = append(list, v.Name)
-	}
-	return list
-}
-
-// 已经存在的账户，未创建WB_UFile文件，则直接创建
-func (*Manager) createExistAccountWbUFile() {
-	userList := getUserNameList()
-	for _, name := range userList {
-		dir := fmt.Sprintf("/var/lib/keyring/%s", name)
-		filename := path.Join(dir, "WB_UFile")
-		if !dutils.IsFileExist(dir) || !dutils.IsFileExist(filename) {
-			err := keyring.CreateWhiteBoxUFile(name)
-			if err != nil {
-				logger.Warning("Keyring crypto so not exist.")
-				return
-			}
-		}
-	}
 }
 
 // Create new user.
@@ -127,10 +85,6 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 	err = users.SetGroupsForUser(groups, name)
 	if err != nil {
 		logger.Warningf("failed to set groups for user %s: %v", name, err)
-	}
-
-	if err = createWhiteBoxUFile(name); err != nil {
-		logger.Warningf("createWhiteBoxUFile: create user '%s' failed: %v\n", name, err)
 	}
 
 	// create user success
@@ -225,12 +179,6 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 	//delete user config and icons
 	if rmFiles {
 		user.clearData()
-	}
-
-	err = keyring.DeleteWhiteBoxUFile(name)
-	if err != nil {
-		logger.Warningf("DeleteWhiteBoxUFile '%s' failed: %v\n", name, err)
-		return dbusutil.ToError(err)
 	}
 
 	return nil
