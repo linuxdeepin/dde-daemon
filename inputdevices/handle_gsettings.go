@@ -11,7 +11,7 @@ import (
 
 func (m *Manager) handleGSettings() {
 	gsettings.ConnectChanged(gsSchemaInputDevices, gsKeyWheelSpeed, func(key string) {
-		m.setWheelSpeed(false)
+		m.setWheelSpeed()
 	})
 }
 

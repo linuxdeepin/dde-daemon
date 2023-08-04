@@ -11,11 +11,12 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	kwin "github.com/linuxdeepin/go-dbus-factory/org.kde.kwin"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (
@@ -42,6 +43,9 @@ type Manager struct {
 	trackPoint *TrackPoint
 	tpad       *Touchpad
 	wacom      *Wacom
+
+	kwinManager kwin.InputDeviceManager
+	kwinIdList  []dbusutil.SignalHandlerId
 
 	sessionSigLoop *dbusutil.SignalLoop
 	syncConfig     *dsync.Config
@@ -82,6 +86,8 @@ func NewManager(service *dbusutil.Service) *Manager {
 
 	m.trackPoint = newTrackPoint(service)
 
+	m.kwinManager = kwin.NewInputDeviceManager(service.Conn())
+
 	m.sessionSigLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
 	m.syncConfig = dsync.NewConfig("peripherals", &syncConfig{m: m},
 		m.sessionSigLoop, dbusPath, logger)
@@ -89,25 +95,29 @@ func NewManager(service *dbusutil.Service) *Manager {
 	return m
 }
 
-func (m *Manager) setWheelSpeed(inInit bool) {
+func (m *Manager) setWheelSpeed() {
 	speed := m.settings.GetUint(gsKeyWheelSpeed)
 	// speed range is [1,100]
 	logger.Debug("setWheelSpeed", speed)
 
-	var err error
-	shouldWrite := true
-	if inInit {
-		if _, err := os.Stat(m.imWheelConfigFile); err == nil {
-			shouldWrite = false
-		}
+	// 为了避免imwheel对kwin影响，先杀死imwheel
+	err := exec.Command("pkill", "-ef", imWheelBin).Run()
+	if err != nil {
+		logger.Warning(err)
 	}
 
-	if shouldWrite {
-		err = writeImWheelConfig(m.imWheelConfigFile, speed)
-		if err != nil {
-			logger.Warning("failed to write imwheel config file:", err)
-			return
-		}
+	err = m.setWaylandWheelSpeed(speed)
+	if err == nil {
+		logger.Info("set Wayland WheelSpeed finish")
+		return
+	}
+
+	logger.Info("can not set WheelSpeed by Wayland interface, use imwheel")
+	// 通过kwin设置wheel speed失败时候才通过命令设置
+	err = writeImWheelConfig(m.imWheelConfigFile, speed)
+	if err != nil {
+		logger.Warning("failed to write imwheel config file:", err)
+		return
 	}
 
 	err = controlImWheel(speed)
@@ -184,7 +194,7 @@ func (m *Manager) init() {
 	m.trackPoint.init()
 	m.trackPoint.handleGSettings()
 
-	m.setWheelSpeed(true)
+	m.setWheelSpeed()
 	m.handleGSettings()
 
 	m.sessionSigLoop.Start()

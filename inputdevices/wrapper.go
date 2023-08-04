@@ -77,6 +77,8 @@ func handleDeviceChanged() {
 	_manager.mouse.handleDeviceChanged()
 	_manager.wacom.handleDeviceChanged()
 	_manager.kbd.handleDeviceChanged()
+
+	_manager.setWheelSpeed()
 }
 
 func getDeviceInfos(force bool) common.DeviceInfos {

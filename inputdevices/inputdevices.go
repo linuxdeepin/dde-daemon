@@ -5,8 +5,8 @@
 package inputdevices
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 //go:generate dbusutil-gen -type Keyboard,Mouse,Touchpad,TrackPoint,Wacom keyboard.go mouse.go touchpad.go trackpoint.go wacom.go
@@ -86,7 +86,7 @@ func (d *Daemon) Start() error {
 			logger.Warning(err)
 		}
 		if globalWayland {
-			handleInputDeviceChanged(service, false)
+			_manager.handleInputDeviceChanged(false)
 			return
 		}
 		startDeviceListener()
@@ -114,7 +114,7 @@ func (*Daemon) Stop() error {
 	_manager = nil
 
 	if globalWayland {
-		handleInputDeviceChanged(nil, true)
+		_manager.handleInputDeviceChanged(true)
 		return nil
 	}
 	// TODO endDeviceListener will be stuck
