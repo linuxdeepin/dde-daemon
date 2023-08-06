@@ -11,7 +11,7 @@ Wants=nss-user-lookup.target fprintd.service
 Type=dbus
 BusName=org.deepin.dde.Accounts1
 ExecStart=/usr/lib/deepin-daemon/dde-system-daemon
-StandardOutput=syslog
+StandardOutput=journal
 Environment=GVFS_DISABLE_FUSE=1
 Environment=GIO_USE_VFS=local
 Environment=GVFS_REMOTE_VOLUME_MONITOR_IGNORE=1
