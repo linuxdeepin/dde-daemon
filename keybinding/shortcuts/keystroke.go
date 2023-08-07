@@ -308,7 +308,11 @@ func (ks *Keystroke) searchString() string {
 
 	visibleChar, ok := keysyms.KeysymVisibleCharMap[ks.Keysym]
 	if ok {
-		strs = append(strs, strings.ToLower(string(visibleChar)))
+		if visibleChar == keysyms.XK_space {
+			strs = append(strs, "space")
+		} else {
+			strs = append(strs, strings.ToLower(string(visibleChar)))
+		}
 	} else {
 		strs = append(strs, strings.ToLower(ks.Keystr))
 	}

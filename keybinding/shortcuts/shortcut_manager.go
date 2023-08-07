@@ -12,6 +12,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode"
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
@@ -21,7 +22,6 @@ import (
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/go-lib/pinyin_search"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 	x "github.com/linuxdeepin/go-x11-client"
@@ -347,9 +347,11 @@ func (sm *ShortcutManager) ListByType(type0 int32) (list []Shortcut) {
 	return
 }
 
-func (sm *ShortcutManager) Search(query string) (list []Shortcut) {
-	query = pinyin_search.GeneralizeQuery(query)
+func Contains(str1 string, str2 string) bool {
+	return strings.Contains(strings.ToLower(str1), strings.ToLower(str2))
+}
 
+func (sm *ShortcutManager) Search(query string) (list []Shortcut) {
 	sm.idShortcutMapMu.Lock()
 	defer sm.idShortcutMapMu.Unlock()
 
@@ -362,7 +364,10 @@ func (sm *ShortcutManager) Search(query string) (list []Shortcut) {
 }
 
 func (sm *ShortcutManager) matchShortcut(shortcut Shortcut, query string) bool {
-	name := shortcut.GetName()
+	name := strings.TrimRightFunc(shortcut.GetName(), unicode.IsSpace)
+	if Contains(name, query) {
+		return true
+	}
 
 	if sm.pinyinEnabled {
 		nameBlocks := shortcut.GetNameBlocks()
@@ -371,14 +376,9 @@ func (sm *ShortcutManager) matchShortcut(shortcut Shortcut, query string) bool {
 		}
 	}
 
-	name = pinyin_search.GeneralizeQuery(name)
-	if strings.Contains(name, query) {
-		return true
-	}
-
 	keystrokes := shortcut.GetKeystrokes()
 	for _, keystroke := range keystrokes {
-		if strings.Contains(keystroke.searchString(), query) {
+		if Contains(keystroke.searchString(), query) {
 			return true
 		}
 	}
