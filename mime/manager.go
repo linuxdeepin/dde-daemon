@@ -18,7 +18,6 @@ import (
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/strv"
-	dutils "github.com/linuxdeepin/go-lib/utils"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
@@ -161,41 +160,6 @@ func (m *Manager) destroy() {
 	close(m.done)
 	// Wait for handleFileEvents goroutine to close
 	<-m.doneResp
-}
-
-func (m *Manager) initConfigData() {
-	if dutils.IsFileExist(filepath.Join(basedir.GetUserConfigDir(),
-		"mimeapps.list")) {
-		return
-	}
-
-	go func() {
-		err := m.doInitConfigData()
-		if err != nil {
-			logger.Warning("Init mime config file failed", err)
-		} else {
-			logger.Info("Init mime config file successfully")
-		}
-	}()
-}
-
-func (m *Manager) doInitConfigData() error {
-	return genMimeAppsFile(
-		findFilePath(filepath.Join("dde-daemon", "mime", "data.json")))
-}
-
-// Reset reset mimes default app
-func (m *Manager) Reset() {
-	resetTerminal()
-
-	go func() {
-		err := m.doInitConfigData()
-		if err != nil {
-			logger.Warning("Init mime config file failed", err)
-		}
-		m.emitSignalChange()
-	}()
-
 }
 
 // GetDefaultApp get the default app id for the special mime

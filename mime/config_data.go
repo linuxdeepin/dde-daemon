@@ -42,34 +42,3 @@ func toJSON(v interface{}) (string, error) {
 	}
 	return string(content), nil
 }
-
-func genMimeAppsFile(data string) error {
-	table, err := unmarshal(data)
-	if err != nil {
-		logger.Warning("[genMimeAppsFile] unmarshal failed:", err)
-		return err
-	}
-
-	for _, info := range table.Apps {
-		var validId = ""
-		for _, ty := range info.Types {
-			if validId != "" {
-				_ = SetAppInfo(ty, validId)
-				continue
-			}
-
-			for _, id := range info.AppId {
-				err := SetAppInfo(ty, id)
-				if err != nil {
-					logger.Warningf("[genMimeAppsFile] set '%s' to parse '%s' failed: %v\n",
-						info.AppId, ty, err)
-					continue
-				}
-				validId = id
-				break
-			}
-		}
-	}
-
-	return nil
-}
