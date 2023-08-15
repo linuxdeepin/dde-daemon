@@ -129,10 +129,9 @@ func DeleteUser(rmFiles bool, username string) error {
 	if err != nil {
 		return err
 	}
-	gInfo, err := getGroupByGid(uInfo.Gid)
-	if err != nil {
-		return err
-	}
+
+	// It is possible that the corresponding group name has already been deleted.
+	gInfo, _ := getGroupByGid(uInfo.Gid)
 
 	var args = []string{"-f"}
 	if rmFiles {
@@ -144,7 +143,7 @@ func DeleteUser(rmFiles bool, username string) error {
 		return err
 	}
 
-	if username != gInfo.Name {
+	if gInfo != nil && username != gInfo.Name {
 		err = doAction(cmdGroupDel, []string{gInfo.Name})
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "failed to delete group %s: %v\n", gInfo.Name, err)
