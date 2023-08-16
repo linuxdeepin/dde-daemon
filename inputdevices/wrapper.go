@@ -62,7 +62,7 @@ func handleDeviceChanged() {
 
 	// 鼠标依赖触摸板的数据，必须在触摸板之后获取
 	_tpadInfos = Touchpads{}
-	getTPadInfos(false)
+	getTPadInfos(false, false)
 	_mouseInfos = Mouses{}
 	getMouseInfos(false)
 	_wacomInfos = dxWacoms{}
@@ -195,13 +195,30 @@ func getMouseInfos(force bool) Mouses {
 	return _mouseInfos
 }
 
-func getTPadInfos(force bool) Touchpads {
+func isTPadPS2Mouse(name string) bool {
+	name = strings.ToLower(name)
+	return strings.Contains(name, "ps/2") && strings.Contains(name, "mouse") && !strings.Contains(name, "usb")
+}
+
+func getTPadInfos(force, check bool) Touchpads {
 	if !force && len(_tpadInfos) != 0 {
 		return _tpadInfos
 	}
 
 	_tpadInfos = Touchpads{}
 	for _, info := range getDeviceInfos(false) {
+		// 处理触控板被识别为PS2鼠标的情况
+		if check && info.Type == common.DevTypeMouse && isTPadPS2Mouse(info.Name) {
+			info.Type = common.DevTypeTouchpad
+			tmp, err := dxinput.NewTouchpadFromDevInfo(info)
+			if err != nil {
+				logger.Warning(err)
+			} else {
+				_tpadInfos = append(_tpadInfos, getTouchpadInfoByDxTouchpad(tmp))
+			}
+			info.Type = common.DevTypeMouse
+			continue
+		}
 		if info.Type == common.DevTypeTouchpad {
 			tmp, _ := dxinput.NewTouchpadFromDevInfo(info)
 
