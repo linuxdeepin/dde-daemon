@@ -54,6 +54,15 @@ func (m *Mouse) handleGSettings() {
 			m.enableAdaptiveAccelProfile()
 		}
 	})
+
+	gsettings.ConnectChanged(tpadSchema, tpadKeyEnabled, func(key string) {
+		logger.Debug("setting changed", key)
+		if m.DisableTpad.Get() {
+			m.disableTouchPad()
+		} else {
+			m.touchPad.enable(m.touchPad.TPadEnable.Get())
+		}
+	})
 }
 
 func (tp *TrackPoint) handleGSettings() {
@@ -86,8 +95,6 @@ func (tp *TrackPoint) handleGSettings() {
 func (tpad *Touchpad) handleGSettings() {
 	gsettings.ConnectChanged(tpadSchema, "*", func(key string) {
 		switch key {
-		case tpadKeyEnabled:
-			tpad.enable(tpad.TPadEnable.Get())
 		case tpadKeyLeftHanded:
 			tpad.enableLeftHanded()
 			tpad.enableTapToClick()
