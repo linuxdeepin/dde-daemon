@@ -242,7 +242,7 @@ func newAudio(service *dbusutil.Service) *Audio {
 
 func startAudioServer(service *dbusutil.Service) error {
 	var serverPath dbus.ObjectPath
-	audioServers := []string{"pipewire.service", "pluseaudio.service"}
+	audioServers := []string{"pipewire-pulse.service", "pulseaudio.service"}
 
 	systemd := systemd1.NewManager(service.Conn())
 
@@ -277,15 +277,6 @@ func startAudioServer(service *dbusutil.Service) error {
 				}
 			}()
 		}
-	}
-
-	has, err := service.NameHasOwner(dbusPulseaudioServer)
-	if err != nil {
-		logger.Warningf("failed to get dbus pulseaudio server owner, err: %v", err)
-	}
-
-	if !has {
-		return errors.New("failed to start audio server")
 	}
 
 	return nil
