@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"path/filepath"
+	"sync"
 
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
@@ -37,6 +38,7 @@ type ConfigKeeper struct {
 	Mute     *MuteConfig            // 全局静音
 	file     string                 // 配置文件路径
 	muteFile string                 // 静音配置文件路径
+	mu       sync.Mutex             //
 }
 
 // 创建单例
@@ -183,46 +185,70 @@ func (ck *ConfigKeeper) GetCardAndPortConfig(cardName string, portName string) (
 }
 
 func (ck *ConfigKeeper) SetEnabled(cardName string, portName string, enabled bool) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
 	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.Enabled = enabled
 	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetVolume(cardName string, portName string, volume float64) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
 	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.Volume = volume
 	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetIncreaseVolume(cardName string, portName string, enhance bool) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
 	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.IncreaseVolume = enhance
 	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetBalance(cardName string, portName string, balance float64) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
 	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.Balance = balance
 	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetReduceNoise(cardName string, portName string, reduce bool) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
 	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.ReduceNoise = reduce
 	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetMuteOutput(mute bool) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
 	ck.Mute.MuteOutput = mute
 	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetMuteInput(mute bool) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
 	ck.Mute.MuteInput = mute
 	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetMuteAll(mute bool) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
 	for _, card := range ck.Cards {
 		for _, port := range card.Ports {
 			port.Mute = mute
