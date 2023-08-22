@@ -115,7 +115,7 @@ func newSysBluetooth(service *dbusutil.Service) (b *SysBluetooth) {
 	sysBus := service.Conn()
 	b = &SysBluetooth{
 		service:                service,
-		sigLoop:                dbusutil.NewSignalLoop(sysBus, 10),
+		sigLoop:                dbusutil.NewSignalLoop(sysBus, 100),
 		userAgents:             newUserAgentMap(),
 		needFixBtPoweredStatus: false,
 	}
@@ -810,7 +810,7 @@ func (b *SysBluetooth) updateState() {
 
 	for _, devices := range b.devices {
 		for _, d := range devices {
-			if d.connected && d.Paired {
+			if d.adapter != nil && d.adapter.Powered && d.connected && d.Paired {
 				newState = StateConnected
 				break
 			}
