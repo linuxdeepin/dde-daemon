@@ -232,7 +232,15 @@ func (m *Manager) shouldHideOnSmartHideModeX(activeWin x.Window) (bool, error) {
 }
 
 func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, error) {
-	return m.isWindowDockOverlapK(activeWin)
+	// 遍历所有窗口,任意窗口遮挡任务栏区域均会触发智能隐藏的行为
+	for _, winInfo := range m.waylandManager.windows {
+		hide, _ := m.isWindowDockOverlapK(winInfo)
+		if hide {
+			return true, nil
+		}
+    }
+
+	return false, nil
 }
 
 func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
@@ -333,17 +341,6 @@ func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
 	}
 	logger.Debugf("window [%s] rect: %v", winInfo.appId, winRect)
 	logger.Debug("dock rect:", m.FrontendWindowRect)
-
-	isActiveWin, err := winInfo.winObj.IsActive(0)
-	if err != nil {
-		logger.Warning(err)
-		return false, nil
-	}
-
-	if !isActiveWin {
-		logger.Debugf("check window [%s] InActive && return isWindowDockOverlapK false", winInfo.appId)
-		return false, nil
-	}
 
 	if winInfo.appId == "dde-desktop" ||
 		winInfo.appId == "dde-lock" ||

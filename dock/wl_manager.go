@@ -157,6 +157,11 @@ func (m *Manager) unregisterWindowWayland(objPath dbus.ObjectPath) {
 	m.waylandManager.mu.Lock()
 	delete(m.waylandManager.windows, objPath)
 	m.waylandManager.mu.Unlock()
+
+	// TODO 发现windowInfoMap中的内容没有被清除过
+	// m.windowInfoMapMutex.Lock()
+	// delete(m.windowInfoMap, winInfo.getXid())
+	// m.windowInfoMapMutex.Unlock()
 }
 
 var globalRestrictWaylandWindow = true
