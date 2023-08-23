@@ -6,6 +6,7 @@ package network
 
 import (
 	"errors"
+
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -23,6 +24,14 @@ func (m *Manager) vpnEnabledWriteCb(write *dbusutil.PropertyWrite) *dbus.Error {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
+
+	// FIXME:
+	// 由于断开是VPN是在system中完成，断开会触发VPN自动连接重试，这里提前先调整状态
+	// 避免自动重连
+	if !enabled {
+		m.VpnEnabled = false
+	}
+
 	err := m.sysNetwork.VpnEnabled().Set(0, enabled)
 	if err != nil {
 		logger.Warning(err)
