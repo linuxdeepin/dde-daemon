@@ -16,6 +16,7 @@ import (
 	"github.com/godbus/dbus"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
+	kwin "github.com/linuxdeepin/go-dbus-factory/org.kde.kwin"
 	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
 	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.launcher"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
@@ -91,8 +92,10 @@ type Manager struct {
 	startManager     sessionmanager.StartManager
 	wmSwitcher       wmswitcher.WMSwitcher
 	waylandWM        kwayland.WindowManager
+	kwin             kwin.KWin
 	wmName           string
 	isWaylandSession bool
+	isMultiTaskViewShow  bool
 	//nolint
 	signals *struct {
 		ServiceRestarted struct{}

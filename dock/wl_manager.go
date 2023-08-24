@@ -42,6 +42,8 @@ func newWaylandManager() *WaylandManager {
 
 func (m *Manager) listenWaylandWMSignals() {
 	m.waylandWM.InitSignalExt(m.sessionSigLoop, true)
+	m.kwin.InitSignalExt(m.sessionSigLoop, true)
+
 	_, err := m.waylandWM.ConnectActiveWindowChanged(func() {
 		activeWinInternalId, err := m.waylandWM.ActiveWindow(0)
 		if err != nil {
@@ -72,6 +74,14 @@ func (m *Manager) listenWaylandWMSignals() {
 		objPath := dbus.ObjectPath(objPathStr)
 		logger.Debug("window removed", objPath)
 		m.unregisterWindowWayland(objPath)
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	_, err = m.kwin.ConnectMultitaskStateChanged(func(state bool) {
+		m.isMultiTaskViewShow = state
+		m.updateHideState(false)
 	})
 	if err != nil {
 		logger.Warning(err)

@@ -12,6 +12,7 @@ import (
 	"github.com/godbus/dbus"
 	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
+	kwin "github.com/linuxdeepin/go-dbus-factory/org.kde.kwin"
 	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
 	libDDELauncher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.launcher"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
@@ -281,6 +282,7 @@ func (m *Manager) init() error {
 	if m.isWaylandSession {
 		m.waylandWM = kwayland.NewWindowManager(sessionBus)
 		m.waylandManager = newWaylandManager()
+		m.kwin = kwin.NewKWin(sessionBus)
 	}
 
 	m.sessionSigLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)

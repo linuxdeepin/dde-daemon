@@ -244,6 +244,11 @@ func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, erro
 }
 
 func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
+	if m.isWaylandSession && m.isMultiTaskViewShow {
+		logger.Debug("shouldHideOnSmartHideMode: multitaskview is visible")
+		return true, nil
+	}
+
 	activeWinInfo := m.getActiveWindow()
 	if activeWinInfo == nil {
 		logger.Debug("shouldHideOnSmartHideMode: activeWinInfo is nil")
@@ -258,7 +263,6 @@ func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
 	case *WindowInfo:
 		activeWin := winInfo.getXid()
 		return m.shouldHideOnSmartHideModeX(activeWin)
-
 	case *KWindowInfo:
 		return m.shouldHideOnSmartHideModeK(winInfo)
 	default:
