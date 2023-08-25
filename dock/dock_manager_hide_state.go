@@ -232,8 +232,17 @@ func (m *Manager) shouldHideOnSmartHideModeX(activeWin x.Window) (bool, error) {
 }
 
 func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, error) {
-	// 遍历所有窗口,任意窗口遮挡任务栏区域均会触发智能隐藏的行为
+	// 遍历所有窗口(最小化窗口不用统计),任意窗口遮挡任务栏区域均会触发智能隐藏的行为
 	for _, winInfo := range m.waylandManager.windows {
+		minimized, err := winInfo.winObj.IsMinimized(0)
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			if minimized {
+				continue
+			}
+		}
+
 		hide, _ := m.isWindowDockOverlapK(winInfo)
 		if hide {
 			return true, nil
@@ -244,7 +253,7 @@ func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, erro
 }
 
 func (m *Manager) shouldHideOnSmartHideMode() (bool, error) {
-	if m.isWaylandSession && m.isMultiTaskViewShow {
+	if m.isMultiTaskViewShow {
 		logger.Debug("shouldHideOnSmartHideMode: multitaskview is visible")
 		return true, nil
 	}

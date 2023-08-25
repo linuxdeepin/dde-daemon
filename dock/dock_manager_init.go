@@ -107,6 +107,17 @@ const (
 	wmName2D = "deepin metacity"
 )
 
+func (m *Manager) listenKWinSignal() {
+	m.kwin.InitSignalExt(m.sessionSigLoop, true)
+	_, err := m.kwin.ConnectMultitaskStateChanged(func(state bool) {
+		m.isMultiTaskViewShow = state
+		m.updateHideState(false)
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
 func (m *Manager) listenWMSignal() {
 	m.wm.InitSignalExt(m.sessionSigLoop, true)
 	_, err := m.wm.ConnectCompositingEnabledChanged(func(enabled bool) {
@@ -273,7 +284,8 @@ func (m *Manager) init() error {
 	m.ddeLauncher = libDDELauncher.NewLauncher(sessionBus)
 	m.startManager = sessionmanager.NewStartManager(sessionBus)
 	m.wmSwitcher = wmswitcher.NewWMSwitcher(sessionBus)
-
+	m.kwin = kwin.NewKWin(sessionBus)
+	
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	if strings.Contains(sessionType, "wayland") {
 		m.isWaylandSession = true
@@ -282,7 +294,6 @@ func (m *Manager) init() error {
 	if m.isWaylandSession {
 		m.waylandWM = kwayland.NewWindowManager(sessionBus)
 		m.waylandManager = newWaylandManager()
-		m.kwin = kwin.NewKWin(sessionBus)
 	}
 
 	m.sessionSigLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)
@@ -292,6 +303,8 @@ func (m *Manager) init() error {
 	m.listenLauncherSignal()
 	m.listenWMSwitcherSignal()
 	m.listenWMSignal()
+	m.listenKWinSignal()
+
 	if strings.Contains(sessionType, "wayland") {
 		m.listenWaylandWMSignals()
 	}
