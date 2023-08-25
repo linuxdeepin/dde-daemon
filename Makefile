@@ -184,6 +184,9 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/lib/systemd/user/
 	cp -f misc/systemd/services/* ${DESTDIR}/lib/systemd/user/
 
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-initialized.target.wants/
+	ln -s $(PREFIX)/lib/systemd/user/org.dde.session.Daemon1.service $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-initialized.target.wants/org.dde.session.Daemon1.service
+
 	mkdir -pv ${DESTDIR}/lib/systemd/system/
 	cp -f misc/systemd/system-services/* ${DESTDIR}/lib/systemd/system/
 
