@@ -8,7 +8,6 @@
 # Wiktor Jezioro <wikjezioro@op.pl>, 2023
 # Maggie Liu <maggie.liufei@gmail.com>, 2023
 # Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2023
-# Maciej Błędkowski <mble@tuta.io>, 2023
 # Pyroxar <kacper-paczos@linux.pl>, 2023
 # deepiner, 2023
 # Piotr Strębski <strebski@gmail.com>, 2023
@@ -20,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Janusz Ruchała, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/linuxdeepin/teams/3617/pl/)\n"
@@ -32,9 +31,10 @@ msgstr ""
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr "Proszę wpisać hasło o długości nie krótszej niż 8 znaków"
+msgstr "Wprowadź hasło, które zawiera co najmniej 8 znaków"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -62,7 +62,7 @@ msgstr "Taka nazwa już istnieje"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nazwa użytkownika musi zawierać od 3 do 32 znaków"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -86,7 +86,7 @@ msgstr "Weryfikacja odcisku palca nie powiodła się"
 msgid "Fingerprint verification timed out"
 msgstr "Upłynął limit czasu oczekiwania odcisku palca"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "Twoje hasło wygaśnie za %d dni, zmień je"
@@ -428,7 +428,7 @@ msgstr "Przełącz monitory"
 msgid "Authentication is required to switch language"
 msgstr "Wymagane jest uwierzytelnienie, aby móc przełączyć język"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -436,17 +436,25 @@ msgstr ""
 "Trwa zmiana języka systemu oraz instalacja wymaganych pakietów językowych, "
 "proszę czekać..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Trwa zmiana języka systemu, proszę czekać..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "Zmieniono język systemu, proszę zalogować się ponownie"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr "Zmieniono region systemu, zaloguj się ponownie"
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
-msgstr "Nie można zmienić języka systemu, proszę spróbować później"
+msgstr "Nie udało się zmienić języka systemu, spróbuj ponownie później"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr "Nie udało się zmienić regionu, spróbuj ponownie później"
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -458,11 +466,11 @@ msgstr "Aktualizuj teraz"
 
 #: ../../lastore1/lastore.go:479
 msgid "Reboot Now"
-msgstr "Uruchom ponownie teraz"
+msgstr "Uruchom ponownie"
 
 #: ../../lastore1/lastore.go:483
 msgid "Remind Me Later"
-msgstr "Przypomnij mi później"
+msgstr "Przypomnij później"
 
 #: ../../lastore1/lastore.go:490
 msgid "10 mins later"
@@ -977,7 +985,7 @@ msgstr "Wymagane jest hasło, aby połączyć się z %q"
 
 #: ../../network/state_handler.go:368
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr "Nie można znaleźć sieci WLAN %q 802.11"
+msgstr "Nie udało się znaleźć sieci WLAN %q 802.11"
 
 #: ../../network/utils_dbus_nm.go:278
 msgid "Unknown"
@@ -1032,7 +1040,7 @@ msgstr "Krytycznie niski poziom baterii"
 #: ../../session/power1/manager_events.go:233
 #: ../../session/power1/manager_events.go:238
 msgid "Battery low, please plug in"
-msgstr "Niski stan poziomu baterii, podłącz komputer do zasilania"
+msgstr "Niski poziom baterii, podłącz zasilanie"
 
 #: ../../session/power1/utils.go:439 ../../session/power1/utils.go:446
 #: ../../session/power1/utils.go:453 ../../session/power1/utils.go:460

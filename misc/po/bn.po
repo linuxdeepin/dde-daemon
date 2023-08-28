@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Siam Sami <justfortest16162215@gmail.com>, 2023\n"
 "Language-Team: Bengali (https://app.transifex.com/linuxdeepin/teams/3617/bn/)\n"
@@ -30,6 +30,7 @@ msgstr ""
 "দয়া করে একটি পাসওয়ার্ড লিখুন যা ইংরেজি 8টি বা বাংলা ৮টি অক্ষরের কম নয়"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -57,7 +58,7 @@ msgstr ""
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -79,7 +80,7 @@ msgstr "আঙুলের ছাপ সনাক্ত করতে বার�
 msgid "Fingerprint verification timed out"
 msgstr "আঙুলের ছাপ সনাক্ত করার সময় শেষ হয়ে গেছে"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -420,7 +421,7 @@ msgstr ""
 msgid "Authentication is required to switch language"
 msgstr "ভাষা পরিবর্তন করতে প্রমাণীকরণের প্রয়োজন"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -428,17 +429,25 @@ msgstr ""
 "সিস্টেমের ভাষা পরিবর্তন করা হচ্ছে এবং প্রয়োজনীয় ভাষার প্যাকেজ ইন্সটল করা "
 "হচ্ছে।  দয়া করে অপেক্ষা করুন..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "সিস্টেমের ভাষা পরিবর্তন করা হচ্ছে, দয়া করে অপেক্ষা করুন..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "সিস্টেমের ভাষা পরিবর্তন করা হয়েছে। দয়াকরে লগআউট করে এরপর লগইন করুন।"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "সিস্টেম ভাষা পরিবর্তন করতে ব্যর্থ হয়েছে, দয়া করে পরে চেষ্টা করুন"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"

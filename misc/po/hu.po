@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Béla Bajza, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/linuxdeepin/teams/3617/hu/)\n"
@@ -42,6 +42,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Kérjük adjon meg egy legalább 8 karakteres jelszót"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -69,7 +70,7 @@ msgstr "A név már létezik"
 msgid "Username must be between 3 and 32 characters"
 msgstr "A felhasználónév hosszának 3 és 32 karakter között kell lennie"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -93,7 +94,7 @@ msgstr "Az ujjlenyomat azonosítás sikertelen"
 msgid "Fingerprint verification timed out"
 msgstr "Az ujjlenyomat azonosítás túllépte a megengedett időt"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "A jelszava %d nap múlva lejár, kérjük változtassa meg időben"
@@ -434,7 +435,7 @@ msgstr "Monitor váltása"
 msgid "Authentication is required to switch language"
 msgstr "Hitelesítés szükség a nyelvi beállítások módosításához"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -442,19 +443,29 @@ msgstr ""
 "A rendszer nyelv változtatása, és a szükséges nyelvi csomagok telepítése "
 "folyamatban van, kérjük várjon..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "A rendszer nyelv változtatása folyamatban, kérjük várjon..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "A rendszer nyelvének változtatása megtörtént, kérjük jelentkezzen ki, majd "
 "újra be az életbe lépéshez"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+"A rendszer régiója megváltozott, kérjük jelentkezzen ki, majd jelentkezzen "
+"be újra"
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "A rendszer nyelv változtatása sikertelen, kérjük próbálja meg később"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr "A régió változtatása sikertelen, kérjük próbálja meg később"
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"

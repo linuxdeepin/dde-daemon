@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Davidmp <medipas@gmail.com>, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/linuxdeepin/teams/3617/ca/)\n"
@@ -30,6 +30,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Si us plau, escriviu una contrasenya d'un mínim de 8 caràcters."
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -57,7 +58,7 @@ msgstr "El nom ja existeix."
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nom d'usuari ha de tenir de 3 a 32 caràcters de llargada."
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "L'usuari %s existia abans i les seves dades estan sincronitzades."
@@ -79,7 +80,7 @@ msgstr "La verificació de l'empremta ha fallat."
 msgid "Fingerprint verification timed out"
 msgstr "La verificació de l'empremta ha trigat massa."
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "La contrasenya caducarà d'aquí a %d dies; canvieu-la oportunament."
@@ -420,7 +421,7 @@ msgstr "Commuta els monitors"
 msgid "Authentication is required to switch language"
 msgstr "Cal autenticació per canviar la llengua."
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -428,21 +429,29 @@ msgstr ""
 "Es canvia la llengua del sistema i s'instal·len els paquets de llengua "
 "necessaris. Espereu, si us plau..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Es canvia la llengua del sistema. Espereu, si us plau..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "S'ha canviat la llengua del sistema. Si us plau, sortiu de la sessió i "
 "torneu-hi a entrar."
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr ""
 "Ha fallat canviar la llengua del sistema. Si us plau, torneu-ho a provar més"
 " tard."
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"

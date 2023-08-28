@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: abuyop <abuyop@gmail.com>, 2023\n"
 "Language-Team: Malay (https://app.transifex.com/linuxdeepin/teams/3617/ms/)\n"
@@ -28,6 +28,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Sila masukkan kata aluan tidak kurang dari 8 aksara panjangnya"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -55,7 +56,7 @@ msgstr "Nama sudah wujud"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nama pengguna mestilah antara 3 hingga 32 aksara"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -77,7 +78,7 @@ msgstr "Pengesahan cap jari gagal"
 msgid "Fingerprint verification timed out"
 msgstr "Pengesahan cap jari telah tamat masa"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -420,7 +421,7 @@ msgstr "Tukar monitor"
 msgid "Authentication is required to switch language"
 msgstr "Pengesahihan diperlukan untuk mengubah bahasa"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -428,17 +429,25 @@ msgstr ""
 "Mengubah bahasa sistem dan  memasang pakej bahasa yang diperlukan, tunggu "
 "sebentar..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Mengubah bahasa sistem, tunggu sebentar..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "Bahasa sistem telah diubah, sila daftar keluar kemudian daftar masuk"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "Gagal mengubah bahasa sistem, sila cuba lagi kemudian..."
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
