@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2023\n"
 "Language-Team: Serbian (https://app.transifex.com/linuxdeepin/teams/3617/sr/)\n"
@@ -32,6 +32,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Молимо унесите лозинку од најмање 8 карактера"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -59,7 +60,7 @@ msgstr "Име већ постоји"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Корисничко име мора садржати између 3-32 карактера"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -81,7 +82,7 @@ msgstr "Неуспешна верификација отиска прста"
 msgid "Fingerprint verification timed out"
 msgstr "Време за верификацију отиска прста је истекло"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "Лозинка истиче за %d дан(а), промените је на време"
@@ -422,7 +423,7 @@ msgstr "Промена екрана"
 msgid "Authentication is required to switch language"
 msgstr "Идентификација је неопходна за промену језика"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -430,17 +431,25 @@ msgstr ""
 "Промена језика система и инсталирање потребних језичких пакета, молимо "
 "сачекајте..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Промена језика система, молимо сачекајте..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "Језик система је промењен, одјавите се, затим се пријавите"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "Неуспешна промена језика система, молимо покушајте касније"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"

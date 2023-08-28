@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Hoan Chu Đình <chudinhhoan277@gmail.com>, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/linuxdeepin/teams/3617/vi/)\n"
@@ -31,6 +31,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Xin hãy nhập mật khẩu nhiều hơn hoặc bằng 8 ký tự"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -58,7 +59,7 @@ msgstr "Tên người dùng đã được sử dụng"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Tên người dùng phải từ 3 đến 32 kí tự"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -80,7 +81,7 @@ msgstr "Xác minh vân tay không thành công"
 msgid "Fingerprint verification timed out"
 msgstr "Đã hết thời gian xác minh dấu vân tay"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -421,7 +422,7 @@ msgstr "Chuyển màn hình"
 msgid "Authentication is required to switch language"
 msgstr "Chứng thực được đòi hỏi để đổi ngôn ngữ"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -429,17 +430,25 @@ msgstr ""
 "Thay đổi ngôn ngữ hệ thống và cài đặt các gói ngôn ngữ cần thiết, vui lòng "
 "đợi ..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Thay đổi ngôn ngữ hệ thống, vui lòng đợi ..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "Ngôn ngữ hệ thống đã thay đổi, vui lòng đăng xuất và sau đó đăng nhập"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "Không thể thay đổi ngôn ngữ hệ thống, vui lòng thử lại sau"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"

@@ -4,7 +4,6 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# deepiner, 2023
 # Besnik Bleta <besnik@programeshqip.org>, 2023
 # 
 #, fuzzy
@@ -12,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2023\n"
 "Language-Team: Albanian (https://app.transifex.com/linuxdeepin/teams/3617/sq/)\n"
@@ -27,12 +26,13 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Ju lutemi, jepni një fjalëkalim jo më pak se 8 shenja"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
 "Fjalëkalimet mund të përmbajnë vetëm shkronja anglisht (bëhet dallimi mes "
-"shkrimit me të mëdha dhe të vogla), numra ose simbole speciale "
+"shkrimit me të mëdha dhe të vogla), numra, ose simbole speciale "
 "(~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts1/checkers/username.go:49
@@ -41,7 +41,7 @@ msgstr "Emri i përdoruesit s’mund të jetë i zbrazët"
 
 #: ../../accounts1/checkers/username.go:54
 msgid "The first character must be a letter or number"
-msgstr "Shenja e parë duhet të jetë shkronjë ose numër"
+msgstr "Shenja e parë duhet të jetë shkronjë, ose numër"
 
 #: ../../accounts1/checkers/username.go:56
 msgid "The username already exists"
@@ -55,7 +55,7 @@ msgstr "Emri ekziston tashmë"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Emri i përdoruesit duhet të jetë mes 3 dhe 32 shenja i gjatë"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -68,7 +68,7 @@ msgstr "%s është çaktivizuar"
 
 #: ../../audio1/audio_events.go:472
 msgid "Open"
-msgstr "Hap"
+msgstr "Hape"
 
 #: ../../bin/dde-authority/fprint_transaction.go:25
 msgid "Fingerprint verification failed"
@@ -76,9 +76,9 @@ msgstr "Verifikimi i shenjave të gishtit dështoi"
 
 #: ../../bin/dde-authority/fprint_transaction.go:26
 msgid "Fingerprint verification timed out"
-msgstr "Verifikimit të shenjave të gishtit"
+msgstr "Verifikimit të shenjave të gishtit i mbaroi koha"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -421,7 +421,7 @@ msgstr "Ndërroni monitorë"
 msgid "Authentication is required to switch language"
 msgstr "Që të këmbehet gjuha, lypset mirëfilltësim"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -429,17 +429,27 @@ msgstr ""
 "Po ndryshohet gjuhë sistemi dhe po instalohen paketat e domosdoshme të "
 "gjuhës, ju lutemi, pritni…"
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Po ndryshohet gjuhë sistemi, ju lutemi, pritni…"
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "Gjuha e sistemit u ndryshua, ju lutemi, dilni dhe mandej hyni"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+"U ndryshua rajon sistemi, ju lutemi, dilni nga llogaria dhe mandej rihyni"
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "S’u arrit të ndryshohej gjuhë sistemi, ju lutemi, provoni më vonë"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
+"S’u arrit të ndryshohet rajon vendoreje, ju lutemi, bëni hyrjen më vonë"
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -628,7 +638,7 @@ msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
 msgstr ""
-"Lutësi 802.1X u shkëput prej pikës së hyrjeve ose prej shërbyesit të "
+"Lutësi 802.1X u shkëput prej pikës së hyrjeve, ose prej shërbyesit të "
 "mirëfilltësimeve"
 
 #: ../../network/state_handler.go:32
@@ -637,7 +647,7 @@ msgstr "Formësimi i lutësit 802.1X dështoi"
 
 #: ../../network/state_handler.go:33
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "Lutësi 802.1X u mbyll ose dështoi në mënyrë të papritur"
+msgstr "Lutësi 802.1X u mbyll, ose dështoi në mënyrë të papritur"
 
 #: ../../network/state_handler.go:34
 msgid "The 802.1X supplicant took too long time to authenticate"
@@ -653,7 +663,7 @@ msgstr "Shërbimi PPP u shkëput papritmas"
 
 #: ../../network/state_handler.go:37
 msgid "The PPP service quitted or failed unexpectedly"
-msgstr "Shërbimi PPP u mbyll ose dështoi papritmas"
+msgstr "Shërbimi PPP u mbyll, ose dështoi papritmas"
 
 #: ../../network/state_handler.go:38
 msgid "The DHCP service failed to start within the allowed time"
@@ -665,7 +675,7 @@ msgstr "Shërbyesi DHCP raportoi një gabim të papritur"
 
 #: ../../network/state_handler.go:40
 msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "Shërbimi DHCP u mbyll ose dështoi papritmas"
+msgstr "Shërbimi DHCP u mbyll, ose dështoi papritmas"
 
 #: ../../network/state_handler.go:41
 msgid "The shared connection service failed to start"
@@ -674,7 +684,7 @@ msgstr "Dështoi nisja e shërbimit për lidhje të përbashkët"
 #: ../../network/state_handler.go:42
 msgid "The shared connection service quitted or failed unexpectedly"
 msgstr ""
-"Shërbimi për lidhje të përbashkët u mbyll ose dështoi në mënyrë të papritur"
+"Shërbimi për lidhje të përbashkët u mbyll, ose dështoi në mënyrë të papritur"
 
 #: ../../network/state_handler.go:43
 msgid "The AutoIP service failed to start"
@@ -686,7 +696,7 @@ msgstr "Shërbimi AutoIP raportoi një gabim të papritur"
 
 #: ../../network/state_handler.go:45
 msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "Shërbimi AutoIP u mbyll ose dështoi papritmas"
+msgstr "Shërbimi AutoIP u mbyll, ose dështoi papritmas"
 
 #: ../../network/state_handler.go:46
 msgid "Dialing failed due to busy lines"
@@ -754,7 +764,7 @@ msgstr "Lidhja aktive e pajisjes u hoq, ose u zhduk"
 
 #: ../../network/state_handler.go:62
 msgid "A user or client requested to disconnect"
-msgstr "Një përdorues ose klient kërkoi shkëputjen"
+msgstr "Një përdorues, ose klient kërkoi shkëputjen"
 
 #: ../../network/state_handler.go:63
 msgid "The device's carrier/link changed"
@@ -774,7 +784,7 @@ msgstr "S’u gjet dot modemi"
 
 #: ../../network/state_handler.go:67
 msgid "The Bluetooth connection timed out or failed"
-msgstr "Lidhja përmes Bluetooth-it dështoi ose i mbaroi koha"
+msgstr "Lidhja përmes Bluetooth-it dështoi, ose i mbaroi koha"
 
 #: ../../network/state_handler.go:68
 msgid "GSM Modem's SIM Card was not inserted"
@@ -802,11 +812,11 @@ msgstr "Një varësi e lidhjes është e paplotësuar"
 
 #: ../../network/state_handler.go:74
 msgid "RFC 2684 Ethernet bridging error to ADSL"
-msgstr ""
+msgstr "Gabim në krijim ure mes RFC 2684 Ethernet dhe ADSL"
 
 #: ../../network/state_handler.go:75
 msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "ModemManager s’u xhirua ose u mbyll papritmas"
+msgstr "ModemManager s’u xhirua, ose u mbyll papritmas"
 
 #: ../../network/state_handler.go:76
 msgid "The 802.11 WLAN network could not be found"
@@ -826,7 +836,7 @@ msgstr ""
 
 #: ../../network/state_handler.go:82
 msgid "Modem failed to run or not available"
-msgstr "Modemi s’u arrit të vihej në punë ose s’ka"
+msgstr "Modemi s’u arrit të vihej në punë, ose s’ka"
 
 #: ../../network/state_handler.go:83
 msgid "Modem now ready and available"
@@ -951,7 +961,7 @@ msgstr "S’arrihet të lidhet %q, ju lutemi, jini më afër rrugëzuesit pa fil
 #: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
-"S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit ose "
+"S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit, ose "
 "rrjetit tuaj."
 
 #: ../../network/state_handler.go:353
@@ -1011,7 +1021,7 @@ msgstr "I lidhur"
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
-"\"%s\" s’e kaloi verifikimin e sigurisë së sistemit, dhe s’mund të xhirohet "
+"“%s” s’e kaloi verifikimin e sigurisë së sistemit, dhe s’mund të xhirohet "
 "këtë herë"
 
 #: ../../session/power1/manager_events.go:203

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: yeshe lhamo <981611630@qq.com>, 2023\n"
 "Language-Team: Tibetan (https://app.transifex.com/linuxdeepin/teams/3617/bo/)\n"
@@ -29,6 +29,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "གྲངས་གནས་8ལས་མི་ཉུང་བའི་གསང་ཨང་ནང་འཇུག་བྱེད་རོགས།"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -56,7 +57,7 @@ msgstr "མིང་ཡོད་པ།"
 msgid "Username must be between 3 and 32 characters"
 msgstr "སྤྱོད་མཁན་མིང་གི་རིང་ཚད་ངེས་པར་དུ་ཡིག་འབྲུ་3ནས་32བར་ཡིན་དགོས། "
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -80,7 +81,7 @@ msgstr "མཛུབ་རིས་ར་སྤྲོད་ཐུབ་མ་ས
 msgid "Fingerprint verification timed out"
 msgstr "མཛུབ་རིས་ར་སྤྲོད་ཀྱི་དུས་ཡུན་བརྒལ་སོང་།"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "གསང་ཨང་ཉིན་%dརྗེས་དུས་ཚད་འཐིམ་པས་དུས་ཐོག་ཏུ་བཟོ་བཅོས་བྱོས།"
@@ -421,25 +422,33 @@ msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 msgid "Authentication is required to switch language"
 msgstr "སྐད་ཡིག་བརྗེ་སྐབས་བདེན་དཔང་བྱ་དགོས།"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་པ་མ་ཟད་སྐད་ཡིག་མེད་པ་དག་ཀྱང་སྒྲིག་སྦྱོར་བྱེད་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "སྐད་ཡིག་བརྗེས་ཟིན་པས་ཐོ་བསུབས་རྗེས་ཡང་བསྐྱར་ནང་འཇུག་བྱེད་རོགས།"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr ""
 "རྒྱུད་ཁོངས་སྐད་ཡིག་བརྗེ་མི་ཐུབ་པས་ཏོག་ཙམ་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་རོགས།"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"

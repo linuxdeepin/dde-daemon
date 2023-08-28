@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Massimo A. Carofano <real.massimo@hotmail.it>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/linuxdeepin/teams/3617/it/)\n"
@@ -29,6 +29,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Inserisci una password lunga almeno 8 caratteri"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -56,7 +57,7 @@ msgstr "Questo nome esiste già"
 msgid "Username must be between 3 and 32 characters"
 msgstr "L'username deve esser compresa tra 3 e 32 caratteri"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "L'utente \"%s\" esisteva prima e i suoi dati sono sincronizzati"
@@ -78,7 +79,7 @@ msgstr "Verifica impronta fallita"
 msgid "Fingerprint verification timed out"
 msgstr "Verifica impronta in time out"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "La tua password scadrà in %d giorni, ricordati di sostituirla"
@@ -419,24 +420,32 @@ msgstr "Cambia monitor"
 msgid "Authentication is required to switch language"
 msgstr "Il cambio lingua richiede l'autenticazione"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 "Cambio lingua di sistema ed installazione dei relativi pacchetti, attendi..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Cambio lingua di Sistema, attendi..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "Lingua di sistema modificata, esegui un nuovo login"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "Cambio lingua di sistema fallito, riprova"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"

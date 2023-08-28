@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Jozef Gaal <preklady@mayday.sk>, 2023\n"
 "Language-Team: Slovak (https://app.transifex.com/linuxdeepin/teams/3617/sk/)\n"
@@ -30,6 +30,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Prosím, zadajte heslo s viac ako 8 znakmi"
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -57,7 +58,7 @@ msgstr ""
 msgid "Username must be between 3 and 32 characters"
 msgstr "Používateľské meno musí mať 3 až 32 znakov"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -79,7 +80,7 @@ msgstr "Overenie odtlačku prsta zlyhalo"
 msgid "Fingerprint verification timed out"
 msgstr "Časový limit overenia odtlačku prsta vypršal"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -420,7 +421,7 @@ msgstr ""
 msgid "Authentication is required to switch language"
 msgstr "Na prepínanie jazyka je potrebné overenie"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -428,17 +429,25 @@ msgstr ""
 "Systémový jazyk sa zmení inštaláciou potrebných jazykových balíkov, prosím "
 "čakajte..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Dochádza k zmene systémového jazyka, prosím čakajte..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr "Systémový jazyk bol zmenený, po odhlásení sa znovu prihláste"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "Jazyk systému sa nezmenil, skúste to prosím neskôr"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"

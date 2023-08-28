@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 15:59+0800\n"
+"POT-Creation-Date: 2023-08-18 16:28+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
 "Last-Translator: Rosserex <superiorgravelgr@gmail.com>, 2023\n"
 "Language-Team: Greek (https://app.transifex.com/linuxdeepin/teams/3617/el/)\n"
@@ -34,6 +34,7 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Παρακαλώ εισάγετε ένα κωδικό πρόσβασης τουλάχιστον με 8 χαρακτήρες "
 
 #: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -61,7 +62,7 @@ msgstr "Το όνομα υπάρχει ήδη"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Το όνομα χρήστη πρέπει να έχει μήκος μεταξύ 3-32 χαρακτήρων"
 
-#: ../../accounts1/manager.go:450
+#: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
@@ -83,7 +84,7 @@ msgstr "Εσφαλμένη επαλήθευση αποτυπώματος"
 msgid "Fingerprint verification timed out"
 msgstr "Εκτός χρόνου επαλήθευση αποτυπώματος"
 
-#: ../../bin/dde-session-daemon/main.go:471
+#: ../../bin/dde-session-daemon/main.go:476
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -425,7 +426,7 @@ msgstr "Εναλλαγή οθονών"
 msgid "Authentication is required to switch language"
 msgstr "Απαιτείται πιστοποίηση για εναλλαγή γλώσσας"
 
-#: ../../langselector1/locale.go:137
+#: ../../langselector1/locale.go:141
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -433,18 +434,26 @@ msgstr ""
 "Αλλάζει η γλώσσα συστήματος και εγκατάσταση των απαραίτητων πακέτων γλώσσας,"
 " παρακαλώ περιμένετε..."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:142
 msgid "Changing system language, please wait..."
 msgstr "Αλλάζει η γλώσσα συστήματος, παρακαλώ περιμένετε..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:143
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "Έχει αλλάξει η γλώσσα συστήματος, παρακαλώ αποσυνδεθείτε και μετά συνδεθείτε"
 
-#: ../../langselector1/locale.go:385
+#: ../../langselector1/locale.go:144
+msgid "System region changed, please log out and then log in"
+msgstr ""
+
+#: ../../langselector1/locale.go:412
 msgid "Failed to change system language, please try later"
 msgstr "Αποτυχία αλλαγής γλώσσας συστήματος, παρακαλούμε προσπαθήστε αργότερα"
+
+#: ../../langselector1/locale.go:749
+msgid "Failed to change locale region, please try later"
+msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
