@@ -5,6 +5,7 @@
 package main
 
 import (
+	"fmt"
 	"path/filepath"
 
 	dbus "github.com/godbus/dbus"
@@ -21,6 +22,9 @@ const (
 
 func (*Daemon) BluetoothGetDeviceTechnologies(adapter, device string) (technologies []string, busErr *dbus.Error) {
 	var filename = filepath.Join(bluetoothPrefixDir, adapter, device, "info")
+	if !filepath.HasPrefix(filename, bluetoothPrefixDir) {
+		return nil, dbusutil.ToError(fmt.Errorf("invaild adapter: [%s] device: [%s]", adapter, device))
+	}
 	technologies, err := doBluetoothGetDeviceTechnologies(filename)
 	if err != nil {
 		return nil, dbusutil.ToError(err)
@@ -32,7 +36,7 @@ func doBluetoothGetDeviceTechnologies(filename string) ([]string, error) {
 	var kf = keyfile.NewKeyFile()
 	err := kf.LoadFromFile(filename)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("can't parse file: %s", filename)
 	}
 	return kf.GetStringList(kfSectionGeneral, kfKeyTechnologies)
 }
