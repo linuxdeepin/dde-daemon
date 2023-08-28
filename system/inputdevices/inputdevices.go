@@ -168,7 +168,7 @@ func (m *InputDevices) dsgSetValue(path, value string) error {
 	m.dsgWakeupDeviceStatus = nil
 	logger.Info("[dsgSetValue] dsg save devices : ", dsgWakeupDeviceStatus)
 	for _, val := range dsgWakeupDeviceStatus {
-		dd := strings.Split(regexp.MustCompile(`"`).ReplaceAllString(val.String(), ""), ":")
+		dd := strings.Split(regexp.MustCompile("\"").ReplaceAllString(val.String(), ""), ":")
 		logger.Debug("[dsgSetValue] strings.Split dd : ", dd)
 		if len(dd) < 2 {
 			continue
@@ -220,7 +220,7 @@ func (m *InputDevices) initDSettings(sysBus *dbusutil.Service) {
 				continue
 			}
 			curV := value.String()
-			d := regexp.MustCompile(`"`).ReplaceAllString(curV, "")
+			d := regexp.MustCompile("\"").ReplaceAllString(curV, "")
 			dsgVal := strings.Split(d, ":")
 
 			if len(dsgVal) < 2 {
