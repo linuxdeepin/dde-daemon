@@ -1057,7 +1057,7 @@ var secretSettingKeys = map[string][]string{
 }
 
 var vpnSecretKeys = []string{
-	"password", "proxy-password", "IPSec secret", "Xauth password",
+	"password", "proxy-password", "IPSec secret", "Xauth password", "cert-pass",
 }
 
 func (sa *SecretAgent) SaveSecretsDeepin(connectionData map[string]map[string]dbus.Variant,
