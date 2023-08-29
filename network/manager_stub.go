@@ -29,7 +29,7 @@ func (m *Manager) vpnEnabledWriteCb(write *dbusutil.PropertyWrite) *dbus.Error {
 	// 由于断开是VPN是在system中完成，断开会触发VPN自动连接重试，这里提前先调整状态
 	// 避免自动重连
 	if !enabled {
-		m.VpnEnabled = false
+		m.setPropVpnEnabled(enabled)
 	}
 
 	err := m.sysNetwork.VpnEnabled().Set(0, enabled)
