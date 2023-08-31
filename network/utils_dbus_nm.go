@@ -754,6 +754,14 @@ func nmAddConnection(data connectionData) (cpath dbus.ObjectPath, err error) {
 	return
 }
 
+func nmAddConnectionUnsave(data connectionData) (cpath dbus.ObjectPath, err error) {
+	cpath, err = nmSettings.AddConnectionUnsaved(0, data)
+	if err != nil {
+		logger.Error(err)
+	}
+	return
+}
+
 func parseAddressDataProp(addressData []map[string]dbus.Variant) (addresses []addressDataItem) {
 	addresses = make([]addressDataItem, 0, len(addressData))
 	for _, v := range addressData {

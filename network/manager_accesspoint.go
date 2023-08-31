@@ -366,7 +366,7 @@ func (m *Manager) GetAccessPoints(path dbus.ObjectPath) (apsJSON string, busErr 
 func (m *Manager) ActivateAccessPoint(uuid string, apPath, devPath dbus.ObjectPath) (connection dbus.ObjectPath,
 	busErr *dbus.Error) {
 	var err error
-	cpath, err := m.activateAccessPoint(uuid, apPath, devPath)
+	cpath, err := m.activateAccessPoint(uuid, apPath, devPath, false)
 	if err != nil {
 		logger.Warning("failed to activate access point:", err)
 		return "/", dbusutil.ToError(err)
@@ -480,7 +480,7 @@ func fixApSecTypeChange(uuid string, secType apSecType) (needUserEdit bool, err 
 }
 
 // ActivateAccessPoint add and activate connection for access point.
-func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPath) (cpath dbus.ObjectPath, err error) {
+func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPath, saved bool) (cpath dbus.ObjectPath, err error) {
 	logger.Debugf("ActivateAccessPoint: uuid=%s, apPath=%s, devPath=%s", uuid, apPath, devPath)
 
 	cpath = "/"
@@ -501,6 +501,9 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 			return
 		}
 		cpath, err = m.activateConnection(uuid, devPath)
+		if err != nil {
+			return
+		}
 	} else {
 		// if there is no connection for current access point, create one
 		uuid = utils.GenUuid()
@@ -515,7 +518,11 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 		if m.isHidden(string(ssid)) {
 			setSettingWirelessHidden(data, true)
 		}
-		cpath, _, err = nmAddAndActivateConnection(data, devPath, true)
+		if saved {
+			cpath, _, err = nmAddAndActivateConnection(data, devPath, true)
+		} else {
+			cpath, err = nmAddConnectionUnsave(data)
+		}
 		if err != nil {
 			return
 		}
@@ -662,7 +669,7 @@ func (m *Manager) checkAPStrength() {
 				logger.Error(err)
 				continue
 			}
-			_, err = m.activateAccessPoint(conn.Uuid, apNow.Path, dev.Path)
+			_, err = m.activateAccessPoint(conn.Uuid, apNow.Path, dev.Path, false)
 			if err != nil {
 				logger.Error(err)
 				continue
