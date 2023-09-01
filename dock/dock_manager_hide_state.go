@@ -232,15 +232,20 @@ func (m *Manager) shouldHideOnSmartHideModeX(activeWin x.Window) (bool, error) {
 }
 
 func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, error) {
-	// 遍历所有窗口(最小化窗口不用统计),任意窗口遮挡任务栏区域均会触发智能隐藏的行为
+	// 向窗管小伙伴讨教了一下，这里的currentDesktop - 1 后才和wayland下通过kwayland拿到的virtualDesktop相等
+	currentDesktop,_ := m.kwin.CurrentDesktop(0)
+
 	for _, winInfo := range m.waylandManager.windows {
 		minimized, err := winInfo.winObj.IsMinimized(0)
+		virtualDesktop,err := winInfo.winObj.VirtualDesktop(0)
 		if err != nil {
 			logger.Warning(err)
-		} else {
-			if minimized {
-				continue
-			}
+			continue
+		}
+
+		if minimized || virtualDesktop != uint32(currentDesktop - 1) {
+			logger.Debugf("window %v is hidden or keepAbove or  not on current workspace", winInfo.appId)
+			continue
 		}
 
 		hide, _ := m.isWindowDockOverlapK(winInfo)
