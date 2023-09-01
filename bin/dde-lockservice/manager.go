@@ -119,7 +119,7 @@ func (m *Manager) SwitchToUser(username string) *dbus.Error {
 
 	err := setGreeterUser(greeterUserConfig, username)
 	if err != nil {
-		return dbusutil.ToError(err)
+		return dbusutil.ToError(errors.New("set greeter user failed"))
 	}
 	if current != "" {
 		err = m.service.Emit(m, "UserChanged", username)
