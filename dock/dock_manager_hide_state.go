@@ -362,8 +362,9 @@ func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
 
 	if winInfo.appId == "dde-desktop" ||
 		winInfo.appId == "dde-lock" ||
-		winInfo.appId == "dde-shutdown" {
-		logger.Debug("Active Window is dde-desktop/dde-lock/dde-shutdowm && return isWindowDockOverlapK false")
+		winInfo.appId == "dde-shutdown" ||
+		winInfo.appId == "deepin-screen-recorder" {
+		logger.Debug("Active Window is dde-desktop/dde-lock/dde-shutdowm/deepin-screen-recorder && return isWindowDockOverlapK false")
 		return false, nil
 	}
 
