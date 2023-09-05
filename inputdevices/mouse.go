@@ -79,9 +79,10 @@ func (m *Mouse) init() {
 	//触摸板和鼠标都是用mouse的doubleClick，检测到只有触摸板时也同步到xsettings
 	m.syncConfigToXsettings()
 
+	tpad := m.touchPad
+
 	if !m.Exist {
-		tpad := m.touchPad
-		if tpad.Exist && tpad.TPadEnable.Get() {
+		if tpad.Exist && !tpad.TPadEnable.Get() {
 			tpad.enable(true)
 		}
 		return
@@ -93,7 +94,7 @@ func (m *Mouse) init() {
 	m.enableAdaptiveAccelProfile()
 	m.motionAcceleration()
 	m.motionThreshold()
-	if m.DisableTpad.Get() {
+	if m.DisableTpad.Get() && tpad.TPadEnable.Get() {
 		m.disableTouchPad()
 	}
 }
