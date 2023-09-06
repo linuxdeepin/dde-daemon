@@ -82,11 +82,31 @@ func (m *Manager) isWmBlackScreenActive() bool {
 }
 
 func (m *Manager) setWmBlackScreenActive(active bool) {
+	if m.delayInActive {
+		return
+	}
+
 	logger.Info("set blackScreen effect active: ", active)
 	bus, err := dbus.SessionBus()
 	if err == nil {
 		kwinInter := bus.Object("org.kde.KWin", "/BlackScreen")
 		err = kwinInter.Call("org.kde.kwin.BlackScreen.setActive", 0, active).Err
+		if err != nil {
+			logger.Warning("set blackScreen active failed:", err)
+		}
+	}
+}
+
+func (m *Manager) setDDEBlackScreenActive(active bool) {
+	if m.delayInActive {
+		return
+	}
+
+	logger.Info("set blackScreen effect active: ", active)
+	bus, err := dbus.SessionBus()
+	if err == nil {
+		dbusObject := bus.Object("com.deepin.dde.BlackScreen", "/com/deepin/dde/BlackScreen")
+		err = dbusObject.Call("com.deepin.dde.BlackScreen.setActive", 0, active).Err
 		if err != nil {
 			logger.Warning("set blackScreen active failed:", err)
 		}

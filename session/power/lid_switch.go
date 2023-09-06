@@ -111,8 +111,8 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 			return
 		}
 
-		if lidCloseAction != powerActionTurnOffScreen && !m.isWmBlackScreenActive() {
-			m.setWmBlackScreenActive(true)
+		if lidCloseAction != powerActionTurnOffScreen {
+			m.setDDEBlackScreenActive(true)
 		}
 	} else { // 开盖
 		err := h.stopAskUser()
@@ -131,9 +131,7 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 			logger.Warning(err)
 		}
 
-		if m.isWmBlackScreenActive() {
-			m.setWmBlackScreenActive(false)
-		}
+		m.setDDEBlackScreenActive(false)
 		m.setDPMSModeOn()
 	}
 }

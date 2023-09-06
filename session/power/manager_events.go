@@ -71,9 +71,7 @@ func (m *Manager) initOnBatteryChangedHandler() {
 
 func (m *Manager) handleBeforeSuspend() {
 	m.setPrepareSuspend(suspendStatePrepare)
-	if !m.isWmBlackScreenActive() {
-		m.setWmBlackScreenActive(true)
-	}
+	m.setDDEBlackScreenActive(true)
 	logger.Debug("before sleep")
 }
 
@@ -90,6 +88,13 @@ func (m *Manager) handleWakeup() {
 			logger.Warning(err)
 		}
 	}
+
+	m.delayInActive = true
+	time.AfterFunc(3*time.Second, func() {
+		m.delayInActive = false
+		playSound(soundutils.EventWakeup)
+		m.setDDEBlackScreenActive(false)
+	})
 
 	if v := m.submodules[submodulePSP]; v != nil {
 		if psp := v.(*powerSavePlan); psp != nil {
@@ -112,8 +117,6 @@ func (m *Manager) handleWakeup() {
 			return
 		}
 	}()
-
-	playSound(soundutils.EventWakeup)
 }
 
 func (m *Manager) handleRefreshMains() {

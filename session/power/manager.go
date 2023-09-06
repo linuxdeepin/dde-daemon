@@ -17,13 +17,13 @@ import (
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	systemPower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
-	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -148,8 +148,10 @@ type Manager struct {
 	isPowerSaveSupported bool
 	kwinHanleIdleOffCh   chan bool
 
-	dsConfigManager 	 configManager.Manager
-	wmDBus               wm.Wm
+	dsConfigManager configManager.Manager
+	wmDBus          wm.Wm
+
+	delayInActive bool
 }
 
 var _manager *Manager
