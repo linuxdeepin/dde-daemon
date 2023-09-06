@@ -1,3 +1,9 @@
+dde-daemon (6.0.20) unstable; urgency=medium
+
+  * fix: tpad enable status misjudgment
+
+ -- dengbo <dengbo@deepin.org>  Wed, 06 Sep 2023 10:12:35 +0800
+
 dde-daemon (6.0.19) unstable; urgency=medium
 
   * feat: New keyring white box solution decouples dde-daemon and removes relevant code
