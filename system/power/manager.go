@@ -32,7 +32,8 @@ var noUEvent bool
 const (
 	configManagerId                   = "org.desktopspec.ConfigManager"
 	_configHwSystem                   = "/usr/share/uos-hw-config"
-	pstatePath                        = "/sys/devices/system/cpu/intel_pstate"
+	intelPstatePath                   = "/sys/devices/system/cpu/intel_pstate"
+	amdPstatePath                     = "/sys/devices/system/cpu/amd_pstate"
 	amdGPUPath                        = "/sys/class/drm/card0/device/power_dpm_force_performance_level"
 	configDefaultGovFilePattern       = `config-[0-9\.]+-.*-desktop`
 	configDefaultGovContentDDEPattern = `^\s*CONFIG_CPU_FREQ_DEFAULT_GOV_DDE_(\w+)`
@@ -183,7 +184,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 	// check pstate , if has pstate, it is intel pstate mode , then
 	// we need another logic
-	m.hasPstate = utils.IsFileExist(pstatePath)
+	m.hasPstate = utils.IsFileExist(intelPstatePath) || utils.IsFileExist(amdPstatePath)
 	// check if amd is used
 	m.hasAmddpm = utils.IsFileExist(amdGPUPath)
 
