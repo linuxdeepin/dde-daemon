@@ -32,6 +32,7 @@ type Manager struct {
 	service  *dbusutil.Service
 	PropsMu  sync.RWMutex
 	appProxy proxy.App
+	Enable    bool
 	Type     string
 	IP       string
 	Port     uint32
@@ -85,6 +86,7 @@ func (m *Manager) init() {
 		return
 	}
 
+	m.Enable = cfg.Enable
 	m.Type = cfg.Type
 	m.IP = cfg.IP
 	m.Port = cfg.Port
@@ -107,7 +109,7 @@ func (m *Manager) init() {
 		}
 	}
 
-	if m.IP != "" && m.Port != 0 {
+	if m.Enable && m.IP != "" && m.Port != 0 {
 		settings := proxy.Proxy{
 			ProtoType: m.Type,
 			Name:      "default",
@@ -135,6 +137,7 @@ func (m *Manager) init() {
 
 func (m *Manager) saveConfig() error {
 	cfg := &Config{
+		Enable:   m.Enable,
 		Type:     m.Type,
 		IP:       m.IP,
 		Port:     m.Port,
@@ -205,6 +208,15 @@ func (err InvalidParamError) Error() string {
 	return fmt.Sprintf("invalid param %s", err.Param)
 }
 
+func (m *Manager) SetEnable(enable bool) *dbus.Error {
+	if m.Enable != enable {
+		m.Enable = enable
+		m.notifyChange("Enable", enable)
+	}
+	err := m.set(m.Type, m.IP, m.Port, m.User, m.Password)
+	return dbusutil.ToError(err);
+}
+
 func (m *Manager) Set(type0, ip string, port uint32, user, password string) *dbus.Error {
 	err := m.set(type0, ip, port, user, password)
 	return dbusutil.ToError(err)
@@ -224,22 +236,26 @@ func (m *Manager) set(type0, ip string, port uint32, user, password string) erro
 		disable = true
 	}
 
+	if !m.Enable {
+		disable = true
+	}
+
 	if !disable && !validIPv4(ip) {
 		notifyAppProxyEnableFailed()
 		return InvalidParamError{"IP"}
 	}
 
-	if !validUser(user) {
+	if m.Enable && !validUser(user) {
 		notifyAppProxyEnableFailed()
 		return InvalidParamError{"User"}
 	}
 
-	if !validPassword(password) {
+	if m.Enable && !validPassword(password) {
 		notifyAppProxyEnableFailed()
 		return InvalidParamError{"Password"}
 	}
 
-	if (user == "" && password != "") || (user != "" && password == "") {
+	if m.Enable && ((user == "" && password != "") || (user != "" && password == "")) {
 		notifyAppProxyEnableFailed()
 		return errors.New("user and password are not provided at the same time")
 	}

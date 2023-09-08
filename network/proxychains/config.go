@@ -10,6 +10,7 @@ import (
 )
 
 type Config struct {
+	Enable    bool
 	Type     string
 	IP       string
 	Port     uint32
