@@ -1,3 +1,9 @@
+dde-daemon (6.0.21) unstable; urgency=medium
+
+  * fix: touchpad enable status misjudgment
+
+ -- dengbo <dengbo@deepin.org>  Mon, 11 Sep 2023 13:10:15 +0800
+
 dde-daemon (6.0.20) unstable; urgency=medium
 
   * fix: tpad enable status misjudgment
