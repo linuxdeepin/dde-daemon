@@ -155,7 +155,7 @@ func (m *Mouse) disableTouchPad() {
 		return
 	}
 
-	if !m.DisableTpad.Get() && touchPad.TPadEnable.Get() {
+	if !m.DisableTpad.Get() && !touchPad.TPadEnable.Get() {
 		touchPad.enable(true)
 		return
 	}
