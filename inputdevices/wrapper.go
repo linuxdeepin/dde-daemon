@@ -170,7 +170,7 @@ func getMouseInfos(force bool) Mouses {
 			// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
 			found := false
 			for _, touchpad := range _tpadInfos {
-				logger.Warning(touchpad)
+				logger.Debug(touchpad)
 				if touchpad.phys == mouse.phys {
 					found = true
 					break

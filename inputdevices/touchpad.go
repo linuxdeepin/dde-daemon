@@ -357,7 +357,7 @@ func (tpad *Touchpad) enablePalmDetect() {
 	for _, dev := range tpad.devInfos {
 		err := dev.EnablePalmDetect(enabled)
 		if err != nil {
-			logger.Warning("[enablePalmDetect] failed to enable:", dev.Id, enabled, err)
+			logger.Debug("[enablePalmDetect] failed to enable:", dev.Id, enabled, err)
 		}
 	}
 }
@@ -368,7 +368,7 @@ func (tpad *Touchpad) setPalmDimensions() {
 	for _, dev := range tpad.devInfos {
 		err := dev.SetPalmDimensions(width, z)
 		if err != nil {
-			logger.Warning("[setPalmDimensions] failed to set:", dev.Id, width, z, err)
+			logger.Debug("[setPalmDimensions] failed to set:", dev.Id, width, z, err)
 		}
 	}
 }
