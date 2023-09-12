@@ -147,9 +147,9 @@ type Audio struct {
 	cards    CardList
 
 	isSaving     bool
-	sourceIdx    uint32 //used to disable source if select a2dp profile
+	sourceIdx    uint32 // used to disable source if select a2dp profile
 	saverLocker  sync.Mutex
-	enableSource bool //can not enable a2dp Source if card profile is "a2dp"
+	enableSource bool // can not enable a2dp Source if card profile is "a2dp"
 
 	portLocker sync.Mutex
 
@@ -274,11 +274,64 @@ func getCtx() (ctx *pulse.Context, err error) {
 	return
 }
 
+const (
+	dndVirtualSinkName        = "deepin_network_displays"
+	fakeCardName              = "VirtualCard"
+	dndVirtualSinkDescription = "NetworkDisplayDevice "
+)
+
+// genFakeCard 用于适配虚拟sink的场景,生成一个假的card
+func (a *Audio) genFakeCard() *Card {
+	sinkList := a.ctx.GetSinkList()
+	for _, sink := range sinkList {
+		if sink.Name == dndVirtualSinkName {
+			port := pulse.CardPortInfo{
+				PortInfo: pulse.PortInfo{
+					Name:        dndVirtualSinkName,
+					Description: dndVirtualSinkDescription,
+					Priority:    0,
+					Available:   2,
+				},
+				Direction: 1,
+				Profiles:  nil,
+			}
+			card := &pulse.Card{
+				Index:         sink.Index,
+				Name:          fakeCardName,
+				OwnerModule:   0,
+				Driver:        "",
+				PropList:      nil,
+				Profiles:      nil,
+				ActiveProfile: pulse.ProfileInfo2{},
+				Ports: pulse.CardPortInfos{
+					port,
+				},
+			}
+
+			fakeCard := &Card{
+				Id:            sink.Card,
+				Name:          card.Name,
+				ActiveProfile: nil,
+				Profiles:      nil,
+				Ports: pulse.CardPortInfos{
+					port,
+				},
+				core: card,
+			}
+			return fakeCard
+		}
+	}
+	return nil
+}
+
 func (a *Audio) refreshCards() {
 	a.cards = newCardList(a.ctx.GetCardList())
+	fakeCard := a.genFakeCard()
+	if fakeCard != nil {
+		a.cards = append(a.cards, fakeCard)
+	}
 	cards := a.cards.string()
 	logger.Infof("cards : %s", cards)
-
 	a.setPropCards(cards)
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 }
@@ -333,6 +386,16 @@ func (a *Audio) refreshSinks() {
 	sinkInfoList := a.ctx.GetSinkList()
 
 	for _, sinkInfo := range sinkInfoList {
+		if sinkInfo.Name == dndVirtualSinkName {
+			port := pulse.PortInfo{
+				Name:        sinkInfo.Name,
+				Description: dndVirtualSinkDescription,
+				Priority:    0,
+				Available:   2,
+			}
+			sinkInfo.Ports = append(sinkInfo.Ports, port)
+			sinkInfo.ActivePort = port
+		}
 		sinkInfoMap[sinkInfo.Index] = sinkInfo
 		sink, exist := a.sinks[sinkInfo.Index]
 		if exist {
@@ -749,6 +812,10 @@ func (a *Audio) findSourceByCardIndexPortName(cardId uint32, portName string) *p
 
 // set default sink and sink active port
 func (a *Audio) setDefaultSinkWithPort(cardId uint32, portName string) error {
+	if portName == dndVirtualSinkName || cardId == math.MaxUint32 {
+		a.ctx.SetDefaultSink(portName)
+		return nil
+	}
 	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	if !portConfig.Enabled {
 		return fmt.Errorf("card #%d port %q is disabled", cardId, portName)
@@ -990,8 +1057,11 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 	}
 
 	// 蓝牙特殊情况下会出错，导致profile为off, 需要重新寻找合适的
-	if targetPortInfo.Profiles.Exists(card.ActiveProfile.Name) && card.ActiveProfile.Name != "off" {
+	if targetPortInfo.Profiles != nil && targetPortInfo.Profiles.Exists(card.ActiveProfile.Name) && card.ActiveProfile.Name != "off" {
 		// no need to change profile
+		return setDefaultPort()
+	}
+	if portName == dndVirtualSinkName || cardId == math.MaxUint32 {
 		return setDefaultPort()
 	}
 
@@ -1244,7 +1314,7 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 func (a *Audio) updateSources(index uint32) (source *Source) {
 	sourceInfoList := a.ctx.GetSourceList()
 	for _, sourceInfo := range sourceInfoList {
-		//如果音频为输入，过滤到所有的monitor
+		// 如果音频为输入，过滤到所有的monitor
 		if strings.HasSuffix(sourceInfo.Name, ".monitor") {
 			logger.Debugf("skip %s source update", sourceInfo.Name)
 			continue

@@ -71,6 +71,16 @@ func (a *Audio) getCardNameById(cardId uint32) string {
 		}
 		return ""
 	}
+	// 虚拟的输出cardId都是MaxUint32
+	if cardId == math.MaxUint32 {
+		card, err := a.cards.get(cardId)
+		if err != nil {
+			logger.Warning(err)
+			return ""
+		}
+
+		return card.Name
+	}
 	card, err := a.ctx.GetCard(cardId)
 	if err != nil {
 		logger.Warning(err)
