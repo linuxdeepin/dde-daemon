@@ -26,13 +26,13 @@ prepareGfxmodeDetect () {
         return 0
     fi
 
-    if [ -f /etc/default/grub ]; then
-        . /etc/default/grub
-        if [ "$DEEPIN_GFXMODE_ADJUSTED" = 1 -o -n "$DEEPIN_GFXMODE_DETECT" ] ;then
+    if [ -f /etc/default/grub.d/11_dde.cfg ]; then
+        . /etc/default/grub.d/11_dde.cfg
+        if [ "$DEEPIN_GFXMODE_ADJUSTED" = 1 -o -n "$DEEPIN_GFXMODE_DETECT" ]; then
             return
         fi
-        /usr/lib/deepin-daemon/grub2 -prepare-gfxmode-detect && update-grub || true
     fi
+    /usr/lib/deepin-daemon/grub2 -prepare-gfxmode-detect && update-grub || true
 }
 
 case "$1" in

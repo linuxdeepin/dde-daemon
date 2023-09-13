@@ -58,15 +58,23 @@ func RunAsDaemon() {
 }
 
 func PrepareGfxmodeDetect() error {
-	params, err := grub_common.LoadGrubParams()
+	defaultParams, err := grub_common.LoadGrubParams()
 	if err != nil {
 		logger.Warning(err)
 	}
 
+	params := make(map[string]string)
+	for _, key := range []string{grubBackground, grubDefault, grubGfxmode, grubTheme, grubTimeout} {
+		if v, ok := defaultParams[key]; ok {
+			params[key] = v
+		}
+	}
+
 	gfxmodes, err := grub_common.GetGfxmodesFromXRandr()
 	if err != nil {
-		logger.Debug("failed to gfxmodes from XRandr:", err)
+		logger.Warning("failed to gfxmodes from XRandr:", err)
 	}
+
 	gfxmodes.SortDesc()
 	logger.Debug("gfxmodes:", gfxmodes)
 	gfxmodesStr := joinGfxmodesForDetect(gfxmodes)

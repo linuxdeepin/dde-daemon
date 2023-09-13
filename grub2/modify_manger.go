@@ -70,7 +70,7 @@ func (m *modifyManager) start(tasks ...modifyTask) {
 	logger.Infof("modifyManager start")
 	defer logger.Infof("modifyManager start return")
 
-	params, _ := grub_common.LoadGrubParams()
+	params, _ := grub_common.LoadDDEGrubParams()
 
 	logger.Debug("modifyManager.start len(tasks):", len(tasks))
 	var adjustTheme bool

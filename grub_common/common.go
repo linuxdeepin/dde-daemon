@@ -22,15 +22,16 @@ import (
 
 const (
 	GrubParamsFile            = "/etc/default/grub"
+	DDEGrubParamsFile         = "/etc/default/grub.d/11_dde.cfg"
 	GfxmodeDetectReadyPath    = "/tmp/deepin-gfxmode-detect-ready"
 	DeepinGfxmodeDetect       = "DEEPIN_GFXMODE_DETECT"
 	DeepinGfxmodeAdjusted     = "DEEPIN_GFXMODE_ADJUSTED"
 	DeepinGfxmodeNotSupported = "DEEPIN_GFXMODE_NOT_SUPPORTED"
 )
 
-func LoadGrubParams() (map[string]string, error) {
+func LoadGrubParamsFile(file string) (map[string]string, error) {
 	params := make(map[string]string)
-	f, err := os.Open(GrubParamsFile)
+	f, err := os.Open(file)
 	if err != nil {
 		return params, err
 	}
@@ -51,6 +52,14 @@ func LoadGrubParams() (map[string]string, error) {
 	}
 
 	return params, nil
+}
+
+func LoadGrubParams() (map[string]string, error) {
+	return LoadGrubParamsFile(GrubParamsFile)
+}
+
+func LoadDDEGrubParams() (map[string]string, error) {
+	return LoadGrubParamsFile(DDEGrubParamsFile)
 }
 
 func DecodeShellValue(in string) string {

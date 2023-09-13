@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	grubParamsFile     = "/etc/default/grub"
+	grubParamsFile     = "/etc/default/grub.d/11_dde.cfg"
 	themesDir          = "/boot/grub/themes"
 	themesTmpDir       = themesDir + ".tmp"
 	defaultThemeDir    = themesDir + "/deepin"

@@ -152,7 +152,7 @@ func getModifyTaskEnableTheme(enable bool, lang string, gfxmodeDetectState gfxmo
 		}
 	} else {
 		f := func(params map[string]string) {
-			delete(params, grubTheme)
+			params[grubTheme] = ""
 			params[grubBackground] = ""
 		}
 		return modifyTask{
@@ -216,7 +216,9 @@ func getModifyFuncPrepareGfxmodeDetect(gfxmodesStr string) func(map[string]strin
 		params[grub_common.DeepinGfxmodeDetect] = "1"
 		delete(params, grub_common.DeepinGfxmodeAdjusted)
 		delete(params, grub_common.DeepinGfxmodeNotSupported)
-		params[grubGfxmode] = gfxmodesStr
+		if gfxmodesStr != "auto" || params[grubGfxmode] == "" {
+			params[grubGfxmode] = gfxmodesStr
+		}
 	}
 	return f
 }
@@ -309,7 +311,7 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 		logger.Warning("readEntries Failed:", err)
 	}
 
-	params, err := grub_common.LoadGrubParams()
+	params, err := grub_common.LoadDDEGrubParams()
 	if err != nil {
 		logger.Warning(err)
 	}

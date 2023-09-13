@@ -284,10 +284,17 @@ func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 	gfxmodeDetectState := g.gfxmodeDetectState
 	g.PropsMu.RUnlock()
 
-	params, err := grub_common.LoadGrubParams()
+	defaultParams, err := grub_common.LoadGrubParams()
 	if err != nil {
 		logger.Warning("failed to load grub params:", err)
 		return dbusutil.ToError(err)
+	}
+
+	params := make(map[string]string)
+	for _, key := range []string{grubBackground, grubDefault, grubGfxmode, grubTheme, grubTimeout} {
+		if v, ok := defaultParams[key]; ok {
+			params[key] = v
+		}
 	}
 
 	if gfxmodeDetectState == gfxmodeDetectStateDetecting {
