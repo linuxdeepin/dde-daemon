@@ -35,6 +35,9 @@ const (
 	gsKeyReduceNoise              = "reduce-input-noise"
 	gsKeyOutputAutoSwitchCountMax = "output-auto-switch-count-max"
 
+	gsSchemaControlCenter         = "com.deepin.dde.control-center"
+	gsKeyDeviceManager            = "device-manage"
+
 	gsSchemaSoundEffect  = "com.deepin.dde.sound-effect"
 	gsKeyEnabled         = "enabled"
 	gsKeyDisableAutoMute = "disable-auto-mute"
@@ -166,6 +169,10 @@ type Audio struct {
 	outputAutoSwitchCountMax int
 	// 自动端口切换
 	enableAutoSwitchPort bool
+	controlCenterGsSettings  *gio.Settings
+	// 控制中心-声音-设备管理 是否显示
+	controlCenterDeviceManager gsprop.Bool `prop:"access:rw"`
+
 	systemSigLoop        *dbusutil.SignalLoop
 	// 用来进一步断是否需要暂停播放的信息
 	misc uint32
@@ -178,6 +185,15 @@ type Audio struct {
 			enabled  bool
 		}
 	}
+}
+
+func isStringInSlice(list []string, str string) bool {
+	for _, v := range list {
+		if v == str {
+			return true
+		}
+	}
+	return false
 }
 
 func newAudio(service *dbusutil.Service) *Audio {
@@ -203,6 +219,17 @@ func newAudio(service *dbusutil.Service) *Audio {
 	}
 	gMaxUIVolume = a.MaxUIVolume
 	a.listenGSettingVolumeIncreaseChanged()
+
+	if isStringInSlice(gio.SettingsListSchemas(), gsSchemaControlCenter) {
+		a.controlCenterGsSettings = gio.NewSettings(gsSchemaControlCenter)
+		if isStringInSlice(a.controlCenterGsSettings.ListKeys(), gsKeyDeviceManager) {
+			a.controlCenterDeviceManager.Bind(a.controlCenterGsSettings, gsKeyDeviceManager)
+			a.listenGSettingDeviceManageChanged()
+		}
+	} else {
+		logger.Warning(" [newAudio] gschemas file not exist : /usr/share/glib-2.0/schemas/com.deepin.dde.control-center.gschema.xml")
+	}
+
 	a.sessionSigLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
 	a.syncConfig = dsync.NewConfig("audio", &syncConfig{a: a},
 		a.sessionSigLoop, dbusPath, logger)
@@ -865,6 +892,9 @@ func (a *Audio) findSources(cardId uint32, activePortName string) []*Source {
 }
 
 func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *dbus.Error {
+	if !a.enableAutoSwitchPort {
+		return dbusutil.ToError(errors.New("DConfig of org.deepin.dde.daemon.audio autoSwitchPort is false"))
+	}
 	if enabled {
 		logger.Debugf("enable port<%d,%s>", cardId, portName)
 	} else {
@@ -1474,6 +1504,23 @@ func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
 	return dbusutil.ToError(fmt.Errorf("%s cannot support %s mode", card.core.Name, mode))
 }
 
+func (a *Audio) setEnableAutoSwitchPort(value bool) {
+	a.PropsMu.Lock()
+	a.enableAutoSwitchPort = value
+	a.PropsMu.Unlock()
+
+	if a.controlCenterGsSettings == nil {
+		return
+	} else if !isStringInSlice(a.controlCenterGsSettings.ListKeys(), gsKeyDeviceManager) {
+		return
+	}
+
+	if a.enableAutoSwitchPort != a.controlCenterDeviceManager.Get() {
+		a.controlCenterDeviceManager.Set(a.enableAutoSwitchPort)
+		logger.Info("setEnableAutoSwitchPort set a.enableAutoSwitchPort to a.controlCenterDeviceManager. value : ", a.enableAutoSwitchPort)
+	}
+}
+
 // 初始化 dsg 配置的属性
 func (a *Audio) initDsgProp() error {
 	systemBus, err := dbus.SystemBus()
@@ -1507,9 +1554,7 @@ func (a *Audio) initDsgProp() error {
 		logger.Warning(err)
 	} else {
 		logger.Info("auto switch port:", val)
-		a.PropsMu.Lock()
-		a.enableAutoSwitchPort = val
-		a.PropsMu.Unlock()
+		a.setEnableAutoSwitchPort(val)
 	}
 
 	var ret []dbus.Variant
@@ -1559,9 +1604,7 @@ func (a *Audio) initDsgProp() error {
 					logger.Warning(err)
 				} else {
 					logger.Info("auto switch port:", val)
-					a.PropsMu.Lock()
-					a.enableAutoSwitchPort = val
-					a.PropsMu.Unlock()
+					a.setEnableAutoSwitchPort(val)
 				}
 			}
 

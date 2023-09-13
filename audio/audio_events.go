@@ -569,6 +569,15 @@ func (a *Audio) listenGSettingVolumeIncreaseChanged() {
 	})
 }
 
+func (a *Audio) listenGSettingDeviceManageChanged() {
+	gsettings.ConnectChanged(gsSchemaControlCenter, gsKeyDeviceManager, func(val string) {
+		if a.enableAutoSwitchPort != a.controlCenterDeviceManager.Get() {
+			a.controlCenterDeviceManager.Set(a.enableAutoSwitchPort)
+			logger.Info("listenGSettingDeviceManageChanged set a.enableAutoSwitchPort to a.controlCenterDeviceManager. value : ", a.enableAutoSwitchPort)
+		}
+	})
+}
+
 // 外部修改ReducecNoise时触发回调，响应实际降噪开关
 func (a *Audio) writeReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
 	reduce, ok := write.Value.(bool)
