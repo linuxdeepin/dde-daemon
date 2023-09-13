@@ -280,6 +280,7 @@ func (m *Manager) init() {
 		m.UseWayland = false
 	}
 
+	logger.Info("init Getenv(WAYLAND_DISPLAY) UseWayland : ", m.UseWayland)
 	m.helper.initSignalExt(m.systemSigLoop, m.sessionSigLoop)
 
 	// init sleep inhibitor
