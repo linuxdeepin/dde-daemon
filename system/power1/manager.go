@@ -10,9 +10,11 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
+	"github.com/fsnotify/fsnotify"
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/powersupply"
 	"github.com/linuxdeepin/dde-api/powersupply/battery"
@@ -31,6 +33,11 @@ const (
 	intelPstatePath = "/sys/devices/system/cpu/intel_pstate"
 	AmdPstatePath   = "/sys/devices/system/cpu/amd_pstate"
 	amdGPUPath      = "/sys/class/drm/card0/device/power_dpm_force_performance_level"
+)
+
+const (
+	pstateConfPath  = "/sys/devices/system/cpu/cpufreq/policy0/energy_performance_preference"
+	scalingConfPath = "/sys/devices/system/cpu/cpufreq/policy0/scaling_governor"
 )
 
 func init() {
@@ -150,6 +157,8 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		return nil, err
 	}
 
+	go m.initFsWatcher()
+
 	return m, nil
 }
 
@@ -168,6 +177,76 @@ func newAC(manager *Manager, device *gudev.Device) *AC {
 
 func (ac *AC) newDevice() *gudev.Device {
 	return ac.gudevClient.QueryBySysfsPath(ac.sysfsPath)
+}
+
+type ModeData struct {
+	mode     string
+	governor string
+}
+
+func (m *Manager) getModeFromFile() (ModeData, error) {
+	fileName := ""
+	if m.hasPstate {
+		fileName = pstateConfPath
+	} else {
+		fileName = scalingConfPath
+	}
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		return ModeData{"", ""}, err
+	}
+	status := strings.TrimSpace(string(data))
+	if status == m.balanceScalingGovernor {
+		return ModeData{"balance", status}, nil
+	}
+	if status == "performance" || status == "high" {
+		return ModeData{"performance", status}, nil
+	}
+
+	if status == "powersave" || status == "power" {
+		return ModeData{"powersave", status}, nil
+	}
+	logger.Info("Unknown status:", status)
+
+	return ModeData{"", ""}, nil
+}
+
+func (m *Manager) initFsWatcher() {
+	watcher, err := fsnotify.NewWatcher()
+	defer watcher.Close()
+
+	if err != nil {
+		logger.Warning("power fswatcher error:", err)
+		return
+	}
+
+	e := watcher.Add("/sys/devices/system/cpu/cpufreq/policy0")
+	if e != nil {
+		logger.Warning("power fswatcher error:", e)
+		return
+	}
+
+	for {
+		select {
+		case event, ok := <-watcher.Events:
+			if !ok || !event.Has(fsnotify.Write) {
+				continue
+			}
+			if (m.hasPstate && strings.HasSuffix(event.Name, "energy_performance_preference")) || strings.HasSuffix(event.Name, "scaling_governor") {
+				modeAndgovData, err := m.getModeFromFile()
+				if err == nil && modeAndgovData.mode != "" {
+					m.setPropMode(modeAndgovData.mode)
+					m.setPropCpuGovernor(modeAndgovData.governor)
+				}
+			}
+
+		case err, ok := <-watcher.Errors:
+			if !ok {
+				return
+			}
+			logger.Warning("power fswatcher error:", err)
+		}
+	}
 }
 
 func (m *Manager) refreshAC(ac *gudev.Device) { // 拔插电源时候触发
