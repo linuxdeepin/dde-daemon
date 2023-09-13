@@ -111,7 +111,7 @@ Provides:
 Recommends:
  flatpak,
  iio-sensor-proxy,
- laptop-mode-tools,
+ tlp,
  proxychains4,
  mesa-utils,
 Suggests:

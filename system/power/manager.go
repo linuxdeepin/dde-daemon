@@ -43,6 +43,8 @@ const (
 const (
 	dsettingsAppID                                = "org.deepin.dde.daemon"
 	dsettingsPowerName                            = "org.deepin.dde.daemon.power"
+	dsettingsTlpName                              = "org.deepin.dde.daemon.power.tlp"
+	dsettingsBluetoothAdapterName                 = "org.deepin.dde.daemon.power.bluetoothAdapter"
 	dsettingsSpecialCpuModeJson                   = "specialCpuModeJson"
 	dsettingsBalanceCpuGovernor                   = "BalanceCpuGovernor"
 	dsettingsIsFirstGetCpuGovernor                = "isFirstGetCpuGovernor"
@@ -152,6 +154,10 @@ type Manager struct {
 	// powersave aspm 状态
 	idlePowersaveAspmEnabled bool
 	loginManager             login1.Manager
+
+	// 蓝牙适配器状态
+	bluetoothAdapterEnabledCmd string
+	bluetoothAdapterScanCmd string
 
 	// Special Cpu suppoert mode
 	specialCpuMode *supportMode
@@ -266,6 +272,14 @@ func (m *Manager) init() error {
 	if err != nil {
 		logger.Warning(err)
 	}
+	err = m.initTlpDsgConfig()
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = m.initBluetoothAdapterDsgConfig()
+	if err != nil {
+		logger.Warning(err)
+	}
 	m.systemSigLoop.Start()
 
 	subsystems := []string{"power_supply", "input"}
@@ -280,7 +294,7 @@ func (m *Manager) init() error {
 	cfg := loadConfigSafe()
 	if cfg != nil {
 		// 将config.json中的配置完成初始化
-		m.PowerSavingModeEnabled = cfg.PowerSavingModeEnabled                             // 开启和关闭节能模式
+		m.setPowerSavingModeEnabled(cfg.PowerSavingModeEnabled)                           // 开启和关闭节能模式
 		m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
 		m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
 		m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
@@ -404,11 +418,11 @@ func (m *Manager) initDsgConfig() error {
 		}
 
 		if init {
-			m.PowerSavingModeEnabled = data.Value().(bool)
+			m.setPowerSavingModeEnabled(data.Value().(bool))
 			return
 		}
 
-		if m.setPropPowerSavingModeEnabled(data.Value().(bool)) {
+		if m.setPowerSavingModeEnabled(data.Value().(bool)) {
 			logger.Info("Set power saving mode enable", m.PowerSavingModeEnabled)
 		}
 	}
@@ -421,7 +435,7 @@ func (m *Manager) initDsgConfig() error {
 		}
 
 		if init {
-			m.PowerSavingModeAutoWhenBatteryLow = data.Value().(bool)
+			m.setPowerSavingModeEnabled(data.Value().(bool))
 			return
 		}
 
@@ -889,7 +903,7 @@ func (m *Manager) doSetMode(mode string) error {
 			break
 		}
 
-		m.setPropPowerSavingModeEnabled(false)
+		m.setPowerSavingModeEnabled(false)
 		err = m.doSetCpuGovernor(m.balanceScalingGovernor)
 		if err != nil {
 			logger.Warning(err)
@@ -915,7 +929,7 @@ func (m *Manager) doSetMode(mode string) error {
 			break
 		}
 
-		m.setPropPowerSavingModeEnabled(true)
+		m.setPowerSavingModeEnabled(true)
 		if m.hasPstate {
 			err = m.doSetCpuGovernor("power")
 		} else {
@@ -937,7 +951,7 @@ func (m *Manager) doSetMode(mode string) error {
 			break
 		}
 
-		m.setPropPowerSavingModeEnabled(false)
+		m.setPowerSavingModeEnabled(false)
 		err = m.doSetCpuGovernor("performance")
 		if err != nil {
 			logger.Warning(err)
@@ -1047,4 +1061,17 @@ func (m *Manager) enablePerformanceInBoot() bool {
 		return false
 	}
 	return true
+}
+
+func (m *Manager) setPowerSavingModeEnabled(enable bool) (changed bool) {
+	changed = m.setPropPowerSavingModeEnabled(enable)
+	err := m.writePowerSavingModeEnabledCbImpl(enable)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = m.saveDsgConfig("PowerSavingModeEnabled")
+	if err != nil {
+		logger.Warning(err)
+	}
+	return
 }
