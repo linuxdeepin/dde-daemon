@@ -1,3 +1,10 @@
+dde-daemon (6.0.22) unstable; urgency=medium
+
+  * fix: battery governor changed, mode not be changed
+  * fix: power interface call error
+
+ -- chenhongtao <chenhongtao@deepin.org>  Thu, 14 Sep 2023 13:10:15 +0800
+
 dde-daemon (6.0.21) unstable; urgency=medium
 
   * fix: touchpad enable status misjudgment
