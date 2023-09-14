@@ -229,7 +229,7 @@ func (m *Manager) initFsWatcher() {
 	for {
 		select {
 		case event, ok := <-watcher.Events:
-			if !ok || !event.Has(fsnotify.Write) {
+			if !ok || event.Op&fsnotify.Write != fsnotify.Write {
 				continue
 			}
 			if (m.hasPstate && strings.HasSuffix(event.Name, "energy_performance_preference")) || strings.HasSuffix(event.Name, "scaling_governor") {
