@@ -235,8 +235,13 @@ func (m *Manager) initFsWatcher() {
 			if (m.hasPstate && strings.HasSuffix(event.Name, "energy_performance_preference")) || strings.HasSuffix(event.Name, "scaling_governor") {
 				modeAndgovData, err := m.getModeFromFile()
 				if err == nil && modeAndgovData.mode != "" {
-					m.setPropMode(modeAndgovData.mode)
-					m.setPropCpuGovernor(modeAndgovData.governor)
+					if modeAndgovData.mode != m.Mode {
+						err = m.doSetMode(m.Mode)
+						if err != nil {
+							logger.Warning("power set mode error:", err)
+						}
+						continue
+					}
 				}
 			}
 
@@ -672,6 +677,10 @@ func (m *Manager) saveConfig() error {
 
 func (m *Manager) doSetMode(mode string) error {
 	var err error
+
+	previousMode := m.Mode
+	m.setPropMode(mode)
+
 	switch mode {
 	case "balance": // governor=performance boost=false
 		if m.hasAmddpm {
@@ -765,8 +774,9 @@ func (m *Manager) doSetMode(mode string) error {
 		err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
 	}
 
-	if err == nil {
-		m.setPropMode(mode)
+	//set CpuGovernor file failed, restore previous mode
+	if err != nil {
+		m.setPropMode(previousMode)
 	}
 
 	return err
