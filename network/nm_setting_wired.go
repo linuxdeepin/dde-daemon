@@ -36,7 +36,6 @@ func newWiredConnectionData(id, uuid string, devPath dbus.ObjectPath) (data conn
 	setSettingConnectionUuid(data, uuid)
 	setSettingConnectionType(data, nm.NM_SETTING_WIRED_SETTING_NAME)
 
-	// dont set mac
 	initSettingSectionWired(data, devPath)
 
 	initSettingSectionIpv4(data)
@@ -54,4 +53,9 @@ func initSettingSectionWired(data connectionData, devPath dbus.ObjectPath) {
 		return
 	}
 	setSettingConnectionInterfaceName(data, ifc)
+	// need to set macAddress
+	hwAddr, err := nmGeneralGetDeviceHwAddr(devPath, true)
+	if err == nil {
+		setSettingWiredMacAddress(data, convertMacAddressToArrayByte(hwAddr));
+	}
 }
