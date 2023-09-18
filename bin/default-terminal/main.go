@@ -10,7 +10,7 @@ import (
 	"os/exec"
 
 	"github.com/godbus/dbus/v5"
-	startmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.startmanager1"
+	appmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.application1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 )
@@ -57,7 +57,7 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			startManager := startmanager.NewStartManager(sessionBus)
+			appManager := appmanager.NewManager(sessionBus)
 			filename := appInfo.GetFileName()
 			workDir, err := os.Getwd()
 			if err != nil {
@@ -66,7 +66,7 @@ func main() {
 			options := map[string]dbus.Variant{
 				"path": dbus.MakeVariant(workDir),
 			}
-			err = startManager.LaunchAppWithOptions(0, filename, 0,
+			err = appManager.LaunchAppWithOptions(0, filename, 0,
 				nil, options)
 			if err != nil {
 				log.Println(err)

@@ -15,12 +15,12 @@ import (
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
+	appmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.application1"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.inputdevices1"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
 	lockfront "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.lockfront1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.shutdownfront1"
-	startmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.startmanager1"
 	airplanemode "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.airplanemode1"
 	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
 	keyevent "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.keyevent1"
@@ -116,7 +116,7 @@ type Manager struct {
 
 	sessionSigLoop            *dbusutil.SignalLoop
 	systemSigLoop             *dbusutil.SignalLoop
-	startManager              startmanager.StartManager
+	appManager                appmanager.Manager
 	sessionManager            sessionmanager.SessionManager
 	airplane                  airplanemode.AirplaneMode
 	backlightHelper           backlight.Backlight
@@ -293,7 +293,7 @@ func (m *Manager) init() {
 	m.audioController = NewAudioController(sessionBus, m.backlightHelper)
 	m.mediaPlayerController = NewMediaPlayerController(m.systemSigLoop, sessionBus)
 
-	m.startManager = startmanager.NewStartManager(sessionBus)
+	m.appManager = appmanager.NewManager(sessionBus)
 	m.airplane = airplanemode.NewAirplaneMode(sysBus)
 	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
 	m.keyboard = inputdevices.NewKeyboard(sessionBus)
@@ -1098,7 +1098,7 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 	}
 
 	logger.Debug("startdde run cmd:", cmd)
-	return m.startManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
+	return m.appManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
 }
 
 func (m *Manager) handleCheckCamera() error {
@@ -1106,11 +1106,11 @@ func (m *Manager) handleCheckCamera() error {
 	if checkProRunning(cmd) {
 		cmd = "killall deepin-camera"
 	}
-	return m.startManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
+	return m.appManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
 }
 
 func (m *Manager) runDesktopFile(desktop string) error {
-	return m.startManager.LaunchApp(0, desktop, 0, []string{})
+	return m.appManager.LaunchApp(0, desktop, 0, []string{})
 }
 
 func (m *Manager) eliminateKeystrokeConflict() {
