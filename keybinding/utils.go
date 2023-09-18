@@ -13,12 +13,13 @@ import (
 	"path/filepath"
 	"strconv"
 	"time"
+
 	dbus "github.com/godbus/dbus"
-	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
-	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 	"github.com/linuxdeepin/dde-daemon/keybinding/util"
+	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/strv"
+	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 )
 
 // nolint
@@ -190,22 +191,23 @@ func (m *Manager) canShutdown() bool {
 }
 
 func (m *Manager) systemShutdown() {
+	// 快捷键关机流程：无论是否可以关机，都要通过sessionManager尝试关机，如果不能关机，那么会显示关机阻塞界面；
+	// 如果是锁定状态，那么不需要后端进行关机响应，前端会显示关机或者关机阻塞界面;
 	if !m.canShutdown() {
 		logger.Info("can not Shutdown")
-		return
 	}
 
 	locked, err := m.sessionManager.Locked().Get(0)
 	if err != nil {
-		logger.Warning("sessionManager get locked error:", err)
+		logger.Warning("sessionManager get locked state error:", err)
 		return
 	}
 	if locked {
-		logger.Info("session is locked")
+		logger.Info("current session is locked")
 		return
 	}
 
-	logger.Debug("Shutdown")
+	logger.Debug("keybinding start request SessionManager shutdown")
 	err = m.sessionManager.RequestShutdown(0)
 	if err != nil {
 		logger.Warning("failed to Shutdown:", err)
