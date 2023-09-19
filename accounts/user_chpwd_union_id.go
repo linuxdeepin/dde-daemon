@@ -414,7 +414,7 @@ func newPwdChangerBase(caller *caller, u *User) (ret *pwdChangerBase, err error)
 
 	cmd := exec.Command(
 		"runuser", "-u", pwdChangerUser.Username, "--",
-		resetPwdDialogPath, "-u", u.UserName, "-a", caller.app,
+		resetPwdDialogPath, "-u", u.UserName, "-f", u.FullName, "-a", caller.app,
 		"--fd", "3") //#nosec G204
 
 	cmd.ExtraFiles = append(cmd.ExtraFiles, writePipe)
