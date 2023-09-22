@@ -79,7 +79,6 @@ var mediaIdActionMap = map[string]*Action{
 	// display control
 	"mon-brightness-up":   NewDisplayCtrlAction(MonitorBrightnessUp),
 	"mon-brightness-down": NewDisplayCtrlAction(MonitorBrightnessDown),
-	"switch-monitors":     NewDisplayCtrlAction(DisplayModeSwitch),
 	"display":             NewDisplayCtrlAction(DisplayModeSwitch),
 	"adjust-brightness":   NewDisplayCtrlAction(AdjustBrightnessSwitch),
 

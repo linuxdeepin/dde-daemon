@@ -200,7 +200,6 @@ func getMediaIdNameMap() map[string]string {
 		"touchpad-toggle":      "ToggleTouchpad",    // XF86TouchpadToggle
 		"away":                 "Away",              // XF86Away
 		"web-cam":              "Camera",            // XF86WebCam
-		"switch-monitors":      gettext.Tr("Switch monitors"),
 	}
 	return idNameMap
 }
