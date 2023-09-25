@@ -38,7 +38,6 @@ prepare() {
   rm -rf system/uadp
   rm -rf session/uadpagent
   export GOPATH="$srcdir/build:/usr/share/gocode"
-  sed -i 's#/usr/share/backgrounds/default_background.jpg#/usr/share/backgrounds/deepin/desktop.jpg#' accounts1/user.go
 }
 
 build() {
