@@ -64,7 +64,7 @@ func PrepareGfxmodeDetect() error {
 	}
 
 	params := make(map[string]string)
-	for _, key := range []string{grubBackground, grubDefault, grubGfxmode, grubTheme, grubTimeout} {
+	for _, key := range []string{grubBackground, grubGfxmode, grubTheme, grubTimeout} {
 		if v, ok := defaultParams[key]; ok {
 			params[key] = v
 		}

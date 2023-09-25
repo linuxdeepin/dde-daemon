@@ -291,7 +291,7 @@ func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 	}
 
 	params := make(map[string]string)
-	for _, key := range []string{grubBackground, grubDefault, grubGfxmode, grubTheme, grubTimeout} {
+	for _, key := range []string{grubBackground, grubGfxmode, grubTheme, grubTimeout} {
 		if v, ok := defaultParams[key]; ok {
 			params[key] = v
 		}
