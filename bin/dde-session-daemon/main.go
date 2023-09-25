@@ -75,7 +75,7 @@ func allowRun() bool {
 		dbus.FlagNoAutoStart).Store(&allowRun)
 	if err != nil {
 		logger.Warning(err)
-		return true
+		return false
 	}
 
 	return allowRun
