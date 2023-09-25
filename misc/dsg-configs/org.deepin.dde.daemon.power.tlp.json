@@ -1,0 +1,548 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "soundPowerSaveOnAc": {
+            "value": "0",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "SoundPowerSaveOnAc",
+            "name[zh_CN]": "连接电源状态的音频节能模式",
+            "description": "Audio power saving for Intel HDA on Alternating current.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "soundPowerSaveOnBat": {
+            "value": "1",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "SoundPowerSaveOnBat",
+            "name[zh_CN]": "电池状态的音频节能模式",
+            "description": "Audio power saving for Intel HDA on battery.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "soundPowerSaveController": {
+            "value": "Y",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "SoundPowerSaveController",
+            "name[zh_CN]": "音频节能控制器",
+            "description": "Audio power saving controller.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "startChargeThreshBatPrimary": {
+            "value": "75",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "StartChargeThreshBatPrimary",
+            "name[zh_CN]": "主电池开始充电的阈值",
+            "description": "Main Battery charge level below which charging will begin when connecting the charger.",
+            "description[zh_CN]": "",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "stopChargeThreshBatPrimary": {
+            "value": "80",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "StopChargeThreshBatPrimary",
+            "name[zh_CN]": "主电池停止充电的阈值",
+            "description": "Main battery charge level above which charging will stop while the charger is connected.",
+            "description[zh_CN]": "",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "startChargeThreshBatSecondary": {
+            "value": "75",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "StartChargeThreshBatSecondary",
+            "name[zh_CN]": "辅电池开始充电的阈值",
+            "description": "Ultrabay battery charge level below which charging will begin when connecting the charger.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "stopChargeThreshBatSecondary": {
+            "value": "80",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "StopChargeThreshBatSecondary",
+            "name[zh_CN]": "辅电池停止充电的阈值",
+            "description": "Ultrabay battery charge level above which charging will stop while the charger is connected.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "restoreThresholdsOnBat": {
+            "value": "1",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "RestoreThresholdsOnBat",
+            "name[zh_CN]": "恢复配置的电荷阈值",
+            "description": "Restore configured charge thresholds when AC is unplugged.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "bayPoweroffOnAc": {
+            "value": "0",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "BayPoweroffOnAc",
+            "name[zh_CN]": "使用电源时关闭光驱",
+            "description": "Power off optical drive in UltraBay/MediaBay",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "bayPoweroffOnBat": {
+            "value": "0",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "BayPoweroffOnBat",
+            "name[zh_CN]": "使用电池时关闭光驱",
+            "description": "Power off optical drive in UltraBay/MediaBay",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "bayDevice": {
+            "value": "sr0",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "BayDevice",
+            "name[zh_CN]": "光驱设备",
+            "description": "Optical drive device to power off",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "maxLostWorkSecsOnAc": {
+            "value": "15",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "MaxLostWorkSecsOnAc",
+            "name[zh_CN]": "接入电源磁盘写入超时",
+            "description": "Timeout (in seconds) for writing unsaved data in file system buffers to disk",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "maxLostWorkSecsOnBat": {
+            "value": "60",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "MaxLostWorkSecsOnBat",
+            "name[zh_CN]": "接入电池磁盘写入超时",
+            "description": "Timeout (in seconds) for writing unsaved data in file system buffers to disk",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "nmiWatchdog": {
+            "value": "0",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "NmiWatchdog",
+            "name[zh_CN]": "内核NMI看门狗",
+            "description": "Kernel NMI Watchdog",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "wifiPwrOnAc": {
+            "value": "off",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "WifiPwrOnAc",
+            "name[zh_CN]": "接入电源wifi节能模式",
+            "description": "Sets Wi-Fi power saving mode. Adapter support depends on kernel and driver. ",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "wifiPwrOnBat": {
+            "value": "on",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "WifiPwrOnBat",
+            "name[zh_CN]": "接入电池wifi节能模式",
+            "description": "Sets Wi-Fi power saving mode. Adapter support depends on kernel and driver. ",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "wolDisable": {
+            "value": "Y",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "WolDisable",
+            "name[zh_CN]": "禁用网络唤醒",
+            "description": "Disable wake on LAN",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "restoreDeviceStateOnStartup": {
+            "value": "0",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "RestoreDeviceStateOnStartup",
+            "name[zh_CN]": "恢复无线设备状态",
+            "description": "Restores radio device state (builtin Bluetooth, Wi-Fi, WWAN) from previous shutdown on boot",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnStartup": {
+            "value": "bluetooth wifi wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnStartup",
+            "name[zh_CN]": "启动时禁用内置无线设备",
+            "description": "Disables builtin radio devices on boot",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToEableOnStartup": {
+            "value": "wifi",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToEableOnStartup",
+            "name[zh_CN]": "启动时启用内置无线设备",
+            "description": "Radio devices to enable on startup",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnShutdown": {
+            "value": "bluetooth wifi wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnShutdown",
+            "name[zh_CN]": "关机时禁用内置无线设备",
+            "description": "Disables builtin radio devices upon system shutdown. ",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToEableOnShutdown": {
+            "value": "wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToEableOnShutdown",
+            "name[zh_CN]": "关机时启用内置无线设备",
+            "description": "Enables builtin radio devices on shutdown",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToEableOnAc": {
+            "value": "bluetooth wifi wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToEableOnAc",
+            "name[zh_CN]": "接入电源时启用内置无线设备",
+            "description": "Enables builtin radio devices when AC power is plugged in.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnBat": {
+            "value": "bluetooth wifi wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnBat",
+            "name[zh_CN]": "接入电池时禁用内置无线设备",
+            "description": "Disables builtin radio devices when changing to battery power regardless of their connection state",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnBatNotInUse": {
+            "value": "bluetooth wifi wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnBatNotInUse",
+            "name[zh_CN]": "当设备没有连接时，接入电源禁用内置无线设备",
+            "description": "Disables builtin radio devices that are not connected when changing to battery power",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnLanConnect": {
+            "value": "wifi wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnLanConnect",
+            "name[zh_CN]": "LAN建立连接后，禁用无线设备",
+            "description": "When a LAN connection has been established, the stated radio devices are disabled",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnWifiConnect": {
+            "value": "wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnWifiConnect",
+            "name[zh_CN]": "Wifi建立连接后，禁用无线设备",
+            "description": "When a Wifi connection has been established, the stated radio devices are disabled",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnWwanConnect": {
+            "value": "wifi",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnWwanConnect",
+            "name[zh_CN]": "Wwan建立连接后，禁用无线设备",
+            "description": "When a Wwan connection has been established, the stated radio devices are disabled",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToEableOnLanDisconnect": {
+            "value": "wifi wwan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToEableOnLanDisconnect",
+            "name[zh_CN]": "LAN断开后，启用无线设备",
+            "description": "When a LAN connection has been disconnected, the stated radio devices are enabled",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToEableOnWifiDisconnect": {
+            "value": "",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToEableOnWifiDisconnect",
+            "name[zh_CN]": "wifi断开后，启用无线设备",
+            "description": "When a wifi connection has been disconnected, the stated radio devices are enabled",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToEableOnWwanDisconnect": {
+            "value": "",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToEableOnWwanDisconnect",
+            "name[zh_CN]": "Wwan断开后，启用无线设备",
+            "description": "When a Wwan connection has been disconnected, the stated radio devices are enabled",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToEableOnDock": {
+            "value": "",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToEableOnDock",
+            "name[zh_CN]": "停靠后，无线设备被启用",
+            "description": "After docking the stated radio devices are enabled.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnDock": {
+            "value": "",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnDock",
+            "name[zh_CN]": "停靠后，无线设备被禁用",
+            "description": "After docking the stated radio devices are disabled.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToEableOnUndock": {
+            "value": "wifi",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToEableOnUndock",
+            "name[zh_CN]": "解除对接后，启用无线设备",
+            "description": "After undocking the stated radio devices are enabled.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "devicesToDisableOnUndock": {
+            "value": "",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DevicesToDisableOnUndock",
+            "name[zh_CN]": "解除对接后，禁用无线设备",
+            "description": "After undocking the stated radio devices are disabled.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "runtimePmOnAc": {
+            "value": "on",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "RuntimePmOnAc",
+            "name[zh_CN]": "PCIe 设备的运行时电源管理",
+            "description": "Controls runtime power management for PCIe devices.",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "runtimePmOnBat": {
+            "value": "auto",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "RuntimePmOnBat",
+            "name[zh_CN]": "PCIe 设备的运行时电源管理",
+            "description": "Controls runtime power management for PCIe devices.",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "pcieAspmOnAc": {
+            "value": "default",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "PcieAspmOnAc",
+            "name[zh_CN]": "设置 PCIe ASPM 节能模式",
+            "description": "Sets PCIe ASPM power saving mode.",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "pcieAspmOnBat": {
+            "value": "default",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "PcieAspmOnBat",
+            "name[zh_CN]": "设置 PCIe ASPM 节能模式",
+            "description": "Sets PCIe ASPM power saving mode.",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "usbAutosuspend": {
+            "value": "1",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "UsbAutosuspend",
+            "name[zh_CN]": "USB自动挂起",
+            "description": "Set autosuspend mode for USB devices on boot and when plugged.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "usbAutosuspendDisableOnShutdown": {
+            "value": "1",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "UsbAutosuspendDisableOnShutdown",
+            "name[zh_CN]": "系统关闭时禁用USB自动挂起",
+            "description": "Disables USB autosuspend mode upon system shutdown.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "diskApmLevelOnAc": {
+            "value": "254 254",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DiskApmLevelOnAc",
+            "name[zh_CN]": "接入电源时磁盘功耗的管理",
+            "description": "Disk advanced power management level",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "diskApmLevelOnBat": {
+            "value": "128 128",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "DiskApmLevelOnBat",
+            "name[zh_CN]": "接入电池时磁盘功耗的管理",
+            "description": "Disk advanced power management level",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "sataLinkPwrOnAc": {
+            "value": "med_power_with_dipm max_performance",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "SataLinkPwrOnAc",
+            "name[zh_CN]": "为连接磁盘和光驱的 SATA 链路设置电源管理模式",
+            "description": "Sets the power management mode for the SATA links connecting disks and optical drives",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "sataLinkPwrOnBat": {
+            "value": "med_power_with_dipm min_power",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "SataLinkPwrOnBat",
+            "name[zh_CN]": "为连接磁盘和光驱的 SATA 链路设置电源管理模式",
+            "description": "Sets the power management mode for the SATA links connecting disks and optical drives",
+            "permissions": "readwrite",
+            "visibility": "public"
+        }
+    }
+}

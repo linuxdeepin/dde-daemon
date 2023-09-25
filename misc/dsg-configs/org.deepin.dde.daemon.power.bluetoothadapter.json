@@ -1,0 +1,30 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "enableDevices": {
+            "value": "up",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "EnableDevices",
+            "name[zh_CN]": "启用/禁用设备",
+            "description": "Enable/disable the devices",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "scanDevices": {
+            "value": "piscan",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "PiscanDevices",
+            "name[zh_CN]": "启用/禁用页面查询扫描",
+            "description": "Enable/disable Page and query scanning",
+            "permissions": "readwrite",
+            "visibility": "public"
+        }
+    }
+}

@@ -28,6 +28,12 @@ import (
 var noUEvent bool
 
 const (
+	dsettingsAppID                = "org.deepin.dde.daemon"
+	dsettingsTlpName              = "org.deepin.dde.daemon.power.tlp"
+	dsettingsBluetoothAdapterName = "org.deepin.dde.daemon.power.bluetoothAdapter"
+)
+
+const (
 	configManagerId = "org.desktopspec.ConfigManager"
 	_configHwSystem = "/usr/share/uos-hw-config"
 	intelPstatePath = "/sys/devices/system/cpu/intel_pstate"
@@ -123,6 +129,10 @@ type Manager struct {
 
 	// 当前模式
 	Mode string
+
+	// 蓝牙适配器状态
+	bluetoothAdapterEnabledCmd string
+	bluetoothAdapterScanCmd    string
 
 	// nolint
 	signals *struct {
@@ -357,6 +367,17 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 	}
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
 	m.initDsgConfig(systemBus)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = m.initTlpDsgConfig()
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = m.initBluetoothAdapterDsgConfig()
+	if err != nil {
+		logger.Warning(err)
+	}
 	m.systemSigLoop.Start()
 
 	path := m.cpus.getCpuGovernorPath(m.hasPstate)
@@ -712,7 +733,10 @@ func (m *Manager) doSetMode(mode string) error {
 			break
 		}
 
-		m.setPropPowerSavingModeEnabled(false)
+		m.PropsMu.Lock()
+		m.setPowerSavingModeEnabled(false)
+		m.PropsMu.Unlock()
+
 		balanceScalingGovernor := m.balanceScalingGovernor
 		// if do not have pstate, go to the logic below
 		if !m.hasPstate {
@@ -753,8 +777,9 @@ func (m *Manager) doSetMode(mode string) error {
 			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
 			break
 		}
-
-		m.setPropPowerSavingModeEnabled(true)
+		m.PropsMu.Lock()
+		m.setPowerSavingModeEnabled(true)
+		m.PropsMu.Unlock()
 		if m.hasPstate {
 			err = m.doSetCpuGovernor("power")
 		} else {
@@ -778,7 +803,9 @@ func (m *Manager) doSetMode(mode string) error {
 			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
 			break
 		}
-		m.setPropPowerSavingModeEnabled(false)
+		m.PropsMu.Lock()
+		m.setPowerSavingModeEnabled(false)
+		m.PropsMu.Unlock()
 		err = m.doSetCpuGovernor("performance")
 		if err != nil {
 			logger.Warning(err)
@@ -833,4 +860,16 @@ func (m *Manager) doSetCpuGovernor(governor string) error {
 		m.setPropCpuGovernor(governor)
 	}
 	return err
+}
+
+func (m *Manager) setPowerSavingModeEnabled(enable bool) (changed bool) {
+	changed = m.setPropPowerSavingModeEnabled(enable)
+	if !changed {
+		return
+	}
+	err := m.writePowerSavingModeEnabledCbImpl(enable)
+	if err != nil {
+		logger.Warning(err)
+	}
+	return
 }
