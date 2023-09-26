@@ -760,6 +760,15 @@ func (m *Manager) shouldHandleEvent(devType deviceType) (bool, error) {
 		return false, nil
 	}
 
+	isLocked, err := m.sessionmanager.Locked().Get(0)
+	if err != nil {
+		return false, fmt.Errorf("get login1 session locked failed: %v", err)
+	}
+
+	if isLocked {
+		return false, nil
+	}
+
 	currentSessionPath, err := m.sessionmanager.CurrentSessionPath().Get(0)
 	if err != nil {
 		return false, fmt.Errorf("get login1 session path failed: %v", err)
