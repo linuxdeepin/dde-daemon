@@ -7,8 +7,8 @@
 # Yuriy, 2020
 # Roman <dejitaru.tiger@gmail.com>, 2020
 # deepiner, 2020
-# Marck Hrin, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
+# Marck Hrin, 2023
 # Yuri Chornoivan <yurchor@ukr.net>, 2023
 # 
 #, fuzzy
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 13:22+0800\n"
+"POT-Creation-Date: 2023-09-19 17:17+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/linuxdeepin/teams/3617/uk/)\n"
@@ -58,40 +58,40 @@ msgstr "Таке ім'я вже існує"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
 
-#: ../../accounts/manager.go:539
+#: ../../accounts/manager.go:567
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Запис користувача «%s» вже існував. Його дані синхронізовано з попередніми"
 
-#: ../../accounts/user_ifc.go:669
+#: ../../accounts/user_ifc.go:686
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Фонове зображення у цій системі заблоковано від змін. Будь ласка, зв'яжіться"
 " з адміністратором вашої системи."
 
-#: ../../appearance/scale.go:41
+#: ../../appearance/scale.go:38
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
 "Вийдіть із системи, щоб параметри масштабування дисплея набули чинності"
 
-#: ../../appearance/scale.go:42
+#: ../../appearance/scale.go:39
 msgid "Set successfully"
 msgstr "Успішно встановлено"
 
-#: ../../appearance/scale.go:52
+#: ../../appearance/scale.go:49
 msgid "Later"
 msgstr "Пізніше"
 
-#: ../../appearance/scale.go:52
+#: ../../appearance/scale.go:49
 msgid "Log Out Now"
 msgstr "Вийти з системи зараз"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:63
 msgid "Setting display scaling"
 msgstr "Налаштування масштабування зображення"
 
-#: ../../appearance/scale.go:67
+#: ../../appearance/scale.go:64
 msgid "Display scaling"
 msgstr "Маштабування дисплею"
 
@@ -371,101 +371,102 @@ msgid "Notification Center"
 msgstr "Центр сповіщень"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Switch Layout"
 msgstr "Переключити компонування"
 
-#: ../../keybinding/shortcuts/id_name_map.go:65
+#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:203
+msgid "Toggle multiple displays"
+msgstr "Перемикання між декількома дисплеями"
+
+#: ../../keybinding/shortcuts/id_name_map.go:66
 msgid "Switch to left workspace"
 msgstr "Перемикання на ліву робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:66
+#: ../../keybinding/shortcuts/id_name_map.go:67
 msgid "Switch to right workspace"
 msgstr "Перемикання на правий робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:67
+#: ../../keybinding/shortcuts/id_name_map.go:68
 msgid "Switch to upper workspace"
 msgstr "Перемикання на верхнє робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:68
+#: ../../keybinding/shortcuts/id_name_map.go:69
 msgid "Switch to lower workspace"
 msgstr "Перемикання на нижчій робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:70
+#: ../../keybinding/shortcuts/id_name_map.go:71
 msgid "Switch similar windows"
 msgstr "Замінити схожі вікна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:71
+#: ../../keybinding/shortcuts/id_name_map.go:72
 msgid "Switch similar windows in reverse"
 msgstr "Перемикання між подібними вікнами у зворотному порядку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:72
+#: ../../keybinding/shortcuts/id_name_map.go:73
 msgid "Switch windows"
 msgstr "Перехід між вікнами"
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:74
 msgid "Switch windows in reverse"
 msgstr "Перемикання між вікнами у зворотному порядку"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Show desktop"
 msgstr "Показати стільницю"
 
-#: ../../keybinding/shortcuts/id_name_map.go:93
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Maximize window"
 msgstr "Розгорнути вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:95
 msgid "Restore window"
 msgstr "Відновити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Minimize window"
 msgstr "Згорнути вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Close window"
 msgstr "Закрити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Move window"
 msgstr "Перемістити вікно"
 
-#: ../../keybinding/shortcuts/id_name_map.go:99
+#: ../../keybinding/shortcuts/id_name_map.go:100
 msgid "Resize window"
 msgstr "Змінити розмір вікна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:115
 msgid "Move to left workspace"
 msgstr "Перемістити на лівий робочий простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to right workspace"
 msgstr "Перемістити на правий робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to upper workspace"
 msgstr "Перемістити на верхній робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to lower workspace"
 msgstr "Перемістити на нижчій робочій простір"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:140
 msgid "Display windows of all workspaces"
 msgstr "Відображати вікна всіх робочих просторів"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of current workspace"
 msgstr "Показати вікна поточного робочого простору"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display workspace"
 msgstr "Показати робочій простір"
-
-#: ../../keybinding/shortcuts/id_name_map.go:202
-msgid "Switch monitors"
-msgstr "Перемкнути монітори"
 
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
@@ -491,11 +492,11 @@ msgstr "Змінено мову системи, вийдіть із систем
 msgid "Failed to change system language, please try later"
 msgstr "Не вдалося змінити мову системи, спробуйте пізніше"
 
-#: ../../lastore/daemon.go:184
+#: ../../lastore/daemon.go:186
 msgid "Updates failed: it was interrupted."
 msgstr "Невдале оновлення: процес було перервано."
 
-#: ../../lastore/daemon.go:186
+#: ../../lastore/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
@@ -503,11 +504,11 @@ msgstr ""
 "Невдале оновлення: процес було перервано. Будь ласка, поверніться до старої "
 "версії і повторіть спробу."
 
-#: ../../lastore/daemon.go:192
+#: ../../lastore/daemon.go:194
 msgid "Updates failed: DPKG error."
 msgstr "Невдале оновлення: помилка DPKG."
 
-#: ../../lastore/daemon.go:194
+#: ../../lastore/daemon.go:196
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
@@ -515,11 +516,11 @@ msgstr ""
 "Невдале оновлення: помилка DPKG. Будь ласка, поверніться до старої версії і "
 "повторіть спробу."
 
-#: ../../lastore/daemon.go:198
+#: ../../lastore/daemon.go:200
 msgid "Updates failed: insufficient disk space."
 msgstr "Помилка оновлення: недостатньо місця на диску."
 
-#: ../../lastore/daemon.go:200
+#: ../../lastore/daemon.go:202
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
@@ -527,11 +528,11 @@ msgstr ""
 "Невдале оновлення: недостатньо місця на диску. Будь ласка, поверніться до "
 "старої версії і повторіть спробу."
 
-#: ../../lastore/daemon.go:204
+#: ../../lastore/daemon.go:206
 msgid "Updates failed"
 msgstr "Не вдалося оновити"
 
-#: ../../lastore/daemon.go:206
+#: ../../lastore/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
 "Невдале оновлення: будь ласка, поверніться до старої версії і повторіть "
@@ -1050,54 +1051,54 @@ msgstr ""
 msgid "Proceed"
 msgstr "Продовжити"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:248
 msgid "Battery critically low"
 msgstr "Акумулятор критично розряджено"
 
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
-#: ../../session/power/manager_events.go:233
-#: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:268
+#: ../../session/power/manager_events.go:273
+#: ../../session/power/manager_events.go:278
+#: ../../session/power/manager_events.go:283
 msgid "Battery low, please plug in"
 msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
 "мережі живлення"
 
-#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
-#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
+#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
+#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
 msgid "Power settings changed"
 msgstr "Параметри живлення змінено"
 
-#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Якщо закрито кришку,"
 
-#: ../../session/power/utils.go:537
+#: ../../session/power/utils.go:557
 msgid "When pressing the power button, "
 msgstr "Якщо натиснуто кнопку живлення,"
 
-#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "ваш комп'ютер буде вимкнено"
 
-#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "ваш комп'ютер буде призупинено"
 
-#: ../../session/power/utils.go:551
+#: ../../session/power/utils.go:571
 msgid "your computer will hibernate"
 msgstr "ваш комп'ютер буде приспано"
 
-#: ../../session/power/utils.go:553
+#: ../../session/power/utils.go:573
 msgid "your monitor will turn off"
 msgstr "монітор буде вимкнено"
 
-#: ../../session/power/utils.go:555
+#: ../../session/power/utils.go:575
 msgid "your monitor will show the shutdown interface"
 msgstr "на вашому моніторі буде показано інтерфейс завершення роботи"
 
-#: ../../session/power/utils.go:557
+#: ../../session/power/utils.go:577
 msgid "it will do nothing to your computer"
 msgstr "ніяких дій із комп'ютером не буде виконано"
 

@@ -10,7 +10,6 @@
 # efedezeta <pocodance@gmail.com>, 2020
 # Pablo Alejandro Hamann <linkstat@gmail.com>, 2020
 # jhalo <jhalo@protonmail.com>, 2020
-# Diego Sanguinetti, 2020
 # deepiner, 2020
 # Martín Josemaría <martin.vuelta@gmail.com>, 2020
 # jose luis <josemdance@outlook.com>, 2020
@@ -19,16 +18,18 @@
 # Isaías Gätjens M <igatjens@gmail.com>, 2021
 # Alvaro Samudio <alvarosamudio@protonmail.com>, 2022
 # brandon galvis, 2022
+# Amaro Martínez <xoas@airmail.cc>, 2023
 # Zaraza, 2023
+# Diego Sanguinetti, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 13:22+0800\n"
+"POT-Creation-Date: 2023-09-19 17:17+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Zaraza, 2023\n"
+"Last-Translator: Diego Sanguinetti, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/linuxdeepin/teams/3617/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,38 +69,38 @@ msgstr "El nombre ya existe"
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nombre de usuario debe tener entre 3 y 32 caracteres"
 
-#: ../../accounts/manager.go:539
+#: ../../accounts/manager.go:567
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "El usuario \"%s\" ya existía y sus datos están sincronizados"
 
-#: ../../accounts/user_ifc.go:669
+#: ../../accounts/user_ifc.go:686
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Este fondo de pantalla del sistema está bloqueado. Póngase en contacto con "
 "su administrador."
 
-#: ../../appearance/scale.go:41
+#: ../../appearance/scale.go:38
 msgid "Log out for display scaling settings to take effect"
 msgstr "Cierre sesión para que los ajustes surtan efecto"
 
-#: ../../appearance/scale.go:42
+#: ../../appearance/scale.go:39
 msgid "Set successfully"
 msgstr "Establecida con éxito"
 
-#: ../../appearance/scale.go:52
+#: ../../appearance/scale.go:49
 msgid "Later"
 msgstr "Luego"
 
-#: ../../appearance/scale.go:52
+#: ../../appearance/scale.go:49
 msgid "Log Out Now"
 msgstr "Cerrar sesión ahora"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:63
 msgid "Setting display scaling"
 msgstr "Configurar escalado de pantalla"
 
-#: ../../appearance/scale.go:67
+#: ../../appearance/scale.go:64
 msgid "Display scaling"
 msgstr "Escalado de pantalla"
 
@@ -194,7 +195,7 @@ msgstr "Ver"
 
 #: ../../bluetooth/obex_agent.go:406
 msgid "You have received files from %q successfully"
-msgstr "Archivos recibidos exitósamente de %q"
+msgstr "Archivos recibidos exitosamente de %q"
 
 #: ../../bluetooth/obex_agent.go:407
 msgid "Done"
@@ -379,101 +380,102 @@ msgid "Notification Center"
 msgstr "Centro de notificaciones"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Switch Layout"
 msgstr "Cambiar distribución de teclado"
 
-#: ../../keybinding/shortcuts/id_name_map.go:65
+#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:203
+msgid "Toggle multiple displays"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:66
 msgid "Switch to left workspace"
 msgstr "Cambiar al espacio de trabajo izquierdo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:66
+#: ../../keybinding/shortcuts/id_name_map.go:67
 msgid "Switch to right workspace"
 msgstr "Cambiar al espacio de trabajo derecho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:67
+#: ../../keybinding/shortcuts/id_name_map.go:68
 msgid "Switch to upper workspace"
 msgstr "Cambiar al espacio de trabajo superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:68
+#: ../../keybinding/shortcuts/id_name_map.go:69
 msgid "Switch to lower workspace"
 msgstr "Cambie para reducir el espacio de trabajo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:70
+#: ../../keybinding/shortcuts/id_name_map.go:71
 msgid "Switch similar windows"
 msgstr "Cambiar ventanas similares"
 
-#: ../../keybinding/shortcuts/id_name_map.go:71
+#: ../../keybinding/shortcuts/id_name_map.go:72
 msgid "Switch similar windows in reverse"
 msgstr "Cambiar ventanas similares en reversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:72
+#: ../../keybinding/shortcuts/id_name_map.go:73
 msgid "Switch windows"
 msgstr "Cambiar ventanas"
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:74
 msgid "Switch windows in reverse"
 msgstr "Cambiar ventanas en reversa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Show desktop"
 msgstr "Mostrar escritorio"
 
-#: ../../keybinding/shortcuts/id_name_map.go:93
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Maximize window"
 msgstr "Maximizar ventana "
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:95
 msgid "Restore window"
 msgstr "Restaurar ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Minimize window"
 msgstr "Minimizar ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Close window"
 msgstr "Cerrar ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Move window"
 msgstr "Mover ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:99
+#: ../../keybinding/shortcuts/id_name_map.go:100
 msgid "Resize window"
 msgstr "Cambiar tamaño de ventana"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:115
 msgid "Move to left workspace"
 msgstr "Mover al espacio de trabajo izquierdo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to right workspace"
 msgstr "Mover al espacio de trabajo derecho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to upper workspace"
 msgstr "Mover al espacio de trabajo superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to lower workspace"
 msgstr "Mover al espacio de trabajo inferior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:140
 msgid "Display windows of all workspaces"
 msgstr "Mostrar ventanas de todos los espacios de trabajo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of current workspace"
 msgstr "Mostrar ventanas del espacio de trabajo actual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display workspace"
 msgstr "Mostrar espacio de trabajo"
-
-#: ../../keybinding/shortcuts/id_name_map.go:202
-msgid "Switch monitors"
-msgstr "Cambiar entre monitores"
 
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
@@ -499,11 +501,11 @@ msgstr "El idioma del sistema cambió, por favor reinicie la sesión"
 msgid "Failed to change system language, please try later"
 msgstr "Error al cambiar el idioma del sistema, por favor intente más tarde"
 
-#: ../../lastore/daemon.go:184
+#: ../../lastore/daemon.go:186
 msgid "Updates failed: it was interrupted."
 msgstr "Actualizacion fallida: se interrumpió."
 
-#: ../../lastore/daemon.go:186
+#: ../../lastore/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
@@ -511,11 +513,11 @@ msgstr ""
 "Actualizacion fallida: se interrumpió. Vuelva a la versión anterior e "
 "inténtelo de nuevo."
 
-#: ../../lastore/daemon.go:192
+#: ../../lastore/daemon.go:194
 msgid "Updates failed: DPKG error."
 msgstr "Actualizaciones fallidas: error DPKG."
 
-#: ../../lastore/daemon.go:194
+#: ../../lastore/daemon.go:196
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
@@ -523,11 +525,11 @@ msgstr ""
 "Actualización fallida: error DPKG. Vuelva a la versión anterior e inténtelo "
 "de nuevo"
 
-#: ../../lastore/daemon.go:198
+#: ../../lastore/daemon.go:200
 msgid "Updates failed: insufficient disk space."
 msgstr "La actualización falló: espacio de disco insuficiente"
 
-#: ../../lastore/daemon.go:200
+#: ../../lastore/daemon.go:202
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
@@ -535,11 +537,11 @@ msgstr ""
 "Las actualización fallo: espacio en disco insuficiente. Vuelva a la versión "
 "anterior e inténtelo de nuevo."
 
-#: ../../lastore/daemon.go:204
+#: ../../lastore/daemon.go:206
 msgid "Updates failed"
 msgstr "Actualización fallida"
 
-#: ../../lastore/daemon.go:206
+#: ../../lastore/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
 "Las actualización fallo. Vuelva a la versión anterior e inténtelo de nuevo."
@@ -604,7 +606,7 @@ msgstr "Conexión por cable %v"
 
 #: ../../network/proxychains/utils_notify.go:49
 msgid "Application proxy is set successfully"
-msgstr "Proxy de aplicaciones configurado exitósamente"
+msgstr "Proxy de aplicaciones configurado exitosamente"
 
 #: ../../network/proxychains/utils_notify.go:49
 #: ../../network/proxychains/utils_notify.go:52
@@ -1053,57 +1055,59 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"No puede ejecutar el \"%s\", pero puede cambiar la configuración en el "
+"Centro de Seguridad.."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Proceder"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:248
 msgid "Battery critically low"
 msgstr "Batería críticamente baja"
 
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
-#: ../../session/power/manager_events.go:233
-#: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:268
+#: ../../session/power/manager_events.go:273
+#: ../../session/power/manager_events.go:278
+#: ../../session/power/manager_events.go:283
 msgid "Battery low, please plug in"
 msgstr "Batería baja, por favor, conéctela"
 
-#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
-#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
+#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
+#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
 msgid "Power settings changed"
 msgstr "Modificar configuraciones de energía"
 
-#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Cuando la tapa está cerrada,"
 
-#: ../../session/power/utils.go:537
+#: ../../session/power/utils.go:557
 msgid "When pressing the power button, "
 msgstr "Al presionar el botón de encendido,"
 
-#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "su equipo se apagará"
 
-#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "su equipo se suspenderá"
 
-#: ../../session/power/utils.go:551
+#: ../../session/power/utils.go:571
 msgid "your computer will hibernate"
 msgstr "su equipo hibernará"
 
-#: ../../session/power/utils.go:553
+#: ../../session/power/utils.go:573
 msgid "your monitor will turn off"
 msgstr "su monitor se apagará"
 
-#: ../../session/power/utils.go:555
+#: ../../session/power/utils.go:575
 msgid "your monitor will show the shutdown interface"
 msgstr "su monitor mostrará la interfaz de apagado"
 
-#: ../../session/power/utils.go:557
+#: ../../session/power/utils.go:577
 msgid "it will do nothing to your computer"
 msgstr "no cambiará nada a su equipo"
 

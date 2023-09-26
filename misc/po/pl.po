@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 13:22+0800\n"
+"POT-Creation-Date: 2023-09-19 17:17+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: Janusz Ruchała, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/linuxdeepin/teams/3617/pl/)\n"
@@ -60,39 +60,39 @@ msgstr "Taka nazwa już istnieje"
 msgid "Username must be between 3 and 32 characters"
 msgstr "Nazwa użytkownika musi zawierać od 3 do 32 znaków"
 
-#: ../../accounts/manager.go:539
+#: ../../accounts/manager.go:567
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Użytkownik \"%s\" już istniał wcześniej, więc jego dane zostaną "
 "zsynchronizowane"
 
-#: ../../accounts/user_ifc.go:669
+#: ../../accounts/user_ifc.go:686
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Tapeta systemu jest zablokowana. Skontaktuj się ze swoim administratorem."
 
-#: ../../appearance/scale.go:41
+#: ../../appearance/scale.go:38
 msgid "Log out for display scaling settings to take effect"
 msgstr "Wyloguj się, aby zastosować ustawienia wyświetlania"
 
-#: ../../appearance/scale.go:42
+#: ../../appearance/scale.go:39
 msgid "Set successfully"
 msgstr "Ustawiono pomyślnie"
 
-#: ../../appearance/scale.go:52
+#: ../../appearance/scale.go:49
 msgid "Later"
 msgstr "Później"
 
-#: ../../appearance/scale.go:52
+#: ../../appearance/scale.go:49
 msgid "Log Out Now"
 msgstr "Wyloguj teraz"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:63
 msgid "Setting display scaling"
 msgstr "Ustawienie skalowania ekranu"
 
-#: ../../appearance/scale.go:67
+#: ../../appearance/scale.go:64
 msgid "Display scaling"
 msgstr "Skalowanie ekranu"
 
@@ -373,101 +373,102 @@ msgid "Notification Center"
 msgstr "Centrum powiadomień"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Switch Layout"
 msgstr "Przełącz układ"
 
-#: ../../keybinding/shortcuts/id_name_map.go:65
+#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:203
+msgid "Toggle multiple displays"
+msgstr "Przełącz wiele ekranów"
+
+#: ../../keybinding/shortcuts/id_name_map.go:66
 msgid "Switch to left workspace"
 msgstr "Przełącz na lewy obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:66
+#: ../../keybinding/shortcuts/id_name_map.go:67
 msgid "Switch to right workspace"
 msgstr "Przełącz na prawy obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:67
+#: ../../keybinding/shortcuts/id_name_map.go:68
 msgid "Switch to upper workspace"
 msgstr "Przełącz na górny obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:68
+#: ../../keybinding/shortcuts/id_name_map.go:69
 msgid "Switch to lower workspace"
 msgstr "Przełącz na dolny obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:70
+#: ../../keybinding/shortcuts/id_name_map.go:71
 msgid "Switch similar windows"
 msgstr "Przełącz podobne okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:71
+#: ../../keybinding/shortcuts/id_name_map.go:72
 msgid "Switch similar windows in reverse"
 msgstr "Przełącz podobne okna w odwrotnej kolejności"
 
-#: ../../keybinding/shortcuts/id_name_map.go:72
+#: ../../keybinding/shortcuts/id_name_map.go:73
 msgid "Switch windows"
 msgstr "Przełącz okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:74
 msgid "Switch windows in reverse"
 msgstr "Przełącz okna w odwrotnej kolejności"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Show desktop"
 msgstr "Wyświetl pulpit"
 
-#: ../../keybinding/shortcuts/id_name_map.go:93
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Maximize window"
 msgstr "Maksymalizuj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:95
 msgid "Restore window"
 msgstr "Przywróć okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Minimize window"
 msgstr "Minimalizuj okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Close window"
 msgstr "Zamknij okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Move window"
 msgstr "Przenieś okno"
 
-#: ../../keybinding/shortcuts/id_name_map.go:99
+#: ../../keybinding/shortcuts/id_name_map.go:100
 msgid "Resize window"
 msgstr "Zmień rozmiar okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:115
 msgid "Move to left workspace"
 msgstr "Przenieś na lewy obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to right workspace"
 msgstr "Przenieś na prawy obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to upper workspace"
 msgstr "Przenieś na górny obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to lower workspace"
 msgstr "Przenieś na dolny obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:140
 msgid "Display windows of all workspaces"
 msgstr "Wyświetl okna wszystkich obszarów roboczych"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of current workspace"
 msgstr "Wyświetl okna bieżącego obszaru roboczego"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display workspace"
 msgstr "Wyświetl obszar roboczy"
-
-#: ../../keybinding/shortcuts/id_name_map.go:202
-msgid "Switch monitors"
-msgstr "Przełącz monitory"
 
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
@@ -493,11 +494,11 @@ msgstr "Zmieniono język systemu, proszę zalogować się ponownie"
 msgid "Failed to change system language, please try later"
 msgstr "Nie można zmienić języka systemu, proszę spróbować później"
 
-#: ../../lastore/daemon.go:184
+#: ../../lastore/daemon.go:186
 msgid "Updates failed: it was interrupted."
 msgstr "Błąd aktualizacji: została przerwana."
 
-#: ../../lastore/daemon.go:186
+#: ../../lastore/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
@@ -505,11 +506,11 @@ msgstr ""
 "Błąd aktualizacji: została przerwana. Przywróć system do starszej wersji i "
 "spróbuj ponownie."
 
-#: ../../lastore/daemon.go:192
+#: ../../lastore/daemon.go:194
 msgid "Updates failed: DPKG error."
 msgstr "Błąd aktualizacji: DPKG error."
 
-#: ../../lastore/daemon.go:194
+#: ../../lastore/daemon.go:196
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
@@ -517,11 +518,11 @@ msgstr ""
 "Błąd aktualizacji: DPKG error. Przywróć system do starszej wersji i spróbuj "
 "ponownie."
 
-#: ../../lastore/daemon.go:198
+#: ../../lastore/daemon.go:200
 msgid "Updates failed: insufficient disk space."
 msgstr "Błąd aktualizacji: za mało miejsca na dysku. "
 
-#: ../../lastore/daemon.go:200
+#: ../../lastore/daemon.go:202
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
@@ -529,11 +530,11 @@ msgstr ""
 "Błąd aktualizacji: za mało miejsca na dysku. Przywróć system do starszej "
 "wersji i spróbuj ponownie."
 
-#: ../../lastore/daemon.go:204
+#: ../../lastore/daemon.go:206
 msgid "Updates failed"
 msgstr "Błąd aktualizacji"
 
-#: ../../lastore/daemon.go:206
+#: ../../lastore/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
 "Błąd aktualizacji. Przywróć system do starszej wersji i spróbuj ponownie."
@@ -1050,52 +1051,52 @@ msgstr ""
 msgid "Proceed"
 msgstr "Kontynuuj"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:248
 msgid "Battery critically low"
 msgstr "Krytycznie niski poziom baterii"
 
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
-#: ../../session/power/manager_events.go:233
-#: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:268
+#: ../../session/power/manager_events.go:273
+#: ../../session/power/manager_events.go:278
+#: ../../session/power/manager_events.go:283
 msgid "Battery low, please plug in"
-msgstr "Niski stan poziomu baterii, podłącz komputer do zasilania"
+msgstr "Niski poziom baterii, podłącz zasilanie"
 
-#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
-#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
+#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
+#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
 msgid "Power settings changed"
 msgstr "Ustawienia zasilania uległy zmianie"
 
-#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "Kiedy pokrywa jest zamknięta,"
 
-#: ../../session/power/utils.go:537
+#: ../../session/power/utils.go:557
 msgid "When pressing the power button, "
 msgstr "Po naciśnięciu przycisku zasilania, "
 
-#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "komputer zostanie wyłączony"
 
-#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "komputer zostanie wstrzymany"
 
-#: ../../session/power/utils.go:551
+#: ../../session/power/utils.go:571
 msgid "your computer will hibernate"
 msgstr "komputer przejdzie w stan hibernacji"
 
-#: ../../session/power/utils.go:553
+#: ../../session/power/utils.go:573
 msgid "your monitor will turn off"
 msgstr "monitor zostanie wyłączony"
 
-#: ../../session/power/utils.go:555
+#: ../../session/power/utils.go:575
 msgid "your monitor will show the shutdown interface"
 msgstr "monitor wyświetli interfejs wyłączania"
 
-#: ../../session/power/utils.go:557
+#: ../../session/power/utils.go:577
 msgid "it will do nothing to your computer"
 msgstr "nic się nie stanie"
 

@@ -10,7 +10,7 @@
 # Julian Lai <laichiaheng@outlook.com>, 2020
 # Zhou Rh <jjzrh2@126.com>, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
-# pan93412 <pan93412@gmail.com>, 2021
+# pan93412 <pan93412@gmail.com>, 2023
 # deepiner, 2023
 # 
 #, fuzzy
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 13:22+0800\n"
+"POT-Creation-Date: 2023-09-19 17:17+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
 "Last-Translator: deepiner, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
@@ -58,36 +58,36 @@ msgstr "該名稱已存在"
 msgid "Username must be between 3 and 32 characters"
 msgstr "使用者名稱長度必須介於 3 至 32 個字元之間"
 
-#: ../../accounts/manager.go:539
+#: ../../accounts/manager.go:567
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "“%s”使用者為之前已存在的使用者，原資料已同步"
 
-#: ../../accounts/user_ifc.go:669
+#: ../../accounts/user_ifc.go:686
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr "目前系統桌布已被鎖定，請聯絡管理員"
 
-#: ../../appearance/scale.go:41
+#: ../../appearance/scale.go:38
 msgid "Log out for display scaling settings to take effect"
 msgstr "屏幕縮放需登出後才能生效"
 
-#: ../../appearance/scale.go:42
+#: ../../appearance/scale.go:39
 msgid "Set successfully"
 msgstr "成功設定"
 
-#: ../../appearance/scale.go:52
+#: ../../appearance/scale.go:49
 msgid "Later"
 msgstr "稍後登出"
 
-#: ../../appearance/scale.go:52
+#: ../../appearance/scale.go:49
 msgid "Log Out Now"
 msgstr "立即登出"
 
-#: ../../appearance/scale.go:66
+#: ../../appearance/scale.go:63
 msgid "Setting display scaling"
 msgstr "設定螢幕縮放率"
 
-#: ../../appearance/scale.go:67
+#: ../../appearance/scale.go:64
 msgid "Display scaling"
 msgstr "畫面縮放"
 
@@ -367,101 +367,102 @@ msgid "Notification Center"
 msgstr "通知中心"
 
 #: ../../keybinding/shortcuts/id_name_map.go:39
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:47
 msgid "Switch Layout"
 msgstr "切換佈局"
 
-#: ../../keybinding/shortcuts/id_name_map.go:65
+#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:203
+msgid "Toggle multiple displays"
+msgstr "切換多屏模式"
+
+#: ../../keybinding/shortcuts/id_name_map.go:66
 msgid "Switch to left workspace"
 msgstr "切換到左側工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:66
+#: ../../keybinding/shortcuts/id_name_map.go:67
 msgid "Switch to right workspace"
 msgstr "切換到右側工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:67
+#: ../../keybinding/shortcuts/id_name_map.go:68
 msgid "Switch to upper workspace"
 msgstr "切換到頂部工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:68
+#: ../../keybinding/shortcuts/id_name_map.go:69
 msgid "Switch to lower workspace"
 msgstr "切換到底部工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:70
+#: ../../keybinding/shortcuts/id_name_map.go:71
 msgid "Switch similar windows"
 msgstr "順向切換相似視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:71
+#: ../../keybinding/shortcuts/id_name_map.go:72
 msgid "Switch similar windows in reverse"
 msgstr "逆向切換相似視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:72
+#: ../../keybinding/shortcuts/id_name_map.go:73
 msgid "Switch windows"
 msgstr "順向切換視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:74
 msgid "Switch windows in reverse"
 msgstr "逆向切換視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:84
+#: ../../keybinding/shortcuts/id_name_map.go:85
 msgid "Show desktop"
 msgstr "顯示桌面"
 
-#: ../../keybinding/shortcuts/id_name_map.go:93
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Maximize window"
 msgstr "最大化視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../keybinding/shortcuts/id_name_map.go:95
 msgid "Restore window"
 msgstr "還原視窗大小"
 
-#: ../../keybinding/shortcuts/id_name_map.go:96
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Minimize window"
 msgstr "最小化視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Close window"
 msgstr "關閉視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Move window"
 msgstr "移動視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:99
+#: ../../keybinding/shortcuts/id_name_map.go:100
 msgid "Resize window"
 msgstr "調整視窗大小"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:115
 msgid "Move to left workspace"
 msgstr "移動到左側工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to right workspace"
 msgstr "移動到右側工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to upper workspace"
 msgstr "移動到頂部工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to lower workspace"
 msgstr "移動到底部工作區"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:140
 msgid "Display windows of all workspaces"
 msgstr "檢視所有工作區的視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of current workspace"
 msgstr "僅顯示目前工作區視窗"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display workspace"
 msgstr "顯示工作區"
-
-#: ../../keybinding/shortcuts/id_name_map.go:202
-msgid "Switch monitors"
-msgstr "多屏切換"
 
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
@@ -485,41 +486,41 @@ msgstr "已變更系統語言，請重新登入以套用變更"
 msgid "Failed to change system language, please try later"
 msgstr "無法變更系統語言，請稍候再試"
 
-#: ../../lastore/daemon.go:184
+#: ../../lastore/daemon.go:186
 msgid "Updates failed: it was interrupted."
 msgstr "由於更新中斷，此次系統更新失敗"
 
-#: ../../lastore/daemon.go:186
+#: ../../lastore/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr "由於更新中斷，此次系統更新失敗，請回退系統後重試"
 
-#: ../../lastore/daemon.go:192
+#: ../../lastore/daemon.go:194
 msgid "Updates failed: DPKG error."
 msgstr "由於dpkg錯誤，此次系統更新失敗"
 
-#: ../../lastore/daemon.go:194
+#: ../../lastore/daemon.go:196
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr "由於dpkg錯誤，此次系統更新失敗，請回退系統後重試"
 
-#: ../../lastore/daemon.go:198
+#: ../../lastore/daemon.go:200
 msgid "Updates failed: insufficient disk space."
 msgstr "磁碟空間不足，此次更新失敗"
 
-#: ../../lastore/daemon.go:200
+#: ../../lastore/daemon.go:202
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr "由於磁碟空間不足，此次更新失敗，請回退系統後重試"
 
-#: ../../lastore/daemon.go:204
+#: ../../lastore/daemon.go:206
 msgid "Updates failed"
 msgstr "此次更新失敗"
 
-#: ../../lastore/daemon.go:206
+#: ../../lastore/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr "此次系統更新失敗，請回退系統後重試"
 
@@ -1017,52 +1018,52 @@ msgstr "\"%s\"沒有通過系統安全驗證，無法執行，請前往安全中
 msgid "Proceed"
 msgstr "前往"
 
-#: ../../session/power/manager_events.go:203
+#: ../../session/power/manager_events.go:248
 msgid "Battery critically low"
 msgstr "電量耗盡"
 
-#: ../../session/power/manager_events.go:223
-#: ../../session/power/manager_events.go:228
-#: ../../session/power/manager_events.go:233
-#: ../../session/power/manager_events.go:238
+#: ../../session/power/manager_events.go:268
+#: ../../session/power/manager_events.go:273
+#: ../../session/power/manager_events.go:278
+#: ../../session/power/manager_events.go:283
 msgid "Battery low, please plug in"
 msgstr "電量剩餘不多，請接上電源"
 
-#: ../../session/power/utils.go:488 ../../session/power/utils.go:495
-#: ../../session/power/utils.go:502 ../../session/power/utils.go:509
+#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
+#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
 msgid "Power settings changed"
 msgstr "電源設定更改"
 
-#: ../../session/power/utils.go:533 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
 #: ../../session/power/utils_test.go:17
 msgid "When the lid is closed, "
 msgstr "“筆記本合蓋時”"
 
-#: ../../session/power/utils.go:537
+#: ../../session/power/utils.go:557
 msgid "When pressing the power button, "
 msgstr "“按電源按鈕時”"
 
-#: ../../session/power/utils.go:547 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
 msgid "your computer will shut down"
 msgstr "修改為關機"
 
-#: ../../session/power/utils.go:549 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
 msgid "your computer will suspend"
 msgstr "修改為待機"
 
-#: ../../session/power/utils.go:551
+#: ../../session/power/utils.go:571
 msgid "your computer will hibernate"
 msgstr "修改為休眠"
 
-#: ../../session/power/utils.go:553
+#: ../../session/power/utils.go:573
 msgid "your monitor will turn off"
 msgstr "修改為關閉顯示器"
 
-#: ../../session/power/utils.go:555
+#: ../../session/power/utils.go:575
 msgid "your monitor will show the shutdown interface"
 msgstr "修改為進入關機介面"
 
-#: ../../session/power/utils.go:557
+#: ../../session/power/utils.go:577
 msgid "it will do nothing to your computer"
 msgstr "修改為無任何操作"
 
