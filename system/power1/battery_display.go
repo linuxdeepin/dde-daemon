@@ -123,7 +123,7 @@ func (m *Manager) refreshBatteryDisplay() {
 
 func (m *Manager) changeBatteryLowByBatteryPercentage(percentage float64) {
 	logger.Debug("changeBatteryLowByBatteryPercentage, battery percentage: ", percentage)
-	batteryLow := percentage <= lowBatteryThreshold
+	batteryLow := percentage <= float64(m.PowerSavingModeAutoBatteryPercent)
 	if m.batteryLow != batteryLow {
 		m.batteryLow = batteryLow
 		m.updatePowerSavingMode()
