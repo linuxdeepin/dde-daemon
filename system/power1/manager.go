@@ -93,6 +93,9 @@ type Manager struct {
 	// 开启节能模式时降低亮度的百分比值
 	PowerSavingModeBrightnessDropPercent uint32 `prop:"access:rw"`
 
+	// 开启自动节能模式电量的百分比值
+	PowerSavingModeAutoBatteryPercent uint32 `prop:"access:rw"`
+
 	// 开启节能模式时保存的数据
 	PowerSavingModeBrightnessData string `prop:"access:rw"`
 
@@ -308,6 +311,8 @@ func (m *Manager) init() error {
 	m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
 	m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
 	m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
+	m.PowerSavingModeAutoBatteryPercent = cfg.PowerSavingModeBatteryPercent
+
 	m.Mode = cfg.Mode
 
 	// 恢复配置
@@ -604,6 +609,7 @@ type Config struct {
 	PowerSavingModeAuto                  bool
 	PowerSavingModeAutoWhenBatteryLow    bool
 	PowerSavingModeBrightnessDropPercent uint32
+	PowerSavingModeBatteryPercent        uint32
 	Mode                                 string
 }
 
@@ -634,6 +640,7 @@ func loadConfigSafe() *Config {
 			PowerSavingModeEnabled:               false,
 			PowerSavingModeAutoWhenBatteryLow:    false,
 			PowerSavingModeBrightnessDropPercent: 20,
+			PowerSavingModeBatteryPercent:        20,
 			Mode:                                 "balance",
 		}
 	}
