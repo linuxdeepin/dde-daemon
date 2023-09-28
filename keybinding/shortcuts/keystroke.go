@@ -314,10 +314,19 @@ func (ks *Keystroke) searchString() string {
 			strs = append(strs, strings.ToLower(string(visibleChar)))
 		}
 	} else {
-		strs = append(strs, strings.ToLower(ks.Keystr))
+		keyStr := fixSpecialKeyStr(ks.Keystr)
+		strs = append(strs, strings.ToLower(keyStr))
 	}
 
 	return strings.Join(strs, "")
+}
+
+func fixSpecialKeyStr(keyStr string) string {
+	// 处理特殊键值，搜索时，去除按键值的前后缀，例如Super_L,搜索super即可
+	res := strings.TrimSuffix(keyStr, "_L")
+	res = strings.TrimSuffix(res, "_R")
+	res = strings.TrimPrefix(res, "KP_")
+	return res
 }
 
 func isGoodNoMods(str string, sym x.Keysym) bool {
