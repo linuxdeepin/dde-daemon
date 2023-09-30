@@ -20,12 +20,12 @@ const (
 	typeEchoReply       = 0
 	typeEchoRequestIPV6 = 128
 	typeEchoReplyIPV6   = 129
-	typeNetUnrechable   = 3
+	typeNetUnreachable  = 3
 
-	codeNetUnrechable      = 0
-	codeHostUnrechable     = 1
-	codeProtocolUnrechable = 2
-	codePortUnrechable     = 3
+	codeNetUnreachable      = 0
+	codeHostUnreachable     = 1
+	codeProtocolUnreachable = 2
+	codePortUnreachable     = 3
 
 	ipHeaderMinLen = 20
 	ipProtocolICMP = 1
@@ -231,19 +231,19 @@ func handleICMPReply(icmp *ICMP) error {
 	if icmp.Type == typeEchoReply {
 		return nil
 	}
-	if icmp.Type != typeNetUnrechable {
+	if icmp.Type != typeNetUnreachable {
 		return fmt.Errorf("unknown error")
 	}
 
 	var msg string
 	switch icmp.Code {
-	case codeNetUnrechable:
+	case codeNetUnreachable:
 		msg = "network unreachable"
-	case codeHostUnrechable:
+	case codeHostUnreachable:
 		msg = "host unreachable"
-	case codeProtocolUnrechable:
+	case codeProtocolUnreachable:
 		msg = "protocol unreachable"
-	case codePortUnrechable:
+	case codePortUnreachable:
 		msg = "host port unreachable"
 	}
 	return fmt.Errorf(msg)
