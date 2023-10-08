@@ -174,7 +174,7 @@ func (wrl *WSLoop) GetShowed() []string {
 	return result
 }
 
-func (wrl *WSLoop) getNotShowed() []string {
+func (wrl *WSLoop) getNotShowed(t uint32) []string {
 	if wrl.fsChanged {
 		bgs := background.ListBackground()
 		bgFiles := make([]string, 0, len(bgs))
@@ -188,14 +188,17 @@ func (wrl *WSLoop) getNotShowed() []string {
 	for _, file := range wrl.all {
 		_, ok := wrl.showed[file]
 		if !ok {
-			result = append(result, file)
+			_, t1 := background.GetWallpaperType(file)
+			if t == t1 {
+				result = append(result, file)
+			}
 		}
 	}
 	return result
 }
 
-func (wrl *WSLoop) getNext() string {
-	notShowed := wrl.getNotShowed()
+func (wrl *WSLoop) getNext(t uint32) string {
+	notShowed := wrl.getNotShowed(t)
 	if len(notShowed) == 0 {
 		return ""
 	}
@@ -221,18 +224,18 @@ func (wrl *WSLoop) AddToShowed(file string) {
 	wrl.mu.Unlock()
 }
 
-func (wrl *WSLoop) GetNext() string {
+func (wrl *WSLoop) GetNext(t uint32) string {
 	wrl.mu.Lock()
 	defer wrl.mu.Unlock()
 
-	next := wrl.getNext()
+	next := wrl.getNext(t)
 	if next != "" {
 		return next
 	}
 
 	if len(wrl.all) > 0 {
 		wrl.reset()
-		next = wrl.getNext()
+		next = wrl.getNext(t)
 	}
 
 	return next

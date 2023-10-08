@@ -98,12 +98,12 @@ const (
 	wsPolicyLogin  = "login"
 	wsPolicyWakeup = "wakeup"
 
-	defaultIconTheme      = "bloom"
-	defaultGtkTheme       = "deepin"
-	autoGtkTheme          = "deepin-auto"
-	defaultCursorTheme    = "bloom"
-	defaultStandardFont   = "Noto Sans"
-	defaultMonospaceFont  = "Noto Mono"
+	defaultIconTheme     = "bloom"
+	defaultGtkTheme      = "deepin"
+	autoGtkTheme         = "deepin-auto"
+	defaultCursorTheme   = "bloom"
+	defaultStandardFont  = "Noto Sans"
+	defaultMonospaceFont = "Noto Mono"
 
 	dbusServiceName = "com.deepin.daemon.Appearance"
 	dbusPath        = "/com/deepin/daemon/Appearance"
@@ -721,10 +721,11 @@ func (m *Manager) doSetCursorTheme(value string) error {
 
 func (m *Manager) doSetMonitorBackground(monitorName string, imageFile string) (string, error) {
 	logger.Debugf("call doSetMonitorBackground monitor:%q file:%q", monitorName, imageFile)
-	if !background.IsBackgroundFile(imageFile) {
+	file, t := background.GetWallpaperType(imageFile)
+	if t == background.Unknown {
 		return "", errors.New("invalid background")
 	}
-	file, err := background.Prepare(imageFile)
+	file, err := background.Prepare(file, t)
 	if err != nil {
 		logger.Warning("failed to prepare:", err)
 		return "", err
@@ -891,11 +892,12 @@ func (m *Manager) doGetWallpaperSlideShow(monitorName string) (string, error) {
 
 func (m *Manager) doSetBackground(value string) (string, error) {
 	logger.Debugf("call doSetBackground %q", value)
-	if !background.IsBackgroundFile(value) {
+	file, t := background.GetWallpaperType(value)
+	if t == background.Unknown {
 		return "", errors.New("invalid background")
 	}
 
-	file, err := background.Prepare(value)
+	file, err := background.Prepare(file, t)
 	if err != nil {
 		logger.Warning("failed to prepare:", err)
 		return "", err
@@ -1065,11 +1067,6 @@ func (m *Manager) autoChangeBg(monitorSpace string, t time.Time) {
 	if m.wsLoopMap[monitorSpace] == nil {
 		return
 	}
-	file := m.wsLoopMap[monitorSpace].GetNext()
-	if file == "" {
-		logger.Warning("file is empty")
-		return
-	}
 	idx, err := m.wm.GetCurrentWorkspace(0)
 	if err != nil {
 		logger.Warning(err)
@@ -1081,7 +1078,20 @@ func (m *Manager) autoChangeBg(monitorSpace string, t time.Time) {
 		return
 	}
 	if strIdx == monitorSpace[splitter+len("&&"):] {
-		_, err := m.doSetMonitorBackground(monitorSpace[:splitter], file)
+		monitorname := monitorSpace[:splitter]
+		// 获取当前monitor的wallpaper，check是否是纯色壁纸
+		currentURI, err := m.wm.GetWorkspaceBackgroundForMonitor(0, idx, monitorname)
+		if err != nil {
+			logger.Warning("get wallpaperURI failed:", err)
+			return
+		}
+		_, t := background.GetWallpaperType(currentURI)
+		file := m.wsLoopMap[monitorSpace].GetNext(t)
+		if file == "" {
+			logger.Warning("file is empty")
+			return
+		}
+		_, err = m.doSetMonitorBackground(monitorname, file)
 		if err != nil {
 			logger.Warning("failed to set background:", err)
 		}

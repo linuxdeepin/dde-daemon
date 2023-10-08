@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/godbus/dbus"
@@ -40,6 +41,18 @@ const (
 	Government
 	Enterprise
 	Count
+)
+
+const (
+	Unknown uint32 = iota
+	Normal
+	Solid
+)
+
+const (
+	solidPrefix           = "solid::"
+	solidWallPaperPath    = "/usr/share/wallpapers/custom-solidwallpapers"
+	sysSolidWallPaperPath = "/usr/share/wallpapers/deepin-solidwallpapers"
 )
 
 var _licenseAuthorizationProperty uint32 = 0
@@ -105,7 +118,11 @@ func refreshBackground() {
 	}
 
 	// add system, get default systemWallpapers
-	for _, file := range getSysBgFiles(_wallpapersPathMap[Professional]) {
+	var systemWallpapersDir = []string{
+		_wallpapersPathMap[Professional],
+		sysSolidWallPaperPath,
+	}
+	for _, file := range getSysBgFiles(systemWallpapersDir) {
 		logger.Debugf("system: %s", file)
 		bgs = append(bgs, &Background{
 			Id:        dutils.EncodeURI(file, dutils.SCHEME_FILE),
@@ -116,7 +133,7 @@ func refreshBackground() {
 	logger.Debug("[refreshBackground] _licenseAuthorizationProperty : ", _licenseAuthorizationProperty)
 	// add system, get  enterprise or government systemWallpapers
 	if _licenseAuthorizationProperty > Professional && _licenseAuthorizationProperty < uint32(len(_wallpapersPathMap)) {
-		for _, file := range getSysBgFiles(_wallpapersPathMap[_licenseAuthorizationProperty]) {
+		for _, file := range getSysBgFiles([]string{_wallpapersPathMap[_licenseAuthorizationProperty]}) {
 			logger.Debugf("system: %s", file)
 			bgs = append(bgs, &Background{
 				Id:        dutils.EncodeURI(file, dutils.SCHEME_FILE),
@@ -231,20 +248,42 @@ func (info *Background) Thumbnail() (string, error) {
 	return "", errors.New("not supported")
 }
 
-func Prepare(file string) (string, error) {
+func Prepare(file string, t uint32) (string, error) {
 	var systemWallpapersDir = []string{
 		_wallpapersPathMap[Professional],
+		sysSolidWallPaperPath,
 	}
 	if _licenseAuthorizationProperty > Professional && _licenseAuthorizationProperty < uint32(len(_wallpapersPathMap)) {
 		systemWallpapersDir = append(systemWallpapersDir, _wallpapersPathMap[_licenseAuthorizationProperty])
 	}
 
-	file = dutils.DecodeURI(file)
 	if isFileInDirs(file, systemWallpapersDir) {
 		logger.Debug("is system")
 		return file, nil
 	}
 
 	logger.Debug("is custom")
-	return prepare(file)
+	return prepare(file, t)
+
+}
+
+func GetWallpaperType(file string) (string, uint32) {
+	t := Normal
+
+	if strings.HasPrefix(file, solidPrefix) {
+		file = strings.TrimPrefix(file, solidPrefix)
+		t = Solid
+	}
+	if !IsBackgroundFile(file) {
+		t = Unknown
+	}
+	file = dutils.DecodeURI(file)
+	if file == "" {
+		t = Unknown
+	}
+	if strings.HasPrefix(file, sysSolidWallPaperPath) ||
+		strings.HasPrefix(file, solidWallPaperPath) {
+		t = Solid
+	}
+	return file, t
 }

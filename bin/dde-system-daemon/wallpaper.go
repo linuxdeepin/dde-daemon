@@ -25,62 +25,82 @@ import (
 const maxCount = 5
 const maxSize = 32 * 1024 * 1024
 const wallPaperDir = "/usr/share/wallpapers/custom-wallpapers/"
+const solidWallPaperPath = "/usr/share/wallpapers/custom-solidwallpapers/"
+const solidPrefix = "solid::"
 
-func GetUserDir(username string) (string, error) {
-	dir := filepath.Join(wallPaperDir, username)
-	dir, err := filepath.Abs(dir)
+var wallPaperDirs = []string{
+	wallPaperDir,
+	solidWallPaperPath,
+}
 
-	if err != nil {
-		return "", err
+func checkPath(path string, dirs []string) string {
+	for _, dir := range dirs {
+		if strings.HasPrefix(path, dir) {
+			return dir
+		}
 	}
+	return ""
+}
 
-	if !strings.HasPrefix(dir, wallPaperDir) {
-		return "", fmt.Errorf("UserName is not in %s", wallPaperDir)
+func GetUserDirs(username string) (dirs []string, err error) {
+	dirs = make([]string, 0)
+	for _, wallPaperDir := range wallPaperDirs {
+		dir := filepath.Join(wallPaperDir, username)
+		dir, err := filepath.Abs(dir)
+
+		if err != nil {
+			continue
+		}
+
+		if !strings.HasPrefix(dir, wallPaperDir) {
+			continue
+		}
+
+		info, err := os.Stat(dir)
+
+		if err != nil && !os.IsExist(err) {
+			os.MkdirAll(dir, 0755)
+		}
+
+		if info != nil && !info.IsDir() {
+			return nil, errors.New("UsernName is not a dir")
+		}
+		dirs = append(dirs, dir)
 	}
-
-	info, err := os.Stat(dir)
-
-	if err != nil && !os.IsExist(err) {
-		os.MkdirAll(dir, 0755)
-	}
-
-	if info != nil && !info.IsDir() {
-		return "", errors.New("UsernName is not a dir")
-	}
-
-	return dir, nil
+	return dirs, nil
 }
 
 func RemoveOverflowWallPapers(username string, max int) error {
-	dir, err := GetUserDir(username)
+	dirs, err := GetUserDirs(username)
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
-
-	fileinfos, err := ioutil.ReadDir(dir)
-	if err != nil {
-		logger.Warning(err)
-		return err
-	}
-
-	logger.Debugf("is count %d <= %d ?", len(fileinfos), max)
-	if len(fileinfos) <= max {
-		return nil
-	}
-
-	sort.Slice(fileinfos, func(i, j int) bool { return fileinfos[i].ModTime().Before(fileinfos[j].ModTime()) })
-	for i := 0; i < len(fileinfos)-max; i++ {
-		err = os.Remove(filepath.Join(dir, fileinfos[i].Name()))
+	for _, dir := range dirs {
+		fileinfos, err := ioutil.ReadDir(dir)
 		if err != nil {
 			logger.Warning(err)
+			continue
+		}
+
+		logger.Debugf("is count %d <= %d ?", len(fileinfos), max)
+		if len(fileinfos) <= max {
+			continue
+		}
+
+		sort.Slice(fileinfos, func(i, j int) bool { return fileinfos[i].ModTime().Before(fileinfos[j].ModTime()) })
+		for i := 0; i < len(fileinfos)-max; i++ {
+			err = os.Remove(filepath.Join(dir, fileinfos[i].Name()))
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 	}
 	return nil
 }
 
 func DeleteWallPaper(username string, file string) error {
-	dir, err := GetUserDir(username)
+	dirs, err := GetUserDirs(username)
 	if err != nil {
 		return err
 	}
@@ -90,14 +110,20 @@ func DeleteWallPaper(username string, file string) error {
 		return err
 	}
 
-	if !filepath.HasPrefix(path, dir) {
-		return fmt.Errorf("%s is not in %s", file, dir)
+	if checkPath(path, dirs) == "" {
+		return fmt.Errorf("%s is not in %v", file, dirs)
 	}
 
 	return os.Remove(path)
 }
 
 func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file string) (string, *dbus.Error) {
+	var err error
+	var isSolid bool = false
+	if strings.HasPrefix(file, solidPrefix) {
+		file = strings.TrimPrefix(file, solidPrefix)
+		isSolid = true
+	}
 	info, err := os.Stat(file)
 	if err != nil {
 		logger.Warning(err)
@@ -109,14 +135,14 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
+	dirs, _ := GetUserDirs(username)
 
-	dir, err := GetUserDir(username)
 	if err != nil {
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
 
-	if filepath.HasPrefix(file, dir) {
+	if checkPath(file, dirs) != "" {
 		return file, nil
 	}
 
@@ -147,7 +173,21 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 	}
 	md5sum, _ := dutils.SumFileMd5(file)
 
-	destFile := filepath.Join(dir, md5sum)
+	var prefix string
+	if isSolid {
+		prefix = solidWallPaperPath
+	} else {
+		prefix = wallPaperDir
+	}
+	fn := func(prefix string) string {
+		for _, dir := range dirs {
+			if strings.HasPrefix(dir, prefix) {
+				return dir
+			}
+		}
+		return ""
+	}(prefix)
+	destFile := filepath.Join(fn, md5sum)
 	destFile = destFile + filepath.Ext(file)
 	src, err := os.Open(file)
 	if err != nil {
@@ -182,21 +222,24 @@ func (*Daemon) DeleteCustomWallPaper(username string, file string) *dbus.Error {
 }
 
 func (*Daemon) GetCustomWallPapers(username string) ([]string, *dbus.Error) {
-	dir, err := GetUserDir(username)
+	dirs, err := GetUserDirs(username)
 	if err != nil {
 		logger.Warning(err)
 		return []string{}, dbusutil.ToError(err)
 	}
-
-	fileinfos, err := ioutil.ReadDir(dir)
-	if err != nil {
-		logger.Warning(err)
-		return []string{}, dbusutil.ToError(err)
-	}
-
 	files := []string{}
-	for _, fileinfo := range fileinfos {
-		files = append(files, filepath.Join(wallPaperDir, username, fileinfo.Name()))
+
+	for _, dir := range dirs {
+
+		fileinfos, err := ioutil.ReadDir(dir)
+		if err != nil {
+			logger.Warning(err)
+			return []string{}, dbusutil.ToError(err)
+		}
+
+		for _, fileinfo := range fileinfos {
+			files = append(files, filepath.Join(dir, fileinfo.Name()))
+		}
 	}
 
 	return files, nil

@@ -43,6 +43,6 @@ func Test_FileInDirs(t *testing.T) {
 }
 
 func Test_GetBgFiles(t *testing.T) {
-	files := getSysBgFiles("/usr/share/wallpapers/deepin")
+	files := getSysBgFiles([]string{"/usr/share/wallpapers/deepin"})
 	t.Log(files)
 }

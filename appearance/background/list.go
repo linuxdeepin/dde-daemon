@@ -45,10 +45,13 @@ func sortByTime(fileInfoList []os.FileInfo) []os.FileInfo {
 	return fileInfoList
 }
 
-func getSysBgFiles(path string) []string {
+func getSysBgFiles(paths []string) []string {
 	var files []string
-	if dutils.IsFileExist(path) {
-		files = append(files, getBgFilesInDir(path)...)
+
+	for _, path := range paths {
+		if dutils.IsFileExist(path) {
+			files = append(files, getBgFilesInDir(path)...)
+		}
 	}
 	return files
 }

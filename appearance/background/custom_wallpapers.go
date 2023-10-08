@@ -115,7 +115,7 @@ func resizeImage(filename, cacheDir string) (outFilename, ext string, isResized 
 	return
 }
 
-func prepare(filename string) (string, error) {
+func prepare(filename string, t uint32) (string, error) {
 	bus, err := dbus.SystemBus()
 	if err != nil {
 		return "", err
@@ -131,6 +131,9 @@ func prepare(filename string) (string, error) {
 
 	NotifyChanged()
 
+	if t == Solid {
+		file = solidPrefix + file
+	}
 	return dm.SaveCustomWallPaper(0, cur.Username, file)
 }
 

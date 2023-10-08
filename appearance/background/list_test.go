@@ -12,7 +12,7 @@ import (
 
 func Test_getSysBgFiles(t *testing.T) {
 	type args struct {
-		dir string
+		dir []string
 	}
 	tests := []struct {
 		name string
@@ -22,14 +22,14 @@ func Test_getSysBgFiles(t *testing.T) {
 		{
 			name: "getSysBgFiles",
 			args: args{
-				dir: "./testdata/fakeimages",
+				dir: []string{"./testdata/fakeimages"},
 			},
 			want: []string{"testdata/fakeimages/fakeimage1.jpg", "testdata/fakeimages/fakeimage2.jpg"},
 		},
 		{
 			name: "getCustomBgFilesInDir empty",
 			args: args{
-				dir: "./testdata/fakeimages/empty",
+				dir: []string{"./testdata/fakeimages/empty"},
 			},
 			want: nil,
 		},
