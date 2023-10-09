@@ -51,6 +51,13 @@ type ActionExecCmdArg struct {
 	Cmd           string
 }
 
+func NewDesktopTypeAction(desktop string) *Action {
+	return &Action{
+		Type: ActionTypeDesktopFile,
+		Arg:  desktop,
+	}
+}
+
 func NewExecCmdAction(cmd string, execOnRelease bool) *Action {
 	return &Action{
 		Type: ActionTypeExecCmd,

@@ -65,7 +65,6 @@ func (m *Manager) initHandlers() {
 			if err != nil {
 				logger.Warning("execCmd error:", arg.Cmd, err)
 			}
-			
 		}()
 	}
 
@@ -126,9 +125,15 @@ func (m *Manager) initHandlers() {
 		}
 
 		go func() {
-			err := m.execCmd(queryCommandByMime(mimeType), true)
+			desktop, err := queryAppDesktopByMime(mimeType)
 			if err != nil {
-				logger.Warning("execCmd error:", err)
+				logger.Debug("queryAppByMime error:", err)
+				return
+			}
+
+			err = m.runDesktopFile(desktop)
+			if err != nil {
+				logger.Warningf("launch %s error: %v", desktop, err)
 			}
 		}()
 	}

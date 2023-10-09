@@ -25,18 +25,21 @@ const (
 	cmdMyComputer = "gio open computer:///"
 	cmdDocuments  = "gio open ~/Documents"
 	cmdEject      = "eject -r"
-	cmdCalculator = "deepin-calculator"
-	cmdCalendar   = "dde-calendar"
-	cmdMeeting    = "deepin-contacts"
 	cmdTerminal   = "/usr/lib/deepin-daemon/default-terminal"
 	cmdMessenger  = "dbus-send --print-reply --dest=org.deepin.dde.Widgets1 /org/deepin/dde/Widgets1 org.deepin.dde.Widgets1.Toggle"
 	cmdLauncher   = "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle"
-	cmdCamera     = "deepin-camera"
+)
+
+const (
+	desktopCalculator = "deepin-calculator.desktop"
+	desktopCalendar   = "dde-calendar.desktop"
+	desktopMeeting    = "deepin-contacts.desktop"
+	desktopCamera     = "deepin-camera.desktop"
 )
 
 var mediaIdActionMap = map[string]*Action{
-	"numlock":  &Action{Type: ActionTypeShowNumLockOSD},
-	"capslock": &Action{Type: ActionTypeShowCapsLockOSD},
+	"numlock":  {Type: ActionTypeShowNumLockOSD},
+	"capslock": {Type: ActionTypeShowCapsLockOSD},
 	// Open MimeType
 	"home-page":   NewOpenMimeTypeAction(mimeTypeBrowser),
 	"www":         NewOpenMimeTypeAction(mimeTypeBrowser),
@@ -51,9 +54,9 @@ var mediaIdActionMap = map[string]*Action{
 	"my-computer": NewExecCmdAction(cmdMyComputer, false),
 	"documents":   NewExecCmdAction(cmdDocuments, false),
 	"eject":       NewExecCmdAction(cmdEject, false),
-	"calculator":  NewExecCmdAction(cmdCalculator, false),
-	"calendar":    NewExecCmdAction(cmdCalendar, false),
-	"meeting":     NewExecCmdAction(cmdMeeting, false),
+	"calculator":  NewDesktopTypeAction(desktopCalculator),
+	"calendar":    NewDesktopTypeAction(desktopCalendar),
+	"meeting":     NewDesktopTypeAction(desktopMeeting),
 	"terminal":    NewExecCmdAction(cmdTerminal, false),
 	"messenger":   NewExecCmdAction(cmdMessenger, false),
 	"app-left":    NewExecCmdAction(cmdLauncher, false),
@@ -94,17 +97,17 @@ var mediaIdActionMap = map[string]*Action{
 	"touchpad-off":    NewTouchpadCtrlAction(TouchpadOff),
 
 	// power
-	"suspend": &Action{Type: ActionTypeSystemSuspend},
-	"sleep":   &Action{Type: ActionTypeSystemSuspend},
-	"log-off": &Action{Type: ActionTypeSystemLogOff},
-	"away":    &Action{Type: ActionTypeSystemAway},
+	"suspend": {Type: ActionTypeSystemSuspend},
+	"sleep":   {Type: ActionTypeSystemSuspend},
+	"log-off": {Type: ActionTypeSystemLogOff},
+	"away":    {Type: ActionTypeSystemAway},
 
-	"web-cam": NewExecCmdAction(cmdCamera, false),
+	"web-cam": NewDesktopTypeAction(desktopCamera),
 
 	// We do not need to deal with XF86Wlan key default,
 	// but can be specially by 'EnableNetworkController'
-	"wlan":  &Action{Type: ActionTypeToggleWireless},
-	"tools": &Action{Type: ActionTypeShowControlCenter},
+	"wlan":  {Type: ActionTypeToggleWireless},
+	"tools": {Type: ActionTypeShowControlCenter},
 }
 
 func showOSD(signal string) {
