@@ -140,6 +140,9 @@ func getWMIdNameMap() map[string]string {
 		"expose-all-windows":           gettext.Tr("Display windows of all workspaces"),
 		"expose-windows":               gettext.Tr("Display windows of current workspace"),
 		"preview-workspace":            gettext.Tr("Display workspace"),
+		"view-zoom-in":                 gettext.Tr("Zoom In"),
+		"view-zoom-out":                gettext.Tr("Zoom Out"),
+		"view-actual-size":             gettext.Tr("Zoom to Actual Size"),
 	}
 	return idNameMap
 }
