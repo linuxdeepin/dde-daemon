@@ -64,6 +64,16 @@ func (m *Module) start() error {
 	so := service.GetServerObject(m.audio)
 	err = so.SetWriteCallback(m.audio, "ReduceNoise", m.audio.writeReduceNoise)
 
+	if err != nil {
+		logger.Warning("failed to bind callback for ReduceNoise:", err)
+	}
+
+	err = so.SetWriteCallback(m.audio, "PausePlayer", m.audio.writeKeyPausePlayer)
+
+	if err != nil {
+		logger.Warning("failed to bind callback for PausePlayer:", err)
+	}
+
 	err = m.audio.syncConfig.Register()
 	if err != nil {
 		logger.Warning("failed to register for deepin sync:", err)

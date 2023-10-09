@@ -2,6 +2,16 @@
   "magic": "dsg.config.meta",
   "version": "1.0",
   "contents": {
+    "pausePlayer": {
+      "value": false,
+      "serial":0,
+      "flags" : [],
+      "name": "PlayerPause",
+      "name[zh_CN]": "插拔声音设备暂停输出",
+      "description": "auto pause player",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
     "autoSwitchPort": {
       "value": true,
       "serial": 0,
