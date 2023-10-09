@@ -162,7 +162,7 @@ func (m *Manager) handleFileGroupChanged() {
 				logger.Warning("handleFileGroupChanged m.udcpCache is nil.")
 				return
 			}
-			groups, err := m.udcpCache.GetUserGroups(0, u.UserName)
+			groups, err = m.udcpCache.GetUserGroups(0, u.UserName)
 			if err != nil {
 				logger.Warningf("Udcp cache getUserGroups failed: %v", err)
 				continue
