@@ -123,6 +123,19 @@ func (v *Audio) emitPropChangedBluetoothAudioModeOpts(value []string) error {
 	return v.service.EmitPropertyChanged(v, "BluetoothAudioModeOpts", value)
 }
 
+func (v *Audio) setPropPausePlayer(value bool) (changed bool) {
+	if v.PausePlayer != value {
+		v.PausePlayer = value
+		v.emitPropChangedPausePlayer(value)
+		return true
+	}
+	return false
+}
+
+func (v *Audio) emitPropChangedPausePlayer(value bool) error {
+	return v.service.EmitPropertyChanged(v, "PausePlayer", value)
+}
+
 func (v *Audio) setPropReduceNoise(value bool) (changed bool) {
 	if v.ReduceNoise != value {
 		v.ReduceNoise = value

@@ -31,6 +31,7 @@ const (
 	gsKeyHeadphoneOutputVolume    = "headphone-output-volume"
 	gsKeyHeadphoneUnplugAutoPause = "headphone-unplug-auto-pause"
 	gsKeyVolumeIncrease           = "volume-increase"
+
 	gsKeyReduceNoise              = "reduce-input-noise"
 	gsKeyOutputAutoSwitchCountMax = "output-auto-switch-count-max"
 
@@ -47,6 +48,7 @@ const (
 	increaseMaxVolume = 1.5
 	normalMaxVolume   = 1.0
 
+	dsgkeyPausePlayer         = "pausePlayer"
 	dsgKeyAutoSwitchPort      = "autoSwitchPort"
 	dsgKeyBluezModeFilterList = "bluezModeFilterList"
 	dsgKeyPortFilterList      = "portFilterList"
@@ -97,6 +99,7 @@ type Audio struct {
 	// dbusutil-gen: equal=objectPathSliceEqual
 	Sinks []dbus.ObjectPath
 	// dbusutil-gen: equal=objectPathSliceEqual
+	configManagerPath       dbus.ObjectPath
 	Sources                 []dbus.ObjectPath
 	DefaultSink             dbus.ObjectPath
 	DefaultSource           dbus.ObjectPath
@@ -109,7 +112,10 @@ type Audio struct {
 	// dbusutil-gen: ignore
 	IncreaseVolume gsprop.Bool `prop:"access:rw"`
 
-	ReduceNoise  bool `prop:"access:rw"`
+	PausePlayer bool `prop:"access:rw"`
+
+	ReduceNoise bool `prop:"access:rw"`
+
 	defaultPaCfg defaultPaConfig
 
 	// 最大音量
@@ -188,6 +194,7 @@ func newAudio(service *dbusutil.Service) *Audio {
 	a.settings.Reset(gsKeyInputVolume)
 	a.settings.Reset(gsKeyOutputVolume)
 	a.IncreaseVolume.Bind(a.settings, gsKeyVolumeIncrease)
+	a.PausePlayer = false
 	a.ReduceNoise = false
 	a.emitPropChangedReduceNoise(a.ReduceNoise)
 	a.headphoneUnplugAutoPause = a.settings.GetBoolean(gsKeyHeadphoneUnplugAutoPause)
@@ -407,6 +414,9 @@ func (a *Audio) refershSinkInputs() {
 }
 
 func (a *Audio) shouldAutoPause() bool {
+	if !a.PausePlayer {
+		return false
+	}
 	if a.defaultSink == nil {
 		logger.Debug("default sink is nil")
 		return false
@@ -1407,7 +1417,7 @@ func (a *Audio) NoRestartPulseAudio() *dbus.Error {
 	return nil
 }
 
-//当蓝牙声卡配置文件选择a2dp时,不支持声音输入,所以需要禁用掉,否则会录入
+// 当蓝牙声卡配置文件选择a2dp时,不支持声音输入,所以需要禁用掉,否则会录入
 func (a *Audio) disableBluezSourceIfProfileIsA2dp() {
 	a.mu.Lock()
 	source, ok := a.sources[a.sourceIdx]
@@ -1491,16 +1501,15 @@ func (a *Audio) initDsgProp() error {
 
 	a.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
 
-	var configManagerPath dbus.ObjectPath
 	systemConnObj := systemBus.Object("org.desktopspec.ConfigManager", "/")
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.audio", "").Store(&configManagerPath)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.audio", "").Store(&a.configManagerPath)
 	if err != nil {
 		logger.Warning(err)
 		return nil
 	}
 
 	err = dbusutil.NewMatchRuleBuilder().Type("signal").
-		PathNamespace(string(configManagerPath)).
+		PathNamespace(string(a.configManagerPath)).
 		Interface("org.desktopspec.ConfigManager.Manager").
 		Member("valueChanged").Build().AddTo(systemBus)
 	if err != nil {
@@ -1509,7 +1518,7 @@ func (a *Audio) initDsgProp() error {
 	}
 
 	var val bool
-	systemConnObj = systemBus.Object("org.desktopspec.ConfigManager", configManagerPath)
+	systemConnObj = systemBus.Object("org.desktopspec.ConfigManager", a.configManagerPath)
 	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyAutoSwitchPort).Store(&val)
 	if err != nil {
 		logger.Warning(err)
@@ -1517,6 +1526,17 @@ func (a *Audio) initDsgProp() error {
 		logger.Info("auto switch port:", val)
 		a.PropsMu.Lock()
 		a.enableAutoSwitchPort = val
+		a.PropsMu.Unlock()
+	}
+
+	var keyPausePlayer bool
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgkeyPausePlayer).Store(&keyPausePlayer)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		logger.Info("auto switch port:", keyPausePlayer)
+		a.PropsMu.Lock()
+		a.PausePlayer = keyPausePlayer
 		a.PropsMu.Unlock()
 	}
 
@@ -1566,6 +1586,19 @@ func (a *Audio) initDsgProp() error {
 				}
 			}
 
+			if ok && key == dsgkeyPausePlayer {
+				var pausePlayer bool
+				err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&pausePlayer)
+				if err != nil {
+					logger.Warning(err)
+				} else {
+					logger.Info("pausePlayer config:", pausePlayer)
+					a.PropsMu.Lock()
+					a.PausePlayer = pausePlayer
+					a.emitPropChangedPausePlayer(pausePlayer)
+					a.PropsMu.Unlock()
+				}
+			}
 		}
 	})
 
