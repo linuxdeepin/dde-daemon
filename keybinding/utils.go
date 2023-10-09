@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	dbus "github.com/godbus/dbus/v5"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
@@ -255,14 +256,13 @@ func (m *Manager) systemAway() {
 	}
 }
 
-func queryCommandByMime(mime string) string {
-	app := gio.AppInfoGetDefaultForType(mime, false)
-	if app == nil {
-		return ""
+func queryAppDesktopByMime(mime string) (string, error) {
+	desktop, err := exec.Command("xdg-mime", "query", "default", mime).Output()
+	if err != nil {
+		return "", err
 	}
-	defer app.Unref()
 
-	return app.GetExecutable()
+	return strings.TrimSpace(string(desktop)), nil
 }
 
 func getRfkillWlanState() (int, error) {
