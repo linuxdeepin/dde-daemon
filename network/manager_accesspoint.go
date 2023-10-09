@@ -374,7 +374,7 @@ func (m *Manager) ActivateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 	return cpath, nil
 }
 
-func fixApKeyMgmtChange(uuid string, keymgmt string) (needUserEdit bool, err error) {
+func fixApKeyMgmtChange(uuid string, keymgmt string, saved bool) (needUserEdit bool, err error) {
 	var cpath dbus.ObjectPath
 	cpath, err = nmGetConnectionByUuid(uuid)
 	if err != nil {
@@ -416,7 +416,11 @@ func fixApKeyMgmtChange(uuid string, keymgmt string) (needUserEdit bool, err err
 		setSettingIP6ConfigRoutes(connData, getSettingIP6ConfigRoutes(connData))
 	}
 
-	err = conn.Update(0, connData)
+	if saved {
+		err = conn.Update(0, connData)
+	} else {
+		err = conn.UpdateUnsaved(0, connData)
+	}
 	return
 }
 
@@ -492,7 +496,7 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 	keymgmt := getKeyMgmtFromAP(nmAp)
 	if uuid != "" {
 		var needUserEdit bool
-		needUserEdit, err = fixApKeyMgmtChange(uuid, keymgmt)
+		needUserEdit, err = fixApKeyMgmtChange(uuid, keymgmt, saved)
 		if err != nil {
 			return
 		}
