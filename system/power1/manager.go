@@ -307,11 +307,12 @@ func (m *Manager) init() error {
 
 	cfg := loadConfigSafe()
 	// 将config.json中的配置完成初始化
-	m.PowerSavingModeEnabled = cfg.PowerSavingModeEnabled                             // 开启和关闭节能模式
-	m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
-	m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
+	m.PowerSavingModeEnabled = cfg.PowerSavingModeEnabled                       // 开启和关闭节能模式
+	m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                             // 自动切换节能模式，依据为是否插拔电源
+	m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow // 低电量时自动开启
+
 	m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
-	m.PowerSavingModeAutoBatteryPercent = cfg.PowerSavingModeBatteryPercent
+	m.PowerSavingModeAutoBatteryPercent = cfg.PowerSavingModeAutoBatteryPercent       // 开启在低电量自动节能模式时候的百分比
 
 	m.Mode = cfg.Mode
 
@@ -609,7 +610,7 @@ type Config struct {
 	PowerSavingModeAuto                  bool
 	PowerSavingModeAutoWhenBatteryLow    bool
 	PowerSavingModeBrightnessDropPercent uint32
-	PowerSavingModeBatteryPercent        uint32
+	PowerSavingModeAutoBatteryPercent    uint32
 	Mode                                 string
 }
 
@@ -640,7 +641,7 @@ func loadConfigSafe() *Config {
 			PowerSavingModeEnabled:               false,
 			PowerSavingModeAutoWhenBatteryLow:    false,
 			PowerSavingModeBrightnessDropPercent: 20,
-			PowerSavingModeBatteryPercent:        20,
+			PowerSavingModeAutoBatteryPercent:    20,
 			Mode:                                 "balance",
 		}
 	}
@@ -649,6 +650,11 @@ func loadConfigSafe() *Config {
 	// 正常情况下该字段范围为10-40,只有在该情况下会出现0的可能
 	if cfg.PowerSavingModeBrightnessDropPercent == 0 {
 		cfg.PowerSavingModeBrightnessDropPercent = 20
+	}
+
+	// when PowerSavingModeAutoBatteryPercent is lower than 10, it is not available, so change set it to 20 as default
+	if cfg.PowerSavingModeAutoBatteryPercent < 10 {
+		cfg.PowerSavingModeAutoBatteryPercent = 20
 	}
 
 	if cfg.Mode == "" {
@@ -666,6 +672,7 @@ func (m *Manager) saveConfig() error {
 	cfg.PowerSavingModeEnabled = m.PowerSavingModeEnabled
 	cfg.PowerSavingModeAutoWhenBatteryLow = m.PowerSavingModeAutoWhenBatteryLow
 	cfg.PowerSavingModeBrightnessDropPercent = m.PowerSavingModeBrightnessDropPercent
+	cfg.PowerSavingModeAutoBatteryPercent = m.PowerSavingModeAutoBatteryPercent
 	cfg.Mode = m.Mode
 	m.PropsMu.RUnlock()
 
