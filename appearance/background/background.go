@@ -26,7 +26,6 @@ import (
 var (
 	backgroundsCache   Backgrounds
 	backgroundsCacheMu sync.Mutex
-	fsChanged          bool
 
 	CustomWallpapersConfigDir     string
 	customWallpaperDeleteCallback func(file string)
@@ -55,6 +54,8 @@ const (
 	sysSolidWallPaperPath = "/usr/share/wallpapers/deepin-solidwallpapers"
 )
 
+var NotifyFunc func(string, string)
+
 var _licenseAuthorizationProperty uint32 = 0
 
 var _wallpapersPathMap = make(map[uint32]string)
@@ -78,7 +79,7 @@ func SetLicenseAuthorizationProperty(value uint32) {
 }
 
 func UpdateLicenseAuthorizationProperty() {
-	refreshBackground()
+	refreshBackground(true)
 }
 
 func init() {
@@ -103,7 +104,7 @@ type Background struct {
 
 type Backgrounds []*Background
 
-func refreshBackground() {
+func refreshBackground(notify bool) {
 	if logger != nil {
 		logger.Debug("refresh background")
 	}
@@ -141,24 +142,58 @@ func refreshBackground() {
 			})
 		}
 	}
-
+	// 对比差异，发送壁纸新增和删除的信号
+	if notify && NotifyFunc != nil {
+		diff := diffBackgroundCache(bgs, backgroundsCache)
+		// TODO: 不在此处理壁纸添加信号。用户添加壁纸时，只要路径不是/usr/share/wallpaper，即认为是新壁纸，不管底层是否已经存在
+		// if diff["added"] != nil {
+		// 	logger.Debug("new wallpapper added!", diff["added"])
+		// 	NotifyFunc("background-add", strings.Join(diff["added"], ";"))
+		// }
+		if diff["deleted"] != nil {
+			logger.Debug("new wallpapper deleted!", diff["deleted"])
+			NotifyFunc("background-delete", strings.Join(diff["deleted"], ";"))
+		}
+	}
 	backgroundsCache = bgs
-	fsChanged = false
+}
+
+func diffBackgroundCache(newCache Backgrounds, oldCache Backgrounds) map[string][]string {
+	tmp := make(map[string]string)
+	for _, newBg := range newCache {
+		tmp[newBg.Id] = "added"
+		for _, oldBg := range oldCache {
+			if tmp[oldBg.Id] == "existed" {
+				continue
+			}
+			if newBg.Id == oldBg.Id {
+				tmp[oldBg.Id] = "existed"
+			}
+			if tmp[oldBg.Id] == "" {
+				tmp[oldBg.Id] = "deleted"
+			}
+		}
+	}
+	diff := make(map[string][]string)
+	for file, stat := range tmp {
+		diff[stat] = append(diff[stat], file)
+	}
+	return diff
 }
 
 func ListBackground() Backgrounds {
 	backgroundsCacheMu.Lock()
 	defer backgroundsCacheMu.Unlock()
 
-	if len(backgroundsCache) == 0 || fsChanged {
-		refreshBackground()
+	if len(backgroundsCache) == 0 {
+		refreshBackground(false)
 	}
 	return backgroundsCache
 }
 
 func NotifyChanged() {
 	backgroundsCacheMu.Lock()
-	fsChanged = true
+	refreshBackground(true)
 	backgroundsCacheMu.Unlock()
 }
 
@@ -205,7 +240,6 @@ func (bgs Backgrounds) Delete(uri string) error {
 		return fmt.Errorf("not found '%s'", uri)
 	}
 
-	NotifyChanged()
 	return info.Delete()
 }
 
@@ -241,6 +275,8 @@ func (info *Background) Delete() error {
 	if customWallpaperDeleteCallback != nil {
 		customWallpaperDeleteCallback(file)
 	}
+
+	NotifyChanged()
 	return err
 }
 

@@ -129,8 +129,6 @@ func prepare(filename string, t uint32) (string, error) {
 		return "", err
 	}
 
-	NotifyChanged()
-
 	if t == Solid {
 		file = solidPrefix + file
 	}

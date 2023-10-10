@@ -179,15 +179,20 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 	} else {
 		prefix = wallPaperDir
 	}
-	fn := func(prefix string) string {
+	// 设置壁纸路径
+	path := func() string {
 		for _, dir := range dirs {
 			if strings.HasPrefix(dir, prefix) {
 				return dir
 			}
 		}
 		return ""
-	}(prefix)
-	destFile := filepath.Join(fn, md5sum)
+	}()
+	if path == ""{
+		err = fmt.Errorf("unknown path: %s", prefix)
+		return "", dbusutil.ToError(err)
+	}
+	destFile := filepath.Join(path, md5sum)
 	destFile = destFile + filepath.Ext(file)
 	src, err := os.Open(file)
 	if err != nil {

@@ -316,12 +316,18 @@ func (m *Manager) isBgInUse(file string) bool {
 	if file == m.greeterBg {
 		return true
 	}
-
-	for _, bg := range m.desktopBgs {
-		if bg == file {
+	// 检查所有的工作区的屏幕壁纸是否占用
+	mapWallpaperURIs,err := doUnmarshalMonitorWorkspaceWallpaperURIs(m.WallpaperURIs.Get()) 
+	if err != nil {
+		logger.Error(err)
+		return false
+	}
+	for _,bg := range mapWallpaperURIs {
+		if file == bg {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -492,6 +498,9 @@ func (m *Manager) init() error {
 	}
 
 	m.initUserObj(systemBus)
+	background.NotifyFunc = func(type0, value string) {
+		m.emitSignalChanged(type0, value)
+	}
 	m.initCurrentBgs()
 	m.display = display.NewDisplay(sessionBus)
 	m.display.InitSignalExt(m.sessionSigLoop, true)
@@ -725,6 +734,11 @@ func (m *Manager) doSetMonitorBackground(monitorName string, imageFile string) (
 	if t == background.Unknown {
 		return "", errors.New("invalid background")
 	}
+	// 如果设置的壁纸不是/usr/share/wallpapers/下的，则认为是用户自定义壁纸，需要发送add信号
+	needNotify := false
+	if !strings.HasPrefix(file,"/usr/share/wallpapers/"){
+		needNotify = true
+	}
 	file, err := background.Prepare(file, t)
 	if err != nil {
 		logger.Warning("failed to prepare:", err)
@@ -735,6 +749,13 @@ func (m *Manager) doSetMonitorBackground(monitorName string, imageFile string) (
 	err = m.wm.SetCurrentWorkspaceBackgroundForMonitor(0, uri, monitorName)
 	if err != nil {
 		return "", err
+	}
+	// 如果文件发生增删，发送add/delete的信号
+	if needNotify {
+		// 由于用户操作，统一将用户自定义设置的壁纸当做新的壁纸处理，发送新增信号，告知上层
+		m.emitSignalChanged("background-add", file)
+		// 在此处理删除操作
+		background.NotifyChanged()
 	}
 	err = m.doUpdateWallpaperURIs()
 	if err != nil {
@@ -897,6 +918,11 @@ func (m *Manager) doSetBackground(value string) (string, error) {
 		return "", errors.New("invalid background")
 	}
 
+	// 如果设置的壁纸不是/usr/share/wallpapers/下的，则认为是用户自定义壁纸，需要发送add信号
+	needNotify := false
+	if !strings.HasPrefix(file,"/usr/share/wallpapers/"){
+		needNotify = true
+	}
 	file, err := background.Prepare(file, t)
 	if err != nil {
 		logger.Warning("failed to prepare:", err)
@@ -908,7 +934,13 @@ func (m *Manager) doSetBackground(value string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
+	// 如果文件发生增删，发送add/delete的信号
+	if needNotify {
+		// 由于用户操作，统一将用户自定义设置的壁纸当做新的壁纸处理，发送新增信号，告知上层
+		m.emitSignalChanged("background-add", file)
+		// 在此处理删除操作
+		background.NotifyChanged()
+	}
 	_, err = m.imageBlur.Get(0, file)
 	if err != nil {
 		logger.Warning("call imageBlur.Get err:", err)
