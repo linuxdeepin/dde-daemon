@@ -131,6 +131,8 @@ func (r *ALRecorder) listenEvents() {
 }
 
 func (r *ALRecorder) UninstallHints(desktopFiles []string) *dbus.Error {
+	logger.Infof("dbus call UninstallHints desktopFiles %v", desktopFiles)
+
 	for _, filename := range desktopFiles {
 		r.uninstallHint(filename)
 	}
@@ -192,7 +194,7 @@ func (r *ALRecorder) handleDirRemoved(file string) {
 }
 
 func (r *ALRecorder) MarkLaunched(file string) *dbus.Error {
-	logger.Debugf("ALRecorder.MarkLaunched file: %q", file)
+	logger.Debugf("dbus call MarkLaunched file: %q", file)
 	r.subRecordersMutex.RLock()
 	defer r.subRecordersMutex.RUnlock()
 
@@ -210,8 +212,11 @@ func (r *ALRecorder) MarkLaunched(file string) *dbus.Error {
 }
 
 func (r *ALRecorder) GetNew(sender dbus.Sender) (newApps map[string][]string, busErr *dbus.Error) {
+	logger.Infof("dbus call GetNew sender %v", sender)
+
 	uid, err := r.Service().GetConnUID(string(sender))
 	if err != nil {
+		logger.Warning(err)
 		return nil, dbusutil.ToError(err)
 	}
 
@@ -251,27 +256,35 @@ func (r *ALRecorder) watchAppsDir(uid int, home, appsDir string) {
 }
 
 func (r *ALRecorder) WatchDirs(sender dbus.Sender, dataDirs []string) *dbus.Error {
+	logger.Infof("dbus call WatchDirs  sender %v, dataDirs %v", sender, dataDirs)
+
 	uid, err := r.Service().GetConnUID(string(sender))
 	if err != nil {
+		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
 
 	logger.Debugf("WatchDirs uid: %d, data dirs: %#v", uid, dataDirs)
 	// check uid
 	if uid < minUid {
-		return dbusutil.ToError(errors.New("invalid uid"))
+		err = errors.New("invalid uid")
+		logger.Warning(err)
+		return dbusutil.ToError(err)
 	}
 
 	// check dataDirs
 	for _, dataDir := range dataDirs {
 		if !filepath.IsAbs(dataDir) {
-			return dbusutil.ToError(fmt.Errorf("%q is not absolute path", dataDir))
+			err = fmt.Errorf("%q is not absolute path", dataDir)
+			logger.Warning(err)
+			return dbusutil.ToError(err)
 		}
 	}
 
 	// get home dir
 	home, err := getHomeByUid(int(uid))
 	if err != nil {
+		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
 
