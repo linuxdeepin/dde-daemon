@@ -12,6 +12,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/godbus/dbus"
+	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
@@ -36,6 +39,12 @@ var (
 	atomFromClipboardManager x.Atom
 
 	selectionMaxSize int
+)
+
+const (
+	dSettingsAppID                      = "org.deepin.dde.daemon"
+	dSettingsClipboardName              = "org.deepin.dde.daemon.clipboard"
+	dSettingsKeySaveAtomIncrDataEnabled = "saveAtomIncrDataEnabled"
 )
 
 func initAtoms(xConn *x.Conn) {
@@ -80,9 +89,11 @@ type Manager struct {
 	contentMu sync.Mutex
 	content   []*TargetData
 
-	saveTargetsMu          sync.Mutex
-	saveTargetsSuccessTime time.Time
-	saveTargetsRequestor   x.Window
+	saveTargetsMu           sync.Mutex
+	saveTargetsSuccessTime  time.Time
+	saveTargetsRequestor    x.Window
+	dsClipboardManager      ConfigManager.Manager
+	saveAtomIncrDataEnabled bool
 }
 
 func (m *Manager) getTargetData(target x.Atom) *TargetData {
@@ -123,7 +134,52 @@ func mapToSliceTargetData(dataMap map[x.Atom]*TargetData) []*TargetData {
 	return result
 }
 
+func (m *Manager) getConfigFromDSettings() error {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+
+	ds := ConfigManager.NewConfigManager(sysBus)
+	dsPath, err := ds.AcquireManager(0, dSettingsAppID, dSettingsClipboardName, "")
+	if err != nil {
+		return err
+	}
+
+	m.dsClipboardManager, err = ConfigManager.NewManager(sysBus, dsPath)
+	if err != nil {
+		return err
+	}
+
+	systemSigLoop := dbusutil.NewSignalLoop(sysBus, 10)
+	systemSigLoop.Start()
+	m.dsClipboardManager.InitSignalExt(systemSigLoop, true)
+
+	m.saveAtomIncrDataEnabled = true
+
+	getSaveAtomIncrDataEnabled := func() {
+		v, err := m.dsClipboardManager.Value(0, dSettingsKeySaveAtomIncrDataEnabled)
+		if err == nil {
+			m.saveAtomIncrDataEnabled = v.Value().(bool)
+		}
+	}
+
+	_, err = m.dsClipboardManager.ConnectValueChanged(func(key string) {
+		switch key {
+		case dSettingsKeySaveAtomIncrDataEnabled:
+			getSaveAtomIncrDataEnabled()
+		}
+	})
+
+	getSaveAtomIncrDataEnabled()
+
+	return nil
+}
+
 func (m *Manager) start() error {
+	// 初始化配置
+	m.getConfigFromDSettings()
+
 	owner, err := m.xc.GetSelectionOwner(atomClipboardManager)
 	if err != nil {
 		return err
@@ -707,7 +763,9 @@ func (m *Manager) saveTarget(target x.Atom, ts x.Timestamp) (targetData *TargetD
 	}
 
 	if propReply.Type == atomIncr {
-		targetData, err = m.receiveTargetIncr(target, selNotifyEvent.Property)
+		if m.saveAtomIncrDataEnabled {
+			targetData, err = m.receiveTargetIncr(target, selNotifyEvent.Property)
+		}
 	} else {
 		err = m.xc.DeletePropertyE(m.window, selNotifyEvent.Property)
 		if err != nil {
