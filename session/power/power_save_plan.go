@@ -23,15 +23,24 @@ import (
 	x "github.com/linuxdeepin/go-x11-client"
 	xscreensaver "github.com/linuxdeepin/go-x11-client/ext/screensaver"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
+	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 )
 
 const submodulePSP = "PowerSavePlan"
+
+const (
+	dsettingsAppID            = "org.deepin.dde.daemon"
+	dsettingsPowerName        = "org.deepin.dde.daemon.power"
+	dsettingsAllowScreenSaver = "allowScreenSaver"
+)
 
 func init() {
 	submoduleList = append(submoduleList, newPowerSavePlan)
 }
 
 type powerSavePlan struct {
+	systemSigLoop *dbusutil.SignalLoop
+	dsgPower      ConfigManager.Manager
 	manager            *Manager
 	screenSaverTimeout int32
 	metaTasks          metaTasks
@@ -50,6 +59,7 @@ type powerSavePlan struct {
 	psmEnabledTime         time.Time
 	psmPercentChangedTime  time.Time
 	modeBeforeIdle         string
+	allowScreenSaver       bool
 }
 
 func newPowerSavePlan(manager *Manager) (string, submodule, error) {
@@ -69,6 +79,13 @@ func newPowerSavePlan(manager *Manager) (string, submodule, error) {
 
 	p.fullscreenWorkaroundAppList = manager.settings.GetStrv(
 		"fullscreen-workaround-app-list")
+
+	err = p.initDsgConfig()
+	if err != nil {
+		logger.Warning(err)
+	}
+	p.systemSigLoop.Start()
+
 	return submodulePSP, p, nil
 }
 
@@ -502,6 +519,11 @@ func (psp *powerSavePlan) resetBrightness() {
 func (psp *powerSavePlan) startScreensaver() {
 	if os.Getenv("DESKTOP_CAN_SCREENSAVER") == "N" {
 		logger.Info("do not start screensaver, env DESKTOP_CAN_SCREENSAVER == N")
+		return
+	}
+
+	if !psp.allowScreenSaver {
+		logger.Info("do not start screensaver, allowScreenSaver is false")
 		return
 	}
 
@@ -968,6 +990,51 @@ func (psp *powerSavePlan) ConnectIdle() error {
 		}
 	})
 	sessionSigLoop.Start()
+
+	return nil
+}
+
+func (psp *powerSavePlan) initDsgConfig() error {
+	logger.Info("initDsgConfig.")
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+	psp.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
+	// dsg 配置
+	ds := ConfigManager.NewConfigManager(psp.systemSigLoop.Conn())
+	dsPowerPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsPowerName, "")
+	if err != nil {
+		return err
+	}
+	dsPower, err := ConfigManager.NewManager(psp.systemSigLoop.Conn(), dsPowerPath)
+	if err != nil {
+		return err
+	}
+	psp.dsgPower = dsPower
+
+	getAllowScreenSaver := func() {
+		data, err := dsPower.Value(0, dsettingsAllowScreenSaver)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		psp.allowScreenSaver = data.Value().(bool)
+		logger.Info("allow screen saver enabled", psp.allowScreenSaver)
+	}
+
+	getAllowScreenSaver()
+
+	dsPower.InitSignalExt(psp.systemSigLoop, true)
+	dsPower.ConnectValueChanged(func(key string) {
+		logger.Info("DSG org.deepin.dde.daemon.power valueChanged, key : ", key)
+		switch key {
+		case dsettingsAllowScreenSaver:
+			getAllowScreenSaver()
+			logger.Debug("getAllowScreenSaver changed :", key)
+		default:
+		}
+	})
 
 	return nil
 }
