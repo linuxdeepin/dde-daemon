@@ -247,8 +247,8 @@ func (b *Bluetooth) init() {
 		logger.Warning(err)
 	}
 
-	canSendFile = b.getSendFileEnable()
-	b.setPropCanSendFile(canSendFile)
+	configCanSendFile := b.getSendFileEnable()
+	b.setPropCanSendFile(canSendFile && configCanSendFile)
 
 	err = b.sysBt.State().ConnectChanged(func(hasValue bool, value uint32) {
 		if !hasValue {
