@@ -144,7 +144,6 @@ func newCardList(cards []*pulse.Card) CardList {
 	var result CardList
 	for _, v := range cards {
 		result = append(result, newCard(v))
-		logger.Debugf("add card #%d %s", v.Index, v.Name)
 	}
 	return result
 }

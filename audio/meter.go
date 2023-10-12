@@ -67,6 +67,8 @@ func (m *Meter) tryQuit() {
 }
 
 func (m *Meter) Tick() *dbus.Error {
+	logger.Infof("dbus call Tick")
+
 	m.PropsMu.Lock()
 	m.alive = true
 	m.PropsMu.Unlock()

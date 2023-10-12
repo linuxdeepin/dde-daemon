@@ -35,8 +35,8 @@ const (
 	gsKeyReduceNoise              = "reduce-input-noise"
 	gsKeyOutputAutoSwitchCountMax = "output-auto-switch-count-max"
 
-	gsSchemaControlCenter         = "com.deepin.dde.control-center"
-	gsKeyDeviceManager            = "device-manage"
+	gsSchemaControlCenter = "com.deepin.dde.control-center"
+	gsKeyDeviceManager    = "device-manage"
 
 	gsSchemaSoundEffect  = "com.deepin.dde.sound-effect"
 	gsKeyEnabled         = "enabled"
@@ -168,12 +168,12 @@ type Audio struct {
 	outputAutoSwitchCount    int
 	outputAutoSwitchCountMax int
 	// 自动端口切换
-	enableAutoSwitchPort bool
-	controlCenterGsSettings  *gio.Settings
+	enableAutoSwitchPort    bool
+	controlCenterGsSettings *gio.Settings
 	// 控制中心-声音-设备管理 是否显示
 	controlCenterDeviceManager gsprop.Bool `prop:"access:rw"`
 
-	systemSigLoop        *dbusutil.SignalLoop
+	systemSigLoop *dbusutil.SignalLoop
 	// 用来进一步断是否需要暂停播放的信息
 	misc uint32
 
@@ -274,7 +274,10 @@ func getCtx() (ctx *pulse.Context, err error) {
 
 func (a *Audio) refreshCards() {
 	a.cards = newCardList(a.ctx.GetCardList())
-	a.setPropCards(a.cards.string())
+	cards := a.cards.string()
+	logger.Infof("cards : %s", cards)
+
+	a.setPropCards(cards)
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 }
 
@@ -422,12 +425,13 @@ func (a *Audio) refershSinkInputs() {
 
 func (a *Audio) shouldAutoPause() bool {
 	if a.defaultSink == nil {
-		logger.Debug("default sink is nil")
+		logger.Warning("default sink is nil")
 		return false
 	}
 
 	// 云平台无card
 	if a.defaultSink.Card == math.MaxUint32 {
+		logger.Warningf("default sink car is %d", a.defaultSink.Card)
 		return false
 	}
 
@@ -445,6 +449,7 @@ func (a *Audio) shouldAutoPause() bool {
 
 	logger.Debugf("default sink active port: %v %v", port.Name, port.Available)
 	if a.defaultSink.ActivePort.Available == 1 {
+		logger.Warningf("default sink activePort available is %d", a.defaultSink.ActivePort.Available)
 		return false
 	}
 
@@ -816,8 +821,7 @@ func (a *Audio) setDefaultSourceWithPort(cardId uint32, portName string) error {
 // SetPort activate the port for the special card.
 // The available sinks and sources will also change with the profile changing.
 func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.Error {
-	logger.Debugf("Audio.SetPort card idx: %d, port name: %q, direction: %d",
-		cardId, portName, direction)
+	logger.Infof("dbus call SetPort with cardId %d, portName %s and direction %d", cardId, portName, direction)
 
 	if !a.isPortEnabled(cardId, portName, direction) {
 		return dbusutil.ToError(fmt.Errorf("card idx: %d, port name: %q is disabled", cardId, portName))
@@ -825,6 +829,7 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 
 	err := a.setPort(cardId, portName, int(direction))
 	if err != nil {
+		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
 
@@ -892,14 +897,14 @@ func (a *Audio) findSources(cardId uint32, activePortName string) []*Source {
 }
 
 func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *dbus.Error {
+	logger.Infof("dbus call SetPortEnabled with cardId %d, portName %s and enabled %t", cardId, portName, enabled)
+
 	if !a.enableAutoSwitchPort {
-		return dbusutil.ToError(errors.New("DConfig of org.deepin.dde.daemon.audio autoSwitchPort is false"))
+		err := errors.New("DConfig of org.deepin.dde.daemon.audio autoSwitchPort is false")
+		logger.Warning(err)
+		return dbusutil.ToError(err)
 	}
-	if enabled {
-		logger.Debugf("enable port<%d,%s>", cardId, portName)
-	} else {
-		logger.Debugf("disable port<%d,%s>", cardId, portName)
-	}
+
 	GetConfigKeeper().SetEnabled(a.getCardNameById(cardId), portName, enabled)
 
 	err := a.service.Emit(a, "PortEnabledChanged", cardId, portName, enabled)
@@ -928,7 +933,8 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 
 func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, busErr *dbus.Error) {
 	// 不建议使用这个接口，可以从Cards和CardsWithoutUnavailable属性中获取此状态
-	logger.Debugf("check is port<%d,%s> enabled", cardId, portName)
+	logger.Infof("dbus call IsPortEnabled with cardId %d and portName %s", cardId, portName)
+
 	_, portConfig := GetConfigKeeper().GetCardAndPortConfig(a.getCardNameById(cardId), portName)
 	return portConfig.Enabled, nil
 }
@@ -1050,6 +1056,8 @@ func (a *Audio) resetSourceVolume() {
 }
 
 func (a *Audio) Reset() *dbus.Error {
+	logger.Infof("dbus call Reset")
+
 	a.resetSinksVolume()
 	a.resetSourceVolume()
 	gsSoundEffect := gio.NewSettings(gsSchemaSoundEffect)
@@ -1471,13 +1479,17 @@ func (a *Audio) isPortEnabled(cardId uint32, portName string, direction int32) b
 
 // 设置蓝牙模式
 func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
+	logger.Infof("dbus call SetBluetoothAudioMode with mode %s", mode)
+
 	card, err := a.cards.get(a.defaultSink.Card)
 	if err != nil {
 		logger.Warning(err)
 	}
 
 	if !isBluezAudio(card.core.Name) {
-		return dbusutil.ToError(fmt.Errorf("current card %s is not bluetooth audio device", card.core.Name))
+		err = fmt.Errorf("current card %s is not bluetooth audio device", card.core.Name)
+		logger.Warning(err)
+		return dbusutil.ToError(err)
 	}
 
 	for _, profile := range card.Profiles {

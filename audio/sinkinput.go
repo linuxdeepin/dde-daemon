@@ -87,8 +87,13 @@ func getSinkInputVisible(sinkInputInfo *pulse.SinkInput) bool {
 }
 
 func (s *SinkInput) SetVolume(value float64, isPlay bool) *dbus.Error {
+	logger.Infof("dbus call SetVolume with value %f and isPlay %t, the sink input name is %s",
+		value, isPlay, s.Name)
+
 	if !isVolumeValid(value) {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
+		err := fmt.Errorf("invalid volume value: %v", value)
+		logger.Warning(err)
+		return dbusutil.ToError(err)
 	}
 
 	if value == 0 {
@@ -106,8 +111,13 @@ func (s *SinkInput) SetVolume(value float64, isPlay bool) *dbus.Error {
 }
 
 func (s *SinkInput) SetBalance(value float64, isPlay bool) *dbus.Error {
+	logger.Infof("dbus call SetBalance with value %f and isPlay %t, the sink input name is %s",
+		value, isPlay, s.Name)
+
 	if value < -1.00 || value > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
+		err := fmt.Errorf("invalid volume value: %v", value)
+		logger.Warning(err)
+		return dbusutil.ToError(err)
 	}
 
 	s.PropsMu.RLock()
@@ -122,8 +132,12 @@ func (s *SinkInput) SetBalance(value float64, isPlay bool) *dbus.Error {
 }
 
 func (s *SinkInput) SetFade(value float64) *dbus.Error {
+	logger.Infof("dbus call SetFade with value %f, the sink input name is %s", value, s.Name)
+
 	if value < -1.00 || value > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
+		err := fmt.Errorf("invalid volume value: %v", value)
+		logger.Warning(err)
+		return dbusutil.ToError(err)
 	}
 
 	s.PropsMu.RLock()
@@ -136,6 +150,8 @@ func (s *SinkInput) SetFade(value float64) *dbus.Error {
 }
 
 func (s *SinkInput) SetMute(value bool) *dbus.Error {
+	logger.Infof("dbus call SetMute with value %t, the sink input name is %s", value, s.Name)
+
 	s.audio.context().SetSinkInputMute(s.index, value)
 	if !value {
 		playFeedback()

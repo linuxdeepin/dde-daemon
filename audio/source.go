@@ -76,14 +76,19 @@ func (s *Source) CheckPort() *dbus.Error {
 
 // 如何反馈输入音量？
 func (s *Source) SetVolume(value float64, isPlay bool) *dbus.Error {
+	logger.Infof("dbus call SetVolume with value %f and isPlay %t, the source name is %s",
+		value, isPlay, s.Name)
+
 	err := s.CheckPort()
 	if err != nil {
+		logger.Warning(err.Body...)
 		return err
 	}
 
-	logger.Debugf("set source %q volume %f", s.Name, value)
 	if !isVolumeValid(value) {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
+		err1 := fmt.Errorf("invalid volume value: %v", value)
+		logger.Warning(err.Body...)
+		return dbusutil.ToError(err1)
 	}
 
 	if value == 0 {
@@ -103,13 +108,19 @@ func (s *Source) SetVolume(value float64, isPlay bool) *dbus.Error {
 }
 
 func (s *Source) SetBalance(value float64, isPlay bool) *dbus.Error {
+	logger.Infof("dbus call SetBalance with value %f and isPlay %t, the source name is %s",
+		value, isPlay, s.Name)
+
 	err := s.CheckPort()
 	if err != nil {
+		logger.Warning(err.Body...)
 		return err
 	}
 
 	if value < -1.00 || value > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
+		err1 := fmt.Errorf("invalid volume value: %v", value)
+		logger.Warning(err1)
+		return dbusutil.ToError(err1)
 	}
 
 	s.PropsMu.RLock()
@@ -126,13 +137,18 @@ func (s *Source) SetBalance(value float64, isPlay bool) *dbus.Error {
 }
 
 func (s *Source) SetFade(value float64) *dbus.Error {
+	logger.Infof("dbus call SetFade with value %f, the source name is %s", value, s.Name)
+
 	err := s.CheckPort()
 	if err != nil {
+		logger.Warning(err.Body...)
 		return err
 	}
 
 	if value < -1.00 || value > 1.00 {
-		return dbusutil.ToError(fmt.Errorf("invalid volume value: %v", value))
+		err1 := fmt.Errorf("invalid volume value: %v", value)
+		logger.Warning(err1)
+		return dbusutil.ToError(err1)
 	}
 
 	s.PropsMu.RLock()
@@ -174,8 +190,11 @@ func (s *Source) setVBF(v, b, f float64) *dbus.Error {
 }
 
 func (s *Source) SetMute(value bool) *dbus.Error {
+	logger.Infof("dbus call SetMute with value %t, the source name is %s", value, s.Name)
+
 	err := s.CheckPort()
 	if err != nil {
+		logger.Warning(err.Body...)
 		return err
 	}
 
@@ -189,11 +208,15 @@ func (s *Source) SetMute(value bool) *dbus.Error {
 }
 
 func (s *Source) SetPort(name string) *dbus.Error {
+	logger.Infof("dbus call SetPort with name %s, the source name is %s", name, s.Name)
+
 	s.audio.context().SetSourcePortByIndex(s.index, name)
 	return nil
 }
 
 func (s *Source) GetMeter() (meter dbus.ObjectPath, busErr *dbus.Error) {
+	logger.Infof("dbus call GetMeter, the source name is %s", s.Name)
+
 	id := fmt.Sprintf("source%d", s.index)
 	s.audio.mu.Lock()
 	m, ok := s.audio.meters[id]
@@ -207,6 +230,7 @@ func (s *Source) GetMeter() (meter dbus.ObjectPath, busErr *dbus.Error) {
 	meterPath := m.getPath()
 	err := s.service.Export(meterPath, m)
 	if err != nil {
+		logger.Warning(err)
 		return "/", dbusutil.ToError(err)
 	}
 
