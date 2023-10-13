@@ -267,6 +267,7 @@ func (b *Bluetooth) init() {
 
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
+		logger.Warning(err)
 		return
 	}
 
@@ -458,6 +459,7 @@ func getMprisPlayers(sessionConn *dbus.Conn) ([]string, error) {
 func setAllPlayers(value bool) {
 	sessionConn, err := dbus.SessionBus()
 	if err != nil {
+		logger.Warning(err)
 		return
 	}
 	playerNames, err := getMprisPlayers(sessionConn)

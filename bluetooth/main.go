@@ -5,10 +5,12 @@
 package bluetooth
 
 import (
-	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/log"
+	"fmt"
+
 	btcommon "github.com/linuxdeepin/dde-daemon/common/bluetooth"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 type daemon struct {
@@ -38,9 +40,8 @@ func (d *daemon) Start() error {
 
 	err := service.Export(dbusPath, globalBluetooth)
 	if err != nil {
-		logger.Warning("failed to export bluetooth:", err)
 		globalBluetooth = nil
-		return err
+		return fmt.Errorf("failed to export bluetooth: %s", err)
 	}
 
 	err = service.RequestName(dbusServiceName)
@@ -59,15 +60,13 @@ func (d *daemon) Start() error {
 
 	err = sysService.Export(btcommon.SessionAgentPath, globalAgent)
 	if err != nil {
-		logger.Warning("failed to export agent:", err)
-		return err
+		return fmt.Errorf("failed to export agent: %s", err)
 	}
 
 	obexAgent := newObexAgent(service, globalBluetooth)
 	err = service.Export(obexAgentDBusPath, obexAgent)
 	if err != nil {
-		logger.Warning("failed to export obex agent:", err)
-		return err
+		return fmt.Errorf("failed to export obex agent: %s", err)
 	}
 	globalBluetooth.obexAgent = obexAgent
 

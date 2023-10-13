@@ -106,15 +106,17 @@ func (a *obexAgent) unregisterAgent() {
 
 // AuthorizePush 用于请求用户接收文件
 func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName string, busErr *dbus.Error) {
+	logger.Infof("dbus call obexAgent AuthorizePush with transferPath %v", transferPath)
+
 	transfer, err := obex.NewTransfer(a.service.Conn(), transferPath)
 	if err != nil {
-		logger.Error("failed to new transfer:", err)
+		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
 
 	oriFilename, err := transfer.Name().Get(0)
 	if err != nil {
-		logger.Warning("failed to get filename:", err)
+		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
 	tempFileName = randFileName(oriFilename)
@@ -123,27 +125,26 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 	}
 	sessionPath, err := transfer.Session().Get(0)
 	if err != nil {
-		logger.Warning("failed to get transfer session path:", err)
+		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
 	logger.Debug("session path:", sessionPath)
 
 	session, err := obex.NewSession(a.service.Conn(), sessionPath)
 	if err != nil {
-		logger.Warning("failed to get transfer session:", err)
+		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
 
 	deviceAddress, err := session.Session().Destination().Get(0)
 	if err != nil {
-		logger.Warning("failed to get device address:", err)
+		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
 
 	dev := a.b.getDeviceByAddress(deviceAddress)
 	if dev == nil {
-		err = errors.New("failed to get device info")
-		logger.Error(err)
+		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
 
@@ -160,11 +161,13 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 	}
 	accepted, err := a.isSessionAccepted(transferObj)
 	if err != nil {
-		logger.Debug("isSessionAccepted err", err)
+		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
 	if !accepted {
-		return "", dbusutil.ToError(errors.New("declined"))
+		err = errors.New("session declined")
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
 	}
 	// 设置未文件不能传输状态
 	a.b.setPropTransportable(false)
@@ -444,10 +447,14 @@ func (a *obexAgent) notifyFailed(notify notifications.Notifications, replaceID u
 
 // Cancel 用于在客户端取消发送文件时取消文件传输请求
 func (a *obexAgent) Cancel() *dbus.Error {
+	logger.Info("dbus call obexAgent Cancel")
+
 	a.requestNotifyChMu.Lock()
 	defer a.requestNotifyChMu.Unlock()
 	if a.requestNotifyCh == nil {
-		return dbusutil.ToError(errors.New("no such process"))
+		err := errors.New("no such process")
+		logger.Warning(err)
+		return dbusutil.ToError(err)
 	}
 	a.requestNotifyCh <- false
 	return nil
