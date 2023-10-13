@@ -95,8 +95,11 @@ func (m *Manager) SetCpuGovernor(governor string) *dbus.Error {
 
 func (m *Manager) SetMode(mode string) *dbus.Error {
 	if m.Mode == mode {
-		return dbusutil.ToError(errors.New("Repeat switch"))
+		return dbusutil.ToError(errors.New("repeat switch"))
 	}
+
+	m.setPropPowerSavingModeAutoWhenBatteryLow(false)
+	m.setPropPowerSavingModeAuto(false)
 
 	err := m.doSetMode(mode)
 	if err == nil {
