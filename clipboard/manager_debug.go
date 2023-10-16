@@ -48,8 +48,15 @@ func (m *Manager) saveClipboard() error {
 }
 
 func (m *Manager) SaveClipboard() *dbus.Error {
+	logger.Info("dbus call SaveClipboard")
+
 	err := m.saveClipboard()
-	return dbusutil.ToError(err)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
+	return nil
 }
 
 func (m *Manager) writeContent() error {
@@ -93,17 +100,33 @@ func (m *Manager) writeContent() error {
 }
 
 func (m *Manager) WriteContent() *dbus.Error {
+	logger.Info("dbus call WriteContent")
+
 	err := m.writeContent()
-	return dbusutil.ToError(err)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
+	return nil
 }
 
 func (m *Manager) BecomeClipboardOwner() *dbus.Error {
+	logger.Info("dbus call BecomeClipboardOwner")
+
 	ts, err := m.getTimestamp()
 	if err != nil {
+		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
+
 	err = m.becomeClipboardOwner(ts)
-	return dbusutil.ToError(err)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
+	return nil
 }
 
 func (m *Manager) removeTarget(target x.Atom) {
@@ -119,6 +142,8 @@ func (m *Manager) removeTarget(target x.Atom) {
 }
 
 func (m *Manager) RemoveTarget(target uint32) *dbus.Error {
+	logger.Infof("dbus call RemoveTarget with target %d", target)
+
 	m.removeTarget(x.Atom(target))
 	return nil
 }

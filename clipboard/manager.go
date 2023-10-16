@@ -160,8 +160,12 @@ func (m *Manager) getConfigFromDSettings() error {
 	getSaveAtomIncrDataEnabled := func() {
 		v, err := m.dsClipboardManager.Value(0, dSettingsKeySaveAtomIncrDataEnabled)
 		if err == nil {
+			logger.Infof("get saveAtomIncrDataEnabled  %t", v.Value().(bool))
 			m.saveAtomIncrDataEnabled = v.Value().(bool)
 		}
+	}
+	if err != nil {
+		logger.Warning(err)
 	}
 
 	_, err = m.dsClipboardManager.ConnectValueChanged(func(key string) {
@@ -171,6 +175,10 @@ func (m *Manager) getConfigFromDSettings() error {
 		}
 	})
 
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	getSaveAtomIncrDataEnabled()
 
 	return nil
@@ -178,7 +186,10 @@ func (m *Manager) getConfigFromDSettings() error {
 
 func (m *Manager) start() error {
 	// 初始化配置
-	m.getConfigFromDSettings()
+	err := m.getConfigFromDSettings()
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	owner, err := m.xc.GetSelectionOwner(atomClipboardManager)
 	if err != nil {
