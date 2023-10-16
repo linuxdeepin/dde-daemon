@@ -12,6 +12,7 @@ import (
 	"github.com/linuxdeepin/dde-daemon/common/cpuinfo"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	systeminfo "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.systeminfo"
+	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 )
@@ -19,9 +20,12 @@ import (
 //go:generate dbusutil-gen em -type SystemInfo
 
 const (
-	dbusServiceName = "com.deepin.daemon.SystemInfo"
-	dbusPath        = "/com/deepin/daemon/SystemInfo"
-	dbusInterface   = dbusServiceName
+	dbusServiceName         = "com.deepin.daemon.SystemInfo"
+	dbusPath                = "/com/deepin/daemon/SystemInfo"
+	dbusInterface           = dbusServiceName
+	dsettingsAppID          = "org.deepin.dde.daemon"
+	dsettingsSystemInfoName = "org.deepin.dde.daemon.systeminfo"
+	dsettingsIsM900Config   = "IsM900Config"
 )
 
 type SystemInfo struct {
@@ -55,6 +59,9 @@ type Daemon struct {
 	systeminfo    systeminfo.SystemInfo
 	sigSystemLoop *dbusutil.SignalLoop
 	*loader.ModuleBase
+
+	// 判断是否是M900配置，如果不是则设置CPUHardware为null
+	isM900Config bool
 }
 
 var logger = log.NewLogger("daemon/systeminfo")
@@ -76,6 +83,9 @@ func (d *Daemon) Start() error {
 	service := loader.GetService()
 
 	d.info = NewSystemInfo()
+	d.isM900Config = d.getDsgIsM900Config()
+	logger.Infof("the system M900 config is %t", d.isM900Config)
+
 	d.initSysSystemInfo()
 	err := service.Export(dbusPath, d.info)
 	if err != nil {
@@ -145,12 +155,17 @@ func (d *Daemon) initSysSystemInfo() {
 		d.info.CPUMaxMHz = float64(d.info.CurrentSpeed)
 	}
 	d.info.CPUHardware = "null"
-	cpuinfo, err := cpuinfo.ReadCPUInfo("/proc/cpuinfo")
-	if err != nil {
-		logger.Warning(err)
-	} else if cpuinfo.Hardware != "" {
-		d.info.CPUHardware = cpuinfo.Hardware
+	if d.isM900Config {
+		cpuinfo, err := cpuinfo.ReadCPUInfo("/proc/cpuinfo")
+		if err != nil {
+			logger.Warning(err)
+		} else if cpuinfo.Hardware != "" {
+
+			d.info.CPUHardware = cpuinfo.Hardware
+
+		}
 	}
+
 	d.PropsMu.Unlock()
 	logger.Infof("CurrentSpeed: %v CPUMaxMHz: %v CPUHardware: %s", d.info.CurrentSpeed, d.info.CPUMaxMHz, d.info.CPUHardware)
 }
@@ -243,4 +258,35 @@ func (info *SystemInfo) isValidity() bool {
 
 func (*SystemInfo) GetInterfaceName() string {
 	return dbusInterface
+}
+
+func (d *Daemon) getDsgIsM900Config() bool {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	ds := ConfigManager.NewConfigManager(sysBus)
+	dsSystemInfoPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsSystemInfoName, "")
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	dsSystemInfo, err := ConfigManager.NewManager(sysBus, dsSystemInfoPath)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	data, err := dsSystemInfo.Value(0, dsettingsIsM900Config)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+
+	if isM900Config, ok := data.Value().(bool); ok {
+		return isM900Config
+	}
+
+	return false
 }

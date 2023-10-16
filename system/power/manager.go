@@ -55,6 +55,8 @@ const (
 	dsettingsPowerSavingModeBrightnessDropPercent = "powerSavingModeBrightnessDropPercent"
 	dsettingsMode                                 = "mode"
 	dsettingsSupportCpuGovernors                  = "supportCpuGovernors"
+	dsettingsSystemInfoName                       = "org.deepin.dde.daemon.systeminfo"
+	dsettingsIsM900Config                         = "IsM900Config"
 )
 
 type supportMode struct {
@@ -342,7 +344,27 @@ func (m *Manager) init() error {
 func (m *Manager) initDsgConfig() error {
 	logger.Info("initDsgConfig.")
 	// dsg 配置
+	var isM900Config bool
 	ds := ConfigManager.NewConfigManager(m.systemSigLoop.Conn())
+
+	dsSystemInfoPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsSystemInfoName, "")
+	if err != nil {
+		return err
+	}
+	dsSystemInfo, err := ConfigManager.NewManager(m.systemSigLoop.Conn(), dsSystemInfoPath)
+	if err != nil {
+		return err
+	}
+
+	data, err := dsSystemInfo.Value(0, dsettingsIsM900Config)
+	if err != nil {
+		return err
+	}
+
+	if value, ok := data.Value().(bool); ok {
+		isM900Config = value
+	}
+
 	dsPowerPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsPowerName, "")
 	if err != nil {
 		return err
@@ -355,6 +377,11 @@ func (m *Manager) initDsgConfig() error {
 
 	getSpecialCpuMode := func() {
 		// 获取cpu Hardware
+		if !isM900Config {
+			logger.Info("the system is not M900 config, not need special cpu mode")
+			return
+		}
+
 		cpuinfo, err := cpuinfo.ReadCPUInfo("/proc/cpuinfo")
 		if err != nil {
 			logger.Warning("ReadCPUInfo /proc/cpuinfo err : ", err)
