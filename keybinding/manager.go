@@ -516,6 +516,16 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 		Name: "org.kde.kglobalaccel.Component.globalShortcutPressed",
 	}, func(sig *dbus.Signal) {
 		if len(sig.Body) > 1 {
+			const minKeyEventInterval = 200 * time.Millisecond
+			now := time.Now()
+			duration := now.Sub(m.lastKeyEventTime)
+			logger.Debug("duration:", duration)
+			if 0 < duration && duration < minKeyEventInterval {
+				logger.Debug("ignore key event")
+				return
+			}
+			m.lastKeyEventTime = now
+
 			m.shortcutKey = sig.Body[0].(string)
 			m.shortcutKeyCmd = sig.Body[1].(string)
 			ok := strings.Compare(string("kwin"), m.shortcutKey)
