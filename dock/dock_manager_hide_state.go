@@ -235,6 +235,14 @@ func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, erro
 	// 向窗管小伙伴讨教了一下，这里的currentDesktop - 1 后才和wayland下通过kwayland拿到的virtualDesktop相等
 	currentDesktop,_ := m.kwin.CurrentDesktop(0)
 
+	isShowDesktop, err := m.wm.GetIsShowDesktop(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+	if isShowDesktop {
+		return false, nil
+	}
+
 	for _, winInfo := range m.waylandManager.windows {
 		// 最小化的窗口不用关心
 		minimized, err := winInfo.winObj.IsMinimized(0)
