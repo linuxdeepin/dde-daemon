@@ -151,18 +151,16 @@ func (m *Manager) writePowerSavingModeEnabledCb(write *dbusutil.PropertyWrite) *
 	return dbusutil.ToError(m.writePowerSavingModeEnabledCbImpl(write.Value.(bool)))
 }
 
-// enabled := write.Value.(bool)
 func (m *Manager) writePowerSavingModeEnabledCbImpl(enabled bool) error {
 	var err error
 	var tlpCfgChanged bool
 	bluetoothAdapterEnabledCmd := "up"
 	bluetoothAdapterScanCmd := "piscan"
 
-	m.PropsMu.Lock()
-	m.updatePowerSavingState(false)
-	m.PropsMu.Unlock()
-
 	if enabled {
+		m.PropsMu.Lock()
+		m.updatePowerSavingState(false)
+		m.PropsMu.Unlock()
 		tlpCfgChanged, err = setTlpConfigMode(tlpConfigEnabled)
 		bluetoothAdapterEnabledCmd = m.bluetoothAdapterEnabledCmd
 		bluetoothAdapterScanCmd = m.bluetoothAdapterScanCmd
@@ -195,7 +193,6 @@ func (m *Manager) updatePowerSavingMode() { // 根据用户设置以及当前状
 		return
 	}
 	var enable bool
-	// var tlpCfgChanged bool
 	var err error
 	if !m.IsPowerSaveSupported {
 		enable = false

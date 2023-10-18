@@ -296,7 +296,7 @@ func (m *Manager) init() error {
 	cfg := loadConfigSafe()
 	if cfg != nil {
 		// 将config.json中的配置完成初始化
-		m.setPowerSavingModeEnabled(cfg.PowerSavingModeEnabled)                           // 开启和关闭节能模式
+		m.PowerSavingModeEnabled = cfg.PowerSavingModeEnabled                             // 开启和关闭节能模式
 		m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
 		m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
 		m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
@@ -445,7 +445,7 @@ func (m *Manager) initDsgConfig() error {
 		}
 
 		if init {
-			m.setPowerSavingModeEnabled(data.Value().(bool))
+			m.PowerSavingModeEnabled = data.Value().(bool)
 			return
 		}
 
@@ -462,7 +462,7 @@ func (m *Manager) initDsgConfig() error {
 		}
 
 		if init {
-			m.setPowerSavingModeEnabled(data.Value().(bool))
+			m.PowerSavingModeAutoWhenBatteryLow = data.Value().(bool)
 			return
 		}
 
@@ -1092,10 +1092,14 @@ func (m *Manager) enablePerformanceInBoot() bool {
 
 func (m *Manager) setPowerSavingModeEnabled(enable bool) (changed bool) {
 	changed = m.setPropPowerSavingModeEnabled(enable)
-	err := m.writePowerSavingModeEnabledCbImpl(enable)
-	if err != nil {
-		logger.Warning(err)
+	var err error
+	if changed {
+		err = m.writePowerSavingModeEnabledCbImpl(enable)
+		if err != nil {
+			logger.Warning(err)
+		}
 	}
+
 	err = m.saveDsgConfig("PowerSavingModeEnabled")
 	if err != nil {
 		logger.Warning(err)
