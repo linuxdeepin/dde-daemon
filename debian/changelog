@@ -1,3 +1,14 @@
+dde-daemon (6.0.24) unstable; urgency=medium
+
+  * feat: add pause player interface
+  * fix: keybing action cmd error
+  * chore: remove unneeded sed in PKGBUILD
+  * feat: make low power setting configurable
+  * fix: low battery is not saved in config
+  * fix: power save mode button status error
+
+ -- chenhongtao <chenhongtao@deepin.org>  Thu, 19 Oct 2023 10:26:50 +0800
+
 dde-daemon (6.0.23) unstable; urgency=medium
 
   * chore: release with go-dbus-factory
