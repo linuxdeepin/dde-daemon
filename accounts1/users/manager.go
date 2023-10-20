@@ -24,6 +24,7 @@ const (
 	cmdChAge    = "chage"
 
 	defaultConfigShell = "/etc/adduser.conf"
+	defaultShell = "/bin/bash"
 )
 
 const (
@@ -38,6 +39,9 @@ func CreateUser(username, fullname, shell string) error {
 
 	if len(shell) == 0 {
 		shell, _ = getDefaultShell(defaultConfigShell)
+		if len(shell) == 0 {
+			shell = defaultShell
+		}
 	}
 
 	mockUserInfo := UserInfo{
