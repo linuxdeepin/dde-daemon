@@ -5,8 +5,8 @@
 package timedate
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 var (
@@ -15,7 +15,7 @@ var (
 
 type Daemon struct {
 	*loader.ModuleBase
-	manager *Manager
+	manager       *Manager
 	managerFormat *ManagerFormat
 }
 
@@ -45,6 +45,11 @@ func (d *Daemon) Start() error {
 	err = service.Export(dbusPath, d.manager)
 	if err != nil {
 		return err
+	}
+
+	err = d.manager.initTimeDatePropertyWriteCallback(service)
+	if err != nil {
+		logger.Warning("call SetWriteCallback err:", err)
 	}
 
 	d.managerFormat, err = newManagerFormat(service)

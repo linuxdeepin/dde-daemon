@@ -15,10 +15,10 @@ import (
 )
 
 const (
-	dbusFormatPath  	= "/com/deepin/daemon/Format"
-	dbusFormatInterface = "com.deepin.daemon.Format"
-	configManagerId 	= "org.desktopspec.ConfigManager"
-	dbusFormatServiceName   = dbusFormatInterface
+	dbusFormatPath        = "/com/deepin/daemon/Format"
+	dbusFormatInterface   = "com.deepin.daemon.Format"
+	configManagerId       = "org.desktopspec.ConfigManager"
+	dbusFormatServiceName = dbusFormatInterface
 )
 
 //go:generate dbusutil-gen -type ManagerFormat manager_format.go
@@ -31,12 +31,12 @@ type ManagerFormat struct {
 	PropsMu       sync.RWMutex
 
 	// dsg config
-	CurrencySymbol string `prop:"access:rw"`
+	CurrencySymbol         string `prop:"access:rw"`
 	PositiveCurrencyFormat string `prop:"access:rw"`
 	NegativeCurrencyFormat string `prop:"access:rw"`
-	DecimalSymbol string `prop:"access:rw"`
-	DigitGroupingSymbol string `prop:"access:rw"`
-	DigitGrouping string `prop:"access:rw"`
+	DecimalSymbol          string `prop:"access:rw"`
+	DigitGroupingSymbol    string `prop:"access:rw"`
+	DigitGrouping          string `prop:"access:rw"`
 
 	configManagerPath dbus.ObjectPath
 }
@@ -82,7 +82,7 @@ func newManagerFormat(service *dbusutil.Service) (*ManagerFormat, error) {
 
 	logger.Infof(" [newManagerFormat] space : %v, decimalSymbol : %v", space, decimalSymbol)
 	if decimalSymbol == string("Space") || decimalSymbol == space {
-		if m.setPropDecimalSymbol(space){
+		if m.setPropDecimalSymbol(space) {
 			m.setDsgData("decimalSymbol", space)
 		}
 	}
@@ -109,7 +109,7 @@ func (m *ManagerFormat) setPropValue() {
 }
 
 func (m *ManagerFormat) initPropertyWriteCallback(service *dbusutil.Service) error {
-	logger.Debug("nitPropertyWriteCallback.")
+	logger.Debug("initPropertyWriteCallback.")
 	obj := service.GetServerObject(m)
 	err := obj.SetWriteCallback(m, "CurrencySymbol", m.setWriteCurrencySymbolCb)
 	if err != nil {
@@ -250,7 +250,7 @@ func (m *ManagerFormat) getDsgData(key string) string {
 	}
 	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
 	var value string
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value",0, key).Store(&value)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&value)
 	if err != nil {
 		logger.Warningf("getDsgData key : %s. err : %s", key, err)
 		return ""
@@ -266,7 +266,7 @@ func (m *ManagerFormat) setDsgData(key, value string) bool {
 		return false
 	}
 	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.setValue",0, key, dbus.MakeVariant(value)).Store()
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.setValue", 0, key, dbus.MakeVariant(value)).Store()
 	if err != nil {
 		logger.Warningf("setDsgData key : %s. err : %s", key, err)
 		return false

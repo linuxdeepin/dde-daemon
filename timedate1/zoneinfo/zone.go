@@ -35,15 +35,15 @@ type ZoneInfo struct {
 }
 
 var (
-	_zoneListMux sync.Mutex
-	_zoneList    []string
-	_zoneListMap map[string]struct{}
+	_zoneListMux    sync.Mutex
+	_deepinZoneList []string
+	_zoneListMap    map[string]struct{}
 
 	// Error, invalid timezone
-	ErrZoneInvalid = fmt.Errorf("Invalid time zone")
+	ErrZoneInvalid = fmt.Errorf("invalid time zone")
 
-	defaultZoneTab = "/usr/share/zoneinfo/zone1970.tab"
-	defaultZoneDir = "/usr/share/zoneinfo"
+	deepinDefaultZoneTab = "/usr/share/dde/zoneinfo/zone1970.tab"
+	defaultZoneDir       = "/usr/share/zoneinfo"
 )
 
 // Check timezone validity
@@ -56,7 +56,7 @@ func IsZoneValid(zone string) (ret bool, err error) {
 	_zoneListMux.Lock()
 	defer _zoneListMux.Unlock()
 
-	if _zoneList == nil {
+	if _deepinZoneList == nil {
 		err = loadZoneListWithoutLock()
 	}
 
@@ -66,10 +66,10 @@ func IsZoneValid(zone string) (ret bool, err error) {
 
 func loadZoneListWithoutLock() (err error) {
 
-	_zoneList, err = getZoneListFromFile(defaultZoneTab)
+	_deepinZoneList, err = getZoneListFromFile(deepinDefaultZoneTab)
 	_zoneListMap = make(map[string]struct{})
 
-	for _, zone := range _zoneList {
+	for _, zone := range _deepinZoneList {
 		_zoneListMap[zone] = struct{}{}
 	}
 
@@ -79,10 +79,10 @@ func loadZoneListWithoutLock() (err error) {
 func GetAllZones() (ret []string, err error) {
 	_zoneListMux.Lock()
 	defer _zoneListMux.Unlock()
-	if _zoneList == nil {
+	if _deepinZoneList == nil {
 		err = loadZoneListWithoutLock()
 	}
-	return _zoneList, err
+	return _deepinZoneList, err
 }
 
 // Query timezone detail info by timezone
