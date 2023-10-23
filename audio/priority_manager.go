@@ -13,6 +13,12 @@ import (
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
+// dconfig默认优先级
+var (
+	inputDefaultPriorities  = []int{}
+	outputDefaultPriorities = []int{}
+)
+
 // 优先级策略组，包含输入和输出
 type PriorityManager struct {
 	Output *PriorityPolicy
@@ -89,9 +95,26 @@ func (pm *PriorityManager) Load() bool {
 	return true
 }
 
+// 加载dconfig默认优先级
+func (pm *PriorityManager) completeDefaultTypes() {
+	for _, i := range inputDefaultPriorities {
+		if !pm.Input.Types.hasElement(i) {
+			pm.Input.Types = append(pm.Input.Types, i)
+			logger.Debugf("input defualt append type %d", i)
+		}
+	}
+	for _, i := range outputDefaultPriorities {
+		if !pm.Output.Types.hasElement(i) {
+			pm.Output.Types = append(pm.Output.Types, i)
+			logger.Debugf("output defualt append type %d", i)
+		}
+	}
+}
+
 // 使用默认值进行初始化
 func (pm *PriorityManager) defaultInit(cards CardList) {
 	// 初始化类型优先级列表
+	pm.completeDefaultTypes()
 	pm.Output.completeTypes()
 	pm.Input.completeTypes()
 
@@ -165,6 +188,7 @@ func (pm *PriorityManager) Init(cards CardList) {
 	pm.SetPorts(cards)
 
 	// 补充缺少的类型（产品修改了端口类型），并更新端口排序
+	pm.completeDefaultTypes()
 	pm.Output.completeTypes()
 	pm.Output.sortPorts()
 	pm.Input.completeTypes()

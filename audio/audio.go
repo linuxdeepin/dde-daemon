@@ -52,10 +52,12 @@ const (
 	increaseMaxVolume = 1.5
 	normalMaxVolume   = 1.0
 
-	dsgKeyAutoSwitchPort      = "autoSwitchPort"
-	dsgKeyBluezModeFilterList = "bluezModeFilterList"
-	dsgKeyPortFilterList      = "portFilterList"
-	dsgKeyReduceNoise         = "reduceNoise"
+	dsgKeyAutoSwitchPort          = "autoSwitchPort"
+	dsgKeyBluezModeFilterList     = "bluezModeFilterList"
+	dsgKeyPortFilterList          = "portFilterList"
+	dsgKeyReduceNoise             = "reduceNoise"
+	dsgKeyInputDefaultPriorities  = "inputDefaultPrioritiesByType"
+	dsgKeyOutputDefaultPriorities = "outputDefaultPrioritiesByType"
 )
 
 var (
@@ -1603,6 +1605,31 @@ func (a *Audio) initDsgProp() error {
 		logger.Info("default reduce noise status:", defaultReduceNoise)
 	}
 
+	ret = make([]dbus.Variant, 0)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyInputDefaultPriorities).Store(&ret)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		for i := range ret {
+			if v, ok := ret[i].Value().(float64); ok {
+				inputDefaultPriorities = append(inputDefaultPriorities, int(v))
+			}
+		}
+		logger.Info("input default priority list", inputDefaultPriorities)
+	}
+
+	ret = make([]dbus.Variant, 0)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyOutputDefaultPriorities).Store(&ret)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		for i := range ret {
+			if v, ok := ret[i].Value().(float64); ok {
+				outputDefaultPriorities = append(outputDefaultPriorities, int(v))
+			}
+		}
+		logger.Info("output default priority list", outputDefaultPriorities)
+	}
 	// 监听dsg配置变化
 	a.systemSigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
