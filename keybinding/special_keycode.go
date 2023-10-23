@@ -189,6 +189,15 @@ func (m *Manager) handleScreenlock() {
 
 // 打开任务视图
 func (m *Manager) handleWorkspace() {
+	logger.Info("handleWorkspace.")
+	locked, err := m.sessionManager.Locked().Get(0)
+	if err != nil {
+		logger.Warning("sessionManager get locked error:", err)
+	}
+	if locked {
+		logger.Info("Now LockScreen is locked.")
+		return
+	}
 	m.wm.ShowWorkspace(0)
 }
 
