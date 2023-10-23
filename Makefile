@@ -225,7 +225,7 @@ install: build install-dde-data install-icons
 
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
-	cp -r misc/data ${DESTDIR}${PREFIX}/share/dde/
+	cp -r misc/data misc/zoneinfo ${DESTDIR}${PREFIX}/share/dde/
 
 icons:
 	python3 misc/icons/install_to_hicolor.py -d status -o out/icons misc/icons/status
