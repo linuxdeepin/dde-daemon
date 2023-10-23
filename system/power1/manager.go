@@ -114,6 +114,9 @@ type Manager struct {
 	// 是否支持节能模式
 	IsPowerSaveSupported bool
 
+	// 是否支持平衡性能模式
+	IsBalancePerformanceSupported bool
+
 	// 性能模式-平衡模式dsg
 	balanceScalingGovernor string
 	configManagerPath      dbus.ObjectPath
@@ -362,6 +365,7 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 		m.IsHighPerformanceSupported = false
 		m.IsBalanceSupported = false
 		m.IsPowerSaveSupported = false
+		m.IsBalancePerformanceSupported = false
 		return
 	}
 
@@ -417,10 +421,11 @@ func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性�
 	m.IsBalanceSupported = getIsBalanceSupported(m.hasPstate)
 	m.IsHighPerformanceSupported = getIsHighPerformanceSupported(m.hasPstate)
 	m.IsPowerSaveSupported = getIsPowerSaveSupported(m.hasPstate)
+	m.IsBalancePerformanceSupported = m.hasPstate
 
 	if m.hasPstate {
 		// INFO: balance_performance or balance_power?
-		m.balanceScalingGovernor = "balance_performance"
+		m.balanceScalingGovernor = "balance_power"
 	} else if strv.Strv(getSupportGovernors()).Contains(dsgCpuGovernor) {
 		m.balanceScalingGovernor = dsgCpuGovernor
 	} else {
@@ -783,7 +788,20 @@ func (m *Manager) doSetMode(mode string) error {
 		if m.cpus.IsBoostFileExist() {
 			err = m.doSetCpuBoost(true)
 		}
+	case "balance_performance":
+		if !m.IsBalancePerformanceSupported {
+			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
+			break
+		}
+		m.setPropPowerSavingModeEnabled(false)
+		err = m.doSetCpuGovernor("balance_performance")
+		if err != nil {
+			logger.Warning(err)
+		}
 
+		if m.cpus.IsBoostFileExist() {
+			err = m.doSetCpuBoost(true)
+		}
 	default:
 		err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
 	}
