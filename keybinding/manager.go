@@ -102,15 +102,15 @@ type Manager struct {
 	gsGnomeWM        *gio.Settings
 	gsPower          *gio.Settings
 
-	enableListenGSettings   bool
-	delayNetworkStateChange bool
-	canExcuteSuspendOrHiberate    bool
-	prepareForSleep			bool
-	clickNum                uint32
-	shortcutCmd             string
-	shortcutKey             string
-	shortcutKeyCmd          string
-	customShortcutManager   *shortcuts.CustomShortcutManager
+	enableListenGSettings      bool
+	delayNetworkStateChange    bool
+	canExcuteSuspendOrHiberate bool
+	prepareForSleep            bool
+	clickNum                   uint32
+	shortcutCmd                string
+	shortcutKey                string
+	shortcutKeyCmd             string
+	customShortcutManager      *shortcuts.CustomShortcutManager
 
 	lockFront     lockfront.LockFront
 	shutdownFront shutdownfront.ShutdownFront
@@ -155,9 +155,9 @@ type Manager struct {
 
 	configManagerPath dbus.ObjectPath
 
-	dmiInfo systeminfo.DMIInfo
-	rfkillState       bool
-	repeatCount       int
+	dmiInfo     systeminfo.DMIInfo
+	rfkillState bool
+	repeatCount int
 
 	// nolint
 	signals *struct {
@@ -228,8 +228,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 	m.prepareForSleep, _ = m.login1Manager.PreparingForSleep().Get(0)
 
-	m.init()
-
 	m.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
 	m.NumLockState.Bind(m.gsKeyboard, gsKeyNumLockState)
 	m.ShortcutSwitchLayout.Bind(m.gsKeyboard, gsKeyShortcutSwitchLayout)
@@ -238,6 +236,9 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.initNumLockState(sysBus)
 	m.initDSettings(sysBus)
+
+	m.init()
+
 	return &m, nil
 }
 
