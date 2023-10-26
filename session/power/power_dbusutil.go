@@ -2,6 +2,58 @@
 
 package power
 
+func (v *Manager) setPropScheduledShutdownState(value bool) (changed bool) {
+	if v.ScheduledShutdownState != value {
+		v.ScheduledShutdownState = value
+		v.emitPropChangedScheduledShutdownState(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedScheduledShutdownState(value bool) error {
+	return v.service.EmitPropertyChanged(v, "ScheduledShutdownState", value)
+}
+
+func (v *Manager) setPropShutdownTime(value string) (changed bool) {
+	if v.ShutdownTime != value {
+		v.ShutdownTime = value
+		v.emitPropChangedShutdownTime(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedShutdownTime(value string) error {
+	return v.service.EmitPropertyChanged(v, "ShutdownTime", value)
+}
+
+func (v *Manager) setPropShutdownRepetition(value int) (changed bool) {
+	if v.ShutdownRepetition != value {
+		v.ShutdownRepetition = value
+		v.emitPropChangedShutdownRepetition(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedShutdownRepetition(value int) error {
+	return v.service.EmitPropertyChanged(v, "ShutdownRepetition", value)
+}
+
+func (v *Manager) setPropCustomShutdownWeekDays(value []byte) (changed bool) {
+	if !byteSliceEqual(v.CustomShutdownWeekDays, value) {
+		v.CustomShutdownWeekDays = value
+		v.emitPropChangedCustomShutdownWeekDays(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedCustomShutdownWeekDays(value []byte) error {
+	return v.service.EmitPropertyChanged(v, "CustomShutdownWeekDays", value)
+}
+
 func (v *Manager) setPropLidIsPresent(value bool) (changed bool) {
 	if v.LidIsPresent != value {
 		v.LidIsPresent = value

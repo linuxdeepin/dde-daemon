@@ -636,3 +636,15 @@ func (m *Manager) setDpmsModeByKwin(mode int32) error {
 
 	return nil
 }
+
+func byteSliceEqual(v1, v2 []byte) bool {
+	if len(v1) != len(v2) {
+		return false
+	}
+	for i, e1 := range v1 {
+		if e1 != v2[i] {
+			return false
+		}
+	}
+	return true
+}

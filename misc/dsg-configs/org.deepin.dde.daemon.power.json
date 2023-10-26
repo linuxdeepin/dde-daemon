@@ -142,6 +142,56 @@
             "description": "allow screen saver",
             "permissions": "readwrite",
             "visibility": "public"
+        },
+        "scheduledShutdownState": {
+            "value": false,
+            "serial": 0,
+            "flags": [],
+            "name": "Scheduled shutdown switch",
+            "name[zh_CN]": "定时关机开关",
+            "description": "Scheduled shutdown switch",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "shutdownTime": {
+            "value": "19:00",
+            "serial": 0,
+            "flags": [],
+            "name": "time of timed shutdown",
+            "name[zh_CN]": "关机时间",
+            "description": "time of timed shutdown",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "shutdownRepetition": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "type of the shutdown repetition",
+            "name[zh_CN]": "重复类型, 0-3",
+            "description": "type of the shutdown repetition",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "customShutdownWeekDays": {
+            "value": [],
+            "serial": 0,
+            "flags": [],
+            "name": "custom shutdown week days",
+            "name[zh_CN]": "自定义关机重复日期",
+            "description": "custom shutdown week days",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "shutdownCountdown": {
+            "value": 60,
+            "serial": 0,
+            "flags": [],
+            "name": "shutdown countdown",
+            "name[zh_CN]": "关机倒计时",
+            "description": "shutdown countdown",
+            "permissions": "readwrite",
+            "visibility": "public"
         }
     }
 }
