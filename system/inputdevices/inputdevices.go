@@ -7,6 +7,7 @@ package inputdevices
 import (
 	"fmt"
 	"io/ioutil"
+	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -20,10 +21,12 @@ import (
 
 const (
 	_usbDevicePath                  = "/sys/bus/usb/devices"
+	_pciWakeupDevicePath            = "/proc/acpi/wakeup"
 	_dsettingsAppID                 = "org.deepin.dde.daemon"
 	_dsettingsInputdevicesName      = "org.deepin.dde.daemon.inputdevices"
 	_dsettingsDeviceWakeupStatusKey = "deviceWakeupStatus"
 	_dsettingsTouchpadEnabledKey    = "toupadEnabled"
+	_ps2mDevice                     = "PS2M"
 )
 
 //go:generate dbusutil-gen -type InputDevices,Touchpad inputdevices.go touchpad.go
@@ -80,7 +83,6 @@ func (m *InputDevices) init() {
 	go func() {
 		m.SupportWakeupDevices = make(map[string]string)
 		m.initDSettings(m.service)
-		m.supportWakeupDevices = getSupportUsbhidDevices()
 		m.updateSupportWakeupDevices()
 		if err := TouchpadExist(touchpadSwitchFile); err == nil {
 			m.newTouchpad()
@@ -272,11 +274,33 @@ func (m *InputDevices) updatePluggableDevice() {
 }
 
 func (m *InputDevices) updateSupportWakeupDevices() {
+	logger.Info("updateSupportWakeupDevices")
 	m.supportWakeupDevices = getSupportUsbhidDevices()
+	devicePath, err := getSupportAcpiDevices(_ps2mDevice)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		m.supportWakeupDevices = append(m.supportWakeupDevices, devicePath)
+	}
+
 	m.updatePluggableDevice()
 	//更新完拔出设备后，再处理可能新插入的设备
 	for _, devicePath := range m.supportWakeupDevices {
-		m.setPropSupportWakeupDevices(devicePath, getReadFileValidData(devicePath))
+		value := getArrValueFromKey(m.dsgWakeupDeviceStatus, devicePath)
+		logger.Infof("getArrValueFromKey path %s,value %s", devicePath, value)
+		if isAcpiDevice(devicePath) {
+			if value != "" {
+				m.setPropSupportWakeupDevices(devicePath, value)
+			} else {
+				m.setPropSupportWakeupDevices(devicePath, getSupportAcpiDeviceEnable(devicePath))
+			}
+		} else {
+			if value != "" {
+				m.setPropSupportWakeupDevices(devicePath, value)
+			} else {
+				m.setPropSupportWakeupDevices(devicePath, getReadFileValidData(devicePath))
+			}
+		}
 	}
 }
 
@@ -307,7 +331,7 @@ func (m *InputDevices) saveDeviceFile(path, value string, userSet bool) error {
 			bNeedUpdateDsg = false
 			logger.Infof("use user set device state. path : %s, value : %s", path, value)
 		} else {
-			logger.Debugf("use kernel device state.  path : %s, value : %s", path, value)
+			logger.Infof("use kernel device state.  path : %s, value : %s", path, value)
 		}
 	} else {
 		logger.Debugf("dsgValue equal with kernel value.  path : %s, value : %s", path, value)
@@ -315,15 +339,24 @@ func (m *InputDevices) saveDeviceFile(path, value string, userSet bool) error {
 
 	// 内核仅支持 disabled/enabled
 	if value == "disabled" || value == "enabled" {
-		readData := getReadFileValidData(path)
-		logger.Debugf("[saveDeviceFile] value : %s, readData : %s", value, readData)
-		if readData == value {
-			logger.Warningf("can't WriteFile, the value is equal. path : %s, value : %s", path, value)
-			return nil
-		}
-		err := ioutil.WriteFile(path, []byte(value), 0755)
-		if err != nil {
-			return dbusutil.ToError(fmt.Errorf("WriteFile err : %s", err))
+		if isAcpiDevice(path) {
+			err := setSupportAcpiDeviceEnable(path)
+			if err != nil {
+				logger.Warning(err)
+				return dbusutil.ToError(err)
+			}
+
+		} else {
+			readData := getReadFileValidData(path)
+			logger.Debugf("[saveDeviceFile] value : %s, readData : %s", value, readData)
+			if readData == value {
+				logger.Warningf("can't WriteFile, the value is equal. path : %s, value : %s", path, value)
+				return nil
+			}
+			err := ioutil.WriteFile(path, []byte(value), 0755)
+			if err != nil {
+				return dbusutil.ToError(fmt.Errorf("WriteFile err : %s", err))
+			}
 		}
 
 		//只有用户设置的值才需要保存，默认值不需要存储
@@ -509,4 +542,95 @@ func getSupportUsbhidDevices() []string {
 	}
 	logger.Debug("[getSupportUsbhidDevices] validList : ", validList)
 	return validList
+}
+
+// 由于/proc/acpi/wakeup下面设备较多，将路径改为/proc/acpi/wakeup:PS2M格式
+func getSupportAcpiDevices(device string) (string, error) {
+	data, err := ioutil.ReadFile(_pciWakeupDevicePath)
+	if err != nil {
+		return "", err
+	}
+
+	content := string(data)
+	lines := strings.Split(content, "\n")
+
+	for _, line := range lines {
+		if strings.HasPrefix(line, device) {
+			return _pciWakeupDevicePath + "-" + device, nil
+		}
+	}
+
+	return "", err
+}
+
+func isAcpiDevice(devicePath string) bool {
+	paths := strings.Split(devicePath, "-")
+	if len(paths) != 2 {
+		logger.Warningf("device path %s is invalid", devicePath)
+		return false
+	}
+
+	if paths[0] == _pciWakeupDevicePath {
+		return true
+	}
+
+	return false
+}
+
+func getSupportAcpiDeviceEnable(devicePath string) string {
+	paths := strings.Split(devicePath, "-")
+	if len(paths) != 2 {
+		logger.Warningf("device path %s is invalid", devicePath)
+		return "disabled"
+	}
+
+	data, err := ioutil.ReadFile(paths[0])
+	if err != nil {
+		logger.Warning(err)
+		return "disabled"
+	}
+
+	content := string(data)
+	lines := strings.Split(content, "\n")
+
+	for _, line := range lines {
+		if strings.HasPrefix(line, paths[1]) {
+			arrs := strings.Fields(line)
+			if len(arrs) < 3 {
+				logger.Warningf("%s divide into no more than 3 groups according to spaces", line)
+				return ""
+			}
+			if arrs[2] == "*enabled" {
+				return "enabled"
+			} else {
+				return "disabled"
+			}
+		}
+	}
+
+	logger.Warningf("not found acpi device : %s info", paths[1])
+	return "disabled"
+}
+
+func setSupportAcpiDeviceEnable(devicePath string) error {
+	logger.Infof("set device path %s :", devicePath)
+
+	paths := strings.Split(devicePath, "-")
+	if len(paths) != 2 {
+		err := fmt.Errorf("device path %s is invalid", devicePath)
+		return err
+	}
+
+	if paths[0] != _pciWakeupDevicePath {
+		err := fmt.Errorf("device path %s is invalid", devicePath)
+		return err
+	}
+	logger.Infof("paths[0] %s,paths[1] %s", paths[0], paths[1])
+
+	cmd := exec.Command("/bin/sh", "-c", "echo "+paths[1]+"> "+paths[0])
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+	return nil
 }
