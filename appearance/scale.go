@@ -35,7 +35,7 @@ const icon = "dialog-window-scale"
 
 func handleSetScaleFactorDone() {
 	const (
-		expireTimeout = 15 * 1000
+		expireTimeout = 0
 		requestLogout = "dbus-send,--type=method_call,--dest=com.deepin.SessionManager,/com/deepin/SessionManager,com.deepin.SessionManager.RequestLogout"
 	)
 	body := gettext.Tr("Log out for display scaling settings to take effect")
@@ -53,6 +53,8 @@ func handleSetScaleFactorDone() {
 		map[string]dbus.Variant{
 			"x-deepin-action-_logout": dbus.MakeVariant(requestLogout),
 			"x-deepin-action-_later":  dbus.MakeVariant(""),
+			"x-deepin-ClickToDisappear":   dbus.MakeVariant(false),
+			"x-deepin-DisappearAfterLock": dbus.MakeVariant(false),
 		}, expireTimeout)
 	if err != nil {
 		logger.Warning(err)
