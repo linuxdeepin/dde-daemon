@@ -5,6 +5,7 @@
 package keybinding
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -18,6 +19,7 @@ import (
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.inputdevices"
 	keyevent "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.keyevent"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.kwayland"
+	network "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.network"
 	lockfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.lockfront"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
@@ -27,6 +29,7 @@ import (
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	DisplayManager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.DisplayManager"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	networkmanager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.networkmanager"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -121,6 +124,7 @@ type Manager struct {
 	startManager              sessionmanager.StartManager
 	sessionManager            sessionmanager.SessionManager
 	airplane                  airplanemode.AirplaneMode
+	networkmanager            networkmanager.Manager
 	backlightHelper           backlight.Backlight
 	keyboard                  inputdevices.Keyboard
 	keyboardLayout            string
@@ -129,6 +133,7 @@ type Manager struct {
 	login1Manager             login1.Manager
 	keyEvent                  keyevent.KeyEvent
 	displayManager            DisplayManager.DisplayManager
+	network                   network.Network
 	specialKeycodeBindingList map[SpecialKeycodeMapKey]func()
 
 	// controllers
@@ -259,6 +264,7 @@ func (m *Manager) init() {
 	m.gsPower = gio.NewSettings(gsSchemaSessionPower)
 	m.wm = wm.NewWm(sessionBus)
 	m.keyEvent = keyevent.NewKeyEvent(sysBus)
+	m.network = network.NewNetwork(sessionBus)
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
 
@@ -313,6 +319,7 @@ func (m *Manager) init() {
 
 	m.startManager = sessionmanager.NewStartManager(sessionBus)
 	m.airplane = airplanemode.NewAirplaneMode(sysBus)
+	m.networkmanager = networkmanager.NewManager(sysBus)
 	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
 	m.keyboard = inputdevices.NewKeyboard(sessionBus)
 	m.keyboard.InitSignalExt(m.sessionSigLoop, true)
@@ -763,6 +770,26 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			if err != nil {
 				logger.Warningf("get wireless enabled failed, err: %v", err)
 				return
+			}
+			// FIXME:  修复NM WiFi无法恢复bug, 使快捷键能够恢复WiFi问题
+			if !enabled {
+				if devicesJson, err := m.network.Devices().Get(0); err == nil {
+					networkDevices := make(map[string][]*networkDevice)
+					json.Unmarshal([]byte(devicesJson), &networkDevices)
+					for _, wifiDevice := range networkDevices["wireless"] {
+						if wifiDevice.InterfaceFlags == 0 {
+							// wifi里有未up的网络接口时尝试重置下wifi网络
+							logger.Info("rest wifi, because some link down")
+							if err := m.networkmanager.WirelessEnabled().Set(0, false); err != nil {
+								logger.Warning(err)
+							}
+							if err := m.networkmanager.WirelessEnabled().Set(0, true); err != nil {
+								logger.Warning(err)
+							}
+							break
+						}
+					}
+				}
 			}
 			err = m.airplane.EnableWifi(0, !enabled)
 			if err != nil {

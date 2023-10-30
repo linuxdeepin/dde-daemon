@@ -34,6 +34,26 @@ const (
 	suspendStateButtonClick
 )
 
+type networkDevice struct {
+	Udi                 string
+	Path                dbus.ObjectPath
+	State               uint32
+	Interface           string
+	ClonedAddress       string
+	HwAddress           string
+	Driver              string
+	Managed             bool
+	Vendor              string
+	UniqueUuid          string
+	UsbDevice           bool
+	ActiveAp            dbus.ObjectPath
+	SupportHotspot      bool
+	Mode                uint32
+	MobileNetworkType   string
+	MobileSignalQuality uint32
+	InterfaceFlags      uint32
+}
+
 func resetGSettings(gs *gio.Settings) {
 	for _, key := range gs.ListKeys() {
 		userVal := gs.GetUserValue(key)
