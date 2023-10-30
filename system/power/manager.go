@@ -43,8 +43,6 @@ const (
 const (
 	dsettingsAppID                                = "org.deepin.dde.daemon"
 	dsettingsPowerName                            = "org.deepin.dde.daemon.power"
-	dsettingsTlpName                              = "org.deepin.dde.daemon.power.tlp"
-	dsettingsBluetoothAdapterName                 = "org.deepin.dde.daemon.power.bluetoothAdapter"
 	dsettingsSpecialCpuModeJson                   = "specialCpuModeJson"
 	dsettingsBalanceCpuGovernor                   = "BalanceCpuGovernor"
 	dsettingsIsFirstGetCpuGovernor                = "isFirstGetCpuGovernor"
@@ -157,10 +155,6 @@ type Manager struct {
 	idlePowersaveAspmEnabled bool
 	loginManager             login1.Manager
 
-	// 蓝牙适配器状态
-	bluetoothAdapterEnabledCmd string
-	bluetoothAdapterScanCmd string
-
 	// Special Cpu suppoert mode
 	specialCpuMode *supportMode
 
@@ -271,14 +265,6 @@ func (m *Manager) init() error {
 	}
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
 	err = m.initDsgConfig()
-	if err != nil {
-		logger.Warning(err)
-	}
-	err = m.initTlpDsgConfig()
-	if err != nil {
-		logger.Warning(err)
-	}
-	err = m.initBluetoothAdapterDsgConfig()
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -449,7 +435,7 @@ func (m *Manager) initDsgConfig() error {
 			return
 		}
 
-		if m.setPowerSavingModeEnabled(data.Value().(bool)) {
+		if m.setPropPowerSavingModeEnabled(data.Value().(bool)) {
 			logger.Info("Set power saving mode enable", m.PowerSavingModeEnabled)
 		}
 	}
@@ -930,7 +916,7 @@ func (m *Manager) doSetMode(mode string) error {
 			break
 		}
 
-		m.setPowerSavingModeEnabled(false)
+		m.setPropPowerSavingModeEnabled(false)
 		err = m.doSetCpuGovernor(m.balanceScalingGovernor)
 		if err != nil {
 			logger.Warning(err)
@@ -956,7 +942,7 @@ func (m *Manager) doSetMode(mode string) error {
 			break
 		}
 
-		m.setPowerSavingModeEnabled(true)
+		m.setPropPowerSavingModeEnabled(true)
 		if m.hasPstate {
 			err = m.doSetCpuGovernor("power")
 		} else {
@@ -978,7 +964,7 @@ func (m *Manager) doSetMode(mode string) error {
 			break
 		}
 
-		m.setPowerSavingModeEnabled(false)
+		m.setPropPowerSavingModeEnabled(false)
 		err = m.doSetCpuGovernor("performance")
 		if err != nil {
 			logger.Warning(err)
@@ -1088,21 +1074,4 @@ func (m *Manager) enablePerformanceInBoot() bool {
 		return false
 	}
 	return true
-}
-
-func (m *Manager) setPowerSavingModeEnabled(enable bool) (changed bool) {
-	changed = m.setPropPowerSavingModeEnabled(enable)
-	var err error
-	if changed {
-		err = m.writePowerSavingModeEnabledCbImpl(enable)
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
-	err = m.saveDsgConfig("PowerSavingModeEnabled")
-	if err != nil {
-		logger.Warning(err)
-	}
-	return
 }
