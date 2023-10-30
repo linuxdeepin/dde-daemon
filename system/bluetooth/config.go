@@ -23,6 +23,11 @@ type config struct {
 	//Discoverable bool `json:"discoverable"`
 }
 
+var (
+	adapterDefaultPowered      bool = false //蓝牙开关默认状态
+	adapterDefaultDiscoverable bool = true  //设备可被发现状态
+)
+
 type adapterConfig struct {
 	Powered      bool
 	Discoverable bool
@@ -73,7 +78,7 @@ func (c *config) save() {
 }
 
 func newAdapterConfig() (ac *adapterConfig) {
-	ac = &adapterConfig{Powered: false, Discoverable: true}
+	ac = &adapterConfig{Powered: adapterDefaultPowered, Discoverable: adapterDefaultDiscoverable}
 	return
 }
 

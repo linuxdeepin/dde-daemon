@@ -31,6 +31,26 @@
           "description": "Allow auto pair",
           "permissions": "readwrite",
           "visibility": "private"
+      },
+      "adapterPowerd": {
+          "value": false,
+          "serial": 0,
+          "flags": ["global"],
+          "name": "adapterPowerd",
+          "name[zh_CN]": "蓝牙开关状态",
+          "description": "adapter default power state",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "adapterDiscoverable": {
+          "value": true,
+          "serial": 0,
+          "flags": ["global"],
+          "name": "adapterDiscoverable",
+          "name[zh_CN]": "蓝牙可被发现状态",
+          "description": "adapter default discoverable",
+          "permissions": "readwrite",
+          "visibility": "private"
       }
   }
 }

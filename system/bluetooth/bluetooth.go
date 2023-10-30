@@ -52,9 +52,11 @@ const (
 )
 
 const (
-	dsettingsAppID             = "org.deepin.dde.daemon"
-	dsettingsBluetoothName     = "org.deepin.dde.daemon.bluetooth"
-	dsettingsAutoPairEnableKey = "autoPairEnable"
+	dsettingsAppID               = "org.deepin.dde.daemon"
+	dsettingsBluetoothName       = "org.deepin.dde.daemon.bluetooth"
+	dsettingsAutoPairEnableKey   = "autoPairEnable"
+	dsettingsAdapterPowerd       = "adapterPowerd"
+	dsettingsAdapterDiscoverable = "adapterDiscoverable"
 )
 
 //go:generate dbusutil-gen -type SysBluetooth bluetooth.go
@@ -238,6 +240,24 @@ func (b *SysBluetooth) init() {
 	}
 
 	logger.Info("====== dsg autoPairEnable is ======", b.canAutoPair())
+
+	adapterDefaultPowered = func() bool {
+		v, err := dsBluetooth.Value(0, dsettingsAdapterPowerd)
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+		return v.Value().(bool)
+	}()
+
+	adapterDefaultDiscoverable = func() bool {
+		v, err := dsBluetooth.Value(0, dsettingsAdapterDiscoverable)
+		if err != nil {
+			logger.Warning(err)
+			return true
+		}
+		return v.Value().(bool)
+	}()
 
 	b.loginManager.InitSignalExt(b.sigLoop, true)
 	_, err = b.loginManager.ConnectSessionNew(b.handleSessionNew)
