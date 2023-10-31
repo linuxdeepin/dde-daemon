@@ -5,11 +5,14 @@
 package keybinding
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/godbus/dbus"
+	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	audio "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.audio"
 	backlight "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.helper.backlight"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
-	. "github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 )
 
 const (
@@ -227,6 +230,18 @@ func (c *AudioController) getDefaultSink() (audio.Sink, error) {
 	if err != nil {
 		return nil, err
 	}
+	name, err := sink.Name().Get(0)
+	if err != nil {
+		return nil, err
+	}
+	ports, err := sink.Ports().Get(0)
+	if err != nil {
+		return nil, err
+	}
+	if len(ports) == 0 && strings.Contains(name, "auto_null") {
+		return nil, errors.New("default sink (auto_null) is invalid")
+	}
+
 	return sink, nil
 }
 
@@ -238,6 +253,17 @@ func (c *AudioController) getDefaultSource() (audio.Source, error) {
 	source, err := audio.NewSource(c.conn, sourcePath)
 	if err != nil {
 		return nil, err
+	}
+	name, err := source.Name().Get(0)
+	if err != nil {
+		return nil, err
+	}
+	ports, err := source.Ports().Get(0)
+	if err != nil {
+		return nil, err
+	}
+	if len(ports) == 0 && strings.Contains(name, "auto_null") {
+		return nil, errors.New("default source (auto_null) is invalid")
 	}
 
 	return source, nil
