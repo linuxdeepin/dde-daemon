@@ -5,9 +5,9 @@
 package keybinding
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/keybinding/shortcuts"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 func init() {
@@ -77,6 +77,7 @@ func (d *Daemon) Start() error {
 
 		m.eliminateKeystrokeConflict()
 		m.shortcutManager.EventLoop()
+		m.shortcutManager.RecordEventLoop()
 	}()
 
 	return nil
