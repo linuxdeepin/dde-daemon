@@ -107,7 +107,7 @@ func (m *Manager) findLidSwitch() string {
 
 		capSw := device.GetSysfsAttr("../capabilities/sw")
 
-		bitmask := make([]int, NBITS(SW_LID))
+		bitmask := make([]int, NBITS(SW_MAX))
 		numBits := upInputStrToBitmask(capSw, bitmask)
 
 		if numBits == 0 || numBits >= SW_CNT {
