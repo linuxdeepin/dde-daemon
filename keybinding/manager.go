@@ -1004,10 +1004,12 @@ func (m *Manager) handleKeyEvent(ev *shortcuts.KeyEvent) {
 		return
 	}
 
-	if handler := m.handlers[int(action.Type)]; handler != nil {
-		handler(ev)
-	} else {
-		logger.Warning("handler is nil")
+	if len(m.handlers) > 0 {
+		if handler := m.handlers[int(action.Type)]; handler != nil {
+			handler(ev)
+		} else {
+			logger.Warning("handler is nil")
+		}
 	}
 }
 

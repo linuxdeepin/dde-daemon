@@ -192,10 +192,7 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 	}
 	// init record
 	err := ss.initRecord()
-	if err == nil {
-		logger.Debug("start record event loop")
-		go ss.recordEventLoop()
-	} else {
+	if err != nil {
 		logger.Warning("init record failed: ", err)
 	}
 
@@ -207,7 +204,7 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 	return ss
 }
 
-func (sm *ShortcutManager) recordEventLoop() {
+func (sm *ShortcutManager) RecordEventLoop() {
 	// enable context
 	cookie := record.EnableContext(sm.dataConn, sm.recordContext)
 
@@ -703,8 +700,8 @@ func (sm *ShortcutManager) SetAllModKeysReleasedCallback(cb func()) {
 	sm.xRecordEventHandler.allModKeysReleasedCb = cb
 }
 
-//get Active Window pid
-//注意: 从D-BUS启动dde-system-daemon的时候x会取不到环境变量,只能把获取pid放到dde-session-daemon
+// get Active Window pid
+// 注意: 从D-BUS启动dde-system-daemon的时候x会取不到环境变量,只能把获取pid放到dde-session-daemon
 func (sm *ShortcutManager) getActiveWindowPid() (uint32, error) {
 	activeWin, err := ewmh.GetActiveWindow(sm.conn).Reply(sm.conn)
 	if err != nil {
@@ -731,7 +728,7 @@ func (sm *ShortcutManager) isPidVirtualMachine(pid uint32) (bool, error) {
 	return ret, nil
 }
 
-//初始化go-dbus-factory system DBUS : org.deepin.dde.Daemon1
+// 初始化go-dbus-factory system DBUS : org.deepin.dde.Daemon1
 func (sm *ShortcutManager) initSysDaemon() error {
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
@@ -1091,7 +1088,7 @@ func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager, wmObj wm.Wm) {
 				logger.Warning("failed to setShortForWayland:", err)
 				continue
 			}
-			sm.WaylandCustomShortCutMap[id + "-cs"] = cmd
+			sm.WaylandCustomShortCutMap[id+"-cs"] = cmd
 			cs := newCustomShort(id, id, keystrokesStrv, wmObj, csm)
 			sm.addWithoutLock(cs)
 		}
