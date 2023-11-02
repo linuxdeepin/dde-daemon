@@ -37,6 +37,11 @@ func (v *Audio) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetPortEnabled,
 			InArgs: []string{"cardId", "portName", "enabled"},
 		},
+		{
+			Name:   "SetCurrentAudioServer",
+			Fn:     v.SetCurrentAudioServer,
+			InArgs: []string{"serverName"},
+		},
 	}
 }
 func (v *Meter) GetExportedMethods() dbusutil.ExportedMethods {
