@@ -11,14 +11,21 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	appmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.application1"
+	newAppmanager "github.com/linuxdeepin/go-dbus-factory/session/org.desktopspec.applicationmanager1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 const (
 	gsSchemaDefaultTerminal = "com.deepin.desktop.default-applications.terminal"
 	gsKeyAppId              = "app-id"
 	gsKeyExec               = "exec"
+)
+
+const (
+	appManagerDBusServiceName = "org.desktopspec.ApplicationManager1"
+	appManagerDBusPath        = "/org/desktopspec/ApplicationManager1"
 )
 
 var terms = []string{
@@ -57,17 +64,47 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			appManager := appmanager.NewManager(sessionBus)
-			filename := appInfo.GetFileName()
+
 			workDir, err := os.Getwd()
 			if err != nil {
 				log.Println("warning: failed to get work dir:", err)
 			}
+
 			options := map[string]dbus.Variant{
 				"path": dbus.MakeVariant(workDir),
 			}
-			err = appManager.LaunchAppWithOptions(0, filename, 0,
-				nil, options)
+
+			session, err := dbusutil.NewSessionService()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			has, err := session.NameHasOwner(appManagerDBusServiceName)
+			if err != nil {
+				log.Println("warning: call name has owner error:", err)
+
+			}
+			if has {
+				obj, err := desktopappinfo.GetDBusObjectFromAppDesktop(appId, appManagerDBusServiceName, appManagerDBusPath)
+				if err != nil {
+					log.Println("warning: get dbus object error:", err)
+				}
+
+				appManagerAppObj, err := newAppmanager.NewApplication(sessionBus, obj)
+				if err != nil {
+					log.Println("warning: new appManager error:", err)
+				}
+
+				_, err = appManagerAppObj.Launch(0, "", []string{}, options)
+				if err != nil {
+					log.Println("warning: launch app error:", err)
+				}
+			} else {
+				appManager := appmanager.NewManager(sessionBus)
+				err = appManager.LaunchAppWithOptions(0, appInfo.GetFileName(), 0,
+					nil, options)
+			}
+
 			if err != nil {
 				log.Println(err)
 				runFallbackTerm()
