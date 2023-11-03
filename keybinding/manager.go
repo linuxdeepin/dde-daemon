@@ -7,6 +7,7 @@ package keybinding
 import (
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -21,6 +22,7 @@ import (
 	lockfront "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.lockfront1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.shutdownfront1"
+	newAppmanager "github.com/linuxdeepin/go-dbus-factory/session/org.desktopspec.applicationmanager1"
 	airplanemode "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.airplanemode1"
 	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
 	keyevent "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.keyevent1"
@@ -28,6 +30,7 @@ import (
 	systeminfo "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.systeminfo1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
@@ -78,6 +81,25 @@ const ( // power按键事件的响应
 	powerActionHibernate
 	powerActionTurnOffScreen
 	powerActionShowUI
+)
+
+const (
+	appManagerDBusServiceName = "org.desktopspec.ApplicationManager1"
+	appManagerDBusPath        = "/org/desktopspec/ApplicationManager1"
+)
+
+const (
+	KeyType        = "Type"
+	KeyVersion     = "Version"
+	KeyName        = "Name"
+	KeyGenericName = "GenericName"
+	KeyNoDisplay   = "NoDisplay"
+	KeyIcon        = "Icon"
+	KeyExec        = "Exec"
+	KeyPath        = "Path"
+	KeyTerminal    = "Terminal"
+	KeyMimeType    = "MimeType"
+	KeyActions     = "Actions"
 )
 
 var _useWayland bool
@@ -149,6 +171,7 @@ type Manager struct {
 
 	// dsg config
 	wifiControlEnable bool
+	useNewAppManager  bool
 	needXrandrQDevice []string
 
 	dmiInfo systeminfo.DMIInfo
@@ -226,6 +249,14 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		}
 	}
 
+	hasOwner, err := service.NameHasOwner(appManagerDBusServiceName)
+	if err != nil {
+		logger.Warning("failed to call NameHasOwner:", err)
+	}
+	if hasOwner {
+		m.useNewAppManager = true
+	}
+
 	return &m, nil
 }
 
@@ -295,7 +326,10 @@ func (m *Manager) init() {
 	m.audioController = NewAudioController(sessionBus, m.backlightHelper)
 	m.mediaPlayerController = NewMediaPlayerController(m.systemSigLoop, sessionBus)
 
-	m.appManager = appmanager.NewManager(sessionBus)
+	if !m.useNewAppManager {
+		m.appManager = appmanager.NewManager(sessionBus)
+	}
+
 	m.airplane = airplanemode.NewAirplaneMode(sysBus)
 	m.sessionManager = sessionmanager.NewSessionManager(sessionBus)
 	m.keyboard = inputdevices.NewKeyboard(sessionBus)
@@ -1101,20 +1135,95 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 		return exec.Command("/bin/sh", "-c", cmd).Run()
 	}
 
-	logger.Debug("startdde run cmd:", cmd)
-	return m.appManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
-}
+	logger.Debug("exec run cmd:", cmd)
 
-func (m *Manager) handleCheckCamera() error {
-	cmd := "deepin-camera"
-	if checkProRunning(cmd) {
-		cmd = "killall deepin-camera"
+	if m.useNewAppManager {
+		desktopExt := ".desktop"
+		name := strings.TrimSuffix(filepath.Base(cmd), path.Ext(cmd))
+		desktopFileName := "daemon-keybinding-" + name + desktopExt
+
+		_, err := os.Stat(basedir.GetUserDataDir() + "/applications/" + desktopFileName)
+		// 如果对应命令的desktop文件不存在，需要新建desktop文件
+		if os.IsNotExist(err) {
+			desktopInfoMap := map[string]dbus.Variant{
+				KeyExec: dbus.MakeVariant(map[string]string{
+					"default": cmd,
+				}),
+				KeyIcon: dbus.MakeVariant(map[string]string{
+					"default-icon": "",
+				}),
+				KeyMimeType: dbus.MakeVariant([]string{""}),
+				KeyName: dbus.MakeVariant(map[string]string{
+					"default": name,
+				}),
+				KeyTerminal:  dbus.MakeVariant(false),
+				KeyType:      dbus.MakeVariant("Application"),
+				KeyVersion:   dbus.MakeVariant(1),
+				KeyNoDisplay: dbus.MakeVariant(true),
+			}
+
+			appManager := newAppmanager.NewManager(m.sessionSigLoop.Conn())
+			desktopFileName, err = appManager.AddUserApplication(0, desktopInfoMap, desktopFileName)
+			if err != nil {
+				logger.Warning("adding user application error: ", err)
+				return err
+			}
+		}
+
+		obj, err := desktopappinfo.GetDBusObjectFromAppDesktop(desktopFileName, appManagerDBusServiceName, appManagerDBusPath)
+		if err != nil {
+			logger.Warning("get dbus object error:", err)
+			return err
+		}
+
+		appManagerAppObj, err := newAppmanager.NewApplication(m.sessionSigLoop.Conn(), obj)
+		if err != nil {
+			return err
+		}
+
+		_, err = appManagerAppObj.Launch(0, "", []string{}, make(map[string]dbus.Variant))
+
+		if err != nil {
+			logger.Warningf("launch keybinding cmd %s error: %v", cmd, err)
+			return err
+		}
+	} else {
+		err := m.appManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
+		if err != nil {
+			logger.Warningf("launch keybinding cmd %s error: %v", cmd, err)
+			return err
+		}
 	}
-	return m.appManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
+
+	return nil
 }
 
 func (m *Manager) runDesktopFile(desktop string) error {
-	return m.appManager.LaunchApp(0, desktop, 0, []string{})
+	if m.useNewAppManager {
+		obj, err := desktopappinfo.GetDBusObjectFromAppDesktop(desktop, appManagerDBusServiceName, appManagerDBusPath)
+		if err != nil {
+			logger.Warning("get dbus object error: ", err)
+			return err
+		}
+
+		appManagerAppObj, err := newAppmanager.NewApplication(m.sessionSigLoop.Conn(), obj)
+		if err != nil {
+			return err
+		}
+
+		_, err = appManagerAppObj.Launch(0, "", []string{}, make(map[string]dbus.Variant))
+		if err != nil {
+			logger.Warning("failed to launch application", desktop)
+			return err
+		}
+	} else {
+		err := m.appManager.LaunchApp(0, desktop, 0, []string{})
+		if err != nil {
+			logger.Warning("failed to launch application", desktop)
+		}
+	}
+
+	return nil
 }
 
 func (m *Manager) eliminateKeystrokeConflict() {
