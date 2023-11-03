@@ -149,7 +149,8 @@ func (m *Manager) handleWakeupDDELowPowerCheck() {
 			m.setPropOnBattery(onBattery)
 		}
 
-		if !onBattery {
+		// 使用电池
+		if onBattery {
 			percentage, err := power.BatteryPercentage().Get(0)
 			if err != nil {
 				logger.Warning(err)
