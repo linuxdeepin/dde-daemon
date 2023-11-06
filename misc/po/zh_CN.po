@@ -64,6 +64,18 @@ msgstr "用户名长度必须介于3到32个字符之间"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "“%s”用户为之前已存在的用户，原数据已同步"
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr "音频服务切换失败，请稍后重试"
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr "正在切换音频服务，请稍候…"
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr "音频服务切换成功，请注销后重新登录"
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
