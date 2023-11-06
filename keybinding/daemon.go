@@ -76,8 +76,13 @@ func (d *Daemon) Start() error {
 		m.listenSystemPlatformChanged()
 
 		m.eliminateKeystrokeConflict()
-		m.shortcutManager.EventLoop()
-		m.shortcutManager.RecordEventLoop()
+
+		for ch := range m.smInit {
+			if ch {
+				go m.shortcutManager.EventLoop()
+				go m.shortcutManager.RecordEventLoop()
+			}
+		}
 	}()
 
 	return nil
