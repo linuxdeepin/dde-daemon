@@ -151,9 +151,8 @@ type Manager struct {
 	wifiControlEnable bool
 	needXrandrQDevice []string
 
-	configManagerPath dbus.ObjectPath
-
 	dmiInfo systeminfo.DMIInfo
+	smInit  chan bool
 
 	//nolint
 	signals *struct {
@@ -206,6 +205,8 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		m.login1Manager = login1.NewManager(sysBus)
 	}
 
+	m.smInit = make(chan bool, 10)
+
 	m.init()
 
 	m.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
@@ -243,6 +244,7 @@ func (m *Manager) init() {
 	m.keyEvent = keyevent.NewKeyEvent(sysBus)
 
 	m.shortcutManager = shortcuts.NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
+	m.smInit <- m.shortcutManager != nil
 
 	// when session is locked, we need handle some keyboard function event
 	m.lockFront = lockfront.NewLockFront(sessionBus)

@@ -182,6 +182,7 @@ func (m *Manager) initHandlers() {
 
 	if m.shortcutManager == nil {
 		m.shortcutManager = NewShortcutManager(m.conn, m.keySymbols, m.handleKeyEvent)
+		m.smInit <- m.shortcutManager != nil
 	}
 
 	m.shortcutManager.SetAllModKeysReleasedCallback(func() {
