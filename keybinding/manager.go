@@ -25,6 +25,7 @@ import (
 	systeminfo "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.systeminfo"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	DisplayManager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.DisplayManager"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -127,6 +128,7 @@ type Manager struct {
 	waylandOutputMgr          kwayland.OutputManagement
 	login1Manager             login1.Manager
 	keyEvent                  keyevent.KeyEvent
+	displayManager            DisplayManager.DisplayManager
 	specialKeycodeBindingList map[SpecialKeycodeMapKey]func()
 
 	// controllers
@@ -227,7 +229,8 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		logger.Warning("failed to connect signal PrepareForSleep:", err)
 	}
 	m.prepareForSleep, _ = m.login1Manager.PreparingForSleep().Get(0)
-
+	m.displayManager = DisplayManager.NewDisplayManager(sysBus)
+	m.shutdownFront = shutdownfront.NewShutdownFront(sessionBus)
 	m.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
 	m.NumLockState.Bind(m.gsKeyboard, gsKeyNumLockState)
 	m.ShortcutSwitchLayout.Bind(m.gsKeyboard, gsKeyShortcutSwitchLayout)

@@ -7,6 +7,7 @@ package power
 import (
 	"math"
 	"os/exec"
+	"strings"
 	"time"
 
 	dbus "github.com/godbus/dbus"
@@ -284,24 +285,80 @@ func (m *Manager) canShutdown() bool {
 	return can
 }
 
+// 正常关机流程，存在 block or delay shutdown 或多用户时，显示shutdown界面，其他情况，直接关机
 func (m *Manager) doShutdown() {
-	sessionManager := m.helper.SessionManager
-	can, err := sessionManager.CanShutdown(0)
+	if m.hasShutdownInhibit() || m.hasMultipleDisplaySession() {
+		logger.Info("exist shutdown inhibit(delay or block) or multiple display session")
+		err := m.ddeShutdown.Shutdown(0)
+		if err != nil {
+			logger.Warning(err)
+		}
+	} else {
+		logger.Debug("Shutdown")
+		err := m.helper.SessionManager.RequestShutdown(0)
+		if err != nil {
+			logger.Warning("failed to Shutdown:", err)
+		}
+	}
+}
+
+func (m *Manager) hasShutdownInhibit() bool {
+	// 先检查是否有delay 或 block shutdown的inhibitor
+	inhibitors, err := m.objLogin.ListInhibitors(0)
+	if err != nil {
+		logger.Warning("failed to call login ListInhibitors:", err)
+	} else {
+		for _, inhibit := range inhibitors {
+			logger.Infof("inhibit is: %+v", inhibit)
+			if strings.Contains(inhibit.What, "shutdown") {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// 定时关机流程: 存在block关机项时，显示shutdown界面，无block时，直接关机，delay情况进行延迟关机
+func (m *Manager) doAutoShutdown() {
+	if m.hasShutdownBlock() {
+		err := m.ddeShutdown.Shutdown(0)
+		if err != nil {
+			logger.Warning(err)
+		}
+	} else {
+		logger.Debug("Shutdown")
+		err := m.helper.SessionManager.RequestShutdown(0)
+		if err != nil {
+			logger.Warning("failed to Shutdown:", err)
+		}
+	}
+}
+
+func (m *Manager) hasShutdownBlock() bool {
+	// 检查是否有block shutdown的inhibitor
+	inhibitors, err := m.objLogin.ListInhibitors(0)
+	if err != nil {
+		logger.Warning("failed to call login ListInhibitors:", err)
+	} else {
+		for _, inhibit := range inhibitors {
+			logger.Infof("inhibit is: %+v", inhibit)
+			if strings.Contains(inhibit.What, "shutdown") && inhibit.Mode == "block" {
+				logger.Info("exist shutdown block")
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (m *Manager) hasMultipleDisplaySession() bool {
+	// 检查是否有多个图形session,有多个图形session就需要显示阻塞界面
+	sessions, err := m.displayManager.Sessions().Get(0)
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
-
-	if !can {
-		logger.Info("can not Shutdown")
-		return
-	}
-
-	logger.Debug("Shutdown")
-	err = sessionManager.RequestShutdown(0)
-	if err != nil {
-		logger.Warning("failed to Shutdown:", err)
-	}
+	return len(sessions) >= 2
 }
 
 func (m *Manager) canHibernate() bool {
@@ -528,7 +585,7 @@ func (m *Manager) initGSettingsConnectChanged() {
 			notifyString := getNotifyString(settingKeyBatteryPressPowerBtnAction, value)
 			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyHighPerformanceEnabled:
-			//根据systemPower::IsHighPerformanceEnabled GSetting::settingKeyHighPerformanceEnabled
+			// 根据systemPower::IsHighPerformanceEnabled GSetting::settingKeyHighPerformanceEnabled
 			bSettingKeyHighPerformanceEnabled := m.settings.GetBoolean(settingKeyHighPerformanceEnabled)
 			if bSettingKeyHighPerformanceEnabled == m.gsHighPerformanceEnabled {
 				return

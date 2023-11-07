@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	dbus "github.com/godbus/dbus"
@@ -190,9 +191,35 @@ func (m *Manager) canShutdown() bool {
 	return can
 }
 
+func (m *Manager) hasShutdownInhibit() bool {
+	// 先检查是否有delay 或 block shutdown的inhibitor
+	inhibitors, err := m.login1Manager.ListInhibitors(0)
+	if err != nil {
+		logger.Warning("failed to call login ListInhibitors:", err)
+	} else {
+		for _, inhibit := range inhibitors {
+			logger.Infof("inhibit is: %+v", inhibit)
+			if strings.Contains(inhibit.What, "shutdown") {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (m *Manager) hasMultipleDisplaySession() bool {
+	// 检查是否有多个图形session,有多个图形session就需要显示阻塞界面
+	sessions, err := m.displayManager.Sessions().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return len(sessions) >= 2
+}
+
 func (m *Manager) systemShutdown() {
-	// 快捷键关机流程：无论是否可以关机，都要通过sessionManager尝试关机，如果不能关机，那么会显示关机阻塞界面；
-	// 如果是锁定状态，那么不需要后端进行关机响应，前端会显示关机或者关机阻塞界面;
+	// 如果是锁定状态，那么不需要后端进行关机响应，前端会显示关机或者关机阻塞界面；
+	// 快捷键关机流程：判断是否存在多用户或任何shutdown阻塞项(block or delay),存在则跳转dde-shutdown界面，不存在进行sessionManager的注销
 	if !m.canShutdown() {
 		logger.Info("can not Shutdown")
 	}
@@ -207,10 +234,18 @@ func (m *Manager) systemShutdown() {
 		return
 	}
 
-	logger.Debug("keybinding start request SessionManager shutdown")
-	err = m.sessionManager.RequestShutdown(0)
-	if err != nil {
-		logger.Warning("failed to Shutdown:", err)
+	if m.hasShutdownInhibit() || m.hasMultipleDisplaySession() {
+		logger.Info("exist shutdown inhibit(delay or block) or multiple display session")
+		err := m.shutdownFront.Shutdown(0)
+		if err != nil {
+			logger.Warning(err)
+		}
+	} else {
+		logger.Debug("keybinding start request SessionManager shutdown")
+		err := m.sessionManager.RequestShutdown(0)
+		if err != nil {
+			logger.Warning("failed to Shutdown:", err)
+		}
 	}
 }
 

@@ -18,10 +18,12 @@ import (
 	"github.com/linuxdeepin/dde-daemon/session/common"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
 	calendar "github.com/linuxdeepin/go-dbus-factory/com.deepin.dataserver.Calendar"
+	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	systemPower "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	wm "github.com/linuxdeepin/go-dbus-factory/com.deepin.wm"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	DisplayManager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.DisplayManager"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
@@ -84,6 +86,9 @@ type Manager struct {
 	systemPower          systemPower.Power
 	display              display.Display
 	calendar             calendar.HuangLi
+	objLogin             login1.Manager
+	ddeShutdown          shutdownfront.ShutdownFront
+	displayManager       DisplayManager.DisplayManager
 	lightSensorEnabled   bool
 
 	sessionManager     sessionmanager.SessionManager
@@ -214,6 +219,9 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	sessionBus := service.Conn()
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
+	m.objLogin = login1.NewManager(systemBus)
+	m.ddeShutdown = shutdownfront.NewShutdownFront(sessionBus)
+	m.displayManager = DisplayManager.NewDisplayManager(systemBus)
 	m.inhibitFd = -1
 	m.prepareSuspend = suspendStateUnknown
 
@@ -722,9 +730,7 @@ func (m *Manager) scheduledShutdownSwitch(state bool, countdownContinue bool) {
 						logger.Warning("shut down now!")
 						m.actionShutdown(false)
 						// 执行关机
-						if m.canShutdown() {
-							m.doShutdown()
-						}
+						m.doAutoShutdown()
 						return
 					}
 					m.shutdownCountdownNotify(count, playSound)
@@ -790,9 +796,7 @@ func (m *Manager) shutdownCountdownNotify(count int, playSound bool) {
 		if actionKey == "Shutdown" {
 			m.actionShutdown(false)
 			// 执行关机
-			if m.canShutdown() {
-				m.doShutdown()
-			}
+			m.doAutoShutdown()
 		}
 	})
 }
