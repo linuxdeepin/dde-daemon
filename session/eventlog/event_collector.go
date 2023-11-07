@@ -5,8 +5,8 @@
 package eventlog
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -14,6 +14,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
+	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.sessionwatcher"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	dutils "github.com/linuxdeepin/go-lib/utils"
@@ -36,6 +37,7 @@ var (
 	userExpPath    = "/var/public/deepin-user-experience/user"
 	defaultExpPath = "/etc/deepin/deepin-user-experience"
 	varTmpExpPath  = "/var/tmp/deepin/deepin-user-experience/state/"
+	expPathV0      = "/var/tmp/exp-state-v0"
 )
 
 const (
@@ -51,6 +53,8 @@ type EventLog struct {
 	propMu                   sync.Mutex
 	fileMu                   sync.Mutex
 	currentUserVarTmpExpPath string
+	sessionSigLoop           *dbusutil.SignalLoop
+	sessionWatcher           sessionwatcher.SessionWatcher
 }
 
 func newEventLog(service *dbusutil.Service, fn writeEventLogFunc) *EventLog {
@@ -59,6 +63,20 @@ func newEventLog(service *dbusutil.Service, fn writeEventLogFunc) *EventLog {
 		writeEventLogFn:          fn,
 		currentUserVarTmpExpPath: path.Join(varTmpExpPath, fmt.Sprintf("%v/info", os.Getuid())),
 	}
+	m.sessionWatcher = sessionwatcher.NewSessionWatcher(service.Conn())
+
+	m.sessionSigLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
+	m.sessionSigLoop.Start()
+	m.sessionWatcher.InitSignalExt(m.sessionSigLoop, true)
+	_ = m.sessionWatcher.IsActive().ConnectChanged(func(hasValue, active bool) {
+		if !hasValue {
+			return
+		}
+		if active {
+			logger.Info("start sync exp state")
+			m.syncUserExpState()
+		}
+	})
 	return m
 }
 
@@ -93,24 +111,38 @@ func (e *EventLog) ReportLog(log string) *dbus.Error {
 }
 
 func (e *EventLog) syncUserExpState() {
-	var state bool
-	if dutils.IsFileExist(e.currentUserVarTmpExpPath) {
+	state := false
+	if dutils.IsFileExist(expPathV0) {
+		state = e.getV0ExpState()
+	} else if dutils.IsFileExist(e.currentUserVarTmpExpPath) {
 		// 从1054标准路径获取
 		state = e.getUserExpStateFromVarTmpExpPath()
+	} else if dutils.IsFileExist("/var/tmp/deepin/deepin-user-experience/state") { // 非当前用户创建的state/uid/info 时
+		infos, err := ioutil.ReadDir("/var/tmp/deepin/deepin-user-experience/state")
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			for _, info := range infos {
+				// 只会有一个文件
+				content, err := ioutil.ReadFile(filepath.Join("/var/tmp/deepin/deepin-user-experience/state", info.Name(), "info"))
+				if err != nil {
+					logger.Warning(err)
+				} else {
+					state = string(content) == enableUserExp
+				}
+				break
+			}
+		}
 	} else if dutils.IsFileExist(userExpPath) {
 		// 从历史版本获取
 		state = e.getUserExpStateFromUserExpPath()
-		err := e.setUserExpFileState(state)
-		if err != nil {
-			logger.Warning(err)
-		}
 	} else {
 		// 从安装器文件获取
 		state = e.getUserExpStateFromDefaultPath()
-		err := e.setUserExpFileState(state)
-		if err != nil {
-			logger.Warning(err)
-		}
+	}
+	err := e.setUserExpFileState(state)
+	if err != nil {
+		logger.Warning(err)
 	}
 	e.setPropEnabled(state)
 }
@@ -125,12 +157,6 @@ func (e *EventLog) getUserExpStateFromUserExpPath() bool {
 	}
 	if len(content) == 0 {
 		// 如果user的内容是空的，则默认为false，并将状态写回user
-		e.fileMu.Unlock()
-		err = e.setUserExpFileState(false)
-		if err != nil {
-			logger.Warning(err)
-		}
-		e.fileMu.Lock()
 		return false
 	}
 	cfg := &SysCfg{}
@@ -165,10 +191,10 @@ func (e *EventLog) getUserExpStateFromDefaultPath() bool {
 func (e *EventLog) setUserExpFileState(state bool) error {
 	e.fileMu.Lock()
 	defer e.fileMu.Unlock()
-	if !dutils.IsFileExist(e.currentUserVarTmpExpPath) {
-		err := os.MkdirAll(filepath.Dir(e.currentUserVarTmpExpPath), 0777)
-		if err != nil {
-			return err
+	if dutils.IsFileExist(expPathV0) {
+		oldState := e.getV0ExpState()
+		if oldState == state {
+			return nil
 		}
 	}
 	var content []byte
@@ -177,7 +203,21 @@ func (e *EventLog) setUserExpFileState(state bool) error {
 	} else {
 		content = []byte(disableUserExp)
 	}
-	return ioutil.WriteFile(e.currentUserVarTmpExpPath, content, 0666)
+	err := ioutil.WriteFile(expPathV0, content, 0666)
+	if err != nil {
+		return err
+	}
+	_ = os.Chmod(expPathV0, 0666)
+	return nil
+}
+
+func (e *EventLog) getV0ExpState() bool {
+	content, err := ioutil.ReadFile(expPathV0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return string(content) == enableUserExp
 }
 
 func (e *EventLog) getUserExpStateFromVarTmpExpPath() bool {
@@ -189,13 +229,6 @@ func (e *EventLog) getUserExpStateFromVarTmpExpPath() bool {
 		return false
 	}
 	if len(content) == 0 {
-		// 如果info的内容是空的，则默认为false，并将状态写回user
-		e.fileMu.Unlock()
-		err = e.setUserExpFileState(false)
-		if err != nil {
-			logger.Warning(err)
-		}
-		e.fileMu.Lock()
 		return false
 	}
 

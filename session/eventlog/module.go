@@ -123,6 +123,7 @@ func (m *Module) Stop() error {
 			logger.Warning(err)
 		}
 	}
+	m.eventlog.sessionSigLoop.Stop()
 	return stop()
 }
 
