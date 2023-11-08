@@ -86,10 +86,15 @@ func resizeImage(filename, cacheDir string) (outFilename, ext string, isResized 
 	}
 
 	// tmp-###
-	outFilename = fh.Name()
+	outFilename = fh.Name() + "." + ext
 	err = fh.Close()
 	if err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, "failed to close temp file:", err)
+	}
+	// 删除临时文件
+	err = os.Remove(fh.Name())
+	if err != nil {
+		_, _ = fmt.Fprintln(os.Stderr, "failed to remove temp file:", err)
 	}
 
 	if float64(imgWidth)/float64(imgHeight) > float64(stdWidth)/float64(stdHeight) {
