@@ -209,14 +209,12 @@ func getTPadInfos(force, check bool) Touchpads {
 	for _, info := range getDeviceInfos(false) {
 		// 处理触控板被识别为PS2鼠标的情况
 		if check && info.Type == common.DevTypeMouse && isTPadPS2Mouse(info.Name) {
-			info.Type = common.DevTypeTouchpad
 			tmp, err := dxinput.NewTouchpadFromDevInfo(info)
 			if err != nil {
 				logger.Warning(err)
 			} else {
 				_tpadInfos = append(_tpadInfos, getTouchpadInfoByDxTouchpad(tmp))
 			}
-			info.Type = common.DevTypeMouse
 			continue
 		}
 		if info.Type == common.DevTypeTouchpad {
