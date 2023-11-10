@@ -206,6 +206,11 @@ func (m *Manager) DeleteUserTimezone(zone string) *dbus.Error {
 	if deleted || hasNil {
 		m.UserTimezones = newList
 		m.service.EmitPropertyChanged(m, "UserTimezones", m.UserTimezones)
+		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsKeyTimezoneList, dbus.MakeVariant(m.UserTimezones))
+		if err != nil {
+			logger.Warning(err)
+			return dbusutil.ToError(err)
+		}
 	}
 	return nil
 }
