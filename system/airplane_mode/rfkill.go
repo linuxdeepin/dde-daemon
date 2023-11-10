@@ -106,8 +106,8 @@ func (mgr *Manager) handleBTRfkillEvent(event *RfkillEvent) {
 			}
 		}
 	}
-	btBlocked := btCnt != 0 && (btCnt == blockBtCnt)
-	btSoftBlocked := btCnt != 0 && (btCnt == softBtBlockCnt)
+	btBlocked := btCnt == blockBtCnt
+	btSoftBlocked := btCnt == softBtBlockCnt
 	mgr.setPropHasAirplaneMode(btCnt != 0 || mgr.hasNmWirelessDevices)
 	mgr.setPropBluetoothEnabled(btBlocked)
 	logger.Debug("refresh bluetooth blocked state:", btBlocked)
