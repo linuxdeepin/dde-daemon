@@ -1062,7 +1062,6 @@ func (m *Manager) startSysPowersave() {
 //需求: 为了提高启动速度，登录前将性能模式设置为performance
 //① 为了减小耦合性，仅写文件(doSetCpuGovernor)，不修改后端相关属性
 func (m *Manager) enablePerformanceInBoot() bool {
-	m.IsInBootTime = true
 	if m.Mode == "performance" {
 		return false
 	}
@@ -1073,5 +1072,6 @@ func (m *Manager) enablePerformanceInBoot() bool {
 		logger.Warning(err)
 		return false
 	}
+	m.IsInBootTime = true
 	return true
 }
