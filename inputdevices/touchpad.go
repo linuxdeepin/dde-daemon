@@ -14,6 +14,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus"
+	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.inputdevices"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
@@ -82,6 +83,9 @@ type Touchpad struct {
 	devInfos     Touchpads
 	setting      *gio.Settings
 	mouseSetting *gio.Settings
+
+	systemConn    *dbus.Conn
+	systemSigLoop *dbusutil.SignalLoop
 }
 
 func newTouchpad(service *dbusutil.Service) *Touchpad {
@@ -110,6 +114,13 @@ func newTouchpad(service *dbusutil.Service) *Touchpad {
 	tpad.DragThreshold.Bind(tpad.mouseSetting, mouseKeyDragThreshold)
 
 	tpad.updateDXTpads()
+
+	if conn, err := dbus.SystemBus(); err != nil {
+		logger.Warning(err)
+	} else {
+		tpad.systemConn = conn
+		tpad.systemSigLoop = dbusutil.NewSignalLoop(conn, 10)
+	}
 
 	return tpad
 }
@@ -161,6 +172,27 @@ func (tpad *Touchpad) init() {
 		return
 	}
 
+	if tpad.systemConn != nil {
+		sysTouchPad, err := inputdevices.NewTouchpad(tpad.systemConn, "/com/deepin/system/InputDevices/Touchpad")
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			sysTouchPad.InitSignalExt(tpad.systemSigLoop, true)
+			sysTouchPad.Enable().ConnectChanged(func(hasValue bool, value bool) {
+				if !hasValue {
+					return
+				}
+				tpad.TPadEnable.Set(value)
+				tpad.enable(tpad.TPadEnable.Get())
+			})
+			if enabled, err := sysTouchPad.Enable().Get(0); err != nil {
+				logger.Warning(err)
+			} else {
+				tpad.TPadEnable.Set(enabled)
+			}
+		}
+	}
+
 	tpad.enable(tpad.TPadEnable.Get())
 	tpad.enableLeftHanded()
 	tpad.enableNaturalScroll()
@@ -173,6 +205,10 @@ func (tpad *Touchpad) init() {
 	tpad.disableWhileTyping()
 	tpad.enablePalmDetect()
 	tpad.setPalmDimensions()
+
+	if tpad.systemSigLoop != nil {
+		tpad.systemSigLoop.Start()
+	}
 }
 
 func (tpad *Touchpad) handleDeviceChanged() {
@@ -420,6 +456,12 @@ func (tpad *Touchpad) setPalmDimensions() {
 		if err != nil {
 			logger.Warning("[setPalmDimensions] failed to set:", dev.Id, width, z, err)
 		}
+	}
+}
+
+func (tpad *Touchpad) destroy() {
+	if tpad.systemSigLoop != nil {
+		tpad.systemSigLoop.Stop()
 	}
 }
 

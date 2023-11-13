@@ -111,6 +111,11 @@ func (*Daemon) Stop() error {
 		_manager.wacom.destroy()
 		_manager.wacom = nil
 	}
+
+	if _manager.tpad != nil {
+		_manager.tpad.destroy()
+		_manager.tpad = nil
+	}
 	_manager = nil
 
 	if globalWayland {
