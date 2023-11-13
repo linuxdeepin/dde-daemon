@@ -16,9 +16,9 @@ const (
 	dbusPath      = "/org/deepin/dde/LangSelector1"
 	dbusInterface = "org.deepin.dde.LangSelector1"
 
-	localeIconStart    = "notification-change-language-start"
-	localeIconFailed   = "notification-change-language-failed"
-	localeIconFinished = "notification-change-language-finished"
+	localeIconStart    = "notification-change-start"
+	localeIconFailed   = "notification-change-failed"
+	localeIconFinished = "notification-change-finished"
 )
 
 // Set user desktop environment locale, the new locale will work after relogin.
