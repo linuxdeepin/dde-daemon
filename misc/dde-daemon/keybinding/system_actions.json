@@ -25,6 +25,10 @@
             "Key": "lock-screen"
         },
         {
+            "Action": "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option $originmap",
+            "Key": "lock-screen-wayland"
+        },
+        {
             "Action": "dbus-send --print-reply --dest=com.deepin.dde.shutdownFront /com/deepin/dde/shutdownFront com.deepin.dde.shutdownFront.Show",
             "Key": "logout"
         },

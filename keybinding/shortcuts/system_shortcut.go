@@ -74,6 +74,9 @@ func getSystemActionCmd(id string) string {
 			return cmd
 		}
 	}
+	if id == "lock-screen" && _useWayland {
+		id = "lock-screen-wayland"
+	}
 	return defaultSysActionCmdMap[id]
 }
 
@@ -83,6 +86,8 @@ var defaultSysActionCmdMap = map[string]string{
 	"terminal":               "/usr/lib/deepin-daemon/default-terminal",
 	"terminal-quake":         "deepin-terminal --quake-mode",
 	"lock-screen":            "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option $originmap",
+	//wayland不能设置XF86Ungrab，否则会导致Bug-224309
+	"lock-screen-wayland":    "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option $originmap",
 	"logout":                 "dbus-send --print-reply --dest=com.deepin.dde.shutdownFront /com/deepin/dde/shutdownFront com.deepin.dde.shutdownFront.Show",
 	"deepin-screen-recorder": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord",
 	"system-monitor":         "/usr/bin/deepin-system-monitor",
