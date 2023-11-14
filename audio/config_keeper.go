@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
@@ -82,10 +83,22 @@ func NewCardConfig(name string) *CardConfig {
 }
 
 func NewPortConfig(name string) *PortConfig {
+	pname := strings.ToLower(name)
+	volume := 0.5
+	if strings.Contains(pname, "input") {
+		volume = defaultInputVolume
+	} else if strings.Contains(pname, "output") {
+		if strings.Contains(pname, "headphone") || strings.Contains(pname, "headset") {
+			volume = defaultHeadphoneOutputVolume
+		} else {
+			volume = defaultOutputVolume
+		}
+
+	}
 	return &PortConfig{
 		Name:           name,
 		Enabled:        true,
-		Volume:         0.5,
+		Volume:         volume,
 		IncreaseVolume: false,
 		Balance:        0.0,
 		ReduceNoise:    defaultReduceNoise,

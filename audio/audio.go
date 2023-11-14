@@ -209,6 +209,7 @@ func newAudio(service *dbusutil.Service) *Audio {
 	a.settings = gio.NewSettings(gsSchemaAudio)
 	a.settings.Reset(gsKeyInputVolume)
 	a.settings.Reset(gsKeyOutputVolume)
+	a.settings.Reset(gsKeyHeadphoneOutputVolume)
 	a.IncreaseVolume.Bind(a.settings, gsKeyVolumeIncrease)
 	a.ReduceNoise = false
 	a.emitPropChangedReduceNoise(a.ReduceNoise)
