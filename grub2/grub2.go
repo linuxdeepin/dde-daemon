@@ -315,7 +315,15 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 	if err != nil {
 		logger.Warning(err)
 	}
-
+	_, ok := params[grubDefault]
+	if !ok {
+		defaultParams, err := grub_common.LoadGrubParams()
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			params[grubDefault] = defaultParams[grubDefault]
+		}
+	}
 	g.applyParams(params)
 	g.modifyManager = newModifyManager()
 	g.modifyManager.g = g
