@@ -33,6 +33,7 @@ const (
 	dsettingsPowerSavingModeAutoWhenBatteryLow    = "powerSavingModeAutoWhenBatteryLow"
 	dsettingsPowerSavingModeBrightnessDropPercent = "powerSavingModeBrightnessDropPercent"
 	dsettingsPowerCompositorPowerSaveEnable       = "powerCompositorPowerSaveEnabled"
+	dsettingsPowerMappingConfig                   = "powerMappingConfig"
 	dsettingsMode                                 = "mode"
 )
 
@@ -158,6 +159,13 @@ const (
 	ddePerformance = "performance"
 	ddeLowBattery  = "lowBattery" // 内部使用，在对外暴露的时候，会切换成powersave
 )
+
+var _allPowerModeArray = []string{
+	ddePowerSave,
+	ddeBalance,
+	ddePerformance,
+	ddeLowBattery,
+}
 
 var _validPowerModeArray = strv.Strv{
 	ddePowerSave,
@@ -413,6 +421,29 @@ func (m *Manager) initDsgConfig() error {
 		m.setPropMode(value)
 	}
 
+	getPowerMappingConfig := func() {
+		data, err := dsPower.Value(0, dsettingsPowerMappingConfig)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		config := make(map[string]powerConfig)
+		configStr := data.Value().(string)
+		err = json.Unmarshal([]byte(configStr), &config)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+
+		for _, mode := range _allPowerModeArray {
+			c, ok := config[mode]
+			if ok {
+				_powerConfigMap[mode].DSPCConfig = c.DSPCConfig
+				_powerConfigMap[mode].CompositorConfig = c.CompositorConfig
+			}
+		}
+	}
+
 	getCompositorPowerSaveEnable := func(init bool) {
 		data, err := dsPower.Value(0, dsettingsPowerCompositorPowerSaveEnable)
 		if err != nil {
@@ -434,6 +465,7 @@ func (m *Manager) initDsgConfig() error {
 	getPowerSavingModeBrightnessDropPercent(true)
 	getMode(true)
 	getCompositorPowerSaveEnable(true)
+	getPowerMappingConfig()
 
 	dsPower.InitSignalExt(m.systemSigLoop, true)
 	_, _ = dsPower.ConnectValueChanged(func(key string) {
@@ -451,6 +483,8 @@ func (m *Manager) initDsgConfig() error {
 			getMode(false)
 		case dsettingsPowerCompositorPowerSaveEnable:
 			getCompositorPowerSaveEnable(false)
+		case dsettingsPowerMappingConfig:
+			getPowerMappingConfig()
 		default:
 			logger.Debug("Not process. valueChanged, key : ", key)
 		}

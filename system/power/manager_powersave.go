@@ -27,7 +27,7 @@ type powerConfig struct {
 }
 
 // TODO dconfig 或其他配置存储
-var _powerConfigMap = map[string]powerConfig{
+var _powerConfigMap = map[string]*powerConfig{
 	ddePerformance: {
 		DSPCConfig:             DSPCPerformance,
 		CompositorConfig:       compositorAuto,
@@ -59,12 +59,11 @@ func (m *Manager) setDSPCState(state DSPCMode) {
 	}
 }
 
-type compositorState uint8
+type compositorState string
 
 const (
-	compositorAuto    compositorState = iota // 开启特效，合成器为auto
-	compositorXRender                        // 开启特效，合成器为XRender
-	compositorDisable                        // 关闭特效
+	compositorAuto    compositorState = "auto"    // 开启特效，合成器为auto
+	compositorXRender compositorState = "XRender" // 开启特效，合成器为XRender
 )
 
 func (m *Manager) setCompositorState(state compositorState) {

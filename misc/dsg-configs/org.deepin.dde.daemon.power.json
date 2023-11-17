@@ -226,6 +226,18 @@
             "description": "next shutdown time",
             "permissions": "readwrite",
             "visibility": "public"
+        },
+        "powerMappingConfig":{
+            "value": "{\"balance\":{\"DSPCConfig\":\"performance\",\"CompositorConfig\":\"auto\"},\"lowBattery\":{\"DSPCConfig\":\"saving\",\"CompositorConfig\":\"XRender\"},\"performance\":{\"DSPCConfig\":\"performance\",\"CompositorConfig\":\"auto\"},\"powersave\":{\"DSPCConfig\":\"saving\",\"CompositorConfig\":\"auto\"}}",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power mapping config",
+            "name[zh_CN]": "电源性能模式映射配置",
+            "description": "四种功耗模式对应的配置",
+            "permissions": "readwrite",
+            "visibility": "public"
         }
     }
 }
