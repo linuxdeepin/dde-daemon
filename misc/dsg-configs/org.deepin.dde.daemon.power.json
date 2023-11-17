@@ -216,6 +216,16 @@
             "description": "是否在低电量模式时关闭部分窗管特效",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "lastShutdownTime": {
+            "value": 60,
+            "serial": 0,
+            "flags": [],
+            "name": "last shutdown time",
+            "name[zh_CN]": "上次关机时间",
+            "description": "last shutdown time",
+            "permissions": "readwrite",
+            "visibility": "public"
         }
     }
 }

@@ -48,6 +48,7 @@ const (
 	dsettingShutdownRepetition     = "shutdownRepetition"
 	dsettingCustomShutdownWeekDays = "customShutdownWeekDays"
 	dsettingShutdownCountdown      = "shutdownCountdown"
+	dsettingLastShutdownTime       = "lastShutdownTime"
 )
 
 const (
@@ -99,6 +100,7 @@ type Manager struct {
 	ScheduledShutdownState bool   `prop:"access:rw"`
 	ShutdownTime           string `prop:"access:rw"`
 	ShutdownRepetition     int    `prop:"access:rw"`
+	lastShutdownTime       int64
 	// dbusutil-gen: equal=byteSliceEqual
 	CustomShutdownWeekDays []byte `prop:"access:rw"`
 	shutdownTimer          *time.Timer
@@ -624,6 +626,8 @@ func (m *Manager) initDsg() {
 			}
 		case dsettingShutdownCountdown:
 			m.shutdownCountdown = int(data.Value().(float64))
+		case dsettingLastShutdownTime:
+			m.lastShutdownTime = int64(data.Value().(float64))
 		case dsettingShutdownRepetition:
 			if init {
 				m.ShutdownRepetition = int(data.Value().(float64))
@@ -658,6 +662,7 @@ func (m *Manager) initDsg() {
 	getDsPowerConfig(dsettingShutdownRepetition, true)
 	getDsPowerConfig(dsettingShutdownTime, true)
 	getDsPowerConfig(dsettingScheduledShutdownState, true)
+	getDsPowerConfig(dsettingLastShutdownTime, true)
 	m.dsPowerConfigManager.InitSignalExt(m.systemSigLoop, true)
 	m.dsPowerConfigManager.ConnectValueChanged(func(key string) {
 		logger.Info("DSG org.deepin.dde.daemon.power valueChanged, key : ", key)
@@ -676,6 +681,8 @@ func (m *Manager) savePowerDsgConfig(key string) (err error) {
 		value = tmp
 	case dsettingShutdownCountdown:
 		value = m.shutdownCountdown
+	case dsettingLastShutdownTime:
+		value = m.lastShutdownTime
 	case dsettingShutdownRepetition:
 		value = m.ShutdownRepetition
 	case dsettingShutdownTime:
@@ -865,6 +872,12 @@ func (m *Manager) checkShutdownTrigger() bool {
 		return false
 	}
 	targetTime = time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), targetTime.Hour(), targetTime.Minute(), 0, 0, currentTime.Location())
+	lastTime := time.Unix(m.lastShutdownTime, 0)
+	// 如果上一次关机时间小于1分钟，则说明已经重启过了，则不在弹出提示
+	subTime := targetTime.Sub(lastTime).Seconds()
+	if int(subTime) < m.shutdownCountdown {
+		return false
+	}
 	// 计算时间间隔
 	currentToStart := targetTime.Sub(currentTime)
 	logger.Warning("time to shut down:", int(currentToStart.Seconds()))

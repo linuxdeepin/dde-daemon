@@ -328,6 +328,8 @@ func (m *Manager) doAutoShutdown() {
 	} else {
 		logger.Debug("Shutdown")
 		err := m.helper.SessionManager.RequestShutdown(0)
+		m.lastShutdownTime = time.Now().Unix()
+		m.savePowerDsgConfig(dsettingLastShutdownTime)
 		if err != nil {
 			logger.Warning("failed to Shutdown:", err)
 		}
