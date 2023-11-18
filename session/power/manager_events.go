@@ -89,12 +89,9 @@ func (m *Manager) handleWakeup() {
 		}
 	}
 
-	m.delayInActive = true
-	time.AfterFunc(3*time.Second, func() {
-		m.delayInActive = false
-		playSound(soundutils.EventWakeup)
-		m.setDDEBlackScreenActive(false)
-	})
+	m.delayInActive = false
+	playSound(soundutils.EventWakeup)
+	m.setDDEBlackScreenActive(false)
 
 	if v := m.submodules[submodulePSP]; v != nil {
 		if psp := v.(*powerSavePlan); psp != nil {
