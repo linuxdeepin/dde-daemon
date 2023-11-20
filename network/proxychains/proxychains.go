@@ -32,7 +32,7 @@ type Manager struct {
 	service  *dbusutil.Service
 	PropsMu  sync.RWMutex
 	appProxy proxy.App
-	Enable    bool
+	Enable   bool
 	Type     string
 	IP       string
 	Port     uint32
@@ -147,7 +147,7 @@ func (m *Manager) saveConfig() error {
 	return cfg.save(m.jsonFile)
 }
 
-//nolint
+// nolint
 func (m *Manager) notifyChange(prop string, v interface{}) {
 	err := m.service.EmitPropertyChanged(m, prop, v)
 	if err != nil {
@@ -203,18 +203,16 @@ type InvalidParamError struct {
 	Param string
 }
 
-//nolint
+// nolint
 func (err InvalidParamError) Error() string {
 	return fmt.Sprintf("invalid param %s", err.Param)
 }
 
 func (m *Manager) SetEnable(enable bool) *dbus.Error {
-	if m.Enable != enable {
-		m.Enable = enable
-		m.notifyChange("Enable", enable)
-	}
+	m.Enable = enable
+	m.notifyChange("Enable", enable)
 	err := m.set(m.Type, m.IP, m.Port, m.User, m.Password)
-	return dbusutil.ToError(err);
+	return dbusutil.ToError(err)
 }
 
 func (m *Manager) Set(type0, ip string, port uint32, user, password string) *dbus.Error {
