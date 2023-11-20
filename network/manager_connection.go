@@ -153,40 +153,24 @@ func (conn *connection) updateProps() connectionData {
 		if isSettingWiredMacAddressExists(cdata) {
 			conn.HwAddress = convertMacAddressToString(getSettingWiredMacAddress(cdata))
 		} else {
-			hwAddr, err := nmGeneralGetDeviceHwAddr(conn.Path, true)
-			if err != nil {
-				logger.Warning("get mac address error", err)
-			}
-			conn.HwAddress = hwAddr
+			conn.HwAddress = ""
 		}
 		if isSettingWiredClonedMacAddressExists(cdata) {
 			conn.ClonedAddress = convertMacAddressToString(getSettingWiredClonedMacAddress(cdata))
 		} else {
-			hwAddr, err := nmGeneralGetDeviceHwAddr(conn.Path, true)
-			if err != nil {
-				logger.Warning("get mac address error", err)
-			}
-			conn.ClonedAddress = hwAddr
+			conn.ClonedAddress = ""
 		}
 	case nm.NM_SETTING_WIRELESS_SETTING_NAME:
 		conn.Ssid = decodeSsid(getSettingWirelessSsid(cdata))
 		if isSettingWirelessMacAddressExists(cdata) {
 			conn.HwAddress = convertMacAddressToString(getSettingWirelessMacAddress(cdata))
 		} else {
-			hwAddr, err := nmGeneralGetDeviceHwAddr(conn.Path, true)
-			if err != nil {
-				logger.Warning("get mac address error", err)
-			}
-			conn.HwAddress = hwAddr
+			conn.HwAddress = ""
 		}
 		if isSettingWirelessChannelExists(cdata) {
 			conn.ClonedAddress = convertMacAddressToString(getSettingWirelessClonedMacAddress(cdata))
 		} else {
-			hwAddr, err := nmGeneralGetDeviceHwAddr(conn.Path, true)
-			if err != nil {
-				logger.Warning("get mac address error", err)
-			}
-			conn.ClonedAddress = hwAddr
+			conn.ClonedAddress = ""
 		}
 		conn.Hidden = getSettingWirelessHidden(cdata)
 	}
