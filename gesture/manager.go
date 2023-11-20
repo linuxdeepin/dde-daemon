@@ -400,7 +400,8 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 
 	info := m.Infos.Get(evInfo)
 	if info == nil {
-		return fmt.Errorf("not found event info: %s", evInfo.toString())
+		logger.Infof("[Exec]: not found event info: %s", evInfo.toString())
+		return nil
 	}
 
 	logger.Debugf("[Exec]: event info:%s  action info:%s", info.Event.toString(), info.Action.toString())
