@@ -112,6 +112,20 @@ func (mgr *Manager) listenRfkill() {
 			})
 		}
 		mgr.handleBTRfkillEvent(event)
+		mgr.handleWifIRfkillEvent(event)
+	}
+}
+
+func (mgr *Manager) handleWifIRfkillEvent(event *RfkillEvent) {
+	if event.Typ != rfkillTypeWifi {
+		return
+	}
+
+	if mgr.hasNmWirelessDevices {
+		// 当飞行模式的wifi设备状态为禁用而rfkill 状态为unblock状态时，以rfkill状态为准
+		if mgr.WifiEnabled && event.Soft == rfkillStateUnblock {
+			mgr.block(rfkillTypeWifi, false)
+		}
 	}
 }
 
