@@ -45,7 +45,9 @@ gopath/
 .idea/
 
 a.out
-misc/polkit-action/*.policy
+misc/polkit-action/org.deepin.dde.accounts.policy
+misc/polkit-action/org.deepin.dde.fprintd.policy
+misc/polkit-action/org.deepin.dde.grub2.policy
 coverage.csv
 ConfigKeeperMute_Save
 system/uadp1/testdata
