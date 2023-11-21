@@ -29,9 +29,10 @@ import (
 const submodulePSP = "PowerSavePlan"
 
 const (
-	dsettingsAppID            = "org.deepin.dde.daemon"
-	dsettingsPowerName        = "org.deepin.dde.daemon.power"
-	dsettingsAllowScreenSaver = "allowScreenSaver"
+	dsettingsAppID               = "org.deepin.dde.daemon"
+	dsettingsPowerName           = "org.deepin.dde.daemon.power"
+	dsettingsAllowScreenSaver    = "allowScreenSaver"
+	dsettingsDelayWakeupInterval = "delayWakeupInterval"
 )
 
 func init() {
@@ -1020,10 +1021,29 @@ func (psp *powerSavePlan) initDsgConfig() error {
 			return
 		}
 		psp.allowScreenSaver = data.Value().(bool)
-		logger.Info("allow screen saver enabled", psp.allowScreenSaver)
+		logger.Info("allow screen saver enabled : ", psp.allowScreenSaver)
 	}
 
 	getAllowScreenSaver()
+
+	getDelayWakeupInterval := func() {
+		v, err := dsPower.Value(0, dsettingsDelayWakeupInterval)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		switch vv := v.Value().(type) {
+		case float64:
+			psp.manager.delayWakeupInterval = uint32(vv)
+		case int64:
+			psp.manager.delayWakeupInterval = uint32(vv)
+		default:
+			logger.Warning("type is wrong!")
+		}
+		logger.Info("delay wake up interval : ", psp.manager.delayWakeupInterval)
+	}
+
+	getDelayWakeupInterval()
 
 	dsPower.InitSignalExt(psp.systemSigLoop, true)
 	dsPower.ConnectValueChanged(func(key string) {
@@ -1031,7 +1051,8 @@ func (psp *powerSavePlan) initDsgConfig() error {
 		switch key {
 		case dsettingsAllowScreenSaver:
 			getAllowScreenSaver()
-			logger.Debug("getAllowScreenSaver changed :", key)
+		case dsettingsDelayWakeupInterval:
+			getDelayWakeupInterval()
 		default:
 		}
 	})
