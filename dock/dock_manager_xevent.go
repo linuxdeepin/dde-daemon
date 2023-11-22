@@ -163,7 +163,23 @@ func (m *Manager) handleActiveWindowChanged(activeWindow WindowInfoImp) {
 	}
 	m.Entries.mu.RUnlock()
 
-	m.updateHideState(true)
+	isShowDesktop := false
+	var err error
+
+	switch activeWindow.(type) {
+	case *WindowInfo:
+		isShowDesktop, err = ewmh.GetShowingDesktop(globalXConn).Reply(globalXConn)
+	case *KWindowInfo:
+		isShowDesktop, err = m.wm.GetIsShowDesktop(0)
+	default:
+		logger.Warning("invalid type WindowInfo")
+	}
+
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.updateHideState(!isShowDesktop)
 }
 
 func (m *Manager) listenRootWindowXEvent() {
