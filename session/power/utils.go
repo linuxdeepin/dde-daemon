@@ -321,15 +321,16 @@ func (m *Manager) hasShutdownInhibit() bool {
 // 定时关机流程: 存在block关机项时，显示shutdown界面，无block时，直接关机，delay情况进行延迟关机
 func (m *Manager) doAutoShutdown() {
 	if m.hasShutdownBlock() {
+		logger.Warning("Shutdown")
 		err := m.ddeShutdown.Shutdown(0)
 		if err != nil {
 			logger.Warning(err)
 		}
 	} else {
-		logger.Debug("Shutdown")
+		logger.Warning("Shutdown")
 		err := m.helper.SessionManager.RequestShutdown(0)
-		m.lastShutdownTime = time.Now().Unix()
-		m.savePowerDsgConfig(dsettingLastShutdownTime)
+		// m.lastShutdownTime = time.Now().Unix()
+		// m.savePowerDsgConfig(dsettingLastShutdownTime)
 		if err != nil {
 			logger.Warning("failed to Shutdown:", err)
 		}

@@ -17,6 +17,7 @@ import (
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	"github.com/linuxdeepin/dde-daemon/session/common"
 	display "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.display"
+	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.timedate"
 	calendar "github.com/linuxdeepin/go-dbus-factory/com.deepin.dataserver.Calendar"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.shutdownfront"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
@@ -27,6 +28,7 @@ import (
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	timedate "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -48,7 +50,7 @@ const (
 	dsettingShutdownRepetition     = "shutdownRepetition"
 	dsettingCustomShutdownWeekDays = "customShutdownWeekDays"
 	dsettingShutdownCountdown      = "shutdownCountdown"
-	dsettingLastShutdownTime       = "lastShutdownTime"
+	dsettingNextShutdownTime       = "nextShutdownTime"
 )
 
 const (
@@ -100,7 +102,6 @@ type Manager struct {
 	ScheduledShutdownState bool   `prop:"access:rw"`
 	ShutdownTime           string `prop:"access:rw"`
 	ShutdownRepetition     int    `prop:"access:rw"`
-	lastShutdownTime       int64
 	// dbusutil-gen: equal=byteSliceEqual
 	CustomShutdownWeekDays []byte `prop:"access:rw"`
 	shutdownTimer          *time.Timer
@@ -108,7 +109,12 @@ type Manager struct {
 	notifyId               uint32
 	notifyIdMu             sync.Mutex
 	notify                 notifications.Notifications
-	countdowning           bool
+
+	nextShutdownTime int64 // 下一次关机时间，只有关机配置、系统时间/时区等手动更改时，触发变更
+	shutdownStatus   int
+
+	sessionTimeDate sessiontimedate.Timedate
+	timeDate        timedate.Timedate
 
 	PropsMu sync.RWMutex
 	// 是否有盖子，一般笔记本电脑才有
@@ -329,6 +335,11 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.notify = notifications.NewNotifications(sessionBus)
 	m.notify.InitSignalExt(m.sessionSigLoop, true)
 
+	m.sessionTimeDate = sessiontimedate.NewTimedate(sessionBus)
+	m.sessionTimeDate.InitSignalExt(m.sessionSigLoop, true)
+
+	m.timeDate = timedate.NewTimedate(systemBus)
+	m.timeDate.InitSignalExt(m.systemSigLoop, true)
 	return m, nil
 }
 
@@ -409,6 +420,41 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	}
 
+	//修改时间后通过信号通知更新关机定时器
+	_, err = m.sessionTimeDate.ConnectTimeUpdate(func() {
+		if m.ScheduledShutdownState {
+			m.nextShutdownTime = m.genNextShutdownTime(0)
+			m.scheduledShutdown(Init)
+		}
+	})
+	if err != nil {
+		logger.Warning("connect signal TimeUpdate failed:", err)
+	}
+
+	err = m.timeDate.Timezone().ConnectChanged(func(hasValue bool, value string) {
+		time.AfterFunc(time.Second*2, func() {
+			if m.ScheduledShutdownState {
+				m.nextShutdownTime = m.genNextShutdownTime(0)
+				m.scheduledShutdown(Init)
+			}
+		})
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	err = m.timeDate.NTP().ConnectChanged(func(hasValue bool, value bool) {
+		time.AfterFunc(time.Second*2, func() {
+			if m.ScheduledShutdownState {
+				m.nextShutdownTime = m.genNextShutdownTime(0)
+				m.scheduledShutdown(Init)
+			}
+		})
+	})
+	if err != nil {
+		logger.Warning("connect NTP failed:", err)
+	}
+
 	err = m.helper.SessionWatcher.IsActive().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
@@ -421,17 +467,8 @@ func (m *Manager) init() {
 
 		logger.Debug("session active changed to:", value)
 		m.claimOrReleaseAmbientLight()
-		// 用户不活跃停止关机倒计时
-		if !m.sessionActive && m.countdowning {
-			m.scheduledShutdownSwitch(false, true)
-			m.notify.CloseNotification(0, m.notifyId)
-		} else if m.sessionActive && m.ScheduledShutdownState {
-			if m.countdowning && m.ShutdownRepetition == Once && !m.checkShutdownTrigger() {
-				m.actionShutdown(true)
-			} else {
-				m.scheduledShutdownSwitch(true, false)
-			}
-		}
+		// 出发关机定时器
+		m.scheduledShutdown(Init)
 	})
 	if err != nil {
 		logger.Warning(err)
@@ -626,8 +663,8 @@ func (m *Manager) initDsg() {
 			}
 		case dsettingShutdownCountdown:
 			m.shutdownCountdown = int(data.Value().(float64))
-		case dsettingLastShutdownTime:
-			m.lastShutdownTime = int64(data.Value().(float64))
+		case dsettingNextShutdownTime:
+			m.nextShutdownTime = int64(data.Value().(float64))
 		case dsettingShutdownRepetition:
 			if init {
 				m.ShutdownRepetition = int(data.Value().(float64))
@@ -653,8 +690,9 @@ func (m *Manager) initDsg() {
 				}
 			}
 		}
-		m.scheduledShutdownSwitch(false, false)
-		m.scheduledShutdownSwitch(m.ScheduledShutdownState, false)
+		// m.scheduledShutdownSwitch(false, false)
+		// m.scheduledShutdownSwitch(m.ScheduledShutdownState, false)
+
 	}
 
 	getDsPowerConfig(dsettingCustomShutdownWeekDays, true)
@@ -662,12 +700,23 @@ func (m *Manager) initDsg() {
 	getDsPowerConfig(dsettingShutdownRepetition, true)
 	getDsPowerConfig(dsettingShutdownTime, true)
 	getDsPowerConfig(dsettingScheduledShutdownState, true)
-	getDsPowerConfig(dsettingLastShutdownTime, true)
+	getDsPowerConfig(dsettingNextShutdownTime, true)
 	m.dsPowerConfigManager.InitSignalExt(m.systemSigLoop, true)
 	m.dsPowerConfigManager.ConnectValueChanged(func(key string) {
 		logger.Info("DSG org.deepin.dde.daemon.power valueChanged, key : ", key)
 		getDsPowerConfig(key, false)
+
+		if key != dsettingNextShutdownTime {
+			// 如果重复一次，重置nextShutdownTime
+			m.nextShutdownTime = m.genNextShutdownTime(0)
+			m.scheduledShutdown(Init)
+		}
 	})
+
+	if m.nextShutdownTime == 0 {
+		m.nextShutdownTime = m.genNextShutdownTime(0)
+	}
+	m.scheduledShutdown(Init)
 }
 
 func (m *Manager) savePowerDsgConfig(key string) (err error) {
@@ -681,8 +730,8 @@ func (m *Manager) savePowerDsgConfig(key string) (err error) {
 		value = tmp
 	case dsettingShutdownCountdown:
 		value = m.shutdownCountdown
-	case dsettingLastShutdownTime:
-		value = m.lastShutdownTime
+	case dsettingNextShutdownTime:
+		value = m.nextShutdownTime
 	case dsettingShutdownRepetition:
 		value = m.ShutdownRepetition
 	case dsettingShutdownTime:
@@ -711,68 +760,121 @@ func (m *Manager) setDsgData(key string, value interface{}, dsg configManager.Ma
 	return nil
 }
 
-func (m *Manager) scheduledShutdownSwitch(state bool, countdownContinue bool) {
-	// 属性修改后需要重新检测
-	m.countdowning = countdownContinue
-	if !state {
-		if m.shutdownTimer != nil {
-			m.shutdownTimer.Stop()
-			m.shutdownTimer = nil
-		}
+const (
+	Init            = iota // 初始阶段
+	WaitingToNotify        // 等待发送通知
+	Countdowning           // 倒计时中
+	// 下面是执行结果
+	Shutdown // 倒计时结束,准备关机
+	Cancle   // 执行关机取消，可能需要重置定时器
+	TimeOut  // 检测到超时，可能需要重置定时器
+)
+
+func (m *Manager) scheduledShutdown(state int) {
+	logger.Debugf("scheduledShutdown,pre-stat:%v next-stat:%v", m.shutdownStatus, state)
+	if m.shutdownTimer != nil {
+		m.shutdownTimer.Stop()
+		m.shutdownTimer = nil
+	}
+	if state != Init && state == m.shutdownStatus {
 		return
 	}
-	if m.shutdownTimer == nil {
-		m.shutdownTimer = time.NewTimer(1 * time.Second)
-	} else {
-		m.shutdownTimer.Reset(1 * time.Second)
-	}
-	go func() {
-		count := m.shutdownCountdown
-		playSound := true
-		logger.Warning("shutdownCountdown:", m.shutdownCountdown)
-		for {
-			select {
-			case <-m.shutdownTimer.C:
-				if m.countdowning {
-					if count == 0 {
-						logger.Warning("shut down now!")
-						m.actionShutdown(false)
-						// 执行关机
-						m.doAutoShutdown()
-						return
-					}
-					m.shutdownCountdownNotify(count, playSound)
-					if playSound {
-						playSound = false
-					}
-					count--
+
+	next := time.Unix(m.nextShutdownTime, 0)
+	currentTime := time.Now()
+	switch state {
+	case Init:
+		// 非活跃状态或者定时关闭的情况下，关闭定时器
+		if m.shutdownStatus >= Countdowning {
+			m.notify.CloseNotification(0, m.notifyId)
+		}
+		if !m.ScheduledShutdownState {
+			return
+		}
+		m.shutdownStatus = Init
+		var nextStatus int
+		logger.Debugf("shutdown sub:%v s, %v min, countDown:%v", int(next.Sub(currentTime).Seconds()), int(next.Sub(currentTime).Minutes()), m.shutdownCountdown)
+		if int(next.Sub(currentTime).Minutes()) < 0 {
+			// 超时太久，则进行超时处理
+			nextStatus = TimeOut
+		} else if int(next.Sub(currentTime).Minutes()) == 0 {
+			// 超时太久，则进行超时处理
+			nextStatus = Countdowning
+		} else if int(next.Sub(currentTime).Seconds()) <= m.shutdownCountdown {
+			// 如果在倒计时的时区内
+			nextStatus = Countdowning
+		} else {
+			// 时间远远未到，等待发送通知
+			nextStatus = WaitingToNotify
+		}
+		m.scheduledShutdown(nextStatus)
+	case WaitingToNotify:
+		m.shutdownStatus = WaitingToNotify
+		// 提前通知，设置通知的定时器
+		t := time.Duration(m.shutdownCountdown) * time.Second * -1
+		next = next.Add(t)
+		m.shutdownTimer = time.AfterFunc(time.Until(next), func() {
+			m.scheduledShutdown(Countdowning)
+		})
+	case Countdowning:
+		m.shutdownStatus = Countdowning
+		// 已经发送通知，正在进行关机倒计时
+		counter := func() func() int {
+			count := m.shutdownCountdown + 1
+			return func() int {
+				count--
+				return count
+			}
+		}()
+		go func() {
+			count := counter()
+			m.shutdownCountdownNotify(count, true)
+			m.shutdownTimer = time.NewTimer(time.Second)
+			for range m.shutdownTimer.C {
+				count := counter()
+				if count == 0 {
+					m.scheduledShutdown(Shutdown)
 				} else {
-					m.countdowning = m.checkShutdownTrigger()
+					// TODO: 每秒通知一次？有没有更好的办法？
+					m.shutdownCountdownNotify(count, false)
+					m.shutdownTimer.Reset(time.Second)
 				}
 			}
-			if m.shutdownTimer == nil {
-				m.shutdownTimer = time.NewTimer(1 * time.Second)
+		}()
+	case Shutdown, Cancle, TimeOut:
+		// 如果是超时，则关闭通知
+		if state == TimeOut {
+			m.notify.CloseNotification(0, m.notifyId)
+		}
+		m.shutdownStatus = state
+		if m.ShutdownRepetition == Once {
+			// 如果是重复一次，则停止定时器
+			m.setPropScheduledShutdownState(false)
+			m.nextShutdownTime = 0
+			m.savePowerDsgConfig(dsettingNextShutdownTime)
+			m.savePowerDsgConfig(dsettingScheduledShutdownState)
+		} else {
+			// 重新生成下一次定时关机时间，并保存
+			m.nextShutdownTime = m.genNextShutdownTime(m.nextShutdownTime)
+			m.savePowerDsgConfig(dsettingNextShutdownTime)
+			// 当前与设定的时间超过1分钟
+			t := time.Until(next).Minutes()
+			if t > 0 {
+				// 超时，重新开始调度
+				m.shutdownTimer = time.AfterFunc(10*time.Second, func() {
+					m.scheduledShutdown(Init)
+				})
 			} else {
-				m.shutdownTimer.Reset(1 * time.Second)
+				// 提前取消，则等待count时间后在重新调度
+				m.shutdownTimer = time.AfterFunc(time.Duration(m.shutdownCountdown)*time.Second, func() {
+					m.scheduledShutdown(Init)
+				})
 			}
 		}
-	}()
-}
-
-func (m *Manager) actionShutdown(isCancle bool) {
-	// 如果中途取消，需要根据重复选项定时重新检查
-	m.scheduledShutdownSwitch(false, false)
-	m.notify.CloseNotification(0, m.notifyId)
-	if m.ShutdownRepetition == Once {
-		m.setPropScheduledShutdownState(false)
-		m.savePowerDsgConfig(dsettingScheduledShutdownState)
-	}
-	if isCancle {
-		m.shutdownTimer = time.AfterFunc(time.Duration(m.shutdownCountdown)*time.Second, func() {
-			m.shutdownTimer.Stop()
-			m.shutdownTimer = nil
-			m.scheduledShutdownSwitch(true, false)
-		})
+		if state == Shutdown {
+			// 执行关机,整个状态机应该结束了
+			m.doAutoShutdown()
+		}
 	}
 }
 
@@ -794,18 +896,22 @@ func (m *Manager) shutdownCountdownNotify(count int, playSound bool) {
 	m.notifyIdMu.Lock()
 	m.notifyId = nid
 	m.notifyIdMu.Unlock()
-	_, err = m.notify.ConnectActionInvoked(func(id uint32, actionKey string) {
-		if id != m.notifyId {
-			return
-		}
+	m.notify.ConnectActionInvoked(func(id uint32, actionKey string) {
+
+		var nextStatus int
 		if actionKey == "Cancle" {
-			m.actionShutdown(true)
-		}
-		if actionKey == "Shutdown" {
-			m.actionShutdown(false)
+			// m.actionShutdown(true)
+			nextStatus = Cancle
+		} else if actionKey == "Shutdown" {
+			// m.actionShutdown(false)
 			// 执行关机
-			m.doAutoShutdown()
+			nextStatus = Shutdown
+		} else {
+			logger.Warningf("unknown actionKey %v", actionKey)
+			nextStatus = Cancle
 		}
+		logger.Warning("notify Invoked:", actionKey)
+		m.scheduledShutdown(nextStatus)
 	})
 }
 
@@ -824,12 +930,7 @@ func (m *Manager) isWorkday(date time.Time) (res bool) {
 			return date.Weekday() != time.Sunday && date.Weekday() != time.Saturday
 		}
 		for _, holidayInfo := range rootCfg[0].List {
-			holiday, err := time.Parse("2006-1-2", holidayInfo.Date)
-			if err != nil {
-				logger.Warning(err)
-				return false
-			}
-			if holiday.Equal(date) {
+			if holidayInfo.Date == date.Format("2006-1-2") {
 				return holidayInfo.Status == 2
 			}
 		}
@@ -840,52 +941,60 @@ func (m *Manager) isWorkday(date time.Time) (res bool) {
 	return
 }
 
-func (m *Manager) checkShutdownTrigger() bool {
-	// 获取当前日期
-	currentTime := time.Now()
-
-	triggerFlag := false
-
-	switch m.ShutdownRepetition {
-	case Once, Everyday:
-		triggerFlag = true
-	case Workdays:
-		triggerFlag = m.isWorkday(currentTime)
-	case Custom:
-		for _, v := range m.CustomShutdownWeekDays {
-			if byte(currentTime.Weekday()) == v {
-				triggerFlag = true
-				logger.Debug("Today is included in custom shutdown weekdays")
-				break
-			}
+func (m *Manager) isCustomday(date time.Time) (res bool) {
+	for _, v := range m.CustomShutdownWeekDays {
+		if byte(date.Weekday()) == v {
+			logger.Debug("Today is included in custom shutdown weekdays")
+			return true
 		}
 	}
-
-	if !triggerFlag {
-		return false
-	}
-	// 构建目标时间
-	targetTimeLayout := "15:04"
-	targetTime, err := time.Parse(targetTimeLayout, m.ShutdownTime)
-	if err != nil {
-		logger.Warning("Failed to get start time:", err)
-		return false
-	}
-	targetTime = time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), targetTime.Hour(), targetTime.Minute(), 0, 0, currentTime.Location())
-	lastTime := time.Unix(m.lastShutdownTime, 0)
-	// 如果上一次关机时间小于1分钟，则说明已经重启过了，则不在弹出提示
-	subTime := targetTime.Sub(lastTime).Seconds()
-	if int(subTime) < m.shutdownCountdown {
-		return false
-	}
-	// 计算时间间隔
-	currentToStart := targetTime.Sub(currentTime)
-	logger.Warning("time to shut down:", int(currentToStart.Seconds()))
-	// 默认提前60s发通知
-	if int(currentToStart.Seconds()) >= 0 && int(currentToStart.Seconds()) <= m.shutdownCountdown {
-		return true
-	}
 	return false
+}
+
+func (m *Manager) genNextShutdownTime(bt int64) int64 {
+	getNextTime := func() time.Time {
+		bastTime := time.Unix(bt, 0)
+		currentTime := time.Now()
+		// 构建目标时间
+		targetTimeLayout := "15:04"
+		targetTime, _ := time.Parse(targetTimeLayout, m.ShutdownTime)
+		targetTime = time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), targetTime.Hour(), targetTime.Minute(), 0, 0, currentTime.Location())
+		// 如果比当前时间小，则跳过今天
+		if int(targetTime.Sub(currentTime).Minutes()) < 0 {
+			// 如果在同一分鐘內，應該立发送通知
+			t, _ := time.ParseDuration("24h")
+			targetTime = targetTime.Add(t)
+		}
+		// 如果比base时间小，则target时间加1天
+		if int(targetTime.Sub(bastTime).Minutes()) <= 0 {
+			// 如果在同一分鐘內，應該立发送通知
+			t, _ := time.ParseDuration("24h")
+			targetTime = targetTime.Add(t)
+		}
+		return targetTime
+	}
+
+	var targetTime time.Time
+	switch m.ShutdownRepetition {
+	case Once, Everyday:
+		targetTime = getNextTime()
+	case Workdays:
+		targetTime = getNextTime()
+		// 获取下一个工作日，也可能是今天
+		for !m.isWorkday(targetTime) {
+			t, _ := time.ParseDuration("24h")
+			targetTime = targetTime.Add(t)
+		}
+	case Custom:
+		targetTime = getNextTime()
+		// 获取下一个自定义工作日，也可能是今天
+		for !m.isCustomday(targetTime) {
+			t, _ := time.ParseDuration("24h")
+			targetTime = targetTime.Add(t)
+		}
+	}
+	logger.Debug("gen next shutdown time:", targetTime.Format("2006-01-02 15:04:05"))
+	return targetTime.Unix()
 }
 
 func (m *Manager) getAutoChangeDeepinWm() bool {

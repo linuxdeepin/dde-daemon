@@ -89,8 +89,13 @@ func (m *Manager) handleWakeup() {
 		}
 	}
 
+	// 系统唤醒后重新处理关机定时器
+	if m.ScheduledShutdownState {
+		m.scheduledShutdown(Init)
+	}
+
 	m.delayInActive = true
-	time.AfterFunc(time.Duration(m.delayWakeupInterval) * time.Second, func() {
+	time.AfterFunc(time.Duration(m.delayWakeupInterval)*time.Second, func() {
 		m.delayInActive = false
 		playSound(soundutils.EventWakeup)
 		m.setDDEBlackScreenActive(false)

@@ -217,13 +217,13 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
-        "lastShutdownTime": {
-            "value": 60,
+        "nextShutdownTime": {
+            "value": 0,
             "serial": 0,
             "flags": [],
-            "name": "last shutdown time",
-            "name[zh_CN]": "上次关机时间",
-            "description": "last shutdown time",
+            "name": "next shutdown time",
+            "name[zh_CN]": "下一次关机时间",
+            "description": "next shutdown time",
             "permissions": "readwrite",
             "visibility": "public"
         }
