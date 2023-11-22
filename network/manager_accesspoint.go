@@ -517,7 +517,14 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 			logger.Warning("failed to get Ap Ssid:", err)
 			return
 		}
-		data := newWirelessConnectionData(decodeSsid(ssid), uuid, ssid, keymgmt)
+
+		// need to set macAddress
+		var hwAddr string
+		hwAddr, err = nmGeneralGetDeviceHwAddr(devPath, true)
+		if (err != nil) {
+			logger.Warning("failed to get mac", err)
+		}
+		data := newWirelessConnectionData(decodeSsid(ssid), uuid, ssid, keymgmt, hwAddr)
 		// check if need add hidden
 		if m.isHidden(string(ssid)) {
 			setSettingWirelessHidden(data, true)

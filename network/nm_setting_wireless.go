@@ -28,7 +28,7 @@ func newWirelessHotspotConnectionForDevice(id, uuid string, devPath dbus.ObjectP
 }
 
 // new connection data
-func newWirelessConnectionData(id, uuid string, ssid []byte, keymgmt string) (data connectionData) {
+func newWirelessConnectionData(id, uuid string, ssid []byte, keymgmt, macAddress string) (data connectionData) {
 	logger.Debug("newWirelessConnectionData: keymgmt:", keymgmt)
 	data = make(connectionData)
 
@@ -49,6 +49,10 @@ func newWirelessConnectionData(id, uuid string, ssid []byte, keymgmt string) (da
 		return
 	}
 
+	if macAddress != "" {
+		setSettingWirelessMacAddress(data, convertMacAddressToArrayByte(macAddress));
+	}
+
 	initSettingSectionIpv4(data)
 	initSettingSectionIpv6(data)
 
@@ -56,7 +60,7 @@ func newWirelessConnectionData(id, uuid string, ssid []byte, keymgmt string) (da
 }
 
 func newWirelessHotspotConnectionData(id, uuid string) (data connectionData) {
-	data = newWirelessConnectionData(id, uuid, nil, "none")
+	data = newWirelessConnectionData(id, uuid, nil, "none", "")
 	err := logicSetSettingWirelessMode(data, nm.NM_SETTING_WIRELESS_MODE_AP)
 	if err != nil {
 		logger.Debug("failed to set WirelessMode")

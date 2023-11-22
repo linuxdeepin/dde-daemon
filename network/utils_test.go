@@ -214,7 +214,7 @@ func (*testWrapper) TestExpandIpv6Address(c *C.C) {
 }
 
 func (*testWrapper) TestGetterAndSetterForVirtualKey(c *C.C) {
-	data := newWirelessConnectionData("", "", nil, "none")
+	data := newWirelessConnectionData("", "", nil, "none", "")
 
 	err := logicSetSettingVkWirelessSecurityKeyMgmt(data, "none")
 	if err != nil {
