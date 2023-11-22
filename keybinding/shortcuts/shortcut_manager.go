@@ -1311,7 +1311,7 @@ func (sm *ShortcutManager) AddMediaToKwin(gsettings *gio.Settings, wmObj wm.Wm) 
 			name = id
 		}
 		if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
-			if name == "Capslock" || name == "Numlock" {
+			if name == "Capslock" || name == "Numlock" || name == "switch-monitors" {
 				continue
 			}
 		}

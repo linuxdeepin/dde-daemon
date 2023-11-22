@@ -450,6 +450,7 @@ var kwinSysActionCmdMap = map[string]string{
 	"ScreenshotScroll": "screenshot-scroll",
 	"ScreenshotOcr":    "screenshot-ocr",
 	"Global Search":    "global-search",
+	"Switch monitors":   "switch-monitors",
 }
 
 var waylandMediaIdMap = map[string]string{
@@ -502,7 +503,6 @@ var waylandMediaIdMap = map[string]string{
 	"app-left":          "ApplicationLeft",     // XF86ApplicationLeft
 	"app-right":         "ApplicationRight",    // XF86ApplicationRight
 	"meeting":           "Meeting",             // XF86Meeting
-	"Switch monitors":   "switch-monitors",
 	"Numlock":           "numlock",
 	"Capslock":          "capslock",
 	"Switch kbd layout": "switch-kbd-layout",
