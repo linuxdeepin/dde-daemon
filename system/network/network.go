@@ -333,6 +333,19 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 		}
 	})
 
+	d.InterfaceFlags().ConnectChanged(func(hasValue bool, value uint32){
+		if !hasValue {
+			return
+		}
+
+		logger.Debugf("recv interfaceFlags changed signal, current value: %v", value)
+
+		n.enableDevice(dev.iface, value != 0)
+		if err != nil {
+			logger.Warningf("enable dev failed, err: %v", err)
+		}
+	})
+
 	dev.iface, err = d.Interface().Get(0)
 	if err != nil {
 		logger.Warning(err)
