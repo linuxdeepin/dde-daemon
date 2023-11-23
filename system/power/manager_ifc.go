@@ -6,7 +6,7 @@ package power
 
 import (
 	"errors"
-	"time"
+	"fmt"
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -78,74 +78,55 @@ func (m *Manager) Refresh() *dbus.Error {
 }
 
 func (m *Manager) SetCpuBoost(enabled bool) *dbus.Error {
-	err := m.cpus.SetBoostEnabled(enabled)
-	if err == nil {
-		m.setPropCpuBoost(enabled)
-	}
-	return dbusutil.ToError(err)
+	m.setPropCpuBoost(enabled)
+	return nil
 }
 
 func (m *Manager) SetCpuGovernor(governor string) *dbus.Error {
-	err := m.cpus.SetGovernor(governor, false)
-	if err == nil {
-		m.setPropCpuGovernor(governor)
-	}
-	return dbusutil.ToError(err)
-}
-
-func (m *Manager) updatePowerSavingState(state bool) {
-	if m.setPropPowerSavingModeAutoWhenBatteryLow(state) {
-		m.setDsgData(dsettingsPowerSavingModeAutoWhenBatteryLow, state, m.dsgPower)
-	}
-
-	if m.setPropPowerSavingModeAuto(state) {
-		m.setDsgData(dsettingsPowerSavingModeAuto, state, m.dsgPower)
-	}
+	m.setPropCpuGovernor(governor)
+	return nil
 }
 
 func (m *Manager) SetMode(mode string) *dbus.Error {
 	if m.Mode == mode {
-		return dbusutil.ToError(errors.New("Repeat switch"))
+		return dbusutil.ToError(errors.New("repeat set mode"))
 	}
-
-	if "powersave" == m.Mode || "powersave" == mode {
-		m.updatePowerSavingState(false)
-	}
-
 	logger.Info(" SetMode mode : ", mode)
-	err := m.doSetMode(mode)
-	if err == nil {
-		err = m.saveDsgConfig("Mode")
+	if !_validPowerModeArray.Contains(mode) {
+		return dbusutil.ToError(fmt.Errorf("PowerMode %q mode is not supported", mode))
 	}
 
-	if err != nil {
-		logger.Warning(err)
+	// 手动(外部请求)切换到节能模式，或节能模式切换到其他模式时，关闭电池自动节能和低电量自动节能
+	if ddePowerSave == m.Mode || ddePowerSave == mode {
+		m.PropsMu.Lock()
+		m.updatePowerSavingState(false)
+		m.PropsMu.Unlock()
 	}
-
-	return dbusutil.ToError(err)
+	m.doSetMode(mode)
+	return nil
 }
 
 func (m *Manager) LockCpuFreq(governor string, lockTime int32) *dbus.Error {
-
-	currentGovernor, err := m.cpus.GetGovernor()
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
-
-	// change cpu governor
-	if governor != currentGovernor {
-		err = m.cpus.SetGovernor(governor, false)
-		if err != nil {
-			return dbusutil.ToError(err)
-		}
-
-		time.AfterFunc(time.Second*time.Duration(lockTime), func() {
-			err := m.cpus.SetGovernor(currentGovernor, false)
-			if err != nil {
-				logger.Warningf("rewrite cpu scaling_governor file failed:%v", err)
-			}
-		})
-	}
+	// TODO 改用tlp
+	// currentGovernor, err := m.cpus.GetGovernor()
+	// if err != nil {
+	// 	return dbusutil.ToError(err)
+	// }
+	//
+	// // change cpu governor
+	// if governor != currentGovernor {
+	// 	err = m.cpus.SetGovernor(governor, false)
+	// 	if err != nil {
+	// 		return dbusutil.ToError(err)
+	// 	}
+	//
+	// 	time.AfterFunc(time.Second*time.Duration(lockTime), func() {
+	// 		err := m.cpus.SetGovernor(currentGovernor, false)
+	// 		if err != nil {
+	// 			logger.Warningf("rewrite cpu scaling_governor file failed:%v", err)
+	// 		}
+	// 	})
+	// }
 
 	return nil
 }

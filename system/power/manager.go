@@ -9,52 +9,37 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
-	"regexp"
-	"strings"
 	"sync"
 	"time"
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-api/powersupply"
 	"github.com/linuxdeepin/dde-api/powersupply/battery"
-	"github.com/linuxdeepin/dde-daemon/common/cpuinfo"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	DisplayManager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.DisplayManager"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/go-lib/utils"
 )
 
 var noUEvent bool
 
 const (
-	configManagerId                   = "org.desktopspec.ConfigManager"
-	_configHwSystem                   = "/usr/share/uos-hw-config"
-	intelPstatePath                   = "/sys/devices/system/cpu/intel_pstate"
-	amdPstatePath                     = "/sys/devices/system/cpu/amd_pstate"
-	amdGPUPath                        = "/sys/class/drm/card0/device/power_dpm_force_performance_level"
-	configDefaultGovFilePattern       = `config-[0-9\.]+-.*-desktop`
-	configDefaultGovContentDDEPattern = `^\s*CONFIG_CPU_FREQ_DEFAULT_GOV_DDE_(\w+)`
-	configDefaultGovContentPattern    = `^\s*CONFIG_CPU_FREQ_DEFAULT_GOV_(\w+)`
-)
-
-const (
 	dsettingsAppID                                = "org.deepin.dde.daemon"
 	dsettingsPowerName                            = "org.deepin.dde.daemon.power"
-	dsettingsSpecialCpuModeJson                   = "specialCpuModeJson"
-	dsettingsBalanceCpuGovernor                   = "BalanceCpuGovernor"
-	dsettingsIsFirstGetCpuGovernor                = "isFirstGetCpuGovernor"
-	dsettingsIdlePowersaveAspmEnabled             = "idlePowersaveAspmEnabled"
 	dsettingsPowerSavingModeEnabled               = "powerSavingModeEnabled"
 	dsettingsPowerSavingModeAuto                  = "powerSavingModeAuto"
 	dsettingsPowerSavingModeAutoWhenBatteryLow    = "powerSavingModeAutoWhenBatteryLow"
 	dsettingsPowerSavingModeBrightnessDropPercent = "powerSavingModeBrightnessDropPercent"
+	dsettingsPowerCompositorPowerSaveEnable       = "powerCompositorPowerSaveEnabled"
 	dsettingsMode                                 = "mode"
-	dsettingsSupportCpuGovernors                  = "supportCpuGovernors"
-	dsettingsSystemInfoName                       = "org.deepin.dde.daemon.systeminfo"
-	dsettingsIsM900Config                         = "IsM900Config"
+)
+
+const (
+	kwinDsettingsAppID           = "org.kde.kwin"
+	kwinDsettingsCompositingName = "org.kde.kwin.compositing"
+	kwinDsettingsPropCompositor  = "compositor"
 )
 
 type supportMode struct {
@@ -81,17 +66,13 @@ type Manager struct {
 	ac            *AC
 	gudevClient   *gudev.Client
 	dsgPower      ConfigManager.Manager
-
+	dsgKwin       ConfigManager.Manager
 	// 电池是否电量低
 	batteryLow bool
 	// 初始化是否完成
 	initDone bool
 
-	// CPU操作接口
-	cpus *CpuHandlers
 	// INFO: pstate中，可选项是performance balance_performance balance_power power
-	hasPstate bool
-	hasAmddpm bool
 
 	PropsMu      sync.RWMutex
 	OnBattery    bool
@@ -135,29 +116,23 @@ type Manager struct {
 	// 是否支持节能模式
 	IsPowerSaveSupported bool
 
-	// 性能模式-平衡模式dsg
-	balanceScalingGovernor string
-	configManagerPath      dbus.ObjectPath
+	// 是否在节能模式时开启合成器节能
+	CompositorPowerSaveEnable bool `prop:"access:rw"`
 
+	// 是否支持切换性能模式
+	SupportSwitchPowerMode bool `prop:"access:rw"`
 	// 当前模式
 	Mode string
 
-	//是否在启动阶段，启动阶段不允许调节亮度; 若在启动阶段切换模式后(切节能模式降低亮度)，可以调节亮度.
+	// 是否在启动阶段，启动阶段不允许调节亮度; 若在启动阶段切换模式后(切节能模式降低亮度)，可以调节亮度.
 	IsInBootTime bool
 
 	// 上次非低电量时的模式
 	lastMode string
 
-	// 退出函数
-	endSysPowerSave func()
+	displayManager DisplayManager.DisplayManager
 
-	// powersave aspm 状态
-	idlePowersaveAspmEnabled bool
-	loginManager             login1.Manager
-
-	// Special Cpu suppoert mode
-	specialCpuMode *supportMode
-
+	isLowBatteryMode bool
 	// nolint
 	signals *struct {
 		BatteryDisplayUpdate struct {
@@ -177,23 +152,30 @@ type Manager struct {
 	}
 }
 
+const (
+	ddePowerSave   = "powersave"
+	ddeBalance     = "balance"
+	ddePerformance = "performance"
+	ddeLowBattery  = "lowBattery" // 内部使用，在对外暴露的时候，会切换成powersave
+)
+
+var _validPowerModeArray = strv.Strv{
+	ddePowerSave,
+	ddeBalance,
+	ddePerformance,
+}
+
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	m := &Manager{
-		service:           service,
-		BatteryPercentage: 100,
-		cpus:              NewCpuHandlers(),
-		lastMode:          "balance",
+		service:                    service,
+		BatteryPercentage:          100,
+		lastMode:                   ddeBalance,
+		IsHighPerformanceSupported: true,
+		IsBalanceSupported:         true,
+		IsPowerSaveSupported:       true,
+		CpuBoost:                   true,
 	}
-	// check pstate , if has pstate, it is intel pstate mode , then
-	// we need another logic
-	m.hasPstate = utils.IsFileExist(intelPstatePath) || utils.IsFileExist(amdPstatePath)
-	// check if amd is used
-	m.hasAmddpm = utils.IsFileExist(amdGPUPath)
 
-	m.refreshSystemPowerPerformance()
-	if m.hasPstate {
-		m.balanceScalingGovernor = "balance_performance"
-	}
 	err := m.init()
 	if err != nil {
 		m.destroy()
@@ -229,7 +211,7 @@ func (m *Manager) refreshAC(ac *gudev.Device) { // 拔插电源时候触发
 	m.setPropOnBattery(onBattery)
 	m.PropsMu.Unlock()
 	// 根据OnBattery的状态,修改节能模式
-	m.updatePowerSavingMode()
+	m.updatePowerMode(false) // refreshAC
 }
 
 func (m *Manager) initAC(devices []*gudev.Device) {
@@ -259,16 +241,12 @@ func (m *Manager) initAC(devices []*gudev.Device) {
 }
 
 func (m *Manager) init() error {
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		return err
-	}
-	m.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
-	err = m.initDsgConfig()
+	m.systemSigLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)
+	m.systemSigLoop.Start()
+	err := m.initDsgConfig()
 	if err != nil {
 		logger.Warning(err)
 	}
-	m.systemSigLoop.Start()
 
 	subsystems := []string{"power_supply", "input"}
 	m.gudevClient = gudev.NewClient(subsystems)
@@ -279,29 +257,6 @@ func (m *Manager) init() error {
 	m.initLidSwitch()
 	devices := powersupply.GetDevices(m.gudevClient)
 
-	cfg := loadConfigSafe()
-	if cfg != nil {
-		// 将config.json中的配置完成初始化
-		m.PowerSavingModeEnabled = cfg.PowerSavingModeEnabled                             // 开启和关闭节能模式
-		m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
-		m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
-		m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
-		m.Mode = cfg.Mode
-		migrateErr := m.migrateFromCurrentConfigsToDsg(cfg)
-		if migrateErr != nil {
-			logger.Error("migrateFromCurrentConfigsToDsg failed, err:", migrateErr)
-		}
-	}
-
-	logger.Info(" ## init(second) m.Mode : ", m.Mode)
-	// 恢复配置
-	err = m.doSetMode(m.Mode)
-	if err != nil {
-		logger.Warning(err)
-	} else {
-		logger.Debugf("init mode %s", m.Mode)
-	}
-
 	m.initAC(devices)
 	m.initBatteries(devices)
 	for _, dev := range devices {
@@ -310,99 +265,52 @@ func (m *Manager) init() error {
 
 	m.gudevClient.Connect("uevent", m.handleUEvent)
 	m.initDone = true
-	// init LMT config
-	m.updatePowerSavingMode()
 
-	m.CpuBoost, err = m.cpus.GetBoostEnabled()
-	if err != nil {
-		logger.Warning(err)
-	}
+	m.updatePowerMode(true) // init
 
-	m.CpuGovernor, err = m.cpus.GetGovernor()
-	if err != nil {
-		logger.Warning(err)
-	}
-	m.loginManager = login1.NewManager(m.service.Conn())
-	m.loginManager.InitSignalExt(m.systemSigLoop, true)
+	m.displayManager = DisplayManager.NewDisplayManager(m.service.Conn())
+	m.displayManager.InitSignalExt(m.systemSigLoop, true)
 	return nil
 }
 
 func (m *Manager) initDsgConfig() error {
-	logger.Info("initDsgConfig.")
+	logger.Info("com.deepin.system.Power module start init dconfig.")
 	// dsg 配置
-	var isM900Config bool
-	ds := ConfigManager.NewConfigManager(m.systemSigLoop.Conn())
-
-	dsSystemInfoPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsSystemInfoName, "")
-	if err != nil {
-		return err
-	}
-	dsSystemInfo, err := ConfigManager.NewManager(m.systemSigLoop.Conn(), dsSystemInfoPath)
-	if err != nil {
-		return err
-	}
-
-	data, err := dsSystemInfo.Value(0, dsettingsIsM900Config)
-	if err != nil {
-		return err
-	}
-
-	if value, ok := data.Value().(bool); ok {
-		isM900Config = value
-	}
+	ds := ConfigManager.NewConfigManager(m.service.Conn())
 
 	dsPowerPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsPowerName, "")
 	if err != nil {
 		return err
 	}
-	dsPower, err := ConfigManager.NewManager(m.systemSigLoop.Conn(), dsPowerPath)
+	dsPower, err := ConfigManager.NewManager(m.service.Conn(), dsPowerPath)
 	if err != nil {
 		return err
 	}
 	m.dsgPower = dsPower
 
-	getSpecialCpuMode := func() {
-		// 获取cpu Hardware
-		if !isM900Config {
-			logger.Info("the system is not M900 config, not need special cpu mode")
-			return
-		}
-
-		cpuinfo, err := cpuinfo.ReadCPUInfo("/proc/cpuinfo")
-		if err != nil {
-			logger.Warning("ReadCPUInfo /proc/cpuinfo err : ", err)
-			return
-		}
-
-		data, err := dsPower.Value(0, dsettingsSpecialCpuModeJson)
+	dsKwinPath, err := ds.AcquireManager(0, kwinDsettingsAppID, kwinDsettingsCompositingName, "")
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		dsKwin, err := ConfigManager.NewManager(m.service.Conn(), dsKwinPath)
 		if err != nil {
 			logger.Warning(err)
-			return
-		}
-
-		str := data.Value().(string)
-		modeMap := make(map[string]*supportMode)
-		if err := json.Unmarshal([]byte(str), &modeMap); err != nil {
-			logger.Warning(err)
-		}
-		for k, v := range modeMap {
-			if strings.HasPrefix(cpuinfo.Hardware, k) {
-				logger.Info("use special cpu mode", v)
-				m.specialCpuMode = v
-				return
-			}
+		} else {
+			m.dsgKwin = dsKwin
 		}
 	}
-
-	getIdlePowersaveAspmEnabled := func() {
-		data, err := dsPower.Value(0, dsettingsIdlePowersaveAspmEnabled)
-		if err != nil {
-			logger.Warning(err)
-			return
+	cfg := loadConfigSafe()
+	if cfg != nil {
+		// 将config.json中的配置完成初始化
+		m.PowerSavingModeEnabled = cfg.PowerSavingModeEnabled                             // 开启和关闭节能模式
+		m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
+		m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
+		m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
+		m.Mode = cfg.Mode
+		migrateErr := m.migrateFromCurrentConfigsToDsg()
+		if migrateErr != nil {
+			logger.Error("migrateFromCurrentConfigsToDsg failed, err:", migrateErr)
 		}
-
-		m.idlePowersaveAspmEnabled = data.Value().(bool)
-		logger.Info("Set idle powersave aspm enabled", m.idlePowersaveAspmEnabled)
 	}
 
 	getPowerSavingModeAuto := func(init bool) {
@@ -417,10 +325,7 @@ func (m *Manager) initDsgConfig() error {
 			return
 		}
 
-		if m.setPropPowerSavingModeAuto(data.Value().(bool)) {
-			logger.Info("Set power saving mode auto", m.PowerSavingModeAuto)
-			m.updatePowerSavingMode()
-		}
+		m.setPropPowerSavingModeAuto(data.Value().(bool))
 	}
 
 	getPowerSavingModeEnabled := func(init bool) {
@@ -435,9 +340,7 @@ func (m *Manager) initDsgConfig() error {
 			return
 		}
 
-		if m.setPropPowerSavingModeEnabled(data.Value().(bool)) {
-			logger.Info("Set power saving mode enable", m.PowerSavingModeEnabled)
-		}
+		m.setPropPowerSavingModeEnabled(data.Value().(bool))
 	}
 
 	getPowerSavingModeAutoWhenBatteryLow := func(init bool) {
@@ -452,10 +355,7 @@ func (m *Manager) initDsgConfig() error {
 			return
 		}
 
-		if m.setPropPowerSavingModeAutoWhenBatteryLow(data.Value().(bool)) {
-			logger.Info("Set power saving mode auto when battery low", m.PowerSavingModeAutoWhenBatteryLow)
-			m.updatePowerSavingMode()
-		}
+		m.setPropPowerSavingModeAutoWhenBatteryLow(data.Value().(bool))
 	}
 
 	getPowerSavingModeBrightnessDropPercent := func(init bool) {
@@ -500,72 +400,45 @@ func (m *Manager) initDsgConfig() error {
 		}
 
 		value := ret.Value().(string)
-
+		logger.Infof("value:%v", value)
+		// dsg更新配置后，校验mode有效性
+		if !_validPowerModeArray.Contains(value) {
+			value = ddeBalance
+		}
 		if init {
+			logger.Info("init ")
 			m.Mode = value
 			return
 		}
-
-		//dsg更新配置后，校验mode有效性
-		if value == "balance" || value == "powersave" || value == "performance" {
-			logger.Info(" ---- update DsgConfig mode : ", value)
-			err = m.doSetMode(value)
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-		} else {
-			logger.Warningf("invalid dsg of mode : %s. Please use balance/powersave/performance", value)
-			expectValue := "balance"
-			//非法制需要强制设置成有效值
-			if m.Mode == "balance" || m.Mode == "powersave" || m.Mode == "performance" {
-				expectValue = m.Mode
-			} else {
-				// dsg获取非法数据，设置成平衡模式
-				expectValue = "balance"
-			}
-			err = m.doSetMode(expectValue)
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-			m.setDsgData(dsettingsMode, expectValue, dsPower)
-		}
+		m.setPropMode(value)
 	}
 
-	getSpecialCpuMode()
-	getIdlePowersaveAspmEnabled()
+	getCompositorPowerSaveEnable := func(init bool) {
+		data, err := dsPower.Value(0, dsettingsPowerCompositorPowerSaveEnable)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+
+		if init {
+			m.CompositorPowerSaveEnable = data.Value().(bool)
+			return
+		}
+
+		m.setPropCompositorPowerSaveEnable(data.Value().(bool))
+	}
+
 	getPowerSavingModeAuto(true)
 	getPowerSavingModeEnabled(true)
 	getPowerSavingModeAutoWhenBatteryLow(true)
 	getPowerSavingModeBrightnessDropPercent(true)
 	getMode(true)
+	getCompositorPowerSaveEnable(true)
 
 	dsPower.InitSignalExt(m.systemSigLoop, true)
-	dsPower.ConnectValueChanged(func(key string) {
-		logger.Info("DSG org.deepin.dde.daemon.power valueChanged, key : ", key)
+	_, _ = dsPower.ConnectValueChanged(func(key string) {
+		logger.Info("dconfig org.deepin.dde.daemon.power valueChanged, key : ", key)
 		switch key {
-		case dsettingsSupportCpuGovernors:
-			data, err := dsPower.Value(0, dsettingsSupportCpuGovernors)
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-			// 当supportCpuGovernors被人为改动后，就和availableArrGovernors比较，如果不同则直接设置成availableArrGovernors数据
-			cpuGovernors := interfaceToArrayString(data.Value().(string))
-			availableArrGovernors := getLocalAvailableGovernors()
-			if len(cpuGovernors) != len(availableArrGovernors) {
-				m.setDsgData(dsettingsSupportCpuGovernors, availableArrGovernors, dsPower)
-				logger.Info("Modification availableGovernors not allowed.")
-			} else {
-				for _, v := range cpuGovernors {
-					if !strv.Strv(availableArrGovernors).Contains(v.(string)) {
-						m.setDsgData(dsettingsSupportCpuGovernors, availableArrGovernors, dsPower)
-						logger.Info("Modification availableGovernors not allowed.")
-						return
-					}
-				}
-			}
 		case dsettingsPowerSavingModeAuto:
 			getPowerSavingModeAuto(false)
 		case dsettingsPowerSavingModeEnabled:
@@ -574,75 +447,17 @@ func (m *Manager) initDsgConfig() error {
 			getPowerSavingModeAutoWhenBatteryLow(false)
 		case dsettingsPowerSavingModeBrightnessDropPercent:
 			getPowerSavingModeBrightnessDropPercent(false)
-		case dsettingsIdlePowersaveAspmEnabled:
-			getIdlePowersaveAspmEnabled()
 		case dsettingsMode:
 			getMode(false)
-
+		case dsettingsPowerCompositorPowerSaveEnable:
+			getCompositorPowerSaveEnable(false)
 		default:
 			logger.Debug("Not process. valueChanged, key : ", key)
 		}
+		m.updatePowerMode(false) // dconfig change
 	})
 
-	return err
-}
-
-func (m *Manager) refreshSystemPowerPerformance() { // 获取系统支持的性能模式
-	path := m.cpus.getCpuGovernorPath(m.hasPstate)
-
-	if path == "" {
-		m.IsHighPerformanceSupported = false
-		m.IsBalanceSupported = false
-		m.IsPowerSaveSupported = false
-		return
-	}
-
-	re := regexp.MustCompile(configDefaultGovFilePattern)
-	if result, err := utils.FindFileInDirRegexp("/boot/", re); err != nil {
-		logger.Warning(err)
-	} else if len(result) > 0 {
-		re = regexp.MustCompile(configDefaultGovContentDDEPattern)
-		_, matches, err := utils.FindContentInFileRegexp(result[0], re)
-		if err != nil {
-			logger.Warning(err)
-			re = regexp.MustCompile(configDefaultGovContentPattern)
-			_, matches, err = utils.FindContentInFileRegexp(result[0], re)
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
-		if len(matches) > 1 {
-			m.balanceScalingGovernor = strings.ToLower(matches[1])
-		}
-	}
-
-	if m.balanceScalingGovernor == "" {
-		logger.Warning("can't find balance scaling governor use ondemand")
-		m.balanceScalingGovernor = "ondemand"
-	}
-
-	logger.Info(" ## refreshSystemPowerPerformance balance ScalingGovernor : ", m.balanceScalingGovernor)
-
-	if m.specialCpuMode != nil {
-		m.IsBalanceSupported = m.specialCpuMode.Balance
-		m.IsHighPerformanceSupported = m.specialCpuMode.Performace
-		m.IsPowerSaveSupported = m.specialCpuMode.PowerSave
-	} else {
-		logger.Info("check available governor")
-		m.IsBalanceSupported = true
-		ret := m.cpus.tryWriteGovernor(strv.Strv{"performance", "powersave"}, m.hasPstate)
-		if ret.Contains("performance") {
-			m.IsHighPerformanceSupported = true
-		}
-		if ret.Contains("powersave") {
-			m.IsPowerSaveSupported = true
-		}
-		if ret.Contains("power") && m.hasPstate {
-			m.IsPowerSaveSupported = true
-		}
-	}
-
-	logger.Info(" init end. m.balanceScalingGovernor : ", m.balanceScalingGovernor)
+	return nil
 }
 
 func (m *Manager) handleUEvent(client *gudev.Client, action string, device *gudev.Device) {
@@ -834,12 +649,12 @@ func loadConfigSafe() *Config {
 	}
 
 	if cfg.Mode == "" {
-		cfg.Mode = "balance"
+		cfg.Mode = ddeBalance
 	}
 	return cfg
 }
 
-func (m *Manager) migrateFromCurrentConfigsToDsg(cfg *Config) error {
+func (m *Manager) migrateFromCurrentConfigsToDsg() error {
 	err := m.saveDsgConfig("")
 	if err != nil {
 		logger.Warning("saveDsgConfig failed", err)
@@ -878,6 +693,11 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 		if err != nil {
 			return err
 		}
+	case "CompositorPowerSaveEnable":
+		err = m.setDsgData(dsettingsPowerCompositorPowerSaveEnable, m.PowerSavingModeAuto, m.dsgPower)
+		if err != nil {
+			return err
+		}
 	case "":
 		err = m.setDsgData(dsettingsPowerSavingModeBrightnessDropPercent, int64(m.PowerSavingModeBrightnessDropPercent), m.dsgPower)
 		if err != nil {
@@ -895,183 +715,62 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 		if err != nil {
 			return err
 		}
+		err = m.setDsgData(dsettingsPowerCompositorPowerSaveEnable, m.PowerSavingModeAuto, m.dsgPower)
+		if err != nil {
+			return err
+		}
 	}
 
 	return m.setDsgData(dsettingsMode, m.Mode, m.dsgPower)
 }
 
-func (m *Manager) doSetMode(mode string) error {
+func (m *Manager) doSetMode(mode string) {
 	logger.Info(" doSetMode, mode : ", mode)
-	var err error
-	switch mode {
-	case "balance": // governor=performance
-		if m.hasAmddpm {
-			err := ioutil.WriteFile(amdGPUPath, []byte("auto"), 0644)
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
-		if !m.IsBalanceSupported {
-			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
-			break
-		}
-
-		m.setPropPowerSavingModeEnabled(false)
-		err = m.doSetCpuGovernor(m.balanceScalingGovernor)
-		if err != nil {
-			logger.Warning(err)
-			mode := "powersave"
-			if m.hasPstate {
-				mode = "power"
-			}
-			logger.Infof("set %s mode failed, try to set %s mode", m.balanceScalingGovernor, mode)
-			err = m.doSetCpuGovernor(mode)
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
-	case "powersave": // governor=powersave
-		if m.hasAmddpm {
-			err := ioutil.WriteFile(amdGPUPath, []byte("low"), 0644)
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
-		if !m.IsPowerSaveSupported {
-			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
-			break
-		}
-
-		m.setPropPowerSavingModeEnabled(true)
-		if m.hasPstate {
-			err = m.doSetCpuGovernor("power")
-		} else {
-			err = m.doSetCpuGovernor("powersave")
-		}
-		if err != nil {
-			logger.Warning(err)
-		}
-
-	case "performance": // governor=performance
-		if m.hasAmddpm {
-			err := ioutil.WriteFile(amdGPUPath, []byte("high"), 0644)
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
-		if !m.IsHighPerformanceSupported {
-			err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
-			break
-		}
-
-		m.setPropPowerSavingModeEnabled(false)
-		err = m.doSetCpuGovernor("performance")
-		if err != nil {
-			logger.Warning(err)
-		}
-
-	default:
-		err = dbusutil.MakeErrorf(m, "PowerMode", "%q mode is not supported", mode)
-	}
-	if mode == "powersave" {
-		m.startSysPowersave()
-	} else if m.endSysPowerSave != nil {
-		m.endSysPowerSave()
+	if !_validPowerModeArray.Contains(mode) {
+		logger.Errorf("PowerMode %q mode is not supported", mode)
+		return
 	}
 
-	if err == nil {
-		if m.setPropMode(mode) {
-			logger.Info("Set power mode", m.Mode)
-			m.IsInBootTime = false
-			m.setDsgData(dsettingsMode, mode, m.dsgPower)
-		} else {
-			logger.Warningf("Set power mode failed. mode : %s, current mode : %s", mode, m.Mode)
-		}
-		if m.lastMode != mode && mode != "powersave" {
-			m.lastMode = mode
-		}
+	fixMode := mode
+	if fixMode == ddeLowBattery {
+		fixMode = ddePowerSave
+		m.isLowBatteryMode = true
+	} else {
+		m.isLowBatteryMode = false
+	}
+	modeChanged := m.setPropMode(fixMode)
+	if modeChanged {
+		logger.Info("Set power mode", fixMode)
+		m.IsInBootTime = false
 	}
 
-	return err
-}
+	// 处理ddeLowBattery情况，所以每次都要设置
+	go m.setDSPCState(_powerConfigMap[mode].DSPCConfig) // doSetMode
+	m.setCompositorState(_powerConfigMap[mode].CompositorConfig)
+	m.setPropPowerSavingModeEnabled(_powerConfigMap[mode].PowerSavingModeEnabled)
 
-func (m *Manager) doSetCpuBoost(enabled bool) error {
-	if m.specialCpuMode != nil {
-		logger.Info("=== special cpu mode is on ===")
-		return nil
+	if m.lastMode != mode && mode != ddePowerSave && mode != ddeLowBattery {
+		m.lastMode = mode
 	}
-
-	err := m.cpus.SetBoostEnabled(enabled)
-	if err == nil {
-		m.setPropCpuBoost(enabled)
-	}
-	return err
-}
-
-func (m *Manager) doSetCpuGovernor(governor string) error {
-	if m.specialCpuMode != nil {
-		logger.Info("=== special cpu mode is on ===")
-		return nil
-	}
-	err := m.cpus.SetGovernor(governor, m.hasPstate)
-
-	if err == nil {
-		m.setPropCpuGovernor(governor)
-	}
-	return err
-}
-
-func (m *Manager) startSysPowersave() {
-	// echo powersave > /sys/module/pcie_aspm/parameters/policy
-	// echo low > /sys/class/drm/card0/device/power_dpm_force_performance_level
-	policy := ""
-	level := getPowerDpmForcePerformanceLevel()
-
-	if m.idlePowersaveAspmEnabled {
-		policy = getPowerPolicy()
-	}
-
-	logger.Info("start system power save [policy: powersave, level: low]")
-	var err error
-	if policy != "" {
-		err = setPowerPolicy("powersave")
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-	err = setPowerDpmForcePerformanceLevel("low")
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	m.endSysPowerSave = func() {
-		logger.Infof("end system power save [policy: %s, level: %s]", policy, level)
-		if policy != "" {
-			err = setPowerPolicy(policy)
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
-		err = setPowerDpmForcePerformanceLevel(level)
-		if err != nil {
-			logger.Warning(err)
-		}
+	if modeChanged {
+		_ = m.setDsgData(dsettingsMode, fixMode, m.dsgPower)
 	}
 }
 
-//需求: 为了提高启动速度，登录前将性能模式设置为performance
-//① 为了减小耦合性，仅写文件(doSetCpuGovernor)，不修改后端相关属性
+// 需求: 为了提高启动速度，登录前将性能模式设置为performance
+// ① 为了减小耦合性，仅写文件(doSetCpuGovernor)，不修改后端相关属性
 func (m *Manager) enablePerformanceInBoot() bool {
-	if m.Mode == "performance" {
+	if m.Mode == ddePerformance {
 		return false
 	}
-
-	logger.Info("enablePerformanceInBoot performance")
-	err := m.doSetCpuGovernor("performance")
+	displaySessions, err := m.displayManager.Sessions().Get(0)
 	if err != nil {
 		logger.Warning(err)
+	} else if len(displaySessions) > 0 {
 		return false
 	}
+	go m.setDSPCState(DSPCPerformance)
+	logger.Info("enablePerformanceInBoot performance")
 	m.IsInBootTime = true
 	return true
 }

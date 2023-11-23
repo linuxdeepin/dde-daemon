@@ -6,6 +6,7 @@ package power
 
 import (
 	"errors"
+
 	"github.com/godbus/dbus"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/utils"
@@ -33,6 +34,6 @@ func (m *Manager) setDsgData(key string, value interface{}, dsg ConfigManager.Ma
 		logger.Warningf("setDsgData key : %s. err : %v", key, err)
 		return err
 	}
-	logger.Infof("setDsgData key : %s , value : %v", key, value)
+	logger.Debugf("setDsgData key : %s , value : %v", key, value)
 	return nil
 }

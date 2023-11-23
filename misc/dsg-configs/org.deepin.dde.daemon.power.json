@@ -204,6 +204,18 @@
             "description": "延时关闭DDE黑屏程序时间间隔",
             "permissions": "readwrite",
             "visibility": "public"
+        },
+        "powerCompositorPowerSaveEnabled":{
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "compositor power save enabled",
+            "name[zh_CN]": "特效节能模式开关",
+            "description": "是否在低电量模式时关闭部分窗管特效",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }
