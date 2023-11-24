@@ -127,10 +127,8 @@ func (m *Manager) SetLocalRTC(localRTC, fixSystem bool) *dbus.Error {
 //
 // zone: pass a value like "Asia/Shanghai" to set the timezone.
 func (m *Manager) SetTimezone(zone string) *dbus.Error {
-	ok, err := zoneinfo.IsZoneValid(zone)
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
+	ok := m.isZoneValid(zone)
+
 	if !ok {
 		logger.Debug("Invalid zone:", zone)
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
@@ -138,10 +136,10 @@ func (m *Manager) SetTimezone(zone string) *dbus.Error {
 
 	// 如果要设置的时区是自定义时区或者是上海时区且当前的时区是自定义时区，需要更新时区属性
 	// 否则在设置完系统时区后再更新
-	isNeedUpdateProp := zone == "Asia/Shanghai" && strv.Strv(customTimeZoneList).Contains(m.Timezone) ||
+	isNeedUpdateProp := zone == defaultTimezone && strv.Strv(customTimeZoneList).Contains(m.Timezone) ||
 		strv.Strv(customTimeZoneList).Contains(zone)
 
-	err = m.setter.SetTimezone(0, zone,
+	err := m.setter.SetTimezone(0, zone,
 		Tr("Authentication is required to set the system timezone"))
 	if err != nil {
 		logger.Debug("SetTimezone failed:", err)
@@ -165,10 +163,8 @@ func (m *Manager) SetTimezone(zone string) *dbus.Error {
 
 // Add the specified time zone to user time zone list.
 func (m *Manager) AddUserTimezone(zone string) *dbus.Error {
-	ok, err := zoneinfo.IsZoneValid(zone)
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
+	ok := m.isZoneValid(zone)
+
 	if !ok {
 		logger.Debug("Invalid zone:", zone)
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
@@ -181,7 +177,7 @@ func (m *Manager) AddUserTimezone(zone string) *dbus.Error {
 		m.UserTimezones = newList
 		m.PropsMu.Unlock()
 		m.service.EmitPropertyChanged(m, "UserTimezones", m.UserTimezones)
-		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsKeyTimezoneList, dbus.MakeVariant(m.UserTimezones))
+		err := m.dConfigManager.SetValue(dbus.Flags(0), dSettingsKeyTimezoneList, dbus.MakeVariant(m.UserTimezones))
 		if err != nil {
 			logger.Warning(err)
 			return dbusutil.ToError(err)
@@ -192,10 +188,8 @@ func (m *Manager) AddUserTimezone(zone string) *dbus.Error {
 
 // Delete the specified time zone from user time zone list.
 func (m *Manager) DeleteUserTimezone(zone string) *dbus.Error {
-	ok, err := zoneinfo.IsZoneValid(zone)
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
+	ok := m.isZoneValid(zone)
+
 	if !ok {
 		logger.Debug("Invalid zone:", zone)
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
@@ -206,7 +200,7 @@ func (m *Manager) DeleteUserTimezone(zone string) *dbus.Error {
 	if deleted || hasNil {
 		m.UserTimezones = newList
 		m.service.EmitPropertyChanged(m, "UserTimezones", m.UserTimezones)
-		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsKeyTimezoneList, dbus.MakeVariant(m.UserTimezones))
+		err := m.dConfigManager.SetValue(dbus.Flags(0), dSettingsKeyTimezoneList, dbus.MakeVariant(m.UserTimezones))
 		if err != nil {
 			logger.Warning(err)
 			return dbusutil.ToError(err)
@@ -222,8 +216,7 @@ func (m *Manager) GetZoneInfo(zone string) (zoneInfo zoneinfo.ZoneInfo, busErr *
 	m.PropsMu.Unlock()
 
 	if strv.Strv(customTimeZoneList).Contains(zone) {
-		zoneShanghai := "Asia/Shanghai"
-		zoneInfoShanghai, err := zoneinfo.GetZoneInfo(zoneShanghai)
+		zoneInfoShanghai, err := zoneinfo.GetZoneInfo(defaultTimezone)
 		if err != nil {
 			logger.Debugf("Get zone info for '%s' failed: %v", zone, err)
 			return zoneinfo.ZoneInfo{}, dbusutil.ToError(err)
@@ -234,6 +227,12 @@ func (m *Manager) GetZoneInfo(zone string) (zoneInfo zoneinfo.ZoneInfo, busErr *
 	}
 
 	if err != nil {
+		// 时区在系统时区中而不在zone1970.tab中，在控制中心地图中找不到这种时区的位置，只显示其名字
+		timezoneList, err := m.getZoneList()
+		if strv.Strv(timezoneList).Contains(zone) {
+			return zoneinfo.ZoneInfo{Name: zone, Desc: "", Offset: 0, DST: zoneInfo.DST}, nil
+		}
+
 		logger.Debugf("Get zone info for '%s' failed: %v", zone, err)
 		return zoneinfo.ZoneInfo{}, dbusutil.ToError(err)
 	}
@@ -243,6 +242,10 @@ func (m *Manager) GetZoneInfo(zone string) (zoneInfo zoneinfo.ZoneInfo, busErr *
 
 // GetZoneList returns all the valid timezones.
 func (m *Manager) GetZoneList() (zoneList []string, busErr *dbus.Error) {
-	zoneList, err := zoneinfo.GetAllZones()
-	return zoneList, dbusutil.ToError(err)
+	zoneList, err := m.getZoneList()
+	if err != nil {
+		return nil, dbusutil.ToError(err)
+	}
+
+	return zoneList, nil
 }

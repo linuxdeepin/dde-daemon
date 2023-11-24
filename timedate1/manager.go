@@ -15,12 +15,14 @@ import (
 	"github.com/godbus/dbus/v5"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 	"github.com/linuxdeepin/dde-daemon/session/common"
+	"github.com/linuxdeepin/dde-daemon/timedate1/zoneinfo"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
 	timedate "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.timedate1"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timedate1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (
@@ -45,6 +47,8 @@ const (
 	dSettingsKeyLongTimeFormat  = "longTimeFormat"
 	dSettingsKeyWeekBegins      = "weekBegins"
 )
+
+const defaultTimezone = "Asia/Shanghai"
 
 //go:generate dbusutil-gen -type Manager manager.go
 //go:generate dbusutil-gen em -type Manager
@@ -487,7 +491,7 @@ func (m *Manager) init() {
 	}
 
 	// 如果系统时区是Asia/Shanghai且和用户设置的时区不一样，不需要去更新用户时区，以用户设置的时区为准
-	if !(timezone == "Asia/Shanghai" && timezone != m.Timezone) {
+	if !(timezone == defaultTimezone && timezone != m.Timezone) {
 		m.setPropTimezone(timezone)
 		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsTimeZone, dbus.MakeVariant(timezone))
 		if err != nil {
@@ -590,4 +594,49 @@ func (m *Manager) getSystemTimeZoneFromInstaller() (string, error) {
 	}
 
 	return strings.TrimSpace(timezone), nil
+}
+
+func (m *Manager) getZoneList() ([]string, error) {
+	timezoneList, err := zoneinfo.GetAllZones()
+	if err != nil {
+		logger.Warning(err)
+		return timezoneList, err
+	}
+
+	systemTimezoneList, err := m.td.ListTimezones(0)
+	if err != nil {
+		logger.Warning("get zone list failed:", err)
+		return timezoneList, err
+	}
+
+	// 将systemd中时区加入（zone1970.tab没有）
+	for _, v := range systemTimezoneList {
+		if strv.Strv(timezoneList).Contains(v) {
+			continue
+		}
+
+		timezoneList = append(timezoneList, v)
+	}
+
+	return timezoneList, err
+}
+
+func (m *Manager) isZoneValid(zone string) bool {
+	var ret bool
+
+	if len(zone) == 0 {
+		return ret
+	}
+
+	timezoneList, err := m.getZoneList()
+	if err != nil {
+		logger.Warning(err)
+		return ret
+	}
+
+	if strv.Strv(timezoneList).Contains(zone) {
+		ret = true
+	}
+
+	return ret
 }

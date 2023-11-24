@@ -60,7 +60,7 @@ func (m *Manager) listenPropChanged() {
 		logger.Debug("property Timezone changed to", value)
 
 		// 如果要设置的时区是上海时区且当前的时区是自定义时区, 已经在SetTimezone更新过Timezone属性，此处不需要再更新
-		if value == "Asia/Shanghai" && strv.Strv(customTimeZoneList).Contains(m.Timezone) {
+		if value == defaultTimezone && strv.Strv(customTimeZoneList).Contains(m.Timezone) {
 			return
 		}
 
