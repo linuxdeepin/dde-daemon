@@ -1,3 +1,10 @@
+dde-daemon (6.0.29) unstable; urgency=medium
+
+  * fix: wifi device not enable
+  * fix: dde-control-center timedate show empty
+
+ -- dengbo <dengbo@deepin.org>  Tue, 28 Nov 2023 10:17:15 +0800
+
 dde-daemon (6.0.28) unstable; urgency=medium
 
   * fix: delete timezone not update config file
