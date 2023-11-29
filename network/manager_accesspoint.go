@@ -374,11 +374,25 @@ func (m *Manager) ActivateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 	return cpath, nil
 }
 
-func fixApKeyMgmtChange(uuid string, keymgmt string, saved bool) (needUserEdit bool, err error) {
+func (m *Manager) fixApKeyMgmtChange(uuid string, keymgmt string, saved bool, devPath dbus.ObjectPath) (needUserEdit bool, err error) {
 	var cpath dbus.ObjectPath
 	cpath, err = nmGetConnectionByUuid(uuid)
 	if err != nil {
 		return
+	}
+
+	// 已成功连接过的网络需要更新配置
+	isAvailable := false
+	connections, err := m.listDeviceConnections(devPath)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		for _, path := range connections {
+			if path == cpath {
+				isAvailable = true
+				break
+			}
+		}
 	}
 
 	var conn nmdbus.ConnectionSettings
@@ -416,7 +430,12 @@ func fixApKeyMgmtChange(uuid string, keymgmt string, saved bool) (needUserEdit b
 		setSettingIP6ConfigRoutes(connData, getSettingIP6ConfigRoutes(connData))
 	}
 
-	if saved {
+	unsaved, err := conn.Unsaved().Get(0)
+	if err != nil {
+		unsaved = false
+		logger.Warning(err)
+	}
+	if saved || (isAvailable && !unsaved) {
 		err = conn.Update(0, connData)
 	} else {
 		err = conn.UpdateUnsaved(0, connData)
@@ -496,7 +515,7 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 	keymgmt := getKeyMgmtFromAP(nmAp)
 	if uuid != "" {
 		var needUserEdit bool
-		needUserEdit, err = fixApKeyMgmtChange(uuid, keymgmt, saved)
+		needUserEdit, err = m.fixApKeyMgmtChange(uuid, keymgmt, saved, devPath)
 		if err != nil {
 			return
 		}
@@ -533,6 +552,9 @@ func (m *Manager) activateAccessPoint(uuid string, apPath, devPath dbus.ObjectPa
 			cpath, _, err = nmAddAndActivateConnection(data, devPath, true)
 		} else {
 			cpath, err = nmAddConnectionUnsave(data)
+			if err == nil {
+				_, err = nmActivateConnection(cpath, devPath)
+			}
 		}
 		if err != nil {
 			return
