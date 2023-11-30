@@ -416,6 +416,10 @@ func (n *Network) enableDevice1(d *device) (cpath dbus.ObjectPath, err error) {
 	if err != nil {
 		return "/", err
 	}
+	err = setDeviceAutoConnect(d.nmDevice, true)
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	if d.type0 == nm.NM_DEVICE_TYPE_WIFI {
 		err = n.enableWireless()
