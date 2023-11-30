@@ -728,7 +728,7 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 			return err
 		}
 	case "CompositorPowerSaveEnable":
-		err = m.setDsgData(dsettingsPowerCompositorPowerSaveEnable, m.PowerSavingModeAuto, m.dsgPower)
+		err = m.setDsgData(dsettingsPowerCompositorPowerSaveEnable, m.CompositorPowerSaveEnable, m.dsgPower)
 		if err != nil {
 			return err
 		}
@@ -749,7 +749,7 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 		if err != nil {
 			return err
 		}
-		err = m.setDsgData(dsettingsPowerCompositorPowerSaveEnable, m.PowerSavingModeAuto, m.dsgPower)
+		err = m.setDsgData(dsettingsPowerCompositorPowerSaveEnable, m.CompositorPowerSaveEnable, m.dsgPower)
 		if err != nil {
 			return err
 		}
