@@ -171,6 +171,7 @@ var _validPowerModeArray = strv.Strv{
 	ddePowerSave,
 	ddeBalance,
 	ddePerformance,
+	ddeLowBattery,
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
