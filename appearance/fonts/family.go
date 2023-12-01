@@ -74,10 +74,10 @@ func SetFamily(standard, monospace string, size float64) error {
 	defer locker.Unlock()
 
 	if isVirtualFont(standard) {
-		standard = fcFontMatch(standard)
+		standard = FcFont_Match(standard)
 	}
 	if isVirtualFont(monospace) {
-		monospace = fcFontMatch(monospace)
+		monospace = FcFont_Match(monospace)
 	}
 
 	table := GetFamilyTable()
@@ -94,8 +94,8 @@ func SetFamily(standard, monospace string, size float64) error {
 
 	// fc-match can not real time update
 	/*
-		curStand := fcFontMatch("sans-serif")
-		curMono := fcFontMatch("monospace")
+		curStand := FcFont_Match("sans-serif")
+		curMono := FcFont_Match("monospace")
 		if (standInfo.Id == curStand || standInfo.Name == curStand) &&
 			(monoInfo.Id == curMono || monoInfo.Name == curMono) {
 			return nil

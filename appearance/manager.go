@@ -213,7 +213,9 @@ func newManager(service *dbusutil.Service) *Manager {
 	m.GtkTheme.Bind(m.setting, gsKeyGtkTheme)
 	m.IconTheme.Bind(m.setting, gsKeyIconTheme)
 	m.CursorTheme.Bind(m.setting, gsKeyCursorTheme)
+	m.setting.SetString(gsKeyFontStandard, fonts.FcFont_Match("system-ui"))
 	m.StandardFont.Bind(m.setting, gsKeyFontStandard)
+	m.setting.SetString(gsKeyFontMonospace, fonts.FcFont_Match("monospace"))
 	m.MonospaceFont.Bind(m.setting, gsKeyFontMonospace)
 	m.Background.Bind(m.wrapBgSetting, gsKeyBackground)
 
@@ -317,7 +319,7 @@ func (m *Manager) isBgInUse(file string) bool {
 		return true
 	}
 	// 检查所有的工作区的屏幕壁纸是否占用
-	mapWallpaperURIs,err := doUnmarshalMonitorWorkspaceWallpaperURIs(m.WallpaperURIs.Get()) 
+	mapWallpaperURIs,err := doUnmarshalMonitorWorkspaceWallpaperURIs(m.WallpaperURIs.Get())
 	if err != nil {
 		logger.Error(err)
 		return false

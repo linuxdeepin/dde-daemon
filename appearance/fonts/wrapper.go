@@ -56,7 +56,7 @@ var familyBlacklist = strv.Strv([]string{
 
 // family ex: 'sans', 'serif', 'monospace'
 // cRet: `SourceCodePro-Medium.otf: "Source Code Pro" "Medium"`
-func fcFontMatch(family string) string {
+func FcFont_Match(family string) string {
 	cFamily := C.CString(family)
 	defer C.free(unsafe.Pointer(cFamily))
 	cRet := C.font_match(cFamily)
