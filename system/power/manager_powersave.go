@@ -15,9 +15,9 @@ type DSPCMode string
 
 const (
 	DSPCPerformance DSPCMode = "performance"
-	DSPCBalance     DSPCMode = "performance"
+	DSPCBalance     DSPCMode = "balance"
 	DSPCSaving      DSPCMode = "saving"
-	DSPCLowBattery  DSPCMode = "saving"
+	DSPCLowBattery  DSPCMode = "lowbat"
 )
 
 type powerConfig struct {

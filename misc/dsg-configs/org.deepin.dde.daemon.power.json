@@ -228,7 +228,7 @@
             "visibility": "public"
         },
         "powerMappingConfig":{
-            "value": "{\"balance\":{\"DSPCConfig\":\"performance\",\"CompositorConfig\":\"auto\"},\"lowBattery\":{\"DSPCConfig\":\"saving\",\"CompositorConfig\":\"XRender\"},\"performance\":{\"DSPCConfig\":\"performance\",\"CompositorConfig\":\"auto\"},\"powersave\":{\"DSPCConfig\":\"saving\",\"CompositorConfig\":\"auto\"}}",
+            "value": "{\"balance\":{\"DSPCConfig\":\"balance\",\"CompositorConfig\":\"auto\"},\"lowBattery\":{\"DSPCConfig\":\"lowbat\",\"CompositorConfig\":\"XRender\"},\"performance\":{\"DSPCConfig\":\"performance\",\"CompositorConfig\":\"auto\"},\"powersave\":{\"DSPCConfig\":\"saving\",\"CompositorConfig\":\"auto\"}}",
             "serial": 0,
             "flags": [
                 "global"
