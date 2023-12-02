@@ -765,7 +765,9 @@ func (m *Manager) doSetMode(mode string) {
 		logger.Errorf("PowerMode %q mode is not supported", mode)
 		return
 	}
-
+	if mode == ddePowerSave && m.batteryLow {
+		mode = ddeLowBattery
+	}
 	fixMode := mode
 	if fixMode == ddeLowBattery {
 		fixMode = ddePowerSave
