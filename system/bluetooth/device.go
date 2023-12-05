@@ -616,10 +616,14 @@ func (d *device) doRealConnect() error {
 	err := d.core.Connect(0)
 	d.setConnectPhase(connectPhaseConnectProfilesEnd)
 	if err != nil {
-		// connect failed
-		logger.Warningf("%s connect failed: %v", d, err)
-		_bt.config.setDeviceConfigConnected(d, false)
-		return err
+		if strings.Contains(err.Error(), "Input/output error") {
+			logger.Info("Input/output error -> ignore profile fail.")
+		} else {
+			// connect failed
+			logger.Warningf("%s connect failed: %v", d, err)
+			_bt.config.setDeviceConfigConnected(d, false)
+			return err
+		}
 	}
 
 	// connect succeeded
