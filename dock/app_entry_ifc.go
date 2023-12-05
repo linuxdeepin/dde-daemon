@@ -153,6 +153,14 @@ func (entry *AppEntry) PresentWindows() *dbus.Error {
 	return nil
 }
 
+func (entry *AppEntry) showWorkspace() error {
+	err := entry.manager.wm.ShowWorkspace(0)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	return nil
+}
+
 func (entry *AppEntry) NewInstance(timestamp uint32) *dbus.Error {
 	entry.launchApp(timestamp)
 	return nil

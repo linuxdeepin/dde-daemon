@@ -1064,6 +1064,10 @@ func (sm *ShortcutManager) AddWM(gsettings *gio.Settings, wmObj wm.Wm) {
 			logger.Debugf("release type is server filter '%s'", id)
 			continue
 		}
+		if id == "expose-all-windows" || id == "expose-windows" {
+			logger.Debugf("'%s' is abandoned!", id)
+			continue
+		}
 		name := idNameMap[id]
 		if name == "" {
 			name = id
@@ -1197,6 +1201,10 @@ func (sm *ShortcutManager) AddKWin(wmObj wm.Wm) {
 			logger.Debugf("release type is server filter '%s'", accel.Id)
 			continue
 		}
+		if accel.Id == "expose-all-windows" || accel.Id == "expose-windows" {
+			logger.Debugf("'%s' is abandoned!", accel.Id)
+			continue
+		}
 		name := idNameMap[accel.Id]
 		if name == "" {
 			name = accel.Id
@@ -1216,7 +1224,8 @@ func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
 	}
 	idNameMap := getWMIdNameMap()
 	for _, accel := range accels {
-		if accel.Id == "color-picker" || accel.Id == "switch-kbd-layout" {
+		if accel.Id == "color-picker" || accel.Id == "switch-kbd-layout" ||
+			accel.Id == "expose-all-windows" || accel.Id == "expose-windows" {
 			continue
 		}
 		if getSystemIdNameMap()[accel.Id] != "" || getMediaIdNameMap()[accel.Id] != "" {

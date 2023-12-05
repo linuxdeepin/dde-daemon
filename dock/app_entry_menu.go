@@ -181,9 +181,9 @@ func (entry *AppEntry) getMenuItemUndock() *MenuItem {
 func (entry *AppEntry) getMenuItemAllWindows() *MenuItem {
 	menuItem := NewMenuItem(Tr("All Windows"), func(uint32) {
 		logger.Debug("menu action all windows")
-		err := entry.PresentWindows()
+		err := entry.showWorkspace()
 		if err != nil {
-			logger.Warning("PresentWindows error:", err)
+			logger.Warning("ShowWorkspace error:", err)
 		}
 	}, true)
 	menuItem.hint = menuItemHintShowAllWindows
