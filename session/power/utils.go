@@ -564,29 +564,21 @@ func (m *Manager) initGSettingsConnectChanged() {
 			if isIllegalAction(value) {
 				break
 			}
-			notifyString := getNotifyString(settingKeyLinePowerLidClosedAction, value)
-			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyLinePowerPressPowerBtnAction:
 			value := m.LinePowerPressPowerBtnAction.Get()
 			if isIllegalAction(value) {
 				break
 			}
-			notifyString := getNotifyString(settingKeyLinePowerPressPowerBtnAction, value)
-			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyBatteryLidClosedAction:
 			value := m.BatteryLidClosedAction.Get()
 			if isIllegalAction(value) {
 				break
 			}
-			notifyString := getNotifyString(settingKeyBatteryLidClosedAction, value)
-			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyBatteryPressPowerBtnAction:
 			value := m.BatteryPressPowerBtnAction.Get()
 			if isIllegalAction(value) {
 				break
 			}
-			notifyString := getNotifyString(settingKeyBatteryPressPowerBtnAction, value)
-			m.sendChangeNotify(powerSettingsIcon, Tr("Power settings changed"), notifyString)
 		case settingKeyHighPerformanceEnabled:
 			// 根据systemPower::IsHighPerformanceEnabled GSetting::settingKeyHighPerformanceEnabled
 			bSettingKeyHighPerformanceEnabled := m.settings.GetBoolean(settingKeyHighPerformanceEnabled)
@@ -598,27 +590,6 @@ func (m *Manager) initGSettingsConnectChanged() {
 			m.setPropIsHighPerformanceSupported(isHighPerformanceSupported && bSettingKeyHighPerformanceEnabled)
 		}
 	})
-}
-
-func getNotifyString(option string, action int32) string {
-	var (
-		notifyString string
-		firstPart    string
-		secondPart   string
-	)
-	switch option {
-	case
-		settingKeyLinePowerLidClosedAction,
-		settingKeyBatteryLidClosedAction:
-		firstPart = Tr("When the lid is closed, ")
-	case
-		settingKeyLinePowerPressPowerBtnAction,
-		settingKeyBatteryPressPowerBtnAction:
-		firstPart = Tr("When pressing the power button, ")
-	}
-	secondPart = getPowerActionString(action)
-	notifyString = firstPart + secondPart
-	return notifyString
 }
 
 func getPowerActionString(action int32) string {
