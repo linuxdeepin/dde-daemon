@@ -37,7 +37,7 @@ const (
 	ErrCodeInvalidChar
 	ErrCodeFirstCharInvalid
 	ErrCodeExist
-	ErrCodeNameExist
+	ErrCodeNameInGroup
 	ErrCodeSystemUsed
 	ErrCodeLen
 )
@@ -53,10 +53,11 @@ func (code ErrorCode) Error() *ErrorInfo {
 	case ErrCodeFirstCharInvalid:
 		err = errors.New(Tr("The first character must be a letter or number"))
 	case ErrCodeExist, ErrCodeSystemUsed:
+		//提示校验项目与全名、用户名是否相同
 		err = errors.New(Tr("The username already exists"))
-	case ErrCodeNameExist:
-		//提示校验项目与全名、组名或用户名是否相同
-		err = errors.New(Tr("The name already exists"))
+	case ErrCodeNameInGroup:
+		//提示校验项目与用户组名是否相同
+		err = errors.New(Tr("The group name already exists"))
 	case ErrCodeLen:
 		err = errors.New(Tr("Username must be between 3 and 32 characters"))
 	default:
@@ -91,7 +92,7 @@ func CheckUsernameValid(name string) *ErrorInfo {
 	// in euler version, linux kernel is 4.19.90
 	// do not allow create user already token by group
 	if Username(name).isNameInGroup() {
-		return ErrCodeNameExist.Error()
+		return ErrCodeNameInGroup.Error()
 	}
 
 	if !Username(name).isFirstCharValid() {
