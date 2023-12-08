@@ -784,6 +784,15 @@ func (m *Manager) scheduledShutdown(state int) {
 		m.shutdownTimer.Stop()
 		m.shutdownTimer = nil
 	}
+
+	// 用户非活跃状态或者低电量屏保状态，停止定时关机流程
+	isSessionActive, _ := m.helper.SessionWatcher.IsActive().Get(0)
+	if !isSessionActive || m.WarnLevel == WarnLevelAction {
+		m.notify.CloseNotification(0, m.notifyId)
+		logger.Warning("Stop scheduledShutdown")
+		return
+	}
+
 	if state != Init && state == m.shutdownStatus {
 		return
 	}
@@ -792,7 +801,7 @@ func (m *Manager) scheduledShutdown(state int) {
 	currentTime := time.Now()
 	switch state {
 	case Init:
-		// 非活跃状态或者定时关闭的情况下，关闭定时器
+		// 定时关闭的情况下，关闭定时器
 		if m.shutdownStatus >= Countdowning {
 			m.notify.CloseNotification(0, m.notifyId)
 		}

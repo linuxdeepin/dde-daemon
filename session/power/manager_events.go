@@ -249,6 +249,9 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 
 	switch level {
 	case WarnLevelAction:
+		if m.ScheduledShutdownState {
+			m.scheduledShutdown(Init)
+		}
 		playSound(soundutils.EventBatteryLow)
 		m.sendNotify(iconBatteryLow, "",
 			Tr("Battery critically low"))
@@ -291,6 +294,9 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 	case WarnLevelNone:
 		logger.Debug("Power sufficient")
 		doCloseDDELowPower()
+		if m.ScheduledShutdownState {
+			m.scheduledShutdown(Init)
+		}
 		// 由 低电量 到 电量充足，必然需要有线电源插入
 	}
 }
