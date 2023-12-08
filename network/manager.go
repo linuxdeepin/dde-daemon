@@ -47,6 +47,7 @@ const (
 	networkCoreConfigPath      = "org.deepin.dde.network"
 	ddeNetworkCoreConfigPath   = networkCoreConfigPath
 	dsettingsLoadServiceFromNM = "LoadServiceFromNM"
+	dsettingsEnableConnectivity= "enableConnectivity"
 )
 
 const checkRepeatTime = 1 * time.Second
@@ -134,6 +135,7 @@ type Manager struct {
 
 	// dsg config : org.deepin.dde.network : LoadServiceFromNM
 	loadServiceFromNM bool
+	enableLocalConnectivity bool
 
 	//nolint
 	signals *struct {
@@ -291,7 +293,7 @@ func (m *Manager) init() {
 
 	m.loadServiceFromNM = m.getLoadServiceFromNM(ds)
 	logger.Info("[init], DConfig data of LoadServiceFromNM : ", m.loadServiceFromNM)
-
+	m.loadEnableConnectivity(ds)
 	// 初始化配置
 	m.wifiOSDEnable = true
 	m.resetWifiOSDEnableTimer = time.AfterFunc(time.Duration(m.resetWifiOSDEnableTimeout)*time.Millisecond, func() {
@@ -425,7 +427,7 @@ func (m *Manager) init() {
 	// update property Connectivity
 	_ = nmManager.Connectivity().ConnectChanged(func(hasValue bool, value uint32) {
 		logger.Debug("connectivity state changed ", hasValue, value)
-		if hasValue && value == nm.NM_CONNECTIVITY_PORTAL && m.protalAuthEnable {
+		if hasValue && value == nm.NM_CONNECTIVITY_PORTAL && m.protalAuthEnable && !m.enableLocalConnectivity {
 			go m.doPortalAuthentication()
 		}
 		m.setPropConnectivity(value)
@@ -462,6 +464,43 @@ func (m *Manager) init() {
 
 	m.syncConfig = dsync.NewConfig("network", &syncConfig{m: m},
 		m.sessionSigLoop, dbusPath, logger)
+}
+
+func (m *Manager) loadEnableConnectivity(ds configManager.ConfigManager) {
+	networkCoreConfigManagerPath, err := ds.AcquireManager(0, networkCoreConfigPath, ddeNetworkCoreConfigPath, "")
+	if err != nil {
+		logger.Warning(err)
+		return;
+	}
+
+	networkCoreConfigManager, err := configManager.NewManager(m.sysSigLoop.Conn(), networkCoreConfigManagerPath)
+	if err != nil {
+		logger.Warning(err)
+		return;
+	}
+
+	getDEnableLocalConnectivity := func() bool {
+		v, err := networkCoreConfigManager.Value(0, dsettingsEnableConnectivity)
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+		return v.Value().(bool)
+	}
+
+	m.enableLocalConnectivity = getDEnableLocalConnectivity()
+	logger.Info("DConfig data of enableConnectivity : ", m.enableLocalConnectivity)
+	networkCoreConfigManager.InitSignalExt(m.sysSigLoop, true)
+	_, err = networkCoreConfigManager.ConnectValueChanged(func(key string) {
+		if key == dsettingsEnableConnectivity {
+				m.enableLocalConnectivity = getDEnableLocalConnectivity()
+				logger.Info("DConfig data changed of enableConnectivity : ", m.enableLocalConnectivity)
+			}
+		})
+
+	if err != nil {
+		logger.Warning(err)
+	}
 }
 
 func (m *Manager) getLoadServiceFromNM(ds configManager.ConfigManager) (ret bool) {
@@ -761,7 +800,7 @@ func (m *Manager) checkConnectivity() {
 		logger.Warning(err)
 		return
 	}
-	if connectivity == nm.NM_CONNECTIVITY_PORTAL && m.protalAuthEnable {
+	if connectivity == nm.NM_CONNECTIVITY_PORTAL && m.protalAuthEnable && !m.enableLocalConnectivity {
 		m.doPortalAuthentication()
 	}
 }
