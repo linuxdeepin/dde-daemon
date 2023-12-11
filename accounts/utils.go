@@ -32,6 +32,8 @@ const (
 	polkitActionChangeOwnData          = "com.deepin.daemon.accounts.change-own-user-data"
 	polkitActionEnableAutoLogin        = "com.deepin.daemon.accounts.enable-auto-login"
 	polkitActionDisableAutoLogin       = "com.deepin.daemon.accounts.disable-auto-login"
+	polkitActionEnableQuickLogin       = "com.deepin.daemon.accounts.enable-quick-login"
+	polkitActionDisableQuickLogin      = "com.deepin.daemon.accounts.disable-quick-login"
 	polkitActionEnableNoPasswordLogin  = "com.deepin.daemon.accounts.enable-nopass-login"
 	polkitActionDisableNoPasswordLogin = "com.deepin.daemon.accounts.disable-nopass-login"
 	polkitActionSetKeyboardLayout      = "com.deepin.daemon.accounts.set-keyboard-layout"

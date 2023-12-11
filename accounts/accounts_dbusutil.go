@@ -349,6 +349,19 @@ func (v *User) emitPropChangedAutomaticLogin(value bool) error {
 	return v.service.EmitPropertyChanged(v, "AutomaticLogin", value)
 }
 
+func (v *User) setPropQuickLogin(value bool) (changed bool) {
+	if v.QuickLogin != value {
+		v.QuickLogin = value
+		v.emitPropChangedQuickLogin(value)
+		return true
+	}
+	return false
+}
+
+func (v *User) emitPropChangedQuickLogin(value bool) error {
+	return v.service.EmitPropertyChanged(v, "QuickLogin", value)
+}
+
 func (v *User) setPropWorkspace(value int32) (changed bool) {
 	if v.Workspace != value {
 		v.Workspace = value
@@ -482,4 +495,17 @@ func (v *Manager) setPropIsTerminalLocked(value bool) (changed bool) {
 
 func (v *Manager) emitPropChangedIsTerminalLocked(value bool) error {
 	return v.service.EmitPropertyChanged(v, "IsTerminalLocked", value)
+}
+
+func (v *Manager) setPropQuickLoginEnabled(value bool) (changed bool) {
+	if v.QuickLoginEnabled != value {
+		v.QuickLoginEnabled = value
+		v.emitPropChangedQuickLoginEnabled(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedQuickLoginEnabled(value bool) error {
+	return v.service.EmitPropertyChanged(v, "QuickLoginEnabled", value)
 }

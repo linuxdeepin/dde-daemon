@@ -135,6 +135,10 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"icon"},
 		},
 		{
+			Name: "DeleteSecretKey",
+			Fn:   v.DeleteSecretKey,
+		},
+		{
 			Name:   "EnableNoPasswdLogin",
 			Fn:     v.EnableNoPasswdLogin,
 			InArgs: []string{"enabled"},
@@ -143,6 +147,12 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:    "GetReminderInfo",
 			Fn:      v.GetReminderInfo,
 			OutArgs: []string{"info"},
+		},
+		{
+			Name:    "GetSecretKey",
+			Fn:      v.GetSecretKey,
+			InArgs:  []string{"username"},
+			OutArgs: []string{"outArg0"},
 		},
 		{
 			Name:    "GetSecretQuestions",
@@ -245,9 +255,9 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"hint"},
 		},
 		{
-			Name:   "SetSecretQuestions",
-			Fn:     v.SetSecretQuestions,
-			InArgs: []string{"list"},
+			Name:   "SetQuickLogin",
+			Fn:     v.SetQuickLogin,
+			InArgs: []string{"enabled"},
 		},
 		{
 			Name:   "SetSecretKey",
@@ -255,15 +265,9 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"secretKey"},
 		},
 		{
-			Name:    "GetSecretKey",
-			Fn:      v.GetSecretKey,
-			InArgs:  []string{"username"},
-			OutArgs: []string{"secretKey"},
-		},
-		{
-			Name:   "DeleteSecretKey",
-			Fn:     v.DeleteSecretKey,
-			InArgs: []string{},
+			Name:   "SetSecretQuestions",
+			Fn:     v.SetSecretQuestions,
+			InArgs: []string{"list"},
 		},
 		{
 			Name:   "SetShell",

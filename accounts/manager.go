@@ -15,10 +15,13 @@ import (
 	"strconv"
 	"sync"
 	"syscall"
+	"time"
+	"fmt"
 
 	dbus "github.com/godbus/dbus"
 	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/tasker"
@@ -96,8 +99,14 @@ type Manager struct {
 	udcpCache        udcp.UdcpCache
 	userConfig       DefaultDomainUserConfig
 	domainUserMapMu  sync.Mutex
+	cfgManager       configManager.ConfigManager
 	dsAccount        configManager.Manager
+	// greeter 的 dconfig 配置
+	dsGreeter        configManager.Manager
+	dbusDaemon       ofdbus.DBus
 	IsTerminalLocked bool
+	// 快速登录总开关
+	QuickLoginEnabled bool
 
 	//nolint
 	signals *struct {
@@ -131,6 +140,10 @@ func NewManager(service *dbusutil.Service) *Manager {
 
 	m.GuestIcon = userIconGuest
 	m.AllowGuest = isGuestUserEnabled()
+	m.QuickLoginEnabled, err = users.GetLightDMQuickLoginEnabled()
+	if err != nil {
+		logger.Warning("GetLightDMQuickLoginEnabled failed, err:", err)
+	}
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
 	m.initAccountDSettings()
@@ -159,6 +172,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 		_ = m.delayTaskManager.AddTask(taskNameGroup, fileEventDelay, m.handleFileGroupChanged)
 		_ = m.delayTaskManager.AddTask(taskNameShadow, fileEventDelay, m.handleFileShadowChanged)
 		_ = m.delayTaskManager.AddTask(taskNameDM, fileEventDelay, m.handleDMConfigChanged)
+		_ = m.delayTaskManager.AddTask(taskNameGreeterState, fileEventDelay, m.handleGreeterStateChanged)
 
 		m.watcher.SetFileList(m.getWatchFiles())
 		m.watcher.SetEventHandler(m.handleFileChanged)
@@ -659,9 +673,9 @@ func (m *Manager) checkGroupCanChange(name string) bool {
 }
 
 func (m *Manager) initAccountDSettings() {
-	ds := configManager.NewConfigManager(m.sysSigLoop.Conn())
+	m.cfgManager = configManager.NewConfigManager(m.sysSigLoop.Conn())
 
-	accountPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsAccountName, "")
+	accountPath, err := m.cfgManager.AcquireManager(0, dsettingsAppID, dsettingsAccountName, "")
 	if err != nil {
 		logger.Warning(err)
 		return
@@ -681,5 +695,128 @@ func (m *Manager) initAccountDSettings() {
 
 	if data, ok := v.Value().(bool); ok {
 		m.IsTerminalLocked = data
+	}
+}
+
+const (
+	greeterAppId               = "org.deepin.dde.lightdm-deepin-greeter"
+	greeterResourceId          = "org.deepin.dde.daemon.accounts"
+	greeterKeyEnableQuickLogin = "enableQuickLogin"
+)
+
+// 在 dconfig 设置 quick login （总开关）
+func (m *Manager) setDConfigQuickLoginEnabled(enabled bool) error {
+	if m.dsGreeter == nil {
+		return errors.New("get greeter dconfig failed")
+	}
+	err := m.dsGreeter.SetValue(0, greeterKeyEnableQuickLogin, dbus.MakeVariant(enabled))
+	if err != nil {
+		return fmt.Errorf("set greeter dconfig enableQuickLogin failed, err: %v", err)
+	}
+	return nil
+}
+
+// 从 dconfig 获取 quick login （总开关）的配置
+func (m *Manager) getDConfigQuickLoginEnabled() (bool, error) {
+	if m.dsGreeter == nil {
+		return false, errors.New("get greeter dconfig failed")
+	}
+	enabledVar, err := m.dsGreeter.Value(0, greeterKeyEnableQuickLogin)
+	if err != nil {
+		return false, fmt.Errorf("set greeter dconfig enableQuickLogin failed, err: %v", err)
+	}
+
+	enabled, ok := enabledVar.Value().(bool)
+	if !ok {
+		return false, errors.New("enabledVar.Value() is not bool type")
+	}
+	return enabled, nil
+}
+
+func (m *Manager) initDConfigGreeterWatch() error {
+	greeterPath, err := m.cfgManager.AcquireManager(0, greeterAppId, greeterResourceId, "")
+	if err != nil {
+		return err
+	}
+
+	m.dsGreeter, err = configManager.NewManager(m.sysSigLoop.Conn(), greeterPath)
+	if err != nil {
+		return err
+	}
+
+	enabled, err := m.getDConfigQuickLoginEnabled()
+	if err != nil {
+		logger.Warning("getDConfigQuickLoginEnabled failed, err:", err)
+	} else {
+		// 从 dconfig 获取值，然后同步到 /etc/lightdm/lightdm.conf 配置文件中。
+		err = users.SetLightDMQuickLoginEnabled(enabled)
+		if err != nil {
+			logger.Warning("SetLightDMQuickLoginEnabled failed, error:", err)
+		}
+		m.setPropQuickLoginEnabled(enabled)
+	}
+
+	m.dsGreeter.InitSignalExt(m.sysSigLoop, true)
+	m.dsGreeter.ConnectValueChanged(func(key string) {
+		// dconfig 配置改变
+		if key != greeterKeyEnableQuickLogin {
+			return
+		}
+
+		enabled, err := m.getDConfigQuickLoginEnabled()
+		if err != nil {
+			logger.Warning("getDConfigQuickLoginEnabled failed, err:", err)
+			return
+		}
+
+		logger.Debug("handle dconfig quick login enabled changed", enabled)
+		err = users.SetLightDMQuickLoginEnabled(enabled)
+		if err != nil {
+			logger.Warning("SetLightDMQuickLoginEnabled failed, error:", err)
+		}
+	})
+	return nil
+}
+
+func (m *Manager) removeGreeterDConfigWatch() {
+	if m.dsGreeter != nil {
+		m.dsGreeter.RemoveAllHandlers()
+	}
+}
+
+// 监控 dconfig-daemon 服务是否重新启动, 如果重新启动了，需要重新注册监控器。
+func (m *Manager) initDBusDaemonWatch() {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("get system bus failed, err:", err)
+		return
+	}
+
+	m.dbusDaemon = ofdbus.NewDBus(systemBus)
+	m.dbusDaemon.InitSignalExt(m.sysSigLoop, false)
+
+	// 手工构建匹配规则
+	rule := dbusutil.NewMatchRuleBuilder().Sender(m.dbusDaemon.ServiceName_()).
+		Path(string(m.dbusDaemon.Path_())).Member("NameOwnerChanged").
+		Arg(0, m.cfgManager.ServiceName_()).
+		Build()
+	logger.Debug("rule:", rule.Str)
+	err = rule.AddTo(systemBus)
+	if err != nil {
+		logger.Warning("add match rule failed, err:", err)
+		return
+	}
+
+	_, err = m.dbusDaemon.ConnectNameOwnerChanged(func(name, oldOwner, newOwner string) {
+		if name == m.cfgManager.ServiceName_() && oldOwner == "" && newOwner != "" {
+			// 检测到 dconfig-daemon 服务启动后，重新初始化相关配置
+			logger.Debug("monitored that the dconfig-daemon service has restarted")
+			time.Sleep(2 * time.Second)
+			m.removeGreeterDConfigWatch()
+			m.initDConfigGreeterWatch()
+		}
+	})
+	if err != nil {
+		logger.Warning("connect NameOwnerChanged signal failed, err:", err)
 	}
 }

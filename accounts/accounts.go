@@ -13,8 +13,13 @@ import (
 var (
 	_imageBlur         *ImageBlur
 	_userStandardIcons []string
+	_accountsManager   *Manager
 	logger             = log.NewLogger("daemon/accounts")
 )
+
+func getAccountsManager() *Manager {
+	return _accountsManager
+}
 
 func init() {
 	loader.Register(NewDaemon())
@@ -44,6 +49,7 @@ func (d *Daemon) Start() error {
 	_userStandardIcons = getUserStandardIcons()
 	service := loader.GetService()
 	d.manager = NewManager(service)
+	_accountsManager = d.manager
 
 	err := service.Export(dbusPath, d.manager)
 	if err != nil {
@@ -81,6 +87,13 @@ func (d *Daemon) Start() error {
 	if err != nil {
 		return err
 	}
+
+	err = d.manager.initDConfigGreeterWatch()
+	if err != nil {
+		logger.Warning("init greeter dconfig watch failed:", err)
+	}
+	d.manager.initDBusDaemonWatch()
+
 	return nil
 }
 
@@ -88,6 +101,7 @@ func (d *Daemon) Stop() error {
 	if d.manager != nil {
 		d.manager.destroy()
 		d.manager = nil
+		_accountsManager = nil
 	}
 
 	service := loader.GetService()

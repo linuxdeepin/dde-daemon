@@ -119,6 +119,10 @@ type User struct {
 	Locked bool
 	// 是否允许此用户自动登录
 	AutomaticLogin bool
+
+	// 是否快速登录
+	QuickLogin bool
+
 	// 当前工作区
 	Workspace int32
 
@@ -164,6 +168,7 @@ func NewUser(userPath string, service *dbusutil.Service, ignoreErr bool) (*User,
 		HomeDir:            userInfo.Home,
 		Shell:              userInfo.Shell,
 		AutomaticLogin:     users.IsAutoLoginUser(userInfo.Name),
+		QuickLogin:         users.IsQuickLoginUser(userInfo.Name),
 		NoPasswdLogin:      users.CanNoPasswdLogin(userInfo.Name),
 		Locked:             shadowInfo.Status == users.PasswordStatusLocked,
 		PasswordStatus:     shadowInfo.Status,
@@ -196,6 +201,7 @@ func NewDomainUser(usrId uint32, service *dbusutil.Service, groups []string) (*U
 		HomeDir:            users.GetPwDir(usrId),
 		Shell:              users.GetPwShell(usrId),
 		AutomaticLogin:     users.IsAutoLoginUser(userName),
+		QuickLogin:         users.IsQuickLoginUser(userName),
 		NoPasswdLogin:      users.CanNoPasswdLogin(userName),
 		Locked:             false,
 		PasswordStatus:     users.PasswordStatusUsable,
@@ -405,6 +411,13 @@ func (u *User) updatePropAutomaticLogin() {
 	u.PropsMu.Unlock()
 }
 
+func (u *User) updatePropQuickLogin() {
+	newVal := users.IsQuickLoginUser(u.UserName)
+	u.PropsMu.Lock()
+	u.setPropQuickLogin(newVal)
+	u.PropsMu.Unlock()
+}
+
 func (u *User) updatePropsPasswd(uInfo *users.UserInfo) {
 	var userNameChanged bool
 	var oldUserName string
@@ -532,6 +545,17 @@ func (u *User) checkAuthAutoLogin(sender dbus.Sender, enabled bool) error {
 		actionId = polkitActionEnableAutoLogin
 	} else {
 		actionId = polkitActionDisableAutoLogin
+	}
+
+	return u.checkAuth(sender, false, actionId)
+}
+
+func (u *User) checkAuthQuickLogin(sender dbus.Sender, enabled bool) error {
+	var actionId string
+	if enabled {
+		actionId = polkitActionEnableQuickLogin
+	} else {
+		actionId = polkitActionDisableQuickLogin
 	}
 
 	return u.checkAuth(sender, false, actionId)
@@ -909,5 +933,39 @@ func (u *User) setAutomaticLogin(enabled bool) *dbus.Error {
 
 	u.AutomaticLogin = enabled
 	_ = u.emitPropChangedAutomaticLogin(enabled)
+	return nil
+}
+
+// 设置用户是否快速登录
+func (u *User) setQuickLogin(enabled bool) *dbus.Error {
+	u.PropsMu.Lock()
+	defer u.PropsMu.Unlock()
+
+	if u.Locked {
+		return dbusutil.ToError(fmt.Errorf("user %s has been locked", u.UserName))
+	}
+
+	if u.QuickLogin == enabled {
+		return nil
+	}
+
+	// 先打开总开关
+	if enabled {
+		accountsManager := getAccountsManager()
+		if accountsManager == nil {
+			return dbusutil.ToError(errors.New("get accounts manager failed"))
+		}
+		err := accountsManager.setDConfigQuickLoginEnabled(true)
+		if err != nil {
+			return dbusutil.ToError(fmt.Errorf("set greeter dconfig enableQuickLogin failed: %v", err))
+		}
+	}
+
+	err := users.SetQuickLogin(u.UserName, enabled)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
+	u.setPropQuickLogin(enabled)
 	return nil
 }

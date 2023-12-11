@@ -29,14 +29,16 @@ const (
 const (
 	fileEventDelay = time.Millisecond * 500
 
-	taskNamePasswd = "passwd"
-	taskNameGroup  = "group"
-	taskNameShadow = "shadow"
-	taskNameDM     = "dm"
+	taskNamePasswd       = "passwd"
+	taskNameGroup        = "group"
+	taskNameShadow       = "shadow"
+	taskNameDM           = "dm"
+	taskNameGreeterState = "greeter-state"
 )
 
 func (m *Manager) getWatchFiles() []string {
-	list := []string{"/etc"}
+	// 监控 /etc 目录，greeter state 目录，DM 配置目录
+	list := []string{"/etc", filepath.Dir(users.GreeterStateFile)}
 	dmConfig, err := users.GetDMConfig()
 	if err == nil {
 		list = append(list, filepath.Dir(dmConfig))
@@ -66,6 +68,11 @@ func (m *Manager) handleFileChanged(ev fsnotify.Event) {
 	case lightdmConfig, kdmConfig, gdmConfig:
 		logger.Debug("File changed:", ev)
 		if task, _ := m.delayTaskManager.GetTask(taskNameDM); task != nil {
+			err = task.Start()
+		}
+	case users.GreeterStateFile:
+		logger.Debug("File changed:", ev)
+		if task, _ := m.delayTaskManager.GetTask(taskNameGreeterState); task != nil {
 			err = task.Start()
 		}
 	default:
@@ -203,8 +210,20 @@ func (m *Manager) handleFileShadowChanged() {
 }
 
 func (m *Manager) handleDMConfigChanged() {
+	quickLoginEnabled, err := users.GetLightDMQuickLoginEnabled()
+	if err != nil {
+		logger.Warning("GetLightDMQuickLoginEnabled failed, err:", err)
+	}
+	m.setPropQuickLoginEnabled(quickLoginEnabled)
 	for _, u := range m.usersMap {
 		u.updatePropAutomaticLogin()
+		u.updatePropQuickLogin()
+	}
+}
+
+func (m *Manager) handleGreeterStateChanged() {
+	for _, u := range m.usersMap {
+		u.updatePropQuickLogin()
 	}
 }
 

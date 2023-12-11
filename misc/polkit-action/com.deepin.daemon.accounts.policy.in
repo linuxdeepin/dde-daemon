@@ -46,6 +46,26 @@
         </defaults>
     </action>
 
+    <action id="com.deepin.daemon.accounts.enable-quick-login">
+        <description>Enable Quick Login</description>
+        <message>Authentication is required to enable quick login</message>
+        <defaults>
+            <allow_any>no</allow_any>
+            <allow_inactive>no</allow_inactive>
+            <allow_active>auth_self</allow_active>
+        </defaults>
+    </action>
+
+    <action id="com.deepin.daemon.accounts.disable-quick-login">
+        <description>Disable Quick Login</description>
+        <message>Authentication is required to disable quick login</message>
+        <defaults>
+            <allow_any>no</allow_any>
+            <allow_inactive>no</allow_inactive>
+            <allow_active>auth_self</allow_active>
+        </defaults>
+    </action>
+
     <action id="com.deepin.daemon.accounts.enable-nopass-login">
         <description>Enable Login without password</description>
         <message>Authentication is required to enable login without password</message>

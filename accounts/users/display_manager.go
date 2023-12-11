@@ -9,8 +9,11 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
+	"strconv"
 	"strings"
 
+	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -18,25 +21,27 @@ const (
 	defaultDMFile         = "/etc/X11/default-display-manager"
 	defaultDisplayService = "/etc/systemd/system/display-manager.service"
 	lightdmConfig         = "/etc/lightdm/lightdm.conf"
+	GreeterStateFile      = "/var/lib/lightdm/lightdm-deepin-greeter/state_user"
 	kdmConfig             = "/usr/share/config/kdm/kdmrc"
 	gdmConfig             = "/etc/gdm/custom.conf"
 	sddmConfig            = "/etc/sddm.conf"
 	lxdmConfig            = "/etc/lxdm/lxdm.conf"
 
-	kfGroupLightdmSeat        = "Seat:*"
-	kfKeyLightdmAutoLoginUser = "autologin-user"
-	kfKeyLightdmUserSession   = "user-session"
-	kfGroupKDMXCore           = "X-:0-Core"
-	kfKeyKDMAutoLoginEnable   = "AutoLoginEnable"
-	kfKeyKDMAutoLoginUser     = "AutoLoginUser"
-	kfGroupGDM3Daemon         = "daemon"
-	kfKeyGDM3AutomaticEnable  = "AutomaticLoginEnable"
-	kfKeyGDM3AutomaticLogin   = "AutomaticLogin"
-	kfGroupSDDMAutologin      = "Autologin"
-	kfKeySDDMUser             = "User"
-	kfKeySDDMSession          = "Session"
-	kfGroupLXDMBase           = "base"
-	kfKeyLXDMAutologin        = "autologin"
+	kfGroupLightdmSeat            = "Seat:*"
+	kfKeyLightdmAutoLoginUser     = "autologin-user"
+	kfKeyLightdmUserSession       = "user-session"
+	kfKeyLightdmQuickLoginEnabled = "quicklogin-enabled"
+	kfGroupKDMXCore               = "X-:0-Core"
+	kfKeyKDMAutoLoginEnable       = "AutoLoginEnable"
+	kfKeyKDMAutoLoginUser         = "AutoLoginUser"
+	kfGroupGDM3Daemon             = "daemon"
+	kfKeyGDM3AutomaticEnable      = "AutomaticLoginEnable"
+	kfKeyGDM3AutomaticLogin       = "AutomaticLogin"
+	kfGroupSDDMAutologin          = "Autologin"
+	kfKeySDDMUser                 = "User"
+	kfKeySDDMSession              = "Session"
+	kfGroupLXDMBase               = "base"
+	kfKeyLXDMAutologin            = "autologin"
 
 	// values: 'yes', 'no'
 	slimKeyAutoLogin   = "auto_login"
@@ -163,6 +168,124 @@ func GetAutoLoginUser() (string, error) {
 	return "", fmt.Errorf("Not supported or invalid display manager: %q", dm)
 }
 
+const (
+	greeterStateGroup              = "General"
+	greeterStateKeyQuickLoginUsers = "quicklogin-users"
+)
+
+// 获取 lightdm 配置文件中 quick login 的开关状态，总开关。
+func GetLightDMQuickLoginEnabled() (bool, error) {
+	dm, err := getDefaultDM(defaultDMFile)
+	if err != nil {
+		dm, err = getDMFromSystemService(defaultDisplayService)
+		if err != nil {
+			return false, err
+		}
+	}
+
+	if dm != "lightdm" {
+		return false, fmt.Errorf("Not supported or invalid display manager: %q", dm)
+	}
+	value, err := getIniKeys(lightdmConfig, kfGroupLightdmSeat,
+		[]string{kfKeyLightdmQuickLoginEnabled}, []string{""})
+	if err != nil {
+		return false, err
+	}
+	return value == "true", nil
+}
+
+// 设置 lightdm 配置文件中 quick login 的开关状态，总开关。
+func SetLightDMQuickLoginEnabled(enabled bool) error {
+	curEnabled, err := GetLightDMQuickLoginEnabled()
+	if err != nil {
+		return err
+	}
+
+	if enabled == curEnabled {
+		// 无需修改
+		return nil
+	}
+
+	value := strconv.FormatBool(enabled)
+	return setIniKeys(lightdmConfig, kfGroupLightdmSeat,
+		[]string{kfKeyLightdmQuickLoginEnabled}, []string{value})
+}
+
+// 从 greeter state_user 文件获取开启了快速登录的用户名列表。
+func GetQuickLoginUsernames() ([]string, error) {
+	dm, err := getDefaultDM(defaultDMFile)
+	if err != nil {
+		dm, err = getDMFromSystemService(defaultDisplayService)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// 仅支持 lightdm
+	if dm != "lightdm" {
+		return nil, fmt.Errorf("Not supported or invalid display manager: %q", dm)
+	}
+
+	usernames, err := getIniStringList(GreeterStateFile, greeterStateGroup, greeterStateKeyQuickLoginUsers)
+	if err != nil {
+		return nil, err
+	}
+	// 去除空字符串
+	var tmpUsers []string
+	for _, username := range usernames {
+		if username == "" {
+			continue
+		}
+		tmpUsers = append(tmpUsers, username)
+	}
+	return tmpUsers, nil
+}
+
+// 在 greeter state_user 文件设置用户 username 的快速登录开启状态为 enabled，用户分开关设置。
+func SetQuickLogin(username string, enabled bool) error {
+	dm, err := getDefaultDM(defaultDMFile)
+	if err != nil {
+		dm, err = getDMFromSystemService(defaultDisplayService)
+		if err != nil {
+			return err
+		}
+	}
+
+	// 仅支持 lightdm
+	if dm != "lightdm" {
+		return fmt.Errorf("Not supported or invalid display manager: %q", dm)
+	}
+
+	var usernames strv.Strv
+	usernames, _ = GetQuickLoginUsernames()
+	changed := false
+	if enabled {
+		usernames, changed = usernames.Add(username)
+	} else {
+		// disable
+		usernames, changed = usernames.Delete(username)
+	}
+
+	if changed {
+
+		dir := filepath.Dir(GreeterStateFile)
+		err = os.Mkdir(dir, 0755)
+		if os.IsExist(err) {
+			// 已经存在，忽略错误
+			err = nil
+		}
+		if err != nil {
+			// 创建目录失败
+			return err
+		}
+
+		return setIniStringList(GreeterStateFile, greeterStateGroup,
+			greeterStateKeyQuickLoginUsers, usernames)
+	}
+
+	return nil
+}
+
 // GetDefaultXSession return the default user session
 func GetDefaultXSession() (string, error) {
 	dm, err := getDefaultDM(defaultDMFile)
@@ -216,6 +339,44 @@ func GetDMConfig() (string, error) {
 		return gdmConfig, nil
 	}
 	return "", fmt.Errorf("Not supported the display manager: %q", dm)
+}
+
+func getIniStringList(filename string, group string, key string) ([]string, error) {
+	if !dutils.IsFileExist(filename) {
+		return nil, fmt.Errorf("Not found the file: %s", filename)
+	}
+
+	kf, err := dutils.NewKeyFileFromFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer kf.Free()
+
+	_, result, err := kf.GetStringList(group, key)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func setIniStringList(filename string, group string, key string, values []string) error {
+	if !dutils.IsFileExist(filename) {
+		err := dutils.CreateFile(filename)
+		if err != nil {
+			return err
+		}
+	}
+
+	kf, err := dutils.NewKeyFileFromFile(filename)
+	if err != nil {
+		return err
+	}
+	defer kf.Free()
+
+	kf.SetStringList(group, key, values)
+
+	_, err = kf.SaveToFile(filename)
+	return err
 }
 
 func getIniKeys(filename, group string, keys, expected []string) (string, error) {

@@ -323,6 +323,20 @@ func (u *User) SetAutomaticLogin(sender dbus.Sender, enabled bool) *dbus.Error {
 	return u.setAutomaticLogin(enabled)
 }
 
+// 设置用户是否快速登录
+func (u *User) SetQuickLogin(sender dbus.Sender, enabled bool) *dbus.Error {
+	logger.Infof("DBus call SetQuickLogin sender %v, enabled %t", sender, enabled)
+
+	// 验证调用者权限
+	err := u.checkAuthQuickLogin(sender, enabled)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
+	return u.setQuickLogin(enabled)
+}
+
 func (u *User) EnableNoPasswdLogin(sender dbus.Sender, enabled bool) *dbus.Error {
 	logger.Debug("[EnableNoPasswdLogin] enabled:", enabled)
 

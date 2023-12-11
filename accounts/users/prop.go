@@ -17,6 +17,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/linuxdeepin/go-lib/strv"
 	libdate "github.com/rickb777/date"
 )
 
@@ -197,6 +198,20 @@ const (
 func IsAutoLoginUser(username string) bool {
 	name, _ := GetAutoLoginUser()
 	return name == username
+}
+
+// 判断用户是否启用了快速登录，先检查总开关状态，于是用户的 QuickLogin 属性和 2 个配置文件有关：
+// 1. /etc/lightdm/lightdm.conf 文件, 总开关。
+// 2. /var/lib/lightdm/lightdm-deepin-greeter/state_user 文件, 用户分开关。
+func IsQuickLoginUser(username string) bool {
+	// 先检查总开关状态
+	mainEnabled, _ := GetLightDMQuickLoginEnabled()
+	if !mainEnabled {
+		return false
+	}
+	var usernames strv.Strv
+	usernames, _ = GetQuickLoginUsernames()
+	return usernames.Contains(username)
 }
 
 func IsAdminUser(username string) bool {
