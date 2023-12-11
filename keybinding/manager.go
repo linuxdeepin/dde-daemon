@@ -553,10 +553,12 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 								logger.Warning(err)
 							}
 						} else {
-							err := m.execCmd(m.shortcutCmd, true)
-							if err != nil {
-								logger.Warning(err)
-							}
+							go func() {
+								err := m.execCmd(m.shortcutCmd, true)
+								if err != nil {
+									logger.Warning(err)
+								}
+							}()
 						}
 					}
 				}
