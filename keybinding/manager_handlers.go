@@ -16,7 +16,6 @@ func (m *Manager) shouldShowCapsLockOSD() bool {
 }
 
 func (m *Manager) initHandlers() {
-	m.handlers = make([]KeyEventFunc, ActionTypeCount)
 	logger.Debug("initHandlers", len(m.handlers))
 
 	m.handlers[ActionTypeNonOp] = func(ev *KeyEvent) {
@@ -45,9 +44,8 @@ func (m *Manager) initHandlers() {
 		if type0 == ShortcutTypeSystem && id == "wm-switcher" {
 			now := time.Now()
 			duration := now.Sub(m.lastExecCmdTime)
-			logger.Debug("handle ActionTypeExecCmd duration:", duration)
 			if 0 < duration && duration < minExecCmdInterval {
-				logger.Debug("handle ActionTypeExecCmd ignore key event")
+				logger.Debug("handle ActionTypeExecCmd ignore key event duration:", duration)
 				return
 			}
 			m.lastExecCmdTime = now
@@ -64,13 +62,16 @@ func (m *Manager) initHandlers() {
 			var err error
 			if arg.Cmd == "deepin-camera" {
 				err = m.handleCheckCamera()
+				if err != nil {
+					logger.Warning(err)
+				}
 			} else {
 				err = m.execCmd(arg.Cmd, true)
 				if err != nil {
 					logger.Warning("execCmd error:", err)
 				}
 			}
-			
+
 		}()
 	}
 
@@ -169,7 +170,7 @@ func (m *Manager) initHandlers() {
 
 	// handle Switch Kbd Layout
 	m.handlers[ActionTypeSwitchKbdLayout] = func(ev *KeyEvent) {
-		logger.Debug("Switch Kbd Layout shortcut was disbaled by TASK-67900")
+		logger.Warning("Switch Kbd Layout shortcut was disbaled by TASK-67900")
 	}
 
 	m.handlers[ActionTypeShowControlCenter] = func(ev *KeyEvent) {

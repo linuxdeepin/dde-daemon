@@ -207,6 +207,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		enableListenGSettings: true,
 		conn:                  conn,
 		keySymbols:            keysyms.NewKeySymbols(conn),
+		handlers:              make([]shortcuts.KeyEventFunc, shortcuts.ActionTypeCount),
 	}
 
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
@@ -530,9 +531,8 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 			const minKeyEventInterval = 200 * time.Millisecond
 			now := time.Now()
 			duration := now.Sub(m.lastKeyEventTime)
-			logger.Debug("duration:", duration)
 			if 0 < duration && duration < minKeyEventInterval {
-				logger.Debug("ignore key event")
+				logger.Debug("ignore key event duration:", duration)
 				return
 			}
 			m.lastKeyEventTime = now
@@ -541,7 +541,7 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 			m.shortcutKeyCmd = sig.Body[1].(string)
 			ok := strings.Compare(string("kwin"), m.shortcutKey)
 			if ok == 0 {
-				logger.Debug("[test global key] get accel sig.Body[1]", sig.Body[1])
+				logger.Debug("[global key] get accel sig.Body[1]", m.shortcutKeyCmd)
 				if m.shortcutKeyCmd == "" {
 					// + 把响应一次的逻辑放到协程外执行，防止协程响应延迟
 					m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
@@ -576,12 +576,11 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 	return nil
 }
 
-func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) error {
+func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) {
 	err := systemBus.Object("com.deepin.daemon.Gesture",
 		"/com/deepin/daemon/Gesture").AddMatchSignal("com.deepin.daemon.Gesture", "KeyboardEvent").Err
 	if err != nil {
 		logger.Warning(err)
-		return err
 	}
 	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "com.deepin.daemon.Gesture.KeyboardEvent",
@@ -597,8 +596,6 @@ func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) error {
 			}
 		}
 	})
-
-	return nil
 }
 
 // 初始化 NumLock 数字锁定键状态
@@ -759,7 +756,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 		}
 
 		if enabled {
-			logger.Debugf("airplane mode enabled, can not enable wireless by key")
+			logger.Debug("airplane mode enabled, can not enable wireless by key")
 			return
 		}
 
@@ -969,7 +966,6 @@ func (m *Manager) playMeadiaByHeadphone() {
 			logger.Warning(m.mediaPlayerController.Name(), "Controller exec cmd err:", err)
 		}
 	}
-	return
 }
 
 func (m *Manager) handleKeyEventFromShutdownFront(changKey string) {
@@ -979,7 +975,7 @@ func (m *Manager) handleKeyEventFromShutdownFront(changKey string) {
 		if handler := m.handlers[int(action.Type)]; handler != nil {
 			handler(nil)
 		} else {
-			logger.Warning("handler is nil")
+			logger.Warning("handler [system shutdown] is nil")
 		}
 	}
 }
@@ -1051,9 +1047,8 @@ func (m *Manager) handleKeyEvent(ev *shortcuts.KeyEvent) {
 	const minKeyEventInterval = 200 * time.Millisecond
 	now := time.Now()
 	duration := now.Sub(m.lastKeyEventTime)
-	logger.Debug("duration:", duration)
 	if 0 < duration && duration < minKeyEventInterval {
-		logger.Debug("handleKeyEvent ignore key event")
+		logger.Debug("handleKeyEvent ignore key event duration:", duration)
 		return
 	}
 	m.lastKeyEventTime = now
