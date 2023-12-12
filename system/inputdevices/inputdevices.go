@@ -78,11 +78,11 @@ func (*InputDevices) GetInterfaceName() string {
 }
 
 func (m *InputDevices) init() {
+	m.initDSettings(m.service)
 	m.l = newLibinput(m)
 	m.l.start()
 	go func() {
 		m.SupportWakeupDevices = make(map[string]string)
-		m.initDSettings(m.service)
 		m.updateSupportWakeupDevices()
 		if err := TouchpadExist(touchpadSwitchFile); err == nil {
 			m.newTouchpad()

@@ -47,8 +47,8 @@ func (d *daemon) Start() error {
 
 	service := loader.GetService()
 	d.inputdevices.service = service
-	d.inputdevices.init()
 	d.inputdevices.systemSigLoop = dbusutil.NewSignalLoop(service.Conn(), 5)
+	d.inputdevices.init()
 
 	err := service.Export(dbusPath, d.inputdevices)
 	if err != nil {
