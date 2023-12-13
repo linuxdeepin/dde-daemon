@@ -340,7 +340,11 @@ func (n *Network) addDevice(devPath dbus.ObjectPath) error {
 
 		logger.Debugf("recv interfaceFlags changed signal, current value: %v", value)
 
-		n.enableDevice(dev.iface, value != 0)
+		// NOTE: only when value is 0, set it disable
+		if value == 0 {
+			n.enableDevice(dev.iface, false)
+		}
+
 		if err != nil {
 			logger.Warningf("enable dev failed, err: %v", err)
 		}
