@@ -81,6 +81,9 @@ func (m *Manager) SetNTPServer(server string) *dbus.Error {
 
 func (m *Manager) GetSampleNTPServers() (servers []string, busErr *dbus.Error) {
 	servers = []string{
+		"ntp.ntsc.ac.cn",
+		"cn.ntp.org.cn",
+
 		"0.debian.pool.ntp.org",
 		"1.debian.pool.ntp.org",
 		"2.debian.pool.ntp.org",
