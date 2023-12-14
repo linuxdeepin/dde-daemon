@@ -1227,6 +1227,12 @@ func (a *Audio) resumeSourceConfig(s *Source, isPhyDev bool) {
 
 	s.setMute(GetConfigKeeper().Mute.MuteInput)
 
+	// 蓝牙不支持噪音抑制
+	if portConfig.ReduceNoise && isBluezAudio(s.Name) {
+		logger.Debug("bluetooth audio device cannot open reduce-noise")
+		GetConfigKeeper().SetReduceNoise(a.getCardNameById(s.Card), s.ActivePort.Name, false)
+	}
+
 	// 不要在降噪通道上重复开启降噪
 	if isPhyDev {
 		logger.Debugf("physical source, set reduce noise %v", portConfig.ReduceNoise)
