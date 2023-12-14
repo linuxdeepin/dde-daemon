@@ -413,6 +413,7 @@ func (m *Manager) initDsgConfig() error {
 		// dsg更新配置后，校验mode有效性
 		if !_validPowerModeArray.Contains(value) {
 			value = ddeBalance
+			_ = m.setDsgData(dsettingsMode, value, m.dsgPower) // 将修正后的数据回写dconfig
 		}
 		if init {
 			logger.Info("init ")
