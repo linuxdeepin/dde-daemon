@@ -31,7 +31,7 @@ const (
 	configManagerId = "org.desktopspec.ConfigManager"
 	_configHwSystem = "/usr/share/uos-hw-config"
 	intelPstatePath = "/sys/devices/system/cpu/intel_pstate"
-	AmdPstatePath   = "/sys/devices/system/cpu/amd_pstate"
+	amdPstatePath   = "/sys/devices/system/cpu/amd_pstate"
 	amdGPUPath      = "/sys/class/drm/card0/device/power_dpm_force_performance_level"
 )
 
@@ -151,8 +151,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 	// check pstate , if has pstate, it is intel pstate mode , then
 	// we need another logic
-	m.hasPstate = dutils.IsFileExist(intelPstatePath) || dutils.IsFileExist(AmdPstatePath)
-	// check if amd is used
+	m.hasPstate = (dutils.IsFileExist(intelPstatePath) || dutils.IsFileExist(amdPstatePath)) && dutils.IsFileExist(pstateConfPath) // check if amd is used
 	m.hasAmddpm = dutils.IsFileExist(amdGPUPath)
 
 	m.refreshSystemPowerPerformance()
