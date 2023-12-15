@@ -141,13 +141,15 @@ func (m *Manager) getDPMSMode() int32 {
 var prevTimestamp int64
 
 func (m *Manager) setDPMSModeOn() {
-	timestamp := time.Now().UnixNano()
-	tmp := timestamp - prevTimestamp
-	logger.Debug("[setDPMSModeOn] timestamp:", prevTimestamp, timestamp, tmp)
-	prevTimestamp = timestamp
-	if tmp < 300000000 {
-		logger.Debug("[setDPMSModeOn] div < 300ms ignored.")
-		return
+	if m.delayHandleIdleOffIntervalWhenScreenBlack == 0 {
+		timestamp := time.Now().UnixNano()
+		tmp := timestamp - prevTimestamp
+		logger.Debug("[setDPMSModeOn] timestamp:", prevTimestamp, timestamp, tmp)
+		prevTimestamp = timestamp
+		if tmp < 300000000 {
+			logger.Debug("[setDPMSModeOn] div < 300ms ignored.")
+			return
+		}
 	}
 
 	logger.Info("DPMS On")

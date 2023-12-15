@@ -212,8 +212,9 @@ type Manager struct {
 	dsPowerConfigManager   configManager.Manager
 	wmDBus                 wm.Wm
 
-	delayInActive       bool
-	delayWakeupInterval uint32
+	delayInActive                             bool
+	delayWakeupInterval                       uint32
+	delayHandleIdleOffIntervalWhenScreenBlack uint32
 }
 
 var _manager *Manager

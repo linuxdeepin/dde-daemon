@@ -29,10 +29,11 @@ import (
 const submodulePSP = "PowerSavePlan"
 
 const (
-	dsettingsAppID               = "org.deepin.dde.daemon"
-	dsettingsPowerName           = "org.deepin.dde.daemon.power"
-	dsettingsAllowScreenSaver    = "allowScreenSaver"
-	dsettingsDelayWakeupInterval = "delayWakeupInterval"
+	dsettingsAppID                                     = "org.deepin.dde.daemon"
+	dsettingsPowerName                                 = "org.deepin.dde.daemon.power"
+	dsettingsAllowScreenSaver                          = "allowScreenSaver"
+	dsettingsDelayWakeupInterval                       = "delayWakeupInterval"
+	dsettingsDelayHandleIdleOffIntervalWhenScreenBlack = "delayHandleIdleOffIntervalWhenScreenBlack"
 )
 
 func init() {
@@ -1045,6 +1046,24 @@ func (psp *powerSavePlan) initDsgConfig() error {
 
 	getDelayWakeupInterval()
 
+	getDelayHandleIdleOffIntervalWhenScreenBlack := func() {
+		v, err := dsPower.Value(0, dsettingsDelayHandleIdleOffIntervalWhenScreenBlack)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		switch vv := v.Value().(type) {
+		case float64:
+			psp.manager.delayHandleIdleOffIntervalWhenScreenBlack = uint32(vv)
+		case int64:
+			psp.manager.delayHandleIdleOffIntervalWhenScreenBlack = uint32(vv)
+		default:
+			logger.Warning("type is wrong!")
+		}
+		logger.Info("delay wake up interval : ", psp.manager.delayHandleIdleOffIntervalWhenScreenBlack)
+	}
+	getDelayHandleIdleOffIntervalWhenScreenBlack()
+
 	dsPower.InitSignalExt(psp.systemSigLoop, true)
 	dsPower.ConnectValueChanged(func(key string) {
 		logger.Info("DSG org.deepin.dde.daemon.power valueChanged, key : ", key)
@@ -1053,6 +1072,8 @@ func (psp *powerSavePlan) initDsgConfig() error {
 			getAllowScreenSaver()
 		case dsettingsDelayWakeupInterval:
 			getDelayWakeupInterval()
+		case dsettingsDelayHandleIdleOffIntervalWhenScreenBlack:
+			getDelayHandleIdleOffIntervalWhenScreenBlack()
 		default:
 		}
 	})
