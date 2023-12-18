@@ -1711,7 +1711,8 @@ func (a *Audio) initDsgProp() error {
 	a.systemSigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
 	}, func(sig *dbus.Signal) {
-		if strings.Contains(sig.Name, "org.desktopspec.ConfigManager.Manager.valueChanged") && len(sig.Body) == 1 {
+		if strings.Contains(sig.Name, "org.desktopspec.ConfigManager.Manager.valueChanged") &&
+			strings.Contains(string(sig.Path), "org_deepin_dde_daemon_audio") && len(sig.Body) >= 1 {
 			key, ok := sig.Body[0].(string)
 			if ok && key == dsgKeyAutoSwitchPort {
 				var val bool

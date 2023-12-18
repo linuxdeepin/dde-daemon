@@ -227,8 +227,9 @@ func (m *ManagerFormat) listenDsgPropChanged() {
 	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
 	}, func(sig *dbus.Signal) {
-		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
-			logger.Info("[listenDsgPropChanged] org.desktopspec.ConfigManager.Manager.valueChanged value : ", sig.Name)
+		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") &&
+			strings.Contains(string(sig.Path), "org_deepin_dde_daemon_format") {
+			logger.Info("[listenDsgPropChanged] org.desktopspec.ConfigManager.Manager.valueChanged path : ", string(sig.Path))
 			m.setPropValue()
 		}
 	})

@@ -114,7 +114,8 @@ func (s *SessionDaemon) initDsgConfig() error {
 	s.systemSigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
 	}, func(sig *dbus.Signal) {
-		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") && len(sig.Body) >= 1 {
+		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") &&
+			strings.Contains(string(sig.Path), "org_deepin_dde_daemon_loader") && len(sig.Body) >= 1 {
 			key, ok := sig.Body[0].(string)
 			if ok {
 				// dconfig key names must keep consistent with module names
@@ -122,14 +123,14 @@ func (s *SessionDaemon) initDsgConfig() error {
 				defer moduleLocker.Unlock()
 				module := loader.GetModule(key)
 				if module == nil {
-					logger.Error("Invalid module name:", key)
+					logger.Warning("Invalid module name:", key)
 					return
 				}
 
 				enable := s.getConfigValue(key)
 				err := s.checkDependencies(module, enable)
 				if err != nil {
-					logger.Error(err)
+					logger.Warning(err)
 					return
 				}
 				logger.Info("valueChanged:", module.Name(), enable)

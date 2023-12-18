@@ -262,13 +262,31 @@ func (m *Manager) init() {
 	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
 	}, func(sig *dbus.Signal) {
-		if strings.Contains(string(sig.Name), "org.desktopspec.ConfigManager.Manager.valueChanged") {
-			m.longPressEnable = m.getGestureConfigValue("longPressEnable")
-			m.oneFingerBottomEnable = m.getGestureConfigValue("oneFingerBottomEnable")
-			m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
-			m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
-			if _useWayland {
-				setLongPressEnable(m.longPressEnable)
+		if strings.Contains(sig.Name, "org.desktopspec.ConfigManager.Manager.valueChanged") &&
+			strings.Contains(string(sig.Path), "org_deepin_dde_daemon_gesture") && len(sig.Body) >= 1 {
+			key, ok := sig.Body[0].(string)
+			if !ok {
+				logger.Warning("Get key of body failed.")
+				return
+			}
+			switch key {
+			case "oneFingerBottomEnable":
+				m.oneFingerBottomEnable = m.getGestureConfigValue("oneFingerBottomEnable")
+				logger.Info("DConfig of oneFingerBottomEnable : ", m.oneFingerBottomEnable)
+			case "longPressEnable":
+				m.longPressEnable = m.getGestureConfigValue("longPressEnable")
+				logger.Info("DConfig of longPressEnable : ", m.longPressEnable)
+				if _useWayland {
+					setLongPressEnable(m.longPressEnable)
+				}
+			case "oneFingerLeftEnable":
+				m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
+				logger.Info("DConfig of oneFingerLeftEnable : ", m.oneFingerLeftEnable)
+			case "oneFingerRightEnable":
+				m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
+				logger.Info("DConfig of oneFingerRightEnable : ", m.oneFingerRightEnable)
+			default:
+				logger.Warning("Not use key : ", key)
 			}
 		}
 	})
