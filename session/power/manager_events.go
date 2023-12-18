@@ -103,7 +103,7 @@ func (m *Manager) handleWakeup() {
 
 	if v := m.submodules[submodulePSP]; v != nil {
 		if psp := v.(*powerSavePlan); psp != nil {
-			// 避免出现dconfig配置获取后，又设置powerPressAction状态为非powerActionTurnOffScreen，导致delayHandleIdleOffIntervalWhenScreenBlack使用异常
+			var delayHandleIdleOffInterval uint32
 			var powerPressAction int32
 			if psp.manager.OnBattery {
 				powerPressAction = psp.manager.BatteryPressPowerBtnAction.Get()
@@ -111,16 +111,15 @@ func (m *Manager) handleWakeup() {
 				powerPressAction = psp.manager.LinePowerPressPowerBtnAction.Get()
 			}
 
-			if powerPressAction != powerActionTurnOffScreen {
-				//非“按电源按钮时-关闭显示器”不添加延时
-				psp.manager.delayHandleIdleOffIntervalWhenScreenBlack = 0
-				logger.Info("Delay handle idleOff interval : ", psp.manager.delayHandleIdleOffIntervalWhenScreenBlack)
-			} else if psp.manager.delayHandleIdleOffIntervalWhenScreenBlack > 2000 {
-				// 当“按电源按钮时-关闭显示器”时，最长可增加2S延时
-				psp.manager.delayHandleIdleOffIntervalWhenScreenBlack = 2000
+			if powerPressAction == powerActionTurnOffScreen  {
+				delayHandleIdleOffInterval = psp.manager.delayHandleIdleOffIntervalWhenScreenBlack
+				if delayHandleIdleOffInterval > 2500 {
+					// 当“按电源按钮时-关闭显示器”时，最长可增加2.5S延时
+					delayHandleIdleOffInterval = 2500
+				}
 			}
 
-			time.AfterFunc(time.Duration(m.delayHandleIdleOffIntervalWhenScreenBlack) * time.Millisecond, func() {
+			time.AfterFunc(time.Duration(delayHandleIdleOffInterval) * time.Millisecond, func() {
 				psp.HandleIdleOff()
 			})
 		}
