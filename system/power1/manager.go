@@ -151,7 +151,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 	// check pstate , if has pstate, it is intel pstate mode , then
 	// we need another logic
-	m.hasPstate = (dutils.IsFileExist(intelPstatePath) || dutils.IsFileExist(amdPstatePath)) && dutils.IsFileExist(pstateConfPath) // check if amd is used
+	m.hasPstate = cpuHasPstate() // check if amd is used
 	m.hasAmddpm = dutils.IsFileExist(amdGPUPath)
 
 	m.refreshSystemPowerPerformance()
