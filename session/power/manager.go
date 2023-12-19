@@ -424,7 +424,7 @@ func (m *Manager) init() {
 	//修改时间后通过信号通知更新关机定时器
 	_, err = m.sessionTimeDate.ConnectTimeUpdate(func() {
 		if m.ScheduledShutdownState {
-			m.nextShutdownTime = m.genNextShutdownTime(0)
+			m.setNextShutdownTime(0)
 			m.scheduledShutdown(Init)
 		}
 	})
@@ -435,7 +435,7 @@ func (m *Manager) init() {
 	err = m.timeDate.Timezone().ConnectChanged(func(hasValue bool, value string) {
 		time.AfterFunc(time.Second*2, func() {
 			if m.ScheduledShutdownState {
-				m.nextShutdownTime = m.genNextShutdownTime(0)
+				m.setNextShutdownTime(0)
 				m.scheduledShutdown(Init)
 			}
 		})
@@ -447,7 +447,7 @@ func (m *Manager) init() {
 	err = m.timeDate.NTP().ConnectChanged(func(hasValue bool, value bool) {
 		time.AfterFunc(time.Second*2, func() {
 			if m.ScheduledShutdownState {
-				m.nextShutdownTime = m.genNextShutdownTime(0)
+				m.setNextShutdownTime(0)
 				m.scheduledShutdown(Init)
 			}
 		})
@@ -712,20 +712,25 @@ func (m *Manager) initDsg() {
 	getDsPowerConfig(dsettingNextShutdownTime, true)
 	m.dsPowerConfigManager.InitSignalExt(m.systemSigLoop, true)
 	m.dsPowerConfigManager.ConnectValueChanged(func(key string) {
+		if key == dsettingNextShutdownTime {
+			return
+		}
 		logger.Info("DSG org.deepin.dde.daemon.power valueChanged, key : ", key)
 		getDsPowerConfig(key, false)
-
-		if key != dsettingNextShutdownTime {
-			// 如果重复一次，重置nextShutdownTime
-			m.nextShutdownTime = m.genNextShutdownTime(0)
-			m.scheduledShutdown(Init)
-		}
+		// 如果重复一次，重置nextShutdownTime
+		m.setNextShutdownTime(0)
+		m.scheduledShutdown(Init)
 	})
 
 	if m.nextShutdownTime == 0 {
-		m.nextShutdownTime = m.genNextShutdownTime(0)
+		m.setNextShutdownTime(0)
 	}
 	m.scheduledShutdown(Init)
+}
+
+func (m *Manager) setNextShutdownTime(bt int64) {
+	m.nextShutdownTime = m.getNextShutdownTime(bt)
+	m.savePowerDsgConfig(dsettingNextShutdownTime)
 }
 
 func (m *Manager) savePowerDsgConfig(key string) (err error) {
@@ -873,8 +878,7 @@ func (m *Manager) scheduledShutdown(state int) {
 			m.savePowerDsgConfig(dsettingScheduledShutdownState)
 		} else {
 			// 重新生成下一次定时关机时间，并保存
-			m.nextShutdownTime = m.genNextShutdownTime(m.nextShutdownTime)
-			m.savePowerDsgConfig(dsettingNextShutdownTime)
+			m.setNextShutdownTime(m.nextShutdownTime)
 			// 当前与设定的时间超过1分钟
 			t := time.Until(next).Minutes()
 			if t > 0 {
@@ -969,7 +973,7 @@ func (m *Manager) isCustomday(date time.Time) (res bool) {
 	return false
 }
 
-func (m *Manager) genNextShutdownTime(bt int64) int64 {
+func (m *Manager) getNextShutdownTime(bt int64) int64 {
 	getNextTime := func() time.Time {
 		bastTime := time.Unix(bt, 0)
 		currentTime := time.Now()
