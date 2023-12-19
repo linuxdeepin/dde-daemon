@@ -5,10 +5,24 @@
 package power
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/assert"
+	"os"
+	"testing"
 )
+
+func Test_IsPstate(t *testing.T) {
+	driverData, _ := os.ReadFile("./testdata/scaling_driver_intel_pstate")
+	driver := string(driverData)
+	assert.Equal(t, driverHasPstate(driver), true)
+
+	driverData, _ = os.ReadFile("./testdata/scaling_driver_amd_pstate")
+	driver = string(driverData)
+	assert.Equal(t, driverHasPstate(driver), true)
+
+	driverData, _ = os.ReadFile("./testdata/scaling_driver_intel_cpufreq")
+	driver = string(driverData)
+	assert.Equal(t, driverHasPstate(driver), false)
+}
 
 func Test_GetGovernor(t *testing.T) {
 	expectGovernor := "performance"

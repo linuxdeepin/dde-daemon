@@ -26,6 +26,7 @@ const (
 	globalAvailableGovernorFileName = "scaling_available_governors"
 	globalBoostFilePath             = "/sys/devices/system/cpu/cpufreq/boost"
 	globalDefaultPath               = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+	globalDefaultDriverPath         = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver"
 	_isHuaWei                       = `dmidecode -t 1 | awk "/Product Name:/{print $NF}" | cut -d ":" -f 2`
 )
 
@@ -103,13 +104,11 @@ func getIsBalanceSupported(isPstate bool) bool {
 	}
 }
 
-// TODO: 之后是否需要判断boost 的逻辑需要讨论
 func getIsHighPerformanceSupported(isPstate bool) bool {
-	cpus := CpuHandlers{}
 	if isPstate {
 		return strv.Strv(getSupportGovernors()).Contains("performance")
 	}
-	return cpus.IsBoostFileExist() && strv.Strv(getSupportGovernors()).Contains("performance")
+	return strv.Strv(getSupportGovernors()).Contains("performance")
 }
 
 func getIsPowerSaveSupported(isPstate bool) bool {
@@ -338,6 +337,22 @@ func (cpus *CpuHandlers) getCpuGovernorPath(isPstate bool) string {
 	}
 
 	return path
+}
+
+func cpuHasPstate() bool {
+	if !dutils.IsFileExist(globalDefaultDriverPath) {
+		return false
+	}
+	driverData, err := os.ReadFile(globalDefaultDriverPath)
+	if err != nil {
+		return false
+	}
+	driver := string(driverData)
+	return driverHasPstate(driver) && dutils.IsFileExist(pstateConfPath)
+}
+
+func driverHasPstate(driver string) bool {
+	return strings.Contains(driver, "pstate")
 }
 
 // 通过写文件的返回情况，获取非scaling_available_governors的值是否支持
