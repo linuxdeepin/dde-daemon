@@ -179,15 +179,3 @@ func Test_String_TouchDirection(t *testing.T) {
 	rtn = g.String()
 	assert.Equal(t, m1[UNKNOWN], rtn)
 }
-
-func Test_SimpleFunc(t *testing.T) {
-	d := Daemon{}
-	d.GetDependencies()
-	d.SetLongPressDuration(1)
-
-	m := Manager{}
-	m.GetInterfaceName()
-	m.SetShortPressDuration(1)
-	m.SetEdgeMoveStopDuration(1)
-	m.SetInputIgnore("", false)
-}

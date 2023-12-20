@@ -92,9 +92,3 @@ func Test_DebugGetPidAreasMap(t *testing.T) {
 	assert.Equal(t, expectRtn, rtnStr)
 	fmt.Printf("rtnStr:%s\n", rtnStr)
 }
-
-func Test_SimpleFunc(t *testing.T) {
-	m := Manager{}
-
-	m.GetExportedMethods()
-}

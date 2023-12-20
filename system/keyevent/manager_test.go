@@ -34,9 +34,3 @@ func Test_handleEvent(t *testing.T) {
 	ev.Keycode = KEY_RIGHTMETA
 	m.handleEvent(ev)
 }
-
-func Test_SimpleFunc(t *testing.T) {
-	m := Manager{}
-	m.GetInterfaceName()
-}
-

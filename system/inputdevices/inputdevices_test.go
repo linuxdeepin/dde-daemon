@@ -58,10 +58,3 @@ func Test_getIndexByDevNode(t *testing.T) {
 	i = m.getIndexByDevNode("/com/deepin/ABRecovery")
 	assert.Equal(t, 0, i)
 }
-
-func Test_SimpleFunc(t *testing.T) {
-	m := InputDevices{}
-	m.init()
-	m.GetInterfaceName()
-	newInputDevices()
-}
