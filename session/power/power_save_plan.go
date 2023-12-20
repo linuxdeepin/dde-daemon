@@ -708,8 +708,7 @@ func (psp *powerSavePlan) HandleIdleOn() {
 	}
 }
 
-// 结束 Idle
-func (psp *powerSavePlan) HandleIdleOff() {
+func (psp *powerSavePlan) handleIdleOff() {
 	psp.mu.Lock()
 	defer psp.mu.Unlock()
 
@@ -733,6 +732,31 @@ func (psp *powerSavePlan) HandleIdleOff() {
 	psp.manager.setDPMSModeOn()
 	psp.manager.setDDEBlackScreenActive(false)
 	psp.resetBrightness()
+}
+
+// 结束 Idle
+func (psp *powerSavePlan) HandleIdleOff() {
+	var powerPressAction int32
+	if psp.manager.OnBattery {
+		powerPressAction = psp.manager.BatteryPressPowerBtnAction.Get()
+	} else {
+		powerPressAction = psp.manager.LinePowerPressPowerBtnAction.Get()
+	}
+
+	if powerPressAction == powerActionTurnOffScreen  {
+		var delayHandleIdleOffInterval uint32
+		delayHandleIdleOffInterval = psp.manager.delayHandleIdleOffIntervalWhenScreenBlack
+		if delayHandleIdleOffInterval > 2500 {
+			// 当“按电源按钮时-关闭显示器”时，最长可增加2.5S延时
+			delayHandleIdleOffInterval = 2500
+		}
+		time.AfterFunc(time.Duration(delayHandleIdleOffInterval) * time.Millisecond, func() {
+			psp.handleIdleOff()
+		})
+		return
+	}
+
+	psp.handleIdleOff()
 }
 
 func (psp *powerSavePlan) isWindowFullScreenAndFocused(xid x.Window) (bool, error) {
