@@ -42,7 +42,8 @@
       "global": true,
       "name": "reduceNoiseEnable",
       "name[zh_CN]": "噪音抑制启动",
-      "description": "default reduce noise status",
+      "description": "default reduce noise status. Notice: the machines of huawei hisikirin do not support reduce noise, please do not enable this item",
+      "description[zh_CN]": "噪音抑制开关，注意：华为海思麒麟的机器不支持噪音抑制，请不要开启",
       "permissions": "read",
       "visibility": "private"
     },
