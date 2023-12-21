@@ -8,8 +8,8 @@ import (
 	"os"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/dde-daemon/timedate/zoneinfo"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
 // SetTime set the current time and date,
@@ -103,6 +103,10 @@ func (m *Manager) SetNTPServer(sender dbus.Sender, server, message string) *dbus
 	}
 
 	err = m.setNTPServer(server)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = m.setDsgNTPServer(server)
 	if err != nil {
 		logger.Warning(err)
 	}

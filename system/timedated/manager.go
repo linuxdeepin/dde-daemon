@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus"
+	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	polkit "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.policykit1"
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.systemd1"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.timedate1"
@@ -33,6 +34,7 @@ type Manager struct {
 	systemd        systemd1.Manager
 	setNTPServerMu sync.RWMutex
 	signalLoop     *dbusutil.SignalLoop
+	dsManager      ConfigManager.Manager
 }
 
 const (
@@ -47,6 +49,13 @@ const (
 	timesyncdService = "systemd-timesyncd.service"
 )
 
+const (
+	dsettingsAppID                = "org.deepin.dde.daemon"
+	dsettingsTimeDatedName        = "org.deepin.dde.daemon.timedated"
+	dsettingsKeyObsoleteNTPServer = "ObsoleteNTPServer"
+	dsettingsKeyNTPServer         = "NTPServer"
+)
+
 func NewManager(service *dbusutil.Service) (*Manager, error) {
 	core := timedate1.NewTimedate(service.Conn())
 	m := &Manager{
@@ -56,35 +65,118 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	return m, nil
 }
 
+func (m *Manager) initDsgConfig() {
+	// dsg config
+	ds := ConfigManager.NewConfigManager(m.signalLoop.Conn())
+
+	dsPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsTimeDatedName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	m.dsManager, err = ConfigManager.NewManager(m.signalLoop.Conn(), dsPath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+}
+
+func (m *Manager) getDsgObsoleteNTPServer() string {
+	v, err := m.dsManager.Value(0, dsettingsKeyObsoleteNTPServer)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+
+	return v.Value().(string)
+}
+
+func (m *Manager) getDsgNTPServer() string {
+	v, err := m.dsManager.Value(0, dsettingsKeyNTPServer)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+
+	return v.Value().(string)
+}
+
+func (m *Manager) setDsgObsoleteNTPServer(server string) error {
+	return m.dsManager.SetValue(0, dsettingsKeyObsoleteNTPServer, dbus.MakeVariant(server))
+}
+
+func (m *Manager) setDsgNTPServer(server string) error {
+	return m.dsManager.SetValue(0, dsettingsKeyNTPServer, dbus.MakeVariant(server))
+}
+
 func (m *Manager) start() {
 
 	m.signalLoop = dbusutil.NewSignalLoop(m.service.Conn(), 10)
 	m.signalLoop.Start()
+
+	m.initDsgConfig()
 
 	m.timesyncd = timesync1.NewTimesync1(m.service.Conn())
 	server, err := getNTPServer()
 	if err != nil {
 		logger.Warning(err)
 	}
+	obsoleteNTPServer := m.getDsgObsoleteNTPServer()
+	ntpServer := m.getDsgNTPServer()
+
+	logger.Infof("dsg obolete ntp server: %s; dsg ntp server: %s", obsoleteNTPServer, ntpServer)
 	m.systemd = systemd1.NewManager(m.service.Conn())
-	// 第一次启动时,默认无NTPServer文件.如果时间同步状态是开启的(系统默认开启),将时间同步服务数据同步到timedated中
-	if server == "" {
+	syncFn := func() {
 		ntp, err := m.core.NTP().Get(0)
 		if err != nil {
 			logger.Warning(err)
 		}
-		if m.isUnitEnable(timesyncdService) && ntp {
-			serverName, err := m.timesyncd.ServerName().Get(0)
+
+		if ntpServer == "" {
+			if m.isUnitEnable(timesyncdService) && ntp {
+				serverName, err := m.timesyncd.ServerName().Get(0)
+				if err != nil {
+					logger.Warning(err)
+				}
+				err = m.setNTPServer(serverName)
+				if err != nil {
+					logger.Warning(err)
+				}
+			}
+		} else {
+			err = m.setNTPServer(ntpServer)
 			if err != nil {
 				logger.Warning(err)
-			} else {
-				server = serverName
+			}
+			if m.isUnitEnable(timesyncdService) && ntp {
+				go func() {
+					_, err := m.systemd.RestartUnit(0, timesyncdService, "replace")
+					if err != nil {
+						logger.Warning("failed to restart systemd timesyncd service:", err)
+					}
+				}()
 			}
 		}
 	}
-	err = m.setNTPServer(server)
-	if err != nil {
-		logger.Warning(err)
+	// 第一次启动时,默认无NTPServer文件.如果时间同步状态是开启的(系统默认开启),将时间同步服务数据同步到timedated中
+	if server == "" {
+		syncFn()
+	} else {
+		if server != ntpServer {
+			if server != obsoleteNTPServer && obsoleteNTPServer != "-" {
+				// 文件里已经有值，同步到 dconf 中
+				m.setDsgNTPServer(server)
+			} else {
+				// 使用 dconf 配置
+				syncFn()
+			}
+		}
+	}
+
+	if obsoleteNTPServer != "-" {
+		// 将obsolete ntp server 标记为已经使用过
+		m.setDsgObsoleteNTPServer("-")
 	}
 	m.timesyncd.InitSignalExt(m.signalLoop, true)
 	err = m.timesyncd.ServerName().ConnectChanged(func(hasValue bool, value string) {
@@ -92,6 +184,10 @@ func (m *Manager) start() {
 			return
 		}
 		err = m.setNTPServer(server)
+		if err != nil {
+			logger.Warning(err)
+		}
+		err = m.setDsgNTPServer(server)
 		if err != nil {
 			logger.Warning(err)
 		}
@@ -123,6 +219,10 @@ func (m *Manager) start() {
 			}
 			if server != "" {
 				err = m.setNTPServer(server)
+				if err != nil {
+					logger.Warning(err)
+				}
+				err = m.setDsgNTPServer(server)
 				if err != nil {
 					logger.Warning(err)
 				}
