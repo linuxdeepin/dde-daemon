@@ -46,7 +46,11 @@ func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 	}
 
 	winInfo := entry.current
-
+	if winInfo == nil {
+		err = errors.New("winInfo is nil")
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
 	if m.isWaylandSession {
 		if m.isActiveWindow(winInfo) {
 			showing, _ := m.waylandWM.IsShowingDesktop(0)
@@ -76,7 +80,11 @@ func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 		}
 
 		activeWin := entry.manager.getActiveWindow()
-
+		if activeWin == nil {
+			err = errors.New("activeWin is nil")
+			logger.Warning(err)
+			return dbusutil.ToError(err)
+		}
 		if win == activeWin.getXid() {
 			if atomsContains(state, atomNetWmStateHidden) {
 				err = activateWindow(win)
@@ -85,6 +93,11 @@ func (entry *AppEntry) Activate(timestamp uint32) *dbus.Error {
 					err = minimizeWindow(win)
 				} else if entry.manager.getActiveWindow().getXid() == win {
 					nextWin := entry.findNextLeader()
+					if nextWin == nil {
+						err = errors.New("nextWin is nil")
+						logger.Warning(err)
+						return dbusutil.ToError(err)
+					}
 					err = nextWin.activate()
 				}
 			}
