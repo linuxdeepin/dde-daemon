@@ -491,6 +491,9 @@ func (m *Manager) initDsgConfig() error {
 			logger.Debug("Not process. valueChanged, key : ", key)
 		}
 		m.updatePowerMode(false) // dconfig change
+		if key == dsettingsMode {
+			m.doSetMode(m.Mode)
+		}
 	})
 
 	return nil
