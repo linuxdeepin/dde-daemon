@@ -1,3 +1,12 @@
+dde-daemon (6.0.30) unstable; urgency=medium
+
+  * fix: network need to disable twice
+  * fix: fix: pstate file exist but not enable
+  * feat: betterperformancelogic
+  * feat: add window keybinding
+
+ -- dengbo <dengbo@deepin.org>  Fri, 22 Dec 2023 13:03:55 +0800
+
 dde-daemon (6.0.29) unstable; urgency=medium
 
   * fix: wifi device not enable
