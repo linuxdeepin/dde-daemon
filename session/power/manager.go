@@ -895,6 +895,7 @@ func (m *Manager) scheduledShutdown(state int) {
 		}
 		if state == Shutdown {
 			// 执行关机,整个状态机应该结束了
+			m.notify.CloseNotification(0, m.notifyId)
 			m.doAutoShutdown()
 		}
 	}
