@@ -181,6 +181,13 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		return dbusutil.ToError(err)
 	}
 
+	// 清除用户快速登录设置
+	err = users.SetQuickLogin(name, false)
+	if err != nil {
+		// 仅警告错误
+		logger.Warningf("disable quick login for user %q failed: %v", name, err)
+	}
+
 	// 删除账户前先删除生物特征，避免删除账户后，用户数据找不到
 	if rmFiles {
 		user.clearBiometricChara()
