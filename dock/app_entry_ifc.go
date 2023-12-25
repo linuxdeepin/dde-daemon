@@ -203,7 +203,7 @@ func (entry *AppEntry) ForceQuit() *dbus.Error {
 		} else {
 			err := winInfo.killClient()
 			if err != nil {
-				dbusutil.ToError(err)
+				logger.Warning(err)
 			}
 		}
 	}
@@ -216,7 +216,7 @@ func (entry *AppEntry) ForceQuit() *dbus.Error {
 				for _, winInfo := range winInfoSlice {
 					err = winInfo.killClient()
 					if err != nil {
-						dbusutil.ToError(err)
+						logger.Warning(err)
 					}
 				}
 			}

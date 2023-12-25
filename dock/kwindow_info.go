@@ -306,7 +306,7 @@ func (winInfo *KWindowInfo) close(timestamp uint32) error {
 }
 
 func (winInfo *KWindowInfo) killClient() error {
-	return nil
+	return winInfo.winObj.RequestClose(0)
 }
 
 func (winInfo *KWindowInfo) changeXid(xid x.Window) bool {
