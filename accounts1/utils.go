@@ -24,7 +24,6 @@ import (
 	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/encoding/kv"
 	"github.com/linuxdeepin/go-lib/graphic"
-	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -91,9 +90,7 @@ func getUserIcons() ([]string, []string) {
 				return err
 			}
 
-			subPaths := []string{"dimensional", "flat", "local"}
-
-			if info.IsDir() && strv.Strv(subPaths).Contains(info.Name()) {
+			if info.IsDir() && info.Name() != "icons" {
 				paths = append(paths, path)
 			}
 
