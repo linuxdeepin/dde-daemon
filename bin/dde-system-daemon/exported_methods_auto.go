@@ -61,5 +61,10 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.ScalePlymouth,
 			InArgs: []string{"scale"},
 		},
+		{
+			Name:   "SetPlymouthTheme",
+			Fn:     v.SetPlymouthTheme,
+			InArgs: []string{"themeName"},
+		},
 	}
 }
