@@ -213,12 +213,9 @@ func newManager(service *dbusutil.Service) *Manager {
 	m.GtkTheme.Bind(m.setting, gsKeyGtkTheme)
 	m.IconTheme.Bind(m.setting, gsKeyIconTheme)
 	m.CursorTheme.Bind(m.setting, gsKeyCursorTheme)
-	m.setting.SetString(gsKeyFontStandard, fonts.FcFont_Match("system-ui"))
 	m.StandardFont.Bind(m.setting, gsKeyFontStandard)
-	m.setting.SetString(gsKeyFontMonospace, fonts.FcFont_Match("monospace"))
 	m.MonospaceFont.Bind(m.setting, gsKeyFontMonospace)
 	m.Background.Bind(m.wrapBgSetting, gsKeyBackground)
-
 	m.Opacity.Bind(m.setting, gsKeyOpacity)
 	m.WallpaperSlideShow.Bind(m.setting, gsKeyWallpaperSlideshow)
 	m.WallpaperURIs.Bind(m.setting, gsKeyWallpaperURIs)
@@ -319,12 +316,12 @@ func (m *Manager) isBgInUse(file string) bool {
 		return true
 	}
 	// 检查所有的工作区的屏幕壁纸是否占用
-	mapWallpaperURIs,err := doUnmarshalMonitorWorkspaceWallpaperURIs(m.WallpaperURIs.Get())
+	mapWallpaperURIs, err := doUnmarshalMonitorWorkspaceWallpaperURIs(m.WallpaperURIs.Get())
 	if err != nil {
 		logger.Error(err)
 		return false
 	}
-	for _,bg := range mapWallpaperURIs {
+	for _, bg := range mapWallpaperURIs {
 		if file == bg {
 			return true
 		}
@@ -634,6 +631,8 @@ func (m *Manager) init() error {
 
 	// Init IrregularFontWhiteList
 	m.initAppearanceDSettings()
+	m.setting.SetString(gsKeyFontStandard, fonts.FcFont_Match("system-ui"))
+	m.setting.SetString(gsKeyFontMonospace, fonts.FcFont_Match("monospace"))
 
 	return nil
 }
@@ -738,7 +737,7 @@ func (m *Manager) doSetMonitorBackground(monitorName string, imageFile string) (
 	}
 	// 如果设置的壁纸不是/usr/share/wallpapers/下的，则认为是用户自定义壁纸，需要发送add信号
 	needNotify := false
-	if !strings.HasPrefix(file,"/usr/share/wallpapers/"){
+	if !strings.HasPrefix(file, "/usr/share/wallpapers/") {
 		needNotify = true
 	}
 	file, err := background.Prepare(file, t)
@@ -922,7 +921,7 @@ func (m *Manager) doSetBackground(value string) (string, error) {
 
 	// 如果设置的壁纸不是/usr/share/wallpapers/下的，则认为是用户自定义壁纸，需要发送add信号
 	needNotify := false
-	if !strings.HasPrefix(file,"/usr/share/wallpapers/"){
+	if !strings.HasPrefix(file, "/usr/share/wallpapers/") {
 		needNotify = true
 	}
 	file, err := background.Prepare(file, t)
