@@ -106,6 +106,41 @@ func (d *Daemon) scalePlymouth(scale uint32) error {
 	return nil
 }
 
+func (d *Daemon) SetPlymouthTheme(themeName string) *dbus.Error {
+	return dbusutil.ToError(d.setPlymouthTheme(themeName))
+}
+
+func (d *Daemon) setPlymouthTheme(themeName string) error {
+	plymouthLocker.Lock()
+	defer plymouthLocker.Unlock()
+	defer logger.Debug("end ScalePlymouth", themeName)
+	themelistout, err := exec.Command("plymouth-set-default-theme", "--list").CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("seems cannot find the plymouth-set-default-theme: %v", err)
+	}
+	themelist := string(themelistout)
+	if !strings.Contains(themelist, themeName) {
+		return fmt.Errorf("The themeName %s does not exist in plymouth themelist", themeName)
+	}
+
+	out, err := exec.Command("plymouth-set-default-theme", themeName).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("failed to set plymouth theme: %s, err: %v", string(out), err)
+	}
+
+	kernel, err := exec.Command("uname", "-r").CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("failed to get kernel, err: %v", err)
+	}
+	out, err = exec.Command("update-initramfs",
+		"-u", "-k", string(bytes.TrimSpace(kernel))).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("failed to update initramfs: %s, err: %v", string(out), err)
+	}
+
+	return nil
+}
+
 func getEditionName() (string, error) {
 	conf, err := parseInfoFile("/etc/os-version", "=")
 	if err != nil {
