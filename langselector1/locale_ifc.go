@@ -110,26 +110,3 @@ func (lang *LangSelector) DeleteLocale(locale string) *dbus.Error {
 	err := lang.deleteLocale(locale)
 	return dbusutil.ToError(err)
 }
-
-func (lang *LangSelector) GetLocaleRegion() (region string, busErr *dbus.Error) {
-	lang.service.DelayAutoQuit()
-
-	localeRegion, err := lang.getLocaleRegion()
-	if err != nil {
-		return "", dbusutil.ToError(err)
-	}
-
-	return localeRegion, nil
-}
-
-func (lang *LangSelector) SetLocaleRegion(locale string) *dbus.Error {
-	lang.service.DelayAutoQuit()
-
-	if !lang.isSupportedLocale(locale) {
-		return dbusutil.ToError(fmt.Errorf("invalid locale: %v", locale))
-	}
-
-	logger.Debugf("setLocaleRegion %q", locale)
-	go lang.setLocaleRegion(locale)
-	return nil
-}
