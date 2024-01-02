@@ -115,6 +115,7 @@ func (*Module) start() error {
 	go _m.listenCursorChanged()
 	go _m.handleThemeChanged()
 	_m.listenGSettingChanged()
+	_m.initFont()
 	return nil
 }
 

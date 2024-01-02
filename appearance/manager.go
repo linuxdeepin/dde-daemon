@@ -631,10 +631,37 @@ func (m *Manager) init() error {
 
 	// Init IrregularFontWhiteList
 	m.initAppearanceDSettings()
-	m.setting.SetString(gsKeyFontStandard, fonts.FcFont_Match("system-ui"))
-	m.setting.SetString(gsKeyFontMonospace, fonts.FcFont_Match("monospace"))
-
 	return nil
+}
+
+// initFont 初始化字体设置
+func (m *Manager) initFont() {
+	value := fonts.FcFont_Match("system-ui")
+	if m.StandardFont.Get() != value {
+		m.StandardFont.Set(value)
+	}
+	value = fonts.FcFont_Match("monospace")
+	if m.MonospaceFont.Get() != value {
+		m.MonospaceFont.Set(value)
+	}
+	err := setDQtTheme(dQtFile, dQtSectionTheme,
+		[]string{
+			dQtKeyIcon,
+			dQtKeyFont,
+			dQtKeyMonoFont,
+			dQtKeyFontSize},
+		[]string{
+			m.IconTheme.Get(),
+			m.StandardFont.Get(),
+			m.MonospaceFont.Get(),
+			strconv.FormatFloat(m.FontSize.Get(), 'f', 1, 64)})
+	if err != nil {
+		logger.Warning("failed to set deepin qt theme:", err)
+	}
+	err = saveDQtTheme(dQtFile)
+	if err != nil {
+		logger.Warning("Failed to save deepin qt theme:", err)
+	}
 }
 
 func (m *Manager) handleDisplayChanged(hasValue bool) {
@@ -671,7 +698,7 @@ func (m *Manager) handleWmWorkspaceCountChanged(count int32) {
 	}
 }
 
-//切换工作区
+// 切换工作区
 func (m *Manager) handleWmWorkspaceSwithched(from, to int32) {
 	logger.Debugf("wm workspace switched from %d to %d", from, to)
 	if m.userObj != nil {
