@@ -279,7 +279,7 @@ func (psp *powerSavePlan) handlePowerSavingModeBrightnessDropPercentChanged(hasV
 	psp.manager.setAndSaveDisplayBrightness(brightnessTable)
 }
 
-//节能模式变化后的亮度修改
+// 节能模式变化后的亮度修改
 func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bool) {
 	const (
 		multiLevelAdjustmentScale     = 0.2 // 分级调节时，默认按照20%亮度调节值调整亮度，并在亮度显示的设置分级中，归到所在分级
@@ -568,7 +568,7 @@ func (psp *powerSavePlan) screenBlack() {
 			}
 			manager.setDisplayBrightness(brightnessTable)
 		}
-		manager.setDPMSModeOff()
+		manager.doTurnOffScreen()
 
 	})
 	psp.addTask(taskF)
