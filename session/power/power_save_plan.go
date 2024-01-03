@@ -17,13 +17,13 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 
 	"github.com/godbus/dbus"
+	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/procfs"
 	x "github.com/linuxdeepin/go-x11-client"
 	xscreensaver "github.com/linuxdeepin/go-x11-client/ext/screensaver"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
-	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 )
 
 const submodulePSP = "PowerSavePlan"
@@ -41,8 +41,8 @@ func init() {
 }
 
 type powerSavePlan struct {
-	systemSigLoop *dbusutil.SignalLoop
-	dsgPower      ConfigManager.Manager
+	systemSigLoop      *dbusutil.SignalLoop
+	dsgPower           ConfigManager.Manager
 	manager            *Manager
 	screenSaverTimeout int32
 	metaTasks          metaTasks
@@ -175,7 +175,7 @@ func (psp *powerSavePlan) Start() error {
 		psp.initMultiBrightnessWithPsm()
 	}
 
-	//OnBattery changed will effect current PowerSavePlan
+	// OnBattery changed will effect current PowerSavePlan
 	err := power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
 		psp.Reset()
 	})
@@ -313,7 +313,7 @@ func (psp *powerSavePlan) handlePowerSavingModeBrightnessDropPercentChanged(hasV
 			psp.psmPercentChangedTime = time.Now()
 		}
 	} else {
-		//else中(非节能状态下的调节)不需要做响应,需要降低亮度的预设值在之前已经保存了
+		// else中(非节能状态下的调节)不需要做响应,需要降低亮度的预设值在之前已经保存了
 		return
 	}
 	psp.manager.setAndSaveDisplayBrightness(brightnessTable)
@@ -544,8 +544,8 @@ func (psp *powerSavePlan) stopScreensaver() {
 func (psp *powerSavePlan) makeSystemSleep() {
 	logger.Info("sleep")
 	psp.stopScreensaver()
-	//psp.manager.setDPMSModeOn()
-	//psp.resetBrightness()
+	// psp.manager.setDPMSModeOn()
+	// psp.resetBrightness()
 	psp.manager.doSuspendByFront()
 }
 
@@ -700,8 +700,8 @@ func (psp *powerSavePlan) HandleIdleOn() {
 	_, err := os.Stat("/etc/deepin/no_suspend")
 	if err == nil {
 		if psp.manager.ScreenBlackLock.Get() {
-			//m.setDPMSModeOn()
-			//m.lockWaitShow(4 * time.Second)
+			// m.setDPMSModeOn()
+			// m.lockWaitShow(4 * time.Second)
 			psp.manager.doLock(true)
 			time.Sleep(time.Millisecond * 500)
 		}
@@ -743,14 +743,14 @@ func (psp *powerSavePlan) HandleIdleOff() {
 		powerPressAction = psp.manager.LinePowerPressPowerBtnAction.Get()
 	}
 
-	if powerPressAction == powerActionTurnOffScreen  {
+	if powerPressAction == powerActionTurnOffScreen {
 		var delayHandleIdleOffInterval uint32
 		delayHandleIdleOffInterval = psp.manager.delayHandleIdleOffIntervalWhenScreenBlack
 		if delayHandleIdleOffInterval > 2500 {
 			// 当“按电源按钮时-关闭显示器”时，最长可增加2.5S延时
 			delayHandleIdleOffInterval = 2500
 		}
-		time.AfterFunc(time.Duration(delayHandleIdleOffInterval) * time.Millisecond, func() {
+		time.AfterFunc(time.Duration(delayHandleIdleOffInterval)*time.Millisecond, func() {
 			psp.handleIdleOff()
 		})
 		return
@@ -770,10 +770,10 @@ func (psp *powerSavePlan) isWindowFullScreenAndFocused(xid x.Window) (bool, erro
 		if s == psp.atomNetWMStateFullscreen {
 			found++
 		}
-		//后端的代码之前是基于deepin-wm这个窗口适配，现在换成了kwin,state中没有 focus 这个属性了
-		//else if s == psp.atomNetWMStateFocused {
+		// 后端的代码之前是基于deepin-wm这个窗口适配，现在换成了kwin,state中没有 focus 这个属性了
+		// else if s == psp.atomNetWMStateFocused {
 		//	found++
-		//}
+		// }
 		if found == 1 {
 			return true, nil
 		}
@@ -872,8 +872,8 @@ func (psp *powerSavePlan) handleBrightnessPropertyChanged(value bool, value2 map
 
 type brightnessWithPsp struct {
 	MonitorName      string
-	BrightnessSaved  float64 //开启节能模式之前的亮度值
-	BrightnessLatest float64 //开启节能模式之后每次手动设置的亮度
+	BrightnessSaved  float64 // 开启节能模式之前的亮度值
+	BrightnessLatest float64 // 开启节能模式之后每次手动设置的亮度
 	ManuallyModified bool
 }
 

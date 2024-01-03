@@ -421,7 +421,7 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	}
 
-	//修改时间后通过信号通知更新关机定时器
+	// 修改时间后通过信号通知更新关机定时器
 	_, err = m.sessionTimeDate.ConnectTimeUpdate(func() {
 		if m.ScheduledShutdownState {
 			m.setNextShutdownTime(0)
@@ -538,7 +538,7 @@ func (m *Manager) init() {
 				if ch {
 					m.prepareSuspendLocker.Lock()
 					// 如果系统处于suspend状态，不需要在上层通过鼠标键盘事件唤醒系统
-					if m.prepareSuspend >= suspendStatePrepare{
+					if m.prepareSuspend >= suspendStatePrepare {
 						m.prepareSuspendLocker.Unlock()
 						continue
 					}
@@ -718,8 +718,10 @@ func (m *Manager) initDsg() {
 		logger.Info("DSG org.deepin.dde.daemon.power valueChanged, key : ", key)
 		getDsPowerConfig(key, false)
 		// 如果重复一次，重置nextShutdownTime
-		m.setNextShutdownTime(0)
-		m.scheduledShutdown(Init)
+		if m.ScheduledShutdownState {
+			m.setNextShutdownTime(0)
+			m.scheduledShutdown(Init)
+		}
 	})
 
 	if m.nextShutdownTime == 0 {
