@@ -7,10 +7,11 @@ package network
 import (
 	"time"
 
-	"github.com/linuxdeepin/go-lib/log"
-	libnotify "github.com/linuxdeepin/go-lib/notify"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/dde-daemon/network/proxychains"
+	"github.com/linuxdeepin/go-lib/log"
+	libnotify "github.com/linuxdeepin/go-lib/notify"
+	"github.com/linuxdeepin/go-lib/proxy"
 )
 
 var (
@@ -57,6 +58,8 @@ func (d *Module) GetDependencies() []string {
 }
 
 func (d *Module) start() error {
+	proxy.SetupProxy()
+
 	service := loader.GetService()
 	manager = NewManager(service)
 	manager.init()

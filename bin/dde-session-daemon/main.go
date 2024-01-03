@@ -37,7 +37,6 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/go-lib/proxy"
 	"github.com/linuxdeepin/go-lib/utils"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
@@ -197,7 +196,6 @@ func main() {
 	}
 
 	C.init()
-	proxy.SetupProxy()
 
 	app := NewSessionDaemon(logger)
 	if app == nil {
