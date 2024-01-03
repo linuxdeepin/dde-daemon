@@ -124,6 +124,10 @@ func (ks *Keystroke) ToKeyList(keySymbols *keysyms.KeySymbols) ([]Key, error) {
 		if code == 0 {
 			continue
 		}
+		if strings.HasPrefix(ks.Keystr, "XF86") && keySymbols.GetKeysym(code, 0) != ks.Keysym {
+			// XF86 只取基本层级
+			continue
+		}
 		keyList = append(keyList, Key{
 			Mods: ks.Mods,
 			Code: Keycode(code),

@@ -393,7 +393,6 @@ func (sm *ShortcutManager) grabKeystroke(shortcut Shortcut, ks *Keystroke, dummy
 		logger.Debugf("grabKeystroke failed, shortcut: %v, ks: %v, err: %v", shortcut.GetId(), ks, err)
 		return
 	}
-	//logger.Debugf("grabKeystroke shortcut: %s, ks: %s, key: %s, dummy: %v", shortcut.GetId(), ks, key, dummy)
 
 	var conflictCount int
 	var idx = -1
@@ -401,6 +400,8 @@ func (sm *ShortcutManager) grabKeystroke(shortcut Shortcut, ks *Keystroke, dummy
 		sm.keyKeystrokeMapMu.Lock()
 		conflictKeystroke, ok := sm.keyKeystrokeMap[key]
 		sm.keyKeystrokeMapMu.Unlock()
+
+		logger.Debugf("grabKeystroke shortcut: %s, ks: %s, key: %s, dummy: %v", shortcut.GetId(), ks, key, dummy)
 
 		if ok {
 			// conflict
@@ -1123,7 +1124,7 @@ func (sm *ShortcutManager) AddCustom(csm *CustomShortcutManager, wmObj wm.Wm) {
 				logger.Warning("failed to setShortForWayland:", err)
 				continue
 			}
-			sm.WaylandCustomShortCutMap[id + "-cs"] = cmd
+			sm.WaylandCustomShortCutMap[id+"-cs"] = cmd
 			cs := newCustomShort(id, id, cmd, keystrokesStrv, wmObj, csm)
 			sm.addWithoutLock(cs)
 		}
