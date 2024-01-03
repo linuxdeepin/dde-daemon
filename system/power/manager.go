@@ -40,7 +40,7 @@ const (
 const (
 	kwinDsettingsAppID           = "org.kde.kwin"
 	kwinDsettingsCompositingName = "org.kde.kwin.compositing"
-	kwinDsettingsPropCompositor  = "compositor"
+	kwinDsettingsPropCompositor  = "user_type"
 )
 
 type supportMode struct {

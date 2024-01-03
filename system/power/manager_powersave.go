@@ -7,8 +7,6 @@ package power
 import (
 	"fmt"
 	"os/exec"
-
-	"github.com/godbus/dbus"
 )
 
 type DSPCMode string
@@ -59,18 +57,18 @@ func (m *Manager) setDSPCState(state DSPCMode) {
 	}
 }
 
-type compositorState string
+type compositorState int
 
 const (
-	compositorAuto    compositorState = "auto"    // 开启特效，合成器为auto
-	compositorXRender compositorState = "XRender" // 开启特效，合成器为XRender
+	compositorAuto    compositorState = 0 // 开启特效，合成器为auto
+	compositorXRender compositorState = 4 // 开启特效，合成器为XRender
 )
 
 func (m *Manager) setCompositorState(state compositorState) {
 	if !m.CompositorPowerSaveEnable {
 		state = compositorAuto
 	}
-	err := m.setDsgData(kwinDsettingsPropCompositor, dbus.MakeVariant(state), m.dsgKwin)
+	err := m.setDsgData(kwinDsettingsPropCompositor, state, m.dsgKwin)
 	if err != nil {
 		logger.Warning(err)
 	}
