@@ -401,11 +401,11 @@ func (m *Manager) initDsgConfig() error {
 		}
 	}
 
-	getMode := func(init bool) {
+	getMode := func(init bool) string {
 		ret, err := dsPower.Value(0, dsettingsMode)
 		if err != nil {
 			logger.Warning(err)
-			return
+			return ddeBalance
 		}
 
 		value := ret.Value().(string)
@@ -418,9 +418,10 @@ func (m *Manager) initDsgConfig() error {
 		if init {
 			logger.Info("init ")
 			m.Mode = value
-			return
+			return value
 		}
 		m.setPropMode(value)
+		return value
 	}
 
 	getPowerMappingConfig := func() {
@@ -482,7 +483,16 @@ func (m *Manager) initDsgConfig() error {
 		case dsettingsPowerSavingModeBrightnessDropPercent:
 			getPowerSavingModeBrightnessDropPercent(false)
 		case dsettingsMode:
-			getMode(false)
+			oldMode := m.Mode
+			newMode := getMode(false)
+			// 手动(外部请求)切换到节能模式，或节能模式切换到其他模式时，关闭电池自动节能和低电量自动节能
+			if ddePowerSave == oldMode || ddePowerSave == newMode {
+				m.PropsMu.Lock()
+				m.updatePowerSavingState(false)
+				m.PropsMu.Unlock()
+			}
+			m.doSetMode(newMode)
+			return
 		case dsettingsPowerCompositorPowerSaveEnable:
 			getCompositorPowerSaveEnable(false)
 		case dsettingsPowerMappingConfig:
@@ -491,9 +501,6 @@ func (m *Manager) initDsgConfig() error {
 			logger.Debug("Not process. valueChanged, key : ", key)
 		}
 		m.updatePowerMode(false) // dconfig change
-		if key == dsettingsMode {
-			m.doSetMode(m.Mode)
-		}
 	})
 
 	return nil
