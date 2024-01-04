@@ -216,6 +216,11 @@ func newAudio(service *dbusutil.Service) *Audio {
 		AudioServerState: AudioStateChanged,
 	}
 
+	// TODO: here should check the exported property
+	// when is piepwire, sometimes something error with golib
+	// cannot get the defaultSink and defaultSource
+	a.DefaultSource = "/fakesource"
+	a.DefaultSink = "/fakesink"
 	a.settings = gio.NewSettings(gsSchemaAudio)
 	a.settings.Reset(gsKeyInputVolume)
 	a.settings.Reset(gsKeyOutputVolume)
