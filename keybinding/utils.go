@@ -305,6 +305,7 @@ func (m *Manager) systemTurnOffScreen() {
 		m.setWmBlackScreenActive(false)
 	}
 	undoPrepareSuspend()
+	ioutil.WriteFile("/tmp/dpms-state", []byte("1"), 0644)
 }
 
 func (m *Manager) systemLogout() {

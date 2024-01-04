@@ -5,6 +5,7 @@
 package power
 
 import (
+	"io/ioutil"
 	"math"
 	"os/exec"
 	"strings"
@@ -189,6 +190,7 @@ func (m *Manager) setDPMSModeOff() {
 	if err != nil {
 		logger.Warning("set DPMS off error:", err)
 	}
+	ioutil.WriteFile("/tmp/dpms-state", []byte("1"), 0644)
 }
 
 const (
