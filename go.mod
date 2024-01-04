@@ -13,7 +13,7 @@ require (
 	github.com/linuxdeepin/dde-api v0.0.0-20230407015108-8b16b3779328
 	github.com/linuxdeepin/go-dbus-factory v0.0.0-20231128020144-77ac5d6251aa
 	github.com/linuxdeepin/go-gir v0.0.0-20230331033513-a8d7a9e89f9b
-	github.com/linuxdeepin/go-lib v0.0.0-20231103081115-92734773415c
+	github.com/linuxdeepin/go-lib v0.0.0-20240103033000-4fb70d4b858f
 	github.com/linuxdeepin/go-x11-client v0.0.0-20230329071904-56c906e1ab5d
 	github.com/mdlayher/netlink v1.7.1
 	github.com/msteinert/pam v1.1.0
@@ -39,9 +39,9 @@ require (
 	github.com/youpy/go-riff v0.1.0 // indirect
 	github.com/youpy/go-wav v0.3.2 // indirect
 	github.com/zaf/g711 v0.0.0-20220109202201-cf0017bf0359 // indirect
-	golang.org/x/image v0.7.0 // indirect
+	golang.org/x/image v0.10.0 // indirect
 	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
 )
