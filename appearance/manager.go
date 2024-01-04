@@ -639,11 +639,20 @@ func (m *Manager) initFont() {
 	value := fonts.FcFont_Match("system-ui")
 	if m.StandardFont.Get() != value {
 		m.StandardFont.Set(value)
+		err := m.xSettings.SetString(0, "Qt/FontName", value)
+		if err != nil {
+			logger.Warning("failed to set xsetting Qt/FontName:", err)
+		}
 	}
 	value = fonts.FcFont_Match("monospace")
 	if m.MonospaceFont.Get() != value {
 		m.MonospaceFont.Set(value)
+		err := m.xSettings.SetString(0, "Qt/MonoFontName", value)
+		if err != nil {
+			logger.Warning("failed to set xsetting Qt/MonoFontName:", err)
+		}
 	}
+
 	err := setDQtTheme(dQtFile, dQtSectionTheme,
 		[]string{
 			dQtKeyIcon,

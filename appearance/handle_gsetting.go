@@ -54,11 +54,17 @@ func (m *Manager) listenGSettingChanged() {
 		case gsKeyFontStandard:
 			ty = TypeStandardFont
 			value = m.setting.GetString(key)
-			err = m.doSetStandardFont(value)
+			// 如果值相同，可能是dde设置导致的gsetting变化，不做变更
+			if m.StandardFont.Get() != value {
+				err = m.doSetStandardFont(value)
+			}
 		case gsKeyFontMonospace:
 			ty = TypeMonospaceFont
 			value = m.setting.GetString(key)
-			err = m.doSetMonospaceFont(value)
+			// 如果值相同，可能是dde设置导致的gsetting变化，不做变更
+			if m.MonospaceFont.Get() != value {
+				err = m.doSetMonospaceFont(value)
+			}
 		case gsKeyDTKSizeMode:
 			ty = TypeDTKSizeMode
 			enabled := m.setting.GetInt(key)
