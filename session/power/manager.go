@@ -110,7 +110,7 @@ type Manager struct {
 	notifyIdMu             sync.Mutex
 	notify                 notifications.Notifications
 
-	nextShutdownTime int64 // 下一次关机时间，只有关机配置、系统时间/时区等手动更改时，触发变更
+	nextShutdownTime int64 // 下一次关机时间，只有关机配置、系统时间/时区等手动更改时，触发变更. 0则为无效日期
 	shutdownStatus   int
 
 	sessionTimeDate sessiontimedate.Timedate
@@ -787,7 +787,7 @@ const (
 )
 
 func (m *Manager) scheduledShutdown(state int) {
-	logger.Debugf("scheduledShutdown,pre-stat:%v next-stat:%v", m.shutdownStatus, state)
+	logger.Debugf("scheduledShutdown,pre-stat:%v next-stat:%v nextShutDownTime:%v", m.shutdownStatus, state, time.Unix(m.nextShutdownTime, 0).Format("2006-01-02 15:04:05"))
 	if m.shutdownTimer != nil {
 		m.shutdownTimer.Stop()
 		m.shutdownTimer = nil
@@ -802,6 +802,12 @@ func (m *Manager) scheduledShutdown(state int) {
 	}
 
 	if state != Init && state == m.shutdownStatus {
+		return
+	}
+
+	// 下次关机时间为0，则退出调度
+	if m.nextShutdownTime == 0 {
+		logger.Warning("next shutdown time is illegal, please check the config")
 		return
 	}
 
@@ -976,6 +982,11 @@ func (m *Manager) isCustomday(date time.Time) (res bool) {
 	return false
 }
 
+const (
+	daysOfWeek = 7   //一周天数
+	daysOfYear = 366 // 一年天数
+)
+
 func (m *Manager) getNextShutdownTime(bt int64) int64 {
 	getNextTime := func() time.Time {
 		bastTime := time.Unix(bt, 0)
@@ -1006,16 +1017,32 @@ func (m *Manager) getNextShutdownTime(bt int64) int64 {
 	case Workdays:
 		targetTime = getNextTime()
 		// 获取下一个工作日，也可能是今天
-		for !m.isWorkday(targetTime) {
-			t, _ := time.ParseDuration("24h")
-			targetTime = targetTime.Add(t)
+		// isWorkday依赖第三方接口，防止调用一直报错导致死循环
+		for i := 0; i <= daysOfYear; i++ {
+			if i == daysOfYear {
+				return 0
+			}
+			if m.isWorkday(targetTime) {
+				break
+			} else {
+				t, _ := time.ParseDuration("24h")
+				targetTime = targetTime.Add(t)
+			}
 		}
 	case Custom:
 		targetTime = getNextTime()
-		// 获取下一个自定义工作日，也可能是今天
-		for !m.isCustomday(targetTime) {
-			t, _ := time.ParseDuration("24h")
-			targetTime = targetTime.Add(t)
+		// 一周7天，获取下一个自定义工作日，也可能是今天
+		for i := 0; i <= daysOfWeek; i++ {
+			// 循环一周都获取不到工作日，则返回无效日期
+			if i == daysOfWeek {
+				return 0
+			}
+			if m.isCustomday(targetTime) {
+				break
+			} else {
+				t, _ := time.ParseDuration("24h")
+				targetTime = targetTime.Add(t)
+			}
 		}
 	}
 	logger.Debug("gen next shutdown time:", targetTime.Format("2006-01-02 15:04:05"))
