@@ -794,11 +794,6 @@ func nmGetIp4ConfigInfo(path dbus.ObjectPath) (ip4Data ipv4Info) {
 
 	addressDataProp, _ := ip4config.AddressData().Get(0)
 	ip4Data.Addresses = parseAddressDataProp(addressDataProp)
-	if len(ip4Data.Addresses) == 0 {
-		ip4Data.Addresses = []addressDataItem{
-			emptyIPv4,
-		}
-	}
 
 	ip4Data.Gateway, _ = ip4config.Gateway().Get(0)
 
@@ -825,12 +820,6 @@ func nmGetIp6ConfigInfo(path dbus.ObjectPath) (ip6Data ipv6Info) {
 		if !strings.HasPrefix(addr.Address, "FE80:") && // link local
 			!strings.HasPrefix(addr.Address, "FEC0:") { // site local
 			ip6Data.Addresses = append(ip6Data.Addresses, addr)
-		}
-	}
-
-	if len(ip6Data.Addresses) == 0 {
-		ip6Data.Addresses = []addressDataItem{
-			emptyIPv6,
 		}
 	}
 

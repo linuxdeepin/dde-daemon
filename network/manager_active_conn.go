@@ -68,18 +68,6 @@ type addressDataItem struct {
 	Prefix  uint32
 }
 
-var (
-	emptyIPv4 = addressDataItem{
-		Address: "0.0.0.0",
-		Prefix:  0,
-	}
-
-	emptyIPv6 = addressDataItem{
-		Address: "0::0",
-		Prefix:  0,
-	}
-)
-
 type ipv4Info struct {
 	Addresses   []addressDataItem
 	Gateway     string
@@ -111,31 +99,27 @@ type hotspotConnectionInfo struct {
 }
 
 func (i ipv4Info) toDeprecatedStruct() ip4ConnectionInfoDeprecated {
-	firstAddress := emptyIPv4
-	if len(i.Addresses) != 0 {
-		firstAddress = i.Addresses[0]
-	}
-
-	return ip4ConnectionInfoDeprecated{
-		Address:  firstAddress.Address,
-		Mask:     convertIpv4PrefixToNetMask(firstAddress.Prefix),
+	ip4ConnectionInfoDeprecatedInfo := ip4ConnectionInfoDeprecated {
 		Gateways: []string{i.Gateway},
 		Dnses:    i.Nameservers,
 	}
+	if len(i.Addresses) != 0 {
+		ip4ConnectionInfoDeprecatedInfo.Address = i.Addresses[0].Address
+		ip4ConnectionInfoDeprecatedInfo.Mask = convertIpv4PrefixToNetMask(i.Addresses[0].Prefix)
+	}
+	return ip4ConnectionInfoDeprecatedInfo
 }
 
 func (i ipv6Info) toDeprecatedStruct() ip6ConnectionInfoDeprecated {
-	firstAddress := emptyIPv6
-	if len(i.Addresses) != 0 {
-		firstAddress = i.Addresses[0]
-	}
-
-	return ip6ConnectionInfoDeprecated{
-		Address:  firstAddress.Address,
-		Prefix:   strconv.FormatUint(uint64(firstAddress.Prefix), 10),
+	ip6ConnectionInfoDeprecatedInfo := ip6ConnectionInfoDeprecated {
 		Gateways: []string{i.Gateway},
 		Dnses:    i.Nameservers,
 	}
+	if len(i.Addresses) != 0 {
+		ip6ConnectionInfoDeprecatedInfo.Address = i.Addresses[0].Address
+		ip6ConnectionInfoDeprecatedInfo.Prefix = strconv.FormatUint(uint64(i.Addresses[0].Prefix), 10)
+	}
+	return ip6ConnectionInfoDeprecatedInfo
 }
 
 func (m *Manager) initActiveConnectionManage() {
