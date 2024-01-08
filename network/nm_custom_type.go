@@ -5,8 +5,8 @@
 package network
 
 import (
-	_ "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/dde-daemon/network/nm"
+	_ "github.com/linuxdeepin/go-lib/gettext"
 )
 
 // Custom device types, use string instead of number, used by front-end
@@ -69,7 +69,7 @@ func getCustomDeviceType(devType uint32) (customDevType string) {
 		return deviceWifiP2p
 	case nm.NM_DEVICE_TYPE_UNKNOWN:
 	default:
-		logger.Error("unknown device type", devType)
+		logger.Debug("unknown device type", devType)
 	}
 	return deviceUnknown
 }

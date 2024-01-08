@@ -195,7 +195,7 @@ func nmGeneralGetDeviceHwAddr(devPath dbus.ObjectPath, perm bool) (hwAddr string
 		err = fmt.Errorf("there is no hardware address for device modem, adsl, tun")
 	default:
 		err = fmt.Errorf("unknown device type %d", devType)
-		logger.Error(err)
+		logger.Debug(err)
 	}
 	hwAddr = strings.ToUpper(hwAddr)
 	return
