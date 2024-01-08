@@ -109,7 +109,7 @@ func (mgr *Manager) handleBTRfkillEvent(event *RfkillEvent) {
 	btBlocked := btCnt == blockBtCnt
 	btSoftBlocked := btCnt == softBtBlockCnt
 	mgr.setPropHasAirplaneMode(btCnt != 0 || mgr.hasNmWirelessDevices)
-	mgr.setPropBluetoothEnabled(btBlocked)
+	mgr.setPropBluetoothEnabled(btBlocked && btCnt != 0)
 	logger.Debug("refresh bluetooth blocked state:", btBlocked)
 	if mgr.hasNmWirelessDevices {
 		mgr.setPropEnabled(btBlocked && mgr.WifiEnabled)
@@ -117,7 +117,7 @@ func (mgr *Manager) handleBTRfkillEvent(event *RfkillEvent) {
 		// 仅保存 soft block 的状态
 		mgr.config.SetBlocked(rfkillTypeAll, btSoftBlocked && mgr.WifiEnabled)
 	} else {
-		mgr.setPropEnabled(btBlocked)
+		mgr.setPropEnabled(btBlocked && btCnt != 0)
 		logger.Debug("refresh all blocked state:", btBlocked)
 		// 仅保存 soft block 的状态
 		mgr.config.SetBlocked(rfkillTypeAll, btSoftBlocked)
