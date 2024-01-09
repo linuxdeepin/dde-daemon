@@ -15,6 +15,7 @@ StandardOutput=syslog
 Environment=GVFS_DISABLE_FUSE=1
 Environment=GIO_USE_VFS=local
 Environment=GVFS_REMOTE_VOLUME_MONITOR_IGNORE=1
+Environment=GOTRACEBACK=crash
 
 [Install]
 # We pull this in by graphical.target instead of waiting for the bus
