@@ -455,7 +455,7 @@ func getMprisPlayers(sessionConn *dbus.Conn) ([]string, error) {
 	return playerNames, nil
 }
 
-//true ： play; false : pause
+// true ： play; false : pause
 func setAllPlayers(value bool) {
 	sessionConn, err := dbus.SessionBus()
 	if err != nil {
@@ -486,7 +486,7 @@ func setAllPlayers(value bool) {
 	}
 }
 
-//获取当前是否为蓝牙端口音频，是：暂停音乐
+// 获取当前是否为蓝牙端口音频，是：暂停音乐
 func (b *Bluetooth) handleBluezPort(value bool) error {
 	//get defaultSink Name
 	sinkPath, err := b.sessionAudio.DefaultSink().Get(0)
@@ -716,6 +716,10 @@ func (b *Bluetooth) doSendFiles(session obex.Session, files []string, totalSize 
 		}
 		transfer.RemoveAllHandlers()
 		b.emitTransferRemoved(f, transferPath, sessionPath, res)
+
+		if !res {
+			break
+		}
 
 		if cancel {
 			break
