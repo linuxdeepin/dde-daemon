@@ -485,6 +485,9 @@ func (m *Manager) initDsgConfig() error {
 		case dsettingsMode:
 			oldMode := m.Mode
 			newMode := getMode(false)
+			if oldMode == newMode {
+				return
+			}
 			// 手动(外部请求)切换到节能模式，或节能模式切换到其他模式时，关闭电池自动节能和低电量自动节能
 			if ddePowerSave == oldMode || ddePowerSave == newMode {
 				m.PropsMu.Lock()
