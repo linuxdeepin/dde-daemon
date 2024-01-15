@@ -79,15 +79,13 @@ func (c *TouchPadController) toggle() error {
 		return nil
 	}
 
-	if globalConfig.HandleTouchPadToggle {
-		enabled, err := c.touchPad.TPadEnable().Get(0)
-		if err != nil {
-			return err
-		}
-		err = c.touchPad.TPadEnable().Set(0, !enabled)
-		if err != nil {
-			return err
-		}
+	enabled, err := c.touchPad.TPadEnable().Get(0)
+	if err != nil {
+		return err
+	}
+	err = c.touchPad.TPadEnable().Set(0, !enabled)
+	if err != nil {
+		return err
 	}
 
 	showOSD("TouchpadToggle")
