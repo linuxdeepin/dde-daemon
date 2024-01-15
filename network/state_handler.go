@@ -120,6 +120,7 @@ type deviceStateInfo struct {
 	devUdi         string
 	devType        uint32
 	aconnId        string
+	aconnHasEap    bool
 	connectionType string
 }
 
@@ -250,6 +251,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 		case nm.NM_DEVICE_STATE_PREPARE:
 			if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
 				dsi.aconnId = getSettingConnectionId(data)
+				dsi.aconnHasEap = isSetting8021xEapExists(data)
 				icon := generalGetNotifyDisconnectedIcon(dsi.devType, path)
 				logger.Debug("--------[Prepare] Active connection info:", dsi.aconnId, dsi.connectionType, dsi.nmDev.Path_())
 				if dsi.connectionType == connectionWirelessHotspot {
@@ -354,7 +356,7 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 					} else if oldState == nm.NM_DEVICE_STATE_CONFIG && newState == nm.NM_DEVICE_STATE_FAILED {
 						msg = fmt.Sprintf(Tr("Unable to connect %q"), dsi.aconnId)
 					}
-				case CUSTOM_NM_DEVICE_STATE_REASON_CABLE_UNPLUGGED: //disconnected due to cable unplugged
+				case CUSTOM_NM_DEVICE_STATE_REASON_CABLE_UNPLUGGED: // disconnected due to cable unplugged
 					// if device is ethernet,notify disconnected message
 
 					logger.Debug("Disconnected due to unplugged cable")
@@ -363,10 +365,15 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 						msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
 					}
 				case nm.NM_DEVICE_STATE_REASON_NO_SECRETS:
-					msg = fmt.Sprintf(Tr("Password is required to connect %q"), dsi.aconnId)
+					if dsi.aconnHasEap {
+						msg = fmt.Sprintf(Tr("To connect %q, please set up your authentication info"), dsi.aconnId)
+					} else {
+						msg = fmt.Sprintf(Tr("Password is required to connect %q"), dsi.aconnId)
+					}
+
 				case nm.NM_DEVICE_STATE_REASON_SSID_NOT_FOUND:
 					msg = fmt.Sprintf(Tr("The %q 802.11 WLAN network could not be found"), dsi.aconnId)
-					//default:
+					// default:
 					//	if dsi.aconnId != "" {
 					//		msg = fmt.Sprintf(Tr("%q disconnected"), dsi.aconnId)
 					//	}
