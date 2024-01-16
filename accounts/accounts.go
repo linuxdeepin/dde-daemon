@@ -83,17 +83,17 @@ func (d *Daemon) Start() error {
 		return err
 	}
 
+	err = d.manager.initDConfigGreeterWatch()
+	if err != nil {
+		logger.Warning("init greeter dconfig watch failed:", err)
+	}
+
 	err = service.RequestName(dbusServiceName)
 	if err != nil {
 		return err
 	}
 
-	err = d.manager.initDConfigGreeterWatch()
-	if err != nil {
-		logger.Warning("init greeter dconfig watch failed:", err)
-	}
 	d.manager.initDBusDaemonWatch()
-
 	return nil
 }
 

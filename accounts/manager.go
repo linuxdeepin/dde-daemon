@@ -7,6 +7,7 @@ package accounts
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -16,7 +17,6 @@ import (
 	"sync"
 	"syscall"
 	"time"
-	"fmt"
 
 	dbus "github.com/godbus/dbus"
 	udcp "github.com/linuxdeepin/go-dbus-factory/com.deepin.udcp.iam"
@@ -103,7 +103,6 @@ type Manager struct {
 	dsAccount        configManager.Manager
 	// greeter 的 dconfig 配置
 	dsGreeterAccounts configManager.Manager
-	dsGreeterGreeter  configManager.Manager
 
 	dbusDaemon       ofdbus.DBus
 	IsTerminalLocked bool
@@ -142,10 +141,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 
 	m.GuestIcon = userIconGuest
 	m.AllowGuest = isGuestUserEnabled()
-	m.QuickLoginEnabled, err = users.GetLightDMQuickLoginEnabled()
-	if err != nil {
-		logger.Warning("GetLightDMQuickLoginEnabled failed, err:", err)
-	}
+
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
 	m.initAccountDSettings()
@@ -702,10 +698,8 @@ func (m *Manager) initAccountDSettings() {
 
 const (
 	greeterAppId             = "org.deepin.dde.lightdm-deepin-greeter"
-	greeterResourceId        = greeterAppId
 	daemonAccountsResourceId = "org.deepin.dde.daemon.accounts"
 	keyEnableQuickLogin      = "enableQuickLogin"
-	keyEnableOneKeyLogin     = "enableOneKeylogin"
 )
 
 // 在 dconfig 设置 quick login （总开关）
@@ -722,24 +716,6 @@ func (m *Manager) setDConfigQuickLoginEnabled(enabled bool) error {
 
 // 从 dconfig 获取 quick login （总开关）的配置
 func (m *Manager) getDConfigQuickLoginEnabled() (bool, error) {
-	if m.dsGreeterGreeter == nil {
-		return false, errors.New("get greeter greeter dconfig failed")
-	}
-	// NOTE 暂不监控 enableOneKeyLogin 的变化
-	enableOneKeyLoginVar, err := m.dsGreeterGreeter.Value(0, keyEnableOneKeyLogin)
-	if err != nil {
-		return false, fmt.Errorf("get greeter greeter dconfig enableOneKeyLogin failed, err: %v", err)
-	}
-
-	enableOneKeyLogin, ok := enableOneKeyLoginVar.Value().(bool)
-	if !ok {
-		return false, errors.New("enableOneKeyLoginVar.Value() is not bool type")
-	}
-	// NOTE: 当启用华为一键登录时，禁用快速登录功能。
-	if enableOneKeyLogin {
-		return false, nil
-	}
-
 	if m.dsGreeterAccounts == nil {
 		return false, errors.New("get greeter accounts dconfig failed")
 	}
@@ -762,16 +738,6 @@ func (m *Manager) initDConfigGreeterWatch() error {
 	}
 
 	m.dsGreeterAccounts, err = configManager.NewManager(m.sysSigLoop.Conn(), greeterAccountsPath)
-	if err != nil {
-		return err
-	}
-
-	greeterGreeterPath, err := m.cfgManager.AcquireManager(0, greeterAppId, greeterResourceId, "")
-	if err != nil {
-		return err
-	}
-
-	m.dsGreeterGreeter, err = configManager.NewManager(m.sysSigLoop.Conn(), greeterGreeterPath)
 	if err != nil {
 		return err
 	}
