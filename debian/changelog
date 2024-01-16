@@ -1,3 +1,11 @@
+dde-daemon (6.0.32) unstable; urgency=medium
+
+  * fix: nm log level error
+  * fix: toggle button do not work
+  * fix: invalid timezone during set dateTime
+
+ -- chenhongtao <chenhongtao@deepin.org>  Tue, 16 Jan 2024 14:36:52 +0800
+
 dde-daemon (6.0.31) unstable; urgency=medium
 
   * feat: support to set anykind of grub theme
