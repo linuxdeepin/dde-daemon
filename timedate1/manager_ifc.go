@@ -24,7 +24,11 @@ func (m *Manager) Reset() *dbus.Error {
 //
 // The time may be specified in the format '2015' '1' '1' '18' '18' '18' '8'.
 func (m *Manager) SetDate(year, month, day, hour, min, sec, nsec int32) *dbus.Error {
-	loc, err := time.LoadLocation(m.Timezone)
+	timeZone := m.Timezone
+	if strv.Strv(customTimeZoneList).Contains(m.Timezone) {
+		 timeZone = "Asia/Shanghai"
+	}
+	loc, err := time.LoadLocation(timeZone)
 	if err != nil {
 		logger.Debugf("Load location '%s' failed: %v", m.Timezone, err)
 		return dbusutil.ToError(err)
