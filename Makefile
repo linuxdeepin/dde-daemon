@@ -133,9 +133,6 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.lightdm-deepin-greeter
 	cp -r misc/dsg-configs/org.deepin.dde.lightdm-deepin-greeter/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.lightdm-deepin-greeter/
 
-	mkdir -pv ${DESTDIR}/var/lib/deepin-ab-recovery/hooks/
-	cp -r misc/dde-daemon/power/98_reset_power_mode.sh	${DESTDIR}/var/lib/deepin-ab-recovery/hooks/
-
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
 	cp -r misc/data ${DESTDIR}${PREFIX}/share/dde/
