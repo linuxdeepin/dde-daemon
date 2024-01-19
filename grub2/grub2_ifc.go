@@ -39,6 +39,8 @@ func (grub *Grub2) GetSimpleEntryTitles(sender dbus.Sender) (titles []string, bu
 	}
 	grub.service.DelayAutoQuit()
 
+	grub.readEntries()
+
 	for _, entry := range grub.entries {
 		if entry.parentSubMenu == nil && entry.entryType == MENUENTRY {
 			title := entry.getFullTitle()

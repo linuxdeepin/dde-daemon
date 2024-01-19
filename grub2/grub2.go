@@ -638,7 +638,7 @@ func checkInvokePermission(service *dbusutil.Service, sender dbus.Sender) error 
 				return err
 			}
 		}
-		if cmd == "/usr/bin/dde-control-center" {
+		if cmd == "/usr/bin/dde-control-center" || cmd == "/usr/libexec/lastore-daemon/lastore-daemon" {
 			return nil
 		} else {
 			return fmt.Errorf("not allow %v call this method", sender)
