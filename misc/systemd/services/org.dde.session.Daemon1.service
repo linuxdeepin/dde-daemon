@@ -17,3 +17,4 @@ BusName=org.deepin.dde.XEventMonitor1
 ExecStart=/usr/lib/deepin-daemon/dde-session-daemon
 Slice=app.slice
 Restart=on-failure
+NotifyAccess=main
