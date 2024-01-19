@@ -48,6 +48,7 @@ func newStatusNotifierWatcher(service *dbusutil.Service,
 	snw := &StatusNotifierWatcher{
 		service: service,
 		sigLoop: sigLoop,
+		IsStatusNotifierHostRegistered: true,
 	}
 
 	sessionBus := service.Conn()
@@ -117,13 +118,11 @@ func (snw *StatusNotifierWatcher) RegisterStatusNotifierHost(serviceName string)
 	snw.PropsMu.Lock()
 	defer snw.PropsMu.Unlock()
 
-	if snw.IsStatusNotifierHostRegistered {
+	if snw.hostServiceName != "" {
 		return dbusutil.ToError(errors.New("host has been registered"))
 	}
 
-	snw.setPropIsStatusNotifierHostRegistered(true)
 	snw.hostServiceName = serviceName
-
 	err := snw.service.Emit(snw, "StatusNotifierHostRegistered")
 
 	return dbusutil.ToError(err)
@@ -139,7 +138,6 @@ func (ss *StatusNotifierWatcher) listenDBusNameOwnerChanged() {
 			if ss.hostServiceName == name {
 				logger.Infof("host %s lost", name)
 				ss.hostServiceName = ""
-				ss.setPropIsStatusNotifierHostRegistered(false)
 
 			} else if ss.watchedServices.Contains(name) {
 				logger.Infof("item %s lost", name)
