@@ -30,15 +30,15 @@ const (
 	nmSecretDialogBin              = "/usr/lib/deepin-daemon/dnetwork-secret-dialog"
 	getSecretsFlagAllowInteraction = 0x1
 	getSecretsFlagRequestNew       = 0x2
-	getSecretsFlagUserRequested    = 0x4 //nolint
+	getSecretsFlagUserRequested    = 0x4 // nolint
 
 	secretFlagNone          = 0   // save for all user
-	secretFlagNoneStr       = "0" //nolint
+	secretFlagNoneStr       = "0" // nolint
 	secretFlagAgentOwned    = 1   // save for me
 	secretFlagAgentOwnedStr = "1"
 	secretFlagAsk           = 2 // always ask
 	secretFlagAskStr        = "2"
-	secretFlagNotRequired   = 4 //nolint  //no need password
+	secretFlagNotRequired   = 4 // nolint  //no need password
 
 	// keep keyring tags same with nm-applet
 	keyringTagConnUUID    = "connection-uuid"
@@ -499,10 +499,11 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 		return nil, err
 	}
 	logger.Debugf("reqJSON: %s", reqJSON)
-	//true : exist -> return
-	if isSecretDialogExist() {
-		return nil, err
-	}
+	// true : exist -> return
+	// 为了修复wifi多弹框问题，增加只允许一个进程存在，目前wifi弹框在任务栏输出密码，不存在该情况，可以解除该限制
+	// if isSecretDialogExist() {
+	// 	return nil, err
+	// }
 	cmd := exec.Command(nmSecretDialogBin)
 	cmd.Stdin = bytes.NewReader(reqJSON)
 	var cmdOutBuf bytes.Buffer
