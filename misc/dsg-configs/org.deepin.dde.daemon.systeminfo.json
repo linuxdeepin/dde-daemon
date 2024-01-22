@@ -11,7 +11,7 @@
             "name": "IsM900Config",
             "name[zh_CN]": "是否是M900配置",
             "description": "配置为M900",
-            "permissions": "read",
+            "permissions": "readwrite",
             "visibility": "public"
         }
     }
