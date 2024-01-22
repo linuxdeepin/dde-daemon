@@ -11,16 +11,16 @@
 # transifex deepin <transifex@deepin.com>, 2020
 # electricface <songwentai@linuxdeepin.com>, 2021
 # Maggie Liu <maggie.liufei@gmail.com>, 2023
-# deepiner, 2023
+# deepiner, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-19 17:17+0800\n"
+"POT-Creation-Date: 2024-01-17 11:02+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: deepiner, 2023\n"
+"Last-Translator: deepiner, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,48 +46,48 @@ msgstr "用户名不能为空"
 msgid "The first character must be a letter or number"
 msgstr "首字符必须为字母或数字"
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts/checkers/username.go:57
 msgid "The username already exists"
 msgstr "此用户名已存在"
 
-#: ../../accounts/checkers/username.go:59
-msgid "The name already exists"
-msgstr "该名称已存在"
+#: ../../accounts/checkers/username.go:60
+msgid "The group name already exists"
+msgstr "该名称与用户组名重复"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
 msgstr "用户名长度必须介于3到32个字符之间"
 
-#: ../../accounts/manager.go:567
+#: ../../accounts/manager.go:572
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "“%s”用户为之前已存在的用户，原数据已同步"
 
-#: ../../accounts/user_ifc.go:686
+#: ../../accounts/user_ifc.go:656
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr "当前系统壁纸已被锁定，请联系管理员"
 
-#: ../../appearance/scale.go:38
+#: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
 msgstr "屏幕缩放需注销后才能生效"
 
-#: ../../appearance/scale.go:39
+#: ../../appearance/scale.go:42
 msgid "Set successfully"
 msgstr "设置成功"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Later"
 msgstr "稍后注销"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Log Out Now"
 msgstr "立即注销"
 
-#: ../../appearance/scale.go:63
+#: ../../appearance/scale.go:68
 msgid "Setting display scaling"
 msgstr "即将设置屏幕缩放"
 
-#: ../../appearance/scale.go:64
+#: ../../appearance/scale.go:69
 msgid "Display scaling"
 msgstr "屏幕缩放"
 
@@ -168,56 +168,56 @@ msgstr "消息访问"
 msgid "Message notification"
 msgstr "消息通知"
 
-#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "取消"
 
-#: ../../bluetooth/obex_agent.go:391
+#: ../../bluetooth/obex_agent.go:394
 msgid "Receiving %[1]q from %[2]q"
 msgstr "正在接收来自%[2]q的%[1]q文件"
 
-#: ../../bluetooth/obex_agent.go:400
+#: ../../bluetooth/obex_agent.go:403
 msgid "View"
 msgstr "查看"
 
-#: ../../bluetooth/obex_agent.go:406
+#: ../../bluetooth/obex_agent.go:409
 msgid "You have received files from %q successfully"
 msgstr "您已成功接收来自%q的文件"
 
-#: ../../bluetooth/obex_agent.go:407
+#: ../../bluetooth/obex_agent.go:410
 msgid "Done"
 msgstr "完成"
 
-#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
+#: ../../bluetooth/obex_agent.go:425 ../../bluetooth/obex_agent.go:528
 msgid "Stop Receiving Files"
 msgstr "文件接收中止"
 
-#: ../../bluetooth/obex_agent.go:424
+#: ../../bluetooth/obex_agent.go:427
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:429 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "蓝牙连接失败"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Decline"
 msgstr "拒绝"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Receive"
 msgstr "接收"
 
-#: ../../bluetooth/obex_agent.go:466
+#: ../../bluetooth/obex_agent.go:473
 msgid "Bluetooth File Transfer"
 msgstr "蓝牙文件传输"
 
-#: ../../bluetooth/obex_agent.go:467
+#: ../../bluetooth/obex_agent.go:474
 msgid "%q wants to send files to you. Receive?"
 msgstr "您收到%q发送给您的文件，是否接收？"
 
-#: ../../bluetooth/obex_agent.go:522
+#: ../../bluetooth/obex_agent.go:529
 msgid "Receiving %q timed out"
 msgstr "接收%q超时"
 
@@ -372,7 +372,6 @@ msgid "Switch Layout"
 msgstr "切换键盘布局"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
-#: ../../keybinding/shortcuts/id_name_map.go:203
 msgid "Toggle multiple displays"
 msgstr "切换多屏模式"
 
@@ -464,6 +463,18 @@ msgstr "显示当前工作区的窗口"
 msgid "Display workspace"
 msgstr "显示工作区 "
 
+#: ../../keybinding/shortcuts/id_name_map.go:143
+msgid "Zoom In"
+msgstr "屏幕放大"
+
+#: ../../keybinding/shortcuts/id_name_map.go:144
+msgid "Zoom Out"
+msgstr "屏幕缩小"
+
+#: ../../keybinding/shortcuts/id_name_map.go:145
+msgid "Zoom to Actual Size"
+msgstr "重置屏幕缩放"
+
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "切换语言需要认证"
@@ -532,44 +543,44 @@ msgstr "成功卸载 %q "
 msgid "Failed to uninstall %q"
 msgstr "%q 卸载失败"
 
-#: ../../network/manager_active_conn.go:484
-#: ../../network/manager_active_conn.go:489
+#: ../../network/manager_active_conn.go:468
+#: ../../network/manager_active_conn.go:473
 msgid "None"
 msgstr "无"
 
-#: ../../network/manager_active_conn.go:491
+#: ../../network/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
 msgstr "WEP40/128位密钥"
 
-#: ../../network/manager_active_conn.go:493
+#: ../../network/manager_active_conn.go:477
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2个人版"
 
-#: ../../network/manager_active_conn.go:495
+#: ../../network/manager_active_conn.go:479
 msgid "WPA3 Personal"
 msgstr "WPA3个人版"
 
-#: ../../network/manager_active_conn.go:503
+#: ../../network/manager_active_conn.go:487
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:505
+#: ../../network/manager_active_conn.go:489
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:507
+#: ../../network/manager_active_conn.go:491
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:509
+#: ../../network/manager_active_conn.go:493
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:511
+#: ../../network/manager_active_conn.go:495
 msgid "Tunneled TLS"
 msgstr "隧道TLS"
 
-#: ../../network/manager_active_conn.go:513
+#: ../../network/manager_active_conn.go:497
 msgid "Protected EAP"
 msgstr "受保护的EAP"
 
@@ -914,56 +925,60 @@ msgstr "验证到VPN服务器失败"
 msgid "The connection was deleted from settings"
 msgstr "该连接已从设置中删除"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:258
 msgid "Enabling hotspot"
 msgstr "正在尝试打开热点"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:262
 msgid "Connecting %q"
 msgstr "正在连接%q"
 
-#: ../../network/state_handler.go:269
+#: ../../network/state_handler.go:271
 msgid "Hotspot enabled"
 msgstr "热点共享已开启"
 
-#: ../../network/state_handler.go:271
+#: ../../network/state_handler.go:273
 msgid "%q connected"
 msgstr "已连接%q"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:284 ../../network/state_handler.go:339
 msgid "Hotspot disabled"
 msgstr "热点共享已关闭"
 
-#: ../../network/state_handler.go:339 ../../network/state_handler.go:363
+#: ../../network/state_handler.go:341 ../../network/state_handler.go:365
 #: ../../system/bluetooth/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q已断开"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:347
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "无法共享热点，请检查dnsmasq 相关设置"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "未能加入%q，请尝试靠近无线路由器"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:351
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "未能加入%q，请检查路由器或网线。"
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "连接失败，未能加入%q，密码不正确"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q"
 msgstr "无法连接到%q"
 
-#: ../../network/state_handler.go:366
+#: ../../network/state_handler.go:369
+msgid "To connect %q, please set up your authentication info"
+msgstr "连接“%1”需要配置认证信息"
+
+#: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"
 msgstr "连接%q需要密码"
 
-#: ../../network/state_handler.go:368
+#: ../../network/state_handler.go:375
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLAN网络无法找到"
 
@@ -1018,52 +1033,55 @@ msgstr "\"%s\"没有通过系统安全验证，无法运行，请前往安全中
 msgid "Proceed"
 msgstr "前往"
 
-#: ../../session/power/manager_events.go:248
+#: ../../session/power/manager.go:913
+#, c-format
+msgid "The system will shut down automatically after %d s"
+msgstr "系统将在%d后自动关机"
+
+#: ../../session/power/manager.go:914
+msgid "Scheduled Shutdown"
+msgstr ""
+
+#: ../../session/power/manager.go:915
+msgid "Cancle"
+msgstr "取消"
+
+#: ../../session/power/manager.go:915
+msgid "Shut down"
+msgstr "立即关机"
+
+#: ../../session/power/manager_events.go:257
 msgid "Battery critically low"
 msgstr "电池电量耗尽"
 
-#: ../../session/power/manager_events.go:268
-#: ../../session/power/manager_events.go:273
-#: ../../session/power/manager_events.go:278
-#: ../../session/power/manager_events.go:283
+#: ../../session/power/manager_events.go:277
+#: ../../session/power/manager_events.go:282
+#: ../../session/power/manager_events.go:287
+#: ../../session/power/manager_events.go:292
 msgid "Battery low, please plug in"
 msgstr "电池电量低，请连接电源"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
-#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
-msgid "Power settings changed"
-msgstr "电源设置更改"
-
-#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
-msgid "When the lid is closed, "
-msgstr "“笔记本合盖时”"
-
-#: ../../session/power/utils.go:557
-msgid "When pressing the power button, "
-msgstr "“按电源按钮时”"
-
-#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:602
 msgid "your computer will shut down"
 msgstr "修改为关机"
 
-#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:604
 msgid "your computer will suspend"
 msgstr "修改为待机"
 
-#: ../../session/power/utils.go:571
+#: ../../session/power/utils.go:606
 msgid "your computer will hibernate"
 msgstr "修改为休眠"
 
-#: ../../session/power/utils.go:573
+#: ../../session/power/utils.go:608
 msgid "your monitor will turn off"
 msgstr "修改为关闭显示器"
 
-#: ../../session/power/utils.go:575
+#: ../../session/power/utils.go:610
 msgid "your monitor will show the shutdown interface"
 msgstr "修改为进入关机界面"
 
-#: ../../session/power/utils.go:577
+#: ../../session/power/utils.go:612
 msgid "it will do nothing to your computer"
 msgstr "修改为无任何操作"
 
@@ -1098,12 +1116,12 @@ msgstr "开启或关闭网络时间同步需要认证"
 msgid "Authentication is required to change NTP server"
 msgstr "修改时间服务器需要认证"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate/manager_ifc.go:117
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr "设置硬件时钟使用本地时间或 UTC 需要认证"
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate/manager_ifc.go:140
 msgid "Authentication is required to set the system timezone"
 msgstr "设置系统时区需要认证"

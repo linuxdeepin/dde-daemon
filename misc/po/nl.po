@@ -12,16 +12,16 @@
 # Maggie Liu <maggie.liufei@gmail.com>, 2020
 # Hans van Schooten <hans@schootenvan.nl>, 2021
 # Lars Acou <lars.acou@gmail.com>, 2023
-# Heimen Stoffels <vistausss@fastmail.com>, 2023
+# Heimen Stoffels <vistausss@fastmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-19 17:17+0800\n"
+"POT-Creation-Date: 2024-01-17 11:02+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2023\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/linuxdeepin/teams/3617/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,50 +49,50 @@ msgstr "Voer een gebruikersnaam in"
 msgid "The first character must be a letter or number"
 msgstr "Het eerste teken moet een letter of cijfer zijn"
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts/checkers/username.go:57
 msgid "The username already exists"
 msgstr "Deze gebruikersnaam is al in gebruik"
 
-#: ../../accounts/checkers/username.go:59
-msgid "The name already exists"
-msgstr "Deze naam is al in gebruik"
+#: ../../accounts/checkers/username.go:60
+msgid "The group name already exists"
+msgstr "Deze groepsnaam is al in gebruik"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
 msgstr "De gebruikersnaam moet tussen de 3 en 32 tekens lang zijn"
 
-#: ../../accounts/manager.go:567
+#: ../../accounts/manager.go:572
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "Gebruiker ‘%s’ bestond al en de gegevens zijn gesynchroniseerd"
 
-#: ../../accounts/user_ifc.go:686
+#: ../../accounts/user_ifc.go:656
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Deze systeemachtergrond is vergrendeld. Neem contact op met je "
 "systeembeheerder."
 
-#: ../../appearance/scale.go:38
+#: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
 msgstr "Meld je af en weer aan om de beeldgrootte-instellingen toe te passen"
 
-#: ../../appearance/scale.go:39
+#: ../../appearance/scale.go:42
 msgid "Set successfully"
 msgstr "Instellen voltooid"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Later"
 msgstr "Later"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Log Out Now"
 msgstr "Nu afmelden"
 
-#: ../../appearance/scale.go:63
+#: ../../appearance/scale.go:68
 msgid "Setting display scaling"
 msgstr "Beeldgrootte instellen"
 
-#: ../../appearance/scale.go:64
+#: ../../appearance/scale.go:69
 msgid "Display scaling"
 msgstr "Beeldgrootte"
 
@@ -173,56 +173,56 @@ msgstr "Berichttoegang"
 msgid "Message notification"
 msgstr "Berichtmelding"
 
-#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../../bluetooth/obex_agent.go:391
+#: ../../bluetooth/obex_agent.go:394
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Bezig met ontvangen van %[1]q van %[2]q"
 
-#: ../../bluetooth/obex_agent.go:400
+#: ../../bluetooth/obex_agent.go:403
 msgid "View"
 msgstr "Bekijk"
 
-#: ../../bluetooth/obex_agent.go:406
+#: ../../bluetooth/obex_agent.go:409
 msgid "You have received files from %q successfully"
 msgstr "De bestanden van %q zijn ontvangen"
 
-#: ../../bluetooth/obex_agent.go:407
+#: ../../bluetooth/obex_agent.go:410
 msgid "Done"
 msgstr "Klaar"
 
-#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
+#: ../../bluetooth/obex_agent.go:425 ../../bluetooth/obex_agent.go:528
 msgid "Stop Receiving Files"
 msgstr "Bestandsoverdracht afbreken"
 
-#: ../../bluetooth/obex_agent.go:424
+#: ../../bluetooth/obex_agent.go:427
 msgid "You have cancelled the file transfer"
 msgstr "Je hebt de bestandsoverdracht afgebroken"
 
-#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:429 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Bluetoothverbinding mislukt"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Decline"
 msgstr "Weigeren"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Receive"
 msgstr "Ontvangen"
 
-#: ../../bluetooth/obex_agent.go:466
+#: ../../bluetooth/obex_agent.go:473
 msgid "Bluetooth File Transfer"
 msgstr "Bluetooth-bestandsoverdracht"
 
-#: ../../bluetooth/obex_agent.go:467
+#: ../../bluetooth/obex_agent.go:474
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q wil je bestanden sturen. Wil je dit toestaan?"
 
-#: ../../bluetooth/obex_agent.go:522
+#: ../../bluetooth/obex_agent.go:529
 msgid "Receiving %q timed out"
 msgstr "De verbinding met %q is verlopen"
 
@@ -377,7 +377,6 @@ msgid "Switch Layout"
 msgstr "Schakelen tussen indelingen"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
-#: ../../keybinding/shortcuts/id_name_map.go:203
 msgid "Toggle multiple displays"
 msgstr "Meerdere beeldschermen"
 
@@ -469,6 +468,18 @@ msgstr "Vensters van huidige werkruimte tonen"
 msgid "Display workspace"
 msgstr "Werkruimte tonen"
 
+#: ../../keybinding/shortcuts/id_name_map.go:143
+msgid "Zoom In"
+msgstr "Inzoomen"
+
+#: ../../keybinding/shortcuts/id_name_map.go:144
+msgid "Zoom Out"
+msgstr "Uitzoomen"
+
+#: ../../keybinding/shortcuts/id_name_map.go:145
+msgid "Zoom to Actual Size"
+msgstr "Ware grootte"
+
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "Voer je wachtwoord in om de taal te wijzigen"
@@ -547,44 +558,44 @@ msgstr "%q is verwijderd"
 msgid "Failed to uninstall %q"
 msgstr "%q kan niet worden verwijderd"
 
-#: ../../network/manager_active_conn.go:484
-#: ../../network/manager_active_conn.go:489
+#: ../../network/manager_active_conn.go:468
+#: ../../network/manager_active_conn.go:473
 msgid "None"
 msgstr "Geen"
 
-#: ../../network/manager_active_conn.go:491
+#: ../../network/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128-bitsleutel"
 
-#: ../../network/manager_active_conn.go:493
+#: ../../network/manager_active_conn.go:477
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 persoonlijk"
 
-#: ../../network/manager_active_conn.go:495
+#: ../../network/manager_active_conn.go:479
 msgid "WPA3 Personal"
 msgstr "WPA3 persoonlijk"
 
-#: ../../network/manager_active_conn.go:503
+#: ../../network/manager_active_conn.go:487
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:505
+#: ../../network/manager_active_conn.go:489
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:507
+#: ../../network/manager_active_conn.go:491
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:509
+#: ../../network/manager_active_conn.go:493
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:511
+#: ../../network/manager_active_conn.go:495
 msgid "Tunneled TLS"
 msgstr "Tunneled TLS"
 
-#: ../../network/manager_active_conn.go:513
+#: ../../network/manager_active_conn.go:497
 msgid "Protected EAP"
 msgstr "Beschermd EAP"
 
@@ -941,59 +952,63 @@ msgstr "De authenticatie met de vpn-server is mislukt"
 msgid "The connection was deleted from settings"
 msgstr "De verbinding is verwijderd uit het instellingencentrum"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:258
 msgid "Enabling hotspot"
 msgstr "Hotspot opzetten"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:262
 msgid "Connecting %q"
 msgstr "Verbinden met %q"
 
-#: ../../network/state_handler.go:269
+#: ../../network/state_handler.go:271
 msgid "Hotspot enabled"
 msgstr "De hotspot is opgezet"
 
-#: ../../network/state_handler.go:271
+#: ../../network/state_handler.go:273
 msgid "%q connected"
 msgstr "%q verbonden"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:284 ../../network/state_handler.go:339
 msgid "Hotspot disabled"
 msgstr "De hotspot is uitgeschakeld"
 
-#: ../../network/state_handler.go:339 ../../network/state_handler.go:363
+#: ../../network/state_handler.go:341 ../../network/state_handler.go:365
 #: ../../system/bluetooth/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "Verbinding verbroken met %q"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:347
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "De hotspot kan niet worden gedeeld - controleer de dnswasq-instellingen"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Kan geen verbinding maken met %q - blijf in de buurt van de draadloze router"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:351
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Kan geen verbinding maken met %q - controleer de router of netwerkkabel"
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Kan geen verbinding maken met %q: onjuist wachtwoord"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q"
 msgstr "Het verbinden met %q is mislukt"
 
-#: ../../network/state_handler.go:366
+#: ../../network/state_handler.go:369
+msgid "To connect %q, please set up your authentication info"
+msgstr "Voer je inloggegevens in om verbinding te kunnen maken met %q"
+
+#: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"
 msgstr "Wachtwoord vereist om verbinding te maken met %q"
 
-#: ../../network/state_handler.go:368
+#: ../../network/state_handler.go:375
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Het 802.11 wlan-netwerk is niet aangetroffen"
 
@@ -1054,52 +1069,55 @@ msgstr ""
 msgid "Proceed"
 msgstr "Doorgaan"
 
-#: ../../session/power/manager_events.go:248
+#: ../../session/power/manager.go:913
+#, c-format
+msgid "The system will shut down automatically after %d s"
+msgstr "De computer wordt over %d seconden afgesloten"
+
+#: ../../session/power/manager.go:914
+msgid "Scheduled Shutdown"
+msgstr "Ingeplande afsluittijd"
+
+#: ../../session/power/manager.go:915
+msgid "Cancle"
+msgstr "Annuleren"
+
+#: ../../session/power/manager.go:915
+msgid "Shut down"
+msgstr "Afsluiten"
+
+#: ../../session/power/manager_events.go:257
 msgid "Battery critically low"
 msgstr "Het accuniveau is zeer laag"
 
-#: ../../session/power/manager_events.go:268
-#: ../../session/power/manager_events.go:273
-#: ../../session/power/manager_events.go:278
-#: ../../session/power/manager_events.go:283
+#: ../../session/power/manager_events.go:277
+#: ../../session/power/manager_events.go:282
+#: ../../session/power/manager_events.go:287
+#: ../../session/power/manager_events.go:292
 msgid "Battery low, please plug in"
 msgstr "De accu is bijna leeg - sluit de netstroomadapter aan"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
-#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
-msgid "Power settings changed"
-msgstr "De energie-instellingen zijn aangepast"
-
-#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
-msgid "When the lid is closed, "
-msgstr "Als het deksel gesloten is, "
-
-#: ../../session/power/utils.go:557
-msgid "When pressing the power button, "
-msgstr "Als de aan-/uitknop wordt ingedrukt, "
-
-#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:602
 msgid "your computer will shut down"
 msgstr "wordt je computer afgesloten"
 
-#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:604
 msgid "your computer will suspend"
 msgstr "wordt je computer in de pauzestand gezet"
 
-#: ../../session/power/utils.go:571
+#: ../../session/power/utils.go:606
 msgid "your computer will hibernate"
 msgstr "wordt je computer in de slaapstand gezet"
 
-#: ../../session/power/utils.go:573
+#: ../../session/power/utils.go:608
 msgid "your monitor will turn off"
 msgstr "wordt je beeldscherm uitgeschakeld"
 
-#: ../../session/power/utils.go:575
+#: ../../session/power/utils.go:610
 msgid "your monitor will show the shutdown interface"
 msgstr "Het afsluitscherm zal worden getoond"
 
-#: ../../session/power/utils.go:577
+#: ../../session/power/utils.go:612
 msgid "it will do nothing to your computer"
 msgstr "wordt er geen actie ondernomen"
 
@@ -1138,13 +1156,13 @@ msgstr ""
 msgid "Authentication is required to change NTP server"
 msgstr "Voer je wachtwoord in om de ntp-server te wijzigen"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate/manager_ifc.go:117
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
 "Voer je wachtwoord in om te bepalen of RTC de lokale of UTC-tijd opslaat"
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate/manager_ifc.go:140
 msgid "Authentication is required to set the system timezone"
 msgstr "Voer je wachtwoord in om de systeemtijdzone in te stellen"

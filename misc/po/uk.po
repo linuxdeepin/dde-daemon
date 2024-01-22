@@ -9,16 +9,16 @@
 # deepiner, 2020
 # Maggie Liu <maggie.liufei@gmail.com>, 2021
 # Marck Hrin, 2023
-# Yuri Chornoivan <yurchor@ukr.net>, 2023
+# Yuri Chornoivan <yurchor@ukr.net>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-19 17:17+0800\n"
+"POT-Creation-Date: 2024-01-17 11:02+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,52 +46,52 @@ msgstr "Поле, призначене для імені користувача,
 msgid "The first character must be a letter or number"
 msgstr "Перший символ має бути літерою або цифрою"
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts/checkers/username.go:57
 msgid "The username already exists"
 msgstr "Таке ім'я користувача вже існує"
 
-#: ../../accounts/checkers/username.go:59
-msgid "The name already exists"
-msgstr "Таке ім'я вже існує"
+#: ../../accounts/checkers/username.go:60
+msgid "The group name already exists"
+msgstr "Група з такою назвою вже існує"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
 msgstr "Ім'я користувача має містити 3-32 символи"
 
-#: ../../accounts/manager.go:567
+#: ../../accounts/manager.go:572
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Запис користувача «%s» вже існував. Його дані синхронізовано з попередніми"
 
-#: ../../accounts/user_ifc.go:686
+#: ../../accounts/user_ifc.go:656
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Фонове зображення у цій системі заблоковано від змін. Будь ласка, зв'яжіться"
 " з адміністратором вашої системи."
 
-#: ../../appearance/scale.go:38
+#: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
 "Вийдіть із системи, щоб параметри масштабування дисплея набули чинності"
 
-#: ../../appearance/scale.go:39
+#: ../../appearance/scale.go:42
 msgid "Set successfully"
 msgstr "Успішно встановлено"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Later"
 msgstr "Пізніше"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Log Out Now"
 msgstr "Вийти з системи зараз"
 
-#: ../../appearance/scale.go:63
+#: ../../appearance/scale.go:68
 msgid "Setting display scaling"
 msgstr "Налаштування масштабування зображення"
 
-#: ../../appearance/scale.go:64
+#: ../../appearance/scale.go:69
 msgid "Display scaling"
 msgstr "Маштабування дисплею"
 
@@ -172,56 +172,56 @@ msgstr "Доступ до повідомлень"
 msgid "Message notification"
 msgstr "Сповіщення про повідомлення"
 
-#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: ../../bluetooth/obex_agent.go:391
+#: ../../bluetooth/obex_agent.go:394
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Отримуємо %[1]q з %[2]q"
 
-#: ../../bluetooth/obex_agent.go:400
+#: ../../bluetooth/obex_agent.go:403
 msgid "View"
 msgstr "Переглянути"
 
-#: ../../bluetooth/obex_agent.go:406
+#: ../../bluetooth/obex_agent.go:409
 msgid "You have received files from %q successfully"
 msgstr "Вами успішно отримано файли з %q"
 
-#: ../../bluetooth/obex_agent.go:407
+#: ../../bluetooth/obex_agent.go:410
 msgid "Done"
 msgstr "Виконано"
 
-#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
+#: ../../bluetooth/obex_agent.go:425 ../../bluetooth/obex_agent.go:528
 msgid "Stop Receiving Files"
 msgstr "Припинити отримання файлів"
 
-#: ../../bluetooth/obex_agent.go:424
+#: ../../bluetooth/obex_agent.go:427
 msgid "You have cancelled the file transfer"
 msgstr "Вами скасовано передавання файлів"
 
-#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:429 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Збій підключення з Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Decline"
 msgstr "Відхилити"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Receive"
 msgstr "Отримати"
 
-#: ../../bluetooth/obex_agent.go:466
+#: ../../bluetooth/obex_agent.go:473
 msgid "Bluetooth File Transfer"
 msgstr "Передавання файлів Bluetooth"
 
-#: ../../bluetooth/obex_agent.go:467
+#: ../../bluetooth/obex_agent.go:474
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q хоче надіслати вам файли. Отримати ці файли?"
 
-#: ../../bluetooth/obex_agent.go:522
+#: ../../bluetooth/obex_agent.go:529
 msgid "Receiving %q timed out"
 msgstr "Перевищено час очікування на отримання %q"
 
@@ -376,7 +376,6 @@ msgid "Switch Layout"
 msgstr "Переключити компонування"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
-#: ../../keybinding/shortcuts/id_name_map.go:203
 msgid "Toggle multiple displays"
 msgstr "Перемикання між декількома дисплеями"
 
@@ -468,6 +467,18 @@ msgstr "Показати вікна поточного робочого прос
 msgid "Display workspace"
 msgstr "Показати робочій простір"
 
+#: ../../keybinding/shortcuts/id_name_map.go:143
+msgid "Zoom In"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:144
+msgid "Zoom Out"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:145
+msgid "Zoom to Actual Size"
+msgstr ""
+
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "Аутентифікація потрібна для перемикання мови"
@@ -546,44 +557,44 @@ msgstr "%q успішно видалено"
 msgid "Failed to uninstall %q"
 msgstr "Не вдалося встановити %q"
 
-#: ../../network/manager_active_conn.go:484
-#: ../../network/manager_active_conn.go:489
+#: ../../network/manager_active_conn.go:468
+#: ../../network/manager_active_conn.go:473
 msgid "None"
 msgstr "Нічого"
 
-#: ../../network/manager_active_conn.go:491
+#: ../../network/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
 msgstr "Ключ WEP 40/128-біт"
 
-#: ../../network/manager_active_conn.go:493
+#: ../../network/manager_active_conn.go:477
 msgid "WPA/WPA2 Personal"
 msgstr "Режим WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:495
+#: ../../network/manager_active_conn.go:479
 msgid "WPA3 Personal"
 msgstr "Особистий WPA3"
 
-#: ../../network/manager_active_conn.go:503
+#: ../../network/manager_active_conn.go:487
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:505
+#: ../../network/manager_active_conn.go:489
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:507
+#: ../../network/manager_active_conn.go:491
 msgid "LEAP"
 msgstr "ІНТЕРВАЛ"
 
-#: ../../network/manager_active_conn.go:509
+#: ../../network/manager_active_conn.go:493
 msgid "FAST"
 msgstr "ШВИДКО"
 
-#: ../../network/manager_active_conn.go:511
+#: ../../network/manager_active_conn.go:495
 msgid "Tunneled TLS"
 msgstr "Тунельований TLS"
 
-#: ../../network/manager_active_conn.go:513
+#: ../../network/manager_active_conn.go:497
 msgid "Protected EAP"
 msgstr "Захищений EAP"
 
@@ -937,60 +948,64 @@ msgstr "Аутентифікація при доступі до VPN-сервер
 msgid "The connection was deleted from settings"
 msgstr "З'єднання було видалено з налаштувань."
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:258
 msgid "Enabling hotspot"
 msgstr "Увімкнути точку доступу"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:262
 msgid "Connecting %q"
 msgstr "Підключити %q"
 
-#: ../../network/state_handler.go:269
+#: ../../network/state_handler.go:271
 msgid "Hotspot enabled"
 msgstr "Точка доступу увімкнена"
 
-#: ../../network/state_handler.go:271
+#: ../../network/state_handler.go:273
 msgid "%q connected"
 msgstr "%q підключено"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:284 ../../network/state_handler.go:339
 msgid "Hotspot disabled"
 msgstr "Точка доступу вимкнена"
 
-#: ../../network/state_handler.go:339 ../../network/state_handler.go:363
+#: ../../network/state_handler.go:341 ../../network/state_handler.go:365
 #: ../../system/bluetooth/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q відключено"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:347
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "Неможливо поділитися точкою доступу, перевірте налаштування dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 "Неможливо підключити %q, будь ласка, тримайтеся ближче до бездротового "
 "маршрутизатора"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:351
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "Не вдалося з'єднатися із %q. Будь ласка, перевірте, чи працює ваш "
 "маршрутизатор або мережевий кабель."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Помилка підключення, неможливо підключити %q, невірний пароль"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q"
 msgstr "Не вдалося встановити з'єднання із %q"
 
-#: ../../network/state_handler.go:366
+#: ../../network/state_handler.go:369
+msgid "To connect %q, please set up your authentication info"
+msgstr ""
+
+#: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"
 msgstr "Пароль, необхідний для підключення %q"
 
-#: ../../network/state_handler.go:368
+#: ../../network/state_handler.go:375
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "Не вдалося знайти мережу WLAN 802.11 %q"
 
@@ -1051,54 +1066,57 @@ msgstr ""
 msgid "Proceed"
 msgstr "Продовжити"
 
-#: ../../session/power/manager_events.go:248
+#: ../../session/power/manager.go:913
+#, c-format
+msgid "The system will shut down automatically after %d s"
+msgstr ""
+
+#: ../../session/power/manager.go:914
+msgid "Scheduled Shutdown"
+msgstr ""
+
+#: ../../session/power/manager.go:915
+msgid "Cancle"
+msgstr ""
+
+#: ../../session/power/manager.go:915
+msgid "Shut down"
+msgstr ""
+
+#: ../../session/power/manager_events.go:257
 msgid "Battery critically low"
 msgstr "Акумулятор критично розряджено"
 
-#: ../../session/power/manager_events.go:268
-#: ../../session/power/manager_events.go:273
-#: ../../session/power/manager_events.go:278
-#: ../../session/power/manager_events.go:283
+#: ../../session/power/manager_events.go:277
+#: ../../session/power/manager_events.go:282
+#: ../../session/power/manager_events.go:287
+#: ../../session/power/manager_events.go:292
 msgid "Battery low, please plug in"
 msgstr ""
 "Низький рівень заряду акумулятора, будь ласка, приєднайте комп'ютер до "
 "мережі живлення"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
-#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
-msgid "Power settings changed"
-msgstr "Параметри живлення змінено"
-
-#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
-msgid "When the lid is closed, "
-msgstr "Якщо закрито кришку,"
-
-#: ../../session/power/utils.go:557
-msgid "When pressing the power button, "
-msgstr "Якщо натиснуто кнопку живлення,"
-
-#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:602
 msgid "your computer will shut down"
 msgstr "ваш комп'ютер буде вимкнено"
 
-#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:604
 msgid "your computer will suspend"
 msgstr "ваш комп'ютер буде призупинено"
 
-#: ../../session/power/utils.go:571
+#: ../../session/power/utils.go:606
 msgid "your computer will hibernate"
 msgstr "ваш комп'ютер буде приспано"
 
-#: ../../session/power/utils.go:573
+#: ../../session/power/utils.go:608
 msgid "your monitor will turn off"
 msgstr "монітор буде вимкнено"
 
-#: ../../session/power/utils.go:575
+#: ../../session/power/utils.go:610
 msgid "your monitor will show the shutdown interface"
 msgstr "на вашому моніторі буде показано інтерфейс завершення роботи"
 
-#: ../../session/power/utils.go:577
+#: ../../session/power/utils.go:612
 msgid "it will do nothing to your computer"
 msgstr "ніяких дій із комп'ютером не буде виконано"
 
@@ -1137,7 +1155,7 @@ msgstr ""
 msgid "Authentication is required to change NTP server"
 msgstr "Для зміни NTP-сервера потрібна автентифікація"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate/manager_ifc.go:117
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1145,6 +1163,6 @@ msgstr ""
 "Аутентифікація необхідна для контролю того, чи зберігає RTC місцевий або UTC"
 " час ."
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate/manager_ifc.go:140
 msgid "Authentication is required to set the system timezone"
 msgstr "Аутентифікація потрібна для встановлення системного часового поясу."

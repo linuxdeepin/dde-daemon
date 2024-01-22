@@ -5,16 +5,16 @@
 # 
 # Translators:
 # deepiner, 2020
-# Besnik Bleta <besnik@programeshqip.org>, 2023
+# Besnik Bleta <besnik@programeshqip.org>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-19 17:17+0800\n"
+"POT-Creation-Date: 2024-01-17 11:02+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2023\n"
+"Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2024\n"
 "Language-Team: Albanian (https://app.transifex.com/linuxdeepin/teams/3617/sq/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,51 +43,51 @@ msgstr "Emri i përdoruesit s’mund të jetë i zbrazët"
 msgid "The first character must be a letter or number"
 msgstr "Shenja e parë duhet të jetë shkronjë ose numër"
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts/checkers/username.go:57
 msgid "The username already exists"
 msgstr "Emri i përdoruesi ekziston tashmë"
 
-#: ../../accounts/checkers/username.go:59
-msgid "The name already exists"
-msgstr "Emri ekziston tashmë"
+#: ../../accounts/checkers/username.go:60
+msgid "The group name already exists"
+msgstr "Emri i grupit ekziston tashmë"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
 msgstr "Emri i përdoruesit duhet të jetë mes 3 dhe 32 shenja i gjatë"
 
-#: ../../accounts/manager.go:567
+#: ../../accounts/manager.go:572
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "Përdoruesi “%s” ekzistonte më parë dhe të dhënat e tij janë njëkohësuar"
 
-#: ../../accounts/user_ifc.go:686
+#: ../../accounts/user_ifc.go:656
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Ky sfond sistemi është i kyçur. Ju lutemi, lidhuni me përgjegjësin tuaj."
 
-#: ../../appearance/scale.go:38
+#: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
 msgstr ""
 "Që të hyjnë në fuqi rregullimet për përshkallëzim, bëni daljen nga llogaria"
 
-#: ../../appearance/scale.go:39
+#: ../../appearance/scale.go:42
 msgid "Set successfully"
 msgstr "U caktua me sukses"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Later"
 msgstr "Më vonë"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Log Out Now"
 msgstr "Dilni Tani"
 
-#: ../../appearance/scale.go:63
+#: ../../appearance/scale.go:68
 msgid "Setting display scaling"
 msgstr "Po ujdiset ripërmasim ekrani"
 
-#: ../../appearance/scale.go:64
+#: ../../appearance/scale.go:69
 msgid "Display scaling"
 msgstr "Ripërmasim ekrani"
 
@@ -168,56 +168,56 @@ msgstr "Hyrje në mesazhe"
 msgid "Message notification"
 msgstr "Njoftim mesazhesh"
 
-#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "Anuloje"
 
-#: ../../bluetooth/obex_agent.go:391
+#: ../../bluetooth/obex_agent.go:394
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Po merret %[1]q nga %[2]q"
 
-#: ../../bluetooth/obex_agent.go:400
+#: ../../bluetooth/obex_agent.go:403
 msgid "View"
 msgstr "Shiheni"
 
-#: ../../bluetooth/obex_agent.go:406
+#: ../../bluetooth/obex_agent.go:409
 msgid "You have received files from %q successfully"
 msgstr "Morët me sukses kartela nga %q"
 
-#: ../../bluetooth/obex_agent.go:407
+#: ../../bluetooth/obex_agent.go:410
 msgid "Done"
 msgstr "U bë"
 
-#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
+#: ../../bluetooth/obex_agent.go:425 ../../bluetooth/obex_agent.go:528
 msgid "Stop Receiving Files"
 msgstr "Resht Së Marri Kartela"
 
-#: ../../bluetooth/obex_agent.go:424
+#: ../../bluetooth/obex_agent.go:427
 msgid "You have cancelled the file transfer"
 msgstr "E keni anuluar shpërnguljen e kartelave"
 
-#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:429 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Lidhja përmes Bluetooth-it dështoi"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Decline"
 msgstr "Hidhe poshtë"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Receive"
 msgstr "Merre"
 
-#: ../../bluetooth/obex_agent.go:466
+#: ../../bluetooth/obex_agent.go:473
 msgid "Bluetooth File Transfer"
 msgstr "Shpërngulje Bluetooth Kartelash"
 
-#: ../../bluetooth/obex_agent.go:467
+#: ../../bluetooth/obex_agent.go:474
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q dëshiron t’ju dërgojë kartela. Të merren?"
 
-#: ../../bluetooth/obex_agent.go:522
+#: ../../bluetooth/obex_agent.go:529
 msgid "Receiving %q timed out"
 msgstr "Marrjes së %q i mbaroi koha"
 
@@ -256,7 +256,7 @@ msgstr "Tërë Dritaret"
 
 #: ../../dock/app_info.go:72 ../../launcher/item.go:97
 msgid "(Linglong)"
-msgstr ""
+msgstr "(Linglong)"
 
 #: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
@@ -373,7 +373,6 @@ msgid "Switch Layout"
 msgstr "Ndërroni Skemë"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
-#: ../../keybinding/shortcuts/id_name_map.go:203
 msgid "Toggle multiple displays"
 msgstr ""
 
@@ -465,6 +464,18 @@ msgstr "Shfaq dritaret e hapësirës së tanishme të punës"
 msgid "Display workspace"
 msgstr "Shfaq hapësirë pune"
 
+#: ../../keybinding/shortcuts/id_name_map.go:143
+msgid "Zoom In"
+msgstr "Zmadhoje"
+
+#: ../../keybinding/shortcuts/id_name_map.go:144
+msgid "Zoom Out"
+msgstr "Zvogëloje"
+
+#: ../../keybinding/shortcuts/id_name_map.go:145
+msgid "Zoom to Actual Size"
+msgstr "Sa Madhësia Faktike"
+
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "Që të këmbehet gjuha, lypset mirëfilltësim"
@@ -543,44 +554,44 @@ msgstr "%q u hoq me sukses"
 msgid "Failed to uninstall %q"
 msgstr "S’u arrit të çinstalohej %q"
 
-#: ../../network/manager_active_conn.go:484
-#: ../../network/manager_active_conn.go:489
+#: ../../network/manager_active_conn.go:468
+#: ../../network/manager_active_conn.go:473
 msgid "None"
 msgstr "Asnjë"
 
-#: ../../network/manager_active_conn.go:491
+#: ../../network/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
 msgstr "Kyç WEP 40/128-bit"
 
-#: ../../network/manager_active_conn.go:493
+#: ../../network/manager_active_conn.go:477
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 Personal"
 
-#: ../../network/manager_active_conn.go:495
+#: ../../network/manager_active_conn.go:479
 msgid "WPA3 Personal"
 msgstr "WPA3 Personal"
 
-#: ../../network/manager_active_conn.go:503
+#: ../../network/manager_active_conn.go:487
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:505
+#: ../../network/manager_active_conn.go:489
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:507
+#: ../../network/manager_active_conn.go:491
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:509
+#: ../../network/manager_active_conn.go:493
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:511
+#: ../../network/manager_active_conn.go:495
 msgid "Tunneled TLS"
 msgstr "TLS përmes tuneli"
 
-#: ../../network/manager_active_conn.go:513
+#: ../../network/manager_active_conn.go:497
 msgid "Protected EAP"
 msgstr "EAP i mbrojtur"
 
@@ -931,60 +942,65 @@ msgstr "Mirëfilltësimi te shërbyesi VPN dështoi"
 msgid "The connection was deleted from settings"
 msgstr "Lidhja u fshi prej rregullimeve"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:258
 msgid "Enabling hotspot"
 msgstr "Po aktivizohet hotspot-i"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:262
 msgid "Connecting %q"
 msgstr "Po lidhet %q"
 
-#: ../../network/state_handler.go:269
+#: ../../network/state_handler.go:271
 msgid "Hotspot enabled"
 msgstr "Hotspot-i u aktivizua"
 
-#: ../../network/state_handler.go:271
+#: ../../network/state_handler.go:273
 msgid "%q connected"
 msgstr "%q u lidh"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:284 ../../network/state_handler.go:339
 msgid "Hotspot disabled"
 msgstr "Hotspot-i u çaktivizua"
 
-#: ../../network/state_handler.go:339 ../../network/state_handler.go:363
+#: ../../network/state_handler.go:341 ../../network/state_handler.go:365
 #: ../../system/bluetooth/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q u shkëput"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:347
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "S’arrihet të ndahet hotspot me të tjerë, ju lutemi, kontrolloni rregullimet "
 "për dnsmasq"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "S’arrihet të lidhet %q, ju lutemi, jini më afër rrugëzuesit pa fill"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:351
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 "S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit ose "
 "rrjetit tuaj."
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "Lidhja dështoi, s’arrihet të lidhet %q, fjalëkalim i gabuar"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q"
 msgstr "S’arrihet të lidhet %q"
 
-#: ../../network/state_handler.go:366
+#: ../../network/state_handler.go:369
+msgid "To connect %q, please set up your authentication info"
+msgstr ""
+"Që të lidhet me %q, ju lutemi, ujdisni të dhënat tuaja për mirëfilltësim"
+
+#: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"
 msgstr "Për lidhjen e %q lypset fjalëkalim"
 
-#: ../../network/state_handler.go:368
+#: ../../network/state_handler.go:375
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "S’u gjet dot rrjeti %q 802.11 WLAN"
 
@@ -1045,52 +1061,55 @@ msgstr ""
 msgid "Proceed"
 msgstr "Vazhdo"
 
-#: ../../session/power/manager_events.go:248
+#: ../../session/power/manager.go:913
+#, c-format
+msgid "The system will shut down automatically after %d s"
+msgstr "Sistemi do të fiket automatikisht pas %d s"
+
+#: ../../session/power/manager.go:914
+msgid "Scheduled Shutdown"
+msgstr "Fikje e Planifikuar"
+
+#: ../../session/power/manager.go:915
+msgid "Cancle"
+msgstr "Anuloje"
+
+#: ../../session/power/manager.go:915
+msgid "Shut down"
+msgstr "Fike"
+
+#: ../../session/power/manager_events.go:257
 msgid "Battery critically low"
 msgstr "Bateri e pakët në nivel kritik"
 
-#: ../../session/power/manager_events.go:268
-#: ../../session/power/manager_events.go:273
-#: ../../session/power/manager_events.go:278
-#: ../../session/power/manager_events.go:283
+#: ../../session/power/manager_events.go:277
+#: ../../session/power/manager_events.go:282
+#: ../../session/power/manager_events.go:287
+#: ../../session/power/manager_events.go:292
 msgid "Battery low, please plug in"
 msgstr "Bateri e pakët, ju lutemi, vëreni në prizë"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
-#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
-msgid "Power settings changed"
-msgstr "Rregullimet për energjinë ndryshuan"
-
-#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
-msgid "When the lid is closed, "
-msgstr "Kur mbyllet kapaku,"
-
-#: ../../session/power/utils.go:557
-msgid "When pressing the power button, "
-msgstr "Kur shtypet butoni i energjisë,"
-
-#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:602
 msgid "your computer will shut down"
 msgstr "kompjuteri juaj do të fiket"
 
-#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:604
 msgid "your computer will suspend"
 msgstr "kompjuteri juaj do të pezullohet"
 
-#: ../../session/power/utils.go:571
+#: ../../session/power/utils.go:606
 msgid "your computer will hibernate"
 msgstr "kompjuteri juaj do të plogështohet"
 
-#: ../../session/power/utils.go:573
+#: ../../session/power/utils.go:608
 msgid "your monitor will turn off"
 msgstr "monitori juaj do të fiket"
 
-#: ../../session/power/utils.go:575
+#: ../../session/power/utils.go:610
 msgid "your monitor will show the shutdown interface"
 msgstr "monitori juaj do të shfaqë skenën e fikjes"
 
-#: ../../session/power/utils.go:577
+#: ../../session/power/utils.go:612
 msgid "it will do nothing to your computer"
 msgstr "s’do të ndodhë gjë në kompjuterin tuaj"
 
@@ -1129,7 +1148,7 @@ msgstr ""
 msgid "Authentication is required to change NTP server"
 msgstr "Që të ndryshoni shërbyes NTP, lypset mirëfilltësim"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate/manager_ifc.go:117
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1137,6 +1156,6 @@ msgstr ""
 "Që të kontrolloni nëse RTC-ja depoziton kohën vendore apo atë UTC, lypset "
 "mirëfilltësim"
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate/manager_ifc.go:140
 msgid "Authentication is required to set the system timezone"
 msgstr "Që të ujdisni zonën kohore të sistemit, lypset mirëfilltësim"

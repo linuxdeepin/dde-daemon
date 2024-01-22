@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="hu" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hu">
 	<context>
 		<name>policy</name>
 		<message>
@@ -40,6 +40,26 @@
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!description" line="0"/>
 			<source>Disable Auto Login</source>
 			<translation>Automatikus bejelentkezés kikapcsolása</translation>
+		</message>
+		<message>
+			<location filename="com.deepin.daemon.accounts.enable-quick-login!message" line="0"/>
+			<source>Authentication is required to enable quick login</source>
+			<translation>Hitelesítés szükséges a gyors bejelentkezés engedélyezéséhez</translation>
+		</message>
+		<message>
+			<location filename="com.deepin.daemon.accounts.enable-quick-login!description" line="0"/>
+			<source>Enable Quick Login</source>
+			<translation>Gyors bejelentkezés engedélyezése</translation>
+		</message>
+		<message>
+			<location filename="com.deepin.daemon.accounts.disable-quick-login!message" line="0"/>
+			<source>Authentication is required to disable quick login</source>
+			<translation>Hitelesítés szükséges a gyors bejelentkezés letiltásához</translation>
+		</message>
+		<message>
+			<location filename="com.deepin.daemon.accounts.disable-quick-login!description" line="0"/>
+			<source>Disable Quick Login</source>
+			<translation>Gyors bejelentkezés letiltása</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!message" line="0"/>

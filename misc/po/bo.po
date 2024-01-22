@@ -6,17 +6,17 @@
 # Translators:
 # Thupten 123 <2389588952@qq.com>, 2022
 # deepiner, 2022
-# yeshe lhamo <981611630@qq.com>, 2023
-# tsewang baljor <bdcwbj@163.com>, 2023
+# tsewang baljor <bdcwbj@163.com>, 2024
+# yeshe lhamo <981611630@qq.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-19 17:17+0800\n"
+"POT-Creation-Date: 2024-01-17 11:02+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: tsewang baljor <bdcwbj@163.com>, 2023\n"
+"Last-Translator: yeshe lhamo <981611630@qq.com>, 2024\n"
 "Language-Team: Tibetan (https://app.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,52 +44,52 @@ msgstr "སྤྱོད་མཁན་མིང་སྟོང་པ་ཡིན
 msgid "The first character must be a letter or number"
 msgstr "ཡིག་འབྲུ་ཐོག་མ་དེ་ངེས་པར་དུ་གསལ་བྱེད་དམ་ཨང་ཀི་ཡིན་དགོས། "
 
-#: ../../accounts/checkers/username.go:56
+#: ../../accounts/checkers/username.go:57
 msgid "The username already exists"
 msgstr "སྤྱོད་མཁན་མིང་འདི་འདུག"
 
-#: ../../accounts/checkers/username.go:59
-msgid "The name already exists"
-msgstr "མིང་ཡོད་པ།"
+#: ../../accounts/checkers/username.go:60
+msgid "The group name already exists"
+msgstr "མིང་འདི་དང་སྤྱོད་མཚན་ཚོ་ཆུང་གི་མིང་བསྐྱར་ཟློས་བྱས་འདུག"
 
-#: ../../accounts/checkers/username.go:61
+#: ../../accounts/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
 msgstr "སྤྱོད་མཁན་མིང་གི་རིང་ཚད་ངེས་པར་དུ་ཡིག་འབྲུ་3ནས་32བར་ཡིན་དགོས། "
 
-#: ../../accounts/manager.go:567
+#: ../../accounts/manager.go:572
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 "སྤྱོད་མཁན་“%s”ནི་དེ་སྔའི་སྤྱོད་མཁན་ཞིག་ཡིན་པས། "
 "ཐོག་མའི་གཞི་གྲངས་མཉམ་བགྲོད་བྱས་ཟིན།"
 
-#: ../../accounts/user_ifc.go:686
+#: ../../accounts/user_ifc.go:656
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "མིག་སྔའི་རྒྱུད་ཁོངས་ཀྱི་རྩིག་ཤོག་སྒོ་ལྕགས་བརྒྱབ་འདུག་པས། "
 "དོ་དམ་པ་དང་འབྲེལ་བ་བྱོས།"
 
-#: ../../appearance/scale.go:38
+#: ../../appearance/scale.go:41
 msgid "Log out for display scaling settings to take effect"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་བྱེད་པར་ཐོ་འདོར་རྗེས་གཞི་ནས་གོ་ཆོད་པ་ཡིན།"
 
-#: ../../appearance/scale.go:39
+#: ../../appearance/scale.go:42
 msgid "Set successfully"
 msgstr "སྒྲིག་འགོད་བྱས་ཟིན།"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Later"
 msgstr "ཏོག་ཙམ་ནས་ཐོ་འདོར་བ།"
 
-#: ../../appearance/scale.go:49
+#: ../../appearance/scale.go:52
 msgid "Log Out Now"
 msgstr "ལམ་སེང་ཐོ་འདོར་བ།"
 
-#: ../../appearance/scale.go:63
+#: ../../appearance/scale.go:68
 msgid "Setting display scaling"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་སྒྲིག་འགོད་བྱ་རྩིས་བྱེད་པ།"
 
-#: ../../appearance/scale.go:64
+#: ../../appearance/scale.go:69
 msgid "Display scaling"
 msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་།"
 
@@ -170,56 +170,56 @@ msgstr "བརྡ་འཕྲིན་ལྟ་སྤྱོད།"
 msgid "Message notification"
 msgstr "བརྡ་འཕྲིན་བརྡ་ཐོ།"
 
-#: ../../bluetooth/obex_agent.go:384 ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:130
 msgid "Cancel"
 msgstr "འདོར་བ། "
 
-#: ../../bluetooth/obex_agent.go:391
+#: ../../bluetooth/obex_agent.go:394
 msgid "Receiving %[1]q from %[2]q"
 msgstr "%[2]qཡི་ཡིག་ཆ་%[1]qལེན་བཞིན་པ།"
 
-#: ../../bluetooth/obex_agent.go:400
+#: ../../bluetooth/obex_agent.go:403
 msgid "View"
 msgstr "ལྟ་བཤེར།"
 
-#: ../../bluetooth/obex_agent.go:406
+#: ../../bluetooth/obex_agent.go:409
 msgid "You have received files from %q successfully"
 msgstr "ཁྱེད་ཀྱིས་%qཡི་ཡིག་ཆ་བླངས་ཟིན།"
 
-#: ../../bluetooth/obex_agent.go:407
+#: ../../bluetooth/obex_agent.go:410
 msgid "Done"
 msgstr "ལེགས་གྲུབ།"
 
-#: ../../bluetooth/obex_agent.go:422 ../../bluetooth/obex_agent.go:521
+#: ../../bluetooth/obex_agent.go:425 ../../bluetooth/obex_agent.go:528
 msgid "Stop Receiving Files"
 msgstr "ཡིག་ཆ་ལེན་མཚམས་བཞག་པ།"
 
-#: ../../bluetooth/obex_agent.go:424
+#: ../../bluetooth/obex_agent.go:427
 msgid "You have cancelled the file transfer"
 msgstr "ཁྱེད་ཀྱིས་ཡིག་ཆ་ལེན་རྒྱུ་རྩིས་མེད་དུ་བཏང་བ།"
 
-#: ../../bluetooth/obex_agent.go:426 ../../system/bluetooth/utils_notify.go:63
+#: ../../bluetooth/obex_agent.go:429 ../../system/bluetooth/utils_notify.go:63
 #: ../../system/bluetooth/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "སོ་སྔོན་འབྲེལ་མཐུད་ཆད་པ།"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Decline"
 msgstr "མི་ལེན་པ།"
 
-#: ../../bluetooth/obex_agent.go:461
+#: ../../bluetooth/obex_agent.go:468
 msgid "Receive"
 msgstr "ལེན་པ།"
 
-#: ../../bluetooth/obex_agent.go:466
+#: ../../bluetooth/obex_agent.go:473
 msgid "Bluetooth File Transfer"
 msgstr "སོ་སྔོན་ཡིག་ཆ་སྐྱེལ་གཏོང་།"
 
-#: ../../bluetooth/obex_agent.go:467
+#: ../../bluetooth/obex_agent.go:474
 msgid "%q wants to send files to you. Receive?"
 msgstr "ཁྱེད་ལ་%qཀྱིས་བསྐུར་བའི་ཡིག་ཆ་འབྱོར་འདུག་པས། རྩིས་ལེན་བྱེད་དམ།"
 
-#: ../../bluetooth/obex_agent.go:522
+#: ../../bluetooth/obex_agent.go:529
 msgid "Receiving %q timed out"
 msgstr "%qལེན་པ་དུས་ཚོད་ལས་བརྒལ་བ།"
 
@@ -374,7 +374,6 @@ msgid "Switch Layout"
 msgstr "མཐེབ་གཞོང་བཀོད་པ་བརྗེ་བ།"
 
 #: ../../keybinding/shortcuts/id_name_map.go:40
-#: ../../keybinding/shortcuts/id_name_map.go:203
 msgid "Toggle multiple displays"
 msgstr "བརྙན་མང་སྒྲིག་འགོད་དུ་བརྗེ་བ།"
 
@@ -466,6 +465,18 @@ msgstr "མིག་སྔའི་ལས་ཀ་བྱེད་ཁུལ་ག
 msgid "Display workspace"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་མངོན་སྟོན།"
 
+#: ../../keybinding/shortcuts/id_name_map.go:143
+msgid "Zoom In"
+msgstr "བརྙན་ཡོལ་ཆེར་གཏོང་།"
+
+#: ../../keybinding/shortcuts/id_name_map.go:144
+msgid "Zoom Out"
+msgstr "བརྙན་ཡོལ་ཆུང་གཏོང་།"
+
+#: ../../keybinding/shortcuts/id_name_map.go:145
+msgid "Zoom to Actual Size"
+msgstr "བརྙན་ཡོལ་སྐྱེད་སྐྱུང་བསྐྱར་སྒྲིག"
+
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "སྐད་ཡིག་བརྗེ་སྐབས་བདེན་དཔང་བྱ་དགོས།"
@@ -546,44 +557,44 @@ msgstr "%qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 msgid "Failed to uninstall %q"
 msgstr "%q བཤིག་འདོན་བྱེད་མ་ཐུབ།"
 
-#: ../../network/manager_active_conn.go:484
-#: ../../network/manager_active_conn.go:489
+#: ../../network/manager_active_conn.go:468
+#: ../../network/manager_active_conn.go:473
 msgid "None"
 msgstr "མེད།"
 
-#: ../../network/manager_active_conn.go:491
+#: ../../network/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
 msgstr "གསང་ལྡེ་གནས་WEP40/128"
 
-#: ../../network/manager_active_conn.go:493
+#: ../../network/manager_active_conn.go:477
 msgid "WPA/WPA2 Personal"
 msgstr "སྒེར་གྱི་པར་གཞི་WPA/WPA2"
 
-#: ../../network/manager_active_conn.go:495
+#: ../../network/manager_active_conn.go:479
 msgid "WPA3 Personal"
 msgstr "WPA3མི་སྒེར་གྱི་པར་གཞི།"
 
-#: ../../network/manager_active_conn.go:503
+#: ../../network/manager_active_conn.go:487
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:505
+#: ../../network/manager_active_conn.go:489
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:507
+#: ../../network/manager_active_conn.go:491
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:509
+#: ../../network/manager_active_conn.go:493
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:511
+#: ../../network/manager_active_conn.go:495
 msgid "Tunneled TLS"
 msgstr "ཕུག་ལམ་TLS"
 
-#: ../../network/manager_active_conn.go:513
+#: ../../network/manager_active_conn.go:497
 msgid "Protected EAP"
 msgstr "སྲུང་སྐྱོང་ཡོད་པའི་EAP"
 
@@ -930,57 +941,61 @@ msgstr "VPNཞབས་ཞུ་འཕྲུལ་ཆས་ཕམ་པའི་
 msgid "The connection was deleted from settings"
 msgstr "འབྲེལ་མཐུད་འདི་སྒྲིག་འགོད་ལས་བསུབས་ཟིན།"
 
-#: ../../network/state_handler.go:256
+#: ../../network/state_handler.go:258
 msgid "Enabling hotspot"
 msgstr "ཚ་གནས་ཁ་འབྱེད་པའི་ཚོད་ལྟ་བྱེད་བཞིན་པ།"
 
-#: ../../network/state_handler.go:260
+#: ../../network/state_handler.go:262
 msgid "Connecting %q"
 msgstr "འབྲེལ་མཐུད་བྱེད་བཞིན་ཡོད་%q"
 
-#: ../../network/state_handler.go:269
+#: ../../network/state_handler.go:271
 msgid "Hotspot enabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་ཕྱེ་ཡོད།"
 
-#: ../../network/state_handler.go:271
+#: ../../network/state_handler.go:273
 msgid "%q connected"
 msgstr "འབྲེལ་མཐུད་ཟིན་%q"
 
-#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
+#: ../../network/state_handler.go:284 ../../network/state_handler.go:339
 msgid "Hotspot disabled"
 msgstr "ཚ་གནས་མཉམ་སྤྱོད་ཁ་བརྒྱབ་ཟིན།"
 
-#: ../../network/state_handler.go:339 ../../network/state_handler.go:363
+#: ../../network/state_handler.go:341 ../../network/state_handler.go:365
 #: ../../system/bluetooth/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%qབཅད་ཟིན།"
 
-#: ../../network/state_handler.go:345
+#: ../../network/state_handler.go:347
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 "ཚ་གནས་མཉམ་སྤྱོད་བྱེད་མི་ཐུབ་པས་dnsmasq དང་འབྲེལ་བའི་སྒྲིག་ཆས་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:347
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%qསྣོན་ཐུབ་མེད་པས། སྐུད་མེད་ལམ་སྟོན་ཆས་དང་ཉེ་འབྲེལ་ཚོད་ལྟ་བྱེད།"
 
-#: ../../network/state_handler.go:349
+#: ../../network/state_handler.go:351
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr "%qསྣོན་ཐུབ་མེད་པས། ལམ་སྟོན་ཆས་སམ་དྲ་སྐུད་ལ་ཞིབ་བཤེར་བྱེད་རོགས།"
 
-#: ../../network/state_handler.go:353
+#: ../../network/state_handler.go:355
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr "འབྲེལ་མཐུད་མི་ཐུབ། %qནང་དུ་བཅུག་མི་ཐུབ། གསང་ཨང་ནོར་འདུག"
 
-#: ../../network/state_handler.go:355
+#: ../../network/state_handler.go:357
 msgid "Unable to connect %q"
 msgstr "%qདང་སྦྲེལ་མ་ཐུབ།"
 
-#: ../../network/state_handler.go:366
+#: ../../network/state_handler.go:369
+msgid "To connect %q, please set up your authentication info"
+msgstr "“%1”དང་སྦྲེལ་བར་ར་སྤྲོད་ཆ་འཕྲིན་སྒྲིག་སྦྱོར་བྱེད་དགོས།"
+
+#: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"
 msgstr "%qའབྲེལ་བར་གསང་ཨང་དགོས།"
 
-#: ../../network/state_handler.go:368
+#: ../../network/state_handler.go:375
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr "%q 802.11 WLANདྲ་རྒྱ་རྙེད་ཐབས་མེད།"
 
@@ -1041,52 +1056,55 @@ msgstr ""
 msgid "Proceed"
 msgstr "བསྐྱོད་པ།"
 
-#: ../../session/power/manager_events.go:248
+#: ../../session/power/manager.go:913
+#, c-format
+msgid "The system will shut down automatically after %d s"
+msgstr "རྒྱུད་ཁོངས་%dརྗེས་རང་འགུལ་གྱིས་སྒོ་རྒྱག་སྲིད།"
+
+#: ../../session/power/manager.go:914
+msgid "Scheduled Shutdown"
+msgstr ""
+
+#: ../../session/power/manager.go:915
+msgid "Cancle"
+msgstr "འདོར་བ།"
+
+#: ../../session/power/manager.go:915
+msgid "Shut down"
+msgstr "ལམ་སེང་ཁ་བརྒྱབ།"
+
+#: ../../session/power/manager_events.go:257
 msgid "Battery critically low"
 msgstr "གློག་རྫོགས་ཟིན།"
 
-#: ../../session/power/manager_events.go:268
-#: ../../session/power/manager_events.go:273
-#: ../../session/power/manager_events.go:278
-#: ../../session/power/manager_events.go:283
+#: ../../session/power/manager_events.go:277
+#: ../../session/power/manager_events.go:282
+#: ../../session/power/manager_events.go:287
+#: ../../session/power/manager_events.go:292
 msgid "Battery low, please plug in"
 msgstr "གློག་ཉུང་བས་གློག་ཁུངས་དང་མཐུད་རོགས།"
 
-#: ../../session/power/utils.go:508 ../../session/power/utils.go:515
-#: ../../session/power/utils.go:522 ../../session/power/utils.go:529
-msgid "Power settings changed"
-msgstr "གློག་ཁུངས་སྒྲིག་འགོད་སྒྱུར་བ།"
-
-#: ../../session/power/utils.go:553 ../../session/power/utils_test.go:16
-#: ../../session/power/utils_test.go:17
-msgid "When the lid is closed, "
-msgstr "ལག་ཁྱེར་གློག་ཀླད་ཁ་བརྒྱབ་སྐབས།"
-
-#: ../../session/power/utils.go:557
-msgid "When pressing the power button, "
-msgstr "གློག་ཁུངས་ཀྱི་བསད་སྤར་མནན་སྐབས།"
-
-#: ../../session/power/utils.go:567 ../../session/power/utils_test.go:16
+#: ../../session/power/utils.go:602
 msgid "your computer will shut down"
 msgstr "སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:569 ../../session/power/utils_test.go:17
+#: ../../session/power/utils.go:604
 msgid "your computer will suspend"
 msgstr "སྒུག་སྡོད་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:571
+#: ../../session/power/utils.go:606
 msgid "your computer will hibernate"
 msgstr "མལ་གསོ་ཞེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:573
+#: ../../session/power/utils.go:608
 msgid "your monitor will turn off"
 msgstr "མངོན་ཆས་སྒོ་བརྒྱབ་ཅེས་པར་བཟོ་བཅོས་བྱེད།"
 
-#: ../../session/power/utils.go:575
+#: ../../session/power/utils.go:610
 msgid "your monitor will show the shutdown interface"
 msgstr "སྒོ་རྒྱག་པ་ལ་བཅོས་པ།"
 
-#: ../../session/power/utils.go:577
+#: ../../session/power/utils.go:612
 msgid "it will do nothing to your computer"
 msgstr "བཀོལ་སྤྱོད་གང་ཡང་བྱས་མེད་པར་བཟོ་བཅོས་བྱེད།"
 
@@ -1123,13 +1141,13 @@ msgstr "དྲ་རྒྱའི་དུས་ཚོད་མཉམ་བགྲ
 msgid "Authentication is required to change NTP server"
 msgstr "དུས་ཚོད་ཀྱི་ཞབས་ཞུ་འཕྲུལ་ཆས་བཟོ་བཅོས་བྱེད་པར་ར་སྤྲོད་བྱེད་དགོས།"
 
-#: ../../timedate/manager_ifc.go:114
+#: ../../timedate/manager_ifc.go:117
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
 "སྲ་ཆས་སྒྲིག་འགོད་བྱས་ཏེ་རང་སའི་དུས་ཚོད་དམ་UTC སྤྱོད་པར་ར་སྤྲོད་བྱེད་དགོས།"
 
-#: ../../timedate/manager_ifc.go:137
+#: ../../timedate/manager_ifc.go:140
 msgid "Authentication is required to set the system timezone"
 msgstr "རྒྱུད་ཁོངས་ཀྱི་དུས་ཁུལ་སྒྲིག་འགོད་བྱེད་པར་ར་སྤྲོད་བྱེད་དགོས།"

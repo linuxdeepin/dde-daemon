@@ -34,12 +34,12 @@
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!message" line="0"/>
 			<source>Password is required to perform this action</source>
-			<translation type="unfinished"/>
+			<translation>Na vykonanie tejto akcie je potrebné heslo</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.fprintd.manager!description" line="0"/>
 			<source>Manage fingerprint passwords</source>
-			<translation type="unfinished"/>
+			<translation>Spravovať heslá odtlačkov prstov</translation>
 		</message>
 	</context>
 </TS>

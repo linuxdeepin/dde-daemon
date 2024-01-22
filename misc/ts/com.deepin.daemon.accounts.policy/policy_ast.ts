@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ast" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ast">
 	<context>
 		<name>policy</name>
 		<message>
@@ -39,6 +39,26 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!description" line="0"/>
 			<source>Disable Auto Login</source>
+			<translation type="unfinished"/>
+		</message>
+		<message>
+			<location filename="com.deepin.daemon.accounts.enable-quick-login!message" line="0"/>
+			<source>Authentication is required to enable quick login</source>
+			<translation type="unfinished"/>
+		</message>
+		<message>
+			<location filename="com.deepin.daemon.accounts.enable-quick-login!description" line="0"/>
+			<source>Enable Quick Login</source>
+			<translation type="unfinished"/>
+		</message>
+		<message>
+			<location filename="com.deepin.daemon.accounts.disable-quick-login!message" line="0"/>
+			<source>Authentication is required to disable quick login</source>
+			<translation type="unfinished"/>
+		</message>
+		<message>
+			<location filename="com.deepin.daemon.accounts.disable-quick-login!description" line="0"/>
+			<source>Disable Quick Login</source>
 			<translation type="unfinished"/>
 		</message>
 		<message>
