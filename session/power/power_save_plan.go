@@ -12,6 +12,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"io/ioutil"
 
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
@@ -708,6 +709,20 @@ func (psp *powerSavePlan) HandleIdleOn() {
 	}
 }
 
+func (ps *powerSavePlan) restoreDpmsStateFile() {
+	v, err := ioutil.ReadFile("/tmp/dpms-state")
+	if err != nil {
+		return
+	}
+
+	if string(v) == "1" {
+		err = ioutil.WriteFile("/tmp/dpms-state", []byte("0"), 0644)
+		if err != nil {
+			logger.Warning("WriteFile /tmp/dpms-state:", err)
+		}
+	}
+}
+
 func (psp *powerSavePlan) handleIdleOff() {
 	psp.mu.Lock()
 	defer psp.mu.Unlock()
@@ -732,6 +747,7 @@ func (psp *powerSavePlan) handleIdleOff() {
 	psp.manager.setDPMSModeOn()
 	psp.manager.setDDEBlackScreenActive(false)
 	psp.resetBrightness()
+	psp.restoreDpmsStateFile()
 }
 
 // 结束 Idle
