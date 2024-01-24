@@ -162,7 +162,6 @@ func (d *ddcci) RefreshDisplays() error {
 			logger.Warning(err)
 		}
 	}
-
 	return nil
 }
 
@@ -280,7 +279,8 @@ func (d *ddcci) findMonitorIndex(edidBase64 string) (int, bool) {
 		//logger.Debugf("edid:", edidIter)
 		bufIter, _ := base64.StdEncoding.DecodeString(edidIter)
 		zeroEdidMonitorName(bufIter)
-		if bytes.Equal(bufInput, bufIter) {
+		// ddcci只存储128个字节，所以之比较前128个字节
+		if bytes.HasPrefix(bufInput, bufIter) {
 			idx = idxIter.idx
 			find = true
 			//logger.Debugf("brightness: DeepEqual\n")
