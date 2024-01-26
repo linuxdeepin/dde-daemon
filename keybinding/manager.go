@@ -5,9 +5,9 @@
 package keybinding
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -1139,14 +1139,7 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 
 	if m.useNewAppManager {
 		desktopExt := ".desktop"
-		splitStr := strings.Split(cmd, " ")
-		if len(splitStr) == 0 {
-			err := fmt.Errorf("invalid command: %s", splitStr)
-			return err
-		}
-
-		name := splitStr[len(splitStr)-1]
-
+		name := strings.TrimSuffix(filepath.Base(cmd), path.Ext(cmd))
 		desktopFileName := "daemon-keybinding-" + name + desktopExt
 
 		_, err := os.Stat(basedir.GetUserDataDir() + "/applications/" + desktopFileName)
