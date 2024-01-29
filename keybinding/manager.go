@@ -5,9 +5,10 @@
 package keybinding
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"os"
 	"os/exec"
-	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -1139,10 +1140,17 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 
 	if m.useNewAppManager {
 		desktopExt := ".desktop"
-		name := strings.TrimSuffix(filepath.Base(cmd), path.Ext(cmd))
+		sha256Hasher := sha256.New()
+		_, err := sha256Hasher.Write([]byte(cmd))
+		if err != nil {
+			logger.Warning("generate sha256 hash failed with error: ", err)
+			return err
+		}
+		desktopPre := sha256Hasher.Sum(nil)
+		name := hex.EncodeToString(desktopPre)
 		desktopFileName := "daemon-keybinding-" + name + desktopExt
 
-		_, err := os.Stat(basedir.GetUserDataDir() + "/applications/" + desktopFileName)
+		_, err = os.Stat(basedir.GetUserDataDir() + "/applications/" + desktopFileName)
 		// 如果对应命令的desktop文件不存在，需要新建desktop文件
 		if os.IsNotExist(err) {
 			desktopInfoMap := map[string]dbus.Variant{
