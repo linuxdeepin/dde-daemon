@@ -991,7 +991,7 @@ msgstr "%q كە ئۇلانمىدى"
 
 #: ../../network/state_handler.go:369
 msgid "To connect %q, please set up your authentication info"
-msgstr "«%1» غا ئۇلاش ئۈچۈن دەلىللەش ئۇچۇرلىرىنى سەپلىشىڭىز كېرەك"
+msgstr "%q غا ئۇلاش ئۈچۈن دەلىللەش ئۇچۇرلىرىنى سەپلىشىڭىز كېرەك"
 
 #: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"

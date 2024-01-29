@@ -969,7 +969,7 @@ msgstr "無法連接到%q"
 
 #: ../../network/state_handler.go:369
 msgid "To connect %q, please set up your authentication info"
-msgstr "連接“%1”需要配置認證資訊"
+msgstr "連接%q，需要配置認證資訊"
 
 #: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"

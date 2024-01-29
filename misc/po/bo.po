@@ -989,7 +989,7 @@ msgstr "%qདང་སྦྲེལ་མ་ཐུབ།"
 
 #: ../../network/state_handler.go:369
 msgid "To connect %q, please set up your authentication info"
-msgstr "“%1”དང་སྦྲེལ་བར་ར་སྤྲོད་ཆ་འཕྲིན་སྒྲིག་སྦྱོར་བྱེད་དགོས།"
+msgstr "%qདང་སྦྲེལ་བར་ར་སྤྲོད་ཆ་འཕྲིན་སྒྲིག་སྦྱོར་བྱེད་དགོས།"
 
 #: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"

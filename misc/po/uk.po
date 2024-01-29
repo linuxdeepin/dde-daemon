@@ -469,15 +469,15 @@ msgstr "Показати робочій простір"
 
 #: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Zoom In"
-msgstr ""
+msgstr "Збільшити"
 
 #: ../../keybinding/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr ""
+msgstr "Зменшити"
 
 #: ../../keybinding/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Масштабувати до справжніх розмірів"
 
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
@@ -1000,6 +1000,8 @@ msgstr "Не вдалося встановити з'єднання із %q"
 #: ../../network/state_handler.go:369
 msgid "To connect %q, please set up your authentication info"
 msgstr ""
+"Для встановлення з'єднання з %q, будь ласка, вкажіть ваші дані для "
+"розпізнавання"
 
 #: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"
@@ -1069,19 +1071,19 @@ msgstr "Продовжити"
 #: ../../session/power/manager.go:913
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "Система автоматично завершить роботу за %d с"
 
 #: ../../session/power/manager.go:914
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "Заплановане вимикання"
 
 #: ../../session/power/manager.go:915
 msgid "Cancle"
-msgstr ""
+msgstr "Скасувати"
 
 #: ../../session/power/manager.go:915
 msgid "Shut down"
-msgstr ""
+msgstr "Вимкнути"
 
 #: ../../session/power/manager_events.go:257
 msgid "Battery critically low"
