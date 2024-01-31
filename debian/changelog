@@ -1,3 +1,9 @@
+dde-daemon (6.0.35) unstable; urgency=medium
+
+  *  fix: use sha256 generate desktop name
+
+ -- dengbo <dengbo@deepin.org>  Wed, 31 Jan 2024 15:38:35 +0800
+
 dde-daemon (6.0.34) unstable; urgency=medium
 
   * revert fix for keybinding for linglong
