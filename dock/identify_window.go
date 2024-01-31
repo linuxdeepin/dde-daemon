@@ -62,11 +62,11 @@ func (m *Manager) registerIdentifyKWindowFuncs() {
 	m.registerIdentifyKWindowFunc("PidEnv", func(m *Manager, winInfo *KWindowInfo) (string, *AppInfo) {
 		return identifyWindowByPidEnv(m, &winInfo.baseWindowInfo)
 	})
-	m.registerIdentifyKWindowFunc("ExeEnv", identifyKwindowByExeEnv)
-	m.registerIdentifyKWindowFunc("WmClass", identifyKWindowByWMClass)
 	m.registerIdentifyKWindowFunc("Bamf", func(m *Manager, winInfo *KWindowInfo) (string, *AppInfo) {
 		return identifyWindowByBamf(m, &winInfo.baseWindowInfo)
 	})
+	m.registerIdentifyKWindowFunc("ExeEnv", identifyKwindowByExeEnv)
+	m.registerIdentifyKWindowFunc("WmClass", identifyKWindowByWMClass)
 }
 
 func (m *Manager) registerIdentifyKWindowFunc(name string, fn _IdentifyKWindowFunc) {
