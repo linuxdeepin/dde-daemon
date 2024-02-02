@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -37,6 +38,9 @@ type Manager struct {
 	fsWatcher   *fsnotify.Watcher
 	changeTimer *time.Timer
 
+	hasSetMime    bool
+	hasSetMimeMux sync.Mutex
+
 	done     chan struct{}
 	doneResp chan struct{}
 
@@ -48,6 +52,7 @@ type Manager struct {
 
 func NewManager(service *dbusutil.Service) *Manager {
 	m := new(Manager)
+	m.hasSetMime = false
 	m.service = service
 	m.done = make(chan struct{})
 	m.doneResp = make(chan struct{})
@@ -133,6 +138,18 @@ func (m *Manager) handleFileEvents() {
 }
 
 func (m *Manager) deferEmitChange() {
+
+	m.hasSetMimeMux.Lock()
+	hasSetMime := m.hasSetMime
+	m.hasSetMimeMux.Unlock()
+	if hasSetMime {
+		if m.changeTimer != nil {
+			m.changeTimer.Stop()
+			m.changeTimer = nil
+		}
+		m.emitSignalChange()
+		return
+	}
 	delay := 2 * time.Second
 	if m.changeTimer == nil {
 		m.changeTimer = time.AfterFunc(delay, func() {
@@ -193,6 +210,9 @@ func (m *Manager) GetDefaultApp(mimeType string) (defaultApp string, busErr *dbu
 // deskId: the default app desktop id
 // ret0: error message
 func (m *Manager) SetDefaultApp(mimes []string, desktopId string) *dbus.Error {
+	m.hasSetMimeMux.Lock()
+	m.hasSetMime = true
+	m.hasSetMimeMux.Unlock()
 	var err error
 	for _, mime := range mimes {
 		if mime == AppMimeTerminal {
@@ -206,6 +226,9 @@ func (m *Manager) SetDefaultApp(mimes []string, desktopId string) *dbus.Error {
 			break
 		}
 	}
+	m.hasSetMimeMux.Lock()
+	m.hasSetMime = false
+	m.hasSetMimeMux.Unlock()
 	return dbusutil.ToError(err)
 }
 
