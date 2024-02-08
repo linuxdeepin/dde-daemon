@@ -16,14 +16,13 @@ const lowBatteryThreshold = 20.0
 
 func modifyLMTConfig(lines []string, dict map[string]string) ([]string, bool) {
 	var changed bool
-	for idx := range lines {
-		line := lines[idx]
+	for _, line := range lines {
 		for key, value := range dict {
 			if strings.HasPrefix(line, key) {
 				newLine := key + "=" + value
 				if line != newLine {
 					changed = true
-					lines[idx] = newLine
+					line = newLine
 				}
 				delete(dict, key)
 			}
@@ -32,6 +31,7 @@ func modifyLMTConfig(lines []string, dict map[string]string) ([]string, bool) {
 			break
 		}
 	}
+
 	if len(dict) > 0 {
 		for key, value := range dict {
 			newLine := key + "=" + value
@@ -50,7 +50,6 @@ func (m *Manager) writePowerSavingModeEnabledCb(write *dbusutil.PropertyWrite) *
 	m.setPropPowerSavingModeAuto(false)
 	m.setPropPowerSavingModeAutoWhenBatteryLow(false)
 	m.PropsMu.Unlock()
-
 
 	// TODO: add tlp part
 
