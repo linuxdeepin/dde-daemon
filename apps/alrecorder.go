@@ -7,6 +7,7 @@ package apps
 import (
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -255,6 +256,28 @@ func (r *ALRecorder) watchAppsDir(uid int, home, appsDir string) {
 	r.subRecorders[appsDir] = sr
 }
 
+//判断filename是否是符号链接
+func isSymlink(filename string) bool {
+	fileInfo, err := os.Lstat(filename)
+	if err != nil {
+		return false
+	}
+	return fileInfo.Mode()&os.ModeSymlink != 0
+}
+
+//获取path所有子path
+func getPathDirs(filename string) (ret []string) {
+	for {
+		ret = append(ret, filename)
+		parentDir := filepath.Dir(filename)
+		if parentDir == filename {
+			break
+		}
+		filename = parentDir
+	}
+	return ret
+}
+
 func (r *ALRecorder) WatchDirs(sender dbus.Sender, dataDirs []string) *dbus.Error {
 	logger.Infof("dbus call WatchDirs  sender %v, dataDirs %v", sender, dataDirs)
 
@@ -276,6 +299,11 @@ func (r *ALRecorder) WatchDirs(sender dbus.Sender, dataDirs []string) *dbus.Erro
 	for _, dataDir := range dataDirs {
 		if !filepath.IsAbs(dataDir) {
 			err = fmt.Errorf("%q is not absolute path", dataDir)
+			logger.Warning(err)
+			return dbusutil.ToError(err)
+		}
+		if isSymlink(dataDir) {
+			err = fmt.Errorf("%q is a symbolic link", dataDir)
 			logger.Warning(err)
 			return dbusutil.ToError(err)
 		}

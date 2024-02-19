@@ -59,11 +59,22 @@ func NewSubRecorder(uid int, home, root string, parent *ALRecorder) *SubRecorder
 func (sr *SubRecorder) init() {
 	subDirNames, apps := getDirsAndApps(sr.root)
 	if sr.initAppLaunchedMap(apps) {
-		err := MkdirAll(filepath.Dir(sr.statusFile), sr.statusFileOwner, dirPerm)
-		if err != nil {
-			logger.Warning(err)
+		var needMkdir = true
+		ret := getPathDirs(sr.statusFile)
+		for _, v := range ret {
+			if isSymlink(v) {
+				logger.Warningf("%q is a symbolic link", v)
+				needMkdir = false
+				break
+			}
 		}
-		sr.RequestSave()
+		if needMkdir {
+			err := MkdirAll(filepath.Dir(sr.statusFile), sr.statusFileOwner, dirPerm)
+			if err != nil {
+				logger.Warning(err)
+			}
+			sr.RequestSave()
+		}
 	}
 
 	for _, dirName := range subDirNames {
@@ -115,6 +126,7 @@ func getStatusFileAndOwner(uid int, home, appsDir string) (string, int) {
 
 func (sr *SubRecorder) initAppLaunchedMap(apps []string) bool {
 	var changed bool
+	logger.Debug("initAppLaunchedMap sr.statusFile :", sr.statusFile)
 	if launchedMap, err := loadStatusFromFile(sr.statusFile); err != nil {
 		logger.Warning("SubRecorder.loadStatusFromFile failed", err)
 		sr.resetStatus(apps)
