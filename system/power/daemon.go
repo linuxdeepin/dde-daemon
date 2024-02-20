@@ -108,18 +108,6 @@ func (d *Daemon) Start() (err error) {
 		logger.Warning(err)
 	}
 
-	err = serverObj.ConnectChanged(d.manager, "CompositorPowerSaveEnable", func(change *dbusutil.PropertyChanged) {
-		if d.manager.isLowBatteryMode {
-			d.manager.setCompositorState(_powerConfigMap[ddeLowBattery].CompositorConfig)
-		} else {
-			d.manager.setCompositorState(_powerConfigMap[d.manager.Mode].CompositorConfig)
-		}
-		err := d.manager.saveDsgConfig("CompositorPowerSaveEnable")
-		if err != nil {
-			logger.Warning(err)
-		}
-	})
-
 	if err != nil {
 		logger.Warning(err)
 	}

@@ -240,19 +240,6 @@ func (v *Manager) emitPropChangedIsPowerSaveSupported(value bool) error {
 	return v.service.EmitPropertyChanged(v, "IsPowerSaveSupported", value)
 }
 
-func (v *Manager) setPropCompositorPowerSaveEnable(value bool) (changed bool) {
-	if v.CompositorPowerSaveEnable != value {
-		v.CompositorPowerSaveEnable = value
-		v.emitPropChangedCompositorPowerSaveEnable(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedCompositorPowerSaveEnable(value bool) error {
-	return v.service.EmitPropertyChanged(v, "CompositorPowerSaveEnable", value)
-}
-
 func (v *Manager) setPropSupportSwitchPowerMode(value bool) (changed bool) {
 	if v.SupportSwitchPowerMode != value {
 		v.SupportSwitchPowerMode = value

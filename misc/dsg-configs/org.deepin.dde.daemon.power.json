@@ -205,18 +205,6 @@
             "permissions": "readwrite",
             "visibility": "public"
         },
-        "powerCompositorPowerSaveEnabled":{
-            "value": false,
-            "serial": 0,
-            "flags": [
-                "global"
-            ],
-            "name": "compositor power save enabled",
-            "name[zh_CN]": "特效节能模式开关",
-            "description": "是否在低电量模式时关闭部分窗管特效",
-            "permissions": "readwrite",
-            "visibility": "private"
-        },
         "nextShutdownTime": {
             "value": 0,
             "serial": 0,
@@ -228,7 +216,7 @@
             "visibility": "public"
         },
         "powerMappingConfig":{
-            "value": "{\"balance\":{\"DSPCConfig\":\"balance\",\"CompositorConfig\":\"auto\"},\"lowBattery\":{\"DSPCConfig\":\"lowbat\",\"CompositorConfig\":\"XRender\"},\"performance\":{\"DSPCConfig\":\"performance\",\"CompositorConfig\":\"auto\"},\"powersave\":{\"DSPCConfig\":\"saving\",\"CompositorConfig\":\"auto\"}}",
+            "value": "{\"balance\":{\"DSPCConfig\":\"balance\"},\"lowBattery\":{\"DSPCConfig\":\"lowbat\"},\"performance\":{\"DSPCConfig\":\"performance\"},\"powersave\":{\"DSPCConfig\":\"saving\"}}",
             "serial": 0,
             "flags": [
                 "global"

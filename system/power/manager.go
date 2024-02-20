@@ -32,15 +32,8 @@ const (
 	dsettingsPowerSavingModeAuto                  = "powerSavingModeAuto"
 	dsettingsPowerSavingModeAutoWhenBatteryLow    = "powerSavingModeAutoWhenBatteryLow"
 	dsettingsPowerSavingModeBrightnessDropPercent = "powerSavingModeBrightnessDropPercent"
-	dsettingsPowerCompositorPowerSaveEnable       = "powerCompositorPowerSaveEnabled"
 	dsettingsPowerMappingConfig                   = "powerMappingConfig"
 	dsettingsMode                                 = "mode"
-)
-
-const (
-	kwinDsettingsAppID           = "org.kde.kwin"
-	kwinDsettingsCompositingName = "org.kde.kwin.compositing"
-	kwinDsettingsPropCompositor  = "user_type"
 )
 
 type supportMode struct {
@@ -67,7 +60,6 @@ type Manager struct {
 	ac            *AC
 	gudevClient   *gudev.Client
 	dsgPower      ConfigManager.Manager
-	dsgKwin       ConfigManager.Manager
 	// 电池是否电量低
 	batteryLow bool
 	// 初始化是否完成
@@ -116,9 +108,6 @@ type Manager struct {
 
 	// 是否支持节能模式
 	IsPowerSaveSupported bool
-
-	// 是否在节能模式时开启合成器节能
-	CompositorPowerSaveEnable bool `prop:"access:rw"`
 
 	// 是否支持切换性能模式
 	SupportSwitchPowerMode bool `prop:"access:rw"`
@@ -297,17 +286,6 @@ func (m *Manager) initDsgConfig() error {
 	}
 	m.dsgPower = dsPower
 
-	dsKwinPath, err := ds.AcquireManager(0, kwinDsettingsAppID, kwinDsettingsCompositingName, "")
-	if err != nil {
-		logger.Warning(err)
-	} else {
-		dsKwin, err := ConfigManager.NewManager(m.service.Conn(), dsKwinPath)
-		if err != nil {
-			logger.Warning(err)
-		} else {
-			m.dsgKwin = dsKwin
-		}
-	}
 	cfg := loadConfigSafe()
 	if cfg != nil {
 		// 将config.json中的配置完成初始化
@@ -442,24 +420,8 @@ func (m *Manager) initDsgConfig() error {
 			c, ok := config[mode]
 			if ok {
 				_powerConfigMap[mode].DSPCConfig = c.DSPCConfig
-				_powerConfigMap[mode].CompositorConfig = c.CompositorConfig
 			}
 		}
-	}
-
-	getCompositorPowerSaveEnable := func(init bool) {
-		data, err := dsPower.Value(0, dsettingsPowerCompositorPowerSaveEnable)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-
-		if init {
-			m.CompositorPowerSaveEnable = data.Value().(bool)
-			return
-		}
-
-		m.setPropCompositorPowerSaveEnable(data.Value().(bool))
 	}
 
 	getPowerSavingModeAuto(true)
@@ -467,7 +429,6 @@ func (m *Manager) initDsgConfig() error {
 	getPowerSavingModeAutoWhenBatteryLow(true)
 	getPowerSavingModeBrightnessDropPercent(true)
 	getMode(true)
-	getCompositorPowerSaveEnable(true)
 	getPowerMappingConfig()
 
 	dsPower.InitSignalExt(m.systemSigLoop, true)
@@ -496,8 +457,6 @@ func (m *Manager) initDsgConfig() error {
 			}
 			m.doSetMode(newMode)
 			return
-		case dsettingsPowerCompositorPowerSaveEnable:
-			getCompositorPowerSaveEnable(false)
 		case dsettingsPowerMappingConfig:
 			getPowerMappingConfig()
 		default:
@@ -742,11 +701,6 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 		if err != nil {
 			return err
 		}
-	case "CompositorPowerSaveEnable":
-		err = m.setDsgData(dsettingsPowerCompositorPowerSaveEnable, m.CompositorPowerSaveEnable, m.dsgPower)
-		if err != nil {
-			return err
-		}
 	case "":
 		err = m.setDsgData(dsettingsPowerSavingModeBrightnessDropPercent, int64(m.PowerSavingModeBrightnessDropPercent), m.dsgPower)
 		if err != nil {
@@ -761,10 +715,6 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 			return err
 		}
 		err = m.setDsgData(dsettingsPowerSavingModeAuto, m.PowerSavingModeAuto, m.dsgPower)
-		if err != nil {
-			return err
-		}
-		err = m.setDsgData(dsettingsPowerCompositorPowerSaveEnable, m.CompositorPowerSaveEnable, m.dsgPower)
 		if err != nil {
 			return err
 		}
@@ -797,7 +747,6 @@ func (m *Manager) doSetMode(mode string) {
 
 	// 处理ddeLowBattery情况，所以每次都要设置
 	go m.setDSPCState(_powerConfigMap[mode].DSPCConfig) // doSetMode
-	m.setCompositorState(_powerConfigMap[mode].CompositorConfig)
 	m.setPropPowerSavingModeEnabled(_powerConfigMap[mode].PowerSavingModeEnabled)
 
 	if m.lastMode != mode && mode != ddePowerSave && mode != ddeLowBattery {

@@ -19,8 +19,8 @@ const (
 )
 
 type powerConfig struct {
-	DSPCConfig             DSPCMode
-	CompositorConfig       compositorState
+	DSPCConfig DSPCMode
+
 	PowerSavingModeEnabled bool
 }
 
@@ -28,22 +28,18 @@ type powerConfig struct {
 var _powerConfigMap = map[string]*powerConfig{
 	ddePerformance: {
 		DSPCConfig:             DSPCPerformance,
-		CompositorConfig:       compositorAuto,
 		PowerSavingModeEnabled: false,
 	},
 	ddeBalance: {
 		DSPCConfig:             DSPCBalance,
-		CompositorConfig:       compositorAuto,
 		PowerSavingModeEnabled: false,
 	},
 	ddePowerSave: {
 		DSPCConfig:             DSPCSaving,
-		CompositorConfig:       compositorAuto,
 		PowerSavingModeEnabled: true,
 	},
 	ddeLowBattery: {
 		DSPCConfig:             DSPCLowBattery,
-		CompositorConfig:       compositorXRender,
 		PowerSavingModeEnabled: true,
 	},
 }
@@ -55,24 +51,6 @@ func (m *Manager) setDSPCState(state DSPCMode) {
 	if err != nil {
 		logger.Warning("failed to set deepin tlp state ", err)
 	}
-}
-
-type compositorState int
-
-const (
-	compositorAuto    compositorState = 0 // 开启特效，合成器为auto
-	compositorXRender compositorState = 4 // 开启特效，合成器为XRender
-)
-
-func (m *Manager) setCompositorState(state compositorState) {
-	if !m.CompositorPowerSaveEnable {
-		state = compositorAuto
-	}
-	err := m.setDsgData(kwinDsettingsPropCompositor, state, m.dsgKwin)
-	if err != nil {
-		logger.Warning(err)
-	}
-	return
 }
 
 // 关联电量、电源连接状态、低电量节能开关、使用电池节能开关四项状态的变动，修改系统的功耗模式
