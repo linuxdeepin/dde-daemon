@@ -48,7 +48,13 @@ func (m *Manager) initEntries() {
 			}
 		}()
 	}
-	m.initClientList()
+
+	if m.isWaylandSession {
+		m.initWaylandWindows()
+	} else {
+		m.initClientList()
+	}
+
 	m.clientListInitEnd = true
 }
 
