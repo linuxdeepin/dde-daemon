@@ -137,7 +137,7 @@ func (mgr *Manager) init() error {
 	mgr.sigLoop.Start()
 	mgr.nmManager.InitSignalExt(mgr.sigLoop, true)
 	mgr.hasNmWirelessDevices = mgr.hasWirelessDevicesWithRetry()
-
+	mgr.initBTRfkillDevice()
 	// recover
 	mgr.recover()
 
@@ -186,6 +186,10 @@ func (mgr *Manager) recover() {
 	if err != nil {
 		logger.Warningf("recover all failed, state: %v, err: %v", mgr.Enabled, err)
 	}
+
+	mgr.btDevicesMu.RLock()
+	defer mgr.btDevicesMu.RUnlock()
+	mgr.setPropHasAirplaneMode(len(mgr.btRfkillDevices) > 0 || mgr.hasNmWirelessDevices)
 }
 
 // block use rfkill to block wifi

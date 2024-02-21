@@ -8,6 +8,9 @@ import (
 	"bytes"
 	"encoding/binary"
 	"os"
+	"os/exec"
+	"strconv"
+	"strings"
 	"syscall"
 )
 
@@ -74,8 +77,47 @@ func (mgr *Manager) listenRfkill() {
 			logger.Warning("failed to read event info:", err)
 			continue
 		}
-
 		mgr.handleBTRfkillEvent(event)
+	}
+}
+
+// 初始化获取rfkill BT设备
+func (mgr *Manager) initBTRfkillDevice() {
+	bin := "/usr/sbin/rfkill"
+	// -n: don't print headings
+	// --output ID,TYPE,SOFT,HARD: 只输出id、类型、SOFT,HARD信息
+	args := "-n --output ID,TYPE,SOFT,HARD"
+	output, err := exec.Command(bin, args).Output()
+	if err != nil {
+		logger.Warning("run rfkill err:", err)
+		return
+	}
+	mgr.btDevicesMu.RLock()
+	defer mgr.btDevicesMu.RUnlock()
+	lines := strings.Split(string(output), "\n")
+	getState := func(str string) rfkillState {
+		if str == "blocked" {
+			return rfkillStateBlock
+		}
+		return rfkillStateUnblock
+	}
+	for _, line := range lines {
+		logger.Debug("rfkill device info:", line)
+		fields := strings.Fields(line)
+		if len(fields) != 4 {
+			continue
+		}
+		if fields[1] == "bluetooth" {
+			id, err := strconv.Atoi(fields[0])
+			if err != nil {
+				continue
+			}
+			mgr.btRfkillDevices[uint32(id)] = device{
+				typ:  rfkillTypeBT,
+				soft: getState(fields[2]),
+				hard: getState(fields[3]),
+			}
+		}
 	}
 }
 
