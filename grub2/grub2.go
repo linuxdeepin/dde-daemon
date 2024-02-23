@@ -51,6 +51,7 @@ type Grub2 struct {
 	entries            []Entry
 	theme              *Theme
 	editAuth           *EditAuth
+	fstart             *Fstart
 	gfxmodeDetectState gfxmodeDetectState
 	inhibitFd          dbus.UnixFD
 	PropsMu            sync.RWMutex
@@ -342,6 +343,8 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 
 	// init theme
 	g.theme = NewTheme(g)
+
+	g.fstart = NewFstart(g)
 
 	jobLog, err := loadLog()
 	if err != nil {
@@ -646,4 +649,65 @@ func checkInvokePermission(service *dbusutil.Service, sender dbus.Sender) error 
 	} else {
 		return nil
 	}
+}
+
+func getFstartState() (bool, int) {
+	if !dutils.IsFileExist(deepinFstartFile) {
+		return false, -1
+	}
+	content, err := ioutil.ReadFile(deepinFstartFile)
+	if err != nil {
+		return false, -1
+	}
+
+	lines := strings.Split(string(content), "\n")
+	for i, line := range lines {
+		line = strings.TrimPrefix(strings.TrimSpace(string(line)), "export ")
+		if line == "" || line[0] == '#' {
+			continue
+		}
+		equalIndex := strings.Index(line, "=")
+		if equalIndex != -1 {
+			key := line[:equalIndex]
+			if key != deepinFstart {
+				continue
+			}
+			value := strings.Trim(strings.TrimSpace(line[strings.Index(line, "=")+1:]), "\"")
+			logger.Debug("FstartState:", value)
+			return value == "true", i
+		}
+	}
+	return false, -1
+}
+
+func setFstartState(state bool) error {
+	value, lineNum := getFstartState()
+	if lineNum == -1 {
+		return errors.New(deepinFstartFile + "is illegal!")
+	}
+	if value == state {
+		logger.Debug("current state is same : ", state)
+		return nil
+	}
+	content, err := ioutil.ReadFile(deepinFstartFile)
+	if err != nil {
+		return err
+	}
+	lines := strings.Split(string(content), "\n")
+	line := strings.TrimPrefix(strings.TrimSpace(string(lines[lineNum])), "export ")
+	if !strings.Contains(line, deepinFstart) {
+		return errors.New(deepinFstartFile + "is illegal!")
+	}
+	arg := "true"
+	if !state {
+		arg = "false"
+	}
+	if strings.Trim(strings.TrimSpace(line[strings.Index(line, "=")+1:]), "\"") != arg {
+		lines[lineNum] = "export " + deepinFstart + "=\"" + arg + "\""
+		err := ioutil.WriteFile(deepinFstartFile, []byte(strings.Join(lines, "\n")), 0644)
+		if err != nil{
+			return dbusutil.ToError(err)
+		}
+	}
+	return nil
 }

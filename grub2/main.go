@@ -38,6 +38,11 @@ func RunAsDaemon() {
 		logger.Fatal("failed to export grub2 theme:", err)
 	}
 
+	err = service.Export(fstartDBusPath, _g.fstart)
+	if err != nil {
+		logger.Fatal("failed to export grub2 fstart:", err)
+	}
+
 	err = service.Export(editAuthDBusPath, _g.editAuth)
 	if err != nil {
 		logger.Fatal("failed to export grub2 edit auth:", err)
