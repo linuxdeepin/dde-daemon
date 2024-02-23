@@ -140,15 +140,6 @@ func (mgr *Manager) init() error {
 	mgr.initBTRfkillDevice()
 	// recover
 	mgr.recover()
-
-	// init HasAirplaneMode
-	devPaths, err := mgr.nmManager.GetDevices(0)
-	if err != nil {
-		logger.Error(err)
-	} else {
-		mgr.HasAirplaneMode = mgr.hasWirelessDevices(devPaths)
-	}
-
 	// use goroutine to monitor rfkill event
 	go mgr.listenRfkill()
 	mgr.listenWirelessEnabled()
