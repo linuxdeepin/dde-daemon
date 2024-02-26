@@ -44,22 +44,22 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!message" line="0"/>
 			<source>Authentication is required to enable quick login</source>
-			<translation type="unfinished"/>
+			<translation>É necessária autenticação para ativar o início de sessão rápido</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>Ativar o início de sessão rápido</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-quick-login!message" line="0"/>
 			<source>Authentication is required to disable quick login</source>
-			<translation type="unfinished"/>
+			<translation>É necessária autenticação para desativar o início de sessão rápido</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>Desativar o início de sessão rápido</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!message" line="0"/>

@@ -8,7 +8,7 @@
 # deepiner, 2020
 # Nicat Məmmədov <n1c4t97@gmail.com>, 2020
 # Vagif Khansultanov <Khansultanov@gmail.com>, 2020
-# Xəyyam Qocayev <xxmn77@gmail.com>, 2024
+# xxmn77 <xxmn77@gmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 11:02+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Xəyyam Qocayev <xxmn77@gmail.com>, 2024\n"
+"Last-Translator: xxmn77 <xxmn77@gmail.com>, 2024\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/linuxdeepin/teams/3617/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

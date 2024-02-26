@@ -324,7 +324,7 @@ msgstr "停用觸控板"
 
 #: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
-msgstr "視窗特效開關"
+msgstr "切換視窗效果"
 
 #: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Fast Screen Off"
@@ -1040,7 +1040,7 @@ msgstr "系統將在%d後自動關機"
 
 #: ../../session/power/manager.go:914
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "定時關機"
 
 #: ../../session/power/manager.go:915
 msgid "Cancle"

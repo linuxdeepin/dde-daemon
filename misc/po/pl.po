@@ -974,7 +974,7 @@ msgstr "%q rozłączono"
 
 #: ../../network/state_handler.go:347
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "Nie można udostępnić hotspotu, sprawdź ustawienia dnsmasq"
+msgstr "Nie można udostępnić Hotspotu, sprawdź ustawienia dnsmasq"
 
 #: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please keep closer to the wireless router"

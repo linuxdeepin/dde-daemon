@@ -478,15 +478,15 @@ msgstr "Mostrar espacio de trabajo"
 
 #: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Zoom In"
-msgstr ""
+msgstr "Acercar"
 
 #: ../../keybinding/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr ""
+msgstr "Alejar"
 
 #: ../../keybinding/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Zoom al tamaño real"
 
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
@@ -1010,7 +1010,7 @@ msgstr "No puede conectarse %q"
 
 #: ../../network/state_handler.go:369
 msgid "To connect %q, please set up your authentication info"
-msgstr ""
+msgstr "Para conectarse a %q, configure su información de autenticación"
 
 #: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"
@@ -1080,19 +1080,19 @@ msgstr "Proceder"
 #: ../../session/power/manager.go:913
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "El sistema se apagará automáticamente después %d s"
 
 #: ../../session/power/manager.go:914
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "Apagado programado"
 
 #: ../../session/power/manager.go:915
 msgid "Cancle"
-msgstr ""
+msgstr "Cancelar"
 
 #: ../../session/power/manager.go:915
 msgid "Shut down"
-msgstr ""
+msgstr "Apagar"
 
 #: ../../session/power/manager_events.go:257
 msgid "Battery critically low"
