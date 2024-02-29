@@ -1033,7 +1033,7 @@ msgstr "前往"
 #: ../../session/power/manager.go:913
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr "系統將在%d後自動關機"
+msgstr "系統將在%ds後自動關機"
 
 #: ../../session/power/manager.go:914
 msgid "Scheduled Shutdown"
