@@ -142,13 +142,19 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 	allow := allowList[ev.Keycode]
 	if allow {
 		m.emitKeyEvent(ev)
-		if ev.Keycode == KEY_TOUCHPAD_TOGGLE && pressed {
+		if !pressed {
+			return
+		}
+
+		//开关触控板逻辑
+		_, err := os.Stat(touchpadSwitchFile)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		switch ev.Keycode {
+		case KEY_TOUCHPAD_TOGGLE:
 			go func() {
-				_, err := os.Stat(touchpadSwitchFile)
-				if err != nil {
-					logger.Warning(err)
-					return
-				}
 				content, err := ioutil.ReadFile(touchpadSwitchFile)
 				if err != nil {
 					logger.Warning(err)
@@ -173,6 +179,38 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 						arg = "enable"
 					}
 					err = ioutil.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
+					if err != nil{
+						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
+					}
+				}
+			}()
+		case KEY_TOUCHPAD_ON:
+			go func() {
+				if m.touchPad == nil {
+					err = errors.New("m.TouchPad is nil")
+				} else {
+					err = m.touchPad.SetTouchpadEnable(0, true)
+				}
+
+				if err != nil {
+					logger.Warning("Set TouchPad state err : ", err)
+					err = ioutil.WriteFile(touchpadSwitchFile, []byte("enable"), 0644)
+					if err != nil{
+						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
+					}
+				}
+			}()
+		case KEY_TOUCHPAD_OFF:
+			go func() {
+				if m.touchPad == nil {
+					err = errors.New("m.TouchPad is nil")
+				} else {
+					err = m.touchPad.SetTouchpadEnable(0, false)
+				}
+
+				if err != nil {
+					logger.Warning("Set TouchPad state err : ", err)
+					err = ioutil.WriteFile(touchpadSwitchFile, []byte("disable"), 0644)
 					if err != nil{
 						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
 					}
