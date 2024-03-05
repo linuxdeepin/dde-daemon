@@ -165,12 +165,15 @@ func (m *Manager) start() {
 	} else {
 		if server != ntpServer {
 			if server != obsoleteNTPServer && obsoleteNTPServer != "-" {
+				m.setNTPServer(server)
 				// 文件里已经有值，同步到 dconf 中
 				m.setDsgNTPServer(server)
 			} else {
 				// 使用 dconf 配置
 				syncFn()
 			}
+		} else {
+			m.setNTPServer(server)
 		}
 	}
 
