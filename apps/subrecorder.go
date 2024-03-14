@@ -15,6 +15,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
@@ -61,13 +63,15 @@ func (sr *SubRecorder) init() {
 	if sr.initAppLaunchedMap(apps) {
 		var needMkdir = true
 		ret := getPathDirs(sr.statusFile)
+		sr.launchedMapMu.Lock()
 		for _, v := range ret {
-			if isSymlink(v) {
-				logger.Warningf("%q is a symbolic link", v)
+			if !dutils.IsFileExist(v) || isSymlink(v) {
+				logger.Warningf("%q is a symbolic link or file not exist.", v)
 				needMkdir = false
 				break
 			}
 		}
+		sr.launchedMapMu.Unlock()
 		if needMkdir {
 			err := MkdirAll(filepath.Dir(sr.statusFile), sr.statusFileOwner, dirPerm)
 			if err != nil {
