@@ -18,12 +18,9 @@ import (
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	DisplayManager "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.DisplayManager"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
-	"github.com/linuxdeepin/go-lib/arch"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
 )
-
-var noUEvent bool
 
 const (
 	dsettingsAppID                                = "org.deepin.dde.daemon"
@@ -40,12 +37,6 @@ type supportMode struct {
 	Balance    bool `json:"balance"`
 	Performace bool `json:"performace"`
 	PowerSave  bool `json:"powersave"`
-}
-
-func init() {
-	if arch.Get() == arch.Sunway {
-		noUEvent = true
-	}
 }
 
 //go:generate dbusutil-gen -type Manager,Battery -import github.com/linuxdeepin/dde-api/powersupply/battery manager.go battery.go
@@ -223,18 +214,6 @@ func (m *Manager) initAC(devices []*gudev.Device) {
 	if ac != nil {
 		m.refreshAC(ac)
 		m.ac = newAC(m, ac)
-
-		if noUEvent {
-			go func() {
-				c := time.Tick(2 * time.Second)
-				for range c {
-					err := m.RefreshMains()
-					if err != nil {
-						logger.Warning(err)
-					}
-				}
-			}()
-		}
 	}
 }
 
