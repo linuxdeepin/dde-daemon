@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/dde-daemon/network/nm"
 	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/dde-daemon/network/nm"
 )
 
 const (
@@ -135,7 +135,7 @@ func (nm *NotifyManager) loop() {
 }
 
 func notify(icon, summary, body string) {
-	if globalSessionActive {
+	if manager != nil && manager.isSessionActive() {
 		globalNotifyManager.addMsg(&notifyMsg{
 			icon:    icon,
 			summary: summary,
