@@ -87,7 +87,16 @@ func (d *displayHandle) getEdidBase64() string {
 }
 
 func (d *displayHandle) setBrightness(percent int) error {
-	status := C.ddca_set_non_table_vcp_value(d.handle, brightnessVCP, 0, C.uchar(percent))
+	var val C.DDCA_Non_Table_Vcp_Value
+	status := C.ddca_get_non_table_vcp_value(d.handle, brightnessVCP, &val)
+	if status != C.int(0) {
+		return fmt.Errorf("brightness: failed to get brightness: %d", status)
+	}
+
+	if int(val.sl) == percent {
+		return nil
+	}
+	status = C.ddca_set_non_table_vcp_value(d.handle, brightnessVCP, 0, C.uchar(percent))
 	if status != C.int(0) {
 		return fmt.Errorf("brightness: failed to set brightness via DDC/CI: %d", status)
 	}
@@ -189,8 +198,15 @@ func (d *ddcci) GetBrightness(edidBase64 string) (brightness int, err error) {
 
 	handle, ok := d.displayHandleMap[edidBase64]
 	if !ok || handle == nil {
-		err = fmt.Errorf("brightness: failed to find monitor handle")
-		return
+		//ignore any bytes
+		idx, find := d.findMonitorIndex(edidBase64)
+		if find {
+			handle = d.getDisplayHandleByIdx(idx)
+			logger.Info("get display handle by index:", idx)
+		} else {
+			err = fmt.Errorf("brightness: failed to find monitor")
+			return
+		}
 	}
 
 	var val C.DDCA_Non_Table_Vcp_Value

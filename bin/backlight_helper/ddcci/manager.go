@@ -77,9 +77,6 @@ func (m *Manager) SetBrightness(edidBase64 string, value int32) *dbus.Error {
 		err := fmt.Errorf("brightness: not support ddc/ci: %s", edidBase64)
 		return dbusutil.ToError(err)
 	}
-	if v, err := m.ddcci.GetBrightness(edidBase64); err != nil || int32(v) == value {
-		return dbusutil.ToError(err)
-	}
 	err := m.ddcci.SetBrightness(edidBase64, int(value))
 	return dbusutil.ToError(err)
 }
