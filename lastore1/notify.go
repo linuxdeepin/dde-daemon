@@ -101,14 +101,14 @@ func (l *Lastore) notifyInstall(pkgId string, succeed bool, ac []NotifyAction) {
 func (l *Lastore) notifyRemove(pkgId string, succeed bool, ac []NotifyAction) {
 	var msg string
 	if succeed {
-		msg = gettext.Tr("Removed successfully")
+		msg = fmt.Sprintf(gettext.Tr("%q removed successfully"), pkgId)
 	} else {
-		msg = gettext.Tr("Failed to remove the app")
+		msg = fmt.Sprintf(gettext.Tr("%q failed to remove"), pkgId)
 	}
 	l.sendNotify("deepin-appstore", "", msg, ac, nil, notifyExpireTimeoutDefault, getAppStoreAppName())
 }
 
-//NotifyLowPower send notify for low power
+// NotifyLowPower send notify for low power
 func (l *Lastore) notifyLowPower() {
 	msg := gettext.Tr("In order to prevent automatic shutdown, please plug in for normal update.")
 	l.sendNotify("notification-battery_low", "", msg, nil, nil, notifyExpireTimeoutDefault, getAppStoreAppName())
