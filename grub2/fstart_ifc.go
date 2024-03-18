@@ -46,6 +46,9 @@ func (f *Fstart) SkipGrub(sender dbus.Sender, enabled bool) *dbus.Error {
 	if err != nil{
 		return dbusutil.ToError(err)
 	}
-	f.setPropIsSkipGrub(enabled)
+
+	if f.setPropIsSkipGrub(enabled) {
+		f.g.addModifyTask(modifyTask{})
+	}
 	return nil
 }
