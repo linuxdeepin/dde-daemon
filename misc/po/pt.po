@@ -4,23 +4,23 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Francisco Jesus <franciscocjesus@outlook.com>, 2023
 # Maggie Liu <maggie.liufei@gmail.com>, 2023
 # 00101f7862160fbf8a065655a48ad879_875972c <c486e5cdf80c8fbbc1127ec062b107b4_205162>, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
 # deepiner, 2023
 # Ricardo Simões <xmcorporation@gmail.com>, 2023
-# Luís Lima <geral@liqensoft.com>, 2023
 # Hugo Carvalho <hugokarvalho@hotmail.com>, 2023
+# Francisco Jesus <franciscocjesus@outlook.com>, 2024
+# Luís Lima <geral@liqensoft.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>, 2023\n"
+"Last-Translator: Luís Lima <geral@liqensoft.com>, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/linuxdeepin/teams/3617/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Introduza uma palavra-passe não inferior a 8 caracteres"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -66,6 +65,20 @@ msgstr "O nome de utilizador deve ter entre 3 e 32 caracteres"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "O utilizador \"%s\" já existe e os seus dados estão sincronizados"
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr "Falha ao alterar o Servidor Áudio, tente novamente mais tarde "
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr "A alterar o Servidor Áudio, por favor aguarde..."
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+"Servidor Áudio alterado, por favor termine e efetue início de sessão "
+"novamente"
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -83,7 +96,7 @@ msgstr "Falha na verificação de impressão digital"
 msgid "Fingerprint verification timed out"
 msgstr "A verificação de impressão digital expirou"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "A palavra-passe expirará dentro de %d dias. Altere-a atempadamente"
@@ -388,35 +401,43 @@ msgstr "Mover janela"
 msgid "Resize window"
 msgstr "Redimensionar janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Mover para área de trabalho à esquerda"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Mover para área de trabalho à direita"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Mover para área de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Mover para área de trabalho abaixo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Mostrar janelas de todas as áreas de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Mostrar janelas da atual área de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Mostrar área de trabalho virtual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Alternar monitores"
 
@@ -424,7 +445,7 @@ msgstr "Alternar monitores"
 msgid "Authentication is required to switch language"
 msgstr "É necessária a autenticação para alterar o idioma"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -432,25 +453,17 @@ msgstr ""
 "A alterar o idioma do sistema e a instalar os pacotes de idioma necessários,"
 " aguarde..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "A alterar o idioma do sistema, aguarde..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "Idioma do sistema alterado, termine sessão e depois inicie novamente"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Falha ao alterar o idioma do sistema, tente novamente mais tarde"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -493,12 +506,12 @@ msgid "%q failed to install."
 msgstr "%q falhou ao instalar."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Removida com sucesso"
+msgid "%q removed successfully"
+msgstr "%q removido com sucesso"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Falha ao remover a aplicação"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -972,7 +985,7 @@ msgstr "A ligação falhou, incapaz de ligar %q, palavra-passe incorreta"
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "Falha ao conectar a %q"
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
@@ -1069,7 +1082,7 @@ msgstr "o monitor será desligado"
 
 #: ../../session/power1/utils.go:506
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "o seu ecrã irá mostrar a interface de desligamento "
 
 #: ../../session/power1/utils.go:508
 msgid "it will do nothing to your computer"
@@ -1094,11 +1107,11 @@ msgstr ""
 msgid "Space"
 msgstr "Espaço"
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "É necessária a autenticação para definir a hora do sistema"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1106,11 +1119,11 @@ msgstr ""
 "É necessária a autenticação para controlar se a sincronização da hora "
 "através da rede deverá estar ativada"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "É necessária autenticação para alterar o servidor NTP"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1118,6 +1131,6 @@ msgstr ""
 "É necessária a autenticação para controlar se o RTC guarda UTC ou a hora "
 "local"
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "É necessária a autenticação para definir o fuso horário do sistema"

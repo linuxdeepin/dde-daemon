@@ -15,18 +15,18 @@
 # Snow fire R <iceler75@gmail.com>, 2023
 # Анатолий Валерианович <ffox909@mail.ru>, 2023
 # deepiner, 2023
-# Валерий Владимирович, 2023
 # Владимир Киреев <vovan_kireev@mail.ru>, 2023
 # Basil Russu <basil_russu@hotmail.com>, 2023
+# Валерий Владимирович, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Basil Russu <basil_russu@hotmail.com>, 2023\n"
+"Last-Translator: Валерий Владимирович, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Введите пароль не менее 8 символов"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -72,6 +71,18 @@ msgstr "Имя пользователя должно быть длинной 3-3
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -89,7 +100,7 @@ msgstr "Ошибка проверки отпечатка пальца"
 msgid "Fingerprint verification timed out"
 msgstr "Время проверки отпечатка пальца вышло"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -396,35 +407,43 @@ msgstr "Переместить окно"
 msgid "Resize window"
 msgstr "Изменить размер окна"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Переместить на левый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Переместить на правый рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Переместить на верхний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Переместить на нижний рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Показать окна всех рабочих столов"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Показать окна текущего рабочего стола"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Отобразить рабочий стол"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Переключить мониторы"
 
@@ -432,7 +451,7 @@ msgstr "Переключить мониторы"
 msgid "Authentication is required to switch language"
 msgstr "Для изменения языка системы требуется аутентификация"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -440,26 +459,18 @@ msgstr ""
 "Изменяется язык системы и устанавливаются недостающие языковые пакеты, "
 "пожалуйста подождите…"
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Изменяется язык системы, пожалуйста подождите..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr ""
 " Язык системы был изменен, пожалуйста выйдите из системы и войдите вновь…"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Не удалось изменить язык системы, попробуйте позже."
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -502,12 +513,12 @@ msgid "%q failed to install."
 msgstr "%q установить не удалось."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Успешно удалено"
+msgid "%q removed successfully"
+msgstr "%q успешно удалён"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Не удалось удалить приложение"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -1093,11 +1104,11 @@ msgstr ""
 msgid "Space"
 msgstr ""
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Для установки системного времени требуется аутентификация."
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1105,11 +1116,11 @@ msgstr ""
 "Для управления включением синхронизации времени по сети требуется "
 "аутентификация."
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Для смены NTP-сервера требуется аутентификация"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1117,6 +1128,6 @@ msgstr ""
 "Аутентификация требуется для контроля того, сохраняет ли RTC местное время "
 "или время UTC."
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Для установки часового пояса системы требуется аутентификация"

@@ -7,16 +7,16 @@
 # Thupten 123 <2389588952@qq.com>, 2023
 # deepiner, 2023
 # tsewang baljor <bdcwbj@163.com>, 2023
-# yeshe lhamo <981611630@qq.com>, 2023
+# yeshe lhamo <981611630@qq.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: yeshe lhamo <981611630@qq.com>, 2023\n"
+"Last-Translator: yeshe lhamo <981611630@qq.com>, 2024\n"
 "Language-Team: Tibetan (https://app.transifex.com/linuxdeepin/teams/3617/bo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "གྲངས་གནས་8ལས་མི་ཉུང་བའི་གསང་ཨང་ནང་འཇུག་བྱེད་རོགས།"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -64,6 +63,18 @@ msgstr ""
 "སྤྱོད་མཁན་“%s”ནི་དེ་སྔའི་སྤྱོད་མཁན་ཞིག་ཡིན་པས། "
 "ཐོག་མའི་གཞི་གྲངས་མཉམ་བགྲོད་བྱས་ཟིན།"
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -81,7 +92,7 @@ msgstr "མཛུབ་རིས་ར་སྤྲོད་ཐུབ་མ་ས
 msgid "Fingerprint verification timed out"
 msgstr "མཛུབ་རིས་ར་སྤྲོད་ཀྱི་དུས་ཡུན་བརྒལ་སོང་།"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "གསང་ཨང་ཉིན་%dརྗེས་དུས་ཚད་འཐིམ་པས་དུས་ཐོག་ཏུ་བཟོ་བཅོས་བྱོས།"
@@ -386,35 +397,43 @@ msgstr "སྒེའུ་ཁུང་སྤོ་བ།"
 msgid "Resize window"
 msgstr "སྒེའུ་ཁུང་གི་ཆེ་ཆུང་སྒྱུར་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "གཡོན་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "གཡས་ཕྱོགས་ཀྱི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "གོང་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "འོག་གི་ལས་ཀ་བྱེད་ཁུལ་དུ་སྤོ་བ།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་ཆ་ཚང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "མིག་སྔའི་ལས་ཀ་བྱེད་ཁུལ་གྱི་སྒེའུ་ཁུང་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "ལས་ཀ་བྱེད་ཁུལ་མངོན་སྟོན།"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 
@@ -422,33 +441,25 @@ msgstr "བརྙན་ཡོལ་མང་པོ་བརྗེ་བ།"
 msgid "Authentication is required to switch language"
 msgstr "སྐད་ཡིག་བརྗེ་སྐབས་བདེན་དཔང་བྱ་དགོས།"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་པ་མ་ཟད་སྐད་ཡིག་མེད་པ་དག་ཀྱང་སྒྲིག་སྦྱོར་བྱེད་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "རྒྱུད་ཁོངས་ཀྱི་སྐད་ཡིག་ལ་བརྗེ་བཞིན་ཡོད་པས་ཏོག་ཙམ་སྒུག་རོགས།"
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "སྐད་ཡིག་བརྗེས་ཟིན་པས་ཐོ་བསུབས་རྗེས་ཡང་བསྐྱར་ནང་འཇུག་བྱེད་རོགས།"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr ""
 "རྒྱུད་ཁོངས་སྐད་ཡིག་བརྗེ་མི་ཐུབ་པས་ཏོག་ཙམ་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་བྱེད་རོགས།"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -491,12 +502,12 @@ msgid "%q failed to install."
 msgstr "%q སྒྲིག་འཇུག་བྱེད་མ་ཐུབ།"
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "བཤིག་འདོན་ལེགས་གྲུབ་བྱུང་།"
+msgid "%q removed successfully"
+msgstr "%qབཤིག་འདོན་བྱེད་ཐུབ་པ།"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "བཤིག་འདོན་བྱེད་མ་ཐུབ།"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -1084,27 +1095,27 @@ msgstr ""
 msgid "Space"
 msgstr "སྟོང་པ།"
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "རྒྱུད་ཁོངས་ཀྱི་དུས་ཚོད་སྒྲིག་འགོད་བྱེད་པར་ར་སྤྲོད་བྱེད་དགོས།"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "དྲ་རྒྱའི་དུས་ཚོད་མཉམ་བགྲོད་ཁ་ཕྱེ་བའམ་བརྒྱབ་པར་ར་སྤྲོད་བྱེད་དགོས།"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "དུས་ཚོད་ཀྱི་ཞབས་ཞུ་འཕྲུལ་ཆས་བཟོ་བཅོས་བྱེད་པར་ར་སྤྲོད་བྱེད་དགོས།"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
 "སྲ་ཆས་སྒྲིག་འགོད་བྱས་ཏེ་རང་སའི་དུས་ཚོད་དམ་UTC སྤྱོད་པར་ར་སྤྲོད་བྱེད་དགོས།"
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "རྒྱུད་ཁོངས་ཀྱི་དུས་ཁུལ་སྒྲིག་འགོད་བྱེད་པར་ར་སྤྲོད་བྱེད་དགོས།"

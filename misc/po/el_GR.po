@@ -1,971 +1,1093 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
-# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Deepin Desktop Environment\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 10:32+0800\n"
-"PO-Revision-Date: 2019-11-13 03:52+0000\n"
-"Last-Translator: transifex deepin <transifex@deepin.com>\n"
-"Language-Team: Greek (Greece) (http://www.transifex.com/linuxdeepin/deepin-desktop-environment/language/el_GR/)\n"
+"POT-Creation-Date: 2024-03-15 17:20+0800\n"
+"PO-Revision-Date: 2023-05-23 09:02+0000\n"
+"Language-Team: Greek (Greece) (https://app.transifex.com/linuxdeepin/teams/3617/el_GR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: el_GR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../../accounts/checkers/password.go:53
+#: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
 msgstr ""
 
-#: ../../accounts/checkers/password.go:55
+#: ../../accounts1/checkers/password.go:40
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:63
+#: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:65
-msgid "Username must only contain a~z, 0~9, - or _"
+#: ../../accounts1/checkers/username.go:54
+msgid "The first character must be a letter or number"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:67
-msgid "The first character must be in lower case"
-msgstr ""
-
-#: ../../accounts/checkers/username.go:69
+#: ../../accounts1/checkers/username.go:56
 msgid "The username already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:71
-msgid "The username has been used by system"
+#: ../../accounts1/checkers/username.go:59
+msgid "The name already exists"
 msgstr ""
 
-#: ../../accounts/checkers/username.go:73
+#: ../../accounts1/checkers/username.go:61
 msgid "Username must be between 3 and 32 characters"
 msgstr ""
 
-#: ../../bin/dde-authority/fprint_transaction.go:20
+#: ../../accounts1/manager.go:448
+#, c-format
+msgid "User \"%s\" existed before and its data is synced"
+msgstr ""
+
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
+#: ../../audio1/audio_events.go:471
+#, c-format
+msgid "%s had been disabled"
+msgstr ""
+
+#: ../../audio1/audio_events.go:472
+msgid "Open"
+msgstr ""
+
+#: ../../bin/dde-authority/fprint_transaction.go:25
 msgid "Fingerprint verification failed"
 msgstr ""
 
-#: ../../bin/dde-authority/fprint_transaction.go:21
+#: ../../bin/dde-authority/fprint_transaction.go:26
 msgid "Fingerprint verification timed out"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:29
+#: ../../bin/dde-session-daemon/main.go:474
+#, c-format
+msgid "Your password will expire in %d days, please change it timely"
+msgstr ""
+
+#: ../../bluetooth1/bluez_profile.go:15
+#: ../../system/bluetooth1/bluez_profile.go:15
 msgid "Serial port"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:30
+#: ../../bluetooth1/bluez_profile.go:16
+#: ../../system/bluetooth1/bluez_profile.go:16
 msgid "Dial-Up networking"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:31
+#: ../../bluetooth1/bluez_profile.go:17
+#: ../../system/bluetooth1/bluez_profile.go:17
 msgid "Hands-Free device"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:32
+#: ../../bluetooth1/bluez_profile.go:18
+#: ../../system/bluetooth1/bluez_profile.go:18
 msgid "Hands-Free voice gateway"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:33
+#: ../../bluetooth1/bluez_profile.go:19
+#: ../../system/bluetooth1/bluez_profile.go:19
 msgid "Headset voice gateway"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:34
+#: ../../bluetooth1/bluez_profile.go:20
+#: ../../system/bluetooth1/bluez_profile.go:20
 msgid "Object push"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:35
+#: ../../bluetooth1/bluez_profile.go:21
+#: ../../system/bluetooth1/bluez_profile.go:21
 msgid "File transfer"
-msgstr "Μεταφορά αρχείων"
+msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:36
+#: ../../bluetooth1/bluez_profile.go:22
+#: ../../system/bluetooth1/bluez_profile.go:22
 msgid "Synchronization"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:37
+#: ../../bluetooth1/bluez_profile.go:23
+#: ../../system/bluetooth1/bluez_profile.go:23
 msgid "Phone book access"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:38
+#: ../../bluetooth1/bluez_profile.go:24
+#: ../../system/bluetooth1/bluez_profile.go:24
 msgid "Phone book access client"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:39
+#: ../../bluetooth1/bluez_profile.go:25
+#: ../../system/bluetooth1/bluez_profile.go:25
 msgid "Message access"
 msgstr ""
 
-#: ../../bluetooth/bluez_profile.go:40
+#: ../../bluetooth1/bluez_profile.go:26
+#: ../../system/bluetooth1/bluez_profile.go:26
 msgid "Message notification"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:52 ../../network/utils_notify.go:107
-msgid "Connected"
+#: ../../bluetooth1/obex_agent.go:376 ../../bluetooth1/utils_notify.go:130
+#: ../../lastore1/lastore.go:435
+msgid "Cancel"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:55 ../../network/utils_notify.go:80
-#: ../../network/utils_notify.go:84 ../../network/utils_notify.go:88
-#: ../../network/utils_notify.go:92 ../../network/utils_notify.go:110
-#: ../../network/utils_notify.go:113 ../../network/utils_notify.go:202
-msgid "Disconnected"
+#: ../../bluetooth1/obex_agent.go:383
+msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:59
-msgid "Make sure %q is turned on and in range"
+#: ../../bluetooth1/obex_agent.go:392
+msgid "View"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:64
-msgid "Failed to connect %q, pairing failed"
+#: ../../bluetooth1/obex_agent.go:398
+msgid "You have received files from %q successfully"
 msgstr ""
 
-#: ../../bluetooth/utils_notify.go:69
+#: ../../bluetooth1/obex_agent.go:399
+msgid "Done"
+msgstr ""
+
+#: ../../bluetooth1/obex_agent.go:414 ../../bluetooth1/obex_agent.go:513
+msgid "Stop Receiving Files"
+msgstr ""
+
+#: ../../bluetooth1/obex_agent.go:416
+msgid "You have cancelled the file transfer"
+msgstr ""
+
+#: ../../bluetooth1/obex_agent.go:418
+#: ../../system/bluetooth1/utils_notify.go:63
+#: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr ""
 
-#: ../../calendar/job.go:413 ../../calendar/job.go:420
-msgid "today"
+#: ../../bluetooth1/obex_agent.go:453
+msgid "Decline"
 msgstr ""
 
-#: ../../calendar/job.go:415 ../../calendar/job.go:422
-msgid "tomorrow"
+#: ../../bluetooth1/obex_agent.go:453
+msgid "Receive"
 msgstr ""
 
-#: ../../calendar/job.go:435
-#, c-format
-msgid "%s to %s"
+#: ../../bluetooth1/obex_agent.go:458
+msgid "Bluetooth File Transfer"
 msgstr ""
 
-#: ../../calendar/module.go:126
-msgid "Work"
+#: ../../bluetooth1/obex_agent.go:459
+msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../calendar/module.go:127
-msgid "Life"
+#: ../../bluetooth1/obex_agent.go:514
+msgid "Receiving %q timed out"
 msgstr ""
 
-#: ../../calendar/module.go:128
-msgid "Other"
-msgstr "Άλλο"
-
-#: ../../calendar/scheduler.go:477
-msgid "One day before start"
+#: ../../bluetooth1/utils_notify.go:119
+msgid "Click here to connect to %q"
 msgstr ""
 
-#: ../../calendar/scheduler.go:478 ../../calendar/scheduler.go:483
-#: ../../calendar/scheduler.go:491 ../../calendar/scheduler.go:495
-msgid "Close"
-msgstr "Κλείσιμο"
-
-#: ../../calendar/scheduler.go:482
-msgid "Remind me tomorrow"
+#: ../../bluetooth1/utils_notify.go:120
+msgid "Add Bluetooth devices"
 msgstr ""
 
-#: ../../calendar/scheduler.go:490
-msgid "Remind me later"
+#: ../../bluetooth1/utils_notify.go:130
+msgid "Pair"
 msgstr ""
 
-#: ../../calendar/scheduler.go:500
-msgid "Schedule Reminder"
-msgstr ""
-
-#: ../../housekeeping/init.go:90
+#: ../../housekeeping/init.go:75
 msgid "Insufficient disk space, please clean up in time!"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:28
+#: ../../keybinding/shortcuts/id_name_map.go:13
 msgid "Launcher"
-msgstr "Πρόγραμμα εκκίνησης"
+msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:29
+#: ../../keybinding/shortcuts/id_name_map.go:14
 msgid "Terminal"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:30
+#: ../../keybinding/shortcuts/id_name_map.go:15
 msgid "Screen Recorder"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:31
+#: ../../keybinding/shortcuts/id_name_map.go:16
 msgid "Lock screen"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:32
+#: ../../keybinding/shortcuts/id_name_map.go:17
 msgid "Show/Hide the dock"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:33
+#: ../../keybinding/shortcuts/id_name_map.go:18
 msgid "Shutdown interface"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:34
+#: ../../keybinding/shortcuts/id_name_map.go:19
 msgid "Terminal Quake Window"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:35
+#: ../../keybinding/shortcuts/id_name_map.go:20
 msgid "Screenshot"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:36
+#: ../../keybinding/shortcuts/id_name_map.go:21
 msgid "Full screenshot"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:37
+#: ../../keybinding/shortcuts/id_name_map.go:22
 msgid "Window screenshot"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:38
+#: ../../keybinding/shortcuts/id_name_map.go:23
 msgid "Delay screenshot"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:39
-msgid "File manager"
-msgstr "Διαχειριστής αρχείων"
+#: ../../keybinding/shortcuts/id_name_map.go:24
+msgid "OCR (Image to Text)"
+msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:40
+#: ../../keybinding/shortcuts/id_name_map.go:25
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:26
+msgid "File manager"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:27
 msgid "Disable Touchpad"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:41
+#: ../../keybinding/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:42
+#: ../../keybinding/shortcuts/id_name_map.go:29
 msgid "Fast Screen Off"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:43
+#: ../../keybinding/shortcuts/id_name_map.go:30
 msgid "System Monitor"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:44
+#: ../../keybinding/shortcuts/id_name_map.go:31
 msgid "Deepin Picker"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:45
+#: ../../keybinding/shortcuts/id_name_map.go:32
 msgid "Desktop AI Assistant"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:46
+#: ../../keybinding/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:47
+#: ../../keybinding/shortcuts/id_name_map.go:34
 msgid "Speech to Text"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:54
+#: ../../keybinding/shortcuts/id_name_map.go:35
+msgid "Clipboard"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:36
+msgid "Translation"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:37
+msgid "Grand Search"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:38
+msgid "Notification Center"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:39
+#: ../../keybinding/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:73
+#: ../../keybinding/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:74
+#: ../../keybinding/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:75
+#: ../../keybinding/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:76
+#: ../../keybinding/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:78
+#: ../../keybinding/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:79
+#: ../../keybinding/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:80
+#: ../../keybinding/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:81
+#: ../../keybinding/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:92
+#: ../../keybinding/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:101
+#: ../../keybinding/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:102
+#: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:104
+#: ../../keybinding/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:105
+#: ../../keybinding/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:106
+#: ../../keybinding/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:107
+#: ../../keybinding/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:122
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:123
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:124
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:125
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:147
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:148
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:149
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr ""
 
-#: ../../langselector/locale.go:63
+#: ../../keybinding/shortcuts/id_name_map.go:204
+msgid "Switch monitors"
+msgstr ""
+
+#: ../../langselector1/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr ""
 
-#: ../../langselector/locale.go:390
-msgid "Failed to change system language, please try later"
-msgstr ""
-
-#: ../../langselector/locale.go:414
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 
-#: ../../langselector/locale.go:417
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr ""
 
-#: ../../langselector/locale.go:465
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr ""
 
-#: ../../lastore/check_source.go:51
-msgid "Restore"
+#: ../../langselector1/locale.go:384
+msgid "Failed to change system language, please try later"
 msgstr ""
 
-#: ../../lastore/check_source.go:70 ../../lastore/lastore.go:248
-msgid "Cancel"
-msgstr "Ακύρωση"
-
-#: ../../lastore/lastore.go:240
+#: ../../lastore1/lastore.go:427
 msgid "Retry"
 msgstr ""
 
-#: ../../lastore/notify.go:82
+#: ../../lastore1/lastore.go:449
+msgid "Update Now"
+msgstr ""
+
+#: ../../lastore1/lastore.go:479
+msgid "Reboot Now"
+msgstr ""
+
+#: ../../lastore1/lastore.go:483
+msgid "Remind Me Later"
+msgstr ""
+
+#: ../../lastore1/lastore.go:490
+msgid "10 mins later"
+msgstr ""
+
+#: ../../lastore1/lastore.go:497
+msgid "30 mins later"
+msgstr ""
+
+#: ../../lastore1/lastore.go:504
+msgid "2h later"
+msgstr ""
+
+#: ../../lastore1/lastore.go:511
+msgid "6h later"
+msgstr ""
+
+#: ../../lastore1/notify.go:93
 msgid "%q installed successfully."
 msgstr ""
 
-#: ../../lastore/notify.go:85
+#: ../../lastore1/notify.go:96
 msgid "%q failed to install."
 msgstr ""
 
-#: ../../lastore/notify.go:93
+#: ../../lastore1/notify.go:104
 msgid "%q removed successfully."
 msgstr ""
 
-#: ../../lastore/notify.go:95
+#: ../../lastore1/notify.go:106
 msgid "%q failed to remove."
 msgstr ""
 
-#: ../../lastore/notify.go:102
+#: ../../lastore1/notify.go:113
 msgid ""
 "In order to prevent automatic shutdown, please plug in for normal update."
 msgstr ""
 
-#: ../../lastore/notify.go:107
+#: ../../lastore1/notify.go:118
 msgid "Package cache wiped"
 msgstr ""
 
-#: ../../lastore/notify.go:112
+#: ../../lastore1/notify.go:123
+msgid "Updates Available"
+msgstr ""
+
+#: ../../lastore1/notify.go:128
+msgid "Reboot after Updates"
+msgstr ""
+
+#: ../../lastore1/notify.go:129
+msgid "Restart the computer to use the system and applications properly"
+msgstr ""
+
+#: ../../lastore1/notify.go:139
 msgid ""
-"Your system source has been modified, please restore to official source for "
-"your normal use"
+"Your system is being updated, but the capacity is lower than 50%, please "
+"plug in to avoid power outage"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:318
-msgid "A (5 GHz)"
+#: ../../lastore1/notify.go:140
+msgid "OK"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:320
-msgid "BG (2.4 GHz)"
-msgstr ""
-
-#: ../../network/manager_active_conn.go:322
-msgid "Automatic"
-msgstr ""
-
-#: ../../network/manager_active_conn.go:333
-#: ../../network/manager_active_conn.go:338
+#: ../../network/manager_active_conn.go:484
+#: ../../network/manager_active_conn.go:489
 msgid "None"
-msgstr "Κανένα"
+msgstr ""
 
-#: ../../network/manager_active_conn.go:340
+#: ../../network/manager_active_conn.go:491
 msgid "WEP 40/128-bit Key"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:342
+#: ../../network/manager_active_conn.go:493
 msgid "WPA/WPA2 Personal"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:350
+#: ../../network/manager_active_conn.go:495
+msgid "WPA3 Personal"
+msgstr ""
+
+#: ../../network/manager_active_conn.go:503
 msgid "TLS"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:352
+#: ../../network/manager_active_conn.go:505
 msgid "MD5"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:354
+#: ../../network/manager_active_conn.go:507
 msgid "LEAP"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:356
+#: ../../network/manager_active_conn.go:509
 msgid "FAST"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:358
+#: ../../network/manager_active_conn.go:511
 msgid "Tunneled TLS"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:360
+#: ../../network/manager_active_conn.go:513
 msgid "Protected EAP"
 msgstr ""
 
-#: ../../network/manager_connection.go:278 ../../network/nm_custom_type.go:225
+#: ../../network/manager_connection.go:346
+#: ../../network/manager_connection.go:350
 msgid "Wired Connection"
 msgstr ""
 
-#: ../../network/nm_custom_type.go:223
-msgid "Connection"
-msgstr "Σύνδεση"
-
-#: ../../network/nm_custom_type.go:227
-msgid "Wireless Connection"
+#: ../../network/manager_connection.go:389
+msgid "Wired Connection %v"
 msgstr ""
 
-#: ../../network/nm_custom_type.go:229
-msgid "Wireless Ad-Hoc"
+#: ../../network/proxychains/utils_notify.go:49
+msgid "Application proxy is set successfully"
 msgstr ""
 
-#: ../../network/nm_custom_type.go:231
-msgid "Wireless Ap-Hotspot"
+#: ../../network/proxychains/utils_notify.go:49
+#: ../../network/proxychains/utils_notify.go:52
+#: ../../network/utils_notify.go:182 ../../network/utils_notify.go:186
+#: ../../network/utils_notify.go:189
+msgid "Network"
 msgstr ""
 
-#: ../../network/nm_custom_type.go:233
-msgid "PPPoE Connection"
+#: ../../network/proxychains/utils_notify.go:52
+msgid "Failed to set the application proxy"
 msgstr ""
 
-#: ../../network/nm_custom_type.go:235
-msgid "Mobile Connection"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:237
-msgid "Mobile GSM Connection"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:239
-msgid "Mobile CDMA Connection"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:241
-msgid "VPN Connection"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:243
-msgid "VPN L2TP"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:245
-msgid "VPN OpenConnect"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:247
-msgid "VPN OpenVPN"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:249
-msgid "VPN PPTP"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:251
-msgid "VPN StrongSwan"
-msgstr ""
-
-#: ../../network/nm_custom_type.go:253
-msgid "VPN VPNC"
-msgstr ""
-
-#: ../../network/state_handler.go:39
+#: ../../network/state_handler.go:23
 msgid "Device state changed"
 msgstr ""
 
-#: ../../network/state_handler.go:40
+#: ../../network/state_handler.go:24
 msgid "Device state changed, reason unknown"
 msgstr ""
 
-#: ../../network/state_handler.go:41
+#: ../../network/state_handler.go:25
 msgid "The device is now managed"
 msgstr ""
 
-#: ../../network/state_handler.go:42
+#: ../../network/state_handler.go:26
 msgid "The device is no longer managed"
 msgstr ""
 
-#: ../../network/state_handler.go:43
+#: ../../network/state_handler.go:27
 msgid "The device has not been ready for configuration"
 msgstr ""
 
-#: ../../network/state_handler.go:44
+#: ../../network/state_handler.go:28
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
 msgstr ""
 
-#: ../../network/state_handler.go:45
+#: ../../network/state_handler.go:29
 msgid "The IP configuration is no longer valid"
 msgstr ""
 
-#: ../../network/state_handler.go:46
+#: ../../network/state_handler.go:30
 msgid "Passwords were required but not provided"
 msgstr ""
 
-#: ../../network/state_handler.go:47
+#: ../../network/state_handler.go:31
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
 msgstr ""
 
-#: ../../network/state_handler.go:48
+#: ../../network/state_handler.go:32
 msgid "Configuration of the 802.1X supplicant failed"
 msgstr ""
 
-#: ../../network/state_handler.go:49
+#: ../../network/state_handler.go:33
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:50
+#: ../../network/state_handler.go:34
 msgid "The 802.1X supplicant took too long time to authenticate"
 msgstr ""
 
-#: ../../network/state_handler.go:51
+#: ../../network/state_handler.go:35
 msgid "The PPP service failed to start within the allowed time"
 msgstr ""
 
-#: ../../network/state_handler.go:52
+#: ../../network/state_handler.go:36
 msgid "The PPP service disconnected unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:53
+#: ../../network/state_handler.go:37
 msgid "The PPP service quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:54
+#: ../../network/state_handler.go:38
 msgid "The DHCP service failed to start within the allowed time"
 msgstr ""
 
-#: ../../network/state_handler.go:55
+#: ../../network/state_handler.go:39
 msgid "The DHCP service reported an unexpected error"
 msgstr ""
 
-#: ../../network/state_handler.go:56
+#: ../../network/state_handler.go:40
 msgid "The DHCP service quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:57
+#: ../../network/state_handler.go:41
 msgid "The shared connection service failed to start"
 msgstr ""
 
-#: ../../network/state_handler.go:58
+#: ../../network/state_handler.go:42
 msgid "The shared connection service quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:59
+#: ../../network/state_handler.go:43
 msgid "The AutoIP service failed to start"
 msgstr ""
 
-#: ../../network/state_handler.go:60
+#: ../../network/state_handler.go:44
 msgid "The AutoIP service reported an unexpected error"
 msgstr ""
 
-#: ../../network/state_handler.go:61
+#: ../../network/state_handler.go:45
 msgid "The AutoIP service quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:62
+#: ../../network/state_handler.go:46
 msgid "Dialing failed due to busy lines"
 msgstr ""
 
-#: ../../network/state_handler.go:63
+#: ../../network/state_handler.go:47
 msgid "Dialing failed due to no dial tone"
 msgstr ""
 
-#: ../../network/state_handler.go:64
+#: ../../network/state_handler.go:48
 msgid "Dialing failed due to the carrier"
 msgstr ""
 
-#: ../../network/state_handler.go:65
+#: ../../network/state_handler.go:49
 msgid "Dialing timed out"
 msgstr ""
 
-#: ../../network/state_handler.go:66
+#: ../../network/state_handler.go:50
 msgid "Dialing failed"
 msgstr ""
 
-#: ../../network/state_handler.go:67
+#: ../../network/state_handler.go:51
 msgid "Modem initialization failed"
 msgstr ""
 
-#: ../../network/state_handler.go:68
+#: ../../network/state_handler.go:52
 msgid "Failed to select the specified GSM APN"
 msgstr ""
 
-#: ../../network/state_handler.go:69
+#: ../../network/state_handler.go:53
 msgid "No networks searched"
 msgstr ""
 
-#: ../../network/state_handler.go:70
+#: ../../network/state_handler.go:54
 msgid "Network registration was denied"
 msgstr ""
 
-#: ../../network/state_handler.go:71
+#: ../../network/state_handler.go:55
 msgid "Network registration timed out"
 msgstr ""
 
-#: ../../network/state_handler.go:72
+#: ../../network/state_handler.go:56
 msgid "Failed to register to the requested GSM network"
 msgstr ""
 
-#: ../../network/state_handler.go:73
+#: ../../network/state_handler.go:57
 msgid "PIN check failed"
 msgstr ""
 
-#: ../../network/state_handler.go:74
+#: ../../network/state_handler.go:58
 msgid "Necessary firmware for the device may be missed"
 msgstr ""
 
-#: ../../network/state_handler.go:75
+#: ../../network/state_handler.go:59
 msgid "The device was removed"
 msgstr ""
 
-#: ../../network/state_handler.go:76
+#: ../../network/state_handler.go:60
 msgid "NetworkManager went to sleep"
 msgstr ""
 
-#: ../../network/state_handler.go:77
+#: ../../network/state_handler.go:61
 msgid "The device's active connection was removed or disappeared"
 msgstr ""
 
-#: ../../network/state_handler.go:78
+#: ../../network/state_handler.go:62
 msgid "A user or client requested to disconnect"
 msgstr ""
 
-#: ../../network/state_handler.go:79
+#: ../../network/state_handler.go:63
 msgid "The device's carrier/link changed"
 msgstr ""
 
-#: ../../network/state_handler.go:80
+#: ../../network/state_handler.go:64
 msgid "The device's existing connection was assumed"
 msgstr ""
 
-#: ../../network/state_handler.go:81
+#: ../../network/state_handler.go:65
 msgid "The 802.1x supplicant is now available"
 msgstr ""
 
-#: ../../network/state_handler.go:82
+#: ../../network/state_handler.go:66
 msgid "The modem could not be found"
 msgstr ""
 
-#: ../../network/state_handler.go:83
+#: ../../network/state_handler.go:67
 msgid "The Bluetooth connection timed out or failed"
 msgstr ""
 
-#: ../../network/state_handler.go:84
+#: ../../network/state_handler.go:68
 msgid "GSM Modem's SIM Card was not inserted"
 msgstr ""
 
-#: ../../network/state_handler.go:85
+#: ../../network/state_handler.go:69
 msgid "GSM Modem's SIM PIN required"
 msgstr ""
 
-#: ../../network/state_handler.go:86
+#: ../../network/state_handler.go:70
 msgid "GSM Modem's SIM PUK required"
 msgstr ""
 
-#: ../../network/state_handler.go:87
+#: ../../network/state_handler.go:71
 msgid "SIM card error in GSM Modem"
 msgstr ""
 
-#: ../../network/state_handler.go:88
+#: ../../network/state_handler.go:72
 msgid "InfiniBand device does not support connected mode"
 msgstr ""
 
-#: ../../network/state_handler.go:89
+#: ../../network/state_handler.go:73
 msgid "A dependency of the connection failed"
 msgstr ""
 
-#: ../../network/state_handler.go:90
+#: ../../network/state_handler.go:74
 msgid "RFC 2684 Ethernet bridging error to ADSL"
 msgstr ""
 
-#: ../../network/state_handler.go:91
+#: ../../network/state_handler.go:75
 msgid "ModemManager did not run or quitted unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:92
-msgid "The 802.11 Wi-Fi network could not be found"
+#: ../../network/state_handler.go:76
+msgid "The 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/state_handler.go:93
+#: ../../network/state_handler.go:77
 msgid "A secondary connection of the base connection failed"
 msgstr ""
 
-#: ../../network/state_handler.go:96
+#: ../../network/state_handler.go:80
 msgid "DCB or FCoE setup failed"
 msgstr ""
 
-#: ../../network/state_handler.go:97
+#: ../../network/state_handler.go:81
 msgid "Network teaming control failed"
 msgstr ""
 
-#: ../../network/state_handler.go:98
+#: ../../network/state_handler.go:82
 msgid "Modem failed to run or not available"
 msgstr ""
 
-#: ../../network/state_handler.go:99
+#: ../../network/state_handler.go:83
 msgid "Modem now ready and available"
 msgstr ""
 
-#: ../../network/state_handler.go:100
+#: ../../network/state_handler.go:84
 msgid "SIM PIN is incorrect"
 msgstr ""
 
-#: ../../network/state_handler.go:101
+#: ../../network/state_handler.go:85
 msgid "New connection activation is enqueuing"
 msgstr ""
 
-#: ../../network/state_handler.go:102
+#: ../../network/state_handler.go:86
 msgid "Parent device changed"
 msgstr ""
 
-#: ../../network/state_handler.go:103
+#: ../../network/state_handler.go:87
 msgid "Management status of parent device changed"
 msgstr ""
 
-#: ../../network/state_handler.go:106
+#: ../../network/state_handler.go:90
 msgid "Network cable is unplugged"
 msgstr ""
 
-#: ../../network/state_handler.go:107
+#: ../../network/state_handler.go:91
 msgid "Please make sure SIM card has been inserted with mobile network signal"
 msgstr ""
 
-#: ../../network/state_handler.go:108
+#: ../../network/state_handler.go:92
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
 msgstr ""
 
-#: ../../network/state_handler.go:111
+#: ../../network/state_handler.go:95
 msgid "Failed to activate VPN connection, reason unknown"
 msgstr ""
 
-#: ../../network/state_handler.go:112
+#: ../../network/state_handler.go:96
 msgid "Failed to activate VPN connection"
 msgstr ""
 
-#: ../../network/state_handler.go:113
+#: ../../network/state_handler.go:97
 msgid "The VPN connection state changed due to being disconnected by users"
 msgstr ""
 
-#: ../../network/state_handler.go:114
+#: ../../network/state_handler.go:98
 msgid ""
 "The VPN connection state changed due to being disconnected from devices"
 msgstr ""
 
-#: ../../network/state_handler.go:115
+#: ../../network/state_handler.go:99
 msgid "VPN service stopped"
 msgstr ""
 
-#: ../../network/state_handler.go:116
+#: ../../network/state_handler.go:100
 msgid "The IP config of VPN connection was invalid"
 msgstr ""
 
-#: ../../network/state_handler.go:117
+#: ../../network/state_handler.go:101
 msgid "The connection attempt to VPN service timed out"
 msgstr ""
 
-#: ../../network/state_handler.go:118
+#: ../../network/state_handler.go:102
 msgid "The VPN service start timed out"
 msgstr ""
 
-#: ../../network/state_handler.go:119
+#: ../../network/state_handler.go:103
 msgid "The VPN service failed to start"
 msgstr ""
 
-#: ../../network/state_handler.go:120
+#: ../../network/state_handler.go:104
 msgid "The VPN connection password was not provided"
 msgstr ""
 
-#: ../../network/state_handler.go:121
+#: ../../network/state_handler.go:105
 msgid "Authentication to VPN server failed"
 msgstr ""
 
-#: ../../network/state_handler.go:122
+#: ../../network/state_handler.go:106
 msgid "The connection was deleted from settings"
 msgstr ""
 
-#: ../../network/state_handler.go:251
+#: ../../network/state_handler.go:256
 msgid "Enabling hotspot"
 msgstr ""
 
-#: ../../network/state_handler.go:253
+#: ../../network/state_handler.go:260
 msgid "Connecting %q"
 msgstr ""
 
-#: ../../network/state_handler.go:261
+#: ../../network/state_handler.go:269
 msgid "Hotspot enabled"
 msgstr ""
 
-#: ../../network/state_handler.go:263
+#: ../../network/state_handler.go:271
 msgid "%q connected"
 msgstr ""
 
-#: ../../network/state_handler.go:274 ../../network/state_handler.go:325
+#: ../../network/state_handler.go:282 ../../network/state_handler.go:337
 msgid "Hotspot disabled"
 msgstr ""
 
-#: ../../network/state_handler.go:327 ../../network/state_handler.go:347
+#: ../../network/state_handler.go:339 ../../network/state_handler.go:363
+#: ../../system/bluetooth1/utils_notify.go:50
 msgid "%q disconnected"
 msgstr ""
 
-#: ../../network/state_handler.go:333
+#: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
 
-#: ../../network/state_handler.go:335
+#: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr ""
 
-#: ../../network/state_handler.go:337
+#: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 
-#: ../../network/state_handler.go:340
-msgid "Password is required to connect %q"
-msgstr ""
-
-#: ../../network/state_handler.go:343
+#: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:229
-msgid "Unknown"
-msgstr "Άγνωστο"
-
-#: ../../network/utils_notify.go:80
-msgid "You are now offline."
+#: ../../network/state_handler.go:355
+msgid "Unable to connect %q"
 msgstr ""
 
-#: ../../network/utils_notify.go:84
+#: ../../network/state_handler.go:366
+msgid "Password is required to connect %q"
+msgstr ""
+
+#: ../../network/state_handler.go:368
+msgid "The %q 802.11 WLAN network could not be found"
+msgstr ""
+
+#: ../../network/utils_dbus_nm.go:278
+msgid "Unknown"
+msgstr ""
+
+#: ../../network/utils_notify.go:170
 msgid "Airplane mode enabled."
 msgstr ""
 
-#: ../../network/utils_notify.go:92
+#: ../../network/utils_notify.go:170 ../../network/utils_notify.go:174
+#: ../../network/utils_notify.go:178 ../../network/utils_notify.go:196
+#: ../../network/utils_notify.go:199 ../../network/utils_notify.go:288
+msgid "Disconnected"
+msgstr ""
+
+#: ../../network/utils_notify.go:178
 msgid "Access Point mode is not supported by this device."
 msgstr ""
 
-#: ../../network/utils_notify.go:96 ../../network/utils_notify.go:100
-#: ../../network/utils_notify.go:103
-msgid "Network"
-msgstr "Δίκτυο"
-
-#: ../../network/utils_notify.go:96
+#: ../../network/utils_notify.go:182
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr ""
 
-#: ../../network/utils_notify.go:100
+#: ../../network/utils_notify.go:186
 msgid "System proxy is set successfully."
 msgstr ""
 
-#: ../../network/utils_notify.go:103
+#: ../../network/utils_notify.go:189
 msgid "System proxy has been cancelled."
 msgstr ""
 
-#: ../../session/power/manager_events.go:151
-msgid "Battery Critically Low"
+#: ../../network/utils_notify.go:193
+msgid "Connected"
 msgstr ""
 
-#: ../../session/power/manager_events.go:152
-msgid "Computer will suspend very soon, please plug in now"
+#: ../../service_trigger/msg.go:11
+#, c-format
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
-#: ../../session/power/manager_events.go:175
-#: ../../session/power/manager_events.go:182
-msgid "Battery Low"
+#: ../../session/power1/manager_events.go:203
+msgid "Battery critically low"
 msgstr ""
 
-#: ../../session/power/manager_events.go:176
-msgid "Computer will suspend soon, please plug in"
-msgstr ""
-
-#: ../../session/power/manager_events.go:183
+#: ../../session/power1/manager_events.go:223
+#: ../../session/power1/manager_events.go:228
+#: ../../session/power1/manager_events.go:233
+#: ../../session/power1/manager_events.go:238
 msgid "Battery low, please plug in"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:59
+#: ../../session/power1/utils.go:439 ../../session/power1/utils.go:446
+#: ../../session/power1/utils.go:453 ../../session/power1/utils.go:460
+msgid "Power settings changed"
+msgstr ""
+
+#: ../../session/power1/utils.go:484 ../../session/power1/utils_test.go:16
+#: ../../session/power1/utils_test.go:17
+msgid "When the lid is closed, "
+msgstr ""
+
+#: ../../session/power1/utils.go:488
+msgid "When pressing the power button, "
+msgstr ""
+
+#: ../../session/power1/utils.go:498 ../../session/power1/utils_test.go:16
+msgid "your computer will shut down"
+msgstr ""
+
+#: ../../session/power1/utils.go:500 ../../session/power1/utils_test.go:17
+msgid "your computer will suspend"
+msgstr ""
+
+#: ../../session/power1/utils.go:502
+msgid "your computer will hibernate"
+msgstr ""
+
+#: ../../session/power1/utils.go:504
+msgid "your monitor will turn off"
+msgstr ""
+
+#: ../../session/power1/utils.go:506
+msgid "your monitor will show the shutdown interface"
+msgstr ""
+
+#: ../../session/power1/utils.go:508
+msgid "it will do nothing to your computer"
+msgstr ""
+
+#: ../../system/bluetooth1/utils_notify.go:43
+msgid "Connect %q successfully"
+msgstr ""
+
+#: ../../system/bluetooth1/utils_notify.go:56
+msgid "Make sure %q is turned on and in range"
+msgstr ""
+
+#: ../../system/bluetooth1/utils_notify.go:74
+msgid ""
+"%q can no longer connect to %q. Try to forget this device and pair it again."
+msgstr ""
+
+#: ../../timedate1/manager_format.go:75
+msgid "Space"
+msgstr ""
+
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:122
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:141
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr ""

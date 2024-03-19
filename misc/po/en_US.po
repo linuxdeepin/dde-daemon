@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# deepiner, 2023
+# deepiner, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-21 09:55+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: deepiner, 2023\n"
+"Last-Translator: deepiner, 2024\n"
 "Language-Team: English (United States) (https://app.transifex.com/linuxdeepin/teams/3617/en_US/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Please enter a password not less than 8 characters"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -59,6 +58,18 @@ msgstr "Username must be between 3 and 32 characters"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "User \"%s\" existed before and its data is synced"
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -76,7 +87,7 @@ msgstr "Fingerprint verification failed"
 msgid "Fingerprint verification timed out"
 msgstr "Fingerprint verification timed out"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "Your password will expire in %d days, please change it timely"
@@ -383,11 +394,11 @@ msgstr "Resize window"
 
 #: ../../keybinding/shortcuts/id_name_map.go:100
 msgid "Window Quick Tile Left"
-msgstr "Window Quick Tile Left"
+msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:101
 msgid "Window Quick Tile Right"
-msgstr "Window Quick Tile Right"
+msgstr ""
 
 #: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
@@ -425,7 +436,7 @@ msgstr "Switch monitors"
 msgid "Authentication is required to switch language"
 msgstr "Authentication is required to switch language"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -433,25 +444,17 @@ msgstr ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Changing system language, please wait..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "System language changed, please log out and then log in"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Failed to change system language, please try later"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -494,12 +497,12 @@ msgid "%q failed to install."
 msgstr "%q failed to install."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Removed successfully"
+msgid "%q removed successfully"
+msgstr "%q removed successfully"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Failed to remove the app"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -1084,11 +1087,11 @@ msgstr ""
 msgid "Space"
 msgstr "Space"
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Authentication is required to set the system time"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1096,11 +1099,11 @@ msgstr ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Authentication is required to change NTP server"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1108,6 +1111,6 @@ msgstr ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 
-#: ../../timedate1/manager_ifc.go:143
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Authentication is required to set the system timezone"

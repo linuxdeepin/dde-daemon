@@ -10,16 +10,16 @@
 # Boki Ball <superdodgeballer@gmail.com>, 2023
 # Smarty <kidsmart33@gmail.com>, 2023
 # deepiner, 2023
-# Марко Пејовић <markopejovic@tutanota.com>, 2023
+# Марко Пејовић <markopejovic@tutanota.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2023\n"
+"Last-Translator: Марко Пејовић <markopejovic@tutanota.com>, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/linuxdeepin/teams/3617/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Молимо унесите лозинку од најмање 8 карактера"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -65,6 +64,18 @@ msgstr "Корисничко име мора садржати између 3-32 
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -82,7 +93,7 @@ msgstr "Неуспешна верификација отиска прста"
 msgid "Fingerprint verification timed out"
 msgstr "Време за верификацију отиска прста је истекло"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "Лозинка истиче за %d дан(а), промените је на време"
@@ -387,35 +398,43 @@ msgstr "Помери прозор"
 msgid "Resize window"
 msgstr "Промени величину прозора"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Премести на леви радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Премести на десни радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Премести на горњи радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Премести на доњи радни простор"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Приказ прозора свих радних површина"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Приказ прозора тренутне радне површине"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Приказ активности"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Промена екрана"
 
@@ -423,7 +442,7 @@ msgstr "Промена екрана"
 msgid "Authentication is required to switch language"
 msgstr "Идентификација је неопходна за промену језика"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -431,25 +450,17 @@ msgstr ""
 "Промена језика система и инсталирање потребних језичких пакета, молимо "
 "сачекајте..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Промена језика система, молимо сачекајте..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "Језик система је промењен, одјавите се, затим се пријавите"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Неуспешна промена језика система, молимо покушајте касније"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -492,12 +503,12 @@ msgid "%q failed to install."
 msgstr "%q инсталација неуспешна."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Успешно уклоњено"
+msgid "%q removed successfully"
+msgstr "%q уклањање успешно"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Неуспешно уклањање програма"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -1080,22 +1091,22 @@ msgstr ""
 msgid "Space"
 msgstr ""
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Идентификација је неопходна за подешавање времена система"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
 "Идентификација је неопходна да контролишете мрежну синхронизацију времена"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Идентификација је неопходна за промену НТП сервера"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1103,6 +1114,6 @@ msgstr ""
 "Идентификација је неопходна да контролишете да ли RTC памти локално или UTC "
 "време"
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Идентификација је неопходна за поставку временске зоне"

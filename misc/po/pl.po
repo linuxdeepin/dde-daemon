@@ -12,16 +12,16 @@
 # deepiner, 2023
 # Piotr Strębski <strebski@gmail.com>, 2023
 # Marcin Kozioł <koziol.martin@gmail.com>, 2023
-# Janusz Ruchała, 2023
+# Janusz Ruchała, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Janusz Ruchała, 2023\n"
+"Last-Translator: Janusz Ruchała, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/linuxdeepin/teams/3617/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +34,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Wprowadź hasło, które zawiera co najmniej 8 znaków"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -69,6 +68,18 @@ msgstr ""
 "Użytkownik \"%s\" już istniał wcześniej, więc jego dane zostaną "
 "zsynchronizowane"
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr "Nie udało się zmienić serwera audio, spróbuj ponownie później"
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr "Zmiana serwera audio, proszę czekać..."
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr "Serwer audio został zmieniony. Wyloguj się, a następnie zaloguj"
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -84,9 +95,9 @@ msgstr "Weryfikacja odcisku palca nie powiodła się"
 
 #: ../../bin/dde-authority/fprint_transaction.go:26
 msgid "Fingerprint verification timed out"
-msgstr "Upłynął limit czasu oczekiwania odcisku palca"
+msgstr "Upłynął czas oczekiwania odcisku palca"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "Twoje hasło wygaśnie za %d dni, zmień je"
@@ -204,7 +215,7 @@ msgstr "%q chce wysłać do Ciebie pliki. Odebrać?"
 
 #: ../../bluetooth1/obex_agent.go:514
 msgid "Receiving %q timed out"
-msgstr "Upłynął limit czasu oczekiwania odbioru %q"
+msgstr "Upłynął czas oczekiwania odbioru %q"
 
 #: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
@@ -237,7 +248,7 @@ msgstr "Nagrywanie ekranu"
 
 #: ../../keybinding/shortcuts/id_name_map.go:16
 msgid "Lock screen"
-msgstr "Blokada ekranu"
+msgstr "Ekran blokady"
 
 #: ../../keybinding/shortcuts/id_name_map.go:17
 msgid "Show/Hide the dock"
@@ -392,35 +403,43 @@ msgstr "Przenieś okno"
 msgid "Resize window"
 msgstr "Zmień rozmiar okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr "Kafelkuj okno do lewej"
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr "Kafelkuj okno do prawej"
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Przenieś na lewy obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Przenieś na prawy obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Przenieś na górny obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Przenieś na dolny obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Wyświetl okna wszystkich obszarów roboczych"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Wyświetl okna bieżącego obszaru roboczego"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Wyświetl obszar roboczy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Przełącz monitory"
 
@@ -428,7 +447,7 @@ msgstr "Przełącz monitory"
 msgid "Authentication is required to switch language"
 msgstr "Wymagane jest uwierzytelnienie, aby móc przełączyć język"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -436,25 +455,17 @@ msgstr ""
 "Trwa zmiana języka systemu oraz instalacja wymaganych pakietów językowych, "
 "proszę czekać..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Trwa zmiana języka systemu, proszę czekać..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "Zmieniono język systemu, proszę zalogować się ponownie"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr "Zmieniono region systemu, zaloguj się ponownie"
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Nie udało się zmienić języka systemu, spróbuj ponownie później"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr "Nie udało się zmienić regionu, spróbuj ponownie później"
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -497,12 +508,12 @@ msgid "%q failed to install."
 msgstr "Nie udało się zainstalować %q."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Usunięto pomyślnie"
+msgid "%q removed successfully"
+msgstr "%q został usunięty pomyślnie"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Nie udało się usunąć aplikacji"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -623,14 +634,14 @@ msgstr "Urządzenie nie jest już zarządzane"
 
 #: ../../network/state_handler.go:27
 msgid "The device has not been ready for configuration"
-msgstr "Urządzenie nie jest gotowe do skonfigurowania"
+msgstr "Urządzenie nie jest gotowe do konfiguracji"
 
 #: ../../network/state_handler.go:28
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
 msgstr ""
-"Nie można zarezerwować konfiguracji IP (brak adresu, przekroczony czas "
-"oczekiwania, itp.)"
+"Nie można zarezerwować konfiguracji IP (brak dostępnego adresu, upłynął czas"
+" oczekiwania itp.)"
 
 #: ../../network/state_handler.go:29
 msgid "The IP configuration is no longer valid"
@@ -708,19 +719,19 @@ msgstr "Usługa AutoIP niespodziewanie zakończyła pracę lub uległa awarii"
 
 #: ../../network/state_handler.go:46
 msgid "Dialing failed due to busy lines"
-msgstr "Dodzwonienie nie powiodło się z powodu zajętych linii"
+msgstr "Wybieranie numeru nie powiodło się z powodu zajętych linii"
 
 #: ../../network/state_handler.go:47
 msgid "Dialing failed due to no dial tone"
-msgstr "Dodzwonienie nie powiodło się z powodu braku sygnału"
+msgstr "Wybieranie numeru nie powiodło się z powodu braku sygnału"
 
 #: ../../network/state_handler.go:48
 msgid "Dialing failed due to the carrier"
-msgstr "Dodzwonienie nie powiodło się z powodu dostawcy"
+msgstr "Wybieranie numeru nie powiodło się z powodu dostawcy"
 
 #: ../../network/state_handler.go:49
 msgid "Dialing timed out"
-msgstr "Przekroczono limit czasu oczekiwania wybierania numeru"
+msgstr "Upłynął czas oczekiwania wybierania numeru"
 
 #: ../../network/state_handler.go:50
 msgid "Dialing failed"
@@ -744,7 +755,7 @@ msgstr "Odrzucono rejestrację sieci"
 
 #: ../../network/state_handler.go:55
 msgid "Network registration timed out"
-msgstr "Upłynął limit czasu oczekiwania rejestracji sieci"
+msgstr "Upłynął czas oczekiwania rejestracji sieci"
 
 #: ../../network/state_handler.go:56
 msgid "Failed to register to the requested GSM network"
@@ -792,9 +803,7 @@ msgstr "Nie można odnaleźć modemu"
 
 #: ../../network/state_handler.go:67
 msgid "The Bluetooth connection timed out or failed"
-msgstr ""
-"Upłynął limit czasu oczekiwania połączenia Bluetooth lub połączenie nie "
-"powiodło się"
+msgstr "Upłynął czas oczekiwania połączenia Bluetooth lub wystąpił błąd"
 
 #: ../../network/state_handler.go:68
 msgid "GSM Modem's SIM Card was not inserted"
@@ -888,7 +897,7 @@ msgstr "Nie można aktywować połączenia VPN, przyczyna nieznana"
 
 #: ../../network/state_handler.go:96
 msgid "Failed to activate VPN connection"
-msgstr "Nie można aktywować połączenia VPN"
+msgstr "Nie udało się ustanowić połączenia VPN"
 
 #: ../../network/state_handler.go:97
 msgid "The VPN connection state changed due to being disconnected by users"
@@ -910,11 +919,11 @@ msgstr "Konfiguracja IP połączenia VPN jest nieprawidłowa"
 
 #: ../../network/state_handler.go:101
 msgid "The connection attempt to VPN service timed out"
-msgstr "Przekroczono czas oczekiwania próby podłączenia do usługi VPN"
+msgstr "Upłynął czas oczekiwania próby połączenia usługi VPN"
 
 #: ../../network/state_handler.go:102
 msgid "The VPN service start timed out"
-msgstr "Przekroczono limit czasu oczekiwania uruchamiania usługi VPN"
+msgstr "Upłynął czas oczekiwania uruchamiania usługi VPN"
 
 #: ../../network/state_handler.go:103
 msgid "The VPN service failed to start"
@@ -926,7 +935,7 @@ msgstr "Hasło połączenia VPN nie zostało podane"
 
 #: ../../network/state_handler.go:105
 msgid "Authentication to VPN server failed"
-msgstr "Uwierzytelnienie do serwera VPN nie powiodło się"
+msgstr "Uwierzytelnienie serwera VPN nie powiodło się"
 
 #: ../../network/state_handler.go:106
 msgid "The connection was deleted from settings"
@@ -959,17 +968,15 @@ msgstr "%q rozłączono"
 
 #: ../../network/state_handler.go:345
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "Nie można udostępnić hotspotu, sprawdź ustawienia dnsmasq"
+msgstr "Nie można udostępnić Hotspotu, sprawdź ustawienia dnsmasq"
 
 #: ../../network/state_handler.go:347
 msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
-"Nie można połączyć z %q, prosimy przybliżyć się do routera bezprzewodowego"
+msgstr "Nie można połączyć się z %q, przybliż się do routera bezprzewodowego"
 
 #: ../../network/state_handler.go:349
 msgid "Unable to connect %q, please check your router or net cable."
-msgstr ""
-"Nie można połączyć z %q, prosimy sprawdzić swój router lub kabel sieciowy."
+msgstr "Nie można połączyć się z %q, sprawdź router lub kabel sieciowy."
 
 #: ../../network/state_handler.go:353
 msgid "Connection failed, unable to connect %q, wrong password"
@@ -985,7 +992,7 @@ msgstr "Wymagane jest hasło, aby połączyć się z %q"
 
 #: ../../network/state_handler.go:368
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr "Nie udało się znaleźć sieci WLAN %q 802.11"
+msgstr "Nie można znaleźć sieci WLAN %q 802.11"
 
 #: ../../network/utils_dbus_nm.go:278
 msgid "Unknown"
@@ -993,7 +1000,7 @@ msgstr "Nieznany"
 
 #: ../../network/utils_notify.go:170
 msgid "Airplane mode enabled."
-msgstr "Włączono tryb samolotowy."
+msgstr "Włączono Tryb samolotowy."
 
 #: ../../network/utils_notify.go:170 ../../network/utils_notify.go:174
 #: ../../network/utils_notify.go:178 ../../network/utils_notify.go:196
@@ -1099,11 +1106,11 @@ msgstr ""
 msgid "Space"
 msgstr "Space"
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Wymagane jest uwierzytelnienie, aby ustawić czas systemowy"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1111,11 +1118,11 @@ msgstr ""
 "Wymagane jest uwierzytelnienie, aby kontrolować synchronizację z czasu "
 "sieciowego"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Wymagane jest uwierzytelnienie do zmiany serwera NTP"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1123,6 +1130,6 @@ msgstr ""
 "Wymagane jest uwierzytelnienie, aby kontrolować, czy RTC będzie przechowywać"
 " czas lokalny lub UTC."
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Wymagane jest uwierzytelnienie, aby ustawić strefę czasową systemu"
