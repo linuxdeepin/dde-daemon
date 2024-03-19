@@ -6,6 +6,7 @@ package dock
 
 import (
 	"encoding/json"
+	"github.com/linuxdeepin/go-lib/strv"
 	"os"
 )
 
@@ -94,7 +95,14 @@ func (sc *syncConfig) Set(data []byte) error {
 	m.DisplayMode.SetString(v.DisplayMode)
 	m.HideMode.SetString(v.HideMode)
 	m.Position.SetString(v.Position)
-	sc.setDockedApps(v.DockedApps)
+
+	if !strv.Strv(m.DockedApps.Get()).Equal(v.DockedApps) {
+		logger.Debugf("current entries is: %+v", m.DockedApps.Get())
+		logger.Debugf("ucloud  entries is: %+v", v.DockedApps)
+
+		sc.setDockedApps(v.DockedApps)
+	}
+
 	sc.setPluginSettings(v.Plugins)
 	return nil
 }
