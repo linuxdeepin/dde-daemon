@@ -9,8 +9,6 @@
 # Flavio Lima <flaviolimaviolinista@gmail.com>, 2023
 # Joel Queiroz <joelcfq@yandex.ru>, 2023
 # 1d1ce5c8357ff895d313b0cce072591e_46a6b98, 2023
-# Fábio C, 2023
-# Cassiano Molinari <chano2808a@gmail.com>, 2023
 # Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2023
 # JeffWagen <jeff.wagen@yahoo.com>, 2023
 # Raphael Miquelis <raphaelmiquelis@gmail.com>, 2023
@@ -18,16 +16,17 @@
 # Felipe André Alves Santos <lip.dre@gmail.com>, 2023
 # deepiner, 2023
 # Paulo Schopf, 2023
-# Alex, 2023
+# Alex Wender, 2024
+# 380125ae2590f93d3e1eff2258abdf75_6979c31, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Alex, 2023\n"
+"Last-Translator: 380125ae2590f93d3e1eff2258abdf75_6979c31, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +39,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Digite uma senha com pelo menos 8 caracteres"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -73,6 +71,18 @@ msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -90,7 +100,7 @@ msgstr "Falha ao verificar a impressão digital"
 msgid "Fingerprint verification timed out"
 msgstr "O tempo de verificação da impressão digital expirou"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "A senha expirará em %d dias; altere-a em tempo hábil"
@@ -188,7 +198,7 @@ msgstr "A transferência do arquivo foi cancelada"
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
-msgstr "Falha na conexão Bluetooth"
+msgstr "A conexão Bluetooth falhou"
 
 #: ../../bluetooth1/obex_agent.go:453
 msgid "Decline"
@@ -216,7 +226,7 @@ msgstr "Clique aqui para conectar-se à %q"
 
 #: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
-msgstr "Adicionar dispositivos Bluetooth"
+msgstr "Adicionar dispositivos"
 
 #: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
@@ -244,7 +254,7 @@ msgstr "Bloquear Tela"
 
 #: ../../keybinding/shortcuts/id_name_map.go:17
 msgid "Show/Hide the dock"
-msgstr "Exibir/Ocultar a Dock"
+msgstr "Exibir/Ocultar o dock"
 
 #: ../../keybinding/shortcuts/id_name_map.go:18
 msgid "Shutdown interface"
@@ -324,7 +334,7 @@ msgstr "Tradução"
 
 #: ../../keybinding/shortcuts/id_name_map.go:37
 msgid "Grand Search"
-msgstr "Pesquisa geral"
+msgstr "Pesquisa Instantânea"
 
 #: ../../keybinding/shortcuts/id_name_map.go:38
 msgid "Notification Center"
@@ -395,35 +405,43 @@ msgstr "Mover Janela"
 msgid "Resize window"
 msgstr "Redimensionar Janela"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Mover para o espaço de trabalho esquerdo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Mover para o espaço de trabalho direito"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Mover para o espaço de trabalho superior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Mover para o espaço de trabalho inferior"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Exibir as janelas de todas as áreas de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Exibir as janelas da área de trabalho atual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Exibir área de trabalho"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Alternar monitores"
 
@@ -431,37 +449,29 @@ msgstr "Alternar monitores"
 msgid "Authentication is required to switch language"
 msgstr "A autenticação é necessária para alternar o idioma"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "Alterando o idioma do sistema, aguarde..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Alterando o idioma do sistema, aguarde..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "O idioma do sistema foi alterado; é necessário encerrar a sessão para "
 "efetivá-lo"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Falha ao alterar o idioma do sistema; tente novamente"
 
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
-
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
-msgstr "Tentar novamente"
+msgstr "Repetir"
 
 #: ../../lastore1/lastore.go:449
 msgid "Update Now"
@@ -500,12 +510,12 @@ msgid "%q failed to install."
 msgstr "Falha ao instalar %q."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Removido"
+msgid "%q removed successfully"
+msgstr "%q foi desinstalado"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Falha ao remover o aplicativo"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -735,7 +745,7 @@ msgstr "Falha ao selecionar a APN GSM especificada"
 
 #: ../../network/state_handler.go:53
 msgid "No networks searched"
-msgstr "Nenhuma rede pesquisada"
+msgstr "Nenhuma rede encontrada"
 
 #: ../../network/state_handler.go:54
 msgid "Network registration was denied"
@@ -827,7 +837,7 @@ msgstr "O Gerenciador do Modem não foi executado ou encerrado inesperadamente"
 
 #: ../../network/state_handler.go:76
 msgid "The 802.11 WLAN network could not be found"
-msgstr "Não foi possível encontrar a rede WLAN 802.11"
+msgstr "Não foi possível encontrar a rede Wi-Fi"
 
 #: ../../network/state_handler.go:77
 msgid "A secondary connection of the base connection failed"
@@ -984,7 +994,7 @@ msgstr "Uma senha é necessária para conectar-se à %q"
 
 #: ../../network/state_handler.go:368
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr "A rede %q 802.11 WLAN não pode ser encontrada"
+msgstr "Não foi possível encontrar a rede Wi-Fi %q"
 
 #: ../../network/utils_dbus_nm.go:278
 msgid "Unknown"
@@ -1007,8 +1017,7 @@ msgstr "O modo de ponto de acesso não é suportado neste dispositivo."
 #: ../../network/utils_notify.go:182
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr ""
-"A placa WLAN está desligada fisicamente; ative-a sempre que necessário."
+msgstr "A placa Wi-Fi está desligada fisicamente"
 
 #: ../../network/utils_notify.go:186
 msgid "System proxy is set successfully."
@@ -1096,21 +1105,21 @@ msgstr ""
 msgid "Space"
 msgstr "Espaço"
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "A autenticação é necessária para alterar a hora do sistema"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "A autenticação é necessária para alterar a sincronização da hora"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "A autenticação é necessária para alterar o Servidor NTP"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1118,6 +1127,6 @@ msgstr ""
 "A autenticação é necessária para controlar se o RTC armazena a hora local ou"
 " UTC"
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "A autenticação é necessária para alterar o fuso horário"

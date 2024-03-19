@@ -7,17 +7,17 @@
 # fasier <matus.ravas@outlook.com>, 2023
 # Microtus <hrabosmartin@gmail.com>, 2023
 # deepiner, 2023
-# 6a031f57f79e736069d8f4ea6d230365_39313e6 <902495911fc964c4ba556aa7711a2823_20303>, 2023
 # Jozef Gaal <preklady@mayday.sk>, 2023
+# 6a031f57f79e736069d8f4ea6d230365_39313e6 <902495911fc964c4ba556aa7711a2823_20303>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Jozef Gaal <preklady@mayday.sk>, 2023\n"
+"Last-Translator: 6a031f57f79e736069d8f4ea6d230365_39313e6 <902495911fc964c4ba556aa7711a2823_20303>, 2024\n"
 "Language-Team: Slovak (https://app.transifex.com/linuxdeepin/teams/3617/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Prosím, zadajte heslo s viac ako 8 znakmi"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -52,7 +51,7 @@ msgstr "Meno používateľa už existuje"
 
 #: ../../accounts1/checkers/username.go:59
 msgid "The name already exists"
-msgstr ""
+msgstr "Meno už existuje"
 
 #: ../../accounts1/checkers/username.go:61
 msgid "Username must be between 3 and 32 characters"
@@ -61,12 +60,24 @@ msgstr "Používateľské meno musí mať 3 až 32 znakov"
 #: ../../accounts1/manager.go:448
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
+msgstr "Používateľ \"%s\" existoval už predtým a jeho údaje sú synchronizované"
+
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%s bolo vypnuté"
 
 #: ../../audio1/audio_events.go:472
 msgid "Open"
@@ -80,10 +91,10 @@ msgstr "Overenie odtlačku prsta zlyhalo"
 msgid "Fingerprint verification timed out"
 msgstr "Časový limit overenia odtlačku prsta vypršal"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
-msgstr ""
+msgstr "Vaše heslo vyprší za %d dní, zmeňte si ho prosím včas"
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -152,7 +163,7 @@ msgstr "Zrušiť"
 
 #: ../../bluetooth1/obex_agent.go:383
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "Prijímanie %[1]q od %[2]q"
 
 #: ../../bluetooth1/obex_agent.go:392
 msgid "View"
@@ -160,7 +171,7 @@ msgstr "Pohľad"
 
 #: ../../bluetooth1/obex_agent.go:398
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "Úspešne ste prijali súbory od %q"
 
 #: ../../bluetooth1/obex_agent.go:399
 msgid "Done"
@@ -182,11 +193,11 @@ msgstr "Pripojenie bluetooth zlyhalo"
 
 #: ../../bluetooth1/obex_agent.go:453
 msgid "Decline"
-msgstr ""
+msgstr "Odmietnuť"
 
 #: ../../bluetooth1/obex_agent.go:453
 msgid "Receive"
-msgstr ""
+msgstr "Prijať"
 
 #: ../../bluetooth1/obex_agent.go:458
 msgid "Bluetooth File Transfer"
@@ -385,35 +396,43 @@ msgstr "Presunúť okno"
 msgid "Resize window"
 msgstr "Zmeniť veľkosť okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Prejsť na plochu vľavo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Prejsť na plochu vpravo"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Prejsť na plochu hore"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Prejsť na plochu dole"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Zobraziť okná zo všetkých pracovných prostredí"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Zobraziť okná z aktuálného pracovného prostredia"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Pracovné prostredie"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr ""
 
@@ -421,7 +440,7 @@ msgstr ""
 msgid "Authentication is required to switch language"
 msgstr "Na prepínanie jazyka je potrebné overenie"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -429,25 +448,17 @@ msgstr ""
 "Systémový jazyk sa zmení inštaláciou potrebných jazykových balíkov, prosím "
 "čakajte..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Dochádza k zmene systémového jazyka, prosím čakajte..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "Systémový jazyk bol zmenený, po odhlásení sa znovu prihláste"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Jazyk systému sa nezmenil, skúste to prosím neskôr"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -490,12 +501,12 @@ msgid "%q failed to install."
 msgstr "%q inštalácia zlyhala."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Úspešne odstránené"
+msgid "%q removed successfully"
+msgstr "%q úspešne odstránené"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Odstránenie aplikácie zlyhalo "
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -510,7 +521,7 @@ msgstr "Vyrovnávaciu pamäť balíčkov vymazaná"
 
 #: ../../lastore1/notify.go:123
 msgid "Updates Available"
-msgstr ""
+msgstr "Aktualizácie sú k dispozícii"
 
 #: ../../lastore1/notify.go:128
 msgid "Reboot after Updates"
@@ -545,7 +556,7 @@ msgstr "WPA/WPA2 Personal"
 
 #: ../../network/manager_active_conn.go:495
 msgid "WPA3 Personal"
-msgstr ""
+msgstr "WPA3 Personal"
 
 #: ../../network/manager_active_conn.go:503
 msgid "TLS"
@@ -578,7 +589,7 @@ msgstr "Káblové pripojenie"
 
 #: ../../network/manager_connection.go:389
 msgid "Wired Connection %v"
-msgstr ""
+msgstr "Káblové pripojenie %v"
 
 #: ../../network/proxychains/utils_notify.go:49
 msgid "Application proxy is set successfully"
@@ -1079,21 +1090,21 @@ msgstr ""
 msgid "Space"
 msgstr ""
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Na nastavenie systémového času je potrebné overenie"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "Je potrebné overiť, či je zapnutá synchronizácia času v sieti"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Na zmenu NTP servera je potrebné overenie"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1101,6 +1112,6 @@ msgstr ""
 "Autentifikácia je potrebná na kontrolu, či RTC ukladá miestny čas alebo čas "
 "UTC"
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Na nastavenie časového pásma systému je potrebné overenie"

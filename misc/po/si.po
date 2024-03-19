@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Thejan Rajapakshe <coder.clix@gmail.com>, 2023
-# Roshan Karunarathna <rkvisit@gmail.com>, 2023
+# Roshan Karunarathna <rkvisit@gmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2023\n"
+"Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2024\n"
 "Language-Team: Sinhala (https://app.transifex.com/linuxdeepin/teams/3617/si/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "කරුණාකර අක්ෂර 8 කට නොඅඩු මුරපදයක් ඇතුළත් කරන්න"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -60,6 +59,18 @@ msgstr "පරිශීලක නාමය අක්ෂර 3 ත් 32 ත් �
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -77,7 +88,7 @@ msgstr "ඇඟිලි සලකුණු සත්‍යාපනය අසා
 msgid "Fingerprint verification timed out"
 msgstr "ඇඟිලි සලකුණු සත්‍යාපනය කල් ඉකුත් විය"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -382,35 +393,43 @@ msgstr "කවුළුව චලනය කරන්න"
 msgid "Resize window"
 msgstr "කවුළු පරිමාණ වෙනස් කරන"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "වම් වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "දකුණු වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "ඉහළ වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "පහළ වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "සියලුම වැඩ අවකාශයන්ගේ පවතින කවුළු පෙන්වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "වත්මන් වැඩ අවකාශයේ පවතින කවුළු පෙන්වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "වැඩ අවකාශය පෙන්වන්න"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr ""
 
@@ -418,7 +437,7 @@ msgstr ""
 msgid "Authentication is required to switch language"
 msgstr "භාෂාව මාරු කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -426,25 +445,17 @@ msgstr ""
 "පද්ධති භාෂාව වෙනස් කිරීම සහ අවශ්‍ය භාෂා පැකේජ ස්ථාපනය කරමින් පවතී, කරුණාකර "
 "රැඳී සිටින්න ..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "පද්ධති භාෂාව වෙනස් කිරීම, කරුණාකර රැඳී සිටින්න ..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "පද්ධති භාෂාව වෙනස් වී ඇත, කරුණාකර පද්ධතියෙන් ඉවත් වී නැවත ඇතුළු වන්න"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "පද්ධති භාෂාව වෙනස් කිරීමට අපොහොසත් විය, කරුණාකර පසුව උත්සාහ කරන්න"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -487,12 +498,12 @@ msgid "%q failed to install."
 msgstr "%q ස්ථාපනය කිරීමට අසමත් විය."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "සාර්ථකව ඉවත් කරන ලදි."
+msgid "%q removed successfully"
+msgstr "%q සාර්ථකව ඉවත් කර ඇත."
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "යෙදවුම ඉවත් කිරීම අසාර්ථක විය."
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -1079,11 +1090,11 @@ msgstr ""
 msgid "Space"
 msgstr ""
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "පද්ධතියේ වේලාව සකස් කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1091,11 +1102,11 @@ msgstr ""
 "ජාල කාල සමමුහුර්තකරණය/synchronization සක්‍රීය වීීීම පාලනය කිරීම සඳහා "
 "සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "NTP සේවාදායකය/server වෙනස් කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1103,6 +1114,6 @@ msgstr ""
 "RTC-තත් කාල ඔරලෝසුවෙහි දේශීය හෝ UTC-සමායෝත සාර්වත්‍ර වේලාව ගබඩා කරන්නේද යන්න"
 " පාලනය කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "පද්ධතියේ වේලා කලාපය සකස් කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"

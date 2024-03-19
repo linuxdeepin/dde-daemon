@@ -8,16 +8,16 @@
 # el_libre como el chaval <el.libre@gmail.com>, 2023
 # deepin_transifex <xiabin@linuxdeepin.com>, 2023
 # deepiner, 2023
-# Davidmp <medipas@gmail.com>, 2023
+# Davidmp <medipas@gmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Davidmp <medipas@gmail.com>, 2023\n"
+"Last-Translator: Davidmp <medipas@gmail.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/linuxdeepin/teams/3617/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Si us plau, escriviu una contrasenya d'un mínim de 8 caràcters."
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -63,6 +62,20 @@ msgstr "El nom d'usuari ha de tenir de 3 a 32 caràcters de llargada."
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "L'usuari %s existia abans i les seves dades estan sincronitzades."
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr "Ha fallat canviar el servidor d'àudio. Torneu-ho a provar més tard."
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr "Es canvia el servidor d'àudio. Espereu, si us plau..."
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+"El servidor d'àudio ha canviat. Si us plau, sortiu de la sessió i torneu-hi "
+"a entrar."
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -80,7 +93,7 @@ msgstr "La verificació de l'empremta ha fallat."
 msgid "Fingerprint verification timed out"
 msgstr "La verificació de l'empremta ha trigat massa."
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "La contrasenya caducarà d'aquí a %d dies; canvieu-la oportunament."
@@ -385,35 +398,43 @@ msgstr "Mou la finestra"
 msgid "Resize window"
 msgstr "Canvia la mida de la finestra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr "Mosaic ràpid de finestres a l'esquerra"
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr "Mosaic ràpid de finestres a la dreta"
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Mou a l'espai de treball de l'esquerra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Mou a l'espai de treball de la dreta"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Mou a l'espai de treball de dalt"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Mou a l'espai de treball de baix"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Mostra les finestres de tots els espais de treball"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Mostra les finestres de l'espai de treball actual"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Mostra l'espai de treball"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Commuta els monitors"
 
@@ -421,7 +442,7 @@ msgstr "Commuta els monitors"
 msgid "Authentication is required to switch language"
 msgstr "Cal autenticació per canviar la llengua."
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -429,29 +450,21 @@ msgstr ""
 "Es canvia la llengua del sistema i s'instal·len els paquets de llengua "
 "necessaris. Espereu, si us plau..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Es canvia la llengua del sistema. Espereu, si us plau..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "S'ha canviat la llengua del sistema. Si us plau, sortiu de la sessió i "
 "torneu-hi a entrar."
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr ""
 "Ha fallat canviar la llengua del sistema. Si us plau, torneu-ho a provar més"
 " tard."
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -494,12 +507,12 @@ msgid "%q failed to install."
 msgstr "Ha fallat la instal·lació de %q"
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "S'ha eliminat correctament."
+msgid "%q removed successfully"
+msgstr "%q eliminada correctament"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Ha fallat eliminar l'aplicació."
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -1102,11 +1115,11 @@ msgstr ""
 msgid "Space"
 msgstr "Espai"
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Cal autenticació per establir l'hora del sistema."
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1114,11 +1127,11 @@ msgstr ""
 "Cal autenticació per controlar si s'ha d'habilitar la sincronització amb "
 "l'hora de la xarxa."
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Cal autenticació per canviar el servidor NTP."
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1126,6 +1139,6 @@ msgstr ""
 "Cal autenticació per controlar si l'RTC (rellotge de temps real) desa l'hora"
 " local o l'hora UTC."
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Cal autenticació per establir la zona horària del sistema."

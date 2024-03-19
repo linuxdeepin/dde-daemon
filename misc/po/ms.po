@@ -6,16 +6,16 @@
 # Translators:
 # inashdeen <inashdeen@gmail.com>, 2023
 # deepiner, 2023
-# abuyop <abuyop@gmail.com>, 2023
+# abuyop <abuyop@gmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: abuyop <abuyop@gmail.com>, 2023\n"
+"Last-Translator: abuyop <abuyop@gmail.com>, 2024\n"
 "Language-Team: Malay (https://app.transifex.com/linuxdeepin/teams/3617/ms/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Sila masukkan kata aluan tidak kurang dari 8 aksara panjangnya"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -61,6 +60,18 @@ msgstr "Nama pengguna mestilah antara 3 hingga 32 aksara"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -78,7 +89,7 @@ msgstr "Pengesahan cap jari gagal"
 msgid "Fingerprint verification timed out"
 msgstr "Pengesahan cap jari telah tamat masa"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr ""
@@ -385,35 +396,43 @@ msgstr "Alih tetingkap"
 msgid "Resize window"
 msgstr "Saiz semula tetingkap"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Alih ke ruang kerja kiri"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Alih ke ruang kerja kanan"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Alih ke ruang kerja aras"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Alih ke ruang kerja bawah"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Papar tetingkap pada semua ruang kerja"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Papar tetingkap pada ruang kerja semasa"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Papar ruang kerja"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Tukar monitor"
 
@@ -421,7 +440,7 @@ msgstr "Tukar monitor"
 msgid "Authentication is required to switch language"
 msgstr "Pengesahihan diperlukan untuk mengubah bahasa"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -429,25 +448,17 @@ msgstr ""
 "Mengubah bahasa sistem dan  memasang pakej bahasa yang diperlukan, tunggu "
 "sebentar..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Mengubah bahasa sistem, tunggu sebentar..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "Bahasa sistem telah diubah, sila daftar keluar kemudian daftar masuk"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Gagal mengubah bahasa sistem, sila cuba lagi kemudian..."
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -490,12 +501,12 @@ msgid "%q failed to install."
 msgstr "%q gagal dipasangkan."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Berjaya dibuangkan"
+msgid "%q removed successfully"
+msgstr "%q berjaya dibuang"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Gagal membuang apl"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -1087,11 +1098,11 @@ msgstr ""
 msgid "Space"
 msgstr ""
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Pengesahihan diperlukan untuk menetap waktu sistem"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1099,11 +1110,11 @@ msgstr ""
 "Pengesahihan diperlukan untuk mengawal sama ada penyegerakan waktu rangkaian"
 " dapat dibenarkan"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Pengesahihan diperlukan untuk mengubah pelayan NTP"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1111,6 +1122,6 @@ msgstr ""
 "Pengesahihan diperlukan untuk mengawal sama ada RTC menyimpan waktu setempat"
 " atau UTC"
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Pengesahihan diperlukan untuk menetap zon waktu sistem"

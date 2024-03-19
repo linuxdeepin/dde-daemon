@@ -4,22 +4,22 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.change-own-user-data!message" line="0"/>
 			<source>Authentication is required to change your own user data</source>
-			<translation>Requirse autenticación para cambiar os seus propios datos de usuario</translation>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.change-own-user-data!description" line="0"/>
 			<source>Change your own user data</source>
-			<translation>Cambiar os seus propios datos de usuario</translation>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.user-administration!message" line="0"/>
 			<source>Authentication is required to change user data</source>
-			<translation>Requirse autenticación para cambiar os datos do usuario</translation>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.user-administration!description" line="0"/>
 			<source>Manage user accounts</source>
-			<translation>Xestionar contas de usuario</translation>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-auto-login!message" line="0"/>

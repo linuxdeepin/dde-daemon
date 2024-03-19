@@ -6,20 +6,20 @@
 # Translators:
 # 李洪武 <lihongwu1987@gmail.com>, 2023
 # op6464 <op64@seznam.cz>, 2023
-# Petr Balvín, 2023
+# Petr Balvín <petrbalvin@petalmail.com>, 2023
 # fri, 2023
 # Tomáš Hurta, 2023
 # deepiner, 2023
-# Pavel Borecki <pavel.borecki@gmail.com>, 2023
+# Pavel Borecki <pavel.borecki@gmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2023\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/linuxdeepin/teams/3617/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Zadejte heslo (délka nejméně 8 znaků)"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -66,6 +65,18 @@ msgstr "Je třeba, aby uživatelské jméno mělo délku 3 až 32 znaků"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "Uživatel „%s“ existoval předtím a jeho data jsou synchronizována"
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr ""
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr ""
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr ""
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -83,7 +94,7 @@ msgstr "Ověření otiskem prstu se nezdařilo"
 msgid "Fingerprint verification timed out"
 msgstr "Časový limit pro ověření otisku prstu překročen"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "Platnost vašeho hesla skončí za %d dnů, prosíme změňte si ho zavčas"
@@ -388,35 +399,43 @@ msgstr "Přesunout okno"
 msgid "Resize window"
 msgstr "Změnit velikost okna"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Přesunout vlevo na pracovní plochu"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Přesunout vpravo na pracovní plochu"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Přesunout nahoru na pracovní plochu"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Přesunout dolů na pracovní plochu"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Zobrazit okna ze všech pracovních ploch"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Zobrazit okna ze stávající pracovní plochy"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Zobrazit pracovní plochu"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Přepnout monitory"
 
@@ -424,7 +443,7 @@ msgstr "Přepnout monitory"
 msgid "Authentication is required to switch language"
 msgstr "Pro přepnutí jazyka je požadováno ověření se"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -432,29 +451,17 @@ msgstr ""
 "Mění se jazyk systému a instalují se požadované jazykové balíčky – čekejte "
 "prosím…"
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Mění se jazyk systému – čekejte prosím…"
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "Systémový jazyk byl změněn – prosím odhlaste se a přihlaste nazpět"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-"Nastavení oblasti, ve které je systém provozován, se změnilo – prosím "
-"odhlaste se a přihlaste nazpět"
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
-msgstr "Nepodařilo se změnit jazyk systému, zkuste to znovu později"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
-"Nepodařilo se změnit oblast pro místní a jazyková nastavení – zkuste to "
-"později"
+msgstr "Nepodařilo se změnit jazyk systému – zkuste to později"
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -497,12 +504,12 @@ msgid "%q failed to install."
 msgstr "%q se nepodařilo nainstalovat."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Úspěšně odebráno"
+msgid "%q removed successfully"
+msgstr "%q úspěšně odstraněno"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Aplikaci se nepodařilo odebrat"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -532,8 +539,8 @@ msgid ""
 "Your system is being updated, but the capacity is lower than 50%, please "
 "plug in to avoid power outage"
 msgstr ""
-"Váš systém se aktualizuje, ale úroveň baterie je nižší než 50 %, zapojte "
-"nabíječku, abyste předešli výpadku proudu "
+"Probíhá aktualizace systému, ale akumulátor počítače je nabitý z méně než 50"
+" % – připojte ho k napájení z elektrické zásuvky"
 
 #: ../../lastore1/notify.go:140
 msgid "OK"
@@ -725,7 +732,7 @@ msgstr "Vytáčení se nezdařilo"
 
 #: ../../network/state_handler.go:51
 msgid "Modem initialization failed"
-msgstr "Zprovoznění modemu se nezdařilo"
+msgstr "Inicializace modemu se nezdařila"
 
 #: ../../network/state_handler.go:52
 msgid "Failed to select the specified GSM APN"
@@ -809,7 +816,7 @@ msgstr "Chyba SIM karty v GSM modemu"
 
 #: ../../network/state_handler.go:72
 msgid "InfiniBand device does not support connected mode"
-msgstr "InfiniBand zařízení nepodporuje spojený režim"
+msgstr "InfiniBand zařízení nepodporuje režim connected, ale jen datagramový"
 
 #: ../../network/state_handler.go:73
 msgid "A dependency of the connection failed"
@@ -1092,11 +1099,11 @@ msgstr ""
 msgid "Space"
 msgstr "Místo"
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Pro nastavení systémového času je požadováno ověření se"
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1104,11 +1111,11 @@ msgstr ""
 "Pro ovládání toho, zda má být čas synchronizován ze sítě, je vyžadováno "
 "ověření se"
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Pro změnu NTP serveru je vyžadováno ověření se"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1116,6 +1123,6 @@ msgstr ""
 "Pro ovládání toho, zda mají hardwarové hodiny počítače být nařízené na "
 "místní nebo univerzální čas (UTC) je vyžadováno ověření se"
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Pro nastavení časového pásma systému je požadováno ověření se"

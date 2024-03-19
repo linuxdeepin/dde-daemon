@@ -7,16 +7,16 @@
 # Arreyu <massi_gi@hotmail.it>, 2023
 # Massimo Antonio Carofano <massimo.carofano@gmail.com>, 2023
 # deepiner, 2023
-# Massimo A. Carofano <real.massimo@hotmail.it>, 2023
+# Massimo A. Carofano <real.massimo@hotmail.it>, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 16:28+0800\n"
+"POT-Creation-Date: 2024-03-19 13:21+0800\n"
 "PO-Revision-Date: 2023-05-23 09:02+0000\n"
-"Last-Translator: Massimo A. Carofano <real.massimo@hotmail.it>, 2023\n"
+"Last-Translator: Massimo A. Carofano <real.massimo@hotmail.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/linuxdeepin/teams/3617/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,6 @@ msgid "Please enter a password not less than 8 characters"
 msgstr "Inserisci una password lunga almeno 8 caratteri"
 
 #: ../../accounts1/checkers/password.go:40
-#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
@@ -62,6 +61,18 @@ msgstr "L'username deve esser compresa tra 3 e 32 caratteri"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "L'utente \"%s\" esisteva prima e i suoi dati sono sincronizzati"
 
+#: ../../audio1/audio.go:245
+msgid "Failed to change Audio Server, please try later"
+msgstr "Modifica server Audio fallita, riprova dopo"
+
+#: ../../audio1/audio.go:281
+msgid "Changing Audio Server, please wait..."
+msgstr "Modifica server Audio, attendere.."
+
+#: ../../audio1/audio.go:314
+msgid "Audio Server changed, please log out and then log in"
+msgstr "Server audio modificato, riavvia la sessione"
+
 #: ../../audio1/audio_events.go:471
 #, c-format
 msgid "%s had been disabled"
@@ -79,7 +90,7 @@ msgstr "Verifica impronta fallita"
 msgid "Fingerprint verification timed out"
 msgstr "Verifica impronta in time out"
 
-#: ../../bin/dde-session-daemon/main.go:476
+#: ../../bin/dde-session-daemon/main.go:474
 #, c-format
 msgid "Your password will expire in %d days, please change it timely"
 msgstr "La tua password scadrà in %d giorni, ricordati di sostituirla"
@@ -384,35 +395,43 @@ msgstr "Muovi finestra"
 msgid "Resize window"
 msgstr "Ridimensiona la finestra"
 
-#: ../../keybinding/shortcuts/id_name_map.go:114
+#: ../../keybinding/shortcuts/id_name_map.go:100
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:101
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../keybinding/shortcuts/id_name_map.go:116
 msgid "Move to left workspace"
 msgstr "Muoviti sullo spazio di lavoro sinistro"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding/shortcuts/id_name_map.go:117
 msgid "Move to right workspace"
 msgstr "Muoviti sullo spazio di lavoro destro"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding/shortcuts/id_name_map.go:118
 msgid "Move to upper workspace"
 msgstr "Muoviti sullo spazio di lavoro superiore"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding/shortcuts/id_name_map.go:119
 msgid "Move to lower workspace"
 msgstr "Muoviti sullo spazio di lavoro inferiore"
 
-#: ../../keybinding/shortcuts/id_name_map.go:139
+#: ../../keybinding/shortcuts/id_name_map.go:141
 msgid "Display windows of all workspaces"
 msgstr "Visualizza le finestre per tutti gli spazi di lavoro"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding/shortcuts/id_name_map.go:142
 msgid "Display windows of current workspace"
 msgstr "Visualizza le finestre dell'attuale spazio di lavoro"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Display workspace"
 msgstr "Visualizza lo spazio di lavoro"
 
-#: ../../keybinding/shortcuts/id_name_map.go:202
+#: ../../keybinding/shortcuts/id_name_map.go:204
 msgid "Switch monitors"
 msgstr "Cambia monitor"
 
@@ -420,32 +439,24 @@ msgstr "Cambia monitor"
 msgid "Authentication is required to switch language"
 msgstr "Il cambio lingua richiede l'autenticazione"
 
-#: ../../langselector1/locale.go:141
+#: ../../langselector1/locale.go:139
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 "Cambio lingua di sistema ed installazione dei relativi pacchetti, attendi..."
 
-#: ../../langselector1/locale.go:142
+#: ../../langselector1/locale.go:140
 msgid "Changing system language, please wait..."
 msgstr "Cambio lingua di Sistema, attendi..."
 
-#: ../../langselector1/locale.go:143
+#: ../../langselector1/locale.go:141
 msgid "System language changed, please log out and then log in"
 msgstr "Lingua di sistema modificata, esegui un nuovo login"
 
-#: ../../langselector1/locale.go:144
-msgid "System region changed, please log out and then log in"
-msgstr ""
-
-#: ../../langselector1/locale.go:412
+#: ../../langselector1/locale.go:384
 msgid "Failed to change system language, please try later"
 msgstr "Cambio lingua di sistema fallito, riprova"
-
-#: ../../langselector1/locale.go:749
-msgid "Failed to change locale region, please try later"
-msgstr ""
 
 #: ../../lastore1/lastore.go:427
 msgid "Retry"
@@ -488,12 +499,12 @@ msgid "%q failed to install."
 msgstr "installazione %q fallita."
 
 #: ../../lastore1/notify.go:104
-msgid "Removed successfully"
-msgstr "Rimozione riuscita"
+msgid "%q removed successfully"
+msgstr "%q rimossa con successo"
 
 #: ../../lastore1/notify.go:106
-msgid "Failed to remove the app"
-msgstr "Rimozione fallita"
+msgid "%q failed to remove"
+msgstr ""
 
 #: ../../lastore1/notify.go:113
 msgid ""
@@ -972,7 +983,7 @@ msgstr "Connessione fallita, impossibile connettersi a %q, password errata"
 
 #: ../../network/state_handler.go:355
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "Impossibile collegarsi a %q"
 
 #: ../../network/state_handler.go:366
 msgid "Password is required to connect %q"
@@ -1068,7 +1079,7 @@ msgstr "il monitor si spegnerà"
 
 #: ../../session/power1/utils.go:506
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "il tuo monitor mostrerà l'interfaccia di spegnimento"
 
 #: ../../session/power1/utils.go:508
 msgid "it will do nothing to your computer"
@@ -1093,11 +1104,11 @@ msgstr ""
 msgid "Space"
 msgstr "Spazio"
 
-#: ../../timedate1/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:58
 msgid "Authentication is required to set the system time"
 msgstr "Autenticazione richiesta per impostare l'orario di sistema."
 
-#: ../../timedate1/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:71
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1105,11 +1116,11 @@ msgstr ""
 "Autenticazione richiesta per verificare se la sincronizzazione dell'orario "
 "mediante Rete può esser abilitata."
 
-#: ../../timedate1/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:81
 msgid "Authentication is required to change NTP server"
 msgstr "Autenticazione necessaria per cambiare il server NTP"
 
-#: ../../timedate1/manager_ifc.go:114
+#: ../../timedate1/manager_ifc.go:121
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1117,6 +1128,6 @@ msgstr ""
 "Autenticazione richiesta per verificare se lo store RTC utilizza l'orario "
 "Locale o UTC."
 
-#: ../../timedate1/manager_ifc.go:137
+#: ../../timedate1/manager_ifc.go:147
 msgid "Authentication is required to set the system timezone"
 msgstr "Autenticazione richiesta per impostare l'orario di Sistema."
