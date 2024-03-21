@@ -66,7 +66,6 @@ var allowList = map[uint32]bool{
 	KEY_MODE:            true,
 	KEY_KBDILLUMTOGGLE:  true,
 	KEY_SCREENLOCK:      true,
-	KEY_SLEEP:           true,
 }
 
 func newManager(service *dbusutil.Service) *Manager {
