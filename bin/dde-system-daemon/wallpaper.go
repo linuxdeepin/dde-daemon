@@ -16,6 +16,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 
 	dbus "github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -117,9 +118,13 @@ func DeleteWallPaper(username string, file string) error {
 	return os.Remove(path)
 }
 
+var wallpaperMutex sync.Mutex
+
 func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file string) (string, *dbus.Error) {
 	var err error
 	var isSolid bool = false
+	wallpaperMutex.Lock()
+	defer wallpaperMutex.Unlock()
 	if strings.HasPrefix(file, solidPrefix) {
 		file = strings.TrimPrefix(file, solidPrefix)
 		isSolid = true
@@ -188,12 +193,15 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		}
 		return ""
 	}()
-	if path == ""{
+	if path == "" {
 		err = fmt.Errorf("unknown path: %s", prefix)
 		return "", dbusutil.ToError(err)
 	}
 	destFile := filepath.Join(path, md5sum)
 	destFile = destFile + filepath.Ext(file)
+	if dutils.IsFileExist(destFile) {
+		return destFile, nil
+	}
 	src, err := os.Open(file)
 	if err != nil {
 		logger.Warning(err)

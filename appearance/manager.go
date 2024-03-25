@@ -679,6 +679,7 @@ func (m *Manager) handleDisplayChanged(hasValue bool) {
 	}
 	m.updateMonitorMap()
 	err := m.doUpdateWallpaperURIs()
+	m.updateGreeterBackground()
 	if err != nil {
 		logger.Warning("failed to update WallpaperURIs:", err)
 	}
@@ -707,6 +708,25 @@ func (m *Manager) handleWmWorkspaceCountChanged(count int32) {
 	}
 }
 
+// 同步当前主屏的壁纸到greeter界面壁纸
+func (m *Manager) updateGreeterBackground() {
+	for item, _ := range m.monitorMap {
+		if m.monitorMap[item] == "Primary" {
+			bg, err := m.wm.GetCurrentWorkspaceBackgroundForMonitor(0, item)
+			if err != nil {
+				logger.Warning("get current background failed", err)
+				return
+			}
+			err = m.doSetGreeterBackground(bg)
+			if err != nil {
+				logger.Warning("set greeter background failed", err)
+				return
+			}
+			return
+		}
+	}
+}
+
 // 切换工作区
 func (m *Manager) handleWmWorkspaceSwithched(from, to int32) {
 	logger.Debugf("wm workspace switched from %d to %d", from, to)
@@ -716,6 +736,8 @@ func (m *Manager) handleWmWorkspaceSwithched(from, to int32) {
 			logger.Warning("call userObj.SetCurrentWorkspace err:", err)
 		}
 	}
+	// 切换工作区，需要同步当前主屏的壁纸到greeter界面壁纸
+	m.updateGreeterBackground()
 }
 
 func (m *Manager) doSetGtkTheme(value string) error {
@@ -787,6 +809,7 @@ func (m *Manager) doSetMonitorBackground(monitorName string, imageFile string) (
 	if err != nil {
 		return "", err
 	}
+
 	// 如果文件发生增删，发送add/delete的信号
 	if needNotify {
 		// 由于用户操作，统一将用户自定义设置的壁纸当做新的壁纸处理，发送新增信号，告知上层
@@ -995,13 +1018,24 @@ func (m *Manager) doSetBackground(value string) (string, error) {
 }
 
 func (m *Manager) doSetGreeterBackground(value string) error {
-	value = dutils.EncodeURI(value, dutils.SCHEME_FILE)
-	m.greeterBg = value
+	logger.Debugf("call doSetGreeterBackground file:%q", value)
+	file, t := background.GetWallpaperType(value)
+	if t == background.Unknown {
+		return errors.New("invalid background")
+	}
+
+	file, err := background.Prepare(file, t)
+	if err != nil {
+		logger.Warning("failed to prepare:", err)
+		return err
+	}
+	file = dutils.EncodeURI(file, dutils.SCHEME_FILE)
+	m.greeterBg = file
 	if m.userObj == nil {
 		return errors.New("user object is nil")
 	}
-
-	return m.userObj.SetGreeterBackground(0, value)
+	logger.Debug("set greeter background:", file)
+	return m.userObj.SetGreeterBackground(0, file)
 }
 
 func (m *Manager) doSetStandardFont(value string) error {
@@ -1161,6 +1195,9 @@ func (m *Manager) autoChangeBg(monitorSpace string, t time.Time) {
 			return
 		}
 		_, err = m.doSetMonitorBackground(monitorname, file)
+		if m.monitorMap[monitorname] == "Primary" {
+			m.updateGreeterBackground()
+		}
 		if err != nil {
 			logger.Warning("failed to set background:", err)
 		}
