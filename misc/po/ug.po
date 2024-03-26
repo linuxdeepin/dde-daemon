@@ -1062,7 +1062,7 @@ msgstr "سىستېما %dدىن كېيىن ئاپتوماتىك تاقىلىدۇ
 
 #: ../../session/power/manager.go:914
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "ۋاقىت بەلگىلەپ تاقاش"
 
 #: ../../session/power/manager.go:915
 msgid "Cancle"

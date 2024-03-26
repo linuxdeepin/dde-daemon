@@ -4,42 +4,42 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!message" line="0"/>
 			<source>Authentication is required to change your own user data</source>
-			<translation type="unfinished"/>
+			<translation>Sie müssen sich authentifizieren, um ihre Benutzerdaten zu ändern</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.change-own-user-data!description" line="0"/>
 			<source>Change your own user data</source>
-			<translation type="unfinished"/>
+			<translation>Ändern Sie ihre Benutzerdaten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!message" line="0"/>
 			<source>Authentication is required to change user data</source>
-			<translation type="unfinished"/>
+			<translation>Sie müssen sich authentifizieren, um Benutzerdaten zu ändern</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.user-administration!description" line="0"/>
 			<source>Manage user accounts</source>
-			<translation type="unfinished"/>
+			<translation>Benutzerkonten verwalten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!message" line="0"/>
 			<source>Authentication is required to enable auto login</source>
-			<translation type="unfinished"/>
+			<translation>Sie müssen sich authentifizieren, um Auto-LogIn einzurichten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-auto-login!description" line="0"/>
 			<source>Enable Auto Login</source>
-			<translation type="unfinished"/>
+			<translation>Auto-LogIn Einrichten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!message" line="0"/>
 			<source>Authentication is required to disable auto login</source>
-			<translation type="unfinished"/>
+			<translation>Sie müssen sich authentifizieren, um Auto-LogIn abzuschalten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-auto-login!description" line="0"/>
 			<source>Disable Auto Login</source>
-			<translation type="unfinished"/>
+			<translation>Auto-LogIn abschalten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!message" line="0"/>
@@ -64,32 +64,32 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!message" line="0"/>
 			<source>Authentication is required to enable login without password</source>
-			<translation type="unfinished"/>
+			<translation>Sie müssen sich authentifizieren, um LogIn ohne Passwort einzurichten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!description" line="0"/>
 			<source>Enable Login without password</source>
-			<translation type="unfinished"/>
+			<translation>LogIn ohne Passwort einrichten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-nopass-login!message" line="0"/>
 			<source>Authentication is required to disable login without password</source>
-			<translation type="unfinished"/>
+			<translation>Sie müssen sich authentifizieren, um LogIn ohne Passwort abzuschalten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-nopass-login!description" line="0"/>
 			<source>Disable Login without password</source>
-			<translation type="unfinished"/>
+			<translation>LogIn ohne Passwort abschalten</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!message" line="0"/>
 			<source>Authentication is required to set keyboard layout</source>
-			<translation type="unfinished"/>
+			<translation>Sie müssen sich authentifizieren, um das Tastatur-Layout einzustellen</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.set-keyboard-layout!description" line="0"/>
 			<source>Set keyboard layout</source>
-			<translation type="unfinished"/>
+			<translation>Tastatur-Layout einstellen</translation>
 		</message>
 	</context>
 </TS>

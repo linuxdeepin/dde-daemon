@@ -464,15 +464,15 @@ msgstr "İş sahələrini göstərmək"
 
 #: ../../keybinding/shortcuts/id_name_map.go:143
 msgid "Zoom In"
-msgstr ""
+msgstr "Yaxınlaşdırın"
 
 #: ../../keybinding/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr ""
+msgstr "Uzaqlaşdırın"
 
 #: ../../keybinding/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Miqyası ilkin ölçüyə qaytarın"
 
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
@@ -992,6 +992,8 @@ msgstr "%q ilə bağlantı alınmadı"
 #: ../../network/state_handler.go:369
 msgid "To connect %q, please set up your authentication info"
 msgstr ""
+"%q ilə bağlantı üçün, xahiş edirik kimlik doğrulaması məlumatlarınızı təyin "
+"edin"
 
 #: ../../network/state_handler.go:371
 msgid "Password is required to connect %q"
@@ -1059,19 +1061,19 @@ msgstr "Davam edin"
 #: ../../session/power/manager.go:913
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "Sistem %d san. sonra avtomatik olaraq söndürüləcək"
 
 #: ../../session/power/manager.go:914
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "Planlaşdırılan söndürmə"
 
 #: ../../session/power/manager.go:915
 msgid "Cancle"
-msgstr ""
+msgstr "Ləğv edin"
 
 #: ../../session/power/manager.go:915
 msgid "Shut down"
-msgstr ""
+msgstr "Söndürün"
 
 #: ../../session/power/manager_events.go:257
 msgid "Battery critically low"

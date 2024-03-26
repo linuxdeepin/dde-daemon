@@ -44,22 +44,22 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!message" line="0"/>
 			<source>Authentication is required to enable quick login</source>
-			<translation type="unfinished"/>
+			<translation>تېزلەتمە كىرىشنى ئېچىش ئۈچۈن سالاھىيەت دەلىللەش كېرەك</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>تېزلەتمە كىرىشنى ئېچىش</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-quick-login!message" line="0"/>
 			<source>Authentication is required to disable quick login</source>
-			<translation type="unfinished"/>
+			<translation>تېزلەتمە كىرىشنى تاقاش ئۈچۈن سالاھىيەت دەلىللەش كېرەك</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>تېزلەتمە كىرىشنى تاقاش</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!message" line="0"/>

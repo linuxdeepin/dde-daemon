@@ -44,22 +44,22 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!message" line="0"/>
 			<source>Authentication is required to enable quick login</source>
-			<translation type="unfinished"/>
+			<translation>འཕྲལ་དུ་ཐོ་འཇུག་པར་ར་སྤྲོད་བྱེད་དགོས།</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>འཕྲུལ་དུ་ཐོ་འཇུག</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-quick-login!message" line="0"/>
 			<source>Authentication is required to disable quick login</source>
-			<translation type="unfinished"/>
+			<translation>འཕྲལ་དུ་ཐོ་འཇུག་པར་ར་སྤྲོད་བྱེད་མི་དགོས།</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>འཕྲུལ་དུ་ཐོ་འཇུག་ཅེས་པ་སྒོ་རྒྱག་པ།</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!message" line="0"/>

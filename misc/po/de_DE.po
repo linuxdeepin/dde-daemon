@@ -3,13 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Keine Werbung, 2024
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 11:02+0800\n"
+"POT-Creation-Date: 2024-03-25 09:50+0800\n"
 "PO-Revision-Date: 2020-05-29 07:18+0000\n"
+"Last-Translator: Keine Werbung, 2024\n"
 "Language-Team: German (Germany) (https://app.transifex.com/linuxdeepin/teams/3617/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,25 +23,27 @@ msgstr ""
 
 #: ../../accounts/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr ""
+msgstr "Bitte geben Sie ein Passwort mit mindestens 8 Zeichen ein"
 
 #: ../../accounts/checkers/password.go:40
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
+"Das Passwort muss aus lateinischen Buchstaben (Groß-/Kleinschreibung "
+"beachten), Ziffern oder Spezialzeichen  (~!@#$%^&*()[]{}\\|/?,.<>) bestehen"
 
 #: ../../accounts/checkers/username.go:49
 msgid "Username cannot be empty"
-msgstr ""
+msgstr "Benutzername darf nicht leer sein"
 
 #: ../../accounts/checkers/username.go:54
 msgid "The first character must be a letter or number"
-msgstr ""
+msgstr "Das erste Zeichen muss ein Buchstabe oder eine Ziffer sein"
 
 #: ../../accounts/checkers/username.go:57
 msgid "The username already exists"
-msgstr ""
+msgstr "Dieser Benutzername ist schon vergeben"
 
 #: ../../accounts/checkers/username.go:60
 msgid "The group name already exists"
@@ -45,12 +51,12 @@ msgstr ""
 
 #: ../../accounts/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
-msgstr ""
+msgstr "Der Benutzername muss 3 bis 32 Zeichen lang sein"
 
 #: ../../accounts/manager.go:572
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
+msgstr "Benutzer \"%s\" gab es schon vorher und seine Daten sind synchronisiert"
 
 #: ../../accounts/user_ifc.go:656
 msgid "This system wallpaper is locked. Please contact your admin."

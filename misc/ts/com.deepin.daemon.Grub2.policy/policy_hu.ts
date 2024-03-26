@@ -1,25 +1,25 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="hu" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hu">
 	<context>
 		<name>policy</name>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!message" line="0"/>
-			<source>Authentication is required to change the grub2 configuration</source>
-			<translation>Hitelesítés szükséges a grub2 konfiguráció módosítához </translation>
+			<source>Authentication is required to change the grub configuration</source>
+			<translation>Hitelesítés szükséges a grub konfiguráció módosításához </translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!description" line="0"/>
-			<source>Change the grub2 configuration</source>
-			<translation>Módosítsa a grub2 konfigurációt</translation>
+			<source>Change the grub configuration</source>
+			<translation>Módosítsa a grub konfigurációt</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!message" line="0"/>
-			<source>Authentication is required to prepare grub2 display resolution detection</source>
-			<translation>Hitelesítés szükséges a grub2 képernyőfelbontás érzékeléshez</translation>
+			<source>Authentication is required to prepare grub display resolution detection</source>
+			<translation>Hitelesítés szükséges a grub képernyőfelbontás érzékeléshez</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!description" line="0"/>
-			<source>Prepare grub2 display resolution detection</source>
-			<translation>Grub2 képernyőfelbontás érzékelése</translation>
+			<source>Prepare grub display resolution detection</source>
+			<translation>Grub képernyőfelbontás érzékelése</translation>
 		</message>
 	</context>
 </TS>

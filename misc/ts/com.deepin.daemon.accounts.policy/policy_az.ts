@@ -44,22 +44,22 @@
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!message" line="0"/>
 			<source>Authentication is required to enable quick login</source>
-			<translation type="unfinished"/>
+			<translation>Kimlik doğrulaması avtomatik girişi aktiv etmək üçün tələb olunur</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>Sürətli girişi aktiv edin</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-quick-login!message" line="0"/>
 			<source>Authentication is required to disable quick login</source>
-			<translation type="unfinished"/>
+			<translation>Kimlik doğrulaması avtomatik girişi söndürmək üçün tələb olunur</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>Sürətli girişi söndürün</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.accounts.enable-nopass-login!message" line="0"/>

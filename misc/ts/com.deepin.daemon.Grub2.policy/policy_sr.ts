@@ -3,23 +3,23 @@
 		<name>policy</name>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!message" line="0"/>
-			<source>Authentication is required to change the grub2 configuration</source>
-			<translation>Идентификација је неопходна за промену grub2 поставки</translation>
+			<source>Authentication is required to change the grub configuration</source>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!description" line="0"/>
-			<source>Change the grub2 configuration</source>
-			<translation>Промени grub2 поставке</translation>
+			<source>Change the grub configuration</source>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!message" line="0"/>
-			<source>Authentication is required to prepare grub2 display resolution detection</source>
-			<translation>Идентификација је неопходна за припрему grub2 откривања резолуције екрана</translation>
+			<source>Authentication is required to prepare grub display resolution detection</source>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!description" line="0"/>
-			<source>Prepare grub2 display resolution detection</source>
-			<translation>Припреми grub2 откривања резолуције екрана</translation>
+			<source>Prepare grub display resolution detection</source>
+			<translation type="unfinished"/>
 		</message>
 	</context>
 </TS>

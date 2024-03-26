@@ -1,25 +1,25 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="nl" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
 	<context>
 		<name>policy</name>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!message" line="0"/>
-			<source>Authentication is required to change the grub2 configuration</source>
-			<translation>Authenticatie vereist om de grub2-instellingen aan te passen</translation>
+			<source>Authentication is required to change the grub configuration</source>
+			<translation>Verificatie vereist om de grub-instellingen aan te passen</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.Grub2!description" line="0"/>
-			<source>Change the grub2 configuration</source>
-			<translation>Grub2-instellingen aanpassen</translation>
+			<source>Change the grub configuration</source>
+			<translation>Grub-instellingen aanpassen</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!message" line="0"/>
-			<source>Authentication is required to prepare grub2 display resolution detection</source>
-			<translation>Authenticatie vereist om de grub2-schermresolutiedetectie voor te bereiden</translation>
+			<source>Authentication is required to prepare grub display resolution detection</source>
+			<translation>Verificatie vereist om de grub-schermresolutiedetectie voor te bereiden</translation>
 		</message>
 		<message>
 			<location filename="com.deepin.daemon.grub2.prepare-gfxmode-detect!description" line="0"/>
-			<source>Prepare grub2 display resolution detection</source>
-			<translation>Grub2-schermresolutiedetectie voorbereiden</translation>
+			<source>Prepare grub display resolution detection</source>
+			<translation>Grub-schermresolutiedetectie voorbereiden</translation>
 		</message>
 	</context>
 </TS>
