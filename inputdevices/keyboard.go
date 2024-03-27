@@ -468,9 +468,25 @@ func (kbd *Keyboard) setLayoutListForAccountsUser(layoutList []string) {
 	}
 }
 
+func (kbd *Keyboard) getRepeatDelay() (delay uint32) {
+	// 重复延迟列表
+	var repeatDelayLevel = []uint32{
+		20, 80, 150, 250, 360, 480, 600,
+	}
+	// 最低重复延迟等级
+	const minRepeatDelayLevel = 1
+
+	delay = kbd.RepeatDelay.Get()
+	// 重复延迟过低的话，键盘事件的重复率太高了，处理最低档位，上层配置保持不变
+	if delay < repeatDelayLevel[minRepeatDelayLevel] {
+		return repeatDelayLevel[minRepeatDelayLevel]
+	}
+	return
+}
+
 func (kbd *Keyboard) applyKwinWaylandRepeat() {
 	var (
-		delay    = kbd.RepeatDelay.Get()
+		delay    = kbd.getRepeatDelay()
 		interval = kbd.RepeatInterval.Get()
 	)
 
@@ -493,7 +509,7 @@ func (kbd *Keyboard) applyKwinWaylandRepeat() {
 func (kbd *Keyboard) applyX11Repeat() {
 	var (
 		repeat   = kbd.RepeatEnabled.Get()
-		delay    = kbd.RepeatDelay.Get()
+		delay    = kbd.getRepeatDelay()
 		interval = kbd.RepeatInterval.Get()
 	)
 
