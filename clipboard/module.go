@@ -5,6 +5,8 @@
 package clipboard
 
 import (
+	"os"
+
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
@@ -35,6 +37,9 @@ func (*Module) GetDependencies() []string {
 }
 
 func (mo *Module) Start() error {
+	if os.Getenv("WAYLAND_DISPLAY") != "" {
+		return nil
+	}
 	logger.Debug("clipboard module start")
 
 	xConn, err := x.NewConn()
