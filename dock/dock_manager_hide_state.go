@@ -233,7 +233,7 @@ func (m *Manager) shouldHideOnSmartHideModeX(activeWin x.Window) (bool, error) {
 
 func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, error) {
 	// 向窗管小伙伴讨教了一下，这里的currentDesktop - 1 后才和wayland下通过kwayland拿到的virtualDesktop相等
-	currentDesktop,_ := m.kwin.CurrentDesktop(0)
+	currentDesktop, _ := m.kwin.CurrentDesktop(0)
 
 	isShowDesktop, err := m.wm.GetIsShowDesktop(0)
 	if err != nil {
@@ -248,16 +248,16 @@ func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, erro
 		minimized, err := winInfo.winObj.IsMinimized(0)
 
 		// 非当前工作区的窗口不用关心
-		virtualDesktop,_ := winInfo.winObj.VirtualDesktop(0)
+		virtualDesktop, _ := winInfo.winObj.VirtualDesktop(0)
 
 		// 一些置顶的窗口过滤掉，例如输入法的小窗口
-		isKeepAbove,_ := winInfo.winObj.IsKeepAbove(0)
+		isKeepAbove, _ := winInfo.winObj.IsKeepAbove(0)
 		if err != nil {
 			logger.Warning(err)
 			continue
 		}
 
-		if minimized || virtualDesktop != uint32(currentDesktop - 1) || isKeepAbove {
+		if minimized || virtualDesktop != uint32(currentDesktop-1) || isKeepAbove {
 			logger.Debugf("window %v is hidden or keepAbove or  not on current workspace", winInfo.appId)
 			continue
 		}
@@ -266,7 +266,7 @@ func (m *Manager) shouldHideOnSmartHideModeK(activeWin *KWindowInfo) (bool, erro
 		if hide {
 			return true, nil
 		}
-    }
+	}
 
 	return false, nil
 }
@@ -377,6 +377,7 @@ func (m *Manager) isWindowDockOverlapK(winInfo *KWindowInfo) (bool, error) {
 	if winInfo.appId == "dde-desktop" ||
 		winInfo.appId == "dde-lock" ||
 		winInfo.appId == "dde-shutdown" ||
+		winInfo.appId == "reset-password-dialog" ||
 		winInfo.appId == "deepin-screen-recorder" {
 		logger.Debug("Active Window is dde-desktop/dde-lock/dde-shutdowm/deepin-screen-recorder && return isWindowDockOverlapK false")
 		return false, nil

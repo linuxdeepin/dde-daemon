@@ -163,6 +163,8 @@ func (winInfo *WindowInfo) shouldSkipWithWMClass() bool {
 		return true
 	} else if wmClass.Class == "dde-launcher" {
 		return true
+	} else if wmClass.Class == "reset-password-dialog" || wmClass.Instance == "reset-password-dialog" {
+		return true
 	} else if wmClass.Instance == "onboard" && wmClass.Class == "Onboard" {
 		return true
 	}
