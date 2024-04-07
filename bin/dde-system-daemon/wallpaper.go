@@ -7,7 +7,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -163,19 +162,6 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		err = fmt.Errorf("%s not allowed to set %s wallpaper", user.Username, username)
 		return "", dbusutil.ToError(err)
 	}
-	err = exec.Command("runuser", []string{
-		"-u",
-		username,
-		"--",
-		"head",
-		"-c",
-		"0",
-		file,
-	}...).Run()
-	if err != nil {
-		err = fmt.Errorf("permission denied, %s is not allowed to read this file:%s", username, file)
-		return "", dbusutil.ToError(err)
-	}
 	md5sum, _ := dutils.SumFileMd5(file)
 
 	var prefix string
@@ -202,21 +188,19 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 	if dutils.IsFileExist(destFile) {
 		return destFile, nil
 	}
-	src, err := os.Open(file)
+	src, err := exec.Command("runuser", []string{
+		"-u",
+		username,
+		"--",
+		"cat",
+		file,
+	}...).Output()
 	if err != nil {
-		logger.Warning(err)
+		err = fmt.Errorf("permission denied, %s is not allowed to read this file:%s", username, file)
 		return "", dbusutil.ToError(err)
 	}
-	defer src.Close()
 
-	dest, err := os.Create(destFile)
-	if err != nil {
-		logger.Warning(err)
-		return "", dbusutil.ToError(err)
-	}
-	defer dest.Close()
-
-	_, err = io.Copy(dest, src)
+	err = ioutil.WriteFile(destFile, src, 0644)
 	if err != nil {
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
