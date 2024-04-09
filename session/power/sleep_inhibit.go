@@ -5,11 +5,11 @@
 package power
 
 import (
+	"github.com/linuxdeepin/dde-daemon/appearance"
+	"github.com/linuxdeepin/dde-daemon/network"
 	"syscall"
 
 	"github.com/godbus/dbus"
-	"github.com/linuxdeepin/dde-daemon/appearance"
-	"github.com/linuxdeepin/dde-daemon/network"
 	daemon "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.daemon"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
@@ -17,10 +17,11 @@ import (
 )
 
 type sleepInhibitor struct {
-	loginManager login1.Manager
-	fd           int
-	dbusObj      ofdbus.DBus
-	sysLoop      *dbusutil.SignalLoop
+	loginManager      login1.Manager
+	fd                int
+	dbusObj           ofdbus.DBus
+	sysLoop           *dbusutil.SignalLoop
+	hasRunBeforeSleep bool
 
 	OnWakeup        func()
 	OnBeforeSuspend func()
@@ -41,14 +42,19 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 	inhibitor.sysLoop.Start()
 	inhibitor.dbusObj.InitSignalExt(inhibitor.sysLoop, true)
 	_, err = daemon.ConnectHandleForSleep(func(before bool) {
-		logger.Info("login1 HandleForSleep", before)
+		logger.Info("sleepInhibitor HandleForSleep", before)
 		// signal `HandleForSleep` true -> false
-		if !_manager.sessionActive {
-			// 如果此用户此时不是活跃状态,则不处理待机唤醒信号.
-			return
-		}
-
 		if before {
+			_manager.PropsMu.Lock()
+			if !_manager.sessionActive {
+				logger.Debug("sessionActive is false,don't need run before sleep")
+				_manager.PropsMu.Unlock()
+				// 如果此用户此时不是活跃状态,则不处理待机唤醒信号.
+				return
+			}
+			_manager.PropsMu.Unlock()
+
+			inhibitor.hasRunBeforeSleep = true
 			// TODO(jouyouyun): implement 'HandleForSleep' register
 			appearance.HandlePrepareForSleep(true)
 			network.HandlePrepareForSleep(true)
@@ -62,6 +68,10 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 				logger.Warning(err)
 			}
 		} else {
+			if !inhibitor.hasRunBeforeSleep {
+				logger.Debug("not run before sleep,don't need run after sleep")
+				return
+			}
 			suspendPulseSources(0)
 			suspendPulseSinks(0)
 			if inhibitor.OnWakeup != nil {
@@ -78,6 +88,7 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 			if err != nil {
 				logger.Warning(err)
 			}
+			inhibitor.hasRunBeforeSleep = false
 		}
 	})
 	if err != nil {
