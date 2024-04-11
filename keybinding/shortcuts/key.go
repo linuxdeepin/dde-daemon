@@ -78,5 +78,5 @@ func (k Key) Ungrab(conn *x.Conn) {
 
 func (k Key) Grab(conn *x.Conn) error {
 	rootWin := conn.GetDefaultScreen().Root
-	return keybind.GrabChecked(conn, rootWin, uint16(k.Mods), x.Keycode(k.Code))
+	return keybind.GrabCheckedV2(conn, rootWin, uint16(k.Mods), x.Keycode(k.Code), x.GrabModeAsync, x.GrabModeSync)
 }

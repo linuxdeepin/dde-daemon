@@ -775,6 +775,8 @@ func (sm *ShortcutManager) EventLoop() {
 	for ev := range eventChan {
 		switch ev.GetEventCode() {
 		case x.KeyPressEventCode:
+			x.UngrabKeyboardChecked(sm.conn, x.TimeCurrentTime).Check(sm.conn)
+
 			event, _ := x.NewKeyPressEvent(ev)
 			logger.Debug(event)
 			sm.handleKeyEvent(true, event.Detail, event.State)
