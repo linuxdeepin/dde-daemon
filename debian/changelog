@@ -1,3 +1,9 @@
+dde-daemon (6.0.37) unstable; urgency=medium
+
+  * fix: pressing the shortcut key will hide the launchpad
+
+ -- zsien <quezhiyong@deepin.org>  Fri, 12 Apr 2024 14:14:27 +0800
+
 dde-daemon (6.0.36) unstable; urgency=medium
 
   * chore: update translations
