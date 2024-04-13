@@ -66,6 +66,8 @@ type SecretAgent struct {
 	saveSecretsTasks   map[saveSecretsTaskKey]saveSecretsTask
 	saveSecretsTasksMu sync.Mutex
 
+	handleProcessMu sync.Mutex
+
 	// sleep for 2 seconds when trying to get keyring in the first boot
 	needSleep bool
 
@@ -100,11 +102,13 @@ func (sa *SecretAgent) getSaveSecretsTaskProcess(connPath dbus.ObjectPath,
 	settingName string) *os.Process {
 	sa.saveSecretsTasksMu.Lock()
 
-	task := sa.saveSecretsTasks[saveSecretsTaskKey{
+	task, ok := sa.saveSecretsTasks[saveSecretsTaskKey{
 		connPath:    connPath,
 		settingName: settingName,
 	}]
-
+	if !ok {
+		logger.Info("not exist this task:", connPath, settingName)
+	}
 	sa.saveSecretsTasksMu.Unlock()
 	return task.process
 }
@@ -504,15 +508,29 @@ func (sa *SecretAgent) askPasswords(connPath dbus.ObjectPath,
 	// if isSecretDialogExist() {
 	// 	return nil, err
 	// }
+	// TODO 还是有可能存在第二个getSecrets在第一个之前触发，概率较低;先用该方式规避两次getSecrets间隔很小导致无法正常取消第一个getSecrets。后续需要优化网络库两次激活和后端secret_agent逻辑。
+	sa.handleProcessMu.Lock()
+	process := sa.getSaveSecretsTaskProcess(connPath, settingName)
+	if process != nil {
+		logger.Debug("kill process", process.Pid)
+		err := process.Kill()
+		if err != nil {
+			logger.Warning(err)
+			sa.handleProcessMu.Unlock()
+			return nil, err
+		}
+	}
 	cmd := exec.Command(nmSecretDialogBin)
 	cmd.Stdin = bytes.NewReader(reqJSON)
 	var cmdOutBuf bytes.Buffer
 	cmd.Stdout = &cmdOutBuf
 	err = cmd.Start()
 	if err != nil {
+		sa.handleProcessMu.Unlock()
 		return nil, err
 	}
 	sa.addSaveSecretsTask(connPath, settingName, cmd.Process)
+	sa.handleProcessMu.Unlock()
 	err = cmd.Wait()
 	sa.removeSaveSecretsTask(connPath, settingName)
 	if err != nil {
