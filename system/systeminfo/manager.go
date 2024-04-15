@@ -54,6 +54,7 @@ type lshwClassContent []lshwItemContent
 
 // 缓存 lshw 指令获取到的数据 key/value --> class/data
 var _lshwContent = make(map[string]lshwClassContent)
+var _lshwContentMu sync.Mutex
 
 const (
 	dbusServiceName = "com.deepin.system.SystemInfo"
@@ -114,7 +115,8 @@ func getLshwData(class string) (lshwClassContent, error) {
 		logger.Info("class is Empty")
 		return nil, errors.New("input is not allowed to be empty")
 	}
-
+	_lshwContentMu.Lock()
+	defer _lshwContentMu.Unlock()
 	_, ok := _lshwContent[class]
 	if !ok {
 		output, err := exec.Command("lshw", "-c", class, "-sanitize", "-quiet", "-json").Output()

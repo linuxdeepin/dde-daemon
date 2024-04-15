@@ -5,10 +5,11 @@
 package systeminfo
 
 import (
-	"strings"
-
-	"github.com/jouyouyun/hardware/dmi"
+	"github.com/godbus/dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
+	"strings"
+	"sync"
 
 	"github.com/linuxdeepin/dde-daemon/loader"
 )
@@ -35,40 +36,40 @@ func (m *Module) Start() error {
 	logger.Debug("system info module start")
 	service := loader.GetService()
 	m.m = NewManager(service)
-	err := service.Export(dbusPath, m.m)
+	serverObj, err := service.NewServerObject(dbusPath, m.m)
 	if err != nil {
+		logger.Warning(err)
 		return err
 	}
-	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		return err
-	}
-	go func() {
+
+	handleMem := func() {
 		// init get memory
 		err = m.m.calculateMemoryViaLshw()
 		if err != nil {
 			logger.Warning(err)
 		}
-		// get system bit
-		systemType := 64
-		if "64" != m.m.systemBit() {
-			systemType = 32
-		}
-		// Get CPU MHZ
-		currentSpeed, err1 := GetCurrentSpeed(systemType)
-		if err1 != nil {
-			logger.Warning(err1)
-			return
-		}
-		m.m.setPropCurrentSpeed(currentSpeed)
-		info, err := dmi.GetDMI()
-		if err != nil {
-			logger.Warning(err)
-		} else {
-			if info != nil {
-				m.m.setPropDMIInfo(*info)
-			}
-		}
+	}
+	var memOnce sync.Once
+	err = serverObj.SetReadCallback(m.m, "MemorySize", func(read *dbusutil.PropertyRead) *dbus.Error {
+		memOnce.Do(func() {
+			handleMem()
+		})
+		return nil
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = serverObj.SetReadCallback(m.m, "MemorySizeHuman", func(read *dbusutil.PropertyRead) *dbus.Error {
+		memOnce.Do(func() {
+			handleMem()
+		})
+		return nil
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	handleDisplay := func() {
 		// get system display driver info
 		classContent, err := getLshwData("display")
 		if err != nil {
@@ -80,8 +81,21 @@ func (m *Module) Start() error {
 			}
 			m.m.setPropDisplayDriver(strings.Join(res, "&&"))
 		}
+	}
+	var displayOnce sync.Once
+	err = serverObj.SetReadCallback(m.m, "DisplayDriver", func(read *dbusutil.PropertyRead) *dbus.Error {
+		displayOnce.Do(func() {
+			handleDisplay()
+		})
+		return nil
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	handleVideo := func() {
 		// get system video driver info
-		classContent, err = getLshwData("video")
+		classContent, err := getLshwData("video")
 		if err != nil {
 			logger.Warning(err)
 		} else {
@@ -91,7 +105,28 @@ func (m *Module) Start() error {
 			}
 			m.m.setPropVideoDriver(strings.Join(res, "&&"))
 		}
-	}()
+	}
+	var videoOnce sync.Once
+	err = serverObj.SetReadCallback(m.m, "VideoDriver", func(read *dbusutil.PropertyRead) *dbus.Error {
+		videoOnce.Do(func() {
+			handleVideo()
+		})
+		return nil
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	err = serverObj.Export()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	err = service.RequestName(dbusServiceName)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
