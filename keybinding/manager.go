@@ -165,6 +165,8 @@ type Manager struct {
 	dmiInfo     systeminfo.DMIInfo
 	rfkillState bool
 	repeatCount int
+	fnLockCount int
+	fnLocking   bool
 
 	// nolint
 	signals *struct {
@@ -458,7 +460,7 @@ var kwinSysActionCmdMap = map[string]string{
 	"ScreenshotScroll": "screenshot-scroll",
 	"ScreenshotOcr":    "screenshot-ocr",
 	"Global Search":    "global-search",
-	"Switch monitors":   "switch-monitors",
+	"Switch monitors":  "switch-monitors",
 }
 
 var waylandMediaIdMap = map[string]string{

@@ -11,6 +11,8 @@ import (
 	"time"
 
 	"github.com/godbus/dbus"
+	launcher "github.com/linuxdeepin/go-dbus-factory/com.deepin.dde.daemon.launcher"
+	sessionmanager "github.com/linuxdeepin/go-dbus-factory/com.deepin.sessionmanager"
 	power "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.power"
 )
 
@@ -30,6 +32,7 @@ const (
 	KEY_MODE            = 0x175
 	KEY_KBDILLUMTOGGLE  = 228
 	KEY_RFKILL          = 247
+	KEY_UNKNOWN         = 240
 )
 
 type SpecialKeycodeMapKey struct {
@@ -113,6 +116,14 @@ func (m *Manager) initSpecialKeycodeMap() {
 	// 切换飞行模式 Hard开/关状态
 	key = createSpecialKeycodeIndex(KEY_RFKILL, false, MODIFY_NONE)
 	m.specialKeycodeBindingList[key] = m.handleRFKILL
+
+	// 打开截屏
+	key = createSpecialKeycodeIndex(294, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleScreenshot
+
+	// 打开设备管理器
+	key = createSpecialKeycodeIndex(KEY_UNKNOWN, false, MODIFY_NONE)
+	m.specialKeycodeBindingList[key] = m.handleOpenDeviceManager
 }
 
 // 处理函数的总入口
@@ -130,6 +141,16 @@ func (m *Manager) handleSpecialKeycode(keycode uint32,
 		shiftPressed,
 		altPressed,
 		superPressed,
+	}
+
+	if keycode == KEY_UNKNOWN {
+		if pressed {
+			m.fnLockCount++
+		} else {
+			m.fnLockCount--
+		}
+	} else {
+		m.fnLockCount = 0
 	}
 
 	handler, ok := m.specialKeycodeBindingList[key]
@@ -423,4 +444,33 @@ func (m *Manager) handleRFKILL() {
 	m.emitSignalKeyEvent(true, "KEY_RFKILL")
 	m.delayUpdateRfTimer.Stop()
 	m.delayUpdateRfTimer.Reset(minCallRfkillInterval)
+}
+
+func (m *Manager) handleScreenshot() {
+	m.execCmd("dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.StartScreenshot", false)
+}
+
+func (m *Manager) handleOpenDeviceManager() {
+	if m.fnLockCount > 0 {
+		// 连续 KEY_UNKNOWN 为切换 fn-lock 忽略掉
+		m.fnLocking = true
+		return
+	}
+
+	if m.fnLocking {
+		m.fnLocking = false
+		return
+	}
+
+	launcher := launcher.NewLauncher(m.service.Conn())
+	info, err := launcher.GetItemInfo(0, "deepin-devicemanager")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	sessionmanager := sessionmanager.NewStartManager(m.service.Conn())
+	_, err = sessionmanager.Launch(0, info.Path)
+	if err != nil {
+		logger.Warning(err)
+	}
 }

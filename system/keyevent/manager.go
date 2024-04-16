@@ -6,21 +6,22 @@ package keyevent
 
 import (
 	"errors"
-	"os"
 	"io/ioutil"
+	"os"
 	"strings"
+
 	"github.com/godbus/dbus"
+	inputdevices "github.com/linuxdeepin/go-dbus-factory/com.deepin.system.inputdevices"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-dbus-factory/com.deepin.system.inputdevices"
 )
 
 //go:generate dbusutil-gen em -type Manager
 
 type Manager struct {
-	service     *dbusutil.Service
-	quit        chan bool
-	ch          chan *KeyEvent
-	touchPad    inputdevices.Touchpad
+	service  *dbusutil.Service
+	quit     chan bool
+	ch       chan *KeyEvent
+	touchPad inputdevices.Touchpad
 
 	leftCtrlPressed  bool
 	leftShiftPressed bool
@@ -45,7 +46,7 @@ type Manager struct {
 	}
 }
 
-const(
+const (
 	touchpadSwitchFile = "/proc/uos/touchpad_switch"
 )
 
@@ -66,6 +67,8 @@ var allowList = map[uint32]bool{
 	KEY_MODE:            true,
 	KEY_KBDILLUMTOGGLE:  true,
 	KEY_SCREENLOCK:      true,
+	KEY_UNKNOWN:         true,
+	294:                 true,
 }
 
 func newManager(service *dbusutil.Service) *Manager {
@@ -79,7 +82,7 @@ func newManager(service *dbusutil.Service) *Manager {
 	if err != nil {
 		return m
 	}
-	m.touchPad, err = inputdevices.NewTouchpad(sysBus,"/com/deepin/system/InputDevices/Touchpad")
+	m.touchPad, err = inputdevices.NewTouchpad(sysBus, "/com/deepin/system/InputDevices/Touchpad")
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -178,7 +181,7 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 						arg = "enable"
 					}
 					err = ioutil.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
-					if err != nil{
+					if err != nil {
 						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
 					}
 				}
@@ -194,7 +197,7 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 				if err != nil {
 					logger.Warning("Set TouchPad state err : ", err)
 					err = ioutil.WriteFile(touchpadSwitchFile, []byte("enable"), 0644)
-					if err != nil{
+					if err != nil {
 						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
 					}
 				}
@@ -210,7 +213,7 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 				if err != nil {
 					logger.Warning("Set TouchPad state err : ", err)
 					err = ioutil.WriteFile(touchpadSwitchFile, []byte("disable"), 0644)
-					if err != nil{
+					if err != nil {
 						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
 					}
 				}
