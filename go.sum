@@ -84,8 +84,8 @@ github.com/linuxdeepin/go-x11-client v0.0.0-20220830090948-78fe92b727bb/go.mod h
 github.com/linuxdeepin/go-x11-client v0.0.0-20230131052004-7503e2337ee1/go.mod h1:KwpmRZ47A/0a2l9V0V6aTlkuNaqy5j1fOqMFJONuIMY=
 github.com/linuxdeepin/go-x11-client v0.0.0-20230329071904-56c906e1ab5d h1:FYvSF95wgsMpah80xtLCOMqompAbjkaMRmn9RBMBzo8=
 github.com/linuxdeepin/go-x11-client v0.0.0-20230329071904-56c906e1ab5d/go.mod h1:KwpmRZ47A/0a2l9V0V6aTlkuNaqy5j1fOqMFJONuIMY=
-github.com/linuxdeepin/go-x11-client v0.0.0-20240412020522-868786c7cd21 h1:MEiOHxzvbIGwIXRhb4FReHO1wqaQMDlIl8FHMrveI2g=
-github.com/linuxdeepin/go-x11-client v0.0.0-20240412020522-868786c7cd21/go.mod h1:KwpmRZ47A/0a2l9V0V6aTlkuNaqy5j1fOqMFJONuIMY=
+github.com/linuxdeepin/go-x11-client v0.0.0-20240415051504-c8e43d028ff9 h1:GbhdC1TMi+V5yMRlfl16Y2gT/nhJn2OJalw6sVbFRHQ=
+github.com/linuxdeepin/go-x11-client v0.0.0-20240415051504-c8e43d028ff9/go.mod h1:KwpmRZ47A/0a2l9V0V6aTlkuNaqy5j1fOqMFJONuIMY=
 github.com/mattn/go-sqlite3 v1.14.0/go.mod h1:JIl7NbARA7phWnGvh0LKTyg7S9BA+6gx71ShQilpsus=
 github.com/mattn/go-sqlite3 v1.14.16/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
 github.com/mattn/goveralls v0.0.11/go.mod h1:gU8SyhNswsJKchEV93xRQxX6X3Ei4PJdQk/6ZHvrvRk=

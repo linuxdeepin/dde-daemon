@@ -14,7 +14,7 @@ require (
 	github.com/linuxdeepin/go-dbus-factory v0.0.0-20231128020144-77ac5d6251aa
 	github.com/linuxdeepin/go-gir v0.0.0-20230331033513-a8d7a9e89f9b
 	github.com/linuxdeepin/go-lib v0.0.0-20240103033000-4fb70d4b858f
-	github.com/linuxdeepin/go-x11-client v0.0.0-20240412020522-868786c7cd21
+	github.com/linuxdeepin/go-x11-client v0.0.0-20240415051504-c8e43d028ff9
 	github.com/mdlayher/netlink v1.7.1
 	github.com/msteinert/pam v1.1.0
 	github.com/rickb777/date v1.20.1
