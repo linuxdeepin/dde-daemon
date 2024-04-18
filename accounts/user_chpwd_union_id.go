@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/user"
@@ -20,7 +21,6 @@ import (
 	"sync"
 	"syscall"
 	"time"
-	"io/ioutil"
 
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/dde-daemon/accounts/users"
@@ -35,8 +35,24 @@ import (
 // 所以需要将重置密码的对话框 (文件位于 resetPwdDialogPath)
 // 以一个特殊的用户的身份运行, 这个用户只做运行对话框这一件事情.
 
-const pwdChangerUserName = "deepin-password-admin"                                //#nosec G101
+var pwdChangerUserName = "deepin-password-admin"                               //#nosec G101
 const resetPwdDialogPath = "/usr/lib/dde-control-center/reset-password-dialog" //#nosec G101
+
+func init() {
+	fileInfo, err := os.Stat(resetPwdDialogPath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	stat := fileInfo.Sys().(*syscall.Stat_t)
+	user, err := user.LookupId(fmt.Sprintf("%d", stat.Uid))
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	pwdChangerUserName = user.Username
+}
 
 // copy from golang 1.17, comment out some code because of unexported member
 //
@@ -673,7 +689,7 @@ func doSetPwdWithUnionID(u *User, sender dbus.Sender, count int) error {
 func removeLoginKeyring(user *User) (err error) {
 	//白盒密钥生效后，就不需要再删除keyring文件
 	dir := path.Join(user.HomeDir, "/.local/share/deepin-keyrings-wb")
-	isUseWhiteboxFunc := func () bool {
+	isUseWhiteboxFunc := func() bool {
 		statusFile := fmt.Sprintf("%s/status", dir)
 		if dutils.IsFileExist(dir) && dutils.IsFileExist(statusFile) {
 			content, err := ioutil.ReadFile(statusFile)

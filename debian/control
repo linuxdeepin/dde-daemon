@@ -95,7 +95,6 @@ Depends:
  xdotool,
  xkb-data,
  dde-dconfig-daemon,
- dde-control-center (>> 5.6.17-1),
  ${dist:Depends},
  ${misc:Depends},
  ${shlibs:Depends},
