@@ -5,6 +5,7 @@
 package timedate
 
 import (
+	"github.com/linuxdeepin/go-lib/strv"
 	"time"
 
 	"github.com/godbus/dbus/v5"
@@ -22,8 +23,9 @@ func (m *Manager) Reset() *dbus.Error {
 // The time may be specified in the format '2015' '1' '1' '18' '18' '18' '8'.
 func (m *Manager) SetDate(year, month, day, hour, min, sec, nsec int32) *dbus.Error {
 	timeZone := m.Timezone
+	customTimeZoneList := []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian"}
 	if strv.Strv(customTimeZoneList).Contains(m.Timezone) {
-		 timeZone = "Asia/Shanghai"
+		timeZone = "Asia/Shanghai"
 	}
 	loc, err := time.LoadLocation(timeZone)
 	if err != nil {
