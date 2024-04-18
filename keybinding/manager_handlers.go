@@ -36,21 +36,6 @@ func (m *Manager) initHandlers() {
 	}
 
 	m.handlers[ActionTypeExecCmd] = func(ev *KeyEvent) {
-		// prevent shortcuts such as switch window managers from being
-		// triggered twice by mistake.
-		const minExecCmdInterval = 600 * time.Millisecond
-		type0 := ev.Shortcut.GetType()
-		id := ev.Shortcut.GetId()
-		if type0 == ShortcutTypeSystem && id == "wm-switcher" {
-			now := time.Now()
-			duration := now.Sub(m.lastExecCmdTime)
-			if 0 < duration && duration < minExecCmdInterval {
-				logger.Debug("handle ActionTypeExecCmd ignore key event duration:", duration)
-				return
-			}
-			m.lastExecCmdTime = now
-		}
-
 		action := ev.Shortcut.GetAction()
 		arg, ok := action.Arg.(*ActionExecCmdArg)
 		if !ok {

@@ -147,7 +147,6 @@ type Manager struct {
 	// shortcut action handlers
 	handlers             []shortcuts.KeyEventFunc
 	lastKeyEventTime     time.Time
-	lastExecCmdTime      time.Time
 	lastMethodCalledTime time.Time
 	delayUpdateRfTimer   *time.Timer
 	grabScreenKeystroke  *shortcuts.Keystroke
