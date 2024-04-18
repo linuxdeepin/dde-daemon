@@ -8,6 +8,7 @@ package ddcci
 //#cgo LDFLAGS:-ldl
 //#cgo pkg-config: ddcutil
 //#include <ddcutil_c_api.h>
+//#include <ddcutil_types.h>
 //#include <stdlib.h>
 //#include "ddcci_wrapper.h"
 import "C"
@@ -103,9 +104,9 @@ func newDDCCI() (*ddcci, error) {
 		displayHandleMap: make(map[string]*displayHandle),
 	}
 
-	status := C.ddca_set_max_tries(C.DDCA_MULTI_PART_TRIES, 5)
+	status := C.ddca_init2((*C.char)(unsafe.Pointer(nil)), C.DDCA_SYSLOG_NOTICE, C.DDCA_INIT_OPTIONS_CLIENT_OPENED_SYSLOG, (***C.char)(unsafe.Pointer(nil)))
 	if status < C.int(0) {
-		return nil, fmt.Errorf("brightness: Error setting retries: %d", status)
+		return nil, fmt.Errorf("brightness: Error ddcci init: %d", status)
 	}
 
 	err := ddc.RefreshDisplays()
@@ -116,14 +117,14 @@ func newDDCCI() (*ddcci, error) {
 	content, err := exec.Command("/usr/bin/dpkg-architecture", "-qDEB_HOST_MULTIARCH").Output()
 	if err != nil {
 		// use dlopen search library when dpkg-architecture not available
-		cStr := C.CString("libddcutil.so.0")
+		cStr := C.CString("libddcutil.so.5")
 		defer C.free(unsafe.Pointer(cStr))
 		ret := C.InitDDCCISo(cStr)
 		if ret == -2 {
 			logger.Debug("failed to initialize ddca_free_all_displays sym")
 		}
 	} else {
-		path := filepath.Join("/usr/lib", strings.TrimSpace(string(content)), "libddcutil.so.0")
+		path := filepath.Join("/usr/lib", strings.TrimSpace(string(content)), "libddcutil.so.5")
 		logger.Debug("so path:", path)
 		cStr := C.CString(path)
 		defer C.free(unsafe.Pointer(cStr))
