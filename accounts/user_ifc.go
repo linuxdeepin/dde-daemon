@@ -413,7 +413,7 @@ func (u *User) SetLocale(sender dbus.Sender, locale string) *dbus.Error {
 func (u *User) SetLayout(sender dbus.Sender, layout string) *dbus.Error {
 	logger.Debug("[SetLayout] new layout:", layout)
 
-	err := u.checkAuth(sender, true, polkitActionSetKeyboardLayout)
+	err := u.checkAuth(sender, true, "")
 	if err != nil {
 		logger.Debug("[SetLayout] access denied:", err)
 		return dbusutil.ToError(err)
