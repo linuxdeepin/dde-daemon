@@ -10,13 +10,14 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
+	"os/exec"
+	"os/user"
 	"path/filepath"
 	"strings"
 	"sync"
 	"time"
-
-	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
@@ -63,21 +64,40 @@ func (sr *SubRecorder) init() {
 	if sr.initAppLaunchedMap(apps) {
 		var needMkdir = true
 		ret := getPathDirs(sr.statusFile)
-		sr.launchedMapMu.Lock()
 		for _, v := range ret {
-			if !dutils.IsFileExist(v) || isSymlink(v) {
-				logger.Warningf("%q is a symbolic link or file not exist.", v)
+			if isSymlink(v) {
+				logger.Warningf("%q is a symbolic link", v)
 				needMkdir = false
 				break
 			}
 		}
-		sr.launchedMapMu.Unlock()
 		if needMkdir {
-			err := MkdirAll(filepath.Dir(sr.statusFile), sr.statusFileOwner, dirPerm)
-			if err != nil {
-				logger.Warning(err)
+			// 使用用户权限来创建文件夹，防止提权。
+			if sr.statusFileOwner != 0 {
+				if user, err := user.LookupId(fmt.Sprintf("%d", sr.statusFileOwner)); err != nil {
+					logger.Warning(err)
+				} else {
+					err = exec.Command("runuser", []string{
+						"-u",
+						user.Username,
+						"--",
+						"mkdir",
+						"-p",
+						filepath.Dir(sr.statusFile),
+					}...).Run()
+					if err != nil {
+						logger.Warning(err)
+					} else {
+						sr.RequestSave()
+					}
+				}
+			} else {
+				err := MkdirAll(filepath.Dir(sr.statusFile), sr.statusFileOwner, dirPerm)
+				if err != nil {
+					logger.Warning(err)
+				}
+				sr.RequestSave()
 			}
-			sr.RequestSave()
 		}
 	}
 
@@ -195,8 +215,7 @@ func (sr *SubRecorder) writeStatus(w io.Writer) error {
 func (sr *SubRecorder) save() error {
 	logger.Debug("SubRecorder.save", sr.root, sr.statusFile)
 	file := sr.statusFile
-	tmpFile := fmt.Sprintf("%s.new%x", file, time.Now().UnixNano())
-	f, err := os.Create(tmpFile)
+	f, err := ioutil.TempFile("", fmt.Sprintf("%s.new%x-", filepath.Base(file), time.Now().UnixNano()))
 	if err != nil {
 		return err
 	}
@@ -205,12 +224,34 @@ func (sr *SubRecorder) save() error {
 		return err
 	}
 
+	tmpFile := f.Name()
 	if err := os.Chown(tmpFile, sr.statusFileOwner, sr.statusFileOwner); err != nil {
 		return err
 	}
 
-	if err := os.Rename(tmpFile, file); err != nil {
-		return err
+	// 防止提权，使用用户权限执行。
+	if sr.statusFileOwner != 0 {
+		if user, err := user.LookupId(fmt.Sprintf("%d", sr.statusFileOwner)); err != nil {
+			logger.Warning(err)
+		} else {
+			err = exec.Command("runuser", []string{
+				"-u",
+				user.Username,
+				"--",
+				"mv",
+				"-f",
+				tmpFile,
+				file,
+			}...).Run()
+			if err != nil {
+				os.Remove(tmpFile)
+				return err
+			}
+		}
+	} else {
+		if err := os.Rename(tmpFile, file); err != nil {
+			return err
+		}
 	}
 	return nil
 }
