@@ -69,6 +69,7 @@ var allowList = map[uint32]bool{
 	KEY_SCREENLOCK:      true,
 	KEY_UNKNOWN:         true,
 	294:                 true,
+	KEY_CAMERA:          true,
 }
 
 func newManager(service *dbusutil.Service) *Manager {

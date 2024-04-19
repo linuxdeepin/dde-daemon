@@ -33,6 +33,7 @@ const (
 	KEY_KBDILLUMTOGGLE  = 228
 	KEY_RFKILL          = 247
 	KEY_UNKNOWN         = 240
+	KEY_CAMERA          = 212
 )
 
 type SpecialKeycodeMapKey struct {
@@ -133,6 +134,15 @@ func (m *Manager) handleSpecialKeycode(keycode uint32,
 	shiftPressed bool,
 	altPressed bool,
 	superPressed bool) {
+
+	if keycode == KEY_CAMERA {
+		if pressed {
+			showOSD("CameraOn")
+		} else {
+			showOSD("CameraOff")
+		}
+		return
+	}
 
 	key := SpecialKeycodeMapKey{
 		keycode,
