@@ -91,7 +91,8 @@ TEST = \
     ${GOPKG_PREFIX}/systeminfo1 \
     ${GOPKG_PREFIX}/timedate1 \
     ${GOPKG_PREFIX}/trayicon1 \
-    ${GOPKG_PREFIX}/x_event_monitor1
+    ${GOPKG_PREFIX}/x_event_monitor1 \
+    ${GOPKG_PREFIX}/bin/default-file-manager
     #${GOPKG_PREFIX}/timedate1/zoneinfo \
 
 BINARIES =  \
@@ -105,7 +106,8 @@ BINARIES =  \
 	    dde-lockservice \
 	    dde-authority \
 	    default-terminal \
-	    dde-greeter-setter
+	    dde-greeter-setter \
+	    default-file-manager
 
 LANGUAGES = $(basename $(notdir $(wildcard misc/po/*.po)))
 
@@ -120,9 +122,6 @@ prepare:
 
 out/bin/%: prepare
 	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@ ${GOBUILD_OPTIONS} ${GOPKG_PREFIX}/bin/${@F}
-
-out/bin/default-file-manager: bin/default-file-manager/main.c
-	gcc $^ $(shell pkg-config --cflags --libs gio-unix-2.0) $(CFLAGS) -o $@
 
 out/bin/desktop-toggle: bin/desktop-toggle/main.c
 	gcc $^ $(shell pkg-config --cflags --libs x11) $(CFLAGS) -o $@
