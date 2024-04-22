@@ -15,3 +15,4 @@ package daemon
 //go:generate go build -o target/ github.com/linuxdeepin/dde-daemon/bin/dde-authority
 //go:generate go build -o target/ github.com/linuxdeepin/dde-daemon/bin/default-terminal
 //go:generate go build -o target/ github.com/linuxdeepin/dde-daemon/bin/dde-greeter-setter
+//go:generate go build -o target/ github.com/linuxdeepin/dde-daemon/bin/default-file-manager
