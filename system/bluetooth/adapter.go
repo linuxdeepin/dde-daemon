@@ -165,7 +165,6 @@ func (a *adapter) connectProperties() {
 			//	logger.Warningf("failed to set discoverable for %s: %v", a, err)
 			//}
 			go func() {
-				time.Sleep(1 * time.Second)
 				err = a.core.Adapter().StopDiscovery(0)
 				if err != nil {
 					logger.Warningf("failed to stop discovery for %s: %v", a, err)
