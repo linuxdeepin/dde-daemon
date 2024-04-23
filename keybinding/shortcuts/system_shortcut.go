@@ -86,7 +86,7 @@ var defaultSysActionCmdMap = map[string]string{
 	"lock-screen":            "/usr/lib/deepin-daemon/dde-lock.sh",
 	"logout":                 "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
 	"deepin-screen-recorder": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord",
-	"system-monitor":         "deepin-system-monitor",
+	"system-monitor":         "dde-am deepin-system-monitor",
 	"color-picker":           "dbus-send --print-reply --dest=com.deepin.Picker /com/deepin/Picker com.deepin.Picker.Show",
 	// screenshot actions:1
 	"screenshot":            screenshotCmdPrefix + "StartScreenshot",

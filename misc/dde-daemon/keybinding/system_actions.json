@@ -13,8 +13,8 @@
             "Action": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord"
         },
         {
-            "Action": "deepin-system-monitor",
-            "Key": "system-monitor"
+            "Key": "system-monitor",
+            "Action": "dde-am deepin-system-monitor"
         },
         {
             "Key": "deepin-picker",
