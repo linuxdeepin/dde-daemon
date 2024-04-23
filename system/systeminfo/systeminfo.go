@@ -117,6 +117,24 @@ func (m *Module) Start() error {
 		logger.Warning(err)
 	}
 
+	handleCurrentSpeed := func() {
+		// get system bit
+		systemType := 64
+		if "64" != m.m.systemBit() {
+			systemType = 32
+		}
+		// Get CPU MHZ
+		currentSpeed, err1 := GetCurrentSpeed(systemType)
+		if err1 != nil {
+			logger.Warning(err1)
+			return
+		}
+		m.m.setPropCurrentSpeed(currentSpeed)
+	}
+
+	// speed是通过dmidecode获取，不影响性能
+	handleCurrentSpeed()
+
 	err = serverObj.Export()
 	if err != nil {
 		logger.Warning(err)
