@@ -243,6 +243,15 @@ func (m *Manager) tryChangeDeepinWM() bool {
 }
 
 func (m *Manager) doLock(autoStartAuth bool) {
+	locked, err := m.sessionManager.Locked().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+	if locked {
+		logger.Info("Current is locked. ignore this doLock.")
+		return
+	}
+
 	logger.Info("Lock Screen")
 	bus, err := dbus.SessionBus()
 	if err != nil {
