@@ -152,6 +152,9 @@ type Manager struct {
 			ip  string
 			mac string
 		}
+		ProxyMethodChanged struct {
+			method string
+		}
 	}
 }
 

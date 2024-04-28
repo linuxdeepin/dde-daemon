@@ -60,6 +60,16 @@ func initProxyGsettings() {
 	proxyChildSettingsHttps = proxySettings.GetChild(gchildProxyHttps)
 	proxyChildSettingsFtp = proxySettings.GetChild(gchildProxyFtp)
 	proxyChildSettingsSocks = proxySettings.GetChild(gchildProxySocks)
+
+	// 如果ip全为空，则自动设置代理为None
+	proxyAuto := proxySettings.GetString(gkeyProxyAuto)
+	http := proxyChildSettingsHttp.GetString(gkeyProxyHost)
+	https := proxyChildSettingsHttps.GetString(gkeyProxyHost)
+	ftp := proxyChildSettingsFtp.GetString(gkeyProxyHost)
+	socks := proxyChildSettingsSocks.GetString(gkeyProxyHost)
+	if proxyAuto == "" && http == "" && https == "" && ftp == "" && socks == "" {
+		proxySettings.SetString(gkeyProxyMode, proxyModeNone)
+	}
 }
 
 func getProxyChildSettings(proxyType string) (childSettings *gio.Settings, err error) {
@@ -110,6 +120,7 @@ func (m *Manager) setProxyMethod(proxyMode string) (err error) {
 		err = fmt.Errorf("set proxy method through gsettings failed")
 		return
 	}
+	m.service.Emit(m, "ProxyMethodChanged", proxyMode)
 	switch proxyMode {
 	case proxyModeNone:
 		notifyProxyDisabled()
