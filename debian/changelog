@@ -1,3 +1,9 @@
+dde-daemon (6.0.39) unstable; urgency=medium
+
+  * fix: fix a crash
+
+ -- zsien <quezhiyong@deepin.org>  Mon, 29 Apr 2024 16:16:33 +0800
+
 dde-daemon (6.0.38) unstable; urgency=medium
 
   * feat: refactor default-file-manager
