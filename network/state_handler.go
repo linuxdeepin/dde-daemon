@@ -249,6 +249,10 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 
 		switch newState {
 		case nm.NM_DEVICE_STATE_PREPARE:
+			if sh.m.disableFailureNotify {
+				// 如果禁用了失败的消息，则不提示正在连接的消息
+				return
+			}
 			if data, err := nmGetDeviceActiveConnectionData(path); err == nil {
 				dsi.aconnId = getSettingConnectionId(data)
 				dsi.aconnHasEap = isSetting8021xEapExists(data)
@@ -275,7 +279,11 @@ func (sh *stateHandler) watch(path dbus.ObjectPath) {
 		case nm.NM_DEVICE_STATE_FAILED, nm.NM_DEVICE_STATE_DISCONNECTED, nm.NM_DEVICE_STATE_NEED_AUTH,
 			nm.NM_DEVICE_STATE_UNMANAGED, nm.NM_DEVICE_STATE_UNAVAILABLE:
 			logger.Infof("device disconnected, type %s, %d => %d, reason[%d] %s", getCustomDeviceType(dsi.devType), oldState, newState, reason, deviceErrorTable[reason])
-
+			if sh.m.disableFailureNotify {
+				// 如果禁用了失败的消息，则不提示失败消息
+				return
+			}
+			
 			// ignore device removed signals for that could not
 			// query related information correct
 			if reason == nm.NM_DEVICE_STATE_REASON_REMOVED {

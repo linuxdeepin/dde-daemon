@@ -21,6 +21,16 @@
         "description": "Allow display of network connection OSD",
         "permissions": "readwrite",
         "visibility": "private"
+    },
+    "disableFailureNotify": {
+      "value": false,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "disableFailureNotify",
+      "name[zh_CN]": "当网络连接失败后,true:不弹出消息,false:弹出消息",
+      "description": "if network connect failure: true:do not notify message, false:notify message",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }

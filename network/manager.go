@@ -42,6 +42,7 @@ const (
 	networkConfigPath                  = "org.deepin.dde.daemon.network"
 	dsettingsProtalAuthEnable          = "protalAuthEnable"
 	dsettingsResetWifiOSDEnableTimeout = "resetWifiOSDEnableTimeout"
+	dsettingsDisableFailureNotify      = "disableFailureNotify"
 
 	networkCoreDsgConfigPath   = "/usr/share/dsg/configs/org.deepin.dde.network/org.deepin.dde.network.json"
 	networkCoreConfigPath      = "org.deepin.dde.network"
@@ -129,6 +130,7 @@ type Manager struct {
 	// dsg config : org.deepin.dde.daemon.network
 	protalAuthEnable          bool
 	wifiOSDEnable             bool
+	disableFailureNotify      bool
 	resetWifiOSDEnableTimeout uint32
 	resetWifiOSDEnableTimer   *time.Timer
 	delayShowWifiOSD          *time.Timer
@@ -257,6 +259,15 @@ func (m *Manager) init() {
 				m.protalAuthEnable = v.Value().(bool)
 			}
 
+			getDisableFailureNotify := func() {
+				v, err := networkConfigManager.Value(0, dsettingsDisableFailureNotify)
+				if err != nil {
+					logger.Warning(err)
+					return
+				}
+				m.disableFailureNotify = v.Value().(bool)
+			}
+
 			getResetWifiOSDEnableTimeout := func() {
 				v, err := networkConfigManager.Value(0, dsettingsResetWifiOSDEnableTimeout)
 				if err != nil {
@@ -275,6 +286,7 @@ func (m *Manager) init() {
 
 			getProtalAuthEnable()
 			getResetWifiOSDEnableTimeout()
+			getDisableFailureNotify()
 
 			networkConfigManager.InitSignalExt(m.sysSigLoop, true)
 			_, err = networkConfigManager.ConnectValueChanged(func(key string) {
@@ -282,6 +294,8 @@ func (m *Manager) init() {
 					getProtalAuthEnable()
 				} else if key == dsettingsResetWifiOSDEnableTimeout {
 					getResetWifiOSDEnableTimeout()
+				} else if key == dsettingsDisableFailureNotify {
+					getDisableFailureNotify()
 				}
 			})
 			if err != nil {
