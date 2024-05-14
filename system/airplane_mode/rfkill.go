@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+	"time"
 )
 
 var endian binary.ByteOrder = getByteOrder()
@@ -77,6 +78,22 @@ func (mgr *Manager) listenRfkill() {
 			logger.Warning("failed to read event info:", err)
 			continue
 		}
+
+		if event.Typ == rfkillTypeWifi &&
+			event.Hard != 0 &&
+			event.Soft != 0 {
+			// 开启了hard block，就解除soft block
+			time.AfterFunc(100*time.Millisecond, func() {
+				mgr.btDevicesMu.Lock()
+				numBt := len(mgr.btRfkillDevices)
+				mgr.btDevicesMu.Unlock()
+				if numBt == 0 {
+					mgr.block(rfkillTypeAll, false)
+				} else {
+					mgr.block(rfkillTypeWifi, false)
+				}
+			})
+		}
 		mgr.handleBTRfkillEvent(event)
 	}
 }
@@ -121,6 +138,43 @@ func (mgr *Manager) initBTRfkillDevice() {
 	}
 }
 
+func (mgr *Manager) updateAllState() {
+	if mgr.hasNmWirelessDevices {
+		if len(mgr.btRfkillDevices) > 0 {
+			mgr.setPropEnabled(mgr.BluetoothEnabled && mgr.WifiEnabled)
+		} else {
+			mgr.setPropEnabled(mgr.WifiEnabled)
+
+		}
+	} else if len(mgr.btRfkillDevices) > 0 {
+		mgr.setPropEnabled(mgr.BluetoothEnabled)
+	} else {
+		logger.Info("rfkill device is empty")
+		mgr.setPropEnabled(false)
+	}
+
+	// 仅保存 soft block 的状态
+	allSoftBlocked := false
+	states, err := getRfkillState(rfkillTypeWifi)
+	if err != nil {
+		logger.Warning(err)
+		allSoftBlocked = mgr.BluetoothEnabled && mgr.WifiEnabled
+	} else if mgr.WifiEnabled {
+		allSoftBlocked = mgr.BluetoothEnabled
+	} else {
+		// nm 无线控制关闭，可能是hard关闭，dde只控制soft。
+		for _, v := range states {
+			if v.Soft != 0 {
+				allSoftBlocked = true
+
+			}
+		}
+	}
+
+	mgr.config.SetBlocked(rfkillTypeAll, allSoftBlocked)
+	logger.Debug("refresh all blocked state:", allSoftBlocked)
+}
+
 // 只处理bluetooth设备
 func (mgr *Manager) handleBTRfkillEvent(event *RfkillEvent) {
 	if event.Typ != rfkillTypeBT {
@@ -130,6 +184,22 @@ func (mgr *Manager) handleBTRfkillEvent(event *RfkillEvent) {
 	defer mgr.btDevicesMu.Unlock()
 	if event.Op == rfkillOpDel {
 		delete(mgr.btRfkillDevices, event.Index)
+		if event.Soft != 0 {
+			// 飞行模式开启的时候，如果rfkill有hard block，
+			// 解除 all soft block，让硬件接管。
+			// FIXME: 优化
+			time.AfterFunc(300*time.Millisecond, func() {
+				hardEnable, err := mgr.nmManager.WirelessHardwareEnabled().Get(0)
+				if err != nil {
+					logger.Warning(err)
+				}
+
+				logger.Debug("wifi hardware status:", hardEnable)
+				if !hardEnable {
+					mgr.block(rfkillTypeAll, false)
+				}
+			})
+		}
 	} else {
 		mgr.btRfkillDevices[event.Index] = device{
 			typ:  rfkillTypeBT,
@@ -152,18 +222,8 @@ func (mgr *Manager) handleBTRfkillEvent(event *RfkillEvent) {
 	btSoftBlocked := btCnt == softBtBlockCnt
 	mgr.setPropHasAirplaneMode(btCnt != 0 || mgr.hasNmWirelessDevices)
 	mgr.setPropBluetoothEnabled(btBlocked && btCnt != 0)
-	logger.Debug("refresh bluetooth blocked state:", btBlocked)
-	if mgr.hasNmWirelessDevices {
-		mgr.setPropEnabled(btBlocked && mgr.WifiEnabled)
-		logger.Debug("refresh all blocked state:", btBlocked && mgr.WifiEnabled)
-		// 仅保存 soft block 的状态
-		mgr.config.SetBlocked(rfkillTypeAll, btSoftBlocked && mgr.WifiEnabled)
-	} else {
-		mgr.setPropEnabled(btBlocked && btCnt != 0)
-		logger.Debug("refresh all blocked state:", btBlocked)
-		// 仅保存 soft block 的状态
-		mgr.config.SetBlocked(rfkillTypeAll, btSoftBlocked)
-	}
+	mgr.updateAllState()
+	logger.Debug("refresh bluetooth blocked state:", btSoftBlocked)
 	mgr.config.SetBlocked(rfkillTypeBT, btSoftBlocked)
 	// save rfkill key event result to config file
 	err := mgr.config.SaveConfig()
@@ -199,32 +259,23 @@ func rfkillAction(typ rfkillType, action rfkillState) error {
 	return nil
 }
 
-type rfkillModuleState struct {
-	count   int
-	blocked bool
-}
-
-func getRfkillState(typ rfkillType) (rfkillModuleState, error) {
-	state := rfkillModuleState{
-		count:   0,
-		blocked: true,
-	}
+func getRfkillState(typ rfkillType) ([]*RfkillEvent, error) {
+	ret := []*RfkillEvent{}
 	// open rfkill file
 	file, err := os.Open("/dev/rfkill")
 	if err != nil {
 		logger.Warningf("cant open rfkill, err: %v", err)
-		return state, err
+		return ret, err
 	}
 	// close file
 	defer file.Close()
 	// get fd
 	fd := int(file.Fd())
-	defer syscall.Close(fd)
 	// set non-block
 	err = syscall.SetNonblock(fd, true)
 	if err != nil {
 		logger.Warningf("cant set non-block, err: %v", err)
-		return state, err
+		return ret, err
 	}
 	// create event action
 	event := &RfkillEvent{
@@ -241,7 +292,7 @@ func getRfkillState(typ rfkillType) (rfkillModuleState, error) {
 				break
 			}
 			logger.Warningf("read rfkill failed, err: %v", err)
-			return state, err
+			return ret, err
 		}
 		// unmarshal to event
 		info := bytes.NewBuffer(buf)
@@ -249,7 +300,7 @@ func getRfkillState(typ rfkillType) (rfkillModuleState, error) {
 		err = binary.Read(info, endian, event)
 		if err != nil {
 			logger.Warningf("binary read rfkill failed, err: %v", err)
-			return state, err
+			return ret, err
 		}
 		// check type here
 		// if type is all type, all type match
@@ -258,16 +309,9 @@ func getRfkillState(typ rfkillType) (rfkillModuleState, error) {
 		if typ != rfkillTypeAll && typ != event.Typ {
 			continue
 		}
-		// add count
-		state.count++
-		// check block state
-		// if exist at least one device is non block,
-		// this module is blocked now
-		if event.Hard == 0 && event.Soft == 0 {
-			state.blocked = false
-		}
-		continue
+
+		ret = append(ret, event)
 	}
-	logger.Infof("module state: %v", state)
-	return state, nil
+
+	return ret, nil
 }

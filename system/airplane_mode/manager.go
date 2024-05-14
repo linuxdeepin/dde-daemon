@@ -225,23 +225,19 @@ func (mgr *Manager) listenWirelessEnabled() {
 		if !hasValue {
 			return
 		}
-		wifiAirplaneMode := !wifiEnable
+		// 硬件关闭时，开启wifi会先收到enable变为true 然后变为false
+		hardEnable, err := mgr.nmManager.WirelessHardwareEnabled().Get(0)
+		if err != nil {
+			logger.Warning(err)
+		}
+		wifiAirplaneMode := !wifiEnable || !hardEnable
 		mgr.setPropWifiEnabled(wifiAirplaneMode)
-		mgr.config.SetBlocked(rfkillTypeWifi, wifiAirplaneMode) // 无法判断wifi是否为soft block
+		mgr.config.SetBlocked(rfkillTypeWifi, !wifiEnable) // 无法判断wifi是否为soft block
 		mgr.btDevicesMu.RLock()
 		defer mgr.btDevicesMu.RUnlock()
-		var enabled = false
-		if len(mgr.btRfkillDevices) > 0 {
-			enabled = wifiAirplaneMode && mgr.BluetoothEnabled
-		} else {
-			enabled = wifiAirplaneMode
-		}
-		mgr.setPropEnabled(enabled)
-		logger.Debug("refresh all blocked state:", enabled)
 
-		// 仅保存 soft block 的状态
-		mgr.config.SetBlocked(rfkillTypeAll, mgr.Enabled)
-		err := mgr.config.SaveConfig()
+		mgr.updateAllState()
+		err = mgr.config.SaveConfig()
 		if err != nil {
 			logger.Warningf("save rfkill config file failed, err: %v", err)
 		}
