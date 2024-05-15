@@ -645,7 +645,23 @@ func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
 
 }
 
+// 检查快捷键时间间隔，如果间隔太短返回false，不应该响应快捷键
+func (m *Manager) checkKeyEventInterval() bool {
+	const minKeyEventInterval = 200 * time.Millisecond
+	now := time.Now()
+	duration := now.Sub(m.lastKeyEventTime)
+	if 0 < duration && duration < minKeyEventInterval {
+		logger.Debug("handleKeyEvent ignore key event duration:", duration)
+		return false
+	}
+	m.lastKeyEventTime = now
+	return true
+}
+
 func (m *Manager) handleKeyEventFromLockFront(changKey string) {
+	if !m.checkKeyEventInterval() {
+		return
+	}
 	logger.Debugf("Receive LockFront ChangKey Event %s", changKey)
 	action := shortcuts.GetAction(changKey)
 
@@ -1045,15 +1061,9 @@ func (m *Manager) destroy() {
 }
 
 func (m *Manager) handleKeyEvent(ev *shortcuts.KeyEvent) {
-	const minKeyEventInterval = 200 * time.Millisecond
-	now := time.Now()
-	duration := now.Sub(m.lastKeyEventTime)
-	if 0 < duration && duration < minKeyEventInterval {
-		logger.Debug("handleKeyEvent ignore key event duration:", duration)
+	if !m.checkKeyEventInterval() {
 		return
 	}
-	m.lastKeyEventTime = now
-
 	logger.Debugf("handleKeyEvent ev: %#v", ev)
 	action := ev.Shortcut.GetAction()
 	shortcutId := ev.Shortcut.GetId()
