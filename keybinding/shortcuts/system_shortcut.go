@@ -82,10 +82,10 @@ func getSystemActionCmd(id string) string {
 
 // key is id, value is commandline.
 var defaultSysActionCmdMap = map[string]string{
-	"launcher":               "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle",
-	"terminal":               "/usr/lib/deepin-daemon/default-terminal",
-	"terminal-quake":         "deepin-terminal --quake-mode",
-	"lock-screen":            "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option $originmap",
+	"launcher":       "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle",
+	"terminal":       "/usr/lib/deepin-daemon/default-terminal",
+	"terminal-quake": "deepin-terminal --quake-mode",
+	"lock-screen":    "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option $originmap",
 	//wayland不能设置XF86Ungrab，否则会导致Bug-224309
 	"lock-screen-wayland":    "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option $originmap",
 	"logout":                 "dbus-send --print-reply --dest=com.deepin.dde.shutdownFront /com/deepin/dde/shutdownFront com.deepin.dde.shutdownFront.Show",
@@ -111,6 +111,7 @@ var defaultSysActionCmdMap = map[string]string{
 	// cmd
 	"calculator": "/usr/bin/deepin-calculator",
 	"search":     "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
+	"script":     "/usr/libexec/dde-daemon/keybinding/shortcut-dde-script.sh",
 }
 
 type actionHandler struct {
