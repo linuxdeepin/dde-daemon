@@ -161,7 +161,7 @@ func (winInfo *WindowInfo) shouldSkipWithWMClass() bool {
 	}
 	if wmClass.Instance == "explorer.exe" && wmClass.Class == "Wine" {
 		return true
-	} else if wmClass.Class == "dde-launcher" {
+	} else if wmClass.Class == "dde-launcher" || wmClass.Class == "dde-lock" || wmClass.Class == "dde-dock" {
 		return true
 	} else if wmClass.Class == "reset-password-dialog" || wmClass.Instance == "reset-password-dialog" {
 		return true
