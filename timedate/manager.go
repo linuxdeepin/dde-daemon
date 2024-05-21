@@ -5,7 +5,9 @@
 package timedate
 
 import (
+	"os"
 	"os/user"
+	"strings"
 	"sync"
 
 	"github.com/godbus/dbus"
@@ -147,6 +149,22 @@ func (m *Manager) init() {
 	timezone, err := m.td.Timezone().Get(0)
 	if err != nil {
 		logger.Warning(err)
+	}
+
+	targetPath, err := os.Readlink("/etc/localtime")
+	if err != nil {
+		logger.Warning("Error reading the symlink:", err)
+	}
+
+	subPath := "/usr/share/zoneinfo/"
+	idx := strings.Index(targetPath, subPath)
+	if idx >= 0 {
+		extractedPath := targetPath[idx:]
+		actualZone := strings.TrimPrefix(extractedPath, subPath)
+		if actualZone != "" && actualZone != timezone {
+			logger.Warningf("/etc/localtime : %s, org.freedesktop.timedate1.Timezone : %s", actualZone, timezone)
+			timezone = actualZone
+		}
 	}
 	m.setPropTimezone(timezone)
 
