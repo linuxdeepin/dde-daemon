@@ -12,5 +12,5 @@ fi
 if [ -x /usr/bin/uos-ai-assistant ]; then
   /usr/bin/uos-ai-assistant --talk
 else
-  exec ./shortcut-dde-grand-search.sh
+  exec /usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh
 fi
