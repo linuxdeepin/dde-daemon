@@ -104,6 +104,11 @@ func (m *Manager) setDDEBlackScreenActive(active bool) {
 		return
 	}
 
+	if !m.SleepLock.Get() {
+		logger.Info("setDDEBlackScreenActive GSettings of sleep-lock is false, Not use dde black widget")
+		return
+	}
+
 	logger.Info("set blackScreen effect active: ", active)
 	bus, err := dbus.SessionBus()
 	if err == nil {
