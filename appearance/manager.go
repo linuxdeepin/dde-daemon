@@ -596,12 +596,14 @@ func (m *Manager) init() error {
 	if currentGtkTheme == autoGtkTheme {
 		m.updateThemeAuto(true)
 	} else {
-		if gtkThemes.Get(currentGtkTheme) == nil {
-			m.GtkTheme.Set(defaultGtkTheme)
-			err = m.doSetGtkTheme(defaultGtkTheme)
-			if err != nil {
-				logger.Warning("failed to set gtk theme:", err)
-			}
+		gtkTheme := defaultGtkTheme
+		if gtkThemes.Get(currentGtkTheme) != nil {
+			gtkTheme = currentGtkTheme
+		}
+		m.GtkTheme.Set(gtkTheme)
+		err = m.doSetGtkTheme(gtkTheme)
+		if err != nil {
+			logger.Warning("failed to set gtk theme:", err)
 		}
 	}
 
