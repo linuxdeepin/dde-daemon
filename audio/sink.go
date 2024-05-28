@@ -103,6 +103,7 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 
 	if value == 0 {
 		value = 0.001
+		s.SetMute(true)
 	}
 	s.PropsMu.Lock()
 	cv := s.cVolume.SetAvg(value)
