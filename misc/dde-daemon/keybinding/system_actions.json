@@ -29,7 +29,7 @@
             "Key": "logout"
         },
         {
-            "Action": "deepin-terminal --quake-mode",
+            "Action": "dde-am deepin-terminal quake-mode",
             "Key": "terminal-quake"
         },
         {
