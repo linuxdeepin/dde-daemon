@@ -139,7 +139,7 @@ func (m *Manager) notify(bodyNotify *sessionmsg.BodyNotify) {
 
 	appName := bodyNotify.AppName
 	if appName == "" {
-		appName = "dde-control-center"
+		appName = Tr("dde-control-center")
 	}
 
 	_, err := m.notifications.Notify(0, appName, 0, bodyNotify.Icon,

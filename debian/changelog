@@ -1,3 +1,9 @@
+dde-daemon (6.0.41) unstable; urgency=medium
+
+  * Add translations of dde-control-center in notification titles
+
+ -- Yutao Meng <mengyutao@deepin.org>  Thu, 06 Jun 2024 13:28:25 +0800
+
 dde-daemon (6.0.40) unstable; urgency=medium
 
   * chore(deps): bump golang.org/x/net from 0.17.0 to 0.23.0

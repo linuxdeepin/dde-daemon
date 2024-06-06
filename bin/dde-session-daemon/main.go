@@ -476,7 +476,7 @@ func sendLoginNotify() {
 	notify := notifications.NewNotifications(session)
 	_, err = notify.Notify(
 		0,
-		"dde-control-center",
+		Tr("dde-control-center"),
 		0,
 		icon,
 		"",

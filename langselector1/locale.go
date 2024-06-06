@@ -28,7 +28,7 @@ import (
 
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	. "github.com/linuxdeepin/go-lib/gettext"
+	.  "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
@@ -236,7 +236,7 @@ func sendNotify(icon, summary, body string) {
 		return
 	}
 	n := notifications.NewNotifications(sessionBus)
-	_, err = n.Notify(0, "dde-control-center", 0,
+	_, err = n.Notify(0, Tr("dde-control-center"), 0,
 		icon, summary, body,
 		nil, nil, -1)
 	logger.Debugf("send notification icon: %q, summary: %q, body: %q",

@@ -331,7 +331,7 @@ func (m *Manager) sendNotify(icon, summary, body string) {
 		return
 	}
 	n := m.helper.Notifications
-	_, err := n.Notify(0, "dde-control-center", 0, icon, summary, body, nil, nil, -1)
+	_, err := n.Notify(0, Tr("dde-control-center"), 0, icon, summary, body, nil, nil, -1)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -339,7 +339,7 @@ func (m *Manager) sendNotify(icon, summary, body string) {
 
 func (m *Manager) sendChangeNotify(icon, summary, body string) {
 	n := m.helper.Notifications
-	_, err := n.Notify(0, "dde-control-center", 0, icon, summary, body, nil, nil, -1)
+	_, err := n.Notify(0, Tr("dde-control-center"), 0, icon, summary, body, nil, nil, -1)
 	if err != nil {
 		logger.Warning(err)
 	}

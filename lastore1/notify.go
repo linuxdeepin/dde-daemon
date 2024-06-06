@@ -116,12 +116,12 @@ func (l *Lastore) notifyLowPower() {
 
 func (l *Lastore) notifyAutoClean() {
 	msg := gettext.Tr("Package cache wiped")
-	l.sendNotify("deepin-appstore", "", msg, nil, nil, notifyExpireTimeoutDefault, "dde-control-center")
+	l.sendNotify("deepin-appstore", "", msg, nil, nil, notifyExpireTimeoutDefault, gettext.Tr("dde-control-center"))
 }
 
 func (l *Lastore) notifyUpdateSource(actions []NotifyAction) {
 	msg := gettext.Tr("Updates Available")
-	l.sendNotify("preferences-system", "", msg, actions, nil, notifyExpireTimeoutDefault, "dde-control-center")
+	l.sendNotify("preferences-system", "", msg, actions, nil, notifyExpireTimeoutDefault, gettext.Tr(gettext.Tr("dde-control-center")))
 }
 
 func (l *Lastore) updateSucceedNotify(actions []NotifyAction) {
@@ -129,7 +129,7 @@ func (l *Lastore) updateSucceedNotify(actions []NotifyAction) {
 	msg := gettext.Tr("Restart the computer to use the system and applications properly")
 	hints := map[string]dbus.Variant{"x-deepin-action-RebootNow": dbus.MakeVariant("busctl,--user,call,org.deepin.dde.SessionManager1," +
 		"/org/deepin/dde/SessionManager1,org.deepin.dde.SessionManager1,RequestReboot")}
-	l.sendNotify(systemUpdatedIcon, summary, msg, actions, hints, notifyExpireTimeoutReboot, "dde-control-center")
+	l.sendNotify(systemUpdatedIcon, summary, msg, actions, hints, notifyExpireTimeoutReboot, gettext.Tr(gettext.Tr("dde-control-center")))
 
 	// 默认弹出横幅时间为每2小时
 	l.resetUpdateSucceedNotifyTimer(l.intervalTime)
@@ -139,7 +139,7 @@ func (l *Lastore) lowBatteryInUpdatingNotify() {
 	msg := gettext.Tr("Your system is being updated, but the capacity is lower than 50%, please plug in to avoid power outage")
 	actions := []string{"ok", gettext.Tr("OK")}
 	notifyID, err := l.notifications.Notify(0,
-		"dde-control-center",
+		gettext.Tr("dde-control-center"),
 		0,
 		systemUpdatedIcon,
 		"",
