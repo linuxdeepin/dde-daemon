@@ -474,7 +474,7 @@ func (a *Audio) notifyPortDisabled(cardId uint32, port pulse.CardPortInfo) {
 	notify := notifications.NewNotifications(session)
 	_, err = notify.Notify(
 		0,
-		"dde-control-center",
+		gettext.Tr("dde-control-center"),
 		0,
 		icon,
 		message,

@@ -154,7 +154,7 @@ func _notify(icon, summary, body string) {
 	nid := notifyId
 	notifyIdMu.Unlock()
 
-	nid, err := notification.Notify(0, "dde-control-center", nid,
+	nid, err := notification.Notify(0, Tr("dde-control-center"), nid,
 		icon, summary, body, nil, nil, -1)
 	if err != nil {
 		logger.Warning(err)

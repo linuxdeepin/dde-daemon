@@ -103,7 +103,7 @@ func sendNotify(icon, summary, body string) error {
 		return err
 	}
 	notifier := notifications.NewNotifications(sessionConn)
-	_, err = notifier.Notify(0, "dde-control-center", 0,
+	_, err = notifier.Notify(0, Tr("dde-control-center"), 0,
 		icon, summary, body,
 		nil, nil, -1)
 	return err

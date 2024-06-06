@@ -377,7 +377,7 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 		hints := map[string]dbus.Variant{"suppress-sound": dbus.MakeVariant(true)}
 
 		notifyID, err = notify.Notify(0,
-			"dde-control-center",
+			gettext.Tr("dde-control-center"),
 			replaceID,
 			notifyIconBluetoothConnected,
 			fmt.Sprintf(gettext.Tr("Receiving %[1]q from %[2]q"), filename, device),
@@ -392,7 +392,7 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 		actions = []string{"_view", gettext.Tr("View")}
 		hints := map[string]dbus.Variant{"x-deepin-action-_view": dbus.MakeVariant("xdg-open," + receiveBaseDir)}
 		notifyID, err = notify.Notify(0,
-			"dde-control-center",
+			gettext.Tr("dde-control-center"),
 			replaceID,
 			notifyIconBluetoothConnected,
 			fmt.Sprintf(gettext.Tr("You have received files from %q successfully"), device),
@@ -419,7 +419,7 @@ func (a *obexAgent) notifyFailed(notify notifications.Notifications, replaceID u
 	}
 
 	notifyID, err := notify.Notify(0,
-		"dde-control-center",
+		gettext.Tr("dde-control-center"),
 		replaceID,
 		notifyIconBluetoothConnectFailed,
 		summary,
@@ -452,7 +452,7 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 
 	actions := []string{"decline", gettext.Tr("Decline"), "receive", gettext.Tr("Receive")}
 	notifyID, err := notify.Notify(0,
-		"dde-control-center",
+		gettext.Tr("dde-control-center"),
 		0,
 		notifyIconBluetoothConnected,
 		gettext.Tr("Bluetooth File Transfer"),
@@ -507,7 +507,7 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 // notifyReceiveFileTimeout 接收文件请求超时通知
 func (a *obexAgent) notifyReceiveFileTimeout(notify notifications.Notifications, replaceID uint32, filename string) {
 	_, err := notify.Notify(0,
-		"dde-control-center",
+		gettext.Tr("dde-control-center"),
 		replaceID,
 		notifyIconBluetoothConnectFailed,
 		gettext.Tr("Stop Receiving Files"),

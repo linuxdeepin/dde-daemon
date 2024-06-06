@@ -43,7 +43,7 @@ func createNotify(appName string) func(string, string, string) {
 	}
 }
 
-var notify = createNotify("dde-control-center")
+var notify = createNotify(Tr("dde-control-center"))
 
 func notifyAppProxyEnabled() {
 	notify(notifyIconProxyEnabled, Tr("Network"), Tr("Application proxy is set successfully"))

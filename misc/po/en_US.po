@@ -514,6 +514,11 @@ msgstr ""
 msgid "Package cache wiped"
 msgstr "Package cache wiped"
 
+#: ../../lastore1/notify.go:119 ../../lastore1/notify.go:124
+#: ../../lastore1/notify.go:132
+msgid "dde-control-center"
+msgstr "Control Center"
+
 #: ../../lastore1/notify.go:123
 msgid "Updates Available"
 msgstr "Updates Available"

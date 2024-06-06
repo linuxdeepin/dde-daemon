@@ -512,6 +512,11 @@ msgstr "為免自動關機，更新時請接上電源。"
 msgid "Package cache wiped"
 msgstr "已成功清理軟件包緩存 "
 
+#: ../../lastore1/notify.go:119 ../../lastore1/notify.go:124
+#: ../../lastore1/notify.go:132
+msgid "dde-control-center"
+msgstr "控制中心"
+
 #: ../../lastore1/notify.go:123
 msgid "Updates Available"
 msgstr "檢測到有更新可用"
