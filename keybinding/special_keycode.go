@@ -276,7 +276,7 @@ func (m *Manager) handlePower() {
 		}
 		m.systemTurnOffScreen()
 	case powerActionShowUI:
-		cmd := "/usr/lib/deepin-daemon/dde-lock.sh"
+		cmd := "/usr/lib/deepin-daemon/dde-shutdown.sh"
 		go func() {
 			locked, err := m.sessionManager.Locked().Get(0)
 			if err != nil {
