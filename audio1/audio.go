@@ -359,7 +359,7 @@ func sendNotify(icon, summary, body string) {
 		return
 	}
 	n := notifications.NewNotifications(sessionBus)
-	_, err = n.Notify(0, "dde-control-center", 0,
+	_, err = n.Notify(0, Tr("dde-control-center"), 0,
 		icon, summary, body,
 		nil, nil, -1)
 	logger.Debugf("send notification icon: %q, summary: %q, body: %q",
