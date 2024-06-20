@@ -1,3 +1,10 @@
+dde-daemon (6.0.42) unstable; urgency=medium
+
+  * fix: pressing the power button opened the lock screen
+(linuxdeepin/developer-center#9360)
+
+ -- zsien <quezhiyong@deepin.org>  Thu, 20 Jun 2024 13:47:17 +0800
+
 dde-daemon (6.0.41) unstable; urgency=medium
 
   * Add translations of dde-control-center in notification titles
