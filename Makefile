@@ -223,6 +223,7 @@ install: build install-dde-data install-icons
 	cp -r misc/dsg-configs/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
 
 	cp -f misc/scripts/dde-lock.sh ${DESTDIR}${PREFIX}/lib/deepin-daemon/
+	cp -f misc/scripts/dde-shutdown.sh ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
 	cp -r misc/data misc/zoneinfo ${DESTDIR}${PREFIX}/share/dde/
