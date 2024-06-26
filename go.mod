@@ -39,9 +39,9 @@ require (
 	github.com/youpy/go-riff v0.1.0 // indirect
 	github.com/youpy/go-wav v0.3.2 // indirect
 	github.com/zaf/g711 v0.0.0-20220109202201-cf0017bf0359 // indirect
-	golang.org/x/image v0.10.0 // indirect
+	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sync v0.1.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
 )
