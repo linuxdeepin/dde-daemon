@@ -24,6 +24,10 @@ override_dh_auto_test:
 	true
 endif
 
+override_dh_auto_install:
+	dh_auto_install
+	dh_installsysusers  dde-daemon.sysusers
+
 ifeq ($(DEB_BUILD_ARCH), mipsel)
 override_dh_auto_configure:
 	# mate-screenshot -a grab the area screen
@@ -38,6 +42,7 @@ override_dh_auto_install:
 	dh_auto_install
 	rm debian/dde-daemon/etc/default/grub.d/10_deepin.cfg
 	rm debian/dde-daemon/etc/grub.d/35_deepin_gfxmode
+	dh_installsysusers  dde-daemon.sysusers
 endif
 
 ifeq ($(DEB_BUILD_ARCH), mips64el)
@@ -46,6 +51,7 @@ override_dh_auto_install:
 	rm debian/dde-daemon/etc/default/grub.d/10_deepin.cfg
 	install -d debian/dde-daemon/lib/systemd/system-sleep/
 	install misc/scripts/dde-system-daemon-power-refresh.sh debian/dde-daemon/lib/systemd/system-sleep/
+	dh_installsysusers  dde-daemon.sysusers
 endif
 
 override_dh_installsystemd:
