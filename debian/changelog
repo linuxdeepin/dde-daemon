@@ -1,3 +1,9 @@
+dde-daemon (6.0.42) unstable; urgency=medium
+
+  * Release to 6.0.42
+
+ -- Yingzhen zhao <zhaoyingzhen@uniontech.com>  Fri, 06 Jul 2024 17:28:26 +0800
+
 dde-daemon (6.0.41) unstable; urgency=medium
 
   * Add translations of dde-control-center in notification titles
