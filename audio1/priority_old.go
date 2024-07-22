@@ -61,20 +61,20 @@ func GetPortType(cardName string, portName string) int {
 	if contains(cardName, portName, "multichannel") {
 		return PortTypeMultiChannel
 	}
+	if contains(cardName, portName, "speaker") ||
+		contains(cardName, portName, "input-mic") {
+		return PortTypeBuiltin
+	}
 
 	if contains(cardName, portName, "linein") ||
 		contains(cardName, portName, "lineout") {
 		return PortTypeLineIO
 	}
 
-	if contains(cardName, portName, "bluez") ||
-		contains(cardName, portName, "bluetooth") {
-		return PortTypeBluetooth
-	}
-
 	if contains(cardName, portName, "usb") ||
 		contains(cardName, portName, "rear-mic") ||
 		contains(cardName, portName, "front-mic") ||
+		contains(cardName, portName, "headset") ||
 		contains(cardName, portName, "headphone") {
 		return PortTypeHeadset
 	}
@@ -83,12 +83,10 @@ func GetPortType(cardName string, portName string) int {
 		return PortTypeHdmi
 	}
 
-	if contains(cardName, portName, "speaker") ||
-		contains(cardName, portName, "input-mic") {
-		return PortTypeBuiltin
-
+	if contains(cardName, portName, "bluez") ||
+		contains(cardName, portName, "bluetooth") {
+		return PortTypeBluetooth
 	}
-
 	return PortTypeUnknown
 }
 
