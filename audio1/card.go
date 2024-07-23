@@ -34,6 +34,7 @@ type CardPortExport struct {
 	Bluetooth   bool
 	Description string
 	Direction   int
+	PortType    int
 }
 
 func newCard(card *pulse.Card) *Card {
@@ -161,6 +162,7 @@ func (cards CardList) string() string {
 				Bluetooth:   isBluetoothCard(cardInfo.core),
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
+				PortType:    DetectPortType(cardInfo.core, &portInfo),
 			})
 		}
 
@@ -189,6 +191,7 @@ func (cards CardList) stringWithoutUnavailable() string {
 				Bluetooth:   isBluetoothCard(cardInfo.core),
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
+				PortType:    DetectPortType(cardInfo.core, &portInfo),
 			})
 		}
 
