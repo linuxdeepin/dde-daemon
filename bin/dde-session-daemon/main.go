@@ -43,6 +43,9 @@ import (
 
 var logger = log.NewLogger("daemon/dde-session-daemon")
 var hasDDECookie bool
+var hasTreeLand bool
+
+var treeLandNotAllowModules = []string{"x-event-monitor", "keybinding", "trayicon", "screensaver", "inputdevices", "power"}
 
 func isInShutdown() bool {
 	bus, err := dbus.SystemBus()
@@ -154,6 +157,7 @@ func init() {
 
 	// -disable
 	flag.StringVar(&_options.disable, "disable", "", "Disable modules, ignore settings.")
+
 }
 
 func main() {
@@ -189,6 +193,12 @@ func main() {
 	if _options.disable != "" {
 		_options.disableModules = strings.Split(_options.disable, ",")
 	}
+
+	if os.Getenv("DDE_CURRENT_COMPOSITOR") == "TreeLand" {
+		hasTreeLand = true
+	}
+
+	logger.Infof("env DDE_CURRENT_COMPOSITOR is %s", os.Getenv("DDE_CURRENT_COMPOSITOR"))
 
 	usr, err := user.Current()
 	if err == nil {
@@ -236,6 +246,8 @@ func main() {
 		err = app.enableModules(_options.enablingModules)
 	} else if len(_options.disableModules) > 0 {
 		err = app.disableModules(_options.disableModules)
+	} else if hasTreeLand {
+		err = app.disableModules(treeLandNotAllowModules)
 	} else {
 		app.execDefaultAction()
 	}
