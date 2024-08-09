@@ -1,3 +1,10 @@
+dde-daemon (6.0.44) unstable; urgency=medium
+
+  * chore: 修改默认greeter壁纸 (#645)
+  * feat: TreeLand display service special handlle
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 09 Aug 2024 14:27:29 +0800
+
 dde-daemon (6.0.43) unstable; urgency=medium
 
   * bump version to 6.0.43
