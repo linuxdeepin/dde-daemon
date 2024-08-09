@@ -73,14 +73,42 @@ const (
 	defaultWorkspace         = 1
 )
 
-func getDefaultUserBackground() string {
-	filename := filepath.Join(defaultUserBackgroundDir, "desktop.bmp")
-	_, err := os.Stat(filename)
-	if err == nil {
-		return "file://" + filename
-	}
+const (
+	deepinThemePath         = "/usr/share/deepin-themes/"
+	defaultTheme            = "bloom"
+	themeFile               = "index.theme"
+	themeGroupDefault       = "DefaultTheme"
+	themeGroupDark          = "DarkTheme"
+	configKeyLockBackground = "LockBackground"
+)
 
-	return "file://" + filepath.Join(defaultUserBackgroundDir, "desktop.jpg")
+func getThemeLockBackground(theme string) string {
+	kf, err := dutils.NewKeyFileFromFile(
+		path.Join(deepinThemePath, theme, themeFile))
+	if err != nil {
+		logger.Warning("load theme failed", err)
+		return ""
+	}
+	defer kf.Free()
+	bg, err := kf.GetString(themeGroupDefault, configKeyLockBackground)
+	if err != nil {
+		logger.Warning("get lock background failed", err)
+		return ""
+	}
+	if !dutils.IsFileExist(bg) {
+		return ""
+	}
+	return bg
+}
+
+// 通过默认主题去获取壁纸
+func getDefaultUserBackground() string {
+	bg := "file://" + filepath.Join(defaultUserBackgroundDir, "deepin-default.jpg")
+	value := getThemeLockBackground(defaultTheme)
+	if value != "" {
+		bg = value
+	}
+	return bg
 }
 
 type User struct {
