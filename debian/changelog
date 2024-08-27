@@ -1,3 +1,11 @@
+dde-daemon (6.0.44) unstable; urgency=medium
+
+  * feat: TreeLand display service special handlle
+  * chore: 修改默认greeter壁纸 (#645)
+  * fix: unable to start under wayland
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 27 Aug 2024 14:29:40 +0800
+
 dde-daemon (6.0.43) unstable; urgency=medium
 
   * bump version to 6.0.43
