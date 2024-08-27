@@ -288,36 +288,6 @@ func (b *Bluetooth) init() {
 		}
 	}
 
-	b.airplane.InitSignalExt(b.systemSigLoop, true)
-	err = b.airplane.Enabled().ConnectChanged(func(hasValue bool, value bool) {
-		if !hasValue {
-			return
-		}
-		if value {
-			b.airplaneBltOriginState = make(map[dbus.ObjectPath]bool)
-			// get adapter info
-			for _, adapter := range b.adapters.infos {
-				b.airplaneBltOriginState[adapter.Path] = adapter.Powered
-				// close device
-				err = b.sysBt.SetAdapterPowered(0, adapter.Path, false)
-				// it is ok if set power off failed
-				if err != nil {
-					logger.Debugf("close bluetooth adapter powered failed, path: %v, err: %v", adapter.Path, err)
-				}
-			}
-			b.setAirplaneBltOriginStateConfig(marshalJSON(b.airplaneBltOriginState))
-			logger.Debugf("airplane is on, save bluetooth origin state, %v", b.airplaneBltOriginState)
-		} else {
-			// recover origin state
-			for path, enabled := range b.airplaneBltOriginState {
-				err = b.sysBt.SetAdapterPowered(0, path, enabled)
-				if err != nil {
-					logger.Debugf("recover bluetooth adapter power state failed, path: %v, powered: %v, err: %v", path, enabled, err)
-				}
-			}
-		}
-	})
-
 	_, err = b.sysBt.ConnectAdapterAdded(func(adapterJSON string) {
 		adapterInfo, err := unmarshalAdapterInfo(adapterJSON)
 		if err != nil {
@@ -507,7 +477,7 @@ func getMprisPlayers(sessionConn *dbus.Conn) ([]string, error) {
 	return playerNames, nil
 }
 
-//true ： play; false : pause
+// true ： play; false : pause
 func setAllPlayers(value bool) {
 	sessionConn, err := dbus.SessionBus()
 	if err != nil {
@@ -537,7 +507,7 @@ func setAllPlayers(value bool) {
 	}
 }
 
-//获取当前是否为蓝牙端口音频，是：暂停音乐
+// 获取当前是否为蓝牙端口音频，是：暂停音乐
 func (b *Bluetooth) handleBluezPort(value bool) error {
 	//get defaultSink Name
 	sinkPath, err := b.sessionAudio.DefaultSink().Get(0)
