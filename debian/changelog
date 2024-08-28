@@ -1,3 +1,9 @@
+dde-daemon (6.0.45) unstable; urgency=medium
+
+  * chore: 同步专业版方案，移除飞行模式蓝牙控制代码 (#649)
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 28 Aug 2024 17:16:06 +0800
+
 dde-daemon (6.0.44) unstable; urgency=medium
 
   * feat: TreeLand display service special handlle
