@@ -17,17 +17,17 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/godbus/dbus"
-	libApps "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.apps"
-	libLastore "github.com/linuxdeepin/go-dbus-factory/com.deepin.lastore"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	"github.com/linuxdeepin/dde-daemon/session/common"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
+	libApps "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.apps1"
+	libLastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-daemon/common/dsync"
-	"github.com/linuxdeepin/dde-daemon/session/common"
 )
 
 //go:generate dbusutil-gen em -type Manager

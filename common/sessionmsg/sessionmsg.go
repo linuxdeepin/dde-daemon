@@ -13,7 +13,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/multierr"
 )
@@ -151,8 +151,8 @@ func (a *agent) sendMessage(msg *Message) error {
 
 // 这个 agent 实际在 dde-session-daemon 中的 service_trigger 模块中实现的
 const (
-	AgentPath         = "/com/deepin/daemon/ServiceTrigger/Agent"
-	AgentIfc          = "com.deepin.daemon.ServiceTrigger.Agent"
+	AgentPath         = "/org/deepin/dde/ServiceTrigger1/Agent"
+	AgentIfc          = "org.deepin.dde.ServiceTrigger1.Agent"
 	MethodSendMessage = "SendMessage"
 )
 

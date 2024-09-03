@@ -5,8 +5,8 @@
 package main
 
 import (
+	"github.com/linuxdeepin/dde-daemon/langselector1"
 	"github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/dde-daemon/langselector"
 )
 
 func main() {

@@ -7,7 +7,7 @@ package main
 import (
 	"strings"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/procfs"
@@ -40,8 +40,8 @@ func init() {
 	}()
 }
 
-//从配置文件读取支持App的关键字段
-//当获取不到"/usr/share/dde-daemon/supportVirsConf.ini"数据的时候，使用默认值
+// 从配置文件读取支持App的关键字段
+// 当获取不到"/usr/share/dde-daemon/supportVirsConf.ini"数据的时候，使用默认值
 func readSupConfigFile(key, value string) []string {
 	kf := keyfile.NewKeyFile()
 	err := kf.LoadFromFile(supportVirsConf)
@@ -79,7 +79,7 @@ func getValidSupData(supApps []string) []string {
 	return ret
 }
 
-//获取App二进制名称，将exe和cmdline拼接成一个string
+// 获取App二进制名称，将exe和cmdline拼接成一个string
 func getActivePidInfo(pid uint32) (execPath string, err error) {
 	value := procfs.Process(pid)
 	execPath, err = value.Exe()
@@ -99,7 +99,7 @@ func getActivePidInfo(pid uint32) (execPath string, err error) {
 	return strings.ToLower(execPath), err
 }
 
-//判断是否是虚拟机
+// 判断是否是虚拟机
 func isVirtual(exe string, supApps []string) bool {
 	for _, vir := range supApps {
 		//exe中是否包含，去掉空格的虚拟机相关字段

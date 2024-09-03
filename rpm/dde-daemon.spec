@@ -95,13 +95,13 @@ sed -i 's|boot/grub|boot/grub2|' grub2/{grub2,grub_params,theme}.go
 # Fix activate services failed (Permission denied)
 # dbus service
 pushd misc/system-services/
-sed -i '$aSystemdService=deepin-accounts-daemon.service' com.deepin.system.Power.service \
-    com.deepin.daemon.{Accounts,Apps,Daemon}.service \
-    com.deepin.daemon.{Gesture,SwapSchedHelper,Timedated}.service
-sed -i '$aSystemdService=dbus-com.deepin.dde.lockservice.service' com.deepin.dde.LockService.service
+sed -i '$aSystemdService=deepin-accounts-daemon.service' org.deepin.dde.Power1.service \
+    org.deepin.dde.{Accounts,Apps,Daemon}1.service \
+    org.deepin.dde.{Gesture,SwapSchedHelper,Timedated}1.service
+sed -i '$aSystemdService=dbus-org.deepin.dde.Lockservice1.service' org.deepin.dde.LockService1.service
 popd
 # systemd service
-cat > misc/systemd/services/dbus-com.deepin.dde.lockservice.service <<EOF
+cat > misc/systemd/services/dbus-org.deepin.dde.Lockservice1.service <<EOF
 [Unit]
 Description=Deepin Lock Service
 Wants=user.slice dbus.socket
@@ -109,7 +109,7 @@ After=user.slice dbus.socket
 
 [Service]
 Type=dbus
-BusName=com.deepin.dde.LockService
+BusName=org.deepin.dde.LockService1
 ExecStart=%{_libexecdir}/%{sname}/dde-lockservice
 
 [Install]
@@ -174,14 +174,14 @@ fi
 %{_datadir}/%{name}/
 %{_datadir}/dde/
 %{_datadir}/polkit-1/actions/*.policy
-%{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla
-%{_var}/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla
+%{_var}/lib/polkit-1/localauthority/10-vendor.d/org.deepin.dde.accounts.pkla
+%{_var}/lib/polkit-1/localauthority/10-vendor.d/org.deepin.dde.grub2.pkla
 %{_sysconfdir}/acpi/actions/deepin_lid.sh
 %{_sysconfdir}/acpi/events/deepin_lid
 %{_sysconfdir}/pulse/daemon.conf.d/10-deepin.conf
 /lib/udev/rules.d/80-deepin-fprintd.rules
-/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla
-/lib/systemd/system/dbus-com.deepin.dde.lockservice.service
+/var/lib/polkit-1/localauthority/10-vendor.d/org.deepin.dde.fprintd.pkla
+/lib/systemd/system/dbus-org.deepin.dde.Lockservice1.service
 /lib/systemd/system/deepin-accounts-daemon.service
 
 %changelog

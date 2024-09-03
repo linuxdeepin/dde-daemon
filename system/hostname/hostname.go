@@ -12,11 +12,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	hostname1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.hostname1"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	"github.com/linuxdeepin/dde-daemon/loader"
+	hostname1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.hostname1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 type Module struct {

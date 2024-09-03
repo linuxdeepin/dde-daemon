@@ -20,9 +20,9 @@ func init() {
 }
 
 const (
-	dbusInterface   = "com.deepin.daemon.Authority"
+	dbusInterface   = "org.deepin.dde.Authority1"
 	dbusServiceName = dbusInterface
-	dbusPath        = "/com/deepin/daemon/Authority"
+	dbusPath        = "/org/deepin/dde/Authority1"
 
 	dbusAgentInterface = dbusInterface + ".Agent"
 )

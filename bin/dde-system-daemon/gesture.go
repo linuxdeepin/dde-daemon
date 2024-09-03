@@ -7,9 +7,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
-	"github.com/linuxdeepin/dde-daemon/system/gesture"
+	"github.com/linuxdeepin/dde-daemon/system/gesture1"
 )
 
 func (*Daemon) SetLongPressDuration(duration uint32) *dbus.Error {
@@ -23,6 +23,6 @@ func (*Daemon) SetLongPressDuration(duration uint32) *dbus.Error {
 		return dbus.NewError(epath,
 			[]interface{}{"Not found module 'gesture'"})
 	}
-	m.(*gesture.Daemon).SetLongPressDuration(int(duration))
+	m.(*gesture1.Daemon).SetLongPressDuration(int(duration))
 	return nil
 }

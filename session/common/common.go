@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/godbus/dbus"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	"github.com/godbus/dbus/v5"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 )
 
 func ActivateSysDaemonService(serviceName string) error {
@@ -42,7 +42,7 @@ func ActivateSysDaemonService(serviceName string) error {
 			return nil
 		}
 
-		has, err = sysBusObj.NameHasOwner(0, "com.deepin.daemon.Daemon")
+		has, err = sysBusObj.NameHasOwner(0, "org.deepin.dde.Daemon1")
 		if err != nil {
 			return err
 		}

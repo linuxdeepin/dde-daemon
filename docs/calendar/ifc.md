@@ -1,10 +1,10 @@
 Bus 类型：session bus
 
-服务名称：com.deepin.daemon.Calendar
+服务名称：org.deepin.dde.Calendar1
 
-对象路径：/com/deepin/daemon/Calendar/Scheduler
+对象路径：/org/deepin/dde/Calendar1/Scheduler
 
-接口名称：com.deepin.daemon.Calendar.Scheduler
+接口名称：org.deepin.dde.Calendar1.Scheduler
 
 
 # 方法

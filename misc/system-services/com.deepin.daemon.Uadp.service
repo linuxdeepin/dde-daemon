@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name=com.deepin.daemon.Uadp
-Exec=/usr/lib/deepin-daemon/dde-system-daemon
-User=root

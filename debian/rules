@@ -4,6 +4,7 @@ include /usr/share/dpkg/architecture.mk
 
 export GOCACHE = /tmp/gocache
 export GOPATH = /usr/share/gocode
+export GO111MODULE=off
 
 SYSTYPE=Desktop
 SYSTYPE=$(shell cat /etc/deepin-version | grep Type= | awk -F'=' '{print $$2}')
@@ -11,10 +12,6 @@ SYSTYPE=$(shell cat /etc/deepin-version | grep Type= | awk -F'=' '{print $$2}')
 ifeq ($(SYSTYPE), Desktop)
 override_dh_gencontrol:
 	dh_gencontrol -- -Vdist:Depends="fprintd, libpam-fprintd"
-endif
-
-ifneq ($(DEB_BUILD_ARCH), mips64el)
-	export GOBUILD_OPTIONS=-ldflags '-linkmode=external -extldflags "-pie"'
 endif
 
 %:
@@ -53,3 +50,7 @@ endif
 
 override_dh_installsystemd:
 	dh_installsystemd --no-start
+
+override_dh_auto_clean:
+	dh_auto_clean --
+	rm -fr obj-x86_64-linux-gnu

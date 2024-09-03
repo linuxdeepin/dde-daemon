@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/msteinert/pam"
 )
@@ -49,9 +49,9 @@ type Manager struct {
 }
 
 const (
-	dbusServiceName = "com.deepin.dde.LockService"
-	dbusPath        = "/com/deepin/dde/LockService"
-	dbusInterface   = "com.deepin.dde.LockService"
+	dbusServiceName = "org.deepin.dde.LockService1"
+	dbusPath        = "/org/deepin/dde/LockService1"
+	dbusInterface   = dbusServiceName
 )
 
 var _m *Manager

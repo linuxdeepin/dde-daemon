@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name=com.deepin.daemon.Greeter
-Exec=/usr/lib/deepin-daemon/dde-greeter-setter
-User=root

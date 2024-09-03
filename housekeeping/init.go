@@ -8,12 +8,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/godbus/dbus"
-	notifications "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.notifications"
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/loader"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/utils"
-	"github.com/linuxdeepin/dde-daemon/loader"
 )
 
 const (
@@ -61,20 +61,11 @@ func (d *Daemon) Start() error {
 					return
 				}
 
-				fs, err := utils.QueryFilesytemInfo(os.Getenv("HOME"))
-				if err != nil {
-					logger.Error("Failed to get filesystem info:", err)
+				if !d.checkSpace("HOME", true) {
 					break
 				}
-				logger.Debug("Home filesystem info(total, free, avail):",
-					fs.TotalSize, fs.FreeSize, fs.AvailSize)
-				if fs.AvailSize > fsMinLeftSpace {
+				if !d.checkSpace("/tmp", false) {
 					break
-				}
-				err = sendNotify("dialog-warning", "",
-					Tr("Insufficient disk space, please clean up in time!"))
-				if err != nil {
-					logger.Warning(err)
 				}
 			case <-d.stopChan:
 				logger.Debug("Stop housekeeping")
@@ -107,4 +98,48 @@ func sendNotify(icon, summary, body string) error {
 		icon, summary, body,
 		nil, nil, -1)
 	return err
+}
+
+func sendNotify2(icon, summary, body, action, call string, timeout int32) error {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		return err
+	}
+	notifier := notifications.NewNotifications(sessionBus)
+	_, err = notifier.Notify(0, "dde-control-center", 0,
+		icon, summary, body,
+		[]string{"_dbus", action},
+		map[string]dbus.Variant{
+			"x-deepin-action-_dbus":       dbus.MakeVariant(call),
+			"x-deepin-ClickToDisappear":   dbus.MakeVariant(false),
+			"x-deepin-DisappearAfterLock": dbus.MakeVariant(false),
+		}, timeout)
+	return err
+}
+
+func (d *Daemon) checkSpace(dir string, state bool) bool {
+	if state {
+		dir = os.Getenv(dir)
+	}
+	fs, err := utils.QueryFilesytemInfo(dir)
+	if err != nil {
+		logger.Error("Failed to get filesystem info for :", dir, err)
+		return false
+	}
+
+	if fs.AvailSize > fsMinLeftSpace {
+		logger.Debug("Sufficient space for:", dir)
+		return true
+	}
+	logger.Info("checkSpace fs.AvailSize(M) : ", dir, fs.AvailSize/1024/1024)
+	err = sendNotify2("dialog-warning", "",
+		Tr("Insufficient disk space, please clean up in time!"),
+		Tr("Go to clean up"),
+		"dbus-send,--type=method_call,--dest=com.deepin.defender.hmiscreen,/com/deepin/defender/hmiscreen,com.deepin.defender.hmiscreen.ShowModule,string:diskcleaner",
+		5000,
+	)
+	if err != nil {
+		logger.Warning("Failed to send notification for", dir, ":", err)
+	}
+	return false
 }

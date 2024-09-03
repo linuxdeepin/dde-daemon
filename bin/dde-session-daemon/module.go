@@ -10,39 +10,31 @@ import (
 
 	"github.com/linuxdeepin/dde-daemon/loader"
 
-	_ "github.com/linuxdeepin/dde-daemon/appearance"
-	_ "github.com/linuxdeepin/dde-daemon/audio"
-	_ "github.com/linuxdeepin/dde-daemon/bluetooth"
-	_ "github.com/linuxdeepin/dde-daemon/screenedge"
-
-	_ "github.com/linuxdeepin/dde-daemon/mime"
+	_ "github.com/linuxdeepin/dde-daemon/audio1"
+	_ "github.com/linuxdeepin/dde-daemon/bluetooth1"
+	_ "github.com/linuxdeepin/dde-daemon/screenedge1"
 
 	// depends: network
-	_ "github.com/linuxdeepin/dde-daemon/systeminfo"
-
 	_ "github.com/linuxdeepin/dde-daemon/calltrace"
-	_ "github.com/linuxdeepin/dde-daemon/clipboard"
+	_ "github.com/linuxdeepin/dde-daemon/clipboard1"
 	_ "github.com/linuxdeepin/dde-daemon/debug"
-	_ "github.com/linuxdeepin/dde-daemon/dock"
-	_ "github.com/linuxdeepin/dde-daemon/gesture"
+
+	_ "github.com/linuxdeepin/dde-daemon/gesture1"
 	_ "github.com/linuxdeepin/dde-daemon/housekeeping"
-	_ "github.com/linuxdeepin/dde-daemon/inputdevices"
-	_ "github.com/linuxdeepin/dde-daemon/keybinding"
-	_ "github.com/linuxdeepin/dde-daemon/lastore"
-	_ "github.com/linuxdeepin/dde-daemon/launcher"
-	_ "github.com/linuxdeepin/dde-daemon/mime"
-	_ "github.com/linuxdeepin/dde-daemon/network"
-	_ "github.com/linuxdeepin/dde-daemon/screenedge"
-	_ "github.com/linuxdeepin/dde-daemon/screensaver"
+	_ "github.com/linuxdeepin/dde-daemon/inputdevices1"
+	_ "github.com/linuxdeepin/dde-daemon/keybinding1"
+	_ "github.com/linuxdeepin/dde-daemon/lastore1"
+
+	_ "github.com/linuxdeepin/dde-daemon/network1"
+	_ "github.com/linuxdeepin/dde-daemon/screensaver1"
 	_ "github.com/linuxdeepin/dde-daemon/service_trigger"
-	_ "github.com/linuxdeepin/dde-daemon/session/eventlog"
-	_ "github.com/linuxdeepin/dde-daemon/session/power"
-	_ "github.com/linuxdeepin/dde-daemon/session/uadpagent"
-	_ "github.com/linuxdeepin/dde-daemon/sessionwatcher"
-	_ "github.com/linuxdeepin/dde-daemon/systeminfo"
-	_ "github.com/linuxdeepin/dde-daemon/timedate"
-	_ "github.com/linuxdeepin/dde-daemon/trayicon"
-	_ "github.com/linuxdeepin/dde-daemon/x_event_monitor"
+	_ "github.com/linuxdeepin/dde-daemon/session/power1"
+	_ "github.com/linuxdeepin/dde-daemon/session/uadpagent1"
+	_ "github.com/linuxdeepin/dde-daemon/sessionwatcher1"
+	_ "github.com/linuxdeepin/dde-daemon/systeminfo1"
+	_ "github.com/linuxdeepin/dde-daemon/timedate1"
+	_ "github.com/linuxdeepin/dde-daemon/trayicon1"
+	_ "github.com/linuxdeepin/dde-daemon/x_event_monitor1"
 )
 
 var (

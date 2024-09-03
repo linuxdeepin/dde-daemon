@@ -70,7 +70,6 @@ Depends:
  deepin-installer-timezones,
  deepin-proxy,
  deepin-sound-theme,
- deepin-wm | deepin-metacity | dde-kwin,
  dmidecode,
  dnsmasq-base,
  gnome-keyring,

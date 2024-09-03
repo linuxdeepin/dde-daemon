@@ -5,6 +5,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -13,18 +14,21 @@ import (
 	"sync"
 	"time"
 
-	"github.com/godbus/dbus"
-	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
-	fprint "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.fprintd"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	"github.com/godbus/dbus/v5"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
+	fprint "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.fprintd1"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/pam"
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 //go:generate dbusutil-gen em -type Authority,PAMTransaction,FPrintTransaction
 
 const (
-	pamConfigDir = "/etc/pam.d"
+	pamConfigDir             = "/etc/pam.d"
+	polkitActionDoAuthorized = "org.deepin.dde.Authority1.doAuthorized"
 )
 
 func isPamServiceExist(name string) bool {
@@ -41,6 +45,10 @@ type Authority struct {
 	fprintManager fprint.Fprintd
 	dbusDaemon    ofdbus.DBus
 	accounts      accounts.Accounts
+}
+
+type PolkitDetail struct {
+	Message string `json:"message"`
 }
 
 func newAuthority(service *dbusutil.Service) *Authority {
@@ -227,6 +235,68 @@ func (a *Authority) CheckCookie(user, cookie string) (result bool, authToken str
 		}
 	}
 	return false, "", nil
+}
+
+func (a *Authority) CheckAuth(sender dbus.Sender, details string) *dbus.Error {
+	ret, err := checkAuthByPolkit(polkitActionDoAuthorized, details, string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	if !ret.IsAuthorized {
+		inf, err := getDetailsKey(ret.Details, "polkit.dismissed")
+		if err == nil {
+			if dismiss, ok := inf.(string); ok {
+				if dismiss != "" {
+					return dbusutil.ToError(errors.New(""))
+				}
+			}
+		}
+		return dbusutil.ToError(errors.New("policykit authentication failed"))
+	}
+	return nil
+}
+
+func checkAuthByPolkit(actionId string, details string, sysBusName string) (ret polkit.AuthorizationResult, err error) {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+
+	var polkitDetail PolkitDetail
+	err = json.Unmarshal([]byte(details), &polkitDetail)
+	if err != nil {
+		return
+	}
+
+	detail := map[string]string{
+		"polkit.message": polkitDetail.Message,
+		"exAuth":         "true",
+		"exAuthFlags":    "1",
+	}
+
+	ret, err = authority.CheckAuthorization(0, subject,
+		actionId, detail,
+		polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		logger.Warningf("call check auth failed, err: %v", err)
+		return
+	}
+	logger.Debugf("call check auth success, ret: %v", ret)
+	return
+}
+
+func getDetailsKey(details map[string]dbus.Variant, key string) (interface{}, error) {
+	result, ok := details[key]
+	if !ok {
+		return nil, errors.New("key dont exist in details")
+	}
+	if utils.IsInterfaceNil(result) {
+		return nil, errors.New("result is nil")
+	}
+	return result.Value(), nil
 }
 
 func (a *Authority) HasCookie(user string) (result bool, busErr *dbus.Error) {

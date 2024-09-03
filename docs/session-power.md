@@ -1,10 +1,10 @@
-# com.deepin.daemon.Power 服务
+# org.deepin.dde.Power1 服务
 
 这是个在 Session Bus 上的服务
 
 ## Power 入口对象
  
-对象路径：/com/deepin/daemon/Power
+对象路径：/org/deepin/dde/Power1
 
 ## 属性：
 

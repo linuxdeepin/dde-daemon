@@ -17,9 +17,9 @@ import (
 	"sync"
 	"unicode"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/procfs"
@@ -705,7 +705,7 @@ func setFstartState(state bool) error {
 	if strings.Trim(strings.TrimSpace(line[strings.Index(line, "=")+1:]), "\"") != arg {
 		lines[lineNum] = "export " + deepinFstart + "=\"" + arg + "\""
 		err := ioutil.WriteFile(deepinFstartFile, []byte(strings.Join(lines, "\n")), 0644)
-		if err != nil{
+		if err != nil {
 			return dbusutil.ToError(err)
 		}
 	}

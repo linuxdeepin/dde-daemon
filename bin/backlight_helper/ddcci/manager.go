@@ -8,15 +8,15 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
 )
 
 const (
-	DbusPath      = "/com/deepin/daemon/helper/Backlight/DDCCI"
-	dbusInterface = "com.deepin.daemon.helper.Backlight.DDCCI"
+	DbusPath      = "/org/deepin/dde/BacklightHelper1/DDCCI"
+	dbusInterface = "org.deepin.dde.BacklightHelper1.DDCCI"
 )
 
 var logger = log.NewLogger("backlight_helper/ddcci")

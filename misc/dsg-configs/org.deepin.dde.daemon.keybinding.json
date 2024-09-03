@@ -24,6 +24,16 @@
       "description": "system-product-names need xrandr+q to resolve hot plug",
       "permissions": "readwrite",
       "visibility": "private"
+    },
+    "deviceManagerControlEnable": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "name": "deviceManagerControlEnable",
+      "name[zh_CN]": "通过DDE控制实现设备管理器热键功能",
+      "description": "DeviceManager shortcut effected by DDE software",
+      "permissions": "readonly",
+      "visibility": "private"
     }
   }
 }

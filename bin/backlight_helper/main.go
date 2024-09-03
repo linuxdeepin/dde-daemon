@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/bin/backlight_helper/ddcci"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -22,9 +22,9 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "com.deepin.daemon.helper.Backlight"
-	dbusPath        = "/com/deepin/daemon/helper/Backlight"
-	dbusInterface   = "com.deepin.daemon.helper.Backlight"
+	dbusServiceName = "org.deepin.dde.BacklightHelper1"
+	dbusPath        = "/org/deepin/dde/BacklightHelper1"
+	dbusInterface   = dbusServiceName
 	configManagerId = "org.desktopspec.ConfigManager"
 )
 

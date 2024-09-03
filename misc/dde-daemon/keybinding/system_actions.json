@@ -1,7 +1,7 @@
 {
     "Actions": [
         {
-            "Action": "dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Toggle",
+            "Action": "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle",
             "Key": "launcher"
         },
         {
@@ -13,23 +13,19 @@
             "Action": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord"
         },
         {
-            "Action": "/usr/bin/deepin-system-monitor",
-            "Key": "system-monitor"
+            "Key": "system-monitor",
+            "Action": "dde-am deepin-system-monitor"
         },
         {
             "Key": "deepin-picker",
             "Action": "dbus-send --print-reply --dest=com.deepin.Picker /com/deepin/Picker com.deepin.Picker.Show"
         },
         {
-            "Action": "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option $originmap",
+            "Action": "/usr/lib/deepin-daemon/dde-lock.sh",
             "Key": "lock-screen"
         },
         {
-            "Action": "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&dbus-send --print-reply --dest=com.deepin.dde.lockFront /com/deepin/dde/lockFront com.deepin.dde.lockFront.Show&&/usr/bin/setxkbmap -option $originmap",
-            "Key": "lock-screen-wayland"
-        },
-        {
-            "Action": "dbus-send --print-reply --dest=com.deepin.dde.shutdownFront /com/deepin/dde/shutdownFront com.deepin.dde.shutdownFront.Show",
+            "Action": "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
             "Key": "logout"
         },
         {
@@ -61,7 +57,7 @@
             "Key": "disable-touchpad"
         },
         {
-            "Action": "dbus-send --type=method_call --dest=com.deepin.WMSwitcher /com/deepin/WMSwitcher com.deepin.WMSwitcher.RequestSwitchWM",
+            "Action": "dbus-send --type=method_call --dest=org.deepin.dde.WMSwitcher1 /org/deepin/dde/WMSwitcher1 org.deepin.dde.WMSwitcher1.RequestSwitchWM",
             "Key": "wm-switcher"
         },
         {
@@ -82,7 +78,7 @@
         },
         {
             "Key": "clipboard",
-            "Action": "dbus-send --print-reply --dest=com.deepin.dde.Clipboard /com/deepin/dde/Clipboard com.deepin.dde.Clipboard.Toggle; dbus-send --print-reply --dest=com.deepin.dde.Launcher /com/deepin/dde/Launcher com.deepin.dde.Launcher.Hide"
+            "Action": "dbus-send --print-reply --dest=org.deepin.dde.Clipboard1 /org/deepin/dde/Clipboard1 org.deepin.dde.Clipboard1.Toggle"
         },
         {
             "Key": "translation",
@@ -90,7 +86,7 @@
         },
 		{
             "key":"notification-center",
-            "Action":"dbus-send --print-reply --dest=com.deepin.dde.osd /org/freedesktop/Notifications com.deepin.dde.Notification.Toggle"
+            "Action":"dbus-send --print-reply --dest=org.deepin.dde.Widgets1 /org/deepin/dde/Widgets1 org.deepin.dde.Widgets1.Toggle"
         },
         {
             "Key": "screenshot-ocr",

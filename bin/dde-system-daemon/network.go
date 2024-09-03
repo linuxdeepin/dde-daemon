@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
+	. "github.com/linuxdeepin/dde-daemon/common/dsync"
 	"github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	. "github.com/linuxdeepin/dde-daemon/common/dsync"
 )
 
 const (

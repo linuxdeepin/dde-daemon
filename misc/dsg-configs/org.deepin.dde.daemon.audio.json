@@ -77,6 +77,17 @@
       "description[zh_CN]": "通过端口类型设置输出优先级,0:蓝牙音频 1:3.5mm, 耳麦 2:USB, 3:内置扬声器和话筒, 4:HDMI, 5:线缆输入输出, 6:多声道, 7:其他类型",
       "permissions": "read",
       "visibility": "private"
+    },
+    "bluezModeDefault": {
+      "value": "a2dp",
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "BluezModeDefault",
+      "name[zh_CN]": "蓝牙默认模式",
+      "description": "bluetooth audio default mode",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }

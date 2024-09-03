@@ -47,7 +47,7 @@
 *   feat(dde-session-daemon): sync login sound config after all module started
 *   fix(soundeffect): still play login sound even if sound effect switch is off
 *   chore: auto pull translation files from transifex
-*   change(api): com.deepin.daemon.Greeter add method UpdateGreeterQtTheme
+*   change(api): org.deepin.dde.Greeter1 add method UpdateGreeterQtTheme
 *   fix: ScreenScaleFactors cannot be easily parsed by greeter
 *   feat: also set the screen scale factors of the greeter
 *   fix(accounts): user was not added to some groups when creating user
@@ -68,7 +68,7 @@
 *   chore(langselector): remove failed test
 *   fix(audio): trySelectBestPort do not work
 *   change(api): sound effect add more functions
-*   change(api): add sytem service com.deepin.system.Network
+*   change(api): add sytem service org.deepin.dde.Network1
 
 [3.23.1] 2019-03-01
 *   feat(bluetooth): when disconnected quickly after connecting, automatically try to connect
@@ -531,7 +531,7 @@
 
 ## [3.2.4] - 2017-11-09
 #### Features
-*   add com.deepin.daemon.ImageBlur interface
+*   add org.deepin.dde.ImageBlur1 interface
 
 #### Bug Fixes
 *   not show newly installed wechat in launcher

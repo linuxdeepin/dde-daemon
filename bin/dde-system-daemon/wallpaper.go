@@ -17,7 +17,8 @@ import (
 	"strings"
 	"sync"
 
-	dbus "github.com/godbus/dbus"
+	dbus "github.com/godbus/dbus/v5"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
@@ -27,6 +28,7 @@ const maxSize = 32 * 1024 * 1024
 const wallPaperDir = "/usr/share/wallpapers/custom-wallpapers/"
 const solidWallPaperPath = "/usr/share/wallpapers/custom-solidwallpapers/"
 const solidPrefix = "solid::"
+const polkitActionUserAdministration = "org.deepin.dde.accounts1.user-administration"
 
 var wallPaperDirs = []string{
 	wallPaperDir,
@@ -118,6 +120,76 @@ func DeleteWallPaper(username string, file string) error {
 }
 
 var wallpaperMutex sync.Mutex
+
+func checkAuth(actionId string, sysBusName string) error {
+	ret, err := checkAuthByPolkit(actionId, sysBusName)
+	if err != nil {
+		return err
+	}
+	if !ret.IsAuthorized {
+		inf, err := getDetailsKey(ret.Details, "polkit.dismissed")
+		if err == nil {
+			if dismiss, ok := inf.(string); ok {
+				if dismiss != "" {
+					return errors.New("")
+				}
+			}
+		}
+		return fmt.Errorf("Policykit authentication failed")
+	}
+	return nil
+}
+
+func checkAuthByPolkit(actionId string, sysBusName string) (ret polkit.AuthorizationResult, err error) {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+
+	ret, err = authority.CheckAuthorization(0, subject,
+		actionId, nil,
+		polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		logger.Warningf("call check auth failed, err: %v", err)
+		return
+	}
+	logger.Debugf("call check auth success, ret: %v", ret)
+	return
+}
+
+func getDetailsKey(details map[string]dbus.Variant, key string) (interface{}, error) {
+	result, ok := details[key]
+	if !ok {
+		return nil, errors.New("key dont exist in details")
+	}
+	if dutils.IsInterfaceNil(result) {
+		return nil, errors.New("result is nil")
+	}
+	return result.Value(), nil
+}
+
+func (d *Daemon) isSelf(sender dbus.Sender, username string) error {
+	uid, err := d.service.GetConnUID(string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	user, err := user.LookupId(strconv.Itoa(int(uid)))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	if user.Username != username {
+		err = fmt.Errorf("%s not allowed to delete %s custom wallpaper", user.Username, username)
+		return dbusutil.ToError(err)
+	}
+	return nil
+}
+
+func (d *Daemon) checkAuth(sender dbus.Sender) error {
+	return checkAuth(polkitActionUserAdministration, string(sender))
+}
 
 func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file string) (string, *dbus.Error) {
 	var err error
@@ -214,7 +286,19 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 	return destFile, dbusutil.ToError(err)
 }
 
-func (*Daemon) DeleteCustomWallPaper(username string, file string) *dbus.Error {
+func (d *Daemon) DeleteCustomWallPaper(sender dbus.Sender, username string, file string) *dbus.Error {
+	err := d.isSelf(sender, username)
+	if err != nil {
+		logger.Warning(err)
+
+		err = d.checkAuth(sender)
+		if err != nil {
+			return dbusutil.ToError(err)
+		} else {
+			return dbusutil.ToError(DeleteWallPaper(username, file))
+		}
+	}
+
 	return dbusutil.ToError(DeleteWallPaper(username, file))
 }
 

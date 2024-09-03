@@ -9,6 +9,11 @@ import (
 func (v *Authority) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
+			Name:   "CheckAuth",
+			Fn:     v.CheckAuth,
+			InArgs: []string{"details"},
+		},
+		{
 			Name:    "CheckCookie",
 			Fn:      v.CheckCookie,
 			InArgs:  []string{"user", "cookie"},

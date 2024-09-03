@@ -7,7 +7,7 @@ package grub2
 import (
 	"errors"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -18,7 +18,7 @@ const (
 
 const (
 	deepinFstartFile = "/etc/default/grub.d/15_deepin_fstart.cfg"
-	deepinFstart = "DEEPIN_FSTART";
+	deepinFstart     = "DEEPIN_FSTART"
 )
 
 func (*Fstart) GetInterfaceName() string {
@@ -43,7 +43,7 @@ func (f *Fstart) SkipGrub(sender dbus.Sender, enabled bool) *dbus.Error {
 		return nil
 	}
 	err = setFstartState(enabled)
-	if err != nil{
+	if err != nil {
 		return dbusutil.ToError(err)
 	}
 

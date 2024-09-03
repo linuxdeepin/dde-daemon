@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/procfs"
@@ -20,8 +20,8 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	dbusServiceName = "com.deepin.daemon.Greeter"
-	dbusPath        = "/com/deepin/daemon/Greeter"
+	dbusServiceName = "org.deepin.dde.Greeter1"
+	dbusPath        = "/org/deepin/dde/Greeter1"
 	dbusInterface   = dbusServiceName
 )
 

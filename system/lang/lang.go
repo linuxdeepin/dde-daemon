@@ -5,23 +5,20 @@
 package lang
 
 import (
-	"os"
-	"path/filepath"
-	"sync"
-	"syscall"
-
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
-	accounts "github.com/linuxdeepin/go-dbus-factory/com.deepin.daemon.accounts"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.dbus"
-	login1 "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.login1"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/strv"
+	"os"
+	"path/filepath"
+	"sync"
 )
 
 const (
-	langService = "com.deepin.system.Lang"
+	langService = "org.deepin.dde.Lang1"
 
 	userLocaleConfigFile    = ".config/locale.conf"
 	userLocaleConfigFileTmp = ".config/.locale.conf"
@@ -92,7 +89,7 @@ func (l *Lang) init() {
 
 	l.loadSessionList()
 	l.listenSystemSignals()
-	l.updateAllUserLocale(true)
+	l.updateAllUserLocale()
 }
 
 func (l *Lang) updateLocaleBySessionPath(_ string, sessionPath dbus.ObjectPath) {
@@ -128,50 +125,11 @@ func (l *Lang) updateLocaleFile(tempLocaleFilePath, localeFilePath string) {
 	}
 }
 
-func (l *Lang) updateAllUserLocale(start bool) {
-	if !start {
-		return
-	}
-	manager := login1.NewManager(l.service.Conn())
-	inhibit, err := manager.Inhibit(0, "shutdown", langService, "to write language config file", "delay")
-	if err != nil {
-		logger.Warning(err)
-	}
-	// handle login1 restart
-	dbusObj := ofdbus.NewDBus(l.service.Conn())
-	sysLoop := dbusutil.NewSignalLoop(l.service.Conn(), 10)
-	sysLoop.Start()
-	dbusObj.InitSignalExt(sysLoop, true)
-	_, _ = dbusObj.ConnectNameOwnerChanged(func(name string, oldOwner string, newOwner string) {
-		if name == "org.freedesktop.login1" && newOwner != "" && oldOwner == "" {
-			if inhibit != -1 { // 如果之前存在inhibit时，login1重启需要重新inhibit
-				err := syscall.Close(int(inhibit))
-				inhibit = -1
-				if err != nil {
-					logger.Warning("failed to close fd:", err)
-					return
-				}
-				inhibit, err = manager.Inhibit(0, "shutdown", langService, "to write language config file", "delay")
-				if err != nil {
-					logger.Warning(err)
-				}
-			}
-		}
-	})
-	defer func() {
-		dbusObj.RemoveAllHandlers()
-	}()
-	// end handle login1 restart
-	defer func() {
-		err = syscall.Close(int(inhibit))
-		if err != nil {
-			logger.Warning(err)
-		}
-	}()
-
+func (l *Lang) updateAllUserLocale() {
 	l.sessionPathHomeMapMu.Lock()
 	defer l.sessionPathHomeMapMu.Unlock()
 	for _, homeDir := range l.sessionPathHomeMap {
+		logger.Debug("update local in : ", homeDir)
 		l.updateLocaleByHomeDir(homeDir)
 	}
 }
@@ -184,6 +142,7 @@ func (l *Lang) deleteSessionPathHomeMap(sessionPath dbus.ObjectPath) {
 
 func (l *Lang) addSessionMap(_ string, _ dbus.ObjectPath) {
 	l.loadSessionList()
+	l.updateAllUserLocale()
 }
 
 func (l *Lang) listenSystemSignals() {
@@ -198,12 +157,6 @@ func (l *Lang) listenSystemSignals() {
 
 	// 注销时,监听是哪个 session 注销,从 map 中获取这个 session 的用户信息, 对这个用户的家目录下语言配置进行更新
 	_, err = manager.ConnectSessionRemoved(l.updateLocaleBySessionPath)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	// 关机时,更新所有用户的家目录语言
-	_, err = manager.ConnectPrepareForShutdown(l.updateAllUserLocale)
 	if err != nil {
 		logger.Warning(err)
 	}

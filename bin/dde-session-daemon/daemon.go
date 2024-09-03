@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/godbus/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/session"
 	"github.com/linuxdeepin/dde-daemon/calltrace"
 	"github.com/linuxdeepin/dde-daemon/loader"
@@ -26,8 +26,8 @@ const (
 	ProfTypeCPU = "cpu"    //nolint
 	ProfTypeMem = "memory" //nolint
 
-	dbusPath        = "/com/deepin/daemon/Daemon"
-	dbusServiceName = "com.deepin.daemon.Daemon"
+	dbusPath        = "/org/deepin/dde/Daemon"
+	dbusServiceName = "org.deepin.dde.Daemon"
 	dbusInterface   = dbusServiceName
 	configManagerId = "org.desktopspec.ConfigManager"
 )
@@ -177,16 +177,13 @@ func (s *SessionDaemon) register(service *dbusutil.Service) error {
 
 func (s *SessionDaemon) initModules() {
 	part1ModuleNames := []string{
-		"dock",
 		"trayicon",
 		"x-event-monitor",
 	}
 
 	part2ModuleNames := []string{
-		"launcher",
 		"network",
 		"audio",
-		"appearance",
 		"screensaver",
 		"sessionwatcher",
 		"power", // need screensaver and sessionwatcher
@@ -200,12 +197,8 @@ func (s *SessionDaemon) initModules() {
 		"timedate",
 		"bluetooth",
 		"screenedge",
-		"mime",
-		//"calendar",
-		//"miracast", // need network
 		"systeminfo",
 		"lastore",
-		"eventlog",
 		"calltrace",
 		"debug",
 	}

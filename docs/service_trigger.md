@@ -27,9 +27,9 @@
         "Type": "DBus",
         "DBus": {
             "BusType": "System",
-            "Sender": "com.deepin.daemon.Apps",
-            "Interface": "com.deepin.daemon.Apps.LaunchedRecorder",
-            "Path": "/com/deepin/daemon/Apps",
+            "Sender": "org.deepin.dde.Apps1",
+            "Interface": "org.deepin.dde.Apps1.LaunchedRecorder",
+            "Path": "/org/deepin/dde/Apps1",
             "Signal": "StatusSaved"
         }
     },
@@ -40,7 +40,7 @@
 }
 ```
 
-这样会让 service_trigger 监听 system bus 的 com.deepin.daemon.Apps 服务的 /com/deepin/daemon/Apps 对象的 com.deepin.daemon.Apps.LaunchedRecorder 接口的 StatusSaved 信号，如果收到将执行 echo 命令输出信号参数。
+这样会让 service_trigger 监听 system bus 的 org.deepin.dde.Apps 服务的 /org/deepin/dde/Apps1 对象的 org.deepin.dde.Apps1.LaunchedRecorder 接口的 StatusSaved 信号，如果收到将执行 echo 命令输出信号参数。
 
 ### 详述
 Name 名称，字符串，必填；
