@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
+	"github.com/adrg/xdg"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
@@ -20,12 +21,11 @@ const (
 )
 
 var (
-	configUserPath = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/gesture.json")
+	configUserPath      = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/gesture.json")
+	configSystemPath, _ = xdg.SearchDataFile("dde-daemon/gesture.json")
 )
 
 const (
-	configSystemPath = "/usr/share/dde-daemon/gesture.json"
-
 	gestureSchemaId         = "com.deepin.dde.gesture"
 	gsKeyTouchPadEnabled    = "touch-pad-enabled"
 	gsKeyTouchScreenEnabled = "touch-screen-enabled"

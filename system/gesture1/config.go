@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
+	"github.com/adrg/xdg"
 	"github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -35,5 +36,6 @@ func getConfigPath() string {
 	if utils.IsFileExist(filename) {
 		return filename
 	}
-	return "/usr/share/" + suffix
+	filepath, _ := xdg.SearchDataFile(suffix)
+	return filepath
 }
