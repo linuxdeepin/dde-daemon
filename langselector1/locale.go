@@ -85,6 +85,7 @@ var (
 	notifyTxtStartWithInstall string
 	notifyTxtStart            string
 	notifyTxtDone             string
+	notifyTxtRegionSetDone    string
 )
 
 //go:generate dbusutil-gen -type LangSelector locale.go
@@ -140,6 +141,7 @@ func initNotifyTxt() {
 	notifyTxtStartWithInstall = Tr("Changing system language and installing the required language packages, please wait...")
 	notifyTxtStart = Tr("Changing system language, please wait...")
 	notifyTxtDone = Tr("System language changed, please log out and then log in")
+	notifyTxtRegionSetDone = Tr("System region changed, please log out and then log in")
 }
 
 func newLangSelector(service *dbusutil.Service) (*LangSelector, error) {
@@ -765,7 +767,7 @@ func (lang *LangSelector) setLocaleRegion(locale string) {
 		logger.Warning("failed to write user locale formats:", err)
 	}
 
-	sendNotify(localeIconFinished, "", notifyTxtDone)
+	sendNotify(localeIconFinished, "", notifyTxtRegionSetDone)
 
 	lang.PropsMu.Lock()
 	lang.setPropLocaleState(LocaleStateChanged)
