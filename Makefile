@@ -2,8 +2,8 @@ PREFIX = /usr
 GOPATH_DIR = gopath
 GOPKG_PREFIX = github.com/linuxdeepin/dde-daemon
 GOBUILD = go build $(GO_BUILD_FLAGS)
-export GOPATH=$(shell go env GOPATH)
-
+#export GOPATH=$(shell go env GOPATH)
+export GOPATH=/home/uos/v25:/home/uos/go:/usr/share/gocode
 ifneq (${shell uname -m}, mips64el)
     GOBUILD_OPTIONS = -ldflags '-linkmode=external -extldflags "-pie"'
 endif

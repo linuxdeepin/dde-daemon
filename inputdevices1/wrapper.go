@@ -24,14 +24,16 @@ import (
 
 type mouseInfo struct {
 	*dxinput.Mouse
-	devNode string
-	phys    string
+	devNode   string
+	sysfsPath string
+	phys      string
 }
 
 type touchpadInfo struct {
 	*dxinput.Touchpad
-	devNode string
-	phys    string
+	devNode   string
+	sysfsPath string
+	phys      string
 }
 
 type Mouses []*mouseInfo
@@ -100,7 +102,7 @@ func getKeyboardNumber() int {
 	return number
 }
 
-func getExtraInfo(id int32) (devNode string, phys string) {
+func getExtraInfo(id int32) (devNode string, sysfsPath string, phys string) {
 	var devNodeBytes []byte
 	var length int32
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
@@ -121,7 +123,7 @@ func getExtraInfo(id int32) (devNode string, phys string) {
 		return
 	}
 	defer udevDev.Unref()
-
+	sysfsPath = udevDev.GetSysfsPath()
 	phys = udevDev.GetSysfsAttr("phys")
 	if phys == "" {
 		parent := udevDev.GetParent()
@@ -142,7 +144,7 @@ func getTouchpadInfoByDxTouchpad(tmp *dxinput.Touchpad) *touchpadInfo {
 		Touchpad: tmp,
 	}
 
-	m.devNode, m.phys = getExtraInfo(tmp.Id)
+	m.devNode, m.sysfsPath, m.phys = getExtraInfo(tmp.Id)
 
 	return m
 }
@@ -152,7 +154,7 @@ func getMouseInfoByDxMouse(tmp *dxinput.Mouse) *mouseInfo {
 		Mouse: tmp,
 	}
 
-	m.devNode, m.phys = getExtraInfo(tmp.Id)
+	m.devNode, m.sysfsPath, m.phys = getExtraInfo(tmp.Id)
 
 	return m
 }
@@ -167,6 +169,10 @@ func getMouseInfos(force bool) Mouses {
 		if info.Type == common.DevTypeMouse {
 			tmp, _ := dxinput.NewMouseFromDeviceInfo(info)
 			mouse := getMouseInfoByDxMouse(tmp)
+			if mouse.isVirtual() {
+				logger.Debug("ignore virtial mouse:", tmp.Name)
+				continue
+			}
 
 			// phys 用来标识物理设备，若俩设备的 phys 相同，说明是同一物理设备，
 			// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
@@ -210,17 +216,28 @@ func getTPadInfos(force, check bool) Touchpads {
 		// 处理触控板被识别为PS2鼠标的情况
 		if check && info.Type == common.DevTypeMouse && isTPadPS2Mouse(info.Name) {
 			tmp, err := dxinput.NewTouchpadFromDevInfo(info)
+			touchpad := getTouchpadInfoByDxTouchpad(tmp)
+
+			if touchpad.isVirtual() {
+				logger.Debug("ignore virtial mouse:", tmp.Name)
+				continue
+			}
 			if err != nil {
 				logger.Warning(err)
 			} else {
-				_tpadInfos = append(_tpadInfos, getTouchpadInfoByDxTouchpad(tmp))
+				_tpadInfos = append(_tpadInfos, touchpad)
 			}
 			continue
 		}
 		if info.Type == common.DevTypeTouchpad {
 			tmp, _ := dxinput.NewTouchpadFromDevInfo(info)
+			touchpad := getTouchpadInfoByDxTouchpad(tmp)
 
-			_tpadInfos = append(_tpadInfos, getTouchpadInfoByDxTouchpad(tmp))
+			if touchpad.isVirtual() {
+				logger.Debug("ignore virtial mouse:", tmp.Name)
+				continue
+			}
+			_tpadInfos = append(_tpadInfos, touchpad)
 		}
 	}
 
@@ -285,4 +302,12 @@ func (infos dxWacoms) string() string {
 func toJSON(v interface{}) string {
 	data, _ := json.Marshal(v)
 	return string(data)
+}
+
+func (info mouseInfo) isVirtual() bool {
+	return strings.Contains(info.sysfsPath, "virtual")
+}
+
+func (info touchpadInfo) isVirtual() bool {
+	return strings.Contains(info.sysfsPath, "virtual")
 }

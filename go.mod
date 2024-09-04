@@ -11,7 +11,7 @@ require (
 	github.com/gosexy/gettext v0.0.0-20160830220431-74466a0a0c4a
 	github.com/jouyouyun/hardware v0.1.8
 	github.com/linuxdeepin/dde-api v0.0.0-20240902063014-bac87797f4c3
-	github.com/linuxdeepin/go-dbus-factory v0.0.0-20240903071359-9b78726cee9a
+	github.com/linuxdeepin/go-dbus-factory v0.0.0-20240903081145-85d3b34776c4
 	github.com/linuxdeepin/go-gir v0.0.0-20230710064042-bd15f0549c87
 	github.com/linuxdeepin/go-lib v0.0.0-20240105075242-dddda54ea9f0
 	github.com/linuxdeepin/go-x11-client v0.0.0-20240415051504-c8e43d028ff9

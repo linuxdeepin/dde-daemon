@@ -32,7 +32,7 @@ Build-Depends:
  golang-golang-x-sys-dev,
  golang-golang-x-xerrors-dev,
  golang-gopkg-check.v1-dev,
- golang-gopkg-yaml.v2-dev,
+ golang-gopkg-yaml.v3-dev,
  golang-google-protobuf-dev,
  golang-github-mdlayher-netlink-dev,
  golang-github-jouyouyun-hardware-dev,
