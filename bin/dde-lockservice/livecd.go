@@ -4,32 +4,17 @@
 
 package main
 
-//#include <stdlib.h>
-//#include <string.h>
-//#include <shadow.h>
-//#include <crypt.h>
-//#cgo LDFLAGS: -lcrypt
-//#cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
-//int is_livecd(const char *username)\
-//{\
-//    if (strcmp("deepin", username) != 0) {\
-//        return 0;\
-//    }\
-//    struct spwd *data = getspnam(username);\
-//    if (data == NULL || strlen(data->sp_pwdp) == 0) {\
-//        return 0;\
-//    }\
-//    if (strcmp(crypt("", data->sp_pwdp), data->sp_pwdp) != 0) {\
-//        return 0;\
-//    }\
-//    return 1;\
-//}
-import "C"
-import "unsafe"
+import (
+	"fmt"
+	"os"
+	"strings"
+)
 
 func isInLiveCD(username string) bool {
-	cName := C.CString(username)
-	ret := C.is_livecd(cName)
-	C.free(unsafe.Pointer(cName))
-	return (int(ret) == 1)
+	cmdline, err := os.ReadFile("/proc/cmdline")
+	if err != nil {
+		fmt.Println("failed to read /proc/cmdline")
+		return false
+	}
+	return strings.Contains(string(cmdline), "boot=live")
 }
