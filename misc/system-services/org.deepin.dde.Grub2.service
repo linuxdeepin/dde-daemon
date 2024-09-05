@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name=org.deepin.dde.Grub2
-Exec=/usr/lib/deepin-daemon/grub2
-User=root
+Exec=/bin/false
+SystemdService=deepin-grub2.service
