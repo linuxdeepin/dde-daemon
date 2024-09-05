@@ -133,7 +133,7 @@ translate: $(addsuffix /LC_MESSAGES/dde-daemon.mo, $(addprefix out/locale/, ${LA
 pot:
 	deepin-update-pot misc/po/locale_config.ini
 
-POLICIES=accounts1 Grub2 Fprintd1
+POLICIES=accounts grub2 fprintd
 ts:
 	for i in $(POLICIES); do \
 		deepin-policy-ts-convert policy2ts misc/polkit-action/org.deepin.dde.$$i.policy.in misc/ts/org.deepin.dde.$$i.policy; \

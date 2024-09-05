@@ -20,7 +20,7 @@ const (
 	dbusPath        = "/org/deepin/dde/Grub2"
 	dbusInterface   = dbusServiceName
 
-	polikitActionIdCommon               = "org.deepin.dde.Grub2"
+	polikitActionIdCommon               = "org.deepin.dde.grub2"
 	polikitActionIdPrepareGfxmodeDetect = "org.deepin.dde.grub2.prepare-gfxmode-detect"
 
 	timeoutMax = 10

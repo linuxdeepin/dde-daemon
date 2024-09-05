@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	actionIdEnroll = "org.deepin.dde.fprintd1.enroll"
-	actionIdDelete = "org.deepin.dde.fprintd1.delete-enrolled-fingers"
+	actionIdEnroll = "org.deepin.dde.fprintd.enroll"
+	actionIdDelete = "org.deepin.dde.fprintd.delete-enrolled-fingers"
 )
 
 type IDevice interface {
