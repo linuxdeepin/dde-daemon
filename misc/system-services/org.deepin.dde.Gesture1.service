@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name=org.deepin.dde.Gesture1
-Exec=/usr/lib/deepin-daemon/dde-system-daemon
-User=root
+Exec=/usr/bin/false
+SystemdService=dde-system-daemon.service
