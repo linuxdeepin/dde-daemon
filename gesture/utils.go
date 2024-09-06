@@ -6,7 +6,7 @@ package gesture
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/godbus/dbus/v5"
@@ -72,7 +72,7 @@ func getCurrentActionWindowCmd() string {
 		logger.Warning("Failed to get current window pid:", err)
 		return ""
 	}
-	data, err := ioutil.ReadFile(fmt.Sprintf("/proc/%d/cmdline", pid))
+	data, err := os.ReadFile(fmt.Sprintf("/proc/%d/cmdline", pid))
 	if err != nil {
 		logger.Warning("Failed to read cmdline:", err)
 		return ""

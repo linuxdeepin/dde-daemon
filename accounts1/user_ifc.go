@@ -22,7 +22,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -1171,7 +1170,7 @@ func (u *User) SetSecretQuestions(sender dbus.Sender, list map[int][]byte) *dbus
 		content.WriteRune('\n')
 	}
 
-	err = ioutil.WriteFile(path, content.Bytes(), 0600)
+	err = os.WriteFile(path, content.Bytes(), 0600)
 	return dbusutil.ToError(err)
 }
 

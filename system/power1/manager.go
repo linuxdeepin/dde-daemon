@@ -7,7 +7,6 @@ package power
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -619,7 +618,7 @@ type Config struct {
 }
 
 func loadConfig() (*Config, error) {
-	content, err := ioutil.ReadFile(configFile)
+	content, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, err
 	}
@@ -690,7 +689,7 @@ func (m *Manager) saveConfig() error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(configFile, content, 0644) // #nosec G306
+	return os.WriteFile(configFile, content, 0644) // #nosec G306
 }
 
 func (m *Manager) doSetMode(mode string) error {
@@ -702,7 +701,7 @@ func (m *Manager) doSetMode(mode string) error {
 	switch mode {
 	case "balance": // governor=performance boost=false
 		if m.hasAmddpm {
-			err := ioutil.WriteFile(amdGPUPath, []byte("auto"), 0644)
+			err := os.WriteFile(amdGPUPath, []byte("auto"), 0644)
 			if err != nil {
 				logger.Warning(err)
 			}
@@ -744,7 +743,7 @@ func (m *Manager) doSetMode(mode string) error {
 		}
 	case "powersave": // governor=powersave boost=false
 		if m.hasAmddpm {
-			err := ioutil.WriteFile(amdGPUPath, []byte("low"), 0644)
+			err := os.WriteFile(amdGPUPath, []byte("low"), 0644)
 			if err != nil {
 				logger.Warning(err)
 			}
@@ -769,7 +768,7 @@ func (m *Manager) doSetMode(mode string) error {
 		}
 	case "performance": // governor=performance boost=true
 		if m.hasAmddpm {
-			err := ioutil.WriteFile(amdGPUPath, []byte("high"), 0644)
+			err := os.WriteFile(amdGPUPath, []byte("high"), 0644)
 			if err != nil {
 				logger.Warning(err)
 			}

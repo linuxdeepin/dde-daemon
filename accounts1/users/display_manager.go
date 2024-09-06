@@ -6,7 +6,6 @@ package users
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -271,13 +270,13 @@ func setIniKeys(filename, group string, keys, values []string) error {
 	return err
 }
 
-//Default config: /etc/X11/default-display-manager
+// Default config: /etc/X11/default-display-manager
 func getDefaultDM(file string) (string, error) {
 	if !dutils.IsFileExist(file) {
 		return "", fmt.Errorf("Not found this file: %s", file)
 	}
 
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return "", err
 	}
@@ -317,7 +316,7 @@ func getDMFromSystemService(service string) (string, error) {
 
 // enable autologin: set 'auto_login' to 'yes', and 'default_user' to 'username'
 func parseSlimConfig(filename, username string, isWirte bool) (string, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return "", err
 	}
@@ -386,5 +385,5 @@ func parseSlimConfig(filename, username string, isWirte bool) (string, error) {
 	}
 
 	data := strings.Join(lines, "\n")
-	return "", ioutil.WriteFile(filename, []byte(data), 0644)
+	return "", os.WriteFile(filename, []byte(data), 0644)
 }

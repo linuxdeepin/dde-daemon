@@ -7,7 +7,6 @@ package keybinding
 import (
 	"bytes"
 	"errors"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -267,7 +266,7 @@ func queryAppDesktopByMime(mime string) (string, error) {
 
 func getRfkillWlanState() (int, error) {
 	dir := "/sys/class/rfkill"
-	fileInfoList, err := ioutil.ReadDir(dir)
+	fileInfoList, err := os.ReadDir(dir)
 	if err != nil {
 		return 0, err
 	}

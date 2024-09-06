@@ -5,7 +5,6 @@
 package grub2
 
 import (
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"time"
@@ -77,7 +76,7 @@ func PrepareGfxmodeDetect() error {
 	gfxmodesStr := joinGfxmodesForDetect(gfxmodes)
 	getModifyFuncPrepareGfxmodeDetect(gfxmodesStr)(params)
 
-	err = ioutil.WriteFile(grub_common.GfxmodeDetectReadyPath, nil, 0644)
+	err = os.WriteFile(grub_common.GfxmodeDetectReadyPath, nil, 0644)
 	if err != nil {
 		return err
 	}
@@ -99,7 +98,7 @@ func PrepareGfxmodeDetect() error {
 }
 
 func GetOSNum() (uint32, error) {
-	fileContent, err := ioutil.ReadFile(grubScriptFile)
+	fileContent, err := os.ReadFile(grubScriptFile)
 	if err != nil {
 		logger.Error(err)
 		return 0, err

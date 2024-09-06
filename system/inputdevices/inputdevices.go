@@ -6,7 +6,7 @@ package inputdevices
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -29,9 +29,9 @@ const (
 //go:generate dbusutil-gen -type InputDevices,Touchpad inputdevices.go touchpad.go
 //go:generate dbusutil-gen em -type InputDevices,Touchpad
 type InputDevices struct {
-	service *dbusutil.Service
+	service       *dbusutil.Service
 	systemSigLoop *dbusutil.SignalLoop
-	l       *libinput
+	l             *libinput
 
 	maxTouchscreenId uint32
 
@@ -43,10 +43,10 @@ type InputDevices struct {
 	touchpadMu sync.Mutex
 	touchpad   *Touchpad
 
-	supportWakeupDevices		[]string //所有支持usbhid的设备路径
-	SupportWakeupDevices		map[string]string `prop:"access:rw"` //保存所有支持usbhid设备的power/wakeup状态
-	dsgWakeupDeviceStatus		[]string //用于存储dsg的数据
-	dsgInputDevices				configManager.Manager
+	supportWakeupDevices  []string          //所有支持usbhid的设备路径
+	SupportWakeupDevices  map[string]string `prop:"access:rw"` //保存所有支持usbhid设备的power/wakeup状态
+	dsgWakeupDeviceStatus []string          //用于存储dsg的数据
+	dsgInputDevices       configManager.Manager
 
 	//nolint
 	signals *struct {
@@ -56,12 +56,11 @@ type InputDevices struct {
 
 		// Libinput events state changed
 		EventChanged struct {
-			devNode string	//设备节点
-			devName string  //设备名称
-			path    string	//设备DEVPATH
-			state   bool	//插拔状态，true(插入)， false(拔出)
+			devNode string //设备节点
+			devName string //设备名称
+			path    string //设备DEVPATH
+			state   bool   //插拔状态，true(插入)， false(拔出)
 		}
-
 	}
 }
 
@@ -98,7 +97,7 @@ func (m *InputDevices) init() {
 	}()
 }
 
-//Note：由于数组默认长度为0，后面append时，需要重新申请内存和拷贝，所以效率较低
+// Note：由于数组默认长度为0，后面append时，需要重新申请内存和拷贝，所以效率较低
 func getMapKeys(m map[string]string) []string {
 	keys := []string{}
 	for k := range m {
@@ -243,7 +242,7 @@ func (m *InputDevices) initDSettings(sysBus *dbus.Conn) {
 	}
 }
 
-//通过map不能将相同数据添加进去，append数据后计算map长度来确认重复数据
+// 通过map不能将相同数据添加进去，append数据后计算map长度来确认重复数据
 func getDeleteData(truthValue, mapValue []string) (ret []string) {
 	if len(truthValue) < len(mapValue) {
 		tmpArr := make(map[string]int)
@@ -319,7 +318,7 @@ func (m *InputDevices) saveDeviceFile(path, value string, userSet bool) error {
 			logger.Warningf("can't WriteFile, the value is equal. path : %s, value : %s", path, value)
 			return nil
 		}
-		err := ioutil.WriteFile(path, []byte(value), 0755)
+		err := os.WriteFile(path, []byte(value), 0755)
 		if err != nil {
 			return dbusutil.ToError(fmt.Errorf("WriteFile err : %s", err))
 		}
@@ -427,27 +426,27 @@ func touchscreenSliceEqual(v1 []dbus.ObjectPath, v2 []dbus.ObjectPath) bool {
 func getReadFileValidData(path string) string {
 	// "03" : [48 51]
 	// data: [48 51 10] , need delete 10
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		logger.Warning(err)
 	}
 
 	var databyte []byte
-	for i := 0; i < len(data) - 1; i++ {
+	for i := 0; i < len(data)-1; i++ {
 		databyte = append(databyte, data[i])
 	}
 	return string(databyte)
 }
 
 func getSupportUsbhidDevices() []string {
-	dirs, err := ioutil.ReadDir(_usbDevicePath)
+	dirs, err := os.ReadDir(_usbDevicePath)
 	if err != nil {
 		logger.Warning(" [getSupportUsbhidDevices] err : ", err)
 		return nil
 	}
 	//记录所有类似1-2这样的目录名
 	var listDir []string
-	for _, dir := range dirs  {
+	for _, dir := range dirs {
 		if strings.Contains(dir.Name(), ":") || !strings.Contains(dir.Name(), "-") {
 			continue
 		}
@@ -456,8 +455,8 @@ func getSupportUsbhidDevices() []string {
 
 	// 记录所有包含:,且存在类似1-2名字的目录名
 	var listDirInterface []string
-	for _, path := range listDir  {
-		for _, dir := range dirs  {
+	for _, path := range listDir {
+		for _, dir := range dirs {
 			if strings.Contains(dir.Name(), path) && strings.Contains(dir.Name(), ":") {
 				listDirInterface = append(listDirInterface, dir.Name())
 				continue
@@ -468,8 +467,8 @@ func getSupportUsbhidDevices() []string {
 
 	// 记录类似后面文件值为3，即支持usbhid /sys/bus/usb/devices/1-10:1.0/bInterfaceSubClass
 	var tmp []string
-	for _, dir := range listDirInterface  {
-		bInterfaceClassPath := fmt.Sprintf("%s/%s/%s" ,_usbDevicePath, dir, "bInterfaceClass")
+	for _, dir := range listDirInterface {
+		bInterfaceClassPath := fmt.Sprintf("%s/%s/%s", _usbDevicePath, dir, "bInterfaceClass")
 		if !dutils.IsFileExist(bInterfaceClassPath) {
 			logger.Warningf("[getSupportUsbhidDevices] bInterfaceClassPath : %s not exist.", bInterfaceClassPath)
 			continue
@@ -486,8 +485,8 @@ func getSupportUsbhidDevices() []string {
 	// 支持usbhid的目录名
 	var validList []string
 	bValidData := true
-	for _, dir := range tmp  {//example: 【1-3:1.0
-		for _, dirName := range listDir  {//example: [1-3]
+	for _, dir := range tmp { //example: 【1-3:1.0
+		for _, dirName := range listDir { //example: [1-3]
 			if strings.Contains(dir, dirName) {
 				value := fmt.Sprintf("%s/%s/power/wakeup", _usbDevicePath, dirName)
 				bValidData = true

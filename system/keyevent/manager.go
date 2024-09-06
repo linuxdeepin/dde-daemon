@@ -6,8 +6,8 @@ package keyevent
 
 import (
 	"os"
-	"io/ioutil"
 	"strings"
+
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -42,7 +42,7 @@ type Manager struct {
 	}
 }
 
-const(
+const (
 	touchpadSwitchFile = "/proc/uos/touchpad_switch"
 )
 
@@ -136,7 +136,7 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 					logger.Warning(err)
 					return
 				}
-				content, err := ioutil.ReadFile(touchpadSwitchFile)
+				content, err := os.ReadFile(touchpadSwitchFile)
 				if err != nil {
 					logger.Warning(err)
 					return

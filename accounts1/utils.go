@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -324,7 +323,7 @@ func getValueFromLine(line, delim string) string {
 
 // Get available shells from '/etc/shells'
 func getAvailableShells(file string) []string {
-	contents, err := ioutil.ReadFile(file)
+	contents, err := os.ReadFile(file)
 	if err != nil || len(contents) == 0 {
 		return nil
 	}

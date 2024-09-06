@@ -6,7 +6,6 @@ package network
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -23,7 +22,7 @@ type DeviceConfig struct {
 const configFile = "/var/lib/dde-daemon/network/config.json"
 
 func loadConfig(filename string, cfg *Config) error {
-	data, err := ioutil.ReadFile(filename)
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		return err
 	}
@@ -55,7 +54,7 @@ func saveConfig(filename string, cfg *Config) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(filename, data, 0644)
+	err = os.WriteFile(filename, data, 0644)
 	if err != nil {
 		return err
 	}

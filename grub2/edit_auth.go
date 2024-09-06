@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"sync"
@@ -59,7 +58,7 @@ func (e *EditAuth) init() {
 	}
 
 	logger.Debugf("load data from %s", e.configFile)
-	data, err := ioutil.ReadFile(e.configFile)
+	data, err := os.ReadFile(e.configFile)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -80,7 +79,7 @@ func (e *EditAuth) loadUserAuthInfo() error {
 	}
 
 	logger.Debugf("load data from %s", e.configFile)
-	data, err := ioutil.ReadFile(e.configFile)
+	data, err := os.ReadFile(e.configFile)
 	if err != nil {
 		return err
 	}
@@ -107,7 +106,7 @@ exec tail -n +3 $0
 		b.Write(v)
 	}
 
-	return ioutil.WriteFile(e.configFile, b.Bytes(), 0755)
+	return os.WriteFile(e.configFile, b.Bytes(), 0755)
 }
 
 func (e *EditAuth) load() {

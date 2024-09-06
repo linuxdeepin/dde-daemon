@@ -7,7 +7,7 @@ package gesture
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/adrg/xdg"
@@ -21,7 +21,7 @@ const (
 )
 
 var (
-	configUserPath = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/gesture.json")
+	configUserPath      = filepath.Join(basedir.GetUserConfigDir(), "deepin/dde-daemon/gesture.json")
 	configSystemPath, _ = xdg.SearchDataFile("dde-daemon/gesture.json")
 )
 
@@ -77,7 +77,7 @@ func (infos gestureInfos) Set(evInfo EventInfo, action ActionInfo) error {
 }
 
 func newGestureInfosFromFile(filename string) (gestureInfos, error) {
-	content, err := ioutil.ReadFile(filepath.Clean(filename))
+	content, err := os.ReadFile(filepath.Clean(filename))
 	if err != nil {
 		return nil, err
 	}

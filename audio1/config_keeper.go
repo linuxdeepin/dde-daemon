@@ -6,7 +6,7 @@ package audio
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
@@ -98,7 +98,7 @@ func (ck *ConfigKeeper) Save() error {
 		return err
 	}
 
-	err = ioutil.WriteFile(ck.file, data, 0644)
+	err = os.WriteFile(ck.file, data, 0644)
 	if err != nil {
 		logger.Warning(err)
 		// 这里不返回，因为可能可以写另一个配置
@@ -110,7 +110,7 @@ func (ck *ConfigKeeper) Save() error {
 		return err
 	}
 
-	err = ioutil.WriteFile(ck.muteFile, data, 0644)
+	err = os.WriteFile(ck.muteFile, data, 0644)
 	if err != nil {
 		logger.Warning(err)
 		return err
@@ -120,7 +120,7 @@ func (ck *ConfigKeeper) Save() error {
 }
 
 func (ck *ConfigKeeper) Load() error {
-	data, err := ioutil.ReadFile(ck.file)
+	data, err := os.ReadFile(ck.file)
 	if err != nil {
 		logger.Warning(err)
 		return err
@@ -131,7 +131,7 @@ func (ck *ConfigKeeper) Load() error {
 		logger.Warning(err)
 	}
 
-	data, err = ioutil.ReadFile(ck.muteFile)
+	data, err = os.ReadFile(ck.muteFile)
 	if err != nil {
 		logger.Warning(err)
 		return err

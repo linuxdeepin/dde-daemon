@@ -17,7 +17,6 @@ import "C"
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"math"
 	"os"
 	"os/user"
@@ -100,7 +99,7 @@ func updatePasswd(password, username string) error {
 	}
 	defer C._unlock_shadow_file()
 
-	content, err := ioutil.ReadFile(userFileShadow)
+	content, err := os.ReadFile(userFileShadow)
 	if err != nil {
 		return err
 	}

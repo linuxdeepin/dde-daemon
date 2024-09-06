@@ -6,7 +6,6 @@ package calltrace
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -25,7 +24,7 @@ type cpuTimeInfo struct {
 
 func getCPUPercentage() (float64, error) {
 	statFile := fmt.Sprintf("/proc/%d/stat", os.Getpid())
-	contents, err := ioutil.ReadFile(statFile)
+	contents, err := os.ReadFile(statFile)
 	if err != nil {
 		logger.Warning("Failed to read contents:", err)
 		return 0, err
@@ -57,7 +56,7 @@ func (info *cpuTimeInfo) Percentage() float64 {
 }
 
 func getUptime() float64 {
-	contents, err := ioutil.ReadFile("/proc/uptime")
+	contents, err := os.ReadFile("/proc/uptime")
 	if err != nil {
 		logger.Warning("Failed to read uptime:", err)
 		return 0

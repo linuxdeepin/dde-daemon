@@ -5,7 +5,6 @@
 package grub2
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -20,24 +19,24 @@ func Test_replaceAndbackupDir(t *testing.T) {
 	testFile := filepath.Join(tmpDirA, "test")
 	dataA := []byte{'a'}
 	dataB := []byte{'b'}
-	err = ioutil.WriteFile(testFile, dataA, 0755)
+	err = os.WriteFile(testFile, dataA, 0755)
 	require.NoError(t, err)
 
 	tmpDirB, err := getTempDir()
 	require.NoError(t, err)
 
-	err = ioutil.WriteFile(filepath.Join(tmpDirB, "test"), dataB, 0755)
+	err = os.WriteFile(filepath.Join(tmpDirB, "test"), dataB, 0755)
 	require.NoError(t, err)
 
 	err = replaceAndBackupDir(tmpDirA, tmpDirB)
 	require.NoError(t, err)
 
-	get, err := ioutil.ReadFile(testFile)
+	get, err := os.ReadFile(testFile)
 	require.NoError(t, err)
 	require.Equal(t, dataB, get)
 
 	bakDir := tmpDirA + ".bak"
-	get, err = ioutil.ReadFile(filepath.Join(bakDir, "test"))
+	get, err = os.ReadFile(filepath.Join(bakDir, "test"))
 	require.NoError(t, err)
 	require.Equal(t, dataA, get)
 

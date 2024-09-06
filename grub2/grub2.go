@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
@@ -352,7 +351,7 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 }
 
 func (grub *Grub2) readEntries() (err error) {
-	fileContent, err := ioutil.ReadFile(grubScriptFile)
+	fileContent, err := os.ReadFile(grubScriptFile)
 	if err != nil {
 		logger.Error(err)
 		return

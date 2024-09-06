@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -138,7 +137,7 @@ type Config struct {
 }
 
 func loadConfig(filename string) (*Config, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +161,7 @@ func saveConfig(cfg *Config, filename string) error {
 	}
 
 	tmpFile := filename + ".tmp"
-	err = ioutil.WriteFile(tmpFile, content, 0644)
+	err = os.WriteFile(tmpFile, content, 0644)
 	if err != nil {
 		return err
 	}
@@ -180,7 +179,7 @@ type RendererConfig struct {
 }
 
 func loadRendererConfig(filename string) (*RendererConfig, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +203,7 @@ func genRendererConfig(cfg *RendererConfig, filename string) error {
 	}
 
 	tmpFile := filename + ".tmp"
-	err = ioutil.WriteFile(tmpFile, content, 0644)
+	err = os.WriteFile(tmpFile, content, 0644)
 	if err != nil {
 		return err
 	}

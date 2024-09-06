@@ -6,7 +6,7 @@ package systeminfo
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -37,7 +37,7 @@ func getMemoryFromFile(file string) (uint64, error) {
 	return cap * 1024, nil
 }
 
-//执行命令：/usr/bin/getconf LONG_BIT 获取系统位数
+// 执行命令：/usr/bin/getconf LONG_BIT 获取系统位数
 func systemBit() string {
 	output, err := exec.Command("getconf", "LONG_BIT").Output()
 	if err != nil {
@@ -71,7 +71,7 @@ func runLscpu() (map[string]string, error) {
 }
 
 func parseInfoFile(file, delim string) (map[string]string, error) {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

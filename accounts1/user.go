@@ -7,7 +7,6 @@ package accounts
 import (
 	"encoding/base64"
 	"errors"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -678,7 +677,7 @@ func scaleUserIcon(file string) (string, bool, error) {
 
 // return temp file path and error
 func getTempFile() (string, error) {
-	tmpfile, err := ioutil.TempFile("", "dde-daemon-accounts")
+	tmpfile, err := os.CreateTemp("", "dde-daemon-accounts")
 	if err != nil {
 		return "", err
 	}
@@ -710,7 +709,7 @@ func getUserSession(homeDir string) string {
 }
 
 func getSessionList() []string {
-	fileInfoList, err := ioutil.ReadDir("/usr/share/xsessions")
+	fileInfoList, err := os.ReadDir("/usr/share/xsessions")
 	if err != nil {
 		return nil
 	}

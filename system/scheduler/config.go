@@ -6,7 +6,7 @@ package scheduler
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 )
 
@@ -33,7 +33,7 @@ func (c *config) getPriority(exe string) *priorityCfg {
 }
 
 func loadConfigAux(filename string) (*config, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}

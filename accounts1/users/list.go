@@ -8,7 +8,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
@@ -131,7 +130,7 @@ func getUserInfo(condition UserInfo, file string) (UserInfo, error) {
 }
 
 func getUserInfosFromFile(file string) (UserInfos, error) {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

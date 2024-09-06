@@ -7,7 +7,6 @@ package clipboard
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -77,14 +76,14 @@ func (m *Manager) writeContent() error {
 			return err
 		}
 
-		err = ioutil.WriteFile(filepath.Join(dir, strconv.Itoa(int(target))), targetData.Data, 0644)
+		err = os.WriteFile(filepath.Join(dir, strconv.Itoa(int(target))), targetData.Data, 0644)
 		if err != nil {
 			m.contentMu.Unlock()
 			return err
 		}
 	}
 	m.contentMu.Unlock()
-	err = ioutil.WriteFile(filepath.Join(dir, "index.txt"), buf.Bytes(), 0600)
+	err = os.WriteFile(filepath.Join(dir, "index.txt"), buf.Bytes(), 0600)
 	if err != nil {
 		return err
 	}

@@ -7,7 +7,6 @@ package gesture
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"math"
 	"os"
 	"os/exec"
@@ -388,7 +387,7 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 		return nil
 	}
 
-	if (!m.longPressEnable  || _useWayland) && strings.Contains(string(info.Event.Name), "touch right button") {
+	if (!m.longPressEnable || _useWayland) && strings.Contains(string(info.Event.Name), "touch right button") {
 		return nil
 	}
 
@@ -426,7 +425,7 @@ func (m *Manager) Write() error {
 		return err
 	}
 	// #nosec G306
-	return ioutil.WriteFile(m.userFile, data, 0644)
+	return os.WriteFile(m.userFile, data, 0644)
 }
 
 func (m *Manager) listenGSettingsChanged() {
@@ -610,7 +609,7 @@ func (m *Manager) getTouchScreenRotationContext() (context *touchEventContext, p
 	return
 }
 
-//param @edge: swipe to touchscreen edge
+// param @edge: swipe to touchscreen edge
 // edge: 该手势来自屏幕的哪条边
 // p:    该手势的终点
 func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge string, p *point, duration int32) error {
@@ -713,7 +712,7 @@ func (m *Manager) handleTouchMovementEvent(context *touchEventContext, direction
 	return nil
 }
 
-//touchpad double click down
+// touchpad double click down
 func (m *Manager) handleDbclickDown(fingers int32) error {
 	if fingers == 3 {
 		return m.wm.TouchToMove(0, 0, 0)
@@ -721,7 +720,7 @@ func (m *Manager) handleDbclickDown(fingers int32) error {
 	return nil
 }
 
-//touchpad swipe move
+// touchpad swipe move
 func (m *Manager) handleSwipeMoving(fingers int32, accelX float64, accelY float64) error {
 	if fingers == 3 {
 		return m.wm.TouchToMove(0, int32(accelX), int32(accelY))
@@ -729,7 +728,7 @@ func (m *Manager) handleSwipeMoving(fingers int32, accelX float64, accelY float6
 	return nil
 }
 
-//touchpad swipe stop or interrupted
+// touchpad swipe stop or interrupted
 func (m *Manager) handleSwipeStop(fingers int32) error {
 	if fingers == 3 {
 		return m.wm.ClearMoveStatus(0)

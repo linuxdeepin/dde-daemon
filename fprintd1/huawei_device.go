@@ -6,7 +6,6 @@ package fprintd
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -362,7 +361,7 @@ func (dev *HuaweiDevice) deleteEnrolledFingers(sender dbus.Sender, username stri
 		return err
 	}
 
-	fileInfoList, err := ioutil.ReadDir(dir)
+	fileInfoList, err := os.ReadDir(dir)
 	if err != nil {
 		return err
 	}
@@ -450,7 +449,7 @@ func (dev *HuaweiDevice) listEnrolledFingers(username string) ([]string, error) 
 		return nil, err
 	}
 
-	fileInfoList, err := ioutil.ReadDir(dir)
+	fileInfoList, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}

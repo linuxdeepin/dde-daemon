@@ -6,7 +6,7 @@ package gesture
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 
 	"github.com/adrg/xdg"
 	"github.com/linuxdeepin/go-lib/utils"
@@ -18,7 +18,7 @@ type Config struct {
 }
 
 func loadConfig(filename string) (*Config, error) {
-	contents, err := ioutil.ReadFile(filename)
+	contents, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -37,5 +37,5 @@ func getConfigPath() string {
 		return filename
 	}
 	filepath, _ := xdg.SearchDataFile(suffix)
-	return filepath;
+	return filepath
 }

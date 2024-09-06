@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -116,7 +115,7 @@ type envInfo struct {
 type envInfos []envInfo
 
 func readEnvFile(file string) (envInfos, error) {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +140,7 @@ func readEnvFile(file string) (envInfos, error) {
 }
 
 func getTempDir() (string, error) {
-	return ioutil.TempDir("", "grub2_theme_*")
+	return os.MkdirTemp("", "grub2_theme_*")
 }
 
 func copyBgSource(src, dst string) error {

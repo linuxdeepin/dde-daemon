@@ -6,7 +6,6 @@ package eventlog
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -108,7 +107,7 @@ func (e *EventLog) syncUserExpState() {
 func (e *EventLog) getUserExpStateFromUserExpPath() bool {
 	e.fileMu.Lock()
 	defer e.fileMu.Unlock()
-	content, err := ioutil.ReadFile(userExpPath)
+	content, err := os.ReadFile(userExpPath)
 	if err != nil {
 		logger.Warning(err)
 		return false
@@ -167,13 +166,13 @@ func (e *EventLog) setUserExpFileState(state bool) error {
 	} else {
 		content = []byte(disableUserExp)
 	}
-	return ioutil.WriteFile(e.currentUserVarTmpExpPath, content, 0666)
+	return os.WriteFile(e.currentUserVarTmpExpPath, content, 0666)
 }
 
 func (e *EventLog) getUserExpStateFromVarTmpExpPath() bool {
 	e.fileMu.Lock()
 	defer e.fileMu.Unlock()
-	content, err := ioutil.ReadFile(e.currentUserVarTmpExpPath)
+	content, err := os.ReadFile(e.currentUserVarTmpExpPath)
 	if err != nil {
 		logger.Warning(err)
 		return false

@@ -6,7 +6,6 @@ package power
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -188,7 +187,7 @@ func isHuaWei() bool {
 
 func NewCpuHandlers() *CpuHandlers {
 	cpus := make(CpuHandlers, 0)
-	dirs, err := ioutil.ReadDir(globalCpuDirPath)
+	dirs, err := os.ReadDir(globalCpuDirPath)
 	if err != nil {
 		logger.Warning(err)
 		return &cpus
@@ -221,7 +220,7 @@ func NewCpuHandlers() *CpuHandlers {
 
 func (cpu *CpuHandler) GetGovernor(force bool) (string, error) {
 	if force {
-		data, err := ioutil.ReadFile(filepath.Join(cpu.path, globalGovernorFileName))
+		data, err := os.ReadFile(filepath.Join(cpu.path, globalGovernorFileName))
 		if err != nil {
 			logger.Warning(err)
 			return "", err
@@ -236,16 +235,16 @@ func (cpu *CpuHandler) SetGovernor(governor string, isPstate bool) error {
 	err := func() (err error) {
 		if isPstate {
 			if governor == "performance" {
-				return ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
+				return os.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
 			} else {
-				errPstate := ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte("powersave"), 0644)
+				errPstate := os.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte("powersave"), 0644)
 				if errPstate != nil {
 					return errPstate
 				}
-				return ioutil.WriteFile(filepath.Join(cpu.path, globalPstateGovernorFileName), []byte(governor), 0644)
+				return os.WriteFile(filepath.Join(cpu.path, globalPstateGovernorFileName), []byte(governor), 0644)
 			}
 		} else {
-			return ioutil.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
+			return os.WriteFile(filepath.Join(cpu.path, globalGovernorFileName), []byte(governor), 0644)
 		}
 	}()
 	if err != nil {
@@ -278,9 +277,9 @@ func (cpus *CpuHandlers) getAvailableGovernors(isPstate bool) (ret string, err e
 	for i, cpu := range *cpus {
 		data, err := func() (ret []byte, err error) {
 			if isPstate {
-				return ioutil.ReadFile(filepath.Join(cpu.path, globalPstateAvailableGovernorFileName))
+				return os.ReadFile(filepath.Join(cpu.path, globalPstateAvailableGovernorFileName))
 			} else {
-				return ioutil.ReadFile(filepath.Join(cpu.path, globalAvailableGovernorFileName))
+				return os.ReadFile(filepath.Join(cpu.path, globalAvailableGovernorFileName))
 			}
 		}()
 		if err != nil {
@@ -366,7 +365,7 @@ func (cpus *CpuHandlers) tryWriteGovernor(lines []string, isPstate bool) []strin
 		return _pstateAvailableGovernors
 	}
 	//获取当前系统的governor值
-	oldGovernor, err := ioutil.ReadFile(path)
+	oldGovernor, err := os.ReadFile(path)
 	if err != nil {
 		return lines
 	}
@@ -375,7 +374,7 @@ func (cpus *CpuHandlers) tryWriteGovernor(lines []string, isPstate bool) []strin
 	// 通过是否能写入文件判断不包含在supportGovernors的值是否支持设置
 	for _, value := range getScalingAvailableGovernors() {
 		if !strv.Strv(lines).Contains(value) {
-			err = ioutil.WriteFile(path, []byte(value), 0644)
+			err = os.WriteFile(path, []byte(value), 0644)
 			logger.Infof(" Not contain in supportGovernors. Governor : %s.", value)
 			if err != nil {
 				logger.Infof(" Can't use the governor : %s. err : %s", value, err)
@@ -385,7 +384,7 @@ func (cpus *CpuHandlers) tryWriteGovernor(lines []string, isPstate bool) []strin
 		}
 	}
 	//将当前系统原始的governor值设置回去
-	err = ioutil.WriteFile(path, oldGovernor, 0644)
+	err = os.WriteFile(path, oldGovernor, 0644)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -412,14 +411,14 @@ func (cpus *CpuHandlers) IsBoostFileExist() bool {
 func (cpus *CpuHandlers) SetBoostEnabled(enabled bool) error {
 	var err error
 	if enabled {
-		err = ioutil.WriteFile(globalBoostFilePath, []byte("1"), 0644)
+		err = os.WriteFile(globalBoostFilePath, []byte("1"), 0644)
 	} else {
-		err = ioutil.WriteFile(globalBoostFilePath, []byte("0"), 0644)
+		err = os.WriteFile(globalBoostFilePath, []byte("0"), 0644)
 	}
 	return err
 }
 
 func (cpus *CpuHandlers) GetBoostEnabled() (bool, error) {
-	data, err := ioutil.ReadFile(globalBoostFilePath)
+	data, err := os.ReadFile(globalBoostFilePath)
 	return strings.TrimSpace(string(data)) == "0", err
 }

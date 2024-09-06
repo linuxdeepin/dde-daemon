@@ -6,7 +6,6 @@ package inputdevices
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -382,7 +381,7 @@ func isSyndaemonExist(pidFile string) bool {
 		return true
 	}
 
-	context, err := ioutil.ReadFile(pidFile)
+	context, err := os.ReadFile(pidFile)
 	if err != nil {
 		return false
 	}
@@ -396,7 +395,7 @@ func isSyndaemonExist(pidFile string) bool {
 }
 
 func isProcessExist(file, name string) bool {
-	context, err := ioutil.ReadFile(file)
+	context, err := os.ReadFile(file)
 	if err != nil {
 		return false
 	}

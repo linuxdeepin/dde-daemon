@@ -7,7 +7,6 @@ package accounts
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"sort"
@@ -196,7 +195,7 @@ func (m *Manager) initUsers(list []string) {
 func (m *Manager) initUdcpCache() error {
 	// 解析json文件 新建udcp-cache对象
 	var ifcCfg InterfaceConfig
-	content, err := ioutil.ReadFile(interfacesFile)
+	content, err := os.ReadFile(interfacesFile)
 	if err != nil {
 		return err
 	}

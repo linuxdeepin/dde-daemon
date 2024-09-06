@@ -6,12 +6,12 @@ package inputdevices
 
 import (
 	"encoding/xml"
-	"io/ioutil"
+	"os"
 
+	"github.com/linuxdeepin/dde-daemon/inputdevices/iso639"
 	"github.com/linuxdeepin/go-lib/gettext"
 	lib_locale "github.com/linuxdeepin/go-lib/locale"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/dde-daemon/inputdevices/iso639"
 )
 
 const (
@@ -36,7 +36,7 @@ type XConfigItem struct {
 
 func parseXML(filename string) (XKBConfigRegister, error) {
 	var v XKBConfigRegister
-	xmlByte, err := ioutil.ReadFile(filename)
+	xmlByte, err := os.ReadFile(filename)
 	if err != nil {
 		return v, err
 	}

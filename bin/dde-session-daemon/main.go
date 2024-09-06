@@ -14,7 +14,6 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -334,7 +333,7 @@ type pamEnvKeyValue struct {
 }
 
 func loadPamEnv(filename string) ([]pamEnvKeyValue, error) {
-	content, err := ioutil.ReadFile(filename) //#nosec G304
+	content, err := os.ReadFile(filename) //#nosec G304
 	if err != nil {
 		return nil, err
 	}
