@@ -6,7 +6,7 @@ package shortcuts
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path"
 	"sync"
 
@@ -135,7 +135,7 @@ func loadSystemActionsFile(file string) (*actionHandler, error) {
 	logger.Debug("load system action file:", file)
 
 	// #nosec G304
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

@@ -7,7 +7,6 @@ package power
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"os"
 	"sync"
 	"time"
@@ -606,7 +605,7 @@ type Config struct {
 }
 
 func loadConfig() (*Config, error) {
-	content, err := ioutil.ReadFile(configFile)
+	content, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, err
 	}

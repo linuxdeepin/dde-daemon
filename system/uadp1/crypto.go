@@ -6,7 +6,6 @@ package uadp
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"unsafe"
@@ -81,7 +80,7 @@ func (ctx *CryptoContext) Save(file string) bool {
 		}
 	}
 
-	err = ioutil.WriteFile(file, data, 0600)
+	err = os.WriteFile(file, data, 0600)
 	if err != nil {
 		logger.Warning(err)
 		return false
@@ -93,7 +92,7 @@ func (ctx *CryptoContext) Save(file string) bool {
 
 // 加载密钥
 func (ctx *CryptoContext) Load(file string) bool {
-	data, err := ioutil.ReadFile(file)
+	data, err := os.ReadFile(file)
 	if err != nil {
 		logger.Debugf("%s not exist, create it", file)
 		return false

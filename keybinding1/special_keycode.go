@@ -5,7 +5,7 @@
 package keybinding
 
 import (
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -378,7 +378,7 @@ func (m *Manager) handlePower() {
 
 // 响应键盘背光模式切换
 func (m *Manager) handleKbdLight() {
-	data, err := ioutil.ReadFile("/sys/class/backlight/n70z/n70z_kbbacklight")
+	data, err := os.ReadFile("/sys/class/backlight/n70z/n70z_kbbacklight")
 	if err != nil {
 		logger.Warning(err)
 		return

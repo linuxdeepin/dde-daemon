@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -56,7 +55,7 @@ func loadConfig() (cfg config, err error) {
 
 	var content []byte
 
-	content, err = ioutil.ReadFile(configPath)
+	content, err = os.ReadFile(configPath)
 	if err != nil {
 		return
 	}
@@ -83,7 +82,7 @@ func getTasksFromFile(path string) (tasks [][]byte, err error) {
 
 	var content []byte
 
-	content, err = ioutil.ReadAll(tasksFile)
+	content, err = os.ReadAll(tasksFile)
 	if err != nil {
 		return
 	}

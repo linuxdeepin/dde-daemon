@@ -6,7 +6,7 @@ package audio
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -67,7 +67,7 @@ func (m *BluezAudioManager) Save() {
 		return
 	}
 
-	err = ioutil.WriteFile(m.file, data, 0644)
+	err = os.WriteFile(m.file, data, 0644)
 	if err != nil {
 		logger.Warning(err)
 		return
@@ -76,7 +76,7 @@ func (m *BluezAudioManager) Save() {
 
 /* 加载配置 */
 func (m *BluezAudioManager) Load() {
-	data, err := ioutil.ReadFile(m.file)
+	data, err := os.ReadFile(m.file)
 	if err != nil {
 		logger.Warning(err)
 		return

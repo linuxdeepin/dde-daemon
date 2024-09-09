@@ -6,7 +6,6 @@ package inputdevices1
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -70,9 +69,9 @@ func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 	if !enabled {
 		arg = "disable"
 	}
-	err = ioutil.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
+	err = os.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
 	if err != nil {
-		logger.Warning(" ioutil.WriteFile err : ", err)
+		logger.Warning(" os.WriteFile err : ", err)
 		return err
 	}
 	t.setPropEnable(enabled)
@@ -110,7 +109,7 @@ func TouchpadEnable(filePath string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	content, err := ioutil.ReadFile(touchpadSwitchFile)
+	content, err := os.ReadFile(touchpadSwitchFile)
 	if err != nil {
 		return false, err
 	}

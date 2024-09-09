@@ -6,7 +6,7 @@ package checkers
 
 import (
 	"errors"
-	"io/ioutil"
+	"os"
 	"os/user"
 	"regexp"
 	"strconv"
@@ -159,7 +159,7 @@ func (name Username) getUid() (int64, error) {
 }
 
 func getAllUsername(file string) (UsernameList, error) {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

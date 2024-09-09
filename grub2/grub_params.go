@@ -6,7 +6,7 @@ package grub2
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"sort"
 	"strconv"
@@ -98,7 +98,7 @@ func writeGrubParams(params map[string]string) error {
 	logger.Debug("write grub params")
 	content := getGrubParamsContent(params)
 
-	err := ioutil.WriteFile(grubParamsFile, content, 0644)
+	err := os.WriteFile(grubParamsFile, content, 0644)
 	if err != nil {
 		return err
 	}

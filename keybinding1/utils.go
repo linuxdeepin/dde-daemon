@@ -7,7 +7,6 @@ package keybinding
 import (
 	"bytes"
 	"errors"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -305,7 +304,7 @@ func (m *Manager) systemTurnOffScreen() {
 		m.setWmBlackScreenActive(false)
 	}
 	undoPrepareSuspend()
-	ioutil.WriteFile("/tmp/dpms-state", []byte("1"), 0644)
+	os.WriteFile("/tmp/dpms-state", []byte("1"), 0644)
 }
 
 func (m *Manager) systemLogout() {
@@ -346,7 +345,7 @@ func queryCommandByMime(mime string) string {
 
 func getRfkillWlanState() (int, error) {
 	dir := "/sys/class/rfkill"
-	fileInfoList, err := ioutil.ReadDir(dir)
+	fileInfoList, err := os.ReadDir(dir)
 	if err != nil {
 		return 0, err
 	}

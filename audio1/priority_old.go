@@ -6,7 +6,7 @@ package audio
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/linuxdeepin/go-lib/pulse"
@@ -143,7 +143,7 @@ func (pr *Priorities) Save(file string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(file, data, 0644)
+	return os.WriteFile(file, data, 0644)
 }
 
 func (pr *Priorities) Print() {
@@ -156,7 +156,7 @@ func (pr *Priorities) Print() {
 }
 
 func (pr *Priorities) Load(file string, cards CardList) {
-	data, err := ioutil.ReadFile(file)
+	data, err := os.ReadFile(file)
 	if err != nil {
 		logger.Warning(err)
 		pr.defaultInit(cards)

@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
@@ -372,7 +371,7 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 }
 
 func (grub *Grub2) readEntries() (err error) {
-	fileContent, err := ioutil.ReadFile(grubScriptFile)
+	fileContent, err := os.ReadFile(grubScriptFile)
 	if err != nil {
 		logger.Error(err)
 		return
@@ -655,7 +654,7 @@ func getFstartState() (bool, int) {
 	if !dutils.IsFileExist(deepinFstartFile) {
 		return false, -1
 	}
-	content, err := ioutil.ReadFile(deepinFstartFile)
+	content, err := os.ReadFile(deepinFstartFile)
 	if err != nil {
 		return false, -1
 	}
@@ -689,7 +688,7 @@ func setFstartState(state bool) error {
 		logger.Debug("current state is same : ", state)
 		return nil
 	}
-	content, err := ioutil.ReadFile(deepinFstartFile)
+	content, err := os.ReadFile(deepinFstartFile)
 	if err != nil {
 		return err
 	}
@@ -704,7 +703,7 @@ func setFstartState(state bool) error {
 	}
 	if strings.Trim(strings.TrimSpace(line[strings.Index(line, "=")+1:]), "\"") != arg {
 		lines[lineNum] = "export " + deepinFstart + "=\"" + arg + "\""
-		err := ioutil.WriteFile(deepinFstartFile, []byte(strings.Join(lines, "\n")), 0644)
+		err := os.WriteFile(deepinFstartFile, []byte(strings.Join(lines, "\n")), 0644)
 		if err != nil {
 			return dbusutil.ToError(err)
 		}

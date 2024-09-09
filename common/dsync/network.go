@@ -6,10 +6,9 @@ package dsync
 
 import (
 	"errors"
-	"io/ioutil"
+	"fmt"
 	"os"
 	"path/filepath"
-	"fmt"
 	"strings"
 )
 
@@ -119,7 +118,7 @@ func (data *Connection) WriteFile(dir string) error {
 	if !strings.HasPrefix(absPath, dir) {
 		return fmt.Errorf("%s is not in %s", absPath, dir)
 	}
-	return ioutil.WriteFile(absPath, data.Contents, 0600)
+	return os.WriteFile(absPath, data.Contents, 0600)
 }
 
 func (data *Connection) RemoveFile(dir string) error {

@@ -5,7 +5,6 @@
 package clipboard
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -95,18 +94,18 @@ func Test_getBytesMd5sum(t *testing.T) {
 }
 
 func Test_emptyDir(t *testing.T) {
-	dir, err := ioutil.TempDir("", "dde-daemon-clipboard-test")
+	dir, err := os.MkdirTemp("", "dde-daemon-clipboard-test")
 	if err != nil {
 		assert.FailNow(t, "failed to create temp dir: %v", err)
 	}
 	t.Log("dir:", dir)
-	err = ioutil.WriteFile(filepath.Join(dir, "1"), []byte("abc"), 0644)
+	err = os.WriteFile(filepath.Join(dir, "1"), []byte("abc"), 0644)
 	assert.NoError(t, err)
 
 	err = os.Mkdir(filepath.Join(dir, "d1"), 0755)
 	assert.NoError(t, err)
 
-	err = ioutil.WriteFile(filepath.Join(dir, "d1/1"), []byte("abc"), 0644)
+	err = os.WriteFile(filepath.Join(dir, "d1/1"), []byte("abc"), 0644)
 	assert.NoError(t, err)
 
 	err = emptyDir(dir)

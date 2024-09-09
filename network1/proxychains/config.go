@@ -6,7 +6,7 @@ package proxychains
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 )
 
 type Config struct {
@@ -19,7 +19,7 @@ type Config struct {
 }
 
 func loadConfig(file string) (*Config, error) {
-	data, err := ioutil.ReadFile(file)
+	data, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
@@ -38,5 +38,5 @@ func (cfg *Config) save(file string) error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(file, data, 0600)
+	return os.WriteFile(file, data, 0600)
 }

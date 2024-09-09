@@ -8,8 +8,8 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"math"
+	"os"
 	"strings"
 	"unicode"
 
@@ -100,7 +100,7 @@ func floatPrecision(f float64) float64 {
 const defaultPaFile = "/etc/pulse/default.pa"
 
 func loadDefaultPaConfig(filename string) (cfg defaultPaConfig) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		logger.Warning(err)
 		return

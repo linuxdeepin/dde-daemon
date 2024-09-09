@@ -7,7 +7,7 @@ package gesture1
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/adrg/xdg"
@@ -77,7 +77,7 @@ func (infos gestureInfos) Set(evInfo EventInfo, action ActionInfo) error {
 }
 
 func newGestureInfosFromFile(filename string) (gestureInfos, error) {
-	content, err := ioutil.ReadFile(filepath.Clean(filename))
+	content, err := os.ReadFile(filepath.Clean(filename))
 	if err != nil {
 		return nil, err
 	}

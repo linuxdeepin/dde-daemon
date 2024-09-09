@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"sort"
@@ -417,7 +416,7 @@ func getGroupInfoWithCache(file string) (map[string]GroupInfo, error) {
 		return groupFileInfo, nil
 	}
 
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

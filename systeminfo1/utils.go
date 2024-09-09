@@ -6,7 +6,7 @@ package systeminfo
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -71,7 +71,7 @@ func runLscpu() (map[string]string, error) {
 }
 
 func parseInfoFile(file, delim string) (map[string]string, error) {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

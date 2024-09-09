@@ -6,7 +6,7 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sort"
 
@@ -146,7 +146,7 @@ func loadConnectionFile(filename string) (*Connection, error) {
 }
 
 func getConnectionFiles(dir string) ([]string, error) {
-	finfos, err := ioutil.ReadDir(dir)
+	finfos, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}

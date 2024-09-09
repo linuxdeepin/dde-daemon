@@ -8,7 +8,6 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -59,7 +58,7 @@ func (dm *DataManager) Save(file string) error {
 		}
 	}
 
-	err = ioutil.WriteFile(file, data, 0600)
+	err = os.WriteFile(file, data, 0600)
 	if err != nil {
 		return err
 	}
@@ -69,7 +68,7 @@ func (dm *DataManager) Save(file string) error {
 }
 
 func (dm *DataManager) Load(file string) bool {
-	data, err := ioutil.ReadFile(file)
+	data, err := os.ReadFile(file)
 	if err != nil {
 		logger.Debugf("%s not exist, create it", file)
 		return false
@@ -100,7 +99,7 @@ func (dm *DataManager) SetData(dir string, process string, name string, aesKey [
 	}
 
 	file = dir + md5str(data)
-	err := ioutil.WriteFile(file, data, 0600)
+	err := os.WriteFile(file, data, 0600)
 	if err != nil {
 		return err
 	}
@@ -120,7 +119,7 @@ func (dm *DataManager) GetData(process string, name string) ([]byte, []byte, err
 		return []byte{}, []byte{}, fmt.Errorf("'%s' not exist", name)
 	}
 
-	data, err := ioutil.ReadFile(file)
+	data, err := os.ReadFile(file)
 	return aesKey, data, err
 }
 

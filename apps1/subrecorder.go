@@ -9,9 +9,7 @@ import (
 	"crypto/md5"
 	"encoding/csv"
 	"fmt"
-	"github.com/linuxdeepin/go-lib/utils"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/user"
@@ -19,6 +17,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
@@ -216,7 +216,7 @@ func (sr *SubRecorder) writeStatus(w io.Writer) error {
 func (sr *SubRecorder) save() error {
 	logger.Debug("SubRecorder.save", sr.root, sr.statusFile)
 	file := sr.statusFile
-	f, err := ioutil.TempFile("", fmt.Sprintf("%s.new%x-", filepath.Base(file), time.Now().UnixNano()))
+	f, err := os.CreateTemp("", fmt.Sprintf("%s.new%x-", filepath.Base(file), time.Now().UnixNano()))
 	if err != nil {
 		return err
 	}

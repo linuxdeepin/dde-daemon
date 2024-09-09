@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"io/ioutil"
 	"math"
 	"os"
 	"os/exec"
@@ -466,7 +465,7 @@ func (m *Manager) Write() error {
 		return err
 	}
 	// #nosec G306
-	return ioutil.WriteFile(m.userFile, data, 0644)
+	return os.WriteFile(m.userFile, data, 0644)
 }
 
 func (m *Manager) listenGSettingsChanged() {

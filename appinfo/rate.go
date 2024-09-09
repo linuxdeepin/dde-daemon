@@ -5,7 +5,6 @@
 package appinfo
 
 import (
-	"io/ioutil"
 	"os"
 
 	"github.com/linuxdeepin/go-gir/glib-2.0"
@@ -43,7 +42,7 @@ func saveKeyFile(file *glib.KeyFile, path string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(path, []byte(content), stat.Mode())
+	err = os.WriteFile(path, []byte(content), stat.Mode())
 	if err != nil {
 		return err
 	}

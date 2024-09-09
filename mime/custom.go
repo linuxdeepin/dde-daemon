@@ -7,7 +7,6 @@ package mime
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"sync"
@@ -117,7 +116,7 @@ func (m *userAppManager) Write() error {
 		return err
 	}
 	logger.Debug("userAppManager.Write write file")
-	return ioutil.WriteFile(m.filename, []byte(content), 0644)
+	return os.WriteFile(m.filename, []byte(content), 0644)
 }
 
 func (infos userAppInfos) String() string {
@@ -172,7 +171,7 @@ func newUserAppManager(filename string) (*userAppManager, error) {
 }
 
 func readUserAppFile(filename string) (userAppInfos, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}

@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -252,7 +251,7 @@ func (m *Manager) initUsers(list []string) {
 func (m *Manager) initUdcpCache() error {
 	// 解析json文件 新建udcp-cache对象
 	var ifcCfg InterfaceConfig
-	content, err := ioutil.ReadFile(interfacesFile)
+	content, err := os.ReadFile(interfacesFile)
 	if err != nil {
 		return err
 	}
@@ -592,7 +591,7 @@ func (m *Manager) loadDomainUserConfig() error {
 			return err
 		}
 	} else {
-		data, err := ioutil.ReadFile(configFile)
+		data, err := os.ReadFile(configFile)
 		if err != nil {
 			return err
 		}
@@ -622,7 +621,7 @@ func (m *Manager) saveDomainUserConfig(config DefaultDomainUserConfig) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(configFile, data, 0644)
+	err = os.WriteFile(configFile, data, 0644)
 	return err
 }
 

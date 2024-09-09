@@ -7,7 +7,7 @@ package inputdevices1
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -362,7 +362,7 @@ func (m *InputDevices) saveDeviceFile(path, value string, userSet bool) error {
 				logger.Warningf("can't WriteFile, the value is equal. path : %s, value : %s", path, value)
 				return nil
 			}
-			err := ioutil.WriteFile(path, []byte(value), 0755)
+			err := os.WriteFile(path, []byte(value), 0755)
 			if err != nil {
 				return dbusutil.ToError(fmt.Errorf("WriteFile err : %s", err))
 			}
@@ -471,7 +471,7 @@ func touchscreenSliceEqual(v1 []dbus.ObjectPath, v2 []dbus.ObjectPath) bool {
 func getReadFileValidData(path string) string {
 	// "03" : [48 51]
 	// data: [48 51 10] , need delete 10
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -484,7 +484,7 @@ func getReadFileValidData(path string) string {
 }
 
 func getSupportUsbhidDevices() []string {
-	dirs, err := ioutil.ReadDir(_usbDevicePath)
+	dirs, err := os.ReadDir(_usbDevicePath)
 	if err != nil {
 		logger.Warning(" [getSupportUsbhidDevices] err : ", err)
 		return nil
@@ -555,7 +555,7 @@ func getSupportUsbhidDevices() []string {
 
 // 由于/proc/acpi/wakeup下面设备较多，将路径改为/proc/acpi/wakeup:PS2M格式
 func getSupportAcpiDevices(device string) (string, error) {
-	data, err := ioutil.ReadFile(_pciWakeupDevicePath)
+	data, err := os.ReadFile(_pciWakeupDevicePath)
 	if err != nil {
 		return "", err
 	}
@@ -593,7 +593,7 @@ func getSupportAcpiDeviceEnable(devicePath string) string {
 		return "disabled"
 	}
 
-	data, err := ioutil.ReadFile(paths[0])
+	data, err := os.ReadFile(paths[0])
 	if err != nil {
 		logger.Warning(err)
 		return "disabled"

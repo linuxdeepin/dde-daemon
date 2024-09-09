@@ -5,7 +5,6 @@
 package eventlog
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -72,10 +71,10 @@ func Test_removeEntry(t *testing.T) {
 
 func Test_isSymlink(t *testing.T) {
 	t.Run("Test isSymlink", func(t *testing.T) {
-		dir, err := ioutil.TempDir("", "eventlog")
+		dir, err := os.MkdirTemp("", "eventlog")
 		assert.NoError(t, err)
 		defer os.RemoveAll(dir)
-		_, err = ioutil.TempFile(dir, "filepath1")
+		_, err = os.CreateTemp(dir, "filepath1")
 		assert.NoError(t, err)
 		assert.True(t, !isSymlink(filepath.Join(dir, "filepath1")))
 	})
