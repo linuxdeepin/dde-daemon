@@ -5,11 +5,9 @@
 package audio
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"math"
-	"os/exec"
 	"sort"
 	"strings"
 	"sync"
@@ -17,9 +15,12 @@ import (
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
+	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
+	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"golang.org/x/xerrors"
 )
@@ -32,6 +33,7 @@ const (
 	gsKeyHeadphoneOutputVolume    = "headphone-output-volume"
 	gsKeyHeadphoneUnplugAutoPause = "headphone-unplug-auto-pause"
 	gsKeyVolumeIncrease           = "volume-increase"
+
 	gsKeyReduceNoise              = "reduce-input-noise"
 	gsKeyOutputAutoSwitchCountMax = "output-auto-switch-count-max"
 
@@ -46,12 +48,18 @@ const (
 	dbusPath        = "/org/deepin/dde/Audio1"
 	dbusInterface   = dbusServiceName
 
-	cmdSystemctl  = "systemctl"
-	cmdPulseaudio = "pulseaudio"
+	pulseaudioService    = "pulseaudio.service"
+	pipewireService      = "pipewire.service"
+	pipewirePulseService = "pipewire-pulse.service"
+
+	pulseaudioSocket    = "pulseaudio.socket"
+	pipewireSocket      = "pipewire.socket"
+	pipewirePulseSocket = "pipewire-pulse.socket"
 
 	increaseMaxVolume = 1.5
 	normalMaxVolume   = 1.0
 
+	dsgkeyPausePlayer             = "pausePlayer"
 	dsgKeyAutoSwitchPort          = "autoSwitchPort"
 	dsgKeyBluezModeFilterList     = "bluezModeFilterList"
 	dsgKeyPortFilterList          = "portFilterList"
@@ -59,6 +67,10 @@ const (
 	dsgKeyInputDefaultPriorities  = "inputDefaultPrioritiesByType"
 	dsgKeyOutputDefaultPriorities = "outputDefaultPrioritiesByType"
 	dsgKeyBluezModeDefault        = "bluezModeDefault"
+
+	changeIconStart    = "notification-change-start"
+	changeIconFailed   = "notification-change-failed"
+	changeIconFinished = "notification-change-finished"
 )
 
 var (
@@ -67,6 +79,17 @@ var (
 	defaultHeadphoneOutputVolume = 0.17
 	gMaxUIVolume                 float64
 	defaultReduceNoise           = false
+
+	// 保存 pulaudio ,pipewire 相关的服务
+	pulseaudioServices = []string{pulseaudioService, pulseaudioSocket}
+	pipewireServices   = []string{pipewireService, pipewirePulseService, pipewireSocket, pipewirePulseSocket}
+)
+
+const (
+	// 音频服务更改状态：已经完成
+	AudioStateChanged = true
+	// 音频服务更改状态：正在修改中
+	AudioStateChanging = false
 )
 
 //go:generate dbusutil-gen -type Audio,Sink,SinkInput,Source,Meter -import github.com/godbus/dbus audio.go sink.go sinkinput.go source.go meter.go
@@ -107,6 +130,7 @@ type Audio struct {
 	// dbusutil-gen: equal=objectPathSliceEqual
 	Sinks []dbus.ObjectPath
 	// dbusutil-gen: equal=objectPathSliceEqual
+	configManagerPath       dbus.ObjectPath
 	Sources                 []dbus.ObjectPath
 	DefaultSink             dbus.ObjectPath
 	DefaultSource           dbus.ObjectPath
@@ -115,11 +139,16 @@ type Audio struct {
 	BluetoothAudioMode      string // 蓝牙模式
 	// dbusutil-gen: equal=isStrvEqual
 	BluetoothAudioModeOpts []string // 可用的蓝牙模式
+	CurrentAudioServer     string   // 当前使用的音频服务
+	AudioServerState       bool     // 音频服务状态
 
 	// dbusutil-gen: ignore
 	IncreaseVolume gsprop.Bool `prop:"access:rw"`
 
-	ReduceNoise  bool `prop:"access:rw"`
+	PausePlayer bool `prop:"access:rw"`
+
+	ReduceNoise bool `prop:"access:rw"`
+
 	defaultPaCfg defaultPaConfig
 
 	// 最大音量
@@ -201,10 +230,11 @@ func isStringInSlice(list []string, str string) bool {
 
 func newAudio(service *dbusutil.Service) *Audio {
 	a := &Audio{
-		service:      service,
-		meters:       make(map[string]*Meter),
-		MaxUIVolume:  pulse.VolumeUIMax,
-		enableSource: true,
+		service:          service,
+		meters:           make(map[string]*Meter),
+		MaxUIVolume:      pulse.VolumeUIMax,
+		enableSource:     true,
+		AudioServerState: AudioStateChanged,
 	}
 
 	a.settings = gio.NewSettings(gsSchemaAudio)
@@ -212,8 +242,10 @@ func newAudio(service *dbusutil.Service) *Audio {
 	a.settings.Reset(gsKeyOutputVolume)
 	a.settings.Reset(gsKeyHeadphoneOutputVolume)
 	a.IncreaseVolume.Bind(a.settings, gsKeyVolumeIncrease)
+	a.PausePlayer = false
 	a.ReduceNoise = false
 	a.emitPropChangedReduceNoise(a.ReduceNoise)
+	a.CurrentAudioServer = a.getCurrentAudioServer()
 	a.headphoneUnplugAutoPause = a.settings.GetBoolean(gsKeyHeadphoneUnplugAutoPause)
 	a.outputAutoSwitchCountMax = int(a.settings.GetInt(gsKeyOutputAutoSwitchCountMax))
 	if a.IncreaseVolume.Get() {
@@ -242,26 +274,205 @@ func newAudio(service *dbusutil.Service) *Audio {
 	return a
 }
 
-func startPulseaudio(count int) error {
-	var errBuf bytes.Buffer
-	cmd := exec.Command(cmdSystemctl, "--user", "start", "pulseaudio")
-	cmd.Stderr = &errBuf
-	err := cmd.Run()
-	if err != nil {
-		logger.Warningf("failed to start pulseaudio via systemd: err: %v, stderr: %s",
-			err, errBuf.Bytes())
-	}
-	errBuf.Reset()
+func (a *Audio) setAudioServerFailed(oldAudioServer string) {
+	sendNotify(changeIconFailed, "", Tr("Failed to change Audio Server, please try later"))
+	// 还原音频服务
+	a.PropsMu.Lock()
+	a.setPropCurrentAudioServer(oldAudioServer)
+	a.setPropAudioServerState(AudioStateChanged)
+	a.PropsMu.Unlock()
+}
 
-	err = exec.Command(cmdPulseaudio, "--check").Run()
-	if err != nil {
-		logger.Warning("pulseaudio check error", err)
-		if count > 0 {
-			logger.Info("retry start pulseaudio after 500ms")
-			time.Sleep(500 * time.Millisecond)
-			return startPulseaudio(count - 1)
+func (a *Audio) getCurrentAudioServer() (serverName string) {
+	audioServers := []string{pulseaudioService, pipewireService}
+	systemd := systemd1.NewManager(a.service.Conn())
+
+	for _, server := range audioServers {
+		path, err := systemd.GetUnit(0, server)
+		if err == nil {
+			serverSystemdUnit, err := systemd1.NewUnit(a.service.Conn(), path)
+			if err == nil {
+				state, err := serverSystemdUnit.Unit().LoadState().Get(0)
+				if err != nil {
+					logger.Warning("Failed to get LoadState of unit", path)
+				} else if state == "loaded" {
+					return strings.Split(server, ".")[0]
+				}
+			}
 		}
-		return errors.New("failed to start pulseaudio")
+	}
+
+	return ""
+}
+
+func (a *Audio) SetCurrentAudioServer(serverName string) *dbus.Error {
+	a.PropsMu.Lock()
+	a.setPropAudioServerState(AudioStateChanging)
+	a.setPropCurrentAudioServer(serverName)
+	a.PropsMu.Unlock()
+
+	sendNotify(changeIconStart, "", Tr("Changing Audio Server, please wait..."))
+
+	var activeServices, deactiveServices []string
+	if serverName == "pulseaudio" {
+		activeServices = pulseaudioServices
+		deactiveServices = pipewireServices
+	} else {
+		activeServices = pipewireServices
+		deactiveServices = pulseaudioServices
+	}
+
+	oldAudioServer := a.CurrentAudioServer
+	systemd := systemd1.NewManager(a.service.Conn())
+	_, err := systemd.UnmaskUnitFiles(0, activeServices, false)
+	if err != nil {
+		logger.Warning("Failed to unmask unit files", activeServices, "\nError:", err)
+		a.setAudioServerFailed(oldAudioServer)
+		return dbusutil.ToError(err)
+	}
+
+	_, err = systemd.MaskUnitFiles(0, deactiveServices, false, true)
+	if err != nil {
+		logger.Warning("Failed to mask unit files", deactiveServices, "\nError:", err)
+		a.setAudioServerFailed(oldAudioServer)
+		return dbusutil.ToError(err)
+	}
+
+	err = systemd.Reload(0)
+	if err != nil {
+		logger.Warning("Failed to reload unit files. Error:", err)
+		return dbusutil.ToError(err)
+	}
+
+	sendNotify(changeIconFinished, "", Tr("Audio Server changed, please log out and then log in"))
+
+	a.PropsMu.Lock()
+	a.setPropAudioServerState(AudioStateChanged)
+	a.PropsMu.Unlock()
+	return nil
+}
+
+func sendNotify(icon, summary, body string) {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	n := notifications.NewNotifications(sessionBus)
+	_, err = n.Notify(0, Tr("dde-control-center"), 0,
+		icon, summary, body,
+		nil, nil, -1)
+	logger.Debugf("send notification icon: %q, summary: %q, body: %q",
+		icon, summary, body)
+
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
+func startAudioServer(service *dbusutil.Service) error {
+	var pulseaudioState string
+	var activeServices, deactiveServices []string
+	audioServers := []string{pulseaudioService, pipewireService}
+
+	systemd := systemd1.NewManager(service.Conn())
+
+	for _, server := range audioServers {
+		path, err := systemd.GetUnit(0, server)
+		if err == nil {
+			serverSystemdUnit, err := systemd1.NewUnit(service.Conn(), path)
+			if err != nil {
+				logger.Warning("failed to create service systemd unit", err)
+				return err
+			}
+
+			state, err := serverSystemdUnit.Unit().LoadState().Get(0)
+			if err != nil {
+				logger.Warning("failed to get service active state", err)
+				return err
+			}
+
+			if server == pulseaudioService {
+				pulseaudioState = state
+			}
+
+			// 做一个特判，pulseaudio 与 pipewire 同时预装，但是没法在装包的时候进行 mask 操作，
+			if state == "loaded" && server == pulseaudioService {
+				activeServices = pulseaudioServices
+				deactiveServices = pipewireServices
+			} else if pulseaudioState == "masked" && server == pipewireService {
+				activeServices = pipewireServices
+				deactiveServices = pulseaudioServices
+			}
+
+		}
+	}
+
+	for _, deactiveService := range deactiveServices {
+		deactiveServicePath, err := systemd.GetUnit(0, deactiveService)
+		if err == nil {
+			if len(deactiveServicePath) != 0 {
+				serverSystemdUnit, err := systemd1.NewUnit(service.Conn(), deactiveServicePath)
+
+				if err != nil {
+					logger.Warning("failed to create service systemd unit", err)
+					return err
+				}
+
+				state, err := serverSystemdUnit.Unit().LoadState().Get(0)
+				if err != nil {
+					logger.Warning("failed to get service active state", err)
+					return err
+				}
+
+				if state != "masked" {
+					_, err := systemd.MaskUnitFiles(0, []string{deactiveService}, false, true)
+
+					if err != nil {
+						logger.Warning("Failed to mask unit files", err)
+						return err
+					}
+				}
+
+				// 服务在 mask 之前服务，可能被激活，调用 stop
+				_, err = systemd.StopUnit(0, deactiveService, "replace")
+				if err != nil {
+					logger.Warning("Failed to stop service", err)
+					return err
+				}
+			}
+		}
+	}
+
+	for _, activeService := range activeServices {
+		activeServicePath, err := systemd.GetUnit(0, activeService)
+		if err == nil {
+			logger.Debug("ready to start audio server", activeServicePath)
+
+			if len(activeServicePath) != 0 {
+				serverSystemdUnit, err := systemd1.NewUnit(service.Conn(), activeServicePath)
+				if err != nil {
+					logger.Warning("failed to create audio server systemd unit", err)
+					return err
+				}
+
+				state, err := serverSystemdUnit.Unit().ActiveState().Get(0)
+				if err != nil {
+					logger.Warning("failed to get audio server active state", err)
+					return err
+				}
+
+				if state != "active" {
+					go func() {
+						_, err := serverSystemdUnit.Unit().Start(0, "replace")
+						if err != nil {
+							logger.Warning("failed to start audio server unit:", err)
+						}
+					}()
+				}
+			}
+
+		}
 	}
 
 	return nil
@@ -491,6 +702,9 @@ func (a *Audio) refershSinkInputs() {
 }
 
 func (a *Audio) shouldAutoPause() bool {
+	if !a.PausePlayer {
+		return false
+	}
 	if a.defaultSink == nil {
 		logger.Warning("default sink is nil")
 		return false
@@ -1653,16 +1867,15 @@ func (a *Audio) initDsgProp() error {
 
 	a.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
 
-	var configManagerPath dbus.ObjectPath
 	systemConnObj := systemBus.Object("org.desktopspec.ConfigManager", "/")
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.audio", "").Store(&configManagerPath)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.audio", "").Store(&a.configManagerPath)
 	if err != nil {
 		logger.Warning(err)
 		return nil
 	}
 
 	err = dbusutil.NewMatchRuleBuilder().Type("signal").
-		PathNamespace(string(configManagerPath)).
+		PathNamespace(string(a.configManagerPath)).
 		Interface("org.desktopspec.ConfigManager.Manager").
 		Member("valueChanged").Build().AddTo(systemBus)
 	if err != nil {
@@ -1671,13 +1884,24 @@ func (a *Audio) initDsgProp() error {
 	}
 
 	var val bool
-	systemConnObj = systemBus.Object("org.desktopspec.ConfigManager", configManagerPath)
+	systemConnObj = systemBus.Object("org.desktopspec.ConfigManager", a.configManagerPath)
 	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyAutoSwitchPort).Store(&val)
 	if err != nil {
 		logger.Warning(err)
 	} else {
 		logger.Info("auto switch port:", val)
 		a.setEnableAutoSwitchPort(val)
+	}
+
+	var keyPausePlayer bool
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgkeyPausePlayer).Store(&keyPausePlayer)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		logger.Info("auto switch port:", keyPausePlayer)
+		a.PropsMu.Lock()
+		a.PausePlayer = keyPausePlayer
+		a.PropsMu.Unlock()
 	}
 
 	var ret []dbus.Variant
@@ -1777,6 +2001,19 @@ func (a *Audio) initDsgProp() error {
 				}
 			}
 
+			if ok && key == dsgkeyPausePlayer {
+				var pausePlayer bool
+				err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&pausePlayer)
+				if err != nil {
+					logger.Warning(err)
+				} else {
+					logger.Info("pausePlayer config:", pausePlayer)
+					a.PropsMu.Lock()
+					a.PausePlayer = pausePlayer
+					a.emitPropChangedPausePlayer(pausePlayer)
+					a.PropsMu.Unlock()
+				}
+			}
 		}
 	})
 

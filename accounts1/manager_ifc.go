@@ -108,6 +108,7 @@ func (m *Manager) CreateUser(sender dbus.Sender,
 	if err != nil {
 		logger.Warningf("failed to set groups for user %s: %v", name, err)
 	}
+
 	// create user success
 	select {
 	case userPath, ok := <-ch:
@@ -266,14 +267,13 @@ func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) 
 //
 // ret0：头像路径，为空则表示获取失败
 func (m *Manager) RandUserIcon() (iconFile string, busErr *dbus.Error) {
-	icons := getUserStandardIcons()
-	if len(icons) == 0 {
+	if len(_userStandardIcons) == 0 {
 		return "", dbusutil.ToError(errors.New("Did not find any user icons"))
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	idx := rand.Intn(len(icons)) // #nosec G404
-	return icons[idx], nil
+	idx := rand.Intn(len(_userStandardIcons)) // #nosec G404
+	return _userStandardIcons[idx], nil
 }
 
 func (m *Manager) isDomainUserExist(name string) bool {

@@ -37,7 +37,6 @@ const (
 	userIconsDir       = actConfigDir + "/icons"
 	userCustomIconsDir = actConfigDir + "/icons/local"
 
-	userIconGuest       = actConfigDir + "/icons/guest.png"
 	actConfigFile       = actConfigDir + "/accounts.ini"
 	actConfigGroupGroup = "Accounts"
 	actConfigKeyGuest   = "AllowGuest"
@@ -139,7 +138,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 	m.usersMap = make(map[string]*User)
 	m.userAddedChanMap = make(map[string]chan string)
 
-	m.GuestIcon = userIconGuest
+	m.GuestIcon = getRandomIcon()
 	m.AllowGuest = isGuestUserEnabled()
 
 	m.initUsers(getUserPaths())

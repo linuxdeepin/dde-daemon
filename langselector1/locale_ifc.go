@@ -9,7 +9,6 @@ import (
 	"fmt"
 
 	"github.com/godbus/dbus/v5"
-	"github.com/linuxdeepin/dde-api/language_support"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -17,9 +16,9 @@ const (
 	dbusPath      = "/org/deepin/dde/LangSelector1"
 	dbusInterface = "org.deepin.dde.LangSelector1"
 
-	localeIconStart    = "notification-change-language-start"
-	localeIconFailed   = "notification-change-language-failed"
-	localeIconFinished = "notification-change-language-finished"
+	localeIconStart    = "notification-change-start"
+	localeIconFailed   = "notification-change-failed"
+	localeIconFinished = "notification-change-finished"
 )
 
 func (*LangSelector) GetInterfaceName() string {
@@ -83,14 +82,12 @@ func (lang *LangSelector) Reset() *dbus.Error {
 func (lang *LangSelector) GetLanguageSupportPackages(locale string) (packages []string, busErr *dbus.Error) {
 	lang.service.DelayAutoQuit()
 
-	ls, err := language_support.NewLanguageSupport()
+	pkg, err := lang.getInstallLangSupportPackages(locale)
 	if err != nil {
 		return nil, dbusutil.ToError(err)
 	}
 
-	packages = ls.ByLocale(locale, false)
-	ls.Destroy()
-	return packages, nil
+	return pkg, nil
 }
 
 func (lang *LangSelector) AddLocale(locale string) *dbus.Error {

@@ -5,6 +5,7 @@ mode = developer
 
 [o:linuxdeepin:p:deepin-desktop-environment:r:dde-daemonpot]
 file_filter = misc/po/<lang>.po
+minimum_perc = 0
 source_file = misc/po/dde-daemon.pot
 source_lang = en
 type = PO

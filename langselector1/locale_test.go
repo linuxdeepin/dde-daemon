@@ -14,7 +14,6 @@ import (
 func Test_GenerateLocaleEnvFile(t *testing.T) {
 	example := `LANG=en_US.UTF-8
 LANGUAGE=en_US
-LC_TIME="zh_CN.UTF-8"
 `
 	assert.Equal(t, string(generateLocaleEnvFile("en_US.UTF-8",
 		"testdata/pam_environment")), example)

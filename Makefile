@@ -133,7 +133,7 @@ translate: $(addsuffix /LC_MESSAGES/dde-daemon.mo, $(addprefix out/locale/, ${LA
 pot:
 	deepin-update-pot misc/po/locale_config.ini
 
-POLICIES=accounts1 Grub2 Fprintd1
+POLICIES=accounts grub2 fprintd
 ts:
 	for i in $(POLICIES); do \
 		deepin-policy-ts-convert policy2ts misc/polkit-action/org.deepin.dde.$$i.policy.in misc/ts/org.deepin.dde.$$i.policy; \
@@ -224,6 +224,7 @@ install: build install-dde-data install-icons
 	cp -r misc/dsg-configs/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
 
 	cp -f misc/scripts/dde-lock.sh ${DESTDIR}${PREFIX}/lib/deepin-daemon/
+	cp -f misc/scripts/dde-shutdown.sh ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
 	cp -r misc/data ${DESTDIR}${PREFIX}/share/dde/

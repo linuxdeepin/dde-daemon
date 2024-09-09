@@ -26,8 +26,8 @@ const (
 	ProfTypeCPU = "cpu"    //nolint
 	ProfTypeMem = "memory" //nolint
 
-	dbusPath        = "/org/deepin/dde/Daemon"
-	dbusServiceName = "org.deepin.dde.Daemon"
+	dbusPath        = "/org/deepin/dde/Daemon1"
+	dbusServiceName = "org.deepin.dde.Daemon1"
 	dbusInterface   = dbusServiceName
 	configManagerId = "org.desktopspec.ConfigManager"
 )

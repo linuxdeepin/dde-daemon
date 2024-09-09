@@ -37,13 +37,14 @@ func (*Module) GetDependencies() []string {
 }
 
 func (m *Module) start() error {
-	err := startPulseaudio(5) // 为了保证蓝牙模块依赖audio模块,并且audio模块启动pulseaudio完成.
+	service := loader.GetService()
+
+	err := startAudioServer(service) // 为了保证蓝牙模块依赖audio模块,并且audio模块启动音频服务完成.
 	if err != nil {
 		err = xerrors.Errorf("failed to start pulseaudio: %w", err)
 		return err
 	}
 
-	service := loader.GetService()
 	m.audio = newAudio(service)
 	err = m.audio.init()
 	if err != nil {
@@ -62,6 +63,16 @@ func (m *Module) start() error {
 
 	so := service.GetServerObject(m.audio)
 	err = so.SetWriteCallback(m.audio, "ReduceNoise", m.audio.writeReduceNoise)
+
+	if err != nil {
+		logger.Warning("failed to bind callback for ReduceNoise:", err)
+	}
+
+	err = so.SetWriteCallback(m.audio, "PausePlayer", m.audio.writeKeyPausePlayer)
+
+	if err != nil {
+		logger.Warning("failed to bind callback for PausePlayer:", err)
+	}
 
 	err = m.audio.syncConfig.Register()
 	if err != nil {

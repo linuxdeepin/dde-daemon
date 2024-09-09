@@ -315,7 +315,7 @@ func (a *Audio) handleCardChanged(idx uint32) {
 	}
 
 	// 如果发生变化的是当前输出所用的声卡，且是蓝牙声卡
-	if idx == a.defaultSink.Card && isBluetoothCard(card.core) {
+	if a.defaultSink != nil && idx == a.defaultSink.Card && isBluetoothCard(card.core) {
 		if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeA2dp) {
 			a.setPropBluetoothAudioMode(bluezModeA2dp)
 		} else if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeHeadset) {
@@ -462,7 +462,7 @@ func (a *Audio) notifyPortDisabled(cardId uint32, port pulse.CardPortInfo) {
 	notify := notifications.NewNotifications(session)
 	_, err = notify.Notify(
 		0,
-		"dde-control-center",
+		gettext.Tr("dde-control-center"),
 		0,
 		icon,
 		message,
@@ -603,6 +603,25 @@ func (a *Audio) writeReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
 		logger.Warning("set Reduce Noise failed: ", err)
 	}
 	a.inputAutoSwitchCount = 0
+	return nil
+}
+
+func (a *Audio) writeKeyPausePlayer(write *dbusutil.PropertyWrite) *dbus.Error {
+	pausePlayer, ok := write.Value.(bool)
+	if !ok {
+		return dbusutil.ToError(errors.New("type is not bool"))
+	}
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return dbus.MakeFailedError(err)
+	}
+
+	systemConnObj := systemBus.Object("org.desktopspec.ConfigManager", a.configManagerPath)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.setValue", 0, dsgkeyPausePlayer, dbus.MakeVariant(pausePlayer)).Err
+	if err != nil {
+		return dbusutil.ToError(errors.New("dconfig Cannot set value " + dsgkeyPausePlayer))
+	}
+	a.setPropPausePlayer(pausePlayer)
 	return nil
 }
 

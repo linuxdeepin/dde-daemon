@@ -28,7 +28,7 @@ const maxSize = 32 * 1024 * 1024
 const wallPaperDir = "/usr/share/wallpapers/custom-wallpapers/"
 const solidWallPaperPath = "/usr/share/wallpapers/custom-solidwallpapers/"
 const solidPrefix = "solid::"
-const polkitActionUserAdministration = "org.deepin.dde.accounts1.user-administration"
+const polkitActionUserAdministration = "org.deepin.dde.accounts.user-administration"
 
 var wallPaperDirs = []string{
 	wallPaperDir,

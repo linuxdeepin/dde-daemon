@@ -344,6 +344,18 @@ func (b *Bluetooth) init() {
 			b.adapters.mu.Lock()
 			b.adapters.infos = adapterInfos
 			b.adapters.mu.Unlock()
+			for _, adapterInfo := range adapterInfos {
+				data, err := json.Marshal(adapterInfo)
+				if err != nil {
+					logger.Warning(err)
+					continue
+				}
+				err = b.service.Emit(b, "AdapterAdded", string(data))
+				if err != nil {
+					logger.Warning(err)
+					continue
+				}
+			}
 		} else {
 			logger.Warning(err)
 		}

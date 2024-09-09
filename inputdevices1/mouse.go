@@ -34,6 +34,7 @@ type Mouse struct {
 	Exist      bool
 
 	// dbusutil-gen: ignore-below
+	Enabled               bool        `prop:"access:rw"`
 	LeftHanded            gsprop.Bool `prop:"access:rw"`
 	DisableTpad           gsprop.Bool `prop:"access:rw"`
 	NaturalScroll         gsprop.Bool `prop:"access:rw"`
@@ -78,9 +79,10 @@ func (m *Mouse) init() {
 	//触摸板和鼠标都是用mouse的doubleClick，检测到只有触摸板时也同步到xsettings
 	m.syncConfigToXsettings()
 
+	tpad := m.touchPad
+
 	if !m.Exist {
-		tpad := m.touchPad
-		if tpad.Exist && tpad.TPadEnable.Get() {
+		if tpad.Exist && !tpad.TPadEnable.Get() {
 			tpad.enable(true)
 		}
 		return
@@ -92,7 +94,7 @@ func (m *Mouse) init() {
 	m.enableAdaptiveAccelProfile()
 	m.motionAcceleration()
 	m.motionThreshold()
-	if m.DisableTpad.Get() {
+	if m.DisableTpad.Get() && tpad.TPadEnable.Get() {
 		m.disableTouchPad()
 	}
 }
@@ -110,6 +112,10 @@ func (m *Mouse) updateDXMouses() {
 	for _, info := range getMouseInfos(true) {
 		if info.TrackPoint {
 			continue
+		}
+
+		if info.IsEnabled() {
+			m.Enabled = true
 		}
 
 		if !globalWayland {
@@ -149,12 +155,27 @@ func (m *Mouse) disableTouchPad() {
 		return
 	}
 
-	if !m.DisableTpad.Get() && touchPad.TPadEnable.Get() {
+	if !m.DisableTpad.Get() && !touchPad.TPadEnable.Get() {
 		touchPad.enable(true)
 		return
 	}
 
 	touchPad.enable(false)
+}
+
+func (m *Mouse) enable(enabled bool) error {
+	for _, v := range m.devInfos {
+		err := v.Enable(enabled)
+		if err != nil {
+			logger.Debugf("Enable left handed for '%d - %v' failed: %v",
+				v.Id, v.Name, err)
+			return err
+		}
+	}
+
+	m.Enabled = enabled
+
+	return nil
 }
 
 func (m *Mouse) enableLeftHanded() {

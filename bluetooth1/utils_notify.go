@@ -74,7 +74,7 @@ func notify(icon, summary, body string) {
 	nid := globalNotifyId
 	globalNotifyMu.Unlock()
 
-	nid, err := globalNotifications.Notify(0, "dde-control-center", nid, icon,
+	nid, err := globalNotifications.Notify(0, Tr("dde-control-center"), nid, icon,
 		summary, body, nil, nil, -1)
 	if err != nil {
 		logger.Warning(err)
@@ -140,7 +140,7 @@ func notifyPassiveConnect(dev *DeviceInfo, pinCode string) error {
 
 	// notify connect request to dde-control-center
 	// set notify time out as -1, default time out is 5 seconds
-	nid, err = globalNotifications.Notify(0, "dde-control-center", nid, notifyIconBluetoothConnected,
+	nid, err = globalNotifications.Notify(0, Tr("dde-control-center"), nid, notifyIconBluetoothConnected,
 		summary, body, as, hints, 30*1000)
 	if err != nil {
 		logger.Warningf("notify message failed,err:%v", err)

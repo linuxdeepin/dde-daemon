@@ -72,6 +72,8 @@ type device struct {
 	RSSI    int16
 	Address string
 
+	Battery byte
+
 	connected         bool
 	connectedTime     time.Time
 	retryConnectCount int
@@ -114,6 +116,8 @@ type backupDevice struct {
 	Icon    string
 	RSSI    int16
 	Address string
+
+	Battery byte
 }
 
 type connectPhase uint32
@@ -229,6 +233,7 @@ func newDevice(systemSigLoop *dbusutil.SignalLoop, dpath dbus.ObjectPath) (d *de
 	d.Icon, _ = d.core.Icon().Get(0)
 	d.RSSI, _ = d.core.RSSI().Get(0)
 	d.blocked, _ = d.core.Blocked().Get(0)
+	d.Battery, _ = d.core.Percentage().Get(0)
 	d.needNotify = true
 	var err error
 	d.inputReconnectMode, err = d.getInputReconnectModeRaw()
@@ -490,6 +495,15 @@ func (d *device) connectProperties() {
 		}
 		logger.Debugf("%s Blocked: %v", d, value)
 		d.blocked = value
+	})
+
+	_ = d.core.Percentage().ConnectChanged(func(hasValue bool, value byte) {
+		if !hasValue {
+			return
+		}
+		d.Battery = value
+		logger.Debugf("%s Battery: %v", d, value)
+		d.notifyDevicePropertiesChanged()
 	})
 }
 
@@ -908,6 +922,7 @@ func newBackupDevice(d *device) (bd *backupDevice) {
 	bd.ServicesResolved = d.ServicesResolved
 	bd.Trusted = d.Trusted
 	bd.UUIDs = d.UUIDs
+	bd.Battery = d.Battery
 	return bd
 }
 

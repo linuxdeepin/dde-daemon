@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -26,7 +25,7 @@ import (
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	localehelper "github.com/linuxdeepin/go-dbus-factory/system/com.deepin.api.localehelper"
 	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/gsettings"
@@ -45,7 +44,9 @@ const (
 
 var (
 	// for locale-helper
-	_ = Tr("Authentication is required to switch language")
+	_                   = Tr("Authentication is required to switch language")
+	localeConfigFile    = filepath.Join(basedir.GetUserHomeDir(), userLocaleConfigFile)
+	localeConfigFileTmp = filepath.Join(basedir.GetUserHomeDir(), userLocaleConfigFileTmp)
 )
 
 const (
@@ -66,15 +67,15 @@ var (
 	// Error: not found the file
 	//
 	// 错误：没有此文件
-	ErrFileNotExist = fmt.Errorf("File not exist")
+	ErrFileNotExist = fmt.Errorf("file not exist")
 	// Error: not found the locale
 	//
 	// 错误：无效的 Locale
-	ErrLocaleNotFound = fmt.Errorf("Locale not found")
+	ErrLocaleNotFound = fmt.Errorf("locale not found")
 	// Error: changing locale failure
 	//
 	// 错误：修改 locale 失败
-	ErrLocaleChangeFailed = fmt.Errorf("Changing locale failed")
+	ErrLocaleChangeFailed = fmt.Errorf("changing locale failed")
 )
 
 var (
@@ -282,7 +283,6 @@ func getCurrentUserLocale() (locale string) {
 }
 
 func writeUserLocale(locale string) error {
-	homeDir := basedir.GetUserHomeDir()
 	err := userenv.Modify(func(m map[string]string) {
 		m["LANG"] = locale
 		m["LANGUAGE"] = strings.Split(locale, ".")[0]
@@ -291,8 +291,6 @@ func writeUserLocale(locale string) error {
 		return err
 	}
 
-	localeConfigFile := filepath.Join(homeDir, userLocaleConfigFile)
-	localeConfigFileTmp := filepath.Join(homeDir, userLocaleConfigFileTmp)
 	err = writeLocaleEnvFile(locale, localeConfigFile, localeConfigFileTmp)
 	if err != nil {
 		return err
@@ -302,7 +300,7 @@ func writeUserLocale(locale string) error {
 
 func writeLocaleEnvFile(locale, originFilename string, destFilename string) error {
 	var content = generateLocaleEnvFile(locale, originFilename)
-	return ioutil.WriteFile(destFilename, content, 0644)
+	return os.WriteFile(destFilename, content, 0644)
 }
 
 func generateLocaleEnvFile(locale, filename string) []byte {
@@ -352,7 +350,7 @@ func getLocaleFromFile(filename string) (string, error) {
 }
 
 func readEnvFile(file string) (envInfos, error) {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
@@ -400,10 +398,20 @@ func (lang *LangSelector) setLocale(locale string) {
 		logger.Warning(err)
 	}
 
-	if networkEnabled {
-		sendNotify(localeIconStart, "", notifyTxtStartWithInstall)
-	} else {
-		sendNotify(localeIconStart, "", notifyTxtStart)
+	pkg, err := lang.getInstallLangSupportPackages(locale)
+	if err != nil {
+		logger.Debug("failed to get support packages", err)
+	}
+
+	// only language support packages not installed and network enabled should install
+	isInstalled := len(pkg) != 0
+
+	if !isInstalled {
+		if networkEnabled {
+			sendNotify(localeIconStart, "", notifyTxtStartWithInstall)
+		} else {
+			sendNotify(localeIconStart, "", notifyTxtStart)
+		}
 	}
 
 	// generate locale
@@ -441,7 +449,7 @@ func (lang *LangSelector) setLocale(locale string) {
 	}
 
 	// install language support packages
-	if networkEnabled {
+	if !isInstalled && networkEnabled {
 		err = lang.installLangSupportPackages(locale)
 		if err != nil {
 			logger.Warning("failed to install packages:", err)
@@ -525,6 +533,17 @@ func (lang *LangSelector) generateLocale(locale string) error {
 			return errors.New(failReason)
 		}
 	}
+}
+
+func (lang *LangSelector) getInstallLangSupportPackages(locale string) ([]string, error) {
+	ls, err := language_support.NewLanguageSupport()
+	if err != nil {
+		return nil, dbusutil.ToError(err)
+	}
+
+	packages := ls.ByLocale(locale, false)
+	ls.Destroy()
+	return packages, nil
 }
 
 func (lang *LangSelector) installLangSupportPackages(locale string) error {

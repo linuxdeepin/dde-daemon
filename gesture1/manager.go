@@ -686,6 +686,24 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge 
 	return nil
 }
 
+func (m *Manager) showWidgets(show bool) error {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	obj := sessionBus.Object("org.deepin.dde.Widgets", "/org/deepin/dde/Widgets")
+	if show {
+		err = obj.Call("org.deepin.dde.Widgets.Show", 0).Err
+	} else {
+		err = obj.Call("org.deepin.dde.Widgets.Hide", 0).Err
+	}
+	if err != nil {
+		logger.Warning(err)
+	}
+	return err
+}
+
 // edge: 该手势来自屏幕的哪条边
 // p:    该手势的终点
 func (m *Manager) handleTouchEdgeEvent(context *touchEventContext, edge string, p *point) error {
@@ -697,7 +715,7 @@ func (m *Manager) handleTouchEdgeEvent(context *touchEventContext, edge string, 
 		}
 	case context.right:
 		if (1-p.X)*float64(context.screenWidth) > 100 && m.oneFingerRightEnable {
-			return m.notification.Show(0)
+			return m.showWidgets(true)
 		}
 	}
 	return nil
@@ -727,7 +745,7 @@ func (m *Manager) handleTouchMovementEvent(context *touchEventContext, direction
 			}
 		case context.right:
 			if m.oneFingerRightEnable {
-				return m.notification.Hide(0)
+				return m.showWidgets(false)
 			}
 		}
 	}

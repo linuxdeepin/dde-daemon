@@ -24,6 +24,7 @@ const (
 	bluezDBusServiceName      = "org.bluez"
 	bluezAdapterDBusInterface = "org.bluez.Adapter1"
 	bluezDeviceDBusInterface  = "org.bluez.Device1"
+	bluezBatteryDBusInterface = "org.bluez.Battery1"
 
 	dbusServiceName = "org.deepin.dde.Bluetooth1"
 	dbusPath        = "/org/deepin/dde/Bluetooth1"
@@ -404,6 +405,13 @@ func (b *SysBluetooth) loadObjects() {
 			b.addDevice(path)
 		}
 	}
+
+	// then update battery
+	for path, obj := range objects {
+		if _, ok := obj[bluezBatteryDBusInterface]; ok {
+			b.updateBatteryForAdd(path)
+		}
+	}
 }
 
 func (b *SysBluetooth) removeAllObjects() {
@@ -433,6 +441,9 @@ func (b *SysBluetooth) handleInterfacesAdded(path dbus.ObjectPath, data map[stri
 	if _, ok := data[bluezDeviceDBusInterface]; ok {
 		b.addDeviceWithCount(path, 3)
 	}
+	if _, ok := data[bluezBatteryDBusInterface]; ok {
+		b.updateBatteryForAdd(path)
+	}
 }
 
 func (b *SysBluetooth) handleInterfacesRemoved(path dbus.ObjectPath, interfaces []string) {
@@ -441,6 +452,9 @@ func (b *SysBluetooth) handleInterfacesRemoved(path dbus.ObjectPath, interfaces 
 	}
 	if isStringInArray(bluezDeviceDBusInterface, interfaces) {
 		b.removeDevice(path)
+	}
+	if isStringInArray(bluezBatteryDBusInterface, interfaces) {
+		b.updateBatteryForRemove(path)
 	}
 }
 
@@ -515,6 +529,46 @@ func (b *SysBluetooth) addDeviceWithCount(devPath dbus.ObjectPath, count int) {
 				logger.Warning(err)
 			}
 		}()
+	}
+}
+
+func (b *SysBluetooth) updateBatteryForAdd(devPath dbus.ObjectPath) {
+	if !b.isDeviceExists(devPath) {
+		b.addDeviceWithCount(devPath, 3)
+	} else {
+		d, _ := b.getDevice(devPath)
+		d.Battery, _ = d.core.Percentage().Get(0)
+
+		// update backup battery
+		b.backupDevicesMu.Lock()
+		idx := b.indexBackupDeviceNoLock(d.AdapterPath, devPath)
+		if idx != -1 {
+			b.backupDevices[d.AdapterPath][idx].Battery = d.Battery
+		} else {
+			b.backupDevices[d.AdapterPath] = append(b.backupDevices[d.AdapterPath], newBackupDevice(d))
+		}
+		b.backupDevicesMu.Unlock()
+
+		// notify prop changed
+		d.notifyDevicePropertiesChanged()
+	}
+}
+
+func (b *SysBluetooth) updateBatteryForRemove(devPath dbus.ObjectPath) {
+	if b.isDeviceExists(devPath) {
+		d, _ := b.getDevice(devPath)
+		d.Battery = 0
+
+		// update backup battery
+		b.backupDevicesMu.Lock()
+		idx := b.indexBackupDeviceNoLock(d.AdapterPath, devPath)
+		if idx != -1 {
+			b.backupDevices[d.AdapterPath][idx].Battery = 0
+		}
+		b.backupDevicesMu.Unlock()
+
+		// notify prop changed
+		d.notifyDevicePropertiesChanged()
 	}
 }
 

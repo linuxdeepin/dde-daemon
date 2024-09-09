@@ -5,6 +5,7 @@
 package apps1
 
 import (
+	"github.com/adrg/xdg"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -96,7 +97,7 @@ func removeDesktopExt(name string) string {
 }
 
 func getSystemDataDirs() []string {
-	return []string{"/usr/share", "/usr/local/share"}
+	return xdg.DataDirs
 }
 
 // get user home

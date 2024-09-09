@@ -71,5 +71,10 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetLongPressDuration,
 			InArgs: []string{"duration"},
 		},
+		{
+			Name:   "SetPlymouthTheme",
+			Fn:     v.SetPlymouthTheme,
+			InArgs: []string{"themeName"},
+		},
 	}
 }
