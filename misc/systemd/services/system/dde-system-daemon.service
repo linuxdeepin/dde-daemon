@@ -1,0 +1,115 @@
+[Unit]
+Description=Accounts1 Service
+
+# In order to avoid races with identity-providing services like SSSD or
+# winbind, we need to ensure that Accounts Service starts after
+# nss-user-lookup.target
+After=nss-user-lookup.target lightdm.service
+Wants=nss-user-lookup.target fprintd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/lib/deepin-daemon/dde-system-daemon
+StandardOutput=journal
+Environment=GVFS_DISABLE_FUSE=1
+Environment=GIO_USE_VFS=local
+Environment=GVFS_REMOTE_VOLUME_MONITOR_IGNORE=1
+
+ReadWritePaths=/usr/share/dde-daemon/
+ReadWritePaths=/var/lib/dde-daemon/
+ReadWritePaths=/var/cache/deepin/dde-daemon/
+ReadWritePaths=-/etc/dde-daemon/
+ReadOnlyPaths=/proc/
+
+DevicePolicy=closed
+
+# clear tty
+DeviceAllow=char-pts
+
+# bluetooth
+ReadOnlyPaths=/var/lib/bluetooth
+
+# network
+ReadOnlyPaths=/etc/NetworkManager/system-connections
+
+# plymouth
+ReadOnlyPaths=/etc/os-version
+ExecPaths=/usr/bin/uname
+ExecPaths=/usr/sbin/plymouth-set-default-theme
+ExecPaths=/usr/sbin/update-initramfs
+
+# wallpapers
+ReadWritePaths=/usr/share/wallpapers/custom-wallpapers/
+
+# Accounts
+ReadOnlyPaths=/etc/deepin-version
+ExecPaths=/usr/lib/dde-control-center/reset-password-dialog
+ReadOnlyPaths=/etc/passwd
+ReadOnlyPaths=/etc/group
+ReadOnlyPaths=/etc/shadow
+ReadOnlyPaths=/etc/sudoers
+ReadOnlyPaths=/etc/lightdm/lightdm.conf
+ReadOnlyPaths=-/usr/share/config/kdm/kdmrc
+ReadOnlyPaths=-/etc/gdm/custom.conf
+ReadOnlyPaths=/var/cache/image-blur/
+ReadWritePaths=/var/lib/AccountsService/
+ReadOnlyPaths=/home/
+ReadOnlyPaths=/var/log/btmp
+ReadOnlyPaths=/var/log/wtmp
+
+# AirplaneMode
+DeviceAllow=/dev/rfkill
+
+# Bluetooth
+ReadOnlyPaths=/var/lib/bluetooth
+
+# Gesture
+DeviceAllow=char-input
+
+# InputDevices、KeyEvent
+ReadOnlyPaths=/sys/bus/usb/devices/
+
+# Power
+ReadOnlyPaths=-/usr/share/uos-hw-config
+BindPaths=/sys/class/drm/
+ReadWritePaths=/sys/devices/system/cpu/
+
+# PowerManager
+ReadOnlyPaths=-/sys/power/mem_sleep
+
+# Scheduler
+ReadOnlyPaths=/etc/deepin/scheduler/config.json
+ReadOnlyPaths=/usr/share/deepin/scheduler/config.json
+
+# Timezone
+ReadWritePaths=/etc/timezone
+ReadWritePaths=/etc/systemd/timesyncd.conf.d/deepin.conf
+
+# UADP
+DeviceAllow=char-tpm
+ReadWritePaths=/usr/share/uadp/
+
+ProtectSystem=full
+#ProtectHome=yes
+PrivateTmp=yes
+#PrivateDevices=yes
+PrivateNetwork=yes
+ProtectHostname=yes
+ProtectClock=yes
+#ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+RemoveIPC=yes
+
+[Install]
+# We pull this in by graphical.target instead of waiting for the bus
+# activation, to speed things up a little: gdm uses this anyway so it is nice
+# if it is already around when gdm wants to use it and doesn't have to wait for
+# it.
+WantedBy=graphical.target

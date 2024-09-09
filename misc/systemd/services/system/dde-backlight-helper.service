@@ -1,5 +1,5 @@
 [Unit]
-Description=deepin backlight helper service
+Description=dde backlight helper service
 
 [Service]
 Type=dbus
@@ -35,3 +35,7 @@ LockPersonality=yes
 RestrictRealtime=yes
 RemoveIPC=yes
 #MemoryDenyWriteExecute=yes
+MemoryLimit=100M
+
+[Install]
+Alias=dbus-org.deepin.dde.BacklightHelper1.service
