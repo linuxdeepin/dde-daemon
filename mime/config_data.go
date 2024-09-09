@@ -6,7 +6,7 @@ package mime
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 )
 
 type defaultAppTable struct {
@@ -21,7 +21,7 @@ type defaultAppInfo struct {
 type defaultAppInfos []*defaultAppInfo
 
 func unmarshal(file string) (*defaultAppTable, error) {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

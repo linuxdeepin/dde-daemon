@@ -7,7 +7,7 @@ package service_trigger
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -207,7 +207,7 @@ const (
 )
 
 func (m *Manager) loadServicesFromDir(dirname string) {
-	fileInfoList, _ := ioutil.ReadDir(dirname)
+	fileInfoList, _ := os.ReadDir(dirname)
 	for _, fileInfo := range fileInfoList {
 		if fileInfo.IsDir() {
 			continue

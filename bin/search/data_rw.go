@@ -7,7 +7,6 @@ package main
 import (
 	"bytes"
 	"encoding/gob"
-	"io/ioutil"
 	"os"
 
 	dutils "github.com/linuxdeepin/go-lib/utils"
@@ -43,7 +42,7 @@ func readDatasFromFile(datas interface{}, filename string) bool {
 		return false
 	}
 
-	contents, err := ioutil.ReadFile(filename)
+	contents, err := os.ReadFile(filename)
 	if err != nil {
 		logger.Warningf("failed to read file %q: %v", filename, err)
 		return false

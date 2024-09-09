@@ -6,7 +6,6 @@ package keybinding
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 )
 
@@ -17,7 +16,7 @@ type Config struct {
 var globalConfig Config
 
 func loadConfig() {
-	data, err := ioutil.ReadFile("/var/lib/dde-daemon/keybinding/config.json")
+	data, err := os.ReadFile("/var/lib/dde-daemon/keybinding/config.json")
 	if err != nil {
 		if !os.IsNotExist(err) {
 			logger.Warning(err)

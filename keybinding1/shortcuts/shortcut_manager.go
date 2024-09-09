@@ -6,7 +6,6 @@ package shortcuts
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -752,7 +751,7 @@ func (sm *ShortcutManager) getActiveWindowCmd() string {
 		logger.Warning("Failed to get current window pid:", err)
 		return ""
 	}
-	data, err := ioutil.ReadFile(fmt.Sprintf("/proc/%d/cmdline", pid))
+	data, err := os.ReadFile(fmt.Sprintf("/proc/%d/cmdline", pid))
 	if err != nil {
 		logger.Warning("Failed to read cmdline:", err)
 		return ""

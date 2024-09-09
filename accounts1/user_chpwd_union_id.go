@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/user"
@@ -692,7 +691,7 @@ func removeLoginKeyring(user *User) (err error) {
 	isUseWhiteboxFunc := func() bool {
 		statusFile := fmt.Sprintf("%s/status", dir)
 		if dutils.IsFileExist(dir) && dutils.IsFileExist(statusFile) {
-			content, err := ioutil.ReadFile(statusFile)
+			content, err := os.ReadFile(statusFile)
 			if err != nil {
 				return false
 			}

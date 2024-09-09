@@ -7,7 +7,6 @@ package eventlog
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -118,13 +117,13 @@ func (e *EventLog) syncUserExpState() {
 		// 从1054标准路径获取
 		state = e.getUserExpStateFromVarTmpExpPath()
 	} else if dutils.IsFileExist("/var/tmp/deepin/deepin-user-experience/state") { // 非当前用户创建的state/uid/info 时
-		infos, err := ioutil.ReadDir("/var/tmp/deepin/deepin-user-experience/state")
+		infos, err := os.ReadDir("/var/tmp/deepin/deepin-user-experience/state")
 		if err != nil {
 			logger.Warning(err)
 		} else {
 			for _, info := range infos {
 				// 只会有一个文件
-				content, err := ioutil.ReadFile(filepath.Join("/var/tmp/deepin/deepin-user-experience/state", info.Name(), "info"))
+				content, err := os.ReadFile(filepath.Join("/var/tmp/deepin/deepin-user-experience/state", info.Name(), "info"))
 				if err != nil {
 					logger.Warning(err)
 				} else {
@@ -150,7 +149,7 @@ func (e *EventLog) syncUserExpState() {
 func (e *EventLog) getUserExpStateFromUserExpPath() bool {
 	e.fileMu.Lock()
 	defer e.fileMu.Unlock()
-	content, err := ioutil.ReadFile(userExpPath)
+	content, err := os.ReadFile(userExpPath)
 	if err != nil {
 		logger.Warning(err)
 		return false
@@ -203,7 +202,7 @@ func (e *EventLog) setUserExpFileState(state bool) error {
 	} else {
 		content = []byte(disableUserExp)
 	}
-	err := ioutil.WriteFile(expPathV0, content, 0666)
+	err := os.WriteFile(expPathV0, content, 0666)
 	if err != nil {
 		return err
 	}
@@ -212,7 +211,7 @@ func (e *EventLog) setUserExpFileState(state bool) error {
 }
 
 func (e *EventLog) getV0ExpState() bool {
-	content, err := ioutil.ReadFile(expPathV0)
+	content, err := os.ReadFile(expPathV0)
 	if err != nil {
 		logger.Warning(err)
 		return false
@@ -223,7 +222,7 @@ func (e *EventLog) getV0ExpState() bool {
 func (e *EventLog) getUserExpStateFromVarTmpExpPath() bool {
 	e.fileMu.Lock()
 	defer e.fileMu.Unlock()
-	content, err := ioutil.ReadFile(e.currentUserVarTmpExpPath)
+	content, err := os.ReadFile(e.currentUserVarTmpExpPath)
 	if err != nil {
 		logger.Warning(err)
 		return false

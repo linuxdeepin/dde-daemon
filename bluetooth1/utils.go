@@ -6,7 +6,7 @@ package bluetooth
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"strconv"
 
 	"github.com/linuxdeepin/go-lib/procfs"
@@ -33,7 +33,7 @@ func marshalJSON(v interface{}) (strJSON string) {
 
 // find process
 func checkProcessExists(processName string) bool {
-	files, err := ioutil.ReadDir("/proc")
+	files, err := os.ReadDir("/proc")
 	if err != nil {
 		logger.Warningf("read proc failed,err:%v", err)
 	}

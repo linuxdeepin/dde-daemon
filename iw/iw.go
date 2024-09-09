@@ -12,7 +12,7 @@ import "C"
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 	"unsafe"
 
@@ -109,7 +109,7 @@ func hwAddressFile(name string) string {
 }
 
 func getHwAddressByFile(file string) string {
-	contents, err := ioutil.ReadFile(file)
+	contents, err := os.ReadFile(file)
 	if err != nil {
 		return ""
 	}

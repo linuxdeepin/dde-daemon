@@ -6,7 +6,6 @@ package users
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -438,7 +437,7 @@ func getDefaultDM(file string) (string, error) {
 		return "", fmt.Errorf("Not found this file: %s", file)
 	}
 
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return "", err
 	}
@@ -478,7 +477,7 @@ func getDMFromSystemService(service string) (string, error) {
 
 // enable autologin: set 'auto_login' to 'yes', and 'default_user' to 'username'
 func parseSlimConfig(filename, username string, isWirte bool) (string, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return "", err
 	}
@@ -547,5 +546,5 @@ func parseSlimConfig(filename, username string, isWirte bool) (string, error) {
 	}
 
 	data := strings.Join(lines, "\n")
-	return "", ioutil.WriteFile(filename, []byte(data), 0644)
+	return "", os.WriteFile(filename, []byte(data), 0644)
 }

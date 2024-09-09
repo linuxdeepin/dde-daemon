@@ -6,7 +6,6 @@ package grub2
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -24,7 +23,7 @@ const (
 
 func logStart() {
 	content := fmt.Sprintf("start=%s\n", time.Now())
-	err := ioutil.WriteFile(logFile, []byte(content), logFileMode)
+	err := os.WriteFile(logFile, []byte(content), logFileMode)
 	if err != nil {
 		logger.Warning("logStart write failed:", err)
 	}

@@ -6,7 +6,6 @@ package keyevent1
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -158,7 +157,7 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 		switch ev.Keycode {
 		case KEY_TOUCHPAD_TOGGLE:
 			go func() {
-				content, err := ioutil.ReadFile(touchpadSwitchFile)
+				content, err := os.ReadFile(touchpadSwitchFile)
 				if err != nil {
 					logger.Warning(err)
 					return
@@ -181,7 +180,7 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 					} else {
 						arg = "enable"
 					}
-					err = ioutil.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
+					err = os.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
 					if err != nil {
 						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
 					}
@@ -197,7 +196,7 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 
 				if err != nil {
 					logger.Warning("Set TouchPad state err : ", err)
-					err = ioutil.WriteFile(touchpadSwitchFile, []byte("enable"), 0644)
+					err = os.WriteFile(touchpadSwitchFile, []byte("enable"), 0644)
 					if err != nil {
 						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
 					}
@@ -213,7 +212,7 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 
 				if err != nil {
 					logger.Warning("Set TouchPad state err : ", err)
-					err = ioutil.WriteFile(touchpadSwitchFile, []byte("disable"), 0644)
+					err = os.WriteFile(touchpadSwitchFile, []byte("disable"), 0644)
 					if err != nil {
 						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
 					}

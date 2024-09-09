@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -160,7 +159,7 @@ func (m *Manager) uninstallFlatpakApp(item *Item, fpAppInfo *flatpakAppInfo) err
 		pkgFile := filepath.Join("/usr/share/deepin-flatpak/app/",
 			fpAppInfo.name, fpAppInfo.arch, fpAppInfo.branch, "pkg")
 		logger.Debug("pkg file:", pkgFile)
-		content, err := ioutil.ReadFile(pkgFile)
+		content, err := os.ReadFile(pkgFile)
 		if err == nil {
 			pkgName := string(bytes.TrimSpace(content))
 			return m.uninstallSystemPackage(item.Name, pkgName)

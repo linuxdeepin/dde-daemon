@@ -6,7 +6,6 @@ package airplane_mode
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -36,7 +35,7 @@ func NewConfig() *Config {
 // LoadConfig load config from file
 func (cfg *Config) LoadConfig() error {
 	// read file
-	buf, err := ioutil.ReadFile(configFile)
+	buf, err := os.ReadFile(configFile)
 	if err != nil {
 		return err
 	}
@@ -61,7 +60,7 @@ func (cfg *Config) SaveConfig() error {
 		return err
 	}
 	// write config to file
-	err = ioutil.WriteFile(configFile, buf, 0644)
+	err = os.WriteFile(configFile, buf, 0644)
 	if err != nil {
 		return err
 	}

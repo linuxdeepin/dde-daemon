@@ -7,7 +7,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/user"
@@ -79,7 +78,7 @@ func RemoveOverflowWallPapers(username string, max int) error {
 		return err
 	}
 	for _, dir := range dirs {
-		fileinfos, err := ioutil.ReadDir(dir)
+		fileinfos, err := os.ReadDir(dir)
 		if err != nil {
 			logger.Warning(err)
 			continue
@@ -90,7 +89,19 @@ func RemoveOverflowWallPapers(username string, max int) error {
 			continue
 		}
 
-		sort.Slice(fileinfos, func(i, j int) bool { return fileinfos[i].ModTime().Before(fileinfos[j].ModTime()) })
+		sort.Slice(fileinfos, func(i, j int) bool {
+			infoI, err := fileinfos[i].Info()
+			if err != nil {
+				logger.Warning(err)
+				return false
+			}
+			infoJ, err := fileinfos[j].Info()
+			if err != nil {
+				logger.Warning(err)
+				return false
+			}
+			return infoI.ModTime().Before(infoJ.ModTime())
+		})
 		for i := 0; i < len(fileinfos)-max; i++ {
 			err = os.Remove(filepath.Join(dir, fileinfos[i].Name()))
 			if err != nil {
@@ -272,7 +283,7 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		return "", dbusutil.ToError(err)
 	}
 
-	err = ioutil.WriteFile(destFile, src, 0644)
+	err = os.WriteFile(destFile, src, 0644)
 	if err != nil {
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
@@ -312,7 +323,7 @@ func (*Daemon) GetCustomWallPapers(username string) ([]string, *dbus.Error) {
 
 	for _, dir := range dirs {
 
-		fileinfos, err := ioutil.ReadDir(dir)
+		fileinfos, err := os.ReadDir(dir)
 		if err != nil {
 			logger.Warning(err)
 			return []string{}, dbusutil.ToError(err)

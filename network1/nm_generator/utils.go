@@ -7,7 +7,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -18,7 +17,7 @@ import (
 var logger = log.NewLogger("daemon/network/nm_generator")
 
 func yamlUnmarshalFile(file string, value interface{}) {
-	yamlContent, err := ioutil.ReadFile(file)
+	yamlContent, err := os.ReadFile(file)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -32,7 +31,7 @@ func yamlUnmarshalFile(file string, value interface{}) {
 
 func writeOutputFile(file, content string) {
 	// write to .go file and execute gofmt
-	err := ioutil.WriteFile(file, []byte(content), 0644)
+	err := os.WriteFile(file, []byte(content), 0644)
 	if err != nil {
 		fmt.Println("error, write file failed:", err)
 		return

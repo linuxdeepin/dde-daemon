@@ -8,7 +8,6 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -177,7 +176,7 @@ func getBytesMd5sum(data []byte) string {
 }
 
 func emptyDir(dir string) error {
-	fileInfoList, err := ioutil.ReadDir(dir)
+	fileInfoList, err := os.ReadDir(dir)
 	if err != nil {
 		return err
 	}

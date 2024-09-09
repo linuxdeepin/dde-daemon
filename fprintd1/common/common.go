@@ -6,7 +6,6 @@ package common
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -32,7 +31,7 @@ func DeleteEnrolledFingers(username, userUuid string) error {
 
 	// remove huawei fingers
 	huaweiFprintUserDir := filepath.Join(HuaweiFprintDir, userUuid)
-	fileInfoList, err := ioutil.ReadDir(huaweiFprintUserDir)
+	fileInfoList, err := os.ReadDir(huaweiFprintUserDir)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil

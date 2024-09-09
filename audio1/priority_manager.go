@@ -6,7 +6,7 @@ package audio
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/linuxdeepin/go-lib/pulse"
@@ -71,7 +71,7 @@ func (pm *PriorityManager) Save() {
 		return
 	}
 
-	err = ioutil.WriteFile(pm.file, data, 0644)
+	err = os.WriteFile(pm.file, data, 0644)
 	if err != nil {
 		logger.Warning(err)
 		return
@@ -80,7 +80,7 @@ func (pm *PriorityManager) Save() {
 
 // 读取配置文件
 func (pm *PriorityManager) Load() bool {
-	data, err := ioutil.ReadFile(pm.file)
+	data, err := os.ReadFile(pm.file)
 	if err != nil {
 		logger.Warningf("failed to read file '%s': %v", pm.file, err)
 		return false

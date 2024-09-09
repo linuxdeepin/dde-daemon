@@ -7,12 +7,12 @@ package airplane_mode
 import (
 	"bytes"
 	"encoding/binary"
-	"io/ioutil"
+	"os"
 	"unsafe"
 )
 
 func readFile(filename string) (string, error) {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return "", err
 	}

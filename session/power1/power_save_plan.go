@@ -7,7 +7,6 @@ package power
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"math"
 	"os"
 	"strings"
@@ -710,13 +709,13 @@ func (psp *powerSavePlan) HandleIdleOn() {
 }
 
 func (ps *powerSavePlan) restoreDpmsStateFile() {
-	v, err := ioutil.ReadFile("/tmp/dpms-state")
+	v, err := os.ReadFile("/tmp/dpms-state")
 	if err != nil {
 		return
 	}
 
 	if string(v) == "1" {
-		err = ioutil.WriteFile("/tmp/dpms-state", []byte("0"), 0644)
+		err = os.WriteFile("/tmp/dpms-state", []byte("0"), 0644)
 		if err != nil {
 			logger.Warning("WriteFile /tmp/dpms-state:", err)
 		}

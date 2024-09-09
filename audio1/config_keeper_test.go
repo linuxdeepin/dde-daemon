@@ -4,7 +4,6 @@
 package audio
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -74,7 +73,7 @@ func TestConfigKeeper_Save(t *testing.T) {
 			require.NoError(t, err)
 			assert.Equal(t, 0644, int(s.Mode())&0777)
 
-			content, err := ioutil.ReadFile(tt.fields.file)
+			content, err := os.ReadFile(tt.fields.file)
 			require.NoError(t, err)
 			assert.Equal(t, tt.fileContent, string(content))
 

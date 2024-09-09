@@ -6,7 +6,6 @@ package audio
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -61,7 +60,7 @@ func readConfig() (*config, error) {
 	}
 
 	var info config
-	content, err := ioutil.ReadFile(configFile)
+	content, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +92,7 @@ func saveConfig(info *config) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(configFile, content, 0644)
+	err = os.WriteFile(configFile, content, 0644)
 	if err != nil {
 		return err
 	}

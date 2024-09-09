@@ -5,7 +5,6 @@
 package power
 
 import (
-	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -53,7 +52,7 @@ func (m *Manager) swLidSwitchCheckLoop() {
 
 // lid_state content: '1\n'
 func getLidStateSW() string {
-	content, err := ioutil.ReadFile(swLidStateFile)
+	content, err := os.ReadFile(swLidStateFile)
 	if err != nil {
 		logger.Warning(err)
 		return swLidOpen

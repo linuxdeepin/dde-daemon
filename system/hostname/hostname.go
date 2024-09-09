@@ -5,7 +5,6 @@
 package hostname
 
 import (
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -113,7 +112,7 @@ func (h *HostName) listenHostNameChangeSignals() error {
 		}
 		logger.Debug("xorgCmdContent:", xorgCmdContent)
 		if xorgCmdContent != "" {
-			dirList, err := ioutil.ReadDir("/proc/")
+			dirList, err := os.ReadDir("/proc/")
 			if err != nil {
 				logger.Debug("read dir /proc error:", err)
 				return
@@ -133,7 +132,7 @@ func (h *HostName) listenHostNameChangeSignals() error {
 					continue
 				}
 				cmdline := filepath.Join(procPath, "cmdline")
-				content, err := ioutil.ReadFile(cmdline) // #nosec G304
+				content, err := os.ReadFile(cmdline) // #nosec G304
 				if err != nil {
 					logger.Debug("ReadFile error:", err)
 					continue
