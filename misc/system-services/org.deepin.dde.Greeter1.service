@@ -1,4 +1,5 @@
 [D-BUS Service]
 Name=org.deepin.dde.Greeter1
 Exec=/bin/false
-SystemdService=deepin-greeter-setter.service
+User=root
+SystemdService=dde-greeter-setter.service
