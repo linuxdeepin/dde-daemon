@@ -411,6 +411,15 @@ func startAudioServer(service *dbusutil.Service) error {
 		}
 	}
 
+	var wg sync.WaitGroup
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		return err
+	}
+	sigLoop := dbusutil.NewSignalLoop(sessionBus, 10)
+	sigLoop.Start()
+	defer sigLoop.Stop()
+
 	for _, activeService := range activeServices {
 		activeServicePath, err := systemd.GetUnit(0, activeService)
 		if err == nil {
@@ -423,13 +432,29 @@ func startAudioServer(service *dbusutil.Service) error {
 					return err
 				}
 
+				wg.Add(1)
+				actived := false
+				serverSystemdUnit.InitSignalExt(sigLoop, true)
+				serverSystemdUnit.Unit().ActiveState().ConnectChanged(func(hasValue bool, value string) {
+					if !hasValue {
+						return
+					}
+
+					if value == "active" && !actived {
+						wg.Done()
+					}
+				})
+
 				state, err := serverSystemdUnit.Unit().ActiveState().Get(0)
 				if err != nil {
 					logger.Warning("failed to get audio server active state", err)
 					return err
 				}
 
-				if state != "active" {
+				if state == "active" {
+					actived = true
+					wg.Done()
+				} else {
 					go func() {
 						_, err := serverSystemdUnit.Unit().Start(0, "replace")
 						if err != nil {
@@ -441,6 +466,7 @@ func startAudioServer(service *dbusutil.Service) error {
 
 		}
 	}
+	wg.Wait()
 
 	return nil
 }
