@@ -1,3 +1,9 @@
+dde-daemon (6.0.46) unstable; urgency=medium
+
+  * fix: connect to pulseaudio timeout
+
+ -- zsien <quezhiyong@deepin.org>  Wed, 25 Sep 2024 13:19:53 +0800
+
 dde-daemon (6.0.45) unstable; urgency=medium
 
   * chore: 同步专业版方案，移除飞行模式蓝牙控制代码 (#649)
