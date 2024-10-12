@@ -54,7 +54,7 @@ type DeviceInfo struct {
 	RSSI    int16
 	Address string
 
-	Battery byte
+	Battery bool
 }
 
 func unmarshalDeviceInfo(data string) (*DeviceInfo, error) {

@@ -123,7 +123,8 @@ func isBluezDeviceValid(bluezPath string) bool {
 		logger.Warning("[isDeviceValid] new device failed:", err)
 		return false
 	}
-	icon, err := bluezDevice.Icon().Get(0)
+	bluezDevice.Device().Paired().Get(0)
+	icon, err := bluezDevice.Device().Icon().Get(0)
 	if err != nil {
 		logger.Warning("[isDeviceValid] get icon failed:", err)
 		return false

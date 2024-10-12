@@ -72,7 +72,7 @@ type device struct {
 	RSSI    int16
 	Address string
 
-	Battery byte
+	Battery bool
 
 	connected         bool
 	connectedTime     time.Time
@@ -117,7 +117,7 @@ type backupDevice struct {
 	RSSI    int16
 	Address string
 
-	Battery byte
+	Battery bool
 }
 
 type connectPhase uint32
@@ -221,19 +221,19 @@ func newDevice(systemSigLoop *dbusutil.SignalLoop, dpath dbus.ObjectPath) (d *de
 	d = &device{Path: dpath}
 	systemConn := systemSigLoop.Conn()
 	d.core, _ = bluez.NewDevice(systemConn, dpath)
-	d.AdapterPath, _ = d.core.Adapter().Get(0)
-	d.Name, _ = d.core.Name().Get(0)
-	d.Alias, _ = d.core.Alias().Get(0)
-	d.Address, _ = d.core.Address().Get(0)
-	d.Trusted, _ = d.core.Trusted().Get(0)
-	d.Paired, _ = d.core.Paired().Get(0)
-	d.connected, _ = d.core.Connected().Get(0)
-	d.UUIDs, _ = d.core.UUIDs().Get(0)
-	d.ServicesResolved, _ = d.core.ServicesResolved().Get(0)
-	d.Icon, _ = d.core.Icon().Get(0)
-	d.RSSI, _ = d.core.RSSI().Get(0)
-	d.blocked, _ = d.core.Blocked().Get(0)
-	d.Battery, _ = d.core.Percentage().Get(0)
+	d.AdapterPath, _ = d.core.Device().Adapter().Get(0)
+	d.Name, _ = d.core.Device().Name().Get(0)
+	d.Alias, _ = d.core.Device().Alias().Get(0)
+	d.Address, _ = d.core.Device().Address().Get(0)
+	d.Trusted, _ = d.core.Device().Trusted().Get(0)
+	d.Paired, _ = d.core.Device().Paired().Get(0)
+	d.connected, _ = d.core.Device().Connected().Get(0)
+	d.UUIDs, _ = d.core.Device().UUIDs().Get(0)
+	d.ServicesResolved, _ = d.core.Device().ServicesResolved().Get(0)
+	d.Icon, _ = d.core.Device().Icon().Get(0)
+	d.RSSI, _ = d.core.Device().RSSI().Get(0)
+	d.blocked, _ = d.core.Device().Blocked().Get(0)
+	d.Battery, _ = d.core.Battery().Percentage().Get(0)
 	d.needNotify = true
 	var err error
 	d.inputReconnectMode, err = d.getInputReconnectModeRaw()
@@ -298,7 +298,7 @@ func (d *device) notifyDevicePropertiesChanged() {
 }
 
 func (d *device) connectProperties() {
-	err := d.core.Connected().ConnectChanged(func(hasValue bool, connected bool) {
+	err := d.core.Device().Connected().ConnectChanged(func(hasValue bool, connected bool) {
 		if !hasValue {
 			return
 		}
@@ -380,7 +380,7 @@ func (d *device) connectProperties() {
 		logger.Warning(err)
 	}
 
-	_ = d.core.Name().ConnectChanged(func(hasValue bool, value string) {
+	_ = d.core.Device().Name().ConnectChanged(func(hasValue bool, value string) {
 		if !hasValue {
 			return
 		}
@@ -389,7 +389,7 @@ func (d *device) connectProperties() {
 		d.notifyDevicePropertiesChanged()
 	})
 
-	_ = d.core.Alias().ConnectChanged(func(hasValue bool, value string) {
+	_ = d.core.Device().Alias().ConnectChanged(func(hasValue bool, value string) {
 		if !hasValue {
 			return
 		}
@@ -398,7 +398,7 @@ func (d *device) connectProperties() {
 		d.notifyDevicePropertiesChanged()
 	})
 
-	_ = d.core.Address().ConnectChanged(func(hasValue bool, value string) {
+	_ = d.core.Device().Address().ConnectChanged(func(hasValue bool, value string) {
 		if !hasValue {
 			return
 		}
@@ -407,7 +407,7 @@ func (d *device) connectProperties() {
 		d.notifyDevicePropertiesChanged()
 	})
 
-	_ = d.core.Trusted().ConnectChanged(func(hasValue bool, value bool) {
+	_ = d.core.Device().Trusted().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
 		}
@@ -416,7 +416,7 @@ func (d *device) connectProperties() {
 		d.notifyDevicePropertiesChanged()
 	})
 
-	_ = d.core.Paired().ConnectChanged(func(hasValue bool, value bool) {
+	_ = d.core.Device().Paired().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
 		}
@@ -439,7 +439,7 @@ func (d *device) connectProperties() {
 		d.notifyDevicePropertiesChanged()
 	})
 
-	_ = d.core.ServicesResolved().ConnectChanged(func(hasValue bool, value bool) {
+	_ = d.core.Device().ServicesResolved().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
 		}
@@ -448,7 +448,7 @@ func (d *device) connectProperties() {
 		d.notifyDevicePropertiesChanged()
 	})
 
-	_ = d.core.Icon().ConnectChanged(func(hasValue bool, value string) {
+	_ = d.core.Device().Icon().ConnectChanged(func(hasValue bool, value string) {
 		if !hasValue {
 			return
 		}
@@ -462,7 +462,7 @@ func (d *device) connectProperties() {
 		}
 	})
 
-	_ = d.core.UUIDs().ConnectChanged(func(hasValue bool, value []string) {
+	_ = d.core.Device().UUIDs().ConnectChanged(func(hasValue bool, value []string) {
 		if !hasValue {
 			return
 		}
@@ -471,7 +471,7 @@ func (d *device) connectProperties() {
 		d.notifyDevicePropertiesChanged()
 	})
 
-	_ = d.core.RSSI().ConnectChanged(func(hasValue bool, value int16) {
+	_ = d.core.Device().RSSI().ConnectChanged(func(hasValue bool, value int16) {
 		if !hasValue {
 			d.RSSI = 0
 			logger.Debugf("%s RSSI invalidated", d)
@@ -482,14 +482,14 @@ func (d *device) connectProperties() {
 		d.notifyDevicePropertiesChanged()
 	})
 
-	_ = d.core.LegacyPairing().ConnectChanged(func(hasValue bool, value bool) {
+	_ = d.core.Device().LegacyPairing().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
 		}
 		logger.Debugf("%s LegacyPairing: %v", d, value)
 	})
 
-	_ = d.core.Blocked().ConnectChanged(func(hasValue bool, value bool) {
+	_ = d.core.Device().Blocked().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
 		}
@@ -497,7 +497,7 @@ func (d *device) connectProperties() {
 		d.blocked = value
 	})
 
-	_ = d.core.Percentage().ConnectChanged(func(hasValue bool, value byte) {
+	_ = d.core.Battery().Percentage().ConnectChanged(func(hasValue bool, value bool) {
 		if !hasValue {
 			return
 		}
@@ -639,7 +639,7 @@ func (d *device) doRealConnect() error {
 		}()
 	}
 	d.setConnectPhase(connectPhaseConnectProfilesStart)
-	err := d.core.Connect(0)
+	err := d.core.Device().Connect(0)
 	d.setConnectPhase(connectPhaseConnectProfilesEnd)
 	if err != nil {
 		if strings.Contains(err.Error(), "Input/output error") {
@@ -666,11 +666,11 @@ func (d *device) doRealConnect() error {
 }
 
 func (d *device) doTrust() error {
-	trusted, _ := d.core.Trusted().Get(0)
+	trusted, _ := d.core.Device().Trusted().Get(0)
 	if trusted {
 		return nil
 	}
-	err := d.core.Trusted().Set(0, true)
+	err := d.core.Device().Trusted().Set(0, true)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -678,7 +678,7 @@ func (d *device) doTrust() error {
 }
 
 func (d *device) cancelBlock() error {
-	blocked, err := d.core.Blocked().Get(0)
+	blocked, err := d.core.Device().Blocked().Get(0)
 	if err != nil {
 		logger.Warning(err)
 		return err
@@ -686,7 +686,7 @@ func (d *device) cancelBlock() error {
 	if !blocked {
 		return nil
 	}
-	err = d.core.Blocked().Set(0, false)
+	err = d.core.Device().Blocked().Set(0, false)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -694,13 +694,13 @@ func (d *device) cancelBlock() error {
 }
 
 func (d *device) cancelPairing() error {
-	err := d.core.CancelPairing(0)
+	err := d.core.Device().CancelPairing(0)
 
 	return err
 }
 
 func (d *device) doPair() error {
-	paired, err := d.core.Paired().Get(0)
+	paired, err := d.core.Device().Paired().Get(0)
 	if err != nil {
 		logger.Warning(err)
 		return err
@@ -711,7 +711,7 @@ func (d *device) doPair() error {
 	}
 
 	d.setConnectPhase(connectPhasePairStart)
-	err = d.core.Pair(0)
+	err = d.core.Device().Pair(0)
 	d.setConnectPhase(connectPhasePairEnd)
 	if err != nil {
 		logger.Warningf("%s pair failed: %v", d, err)
@@ -771,7 +771,7 @@ func (d *device) Disconnect() {
 	d.setDisconnectPhase(disconnectPhaseStart)
 	defer d.setDisconnectPhase(disconnectPhaseNone)
 
-	connected, err := d.core.Connected().Get(0)
+	connected, err := d.core.Device().Connected().Get(0)
 	if err != nil {
 		logger.Warning(err)
 		return
@@ -783,7 +783,7 @@ func (d *device) Disconnect() {
 
 	// 如果是 LE 或由设备主动重连接的设备, 则先设置 Trusted 为 false, 防止很快地重连接。
 	if d.maybeReconnectByDevice() {
-		err = d.core.Trusted().Set(0, false)
+		err = d.core.Device().Trusted().Set(0, false)
 		if err != nil {
 			logger.Warning("set trusted failed:", err)
 		}
@@ -794,7 +794,7 @@ func (d *device) Disconnect() {
 	ch := d.goWaitDisconnect()
 
 	d.setDisconnectPhase(disconnectPhaseDisconnectStart)
-	err = d.core.Disconnect(0)
+	err = d.core.Device().Disconnect(0)
 	if err != nil {
 		logger.Warningf("failed to disconnect %s: %v", d, err)
 	}
