@@ -537,7 +537,7 @@ func (b *SysBluetooth) updateBatteryForAdd(devPath dbus.ObjectPath) {
 		b.addDeviceWithCount(devPath, 3)
 	} else {
 		d, _ := b.getDevice(devPath)
-		d.Battery, _ = d.core.Percentage().Get(0)
+		d.Battery, _ = d.core.Battery().Percentage().Get(0)
 
 		// update backup battery
 		b.backupDevicesMu.Lock()
@@ -557,13 +557,13 @@ func (b *SysBluetooth) updateBatteryForAdd(devPath dbus.ObjectPath) {
 func (b *SysBluetooth) updateBatteryForRemove(devPath dbus.ObjectPath) {
 	if b.isDeviceExists(devPath) {
 		d, _ := b.getDevice(devPath)
-		d.Battery = 0
+		d.Battery = false
 
 		// update backup battery
 		b.backupDevicesMu.Lock()
 		idx := b.indexBackupDeviceNoLock(d.AdapterPath, devPath)
 		if idx != -1 {
-			b.backupDevices[d.AdapterPath][idx].Battery = 0
+			b.backupDevices[d.AdapterPath][idx].Battery = false
 		}
 		b.backupDevicesMu.Unlock()
 
@@ -967,7 +967,7 @@ func (b *SysBluetooth) tryConnectPairedDevices(adapterPath dbus.ObjectPath) {
 				logger.Debugf("do not auto connect %v, but try connect once", d)
 				connectDuration = 1 * time.Second
 				if !d.Trusted {
-					err := d.core.Trusted().Set(0, true)
+					err := d.core.Device().Trusted().Set(0, true)
 					if err != nil {
 						logger.Warning(err)
 					}

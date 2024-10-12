@@ -109,7 +109,7 @@ func (b *SysBluetooth) SetDeviceAlias(device dbus.ObjectPath, alias string) *dbu
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
-	err = d.core.Alias().Set(0, alias)
+	err = d.core.Device().Alias().Set(0, alias)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -121,7 +121,7 @@ func (b *SysBluetooth) SetDeviceTrusted(device dbus.ObjectPath, trusted bool) *d
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
-	err = d.core.Trusted().Set(0, trusted)
+	err = d.core.Device().Trusted().Set(0, trusted)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}

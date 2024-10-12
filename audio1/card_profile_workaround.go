@@ -108,5 +108,5 @@ func tryConnectBluetooth(c *pulse.Card) error {
 	if err != nil {
 		return err
 	}
-	return dev.Connect(0)
+	return dev.Device().Connect(0)
 }
