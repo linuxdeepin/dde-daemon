@@ -1,3 +1,12 @@
+dde-daemon (6.1.2) unstable; urgency=medium
+
+  * chore:修复dde-daemon编译问题
+  * chore: remove deprecated ioutil
+  * chore: systemd hardening
+  * chore: systemd文件调整，makefile去掉冗余的安装 (linuxdeepin#654)
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 18 Oct 2024 14:34:13 +0800
+
 dde-daemon (6.1.1) unstable; urgency=medium
 
   * chore: cherry-pick paths from professional
