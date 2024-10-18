@@ -178,8 +178,8 @@ install: build install-dde-data install-icons
 	cp -r misc/dde-daemon/*   ${DESTDIR}${PREFIX}/share/dde-daemon/
 	cp -r misc/usr/share/deepin ${DESTDIR}${PREFIX}/share/
 
-	mkdir -pv ${DESTDIR}/lib/systemd/system/
-	cp -f misc/systemd/services/system/* ${DESTDIR}/lib/systemd/system/
+	mkdir -pv ${DESTDIR}/lib/systemd/
+	cp -r misc/systemd/services/* ${DESTDIR}/lib/systemd/
 
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-initialized.target.wants/
 	ln -s $(PREFIX)/lib/systemd/user/org.dde.session.Daemon1.service $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-initialized.target.wants/org.dde.session.Daemon1.service
