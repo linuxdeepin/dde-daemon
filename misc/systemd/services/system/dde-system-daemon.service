@@ -8,105 +8,125 @@ After=nss-user-lookup.target lightdm.service
 Wants=nss-user-lookup.target fprintd.service
 
 [Service]
-Type=simple
+Type=dbus
+User=root
 ExecStart=/usr/lib/deepin-daemon/dde-system-daemon
-StandardOutput=journal
+StandardOutput=null
+StandardError=journal
 Environment=GVFS_DISABLE_FUSE=1
 Environment=GIO_USE_VFS=local
 Environment=GVFS_REMOTE_VOLUME_MONITOR_IGNORE=1
 
-ReadWritePaths=/usr/share/dde-daemon/
-ReadWritePaths=/var/lib/dde-daemon/
-ReadWritePaths=/var/cache/deepin/dde-daemon/
-ReadWritePaths=-/etc/dde-daemon/
-ReadOnlyPaths=/proc/
+ProtectSystem=strict
 
-DevicePolicy=closed
-
-# clear tty
-DeviceAllow=char-pts
-
-# bluetooth
-ReadOnlyPaths=/var/lib/bluetooth
-
-# network
-ReadOnlyPaths=/etc/NetworkManager/system-connections
-
-# plymouth
-ReadOnlyPaths=/etc/os-version
-ExecPaths=/usr/bin/uname
-ExecPaths=/usr/sbin/plymouth-set-default-theme
-ExecPaths=/usr/sbin/update-initramfs
-
-# wallpapers
-ReadWritePaths=/usr/share/wallpapers/custom-wallpapers/
-
-# Accounts
-ReadOnlyPaths=/etc/deepin-version
-ExecPaths=/usr/lib/dde-control-center/reset-password-dialog
-ReadOnlyPaths=/etc/passwd
-ReadOnlyPaths=/etc/group
-ReadOnlyPaths=/etc/shadow
-ReadOnlyPaths=/etc/sudoers
-ReadOnlyPaths=/etc/lightdm/lightdm.conf
-ReadOnlyPaths=-/usr/share/config/kdm/kdmrc
-ReadOnlyPaths=-/etc/gdm/custom.conf
-ReadOnlyPaths=/var/cache/image-blur/
-ReadWritePaths=/var/lib/AccountsService/
-ReadOnlyPaths=/home/
-ReadOnlyPaths=/var/log/btmp
-ReadOnlyPaths=/var/log/wtmp
-
-# AirplaneMode
-DeviceAllow=/dev/rfkill
-
-# Bluetooth
-ReadOnlyPaths=/var/lib/bluetooth
-
-# Gesture
-DeviceAllow=char-input
-
-# InputDevices、KeyEvent
-ReadOnlyPaths=/sys/bus/usb/devices/
-
-# Power
-ReadOnlyPaths=-/usr/share/uos-hw-config
-BindPaths=/sys/class/drm/
-ReadWritePaths=/sys/devices/system/cpu/
-
-# PowerManager
-ReadOnlyPaths=-/sys/power/mem_sleep
-
-# Scheduler
-ReadOnlyPaths=/etc/deepin/scheduler/config.json
-ReadOnlyPaths=/usr/share/deepin/scheduler/config.json
-
-# Timezone
-ReadWritePaths=/etc/timezone
-ReadWritePaths=/etc/systemd/timesyncd.conf.d/deepin.conf
-
-# UADP
-DeviceAllow=char-tpm
-ReadWritePaths=/usr/share/uadp/
-
-ProtectSystem=full
-#ProtectHome=yes
-PrivateTmp=yes
-#PrivateDevices=yes
-PrivateNetwork=yes
-ProtectHostname=yes
-ProtectClock=yes
-#ProtectKernelTunables=yes
+NoNewPrivileges=yes
+# 部分数据需要写到home下
+# ProtectHome=yes
+# TODO 判断udev事件是否需要该配置
+# ProtectKernelTunables=yes
 ProtectKernelModules=yes
-ProtectKernelLogs=yes
-ProtectControlGroups=yes
-RestrictAddressFamilies=AF_UNIX
+# SwapSchedHelper需要设置cgroup
+# ProtectControlGroups=yes
+PrivateMounts=yes
+# 部分数据写在tmp，待整改tmp完成后考虑设置该项
+# PrivateTmp=yes
+# libinput库需要用；clear tty需要；
+# PrivateDevices=yes
+# TODO
+# PrivateNetwork=yes
+# 重置密码需要runusr -u 以及需要获取proc下相关信息
+# PrivateUsers=yes
 RestrictNamespaces=yes
 LockPersonality=yes
 RestrictRealtime=yes
-RestrictSUIDSGID=yes
 RemoveIPC=yes
+# 和golang -pie参数冲突，导致进程无法启动
+# MemoryDenyWriteExecute=yes
+# 内存占用待定
+# MemoryLimit=100M
 
+# com.deepin.daemon.Gesture
+ReadWritePaths=-/usr/share/dde-daemon/gesture
+ReadWritePaths=-/etc/dde-daemon/gesture
+
+# com.deepin.daemon.Fprintd
+ReadWritePaths=-/var/lib/fprint
+ReadWritePaths=-/var/lib/dde-daemon/fingerprint/huawei
+
+# com.deepin.daemon.Timedated
+# /etc/systemd/timesyncd.conf.d/deepin.conf如果conf.d文件夹不存在，需要创建
+# ReadWritePaths=-/etc/systemd
+# /var/lib/systemd/timesync/clock 删除该文件，需要上一层的rw权限
+ReadWritePaths=-/var/lib/systemd/timesync
+
+# com.deepin.daemon.AirplaneMode
+ReadWritePaths=-/var/lib/dde-daemon/airplane_mode
+# com.deepin.daemon.ImageEffect
+ReadWritePaths=-/var/cache/deepin/dde-daemon/image-effect
+# com.deepin.daemon.Uadp
+ReadWritePaths=-/usr/share/uadp/
+# com.deepin.system.Network
+ReadWritePaths=-/var/lib/dde-daemon/network/
+# com.deepin.system.Bluetooth
+ReadWritePaths=-/var/lib/dde-daemon/bluetooth
+
+# com.deepin.daemon.Accounts
+# ReadWritePaths=-/etc/lightdm/lightdm.conf
+# 需要修改使用usermod改密码的方案
+# useradd会创建/etc/.pwd.lock文件，需要/etc/文件夹权限
+ReadWritePaths=-/etc/
+# ReadWritePaths=-/etc/passwd
+# ReadWritePaths=-/etc/shadow
+# ReadWritePaths=-/etc/group
+# ReadWritePaths=-/etc/group-
+ReadWritePaths=-/var/lib/AccountsService
+ReadWritePaths=-/usr/share/dde-daemon/accounts
+ReadWritePaths=-/var/cache/deepin/dde-daemon
+ReadWritePaths=-/var/lib/dde-daemon/
+# ReadWritePaths=-/etc/default/locale
+# ReadWritePaths=-/etc/locale.conf
+# ReadWritePaths=-/etc/default/keyboard
+ReadWritePaths=-/usr/share/config/kdm/kdmrc
+# ReadWritePaths=-/etc/gdm/custom.conf
+# ReadWritePaths=-/etc/sddm.conf
+# ReadWritePaths=-/etc/lxdm/lxdm.conf
+# 需要创建/var/lib/lightdm/lightdm-deepin-greeter文件夹
+ReadWritePaths=-/var/lib/lightdm
+ReadWritePaths=-/run/user
+# ReadWritePaths=-/var/lib/dde-daemon/secret-question/
+# com.deepin.system.Display
+ReadWritePaths=-/var/lib/dde-daemon/display/
+# com.deepin.system.Power
+ReadWritePaths=-/var/lib/dde-daemon/power/
+# ReadWritePaths=-/etc/tlp.d
+# com.deepin.daemon.SwapSchedHelper
+# 需要操作cgroup
+# com.deepin.daemon.PowerManager
+# 无读写文件
+# com.deepin.daemon.Daemon
+# ReadWritePaths=-/etc/NetworkManager/system-connections
+# ReadWritePaths=-/etc/systemd/logind.conf.d
+ReadWritePaths=-/usr/share/wallpapers/custom-wallpapers/
+ReadWritePaths=-/usr/share/wallpapers/custom-solidwallpapers/
+# 执行plymouth-set-default-theme
+ReadWritePaths=-/usr/share/plymouth/
+# ReadWritePaths=-/etc/plymouth/
+# 执行update-initramfs -u -k kernel
+ReadWritePaths=-/var/tmp
+ReadWritePaths=-/boot
+# com.deepin.daemon.KeyEvent
+# 写/proc/uos/touchpad_switch
+# com.deepin.daemon.PowerManager
+# 无读写文件
+# com.deepin.system.InputDevices
+# 写/proc/uos/touchpad_switch
+# 写/sys/bus/usb/devices
+# com.deepin.system.SystemInfo
+# 需要调用命令获取信息
+# com.deepin.daemon.Apps
+ReadWritePaths=-/var/lib/dde-daemon/apps
+ReadWritePaths=-/tmp
+ReadWritePaths=-/home
 [Install]
 # We pull this in by graphical.target instead of waiting for the bus
 # activation, to speed things up a little: gdm uses this anyway so it is nice
