@@ -34,7 +34,7 @@ RestrictRealtime=yes
 RemoveIPC=yes
 # 和golang -pie参数冲突，导致进程无法启动
 #MemoryDenyWriteExecute=yes
-MemoryLimit=100M
+#MemoryLimit=100M
 
 [Install]
 Alias=dbus-org.deepin.dde.Authority1.service
