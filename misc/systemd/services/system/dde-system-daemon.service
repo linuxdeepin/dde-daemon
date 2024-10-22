@@ -8,7 +8,6 @@ After=nss-user-lookup.target lightdm.service
 Wants=nss-user-lookup.target fprintd.service
 
 [Service]
-Type=dbus
 User=root
 ExecStart=/usr/lib/deepin-daemon/dde-system-daemon
 StandardOutput=null
