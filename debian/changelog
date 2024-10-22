@@ -1,3 +1,9 @@
+dde-daemon (6.1.6) unstable; urgency=medium
+
+  * feat: 解决dde-system-daemon服务启动不了的问题 (#663)
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 22 Oct 2024 17:03:02 +0800
+
 dde-daemon (6.1.5) unstable; urgency=medium
 
   * feat: 解决dde-system-daemon服务启动不了的问题 (#663)
