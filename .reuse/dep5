@@ -49,7 +49,7 @@ Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
 
 # translation or configuration files
-Files: misc/*
+Files: misc/* *.mod *.sum
 Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
 
