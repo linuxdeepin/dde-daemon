@@ -62,8 +62,8 @@ func NewManager(service *dbusutil.Service) *Manager {
 }
 
 const (
-	DBusPath      = "/org/deepin/dde/Network/ProxyChains"
-	dbusInterface = "org.deepin.dde.Network.ProxyChains"
+	DBusPath      = "/org/deepin/dde/Network1/ProxyChains"
+	dbusInterface = "org.deepin.dde.Network1.ProxyChains"
 )
 
 func (*Manager) GetInterfaceName() string {
