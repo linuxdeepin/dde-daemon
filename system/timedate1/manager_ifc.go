@@ -5,6 +5,7 @@
 package timedated
 
 import (
+	"github.com/linuxdeepin/go-lib/strv"
 	"os"
 
 	"github.com/godbus/dbus/v5"
@@ -34,6 +35,16 @@ func (m *Manager) SetTimezone(sender dbus.Sender, timezone, message string) *dbu
 	err = m.checkAuthorization("SetTimezone", message, sender)
 	if err != nil {
 		return dbusutil.ToError(err)
+	}
+
+	err = m.writeInstallerTimeZone(timezone)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	customTimeZoneList := []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian"}
+	// 以下时区不在国际时区中，如果用户选择以下时区，统一链接到上海时区
+	if strv.Strv(customTimeZoneList).Contains(timezone) {
+		timezone = "Asia/Shanghai"
 	}
 
 	currentTimezone, err := m.core.Timezone().Get(0)

@@ -5,6 +5,9 @@
 package timedate
 
 import (
+	"bufio"
+	"errors"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"os"
 	"os/user"
 	"strings"
@@ -14,29 +17,32 @@ import (
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 	"github.com/linuxdeepin/dde-daemon/session/common"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
-	timedated "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.timedate1"
+	timedate "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.timedate1"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timedate1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
 
 const (
-	timeDateSchema             = "com.deepin.dde.datetime"
-	settingsKey24Hour          = "is-24hour"
-	settingsKeyTimezoneList    = "user-timezone-list"
-	settingsKeyDSTOffset       = "dst-offset"
-	settingsKeyWeekdayFormat   = "weekday-format"
-	settingsKeyShortDateFormat = "short-date-format"
-	settingsKeyLongDateFormat  = "long-date-format"
-	settingsKeyShortTimeFormat = "short-time-format"
-	settingsKeyLongTimeFormat  = "long-time-format"
-	settingsKeyWeekBegins      = "week-begins"
-
-	dbusServiceName = "org.deepin.dde.Timedate1"
-	dbusPath        = "/org/deepin/dde/Timedate1"
-	dbusInterface   = dbusServiceName
+	dbusServiceName       = "org.deepin.dde.Timedate1"
+	dbusPath              = "/org/deepin/dde/Timedate1"
+	dbusInterface         = dbusServiceName
+	installerTimeZoneFile = "/etc/timezone"
+)
+const (
+	dSettingsAppID              = "org.deepin.dde.daemon"
+	dSettingsTimeDateName       = "org.deepin.dde.daemon.timedate"
+	dSettingsTimeZone           = "timeZone"
+	dSettingsNTPServer          = "ntpServer"
+	dSettingsKey24Hour          = "is24hour"
+	dSettingsKeyTimezoneList    = "userTimezoneList"
+	dSettingsKeyDSTOffset       = "dstOffset"
+	dSettingsKeyWeekdayFormat   = "weekdayFormat"
+	dSettingsKeyShortDateFormat = "shortDateFormat"
+	dSettingsKeyLongDateFormat  = "longDateFormat"
+	dSettingsKeyShortTimeFormat = "shortTimeFormat"
+	dSettingsKeyLongTimeFormat  = "longTimeFormat"
+	dSettingsKeyWeekBegins      = "weekBegins"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
@@ -55,43 +61,329 @@ type Manager struct {
 	LocalRTC bool
 
 	// Current timezone
-	Timezone  string
-	NTPServer string
+	Timezone  string `prop:"access:rw"`
+	NTPServer string `prop:"access:rw"`
 
 	// dbusutil-gen: ignore-below
 	// Use 24 hour format to display time
-	Use24HourFormat gsprop.Bool `prop:"access:rw"`
+	Use24HourFormat bool `prop:"access:rw"`
 	// DST offset
-	DSTOffset gsprop.Int `prop:"access:rw"`
+	DSTOffset int32 `prop:"access:rw"`
 	// User added timezone list
-	UserTimezones gsprop.Strv
+	UserTimezones []string
 
 	// weekday shows format
-	WeekdayFormat gsprop.Int `prop:"access:rw"`
+	WeekdayFormat int32 `prop:"access:rw"`
 
 	// short date shows format
-	ShortDateFormat gsprop.Int `prop:"access:rw"`
+	ShortDateFormat int32 `prop:"access:rw"`
 
 	// long date shows format
-	LongDateFormat gsprop.Int `prop:"access:rw"`
+	LongDateFormat int32 `prop:"access:rw"`
 
 	// short time shows format
-	ShortTimeFormat gsprop.Int `prop:"access:rw"`
+	ShortTimeFormat int32 `prop:"access:rw"`
 
 	// long time shows format
-	LongTimeFormat gsprop.Int `prop:"access:rw"`
+	LongTimeFormat int32 `prop:"access:rw"`
 
-	WeekBegins gsprop.Int `prop:"access:rw"`
+	WeekBegins int32 `prop:"access:rw"`
 
-	settings *gio.Settings
-	td       timedate1.Timedate
-	setter   timedated.Timedate
-	userObj  accounts.User
+	td             timedate1.Timedate
+	setter         timedate.Timedate
+	userObj        accounts.User
+	dConfigManager configManager.Manager
 
 	//nolint
 	signals *struct {
 		TimeUpdate struct {
 		}
+	}
+}
+
+func (m *Manager) setTimeDatePropertyCb(write *dbusutil.PropertyWrite) *dbus.Error {
+	name := write.Name
+	value := write.Value
+	propToDSettings := map[string]string{
+		"Timezone":        dSettingsTimeZone,
+		"NTPServer":       dSettingsNTPServer,
+		"Use24HourFormat": dSettingsKey24Hour,
+		"UserTimezones":   dSettingsKeyTimezoneList,
+		"DSTOffset":       dSettingsKeyDSTOffset,
+		"WeekdayFormat":   dSettingsKeyWeekdayFormat,
+		"ShortDateFormat": dSettingsKeyShortDateFormat,
+		"LongDateFormat":  dSettingsKeyLongDateFormat,
+		"ShortTimeFormat": dSettingsKeyShortTimeFormat,
+		"LongTimeFormat":  dSettingsKeyLongTimeFormat,
+		"WeekBegins":      dSettingsKeyWeekBegins,
+	}
+	var err error
+	switch name {
+	case "Timezone", "NTPServer":
+		v, ok := value.(string)
+		if ok {
+			err = m.dConfigManager.SetValue(dbus.Flags(0), propToDSettings[name], dbus.MakeVariant(v))
+		}
+	case "UserTimezones":
+		v, ok := value.([]dbus.Variant)
+		if ok {
+			oldList, hasNil := filterNilString(m.UserTimezones)
+			for _, zone := range v {
+				newList, added := addItemToList(zone.Value().(string), oldList)
+				if added || hasNil {
+					m.PropsMu.Lock()
+					m.UserTimezones = newList
+					m.PropsMu.Unlock()
+				}
+			}
+			m.service.EmitPropertyChanged(m, "UserTimezones", m.UserTimezones)
+			err = m.dConfigManager.SetValue(dbus.Flags(0), propToDSettings[name], dbus.MakeVariant(m.UserTimezones))
+		}
+	case "Use24HourFormat":
+		v, ok := value.(bool)
+		if ok {
+			err = m.dConfigManager.SetValue(dbus.Flags(0), propToDSettings[name], dbus.MakeVariant(v))
+		}
+	case "DSTOffset", "WeekdayFormat", "ShortDateFormat", "LongDateFormat",
+		"ShortTimeFormat", "LongTimeFormat", "WeekBegins":
+		v, ok := value.(int32)
+		if ok {
+			err = m.dConfigManager.SetValue(dbus.Flags(0), propToDSettings[name], dbus.MakeVariant(v))
+		}
+	default:
+		err = errors.New("invalid value")
+	}
+	if err != nil {
+		logger.Warningf("setDsgData key : %s. err : %s", name, err)
+		return dbusutil.ToError(err)
+	}
+	return nil
+}
+func (m *Manager) initTimeDatePropertyWriteCallback(service *dbusutil.Service) error {
+	logger.Debug("initTimeDatePropertyWriteCallback.")
+	obj := service.GetServerObject(m)
+	err := obj.SetWriteCallback(m, "Timezone", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "NTPServer", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "Use24HourFormat", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "DSTOffset", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "UserTimezones", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "WeekdayFormat", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "ShortDateFormat", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "LongDateFormat", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "ShortTimeFormat", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "LongTimeFormat", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	err = obj.SetWriteCallback(m, "WeekBegins", m.setTimeDatePropertyCb)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (m *Manager) initDSettings(bus *dbus.Conn) {
+	var err error
+	getDsgData := func(key string) interface{} {
+		v, err := m.dConfigManager.Value(0, key)
+		if err != nil {
+			logger.Warning(err)
+			return err
+		}
+		return v.Value()
+	}
+	getKey24HourConfig := func() {
+		v, ok := getDsgData(dSettingsKey24Hour).(bool)
+		if !ok {
+			logger.Info("get dsg 24 hour format failed")
+			return
+		}
+		m.Use24HourFormat = v
+		err = m.userObj.SetUse24HourFormat(0, v)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	getTimezoneConfig := func() {
+		v, ok := getDsgData(dSettingsTimeZone).(string)
+		if !ok {
+			logger.Debug("get dsg time zone failed")
+			return
+		}
+		m.Timezone = v
+	}
+	getNTPServerConfig := func() {
+		v, ok := getDsgData(dSettingsNTPServer).(string)
+		if !ok {
+			logger.Debug("get dsg ntp server failed")
+			return
+		}
+		m.NTPServer = v
+	}
+	getTimezoneListConfig := func() {
+		zoneList, ok := getDsgData(dSettingsKeyTimezoneList).([]dbus.Variant)
+		if !ok {
+			logger.Debug("get dsg time zone list failed")
+			return
+		}
+		for _, zone := range zoneList {
+			oldList, hasNil := filterNilString(m.UserTimezones)
+			newList, added := addItemToList(zone.Value().(string), oldList)
+			if added || hasNil {
+				m.PropsMu.Lock()
+				m.UserTimezones = newList
+				m.PropsMu.Unlock()
+			}
+		}
+	}
+	getDSTOffsetConfig := func() {
+		v, ok := getDsgData(dSettingsKeyDSTOffset).(int64)
+		if !ok {
+			logger.Debug("get dsg 24 hour format failed")
+			return
+		}
+		m.DSTOffset = int32(v)
+	}
+	getWeekdayFormatConfig := func() {
+		v, ok := getDsgData(dSettingsKeyWeekdayFormat).(int64)
+		if !ok {
+			logger.Debug("get dsg week day format failed")
+			return
+		}
+		m.WeekdayFormat = int32(v)
+		err = m.userObj.SetWeekdayFormat(0, m.WeekdayFormat)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	getShortDateFormatConfig := func() {
+		v, ok := getDsgData(dSettingsKeyShortDateFormat).(int64)
+		logger.Info("666get dsg short", v, ok)
+		if !ok {
+			logger.Debug("get dsg short date format failed")
+			return
+		}
+		m.ShortDateFormat = int32(v)
+		err = m.userObj.SetShortDateFormat(0, m.ShortDateFormat)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	getLongDateFormatConfig := func() {
+		v, ok := getDsgData(dSettingsKeyLongDateFormat).(int64)
+		if !ok {
+			logger.Debug("get dsg long date format failed")
+			return
+		}
+		m.LongDateFormat = int32(v)
+		err = m.userObj.SetLongDateFormat(0, m.LongDateFormat)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	getShortTimeFormatConfig := func() {
+		v, ok := getDsgData(dSettingsKeyShortTimeFormat).(int64)
+		if !ok {
+			logger.Debug("get dsg short time format failed")
+			return
+		}
+		m.ShortTimeFormat = int32(v)
+		err = m.userObj.SetShortTimeFormat(0, m.ShortTimeFormat)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	getLongTimeFormatConfig := func() {
+		v, ok := getDsgData(dSettingsKeyLongTimeFormat).(int64)
+		if !ok {
+			logger.Debug("get dsg long time format failed")
+			return
+		}
+		m.LongTimeFormat = int32(v)
+		err = m.userObj.SetLongTimeFormat(0, m.LongTimeFormat)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	getWeekBeginsConfig := func() {
+		v, ok := getDsgData(dSettingsKeyWeekBegins).(int64)
+		if !ok {
+			logger.Debug("get dsg week begins failed")
+			return
+		}
+		m.WeekBegins = int32(v)
+		err = m.userObj.SetWeekBegins(0, m.WeekBegins)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	getKey24HourConfig()
+	getDSTOffsetConfig()
+	getTimezoneConfig()
+	getNTPServerConfig()
+	getTimezoneListConfig()
+	getWeekdayFormatConfig()
+	getShortDateFormatConfig()
+	getLongDateFormatConfig()
+	getShortTimeFormatConfig()
+	getLongTimeFormatConfig()
+	getWeekBeginsConfig()
+	m.dConfigManager.InitSignalExt(m.systemSigLoop, true)
+	// 监听dsg配置变化
+	_, err = m.dConfigManager.ConnectValueChanged(func(key string) {
+		switch key {
+		case dSettingsKey24Hour:
+			getKey24HourConfig()
+		case dSettingsTimeZone:
+			getTimezoneConfig()
+		case dSettingsNTPServer:
+			getNTPServerConfig()
+		case dSettingsKeyTimezoneList:
+			getTimezoneListConfig()
+		case dSettingsKeyDSTOffset:
+			getDSTOffsetConfig()
+		case dSettingsKeyWeekdayFormat:
+			getWeekdayFormatConfig()
+		case dSettingsKeyShortDateFormat:
+			getShortDateFormatConfig()
+		case dSettingsKeyLongDateFormat:
+			getNTPServerConfig()
+		case dSettingsKeyShortTimeFormat:
+			getShortTimeFormatConfig()
+		case dSettingsKeyLongTimeFormat:
+			getLongTimeFormatConfig()
+		case dSettingsKeyWeekBegins:
+			getWeekBeginsConfig()
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
 	}
 }
 
@@ -108,19 +400,21 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.systemSigLoop = dbusutil.NewSignalLoop(sysBus, 10)
 	m.td = timedate1.NewTimedate(sysBus)
-	m.setter = timedated.NewTimedate(sysBus)
+	m.setter = timedate.NewTimedate(sysBus)
 
-	m.settings = gio.NewSettings(timeDateSchema)
-	m.Use24HourFormat.Bind(m.settings, settingsKey24Hour)
-	m.DSTOffset.Bind(m.settings, settingsKeyDSTOffset)
-	m.UserTimezones.Bind(m.settings, settingsKeyTimezoneList)
+	ds := configManager.NewConfigManager(sysBus)
+	dsPath, err := ds.AcquireManager(0, dSettingsAppID, dSettingsTimeDateName, "")
+	if err != nil {
+		logger.Warning(err)
+	}
 
-	m.WeekdayFormat.Bind(m.settings, settingsKeyWeekdayFormat)
-	m.ShortDateFormat.Bind(m.settings, settingsKeyShortDateFormat)
-	m.LongDateFormat.Bind(m.settings, settingsKeyLongDateFormat)
-	m.ShortTimeFormat.Bind(m.settings, settingsKeyShortTimeFormat)
-	m.LongTimeFormat.Bind(m.settings, settingsKeyLongTimeFormat)
-	m.WeekBegins.Bind(m.settings, settingsKeyWeekBegins)
+	m.dConfigManager, err = configManager.NewManager(sysBus, dsPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.initUserObj(sysBus)
+	m.initDSettings(sysBus)
 
 	return m, nil
 }
@@ -166,16 +460,35 @@ func (m *Manager) init() {
 			timezone = actualZone
 		}
 	}
-	m.setPropTimezone(timezone)
+	// 如果系统时区是Asia/Shanghai且和用户设置的时区不一样，不需要去更新用户时区，以用户设置的时区为准
+	if !(timezone == "Asia/Shanghai" && timezone != m.Timezone) {
+		m.setPropTimezone(timezone)
+		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsTimeZone, dbus.MakeVariant(timezone))
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	// 如果安装器设置的时区和系统时区不一样，以安装器设置的时区为准
+	installerTimeZone, err := m.getSystemTimeZoneFromInstaller()
+	if err != nil {
+		logger.Warning(err)
+	}
+	if installerTimeZone != timezone {
+		m.setPropTimezone(installerTimeZone)
+		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsTimeZone, dbus.MakeVariant(installerTimeZone))
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
 
 	m.PropsMu.Unlock()
 
-	newList, hasNil := filterNilString(m.UserTimezones.Get())
+	newList, hasNil := filterNilString(m.UserTimezones)
 	if hasNil {
-		m.UserTimezones.Set(newList)
+		m.UserTimezones = newList
 	}
-	err = m.AddUserTimezone(m.Timezone)
-	if err != nil {
+	error := m.AddUserTimezone(m.Timezone)
+	if error != nil {
 		logger.Warning("AddUserTimezone error:", err)
 	}
 
@@ -188,18 +501,18 @@ func (m *Manager) init() {
 			logger.Warning(err)
 		} else {
 			m.NTPServer = ntpServer
+			err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsNTPServer, dbus.MakeVariant(m.NTPServer))
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 	}
 
-	sysBus := m.systemSigLoop.Conn()
-	m.initUserObj(sysBus)
-	m.handleGSettingsChanged()
 	m.systemSigLoop.Start()
 	m.listenPropChanged()
 }
 
 func (m *Manager) destroy() {
-	m.settings.Unref()
 	m.td.RemoveHandler(proxy.RemoveAllHandlers)
 	m.systemSigLoop.Stop()
 }
@@ -225,47 +538,27 @@ func (m *Manager) initUserObj(systemConn *dbus.Conn) {
 		logger.Warning("failed to new user object:", err)
 		return
 	}
+}
 
-	// sync use 24 hour format
-	use24hourFormat := m.settings.GetBoolean(settingsKey24Hour)
-	err = m.userObj.SetUse24HourFormat(0, use24hourFormat)
+func (m *Manager) getSystemTimeZoneFromInstaller() (string, error) {
+	var timezone string
+
+	fr, err := os.Open(installerTimeZoneFile)
 	if err != nil {
-		logger.Warning(err)
+		return timezone, err
+	}
+	defer fr.Close()
+
+	var scanner = bufio.NewScanner(fr)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+
+		timezone = line
+		break
 	}
 
-	weekdayFormat := m.settings.GetInt(settingsKeyWeekdayFormat)
-	err = m.userObj.SetWeekdayFormat(0, weekdayFormat)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	shortDateFormat := m.settings.GetInt(settingsKeyShortDateFormat)
-	err = m.userObj.SetShortDateFormat(0, shortDateFormat)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	longDateFormat := m.settings.GetInt(settingsKeyLongDateFormat)
-	err = m.userObj.SetLongDateFormat(0, longDateFormat)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	shortTimeFormat := m.settings.GetInt(settingsKeyShortTimeFormat)
-	err = m.userObj.SetShortTimeFormat(0, shortTimeFormat)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	longTimeFormat := m.settings.GetInt(settingsKeyLongTimeFormat)
-	err = m.userObj.SetLongDateFormat(0, longTimeFormat)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	weekBegins := m.settings.GetInt(settingsKeyWeekBegins)
-	err = m.userObj.SetWeekBegins(0, weekBegins)
-	if err != nil {
-		logger.Warning(err)
-	}
+	return strings.TrimSpace(timezone), nil
 }

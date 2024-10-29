@@ -43,11 +43,10 @@ const (
 	dbusPath        = "/org/deepin/dde/Timedate1"
 	dbusInterface   = dbusServiceName
 
-	timedate1ActionId = "org.freedesktop.timedate1.set-time"
-
-	timeSyncCfgFile = "/etc/systemd/timesyncd.conf.d/deepin.conf"
-
-	timesyncdService = "systemd-timesyncd.service"
+	timedate1ActionId     = "org.freedesktop.timedate1.set-time"
+	timeSyncCfgFile       = "/etc/systemd/timesyncd.conf.d/deepin.conf"
+	timesyncdService      = "systemd-timesyncd.service"
+	installerTimeZoneFile = "/etc/timezone"
 )
 
 const (
@@ -351,4 +350,17 @@ func (m *Manager) isUnitEnable(unit string) bool {
 		return false
 	}
 	return "enabled" == strings.TrimSpace(state)
+}
+
+func (m *Manager) writeInstallerTimeZone(timezone string) error {
+	fh, err := os.OpenFile(installerTimeZoneFile, os.O_WRONLY|os.O_TRUNC, 0666)
+	if err != nil {
+		return err
+	}
+	defer fh.Close()
+	_, err = fh.WriteString(timezone)
+	if err != nil {
+		return err
+	}
+	return nil
 }
