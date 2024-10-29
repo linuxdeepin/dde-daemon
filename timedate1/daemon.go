@@ -47,6 +47,11 @@ func (d *Daemon) Start() error {
 		return err
 	}
 
+	err = d.manager.initTimeDatePropertyWriteCallback(service)
+	if err != nil {
+		logger.Warning("call SetWriteCallback err:", err)
+	}
+
 	d.managerFormat, err = newManagerFormat(service)
 	if err != nil {
 		return err

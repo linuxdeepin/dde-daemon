@@ -109,7 +109,7 @@ func (m *ManagerFormat) setPropValue() {
 }
 
 func (m *ManagerFormat) initPropertyWriteCallback(service *dbusutil.Service) error {
-	logger.Debug("nitPropertyWriteCallback.")
+	logger.Debug("initPropertyWriteCallback.")
 	obj := service.GetServerObject(m)
 	err := obj.SetWriteCallback(m, "CurrencySymbol", m.setWriteCurrencySymbolCb)
 	if err != nil {

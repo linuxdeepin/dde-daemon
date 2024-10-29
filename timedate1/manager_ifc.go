@@ -14,6 +14,8 @@ import (
 	. "github.com/linuxdeepin/go-lib/gettext"
 )
 
+var customTimeZoneList = []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian"}
+
 func (m *Manager) Reset() *dbus.Error {
 	return m.SetNTP(true)
 }
@@ -141,14 +143,26 @@ func (m *Manager) SetTimezone(zone string) *dbus.Error {
 		logger.Debug("Invalid zone:", zone)
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
 	}
-
+	// 如果要设置的时区是自定义时区或者是上海时区且当前的时区是自定义时区，需要更新时区属性
+	// 否则在设置完系统时区后再更新
+	isNeedUpdateProp := zone == "Asia/Shanghai" && strv.Strv(customTimeZoneList).Contains(m.Timezone) ||
+		strv.Strv(customTimeZoneList).Contains(zone)
 	err = m.setter.SetTimezone(0, zone,
 		Tr("Authentication is required to set the system timezone"))
 	if err != nil {
 		logger.Debug("SetTimezone failed:", err)
 		return dbusutil.ToError(err)
 	}
-
+	if isNeedUpdateProp {
+		m.PropsMu.Lock()
+		m.setPropTimezone(zone)
+		m.PropsMu.Unlock()
+		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsTimeZone, dbus.MakeVariant(zone))
+		if err != nil {
+			logger.Warning(err)
+			return dbusutil.ToError(err)
+		}
+	}
 	return m.AddUserTimezone(zone)
 }
 
@@ -163,10 +177,18 @@ func (m *Manager) AddUserTimezone(zone string) *dbus.Error {
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
 	}
 
-	oldList, hasNil := filterNilString(m.UserTimezones.Get())
+	oldList, hasNil := filterNilString(m.UserTimezones)
 	newList, added := addItemToList(zone, oldList)
 	if added || hasNil {
-		m.UserTimezones.Set(newList)
+		m.PropsMu.Lock()
+		m.UserTimezones = newList
+		m.PropsMu.Unlock()
+		m.service.EmitPropertyChanged(m, "UserTimezones", m.UserTimezones)
+		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsKeyTimezoneList, dbus.MakeVariant(m.UserTimezones))
+		if err != nil {
+			logger.Warning(err)
+			return dbusutil.ToError(err)
+		}
 	}
 	return nil
 }
@@ -182,10 +204,11 @@ func (m *Manager) DeleteUserTimezone(zone string) *dbus.Error {
 		return dbusutil.ToError(zoneinfo.ErrZoneInvalid)
 	}
 
-	oldList, hasNil := filterNilString(m.UserTimezones.Get())
+	oldList, hasNil := filterNilString(m.UserTimezones)
 	newList, deleted := deleteItemFromList(zone, oldList)
 	if deleted || hasNil {
-		m.UserTimezones.Set(newList)
+		m.UserTimezones = newList
+		m.service.EmitPropertyChanged(m, "UserTimezones", m.UserTimezones)
 	}
 	return nil
 }
@@ -195,6 +218,16 @@ func (m *Manager) GetZoneInfo(zone string) (zoneInfo zoneinfo.ZoneInfo, busErr *
 	m.PropsMu.Lock()
 	info, err := zoneinfo.GetZoneInfo(zone)
 	m.PropsMu.Unlock()
+	if strv.Strv(customTimeZoneList).Contains(zone) {
+		zoneShanghai := "Asia/Shanghai"
+		zoneInfoShanghai, err := zoneinfo.GetZoneInfo(zoneShanghai)
+		if err != nil {
+			logger.Debugf("Get zone info for '%s' failed: %v", zone, err)
+			return zoneinfo.ZoneInfo{}, dbusutil.ToError(err)
+		}
+		info.Offset = zoneInfoShanghai.Offset
+		info.DST = zoneInfoShanghai.DST
+	}
 	if err != nil {
 		logger.Debugf("Get zone info for '%s' failed: %v", zone, err)
 		return zoneinfo.ZoneInfo{}, dbusutil.ToError(err)
