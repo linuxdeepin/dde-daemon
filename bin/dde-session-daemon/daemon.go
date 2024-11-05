@@ -201,10 +201,12 @@ func (s *SessionDaemon) initModules() {
 		"lastore",
 		"calltrace",
 		"debug",
+		"eventlog",
 	}
 
 	allModules := loader.List()
 	if len(part1ModuleNames)+len(part2ModuleNames) != len(allModules) {
+		s.log.Warningf("part1ModuleNames %s,part2ModuleNames %s,allModules %s", part1ModuleNames, part2ModuleNames, allModules)
 		panic("module names len not equal")
 	}
 
