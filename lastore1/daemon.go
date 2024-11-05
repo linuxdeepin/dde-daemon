@@ -65,7 +65,7 @@ const (
 	NotifyExpireTimeoutNoHide  = 0
 )
 
-const distUpgradeJobPath = "/com/deepin/lastore/Jobdist_upgrade"
+const distUpgradeJobPath = "/org/deepin/dde/Lastore1/Jobdist_upgrade"
 
 var logger = log.NewLogger("daemon/lastore")
 

@@ -26,8 +26,8 @@ type syncData struct {
 const (
 	syncVersion = "1.0"
 
-	smartMirrorService = "com.deepin.lastore.Smartmirror"
-	smartMirrorPath    = "/com/deepin/lastore/Smartmirror"
+	smartMirrorService = "org.deepin.dde.Lastore1.Smartmirror"
+	smartMirrorPath    = "/org/deepin/dde/Lastore1/Smartmirror"
 	smartMirrorIFC     = smartMirrorService
 )
 

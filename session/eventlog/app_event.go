@@ -128,7 +128,7 @@ func (c *appEventCollector) Collect() error {
 		if !c.removeEntry(entryId) {
 			return
 		}
-		entryPath := dbus.ObjectPath(filepath.Join("/com/deepin/dde/daemon/Dock/entries/", entryId))
+		entryPath := dbus.ObjectPath(filepath.Join("/org/deepin/dde/daemon/Dock1/entries/", entryId))
 		entryObj := getEntryMapObj(entryPath)
 		if entryObj != nil {
 			entryObj.RemoveAllHandlers()
