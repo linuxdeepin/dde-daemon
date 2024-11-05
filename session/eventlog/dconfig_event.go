@@ -128,9 +128,9 @@ func (c *dconfigLogCollector) updateSyncConfig(service *dbusutil.Service) error 
 }
 
 func (c *dconfigLogCollector) getLastoreBoolProp(service *dbusutil.Service, propName string) (bool, error) {
-	lastoreObj := service.Conn().Object("com.deepin.lastore", "/com/deepin/lastore")
+	lastoreObj := service.Conn().Object("org.deepin.dde.Lastore1", "/org/deepin/dde/Lastore1")
 	var ret dbus.Variant
-	err := lastoreObj.Call("org.freedesktop.DBus.Properties.Get", 0, "com.deepin.lastore.Updater", propName).Store(&ret)
+	err := lastoreObj.Call("org.freedesktop.DBus.Properties.Get", 0, "org.deepin.dde.Lastore1.Updater", propName).Store(&ret)
 	if err != nil {
 		logger.Warning(err)
 		return false, err

@@ -112,8 +112,8 @@ func (m *Manager) setDDEBlackScreenActive(active bool) {
 	logger.Info("set blackScreen effect active: ", active)
 	bus, err := dbus.SessionBus()
 	if err == nil {
-		dbusObject := bus.Object("com.deepin.dde.BlackScreen", "/com/deepin/dde/BlackScreen")
-		err = dbusObject.Call("com.deepin.dde.BlackScreen.setActive", 0, active).Err
+		dbusObject := bus.Object("org.deepin.dde.BlackScreen1", "/org/deepin/dde/BlackScreen1")
+		err = dbusObject.Call("org.deepin.dde.BlackScreen1.setActive", 0, active).Err
 		if err != nil {
 			logger.Warning("set blackScreen active failed:", err)
 		}

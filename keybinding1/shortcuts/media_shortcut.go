@@ -29,7 +29,7 @@ const (
 	cmdCalendar   = "dde-calendar"
 	cmdMeeting    = "deepin-contacts"
 	cmdTerminal   = "/usr/lib/deepin-daemon/default-terminal"
-	cmdMessenger  = "dbus-send --print-reply --dest=com.deepin.dde.osd /com/deepin/dde/Notification com.deepin.dde.Notification.Toggle"
+	cmdMessenger  = "dbus-send --print-reply --dest=org.deepin.dde.Osd1 /org/deepin/dde/Notification1 org.deepin.dde.Notification1.Toggle"
 	cmdLauncher   = "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle"
 	cmdCamera     = "/usr/share/dde-daemon/keybinding/cameraSwitch.sh"
 )

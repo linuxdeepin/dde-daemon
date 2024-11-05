@@ -20,8 +20,8 @@ import (
 )
 
 const (
-	dbusServiceName    = "com.deepin.dde.daemon.Launcher"
-	dbusObjPath        = "/com/deepin/dde/daemon/Launcher"
+	dbusServiceName    = "org.deepin.dde.daemon.Launcher1"
+	dbusObjPath        = "/org/deepin/dde/daemon/Launcher1"
 	dbusInterface      = dbusServiceName
 	desktopMainSection = "Desktop Entry"
 	launcherExecPath   = "/usr/bin/dde-launcher"
