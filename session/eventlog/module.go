@@ -46,7 +46,7 @@ type Module struct {
 }
 
 func (m *Module) GetDependencies() []string {
-	return []string{"dock"}
+	return []string{}
 }
 
 func newModule(logger *log.Logger) *Module {
