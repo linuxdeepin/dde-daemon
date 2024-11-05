@@ -103,8 +103,8 @@ func showOSD(signal string) {
 	go sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
 }
 
-const sessionManagerDest = "com.deepin.SessionManager"
-const sessionManagerObjPath = "/com/deepin/SessionManager"
+const sessionManagerDest = "org.deepin.dde.SessionManager1"
+const sessionManagerObjPath = "/org/deepin/dde/SessionManager1"
 
 func systemLock() {
 	sessionDBus, err := dbus.SessionBus()

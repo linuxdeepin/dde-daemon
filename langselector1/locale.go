@@ -23,8 +23,8 @@ import (
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 	libnetwork "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.network1"
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
-	localehelper "github.com/linuxdeepin/go-dbus-factory/system/com.deepin.api.localehelper"
 	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
+	localehelper "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.localehelper1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
@@ -488,7 +488,7 @@ func syncUserLocale(locale string) error {
 var errSignalBodyInvalid = errors.New("signal body is invalid")
 
 func (lang *LangSelector) generateLocale(locale string) error {
-	successMatchRule := dbusutil.NewMatchRuleBuilder().ExtSignal("/com/deepin/api/LocaleHelper", "com.deepin.api.LocaleHelper", "Success").Build()
+	successMatchRule := dbusutil.NewMatchRuleBuilder().ExtSignal("/org/deepin/dde/LocaleHelper1", "org.deepin.dde.LocaleHelper1", "Success").Build()
 	err := successMatchRule.AddTo(lang.systemBus)
 	if err != nil {
 		return err

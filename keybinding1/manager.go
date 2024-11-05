@@ -813,7 +813,7 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			}()
 		}
 	} else if action.Type == shortcuts.ActionTypeShowControlCenter {
-		err := m.execCmd("dbus-send --session --dest=com.deepin.dde.ControlCenter  --print-reply /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.Show",
+		err := m.execCmd("dbus-send --session --dest=org.deepin.dde.ControlCenter1  --print-reply /org/deepin/dde/ControlCenter1 org.deepin.dde.ControlCenter1.Show",
 			false)
 		if err != nil {
 			logger.Warning("failed to show control center:", err)
