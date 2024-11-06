@@ -126,6 +126,11 @@ ReadWritePaths=-/boot
 ReadWritePaths=-/var/lib/dde-daemon/apps
 ReadWritePaths=-/tmp
 ReadWritePaths=-/home
+
+# TLP
+ReadWritePaths=-/usr/share/tlp/deepin-system-power-control/
+ReadWritePaths=-/etc/tlp.d/
+
 [Install]
 # We pull this in by graphical.target instead of waiting for the bus
 # activation, to speed things up a little: gdm uses this anyway so it is nice
