@@ -1,3 +1,12 @@
+dde-daemon (6.1.8) unstable; urgency=medium
+
+  * fix: 修复用户体验计划不可用问题
+  * chore: 修改遗漏的dbus接口变更
+  * chore: 解决super+lock不锁屏的问题
+  * chore: 添加时区，并且将时间的配置改为dconfig控制
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 07 Nov 2024 13:49:01 +0800
+
 dde-daemon (6.1.7) unstable; urgency=medium
 
   * chore: 修改网络代理dbus接口名称
