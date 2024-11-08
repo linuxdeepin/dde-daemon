@@ -72,7 +72,7 @@ type device struct {
 	RSSI    int16
 	Address string
 
-	Battery bool
+	Battery byte
 
 	connected         bool
 	connectedTime     time.Time
@@ -117,7 +117,7 @@ type backupDevice struct {
 	RSSI    int16
 	Address string
 
-	Battery bool
+	Battery byte
 }
 
 type connectPhase uint32
@@ -497,7 +497,7 @@ func (d *device) connectProperties() {
 		d.blocked = value
 	})
 
-	_ = d.core.Battery().Percentage().ConnectChanged(func(hasValue bool, value bool) {
+	_ = d.core.Battery().Percentage().ConnectChanged(func(hasValue bool, value byte) {
 		if !hasValue {
 			return
 		}

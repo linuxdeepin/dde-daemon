@@ -557,13 +557,13 @@ func (b *SysBluetooth) updateBatteryForAdd(devPath dbus.ObjectPath) {
 func (b *SysBluetooth) updateBatteryForRemove(devPath dbus.ObjectPath) {
 	if b.isDeviceExists(devPath) {
 		d, _ := b.getDevice(devPath)
-		d.Battery = false
+		d.Battery = 0
 
 		// update backup battery
 		b.backupDevicesMu.Lock()
 		idx := b.indexBackupDeviceNoLock(d.AdapterPath, devPath)
 		if idx != -1 {
-			b.backupDevices[d.AdapterPath][idx].Battery = false
+			b.backupDevices[d.AdapterPath][idx].Battery = 0
 		}
 		b.backupDevicesMu.Unlock()
 
