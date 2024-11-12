@@ -3,7 +3,7 @@ Description=deepin user lock service
 
 [Service]
 Type=dbus
-BusName=org.deepin.dde.LockService
+BusName=org.deepin.dde.LockService1
 ExecStart=/usr/lib/deepin-daemon/dde-lockservice
 # display和lockservice都会读写/var/lib/lightdm/lightdm-deepin-greeter/state_user文件,因此无法将lockservice单独改为非root
 User=root
@@ -39,4 +39,4 @@ RemoveIPC=yes
 #MemoryLimit=100M
 
 [Install]
-Alias=dbus-org.deepin.dde.LockService.service
+Alias=dbus-org.deepin.dde.LockService1.service
