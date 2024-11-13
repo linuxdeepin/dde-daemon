@@ -187,6 +187,9 @@ type Manager struct {
 	// 自动待机电量百分比
 	LowPowerAutoSleepThreshold gsprop.Int `prop:"access:rw"` // 设置电池电量进入待机模式（s3）的阈值，可设置范围为1%-9%，默认为5%（范围待确定）
 
+	// 低电量操作
+	LowPowerAction gsprop.Enum `prop:"access:rw"`
+
 	savingModeBrightnessDropPercent gsprop.Int // 用来接收和保存来自system power中降低的屏幕亮度值
 
 	AmbientLightAdjustBrightness gsprop.Bool `prop:"access:rw"`
@@ -277,6 +280,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.LowPowerNotifyEnable.Bind(m.settings, settingKeyLowPowerNotifyEnable)
 	m.LowPowerNotifyThreshold.Bind(m.settings, settingKeyLowPowerNotifyThreshold)
 	m.LowPowerAutoSleepThreshold.Bind(m.settings, settingKeyLowPowerAutoSleepThreshold)
+	m.LowPowerAction.Bind(m.settings, settingKeyLowPowerAction)
 	m.savingModeBrightnessDropPercent.Bind(m.settings, settingKeyBrightnessDropPercent)
 	m.initGSettingsConnectChanged()
 	m.AmbientLightAdjustBrightness.Bind(m.settings,
