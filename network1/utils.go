@@ -308,5 +308,5 @@ func (m *Manager) isConnectivityByHttp() bool {
 func showOSD(signal string) {
 	logger.Debug("show OSD", signal)
 	sessionDBus, _ := dbus.SessionBus()
-	go sessionDBus.Object("com.deepin.dde.osd", "/").Call("com.deepin.dde.osd.ShowOSD", 0, signal)
+	go sessionDBus.Object("org.deepin.dde.Osd1", "/").Call("org.deepin.dde.Osd1.ShowOSD", 0, signal)
 }
