@@ -30,6 +30,7 @@ const (
 	settingKeyLowPowerNotifyEnable         = "low-power-notify-enable"
 	settingKeyLowPowerNotifyThreshold      = "low-power-notify-threshold"
 	settingKeyLowPowerAutoSleepThreshold   = "percentage-action"
+	settingKeyLowPowerAction               = "low-power-action"
 	settingKeyBrightnessDropPercent        = "brightness-drop-percent"
 	settingKeyPowerSavingEnabled           = "power-saving-mode-enabled"
 
@@ -68,4 +69,9 @@ const (
 	powerActionTurnOffScreen
 	powerActionShowShutdownInterface
 	powerActionDoNothing
+)
+
+const (
+	lowPowerActionSuspend int32 = iota
+	lowPowerActionHibernate
 )

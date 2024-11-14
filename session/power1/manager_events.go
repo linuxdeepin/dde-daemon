@@ -267,7 +267,12 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 			} else if count == 5 {
 				// after 5 seconds, force suspend
 				m.disableWarnLevelCountTicker()
-				m.doSuspend()
+
+				if m.LowPowerAction.Get() == lowPowerActionSuspend {
+					m.doSuspend()
+				} else {
+					m.doHibernate()
+				}
 			}
 		})
 
