@@ -7,6 +7,7 @@ package power
 import (
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"os"
 	"sync"
 	"time"
@@ -28,6 +29,7 @@ const (
 	dsettingsPowerSavingModeAuto                  = "powerSavingModeAuto"
 	dsettingsPowerSavingModeAutoWhenBatteryLow    = "powerSavingModeAutoWhenBatteryLow"
 	dsettingsPowerSavingModeBrightnessDropPercent = "powerSavingModeBrightnessDropPercent"
+	dsettingsPowerSavingModeAutoBatteryPercent    = "powerSavingModeAutoBatteryPercent"
 	dsettingsPowerMappingConfig                   = "powerMappingConfig"
 	dsettingsMode                                 = "mode"
 )
@@ -80,6 +82,9 @@ type Manager struct {
 
 	// 开启节能模式时降低亮度的百分比值
 	PowerSavingModeBrightnessDropPercent uint32 `prop:"access:rw"`
+
+	// 开启自动节能模式电量的百分比值
+	PowerSavingModeAutoBatteryPercent uint32 `prop:"access:rw"`
 
 	// 开启节能模式时保存的数据
 	PowerSavingModeBrightnessData string `prop:"access:rw"`
@@ -271,6 +276,7 @@ func (m *Manager) initDsgConfig() error {
 		m.PowerSavingModeAuto = cfg.PowerSavingModeAuto                                   // 自动切换节能模式，依据为是否插拔电源
 		m.PowerSavingModeAutoWhenBatteryLow = cfg.PowerSavingModeAutoWhenBatteryLow       // 低电量时自动开启
 		m.PowerSavingModeBrightnessDropPercent = cfg.PowerSavingModeBrightnessDropPercent // 开启节能模式时降低亮度的百分比值
+		m.PowerSavingModeAutoBatteryPercent = cfg.PowerSavingModeAutoBatteryPercent       // 开启在低电量自动节能模式时候的百分比
 		m.Mode = cfg.Mode
 		migrateErr := m.migrateFromCurrentConfigsToDsg()
 		if migrateErr != nil {
@@ -601,11 +607,12 @@ type Config struct {
 	PowerSavingModeAuto                  bool
 	PowerSavingModeAutoWhenBatteryLow    bool
 	PowerSavingModeBrightnessDropPercent uint32
+	PowerSavingModeAutoBatteryPercent    uint32
 	Mode                                 string
 }
 
 func loadConfig() (*Config, error) {
-	content, err := os.ReadFile(configFile)
+	content, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		return nil, err
 	}
@@ -625,13 +632,26 @@ func loadConfigSafe() *Config {
 		if !os.IsNotExist(err) {
 			logger.Warning(err)
 		}
-		return nil
+		return &Config{
+			// default config
+			PowerSavingModeAuto:                  true,
+			PowerSavingModeEnabled:               false,
+			PowerSavingModeAutoWhenBatteryLow:    false,
+			PowerSavingModeBrightnessDropPercent: 20,
+			PowerSavingModeAutoBatteryPercent:    20,
+			Mode:                                 ddeBalance,
+		}
 	}
 	// 新增字段后第一次启动时,缺少两个新增字段的json,导致亮度下降百分比字段默认为0,导致与默认值不符,需要处理
 	// 低电量自动待机字段的默认值为false,不会导致错误影响
 	// 正常情况下该字段范围为10-40,只有在该情况下会出现0的可能
 	if cfg.PowerSavingModeBrightnessDropPercent == 0 {
 		cfg.PowerSavingModeBrightnessDropPercent = 20
+	}
+
+	// when PowerSavingModeAutoBatteryPercent is lower than 10, it is not available, so change set it to 20 as default
+	if cfg.PowerSavingModeAutoBatteryPercent < 10 {
+		cfg.PowerSavingModeAutoBatteryPercent = 20
 	}
 
 	if cfg.Mode == "" {
@@ -669,6 +689,11 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 		if err != nil {
 			return err
 		}
+	case "PowerSavingModeAutoBatteryPercent":
+		err = m.setDsgData(dsettingsPowerSavingModeAutoBatteryPercent, int64(m.PowerSavingModeAutoBatteryPercent), m.dsgPower)
+		if err != nil {
+			return err
+		}
 	case "PowerSavingModeEnabled":
 		err = m.setDsgData(dsettingsPowerSavingModeEnabled, m.PowerSavingModeEnabled, m.dsgPower)
 		if err != nil {
@@ -685,6 +710,10 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 			return err
 		}
 		err = m.setDsgData(dsettingsPowerSavingModeAutoWhenBatteryLow, m.PowerSavingModeAutoWhenBatteryLow, m.dsgPower)
+		if err != nil {
+			return err
+		}
+		err = m.setDsgData(dsettingsPowerSavingModeAutoBatteryPercent, int64(m.PowerSavingModeAutoBatteryPercent), m.dsgPower)
 		if err != nil {
 			return err
 		}

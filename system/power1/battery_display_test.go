@@ -23,17 +23,17 @@ func Test_rightPercentage(t *testing.T) {
 func Test_changeBatteryLowByBatteryPercentage(t *testing.T) {
 	m := Manager{}
 
-	percentage := lowBatteryThreshold - 1
+	percentage := float64(m.PowerSavingModeAutoBatteryPercent - 1)
 	m.changeBatteryLowByBatteryPercentage(percentage)
 
-	percentage = lowBatteryThreshold + 1
+	percentage = float64(m.PowerSavingModeAutoBatteryPercent + 1)
 	m.changeBatteryLowByBatteryPercentage(percentage)
 
-	percentage = lowBatteryThreshold + 1
+	percentage = float64(m.PowerSavingModeAutoBatteryPercent + 1)
 	m.batteryLow = false
 	m.changeBatteryLowByBatteryPercentage(percentage)
 
-	percentage = lowBatteryThreshold + 1
+	percentage = float64(m.PowerSavingModeAutoBatteryPercent + 1)
 	m.batteryLow = true
 	m.changeBatteryLowByBatteryPercentage(percentage)
 }
