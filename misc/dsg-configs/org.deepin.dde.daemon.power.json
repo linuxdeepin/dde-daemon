@@ -107,6 +107,18 @@
             "permissions": "readwrite",
             "visibility": "public"
         },
+        "powerSavingModeAutoBatteryPercent": {
+            "value": 20,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode auto threshold",
+            "name[zh_CN]": "自动开启节能模式阈值",
+            "description": "自动开启节能模式阈值",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
         "powerSavingModeBrightnessDropPercent": {
             "value": 20,
             "serial": 0,
