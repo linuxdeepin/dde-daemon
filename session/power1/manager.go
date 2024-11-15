@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	dutils "github.com/linuxdeepin/go-lib/utils"
 
 	"os"
 	"sync"
@@ -34,7 +35,6 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/gettext"
-	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
@@ -627,22 +627,21 @@ func (m *Manager) initDsg() {
 		return
 	}
 
+	dsg := configManager.NewConfigManager(systemBus)
 	if !dutils.IsFileExist("/usr/share/dsg/configs/org.deepin.startdde/org.deepin.Display.json") {
 		logger.Warning(" [initDsg] dconfig file not exist : /usr/share/dsg/configs/org.deepin.startdde/org.deepin.Display.json.")
-		return
-	}
-	dsg := configManager.NewConfigManager(systemBus)
+	} else {
+		// display
+		displayConfigManagerPath, err := dsg.AcquireManager(0, DSettingsAppID, DSettingsDisplayName, "")
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
 
-	// display
-	displayConfigManagerPath, err := dsg.AcquireManager(0, DSettingsAppID, DSettingsDisplayName, "")
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	m.dsDisplayConfigManager, err = configManager.NewManager(systemBus, displayConfigManagerPath)
-	if err != nil || displayConfigManagerPath == "" {
-		logger.Warning(err)
+		m.dsDisplayConfigManager, err = configManager.NewManager(systemBus, displayConfigManagerPath)
+		if err != nil || displayConfigManagerPath == "" {
+			logger.Warning(err)
+		}
 	}
 
 	// power
@@ -676,15 +675,15 @@ func (m *Manager) initDsg() {
 				logger.Info("Set CustomShutdownWeekDays property", m.CustomShutdownWeekDays)
 			}
 		case dsettingShutdownCountdown:
-			m.shutdownCountdown = int(data.Value().(float64))
+			m.shutdownCountdown = int(data.Value().(int64))
 		case dsettingNextShutdownTime:
-			m.nextShutdownTime = int64(data.Value().(float64))
+			m.nextShutdownTime = int64(data.Value().(int64))
 		case dsettingShutdownRepetition:
 			if init {
-				m.ShutdownRepetition = int(data.Value().(float64))
+				m.ShutdownRepetition = int(data.Value().(int64))
 				return
 			}
-			if m.setPropShutdownRepetition(int(data.Value().(float64))) {
+			if m.setPropShutdownRepetition(int(data.Value().(int64))) {
 				logger.Info("Set ShutdownRepetition property", m.ShutdownRepetition)
 			}
 		case dsettingShutdownTime:
