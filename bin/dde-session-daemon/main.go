@@ -190,11 +190,11 @@ func main() {
 		_options.disableModules = strings.Split(_options.disable, ",")
 	}
 
-	if os.Getenv("DDE_CURRENT_COMPOSITOR") == "TreeLand" {
+	if os.Getenv("XDG_SESSION_TYPE") == "wayland" {
 		hasTreeLand = true
 	}
 
-	logger.Infof("env DDE_CURRENT_COMPOSITOR is %s", os.Getenv("DDE_CURRENT_COMPOSITOR"))
+	logger.Infof("env XDG_SESSION_TYPE is %s", os.Getenv("XDG_SESSION_TYPE"))
 
 	usr, err := user.Current()
 	if err == nil {
