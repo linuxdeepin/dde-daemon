@@ -1,3 +1,15 @@
+dde-daemon (6.1.9) unstable; urgency=medium
+
+  * feat: automatic switch power saving mode threshold
+  * fix: 创建配置目录: /var/lib/dde-daemon
+  * fix: 解决power的dconfig配置初始化失败的问题
+  * fix: 解决热键不响应问题
+  * chore: 更正bluez属性Percentage的类型
+  * feat: support selecting the action when the battery is low
+  * fix: wrong bus name of dde-lock-service
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 20 Nov 2024 14:21:58 +0800
+
 dde-daemon (6.1.8) unstable; urgency=medium
 
   * fix: 修复用户体验计划不可用问题
