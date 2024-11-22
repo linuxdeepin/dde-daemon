@@ -1,3 +1,9 @@
+dde-daemon (6.1.10) unstable; urgency=medium
+
+  * feat: 修复安全漏洞
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 22 Nov 2024 10:59:32 +0800
+
 dde-daemon (6.1.9) unstable; urgency=medium
 
   * feat: automatic switch power saving mode threshold
