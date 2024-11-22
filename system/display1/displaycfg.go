@@ -287,7 +287,7 @@ func (d *Display) doDetectSupportWayland(sender dbus.Sender) (bool, error) {
 		} else {
 			cmd = exec.Command("glxinfo")
 		}
-		environ = append(environ, "LC_ALL=C")
+		environ = append(os.Environ(), environ.Get("DISPLAY"), "LC_ALL=C")
 		cmd.Env = environ
 		outPipe, err := cmd.StdoutPipe()
 		if err != nil {
