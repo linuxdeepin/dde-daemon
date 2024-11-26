@@ -7,7 +7,9 @@ package audio
 import (
 	"errors"
 	"fmt"
+	"github.com/linuxdeepin/go-lib/strv"
 	"math"
+	"os"
 	"sort"
 	"strings"
 	"sync"
@@ -371,13 +373,23 @@ func sendNotify(icon, summary, body string) {
 }
 
 func startAudioServer(service *dbusutil.Service) error {
-	var pulseaudioState string
+	//var pulseaudioState string
 	var activeServices, deactiveServices []string
-	audioServers := []string{pulseaudioService, pipewireService}
+	audioServers := map[string][]string{
+		pulseaudioService: pulseaudioServices,
+		pipewireService:   pipewireServices,
+	}
+	// 默认音频服务
+	var defaultAudioService = pulseaudioService
 
+	// 如果是treeland，则默认使用pipewire服务
+	if os.Getenv("XDG_SESSION_TYPE") == "wayland" {
+		defaultAudioService = pipewireService
+	}
+
+	// 查询已安装的音频服务状态
 	systemd := systemd1.NewManager(service.Conn())
-
-	for _, server := range audioServers {
+	for server, _ := range audioServers {
 		path, err := systemd.GetUnit(0, server)
 		if err == nil {
 			serverSystemdUnit, err := systemd1.NewUnit(service.Conn(), path)
@@ -392,59 +404,85 @@ func startAudioServer(service *dbusutil.Service) error {
 				return err
 			}
 
-			if server == pulseaudioService {
-				pulseaudioState = state
+			if state == "loaded" {
+				// 可加载的服务列表
+				activeServices = append(activeServices, server)
+			} else if state == "masked" {
+				// 需要disable的服务列表
+				deactiveServices = append(deactiveServices, server)
 			}
-
-			// 做一个特判，pulseaudio 与 pipewire 同时预装，但是没法在装包的时候进行 mask 操作，
-			if state == "loaded" && server == pulseaudioService {
-				activeServices = pulseaudioServices
-				deactiveServices = pipewireServices
-			} else if pulseaudioState == "masked" && server == pipewireService {
-				activeServices = pipewireServices
-				deactiveServices = pulseaudioServices
-			}
-
 		}
 	}
 
-	for _, deactiveService := range deactiveServices {
-		deactiveServicePath, err := systemd.GetUnit(0, deactiveService)
-		if err == nil {
-			if len(deactiveServicePath) != 0 {
-				serverSystemdUnit, err := systemd1.NewUnit(service.Conn(), deactiveServicePath)
+	// 如果可激活列表中有默认音频服务，则激活该服务
+	var activeService string
+	if len(activeServices) > 0 {
+		// 如果存在默认音频服务，则优先使用默认
+		if strv.Strv(activeServices).Contains(defaultAudioService) {
+			activeService = defaultAudioService
+		} else {
+			// 不是默认的，说明是手动改过配置
+			activeService = activeServices[0]
+		}
+	} else {
+		// 如果可加载服务列表是空的，可能存在问题，为了能够正常启动服务，则到disable列表中查找
+		if len(deactiveServices) > 0 {
+			if strv.Strv(deactiveServices).Contains(defaultAudioService) {
+				activeService = defaultAudioService
+			} else {
+				// 异常场景，如果都是masked状态，应该选取其中一个激活
+				activeService = deactiveServices[0]
+			}
+		} else {
+			err := errors.New("no available audioservice found")
+			logger.Errorf(err.Error())
+			return err
+		}
+	}
+	logger.Debug("load audio service:", activeService)
 
-				if err != nil {
-					logger.Warning("failed to create service systemd unit", err)
-					return err
-				}
-
-				state, err := serverSystemdUnit.Unit().LoadState().Get(0)
-				if err != nil {
-					logger.Warning("failed to get service active state", err)
-					return err
-				}
-
-				if state != "masked" {
-					_, err := systemd.MaskUnitFiles(0, []string{deactiveService}, false, true)
+	// 将剩余可选的audio服务都mask
+	tmpDeactiveServices, _ := strv.Strv(append(activeServices, deactiveServices...)).Delete(activeService)
+	logger.Debug("deactive audio service:", tmpDeactiveServices)
+	for _, server := range tmpDeactiveServices {
+		for _, deactiveService := range audioServers[server] {
+			deactiveServicePath, err := systemd.GetUnit(0, deactiveService)
+			if err == nil {
+				if len(deactiveServicePath) != 0 {
+					serverSystemdUnit, err := systemd1.NewUnit(service.Conn(), deactiveServicePath)
 
 					if err != nil {
-						logger.Warning("Failed to mask unit files", err)
+						logger.Warning("failed to create service systemd unit", err)
+						return err
+					}
+
+					state, err := serverSystemdUnit.Unit().LoadState().Get(0)
+					if err != nil {
+						logger.Warning("failed to get service active state", err)
+						return err
+					}
+
+					if state != "masked" {
+						_, err := systemd.MaskUnitFiles(0, []string{deactiveService}, false, true)
+
+						if err != nil {
+							logger.Warning("Failed to mask unit files", err)
+							return err
+						}
+					}
+
+					// 服务在 mask 之前服务，可能被激活，调用 stop
+					_, err = systemd.StopUnit(0, deactiveService, "replace")
+					if err != nil {
+						logger.Warning("Failed to stop service", err)
 						return err
 					}
 				}
-
-				// 服务在 mask 之前服务，可能被激活，调用 stop
-				_, err = systemd.StopUnit(0, deactiveService, "replace")
-				if err != nil {
-					logger.Warning("Failed to stop service", err)
-					return err
-				}
 			}
 		}
 	}
 
-	for _, activeService := range activeServices {
+	for _, activeService := range audioServers[activeService] {
 		activeServicePath, err := systemd.GetUnit(0, activeService)
 		if err == nil {
 			logger.Debug("ready to start audio server", activeServicePath)
@@ -461,9 +499,10 @@ func startAudioServer(service *dbusutil.Service) error {
 					logger.Warning("failed to get audio server active state", err)
 					return err
 				}
-
+				logger.Warning("start audio service", activeService, state)
 				if state != "active" {
 					go func() {
+
 						_, err := serverSystemdUnit.Unit().Start(0, "replace")
 						if err != nil {
 							logger.Warning("failed to start audio server unit:", err)
