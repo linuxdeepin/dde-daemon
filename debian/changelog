@@ -1,3 +1,9 @@
+dde-daemon (6.0.46) unstable; urgency=medium
+
+  * feat: 修复安全漏洞
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 26 Nov 2024 16:49:40 +0800
+
 dde-daemon (6.0.45) unstable; urgency=medium
 
   * chore: 同步专业版方案，移除飞行模式蓝牙控制代码 (#649)
