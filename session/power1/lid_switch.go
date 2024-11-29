@@ -102,9 +102,17 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 		case powerActionShutdown:
 			m.doShutdown()
 		case powerActionSuspend:
-			m.doSuspendByFront()
+			if m.UseWayland {
+				m.doSuspend()
+			} else {
+				m.doSuspendByFront()
+			}
 		case powerActionHibernate:
-			m.doHibernateByFront()
+			if m.UseWayland {
+				m.doHibernate()
+			} else {
+				m.doHibernateByFront()
+			}
 		case powerActionTurnOffScreen:
 			m.doTurnOffScreen()
 		case powerActionDoNothing:

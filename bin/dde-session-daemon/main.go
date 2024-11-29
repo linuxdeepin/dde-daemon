@@ -41,7 +41,7 @@ var logger = log.NewLogger("daemon/dde-session-daemon")
 var hasDDECookie bool
 var hasTreeLand bool
 
-var treeLandNotAllowModules = []string{"x-event-monitor", "keybinding", "trayicon", "screensaver", "inputdevices", "power"}
+var treeLandNotAllowModules = []string{"x-event-monitor", "keybinding", "trayicon", "screensaver", "inputdevices"}
 
 func isInShutdown() bool {
 	bus, err := dbus.SystemBus()

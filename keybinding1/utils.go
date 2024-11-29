@@ -7,6 +7,7 @@ package keybinding
 import (
 	"bytes"
 	"errors"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -122,6 +123,10 @@ func (m *Manager) canSuspend() bool {
 		return false
 	}
 	return can
+}
+
+func isTreeLand() bool {
+	return os.Getenv("XDG_SESSION_TYPE") == "wayland"
 }
 
 func (m *Manager) systemSuspend() {
@@ -395,6 +400,25 @@ func shouldUseDDEKwin() bool {
 
 func (m *Manager) doLock(autoStartAuth bool) {
 	logger.Info("Lock Screen")
+	// 如果是treeland，直接执行login1 的session lock
+	if isTreeLand() {
+		currentSessionPath, err := m.sessionManager.CurrentSessionPath().Get(0)
+		if err != nil || currentSessionPath == "" {
+			logger.Warning("get sessionManager CurrentSessionPath failed:", err)
+			return
+		}
+		sysBus, _ := dbus.SystemBus()
+		currentSession, err := login1.NewSession(sysBus, currentSessionPath)
+		if err != nil || currentSession == nil {
+			logger.Error("Failed to connect self session:", err)
+			return
+		}
+		err = currentSession.Lock(0)
+		if err != nil {
+			logger.Warning("Failed to lock current session:", err)
+		}
+		return
+	}
 	err := m.lockFront.ShowAuth(0, autoStartAuth)
 	if err != nil {
 		logger.Warning("failed to call lockFront ShowAuth:", err)

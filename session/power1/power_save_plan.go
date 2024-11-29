@@ -68,15 +68,17 @@ func newPowerSavePlan(manager *Manager) (string, submodule, error) {
 	p := new(powerSavePlan)
 	p.manager = manager
 
-	conn := manager.helper.xConn
 	var err error
-	p.atomNetWMStateFullscreen, err = conn.GetAtom("_NET_WM_STATE_FULLSCREEN")
-	if err != nil {
-		return submodulePSP, nil, err
-	}
-	p.atomNetWMStateFocused, err = conn.GetAtom("_NET_WM_STATE_FOCUSED")
-	if err != nil {
-		return submodulePSP, nil, err
+	if !manager.UseWayland {
+		conn := manager.helper.xConn
+		p.atomNetWMStateFullscreen, err = conn.GetAtom("_NET_WM_STATE_FULLSCREEN")
+		if err != nil {
+			return submodulePSP, nil, err
+		}
+		p.atomNetWMStateFocused, err = conn.GetAtom("_NET_WM_STATE_FOCUSED")
+		if err != nil {
+			return submodulePSP, nil, err
+		}
 	}
 
 	p.fullscreenWorkaroundAppList = manager.settings.GetStrv(
@@ -544,9 +546,11 @@ func (psp *powerSavePlan) stopScreensaver() {
 func (psp *powerSavePlan) makeSystemSleep() {
 	logger.Info("sleep")
 	psp.stopScreensaver()
-	// psp.manager.setDPMSModeOn()
-	// psp.resetBrightness()
-	psp.manager.doSuspendByFront()
+	if psp.manager.UseWayland {
+		psp.manager.doSuspend()
+	} else {
+		psp.manager.doSuspendByFront()
+	}
 }
 
 func (psp *powerSavePlan) lock() {
