@@ -70,7 +70,7 @@
         },
         {
             "Key": "text-to-speech",
-            "Action": "dbus-send  --print-reply --dest=com.iflytek.aiassistant /aiassistant/deepinmain com.iflytek.aiassistant.mainWindow.TextToSpeech"
+            "Action": "/usr/share/uos-ai-assistant/shell/tts.sh"
         },
         {
             "Key": "speech-to-text",
