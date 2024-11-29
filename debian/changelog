@@ -1,3 +1,10 @@
+dde-daemon (6.1.11) unstable; urgency=medium
+
+  * feat: 修改语音朗读快捷键动作
+  * feat: treeland环境下音频框架默认使用pipewire
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 29 Nov 2024 11:34:39 +0800
+
 dde-daemon (6.1.10) unstable; urgency=medium
 
   * feat: 修复安全漏洞
