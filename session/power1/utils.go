@@ -248,6 +248,14 @@ func (m *Manager) tryChangeDeepinWM() bool {
 }
 
 func (m *Manager) doLock(autoStartAuth bool) {
+	// 如果是treeland，直接执行login1 的session lock
+	if m.UseWayland {
+		err := m.currentSession.Lock(0)
+		if err != nil {
+			logger.Warning("set session lock failed:", err)
+		}
+		return
+	}
 	locked, err := m.sessionManager.Locked().Get(0)
 	if err != nil {
 		logger.Warning(err)

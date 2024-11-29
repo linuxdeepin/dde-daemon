@@ -142,7 +142,7 @@ func (m *Manager) initHandlers() {
 	m.handlers[ActionTypeTouchpadCtrl] = buildHandlerFromController(m.touchPadController)
 
 	m.handlers[ActionTypeSystemSuspend] = func(ev *KeyEvent) {
-		if m.gsPower.GetBoolean("sleep-lock") {
+		if m.gsPower.GetBoolean("sleep-lock") && !isTreeLand() {
 			m.systemSuspendByFront()
 		} else {
 			m.systemSuspend()

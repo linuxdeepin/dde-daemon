@@ -354,7 +354,7 @@ func (m *Manager) init() {
 	m.sessionSigLoop.Start()
 	m.systemSigLoop.Start()
 
-	if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
+	if os.Getenv("XDG_SESSION_TYPE") == "wayland" {
 		m.UseWayland = true
 	} else {
 		m.UseWayland = false
@@ -534,32 +534,33 @@ func (m *Manager) init() {
 		})
 	}
 
-	if m.UseWayland {
-		m.kwinHanleIdleOffCh = make(chan bool, 10)
-		go m.listenEventToHandleIdleOff()
-
-		go func() {
-			for ch := range m.kwinHanleIdleOffCh {
-				if ch {
-					m.prepareSuspendLocker.Lock()
-					// 如果系统处于suspend状态，不需要在上层通过鼠标键盘事件唤醒系统
-					if m.prepareSuspend >= suspendStatePrepare {
-						m.prepareSuspendLocker.Unlock()
-						continue
-					}
-					m.prepareSuspendLocker.Unlock()
-
-					logger.Info("kwin handle idle off")
-
-					if v := m.submodules[submodulePSP]; v != nil {
-						if psp := v.(*powerSavePlan); psp != nil {
-							psp.HandleIdleOff()
-						}
-					}
-				}
-			}
-		}()
-	}
+	// TODO: treeland 上idle暂未实现
+	//if m.UseWayland {
+	//	m.kwinHanleIdleOffCh = make(chan bool, 10)
+	//	go m.listenEventToHandleIdleOff()
+	//
+	//	go func() {
+	//		for ch := range m.kwinHanleIdleOffCh {
+	//			if ch {
+	//				m.prepareSuspendLocker.Lock()
+	//				// 如果系统处于suspend状态，不需要在上层通过鼠标键盘事件唤醒系统
+	//				if m.prepareSuspend >= suspendStatePrepare {
+	//					m.prepareSuspendLocker.Unlock()
+	//					continue
+	//				}
+	//				m.prepareSuspendLocker.Unlock()
+	//
+	//				logger.Info("kwin handle idle off")
+	//
+	//				if v := m.submodules[submodulePSP]; v != nil {
+	//					if psp := v.(*powerSavePlan); psp != nil {
+	//						psp.HandleIdleOff()
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}()
+	//}
 }
 
 func (m *Manager) destroy() {

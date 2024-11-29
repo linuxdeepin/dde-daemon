@@ -351,9 +351,17 @@ func (m *Manager) handlePower() {
 	case powerActionShutdown:
 		m.systemShutdown()
 	case powerActionSuspend:
-		m.systemSuspendByFront()
+		if isTreeLand() {
+			m.systemSuspend()
+		} else {
+			m.systemSuspendByFront()
+		}
 	case powerActionHibernate:
-		m.systemHibernateByFront()
+		if isTreeLand() {
+			m.systemHibernate()
+		} else {
+			m.systemHibernateByFront()
+		}
 	case powerActionTurnOffScreen:
 		if screenBlackLock {
 			systemLock()

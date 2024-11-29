@@ -7,6 +7,7 @@ package power
 import (
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/log"
+	"os"
 )
 
 var logger = log.NewLogger("daemon/session/power")
@@ -27,6 +28,10 @@ func NewDaemon(logger *log.Logger) *Daemon {
 }
 
 func (d *Daemon) GetDependencies() []string {
+	// TODO: Idle在treeland暂时有问题
+	if os.Getenv("XDG_SESSION_TYPE") == "wayland" {
+		return []string{"sessionwatcher"}
+	}
 	return []string{"screensaver", "sessionwatcher"}
 }
 

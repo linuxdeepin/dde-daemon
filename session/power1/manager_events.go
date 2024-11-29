@@ -72,6 +72,15 @@ func (m *Manager) initOnBatteryChangedHandler() {
 func (m *Manager) handleBeforeSuspend() {
 	m.setPrepareSuspend(suspendStatePrepare)
 	m.setDDEBlackScreenActive(true)
+	if m.UseWayland {
+		// 如果是treeland，并且待机休眠唤醒是需要解锁，则将session 给lock
+		if m.SleepLock.Get() {
+			err := m.currentSession.Lock(0)
+			if err != nil {
+				logger.Warning("set session lock failed:", err)
+			}
+		}
+	}
 	logger.Debug("before sleep")
 }
 
