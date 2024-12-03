@@ -42,6 +42,11 @@ func (v *Audio) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetCurrentAudioServer,
 			InArgs: []string{"serverName"},
 		},
+		{
+			Name:   "SetMono",
+			Fn:     v.SetMono,
+			InArgs: []string{"enable"},
+		},
 	}
 }
 func (v *Meter) GetExportedMethods() dbusutil.ExportedMethods {

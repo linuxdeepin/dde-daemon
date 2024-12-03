@@ -6,6 +6,175 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
+func (v *Source) setPropName(value string) (changed bool) {
+	if v.Name != value {
+		v.Name = value
+		v.emitPropChangedName(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedName(value string) error {
+	return v.service.EmitPropertyChanged(v, "Name", value)
+}
+
+func (v *Source) setPropDescription(value string) (changed bool) {
+	if v.Description != value {
+		v.Description = value
+		v.emitPropChangedDescription(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedDescription(value string) error {
+	return v.service.EmitPropertyChanged(v, "Description", value)
+}
+
+func (v *Source) setPropBaseVolume(value float64) (changed bool) {
+	if v.BaseVolume != value {
+		v.BaseVolume = value
+		v.emitPropChangedBaseVolume(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedBaseVolume(value float64) error {
+	return v.service.EmitPropertyChanged(v, "BaseVolume", value)
+}
+
+func (v *Source) setPropMute(value bool) (changed bool) {
+	if v.Mute != value {
+		v.Mute = value
+		v.emitPropChangedMute(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedMute(value bool) error {
+	return v.service.EmitPropertyChanged(v, "Mute", value)
+}
+
+func (v *Source) setPropVolume(value float64) (changed bool) {
+	if v.Volume != value {
+		v.Volume = value
+		v.emitPropChangedVolume(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedVolume(value float64) error {
+	return v.service.EmitPropertyChanged(v, "Volume", value)
+}
+
+func (v *Source) setPropBalance(value float64) (changed bool) {
+	if v.Balance != value {
+		v.Balance = value
+		v.emitPropChangedBalance(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedBalance(value float64) error {
+	return v.service.EmitPropertyChanged(v, "Balance", value)
+}
+
+func (v *Source) setPropSupportBalance(value bool) (changed bool) {
+	if v.SupportBalance != value {
+		v.SupportBalance = value
+		v.emitPropChangedSupportBalance(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedSupportBalance(value bool) error {
+	return v.service.EmitPropertyChanged(v, "SupportBalance", value)
+}
+
+func (v *Source) setPropFade(value float64) (changed bool) {
+	if v.Fade != value {
+		v.Fade = value
+		v.emitPropChangedFade(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedFade(value float64) error {
+	return v.service.EmitPropertyChanged(v, "Fade", value)
+}
+
+func (v *Source) setPropSupportFade(value bool) (changed bool) {
+	if v.SupportFade != value {
+		v.SupportFade = value
+		v.emitPropChangedSupportFade(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedSupportFade(value bool) error {
+	return v.service.EmitPropertyChanged(v, "SupportFade", value)
+}
+
+func (v *Source) setPropPorts(value []Port) (changed bool) {
+	if !portsEqual(v.Ports, value) {
+		v.Ports = value
+		v.emitPropChangedPorts(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedPorts(value []Port) error {
+	return v.service.EmitPropertyChanged(v, "Ports", value)
+}
+
+func (v *Source) setPropActivePort(value Port) (changed bool) {
+	if v.ActivePort != value {
+		v.ActivePort = value
+		v.emitPropChangedActivePort(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedActivePort(value Port) error {
+	return v.service.EmitPropertyChanged(v, "ActivePort", value)
+}
+
+func (v *Source) setPropCard(value uint32) (changed bool) {
+	if v.Card != value {
+		v.Card = value
+		v.emitPropChangedCard(value)
+		return true
+	}
+	return false
+}
+
+func (v *Source) emitPropChangedCard(value uint32) error {
+	return v.service.EmitPropertyChanged(v, "Card", value)
+}
+
+func (v *Meter) setPropVolume(value float64) (changed bool) {
+	if v.Volume != value {
+		v.Volume = value
+		v.emitPropChangedVolume(value)
+		return true
+	}
+	return false
+}
+
+func (v *Meter) emitPropChangedVolume(value float64) error {
+	return v.service.EmitPropertyChanged(v, "Volume", value)
+}
+
 func (v *Audio) setPropSinkInputs(value []dbus.ObjectPath) (changed bool) {
 	if !objectPathSliceEqual(v.SinkInputs, value) {
 		v.SinkInputs = value
@@ -186,6 +355,19 @@ func (v *Audio) setPropMaxUIVolume(value float64) (changed bool) {
 
 func (v *Audio) emitPropChangedMaxUIVolume(value float64) error {
 	return v.service.EmitPropertyChanged(v, "MaxUIVolume", value)
+}
+
+func (v *Audio) setPropMono(value bool) (changed bool) {
+	if v.Mono != value {
+		v.Mono = value
+		v.emitPropChangedMono(value)
+		return true
+	}
+	return false
+}
+
+func (v *Audio) emitPropChangedMono(value bool) error {
+	return v.service.EmitPropertyChanged(v, "Mono", value)
 }
 
 func (v *Sink) setPropName(value string) (changed bool) {
@@ -459,173 +641,4 @@ func (v *SinkInput) setPropSinkIndex(value uint32) (changed bool) {
 
 func (v *SinkInput) emitPropChangedSinkIndex(value uint32) error {
 	return v.service.EmitPropertyChanged(v, "SinkIndex", value)
-}
-
-func (v *Source) setPropName(value string) (changed bool) {
-	if v.Name != value {
-		v.Name = value
-		v.emitPropChangedName(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedName(value string) error {
-	return v.service.EmitPropertyChanged(v, "Name", value)
-}
-
-func (v *Source) setPropDescription(value string) (changed bool) {
-	if v.Description != value {
-		v.Description = value
-		v.emitPropChangedDescription(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedDescription(value string) error {
-	return v.service.EmitPropertyChanged(v, "Description", value)
-}
-
-func (v *Source) setPropBaseVolume(value float64) (changed bool) {
-	if v.BaseVolume != value {
-		v.BaseVolume = value
-		v.emitPropChangedBaseVolume(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedBaseVolume(value float64) error {
-	return v.service.EmitPropertyChanged(v, "BaseVolume", value)
-}
-
-func (v *Source) setPropMute(value bool) (changed bool) {
-	if v.Mute != value {
-		v.Mute = value
-		v.emitPropChangedMute(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedMute(value bool) error {
-	return v.service.EmitPropertyChanged(v, "Mute", value)
-}
-
-func (v *Source) setPropVolume(value float64) (changed bool) {
-	if v.Volume != value {
-		v.Volume = value
-		v.emitPropChangedVolume(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedVolume(value float64) error {
-	return v.service.EmitPropertyChanged(v, "Volume", value)
-}
-
-func (v *Source) setPropBalance(value float64) (changed bool) {
-	if v.Balance != value {
-		v.Balance = value
-		v.emitPropChangedBalance(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedBalance(value float64) error {
-	return v.service.EmitPropertyChanged(v, "Balance", value)
-}
-
-func (v *Source) setPropSupportBalance(value bool) (changed bool) {
-	if v.SupportBalance != value {
-		v.SupportBalance = value
-		v.emitPropChangedSupportBalance(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedSupportBalance(value bool) error {
-	return v.service.EmitPropertyChanged(v, "SupportBalance", value)
-}
-
-func (v *Source) setPropFade(value float64) (changed bool) {
-	if v.Fade != value {
-		v.Fade = value
-		v.emitPropChangedFade(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedFade(value float64) error {
-	return v.service.EmitPropertyChanged(v, "Fade", value)
-}
-
-func (v *Source) setPropSupportFade(value bool) (changed bool) {
-	if v.SupportFade != value {
-		v.SupportFade = value
-		v.emitPropChangedSupportFade(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedSupportFade(value bool) error {
-	return v.service.EmitPropertyChanged(v, "SupportFade", value)
-}
-
-func (v *Source) setPropPorts(value []Port) (changed bool) {
-	if !portsEqual(v.Ports, value) {
-		v.Ports = value
-		v.emitPropChangedPorts(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedPorts(value []Port) error {
-	return v.service.EmitPropertyChanged(v, "Ports", value)
-}
-
-func (v *Source) setPropActivePort(value Port) (changed bool) {
-	if v.ActivePort != value {
-		v.ActivePort = value
-		v.emitPropChangedActivePort(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedActivePort(value Port) error {
-	return v.service.EmitPropertyChanged(v, "ActivePort", value)
-}
-
-func (v *Source) setPropCard(value uint32) (changed bool) {
-	if v.Card != value {
-		v.Card = value
-		v.emitPropChangedCard(value)
-		return true
-	}
-	return false
-}
-
-func (v *Source) emitPropChangedCard(value uint32) error {
-	return v.service.EmitPropertyChanged(v, "Card", value)
-}
-
-func (v *Meter) setPropVolume(value float64) (changed bool) {
-	if v.Volume != value {
-		v.Volume = value
-		v.emitPropChangedVolume(value)
-		return true
-	}
-	return false
-}
-
-func (v *Meter) emitPropChangedVolume(value float64) error {
-	return v.service.EmitPropertyChanged(v, "Volume", value)
 }

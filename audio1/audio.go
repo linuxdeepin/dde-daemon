@@ -69,6 +69,7 @@ const (
 	dsgKeyInputDefaultPriorities  = "inputDefaultPrioritiesByType"
 	dsgKeyOutputDefaultPriorities = "outputDefaultPrioritiesByType"
 	dsgKeyBluezModeDefault        = "bluezModeDefault"
+	dsgKeyMonoEnabled             = "monoEnabled"
 
 	changeIconStart    = "notification-change-start"
 	changeIconFailed   = "notification-change-failed"
@@ -155,6 +156,9 @@ type Audio struct {
 
 	// 最大音量
 	MaxUIVolume float64 // readonly
+
+	// 单声道设置
+	Mono bool
 
 	headphoneUnplugAutoPause bool
 
@@ -945,6 +949,13 @@ func (a *Audio) init() error {
 	} else {
 		logger.Warning(err)
 	}
+	if strings.Contains(strings.ToLower(a.CurrentAudioServer), "pipewire") {
+		if a.defaultSink != nil {
+			if err := a.defaultSink.SetMono(a.Mono); err != nil {
+				logger.Warning(err)
+			}
+		}
+	}
 
 	GetBluezAudioManager().Load()
 	GetConfigKeeper().Load()
@@ -1575,6 +1586,13 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 
 	a.defaultSink = sink
 	defaultSinkPath := sink.getPath()
+	if strings.Contains(strings.ToLower(a.CurrentAudioServer), "pipewire") {
+		if sink != nil {
+			if err := sink.SetMono(a.Mono); err != nil {
+				logger.Warning(err)
+			}
+		}
+	}
 
 	a.resumeSinkConfig(sink)
 
@@ -2015,8 +2033,14 @@ func (a *Audio) initDsgProp() error {
 			}
 		}
 	}
-	getBluezModeDefault()
 
+	getMonoEnabled := func() {
+		err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyMonoEnabled).Store(&a.Mono)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
+	getMonoEnabled()
 	// 监听dsg配置变化
 	a.systemSigLoop.AddHandler(&dbusutil.SignalRule{
 		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
@@ -2037,20 +2061,20 @@ func (a *Audio) initDsgProp() error {
 					}
 				case dsgKeyBluezModeDefault:
 					getBluezModeDefault()
-				}
-			}
-
-			if ok && key == dsgkeyPausePlayer {
-				var pausePlayer bool
-				err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&pausePlayer)
-				if err != nil {
-					logger.Warning(err)
-				} else {
-					logger.Info("pausePlayer config:", pausePlayer)
-					a.PropsMu.Lock()
-					a.PausePlayer = pausePlayer
-					a.emitPropChangedPausePlayer(pausePlayer)
-					a.PropsMu.Unlock()
+				case dsgkeyPausePlayer:
+					var pausePlayer bool
+					err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&pausePlayer)
+					if err != nil {
+						logger.Warning(err)
+					} else {
+						logger.Info("pausePlayer config:", pausePlayer)
+						a.PropsMu.Lock()
+						a.PausePlayer = pausePlayer
+						a.emitPropChangedPausePlayer(pausePlayer)
+						a.PropsMu.Unlock()
+					}
+				case dsgKeyMonoEnabled:
+					getMonoEnabled()
 				}
 			}
 		}
@@ -2067,4 +2091,38 @@ func (a *Audio) canAutoSwitchPort() bool {
 	defer a.PropsMu.RUnlock()
 
 	return a.enableAutoSwitchPort
+}
+
+func (a *Audio) SetMono(enable bool) *dbus.Error {
+	err := a.setMono(enable)
+	return dbusutil.ToError(err)
+}
+
+func (a *Audio) setMono(enable bool) error {
+	// 只有pipewire支持设置
+	if !strings.Contains(strings.ToLower(a.CurrentAudioServer), "pipewire") {
+		err := fmt.Errorf("Current audio server is not support set mono")
+		logger.Warning(err)
+		return err
+	}
+	sink := a.getDefaultSink()
+	if sink != nil {
+		err := sink.SetMono(enable)
+		if err != nil {
+			logger.Warning(err)
+			return err
+		}
+	}
+
+	a.setPropMono(enable)
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return dbus.MakeFailedError(err)
+	}
+	systemConnObj := systemBus.Object("org.desktopspec.ConfigManager", a.configManagerPath)
+	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.setValue", 0, dsgKeyMonoEnabled, dbus.MakeVariant(enable)).Err
+	if err != nil {
+		return dbusutil.ToError(errors.New("dconfig Cannot set value " + dsgKeyMonoEnabled))
+	}
+	return nil
 }
