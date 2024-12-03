@@ -98,6 +98,17 @@
       "description": "bluetooth audio default mode",
       "permissions": "readwrite",
       "visibility": "private"
+    },
+    "monoEnabled":{
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "monoEnabled",
+      "name[zh_CN]": "单声道开关",
+      "description": "audio channel mono enabled set",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }

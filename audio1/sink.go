@@ -118,6 +118,19 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 	return nil
 }
 
+func (s *Sink) SetMono(enable bool) error {
+	err := s.CheckPort()
+	if err != nil {
+		logger.Warning(err.Body...)
+		return err
+	}
+	s.PropsMu.RLock()
+	cv := s.cVolume.SetMono(s.Volume, enable)
+	s.PropsMu.RUnlock()
+	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
+	return nil
+}
+
 // 设置左右声道平衡值
 //
 // v: 声道平衡值
