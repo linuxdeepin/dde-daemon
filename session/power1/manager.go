@@ -19,10 +19,10 @@ import (
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	"github.com/linuxdeepin/dde-daemon/session/common"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	calendar "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.dataserver.Calendar"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.dde.shutdownfront"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
-	calendar "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.lunarcalendar1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
 	sessiontimedate "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.timedate1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.dbus"
@@ -89,7 +89,7 @@ type Manager struct {
 	inhibitFd            dbus.UnixFD
 	systemPower          systemPower.Power
 	display              display.Display
-	calendar             calendar.LunarCalendar
+	calendar             calendar.HuangLi
 	objLogin             login1.Manager
 	ddeShutdown          shutdownfront.ShutdownFront
 	displayManager       DisplayManager.DisplayManager
@@ -337,7 +337,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.display = display.NewDisplay(sessionBus)
 	m.wmDBus = wm.NewWm(sessionBus)
 
-	m.calendar = calendar.NewLunarCalendar(sessionBus)
+	m.calendar = calendar.NewHuangLi(sessionBus)
 	m.notify = notifications.NewNotifications(sessionBus)
 	m.notify.InitSignalExt(m.sessionSigLoop, true)
 
@@ -953,7 +953,7 @@ func (m *Manager) shutdownCountdownNotify(count int, playSound bool) {
 
 func (m *Manager) isWorkday(date time.Time) (res bool) {
 	year, month, _ := date.Date()
-	val, err := m.calendar.GetFestivalMonth(0, int32(year), int32(month))
+	val, err := m.calendar.GetFestivalMonth(0, uint32(year), uint32(month))
 	if err == nil {
 		var rootCfg []FestivalRootConfig
 		err = json.Unmarshal([]byte(val), &rootCfg)
