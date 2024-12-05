@@ -85,6 +85,10 @@ func (d *Daemon) Start() error {
 		if err != nil {
 			logger.Warning(err)
 		}
+		// TODO: treeland环境暂不支持设备变化的处理
+		if hasTreeLand {
+			return
+		}
 		if globalWayland {
 			_manager.handleInputDeviceChanged(false)
 			return

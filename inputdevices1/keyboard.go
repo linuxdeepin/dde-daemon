@@ -107,10 +107,13 @@ func newKeyboard(service *dbusutil.Service) *Keyboard {
 		kbd.appLayoutCfg.Map = make(map[string]int)
 	}
 
-	kbd.xConn, err = x.NewConn()
-	if err != nil {
-		logger.Error("failed to get X conn:", err)
-		return nil
+	// Treeland环境没有X
+	if !hasTreeLand {
+		kbd.xConn, err = x.NewConn()
+		if err != nil {
+			logger.Error("failed to get X conn:", err)
+			return nil
+		}
 	}
 
 	kbd.layoutMap, err = getLayoutsFromFile(kbdLayoutsXml)
@@ -521,7 +524,10 @@ func (kbd *Keyboard) applyX11Repeat() {
 }
 
 func (kbd *Keyboard) applyRepeat() {
-	if globalWayland {
+	// TODO: treeland环境无法设置
+	if hasTreeLand {
+		return
+	} else if globalWayland {
 		if kbd.shouldUseDDEKwin() {
 			kbd.applyKwinWaylandRepeat()
 		} else {
@@ -653,6 +659,9 @@ func (kbd *Keyboard) listenSettingsChanged() {
 }
 
 func (kbd *Keyboard) listenRootWindowXEvent() {
+	if kbd.xConn == nil {
+		return
+	}
 	rootWin := kbd.xConn.GetDefaultScreen().Root
 	const eventMask = x.EventMaskPropertyChange
 	err := x.ChangeWindowAttributesChecked(kbd.xConn, rootWin, x.CWEventMask,
@@ -664,6 +673,9 @@ func (kbd *Keyboard) listenRootWindowXEvent() {
 }
 
 func (kbd *Keyboard) handleActiveWindowChanged() {
+	if kbd.xConn == nil {
+		return
+	}
 	activeWindow, err := ewmh.GetActiveWindow(kbd.xConn).Reply(kbd.xConn)
 	if err != nil {
 		logger.Warning(err)
@@ -698,6 +710,9 @@ func (kbd *Keyboard) handleActiveWindowChanged() {
 }
 
 func (kbd *Keyboard) startXEventLoop() {
+	if kbd.xConn == nil {
+		return
+	}
 	eventChan := make(chan x.GenericEvent, 10)
 	kbd.xConn.AddEventChan(eventChan)
 
@@ -713,6 +728,9 @@ func (kbd *Keyboard) startXEventLoop() {
 }
 
 func (kbd *Keyboard) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
+	if kbd.xConn == nil {
+		return
+	}
 	rootWin := kbd.xConn.GetDefaultScreen().Root
 	if ev.Window == rootWin {
 		kbd.handleActiveWindowChanged()

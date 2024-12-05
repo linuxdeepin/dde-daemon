@@ -112,6 +112,10 @@ func newTouchpad(service *dbusutil.Service) *Touchpad {
 	tpad.DoubleClick.Bind(tpad.mouseSetting, mouseKeyDoubleClick)
 	tpad.DragThreshold.Bind(tpad.mouseSetting, mouseKeyDragThreshold)
 
+	// TODO: treeland环境暂不支持
+	if hasTreeLand {
+		return tpad
+	}
 	tpad.updateDXTpads()
 
 	if conn, err := dbus.SystemBus(); err != nil {
