@@ -31,6 +31,9 @@ type devicePathInfo struct {
 }
 type devicePathInfos []*devicePathInfo
 
+// 是否是treeland环境
+var hasTreeLand = false
+
 type Manager struct {
 	Infos      devicePathInfos // readonly
 	WheelSpeed gsprop.Uint     `prop:"access:rw"`
@@ -52,6 +55,9 @@ type Manager struct {
 }
 
 func NewManager(service *dbusutil.Service) *Manager {
+	if os.Getenv("XDG_SESSION_TYPE") == "wayland" {
+		hasTreeLand = true
+	}
 	var m = new(Manager)
 	m.imWheelConfigFile = filepath.Join(basedir.GetUserHomeDir(), ".imwheelrc")
 
@@ -86,7 +92,10 @@ func NewManager(service *dbusutil.Service) *Manager {
 
 	m.trackPoint = newTrackPoint(service)
 
-	m.kwinManager = kwin.NewInputDeviceManager(service.Conn())
+	// TODO: treeland 环境没有kwin，直接返回
+	if !hasTreeLand {
+		m.kwinManager = kwin.NewInputDeviceManager(service.Conn())
+	}
 
 	m.sessionSigLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
 	m.syncConfig = dsync.NewConfig("peripherals", &syncConfig{m: m},
@@ -106,10 +115,13 @@ func (m *Manager) setWheelSpeed() {
 		logger.Warning(err)
 	}
 
-	err = m.setWaylandWheelSpeed(speed)
-	if err == nil {
-		logger.Info("set Wayland WheelSpeed finish")
-		return
+	// TODO: treeland环境没有kwin
+	if !hasTreeLand {
+		err = m.setWaylandWheelSpeed(speed)
+		if err == nil {
+			logger.Info("set Wayland WheelSpeed finish")
+			return
+		}
 	}
 
 	logger.Info("can not set WheelSpeed by Wayland interface, use imwheel")
@@ -185,14 +197,18 @@ Shift_R,Down,Shift_R|Button5
 func (m *Manager) init() {
 	m.kbd.init()
 	m.kbd.handleGSettings()
-	m.wacom.init()
-	m.wacom.handleGSettings()
-	m.tpad.init()
-	m.tpad.handleGSettings()
-	m.mouse.init()
-	m.mouse.handleGSettings()
-	m.trackPoint.init()
-	m.trackPoint.handleGSettings()
+
+	//TODO: treeland环境暂不支持如下设备
+	if !hasTreeLand {
+		m.wacom.init()
+		m.wacom.handleGSettings()
+		m.tpad.init()
+		m.tpad.handleGSettings()
+		m.mouse.init()
+		m.mouse.handleGSettings()
+		m.trackPoint.init()
+		m.trackPoint.handleGSettings()
+	}
 
 	m.setWheelSpeed()
 	m.handleGSettings()

@@ -163,6 +163,11 @@ func newWacom(service *dbusutil.Service) *Wacom {
 	w.EraserRawSample.Bind(w.eraserSetting, wacomKeyRawSample)
 	w.EraserThreshold.Bind(w.eraserSetting, wacomKeyThreshold)
 
+	// TODO: treeland环境暂不支持
+	if hasTreeLand {
+		return w
+	}
+
 	w.updateDXWacoms()
 
 	err := w.initX()

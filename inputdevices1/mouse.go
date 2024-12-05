@@ -70,6 +70,10 @@ func newMouse(service *dbusutil.Service, touchPad *Touchpad) *Mouse {
 	m.DragThreshold.Bind(m.setting, mouseKeyDragThreshold)
 	m.AdaptiveAccelProfile.Bind(m.setting, mouseKeyAdaptiveAccel)
 
+	// TODO: treeland环境暂不支持
+	if hasTreeLand {
+		return m
+	}
 	m.updateDXMouses()
 
 	return m

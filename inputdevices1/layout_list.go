@@ -61,7 +61,6 @@ func getLayoutsFromFile(filename string) (layoutMap, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	result := make(layoutMap)
 	for _, layout := range xmlData.Layouts {
 		layoutName := layout.ConfigItem.Name

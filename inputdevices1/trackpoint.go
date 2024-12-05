@@ -66,7 +66,10 @@ func newTrackPoint(service *dbusutil.Service) *TrackPoint {
 	tp.WheelEmulationButton.Bind(tp.setting, trackPointKeyWheelButton)
 	tp.WheelEmulationTimeout.Bind(tp.setting, trackPointKeyWheelTimeout)
 	tp.LeftHanded.Bind(tp.setting, trackPointKeyLeftHanded)
-
+	// TODO: treeland环境暂不支持
+	if hasTreeLand {
+		return tp
+	}
 	tp.updateDXMouses()
 
 	return tp
