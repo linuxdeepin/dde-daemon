@@ -35,14 +35,6 @@ prepareGfxmodeDetect () {
     /usr/lib/deepin-daemon/grub2 -prepare-gfxmode-detect && update-grub || true
 }
 
-modifyUPowerConfig () {
-    if [ -f /etc/UPower/UPower.conf ]; then
-        sed -ibak '/^\[UPower]/,/^\[/{s/^AllowRiskyCriticalPowerAction=false/AllowRiskyCriticalPowerAction=true/};/^\[UPower]/,/^\[/{s/^CriticalPowerAction=.*/CriticalPowerAction=Ignore/}' /etc/UPower/UPower.conf
-
-        deb-systemd-invoke reload upower.service
-    fi
-}
-
 case "$1" in
     configure)
     if [ -x /usr/lib/deepin-daemon/default-terminal ];then
@@ -51,7 +43,6 @@ case "$1" in
     fi
     linkJavaFallbackFont
     prepareGfxmodeDetect
-    modifyUPowerConfig
     ;;
     triggered)
     linkJavaFallbackFont
