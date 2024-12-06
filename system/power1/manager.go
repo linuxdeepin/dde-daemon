@@ -632,15 +632,7 @@ func loadConfigSafe() *Config {
 		if !os.IsNotExist(err) {
 			logger.Warning(err)
 		}
-		return &Config{
-			// default config
-			PowerSavingModeAuto:                  true,
-			PowerSavingModeEnabled:               false,
-			PowerSavingModeAutoWhenBatteryLow:    false,
-			PowerSavingModeBrightnessDropPercent: 20,
-			PowerSavingModeAutoBatteryPercent:    20,
-			Mode:                                 ddeBalance,
-		}
+		return nil
 	}
 	// 新增字段后第一次启动时,缺少两个新增字段的json,导致亮度下降百分比字段默认为0,导致与默认值不符,需要处理
 	// 低电量自动待机字段的默认值为false,不会导致错误影响
