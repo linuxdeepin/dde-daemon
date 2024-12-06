@@ -1,3 +1,12 @@
+dde-daemon (6.1.12) UNRELEASED; urgency=medium
+
+  * fix: 解决dconfig属性类型不对导致崩溃的问题
+  * fix: 修复节能设置中低电量时自动开启节能模式和使用电池时自动开启节能模式默认值与需求不符问题
+  * fix: 解决安全加固导致image-blur创建不了文件的问题
+  * fix: treeland下可以导出StatusNotifierWatcher接口
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 06 Dec 2024 17:17:38 +0800
+
 dde-daemon (6.1.11) unstable; urgency=medium
 
   * feat: 修改语音朗读快捷键动作
