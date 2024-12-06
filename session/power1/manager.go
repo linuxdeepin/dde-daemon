@@ -666,7 +666,7 @@ func (m *Manager) initDsg() {
 		case dsettingCustomShutdownWeekDays:
 			res := []byte{}
 			for _, v := range data.Value().([]dbus.Variant) {
-				res = append(res, byte(v.Value().(float64)))
+				res = append(res, byte(v.Value().(int64)))
 			}
 			if init {
 				m.CustomShutdownWeekDays = res
