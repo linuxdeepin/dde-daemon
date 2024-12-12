@@ -55,6 +55,7 @@ Build-Depends:
  libxtst-dev,
  libddcutil-dev,
  python3,
+ dh-golang,
 Standards-Version: 4.5.1
 Homepage: http://www.deepin.org
 

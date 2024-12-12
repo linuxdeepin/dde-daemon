@@ -1,10 +1,7 @@
 #!/usr/bin/make -f
 
 include /usr/share/dpkg/architecture.mk
-
-export GOCACHE = /tmp/gocache
-export GOPATH = /usr/share/gocode
-export GO111MODULE=off
+export DH_GOPKG := github.com/linuxdeepin/dde-daemon
 
 SYSTYPE=Desktop
 SYSTYPE=$(shell cat /etc/deepin-version | grep Type= | awk -F'=' '{print $$2}')
@@ -15,7 +12,7 @@ override_dh_gencontrol:
 endif
 
 %:
-	dh $@
+	dh $@ --buildsystem=golang --with=golang
 
 ifeq ($(DEB_BUILD_ARCH), sw_64)
 override_dh_strip:
