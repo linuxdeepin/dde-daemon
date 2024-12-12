@@ -74,7 +74,7 @@ const (
 
 const (
 	deepinThemePath         = "/usr/share/deepin-themes/"
-	defaultTheme            = "bloom"
+	defaultTheme            = "nirvana"
 	themeFile               = "index.theme"
 	themeGroupDefault       = "DefaultTheme"
 	themeGroupDark          = "DarkTheme"
