@@ -1,4 +1,14 @@
-dde-daemon (6.1.12) UNRELEASED; urgency=medium
+dde-daemon (6.1.13) unstable; urgency=medium
+
+  * fix: 定时关闭倒计时通知取消关闭按钮
+  * feat: 音频单声道设置取消pipewire限制
+  * feat: 音频框架默认pipewire，且treeland环境强制切换为pipewire框架
+  * feat: 设置默认主题为nirvana
+  * chore: update translations
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 13 Dec 2024 14:47:41 +0800
+
+dde-daemon (6.1.12) unstable; urgency=medium
 
   * fix: 解决dconfig属性类型不对导致崩溃的问题
   * fix: 修复节能设置中低电量时自动开启节能模式和使用电池时自动开启节能模式默认值与需求不符问题
