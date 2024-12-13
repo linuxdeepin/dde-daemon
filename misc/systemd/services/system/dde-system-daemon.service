@@ -62,6 +62,7 @@ ReadWritePaths=-/var/lib/systemd/timesync
 ReadWritePaths=-/var/lib/dde-daemon/airplane_mode
 # com.deepin.daemon.ImageEffect
 ReadWritePaths=-/var/cache/deepin/dde-daemon/image-effect
+ReadWritePaths=-/var/cache/image-blur
 # com.deepin.daemon.Uadp
 ReadWritePaths=-/usr/share/uadp/
 # com.deepin.system.Network

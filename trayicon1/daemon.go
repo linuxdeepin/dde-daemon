@@ -5,9 +5,9 @@
 package trayicon
 
 import (
+	"github.com/godbus/dbus/v5"
 	"os"
 
-	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
@@ -39,16 +39,7 @@ func (d *Daemon) Name() string {
 
 func (d *Daemon) Start() error {
 	var err error
-	// init x conn
-	XConn, err = x.NewConn()
-	if err != nil {
-		return err
-	}
-
-	initX()
 	service := loader.GetService()
-	d.manager = NewTrayManager(service)
-
 	sessionBus, err := dbus.SessionBus()
 	if err != nil {
 		return err
@@ -57,24 +48,36 @@ func (d *Daemon) Start() error {
 	d.sigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	d.sigLoop.Start()
 
-	err = service.Export(dbusPath, d.manager)
-	if err != nil {
-		return err
-	}
+	if os.Getenv("XDG_SESSION_TYPE") != "wayland" {
+		// init x conn
+		XConn, err = x.NewConn()
+		if err != nil {
+			return err
+		}
 
-	err = d.manager.sendClientMsgMANAGER()
-	if err != nil {
-		return err
-	}
+		initX()
 
-	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		return err
-	}
+		d.manager = NewTrayManager(service)
 
-	err = service.Emit(d.manager, "Inited")
-	if err != nil {
-		return err
+		err = service.Export(dbusPath, d.manager)
+		if err != nil {
+			return err
+		}
+
+		err = d.manager.sendClientMsgMANAGER()
+		if err != nil {
+			return err
+		}
+
+		err = service.RequestName(dbusServiceName)
+		if err != nil {
+			return err
+		}
+
+		err = service.Emit(d.manager, "Inited")
+		if err != nil {
+			return err
+		}
 	}
 
 	if os.Getenv("DDE_DISABLE_STATUS_NOTIFIER_WATCHER") != "1" {

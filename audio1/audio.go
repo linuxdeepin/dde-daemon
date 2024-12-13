@@ -378,17 +378,17 @@ func sendNotify(icon, summary, body string) {
 
 func startAudioServer(service *dbusutil.Service) error {
 	//var pulseaudioState string
-	var activeServices, deactiveServices []string
+	var activeServices, deactiveServices, needMaskedServices []string
 	audioServers := map[string][]string{
 		pulseaudioService: pulseaudioServices,
 		pipewireService:   pipewireServices,
 	}
 	// 默认音频服务
-	var defaultAudioService = pulseaudioService
+	var defaultAudioService = pipewireService
 
-	// 如果是treeland，则默认使用pipewire服务
+	var hasTreeland = false
 	if os.Getenv("XDG_SESSION_TYPE") == "wayland" {
-		defaultAudioService = pipewireService
+		hasTreeland = true
 	}
 
 	// 查询已安装的音频服务状态
@@ -417,38 +417,36 @@ func startAudioServer(service *dbusutil.Service) error {
 			}
 		}
 	}
-
-	// 如果可激活列表中有默认音频服务，则激活该服务
+	logger.Infof("get audio service, actived: %v， deactive: %v", activeServices, deactiveServices)
 	var activeService string
-	if len(activeServices) > 0 {
-		// 如果存在默认音频服务，则优先使用默认
-		if strv.Strv(activeServices).Contains(defaultAudioService) {
-			activeService = defaultAudioService
-		} else {
-			// 不是默认的，说明是手动改过配置
-			activeService = activeServices[0]
-		}
-	} else {
-		// 如果可加载服务列表是空的，可能存在问题，为了能够正常启动服务，则到disable列表中查找
-		if len(deactiveServices) > 0 {
-			if strv.Strv(deactiveServices).Contains(defaultAudioService) {
-				activeService = defaultAudioService
-			} else {
-				// 异常场景，如果都是masked状态，应该选取其中一个激活
-				activeService = deactiveServices[0]
+	var found bool
+	activeService = defaultAudioService
+	needMaskedServices, found = strv.Strv(activeServices).Delete(defaultAudioService)
+	if !found {
+		if hasTreeland {
+			// 如果是treeland环境，只支持pipewire，需要强制切换
+			// 如果不存在，则在masked 服务中查找
+			// 场景：X11环境切换到treeland环境，需要强制切换音频服务为pipewire
+			found = strv.Strv(deactiveServices).Contains(defaultAudioService)
+			if !found {
+				err := fmt.Errorf("not found supported audio services")
+				return err
 			}
+			logger.Warning("ready to unmask service:", audioServers[defaultAudioService])
 		} else {
-			err := errors.New("no available audioservice found")
-			logger.Errorf(err.Error())
-			return err
+			if len(activeServices) > 0 {
+				activeService = activeServices[0]
+			} else {
+				err := fmt.Errorf("no active services found")
+				return err
+			}
 		}
 	}
-	logger.Debug("load audio service:", activeService)
 
 	// 将剩余可选的audio服务都mask
-	tmpDeactiveServices, _ := strv.Strv(append(activeServices, deactiveServices...)).Delete(activeService)
-	logger.Debug("deactive audio service:", tmpDeactiveServices)
-	for _, server := range tmpDeactiveServices {
+	logger.Info("need to active audio service:", activeService)
+	logger.Info("ready to deactive audio service:", needMaskedServices)
+	for _, server := range needMaskedServices {
 		for _, deactiveService := range audioServers[server] {
 			deactiveServicePath, err := systemd.GetUnit(0, deactiveService)
 			if err == nil {
@@ -485,6 +483,16 @@ func startAudioServer(service *dbusutil.Service) error {
 			}
 		}
 	}
+	_, err := systemd.UnmaskUnitFiles(0, audioServers[activeService], false)
+	if err != nil {
+		logger.Warning("Failed to unmask unit files", activeServices, "\nError:", err)
+		return err
+	}
+	err = systemd.Reload(0)
+	if err != nil {
+		logger.Warning("Failed to reload unit files. Error:", err)
+		return err
+	}
 
 	for _, activeService := range audioServers[activeService] {
 		activeServicePath, err := systemd.GetUnit(0, activeService)
@@ -503,7 +511,7 @@ func startAudioServer(service *dbusutil.Service) error {
 					logger.Warning("failed to get audio server active state", err)
 					return err
 				}
-				logger.Warning("start audio service", activeService, state)
+				logger.Info("start audio service", activeService, state)
 				if state != "active" {
 					go func() {
 
