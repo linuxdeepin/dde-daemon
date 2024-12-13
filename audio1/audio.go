@@ -957,11 +957,9 @@ func (a *Audio) init() error {
 	} else {
 		logger.Warning(err)
 	}
-	if strings.Contains(strings.ToLower(a.CurrentAudioServer), "pipewire") {
-		if a.defaultSink != nil {
-			if err := a.defaultSink.SetMono(a.Mono); err != nil {
-				logger.Warning(err)
-			}
+	if a.defaultSink != nil {
+		if err := a.defaultSink.SetMono(a.Mono); err != nil {
+			logger.Warning(err)
 		}
 	}
 
@@ -1594,11 +1592,9 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 
 	a.defaultSink = sink
 	defaultSinkPath := sink.getPath()
-	if strings.Contains(strings.ToLower(a.CurrentAudioServer), "pipewire") {
-		if sink != nil {
-			if err := sink.SetMono(a.Mono); err != nil {
-				logger.Warning(err)
-			}
+	if sink != nil {
+		if err := sink.SetMono(a.Mono); err != nil {
+			logger.Warning(err)
 		}
 	}
 
@@ -2107,12 +2103,6 @@ func (a *Audio) SetMono(enable bool) *dbus.Error {
 }
 
 func (a *Audio) setMono(enable bool) error {
-	// 只有pipewire支持设置
-	if !strings.Contains(strings.ToLower(a.CurrentAudioServer), "pipewire") {
-		err := fmt.Errorf("Current audio server is not support set mono")
-		logger.Warning(err)
-		return err
-	}
 	sink := a.getDefaultSink()
 	if sink != nil {
 		err := sink.SetMono(enable)
