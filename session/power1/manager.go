@@ -919,6 +919,7 @@ func (m *Manager) shutdownCountdownNotify(count int, playSound bool) {
 	title := gettext.Tr("Scheduled Shutdown")
 	actions := []string{"Cancle", gettext.Tr("Cancle"), "Shutdown", gettext.Tr("Shut down")}
 	hints := map[string]dbus.Variant{"x-deepin-PlaySound": dbus.MakeVariant(playSound),
+		"urgency":                     dbus.MakeVariant(2), //取消关闭按钮
 		"x-deepin-ShowInNotifyCenter": dbus.MakeVariant(false),
 		"x-deepin-ClickToDisappear":   dbus.MakeVariant(false),
 		"x-deepin-DisappearAfterLock": dbus.MakeVariant(false)}
