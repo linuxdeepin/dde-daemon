@@ -7,13 +7,14 @@ package keybinding
 import (
 	"bytes"
 	"errors"
-	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
+
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/util"
@@ -437,7 +438,7 @@ func doPrepareSuspend() {
 func undoPrepareSuspend() {
 	sessionDBus, _ := dbus.SessionBus()
 	obj := sessionDBus.Object("org.deepin.dde.Power1", "/org/deepin/dde/Power1")
-	err := obj.Call("org.deepin.dde.Power.SetPrepareSuspend", 0, suspendStateFinish).Err
+	err := obj.Call("org.deepin.dde.Power1.SetPrepareSuspend", 0, suspendStateFinish).Err
 	if err != nil {
 		logger.Warning(err)
 	}
