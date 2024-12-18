@@ -187,7 +187,8 @@ func (card *Card) BluezModeOpts() []string {
 
 		v := strings.ToLower(profile.Name)
 
-		if filterList.Contains(v) {
+		// pulseaudio和pipewier返回的端口、profile的名称的风格不一样，一个使用中横线一个使用下划线
+		if filterList.Contains(strings.ReplaceAll(v, "-", "_")) {
 			logger.Debug("filter bluez mode", v)
 			continue
 		}
