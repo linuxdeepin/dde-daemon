@@ -315,12 +315,8 @@ func (a *Audio) handleCardChanged(idx uint32) {
 	}
 
 	// 如果发生变化的是当前输出所用的声卡，且是蓝牙声卡
-	if a.defaultSink != nil && idx == a.defaultSink.Card && isBluetoothCard(card.core) {
-		if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeA2dp) {
-			a.setPropBluetoothAudioMode(bluezModeA2dp)
-		} else if strings.Contains(strings.ToLower(card.ActiveProfile.Name), bluezModeHeadset) {
-			a.setPropBluetoothAudioMode(bluezModeHeadset)
-		}
+	if a.defaultSink != nil && idx == a.defaultSink.Card && isBluezAudio(card.core.Name) {
+		a.setPropBluetoothAudioMode(card.ActiveProfile.Name)
 	}
 }
 
@@ -361,7 +357,7 @@ func (a *Audio) handleSinkChanged(idx uint32) {
 	if a.defaultSink != nil && a.defaultSink.index == idx && isBluezAudio(a.defaultSink.Name) {
 		card, err := a.cards.get(a.defaultSink.Card)
 		if err == nil {
-			a.setPropBluetoothAudioMode(card.BluezMode())
+			a.setPropBluetoothAudioMode(card.ActiveProfile.Name)
 		} else {
 			logger.Warningf("%d card not found", a.defaultSink.Card)
 		}
