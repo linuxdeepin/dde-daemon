@@ -86,7 +86,7 @@ func (m *Mouse) init() {
 	tpad := m.touchPad
 
 	if !m.Exist {
-		if tpad.Exist && !tpad.TPadEnable.Get() {
+		if tpad.Exist && tpad.TPadEnable.Get() {
 			tpad.enable(true)
 		}
 		return

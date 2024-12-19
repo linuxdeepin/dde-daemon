@@ -244,6 +244,9 @@ func (tpad *Touchpad) updateDXTpads() {
 }
 
 func (tpad *Touchpad) enable(enabled bool) {
+	if enabled == tpad.TPadEnable.Get() {
+		return
+	}
 	if len(tpad.devInfos) > 0 {
 		for _, v := range tpad.devInfos {
 			err := v.Enable(enabled)
@@ -256,6 +259,12 @@ func (tpad *Touchpad) enable(enabled bool) {
 
 	enableGesture(enabled)
 	tpad.TPadEnable.Set(enabled)
+	sysTouchPad, err := inputdevices.NewTouchpad(tpad.systemConn, "/org/deepin/dde/InputDevices1/Touchpad")
+	if err == nil && sysTouchPad != nil {
+		if err = sysTouchPad.SetTouchpadEnable(0, enabled); err != nil {
+			logger.Warning(err)
+		}
+	}
 }
 
 func (tpad *Touchpad) enableLeftHanded() {
