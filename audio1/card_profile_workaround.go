@@ -71,7 +71,7 @@ func selectNewCardProfile(c *pulse.Card) {
 	// if card is bluetooth device, switch to profile a2dp_sink
 	// only 'a2dp_sink' in bluetooth profiles because of blacklist
 	if len(profiles) > 0 {
-		if isBluetoothCard(c) {
+		if isBluezAudio(c.Name) {
 			// Some bluetooth device services not resolved after connected, then denied to set profile to a2dp_sink.
 			// If connect device again, the services resolved work right. The devices such as: SONY MDR-1ABT
 			if c.ActiveProfile.Name == "off" {
@@ -86,11 +86,6 @@ func selectNewCardProfile(c *pulse.Card) {
 			c.SetProfile(profiles[0].Name)
 		}
 	}
-}
-
-func isBluetoothCard(c *pulse.Card) bool {
-	_, ok := c.PropList["bluez.path"]
-	return ok
 }
 
 func tryConnectBluetooth(c *pulse.Card) error {

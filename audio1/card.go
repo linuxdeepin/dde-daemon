@@ -97,7 +97,6 @@ func (c *Card) update(card *pulse.Card) {
 	sort.Sort(card.Profiles)
 	c.Profiles = newProfileList(card.Profiles)
 	c.filterProfile(card)
-
 	filterList := strv.Strv(portFilterList)
 	for _, port := range card.Ports {
 		if filterList.Contains(port.Name) {
@@ -105,7 +104,7 @@ func (c *Card) update(card *pulse.Card) {
 			port.Available = pulse.AvailableTypeNo
 		} else {
 			/* 蓝牙声卡的端口需要过滤 */
-			if isBluetoothCard(card) {
+			if isBluezAudio(card.Name) {
 				if c.BluezMode() == bluezModeA2dp && port.Direction == pulse.DirectionSource {
 					// a2dp模式过滤输入端口
 					logger.Debugf("filter bluez input port %s", port.Name)
@@ -168,7 +167,7 @@ func (cards CardList) string() string {
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
 				Enabled:     portConfig.Enabled,
-				Bluetooth:   isBluetoothCard(cardInfo.core),
+				Bluetooth:   isBluezAudio(cardInfo.core.Name),
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
 				PortType:    GetIconPortType(cardInfo.Name, portInfo.Name),
@@ -197,7 +196,7 @@ func (cards CardList) stringWithoutUnavailable() string {
 			ports = append(ports, CardPortExport{
 				Name:        portInfo.Name,
 				Enabled:     portConfig.Enabled,
-				Bluetooth:   isBluetoothCard(cardInfo.core),
+				Bluetooth:   isBluezAudio(cardInfo.core.Name),
 				Description: portInfo.Description,
 				Direction:   portInfo.Direction,
 				PortType:    GetIconPortType(cardInfo.Name, portInfo.Name),
