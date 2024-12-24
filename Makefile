@@ -157,6 +157,8 @@ print_gopath: prepare
 install: build install-dde-data install-icons
 	# 创建配置文件夹
 	mkdir -pv ${DESTDIR}/var/lib/dde-daemon/
+	mkdir -pv ${DESTDIR}/var/cache/image-blur
+	mkdir -pv ${DESTDIR}/var/cache/deepin/dde-daemon/
 
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
 	cp -f out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
