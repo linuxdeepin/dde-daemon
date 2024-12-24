@@ -155,7 +155,7 @@ func (pp *PriorityPolicy) completeTypes() {
 func (pp *PriorityPolicy) sortPorts() {
 	length := len(pp.Ports)
 	for i := 0; i+1 < length; i++ {
-		for j := i; j+1 < length; j++ {
+		for j := 0; j+i+1 < length; j++ {
 			port1 := pp.Ports[j]
 			port2 := pp.Ports[j+1]
 			type1 := port1.PortType

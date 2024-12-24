@@ -12,42 +12,7 @@ import (
 	dbus "github.com/godbus/dbus/v5"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
 	"github.com/linuxdeepin/go-lib/asound"
-	"github.com/linuxdeepin/go-lib/pulse"
 )
-
-func (a *Audio) trySelectBestPort() {
-	logger.Debug("trySelectBestPort")
-
-	if !a.defaultPaCfg.setDefaultSink {
-		cardId, sinkPort := a.cards.getPassablePort(pulse.DirectionSink)
-		if sinkPort != nil {
-			logger.Debugf("switch to sink port %s, avail: %s",
-				sinkPort.Name, portAvailToString(sinkPort.Available))
-			err := a.setPort(cardId, sinkPort.Name, sinkPort.Direction)
-			if err != nil {
-				logger.Warningf("failed to switch to sink port %s: %v",
-					sinkPort.Name, err)
-			}
-		}
-	} else {
-		logger.Debug("do not set default sink")
-	}
-
-	if !a.defaultPaCfg.setDefaultSource {
-		cardId, sourcePort := a.cards.getPassablePort(pulse.DirectionSource)
-		if sourcePort != nil {
-			logger.Debugf("switch to source port %s, avail: %s",
-				sourcePort.Name, portAvailToString(sourcePort.Available))
-			err := a.setPort(cardId, sourcePort.Name, pulse.DirectionSource)
-			if err != nil {
-				logger.Warningf("failed to switch to source port %s: %v",
-					sourcePort.Name, err)
-			}
-		}
-	} else {
-		logger.Debug("do not set default source")
-	}
-}
 
 func (a *Audio) saveConfig() {
 	logger.Debug("saveConfig")

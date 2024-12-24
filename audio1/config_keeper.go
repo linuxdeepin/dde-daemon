@@ -21,12 +21,14 @@ type PortConfig struct {
 	IncreaseVolume bool
 	Balance        float64
 	ReduceNoise    bool
-	Mute           bool // 静音改为全局，此配置废弃
+	Mute           bool   // 静音改为全局，此配置废弃
+	PreferProfile  string //优先设置的配置文件
 }
 
 type CardConfig struct {
-	Name  string
-	Ports map[string]*PortConfig // Name => PortConfig
+	Name       string
+	Ports      map[string]*PortConfig // Name => PortConfig
+	PreferPort string                 // 当前设置的端口
 }
 
 type MuteConfig struct {
@@ -204,6 +206,35 @@ func (ck *ConfigKeeper) SetEnabled(cardName string, portName string, enabled boo
 	_, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.Enabled = enabled
 	ck.Save()
+}
+
+func (ck *ConfigKeeper) SetProfile(cardName string, portName string, profile string) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	card, port := ck.GetCardAndPortConfig(cardName, portName)
+	port.PreferProfile = profile
+	card.PreferPort = portName
+	ck.Save()
+}
+
+func (ck *ConfigKeeper) GetCardPreferPort(cardName string) string {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	card, ok := ck.Cards[cardName]
+	if !ok {
+		return ""
+	}
+	return card.PreferPort
+}
+
+func (ck *ConfigKeeper) GetPortProfile(cardName string, portName string) string {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	_, port := ck.GetCardAndPortConfig(cardName, portName)
+	return port.PreferProfile
 }
 
 func (ck *ConfigKeeper) SetVolume(cardName string, portName string, volume float64) {
