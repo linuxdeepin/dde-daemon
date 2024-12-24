@@ -167,8 +167,7 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 		return false
 	}
 
-	outputs := GetPriorityManager().Output
-	firstPort := outputs.GetTheFirstPort()
+	firstPort := a.tryGetPreferOutPut()
 
 	// 没有可用端口
 	if firstPort.PortType == PortTypeInvalid {
@@ -204,13 +203,13 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 }
 
 func (a *Audio) autoSwitchPort() {
+	logger.Warning("auto switch port")
 	if a.needAutoSwitchOutputPort() {
-		outputs := GetPriorityManager().Output
-		firstOutput := outputs.GetTheFirstPort()
+		firstOutput := a.tryGetPreferOutPut()
 		card, err := a.cards.getByName(firstOutput.CardName)
 
 		if err == nil {
-			logger.Debugf("auto switch output to #%d %s:%s", card.Id, card.core.Name, firstOutput.PortName)
+			logger.Warningf("auto switch output to #%d %s:%s", card.Id, card.core.Name, firstOutput.PortName)
 			a.setPort(card.Id, firstOutput.PortName, pulse.DirectionSink)
 		} else {
 			logger.Warning(err)
@@ -227,6 +226,7 @@ func (a *Audio) autoSwitchPort() {
 	}
 
 	if a.needAutoSwitchInputPort() {
+		logger.Warning("auto switch input")
 		inputs := GetPriorityManager().Input
 		firstInput := inputs.GetTheFirstPort()
 		card, err := a.cards.getByName(firstInput.CardName)
@@ -286,16 +286,6 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 func (a *Audio) handleCardAdded(idx uint32) {
 	// 数据更新在refreshCards中统一处理，这里只做业务逻辑上的响应
 	logger.Debugf("card %d added", idx)
-
-	card, err := a.cards.get(idx)
-	if err != nil {
-		logger.Warningf("invalid card index #%d", idx)
-		return
-	}
-
-	if isBluezAudio(card.core.Name) {
-		card.AutoSetBluezMode()
-	}
 }
 
 func (a *Audio) handleCardRemoved(idx uint32) {

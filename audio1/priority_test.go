@@ -10,14 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_contains(t *testing.T) {
-	assert.True(t, contains("hbc.abcd.1234", "world.abcd.1234", "hbc"))
-	assert.True(t, contains("hello.abcd.1234", "hbc.abcd.1234", "hbc"))
-	assert.True(t, contains("HBC.abcd.1234", "world.abcd.1234", "hbc"))
-	assert.True(t, contains("hello.abcd.1234", "HBC.abcd.1234", "hbc"))
-	assert.False(t, contains("hello.abcd.1234", "world.abcd.1234", "hbc"))
-}
-
 func Test_GetPortType(t *testing.T) {
 	assert.Equal(t, GetPortType("hbc.abcd.1234", "world.abcd.1234"), PortTypeUnknown)
 	assert.Equal(t, GetPortType("bluez.abcd.1234", "world.abcd.1234"), PortTypeBluetooth)

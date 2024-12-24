@@ -119,11 +119,6 @@ func removeConfig() {
 	if err != nil && !os.IsNotExist(err) {
 		logger.Warning(err)
 	}
-
-	err = os.Remove(bluezAudioConfigFilePath)
-	if err != nil && !os.IsNotExist(err) {
-		logger.Warning(err)
-	}
 }
 
 func mapStrStrEqual(a, b map[string]string) bool {

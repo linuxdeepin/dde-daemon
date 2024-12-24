@@ -6,10 +6,10 @@ package audio
 
 import (
 	"encoding/json"
+	"github.com/linuxdeepin/go-lib/pulse"
+	"github.com/linuxdeepin/go-lib/strv"
 	"os"
 	"strings"
-
-	"github.com/linuxdeepin/go-lib/pulse"
 )
 
 // const (
@@ -38,10 +38,6 @@ type Priorities struct {
 
 type Skipper func(cardName string, portName string) bool
 
-var (
-	priorities = NewPriorities()
-)
-
 func hasElement(slice []int, value int) bool {
 	for _, v := range slice {
 		if value == v {
@@ -52,79 +48,51 @@ func hasElement(slice []int, value int) bool {
 	return false
 }
 
+// 端口优先级，变更时顺序
+var PortTypeMap = map[int]strv.Strv{
+	PortTypeMultiChannel: {"multichannel"},
+	PortTypeBluetooth:    {"bluez", "bluetooth"},
+	PortTypeLineIO:       {"linein", "lineout"},
+	PortTypeHeadset:      {"usb", "rear-mic", "front-mic", "headset", "headphone"},
+	PortTypeHdmi:         {"hdmi"},
+	PortTypeBuiltin:      {"speaker", "input-mic"},
+}
+
+// 图标类型 扬声器 > 耳机 > HDMI > 蓝牙
+// 端口图标显示优先级，变更时顺序
+var PortIconTypeMap = map[int]strv.Strv{
+	PortTypeLineIO:    {"linein", "lineout"},
+	PortTypeBuiltin:   {"speaker", "input-mic"},
+	PortTypeHeadset:   {"rear-mic", "front-mic", "headset", "headphone"},
+	PortTypeHdmi:      {"hdmi"},
+	PortTypeBluetooth: {"bluez", "bluetooth"},
+	PortTypeUsb:       {"usb"},
+}
+
 func contains(cardName string, portName string, substr string) bool {
 	return strings.Contains(strings.ToLower(cardName), substr) ||
 		strings.Contains(strings.ToLower(portName), substr)
 }
 
 func GetPortType(cardName string, portName string) int {
-	if contains(cardName, portName, "multichannel") {
-		return PortTypeMultiChannel
+	for t, keys := range PortTypeMap {
+		for _, key := range keys {
+			if contains(cardName, portName, key) {
+				return t
+			}
+		}
 	}
-
-	if contains(cardName, portName, "bluez") ||
-		contains(cardName, portName, "bluetooth") {
-		return PortTypeBluetooth
-	}
-
-	if contains(cardName, portName, "linein") ||
-		contains(cardName, portName, "lineout") {
-		return PortTypeLineIO
-	}
-
-	if contains(cardName, portName, "usb") ||
-		contains(cardName, portName, "rear-mic") ||
-		contains(cardName, portName, "front-mic") ||
-		contains(cardName, portName, "headset") ||
-		contains(cardName, portName, "headphone") {
-		return PortTypeHeadset
-	}
-
-	if contains(cardName, portName, "hdmi") {
-		return PortTypeHdmi
-	}
-
-	if contains(cardName, portName, "speaker") ||
-		contains(cardName, portName, "input-mic") {
-		return PortTypeBuiltin
-	}
-
 	return PortTypeUnknown
 }
 
-// 图标类型 扬声器 > 耳机 > HDMI > 蓝牙
 func GetIconPortType(cardName string, portName string) int {
-
-	if contains(cardName, portName, "linein") ||
-		contains(cardName, portName, "lineout") {
-		return PortTypeLineIO
+	for t, keys := range PortIconTypeMap {
+		for _, key := range keys {
+			if contains(cardName, portName, key) {
+				return t
+			}
+		}
 	}
-
-	if contains(cardName, portName, "speaker") ||
-		contains(cardName, portName, "input-mic") {
-		return PortTypeBuiltin
-	}
-
-	if contains(cardName, portName, "rear-mic") ||
-		contains(cardName, portName, "front-mic") ||
-		contains(cardName, portName, "headset") ||
-		contains(cardName, portName, "headphone") {
-		return PortTypeHeadset
-	}
-
-	if contains(cardName, portName, "hdmi") {
-		return PortTypeHdmi
-	}
-
-	if contains(cardName, portName, "bluez") ||
-		contains(cardName, portName, "bluetooth") {
-		return PortTypeBluetooth
-	}
-
-	if contains(cardName, portName, "usb") {
-		return PortTypeUsb
-	}
-
 	return PortTypeUnknown
 }
 
