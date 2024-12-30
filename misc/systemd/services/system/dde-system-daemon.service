@@ -18,7 +18,8 @@ Environment=GVFS_REMOTE_VOLUME_MONITOR_IGNORE=1
 
 ProtectSystem=strict
 
-NoNewPrivileges=yes
+# TODO runuser 需要改配置
+# NoNewPrivileges=yes
 # 部分数据需要写到home下
 # ProtectHome=yes
 # TODO 判断udev事件是否需要该配置
