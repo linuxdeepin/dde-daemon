@@ -61,9 +61,9 @@ func (m *Module) Start() error {
 		info, err := dmi.GetDMI()
 		if err != nil {
 			logger.Warning(err)
-		} else {
-			m.m.setPropDMIInfo(info)
+			info = &dmi.DMI{}
 		}
+		m.m.setPropDMIInfo(info)
 
 	}()
 	return nil
