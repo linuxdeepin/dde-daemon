@@ -666,7 +666,7 @@ func (m *Manager) initDsg() {
 		case dsettingCustomShutdownWeekDays:
 			res := []byte{}
 			for _, v := range data.Value().([]dbus.Variant) {
-				res = append(res, byte(v.Value().(int64)))
+				res = append(res, byte(v.Value().(float64)))
 			}
 			if init {
 				m.CustomShutdownWeekDays = res
@@ -676,15 +676,15 @@ func (m *Manager) initDsg() {
 				logger.Info("Set CustomShutdownWeekDays property", m.CustomShutdownWeekDays)
 			}
 		case dsettingShutdownCountdown:
-			m.shutdownCountdown = int(data.Value().(int64))
+			m.shutdownCountdown = int(data.Value().(float64))
 		case dsettingNextShutdownTime:
-			m.nextShutdownTime = int64(data.Value().(int64))
+			m.nextShutdownTime = int64(data.Value().(float64))
 		case dsettingShutdownRepetition:
 			if init {
-				m.ShutdownRepetition = int(data.Value().(int64))
+				m.ShutdownRepetition = int(data.Value().(float64))
 				return
 			}
-			if m.setPropShutdownRepetition(int(data.Value().(int64))) {
+			if m.setPropShutdownRepetition(int(data.Value().(float64))) {
 				logger.Info("Set ShutdownRepetition property", m.ShutdownRepetition)
 			}
 		case dsettingShutdownTime:
