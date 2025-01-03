@@ -4,7 +4,7 @@ GOPKG_PREFIX = github.com/linuxdeepin/dde-daemon
 GOBUILD = go build $(GO_BUILD_FLAGS)
 export GOPATH=$(shell go env GOPATH)
 
-ifneq (${shell uname -m}, mips64el)
+ifneq (${shell uname -m}, mips64)
     GOBUILD_OPTIONS = -ldflags '-linkmode=external -extldflags "-pie"'
 endif
 
