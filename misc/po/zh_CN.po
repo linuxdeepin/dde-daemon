@@ -231,6 +231,75 @@ msgstr "添加蓝牙设备"
 msgid "Pair"
 msgstr "配对"
 
+#: ../../gesture1/gesture_action.go:38
+msgid "Maximize Window"
+msgstr "最大化窗口"
+
+#: ../../gesture1/gesture_action.go:39
+msgid "Restore Window"
+msgstr "恢复窗口"
+
+#: ../../gesture1/gesture_action.go:40
+msgid "Current Window Left Split"
+msgstr "当前窗口右分屏"
+
+#: ../../gesture1/gesture_action.go:41
+msgid "Current Window Right Split"
+msgstr "当前窗口右分屏"
+
+#: ../../gesture1/gesture_action.go:42
+msgid "Show multitasking view"
+msgstr "显示多任务视图"
+
+#: ../../gesture1/gesture_action.go:43
+msgid "Hide multitasking view"
+msgstr "隐藏多任务视图"
+
+#: ../../gesture1/gesture_action.go:44
+msgid "Switch to previous desktop"
+msgstr "切换至前一个桌面"
+
+#: ../../gesture1/gesture_action.go:45
+msgid "Switch to the next desktop"
+msgstr "切换至后一个桌面"
+
+#: ../../gesture1/gesture_action.go:46
+#: ../../keybinding1/shortcuts/id_name_map.go:85
+msgid "Show desktop"
+msgstr "显示桌面"
+
+#: ../../gesture1/gesture_action.go:47
+msgid "Hide desktop"
+msgstr "隐藏桌面"
+
+#: ../../gesture1/gesture_action.go:48
+msgid "Show/hide launcher"
+msgstr "显示、隐藏启动器"
+
+#: ../../gesture1/gesture_action.go:49
+msgid "Mouse right button pressed"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:50
+msgid "Mouse right button released"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:51
+msgid "Show/hide clipboard"
+msgstr "打开/隐藏剪切板"
+
+#: ../../gesture1/gesture_action.go:52
+msgid "Show/hide grand search"
+msgstr "打开/隐藏全局搜索"
+
+#: ../../gesture1/gesture_action.go:53
+msgid "Show/hide notification center"
+msgstr "打开/隐藏消息中心"
+
+#: ../../gesture1/gesture_action.go:51
+msgid "Disable"
+msgstr "禁用"
+
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "系统磁盘空间不足，请及时清理！"
@@ -383,10 +452,6 @@ msgstr "切换窗口"
 #: ../../keybinding1/shortcuts/id_name_map.go:74
 msgid "Switch windows in reverse"
 msgstr "反向切换窗口"
-
-#: ../../keybinding1/shortcuts/id_name_map.go:85
-msgid "Show desktop"
-msgstr "显示桌面"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Maximize window"
