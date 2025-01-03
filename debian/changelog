@@ -1,3 +1,11 @@
+dde-daemon (6.1.16) unstable; urgency=medium
+
+  * fix: 适配libinput的升级，解决收不到tap事件的问题
+  * fix: 解决ImageEffect1接口调用失败的问题
+  * fix: 由于权限管控，预先创建/var/cache/deepin/dde-daemon目录
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 03 Jan 2025 11:03:48 +0800
+
 dde-daemon (6.1.15) unstable; urgency=medium
 
   * fix: 适配pipewire，解决音频设备模式切换失败的问题
