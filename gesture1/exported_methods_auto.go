@@ -38,5 +38,16 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetShortPressDuration,
 			InArgs: []string{"duration"},
 		},
+		{
+			Name:    "GetGestureAvaiableActions",
+			Fn:      v.GetGestureAvaiableActions,
+			InArgs:  []string{"name", "fingers"},
+			OutArgs: []string{"actions"},
+		},
+		{
+			Name:   "SetGesture",
+			Fn:     v.SetGesture,
+			InArgs: []string{"name", "direction", "fingers", "action"},
+		},
 	}
 }

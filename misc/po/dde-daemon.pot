@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-12 16:11+0800\n"
+"POT-Creation-Date: 2025-01-06 17:16+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,7 @@ msgstr ""
 msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:465
+#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
 #: ../../bluetooth1/obex_agent.go:392 ../../bluetooth1/obex_agent.go:407
 #: ../../bluetooth1/obex_agent.go:434 ../../bluetooth1/obex_agent.go:471
 #: ../../bluetooth1/obex_agent.go:526 ../../bluetooth1/utils_notify.go:77
@@ -77,12 +77,12 @@ msgstr ""
 msgid "dde-control-center"
 msgstr ""
 
-#: ../../audio1/audio_events.go:459
+#: ../../audio1/audio_events.go:445
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio1/audio_events.go:460
+#: ../../audio1/audio_events.go:446
 msgid "Open"
 msgstr ""
 
@@ -218,6 +218,75 @@ msgstr ""
 
 #: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:38
+msgid "Maximize Window"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:39
+msgid "Restore Window"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:40
+msgid "Current Window Left Split"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:41
+msgid "Current Window Right Split"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:42
+msgid "Show multitasking view"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:43
+msgid "Hide multitasking view"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:44
+msgid "Switch to previous desktop"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:45
+msgid "Switch to the next desktop"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:46
+#: ../../keybinding1/shortcuts/id_name_map.go:85
+msgid "Show desktop"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:47
+msgid "Hide desktop"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:48
+msgid "Show/hide launcher"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:49
+msgid "Mouse right button pressed"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:50
+msgid "Mouse right button released"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:51
+msgid "Show/hide clipboard"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:52
+msgid "Show/hide grand search"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:53
+msgid "Show/hide notification center"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:54
+msgid "Disable"
 msgstr ""
 
 #: ../../housekeeping/init.go:136
@@ -371,10 +440,6 @@ msgstr ""
 
 #: ../../keybinding1/shortcuts/id_name_map.go:74
 msgid "Switch windows in reverse"
-msgstr ""
-
-#: ../../keybinding1/shortcuts/id_name_map.go:85
-msgid "Show desktop"
 msgstr ""
 
 #: ../../keybinding1/shortcuts/id_name_map.go:94
