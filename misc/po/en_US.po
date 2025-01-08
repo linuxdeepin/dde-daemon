@@ -228,6 +228,75 @@ msgstr "Add Bluetooth devices"
 msgid "Pair"
 msgstr "Pair"
 
+#: ../../gesture1/gesture_action.go:38
+msgid "Maximize Window"
+msgstr "Maximize Window"
+
+#: ../../gesture1/gesture_action.go:39
+msgid "Restore Window"
+msgstr "Restore Window"
+
+#: ../../gesture1/gesture_action.go:40
+msgid "Current Window Left Split"
+msgstr "Current Window Left Split"
+
+#: ../../gesture1/gesture_action.go:41
+msgid "Current Window Right Split"
+msgstr "Current Window Right Split"
+
+#: ../../gesture1/gesture_action.go:42
+msgid "Show multitasking view"
+msgstr "Show multitasking view"
+
+#: ../../gesture1/gesture_action.go:43
+msgid "Hide multitasking view"
+msgstr "Hide multitasking view"
+
+#: ../../gesture1/gesture_action.go:44
+msgid "Switch to previous desktop"
+msgstr "Switch to previous desktop"
+
+#: ../../gesture1/gesture_action.go:45
+msgid "Switch to the next desktop"
+msgstr "Switch to the next desktop"
+
+#: ../../gesture1/gesture_action.go:51
+msgid "Show/hide clipboard"
+msgstr "Show/hide clipboard"
+
+#: ../../gesture1/gesture_action.go:52
+msgid "Show/hide grand search"
+msgstr "Show/hide grand search"
+
+#: ../../gesture1/gesture_action.go:53
+msgid "Show/hide notification center"
+msgstr "Show/hide notification center"
+
+#: ../../gesture1/gesture_action.go:46
+#: ../../keybinding1/shortcuts/id_name_map.go:85
+msgid "Show desktop"
+msgstr "Show desktop"
+
+#: ../../gesture1/gesture_action.go:47
+msgid "Hide desktop"
+msgstr "Hide desktop"
+
+#: ../../gesture1/gesture_action.go:48
+msgid "Show/hide launcher"
+msgstr "Show/hide launcher"
+
+#: ../../gesture1/gesture_action.go:49
+msgid "Mouse right button pressed"
+msgstr "Mouse right button pressed"
+
+#: ../../gesture1/gesture_action.go:50
+msgid "Mouse right button released"
+msgstr "Mouse right button released"
+
+#: ../../gesture1/gesture_action.go:51
+msgid "Disable"
+msgstr "Disable"
+
 #: ../../dock/app_entry_menu.go:102
 msgid "Close All"
 msgstr "Close All"
@@ -401,10 +470,6 @@ msgstr "Switch windows"
 #: ../../keybinding/shortcuts/id_name_map.go:74
 msgid "Switch windows in reverse"
 msgstr "Switch windows in reverse"
-
-#: ../../keybinding/shortcuts/id_name_map.go:85
-msgid "Show desktop"
-msgstr "Show desktop"
 
 #: ../../keybinding/shortcuts/id_name_map.go:94
 msgid "Maximize window"

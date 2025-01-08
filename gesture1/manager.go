@@ -7,11 +7,10 @@ package gesture1
 import (
 	"encoding/json"
 	"fmt"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 
 	"math"
 	"os"
-	"os/exec"
-	"path/filepath"
 	"strings"
 	"sync"
 
@@ -21,6 +20,7 @@ import (
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	clipboard "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.clipboard1"
 	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
+	launchpad "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.launcher1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
 	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionwatcher1"
 	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
@@ -42,6 +42,12 @@ const (
 	tsSchemaKeyBlacklist    = "longpress-blacklist"
 )
 
+const (
+	availableGesturesWith3Fingers  = "availableGesturesWith3Fingers"
+	availableGesturesWith4Fingers  = "availableGesturesWith4Fingers"
+	availableGesturesWithActionTap = "availableGesturesWithActionTap"
+)
+
 type deviceType int32 // 设备类型(触摸屏，触摸板)
 
 const (
@@ -60,7 +66,6 @@ type Manager struct {
 	sysDaemon          daemon.Daemon
 	systemSigLoop      *dbusutil.SignalLoop
 	mu                 sync.RWMutex
-	userFile           string
 	builtinSets        map[string]func() error
 	gesture            gesture.Gesture
 	dock               dock.Dock
@@ -69,7 +74,7 @@ type Manager struct {
 	tsSetting          *gio.Settings
 	touchPadEnabled    bool
 	touchScreenEnabled bool
-	Infos              gestureInfos
+	Infos              GestureInfos
 	sessionmanager     sessionmanager.SessionManager
 	clipboard          clipboard.Clipboard
 	notification       notification.Notification
@@ -80,6 +85,10 @@ type Manager struct {
 	oneFingerRightEnable  bool
 	configManagerPath     dbus.ObjectPath
 	sessionWatcher        sessionwatcher.SessionWatcher
+	launchpad             launchpad.Launcher
+
+	dsGestureConfigManager configManager.Manager
+	availableGestures      map[string][]string
 }
 
 func newManager() (*Manager, error) {
@@ -94,39 +103,6 @@ func newManager() (*Manager, error) {
 		return nil, err
 	}
 
-	var filename = configUserPath
-	if !dutils.IsFileExist(configUserPath) {
-		filename = configSystemPath
-	}
-
-	infos, err := newGestureInfosFromFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	// for touch long press
-	infos = append(infos, &gestureInfo{
-		Event: EventInfo{
-			Name:      "touch right button",
-			Direction: "down",
-			Fingers:   0,
-		},
-		Action: ActionInfo{
-			Type:   ActionTypeCommandline,
-			Action: "xdotool mousedown 3",
-		},
-	})
-	infos = append(infos, &gestureInfo{
-		Event: EventInfo{
-			Name:      "touch right button",
-			Direction: "up",
-			Fingers:   0,
-		},
-		Action: ActionInfo{
-			Type:   ActionTypeCommandline,
-			Action: "xdotool mouseup 3",
-		},
-	})
-
 	setting, err := dutils.CheckAndNewGSettings(gestureSchemaId)
 	if err != nil {
 		return nil, err
@@ -138,8 +114,6 @@ func newManager() (*Manager, error) {
 	}
 
 	m := &Manager{
-		userFile:           configUserPath,
-		Infos:              infos,
 		setting:            setting,
 		tsSetting:          tsSetting,
 		touchPadEnabled:    setting.GetBoolean(gsKeyTouchPadEnabled),
@@ -151,17 +125,25 @@ func newManager() (*Manager, error) {
 		sessionmanager:     sessionmanager.NewSessionManager(sessionConn),
 		clipboard:          clipboard.NewClipboard(sessionConn),
 		notification:       notification.NewNotification(sessionConn),
+		launchpad:          launchpad.NewLauncher(sessionConn),
+		availableGestures:  make(map[string][]string),
 	}
-
-	systemConnObj := systemConn.Object(configManagerId, "/")
-	err = systemConnObj.Call(configManagerId+".acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.gesture", "").Store(&m.configManagerPath)
+	dsg := configManager.NewConfigManager(systemConn)
+	powerConfigManagerPath, err := dsg.AcquireManager(0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.gesture", "")
 	if err != nil {
 		logger.Warning(err)
+		return nil, err
 	}
+	m.dsGestureConfigManager, err = configManager.NewManager(systemConn, powerConfigManagerPath)
+
 	m.longPressEnable = m.getGestureConfigValue("longPressEnable")
 	m.oneFingerBottomEnable = m.getGestureConfigValue("oneFingerBottomEnable")
 	m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
 	m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
+	m.availableGestures[availableGesturesWith3Fingers] = m.getAvailableGestureConfigValue(availableGesturesWith3Fingers)
+	m.availableGestures[availableGesturesWith4Fingers] = m.getAvailableGestureConfigValue(availableGesturesWith4Fingers)
+	m.availableGestures[availableGesturesWithActionTap] = m.getAvailableGestureConfigValue(availableGesturesWithActionTap)
+	m.Infos = m.getGestureConfig()
 
 	if _useWayland {
 		setLongPressEnable(m.longPressEnable)
@@ -173,6 +155,8 @@ func newManager() (*Manager, error) {
 	if _useWayland {
 		m.sessionWatcher = sessionwatcher.NewSessionWatcher(sessionConn)
 	}
+	m.saveGestureConfig()
+
 	return m, nil
 }
 
@@ -190,18 +174,58 @@ func setLongPressEnable(enable bool) {
 }
 
 func (m *Manager) getGestureConfigValue(key string) bool {
-	systemConn, err := dbus.SystemBus()
-	if err != nil {
-		return true
-	}
-	systemConnObj := systemConn.Object("org.desktopspec.ConfigManager", m.configManagerPath)
-	var val bool
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&val)
+	data, err := m.dsGestureConfigManager.Value(0, key)
 	if err != nil {
 		logger.Warning(err)
 		return true
 	}
-	return val
+	return data.Value().(bool)
+}
+
+func (m *Manager) getAvailableGestureConfigValue(key string) []string {
+	var gestures []string
+	data, err := m.dsGestureConfigManager.Value(0, key)
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+	for _, v := range data.Value().([]dbus.Variant) {
+		gestures = append(gestures, v.Value().(string))
+	}
+	return gestures
+}
+
+func (m *Manager) getGestureConfig() (infos GestureInfos) {
+	var val string
+	data, err := m.dsGestureConfigManager.Value(0, "gestures")
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+	val = data.Value().(string)
+	if len(val) == 0 {
+		return gestureInfos
+	} else {
+		err = json.Unmarshal([]byte(val), &infos)
+		if err != nil {
+			logger.Warning("gesture config unmarshal fail:", err.Error())
+			return
+		}
+	}
+	return
+}
+
+func (m *Manager) saveGestureConfig() {
+	data, err := json.Marshal(m.Infos)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	err = m.dsGestureConfigManager.SetValue(0, "gestures", dbus.MakeVariant(data))
+	if err != nil {
+		logger.Warning(err)
+	}
+	return
 }
 
 func (m *Manager) destroy() {
@@ -211,7 +235,7 @@ func (m *Manager) destroy() {
 }
 
 func (m *Manager) init() {
-	m.initBuiltinSets()
+	m.initActions()
 	err := m.sysDaemon.SetLongPressDuration(0, uint32(m.tsSetting.GetInt(tsSchemaKeyLongPress)))
 	if err != nil {
 		logger.Warning("call SetLongPressDuration failed:", err)
@@ -376,14 +400,14 @@ func (m *Manager) init() {
 	m.listenGSettingsChanged()
 }
 
-func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
+func (m *Manager) shouldIgnoreGesture(info *GestureInfo) bool {
 	// allow right button up when kbd grabbed
-	if (info.Event.Name != "touch right button" || info.Event.Direction != "up") && isKbdAlreadyGrabbed() {
+	if (info.Name != "touch right button" || info.Direction != "up") && isKbdAlreadyGrabbed() {
 		// 多任务窗口下，不应该忽略手势操作
 		isShowMultiTask, err := m.wm.GetMultiTaskingStatus(0)
 		if err != nil {
 			logger.Warning(err)
-		} else if isShowMultiTask && info.Event.Name == "swipe" {
+		} else if isShowMultiTask && info.Name == "swipe" {
 			logger.Debug("should not ignore swipe event, because we are in multi task")
 			return false
 		}
@@ -392,13 +416,13 @@ func (m *Manager) shouldIgnoreGesture(info *gestureInfo) bool {
 	}
 
 	// TODO(jouyouyun): improve touch right button handler
-	if info.Event.Name == "touch right button" {
+	if info.Name == "touch right button" {
 		// filter google chrome
 		if isInWindowBlacklist(getCurrentActionWindowCmd(), m.tsSetting.GetStrv(tsSchemaKeyBlacklist)) {
 			logger.Debug("the current active window in blacklist")
 			return true
 		}
-	} else if strings.HasPrefix(info.Event.Name, "touch") {
+	} else if strings.HasPrefix(info.Name, "touch") {
 		return true
 	}
 
@@ -416,56 +440,22 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 		}
 	}
 
-	info := m.Infos.Get(evInfo)
+	info := m.GetGestureByEvent(evInfo)
 	if info == nil {
 		logger.Infof("[Exec]: not found event info: %s", evInfo.toString())
 		return nil
 	}
 
-	logger.Debugf("[Exec]: event info:%s  action info:%s", info.Event.toString(), info.Action.toString())
+	logger.Debugf("[Exec]: event info:%s", info.toString())
 	if m.shouldIgnoreGesture(info) {
 		return nil
 	}
 
-	if (!m.longPressEnable || _useWayland) && strings.Contains(string(info.Event.Name), "touch right button") {
+	if (!m.longPressEnable || _useWayland) && strings.Contains(string(info.Name), "touch right button") {
 		return nil
 	}
 
-	var cmd = info.Action.Action
-	switch info.Action.Type {
-	case ActionTypeCommandline:
-		break
-	case ActionTypeShortcut:
-		cmd = fmt.Sprintf("xdotool key %s", cmd)
-	case ActionTypeBuiltin:
-		return m.handleBuiltinAction(cmd)
-	default:
-		return fmt.Errorf("invalid action type: %s", info.Action.Type)
-	}
-
-	// #nosec G204
-	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%s", string(out))
-	}
-	return nil
-}
-
-func (m *Manager) Write() error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	// #nosec G301
-	err := os.MkdirAll(filepath.Dir(m.userFile), 0755)
-	if err != nil {
-		return err
-	}
-	data, err := json.Marshal(m.Infos)
-	if err != nil {
-		return err
-	}
-	// #nosec G306
-	return os.WriteFile(m.userFile, data, 0644)
+	return info.doAction()
 }
 
 func (m *Manager) listenGSettingsChanged() {

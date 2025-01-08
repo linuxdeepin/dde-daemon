@@ -41,6 +41,60 @@
           "description": "single finger right edge delimit property",
           "permissions": "readwrite",
           "visibility": "private"
+      },
+      "availableGesturesWith3Fingers": {
+          "value": [
+              "MaximizeWindow",
+              "RestoreWindow",
+              "SplitWindowLeft",
+              "SplitWindowRight",
+              "Disable"
+          ],
+          "serial": 0,
+          "flags": [],
+          "name": "availableGesturesWith3Fingers",
+          "name[zh_CN]": "三指滑动可选手势动作",
+          "description": "available gestures with three fingers",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "availableGesturesWith4Fingers": {
+          "value": [
+              "ShowMultiTask",
+              "HideMultitask",
+              "SwitchToPreDesktop",
+              "SwitchToNextDesktop",
+              "ShowDesktop",
+              "HideDesktop",
+              "Disable"
+          ],
+          "serial": 0,
+          "flags": [],
+          "name": "availableGesturesWith4Fingers",
+          "name[zh_CN]": "四指滑动可选手势动作",
+          "description": "available gestures with four fingers",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "availableGesturesWithActionTap": {
+          "value": ["ToggleLaunchPad","ToggleClipboard","ToggleGrandSearch","ToggleNotifications", "Disable"],
+          "serial": 0,
+          "flags": [],
+          "name": "availableGesturesWithActionTap",
+          "name[zh_CN]": "三指、四指短触可选手势动作",
+          "description": "available gestures with tap",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "gestures": {
+          "value": "",
+          "serial": 0,
+          "flags": [],
+          "name": "gestures",
+          "name[zh_CN]": "手势配置",
+          "description": "gesture config",
+          "permissions": "readwrite",
+          "visibility": "private"
       }
   }
 }
