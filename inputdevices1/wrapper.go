@@ -216,15 +216,14 @@ func getTPadInfos(force, check bool) Touchpads {
 		// 处理触控板被识别为PS2鼠标的情况
 		if check && info.Type == common.DevTypeMouse && isTPadPS2Mouse(info.Name) {
 			tmp, err := dxinput.NewTouchpadFromDevInfo(info)
-			touchpad := getTouchpadInfoByDxTouchpad(tmp)
-
-			if touchpad.isVirtual() {
-				logger.Debug("ignore virtial mouse:", tmp.Name)
-				continue
-			}
 			if err != nil {
 				logger.Warning(err)
 			} else {
+				touchpad := getTouchpadInfoByDxTouchpad(tmp)
+				if touchpad.isVirtual() {
+					logger.Debug("ignore virtial mouse:", tmp.Name)
+					continue
+				}
 				_tpadInfos = append(_tpadInfos, touchpad)
 			}
 			continue

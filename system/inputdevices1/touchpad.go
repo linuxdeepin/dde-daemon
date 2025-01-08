@@ -15,6 +15,7 @@ import (
 )
 
 const (
+	// touchpad接口的导出不再依赖touchpadSwitchFile文件的存在，只有设置的时候才会读写该文件配置
 	touchpadSwitchFile    = "/proc/uos/touchpad_switch"
 	touchpadDBusPath      = "/org/deepin/dde/InputDevices1/Touchpad"
 	touchpadDBusInterface = "org.deepin.dde.InputDevices1.Touchpad"
@@ -23,26 +24,13 @@ const (
 type Touchpad struct {
 	service *dbusutil.Service
 	Enable  bool
-	IsExist bool
 }
 
 func newTouchpad(service *dbusutil.Service) *Touchpad {
 	t := &Touchpad{
 		service: service,
+		Enable:  getDsgConf(),
 	}
-	err := TouchpadExist(touchpadSwitchFile)
-	if err != nil {
-		logger.Warning(err)
-		t.setPropIsExist(false)
-		t.setPropEnable(false)
-		return t
-	}
-	t.setPropIsExist(true)
-	enable, err := TouchpadEnable(touchpadSwitchFile)
-	if err != nil {
-		logger.Warning(err)
-	}
-	t.setPropEnable(enable)
 	return t
 }
 
@@ -52,9 +40,15 @@ func (t *Touchpad) SetTouchpadEnable(enabled bool) *dbus.Error {
 }
 
 func (t *Touchpad) setTouchpadEnable(enabled bool) error {
-	if err := TouchpadExist(touchpadSwitchFile); err != nil {
-		logger.Warning(" TouchpadExist err : ", err)
+	t.setPropEnable(enabled)
+	err := setDsgConf(enabled)
+	if err != nil {
+		logger.Warning(err)
 		return err
+	}
+
+	if err = TouchpadExist(touchpadSwitchFile); err != nil {
+		return nil
 	}
 	current, err := TouchpadEnable(touchpadSwitchFile)
 	if err != nil {
@@ -72,12 +66,6 @@ func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 	err = os.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
 	if err != nil {
 		logger.Warning(" os.WriteFile err : ", err)
-		return err
-	}
-	t.setPropEnable(enabled)
-	err = setDsgConf(enabled)
-	if err != nil {
-		logger.Warning(err)
 		return err
 	}
 	return nil
@@ -102,6 +90,27 @@ func setDsgConf(enable bool) error {
 		return err
 	}
 	return nil
+}
+
+func getDsgConf() bool {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		return false
+	}
+	ds := configManager.NewConfigManager(sysBus)
+	confPath, err := ds.AcquireManager(0, _dsettingsAppID, _dsettingsInputdevicesName, "")
+	if err != nil {
+		return false
+	}
+	dsManager, err := configManager.NewManager(sysBus, confPath)
+	if err != nil {
+		return false
+	}
+	data, err := dsManager.Value(0, _dsettingsTouchpadEnabledKey)
+	if err != nil {
+		return false
+	}
+	return data.Value().(bool)
 }
 
 func TouchpadEnable(filePath string) (bool, error) {

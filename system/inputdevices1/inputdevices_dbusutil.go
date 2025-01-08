@@ -51,15 +51,6 @@ func (v *Touchpad) emitPropChangedEnable(value bool) error {
 	return v.service.EmitPropertyChanged(v, "Enable", value)
 }
 
-func (v *Touchpad) setPropIsExist(value bool) (changed bool) {
-	if v.IsExist != value {
-		v.IsExist = value
-		v.emitPropChangedIsExist(value)
-		return true
-	}
-	return false
-}
-
 func (v *Touchpad) emitPropChangedIsExist(value bool) error {
 	return v.service.EmitPropertyChanged(v, "IsExist", value)
 }

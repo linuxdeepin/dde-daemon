@@ -85,12 +85,16 @@ type Touchpad struct {
 
 	systemConn    *dbus.Conn
 	systemSigLoop *dbusutil.SignalLoop
+
+	// 受鼠标禁用触控板影响，临时关闭触控板
+	disableTemporary bool
 }
 
 func newTouchpad(service *dbusutil.Service) *Touchpad {
 	var tpad = new(Touchpad)
 
 	tpad.service = service
+	tpad.disableTemporary = false
 	tpad.setting = gio.NewSettings(tpadSchema)
 	tpad.TPadEnable.Bind(tpad.setting, tpadKeyEnabled)
 	tpad.LeftHanded.Bind(tpad.setting, tpadKeyLeftHanded)
@@ -243,13 +247,30 @@ func (tpad *Touchpad) updateDXTpads() {
 	tpad.PropsMu.Unlock()
 }
 
+// 受鼠标禁用触控板影响，临时关闭触控板
+func (tpad *Touchpad) setDisableTemporary(disable bool) {
+	if disable == tpad.disableTemporary {
+		return
+	}
+	if len(tpad.devInfos) > 0 {
+		for _, v := range tpad.devInfos {
+			err := v.Enable(!disable && tpad.TPadEnable.Get())
+			if err != nil {
+				logger.Warningf("Enable '%v - %v' failed: %v",
+					v.Id, v.Name, err)
+			}
+		}
+	}
+	tpad.disableTemporary = disable
+}
+
 func (tpad *Touchpad) enable(enabled bool) {
 	if enabled == tpad.TPadEnable.Get() {
 		return
 	}
 	if len(tpad.devInfos) > 0 {
 		for _, v := range tpad.devInfos {
-			err := v.Enable(enabled)
+			err := v.Enable(!tpad.disableTemporary && enabled)
 			if err != nil {
 				logger.Warningf("Enable '%v - %v' failed: %v",
 					v.Id, v.Name, err)
