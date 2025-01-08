@@ -87,7 +87,7 @@ func (m *Mouse) init() {
 
 	if !m.Exist {
 		if tpad.Exist && tpad.TPadEnable.Get() {
-			tpad.enable(true)
+			tpad.setDisableTemporary(false)
 		}
 		return
 	}
@@ -159,12 +159,12 @@ func (m *Mouse) disableTouchPad() {
 		return
 	}
 
-	if !m.DisableTpad.Get() && !touchPad.TPadEnable.Get() {
-		touchPad.enable(true)
+	if !m.DisableTpad.Get() {
+		touchPad.setDisableTemporary(false)
 		return
 	}
 
-	touchPad.enable(false)
+	touchPad.setDisableTemporary(true)
 }
 
 func (m *Mouse) enable(enabled bool) error {

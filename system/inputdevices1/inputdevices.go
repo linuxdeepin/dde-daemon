@@ -85,20 +85,18 @@ func (m *InputDevices) init() {
 	go func() {
 		m.SupportWakeupDevices = make(map[string]string)
 		m.updateSupportWakeupDevices()
-		if err := TouchpadExist(touchpadSwitchFile); err == nil {
-			m.newTouchpad()
-			if m.dsgInputDevices == nil {
-				return
-			}
-			v, err := m.dsgInputDevices.Value(0, _dsettingsTouchpadEnabledKey)
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-			err = m.touchpad.setTouchpadEnable(v.Value().(bool))
-			if err != nil {
-				logger.Warning(err)
-			}
+		m.newTouchpad()
+		if m.dsgInputDevices == nil {
+			return
+		}
+		v, err := m.dsgInputDevices.Value(0, _dsettingsTouchpadEnabledKey)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		err = m.touchpad.setTouchpadEnable(v.Value().(bool))
+		if err != nil {
+			logger.Warning(err)
 		}
 	}()
 }
