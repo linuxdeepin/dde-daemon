@@ -1,3 +1,12 @@
+dde-daemon (6.1.17) unstable; urgency=medium
+
+  * feat: 设置三指短触手势为打开关闭全局搜索
+  * fix: 添加窗口铺至左右侧快捷键的翻译，更新go.mod
+  * fix: 优化触控板逻辑
+  * fix: 手势动作支持设置
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 09 Jan 2025 11:18:00 +0800
+
 dde-daemon (6.1.16) unstable; urgency=medium
 
   * fix: 适配libinput的升级，解决收不到tap事件的问题
