@@ -42,15 +42,14 @@ func (d *Daemon) Start() error {
 	if d.manager != nil {
 		return nil
 	}
-
+	service := loader.GetService()
 	var err error
-	d.manager, err = newManager()
+	d.manager, err = newManager(service)
 	if err != nil {
 		logger.Error("failed to initialize gesture manager:", err)
 		return err
 	}
 
-	service := loader.GetService()
 	err = service.Export(dbusServicePath, d.manager)
 	if err != nil {
 		logger.Error("failed to export gesture:", err)
