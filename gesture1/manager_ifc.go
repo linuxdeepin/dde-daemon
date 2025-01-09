@@ -116,6 +116,10 @@ func (m *Manager) SetGesture(name string, direction string, fingers int32, actio
 			gesture.Direction == direction &&
 			gesture.Fingers == fingers {
 			gesture.ActionName = action
+			err := m.emitPropChangedInfos(m.Infos)
+			if err != nil {
+				logger.Warning(err)
+			}
 			m.saveGestureConfig()
 			break
 		}

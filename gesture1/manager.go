@@ -63,6 +63,7 @@ func setUseWayland(value bool) {
 
 type Manager struct {
 	wm                 wm.Wm
+	service            *dbusutil.Service
 	sysDaemon          daemon.Daemon
 	systemSigLoop      *dbusutil.SignalLoop
 	mu                 sync.RWMutex
@@ -91,7 +92,7 @@ type Manager struct {
 	availableGestures      map[string][]string
 }
 
-func newManager() (*Manager, error) {
+func newManager(service *dbusutil.Service) (*Manager, error) {
 	setUseWayland(len(os.Getenv("WAYLAND_DISPLAY")) != 0)
 	sessionConn, err := dbus.SessionBus()
 	if err != nil {
@@ -127,6 +128,7 @@ func newManager() (*Manager, error) {
 		notification:       notification.NewNotification(sessionConn),
 		launchpad:          launchpad.NewLauncher(sessionConn),
 		availableGestures:  make(map[string][]string),
+		service:            service,
 	}
 	dsg := configManager.NewConfigManager(systemConn)
 	powerConfigManagerPath, err := dsg.AcquireManager(0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.gesture", "")
