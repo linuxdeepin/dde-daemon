@@ -535,6 +535,14 @@ msgstr ""
 msgid "Zoom to Actual Size"
 msgstr ""
 
+#: ../../keybinding1/shortcuts/id_name_map.go:146
+msgid "Window Quick Tile Left"
+msgstr "Window Quick Tile Left"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:147
+msgid "Window Quick Tile Right"
+msgstr "Window Quick Tile Right"
+
 #: ../../langselector/locale.go:48
 msgid "Authentication is required to switch language"
 msgstr "Authentication is required to switch language"

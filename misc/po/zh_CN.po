@@ -517,6 +517,14 @@ msgstr "屏幕缩小"
 msgid "Zoom to Actual Size"
 msgstr "重置屏幕缩放"
 
+#: ../../keybinding1/shortcuts/id_name_map.go:146
+msgid "Window Quick Tile Left"
+msgstr "窗口快速铺至左侧"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:147
+msgid "Window Quick Tile Right"
+msgstr "窗口快速铺至右侧"
+
 #: ../../langselector1/locale.go:47
 msgid "Authentication is required to switch language"
 msgstr "切换语言需要认证"

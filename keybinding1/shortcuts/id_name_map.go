@@ -143,6 +143,8 @@ func getWMIdNameMap() map[string]string {
 		"view-zoom-in":                 gettext.Tr("Zoom In"),
 		"view-zoom-out":                gettext.Tr("Zoom Out"),
 		"view-actual-size":             gettext.Tr("Zoom to Actual Size"),
+		"toggle-to-left":               gettext.Tr("Window Quick Tile Left"),
+		"toggle-to-right":              gettext.Tr("Window Quick Tile Right"),
 	}
 	return idNameMap
 }
