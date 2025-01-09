@@ -34,7 +34,7 @@ var gestureInfos = GestureInfos{
 	{"swipe", "down", 3, "RestoreWindow"},
 	{"swipe", "left", 3, "SplitWindowLeft"},
 	{"swipe", "right", 3, "SplitWindowRight"},
-	{"tap", "none", 3, "ToggleLaunchPad"},
+	{"tap", "none", 3, "ToggleGrandSearch"},
 	{"swipe", "up", 4, "ShowMultiTask"},
 	{"swipe", "down", 4, "HideMultitask"},
 	{"swipe", "left", 4, "SwitchToPreDesktop"},
