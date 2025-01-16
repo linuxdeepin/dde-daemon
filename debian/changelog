@@ -1,3 +1,9 @@
+dde-daemon (6.1.18) unstable; urgency=medium
+
+  * fix: 设置手势的动作后，发送infos变化的信号
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 16 Jan 2025 17:38:52 +0800
+
 dde-daemon (6.1.17) unstable; urgency=medium
 
   * feat: 设置三指短触手势为打开关闭全局搜索
