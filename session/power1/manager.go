@@ -527,3 +527,18 @@ func (m *Manager) listenEventToHandleIdleOff() error {
 
 	return nil
 }
+
+func (m *Manager) doLidClosedAction(action int32) {
+	switch action {
+	case powerActionShutdown:
+		m.doShutdown()
+	case powerActionSuspend:
+		m.doSuspendByFront()
+	case powerActionHibernate:
+		m.doHibernateByFront()
+	case powerActionTurnOffScreen:
+		m.doTurnOffScreen()
+	case powerActionDoNothing:
+		return
+	}
+}
