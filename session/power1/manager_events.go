@@ -53,13 +53,20 @@ func (m *Manager) initOnBatteryChangedHandler() {
 		logger.Debug("property OnBattery changed to", onBattery)
 		m.PropsMu.Lock()
 		changed := m.setPropOnBattery(onBattery)
+		state := m.lidSwitchState
 		m.PropsMu.Unlock()
 
 		if changed {
 			if onBattery {
 				playSound(soundutils.EventPowerUnplug)
+				if state == lidSwitchStateClose {
+					m.doLidClosedAction(m.BatteryLidClosedAction.Get())
+				}
 			} else {
 				playSound(soundutils.EventPowerPlug)
+				if state == lidSwitchStateClose {
+					m.doLidClosedAction(m.LinePowerLidClosedAction.Get())
+				}
 			}
 		}
 	})

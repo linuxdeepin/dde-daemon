@@ -89,39 +89,33 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 	h.isLidOpenLast = state
 
 	m := h.manager
-	m.setPrepareSuspend(suspendStateLidClose)
-	m.PropsMu.Lock()
-	m.lidSwitchState = lidSwitchStateClose
-	m.PropsMu.Unlock()
-	m.claimOrReleaseAmbientLight()
 
 	// 合盖
 	if !state {
-		var onBattery bool
-		onBattery = h.manager.OnBattery
+		m.setPrepareSuspend(suspendStateLidClose)
+		m.PropsMu.Lock()
+		m.lidSwitchState = lidSwitchStateClose
+		m.PropsMu.Unlock()
+		m.claimOrReleaseAmbientLight()
+
 		var lidCloseAction int32
-		if onBattery {
+		if m.OnBattery {
 			lidCloseAction = m.BatteryLidClosedAction.Get() // 获取合盖操作
 		} else {
 			lidCloseAction = m.LinePowerLidClosedAction.Get() // 获取合盖操作
 		}
-		switch lidCloseAction {
-		case powerActionShutdown:
-			m.doShutdown()
-		case powerActionSuspend:
-			m.doSuspendByFront()
-		case powerActionHibernate:
-			m.doHibernateByFront()
-		case powerActionTurnOffScreen:
-			m.doTurnOffScreen()
-		case powerActionDoNothing:
-			return
-		}
+		m.doLidClosedAction(lidCloseAction)
 
 		if lidCloseAction != powerActionTurnOffScreen && !m.isWmBlackScreenActive() {
 			m.setWmBlackScreenActive(true)
 		}
 	} else { // 开盖
+		m.setPrepareSuspend(suspendStateLidOpen)
+		m.PropsMu.Lock()
+		m.lidSwitchState = lidSwitchStateOpen
+		m.PropsMu.Unlock()
+		m.claimOrReleaseAmbientLight()
+
 		err := h.stopAskUser()
 		if err != nil {
 			logger.Warning("stopAskUser error:", err)
