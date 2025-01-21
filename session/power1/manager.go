@@ -529,6 +529,10 @@ func (m *Manager) listenEventToHandleIdleOff() error {
 }
 
 func (m *Manager) doLidClosedAction(action int32) {
+	if !m.sessionActive {
+		return
+	}
+
 	switch action {
 	case powerActionShutdown:
 		m.doShutdown()
