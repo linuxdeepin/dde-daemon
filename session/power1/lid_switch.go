@@ -50,10 +50,20 @@ func (h *LidSwitchHandler) Start() error {
 }
 
 func (h *LidSwitchHandler) onLidClosed() {
+	m := h.manager
+	m.PropsMu.Lock()
+	m.lidSwitchState = lidSwitchStateClose
+	m.PropsMu.Unlock()
+	logger.Info("Lid Closed")
 	h.onLidDelayOperate(false)
 }
 
 func (h *LidSwitchHandler) onLidOpened() {
+	m := h.manager
+	m.PropsMu.Lock()
+	m.lidSwitchState = lidSwitchStateOpen
+	m.PropsMu.Unlock()
+	logger.Info("Lid Opened")
 	h.onLidDelayOperate(true)
 }
 
@@ -93,9 +103,6 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 	// 合盖
 	if !state {
 		m.setPrepareSuspend(suspendStateLidClose)
-		m.PropsMu.Lock()
-		m.lidSwitchState = lidSwitchStateClose
-		m.PropsMu.Unlock()
 		m.claimOrReleaseAmbientLight()
 
 		var lidCloseAction int32
@@ -111,9 +118,6 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 		}
 	} else { // 开盖
 		m.setPrepareSuspend(suspendStateLidOpen)
-		m.PropsMu.Lock()
-		m.lidSwitchState = lidSwitchStateOpen
-		m.PropsMu.Unlock()
 		m.claimOrReleaseAmbientLight()
 
 		err := h.stopAskUser()
