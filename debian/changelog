@@ -1,3 +1,9 @@
+dde-daemon (6.0.48) unstable; urgency=medium
+
+  * fix: 修复笔记本插拔外接电源时,屏幕自动变为待机状态
+
+ -- Chengqi E <echengqi@uniontech.com>  Tue, 21 Jan 2025 11:30:40 +0800
+
 dde-daemon (6.0.47) unstable; urgency=medium
 
   * feat: 完善盒盖状态插拔电源动作
