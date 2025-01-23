@@ -5,6 +5,8 @@
 package grub2
 
 import (
+	"fmt"
+	"github.com/godbus/dbus/v5"
 	"os"
 	"os/exec"
 	"strings"
@@ -12,6 +14,7 @@ import (
 	"syscall"
 
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 )
 
 const (
@@ -130,7 +133,7 @@ func (m *modifyManager) update(adjustTheme bool, adjustThemeLang string) {
 	}
 
 	logJobStart(logJobMkConfig)
-	err := runUpdateGrub()
+	err := m.runUpdateGrubWithUnit()
 	if err != nil {
 		logger.Warning("failed to make config:", err)
 	}
@@ -138,30 +141,66 @@ func (m *modifyManager) update(adjustTheme bool, adjustThemeLang string) {
 	m.updateEnd()
 }
 
-func runUpdateGrub() error {
-	updateGrubPath, err := exec.LookPath(updateGrubCmd)
-	var cmd *exec.Cmd
-	if err == nil {
-		cmd = exec.Command(updateGrubPath)
-		logger.Debugf("$ %s", updateGrubCmd)
+type execStart struct {
+	Path             string   // the binary path to execute
+	Args             []string // an array with all arguments to pass to the executed command, starting with argument 0
+	UncleanIsFailure bool     // a boolean whether it should be considered a failure if the process exits uncleanly
+}
+
+func (m *modifyManager) runUpdateGrubWithUnit() error {
+	var command []string
+	serviceName := "dde-update-grub.service"
+	path, err := exec.LookPath(updateGrubCmd)
+	if err != nil {
+		path = grubMkconfigCmd
+		command = append(command, updateGrubCmd, "-o", grubScriptFile)
 	} else {
-		// fallback to grub-mkconfig
-		cmd = exec.Command(grubMkconfigCmd, "-o", grubScriptFile)
-		logger.Debugf("$ %s -o %s", grubMkconfigCmd, grubScriptFile)
+		command = append(command, path)
 	}
 
 	locale := getSystemLocale()
+	var language string
 	if locale != "" {
 		logger.Info("system locale:", locale)
-		language := strings.Split(locale, ".")[0]
-		cmd.Env = append(os.Environ(), "LANG="+locale, "LANGUAGE="+language)
+		language = strings.Split(locale, ".")[0]
 	} else {
-		logger.Warning("failed to get system locale")
+		err = fmt.Errorf("failed to get system locale")
+		return err
+	}
+	conn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("failed to connect to system bus:", err)
+		return err
 	}
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	systemd := systemd1.NewManager(conn)
+	var properties []systemd1.Property
+	var aux []systemd1.PropertyCollection
+	properties = append(properties, systemd1.Property{"Type", dbus.MakeVariant("oneshot")})
+	properties = append(properties, systemd1.Property{"Description", dbus.MakeVariant("Transient Unit Update Grub")})
+	properties = append(properties, systemd1.Property{"Environment", dbus.MakeVariant([]string{"LANG=" + locale, "LANGUAGE=" + language})})
+	properties = append(properties, systemd1.Property{"ExecStart", dbus.MakeVariant([]execStart{{
+		Path:             command[0],
+		Args:             command,
+		UncleanIsFailure: false,
+	},
+	})})
+	jobPath, err := systemd.StartTransientUnit(0, serviceName, "replace", properties, aux)
+	if err != nil {
+		logger.Warning("failed to start transient unit:", err)
+		return err
+	}
+	systemd.InitSignalExt(m.g.sysLoop, true)
+	logger.Infof("%s started successfully: %v", serviceName, jobPath)
+	var wait = make(chan bool)
+	systemd.ConnectJobRemoved(func(id uint32, job dbus.ObjectPath, unit string, result string) {
+		if job == jobPath {
+			wait <- true
+		}
+	})
+	<-wait
+	logger.Infof("%s unit removed: %v", serviceName, path)
+	return nil
 }
 
 func (m *modifyManager) updateEnd() {
