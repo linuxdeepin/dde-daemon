@@ -1,3 +1,9 @@
+dde-daemon (6.1.19) unstable; urgency=medium
+
+  * fix: 解决切换grub启动菜单失败的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 24 Jan 2025 09:59:48 +0800
+
 dde-daemon (6.1.18) unstable; urgency=medium
 
   * fix: 设置手势的动作后，发送infos变化的信号
