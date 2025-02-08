@@ -50,7 +50,7 @@ func (m *Manager) initActions() {
 		{"MouseRightButtonUp", gettext.Tr("Mouse right button released"), m.doXdotoolsMouseUp},
 		{"ToggleClipboard", gettext.Tr("Show/hide clipboard"), m.doToggleClipboard},
 		{"ToggleGrandSearch", gettext.Tr("Show/hide grand search"), m.doToggleGrandSearch},
-		{"ToggleNotifications", gettext.Tr("Show/hide notificaion center"), m.doToggleNotifications},
+		{"ToggleNotifications", gettext.Tr("Show/hide notification center"), m.doToggleNotifications},
 		{"Disable", gettext.Tr("Disable"), nil},
 	}
 }

@@ -241,7 +241,7 @@ msgstr "恢复窗口"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr "当前窗口右分屏"
+msgstr "当前窗口左分屏"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
