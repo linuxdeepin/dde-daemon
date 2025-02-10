@@ -656,6 +656,16 @@ func (m *Manager) initDsg() {
 		logger.Warning(err)
 		return
 	}
+
+	transTypeToInt := func(v interface{}, def int64) int64 {
+		switch v := v.(type) {
+		case int64:
+			return v
+		case float64:
+			return int64(v)
+		}
+		return def
+	}
 	getDsPowerConfig := func(key string, init bool) {
 		data, err := m.dsPowerConfigManager.Value(0, key)
 		if err != nil {
@@ -666,7 +676,7 @@ func (m *Manager) initDsg() {
 		case dsettingCustomShutdownWeekDays:
 			res := []byte{}
 			for _, v := range data.Value().([]dbus.Variant) {
-				res = append(res, byte(v.Value().(int64)))
+				res = append(res, byte(transTypeToInt(v.Value(), 0)))
 			}
 			if init {
 				m.CustomShutdownWeekDays = res
@@ -676,15 +686,15 @@ func (m *Manager) initDsg() {
 				logger.Info("Set CustomShutdownWeekDays property", m.CustomShutdownWeekDays)
 			}
 		case dsettingShutdownCountdown:
-			m.shutdownCountdown = int(data.Value().(int64))
+			m.shutdownCountdown = int(transTypeToInt(data.Value(), 60))
 		case dsettingNextShutdownTime:
-			m.nextShutdownTime = int64(data.Value().(int64))
+			m.nextShutdownTime = int64(transTypeToInt(data.Value(), 0))
 		case dsettingShutdownRepetition:
 			if init {
-				m.ShutdownRepetition = int(data.Value().(int64))
+				m.ShutdownRepetition = int(transTypeToInt(data.Value(), 0))
 				return
 			}
-			if m.setPropShutdownRepetition(int(data.Value().(int64))) {
+			if m.setPropShutdownRepetition(int(transTypeToInt(data.Value(), 0))) {
 				logger.Info("Set ShutdownRepetition property", m.ShutdownRepetition)
 			}
 		case dsettingShutdownTime:
