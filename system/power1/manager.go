@@ -362,6 +362,39 @@ func (m *Manager) initDsgConfig() error {
 			logger.Info("Set power saving mode brightness drop percent", m.PowerSavingModeBrightnessDropPercent)
 		}
 	}
+	getPowerSavingModeAutoBatteryPercent := func(init bool) {
+		data, err := dsPower.Value(0, dsettingsPowerSavingModeAutoBatteryPercent)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+
+		if init {
+			switch vv := data.Value().(type) {
+			case float64:
+				m.PowerSavingModeAutoBatteryPercent = uint32(vv)
+			case int64:
+				m.PowerSavingModeAutoBatteryPercent = uint32(vv)
+			default:
+				logger.Warning("type is wrong! type : ", vv)
+			}
+
+			return
+		}
+
+		ret := false
+		switch vv := data.Value().(type) {
+		case float64:
+			ret = m.setPropPowerSavingModeAutoBatteryPercent(uint32(vv))
+		case int64:
+			ret = m.setPropPowerSavingModeAutoBatteryPercent(uint32(vv))
+		default:
+			logger.Warning("type is wrong! type : ", vv)
+		}
+		if ret {
+			logger.Info("Set power saving mode auto battery percent", m.PowerSavingModeAutoBatteryPercent)
+		}
+	}
 
 	getMode := func(init bool) string {
 		ret, err := dsPower.Value(0, dsettingsMode)
@@ -412,6 +445,7 @@ func (m *Manager) initDsgConfig() error {
 	getPowerSavingModeEnabled(true)
 	getPowerSavingModeAutoWhenBatteryLow(true)
 	getPowerSavingModeBrightnessDropPercent(true)
+	getPowerSavingModeAutoBatteryPercent(true)
 	getMode(true)
 	getPowerMappingConfig()
 
@@ -427,6 +461,8 @@ func (m *Manager) initDsgConfig() error {
 			getPowerSavingModeAutoWhenBatteryLow(false)
 		case dsettingsPowerSavingModeBrightnessDropPercent:
 			getPowerSavingModeBrightnessDropPercent(false)
+		case dsettingsPowerSavingModeAutoBatteryPercent:
+			getPowerSavingModeAutoBatteryPercent(false)
 		case dsettingsMode:
 			oldMode := m.Mode
 			newMode := getMode(false)

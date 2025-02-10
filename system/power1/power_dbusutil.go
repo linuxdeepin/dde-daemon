@@ -162,6 +162,19 @@ func (v *Manager) emitPropChangedPowerSavingModeBrightnessDropPercent(value uint
 	return v.service.EmitPropertyChanged(v, "PowerSavingModeBrightnessDropPercent", value)
 }
 
+func (v *Manager) setPropPowerSavingModeAutoBatteryPercent(value uint32) (changed bool) {
+	if v.PowerSavingModeAutoBatteryPercent != value {
+		v.PowerSavingModeAutoBatteryPercent = value
+		v.emitPropChangedPowerSavingModeAutoBatteryPercent(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedPowerSavingModeAutoBatteryPercent(value uint32) error {
+	return v.service.EmitPropertyChanged(v, "PowerSavingModeAutoBatteryPercent", value)
+}
+
 func (v *Manager) setPropPowerSavingModeBrightnessData(value string) (changed bool) {
 	if v.PowerSavingModeBrightnessData != value {
 		v.PowerSavingModeBrightnessData = value
