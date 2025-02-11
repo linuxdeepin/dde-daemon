@@ -32,6 +32,7 @@ const (
 
 	receiveFileNotifyTimeout = 15 * 1000
 	receiveFileTimeout       = 40 * time.Second
+	receiveFileNeverTimeout  = 0
 )
 
 var receiveBaseDir = userdir.Get(userdir.Download)
@@ -396,7 +397,7 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 			fmt.Sprintf("%d%%", progress),
 			actions,
 			hints,
-			receiveFileNotifyTimeout)
+			receiveFileNeverTimeout)
 		if err != nil {
 			logger.Warning("failed to send notify:", err)
 		}
@@ -411,7 +412,7 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 			gettext.Tr("Done"),
 			actions,
 			hints,
-			receiveFileNotifyTimeout)
+			receiveFileNeverTimeout)
 		if err != nil {
 			logger.Warning("failed to send notify:", err)
 		}
