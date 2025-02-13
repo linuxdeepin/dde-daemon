@@ -106,8 +106,7 @@ ReadWritePaths=-/var/lib/dde-daemon/power/
 # com.deepin.daemon.Daemon
 # ReadWritePaths=-/etc/NetworkManager/system-connections
 # ReadWritePaths=-/etc/systemd/logind.conf.d
-ReadWritePaths=-/usr/share/wallpapers/custom-wallpapers/
-ReadWritePaths=-/usr/share/wallpapers/custom-solidwallpapers/
+ReadWritePaths=-/usr/share/wallpapers
 # 执行plymouth-set-default-theme
 ReadWritePaths=-/usr/share/plymouth/
 # ReadWritePaths=-/etc/plymouth/
