@@ -5,17 +5,26 @@
 package power
 
 import (
+	hostname1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.hostname1"
 	"github.com/linuxdeepin/go-lib/arch"
 )
 
 func (m *Manager) initLidSwitch() {
-	if arch.Get() == arch.Sunway && isSWLidStateFileExist() {
-		m.initLidSwitchSW()
-	} else {
-		err := m.initLidSwitchByUPower()
-		if err != nil {
-			logger.Warningf("failed to init watch lid switch by upower(%v),start init watch by gudev", err)
-			m.initLidSwitchCommon()
+	hostnameObj := hostname1.NewHostname(m.service.Conn())
+	chassis, err := hostnameObj.Chassis().Get(0)
+	if err != nil {
+		logger.Warningf("failed to get chassis type(%v)", err)
+		return
+	}
+	if chassis == "convertible" || chassis == "laptop" {
+		if arch.Get() == arch.Sunway && isSWLidStateFileExist() {
+			m.initLidSwitchSW()
+		} else {
+			err := m.initLidSwitchByUPower()
+			if err != nil {
+				logger.Warningf("failed to init watch lid switch by upower(%v),start init watch by gudev", err)
+				m.initLidSwitchCommon()
+			}
 		}
 	}
 	logger.Debug("hasLidSwitch:", m.HasLidSwitch)
