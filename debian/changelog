@@ -1,3 +1,13 @@
+dde-daemon (6.1.20) unstable; urgency=medium
+
+  * fix: 修复台式机电源管理中使用电源界面,显示有笔记本合盖时设置项问题
+  * fix: Accept bluetooth file notification will never timeout (#743)
+  * fix: 修复低电量阈值下拉框显示空白问题
+  * fix: 修复电源管理模块崩溃问题
+  * fix: 修复手势翻译错误的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 13 Feb 2025 15:28:30 +0800
+
 dde-daemon (6.1.19) unstable; urgency=medium
 
   * fix: 解决切换grub启动菜单失败的问题
