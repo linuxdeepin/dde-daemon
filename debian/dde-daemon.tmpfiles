@@ -1,0 +1,7 @@
+#Type Path                                          Mode    User    Group   Age     Argument
+d     /var/lib/dde-daemon/                          0755    root    root    -       -
+d     /var/cache/image-blur/                        0755    root    root    -       -
+d     /var/cache/deepin/dde-daemon/                 0755    root    root    -       -
+d     /var/cache/wallpapers/                        0755    root    root    -       -
+d     /var/cache/wallpapers/custom-wallpapers/      0755    root    root    -       -
+d     /var/cache/wallpapers/custom-solidwallpapers/ 0755    root    root    -       -
