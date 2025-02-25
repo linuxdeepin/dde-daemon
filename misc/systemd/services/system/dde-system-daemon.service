@@ -64,7 +64,7 @@ ReadWritePaths=-/var/lib/dde-daemon/airplane_mode
 # com.deepin.daemon.ImageEffect
 ReadWritePaths=-/var/cache/image-blur
 # com.deepin.daemon.Uadp
-ReadWritePaths=-/usr/share/uadp/
+ReadWritePaths=-/var/lib/dde-daemon/uadp/
 # com.deepin.system.Network
 ReadWritePaths=-/var/lib/dde-daemon/network/
 # com.deepin.system.Bluetooth

@@ -13,7 +13,7 @@ ProtectSystem=strict
 InaccessiblePaths=/etc/shadow
 InaccessiblePaths=-/etc/NetworkManager/system-connections
 InaccessiblePaths=-/etc/pam.d
-InaccessiblePaths=-/usr/share/uadp/
+#InaccessiblePaths=-/usr/share/uadp/
 # 创建/etc/default/grub.d/11_dde.cfg
 ReadWritePaths=-/etc/default/grub.d
 # 创建/tmp/deepin-gfxmode-detect-ready // TODO分析该文件是否有被其他进程使用，该文件存放需要修改

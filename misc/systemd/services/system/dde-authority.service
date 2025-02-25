@@ -15,7 +15,7 @@ ProtectSystem=strict
 InaccessiblePaths=-/etc/NetworkManager/system-connections
 # pam认证需要该配置
 #InaccessiblePaths=-/etc/pam.d
-InaccessiblePaths=-/usr/share/uadp/
+#InaccessiblePaths=-/usr/share/uadp/
 
 NoNewPrivileges=yes
 ProtectHome=yes

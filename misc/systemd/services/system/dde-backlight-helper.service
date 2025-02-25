@@ -14,7 +14,7 @@ ProtectSystem=strict
 InaccessiblePaths=/etc/shadow
 InaccessiblePaths=-/etc/NetworkManager/system-connections
 InaccessiblePaths=-/etc/pam.d
-InaccessiblePaths=-/usr/share/uadp/
+#InaccessiblePaths=-/usr/share/uadp/
 #ReadOnlyPaths=/lib
 #ReadWritePaths=/sys/class
 
