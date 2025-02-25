@@ -13,7 +13,7 @@ ProtectSystem=strict
 InaccessiblePaths=-/etc/shadow
 InaccessiblePaths=-/etc/NetworkManager/system-connections
 InaccessiblePaths=-/etc/pam.d
-InaccessiblePaths=-/usr/share/uadp/
+#InaccessiblePaths=-/usr/share/uadp/
 # /etc/lightdm/deepin/qt-theme.ini文件为dde-session-shell安装
 ReadWritePaths=-/etc/lightdm/
 

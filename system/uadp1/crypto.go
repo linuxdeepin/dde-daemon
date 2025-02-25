@@ -20,7 +20,7 @@ import (
 // #cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
 import "C"
 
-const uadpDir = "/usr/share/uadp/"
+const uadpDir = "/var/lib/dde-daemon/uadp/"
 const uadpKeyFile = uadpDir + "key.json"
 
 type CryptoContext struct {
