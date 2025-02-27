@@ -1,3 +1,9 @@
+dde-daemon (6.1.22) unstable; urgency=medium
+
+  * fix: 解决磐石系统下uadp存储的问题
+
+ -- Chengqi E <echengqi@uniontech.com>  Thu, 27 Feb 2025 16:04:06 +0800
+
 dde-daemon (6.1.21) unstable; urgency=medium
 
   * fix: 解决磐石系统下设置不了壁纸的问题
