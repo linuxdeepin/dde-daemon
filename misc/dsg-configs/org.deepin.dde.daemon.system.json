@@ -1,0 +1,16 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+    "customWallpaperMaximum": {
+      "value": 20,
+      "serial":0,
+      "flags" : [["global"]],
+      "name": "customWallpaperMaximum",
+      "name[zh_CN]": "用户壁纸最大保存数量",
+      "description": "Maximum Custom Wallpaper Limit",
+      "permissions": "readwrite",
+      "visibility": "private"
+    }
+  }
+}

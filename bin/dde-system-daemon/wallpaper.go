@@ -22,7 +22,7 @@ import (
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
-const maxCount = 5
+const maxCount = 20
 const maxSize = 32 * 1024 * 1024
 const wallPaperDir = "/var/cache/wallpapers/custom-wallpapers/"
 const solidWallPaperPath = "/var/cache/wallpapers/custom-solidwallpapers/"
@@ -289,7 +289,21 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		return "", dbusutil.ToError(err)
 	}
 
-	err = RemoveOverflowWallPapers(username, maxCount)
+	customWallpaperMaximum := func() int {
+		if d.dsSystem != nil {
+			v, err := d.dsSystem.Value(0, dsKeyCustomWallpaperMaximum)
+			if err != nil {
+				logger.Warning(err)
+			} else {
+				if data, ok := v.Value().(int64); ok {
+					return int(data)
+				}
+			}
+		}
+		return maxCount
+	}
+
+	err = RemoveOverflowWallPapers(username, customWallpaperMaximum())
 	if err != nil {
 		logger.Warning(err)
 	}
