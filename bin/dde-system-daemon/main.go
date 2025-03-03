@@ -5,6 +5,7 @@
 package main
 
 import (
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"os"
 
 	// modules:
@@ -46,6 +47,7 @@ type Daemon struct {
 	systemSigLoop *dbusutil.SignalLoop
 	service       *dbusutil.Service
 	systemd       systemd1.Manager
+	dsSystem      configManager.Manager
 	signals       *struct { // nolint
 		HandleForSleep struct {
 			start bool
@@ -57,6 +59,13 @@ const (
 	dbusServiceName = "org.deepin.dde.Daemon1"
 	dbusPath        = "/org/deepin/dde/Daemon1"
 	dbusInterface   = dbusServiceName
+)
+
+const (
+	dsettingsSystemDaemonID   = "org.deepin.dde.daemon"
+	dsettingsSystemDaemonName = "org.deepin.dde.daemon.system"
+
+	dsKeyCustomWallpaperMaximum = "customWallpaperMaximum"
 )
 
 var logger = log.NewLogger("daemon/dde-system-daemon")
@@ -103,6 +112,7 @@ func main() {
 		systemd:       systemd1.NewManager(service.Conn()),
 	}
 	_daemon.service = service
+	_daemon.initSystemDaemonDConfig()
 	err = service.Export(dbusPath, _daemon)
 	if err != nil {
 		logger.Fatal("failed to export:", err)
@@ -130,4 +140,20 @@ func main() {
 
 func (*Daemon) GetInterfaceName() string {
 	return dbusInterface
+}
+
+func (d *Daemon) initSystemDaemonDConfig() {
+	conn := d.service.Conn()
+	cfgManager := configManager.NewConfigManager(conn)
+	systemPath, err := cfgManager.AcquireManager(0, dsettingsSystemDaemonID, dsettingsSystemDaemonName, "")
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	d.dsSystem, err = configManager.NewManager(conn, systemPath)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
 }
