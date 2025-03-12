@@ -259,6 +259,10 @@ msgstr "(玲瓏)"
 msgid "Insufficient disk space, please clean up in time!"
 msgstr "系統磁盤空間不足，請及時清理！"
 
+#: ../../housekeeping/init.go:137
+msgid "Go to clean up"
+msgstr "前往清理"
+
 #: ../../keybinding/shortcuts/id_name_map.go:13
 msgid "Launcher"
 msgstr "啟動器"
