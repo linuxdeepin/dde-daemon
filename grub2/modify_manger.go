@@ -7,6 +7,7 @@ package grub2
 import (
 	"fmt"
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/systemdunit"
 	"os"
 	"os/exec"
 	"strings"
@@ -14,13 +15,13 @@ import (
 	"syscall"
 
 	"github.com/linuxdeepin/dde-daemon/grub_common"
-	"github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 )
 
 const (
-	grubMkconfigCmd = "grub-mkconfig"
-	updateGrubCmd   = "update-grub"
-	adjustThemeCmd  = "/usr/lib/deepin-api/adjust-grub-theme"
+	grubMkconfigCmd   = "grub-mkconfig"
+	updateGrubCmd     = "update-grub"
+	adjustThemeCmd    = "/usr/lib/deepin-api/adjust-grub-theme"
+	ddeUpdateGrupUnit = "dde-update-grub.service"
 )
 
 func init() {
@@ -148,8 +149,16 @@ type execStart struct {
 }
 
 func (m *modifyManager) runUpdateGrubWithUnit() error {
+	conn, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+
+	if systemdunit.CheckUnitExist(conn, ddeUpdateGrupUnit) {
+		return fmt.Errorf("another dde-update-grub service is running")
+	}
+
 	var command []string
-	serviceName := "dde-update-grub.service"
 	path, err := exec.LookPath(updateGrubCmd)
 	if err != nil {
 		path = grubMkconfigCmd
@@ -167,39 +176,23 @@ func (m *modifyManager) runUpdateGrubWithUnit() error {
 		err = fmt.Errorf("failed to get system locale")
 		return err
 	}
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		logger.Warning("failed to connect to system bus:", err)
-		return err
+
+	unitInfo := systemdunit.TransientUnit{
+		Dbus:        conn,
+		UnitName:    ddeUpdateGrupUnit,
+		Type:        "oneshot",
+		Description: "Transient Unit Update Grub",
+		Environment: []string{"LANG=" + locale, "LANGUAGE=" + language},
+		Commands:    command,
 	}
 
-	systemd := systemd1.NewManager(conn)
-	var properties []systemd1.Property
-	var aux []systemd1.PropertyCollection
-	properties = append(properties, systemd1.Property{"Type", dbus.MakeVariant("oneshot")})
-	properties = append(properties, systemd1.Property{"Description", dbus.MakeVariant("Transient Unit Update Grub")})
-	properties = append(properties, systemd1.Property{"Environment", dbus.MakeVariant([]string{"LANG=" + locale, "LANGUAGE=" + language})})
-	properties = append(properties, systemd1.Property{"ExecStart", dbus.MakeVariant([]execStart{{
-		Path:             command[0],
-		Args:             command,
-		UncleanIsFailure: false,
-	},
-	})})
-	jobPath, err := systemd.StartTransientUnit(0, serviceName, "replace", properties, aux)
+	err = unitInfo.StartTransientUnit()
 	if err != nil {
-		logger.Warning("failed to start transient unit:", err)
 		return err
 	}
-	systemd.InitSignalExt(m.g.sysLoop, true)
-	logger.Infof("%s started successfully: %v", serviceName, jobPath)
-	var wait = make(chan bool)
-	systemd.ConnectJobRemoved(func(id uint32, job dbus.ObjectPath, unit string, result string) {
-		if job == jobPath {
-			wait <- true
-		}
-	})
-	<-wait
-	logger.Infof("%s unit removed: %v", serviceName, path)
+	if !unitInfo.WaitforFinish(m.g.sysLoop) {
+		return fmt.Errorf("%v run failed", unitInfo.UnitName)
+	}
 	return nil
 }
 

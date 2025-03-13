@@ -7,6 +7,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/linuxdeepin/dde-daemon/common/systemdunit"
 	"os"
 	"os/exec"
 	"strings"
@@ -23,6 +24,8 @@ const (
 	dsettingsAppID                       = "org.deepin.dde.daemon"
 	dsettingsAppearanceName              = "org.deepin.dde.daemon.appearance"
 	dsettingsScaleWithoutPlymouthEnabled = "scaleWithoutPlymouthEnabled"
+	plymouthSetDefaultUnit               = "dde-set-default-plymouth-theme.service"
+	updateInitramfsUnit                  = "dde-update-initramfs.service"
 )
 
 func (d *Daemon) getScaleWithoutPlymouthEnabled() bool {
@@ -58,6 +61,13 @@ func (d *Daemon) ScalePlymouth(scale uint32) *dbus.Error {
 }
 
 func (d *Daemon) scalePlymouth(scale uint32) error {
+	conn, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+	if systemdunit.CheckUnitExist(conn, plymouthSetDefaultUnit) || systemdunit.CheckUnitExist(d.service.Conn(), updateInitramfsUnit) {
+		return fmt.Errorf("another plymouth setting service is running")
+	}
 	if d.getScaleWithoutPlymouthEnabled() {
 		logger.Info("skip scale plymouth")
 		return nil
@@ -87,20 +97,49 @@ func (d *Daemon) scalePlymouth(scale uint32) error {
 	if !ok {
 		return fmt.Errorf("invalid scale value: %d", scale)
 	}
-	out, err := exec.Command("plymouth-set-default-theme", name).CombinedOutput()
-
+	path, err := exec.LookPath("plymouth-set-default-theme")
 	if err != nil {
-		return fmt.Errorf("failed to set plymouth theme: %s, err: %v", string(out), err)
+		return fmt.Errorf("could not find plymouth-set-default-theme")
+	}
+	plymouthUnit := systemdunit.TransientUnit{
+		Dbus:        conn,
+		UnitName:    plymouthSetDefaultUnit,
+		Type:        "oneshot",
+		Description: "Transient Unit Set Default Plymouth Theme",
+		Environment: []string{},
+		Commands:    []string{path, name},
+	}
+	err = plymouthUnit.StartTransientUnit()
+	if err != nil {
+		return fmt.Errorf("failed create unit: %v, err: %v", plymouthSetDefaultUnit, err)
+	}
+	if !plymouthUnit.WaitforFinish(d.systemSigLoop) {
+		return fmt.Errorf("%v run failed", plymouthUnit.UnitName)
 	}
 
 	kernel, err := exec.Command("uname", "-r").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("failed to get kernel, err: %v", err)
 	}
-	out, err = exec.Command("update-initramfs",
-		"-u", "-k", string(bytes.TrimSpace(kernel))).CombinedOutput()
+
+	path, err = exec.LookPath("update-initramfs")
 	if err != nil {
-		return fmt.Errorf("failed to update initramfs: %s, err: %v", string(out), err)
+		return fmt.Errorf("could not find plymouth-set-default-theme")
+	}
+	updateInitramfsUnit := systemdunit.TransientUnit{
+		Dbus:        conn,
+		UnitName:    updateInitramfsUnit,
+		Type:        "oneshot",
+		Description: "Transient Unit Update Initramfs",
+		Environment: []string{},
+		Commands:    []string{path, "-u", "-k", string(bytes.TrimSpace(kernel))},
+	}
+	err = updateInitramfsUnit.StartTransientUnit()
+	if err != nil {
+		return fmt.Errorf("failed create unit: %v, err: %v", updateInitramfsUnit, err)
+	}
+	if !updateInitramfsUnit.WaitforFinish(d.systemSigLoop) {
+		return fmt.Errorf("%v run failed", updateInitramfsUnit.UnitName)
 	}
 
 	return nil
