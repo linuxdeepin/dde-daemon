@@ -1,3 +1,10 @@
+dde-daemon (6.1.24) unstable; urgency=medium
+
+  * fix: 解决控制中心设置启动动画尺寸后，重启无法进入系统的问题
+  * fix: 磁盘不足的通知，前往清理的文案没有翻译 
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 13 Mar 2025 17:07:00 +0800
+
 dde-daemon (6.1.23) unstable; urgency=medium
 
   * feat: custom wallpaper maximum 20
