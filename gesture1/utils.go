@@ -126,3 +126,43 @@ func isInWindowBlacklist(cmd string, list []string) bool {
 	}
 	return false
 }
+
+func setActiveWindowMaxMin(max bool) {
+	if xconn == nil {
+		return
+	}
+	focus, err := x.GetInputFocus(xconn).Reply(xconn)
+	if err != nil {
+		logger.Warning("Failed to get current focus window:", err)
+		return
+	}
+	win := focus.Focus
+	states, err := ewmh.GetWMState(xconn, win).Reply(xconn)
+	if err != nil {
+		logger.Warning("Failed to get current window state:", err)
+		return
+	}
+	// 当前焦点
+	focusAtom, _ := xconn.GetAtom("_NET_WM_STATE_FOCUSED")
+	// 水平垂直最大属性
+	vertAtom, _ := xconn.GetAtom("_NET_WM_STATE_MAXIMIZED_VERT")
+	horzAtom, _ := xconn.GetAtom("_NET_WM_STATE_MAXIMIZED_HORZ")
+	for _, state := range states {
+		// 如果焦点在当前窗口
+		if state == focusAtom {
+			var action ewmh.WMStateAction
+			if max {
+				action = ewmh.WMStateAdd
+			} else {
+				action = ewmh.WMStateRemove
+			}
+			err = ewmh.RequestChangeWMState(xconn, win, action, horzAtom, vertAtom, 0).Check(xconn)
+			if err != nil {
+				logger.Warning("Failed to set active window:", err)
+			}
+			return
+		}
+	}
+	logger.Warningf("window %v does not focused", win)
+	return
+}
