@@ -7,6 +7,7 @@ package clipboard
 import (
 	"bytes"
 	"errors"
+	"flag"
 	"fmt"
 	"strings"
 	"sync"
@@ -770,7 +771,8 @@ func (m *Manager) finishSelectionRequest(ev *x.SelectionRequestEvent, success bo
 		logger.Warning(err)
 	}
 
-	if logger.GetLogLevel() == log.LevelDebug {
+	// debug环境中，单元测试不执行下面的逻辑
+	if logger.GetLogLevel() == log.LevelDebug && flag.Lookup("test.v") == nil {
 		successStr := "success"
 		if !success {
 			successStr = "fail"
