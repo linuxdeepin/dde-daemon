@@ -34,6 +34,11 @@ var wallPaperDirs = []string{
 	solidWallPaperPath,
 }
 
+const (
+	wallpaperDel = iota
+	wallpaperAdd
+)
+
 func checkPath(path string, dirs []string) string {
 	for _, dir := range dirs {
 		if strings.HasPrefix(path, dir) {
@@ -71,12 +76,13 @@ func GetUserDirs(username string) (dirs []string, err error) {
 	return dirs, nil
 }
 
-func RemoveOverflowWallPapers(username string, max int) error {
+func RemoveOverflowWallPapers(username string, max int) (error, []string) {
 	dirs, err := GetUserDirs(username)
 	if err != nil {
 		logger.Warning(err)
-		return err
+		return err, nil
 	}
+	var removed []string
 	for _, dir := range dirs {
 		fileinfos, err := os.ReadDir(dir)
 		if err != nil {
@@ -103,13 +109,15 @@ func RemoveOverflowWallPapers(username string, max int) error {
 			return infoI.ModTime().Before(infoJ.ModTime())
 		})
 		for i := 0; i < len(fileinfos)-max; i++ {
-			err = os.Remove(filepath.Join(dir, fileinfos[i].Name()))
+			file := filepath.Join(dir, fileinfos[i].Name())
+			removed = append(removed, file)
+			err = os.Remove(file)
 			if err != nil {
 				logger.Warning(err)
 			}
 		}
 	}
-	return nil
+	return nil, removed
 }
 
 func DeleteWallPaper(username string, file string) error {
@@ -288,7 +296,10 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
-
+	err = d.service.Emit(d, "WallpaperChanged", username, uint32(wallpaperAdd), []string{file})
+	if err != nil {
+		logger.Warning("failed to emit WallpaperChanged signal:", err)
+	}
 	customWallpaperMaximum := func() int {
 		if d.dsSystem != nil {
 			v, err := d.dsSystem.Value(0, dsKeyCustomWallpaperMaximum)
@@ -303,11 +314,16 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		return maxCount
 	}
 
-	err = RemoveOverflowWallPapers(username, customWallpaperMaximum())
+	err, removed := RemoveOverflowWallPapers(username, customWallpaperMaximum())
 	if err != nil {
 		logger.Warning(err)
 	}
-
+	if len(removed) > 0 {
+		err = d.service.Emit(d, "WallpaperChanged", username, uint32(wallpaperDel), removed)
+		if err != nil {
+			logger.Warning("failed to emit WallpaperChanged signal:", err)
+		}
+	}
 	return destFile, dbusutil.ToError(err)
 }
 
@@ -323,8 +339,14 @@ func (d *Daemon) DeleteCustomWallPaper(sender dbus.Sender, username string, file
 			return dbusutil.ToError(DeleteWallPaper(username, file))
 		}
 	}
-
-	return dbusutil.ToError(DeleteWallPaper(username, file))
+	err = DeleteWallPaper(username, file)
+	if err == nil {
+		err = d.service.Emit(d, "WallpaperChanged", username, uint32(wallpaperDel), []string{file})
+		if err != nil {
+			logger.Warning("failed to emit WallpaperChanged signal:", err)
+		}
+	}
+	return dbusutil.ToError(err)
 }
 
 func (*Daemon) GetCustomWallPapers(username string) ([]string, *dbus.Error) {

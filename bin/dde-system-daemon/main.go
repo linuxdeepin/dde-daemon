@@ -52,6 +52,11 @@ type Daemon struct {
 		HandleForSleep struct {
 			start bool
 		}
+		WallpaperChanged struct {
+			userName string
+			added    uint32
+			file     []string
+		}
 	}
 }
 
