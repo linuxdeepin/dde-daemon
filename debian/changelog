@@ -1,3 +1,10 @@
+dde-daemon (6.1.25) unstable; urgency=medium
+
+  * fix: 用户添加删除壁纸，发送信号
+  * fix: 热键使用dde-am启动应用，兼容玲珑应用
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 27 Mar 2025 14:43:33 +0800
+
 dde-daemon (6.1.24) unstable; urgency=medium
 
   * fix: 解决控制中心设置启动动画尺寸后，重启无法进入系统的问题
