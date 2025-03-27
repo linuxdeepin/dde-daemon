@@ -90,7 +90,9 @@ TEST = \
     ${GOPKG_PREFIX}/timedate1 \
     ${GOPKG_PREFIX}/trayicon1 \
     ${GOPKG_PREFIX}/x_event_monitor1 \
-    ${GOPKG_PREFIX}/bin/default-file-manager
+    ${GOPKG_PREFIX}/bin/default-file-manager \
+    ${GOPKG_PREFIX}/display1 \
+    ${GOPKG_PREFIX}/xsettings1
     #${GOPKG_PREFIX}/timedate1/zoneinfo \
 
 BINARIES =  \
@@ -105,7 +107,9 @@ BINARIES =  \
 	    dde-authority \
 	    default-terminal \
 	    dde-greeter-setter \
-	    default-file-manager
+	    default-file-manager \
+	    greeter-display-daemon \
+	    fix-xauthority-perm
 
 LANGUAGES = $(basename $(notdir $(wildcard misc/po/*.po)))
 
@@ -181,8 +185,8 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/lib/systemd/
 	cp -r misc/systemd/services/* ${DESTDIR}/lib/systemd/
 
-	mkdir -p $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-initialized.target.wants/
-	ln -s $(PREFIX)/lib/systemd/user/org.dde.session.Daemon1.service $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-initialized.target.wants/org.dde.session.Daemon1.service
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-pre.target.wants/
+	ln -s $(PREFIX)/lib/systemd/user/org.dde.session.Daemon1.service $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-pre.target.wants/org.dde.session.Daemon1.service
 
 	mkdir -pv ${DESTDIR}/etc/pam.d/
 	cp -f misc/etc/pam.d/* ${DESTDIR}/etc/pam.d/
@@ -222,6 +226,15 @@ install: build install-dde-data install-icons
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
 	cp -r misc/data misc/zoneinfo ${DESTDIR}${PREFIX}/share/dde/
+
+	install -Dm644 misc/lightdm.conf ${DESTDIR}${PREFIX}/share/lightdm/lightdm.conf.d/60-deepin.conf
+
+	mkdir -p $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas
+	install -v -m0644 misc/schemas/*.xml $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/
+
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-initialized.target.wants/
+	install -v -m0644 misc/systemd_task/dde-display-task-refresh-brightness.service $(DESTDIR)$(PREFIX)/lib/systemd/user/
+	ln -s $(PREFIX)/lib/systemd/user/dde-display-task-refresh-brightness.service $(DESTDIR)$(PREFIX)/lib/systemd/user/dde-session-initialized.target.wants/dde-display-task-refresh-brightness.service
 
 icons:
 	python3 misc/icons/install_to_hicolor.py -d status -o out/icons misc/icons/status

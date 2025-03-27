@@ -1,0 +1,115 @@
+{
+  "HDMI-1,eDP-12fd580d2dc41168dce2efb1bf19adb54": {},
+  "HDMI-179de84f651c9a0566d17a8a739359ea1,eDP-12fd580d2dc41168dce2efb1bf19adb54": {
+    "Mirror": {
+      "Monitors": [
+        {
+          "UUID": "eDP-12fd580d2dc41168dce2efb1bf19adb54",
+          "Name": "eDP-1",
+          "Enabled": true,
+          "X": 0,
+          "Y": 0,
+          "Width": 1920,
+          "Height": 1080,
+          "Rotation": 1,
+          "Reflect": 0,
+          "RefreshRate": 59.9987883403725,
+          "Brightness": 1,
+          "Primary": true
+        },
+        {
+          "UUID": "HDMI-179de84f651c9a0566d17a8a739359ea1",
+          "Name": "HDMI-1",
+          "Enabled": true,
+          "X": 0,
+          "Y": 0,
+          "Width": 1920,
+          "Height": 1080,
+          "Rotation": 1,
+          "Reflect": 0,
+          "RefreshRate": 60,
+          "Brightness": 1,
+          "Primary": false
+        }
+      ],
+      "ColorTemperatureMode": 0,
+      "ColorTemperatureManual": 6500
+    }
+  },
+  "HDMI-1e50ab458de66b5fd180c446cd3377106,eDP-12fd580d2dc41168dce2efb1bf19adb54": {
+    "Extend": {
+      "Monitors": [
+        {
+          "UUID": "eDP-12fd580d2dc41168dce2efb1bf19adb54",
+          "Name": "eDP-1",
+          "Enabled": true,
+          "X": 0,
+          "Y": 1080,
+          "Width": 1920,
+          "Height": 1080,
+          "Rotation": 1,
+          "Reflect": 0,
+          "RefreshRate": 59.9987883403725,
+          "Brightness": 0.23,
+          "Primary": true
+        },
+        {
+          "UUID": "HDMI-1e50ab458de66b5fd180c446cd3377106",
+          "Name": "HDMI-1",
+          "Enabled": true,
+          "X": 1920,
+          "Y": 0,
+          "Width": 4096,
+          "Height": 2160,
+          "Rotation": 1,
+          "Reflect": 0,
+          "RefreshRate": 24,
+          "Brightness": 1,
+          "Primary": false
+        }
+      ],
+      "ColorTemperatureMode": 0,
+      "ColorTemperatureManual": 9999
+    }
+  },
+  "eDP-12fd580d2dc41168dce2efb1bf19adb54": {
+    "Extend": {
+      "Monitors": [
+        {
+          "UUID": "eDP-12fd580d2dc41168dce2efb1bf19adb54",
+          "Name": "eDP-1",
+          "Enabled": true,
+          "X": 0,
+          "Y": 0,
+          "Width": 1920,
+          "Height": 1080,
+          "Rotation": 1,
+          "Reflect": 0,
+          "RefreshRate": 59.9987883403725,
+          "Brightness": 1,
+          "Primary": true
+        }
+      ],
+      "ColorTemperatureMode": 0,
+      "ColorTemperatureManual": 6500
+    },
+    "Single": {
+      "Monitors": {
+        "UUID": "eDP-12fd580d2dc41168dce2efb1bf19adb54",
+        "Name": "eDP-1",
+        "Enabled": true,
+        "X": 0,
+        "Y": 0,
+        "Width": 1920,
+        "Height": 1080,
+        "Rotation": 1,
+        "Reflect": 0,
+        "RefreshRate": 59.9987883403725,
+        "Brightness": 0.74,
+        "Primary": false
+      },
+      "ColorTemperatureMode": 0,
+      "ColorTemperatureManual": 6500
+    }
+  }
+}

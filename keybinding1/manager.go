@@ -23,7 +23,6 @@ import (
 	lockfront "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.dde.lockfront"
 	shutdownfront "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.dde.shutdownfront"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
-	appmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.application1"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.inputdevices1"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
 	network "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.network1"
@@ -149,7 +148,6 @@ type Manager struct {
 	sessionSigLoop *dbusutil.SignalLoop
 	systemSigLoop  *dbusutil.SignalLoop
 	//startManager              sessionmanager.StartManager
-	appManager                appmanager.Manager
 	sessionManager            sessionmanager.SessionManager
 	airplane                  airplanemode.AirplaneMode
 	networkmanager            networkmanager.Manager
@@ -403,14 +401,6 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	} else {
 		logger.Info("init rfkillState : ", m.rfkillState)
-	}
-
-	hasOwner, err := m.service.NameHasOwner(appManagerDBusServiceName)
-	if err != nil {
-		logger.Warning("failed to call NameHasOwner:", err)
-	}
-	if hasOwner {
-		m.useNewAppManager = true
 	}
 }
 
@@ -1231,74 +1221,66 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 
 	logger.Debug("exec run cmd:", cmd)
 
-	if m.useNewAppManager {
-		desktopExt := ".desktop"
-		sha256Hasher := sha256.New()
-		_, err := sha256Hasher.Write([]byte(cmd))
+	desktopExt := ".desktop"
+	sha256Hasher := sha256.New()
+	_, err := sha256Hasher.Write([]byte(cmd))
+	if err != nil {
+		logger.Warning("generate sha256 hash failed with error: ", err)
+		return err
+	}
+	desktopPre := sha256Hasher.Sum(nil)
+	name := hex.EncodeToString(desktopPre)
+	desktopFileName := "daemon-keybinding-" + name + desktopExt
+
+	_, err = os.Stat(basedir.GetUserDataDir() + "/applications/" + desktopFileName)
+	// 如果对应命令的desktop文件不存在，需要新建desktop文件
+	if os.IsNotExist(err) {
+		desktopInfoMap := map[string]dbus.Variant{
+			KeyExec: dbus.MakeVariant(map[string]string{
+				"default": cmd,
+			}),
+			KeyIcon: dbus.MakeVariant(map[string]string{
+				"default-icon": "",
+			}),
+			KeyMimeType: dbus.MakeVariant([]string{""}),
+			KeyName: dbus.MakeVariant(map[string]string{
+				"default": name,
+			}),
+			KeyTerminal:  dbus.MakeVariant(false),
+			KeyType:      dbus.MakeVariant("Application"),
+			KeyVersion:   dbus.MakeVariant(1),
+			KeyNoDisplay: dbus.MakeVariant(true),
+		}
+
+		appManager := newAppmanager.NewManager(m.sessionSigLoop.Conn())
+		err := appManager.ReloadApplications(0)
 		if err != nil {
-			logger.Warning("generate sha256 hash failed with error: ", err)
+			logger.Warning("reload applications error: ", err)
+		}
+
+		desktopFileName, err = appManager.AddUserApplication(0, desktopInfoMap, desktopFileName)
+		if err != nil {
+			logger.Warning("adding user application error: ", err)
 			return err
 		}
-		desktopPre := sha256Hasher.Sum(nil)
-		name := hex.EncodeToString(desktopPre)
-		desktopFileName := "daemon-keybinding-" + name + desktopExt
+	}
 
-		_, err = os.Stat(basedir.GetUserDataDir() + "/applications/" + desktopFileName)
-		// 如果对应命令的desktop文件不存在，需要新建desktop文件
-		if os.IsNotExist(err) {
-			desktopInfoMap := map[string]dbus.Variant{
-				KeyExec: dbus.MakeVariant(map[string]string{
-					"default": cmd,
-				}),
-				KeyIcon: dbus.MakeVariant(map[string]string{
-					"default-icon": "",
-				}),
-				KeyMimeType: dbus.MakeVariant([]string{""}),
-				KeyName: dbus.MakeVariant(map[string]string{
-					"default": name,
-				}),
-				KeyTerminal:  dbus.MakeVariant(false),
-				KeyType:      dbus.MakeVariant("Application"),
-				KeyVersion:   dbus.MakeVariant(1),
-				KeyNoDisplay: dbus.MakeVariant(true),
-			}
+	obj, err := desktopappinfo.GetDBusObjectFromAppDesktop(desktopFileName, appManagerDBusServiceName, appManagerDBusPath)
+	if err != nil {
+		logger.Warning("get dbus object error:", err)
+		return err
+	}
 
-			appManager := newAppmanager.NewManager(m.sessionSigLoop.Conn())
-			err := appManager.ReloadApplications(0)
-			if err != nil {
-				logger.Warning("reload applications error: ", err)
-			}
+	appManagerAppObj, err := newAppmanager.NewApplication(m.sessionSigLoop.Conn(), obj)
+	if err != nil {
+		return err
+	}
 
-			desktopFileName, err = appManager.AddUserApplication(0, desktopInfoMap, desktopFileName)
-			if err != nil {
-				logger.Warning("adding user application error: ", err)
-				return err
-			}
-		}
+	_, err = appManagerAppObj.Launch(0, "", []string{}, make(map[string]dbus.Variant))
 
-		obj, err := desktopappinfo.GetDBusObjectFromAppDesktop(desktopFileName, appManagerDBusServiceName, appManagerDBusPath)
-		if err != nil {
-			logger.Warning("get dbus object error:", err)
-			return err
-		}
-
-		appManagerAppObj, err := newAppmanager.NewApplication(m.sessionSigLoop.Conn(), obj)
-		if err != nil {
-			return err
-		}
-
-		_, err = appManagerAppObj.Launch(0, "", []string{}, make(map[string]dbus.Variant))
-
-		if err != nil {
-			logger.Warningf("launch keybinding cmd %s error: %v", cmd, err)
-			return err
-		}
-	} else {
-		err := m.appManager.RunCommand(0, "/bin/sh", []string{"-c", cmd})
-		if err != nil {
-			logger.Warningf("launch keybinding cmd %s error: %v", cmd, err)
-			return err
-		}
+	if err != nil {
+		logger.Warningf("launch keybinding cmd %s error: %v", cmd, err)
+		return err
 	}
 
 	return nil
@@ -1315,28 +1297,21 @@ func (m *Manager) handleCheckCamera() error {
 }
 
 func (m *Manager) runDesktopFile(desktop string) error {
-	if m.useNewAppManager {
-		obj, err := desktopappinfo.GetDBusObjectFromAppDesktop(desktop, appManagerDBusServiceName, appManagerDBusPath)
-		if err != nil {
-			logger.Warning("get dbus object error: ", err)
-			return err
-		}
+	obj, err := desktopappinfo.GetDBusObjectFromAppDesktop(desktop, appManagerDBusServiceName, appManagerDBusPath)
+	if err != nil {
+		logger.Warning("get dbus object error: ", err)
+		return err
+	}
 
-		appManagerAppObj, err := newAppmanager.NewApplication(m.sessionSigLoop.Conn(), obj)
-		if err != nil {
-			return err
-		}
+	appManagerAppObj, err := newAppmanager.NewApplication(m.sessionSigLoop.Conn(), obj)
+	if err != nil {
+		return err
+	}
 
-		_, err = appManagerAppObj.Launch(0, "", []string{}, make(map[string]dbus.Variant))
-		if err != nil {
-			logger.Warning("failed to launch application", desktop)
-			return err
-		}
-	} else {
-		err := m.appManager.LaunchApp(0, desktop, 0, []string{})
-		if err != nil {
-			logger.Warning("failed to launch application", desktop)
-		}
+	_, err = appManagerAppObj.Launch(0, "", []string{}, make(map[string]dbus.Variant))
+	if err != nil {
+		logger.Warning("failed to launch application", desktop)
+		return err
 	}
 
 	return nil

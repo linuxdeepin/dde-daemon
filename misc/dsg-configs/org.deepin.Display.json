@@ -1,0 +1,42 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+    "auto-color-temperature": {
+      "value": "6500:3500",
+      "serial": 0,
+      "flags": [],
+      "name": "auto color temperature",
+      "description": "Automatically adjust color temperature",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "default-temperature-manual": {
+      "value": 3500,
+      "serial": 0,
+      "flags": [],
+      "name": "default temperature manual",
+      "description": "default temperature by manual",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "custom-mode-time": {
+      "value": "22:00-7:00",
+      "serial": 0,
+      "flags": [],
+      "name": "Color Temperature Custom Mode Time",
+      "description": "Recording the time for custom mode",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "color-temperature-mode-on": {
+      "value": 2,
+      "serial": 0,
+      "flags": [],
+      "name": "Color Temperature Mode On",
+      "description": "Recording the mode for last time",
+      "permissions": "readwrite",
+      "visibility": "private"
+    }
+  }
+}

@@ -41,7 +41,7 @@ import (
 //go:generate dbusutil-gen em -type Manager,WarnLevelConfigManager
 
 const (
-	DSettingsAppID        = "org.deepin.startdde"
+	DSettingsAppID        = "org.deepin.dde.daemon"
 	DSettingsDisplayName  = "org.deepin.Display"
 	DSettingsAutoChangeWm = "auto-change-deepin-wm"
 
@@ -629,8 +629,8 @@ func (m *Manager) initDsg() {
 	}
 
 	dsg := configManager.NewConfigManager(systemBus)
-	if !dutils.IsFileExist("/usr/share/dsg/configs/org.deepin.startdde/org.deepin.Display.json") {
-		logger.Warning(" [initDsg] dconfig file not exist : /usr/share/dsg/configs/org.deepin.startdde/org.deepin.Display.json.")
+	if !dutils.IsFileExist("/usr/share/dsg/configs/org.deepin.dde.daemon/org.deepin.Display.json") {
+		logger.Warning(" [initDsg] dconfig file not exist : /usr/share/dsg/configs/org.deepin.dde.daemon/org.deepin.Display.json.")
 	} else {
 		// display
 		displayConfigManagerPath, err := dsg.AcquireManager(0, DSettingsAppID, DSettingsDisplayName, "")
@@ -1067,7 +1067,7 @@ func (m *Manager) getNextShutdownTime(bt int64) int64 {
 
 func (m *Manager) getAutoChangeDeepinWm() bool {
 	if m.dsDisplayConfigManager == nil {
-		logger.Warning("getAutoChangeDeepinWm, dsgConfig org.deepin.startdde auto-change-deepin-wm not exist")
+		logger.Warning("getAutoChangeDeepinWm, dsgConfig org.deepin.dde.daemon auto-change-deepin-wm not exist")
 		return false
 	}
 	v, err := m.dsDisplayConfigManager.Value(0, DSettingsAutoChangeWm)
@@ -1083,7 +1083,7 @@ func (m *Manager) getAutoChangeDeepinWm() bool {
 
 func (m *Manager) setAutoChangeDeepinWm(value bool) error {
 	if m.dsDisplayConfigManager == nil {
-		return errors.New("setAutoChangeDeepinWm, dsgConfig org.deepin.startdde auto-change-deepin-wm not exist")
+		return errors.New("setAutoChangeDeepinWm, dsgConfig org.deepin.dde,daemon auto-change-deepin-wm not exist")
 	}
 	err := m.dsDisplayConfigManager.SetValue(0, DSettingsAutoChangeWm, dbus.MakeVariant(value))
 	if err != nil {

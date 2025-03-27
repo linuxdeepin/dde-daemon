@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <enum id="com.deepin.dde.display.BrightnessSetter">
+	<value value="0" nick="auto" />
+	<value value="1" nick="gamma" />
+	<value value="2" nick="backlight" />
+    </enum>
+
+    <enum id="com.deepin.dde.display.DisplayMode">
+        <value value="0" nick="custom" />
+        <value value="1" nick="mirrors" />
+        <value value="2" nick="extend" />
+        <value value="3" nick="onlyone" />
+        <value value="4" nick="unknow" />
+    </enum>
+
+    <enum id="com.deepin.dde.display.AdjustColorTemperatureMode">
+        <value value="0" nick="normal" />
+        <value value="1" nick="auto" />
+        <value value="2" nick="manual" />
+    </enum>
+    <schema path="/com/deepin/dde/display/" id="com.deepin.dde.display">
+        <key name="brightness-setter" enum="com.deepin.dde.display.BrightnessSetter">
+            <default>'auto'</default>
+            <summary>the method for setting brightness</summary>
+            <description>the method for setting brightness.</description>
+        </key>
+        <key name="display-mode" enum="com.deepin.dde.display.DisplayMode">
+            <default>'extend'</default>
+            <summary>the multi monitors display mode</summary>
+            <description>The mode of multi monitors</description>
+        </key>
+        <key type="s" name="brightness">
+            <default>''</default>
+            <summary>the outputs brightness</summary>
+            <description>The monitor brightness</description>
+        </key>
+        <key type="s" name="map-output">
+            <default>''</default>
+            <summary>Map output to monitor</summary>
+            <description>Output monitor map</description>
+        </key>
+        <key type="s" name="rate-filter">
+            <default>'{"1002:6611": {"1920*1080": [59.94, 30, 29.97, 25, 24, 23.98],"1680*945": [60.02]},"1002:6779": {"1920*1080": [30,29.97,25,24,23.98]}}'</default>
+            <summary>Screen refresh rate filter</summary>
+            <description>
+                Screen refresh rate filter in JSON.
+                You could config this conveniently by
+                https://gitlabwh.uniontech.com/ut001384/display-rate-filter
+            </description>
+        </key>
+        <key type="s" name="primary">
+            <default>''</default>
+            <summary>the primary output</summary>
+            <description>The primary output</description>
+        </key>
+        <key type="s" name="current-custom-mode">
+            <default>''</default>
+            <summary>the current custom id</summary>
+            <description>The id of config only in custom mode</description>
+        </key>
+        <key type="as" name="blacklist">
+            <default>[]</default>
+            <summary>the output blacklist</summary>
+            <description>Filter some invalid outputs</description>
+        </key>
+        <key type="as" name="priority">
+            <default>[]</default>
+            <summary>The output priority</summary>
+            <description>Outputs priority, the first will be primary</description>
+        </key>
+        <key enum="com.deepin.dde.display.AdjustColorTemperatureMode" name="color-temperature-mode">
+			<default>'normal'</default>
+			<summary>method of adjust color temperature according to current time and location</summary>
+		</key>
+		<key type="i" name="color-temperature-manual">
+			<default>6500</default>
+			<range min="1000" max="25000"/>
+			<summary>current color temperature when manual adjustment</summary>
+		</key>
+        <key type="i" name="rotate-screen-time-delay">
+            <default>500</default>
+            <range min="0" max="10000"/>
+            <summary>Rotate the screen when the delay ends</summary>
+        </key>
+        <key type="i" name="custom-display-mode">
+            <default>1</default>
+            <range min="1" max="2"/>
+            <summary>custom display mode</summary>
+            <description>The mode of custom display</description>
+        </key>
+    </schema>
+</schemalist>
