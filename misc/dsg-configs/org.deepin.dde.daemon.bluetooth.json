@@ -33,7 +33,7 @@
           "visibility": "private"
       },
       "adapterPowerd": {
-          "value": false,
+          "value": true,
           "serial": 0,
           "flags": ["global"],
           "name": "adapterPowerd",
