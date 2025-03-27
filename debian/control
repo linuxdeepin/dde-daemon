@@ -103,6 +103,7 @@ Breaks:
 Replaces:
  lastore-daemon(<< 0.9.64),
 Conflicts:
+ startdde,
  dde-workspace,
  lastore-daemon-migration,
 Provides:

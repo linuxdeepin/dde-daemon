@@ -1,3 +1,9 @@
+dde-daemon (6.1.26) unstable; urgency=medium
+
+  * chore: display & xsettings moved to dde-daemon
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 02 Apr 2025 14:26:56 +0800
+
 dde-daemon (6.1.25) unstable; urgency=medium
 
   * fix: 用户添加删除壁纸，发送信号

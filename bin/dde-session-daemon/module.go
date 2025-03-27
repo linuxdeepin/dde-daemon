@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"sync"
 
+	_ "github.com/linuxdeepin/dde-daemon/display1"
 	"github.com/linuxdeepin/dde-daemon/loader"
 
 	_ "github.com/linuxdeepin/dde-daemon/audio1"
@@ -36,6 +37,7 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/timedate1"
 	_ "github.com/linuxdeepin/dde-daemon/trayicon1"
 	_ "github.com/linuxdeepin/dde-daemon/x_event_monitor1"
+	_ "github.com/linuxdeepin/dde-daemon/xsettings1"
 )
 
 var (

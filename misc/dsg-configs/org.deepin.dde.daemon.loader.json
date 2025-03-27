@@ -311,7 +311,27 @@
           "description": "Allow eventlog module start",
           "permissions": "readwrite",
           "visibility": "private"
-        }
+        },
+      "display": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "display",
+        "name[zh_CN]": "显示模块启动",
+        "description": "Allow display module start",
+        "permissions": "readwrite",
+        "visibility": "private"
+      },
+      "xsettings": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "xsettings",
+        "name[zh_CN]": "xsettings模块启动",
+        "description": "Allow xsettings module start",
+        "permissions": "readwrite",
+        "visibility": "private"
+      }
     }
 }
 
