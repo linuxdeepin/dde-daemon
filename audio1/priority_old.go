@@ -48,7 +48,15 @@ func hasElement(slice []int, value int) bool {
 	return false
 }
 
-// 端口优先级，变更时顺序
+// 端口优先级，map保存数据，数组是为了保证顺序优先级
+var portTypeArray []int = []int{
+	PortTypeMultiChannel,
+	PortTypeBluetooth,
+	PortTypeLineIO,
+	PortTypeHeadset,
+	PortTypeHdmi,
+	PortTypeBuiltin,
+}
 var PortTypeMap = map[int]strv.Strv{
 	PortTypeMultiChannel: {"multichannel"},
 	PortTypeBluetooth:    {"bluez", "bluetooth"},
@@ -59,7 +67,16 @@ var PortTypeMap = map[int]strv.Strv{
 }
 
 // 图标类型 扬声器 > 耳机 > HDMI > 蓝牙
-// 端口图标显示优先级，变更时顺序
+
+// 端口优先级，map保存数据，数组是为了保证顺序优先级
+var portIconTypeArray []int = []int{
+	PortTypeLineIO,
+	PortTypeBuiltin,
+	PortTypeHeadset,
+	PortTypeHdmi,
+	PortTypeBluetooth,
+	PortTypeUsb,
+}
 var PortIconTypeMap = map[int]strv.Strv{
 	PortTypeLineIO:    {"linein", "lineout"},
 	PortTypeBuiltin:   {"speaker", "input-mic"},
@@ -75,10 +92,12 @@ func contains(cardName string, portName string, substr string) bool {
 }
 
 func GetPortType(cardName string, portName string) int {
-	for t, keys := range PortTypeMap {
-		for _, key := range keys {
-			if contains(cardName, portName, key) {
-				return t
+	for _, t := range portTypeArray {
+		if keys, ok := PortTypeMap[t]; ok {
+			for _, key := range keys {
+				if contains(cardName, portName, key) {
+					return t
+				}
 			}
 		}
 	}
@@ -86,10 +105,12 @@ func GetPortType(cardName string, portName string) int {
 }
 
 func GetIconPortType(cardName string, portName string) int {
-	for t, keys := range PortIconTypeMap {
-		for _, key := range keys {
-			if contains(cardName, portName, key) {
-				return t
+	for _, t := range portIconTypeArray {
+		if keys, ok := PortIconTypeMap[t]; ok {
+			for _, key := range keys {
+				if contains(cardName, portName, key) {
+					return t
+				}
 			}
 		}
 	}
