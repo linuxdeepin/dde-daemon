@@ -8,9 +8,6 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus/v5"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
-	"github.com/linuxdeepin/go-lib/gsettings"
 )
 
 type warnLevelConfig struct {
@@ -20,11 +17,11 @@ type warnLevelConfig struct {
 	CriticalTime            uint64
 	ActionTime              uint64
 	LowPowerNotifyThreshold float64
-	remindPercentage        float64
+	remindPercentage        float64 // 废弃
 	LowPercentage           float64 // 废弃
 	DangerPercentage        float64 // 废弃
 	CriticalPercentage      float64 // 废弃
-	ActionPercentage        float64 // 废弃
+	ActionPercentage        float64
 }
 
 func (c *warnLevelConfig) isValid() bool {
@@ -41,62 +38,89 @@ func (c *warnLevelConfig) isValid() bool {
 }
 
 type WarnLevelConfigManager struct {
-	UsePercentageForPolicy gsprop.Bool `prop:"access:rw"`
+	UsePercentageForPolicy bool `prop:"access:rw"`
 
-	LowTime      gsprop.Int `prop:"access:rw"`
-	DangerTime   gsprop.Int `prop:"access:rw"`
-	CriticalTime gsprop.Int `prop:"access:rw"`
-	ActionTime   gsprop.Int `prop:"access:rw"`
+	LowTime      int64 `prop:"access:rw"`
+	DangerTime   int64 `prop:"access:rw"`
+	CriticalTime int64 `prop:"access:rw"`
+	ActionTime   int64 `prop:"access:rw"`
 
-	LowPowerNotifyThreshold gsprop.Int `prop:"access:rw"`
-	// LowPercentage、DangerPercentage、CriticalPercentage、ActionPercentage废弃
-	// 这4个值不再提供可设置的方法
-	LowPercentage      gsprop.Int `prop:"access:rw"` // 废弃
-	DangerPercentage   gsprop.Int `prop:"access:rw"` // 废弃
-	CriticalPercentage gsprop.Int `prop:"access:rw"` // 废弃
-	ActionPercentage   gsprop.Int `prop:"access:rw"`
+	LowPowerNotifyThreshold int64 `prop:"access:rw"`
 
-	settings    *gio.Settings
+	ActionPercentage int64 `prop:"access:rw"`
+
 	changeTimer *time.Timer
 	changeCb    func()
+
+	powerManager *Manager
 }
 
-func NewWarnLevelConfigManager(gs *gio.Settings) *WarnLevelConfigManager {
+func NewWarnLevelConfigManager(manager *Manager) *WarnLevelConfigManager {
+	m := &WarnLevelConfigManager{}
+	m.powerManager = manager
+	return m
+}
 
-	m := &WarnLevelConfigManager{
-		settings: gs,
+func (m *WarnLevelConfigManager) initDsg() {
+	needUpdateConfigKeys := []string{
+		dsettingUsePercentageForPolicy,
+		dsettingTimeToEmptyLow,
+		dsettingTimeToEmptyDanger,
+		dsettingTimeToEmptyCritical,
+		dsettingTimeToEmptyAction,
+		dsettingPercentageAction,
+		dsettingLowPowerNotifyThreshold,
+	}
+	for _, key := range needUpdateConfigKeys {
+		m.getConfig(key)
 	}
 
-	m.UsePercentageForPolicy.Bind(gs, settingKeyUsePercentageForPolicy)
-	m.LowTime.Bind(gs, settingKeyLowTime)
-	m.DangerTime.Bind(gs, settingKeyDangerTime)
-	m.CriticalTime.Bind(gs, settingKeyCriticalTime)
-	m.ActionTime.Bind(gs, settingKeyActionTime)
+	m.powerManager.dsPowerConfigManager.ConnectValueChanged(func(key string) {
+		m.getConfig(key)
+		m.notifyChange()
+	})
+}
 
-	m.LowPowerNotifyThreshold.Bind(gs, settingKeyLowPowerNotifyThreshold)
-	m.LowPercentage.Bind(gs, settingKeyLowPercentage)           // 废弃
-	m.DangerPercentage.Bind(gs, settingKeyDangerlPercentage)    // 废弃
-	m.CriticalPercentage.Bind(gs, settingKeyCriticalPercentage) // 废弃
-	m.ActionPercentage.Bind(gs, settingKeyActionPercentage)
+func (m *WarnLevelConfigManager) getConfig(key string) {
+	data, err := m.powerManager.dsPowerConfigManager.Value(0, key)
 
-	m.connectSettingsChanged()
-	return m
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	switch key {
+	case dsettingUsePercentageForPolicy:
+		m.UsePercentageForPolicy = data.Value().(bool)
+	case dsettingTimeToEmptyLow:
+		m.LowTime = data.Value().(int64)
+	case dsettingTimeToEmptyDanger:
+		m.DangerTime = data.Value().(int64)
+	case dsettingTimeToEmptyCritical:
+		m.CriticalTime = data.Value().(int64)
+	case dsettingTimeToEmptyAction:
+		m.ActionTime = data.Value().(int64)
+	case dsettingLowPowerNotifyThreshold:
+		m.LowPowerNotifyThreshold = data.Value().(int64)
+	case dsettingPercentageAction:
+		m.ActionPercentage = data.Value().(int64)
+	}
 }
 
 func (m *WarnLevelConfigManager) getWarnLevelConfig() *warnLevelConfig {
 	return &warnLevelConfig{
-		UsePercentageForPolicy: m.UsePercentageForPolicy.Get(),
-		LowTime:                uint64(m.LowTime.Get()),
-		DangerTime:             uint64(m.DangerTime.Get()),
-		CriticalTime:           uint64(m.CriticalTime.Get()),
-		ActionTime:             uint64(m.ActionTime.Get()),
+		UsePercentageForPolicy: m.UsePercentageForPolicy,
+		LowTime:                uint64(m.LowTime),
+		DangerTime:             uint64(m.DangerTime),
+		CriticalTime:           uint64(m.CriticalTime),
+		ActionTime:             uint64(m.ActionTime),
 
-		LowPowerNotifyThreshold: float64(m.LowPowerNotifyThreshold.Get()),
+		LowPowerNotifyThreshold: float64(m.LowPowerNotifyThreshold),
 		remindPercentage:        float64(25),
 		LowPercentage:           float64(20),
 		DangerPercentage:        float64(15),
 		CriticalPercentage:      float64(10),
-		ActionPercentage:        float64(m.ActionPercentage.Get()),
+		ActionPercentage:        float64(m.ActionPercentage),
 	}
 }
 
@@ -131,19 +155,15 @@ func (m *WarnLevelConfigManager) notifyChange() {
 }
 
 func (m *WarnLevelConfigManager) connectSettingsChanged() {
-	gsettings.ConnectChanged(gsSchemaPower, "*", func(key string) {
+	m.powerManager.dsPowerConfigManager.ConnectValueChanged(func(key string) {
 		switch key {
-		case settingKeyUsePercentageForPolicy,
-			settingKeyLowPowerNotifyThreshold,
-			settingKeyLowPercentage,      // 废弃
-			settingKeyDangerlPercentage,  // 废弃
-			settingKeyCriticalPercentage, // 废弃
-			settingKeyActionPercentage,
-
-			settingKeyLowTime,
-			settingKeyDangerTime,
-			settingKeyCriticalTime,
-			settingKeyActionTime:
+		case dsettingUsePercentageForPolicy,
+			dsettingLowPowerNotifyThreshold,
+			dsettingPercentageAction,
+			dsettingTimeToEmptyLow,
+			dsettingTimeToEmptyDanger,
+			dsettingTimeToEmptyCritical,
+			dsettingTimeToEmptyAction:
 
 			logger.Debug("key changed", key)
 			m.notifyChange()
@@ -153,17 +173,20 @@ func (m *WarnLevelConfigManager) connectSettingsChanged() {
 }
 
 func (m *WarnLevelConfigManager) Reset() *dbus.Error {
-	s := m.settings
-	s.Reset(settingKeyUsePercentageForPolicy)
-	s.Reset(settingKeyLowPowerNotifyThreshold)
-	s.Reset(settingKeyLowPercentage)      // 废弃
-	s.Reset(settingKeyDangerlPercentage)  // 废弃
-	s.Reset(settingKeyCriticalPercentage) // 废弃
-	s.Reset(settingKeyActionPercentage)   // 废弃
-	s.Reset(settingKeyLowTime)
-	s.Reset(settingKeyDangerTime)
-	s.Reset(settingKeyCriticalTime)
-	s.Reset(settingKeyActionTime)
+	needResetConfigKeys := []string{
+		dsettingUsePercentageForPolicy,
+		dsettingLowPowerNotifyThreshold,
+		dsettingPercentageAction,
+		dsettingTimeToEmptyLow,
+		dsettingTimeToEmptyDanger,
+		dsettingTimeToEmptyCritical,
+		dsettingTimeToEmptyAction,
+	}
+
+	for _, key := range needResetConfigKeys {
+		m.powerManager.dsPowerConfigManager.Reset(0, key)
+	}
+
 	return nil
 }
 
