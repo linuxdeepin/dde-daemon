@@ -46,8 +46,8 @@ func (ks *kWinShortcut) ReloadKeystrokes() bool {
 		if ks.Id == "launcher" {
 			keystrokes[0] = "<Super_L>"
 		}
-		//system-monitor
-		if ks.Id == "system-monitor" {
+		//systemMonitor
+		if ks.Id == "systemMonitor" {
 			for i := 0; i < len(keystrokes); i++ {
 				keystrokes[i] = strings.Replace(keystrokes[i], "Esc", "Escape", 1)
 			}

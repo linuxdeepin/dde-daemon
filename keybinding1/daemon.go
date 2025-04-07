@@ -67,10 +67,9 @@ func (d *Daemon) Start() error {
 		m := d.manager
 		m.initHandlers()
 
-		// listen gsettings changed event
-		m.listenGSettingsChanged(gsSchemaSystem, d.manager.gsSystem, shortcuts.ShortcutTypeSystem)
-		m.listenGSettingsChanged(gsSchemaMediaKey, d.manager.gsMediaKey, shortcuts.ShortcutTypeMedia)
-		m.listenGSettingsChanged(gsSchemaGnomeWM, d.manager.gsGnomeWM, shortcuts.ShortcutTypeWM)
+		m.listenDConfigChanged(d.manager.shortcutSystemConfigMgr, shortcuts.ShortcutTypeSystem)
+		m.listenDConfigChanged(d.manager.shortcutMediaConfigMgr, shortcuts.ShortcutTypeMedia)
+		m.listenDConfigChanged(d.manager.shortcutWrapGnomeWmConfigMgr, shortcuts.ShortcutTypeWM)
 
 		m.listenSystemEnableChanged()
 		m.listenSystemPlatformChanged()

@@ -16,7 +16,7 @@ func (m *Manager) claimOrReleaseAmbientLight() {
 	logger.Debug("call claimOrReleaseAmbientLight")
 	var shouldClaim bool
 
-	autoAdjustEnabled := m.AmbientLightAdjustBrightness.Get()
+	autoAdjustEnabled := m.AmbientLightAdjustBrightness
 
 	m.PropsMu.RLock()
 	if m.HasAmbientLightSensor &&
@@ -84,7 +84,7 @@ func (m *Manager) releaseAmbientLight() {
 }
 
 func (m *Manager) handleLightLevelChanged(lightLevel float64) {
-	if !m.AmbientLightAdjustBrightness.Get() {
+	if !m.AmbientLightAdjustBrightness {
 		return
 	}
 

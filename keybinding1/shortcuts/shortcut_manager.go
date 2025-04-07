@@ -14,10 +14,11 @@ import (
 	"unicode"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/util"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/log"
@@ -36,22 +37,22 @@ func GetQtKeycodeMap() map[string]string {
 		"messenger":           "Qt::Key_Messenger",             // XF86Messenger
 		"save":                "Qt::Key_Save",                  // XF86Save
 		"new":                 "Qt::Key_New",                   // XF86New
-		"wake-up":             "Qt::Key_WakeUp",                // XF86WakeUp
-		"audio-rewind":        "Qt::Key_AudioRewind",           // XF86AudioRewind
-		"audio-mute":          "Qt::Key_VolumeMute",            // XF86AudioMute
-		"mon-brightness-up":   "Qt::Key_MonBrightnessUp",       // XF86MonBrightnessUp
+		"wakeUp":              "Qt::Key_WakeUp",                // XF86WakeUp
+		"audioRewind":         "Qt::Key_AudioRewind",           // XF86AudioRewind
+		"audioMute":           "Qt::Key_VolumeMute",            // XF86AudioMute
+		"monBrightnessUp":     "Qt::Key_MonBrightnessUp",       // XF86MonBrightnessUp
 		"wlan":                "Qt::Key_WLAN",                  // XF86WLAN
-		"audio-media":         "Qt::Key_AudioMedia",            // XF86AudioMedia
+		"audioMedia":          "Qt::Key_AudioMedia",            // XF86AudioMedia
 		"reply":               "Qt::Key_Reply",                 // XF86Reply
 		"favorites":           "Qt::Key_Favorites",             // XF86Favorites
-		"audio-play":          "Qt::Key_MediaPlay",             // XF86AudioPlay
-		"audio-mic-mute":      "Qt::Key_MicMute",               // XF86AudioMicMute
-		"audio-pause":         "Qt::Key_MediaPause",            // XF86AudioPause
-		"audio-stop":          "Qt::Key_AudioStop",             // XF86AudioStop
+		"audioPlay":           "Qt::Key_MediaPlay",             // XF86AudioPlay
+		"audioMicMute":        "Qt::Key_MicMute",               // XF86AudioMicMute
+		"audioPause":          "Qt::Key_MediaPause",            // XF86AudioPause
+		"audioStop":           "Qt::Key_AudioStop",             // XF86AudioStop
 		"documents":           "Qt::Key_Documents",             // XF86Documents
 		"game":                "Qt::Key_Game",                  // XF86Game
 		"search":              "<Super><Shift>Touchpad Toggle", // XF86Search
-		"audio-record":        "Qt::Key_AudioRecord",           // XF86AudioRecord
+		"audioRecord":         "Qt::Key_AudioRecord",           // XF86AudioRecord
 		"display":             "Qt::Key_Display",               // XF86Display
 		"reload":              "Qt::Key_Reload",                // XF86Reload
 		"explorer":            "Qt::Key_Explorer",              // XF86Explorer
@@ -63,26 +64,26 @@ func GetQtKeycodeMap() map[string]string {
 		"copy":                "Qt::Key_Copy",                  // XF86Copy
 		"tools":               "Qt::Key_Tools",                 // XF86Tools
 		"audio-raise-volume":  "Qt::Key_VolumeUp",              // XF86AudioRaiseVolume
-		"media-close":         "Qt::Key_Close",                 // XF86Close
+		"mediaClose":          "Qt::Key_Close",                 // XF86Close
 		"www":                 "Qt::Key_WWW",                   // XF86WWW
-		"home-page":           "Qt::Key_HomePage",              // XF86HomePage
+		"homePage":            "Qt::Key_HomePage",              // XF86HomePage
 		"sleep":               "Qt::Key_Sleep",                 // XF86Sleep
 		"audio-lower-volume":  "Qt::Key_VolumeDown",            // XF86AudioLowerVolume
-		"audio-prev":          "Qt::Key_MediaPrevious",         // XF86AudioPrev
-		"audio-next":          "Qt::Key_MediaNext",             // XF86AudioNext
+		"audioPrev":           "Qt::Key_MediaPrevious",         // XF86AudioPrev
+		"audioNext":           "Qt::Key_MediaNext",             // XF86AudioNext
 		"paste":               "Qt::Key_Paste",                 // XF86Paste
 		"open":                "Qt::Key_Open",                  // XF86Open
 		"send":                "Qt::Key_Send",                  // XF86Send
-		"my-computer":         "Qt::Key_MyComputer",            // XF86MyComputer
+		"myComputer":          "Qt::Key_MyComputer",            // XF86MyComputer
 		"mail":                "Qt::Key_MailForward",           // XF86Mail
-		"adjust-brightness":   "Qt::Key_BrightnessAdjust",      // XF86BrightnessAdjust
-		"log-off":             "Qt::Key_LogOff",                // XF86LogOff
+		"adjustBrightness":    "Qt::Key_BrightnessAdjust",      // XF86BrightnessAdjust
+		"logOff":              "Qt::Key_LogOff",                // XF86LogOff
 		"pictures":            "Qt::Key_Pictures",              // XF86Pictures
 		"terminal":            "Qt::Key_Terminal",              // XF86Terminal
 		"video":               "Qt::Key_Video",                 // XF86Video
 		"music":               "Qt::Key_Music",                 // XF86Music
-		"app-left":            "Qt::Key_ApplicationLeft",       // XF86ApplicationLeft
-		"app-right":           "Qt::Key_ApplicationRight",      // XF86ApplicationRight
+		"appLeft":             "Qt::Key_ApplicationLeft",       // XF86ApplicationLeft
+		"appRight":            "Qt::Key_ApplicationRight",      // XF86ApplicationRight
 		"meeting":             "Qt::Key_Meeting",               // XF86Meeting
 	}
 	return qtKeycodMap
@@ -134,12 +135,39 @@ type ShortcutManager struct {
 	EliminateConflictDone bool
 
 	WaylandCustomShortCutMap map[string]string
+
+	shortcutSystemConfigMgr      configManager.Manager
+	shortcutMediaConfigMgr       configManager.Manager
+	shortcutWrapGnomeWmConfigMgr configManager.Manager
+	shortcutEnableConfigMgr      configManager.Manager
+	shortcutPlatformMgr          configManager.Manager
 }
 
 type KeyEvent struct {
 	Mods     Modifiers
 	Code     Keycode
 	Shortcut Shortcut
+}
+
+// 将dconfig返回的值安全地转换为[]string
+func convertToStringSlice(value interface{}) ([]string, error) {
+	if strSlice, ok := value.([]string); ok {
+		return strSlice, nil
+	}
+
+	if variantSlice, ok := value.([]dbus.Variant); ok {
+		result := make([]string, len(variantSlice))
+		for i, variant := range variantSlice {
+			if str, ok := variant.Value().(string); ok {
+				result[i] = str
+			} else {
+				return nil, fmt.Errorf("variant at index %d is not a string: %T", i, variant.Value())
+			}
+		}
+		return result, nil
+	}
+
+	return nil, fmt.Errorf("unsupported type for string slice conversion: %T", value)
 }
 
 func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb KeyEventFunc) *ShortcutManager {
@@ -155,6 +183,8 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 		pinyinEnabled:            isZH(),
 		WaylandCustomShortCutMap: make(map[string]string),
 	}
+
+	ss.initDconfig()
 
 	ss.xRecordEventHandler = NewXRecordEventHandler(keySymbols)
 	ss.xRecordEventHandler.modKeyReleasedCb = func(code uint8, mods uint16) {
@@ -201,6 +231,128 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 	}
 
 	return ss
+}
+
+func (sm *ShortcutManager) initDconfig() {
+	bus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("init D-BUS failed: ", err)
+		return
+	}
+	ds := configManager.NewConfigManager(bus)
+
+	keybindingMediaConfigPath, err := ds.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsKeybindingMediaKeyId, "")
+	if err != nil || keybindingMediaConfigPath == "" {
+		logger.Warning(err)
+		return
+	}
+
+	sm.shortcutMediaConfigMgr, err = configManager.NewManager(bus, keybindingMediaConfigPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	keybindingSystemConfigPath, err := ds.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsKeybindingSystemKeysId, "")
+	if err != nil || keybindingSystemConfigPath == "" {
+		logger.Warning(err)
+		return
+	}
+
+	sm.shortcutSystemConfigMgr, err = configManager.NewManager(bus, keybindingSystemConfigPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	keybindingWrapGnomeWmConfigPath, err := ds.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsKeybindingWrapGnomeWmId, "")
+	if err != nil || keybindingWrapGnomeWmConfigPath == "" {
+		logger.Warning(err)
+		return
+	}
+
+	sm.shortcutWrapGnomeWmConfigMgr, err = configManager.NewManager(bus, keybindingWrapGnomeWmConfigPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	keybindingEnableConfigPath, err := ds.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsKeybindingEnableId, "")
+	if err != nil || keybindingEnableConfigPath == "" {
+		logger.Warning(err)
+		return
+	}
+
+	sm.shortcutEnableConfigMgr, err = configManager.NewManager(bus, keybindingEnableConfigPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	keybindingPlatformConfigPath, err := ds.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsKeybindingPlatformId, "")
+	if err != nil || keybindingPlatformConfigPath == "" {
+		logger.Warning(err)
+		return
+	}
+
+	sm.shortcutPlatformMgr, err = configManager.NewManager(bus, keybindingPlatformConfigPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+}
+
+func (sm *ShortcutManager) getSystemConfigCallbacks() (
+	saveCallback func(id string, keystrokes []string) error,
+	loadCallback func(id string) ([]string, error)) {
+
+	saveCallback = func(id string, keystrokes []string) error {
+		if sm.shortcutSystemConfigMgr == nil {
+			return fmt.Errorf("system config manager is nil")
+		}
+		return sm.shortcutSystemConfigMgr.SetValue(0, id, dbus.MakeVariant(keystrokes))
+	}
+
+	loadCallback = func(id string) ([]string, error) {
+		if sm.shortcutSystemConfigMgr == nil {
+			return nil, fmt.Errorf("system config manager is nil")
+		}
+		value, err := sm.shortcutSystemConfigMgr.Value(0, id)
+		if err != nil {
+			return nil, err
+		}
+		keystrokes, err := convertToStringSlice(value.Value())
+		if err != nil {
+			return nil, fmt.Errorf("invalid keystrokes type: %v", err)
+		}
+		return keystrokes, nil
+	}
+
+	return saveCallback, loadCallback
+}
+
+func (sm *ShortcutManager) getMediaConfigCallbacks() (
+	saveCallback func(id string, keystrokes []string) error,
+	loadCallback func(id string) ([]string, error)) {
+
+	saveCallback = func(id string, keystrokes []string) error {
+		if sm.shortcutMediaConfigMgr == nil {
+			return fmt.Errorf("media config manager is nil")
+		}
+		return sm.shortcutMediaConfigMgr.SetValue(0, id, dbus.MakeVariant(keystrokes))
+	}
+
+	loadCallback = func(id string) ([]string, error) {
+		if sm.shortcutMediaConfigMgr == nil {
+			return nil, fmt.Errorf("media config manager is nil")
+		}
+		value, err := sm.shortcutMediaConfigMgr.Value(0, id)
+		if err != nil {
+			return nil, err
+		}
+		keystrokes, err := convertToStringSlice(value.Value())
+		if err != nil {
+			return nil, fmt.Errorf("invalid keystrokes type: %v", err)
+		}
+		return keystrokes, nil
+	}
+
+	return saveCallback, loadCallback
 }
 
 func (sm *ShortcutManager) recordEventLoop() {
@@ -771,7 +923,7 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 			shortcut := keystroke.Shortcut
 			if shortcut != nil && shortcut.GetType() == ShortcutTypeSystem &&
 				(strings.HasPrefix(shortcut.GetId(), "screenshot") ||
-					strings.HasPrefix(shortcut.GetId(), "deepin-screen-recorder")) &&
+					strings.HasPrefix(shortcut.GetId(), "deepinScreenRecorder")) &&
 				!strings.Contains(sm.getActiveWindowCmd(), "/usr/bin/abrecovery") {
 				keyEvent := &KeyEvent{
 					Mods:     key.Mods,
@@ -782,7 +934,7 @@ func (sm *ShortcutManager) handleXRecordKeyEvent(pressed bool, code uint8, state
 				sm.callEventCallback(keyEvent)
 			}
 			// 显示桌面快捷键是窗管控制，此处需要隐藏启动器
-			if shortcut != nil && shortcut.GetType() == ShortcutTypeWM && shortcut.GetId() == "show-desktop" {
+			if shortcut != nil && shortcut.GetType() == ShortcutTypeWM && shortcut.GetId() == "showDesktop" {
 				go func() {
 					cmd := "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Hide"
 					err := exec.Command("/bin/sh", "-c", cmd).Run()
@@ -953,31 +1105,56 @@ func strvLower(in []string) []string {
 }
 
 // 检测一个系统快捷键是否配置为可用，true可用，false不可用
-func (sm *ShortcutManager) CheckSystem(gsPlatform, gsEnable *gio.Settings, id string) bool {
-	platformSet := arr2set(gsPlatform.ListKeys())
-	enableSet := arr2set(gsEnable.ListKeys())
+func (sm *ShortcutManager) CheckSystem(id string) bool {
+	platformList, err := sm.shortcutPlatformMgr.KeyList().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	platformSet := arr2set(platformList)
+	enableList, err := sm.shortcutEnableConfigMgr.KeyList().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	enableSet := arr2set(enableList)
 	sysType := strings.ToLower(systemType())
 
 	// 判断是否是支持的平台
 	if platformSet[id] {
-		plats := gsPlatform.GetStrv(id)
-
-		platSet := arr2set(strvLower(plats))
+		plats, err := sm.shortcutPlatformMgr.Value(0, id)
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+		platSlice, err := convertToStringSlice(plats.Value())
+		if err != nil {
+			logger.Warning("Failed to convert platform list:", err)
+			return false
+		}
+		platSet := arr2set(strvLower(platSlice))
 		if !platSet["all"] && !platSet[sysType] {
 			return false
 		}
 	}
 
 	// 判断是否配置开启
-	if enableSet[id] && !gsEnable.GetBoolean(id) {
-		logger.Debugf("%s is disabled", id)
-		return false
+	if enableSet[id] {
+		enable, err := sm.shortcutEnableConfigMgr.Value(0, id)
+		if err != nil {
+			logger.Warning(err)
+			return false
+		}
+		if !enable.Value().(bool) {
+			logger.Debugf("%s is disabled", id)
+			return false
+		}
 	}
 
 	return true
 }
 
-func (sm *ShortcutManager) AddSystemById(gsettings *gio.Settings, wmObj wm.Wm, id string) {
+func (sm *ShortcutManager) AddSystemById(wmObj wm.Wm, id string) {
 	shortcut := sm.GetByIdType(id, ShortcutTypeSystem)
 	if shortcut != nil {
 		logger.Debugf("%s is exist", id)
@@ -989,23 +1166,32 @@ func (sm *ShortcutManager) AddSystemById(gsettings *gio.Settings, wmObj wm.Wm, i
 	if name == "" {
 		name = id
 	}
-
 	cmd := getSystemActionCmd(id)
-	if id == "terminal-quake" && strings.Contains(cmd, "deepin-terminal") {
+	if id == "terminalQuake" && strings.Contains(cmd, "deepin-terminal") {
 		termPath, _ := exec.LookPath("deepin-terminal")
 		if termPath == "" {
 			return
 		}
 	}
-
-	keystrokes := gsettings.GetStrv(id)
-	gs := NewGSettingsShortcut(gsettings, wmObj, id, ShortcutTypeSystem, keystrokes, name)
+	keystrokes, err := sm.shortcutSystemConfigMgr.Value(0, id)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	saveCallback, loadCallback := sm.getSystemConfigCallbacks()
+	keystrokesSlice, err := convertToStringSlice(keystrokes.Value())
+	if err != nil {
+		logger.Warning("Failed to convert keystrokes:", err)
+		return
+	}
+	gs := NewShortcut(wmObj, id, ShortcutTypeSystem, keystrokesSlice, name, saveCallback, loadCallback)
 	sysShortcut := &SystemShortcut{
-		GSettingsShortcut: gs,
+		ShortcutObject: gs,
 		arg: &ActionExecCmdArg{
 			Cmd: cmd,
 		},
 	}
+
 	sm.addWithoutLock(sysShortcut)
 }
 
@@ -1018,16 +1204,22 @@ func (sm *ShortcutManager) DelSystemById(id string) {
 	sm.Delete(shortcut)
 }
 
-func (sm *ShortcutManager) AddSystem(gsettings, gsPlatform, gsEnable *gio.Settings, wmObj wm.Wm) {
+func (sm *ShortcutManager) AddSystem(wmObj wm.Wm) {
 	logger.Debug("AddSystem")
 	allow, err := wmObj.CompositingAllowSwitch().Get(0)
 	if err != nil {
 		logger.Warning(err)
 		allow = false
 	}
-	for _, id := range gsettings.ListKeys() {
-		if id == "deepin-screen-recorder" || id == "wm-switcher" {
-			if !allow && id == "wm-switcher" {
+
+	keys, err := sm.shortcutSystemConfigMgr.KeyList().Get(0)
+	if err != nil {
+		logger.Warning(keys)
+	}
+
+	for _, id := range keys {
+		if id == "deepinScreenRecorder" || id == "wmSwitcher" {
+			if !allow && id == "wmSwitcher" {
 				logger.Debugf("com.deepin.wm.compositingAllowSwitch is false, filter %s", id)
 				continue
 			}
@@ -1038,52 +1230,68 @@ func (sm *ShortcutManager) AddSystem(gsettings, gsPlatform, gsEnable *gio.Settin
 			}
 		}
 
-		if !sm.CheckSystem(gsPlatform, gsEnable, id) {
+		if !sm.CheckSystem(id) {
 			continue
 		}
 
-		sm.AddSystemById(gsettings, wmObj, id)
+		sm.AddSystemById(wmObj, id)
 	}
 }
 
-func (sm *ShortcutManager) AddWM(gsettings *gio.Settings, wmObj wm.Wm) {
-	logger.Debug("AddWM")
-	idNameMap := getWMIdNameMap()
-	releaseType := getDeepinReleaseType()
-	for _, id := range gsettings.ListKeys() {
-		if releaseType == "Server" && strings.Contains(id, "workspace") {
-			logger.Debugf("release type is server filter '%s'", id)
-			continue
-		}
-		if id == "expose-all-windows" || id == "expose-windows" {
-			logger.Debugf("'%s' is abandoned!", id)
-			continue
-		}
-		name := idNameMap[id]
-		if name == "" {
-			name = id
-		}
-		keystrokes := gsettings.GetStrv(id)
-		gs := NewGSettingsShortcut(gsettings, wmObj, id, ShortcutTypeWM, keystrokes, name)
-		sm.addWithoutLock(gs)
-	}
-}
+// TODO delete, because not used
+// func (sm *ShortcutManager) AddWM(gsettings *gio.Settings, wmObj wm.Wm) {
+// 	logger.Debug("AddWM")
+// 	idNameMap := getWMIdNameMap()
+// 	releaseType := getDeepinReleaseType()
+// 	for _, id := range gsettings.ListKeys() {
+// 		if releaseType == "Server" && strings.Contains(id, "workspace") {
+// 			logger.Debugf("release type is server filter '%s'", id)
+// 			continue
+// 		}
+// 		if id == "expose-all-windows" || id == "expose-windows" {
+// 			logger.Debugf("'%s' is abandoned!", id)
+// 			continue
+// 		}
+// 		name := idNameMap[id]
+// 		if name == "" {
+// 			name = id
+// 		}
+// 		keystrokes := gsettings.GetStrv(id)
+// 		gs := NewShortcut(wmObj, id, ShortcutTypeWM, keystrokes, name)
+// 		sm.addWithoutLock(gs)
+// 	}
+// }
 
-func (sm *ShortcutManager) AddMedia(gsettings *gio.Settings, wmObj wm.Wm) {
+func (sm *ShortcutManager) AddMedia(wmObj wm.Wm) {
 	logger.Debug("AddMedia")
 	idNameMap := getMediaIdNameMap()
-	for _, id := range gsettings.ListKeys() {
-		if id == "media-close" {
+
+	keys, err := sm.shortcutMediaConfigMgr.KeyList().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	for _, id := range keys {
+		if id == "mediaClose" {
 			continue
 		}
 		name := idNameMap[id]
 		if name == "" {
 			name = id
 		}
-		keystrokes := gsettings.GetStrv(id)
-		gs := NewGSettingsShortcut(gsettings, wmObj, id, ShortcutTypeMedia, keystrokes, name)
+		strokesValue, err := sm.shortcutMediaConfigMgr.Value(0, id)
+		if err != nil {
+			logger.Warning(err)
+		}
+		keystrokes, err := convertToStringSlice(strokesValue.Value())
+		if err != nil {
+			logger.Warning("Failed to convert keystrokes:", err)
+			continue
+		}
+		saveCallback, loadCallback := sm.getMediaConfigCallbacks()
+		gs := NewShortcut(wmObj, id, ShortcutTypeMedia, keystrokes, name, saveCallback, loadCallback)
 		mediaShortcut := &MediaShortcut{
-			GSettingsShortcut: gs,
+			ShortcutObject: gs,
 		}
 		sm.addWithoutLock(mediaShortcut)
 	}
@@ -1192,7 +1400,7 @@ func (sm *ShortcutManager) AddKWin(wmObj wm.Wm) {
 			logger.Debugf("release type is server filter '%s'", accel.Id)
 			continue
 		}
-		if accel.Id == "expose-all-windows" || accel.Id == "expose-windows" {
+		if accel.Id == "exposeAllWindows" || accel.Id == "exposeWindows" {
 			logger.Debugf("'%s' is abandoned!", accel.Id)
 			continue
 		}
@@ -1215,7 +1423,7 @@ func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
 	}
 	idNameMap := getWMIdNameMap()
 	for _, accel := range accels {
-		if accel.Id == "color-picker" || accel.Id == "switch-kbd-layout" ||
+		if accel.Id == "colorPicker" || accel.Id == "switch-kbd-layout" ||
 			accel.Id == "expose-all-windows" || accel.Id == "expose-windows" {
 			continue
 		}
@@ -1249,8 +1457,8 @@ func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
 				keystrokes = append(keystrokes, "<Super_L>")
 			}
 		}
-		//system-monitor
-		if accel.Id == "system-monitor" {
+		//systemMonitor
+		if accel.Id == "systemMonitor" {
 			for i := 0; i < len(keystrokes); i++ {
 				keystrokes[i] = strings.Replace(keystrokes[i], "Esc", "Escape", 1)
 			}
@@ -1260,22 +1468,37 @@ func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
 	}
 }
 
-func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj wm.Wm) {
+func (sm *ShortcutManager) AddSystemToKwin(wmObj wm.Wm) {
 	logger.Debug("AddSystemToKwin")
 	idNameMap := getSystemIdNameMap()
-	for _, id := range gsettings.ListKeys() {
+	keys, err := sm.shortcutSystemConfigMgr.KeyList().Get(0)
+	if err != nil {
+		logger.Warning(keys)
+	}
+
+	for _, id := range keys {
 		name := idNameMap[id]
 		if name == "" {
 			name = id
 		}
 
+		strokesValue, err := sm.shortcutSystemConfigMgr.Value(0, id)
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		keystrokes, err := convertToStringSlice(strokesValue.Value())
+		if err != nil {
+			logger.Warning("Failed to convert keystrokes:", err)
+			continue
+		}
 		accelJson, err := util.MarshalJSON(util.KWinAccel{
 			Id:         id,
-			Keystrokes: gsettings.GetStrv(id),
+			Keystrokes: keystrokes,
 		})
 
-		if id == "screenshot-window" {
-			accelJson = `{"Id":"screenshot-window","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
+		if id == "screenshotWindow" {
+			accelJson = `{"Id":"screenshotWindow","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
 		}
 		if id == "launcher" {
 			accelJson = `{"Id":"launcher","Accels":["Super_L"]}`
@@ -1289,27 +1512,33 @@ func (sm *ShortcutManager) AddSystemToKwin(gsettings *gio.Settings, wmObj wm.Wm)
 		}
 		ok, err := wmObj.SetAccel(0, accelJson)
 		if !ok {
-			logger.Warning("failed to set KWin accels:", id, gsettings.GetStrv(id), err)
+
+			logKeystrokes, _ := convertToStringSlice(strokesValue.Value())
+			logger.Warning("failed to set KWin accels:", id, logKeystrokes, err)
 		}
-		sm.AddSystemById(gsettings, wmObj, id)
+		sm.AddSystemById(wmObj, id)
 	}
 }
 
-func (sm *ShortcutManager) AddMediaToKwin(gsettings *gio.Settings, wmObj wm.Wm) {
+func (sm *ShortcutManager) AddMediaToKwin(wmObj wm.Wm) {
 	logger.Debug("AddMediaToKwin")
 	idNameMap := getMediaIdNameMap()
-	for _, id := range gsettings.ListKeys() {
+	keys, err := sm.shortcutMediaConfigMgr.KeyList().Get(0)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	for _, id := range keys {
 		if id == "close" {
 			continue
 		}
 		name := idNameMap[id]
-		logger.Warning("+++ gsetting KWin accels ID , NANE:", id, name)
 
 		if name == "" {
 			name = id
 		}
 		if len(os.Getenv("WAYLAND_DISPLAY")) != 0 {
-			if name == "Capslock" || name == "Numlock" || name == "switch-monitors" {
+			if name == "Capslock" || name == "Numlock" || name == "switchMonitors" {
 				continue
 			}
 		}
@@ -1327,10 +1556,19 @@ func (sm *ShortcutManager) AddMediaToKwin(gsettings *gio.Settings, wmObj wm.Wm) 
 		if !ok {
 			logger.Warning("failed to set KWin accels:", accelJson, err)
 		}
-		keystrokes := gsettings.GetStrv(id)
-		gs := NewGSettingsShortcut(gsettings, wmObj, id, ShortcutTypeMedia, keystrokes, name)
+		strokesValue, err := sm.shortcutMediaConfigMgr.Value(0, id)
+		if err != nil {
+			logger.Warning(err)
+		}
+		keystrokes, err := convertToStringSlice(strokesValue.Value())
+		if err != nil {
+			logger.Warning("Failed to convert keystrokes:", err)
+			continue
+		}
+		saveCallback, loadCallback := sm.getMediaConfigCallbacks()
+		gs := NewShortcut(wmObj, id, ShortcutTypeMedia, keystrokes, name, saveCallback, loadCallback)
 		mediaShortcut := &MediaShortcut{
-			GSettingsShortcut: gs,
+			ShortcutObject: gs,
 		}
 		sm.addWithoutLock(mediaShortcut)
 	}

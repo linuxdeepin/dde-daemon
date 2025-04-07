@@ -14,11 +14,14 @@ import (
 	"strings"
 	"time"
 
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 
 	dbus "github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/util"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
+
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
@@ -55,13 +58,22 @@ type networkDevice struct {
 	InterfaceFlags      uint32
 }
 
-func resetGSettings(gs *gio.Settings) {
-	for _, key := range gs.ListKeys() {
-		userVal := gs.GetUserValue(key)
-		if userVal != nil {
+func resetDconfig(configMgr configManager.Manager) {
+	keys, err := configMgr.KeyList().Get(0)
+	if err != nil {
+		logger.Warning("failed to get key list:", err)
+		return
+	}
+	for _, key := range keys {
+		userVal, err := configMgr.Value(0, key)
+		if err != nil {
+			logger.Warning("failed to get value:", err)
+			continue
+		}
+		if userVal.Value() != nil {
 			// TODO unref userVal
-			logger.Debug("reset gsettings key", key)
-			gs.Reset(key)
+			logger.Debug("reset dconfig key", key)
+			configMgr.Reset(0, key)
 		}
 	}
 }
@@ -275,7 +287,6 @@ func (m *Manager) systemShutdown() {
 }
 
 func (m *Manager) systemTurnOffScreen() {
-	const settingKeyScreenBlackLock = "screen-black-lock"
 	logger.Info("DPMS Off")
 	var err error
 	var useWayland bool
@@ -285,7 +296,11 @@ func (m *Manager) systemTurnOffScreen() {
 		useWayland = false
 	}
 
-	bScreenBlackLock := m.gsPower.GetBoolean(settingKeyScreenBlackLock)
+	bScreenBlackLockValue, err := m.powerConfigMgr.Value(0, constants.DSettingsKeyScreenBlackLock)
+	if err != nil {
+		logger.Warning(err)
+	}
+	bScreenBlackLock := bScreenBlackLockValue.Value().(bool)
 	if bScreenBlackLock {
 		m.doLock(true)
 	}

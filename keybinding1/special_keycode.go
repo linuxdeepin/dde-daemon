@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	power "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
 )
 
@@ -262,7 +263,11 @@ func (m *Manager) handleSwitchPowerMode() {
 		return
 	}
 
-	bHighPerformanceEnabled := m.gsPower.GetBoolean("high-performance-enabled")
+	bHighPerformanceEnabledValue, err := m.powerConfigMgr.Value(0, constants.DSettingsKeyHighPerformanceEnabled)
+	if err != nil {
+		logger.Warning(err)
+	}
+	bHighPerformanceEnabled := bHighPerformanceEnabledValue.Value().(bool)
 	logger.Info(" handleSwitchPowerMode, isHighPerformanceSupported : ", isHighPerformanceSupported)
 
 	targetMode := ""
@@ -340,12 +345,24 @@ func (m *Manager) handlePower() {
 		logger.Warning(err)
 	}
 
-	screenBlackLock := m.gsPower.GetBoolean("screen-black-lock")
+	screenBlackLockValue, err := m.powerConfigMgr.Value(0, constants.DSettingsKeyScreenBlackLock)
+	if err != nil {
+		logger.Warning(err)
+	}
 
+	screenBlackLock := screenBlackLockValue.Value().(bool)
 	if onBattery {
-		powerPressAction = m.gsPower.GetEnum("battery-press-power-button")
+		powerPressActionValue, err := m.powerConfigMgr.Value(0, constants.DSettingsKeyBatteryPressPowerBtnAction)
+		if err != nil {
+			logger.Warning(err)
+		}
+		powerPressAction = int32(powerPressActionValue.Value().(int64))
 	} else {
-		powerPressAction = m.gsPower.GetEnum("line-power-press-power-button")
+		powerPressActionValue, err := m.powerConfigMgr.Value(0, constants.DSettingsKeyLinePowerPressPowerBtnAction)
+		if err != nil {
+			logger.Warning(err)
+		}
+		powerPressAction = int32(powerPressActionValue.Value().(int64))
 	}
 	switch powerPressAction {
 	case powerActionShutdown:

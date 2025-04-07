@@ -13,13 +13,9 @@ import (
 	"sync"
 	"time"
 
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
-
 	"github.com/godbus/dbus/v5"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/procfs"
 	x "github.com/linuxdeepin/go-x11-client"
 	xscreensaver "github.com/linuxdeepin/go-x11-client/ext/screensaver"
@@ -56,7 +52,7 @@ type powerSavePlan struct {
 	atomNetWMStateFocused       x.Atom
 	fullscreenWorkaroundAppList []string
 
-	brightnessSave         gsprop.String
+	brightnessSave         string
 	multiBrightnessWithPsm *multiBrightnessWithPsm
 	psmEnabledTime         time.Time
 	psmPercentChangedTime  time.Time
@@ -81,8 +77,18 @@ func newPowerSavePlan(manager *Manager) (string, submodule, error) {
 		}
 	}
 
-	p.fullscreenWorkaroundAppList = manager.settings.GetStrv(
-		"fullscreen-workaround-app-list")
+	fullscreenWorkaroundAppListConfig, err := manager.dsPowerConfigManager.Value(0, dsettingFullscreenWorkaroundAppList)
+	if err != nil {
+		logger.Warning(err)
+	} else {
+		variantValue := fullscreenWorkaroundAppListConfig.Value()
+		if variants, ok := variantValue.([]dbus.Variant); ok {
+			p.fullscreenWorkaroundAppList = make([]string, len(variants))
+			for i, v := range variants {
+				p.fullscreenWorkaroundAppList[i] = v.Value().(string)
+			}
+		}
+	}
 
 	err = p.initDsgConfig()
 	if err != nil {
@@ -96,28 +102,28 @@ func newPowerSavePlan(manager *Manager) (string, submodule, error) {
 // 监听 GSettings 值改变, 更新节电计划
 func (psp *powerSavePlan) initSettingsChangedHandler() {
 	m := psp.manager
-	gsettings.ConnectChanged(gsSchemaPower, "*", func(key string) {
+	m.dsPowerConfigManager.ConnectValueChanged(func(key string) {
 		logger.Debug("setting changed", key)
 		switch key {
-		case settingKeyLinePowerScreensaverDelay,
-			settingKeyLinePowerScreenBlackDelay,
-			settingKeyLinePowerLockDelay,
-			settingKeyLinePowerSleepDelay:
+		case dsettingLinePowerScreensaverDelay,
+			dsettingLinePowerScreenBlackDelay,
+			dsettingLinePowerLockDelay,
+			dsettingLinePowerSleepDelay:
 			if !m.OnBattery {
 				logger.Debug("Change OnLinePower plan")
 				psp.OnLinePower()
 			}
 
-		case settingKeyBatteryScreensaverDelay,
-			settingKeyBatteryScreenBlackDelay,
-			settingKeyBatteryLockDelay,
-			settingKeyBatterySleepDelay:
+		case dsettingBatteryScreensaverDelay,
+			dsettingBatteryScreenBlackDelay,
+			dsettingBatteryLockDelay,
+			dsettingBatterySleepDelay:
 			if m.OnBattery {
 				logger.Debug("Change OnBattery plan")
 				psp.OnBattery()
 			}
 
-		case settingKeyAmbientLightAdjuestBrightness:
+		case dsettingAmbientLightAdjustBrightness:
 			psp.manager.claimOrReleaseAmbientLight()
 		}
 	})
@@ -126,17 +132,17 @@ func (psp *powerSavePlan) initSettingsChangedHandler() {
 func (psp *powerSavePlan) OnBattery() {
 	logger.Debug("Use OnBattery plan")
 	m := psp.manager
-	psp.Update(m.BatteryScreensaverDelay.Get(), m.BatteryLockDelay.Get(),
-		m.BatteryScreenBlackDelay.Get(),
-		m.BatterySleepDelay.Get())
+	psp.Update(int32(m.BatteryScreensaverDelay), int32(m.BatteryLockDelay),
+		int32(m.BatteryScreenBlackDelay),
+		int32(m.BatterySleepDelay))
 }
 
 func (psp *powerSavePlan) OnLinePower() {
 	logger.Debug("Use OnLinePower plan")
 	m := psp.manager
-	psp.Update(m.LinePowerScreensaverDelay.Get(), m.LinePowerLockDelay.Get(),
-		m.LinePowerScreenBlackDelay.Get(),
-		m.LinePowerSleepDelay.Get())
+	psp.Update(int32(m.LinePowerScreensaverDelay), int32(m.LinePowerLockDelay),
+		int32(m.LinePowerScreenBlackDelay),
+		int32(m.LinePowerSleepDelay))
 }
 
 func (psp *powerSavePlan) Reset() {
@@ -155,15 +161,19 @@ func (psp *powerSavePlan) syncBrightnessData(value string) {
 	if err != nil {
 		logger.Warning(err)
 	}
-	psp.brightnessSave.Set(value)
+	psp.brightnessSave = value
 }
 
 func (psp *powerSavePlan) Start() error {
 	psp.Reset()
 	psp.initSettingsChangedHandler()
 
-	gs := gio.NewSettings(gsSchemaPower)
-	psp.brightnessSave.Bind(gs, settingKeySaveBrightnessWhilePsm)
+	brightnessSaveConfig, e := psp.manager.dsPowerConfigManager.Value(0, dsettingSaveBrightnessWhilePsm)
+	if e != nil {
+		logger.Warning(e)
+	} else {
+		psp.brightnessSave = brightnessSaveConfig.Value().(string)
+	}
 	psp.multiBrightnessWithPsm = newMultiBrightnessWithPsm()
 
 	helper := psp.manager.helper
@@ -229,7 +239,7 @@ func (psp *powerSavePlan) Start() error {
 	if data != "" {
 		psp.syncBrightnessData(data)
 		state, _ := power.PowerSavingModeEnabled().Get(0)
-		psp.manager.settings.SetBoolean(settingKeyPowerSavingEnabled, state)
+		psp.manager.setDsgData(dsettingsPowerSavingModeEnabled, state, psp.manager.dsPowerConfigManager)
 	} else {
 		psp.dealWithPowerSavingModeWhenSystemBoot()
 	}
@@ -240,7 +250,13 @@ func (psp *powerSavePlan) Start() error {
 func (psp *powerSavePlan) dealWithPowerSavingModeWhenSystemBoot() {
 	power := psp.manager.helper.Power
 	newPowerSaveState, _ := power.PowerSavingModeEnabled().Get(0)
-	if newPowerSaveState != psp.manager.settings.GetBoolean(settingKeyPowerSavingEnabled) {
+
+	powerSavingModeEnabled, err := psp.manager.dsPowerConfigManager.Value(0, dsettingsPowerSavingModeEnabled)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	if newPowerSaveState != powerSavingModeEnabled.Value().(bool) {
 		psp.handlePowerSavingModeChanged(true, newPowerSaveState)
 	}
 }
@@ -287,7 +303,7 @@ func (psp *powerSavePlan) handlePowerSavingModeBrightnessDropPercentChanged(hasV
 	psp.manager.PropsMu.RLock()
 	hasLightSensor := psp.manager.HasAmbientLightSensor
 	psp.manager.PropsMu.RUnlock()
-	if hasLightSensor && psp.manager.AmbientLightAdjustBrightness.Get() {
+	if hasLightSensor && psp.manager.AmbientLightAdjustBrightness {
 		return
 	}
 	if !psp.manager.isSessionActive() { // 系统级的调节保证只有激活用户才能做逻辑
@@ -299,9 +315,9 @@ func (psp *powerSavePlan) handlePowerSavingModeBrightnessDropPercentChanged(hasV
 		logger.Warning(err)
 		return
 	}
-	oldLowerBrightnessScale := float64(psp.manager.savingModeBrightnessDropPercent.Get())
+	oldLowerBrightnessScale := float64(psp.manager.savingModeBrightnessDropPercent)
 	newLowerBrightnessScale := float64(lowerValue)
-	psp.manager.savingModeBrightnessDropPercent.Set(int32(lowerValue))
+	psp.manager.savingModeBrightnessDropPercent = int32(lowerValue)
 	savingModeEnable, err := psp.manager.helper.Power.PowerSavingModeEnabled().Get(0)
 	if err != nil {
 		logger.Error("get current power savingMode state error : ", err)
@@ -328,7 +344,7 @@ func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bo
 	}
 	logger.Debug("power saving mode enabled changed to", enabled)
 
-	psp.manager.settings.SetBoolean(settingKeyPowerSavingEnabled, enabled)
+	psp.manager.setDsgData(dsettingsPowerSavingModeEnabled, enabled, psp.manager.dsPowerConfigManager)
 
 	if !psp.manager.isSessionActive() { // 系统级的调节保证只有激活用户才能做逻辑
 		return
@@ -347,7 +363,7 @@ func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bo
 	hasLightSensor := psp.manager.HasAmbientLightSensor
 	psp.manager.PropsMu.RUnlock()
 
-	if hasLightSensor && psp.manager.AmbientLightAdjustBrightness.Get() {
+	if hasLightSensor && psp.manager.AmbientLightAdjustBrightness {
 		return
 	}
 
@@ -356,7 +372,7 @@ func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bo
 		logger.Warning(err)
 		return
 	}
-	brightnessScale := float64(psp.manager.savingModeBrightnessDropPercent.Get())
+	brightnessScale := float64(psp.manager.savingModeBrightnessDropPercent)
 	for key, value := range brightnessTable {
 		if enabled {
 			value = psp.powerSavingModeBrightnessDrop(value, brightnessScale)
@@ -373,7 +389,7 @@ func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bo
 		psp.setToBrightnessSave()
 		psp.psmEnabledTime = time.Now()
 	} else {
-		psp.brightnessSave.Set("")
+		psp.brightnessSave = ""
 	}
 	psp.manager.setAndSaveDisplayBrightness(brightnessTable)
 }
@@ -561,8 +577,13 @@ func (psp *powerSavePlan) lock() {
 func (psp *powerSavePlan) screenBlack() {
 	manager := psp.manager
 	logger.Info("Start screen black")
+	adjustBrightnessConfig, err := manager.dsPowerConfigManager.Value(0, dsettingAdjustBrightnessEnabled)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
 
-	adjustBrightnessEnabled := manager.settings.GetBoolean(settingKeyAdjustBrightnessEnabled)
+	adjustBrightnessEnabled := adjustBrightnessConfig.Value().(bool)
 
 	if adjustBrightnessEnabled {
 		err := psp.saveCurrentBrightness()
@@ -588,7 +609,7 @@ func (psp *powerSavePlan) screenBlack() {
 	taskF := newDelayedTask("screenFullBlack", fullBlackTime, func() {
 		psp.stopScreensaver()
 		logger.Info("Screen full black")
-		if manager.ScreenBlackLock.Get() {
+		if manager.ScreenBlackLock {
 			manager.lockWaitShow(5*time.Second, true)
 		}
 
@@ -703,7 +724,7 @@ func (psp *powerSavePlan) HandleIdleOn() {
 
 	_, err := os.Stat("/etc/deepin/no_suspend")
 	if err == nil {
-		if psp.manager.ScreenBlackLock.Get() {
+		if psp.manager.ScreenBlackLock {
 			// m.setDPMSModeOn()
 			// m.lockWaitShow(4 * time.Second)
 			psp.manager.doLock(true)
@@ -757,9 +778,9 @@ func (psp *powerSavePlan) handleIdleOff() {
 func (psp *powerSavePlan) HandleIdleOff() {
 	var powerPressAction int32
 	if psp.manager.OnBattery {
-		powerPressAction = psp.manager.BatteryPressPowerBtnAction.Get()
+		powerPressAction = psp.manager.BatteryPressPowerBtnAction
 	} else {
-		powerPressAction = psp.manager.LinePowerPressPowerBtnAction.Get()
+		powerPressAction = psp.manager.LinePowerPressPowerBtnAction
 	}
 
 	if powerPressAction == powerActionTurnOffScreen {
@@ -811,7 +832,7 @@ func (psp *powerSavePlan) setBrightnessFromDisplay() {
 }
 
 func (psp *powerSavePlan) initMultiBrightnessWithPsm() {
-	b := psp.brightnessSave.Get()
+	b := psp.brightnessSave
 
 	err := psp.multiBrightnessWithPsm.toObject(b)
 	if err != nil {
@@ -842,7 +863,7 @@ func (psp *powerSavePlan) setToBrightnessSave() {
 	if err != nil {
 		logger.Warning(err)
 	}
-	psp.brightnessSave.Set(data)
+	psp.brightnessSave = data
 	psp.manager.helper.Power.PowerSavingModeBrightnessData().Set(0, data)
 }
 

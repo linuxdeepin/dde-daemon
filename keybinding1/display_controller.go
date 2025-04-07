@@ -9,15 +9,12 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	. "github.com/linuxdeepin/dde-daemon/keybinding1/shortcuts"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
 	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/strv"
-)
-
-const (
-	gsKeyOsdAdjustBrightnessState = "osd-adjust-brightness-enabled"
 )
 
 type OsdBrightnessState int32
@@ -30,12 +27,13 @@ const (
 )
 
 type DisplayController struct {
-	display          display.Display
-	backlightHelper  backlight.Backlight
-	gsKeyboard       *gio.Settings
-	brightStatusBusy bool
-	brightStatusMu   sync.Mutex
-	m                *Manager
+	display           display.Display
+	backlightHelper   backlight.Backlight
+	keyboardConfigMgr configManager.Manager
+	powerConfigMgr    configManager.Manager
+	brightStatusBusy  bool
+	brightStatusMu    sync.Mutex
+	m                 *Manager
 }
 
 func NewDisplayController(backlightHelper backlight.Backlight, sessionConn *dbus.Conn, m *Manager) *DisplayController {
@@ -44,7 +42,31 @@ func NewDisplayController(backlightHelper backlight.Backlight, sessionConn *dbus
 		display:         display.NewDisplay(sessionConn),
 		m:               m,
 	}
-	c.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
+
+	bus, _ := dbus.SystemBus()
+	dsg := configManager.NewConfigManager(bus)
+
+	dsgPath, err := dsg.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsKeyboardId, "")
+	if err != nil || dsgPath == "" {
+		logger.Warning(err)
+		return c
+	}
+
+	c.keyboardConfigMgr, err = configManager.NewManager(bus, dsgPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	dsgPath, err = dsg.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsPowerId, "")
+	if err != nil || dsgPath == "" {
+		logger.Warning(err)
+		return c
+	}
+	c.powerConfigMgr, err = configManager.NewManager(bus, dsgPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
 	return c
 }
 
@@ -102,25 +124,33 @@ func (c *DisplayController) ExecCmd(cmd ActionCmd) error {
 	return nil
 }
 
-const gsKeyAmbientLightAdjustBrightness = "ambient-light-adjust-brightness"
-
 func (c *DisplayController) changeBrightness(raised bool) error {
 	var osd = "BrightnessUp"
 	if !raised {
 		osd = "BrightnessDown"
 	}
-	var state = OsdBrightnessState(c.gsKeyboard.GetEnum(gsKeyOsdAdjustBrightnessState))
+
+	osdAdjustBrightnessState, err := c.keyboardConfigMgr.Value(0, constants.DSettingsKeyOsdAdjustBrightnessState)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	var state = OsdBrightnessState(osdAdjustBrightnessState.Value().(int64))
 
 	// 只有当OsdAdjustBrightnessState的值为BrightnessAdjustEnable时，才会去执行调整亮度的操作
 	if BrightnessAdjustEnable == state {
-		gs := gio.NewSettings("com.deepin.dde.power")
-		autoAdjustBrightnessEnabled := gs.GetBoolean(gsKeyAmbientLightAdjustBrightness)
-		if autoAdjustBrightnessEnabled {
-			gs.SetBoolean(gsKeyAmbientLightAdjustBrightness, false)
-		}
-		gs.Unref()
 
-		err := c.display.ChangeBrightness(dbus.FlagNoAutoStart, raised)
+		autoAdjustBrightnessEnabledValue, err := c.powerConfigMgr.Value(0, constants.DSettingsKeyAmbientLightAdjustBrightness)
+		if err != nil {
+			logger.Warning(err)
+		}
+		autoAdjustBrightnessEnabled := autoAdjustBrightnessEnabledValue.Value().(bool)
+		if autoAdjustBrightnessEnabled {
+			c.powerConfigMgr.SetValue(0, constants.DSettingsKeyAmbientLightAdjustBrightness, dbus.MakeVariant(false))
+		}
+
+		err = c.display.ChangeBrightness(dbus.FlagNoAutoStart, raised)
 		if err != nil {
 			return err
 		}

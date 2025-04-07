@@ -1,0 +1,15 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "globalSearch": {
+            "value": ["All"],
+            "serial": 0,
+            "flags": [],
+            "name": "globalSearch",
+            "description": "filemanager global search",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}

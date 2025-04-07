@@ -1,0 +1,226 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "launcher": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "launcher",
+            "name[zh_CN]": "启用/禁用启动器",
+            "description": "enabled/disable launcher",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshotDelayed": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "screenshotDelayed",
+            "name[zh_CN]": "启用/禁用延时截图",
+            "description": "enabled/disable screenshotDelayed",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshotFullscreen": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "screenshotFullscreen",
+            "name[zh_CN]": "启用/禁用全屏截图",
+            "description": "enabled/disable screenshotFullscreen",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "deepinScreenRecorder": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "deepinScreenRecorder",
+            "name[zh_CN]": "启用/禁用屏幕录制",
+            "description": "enabled/disable deepinScreenRecorder",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "translation": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "translation",
+            "name[zh_CN]": "启用/禁用翻译",
+            "description": "enabled/disable translation",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshot": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "screenshot",
+            "name[zh_CN]": "启用/禁用截图",
+            "description": "enabled/disable screenshot",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "logout": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "logout",
+            "name[zh_CN]": "启用/禁用注销",
+            "description": "enabled/disable logout",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "lockScreen": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "lockScreen",
+            "name[zh_CN]": "启用/禁用锁定屏幕",
+            "description": "enabled/disable lockScreen",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "clipboard": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "clipboard",
+            "name[zh_CN]": "启用/禁用剪贴板",
+            "description": "enabled/disable clipboard",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "notificationCenter": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "notificationCenter",
+            "name[zh_CN]": "启用/禁用通知中心",
+            "description": "enabled/disable notificationCenter",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "disableTouchpad": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "disableTouchpad",
+            "name[zh_CN]": "启用/禁用触摸板禁用功能",
+            "description": "enabled/disable disableTouchpad",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshotWindow": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "screenshotWindow",
+            "name[zh_CN]": "启用/禁用窗口截图",
+            "description": "enabled/disable screenshotWindow",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "turnOffScreen": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "turnOffScreen",
+            "name[zh_CN]": "启用/禁用关闭屏幕",
+            "description": "enabled/disable turnOffScreen",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "terminal": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "terminal",
+            "name[zh_CN]": "启用/禁用终端",
+            "description": "enabled/disable terminal",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "fileManager": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "fileManager",
+            "name[zh_CN]": "启用/禁用文件管理器",
+            "description": "enabled/disable fileManager",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "systemMonitor": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "systemMonitor",
+            "name[zh_CN]": "启用/禁用系统监视器",
+            "description": "enabled/disable systemMonitor",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "globalSearch": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "globalSearch",
+            "name[zh_CN]": "启用/禁用全局搜索",
+            "description": "enabled/disable globalSearch",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "textToSpeech": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "textToSpeech",
+            "name[zh_CN]": "启用/禁用语音朗读",
+            "description": "enabled/disable textToSpeech",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "speechToText": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "speechToText",
+            "name[zh_CN]": "启用/禁用语音转文字",
+            "description": "enabled/disable speechToText",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "terminalQuake": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "terminalQuake",
+            "name[zh_CN]": "启用/禁用雷神终端",
+            "description": "enabled/disable terminalQuake",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "wmSwitcher": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "wmSwitcher",
+            "name[zh_CN]": "启用/禁用窗口特效切换",
+            "description": "enabled/disable wmSwitcher",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "upperLayerWlan": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "upperLayerWlan",
+            "name[zh_CN]": "启用/禁用上层无线网络",
+            "description": "enable or disable the wireless network in upper layer",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}

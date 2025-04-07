@@ -9,7 +9,7 @@ import (
 )
 
 type MediaShortcut struct {
-	*GSettingsShortcut
+	*ShortcutObject
 }
 
 const (
@@ -38,67 +38,67 @@ var mediaIdActionMap = map[string]*Action{
 	"numlock":  &Action{Type: ActionTypeShowNumLockOSD},
 	"capslock": &Action{Type: ActionTypeShowCapsLockOSD},
 	// Open MimeType
-	"home-page":   NewOpenMimeTypeAction(mimeTypeBrowser),
-	"www":         NewOpenMimeTypeAction(mimeTypeBrowser),
-	"explorer":    NewOpenMimeTypeAction(mimeTypeDir),
-	"mail":        NewOpenMimeTypeAction(mimeTypeMail),
-	"audio-media": NewOpenMimeTypeAction(mimeTypeAudioMedia),
-	"music":       NewOpenMimeTypeAction(mimeTypeAudioMedia),
-	"pictures":    NewOpenMimeTypeAction(mimeTypeImagePng),
-	"video":       NewOpenMimeTypeAction(mimeTypeVideoMp4),
+	"homePage":   NewOpenMimeTypeAction(mimeTypeBrowser),
+	"www":        NewOpenMimeTypeAction(mimeTypeBrowser),
+	"explorer":   NewOpenMimeTypeAction(mimeTypeDir),
+	"mail":       NewOpenMimeTypeAction(mimeTypeMail),
+	"audioMedia": NewOpenMimeTypeAction(mimeTypeAudioMedia),
+	"music":      NewOpenMimeTypeAction(mimeTypeAudioMedia),
+	"pictures":   NewOpenMimeTypeAction(mimeTypeImagePng),
+	"video":      NewOpenMimeTypeAction(mimeTypeVideoMp4),
 
 	// command
-	"my-computer": NewExecCmdAction(cmdMyComputer, false),
-	"documents":   NewExecCmdAction(cmdDocuments, false),
-	"eject":       NewExecCmdAction(cmdEject, false),
-	"calculator":  NewExecCmdAction(cmdCalculator, false),
-	"calendar":    NewExecCmdAction(cmdCalendar, false),
-	"meeting":     NewExecCmdAction(cmdMeeting, false),
-	"terminal":    NewExecCmdAction(cmdTerminal, false),
-	"messenger":   NewExecCmdAction(cmdMessenger, false),
-	"app-left":    NewExecCmdAction(cmdLauncher, false),
-	"app-right":   NewExecCmdAction(cmdLauncher, false),
+	"myComputer": NewExecCmdAction(cmdMyComputer, false),
+	"documents":  NewExecCmdAction(cmdDocuments, false),
+	"eject":      NewExecCmdAction(cmdEject, false),
+	"calculator": NewExecCmdAction(cmdCalculator, false),
+	"calendar":   NewExecCmdAction(cmdCalendar, false),
+	"meeting":    NewExecCmdAction(cmdMeeting, false),
+	"terminal":   NewExecCmdAction(cmdTerminal, false),
+	"messenger":  NewExecCmdAction(cmdMessenger, false),
+	"appLeft":    NewExecCmdAction(cmdLauncher, false),
+	"appRight":   NewExecCmdAction(cmdLauncher, false),
 
 	// audio control
-	"audio-mute":         NewAudioCtrlAction(AudioSinkMuteToggle),
-	"audio-raise-volume": NewAudioCtrlAction(AudioSinkVolumeUp),
-	"audio-lower-volume": NewAudioCtrlAction(AudioSinkVolumeDown),
-	"audio-mic-mute":     NewAudioCtrlAction(AudioSourceMuteToggle),
+	"audioMute":        NewAudioCtrlAction(AudioSinkMuteToggle),
+	"audioRaiseVolume": NewAudioCtrlAction(AudioSinkVolumeUp),
+	"audioLowerVolume": NewAudioCtrlAction(AudioSinkVolumeDown),
+	"audioMicMute":     NewAudioCtrlAction(AudioSourceMuteToggle),
 
 	// media player control
-	"audio-play":    NewMediaPlayerCtrlAction(MediaPlayerPlay),
-	"audio-pause":   NewMediaPlayerCtrlAction(MediaPlayerPause),
-	"audio-stop":    NewMediaPlayerCtrlAction(MediaPlayerStop),
-	"audio-forward": NewMediaPlayerCtrlAction(MediaPlayerForword),
-	"audio-rewind":  NewMediaPlayerCtrlAction(MediaPlayerRewind),
-	"audio-prev":    NewMediaPlayerCtrlAction(MediaPlayerPrevious),
-	"audio-next":    NewMediaPlayerCtrlAction(MediaPlayerNext),
-	"audio-repeat":  NewMediaPlayerCtrlAction(MediaPlayerRepeat),
+	"audioPlay":    NewMediaPlayerCtrlAction(MediaPlayerPlay),
+	"audioPause":   NewMediaPlayerCtrlAction(MediaPlayerPause),
+	"audioStop":    NewMediaPlayerCtrlAction(MediaPlayerStop),
+	"audioForward": NewMediaPlayerCtrlAction(MediaPlayerForword),
+	"audioRewind":  NewMediaPlayerCtrlAction(MediaPlayerRewind),
+	"audioPrev":    NewMediaPlayerCtrlAction(MediaPlayerPrevious),
+	"audioNext":    NewMediaPlayerCtrlAction(MediaPlayerNext),
+	"audioRepeat":  NewMediaPlayerCtrlAction(MediaPlayerRepeat),
 	// TODO audio-random-play audio-cycle-track
 
 	// display control
-	"mon-brightness-up":   NewDisplayCtrlAction(MonitorBrightnessUp),
-	"mon-brightness-down": NewDisplayCtrlAction(MonitorBrightnessDown),
-	"display":             NewDisplayCtrlAction(DisplayModeSwitch),
-	"adjust-brightness":   NewDisplayCtrlAction(AdjustBrightnessSwitch),
+	"monBrightnessUp":   NewDisplayCtrlAction(MonitorBrightnessUp),
+	"monBrightnessDown": NewDisplayCtrlAction(MonitorBrightnessDown),
+	"display":           NewDisplayCtrlAction(DisplayModeSwitch),
+	"adjustBrightness":  NewDisplayCtrlAction(AdjustBrightnessSwitch),
 
 	// kbd light control
-	"kbd-light-on-off":    NewKbdBrightnessCtrlAction(KbdLightToggle),
-	"kbd-brightness-up":   NewKbdBrightnessCtrlAction(KbdLightBrightnessUp),
-	"kbd-brightness-down": NewKbdBrightnessCtrlAction(KbdLightBrightnessDown),
+	"kbdLightOnOff":     NewKbdBrightnessCtrlAction(KbdLightToggle),
+	"kbdBrightnessUp":   NewKbdBrightnessCtrlAction(KbdLightBrightnessUp),
+	"kbdBrightnessDown": NewKbdBrightnessCtrlAction(KbdLightBrightnessDown),
 
 	// touchpad
-	"touchpad-toggle": NewTouchpadCtrlAction(TouchpadToggle),
-	"touchpad-on":     NewTouchpadCtrlAction(TouchpadOn),
-	"touchpad-off":    NewTouchpadCtrlAction(TouchpadOff),
+	"touchpadToggle": NewTouchpadCtrlAction(TouchpadToggle),
+	"touchpadOn":     NewTouchpadCtrlAction(TouchpadOn),
+	"touchpadOff":    NewTouchpadCtrlAction(TouchpadOff),
 
 	// power
 	"suspend": &Action{Type: ActionTypeSystemSuspend},
 	"sleep":   &Action{Type: ActionTypeSystemSuspend},
-	"log-off": &Action{Type: ActionTypeSystemLogOff},
+	"logOff":  &Action{Type: ActionTypeSystemLogOff},
 	"away":    &Action{Type: ActionTypeSystemAway},
 
-	"web-cam": NewExecCmdAction(cmdCamera, false),
+	"webCam": NewExecCmdAction(cmdCamera, false),
 
 	// We do not need to deal with XF86Wlan key default,
 	// but can be specially by 'EnableNetworkController'
