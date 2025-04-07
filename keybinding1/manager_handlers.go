@@ -8,11 +8,18 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	. "github.com/linuxdeepin/dde-daemon/keybinding1/shortcuts"
 )
 
 func (m *Manager) shouldShowCapsLockOSD() bool {
-	return m.gsKeyboard.GetBoolean(gsKeyShowCapsLockOSD)
+	showCapsLockOSDValue, err := m.keyboardConfigMgr.Value(0, constants.DSettingsKeyShowCapsLockOSD)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	return showCapsLockOSDValue.Value().(bool)
 }
 
 func (m *Manager) initHandlers() {
@@ -69,16 +76,20 @@ func (m *Manager) initHandlers() {
 				logger.Warning(err)
 				return
 			}
-			save := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
+			saveStateEnabledValue, err := m.keyboardConfigMgr.Value(0, constants.DSettingsKeySaveNumLockState)
+			if err != nil {
+				logger.Warning(err)
+			}
+			save := saveStateEnabledValue.Value().(bool)
 			switch state {
 			case NumLockOn:
 				if save {
-					m.NumLockState.Set(int32(NumLockOn))
+					m.keyboardConfigMgr.SetValue(0, constants.DSettingsKeyNumLockState, dbus.MakeVariant(NumLockOn))
 				}
 				showOSD("NumLockOn")
 			case NumLockOff:
 				if save {
-					m.NumLockState.Set(int32(NumLockOff))
+					m.keyboardConfigMgr.SetValue(0, constants.DSettingsKeyNumLockState, dbus.MakeVariant(NumLockOff))
 				}
 				showOSD("NumLockOff")
 			}
@@ -142,7 +153,11 @@ func (m *Manager) initHandlers() {
 	m.handlers[ActionTypeTouchpadCtrl] = buildHandlerFromController(m.touchPadController)
 
 	m.handlers[ActionTypeSystemSuspend] = func(ev *KeyEvent) {
-		if m.gsPower.GetBoolean("sleep-lock") && !isTreeLand() {
+		sleepLockValue, err := m.powerConfigMgr.Value(0, constants.DSettingsKeySleepLock)
+		if err != nil {
+			logger.Warning(err)
+		}
+		if sleepLockValue.Value().(bool) && !isTreeLand() {
 			m.systemSuspendByFront()
 		} else {
 			m.systemSuspend()

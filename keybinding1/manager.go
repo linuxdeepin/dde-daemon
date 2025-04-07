@@ -8,6 +8,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
+	"fmt"
 
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 	"github.com/linuxdeepin/go-lib/strv"
@@ -19,6 +21,7 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/shortcuts"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
@@ -38,11 +41,8 @@ import (
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/keysyms"
@@ -56,32 +56,10 @@ const (
 	shortcutSignalAdded   = "Added"
 	shortcutSignalDeleted = "Deleted"
 
-	gsSchemaKeyboard          = "com.deepin.dde.keyboard"
-	gsKeyNumLockState         = "numlock-state"
-	gsKeySaveNumLockState     = "save-numlock-state"
-	gsKeyShortcutSwitchLayout = "shortcut-switch-layout"
-	gsKeyShowCapsLockOSD      = "capslock-toggle"
-	gsKeyUpperLayerWLAN       = "upper-layer-wlan"
-
-	gsSchemaSystem         = "com.deepin.dde.keybinding.system"
-	gsSchemaSystemPlatform = "com.deepin.dde.keybinding.system.platform"
-	gsSchemaSystemEnable   = "com.deepin.dde.keybinding.system.enable"
-	gsSchemaMediaKey       = "com.deepin.dde.keybinding.mediakey"
-	gsSchemaGnomeWM        = "com.deepin.wrap.gnome.desktop.wm.keybindings"
-	gsSchemaSessionPower   = "com.deepin.dde.power"
-
 	customConfigFile = "deepin/dde-daemon/keybinding/custom.ini"
 	CapslockKey      = 58
 	NumlockKey       = 69
 	KeyPress         = 1
-)
-
-const (
-	DSettingsAppID                         = "org.deepin.dde.daemon"
-	DSettingsKeyBindingName                = "org.deepin.dde.daemon.keybinding"
-	DSettingsKeyWirelessControlEnable      = "wirelessControlEnable"
-	DSettingsKeyNeedXrandrQDevices         = "need-xrandr-q-devices"
-	DSettingsKeyDeviceManagerControlEnable = "deviceManagerControlEnable"
 )
 
 const ( // power按键事件的响应
@@ -120,21 +98,21 @@ const (
 type Manager struct {
 	service *dbusutil.Service
 	// properties
-	NumLockState         gsprop.Enum
-	ShortcutSwitchLayout gsprop.Uint `prop:"access:rw"`
+	NumLockState         int64
+	ShortcutSwitchLayout int64
 
 	conn       *x.Conn
 	keySymbols *keysyms.KeySymbols
 
-	gsKeyboard       *gio.Settings
-	gsSystem         *gio.Settings
-	gsSystemPlatform *gio.Settings
-	gsSystemEnable   *gio.Settings
-	gsMediaKey       *gio.Settings
-	gsGnomeWM        *gio.Settings
-	gsPower          *gio.Settings
+	shortcutSystemConfigMgr      configManager.Manager
+	shortcutMediaConfigMgr       configManager.Manager
+	shortcutWrapGnomeWmConfigMgr configManager.Manager
+	shortcutEnableConfigMgr      configManager.Manager
+	shortcutPlatformMgr          configManager.Manager
+	powerConfigMgr               configManager.Manager
+	keyboardConfigMgr            configManager.Manager
 
-	enableListenGSettings      bool
+	enableListenDConfig        bool
 	delayNetworkStateChange    bool
 	canExcuteSuspendOrHiberate bool
 	prepareForSleep            bool
@@ -212,6 +190,26 @@ type Manager struct {
 	}
 }
 
+func convertToStringSlice(value interface{}) ([]string, error) {
+	if strSlice, ok := value.([]string); ok {
+		return strSlice, nil
+	}
+
+	if variantSlice, ok := value.([]dbus.Variant); ok {
+		result := make([]string, len(variantSlice))
+		for i, variant := range variantSlice {
+			if str, ok := variant.Value().(string); ok {
+				result[i] = str
+			} else {
+				return nil, fmt.Errorf("variant at index %d is not a string: %T", i, variant.Value())
+			}
+		}
+		return result, nil
+	}
+
+	return nil, fmt.Errorf("unsupported type for string slice conversion: %T", value)
+}
+
 // SKLState Switch keyboard Layout state
 type SKLState uint
 
@@ -235,11 +233,11 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	}
 
 	var m = Manager{
-		service:               service,
-		enableListenGSettings: true,
-		conn:                  conn,
-		keySymbols:            keysyms.NewKeySymbols(conn),
-		handlers:              make([]shortcuts.KeyEventFunc, shortcuts.ActionTypeCount),
+		service:             service,
+		enableListenDConfig: true,
+		conn:                conn,
+		keySymbols:          keysyms.NewKeySymbols(conn),
+		handlers:            make([]shortcuts.KeyEventFunc, shortcuts.ActionTypeCount),
 	}
 
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
@@ -266,17 +264,16 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	if err != nil {
 		logger.Warning("failed to connect signal PrepareForSleep:", err)
 	}
+	m.initDConfig(sysBus)
+
 	m.prepareForSleep, _ = m.login1Manager.PreparingForSleep().Get(0)
 	m.displayManager = DisplayManager.NewDisplayManager(sysBus)
 	m.shutdownFront = shutdownfront.NewShutdownFront(sessionBus)
-	m.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
-	m.NumLockState.Bind(m.gsKeyboard, gsKeyNumLockState)
-	m.ShortcutSwitchLayout.Bind(m.gsKeyboard, gsKeyShortcutSwitchLayout)
+
 	m.sessionSigLoop.Start()
 	m.systemSigLoop.Start()
 
 	m.initNumLockState(sysBus)
-	m.initDSettings(sysBus)
 
 	m.init()
 
@@ -290,11 +287,6 @@ func (m *Manager) init() {
 	m.canExcuteSuspendOrHiberate = true
 
 	// init settings
-	m.gsSystem = gio.NewSettings(gsSchemaSystem)
-	m.gsSystemPlatform = gio.NewSettings(gsSchemaSystemPlatform)
-	m.gsSystemEnable = gio.NewSettings(gsSchemaSystemEnable)
-	m.gsMediaKey = gio.NewSettings(gsSchemaMediaKey)
-	m.gsPower = gio.NewSettings(gsSchemaSessionPower)
 	m.wm = wm.NewWm(sessionBus)
 	m.keyEvent = keyevent.NewKeyEvent(sysBus)
 	m.network = network.NewNetwork(sessionBus)
@@ -316,12 +308,12 @@ func (m *Manager) init() {
 
 	if _useWayland {
 		m.shortcutManager.AddSpecialToKwin(m.wm)
-		m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
-		m.shortcutManager.AddMediaToKwin(m.gsMediaKey, m.wm)
+		m.shortcutManager.AddSystemToKwin(m.wm)
+		m.shortcutManager.AddMediaToKwin(m.wm)
 		m.shortcutManager.AddKWinForWayland(m.wm)
 	} else {
-		m.shortcutManager.AddSystem(m.gsSystem, m.gsSystemPlatform, m.gsSystemEnable, m.wm)
-		m.shortcutManager.AddMedia(m.gsMediaKey, m.wm)
+		m.shortcutManager.AddSystem(m.wm)
+		m.shortcutManager.AddMedia(m.wm)
 		m.shortcutManager.AddKWin(m.wm)
 		err := sessionBus.BusObject().Call("org.freedesktop.DBus.GetNameOwner",
 			0, "org.kde.kglobalaccel").Store()
@@ -407,22 +399,51 @@ func (m *Manager) init() {
 	}
 }
 
-func (m *Manager) initDSettings(bus *dbus.Conn) {
+func (m *Manager) initDConfig(bus *dbus.Conn) {
 	ds := configManager.NewConfigManager(bus)
-	dsPath, err := ds.AcquireManager(0, DSettingsAppID, DSettingsKeyBindingName, "")
+
+	keybindingDS, err := m.makeDConfigManager(bus, ds, constants.DSettingsAppID, constants.DSettingsKeyBindingName)
 	if err != nil {
 		logger.Warning(err)
-		return
 	}
 
-	keybindingDS, err := configManager.NewManager(bus, dsPath)
+	m.shortcutMediaConfigMgr, err = m.makeDConfigManager(bus, ds, constants.DSettingsAppID, constants.DSettingsKeybindingMediaKeyId)
 	if err != nil {
 		logger.Warning(err)
-		return
+	}
+
+	m.shortcutSystemConfigMgr, err = m.makeDConfigManager(bus, ds, constants.DSettingsAppID, constants.DSettingsKeybindingSystemKeysId)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.shortcutWrapGnomeWmConfigMgr, err = m.makeDConfigManager(bus, ds, constants.DSettingsAppID, constants.DSettingsKeybindingWrapGnomeWmId)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.shortcutEnableConfigMgr, err = m.makeDConfigManager(bus, ds, constants.DSettingsAppID, constants.DSettingsKeybindingEnableId)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.shortcutPlatformMgr, err = m.makeDConfigManager(bus, ds, constants.DSettingsAppID, constants.DSettingsKeybindingPlatformId)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.powerConfigMgr, err = m.makeDConfigManager(bus, ds, constants.DSettingsAppID, constants.DSettingsPowerId)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	m.keyboardConfigMgr, err = m.makeDConfigManager(bus, ds, constants.DSettingsAppID, constants.DSettingsKeyboardId)
+	if err != nil {
+		logger.Warning(err)
 	}
 
 	getWirelessControlEnableConfig := func() {
-		v, err := keybindingDS.Value(0, DSettingsKeyWirelessControlEnable)
+		v, err := keybindingDS.Value(0, constants.DSettingsKeyWirelessControlEnable)
 		if err != nil {
 			logger.Warning(err)
 			return
@@ -430,7 +451,7 @@ func (m *Manager) initDSettings(bus *dbus.Conn) {
 		m.wifiControlEnable = v.Value().(bool)
 	}
 	getNeedXrandrQConfig := func() {
-		v, err := keybindingDS.Value(0, DSettingsKeyNeedXrandrQDevices)
+		v, err := keybindingDS.Value(0, constants.DSettingsKeyNeedXrandrQDevices)
 		if err != nil {
 			logger.Warning(err)
 			return
@@ -442,7 +463,7 @@ func (m *Manager) initDSettings(bus *dbus.Conn) {
 	}
 
 	getDeviceManagerControlEnableConfig := func() {
-		v, err := keybindingDS.Value(0, DSettingsKeyDeviceManagerControlEnable)
+		v, err := keybindingDS.Value(0, constants.DSettingsKeyDeviceManagerControlEnable)
 		if err != nil {
 			logger.Warning(err)
 			return
@@ -457,96 +478,150 @@ func (m *Manager) initDSettings(bus *dbus.Conn) {
 	// 监听dsg配置变化
 	_, err = keybindingDS.ConnectValueChanged(func(key string) {
 		switch key {
-		case DSettingsKeyWirelessControlEnable:
+		case constants.DSettingsKeyWirelessControlEnable:
 			getWirelessControlEnableConfig()
-		case DSettingsKeyNeedXrandrQDevices:
+		case constants.DSettingsKeyNeedXrandrQDevices:
 			getNeedXrandrQConfig()
-		case DSettingsKeyDeviceManagerControlEnable:
+		case constants.DSettingsKeyDeviceManagerControlEnable:
 			getDeviceManagerControlEnableConfig()
 		}
 	})
 	if err != nil {
 		logger.Warning(err)
 	}
+
+	getNumLockState := func() {
+		v, err := m.keyboardConfigMgr.Value(0, constants.DSettingsKeyNumLockState)
+		if err != nil {
+			logger.Warning(err)
+		}
+		m.NumLockState = v.Value().(int64)
+	}
+
+	getShortcutSwitchLayout := func() {
+		v, err := m.keyboardConfigMgr.Value(0, constants.DSettingsKeyShortcutSwitchLayout)
+		if err != nil {
+			logger.Warning(err)
+		}
+		m.ShortcutSwitchLayout = v.Value().(int64)
+	}
+
+	getNumLockState()
+	getShortcutSwitchLayout()
+
+	m.keyboardConfigMgr.InitSignalExt(m.systemSigLoop, true)
+	m.keyboardConfigMgr.ConnectValueChanged(func(key string) {
+		switch key {
+		case constants.DSettingsKeyNumLockState:
+			getNumLockState()
+		case constants.DSettingsKeySaveNumLockState:
+			getShortcutSwitchLayout()
+		}
+	})
+}
+
+func (m *Manager) makeDConfigManager(bus *dbus.Conn, dsManager configManager.ConfigManager, appID string, id string) (configManager.Manager, error) {
+	if bus == nil {
+		return nil, errors.New("bus cannot be nil")
+	}
+	if dsManager == nil {
+		return nil, errors.New("dsManager cannot be nil")
+	}
+	if appID == "" || id == "" {
+		return nil, errors.New("appID and id cannot be empty")
+	}
+	dsPath, err := dsManager.AcquireManager(0, appID, id, "")
+	if err != nil {
+		logger.Warning(err)
+		return nil, err
+	}
+
+	mgr, err := configManager.NewManager(bus, dsPath)
+	if err != nil {
+		logger.Warning(err)
+		return nil, err
+	}
+
+	return mgr, nil
 }
 
 var kwinSysActionCmdMap = map[string]string{
-	"Launcher":              "launcher",               // Super_L Super_R
-	"Terminal":              "terminal",               // <Control><Alt>T
-	"Terminal Quake Window": "terminal-quake",         //
-	"Lock screen":           "lock-screen",            // super+l
-	"Shutdown interface":    "logout",                 // ctrl+alt+del
-	"File manager":          "file-manager",           // super+e
-	"Screenshot":            "screenshot",             // ctrl+alt+a
-	"Full screenshot":       "screenshot-fullscreen",  // print
-	"Window screenshot":     "screenshot-window",      // alt+print
-	"Delay screenshot":      "screenshot-delayed",     // ctrl+print
-	"Disable Touchpad":      "disable-touchpad",       //
-	"Switch window effects": "wm-switcher",            // alt+tab
-	"turn-off-screen":       "Fast Screen Off",        // <Shift><Super>L
-	"Deepin Picker":         "color-picker",           // ctrl+alt+v
-	"System Monitor":        "system-monitor",         // ctrl+alt+escape
-	"Screen Recorder":       "deepin-screen-recorder", // deepin-screen-recorder ctrl+alt+r
-	"Text to Speech":        "text-to-speech",
-	"Speech to Text":        "speech-to-text",
+	"Launcher":              "launcher",             // Super_L Super_R
+	"Terminal":              "terminal",             // <Control><Alt>T
+	"Terminal Quake Window": "terminalQuake",        //
+	"Lock screen":           "lockScreen",           // super+l
+	"Shutdown interface":    "logout",               // ctrl+alt+del
+	"File manager":          "fileManager",          // super+e
+	"Screenshot":            "screenshot",           // ctrl+alt+a
+	"Full screenshot":       "screenshotFullscreen", // print
+	"Window screenshot":     "screenshotWindow",     // alt+print
+	"Delay screenshot":      "screenshotDelayed",    // ctrl+print
+	"Disable Touchpad":      "disableTouchpad",      //
+	"Switch window effects": "wmSwitcher",           // alt+tab
+	"Fast Screen Off":       "turnOffScreen",        // <Shift><Super>L
+	"Deepin Picker":         "colorPicker",          // ctrl+alt+v
+	"System Monitor":        "systemMonitor",        // ctrl+alt+escape
+	"Screen Recorder":       "deepinScreenRecorder", // deepinScreenRecorder ctrl+alt+r
+	"Text to Speech":        "textToSpeech",
+	"Speech to Text":        "speechToText",
 	"Clipboard":             "clipboard",
 	"Translation":           "translation",
-	"Show/Hide the dock":    "show-dock",
+	"Show/Hide the dock":    "showDock",
 
 	// cmd
-	"Calculator":          "calculator",          // XF86Calculator
-	"Search":              "search",              // XF86Search
-	"Notification Center": "notification-center", // Meta M
+	"Calculator":          "calculator",         // XF86Calculator
+	"Search":              "search",             // XF86Search
+	"Notification Center": "notificationCenter", // Meta M
 
-	"ScreenshotScroll": "screenshot-scroll",
-	"ScreenshotOcr":    "screenshot-ocr",
-	"Global Search":    "global-search",
-	"Switch monitors":  "switch-monitors",
+	"ScreenshotScroll": "screenshotScroll",
+	"ScreenshotOcr":    "screenshotOcr",
+	"Global Search":    "globalSearch",
+	"Switch monitors":  "switchMonitors",
 }
 
 var waylandMediaIdMap = map[string]string{
 	"Messenger":         "messenger",           // XF86Messenger
 	"Save":              "save",                // XF86Save
 	"New":               "new",                 // XF86New
-	"WakeUp":            "wake-up",             // XF86WakeUp
-	"audio-rewind":      "AudioRewind",         // XF86AudioRewind
-	"VolumeMute":        "audio-mute",          // XF86AudioMute  "AudioMute":
+	"WakeUp":            "wakeUp",              // XF86WakeUp
+	"audio-rewind":      "audioRewind",         // XF86AudioRewind
+	"VolumeMute":        "audioMute",           // XF86AudioMute  "AudioMute":
 	"MonBrightnessUp":   "mon-brightness-up",   // XF86MonBrightnessUp
 	"WLAN":              "wlan",                // XF86WLAN
-	"AudioMedia":        "audio-media",         // XF86AudioMedia
+	"AudioMedia":        "audioMedia",          // XF86AudioMedia
 	"reply":             "Reply",               // XF86Reply
 	"favorites":         "Favorites",           // XF86Favorites
-	"AudioPlay":         "audio-play",          // XF86AudioPlay
+	"AudioPlay":         "audioPlay",           // XF86AudioPlay
 	"AudioMicMute":      "audio-mic-mute",      // XF86AudioMicMute
-	"AudioPause":        "audio-pause",         // XF86AudioPause
-	"AudioStop":         "audio-stop",          // XF86AudioStop
+	"AudioPause":        "audioPause",          // XF86AudioPause
+	"AudioStop":         "audioStop",           // XF86AudioStop
 	"documents":         "Documents",           // XF86Documents
-	"game":              "Game",                // XF86Game
-	"AudioRecord":       "audio-record",        // XF86AudioRecord
+	"game":              "game",                // XF86Game
+	"AudioRecord":       "audioRecord",         // XF86AudioRecord
 	"Display":           "display",             // XF86Display
-	"reload":            "Reload",              // XF86Reload
-	"explorer":          "Explorer",            // XF86Explorer
+	"reload":            "reload",              // XF86Reload
+	"explorer":          "explorer",            // XF86Explorer
 	"calendar":          "Calendar",            // XF86Calendar
-	"forward":           "Forward",             // XF86Forward
-	"cut":               "Cut",                 // XF86Cut
+	"forward":           "forward",             // XF86Forward
+	"cut":               "cut",                 // XF86Cut
 	"MonBrightnessDown": "mon-brightness-down", // XF86MonBrightnessDown
 	"Copy":              "copy",                // XF86Copy
 	"Tools":             "tools",               // XF86Tools
 	"VolumeUp":          "audio-raise-volume",  // XF86AudioRaiseVolume "AudioRaiseVolume":  "audio-raise-volume",
 	"media-close":       "media-Close",         // XF86Close
 	"WWW":               "www",                 // XF86WWW
-	"HomePage":          "home-page",           // XF86HomePage
-	"sleep":             "Sleep",               // XF86Sleep
+	"HomePage":          "homePage",            // XF86HomePage
+	"sleep":             "sleep",               // XF86Sleep
 	"VolumeDown":        "audio-lower-volume",  // XF86AudioLowerVolume  "AudioLowerVolume":  "audio-lower-volume",
-	"AudioPrev":         "audio-prev",          // XF86AudioPrev
-	"AudioNext":         "audio-next",          // XF86AudioNext
+	"AudioPrev":         "audioPrev",           // XF86AudioPrev
+	"AudioNext":         "audioNext",           // XF86AudioNext
 	"Paste":             "paste",               // XF86Paste
 	"open":              "Open",                // XF86Open
 	"send":              "Send",                // XF86Send
 	"my-computer":       "MyComputer",          // XF86MyComputer
 	"Mail":              "mail",                // XF86Mail
 	"adjust-brightness": "BrightnessAdjust",    // XF86BrightnessAdjust
-	"LogOff":            "log-off",             // XF86LogOff
+	"LogOff":            "logOff",              // XF86LogOff
 	"pictures":          "Pictures",            // XF86Pictures
 	"Terminal":          "terminal",            // XF86Terminal
 	"video":             "Video",               // XF86Video
@@ -649,8 +724,12 @@ func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) {
 // 初始化 NumLock 数字锁定键状态
 func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
 	// 从 gsettings 读取相关设置
-	nlState := NumLockState(m.NumLockState.Get())
-	saveStateEnabled := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
+	nlState := NumLockState(m.NumLockState)
+	saveStateEnabledValue, err := m.keyboardConfigMgr.Value(0, constants.DSettingsKeySaveNumLockState)
+	if err != nil {
+		logger.Warning(err)
+	}
+	saveStateEnabled := saveStateEnabledValue.Value().(bool)
 	if nlState == NumLockUnknown {
 		// 判断是否是笔记本, 只根据电池状态，有电池则是笔记本。
 		isLaptop := false
@@ -674,7 +753,7 @@ func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
 
 		if saveStateEnabled {
 			// 保存新状态到 gsettings
-			m.NumLockState.Set(int32(state))
+			m.keyboardConfigMgr.SetValue(0, constants.DSettingsKeyNumLockState, dbus.MakeVariant(state))
 		}
 
 		err = setNumLockState(m.waylandOutputMgr, m.conn, m.keySymbols, state)
@@ -781,9 +860,17 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 			logger.Error(err)
 		}
 		if onBattery {
-			powerPressAction = m.gsPower.GetEnum("battery-press-power-button")
+			powerPressActionValue, err := m.powerConfigMgr.Value(0, constants.DSettingsKeyBatteryPressPowerBtnAction)
+			if err != nil {
+				logger.Warning(err)
+			}
+			powerPressAction = powerPressActionValue.Value().(int32)
 		} else {
-			powerPressAction = m.gsPower.GetEnum("line-power-press-power-button")
+			powerPressActionValue, err := m.powerConfigMgr.Value(0, constants.DSettingsKeyLinePowerPressPowerBtnAction)
+			if err != nil {
+				logger.Warning(err)
+			}
+			powerPressAction = powerPressActionValue.Value().(int32)
 		}
 		logger.Debug("powerPressAction:", powerPressAction)
 		switch powerPressAction {
@@ -826,7 +913,13 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 
 		// check if allow set wireless
 		// and check if Wifi shortcut effected by DDE software
-		if m.gsMediaKey.GetBoolean(gsKeyUpperLayerWLAN) && m.wifiControlEnable {
+
+		upperLayerWLAN, err := m.shortcutPlatformMgr.Value(0, constants.DSettingsKeyUpperLayerWLAN)
+		if err != nil {
+			logger.Warningf("get upperLayerWLAN failed, err: %v", err)
+			return
+		}
+		if upperLayerWLAN.Value().(bool) && m.wifiControlEnable {
 			enabled, err := m.airplane.WifiEnabled().Get(0)
 			if err != nil {
 				logger.Warningf("get wireless enabled failed, err: %v", err)
@@ -888,17 +981,21 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 				}
 			}
 
-			save := m.gsKeyboard.GetBoolean(gsKeySaveNumLockState)
+			saveStateEnabledValue, err := m.keyboardConfigMgr.Value(0, constants.DSettingsKeySaveNumLockState)
+			if err != nil {
+				logger.Warning(err)
+			}
+			save := saveStateEnabledValue.Value().(bool)
 
 			switch state {
 			case NumLockOn:
 				if save {
-					m.NumLockState.Set(int32(NumLockOn))
+					m.keyboardConfigMgr.SetValue(0, constants.DSettingsKeyNumLockState, dbus.MakeVariant(NumLockOn))
 				}
 				showOSD("NumLockOn")
 			case NumLockOff:
 				if save {
-					m.NumLockState.Set(int32(NumLockOff))
+					m.keyboardConfigMgr.SetValue(0, constants.DSettingsKeyNumLockState, dbus.MakeVariant(NumLockOff))
 				}
 				showOSD("NumLockOff")
 			}
@@ -1055,22 +1152,6 @@ func (m *Manager) destroy() {
 		m.shortcutManager = nil
 	}
 
-	// destroy settings
-	if m.gsSystem != nil {
-		m.gsSystem.Unref()
-		m.gsSystem = nil
-	}
-
-	if m.gsMediaKey != nil {
-		m.gsMediaKey.Unref()
-		m.gsMediaKey = nil
-	}
-
-	if m.gsGnomeWM != nil {
-		m.gsGnomeWM.Unref()
-		m.gsGnomeWM = nil
-	}
-
 	if m.audioController != nil {
 		m.audioController.Destroy()
 		m.audioController = nil
@@ -1143,13 +1224,14 @@ func (m *Manager) emitShortcutSignal(signalName string, shortcut shortcuts.Short
 	}
 }
 
-func (m *Manager) enableListenGSettingsChanged(val bool) {
-	m.enableListenGSettings = val
+func (m *Manager) enableListenDConifigChanged(val bool) {
+	m.enableListenDConfig = val
 }
 
-func (m *Manager) listenGSettingsChanged(schema string, settings *gio.Settings, type0 int32) {
-	gsettings.ConnectChanged(schema, "*", func(key string) {
-		if !m.enableListenGSettings {
+func (m *Manager) listenDConfigChanged(config configManager.Manager, type0 int32) {
+	config.InitSignalExt(m.systemSigLoop, true)
+	config.ConnectValueChanged(func(key string) {
+		if !m.enableListenDConfig {
 			return
 		}
 
@@ -1158,20 +1240,30 @@ func (m *Manager) listenGSettingsChanged(schema string, settings *gio.Settings, 
 			return
 		}
 
-		keystrokes := settings.GetStrv(key)
+		keystrokesValue, err := config.Value(0, key)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		keystrokes, err := convertToStringSlice(keystrokesValue.Value())
+		if err != nil {
+			logger.Warning("Failed to convert keystrokes:", err)
+			return
+		}
 		m.shortcutManager.ModifyShortcutKeystrokes(shortcut, shortcuts.ParseKeystrokes(keystrokes))
 		m.emitShortcutSignal(shortcutSignalChanged, shortcut)
 	})
 }
 
 func (m *Manager) listenSystemEnableChanged() {
-	gsettings.ConnectChanged(gsSchemaSystemEnable, "*", func(key string) {
-		if !m.enableListenGSettings {
+	m.shortcutEnableConfigMgr.InitSignalExt(m.systemSigLoop, true)
+	m.shortcutEnableConfigMgr.ConnectValueChanged(func(key string) {
+		if !m.enableListenDConfig {
 			return
 		}
 
-		if m.shortcutManager.CheckSystem(m.gsSystemPlatform, m.gsSystemEnable, key) {
-			m.shortcutManager.AddSystemById(m.gsSystem, m.wm, key)
+		if m.shortcutManager.CheckSystem(key) {
+			m.shortcutManager.AddSystemById(m.wm, key)
 		} else {
 			m.shortcutManager.DelSystemById(key)
 		}
@@ -1179,13 +1271,14 @@ func (m *Manager) listenSystemEnableChanged() {
 }
 
 func (m *Manager) listenSystemPlatformChanged() {
-	gsettings.ConnectChanged(gsSchemaSystemPlatform, "*", func(key string) {
-		if !m.enableListenGSettings {
+	m.shortcutPlatformMgr.InitSignalExt(m.systemSigLoop, true)
+	m.shortcutPlatformMgr.ConnectValueChanged(func(key string) {
+		if !m.enableListenDConfig {
 			return
 		}
 
-		if m.shortcutManager.CheckSystem(m.gsSystemPlatform, m.gsSystemEnable, key) {
-			m.shortcutManager.AddSystemById(m.gsSystem, m.wm, key)
+		if m.shortcutManager.CheckSystem(key) {
+			m.shortcutManager.AddSystemById(m.wm, key)
 		} else {
 			m.shortcutManager.DelSystemById(key)
 		}

@@ -13,8 +13,8 @@ import (
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/shortcuts"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/util"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -64,20 +64,30 @@ func (m *Manager) isIgnoreRepeat(name string) bool {
 	return false
 }
 
-func (m *Manager) setAccelForWayland(gsettings *gio.Settings, wmObj wm.Wm) {
-	for _, id := range gsettings.ListKeys() {
+func (m *Manager) setAccelForWayland(config configManager.Manager, wmObj wm.Wm) {
+	keys, err := config.KeyList().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	for _, id := range keys {
 		var accelJson string
 		var err error
-		if id == "screenshot-window" {
-			accelJson = `{"Id":"screenshot-window","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
+		if id == "screenshotWindow" {
+			accelJson = `{"Id":"screenshotWindow","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
 		} else if id == "launcher" {
 			accelJson = `{"Id":"launcher","Accels":["Super_L"]}` // wayland左右super对应的都是Super_L
 		} else if id == "system_monitor" {
 			accelJson = `{"Id":"system_monitor","Accels":["<Crtl><Alt>Escape"]}`
 		} else {
+			KeystrokesValue, err := config.Value(0, id)
+			if err != nil {
+				logger.Warning("failed to get value:", err)
+				continue
+			}
 			accelJson, err = util.MarshalJSON(util.KWinAccel{
 				Id:         id,
-				Keystrokes: gsettings.GetStrv(id),
+				Keystrokes: KeystrokesValue.Value().([]string),
 			})
 			if err != nil {
 				logger.Warning("failed to get json:", err)
@@ -87,7 +97,7 @@ func (m *Manager) setAccelForWayland(gsettings *gio.Settings, wmObj wm.Wm) {
 
 		ok, err := wmObj.SetAccel(0, accelJson)
 		if !ok {
-			logger.Warning("failed to set KWin accels:", id, gsettings.GetStrv(id), err)
+			logger.Warning("failed to set KWin accels:", err)
 		}
 	}
 }
@@ -101,18 +111,18 @@ func (m *Manager) Reset() *dbus.Error {
 	customShortcuts := m.customShortcutManager.List()
 	m.shortcutManager.UngrabAll()
 
-	m.enableListenGSettingsChanged(false)
+	m.enableListenDConifigChanged(false)
 	// reset all gsettings
-	resetGSettings(m.gsSystem)
-	resetGSettings(m.gsMediaKey)
-	if m.gsGnomeWM != nil {
-		resetGSettings(m.gsGnomeWM)
+	resetDconfig(m.shortcutSystemConfigMgr)
+	resetDconfig(m.shortcutMediaConfigMgr)
+	if m.shortcutWrapGnomeWmConfigMgr != nil {
+		resetDconfig(m.shortcutWrapGnomeWmConfigMgr)
 	}
 	if _useWayland {
-		m.setAccelForWayland(m.gsSystem, m.wm)
-		m.setAccelForWayland(m.gsMediaKey, m.wm)
-		if m.gsGnomeWM != nil {
-			m.setAccelForWayland(m.gsGnomeWM, m.wm)
+		m.setAccelForWayland(m.shortcutSystemConfigMgr, m.wm)
+		m.setAccelForWayland(m.shortcutMediaConfigMgr, m.wm)
+		if m.shortcutWrapGnomeWmConfigMgr != nil {
+			m.setAccelForWayland(m.shortcutWrapGnomeWmConfigMgr, m.wm)
 		}
 	}
 
@@ -128,7 +138,7 @@ func (m *Manager) Reset() *dbus.Error {
 	}
 
 	changes := m.shortcutManager.ReloadAllShortcutsKeystrokes()
-	m.enableListenGSettingsChanged(true)
+	m.enableListenDConifigChanged(true)
 	m.shortcutManager.GrabAll()
 
 	for _, cs := range customShortcuts {

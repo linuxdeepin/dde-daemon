@@ -94,9 +94,9 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 		onBattery = h.manager.OnBattery
 		var lidCloseAction int32
 		if onBattery {
-			lidCloseAction = m.BatteryLidClosedAction.Get() // 获取合盖操作
+			lidCloseAction = m.BatteryLidClosedAction // 获取合盖操作
 		} else {
-			lidCloseAction = m.LinePowerLidClosedAction.Get() // 获取合盖操作
+			lidCloseAction = m.LinePowerLidClosedAction // 获取合盖操作
 		}
 		switch lidCloseAction {
 		case powerActionShutdown:
