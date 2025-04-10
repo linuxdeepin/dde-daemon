@@ -117,16 +117,14 @@ func (m *Manager) Reset() *dbus.Error {
 	}
 
 	// reset for KWin
-	if shouldUseDDEKwin() {
-		err := resetKWin(m.wm)
-		if err != nil {
-			logger.Warning("failed to reset for KWin:", err)
-		}
-		// 由于快捷键冲突原因，有必要重置两遍
-		err = resetKWin(m.wm)
-		if err != nil {
-			logger.Warning("failed to reset for KWin:", err)
-		}
+	err := resetKWin(m.wm)
+	if err != nil {
+		logger.Warning("failed to reset for KWin:", err)
+	}
+	// 由于快捷键冲突原因，有必要重置两遍
+	err = resetKWin(m.wm)
+	if err != nil {
+		logger.Warning("failed to reset for KWin:", err)
 	}
 
 	changes := m.shortcutManager.ReloadAllShortcutsKeystrokes()
