@@ -394,11 +394,6 @@ func readTinyFile(file string) ([]byte, error) {
 	return buf[:n], nil
 }
 
-func shouldUseDDEKwin() bool {
-	_, err := os.Stat("/usr/bin/kwin_no_scale")
-	return err == nil
-}
-
 func (m *Manager) doLock(autoStartAuth bool) {
 	logger.Info("Lock Screen")
 	// 如果是treeland，直接执行login1 的session lock

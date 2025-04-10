@@ -528,11 +528,7 @@ func (kbd *Keyboard) applyRepeat() {
 	if hasTreeLand {
 		return
 	} else if globalWayland {
-		if kbd.shouldUseDDEKwin() {
-			kbd.applyKwinWaylandRepeat()
-		} else {
-			kbd.applyX11Repeat()
-		}
+		kbd.applyKwinWaylandRepeat()
 	} else {
 		kbd.applyX11Repeat()
 	}
@@ -735,11 +731,6 @@ func (kbd *Keyboard) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 	if ev.Window == rootWin {
 		kbd.handleActiveWindowChanged()
 	}
-}
-
-func (kbd *Keyboard) shouldUseDDEKwin() bool {
-	_, err := os.Stat("/usr/bin/kwin_no_scale")
-	return err == nil
 }
 
 func (kbd *Keyboard) toggleNextLayout() {

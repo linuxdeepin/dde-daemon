@@ -34,6 +34,7 @@ import (
 	power "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
 	systeminfo "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.systeminfo1"
 	DisplayManager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.DisplayManager"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
@@ -313,28 +314,29 @@ func (m *Manager) init() {
 	})
 
 	if _useWayland {
-		if shouldUseDDEKwin() {
-			m.shortcutManager.AddSpecialToKwin(m.wm)
-			m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
-			m.shortcutManager.AddMediaToKwin(m.gsMediaKey, m.wm)
-			m.shortcutManager.AddKWinForWayland(m.wm)
-		} else {
-			m.shortcutManager.AddSpecial()
-			m.shortcutManager.AddSystem(m.gsSystem, m.gsSystemPlatform, m.gsSystemEnable, m.wm)
-			m.shortcutManager.AddMedia(m.gsMediaKey, m.wm)
-			m.gsGnomeWM = gio.NewSettings(gsSchemaGnomeWM)
-			m.shortcutManager.AddWM(m.gsGnomeWM, m.wm)
-		}
+		m.shortcutManager.AddSpecialToKwin(m.wm)
+		m.shortcutManager.AddSystemToKwin(m.gsSystem, m.wm)
+		m.shortcutManager.AddMediaToKwin(m.gsMediaKey, m.wm)
+		m.shortcutManager.AddKWinForWayland(m.wm)
 	} else {
 		m.shortcutManager.AddSystem(m.gsSystem, m.gsSystemPlatform, m.gsSystemEnable, m.wm)
 		m.shortcutManager.AddMedia(m.gsMediaKey, m.wm)
-		if shouldUseDDEKwin() {
-			logger.Debug("Use DDE KWin")
-			m.shortcutManager.AddKWin(m.wm)
+		m.shortcutManager.AddKWin(m.wm)
+		err := sessionBus.BusObject().Call("org.freedesktop.DBus.GetNameOwner",
+			0, "org.kde.kglobalaccel").Store()
+		if err != nil {
+			logger.Warning("kglobalaccel not ready:", err)
+			dbusDaemon := ofdbus.NewDBus(sessionBus)
+			dbusDaemon.InitSignalExt(m.sessionSigLoop, true)
+			dbusDaemon.ConnectNameOwnerChanged(func(name string, oldOwner string, newOwner string) {
+				if name == "org.kde.kglobalaccel" && newOwner != "" {
+					logger.Warning("kglobalaccel ready")
+					m.shortcutManager.AddKWin(m.wm)
+					dbusDaemon.RemoveAllHandlers()
+				}
+			})
 		} else {
-			logger.Debug("Use gnome WM")
-			m.gsGnomeWM = gio.NewSettings(gsSchemaGnomeWM)
-			m.shortcutManager.AddWM(m.gsGnomeWM, m.wm)
+			m.shortcutManager.AddKWin(m.wm)
 		}
 	}
 
