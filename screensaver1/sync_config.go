@@ -6,28 +6,26 @@ package screensaver
 
 import (
 	"encoding/json"
-	"os"
-	"path/filepath"
-
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
-	"github.com/linuxdeepin/go-lib/keyfile"
-	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 const (
 	dScreenSaverPath        = "/org/deepin/dde/ScreenSaver1"
 	dScreenSaverServiceName = "org.deepin.dde.ScreenSaver1"
 
-	gsSchemaPower                  = "com.deepin.dde.power"
-	gsKeyBatteryScreensaverDelay   = "battery-screensaver-delay"
-	gsKeyLinePowerScreensaverDelay = "line-power-screensaver-delay"
+	gsSchemaPower = "com.deepin.dde.power"
 
-	sectionGeneral       = "General"
-	keyCurrent           = "currentScreenSaver"
-	keyLockScreenAtAwake = "lockScreenAtAwake"
+	keyCurrent                     = "currentScreenSaver"
+	keyLockScreenAtAwake           = "lockScreenAtAwake"
+	keybatteryScreenSaverTimeout   = "batteryScreenSaverTimeout"
+	keyLinePowerScreenSaverTimeout = "linePowerScreenSaverTimeout"
+
+	deepinScreensaverDBusServiceName   = "com.deepin.ScreenSaver"
+	deepinScreensaverDBusPath          = "/com/deepin/ScreenSaver"
+	deepinScreensaverDBusInterfaceName = deepinScreensaverDBusServiceName
+	dbusPropertyName                   = "org.freedesktop.DBus.Properties"
 )
-
-var dScreensaverConfigFile = filepath.Join(basedir.GetUserConfigDir(), "deepin/deepin-screensaver.conf")
 
 type syncConfig struct {
 }
@@ -37,19 +35,29 @@ func (sc *syncConfig) Get() (interface{}, error) {
 	defer gs.Unref()
 	var v syncData
 	v.Version = "1.0"
-	v.BatteryDelay = int(gs.GetInt(gsKeyBatteryScreensaverDelay))
-	v.LinePowerDelay = int(gs.GetInt(gsKeyLinePowerScreensaverDelay))
-
-	kf := keyfile.NewKeyFile()
-	err := kf.LoadFromFile(dScreensaverConfigFile)
+	bus, err := dbus.SessionBus()
 	if err != nil {
-		if !os.IsNotExist(err) {
-			return nil, err
-		}
-		return &v, nil
+		logger.Warning(err)
+		return nil, err
 	}
-	v.Current, _ = kf.GetString(sectionGeneral, keyCurrent)
-	v.LockScreenAtAwake, _ = kf.GetBool(sectionGeneral, keyLockScreenAtAwake)
+
+	obj := bus.Object(deepinScreensaverDBusServiceName, deepinScreensaverDBusPath)
+	err = obj.Call(dbusPropertyName+".Get", 0, deepinScreensaverDBusInterfaceName, keyCurrent).Store(&v.Current)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = obj.Call(dbusPropertyName+".Get", 0, deepinScreensaverDBusInterfaceName, keyLockScreenAtAwake).Store(&v.LockScreenAtAwake)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = obj.Call(dbusPropertyName+".Get", 0, deepinScreensaverDBusInterfaceName, keybatteryScreenSaverTimeout).Store(&v.BatteryDelay)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = obj.Call(dbusPropertyName+".Get", 0, deepinScreensaverDBusInterfaceName, keyLinePowerScreenSaverTimeout).Store(&v.LinePowerDelay)
+	if err != nil {
+		logger.Warning(err)
+	}
 	return &v, nil
 }
 
@@ -60,21 +68,24 @@ func (sc *syncConfig) Set(data []byte) error {
 		return err
 	}
 
-	gs := gio.NewSettings(gsSchemaPower)
-	defer gs.Unref()
-	gs.SetInt(gsKeyBatteryScreensaverDelay, int32(v.BatteryDelay))
-	gs.SetInt(gsKeyLinePowerScreensaverDelay, int32(v.LinePowerDelay))
-
-	kf := keyfile.NewKeyFile()
-	err = kf.LoadFromFile(dScreensaverConfigFile)
+	bus, err := dbus.SessionBus()
 	if err != nil {
-		if !os.IsNotExist(err) {
-			return err
+		logger.Warning(err)
+		return err
+	}
+
+	obj := bus.Object(deepinScreensaverDBusServiceName, deepinScreensaverDBusPath)
+	setConfig := func(key string, val interface{}) {
+		err := obj.Call(dbusPropertyName+".Set", 0, deepinScreensaverDBusInterfaceName, key, dbus.MakeVariant(val)).Err
+		if err != nil {
+			logger.Warningf("sync %v to %v failed, %v", key, val, err)
 		}
 	}
-	kf.SetString(sectionGeneral, keyCurrent, v.Current)
-	kf.SetBool(sectionGeneral, keyLockScreenAtAwake, v.LockScreenAtAwake)
-	return kf.SaveToFile(dScreensaverConfigFile)
+	setConfig(keyCurrent, v.Current)
+	setConfig(keyLockScreenAtAwake, v.LockScreenAtAwake)
+	setConfig(keybatteryScreenSaverTimeout, int32(v.BatteryDelay))
+	setConfig(keyLinePowerScreenSaverTimeout, int32(v.LinePowerDelay))
+	return nil
 }
 
 // version: 1.0
