@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	defaultUserBackgroundDir = "/usr/share/wallpapers/deepin/"
+	defaultUserBackgroundDir = "/usr/share/backgrounds/"
 	defaultUserIcon          = "file:///var/lib/AccountsService/icons/default"
 
 	controlCenterPath = "/usr/bin/dde-control-center"
@@ -79,6 +79,9 @@ const (
 	themeGroupDefault       = "DefaultTheme"
 	themeGroupDark          = "DarkTheme"
 	configKeyLockBackground = "LockBackground"
+
+	defaultLockBackgroundFileName = "default_lock_background.jpg"
+	defaultBackgroundFileName     = "default_background.jpg"
 )
 
 func getThemeLockBackground(theme string) string {
@@ -102,11 +105,17 @@ func getThemeLockBackground(theme string) string {
 
 // 通过默认主题去获取壁纸
 func getDefaultUserBackground() string {
-	bg := "file://" + filepath.Join(defaultUserBackgroundDir, "deepin-default.jpg")
-	value := getThemeLockBackground(defaultTheme)
-	if value != "" {
-		bg = value
+	bg := "file://" + filepath.Join(defaultUserBackgroundDir, defaultLockBackgroundFileName)
+	if dutils.IsFileExist(bg) {
+		return bg
 	}
+	logger.Warning("default_lock_background.jpg not exist, try to get from default theme")
+	bg = getThemeLockBackground(defaultTheme)
+	if dutils.IsFileExist(bg) {
+		return bg
+	}
+	logger.Warning("default theme lock background not exist, use default background")
+	bg = "file://" + filepath.Join(defaultUserBackgroundDir, defaultBackgroundFileName)
 	return bg
 }
 
