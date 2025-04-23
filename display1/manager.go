@@ -822,7 +822,11 @@ func (m *Manager) updateMonitorsId(options applyOptions) (changed bool) {
 		logger.Debugf("monitors id changed, old monitors id: %v, new monitors id: %v", oldMonitorsId.v1, newMonitorsId.v1)
 		m.markClean()
 
-		const delayApplyDuration = 1 * time.Second
+		delayApplyDuration := 10 * time.Millisecond
+		if strings.Contains(oldMonitorsId.v1, newMonitorsId.v1) {
+			// 提高延迟时间，避免毛刺（断开-重连现象）导致的问题。
+			delayApplyDuration = 1 * time.Second
+		}
 		if m.delayApplyTimer == nil {
 			m.delayApplyTimer = time.AfterFunc(delayApplyDuration, m.delayApplyConfig)
 		}

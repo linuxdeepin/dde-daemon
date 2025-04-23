@@ -160,11 +160,12 @@ type xMonitorManager struct {
 
 func newXMonitorManager(xConn *x.Conn, hasRandr1d2 bool) *xMonitorManager {
 	xmm := &xMonitorManager{
-		xConn:         xConn,
-		hasRandr1d2:   hasRandr1d2,
-		crtcs:         make(map[randr.Crtc]*CrtcInfo),
-		outputs:       make(map[randr.Output]*OutputInfo),
-		stdNamesCache: make(map[string]string),
+		xConn:                   xConn,
+		hasRandr1d2:             hasRandr1d2,
+		crtcs:                   make(map[randr.Crtc]*CrtcInfo),
+		outputs:                 make(map[randr.Output]*OutputInfo),
+		stdNamesCache:           make(map[string]string),
+		monitorChangedCbEnabled: true,
 	}
 	err := xmm.init()
 	if err != nil {
