@@ -18,6 +18,12 @@ const (
 	lscpuKeyDelim = ":"
 )
 
+const (
+	osVersionFile      = "/etc/os-version"
+	osVersionSplitChar = "="
+	osBuildKey         = "OsBuild"
+)
+
 func getMemoryFromFile(file string) (uint64, error) {
 	ret, err := parseInfoFile(file, memKeyDelim)
 	if err != nil {
@@ -35,6 +41,14 @@ func getMemoryFromFile(file string) (uint64, error) {
 	}
 
 	return cap * 1024, nil
+}
+
+func getOsBuild() (string, error) {
+	content, err := parseInfoFile("/etc/os-version", osVersionSplitChar)
+	if err != nil {
+		return "", err
+	}
+	return content[osBuildKey], nil
 }
 
 // 执行命令：/usr/bin/getconf LONG_BIT 获取系统位数
