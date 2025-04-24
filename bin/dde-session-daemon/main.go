@@ -158,10 +158,6 @@ func init() {
 
 func main() {
 	logger.SetLogLevel(log.LevelInfo)
-	if !allowRun() {
-		logger.Warning("session manager does not allow me to run")
-		os.Exit(1)
-	}
 
 	if isInShutdown() {
 		logger.Warning("system is in shutdown, no need to run")
