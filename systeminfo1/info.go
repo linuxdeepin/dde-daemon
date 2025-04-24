@@ -51,6 +51,8 @@ type SystemInfo struct {
 	CurrentSpeed uint64
 	// Cpu Hardware
 	CPUHardware string
+	// Os Build
+	OsBuild string
 }
 
 type Daemon struct {
@@ -209,6 +211,11 @@ func (info *SystemInfo) init() {
 	info.MemoryCap, err = getMemoryFromFile("/proc/meminfo")
 	if err != nil {
 		logger.Warning("Get memory capacity failed:", err)
+	}
+
+	info.OsBuild, err = getOsBuild()
+	if err != nil {
+		logger.Warning("Get os build failed:", err)
 	}
 
 	if systemBit() == "64" {
