@@ -257,11 +257,11 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "Kalo te desktopi i mëparshëm"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Kalo te desktopi pasues"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
@@ -270,35 +270,35 @@ msgstr "Shfaq desktop"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "Fshihe desktopin"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Shfaq/fshih nisës"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "Butoni i djathtë i miut i shtypur"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
-msgstr ""
+msgstr "Butoni i majtë i miut i shtypur"
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "Shfaq/fshih të papastrën"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Shfaq/fshih kërkimin e madh"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "Shfaq/fshih qendër njoftimesh"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr ""
+msgstr "Çaktivizoje"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -307,7 +307,7 @@ msgstr ""
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "Kalo te spastrim"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
