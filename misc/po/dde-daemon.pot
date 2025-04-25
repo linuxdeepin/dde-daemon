@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-09 10:37+0800\n"
+"POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,9 +70,9 @@ msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 
 #: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
-#: ../../bluetooth1/obex_agent.go:392 ../../bluetooth1/obex_agent.go:407
-#: ../../bluetooth1/obex_agent.go:434 ../../bluetooth1/obex_agent.go:471
-#: ../../bluetooth1/obex_agent.go:526 ../../bluetooth1/utils_notify.go:77
+#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
+#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr ""
@@ -154,57 +154,57 @@ msgstr ""
 msgid "Message notification"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:388 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:395
+#: ../../bluetooth1/obex_agent.go:396
 msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:404
+#: ../../bluetooth1/obex_agent.go:405
 msgid "View"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:411
 msgid "You have received files from %q successfully"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:412
 msgid "Done"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:426 ../../bluetooth1/obex_agent.go:529
+#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
 msgid "Stop Receiving Files"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:428
+#: ../../bluetooth1/obex_agent.go:429
 msgid "You have cancelled the file transfer"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:430
+#: ../../bluetooth1/obex_agent.go:431
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:469
+#: ../../bluetooth1/obex_agent.go:470
 msgid "Decline"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:469
+#: ../../bluetooth1/obex_agent.go:470
 msgid "Receive"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:475
 msgid "Bluetooth File Transfer"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:476
 msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:531
 msgid "Receiving %q timed out"
 msgstr ""
 
@@ -1075,20 +1075,20 @@ msgstr ""
 msgid "Proceed"
 msgstr ""
 
-#: ../../session/power1/manager.go:918
+#: ../../session/power1/manager.go:928
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr ""
 
-#: ../../session/power1/manager.go:919
+#: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
 msgstr ""
 
-#: ../../session/power1/manager.go:920
+#: ../../session/power1/manager.go:930
 msgid "Cancle"
 msgstr ""
 
-#: ../../session/power1/manager.go:920
+#: ../../session/power1/manager.go:930
 msgid "Shut down"
 msgstr ""
 
