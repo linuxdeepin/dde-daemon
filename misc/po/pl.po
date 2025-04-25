@@ -372,7 +372,7 @@ msgstr "Menedżer plików"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:27
 msgid "Disable Touchpad"
-msgstr "Wyłącz touchpad"
+msgstr "Wyłącz panel dotykowy"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
