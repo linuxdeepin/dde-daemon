@@ -247,11 +247,11 @@ msgstr "Przywróć okno"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "Podział do lewej wybranego okna"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "Podział do prawej wybranego okna"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Show multitasking view"
@@ -288,7 +288,7 @@ msgstr "Naciśnięty prawy przycisk myszy"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
-msgstr ""
+msgstr "Uwolniony prawy przycisk myszy"
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
