@@ -269,11 +269,11 @@ msgstr "Ocultar visualização multitarefa"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr "Alternar para a área de trabalho anterior"
+msgstr "Mudar para a área de trabalho anterior"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Mudar para a próxima área de trabalho"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
@@ -282,15 +282,15 @@ msgstr "Área de Trabalho"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "Ocultar área de trabalho"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Mostrar/ocultar iniciador"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "Botão direito do mouse pressionado"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
