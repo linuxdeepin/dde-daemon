@@ -1,3 +1,13 @@
+dde-daemon (6.1.29) unstable; urgency=medium
+
+  * chore: add transifex config file
+  * fix: starting with none screen, then inserted a screen, the screen
+    cannot be lit
+  * feat: Provide osbuild properties
+  * fix: 解决dde-session-daemon启动慢的问题
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Tue, 29 Apr 2025 10:56:39 +0800
+
 dde-daemon (6.1.28) unstable; urgency=medium
 
   * feat: change default lock wallpaper path
