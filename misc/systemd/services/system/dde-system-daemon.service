@@ -131,6 +131,7 @@ ReadWritePaths=-/home
 # TLP
 ReadWritePaths=-/usr/share/tlp/deepin-system-power-control/
 ReadWritePaths=-/etc/tlp.d/
+ReadWritePaths=-/run/tlp/
 
 [Install]
 # We pull this in by graphical.target instead of waiting for the bus
