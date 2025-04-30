@@ -18,9 +18,9 @@
 # jose luis <josemdance@outlook.com>, 2025
 # 555de6651697fc2a607c30c9bb431b88_60731db, 2025
 # Isaías Gätjens M <igatjens@gmail.com>, 2025
-# Zaraza, 2025
 # Alvaro Samudio <alvarosamudio@protonmail.com>, 2025
 # deepiner, 2025
+# Zaraza, 2025
 # 
 #, fuzzy
 msgid ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Zaraza, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/linuxdeepin/teams/3617/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr ""
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr "Por favor, ingrese una contraseña de al menos 8 caracteres"
+msgstr "Ingrese una contraseña de al menos 8 caracteres"
 
 #: ../../accounts1/checkers/password.go:40
 #, c++-format
@@ -246,35 +246,35 @@ msgstr "Emparejar"
 
 #: ../../gesture1/gesture_action.go:38
 msgid "Maximize Window"
-msgstr ""
+msgstr "Maximizar ventana "
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Restore Window"
-msgstr ""
+msgstr "Restaurar ventana"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "Ventana actual dividida a la izquierda"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "Ventana actual dividida a la derecha"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Show multitasking view"
-msgstr ""
+msgstr "Mostrar vista multitarea"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "Ocultar la vista multitarea"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "Cambiar al escritorio anterior"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Cambiar al siguiente escritorio"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
@@ -283,15 +283,15 @@ msgstr "Mostrar escritorio"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "Ocultar el escritorio"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Mostrar/ocultar el lanzador"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "Botón derecho del ratón presionado"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
