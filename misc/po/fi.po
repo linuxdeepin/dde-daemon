@@ -9,9 +9,9 @@
 # Kimmo Siniluoto <robotti1984@gmail.com>, 2025
 # ImSpaceman, 2025
 # Maggie Liu <maggie.liufei@gmail.com>, 2025
-# Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025
 # Deathmist, 2025
 # deepiner, 2025
+# Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025
 # 
 #, fuzzy
 msgid ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/linuxdeepin/teams/3617/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -237,35 +237,35 @@ msgstr "Pari"
 
 #: ../../gesture1/gesture_action.go:38
 msgid "Maximize Window"
-msgstr ""
+msgstr "Suurenna ikkuna"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Restore Window"
-msgstr ""
+msgstr "Palauta ikkuna"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "Ikkuna vasemmalle jaettuna"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "Ikkuna oikealle jaettuna"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Show multitasking view"
-msgstr ""
+msgstr "Näytä työtilat näkymä"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "Piilota työtilat näkymä"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "Vaihda edelliseen työpöytään"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Vaihda seuraavaan työpöytään"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
