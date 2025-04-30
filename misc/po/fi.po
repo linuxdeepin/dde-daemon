@@ -274,11 +274,11 @@ msgstr "Näytä työpöytä"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "Piilota työpöytä"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Näytä tai piillota käynnistin"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
