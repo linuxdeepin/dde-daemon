@@ -282,27 +282,27 @@ msgstr "Näytä tai piillota käynnistin"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "Kun hiiren oikeaa painetaan"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
-msgstr ""
+msgstr "Kun hiiren oikea vapautettu"
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "Näytä tai piillota leikepöytä"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Näytä tai piillota haku"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "Näytä tai piillota ilmoitukset"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr ""
+msgstr "Pois"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
