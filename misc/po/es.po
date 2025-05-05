@@ -564,27 +564,27 @@ msgstr "Error al cambiar el idioma del sistema, por favor intente más tarde"
 
 #: ../../lastore1/daemon.go:186
 msgid "Updates failed: it was interrupted."
-msgstr "Actualizacion fallida: se interrumpió."
+msgstr "La actualizacion falló: se interrumpió."
 
 #: ../../lastore1/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
-"Actualizacion fallida: se interrumpió. Vuelva a la versión anterior e "
+"La actualización falló: se interrumpió. Vuelva a la versión anterior e "
 "inténtelo de nuevo."
 
 #: ../../lastore1/daemon.go:194
 msgid "Updates failed: DPKG error."
-msgstr "Actualizaciones fallidas: error DPKG."
+msgstr "La actualización falló: error DPKG."
 
 #: ../../lastore1/daemon.go:196
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
-"Actualización fallida: error DPKG. Vuelva a la versión anterior e inténtelo "
-"de nuevo"
+"La actualización falló: error DPKG. Vuelva a la versión anterior e inténtelo"
+" de nuevo."
 
 #: ../../lastore1/daemon.go:200
 msgid "Updates failed: insufficient disk space."
@@ -600,7 +600,7 @@ msgstr ""
 
 #: ../../lastore1/daemon.go:206
 msgid "Updates failed"
-msgstr "Actualización fallida"
+msgstr "La actualización falló"
 
 #: ../../lastore1/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
