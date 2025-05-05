@@ -311,7 +311,7 @@ msgstr "Mostrar/ocultar el centro de notificaciones"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr "Deshabilitar"
+msgstr "Desactivar"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
