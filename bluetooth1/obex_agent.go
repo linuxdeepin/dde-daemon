@@ -7,10 +7,8 @@ package bluetooth
 import (
 	"errors"
 	"fmt"
-
 	"math"
 	"math/rand"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -345,7 +343,7 @@ func moveTempFile(src, dest string) string {
 			count++
 			dest = fmt.Sprintf("%v(%v)%v", fileName, count, suffix)
 		} else {
-			err := os.Rename(src, dest)
+			err := dutils.MoveFile(src, dest)
 			if err != nil {
 				fmt.Println("failed to move file:", err)
 			}
