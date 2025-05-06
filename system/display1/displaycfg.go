@@ -294,12 +294,16 @@ func (d *Display) doDetectSupportWayland(sender dbus.Sender) (bool, error) {
 			logger.Warning(err)
 			return false, err
 		}
+		defer outPipe.Close() // 确保管道被关闭
+
 		reader := bufio.NewReader(outPipe)
 		err = cmd.Start()
 		if err != nil {
 			logger.Warning(err)
 			return false, err
 		}
+		defer cmd.Wait() // 确保子进程被正确回收
+
 		for {
 			line, err := reader.ReadBytes('\n')
 			if err != nil {
