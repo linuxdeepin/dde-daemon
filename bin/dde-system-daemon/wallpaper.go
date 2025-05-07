@@ -296,7 +296,7 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
-	err = d.service.Emit(d, "WallpaperChanged", username, uint32(wallpaperAdd), []string{file})
+	err = d.service.Emit(d, "WallpaperChanged", username, uint32(wallpaperAdd), []string{destFile})
 	if err != nil {
 		logger.Warning("failed to emit WallpaperChanged signal:", err)
 	}
