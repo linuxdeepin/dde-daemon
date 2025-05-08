@@ -1,3 +1,9 @@
+dde-daemon (6.1.30) unstable; urgency=medium
+
+  * fix: 解决蓝牙文件传输失败的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 08 May 2025 17:11:02 +0800
+
 dde-daemon (6.1.29) unstable; urgency=medium
 
   * chore: add transifex config file
