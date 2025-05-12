@@ -5,8 +5,8 @@
 # 
 # Translators:
 # Jonas Motiejūnas <exjonas@gmail.com>, 2025
-# Moo, 2025
 # deepiner, 2025
+# Moo, 2025
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Moo, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/linuxdeepin/teams/3617/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +83,7 @@ msgstr "Garso serveris pakeistas, atsijunkite ir vėl prisijunkite"
 #: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
-msgstr ""
+msgstr "dde-control-center"
 
 #: ../../audio1/audio_events.go:445
 #, c-format
@@ -254,11 +254,11 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "Perjungti į ankstesnį darbalaukį"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Perjungti į kitą darbalaukį"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
@@ -267,7 +267,7 @@ msgstr "Rodyti darbalaukį"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "Slėpti darbalaukį"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
@@ -283,7 +283,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "Rodyti/slėpti iškarpinę"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
@@ -295,7 +295,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr ""
+msgstr "Išjungti"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
