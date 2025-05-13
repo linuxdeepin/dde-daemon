@@ -21,6 +21,16 @@
             "description": "current ntp server",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "FallbackNTPServer": {
+            "value": "ntp.aliyun.com",
+            "serial": 0,
+            "flags": ["global"],
+            "name": "fallback ntp server",
+            "name[zh_CN]": "后备的NTP服务地址",
+            "description": "fallback ntp server",
+            "permissions": "readonly",
+            "visibility": "private"
         }
     }
 }

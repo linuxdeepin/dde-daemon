@@ -27,15 +27,16 @@ import (
 //go:generate dbusutil-gen em -type Manager
 
 type Manager struct {
-	core           timedate1.Timedate
-	service        *dbusutil.Service
-	PropsMu        sync.RWMutex
-	NTPServer      string
-	timesyncd      timesync1.Timesync1
-	systemd        systemd1.Manager
-	setNTPServerMu sync.RWMutex
-	signalLoop     *dbusutil.SignalLoop
-	dsManager      ConfigManager.Manager
+	core              timedate1.Timedate
+	service           *dbusutil.Service
+	PropsMu           sync.RWMutex
+	NTPServer         string
+	timesyncd         timesync1.Timesync1
+	systemd           systemd1.Manager
+	setNTPServerMu    sync.RWMutex
+	signalLoop        *dbusutil.SignalLoop
+	dsManager         ConfigManager.Manager
+	fallbackNTPServer string
 }
 
 const (
@@ -54,6 +55,7 @@ const (
 	dsettingsTimeDatedName        = "org.deepin.dde.daemon.timedated"
 	dsettingsKeyObsoleteNTPServer = "ObsoleteNTPServer"
 	dsettingsKeyNTPServer         = "NTPServer"
+	dsettingsFallbackNTPServer    = "FallbackNTPServer"
 )
 
 func NewManager(service *dbusutil.Service) (*Manager, error) {
@@ -108,6 +110,18 @@ func (m *Manager) getDsgNTPServer() string {
 	return v.Value().(string)
 }
 
+func (m *Manager) getDsgFallbackNTPServer() string {
+	if m.dsManager == nil {
+		return ""
+	}
+	v, err := m.dsManager.Value(0, dsettingsFallbackNTPServer)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	return v.Value().(string)
+}
+
 func (m *Manager) setDsgObsoleteNTPServer(server string) error {
 	if m.dsManager == nil {
 		return errors.New("dsManager is nil")
@@ -136,6 +150,7 @@ func (m *Manager) start() {
 	}
 	obsoleteNTPServer := m.getDsgObsoleteNTPServer()
 	ntpServer := m.getDsgNTPServer()
+	m.fallbackNTPServer = m.getDsgFallbackNTPServer()
 
 	logger.Infof("dsg obolete ntp server: %s; dsg ntp server: %s", obsoleteNTPServer, ntpServer)
 	m.systemd = systemd1.NewManager(m.service.Conn())
@@ -259,7 +274,7 @@ func (m *Manager) setNTPServer(value string) error {
 
 	m.setNTPServerMu.Lock()
 	defer m.setNTPServerMu.Unlock()
-	err := setNTPServer(value)
+	err := m.setNTPServerToTimeSyncd(value)
 	if err != nil {
 		return err
 	}
@@ -313,11 +328,22 @@ func doAuthorized(msg, sysBusName string) (bool, error) {
 	return ret.IsAuthorized, nil
 }
 
-func setNTPServer(server string) error {
+func (m *Manager) setNTPServerToTimeSyncd(server string) error {
 	kf := keyfile.NewKeyFile()
 	err := kf.LoadFromFile(timeSyncCfgFile)
 	if err != nil && !os.IsNotExist(err) {
 		return err
+	}
+
+	setFallback, err := m.dsManager.IsDefaultValue(0, dsettingsKeyNTPServer)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	if setFallback && m.fallbackNTPServer != "" {
+		// 配置支持FallbackNtp字段，经过验证无法达到要求，故采用这种方式
+		server += " " + m.fallbackNTPServer
+		logger.Infof("set fallback ntp server: %s", m.fallbackNTPServer)
 	}
 
 	kf.SetString("Time", "NTP", server)
