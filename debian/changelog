@@ -1,3 +1,9 @@
+dde-daemon (6.1.32) unstable; urgency=medium
+
+  * feat: add fallback NTP server support
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Tue, 13 May 2025 21:20:26 +0800
+
 dde-daemon (6.1.31) unstable; urgency=medium
 
   * fix: 修改噪音抑制脚本
