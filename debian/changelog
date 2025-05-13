@@ -1,3 +1,9 @@
+dde-daemon (6.1.31) unstable; urgency=medium
+
+  * fix: 修改噪音抑制脚本
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 13 May 2025 19:37:31 +0800
+
 dde-daemon (6.1.30) unstable; urgency=medium
 
   * fix: 解决蓝牙文件传输失败的问题
