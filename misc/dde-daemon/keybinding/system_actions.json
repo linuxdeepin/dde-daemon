@@ -82,7 +82,7 @@
         },
         {
             "Key": "translation",
-            "Action": "dbus-send  --print-reply --dest=com.iflytek.aiassistant /aiassistant/deepinmain com.iflytek.aiassistant.mainWindow.TextToTranslate"
+            "Action": "/usr/share/uos-ai-assistant/shell/translation.sh"
         },
 		{
             "key":"notification-center",
