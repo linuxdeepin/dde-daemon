@@ -1,2 +1,3 @@
 u deepin-daemon - "Deepin Daemon"
+m deepin-daemon netdev
 g deepin-daemon -
