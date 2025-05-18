@@ -13,11 +13,11 @@
 # RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2025
 # JeffWagen <jeff.wagen@yahoo.com>, 2025
 # Paulo Schopf, 2025
-# Alex, 2025
 # Flavio Lima <flaviolimaviolinista@gmail.com>, 2025
 # 380125ae2590f93d3e1eff2258abdf75_6979c31, 2025
 # deepiner, 2025
 # keven doria, 2025
+# Alex, 2025
 # 
 #, fuzzy
 msgid ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: keven doria, 2025\n"
+"Last-Translator: Alex, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -386,7 +386,7 @@ msgstr "Alternar efeitos visuais"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:29
 msgid "Fast Screen Off"
-msgstr "Desligar Rapidamente a Tela"
+msgstr "Desligamento rápido da tela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:30
 msgid "System Monitor"
