@@ -5,6 +5,7 @@
 package audio
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"time"
@@ -112,6 +113,9 @@ func (a *Audio) saveAudioState() error {
 	}
 
 	sink := a.getDefaultSink()
+	if sink == nil {
+		return fmt.Errorf("not found default sink")
+	}
 	sink.PropsMu.RLock()
 	device := sink.props["alsa.device"]
 	card := sink.props["alsa.card"]

@@ -11,10 +11,10 @@ require (
 	github.com/godbus/dbus/v5 v5.1.0
 	github.com/gosexy/gettext v0.0.0-20160830220431-74466a0a0c4a
 	github.com/jouyouyun/hardware v0.1.8
-	github.com/linuxdeepin/dde-api v0.0.0-20250109021416-9ed771fda2cb
-	github.com/linuxdeepin/go-dbus-factory v0.0.0-20241205055755-b43db97ea584
+	github.com/linuxdeepin/dde-api v0.0.0-20250515055156-b3908acc7af1
+	github.com/linuxdeepin/go-dbus-factory v0.0.0-20250513130423-081e4e5aca69
 	github.com/linuxdeepin/go-gir v0.0.0-20230710064042-bd15f0549c87
-	github.com/linuxdeepin/go-lib v0.0.0-20241205060835-186e3626ee51
+	github.com/linuxdeepin/go-lib v0.0.0-20250514064815-de7ec8f89a8a
 	github.com/linuxdeepin/go-x11-client v0.0.0-20240415051504-c8e43d028ff9
 	github.com/mdlayher/netlink v1.7.2
 	github.com/msteinert/pam v1.2.0
@@ -35,6 +35,7 @@ require (
 	github.com/mozillazg/go-pinyin v0.19.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rickb777/plural v1.4.2 // indirect
+	github.com/smartystreets/goconvey v1.8.1 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/youpy/go-riff v0.1.0 // indirect
 	github.com/youpy/go-wav v0.3.2 // indirect
