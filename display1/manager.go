@@ -2092,30 +2092,30 @@ func (m *Manager) applySysMonitorConfigs(mode byte, monitorsId monitorsId, monit
 		m.setPropDisplayMode(mode)
 	}
 
-	// 异步处理亮度设置
-	go func() {
-		for _, config := range configs {
-			if config.Enabled {
-				err := m.setBrightness(config.Name, config.Brightness)
-				if err != nil {
-					logger.Warningf("call setBrightness err: %v, config.Name: %s", err, config.Name)
-					monitors := m.getConnectedMonitors()
-					monitor := monitors.GetByUuid(config.UUID)
-					// 插拔过程中存在异常monitor空
-					if monitor == nil {
-						logger.Warning("call GetByUuid failed: ", config.UUID)
-						continue
-					}
+	// 不能放在线程中设置亮度，因为后续在设置色温的时候亮度可能还没有设置完成，这时亮度的属性值还没有真正的改变
+	// cfg的值没有设置到monitorMap中，后面再设置色温的时候拿到的monitorMap中的亮度值就是错误的。
+	// TODO：色温和设置亮度都调用了setBrightness的接口，逻辑重复了，需要优化。
+	for _, config := range configs {
+		if config.Enabled {
+			err := m.setBrightness(config.Name, config.Brightness)
+			if err != nil {
+				logger.Warningf("call setBrightness err: %v, config.Name: %s", err, config.Name)
+				monitors := m.getConnectedMonitors()
+				monitor := monitors.GetByUuid(config.UUID)
+				// 插拔过程中存在异常monitor空
+				if monitor == nil {
+					logger.Warning("call GetByUuid failed: ", config.UUID)
+					continue
+				}
 
-					err := m.setBrightness(monitor.Name, config.Brightness)
-					if err != nil {
-						logger.Warningf("call setBrightness err: %v, monitor.Name: %s", err, monitor.Name)
-					}
+				err := m.setBrightness(monitor.Name, config.Brightness)
+				if err != nil {
+					logger.Warningf("call setBrightness err: %v, monitor.Name: %s", err, monitor.Name)
 				}
 			}
 		}
-		m.syncPropBrightness()
-	}()
+	}
+	m.syncPropBrightness()
 
 	// NOTE: Primary 和 PrimaryRect 属性改变信号应该在 DisplayMode 属性改变之后，否则会引发前端 dcc 的 bug。
 	err = m.mm.setMonitorPrimary(primaryMonitorID)
