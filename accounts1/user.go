@@ -581,6 +581,11 @@ func (u *User) checkAuth(sender dbus.Sender, selfPass bool, actionId string) err
 		return nil
 	}
 
+	if !isSelf {
+		// 鉴权非本用户的数据一律需要鉴权管理员
+		actionId = polkitActionUserAdministration
+	}
+
 	if actionId == "" {
 		if isSelf {
 			actionId = polkitActionChangeOwnData
