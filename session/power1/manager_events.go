@@ -74,7 +74,7 @@ func (m *Manager) handleBeforeSuspend() {
 	m.setDDEBlackScreenActive(true)
 	if m.UseWayland {
 		// 如果是treeland，并且待机休眠唤醒是需要解锁，则将session 给lock
-		if m.SleepLock.Get() {
+		if m.SleepLock {
 			err := m.currentSession.Lock(0)
 			if err != nil {
 				logger.Warning("set session lock failed:", err)
@@ -172,9 +172,9 @@ func (m *Manager) handleWakeupDDELowPowerCheck() {
 			}
 			m.setPropBatteryPercentage(percentage)
 
-			logger.Info(" PrepareForSleep(False) : wakeup,  Battery percentage : ", percentage, m.BatteryPercentage[batteryDisplay], m.warnLevelConfig.ActionPercentage.Get())
+			logger.Info(" PrepareForSleep(False) : wakeup,  Battery percentage : ", percentage, m.BatteryPercentage[batteryDisplay], m.warnLevelConfig.ActionPercentage)
 
-			if percentage <= float64(m.warnLevelConfig.ActionPercentage.Get()) {
+			if percentage <= float64(m.warnLevelConfig.ActionPercentage) {
 				return
 			}
 		}
@@ -268,7 +268,7 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 		m.warnLevelCountTicker = newCountTicker(time.Second, func(count int) {
 			if count == 3 {
 				// after 3 seconds, lock and then show dde low power
-				if m.SleepLock.Get() {
+				if m.SleepLock {
 					m.lockWaitShow(5*time.Second, false)
 				}
 			} else if count == 4 {
@@ -277,7 +277,7 @@ func (m *Manager) handleWarnLevelChanged(level WarnLevel) {
 				// after 5 seconds, force suspend
 				m.disableWarnLevelCountTicker()
 
-				if m.LowPowerAction.Get() == lowPowerActionSuspend {
+				if m.LowPowerAction == lowPowerActionSuspend {
 					m.doSuspend()
 				} else {
 					m.doHibernate()
