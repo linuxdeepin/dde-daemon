@@ -1,3 +1,11 @@
+dde-daemon (6.1.33) unstable; urgency=medium
+
+  * fix: 修复认证漏洞
+  * fix: extend custom timezone list
+  * fix: 解决亮度概率异常的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 27 May 2025 20:26:35 +0800
+
 dde-daemon (6.1.32) unstable; urgency=medium
 
   * feat: add fallback NTP server support
