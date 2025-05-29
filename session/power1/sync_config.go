@@ -13,8 +13,8 @@ type syncConfig struct {
 func (sc *syncConfig) Get() (interface{}, error) {
 	return &syncData{
 		Version:         "1.0",
-		ScreenBlackLock: sc.m.ScreenBlackLock.Get(),
-		SleepLock:       sc.m.SleepLock.Get(),
+		ScreenBlackLock: sc.m.ScreenBlackLock,
+		SleepLock:       sc.m.SleepLock,
 	}, nil
 }
 
@@ -24,8 +24,8 @@ func (sc *syncConfig) Set(data []byte) error {
 	if err != nil {
 		return err
 	}
-	sc.m.ScreenBlackLock.Set(v.ScreenBlackLock)
-	sc.m.SleepLock.Set(v.SleepLock)
+	sc.m.ScreenBlackLock = v.ScreenBlackLock
+	sc.m.SleepLock = v.SleepLock
 	return nil
 }
 

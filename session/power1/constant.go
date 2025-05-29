@@ -6,60 +6,62 @@ package power
 
 // nolint
 const (
-	gsSchemaPower = "com.deepin.dde.power"
-	// settingKeys
-	settingKeyBatteryScreensaverDelay = "battery-screensaver-delay"
-	settingKeyBatteryScreenBlackDelay = "battery-screen-black-delay"
-	settingKeyBatterySleepDelay       = "battery-sleep-delay"
-	settingKeyBatteryLockDelay        = "battery-lock-delay"
-
-	settingKeyLinePowerScreensaverDelay = "line-power-screensaver-delay"
-	settingKeyLinePowerScreenBlackDelay = "line-power-screen-black-delay"
-	settingKeyLinePowerSleepDelay       = "line-power-sleep-delay"
-	settingKeyLinePowerLockDelay        = "line-power-lock-delay"
-
-	settingKeyAdjustBrightnessEnabled       = "adjust-brightness-enabled"
-	settingKeyAmbientLightAdjuestBrightness = "ambient-light-adjust-brightness"
-	settingKeyScreenBlackLock               = "screen-black-lock"
-	settingKeySleepLock                     = "sleep-lock"
-
-	settingKeyLinePowerLidClosedAction     = "line-power-lid-closed-action"
-	settingKeyLinePowerPressPowerBtnAction = "line-power-press-power-button"
-	settingKeyBatteryLidClosedAction       = "battery-lid-closed-action"
-	settingKeyBatteryPressPowerBtnAction   = "battery-press-power-button"
-	settingKeyLowPowerNotifyEnable         = "low-power-notify-enable"
-	settingKeyLowPowerNotifyThreshold      = "low-power-notify-threshold"
-	settingKeyLowPowerAutoSleepThreshold   = "percentage-action"
-	settingKeyLowPowerAction               = "low-power-action"
-	settingKeyBrightnessDropPercent        = "brightness-drop-percent"
-	settingKeyPowerSavingEnabled           = "power-saving-mode-enabled"
-
-	settingKeyPowerButtonPressedExec = "power-button-pressed-exec"
-
-	settingKeyFullScreenWorkaroundEnabled = "fullscreen-workaround-enabled"
-	settingKeyUsePercentageForPolicy      = "use-percentage-for-policy"
-
-	settingKeyLowPercentage      = "percentage-low"
-	settingKeyDangerlPercentage  = "percentage-danger"
-	settingKeyCriticalPercentage = "percentage-critical"
-	settingKeyActionPercentage   = "percentage-action"
-
-	settingKeyLowTime      = "time-to-empty-low"
-	settingKeyDangerTime   = "time-to-empty-danger"
-	settingKeyCriticalTime = "time-to-empty-critical"
-	settingKeyActionTime   = "time-to-empty-action"
-
-	settingKeySaveBrightnessWhilePsm = "save-brightness-while-psm"
-
-	settingLightSensorEnabled = "light-sensor-enabled"
-	settingKeyMode            = "mode"
-
-	settingKeyHighPerformanceEnabled = "high-performance-enabled"
-
 	// cmd
 	cmdDDELowPower = "/usr/lib/deepin-daemon/dde-lowpower"
 
 	batteryDisplay = "Display"
+)
+
+// dconfig keys
+const (
+	dsettingLinePowerScreensaverDelay            = "linePowerScreensaverDelay"
+	dsettingBatteryScreensaverDelay              = "batteryScreensaverDelay"
+	dsettingPowerSavingModeBrightnessDropPercent = "powerSavingModeBrightnessDropPercent"
+	dsettingBatteryScreenBlackDelay              = "batteryScreenBlackDelay"
+	dsettingBatterySleepDelay                    = "batterySleepDelay"
+	dsettingLinePowerScreenBlackDelay            = "linePowerScreenBlackDelay"
+	dsettingLinePowerSleepDelay                  = "linePowerSleepDelay"
+	dsettingLinePowerLockDelay                   = "linePowerLockDelay"
+	dsettingBatteryLockDelay                     = "batteryLockDelay"
+	dsettingAdjustBrightnessEnabled              = "adjustBrightnessEnabled"
+	dsettingAmbientLightAdjustBrightness         = "ambientLightAdjustBrightness"
+	dsettingScreenBlackLock                      = "screenBlackLock"
+	dsettingSleepLock                            = "sleepLock"
+	dsettingLidClosedSleep                       = "lidClosedSleep"
+	dsettingBatteryLidClosedSleep                = "batteryLidClosedSleep"
+	dsettingPowerButtonPressedExec               = "powerButtonPressedExec"
+	dsettingFullscreenWorkaroundAppList          = "fullscreenWorkaroundAppList"
+	dsettingUsePercentageForPolicy               = "usePercentageForPolicy"
+	dsettingPowerModuleInitialized               = "powerModuleInitialized"
+	dsettingLowPowerNotifyThreshold              = "lowPowerNotifyThreshold"
+	dsettingLowPowerAction                       = "lowPowerAction"
+	dsettingPercentageAction                     = "percentageAction"
+	dsettingTimeToEmptyLow                       = "timeToEmptyLow"
+	dsettingTimeToEmptyDanger                    = "timeToEmptyDanger"
+	dsettingTimeToEmptyCritical                  = "timeToEmptyCritical"
+	dsettingTimeToEmptyAction                    = "timeToEmptyAction"
+	dsettingLinePowerLidClosedAction             = "linePowerLidClosedAction"
+	dsettingLinePowerPressPowerButton            = "linePowerPressPowerButton"
+	dsettingBatteryLidClosedAction               = "batteryLidClosedAction"
+	dsettingBatteryPressPowerButton              = "batteryPressPowerButton"
+	dsettingLowPowerNotifyEnable                 = "lowPowerNotifyEnable"
+	dsettingSaveBrightnessWhilePsm               = "saveBrightnessWhilePsm"
+	dsettingLightSensorEnabled                   = "lightSensorEnabled"
+	dsettingLowPowerPercentInUpdatingNotify      = "lowPowerPercentInUpdatingNotify"
+	dsettingHighPerformanceEnabled               = "highPerformanceEnabled"
+	dsettingsPowerSavingModeEnabled              = "powerSavingModeEnabled"
+	dsettingScheduledShutdownState               = "scheduledShutdownState"
+	dsettingShutdownTime                         = "shutdownTime"
+	dsettingShutdownRepetition                   = "shutdownRepetition"
+	dsettingCustomShutdownWeekDays               = "customShutdownWeekDays"
+	dsettingShutdownCountdown                    = "shutdownCountdown"
+	dsettingNextShutdownTime                     = "nextShutdownTime"
+)
+
+const (
+	DSettingsAppID        = "org.deepin.dde.daemon"
+	DSettingsDisplayName  = "org.deepin.Display"
+	DSettingsAutoChangeWm = "auto-change-deepin-wm"
 )
 
 const (
