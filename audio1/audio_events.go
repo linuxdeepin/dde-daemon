@@ -570,6 +570,9 @@ func (a *Audio) writeReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
 	if !ok {
 		return dbusutil.ToError(errors.New("type is not bool"))
 	}
+	if a.ReduceNoise == reduce {
+		return nil
+	}
 
 	if reduce && isBluezAudio(a.defaultSource.Name) {
 		logger.Debug("bluetooth audio device cannot open reduce-noise")
