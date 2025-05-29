@@ -1,3 +1,10 @@
+dde-daemon (6.1.34) unstable; urgency=medium
+
+  * chore: 更正一些dbus的调用，使用org风格接口名进行调用
+  * fix: 解决降噪设置被重复触发的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 29 May 2025 15:36:14 +0800
+
 dde-daemon (6.1.33) unstable; urgency=medium
 
   * fix: 修复认证漏洞
