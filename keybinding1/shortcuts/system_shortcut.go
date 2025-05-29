@@ -108,7 +108,7 @@ var defaultSysActionCmdMap = map[string]string{
 	"clipboard":              "dbus-send --print-reply --dest=org.deepin.dde.Clipboard1 /org/deepin/dde/Clipboard1 org.deepin.dde.Clipboard1.Toggle; dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Hide",
 	"global-search":          "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
 	"switch-next-kbd-layout": "dbus-send --print-reply --dest=org.deepin.dde.Keybinding1 /org/deepin/dde/InputDevice1/Keyboard org.deepin.dde.InputDevice1.Keyboard.ToggleNextLayout",
-	"switch-monitors":        "dbus-send --print-reply --dest=org.deepin.dde.Osd1 / org.deepin.dde.Osd1.ShowOSD string:SwitchMonitors",
+	"switch-monitors":        "/usr/libexec/dde-daemon/keybinding/shortcut-dde-switch-monitors.sh",
 	// cmd
 	"calculator": "/usr/bin/deepin-calculator",
 	"search":     "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
