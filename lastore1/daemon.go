@@ -12,7 +12,7 @@ import (
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
-	notifications "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.dde.notification"
+	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.notification1"
 	abrecovery "github.com/linuxdeepin/go-dbus-factory/system/com.deepin.abrecovery"
 	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
