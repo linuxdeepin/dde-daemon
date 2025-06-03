@@ -43,9 +43,7 @@ const (
 	tpadKeyPalmMinWidth       = "palm-min-width"
 	tpadKeyPalmMinZ           = "palm-min-pressure"
 
-	dsettingsAppID        = "org.deepin.dde.daemon"
-	dsettingsInputdevices = "org.deepin.dde.daemon.inputdevices"
-	dsettingsData         = "ps2MouseAsTouchPadEnabled"
+	dsettingsData = "ps2MouseAsTouchPadEnabled"
 )
 
 const (

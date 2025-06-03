@@ -39,13 +39,15 @@ type touchpadInfo struct {
 type Mouses []*mouseInfo
 type Touchpads []*touchpadInfo
 type dxWacoms []*dxinput.Wacom
+type Keyboards []*dxinput.Keyboard
 
 var (
-	_devInfos    common.DeviceInfos
-	_mouseInfos  Mouses
-	_tpadInfos   Touchpads
-	_wacomInfos  dxWacoms
-	_gudevClient = gudev.NewClient([]string{"input"})
+	_devInfos     common.DeviceInfos
+	_mouseInfos   Mouses
+	_tpadInfos    Touchpads
+	_wacomInfos   dxWacoms
+	_keyboardnfos Keyboards
+	_gudevClient  = gudev.NewClient([]string{"input"})
 )
 
 func startDeviceListener() {
@@ -69,6 +71,8 @@ func handleDeviceChanged() {
 	getMouseInfos(false)
 	_wacomInfos = dxWacoms{}
 	getWacomInfos(false)
+	_keyboardnfos = Keyboards{}
+	getKeyboardInfos(false)
 
 	if _manager == nil {
 		logger.Warning("_manager is nil")
@@ -309,4 +313,29 @@ func (info mouseInfo) isVirtual() bool {
 
 func (info touchpadInfo) isVirtual() bool {
 	return strings.Contains(info.sysfsPath, "virtual")
+}
+
+func getKeyboardInfos(force bool) Keyboards {
+	if !force && len(_keyboardnfos) != 0 {
+		return _keyboardnfos
+	}
+
+	_keyboardnfos = Keyboards{}
+	for _, info := range getDeviceInfos(false) {
+		if info.Type == common.DevTypeKeyboard {
+			tmp, _ := dxinput.NewKeyboardDevInfo(info)
+			_keyboardnfos = append(_keyboardnfos, tmp)
+		}
+	}
+
+	return _keyboardnfos
+}
+
+func (infos Keyboards) get(id int32) *dxinput.Keyboard {
+	for _, info := range infos {
+		if info.Id == id {
+			return info
+		}
+	}
+	return nil
 }

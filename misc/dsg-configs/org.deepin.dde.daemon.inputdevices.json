@@ -34,6 +34,17 @@
         "description": "",
         "permissions": "readwrite",
         "visibility": "private"
+      },
+      "keyboardEnabled": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "keyboard_Enabled",
+        "name[zh_CN]": "键盘启用状态",
+        "description[zh_CN]": "用户级别键盘开关",
+        "description": "",
+        "permissions": "readwrite",
+        "visibility": "public"
       }
   }
 }

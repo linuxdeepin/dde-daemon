@@ -129,6 +129,19 @@ func doHandleKWinDeviceAdded(sysName string) {
 			}
 		}
 		_manager.tpad.handleDeviceChanged()
+	case common.DevTypeKeyboard:
+		v, _ := dxinput.NewKeyboardDevInfo(info)
+		if len(_keyboardnfos) == 0 {
+			_keyboardnfos = append(_keyboardnfos, v)
+		} else {
+			for _, tmp := range _keyboardnfos {
+				if tmp.Id == v.Id {
+					continue
+				}
+				_keyboardnfos = append(_keyboardnfos, v)
+			}
+		}
+		_manager.kbd.handleDeviceChanged()
 	}
 }
 
