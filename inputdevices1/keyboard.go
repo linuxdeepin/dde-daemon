@@ -18,6 +18,7 @@ import (
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/dxinput"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
 	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -52,6 +53,8 @@ const (
 	qtDefaultConfig = ".config/Trolltech.conf"
 
 	cmdSetKbd = "/usr/bin/setxkbmap"
+
+	dsettingsKeyboardEnabledKey = "keyboardEnabled"
 )
 
 type Keyboard struct {
@@ -82,7 +85,9 @@ type Keyboard struct {
 	user      accounts.User
 	layoutMap layoutMap
 
-	devNumber int
+	devNumber      int
+	devInfos       Keyboards
+	dsgInputConfig configManager.Manager
 }
 
 func newKeyboard(service *dbusutil.Service) *Keyboard {
@@ -158,6 +163,8 @@ func newKeyboard(service *dbusutil.Service) *Keyboard {
 	kbd.listenSettingsChanged()
 	kbd.listenRootWindowXEvent()
 	kbd.startXEventLoop()
+	kbd.initDsgConfig()
+	kbd.updateDXKeyboards()
 	return kbd
 }
 
@@ -275,6 +282,8 @@ func (kbd *Keyboard) handleDeviceChanged() {
 		kbd.applySettings()
 	}
 	kbd.devNumber = num
+
+	kbd.updateDXKeyboards()
 }
 
 func (kbd *Keyboard) applyLayout() {
@@ -741,4 +750,60 @@ func (kbd *Keyboard) toggleNextLayout() {
 			return
 		}
 	}
+}
+
+func (kbd *Keyboard) updateDXKeyboards() {
+	logger.Debug("updateDXKeyboards")
+	kbd.devInfos = Keyboards{}
+	for _, info := range getKeyboardInfos(false) {
+		tmp := kbd.devInfos.get(info.Id)
+		if tmp != nil {
+			continue
+		}
+		kbd.devInfos = append(kbd.devInfos, info)
+	}
+
+	value, err := kbd.dsgInputConfig.Value(0, dsettingsKeyboardEnabledKey)
+	if err != nil {
+		logger.Warningf("getDsgData key : %s. err : %s", dsettingsKeyboardEnabledKey, err)
+		return
+	}
+
+	if enableKeyboard, ok := value.Value().(bool); ok {
+		for _, dev := range kbd.devInfos {
+			dev.Enable(enableKeyboard)
+		}
+	}
+}
+
+func (kbd *Keyboard) initDsgConfig() error {
+	logger.Debug("initDsgConfig")
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+		return nil
+	}
+	// 加载dsg配置
+	dsg := configManager.NewConfigManager(systemBus)
+
+	inputDevicesPath, err := dsg.AcquireManager(0, dsettingsAppID, dsettingsInputdevices, "")
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	kbd.dsgInputConfig, err = configManager.NewManager(systemBus, inputDevicesPath)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+
+	kbd.dsgInputConfig.InitSignalExt(kbd.sysSigLoop, true)
+	kbd.dsgInputConfig.ConnectValueChanged(func(key string) {
+		logger.Infof("key: %v", key)
+		if key == dsettingsKeyboardEnabledKey {
+			kbd.updateDXKeyboards()
+		}
+	})
+	return nil
 }

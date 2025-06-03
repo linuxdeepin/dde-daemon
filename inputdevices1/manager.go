@@ -23,6 +23,9 @@ const (
 	gsSchemaInputDevices = "com.deepin.dde.inputdevices"
 	gsKeyWheelSpeed      = "wheel-speed"
 	imWheelBin           = "imwheel"
+
+	dsettingsAppID        = "org.deepin.dde.daemon"
+	dsettingsInputdevices = "org.deepin.dde.daemon.inputdevices"
 )
 
 type devicePathInfo struct {
