@@ -338,9 +338,6 @@ func getTemperatureWithLine(line []byte) (int, bool) {
 
 // dbus 上导出的方法
 func (m *Manager) setColorTempValue(value int32) error {
-	if m.ColorTemperatureMode != ColorTemperatureModeManual {
-		return errors.New("current not manual mode, can not adjust color temperature by manual")
-	}
 	if !isValidColorTempValue(value) {
 		return errors.New("value out of range")
 	}
@@ -393,7 +390,12 @@ func (m *Manager) getColorTemperatureValue() int {
 	case ColorTemperatureModeManual:
 		return int(manual)
 	case ColorTemperatureModeAuto:
-		return m.redshiftRunner.getValue()
+		value := m.redshiftRunner.getValue()
+		// 日落时，返回手动设置的色温(from v20)
+		if value != defaultTemperature {
+			value = int(manual)
+		}
+		return value
 	case ColorTemperatureModeCustom:
 		value := defaultTemperature
 		if m.customColorTempFlag {
