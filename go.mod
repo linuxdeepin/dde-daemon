@@ -11,7 +11,7 @@ require (
 	github.com/godbus/dbus/v5 v5.1.0
 	github.com/gosexy/gettext v0.0.0-20160830220431-74466a0a0c4a
 	github.com/jouyouyun/hardware v0.1.8
-	github.com/linuxdeepin/dde-api v0.0.0-20250515055156-b3908acc7af1
+	github.com/linuxdeepin/dde-api v0.0.0-20250603084823-9f6196d55806
 	github.com/linuxdeepin/go-dbus-factory v0.0.0-20250513130423-081e4e5aca69
 	github.com/linuxdeepin/go-gir v0.0.0-20230710064042-bd15f0549c87
 	github.com/linuxdeepin/go-lib v0.0.0-20250514064815-de7ec8f89a8a

@@ -29,7 +29,6 @@ func getSystemIdNameMap() map[string]string {
 		"turn-off-screen":        gettext.Tr("Fast Screen Off"),
 		"system-monitor":         gettext.Tr("System Monitor"),
 		"color-picker":           gettext.Tr("Deepin Picker"),
-		"ai-assistant":           gettext.Tr("Desktop AI Assistant"),
 		"text-to-speech":         gettext.Tr("Text to Speech"),
 		"speech-to-text":         gettext.Tr("Speech to Text"),
 		"clipboard":              gettext.Tr("Clipboard"),
