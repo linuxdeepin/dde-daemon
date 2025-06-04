@@ -15,6 +15,9 @@ import (
 // 在 wayland 下，仅显示器属性改变。
 func (m *Manager) handleMonitorChanged(monitorInfo *MonitorInfo) {
 	m.updateMonitor(monitorInfo)
+	if monitorInfo.Enabled {
+		m.tryToChangeScaleFactor(monitorInfo.Width, monitorInfo.Height)
+	}
 	if _useWayland {
 		return
 	}
@@ -54,6 +57,7 @@ func (m *Manager) handleMonitorAdded(monitorInfo *MonitorInfo) {
 	}
 	m.updatePropMonitors()
 	m.updateMonitorsId(nil)
+	m.tryToChangeScaleFactor(monitorInfo.Width, monitorInfo.Height)
 }
 
 // wayland 下断开显示器
