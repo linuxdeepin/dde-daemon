@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"math"
 	"os"
 	"os/exec"
@@ -19,11 +18,15 @@ import (
 	"sync"
 	"time"
 
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+
 	"github.com/davecgh/go-spew/spew"
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/dxinput"
 	dxutil "github.com/linuxdeepin/dde-api/dxinput/utils"
+	"github.com/linuxdeepin/dde-daemon/common/scale"
 	"github.com/linuxdeepin/dde-daemon/display1/brightness"
+	xs "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.xsettings1"
 	sysdisplay "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.display1"
 	dgesture "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.gesture1"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.inputdevices1"
@@ -228,6 +231,8 @@ type Manager struct {
 	ColorTemperatureManual    int32
 	CustomColorTempTimePeriod string
 
+	xsManager xs.XSettings
+
 	isVM bool
 }
 
@@ -252,6 +257,9 @@ func newManager(service *dbusutil.Service) *Manager {
 			"Loongson",
 		},
 		isVM: isVM,
+	}
+	if !_greeterMode {
+		m.xsManager = xs.NewXSettings(m.service.Conn())
 	}
 	m.redshiftRunner.cb = func(value int) {
 		m.setColorTempOneShot()
@@ -3041,4 +3049,50 @@ func (m *Manager) detectDrmSupportGamma() bool {
 		}
 	}
 	return false
+}
+
+// 从控制中心迁移过来计算屏幕缩放范围。此函数返回屏幕最大的缩放值
+func calcMaxScaleFactor(width, height uint16) float64 {
+	scaleFactors := []float64{1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0}
+
+	maxWScale := float64(width) / 1024.0
+	maxHScale := float64(height) / 768.0
+
+	maxValue := 0.0
+	if maxWScale < maxHScale {
+		maxValue = maxWScale
+	} else {
+		maxValue = maxHScale
+	}
+
+	if maxValue > 3.0 {
+		maxValue = 3.0
+	}
+
+	maxScale := 0.0
+	for idx := 0; (float64(idx)*0.25 + 1.0) <= maxValue; idx++ {
+		maxScale = scaleFactors[idx]
+	}
+
+	return maxScale
+}
+
+func (m *Manager) tryToChangeScaleFactor(monitorWidth, monitorHeight uint16) {
+	// x 下拔掉显示器会触发更新操作，高宽均为0
+	if monitorWidth == 0 || monitorHeight == 0 {
+		return
+	}
+
+	curScale, err := m.xsManager.GetScaleFactor(0)
+	if err != nil {
+		logger.Warning("failed to get scale factor:", err)
+		return
+	}
+
+	maxScale := calcMaxScaleFactor(monitorWidth, monitorHeight)
+	if curScale > maxScale && m.xsManager != nil {
+		recommendScaleFactor := scale.GetRecommendedScaleFactor(m.xConn)
+		// 更新scale factor
+		m.xsManager.SetScaleFactor(0, recommendScaleFactor)
+	}
 }
