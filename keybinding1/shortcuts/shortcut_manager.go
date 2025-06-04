@@ -21,7 +21,6 @@ import (
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/record"
@@ -958,12 +957,7 @@ func (sm *ShortcutManager) CheckSystem(gsPlatform, gsEnable *gio.Settings, id st
 	platformSet := arr2set(gsPlatform.ListKeys())
 	enableSet := arr2set(gsEnable.ListKeys())
 	sysType := strings.ToLower(systemType())
-	assistiveToolsShortcut := []string{
-		"ai-assistant",
-		"speech-to-text",
-		"text-to-speech",
-		"translation",
-	}
+
 	// 判断是否是支持的平台
 	if platformSet[id] {
 		plats := gsPlatform.GetStrv(id)
@@ -972,9 +966,6 @@ func (sm *ShortcutManager) CheckSystem(gsPlatform, gsEnable *gio.Settings, id st
 		if !platSet["all"] && !platSet[sysType] {
 			return false
 		}
-	}
-	if sysType == "community" && strv.Strv(assistiveToolsShortcut).Contains(id) {
-		return false
 	}
 
 	// 判断是否配置开启

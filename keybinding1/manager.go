@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 	"github.com/linuxdeepin/go-lib/strv"
 
@@ -486,7 +487,6 @@ var kwinSysActionCmdMap = map[string]string{
 	"Deepin Picker":         "color-picker",           // ctrl+alt+v
 	"System Monitor":        "system-monitor",         // ctrl+alt+escape
 	"Screen Recorder":       "deepin-screen-recorder", // deepin-screen-recorder ctrl+alt+r
-	"Desktop AI Assistant":  "ai-assistant",           // ai-assistant [<Super>Q]q
 	"Text to Speech":        "text-to-speech",
 	"Speech to Text":        "speech-to-text",
 	"Clipboard":             "clipboard",

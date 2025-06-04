@@ -32,8 +32,8 @@ github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfn
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
-github.com/linuxdeepin/dde-api v0.0.0-20250515055156-b3908acc7af1 h1:DJKDkej1SKeVmHUTRW6P/YYUjUWmD8BVee0PDhBvlqo=
-github.com/linuxdeepin/dde-api v0.0.0-20250515055156-b3908acc7af1/go.mod h1:Ms92CRDOjzkDmX1x0x6+b0vQSYHJ7Ab9jQMY2JYWiio=
+github.com/linuxdeepin/dde-api v0.0.0-20250603084823-9f6196d55806 h1:MB+P88Freh09A1wKmrDbR2ZryElMxX1I7fz6E/f1Ono=
+github.com/linuxdeepin/dde-api v0.0.0-20250603084823-9f6196d55806/go.mod h1:Ms92CRDOjzkDmX1x0x6+b0vQSYHJ7Ab9jQMY2JYWiio=
 github.com/linuxdeepin/go-dbus-factory v0.0.0-20250513130423-081e4e5aca69 h1:fkdKGNucj9zg7P+C2OGYi/jDDReH9l8Pry0XKUi+YfM=
 github.com/linuxdeepin/go-dbus-factory v0.0.0-20250513130423-081e4e5aca69/go.mod h1:iIlTR50SA8MJ9ORPyMOpKWMF4g+AUorbER5AX0RD9Jk=
 github.com/linuxdeepin/go-gir v0.0.0-20230331033513-a8d7a9e89f9b/go.mod h1:a0tox5vepTQu5iO6rdKc4diGT+fkyXZlRROM8ULEvaI=
