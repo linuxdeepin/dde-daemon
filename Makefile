@@ -221,6 +221,9 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
 	cp -r misc/dsg-configs/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
 
+	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.lightdm-deepin-greeter
+	cp -r misc/dsg-configs/org.deepin.dde.lightdm-deepin-greeter/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.lightdm-deepin-greeter/
+
 	cp -f misc/scripts/dde-lock.sh ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 	cp -f misc/scripts/dde-shutdown.sh ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 install-dde-data:
