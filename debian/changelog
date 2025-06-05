@@ -1,3 +1,15 @@
+dde-daemon (6.1.35) unstable; urgency=medium
+
+  * feat: add lightdm-deepin-greeter configuration files to installation
+    for quick login
+  * refactor: remove ai-assistant shortcuts and related actions
+  * fix: 修复换不同显示器后系统缩放未改变的问题。
+  * feat: integrate keyboard management with dsg configuration
+  * fix: remove manual mode check and adjust auto mode logic
+  * feat: 快捷键切换屏幕时判断有效屏幕数量
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 05 Jun 2025 20:48:02 +0800
+
 dde-daemon (6.1.34) unstable; urgency=medium
 
   * chore: 更正一些dbus的调用，使用org风格接口名进行调用
