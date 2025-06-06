@@ -4,23 +4,23 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# electricface <songwentai@linuxdeepin.com>, 2024
-# Michael Jay Tong <michaeljayt@gmail.com>, 2024
-# transifex deepin <transifex@deepin.com>, 2024
-# 李洪武 <lihongwu1987@gmail.com>, 2024
-# cxbii <mycxbii@gmail.com>, 2024
-# Hualet Wang (Hualet Wang) <mr.asianwang@gmail.com>, 2024
-# Maggie Liu <maggie.liufei@gmail.com>, 2024
-# deepiner, 2024
+# 李洪武 <lihongwu1987@gmail.com>, 2025
+# Michael Jay Tong <michaeljayt@gmail.com>, 2025
+# Hualet Wang (Hualet Wang) <mr.asianwang@gmail.com>, 2025
+# transifex deepin <transifex@deepin.com>, 2025
+# electricface <songwentai@linuxdeepin.com>, 2025
+# cxbii <mycxbii@gmail.com>, 2025
+# Maggie Liu <maggie.liufei@gmail.com>, 2025
+# deepiner, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-12 16:11+0800\n"
-"PO-Revision-Date: 2024-03-15 09:12+0000\n"
-"Last-Translator: deepiner, 2024\n"
+"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"PO-Revision-Date: 2025-04-25 07:00+0000\n"
+"Last-Translator: deepiner, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,20 +80,20 @@ msgstr "正在切换音频服务，请稍候…"
 msgid "Audio Server changed, please log out and then log in"
 msgstr "音频服务切换成功，请注销后重新登录"
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:465
-#: ../../bluetooth1/obex_agent.go:392 ../../bluetooth1/obex_agent.go:407
-#: ../../bluetooth1/obex_agent.go:434 ../../bluetooth1/obex_agent.go:471
-#: ../../bluetooth1/obex_agent.go:526 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
+#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
+#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr "控制中心"
 
-#: ../../audio1/audio_events.go:459
+#: ../../audio1/audio_events.go:445
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio1/audio_events.go:460
+#: ../../audio1/audio_events.go:446
 msgid "Open"
 msgstr "打开"
 
@@ -165,57 +165,57 @@ msgstr "消息访问"
 msgid "Message notification"
 msgstr "消息通知"
 
-#: ../../bluetooth1/obex_agent.go:388 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "取消"
 
-#: ../../bluetooth1/obex_agent.go:395
+#: ../../bluetooth1/obex_agent.go:396
 msgid "Receiving %[1]q from %[2]q"
 msgstr "正在接收来自%[2]q的%[1]q文件"
 
-#: ../../bluetooth1/obex_agent.go:404
+#: ../../bluetooth1/obex_agent.go:405
 msgid "View"
 msgstr "查看"
 
-#: ../../bluetooth1/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:411
 msgid "You have received files from %q successfully"
 msgstr "您已成功接收来自%q的文件"
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:412
 msgid "Done"
 msgstr "完成"
 
-#: ../../bluetooth1/obex_agent.go:426 ../../bluetooth1/obex_agent.go:529
+#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
 msgid "Stop Receiving Files"
 msgstr "文件接收中止"
 
-#: ../../bluetooth1/obex_agent.go:428
+#: ../../bluetooth1/obex_agent.go:429
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth1/obex_agent.go:430
+#: ../../bluetooth1/obex_agent.go:431
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "蓝牙连接失败"
 
-#: ../../bluetooth1/obex_agent.go:469
+#: ../../bluetooth1/obex_agent.go:470
 msgid "Decline"
 msgstr "拒绝"
 
-#: ../../bluetooth1/obex_agent.go:469
+#: ../../bluetooth1/obex_agent.go:470
 msgid "Receive"
 msgstr "接收"
 
-#: ../../bluetooth1/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:475
 msgid "Bluetooth File Transfer"
 msgstr "蓝牙文件传输"
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:476
 msgid "%q wants to send files to you. Receive?"
 msgstr "您收到%q发送给您的文件，是否接收？"
 
-#: ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:531
 msgid "Receiving %q timed out"
 msgstr "接收%q超时"
 
@@ -296,7 +296,7 @@ msgstr "打开/隐藏全局搜索"
 msgid "Show/hide notification center"
 msgstr "打开/隐藏消息中心"
 
-#: ../../gesture1/gesture_action.go:51
+#: ../../gesture1/gesture_action.go:54
 msgid "Disable"
 msgstr "禁用"
 
@@ -1087,20 +1087,20 @@ msgstr "\"%s\"没有通过系统安全验证，无法运行，请前往安全中
 msgid "Proceed"
 msgstr "前往"
 
-#: ../../session/power1/manager.go:918
+#: ../../session/power1/manager.go:928
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr "系统将在%ds后自动关机"
 
-#: ../../session/power1/manager.go:919
+#: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
 msgstr "定时关机"
 
-#: ../../session/power1/manager.go:920
+#: ../../session/power1/manager.go:930
 msgid "Cancle"
 msgstr "取消"
 
-#: ../../session/power1/manager.go:920
+#: ../../session/power1/manager.go:930
 msgid "Shut down"
 msgstr "立即关机"
 
