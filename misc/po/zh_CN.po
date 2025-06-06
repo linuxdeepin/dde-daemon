@@ -70,15 +70,15 @@ msgstr "当前系统壁纸已被锁定，请联系管理员"
 
 #: ../../audio1/audio.go:284
 msgid "Failed to change Audio Server, please try later"
-msgstr ""
+msgstr "音频服务切换失败，请稍后重试"
 
 #: ../../audio1/audio.go:320
 msgid "Changing Audio Server, please wait..."
-msgstr ""
+msgstr "正在切换音频服务，请稍候…"
 
 #: ../../audio1/audio.go:353
 msgid "Audio Server changed, please log out and then log in"
-msgstr ""
+msgstr "音频服务切换成功，请注销后重新登录"
 
 #: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
 #: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
@@ -86,7 +86,7 @@ msgstr ""
 #: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
-msgstr ""
+msgstr "控制中心"
 
 #: ../../audio1/audio_events.go:445
 #, c-format
@@ -233,35 +233,35 @@ msgstr "配对"
 
 #: ../../gesture1/gesture_action.go:38
 msgid "Maximize Window"
-msgstr ""
+msgstr "最大化窗口"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Restore Window"
-msgstr ""
+msgstr "恢复窗口"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "当前窗口左分屏"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "当前窗口右分屏"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Show multitasking view"
-msgstr ""
+msgstr "显示多任务视图"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "隐藏多任务视图"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "切换至前一个桌面"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "切换至后一个桌面"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
@@ -270,11 +270,11 @@ msgstr "显示桌面"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "隐藏桌面"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "显示、隐藏启动器"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
@@ -286,19 +286,19 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "打开/隐藏剪切板"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "打开/隐藏全局搜索"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "打开/隐藏消息中心"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr ""
+msgstr "禁用"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -306,7 +306,7 @@ msgstr "系统磁盘空间不足，请及时清理！"
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "前往清理"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
@@ -519,11 +519,11 @@ msgstr "重置屏幕缩放"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Left"
-msgstr ""
+msgstr "窗口快速铺至左侧"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:147
 msgid "Window Quick Tile Right"
-msgstr ""
+msgstr "窗口快速铺至右侧"
 
 #: ../../langselector1/locale.go:47
 msgid "Authentication is required to switch language"
