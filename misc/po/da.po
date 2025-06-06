@@ -600,7 +600,7 @@ msgstr "Kunne ikke afinstallere %q"
 #: ../../network1/manager_active_conn.go:468
 #: ../../network1/manager_active_conn.go:473
 msgid "None"
-msgstr "Ingen"
+msgstr "Intet"
 
 #: ../../network1/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
