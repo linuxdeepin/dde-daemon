@@ -228,35 +228,35 @@ msgstr "Pair"
 
 #: ../../gesture1/gesture_action.go:38
 msgid "Maximize Window"
-msgstr ""
+msgstr "Maximize Window"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Restore Window"
-msgstr ""
+msgstr "Restore Window"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "Current Window Left Split"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "Current Window Right Split"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Show multitasking view"
-msgstr ""
+msgstr "Show multitasking view"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "Hide multitasking view"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "Switch to previous desktop"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Switch to the next desktop"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
@@ -265,35 +265,35 @@ msgstr "Show desktop"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "Hide desktop"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Show/hide launcher"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "Mouse right button pressed"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
-msgstr ""
+msgstr "Mouse right button released"
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "Show/hide clipboard"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Show/hide grand search"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "Show/hide notification center"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr ""
+msgstr "Disable"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -514,11 +514,11 @@ msgstr ""
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Left"
-msgstr ""
+msgstr "Window Quick Tile Left"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:147
 msgid "Window Quick Tile Right"
-msgstr ""
+msgstr "Window Quick Tile Right"
 
 #: ../../langselector1/locale.go:47
 msgid "Authentication is required to switch language"
