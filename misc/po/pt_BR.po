@@ -13,11 +13,11 @@
 # RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2025
 # JeffWagen <jeff.wagen@yahoo.com>, 2025
 # Paulo Schopf, 2025
+# Alex, 2025
 # Flavio Lima <flaviolimaviolinista@gmail.com>, 2025
 # 380125ae2590f93d3e1eff2258abdf75_6979c31, 2025
-# deepiner, 2025
 # keven doria, 2025
-# Alex, 2025
+# deepiner, 2025
 # 
 #, fuzzy
 msgid ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Alex, 2025\n"
+"Last-Translator: deepiner, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr "Insira uma senha com pelo menos 8 caracteres"
+msgstr "Digite uma senha com pelo menos 8 caracteres"
 
 #: ../../accounts1/checkers/password.go:40
 #, c++-format
@@ -49,7 +49,7 @@ msgstr ""
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
-msgstr "O nome de usuário não pode estar vazio"
+msgstr "O nome de usuário não pode ficar em branco"
 
 #: ../../accounts1/checkers/username.go:54
 msgid "The first character must be a letter or number"
@@ -191,7 +191,7 @@ msgstr "Visualizar"
 
 #: ../../bluetooth1/obex_agent.go:411
 msgid "You have received files from %q successfully"
-msgstr "Você recebeu arquivos de %q com êxito"
+msgstr "Os arquivos de %q foram recebidos"
 
 #: ../../bluetooth1/obex_agent.go:412
 msgid "Done"
@@ -221,7 +221,7 @@ msgstr "Receber"
 
 #: ../../bluetooth1/obex_agent.go:475
 msgid "Bluetooth File Transfer"
-msgstr "Transferência de arquivos por Bluetooth"
+msgstr "Transferência de Arquivos por Bluetooth"
 
 #: ../../bluetooth1/obex_agent.go:476
 msgid "%q wants to send files to you. Receive?"
@@ -229,15 +229,15 @@ msgstr "%q está enviando arquivos. Receber?"
 
 #: ../../bluetooth1/obex_agent.go:531
 msgid "Receiving %q timed out"
-msgstr "O recebimento de %q expirou"
+msgstr "O recebimento de %s expirou"
 
 #: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
-msgstr "Clique aqui para conectar-se a %q"
+msgstr "Clique aqui para conectar-se à %q"
 
 #: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
-msgstr "Adicionar dispositivos Bluetooth"
+msgstr "Adicionar dispositivos"
 
 #: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
@@ -382,11 +382,11 @@ msgstr "Desativar Touchpad"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
-msgstr "Alternar efeitos visuais"
+msgstr "Alternar o efeito janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:29
 msgid "Fast Screen Off"
-msgstr "Desligamento rápido da tela"
+msgstr "Desligar Rapidamente a Tela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:30
 msgid "System Monitor"
@@ -418,7 +418,7 @@ msgstr "Tradução"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Grand Search"
-msgstr "Pesquisa instantânea"
+msgstr "Pesquisa Instantânea"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:38
 msgid "Notification Center"
@@ -471,7 +471,7 @@ msgstr "Maximizar Janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:95
 msgid "Restore window"
-msgstr "Restaurar janela"
+msgstr "Restaurar Janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Minimize window"
@@ -608,15 +608,15 @@ msgstr ""
 
 #: ../../launcher/item.go:97
 msgid "(Linglong)"
-msgstr "(Linyaps)"
+msgstr "(Linglong)"
 
 #: ../../launcher/manager_uninstall.go:55
 msgid "%q removed successfully"
-msgstr "%q removido com êxito"
+msgstr "%q foi desinstalado"
 
 #: ../../launcher/manager_uninstall.go:57
 msgid "Failed to uninstall %q"
-msgstr "Falha ao desinstalar %q"
+msgstr "Falha ao remover %q"
 
 #: ../../network1/manager_active_conn.go:468
 #: ../../network1/manager_active_conn.go:473
@@ -662,7 +662,7 @@ msgstr "EAP Protegido"
 #: ../../network1/manager_connection.go:346
 #: ../../network1/manager_connection.go:350
 msgid "Wired Connection"
-msgstr "Conexão cabeada"
+msgstr "Conexão Cabeada"
 
 #: ../../network1/manager_connection.go:389
 msgid "Wired Connection %v"
@@ -670,7 +670,7 @@ msgstr "Conexão cabeada %v"
 
 #: ../../network1/proxychains/utils_notify.go:49
 msgid "Application proxy is set successfully"
-msgstr "O proxy do aplicativo foi definido com êxito"
+msgstr "O proxy do aplicativo foi definido"
 
 #: ../../network1/proxychains/utils_notify.go:49
 #: ../../network1/proxychains/utils_notify.go:52
@@ -865,7 +865,7 @@ msgstr "O requisitante 802.1x já está disponível"
 
 #: ../../network1/state_handler.go:66
 msgid "The modem could not be found"
-msgstr "Impossível encontrar o modem"
+msgstr "Não foi possível encontrar o modem"
 
 #: ../../network1/state_handler.go:67
 msgid "The Bluetooth connection timed out or failed"
@@ -905,7 +905,7 @@ msgstr "O Gerenciador do Modem não foi executado ou encerrado inesperadamente"
 
 #: ../../network1/state_handler.go:76
 msgid "The 802.11 WLAN network could not be found"
-msgstr "Impossível encontrar a rede Wi-Fi"
+msgstr "Não foi possível encontrar a rede Wi-Fi"
 
 #: ../../network1/state_handler.go:77
 msgid "A secondary connection of the base connection failed"
@@ -1012,7 +1012,7 @@ msgstr "A conexão foi excluída das configurações"
 
 #: ../../network1/state_handler.go:262
 msgid "Enabling hotspot"
-msgstr "Ativando hotspot"
+msgstr "Ativando o Hotspot"
 
 #: ../../network1/state_handler.go:266
 msgid "Connecting %q"
@@ -1042,20 +1042,19 @@ msgstr ""
 
 #: ../../network1/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "Impossível conectar-se a %q; verifique a intensidade do sinal Wi-Fi"
+msgstr "Impossível conectar-se à %q; verifique a intensidade do sinal Wi-Fi"
 
 #: ../../network1/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
-msgstr "Impossível conectar-se a %q; verifique os dispositivos de rede."
+msgstr "Impossível conectar-se à %q; verifique os dispositivos de rede."
 
 #: ../../network1/state_handler.go:363
 msgid "Connection failed, unable to connect %q, wrong password"
-msgstr ""
-"A conexão falhou, impossível conectar-se a %q pois a senha está incorreta"
+msgstr "Impossível conectar-se à %q; verifique a senha informada"
 
 #: ../../network1/state_handler.go:365
 msgid "Unable to connect %q"
-msgstr "Impossível conectar-se a %q"
+msgstr "Impossível conectar-se à %q"
 
 #: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
@@ -1063,11 +1062,11 @@ msgstr "Para conectar %q, configure as suas informações de autenticação"
 
 #: ../../network1/state_handler.go:379
 msgid "Password is required to connect %q"
-msgstr "Uma senha é necessária para conectar-se a %q"
+msgstr "Uma senha é necessária para conectar-se à %q"
 
 #: ../../network1/state_handler.go:383
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr "Impossível encontrar a rede Wi-Fi %q"
+msgstr "Não foi possível encontrar a rede Wi-Fi %q"
 
 #: ../../network1/utils_dbus_nm.go:278
 msgid "Unknown"
@@ -1094,7 +1093,7 @@ msgstr "A placa Wi-Fi está desligada fisicamente"
 
 #: ../../network1/utils_notify.go:186
 msgid "System proxy is set successfully."
-msgstr "O proxy do sistema foi definido com êxito."
+msgstr "O proxy do sistema foi definido."
 
 #: ../../network1/utils_notify.go:189
 msgid "System proxy has been cancelled."
@@ -1177,7 +1176,7 @@ msgstr "não irá fazer nada ao computador"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
-msgstr "Conectado à %q com êxito"
+msgstr "Conectado à %q"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
@@ -1187,7 +1186,7 @@ msgstr "Verifique se %q está ligado e próximo"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
-"%q não pode mais conectar-se a %q. Esqueça este dispositivo e tente "
+"%q não pode mais conectar-se à %q. Esqueça este dispositivo e tente "
 "emparelhá-lo novamente."
 
 #: ../../timedate1/manager_format.go:75
@@ -1206,7 +1205,7 @@ msgstr "A autenticação é necessária para alterar a sincronização da hora"
 
 #: ../../timedate1/manager_ifc.go:82
 msgid "Authentication is required to change NTP server"
-msgstr "A autenticação é necessária para alterar o servidor NTP"
+msgstr "A autenticação é necessária para alterar o Servidor NTP"
 
 #: ../../timedate1/manager_ifc.go:125
 msgid ""
