@@ -225,15 +225,15 @@ msgstr "Fogadás"
 
 #: ../../bluetooth1/obex_agent.go:475
 msgid "Bluetooth File Transfer"
-msgstr "Fájlküldés Bluetooth-on"
+msgstr "Bluetooth fájlküldés"
 
 #: ../../bluetooth1/obex_agent.go:476
 msgid "%q wants to send files to you. Receive?"
-msgstr "A %q fájlokat szeretne küldeni Önnek. Fogadni szeretné?"
+msgstr "%q fájlokat szeretne küldeni Önnek. Fogadni szeretné?"
 
 #: ../../bluetooth1/obex_agent.go:531
 msgid "Receiving %q timed out"
-msgstr "A %q fogadásának időtúllépése"
+msgstr "% q fogadásának időtúllépése"
 
 #: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
@@ -350,7 +350,7 @@ msgstr "Leállítási felület"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:19
 msgid "Terminal Quake Window"
-msgstr "Terminál lebegő képernyős mód"
+msgstr "Terminál lebegő mód"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:20
 msgid "Screenshot"
@@ -398,7 +398,7 @@ msgstr "Rendszermonitor"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:31
 msgid "Deepin Picker"
-msgstr "Deepin® Picker"
+msgstr "Deepin® Színlopó"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
 msgid "Desktop AI Assistant"
@@ -963,8 +963,8 @@ msgstr ""
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
 msgstr ""
-"Kérjük győződjön meg arról, hogy a megfelelő tervet választotta ki, anélkül,"
-" hogy a SIM-kártya meghibásodna"
+"Kérjük, győződjön meg arról, hogy a megfelelő tervet választotta ki, "
+"anélkül, hogy a SIM-kártya meghibásodna"
 
 #: ../../network1/state_handler.go:95
 msgid "Failed to activate VPN connection, reason unknown"
@@ -1168,8 +1168,7 @@ msgstr "Az akkumlátor töltöttsége kritikusan alacsony"
 #: ../../session/power1/manager_events.go:301
 #: ../../session/power1/manager_events.go:306
 msgid "Battery low, please plug in"
-msgstr ""
-"Alacsony akkumulátor szint, kérjük csatlakoztassa a számítógépet a töltőre."
+msgstr "Akkutöltöttség alacsony, kérjük csatlakoztassa a töltőt"
 
 #: ../../session/power1/utils.go:636
 msgid "your computer will shut down"
@@ -1197,7 +1196,7 @@ msgstr "Semmit sem fog tenni a számítógépével"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
-msgstr "A %q csatlakoztatása sikeres"
+msgstr "%q csatlakoztatása sikeres"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
