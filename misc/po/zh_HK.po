@@ -134,7 +134,7 @@ msgstr "對象交換"
 #: ../../bluetooth1/bluez_profile.go:21
 #: ../../system/bluetooth1/bluez_profile.go:21
 msgid "File transfer"
-msgstr "檔案傳輸"
+msgstr "檔案傳輸程式"
 
 #: ../../bluetooth1/bluez_profile.go:22
 #: ../../system/bluetooth1/bluez_profile.go:22
@@ -302,7 +302,7 @@ msgstr "系統磁盤空間不足，請及時清理！"
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "前往清理"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
@@ -394,7 +394,7 @@ msgstr "語音聽寫"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Clipboard"
-msgstr "剪貼板"
+msgstr "剪貼簿"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Translation"
