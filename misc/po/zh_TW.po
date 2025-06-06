@@ -306,7 +306,7 @@ msgstr "磁碟機空間不足，請趕快清理！"
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "前往清理"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
