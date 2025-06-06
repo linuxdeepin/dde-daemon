@@ -368,7 +368,7 @@ msgstr "Správce souborů"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:27
 msgid "Disable Touchpad"
-msgstr "Vypnout dotykovou plochu"
+msgstr "Vypnout dotykovou plochu (touchpad)"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
@@ -549,7 +549,7 @@ msgstr "Systémový jazyk byl změněn – prosím odhlaste se a přihlaste nazp
 
 #: ../../langselector1/locale.go:379
 msgid "Failed to change system language, please try later"
-msgstr "Nepodařilo se změnit jazyk systému – zkuste to později"
+msgstr "Nepodařilo se změnit jazyk systému, zkuste to znovu později"
 
 #: ../../lastore1/daemon.go:186
 msgid "Updates failed: it was interrupted."
@@ -611,7 +611,7 @@ msgstr "Nepodařilo se odinstalovat %q"
 #: ../../network1/manager_active_conn.go:468
 #: ../../network1/manager_active_conn.go:473
 msgid "None"
-msgstr "Žádná"
+msgstr "Žádné"
 
 #: ../../network1/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
@@ -794,7 +794,7 @@ msgstr "Vytáčení se nezdařilo"
 
 #: ../../network1/state_handler.go:51
 msgid "Modem initialization failed"
-msgstr "Inicializace modemu se nezdařila"
+msgstr "Zprovoznění modemu se nezdařilo"
 
 #: ../../network1/state_handler.go:52
 msgid "Failed to select the specified GSM APN"
@@ -878,7 +878,7 @@ msgstr "Chyba SIM karty v GSM modemu"
 
 #: ../../network1/state_handler.go:72
 msgid "InfiniBand device does not support connected mode"
-msgstr "InfiniBand zařízení nepodporuje režim connected, ale jen datagramový"
+msgstr "InfiniBand zařízení nepodporuje spojený režim"
 
 #: ../../network1/state_handler.go:73
 msgid "A dependency of the connection failed"
@@ -1021,7 +1021,7 @@ msgstr "%q odpojeno"
 
 #: ../../network1/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "Nedaří se sdílet přípojný bod– prosím zkontrolujte nastavení dnsmasq"
+msgstr "Nedaří se sdílet přípojný bod – prosím zkontrolujte nastavení dnsmasq"
 
 #: ../../network1/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
