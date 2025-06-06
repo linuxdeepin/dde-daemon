@@ -218,7 +218,7 @@ msgstr ""
 
 #: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
-msgstr "%q에 연결하려면 여기를 클릭"
+msgstr "%q에 연결하려면 여기를 클릭하십시오"
 
 #: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
@@ -1071,7 +1071,7 @@ msgstr "연결됨"
 #: ../../service_trigger/msg.go:11
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
-msgstr "\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 실행할 수 없습니다."
+msgstr "\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 실행할 수 없습니다"
 
 #: ../../service_trigger/msg.go:13
 #, c-format
