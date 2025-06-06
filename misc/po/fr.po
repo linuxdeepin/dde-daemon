@@ -102,7 +102,7 @@ msgstr ""
 #: ../../audio1/audio_events.go:445
 #, c-format
 msgid "%s had been disabled"
-msgstr "%s a été désactivé"
+msgstr "%s avait été désactivé"
 
 #: ../../audio1/audio_events.go:446
 msgid "Open"
@@ -409,7 +409,7 @@ msgstr "Discours vers texte"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Clipboard"
-msgstr "Presse-papiers"
+msgstr "Presse-papiers "
 
 #: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Translation"
@@ -426,7 +426,7 @@ msgstr "Centre de notification"
 #: ../../keybinding1/shortcuts/id_name_map.go:39
 #: ../../keybinding1/shortcuts/id_name_map.go:47
 msgid "Switch Layout"
-msgstr "Changer de configuration"
+msgstr "Changer de périphérique "
 
 #: ../../keybinding1/shortcuts/id_name_map.go:40
 msgid "Toggle multiple displays"
@@ -555,8 +555,7 @@ msgstr "Changement de la langue du système en cours, veuillez patienter..."
 #: ../../langselector1/locale.go:140
 msgid "System language changed, please log out and then log in"
 msgstr ""
-"La langue du système a été changée, veuillez-vous déconnecter puis vous "
-"reconnecter"
+"Langue du système changée, veuillez-vous déconnecter puis vous reconnecter"
 
 #: ../../langselector1/locale.go:379
 msgid "Failed to change system language, please try later"
@@ -1187,7 +1186,7 @@ msgstr "%q connecté avec succès"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
-msgstr "Assurez-vous que %q est allumé"
+msgstr "Assurez-vous que %q est sous tension "
 
 #: ../../system/bluetooth1/utils_notify.go:74
 msgid ""
