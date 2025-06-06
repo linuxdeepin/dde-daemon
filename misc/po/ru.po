@@ -4,7 +4,6 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Droid Man, 2025
 # Vladimir “Hagal” Eloshin, 2025
 # Snow fire R <iceler75@gmail.com>, 2025
 # Владимир Киреев <vovan_kireev@mail.ru>, 2025
@@ -319,7 +318,7 @@ msgstr ""
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
-msgstr "Запуск программ"
+msgstr "Выбор Программ"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:14
 msgid "Terminal"
@@ -375,7 +374,7 @@ msgstr " Файловый менеджер "
 
 #: ../../keybinding1/shortcuts/id_name_map.go:27
 msgid "Disable Touchpad"
-msgstr "Отключить сенсорную панель"
+msgstr "Отключить Сенсорную панель"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
@@ -620,7 +619,7 @@ msgstr "Не удалось удалить %q"
 #: ../../network1/manager_active_conn.go:468
 #: ../../network1/manager_active_conn.go:473
 msgid "None"
-msgstr "Нет"
+msgstr "Ничего"
 
 #: ../../network1/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
