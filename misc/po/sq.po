@@ -5,6 +5,7 @@
 # 
 # Translators:
 # Besnik Bleta <besnik@programeshqip.org>, 2025
+# deepiner, 2025
 # 
 #, fuzzy
 msgid ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2025\n"
+"Last-Translator: deepiner, 2025\n"
 "Language-Team: Albanian (https://app.transifex.com/linuxdeepin/teams/3617/sq/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr "Ju lutemi, jepni një fjalëkalim jo më pak se 8 shenja"
+msgstr "Ju lutemi, jepni një fjalëkalim jo më të pakët se 8 shenja"
 
 #: ../../accounts1/checkers/password.go:40
 #, c++-format
@@ -32,7 +33,7 @@ msgid ""
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
 "Fjalëkalimet mund të përmbajnë vetëm shkronja anglisht (bëhet dallimi mes "
-"shkrimit me të mëdha dhe të vogla), numra, ose simbole speciale "
+"shkrimit me të mëdha dhe të vogla), numra ose simbole speciale "
 "(~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts1/checkers/username.go:49
@@ -41,7 +42,7 @@ msgstr "Emri i përdoruesit s’mund të jetë i zbrazët"
 
 #: ../../accounts1/checkers/username.go:54
 msgid "The first character must be a letter or number"
-msgstr "Shenja e parë duhet të jetë shkronjë, ose numër"
+msgstr "Shenja e parë duhet të jetë shkronjë ose numër"
 
 #: ../../accounts1/checkers/username.go:57
 msgid "The username already exists"
@@ -95,7 +96,7 @@ msgstr "%s është çaktivizuar"
 
 #: ../../audio1/audio_events.go:446
 msgid "Open"
-msgstr "Hape"
+msgstr "Hap"
 
 #: ../../bin/dde-authority/fprint_transaction.go:25
 msgid "Fingerprint verification failed"
@@ -103,7 +104,7 @@ msgstr "Verifikimi i shenjave të gishtit dështoi"
 
 #: ../../bin/dde-authority/fprint_transaction.go:26
 msgid "Fingerprint verification timed out"
-msgstr "Verifikimit të shenjave të gishtit i mbaroi koha"
+msgstr "Verifikimit të shenjave të gishtit"
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -387,7 +388,7 @@ msgstr "Zgjedhës Deepin"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
 msgid "Desktop AI Assistant"
-msgstr "Asistent IA Desktop"
+msgstr "Asistent AI Desktop"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
@@ -671,7 +672,7 @@ msgstr "Rrjet"
 
 #: ../../network1/proxychains/utils_notify.go:52
 msgid "Failed to set the application proxy"
-msgstr "S’u arrit të ujdisej ndërmjetës aplikacioni"
+msgstr "S’u arrit të ujdiset ndërmjetës aplikacioni"
 
 #: ../../network1/state_handler.go:23
 msgid "Device state changed"
@@ -711,7 +712,7 @@ msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
 msgstr ""
-"Lutësi 802.1X u shkëput prej pikës së hyrjeve, ose prej shërbyesit të "
+"Lutësi 802.1X u shkëput prej pikës së hyrjeve ose prej shërbyesit të "
 "mirëfilltësimeve"
 
 #: ../../network1/state_handler.go:32
@@ -720,7 +721,7 @@ msgstr "Formësimi i lutësit 802.1X dështoi"
 
 #: ../../network1/state_handler.go:33
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "Lutësi 802.1X u mbyll, ose dështoi në mënyrë të papritur"
+msgstr "Lutësi 802.1X u mbyll ose dështoi në mënyrë të papritur"
 
 #: ../../network1/state_handler.go:34
 msgid "The 802.1X supplicant took too long time to authenticate"
@@ -728,7 +729,7 @@ msgstr "Lutësi 802.1X e zgjati shumë mirëfilltësimin"
 
 #: ../../network1/state_handler.go:35
 msgid "The PPP service failed to start within the allowed time"
-msgstr "S’u arrit të nisej shërbimi PPP brenda kohës së lejuar"
+msgstr "Dështoi nisja e shërbimit PPP brenda kohës së lejuar"
 
 #: ../../network1/state_handler.go:36
 msgid "The PPP service disconnected unexpectedly"
@@ -736,11 +737,11 @@ msgstr "Shërbimi PPP u shkëput papritmas"
 
 #: ../../network1/state_handler.go:37
 msgid "The PPP service quitted or failed unexpectedly"
-msgstr "Shërbimi PPP u mbyll, ose dështoi papritmas"
+msgstr "Shërbimi PPP u mbyll ose dështoi papritmas"
 
 #: ../../network1/state_handler.go:38
 msgid "The DHCP service failed to start within the allowed time"
-msgstr "S’u arrit të nisej shërbyesi DHCP brenda kohës së lejuar"
+msgstr "Dështoi nisja e shërbyesit DHCP brenda kohës së lejuar"
 
 #: ../../network1/state_handler.go:39
 msgid "The DHCP service reported an unexpected error"
@@ -748,20 +749,20 @@ msgstr "Shërbyesi DHCP raportoi një gabim të papritur"
 
 #: ../../network1/state_handler.go:40
 msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "Shërbimi DHCP u mbyll, ose dështoi papritmas"
+msgstr "Shërbimi DHCP u mbyll ose dështoi papritmas"
 
 #: ../../network1/state_handler.go:41
 msgid "The shared connection service failed to start"
-msgstr "S’u arrit të nisej shërbimi për lidhje të përbashkët"
+msgstr "Dështoi nisja e shërbimit për lidhje të përbashkët"
 
 #: ../../network1/state_handler.go:42
 msgid "The shared connection service quitted or failed unexpectedly"
 msgstr ""
-"Shërbimi për lidhje të përbashkët u mbyll, ose dështoi në mënyrë të papritur"
+"Shërbimi për lidhje të përbashkët u mbyll ose dështoi në mënyrë të papritur"
 
 #: ../../network1/state_handler.go:43
 msgid "The AutoIP service failed to start"
-msgstr "S’u arrit të nisej shërbimi AutoIP"
+msgstr "Dështoi nisja e shërbimit AutoIP"
 
 #: ../../network1/state_handler.go:44
 msgid "The AutoIP service reported an unexpected error"
@@ -769,7 +770,7 @@ msgstr "Shërbimi AutoIP raportoi një gabim të papritur"
 
 #: ../../network1/state_handler.go:45
 msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "Shërbimi AutoIP u mbyll, ose dështoi papritmas"
+msgstr "Shërbimi AutoIP u mbyll ose dështoi papritmas"
 
 #: ../../network1/state_handler.go:46
 msgid "Dialing failed due to busy lines"
@@ -797,7 +798,7 @@ msgstr "Gatitja e modemit dështoi"
 
 #: ../../network1/state_handler.go:52
 msgid "Failed to select the specified GSM APN"
-msgstr "S’u arrit të përzgjidhet APN GSM e dhënë"
+msgstr "U dështua në përzgjedhjen e APN-së GSM të dhën"
 
 #: ../../network1/state_handler.go:53
 msgid "No networks searched"
@@ -837,7 +838,7 @@ msgstr "Lidhja aktive e pajisjes u hoq, ose u zhduk"
 
 #: ../../network1/state_handler.go:62
 msgid "A user or client requested to disconnect"
-msgstr "Një përdorues, ose klient kërkoi shkëputjen"
+msgstr "Një përdorues ose klient kërkoi shkëputjen"
 
 #: ../../network1/state_handler.go:63
 msgid "The device's carrier/link changed"
@@ -857,7 +858,7 @@ msgstr "S’u gjet dot modemi"
 
 #: ../../network1/state_handler.go:67
 msgid "The Bluetooth connection timed out or failed"
-msgstr "Lidhja përmes Bluetooth-it dështoi, ose i mbaroi koha"
+msgstr "Lidhja përmes Bluetooth-it dështoi ose i mbaroi koha"
 
 #: ../../network1/state_handler.go:68
 msgid "GSM Modem's SIM Card was not inserted"
@@ -889,7 +890,7 @@ msgstr "Gabim në krijim ure mes RFC 2684 Ethernet dhe ADSL"
 
 #: ../../network1/state_handler.go:75
 msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "ModemManager s’u xhirua, ose u mbyll papritmas"
+msgstr "ModemManager s’u xhirua ose u mbyll papritmas"
 
 #: ../../network1/state_handler.go:76
 msgid "The 802.11 WLAN network could not be found"
@@ -909,7 +910,7 @@ msgstr ""
 
 #: ../../network1/state_handler.go:82
 msgid "Modem failed to run or not available"
-msgstr "Modemi s’u arrit të vihej në punë, ose s’ka të tillë"
+msgstr "Modemi s’u arrit të vihej në punë ose s’ka"
 
 #: ../../network1/state_handler.go:83
 msgid "Modem now ready and available"
@@ -953,7 +954,7 @@ msgstr "S’u arrit të aktivizohej lidhje VPN, arsye e panjohur"
 
 #: ../../network1/state_handler.go:96
 msgid "Failed to activate VPN connection"
-msgstr "S’u arrit të aktivizohej lidhja VPN"
+msgstr "S’u arrit të aktivizohet lidhja VPN"
 
 #: ../../network1/state_handler.go:97
 msgid "The VPN connection state changed due to being disconnected by users"
@@ -982,7 +983,7 @@ msgstr "Nisjes së shërbimit VPN i mbaroi koha"
 
 #: ../../network1/state_handler.go:103
 msgid "The VPN service failed to start"
-msgstr "S’u arrit të nisej shërbimi VPN"
+msgstr "Dështoi nisja e shërbimit AutoIP"
 
 #: ../../network1/state_handler.go:104
 msgid "The VPN connection password was not provided"
@@ -1034,7 +1035,7 @@ msgstr "S’arrihet të lidhet %q, ju lutemi, jini më afër rrugëzuesit pa fil
 #: ../../network1/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
-"S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit, ose "
+"S’arrihet të lidhet %q, ju lutemi, kontrolloni kabllon e rrugëzuesit ose "
 "rrjetit tuaj."
 
 #: ../../network1/state_handler.go:363
@@ -1093,13 +1094,13 @@ msgstr "Ndërmjetësi i sistemit është anuluar."
 
 #: ../../network1/utils_notify.go:193
 msgid "Connected"
-msgstr "I lidhur"
+msgstr "E lidhur"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
-"“%s” s’e kaloi verifikimin e sigurisë së sistemit, dhe s’mund të xhirohet "
+"\"%s\" s’e kaloi verifikimin e sigurisë së sistemit, dhe s’mund të xhirohet "
 "këtë herë"
 
 #: ../../service_trigger/msg.go:13
