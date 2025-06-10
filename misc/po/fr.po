@@ -287,7 +287,7 @@ msgstr "Masquer le bureau"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Afficher/Masquer le lanceur"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
@@ -311,7 +311,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr ""
+msgstr "Désactiver"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -520,11 +520,11 @@ msgstr "Afficher l'espace de travail"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom In"
-msgstr ""
+msgstr "Zoom avant"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr ""
+msgstr "Zoom arrière"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
@@ -596,7 +596,7 @@ msgstr ""
 
 #: ../../lastore1/daemon.go:206
 msgid "Updates failed"
-msgstr ""
+msgstr "Échec des mises à jour"
 
 #: ../../lastore1/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
@@ -1137,15 +1137,15 @@ msgstr ""
 
 #: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "Redémarrage programmé"
 
 #: ../../session/power1/manager.go:930
 msgid "Cancle"
-msgstr ""
+msgstr "Annuler"
 
 #: ../../session/power1/manager.go:930
 msgid "Shut down"
-msgstr ""
+msgstr "Arrêt"
 
 #: ../../session/power1/manager_events.go:266
 msgid "Battery critically low"
