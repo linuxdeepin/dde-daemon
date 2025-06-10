@@ -22,8 +22,8 @@ func Test_getFirstModeBySize(t *testing.T) {
 func Test_getFirstModeBySizeRate(t *testing.T) {
 	modes := []ModeInfo{{84, "", 1920, 1080, 60.0}, {85, "", 1920, 1080, 50.0},
 		{95, "", 1600, 1200, 60.0}}
-	assert.Equal(t, getFirstModeBySizeRate(modes, 1920, 1080, 59.99), ModeInfo{84, "", 1920, 1080, 60.0})
-	assert.Equal(t, getFirstModeBySizeRate(modes, 1920, 1080, 49.99), ModeInfo{85, "", 1920, 1080, 50.0})
+	assert.Equal(t, getFirstModeBySizeRate(modes, 1920, 1080, 59.999), ModeInfo{84, "", 1920, 1080, 60.0})
+	assert.Equal(t, getFirstModeBySizeRate(modes, 1920, 1080, 49.999), ModeInfo{85, "", 1920, 1080, 50.0})
 	assert.Equal(t, getFirstModeBySizeRate(modes, 1600, 1200, 59), ModeInfo{})
 	assert.Equal(t, getFirstModeBySizeRate(modes, 1280, 740, 60), ModeInfo{})
 
