@@ -274,7 +274,7 @@ msgstr "隐藏桌面"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr "显示、隐藏启动器"
+msgstr "打开/关闭启动器"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
@@ -286,15 +286,15 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
-msgstr "打开/隐藏剪切板"
+msgstr "打开/关闭剪贴板"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr "打开/隐藏全局搜索"
+msgstr "打开/关闭全局搜索"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
-msgstr "打开/隐藏消息中心"
+msgstr "打开/关闭通知中心"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
