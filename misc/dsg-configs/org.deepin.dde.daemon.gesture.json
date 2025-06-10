@@ -77,7 +77,7 @@
           "visibility": "private"
       },
       "availableGesturesWithActionTap": {
-          "value": ["ToggleLaunchPad","ToggleClipboard","ToggleGrandSearch","ToggleNotifications", "Disable"],
+          "value": ["ToggleGrandSearch","ToggleLaunchPad","ToggleClipboard","ToggleNotifications", "Disable"],
           "serial": 0,
           "flags": [],
           "name": "availableGesturesWithActionTap",
