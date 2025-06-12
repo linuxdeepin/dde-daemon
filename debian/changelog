@@ -1,3 +1,12 @@
+dde-daemon (6.1.36) unstable; urgency=medium
+
+  * fix: Modify translations to align with Control Center
+  * fix: adjust gesture feature translations and reorder options
+  * fix: Modify the refresh rate accuracy to 0.01
+  * i18n: Updates for project Deepin Desktop Environment (#774)
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 12 Jun 2025 20:50:06 +0800
+
 dde-daemon (6.1.35) unstable; urgency=medium
 
   * feat: add lightdm-deepin-greeter configuration files to installation
