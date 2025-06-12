@@ -250,6 +250,398 @@
             "description": "延时调用HandleIdleOff时间间隔，单位ms",
             "permissions": "readwrite",
             "visibility": "public"
+        },
+        "linePowerScreensaverDelay": {
+            "value": 0,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "linePowerScreensaverDelay",
+            "name[zh_CN]": "插电时显示屏保的超时时间",
+            "description": "line power screen saver delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryScreensaverDelay": {
+            "value": 0,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "batteryScreensaverDelay",
+            "name[zh_CN]": "使用电池时显示屏保的超时时间",
+            "description": "battery screen saver delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryScreenBlackDelay": {
+            "value": 300,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "batteryScreenBlackDelay",
+            "name[zh_CN]": "使用电池时的屏幕黑屏延时",
+            "description": "battery screen black delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batterySleepDelay": {
+            "value": 900,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "batterySleepDelay",
+            "name[zh_CN]": "使用电池时的休眠延时",
+            "description": "battery sleep delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "linePowerScreenBlackDelay": {
+            "value": 900,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "linePowerScreenBlackDelay",
+            "name[zh_CN]": "插电时屏幕黑屏延时",
+            "description": "line power screen black delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "linePowerSleepDelay": {
+            "value": 1800,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "linePowerSleepDelay",
+            "name[zh_CN]": "插电时休眠延时",
+            "description": "line power sleep delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "linePowerLockDelay": {
+            "value": 900,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "linePowerLockDelay",
+            "name[zh_CN]": "插电时锁屏延时",
+            "description": "line power lock delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryLockDelay": {
+            "value": 300,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "batteryLockDelay",
+            "name[zh_CN]": "使用电池时锁屏延时",
+            "description": "battery lock delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "adjustBrightnessEnabled": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "adjustBrightnessEnabled",
+            "name[zh_CN]": "启用自动调节亮度",
+            "description": "adjust display brigtness enabled",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "ambientLightAdjustBrightness": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "ambientLightAdjustBrightness",
+            "name[zh_CN]": "通过环境光自动调节亮度",
+            "description": "auto adjust backlight brightness according to ambient light intensity",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "screenBlackLock": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "screenBlackLock",
+            "name[zh_CN]": "关闭屏幕前锁定",
+            "description": "screen black lock",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "sleepLock": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "sleep lock",
+            "name[zh_CN]": "睡眠前锁定",
+            "description": "sleep lock",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "lidClosedSleep": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "lidClosedSleep",
+            "name[zh_CN]": "插电时合盖休眠",
+            "description": "Sleep when close the lid if use line power",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryLidClosedSleep": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "batteryLidClosedSleep",
+            "name[zh_CN]": "使用电池时合盖休眠",
+            "description": "Sleep when close the lid if use battery",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerButtonPressedExec": {
+            "value": "dde-shutdown",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "powerButtonPressedExec",
+            "name[zh_CN]": "电源键按下执行的命令",
+            "description": "power button pressed exec",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "fullscreenWorkaroundAppList": {
+            "value": ["libflash", "chrome", "firefox","mplayer", "operaplugin", "soffice", "wpp", "evince", "vlc", "totem"],
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "fullscreenWorkaroundAppList",
+            "name[zh_CN]": "全屏工作模式应用列表",
+            "description": "app in list fullscreen inhbit screensaver",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "usePercentageForPolicy": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "usePercentageForPolicy",
+            "name[zh_CN]": "使用基于电池百分比的策略",
+            "description": "Whether battery percentage based policy should be used. It should work around broken firmwares. It is also more reliable than the time left.",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerModuleInitialized": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "powerModuleInitialized",
+            "name[zh_CN]": "电源模块是否初始化",
+            "description": "power module initialized",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "lowPowerNotifyThreshold": {
+            "value": 20,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "lowPowerNotifyThreshold",
+            "name[zh_CN]": "低电量通知阈值",
+            "description": "low power notify threshold",
+            "permissions": "readwrite"
+        },
+        "lowPowerAction": {
+            "value": 1,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "lowPowerAction",
+            "name[zh_CN]": "低电量时系统动作",
+            "description": "0: suspend, 1: hibernate",
+            "permissions": "readwrite"
+        },
+        "percentageAction": {
+            "value": 5,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "percentageAction",
+            "name[zh_CN]": "执行动作的百分比",
+            "description": "system action when battery low",
+            "permissions": "readwrite"
+        },
+        "timeToEmptyLow": {
+            "value": 1200,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "timeToEmptyLow",
+            "name[zh_CN]": "time to empty low",
+            "description": "time to empty low",
+            "permissions": "readwrite"
+        },
+        "timeToEmptyDanger": {
+            "value": 900,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "timeToEmptyDanger",
+            "name[zh_CN]": "time to empty low",
+            "description": "time to empty low",
+            "permissions": "readwrite"
+        },
+        "timeToEmptyCritical": {
+            "value": 600,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "timeToEmptyCritical",
+            "name[zh_CN]": "time to empty low",
+            "description": "time to empty low",
+            "permissions": "readwrite"
+        },
+        "timeToEmptyAction": {
+            "value": 300,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "timeToEmptyAction",
+            "name[zh_CN]": "system action when battery low",
+            "description": "system action when battery low",
+            "permissions": "readwrite"
+        },
+        "linePowerLidClosedAction": {
+            "value": 1,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "linePowerLidClosedAction",
+            "name[zh_CN]": "插电状态下合盖执行的动作",
+            "description": "0:shutdown, 1:suspend, 2:hibernate, 3:turnOffScreen, 4:showSessionUI, 5:doNothing",
+            "permissions": "readwrite"
+        },
+        "linePowerPressPowerButton": {
+            "value": 4,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "linePowerPressPowerButton",
+            "name[zh_CN]": "插电状态下按电源键的动作",
+            "description": "0:shutdown, 1:suspend, 2:hibernate, 3:turnOffScreen, 4:showSessionUI, 5:doNothing",
+            "permissions": "readwrite"
+        },
+        "batteryLidClosedAction": {
+            "value": 1,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "batteryLidClosedAction",
+            "name[zh_CN]": "使用电池时合盖执行的动作",
+            "description": "0:shutdown, 1:suspend, 2:hibernate, 3:turnOffScreen, 4:showSessionUI, 5:doNothing",
+            "permissions": "readwrite"
+        },
+        "batteryPressPowerButton": {
+            "value": 4,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "batteryPressPowerButton",
+            "name[zh_CN]": "使用电池时按电源键执行的动作",
+            "description": "0:shutdown, 1:suspend, 2:hibernate, 3:turnOffScreen, 4:showSessionUI, 5:doNothing",
+            "permissions": "readwrite"
+        },
+        "lowPowerNotifyEnable": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "lowPowerNotifyEnable",
+            "name[zh_CN]": "低电量时打开系统通知",
+            "description": "enable system notify when low power",
+            "permissions": "readwrite"
+        },
+        "saveBrightnessWhilePsm": {
+            "value": "",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "saveBrightnessWhilePsm",
+            "name[zh_CN]": "省电模式时自动降低亮度",
+            "description": "brightness saved while power saving mode enabled",
+            "permissions": "readwrite"
+        },
+        "lightSensorEnabled": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "lightSensorEnabled",
+            "name[zh_CN]": "光感应器开关",
+            "description": "light sensor enabled",
+            "permissions": "readwrite"
+        },
+        "lowPowerPercentInUpdatingNotify": {
+            "value": 50,
+            "serial": 0,
+            "flags":[
+                "global"
+            ],
+            "name": "lowPowerPercentInUpdatingNotify",
+            "name[zh_CN]": "更新系统时触发警告的电量",
+            "description": "low power percent in updating notify",
+            "permissions": "readwrite"
+        },
+        "highPerformanceEnabled": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "highPerformanceEnabled",
+            "name[zh_CN]": "高性能模式开关",
+            "description": "high performance enabled",
+            "permissions": "readwrite"
         }
     }
 }
