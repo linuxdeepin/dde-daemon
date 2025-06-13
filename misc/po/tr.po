@@ -12,6 +12,7 @@
 # Kaya Zeren <kayazeren@gmail.com>, 2025
 # Serdar Sağlam <teknomobil@msn.com>, 2025
 # deepiner, 2025
+# n n, 2025
 # 
 #, fuzzy
 msgid ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: n n, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/linuxdeepin/teams/3617/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -553,7 +554,7 @@ msgstr "Sistem dili değiştirilemedi, lütfen daha sonra yeniden dene"
 
 #: ../../lastore1/daemon.go:186
 msgid "Updates failed: it was interrupted."
-msgstr ""
+msgstr "Güncelleme başarısız oldu: kesintiye uğradı."
 
 #: ../../lastore1/daemon.go:188
 msgid ""
@@ -1054,7 +1055,7 @@ msgstr "%q 'e bağlanılamıyor"
 
 #: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
-msgstr ""
+msgstr "%q'ya bağlanmak için lütfen kimlik doğrulama bilgilerinizi ayarlayın"
 
 #: ../../network1/state_handler.go:379
 msgid "Password is required to connect %q"
@@ -1110,15 +1111,17 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Doğrulanmamış \"%s\" çalıştıramazsınız, ancak Güvenlik Merkezi'ndeki "
+"ayarları değiştirebilirsiniz."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Sürdür"
 
 #: ../../session/power1/manager.go:928
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "Sistem %d sn sonra otomatik olarak kapanacaktır"
 
 #: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
