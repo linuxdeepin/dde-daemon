@@ -309,7 +309,7 @@ msgstr "Disk alanı yetersiz, lütfen zamanında temizleyin!"
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "Temizliğe git"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
@@ -518,7 +518,7 @@ msgstr "Uzaklaştır"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Gerçek Boyuta Yakınlaştır"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Left"
