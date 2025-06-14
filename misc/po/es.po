@@ -1023,7 +1023,7 @@ msgstr "Conectando %q"
 
 #: ../../network1/state_handler.go:275
 msgid "Hotspot enabled"
-msgstr "Compartir conexión activado"
+msgstr "Zona wifi activada"
 
 #: ../../network1/state_handler.go:277
 msgid "%q connected"
@@ -1031,7 +1031,7 @@ msgstr "%q conectado"
 
 #: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
 msgid "Hotspot disabled"
-msgstr "Compartir conexión desactivado"
+msgstr "Zona wifi desactivada"
 
 #: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
 #: ../../system/bluetooth1/utils_notify.go:50
@@ -1040,9 +1040,7 @@ msgstr "%q desconectado"
 
 #: ../../network1/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr ""
-"No es posible usar la conexión compartida, comprueba los ajustes de "
-"\"dnsmasq\""
+msgstr "No es posible usar la zona wifi, comprueba los ajustes de \"dnsmasq\""
 
 #: ../../network1/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
