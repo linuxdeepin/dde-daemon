@@ -104,7 +104,7 @@ msgstr "centro-de-control-dde"
 #: ../../audio1/audio_events.go:445
 #, c-format
 msgid "%s had been disabled"
-msgstr "%s había sido deshabilitado"
+msgstr "%s había sido desactivado"
 
 #: ../../audio1/audio_events.go:446
 msgid "Open"
