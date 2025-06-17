@@ -19,8 +19,8 @@
 # 555de6651697fc2a607c30c9bb431b88_60731db, 2025
 # Alvaro Samudio <alvarosamudio@protonmail.com>, 2025
 # Zaraza, 2025
-# Isaías Gätjens M <igatjens@gmail.com>, 2025
 # deepiner, 2025
+# Isaías Gätjens M <igatjens@gmail.com>, 2025
 # 
 #, fuzzy
 msgid ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Isaías Gätjens M <igatjens@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/linuxdeepin/teams/3617/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,7 +104,7 @@ msgstr "centro-de-control-dde"
 #: ../../audio1/audio_events.go:445
 #, c-format
 msgid "%s had been disabled"
-msgstr "%s había sido deshabilitado"
+msgstr "%s había sido desactivado"
 
 #: ../../audio1/audio_events.go:446
 msgid "Open"
@@ -1015,7 +1015,7 @@ msgstr "La conexión se ha eliminado de los ajustes"
 
 #: ../../network1/state_handler.go:262
 msgid "Enabling hotspot"
-msgstr "Habilitar conexión compartida"
+msgstr "Activando zona wifi"
 
 #: ../../network1/state_handler.go:266
 msgid "Connecting %q"
@@ -1023,7 +1023,7 @@ msgstr "Conectando %q"
 
 #: ../../network1/state_handler.go:275
 msgid "Hotspot enabled"
-msgstr "Compartir conexión activado"
+msgstr "Zona wifi activada"
 
 #: ../../network1/state_handler.go:277
 msgid "%q connected"
@@ -1031,7 +1031,7 @@ msgstr "%q conectado"
 
 #: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
 msgid "Hotspot disabled"
-msgstr "Compartir conexión desactivado"
+msgstr "Zona wifi desactivada"
 
 #: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
 #: ../../system/bluetooth1/utils_notify.go:50
@@ -1040,9 +1040,7 @@ msgstr "%q desconectado"
 
 #: ../../network1/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr ""
-"No es posible usar la conexión compartida, comprueba los ajustes de "
-"\"dnsmasq\""
+msgstr "No es posible usar la zona wifi, comprueba los ajustes de \"dnsmasq\""
 
 #: ../../network1/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
