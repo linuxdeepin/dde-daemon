@@ -114,6 +114,14 @@ func (layoutMap layoutMap) filterByLocales(locales []string) map[string]string {
 	return result
 }
 
+func (layoutMap layoutMap) getAll() map[string]string {
+	result := make(map[string]string)
+	for layout, layoutDetail := range layoutMap {
+		result[layout] = layoutDetail.Description
+	}
+	return result
+}
+
 func (v *layoutDetail) matchAnyLang(languages []string) bool {
 	for _, l := range languages {
 		for _, ll := range v.Languages {

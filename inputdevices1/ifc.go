@@ -78,6 +78,18 @@ func (kbd *Keyboard) LayoutList() (map[string]string, *dbus.Error) {
 	return result, nil
 }
 
+func (kbd *Keyboard) AllLayoutList() (map[string]string, *dbus.Error) {
+	result := kbd.layoutMap.getAll()
+	kbd.PropsMu.RLock()
+	for _, layout := range kbd.UserLayoutList {
+		layoutDetail := kbd.layoutMap[layout]
+		result[layout] = layoutDetail.Description
+	}
+	kbd.PropsMu.RUnlock()
+
+	return result, nil
+}
+
 func (kbd *Keyboard) GetLayoutDesc(layout string) (string, *dbus.Error) {
 	if len(layout) == 0 {
 		return "", nil
