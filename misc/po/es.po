@@ -18,9 +18,9 @@
 # jose luis <josemdance@outlook.com>, 2025
 # 555de6651697fc2a607c30c9bb431b88_60731db, 2025
 # Alvaro Samudio <alvarosamudio@protonmail.com>, 2025
-# Zaraza, 2025
 # deepiner, 2025
 # Isaías Gätjens M <igatjens@gmail.com>, 2025
+# Zaraza, 2025
 # 
 #, fuzzy
 msgid ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Isaías Gätjens M <igatjens@gmail.com>, 2025\n"
+"Last-Translator: Zaraza, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/linuxdeepin/teams/3617/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr ""
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr "Por favor, ingrese una contraseña de al menos 8 caracteres"
+msgstr "Ingrese una contraseña de al menos 8 caracteres"
 
 #: ../../accounts1/checkers/password.go:40
 #, c++-format
@@ -564,14 +564,14 @@ msgstr "Error al cambiar el idioma del sistema, por favor intente más tarde"
 
 #: ../../lastore1/daemon.go:186
 msgid "Updates failed: it was interrupted."
-msgstr "Actualizacion fallida: se interrumpió."
+msgstr "La actualizacion falló: se interrumpió."
 
 #: ../../lastore1/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
-"Actualizacion fallida: se interrumpió. Vuelva a la versión anterior e "
+"La actualización falló: se interrumpió. Vuelva a la versión anterior e "
 "inténtelo de nuevo."
 
 #: ../../lastore1/daemon.go:194
@@ -600,7 +600,7 @@ msgstr ""
 
 #: ../../lastore1/daemon.go:206
 msgid "Updates failed"
-msgstr "Actualización fallida"
+msgstr "La actualización falló"
 
 #: ../../lastore1/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
