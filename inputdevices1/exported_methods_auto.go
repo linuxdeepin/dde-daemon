@@ -44,6 +44,11 @@ func (v *Keyboard) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"outArg0"},
 		},
 		{
+			Name:    "AllLayoutList",
+			Fn:      v.AllLayoutList,
+			OutArgs: []string{"outArg0"},
+		},
+		{
 			Name: "Reset",
 			Fn:   v.Reset,
 		},
