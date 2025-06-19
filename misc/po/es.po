@@ -671,7 +671,7 @@ msgstr "Conexión por cable %v"
 
 #: ../../network1/proxychains/utils_notify.go:49
 msgid "Application proxy is set successfully"
-msgstr "Proxy de aplicaciones configurado exitosamente"
+msgstr "El proxy de la aplicación se ha configurado correctamente"
 
 #: ../../network1/proxychains/utils_notify.go:49
 #: ../../network1/proxychains/utils_notify.go:52
