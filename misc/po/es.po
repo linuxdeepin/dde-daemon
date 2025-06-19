@@ -576,15 +576,15 @@ msgstr ""
 
 #: ../../lastore1/daemon.go:194
 msgid "Updates failed: DPKG error."
-msgstr "Actualizaciones fallidas: error DPKG."
+msgstr "La actualización falló: error DPKG."
 
 #: ../../lastore1/daemon.go:196
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
-"Actualización fallida: error DPKG. Vuelva a la versión anterior e inténtelo "
-"de nuevo"
+"La actualización falló: error DPKG. Vuelva a la versión anterior e inténtelo"
+" de nuevo."
 
 #: ../../lastore1/daemon.go:200
 msgid "Updates failed: insufficient disk space."
