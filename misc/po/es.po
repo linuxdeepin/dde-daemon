@@ -39,7 +39,7 @@ msgstr ""
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr "Ingrese una contraseña de al menos 8 caracteres"
+msgstr "Introduzca una contraseña entre 8 y 64 caracteres."
 
 #: ../../accounts1/checkers/password.go:40
 #, c++-format
