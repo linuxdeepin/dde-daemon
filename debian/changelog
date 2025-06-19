@@ -1,3 +1,10 @@
+dde-daemon (6.1.37) unstable; urgency=medium
+
+  * fix: Add interface to obtain all keyboard layouts
+  * i18n: Updates for project Deepin Desktop Environment (#807)
+
+ -- caixiangrong <caixiangrong@uniontech.com>  Thu, 19 Jun 2025 16:38:27 +0800
+
 dde-daemon (6.1.36) unstable; urgency=medium
 
   * fix: Modify translations to align with Control Center
