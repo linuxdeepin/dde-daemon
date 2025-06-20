@@ -1,3 +1,9 @@
+dde-daemon (6.1.38) unstable; urgency=medium
+
+  * fix: update text scale factor in XSettings configuration
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 20 Jun 2025 18:26:08 +0800
+
 dde-daemon (6.1.37) unstable; urgency=medium
 
   * fix: Add interface to obtain all keyboard layouts
