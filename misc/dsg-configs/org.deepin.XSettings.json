@@ -228,7 +228,7 @@
       "visibility": "private"
     },
     "scale-factor": {
-      "value": 0,
+      "value": 1,
       "serial": 0,
       "flags": [],
       "name": "Text Scale Factor",
