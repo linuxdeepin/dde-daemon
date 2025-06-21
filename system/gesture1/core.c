@@ -296,7 +296,7 @@ valid_long_press_touch(double x, double y)
 }
 
 static gboolean
- handle_tap()
+ handle_tap(gpointer data)
 {
     g_debug("[Tap] fingers: %d", raw->fingers);
     handleGestureEvent(GESTURE_TYPE_TAP, GESTURE_DIRECTION_NONE, raw->fingers);
@@ -304,7 +304,7 @@ static gboolean
 }
 
 static void
-handle_tap_destroy()
+handle_tap_destroy(gpointer data)
 {
     if (raw && raw->tap_id) {
         raw->tap_id = 0;
