@@ -137,8 +137,7 @@ func (m *XSManager) getScaleFactor() float64 {
 func (m *XSManager) adjustScaleFactor(recommendedScaleFactor float64) {
 	logger.Debug("recommended scale factor:", recommendedScaleFactor)
 	var err error
-	if m.cfgHelper.GetDouble(gsKeyScaleFactor) <= 0 &&
-		recommendedScaleFactor != defaultScaleFactor {
+	if m.cfgHelper.GetDouble(gsKeyScaleFactor) <= 0 {
 		err = m.setScaleFactorWithoutNotify(recommendedScaleFactor)
 		if err != nil {
 			logger.Warning("failed to set scale factor:", err)
@@ -149,9 +148,11 @@ func (m *XSManager) adjustScaleFactor(recommendedScaleFactor float64) {
 	// migrate old configuration
 	if os.Getenv("STARTDDE_MIGRATE_SCALE_FACTOR") != "" {
 		scaleFactor := m.getScaleFactor()
-		err = m.setScreenScaleFactorsForQt(map[string]float64{"": scaleFactor})
-		if err != nil {
-			logger.Warning("failed to set scale factor for qt:", err)
+		if scaleFactor > 0 {
+			err = m.setScreenScaleFactorsForQt(map[string]float64{"": scaleFactor})
+			if err != nil {
+				logger.Warning("failed to set scale factor for qt:", err)
+			}
 		}
 
 		err = cleanUpDdeEnv()
@@ -166,7 +167,7 @@ func (m *XSManager) adjustScaleFactor(recommendedScaleFactor float64) {
 		if os.IsNotExist(err) {
 			// lightdm-deepin-greeter does not have the qt-theme.ini file yet.
 			scaleFactor := m.getScaleFactor()
-			if scaleFactor != defaultScaleFactor {
+			if scaleFactor > 0 {
 				err = m.setScreenScaleFactorsForQt(map[string]float64{"": scaleFactor})
 				if err != nil {
 					logger.Warning("failed to set scale factor for qt:", err)

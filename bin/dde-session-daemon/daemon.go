@@ -177,8 +177,8 @@ func (s *SessionDaemon) register(service *dbusutil.Service) error {
 
 func (s *SessionDaemon) initModules() {
 	part1ModuleNames := []string{
-		"display",
 		"xsettings",
+		"display",
 		"trayicon",
 		"x-event-monitor",
 	}

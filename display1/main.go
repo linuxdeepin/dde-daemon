@@ -5,15 +5,16 @@
 package display1
 
 import (
+	"os"
+	"os/exec"
+	"time"
+
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
-	"os"
-	"os/exec"
-	"time"
 )
 
 var logger = log.NewLogger("daemon/display")
@@ -34,7 +35,7 @@ func NewModule(logger *log.Logger) *daemon {
 }
 
 func (*daemon) GetDependencies() []string {
-	return []string{}
+	return []string{"xsettings"}
 }
 
 var _mainBeginTime time.Time

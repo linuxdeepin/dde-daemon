@@ -20,8 +20,6 @@ import (
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/keyfile"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
-	x "github.com/linuxdeepin/go-x11-client"
-	"github.com/linuxdeepin/go-x11-client/ext/randr"
 )
 
 const (
@@ -181,47 +179,9 @@ func getMapFirstValueSF(m map[string]float64) float64 {
 	return 0
 }
 
-func getPrimaryScreenName(xConn *x.Conn) (string, error) {
-	rootWin := xConn.GetDefaultScreen().Root
-	getPrimaryReply, err := randr.GetOutputPrimary(xConn, rootWin).Reply(xConn)
-	if err != nil {
-		logger.Debug("Failed to get output primary:", err)
-		return getPrimaryScreenFromBus()
-	}
-	outputInfo, err := randr.GetOutputInfo(xConn, getPrimaryReply.Output,
-		x.CurrentTime).Reply(xConn)
-	if err != nil {
-		logger.Debug("Failed to get output info:", err)
-		return getPrimaryScreenFromBus()
-	}
-	return outputInfo.Name, nil
-}
-
 var (
 	_sessionConn *dbus.Conn
 )
-
-func getPrimaryScreenFromBus() (string, error) {
-	if _sessionConn == nil {
-		conn, err := dbus.SessionBus()
-		if err != nil {
-			return "", err
-		}
-		_sessionConn = conn
-	}
-
-	variant, err := _sessionConn.Object("org.deepin.dde.Display1",
-		"/org/deepin/dde/Display1").GetProperty("org.deepin.dde.Display1.Primary")
-	if err != nil {
-		return "", err
-	}
-
-	primary, ok := (variant.Value()).(string)
-	if !ok {
-		return "", fmt.Errorf("invalid primary signature: %s", variant.String())
-	}
-	return primary, nil
-}
 
 // 不发送通知版本, 设置流程会转到 setScreenScaleFactors
 func (m *XSManager) setScaleFactorWithoutNotify(scale float64) error {

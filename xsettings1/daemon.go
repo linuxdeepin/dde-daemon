@@ -5,11 +5,12 @@
 package xsettings
 
 import (
+	"os"
+
 	"github.com/linuxdeepin/dde-daemon/common/scale"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
-	"os"
 )
 
 var logger = log.NewLogger("xsettings")
@@ -29,7 +30,7 @@ func NewModule(logger *log.Logger) *daemon {
 }
 
 func (*daemon) GetDependencies() []string {
-	return []string{"display"}
+	return []string{}
 }
 
 func (d *daemon) Start() error {
