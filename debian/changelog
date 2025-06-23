@@ -1,3 +1,10 @@
+dde-daemon (6.1.40) unstable; urgency=medium
+
+  * chore: remove regional variants for es languages
+  * i18n: Updates for project Deepin Desktop Environment (#813)
+
+ -- WuJiangYu <wujiangyu@uniontech.com>  Mon, 23 Jun 2025 17:16:10 +0800
+
 dde-daemon (6.1.39) unstable; urgency=medium
 
   * fix: reorder module dependencies in session daemon and update
