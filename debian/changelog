@@ -1,3 +1,11 @@
+dde-daemon (6.1.41) unstable; urgency=medium
+
+  * fix: remove redundant own policy in Accounts1 config
+  * fix: Fix incompatible function pointer types with g_timeout_add_full
+    on GCC 15
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Fri, 27 Jun 2025 15:47:51 +0800
+
 dde-daemon (6.1.40) unstable; urgency=medium
 
   * chore: remove regional variants for es languages
