@@ -4,24 +4,25 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# luozengbin <jalen.cn@gmail.com>, 2020
-# Katabame Miaya <katabamia@gmail.com>, 2020
-# Pedro Lopes <pedrocvl112358@gmail.com>, 2020
-# 李洪武 <lihongwu1987@gmail.com>, 2020
-# 🎈 BALLOON | FU-SEN, 2020
-# Ryo Nakano, 2020
-# Maggie Liu <maggie.liufei@gmail.com>, 2020
-# deepiner, 2022
-# MMP 0 <mmmmpp0@yahoo.co.jp>, 2023
+# Pedro Lopes <pedrocvl112358@gmail.com>, 2025
+# Katabame Miaya <katabamia@gmail.com>, 2025
+# Maggie Liu <maggie.liufei@gmail.com>, 2025
+# Ryo Nakano, 2025
+# 李洪武 <lihongwu1987@gmail.com>, 2025
+# luozengbin <jalen.cn@gmail.com>, 2025
+# 🎈 BALLOON | FU-SEN, 2025
+# MMP 0 <mmmmpp0@yahoo.co.jp>, 2025
+# deepiner, 2025
+# Keita Kunishi (Keitan924111), 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-17 11:02+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: MMP 0 <mmmmpp0@yahoo.co.jp>, 2023\n"
+"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"PO-Revision-Date: 2025-04-25 07:00+0000\n"
+"Last-Translator: Keita Kunishi (Keitan924111), 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/linuxdeepin/teams/3617/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,993 +30,1047 @@ msgstr ""
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../../accounts/checkers/password.go:38
+#: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
 msgstr "8 文字以上でパスワードを入力してください"
 
-#: ../../accounts/checkers/password.go:40
+#: ../../accounts1/checkers/password.go:40
+#, c++-format
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
 "パスワードには英字 (大文字と小文字を区別します)、数字、特殊記号 (~!@#$%^&*()[]{}\\|/?,.<>) 以外の文字を使用できません"
 
-#: ../../accounts/checkers/username.go:49
+#: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
 msgstr "ユーザー名は空欄にできません"
 
-#: ../../accounts/checkers/username.go:54
+#: ../../accounts1/checkers/username.go:54
 msgid "The first character must be a letter or number"
 msgstr "最初の文字は英数字にする必要があります"
 
-#: ../../accounts/checkers/username.go:57
+#: ../../accounts1/checkers/username.go:57
 msgid "The username already exists"
-msgstr ""
+msgstr "このユーザー名はすでに存在します"
 
-#: ../../accounts/checkers/username.go:60
+#: ../../accounts1/checkers/username.go:60
 msgid "The group name already exists"
-msgstr ""
+msgstr "このグループ名はすでに存在します"
 
-#: ../../accounts/checkers/username.go:62
+#: ../../accounts1/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
 msgstr "ユーザー名は3文字以上32文字以下にする必要があります"
 
-#: ../../accounts/manager.go:572
+#: ../../accounts1/manager.go:570
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../accounts/user_ifc.go:656
+#: ../../accounts1/user_ifc.go:731
 msgid "This system wallpaper is locked. Please contact your admin."
-msgstr ""
+msgstr "壁紙は固定されています。詳細はシステム管理者にお問い合わせください。"
 
-#: ../../appearance/scale.go:41
-msgid "Log out for display scaling settings to take effect"
-msgstr ""
+#: ../../audio1/audio.go:284
+msgid "Failed to change Audio Server, please try later"
+msgstr "オーディオサーバーを変更できませんでした。もう一度お試しください"
 
-#: ../../appearance/scale.go:42
-msgid "Set successfully"
-msgstr "設定しました"
+#: ../../audio1/audio.go:320
+msgid "Changing Audio Server, please wait..."
+msgstr "オーディオサーバーを変更しています。しばらくお待ちください..."
 
-#: ../../appearance/scale.go:52
-msgid "Later"
-msgstr ""
+#: ../../audio1/audio.go:353
+msgid "Audio Server changed, please log out and then log in"
+msgstr "オーディオサーバーが変更されました。再度ログインしてください。"
 
-#: ../../appearance/scale.go:52
-msgid "Log Out Now"
-msgstr ""
+#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
+#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
+#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
+#: ../../bluetooth1/utils_notify.go:143
+msgid "dde-control-center"
+msgstr "dde-control-center"
 
-#: ../../appearance/scale.go:68
-msgid "Setting display scaling"
-msgstr "ディスプレイスケーリングを設定"
-
-#: ../../appearance/scale.go:69
-msgid "Display scaling"
-msgstr "ディスプレイスケーリング"
-
-#: ../../audio/audio_events.go:459
+#: ../../audio1/audio_events.go:445
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "%sが無効化されました"
 
-#: ../../audio/audio_events.go:460 ../../dock/app_entry_menu.go:95
+#: ../../audio1/audio_events.go:446
 msgid "Open"
 msgstr "開く"
 
 #: ../../bin/dde-authority/fprint_transaction.go:25
 msgid "Fingerprint verification failed"
-msgstr ""
+msgstr "指紋認証に失敗しました"
 
 #: ../../bin/dde-authority/fprint_transaction.go:26
 msgid "Fingerprint verification timed out"
-msgstr ""
+msgstr "指紋認証がタイムアウトしました"
 
-#: ../../bluetooth/bluez_profile.go:15
-#: ../../system/bluetooth/bluez_profile.go:15
+#: ../../bluetooth1/bluez_profile.go:15
+#: ../../system/bluetooth1/bluez_profile.go:15
 msgid "Serial port"
 msgstr "シリアルポート"
 
-#: ../../bluetooth/bluez_profile.go:16
-#: ../../system/bluetooth/bluez_profile.go:16
+#: ../../bluetooth1/bluez_profile.go:16
+#: ../../system/bluetooth1/bluez_profile.go:16
 msgid "Dial-Up networking"
 msgstr "ダイヤルアップ ネットワーク"
 
-#: ../../bluetooth/bluez_profile.go:17
-#: ../../system/bluetooth/bluez_profile.go:17
+#: ../../bluetooth1/bluez_profile.go:17
+#: ../../system/bluetooth1/bluez_profile.go:17
 msgid "Hands-Free device"
 msgstr "ハンズフリーデバイス"
 
-#: ../../bluetooth/bluez_profile.go:18
-#: ../../system/bluetooth/bluez_profile.go:18
+#: ../../bluetooth1/bluez_profile.go:18
+#: ../../system/bluetooth1/bluez_profile.go:18
 msgid "Hands-Free voice gateway"
 msgstr "ハンドフリー音声ゲートウェイ"
 
-#: ../../bluetooth/bluez_profile.go:19
-#: ../../system/bluetooth/bluez_profile.go:19
+#: ../../bluetooth1/bluez_profile.go:19
+#: ../../system/bluetooth1/bluez_profile.go:19
 msgid "Headset voice gateway"
 msgstr "ヘッドセット音声ゲートウェイ"
 
-#: ../../bluetooth/bluez_profile.go:20
-#: ../../system/bluetooth/bluez_profile.go:20
+#: ../../bluetooth1/bluez_profile.go:20
+#: ../../system/bluetooth1/bluez_profile.go:20
 msgid "Object push"
 msgstr "オブジェクトプッシュ"
 
-#: ../../bluetooth/bluez_profile.go:21
-#: ../../system/bluetooth/bluez_profile.go:21
+#: ../../bluetooth1/bluez_profile.go:21
+#: ../../system/bluetooth1/bluez_profile.go:21
 msgid "File transfer"
 msgstr "ファイル転送"
 
-#: ../../bluetooth/bluez_profile.go:22
-#: ../../system/bluetooth/bluez_profile.go:22
+#: ../../bluetooth1/bluez_profile.go:22
+#: ../../system/bluetooth1/bluez_profile.go:22
 msgid "Synchronization"
 msgstr "同期"
 
-#: ../../bluetooth/bluez_profile.go:23
-#: ../../system/bluetooth/bluez_profile.go:23
+#: ../../bluetooth1/bluez_profile.go:23
+#: ../../system/bluetooth1/bluez_profile.go:23
 msgid "Phone book access"
 msgstr "電話帳アクセス"
 
-#: ../../bluetooth/bluez_profile.go:24
-#: ../../system/bluetooth/bluez_profile.go:24
+#: ../../bluetooth1/bluez_profile.go:24
+#: ../../system/bluetooth1/bluez_profile.go:24
 msgid "Phone book access client"
 msgstr "電話帳アクセスクライアント"
 
-#: ../../bluetooth/bluez_profile.go:25
-#: ../../system/bluetooth/bluez_profile.go:25
+#: ../../bluetooth1/bluez_profile.go:25
+#: ../../system/bluetooth1/bluez_profile.go:25
 msgid "Message access"
 msgstr "メッセージアクセス"
 
-#: ../../bluetooth/bluez_profile.go:26
-#: ../../system/bluetooth/bluez_profile.go:26
+#: ../../bluetooth1/bluez_profile.go:26
+#: ../../system/bluetooth1/bluez_profile.go:26
 msgid "Message notification"
 msgstr "メッセージ通知 "
 
-#: ../../bluetooth/obex_agent.go:387 ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: ../../bluetooth/obex_agent.go:394
+#: ../../bluetooth1/obex_agent.go:396
 msgid "Receiving %[1]q from %[2]q"
-msgstr ""
+msgstr "%[2]qから%[1]qを受信しています"
 
-#: ../../bluetooth/obex_agent.go:403
+#: ../../bluetooth1/obex_agent.go:405
 msgid "View"
 msgstr "表示"
 
-#: ../../bluetooth/obex_agent.go:409
+#: ../../bluetooth1/obex_agent.go:411
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "%qからファイルを受信しました"
 
-#: ../../bluetooth/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:412
 msgid "Done"
 msgstr "完了"
 
-#: ../../bluetooth/obex_agent.go:425 ../../bluetooth/obex_agent.go:528
+#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
 msgid "Stop Receiving Files"
-msgstr ""
+msgstr "停止"
 
-#: ../../bluetooth/obex_agent.go:427
+#: ../../bluetooth1/obex_agent.go:429
 msgid "You have cancelled the file transfer"
-msgstr ""
+msgstr "ファイル転送を停止しました"
 
-#: ../../bluetooth/obex_agent.go:429 ../../system/bluetooth/utils_notify.go:63
-#: ../../system/bluetooth/utils_notify.go:72
+#: ../../bluetooth1/obex_agent.go:431
+#: ../../system/bluetooth1/utils_notify.go:63
+#: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
-msgstr "Bluetooth の接続に失敗しました"
+msgstr "Bluetooth接続に失敗しました"
 
-#: ../../bluetooth/obex_agent.go:468
+#: ../../bluetooth1/obex_agent.go:470
 msgid "Decline"
-msgstr ""
+msgstr "拒否"
 
-#: ../../bluetooth/obex_agent.go:468
+#: ../../bluetooth1/obex_agent.go:470
 msgid "Receive"
-msgstr ""
+msgstr "受信"
 
-#: ../../bluetooth/obex_agent.go:473
+#: ../../bluetooth1/obex_agent.go:475
 msgid "Bluetooth File Transfer"
-msgstr ""
+msgstr "Bluetoothファイル共有"
 
-#: ../../bluetooth/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:476
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "%qがファイルを送信しようとしています。受信しますか?"
 
-#: ../../bluetooth/obex_agent.go:529
+#: ../../bluetooth1/obex_agent.go:531
 msgid "Receiving %q timed out"
-msgstr ""
+msgstr "%qの受信がタイムアウトしました"
 
-#: ../../bluetooth/utils_notify.go:119
+#: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
-msgstr ""
+msgstr "ここをクリックして%qに接続"
 
-#: ../../bluetooth/utils_notify.go:120
+#: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
-msgstr ""
+msgstr "Bluetoothデバイスを追加"
 
-#: ../../bluetooth/utils_notify.go:130
+#: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
+msgstr "ペアリング"
+
+#: ../../gesture1/gesture_action.go:38
+msgid "Maximize Window"
+msgstr "ウィンドウを最大化"
+
+#: ../../gesture1/gesture_action.go:39
+msgid "Restore Window"
+msgstr "ウィンドウを復元"
+
+#: ../../gesture1/gesture_action.go:40
+msgid "Current Window Left Split"
 msgstr ""
 
-#: ../../dock/app_entry_menu.go:102
-msgid "Close All"
-msgstr "すべて閉じる"
-
-#: ../../dock/app_entry_menu.go:129 ../../dock/app_entry_menu.go:143
-#: ../../dock/app_entry_menu.go:158
-msgid "Force Quit"
-msgstr "強制終了"
-
-#: ../../dock/app_entry_menu.go:162
-msgid "Dock"
-msgstr "ドック"
-
-#: ../../dock/app_entry_menu.go:172
-msgid "Undock"
-msgstr "ドックから外す"
-
-#: ../../dock/app_entry_menu.go:182
-msgid "All Windows"
-msgstr "すべてのウィンドウ"
-
-#: ../../dock/app_info.go:72 ../../launcher/item.go:97
-msgid "(Linglong)"
+#: ../../gesture1/gesture_action.go:41
+msgid "Current Window Right Split"
 msgstr ""
 
-#: ../../housekeeping/init.go:75
-msgid "Insufficient disk space, please clean up in time!"
-msgstr "ディスクの空き領域が不足しています。すぐにクリーンアップしてください！"
-
-#: ../../keybinding/shortcuts/id_name_map.go:13
-msgid "Launcher"
-msgstr "ランチャー"
-
-#: ../../keybinding/shortcuts/id_name_map.go:14
-msgid "Terminal"
-msgstr "ターミナル"
-
-#: ../../keybinding/shortcuts/id_name_map.go:15
-msgid "Screen Recorder"
-msgstr "画面収録"
-
-#: ../../keybinding/shortcuts/id_name_map.go:16
-msgid "Lock screen"
-msgstr "画面をロック"
-
-#: ../../keybinding/shortcuts/id_name_map.go:17
-msgid "Show/Hide the dock"
-msgstr "ドックの表示/非表示"
-
-#: ../../keybinding/shortcuts/id_name_map.go:18
-msgid "Shutdown interface"
-msgstr "シャットダウン インターフェイス"
-
-#: ../../keybinding/shortcuts/id_name_map.go:19
-msgid "Terminal Quake Window"
-msgstr "ターミナルQuakeウィンドウ"
-
-#: ../../keybinding/shortcuts/id_name_map.go:20
-msgid "Screenshot"
-msgstr "スクリーンショット"
-
-#: ../../keybinding/shortcuts/id_name_map.go:21
-msgid "Full screenshot"
-msgstr "画面全体のスクリーンショット"
-
-#: ../../keybinding/shortcuts/id_name_map.go:22
-msgid "Window screenshot"
-msgstr "ウィンドウのスクリーンショット"
-
-#: ../../keybinding/shortcuts/id_name_map.go:23
-msgid "Delay screenshot"
-msgstr "タイマー スクリーンショット"
-
-#: ../../keybinding/shortcuts/id_name_map.go:24
-msgid "OCR (Image to Text)"
+#: ../../gesture1/gesture_action.go:42
+msgid "Show multitasking view"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:25
-msgid "Scrollshot"
+#: ../../gesture1/gesture_action.go:43
+msgid "Hide multitasking view"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:26
-msgid "File manager"
-msgstr "ファイル マネージャー"
-
-#: ../../keybinding/shortcuts/id_name_map.go:27
-msgid "Disable Touchpad"
-msgstr "タッチパッドを無効にする"
-
-#: ../../keybinding/shortcuts/id_name_map.go:28
-msgid "Switch window effects"
-msgstr "ウィンドウ エフェクトを切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:29
-msgid "Fast Screen Off"
-msgstr "高速画面オフ"
-
-#: ../../keybinding/shortcuts/id_name_map.go:30
-msgid "System Monitor"
-msgstr "システム モニター"
-
-#: ../../keybinding/shortcuts/id_name_map.go:31
-msgid "Deepin Picker"
-msgstr "Deepinピッカー"
-
-#: ../../keybinding/shortcuts/id_name_map.go:32
-msgid "Desktop AI Assistant"
-msgstr "デスクトップAIアシスタント"
-
-#: ../../keybinding/shortcuts/id_name_map.go:33
-msgid "Text to Speech"
-msgstr "音声合成"
-
-#: ../../keybinding/shortcuts/id_name_map.go:34
-msgid "Speech to Text"
-msgstr "音声入力"
-
-#: ../../keybinding/shortcuts/id_name_map.go:35
-msgid "Clipboard"
-msgstr "クリップボード"
-
-#: ../../keybinding/shortcuts/id_name_map.go:36
-msgid "Translation"
-msgstr "翻訳"
-
-#: ../../keybinding/shortcuts/id_name_map.go:37
-msgid "Grand Search"
+#: ../../gesture1/gesture_action.go:44
+msgid "Switch to previous desktop"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:38
-msgid "Notification Center"
-msgstr "通知センター"
-
-#: ../../keybinding/shortcuts/id_name_map.go:39
-#: ../../keybinding/shortcuts/id_name_map.go:47
-msgid "Switch Layout"
-msgstr "レイアウトを切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:40
-msgid "Toggle multiple displays"
+#: ../../gesture1/gesture_action.go:45
+msgid "Switch to the next desktop"
 msgstr ""
 
-#: ../../keybinding/shortcuts/id_name_map.go:66
-msgid "Switch to left workspace"
-msgstr "左のワークスペースに切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:67
-msgid "Switch to right workspace"
-msgstr "右のワークスペースに切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:68
-msgid "Switch to upper workspace"
-msgstr "上のワークスペースに切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:69
-msgid "Switch to lower workspace"
-msgstr "下のワークスペースに切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:71
-msgid "Switch similar windows"
-msgstr "類似ウィンドウを切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:72
-msgid "Switch similar windows in reverse"
-msgstr "類似ウィンドウを逆に切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:73
-msgid "Switch windows"
-msgstr "ウィンドウを切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:74
-msgid "Switch windows in reverse"
-msgstr "ウィンドウを逆に切り替え"
-
-#: ../../keybinding/shortcuts/id_name_map.go:85
+#: ../../gesture1/gesture_action.go:46
+#: ../../keybinding1/shortcuts/id_name_map.go:85
 msgid "Show desktop"
 msgstr "デスクトップを表示"
 
-#: ../../keybinding/shortcuts/id_name_map.go:94
+#: ../../gesture1/gesture_action.go:47
+msgid "Hide desktop"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:48
+msgid "Show/hide launcher"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:49
+msgid "Mouse right button pressed"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:50
+msgid "Mouse right button released"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:51
+msgid "Show/hide clipboard"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:52
+msgid "Show/hide grand search"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:53
+msgid "Show/hide notification center"
+msgstr ""
+
+#: ../../gesture1/gesture_action.go:54
+msgid "Disable"
+msgstr ""
+
+#: ../../housekeeping/init.go:136
+msgid "Insufficient disk space, please clean up in time!"
+msgstr "ディスクの空き領域が不足しています。すぐにクリーンアップしてください！"
+
+#: ../../housekeeping/init.go:137
+msgid "Go to clean up"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:13
+msgid "Launcher"
+msgstr "ランチャー"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:14
+msgid "Terminal"
+msgstr "ターミナル"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:15
+msgid "Screen Recorder"
+msgstr "画面収録"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:16
+msgid "Lock screen"
+msgstr "画面をロック"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:17
+msgid "Show/Hide the dock"
+msgstr "ドックの表示/非表示"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:18
+msgid "Shutdown interface"
+msgstr "シャットダウンインターフェース"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:19
+msgid "Terminal Quake Window"
+msgstr "ターミナルQuakeウィンドウ"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:20
+msgid "Screenshot"
+msgstr "スクリーンショット"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:21
+msgid "Full screenshot"
+msgstr "画面全体のスクリーンショット"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:22
+msgid "Window screenshot"
+msgstr "ウィンドウのスクリーンショット"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:23
+msgid "Delay screenshot"
+msgstr "タイマー スクリーンショット"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:24
+msgid "OCR (Image to Text)"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:25
+msgid "Scrollshot"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:26
+msgid "File manager"
+msgstr "ファイル マネージャー"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:27
+msgid "Disable Touchpad"
+msgstr "タッチパッドを無効にする"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:28
+msgid "Switch window effects"
+msgstr "ウィンドウ エフェクトを切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:29
+msgid "Fast Screen Off"
+msgstr "高速画面オフ"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:30
+msgid "System Monitor"
+msgstr "システム モニター"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:31
+msgid "Deepin Picker"
+msgstr "Deepinピッカー"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:32
+msgid "Desktop AI Assistant"
+msgstr "デスクトップAIアシスタント"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:33
+msgid "Text to Speech"
+msgstr "音声合成"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:34
+msgid "Speech to Text"
+msgstr "音声入力"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:35
+msgid "Clipboard"
+msgstr "クリップボード"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:36
+msgid "Translation"
+msgstr "翻訳"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:37
+msgid "Grand Search"
+msgstr "Grand Search"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:38
+msgid "Notification Center"
+msgstr "通知センター"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:39
+#: ../../keybinding1/shortcuts/id_name_map.go:47
+msgid "Switch Layout"
+msgstr "レイアウトを切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:40
+msgid "Toggle multiple displays"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:66
+msgid "Switch to left workspace"
+msgstr "左のワークスペースに切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:67
+msgid "Switch to right workspace"
+msgstr "右のワークスペースに切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:68
+msgid "Switch to upper workspace"
+msgstr "上のワークスペースに切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:69
+msgid "Switch to lower workspace"
+msgstr "下のワークスペースに切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:71
+msgid "Switch similar windows"
+msgstr "類似ウィンドウを切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:72
+msgid "Switch similar windows in reverse"
+msgstr "類似ウィンドウを逆に切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:73
+msgid "Switch windows"
+msgstr "ウィンドウを切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:74
+msgid "Switch windows in reverse"
+msgstr "ウィンドウを逆に切り替え"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Maximize window"
 msgstr "ウィンドウを最大化"
 
-#: ../../keybinding/shortcuts/id_name_map.go:95
+#: ../../keybinding1/shortcuts/id_name_map.go:95
 msgid "Restore window"
 msgstr "ウィンドウを復元"
 
-#: ../../keybinding/shortcuts/id_name_map.go:97
+#: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Minimize window"
 msgstr "ウィンドウを最小化"
 
-#: ../../keybinding/shortcuts/id_name_map.go:98
+#: ../../keybinding1/shortcuts/id_name_map.go:98
 msgid "Close window"
 msgstr "ウィンドウを閉じる"
 
-#: ../../keybinding/shortcuts/id_name_map.go:99
+#: ../../keybinding1/shortcuts/id_name_map.go:99
 msgid "Move window"
 msgstr "ウィンドウを移動"
 
-#: ../../keybinding/shortcuts/id_name_map.go:100
+#: ../../keybinding1/shortcuts/id_name_map.go:100
 msgid "Resize window"
 msgstr "ウィンドウのサイズを変更"
 
-#: ../../keybinding/shortcuts/id_name_map.go:115
+#: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to left workspace"
 msgstr "左のワークスペースに移動"
 
-#: ../../keybinding/shortcuts/id_name_map.go:116
+#: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to right workspace"
 msgstr "右のワークスペースに移動"
 
-#: ../../keybinding/shortcuts/id_name_map.go:117
+#: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to upper workspace"
 msgstr "上のワークスペースに移動"
 
-#: ../../keybinding/shortcuts/id_name_map.go:118
+#: ../../keybinding1/shortcuts/id_name_map.go:118
 msgid "Move to lower workspace"
 msgstr "下のワークスペースに移動"
 
-#: ../../keybinding/shortcuts/id_name_map.go:140
+#: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of all workspaces"
 msgstr "すべてのワークスペースのウィンドウを表示"
 
-#: ../../keybinding/shortcuts/id_name_map.go:141
+#: ../../keybinding1/shortcuts/id_name_map.go:141
 msgid "Display windows of current workspace"
 msgstr "現在のワークスペースのウィンドウを表示"
 
-#: ../../keybinding/shortcuts/id_name_map.go:142
+#: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Display workspace"
 msgstr "ワークスペースを表示"
 
-#: ../../keybinding/shortcuts/id_name_map.go:143
+#: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom In"
-msgstr ""
+msgstr "拡大"
 
-#: ../../keybinding/shortcuts/id_name_map.go:144
+#: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr ""
+msgstr "縮小"
 
-#: ../../keybinding/shortcuts/id_name_map.go:145
+#: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: ../../langselector/locale.go:48
+#: ../../keybinding1/shortcuts/id_name_map.go:146
+msgid "Window Quick Tile Left"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:147
+msgid "Window Quick Tile Right"
+msgstr ""
+
+#: ../../langselector1/locale.go:47
 msgid "Authentication is required to switch language"
 msgstr "言語を変更するには認証が必要です"
 
-#: ../../langselector/locale.go:137
+#: ../../langselector1/locale.go:138
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
 
-#: ../../langselector/locale.go:138
+#: ../../langselector1/locale.go:139
 msgid "Changing system language, please wait..."
-msgstr ""
+msgstr "システム言語を変更しています。しばらくお待ちください..."
 
-#: ../../langselector/locale.go:139
+#: ../../langselector1/locale.go:140
 msgid "System language changed, please log out and then log in"
-msgstr ""
+msgstr "システム言語が変更されました。再度ログインしてください。"
 
-#: ../../langselector/locale.go:381
+#: ../../langselector1/locale.go:379
 msgid "Failed to change system language, please try later"
-msgstr ""
+msgstr "システム言語を変更できませんでした。もう一度お試しください"
 
-#: ../../lastore/daemon.go:186
+#: ../../lastore1/daemon.go:186
 msgid "Updates failed: it was interrupted."
 msgstr ""
 
-#: ../../lastore/daemon.go:188
+#: ../../lastore1/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
 
-#: ../../lastore/daemon.go:194
+#: ../../lastore1/daemon.go:194
 msgid "Updates failed: DPKG error."
 msgstr ""
 
-#: ../../lastore/daemon.go:196
+#: ../../lastore1/daemon.go:196
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
 
-#: ../../lastore/daemon.go:200
+#: ../../lastore1/daemon.go:200
 msgid "Updates failed: insufficient disk space."
-msgstr ""
+msgstr "アップデートできませんでしたした: ディスクの空き領域が不足しています"
 
-#: ../../lastore/daemon.go:202
+#: ../../lastore1/daemon.go:202
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
 
-#: ../../lastore/daemon.go:206
+#: ../../lastore1/daemon.go:206
 msgid "Updates failed"
 msgstr ""
 
-#: ../../lastore/daemon.go:208
+#: ../../lastore1/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
 
-#: ../../launcher/manager_uninstall.go:56
+#: ../../launcher/item.go:97
+msgid "(Linglong)"
+msgstr "(Linglong)"
+
+#: ../../launcher/manager_uninstall.go:55
 msgid "%q removed successfully"
 msgstr "%q を削除しました"
 
-#: ../../launcher/manager_uninstall.go:58
+#: ../../launcher/manager_uninstall.go:57
 msgid "Failed to uninstall %q"
 msgstr "%q のアンインストールに失敗しました"
 
-#: ../../network/manager_active_conn.go:468
-#: ../../network/manager_active_conn.go:473
+#: ../../network1/manager_active_conn.go:468
+#: ../../network1/manager_active_conn.go:473
 msgid "None"
 msgstr "なし"
 
-#: ../../network/manager_active_conn.go:475
+#: ../../network1/manager_active_conn.go:475
 msgid "WEP 40/128-bit Key"
 msgstr "WEP 40/128ビット キー"
 
-#: ../../network/manager_active_conn.go:477
+#: ../../network1/manager_active_conn.go:477
 msgid "WPA/WPA2 Personal"
 msgstr "WPA/WPA2 パーソナル"
 
-#: ../../network/manager_active_conn.go:479
+#: ../../network1/manager_active_conn.go:479
 msgid "WPA3 Personal"
 msgstr ""
 
-#: ../../network/manager_active_conn.go:487
+#: ../../network1/manager_active_conn.go:487
 msgid "TLS"
 msgstr "TLS"
 
-#: ../../network/manager_active_conn.go:489
+#: ../../network1/manager_active_conn.go:489
 msgid "MD5"
 msgstr "MD5"
 
-#: ../../network/manager_active_conn.go:491
+#: ../../network1/manager_active_conn.go:491
 msgid "LEAP"
 msgstr "LEAP"
 
-#: ../../network/manager_active_conn.go:493
+#: ../../network1/manager_active_conn.go:493
 msgid "FAST"
 msgstr "FAST"
 
-#: ../../network/manager_active_conn.go:495
+#: ../../network1/manager_active_conn.go:495
 msgid "Tunneled TLS"
 msgstr "トンネル TLS"
 
-#: ../../network/manager_active_conn.go:497
+#: ../../network1/manager_active_conn.go:497
 msgid "Protected EAP"
 msgstr "保護された EAP"
 
-#: ../../network/manager_connection.go:346
-#: ../../network/manager_connection.go:350
+#: ../../network1/manager_connection.go:346
+#: ../../network1/manager_connection.go:350
 msgid "Wired Connection"
 msgstr "無線接続"
 
-#: ../../network/manager_connection.go:389
+#: ../../network1/manager_connection.go:389
 msgid "Wired Connection %v"
 msgstr ""
 
-#: ../../network/proxychains/utils_notify.go:49
+#: ../../network1/proxychains/utils_notify.go:49
 msgid "Application proxy is set successfully"
 msgstr ""
 
-#: ../../network/proxychains/utils_notify.go:49
-#: ../../network/proxychains/utils_notify.go:52
-#: ../../network/utils_notify.go:182 ../../network/utils_notify.go:186
-#: ../../network/utils_notify.go:189
+#: ../../network1/proxychains/utils_notify.go:49
+#: ../../network1/proxychains/utils_notify.go:52
+#: ../../network1/utils_notify.go:182 ../../network1/utils_notify.go:186
+#: ../../network1/utils_notify.go:189
 msgid "Network"
 msgstr "ネットワーク"
 
-#: ../../network/proxychains/utils_notify.go:52
+#: ../../network1/proxychains/utils_notify.go:52
 msgid "Failed to set the application proxy"
 msgstr ""
 
-#: ../../network/state_handler.go:23
+#: ../../network1/state_handler.go:23
 msgid "Device state changed"
 msgstr ""
 
-#: ../../network/state_handler.go:24
+#: ../../network1/state_handler.go:24
 msgid "Device state changed, reason unknown"
 msgstr ""
 
-#: ../../network/state_handler.go:25
+#: ../../network1/state_handler.go:25
 msgid "The device is now managed"
 msgstr ""
 
-#: ../../network/state_handler.go:26
+#: ../../network1/state_handler.go:26
 msgid "The device is no longer managed"
 msgstr ""
 
-#: ../../network/state_handler.go:27
+#: ../../network1/state_handler.go:27
 msgid "The device has not been ready for configuration"
 msgstr ""
 
-#: ../../network/state_handler.go:28
+#: ../../network1/state_handler.go:28
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)"
 msgstr ""
 
-#: ../../network/state_handler.go:29
+#: ../../network1/state_handler.go:29
 msgid "The IP configuration is no longer valid"
 msgstr ""
 
-#: ../../network/state_handler.go:30
+#: ../../network1/state_handler.go:30
 msgid "Passwords were required but not provided"
 msgstr "パスワードが要求されましたが、指定されていません"
 
-#: ../../network/state_handler.go:31
+#: ../../network1/state_handler.go:31
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server"
 msgstr ""
 
-#: ../../network/state_handler.go:32
+#: ../../network1/state_handler.go:32
 msgid "Configuration of the 802.1X supplicant failed"
 msgstr ""
 
-#: ../../network/state_handler.go:33
+#: ../../network1/state_handler.go:33
 msgid "The 802.1X supplicant quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:34
+#: ../../network1/state_handler.go:34
 msgid "The 802.1X supplicant took too long time to authenticate"
 msgstr ""
 
-#: ../../network/state_handler.go:35
+#: ../../network1/state_handler.go:35
 msgid "The PPP service failed to start within the allowed time"
 msgstr ""
 
-#: ../../network/state_handler.go:36
+#: ../../network1/state_handler.go:36
 msgid "The PPP service disconnected unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:37
+#: ../../network1/state_handler.go:37
 msgid "The PPP service quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:38
+#: ../../network1/state_handler.go:38
 msgid "The DHCP service failed to start within the allowed time"
 msgstr ""
 
-#: ../../network/state_handler.go:39
+#: ../../network1/state_handler.go:39
 msgid "The DHCP service reported an unexpected error"
 msgstr ""
 
-#: ../../network/state_handler.go:40
+#: ../../network1/state_handler.go:40
 msgid "The DHCP service quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:41
+#: ../../network1/state_handler.go:41
 msgid "The shared connection service failed to start"
 msgstr ""
 
-#: ../../network/state_handler.go:42
+#: ../../network1/state_handler.go:42
 msgid "The shared connection service quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:43
+#: ../../network1/state_handler.go:43
 msgid "The AutoIP service failed to start"
 msgstr ""
 
-#: ../../network/state_handler.go:44
+#: ../../network1/state_handler.go:44
 msgid "The AutoIP service reported an unexpected error"
 msgstr ""
 
-#: ../../network/state_handler.go:45
+#: ../../network1/state_handler.go:45
 msgid "The AutoIP service quitted or failed unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:46
+#: ../../network1/state_handler.go:46
 msgid "Dialing failed due to busy lines"
 msgstr ""
 
-#: ../../network/state_handler.go:47
+#: ../../network1/state_handler.go:47
 msgid "Dialing failed due to no dial tone"
 msgstr ""
 
-#: ../../network/state_handler.go:48
+#: ../../network1/state_handler.go:48
 msgid "Dialing failed due to the carrier"
 msgstr ""
 
-#: ../../network/state_handler.go:49
+#: ../../network1/state_handler.go:49
 msgid "Dialing timed out"
 msgstr ""
 
-#: ../../network/state_handler.go:50
+#: ../../network1/state_handler.go:50
 msgid "Dialing failed"
 msgstr ""
 
-#: ../../network/state_handler.go:51
+#: ../../network1/state_handler.go:51
 msgid "Modem initialization failed"
 msgstr ""
 
-#: ../../network/state_handler.go:52
+#: ../../network1/state_handler.go:52
 msgid "Failed to select the specified GSM APN"
 msgstr ""
 
-#: ../../network/state_handler.go:53
+#: ../../network1/state_handler.go:53
 msgid "No networks searched"
 msgstr ""
 
-#: ../../network/state_handler.go:54
+#: ../../network1/state_handler.go:54
 msgid "Network registration was denied"
 msgstr ""
 
-#: ../../network/state_handler.go:55
+#: ../../network1/state_handler.go:55
 msgid "Network registration timed out"
 msgstr ""
 
-#: ../../network/state_handler.go:56
+#: ../../network1/state_handler.go:56
 msgid "Failed to register to the requested GSM network"
 msgstr ""
 
-#: ../../network/state_handler.go:57
+#: ../../network1/state_handler.go:57
 msgid "PIN check failed"
 msgstr ""
 
-#: ../../network/state_handler.go:58
+#: ../../network1/state_handler.go:58
 msgid "Necessary firmware for the device may be missed"
 msgstr ""
 
-#: ../../network/state_handler.go:59
+#: ../../network1/state_handler.go:59
 msgid "The device was removed"
 msgstr ""
 
-#: ../../network/state_handler.go:60
+#: ../../network1/state_handler.go:60
 msgid "NetworkManager went to sleep"
 msgstr ""
 
-#: ../../network/state_handler.go:61
+#: ../../network1/state_handler.go:61
 msgid "The device's active connection was removed or disappeared"
 msgstr ""
 
-#: ../../network/state_handler.go:62
+#: ../../network1/state_handler.go:62
 msgid "A user or client requested to disconnect"
 msgstr ""
 
-#: ../../network/state_handler.go:63
+#: ../../network1/state_handler.go:63
 msgid "The device's carrier/link changed"
 msgstr ""
 
-#: ../../network/state_handler.go:64
+#: ../../network1/state_handler.go:64
 msgid "The device's existing connection was assumed"
 msgstr ""
 
-#: ../../network/state_handler.go:65
+#: ../../network1/state_handler.go:65
 msgid "The 802.1x supplicant is now available"
 msgstr ""
 
-#: ../../network/state_handler.go:66
+#: ../../network1/state_handler.go:66
 msgid "The modem could not be found"
 msgstr ""
 
-#: ../../network/state_handler.go:67
+#: ../../network1/state_handler.go:67
 msgid "The Bluetooth connection timed out or failed"
 msgstr ""
 
-#: ../../network/state_handler.go:68
+#: ../../network1/state_handler.go:68
 msgid "GSM Modem's SIM Card was not inserted"
 msgstr ""
 
-#: ../../network/state_handler.go:69
+#: ../../network1/state_handler.go:69
 msgid "GSM Modem's SIM PIN required"
 msgstr ""
 
-#: ../../network/state_handler.go:70
+#: ../../network1/state_handler.go:70
 msgid "GSM Modem's SIM PUK required"
 msgstr ""
 
-#: ../../network/state_handler.go:71
+#: ../../network1/state_handler.go:71
 msgid "SIM card error in GSM Modem"
 msgstr ""
 
-#: ../../network/state_handler.go:72
+#: ../../network1/state_handler.go:72
 msgid "InfiniBand device does not support connected mode"
 msgstr ""
 
-#: ../../network/state_handler.go:73
+#: ../../network1/state_handler.go:73
 msgid "A dependency of the connection failed"
 msgstr ""
 
-#: ../../network/state_handler.go:74
+#: ../../network1/state_handler.go:74
 msgid "RFC 2684 Ethernet bridging error to ADSL"
 msgstr ""
 
-#: ../../network/state_handler.go:75
+#: ../../network1/state_handler.go:75
 msgid "ModemManager did not run or quitted unexpectedly"
 msgstr ""
 
-#: ../../network/state_handler.go:76
+#: ../../network1/state_handler.go:76
 msgid "The 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/state_handler.go:77
+#: ../../network1/state_handler.go:77
 msgid "A secondary connection of the base connection failed"
 msgstr ""
 
-#: ../../network/state_handler.go:80
+#: ../../network1/state_handler.go:80
 msgid "DCB or FCoE setup failed"
 msgstr ""
 
-#: ../../network/state_handler.go:81
+#: ../../network1/state_handler.go:81
 msgid "Network teaming control failed"
 msgstr ""
 
-#: ../../network/state_handler.go:82
+#: ../../network1/state_handler.go:82
 msgid "Modem failed to run or not available"
 msgstr ""
 
-#: ../../network/state_handler.go:83
+#: ../../network1/state_handler.go:83
 msgid "Modem now ready and available"
 msgstr ""
 
-#: ../../network/state_handler.go:84
+#: ../../network1/state_handler.go:84
 msgid "SIM PIN is incorrect"
 msgstr ""
 
-#: ../../network/state_handler.go:85
+#: ../../network1/state_handler.go:85
 msgid "New connection activation is enqueuing"
 msgstr ""
 
-#: ../../network/state_handler.go:86
+#: ../../network1/state_handler.go:86
 msgid "Parent device changed"
 msgstr ""
 
-#: ../../network/state_handler.go:87
+#: ../../network1/state_handler.go:87
 msgid "Management status of parent device changed"
 msgstr ""
 
-#: ../../network/state_handler.go:90
+#: ../../network1/state_handler.go:90
 msgid "Network cable is unplugged"
 msgstr ""
 
-#: ../../network/state_handler.go:91
+#: ../../network1/state_handler.go:91
 msgid "Please make sure SIM card has been inserted with mobile network signal"
 msgstr ""
 
-#: ../../network/state_handler.go:92
+#: ../../network1/state_handler.go:92
 msgid ""
 "Please make sure a correct plan was selected without arrearage of SIM card"
 msgstr ""
 
-#: ../../network/state_handler.go:95
+#: ../../network1/state_handler.go:95
 msgid "Failed to activate VPN connection, reason unknown"
 msgstr ""
 
-#: ../../network/state_handler.go:96
+#: ../../network1/state_handler.go:96
 msgid "Failed to activate VPN connection"
 msgstr ""
 
-#: ../../network/state_handler.go:97
+#: ../../network1/state_handler.go:97
 msgid "The VPN connection state changed due to being disconnected by users"
 msgstr ""
 
-#: ../../network/state_handler.go:98
+#: ../../network1/state_handler.go:98
 msgid ""
 "The VPN connection state changed due to being disconnected from devices"
 msgstr ""
 
-#: ../../network/state_handler.go:99
+#: ../../network1/state_handler.go:99
 msgid "VPN service stopped"
 msgstr ""
 
-#: ../../network/state_handler.go:100
+#: ../../network1/state_handler.go:100
 msgid "The IP config of VPN connection was invalid"
 msgstr ""
 
-#: ../../network/state_handler.go:101
+#: ../../network1/state_handler.go:101
 msgid "The connection attempt to VPN service timed out"
 msgstr ""
 
-#: ../../network/state_handler.go:102
+#: ../../network1/state_handler.go:102
 msgid "The VPN service start timed out"
 msgstr ""
 
-#: ../../network/state_handler.go:103
+#: ../../network1/state_handler.go:103
 msgid "The VPN service failed to start"
 msgstr "VPN サービスを起動できませんでした"
 
-#: ../../network/state_handler.go:104
+#: ../../network1/state_handler.go:104
 msgid "The VPN connection password was not provided"
 msgstr ""
 
-#: ../../network/state_handler.go:105
+#: ../../network1/state_handler.go:105
 msgid "Authentication to VPN server failed"
 msgstr ""
 
-#: ../../network/state_handler.go:106
+#: ../../network1/state_handler.go:106
 msgid "The connection was deleted from settings"
 msgstr ""
 
-#: ../../network/state_handler.go:258
+#: ../../network1/state_handler.go:262
 msgid "Enabling hotspot"
 msgstr ""
 
-#: ../../network/state_handler.go:262
+#: ../../network1/state_handler.go:266
 msgid "Connecting %q"
 msgstr "%qに接続試行中"
 
-#: ../../network/state_handler.go:271
+#: ../../network1/state_handler.go:275
 msgid "Hotspot enabled"
 msgstr ""
 
-#: ../../network/state_handler.go:273
+#: ../../network1/state_handler.go:277
 msgid "%q connected"
 msgstr "%qに接続されました"
 
-#: ../../network/state_handler.go:284 ../../network/state_handler.go:339
+#: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
 msgid "Hotspot disabled"
 msgstr ""
 
-#: ../../network/state_handler.go:341 ../../network/state_handler.go:365
-#: ../../system/bluetooth/utils_notify.go:50
+#: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
+#: ../../system/bluetooth1/utils_notify.go:50
 msgid "%q disconnected"
 msgstr "%q から切断されました"
 
-#: ../../network/state_handler.go:347
+#: ../../network1/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr "ホットスポットの共有に失敗しました、dnsmasqの設定を確認してください"
 
-#: ../../network/state_handler.go:349
+#: ../../network1/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
 msgstr "%q への接続に失敗しました、ワイヤレスルーターの付近から離れないようにしてください"
 
-#: ../../network/state_handler.go:351
+#: ../../network1/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
 
-#: ../../network/state_handler.go:355
+#: ../../network1/state_handler.go:363
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
 
-#: ../../network/state_handler.go:357
+#: ../../network1/state_handler.go:365
 msgid "Unable to connect %q"
 msgstr ""
 
-#: ../../network/state_handler.go:369
+#: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
 msgstr ""
 
-#: ../../network/state_handler.go:371
+#: ../../network1/state_handler.go:379
 msgid "Password is required to connect %q"
 msgstr ""
 
-#: ../../network/state_handler.go:375
+#: ../../network1/state_handler.go:383
 msgid "The %q 802.11 WLAN network could not be found"
 msgstr ""
 
-#: ../../network/utils_dbus_nm.go:278
+#: ../../network1/utils_dbus_nm.go:278
 msgid "Unknown"
 msgstr "不明"
 
-#: ../../network/utils_notify.go:170
+#: ../../network1/utils_notify.go:170
 msgid "Airplane mode enabled."
 msgstr "機内モードが使用可能です。"
 
-#: ../../network/utils_notify.go:170 ../../network/utils_notify.go:174
-#: ../../network/utils_notify.go:178 ../../network/utils_notify.go:196
-#: ../../network/utils_notify.go:199 ../../network/utils_notify.go:288
+#: ../../network1/utils_notify.go:170 ../../network1/utils_notify.go:174
+#: ../../network1/utils_notify.go:178 ../../network1/utils_notify.go:196
+#: ../../network1/utils_notify.go:199 ../../network1/utils_notify.go:288
 msgid "Disconnected"
 msgstr "切断"
 
-#: ../../network/utils_notify.go:178
+#: ../../network1/utils_notify.go:178
 msgid "Access Point mode is not supported by this device."
 msgstr "アクセスポイントモードは、このデバイスでサポートされていません。"
 
-#: ../../network/utils_notify.go:182
+#: ../../network1/utils_notify.go:182
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
 msgstr "WLAN カードのハードウェアスイッチがオフになっています。必要な場合はスイッチをオンにしてください。"
 
-#: ../../network/utils_notify.go:186
+#: ../../network1/utils_notify.go:186
 msgid "System proxy is set successfully."
 msgstr "システムプロキシが無事設定されました。"
 
-#: ../../network/utils_notify.go:189
+#: ../../network1/utils_notify.go:189
 msgid "System proxy has been cancelled."
 msgstr "システムプロキシはキャンセルされました"
 
-#: ../../network/utils_notify.go:193
+#: ../../network1/utils_notify.go:193
 msgid "Connected"
 msgstr "接続済み"
 
@@ -1035,95 +1090,95 @@ msgstr ""
 msgid "Proceed"
 msgstr ""
 
-#: ../../session/power/manager.go:913
+#: ../../session/power1/manager.go:928
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr ""
 
-#: ../../session/power/manager.go:914
+#: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
 msgstr ""
 
-#: ../../session/power/manager.go:915
+#: ../../session/power1/manager.go:930
 msgid "Cancle"
 msgstr ""
 
-#: ../../session/power/manager.go:915
+#: ../../session/power1/manager.go:930
 msgid "Shut down"
-msgstr ""
+msgstr "シャットダウン"
 
-#: ../../session/power/manager_events.go:257
+#: ../../session/power1/manager_events.go:266
 msgid "Battery critically low"
 msgstr "バッテリー残量がごくわずかです"
 
-#: ../../session/power/manager_events.go:277
-#: ../../session/power/manager_events.go:282
-#: ../../session/power/manager_events.go:287
-#: ../../session/power/manager_events.go:292
+#: ../../session/power1/manager_events.go:291
+#: ../../session/power1/manager_events.go:296
+#: ../../session/power1/manager_events.go:301
+#: ../../session/power1/manager_events.go:306
 msgid "Battery low, please plug in"
 msgstr "バッテリーが少なくなっています。電源に接続してください"
 
-#: ../../session/power/utils.go:602
+#: ../../session/power1/utils.go:636
 msgid "your computer will shut down"
 msgstr ""
 
-#: ../../session/power/utils.go:604
+#: ../../session/power1/utils.go:638
 msgid "your computer will suspend"
 msgstr ""
 
-#: ../../session/power/utils.go:606
+#: ../../session/power1/utils.go:640
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power/utils.go:608
+#: ../../session/power1/utils.go:642
 msgid "your monitor will turn off"
 msgstr ""
 
-#: ../../session/power/utils.go:610
+#: ../../session/power1/utils.go:644
 msgid "your monitor will show the shutdown interface"
 msgstr ""
 
-#: ../../session/power/utils.go:612
+#: ../../session/power1/utils.go:646
 msgid "it will do nothing to your computer"
 msgstr ""
 
-#: ../../system/bluetooth/utils_notify.go:43
+#: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr ""
 
-#: ../../system/bluetooth/utils_notify.go:56
+#: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
 msgstr "%q がオンになっていて、範囲内にあることをご確認ください"
 
-#: ../../system/bluetooth/utils_notify.go:74
+#: ../../system/bluetooth1/utils_notify.go:74
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
 
-#: ../../timedate/manager_format.go:75
+#: ../../timedate1/manager_format.go:75
 msgid "Space"
 msgstr "スペース"
 
-#: ../../timedate/manager_ifc.go:51
+#: ../../timedate1/manager_ifc.go:59
 msgid "Authentication is required to set the system time"
-msgstr ""
+msgstr "システム時刻を変更するには認証が必要です"
 
-#: ../../timedate/manager_ifc.go:64
+#: ../../timedate1/manager_ifc.go:72
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:74
+#: ../../timedate1/manager_ifc.go:82
 msgid "Authentication is required to change NTP server"
-msgstr ""
+msgstr "NTPサーバーを変更するには認証が必要です"
 
-#: ../../timedate/manager_ifc.go:117
+#: ../../timedate1/manager_ifc.go:125
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
 
-#: ../../timedate/manager_ifc.go:140
+#: ../../timedate1/manager_ifc.go:151
 msgid "Authentication is required to set the system timezone"
-msgstr ""
+msgstr "システムタイムゾーンを変更するには認証が必要です"
