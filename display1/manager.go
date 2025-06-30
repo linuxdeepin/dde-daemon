@@ -3083,6 +3083,10 @@ func (m *Manager) tryToChangeScaleFactor(monitorWidth, monitorHeight uint16) {
 		return
 	}
 
+	if m.xsManager == nil {
+		return
+	}
+
 	curScale, err := m.xsManager.GetScaleFactor(0)
 	if err != nil {
 		logger.Warning("failed to get scale factor:", err)
@@ -3090,7 +3094,7 @@ func (m *Manager) tryToChangeScaleFactor(monitorWidth, monitorHeight uint16) {
 	}
 
 	maxScale := calcMaxScaleFactor(monitorWidth, monitorHeight)
-	if curScale > maxScale && m.xsManager != nil {
+	if curScale > maxScale {
 		recommendScaleFactor := scale.GetRecommendedScaleFactor(m.xConn)
 		// 更新scale factor
 		m.xsManager.SetScaleFactor(0, recommendScaleFactor)
