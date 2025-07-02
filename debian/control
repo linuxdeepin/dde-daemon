@@ -91,6 +91,7 @@ Depends:
  network-manager,
  procps,
  rfkill,
+ tlp,
  user-setup,
  xdotool,
  xkb-data,
