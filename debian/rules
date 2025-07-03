@@ -5,6 +5,8 @@ include /usr/share/dpkg/architecture.mk
 export GOCACHE = /tmp/gocache
 export GOPATH = /usr/share/gocode
 export GO111MODULE=off
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export CFLAGS = -W -Wall -fPIC -fstack-protector-all -z relro -z noexecstack -z now -pie
 
 SYSTYPE=Desktop
 SYSTYPE=$(shell cat /etc/deepin-version | grep Type= | awk -F'=' '{print $$2}')
