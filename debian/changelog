@@ -1,3 +1,11 @@
+dde-daemon (6.1.42) unstable; urgency=medium
+
+  * fix: add tlp dependency to debian control file
+  * fix: add nil check for xsManager in tryToChangeScaleFactor
+  * chore: prohibit the startup and auto start of some services
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 03 Jul 2025 17:22:54 +0800
+
 dde-daemon (6.1.41) unstable; urgency=medium
 
   * fix: remove redundant own policy in Accounts1 config
