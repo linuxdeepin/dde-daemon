@@ -58,14 +58,7 @@ override_dh_auto_install:
 endif
 
 override_dh_installsystemd:
-	# 需要开机自启动
-	dh_installsystemd --name=dde-system-daemon --no-start
-	# 不需要开机自启动
-	dh_installsystemd --name=dde-authority --no-enable --no-start
-	dh_installsystemd --name=dde-backlight-helper --no-enable --no-start
-	dh_installsystemd --name=dde-greeter-setter --no-enable --no-start
-	dh_installsystemd --name=dde-lock-service --no-enable --no-start
-	dh_installsystemd --name=deepin-grub2 --no-enable --no-start
+	dh_installsystemd --no-start
 
 override_dh_auto_clean:
 	dh_auto_clean --
