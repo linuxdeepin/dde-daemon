@@ -255,11 +255,11 @@ msgstr "Restaurer la fenêtre"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "Division gauche de la fenêtre actuelle"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "Division droite de la fenêtre actuelle"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Show multitasking view"
@@ -304,11 +304,11 @@ msgstr "Afficher/Masquer le presse-papiers"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Afficher/masquer la recherche globale"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "Afficher/masquer le centre de notifications"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
