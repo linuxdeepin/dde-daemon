@@ -19,6 +19,11 @@ func (v *LangSelector) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"locale"},
 		},
 		{
+			Name:   "GenLocale",
+			Fn:     v.GenLocale,
+			InArgs: []string{"locale"},
+		},
+		{
 			Name:    "GetLanguageSupportPackages",
 			Fn:      v.GetLanguageSupportPackages,
 			InArgs:  []string{"locale"},

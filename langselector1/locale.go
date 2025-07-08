@@ -59,6 +59,11 @@ const (
 	// Locale 更改状态：正在修改中
 	LocaleStateChanging = 1
 
+	// 正在设置语言
+	LocaleStateSetLang = 1 << 1
+	// 正在locale-gen
+	LocaleStateGenLocale = 1 << 2
+
 	gsSchemaLocale = "com.deepin.dde.locale"
 	gsKeyLocales   = "locales"
 )
@@ -388,7 +393,7 @@ func (lang *LangSelector) setLocale(locale string) {
 	// begin
 	lang.PropsMu.Lock()
 	oldLocale := lang.CurrentLocale
-	lang.setPropLocaleState(LocaleStateChanging)
+	lang.setPropLocaleState(LocaleStateChanging | LocaleStateSetLang)
 	lang.setPropCurrentLocale(locale)
 	lang.PropsMu.Unlock()
 
@@ -415,7 +420,7 @@ func (lang *LangSelector) setLocale(locale string) {
 	}
 
 	// generate locale
-	err = lang.generateLocale(locale)
+	err = lang.doGenerateLocale(locale)
 	if err != nil {
 		logger.Warning("failed to generate locale:", err)
 		lang.setLocaleFailed(oldLocale)
@@ -466,6 +471,29 @@ func (lang *LangSelector) setLocale(locale string) {
 	lang.PropsMu.Unlock()
 }
 
+func (lang *LangSelector) genLocale(locale string) {
+	lang.PropsMu.Lock()
+	lang.setPropLocaleState(LocaleStateChanging | LocaleStateGenLocale)
+	lang.PropsMu.Unlock()
+
+	err := lang.doGenerateLocale(locale)
+	if err != nil {
+		logger.Warning("failed to generate locale:", err)
+		// restore state on failure
+		lang.PropsMu.Lock()
+		lang.setPropLocaleState(LocaleStateChanged)
+		lang.PropsMu.Unlock()
+		return
+	} else {
+		logger.Debug("generate locale success")
+	}
+
+	// end
+	lang.PropsMu.Lock()
+	lang.setPropLocaleState(LocaleStateChanged)
+	lang.PropsMu.Unlock()
+}
+
 func syncUserLocale(locale string) error {
 	systemConn, err := dbus.SystemBus()
 	if err != nil {
@@ -487,7 +515,7 @@ func syncUserLocale(locale string) error {
 
 var errSignalBodyInvalid = errors.New("signal body is invalid")
 
-func (lang *LangSelector) generateLocale(locale string) error {
+func (lang *LangSelector) doGenerateLocale(locale string) error {
 	successMatchRule := dbusutil.NewMatchRuleBuilder().ExtSignal("/org/deepin/dde/LocaleHelper1", "org.deepin.dde.LocaleHelper1", "Success").Build()
 	err := successMatchRule.AddTo(lang.systemBus)
 	if err != nil {

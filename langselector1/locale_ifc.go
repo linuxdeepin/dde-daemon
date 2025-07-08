@@ -40,7 +40,7 @@ func (lang *LangSelector) SetLocale(locale string) *dbus.Error {
 
 	lang.PropsMu.Lock()
 	defer lang.PropsMu.Unlock()
-	if lang.LocaleState == LocaleStateChanging || lang.CurrentLocale == locale {
+	if (lang.LocaleState&LocaleStateChanging != 0) || lang.CurrentLocale == locale {
 		return nil
 	}
 	_ = lang.addLocale(locale)
@@ -113,4 +113,17 @@ func (lang *LangSelector) DeleteLocale(locale string) *dbus.Error {
 
 	err := lang.deleteLocale(locale)
 	return dbusutil.ToError(err)
+}
+
+func (lang *LangSelector) GenLocale(locale string) *dbus.Error {
+	lang.service.DelayAutoQuit()
+
+	lang.PropsMu.Lock()
+	defer lang.PropsMu.Unlock()
+	if lang.LocaleState&LocaleStateChanging != 0 {
+		return nil
+	}
+	logger.Debugf("genLocale %q", locale)
+	go lang.genLocale(locale)
+	return nil
 }
