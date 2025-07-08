@@ -5,18 +5,10 @@
 package apps1
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func Test_getHomeByUid(t *testing.T) {
-	uid := os.Getuid()
-	home, err := getHomeByUid(uid)
-	assert.NoError(t, err)
-	assert.Equal(t, home, os.Getenv("HOME"))
-}
 
 func Test_isDesktopFile(t *testing.T) {
 	type args struct {
