@@ -5,15 +5,15 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/godbus/dbus/v5"
-	"github.com/linuxdeepin/dde-api/session"
 	"github.com/linuxdeepin/dde-daemon/calltrace"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	dbusmgr "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gsettings"
@@ -252,14 +252,44 @@ func (s *SessionDaemon) getAllDefaultDisabledModules() []string {
 
 func (s *SessionDaemon) execDefaultAction() {
 	var err error
-	if hasDDECookie {
-		// start part1
-		err = loader.EnableModules(s.part1EnabledModules, s.part1DisabledModules, 0)
-		session.Register()
+	err = loader.EnableModules(s.part1EnabledModules, s.part1DisabledModules, 0)
+	if err != nil {
+		logger.Warning("Failed to enable part1 modules:", err)
+		os.Exit(3)
+	}
+	var once sync.Once
 
-	} else {
-		err = loader.EnableModules(s.getAllDefaultEnabledModules(),
-			s.getAllDefaultDisabledModules(), getEnableFlag(s.flags))
+	sessionBus, _ := dbus.SessionBus()
+	dbusDaemon := dbusmgr.NewDBus(sessionBus)
+	sessionSigLoop := dbusutil.NewSignalLoop(sessionBus, 10)
+	sessionSigLoop.Start()
+	dbusDaemon.InitSignalExt(sessionSigLoop, true)
+	var handler dbusutil.SignalHandlerId
+	handler, err = dbusDaemon.ConnectNameOwnerChanged(func(name, oldOwner, newOwner string) {
+		if name == "org.deepin.dde.SessionManager1" {
+			if len(newOwner) != 0 {
+				logger.Info("org.deepin.dde.SessionManager1 is starting")
+				once.Do(func() {
+					s.StartPart2()
+					dbusDaemon.RemoveHandler(handler)
+				})
+			}
+		}
+	})
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	ok, err := dbusDaemon.NameHasOwner(0, "org.deepin.dde.SessionManager1")
+	if err != nil {
+		logger.Warning("Failed to check org.deepin.dde.SessionManager1 owner:", err)
+		os.Exit(3)
+	}
+	if ok {
+		once.Do(func() {
+			s.StartPart2()
+			dbusDaemon.RemoveHandler(handler)
+		})
 	}
 
 	if err != nil {
@@ -306,9 +336,6 @@ func (s *SessionDaemon) CallTrace(times, seconds uint32) *dbus.Error {
 }
 
 func (s *SessionDaemon) StartPart2() *dbus.Error {
-	if !hasDDECookie {
-		return dbusutil.ToError(errors.New("env DDE_SESSION_PROCESS_COOKIE_ID is empty"))
-	}
 	// start part2
 	err := loader.EnableModules(s.part2EnabledModules, s.part2DisabledModules, 0)
 	return dbusutil.ToError(err)
