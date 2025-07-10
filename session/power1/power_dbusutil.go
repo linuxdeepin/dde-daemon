@@ -119,6 +119,253 @@ func (v *Manager) emitPropChangedHasAmbientLightSensor(value bool) error {
 	return v.service.EmitPropertyChanged(v, "HasAmbientLightSensor", value)
 }
 
+func (v *Manager) setPropLinePowerScreensaverDelay(value int) (changed bool) {
+	if v.LinePowerScreensaverDelay != value {
+		v.LinePowerScreensaverDelay = value
+		v.emitPropChangedLinePowerScreensaverDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLinePowerScreensaverDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "LinePowerScreensaverDelay", value)
+}
+
+func (v *Manager) setPropLinePowerScreenBlackDelay(value int) (changed bool) {
+	if v.LinePowerScreenBlackDelay != value {
+		v.LinePowerScreenBlackDelay = value
+		v.emitPropChangedLinePowerScreenBlackDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLinePowerScreenBlackDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "LinePowerScreenBlackDelay", value)
+}
+
+func (v *Manager) setPropLinePowerSleepDelay(value int) (changed bool) {
+	if v.LinePowerSleepDelay != value {
+		v.LinePowerSleepDelay = value
+		v.emitPropChangedLinePowerSleepDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLinePowerSleepDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "LinePowerSleepDelay", value)
+}
+
+func (v *Manager) setPropBatteryScreensaverDelay(value int) (changed bool) {
+	if v.BatteryScreensaverDelay != value {
+		v.BatteryScreensaverDelay = value
+		v.emitPropChangedBatteryScreensaverDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryScreensaverDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "BatteryScreensaverDelay", value)
+}
+
+func (v *Manager) setPropBatteryScreenBlackDelay(value int) (changed bool) {
+	if v.BatteryScreenBlackDelay != value {
+		v.BatteryScreenBlackDelay = value
+		v.emitPropChangedBatteryScreenBlackDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryScreenBlackDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "BatteryScreenBlackDelay", value)
+}
+
+func (v *Manager) setPropBatterySleepDelay(value int) (changed bool) {
+	if v.BatterySleepDelay != value {
+		v.BatterySleepDelay = value
+		v.emitPropChangedBatterySleepDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatterySleepDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "BatterySleepDelay", value)
+}
+
+func (v *Manager) setPropScreenBlackLock(value bool) (changed bool) {
+	if v.ScreenBlackLock != value {
+		v.ScreenBlackLock = value
+		v.emitPropChangedScreenBlackLock(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedScreenBlackLock(value bool) error {
+	return v.service.EmitPropertyChanged(v, "ScreenBlackLock", value)
+}
+
+func (v *Manager) setPropSleepLock(value bool) (changed bool) {
+	if v.SleepLock != value {
+		v.SleepLock = value
+		v.emitPropChangedSleepLock(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedSleepLock(value bool) error {
+	return v.service.EmitPropertyChanged(v, "SleepLock", value)
+}
+
+func (v *Manager) setPropLinePowerLidClosedAction(value int32) (changed bool) {
+	if v.LinePowerLidClosedAction != value {
+		v.LinePowerLidClosedAction = value
+		v.emitPropChangedLinePowerLidClosedAction(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLinePowerLidClosedAction(value int32) error {
+	return v.service.EmitPropertyChanged(v, "LinePowerLidClosedAction", value)
+}
+
+func (v *Manager) setPropLinePowerPressPowerBtnAction(value int32) (changed bool) {
+	if v.LinePowerPressPowerBtnAction != value {
+		v.LinePowerPressPowerBtnAction = value
+		v.emitPropChangedLinePowerPressPowerBtnAction(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLinePowerPressPowerBtnAction(value int32) error {
+	return v.service.EmitPropertyChanged(v, "LinePowerPressPowerBtnAction", value)
+}
+
+func (v *Manager) setPropBatteryLidClosedAction(value int32) (changed bool) {
+	if v.BatteryLidClosedAction != value {
+		v.BatteryLidClosedAction = value
+		v.emitPropChangedBatteryLidClosedAction(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryLidClosedAction(value int32) error {
+	return v.service.EmitPropertyChanged(v, "BatteryLidClosedAction", value)
+}
+
+func (v *Manager) setPropBatteryPressPowerBtnAction(value int32) (changed bool) {
+	if v.BatteryPressPowerBtnAction != value {
+		v.BatteryPressPowerBtnAction = value
+		v.emitPropChangedBatteryPressPowerBtnAction(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryPressPowerBtnAction(value int32) error {
+	return v.service.EmitPropertyChanged(v, "BatteryPressPowerBtnAction", value)
+}
+
+func (v *Manager) setPropLinePowerLockDelay(value int) (changed bool) {
+	if v.LinePowerLockDelay != value {
+		v.LinePowerLockDelay = value
+		v.emitPropChangedLinePowerLockDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLinePowerLockDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "LinePowerLockDelay", value)
+}
+
+func (v *Manager) setPropBatteryLockDelay(value int) (changed bool) {
+	if v.BatteryLockDelay != value {
+		v.BatteryLockDelay = value
+		v.emitPropChangedBatteryLockDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryLockDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "BatteryLockDelay", value)
+}
+
+func (v *Manager) setPropLowPowerNotifyEnable(value bool) (changed bool) {
+	if v.LowPowerNotifyEnable != value {
+		v.LowPowerNotifyEnable = value
+		v.emitPropChangedLowPowerNotifyEnable(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLowPowerNotifyEnable(value bool) error {
+	return v.service.EmitPropertyChanged(v, "LowPowerNotifyEnable", value)
+}
+
+func (v *Manager) setPropLowPowerNotifyThreshold(value int32) (changed bool) {
+	if v.LowPowerNotifyThreshold != value {
+		v.LowPowerNotifyThreshold = value
+		v.emitPropChangedLowPowerNotifyThreshold(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLowPowerNotifyThreshold(value int32) error {
+	return v.service.EmitPropertyChanged(v, "LowPowerNotifyThreshold", value)
+}
+
+func (v *Manager) setPropLowPowerAutoSleepThreshold(value int32) (changed bool) {
+	if v.LowPowerAutoSleepThreshold != value {
+		v.LowPowerAutoSleepThreshold = value
+		v.emitPropChangedLowPowerAutoSleepThreshold(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLowPowerAutoSleepThreshold(value int32) error {
+	return v.service.EmitPropertyChanged(v, "LowPowerAutoSleepThreshold", value)
+}
+
+func (v *Manager) setPropLowPowerAction(value int32) (changed bool) {
+	if v.LowPowerAction != value {
+		v.LowPowerAction = value
+		v.emitPropChangedLowPowerAction(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLowPowerAction(value int32) error {
+	return v.service.EmitPropertyChanged(v, "LowPowerAction", value)
+}
+
+func (v *Manager) setPropAmbientLightAdjustBrightness(value bool) (changed bool) {
+	if v.AmbientLightAdjustBrightness != value {
+		v.AmbientLightAdjustBrightness = value
+		v.emitPropChangedAmbientLightAdjustBrightness(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedAmbientLightAdjustBrightness(value bool) error {
+	return v.service.EmitPropertyChanged(v, "AmbientLightAdjustBrightness", value)
+}
+
 func (v *Manager) setPropIsHighPerformanceSupported(value bool) (changed bool) {
 	if v.IsHighPerformanceSupported != value {
 		v.IsHighPerformanceSupported = value
