@@ -1,3 +1,13 @@
+dde-daemon (6.1.43) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#823)
+  * feat: add GenLocale method and improve locale state handling
+  * fix: avoid dpkg packaging failures
+  * feat: root进程需要判断调用者时，使用TrustedExe替换Exe
+  * Revert "chore: prohibit the startup and auto start of some services"
+
+ -- WuJiangYu <wujiangyu@uniontech.com>  Thu, 10 Jul 2025 20:58:57 +0800
+
 dde-daemon (6.1.42) unstable; urgency=medium
 
   * fix: add tlp dependency to debian control file
