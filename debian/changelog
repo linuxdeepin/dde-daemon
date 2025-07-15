@@ -1,3 +1,10 @@
+dde-daemon (6.1.44) unstable; urgency=medium
+
+  * fix: fix some modules loaded failed
+  * fix: fix failure to change audio input device
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 15 Jul 2025 20:50:41 +0800
+
 dde-daemon (6.1.43) unstable; urgency=medium
 
   * i18n: Updates for project Deepin Desktop Environment (#823)
