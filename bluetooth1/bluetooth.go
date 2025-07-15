@@ -447,6 +447,7 @@ func (b *Bluetooth) init() {
 	}
 	b.settings = gio.NewSettings(bluetoothSchema)
 	b.DisplaySwitch.Bind(b.settings, displaySwitch)
+	b.DisplaySwitch.Set(false)
 
 	b.agent.init()
 	b.obexAgent.init()
