@@ -7,13 +7,15 @@ package audio
 import (
 	"errors"
 	"fmt"
-	"github.com/linuxdeepin/go-lib/strv"
 	"math"
 	"os"
+	"regexp"
 	"sort"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/linuxdeepin/go-lib/strv"
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
@@ -1653,6 +1655,10 @@ func (a *Audio) refreshBluetoothOpts() {
 }
 
 func (a *Audio) updateDefaultSink(sinkName string) {
+	if a.defaultSink.Name == sinkName {
+		logger.Warningf("defaultSink %s is the same as sinkName %s", a.defaultSink.Name, sinkName)
+		return
+	}
 	sinkInfo := a.getSinkInfoByName(sinkName)
 
 	if sinkInfo == nil {
@@ -1663,9 +1669,14 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 	logger.Debugf("updateDefaultSink #%d %s", sinkInfo.Index, sinkName)
 	a.moveSinkInputsToSink(sinkInfo.Index)
 	if !isPhysicalDevice(sinkName) {
-		sinkInfo = a.getSinkInfoByName(sinkInfo.PropList["device.master_device"])
-		if sinkInfo == nil {
+		master := a.getMasterNameFromVirtualDevice(sinkName)
+		if master == "" {
 			logger.Warning("failed to get virtual device sinkInfo for name:", sinkName)
+			return
+		}
+		sinkInfo = a.getSinkInfoByName(master)
+		if sinkInfo == nil {
+			logger.Warning("failed to get virtual device sinkInfo for name:", master)
 			return
 		}
 	}
@@ -1748,6 +1759,10 @@ func (a *Audio) updateSinks(index uint32) (sink *Sink) {
 }
 
 func (a *Audio) updateDefaultSource(sourceName string) {
+	if a.defaultSource.Name == sourceName {
+		logger.Warningf("defaultSource %s is the same as sourceName %s", a.defaultSource.Name, sourceName)
+		return
+	}
 	sourceInfo := a.getSourceInfoByName(sourceName)
 	if sourceInfo == nil {
 		logger.Warning("failed to get sourceInfo for name:", sourceName)
@@ -1757,7 +1772,12 @@ func (a *Audio) updateDefaultSource(sourceName string) {
 	logger.Debugf("updateDefaultSource #%d %s", sourceInfo.Index, sourceName)
 
 	if !isPhysicalDevice(sourceName) {
-		sourceInfo = a.getSourceInfoByName(sourceInfo.Proplist["device.master_device"])
+		master := a.getMasterNameFromVirtualDevice(sourceName)
+		if master == "" {
+			logger.Error("failed to get virtual device for name:", sourceName)
+			return
+		}
+		sourceInfo = a.getSourceInfoByName(master)
 		if sourceInfo == nil {
 			logger.Warning("failed to get virtual device sourceInfo for name:", sourceName)
 			return
@@ -1856,6 +1876,20 @@ func (a *Audio) getDefaultSinkName() string {
 	v := sink.Name
 	sink.PropsMu.RUnlock()
 	return v
+}
+
+func (a *Audio) getMasterNameFromVirtualDevice(device string) string {
+	modules := a.ctx.GetModuleList()
+	for _, module := range modules {
+		if strings.Contains(module.Name, "echo-cancel") {
+			re := regexp.MustCompile(`source_master=([^\s]+)`)
+			match := re.FindStringSubmatch(module.Argument)
+			if len(match) > 1 {
+				return match[1]
+			}
+		}
+	}
+	return ""
 }
 
 func (a *Audio) getSinkInfoByName(sinkName string) *pulse.Sink {

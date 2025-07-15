@@ -93,7 +93,9 @@ func (a *Audio) setReduceNoise(enable bool) error {
 	var err error
 	var out []byte
 	if enable {
-		out, err = exec.Command("/bin/sh", "/usr/share/dde-daemon/audio/echoCancelEnable.sh").CombinedOutput()
+		sourceName := a.getDefaultSourceName()
+		logger.Debugf("echoCancelEnable.sh --source_master=%s", sourceName)
+		out, err = exec.Command("/usr/share/dde-daemon/audio/echoCancelEnable.sh", "--source_master="+sourceName).CombinedOutput()
 		if err != nil {
 			logger.Warningf("failed to enable reduce noise %v %s", err, out)
 		}
