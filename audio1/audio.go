@@ -944,7 +944,7 @@ func (a *Audio) refreshDefaultSinkSource() {
 		}
 	}
 
-	if a.defaultSource != nil && a.defaultSource.Name != defaultSource {
+	if a.defaultSource == nil || a.defaultSource.Name != defaultSource {
 		logger.Debugf("update default source to %s", defaultSource)
 		a.updateDefaultSource(defaultSource)
 	} else {
@@ -1655,7 +1655,7 @@ func (a *Audio) refreshBluetoothOpts() {
 }
 
 func (a *Audio) updateDefaultSink(sinkName string) {
-	if a.defaultSink.Name == sinkName {
+	if a.defaultSink != nil && a.defaultSink.Name == sinkName {
 		logger.Warningf("defaultSink %s is the same as sinkName %s", a.defaultSink.Name, sinkName)
 		return
 	}
@@ -1759,7 +1759,7 @@ func (a *Audio) updateSinks(index uint32) (sink *Sink) {
 }
 
 func (a *Audio) updateDefaultSource(sourceName string) {
-	if a.defaultSource.Name == sourceName {
+	if a.defaultSource != nil && a.defaultSource.Name == sourceName {
 		logger.Warningf("defaultSource %s is the same as sourceName %s", a.defaultSource.Name, sourceName)
 		return
 	}
