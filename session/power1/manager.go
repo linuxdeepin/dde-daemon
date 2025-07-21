@@ -977,7 +977,10 @@ func (m *Manager) isWorkday(date time.Time) (res bool) {
 			return date.Weekday() != time.Sunday && date.Weekday() != time.Saturday
 		}
 		for _, holidayInfo := range rootCfg[0].List {
-			if holidayInfo.Date == date.Format("2006-1-2") {
+			// 尝试多种日期格式匹配
+			dateStr1 := date.Format("2006-1-2")
+			dateStr2 := date.Format("2006-01-02")
+			if holidayInfo.Date == dateStr1 || holidayInfo.Date == dateStr2 {
 				return holidayInfo.Status == 2
 			}
 		}
