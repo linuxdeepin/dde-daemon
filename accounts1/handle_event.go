@@ -210,11 +210,6 @@ func (m *Manager) handleFileShadowChanged() {
 }
 
 func (m *Manager) handleDMConfigChanged() {
-	quickLoginEnabled, err := users.GetLightDMQuickLoginEnabled()
-	if err != nil {
-		logger.Warning("GetLightDMQuickLoginEnabled failed, err:", err)
-	}
-	m.setPropQuickLoginEnabled(quickLoginEnabled)
 	for _, u := range m.usersMap {
 		u.updatePropAutomaticLogin()
 		u.updatePropQuickLogin()
