@@ -1035,15 +1035,15 @@ func (u *User) setQuickLogin(enabled bool) *dbus.Error {
 		return nil
 	}
 
-	// 先打开总开关
+	// 先打开lightdm的quicklogin-enabled
 	if enabled {
-		accountsManager := getAccountsManager()
-		if accountsManager == nil {
-			return dbusutil.ToError(errors.New("get accounts manager failed"))
-		}
-		err := accountsManager.setDConfigQuickLoginEnabled(true)
+		mainEnable, err := users.GetLightDMQuickLoginEnabled()
 		if err != nil {
-			return dbusutil.ToError(fmt.Errorf("set greeter dconfig enableQuickLogin failed: %v", err))
+			return dbusutil.ToError(errors.New("get lightdm quick login failed"))
+		}
+
+		if !mainEnable {
+			users.SetLightDMQuickLoginEnabled(enabled)
 		}
 	}
 

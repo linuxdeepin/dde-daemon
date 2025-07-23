@@ -744,11 +744,6 @@ func (m *Manager) initDConfigGreeterWatch() error {
 	if err != nil {
 		logger.Warning("getDConfigQuickLoginEnabled failed, err:", err)
 	} else {
-		// 从 dconfig 获取值，然后同步到 /etc/lightdm/lightdm.conf 配置文件中。
-		err = users.SetLightDMQuickLoginEnabled(enabled)
-		if err != nil {
-			logger.Warning("SetLightDMQuickLoginEnabled failed, error:", err)
-		}
 		m.setPropQuickLoginEnabled(enabled)
 	}
 
@@ -763,12 +758,16 @@ func (m *Manager) initDConfigGreeterWatch() error {
 		if err != nil {
 			logger.Warning("getDConfigQuickLoginEnabled failed, err:", err)
 			return
+		} else {
+			m.setPropQuickLoginEnabled(enabled)
 		}
 
-		logger.Debug("handle dconfig quick login enabled changed", enabled)
-		err = users.SetLightDMQuickLoginEnabled(enabled)
-		if err != nil {
-			logger.Warning("SetLightDMQuickLoginEnabled failed, error:", err)
+		if !enabled {
+			logger.Debug("handle dconfig quick login enabled changed", enabled)
+			err = users.SetLightDMQuickLoginEnabled(enabled)
+			if err != nil {
+				logger.Warning("SetLightDMQuickLoginEnabled failed, error:", err)
+			}
 		}
 	})
 	return nil
