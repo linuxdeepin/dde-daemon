@@ -5,7 +5,7 @@
     "customWallpaperMaximum": {
       "value": 20,
       "serial":0,
-      "flags" : [["global"]],
+      "flags" : ["global"],
       "name": "customWallpaperMaximum",
       "name[zh_CN]": "用户壁纸最大保存数量",
       "description": "Maximum Custom Wallpaper Limit",
