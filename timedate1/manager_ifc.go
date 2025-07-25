@@ -5,8 +5,9 @@
 package timedate
 
 import (
-	"github.com/linuxdeepin/go-lib/strv"
 	"time"
+
+	"github.com/linuxdeepin/go-lib/strv"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/timedate1/zoneinfo"
@@ -90,6 +91,7 @@ func (m *Manager) SetNTPServer(server string) *dbus.Error {
 func (m *Manager) GetSampleNTPServers() (servers []string, busErr *dbus.Error) {
 	servers = []string{
 		"ntp.ntsc.ac.cn",
+		"ntp.aliyun.com",
 		"cn.ntp.org.cn",
 
 		"0.debian.pool.ntp.org",

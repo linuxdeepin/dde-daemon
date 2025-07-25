@@ -247,7 +247,11 @@ func (m *Manager) start() {
 				logger.Warning(err)
 				return
 			}
-			if server != "" {
+
+			// 如果当前是fallback状态，则不写dconfig配置，控制中心也不应该显示fallback的服务器
+			isFallback, _ := m.timesyncdIsFallback()
+
+			if server != "" && !isFallback {
 				err = m.setNTPServer(server)
 				if err != nil {
 					logger.Warning(err)
@@ -340,8 +344,8 @@ func (m *Manager) setNTPServerToTimeSyncd(server string) error {
 		logger.Warning(err)
 	}
 
-	if setFallback && m.fallbackNTPServer != "" {
-		// 配置支持FallbackNtp字段，经过验证无法达到要求，故采用这种方式
+	if setFallback && m.fallbackNTPServer != "" && server != m.fallbackNTPServer {
+		// 配置支持FallbackNtp字段，但是这个字段是在没有手动配置ntp服务器时启动的fallback而不是超时使用的fallback
 		server += " " + m.fallbackNTPServer
 		logger.Infof("set fallback ntp server: %s", m.fallbackNTPServer)
 	}
@@ -389,4 +393,32 @@ func (m *Manager) writeInstallerTimeZone(timezone string) error {
 		return err
 	}
 	return nil
+}
+
+func (m *Manager) timesyncdIsFallback() (bool, error) {
+	curServer, err := m.timesyncd.ServerName().Get(dbus.FlagNoAutoStart)
+	if err != nil {
+		return false, err
+	}
+
+	serverList, err := m.timesyncd.SystemNTPServers().Get(dbus.FlagNoAutoStart)
+	if err != nil {
+		return false, err
+	}
+
+	fallbackNTPServer := m.getDsgFallbackNTPServer()
+	if fallbackNTPServer == "" {
+		return false, nil
+	}
+
+	// 如果当前有多个配置，且当前选中项是多个配置非第一项，则当前在fallback状态
+	if len(serverList) > 1 {
+		for i, server := range serverList {
+			if server == curServer && i != 0 {
+				return true, nil
+			}
+		}
+	}
+
+	return false, nil
 }
