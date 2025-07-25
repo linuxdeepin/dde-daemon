@@ -13,7 +13,7 @@
             "visibility": "private"
         },
         "NTPServer": {
-            "value": "ntp.ntsc.ac.cn",
+            "value": "ntp.aliyun.com",
             "serial": 0,
             "flags": ["global"],
             "name": "current ntp server",
@@ -23,7 +23,7 @@
             "visibility": "private"
         },
         "FallbackNTPServer": {
-            "value": "ntp.aliyun.com",
+            "value": "",
             "serial": 0,
             "flags": ["global"],
             "name": "fallback ntp server",
