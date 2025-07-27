@@ -984,7 +984,7 @@ msgstr ""
 
 #: ../../network1/state_handler.go:262
 msgid "Enabling hotspot"
-msgstr ""
+msgstr "ホットスポットを開始しています"
 
 #: ../../network1/state_handler.go:266
 msgid "Connecting %q"
@@ -992,7 +992,7 @@ msgstr "%qに接続試行中"
 
 #: ../../network1/state_handler.go:275
 msgid "Hotspot enabled"
-msgstr ""
+msgstr "ホットスポットが開始されました"
 
 #: ../../network1/state_handler.go:277
 msgid "%q connected"
@@ -1000,7 +1000,7 @@ msgstr "%qに接続されました"
 
 #: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
 msgid "Hotspot disabled"
-msgstr ""
+msgstr "ホットスポットを終了しました"
 
 #: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
 #: ../../system/bluetooth1/utils_notify.go:50
