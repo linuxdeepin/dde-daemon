@@ -1233,38 +1233,33 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 	desktopPre := sha256Hasher.Sum(nil)
 	name := hex.EncodeToString(desktopPre)
 	desktopFileName := "daemon-keybinding-" + name + desktopExt
+	//desktop的内容判断是否为空以及是否存在，在AM那边处理。
+	desktopInfoMap := map[string]dbus.Variant{
+		KeyExec: dbus.MakeVariant(map[string]string{
+			"default": cmd,
+		}),
+		KeyIcon: dbus.MakeVariant(map[string]string{
+			"default-icon": "",
+		}),
+		KeyMimeType: dbus.MakeVariant([]string{""}),
+		KeyName: dbus.MakeVariant(map[string]string{
+			"default": name,
+		}),
+		KeyTerminal:  dbus.MakeVariant(false),
+		KeyType:      dbus.MakeVariant("Application"),
+		KeyVersion:   dbus.MakeVariant(1),
+		KeyNoDisplay: dbus.MakeVariant(true),
+	}
 
-	_, err = os.Stat(basedir.GetUserDataDir() + "/applications/" + desktopFileName)
-	// 如果对应命令的desktop文件不存在，需要新建desktop文件
-	if os.IsNotExist(err) {
-		desktopInfoMap := map[string]dbus.Variant{
-			KeyExec: dbus.MakeVariant(map[string]string{
-				"default": cmd,
-			}),
-			KeyIcon: dbus.MakeVariant(map[string]string{
-				"default-icon": "",
-			}),
-			KeyMimeType: dbus.MakeVariant([]string{""}),
-			KeyName: dbus.MakeVariant(map[string]string{
-				"default": name,
-			}),
-			KeyTerminal:  dbus.MakeVariant(false),
-			KeyType:      dbus.MakeVariant("Application"),
-			KeyVersion:   dbus.MakeVariant(1),
-			KeyNoDisplay: dbus.MakeVariant(true),
-		}
-
-		appManager := newAppmanager.NewManager(m.sessionSigLoop.Conn())
-		err := appManager.ReloadApplications(0)
-		if err != nil {
-			logger.Warning("reload applications error: ", err)
-		}
-
-		desktopFileName, err = appManager.AddUserApplication(0, desktopInfoMap, desktopFileName)
-		if err != nil {
-			logger.Warning("adding user application error: ", err)
-			return err
-		}
+	appManager := newAppmanager.NewManager(m.sessionSigLoop.Conn())
+	err = appManager.ReloadApplications(0)
+	if err != nil {
+		logger.Warning("reload applications error: ", err)
+	}
+	desktopFileName, err = appManager.AddUserApplication(0, desktopInfoMap, desktopFileName)
+	if err != nil {
+		logger.Warning("adding user application error: ", err)
+		return err
 	}
 
 	obj, err := desktopappinfo.GetDBusObjectFromAppDesktop(desktopFileName, appManagerDBusServiceName, appManagerDBusPath)
