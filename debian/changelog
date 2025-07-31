@@ -1,3 +1,15 @@
+dde-daemon (6.1.46) unstable; urgency=medium
+
+  * fix: update initramfs for all kernels instead of current
+  * fix: Double click setting does not take effect
+  * fix: simplify desktop file creation logic
+  * fix: update NTP server configuration and fallback logic
+  * fix: correct flags format in system config
+  * fix: QuickLogin enable state only response to dconfig changes
+  * chore: update  go.mod
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 31 Jul 2025 19:43:17 +0800
+
 dde-daemon (6.1.45) unstable; urgency=medium
 
   * fix: add nil checks for audio sink/source updates
