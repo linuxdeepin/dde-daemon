@@ -171,8 +171,7 @@ func (d *Daemon) setPlymouthTheme(themeName string) error {
 	if err != nil {
 		return fmt.Errorf("failed to get kernel, err: %v", err)
 	}
-	out, err = exec.Command("update-initramfs",
-		"-u", "-k", string(bytes.TrimSpace(kernel))).CombinedOutput()
+	out, err = exec.Command("update-initramfs", "-u", "-k", "all").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("failed to update initramfs: %s, err: %v", string(out), err)
 	}
