@@ -198,6 +198,13 @@ Shift_R,Down,Shift_R|Button5
 }
 
 func (m *Manager) init() {
+	// 初始化dconfig并同步配置
+	if err := initDConfig(); err == nil {
+		syncFromDConfig()
+	} else {
+		logger.Warning("dconfig init failed, using default settings")
+	}
+
 	m.kbd.init()
 	m.kbd.handleGSettings()
 
@@ -209,6 +216,10 @@ func (m *Manager) init() {
 		m.tpad.handleGSettings()
 		m.mouse.init()
 		m.mouse.handleGSettings()
+
+		// 设置全局mouse引用，用于属性同步
+		SetGlobalMouse(m.mouse)
+
 		m.trackPoint.init()
 		m.trackPoint.handleGSettings()
 	}
