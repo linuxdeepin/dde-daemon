@@ -14,7 +14,6 @@ import (
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/soundutils"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
 )
@@ -104,7 +103,7 @@ func (m *Manager) setDDEBlackScreenActive(active bool) {
 		return
 	}
 
-	if !m.SleepLock.Get() {
+	if !m.SleepLock {
 		logger.Info("setDDEBlackScreenActive GSettings of sleep-lock is false, Not use dde black widget")
 		return
 	}
@@ -437,7 +436,7 @@ func (m *Manager) doHibernateByFront() {
 }
 
 func (m *Manager) doTurnOffScreen() {
-	if m.ScreenBlackLock.Get() {
+	if m.ScreenBlackLock {
 		logger.Info("Show lock")
 		m.doLock(true)
 		time.Sleep(1 * time.Second)
@@ -494,7 +493,7 @@ func doCloseDDELowPower() {
 }
 
 func (m *Manager) sendNotify(icon, summary, body string) {
-	if !m.LowPowerNotifyEnable.Get() {
+	if !m.LowPowerNotifyEnable {
 		logger.Info("notify switch is off ")
 		return
 	}
@@ -585,41 +584,44 @@ func suspendPulseSources(suspend int) {
 	}
 }
 
-func (m *Manager) initGSettingsConnectChanged() {
-	const powerSettingsIcon = "preferences-system"
-
+func (m *Manager) initDConfigConnectChanged() {
 	isIllegalAction := func(action int32) bool {
 		return (action == powerActionHibernate && !m.canHibernate()) ||
 			(action == powerActionSuspend && !m.canSuspend())
 	}
 
 	// 监听 session power 的属性的改变,并发送通知
-	gsettings.ConnectChanged(gsSchemaPower, "*", func(key string) {
+	m.dsPowerConfigManager.ConnectValueChanged(func(key string) {
 		logger.Debug("Power Settings Changed :", key)
 		switch key {
-		case settingKeyLinePowerLidClosedAction:
-			value := m.LinePowerLidClosedAction.Get()
+		case dsettingLinePowerLidClosedAction:
+			value := m.LinePowerLidClosedAction
 			if isIllegalAction(value) {
 				break
 			}
-		case settingKeyLinePowerPressPowerBtnAction:
-			value := m.LinePowerPressPowerBtnAction.Get()
+		case dsettingLinePowerPressPowerButton:
+			value := m.LinePowerPressPowerBtnAction
 			if isIllegalAction(value) {
 				break
 			}
-		case settingKeyBatteryLidClosedAction:
-			value := m.BatteryLidClosedAction.Get()
+		case dsettingBatteryLidClosedAction:
+			value := m.BatteryLidClosedAction
 			if isIllegalAction(value) {
 				break
 			}
-		case settingKeyBatteryPressPowerBtnAction:
-			value := m.BatteryPressPowerBtnAction.Get()
+		case dsettingBatteryPressPowerButton:
+			value := m.BatteryPressPowerBtnAction
 			if isIllegalAction(value) {
 				break
 			}
-		case settingKeyHighPerformanceEnabled:
+		case dsettingHighPerformanceEnabled:
 			// 根据systemPower::IsHighPerformanceEnabled GSetting::settingKeyHighPerformanceEnabled
-			bSettingKeyHighPerformanceEnabled := m.settings.GetBoolean(settingKeyHighPerformanceEnabled)
+			highPerformanceEnabled, err := m.dsPowerConfigManager.Value(0, dsettingHighPerformanceEnabled)
+			if err != nil {
+				logger.Warning(err)
+				return
+			}
+			bSettingKeyHighPerformanceEnabled := highPerformanceEnabled.Value().(bool)
 			if bSettingKeyHighPerformanceEnabled == m.gsHighPerformanceEnabled {
 				return
 			}
