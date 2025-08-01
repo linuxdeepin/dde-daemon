@@ -1,3 +1,9 @@
+dde-daemon (6.1.47) unstable; urgency=medium
+
+  * fix: remove redundant kernel version check in plymouth theme setup
+
+  -- lvpeilong <lvpeilong@uniontech.com>  Fri, 01 Aug 2025 10:00:00 +0800
+
 dde-daemon (6.1.46) unstable; urgency=medium
 
   * fix: update initramfs for all kernels instead of current
