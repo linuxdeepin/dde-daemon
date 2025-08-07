@@ -99,10 +99,6 @@ Depends:
  ${dist:Depends},
  ${misc:Depends},
  ${shlibs:Depends},
-Breaks:
- lastore-daemon(<< 0.9.64),
-Replaces:
- lastore-daemon(<< 0.9.64),
 Conflicts:
  startdde,
  dde-workspace,

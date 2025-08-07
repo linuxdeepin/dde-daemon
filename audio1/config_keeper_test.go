@@ -30,9 +30,10 @@ func TestConfigKeeper_Save(t *testing.T) {
 				muteFile: "./testdata/ConfigKeeperMute_Save",
 				Cards: map[string]*CardConfig{
 					"one": {
-						Name:       "xxx",
-						Ports:      map[string]*PortConfig{},
-						PreferPort: "",
+						Name:          "xxx",
+						Ports:         map[string]*PortConfig{},
+						PreferPort:    "",
+						PreferProfile: "",
 					},
 				},
 			},
@@ -41,7 +42,8 @@ func TestConfigKeeper_Save(t *testing.T) {
   "one": {
     "Name": "xxx",
     "Ports": {},
-    "PreferPort": ""
+    "PreferPort": "",
+    "PreferProfile": ""
   }
 }`,
 		},
