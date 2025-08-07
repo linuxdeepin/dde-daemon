@@ -45,6 +45,7 @@ out/
 gopath/
 .vscode/
 .idea/
+vendor/
 
 a.out
 misc/polkit-action/*.policy

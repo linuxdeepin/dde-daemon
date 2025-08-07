@@ -26,9 +26,10 @@ type PortConfig struct {
 }
 
 type CardConfig struct {
-	Name       string
-	Ports      map[string]*PortConfig // Name => PortConfig
-	PreferPort string                 // 当前设置的端口
+	Name          string
+	Ports         map[string]*PortConfig // Name => PortConfig
+	PreferPort    string                 // 当前设置的端口
+	PreferProfile string                 // 当前设置的配置文件
 }
 
 type MuteConfig struct {
@@ -215,6 +216,7 @@ func (ck *ConfigKeeper) SetProfile(cardName string, portName string, profile str
 	card, port := ck.GetCardAndPortConfig(cardName, portName)
 	port.PreferProfile = profile
 	card.PreferPort = portName
+	card.PreferProfile = profile
 	ck.Save()
 }
 
@@ -227,6 +229,17 @@ func (ck *ConfigKeeper) GetCardPreferPort(cardName string) string {
 		return ""
 	}
 	return card.PreferPort
+}
+
+func (ck *ConfigKeeper) GetCardPreferProfile(cardName string) string {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	card, ok := ck.Cards[cardName]
+	if !ok {
+		return ""
+	}
+	return card.PreferProfile
 }
 
 func (ck *ConfigKeeper) GetPortProfile(cardName string, portName string) string {

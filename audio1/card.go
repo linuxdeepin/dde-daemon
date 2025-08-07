@@ -98,6 +98,8 @@ func (c *Card) update(card *pulse.Card) {
 	c.Profiles = newProfileList(card.Profiles)
 	c.filterProfile(card)
 	filterList := strv.Strv(portFilterList)
+	// 清空端口列表，避免端口列表中存在旧的端口信息
+	c.Ports = make(pulse.CardPortInfos, 0)
 	for _, port := range card.Ports {
 		if filterList.Contains(port.Name) {
 			logger.Debug("filter port", port.Name)
