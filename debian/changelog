@@ -1,3 +1,10 @@
+dde-daemon (6.1.48) unstable; urgency=medium
+
+  * feat: 优化音频事件的处理
+  * chore: update go.mod and gitignore
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 08 Aug 2025 11:05:36 +0800
+
 dde-daemon (6.1.47) unstable; urgency=medium
 
   * fix: remove redundant kernel version check in plymouth theme setup
