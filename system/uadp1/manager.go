@@ -162,7 +162,7 @@ func (m *Manager) getExecPath(sender dbus.Sender) (string, error) {
 		return "", err
 	}
 
-	execPath, err := procfs.Process(pid).TrustedExe()
+	execPath, err := procfs.Process(pid).Exe()
 	if err != nil {
 		return "", err
 	}

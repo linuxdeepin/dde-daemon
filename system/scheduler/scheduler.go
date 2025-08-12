@@ -54,7 +54,7 @@ func setProcessPriority(cfg *config, pid int) {
 
 // 获取进程可执行文件路径
 func getProcessExe(pid int) (string, error) {
-	exe, err := procfs.Process(pid).TrustedExe()
+	exe, err := procfs.Process(pid).Exe()
 	return exe, err
 }
 

@@ -283,7 +283,7 @@ func (u *User) getSenderDBus(sender dbus.Sender) string {
 		return ""
 	}
 	proc := procfs.Process(pid)
-	exe, err := proc.TrustedExe()
+	exe, err := proc.Exe()
 	if err != nil {
 		logger.Warning(err)
 		return ""
@@ -530,7 +530,7 @@ func (u *User) checkIsControlCenter(sender dbus.Sender) bool {
 	}
 
 	p := procfs.Process(pid)
-	exe, err := p.TrustedExe()
+	exe, err := p.Exe()
 	if err != nil {
 		logger.Warning(err)
 		return false
@@ -551,7 +551,7 @@ func (u *User) checkIsDeepinDaemon(sender dbus.Sender) bool {
 	}
 
 	p := procfs.Process(pid)
-	exe, err := p.TrustedExe()
+	exe, err := p.Exe()
 	if err != nil {
 		logger.Warning(err)
 		return false
