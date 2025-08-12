@@ -276,7 +276,7 @@ func (d *Display) doDetectSupportWayland(sender dbus.Sender) (bool, error) {
 			logger.Warning(err)
 			return false, err
 		}
-		execPath, err := p.TrustedExe()
+		execPath, err := p.Exe()
 		if err != nil {
 			logger.Warning(err)
 			return false, err

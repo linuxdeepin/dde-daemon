@@ -116,7 +116,7 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 		return
 	}
 
-	exe, err := proc.TrustedExe()
+	exe, err := proc.Exe()
 	if err != nil {
 		err = fmt.Errorf("get sender exe error: %v", err)
 		return

@@ -82,7 +82,7 @@ func getValidSupData(supApps []string) []string {
 // 获取App二进制名称，将exe和cmdline拼接成一个string
 func getActivePidInfo(pid uint32) (execPath string, err error) {
 	value := procfs.Process(pid)
-	execPath, err = value.TrustedExe()
+	execPath, err = value.Exe()
 	if err != nil {
 		logger.Warning(err)
 		return "", err
