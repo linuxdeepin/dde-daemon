@@ -3,11 +3,10 @@ host = https://www.transifex.com
 minimum_perc = 80
 mode = developer
 
-[o:linuxdeepin:p:deepin-desktop-environment:r:dde-daemonpot]
+[o:linuxdeepin:p:deepin-desktop-environment:r:4f2e31d1724caf9d4c44932229926cf4]
 file_filter = misc/po/<lang>.po
-minimum_perc = 0
 source_file = misc/po/dde-daemon.pot
-source_lang = en
+source_lang = en_US
 type = PO
 
 [o:linuxdeepin:p:deepin-desktop-environment:r:dde-daemon-grub2-policyts]

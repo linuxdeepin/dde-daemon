@@ -8,7 +8,6 @@ DDE Daemon is a daemon for handling  the deepin session settings
 ### Build dependencies
 
 * [dde-api](https://github.com/linuxdeepin/dde-api)
-* [startdde](https://github.com/linuxdeepin/startdde)
 * libudev
 * fontconfig
 * libbamf3
@@ -112,8 +111,6 @@ disable: Disable modules, ignore settings.
 
 Any usage issues can ask for help via
 
-* [Gitter](https://gitter.im/orgs/linuxdeepin/rooms)
-* [IRC channel](https://webchat.freenode.net/?channels=deepin)
 * [Forum](https://bbs.deepin.org/)
 * [WiKi](https://wiki.deepin.org/)
 

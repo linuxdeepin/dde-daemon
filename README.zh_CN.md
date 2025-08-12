@@ -8,7 +8,6 @@ DDE Daemon是一个用于处理深度会话设置的守护进程
 ### 编译依赖
 
 * [dde-api](https://github.com/linuxdeepin/dde-api)
-* [startdde](https://github.com/linuxdeepin/startdde)
 * libudev
 * fontconfig
 * libbamf3
@@ -111,8 +110,6 @@ disable: Disable modules, ignore settings.
 
 如果您遇到任何其他问题，您可能还会发现这些渠道很有用：
 
-* [Gitter](https://gitter.im/orgs/linuxdeepin/rooms)
-* [IRC channel](https://webchat.freenode.net/?channels=deepin)
 * [Forum](https://bbs.deepin.org/)
 * [WiKi](https://wiki.deepin.org/)
 
