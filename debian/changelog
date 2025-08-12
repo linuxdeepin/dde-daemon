@@ -1,3 +1,9 @@
+dde-daemon (6.1.49) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#848)
+
+ -- wujiangyu <wujiangyu@uniontech.com>  Tue, 12 Aug 2025 10:39:53 +0800
+
 dde-daemon (6.1.48) unstable; urgency=medium
 
   * feat: 优化音频事件的处理
