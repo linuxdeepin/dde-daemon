@@ -217,10 +217,6 @@ type Audio struct {
 	// 用来进一步断是否需要暂停播放的信息
 	misc uint32
 
-	callbackLocker        sync.Mutex
-	defaultSinkCallback   func(sink *pulse.Sink)
-	defaultSourceCallback func(source *pulse.Source)
-
 	// nolint
 	signals *struct {
 		PortEnabledChanged struct {
@@ -833,53 +829,86 @@ func (a *Audio) autoPause() {
 // 同一张声卡可能存在多个端口，用户也可能切换过端口
 // 通过PriorityManager获取最高优先级对应的卡，然后根据配置获取期望端口
 func (a *Audio) tryGetPreferOutPut() PriorityPort {
-	// 获取PriorityManager获取最高优先级的端口以及对应的声卡
-	firstOutput := GetPriorityManager().Output.GetTheFirstPort()
-	// 获取声卡配置期望的端口
-	preferPort := GetConfigKeeper().GetCardPreferPort(firstOutput.CardName)
-	if preferPort == "" {
-		card, err := a.cards.getByName(firstOutput.CardName)
-		if err != nil {
-			logger.Warning(err)
-			return firstOutput
-		}
-		// TODO: 这个逻辑有问题，下次来修改
-		for _, preferProfile := range card.Profiles {
-			if preferProfile.Available == 0 {
-				continue
+	for _, pp := range GetPriorityManager().Output.Ports {
+		// 获取声卡配置期望的端口
+		cc, pc := GetConfigKeeper().GetCardAndPortConfig(pp.CardName, pp.PortName)
+		logger.Debugf("tryGetPreferOutPut: card=%+v, port=%+v", cc, pc)
+		if !pc.Enabled {
+			continue
+		} else {
+			prefrePort := cc.PreferPort
+			_, pc2 := GetConfigKeeper().GetCardAndPortConfig(cc.Name, prefrePort)
+			if pc2.Enabled {
+				logger.Debugf("tryGetPreferOutPut:prefer port %s, card %s", cc.Name, prefrePort)
+				return *pp
 			}
 
-			for _, port := range card.Ports {
-				if port.Available != pulse.AvailableTypeNo &&
-					port.Direction == pulse.DirectionSink &&
-					port.Profiles.Exists(preferProfile.Name) {
-					logger.Infof("tryGetPreferOutPut:prefer port %s, card %s", port.Name, card.core.Name)
-					return PriorityPort{
-						CardName: firstOutput.CardName,
-						PortName: port.Name,
-						PortType: GetPortType(firstOutput.CardName, port.Name),
+			preferProfile := cc.PreferProfile
+			// 查询当前声卡的优选端口
+			if preferProfile == "" {
+				card, err := a.cards.getByName(cc.Name)
+				if err != nil {
+					logger.Warning(err)
+					continue
+				}
+				for _, profile := range card.Profiles {
+					if profile.Available == 0 {
+						continue
 					}
 
+					// TODO: 优先级配置文件需要优化，当前逻辑过于复杂
+					// 因为同一设备的不同端口，没有先后顺序，比如蓝牙设备的优先级：a2dp > handset
+					// 但是在priority中，a2dp和handset的优先级是相同的，且先后顺序不定，因此需要通过profile来判断优先级。
+					for _, port := range card.Ports {
+						_, pc2 := GetConfigKeeper().GetCardAndPortConfig(card.Name, port.Name)
+						if port.Available == pulse.AvailableTypeNo ||
+							!pc2.Enabled ||
+							port.Direction == pulse.DirectionSource {
+							continue
+						}
+						if port.Profiles.Exists(profile.Name) {
+							logger.Debugf("tryGetPreferOutPut:prefer port %s, card %s", port.Name, card.core.Name)
+							return PriorityPort{
+								CardName: cc.Name,
+								PortName: port.Name,
+								PortType: DetectPortType(card.core, &port),
+							}
+						}
+					}
+				}
+			} else {
+				// 如果期望配置文件和期望端口匹配，直接返回
+				// 如果不匹配
+				card, err := a.cards.getByName(cc.Name)
+				if err != nil {
+					logger.Warning(err)
+					continue
+				}
+				for _, port := range card.Ports {
+					if port.Available == pulse.AvailableTypeNo {
+						continue
+					}
+					_, pc2 := GetConfigKeeper().GetCardAndPortConfig(card.Name, port.Name)
+					if !pc2.Enabled {
+						continue
+					}
+
+					if port.Profiles.Exists(preferProfile) && port.Direction == pulse.DirectionSink {
+						return PriorityPort{
+							CardName: cc.Name,
+							PortName: port.Name,
+							PortType: DetectPortType(card.core, &port),
+						}
+					}
 				}
 			}
 		}
-
 	}
-	if firstOutput.PortName == preferPort {
-		logger.Infof("tryGetPreferOutPut:prefer output %v", firstOutput)
-		return firstOutput
+	return PriorityPort{
+		"",
+		"",
+		PortTypeInvalid,
 	}
-	// 查找PriorityManager中对应端口
-	for _, pp := range GetPriorityManager().Output.Ports {
-		if pp.PortName == preferPort {
-			logger.Infof("tryGetPreferOutPut:prefer output %v", *pp)
-			return *pp
-		}
-	}
-
-	// 正常情况下，在PriorityManager是一定存在的，如果不存在，则返回firstOutput
-	logger.Warning("prefer port not found, maybe something wrong", firstOutput)
-	return firstOutput
 }
 
 func (a *Audio) refreshDefaultSinkSource() {
@@ -1088,14 +1117,13 @@ func (a *Audio) init() error {
 		a.resumeSourceConfig(a.defaultSource, isPhysicalDevice(a.defaultSourceName))
 	}
 
-	// 自动切换会在切换后触发配置恢复
 	a.autoSwitchPort()
 
 	a.fixActivePortNotAvailable()
 	a.moveSinkInputsToDefaultSink()
 
 	// 蓝牙支持的模式
-	a.setPropBluetoothAudioModeOpts([]string{"a2dp", "headset", "handsfree"})
+	a.refreshBluetoothOpts()
 
 	return nil
 }
@@ -1184,7 +1212,7 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 		return dbusutil.ToError(fmt.Errorf("card idx: %d, port name: %q is disabled", cardId, portName))
 	}
 
-	err := a.setPort(cardId, portName, int(direction))
+	err := a.setPort(cardId, portName, int(direction), false)
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
@@ -1248,6 +1276,14 @@ func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *db
 	a.setPropCards(a.cards.string())
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 	GetPriorityManager().SetPorts(a.cards)
+	card, err := a.cards.get(cardId)
+	if err == nil {
+		for _, port := range card.Ports {
+			if port.Name == portName && port.Profiles.Exists(card.ActiveProfile.Name) && port.Direction == pulse.DirectionSink {
+				GetConfigKeeper().SetProfile(card.Name, "")
+			}
+		}
+	}
 	a.autoSwitchPort()
 
 	sinks := a.findSinks(cardId, portName)
@@ -1271,7 +1307,10 @@ func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, bus
 	return portConfig.Enabled, nil
 }
 
-func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
+// setPort: 设置端口，auto为true表示自动切换，false表示手动切换
+// 手动切换场景需要设置期望端口，用于恢复配置使用（保证禁用启用端口的正常）
+// 设置声卡的期望配置文件，是用于自动切换是是否达到期望状态，防止频繁切换
+func (a *Audio) setPort(cardId uint32, portName string, direction int, auto bool) error {
 	// 获取声卡信息
 	card, err := a.ctx.GetCard(cardId)
 	if err != nil {
@@ -1290,7 +1329,20 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 	}
 
 	// 端口不在当前配置文件中，需要切换配置文件
-	return a.setPortWithProfileSwitch(card, portName, direction)
+	profile := a.getPreferProfile(card, portName, direction)
+	if profile != "" {
+		// 切换配置文件
+		logger.Debugf("set profile: %s %s %s", card.Name, portName, profile)
+		GetConfigKeeper().SetProfile(card.Name, profile)
+		if direction == pulse.DirectionSink && !auto {
+			// 手动设置端口的场景，设置期望端口
+			GetConfigKeeper().SetCardPreferPort(card.Name, portName)
+		}
+		card.SetProfile(profile)
+	} else {
+		return fmt.Errorf("set port failed")
+	}
+	return nil
 }
 
 // setPortDirectly 直接设置端口，无需切换配置文件
@@ -1347,12 +1399,13 @@ func (a *Audio) setSourcePortDirectly(cardId uint32, portName string) error {
 	return nil
 }
 
-// setPortWithProfileSwitch 通过切换配置文件来设置端口
-func (a *Audio) setPortWithProfileSwitch(card *pulse.Card, portName string, direction int) error {
+// getPreferProfile 通过切换配置文件来设置端口
+func (a *Audio) getPreferProfile(card *pulse.Card, portName string, direction int) string {
 	// 获取端口信息
 	port, err := card.Ports.Get(portName, direction)
 	if err != nil {
-		return err
+		logger.Warning(err)
+		return ""
 	}
 
 	// 查询当前端口的最高优先级的配置文件
@@ -1360,115 +1413,19 @@ func (a *Audio) setPortWithProfileSwitch(card *pulse.Card, portName string, dire
 	if firstProfile == "" {
 		firstProfile = port.Profiles.SelectProfile()
 		if firstProfile == "" {
-			return fmt.Errorf("no profile found for card %s and port %s", card.Name, portName)
+			logger.Warningf("no profile found for card %s and port %s", card.Name, portName)
+			return ""
 		}
 	}
 
-	// 设置回调函数，当对应的sink/source创建完成后，设置默认sink/source
-	a.setupPortCallback(card.Index, portName, direction)
-
-	// 切换配置文件
-	logger.Debugf("set profile: %s %s %s", card.Name, portName, firstProfile)
-	GetConfigKeeper().SetProfile(card.Name, portName, firstProfile)
-	card.SetProfile(firstProfile)
-
-	return nil
-}
-
-// setupPortCallback 设置端口切换的回调函数
-func (a *Audio) setupPortCallback(cardId uint32, portName string, direction int) {
-	if direction == pulse.DirectionSink {
-		a.setupSinkCallback(cardId, portName)
-	} else {
-		a.setupSourceCallback(cardId, portName)
-	}
-}
-
-// setupSinkCallback 设置输出端口的回调函数
-func (a *Audio) setupSinkCallback(cardId uint32, portName string) {
-	// 检查是否已经存在对应的sink
-	if a.findSinkByCardIndexPortName(cardId, portName) != nil {
-		return
-	}
-
-	a.callbackLocker.Lock()
-	defer a.callbackLocker.Unlock()
-	retry := 0
-	a.defaultSinkCallback = func(sink *pulse.Sink) {
-		logger.Warning("card Id check:", sink.Card, cardId)
-		// 连续多次都没有添加目标sink，说明切换可能失败了，不在尝试，否则影响自动切换
-		retry++
-		if retry > 10 {
-			logger.Warning("retry too many times, skip")
-			a.defaultSinkCallback = nil
-			return
-		}
-		if sink.Card != cardId {
-			return
-		}
-		logger.Warning("active port check:", sink.ActivePort.Name, portName)
-		// 检查sink的活跃端口是否为目标端口
-		if sink.ActivePort.Name == portName {
-			logger.Debugf("set default sink: %s, %s", sink.Name, portName)
-			a.ctx.SetDefaultSink(sink.Name)
-			a.defaultSinkCallback = nil
-			return
-		}
-
-		// 检查sink的端口列表中是否包含目标端口
-		for _, port := range sink.Ports {
-			logger.Warning("search prot:", port, portName)
-			if port.Name == portName {
-				logger.Debugf("set default sink: %s, %s", sink.Name, portName)
-				a.ctx.SetSinkPortByIndex(sink.Index, portName)
-				a.ctx.SetDefaultSink(sink.Name)
-				a.defaultSinkCallback = nil
-				return
-			}
+	// 蓝牙端口，需要设置模式
+	if isBluezAudio(card.Name) && port.Direction == pulse.DirectionSink {
+		_, pp := GetConfigKeeper().GetCardAndPortConfig(card.Name, portName)
+		if pp.PreferProfile == "" {
+			firstProfile = pp.PreferProfile
 		}
 	}
-}
-
-// setupSourceCallback 设置输入端口的回调函数
-func (a *Audio) setupSourceCallback(cardId uint32, portName string) {
-	// 检查是否已经存在对应的source
-	if a.findSourceByCardIndexPortName(cardId, portName) != nil {
-		return
-	}
-
-	a.callbackLocker.Lock()
-	defer a.callbackLocker.Unlock()
-	retry := 0
-	a.defaultSourceCallback = func(source *pulse.Source) {
-		retry++
-		if retry > 10 {
-			logger.Warning("retry too many times, skip")
-			a.defaultSourceCallback = nil
-			return
-		}
-		if source.Card != cardId {
-			return
-		}
-
-		// 检查source的活跃端口是否为目标端口
-		if source.ActivePort.Name == portName {
-			logger.Debugf("set default source: %s, %s", source.Name, portName)
-			a.ctx.SetDefaultSource(source.Name)
-			a.defaultSourceCallback = nil
-			return
-		}
-
-		// 检查source的端口列表中是否包含目标端口
-		for _, port := range source.Ports {
-			if port.Name == portName {
-				logger.Debugf("set default source: %s, %s", source.Name, portName)
-				a.ctx.SetSourcePortByIndex(source.Index, portName)
-				a.ctx.SetDefaultSource(source.Name)
-				a.defaultSourceCallback = nil
-				return
-			}
-		}
-	}
+	return firstProfile
 }
 
 func (a *Audio) resetSinksVolume() {
@@ -2013,10 +1970,9 @@ func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
 		/* 这里需要注意，profile.Available为0表示不可用，非0表示未知 */
 		if profile.Name == mode && profile.Available != 0 {
 			logger.Debugf("set profile %s", profile.Name)
-			// 设置回调函数，当对应的sink/source创建完成后，设置默认sink/source
-			a.setupPortCallback(card.Id, a.defaultSink.ActivePort.Name, pulse.DirectionSink)
 			// 切换配置文件
-			GetConfigKeeper().SetProfile(card.Name, a.defaultSink.ActivePort.Name, profile.Name)
+			GetConfigKeeper().SetPortProfile(card.Name, a.defaultSink.ActivePort.Name, profile.Name)
+			GetConfigKeeper().SetProfile(card.Name, profile.Name)
 			card.core.SetProfile(profile.Name)
 
 			// 手动切换蓝牙模式为headset，Profiles是排序之后的，按照优先级先后来设置

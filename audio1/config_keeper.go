@@ -28,8 +28,8 @@ type PortConfig struct {
 type CardConfig struct {
 	Name          string
 	Ports         map[string]*PortConfig // Name => PortConfig
-	PreferPort    string                 // 当前设置的端口
-	PreferProfile string                 // 当前设置的配置文件
+	PreferPort    string                 // 期望输出端口，用于恢复配置，目前仅考虑输出端口的自动切换与恢复配置，防止频繁自动切换
+	PreferProfile string                 // 声卡期望配置文件，用于自动切换
 }
 
 type MuteConfig struct {
@@ -209,14 +209,47 @@ func (ck *ConfigKeeper) SetEnabled(cardName string, portName string, enabled boo
 	ck.Save()
 }
 
-func (ck *ConfigKeeper) SetProfile(cardName string, portName string, profile string) {
+func (ck *ConfigKeeper) SetProfile(cardName string, profile string) {
 	ck.mu.Lock()
 	defer ck.mu.Unlock()
 
-	card, port := ck.GetCardAndPortConfig(cardName, portName)
-	port.PreferProfile = profile
-	card.PreferPort = portName
+	card, ok := ck.Cards[cardName]
+	if !ok {
+		return
+	}
 	card.PreferProfile = profile
+	ck.Save()
+}
+
+func (ck *ConfigKeeper) SetPortProfile(cardName string, portName string, profile string) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	card, ok := ck.Cards[cardName]
+	if !ok {
+		return
+	}
+	port, ok := card.Ports[portName]
+	if !ok {
+		return
+	}
+	port.PreferProfile = profile
+	ck.Save()
+}
+
+func (ck *ConfigKeeper) SetCardPreferPort(cardName string, portName string) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	card, ok := ck.Cards[cardName]
+	if !ok {
+		return
+	}
+	_, ok = card.Ports[portName]
+	if !ok {
+		return
+	}
+	card.PreferPort = portName
 	ck.Save()
 }
 
