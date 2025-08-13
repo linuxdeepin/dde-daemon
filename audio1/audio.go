@@ -1095,7 +1095,7 @@ func (a *Audio) init() error {
 	a.moveSinkInputsToDefaultSink()
 
 	// 蓝牙支持的模式
-	a.setPropBluetoothAudioModeOpts([]string{"a2dp", "headset", "handsfree"})
+	a.refreshBluetoothOpts()
 
 	return nil
 }
@@ -1369,7 +1369,7 @@ func (a *Audio) setPortWithProfileSwitch(card *pulse.Card, portName string, dire
 
 	// 切换配置文件
 	logger.Debugf("set profile: %s %s %s", card.Name, portName, firstProfile)
-	GetConfigKeeper().SetProfile(card.Name, portName, firstProfile)
+	GetConfigKeeper().SetProfile(card.Name, firstProfile)
 	card.SetProfile(firstProfile)
 
 	return nil
@@ -2016,7 +2016,7 @@ func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
 			// 设置回调函数，当对应的sink/source创建完成后，设置默认sink/source
 			a.setupPortCallback(card.Id, a.defaultSink.ActivePort.Name, pulse.DirectionSink)
 			// 切换配置文件
-			GetConfigKeeper().SetProfile(card.Name, a.defaultSink.ActivePort.Name, profile.Name)
+			GetConfigKeeper().SetProfile(card.Name, profile.Name)
 			card.core.SetProfile(profile.Name)
 
 			// 手动切换蓝牙模式为headset，Profiles是排序之后的，按照优先级先后来设置

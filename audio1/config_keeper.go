@@ -209,13 +209,14 @@ func (ck *ConfigKeeper) SetEnabled(cardName string, portName string, enabled boo
 	ck.Save()
 }
 
-func (ck *ConfigKeeper) SetProfile(cardName string, portName string, profile string) {
+func (ck *ConfigKeeper) SetProfile(cardName string, profile string) {
 	ck.mu.Lock()
 	defer ck.mu.Unlock()
 
-	card, port := ck.GetCardAndPortConfig(cardName, portName)
-	port.PreferProfile = profile
-	card.PreferPort = portName
+	card, ok := ck.Cards[cardName]
+	if !ok {
+		return
+	}
 	card.PreferProfile = profile
 	ck.Save()
 }
