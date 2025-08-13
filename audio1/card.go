@@ -95,6 +95,7 @@ func (c *Card) update(card *pulse.Card) {
 	c.Name = getCardName(card)
 	c.ActiveProfile = newProfile(card.ActiveProfile)
 	sort.Sort(card.Profiles)
+	// profile是排序过的
 	c.Profiles = newProfileList(card.Profiles)
 	c.filterProfile(card)
 	filterList := strv.Strv(portFilterList)
