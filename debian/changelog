@@ -1,3 +1,10 @@
+dde-daemon (6.1.50) unstable; urgency=medium
+
+  * chore: Updates for go.mod
+  * Fix: replace TrustedExe with Exe due to systemd namespace changes
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 15 Aug 2025 10:31:02 +0800
+
 dde-daemon (6.1.49) unstable; urgency=medium
 
   * i18n: Updates for project Deepin Desktop Environment (#848)
