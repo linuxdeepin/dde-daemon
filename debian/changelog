@@ -1,3 +1,9 @@
+dde-daemon (6.1.50) unstable; urgency=medium
+
+  * fix: replace TrustedExe with Exe due to systemd namespace changes
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 15 Aug 2025 09:08:24 +0800
+
 dde-daemon (6.1.49) unstable; urgency=medium
 
   * i18n: Updates for project Deepin Desktop Environment (#848)
