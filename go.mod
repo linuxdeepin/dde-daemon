@@ -11,10 +11,10 @@ require (
 	github.com/godbus/dbus/v5 v5.1.0
 	github.com/gosexy/gettext v0.0.0-20160830220431-74466a0a0c4a
 	github.com/jouyouyun/hardware v0.1.8
-	github.com/linuxdeepin/dde-api v0.0.0-20250731115329-a7fbf5c1b7e1
-	github.com/linuxdeepin/go-dbus-factory v0.0.0-20250731053001-954f97feae8c
-	github.com/linuxdeepin/go-gir v0.0.0-20230710064042-bd15f0549c87
-	github.com/linuxdeepin/go-lib v0.0.0-20250715130109-a4b5968b93a3
+	github.com/linuxdeepin/dde-api v0.0.0-20250814050601-4551e6d49d4c
+	github.com/linuxdeepin/go-dbus-factory v0.0.0-20250815022211-0e9fcc4cb3d8
+	github.com/linuxdeepin/go-gir v0.0.0-20250812023606-b28aaee32ac9
+	github.com/linuxdeepin/go-lib v0.0.0-20250812091504-ef74b917a73a
 	github.com/linuxdeepin/go-x11-client v0.0.0-20240415051504-c8e43d028ff9
 	github.com/mdlayher/netlink v1.7.2
 	github.com/msteinert/pam v1.2.0
