@@ -131,12 +131,6 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 		return false
 	}
 
-	// 当前端口为空
-	if a.defaultSource == nil {
-		logger.Debug("current source is nil")
-		return true
-	}
-
 	// 设置端口时，不触发自动切换
 	a.callbackLocker.Lock()
 	if a.defaultSourceCallback != nil {
@@ -156,6 +150,21 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 	// 如果配置是空，则可能是第一次新增，应该进行自动切换
 	if profile != "" && cp.Name != profile {
 		logger.Warningf("output profile not match, current: %s, prefer: %s", cp.Name, profile)
+		return false
+	}
+	// 如果port的配置文件和profile也不能自动切换
+	found := false
+	port, err := card.Ports.Get(firstPort.PortName, pulse.DirectionSource)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	for _, pp := range port.Profiles {
+		if pp.Available != 0 && pp.Name == profile {
+			found = true
+		}
+	}
+	if !found {
 		return false
 	}
 
@@ -194,12 +203,6 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 		return false
 	}
 
-	// 当前端口为空
-	if a.defaultSink == nil {
-		logger.Debug("default sink is nil")
-		return true
-	}
-
 	// 设置端口时，不触发自动切换
 	a.callbackLocker.Lock()
 	if a.defaultSinkCallback != nil {
@@ -218,6 +221,21 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 	profile := GetConfigKeeper().GetCardPreferProfile(card.core.Name)
 	if profile != "" && cp.Name != profile {
 		logger.Warningf("output profile not match, current: %s, prefer: %s", cp.Name, profile)
+		return false
+	}
+	// 如果port的配置文件和profile不匹配也不能自动切换
+	found := false
+	port, err := card.Ports.Get(firstPort.PortName, pulse.DirectionSink)
+	if err != nil {
+		logger.Warning(err)
+		return false
+	}
+	for _, pp := range port.Profiles {
+		if pp.Available != 0 && pp.Name == profile {
+			found = true
+		}
+	}
+	if !found {
 		return false
 	}
 
@@ -245,14 +263,15 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 func (a *Audio) autoSwitchProfile(card *Card) {
 	profile := GetConfigKeeper().GetCardPreferProfile(card.core.Name)
 	if profile == "" {
-		return
+		profile = card.core.Profiles.SelectProfile()
 	}
 
 	cp := card.core.ActiveProfile
-	if cp.Name == profile {
+	if profile == "" || cp.Name == profile {
 		return
 	}
 	logger.Debugf("auto switch profile %s to %s", cp.Name, profile)
+	GetConfigKeeper().SetProfile(card.core.Name, profile)
 	card.core.SetProfile(profile)
 }
 
