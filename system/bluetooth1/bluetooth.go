@@ -844,6 +844,17 @@ func (b *SysBluetooth) removeAdapter(adapterPath dbus.ObjectPath) {
 	b.adaptersMu.Unlock()
 
 	b.devicesMu.Lock()
+	devices := b.devices[adapterPath]
+	paths := make([]dbus.ObjectPath, len(devices))
+	for i, dev := range devices {
+		paths[i] = dev.Path
+	}
+	b.devicesMu.Unlock()
+	for _, path := range paths {
+		b.removeDevice(path)
+	}
+
+	b.devicesMu.Lock()
 	b.devices[adapterPath] = nil
 	b.devicesMu.Unlock()
 	b.syncCommonToBackupDevices(adapterPath)
