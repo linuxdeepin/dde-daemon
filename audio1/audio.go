@@ -837,15 +837,11 @@ func (a *Audio) tryGetPreferOutPut() PriorityPort {
 			continue
 		} else {
 			prefrePort := cc.PreferPort
-			_, pc2 := GetConfigKeeper().GetCardAndPortConfig(cc.Name, prefrePort)
-			if pc2.Enabled {
-				logger.Debugf("tryGetPreferOutPut:prefer port %s, card %s", cc.Name, prefrePort)
-				return *pp
-			}
-
 			preferProfile := cc.PreferProfile
+
 			// 查询当前声卡的优选端口
-			if preferProfile == "" {
+			// 如果期望端口为空，说明当前声卡没有设置够端口，直接用默认优先级
+			if preferProfile == "" || cc.PreferPort == "" {
 				card, err := a.cards.getByName(cc.Name)
 				if err != nil {
 					logger.Warning(err)
@@ -877,12 +873,28 @@ func (a *Audio) tryGetPreferOutPut() PriorityPort {
 					}
 				}
 			} else {
-				// 如果期望配置文件和期望端口匹配，直接返回
-				// 如果不匹配
 				card, err := a.cards.getByName(cc.Name)
 				if err != nil {
 					logger.Warning(err)
 					continue
+				}
+
+				// 先判断期望端口是否可用，如果不可用，查找当前声卡其他端口是否可用
+				if prefrePort != "" {
+					_, pc2 := GetConfigKeeper().GetCardAndPortConfig(cc.Name, prefrePort)
+					if pc2.Enabled {
+						port, err := card.Ports.Get(prefrePort, pulse.DirectionSink)
+						if err != nil {
+							logger.Warning(err)
+							continue
+						}
+						logger.Debugf("tryGetPreferOutPut:prefer port %s, card %s", cc.Name, prefrePort)
+						return PriorityPort{
+							CardName: cc.Name,
+							PortName: pc2.Name,
+							PortType: DetectPortType(card.core, &port),
+						}
+					}
 				}
 				for _, port := range card.Ports {
 					if port.Available == pulse.AvailableTypeNo {
@@ -1340,7 +1352,7 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int, auto bool
 		}
 		card.SetProfile(profile)
 	} else {
-		return fmt.Errorf("set port failed")
+		return fmt.Errorf("set port failed: get profile is empty")
 	}
 	return nil
 }
@@ -1415,14 +1427,6 @@ func (a *Audio) getPreferProfile(card *pulse.Card, portName string, direction in
 		if firstProfile == "" {
 			logger.Warningf("no profile found for card %s and port %s", card.Name, portName)
 			return ""
-		}
-	}
-
-	// 蓝牙端口，需要设置模式
-	if isBluezAudio(card.Name) && port.Direction == pulse.DirectionSink {
-		_, pp := GetConfigKeeper().GetCardAndPortConfig(card.Name, portName)
-		if pp.PreferProfile == "" {
-			firstProfile = pp.PreferProfile
 		}
 	}
 	return firstProfile

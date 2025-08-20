@@ -206,7 +206,7 @@ func (a *Audio) autoSwitchOutputPort() error {
 	if profile != "" &&
 		cp.Name != profile &&
 		firstPort.PortName != preferPort {
-		return fmt.Errorf("output profile not match, current: %s, prefer: %s, preferPort: %s", cp.Name, profile, preferPort)
+		return fmt.Errorf("output profile not match, current: %s, prefer: %s,firstPort: %s, preferPort: %s", cp.Name, profile, firstPort.PortName, preferPort)
 	}
 
 	// 当前端口就是优先级最高的端口
