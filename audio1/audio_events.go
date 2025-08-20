@@ -230,8 +230,12 @@ func (a *Audio) autoSwitchInputPort() error {
 	}
 
 	// 当前端口就是优先级最高的端口
-	currentCardName := a.getCardNameById(a.defaultSource.Card)
-	currentPortName := a.defaultSource.ActivePort.Name
+	var currentCardName, currentPortName string
+	if a.defaultSource != nil {
+		currentCardName = a.getCardNameById(a.defaultSource.Card)
+		currentPortName = a.defaultSource.ActivePort.Name
+	}
+
 	for _, input := range GetPriorityManager().Input.Ports {
 		cc, pc := GetConfigKeeper().GetCardAndPortConfig(input.CardName, input.PortName)
 		if !pc.Enabled {
@@ -322,20 +326,8 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 		logger.Warningf("unhandled card event, card=%d, type=%d", idx, eventType)
 	}
 
-	// 这里写所有类型的card事件都需要触发的逻辑
-	/* 新增声卡上的端口如果被处于禁用状态，进行横幅提示 */
-	card, err := a.cards.get(idx)
-	if err == nil {
-		if isBluezAudio(card.core.Name) {
-			logger.Debugf("notify bluez card %s", card.core.Name)
-			a.notifyBluezCardPortInsert(card)
-		} else {
-			logger.Debugf("notify normal card %s", card.core.Name)
-			a.notifyCardPortInsert(card)
-		}
-	} else {
-		logger.Warning(err)
-	}
+	// 保存旧的cards
+	a.oldCards = a.cards
 }
 
 func (a *Audio) handleCardAdded(idx uint32) {
@@ -352,10 +344,18 @@ func (a *Audio) handleCardAdded(idx uint32) {
 	a.setPropCards(cards)
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 
-	// 保存旧的cards
-	a.oldCards = a.cards
 	GetPriorityManager().SetPorts(a.cards)
 	GetPriorityManager().Save()
+
+	// 这里写所有类型的card事件都需要触发的逻辑
+	/* 新增声卡上的端口如果被处于禁用状态，进行横幅提示 */
+	if isBluezAudio(card.Name) {
+		logger.Debugf("notify bluez card %s", card.Name)
+		a.notifyBluezCardPortInsert(ac)
+	} else {
+		logger.Debugf("notify normal card %s", card.Name)
+		a.notifyCardPortInsert(ac)
+	}
 
 	a.autoSwitchPort()
 }
@@ -398,6 +398,10 @@ func (a *Audio) handleCardChanged(idx uint32) {
 	cards := a.cards.string()
 	a.setPropCards(cards)
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
+
+	GetPriorityManager().SetPorts(a.cards)
+	GetPriorityManager().Save()
+
 	if oldProfile.Name != ac.ActiveProfile.Name {
 		logger.Infof("card profile change from %v to %v", oldProfile.Name, ac.ActiveProfile.Name)
 	}
@@ -419,6 +423,12 @@ func (a *Audio) handleCardChanged(idx uint32) {
 			if p.Available != port.Available {
 				logger.Debugf("card port available changed, %v.%v from %v to %v",
 					pc.Name, port.Name, port.Available, p.Available)
+				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(pc.Name, port.Name)
+				logger.Warningf("portConfig: %+v", portConfig)
+				if !portConfig.Enabled && p.Available != pulse.AvailableTypeNo {
+					logger.Debugf("port<%s,%s> notify", ac.Name, port.Name)
+					a.notifyPortDisabled(ac.Id, port)
+				}
 				a.autoSwitchPort()
 				break
 			}
@@ -832,12 +842,6 @@ func (a *Audio) notifyBluezCardPortInsert(card *Card) {
 	if err != nil {
 		// oldCard不存在
 		logger.Warning(err)
-	}
-
-	// 蓝牙模式配置出错情况过滤通知
-	if card.ActiveProfile.Name == "off" {
-		logger.Debugf("filter bluez notify, beacuse profile is off")
-		return
 	}
 
 	// 蓝牙会根据模式过滤端口，因此忽略unknown状态
