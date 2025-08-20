@@ -3,7 +3,7 @@
   "version": "1.0",
   "contents": {
     "pausePlayer": {
-      "value": false,
+      "value": true,
       "serial":0,
       "flags" : [],
       "name": "PlayerPause",
