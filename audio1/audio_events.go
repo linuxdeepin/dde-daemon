@@ -317,8 +317,10 @@ func (a *Audio) autoSwitchPort() {
 func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 	switch eventType {
 	case pulse.EventTypeNew: // 新增声卡
+		a.autoPause()
 		a.handleCardAdded(idx)
 	case pulse.EventTypeRemove: // 删除声卡
+		a.autoPause()
 		a.handleCardRemoved(idx)
 	case pulse.EventTypeChange: // 声卡属性变化,也可能是有线耳机插拔了端口
 		a.handleCardChanged(idx)
