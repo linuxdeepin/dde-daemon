@@ -1,3 +1,16 @@
+dde-daemon (6.1.51) unstable; urgency=medium
+
+  * fix: 解决崩溃问题 默认sink没有判空导致崩溃
+  * fix: 解决电源管理性能模式设置后实际不生效的问题
+  * fix: 解决配置声音输入设备优先级，没有生效
+  * fix: 蓝牙默认模式不是最高质量的
+  * fix:  设置输出端口的插拔管理默认开启
+  * fix: 解决禁用声卡端口后，插拔耳机没有通知
+  * fix: 解决端口禁用没有切换的问题
+  * Fix: Error in modifying Bluetooth data
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 21 Aug 2025 14:14:11 +0800
+
 dde-daemon (6.1.50) unstable; urgency=medium
 
   * chore: Updates for go.mod
