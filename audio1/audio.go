@@ -802,6 +802,9 @@ func (a *Audio) autoPause() {
 	if !a.shouldAutoPause() {
 		return
 	}
+	if a.defaultSink == nil {
+		return
+	}
 
 	var port pulse.CardPortInfo
 	card, err := a.ctx.GetCard(a.defaultSink.Card)
@@ -942,6 +945,10 @@ func (a *Audio) refreshDefaultSinkSource() {
 	}
 	// GetPriorityManager中的port是refresh之后的，正常情况下一定存在的
 	// pipewire sink变化的时候，可能其sink列表中不存在当前设置的端口所对应的sink，说明pipewire的切换还未完成
+	if a.defaultSink == nil {
+		logger.Warning("defulat sink is nil")
+		return
+	}
 	if sinkInfo.Card != card.Id || sinkInfo.ActivePort.Name != preferPort.PortName {
 		// 查找声卡所对应的sink是否存在
 		var sink *Sink = nil
@@ -1608,7 +1615,7 @@ func (a *Audio) refreshBluetoothOpts() {
 		return
 	}
 	// 云平台无card
-	if a.defaultSink.Card == math.MaxUint32 {
+	if sink.Card == math.MaxUint32 {
 		return
 	}
 	card, err := a.cards.get(sink.Card)
@@ -1951,6 +1958,10 @@ func (a *Audio) isPortEnabled(cardId uint32, portName string, direction int32) b
 func (a *Audio) SetBluetoothAudioMode(mode string) *dbus.Error {
 	logger.Infof("dbus call SetBluetoothAudioMode with mode %s", mode)
 
+	if a.defaultSink == nil {
+		logger.Warning("default sink is nil")
+		return nil
+	}
 	card, err := a.cards.get(a.defaultSink.Card)
 	if err != nil {
 		logger.Warning(err)

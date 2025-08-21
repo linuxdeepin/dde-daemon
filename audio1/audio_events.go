@@ -168,8 +168,12 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 	}
 
 	// 当前端口就是优先级最高的端口
-	currentCardName := a.getCardNameById(a.defaultSource.Card)
-	currentPortName := a.defaultSource.ActivePort.Name
+	var currentCardName, currentPortName string
+	if a.defaultSource != nil {
+		currentCardName = a.getCardNameById(a.defaultSource.Card)
+		currentPortName = a.defaultSource.ActivePort.Name
+	}
+
 	if currentCardName == firstPort.CardName && currentPortName == firstPort.PortName {
 		logger.Debugf("current input<%s,%s> is already the first port",
 			currentCardName, currentPortName)
@@ -209,9 +213,12 @@ func (a *Audio) autoSwitchOutputPort() error {
 		return fmt.Errorf("output profile not match, current: %s, prefer: %s,firstPort: %s, preferPort: %s", cp.Name, profile, firstPort.PortName, preferPort)
 	}
 
-	// 当前端口就是优先级最高的端口
-	currentCardName := a.getCardNameById(a.defaultSink.Card)
-	currentPortName := a.defaultSink.ActivePort.Name
+	var currentCardName, currentPortName string
+	if a.defaultSink != nil {
+		currentCardName = a.getCardNameById(a.defaultSink.Card)
+		currentPortName = a.defaultSink.ActivePort.Name
+	}
+
 	if currentCardName == firstPort.CardName && currentPortName == firstPort.PortName {
 		logger.Debugf("current output<%s,%s> is already the first",
 			currentCardName, currentPortName)
@@ -289,8 +296,12 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 	}
 
 	// 当前端口就是优先级最高的端口
-	currentCardName := a.getCardNameById(a.defaultSink.Card)
-	currentPortName := a.defaultSink.ActivePort.Name
+	var currentCardName, currentPortName string
+	if a.defaultSink != nil {
+		currentCardName = a.getCardNameById(a.defaultSink.Card)
+		currentPortName = a.defaultSink.ActivePort.Name
+	}
+
 	if currentCardName == firstPort.CardName && currentPortName == firstPort.PortName {
 		logger.Debugf("current output<%s,%s> is already the first",
 			currentCardName, currentPortName)
@@ -371,7 +382,7 @@ func (a *Audio) handleCardRemoved(idx uint32) {
 	a.setPropCards(cards)
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 
-	if a.defaultSink.Card == idx || a.defaultSource.Card == idx {
+	if a.defaultSink == nil || a.defaultSink.Card == idx || a.defaultSource.Card == idx {
 		logger.Debugf("card %d is default sink or source, auto switch port", idx)
 		a.autoSwitchPort()
 	}
@@ -767,7 +778,11 @@ func (a *Audio) listenGSettingVolumeIncreaseChanged() {
 		if err != nil {
 			logger.Warning("changed Max UI Volume failed: ", err)
 		} else {
-			sink := a.defaultSink
+			sink := a.getDefaultSink()
+			if sink == nil {
+				logger.Warning("default sink is nil")
+				return
+			}
 			GetConfigKeeper().SetIncreaseVolume(a.getCardNameById(sink.Card), sink.ActivePort.Name, volInc)
 		}
 	})
@@ -792,7 +807,7 @@ func (a *Audio) writeReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
 		return nil
 	}
 
-	if reduce && isBluezAudio(a.defaultSource.Name) {
+	if reduce && a.defaultSource != nil && isBluezAudio(a.defaultSource.Name) {
 		logger.Debug("bluetooth audio device cannot open reduce-noise")
 		a.ReduceNoise = false
 		a.emitPropChangedReduceNoise(a.ReduceNoise)
