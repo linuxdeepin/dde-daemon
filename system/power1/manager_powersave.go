@@ -5,7 +5,6 @@
 package power
 
 import (
-	"fmt"
 	"os/exec"
 )
 
@@ -45,11 +44,11 @@ var _powerConfigMap = map[string]*powerConfig{
 }
 
 func (m *Manager) setDSPCState(state DSPCMode) {
-	args := fmt.Sprintf("/usr/sbin/deepin-system-power-control set %v", state)
-	logger.Debug("set deepin tlp state cmd:", args)
-	err := exec.Command("/bin/sh", "-c", args).Run()
+	cmd := exec.Command("/usr/sbin/deepin-system-power-control", "set", string(state))
+	logger.Debug("Setting deepin tlp state with command:", cmd.String())
+	_, err := cmd.Output()
 	if err != nil {
-		logger.Warning("failed to set deepin tlp state ", err)
+		logger.Warning("Failed to set deepin tlp state:", err)
 	}
 }
 
