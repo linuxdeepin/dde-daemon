@@ -2094,8 +2094,10 @@ func (a *Audio) initDsgProp() error {
 		logger.Warning(err)
 	} else {
 		for i := range ret {
-			if v, ok := ret[i].Value().(float64); ok {
+			if v, ok := ret[i].Value().(int64); ok {
 				inputDefaultPriorities = append(inputDefaultPriorities, int(v))
+			} else {
+				logger.Warningf("Input default priority list type is not int64, real is:%T", ret[i].Value())
 			}
 		}
 		logger.Info("input default priority list", inputDefaultPriorities)
@@ -2107,8 +2109,10 @@ func (a *Audio) initDsgProp() error {
 		logger.Warning(err)
 	} else {
 		for i := range ret {
-			if v, ok := ret[i].Value().(float64); ok {
+			if v, ok := ret[i].Value().(int64); ok {
 				outputDefaultPriorities = append(outputDefaultPriorities, int(v))
+			} else {
+				logger.Warningf("output default priority list type is not int64, real is:%T", ret[i].Value())
 			}
 		}
 		logger.Info("output default priority list", outputDefaultPriorities)
