@@ -294,7 +294,6 @@ func Start(conn *x.Conn, recommendedScaleFactor float64, service *dbusutil.Servi
 	}
 	m.updateDPI()
 	m.updateXResources()
-	go m.updateFirefoxDPI()
 
 	err = service.Export(xsDBusPath, m)
 	if err != nil {
