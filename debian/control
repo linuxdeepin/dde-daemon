@@ -77,7 +77,6 @@ Depends:
  libglib2.0-bin,
  hwinfo,
  imwheel,
- ipwatchd,
  iso-codes,
  lastore-daemon,
  libfprint0 | libfprint | libfprint-2-2,
