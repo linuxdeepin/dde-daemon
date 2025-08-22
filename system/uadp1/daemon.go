@@ -6,6 +6,7 @@ package uadp
 
 import (
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 )
 
@@ -13,6 +14,12 @@ const (
 	dbusServiceName = "org.deepin.dde.Uadp1"
 	dbusPath        = "/org/deepin/dde/Uadp1"
 	dbusInterface   = dbusServiceName
+)
+
+const (
+	dbusProxyServiceName = "com.deepin.daemon.Uadp"
+	dbusProxyPath        = "/com/deepin/daemon/Uadp"
+	dbusProxyInterface   = dbusProxyServiceName
 )
 
 var logger = log.NewLogger("daemon/system/uadp")
@@ -47,6 +54,25 @@ func (d *Daemon) Start() (err error) {
 	}
 
 	err = service.RequestName(dbusServiceName)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	serviceProxy, _ := dbusutil.NewSystemService()
+	if serviceProxy == nil {
+		logger.Warning("serivce2 is nil")
+	} else {
+		err = serviceProxy.ExportExt(dbusProxyPath, dbusProxyInterface, d.manager)
+		if err != nil {
+			logger.Warning(err)
+		}
+
+		err = serviceProxy.RequestName(dbusProxyServiceName)
+		if err != nil {
+			logger.Warning(err)
+		}
+		go serviceProxy.Wait()
+	}
 
 	d.manager.start()
 	return
