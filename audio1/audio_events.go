@@ -427,6 +427,7 @@ func (a *Audio) handleCardChanged(idx uint32) {
 	} else if !isBluezAudio(ac.Name) {
 		// 蓝牙声卡不检查状态
 		// 因为蓝牙声卡会处理a2dp模式，会导致端口状态对不上
+		shouldAutoSwitch := false
 		for _, port := range oldPorts {
 			p, err := ac.Ports.Get(port.Name, port.Direction)
 			if err != nil {
@@ -442,9 +443,11 @@ func (a *Audio) handleCardChanged(idx uint32) {
 					logger.Debugf("port<%s,%s> notify", ac.Name, port.Name)
 					a.notifyPortDisabled(ac.Id, port)
 				}
-				a.autoSwitchPort()
-				break
+				shouldAutoSwitch = true
 			}
+		}
+		if shouldAutoSwitch {
+			a.autoSwitchPort()
 		}
 	}
 }
