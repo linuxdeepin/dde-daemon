@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	dutils "github.com/linuxdeepin/go-lib/utils"
 
 	"os"
@@ -31,28 +32,12 @@ import (
 	DisplayManager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.DisplayManager"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	timedate "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timedate1"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
 //go:generate dbusutil-gen em -type Manager,WarnLevelConfigManager
-
-const (
-	DSettingsAppID        = "org.deepin.dde.daemon"
-	DSettingsDisplayName  = "org.deepin.Display"
-	DSettingsAutoChangeWm = "auto-change-deepin-wm"
-
-	// 定时关机
-	dsettingScheduledShutdownState = "scheduledShutdownState"
-	dsettingShutdownTime           = "shutdownTime"
-	dsettingShutdownRepetition     = "shutdownRepetition"
-	dsettingCustomShutdownWeekDays = "customShutdownWeekDays"
-	dsettingShutdownCountdown      = "shutdownCountdown"
-	dsettingNextShutdownTime       = "nextShutdownTime"
-)
 
 const (
 	Once int = iota
@@ -81,7 +66,6 @@ type Manager struct {
 	systemSigLoop        *dbusutil.SignalLoop
 	syncConfig           *dsync.Config
 	helper               *Helper
-	settings             *gio.Settings
 	warnLevelCountTicker *countTicker
 	warnLevelConfig      *WarnLevelConfigManager
 	submodules           map[string]submodule
@@ -130,69 +114,74 @@ type Manager struct {
 	// 是否有环境光传感器
 	HasAmbientLightSensor bool
 
-	// dbusutil-gen: ignore-below
 	// 电池是否可用，是否存在
+
+	// dbusutil-gen: ignore
 	BatteryIsPresent map[string]bool
+
 	// 电池电量百分比
+
+	// dbusutil-gen: ignore
 	BatteryPercentage map[string]float64
+
 	// 电池状态
+
+	// dbusutil-gen: ignore
 	BatteryState map[string]uint32
 
 	// 接通电源时，不做任何操作，到显示屏保的时间
-	LinePowerScreensaverDelay gsprop.Int `prop:"access:rw"`
+	LinePowerScreensaverDelay int `prop:"access:rw"`
 	// 接通电源时，不做任何操作，到关闭屏幕的时间
-	LinePowerScreenBlackDelay gsprop.Int `prop:"access:rw"`
+	LinePowerScreenBlackDelay int `prop:"access:rw"`
 	// 接通电源时，不做任何操作，到睡眠的时间
-	LinePowerSleepDelay gsprop.Int `prop:"access:rw"`
+	LinePowerSleepDelay int `prop:"access:rw"`
 
 	// 使用电池时，不做任何操作，到显示屏保的时间
-	BatteryScreensaverDelay gsprop.Int `prop:"access:rw"`
+	BatteryScreensaverDelay int `prop:"access:rw"`
 	// 使用电池时，不做任何操作，到关闭屏幕的时间
-	BatteryScreenBlackDelay gsprop.Int `prop:"access:rw"`
+	BatteryScreenBlackDelay int `prop:"access:rw"`
 	// 使用电池时，不做任何操作，到睡眠的时间
-	BatterySleepDelay gsprop.Int `prop:"access:rw"`
+	BatterySleepDelay int `prop:"access:rw"`
 
 	// 关闭屏幕前是否锁定
-	ScreenBlackLock gsprop.Bool `prop:"access:rw"`
+	ScreenBlackLock bool `prop:"access:rw"`
 	// 睡眠前是否锁定
-	SleepLock gsprop.Bool `prop:"access:rw"`
-
-	// 废弃
-	LidClosedSleep gsprop.Bool `prop:"access:rw"`
+	SleepLock bool `prop:"access:rw"`
 
 	// 接通电源时，笔记本电脑盖上盖子 待机（默认选择）、睡眠、关闭显示器、无任何操作
-	LinePowerLidClosedAction gsprop.Enum `prop:"access:rw"`
+	LinePowerLidClosedAction int32 `prop:"access:rw"`
 
 	// 接通电源时，按下电源按钮 关机（默认选择）、待机、睡眠、关闭显示器、无任何操作
-	LinePowerPressPowerBtnAction gsprop.Enum `prop:"access:rw"` // keybinding中监听power按键事件,获取gsettings的值
+	LinePowerPressPowerBtnAction int32 `prop:"access:rw"` // keybinding中监听power按键事件,获取gsettings的值
 
 	// 使用电池时，笔记本电脑盖上盖子 待机（默认选择）、睡眠、关闭显示器、无任何操作
-	BatteryLidClosedAction gsprop.Enum `prop:"access:rw"`
+	BatteryLidClosedAction int32 `prop:"access:rw"`
 
 	// 使用电池时，按下电源按钮 关机（默认选择）、待机、睡眠、关闭显示器、无任何操作
-	BatteryPressPowerBtnAction gsprop.Enum `prop:"access:rw"` // keybinding中监听power按键事件,获取gsettings的值
+	BatteryPressPowerBtnAction int32 `prop:"access:rw"` // keybinding中监听power按键事件,获取gsettings的值
 
 	// 接通电源时，不做任何操作，到自动锁屏的时间
-	LinePowerLockDelay gsprop.Int `prop:"access:rw"`
+	LinePowerLockDelay int `prop:"access:rw"`
 	// 使用电池时，不做任何操作，到自动锁屏的时间
-	BatteryLockDelay gsprop.Int `prop:"access:rw"`
+	BatteryLockDelay int `prop:"access:rw"`
 
 	// 打开电量通知
-	LowPowerNotifyEnable gsprop.Bool `prop:"access:rw"` // 开启后默认当电池仅剩余达到电量水平低时（默认15%）发出系统通知“电池电量低，请连接电源”；
+	LowPowerNotifyEnable bool `prop:"access:rw"` // 开启后默认当电池仅剩余达到电量水平低时（默认15%）发出系统通知“电池电量低，请连接电源”；
 	// 当电池仅剩余为设置低电量时（默认5%），发出系统通知“电池电量耗尽”，进入待机模式；
 
 	// 电池低电量通知百分比
-	LowPowerNotifyThreshold gsprop.Int `prop:"access:rw"` // 设置电量低提醒的阈值，可设置范围10%-25%，默认为20%
+	LowPowerNotifyThreshold int32 `prop:"access:rw"` // 设置电量低提醒的阈值，可设置范围10%-25%，默认为20%
 
 	// 自动待机电量百分比
-	LowPowerAutoSleepThreshold gsprop.Int `prop:"access:rw"` // 设置电池电量进入待机模式（s3）的阈值，可设置范围为1%-9%，默认为5%（范围待确定）
+	LowPowerAutoSleepThreshold int32 `prop:"access:rw"` // 设置电池电量进入待机模式（s3）的阈值，可设置范围为1%-9%，默认为5%（范围待确定）
 
 	// 低电量操作
-	LowPowerAction gsprop.Enum `prop:"access:rw"`
+	LowPowerAction int32 `prop:"access:rw"`
 
-	savingModeBrightnessDropPercent gsprop.Int // 用来接收和保存来自system power中降低的屏幕亮度值
+	savingModeBrightnessDropPercent int32 // 用来接收和保存来自system power中降低的屏幕亮度值
 
-	AmbientLightAdjustBrightness gsprop.Bool `prop:"access:rw"`
+	AmbientLightAdjustBrightness bool `prop:"access:rw"`
+	// dbusutil-gen: ignore-below
 
 	ambientLightClaimed bool
 	lightLevelUnit      string
@@ -259,34 +248,8 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		return nil, err
 	}
 
-	m.settings = gio.NewSettings(gsSchemaPower)
-	m.warnLevelConfig = NewWarnLevelConfigManager(m.settings)
-
-	m.LinePowerScreensaverDelay.Bind(m.settings, settingKeyLinePowerScreensaverDelay)
-	m.LinePowerScreenBlackDelay.Bind(m.settings, settingKeyLinePowerScreenBlackDelay)
-	m.LinePowerSleepDelay.Bind(m.settings, settingKeyLinePowerSleepDelay)
-	m.LinePowerLockDelay.Bind(m.settings, settingKeyLinePowerLockDelay)
-	m.BatteryScreensaverDelay.Bind(m.settings, settingKeyBatteryScreensaverDelay)
-	m.BatteryScreenBlackDelay.Bind(m.settings, settingKeyBatteryScreenBlackDelay)
-	m.BatterySleepDelay.Bind(m.settings, settingKeyBatterySleepDelay)
-	m.BatteryLockDelay.Bind(m.settings, settingKeyBatteryLockDelay)
-	m.ScreenBlackLock.Bind(m.settings, settingKeyScreenBlackLock)
-	m.SleepLock.Bind(m.settings, settingKeySleepLock)
-
-	m.LinePowerLidClosedAction.Bind(m.settings, settingKeyLinePowerLidClosedAction)
-	m.LinePowerPressPowerBtnAction.Bind(m.settings, settingKeyLinePowerPressPowerBtnAction)
-	m.BatteryLidClosedAction.Bind(m.settings, settingKeyBatteryLidClosedAction)
-	m.BatteryPressPowerBtnAction.Bind(m.settings, settingKeyBatteryPressPowerBtnAction)
-	m.LowPowerNotifyEnable.Bind(m.settings, settingKeyLowPowerNotifyEnable)
-	m.LowPowerNotifyThreshold.Bind(m.settings, settingKeyLowPowerNotifyThreshold)
-	m.LowPowerAutoSleepThreshold.Bind(m.settings, settingKeyLowPowerAutoSleepThreshold)
-	m.LowPowerAction.Bind(m.settings, settingKeyLowPowerAction)
-	m.savingModeBrightnessDropPercent.Bind(m.settings, settingKeyBrightnessDropPercent)
-	m.initGSettingsConnectChanged()
-	m.AmbientLightAdjustBrightness.Bind(m.settings,
-		settingKeyAmbientLightAdjuestBrightness)
-	m.lightSensorEnabled = m.settings.GetBoolean(settingLightSensorEnabled)
-	m.gsHighPerformanceEnabled = m.settings.GetBoolean(settingKeyHighPerformanceEnabled)
+	m.warnLevelConfig = NewWarnLevelConfigManager(m)
+	m.warnLevelConfig.setChangeCallback(m.handleBatteryDisplayUpdate)
 
 	power := m.helper.Power
 	err = common.ActivateSysDaemonService(power.ServiceName_())
@@ -323,15 +286,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	// 初始化电源模式
 	m.systemPower = systemPower.NewPower(systemBus)
-	isHighPerformanceSupported, err := m.systemPower.IsHighPerformanceSupported().Get(0)
-	if err != nil {
-		logger.Warning("Get systemPower.IsHighPerformanceSupported err :", err)
-	}
-	m.setPropIsHighPerformanceSupported(isHighPerformanceSupported && m.settings.GetBoolean(settingKeyHighPerformanceEnabled))
-	m.isPowerSaveSupported, err = m.systemPower.IsPowerSaveSupported().Get(0)
-	if err != nil {
-		logger.Warning("Get systemPower.IsPowerSaveSupported err :", err)
-	}
 
 	// 绑定org.deepin.dde.Display1的DBus
 	m.display = display.NewDisplay(sessionBus)
@@ -480,17 +434,67 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	}
 
-	m.warnLevelConfig.setChangeCallback(m.handleBatteryDisplayUpdate)
-
+	m.initDsg()
+	m.initDConfigConnectChanged()
 	m.initOnBatteryChangedHandler()
 	m.initSubmodules()
 	m.startSubmodules()
 	m.inhibitLogind()
-	m.initDsg()
+	m.initDBusPropCallback()
 
+	m.warnLevelConfig.initDsg()
+	m.warnLevelConfig.connectSettingsChanged()
+
+	isHighPerformanceSupported, err := m.systemPower.IsHighPerformanceSupported().Get(0)
+	if err != nil {
+		logger.Warning("Get systemPower.IsHighPerformanceSupported err :", err)
+	}
+
+	hignPerformanceEnabled, err := m.dsPowerConfigManager.Value(0, dsettingHighPerformanceEnabled)
+	if err != nil {
+		logger.Warning("Get systemPower.IsHighPerformanceEnabled err :", err)
+	} else {
+		m.setPropIsHighPerformanceSupported(isHighPerformanceSupported && hignPerformanceEnabled.Value().(bool))
+	}
+
+	m.isPowerSaveSupported, err = m.systemPower.IsPowerSaveSupported().Get(0)
+	if err != nil {
+		logger.Warning("Get systemPower.IsPowerSaveSupported err :", err)
+	}
+
+	// TODO: treeland 上idle暂未实现
+	//if m.UseWayland {
+	//	m.kwinHanleIdleOffCh = make(chan bool, 10)
+	//	go m.listenEventToHandleIdleOff()
+	//
+	//	go func() {
+	//		for ch := range m.kwinHanleIdleOffCh {
+	//			if ch {
+	//				m.prepareSuspendLocker.Lock()
+	//				// 如果系统处于suspend状态，不需要在上层通过鼠标键盘事件唤醒系统
+	//				if m.prepareSuspend >= suspendStatePrepare {
+	//					m.prepareSuspendLocker.Unlock()
+	//					continue
+	//				}
+	//				m.prepareSuspendLocker.Unlock()
+	//
+	//				logger.Info("kwin handle idle off")
+	//
+	//				if v := m.submodules[submodulePSP]; v != nil {
+	//					if psp := v.(*powerSavePlan); psp != nil {
+	//						psp.HandleIdleOff()
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}()
+	//}
+}
+
+func (m *Manager) initDBusPropCallback() {
 	so := m.service.GetServerObject(m)
 	if so != nil {
-		err = so.SetWriteCallback(m, "ScheduledShutdownState", func(write *dbusutil.PropertyWrite) *dbus.Error {
+		err := so.SetWriteCallback(m, "ScheduledShutdownState", func(write *dbusutil.PropertyWrite) *dbus.Error {
 			value, ok := write.Value.(bool)
 			if !ok {
 				logger.Warning("Type is not bool")
@@ -498,7 +502,7 @@ func (m *Manager) init() {
 				logger.Info("ScheduledShutdownState change to", value)
 			}
 			m.setPropScheduledShutdownState(value)
-			err = m.savePowerDsgConfig(dsettingScheduledShutdownState)
+			err := m.savePowerDsgConfig(dsettingScheduledShutdownState)
 			return dbusutil.ToError(err)
 		})
 		err = so.SetWriteCallback(m, "ShutdownTime", func(write *dbusutil.PropertyWrite) *dbus.Error {
@@ -532,35 +536,236 @@ func (m *Manager) init() {
 			err = m.savePowerDsgConfig(dsettingCustomShutdownWeekDays)
 			return dbusutil.ToError(err)
 		})
-	}
+		err = so.SetWriteCallback(m, "LinePowerScreensaverDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("ShutdownRepetition change to", value)
+			}
+			m.setPropLinePowerScreensaverDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingLinePowerScreensaverDelay)
+			return dbusutil.ToError(err)
+		})
 
-	// TODO: treeland 上idle暂未实现
-	//if m.UseWayland {
-	//	m.kwinHanleIdleOffCh = make(chan bool, 10)
-	//	go m.listenEventToHandleIdleOff()
-	//
-	//	go func() {
-	//		for ch := range m.kwinHanleIdleOffCh {
-	//			if ch {
-	//				m.prepareSuspendLocker.Lock()
-	//				// 如果系统处于suspend状态，不需要在上层通过鼠标键盘事件唤醒系统
-	//				if m.prepareSuspend >= suspendStatePrepare {
-	//					m.prepareSuspendLocker.Unlock()
-	//					continue
-	//				}
-	//				m.prepareSuspendLocker.Unlock()
-	//
-	//				logger.Info("kwin handle idle off")
-	//
-	//				if v := m.submodules[submodulePSP]; v != nil {
-	//					if psp := v.(*powerSavePlan); psp != nil {
-	//						psp.HandleIdleOff()
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}()
-	//}
+		err = so.SetWriteCallback(m, "BatteryScreensaverDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("ShutdownRepetition change to", value)
+			}
+			m.setPropBatteryScreensaverDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingBatteryScreensaverDelay)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LinePowerScreenBlackDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("LinePowerScreenBlackDelay change to", value)
+			}
+			m.setPropLinePowerScreenBlackDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingLinePowerScreenBlackDelay)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LinePowerSleepDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("LinePowerSleepDelay change to", value)
+			}
+			m.setPropLinePowerSleepDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingLinePowerSleepDelay)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LinePowerLockDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("LinePowerLockDelay change to", value)
+			}
+			m.setPropLinePowerLockDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingLinePowerLockDelay)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "BatteryScreenBlackDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("BatteryScreenBlackDelay change to", value)
+			}
+			m.setPropBatteryScreenBlackDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingBatteryScreenBlackDelay)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "BatterySleepDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("BatterySleepDelay change to", value)
+			}
+			m.setPropBatterySleepDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingBatterySleepDelay)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "BatteryLockDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("BatteryLockDelay change to", value)
+			}
+			m.setPropBatteryLockDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingBatteryLockDelay)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "ScreenBlackLock", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(bool)
+			if !ok {
+				logger.Warning("Type is not bool")
+			} else {
+				logger.Info("ScreenBlackLock change to", value)
+			}
+			m.setPropScreenBlackLock(value)
+			err = m.savePowerDsgConfig(dsettingScreenBlackLock)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "SleepLock", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(bool)
+			if !ok {
+				logger.Warning("Type is not bool")
+			} else {
+				logger.Info("SleepLock change to", value)
+			}
+			m.setPropSleepLock(value)
+			err = m.savePowerDsgConfig(dsettingSleepLock)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LinePowerLidClosedAction", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("LinePowerLidClosedAction change to", value)
+			}
+			m.setPropLinePowerLidClosedAction(value)
+			err = m.savePowerDsgConfig(dsettingLinePowerLidClosedAction)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LinePowerPressPowerBtnAction", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("LinePowerPressPowerBtnAction change to", value)
+			}
+			m.setPropLinePowerPressPowerBtnAction(value)
+			m.LinePowerPressPowerBtnAction = value
+			err = m.savePowerDsgConfig(dsettingLinePowerPressPowerButton)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "BatteryLidClosedAction", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("BatteryLidClosedAction change to", value)
+			}
+			m.setPropBatteryLidClosedAction(value)
+			err = m.savePowerDsgConfig(dsettingBatteryLidClosedAction)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "BatteryPressPowerBtnAction", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("BatteryPressPowerBtnAction change to", value)
+			}
+			m.setPropBatteryPressPowerBtnAction(value)
+			err = m.savePowerDsgConfig(dsettingBatteryPressPowerButton)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LowPowerNotifyEnable", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(bool)
+			if !ok {
+				logger.Warning("Type is not bool")
+			} else {
+				logger.Info("LowPowerNotifyEnable change to", value)
+			}
+			m.setPropLowPowerNotifyEnable(value)
+			err = m.savePowerDsgConfig(dsettingLowPowerNotifyEnable)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LowPowerAction", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int")
+			} else {
+				logger.Info("LowPowerAction change to", value)
+			}
+			m.setPropLowPowerAction(value)
+			err = m.savePowerDsgConfig(dsettingLowPowerAction)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "AmbientLightAdjustBrightness", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(bool)
+			if !ok {
+				logger.Warning("Type is not bool")
+			} else {
+				logger.Info("AmbientLightAdjustBrightness change to", value)
+			}
+			m.setPropAmbientLightAdjustBrightness(value)
+			err = m.savePowerDsgConfig(dsettingAmbientLightAdjustBrightness)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LowPowerAutoSleepThreshold", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int32")
+			} else {
+				logger.Info("LowPowerAutoSleepThreshold change to", value)
+			}
+			m.setPropLowPowerAutoSleepThreshold(value)
+			err = m.savePowerDsgConfig(dsettingPercentageAction)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "LowPowerNotifyThreshold", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int32")
+			} else {
+				logger.Info("LowPowerNotifyThreshold change to", value)
+			}
+			m.setPropLowPowerNotifyThreshold(value)
+			err = m.savePowerDsgConfig(dsettingLowPowerNotifyThreshold)
+			return dbusutil.ToError(err)
+		})
+
+	}
 }
 
 func (m *Manager) destroy() {
@@ -594,30 +799,30 @@ func (m *Manager) Reset() *dbus.Error {
 	logger.Debug("Reset settings")
 
 	var settingKeys = []string{
-		settingKeyLinePowerScreenBlackDelay,
-		settingKeyLinePowerSleepDelay,
-		settingKeyLinePowerLockDelay,
-		settingKeyLinePowerLidClosedAction,
-		settingKeyLinePowerPressPowerBtnAction,
+		dsettingLinePowerScreenBlackDelay,
+		dsettingLinePowerSleepDelay,
+		dsettingLinePowerLockDelay,
+		dsettingLinePowerLidClosedAction,
+		dsettingLinePowerPressPowerButton,
 
-		settingKeyBatteryScreenBlackDelay,
-		settingKeyBatterySleepDelay,
-		settingKeyBatteryLockDelay,
-		settingKeyBatteryLidClosedAction,
-		settingKeyBatteryPressPowerBtnAction,
+		dsettingBatteryScreenBlackDelay,
+		dsettingBatterySleepDelay,
+		dsettingBatteryLockDelay,
+		dsettingBatteryLidClosedAction,
+		dsettingBatteryPressPowerButton,
 
-		settingKeyScreenBlackLock,
-		settingKeySleepLock,
-		settingKeyPowerButtonPressedExec,
+		dsettingScreenBlackLock,
+		dsettingSleepLock,
+		dsettingPowerButtonPressedExec,
 
-		settingKeyLowPowerNotifyEnable,
-		settingKeyLowPowerNotifyThreshold,
-		settingKeyLowPowerAutoSleepThreshold,
-		settingKeyBrightnessDropPercent,
+		dsettingLowPowerNotifyEnable,
+		dsettingLowPowerNotifyThreshold,
+		dsettingPercentageAction,
+		dsettingPowerSavingModeBrightnessDropPercent,
 	}
 	for _, key := range settingKeys {
 		logger.Debug("reset setting", key)
-		m.settings.Reset(key)
+		m.dsPowerConfigManager.Reset(0, key)
 	}
 	return nil
 }
@@ -713,18 +918,86 @@ func (m *Manager) initDsg() {
 					logger.Info("Set ScheduledShutdownState property", m.ScheduledShutdownState)
 				}
 			}
+		case dsettingPowerSavingModeBrightnessDropPercent:
+			m.savingModeBrightnessDropPercent = int32(transTypeToInt(data.Value(), 0))
+		case dsettingLinePowerScreensaverDelay:
+			m.LinePowerScreensaverDelay = int(transTypeToInt(data.Value(), 0))
+		case dsettingBatteryScreensaverDelay:
+			m.BatteryScreensaverDelay = int(transTypeToInt(data.Value(), 0))
+		case dsettingBatteryScreenBlackDelay:
+			m.BatteryScreenBlackDelay = int(transTypeToInt(data.Value(), 0))
+		case dsettingBatterySleepDelay:
+			m.BatterySleepDelay = int(transTypeToInt(data.Value(), 0))
+		case dsettingLinePowerScreenBlackDelay:
+			m.LinePowerScreenBlackDelay = int(transTypeToInt(data.Value(), 0))
+		case dsettingLinePowerSleepDelay:
+			m.LinePowerSleepDelay = int(transTypeToInt(data.Value(), 0))
+		case dsettingLinePowerLockDelay:
+			m.LinePowerLockDelay = int(transTypeToInt(data.Value(), 0))
+		case dsettingBatteryLockDelay:
+			m.BatteryLockDelay = int(transTypeToInt(data.Value(), 0))
+		case dsettingAmbientLightAdjustBrightness:
+			m.AmbientLightAdjustBrightness = data.Value().(bool)
+		case dsettingScreenBlackLock:
+			m.ScreenBlackLock = data.Value().(bool)
+		case dsettingSleepLock:
+			m.SleepLock = data.Value().(bool)
+		case dsettingLowPowerAction:
+			m.LowPowerAction = int32(transTypeToInt(data.Value(), 0))
+		case dsettingLinePowerLidClosedAction:
+			m.LinePowerLidClosedAction = int32(transTypeToInt(data.Value(), 0))
+		case dsettingLinePowerPressPowerButton:
+			m.LinePowerPressPowerBtnAction = int32(transTypeToInt(data.Value(), 0))
+		case dsettingBatteryLidClosedAction:
+			m.BatteryLidClosedAction = int32(transTypeToInt(data.Value(), 0))
+		case dsettingBatteryPressPowerButton:
+			m.BatteryPressPowerBtnAction = int32(transTypeToInt(data.Value(), 0))
+		case dsettingLowPowerNotifyEnable:
+			m.LowPowerNotifyEnable = data.Value().(bool)
+		case dsettingLightSensorEnabled:
+			m.lightSensorEnabled = data.Value().(bool)
+		case dsettingHighPerformanceEnabled:
+			m.gsHighPerformanceEnabled = data.Value().(bool)
+		case dsettingLowPowerNotifyThreshold:
+			m.LowPowerNotifyThreshold = int32(transTypeToInt(data.Value(), 0))
+		case dsettingPercentageAction:
+			m.LowPowerAutoSleepThreshold = int32(transTypeToInt(data.Value(), 0))
 		}
+
 		// m.scheduledShutdownSwitch(false, false)
 		// m.scheduledShutdownSwitch(m.ScheduledShutdownState, false)
 
 	}
 
+	getDsPowerConfig(dsettingPowerSavingModeBrightnessDropPercent, true)
 	getDsPowerConfig(dsettingCustomShutdownWeekDays, true)
 	getDsPowerConfig(dsettingShutdownCountdown, true)
 	getDsPowerConfig(dsettingShutdownRepetition, true)
 	getDsPowerConfig(dsettingShutdownTime, true)
 	getDsPowerConfig(dsettingScheduledShutdownState, true)
 	getDsPowerConfig(dsettingNextShutdownTime, true)
+	getDsPowerConfig(dsettingLinePowerScreensaverDelay, true)
+	getDsPowerConfig(dsettingBatteryScreensaverDelay, true)
+	getDsPowerConfig(dsettingBatteryScreenBlackDelay, true)
+	getDsPowerConfig(dsettingBatterySleepDelay, true)
+	getDsPowerConfig(dsettingLinePowerScreenBlackDelay, true)
+	getDsPowerConfig(dsettingLinePowerSleepDelay, true)
+	getDsPowerConfig(dsettingLinePowerLockDelay, true)
+	getDsPowerConfig(dsettingBatteryLockDelay, true)
+	getDsPowerConfig(dsettingAmbientLightAdjustBrightness, true)
+	getDsPowerConfig(dsettingScreenBlackLock, true)
+	getDsPowerConfig(dsettingSleepLock, true)
+	getDsPowerConfig(dsettingLowPowerAction, true)
+	getDsPowerConfig(dsettingLinePowerLidClosedAction, true)
+	getDsPowerConfig(dsettingLinePowerPressPowerButton, true)
+	getDsPowerConfig(dsettingBatteryLidClosedAction, true)
+	getDsPowerConfig(dsettingBatteryPressPowerButton, true)
+	getDsPowerConfig(dsettingLowPowerNotifyEnable, true)
+	getDsPowerConfig(dsettingLightSensorEnabled, true)
+	getDsPowerConfig(dsettingHighPerformanceEnabled, true)
+	getDsPowerConfig(dsettingLowPowerNotifyThreshold, true)
+	getDsPowerConfig(dsettingPercentageAction, true)
+
 	m.dsPowerConfigManager.InitSignalExt(m.systemSigLoop, true)
 	m.dsPowerConfigManager.ConnectValueChanged(func(key string) {
 		if key == dsettingNextShutdownTime {
@@ -769,6 +1042,50 @@ func (m *Manager) savePowerDsgConfig(key string) (err error) {
 		value = m.ShutdownTime
 	case dsettingScheduledShutdownState:
 		value = m.ScheduledShutdownState
+	case dsettingPowerSavingModeBrightnessDropPercent:
+		value = m.savingModeBrightnessDropPercent
+	case dsettingLinePowerScreensaverDelay:
+		value = m.LinePowerScreensaverDelay
+	case dsettingBatteryScreensaverDelay:
+		value = m.BatteryScreensaverDelay
+	case dsettingBatteryScreenBlackDelay:
+		value = m.BatteryScreenBlackDelay
+	case dsettingBatterySleepDelay:
+		value = m.BatterySleepDelay
+	case dsettingLinePowerScreenBlackDelay:
+		value = m.LinePowerScreenBlackDelay
+	case dsettingLinePowerSleepDelay:
+		value = m.LinePowerSleepDelay
+	case dsettingLinePowerLockDelay:
+		value = m.LinePowerLockDelay
+	case dsettingBatteryLockDelay:
+		value = m.BatteryLockDelay
+	case dsettingAmbientLightAdjustBrightness:
+		value = m.AmbientLightAdjustBrightness
+	case dsettingScreenBlackLock:
+		value = m.ScreenBlackLock
+	case dsettingSleepLock:
+		value = m.SleepLock
+	case dsettingLowPowerAction:
+		value = m.LowPowerAction
+	case dsettingLinePowerLidClosedAction:
+		value = m.LinePowerLidClosedAction
+	case dsettingLinePowerPressPowerButton:
+		value = m.LinePowerPressPowerBtnAction
+	case dsettingBatteryLidClosedAction:
+		value = m.BatteryLidClosedAction
+	case dsettingBatteryPressPowerButton:
+		value = m.BatteryPressPowerBtnAction
+	case dsettingLowPowerNotifyEnable:
+		value = m.LowPowerNotifyEnable
+	case dsettingLightSensorEnabled:
+		value = m.lightSensorEnabled
+	case dsettingHighPerformanceEnabled:
+		value = m.gsHighPerformanceEnabled
+	case dsettingLowPowerNotifyThreshold:
+		value = m.LowPowerNotifyThreshold
+	case dsettingPercentageAction:
+		value = m.LowPowerAutoSleepThreshold
 	}
 	err = m.setDsgData(key, value, m.dsPowerConfigManager)
 	if err != nil {
@@ -781,6 +1098,9 @@ func (m *Manager) savePowerDsgConfig(key string) (err error) {
 func (m *Manager) setDsgData(key string, value interface{}, dsg configManager.Manager) error {
 	if dsg == nil {
 		return errors.New("setDsgData dsg is nil")
+	}
+	if value == nil {
+		return errors.New("setDsgData value is nil")
 	}
 	err := dsg.SetValue(0, key, dbus.MakeVariant(value))
 	if err != nil {
