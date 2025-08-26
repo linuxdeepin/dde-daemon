@@ -219,6 +219,13 @@ func (u *User) SetMaxPasswordAge(sender dbus.Sender, nDays int32) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
+	today := time.Now().Format("2006-01-02")
+	err = users.ModifyPasswordLastChange(u.UserName, today)
+	if err != nil {
+		logger.Warning("failed to set password last change date:", err)
+		return dbusutil.ToError(err)
+	}
+
 	return nil
 }
 
