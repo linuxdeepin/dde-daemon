@@ -187,6 +187,10 @@ func ModifyMaxPasswordAge(username string, nDays int) error {
 	return doAction(cmdChAge, []string{"-M", strconv.Itoa(nDays), username})
 }
 
+func ModifyPasswordLastChange(username string, date string) error {
+	return doAction(cmdChAge, []string{"-d", date, username})
+}
+
 const (
 	// Same as the abbreviation in `passwd --status`
 	PasswordStatusUsable     = "P"
