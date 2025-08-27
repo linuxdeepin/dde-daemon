@@ -69,12 +69,10 @@ func newZoneInfo(zone string) *ZoneInfo {
 
 	info.Name = zone
 	info.Desc = DGettext("deepin-installer-timezones", zone)
-
 	tokens := strings.Split(info.Desc, "/")
-	if len(tokens) == 2 {
-		info.Desc = tokens[1]
+	if len(tokens) > 0 {
+		info.Desc = tokens[len(tokens)-1]
 	}
-
 	dst := newDSTInfo(zone)
 	if dst == nil {
 		info.Offset = getOffsetByUSec(zone, 0)
