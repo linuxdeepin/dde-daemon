@@ -167,7 +167,11 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 	if !accepted {
 		err = errors.New("session declined")
 		logger.Warning(err)
-		return "", dbusutil.ToError(err)
+		dbusErr := &dbus.Error{
+			Name: "org.bluez.obex.Error.Rejected",
+			Body: []interface{}{err.Error()},
+		}
+		return "", dbusErr
 	}
 	// 设置未文件不能传输状态
 	a.b.setPropTransportable(false)
