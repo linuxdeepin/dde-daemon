@@ -187,7 +187,6 @@ func (tpad *Touchpad) init() {
 				if !hasValue {
 					return
 				}
-				tpad.TPadEnable.Set(value)
 				tpad.enable(tpad.TPadEnable.Get())
 			})
 			if enabled, err := sysTouchPad.Enable().Get(0); err != nil {
@@ -198,7 +197,9 @@ func (tpad *Touchpad) init() {
 		}
 	}
 
-	tpad.enable(tpad.TPadEnable.Get())
+	currentState := tpad.TPadEnable.Get()
+	tpad.TPadEnable.Set(!currentState)
+	tpad.enable(currentState)
 	tpad.enableLeftHanded()
 	tpad.enableNaturalScroll()
 	tpad.enableEdgeScroll()
