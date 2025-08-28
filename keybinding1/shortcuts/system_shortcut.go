@@ -21,7 +21,7 @@ const (
 )
 
 type SystemShortcut struct {
-	*GSettingsShortcut
+	*ShortcutObject
 	arg *ActionExecCmdArg
 }
 
@@ -75,40 +75,40 @@ func getSystemActionCmd(id string) string {
 			return cmd
 		}
 	}
-	if id == "lock-screen" && _useWayland {
-		id = "lock-screen-wayland"
+	if id == "lockScreen" && _useWayland {
+		id = "lockScreen-wayland"
 	}
 	return defaultSysActionCmdMap[id]
 }
 
 // key is id, value is commandline.
 var defaultSysActionCmdMap = map[string]string{
-	"launcher":       "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle",
-	"terminal":       "/usr/lib/deepin-daemon/default-terminal",
-	"terminal-quake": "dde-am deepin-terminal quake-mode",
-	"lock-screen":    "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=org.deepin.dde.LockFront1 /org/deepin/dde/LockFront1 org.deepin.dde.LockFront1.Show&&/usr/bin/setxkbmap -option $originmap",
+	"launcher":      "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle",
+	"terminal":      "/usr/lib/deepin-daemon/default-terminal",
+	"terminalQuake": "dde-am deepin-terminal quake-mode",
+	"lockScreen":    "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&/usr/bin/xdotool key XF86Ungrab&&dbus-send --print-reply --dest=org.deepin.dde.LockFront1 /org/deepin/dde/LockFront1 org.deepin.dde.LockFront1.Show&&/usr/bin/setxkbmap -option $originmap",
 	//wayland不能设置XF86Ungrab，否则会导致Bug-224309
-	"lock-screen-wayland":    "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&dbus-send --print-reply --dest=org.deepin.dde.LockFront1 /org/deepin/dde/LockFront1 org.deepin.dde.LockFront1.Show&&/usr/bin/setxkbmap -option $originmap",
-	"logout":                 "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
-	"deepin-screen-recorder": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord",
-	"system-monitor":         "/usr/bin/deepin-system-monitor",
-	"color-picker":           "dbus-send --print-reply --dest=com.deepin.Picker /com/deepin/Picker com.deepin.Picker.Show",
+	"lockScreen-wayland":   "originmap=$(setxkbmap -query | grep option | awk -F ' ' '{print $2}');/usr/bin/setxkbmap -option grab:break_actions&&dbus-send --print-reply --dest=org.deepin.dde.LockFront1 /org/deepin/dde/LockFront1 org.deepin.dde.LockFront1.Show&&/usr/bin/setxkbmap -option $originmap",
+	"logout":               "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
+	"deepinScreenRecorder": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord",
+	"systemMonitor":        "/usr/bin/deepin-system-monitor",
+	"colorPicker":          "dbus-send --print-reply --dest=com.deepin.Picker /com/deepin/Picker com.deepin.Picker.Show",
 	// screenshot actions:
 	"screenshot":             screenshotCmdPrefix + "StartScreenshot",
-	"screenshot-fullscreen":  screenshotCmdPrefix + "FullscreenScreenshot",
-	"screenshot-window":      screenshotCmdPrefix + "TopWindowScreenshot",
-	"screenshot-delayed":     screenshotCmdPrefix + "DelayScreenshot int64:5",
-	"screenshot-ocr":         screenshotCmdPrefix + "OcrScreenshot",
-	"screenshot-scroll":      screenshotCmdPrefix + "ScrollScreenshot",
-	"file-manager":           "/usr/lib/deepin-daemon/default-file-manager",
-	"disable-touchpad":       "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
-	"wm-switcher":            "dbus-send --type=method_call --dest=org.deepin.dde.WMSwitcher1 /org/deepin/dde/WMSwitcher1 org.deepin.dde.WMSwitcher1.RequestSwitchWM",
-	"turn-off-screen":        "sleep 0.5; xset dpms force off",
-	"notification-center":    "dbus-send --print-reply --dest=org.deepin.dde.Osd1 /org/deepin/dde/shell/notification/center org.deepin.dde.shell.notification.center.Toggle",
+	"screenshotFullscreen":   screenshotCmdPrefix + "FullscreenScreenshot",
+	"screenshotWindow":       screenshotCmdPrefix + "TopWindowScreenshot",
+	"screenshotDelayed":      screenshotCmdPrefix + "DelayScreenshot int64:5",
+	"screenshotOcr":          screenshotCmdPrefix + "OcrScreenshot",
+	"screenshotScroll":       screenshotCmdPrefix + "ScrollScreenshot",
+	"fileManager":            "/usr/lib/deepin-daemon/default-file-manager",
+	"disableTouchpad":        "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
+	"wmSwitcher":             "dbus-send --type=method_call --dest=org.deepin.dde.WMSwitcher1 /org/deepin/dde/WMSwitcher1 org.deepin.dde.WMSwitcher1.RequestSwitchWM",
+	"turnOffScreen":          "sleep 0.5; xset dpms force off",
+	"notificationCenter":     "dbus-send --print-reply --dest=org.deepin.dde.Osd1 /org/deepin/dde/shell/notification/center org.deepin.dde.shell.notification.center.Toggle",
 	"clipboard":              "dbus-send --print-reply --dest=org.deepin.dde.Clipboard1 /org/deepin/dde/Clipboard1 org.deepin.dde.Clipboard1.Toggle; dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Hide",
-	"global-search":          "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
+	"globalSearch":           "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",
 	"switch-next-kbd-layout": "dbus-send --print-reply --dest=org.deepin.dde.Keybinding1 /org/deepin/dde/InputDevice1/Keyboard org.deepin.dde.InputDevice1.Keyboard.ToggleNextLayout",
-	"switch-monitors":        "/usr/libexec/dde-daemon/keybinding/shortcut-dde-switch-monitors.sh",
+	"switchMonitors":         "/usr/libexec/dde-daemon/keybinding/shortcut-dde-switch-monitors.sh",
 	// cmd
 	"calculator": "/usr/bin/deepin-calculator",
 	"search":     "/usr/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh",

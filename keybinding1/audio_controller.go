@@ -9,19 +9,16 @@ import (
 	"strings"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	. "github.com/linuxdeepin/dde-daemon/keybinding1/shortcuts"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	audio "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.audio1"
 	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 const (
 	volumeMin = 0
 	volumeMax = 1.5
-)
-
-const (
-	gsKeyOsdAdjustVolState = "osd-adjust-volume-enabled"
 )
 
 type OsdVolumeState int32
@@ -37,7 +34,7 @@ type AudioController struct {
 	conn                   *dbus.Conn
 	audioDaemon            audio.Audio
 	huaweiMicLedWorkaround *huaweiMicLedWorkaround
-	gsKeyboard             *gio.Settings
+	keyboardConfigMgr      configManager.Manager
 }
 
 func NewAudioController(sessionConn *dbus.Conn,
@@ -47,7 +44,21 @@ func NewAudioController(sessionConn *dbus.Conn,
 		audioDaemon: audio.NewAudio(sessionConn),
 	}
 	c.initHuaweiMicLedWorkaround(backlightHelper)
-	c.gsKeyboard = gio.NewSettings(gsSchemaKeyboard)
+
+	bus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning(err)
+	}
+	dsg := configManager.NewConfigManager(bus)
+	dsgPath, err := dsg.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsKeyboardId, "")
+	if err != nil || dsgPath == "" {
+		logger.Warning(err)
+		return c
+	}
+	c.keyboardConfigMgr, err = configManager.NewManager(bus, dsgPath)
+	if err != nil {
+		logger.Warning(err)
+	}
 	return c
 }
 
@@ -83,7 +94,12 @@ func (c *AudioController) ExecCmd(cmd ActionCmd) error {
 
 func (c *AudioController) toggleSinkMute() error {
 	var osd string
-	var state = OsdVolumeState(c.gsKeyboard.GetEnum(gsKeyOsdAdjustVolState))
+	stateValue, err := c.keyboardConfigMgr.Value(0, constants.DSettingsKeyOsdAdjustVolumeState)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	state := OsdVolumeState(stateValue.Value().(int64))
 
 	// 当OsdAdjustVolumeState的值为VolumeAdjustEnable时，才会去执行静音操作
 	if VolumeAdjustEnable == state {
@@ -114,7 +130,12 @@ func (c *AudioController) toggleSinkMute() error {
 
 func (c *AudioController) toggleSourceMute() error {
 	var osd string
-	var state = OsdVolumeState(c.gsKeyboard.GetEnum(gsKeyOsdAdjustVolState))
+	stateValue, err := c.keyboardConfigMgr.Value(0, constants.DSettingsKeyOsdAdjustVolumeState)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	state := OsdVolumeState(stateValue.Value().(int64))
 
 	source, err := c.getDefaultSource()
 	if err != nil {
@@ -155,7 +176,12 @@ func (c *AudioController) toggleSourceMute() error {
 
 func (c *AudioController) changeSinkVolume(raised bool) error {
 	var osd string
-	var state = OsdVolumeState(c.gsKeyboard.GetEnum(gsKeyOsdAdjustVolState))
+	stateValue, err := c.keyboardConfigMgr.Value(0, constants.DSettingsKeyOsdAdjustVolumeState)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	state := OsdVolumeState(stateValue.Value().(int64))
 
 	// 当OsdAdjustVolumeState的值为VolumeAdjustEnable时，才会去执行调节音量的操作
 	if VolumeAdjustEnable == state {

@@ -1,0 +1,726 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "monBrightnessUp": {
+            "value": ["XF86MonBrightnessUp"],
+            "serial": 0,
+            "flags": [],
+            "name": "monBrightnessUp",
+            "name[zh_CN]": "显示器亮度增加",
+            "description": "Monitor/panel brightness",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "monBrightnessDown": {
+            "value": ["XF86MonBrightnessDown"],
+            "serial": 0,
+            "flags": [],
+            "name": "monBrightnessDown",
+            "name[zh_CN]": "显示器亮度减少",
+            "description": "Monitor/panel brightness",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "kbdLightOnOff": {
+            "value": ["XF86KbdLightOnOff"],
+            "serial": 0,
+            "flags": [],
+            "name": "kbdLightOnOff",
+            "name[zh_CN]": "键盘背光开关",
+            "description": "Keyboards may be lit",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "kbdBrightnessUp": {
+            "value": ["XF86KbdBrightnessUp"],
+            "serial": 0,
+            "flags": [],
+            "name": "kbdBrightnessUp",
+            "name[zh_CN]": "键盘背光增加",
+            "description": "Keyboards may be lit",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "kbdBrightnessDown": {
+            "value": ["XF86KbdBrightnessDown"],
+            "serial": 0,
+            "flags": [],
+            "name": "kbdBrightnessDown",
+            "name[zh_CN]": "键盘背光减少",
+            "description": "Keyboards may be lit",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioLowerVolume": {
+            "value": ["XF86AudioLowerVolume"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioLowerVolume",
+            "name[zh_CN]": "音量减少",
+            "description": "Volume control down",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioMute": {
+            "value": ["XF86AudioMute"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioMute",
+            "name[zh_CN]": "静音",
+            "description": "Mute sound from the system",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioRaiseVolume": {
+            "value": ["XF86AudioRaiseVolume"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioRaiseVolume",
+            "name[zh_CN]": "音量增加",
+            "description": "Volume control up",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioPlay": {
+            "value": ["XF86AudioPlay"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioPlay",
+            "name[zh_CN]": "播放",
+            "description": "Start playing of audio >",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioStop": {
+            "value": ["XF86AudioStop"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioStop",
+            "name[zh_CN]": "停止",
+            "description": "Stop playing audio",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioPrev": {
+            "value": ["XF86AudioPrev"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioPrev",
+            "name[zh_CN]": "上一曲",
+            "description": "Previous track",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioNext": {
+            "value": ["XF86AudioNext"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioNext",
+            "name[zh_CN]": "下一曲",
+            "description": "Next track",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "homePage": {
+            "value": ["XF86HomePage"],
+            "serial": 0,
+            "flags": [],
+            "name": "homePage",
+            "name[zh_CN]": "主页",
+            "description": "Display user's home page",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "mail": {
+            "value": ["XF86Mail"],
+            "serial": 0,
+            "flags": [],
+            "name": "mail",
+            "name[zh_CN]": "邮件",
+            "description": "Invoke user's mail program",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "search": {
+            "value": ["XF86Search"],
+            "serial": 0,
+            "flags": [],
+            "name": "search",
+            "name[zh_CN]": "搜索",
+            "description": "Search",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioRecord": {
+            "value": ["XF86AudioRecord"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioRecord",
+            "name[zh_CN]": "录音",
+            "description": "Record audio application",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "calculator": {
+            "value": ["XF86Calculator"],
+            "serial": 0,
+            "flags": [],
+            "name": "calculator",
+            "name[zh_CN]": "计算器",
+            "description": "Invoke calculator program",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "back": {
+            "value": ["XF86Back"],
+            "serial": 0,
+            "flags": [],
+            "name": "back",
+            "name[zh_CN]": "后退",
+            "description": "Like back on a browser",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "forward": {
+            "value": ["XF86Forward"],
+            "serial": 0,
+            "flags": [],
+            "name": "forward",
+            "name[zh_CN]": "前进",
+            "description": "Like forward on a browser",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "powerOff": {
+            "value": ["XF86PowerOff"],
+            "serial": 0,
+            "flags": [],
+            "name": "powerOff",
+            "name[zh_CN]": "关机",
+            "description": "Power off system entirely",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "wakeUp": {
+            "value": ["XF86WakeUp"],
+            "serial": 0,
+            "flags": [],
+            "name": "wakeUp",
+            "name[zh_CN]": "唤醒",
+            "description": "Wake up system from sleep",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "eject": {
+            "value": ["XF86Eject"],
+            "serial": 0,
+            "flags": [],
+            "name": "eject",
+            "name[zh_CN]": "弹出",
+            "description": "Eject device (e.g. DVD)",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenSaver": {
+            "value": ["XF86ScreenSaver"],
+            "serial": 0,
+            "flags": [],
+            "name": "screenSaver",
+            "name[zh_CN]": "屏幕保护",
+            "description": "Invoke screensaver",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "www": {
+            "value": ["XF86WWW"],
+            "serial": 0,
+            "flags": [],
+            "name": "www",
+            "name[zh_CN]": "网页浏览器",
+            "description": "Invoke web browser",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "sleep": {
+            "value": ["XF86Sleep"],
+            "serial": 0,
+            "flags": [],
+            "name": "sleep",
+            "name[zh_CN]": "睡眠",
+            "description": "Put system to sleep",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "favorites": {
+            "value": ["XF86Favorites"],
+            "serial": 0,
+            "flags": [],
+            "name": "favorites",
+            "name[zh_CN]": "收藏夹",
+            "description": "Show favorite locations",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioPause": {
+            "value": ["XF86AudioPause"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioPause",
+            "name[zh_CN]": "暂停",
+            "description": "Pause audio playing",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioMedia": {
+            "value": ["XF86AudioMedia"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioMedia",
+            "name[zh_CN]": "媒体",
+            "description": "Launch media collection app",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "myComputer": {
+            "value": ["XF86MyComputer"],
+            "serial": 0,
+            "flags": [],
+            "name": "myComputer",
+            "name[zh_CN]": "我的电脑",
+            "description": "Display \"My Computer\" window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "shop": {
+            "value": ["XF86Shop"],
+            "serial": 0,
+            "flags": [],
+            "name": "shop",
+            "name[zh_CN]": "购物",
+            "description": "Display shopping web site",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "finance": {
+            "value": ["XF86Finance"],
+            "serial": 0,
+            "flags": [],
+            "name": "finance",
+            "name[zh_CN]": "财务",
+            "description": "Display financial site",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioRewind": {
+            "value": ["XF86AudioRewind"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioRewind",
+            "name[zh_CN]": "倒带",
+            "description": "\"rewind\" audio track",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "close": {
+            "value": ["XF86Close"],
+            "serial": 0,
+            "flags": [],
+            "name": "close",
+            "name[zh_CN]": "关闭",
+            "description": "Close window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "mediaClose": {
+            "value": ["XF86Close"],
+            "serial": 0,
+            "flags": [],
+            "name": "mediaClose",
+            "name[zh_CN]": "媒体关闭",
+            "description": "Close window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "copy": {
+            "value": ["XF86Copy"],
+            "serial": 0,
+            "flags": [],
+            "name": "copy",
+            "name[zh_CN]": "复制",
+            "description": "Copy selection",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "cut": {
+            "value": ["XF86Cut"],
+            "serial": 0,
+            "flags": [],
+            "name": "cut",
+            "name[zh_CN]": "剪切",
+            "description": "Cut selection",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "display": {
+            "value": ["XF86Display"],
+            "serial": 0,
+            "flags": [],
+            "name": "display",
+            "name[zh_CN]": "显示器切换",
+            "description": "Output switch key",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "dos": {
+            "value": ["XF86DOS"],
+            "serial": 0,
+            "flags": [],
+            "name": "dos",
+            "name[zh_CN]": "DOS",
+            "description": "Launch DOS (emulation)",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "documents": {
+            "value": ["XF86Documents"],
+            "serial": 0,
+            "flags": [],
+            "name": "documents",
+            "name[zh_CN]": "文档",
+            "description": "Open documents window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "explorer": {
+            "value": ["XF86Explorer"],
+            "serial": 0,
+            "flags": [],
+            "name": "explorer",
+            "name[zh_CN]": "文件浏览器",
+            "description": "Launch file explorer",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "game": {
+            "value": ["XF86Game"],
+            "serial": 0,
+            "flags": [],
+            "name": "game",
+            "name[zh_CN]": "游戏",
+            "description": "Launch game",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "go": {
+            "value": ["XF86Go"],
+            "serial": 0,
+            "flags": [],
+            "name": "go",
+            "name[zh_CN]": "跳转",
+            "description": "Go to URL",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "menuKb": {
+            "value": ["XF86MenuKB"],
+            "serial": 0,
+            "flags": [],
+            "name": "menuKb",
+            "name[zh_CN]": "菜单键盘",
+            "description": "distingush keyboard from PB",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "new": {
+            "value": ["XF86New"],
+            "serial": 0,
+            "flags": [],
+            "name": "new",
+            "name[zh_CN]": "新建",
+            "description": "New (folder, document...",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "open": {
+            "value": ["XF86Open"],
+            "serial": 0,
+            "flags": [],
+            "name": "open",
+            "name[zh_CN]": "打开",
+            "description": "Open",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "paste": {
+            "value": ["XF86Paste"],
+            "serial": 0,
+            "flags": [],
+            "name": "paste",
+            "name[zh_CN]": "粘贴",
+            "description": "Paste",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "phone": {
+            "value": ["XF86Phone"],
+            "serial": 0,
+            "flags": [],
+            "name": "phone",
+            "name[zh_CN]": "电话",
+            "description": "Launch phone; dial number",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "reply": {
+            "value": ["XF86Reply"],
+            "serial": 0,
+            "flags": [],
+            "name": "reply",
+            "name[zh_CN]": "回复",
+            "description": "Reply e.g., mail",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "reload": {
+            "value": ["XF86Reload"],
+            "serial": 0,
+            "flags": [],
+            "name": "reload",
+            "name[zh_CN]": "重新加载",
+            "description": "Reload web page, file, etc.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "rotateWindows": {
+            "value": ["XF86RotateWindows"],
+            "serial": 0,
+            "flags": [],
+            "name": "rotateWindows",
+            "name[zh_CN]": "旋转窗口",
+            "description": "Rotate windows e.g. xrandr",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "save": {
+            "value": ["XF86Save"],
+            "serial": 0,
+            "flags": [],
+            "name": "save",
+            "name[zh_CN]": "保存",
+            "description": "Save (file, document, state",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "scrollUp": {
+            "value": ["XF86ScrollUp"],
+            "serial": 0,
+            "flags": [],
+            "name": "scrollUp",
+            "name[zh_CN]": "向上滚动",
+            "description": "Scroll window/contents up",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "scrollDown": {
+            "value": ["XF86ScrollDown"],
+            "serial": 0,
+            "flags": [],
+            "name": "scrollDown",
+            "name[zh_CN]": "向下滚动",
+            "description": "Scrool window/contentd down",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "send": {
+            "value": ["XF86Send"],
+            "serial": 0,
+            "flags": [],
+            "name": "send",
+            "name[zh_CN]": "发送",
+            "description": "Send mail, file, object",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "taskPane": {
+            "value": ["XF86TaskPane"],
+            "serial": 0,
+            "flags": [],
+            "name": "taskPane",
+            "name[zh_CN]": "任务面板",
+            "description": "Show tasks",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "tools": {
+            "value": ["XF86Tools"],
+            "serial": 0,
+            "flags": [],
+            "name": "tools",
+            "name[zh_CN]": "工具",
+            "description": "toolbox of desktop/app.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "xfer": {
+            "value": ["XF86Xfer"],
+            "serial": 0,
+            "flags": [],
+            "name": "xfer",
+            "name[zh_CN]": "传输",
+            "description": "",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "away": {
+            "value": ["XF86Away"],
+            "serial": 0,
+            "flags": [],
+            "name": "away",
+            "name[zh_CN]": "离开",
+            "description": "Lock user",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "messenger": {
+            "value": ["XF86Messenger"],
+            "serial": 0,
+            "flags": [],
+            "name": "messenger",
+            "name[zh_CN]": "即时消息",
+            "description": "as in instant messaging",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "webCam": {
+            "value": ["XF86WebCam"],
+            "serial": 0,
+            "flags": [],
+            "name": "webCam",
+            "name[zh_CN]": "网络摄像头",
+            "description": "Launch web camera app.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "mailForward": {
+            "value": ["XF86MailForward"],
+            "serial": 0,
+            "flags": [],
+            "name": "mailForward",
+            "name[zh_CN]": "邮件转发",
+            "description": "Forward in mail",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "battery": {
+            "value": ["XF86Battery"],
+            "serial": 0,
+            "flags": [],
+            "name": "battery",
+            "name[zh_CN]": "电池",
+            "description": "Display battery information",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "wlan": {
+            "value": ["XF86WLAN"],
+            "serial": 0,
+            "flags": [],
+            "name": "wlan",
+            "name[zh_CN]": "无线网络",
+            "description": "Enable/disable WLAN",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioForward": {
+            "value": ["XF86AudioForward"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioForward",
+            "name[zh_CN]": "快进",
+            "description": "fast-forward audio track",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "suspend": {
+            "value": ["XF86Suspend"],
+            "serial": 0,
+            "flags": [],
+            "name": "suspend",
+            "name[zh_CN]": "挂起",
+            "description": "Sleep to RAM",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "touchpadToggle": {
+            "value": ["XF86TouchpadToggle"],
+            "serial": 0,
+            "flags": [],
+            "name": "touchpadToggle",
+            "name[zh_CN]": "触摸板切换",
+            "description": "Toggle between touchpad/trackstick",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "touchpadOn": {
+            "value": ["XF86TouchpadOn"],
+            "serial": 0,
+            "flags": [],
+            "name": "touchpadOn",
+            "name[zh_CN]": "触摸板开启",
+            "description": "The touchpad got switched on",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "touchpadOff": {
+            "value": ["XF86TouchpadOff"],
+            "serial": 0,
+            "flags": [],
+            "name": "touchpadOff",
+            "name[zh_CN]": "触摸板关闭",
+            "description": "The touchpad got switched off",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "audioMicMute": {
+            "value": ["XF86AudioMicMute"],
+            "serial": 0,
+            "flags": [],
+            "name": "audioMicMute",
+            "name[zh_CN]": "麦克风静音",
+            "description": "Mute the Mic from the system",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "airplaneModeToggle": {
+            "value": ["XF86RFKill"],
+            "serial": 0,
+            "flags": [],
+            "name": "airplaneModeToggle",
+            "name[zh_CN]": "飞行模式切换",
+            "description": "",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "capslock": {
+            "value": ["Caps_Lock"],
+            "serial": 0,
+            "flags": [],
+            "name": "capslock",
+            "name[zh_CN]": "大写锁定",
+            "description": "",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "numlock": {
+            "value": ["Num_Lock"],
+            "serial": 0,
+            "flags": [],
+            "name": "numlock",
+            "name[zh_CN]": "数字锁定",
+            "description": "",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}

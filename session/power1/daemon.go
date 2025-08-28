@@ -5,9 +5,10 @@
 package power
 
 import (
+	"os"
+
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/log"
-	"os"
 )
 
 var logger = log.NewLogger("daemon/session/power")

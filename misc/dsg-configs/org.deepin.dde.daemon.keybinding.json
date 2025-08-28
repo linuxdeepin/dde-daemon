@@ -12,7 +12,7 @@
       "permissions": "readwrite",
       "visibility": "private"
     },
-    "need-xrandr-q-devices": {
+    "needXrandrQDevices": {
       "value": [
         ""
       ],

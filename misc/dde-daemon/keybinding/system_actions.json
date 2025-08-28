@@ -9,11 +9,11 @@
             "Key": "terminal"
         },
         {
-            "Key": "deepin-screen-recorder",
+            "Key": "deepinScreenRecorder",
             "Action": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord"
         },
         {
-            "Key": "system-monitor",
+            "Key": "systemMonitor",
             "Action": "dde-am deepin-system-monitor"
         },
         {
@@ -22,7 +22,7 @@
         },
         {
             "Action": "/usr/lib/deepin-daemon/dde-lock.sh",
-            "Key": "lock-screen"
+            "Key": "lockScreen"
         },
         {
             "Action": "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
@@ -30,7 +30,7 @@
         },
         {
             "Action": "deepin-terminal --quake-mode",
-            "Key": "terminal-quake"
+            "Key": "terminalQuake"
         },
         {
             "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.StartScreenshot",
@@ -38,38 +38,38 @@
         },
         {
             "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.FullscreenScreenshot",
-            "Key": "screenshot-fullscreen"
+            "Key": "screenshotFullscreen"
         },
         {
             "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.TopWindowScreenshot",
-            "Key": "screenshot-window"
+            "Key": "screenshotWindow"
         },
         {
             "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.DelayScreenshot int64:5",
-            "Key": "screenshot-delayed"
+            "Key": "screenshotDelayed"
         },
         {
             "Action": "/usr/lib/deepin-daemon/default-file-manager",
-            "Key": "file-manager"
+            "Key": "fileManager"
         },
         {
             "Action": "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
-            "Key": "disable-touchpad"
+            "Key": "disableTouchpad"
         },
         {
             "Action": "dbus-send --type=method_call --dest=org.deepin.dde.WMSwitcher1 /org/deepin/dde/WMSwitcher1 org.deepin.dde.WMSwitcher1.RequestSwitchWM",
-            "Key": "wm-switcher"
+            "Key": "wmSwitcher"
         },
         {
             "Action": "sleep 0.5; xset dpms force off",
-            "Key": "turn-off-screen"
+            "Key": "turnOffScreen"
         },
         {
-            "Key": "text-to-speech",
+            "Key": "textToSpeech",
             "Action": "/usr/share/uos-ai-assistant/shell/tts.sh"
         },
         {
-            "Key": "speech-to-text",
+            "Key": "speechToText",
             "Action": "dbus-send  --print-reply --dest=com.iflytek.aiassistant /aiassistant/deepinmain com.iflytek.aiassistant.mainWindow.SpeechToText"
         },
         {
@@ -81,15 +81,15 @@
             "Action": "/usr/share/uos-ai-assistant/shell/translation.sh"
         },
 		{
-            "key":"notification-center",
+            "key":"notificationCenter",
             "Action":"dbus-send --print-reply --dest=org.deepin.dde.Widgets1 /org/deepin/dde/Widgets1 org.deepin.dde.Widgets1.Toggle"
         },
         {
-            "Key": "screenshot-ocr",
+            "Key": "screenshotOcr",
             "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.OcrScreenshot"
         },
 		{
-            "key":"screenshot-scroll",
+            "key":"screenshotScroll",
             "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.ScrollScreenshot"
         }
 
