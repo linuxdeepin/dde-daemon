@@ -1,3 +1,15 @@
+dde-daemon (6.1.52) unstable; urgency=medium
+
+  * fix: 解决蓝牙文件传输拒绝后，依旧在传输的问题
+  * feat(power&keybinding): Change backend configuration to dconfig
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR (#872)
+  * fix: 解决内置声卡被禁用端口插拔时没有通知的问题
+  * fix: 解决控制中心时区列表格式不统一的问题
+  * fix: Fixed the issue of password modification date
+  * chore: remove ipwatchd dependency
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 28 Aug 2025 14:36:05 +0200
+
 dde-daemon (6.1.51) unstable; urgency=medium
 
   * fix: 解决崩溃问题 默认sink没有判空导致崩溃
