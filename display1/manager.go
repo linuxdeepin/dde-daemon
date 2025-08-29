@@ -33,9 +33,7 @@ import (
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timedate1"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 	x "github.com/linuxdeepin/go-x11-client"
@@ -73,22 +71,24 @@ const (
 const (
 	DSettingsAppID                       = "org.deepin.dde.daemon"
 	DSettingsDisplayName                 = "org.deepin.Display"
-	DSettingsKeyAutoColorTemperature     = "auto-color-temperature"
-	DSettingsKeyDefaultTemperatureManual = "default-temperature-manual"
-	DSettingsKeyCustomModeTime           = "custom-mode-time"
-	DSettingKeyColorTemperatureModeOn    = "color-temperature-mode-on"
+	DSettingsKeyAutoColorTemperature     = "autoColorTemperature"
+	DSettingsKeyDefaultTemperatureManual = "defaultTemperatureManual"
+	DSettingsKeyCustomModeTime           = "customModeTime"
+	DSettingKeyColorTemperatureModeOn    = "colorTemperatureModeOn"
+	DSettingsKeyBrightnessSetter         = "brightnessSetter"
+	DSettingsKeyDisplayMode              = "displayMode"
+	DSettingsKeyBrightness               = "brightness"
+	DSettingsKeyMapOutput                = "mapOutput"
+	DSettingsKeyRateFilter               = "rateFilter"
+	DSettingsKeyPrimary                  = "primary"
+	DSettingsKeyCurrentCustomMode        = "currentCustomMode"
+	DSettingsKeyBlacklist                = "blacklist"
+	DSettingsKeyPriority                 = "priority"
+	DSettingsKeyColorTemperatureMode     = "colorTemperatureMode"
+	DSettingsKeyColorTemperatureManual   = "colorTemperatureManual"
+	DSettingsKeyRotateScreenTimeDelay    = "rotateScreenTimeDelay"
+	DSettingsKeyCustomDisplayMode        = "customDisplayMode"
 
-	gsSchemaDisplay  = "com.deepin.dde.display"
-	gsKeyDisplayMode = "display-mode"
-	gsKeyBrightness  = "brightness"
-	gsKeySetter      = "brightness-setter"
-	gsKeyMapOutput   = "map-output"
-	gsKeyRateFilter  = "rate-filter"
-	//gsKeyPrimary     = "primary"
-	gsKeyCustomMode              = "current-custom-mode"
-	gsKeyColorTemperatureMode    = "color-temperature-mode"
-	gsKeyColorTemperatureManual  = "color-temperature-manual"
-	gsKeyRotateScreenTimeDelay   = "rotate-screen-time-delay"
 	customModeDelim              = "+"
 	monitorsIdDelimiter          = ","
 	defaultTemperatureMode       = ColorTemperatureModeNone
@@ -166,8 +166,8 @@ type Manager struct {
 	newSysCfg     *SysRootConfig
 	cursorShowed  bool
 
-	// gsettings com.deepin.dde.display
-	settings                 *gio.Settings
+	// dconfig com.deepin.Display
+	displayConfigMgr         configManager.Manager
 	monitorsId               monitorsId
 	monitorsIdMu             sync.Mutex
 	hasBuiltinMonitor        bool
@@ -273,9 +273,6 @@ func newManager(service *dbusutil.Service) *Manager {
 		m.hasBuiltinMonitor = true
 	}
 
-	m.settings = gio.NewSettings(gsSchemaDisplay)
-	m.CurrentCustomId = m.settings.GetString(gsKeyCustomMode)
-	m.rotateScreenTimeDelay = m.settings.GetInt(gsKeyRotateScreenTimeDelay)
 	m.ColorTemperatureManual = defaultTemperatureManual
 	m.ColorTemperatureMode = defaultTemperatureMode
 
@@ -309,7 +306,7 @@ func newManager(service *dbusutil.Service) *Manager {
 	m.sysSigLoop = sysSigLoop
 	sysSigLoop.Start()
 
-	m.initDSettings(m.sysBus)
+	m.initDConfig(m.sysBus)
 
 	m.dbusDaemon = ofdbus.NewDBus(m.sysBus)
 	m.dbusDaemon.InitSignalExt(sysSigLoop, true)
@@ -411,68 +408,60 @@ func newManager(service *dbusutil.Service) *Manager {
 	return m
 }
 
-func (m *Manager) initDSettings(sysBus *dbus.Conn) {
-	ds := configManager.NewConfigManager(sysBus)
-	configManagerPath, err := ds.AcquireManager(0, DSettingsAppID, DSettingsDisplayName, "")
-	if err != nil || configManagerPath == "" {
-		logger.Warning(err)
-		return
+func (m *Manager) makeDConfigManager(bus *dbus.Conn, dsManager configManager.ConfigManager, appID string, id string) (configManager.Manager, error) {
+	if bus == nil {
+		return nil, errors.New("bus cannot be nil")
+	}
+	if dsManager == nil {
+		return nil, errors.New("dsManager cannot be nil")
+	}
+	if appID == "" || id == "" {
+		return nil, errors.New("appID and id cannot be empty")
 	}
 
-	_dsConfigManager, err = configManager.NewManager(sysBus, configManagerPath)
+	dsPath, err := dsManager.AcquireManager(0, appID, id, "")
 	if err != nil {
 		logger.Warning(err)
+		return nil, err
+	}
+
+	mgr, err := configManager.NewManager(bus, dsPath)
+	if err != nil {
+		logger.Warning(err)
+		return nil, err
+	}
+
+	return mgr, nil
+}
+
+func (m *Manager) initDConfig(sysBus *dbus.Conn) {
+	ds := configManager.NewConfigManager(sysBus)
+
+	var err error
+	m.displayConfigMgr, err = m.makeDConfigManager(sysBus, ds, DSettingsAppID, DSettingsDisplayName)
+	if err != nil {
+		logger.Warning("Failed to create display config manager:", err)
 		return
 	}
-	getDefaultTemperatureManual := func() {
-		v, err := _dsConfigManager.Value(0, DSettingsKeyDefaultTemperatureManual)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		switch vv := v.Value().(type) {
-		case float64:
-			_dsDefaultTemperatureManual = int32(vv)
-		case int64:
-			_dsDefaultTemperatureManual = int32(vv)
-		default:
-			logger.Warning("type is wrong!")
-		}
-		logger.Info("Default temperature manual:", _dsDefaultTemperatureManual)
-	}
 
-	getCustomTemperatureTime := func() {
-		v, err := _dsConfigManager.Value(0, DSettingsKeyCustomModeTime)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		m.CustomColorTempTimePeriod = v.Value().(string)
-		logger.Info("Custom Mode Time:", m.CustomColorTempTimePeriod)
-	}
+	// Initialize color temperature related configs first for compatibility
+	_dsConfigManager = m.displayConfigMgr
 
-	getColorTemperatureModeOn := func() {
-		v, err := _dsConfigManager.Value(0, DSettingKeyColorTemperatureModeOn)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		m.colorTemperatureModeOn = int32(v.Value().(int64))
-		logger.Info("Custom Mode on:", m.colorTemperatureModeOn)
-	}
+	// Load initial values
+	m.loadInitialConfigValues()
 
-	getDefaultTemperatureManual()
-	getCustomTemperatureTime()
-	getColorTemperatureModeOn()
-	m.ColorTemperatureManual = _dsDefaultTemperatureManual
-
-	_dsConfigManager.InitSignalExt(m.sysSigLoop, true)
-	_, err = _dsConfigManager.ConnectValueChanged(func(key string) {
+	// Setup change listeners
+	m.displayConfigMgr.InitSignalExt(m.sysSigLoop, true)
+	_, err = m.displayConfigMgr.ConnectValueChanged(func(key string) {
 		switch key {
 		case DSettingsKeyCustomModeTime:
-			getCustomTemperatureTime()
+			m.getCustomTemperatureTime()
 		case DSettingKeyColorTemperatureModeOn:
-			getColorTemperatureModeOn()
+			m.getColorTemperatureModeOn()
+		case DSettingsKeyCurrentCustomMode:
+			m.getCurrentCustomId()
+		case DSettingsKeyRotateScreenTimeDelay:
+			m.getRotateScreenTimeDelay()
 		default:
 			break
 		}
@@ -480,6 +469,130 @@ func (m *Manager) initDSettings(sysBus *dbus.Conn) {
 	if err != nil {
 		logger.Warning(err)
 	}
+}
+
+func (m *Manager) loadInitialConfigValues() {
+	m.getDefaultTemperatureManual()
+	m.getCustomTemperatureTime()
+	m.getColorTemperatureModeOn()
+	m.getCurrentCustomId()
+	m.getRotateScreenTimeDelay()
+	// ColorTemperatureManual will be loaded from user config via applyColorTempConfig()
+}
+
+func (m *Manager) getDefaultTemperatureManual() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyDefaultTemperatureManual)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	switch vv := v.Value().(type) {
+	case float64:
+		_dsDefaultTemperatureManual = int32(vv)
+	case int64:
+		_dsDefaultTemperatureManual = int32(vv)
+	default:
+		logger.Warning("type is wrong!")
+	}
+	logger.Info("Default temperature manual:", _dsDefaultTemperatureManual)
+}
+
+func (m *Manager) getCustomTemperatureTime() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyCustomModeTime)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	m.CustomColorTempTimePeriod = v.Value().(string)
+	logger.Info("Custom Mode Time:", m.CustomColorTempTimePeriod)
+}
+
+func (m *Manager) getColorTemperatureModeOn() {
+	v, err := m.displayConfigMgr.Value(0, DSettingKeyColorTemperatureModeOn)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	m.colorTemperatureModeOn = int32(v.Value().(int64))
+	logger.Info("Custom Mode on:", m.colorTemperatureModeOn)
+}
+
+func (m *Manager) getCurrentCustomId() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyCurrentCustomMode)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	m.CurrentCustomId = v.Value().(string)
+	logger.Info("Current Custom Id:", m.CurrentCustomId)
+}
+
+func (m *Manager) getRotateScreenTimeDelay() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyRotateScreenTimeDelay)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	m.rotateScreenTimeDelay = int32(v.Value().(int64))
+	logger.Info("Rotate Screen Time Delay:", m.rotateScreenTimeDelay)
+}
+
+func (m *Manager) getDisplayMode() uint8 {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyDisplayMode)
+	if err != nil {
+		logger.Warning(err)
+		return 2 // default extend mode
+	}
+	return uint8(v.Value().(int64))
+}
+
+func (m *Manager) getColorTemperatureMode() int32 {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyColorTemperatureMode)
+	if err != nil {
+		logger.Warning(err)
+		return 0 // default normal mode
+	}
+	return int32(v.Value().(int64))
+}
+
+func (m *Manager) getColorTemperatureManual() int32 {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyColorTemperatureManual)
+	if err != nil {
+		logger.Warning(err)
+		return 0 // default normal mode
+	}
+	return int32(v.Value().(int64))
+}
+
+func (m *Manager) getMapOutput() string {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyMapOutput)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	return v.Value().(string)
+}
+
+func (m *Manager) setMapOutput(value string) error {
+	return m.displayConfigMgr.SetValue(0, DSettingsKeyMapOutput, dbus.MakeVariant(value))
+}
+
+func (m *Manager) getRateFilter() string {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyRateFilter)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	return v.Value().(string)
+}
+
+func (m *Manager) getBrightness() string {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBrightness)
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	}
+	return v.Value().(string)
 }
 
 // 初始化系统级 display 服务的信号处理
@@ -942,15 +1055,15 @@ func (m *Manager) migrateOldConfig() {
 	}
 	logger.Debug("migrateOldConfig")
 
-	// 当系统级配置文件不存在时，此时的display Mode取gsetting中的值，确保升级前后一致
+	// 当系统级配置文件不存在时，此时的display Mode取dconfig中的值，确保升级前后一致
 	m.sysConfig.mu.Lock()
-	m.sysConfig.Config.DisplayMode = uint8(m.settings.GetEnum(gsKeyDisplayMode))
+	m.sysConfig.Config.DisplayMode = m.getDisplayMode()
 	m.DisplayMode = m.sysConfig.Config.DisplayMode
 	m.sysConfig.mu.Unlock()
 	// NOTE: 在设置 m.DisplayMode, m.Brightness, m.gsColorTemperatureMode, m.gsColorTemperatureManual 之后
 	// 再加载配置文件并迁移，主要原因是 loadOldConfig 中的 ConfigV3D3.toConfig 和 ConfigV4.toConfig 需要。
-	m.gsColorTemperatureMode = m.settings.GetInt(gsKeyColorTemperatureMode)
-	m.gsColorTemperatureManual = m.settings.GetInt(gsKeyColorTemperatureManual)
+	m.gsColorTemperatureMode = m.getColorTemperatureMode()
+	m.gsColorTemperatureManual = m.getColorTemperatureManual()
 	m.initBrightness()
 	configV6, err := loadOldConfig(m)
 	if err != nil {
@@ -1075,9 +1188,8 @@ func (m *Manager) init() {
 	// 此时不需要设置色温，在 StartPart2 中做。为性能考虑。
 	m.applyConfig(false, nil)
 	if m.builtinMonitor != nil {
-		m.listenSettingsChanged() // 监听旋转屏幕延时值
-		m.initScreenRotation()    // 获取初始屏幕的状态（屏幕方向）
-		m.listenRotateSignal()    // 监听屏幕旋转信号
+		m.initScreenRotation() // 获取初始屏幕的状态（屏幕方向）
+		m.listenRotateSignal() // 监听屏幕旋转信号
 	} else {
 		// 没有内建屏,不监听内核信号
 		logger.Info("built-in screen does not exist")
@@ -1086,7 +1198,7 @@ func (m *Manager) init() {
 
 // 过滤掉部分模式，尽量不过滤掉 saveMode。
 func (m *Manager) filterModeInfos(modeInfos []ModeInfo, saveMode ModeInfo) []ModeInfo {
-	result := filterModeInfosByRefreshRate(filterModeInfos(modeInfos, saveMode), m.getRateFilter())
+	result := filterModeInfosByRefreshRate(filterModeInfos(modeInfos, saveMode), m.getRateFilterMap())
 	return result
 }
 
@@ -2394,7 +2506,7 @@ func (m *Manager) initTouchMap() {
 	m.TouchMap = make(map[string]string)
 	m.touchScreenDialogMap = make(map[string]*exec.Cmd)
 
-	value := m.settings.GetString(gsKeyMapOutput)
+	value := m.getMapOutput()
 	if len(value) == 0 {
 		return
 	}
@@ -2491,7 +2603,10 @@ func (m *Manager) updateTouchscreenMap(outputName string, touchUUID string, auto
 		OutputName: outputName,
 		Auto:       auto,
 	}
-	m.settings.SetString(gsKeyMapOutput, jsonMarshal(m.touchscreenMap))
+	err = m.setMapOutput(jsonMarshal(m.touchscreenMap))
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	m.TouchMap[touchUUID] = outputName
 
@@ -2503,11 +2618,14 @@ func (m *Manager) updateTouchscreenMap(outputName string, touchUUID string, auto
 
 func (m *Manager) removeTouchscreenMap(touchUUID string) {
 	delete(m.touchscreenMap, touchUUID)
-	m.settings.SetString(gsKeyMapOutput, jsonMarshal(m.touchscreenMap))
+	err := m.setMapOutput(jsonMarshal(m.touchscreenMap))
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	delete(m.TouchMap, touchUUID)
 
-	err := m.emitPropChangedTouchMap(m.TouchMap)
+	err = m.emitPropChangedTouchMap(m.TouchMap)
 	if err != nil {
 		logger.Warning("failed to emit TouchMap PropChanged:", err)
 	}
@@ -2883,9 +3001,9 @@ func (m *Manager) syncPropBrightness() {
 	m.PropsMu.Unlock()
 }
 
-func (m *Manager) getRateFilter() RateFilterMap {
+func (m *Manager) getRateFilterMap() RateFilterMap {
 	data := make(RateFilterMap)
-	jsonStr := m.settings.GetString(gsKeyRateFilter)
+	jsonStr := m.getRateFilter()
 	err := json.Unmarshal([]byte(jsonStr), &data)
 	if err != nil {
 		logger.Warning(err)
@@ -2971,23 +3089,6 @@ func (m *Manager) startBuildInScreenRotation(latestRotationValue uint16) {
 
 		m.builtinMonitor.setPropCurrentRotateMode(RotationFinishModeAuto)
 	}
-}
-
-func (m *Manager) listenSettingsChanged() {
-	if m.settings == nil {
-		m.rotateScreenTimeDelay = defaultRotateScreenTimeDelay
-		return
-	}
-
-	gsettings.ConnectChanged(gsSchemaDisplay, "*", func(key string) {
-		switch key {
-		case gsKeyRotateScreenTimeDelay:
-			m.rotateScreenTimeDelay = m.settings.GetInt(key)
-			return
-		default:
-			return
-		}
-	})
 }
 
 // wayland 下专用，更新屏幕宽高属性

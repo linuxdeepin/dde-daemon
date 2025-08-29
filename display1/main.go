@@ -12,7 +12,6 @@ import (
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
 )
@@ -80,11 +79,6 @@ func (*daemon) Start() error {
 			logger.Warning("start display part2 failed:", err)
 		}
 	}()
-
-	err = gsettings.StartMonitor()
-	if err != nil {
-		logger.Warning("gsettings start monitor failed:", err)
-	}
 
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
