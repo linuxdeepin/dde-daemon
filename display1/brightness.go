@@ -111,7 +111,7 @@ func (m *Manager) changeBrightness(raised bool) error {
 }
 
 func (m *Manager) getSavedBrightnessTable() (map[string]float64, error) {
-	value := m.settings.GetString(gsKeyBrightness)
+	value := m.getBrightness()
 	if value == "" {
 		return nil, nil
 	}
@@ -131,18 +131,24 @@ func (m *Manager) initBrightness() {
 	m.Brightness = brightnessTable
 }
 
-func (m *Manager) getBrightnessSetter() string {
+func (m *Manager) getBrightnessSetter() int {
 	// NOTE: 特殊处理龙芯笔记本亮度设置问题
 	blDir := "/sys/class/backlight/loongson"
 	_, err := os.Stat(blDir)
 	if err == nil {
 		_, err := os.Stat(filepath.Join(blDir, "device/edid"))
 		if err != nil {
-			return "backlight"
+			return brightness.BrightnessSetterBacklight
 		}
 	}
 
-	return m.settings.GetString(gsKeySetter)
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBrightnessSetter)
+	if err != nil {
+		logger.Warning(err)
+		return brightness.BrightnessSetterAuto
+	}
+
+	return int(v.Value().(int64))
 }
 
 // see also: gnome-desktop/libgnome-desktop/gnome-rr.c

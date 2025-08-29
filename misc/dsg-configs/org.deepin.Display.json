@@ -2,41 +2,181 @@
   "magic": "dsg.config.meta",
   "version": "1.0",
   "contents": {
-    "auto-color-temperature": {
+    "autoColorTemperature": {
       "value": "6500:3500",
       "serial": 0,
       "flags": [],
       "name": "auto color temperature",
+      "name[zh_CN]": "自动色温调节",
       "description": "Automatically adjust color temperature",
+      "description[zh_CN]": "自动调节屏幕色温",
       "permissions": "readwrite",
       "visibility": "private"
     },
-    "default-temperature-manual": {
+    "defaultTemperatureManual": {
       "value": 3500,
       "serial": 0,
       "flags": [],
       "name": "default temperature manual",
+      "name[zh_CN]": "手动模式下的色温默认值",
       "description": "default temperature by manual",
+      "description[zh_CN]": "手动模式下的默认色温值",
       "permissions": "readwrite",
       "visibility": "private"
     },
-    "custom-mode-time": {
+    "customModeTime": {
       "value": "22:00-7:00",
       "serial": 0,
       "flags": [],
       "name": "Color Temperature Custom Mode Time",
+      "name[zh_CN]": "色温自定义模式时间范围",
       "description": "Recording the time for custom mode",
+      "description[zh_CN]": "记录自定义模式的时间设置",
       "permissions": "readwrite",
       "visibility": "private"
     },
-    "color-temperature-mode-on": {
+    "colorTemperatureModeOn": {
       "value": 2,
       "serial": 0,
       "flags": [],
       "name": "Color Temperature Mode On",
+      "name[zh_CN]": "色温模式开关",
       "description": "Recording the mode for last time",
+      "description[zh_CN]": "记录上次使用的色温模式",
       "permissions": "readwrite",
       "visibility": "private"
+    },
+    "brightnessSetter": {
+      "value": 0,
+      "serial": 0,
+      "flags": [],
+      "name": "brightness setter",
+      "name[zh_CN]": "亮度设置方式",
+      "description": "The method for setting brightness. 0: auto, 1: gamma, 2: backlight",
+      "description[zh_CN]": "设置亮度的方法。0: 自动, 1: 伽马值, 2: 背光",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "displayMode": {
+      "value": 2,
+      "serial": 0,
+      "flags": [],
+      "name": "display mode",
+      "name[zh_CN]": "显示模式",
+      "description": "The multi monitors display mode. 0: custom, 1: mirrors, 2: extend, 3: onlyone, 4: unknow",
+      "description[zh_CN]": "多显示器显示模式。0: 自定义, 1: 镜像, 2: 扩展, 3: 仅一个, 4: 未知",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "brightness": {
+      "value": "",
+      "serial": 0,
+      "flags": [],
+      "name": "brightness",
+      "name[zh_CN]": "亮度设置",
+      "description": "The monitor brightness",
+      "description[zh_CN]": "显示器亮度设置",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "mapOutput": {
+      "value": "",
+      "serial": 0,
+      "flags": [],
+      "name": "map output",
+      "name[zh_CN]": "输出显示器映射",
+      "description": "Output monitor map",
+      "description[zh_CN]": "输出显示器映射关系",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "rateFilter": {
+      "value": "{\"1002:6611\": {\"1920*1080\": [59.94, 30, 29.97, 25, 24, 23.98],\"1680*945\": [60.02]},\"1002:6779\": {\"1920*1080\": [30,29.97,25,24,23.98]}}",
+      "serial": 0,
+      "flags": [],
+      "name": "rate filter",
+      "name[zh_CN]": "刷新率过滤器",
+      "description": "Screen refresh rate filter in JSON",
+      "description[zh_CN]": "屏幕刷新率过滤器配置（JSON格式）",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "primary": {
+      "value": "",
+      "serial": 0,
+      "flags": [],
+      "name": "primary output",
+      "name[zh_CN]": "主屏",
+      "description": "The primary output",
+      "description[zh_CN]": "主显示输出设备",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "currentCustomMode": {
+      "value": "",
+      "serial": 0,
+      "flags": [],
+      "name": "current custom mode",
+      "name[zh_CN]": "当前自定义模式",
+      "description": "The id of config only in custom mode",
+      "description[zh_CN]": "自定义模式下的配置ID",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "blacklist": {
+      "value": [],
+      "serial": 0,
+      "flags": [],
+      "name": "blacklist",
+      "name[zh_CN]": "不支持的屏幕",
+      "description": "Filter some invalid outputs",
+      "description[zh_CN]": "过滤一些无效的输出设备",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "priority": {
+      "value": [],
+      "serial": 0,
+      "flags": [],
+      "name": "priority",
+      "name[zh_CN]": "输出优先级",
+      "description": "Outputs priority, the first will be primary",
+      "description[zh_CN]": "输出设备优先级，第一个将作为主输出",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "colorTemperatureMode": {
+      "value": 0,
+      "serial": 0,
+      "flags": [],
+      "name": "color temperature mode",
+      "name[zh_CN]": "色温调节模式",
+      "description": "Method of adjust color temperature. 0: normal, 1: auto, 2: manual",
+      "description[zh_CN]": "色温调节方式。0: 正常, 1: 自动, 2: 手动",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "rotateScreenTimeDelay": {
+      "value": 500,
+      "serial": 0,
+      "flags": [],
+      "name": "rotate screen time delay",
+      "name[zh_CN]": "屏幕旋转延时",
+      "description": "Rotate the screen when the delay ends (range: 0-10000ms)",
+      "description[zh_CN]": "屏幕旋转延时结束后执行旋转（范围：0-10000毫秒）",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "customDisplayMode": {
+      "value": 1,
+      "serial": 0,
+      "flags": [],
+      "name": "custom display mode",
+      "name[zh_CN]": "自定义显示模式",
+      "description": "The mode of custom display (range: 1-2)",
+      "description[zh_CN]": "自定义显示模式类型（范围：1-2）",
+      "permissions": "readwrite",
+      "visibility": "public"
     }
   }
 }

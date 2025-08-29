@@ -24,9 +24,9 @@ func SetUseWayland(value bool) {
 }
 
 const (
-	SetterAuto      = "auto"
-	SetterGamma     = "gamma"
-	SetterBacklight = "backlight"
+	BrightnessSetterAuto      = 0 // auto
+	BrightnessSetterGamma     = 1 // gamma
+	BrightnessSetterBacklight = 2 // backlight
 )
 
 var logger = log.NewLogger("daemon/display/brightness")
@@ -42,7 +42,7 @@ func InitBacklightHelper() {
 	helper = backlight.NewBacklight(sysBus)
 }
 
-func Set(brightness float64, temperature int, setter string, isBuiltin bool, outputId uint32, conn *x.Conn) error {
+func Set(brightness float64, temperature int, setter int, isBuiltin bool, outputId uint32, conn *x.Conn) error {
 	if brightness < 0 {
 		brightness = 0
 	} else if brightness > 1 {
@@ -79,28 +79,28 @@ func Set(brightness float64, temperature int, setter string, isBuiltin bool, out
 
 	setFn := setGamma
 	switch setter {
-	case SetterBacklight:
+	case BrightnessSetterBacklight:
 		setFn = setBlGamma
-	case SetterAuto:
+	case BrightnessSetterAuto:
 		if isBuiltin && supportBacklight() {
 			setFn = setBlGamma
 		}
-		//case SetterGamma
+		//case BrightnessSetterGamma
 	}
 	return setFn()
 }
 
 // unused function
-//func Get(setter string, isButiltin bool, outputId uint32, conn *x.Conn) (float64, error) {
+//func Get(setter int, isButiltin bool, outputId uint32, conn *x.Conn) (float64, error) {
 //	output := randr.Output(outputId)
 //	switch setter {
-//	case SetterBacklight:
+//	case BrightnessSetterBacklight:
 //		return getBacklightOnlyOne()
-//	case SetterGamma:
+//	case BrightnessSetterGamma:
 //		return 1, nil
 //	}
 //
-//	// case SetterAuto
+//	// case BrightnessSetterAuto
 //	if isButiltin {
 //		if supportBacklight(output, conn) {
 //			return getBacklight(output, conn)
