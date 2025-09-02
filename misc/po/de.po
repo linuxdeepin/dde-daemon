@@ -17,6 +17,7 @@
 # Sebastian Rettig, 2025
 # Ettore Atalan <atalanttore@googlemail.com>, 2025
 # deepiner, 2025
+# Keine Werbung, 2025
 # 
 #, fuzzy
 msgid ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Keine Werbung, 2025\n"
 "Language-Team: German (https://app.transifex.com/linuxdeepin/teams/3617/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -240,52 +241,52 @@ msgstr "Koppeln"
 
 #: ../../gesture1/gesture_action.go:38
 msgid "Maximize Window"
-msgstr ""
+msgstr "Fenster maximieren"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Restore Window"
-msgstr ""
+msgstr "Fenster wiederherstellen"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "Aktuelles Fenster nach links aufteilen"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "Aktuelles Fenster nach rechts aufteilen"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Show multitasking view"
-msgstr ""
+msgstr "Zeige Multitasking-Ansicht"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "Verstecke Multitasking-Ansicht"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "Wechsle zur vorherigen Arbeitsfläche"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Wechsle zur nächsten Arbeitsfläche"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
 msgid "Show desktop"
-msgstr "Desktop anzeigen"
+msgstr "Schreibtisch zeigen"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "Schreibtisch verbergen"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Starter anzeigen/verstecken"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "Mit gedrückter rechter Maustaste"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
@@ -293,7 +294,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "Zwischenablage anzeigen/verbergen"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
