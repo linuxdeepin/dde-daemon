@@ -70,15 +70,16 @@ msgstr "Benutzername muss zwischen 3 und 32 Zeichen lang sein"
 #: ../../accounts1/manager.go:570
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
+msgstr "Benutzer \"%s\" bereits vorhanden und dessen Daten wurden synchronisiert"
 
 #: ../../accounts1/user_ifc.go:731
 msgid "This system wallpaper is locked. Please contact your admin."
-msgstr ""
+msgstr "Das System-Hintergrundbild ist gesperrt. Admin fragen."
 
 #: ../../audio1/audio.go:284
 msgid "Failed to change Audio Server, please try later"
 msgstr ""
+"Audio-Server konnte nicht geändert werden, bitte später erneut versuchen"
 
 #: ../../audio1/audio.go:320
 msgid "Changing Audio Server, please wait..."
@@ -94,7 +95,7 @@ msgstr "Audioserver geändert, bitte abmelden und wieder anmelden"
 #: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
-msgstr ""
+msgstr "dde-Kontrollzentrum"
 
 #: ../../audio1/audio_events.go:445
 #, c-format
@@ -1125,20 +1126,20 @@ msgstr ""
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Weitermachen"
 
 #: ../../session/power1/manager.go:928
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "Das System wird automatisch nach %d sek herunterfahren."
 
 #: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "Herunterfahren nach Plan"
 
 #: ../../session/power1/manager.go:930
 msgid "Cancle"
-msgstr ""
+msgstr "Abbrechen"
 
 #: ../../session/power1/manager.go:930
 msgid "Shut down"
