@@ -529,11 +529,11 @@ msgstr "Auf tatsächliche Größe zoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Left"
-msgstr ""
+msgstr "Fensterteilung links"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:147
 msgid "Window Quick Tile Right"
-msgstr ""
+msgstr "Fensterteilung rechts"
 
 #: ../../langselector1/locale.go:47
 msgid "Authentication is required to switch language"
@@ -1174,7 +1174,7 @@ msgstr "wird sich Ihr Monitor ausschalten"
 
 #: ../../session/power1/utils.go:644
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "Es wird der Herunterfahren-Bildschirm angezeigt"
 
 #: ../../session/power1/utils.go:646
 msgid "it will do nothing to your computer"
