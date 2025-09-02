@@ -187,7 +187,7 @@ func (tpad *Touchpad) init() {
 				if !hasValue {
 					return
 				}
-				tpad.enable(tpad.TPadEnable.Get())
+				tpad.enable(value)
 			})
 			if enabled, err := sysTouchPad.Enable().Get(0); err != nil {
 				logger.Warning(err)
