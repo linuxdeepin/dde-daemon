@@ -1072,6 +1072,8 @@ msgstr "%q verbinden fehlgeschlagen"
 #: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
 msgstr ""
+"Um %q zu verbinden, richten Sie bitte ihre Authentifizierungsinformationen "
+"ein."
 
 #: ../../network1/state_handler.go:379
 msgid "Password is required to connect %q"
@@ -1131,6 +1133,8 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Sie können nicht das unverifizierte \"%s\" starten, aber Sie können die "
+"Einstellungen in der Sicherheitszentrale ändern."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
