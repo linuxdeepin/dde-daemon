@@ -563,13 +563,15 @@ msgstr ""
 
 #: ../../lastore1/daemon.go:186
 msgid "Updates failed: it was interrupted."
-msgstr ""
+msgstr "Aktualisierungen fehlgeschlagen: Sie wurden unterbrochen."
 
 #: ../../lastore1/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
+"Aktualisierungen fehlgeschlagen: Sie wurden unterbrochen. Bitte kehren Sie "
+"zur alten Version zurück und versuchen es erneut."
 
 #: ../../lastore1/daemon.go:194
 msgid "Updates failed: DPKG error."
@@ -580,6 +582,8 @@ msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
+"Aktualisierungen fehlgeschlagen: DPKG-Fehler. Bitte kehren Sie zur alten "
+"Version zurück und versuchen es erneut."
 
 #: ../../lastore1/daemon.go:200
 msgid "Updates failed: insufficient disk space."
@@ -590,6 +594,8 @@ msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
+"Aktualisierungen fehlgeschlagen: zu wenig Speicherplatz. Bitte kehren Sie "
+"zur alten Version zurück und versuchen es erneut."
 
 #: ../../lastore1/daemon.go:206
 msgid "Updates failed"
@@ -598,6 +604,8 @@ msgstr "Aktualisierungen fehlgeschlagen"
 #: ../../lastore1/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
+"Aktualisierungen fehlgeschlagen. Bitte kehren Sie zur alten Version zurück "
+"und versuchen es erneut."
 
 #: ../../launcher/item.go:97
 msgid "(Linglong)"
@@ -1059,7 +1067,7 @@ msgstr "Verbindung mit %q fehlgeschlagen. Das Passwort ist ungültig"
 
 #: ../../network1/state_handler.go:365
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "%q verbinden fehlgeschlagen"
 
 #: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
