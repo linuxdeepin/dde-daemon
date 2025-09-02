@@ -290,7 +290,7 @@ msgstr "Mit gedrückter rechter Maustaste"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
-msgstr ""
+msgstr "Mit losgelassener rechter Maustaste"
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
@@ -298,15 +298,15 @@ msgstr "Zwischenablage anzeigen/verbergen"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Große Suche anzeigen/verstecken"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "Benachrichtigungszentrum anzeigen/verstecken"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr ""
+msgstr "Deaktivieren"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -315,7 +315,7 @@ msgstr ""
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "Zum Aufräumen gehen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
@@ -367,7 +367,7 @@ msgstr "OCR (Bild zu Text)"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:25
 msgid "Scrollshot"
-msgstr ""
+msgstr "Scroll-Aufnahme"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:26
 msgid "File manager"
@@ -516,15 +516,15 @@ msgstr "Arbeitsfläche anzeigen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom In"
-msgstr ""
+msgstr "Hineinzoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr ""
+msgstr "Herauszoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Auf tatsächliche Größe zoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Left"
