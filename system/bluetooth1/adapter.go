@@ -179,7 +179,8 @@ func (a *adapter) connectProperties() {
 			a.bt.syncCommonToBackupDevices(a.Path)
 		}
 		// Sleep for 1s and wait for bluez to set the attributes before sending the attribute change signal
-		time.Sleep(1 * time.Second)
+		// 延时1s发送状态，会导致前端蓝牙插件图标由disable变化为enable，不符合需求。需求要求插入蓝牙，蓝牙是enable打开状态。
+		// time.Sleep(1 * time.Second)
 		a.notifyPropertiesChanged()
 	})
 	if err != nil {
