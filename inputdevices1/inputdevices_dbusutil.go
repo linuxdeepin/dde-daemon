@@ -3,8 +3,8 @@
 package inputdevices
 
 func (v *Keyboard) setPropCurrentLayout(value string) (changed bool) {
-	if v.CurrentLayout != value {
-		v.CurrentLayout = value
+	if v.CurrentLayout.Get() != value {
+		v.CurrentLayout.Set(value)
 		v.emitPropChangedCurrentLayout(value)
 		return true
 	}
@@ -16,7 +16,7 @@ func (v *Keyboard) emitPropChangedCurrentLayout(value string) error {
 }
 
 func (v *Keyboard) setPropUserLayoutList(value []string) {
-	v.UserLayoutList = value
+	v.UserLayoutList.Set(value)
 	v.emitPropChangedUserLayoutList(value)
 }
 

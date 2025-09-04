@@ -98,8 +98,8 @@ const (
 type Manager struct {
 	service *dbusutil.Service
 	// properties
-	NumLockState         int64
-	ShortcutSwitchLayout int64
+	NumLockState         int32
+	ShortcutSwitchLayout uint32
 
 	conn       *x.Conn
 	keySymbols *keysyms.KeySymbols
@@ -495,7 +495,7 @@ func (m *Manager) initDConfig(bus *dbus.Conn) {
 		if err != nil {
 			logger.Warning(err)
 		}
-		m.NumLockState = v.Value().(int64)
+		m.NumLockState = int32(v.Value().(int64))
 	}
 
 	getShortcutSwitchLayout := func() {
@@ -503,7 +503,7 @@ func (m *Manager) initDConfig(bus *dbus.Conn) {
 		if err != nil {
 			logger.Warning(err)
 		}
-		m.ShortcutSwitchLayout = v.Value().(int64)
+		m.ShortcutSwitchLayout = uint32(v.Value().(int64))
 	}
 
 	getNumLockState()

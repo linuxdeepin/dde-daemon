@@ -93,9 +93,9 @@ func notifyMouseModuleUpdate(key string, value int32) {
 
 	switch key {
 	case xsPropDoubleClick:
-		globalMouse.setting.SetInt("double-click", value)
+		globalMouse.DoubleClick.Set(value)
 	case xsPropDragThres:
-		globalMouse.setting.SetInt("drag-threshold", value)
+		globalMouse.DragThreshold.Set(value)
 	}
 }
 

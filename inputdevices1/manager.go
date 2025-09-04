@@ -11,21 +11,20 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	kwin "github.com/linuxdeepin/go-dbus-factory/session/org.kde.kwin"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
 const (
-	gsSchemaInputDevices = "com.deepin.dde.inputdevices"
-	gsKeyWheelSpeed      = "wheel-speed"
-	imWheelBin           = "imwheel"
+	imWheelBin = "imwheel"
 
 	dsettingsAppID        = "org.deepin.dde.daemon"
 	dsettingsInputdevices = "org.deepin.dde.daemon.inputdevices"
+
+	dconfigKeyWheelSpeed = "wheelSpeed"
 )
 
 type devicePathInfo struct {
@@ -39,9 +38,9 @@ var hasTreeLand = false
 
 type Manager struct {
 	Infos      devicePathInfos // readonly
-	WheelSpeed gsprop.Uint     `prop:"access:rw"`
+	WheelSpeed dconfig.Uint32  `prop:"access:rw"`
 
-	settings          *gio.Settings
+	dsgInputdevices   *dconfig.DConfig
 	imWheelConfigFile string
 
 	kbd        *Keyboard
@@ -83,22 +82,23 @@ func NewManager(service *dbusutil.Service) *Manager {
 		},
 	}
 
-	m.settings = gio.NewSettings(gsSchemaInputDevices)
-	m.WheelSpeed.Bind(m.settings, gsKeyWheelSpeed)
+	if !hasTreeLand {
+		m.kwinManager = kwin.NewInputDeviceManager(service.Conn())
+	}
+
+	if err := m.initDConfig(); err != nil {
+		logger.Errorf("Failed to initialize dconfig: %v", err)
+		panic("DConfig initialization failed - cannot continue without dconfig support")
+	}
 
 	m.kbd = newKeyboard(service)
 	m.wacom = newWacom(service)
 
 	m.tpad = newTouchpad(service)
 
-	m.mouse = newMouse(service, m.tpad)
+	m.mouse = newMouse(service, m.tpad, m.sessionSigLoop)
 
 	m.trackPoint = newTrackPoint(service)
-
-	// TODO: treeland 环境没有kwin，直接返回
-	if !hasTreeLand {
-		m.kwinManager = kwin.NewInputDeviceManager(service.Conn())
-	}
 
 	m.sessionSigLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
 	m.syncConfig = dsync.NewConfig("peripherals", &syncConfig{m: m},
@@ -108,7 +108,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 }
 
 func (m *Manager) setWheelSpeed() {
-	speed := m.settings.GetUint(gsKeyWheelSpeed)
+	speed := m.WheelSpeed.Get()
 	// speed range is [1,100]
 	logger.Debug("setWheelSpeed", speed)
 
@@ -206,26 +206,38 @@ func (m *Manager) init() {
 	}
 
 	m.kbd.init()
-	m.kbd.handleGSettings()
 
 	//TODO: treeland环境暂不支持如下设备
 	if !hasTreeLand {
 		m.wacom.init()
-		m.wacom.handleGSettings()
 		m.tpad.init()
-		m.tpad.handleGSettings()
 		m.mouse.init()
-		m.mouse.handleGSettings()
 
 		// 设置全局mouse引用，用于属性同步
 		SetGlobalMouse(m.mouse)
 
 		m.trackPoint.init()
-		m.trackPoint.handleGSettings()
 	}
 
 	m.setWheelSpeed()
-	m.handleGSettings()
 
 	m.sessionSigLoop.Start()
+}
+
+func (m *Manager) initDConfig() error {
+	// 创建配置管理器实例
+	err := error(nil)
+	m.dsgInputdevices, err = dconfig.NewDConfig(dsettingsAppID, dsettingsInputdevices, "")
+	if err != nil {
+		return err
+	}
+
+	m.WheelSpeed.Bind(m.dsgInputdevices, dconfigKeyWheelSpeed)
+
+	m.dsgInputdevices.ConnectConfigChanged(dconfigKeyWheelSpeed, func(i interface{}) {
+		m.setWheelSpeed()
+	})
+
+	logger.Info("DConfig initialization completed successfully")
+	return nil
 }
