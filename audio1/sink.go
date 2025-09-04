@@ -6,6 +6,7 @@ package audio
 
 import (
 	"fmt"
+	"os/exec"
 	"strconv"
 	"sync"
 
@@ -119,16 +120,37 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 }
 
 func (s *Sink) SetMono(enable bool) error {
-	err := s.CheckPort()
-	if err != nil {
-		logger.Warning(err.Body...)
-		return err
+	logger.Debug("set sink mono :", enable)
+	var err error
+	var out []byte
+	if enable {
+		logger.Debugf("monoEnable.sh --sink_master=%s", s.Name)
+		out, err = exec.Command("/usr/share/dde-daemon/audio/monoEnable.sh", "--sink_master="+s.Name).CombinedOutput()
+		if err != nil {
+			logger.Warningf("failed to enable sink mono %v %s", err, out)
+		}
+	} else {
+		defaultSink := s.audio.context().GetDefaultSink()
+		if defaultSink == "" {
+			return fmt.Errorf("default sink is nil")
+		}
+		if !isPhysicalDevice(defaultSink) {
+			master := s.audio.getMasterNameFromVirtualDevice(defaultSink)
+			if master == "" {
+				return fmt.Errorf("failed to get virtual device sinkInfo for name: %s", defaultSink)
+			}
+			sinkInfo := s.audio.getSinkInfoByName(master)
+			if sinkInfo == nil {
+				return fmt.Errorf("failed to get virtual device sinkInfo for name: %s", master)
+			}
+			s.audio.context().SetDefaultSink(defaultSink)
+			out, err = exec.Command("pactl", "unload-module", "module-remap-sink").CombinedOutput()
+			if err != nil {
+				logger.Warningf("failed to disable sink mono %v %s", err, out)
+			}
+		}
 	}
-	s.PropsMu.RLock()
-	cv := s.cVolume.SetMono(s.Volume, enable)
-	s.PropsMu.RUnlock()
-	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
-	return nil
+	return err
 }
 
 // 设置左右声道平衡值

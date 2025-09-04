@@ -1139,7 +1139,7 @@ func (a *Audio) init() error {
 	a.autoSwitchPort()
 
 	a.fixActivePortNotAvailable()
-	a.moveSinkInputsToDefaultSink()
+	a.moveSinkInputsToSink(nil)
 
 	// 蓝牙支持的模式
 	a.refreshBluetoothOpts()
@@ -1490,26 +1490,65 @@ func (a *Audio) Reset() *dbus.Error {
 	return nil
 }
 
-func (a *Audio) moveSinkInputsToSink(sinkId uint32) {
-	a.mu.Lock()
+func (a *Audio) moveSinkInputsToSink(inputs []uint32) {
 	if len(a.sinkInputs) == 0 {
-		a.mu.Unlock()
 		return
 	}
-	var list []uint32
-	for _, sinkInput := range a.sinkInputs {
-		if sinkInput.getPropSinkIndex() == sinkId {
+
+	sinkName := a.context().GetDefaultSink()
+	if sinkName == "" {
+		return
+	}
+
+	if inputs == nil {
+		inputs = make([]uint32, 0)
+		for _, sinkInput := range a.sinkInputs {
+			inputs = append(inputs, sinkInput.index)
+		}
+	} else {
+		if len(inputs) == 0 {
+			return
+		}
+	}
+
+	var list = make([]uint32, 0)
+	var vrList = make([]uint32, 0)
+	for _, index := range inputs {
+		s, err := a.ctx.GetSinkInput(index)
+		if err != nil {
+			logger.Warning(err)
 			continue
 		}
+		if strings.Contains(s.Name, "Echo-Cancel") || strings.Contains(s.Name, "echo-cancel") {
+			continue
+		} else if strings.Contains(s.Name, "remap-sink-mono") {
+			vrList = append(vrList, index)
+		} else {
+			list = append(list, index)
+		}
+	}
 
-		list = append(list, sinkInput.index)
+	isPhy := isPhysicalDevice(sinkName)
+	if !isPhy {
+		virSink := a.getSinkInfoByName(sinkName)
+		if virSink == nil {
+			logger.Warning("failed to get virtual device sinkInfo for name:", sinkName)
+			return
+		}
+		master := a.getMasterNameFromVirtualDevice(sinkName)
+		if master == "" {
+			logger.Warning("failed to get virtual device sinkInfo for name:", sinkName)
+			return
+		}
+		if len(vrList) > 0 {
+			logger.Infof("will move virtual sink-input %v to sink %s", vrList, master)
+			a.context().MoveSinkInputsByName(vrList, master)
+		}
 	}
-	a.mu.Unlock()
-	if len(list) == 0 {
-		return
+	if len(list) > 0 {
+		logger.Infof("will move sink-input %v to sink %s", list, sinkName)
+		a.context().MoveSinkInputsByName(list, sinkName)
 	}
-	logger.Debugf("move sink inputs %v to sink #%d", list, sinkId)
-	a.ctx.MoveSinkInputsByIndex(list, sinkId)
 }
 
 func isPortExists(name string, ports []pulse.PortInfo) bool {
@@ -1663,6 +1702,20 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 		return
 	}
 
+	isPhy := isPhysicalDevice(sinkName)
+	if !isPhy {
+		master := a.getMasterNameFromVirtualDevice(sinkName)
+		if master == "" {
+			logger.Warning("failed to get virtual device sinkInfo for name:", sinkName)
+			return
+		}
+		sinkInfo = a.getSinkInfoByName(master)
+		if sinkInfo == nil {
+			logger.Warning("failed to get virtual device sinkInfo for name:", master)
+			return
+		}
+	}
+
 	// 部分机型defaultSink事件必add事件先上报。
 	// 如果是这种情况触发SinkAdd逻辑再设置默认Sink
 	a.mu.Lock()
@@ -1679,26 +1732,18 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 			return
 		}
 	}
-
-	logger.Debugf("updateDefaultSink #%d %s", sinkInfo.Index, sinkName)
-	a.moveSinkInputsToSink(sinkInfo.Index)
-	if !isPhysicalDevice(sinkName) {
-		master := a.getMasterNameFromVirtualDevice(sinkName)
-		if master == "" {
-			logger.Warning("failed to get virtual device sinkInfo for name:", sinkName)
-			return
-		}
-		sinkInfo = a.getSinkInfoByName(master)
-		if sinkInfo == nil {
-			logger.Warning("failed to get virtual device sinkInfo for name:", master)
-			return
-		}
+	if sink == nil {
+		logger.Warningf("default sink %v not found", sink)
+		return
 	}
 
-	a.defaultSinkName = sinkName
+	logger.Debugf("updateDefaultSink #%d %s", sinkInfo.Index, sinkName)
+	a.moveSinkInputsToSink(nil)
+
+	a.defaultSinkName = sink.Name
 	a.defaultSink = sink
 	defaultSinkPath := sink.getPath()
-	if sink != nil {
+	if isPhy {
 		if err := sink.SetMono(a.Mono); err != nil {
 			logger.Warning(err)
 		}
@@ -1792,17 +1837,6 @@ func (a *Audio) context() *pulse.Context {
 	return c
 }
 
-func (a *Audio) moveSinkInputsToDefaultSink() {
-	a.mu.Lock()
-	if a.defaultSink == nil {
-		a.mu.Unlock()
-		return
-	}
-	defaultSinkIndex := a.defaultSink.index
-	a.mu.Unlock()
-	a.moveSinkInputsToSink(defaultSinkIndex)
-}
-
 func (a *Audio) getDefaultSource() *Source {
 	a.mu.Lock()
 	v := a.defaultSource
@@ -1844,8 +1878,14 @@ func (a *Audio) getDefaultSinkName() string {
 func (a *Audio) getMasterNameFromVirtualDevice(device string) string {
 	modules := a.ctx.GetModuleList()
 	for _, module := range modules {
-		if strings.Contains(module.Name, "echo-cancel") {
+		if strings.Contains(module.Name, "echo-cancel") && strings.Contains(device, "echo-cancel") {
 			re := regexp.MustCompile(`source_master=([^\s]+)`)
+			match := re.FindStringSubmatch(module.Argument)
+			if len(match) > 1 {
+				return match[1]
+			}
+		} else if strings.Contains(module.Name, "module-remap-sink") && strings.Contains(device, "remap-sink") {
+			re := regexp.MustCompile(`sink_master=([^\s]+)`)
 			match := re.FindStringSubmatch(module.Argument)
 			if len(match) > 1 {
 				return match[1]
