@@ -34,10 +34,10 @@ func (sc *syncConfig) Get() (interface{}, error) {
 	return &syncData{
 		Version: syncVersion,
 		Mouse: &syncMouseData{
-			NaturalScroll: sc.m.mouse.NaturalScroll.Get(),
+			NaturalScroll: sc.m.mouse.NaturalScroll,
 		},
 		Touchpad: &syncTPadData{
-			NaturalScroll: sc.m.tpad.NaturalScroll.Get(),
+			NaturalScroll: sc.m.tpad.NaturalScroll,
 		},
 	}, nil
 }
@@ -49,10 +49,10 @@ func (sc *syncConfig) Set(data []byte) error {
 		return err
 	}
 	if info.Mouse != nil {
-		sc.m.mouse.NaturalScroll.Set(info.Mouse.NaturalScroll)
+		sc.m.mouse.NaturalScroll = info.Mouse.NaturalScroll
 	}
 	if info.Touchpad != nil {
-		sc.m.tpad.NaturalScroll.Set(info.Touchpad.NaturalScroll)
+		sc.m.tpad.NaturalScroll = info.Touchpad.NaturalScroll
 	}
 	return nil
 }

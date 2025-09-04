@@ -13,14 +13,14 @@
         "permissions": "readwrite",
         "visibility": "private"
       },
-      "toupadEnabled": {
+      "touchpadEnabled": {
         "value": true,
         "serial": 0,
         "flags": ["global"],
-        "name": "touchpad_Enabled",
+        "name": "touchpadEnabled",
         "name[zh_CN]": "触控板启用状态",
         "description[zh_CN]": "记录触控板状态，保证重启后和上次状态一致",
-        "description": "",
+        "description": "Record touchpad status to ensure consistency after restart",
         "permissions": "readwrite",
         "visibility": "private"
       },
@@ -39,10 +39,21 @@
         "value": true,
         "serial": 0,
         "flags": [],
-        "name": "keyboard_Enabled",
+        "name": "keyboardEnabled",
         "name[zh_CN]": "键盘启用状态",
         "description[zh_CN]": "用户级别键盘开关",
-        "description": "",
+        "description": "User level keyboard switch",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "wheelSpeed": {
+        "value": 1,
+        "serial": 0,
+        "flags": [],
+        "name": "wheelSpeed",
+        "name[zh_CN]": "鼠标滚轮速度",
+        "description[zh_CN]": "滚轮速度设置，范围1-100",
+        "description": "Wheel speed setting, range 1-100",
         "permissions": "readwrite",
         "visibility": "public"
       }

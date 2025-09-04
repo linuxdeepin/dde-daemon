@@ -17,14 +17,11 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/dxinput"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
-	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
@@ -32,29 +29,34 @@ import (
 )
 
 const (
-	kbdSchema = "com.deepin.dde.keyboard"
+	// DConfig相关常量
+	dsettingsKeyboardName = "org.deepin.dde.daemon.keyboard"
 
-	kbdKeyRepeatEnable   = "repeat-enabled"
-	kbdKeyRepeatInterval = "repeat-interval"
-	kbdKeyRepeatDelay    = "delay"
-	kbdKeyLayoutOptions  = "layout-options"
-	kbdKeyCursorBlink    = "cursor-blink-time"
-	kbdKeyCapslockToggle = "capslock-toggle"
-	kbdKeyAppLayoutMap   = "app-layout-map"
-	kbdKeyLayoutScope    = "layout-scope"
+	// DConfig键值常量 - 对应keyboard.json中的配置项
+	dconfigKeyRepeatEnabled   = "repeatEnabled"
+	dconfigKeyRepeatInterval  = "repeatInterval"
+	dconfigKeyRepeatDelay     = "delay"
+	dconfigKeyLayoutOptions   = "layoutOptions"
+	dconfigKeyCursorBlinkTime = "cursorBlinkTime"
+	dconfigKeyCapslockToggle  = "capslockToggle"
+	dconfigKeyAppLayoutMap    = "app-layout-map"
+	dconfigKeyLayoutScope     = "layout-scope"
+	dconfigKeyUserLayoutList  = "user-layout-list"
+	dconfigKeyLayout          = "layout"
 
+	// 系统级keyboard配置
+	dsettingsKeyboardEnabledKey = "keyboardEnabled"
+
+	// 布局相关常量
 	layoutScopeGlobal = 0
 	layoutScopeApp    = 1
+	layoutDelim       = ";"
+	kbdDefaultLayout  = "us" + layoutDelim
 
-	layoutDelim      = ";"
-	kbdDefaultLayout = "us" + layoutDelim
-
+	// 系统配置文件
 	kbdSystemConfig = "/etc/default/keyboard"
 	qtDefaultConfig = ".config/Trolltech.conf"
-
-	cmdSetKbd = "/usr/bin/setxkbmap"
-
-	dsettingsKeyboardEnabledKey = "keyboardEnabled"
+	cmdSetKbd       = "/usr/bin/setxkbmap"
 )
 
 type Keyboard struct {
@@ -67,41 +69,38 @@ type Keyboard struct {
 	CurrentLayout  string `prop:"access:rw"`
 	appLayoutCfg   appLayoutConfig
 	// dbusutil-gen: equal=nil
-	UserLayoutList []string
+	UserLayoutList []string `prop:"access:rw"`
 
 	// dbusutil-gen: ignore-below
-	LayoutScope    gsprop.Enum `prop:"access:rw"`
-	RepeatEnabled  gsprop.Bool `prop:"access:rw"`
-	CapslockToggle gsprop.Bool `prop:"access:rw"`
+	LayoutScope    uint32 `prop:"access:rw"`
+	RepeatEnabled  bool   `prop:"access:rw"`
+	CapslockToggle bool   `prop:"access:rw"`
 
-	CursorBlink gsprop.Int `prop:"access:rw"`
+	CursorBlink int `prop:"access:rw"`
 
-	RepeatInterval gsprop.Uint `prop:"access:rw"`
-	RepeatDelay    gsprop.Uint `prop:"access:rw"`
+	RepeatInterval uint32 `prop:"access:rw"`
+	RepeatDelay    uint32 `prop:"access:rw"`
 
-	UserOptionList gsprop.Strv
+	UserOptionList []string `prop:"access:rw"`
 
-	setting   *gio.Settings
-	user      accounts.User
-	layoutMap layoutMap
+	dsgKeyboardConfig *dconfig.DConfig
+	user              accounts.User
+	layoutMap         layoutMap
 
 	devNumber      int
 	devInfos       Keyboards
-	dsgInputConfig configManager.Manager
+	dsgInputConfig *dconfig.DConfig
 }
 
 func newKeyboard(service *dbusutil.Service) *Keyboard {
 	var kbd = new(Keyboard)
 
 	kbd.service = service
-	kbd.setting = gio.NewSettings(kbdSchema)
-	kbd.RepeatEnabled.Bind(kbd.setting, kbdKeyRepeatEnable)
-	kbd.RepeatInterval.Bind(kbd.setting, kbdKeyRepeatInterval)
-	kbd.RepeatDelay.Bind(kbd.setting, kbdKeyRepeatDelay)
-	kbd.CursorBlink.Bind(kbd.setting, kbdKeyCursorBlink)
-	kbd.CapslockToggle.Bind(kbd.setting, kbdKeyCapslockToggle)
-	kbd.UserOptionList.Bind(kbd.setting, kbdKeyLayoutOptions)
-	kbd.LayoutScope.Bind(kbd.setting, kbdKeyLayoutScope)
+
+	if err := kbd.initKeyboardDConfig(service); err != nil {
+		logger.Errorf("Failed to initialize keyboard dconfig: %v", err)
+		panic("Keyboard DConfig initialization failed - cannot continue without dconfig support")
+	}
 
 	var err error
 	err = kbd.loadAppLayoutConfig()
@@ -160,7 +159,6 @@ func newKeyboard(service *dbusutil.Service) *Keyboard {
 
 	kbd.devNumber = getKeyboardNumber()
 
-	kbd.listenSettingsChanged()
 	kbd.listenRootWindowXEvent()
 	kbd.startXEventLoop()
 	kbd.initDsgConfig()
@@ -304,7 +302,7 @@ func (kbd *Keyboard) applyLayout() {
 }
 
 func (kbd *Keyboard) applyOptions() {
-	options := kbd.UserOptionList.Get()
+	options := kbd.UserOptionList
 	if len(options) == 0 {
 		return
 	}
@@ -363,7 +361,7 @@ func (kbd *Keyboard) setCurrentLayout(write *dbusutil.PropertyWrite) *dbus.Error
 	}
 	kbd.addUserLayout(layout)
 
-	if kbd.LayoutScope.Get() == layoutScopeGlobal {
+	if kbd.LayoutScope == layoutScopeGlobal {
 		kbd.setLayoutForAccountsUser(layout)
 	} else {
 		kbd.setLayoutScopeApp(layout)
@@ -386,7 +384,9 @@ func (kbd *Keyboard) setLayoutScopeApp(layout string) {
 func (kbd *Keyboard) saveAppLayoutConfig() {
 	jsonStr := kbd.appLayoutCfg.toJson()
 	logger.Debug("save app layout config", jsonStr)
-	kbd.setting.SetString(kbdKeyAppLayoutMap, jsonStr)
+	if err := kbd.saveToKeyboardDConfig(dconfigKeyAppLayoutMap, jsonStr); err != nil {
+		logger.Warning("Failed to save app layout config to dconfig:", err)
+	}
 }
 
 func (kbd *Keyboard) addUserLayout(layout string) {
@@ -425,11 +425,11 @@ func (kbd *Keyboard) addUserOption(option string) {
 
 	// TODO: check option validity
 
-	ret, added := addItemToList(option, kbd.UserOptionList.Get())
+	ret, added := addItemToList(option, kbd.UserOptionList)
 	if !added {
 		return
 	}
-	kbd.UserOptionList.Set(ret)
+	kbd.UserOptionList = ret
 }
 
 func (kbd *Keyboard) delUserOption(option string) {
@@ -437,18 +437,18 @@ func (kbd *Keyboard) delUserOption(option string) {
 		return
 	}
 
-	ret, deleted := delItemFromList(option, kbd.UserOptionList.Get())
+	ret, deleted := delItemFromList(option, kbd.UserOptionList)
 	if !deleted {
 		return
 	}
-	kbd.UserOptionList.Set(ret)
+	kbd.UserOptionList = ret
 }
 
 func (kbd *Keyboard) applyCursorBlink() {
-	value := kbd.CursorBlink.Get()
-	xsSetInt32(xsPropBlinkTimeut, value)
+	value := kbd.CursorBlink
+	xsSetInt32(xsPropBlinkTimeut, int32(value))
 
-	err := setQtCursorBlink(value, path.Join(os.Getenv("HOME"),
+	err := setQtCursorBlink(int32(value), path.Join(os.Getenv("HOME"),
 		qtDefaultConfig))
 	if err != nil {
 		logger.Debugf("failed to set qt cursor blink to '%v': %v",
@@ -488,7 +488,7 @@ func (kbd *Keyboard) getRepeatDelay() (delay uint32) {
 	// 最低重复延迟等级
 	const minRepeatDelayLevel = 1
 
-	delay = kbd.RepeatDelay.Get()
+	delay = kbd.RepeatDelay
 	// 重复延迟过低的话，键盘事件的重复率太高了，处理最低档位，上层配置保持不变
 	if delay < repeatDelayLevel[minRepeatDelayLevel] {
 		return repeatDelayLevel[minRepeatDelayLevel]
@@ -499,7 +499,7 @@ func (kbd *Keyboard) getRepeatDelay() (delay uint32) {
 func (kbd *Keyboard) applyKwinWaylandRepeat() {
 	var (
 		delay    = kbd.getRepeatDelay()
-		interval = kbd.RepeatInterval.Get()
+		interval = kbd.RepeatInterval
 	)
 
 	sessionBus, err := dbus.SessionBus()
@@ -520,9 +520,9 @@ func (kbd *Keyboard) applyKwinWaylandRepeat() {
 
 func (kbd *Keyboard) applyX11Repeat() {
 	var (
-		repeat   = kbd.RepeatEnabled.Get()
+		repeat   = kbd.RepeatEnabled
 		delay    = kbd.getRepeatDelay()
-		interval = kbd.RepeatInterval.Get()
+		interval = kbd.RepeatInterval
 	)
 
 	err := dxinput.SetKeyboardRepeat(repeat, delay, interval)
@@ -635,34 +635,6 @@ func applyXmodmapConfig() error {
 	return doAction("xmodmap " + config)
 }
 
-func (kbd *Keyboard) listenSettingsChanged() {
-	gsettings.ConnectChanged(kbdSchema, "layout-scope", func(key string) {
-		scope := kbd.LayoutScope.Get()
-		logger.Debug("layout scope changed to", scope)
-		switch scope {
-		case layoutScopeGlobal:
-			if kbd.user == nil {
-				logger.Warning("kbd.user is nil")
-				return
-			}
-
-			layout, err := kbd.user.Layout().Get(0)
-			if err != nil {
-				logger.Warning("failed to get user layout:", err)
-				return
-			}
-
-			kbd.setLayout(layout)
-
-		case layoutScopeApp:
-			layout, ok := kbd.appLayoutCfg.get(kbd.activeWinClass)
-			if ok {
-				kbd.setLayout(layout)
-			}
-		}
-	})
-}
-
 func (kbd *Keyboard) listenRootWindowXEvent() {
 	if kbd.xConn == nil {
 		return
@@ -703,7 +675,7 @@ func (kbd *Keyboard) handleActiveWindowChanged() {
 	kbd.activeWinClass = class
 	logger.Debug("wm class changed to", class)
 
-	if kbd.LayoutScope.Get() != layoutScopeApp {
+	if kbd.LayoutScope != layoutScopeApp {
 		return
 	}
 
@@ -763,47 +735,388 @@ func (kbd *Keyboard) updateDXKeyboards() {
 		kbd.devInfos = append(kbd.devInfos, info)
 	}
 
-	value, err := kbd.dsgInputConfig.Value(0, dsettingsKeyboardEnabledKey)
+	enableKeyboard, err := kbd.dsgInputConfig.GetValueBool(dsettingsKeyboardEnabledKey)
 	if err != nil {
 		logger.Warningf("getDsgData key : %s. err : %s", dsettingsKeyboardEnabledKey, err)
 		return
 	}
 
-	if enableKeyboard, ok := value.Value().(bool); ok {
-		for _, dev := range kbd.devInfos {
-			dev.Enable(enableKeyboard)
-		}
+	for _, dev := range kbd.devInfos {
+		dev.Enable(enableKeyboard)
 	}
 }
 
 func (kbd *Keyboard) initDsgConfig() error {
-	logger.Debug("initDsgConfig")
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		logger.Warning(err)
-		return nil
-	}
-	// 加载dsg配置
-	dsg := configManager.NewConfigManager(systemBus)
-
-	inputDevicesPath, err := dsg.AcquireManager(0, dsettingsAppID, dsettingsInputdevices, "")
+	var err error
+	kbd.dsgInputConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsInputdevices, "")
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 
-	kbd.dsgInputConfig, err = configManager.NewManager(systemBus, inputDevicesPath)
+	kbd.dsgInputConfig.ConnectConfigChanged(dsettingsKeyboardEnabledKey, func(value interface{}) {
+		kbd.updateDXKeyboards()
+	})
+
+	return nil
+}
+
+func (kbd *Keyboard) initKeyboardDConfig(service *dbusutil.Service) error {
+	err := error(nil)
+
+	kbd.dsgKeyboardConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsKeyboardName, "")
 	if err != nil {
-		logger.Warning(err)
-		return err
+		return fmt.Errorf("create keyboard dconfig manager failed: %v", err)
 	}
 
-	kbd.dsgInputConfig.InitSignalExt(kbd.sysSigLoop, true)
-	kbd.dsgInputConfig.ConnectValueChanged(func(key string) {
-		logger.Infof("key: %v", key)
-		if key == dsettingsKeyboardEnabledKey {
-			kbd.updateDXKeyboards()
+	// 从dconfig初始化所有属性
+	kbd.initKeyboardPropsFromDConfig()
+
+	kbd.dsgKeyboardConfig.ConnectValueChanged(func(key string) {
+		logger.Debugf("Keyboard dconfig value changed: %s", key)
+		switch key {
+		case dconfigKeyRepeatEnabled:
+			kbd.updateRepeatEnabledFromDConfig()
+		case dconfigKeyRepeatInterval:
+			kbd.updateRepeatIntervalFromDConfig()
+		case dconfigKeyRepeatDelay:
+			kbd.updateRepeatDelayFromDConfig()
+		case dconfigKeyCursorBlinkTime:
+			kbd.updateCursorBlinkFromDConfig()
+		case dconfigKeyCapslockToggle:
+			kbd.updateCapslockToggleFromDConfig()
+		case dconfigKeyLayoutOptions:
+			kbd.updateLayoutOptionsFromDConfig()
+		case dconfigKeyLayoutScope:
+			kbd.updateLayoutScopeFromDConfig()
+		case dconfigKeyUserLayoutList:
+			kbd.updateUserLayoutListFromDConfig()
+		case dconfigKeyLayout:
+			kbd.updateCurrentLayoutFromDConfig()
+		default:
+			logger.Debugf("Unhandled keyboard dconfig key change: %s", key)
 		}
 	})
+
+	logger.Info("Keyboard DConfig initialization completed successfully")
 	return nil
+}
+
+// initKeyboardPropsFromDConfig 从dconfig初始化键盘属性
+func (kbd *Keyboard) initKeyboardPropsFromDConfig() error {
+	// RepeatEnabled
+	err := error(nil)
+	kbd.RepeatEnabled, err = kbd.dsgKeyboardConfig.GetValueBool(dconfigKeyRepeatEnabled)
+	if err != nil {
+		return err
+	}
+	// RepeatInterval
+	kbd.RepeatInterval, err = kbd.dsgKeyboardConfig.GetValueUInt32(dconfigKeyRepeatInterval)
+	if err != nil {
+		return err
+	}
+
+	// RepeatDelay
+	kbd.RepeatDelay, err = kbd.dsgKeyboardConfig.GetValueUInt32(dconfigKeyRepeatDelay)
+	if err != nil {
+		return err
+	}
+
+	// CursorBlink
+	kbd.CursorBlink, err = kbd.dsgKeyboardConfig.GetValueInt(dconfigKeyCursorBlinkTime)
+	if err != nil {
+		return err
+	}
+
+	// CapslockToggle
+	kbd.CapslockToggle, err = kbd.dsgKeyboardConfig.GetValueBool(dconfigKeyCapslockToggle)
+	if err != nil {
+		return err
+	}
+
+	// UserOptionList (layoutOptions)
+	list, err := kbd.dsgKeyboardConfig.GetValueStringList(dconfigKeyLayoutOptions)
+	if err != nil {
+		return err
+	}
+	kbd.UserOptionList = list
+	// LayoutScope
+	kbd.LayoutScope, err = kbd.dsgKeyboardConfig.GetValueUInt32(dconfigKeyLayoutScope)
+	if err != nil {
+		return err
+	}
+
+	// UserLayoutList - 用户布局列表
+	userLayoutList, err := kbd.dsgKeyboardConfig.GetValueStringList(dconfigKeyUserLayoutList)
+	if err != nil {
+		return err
+	}
+	kbd.UserLayoutList = userLayoutList
+
+	// CurrentLayout - 键盘布局
+	kbd.CurrentLayout, err = kbd.dsgKeyboardConfig.GetValueString(dconfigKeyLayout)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// SetKeyboardWriteCallbacks 为键盘属性设置DBus写回调
+func (kbd *Keyboard) SetKeyboardWriteCallbacks(service *dbusutil.Service) error {
+	kbdServerObj := service.GetServerObject(kbd)
+	var err error
+
+	// RepeatEnabled 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "RepeatEnabled",
+		func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(bool)
+			if !ok {
+				return dbusutil.ToError(fmt.Errorf("invalid RepeatEnabled type: %T", write.Value))
+			}
+			if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyRepeatEnabled, value); saveErr != nil {
+				logger.Warning("Failed to save RepeatEnabled to dconfig:", saveErr)
+			}
+			kbd.applyRepeat()
+			return nil
+		})
+	if err != nil {
+		logger.Warning("Failed to set RepeatEnabled write callback:", err)
+	}
+
+	// RepeatInterval 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "RepeatInterval",
+		func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(uint32)
+			if !ok {
+				return dbusutil.ToError(fmt.Errorf("invalid RepeatInterval type: %T", write.Value))
+			}
+			if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyRepeatInterval, value); saveErr != nil {
+				logger.Warning("Failed to save RepeatInterval to dconfig:", saveErr)
+			}
+			kbd.applyRepeat()
+			return nil
+		})
+	if err != nil {
+		logger.Warning("Failed to set RepeatInterval write callback:", err)
+	}
+
+	// RepeatDelay 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "RepeatDelay",
+		func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(uint32)
+			if !ok {
+				return dbusutil.ToError(fmt.Errorf("invalid RepeatDelay type: %T", write.Value))
+			}
+			if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyRepeatDelay, value); saveErr != nil {
+				logger.Warning("Failed to save RepeatDelay to dconfig:", saveErr)
+			}
+			kbd.applyRepeat()
+			return nil
+		})
+	if err != nil {
+		logger.Warning("Failed to set RepeatDelay write callback:", err)
+	}
+
+	// CursorBlink 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "CursorBlink",
+		func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				return dbusutil.ToError(fmt.Errorf("invalid CursorBlink type: %T", write.Value))
+			}
+			if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyCursorBlinkTime, value); saveErr != nil {
+				logger.Warning("Failed to save CursorBlink to dconfig:", saveErr)
+			}
+			kbd.applyCursorBlink()
+			return nil
+		})
+	if err != nil {
+		logger.Warning("Failed to set CursorBlink write callback:", err)
+	}
+
+	// CapslockToggle 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "CapslockToggle",
+		func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(bool)
+			if !ok {
+				return dbusutil.ToError(fmt.Errorf("invalid CapslockToggle type: %T", write.Value))
+			}
+			if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyCapslockToggle, value); saveErr != nil {
+				logger.Warning("Failed to save CapslockToggle to dconfig:", saveErr)
+			}
+			return nil
+		})
+	if err != nil {
+		logger.Warning("Failed to set CapslockToggle write callback:", err)
+	}
+
+	// UserOptionList 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "UserOptionList",
+		func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.([]string)
+			if !ok {
+				return dbusutil.ToError(fmt.Errorf("invalid UserOptionList type: %T", write.Value))
+			}
+			if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyLayoutOptions, value); saveErr != nil {
+				logger.Warning("Failed to save UserOptionList to dconfig:", saveErr)
+			}
+			kbd.applyOptions()
+			return nil
+		})
+	if err != nil {
+		logger.Warning("Failed to set UserOptionList write callback:", err)
+	}
+
+	// LayoutScope 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "LayoutScope",
+		func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				return dbusutil.ToError(fmt.Errorf("invalid LayoutScope type: %T", write.Value))
+			}
+			if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyLayoutScope, value); saveErr != nil {
+				logger.Warning("Failed to save LayoutScope to dconfig:", saveErr)
+			}
+			return nil
+		})
+	if err != nil {
+		logger.Warning("Failed to set LayoutScope write callback:", err)
+	}
+
+	// UserLayoutList 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "UserLayoutList", func(write *dbusutil.PropertyWrite) *dbus.Error {
+		value, ok := write.Value.([]string)
+		if !ok {
+			return dbusutil.ToError(fmt.Errorf("invalid UserLayoutList type: %T", write.Value))
+		}
+		if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyUserLayoutList, value); saveErr != nil {
+			logger.Warning("Failed to save UserLayoutList to dconfig:", saveErr)
+		}
+		return nil
+	})
+	if err != nil {
+		logger.Warning("Failed to set UserLayoutList write callback:", err)
+	}
+
+	// CurrentLayout 写回调
+	err = kbdServerObj.SetWriteCallback(kbd, "CurrentLayout", func(write *dbusutil.PropertyWrite) *dbus.Error {
+		value, ok := write.Value.(string)
+		if !ok {
+			return dbusutil.ToError(fmt.Errorf("invalid CurrentLayout type: %T", write.Value))
+		}
+		if saveErr := kbd.saveToKeyboardDConfig(dconfigKeyLayout, value); saveErr != nil {
+			logger.Warning("Failed to save CurrentLayout to dconfig:", saveErr)
+		}
+		return nil
+	})
+	if err != nil {
+		logger.Warning("Failed to set CurrentLayout write callback:", err)
+	}
+
+	return nil
+}
+
+// saveToKeyboardDConfig 保存配置值到keyboard dconfig
+func (kbd *Keyboard) saveToKeyboardDConfig(key string, value interface{}) error {
+	if kbd.dsgKeyboardConfig == nil {
+		return errors.New("keyboard dconfig not initialized")
+	}
+
+	err := kbd.dsgKeyboardConfig.SetValue(key, value)
+	if err != nil {
+		return fmt.Errorf("failed to save %s to keyboard dconfig: %v", key, err)
+	}
+
+	logger.Debugf("Saved %s = %v to keyboard dconfig", key, value)
+	return nil
+}
+
+// 从dconfig更新属性的方法实现
+func (kbd *Keyboard) updateRepeatEnabledFromDConfig() {
+	value, err := kbd.dsgKeyboardConfig.GetValueBool(dconfigKeyRepeatEnabled)
+	if err != nil {
+		logger.Warning("Failed to get RepeatEnabled from dconfig:", err)
+		return
+	}
+	kbd.RepeatEnabled = value
+	kbd.applyRepeat()
+}
+
+func (kbd *Keyboard) updateRepeatIntervalFromDConfig() {
+	value, err := kbd.dsgKeyboardConfig.GetValueUInt32(dconfigKeyRepeatInterval)
+	if err != nil {
+		logger.Warning("Failed to get RepeatInterval from dconfig:", err)
+		return
+	}
+	kbd.RepeatInterval = value
+	kbd.applyRepeat()
+}
+
+func (kbd *Keyboard) updateRepeatDelayFromDConfig() {
+	value, err := kbd.dsgKeyboardConfig.GetValueUInt32(dconfigKeyRepeatDelay)
+	if err != nil {
+		logger.Warning("Failed to get RepeatDelay from dconfig:", err)
+		return
+	}
+	kbd.RepeatDelay = value
+	kbd.applyRepeat()
+}
+
+func (kbd *Keyboard) updateCursorBlinkFromDConfig() {
+	value, err := kbd.dsgKeyboardConfig.GetValueInt(dconfigKeyCursorBlinkTime)
+	if err != nil {
+		logger.Warning("Failed to get CursorBlink from dconfig:", err)
+		return
+	}
+	kbd.CursorBlink = value
+	kbd.applyCursorBlink()
+}
+
+func (kbd *Keyboard) updateCapslockToggleFromDConfig() {
+	value, err := kbd.dsgKeyboardConfig.GetValueBool(dconfigKeyCapslockToggle)
+	if err != nil {
+		logger.Warning(err)
+	}
+	kbd.CapslockToggle = value
+}
+
+func (kbd *Keyboard) updateLayoutOptionsFromDConfig() {
+	value, err := kbd.dsgKeyboardConfig.GetValue(dconfigKeyLayoutOptions)
+	if err != nil {
+		logger.Warning(err)
+	}
+	kbd.UserOptionList = value.([]string)
+	kbd.applyOptions()
+}
+
+func (kbd *Keyboard) updateLayoutScopeFromDConfig() {
+	value, err := kbd.dsgKeyboardConfig.GetValueUInt32(dconfigKeyLayoutScope)
+	if err != nil {
+		logger.Warning(err)
+	}
+	kbd.LayoutScope = value
+	kbd.applyLayout()
+}
+
+// updateUserLayoutListFromDConfig 从 DConfig 更新用户布局列表
+func (kbd *Keyboard) updateUserLayoutListFromDConfig() {
+	userLayoutList, err := kbd.dsgKeyboardConfig.GetValueStringList(dconfigKeyUserLayoutList)
+	if err != nil {
+		logger.Warning("Failed to update UserLayoutList from DConfig:", err)
+		return
+	}
+	kbd.UserLayoutList = userLayoutList
+	logger.Debug("Updated UserLayoutList from DConfig:", userLayoutList)
+}
+
+// updateCurrentLayoutFromDConfig 从 DConfig 更新当前布局
+func (kbd *Keyboard) updateCurrentLayoutFromDConfig() {
+	currentLayout, err := kbd.dsgKeyboardConfig.GetValueString(dconfigKeyLayout)
+	if err != nil {
+		logger.Warning("Failed to update CurrentLayout from DConfig:", err)
+		return
+	}
+	kbd.CurrentLayout = currentLayout
+	logger.Debug("Updated CurrentLayout from DConfig:", currentLayout)
 }

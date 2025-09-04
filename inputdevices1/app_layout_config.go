@@ -16,11 +16,16 @@ type appLayoutConfig struct {
 }
 
 func (kbd *Keyboard) loadAppLayoutConfig() error {
-	mapStr := kbd.setting.GetString(kbdKeyAppLayoutMap)
+	value, err := kbd.dsgKeyboardConfig.GetValueString(dconfigKeyAppLayoutMap)
+	if err != nil {
+		logger.Warning(err)
+		return err
+	}
+	mapStr := value
 	if mapStr == "" {
 		return nil
 	}
-	err := json.Unmarshal([]byte(mapStr), &kbd.appLayoutCfg)
+	err = json.Unmarshal([]byte(mapStr), &kbd.appLayoutCfg)
 	if err != nil {
 		return err
 	}
