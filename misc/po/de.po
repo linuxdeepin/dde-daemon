@@ -17,6 +17,7 @@
 # Sebastian Rettig, 2025
 # Ettore Atalan <atalanttore@googlemail.com>, 2025
 # deepiner, 2025
+# Keine Werbung, 2025
 # 
 #, fuzzy
 msgid ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Keine Werbung, 2025\n"
 "Language-Team: German (https://app.transifex.com/linuxdeepin/teams/3617/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,15 +70,16 @@ msgstr "Benutzername muss zwischen 3 und 32 Zeichen lang sein"
 #: ../../accounts1/manager.go:570
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
+msgstr "Benutzer \"%s\" bereits vorhanden und dessen Daten wurden synchronisiert"
 
 #: ../../accounts1/user_ifc.go:731
 msgid "This system wallpaper is locked. Please contact your admin."
-msgstr ""
+msgstr "Das System-Hintergrundbild ist gesperrt. Admin fragen."
 
 #: ../../audio1/audio.go:284
 msgid "Failed to change Audio Server, please try later"
 msgstr ""
+"Audio-Server konnte nicht geändert werden, bitte später erneut versuchen"
 
 #: ../../audio1/audio.go:320
 msgid "Changing Audio Server, please wait..."
@@ -93,7 +95,7 @@ msgstr "Audioserver geändert, bitte abmelden und wieder anmelden"
 #: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
-msgstr ""
+msgstr "dde-Kontrollzentrum"
 
 #: ../../audio1/audio_events.go:445
 #, c-format
@@ -240,72 +242,72 @@ msgstr "Koppeln"
 
 #: ../../gesture1/gesture_action.go:38
 msgid "Maximize Window"
-msgstr ""
+msgstr "Fenster maximieren"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Restore Window"
-msgstr ""
+msgstr "Fenster wiederherstellen"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "Aktuelles Fenster nach links aufteilen"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "Aktuelles Fenster nach rechts aufteilen"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Show multitasking view"
-msgstr ""
+msgstr "Zeige Multitasking-Ansicht"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "Verstecke Multitasking-Ansicht"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "Wechsle zur vorherigen Arbeitsfläche"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Wechsle zur nächsten Arbeitsfläche"
 
 #: ../../gesture1/gesture_action.go:46
 #: ../../keybinding1/shortcuts/id_name_map.go:85
 msgid "Show desktop"
-msgstr "Desktop anzeigen"
+msgstr "Schreibtisch zeigen"
 
 #: ../../gesture1/gesture_action.go:47
 msgid "Hide desktop"
-msgstr ""
+msgstr "Schreibtisch verbergen"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Starter anzeigen/verstecken"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "Mit gedrückter rechter Maustaste"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button released"
-msgstr ""
+msgstr "Mit losgelassener rechter Maustaste"
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "Zwischenablage anzeigen/verbergen"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Große Suche anzeigen/verstecken"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "Benachrichtigungszentrum anzeigen/verstecken"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Disable"
-msgstr ""
+msgstr "Deaktivieren"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -314,7 +316,7 @@ msgstr ""
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "Zum Aufräumen gehen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
@@ -366,7 +368,7 @@ msgstr "OCR (Bild zu Text)"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:25
 msgid "Scrollshot"
-msgstr ""
+msgstr "Scroll-Aufnahme"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:26
 msgid "File manager"
@@ -515,23 +517,23 @@ msgstr "Arbeitsfläche anzeigen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom In"
-msgstr ""
+msgstr "Hineinzoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr ""
+msgstr "Herauszoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Auf tatsächliche Größe zoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Left"
-msgstr ""
+msgstr "Fensterteilung links"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:147
 msgid "Window Quick Tile Right"
-msgstr ""
+msgstr "Fensterteilung rechts"
 
 #: ../../langselector1/locale.go:47
 msgid "Authentication is required to switch language"
@@ -561,13 +563,15 @@ msgstr ""
 
 #: ../../lastore1/daemon.go:186
 msgid "Updates failed: it was interrupted."
-msgstr ""
+msgstr "Aktualisierungen fehlgeschlagen: Sie wurden unterbrochen."
 
 #: ../../lastore1/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
+"Aktualisierungen fehlgeschlagen: Sie wurden unterbrochen. Bitte kehren Sie "
+"zur alten Version zurück und versuchen es erneut."
 
 #: ../../lastore1/daemon.go:194
 msgid "Updates failed: DPKG error."
@@ -578,6 +582,8 @@ msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
+"Aktualisierungen fehlgeschlagen: DPKG-Fehler. Bitte kehren Sie zur alten "
+"Version zurück und versuchen es erneut."
 
 #: ../../lastore1/daemon.go:200
 msgid "Updates failed: insufficient disk space."
@@ -588,6 +594,8 @@ msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
+"Aktualisierungen fehlgeschlagen: zu wenig Speicherplatz. Bitte kehren Sie "
+"zur alten Version zurück und versuchen es erneut."
 
 #: ../../lastore1/daemon.go:206
 msgid "Updates failed"
@@ -596,6 +604,8 @@ msgstr "Aktualisierungen fehlgeschlagen"
 #: ../../lastore1/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
+"Aktualisierungen fehlgeschlagen. Bitte kehren Sie zur alten Version zurück "
+"und versuchen es erneut."
 
 #: ../../launcher/item.go:97
 msgid "(Linglong)"
@@ -1057,11 +1067,13 @@ msgstr "Verbindung mit %q fehlgeschlagen. Das Passwort ist ungültig"
 
 #: ../../network1/state_handler.go:365
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "%q verbinden fehlgeschlagen"
 
 #: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
 msgstr ""
+"Um %q zu verbinden, richten Sie bitte ihre Authentifizierungsinformationen "
+"ein."
 
 #: ../../network1/state_handler.go:379
 msgid "Password is required to connect %q"
@@ -1121,23 +1133,25 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Sie können nicht das unverifizierte \"%s\" starten, aber Sie können die "
+"Einstellungen in der Sicherheitszentrale ändern."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Weitermachen"
 
 #: ../../session/power1/manager.go:928
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "Das System wird automatisch nach %d sek herunterfahren."
 
 #: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "Herunterfahren nach Plan"
 
 #: ../../session/power1/manager.go:930
 msgid "Cancle"
-msgstr ""
+msgstr "Abbrechen"
 
 #: ../../session/power1/manager.go:930
 msgid "Shut down"
@@ -1172,7 +1186,7 @@ msgstr "wird sich Ihr Monitor ausschalten"
 
 #: ../../session/power1/utils.go:644
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "Es wird der Herunterfahren-Bildschirm angezeigt"
 
 #: ../../session/power1/utils.go:646
 msgid "it will do nothing to your computer"
