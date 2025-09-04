@@ -47,9 +47,17 @@ func (d *Daemon) Start() error {
 		return err
 	}
 
+	if err := _manager.SetManagerWriteCallbacks(service); err != nil {
+		logger.Warning("Failed to set manager write callbacks:", err)
+	}
+
 	err = service.Export(kbdDBusPath, _manager.kbd)
 	if err != nil {
 		return err
+	}
+
+	if err := _manager.kbd.SetKeyboardWriteCallbacks(service); err != nil {
+		logger.Warning("Failed to set keyboard write callbacks:", err)
 	}
 
 	kbdServerObj := service.GetServerObject(_manager.kbd)
@@ -64,14 +72,30 @@ func (d *Daemon) Start() error {
 		return err
 	}
 
+	if err := _manager.wacom.SetWacomWriteCallbacks(service); err != nil {
+		logger.Warning("Failed to set wacom write callbacks:", err)
+	}
+
 	err = service.Export(touchPadDBusPath, _manager.tpad)
 	if err != nil {
 		return err
 	}
 
+	if err := _manager.tpad.SetTouchpadWriteCallbacks(service); err != nil {
+		logger.Warning("Failed to set touchpad write callbacks:", err)
+	}
+
 	err = service.Export(mouseDBusPath, _manager.mouse, _manager.trackPoint)
 	if err != nil {
 		return err
+	}
+
+	if err := _manager.mouse.SetMouseWriteCallbacks(service); err != nil {
+		logger.Warning("Failed to set mouse write callbacks:", err)
+	}
+
+	if err := _manager.trackPoint.SetTrackPointWriteCallbacks(service); err != nil {
+		logger.Warning("Failed to set trackpoint write callbacks:", err)
 	}
 
 	err = service.RequestName(dbusServiceName)

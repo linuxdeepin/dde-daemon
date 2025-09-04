@@ -1,0 +1,204 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+      "disableWhileTypingCmd": {
+        "value": "syndaemon -i 2 -K",
+        "serial": 0,
+        "flags": [],
+        "name": "disableWhileTypingCmd",
+        "name[zh_CN]": "打字时禁用触控板命令",
+        "description[zh_CN]": "设置打字时禁用触控板的命令",
+        "description": "Set the command to disable touchpad hitting while typing",
+        "permissions": "readwrite",
+        "visibility": "private"
+      },
+      "disableWhileTyping": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "disableWhileTyping",
+        "name[zh_CN]": "打字时禁用触控板",
+        "description[zh_CN]": "如果您在打字时意外触碰触控板有问题，请设置为TRUE",
+        "description": "Set this to TRUE if you have problems with accidentally hitting the touchpad while typing",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "horizScrollEnabled": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "horizScrollEnabled",
+        "name[zh_CN]": "启用水平滚动",
+        "description[zh_CN]": "启用触控板水平滚动功能",
+        "description": "Set this to TRUE to allow horizontal scrolling by the same method selected with the scroll_method key",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "vertScrollEnabled": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "vertScrollEnabled",
+        "name[zh_CN]": "启用垂直滚动",
+        "description[zh_CN]": "启用触控板垂直滚动功能",
+        "description": "Set this to TRUE to allow virtical scrolling by the same method selected with the scroll_method key",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "tapToClick": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "tapToClick",
+        "name[zh_CN]": "轻触点击",
+        "description[zh_CN]": "启用触控板轻触点击功能",
+        "description": "Set this to TRUE to be able to send mouse clicks by tapping on the touchpad",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "touchpadEnabled": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "touchpadEnabled",
+        "name[zh_CN]": "启用触控板",
+        "description[zh_CN]": "启用所有触控板",
+        "description": "Set this to TRUE to enable all touchpads",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "leftHanded": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "leftHanded",
+        "name[zh_CN]": "触控板按键方向",
+        "description[zh_CN]": "为左手用户交换触控板左右键",
+        "description": "Swap left and right mouse buttons for left-handed mice with 'left', 'right' for right-handed, 'mouse' to follow the mouse setting",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionAcceleration": {
+        "value": 1.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionAcceleration",
+        "name[zh_CN]": "触控板加速",
+        "description[zh_CN]": "触控板移动加速倍数，-1为系统默认值",
+        "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionThreshold": {
+        "value": 1.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionThreshold",
+        "name[zh_CN]": "触控板加速阈值",
+        "description[zh_CN]": "激活触控板加速前指针必须移动的距离（像素），-1为系统默认值",
+        "description": "Distance in pixels the pointer must move before accelerated mouse motion is activated. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionScaling": {
+        "value": 10.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionScaling",
+        "name[zh_CN]": "触控板速度缩放",
+        "description[zh_CN]": "触控板移动速度倍数，-1为系统默认值",
+        "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "naturalScroll": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "naturalScroll",
+        "name[zh_CN]": "自然滚动",
+        "description[zh_CN]": "启用触控板自然（反向）滚动",
+        "description": "Set this to TRUE to enable natural (reverse) scrolling for touchpads",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "deltaScroll": {
+        "value": 30,
+        "serial": 0,
+        "flags": [],
+        "name": "deltaScroll",
+        "name[zh_CN]": "自然滚动增量",
+        "description[zh_CN]": "自然滚动增量值",
+        "description": "Natural scrolling delta",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "doubleClick": {
+        "value": 400,
+        "serial": 0,
+        "flags": [],
+        "name": "doubleClick",
+        "name[zh_CN]": "触控板双击时间",
+        "description[zh_CN]": "触控板双击时间间隔（毫秒）",
+        "description": "Length of a double click in milliseconds",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "dragThreshold": {
+        "value": 8,
+        "serial": 0,
+        "flags": [],
+        "name": "dragThreshold",
+        "name[zh_CN]": "触控板拖拽阈值",
+        "description[zh_CN]": "启动拖拽前的距离",
+        "description": "Distance before a drag is started",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "edgeScrollEnabled": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "edgeScrollEnabled",
+        "name[zh_CN]": "边缘滚动",
+        "description[zh_CN]": "启用（或禁用）边缘滚动",
+        "description": "Enable(or disable) edge scrolling",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "palmDetect": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "palmDetect",
+        "name[zh_CN]": "启用手掌检测",
+        "description[zh_CN]": "设置为TRUE以启用触控板手掌检测",
+        "description": "Set this to TRUE to enable touchpad palm detect",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "palmMinWidth": {
+        "value": 6,
+        "serial": 0,
+        "flags": [],
+        "name": "palmMinWidth",
+        "name[zh_CN]": "触控板手掌最小宽度",
+        "description[zh_CN]": "手掌检测的最小宽度",
+        "description": "The min width for palm detect",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "palmMinPressure": {
+        "value": 50,
+        "serial": 0,
+        "flags": [],
+        "name": "palmMinPressure",
+        "name[zh_CN]": "触控板手掌最小压力",
+        "description[zh_CN]": "手掌检测的最小压力",
+        "description": "The min pressure for palm detect",
+        "permissions": "readwrite",
+        "visibility": "public"
+      }
+  }
+}

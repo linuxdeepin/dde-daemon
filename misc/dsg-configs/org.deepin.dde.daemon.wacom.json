@@ -1,0 +1,160 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+      "leftHanded": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "leftHanded",
+        "name[zh_CN]": "Wacom旋转",
+        "description[zh_CN]": "Wacom设备旋转设置",
+        "description": "Wacom Rotate",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "cursorMode": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "cursorMode",
+        "name[zh_CN]": "设置Wacom模式",
+        "description[zh_CN]": "设置为TRUE以启用wacom相对模式",
+        "description": "Set this to TRUE to enable wacom relative mode",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "mapOutput": {
+        "value": "",
+        "serial": 0,
+        "flags": [],
+        "name": "mapOutput",
+        "name[zh_CN]": "映射到输出",
+        "description[zh_CN]": "将数位板输入区域映射到指定输出",
+        "description": "Map the tablet's input area to a given output",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "suppress": {
+        "value": 20,
+        "serial": 0,
+        "flags": [],
+        "name": "suppress",
+        "name[zh_CN]": "抑制",
+        "description[zh_CN]": "设置输入坐标变化的阈值，范围0-100",
+        "description": "Set the delta cutoff level for further processing of incoming input tool coordinate values",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "forceProportions": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "forceProportions",
+        "name[zh_CN]": "强制比例",
+        "description[zh_CN]": "强制绘图表面的比例与屏幕纵横比匹配",
+        "description": "Force the proportions of the drawing surface to match the aspect ratio of your screen",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "mouseEnterRemap": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "mouseEnterRemap",
+        "name[zh_CN]": "鼠标进入重新映射",
+        "description[zh_CN]": "当鼠标进入新屏幕时重新映射",
+        "description": "Remap when mouse enter new screen",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "stylusPressureSensitive": {
+        "value": 4,
+        "serial": 0,
+        "flags": [],
+        "name": "stylusPressureSensitive",
+        "name[zh_CN]": "触控笔压感级别",
+        "description[zh_CN]": "触控笔压力曲线，范围1-7",
+        "description": "Stylus pressure curve, range 1-7",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "keyUpAction": {
+        "value": 2,
+        "serial": 0,
+        "flags": [],
+        "name": "keyUpAction",
+        "name[zh_CN]": "上键操作",
+        "description[zh_CN]": "设置上键的操作映射，0=LeftClick, 1=MiddleClick, 2=RightClick, 3=PageUp, 4=PageDown",
+        "description": "Set action mapping for up button",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "keyDownAction": {
+        "value": 0,
+        "serial": 0,
+        "flags": [],
+        "name": "keyDownAction",
+        "name[zh_CN]": "下键操作",
+        "description[zh_CN]": "设置下键的操作映射，0=LeftClick, 1=MiddleClick, 2=RightClick, 3=PageUp, 4=PageDown",
+        "description": "Set action mapping for down button",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "stylusThreshold": {
+        "value": 27,
+        "serial": 0,
+        "flags": [],
+        "name": "stylusThreshold",
+        "name[zh_CN]": "触控笔压力阈值",
+        "description[zh_CN]": "生成按键事件所需的最小压力，范围1-2047",
+        "description": "The minimum pressure to generate a Button event, range 1-2047",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "stylusRawSample": {
+        "value": 4,
+        "serial": 0,
+        "flags": [],
+        "name": "stylusRawSample",
+        "name[zh_CN]": "触控笔采样窗口大小",
+        "description[zh_CN]": "输入工具原始数据点的采样窗口大小，范围1-20",
+        "description": "Set the sample window size for incoming input tool raw data points, range 1-20",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "eraserPressureSensitive": {
+        "value": 4,
+        "serial": 0,
+        "flags": [],
+        "name": "eraserPressureSensitive",
+        "name[zh_CN]": "橡皮擦压感级别",
+        "description[zh_CN]": "橡皮擦压力曲线，范围1-7",
+        "description": "Eraser pressure curve, range 1-7",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "eraserThreshold": {
+        "value": 27,
+        "serial": 0,
+        "flags": [],
+        "name": "eraserThreshold",
+        "name[zh_CN]": "橡皮擦压力阈值",
+        "description[zh_CN]": "橡皮擦生成按键事件所需的最小压力，范围1-2047",
+        "description": "The minimum pressure to generate a Button event for eraser, range 1-2047",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "eraserRawSample": {
+        "value": 4,
+        "serial": 0,
+        "flags": [],
+        "name": "eraserRawSample",
+        "name[zh_CN]": "橡皮擦采样窗口大小",
+        "description[zh_CN]": "橡皮擦原始数据点的采样窗口大小，范围1-20",
+        "description": "Set the sample window size for eraser raw data points, range 1-20",
+        "permissions": "readwrite",
+        "visibility": "public"
+      }
+  }
+}

@@ -11,8 +11,13 @@ import (
 )
 
 func (m *Mouse) Reset() *dbus.Error {
-	for _, key := range m.setting.ListKeys() {
-		m.setting.Reset(key)
+	keys, err := m.dsgMouseConfig.ListKeys()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	for _, key := range keys {
+		m.dsgMouseConfig.Reset(key)
 	}
 	return nil
 }
@@ -26,15 +31,25 @@ func (m *Mouse) Enable(enabled bool) *dbus.Error {
 }
 
 func (tp *TrackPoint) Reset() *dbus.Error {
-	for _, key := range tp.setting.ListKeys() {
-		tp.setting.Reset(key)
+	keys, err := tp.dsgTrackPointConfig.ListKeys()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	for _, key := range keys {
+		tp.dsgTrackPointConfig.Reset(key)
 	}
 	return nil
 }
 
 func (tpad *Touchpad) Reset() *dbus.Error {
-	for _, key := range tpad.setting.ListKeys() {
-		tpad.setting.Reset(key)
+	keys, err := tpad.dsgTouchpadConfig.ListKeys()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	for _, key := range keys {
+		tpad.dsgTouchpadConfig.Reset(key)
 	}
 	return nil
 }
@@ -45,21 +60,25 @@ func (tpad *Touchpad) Enable(enabled bool) *dbus.Error {
 }
 
 func (w *Wacom) Reset() *dbus.Error {
-	for _, key := range w.setting.ListKeys() {
-		w.setting.Reset(key)
+	keys, err := w.dsgWacomConfig.ListKeys()
+	if err != nil {
+		logger.Warning(err)
 	}
-	for _, key := range w.stylusSetting.ListKeys() {
-		w.stylusSetting.Reset(key)
-	}
-	for _, key := range w.eraserSetting.ListKeys() {
-		w.eraserSetting.Reset(key)
+
+	for _, key := range keys {
+		w.dsgWacomConfig.Reset(key)
 	}
 	return nil
 }
 
 func (kbd *Keyboard) Reset() *dbus.Error {
-	for _, key := range kbd.setting.ListKeys() {
-		kbd.setting.Reset(key)
+	keys, err := kbd.dsgKeyboardConfig.ListKeys()
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	for _, key := range keys {
+		kbd.dsgKeyboardConfig.Reset(key)
 	}
 	return nil
 }
@@ -129,7 +148,7 @@ func (kbd *Keyboard) DeleteLayoutOption(option string) *dbus.Error {
 }
 
 func (kbd *Keyboard) ClearLayoutOption() *dbus.Error {
-	kbd.UserOptionList.Set([]string{})
+	kbd.UserOptionList = []string{}
 	return nil
 }
 
