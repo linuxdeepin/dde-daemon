@@ -1,3 +1,12 @@
+dde-daemon (6.1.53) unstable; urgency=medium
+
+  * fix: Update Bluetooth state as soon as possible
+  * fix: correct touchpad enable function parameter
+  * fix: resolve touchpad state persistence issue after system restart
+  * refactor: migrate display settings from gsettings to dconfig
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 04 Sep 2025 21:48:37 +0800
+
 dde-daemon (6.1.52) unstable; urgency=medium
 
   * fix: 解决蓝牙文件传输拒绝后，依旧在传输的问题
