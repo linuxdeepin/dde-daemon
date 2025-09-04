@@ -17,14 +17,11 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/dxinput"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
-	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/util/wm/ewmh"
@@ -32,29 +29,32 @@ import (
 )
 
 const (
-	kbdSchema = "com.deepin.dde.keyboard"
+	dsettingsKeyboardName = "org.deepin.dde.daemon.keyboard"
 
-	kbdKeyRepeatEnable   = "repeat-enabled"
-	kbdKeyRepeatInterval = "repeat-interval"
-	kbdKeyRepeatDelay    = "delay"
-	kbdKeyLayoutOptions  = "layout-options"
-	kbdKeyCursorBlink    = "cursor-blink-time"
-	kbdKeyCapslockToggle = "capslock-toggle"
-	kbdKeyAppLayoutMap   = "app-layout-map"
-	kbdKeyLayoutScope    = "layout-scope"
+	dconfigKeyRepeatEnabled   = "repeatEnabled"
+	dconfigKeyRepeatInterval  = "repeatInterval"
+	dconfigKeyRepeatDelay     = "delay"
+	dconfigKeyLayoutOptions   = "layoutOptions"
+	dconfigKeyCursorBlinkTime = "cursorBlinkTime"
+	dconfigKeyCapslockToggle  = "capslockToggle"
+	dconfigKeyAppLayoutMap    = "app-layout-map"
+	dconfigKeyLayoutScope     = "layout-scope"
+	dconfigKeyUserLayoutList  = "user-layout-list"
+	dconfigKeyLayout          = "layout"
 
+	// 系统级keyboard配置
+	dsettingsKeyboardEnabledKey = "keyboardEnabled"
+
+	// 布局相关常量
 	layoutScopeGlobal = 0
 	layoutScopeApp    = 1
+	layoutDelim       = ";"
+	kbdDefaultLayout  = "us" + layoutDelim
 
-	layoutDelim      = ";"
-	kbdDefaultLayout = "us" + layoutDelim
-
+	// 系统配置文件
 	kbdSystemConfig = "/etc/default/keyboard"
 	qtDefaultConfig = ".config/Trolltech.conf"
-
-	cmdSetKbd = "/usr/bin/setxkbmap"
-
-	dsettingsKeyboardEnabledKey = "keyboardEnabled"
+	cmdSetKbd       = "/usr/bin/setxkbmap"
 )
 
 type Keyboard struct {
@@ -64,44 +64,41 @@ type Keyboard struct {
 	service        *dbusutil.Service
 	sysSigLoop     *dbusutil.SignalLoop
 	PropsMu        sync.RWMutex
-	CurrentLayout  string `prop:"access:rw"`
+	CurrentLayout  dconfig.String `prop:"access:rw"`
 	appLayoutCfg   appLayoutConfig
 	// dbusutil-gen: equal=nil
-	UserLayoutList []string
+	UserLayoutList dconfig.StringList `prop:"access:rw"`
 
 	// dbusutil-gen: ignore-below
-	LayoutScope    gsprop.Enum `prop:"access:rw"`
-	RepeatEnabled  gsprop.Bool `prop:"access:rw"`
-	CapslockToggle gsprop.Bool `prop:"access:rw"`
+	LayoutScope    dconfig.Uint32 `prop:"access:rw"`
+	RepeatEnabled  dconfig.Bool   `prop:"access:rw"`
+	CapslockToggle dconfig.Bool   `prop:"access:rw"`
 
-	CursorBlink gsprop.Int `prop:"access:rw"`
+	CursorBlink dconfig.Int `prop:"access:rw"`
 
-	RepeatInterval gsprop.Uint `prop:"access:rw"`
-	RepeatDelay    gsprop.Uint `prop:"access:rw"`
+	RepeatInterval dconfig.Uint32 `prop:"access:rw"`
+	RepeatDelay    dconfig.Uint32 `prop:"access:rw"`
 
-	UserOptionList gsprop.Strv
+	UserOptionList dconfig.StringList `prop:"access:rw"`
 
-	setting   *gio.Settings
-	user      accounts.User
-	layoutMap layoutMap
+	dsgKeyboardConfig *dconfig.DConfig
+	user              accounts.User
+	layoutMap         layoutMap
 
 	devNumber      int
 	devInfos       Keyboards
-	dsgInputConfig configManager.Manager
+	dsgInputConfig *dconfig.DConfig
 }
 
 func newKeyboard(service *dbusutil.Service) *Keyboard {
 	var kbd = new(Keyboard)
 
 	kbd.service = service
-	kbd.setting = gio.NewSettings(kbdSchema)
-	kbd.RepeatEnabled.Bind(kbd.setting, kbdKeyRepeatEnable)
-	kbd.RepeatInterval.Bind(kbd.setting, kbdKeyRepeatInterval)
-	kbd.RepeatDelay.Bind(kbd.setting, kbdKeyRepeatDelay)
-	kbd.CursorBlink.Bind(kbd.setting, kbdKeyCursorBlink)
-	kbd.CapslockToggle.Bind(kbd.setting, kbdKeyCapslockToggle)
-	kbd.UserOptionList.Bind(kbd.setting, kbdKeyLayoutOptions)
-	kbd.LayoutScope.Bind(kbd.setting, kbdKeyLayoutScope)
+
+	if err := kbd.initKeyboardDConfig(); err != nil {
+		logger.Errorf("Failed to initialize keyboard dconfig: %v", err)
+		panic("Keyboard DConfig initialization failed - cannot continue without dconfig support")
+	}
 
 	var err error
 	err = kbd.loadAppLayoutConfig()
@@ -143,7 +140,7 @@ func newKeyboard(service *dbusutil.Service) *Keyboard {
 			logger.Warning(err)
 		} else {
 			kbd.PropsMu.Lock()
-			kbd.CurrentLayout = fixLayout(layout)
+			kbd.CurrentLayout.Set(fixLayout(layout))
 			kbd.PropsMu.Unlock()
 		}
 
@@ -153,14 +150,13 @@ func newKeyboard(service *dbusutil.Service) *Keyboard {
 			logger.Warning(err)
 		} else {
 			kbd.PropsMu.Lock()
-			kbd.UserLayoutList = fixLayoutList(layoutList)
+			kbd.UserLayoutList.Set(fixLayoutList(layoutList))
 			kbd.PropsMu.Unlock()
 		}
 	}
 
 	kbd.devNumber = getKeyboardNumber()
 
-	kbd.listenSettingsChanged()
 	kbd.listenRootWindowXEvent()
 	kbd.startXEventLoop()
 	kbd.initDsgConfig()
@@ -251,7 +247,7 @@ func (kbd *Keyboard) applySettings() {
 
 func (kbd *Keyboard) correctLayout() {
 	kbd.PropsMu.RLock()
-	currentLayout := kbd.CurrentLayout
+	currentLayout := kbd.CurrentLayout.Get()
 	kbd.PropsMu.RUnlock()
 
 	if currentLayout == "" {
@@ -267,7 +263,7 @@ func (kbd *Keyboard) correctLayout() {
 	}
 
 	kbd.PropsMu.RLock()
-	layoutList := kbd.UserLayoutList
+	layoutList := kbd.UserLayoutList.Get()
 	kbd.PropsMu.RUnlock()
 
 	if len(layoutList) == 0 {
@@ -288,7 +284,7 @@ func (kbd *Keyboard) handleDeviceChanged() {
 
 func (kbd *Keyboard) applyLayout() {
 	kbd.PropsMu.RLock()
-	currentLayout := kbd.CurrentLayout
+	currentLayout := kbd.CurrentLayout.Get()
 	kbd.PropsMu.RUnlock()
 
 	err := applyLayout(currentLayout)
@@ -386,12 +382,14 @@ func (kbd *Keyboard) setLayoutScopeApp(layout string) {
 func (kbd *Keyboard) saveAppLayoutConfig() {
 	jsonStr := kbd.appLayoutCfg.toJson()
 	logger.Debug("save app layout config", jsonStr)
-	kbd.setting.SetString(kbdKeyAppLayoutMap, jsonStr)
+	if err := kbd.saveToKeyboardDConfig(dconfigKeyAppLayoutMap, jsonStr); err != nil {
+		logger.Warning("Failed to save app layout config to dconfig:", err)
+	}
 }
 
 func (kbd *Keyboard) addUserLayout(layout string) {
 	kbd.PropsMu.Lock()
-	newLayoutList, added := addItemToList(layout, kbd.UserLayoutList)
+	newLayoutList, added := addItemToList(layout, kbd.UserLayoutList.Get())
 	kbd.PropsMu.Unlock()
 
 	if !added {
@@ -407,7 +405,7 @@ func (kbd *Keyboard) delUserLayout(layout string) {
 	}
 
 	kbd.PropsMu.Lock()
-	newLayoutList, deleted := delItemFromList(layout, kbd.UserLayoutList)
+	newLayoutList, deleted := delItemFromList(layout, kbd.UserLayoutList.Get())
 	kbd.PropsMu.Unlock()
 	if !deleted {
 		return
@@ -446,9 +444,9 @@ func (kbd *Keyboard) delUserOption(option string) {
 
 func (kbd *Keyboard) applyCursorBlink() {
 	value := kbd.CursorBlink.Get()
-	xsSetInt32(xsPropBlinkTimeut, value)
+	xsSetInt32(xsPropBlinkTimeut, int32(value))
 
-	err := setQtCursorBlink(value, path.Join(os.Getenv("HOME"),
+	err := setQtCursorBlink(int32(value), path.Join(os.Getenv("HOME"),
 		qtDefaultConfig))
 	if err != nil {
 		logger.Debugf("failed to set qt cursor blink to '%v': %v",
@@ -635,34 +633,6 @@ func applyXmodmapConfig() error {
 	return doAction("xmodmap " + config)
 }
 
-func (kbd *Keyboard) listenSettingsChanged() {
-	gsettings.ConnectChanged(kbdSchema, "layout-scope", func(key string) {
-		scope := kbd.LayoutScope.Get()
-		logger.Debug("layout scope changed to", scope)
-		switch scope {
-		case layoutScopeGlobal:
-			if kbd.user == nil {
-				logger.Warning("kbd.user is nil")
-				return
-			}
-
-			layout, err := kbd.user.Layout().Get(0)
-			if err != nil {
-				logger.Warning("failed to get user layout:", err)
-				return
-			}
-
-			kbd.setLayout(layout)
-
-		case layoutScopeApp:
-			layout, ok := kbd.appLayoutCfg.get(kbd.activeWinClass)
-			if ok {
-				kbd.setLayout(layout)
-			}
-		}
-	})
-}
-
 func (kbd *Keyboard) listenRootWindowXEvent() {
 	if kbd.xConn == nil {
 		return
@@ -743,10 +713,10 @@ func (kbd *Keyboard) handlePropertyNotifyEvent(ev *x.PropertyNotifyEvent) {
 }
 
 func (kbd *Keyboard) toggleNextLayout() {
-	for idx, item := range kbd.UserLayoutList {
-		if kbd.CurrentLayout == item {
-			var index = (idx + 1) % len(kbd.UserLayoutList)
-			kbd.setLayout(kbd.UserLayoutList[index])
+	for idx, item := range kbd.UserLayoutList.Get() {
+		if kbd.CurrentLayout.Get() == item {
+			var index = (idx + 1) % len(kbd.UserLayoutList.Get())
+			kbd.setLayout(kbd.UserLayoutList.Get()[index])
 			return
 		}
 	}
@@ -763,47 +733,85 @@ func (kbd *Keyboard) updateDXKeyboards() {
 		kbd.devInfos = append(kbd.devInfos, info)
 	}
 
-	value, err := kbd.dsgInputConfig.Value(0, dsettingsKeyboardEnabledKey)
+	enableKeyboard, err := kbd.dsgInputConfig.GetValueBool(dsettingsKeyboardEnabledKey)
 	if err != nil {
 		logger.Warningf("getDsgData key : %s. err : %s", dsettingsKeyboardEnabledKey, err)
 		return
 	}
 
-	if enableKeyboard, ok := value.Value().(bool); ok {
-		for _, dev := range kbd.devInfos {
-			dev.Enable(enableKeyboard)
-		}
+	for _, dev := range kbd.devInfos {
+		dev.Enable(enableKeyboard)
 	}
 }
 
 func (kbd *Keyboard) initDsgConfig() error {
-	logger.Debug("initDsgConfig")
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		logger.Warning(err)
-		return nil
-	}
-	// 加载dsg配置
-	dsg := configManager.NewConfigManager(systemBus)
-
-	inputDevicesPath, err := dsg.AcquireManager(0, dsettingsAppID, dsettingsInputdevices, "")
+	var err error
+	kbd.dsgInputConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsInputdevices, "")
 	if err != nil {
 		logger.Warning(err)
 		return err
 	}
 
-	kbd.dsgInputConfig, err = configManager.NewManager(systemBus, inputDevicesPath)
+	kbd.dsgInputConfig.ConnectConfigChanged(dsettingsKeyboardEnabledKey, func(value interface{}) {
+		kbd.updateDXKeyboards()
+	})
+
+	return nil
+}
+
+func (kbd *Keyboard) initKeyboardDConfig() error {
+	err := error(nil)
+
+	kbd.dsgKeyboardConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsKeyboardName, "")
 	if err != nil {
-		logger.Warning(err)
-		return err
+		return fmt.Errorf("create keyboard dconfig manager failed: %v", err)
 	}
 
-	kbd.dsgInputConfig.InitSignalExt(kbd.sysSigLoop, true)
-	kbd.dsgInputConfig.ConnectValueChanged(func(key string) {
-		logger.Infof("key: %v", key)
-		if key == dsettingsKeyboardEnabledKey {
-			kbd.updateDXKeyboards()
+	kbd.CurrentLayout.Bind(kbd.dsgKeyboardConfig, dconfigKeyLayout)
+	kbd.UserLayoutList.Bind(kbd.dsgKeyboardConfig, dconfigKeyUserLayoutList)
+	kbd.LayoutScope.Bind(kbd.dsgKeyboardConfig, dconfigKeyLayoutScope)
+	kbd.RepeatEnabled.Bind(kbd.dsgKeyboardConfig, dconfigKeyRepeatEnabled)
+	kbd.CapslockToggle.Bind(kbd.dsgKeyboardConfig, dconfigKeyCapslockToggle)
+	kbd.CursorBlink.Bind(kbd.dsgKeyboardConfig, dconfigKeyCursorBlinkTime)
+	kbd.RepeatInterval.Bind(kbd.dsgKeyboardConfig, dconfigKeyRepeatInterval)
+	kbd.RepeatDelay.Bind(kbd.dsgKeyboardConfig, dconfigKeyRepeatDelay)
+	kbd.UserOptionList.Bind(kbd.dsgKeyboardConfig, dconfigKeyLayoutOptions)
+
+	kbd.dsgKeyboardConfig.ConnectValueChanged(func(key string) {
+		logger.Debugf("Keyboard dconfig value changed: %s", key)
+		switch key {
+		case dconfigKeyRepeatEnabled:
+			kbd.applyRepeat()
+		case dconfigKeyRepeatInterval:
+			kbd.applyRepeat()
+		case dconfigKeyRepeatDelay:
+			kbd.applyRepeat()
+		case dconfigKeyCursorBlinkTime:
+			kbd.applyCursorBlink()
+		case dconfigKeyLayoutOptions:
+			kbd.applyOptions()
+		case dconfigKeyLayoutScope:
+			kbd.applyLayout()
+		default:
+			logger.Debugf("Unhandled keyboard dconfig key change: %s", key)
 		}
 	})
+
+	logger.Info("Keyboard DConfig initialization completed successfully")
+	return nil
+}
+
+// saveToKeyboardDConfig 保存配置值到keyboard dconfig
+func (kbd *Keyboard) saveToKeyboardDConfig(key string, value interface{}) error {
+	if kbd.dsgKeyboardConfig == nil {
+		return errors.New("keyboard dconfig not initialized")
+	}
+
+	err := kbd.dsgKeyboardConfig.SetValue(key, value)
+	if err != nil {
+		return fmt.Errorf("failed to save %s to keyboard dconfig: %v", key, err)
+	}
+
+	logger.Debugf("Saved %s = %v to keyboard dconfig", key, value)
 	return nil
 }

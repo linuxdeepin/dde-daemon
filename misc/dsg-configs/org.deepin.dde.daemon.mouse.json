@@ -1,0 +1,127 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+      "locatePointer": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "locatePointer",
+        "name[zh_CN]": "定位指针",
+        "description[zh_CN]": "按下并释放Ctrl键时高亮显示指针当前位置",
+        "description": "Highlights the current location of the pointer when the Control key is pressed and released",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "leftHanded": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "leftHanded",
+        "name[zh_CN]": "左手鼠标",
+        "description[zh_CN]": "为左手用户交换鼠标左右键",
+        "description": "Swap left and right mouse buttons for left-handed mice",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "naturalScroll": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "naturalScroll",
+        "name[zh_CN]": "自然滚动",
+        "description[zh_CN]": "启用鼠标自然（反向）滚动",
+        "description": "Set this to TRUE to enable natural (reverse) scrolling for mouses",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "disableTouchpad": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "disableTouchpad",
+        "name[zh_CN]": "检测到鼠标时禁用触控板",
+        "description[zh_CN]": "当检测到鼠标时禁用触控板",
+        "description": "Disable touchpad when has mouse",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "adaptiveAccelProfile": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "adaptiveAccelProfile",
+        "name[zh_CN]": "自适应加速配置",
+        "description[zh_CN]": "使用自适应鼠标加速配置",
+        "description": "Use adaptive mouse acceleration profile",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionAcceleration": {
+        "value": 1.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionAcceleration",
+        "name[zh_CN]": "鼠标加速",
+        "description[zh_CN]": "鼠标移动加速倍数，-1为系统默认值",
+        "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionThreshold": {
+        "value": 1.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionThreshold",
+        "name[zh_CN]": "鼠标加速阈值",
+        "description[zh_CN]": "激活鼠标加速前指针必须移动的距离（像素），-1为系统默认值",
+        "description": "Distance in pixels the pointer must move before accelerated mouse motion is activated. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionScaling": {
+        "value": 10.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionScaling",
+        "name[zh_CN]": "鼠标速度缩放",
+        "description[zh_CN]": "鼠标移动速度倍数，-1为系统默认值",
+        "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "doubleClick": {
+        "value": 500,
+        "serial": 0,
+        "flags": [],
+        "name": "doubleClick",
+        "name[zh_CN]": "双击时间间隔",
+        "description[zh_CN]": "双击时间间隔（毫秒）",
+        "description": "Length of a double click in milliseconds",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "dragThreshold": {
+        "value": 8,
+        "serial": 0,
+        "flags": [],
+        "name": "dragThreshold",
+        "name[zh_CN]": "拖拽阈值",
+        "description[zh_CN]": "启动拖拽前的距离",
+        "description": "Distance before a drag is started",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "middleButtonEnabled": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "middleButtonEnabled",
+        "name[zh_CN]": "中键模拟",
+        "description[zh_CN]": "通过同时点击左右键来模拟中键",
+        "description": "Enables middle mouse button emulation through simultaneous left and right button click",
+        "permissions": "readwrite",
+        "visibility": "public"
+      }
+  }
+}

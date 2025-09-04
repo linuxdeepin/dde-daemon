@@ -26,7 +26,7 @@ const (
 	_dsettingsAppID                 = "org.deepin.dde.daemon"
 	_dsettingsInputdevicesName      = "org.deepin.dde.daemon.inputdevices"
 	_dsettingsDeviceWakeupStatusKey = "deviceWakeupStatus"
-	_dsettingsTouchpadEnabledKey    = "toupadEnabled"
+	_dsettingsTouchpadEnabledKey    = "touchpadEnabled"
 	_ps2mDevice                     = "PS2M"
 )
 

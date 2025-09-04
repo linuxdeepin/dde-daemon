@@ -11,10 +11,7 @@ import (
 )
 
 func (m *Mouse) Reset() *dbus.Error {
-	for _, key := range m.setting.ListKeys() {
-		m.setting.Reset(key)
-	}
-	return nil
+	return dbusutil.ToError(m.dsgMouseConfig.ResetAll())
 }
 
 func (m *Mouse) Enable(enabled bool) *dbus.Error {
@@ -26,17 +23,11 @@ func (m *Mouse) Enable(enabled bool) *dbus.Error {
 }
 
 func (tp *TrackPoint) Reset() *dbus.Error {
-	for _, key := range tp.setting.ListKeys() {
-		tp.setting.Reset(key)
-	}
-	return nil
+	return dbusutil.ToError(tp.dsgTrackPointConfig.ResetAll())
 }
 
 func (tpad *Touchpad) Reset() *dbus.Error {
-	for _, key := range tpad.setting.ListKeys() {
-		tpad.setting.Reset(key)
-	}
-	return nil
+	return dbusutil.ToError(tpad.dsgTouchpadConfig.ResetAll())
 }
 
 func (tpad *Touchpad) Enable(enabled bool) *dbus.Error {
@@ -45,23 +36,11 @@ func (tpad *Touchpad) Enable(enabled bool) *dbus.Error {
 }
 
 func (w *Wacom) Reset() *dbus.Error {
-	for _, key := range w.setting.ListKeys() {
-		w.setting.Reset(key)
-	}
-	for _, key := range w.stylusSetting.ListKeys() {
-		w.stylusSetting.Reset(key)
-	}
-	for _, key := range w.eraserSetting.ListKeys() {
-		w.eraserSetting.Reset(key)
-	}
-	return nil
+	return dbusutil.ToError(w.dsgWacomConfig.ResetAll())
 }
 
 func (kbd *Keyboard) Reset() *dbus.Error {
-	for _, key := range kbd.setting.ListKeys() {
-		kbd.setting.Reset(key)
-	}
-	return nil
+	return dbusutil.ToError(kbd.dsgKeyboardConfig.ResetAll())
 }
 
 func (kbd *Keyboard) LayoutList() (map[string]string, *dbus.Error) {
@@ -69,7 +48,7 @@ func (kbd *Keyboard) LayoutList() (map[string]string, *dbus.Error) {
 	result := kbd.layoutMap.filterByLocales(locales)
 
 	kbd.PropsMu.RLock()
-	for _, layout := range kbd.UserLayoutList {
+	for _, layout := range kbd.UserLayoutList.Get() {
 		layoutDetail := kbd.layoutMap[layout]
 		result[layout] = layoutDetail.Description
 	}
@@ -81,7 +60,7 @@ func (kbd *Keyboard) LayoutList() (map[string]string, *dbus.Error) {
 func (kbd *Keyboard) AllLayoutList() (map[string]string, *dbus.Error) {
 	result := kbd.layoutMap.getAll()
 	kbd.PropsMu.RLock()
-	for _, layout := range kbd.UserLayoutList {
+	for _, layout := range kbd.UserLayoutList.Get() {
 		layoutDetail := kbd.layoutMap[layout]
 		result[layout] = layoutDetail.Description
 	}
