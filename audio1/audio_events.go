@@ -469,12 +469,12 @@ func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
 
 func (a *Audio) handleSinkAdded(idx uint32) {
 	// 数据更新在refreshSinks中统一处理，这里只做业务逻辑上的响应
-	logger.Debugf("sink %d added", idx)
 	sink, err := a.ctx.GetSink(idx)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
+	logger.Debugf("sink %d %s added", idx, sink.Name)
 	if sink.Name == dndVirtualSinkName {
 		port := pulse.PortInfo{
 			Name:        sink.Name,
@@ -613,12 +613,12 @@ func (a *Audio) handleSinkInputEvent(eventType int, idx uint32) {
 
 func (a *Audio) handleSinkInputAdded(idx uint32) {
 	// 数据更新在refreshSinkInputs中统一处理，这里只做业务逻辑上的响应
-	logger.Debugf("sink-input %d added", idx)
 	sinkInput, err := a.ctx.GetSinkInput(idx)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
+	logger.Debugf("sink-input %d %s added", idx, sinkInput.Name)
 	if _, exist := a.sinkInputs[idx]; exist {
 		a.sinkInputs[idx].update(sinkInput)
 	} else {
@@ -626,8 +626,8 @@ func (a *Audio) handleSinkInputAdded(idx uint32) {
 	}
 	if a.defaultSink != nil {
 		list := []uint32{idx}
-		logger.Infof("move sink-input %d to sink %s", idx, a.defaultSink.Name)
-		a.ctx.MoveSinkInputsByIndex(list, a.defaultSink.index)
+		logger.Infof("move sink-input %d to default sink", idx)
+		a.moveSinkInputsToSink(list)
 	}
 }
 
@@ -744,7 +744,7 @@ func (a *Audio) updatePropSinkInputs() {
 
 func isPhysicalDevice(deviceName string) bool {
 	for _, virtualDeviceKey := range []string{
-		"echoCancelSource", "echo-cancel", "Echo-Cancel", // virtual key
+		"echoCancelSource", "echo-cancel", "Echo-Cancel", "remap-sink-mono", // virtual key
 	} {
 		if strings.Contains(deviceName, virtualDeviceKey) {
 			return false
