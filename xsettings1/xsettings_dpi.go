@@ -73,7 +73,20 @@ func (m *XSManager) updateDPI() {
 
 func (m *XSManager) updateXResources() {
 	scaleFactor := m.cfgHelper.GetDouble(gsKeyScaleFactor)
-	xftDpi := int(DPI_FALLBACK * scaleFactor)
+	windowScale := m.cfgHelper.GetInt(gsKeyWindowScale)
+	
+	var xftDpi int
+	if windowScale > 1 {
+		// Mixed scaling mode: Keep XResources Xft.dpi consistent with xsettings Gdk/UnscaledDPI
+		// This prevents DPI jumping when daemon exits, as GTK will use the same base DPI value
+		xftDpi = DPI_FALLBACK  // 96 - matches Gdk/UnscaledDPI (96*1024)/1024
+		logger.Debugf("Mixed scaling mode: windowScale=%d, setting Xft.dpi=%d to match Gdk/UnscaledDPI", windowScale, xftDpi)
+	} else {
+		// Pure DPI scaling mode: Normal DPI scaling
+		xftDpi = int(DPI_FALLBACK * scaleFactor)
+		logger.Debugf("Pure DPI scaling mode: scaleFactor=%.2f, setting Xft.dpi=%d", scaleFactor, xftDpi)
+	}
+	
 	updateXResources(xresourceInfos{
 		&xresourceInfo{
 			key:   "Xcursor.theme",
