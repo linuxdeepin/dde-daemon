@@ -7,9 +7,8 @@ package langselector
 import (
 	"time"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/strv"
 )
@@ -44,7 +43,6 @@ func Run() {
 
 	initNotifyTxt()
 	lang.connectSettingsChanged()
-	err = gsettings.StartMonitor()
 	if err != nil {
 		logger.Warning("failed to start monitor settings:", err)
 	}
@@ -59,11 +57,17 @@ func Run() {
 
 func GetLocales() []string {
 	currentLocale := getCurrentUserLocale()
-	settings := gio.NewSettings(gsSchemaLocale)
-	locales := settings.GetStrv(gsKeyLocales)
+	dconfig, err := dconfig.NewDConfig(dconfigAppID, dconfigLocaleId, "")
+	if err != nil {
+		logger.Warning("failed to new dconfig:", err)
+	}
+	locales, err := dconfig.GetValueStringList(dconfigKeyLocales)
+	if err != nil {
+		logger.Warning("failed to get locales:", err)
+		return nil
+	}
 	if !strv.Strv(locales).Contains(currentLocale) {
 		locales = append(locales, currentLocale)
 	}
-	settings.Unref()
 	return locales
 }

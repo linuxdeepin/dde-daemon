@@ -20,15 +20,14 @@ import (
 	"github.com/linuxdeepin/dde-api/lang_info"
 	"github.com/linuxdeepin/dde-api/language_support"
 	"github.com/linuxdeepin/dde-api/userenv"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 	libnetwork "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.network1"
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
 	localehelper "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.localehelper1"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
@@ -64,8 +63,9 @@ const (
 	// 正在locale-gen
 	LocaleStateGenLocale = 1 << 2
 
-	gsSchemaLocale = "com.deepin.dde.locale"
-	gsKeyLocales   = "locales"
+	dconfigAppID      = "org.deepin.dde.daemon"
+	dconfigLocaleId   = "org.deepin.dde.daemon.locale"
+	dconfigKeyLocales = "locales"
 )
 
 var (
@@ -104,8 +104,8 @@ type LangSelector struct {
 	// Store locale changed state
 	LocaleState int32
 	// dbusutil-gen: equal=nil
-	Locales  []string
-	settings *gio.Settings
+	Locales       []string
+	localeDconfig *dconfig.DConfig
 
 	//nolint
 	signals *struct {
@@ -165,11 +165,18 @@ func newLangSelector(service *dbusutil.Service) (*LangSelector, error) {
 	}
 	lang.CurrentLocale = locale
 
-	lang.settings = gio.NewSettings(gsSchemaLocale)
-	locales := lang.settings.GetStrv(gsKeyLocales)
+	lang.localeDconfig, err = dconfig.NewDConfig(dconfigAppID, dconfigLocaleId, "")
+	if err != nil {
+		return nil, err
+	}
+
+	locales, err := lang.localeDconfig.GetValueStringList(dconfigKeyLocales)
+	if err != nil {
+		return nil, err
+	}
 	if !strv.Strv(locales).Contains(locale) {
 		locales = append(locales, locale)
-		lang.settings.SetStrv(gsKeyLocales, locales)
+		lang.localeDconfig.SetValue(dconfigKeyLocales, locales)
 	}
 	lang.Locales = locales
 
@@ -177,9 +184,14 @@ func newLangSelector(service *dbusutil.Service) (*LangSelector, error) {
 }
 
 func (l *LangSelector) connectSettingsChanged() {
-	gsettings.ConnectChanged(gsSchemaLocale, gsKeyLocales, func(key string) {
-		locales := l.settings.GetStrv(gsKeyLocales)
-		l.updateLocales(locales)
+	l.localeDconfig.ConnectValueChanged(func(key string) {
+		if key == dconfigKeyLocales {
+			locales, err := l.localeDconfig.GetValueStringList(dconfigKeyLocales)
+			if err != nil {
+				return
+			}
+			l.updateLocales(locales)
+		}
 	})
 }
 
@@ -651,20 +663,26 @@ func (lang *LangSelector) installPackages(pkgs []string) error {
 }
 
 func (lang *LangSelector) addLocale(locale string) error {
-	locales := lang.settings.GetStrv(gsKeyLocales)
+	locales, err := lang.localeDconfig.GetValueStringList(dconfigKeyLocales)
+	if err != nil {
+		return err
+	}
 	if !strv.Strv(locales).Contains(locale) {
 		locales = append(locales, locale)
 	}
 
-	lang.settings.SetStrv(gsKeyLocales, locales)
+	lang.localeDconfig.SetValue(dconfigKeyLocales, locales)
 	return nil
 }
 
 func (lang *LangSelector) deleteLocale(locale string) error {
-	locales := lang.settings.GetStrv(gsKeyLocales)
+	locales, err := lang.localeDconfig.GetValueStringList(dconfigKeyLocales)
+	if err != nil {
+		return err
+	}
 	locales, isDeleted := strv.Strv(locales).Delete(locale)
 	if isDeleted {
-		lang.settings.SetStrv(gsKeyLocales, locales)
+		lang.localeDconfig.SetValue(dconfigKeyLocales, locales)
 	}
 	return nil
 }
