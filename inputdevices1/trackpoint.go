@@ -5,25 +5,28 @@
 package inputdevices
 
 import (
+	"fmt"
 	"sync"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 )
 
 const (
-	trackPointSchema              = "com.deepin.dde.trackpoint"
-	trackPointKeyMidButton        = "middle-button-enabled"
-	trackPointKeyMidButtonTimeout = "middle-button-timeout"
-	trackPointKeyWheel            = "wheel-emulation"
-	trackPointKeyWheelButton      = "wheel-emulation-button"
-	trackPointKeyWheelTimeout     = "wheel-emulation-timeout"
-	trackPointKeyWheelHorizScroll = "wheel-horiz-scroll"
-	trackPointKeyAcceleration     = "motion-acceleration"
-	trackPointKeyThreshold        = "motion-threshold"
-	trackPointKeyScaling          = "motion-scaling"
-	trackPointKeyLeftHanded       = "left-handed"
+	// DConfig相关常量
+	dsettingsTrackPointName = "org.deepin.dde.daemon.trackpoint"
+
+	// DConfig键值常量 - 对应trackpoint.json中的配置项
+	dconfigKeyTPMiddleButtonEnabled   = "middleButtonEnabled"
+	dconfigKeyTPMiddleButtonTimeout   = "middleButtonTimeout"
+	dconfigKeyTPWheelEmulation        = "wheelEmulation"
+	dconfigKeyTPWheelEmulationButton  = "wheelEmulationButton"
+	dconfigKeyTPWheelEmulationTimeout = "wheelEmulationTimeout"
+	dconfigKeyTPWheelHorizScroll      = "wheelHorizScroll"
+	dconfigKeyTPMotionAcceleration    = "motionAcceleration"
+	dconfigKeyTPMotionThreshold       = "motionThreshold"
+	dconfigKeyTPMotionScaling         = "motionScaling"
+	dconfigKeyTPLeftHanded            = "leftHanded"
 )
 
 type TrackPoint struct {
@@ -33,39 +36,35 @@ type TrackPoint struct {
 	Exist      bool
 
 	// dbusutil-gen: ignore-below
-	MiddleButtonEnabled gsprop.Bool `prop:"access:rw"`
-	WheelEmulation      gsprop.Bool `prop:"access:rw"`
-	WheelHorizScroll    gsprop.Bool `prop:"access:rw"`
+	MiddleButtonEnabled dconfig.Bool `prop:"access:rw"`
+	WheelEmulation      dconfig.Bool `prop:"access:rw"`
+	WheelHorizScroll    dconfig.Bool `prop:"access:rw"`
 
-	MiddleButtonTimeout   gsprop.Int `prop:"access:rw"`
-	WheelEmulationButton  gsprop.Int `prop:"access:rw"`
-	WheelEmulationTimeout gsprop.Int `prop:"access:rw"`
+	MiddleButtonTimeout   dconfig.Int64 `prop:"access:rw"`
+	WheelEmulationButton  dconfig.Int64 `prop:"access:rw"`
+	WheelEmulationTimeout dconfig.Int64 `prop:"access:rw"`
 
-	MotionAcceleration gsprop.Double `prop:"access:rw"`
-	MotionThreshold    gsprop.Double `prop:"access:rw"`
-	MotionScaling      gsprop.Double `prop:"access:rw"`
+	MotionAcceleration dconfig.Float64 `prop:"access:rw"`
+	MotionThreshold    dconfig.Float64 `prop:"access:rw"`
+	MotionScaling      dconfig.Float64 `prop:"access:rw"`
 
-	LeftHanded gsprop.Bool `prop:"access:rw"`
+	LeftHanded dconfig.Bool `prop:"access:rw"`
 
-	devInfos Mouses
-	setting  *gio.Settings
+	devInfos            Mouses
+	dsgTrackPointConfig *dconfig.DConfig
+	sessionSigLoop      *dbusutil.SignalLoop
 }
 
 func newTrackPoint(service *dbusutil.Service) *TrackPoint {
 	var tp = new(TrackPoint)
 
 	tp.service = service
-	tp.setting = gio.NewSettings(trackPointSchema)
-	tp.MiddleButtonEnabled.Bind(tp.setting, trackPointKeyMidButton)
-	tp.WheelEmulation.Bind(tp.setting, trackPointKeyWheel)
-	tp.WheelHorizScroll.Bind(tp.setting, trackPointKeyWheelHorizScroll)
-	tp.MotionAcceleration.Bind(tp.setting, trackPointKeyAcceleration)
-	tp.MotionThreshold.Bind(tp.setting, trackPointKeyThreshold)
-	tp.MotionScaling.Bind(tp.setting, trackPointKeyScaling)
-	tp.MiddleButtonTimeout.Bind(tp.setting, trackPointKeyMidButtonTimeout)
-	tp.WheelEmulationButton.Bind(tp.setting, trackPointKeyWheelButton)
-	tp.WheelEmulationTimeout.Bind(tp.setting, trackPointKeyWheelTimeout)
-	tp.LeftHanded.Bind(tp.setting, trackPointKeyLeftHanded)
+
+	if err := tp.initTrackPointDConfig(); err != nil {
+		logger.Errorf("Failed to initialize trackpoint dconfig: %v", err)
+		panic("TrackPoint DConfig initialization failed - cannot continue without dconfig support")
+	}
+
 	// TODO: treeland环境暂不支持
 	if hasTreeLand {
 		return tp
@@ -226,4 +225,55 @@ func (tp *TrackPoint) motionScaling() {
 				v.Id, v.Name, err)
 		}
 	}
+}
+
+func (tp *TrackPoint) initTrackPointDConfig() error {
+	var err error
+	tp.dsgTrackPointConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsTrackPointName, "")
+	if err != nil {
+		return fmt.Errorf("create trackpoint config manager failed: %v", err)
+	}
+
+	// 绑定所有 dcprop 属性
+	tp.MiddleButtonEnabled.Bind(tp.dsgTrackPointConfig, dconfigKeyTPMiddleButtonEnabled)
+	tp.WheelEmulation.Bind(tp.dsgTrackPointConfig, dconfigKeyTPWheelEmulation)
+	tp.WheelHorizScroll.Bind(tp.dsgTrackPointConfig, dconfigKeyTPWheelHorizScroll)
+	tp.LeftHanded.Bind(tp.dsgTrackPointConfig, dconfigKeyTPLeftHanded)
+	tp.MiddleButtonTimeout.Bind(tp.dsgTrackPointConfig, dconfigKeyTPMiddleButtonTimeout)
+	tp.WheelEmulationButton.Bind(tp.dsgTrackPointConfig, dconfigKeyTPWheelEmulationButton)
+	tp.WheelEmulationTimeout.Bind(tp.dsgTrackPointConfig, dconfigKeyTPWheelEmulationTimeout)
+	tp.MotionAcceleration.Bind(tp.dsgTrackPointConfig, dconfigKeyTPMotionAcceleration)
+	tp.MotionThreshold.Bind(tp.dsgTrackPointConfig, dconfigKeyTPMotionThreshold)
+	tp.MotionScaling.Bind(tp.dsgTrackPointConfig, dconfigKeyTPMotionScaling)
+
+	tp.dsgTrackPointConfig.ConnectValueChanged(func(key string) {
+		logger.Debugf("TrackPoint dconfig value changed: %s", key)
+		switch key {
+		case dconfigKeyTPMiddleButtonEnabled:
+			tp.enableMiddleButton()
+		case dconfigKeyTPMiddleButtonTimeout:
+			tp.middleButtonTimeout()
+		case dconfigKeyTPWheelEmulation:
+			tp.enableWheelEmulation()
+		case dconfigKeyTPWheelEmulationButton:
+			tp.wheelEmulationButton()
+		case dconfigKeyTPWheelEmulationTimeout:
+			tp.wheelEmulationTimeout()
+		case dconfigKeyTPWheelHorizScroll:
+			tp.enableWheelHorizScroll()
+		case dconfigKeyTPMotionAcceleration:
+			tp.motionAcceleration()
+		case dconfigKeyTPMotionThreshold:
+			tp.motionThreshold()
+		case dconfigKeyTPMotionScaling:
+			tp.motionScaling()
+		case dconfigKeyTPLeftHanded:
+			tp.enableLeftHanded()
+		default:
+			logger.Debugf("Unhandled trackpoint dconfig key change: %s", key)
+		}
+	})
+
+	logger.Info("TrackPoint DConfig initialization completed successfully")
+	return nil
 }

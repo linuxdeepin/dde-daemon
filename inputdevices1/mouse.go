@@ -5,26 +5,29 @@
 package inputdevices
 
 import (
+	"fmt"
 	"sync"
 
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 )
 
 const (
-	mouseSchema = "com.deepin.dde.mouse"
+	// DConfig相关常量
+	dsettingsMouseName = "org.deepin.dde.daemon.mouse"
 
-	mouseKeyLeftHanded      = "left-handed"
-	mouseKeyDisableTouchpad = "disable-touchpad"
-	mouseKeyMiddleButton    = "middle-button-enabled"
-	mouseKeyNaturalScroll   = "natural-scroll"
-	mouseKeyAcceleration    = "motion-acceleration"
-	mouseKeyThreshold       = "motion-threshold"
-	mouseKeyScaling         = "motion-scaling"
-	mouseKeyDoubleClick     = "double-click"
-	mouseKeyDragThreshold   = "drag-threshold"
-	mouseKeyAdaptiveAccel   = "adaptive-accel-profile"
+	// DConfig键值常量 - 对应mouse.json中的配置项
+	dconfigKeyLeftHanded           = "leftHanded"
+	dconfigKeyDisableTouchpad      = "disableTouchpad"
+	dconfigKeyMiddleButtonEnabled  = "middleButtonEnabled"
+	dconfigKeyNaturalScroll        = "naturalScroll"
+	dconfigKeyMotionAcceleration   = "motionAcceleration"
+	dconfigKeyMotionThreshold      = "motionThreshold"
+	dconfigKeyMotionScaling        = "motionScaling"
+	dconfigKeyDoubleClick          = "doubleClick"
+	dconfigKeyDragThreshold        = "dragThreshold"
+	dconfigKeyAdaptiveAccelProfile = "adaptiveAccelProfile"
+	dconfigKeyLocatePointer        = "locatePointer"
 )
 
 type Mouse struct {
@@ -34,41 +37,47 @@ type Mouse struct {
 	Exist      bool
 
 	// dbusutil-gen: ignore-below
-	Enabled               bool        `prop:"access:rw"`
-	LeftHanded            gsprop.Bool `prop:"access:rw"`
-	DisableTpad           gsprop.Bool `prop:"access:rw"`
-	NaturalScroll         gsprop.Bool `prop:"access:rw"`
-	MiddleButtonEmulation gsprop.Bool `prop:"access:rw"`
-	AdaptiveAccelProfile  gsprop.Bool `prop:"access:rw"`
+	Enabled               bool         `prop:"access:rw"`
+	LeftHanded            dconfig.Bool `prop:"access:rw"`
+	DisableTpad           dconfig.Bool `prop:"access:rw"`
+	NaturalScroll         dconfig.Bool `prop:"access:rw"`
+	MiddleButtonEmulation dconfig.Bool `prop:"access:rw"`
+	AdaptiveAccelProfile  dconfig.Bool `prop:"access:rw"`
 
-	MotionAcceleration gsprop.Double `prop:"access:rw"`
-	MotionThreshold    gsprop.Double `prop:"access:rw"`
-	MotionScaling      gsprop.Double `prop:"access:rw"`
+	MotionAcceleration dconfig.Float64 `prop:"access:rw"`
+	MotionThreshold    dconfig.Float64 `prop:"access:rw"`
+	MotionScaling      dconfig.Float64 `prop:"access:rw"`
 
-	DoubleClick   gsprop.Int `prop:"access:rw"`
-	DragThreshold gsprop.Int `prop:"access:rw"`
+	DoubleClick   dconfig.Int32 `prop:"access:rw"`
+	DragThreshold dconfig.Int32 `prop:"access:rw"`
 
-	devInfos Mouses
-	setting  *gio.Settings
-	touchPad *Touchpad
+	devInfos       Mouses
+	dsgMouseConfig *dconfig.DConfig
+	sessionSigLoop *dbusutil.SignalLoop
+	touchPad       *Touchpad
 }
 
-func newMouse(service *dbusutil.Service, touchPad *Touchpad) *Mouse {
+func newMouse(service *dbusutil.Service, touchPad *Touchpad, sessionSigLoop *dbusutil.SignalLoop) *Mouse {
 	var m = new(Mouse)
 
 	m.service = service
 	m.touchPad = touchPad
-	m.setting = gio.NewSettings(mouseSchema)
-	m.LeftHanded.Bind(m.setting, mouseKeyLeftHanded)
-	m.DisableTpad.Bind(m.setting, mouseKeyDisableTouchpad)
-	m.NaturalScroll.Bind(m.setting, mouseKeyNaturalScroll)
-	m.MiddleButtonEmulation.Bind(m.setting, mouseKeyMiddleButton)
-	m.MotionAcceleration.Bind(m.setting, mouseKeyAcceleration)
-	m.MotionThreshold.Bind(m.setting, mouseKeyThreshold)
-	m.MotionScaling.Bind(m.setting, mouseKeyScaling)
-	m.DoubleClick.Bind(m.setting, mouseKeyDoubleClick)
-	m.DragThreshold.Bind(m.setting, mouseKeyDragThreshold)
-	m.AdaptiveAccelProfile.Bind(m.setting, mouseKeyAdaptiveAccel)
+	m.sessionSigLoop = sessionSigLoop
+
+	if err := m.initMouseDConfig(); err != nil {
+		logger.Errorf("Failed to initialize mouse dconfig: %v", err)
+		panic("Mouse DConfig initialization failed - cannot continue without dconfig support")
+	}
+	m.LeftHanded.Bind(m.dsgMouseConfig, dconfigKeyLeftHanded)
+	m.DisableTpad.Bind(m.dsgMouseConfig, dconfigKeyDisableTouchpad)
+	m.NaturalScroll.Bind(m.dsgMouseConfig, dconfigKeyNaturalScroll)
+	m.MiddleButtonEmulation.Bind(m.dsgMouseConfig, dconfigKeyMiddleButtonEnabled)
+	m.AdaptiveAccelProfile.Bind(m.dsgMouseConfig, dconfigKeyAdaptiveAccelProfile)
+	m.MotionAcceleration.Bind(m.dsgMouseConfig, dconfigKeyMotionAcceleration)
+	m.MotionThreshold.Bind(m.dsgMouseConfig, dconfigKeyMotionThreshold)
+	m.MotionScaling.Bind(m.dsgMouseConfig, dconfigKeyMotionScaling)
+	m.DoubleClick.Bind(m.dsgMouseConfig, dconfigKeyDoubleClick)
+	m.DragThreshold.Bind(m.dsgMouseConfig, dconfigKeyDragThreshold)
 
 	// TODO: treeland环境暂不支持
 	if hasTreeLand {
@@ -289,4 +298,43 @@ func (m *Mouse) dragThreshold() {
 
 func (m *Mouse) syncConfigToXsettings() {
 	m.doubleClick() // 初始化时,将默认配置同步到xsettings中
+}
+
+func (m *Mouse) initMouseDConfig() error {
+	var err error
+	m.dsgMouseConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsMouseName, "")
+	if err != nil {
+		return fmt.Errorf("create mouse config manager failed: %v", err)
+	}
+
+	m.dsgMouseConfig.ConnectValueChanged(func(key string) {
+		logger.Debugf("Mouse dconfig value changed: %s", key)
+		switch key {
+		case dconfigKeyLeftHanded:
+			m.enableLeftHanded()
+		case dconfigKeyDisableTouchpad:
+			m.disableTouchPad()
+		case dconfigKeyNaturalScroll:
+			m.enableNaturalScroll()
+		case dconfigKeyMiddleButtonEnabled:
+			m.enableMidBtnEmu()
+		case dconfigKeyAdaptiveAccelProfile:
+			m.enableAdaptiveAccelProfile()
+		case dconfigKeyMotionAcceleration:
+			m.motionAcceleration()
+		case dconfigKeyMotionThreshold:
+			m.motionThreshold()
+		case dconfigKeyMotionScaling:
+			m.motionScaling()
+		case dconfigKeyDoubleClick:
+			m.doubleClick()
+		case dconfigKeyDragThreshold:
+			m.dragThreshold()
+		default:
+			logger.Debugf("Unhandled mouse dconfig key change: %s", key)
+		}
+	})
+
+	logger.Info("Mouse DConfig initialization completed successfully")
+	return nil
 }

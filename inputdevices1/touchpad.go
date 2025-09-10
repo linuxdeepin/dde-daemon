@@ -13,35 +13,34 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.inputdevices1"
 	power "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
-	tpadSchema = "com.deepin.dde.touchpad"
+	dsettingsTouchpadName = "org.deepin.dde.daemon.touchpad"
 
-	tpadKeyEnabled            = "touchpad-enabled"
-	tpadKeyLeftHanded         = "left-handed"
-	tpadKeyDisableWhileTyping = "disable-while-typing"
-	tpadKeyNaturalScroll      = "natural-scroll"
-	tpadKeyEdgeScroll         = "edge-scroll-enabled"
-	tpadKeyHorizScroll        = "horiz-scroll-enabled"
-	tpadKeyVertScroll         = "vert-scroll-enabled"
-	tpadKeyAcceleration       = "motion-acceleration"
-	tpadKeyThreshold          = "motion-threshold"
-	tpadKeyScaling            = "motion-scaling"
-	tpadKeyTapClick           = "tap-to-click"
-	tpadKeyScrollDelta        = "delta-scroll"
-	tpadKeyWhileTypingCmd     = "disable-while-typing-cmd"
-	tpadKeyPalmDetect         = "palm-detect"
-	tpadKeyPalmMinWidth       = "palm-min-width"
-	tpadKeyPalmMinZ           = "palm-min-pressure"
+	dconfigKeyTouchpadEnabled       = "touchpadEnabled"
+	dconfigKeyTouchpadLeftHanded    = "leftHanded"
+	dconfigKeyTouchpadDisableTyping = "disableWhileTyping"
+	dconfigKeyTouchpadNaturalScroll = "naturalScroll"
+	dconfigKeyTouchpadEdgeScroll    = "edgeScrollEnabled"
+	dconfigKeyTouchpadHorizScroll   = "horizScrollEnabled"
+	dconfigKeyTouchpadVertScroll    = "vertScrollEnabled"
+	dconfigKeyTouchpadAcceleration  = "motionAcceleration"
+	dconfigKeyTouchpadThreshold     = "motionThreshold"
+	dconfigKeyTouchpadScaling       = "motionScaling"
+	dconfigKeyTouchpadTapToClick    = "tapToClick"
+	dconfigKeyTouchpadDeltaScroll   = "deltaScroll"
+	dconfigKeyTouchpadDisableCmd    = "disableWhileTypingCmd"
+	dconfigKeyTouchpadPalmDetect    = "palmDetect"
+	dconfigKeyTouchpadPalmMinWidth  = "palmMinWidth"
+	dconfigKeyTouchpadPalmMinZ      = "palmMinPressure"
 
 	dsettingsData = "ps2MouseAsTouchPadEnabled"
 )
@@ -57,29 +56,29 @@ type Touchpad struct {
 	DeviceList string
 
 	// dbusutil-gen: ignore-below
-	TPadEnable      gsprop.Bool `prop:"access:rw"`
-	LeftHanded      gsprop.Bool `prop:"access:rw"`
-	DisableIfTyping gsprop.Bool `prop:"access:rw"`
-	NaturalScroll   gsprop.Bool `prop:"access:rw"`
-	EdgeScroll      gsprop.Bool `prop:"access:rw"`
-	HorizScroll     gsprop.Bool `prop:"access:rw"`
-	VertScroll      gsprop.Bool `prop:"access:rw"`
-	TapClick        gsprop.Bool `prop:"access:rw"`
-	PalmDetect      gsprop.Bool `prop:"access:rw"`
+	TPadEnable      dconfig.Bool `prop:"access:rw"`
+	LeftHanded      dconfig.Bool `prop:"access:rw"`
+	DisableIfTyping dconfig.Bool `prop:"access:rw"`
+	NaturalScroll   dconfig.Bool `prop:"access:rw"`
+	EdgeScroll      dconfig.Bool `prop:"access:rw"`
+	HorizScroll     dconfig.Bool `prop:"access:rw"`
+	VertScroll      dconfig.Bool `prop:"access:rw"`
+	TapClick        dconfig.Bool `prop:"access:rw"`
+	PalmDetect      dconfig.Bool `prop:"access:rw"`
 
-	MotionAcceleration gsprop.Double `prop:"access:rw"`
-	MotionThreshold    gsprop.Double `prop:"access:rw"`
-	MotionScaling      gsprop.Double `prop:"access:rw"`
+	MotionAcceleration dconfig.Float64 `prop:"access:rw"`
+	MotionThreshold    dconfig.Float64 `prop:"access:rw"`
+	MotionScaling      dconfig.Float64 `prop:"access:rw"`
 
-	DoubleClick   gsprop.Int `prop:"access:rw"`
-	DragThreshold gsprop.Int `prop:"access:rw"`
-	DeltaScroll   gsprop.Int `prop:"access:rw"`
-	PalmMinWidth  gsprop.Int `prop:"access:rw"`
-	PalmMinZ      gsprop.Int `prop:"access:rw"`
+	DoubleClick   dconfig.Int32 `prop:"access:rw"`
+	DragThreshold dconfig.Int32 `prop:"access:rw"`
+	DeltaScroll   dconfig.Int64 `prop:"access:rw"`
+	PalmMinWidth  dconfig.Int64 `prop:"access:rw"`
+	PalmMinZ      dconfig.Int64 `prop:"access:rw"`
 
-	devInfos     Touchpads
-	setting      *gio.Settings
-	mouseSetting *gio.Settings
+	devInfos          Touchpads
+	dsgTouchpadConfig *dconfig.DConfig
+	dsgMouseConfig    *dconfig.DConfig
 
 	systemConn    *dbus.Conn
 	systemSigLoop *dbusutil.SignalLoop
@@ -93,26 +92,30 @@ func newTouchpad(service *dbusutil.Service) *Touchpad {
 
 	tpad.service = service
 	tpad.disableTemporary = false
-	tpad.setting = gio.NewSettings(tpadSchema)
-	tpad.TPadEnable.Bind(tpad.setting, tpadKeyEnabled)
-	tpad.LeftHanded.Bind(tpad.setting, tpadKeyLeftHanded)
-	tpad.DisableIfTyping.Bind(tpad.setting, tpadKeyDisableWhileTyping)
-	tpad.NaturalScroll.Bind(tpad.setting, tpadKeyNaturalScroll)
-	tpad.EdgeScroll.Bind(tpad.setting, tpadKeyEdgeScroll)
-	tpad.VertScroll.Bind(tpad.setting, tpadKeyVertScroll)
-	tpad.HorizScroll.Bind(tpad.setting, tpadKeyHorizScroll)
-	tpad.TapClick.Bind(tpad.setting, tpadKeyTapClick)
-	tpad.PalmDetect.Bind(tpad.setting, tpadKeyPalmDetect)
-	tpad.MotionAcceleration.Bind(tpad.setting, tpadKeyAcceleration)
-	tpad.MotionThreshold.Bind(tpad.setting, tpadKeyThreshold)
-	tpad.MotionScaling.Bind(tpad.setting, tpadKeyScaling)
-	tpad.DeltaScroll.Bind(tpad.setting, tpadKeyScrollDelta)
-	tpad.PalmMinWidth.Bind(tpad.setting, tpadKeyPalmMinWidth)
-	tpad.PalmMinZ.Bind(tpad.setting, tpadKeyPalmMinZ)
 
-	tpad.mouseSetting = gio.NewSettings(mouseSchema)
-	tpad.DoubleClick.Bind(tpad.mouseSetting, mouseKeyDoubleClick)
-	tpad.DragThreshold.Bind(tpad.mouseSetting, mouseKeyDragThreshold)
+	if err := tpad.initTouchpadDConfig(); err != nil {
+		logger.Errorf("Failed to initialize touchpad dconfig: %v", err)
+		panic("Touchpad DConfig initialization failed - cannot continue without dconfig support")
+	}
+
+	tpad.TPadEnable.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadEnabled)
+	tpad.LeftHanded.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadLeftHanded)
+	tpad.DisableIfTyping.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadDisableTyping)
+	tpad.NaturalScroll.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadNaturalScroll)
+	tpad.EdgeScroll.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadEdgeScroll)
+	tpad.HorizScroll.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadHorizScroll)
+	tpad.VertScroll.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadVertScroll)
+	tpad.TapClick.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadTapToClick)
+	tpad.PalmDetect.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadPalmDetect)
+	tpad.MotionAcceleration.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadAcceleration)
+	tpad.MotionThreshold.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadThreshold)
+	tpad.MotionScaling.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadScaling)
+	tpad.DeltaScroll.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadDeltaScroll)
+	tpad.PalmMinWidth.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadPalmMinWidth)
+	tpad.PalmMinZ.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadPalmMinZ)
+
+	tpad.DoubleClick.Bind(tpad.dsgMouseConfig, dconfigKeyDoubleClick)
+	tpad.DragThreshold.Bind(tpad.dsgMouseConfig, dconfigKeyDragThreshold)
 
 	// TODO: treeland环境暂不支持
 	if hasTreeLand {
@@ -199,7 +202,7 @@ func (tpad *Touchpad) init() {
 
 	currentState := tpad.TPadEnable.Get()
 	tpad.TPadEnable.Set(!currentState)
-	tpad.enable(currentState)
+	tpad.enable(!currentState)
 	tpad.enableLeftHanded()
 	tpad.enableNaturalScroll()
 	tpad.enableEdgeScroll()
@@ -314,7 +317,7 @@ func (tpad *Touchpad) enableNaturalScroll() {
 func (tpad *Touchpad) setScrollDistance() {
 	delta := tpad.DeltaScroll.Get()
 	for _, v := range tpad.devInfos {
-		err := v.SetScrollDistance(delta, delta)
+		err := v.SetScrollDistance(int32(delta), int32(delta))
 		if err != nil {
 			logger.Debugf("Set natural scroll distance '%v - %v' failed: %v",
 				v.Id, v.Name, err)
@@ -422,7 +425,11 @@ func (tpad *Touchpad) startSyndaemon() {
 		return
 	}
 
-	syncmd := tpad.setting.GetString(tpadKeyWhileTypingCmd)
+	syncmd, err := tpad.dsgTouchpadConfig.GetValueString(dconfigKeyTouchpadDisableCmd)
+	if err != nil {
+		logger.Warningf("Failed to get value for %s: %v", dconfigKeyTouchpadDisableCmd, err)
+		return
+	}
 	if syncmd == "" {
 		logger.Warning("Failed to start syndaemon, because no cmd is specified")
 		return
@@ -445,7 +452,7 @@ func (tpad *Touchpad) startSyndaemon() {
 		argsLen = len(args)
 		cmd = exec.Command(args[0], args[1:argsLen]...)
 	}
-	err := cmd.Start()
+	err = cmd.Start()
 	if err != nil {
 		err = os.Remove(syndaemonPidFile)
 		if err != nil {
@@ -485,7 +492,7 @@ func (tpad *Touchpad) setPalmDimensions() {
 	width := tpad.PalmMinWidth.Get()
 	z := tpad.PalmMinZ.Get()
 	for _, dev := range tpad.devInfos {
-		err := dev.SetPalmDimensions(width, z)
+		err := dev.SetPalmDimensions(int32(width), int32(z))
 		if err != nil {
 			logger.Warning("[setPalmDimensions] failed to set:", dev.Id, width, z, err)
 		}
@@ -540,4 +547,58 @@ func enableGesture(enabled bool) {
 
 	s.SetBoolean("touch-pad-enabled", enabled)
 	s.Unref()
+}
+
+func (tpad *Touchpad) initTouchpadDConfig() error {
+	var err error
+	tpad.dsgTouchpadConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsTouchpadName, "")
+	if err != nil {
+		return fmt.Errorf("create touchpad config manager failed: %v", err)
+	}
+
+	tpad.dsgMouseConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsMouseName, "")
+	if err != nil {
+		return fmt.Errorf("create mouse config manager failed: %v", err)
+	}
+
+	tpad.dsgTouchpadConfig.ConnectValueChanged(func(key string) {
+		logger.Debugf("Touchpad dconfig value changed: %s", key)
+		switch key {
+		case dconfigKeyTouchpadEnabled:
+			tpad.enable(true)
+		case dconfigKeyTouchpadLeftHanded:
+			tpad.enableLeftHanded()
+		case dconfigKeyTouchpadDisableTyping:
+			tpad.disableWhileTyping()
+		case dconfigKeyTouchpadNaturalScroll:
+			tpad.enableNaturalScroll()
+		case dconfigKeyTouchpadEdgeScroll:
+			tpad.enableEdgeScroll()
+		case dconfigKeyTouchpadHorizScroll:
+			tpad.enableTwoFingerScroll()
+		case dconfigKeyTouchpadVertScroll:
+			tpad.enableTwoFingerScroll()
+		case dconfigKeyTouchpadTapToClick:
+			tpad.enableTapToClick()
+		case dconfigKeyTouchpadPalmDetect:
+			tpad.enablePalmDetect()
+		case dconfigKeyTouchpadAcceleration:
+			tpad.motionAcceleration()
+		case dconfigKeyTouchpadThreshold:
+			tpad.motionThreshold()
+		case dconfigKeyTouchpadScaling:
+			tpad.motionScaling()
+		case dconfigKeyTouchpadDeltaScroll:
+			tpad.setScrollDistance()
+		case dconfigKeyTouchpadPalmMinWidth:
+			tpad.setPalmDimensions()
+		case dconfigKeyTouchpadPalmMinZ:
+			tpad.setPalmDimensions()
+		default:
+			logger.Debugf("Unhandled touchpad dconfig key change: %s", key)
+		}
+	})
+
+	logger.Info("Touchpad DConfig initialization completed successfully")
+	return nil
 }

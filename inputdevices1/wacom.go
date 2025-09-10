@@ -11,28 +11,30 @@ import (
 	"time"
 
 	"github.com/linuxdeepin/dde-api/dxinput"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
 )
 
 const (
-	wacomSchema       = "com.deepin.dde.wacom"
-	wacomStylusSchema = wacomSchema + ".stylus"
-	wacomEraserSchema = wacomSchema + ".eraser"
+	// DConfig相关常量
+	dsettingsWacomName = "org.deepin.dde.daemon.wacom"
 
-	wacomKeyLeftHanded        = "left-handed"
-	wacomKeyCursorMode        = "cursor-mode"
-	wacomKeyForceProportions  = "force-proportions"
-	wacomKeyUpAction          = "keyup-action"
-	wacomKeyDownAction        = "keydown-action"
-	wacomKeySuppress          = "suppress"
-	wacomKeyPressureSensitive = "pressure-sensitive"
-	wacomKeyRawSample         = "raw-sample"
-	wacomKeyThreshold         = "threshold"
-	wacomKeyMouseEnterRemap   = "mouse-enter-remap"
+	dconfigKeyWacomLeftHanded       = "leftHanded"
+	dconfigKeyWacomCursorMode       = "cursorMode"
+	dconfigKeyWacomMapOutput        = "mapOutput"
+	dconfigKeyWacomSuppress         = "suppress"
+	dconfigKeyWacomForceProportions = "forceProportions"
+	dconfigKeyWacomMouseEnterRemap  = "mouseEnterRemap"
+	dconfigKeyWacomStylusPressure   = "stylusPressureSensitive"
+	dconfigKeyWacomKeyUpAction      = "keyUpAction"
+	dconfigKeyWacomKeyDownAction    = "keyDownAction"
+	dconfigKeyWacomStylusThreshold  = "stylusThreshold"
+	dconfigKeyWacomStylusRawSample  = "stylusRawSample"
+	dconfigKeyWacomEraserPressure   = "eraserPressureSensitive"
+	dconfigKeyWacomEraserThreshold  = "eraserThreshold"
+	dconfigKeyWacomEraserRawSample  = "eraserRawSample"
 )
 
 const (
@@ -40,12 +42,31 @@ const (
 	btnNumDownKey = 2
 )
 
-var actionMap = map[string]string{
-	"LeftClick":   "button 1",
-	"MiddleClick": "button 2",
-	"RightClick":  "button 3",
-	"PageUp":      "key KP_Page_Up",
-	"PageDown":    "key KP_Page_Down",
+// 动作枚举常量
+const (
+	ActionLeftClick   = 0
+	ActionMiddleClick = 1
+	ActionRightClick  = 2
+	ActionPageUp      = 3
+	ActionPageDown    = 4
+)
+
+// 动作映射：从枚举值到X11命令的映射
+var actionMap = map[int]string{
+	ActionLeftClick:   "button 1",
+	ActionMiddleClick: "button 2",
+	ActionRightClick:  "button 3",
+	ActionPageUp:      "key KP_Page_Up",
+	ActionPageDown:    "key KP_Page_Down",
+}
+
+// 兼容性映射：从旧字符串到枚举值的映射
+var actionStringToInt = map[string]int{
+	"LeftClick":   ActionLeftClick,
+	"MiddleClick": ActionMiddleClick,
+	"RightClick":  ActionRightClick,
+	"PageUp":      ActionPageUp,
+	"PageDown":    ActionPageDown,
 }
 
 type ActionInfo struct {
@@ -105,28 +126,27 @@ type Wacom struct {
 	MapOutput  string
 
 	// dbusutil-gen: ignore-below
-	LeftHanded       gsprop.Bool `prop:"access:rw"`
-	CursorMode       gsprop.Bool `prop:"access:rw"`
-	ForceProportions gsprop.Bool `prop:"access:rw"`
-	MouseEnterRemap  gsprop.Bool `prop:"access:rw"` // need remap when mouse enter new screen
+	LeftHanded       dconfig.Bool `prop:"access:rw"`
+	CursorMode       dconfig.Bool `prop:"access:rw"`
+	ForceProportions dconfig.Bool `prop:"access:rw"`
+	MouseEnterRemap  dconfig.Bool `prop:"access:rw"` // need remap when mouse enter new screen
 
-	KeyUpAction   gsprop.String `prop:"access:rw"`
-	KeyDownAction gsprop.String `prop:"access:rw"`
+	KeyUpAction   dconfig.String `prop:"access:rw"`
+	KeyDownAction dconfig.String `prop:"access:rw"`
 
-	Suppress                gsprop.Uint `prop:"access:rw"`
-	StylusPressureSensitive gsprop.Uint `prop:"access:rw"`
-	EraserPressureSensitive gsprop.Uint `prop:"access:rw"`
-	StylusRawSample         gsprop.Uint `prop:"access:rw"`
-	EraserRawSample         gsprop.Uint `prop:"access:rw"`
-	StylusThreshold         gsprop.Uint `prop:"access:rw"`
-	EraserThreshold         gsprop.Uint `prop:"access:rw"`
+	Suppress                dconfig.Uint32 `prop:"access:rw"`
+	StylusPressureSensitive dconfig.Uint32 `prop:"access:rw"`
+	EraserPressureSensitive dconfig.Uint32 `prop:"access:rw"`
+	StylusRawSample         dconfig.Uint32 `prop:"access:rw"`
+	EraserRawSample         dconfig.Uint32 `prop:"access:rw"`
+	StylusThreshold         dconfig.Uint32 `prop:"access:rw"`
+	EraserThreshold         dconfig.Uint32 `prop:"access:rw"`
 
 	ActionInfos ActionInfos // TODO: remove this field
 
-	devInfos      dxWacoms
-	setting       *gio.Settings
-	stylusSetting *gio.Settings
-	eraserSetting *gio.Settings
+	devInfos       dxWacoms
+	dsgWacomConfig *dconfig.DConfig
+	sessionSigLoop *dbusutil.SignalLoop
 
 	pointerX      int16
 	pointerY      int16
@@ -142,26 +162,12 @@ func newWacom(service *dbusutil.Service) *Wacom {
 	var w = new(Wacom)
 
 	w.service = service
-	w.setting = gio.NewSettings(wacomSchema)
-	w.LeftHanded.Bind(w.setting, wacomKeyLeftHanded)
-	w.CursorMode.Bind(w.setting, wacomKeyCursorMode)
-	w.ForceProportions.Bind(w.setting, wacomKeyForceProportions)
-	w.Suppress.Bind(w.setting, wacomKeySuppress)
-	w.MouseEnterRemap.Bind(w.setting, wacomKeyMouseEnterRemap)
 
-	// stylus settings
-	w.stylusSetting = gio.NewSettings(wacomStylusSchema)
-	w.KeyUpAction.Bind(w.stylusSetting, wacomKeyUpAction)
-	w.KeyDownAction.Bind(w.stylusSetting, wacomKeyDownAction)
-	w.StylusPressureSensitive.Bind(w.stylusSetting, wacomKeyPressureSensitive)
-	w.StylusRawSample.Bind(w.stylusSetting, wacomKeyRawSample)
-	w.StylusThreshold.Bind(w.stylusSetting, wacomKeyThreshold)
-
-	// eraser settings
-	w.eraserSetting = gio.NewSettings(wacomEraserSchema)
-	w.EraserPressureSensitive.Bind(w.eraserSetting, wacomKeyPressureSensitive)
-	w.EraserRawSample.Bind(w.eraserSetting, wacomKeyRawSample)
-	w.EraserThreshold.Bind(w.eraserSetting, wacomKeyThreshold)
+	// 初始化dconfig（必须成功）
+	if err := w.initWacomDConfig(); err != nil {
+		logger.Errorf("Failed to initialize wacom dconfig: %v", err)
+		panic("Wacom DConfig initialization failed - cannot continue without dconfig support")
+	}
 
 	// TODO: treeland环境暂不支持
 	if hasTreeLand {
@@ -188,8 +194,8 @@ func (w *Wacom) init() {
 
 	w.enableCursorMode()
 	w.enableLeftHanded()
-	w.setStylusButtonAction(btnNumUpKey, w.KeyUpAction.Get())
-	w.setStylusButtonAction(btnNumDownKey, w.KeyDownAction.Get())
+	w.setStylusButtonAction(btnNumUpKey, w.getActionIndexByName(w.KeyUpAction.Get()))
+	w.setStylusButtonAction(btnNumDownKey, w.getActionIndexByName(w.KeyDownAction.Get()))
 	w.setPressureSensitive()
 	w.setSuppress()
 	w.setRawSample()
@@ -370,10 +376,10 @@ func (w *Wacom) updateDXWacoms() {
 	w.PropsMu.Unlock()
 }
 
-func (w *Wacom) setStylusButtonAction(btnNum int, action string) {
-	value, ok := actionMap[action]
+func (w *Wacom) setStylusButtonAction(btnNum int, actionIndex int) {
+	value, ok := actionMap[actionIndex]
 	if !ok {
-		logger.Warningf("Invalid button action %q, actionMap: %v", action, actionMap)
+		logger.Warningf("Invalid button action index %d, actionMap: %v", actionIndex, actionMap)
 		return
 	}
 	// set button action for stylus
@@ -643,4 +649,89 @@ func (w *Wacom) setThreshold() {
 func (w *Wacom) destroy() {
 	w.xConn.Close()
 	close(w.exit)
+}
+
+func (w *Wacom) initWacomDConfig() error {
+	var err error
+	w.dsgWacomConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsWacomName, "")
+	if err != nil {
+		return fmt.Errorf("create wacom config manager failed: %v", err)
+	}
+
+	// 绑定所有 dcprop 属性
+	w.LeftHanded.Bind(w.dsgWacomConfig, dconfigKeyWacomLeftHanded)
+	w.CursorMode.Bind(w.dsgWacomConfig, dconfigKeyWacomCursorMode)
+	w.ForceProportions.Bind(w.dsgWacomConfig, dconfigKeyWacomForceProportions)
+	w.MouseEnterRemap.Bind(w.dsgWacomConfig, dconfigKeyWacomMouseEnterRemap)
+	w.KeyUpAction.Bind(w.dsgWacomConfig, dconfigKeyWacomKeyUpAction)
+	w.KeyDownAction.Bind(w.dsgWacomConfig, dconfigKeyWacomKeyDownAction)
+	w.Suppress.Bind(w.dsgWacomConfig, dconfigKeyWacomSuppress)
+	w.StylusPressureSensitive.Bind(w.dsgWacomConfig, dconfigKeyWacomStylusPressure)
+	w.EraserPressureSensitive.Bind(w.dsgWacomConfig, dconfigKeyWacomEraserPressure)
+	w.StylusRawSample.Bind(w.dsgWacomConfig, dconfigKeyWacomStylusRawSample)
+	w.EraserRawSample.Bind(w.dsgWacomConfig, dconfigKeyWacomEraserRawSample)
+	w.StylusThreshold.Bind(w.dsgWacomConfig, dconfigKeyWacomStylusThreshold)
+	w.EraserThreshold.Bind(w.dsgWacomConfig, dconfigKeyWacomEraserThreshold)
+
+	w.dsgWacomConfig.ConnectValueChanged(func(key string) {
+		logger.Debugf("Wacom dconfig value changed: %s", key)
+		switch key {
+		case dconfigKeyWacomLeftHanded:
+			w.enableLeftHanded()
+		case dconfigKeyWacomCursorMode:
+			w.enableCursorMode()
+		case dconfigKeyWacomForceProportions:
+			w.setArea()
+		case dconfigKeyWacomSuppress:
+			w.setSuppress()
+		case dconfigKeyWacomStylusPressure:
+			w.setPressureSensitiveForType(dxinput.WacomTypeStylus)
+		case dconfigKeyWacomKeyUpAction:
+			w.setStylusButtonAction(btnNumUpKey, w.getActionIndexByName(w.KeyUpAction.Get()))
+		case dconfigKeyWacomKeyDownAction:
+			w.setStylusButtonAction(btnNumDownKey, w.getActionIndexByName(w.KeyDownAction.Get()))
+		case dconfigKeyWacomStylusThreshold:
+			w.setThresholdForType(dxinput.WacomTypeStylus)
+		case dconfigKeyWacomStylusRawSample:
+			w.setRawSampleForType(dxinput.WacomTypeStylus)
+		case dconfigKeyWacomEraserPressure:
+			w.setPressureSensitiveForType(dxinput.WacomTypeEraser)
+		case dconfigKeyWacomEraserThreshold:
+			w.setThresholdForType(dxinput.WacomTypeEraser)
+		case dconfigKeyWacomEraserRawSample:
+			w.setRawSampleForType(dxinput.WacomTypeEraser)
+		default:
+			logger.Debugf("Unhandled wacom dconfig key change: %s", key)
+		}
+	})
+
+	logger.Info("Wacom DConfig initialization completed successfully")
+	return nil
+}
+
+func (w *Wacom) getActionNameByIndex(index int) string {
+	switch index {
+	case ActionLeftClick:
+		return "LeftClick"
+	case ActionMiddleClick:
+		return "MiddleClick"
+	case ActionRightClick:
+		return "RightClick"
+	case ActionPageUp:
+		return "PageUp"
+	case ActionPageDown:
+		return "PageDown"
+	default:
+		logger.Warningf("Unknown action index: %d, using LeftClick", index)
+		return "LeftClick"
+	}
+}
+
+// getActionIndexByName 根据动作名称获取枚举索引
+func (w *Wacom) getActionIndexByName(name string) int {
+	if index, ok := actionStringToInt[name]; ok {
+		return index
+	}
+	logger.Warningf("Unknown action name: %s, using LeftClick", name)
+	return ActionLeftClick
 }

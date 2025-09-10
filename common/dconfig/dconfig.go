@@ -20,6 +20,7 @@ type DConfig struct {
 	configChangedCbMap      map[string]func(interface{})
 	configChangedCbMapMutex sync.Mutex
 	configChangedOnce       sync.Once
+	signalLoopOnce          sync.Once
 }
 
 func NewDConfig(appid, name, subPath string) (*DConfig, error) {
@@ -41,6 +42,18 @@ func NewDConfig(appid, name, subPath string) (*DConfig, error) {
 	}
 
 	return &dConfig, nil
+}
+
+func (dConfig *DConfig) ListKeys() ([]string, error) {
+	keys, err := dConfig.manager.KeyList().Get(0)
+	if err != nil {
+		return nil, err
+	}
+	return keys, nil
+}
+
+func (dConfig *DConfig) Reset(key string) error {
+	return dConfig.manager.Reset(0, key)
 }
 
 func (dConfig *DConfig) GetValueString(key string) (string, error) {
@@ -68,20 +81,65 @@ func (dConfig *DConfig) GetValueBool(key string) (bool, error) {
 }
 
 func (dConfig *DConfig) GetValueInt(key string) (int, error) {
+	v, err := dConfig.GetValueInt64(key)
+	if err != nil {
+		return 0, err
+	}
+	return int(v), nil
+}
+
+func (dConfig *DConfig) GetValueInt64(key string) (int64, error) {
 	value, err := dConfig.GetValue(key)
 	if err != nil {
 		return 0, err
 	}
-	v, ok := value.(int)
+	v, ok := value.(int64)
 	if !ok {
 		return 0, fmt.Errorf("dconfig get int error: invalid value")
 	}
 	return v, nil
 }
 
+func (dConfig *DConfig) GetValueFloat64(key string) (float64, error) {
+	value, err := dConfig.GetValue(key)
+
+	if err != nil {
+		return 0, err
+	}
+	switch v := value.(type) {
+	case int64:
+		return float64(v), nil
+	case float64:
+		return v, nil
+	default:
+		return 0, fmt.Errorf("dconfig get float64 error: invalid value (type %T)", value)
+	}
+}
+
+func (dConfig *DConfig) GetValueStringList(key string) ([]string, error) {
+	value, err := dConfig.GetValue(key)
+	if err != nil {
+		return nil, err
+	}
+
+	if variantSlice, ok := value.([]dbus.Variant); ok {
+		result := make([]string, len(variantSlice))
+		for i, variant := range variantSlice {
+			if str, ok := variant.Value().(string); ok {
+				result[i] = str
+			} else {
+				return nil, fmt.Errorf("variant at index %d is not a string: %T", i, variant.Value())
+			}
+		}
+		return result, nil
+	}
+
+	return nil, fmt.Errorf("unsupported type for string slice conversion: %T", value)
+}
+
 func (dConfig *DConfig) GetValue(key string) (interface{}, error) {
 	if dConfig.manager == nil {
-		return nil, fmt.Errorf("dConfig not inited.")
+		return nil, fmt.Errorf("dConfig not inited")
 	}
 	v, err := dConfig.manager.Value(0, key)
 	if err != nil {
@@ -92,13 +150,21 @@ func (dConfig *DConfig) GetValue(key string) (interface{}, error) {
 
 func (dConfig *DConfig) SetValue(key string, value interface{}) error {
 	if dConfig.manager == nil {
-		return fmt.Errorf("dConfig not inited.")
+		return fmt.Errorf("dConfig not inited")
 	}
 	err := dConfig.manager.SetValue(0, key, dbus.MakeVariant(value))
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (dConfig *DConfig) initSignalLoopOnce() {
+	dConfig.signalLoopOnce.Do(func() {
+		systemSigLoop := dbusutil.NewSignalLoop(dConfig.systemConn, 10)
+		systemSigLoop.Start()
+		dConfig.manager.InitSignalExt(systemSigLoop, true)
+	})
 }
 
 func (dConfig *DConfig) ConnectConfigChanged(key string, cb func(interface{})) {
@@ -109,11 +175,8 @@ func (dConfig *DConfig) ConnectConfigChanged(key string, cb func(interface{})) {
 	dConfig.configChangedCbMap[key] = cb
 	dConfig.configChangedCbMapMutex.Unlock()
 
+	dConfig.initSignalLoopOnce()
 	dConfig.configChangedOnce.Do(func() {
-		systemSigLoop := dbusutil.NewSignalLoop(dConfig.systemConn, 10)
-		systemSigLoop.Start()
-		dConfig.manager.InitSignalExt(systemSigLoop, true)
-
 		dConfig.manager.ConnectValueChanged(func(key string) {
 			dConfig.configChangedCbMapMutex.Lock()
 			cb := dConfig.configChangedCbMap[key]
@@ -127,4 +190,20 @@ func (dConfig *DConfig) ConnectConfigChanged(key string, cb func(interface{})) {
 			}
 		})
 	})
+}
+
+func (dConfig *DConfig) ConnectValueChanged(cb func(key string)) {
+	dConfig.initSignalLoopOnce()
+	dConfig.manager.ConnectValueChanged(cb)
+}
+
+func (dConfig *DConfig) ResetAll() error {
+	keys, err := dConfig.ListKeys()
+	if err != nil {
+		return err
+	}
+	for _, key := range keys {
+		dConfig.Reset(key)
+	}
+	return nil
 }
