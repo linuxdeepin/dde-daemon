@@ -1,0 +1,259 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "enabled": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "enabled",
+            "name[zh_CN]": "音效总开关",
+            "description[zh_CN]": "控制音效功能的总开关",
+            "description": "Main switch for sound effect functionality",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "audio-volume-change": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "audio-volume-change",
+            "name[zh_CN]": "音量变化音效",
+            "description[zh_CN]": "音量变化时播放音效",
+            "description": "Play sound when audio volume changes",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "camera-shutter": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "camera-shutter",
+            "name[zh_CN]": "相机快门音效",
+            "description[zh_CN]": "相机快门音效",
+            "description": "Camera shutter sound",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "complete-copy": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "complete-copy",
+            "name[zh_CN]": "文件复制完成音效",
+            "description[zh_CN]": "文件复制完成时播放音效",
+            "description": "Play sound when file copy completes",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "complete-print": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "complete-print",
+            "name[zh_CN]": "打印完成音效",
+            "description[zh_CN]": "打印完成时播放音效",
+            "description": "Play sound when printing completes",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "desktop-login": {
+            "value": false,
+            "serial": 0,
+            "flags": [],
+            "name": "desktop-login",
+            "name[zh_CN]": "桌面登录音效",
+            "description[zh_CN]": "桌面环境登录时播放音效",
+            "description": "Play sound when desktop environment logs in",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "desktop-logout": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "desktop-logout",
+            "name[zh_CN]": "桌面登出音效",
+            "description[zh_CN]": "桌面环境登出时播放音效",
+            "description": "Play sound when desktop environment logs out",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "device-added": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "device-added",
+            "name[zh_CN]": "设备添加音效",
+            "description[zh_CN]": "添加可移动设备时播放音效",
+            "description": "Play sound when removable device is added",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "device-removed": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "device-removed",
+            "name[zh_CN]": "设备移除音效",
+            "description[zh_CN]": "移除可移动设备时播放音效",
+            "description": "Play sound when removable device is removed",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "dialog-error-critical": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "dialog-error-critical",
+            "name[zh_CN]": "严重错误对话框音效",
+            "description[zh_CN]": "严重错误对话框显示时播放音效",
+            "description": "Play sound when critical error dialog appears",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "dialog-error": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "dialog-error",
+            "name[zh_CN]": "错误对话框音效",
+            "description[zh_CN]": "错误对话框显示时播放音效",
+            "description": "Play sound when error dialog appears",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "dialog-error-serious": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "dialog-error-serious",
+            "name[zh_CN]": "严重错误对话框音效",
+            "description[zh_CN]": "严重错误对话框显示时播放音效",
+            "description": "Play sound when serious error dialog appears",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "message": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "message",
+            "name[zh_CN]": "消息通知音效",
+            "description[zh_CN]": "桌面通知显示时播放音效",
+            "description": "Play sound when desktop notification appears",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "power-plug": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "power-plug",
+            "name[zh_CN]": "电源插入音效",
+            "description[zh_CN]": "电源插入时播放音效",
+            "description": "Play sound when power is plugged in",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "power-unplug": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "power-unplug",
+            "name[zh_CN]": "电源拔出音效",
+            "description[zh_CN]": "电源拔出时播放音效",
+            "description": "Play sound when power is unplugged",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "power-unplug-battery-low": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "power-unplug-battery-low",
+            "name[zh_CN]": "电池低电量音效",
+            "description[zh_CN]": "电池电量低时播放音效",
+            "description": "Play sound when battery is low",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "screen-capture-complete": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "screen-capture-complete",
+            "name[zh_CN]": "截图完成音效",
+            "description[zh_CN]": "截图完成时播放音效",
+            "description": "Play sound when screenshot completes",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "screen-capture": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "screen-capture",
+            "name[zh_CN]": "开始截图音效",
+            "description[zh_CN]": "开始截图时播放音效",
+            "description": "Play sound when screenshot starts",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "suspend-resume": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "suspend-resume",
+            "name[zh_CN]": "系统唤醒音效",
+            "description[zh_CN]": "系统从挂起状态恢复时播放音效",
+            "description": "Play sound when system wakes up from suspend",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "system-shutdown": {
+            "value": false,
+            "serial": 0,
+            "flags": [],
+            "name": "system-shutdown",
+            "name[zh_CN]": "系统关机音效",
+            "description[zh_CN]": "系统关机时播放音效",
+            "description": "Play sound when system shuts down",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "trash-empty": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "trash-empty",
+            "name[zh_CN]": "清空回收站音效",
+            "description[zh_CN]": "清空回收站时播放音效",
+            "description": "Play sound when trash is emptied",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "x-deepin-app-sent-to-desktop": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "x-deepin-app-sent-to-desktop",
+            "name[zh_CN]": "应用发送到桌面音效",
+            "description[zh_CN]": "应用发送到桌面时播放音效",
+            "description": "Play sound when app is sent to desktop",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "player": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "player",
+            "name[zh_CN]": "音效播放器",
+            "description[zh_CN]": "音效事件播放器选择: 0-libcanberra, 1-paplay, 3-mpv",
+            "description": "Sound effect event player selection: 0-libcanberra, 1-paplay, 3-mpv",
+            "permissions": "readwrite",
+            "visibility": "public"
+        }
+    }
+}

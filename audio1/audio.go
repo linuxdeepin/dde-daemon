@@ -18,6 +18,7 @@ import (
 	"github.com/linuxdeepin/go-lib/strv"
 
 	dbus "github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
@@ -44,7 +45,8 @@ const (
 	gsSchemaControlCenter = "com.deepin.dde.control-center"
 	gsKeyDeviceManager    = "device-manage"
 
-	gsSchemaSoundEffect  = "com.deepin.dde.sound-effect"
+	dconfigSoundEffectId = "org.deepin.dde.daemon.soundeffect"
+	dconfigDaemonAppId   = "org.deepin.dde.daemon"
 	gsKeyEnabled         = "enabled"
 	gsKeyDisableAutoMute = "disable-auto-mute"
 
@@ -1484,10 +1486,14 @@ func (a *Audio) Reset() *dbus.Error {
 
 	a.resetSinksVolume()
 	a.resetSourceVolume()
-	gsSoundEffect := gio.NewSettings(gsSchemaSoundEffect)
-	gsSoundEffect.Reset(gsKeyEnabled)
-	gsSoundEffect.Unref()
-	return nil
+
+	dconfigSoundEffect, err := dconfig.NewDConfig(dconfigDaemonAppId, dconfigSoundEffectId, "")
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
+	return dbusutil.ToError(dconfigSoundEffect.ResetAll())
 }
 
 func (a *Audio) moveSinkInputsToSink(inputs []uint32) {

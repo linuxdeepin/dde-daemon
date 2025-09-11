@@ -25,10 +25,10 @@ import (
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/soundutils"
 	"github.com/linuxdeepin/dde-api/userenv"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
@@ -368,8 +368,10 @@ func syncConfigToSoundThemePlayer() error {
 		return err
 	}
 	player := soundthemeplayer.NewSoundThemePlayer(sysBus)
-	soundEffectGs := gio.NewSettings("com.deepin.dde.sound-effect")
-	defer soundEffectGs.Unref()
+	soundEffectDConfig, err := dconfig.NewDConfig("org.deepin.dde.daemon", "org.deepin.dde.daemon.soundeffect", "")
+	if err != nil {
+		logger.Warning(err)
+	}
 
 	for _, name := range []string{"", soundutils.EventDesktopLogin,
 		soundutils.EventSystemShutdown} {
@@ -379,7 +381,10 @@ func syncConfigToSoundThemePlayer() error {
 			gsKey = "enabled"
 		}
 
-		enabled := soundEffectGs.GetBoolean(gsKey)
+		enabled, err := soundEffectDConfig.GetValueBool(gsKey)
+		if err != nil {
+			logger.Warning(err)
+		}
 		err = player.EnableSound(0, name, enabled)
 		if err != nil {
 			return err
