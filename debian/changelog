@@ -1,3 +1,15 @@
+dde-daemon (6.1.54) unstable; urgency=medium
+
+  * refactor: migrate sound effect settings to dconfig
+  * i18n: Updates for project Deepin Desktop Environment (#884)
+  * refactor: migrate locale settings from GSettings to DConfig
+  * fix: prevent GTK window size change on daemon exit
+  * feat: 单声道模式支持
+  * feat: uadpdbus接口支持20风格
+  * feat(inputdevice): Change gsettings to dconfig
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 11 Sep 2025 20:58:23 +0800
+
 dde-daemon (6.1.53) unstable; urgency=medium
 
   * fix: Update Bluetooth state as soon as possible
