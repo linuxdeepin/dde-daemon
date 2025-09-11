@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/log"
 )
 
@@ -24,8 +23,6 @@ func run() error {
 	if err != nil {
 		return err
 	}
-
-	_ = gsettings.StartMonitor()
 
 	serverObj, err := service.NewServerObject(dbusPath, m)
 	if err != nil {

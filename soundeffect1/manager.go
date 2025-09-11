@@ -5,28 +5,27 @@
 package soundeffect
 
 import (
-	"bufio"
-	"bytes"
 	"errors"
-	"os/exec"
 	"sync"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/soundutils"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	"github.com/linuxdeepin/go-lib/strv"
 )
 
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	gsSchemaSoundEffect = "com.deepin.dde.sound-effect"
-	gsSchemaAppearance  = "com.deepin.dde.appearance"
-	gsKeyEnabled        = "enabled"
-	gsKeySoundTheme     = "sound-theme"
+	dconfigAppearanceAppId  = "org.deepin.dde.appearance"
+	dconfigAppearanceFileId = dconfigAppearanceAppId
+	dconfigKeySoundName     = "Sound_Theme"
+
+	dconfigappID         = "org.deepin.dde.daemon"
+	dconfigSoundEffectId = "org.deepin.dde.daemon.soundeffect"
+	dconfigKeyEnabled    = "enabled"
 
 	DBusServiceName        = "org.deepin.dde.SoundEffect1"
 	dbusPath               = "/org/deepin/dde/SoundEffect1"
@@ -35,62 +34,47 @@ const (
 )
 
 type Manager struct {
-	service       *dbusutil.Service
-	soundEffectGs *gio.Settings
-	appearanceGs  *gio.Settings
-	count         int
-	countMu       sync.Mutex
-	names         strv.Strv
+	service              *dbusutil.Service
+	soundeffectConfigMgr *dconfig.DConfig
+	appearanceConfigMgr  *dconfig.DConfig
+	count                int
+	countMu              sync.Mutex
+	names                strv.Strv
 
-	Enabled gsprop.Bool `prop:"access:rw"`
+	Enabled dconfig.Bool `prop:"access:rw"`
 }
 
 func NewManager(service *dbusutil.Service) *Manager {
 	var m = new(Manager)
 
 	m.service = service
-	m.soundEffectGs = gio.NewSettings(gsSchemaSoundEffect)
-	m.appearanceGs = gio.NewSettings(gsSchemaAppearance)
 	return m
 }
 
 func (m *Manager) init() error {
-	m.Enabled.Bind(m.soundEffectGs, gsKeyEnabled)
 	var err error
-	m.names, err = getSoundNames()
+	m.soundeffectConfigMgr, err = dconfig.NewDConfig(dconfigappID, dconfigSoundEffectId, "")
 	if err != nil {
 		return err
 	}
+
+	m.appearanceConfigMgr, err = dconfig.NewDConfig(dconfigAppearanceAppId, dconfigAppearanceFileId, "")
+	if err != nil {
+		return err
+	}
+	m.Enabled.Bind(m.soundeffectConfigMgr, dconfigKeyEnabled)
+
+	m.names = m.getSoundNames()
 	logger.Debug(m.names)
 	return nil
 }
 
-func getSoundNames() ([]string, error) {
-	var result []string
-	out, err := exec.Command("gsettings", "list-recursively", gsSchemaSoundEffect).Output()
+func (m *Manager) getSoundNames() []string {
+	keys, err := m.soundeffectConfigMgr.ListKeys()
 	if err != nil {
-		return nil, err
+		logger.Warning(err)
 	}
-	scanner := bufio.NewScanner(bytes.NewReader(out))
-	for scanner.Scan() {
-		parts := bytes.Fields(scanner.Bytes())
-		if len(parts) == 3 {
-			if bytes.Equal(parts[1], []byte("enabled")) {
-				// skip key enabled
-				continue
-			}
-			key := string(parts[1])
-			value := parts[2]
-			if bytes.Equal(value, []byte("true")) || bytes.Equal(value, []byte("false")) {
-				result = append(result, key)
-			}
-		}
-	}
-	if scanner.Err() != nil {
-		return nil, scanner.Err()
-	}
-
-	return result, nil
+	return keys
 }
 
 func (*Manager) GetInterfaceName() string {
@@ -156,7 +140,7 @@ func (m *Manager) canQuit() bool {
 }
 
 func (m *Manager) syncConfigToSoundThemePlayer(name string, enabled bool) error {
-	logger.Debug("sync config to sound-theme-player")
+	logger.Debug("sync config to sound-theme-player", name, enabled)
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
 		return err
@@ -166,7 +150,10 @@ func (m *Manager) syncConfigToSoundThemePlayer(name string, enabled bool) error 
 	if err != nil {
 		return err
 	}
-	theme := m.appearanceGs.GetString(gsKeySoundTheme)
+	theme, err := m.appearanceConfigMgr.GetValueString(dconfigKeySoundName)
+	if err != nil {
+		logger.Warning(err)
+	}
 	err = player.SetSoundTheme(0, theme)
 	return err
 }
@@ -184,7 +171,10 @@ func (m *Manager) EnableSound(name string, enabled bool) *dbus.Error {
 		}
 	}
 
-	m.soundEffectGs.SetBoolean(name, enabled)
+	err := m.soundeffectConfigMgr.SetValue(name, enabled)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	return nil
 }
 
@@ -193,13 +183,24 @@ func (m *Manager) IsSoundEnabled(name string) (enabled bool, busErr *dbus.Error)
 		return false, dbusutil.ToError(errors.New("invalid sound event"))
 	}
 
-	return m.soundEffectGs.GetBoolean(name), nil
+	enabled, err := m.soundeffectConfigMgr.GetValueBool(name)
+	if err != nil {
+		return false, dbusutil.ToError(err)
+	}
+
+	return enabled, nil
 }
 
 func (m *Manager) GetSoundEnabledMap() (result map[string]bool, busErr *dbus.Error) {
 	result = make(map[string]bool, len(m.names))
 	for _, name := range m.names {
-		result[name] = m.soundEffectGs.GetBoolean(name)
+		enabled, err := m.soundeffectConfigMgr.GetValueBool(name)
+		if err != nil {
+			result[name] = false
+			continue
+		}
+
+		result[name] = enabled
 	}
 	return result, nil
 }

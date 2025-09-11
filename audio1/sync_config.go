@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 
 	dbus "github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 const (
@@ -75,33 +75,46 @@ const (
 )
 
 func (sc *syncConfig) Get() (interface{}, error) {
-	s := gio.NewSettings(gsSchemaSoundEffect)
-	defer s.Unref()
+	s, err := dconfig.NewDConfig(dconfigDaemonAppId, dconfigSoundEffectId, "")
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	getConfigBoolOrDefault := func(key string, defaultValue bool) bool {
+		value, err := s.GetValueBool(key)
+		if err != nil {
+			// 记录日志或处理错误
+			logger.Warning("Failed to get boolean for key %s: %v, using default %v", key, err, defaultValue)
+			return defaultValue
+		}
+		return value
+	}
+
 	return &syncData{
 		Version: syncVersion,
 		SoundEffect: &syncSoundEffect{
-			Enabled:                 s.GetBoolean(gsKeyEnabled),
-			AudioVolumeChange:       s.GetBoolean(gsKeyAudioVolumeChange),
-			CameraShutter:           s.GetBoolean(gsKeyCameraShutter),
-			CompleteCopy:            s.GetBoolean(gsKeyCompleteCopy),
-			CompletePrint:           s.GetBoolean(gsKeyCompletePrint),
-			DesktopLogin:            s.GetBoolean(gsKeyDesktopLogin),
-			DesktopLogout:           s.GetBoolean(gsKeyDesktopLogout),
-			DeviceAdded:             s.GetBoolean(gsKeyDeviceAdded),
-			DeviceRemoved:           s.GetBoolean(gsKeyDeviceRemoved),
-			DialogErrorCritical:     s.GetBoolean(gsKeyDialogErrorCritical),
-			DialogError:             s.GetBoolean(gsKeyDialogError),
-			DialogErrorSerious:      s.GetBoolean(gsKeyDialogErrorSerious),
-			Message:                 s.GetBoolean(gsKeyMessage),
-			PowerPlug:               s.GetBoolean(gsKeyPowerPlug),
-			PowerUnplug:             s.GetBoolean(gsKeyPowerUnplug),
-			PowerUnplugBatteryLow:   s.GetBoolean(gsKeyPowerUnplugBatteryLow),
-			ScreenCaptureComplete:   s.GetBoolean(gsKeyScreenCaptureComplete),
-			ScreenCapture:           s.GetBoolean(gsKeyScreenCapture),
-			SuspendResume:           s.GetBoolean(gsKeySuspendResume),
-			SystemShutdown:          s.GetBoolean(gsKeySystemShutdown),
-			TrashEmpty:              s.GetBoolean(gsKeyTrashEmpty),
-			XDeepinAppSentToDesktop: s.GetBoolean(gsKeyXDeepinAppSentToDesktop),
+			Enabled:                 getConfigBoolOrDefault(gsKeyEnabled, true),
+			AudioVolumeChange:       getConfigBoolOrDefault(gsKeyAudioVolumeChange, true),
+			CameraShutter:           getConfigBoolOrDefault(gsKeyCameraShutter, true),
+			CompleteCopy:            getConfigBoolOrDefault(gsKeyCompleteCopy, true),
+			CompletePrint:           getConfigBoolOrDefault(gsKeyCompletePrint, true),
+			DesktopLogin:            getConfigBoolOrDefault(gsKeyDesktopLogin, true),
+			DesktopLogout:           getConfigBoolOrDefault(gsKeyDesktopLogout, true),
+			DeviceAdded:             getConfigBoolOrDefault(gsKeyDeviceAdded, true),
+			DeviceRemoved:           getConfigBoolOrDefault(gsKeyDeviceRemoved, true),
+			DialogErrorCritical:     getConfigBoolOrDefault(gsKeyDialogErrorCritical, true),
+			DialogError:             getConfigBoolOrDefault(gsKeyDialogError, true),
+			DialogErrorSerious:      getConfigBoolOrDefault(gsKeyDialogErrorSerious, true),
+			Message:                 getConfigBoolOrDefault(gsKeyMessage, true),
+			PowerPlug:               getConfigBoolOrDefault(gsKeyPowerPlug, true),
+			PowerUnplug:             getConfigBoolOrDefault(gsKeyPowerUnplug, true),
+			PowerUnplugBatteryLow:   getConfigBoolOrDefault(gsKeyPowerUnplugBatteryLow, true),
+			ScreenCaptureComplete:   getConfigBoolOrDefault(gsKeyScreenCaptureComplete, true),
+			ScreenCapture:           getConfigBoolOrDefault(gsKeyScreenCapture, true),
+			SuspendResume:           getConfigBoolOrDefault(gsKeySuspendResume, true),
+			SystemShutdown:          getConfigBoolOrDefault(gsKeySystemShutdown, true),
+			TrashEmpty:              getConfigBoolOrDefault(gsKeyTrashEmpty, true),
+			XDeepinAppSentToDesktop: getConfigBoolOrDefault(gsKeyXDeepinAppSentToDesktop, true),
 		},
 	}, nil
 }
@@ -114,34 +127,36 @@ func (sc *syncConfig) Set(data []byte) error {
 	}
 	soundEffect := info.SoundEffect
 	if soundEffect != nil {
-		s := gio.NewSettings(gsSchemaSoundEffect)
-		s.SetBoolean(gsKeyEnabled, soundEffect.Enabled)
-		s.SetBoolean(gsKeyAudioVolumeChange, soundEffect.AudioVolumeChange)
-		s.SetBoolean(gsKeyCameraShutter, soundEffect.CameraShutter)
-		s.SetBoolean(gsKeyCompleteCopy, soundEffect.CompleteCopy)
-		s.SetBoolean(gsKeyCompletePrint, soundEffect.CompletePrint)
-		s.SetBoolean(gsKeyDesktopLogin, soundEffect.DesktopLogin)
+		s, err := dconfig.NewDConfig(dconfigDaemonAppId, dconfigSoundEffectId, "")
+		if err != nil {
+			return err
+		}
+		s.SetValue(gsKeyEnabled, soundEffect.Enabled)
+		s.SetValue(gsKeyAudioVolumeChange, soundEffect.AudioVolumeChange)
+		s.SetValue(gsKeyCameraShutter, soundEffect.CameraShutter)
+		s.SetValue(gsKeyCompleteCopy, soundEffect.CompleteCopy)
+		s.SetValue(gsKeyCompletePrint, soundEffect.CompletePrint)
+		s.SetValue(gsKeyDesktopLogin, soundEffect.DesktopLogin)
 		err = sc.syncConfigToSoundThemePlayer(soundEffect.DesktopLogin)
 		if err != nil {
 			logger.Warning(err)
 		}
-		s.SetBoolean(gsKeyDesktopLogout, soundEffect.DesktopLogout)
-		s.SetBoolean(gsKeyDeviceAdded, soundEffect.DeviceAdded)
-		s.SetBoolean(gsKeyDeviceRemoved, soundEffect.DeviceRemoved)
-		s.SetBoolean(gsKeyDialogErrorCritical, soundEffect.DialogErrorCritical)
-		s.SetBoolean(gsKeyDialogError, soundEffect.DialogError)
-		s.SetBoolean(gsKeyDialogErrorSerious, soundEffect.DialogErrorSerious)
-		s.SetBoolean(gsKeyMessage, soundEffect.Message)
-		s.SetBoolean(gsKeyPowerPlug, soundEffect.PowerPlug)
-		s.SetBoolean(gsKeyPowerUnplug, soundEffect.PowerUnplug)
-		s.SetBoolean(gsKeyPowerUnplugBatteryLow, soundEffect.PowerUnplugBatteryLow)
-		s.SetBoolean(gsKeyScreenCaptureComplete, soundEffect.ScreenCaptureComplete)
-		s.SetBoolean(gsKeyScreenCapture, soundEffect.ScreenCapture)
-		s.SetBoolean(gsKeySuspendResume, soundEffect.SuspendResume)
-		s.SetBoolean(gsKeySystemShutdown, soundEffect.SystemShutdown)
-		s.SetBoolean(gsKeyTrashEmpty, soundEffect.TrashEmpty)
-		s.SetBoolean(gsKeyXDeepinAppSentToDesktop, soundEffect.XDeepinAppSentToDesktop)
-		s.Unref()
+		s.SetValue(gsKeyDesktopLogout, soundEffect.DesktopLogout)
+		s.SetValue(gsKeyDeviceAdded, soundEffect.DeviceAdded)
+		s.SetValue(gsKeyDeviceRemoved, soundEffect.DeviceRemoved)
+		s.SetValue(gsKeyDialogErrorCritical, soundEffect.DialogErrorCritical)
+		s.SetValue(gsKeyDialogError, soundEffect.DialogError)
+		s.SetValue(gsKeyDialogErrorSerious, soundEffect.DialogErrorSerious)
+		s.SetValue(gsKeyMessage, soundEffect.Message)
+		s.SetValue(gsKeyPowerPlug, soundEffect.PowerPlug)
+		s.SetValue(gsKeyPowerUnplug, soundEffect.PowerUnplug)
+		s.SetValue(gsKeyPowerUnplugBatteryLow, soundEffect.PowerUnplugBatteryLow)
+		s.SetValue(gsKeyScreenCaptureComplete, soundEffect.ScreenCaptureComplete)
+		s.SetValue(gsKeyScreenCapture, soundEffect.ScreenCapture)
+		s.SetValue(gsKeySuspendResume, soundEffect.SuspendResume)
+		s.SetValue(gsKeySystemShutdown, soundEffect.SystemShutdown)
+		s.SetValue(gsKeyTrashEmpty, soundEffect.TrashEmpty)
+		s.SetValue(gsKeyXDeepinAppSentToDesktop, soundEffect.XDeepinAppSentToDesktop)
 	}
 	return nil
 }
