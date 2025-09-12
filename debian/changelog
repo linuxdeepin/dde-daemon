@@ -1,3 +1,9 @@
+dde-daemon (6.1.55) unstable; urgency=medium
+
+  * fix: correct logger method call in sync config
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 12 Sep 2025 10:09:08 +0800
+
 dde-daemon (6.1.54) unstable; urgency=medium
 
   * refactor: migrate sound effect settings to dconfig
