@@ -84,7 +84,7 @@ func (sc *syncConfig) Get() (interface{}, error) {
 		value, err := s.GetValueBool(key)
 		if err != nil {
 			// 记录日志或处理错误
-			logger.Warning("Failed to get boolean for key %s: %v, using default %v", key, err, defaultValue)
+			logger.Warningf("Failed to get boolean for key %s: %v, using default %v", key, err, defaultValue)
 			return defaultValue
 		}
 		return value
