@@ -561,11 +561,28 @@ func (psp *powerSavePlan) stopScreensaver() {
 
 func (psp *powerSavePlan) makeSystemSleep() {
 	logger.Info("sleep")
-	psp.stopScreensaver()
+
 	if psp.manager.UseWayland {
+		psp.stopScreensaver()
 		psp.manager.doSuspend()
 	} else {
-		psp.manager.doSuspendByFront()
+		// 在停止屏幕保护前，统一捕获状态
+		m := psp.manager
+		if m != nil {
+			m.captureScreensaverStateIfNeeded()
+			// 获取屏幕保护是否正在运行，仅在运行时才停止并标记
+			running := m.isScreensaverRunning()
+			m.screensaverWasRunning = running
+			if running {
+				psp.stopScreensaver()
+			}
+
+			// psp.manager.setDPMSModeOn()
+			// psp.resetBrightness()
+			m.doSuspendByFront()
+		} else {
+			logger.Warning("manager is nil")
+		}
 	}
 }
 
@@ -607,7 +624,13 @@ func (psp *powerSavePlan) screenBlack() {
 	// full black
 	const fullBlackTime = 5000 * time.Millisecond
 	taskF := newDelayedTask("screenFullBlack", fullBlackTime, func() {
-		psp.stopScreensaver()
+		// 获取屏幕保护是否正在运行，仅在运行时才停止并标记
+		running := manager.isScreensaverRunning()
+		manager.screensaverWasRunning = running
+		if running {
+			psp.stopScreensaver()
+		}
+
 		logger.Info("Screen full black")
 		if manager.ScreenBlackLock {
 			manager.lockWaitShow(5*time.Second, true)

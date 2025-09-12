@@ -293,6 +293,7 @@ func (m *Manager) doSuspend() {
 	}
 
 	logger.Debug("suspend")
+	m.captureScreensaverStateIfNeeded()
 	err := m.helper.SessionManager.RequestSuspend(0)
 	if err != nil {
 		logger.Warning("failed to suspend:", err)
@@ -307,6 +308,7 @@ func (m *Manager) doSuspendByFront() {
 	}
 
 	logger.Debug("suspend")
+	m.captureScreensaverStateIfNeeded()
 	err := m.helper.ShutdownFront.Suspend(0)
 	if err != nil {
 		logger.Warning("failed to suspend:", err)
@@ -530,6 +532,40 @@ const (
 	deepinScreensaverDBusInterface   = deepinScreensaverDBusServiceName
 )
 
+// 通用的屏幕保护属性获取方法
+func (m *Manager) getScreensaverProperty(propertyName string) bool {
+	bus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning("failed to get session bus:", err)
+		return false
+	}
+
+	obj := bus.Object(deepinScreensaverDBusServiceName, deepinScreensaverDBusPath)
+	var variant dbus.Variant
+	err = obj.Call("org.freedesktop.DBus.Properties.Get", 0, deepinScreensaverDBusInterface, propertyName).Store(&variant)
+	if err != nil {
+		logger.Warning("failed to get screensaver "+propertyName+":", err)
+		return false
+	}
+
+	if variant.Signature().String() != "b" {
+		logger.Warning("screensaver " + propertyName + " property is not boolean type")
+		return false
+	}
+
+	return variant.Value().(bool)
+}
+
+// 检查屏幕保护是否正在运行
+func (m *Manager) isScreensaverRunning() bool {
+	return m.getScreensaverProperty("isRunning")
+}
+
+// 检查屏幕保护恢复时是否需要密码
+func (m *Manager) isScreensaverLockAtAwake() bool {
+	return m.getScreensaverProperty("lockScreenAtAwake")
+}
+
 func startScreensaver() {
 	logger.Info("start screensaver")
 	bus, err := dbus.SessionBus()
@@ -718,4 +754,15 @@ func byteSliceEqual(v1, v2 []byte) bool {
 		}
 	}
 	return true
+}
+
+func (m *Manager) captureScreensaverStateIfNeeded() {
+	if m == nil || m.screensaverStateCaptured {
+		return
+	}
+
+	// 仅捕获恢复是否需要密码；是否“正在运行”由停止屏保前的路径设置
+	m.screensaverLockAtAwake = m.isScreensaverLockAtAwake()
+	m.screensaverStateCaptured = true
+	logger.Debug("capture screensaver lockAtAwake=", m.screensaverLockAtAwake)
 }
