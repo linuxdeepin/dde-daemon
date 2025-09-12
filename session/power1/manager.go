@@ -208,6 +208,13 @@ type Manager struct {
 	delayInActive                             bool
 	delayWakeupInterval                       uint32
 	delayHandleIdleOffIntervalWhenScreenBlack uint32
+
+	// 睡眠前屏幕保护是否正在运行
+	screensaverWasRunning bool
+	// 睡眠前屏幕保护恢复时是否需要密码
+	screensaverLockAtAwake bool
+	// 是否已在进入待机流程前抓取过屏幕保护状态
+	screensaverStateCaptured bool
 }
 
 var _manager *Manager

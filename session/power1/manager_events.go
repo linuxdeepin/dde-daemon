@@ -71,6 +71,13 @@ func (m *Manager) initOnBatteryChangedHandler() {
 
 func (m *Manager) handleBeforeSuspend() {
 	m.setPrepareSuspend(suspendStatePrepare)
+
+	// 检查屏幕保护状态（删除原有的运行状态获取逻辑，仅在未捕获时补充获取锁屏需求）
+	if !m.screensaverStateCaptured {
+		m.screensaverLockAtAwake = m.isScreensaverLockAtAwake()
+	}
+	logger.Debug("before sleep, screensaver running:", m.screensaverWasRunning, "lock at awake:", m.screensaverLockAtAwake)
+
 	m.setDDEBlackScreenActive(true)
 	if m.UseWayland {
 		// 如果是treeland，并且待机休眠唤醒是需要解锁，则将session 给lock
@@ -87,6 +94,9 @@ func (m *Manager) handleBeforeSuspend() {
 func (m *Manager) handleWakeup() {
 	m.setPrepareSuspend(suspendStateWakeup)
 	logger.Debug("wakeup")
+
+	// 唤醒后还原捕获状态标志，避免影响后续逻辑
+	m.screensaverStateCaptured = false
 
 	// Fix wayland sometimes no dpms event after wakeup
 	if m.UseWayland {
@@ -107,6 +117,13 @@ func (m *Manager) handleWakeup() {
 	time.AfterFunc(time.Duration(m.delayWakeupInterval)*time.Second, func() {
 		m.delayInActive = false
 		playSound(soundutils.EventWakeup)
+
+		// 如果睡眠前屏幕保护正在运行且恢复时需要密码，唤醒时必须显示锁屏界面
+		if m.screensaverWasRunning && m.screensaverLockAtAwake {
+			logger.Debug("wakeup: screensaver was running and lock at awake, show lock screen")
+			m.doLock(true)
+		}
+
 		m.setDDEBlackScreenActive(false)
 	})
 
