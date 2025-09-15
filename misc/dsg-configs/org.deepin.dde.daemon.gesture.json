@@ -95,6 +95,26 @@
           "description": "gesture config",
           "permissions": "readwrite",
           "visibility": "private"
+      },
+      "touchPadEnabled": {
+          "value": true,
+          "serial": 0,
+          "flags": [],
+          "name": "touchPadEnabled",
+          "name[zh_CN]": "是否启用触摸板手势",
+          "description": "Whether enable touchpad gesture",
+          "permissions": "readwrite",
+          "visibility": "private"
+      },
+      "touchScreenEnabled": {
+          "value": true,
+          "serial": 0,
+          "flags": [],
+          "name": "touchScreenEnabled",
+          "name[zh_CN]": "是否启用触摸屏手势",
+          "description": "Enable touchscreen gesture",
+          "permissions": "readwrite",
+          "visibility": "private"
       }
   }
 }

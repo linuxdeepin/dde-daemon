@@ -7,57 +7,61 @@ package gesture1
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
 )
 
 func (m *Manager) SetLongPressDuration(duration uint32) *dbus.Error {
-	if m.tsSetting.GetInt(tsSchemaKeyLongPress) == int32(duration) {
+	if value, _ := m.dconfigTouchScreen.GetValueInt64(dconfigKeyLongpressDuration); value == int64(duration) {
 		return nil
 	}
 	err := m.sysDaemon.SetLongPressDuration(0, duration)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
-	m.tsSetting.SetInt(tsSchemaKeyLongPress, int32(duration))
+	m.dconfigTouchScreen.SetValue(dconfigKeyLongpressDuration, int64(duration))
 	return nil
 }
 
 func (m *Manager) GetLongPressDuration() (duration uint32, busErr *dbus.Error) {
-	return uint32(m.tsSetting.GetInt(tsSchemaKeyLongPress)), nil
+	value, err := m.dconfigTouchScreen.GetValueInt64(dconfigKeyLongpressDuration)
+	return uint32(value), dbusutil.ToError(err)
 }
 
 func (m *Manager) SetShortPressDuration(duration uint32) *dbus.Error {
-	if m.tsSetting.GetInt(tsSchemaKeyShortPress) == int32(duration) {
+	if value, _ := m.dconfigTouchScreen.GetValueInt64(dconfigKeyShortpressDuration); value == int64(duration) {
 		return nil
 	}
 	err := m.gesture.SetShortPressDuration(0, duration)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
-	m.tsSetting.SetInt(tsSchemaKeyShortPress, int32(duration))
+	m.dconfigTouchScreen.SetValue(dconfigKeyShortpressDuration, duration)
 	return nil
 }
 
 func (m *Manager) GetShortPressDuration() (duration uint32, busErr *dbus.Error) {
-	return uint32(m.tsSetting.GetInt(tsSchemaKeyShortPress)), nil
+	value, err := m.dconfigTouchScreen.GetValueInt64(dconfigKeyShortpressDuration)
+	return uint32(value), dbusutil.ToError(err)
 }
 
 func (m *Manager) SetEdgeMoveStopDuration(duration uint32) *dbus.Error {
-	if m.tsSetting.GetInt(tsSchemaKeyShortPress) == int32(duration) {
+	if value, _ := m.dconfigTouchScreen.GetValueInt64(dconfigKeyEdgemovestopDuration); value == int64(duration) {
 		return nil
 	}
 	err := m.gesture.SetEdgeMoveStopDuration(0, duration)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
-	m.tsSetting.SetInt(tsSchemaKeyEdgeMoveStop, int32(duration))
+	m.dconfigTouchScreen.SetValue(dconfigKeyEdgemovestopDuration, int32(duration))
 	return nil
 }
 
 func (m *Manager) GetEdgeMoveStopDuration() (duration uint32, busErr *dbus.Error) {
-	return uint32(m.tsSetting.GetInt(tsSchemaKeyEdgeMoveStop)), nil
+	value, err := m.dconfigTouchScreen.GetValueInt64(dconfigKeyEdgemovestopDuration)
+	return uint32(value), dbusutil.ToError(err)
 }
 
 // GetGestureAvaiableActions 获取手势可选的操作

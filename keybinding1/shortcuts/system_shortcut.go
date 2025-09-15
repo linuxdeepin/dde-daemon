@@ -101,7 +101,7 @@ var defaultSysActionCmdMap = map[string]string{
 	"screenshotOcr":          screenshotCmdPrefix + "OcrScreenshot",
 	"screenshotScroll":       screenshotCmdPrefix + "ScrollScreenshot",
 	"fileManager":            "/usr/lib/deepin-daemon/default-file-manager",
-	"disableTouchpad":        "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
+	"disableTouchpad":        "dde-dconfig set -a  org.deepin.dde.daemon -r org.deepin.dde.daemon.touchpad -k touchpadEnabled -v false",
 	"wmSwitcher":             "dbus-send --type=method_call --dest=org.deepin.dde.WMSwitcher1 /org/deepin/dde/WMSwitcher1 org.deepin.dde.WMSwitcher1.RequestSwitchWM",
 	"turnOffScreen":          "sleep 0.5; xset dpms force off",
 	"notificationCenter":     "dbus-send --print-reply --dest=org.deepin.dde.Osd1 /org/deepin/dde/shell/notification/center org.deepin.dde.shell.notification.center.Toggle",

@@ -7,7 +7,8 @@ package gesture1
 import (
 	"encoding/json"
 	"fmt"
-	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 
 	"math"
 	"os"
@@ -25,21 +26,30 @@ import (
 	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionwatcher1"
 	daemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 	gesture "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.gesture1"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
-	"github.com/linuxdeepin/go-lib/gsettings"
-	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 //go:generate dbusutil-gen em -type Manager
 
 const (
-	tsSchemaID              = "com.deepin.dde.touchscreen"
-	tsSchemaKeyLongPress    = "longpress-duration"
-	tsSchemaKeyShortPress   = "shortpress-duration"
-	tsSchemaKeyEdgeMoveStop = "edgemovestop-duration"
-	tsSchemaKeyBlacklist    = "longpress-blacklist"
+	dconfigappID       = "org.deepin.dde.daemon"
+	dconfigGesture     = "org.deepin.dde.daemon.gesture"
+	dconfigTouchScreen = "org.deepin.dde.daemon.touchscreen"
+
+	dconfigKeyLongpressDuration    = "longpressDuration"
+	dconfigKeyShortpressDuration   = "shortpressDuration"
+	dconfigKeyEdgemovestopDuration = "edgemovestopDuration"
+	dconfigKeyLongpressBlacklist   = "longpressBlacklist"
+
+	dconfigKeyEnable             = "enabled"
+	dconfigKeyTouchPadEnabled    = "touchPadEnabled"
+	dconfigKeyTouchScreenEnabled = "touchScreenEnabled"
+
+	dconfigKeyLongPressEnable       = "longPressEnable"
+	dconfigKeyOneFingerBottomEnable = "oneFingerBottomEnable"
+	dconfigKeyOneFingerLeftEnable   = "oneFingerLeftEnable"
+	dconfigKeyOneFingerRightEnable  = "oneFingerRightEnable"
 )
 
 const (
@@ -71,25 +81,24 @@ type Manager struct {
 	gesture            gesture.Gesture
 	dock               dock.Dock
 	display            display.Display
-	setting            *gio.Settings
-	tsSetting          *gio.Settings
-	touchPadEnabled    bool
-	touchScreenEnabled bool
+	touchPadEnabled    dconfig.Bool
+	touchScreenEnabled dconfig.Bool
 	Infos              GestureInfos
 	sessionmanager     sessionmanager.SessionManager
 	clipboard          clipboard.Clipboard
 	notification       notification.Notification
 
-	longPressEnable       bool
-	oneFingerBottomEnable bool
-	oneFingerLeftEnable   bool
-	oneFingerRightEnable  bool
+	longPressEnable       dconfig.Bool
+	oneFingerBottomEnable dconfig.Bool
+	oneFingerLeftEnable   dconfig.Bool
+	oneFingerRightEnable  dconfig.Bool
 	configManagerPath     dbus.ObjectPath
 	sessionWatcher        sessionwatcher.SessionWatcher
 	launchpad             launchpad.Launcher
 
-	dsGestureConfigManager configManager.Manager
-	availableGestures      map[string][]string
+	dconfigGesture     *dconfig.DConfig
+	dconfigTouchScreen *dconfig.DConfig
+	availableGestures  map[string][]string
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
@@ -104,21 +113,19 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		return nil, err
 	}
 
-	setting, err := dutils.CheckAndNewGSettings(gestureSchemaId)
+	gestureDConfig, err := dconfig.NewDConfig(dconfigappID, dconfigGesture, "")
 	if err != nil {
 		return nil, err
 	}
 
-	tsSetting, err := dutils.CheckAndNewGSettings(tsSchemaID)
+	touchScreenDConfig, err := dconfig.NewDConfig(dconfigappID, dconfigTouchScreen, "")
 	if err != nil {
 		return nil, err
 	}
 
 	m := &Manager{
-		setting:            setting,
-		tsSetting:          tsSetting,
-		touchPadEnabled:    setting.GetBoolean(gsKeyTouchPadEnabled),
-		touchScreenEnabled: setting.GetBoolean(gsKeyTouchScreenEnabled),
+		dconfigGesture:     gestureDConfig,
+		dconfigTouchScreen: touchScreenDConfig,
 		wm:                 wm.NewWm(sessionConn),
 		dock:               dock.NewDock(sessionConn),
 		display:            display.NewDisplay(sessionConn),
@@ -130,25 +137,21 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		availableGestures:  make(map[string][]string),
 		service:            service,
 	}
-	dsg := configManager.NewConfigManager(systemConn)
-	powerConfigManagerPath, err := dsg.AcquireManager(0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.gesture", "")
-	if err != nil {
-		logger.Warning(err)
-		return nil, err
-	}
-	m.dsGestureConfigManager, err = configManager.NewManager(systemConn, powerConfigManagerPath)
 
-	m.longPressEnable = m.getGestureConfigValue("longPressEnable")
-	m.oneFingerBottomEnable = m.getGestureConfigValue("oneFingerBottomEnable")
-	m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
-	m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
+	m.touchPadEnabled.Bind(m.dconfigGesture, dconfigKeyTouchPadEnabled)
+	m.touchScreenEnabled.Bind(m.dconfigGesture, dconfigKeyTouchScreenEnabled)
+	m.longPressEnable.Bind(m.dconfigGesture, dconfigKeyLongPressEnable)
+	m.oneFingerBottomEnable.Bind(m.dconfigGesture, dconfigKeyOneFingerBottomEnable)
+	m.oneFingerLeftEnable.Bind(m.dconfigGesture, dconfigKeyOneFingerLeftEnable)
+	m.oneFingerRightEnable.Bind(m.dconfigGesture, dconfigKeyOneFingerRightEnable)
+
 	m.availableGestures[availableGesturesWith3Fingers] = m.getAvailableGestureConfigValue(availableGesturesWith3Fingers)
 	m.availableGestures[availableGesturesWith4Fingers] = m.getAvailableGestureConfigValue(availableGesturesWith4Fingers)
 	m.availableGestures[availableGesturesWithActionTap] = m.getAvailableGestureConfigValue(availableGesturesWithActionTap)
 	m.Infos = m.getGestureConfig()
 
 	if _useWayland {
-		setLongPressEnable(m.longPressEnable)
+		setLongPressEnable(m.longPressEnable.Get())
 	}
 
 	m.gesture = gesture.NewGesture(systemConn)
@@ -175,40 +178,26 @@ func setLongPressEnable(enable bool) {
 	}
 }
 
-func (m *Manager) getGestureConfigValue(key string) bool {
-	data, err := m.dsGestureConfigManager.Value(0, key)
-	if err != nil {
-		logger.Warning(err)
-		return true
-	}
-	return data.Value().(bool)
-}
-
 func (m *Manager) getAvailableGestureConfigValue(key string) []string {
-	var gestures []string
-	data, err := m.dsGestureConfigManager.Value(0, key)
+	data, err := m.dconfigGesture.GetValueStringList(key)
 	if err != nil {
 		logger.Warning(err)
 		return nil
 	}
-	for _, v := range data.Value().([]dbus.Variant) {
-		gestures = append(gestures, v.Value().(string))
-	}
-	return gestures
+
+	return data
 }
 
 func (m *Manager) getGestureConfig() (infos GestureInfos) {
-	var val string
-	data, err := m.dsGestureConfigManager.Value(0, "gestures")
+	data, err := m.dconfigGesture.GetValueString("gestures")
 	if err != nil {
 		logger.Warning(err)
 		return nil
 	}
-	val = data.Value().(string)
-	if len(val) == 0 {
+	if len(data) == 0 {
 		return gestureInfos
 	} else {
-		err = json.Unmarshal([]byte(val), &infos)
+		err = json.Unmarshal([]byte(data), &infos)
 		if err != nil {
 			logger.Warning("gesture config unmarshal fail:", err.Error())
 			return
@@ -223,7 +212,7 @@ func (m *Manager) saveGestureConfig() {
 		logger.Warning(err)
 		return
 	}
-	err = m.dsGestureConfigManager.SetValue(0, "gestures", dbus.MakeVariant(data))
+	err = m.dconfigGesture.SetValue("gestures", data)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -233,20 +222,31 @@ func (m *Manager) saveGestureConfig() {
 func (m *Manager) destroy() {
 	m.gesture.RemoveHandler(proxy.RemoveAllHandlers)
 	m.systemSigLoop.Stop()
-	m.setting.Unref()
 }
 
 func (m *Manager) init() {
 	m.initActions()
-	err := m.sysDaemon.SetLongPressDuration(0, uint32(m.tsSetting.GetInt(tsSchemaKeyLongPress)))
+	longPress, err := m.dconfigTouchScreen.GetValueInt64(dconfigKeyLongpressDuration)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = m.sysDaemon.SetLongPressDuration(0, uint32(longPress))
 	if err != nil {
 		logger.Warning("call SetLongPressDuration failed:", err)
 	}
-	err = m.gesture.SetShortPressDuration(0, uint32(m.tsSetting.GetInt(tsSchemaKeyShortPress)))
+	shortPress, err := m.dconfigTouchScreen.GetValueInt64(dconfigKeyShortpressDuration)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = m.gesture.SetShortPressDuration(0, uint32(shortPress))
 	if err != nil {
 		logger.Warning("call SetShortPressDuration failed:", err)
 	}
-	err = m.gesture.SetEdgeMoveStopDuration(0, uint32(m.tsSetting.GetInt(tsSchemaKeyEdgeMoveStop)))
+	edgemovestopDuration, err := m.dconfigTouchScreen.GetValueInt64(dconfigKeyEdgemovestopDuration)
+	if err != nil {
+		logger.Warning(err)
+	}
+	err = m.gesture.SetEdgeMoveStopDuration(0, uint32(edgemovestopDuration))
 	if err != nil {
 		logger.Warning("call SetEdgeMoveStopDuration failed:", err)
 	}
@@ -282,38 +282,6 @@ func (m *Manager) init() {
 		})
 		if err != nil {
 			logger.Error("Exec failed:", err)
-		}
-	})
-
-	m.systemSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
-	}, func(sig *dbus.Signal) {
-		if strings.Contains(sig.Name, "org.desktopspec.ConfigManager.Manager.valueChanged") &&
-			strings.Contains(string(sig.Path), "org_deepin_dde_daemon_gesture") && len(sig.Body) >= 1 {
-			key, ok := sig.Body[0].(string)
-			if !ok {
-				logger.Warning("Get key of body failed.")
-				return
-			}
-			switch key {
-			case "oneFingerBottomEnable":
-				m.oneFingerBottomEnable = m.getGestureConfigValue("oneFingerBottomEnable")
-				logger.Info("DConfig of oneFingerBottomEnable : ", m.oneFingerBottomEnable)
-			case "longPressEnable":
-				m.longPressEnable = m.getGestureConfigValue("longPressEnable")
-				logger.Info("DConfig of longPressEnable : ", m.longPressEnable)
-				if _useWayland {
-					setLongPressEnable(m.longPressEnable)
-				}
-			case "oneFingerLeftEnable":
-				m.oneFingerLeftEnable = m.getGestureConfigValue("oneFingerLeftEnable")
-				logger.Info("DConfig of oneFingerLeftEnable : ", m.oneFingerLeftEnable)
-			case "oneFingerRightEnable":
-				m.oneFingerRightEnable = m.getGestureConfigValue("oneFingerRightEnable")
-				logger.Info("DConfig of oneFingerRightEnable : ", m.oneFingerRightEnable)
-			default:
-				logger.Warning("Not use key : ", key)
-			}
 		}
 	})
 
@@ -399,7 +367,6 @@ func (m *Manager) init() {
 	if err != nil {
 		logger.Error("connect handleTouchMovementEvent failed:", err)
 	}
-	m.listenGSettingsChanged()
 }
 
 func (m *Manager) shouldIgnoreGesture(info *GestureInfo) bool {
@@ -420,7 +387,11 @@ func (m *Manager) shouldIgnoreGesture(info *GestureInfo) bool {
 	// TODO(jouyouyun): improve touch right button handler
 	if info.Name == "touch right button" {
 		// filter google chrome
-		if isInWindowBlacklist(getCurrentActionWindowCmd(), m.tsSetting.GetStrv(tsSchemaKeyBlacklist)) {
+		blackList, err := m.dconfigTouchScreen.GetValueStringList(dconfigKeyLongpressBlacklist)
+		if err != nil {
+			logger.Warning(blackList)
+		}
+		if isInWindowBlacklist(getCurrentActionWindowCmd(), blackList) {
 			logger.Debug("the current active window in blacklist")
 			return true
 		}
@@ -453,25 +424,11 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 		return nil
 	}
 
-	if (!m.longPressEnable || _useWayland) && strings.Contains(string(info.Name), "touch right button") {
+	if (!m.longPressEnable.Get() || _useWayland) && strings.Contains(string(info.Name), "touch right button") {
 		return nil
 	}
 
 	return info.doAction()
-}
-
-func (m *Manager) listenGSettingsChanged() {
-	gsettings.ConnectChanged(gestureSchemaId, gsKeyTouchPadEnabled, func(key string) {
-		m.mu.Lock()
-		m.touchPadEnabled = m.setting.GetBoolean(key)
-		m.mu.Unlock()
-	})
-
-	gsettings.ConnectChanged(gestureSchemaId, gsKeyTouchScreenEnabled, func(key string) {
-		m.mu.Lock()
-		m.touchScreenEnabled = m.setting.GetBoolean(key)
-		m.mu.Unlock()
-	})
 }
 
 func (m *Manager) handleBuiltinAction(cmd string) error {
@@ -647,7 +604,7 @@ func (m *Manager) getTouchScreenRotationContext() (context *touchEventContext, p
 func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge string, p *point, duration int32) error {
 	logger.Debugf("handleTouchEdgeMoveStopLeave: context:%+v edge:%s p: %+v", *context, edge, *p)
 
-	if edge == context.bot && m.oneFingerBottomEnable {
+	if edge == context.bot && m.oneFingerBottomEnable.Get() {
 		position, err := m.dock.Position().Get(0)
 		if err != nil {
 			logger.Error("get dock.Position failed:", err)
@@ -701,11 +658,11 @@ func (m *Manager) handleTouchEdgeEvent(context *touchEventContext, edge string, 
 	logger.Debugf("handleTouchEdgeEvent: context:%+v edge:%s p:%+v", *context, edge, *p)
 	switch edge {
 	case context.left:
-		if p.X*float64(context.screenHeight) > 100 && m.oneFingerLeftEnable {
+		if p.X*float64(context.screenHeight) > 100 && m.oneFingerLeftEnable.Get() {
 			return m.clipboard.Show(0)
 		}
 	case context.right:
-		if (1-p.X)*float64(context.screenWidth) > 100 && m.oneFingerRightEnable {
+		if (1-p.X)*float64(context.screenWidth) > 100 && m.oneFingerRightEnable.Get() {
 			return m.showWidgets(true)
 		}
 	}
@@ -731,11 +688,11 @@ func (m *Manager) handleTouchMovementEvent(context *touchEventContext, direction
 
 		switch direction {
 		case context.left:
-			if m.oneFingerLeftEnable {
+			if m.oneFingerLeftEnable.Get() {
 				return m.clipboard.Hide(0)
 			}
 		case context.right:
-			if m.oneFingerRightEnable {
+			if m.oneFingerRightEnable.Get() {
 				return m.showWidgets(false)
 			}
 		}
@@ -775,12 +732,12 @@ func (m *Manager) shouldHandleEvent(devType deviceType) (bool, error) {
 
 	switch devType {
 	case deviceTouchPad:
-		if !m.touchPadEnabled {
+		if !m.touchPadEnabled.Get() {
 			logger.Debug("touch pad is disabled, do not handle touchpad gesture event")
 			return false, nil
 		}
 	case deviceTouchScreen:
-		if !m.touchScreenEnabled {
+		if !m.touchScreenEnabled.Get() {
 			logger.Debug("touch screen is disabled, do not handle touchscreen gesture event")
 			return false, nil
 		}
