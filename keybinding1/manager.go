@@ -723,7 +723,7 @@ func (m *Manager) listenKeyboardEvent(systemBus *dbus.Conn) {
 
 // 初始化 NumLock 数字锁定键状态
 func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
-	// 从 gsettings 读取相关设置
+	// 从 dconfig 读取相关设置
 	nlState := NumLockState(m.NumLockState)
 	saveStateEnabledValue, err := m.keyboardConfigMgr.Value(0, constants.DSettingsKeySaveNumLockState)
 	if err != nil {
@@ -752,7 +752,7 @@ func (m *Manager) initNumLockState(sysBus *dbus.Conn) {
 		}
 
 		if saveStateEnabled {
-			// 保存新状态到 gsettings
+			// 保存新状态到 dconfig
 			m.keyboardConfigMgr.SetValue(0, constants.DSettingsKeyNumLockState, dbus.MakeVariant(state))
 		}
 
