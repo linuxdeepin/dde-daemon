@@ -527,7 +527,6 @@ func (kbd *Keyboard) applyX11Repeat() {
 	if err != nil {
 		logger.Debug("failed to set repeat:", err, repeat, delay, interval)
 	}
-	setWMKeyboardRepeat(repeat, delay, interval)
 }
 
 func (kbd *Keyboard) applyRepeat() {

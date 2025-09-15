@@ -112,7 +112,7 @@ func (m *Manager) Reset() *dbus.Error {
 	m.shortcutManager.UngrabAll()
 
 	m.enableListenDConifigChanged(false)
-	// reset all gsettings
+	// reset all dconfig
 	resetDconfig(m.shortcutSystemConfigMgr)
 	resetDconfig(m.shortcutMediaConfigMgr)
 	if m.shortcutWrapGnomeWmConfigMgr != nil {
