@@ -20,7 +20,6 @@ import (
 	"unsafe"
 
 	upower "github.com/linuxdeepin/go-dbus-factory/org.freedesktop.upower"
-	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 )
 
 const (
@@ -143,6 +142,10 @@ func (m *Manager) initLidSwitchCommon() {
 		return
 	}
 	m.HasLidSwitch = true
+	// TODO: 通过下面的方法获取不到初始状态，先默认LidClosed为false
+	// 可能造成问题，如果开机之前盖上了笔记本的盖子，则无法获取到正确的状态
+	// 导致需要重新合盖才能触发合盖事件
+	m.LidClosed = false
 
 	go func() {
 		for {
@@ -174,17 +177,9 @@ func (m *Manager) initLidSwitchCommon() {
 
 func (m *Manager) initLidSwitchByUPower() error {
 	const UPowerServiceName = "org.freedesktop.UPower"
-	sysBusObj := ofdbus.NewDBus(m.service.Conn())
-	hasOwner, err := sysBusObj.NameHasOwner(0, UPowerServiceName)
-	if err != nil {
-		return err
-	}
-	if !hasOwner {
-		return fmt.Errorf("%v not export", UPowerServiceName)
-	}
 	uPowerObj := upower.NewUPower(m.service.Conn())
 	uPowerObj.InitSignalExt(m.systemSigLoop, true)
-	err = uPowerObj.LidIsClosed().ConnectChanged(func(hasValue bool, isClosed bool) {
+	err := uPowerObj.LidIsClosed().ConnectChanged(func(hasValue bool, isClosed bool) {
 		if !hasValue {
 			return
 		}
@@ -199,6 +194,12 @@ func (m *Manager) initLidSwitchByUPower() error {
 		return err
 	}
 
+	lidClosed, err := uPowerObj.LidIsClosed().Get(0)
+	if err != nil {
+		return err
+	}
+	logger.Info("init lid switch by upower, hasLidSwitch:", hasLidSwitch, " lidClosed:", lidClosed)
+	m.LidClosed = lidClosed
 	m.HasLidSwitch = hasLidSwitch
 	return nil
 }
