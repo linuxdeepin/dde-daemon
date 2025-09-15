@@ -24,11 +24,15 @@ func isSWLidStateFileExist() bool {
 
 func (m *Manager) initLidSwitchSW() {
 	m.HasLidSwitch = true
+	m.LidClosed = false
 	go m.swLidSwitchCheckLoop()
 }
 
 func (m *Manager) swLidSwitchCheckLoop() {
 	prevState := getLidStateSW()
+	if prevState == swLidClose {
+		m.LidClosed = true
+	}
 	for {
 		time.Sleep(time.Second * 3)
 		newState := getLidStateSW()

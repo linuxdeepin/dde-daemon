@@ -62,6 +62,7 @@ type Manager struct {
 	PropsMu      sync.RWMutex
 	OnBattery    bool
 	HasLidSwitch bool
+	LidClosed    bool
 	// battery display properties:
 	HasBattery         bool
 	BatteryPercentage  float64

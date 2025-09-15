@@ -1152,6 +1152,7 @@ func (m *Manager) init() {
 		m.initBuiltinMonitor()
 		m.monitorsId = m.getMonitorsId()
 		m.updatePropMonitors()
+		m.initLidSwitch()
 
 	} else {
 		// randr 版本低于 1.2
@@ -1185,6 +1186,7 @@ func (m *Manager) init() {
 
 	// NOTE: m.listenXEvents 应该在 m.applyDisplayConfig 之前，否则会造成它里面的 m.apply 函数的等待超时。
 	m.listenXEvents()
+
 	// 此时不需要设置色温，在 StartPart2 中做。为性能考虑。
 	m.applyConfig(false, nil)
 	if m.builtinMonitor != nil {
@@ -1685,7 +1687,7 @@ func (m *Manager) setPrimary(name string) error {
 				continue
 			}
 
-			if !monitor.realConnected {
+			if !monitor.realConnected && monitor.lidClosed {
 				return errors.New("monitor is not connected")
 			}
 

@@ -7,10 +7,11 @@ package display1
 import (
 	"errors"
 	"fmt"
-	"github.com/linuxdeepin/dde-daemon/common/scale"
 	"math"
 	"sync"
 	"time"
+
+	"github.com/linuxdeepin/dde-daemon/common/scale"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/linuxdeepin/go-lib/log"
@@ -787,7 +788,7 @@ func getConnectedMonitors(monitorMap map[uint32]*Monitor) Monitors {
 	var monitors Monitors
 	for _, monitor := range monitorMap {
 		monitor.PropsMu.RLock()
-		connected := monitor.realConnected
+		connected := monitor.realConnected && !monitor.lidClosed
 		monitor.PropsMu.RUnlock()
 		if connected {
 			monitors = append(monitors, monitor)
@@ -813,7 +814,7 @@ func getScreenSize(monitorMap map[uint32]*Monitor) screenSize {
 func getScreenWidthHeight(monitorMap map[uint32]*Monitor) (sw, sh uint16) {
 	var w, h int
 	for _, monitor := range monitorMap {
-		if !monitor.realConnected || !monitor.Enabled {
+		if !monitor.realConnected || !monitor.Enabled || monitor.lidClosed {
 			continue
 		}
 

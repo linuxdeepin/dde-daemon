@@ -77,6 +77,8 @@ type Monitor struct {
 	backup *MonitorBackup
 	// changes 记录 DBus 接口对显示器对象做的设置，也用 PropsMu 保护。
 	changes monitorChanges
+
+	lidClosed bool
 }
 
 // monitorChanges 用于记录从 DBus 接收到的显示器新设置，key 是显示器属性名。
@@ -163,6 +165,7 @@ func (m *Monitor) clone() *Monitor {
 		CurrentMode:        m.CurrentMode,
 		CurrentFillMode:    m.CurrentFillMode,
 		AvailableFillModes: m.AvailableFillModes,
+		lidClosed:          m.lidClosed,
 		backup:             nil,
 		changes:            m.changes.clone(),
 	}

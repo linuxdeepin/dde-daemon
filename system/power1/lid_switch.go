@@ -31,6 +31,7 @@ func (m *Manager) initLidSwitch() {
 }
 
 func (m *Manager) handleLidSwitchEvent(closed bool) {
+	m.LidClosed = closed
 	if closed {
 		logger.Info("Lid Closed")
 		err := m.service.Emit(m, "LidClosed")
