@@ -1,0 +1,50 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+    "longpressDuration": {
+      "value": 1000,
+      "serial": 0,
+      "flags": [],
+      "name": "longpressDuration",
+      "name[zh_CN]": "长按持续时间",
+      "description[zh_CN]": "设置触摸屏长按的持续时间，单位为毫秒",
+      "description": "Set the duration for touchscreen longpress, the unit is ms",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "shortpressDuration": {
+      "value": 250,
+      "serial": 0,
+      "flags": [],
+      "name": "shortpressDuration",
+      "name[zh_CN]": "短按持续时间",
+      "description[zh_CN]": "设置触摸屏短按的持续时间，单位为毫秒",
+      "description": "Set the duration for touchscreen shortpress, the unit is ms",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "edgemovestopDuration": {
+      "value": 0,
+      "serial": 0,
+      "flags": [],
+      "name": "edgemovestopDuration",
+      "name[zh_CN]": "边缘移动停止时间",
+      "description[zh_CN]": "设置触摸屏边缘移动停止时间，单位为毫秒",
+      "description": "Set the duration for touchscreen edge move stop time, the unit is ms",
+      "permissions": "readwrite",
+      "visibility": "public"
+    },
+    "longpressBlacklist": {
+      "value": ["/opt/google/chrome/chrome"],
+      "serial": 0,
+      "flags": [],
+      "name": "longpressBlacklist",
+      "name[zh_CN]": "长按黑名单",
+      "description[zh_CN]": "设置禁用触摸屏长按的应用命令行列表",
+      "description": "Set app cmdline list for disable touchscreen longpress",
+      "permissions": "readwrite",
+      "visibility": "public"
+    }
+  }
+}

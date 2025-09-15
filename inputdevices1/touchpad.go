@@ -537,16 +537,15 @@ func isProcessExist(file, name string) bool {
 }
 
 func enableGesture(enabled bool) {
-	s, err := dutils.CheckAndNewGSettings("com.deepin.dde.gesture")
+	dconfig, err := dconfig.NewDConfig(dsettingsAppID, "org.deepin.dde.daemon.gesture", "")
 	if err != nil {
 		return
 	}
-	if s.GetBoolean("touch-pad-enabled") == enabled {
+	if value, _ := dconfig.GetValueBool("touchpadEnabled"); value == enabled {
 		return
 	}
 
-	s.SetBoolean("touch-pad-enabled", enabled)
-	s.Unref()
+	dconfig.SetValue("dconfig", enabled)
 }
 
 func (tpad *Touchpad) initTouchpadDConfig() error {

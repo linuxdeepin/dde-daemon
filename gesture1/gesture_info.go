@@ -8,12 +8,6 @@ import (
 	"fmt"
 )
 
-const (
-	gestureSchemaId         = "com.deepin.dde.gesture"
-	gsKeyTouchPadEnabled    = "touch-pad-enabled"
-	gsKeyTouchScreenEnabled = "touch-screen-enabled"
-)
-
 type EventInfo struct {
 	Name      string
 	Direction string
