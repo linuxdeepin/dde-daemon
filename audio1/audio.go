@@ -22,33 +22,20 @@ import (
 	"github.com/linuxdeepin/dde-daemon/common/dsync"
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
-	gio "github.com/linuxdeepin/go-gir/gio-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/dbusutil/gsprop"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"golang.org/x/xerrors"
 )
 
 const (
-	gsSchemaAudio                 = "com.deepin.dde.audio"
-	gsKeyFirstRun                 = "first-run"
-	gsKeyInputVolume              = "input-volume"
-	gsKeyOutputVolume             = "output-volume"
-	gsKeyHeadphoneOutputVolume    = "headphone-output-volume"
-	gsKeyHeadphoneUnplugAutoPause = "headphone-unplug-auto-pause"
-	gsKeyVolumeIncrease           = "volume-increase"
-
-	gsKeyReduceNoise              = "reduce-input-noise"
-	gsKeyOutputAutoSwitchCountMax = "output-auto-switch-count-max"
-
-	gsSchemaControlCenter = "com.deepin.dde.control-center"
-	gsKeyDeviceManager    = "device-manage"
-
+	gsKeyEnabled         = "enabled"
 	dconfigSoundEffectId = "org.deepin.dde.daemon.soundeffect"
 	dconfigDaemonAppId   = "org.deepin.dde.daemon"
-	gsKeyEnabled         = "enabled"
-	gsKeyDisableAutoMute = "disable-auto-mute"
+	dconfigAudioId       = "org.deepin.dde.daemon.audio"
+
+	dconfigDccAppid = "org.deepin.dde.control-center"
+	dconfigSoundId  = "org.deepin.dde.control-center.sound"
 
 	dbusServiceName = "org.deepin.dde.Audio1"
 	dbusPath        = "/org/deepin/dde/Audio1"
@@ -65,6 +52,8 @@ const (
 	increaseMaxVolume = 1.5
 	normalMaxVolume   = 1.0
 
+	dsgkeySoundShowDeviceManager = "showDeviceManager"
+
 	dsgkeyPausePlayer             = "pausePlayer"
 	dsgKeyAutoSwitchPort          = "autoSwitchPort"
 	dsgKeyBluezModeFilterList     = "bluezModeFilterList"
@@ -74,6 +63,15 @@ const (
 	dsgKeyOutputDefaultPriorities = "outputDefaultPrioritiesByType"
 	dsgKeyBluezModeDefault        = "bluezModeDefault"
 	dsgKeyMonoEnabled             = "monoEnabled"
+
+	dsgKeyFirstRun                 = "firstRun"
+	dsgKeyInputVolume              = "inputVolume"
+	dsgKeyOutputVolume             = "outputVolume"
+	dsgKeyHeadphoneOutputVolume    = "headphoneOutputVolume"
+	dsgKeyHeadphoneUnplugAutoPause = "headphoneUnplugAutoPause"
+	dsgKeyVolumeIncrease           = "volumeIncrease"
+	dsgKeyOutputAutoSwitchCountMax = "outputAutoSwitchCountMax"
+	dsgKeyDisableAutoMute          = "disableAutoMute"
 
 	changeIconStart    = "notification-change-start"
 	changeIconFailed   = "notification-change-failed"
@@ -150,7 +148,7 @@ type Audio struct {
 	AudioServerState       bool     // 音频服务状态
 
 	// dbusutil-gen: ignore
-	IncreaseVolume gsprop.Bool `prop:"access:rw"`
+	IncreaseVolume dconfig.Bool `prop:"access:rw"`
 
 	PausePlayer bool `prop:"access:rw"`
 
@@ -166,7 +164,9 @@ type Audio struct {
 
 	headphoneUnplugAutoPause bool
 
-	settings  *gio.Settings
+	audioDConfig    *dconfig.DConfig
+	dccSoundDconfig *dconfig.DConfig
+
 	ctx       *pulse.Context
 	eventChan chan *pulse.Event
 	stateChan chan int
@@ -210,12 +210,10 @@ type Audio struct {
 	outputAutoSwitchCount    int
 	outputAutoSwitchCountMax int
 	// 自动端口切换
-	enableAutoSwitchPort    bool
-	controlCenterGsSettings *gio.Settings
-	// 控制中心-声音-设备管理 是否显示
-	controlCenterDeviceManager gsprop.Bool `prop:"access:rw"`
+	enableAutoSwitchPort bool
 
-	systemSigLoop *dbusutil.SignalLoop
+	// 控制中心-声音-设备管理 是否显示
+	controlCenterDeviceManager dconfig.Bool
 	// 用来进一步断是否需要暂停播放的信息
 	misc uint32
 
@@ -229,15 +227,6 @@ type Audio struct {
 	}
 }
 
-func isStringInSlice(list []string, str string) bool {
-	for _, v := range list {
-		if v == str {
-			return true
-		}
-	}
-	return false
-}
-
 func newAudio(service *dbusutil.Service) *Audio {
 	a := &Audio{
 		service:          service,
@@ -247,34 +236,43 @@ func newAudio(service *dbusutil.Service) *Audio {
 		AudioServerState: AudioStateChanged,
 	}
 
-	a.settings = gio.NewSettings(gsSchemaAudio)
-	a.settings.Reset(gsKeyInputVolume)
-	a.settings.Reset(gsKeyOutputVolume)
-	a.settings.Reset(gsKeyHeadphoneOutputVolume)
-	a.IncreaseVolume.Bind(a.settings, gsKeyVolumeIncrease)
+	var err error
+	a.audioDConfig, err = dconfig.NewDConfig(dconfigDaemonAppId, dconfigAudioId, "")
+	if err != nil {
+		logger.Warningf("NewAudioDConfig failed: %v", err)
+		return a
+	}
+
+	a.dccSoundDconfig, err = dconfig.NewDConfig(dconfigDccAppid, dconfigSoundId, "")
+	if err != nil {
+		logger.Warningf("NewDccDConfig failed: %v", err)
+		return a
+	}
+
+	a.audioDConfig.Reset(dsgKeyInputVolume)
+	a.audioDConfig.Reset(dsgKeyOutputVolume)
+	a.audioDConfig.Reset(dsgKeyHeadphoneOutputVolume)
+	a.IncreaseVolume.Bind(a.audioDConfig, dsgKeyVolumeIncrease)
 	a.PausePlayer = false
 	a.ReduceNoise = false
 	a.emitPropChangedReduceNoise(a.ReduceNoise)
 	a.CurrentAudioServer = a.getCurrentAudioServer()
-	a.headphoneUnplugAutoPause = a.settings.GetBoolean(gsKeyHeadphoneUnplugAutoPause)
-	a.outputAutoSwitchCountMax = int(a.settings.GetInt(gsKeyOutputAutoSwitchCountMax))
+	a.headphoneUnplugAutoPause, err = a.audioDConfig.GetValueBool(dsgKeyHeadphoneUnplugAutoPause)
+	if err != nil {
+		logger.Warningf("Get headphoneUnplugAutoPause ValueBool failed: %v", err)
+	}
+	a.outputAutoSwitchCountMax, err = a.audioDConfig.GetValueInt(dsgKeyOutputAutoSwitchCountMax)
+	if err != nil {
+		logger.Warningf("Get outputAutoSwitchCountMax ValueInt failed: %v", err)
+	}
 	if a.IncreaseVolume.Get() {
 		a.MaxUIVolume = increaseMaxVolume
 	} else {
 		a.MaxUIVolume = normalMaxVolume
 	}
 	gMaxUIVolume = a.MaxUIVolume
-	a.listenGSettingVolumeIncreaseChanged()
 
-	if isStringInSlice(gio.SettingsListSchemas(), gsSchemaControlCenter) {
-		a.controlCenterGsSettings = gio.NewSettings(gsSchemaControlCenter)
-		if isStringInSlice(a.controlCenterGsSettings.ListKeys(), gsKeyDeviceManager) {
-			a.controlCenterDeviceManager.Bind(a.controlCenterGsSettings, gsKeyDeviceManager)
-			a.listenGSettingDeviceManageChanged()
-		}
-	} else {
-		logger.Warning(" [newAudio] gschemas file not exist : /usr/share/glib-2.0/schemas/com.deepin.dde.control-center.gschema.xml")
-	}
+	a.controlCenterDeviceManager.Bind(a.dccSoundDconfig, dsgkeySoundShowDeviceManager)
 
 	a.sessionSigLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
 	a.syncConfig = dsync.NewConfig("audio", &syncConfig{a: a},
@@ -1032,7 +1030,8 @@ func (a *Audio) refresh() {
 }
 
 func (a *Audio) init() error {
-	if a.settings.GetBoolean(gsKeyDisableAutoMute) {
+	disableAutoMuteValue, _ := a.audioDConfig.GetValueBool(dsgKeyDisableAutoMute)
+	if disableAutoMuteValue {
 		err := disableAutoMuteMode()
 		if err != nil {
 			logger.Warning(err)
@@ -1123,11 +1122,14 @@ func (a *Audio) init() error {
 	go a.handleStateChanged()
 	logger.Debug("init done")
 
-	firstRun := a.settings.GetBoolean(gsKeyFirstRun)
+	firstRun, err := a.audioDConfig.GetValueBool(dsgKeyFirstRun)
+	if err != nil {
+		logger.Warning(err)
+	}
 	if firstRun {
 		logger.Info("first run, Will remove old audio config")
 		removeConfig()
-		a.settings.SetBoolean(gsKeyFirstRun, false)
+		a.audioDConfig.SetValue(dsgKeyFirstRun, false)
 	}
 
 	if !a.needAutoSwitchOutputPort() {
@@ -1190,20 +1192,28 @@ func (a *Audio) destroyCtxRelated() {
 }
 
 func (a *Audio) destroy() {
-	a.settings.Unref()
 	a.sessionSigLoop.Stop()
-	a.systemSigLoop.Stop()
 	a.syncConfig.Destroy()
 	a.destroyCtxRelated()
 }
 
 func (a *Audio) initDefaultVolumes() {
-	inVolumePer := float64(a.settings.GetInt(gsKeyInputVolume)) / 100.0
-	outVolumePer := float64(a.settings.GetInt(gsKeyOutputVolume)) / 100.0
-	headphoneOutVolumePer := float64(a.settings.GetInt(gsKeyHeadphoneOutputVolume)) / 100.0
-	defaultInputVolume = inVolumePer
-	defaultOutputVolume = outVolumePer
-	defaultHeadphoneOutputVolume = headphoneOutVolumePer
+	inVolumePerValue, err := a.audioDConfig.GetValueFloat64(dsgKeyInputVolume)
+	if err != nil {
+		logger.Warning(err)
+	}
+	outVolumePerValue, err := a.audioDConfig.GetValueFloat64(dsgKeyOutputVolume)
+	if err != nil {
+		logger.Warning(err)
+	}
+	headphoneOutVolumePerValue, err := a.audioDConfig.GetValueFloat64(dsgKeyHeadphoneOutputVolume)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	defaultInputVolume = inVolumePerValue / 100.0
+	defaultOutputVolume = outVolumePerValue / 100.0
+	defaultHeadphoneOutputVolume = headphoneOutVolumePerValue / 100.0
 }
 
 func (a *Audio) findSinkByCardIndexPortName(cardId uint32, portName string) *pulse.Sink {
@@ -2053,12 +2063,6 @@ func (a *Audio) setEnableAutoSwitchPort(value bool) {
 	a.enableAutoSwitchPort = value
 	a.PropsMu.Unlock()
 
-	if a.controlCenterGsSettings == nil {
-		return
-	} else if !isStringInSlice(a.controlCenterGsSettings.ListKeys(), gsKeyDeviceManager) {
-		return
-	}
-
 	if a.enableAutoSwitchPort != a.controlCenterDeviceManager.Get() {
 		a.controlCenterDeviceManager.Set(a.enableAutoSwitchPort)
 		logger.Info("setEnableAutoSwitchPort set a.enableAutoSwitchPort to a.controlCenterDeviceManager. value : ", a.enableAutoSwitchPort)
@@ -2067,117 +2071,70 @@ func (a *Audio) setEnableAutoSwitchPort(value bool) {
 
 // 初始化 dsg 配置的属性
 func (a *Audio) initDsgProp() error {
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		return err
-	}
-
-	a.systemSigLoop = dbusutil.NewSignalLoop(systemBus, 10)
-
-	systemConnObj := systemBus.Object("org.desktopspec.ConfigManager", "/")
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.acquireManager", 0, "org.deepin.dde.daemon", "org.deepin.dde.daemon.audio", "").Store(&a.configManagerPath)
+	val, err := a.audioDConfig.GetValueBool(dsgkeyPausePlayer)
 	if err != nil {
 		logger.Warning(err)
-		return nil
 	}
+	a.setEnableAutoSwitchPort(val)
 
-	err = dbusutil.NewMatchRuleBuilder().Type("signal").
-		PathNamespace(string(a.configManagerPath)).
-		Interface("org.desktopspec.ConfigManager.Manager").
-		Member("valueChanged").Build().AddTo(systemBus)
-	if err != nil {
-		logger.Warning(err)
-		return nil
-	}
-
-	var val bool
-	systemConnObj = systemBus.Object("org.desktopspec.ConfigManager", a.configManagerPath)
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyAutoSwitchPort).Store(&val)
+	pausePlayerValue, err := a.audioDConfig.GetValueBool(dsgkeyPausePlayer)
 	if err != nil {
 		logger.Warning(err)
 	} else {
-		logger.Info("auto switch port:", val)
-		a.setEnableAutoSwitchPort(val)
-	}
-
-	var keyPausePlayer bool
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgkeyPausePlayer).Store(&keyPausePlayer)
-	if err != nil {
-		logger.Warning(err)
-	} else {
-		logger.Info("auto switch port:", keyPausePlayer)
+		logger.Info("auto switch port:", pausePlayerValue)
 		a.PropsMu.Lock()
-		a.PausePlayer = keyPausePlayer
+		a.PausePlayer = pausePlayerValue
 		a.PropsMu.Unlock()
 	}
 
-	var ret []dbus.Variant
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyBluezModeFilterList).Store(&ret)
+	bluezModeFilterListValue, err := a.audioDConfig.GetValueStringList(dsgKeyBluezModeFilterList)
 	if err != nil {
 		logger.Warning(err)
 	} else {
 		bluezModeFilterList = bluezModeFilterList[:0]
-		for i := range ret {
-			if v, ok := ret[i].Value().(string); ok {
-				bluezModeFilterList = append(bluezModeFilterList, v)
-			}
-		}
+		bluezModeFilterList = append(bluezModeFilterList, bluezModeFilterListValue...)
 		logger.Info("bluez filter audio mode opts", bluezModeFilterList)
 	}
 
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyPortFilterList).Store(&ret)
+	portFilterListValue, err := a.audioDConfig.GetValueStringList(dsgKeyPortFilterList)
 	if err != nil {
 		logger.Warning(err)
 	} else {
 		portFilterList = portFilterList[:0]
-		for i := range ret {
-			if v, ok := ret[i].Value().(string); ok {
-				portFilterList = append(portFilterList, v)
-			}
-		}
+		portFilterList = append(portFilterList, portFilterListValue...)
 		logger.Info("port filter list", portFilterList)
 	}
 
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyReduceNoise).Store(&defaultReduceNoise)
+	defaultReduceNoiseValue, err := a.audioDConfig.GetValueBool(dsgKeyReduceNoise)
 	if err != nil {
 		logger.Warning(err)
 	} else {
-		logger.Info("default reduce noise status:", defaultReduceNoise)
+		defaultReduceNoise = defaultReduceNoiseValue
+		logger.Info("default reduce noise", defaultReduceNoise)
 	}
 
-	ret = make([]dbus.Variant, 0)
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyInputDefaultPriorities).Store(&ret)
+	inputDefaultPrioritiesValue, err := a.audioDConfig.GetValueInt64List(dsgKeyInputDefaultPriorities)
 	if err != nil {
 		logger.Warning(err)
 	} else {
-		for i := range ret {
-			if v, ok := ret[i].Value().(int64); ok {
-				inputDefaultPriorities = append(inputDefaultPriorities, int(v))
-			} else {
-				logger.Warningf("Input default priority list type is not int64, real is:%T", ret[i].Value())
-			}
+		for i := range inputDefaultPrioritiesValue {
+			inputDefaultPriorities = append(inputDefaultPriorities, int(inputDefaultPrioritiesValue[i]))
 		}
 		logger.Info("input default priority list", inputDefaultPriorities)
 	}
 
-	ret = make([]dbus.Variant, 0)
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyOutputDefaultPriorities).Store(&ret)
+	outputDefaultPrioritiesValue, err := a.audioDConfig.GetValueInt64List(dsgKeyOutputDefaultPriorities)
 	if err != nil {
 		logger.Warning(err)
 	} else {
-		for i := range ret {
-			if v, ok := ret[i].Value().(int64); ok {
-				outputDefaultPriorities = append(outputDefaultPriorities, int(v))
-			} else {
-				logger.Warningf("output default priority list type is not int64, real is:%T", ret[i].Value())
-			}
+		for i := range outputDefaultPrioritiesValue {
+			outputDefaultPriorities = append(outputDefaultPriorities, int(outputDefaultPrioritiesValue[i]))
 		}
 		logger.Info("output default priority list", outputDefaultPriorities)
 	}
 
 	getBluezModeDefault := func() {
-		var val string
-		err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyBluezModeDefault).Store(&val)
+		val, err := a.audioDConfig.GetValueString(dsgKeyBluezModeDefault)
 		if err != nil {
 			logger.Warning(err)
 		} else {
@@ -2189,52 +2146,34 @@ func (a *Audio) initDsgProp() error {
 	}
 
 	getMonoEnabled := func() {
-		err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, dsgKeyMonoEnabled).Store(&a.Mono)
+		monoEnabled, err := a.audioDConfig.GetValueBool(dsgKeyMonoEnabled)
 		if err != nil {
 			logger.Warning(err)
+		} else {
+			a.setMono(monoEnabled)
+			logger.Info("mono enabled:", a.Mono)
 		}
 	}
 	getMonoEnabled()
-	// 监听dsg配置变化
-	a.systemSigLoop.AddHandler(&dbusutil.SignalRule{
-		Name: "org.desktopspec.ConfigManager.Manager.valueChanged",
-	}, func(sig *dbus.Signal) {
-		if strings.Contains(sig.Name, "org.desktopspec.ConfigManager.Manager.valueChanged") &&
-			strings.Contains(string(sig.Path), "org_deepin_dde_daemon_audio") && len(sig.Body) >= 1 {
-			key, ok := sig.Body[0].(string)
-			if ok {
-				switch key {
-				case dsgKeyAutoSwitchPort:
-					var val bool
-					err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&val)
-					if err != nil {
-						logger.Warning(err)
-					} else {
-						logger.Info("auto switch port:", val)
-						a.setEnableAutoSwitchPort(val)
-					}
-				case dsgKeyBluezModeDefault:
-					getBluezModeDefault()
-				case dsgkeyPausePlayer:
-					var pausePlayer bool
-					err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.value", 0, key).Store(&pausePlayer)
-					if err != nil {
-						logger.Warning(err)
-					} else {
-						logger.Info("pausePlayer config:", pausePlayer)
-						a.PropsMu.Lock()
-						a.PausePlayer = pausePlayer
-						a.emitPropChangedPausePlayer(pausePlayer)
-						a.PropsMu.Unlock()
-					}
-				case dsgKeyMonoEnabled:
-					getMonoEnabled()
-				}
-			}
+
+	a.audioDConfig.ConnectValueChanged(func(key string) {
+		switch key {
+		case dsgKeyAutoSwitchPort:
+			value, _ := a.audioDConfig.GetValueBool(dsgKeyAutoSwitchPort)
+			logger.Info("auto switch port:", value)
+			a.setEnableAutoSwitchPort(value)
+		case dsgKeyBluezModeDefault:
+			getBluezModeDefault()
+		case dsgkeyPausePlayer:
+			pausePlayer, _ := a.audioDConfig.GetValueBool(dsgkeyPausePlayer)
+			logger.Info("pausePlayer config:", pausePlayer)
+			a.emitPropChangedPausePlayer(pausePlayer)
+		case dsgKeyMonoEnabled:
+			getMonoEnabled()
+		case dsgKeyVolumeIncrease:
+			a.handleVolumeIncrease()
 		}
 	})
-
-	a.systemSigLoop.Start()
 
 	return nil
 }
@@ -2263,14 +2202,34 @@ func (a *Audio) setMono(enable bool) error {
 	}
 
 	a.setPropMono(enable)
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		return dbus.MakeFailedError(err)
-	}
-	systemConnObj := systemBus.Object("org.desktopspec.ConfigManager", a.configManagerPath)
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.setValue", 0, dsgKeyMonoEnabled, dbus.MakeVariant(enable)).Err
+	err := a.audioDConfig.SetValue(dsgKeyMonoEnabled, enable)
 	if err != nil {
 		return dbusutil.ToError(errors.New("dconfig Cannot set value " + dsgKeyMonoEnabled))
 	}
 	return nil
+}
+
+func (a *Audio) handleVolumeIncrease() {
+	volInc, err := a.audioDConfig.GetValueBool(dsgKeyVolumeIncrease)
+	if err != nil {
+		logger.Warning("dconfig get volume increase error:", err)
+		return
+	}
+	if volInc {
+		a.MaxUIVolume = increaseMaxVolume
+	} else {
+		a.MaxUIVolume = normalMaxVolume
+	}
+	gMaxUIVolume = a.MaxUIVolume
+	err = a.emitPropChangedMaxUIVolume(a.MaxUIVolume)
+	if err != nil {
+		logger.Warning("changed Max UI Volume failed: ", err)
+	} else {
+		sink := a.getDefaultSink()
+		if sink == nil {
+			logger.Warning("default sink is nil")
+			return
+		}
+		GetConfigKeeper().SetIncreaseVolume(a.getCardNameById(sink.Card), sink.ActivePort.Name, volInc)
+	}
 }

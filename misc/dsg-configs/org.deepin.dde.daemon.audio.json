@@ -109,6 +109,116 @@
       "description": "audio channel mono enabled set",
       "permissions": "readwrite",
       "visibility": "private"
+    },
+    "firstRun": {
+      "value": true,
+      "serial": 0,
+      "flags": [],
+      "name": "firstRun",
+      "name[zh_CN]": "是否已初始化",
+      "description": "If no initialized, do it, otherwise nothing to do.",
+      "description[zh_CN]": "如果未初始化则执行初始化，否则不执行任何操作",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "inputVolume": {
+      "value": 50,
+      "serial": 0,
+      "flags": [],
+      "name": "inputVolume",
+      "name[zh_CN]": "输入音量百分比",
+      "description": "Input volume percentage range 0 ~ 100",
+      "description[zh_CN]": "输入音量百分比范围 0 ~ 100",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "outputVolume": {
+      "value": 50,
+      "serial": 0,
+      "flags": [],
+      "name": "outputVolume",
+      "name[zh_CN]": "输出音量百分比",
+      "description": "Output volume percentage range 0 ~ 100",
+      "description[zh_CN]": "输出音量百分比范围 0 ~ 100",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "headphoneOutputVolume": {
+      "value": 50,
+      "serial": 0,
+      "flags": [],
+      "name": "headphoneOutputVolume",
+      "name[zh_CN]": "耳机输出音量百分比",
+      "description": "Headphone output volume percentage range 0 ~ 100",
+      "description[zh_CN]": "耳机输出音量百分比范围 0 ~ 100",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "headphoneUnplugAutoPause": {
+      "value": true,
+      "serial": 0,
+      "flags": [],
+      "name": "headphoneUnplugAutoPause",
+      "name[zh_CN]": "耳机拔出自动暂停",
+      "description": "Auto pause media when headphone unplug",
+      "description[zh_CN]": "耳机拔出时自动暂停媒体播放",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "volumeIncrease": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "name": "volumeIncrease",
+      "name[zh_CN]": "音量增强开关",
+      "description": "if true, max volume be 1.5 ,else 1.0",
+      "description[zh_CN]": "如果为true，最大音量为1.5，否则为1.0",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "outputVolumeMax": {
+      "value": 150,
+      "serial": 0,
+      "flags": [],
+      "name": "outputVolumeMax",
+      "name[zh_CN]": "输出音量最大百分比",
+      "description": "The max percentage for output volume",
+      "description[zh_CN]": "输出音量的最大百分比",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "disableAutoMute": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "name": "disableAutoMute",
+      "name[zh_CN]": "禁用自动静音",
+      "description": "Whether to disable ALSA Mixer Auto-Mute Mode",
+      "description[zh_CN]": "是否禁用ALSA混音器自动静音模式",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "reduceInputNoise": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "name": "reduceInputNoise",
+      "name[zh_CN]": "降低输入噪音",
+      "description": "Whether to reduce input noise",
+      "description[zh_CN]": "是否降低输入噪音",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "outputAutoSwitchCountMax": {
+      "value": 50,
+      "serial": 0,
+      "flags": [],
+      "name": "outputAutoSwitchCountMax",
+      "name[zh_CN]": "输出自动切换最大计数",
+      "description": "The output auto swich count max",
+      "description[zh_CN]": "输出自动切换的最大计数",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }

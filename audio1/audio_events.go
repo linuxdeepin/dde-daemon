@@ -15,7 +15,6 @@ import (
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/go-lib/gsettings"
 	"github.com/linuxdeepin/go-lib/pulse"
 )
 
@@ -766,38 +765,6 @@ func (a *Audio) handleServerEvent(eventType int) {
 		a.updateDefaultSink(server.DefaultSinkName)
 		a.updateDefaultSource(server.DefaultSourceName)
 	}
-}
-
-func (a *Audio) listenGSettingVolumeIncreaseChanged() {
-	gsettings.ConnectChanged(gsSchemaAudio, gsKeyVolumeIncrease, func(val string) {
-		volInc := a.settings.GetBoolean(gsKeyVolumeIncrease)
-		if volInc {
-			a.MaxUIVolume = increaseMaxVolume
-		} else {
-			a.MaxUIVolume = normalMaxVolume
-		}
-		gMaxUIVolume = a.MaxUIVolume
-		err := a.emitPropChangedMaxUIVolume(a.MaxUIVolume)
-		if err != nil {
-			logger.Warning("changed Max UI Volume failed: ", err)
-		} else {
-			sink := a.getDefaultSink()
-			if sink == nil {
-				logger.Warning("default sink is nil")
-				return
-			}
-			GetConfigKeeper().SetIncreaseVolume(a.getCardNameById(sink.Card), sink.ActivePort.Name, volInc)
-		}
-	})
-}
-
-func (a *Audio) listenGSettingDeviceManageChanged() {
-	gsettings.ConnectChanged(gsSchemaControlCenter, gsKeyDeviceManager, func(val string) {
-		if a.enableAutoSwitchPort != a.controlCenterDeviceManager.Get() {
-			a.controlCenterDeviceManager.Set(a.enableAutoSwitchPort)
-			logger.Info("listenGSettingDeviceManageChanged set a.enableAutoSwitchPort to a.controlCenterDeviceManager. value : ", a.enableAutoSwitchPort)
-		}
-	})
 }
 
 // 外部修改ReducecNoise时触发回调，响应实际降噪开关
