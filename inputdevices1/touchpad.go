@@ -202,7 +202,7 @@ func (tpad *Touchpad) init() {
 
 	currentState := tpad.TPadEnable.Get()
 	tpad.TPadEnable.Set(!currentState)
-	tpad.enable(!currentState)
+	tpad.enable(currentState)
 	tpad.enableLeftHanded()
 	tpad.enableNaturalScroll()
 	tpad.enableEdgeScroll()
@@ -565,7 +565,12 @@ func (tpad *Touchpad) initTouchpadDConfig() error {
 		logger.Debugf("Touchpad dconfig value changed: %s", key)
 		switch key {
 		case dconfigKeyTouchpadEnabled:
-			tpad.enable(true)
+			enabled, err := tpad.dsgTouchpadConfig.GetValueBool(dconfigKeyTouchpadEnabled)
+			if err != nil {
+				logger.Warningf("Failed to get touchpad enabled value from dconfig: %v", err)
+			} else {
+				tpad.enable(enabled)
+			}
 		case dconfigKeyTouchpadLeftHanded:
 			tpad.enableLeftHanded()
 		case dconfigKeyTouchpadDisableTyping:
