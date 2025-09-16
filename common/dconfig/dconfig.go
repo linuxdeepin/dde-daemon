@@ -137,6 +137,25 @@ func (dConfig *DConfig) GetValueStringList(key string) ([]string, error) {
 	return nil, fmt.Errorf("unsupported type for string slice conversion: %T", value)
 }
 
+func (dConfig *DConfig) GetValueInt64List(key string) ([]int64, error) {
+	value, err := dConfig.GetValue(key)
+	if err != nil {
+		return nil, err
+	}
+	if variantSlice, ok := value.([]dbus.Variant); ok {
+		result := make([]int64, len(variantSlice))
+		for i, variant := range variantSlice {
+			if iv, ok := variant.Value().(int64); ok {
+				result[i] = iv
+			} else {
+				return nil, fmt.Errorf("variant at index %d is not a int64: %T", i, variant.Value())
+			}
+		}
+		return result, nil
+	}
+	return nil, fmt.Errorf("unsupported type for int64 slice conversion: %T", value)
+}
+
 func (dConfig *DConfig) GetValue(key string) (interface{}, error) {
 	if dConfig.manager == nil {
 		return nil, fmt.Errorf("dConfig not inited")
