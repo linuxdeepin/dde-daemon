@@ -100,7 +100,7 @@ func (a *Agent) SendNotify(sender dbus.Sender, appName string, replacesId uint32
 					if err == nil {
 						if strings.Contains(name, "dde-control-center") {
 							// 焦点在控制中心上,需要判断是否为更新模块
-							currentModule, err := a.controlCenter.CurrentModule().Get(0)
+							currentModule, err := a.controlCenter.Page().Get(0)
 							if err != nil {
 								logger.Warning(err)
 							} else if currentModule == "update" {
@@ -121,7 +121,7 @@ func (a *Agent) SendNotify(sender dbus.Sender, appName string, replacesId uint32
 				logger.Warning(err)
 			} else if strings.Contains(string(output), "dde-control-center") {
 				// 焦点在控制中心上,需要判断是否为更新模块
-				currentModule, err := a.controlCenter.CurrentModule().Get(0)
+				currentModule, err := a.controlCenter.Page().Get(0)
 				if err != nil {
 					logger.Warning(err)
 				} else if currentModule == "update" {

@@ -80,7 +80,7 @@ func (l *Lastore) destroy() {
 }
 
 func (l *Lastore) GetInterfaceName() string {
-	return "com.deepin.LastoreSessionHelper"
+	return "org.deepin.dde.LastoreSessionHelper1"
 }
 
 func (*Lastore) IsDiskSpaceSufficient() (result bool, busErr *dbus.Error) {
