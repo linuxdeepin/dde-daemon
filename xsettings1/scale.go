@@ -27,6 +27,7 @@ const (
 	gsKeyScaleFactor        = "scale-factor"
 	gsKeyWindowScale        = "window-scale"
 	gsKeyGtkCursorThemeSize = "gtk-cursor-theme-size"
+	gsKeyGtkCursorThemeName = "gtk-cursor-theme-name"
 	gsKeyIndividualScaling  = "individual-scaling"
 	baseCursorSize          = 24
 
@@ -39,20 +40,20 @@ const (
 // 设置单个缩放值的关键方法
 func (m *XSManager) setScaleFactor(scale float64, emitSignal bool) {
 	logger.Debug("setScaleFactor", scale)
-	m.cfgHelper.SetDouble(gsKeyScaleFactor, scale)
+	m.xsettingsConfig.SetValue(gsKeyScaleFactor, scale)
 
 	// if 1.7 < scale < 2, window scale = 2
 	windowScale := int32(math.Trunc((scale+0.3)*10) / 10)
 	if windowScale < 1 {
 		windowScale = 1
 	}
-	oldWindowScale := m.cfgHelper.GetInt(gsKeyWindowScale)
-	if oldWindowScale != windowScale {
-		m.cfgHelper.SetInt(gsKeyWindowScale, windowScale)
+	oldWindowScale, _ := m.xsettingsConfig.GetValueInt64(gsKeyWindowScale)
+	if int32(oldWindowScale) != windowScale {
+		m.xsettingsConfig.SetValue(gsKeyWindowScale, windowScale)
 	}
 
 	cursorSize := int32(baseCursorSize * scale)
-	m.cfgHelper.SetInt(gsKeyGtkCursorThemeSize, cursorSize)
+	m.xsettingsConfig.SetValue(gsKeyGtkCursorThemeSize, cursorSize)
 	// set cursor size for deepin-metacity
 	gsWrapGDI := gio.NewSettings("com.deepin.wrap.gnome.desktop.interface")
 	gsWrapGDI.SetInt("cursor-size", cursorSize)
@@ -228,7 +229,7 @@ func (m *XSManager) setScreenScaleFactors(factors map[string]float64, emitSignal
 	// 关键保存位置
 	factorsJoined := joinScreenScaleFactors(factors)
 	if !reflect.DeepEqual(factors, m.getScreenScaleFactors()) {
-		m.cfgHelper.SetString(gsKeyIndividualScaling, factorsJoined)
+		m.xsettingsConfig.SetValue(gsKeyIndividualScaling, factorsJoined)
 	}
 
 	err := m.setScreenScaleFactorsForQt(factors)
@@ -245,7 +246,7 @@ func (m *XSManager) setScreenScaleFactors(factors map[string]float64, emitSignal
 }
 
 func (m *XSManager) getScreenScaleFactors() map[string]float64 {
-	factorsJoined := m.cfgHelper.GetString(gsKeyIndividualScaling)
+	factorsJoined, _ := m.xsettingsConfig.GetValueString(gsKeyIndividualScaling)
 	return parseScreenFactors(factorsJoined)
 }
 
