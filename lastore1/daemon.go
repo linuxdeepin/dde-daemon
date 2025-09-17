@@ -5,19 +5,14 @@
 package lastore
 
 import (
-	"encoding/json"
 	"sync"
 	"time"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
-	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
-	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.notification1"
-	abrecovery "github.com/linuxdeepin/go-dbus-factory/system/com.deepin.abrecovery"
 	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
 )
 
@@ -27,8 +22,8 @@ const (
 )
 
 const (
-	dSettingsAppID                  = "org.deepin.lastore"
-	dSettingsLastoreName            = "org.deepin.lastore"
+	dSettingsAppID                  = "org.deepin.dde.lastore"
+	dSettingsLastoreName            = "org.deepin.dde.lastore"
 	dSettingsKeyUpgradeStatus       = "upgrade-status"
 	dSettingsKeyLastoreDaemonStatus = "lastore-daemon-status"
 )
@@ -136,100 +131,7 @@ func (d *Daemon) Start() error {
 
 	}
 	core := lastore.NewLastore(sysBus)
-	// 处理更新失败/中断的记录
-	go func() {
-		// 获取lastore-daemon记录的更新状态
-		ds := ConfigManager.NewConfigManager(sysBus)
-		dsPath, err := ds.AcquireManager(0, dSettingsAppID, dSettingsLastoreName, "")
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		dsLastoreManager, err := ConfigManager.NewManager(sysBus, dsPath)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		v, err := dsLastoreManager.Value(0, dSettingsKeyUpgradeStatus)
-		if err != nil {
-			logger.Warning(err)
-			return
-		} else {
-			jobList, _ := core.Manager().JobList().Get(0)
-			// 如果正常系统更新,那么不需要处理(更新中切换用户场景)
-			for _, path := range jobList {
-				if path == distUpgradeJobPath {
-					logger.Info("running dist-upgrade,don't need handle status")
-					return
-				}
-			}
-			upgradeStatus := struct {
-				Status     string
-				ReasonCode UpgradeReasonType
-			}{}
-			statusContent := v.Value().(string)
-			err = json.Unmarshal([]byte(statusContent), &upgradeStatus)
-			if err != nil {
-				logger.Warning(err)
-				return
-			}
-			logger.Infof("lastore status:%+v", upgradeStatus)
-			// 记录处理异常更新的通知
-			osd := notifications.NewNotification(service.Conn())
-			abObj := abrecovery.NewABRecovery(sysBus)
-			valid, err := abObj.ConfigValid().Get(0) // config失效时,无法回滚,提示重新更新
-			var msg string
-			switch upgradeStatus.Status {
-			// running状态,更新被中断
-			case UpgradeRunning:
-				if err != nil || !valid {
-					msg = gettext.Tr("Updates failed: it was interrupted.")
-				} else {
-					msg = gettext.Tr("Updates failed: it was interrupted. Please roll back to the old version and try again.")
-				}
-			case UpgradeFailed:
-				switch upgradeStatus.ReasonCode {
-				case ErrorDpkgError:
-					if err != nil || !valid {
-						msg = gettext.Tr("Updates failed: DPKG error.")
-					} else {
-						msg = gettext.Tr("Updates failed: DPKG error. Please roll back to the old version and try again.")
-					}
-				case ErrorInsufficientSpace:
-					if err != nil || !valid {
-						msg = gettext.Tr("Updates failed: insufficient disk space.")
-					} else {
-						msg = gettext.Tr("Updates failed: insufficient disk space. Please roll back to the old version and try again.")
-					}
-				case ErrorUnknown, ErrorPkgNotFound, ErrorNoInstallationCandidate, ErrorIO, ErrorDamagePackage:
-					if err != nil || !valid {
-						msg = gettext.Tr("Updates failed")
-					} else {
-						msg = gettext.Tr("Updates failed. Please roll back to the old version and try again.")
-					}
-				}
-			}
-			logger.Infof("notify msg is:%v", msg)
-			if len(msg) != 0 {
-				_, err = osd.Notify(0, "dde-control-center", 0, "preferences-system", "", msg, nil, nil, NotifyExpireTimeoutNoHide)
-				if err != nil {
-					logger.Warning(err)
-				}
-			}
-			// 通知发完之后,恢复配置文件的内容
-			upgradeStatus.Status = UpgradeReady
-			upgradeStatus.ReasonCode = NoError
-			v, err := json.Marshal(upgradeStatus)
-			if err != nil {
-				logger.Warning(err)
-			} else {
-				err = dsLastoreManager.SetValue(0, dSettingsKeyUpgradeStatus, dbus.MakeVariant(v))
-				if err != nil {
-					logger.Warning(err)
-				}
-			}
-		}
-	}()
+
 	time.AfterFunc(10*time.Minute, func() {
 		lastoreOnce.Do(func() {
 			err := initLastore()

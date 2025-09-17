@@ -10,7 +10,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus/v5"
-	ControlCenter "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.dde.ControlCenter"
+	ControlCenter "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.controlcenter1"
 	kwayland "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.kwayland1"
 	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -18,8 +18,8 @@ import (
 
 const (
 	// lastore agent的interface name
-	sessionAgentInterface = "com.deepin.lastore.Agent"
-	sessionAgentPath      = "/com/deepin/lastore/agent"
+	sessionAgentInterface = "org.deepin.dde.Lastore1.Agent"
+	sessionAgentPath      = "/org/deepin/dde/Lastore1/Agent"
 )
 
 // 对应org.deepin.dde.Network1.GetProxy方法的key值
