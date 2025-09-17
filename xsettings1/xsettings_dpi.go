@@ -23,15 +23,17 @@ const (
 
 // TODO: update 'antialias, hinting, hintstyle, rgba, cursor-theme, cursor-size'
 func (m *XSManager) updateDPI() {
-	scale := m.cfgHelper.GetDouble(gsKeyScaleFactor)
+	scale, _ := m.xsettingsConfig.GetValueFloat64(gsKeyScaleFactor)
 	if scale <= 0 {
 		scale = 1
 	}
 
 	var infos []xsSetting
 	scaledDPI := int32(float64(DPI_FALLBACK*1024) * scale)
-	if scaledDPI != m.cfgHelper.GetInt("xft-dpi") {
-		m.cfgHelper.SetInt("xft-dpi", scaledDPI)
+	dpiValueInt, _ := m.xsettingsConfig.GetValueInt("xft-dpi")
+	dpiValue := int32(dpiValueInt)
+	if scaledDPI != int32(dpiValue) {
+		m.xsettingsConfig.SetValue("xft-dpi", scaledDPI)
 		infos = append(infos, xsSetting{
 			sType: settingTypeInteger,
 			prop:  "Xft/DPI",
@@ -40,11 +42,14 @@ func (m *XSManager) updateDPI() {
 	}
 
 	// update window scale and cursor size
-	windowScale := m.cfgHelper.GetInt(gsKeyWindowScale)
+	windowScaleValue, _ := m.xsettingsConfig.GetValueInt(gsKeyWindowScale)
+	windowScale := int32(windowScaleValue)
+	cursorSizeValue, _ := m.xsettingsConfig.GetValueInt(gsKeyGtkCursorThemeSize)
+	cursorSize := int32(cursorSizeValue)
+
 	if windowScale > 1 {
 		scaledDPI = int32(DPI_FALLBACK * 1024)
 	}
-	cursorSize := m.cfgHelper.GetInt(gsKeyGtkCursorThemeSize)
 	v, _ := m.GetInteger("Gdk/WindowScalingFactor")
 	if v != windowScale {
 		infos = append(infos, xsSetting{
@@ -72,29 +77,34 @@ func (m *XSManager) updateDPI() {
 }
 
 func (m *XSManager) updateXResources() {
-	scaleFactor := m.cfgHelper.GetDouble(gsKeyScaleFactor)
-	windowScale := m.cfgHelper.GetInt(gsKeyWindowScale)
-	
+	windowScaleValue, _ := m.xsettingsConfig.GetValueInt(gsKeyWindowScale)
+
+	scaleFactor, _ := m.xsettingsConfig.GetValueFloat64(gsKeyScaleFactor)
+	windowScale := int32(windowScaleValue)
+
 	var xftDpi int
 	if windowScale > 1 {
 		// Mixed scaling mode: Keep XResources Xft.dpi consistent with xsettings Gdk/UnscaledDPI
 		// This prevents DPI jumping when daemon exits, as GTK will use the same base DPI value
-		xftDpi = DPI_FALLBACK  // 96 - matches Gdk/UnscaledDPI (96*1024)/1024
+		xftDpi = DPI_FALLBACK // 96 - matches Gdk/UnscaledDPI (96*1024)/1024
 		logger.Debugf("Mixed scaling mode: windowScale=%d, setting Xft.dpi=%d to match Gdk/UnscaledDPI", windowScale, xftDpi)
 	} else {
 		// Pure DPI scaling mode: Normal DPI scaling
 		xftDpi = int(DPI_FALLBACK * scaleFactor)
 		logger.Debugf("Pure DPI scaling mode: scaleFactor=%.2f, setting Xft.dpi=%d", scaleFactor, xftDpi)
 	}
-	
+
+	cursorTheme, _ := m.xsettingsConfig.GetValueString(gsKeyGtkCursorThemeName)
+	cursorSize, _ := m.xsettingsConfig.GetValueInt(gsKeyGtkCursorThemeSize)
+
 	updateXResources(xresourceInfos{
 		&xresourceInfo{
 			key:   "Xcursor.theme",
-			value: m.cfgHelper.GetString("gtk-cursor-theme-name"),
+			value: cursorTheme,
 		},
 		&xresourceInfo{
 			key:   "Xcursor.size",
-			value: fmt.Sprintf("%d", m.cfgHelper.GetInt(gsKeyGtkCursorThemeSize)),
+			value: fmt.Sprintf("%d", int32(cursorSize)),
 		},
 		&xresourceInfo{
 			key:   "Xft.dpi",
@@ -106,7 +116,7 @@ func (m *XSManager) updateXResources() {
 var ffDir = path.Join(os.Getenv("HOME"), ".mozilla/firefox")
 
 func (m *XSManager) updateFirefoxDPI() {
-	scale := m.cfgHelper.GetDouble(gsKeyScaleFactor)
+	scale, _ := m.xsettingsConfig.GetValueFloat64(gsKeyScaleFactor)
 	if scale <= 0 {
 		// firefox default value: -1
 		scale = -1

@@ -10,7 +10,7 @@ import (
 	"sync"
 
 	dbus "github.com/godbus/dbus/v5"
-	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	ddeSysDaemon "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.daemon1"
 	greeter "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.greeter1"
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
@@ -21,7 +21,6 @@ import (
 //go:generate dbusutil-gen em -type XSManager
 
 const (
-	xsSchema           = "com.deepin.xsettings"
 	defaultScaleFactor = 1.0
 
 	xsDBusService          = "org.deepin.dde.XSettings1"
@@ -31,29 +30,15 @@ const (
 	dsettingsXSettingsName = "org.deepin.XSettings"
 )
 
-// 配置接口，gsetting或者dconfig
-type configHeler interface {
-	ListKeys() []string
-	GetString(key string) string
-	GetInt(key string) int32
-	GetBoolean(key string) bool
-	GetDouble(key string) float64
-	SetString(key string, value string) bool
-	SetInt(key string, value int32) bool
-	SetBoolean(key string, value bool) bool
-	SetDouble(key string, value float64) bool
-	HandleConfigChanged(cb func(string))
-}
-
 // XSManager xsettings manager
 type XSManager struct {
 	service *dbusutil.Service
 	conn    *x.Conn
 	owner   x.Window
 
-	cfgHelper configHeler
-	greeter   greeter.Greeter
-	sysDaemon ddeSysDaemon.Daemon
+	xsettingsConfig *dconfig.DConfig
+	greeter         greeter.Greeter
+	sysDaemon       ddeSysDaemon.Daemon
 
 	plymouthScalingMu    sync.Mutex
 	plymouthScalingTasks []int
@@ -63,7 +48,6 @@ type XSManager struct {
 
 	// locker for xsettings prop read and write
 	settingsLocker sync.RWMutex
-	dConfigManager configManager.Manager
 
 	sessionSigLoop *dbusutil.SignalLoop
 
@@ -103,8 +87,8 @@ func NewXSManager(conn *x.Conn, recommendedScaleFactor float64, service *dbusuti
 	}
 	m.greeter = greeter.NewGreeter(systemBus)
 	m.sysDaemon = ddeSysDaemon.NewDaemon(systemBus)
-	m.cfgHelper = NewDSConfig(systemBus)
-	if m.cfgHelper == nil {
+	m.xsettingsConfig, err = dconfig.NewDConfig(dsettingsAppID, dsettingsXSettingsName, "")
+	if err != nil {
 		return nil, fmt.Errorf("new dconfig failed")
 	}
 
@@ -137,7 +121,7 @@ func (m *XSManager) getScaleFactor() float64 {
 func (m *XSManager) adjustScaleFactor(recommendedScaleFactor float64) {
 	logger.Debug("recommended scale factor:", recommendedScaleFactor)
 	var err error
-	if m.cfgHelper.GetDouble(gsKeyScaleFactor) <= 0 {
+	if value, _ := m.xsettingsConfig.GetValueFloat64(gsKeyScaleFactor); value <= 0 {
 		err = m.setScaleFactorWithoutNotify(recommendedScaleFactor)
 		if err != nil {
 			logger.Warning("failed to set scale factor:", err)
@@ -220,13 +204,18 @@ func (m *XSManager) setSettings(settings []xsSetting) error {
 
 func (m *XSManager) getSettingsInSchema() []xsSetting {
 	var settings []xsSetting
-	for _, key := range m.cfgHelper.ListKeys() {
+	keys, err := m.xsettingsConfig.ListKeys()
+	if err != nil {
+		logger.Warning(err)
+		return settings
+	}
+	for _, key := range keys {
 		info := gsInfos.getByGSKey(key)
 		if info == nil {
 			continue
 		}
 
-		value, err := info.getValue(m.cfgHelper)
+		value, err := info.getValue(m.xsettingsConfig)
 		if err != nil {
 			logger.Warning(err)
 			continue
@@ -241,18 +230,19 @@ func (m *XSManager) getSettingsInSchema() []xsSetting {
 	return settings
 }
 
-func (m *XSManager) handleGSettingsChangedCb(key string) {
+func (m *XSManager) handleDConfigChangedCb(key string) {
 	switch key {
 	case "xft-dpi":
 		return
 	case gsKeyScaleFactor:
 		// 删除m.updateDPI()，保证设置屏幕缩放比例不会立刻生效
 		return
-	case "gtk-cursor-theme-name":
+	case gsKeyGtkCursorThemeName:
+		cursorTheme, _ := m.xsettingsConfig.GetValueString(gsKeyGtkCursorThemeName)
 		updateXResources(xresourceInfos{
 			&xresourceInfo{
 				key:   "Xcursor.theme",
-				value: m.cfgHelper.GetString("gtk-cursor-theme-name"),
+				value: cursorTheme,
 			},
 		})
 	case gsKeyGtkCursorThemeSize:
@@ -267,7 +257,7 @@ func (m *XSManager) handleGSettingsChangedCb(key string) {
 		return
 	}
 
-	value, err := info.getValue(m.cfgHelper)
+	value, err := info.getValue(m.xsettingsConfig)
 	if err == nil {
 		err = m.setSettings([]xsSetting{
 			{
@@ -286,7 +276,6 @@ func (m *XSManager) handleGSettingsChangedCb(key string) {
 
 // Start load xsettings module
 func Start(conn *x.Conn, recommendedScaleFactor float64, service *dbusutil.Service) (*XSManager, error) {
-	_gs = gio.NewSettings(xsSchema)
 	m, err := NewXSManager(conn, recommendedScaleFactor, service)
 	if err != nil {
 		logger.Error("Start xsettings failed:", err)
@@ -307,7 +296,7 @@ func Start(conn *x.Conn, recommendedScaleFactor float64, service *dbusutil.Servi
 		return nil, err
 	}
 
-	m.cfgHelper.HandleConfigChanged(m.handleGSettingsChangedCb)
+	m.xsettingsConfig.ConnectValueChanged(m.handleDConfigChangedCb)
 	return m, nil
 }
 

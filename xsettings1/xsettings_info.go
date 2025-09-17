@@ -10,6 +10,8 @@ import (
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 )
 
 const (
@@ -398,21 +400,22 @@ func (info *typeGSKeyInfo) getKeySType() uint8 {
 	return settingTypeInteger
 }
 
-func (info *typeGSKeyInfo) getValue(s configHeler) (result interface{}, err error) {
+func (info *typeGSKeyInfo) getValue(s *dconfig.DConfig) (result interface{}, err error) {
 	switch info.gsType {
 	case gsKeyTypeBool:
-		v := s.GetBoolean(info.gsKey)
+		v, _ := s.GetValueBool(info.gsKey)
 		if v {
 			result = int32(1)
 		} else {
 			result = int32(0)
 		}
 	case gsKeyTypeInt:
-		result = int32(s.GetInt(info.gsKey))
+		intValue, _ := s.GetValueInt(info.gsKey)
+		result = int32(intValue)
 	case gsKeyTypeString:
-		result = s.GetString(info.gsKey)
+		result, _ = s.GetValueString(info.gsKey)
 	case gsKeyTypeDouble:
-		result = s.GetDouble(info.gsKey)
+		result, _ = s.GetValueFloat64(info.gsKey)
 	}
 
 	if info.convertGsToXs != nil {
@@ -421,7 +424,7 @@ func (info *typeGSKeyInfo) getValue(s configHeler) (result interface{}, err erro
 	return
 }
 
-func (info *typeGSKeyInfo) setValue(s configHeler, v interface{}) error {
+func (info *typeGSKeyInfo) setValue(s *dconfig.DConfig, v interface{}) error {
 	var err error
 	if info.convertXsToGs != nil {
 		v, err = info.convertXsToGs(v)
@@ -434,16 +437,16 @@ func (info *typeGSKeyInfo) setValue(s configHeler, v interface{}) error {
 	case gsKeyTypeBool:
 		tmp := v.(int32)
 		if tmp == 1 {
-			s.SetBoolean(info.gsKey, true)
+			s.SetValue(info.gsKey, true)
 		} else {
-			s.SetBoolean(info.gsKey, false)
+			s.SetValue(info.gsKey, false)
 		}
 	case gsKeyTypeInt:
-		s.SetInt(info.gsKey, v.(int32))
+		s.SetValue(info.gsKey, v.(int32))
 	case gsKeyTypeString:
-		s.SetString(info.gsKey, v.(string))
+		s.SetValue(info.gsKey, v.(string))
 	case gsKeyTypeDouble:
-		s.SetDouble(info.gsKey, v.(float64))
+		s.SetValue(info.gsKey, v.(float64))
 	}
 	return nil
 }
