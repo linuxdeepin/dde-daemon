@@ -1,3 +1,16 @@
+dde-daemon (6.1.56) unstable; urgency=medium
+
+  * refactor: migrate from custom config helpers to dconfig module
+  * feat: 多屏场景下支持合盖后自动切换仅外屏显示
+  * fix: 解决焦点在控制中心更新模块，仍有更新的横幅通知的问题
+  * refactor: migrate audio configuration from gsettings to dconfig
+  * refactor: migrate gesture configuration from GSettings to DConfig
+  * chore: remove GNOME wrapper configuration
+  * fix: touchpad cannot be properly disabled
+  * fix: Password authentication is required when system was waked up
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 18 Sep 2025 20:00:38 +0800
+
 dde-daemon (6.1.55) unstable; urgency=medium
 
   * fix: correct logger method call in sync config
