@@ -925,8 +925,6 @@ func (m *Manager) initDsg() {
 					logger.Info("Set ScheduledShutdownState property", m.ScheduledShutdownState)
 				}
 			}
-		case dsettingPowerSavingModeBrightnessDropPercent:
-			m.savingModeBrightnessDropPercent = int32(transTypeToInt(data.Value(), 0))
 		case dsettingLinePowerScreensaverDelay:
 			m.LinePowerScreensaverDelay = int(transTypeToInt(data.Value(), 0))
 		case dsettingBatteryScreensaverDelay:
@@ -1049,8 +1047,6 @@ func (m *Manager) savePowerDsgConfig(key string) (err error) {
 		value = m.ShutdownTime
 	case dsettingScheduledShutdownState:
 		value = m.ScheduledShutdownState
-	case dsettingPowerSavingModeBrightnessDropPercent:
-		value = m.savingModeBrightnessDropPercent
 	case dsettingLinePowerScreensaverDelay:
 		value = m.LinePowerScreensaverDelay
 	case dsettingBatteryScreensaverDelay:
