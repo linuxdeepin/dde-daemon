@@ -375,7 +375,7 @@ msgstr " Файловый менеджер "
 
 #: ../../keybinding1/shortcuts/id_name_map.go:27
 msgid "Disable Touchpad"
-msgstr "Отключить Сенсорную панель"
+msgstr "Отключить тачпад"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
