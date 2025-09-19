@@ -17,6 +17,7 @@
 # Okubir Gienum, 2025
 # Валерий Владимирович, 2025
 # deepiner, 2025
+# Михаил Комаров, 2025
 # 
 #, fuzzy
 msgid ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Михаил Комаров, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -298,7 +299,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Показать/Скрыть грандиозный поиск"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
@@ -374,7 +375,7 @@ msgstr " Файловый менеджер "
 
 #: ../../keybinding1/shortcuts/id_name_map.go:27
 msgid "Disable Touchpad"
-msgstr "Отключить Сенсорную панель"
+msgstr "Отключить тачпад"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
@@ -427,7 +428,7 @@ msgstr "Переключить Раскладку"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:40
 msgid "Toggle multiple displays"
-msgstr "Переключение между несколькими дисплеями"
+msgstr "Переключение между несколькими экранами"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to left workspace"
@@ -627,11 +628,11 @@ msgstr "WEP 40/128-бит. ключ"
 
 #: ../../network1/manager_active_conn.go:477
 msgid "WPA/WPA2 Personal"
-msgstr "Персональный WPA/WPA2"
+msgstr "WPA/WPA2 Personal"
 
 #: ../../network1/manager_active_conn.go:479
 msgid "WPA3 Personal"
-msgstr ""
+msgstr "WPA3 Personal"
 
 #: ../../network1/manager_active_conn.go:487
 msgid "TLS"
@@ -870,7 +871,7 @@ msgstr "В GSM-модем не вставлена SIM-карта."
 
 #: ../../network1/state_handler.go:69
 msgid "GSM Modem's SIM PIN required"
-msgstr "GSM модем требует  PIN-код SIM."
+msgstr "GSM модем требует PIN-код SIM."
 
 #: ../../network1/state_handler.go:70
 msgid "GSM Modem's SIM PUK required"
@@ -1186,7 +1187,7 @@ msgstr ""
 
 #: ../../timedate1/manager_format.go:75
 msgid "Space"
-msgstr ""
+msgstr "Пробел"
 
 #: ../../timedate1/manager_ifc.go:59
 msgid "Authentication is required to set the system time"
