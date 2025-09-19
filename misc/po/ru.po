@@ -871,7 +871,7 @@ msgstr "В GSM-модем не вставлена SIM-карта."
 
 #: ../../network1/state_handler.go:69
 msgid "GSM Modem's SIM PIN required"
-msgstr "GSM модем требует  PIN-код SIM."
+msgstr "GSM модем требует PIN-код SIM."
 
 #: ../../network1/state_handler.go:70
 msgid "GSM Modem's SIM PUK required"
