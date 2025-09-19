@@ -299,7 +299,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Показать/Скрыть грандиозный поиск"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide notification center"
@@ -628,7 +628,7 @@ msgstr "WEP 40/128-бит. ключ"
 
 #: ../../network1/manager_active_conn.go:477
 msgid "WPA/WPA2 Personal"
-msgstr "Персональный WPA/WPA2"
+msgstr "WPA/WPA2 Personal"
 
 #: ../../network1/manager_active_conn.go:479
 msgid "WPA3 Personal"
