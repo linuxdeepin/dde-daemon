@@ -428,7 +428,7 @@ msgstr "Переключить Раскладку"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:40
 msgid "Toggle multiple displays"
-msgstr "Переключение между несколькими дисплеями"
+msgstr "Переключение между несколькими экранами"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to left workspace"
