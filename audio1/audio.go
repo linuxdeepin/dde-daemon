@@ -1970,6 +1970,58 @@ func (a *Audio) NoRestartPulseAudio() *dbus.Error {
 	return nil
 }
 
+func (a *Audio) StopAudioService() *dbus.Error {
+	service := a.service
+	systemd := systemd1.NewManager(service.Conn())
+	systemd.InitSignalExt(a.sessionSigLoop, true)
+	var audioServices strv.Strv
+	if a.CurrentAudioServer == "pulseaudio" {
+		audioServices = append(audioServices, pulseaudioServices...)
+	} else {
+		audioServices = append(audioServices, pipewireServices...)
+	}
+	var runningServices strv.Strv
+	runningServices = append(runningServices, audioServices...)
+
+	serviceMap := make(map[dbus.ObjectPath]string, 0)
+	var serviceLock sync.Mutex
+	done := make(chan bool, 1)
+	systemd.ConnectJobRemoved(func(jobId uint32, jobPath dbus.ObjectPath, unit string, result string) {
+		serviceLock.Lock()
+		if _, ok := serviceMap[jobPath]; !ok {
+			serviceLock.Unlock()
+			return
+		} else {
+			runningServices, _ = runningServices.Delete(serviceMap[jobPath])
+			logger.Warningf("service %s stopped, %v is running", serviceMap[jobPath], runningServices)
+			if len(runningServices) == 0 {
+				done <- true
+			}
+		}
+		serviceLock.Unlock()
+	})
+	for _, svc := range audioServices {
+		serviceLock.Lock()
+		path, err := systemd.StopUnit(0, svc, "replace")
+		if err != nil {
+			logger.Warning(err)
+			serviceLock.Unlock()
+			continue
+		}
+		serviceMap[path] = svc
+		serviceLock.Unlock()
+	}
+	for {
+		select {
+		case <-done:
+			return nil
+		case <-time.After(3 * time.Second):
+			logger.Warningf("%v is still running, but timeout", runningServices)
+			return dbusutil.ToError(fmt.Errorf("stop audio services timeout"))
+		}
+	}
+}
+
 // 当蓝牙声卡配置文件选择a2dp时,不支持声音输入,所以需要禁用掉,否则会录入
 func (a *Audio) disableBluezSourceIfProfileIsA2dp() {
 	a.mu.Lock()
