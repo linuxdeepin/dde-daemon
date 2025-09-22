@@ -47,6 +47,10 @@ func (v *Audio) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetMono,
 			InArgs: []string{"enable"},
 		},
+		{
+			Name: "StopAudioService",
+			Fn:   v.StopAudioService,
+		},
 	}
 }
 func (v *Meter) GetExportedMethods() dbusutil.ExportedMethods {
