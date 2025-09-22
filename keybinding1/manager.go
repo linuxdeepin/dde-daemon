@@ -496,6 +496,7 @@ func (m *Manager) initDConfig(bus *dbus.Conn) {
 			logger.Warning(err)
 		}
 		m.NumLockState = int32(v.Value().(int64))
+		m.emitPropChangedNumLockState(m.NumLockState)
 	}
 
 	getShortcutSwitchLayout := func() {
@@ -518,6 +519,10 @@ func (m *Manager) initDConfig(bus *dbus.Conn) {
 			getShortcutSwitchLayout()
 		}
 	})
+}
+
+func (v *Manager) emitPropChangedNumLockState(value int32) error {
+	return v.service.EmitPropertyChanged(v, "NumLockState", value)
 }
 
 func (m *Manager) makeDConfigManager(bus *dbus.Conn, dsManager configManager.ConfigManager, appID string, id string) (configManager.Manager, error) {
