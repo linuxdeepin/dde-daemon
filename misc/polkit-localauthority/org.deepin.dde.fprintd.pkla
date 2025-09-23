@@ -1,6 +1,0 @@
-[Enroll Fingreprint]
-Identity=unix-user:*
-Action=net.reactivated.fprint.device.enroll
-ResultAny=no
-ResultInactive=no
-ResultActive=auth_admin_keep
