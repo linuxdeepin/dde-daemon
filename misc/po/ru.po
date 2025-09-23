@@ -226,11 +226,11 @@ msgstr "%q  хочет отправить вам файлы. Принять?"
 
 #: ../../bluetooth1/obex_agent.go:531
 msgid "Receiving %q timed out"
-msgstr "Время получения %q  истекло"
+msgstr "Время получения %q истекло"
 
 #: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
-msgstr "Нажмите здесь, что подсоединиться к %q"
+msgstr "Нажмите здесь, чтобы подсоединиться к %q"
 
 #: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
@@ -319,7 +319,7 @@ msgstr ""
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
-msgstr "Выбор Программ"
+msgstr "Лаунчер"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:14
 msgid "Terminal"
@@ -327,7 +327,7 @@ msgstr "Терминал"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:15
 msgid "Screen Recorder"
-msgstr "Запись с Экрана"
+msgstr "Запись с экрана"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:16
 msgid "Lock screen"
@@ -343,15 +343,15 @@ msgstr "Интерфейс выключения"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:19
 msgid "Terminal Quake Window"
-msgstr "Запустить Выпадающий Терминал"
+msgstr "Запустить выпадающий терминал"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:20
 msgid "Screenshot"
-msgstr "Снимок"
+msgstr "Скриншот"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:21
 msgid "Full screenshot"
-msgstr "Полноэкранный снимок экрана"
+msgstr "Полноэкранный скриншот"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:22
 msgid "Window screenshot"
@@ -359,7 +359,7 @@ msgstr "Скриншот окна"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:23
 msgid "Delay screenshot"
-msgstr "Снимок экрана с задержкой"
+msgstr "Скриншот с задержкой"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:24
 msgid "OCR (Image to Text)"
@@ -383,11 +383,11 @@ msgstr "Переключатель эффектов окна"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:29
 msgid "Fast Screen Off"
-msgstr "Погасить Экран"
+msgstr "Погасить экран"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:30
 msgid "System Monitor"
-msgstr "Системный Монитор"
+msgstr "Системный монитор"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:31
 msgid "Deepin Picker"
@@ -399,11 +399,11 @@ msgstr "ИИ Ассистент Рабочего стола"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
-msgstr "Текст в Речь"
+msgstr "Текст в речь"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:34
 msgid "Speech to Text"
-msgstr "Речь в Текст"
+msgstr "Речь в текст"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Clipboard"
@@ -419,12 +419,12 @@ msgstr "Грандиозный поиск"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:38
 msgid "Notification Center"
-msgstr "Центр Уведомлений"
+msgstr "Центр уведомлений"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:39
 #: ../../keybinding1/shortcuts/id_name_map.go:47
 msgid "Switch Layout"
-msgstr "Переключить Раскладку"
+msgstr "Переключить раскладку"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:40
 msgid "Toggle multiple displays"
@@ -751,7 +751,7 @@ msgstr "DHCP-сервис не удалось запустить за отвед
 
 #: ../../network1/state_handler.go:39
 msgid "The DHCP service reported an unexpected error"
-msgstr " DHCP-сервис сообщает о непредвиденной ошибке."
+msgstr "DHCP-сервис сообщает о непредвиденной ошибке."
 
 #: ../../network1/state_handler.go:40
 msgid "The DHCP service quitted or failed unexpectedly"
