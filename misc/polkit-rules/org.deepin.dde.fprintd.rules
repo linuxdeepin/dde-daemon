@@ -1,0 +1,10 @@
+polkit.addRule(function(action, subject) {
+    if (action.id === "net.reactivated.fprint.device.enroll" &&
+        subject.user) {  // 匹配所有unix用户
+        if (subject.active) {
+            return polkit.Result.AUTH_ADMIN_KEEP;  // 活跃会话需要管理员认证
+        } else {
+            return polkit.Result.NO;  // 非活跃会话直接拒绝
+        }
+    }
+});
