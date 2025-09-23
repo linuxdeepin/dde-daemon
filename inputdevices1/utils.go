@@ -7,22 +7,17 @@ package inputdevices
 import (
 	"fmt"
 	"os/exec"
-	"sync"
 
 	"github.com/linuxdeepin/dde-daemon/common/dconfig"
-	"github.com/linuxdeepin/go-gir/gio-2.0"
 )
 
 const (
-	xsettingsSchema   = "com.deepin.xsettings"
 	xsPropBlinkTimeut = "cursor-blink-time"
 	xsPropDoubleClick = "double-click-time"
 	xsPropDragThres   = "dnd-drag-threshold"
 )
 
 var (
-	xsLocker           sync.Mutex
-	xsSetting          = gio.NewSettings(xsettingsSchema)
 	dconf              *dconfig.DConfig
 	watcherInitialized bool   // 防止重复初始化监听器
 	globalMouse        *Mouse // 全局mouse引用，用于属性同步
@@ -71,10 +66,6 @@ func watchDConfigChanges() {
 
 			logger.Debugf("dconfig changed: %s = %d", currentKey, intValue)
 
-			xsLocker.Lock()
-			xsSetting.SetInt(currentKey, intValue)
-			xsLocker.Unlock()
-
 			notifyMouseModuleUpdate(currentKey, intValue)
 		})
 	}
@@ -99,47 +90,10 @@ func notifyMouseModuleUpdate(key string, value int32) {
 	}
 }
 
-// 启动时从dconfig同步到xsettings
-func syncFromDConfig() {
-	if dconf == nil {
-		return
-	}
-
-	logger.Debug("syncing from dconfig to xsettings")
-	keys := []string{xsPropBlinkTimeut, xsPropDoubleClick, xsPropDragThres}
-	for _, key := range keys {
-		if value, err := dconf.GetValueInt(key); err == nil && value > 0 {
-			logger.Debugf("sync %s from dconfig: %d", key, value)
-			xsLocker.Lock()
-			xsSetting.SetInt(key, int32(value))
-			xsLocker.Unlock()
-		}
-	}
-}
-
-// 统一的xsettings设置函数（以dconfig为准，并同步回dconfig）
+// 统一的xsettings设置函数
 func xsSetInt32(prop string, value int32) {
-	xsLocker.Lock()
-	defer xsLocker.Unlock()
-
-	// 以dconfig为准：先检查dconfig的值
-	if dconf != nil {
-		if dconfigValue, err := dconf.GetValueInt(prop); err == nil && dconfigValue > 0 {
-			if value != int32(dconfigValue) {
-				logger.Debugf("using dconfig value for %s: %d (requested: %d)", prop, dconfigValue, value)
-			}
-			value = int32(dconfigValue)
-		}
-	}
-
-	if value == xsSetting.GetInt(prop) {
-		return
-	}
-
+	// 同步到 xsettings 的 dconfig
 	logger.Debugf("set xsettings %s to %d", prop, value)
-	xsSetting.SetInt(prop, value)
-
-	// 同步到dconfig
 	if dconf != nil {
 		if err := dconf.SetValue(prop, int(value)); err != nil {
 			logger.Warning("sync to dconfig failed:", err)

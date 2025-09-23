@@ -199,9 +199,7 @@ Shift_R,Down,Shift_R|Button5
 
 func (m *Manager) init() {
 	// 初始化dconfig并同步配置
-	if err := initDConfig(); err == nil {
-		syncFromDConfig()
-	} else {
+	if err := initDConfig(); err != nil {
 		logger.Warning("dconfig init failed, using default settings")
 	}
 
