@@ -31,10 +31,9 @@ start_device_listener()
     }
 
     pthread_attr_t attr;
-
-    // Free thread resource when thread terminates
     pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    // 设置为 joinable，方便主线程等待退出
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
     int ret = pthread_create(&_thrd, &attr,
                              listen_device_thread, (void*)&xi_opcode);
     pthread_attr_destroy(&attr);
@@ -45,6 +44,7 @@ start_device_listener()
         return -1;
     }
 
+    // 主线程等待子线程主动退出
     pthread_join(_thrd, NULL);
 
     return 0;
@@ -53,13 +53,8 @@ start_device_listener()
 void
 end_device_listener()
 {
-    if (_disp != NULL) {
-        XCloseDisplay(_disp);
-    }
-
-    if (_thrd_exit_flag != 1) {
-        pthread_cancel(_thrd);
-    }
+    // 设置退出标志，通知子线程退出
+    _thrd_exit_flag = 1;
 }
 
 static int
@@ -122,32 +117,34 @@ listen_device_thread(void *user_data)
 
     free(mask.mask);
 
-    while (1) {
+    while (!_thrd_exit_flag) {
         XEvent ev;
         XGenericEventCookie *cookie = (XGenericEventCookie*)&ev.xcookie;
-        XNextEvent(_disp, (XEvent*)&ev);
+        // 使用 XPending 检查事件队列，避免阻塞在 XNextEvent
+        if (XPending(_disp) > 0) {
+            XNextEvent(_disp, (XEvent*)&ev);
 
-        if (cookie->type != GenericEvent ||
-            /*cookie->extension != xi_opcode ||*/
-            !XGetEventData(_disp, cookie)) {
-            continue;
-        }
-
-        if (cookie->evtype == XI_HierarchyChanged) {
-            XIHierarchyEvent *event = cookie->data;
-            if (event->flags & XIMasterAdded ||
-                event->flags & XISlaveAdded ) {
-                /* int deviceid = event->info->deviceid; */
-                /*printf("Device Added: %d\n", deviceid);*/
-                handleDeviceChanged();
-            } else if (event->flags & XIMasterRemoved ||
-                       event->flags &XISlaveRemoved ) {
-                /* int deviceid = event->info->deviceid; */
-                /*printf("Device Removed: %d\n", deviceid);*/
-                handleDeviceChanged();
+            if (cookie->type != GenericEvent ||
+                !XGetEventData(_disp, cookie)) {
+                continue;
             }
+
+            if (cookie->evtype == XI_HierarchyChanged) {
+                XIHierarchyEvent *event = cookie->data;
+                if (event->flags & XIMasterAdded ||
+                    event->flags & XISlaveAdded ) {
+                    handleDeviceChanged();
+                } else if (event->flags & XIMasterRemoved ||
+                           event->flags &XISlaveRemoved ) {
+                    handleDeviceChanged();
+                }
+            }
+            XFreeEventData(_disp, cookie);
+        } else {
+            // 没有事件时休眠，避免 CPU 占用
+            struct timespec ts = {0, 10000000}; // 10ms
+            nanosleep(&ts, NULL);
         }
-        XFreeEventData(_disp, cookie);
     }
 
     _thrd_exit_flag = 1;
