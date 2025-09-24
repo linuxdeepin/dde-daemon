@@ -18,7 +18,6 @@ TEST = \
     ${GOPKG_PREFIX}/audio1 \
     ${GOPKG_PREFIX}/bin/backlight_helper \
     ${GOPKG_PREFIX}/bin/backlight_helper/ddcci \
-    ${GOPKG_PREFIX}/bin/dde-authority \
     ${GOPKG_PREFIX}/bin/dde-greeter-setter \
     ${GOPKG_PREFIX}/bin/dde-lockservice \
     ${GOPKG_PREFIX}/bin/dde-session-daemon \
@@ -38,8 +37,6 @@ TEST = \
     ${GOPKG_PREFIX}/common/sessionmsg \
     ${GOPKG_PREFIX}/dbus \
     ${GOPKG_PREFIX}/debug \
-    ${GOPKG_PREFIX}/fprintd1 \
-    ${GOPKG_PREFIX}/fprintd1/common \
     ${GOPKG_PREFIX}/gesture1 \
     ${GOPKG_PREFIX}/graph \
     ${GOPKG_PREFIX}/grub2 \
@@ -104,7 +101,6 @@ BINARIES =  \
 	    langselector \
 	    soundeffect \
 	    dde-lockservice \
-	    dde-authority \
 	    default-terminal \
 	    dde-greeter-setter \
 	    default-file-manager \
@@ -135,7 +131,7 @@ translate: $(addsuffix /LC_MESSAGES/dde-daemon.mo, $(addprefix out/locale/, ${LA
 pot:
 	deepin-update-pot misc/po/locale_config.ini
 
-POLICIES=accounts grub2 fprintd
+POLICIES=accounts grub2
 ts:
 	for i in $(POLICIES); do \
 		deepin-policy-ts-convert policy2ts misc/polkit-action/org.deepin.dde.$$i.policy.in misc/ts/org.deepin.dde.$$i.policy; \
@@ -203,9 +199,6 @@ install: build install-dde-data install-icons
 
 	mkdir -pv ${DESTDIR}/etc/pulse/daemon.conf.d
 	cp -f misc/etc/pulse/daemon.conf.d/*.conf ${DESTDIR}/etc/pulse/daemon.conf.d/
-
-	mkdir -pv ${DESTDIR}/lib/udev/rules.d
-	cp -f misc/udev-rules/*.rules ${DESTDIR}/lib/udev/rules.d/
 
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon/service-trigger
 	cp -f misc/service-trigger/*.json ${DESTDIR}${PREFIX}/lib/deepin-daemon/service-trigger/
