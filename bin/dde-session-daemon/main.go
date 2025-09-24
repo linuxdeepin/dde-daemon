@@ -161,7 +161,7 @@ func main() {
 
 	if isInShutdown() {
 		logger.Warning("system is in shutdown, no need to run")
-		os.Exit(1)
+		return
 	}
 
 	flag.Parse()
@@ -248,7 +248,7 @@ func main() {
 
 	if err != nil {
 		logger.Warning(err)
-		os.Exit(1)
+		return
 	}
 
 	err = migrateUserEnv()
@@ -261,6 +261,10 @@ func main() {
 		logger.Warning(err)
 	}
 
+	defer func() {
+		logger.Info("main exit, cleaning up resources...")
+		// TODO: 这里可根据需要添加 glib/gsettings/loader/信号循环等资源清理
+	}()
 	runMainLoop()
 }
 
