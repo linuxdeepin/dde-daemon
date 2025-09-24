@@ -805,22 +805,7 @@ func (a *Audio) writeReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
 }
 
 func (a *Audio) writeKeyPausePlayer(write *dbusutil.PropertyWrite) *dbus.Error {
-	pausePlayer, ok := write.Value.(bool)
-	if !ok {
-		return dbusutil.ToError(errors.New("type is not bool"))
-	}
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		return dbus.MakeFailedError(err)
-	}
-
-	systemConnObj := systemBus.Object("org.desktopspec.ConfigManager", a.configManagerPath)
-	err = systemConnObj.Call("org.desktopspec.ConfigManager.Manager.setValue", 0, dsgkeyPausePlayer, dbus.MakeVariant(pausePlayer)).Err
-	if err != nil {
-		return dbusutil.ToError(errors.New("dconfig Cannot set value " + dsgkeyPausePlayer))
-	}
-	a.setPropPausePlayer(pausePlayer)
-	return nil
+	return dbusutil.ToError(a.audioDConfig.SetValue(dsgkeyPausePlayer, write.Value))
 }
 
 func (a *Audio) notifyBluezCardPortInsert(card *Card) {
