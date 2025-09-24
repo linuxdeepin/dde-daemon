@@ -246,7 +246,6 @@ func newAudio(service *dbusutil.Service) *Audio {
 	a.dccSoundDconfig, err = dconfig.NewDConfig(dconfigDccAppid, dconfigSoundId, "")
 	if err != nil {
 		logger.Warningf("NewDccDConfig failed: %v", err)
-		return a
 	}
 
 	a.audioDConfig.Reset(dsgKeyInputVolume)
@@ -272,7 +271,9 @@ func newAudio(service *dbusutil.Service) *Audio {
 	}
 	gMaxUIVolume = a.MaxUIVolume
 
-	a.controlCenterDeviceManager.Bind(a.dccSoundDconfig, dsgkeySoundShowDeviceManager)
+	if a.dccSoundDconfig != nil {
+		a.controlCenterDeviceManager.Bind(a.dccSoundDconfig, dsgkeySoundShowDeviceManager)
+	}
 
 	a.sessionSigLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
 	a.syncConfig = dsync.NewConfig("audio", &syncConfig{a: a},
@@ -2115,7 +2116,7 @@ func (a *Audio) setEnableAutoSwitchPort(value bool) {
 	a.enableAutoSwitchPort = value
 	a.PropsMu.Unlock()
 
-	if a.enableAutoSwitchPort != a.controlCenterDeviceManager.Get() {
+	if a.dccSoundDconfig != nil && a.enableAutoSwitchPort != a.controlCenterDeviceManager.Get() {
 		a.controlCenterDeviceManager.Set(a.enableAutoSwitchPort)
 		logger.Info("setEnableAutoSwitchPort set a.enableAutoSwitchPort to a.controlCenterDeviceManager. value : ", a.enableAutoSwitchPort)
 	}
