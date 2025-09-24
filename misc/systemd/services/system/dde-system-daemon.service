@@ -25,7 +25,6 @@ ProtectSystem=strict
 # TODO 判断udev事件是否需要该配置
 # ProtectKernelTunables=yes
 ProtectKernelModules=yes
-# SwapSchedHelper需要设置cgroup
 # ProtectControlGroups=yes
 PrivateMounts=yes
 # 部分数据写在tmp，待整改tmp完成后考虑设置该项
@@ -99,8 +98,6 @@ ReadWritePaths=-/var/lib/dde-daemon/display/
 # com.deepin.system.Power
 ReadWritePaths=-/var/lib/dde-daemon/power/
 # ReadWritePaths=-/etc/tlp.d
-# com.deepin.daemon.SwapSchedHelper
-# 需要操作cgroup
 # com.deepin.daemon.PowerManager
 # 无读写文件
 # com.deepin.daemon.Daemon
