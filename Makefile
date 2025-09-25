@@ -53,10 +53,6 @@ TEST = \
     ${GOPKG_PREFIX}/langselector1 \
     ${GOPKG_PREFIX}/lastore1 \
     ${GOPKG_PREFIX}/loader \
-    ${GOPKG_PREFIX}/network1 \
-    ${GOPKG_PREFIX}/network1/nm \
-    ${GOPKG_PREFIX}/network1/nm_generator \
-    ${GOPKG_PREFIX}/network1/proxychains \
     ${GOPKG_PREFIX}/screenedge1 \
     ${GOPKG_PREFIX}/screensaver1 \
     ${GOPKG_PREFIX}/service_trigger \
