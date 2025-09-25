@@ -967,6 +967,10 @@ func (m *Manager) initDsg() {
 			m.LowPowerNotifyThreshold = int32(transTypeToInt(data.Value(), 0))
 		case dsettingPercentageAction:
 			m.LowPowerAutoSleepThreshold = int32(transTypeToInt(data.Value(), 0))
+		case dsettingPowerSavingModeBrightnessDropPercent:
+			if init {
+				m.savingModeBrightnessDropPercent = int32(transTypeToInt(data.Value(), 0))
+			}
 		}
 
 		// m.scheduledShutdownSwitch(false, false)
