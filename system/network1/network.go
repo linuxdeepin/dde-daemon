@@ -10,9 +10,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/linuxdeepin/dde-daemon/system/network1/nm"
+
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
-	"github.com/linuxdeepin/dde-daemon/network1/nm"
 	airplanemode "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.airplanemode1"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
