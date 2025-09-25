@@ -26,7 +26,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/power_manager1"
 	_ "github.com/linuxdeepin/dde-daemon/system/resource_ctl"
 	_ "github.com/linuxdeepin/dde-daemon/system/scheduler"
-	_ "github.com/linuxdeepin/dde-daemon/system/swapsched1"
 	_ "github.com/linuxdeepin/dde-daemon/system/systeminfo1"
 	_ "github.com/linuxdeepin/dde-daemon/system/timedate1"
 	_ "github.com/linuxdeepin/dde-daemon/system/uadp1"
