@@ -53,10 +53,6 @@ TEST = \
     ${GOPKG_PREFIX}/langselector1 \
     ${GOPKG_PREFIX}/lastore1 \
     ${GOPKG_PREFIX}/loader \
-    ${GOPKG_PREFIX}/network1 \
-    ${GOPKG_PREFIX}/network1/nm \
-    ${GOPKG_PREFIX}/network1/nm_generator \
-    ${GOPKG_PREFIX}/network1/proxychains \
     ${GOPKG_PREFIX}/screenedge1 \
     ${GOPKG_PREFIX}/screensaver1 \
     ${GOPKG_PREFIX}/service_trigger \
@@ -74,7 +70,6 @@ TEST = \
     ${GOPKG_PREFIX}/system/inputdevices1 \
     ${GOPKG_PREFIX}/system/keyevent1 \
     ${GOPKG_PREFIX}/system/lang \
-    ${GOPKG_PREFIX}/system/network1 \
     ${GOPKG_PREFIX}/system/power1 \
     ${GOPKG_PREFIX}/system/power_manager1 \
     ${GOPKG_PREFIX}/system/resource_ctl \

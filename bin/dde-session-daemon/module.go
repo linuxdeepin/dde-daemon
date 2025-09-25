@@ -26,7 +26,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/keybinding1"
 	_ "github.com/linuxdeepin/dde-daemon/lastore1"
 
-	_ "github.com/linuxdeepin/dde-daemon/network1"
 	_ "github.com/linuxdeepin/dde-daemon/screensaver1"
 	_ "github.com/linuxdeepin/dde-daemon/service_trigger"
 	_ "github.com/linuxdeepin/dde-daemon/session/eventlog"

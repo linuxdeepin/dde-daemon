@@ -5,7 +5,6 @@
 package power
 
 import (
-	"github.com/linuxdeepin/dde-daemon/network1"
 	"syscall"
 
 	"github.com/godbus/dbus/v5"
@@ -54,9 +53,9 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 			_manager.PropsMu.Unlock()
 
 			inhibitor.hasRunBeforeSleep = true
-			// TODO(jouyouyun): implement 'HandleForSleep' register
-			//appearance.HandlePrepareForSleep(true)
-			network.HandlePrepareForSleep(true)
+
+			// TODO: network prepare for sleep
+			// network.HandlePrepareForSleep(true)
 			if inhibitor.OnBeforeSuspend != nil {
 				inhibitor.OnBeforeSuspend()
 			}
@@ -81,7 +80,6 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 				_manager.handleBatteryDisplayUpdate()
 				_manager.handleWakeupDDELowPowerCheck()
 			}
-			network.HandlePrepareForSleep(false)
 			//appearance.HandlePrepareForSleep(false)
 			err := inhibitor.block()
 			if err != nil {
