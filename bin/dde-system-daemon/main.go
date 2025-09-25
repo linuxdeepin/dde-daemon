@@ -21,7 +21,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/inputdevices1"
 	_ "github.com/linuxdeepin/dde-daemon/system/keyevent1"
 	_ "github.com/linuxdeepin/dde-daemon/system/lang"
-	_ "github.com/linuxdeepin/dde-daemon/system/network1"
 	_ "github.com/linuxdeepin/dde-daemon/system/power1"
 	_ "github.com/linuxdeepin/dde-daemon/system/power_manager1"
 	_ "github.com/linuxdeepin/dde-daemon/system/resource_ctl"

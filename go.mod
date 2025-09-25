@@ -5,11 +5,9 @@ go 1.20
 require (
 	github.com/Lofanmi/pinyin-golang v0.0.0-20211114132645-1db892057f20
 	github.com/adrg/xdg v0.5.3
-	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/davecgh/go-spew v1.1.1
 	github.com/fsnotify/fsnotify v1.8.0
 	github.com/godbus/dbus/v5 v5.1.0
-	github.com/gosexy/gettext v0.0.0-20160830220431-74466a0a0c4a
 	github.com/jouyouyun/hardware v0.1.8
 	github.com/linuxdeepin/dde-api v0.0.0-20250918123248-b22d4220b302
 	github.com/linuxdeepin/go-dbus-factory v0.0.0-20250919025337-452ff75b01f1
@@ -23,11 +21,11 @@ require (
 	golang.org/x/xerrors v0.0.0-20240716161551-93cc26a95ae9
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
-	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
 	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/gosexy/gettext v0.0.0-20160830220431-74466a0a0c4a // indirect
 	github.com/josharian/native v1.1.0 // indirect
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.1.0 // indirect
@@ -45,4 +43,5 @@ require (
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

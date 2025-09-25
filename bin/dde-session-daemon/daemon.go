@@ -184,7 +184,6 @@ func (s *SessionDaemon) initModules() {
 	}
 
 	part2ModuleNames := []string{
-		"network",
 		"audio",
 		"screensaver",
 		"sessionwatcher",
