@@ -1,3 +1,16 @@
+dde-daemon (6.1.57) unstable; urgency=medium
+
+  * fix: initialize power saving brightness drop percent
+  * fix: handle dconfig initialization failure properly
+  * refactor: remove fprintd and dde-authority modules
+  * chore: update package dependencies
+  * refactor: remove xsettings dependency
+  * feat: migrate polkit rules from pkla to rules format
+  * feat: add StopAudioService interface for session logout
+  * fix: resolve NumLock state sync issue between daemon and frontend
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 25 Sep 2025 20:52:08 +0800
+
 dde-daemon (6.1.56) unstable; urgency=medium
 
   * refactor: migrate from custom config helpers to dconfig module
