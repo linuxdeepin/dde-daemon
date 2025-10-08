@@ -930,8 +930,14 @@ func (m *Manager) handleKeyEventByWayland(changKey string) {
 				logger.Warningf("get wireless enabled failed, err: %v", err)
 				return
 			}
-			// FIXME:  修复NM WiFi无法恢复bug, 使快捷键能够恢复WiFi问题
 			if !enabled {
+				type networkDevice struct {
+					InterfaceFlags uint32 `json:"interface_flags"`
+				}
+				// The following code is intended to fix a bug where NetworkManager WiFi
+				// cannot be restored using a shortcut key. It checks if any wireless
+				// network interfaces are down (InterfaceFlags == 0) and, if so,
+				// toggles the wireless adapter off and on to reset the state.
 				if devicesJson, err := m.network.Devices().Get(0); err == nil {
 					networkDevices := make(map[string][]*networkDevice)
 					json.Unmarshal([]byte(devicesJson), &networkDevices)

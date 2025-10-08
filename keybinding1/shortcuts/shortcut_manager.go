@@ -469,7 +469,11 @@ func (sm *ShortcutManager) NotifyLayoutChanged() {
 }
 
 func (sm *ShortcutManager) Destroy() {
-	// TODO
+	if sm.dataConn != nil {
+		record.FreeContext(sm.conn, sm.recordContext)
+		sm.dataConn.Close()
+		sm.dataConn = nil
+	}
 }
 
 func (sm *ShortcutManager) List() (list []Shortcut) {
@@ -1237,30 +1241,6 @@ func (sm *ShortcutManager) AddSystem(wmObj wm.Wm) {
 		sm.AddSystemById(wmObj, id)
 	}
 }
-
-// TODO delete, because not used
-// func (sm *ShortcutManager) AddWM(gsettings *gio.Settings, wmObj wm.Wm) {
-// 	logger.Debug("AddWM")
-// 	idNameMap := getWMIdNameMap()
-// 	releaseType := getDeepinReleaseType()
-// 	for _, id := range gsettings.ListKeys() {
-// 		if releaseType == "Server" && strings.Contains(id, "workspace") {
-// 			logger.Debugf("release type is server filter '%s'", id)
-// 			continue
-// 		}
-// 		if id == "expose-all-windows" || id == "expose-windows" {
-// 			logger.Debugf("'%s' is abandoned!", id)
-// 			continue
-// 		}
-// 		name := idNameMap[id]
-// 		if name == "" {
-// 			name = id
-// 		}
-// 		keystrokes := gsettings.GetStrv(id)
-// 		gs := NewShortcut(wmObj, id, ShortcutTypeWM, keystrokes, name)
-// 		sm.addWithoutLock(gs)
-// 	}
-// }
 
 func (sm *ShortcutManager) AddMedia(wmObj wm.Wm) {
 	logger.Debug("AddMedia")
