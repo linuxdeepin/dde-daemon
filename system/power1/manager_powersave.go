@@ -5,7 +5,8 @@
 package power
 
 import (
-	"os/exec"
+	dbus "github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/systemdunit"
 )
 
 type DSPCMode string
@@ -44,11 +45,29 @@ var _powerConfigMap = map[string]*powerConfig{
 }
 
 func (m *Manager) setDSPCState(state DSPCMode) {
-	cmd := exec.Command("/usr/sbin/deepin-system-power-control", "set", string(state))
-	logger.Debug("Setting deepin tlp state with command:", cmd.String())
-	_, err := cmd.Output()
+	conn, err := dbus.SystemBus()
 	if err != nil {
-		logger.Warning("Failed to set deepin tlp state:", err)
+		logger.Warning("Failed to connect to system bus:", err)
+		return
+	}
+
+	unitName := "dde-system-power-control.service"
+	unitInfo := systemdunit.TransientUnit{
+		Dbus:        conn,
+		UnitName:    unitName,
+		Type:        "oneshot",
+		Description: "Transient Unit set deepin system power control",
+		Environment: []string{},
+		Commands:    []string{"/usr/sbin/deepin-system-power-control", "set", string(state)},
+	}
+	err = unitInfo.StartTransientUnit()
+	if err != nil {
+		logger.Warningf("failed create unit: %v, err: %v", unitName, err)
+		return
+	}
+	if !unitInfo.WaitforFinish(m.systemSigLoop) {
+		logger.Warningf("%v run failed", unitName)
+		return
 	}
 }
 
