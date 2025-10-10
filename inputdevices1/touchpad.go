@@ -201,8 +201,7 @@ func (tpad *Touchpad) init() {
 	}
 
 	currentState := tpad.TPadEnable.Get()
-	tpad.TPadEnable.Set(!currentState)
-	tpad.enable(currentState)
+	tpad.forceEnable(currentState)
 	tpad.enableLeftHanded()
 	tpad.enableNaturalScroll()
 	tpad.enableEdgeScroll()
@@ -270,6 +269,10 @@ func (tpad *Touchpad) enable(enabled bool) {
 	if enabled == tpad.TPadEnable.Get() {
 		return
 	}
+	tpad.forceEnable(enabled)
+}
+
+func (tpad *Touchpad) forceEnable(enabled bool) {
 	if len(tpad.devInfos) > 0 {
 		for _, v := range tpad.devInfos {
 			err := v.Enable(!tpad.disableTemporary && enabled)
