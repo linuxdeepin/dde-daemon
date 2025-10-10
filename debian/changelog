@@ -1,3 +1,9 @@
+dde-daemon (6.1.59) unstable; urgency=medium
+
+  * Release 6.1.59
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Fri, 10 Oct 2025 17:28:12 +0800
+
 dde-daemon (6.1.58) unstable; urgency=medium
 
   * feat: 移除网络模块
