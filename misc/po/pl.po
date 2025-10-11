@@ -683,7 +683,7 @@ msgstr "Stan urządzenia uległ zmianie"
 
 #: ../../network1/state_handler.go:24
 msgid "Device state changed, reason unknown"
-msgstr "Stan urządzenia zmieniony, przyczyna nieznana"
+msgstr "Stan urządzenia uległ zmianie, przyczyna nieznana"
 
 #: ../../network1/state_handler.go:25
 msgid "The device is now managed"
@@ -896,12 +896,11 @@ msgstr "Błąd mostkowania do ADSL karty sieciowej RFC 2684"
 
 #: ../../network1/state_handler.go:75
 msgid "ModemManager did not run or quitted unexpectedly"
-msgstr ""
-"Zarządzanie modemem nie uruchomiło się lub niespodziewanie zakończyło pracę"
+msgstr "Menedżer modemu nie uruchomił się lub niespodziewanie zakończył pracę"
 
 #: ../../network1/state_handler.go:76
 msgid "The 802.11 WLAN network could not be found"
-msgstr "Nie można znaleźć sieci 802.11 WLAN"
+msgstr "Nie można znaleźć sieci WLAN 802.11"
 
 #: ../../network1/state_handler.go:77
 msgid "A secondary connection of the base connection failed"
@@ -909,7 +908,7 @@ msgstr "Wystąpił błąd drugorzędnego połączenia połączenia bazowego"
 
 #: ../../network1/state_handler.go:80
 msgid "DCB or FCoE setup failed"
-msgstr "Błąd ustawienia DCB lub FCoE"
+msgstr "Wystąpił błąd konfiguracji DCB lub FCoE"
 
 #: ../../network1/state_handler.go:81
 msgid "Network teaming control failed"
@@ -917,11 +916,11 @@ msgstr "Błąd kontroli sieci zespołowej"
 
 #: ../../network1/state_handler.go:82
 msgid "Modem failed to run or not available"
-msgstr "Nie udało się uruchomić modemu lub nie jest dostępny"
+msgstr "Nie udało się uruchomić modemu lub jest niedostępny"
 
 #: ../../network1/state_handler.go:83
 msgid "Modem now ready and available"
-msgstr "Modem jest już gotowy i dostępny"
+msgstr "Modem jest gotowy i dostępny"
 
 #: ../../network1/state_handler.go:84
 msgid "SIM PIN is incorrect"
