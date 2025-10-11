@@ -10,8 +10,8 @@
 # Maggie Liu <maggie.liufei@gmail.com>, 2025
 # Marcin Kozioł <koziol.martin@gmail.com>, 2025
 # Piotr Strebski <strebski@gmail.com>, 2025
-# Janusz Ruchała, 2025
 # deepiner, 2025
+# Janusz Ruchała, 2025
 # 
 #, fuzzy
 msgid ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-25 14:46+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Janusz Ruchała, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/linuxdeepin/teams/3617/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -679,7 +679,7 @@ msgstr "Nie udało się ustawić serwera proxy aplikacji"
 
 #: ../../network1/state_handler.go:23
 msgid "Device state changed"
-msgstr "Zmieniony stan urządzenia"
+msgstr "Stan urządzenia uległ zmianie"
 
 #: ../../network1/state_handler.go:24
 msgid "Device state changed, reason unknown"
