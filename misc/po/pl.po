@@ -944,7 +944,7 @@ msgstr "Kabel sieciowy jest odłączony"
 
 #: ../../network1/state_handler.go:91
 msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr "Upewnij się, że włożono kartę SIM z sygnałem sieci komórkowej"
+msgstr "Upewnij się, że włożono kartę SIM z dostępem do sieci komórkowej"
 
 #: ../../network1/state_handler.go:92
 msgid ""
