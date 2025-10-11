@@ -820,7 +820,7 @@ msgstr "Upłynął limit czasu oczekiwania rejestracji sieci"
 
 #: ../../network1/state_handler.go:56
 msgid "Failed to register to the requested GSM network"
-msgstr "Nie udało się zarejestrować w żądanej sieci GSM"
+msgstr "Nie udało się zarejestrować w wybranej sieci GSM"
 
 #: ../../network1/state_handler.go:57
 msgid "PIN check failed"
@@ -836,7 +836,7 @@ msgstr "Urządzenie zostało usunięte"
 
 #: ../../network1/state_handler.go:60
 msgid "NetworkManager went to sleep"
-msgstr "Zarządzanie siecią przeszło w stan uśpienia"
+msgstr "Menedżer sieci przeszedł w stan uśpienia"
 
 #: ../../network1/state_handler.go:61
 msgid "The device's active connection was removed or disappeared"
@@ -848,7 +848,7 @@ msgstr "Użytkownik lub klient wyraził prośbę o rozłączenie"
 
 #: ../../network1/state_handler.go:63
 msgid "The device's carrier/link changed"
-msgstr "Dostawca/odnośnik urządzenia został zmieniony"
+msgstr "Dostawca/połączenie urządzenia uległo zmianie"
 
 #: ../../network1/state_handler.go:64
 msgid "The device's existing connection was assumed"
@@ -856,7 +856,7 @@ msgstr "Aktywne połączenie urządzenia zostało założone"
 
 #: ../../network1/state_handler.go:65
 msgid "The 802.1x supplicant is now available"
-msgstr "Suplikant 802.1x jest teraz dostępny"
+msgstr "Suplikant 802.1x jest już dostępny"
 
 #: ../../network1/state_handler.go:66
 msgid "The modem could not be found"
