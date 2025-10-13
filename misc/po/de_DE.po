@@ -1029,30 +1029,35 @@ msgstr "%q getrennt"
 #: ../../network1/state_handler.go:355
 msgid "Unable to share hotspot, please check dnsmasq settings"
 msgstr ""
+"Hotspot konnte nicht eingerichtet werden, bitte prüfen Sie DNSMasq-"
+"Einstellungen"
 
 #: ../../network1/state_handler.go:357
 msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
+msgstr "Keine %q-Verbindung möglich, bitte näher zum WLAN-Router hingehen"
 
 #: ../../network1/state_handler.go:359
 msgid "Unable to connect %q, please check your router or net cable."
 msgstr ""
+"Keine %q-Verbindung möglich, bitte prüfen Sie ihren Router oder das "
+"Netwerkkabel"
 
 #: ../../network1/state_handler.go:363
 msgid "Connection failed, unable to connect %q, wrong password"
 msgstr ""
+"Verbindung fehgeschlagen, keine %q-Verbindung möglich, falsches Passwort"
 
 #: ../../network1/state_handler.go:365
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "Keine %q-Verbindung möglich"
 
 #: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
-msgstr ""
+msgstr "Um %q zu verbinden, geben Sie bitte ihre Authentifizierungsdaten ein"
 
 #: ../../network1/state_handler.go:379
 msgid "Password is required to connect %q"
-msgstr ""
+msgstr "Verbindung mit %q erfordert Passwort"
 
 #: ../../network1/state_handler.go:383
 msgid "The %q 802.11 WLAN network could not be found"
