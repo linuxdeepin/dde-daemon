@@ -3,7 +3,8 @@ Description=deepin greeter setter service
 
 [Service]
 Type=dbus
-User=root
+User=lightdm
+Group=lightdm
 BusName=org.deepin.dde.Greeter1
 ExecStart=/usr/lib/deepin-daemon/dde-greeter-setter
 StandardOutput=null
