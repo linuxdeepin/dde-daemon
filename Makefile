@@ -46,7 +46,6 @@ TEST = \
     ${GOPKG_PREFIX}/image_effect1 \
     ${GOPKG_PREFIX}/inputdevices1 \
     ${GOPKG_PREFIX}/inputdevices1/iso639 \
-    ${GOPKG_PREFIX}/iw \
     ${GOPKG_PREFIX}/keybinding1 \
     ${GOPKG_PREFIX}/keybinding1/shortcuts \
     ${GOPKG_PREFIX}/keybinding1/util \
