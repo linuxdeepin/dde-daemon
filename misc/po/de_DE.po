@@ -1061,7 +1061,7 @@ msgstr "Verbindung mit %q erfordert Passwort"
 
 #: ../../network1/state_handler.go:383
 msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
+msgstr "Das %q-802.11-WLAN konnte nicht gefunden werden"
 
 #: ../../network1/utils_dbus_nm.go:278
 msgid "Unknown"
@@ -1079,12 +1079,12 @@ msgstr "Getrennt"
 
 #: ../../network1/utils_notify.go:178
 msgid "Access Point mode is not supported by this device."
-msgstr ""
+msgstr "Der Zugangspunkt-Modus wird von diesem Gerät nicht unterstützt"
 
 #: ../../network1/utils_notify.go:182
 msgid ""
 "The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr ""
+msgstr "Der Hardware-Schalter der WLAN-Karte ist aus, bitte anschalten."
 
 #: ../../network1/utils_notify.go:186
 msgid "System proxy is set successfully."
@@ -1102,6 +1102,8 @@ msgstr "Verbunden"
 #, c-format
 msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
+"\"%s\" erfüllte nicht die Systemsicherheits-Verifizierung und kann daher "
+"nicht starten"
 
 #: ../../service_trigger/msg.go:13
 #, c-format
@@ -1109,10 +1111,12 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Sie können nicht das unverifizierte \"%s\", starten, aber SIe können die "
+"Einstellungen im Sicherheitszentrum ändern."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Weitermachen"
 
 #: ../../session/power1/manager.go:928
 #, c-format
