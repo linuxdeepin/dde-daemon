@@ -1121,7 +1121,7 @@ msgstr "Weitermachen"
 #: ../../session/power1/manager.go:928
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "Das System wird automatisch in %d s herunterfahren"
 
 #: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
@@ -1187,7 +1187,7 @@ msgstr ""
 
 #: ../../timedate1/manager_format.go:75
 msgid "Space"
-msgstr ""
+msgstr "Leertaste"
 
 #: ../../timedate1/manager_ifc.go:59
 msgid "Authentication is required to set the system time"
