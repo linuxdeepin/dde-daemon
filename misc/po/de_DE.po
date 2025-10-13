@@ -510,7 +510,7 @@ msgstr "Hineinzoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr "erauszoomen"
+msgstr "Herauszoomen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
@@ -927,11 +927,11 @@ msgstr "Die Aktivierung einer neuen Verbindung steht an"
 
 #: ../../network1/state_handler.go:86
 msgid "Parent device changed"
-msgstr ""
+msgstr "Übergeordnetes Gerät geändert"
 
 #: ../../network1/state_handler.go:87
 msgid "Management status of parent device changed"
-msgstr ""
+msgstr "Verwaltungsstatus des übergeordneten Gerätes hat sich geändert"
 
 #: ../../network1/state_handler.go:90
 msgid "Network cable is unplugged"
