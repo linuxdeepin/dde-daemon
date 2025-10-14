@@ -1,5 +1,3 @@
-github.com/Lofanmi/pinyin-golang v0.0.0-20211114132645-1db892057f20 h1:QUwRV0ZgSjXBJnKOJh0T5rqe1jLWxlR5AvBLWSYJ7qg=
-github.com/Lofanmi/pinyin-golang v0.0.0-20211114132645-1db892057f20/go.mod h1:J7A5UW8HA8b8lsEO/OshykiGGfmdQEnbDE53D23JsXE=
 github.com/adrg/xdg v0.5.3 h1:xRnxJXne7+oWDatRhR1JLnvuccuIeCoBu2rtuLqQB78=
 github.com/adrg/xdg v0.5.3/go.mod h1:nlTsY+NNiCBGCK2tpm09vRqfVzrc2fLmXGpBLF0zlTQ=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
