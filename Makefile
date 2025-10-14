@@ -58,7 +58,6 @@ TEST = \
     ${GOPKG_PREFIX}/session/common \
     ${GOPKG_PREFIX}/session/eventlog \
     ${GOPKG_PREFIX}/session/power1 \
-    ${GOPKG_PREFIX}/session/uadpagent1 \
     ${GOPKG_PREFIX}/sessionwatcher1 \
     ${GOPKG_PREFIX}/soundeffect1 \
     ${GOPKG_PREFIX}/system/airplane_mode1 \
