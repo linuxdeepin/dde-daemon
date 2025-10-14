@@ -184,12 +184,6 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/etc/deepin
 	cp -f misc/etc/deepin/* ${DESTDIR}/etc/deepin
 
-	mkdir -pv ${DESTDIR}/etc/acpi/events
-	cp -f misc/etc/acpi/events/* ${DESTDIR}/etc/acpi/events/
-
-	mkdir -pv ${DESTDIR}/etc/acpi/actions
-	cp -f misc/etc/acpi/actions/* ${DESTDIR}/etc/acpi/actions/
-
 	mkdir -pv ${DESTDIR}/etc/pulse/daemon.conf.d
 	cp -f misc/etc/pulse/daemon.conf.d/*.conf ${DESTDIR}/etc/pulse/daemon.conf.d/
 
