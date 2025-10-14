@@ -302,16 +302,6 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
-        "uadpagent": {
-            "value": "",
-            "serial": 0,
-            "flags": ["global"],
-            "name": "uadpagent logger level",
-            "name[zh_CN]": "加密模块日志级别",
-            "description": "uadpagent logger level",
-            "permissions": "readwrite",
-            "visibility": "private"
-        },
         "x-event-monitor": {
             "value": "",
             "serial": 0,

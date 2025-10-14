@@ -68,7 +68,6 @@ Depends:
  deepin-installer-timezones,
  deepin-sound-theme,
  dmidecode,
- gnome-keyring,
  libglib2.0-bin,
  hwinfo,
  imwheel,

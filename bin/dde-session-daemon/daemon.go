@@ -188,7 +188,6 @@ func (s *SessionDaemon) initModules() {
 		"screensaver",
 		"sessionwatcher",
 		"power", // need screensaver and sessionwatcher
-		"uadpagent",
 		"service-trigger",
 		"clipboard",
 		"keybinding",

@@ -282,16 +282,6 @@
           "permissions": "readwrite",
           "visibility": "private"
         },
-        "uadpagent": {
-          "value": true,
-          "serial": 0,
-          "flags": [],
-          "name": "uadpagentEnable",
-          "name[zh_CN]": "加密模块启动",
-          "description": "Allow uadpagent module start",
-          "permissions": "readwrite",
-          "visibility": "private"
-        },
         "x-event-monitor": {
           "value": true,
           "serial": 0,
