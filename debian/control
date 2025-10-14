@@ -66,7 +66,6 @@ Depends:
  dde-polkit-agent,
  deepin-desktop-schemas (>> 5.1.2+),
  deepin-installer-timezones,
- deepin-proxy,
  deepin-sound-theme,
  dmidecode,
  gnome-keyring,
