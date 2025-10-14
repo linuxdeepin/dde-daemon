@@ -7,6 +7,8 @@ export GOPATH = /usr/share/gocode
 export GO111MODULE=off
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export CFLAGS = -W -Wall -fPIC -fstack-protector-all -z relro -z noexecstack -z now -pie
+# Deepin/Uos系统，编译scheduler（移除noscheduler标签）
+export BUILD_TAGS = 
 
 SYSTYPE=Desktop
 SYSTYPE=$(shell cat /etc/deepin-version | grep Type= | awk -F'=' '{print $$2}')

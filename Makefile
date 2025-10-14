@@ -4,6 +4,15 @@ GOPKG_PREFIX = github.com/linuxdeepin/dde-daemon
 GOBUILD = go build $(GO_BUILD_FLAGS)
 export GOPATH=$(shell go env GOPATH)
 
+# 构建标签控制
+# 设置 BUILD_TAGS 环境变量来控制模块编译
+# 默认不编译scheduler模块，只有在Deepin/UOS平台或手动设置时才编译
+BUILD_TAGS ?= noscheduler
+
+ifneq ($(BUILD_TAGS),)
+    GOBUILD_TAGS = -tags $(BUILD_TAGS)
+endif
+
 ifneq (${shell uname -m}, mips64)
     GOBUILD_OPTIONS = -ldflags '-linkmode=external -extldflags "-pie"'
 endif
@@ -110,7 +119,7 @@ prepare:
 	@ln -snf ../../../.. ${GOPATH_DIR}/src/${GOPKG_PREFIX};
 
 out/bin/%: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@ ${GOBUILD_OPTIONS} ${GOPKG_PREFIX}/bin/${@F}
+	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@ ${GOBUILD_OPTIONS} ${GOBUILD_TAGS} ${GOPKG_PREFIX}/bin/${@F}
 
 out/bin/desktop-toggle: bin/desktop-toggle/main.c
 	gcc $^ $(shell pkg-config --cflags --libs x11) $(CFLAGS) -o $@
