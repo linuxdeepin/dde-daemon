@@ -11,7 +11,6 @@ import (
 
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts1"
-	_ "github.com/linuxdeepin/dde-daemon/apps1"
 	_ "github.com/linuxdeepin/dde-daemon/image_effect1"
 	_ "github.com/linuxdeepin/dde-daemon/system/airplane_mode1"
 	_ "github.com/linuxdeepin/dde-daemon/system/bluetooth1"

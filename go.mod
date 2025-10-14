@@ -3,7 +3,6 @@ module github.com/linuxdeepin/dde-daemon
 go 1.20
 
 require (
-	github.com/Lofanmi/pinyin-golang v0.0.0-20211114132645-1db892057f20
 	github.com/adrg/xdg v0.5.3
 	github.com/davecgh/go-spew v1.1.1
 	github.com/fsnotify/fsnotify v1.8.0
