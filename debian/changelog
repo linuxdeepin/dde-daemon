@@ -1,3 +1,16 @@
+dde-daemon (6.1.59) unstable; urgency=medium
+
+  * fix: revert device listener thread management to fix CPU usage
+  * fix: restrict scheduler module to Deepin/UOS platforms only
+  * fix: remove ACPI event configurations for security compliance
+  * chore: remove deprecated appinfo and apps1 modules
+  * fix: remove uadpagent module and gnome-keyring dependency
+  * fix: remove deepin-proxy dependency for security compliance
+  * fix: security hardening for dde-daemon services
+  * chore: remove iw module
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 16 Oct 2025 16:55:22 +0800
+
 dde-daemon (6.1.58) unstable; urgency=medium
 
   * feat: 移除网络模块
