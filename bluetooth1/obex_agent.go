@@ -28,7 +28,7 @@ const (
 	obexAgentDBusPath      = dbusPath + "/ObexAgent"
 	obexAgentDBusInterface = "org.bluez.obex.Agent1"
 
-	receiveFileNotifyTimeout = 15 * 1000
+	receiveFileNotifyTimeout = 40 * 1000
 	receiveFileTimeout       = 40 * time.Second
 	receiveFileNeverTimeout  = 0
 )
@@ -43,7 +43,7 @@ type obexAgent struct {
 
 	obexManager obex.Manager
 
-	requestNotifyCh   chan bool
+	requestNotifyCh   chan string
 	requestNotifyChMu sync.Mutex
 
 	receiveCh   chan struct{}
@@ -460,7 +460,8 @@ func (a *obexAgent) Cancel() *dbus.Error {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-	a.requestNotifyCh <- false
+	// mark cancel from obexd
+	a.requestNotifyCh <- "obex_cancel"
 	return nil
 }
 
@@ -485,7 +486,7 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 	}
 
 	a.requestNotifyChMu.Lock()
-	a.requestNotifyCh = make(chan bool, 10)
+	a.requestNotifyCh = make(chan string, 10)
 	a.requestNotifyChMu.Unlock()
 
 	_, err = notify.ConnectActionInvoked(func(id uint32, actionKey string) {
@@ -494,7 +495,11 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 		}
 		a.requestNotifyChMu.Lock()
 		if a.requestNotifyCh != nil {
-			a.requestNotifyCh <- actionKey == "receive"
+			if actionKey == "receive" {
+				a.requestNotifyCh <- "receive"
+			} else {
+				a.requestNotifyCh <- "decline"
+			}
 		}
 		a.requestNotifyChMu.Unlock()
 	})
@@ -505,9 +510,18 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 
 	var result bool
 	select {
-	case result = <-a.requestNotifyCh:
-		if result == false {
+	case reason := <-a.requestNotifyCh:
+		if reason == "obex_cancel" {
+			// cancel from obexd, treat as timeout notify
 			a.b.setPropTransportable(true)
+			a.notifyReceiveFileTimeout(notify, notifyID, filename)
+			result = false
+		} else if reason == "decline" {
+			// user declined, do not send timeout notify
+			a.b.setPropTransportable(true)
+			result = false
+		} else if reason == "receive" {
+			result = true
 		}
 	case <-time.After(receiveFileTimeout):
 		a.b.setPropTransportable(true)
