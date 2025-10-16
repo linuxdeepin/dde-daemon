@@ -268,8 +268,9 @@ func ParseKeystrokes(keystrokes []string) []*Keystroke {
 		parsed, err := ParseKeystroke(keystroke)
 		if err == nil {
 			result = append(result, parsed)
+		} else {
+			logger.Warningf("failed to parse keystroke %q: %v", keystroke, err)
 		}
-		// TODO else warning
 	}
 	return result
 }
