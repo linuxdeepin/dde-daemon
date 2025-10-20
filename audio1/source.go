@@ -105,7 +105,12 @@ func (s *Source) SetVolume(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
-	GetConfigKeeper().SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	card, err2 := s.audio.cards.get(s.Card)
+	if err2 != nil {
+		logger.Warning(err2)
+	} else {
+		GetConfigKeeper().SetVolume(card, s.ActivePort.Name, value)
+	}
 
 	if isPlay {
 		playFeedback()
@@ -134,7 +139,12 @@ func (s *Source) SetBalance(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSourceVolumeByIndex(s.index, cv)
 
-	GetConfigKeeper().SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	card, err2 := s.audio.cards.get(s.Card)
+	if err2 != nil {
+		logger.Warning(err2)
+	} else {
+		GetConfigKeeper().SetBalance(card, s.ActivePort.Name, value)
+	}
 
 	if isPlay {
 		playFeedback()
@@ -271,7 +281,6 @@ func (s *Source) update(sourceInfo *pulse.Source) {
 				sourceInfo.Card = masterSourceInfo.Card
 				sourceInfo.Ports = masterSourceInfo.Ports
 				sourceInfo.ActivePort = masterSourceInfo.ActivePort
-				logger.Debugf("create reducing noise source on %s", masterSourceInfo.Name)
 			}
 		} else {
 			logger.Warningf("cannot get master source for %s", sourceInfo.Name)

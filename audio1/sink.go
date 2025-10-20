@@ -111,7 +111,12 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.Unlock()
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 
-	GetConfigKeeper().SetVolume(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	card, err2 := s.audio.cards.get(s.Card)
+	if err2 != nil {
+		logger.Warning(err2)
+	} else {
+		GetConfigKeeper().SetVolume(card, s.ActivePort.Name, value)
+	}
 
 	if isPlay {
 		s.playFeedback()
@@ -119,36 +124,27 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 	return nil
 }
 
+func unsetMono() {
+	out, err := exec.Command("pactl", "unload-module", "module-remap-sink").CombinedOutput()
+	if err != nil {
+		logger.Warningf("failed to disable sink mono %v %s", err, out)
+	}
+}
+
 func (s *Sink) SetMono(enable bool) error {
 	logger.Debug("set sink mono :", enable)
 	var err error
-	var out []byte
+	a := s.audio
+	// 当存在单声道时，都给移除掉
+	for _, sink := range a.sinks {
+		if sink.Name == "remap-sink-mono" {
+			unsetMono()
+			break
+		}
+	}
 	if enable {
-		logger.Debugf("monoEnable.sh --sink_master=%s", s.Name)
-		out, err = exec.Command("/usr/share/dde-daemon/audio/monoEnable.sh", "--sink_master="+s.Name).CombinedOutput()
-		if err != nil {
-			logger.Warningf("failed to enable sink mono %v %s", err, out)
-		}
-	} else {
-		defaultSink := s.audio.context().GetDefaultSink()
-		if defaultSink == "" {
-			return fmt.Errorf("default sink is nil")
-		}
-		if !isPhysicalDevice(defaultSink) {
-			master := s.audio.getMasterNameFromVirtualDevice(defaultSink)
-			if master == "" {
-				return fmt.Errorf("failed to get virtual device sinkInfo for name: %s", defaultSink)
-			}
-			sinkInfo := s.audio.getSinkInfoByName(master)
-			if sinkInfo == nil {
-				return fmt.Errorf("failed to get virtual device sinkInfo for name: %s", master)
-			}
-			s.audio.context().SetDefaultSink(defaultSink)
-			out, err = exec.Command("pactl", "unload-module", "module-remap-sink").CombinedOutput()
-			if err != nil {
-				logger.Warningf("failed to disable sink mono %v %s", err, out)
-			}
-		}
+		// sink_master并非标准接口，而是识别物理设备对应的sink
+		a.context().LoadModule("module-remap-sink", fmt.Sprintf("sink_name=remap-sink-mono channels=1 channel_map=mono sink_master=%s", s.Name))
 	}
 	return err
 }
@@ -178,7 +174,12 @@ func (s *Sink) SetBalance(value float64, isPlay bool) *dbus.Error {
 	s.PropsMu.RUnlock()
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 
-	GetConfigKeeper().SetBalance(s.audio.getCardNameById(s.Card), s.ActivePort.Name, value)
+	card, err2 := s.audio.cards.get(s.Card)
+	if err2 != nil {
+		logger.Warning(err2)
+	} else {
+		GetConfigKeeper().SetBalance(card, s.ActivePort.Name, value)
+	}
 
 	if isPlay {
 		s.playFeedback()

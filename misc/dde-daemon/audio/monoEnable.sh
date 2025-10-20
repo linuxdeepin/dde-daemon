@@ -4,6 +4,7 @@
 newSinkName="remap-sink-mono"
 sinkMaster=""
 channels="1"
+channel_map="mono"
 
 # 解析参数
 while [[ $# -gt 0 ]]; do
@@ -35,6 +36,6 @@ fi
 echo Reload \"module-remap-sink\" with \"channels=$channels\" $moduleArgs
 pactl unload-module module-remap-sink 2>/dev/null
 
-if pactl load-module module-remap-sink channels=$channels $moduleArgs; then
+if pactl load-module module-remap-sink channels=$channels channel_map=$channel_map $moduleArgs; then
     pactl set-default-sink $newSinkName
 fi

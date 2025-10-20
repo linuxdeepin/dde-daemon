@@ -314,7 +314,6 @@ func (m *Manager) init() {
 	} else {
 		m.shortcutManager.AddSystem(m.wm)
 		m.shortcutManager.AddMedia(m.wm)
-		m.shortcutManager.AddKWin(m.wm)
 		err := sessionBus.BusObject().Call("org.freedesktop.DBus.GetNameOwner",
 			0, "org.kde.kglobalaccel").Store()
 		if err != nil {

@@ -19,20 +19,35 @@ var (
 	outputDefaultPriorities = []int{}
 )
 
+type portList map[string][]string
+
 // 优先级策略组，包含输入和输出
 type PriorityManager struct {
-	Output *PriorityPolicy
-	Input  *PriorityPolicy
+	availablePort portList // 可用端口列表，key=cardName，value=portName
+	Output        *PriorityPolicy
+	Input         *PriorityPolicy
 
 	file string // 配置文件的路径，私有成员不会被json导出
+}
+
+func (pl portList) isExists(cardName string, portName string) bool {
+	if ports, ok := pl[cardName]; ok {
+		for _, port := range ports {
+			if port == portName {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // 创建优先级组
 func NewPriorityManager(path string) *PriorityManager {
 	return &PriorityManager{
-		Output: NewPriorityPolicy(),
-		Input:  NewPriorityPolicy(),
-		file:   path,
+		availablePort: make(portList),
+		Output:        NewPriorityPolicy(),
+		Input:         NewPriorityPolicy(),
+		file:          path,
 	}
 }
 
@@ -109,103 +124,67 @@ func (pm *PriorityManager) completeDefaultTypes() {
 			logger.Debugf("output defualt append type %d", i)
 		}
 	}
-}
-
-// 使用默认值进行初始化
-func (pm *PriorityManager) defaultInit(cards CardList) {
-	// 初始化类型优先级列表
-	pm.completeDefaultTypes()
 	pm.Output.completeTypes()
 	pm.Input.completeTypes()
 
-	// 添加可用的端口
-	for _, card := range cards {
-		for _, port := range card.Ports {
-			if port.Available == pulse.AvailableTypeNo {
-				logger.Debugf("unavailable port '%s(%s)' card:<%s> port:<%s>", port.Description, card.Name, card.core.Name, port.Name)
-				continue
-			}
-
-			if port.Direction == pulse.DirectionSink {
-				pm.Output.AddRawPort(card.core, &port)
-			} else if port.Direction == pulse.DirectionSource {
-				pm.Input.AddRawPort(card.core, &port)
-			} else {
-				logger.Warningf("unexpected direction %d of port <%s:%s>",
-					port.Direction, card.core.Name, port.Name)
-			}
-		}
-	}
-}
-
-// 设置有效端口
-// 这是因为从配置文件读出来的数据是上次运行时保存的，两次运行之间（例如关机状态下）可能插拔了设备
-// 因此需要删除无效端口，添加新的有效端口
-func (pm *PriorityManager) SetPorts(cards CardList) {
-	outputPorts := make(PriorityPortList, 0)
-	inputPorts := make(PriorityPortList, 0)
-	for _, card := range cards {
-		for _, port := range card.Ports {
-			if port.Available == pulse.AvailableTypeNo {
-				logger.Debugf("unavailable port '%s(%s)' card:<%s> port:<%s>", port.Description, card.Name, card.core.Name, port.Name)
-				continue
-			}
-
-			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
-			if !portConfig.Enabled {
-				logger.Debugf("diabled port '%s(%s)' card:<%s> port:<%s>", port.Description, card.Name, card.core.Name, port.Name)
-				continue
-			}
-
-			p := PriorityPort{
-				CardName: card.core.Name,
-				PortName: port.Name,
-				PortType: DetectPortType(card.core, &port),
-			}
-
-			if port.Direction == pulse.DirectionSink {
-				outputPorts = append(outputPorts, &p)
-				logger.Debugf("append output port %s:%s", p.CardName, p.PortName)
-			} else {
-				inputPorts = append(inputPorts, &p)
-				logger.Debugf("append input port %s:%s", p.CardName, p.PortName)
-			}
-		}
-	}
-	pm.Output.SetPorts(outputPorts)
-	pm.Input.SetPorts(inputPorts)
 }
 
 // 进行初始化
 func (pm *PriorityManager) Init(cards CardList) {
-	if !pm.Load() {
-		pm.defaultInit(cards)
-		pm.Save()
-		return
-	}
-
-	// 设置有效端口
-	pm.SetPorts(cards)
-
+	pm.Load()
 	// 补充缺少的类型（产品修改了端口类型），并更新端口排序
 	pm.completeDefaultTypes()
-	pm.Output.completeTypes()
-	pm.Output.sortPorts()
-	pm.Input.completeTypes()
-	pm.Input.sortPorts()
+	pm.refreshPorts(cards)
 
 	pm.Save()
 }
 
-// 设置优先级最高的端口（自动识别输入输出）
-func (pm *PriorityManager) SetTheFirstPort(card *pulse.Card, port *pulse.CardPortInfo) {
-	if port.Direction == pulse.DirectionSink {
-		pm.Output.SetTheFirstPort(card.Name, port.Name)
-	} else if port.Direction == pulse.DirectionSource {
-		pm.Input.SetTheFirstPort(card.Name, port.Name)
-	} else {
+func (pm *PriorityManager) refreshPorts(cards CardList) {
+	pm.availablePort = make(map[string][]string)
+	for _, card := range cards {
+		plist := make([]string, 0)
+		for _, port := range card.Ports {
+			switch port.Direction {
+			case pulse.DirectionSink:
+				pm.Output.InsertPort(card.core, &port)
+			case pulse.DirectionSource:
+				pm.Input.InsertPort(card.core, &port)
+			}
+			// 端口不可用或被禁用时，不插入插入到优先级列表中
+			_, pc := GetConfigKeeper().GetCardAndPortConfig(card, port.Name)
+			if port.Available == pulse.AvailableTypeNo || !pc.Enabled {
+				continue
+			} else {
+				plist = append(plist, port.Name)
+			}
+		}
+		pm.availablePort[card.core.Name] = plist
+	}
+}
+
+func (pm *PriorityManager) GetTheFirstPort(direction int) (*PriorityPort, *Position) {
+	switch direction {
+	case pulse.DirectionSink:
+		if len(pm.Output.Ports) > 0 {
+			return pm.Output.GetTheFirstPort(pm.availablePort)
+		}
+	case pulse.DirectionSource:
+		if len(pm.Input.Ports) > 0 {
+			return pm.Input.GetTheFirstPort(pm.availablePort)
+		}
+	}
+	return nil, &Position{tp: PortTypeInvalid, index: -1}
+}
+
+func (pm *PriorityManager) SetTheFirstPort(cardName string, portName string, direction int) {
+	switch direction {
+	case pulse.DirectionSink:
+		pm.Output.SetTheFirstPort(cardName, portName, pm.availablePort)
+	case pulse.DirectionSource:
+		pm.Input.SetTheFirstPort(cardName, portName, pm.availablePort)
+	default:
 		logger.Warningf("unexpected direction %d of port <%s:%s>",
-			port.Direction, card.Name, port.Name)
+			direction, cardName, portName)
 	}
 
 	// 打印并保存
@@ -213,24 +192,16 @@ func (pm *PriorityManager) SetTheFirstPort(card *pulse.Card, port *pulse.CardPor
 	pm.Save()
 }
 
-// 设置优先级最高的输出端口
-// 注意：cardName和portName有好几种，不要传错了
-// 应当使用 pulse.Card.Name 和 pulse.CardPortInfo.Name
-// 形似："alsa_card.pci-0000_00_1f.3" 和 "hdmi-output-0"
-// 而不是: "HDA Intel PCH" 和 "HDMI / DisplayPort"
-func (pm *PriorityManager) SetFirstOutputPort(cardName string, portName string) {
-	pm.Output.SetTheFirstPort(cardName, portName)
-	pm.Print()
-	pm.Save()
-}
-
-// 设置优先级最高的输入端口
-// 注意：cardName和portName有好几种，不要传错了
-// 应当使用 pulse.Card.Name 和 pulse.CardPortInfo.Name
-// 形似："alsa_card.pci-0000_00_1f.3" 和 "hdmi-output-0"
-// 而不是: "HDA Intel PCH" 和 "HDMI / DisplayPort"
-func (pm *PriorityManager) SetFirstInputPort(cardName string, portName string) {
-	pm.Input.SetTheFirstPort(cardName, portName)
-	pm.Print()
-	pm.Save()
+func (pm *PriorityManager) GetNextPort(direction int, pos *Position) (*PriorityPort, *Position) {
+	switch direction {
+	case pulse.DirectionSink:
+		if len(pm.Output.Ports) > 0 {
+			return pm.Output.GetNextPort(pm.availablePort, pos)
+		}
+	case pulse.DirectionSource:
+		if len(pm.Input.Ports) > 0 {
+			return pm.Input.GetNextPort(pm.availablePort, pos)
+		}
+	}
+	return nil, &Position{tp: PortTypeInvalid, index: -1}
 }
