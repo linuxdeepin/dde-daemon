@@ -21,6 +21,11 @@ linkJavaFallbackFont () {
 
 # 设置/etc/lightdm/deepin/和/var/lib/lightdm/lightdm-deepin-greeter目录权限，让lightdm组可以写入
 setupLightdmDeepinPermissions () {
+    # 检查 lightdm 用户组是否存在
+    if ! getent group lightdm >/dev/null 2>&1; then
+        return 0
+    fi
+    
     # 设置 /etc/lightdm/deepin/ 目录权限
     local etc_dir_path="/etc/lightdm/deepin/"
     if [ ! -d "$etc_dir_path" ]; then
