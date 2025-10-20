@@ -7,7 +7,6 @@ package audio
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"time"
 
 	dbus "github.com/godbus/dbus/v5"
@@ -86,26 +85,6 @@ func (a *Audio) doSaveConfig() {
 		logger.Warning(err)
 	}
 
-}
-
-func (a *Audio) setReduceNoise(enable bool) error {
-	logger.Debug("set reduce noise :", enable)
-	var err error
-	var out []byte
-	if enable {
-		sourceName := a.getDefaultSourceName()
-		logger.Debugf("echoCancelEnable.sh --source_master=%s", sourceName)
-		out, err = exec.Command("/usr/share/dde-daemon/audio/echoCancelEnable.sh", "--source_master="+sourceName).CombinedOutput()
-		if err != nil {
-			logger.Warningf("failed to enable reduce noise %v %s", err, out)
-		}
-	} else {
-		out, err = exec.Command("pactl", "unload-module", "module-echo-cancel").CombinedOutput()
-		if err != nil {
-			logger.Warningf("failed to disable reduce noise %v %s", err, out)
-		}
-	}
-	return err
 }
 
 func (a *Audio) saveAudioState() error {

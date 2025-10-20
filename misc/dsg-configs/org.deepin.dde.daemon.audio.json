@@ -50,18 +50,6 @@
       "permissions": "read",
       "visibility": "private"
     },
-    "reduceNoise": {
-      "value": false,
-      "serial": 0,
-      "flags": [],
-      "global": true,
-      "name": "reduceNoiseEnable",
-      "name[zh_CN]": "噪音抑制启动",
-      "description": "default reduce noise status. Notice: the machines of huawei hisikirin do not support reduce noise, please do not enable this item",
-      "description[zh_CN]": "噪音抑制开关，注意：华为海思麒麟的机器不支持噪音抑制，请不要开启",
-      "permissions": "read",
-      "visibility": "private"
-    },
     "inputDefaultPrioritiesByType": {
       "value": [0,1,2,3,4,5,6,7],
       "serial": 0,
@@ -107,6 +95,17 @@
       "name": "monoEnabled",
       "name[zh_CN]": "单声道开关",
       "description": "audio channel mono enabled set",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "reduceNoiseEnabled":{
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "global": true,
+      "name": "reduceNoiseEnabled",
+      "name[zh_CN]": "噪音抑制开关",
+      "description": "audio channel noise reduce enabled set",
       "permissions": "readwrite",
       "visibility": "private"
     },
@@ -195,17 +194,6 @@
       "name[zh_CN]": "禁用自动静音",
       "description": "Whether to disable ALSA Mixer Auto-Mute Mode",
       "description[zh_CN]": "是否禁用ALSA混音器自动静音模式",
-      "permissions": "readwrite",
-      "visibility": "private"
-    },
-    "reduceInputNoise": {
-      "value": false,
-      "serial": 0,
-      "flags": [],
-      "name": "reduceInputNoise",
-      "name[zh_CN]": "降低输入噪音",
-      "description": "Whether to reduce input noise",
-      "description[zh_CN]": "是否降低输入噪音",
       "permissions": "readwrite",
       "visibility": "private"
     },

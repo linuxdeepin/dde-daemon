@@ -35,7 +35,11 @@ type ProfileList []*Profile
 
 func newProfileList(src []pulse.ProfileInfo2) ProfileList {
 	var result ProfileList
+	blacklist := profileBlacklist()
 	for _, v := range src {
+		if v.Available == 0 || blacklist.Contains(v.Name) {
+			continue
+		}
 		result = append(result, newProfile(v))
 	}
 	return result
