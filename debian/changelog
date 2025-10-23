@@ -1,3 +1,15 @@
+dde-daemon (6.1.60) unstable; urgency=medium
+
+  * fix: 对智能电池电量增加阀值配置,以及开关
+  * fix: disable touchscreen left edge clipboard gesture
+  * Revert "fix: Modify the default clipboard shortcut key"
+  * Revert "fix: prevent GTK window size change on daemon exit"
+  * fix: check lightdm group existence before permission setup
+  * i18n: Updates for project Deepin Desktop Environment (#906)
+  * fix: Modify the default clipboard shortcut key
+
+ -- wujiangyu <wujiangyu@uniontech.com>  Thu, 23 Oct 2025 17:18:59 +0800
+
 dde-daemon (6.1.59) unstable; urgency=medium
 
   * fix: revert device listener thread management to fix CPU usage
