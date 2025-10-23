@@ -45,6 +45,12 @@ type Battery struct {
 	TimeToFull  uint64
 	UpdateTime  int64
 
+	// 是否开启"智能电量"
+	smartBatteryStatus      bool
+
+	// 开启"智能电量"阀值
+	smartBatteryOnThreshold float64
+
 	batteryHistory []float64
 
 	refreshDone func()
@@ -66,6 +72,7 @@ func newBattery(manager *Manager, device *gudev.Device) *Battery {
 		service:     manager.service,
 		gudevClient: manager.gudevClient,
 		SysfsPath:   sysfsPath,
+		smartBatteryOnThreshold: 97.0,
 	}
 	ok := bat.refresh(device)
 	if !ok {
@@ -202,7 +209,7 @@ func (bat *Battery) _refresh(info *battery.BatteryInfo, setTimeToFull bool) {
 
 	/* lie to full */
 	bat.appendToHistory(info.Percentage)
-	if info.Percentage > 97.0 && bat.getHistoryLength() >= 10 && bat.calcHistoryVariance() < 0.3 {
+	if bat.Status != battery.StatusNotCharging && bat.smartBatteryStatus && info.Percentage > bat.smartBatteryOnThreshold && bat.getHistoryLength() >= 10 && bat.calcHistoryVariance() < 0.3 {
 		logger.Debugf("fake 100 : true percentage %.4f%% variance %.4f%%", info.Percentage, bat.calcHistoryVariance())
 		info.Percentage = 100.0
 		info.TimeToFull = 0
