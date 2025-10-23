@@ -183,7 +183,7 @@
             "visibility": "private"
         },
         "clipboard": {
-            "value": ["<Control><Alt>V","<Meta>V"],
+            "value": ["<Super>V","<Meta>V"],
             "serial": 0,
             "flags": [],
             "name": "clipboard",
