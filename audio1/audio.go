@@ -2124,7 +2124,7 @@ func (a *Audio) setEnableAutoSwitchPort(value bool) {
 
 // 初始化 dsg 配置的属性
 func (a *Audio) initDsgProp() error {
-	val, err := a.audioDConfig.GetValueBool(dsgkeyPausePlayer)
+	val, err := a.audioDConfig.GetValueBool(dsgKeyAutoSwitchPort)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -2134,7 +2134,7 @@ func (a *Audio) initDsgProp() error {
 	if err != nil {
 		logger.Warning(err)
 	} else {
-		logger.Info("auto switch port:", pausePlayerValue)
+		logger.Info("pause player:", pausePlayerValue)
 		a.PropsMu.Lock()
 		a.PausePlayer = pausePlayerValue
 		a.PropsMu.Unlock()
