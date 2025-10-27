@@ -1,14 +1,6 @@
 dde-daemon (6.1.60) unstable; urgency=medium
 
   * fix: resolve crash from dconfig type mismatch
-  * chore: bump version to 6.1.60
-  * fix: 对智能电池电量增加阀值配置,以及开关
-  * fix: disable touchscreen left edge clipboard gesture
-  * Revert "fix: Modify the default clipboard shortcut key"
-  * Revert "fix: prevent GTK window size change on daemon exit"
-  * fix: check lightdm group existence before permission setup
-  * i18n: Updates for project Deepin Desktop Environment (#906)
-  * fix: Modify the default clipboard shortcut key
 
  -- fuleyi <fuleyi@uniontech.com>  Mon, 27 Oct 2025 13:51:30 +0800
 
