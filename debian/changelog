@@ -1,4 +1,4 @@
-dde-daemon (6.1.60) unstable; urgency=medium
+dde-daemon (6.1.61) unstable; urgency=medium
 
   * fix: resolve crash from dconfig type mismatch
 
