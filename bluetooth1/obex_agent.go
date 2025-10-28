@@ -414,7 +414,7 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 			gettext.Tr("Done"),
 			actions,
 			hints,
-			receiveFileNeverTimeout)
+			receiveFileNotifyTimeout)
 		if err != nil {
 			logger.Warning("failed to send notify:", err)
 		}
