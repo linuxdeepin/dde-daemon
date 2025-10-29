@@ -41,7 +41,7 @@ func (m *Manager) SetTimezone(sender dbus.Sender, timezone, message string) *dbu
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
-	customTimeZoneList := []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian"}
+	customTimeZoneList := []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian", "Asia/Urumqi"}
 	// 以下时区不在国际时区中，如果用户选择以下时区，统一链接到上海时区
 	if strv.Strv(customTimeZoneList).Contains(timezone) {
 		timezone = "Asia/Shanghai"
