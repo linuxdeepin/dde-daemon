@@ -97,7 +97,7 @@ sed -i 's|boot/grub|boot/grub2|' grub2/{grub2,grub_params,theme}.go
 pushd misc/system-services/
 sed -i '$aSystemdService=deepin-accounts-daemon.service' org.deepin.dde.Power1.service \
     org.deepin.dde.{Accounts,Apps,Daemon}1.service \
-    org.deepin.dde.{Gesture,SwapSchedHelper,Timedated}1.service
+    org.deepin.dde.{Gesture,Timedated}1.service
 sed -i '$aSystemdService=dbus-org.deepin.dde.Lockservice1.service' org.deepin.dde.LockService1.service
 popd
 # systemd service
