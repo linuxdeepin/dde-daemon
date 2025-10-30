@@ -640,11 +640,11 @@ func (m *Manager) showWidgets(show bool) error {
 		logger.Warning(err)
 		return err
 	}
-	obj := sessionBus.Object("org.deepin.dde.Widgets", "/org/deepin/dde/Widgets")
+	obj := sessionBus.Object("org.deepin.dde.shell", "/org/deepin/dde/shell/notification/center")
 	if show {
-		err = obj.Call("org.deepin.dde.Widgets.Show", 0).Err
+		err = obj.Call("org.deepin.dde.shell.notification.center.Show", 0).Err
 	} else {
-		err = obj.Call("org.deepin.dde.Widgets.Hide", 0).Err
+		err = obj.Call("org.deepin.dde.shell.notification.center.Hide", 0).Err
 	}
 	if err != nil {
 		logger.Warning(err)
