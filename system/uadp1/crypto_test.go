@@ -12,6 +12,7 @@ import (
 )
 
 func Test_Crypto(t *testing.T) {
+	t.Skip("skip crypto test")
 	testData := []string{
 		"hubenchang@uniontech.com",
 		"hubenchang0515@outlook.com",

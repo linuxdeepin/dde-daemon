@@ -1,3 +1,13 @@
+dde-daemon (6.1.62) unstable; urgency=medium
+
+  * fix: update notification center D-Bus interface paths
+  * feat: 优化了音频配置.
+  * fix: extend custom timezone mapping list
+  * fix: correct config key in DSG property initialization
+  * fix: update OBEX file transfer notification timeout
+
+ -- Robertkill <lvpeilong@uniontech.com>  Thu, 30 Oct 2025 19:41:40 +0800
+
 dde-daemon (6.1.61) unstable; urgency=medium
 
   * fix: resolve crash from dconfig type mismatch
