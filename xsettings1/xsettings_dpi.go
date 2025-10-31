@@ -6,12 +6,7 @@ package xsettings
 
 import (
 	"fmt"
-	"os"
-	"path"
 	"strconv"
-	"strings"
-
-	"github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
@@ -95,80 +90,4 @@ func (m *XSManager) updateXResources() {
 			value: strconv.Itoa(xftDpi),
 		},
 	})
-}
-
-var ffDir = path.Join(os.Getenv("HOME"), ".mozilla/firefox")
-
-func (m *XSManager) updateFirefoxDPI() {
-	scale, _ := m.xsettingsConfig.GetValueFloat64(gsKeyScaleFactor)
-	if scale <= 0 {
-		// firefox default value: -1
-		scale = -1
-	}
-
-	configs, err := getFirefoxConfigs(ffDir)
-	if err != nil {
-		logger.Debug("Failed to get firefox configs:", err)
-		return
-	}
-
-	for _, config := range configs {
-		err = setFirefoxDPI(scale, config, config)
-		if err != nil {
-			logger.Warning("Failed to set firefox dpi:", config, err)
-		}
-	}
-}
-
-func getFirefoxConfigs(dir string) ([]string, error) {
-	finfos, err := os.ReadDir(dir)
-	if err != nil {
-		return nil, err
-	}
-	var configs []string
-	for _, finfo := range finfos {
-		config := path.Join(dir, finfo.Name(), "prefs.js")
-		if !utils.IsFileExist(config) {
-			continue
-		}
-		configs = append(configs, config)
-	}
-	return configs, nil
-}
-
-func setFirefoxDPI(value float64, src, dest string) error {
-	contents, err := os.ReadFile(src)
-	if err != nil {
-		return err
-	}
-	lines := strings.Split(string(contents), "\n")
-	target := fmt.Sprintf("%s \"%.2f\");", ffKeyPixels, value)
-	found := false
-	for i, line := range lines {
-		if line == "" || line[0] == '#' {
-			continue
-		}
-		if !strings.Contains(line, ffKeyPixels) {
-			continue
-		}
-
-		if line == target {
-			return nil
-		}
-
-		tmp := strings.Split(ffKeyPixels, ",")[0] + ", " +
-			fmt.Sprintf("\"%.2f\");", value)
-		lines[i] = tmp
-		found = true
-		break
-	}
-	if !found {
-		if value == -1 {
-			return nil
-		}
-		tmp := lines[len(lines)-1]
-		lines[len(lines)-1] = target
-		lines = append(lines, tmp)
-	}
-	return os.WriteFile(dest, []byte(strings.Join(lines, "\n")), 0644)
 }
