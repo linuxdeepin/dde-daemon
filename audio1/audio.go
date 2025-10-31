@@ -1393,7 +1393,13 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 		}
 		logger.Info("virtual sink is", sinkName, ",sink_master is", sinkInfo.Name)
 	}
-
+	if sinkInfo == nil {
+		logger.Warning("failed to get sinkInfo for name:", sinkName)
+		a.setPropDefaultSink("/")
+		a.defaultSinkName = ""
+		a.defaultSink = nil
+		return
+	}
 	a.moveSinkInputsToSink(nil)
 	if a.defaultSink != nil {
 		if a.defaultSink.Name == sinkInfo.Name {
@@ -1406,14 +1412,6 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 			go pauseAllPlayers()
 		}
 	}
-	if sinkInfo == nil {
-		logger.Warning("failed to get sinkInfo for name:", sinkName)
-		a.setPropDefaultSink("/")
-		a.defaultSinkName = ""
-		a.defaultSink = nil
-		return
-	}
-
 	// 部分机型defaultSink事件必add事件先上报。
 	// 如果是这种情况触发SinkAdd逻辑再设置默认Sink
 	a.mu.Lock()

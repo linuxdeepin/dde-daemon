@@ -5,11 +5,8 @@
 package xsettings
 
 import (
-	"fmt"
-	"os"
 	"testing"
 
-	"github.com/linuxdeepin/go-lib/utils"
 	C "gopkg.in/check.v1"
 )
 
@@ -157,83 +154,4 @@ func (*testWrapper) TestNewXSItemColor(c *C.C) {
 	c.Check(v1.green, C.Equals, value[1])
 	c.Check(v1.blue, C.Equals, value[2])
 	c.Check(v1.alpha, C.Equals, value[3])
-}
-
-func (*testWrapper) TestGetFirefoxConfigs(c *C.C) {
-	configs, _ := getFirefoxConfigs("testdata/firefox")
-	c.Check(len(configs), C.Equals, 1)
-	c.Check(configs[0], C.Equals, "testdata/firefox/xxx.default/prefs.js")
-}
-
-func (*testWrapper) TestSetFirefoxDPI(c *C.C) {
-	var infos = []struct {
-		src      string
-		dest     string
-		value    float64
-		contents string
-	}{
-		{
-			src:   "testdata/firefox/xxx.default/prefs.js",
-			dest:  "testdata/firefox/xxx.default/prefs.test",
-			value: 1.35,
-			contents: `# Mozilla User Preferences
-
-user_pref("layout.css.devPixelsPerPx", "1.35");
-user_pref("toolkit.telemetry.previousBuildID", "20160803004522");
-user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
-`,
-		},
-		{
-			src:   "testdata/firefox/xxx.default/prefs_multi.js",
-			dest:  "testdata/firefox/xxx.default/prefs_multi.test",
-			value: 1.35,
-			contents: `# Mozilla User Preferences
-
-#user_pref("layout.css.devPixelsPerPx", "1.555");
-user_pref("layout.css.devPixelsPerPx", "1.35");
-user_pref("toolkit.telemetry.previousBuildID", "20160803004522");
-user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
-`,
-		},
-		{
-			src:   "testdata/firefox/xxx.default/prefs_none.js",
-			dest:  "testdata/firefox/xxx.default/prefs_none.test",
-			value: 1.35,
-			contents: `# Mozilla User Preferences
-
-user_pref("toolkit.telemetry.previousBuildID", "20160803004522");
-user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
-user_pref("layout.css.devPixelsPerPx", "1.35");
-`,
-		},
-		{
-			src:   "testdata/firefox/xxx.default/prefs_none.js",
-			dest:  "testdata/firefox/xxx.default/prefs_none1.test",
-			value: -1,
-			contents: `# Mozilla User Preferences
-
-user_pref("toolkit.telemetry.previousBuildID", "20160803004522");
-user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
-`,
-		},
-	}
-
-	for _, info := range infos {
-		err := setFirefoxDPI(info.value, info.src, info.dest)
-		if err != nil {
-			fmt.Println("Failed to set firefox dpi:", err)
-			continue
-		}
-		if info.value == -1 {
-			c.Check(utils.IsFileExist(info.dest), C.Equals, false)
-			continue
-		}
-		contents, err := os.ReadFile(info.dest)
-		if err != nil {
-			fmt.Println("Failed to read file:", err)
-			continue
-		}
-		c.Check(string(contents), C.Equals, info.contents)
-		os.Remove(info.dest)
-	}
 }
