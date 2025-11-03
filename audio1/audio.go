@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"os/exec"
 	"regexp"
 	"sort"
 	"strings"
@@ -1900,6 +1899,15 @@ func (a *Audio) SetMono(enable bool) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
+func (a *Audio) unsetMono() {
+	for _, sink := range a.sinks {
+		if sink.Name == "remap-sink-mono" {
+			a.ctx.UnloadModuleByName("module-remap-sink")
+			break
+		}
+	}
+}
+
 func (a *Audio) setMono(enable bool) error {
 	if a.Mono == enable {
 		return nil
@@ -1961,10 +1969,7 @@ func (a *Audio) unsetReduceNoise() {
 	logger.Info("unload moudle module-echo-cancel")
 	for _, s := range a.sources {
 		if s.Name == "echo-cancel-source" {
-			out, err := exec.Command("pactl", "unload-module", "module-echo-cancel").CombinedOutput()
-			if err != nil {
-				logger.Warningf("failed to disable sink mono %v %s", err, out)
-			}
+			a.context().UnloadModuleByName("module-echo-cancel")
 			return
 		}
 	}
@@ -1982,10 +1987,7 @@ func (a *Audio) hasReduceNoise(source string) bool {
 			if len(match) > 1 {
 				if match[1] != source || found {
 					logger.Infof("unload module:<%s,%d> with args:%s", module.Name, module.Index, module.Argument)
-					out, err := exec.Command("pactl", "unload-module", fmt.Sprintf("%v", module.Index)).CombinedOutput()
-					if err != nil {
-						logger.Warningf("failed to disable sink mono %v %s", err, out)
-					}
+					a.context().UnloadModule(module.Index)
 				} else {
 					found = true
 				}

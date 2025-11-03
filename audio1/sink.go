@@ -6,7 +6,6 @@ package audio
 
 import (
 	"fmt"
-	"os/exec"
 	"strconv"
 	"sync"
 
@@ -124,13 +123,6 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 	return nil
 }
 
-func unsetMono() {
-	out, err := exec.Command("pactl", "unload-module", "module-remap-sink").CombinedOutput()
-	if err != nil {
-		logger.Warningf("failed to disable sink mono %v %s", err, out)
-	}
-}
-
 func (s *Sink) SetMono(enable bool) error {
 	logger.Debug("set sink mono :", enable)
 	var err error
@@ -138,7 +130,7 @@ func (s *Sink) SetMono(enable bool) error {
 	// 当存在单声道时，都给移除掉
 	for _, sink := range a.sinks {
 		if sink.Name == "remap-sink-mono" {
-			unsetMono()
+			a.unsetMono()
 			break
 		}
 	}
