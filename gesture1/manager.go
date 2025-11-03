@@ -77,7 +77,6 @@ type Manager struct {
 	sysDaemon          daemon.Daemon
 	systemSigLoop      *dbusutil.SignalLoop
 	mu                 sync.RWMutex
-	builtinSets        map[string]func() error
 	gesture            gesture.Gesture
 	dock               dock.Dock
 	display            display.Display
@@ -431,14 +430,6 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 	return info.doAction()
 }
 
-func (m *Manager) handleBuiltinAction(cmd string) error {
-	fn := m.builtinSets[cmd]
-	if fn == nil {
-		return fmt.Errorf("invalid built-in action %q", cmd)
-	}
-	return fn()
-}
-
 func (*Manager) GetInterfaceName() string {
 	return dbusServiceIFC
 }
@@ -619,15 +610,16 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge 
 			}
 
 			var dockPly uint32 = 0
-			if position == positionTop || position == positionBottom {
+			switch position {
+			case positionTop, positionBottom:
 				dockPly = rect.Height
-			} else if position == positionRight || position == positionLeft {
+			case positionRight, positionLeft:
 				dockPly = rect.Width
 			}
 
 			if (1-p.Y)*float64(context.screenHeight) > float64(dockPly) {
-				logger.Debug("show work space")
-				return m.handleBuiltinAction("ShowWorkspace")
+				logger.Debug("show muti task")
+				return doActionByName("ShowMultiTask")
 			}
 		}
 	}

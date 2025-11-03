@@ -6,8 +6,9 @@ package gesture1
 
 import (
 	"fmt"
-	"github.com/linuxdeepin/go-lib/gettext"
 	"os/exec"
+
+	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 type actionInfo struct {
@@ -215,4 +216,13 @@ func (m *Manager) doToggleGrandSearch() error {
 func (m *Manager) doToggleNotifications() error {
 	cmd := "dbus-send --print-reply --dest=org.deepin.dde.Osd1 /org/deepin/dde/shell/notification/center org.deepin.dde.shell.notification.center.Toggle"
 	return exec.Command("/bin/bash", "-c", cmd).Run()
+}
+
+func doActionByName(name string) error {
+	for _, action := range actions {
+		if action.Name == name {
+			return action.fn()
+		}
+	}
+	return fmt.Errorf("action %s not found", name)
 }
