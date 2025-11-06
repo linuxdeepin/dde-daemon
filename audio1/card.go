@@ -133,8 +133,6 @@ func (c *Card) update(card *pulse.Card) {
 
 func portBluezMode(port *pulse.CardPortInfo) string {
 	for _, profile := range port.Profiles {
-		logger.Warningf("port<%s> profile<%s> %v", port.Name, profile.Name, profile.Available)
-
 		if strings.Contains(strings.ToLower(profile.Name), bluezModeA2dp) {
 			return bluezModeA2dp
 		}
@@ -352,7 +350,6 @@ const (
 
 func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 	var changed ChangeType = NoChange
-	logger.Debugf("card %v doDiff", card.core.Name)
 	pc := card.core
 	// 检查配置文件变化
 	if card.ActiveProfile != nil {
@@ -376,6 +373,7 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 		if autoPause && first.CardName == card.Name {
 			for _, p := range card.Ports {
 				if p.Name == first.PortName && p.Available != pulse.AvailableTypeNo {
+					logger.Infof("card <%s> changed:%v", card.Name, changed)
 					return changed
 				}
 			}
@@ -402,7 +400,7 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 					logger.Debugf("port<%s,%s> notify", card.Name, oldPort.Name)
 					notifyPortDisabled(card.Id, oldPort)
 				}
-				if first.CardName == card.core.Name && first.PortName == newPort.Name {
+				if first != nil && first.CardName == card.core.Name && first.PortName == newPort.Name {
 					if newPort.Available == pulse.AvailableTypeNo {
 						// 当前使用的端口被禁用，暂停播放
 						if autoPause {
@@ -413,6 +411,8 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 			}
 		}
 	}
-
+	if changed != NoChange {
+		logger.Infof("card <%s> changed:%v", card.Name, changed)
+	}
 	return changed
 }

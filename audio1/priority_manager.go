@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/linuxdeepin/go-lib/pulse"
+	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
@@ -19,7 +20,7 @@ var (
 	outputDefaultPriorities = []int{}
 )
 
-type portList map[string][]string
+type portList map[string]strv.Strv
 
 // 优先级策略组，包含输入和输出
 type PriorityManager struct {
@@ -32,11 +33,7 @@ type PriorityManager struct {
 
 func (pl portList) isExists(cardName string, portName string) bool {
 	if ports, ok := pl[cardName]; ok {
-		for _, port := range ports {
-			if port == portName {
-				return true
-			}
-		}
+		return ports.Contains(portName)
 	}
 	return false
 }
@@ -140,7 +137,7 @@ func (pm *PriorityManager) Init(cards CardList) {
 }
 
 func (pm *PriorityManager) refreshPorts(cards CardList) {
-	pm.availablePort = make(map[string][]string)
+	pm.availablePort = make(map[string]strv.Strv)
 	for _, card := range cards {
 		plist := make([]string, 0)
 		for _, port := range card.Ports {
@@ -160,6 +157,7 @@ func (pm *PriorityManager) refreshPorts(cards CardList) {
 		}
 		pm.availablePort[card.core.Name] = plist
 	}
+	logger.Debugf("refresh avaiable Ports: %+v", pm.availablePort)
 }
 
 func (pm *PriorityManager) GetTheFirstPort(direction int) (*PriorityPort, *Position) {
