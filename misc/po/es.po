@@ -419,7 +419,7 @@ msgstr "Traducción"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Grand Search"
-msgstr "Búsqueda general"
+msgstr "Búsqueda global"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:38
 msgid "Notification Center"
