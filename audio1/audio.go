@@ -845,16 +845,6 @@ func (a *Audio) init() error {
 	go a.handleStateChanged()
 	logger.Debug("init done")
 
-	firstRun, err := a.audioDConfig.GetValueBool(dsgKeyFirstRun)
-	if err != nil {
-		logger.Warning(err)
-	}
-	if firstRun {
-		logger.Info("first run, Will remove old audio config")
-		removeConfig()
-		a.audioDConfig.SetValue(dsgKeyFirstRun, false)
-	}
-
 	if a.defaultSink != nil && !a.needAutoSwitchOutputPort() {
 		a.resumeSinkConfig(a.defaultSink)
 		a.setMono(a.Mono)

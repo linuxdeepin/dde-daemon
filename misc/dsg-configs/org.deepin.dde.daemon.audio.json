@@ -109,17 +109,6 @@
       "permissions": "readwrite",
       "visibility": "private"
     },
-    "firstRun": {
-      "value": true,
-      "serial": 0,
-      "flags": [],
-      "name": "firstRun",
-      "name[zh_CN]": "是否已初始化",
-      "description": "If no initialized, do it, otherwise nothing to do.",
-      "description[zh_CN]": "如果未初始化则执行初始化，否则不执行任何操作",
-      "permissions": "readwrite",
-      "visibility": "private"
-    },
     "inputVolume": {
       "value": 50,
       "serial": 0,

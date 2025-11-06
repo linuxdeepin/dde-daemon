@@ -128,12 +128,7 @@ func (s *Sink) SetMono(enable bool) error {
 	var err error
 	a := s.audio
 	// 当存在单声道时，都给移除掉
-	for _, sink := range a.sinks {
-		if sink.Name == "remap-sink-mono" {
-			a.unsetMono()
-			break
-		}
-	}
+	a.unsetMono()
 	if enable {
 		// sink_master并非标准接口，而是识别物理设备对应的sink
 		a.context().LoadModule("module-remap-sink", fmt.Sprintf("sink_name=remap-sink-mono channels=1 channel_map=mono sink_master=%s", s.Name))
