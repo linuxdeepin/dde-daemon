@@ -17,7 +17,8 @@ const (
 )
 
 const (
-	PriorityHandset  = 20000
+	PriorityA2dp     = 20000
+	PriorityHandset  = 10000
 	PriorityHandfree = 10000
 )
 

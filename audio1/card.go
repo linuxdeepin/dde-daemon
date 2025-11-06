@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"sort"
+	"strings"
 
 	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-lib/strv"
@@ -113,11 +114,13 @@ func (c *Card) update(card *pulse.Card) {
 					logger.Debugf("filter bluez input port %s", port.Name)
 					port.Available = pulse.AvailableTypeNo
 				}
-				switch port.Name {
-				case "headset-output":
-					port.Priority += PriorityHandset
-				case "headset-hf-output":
-					port.Priority += PriorityHandfree
+				switch portBluezMode(&port) {
+				case bluezModeA2dp:
+					port.Priority = PriorityA2dp
+				case bluezModeHeadset:
+					port.Priority = PriorityHandset
+				case bluezModeHandsfree:
+					port.Priority = PriorityHandfree
 				}
 			}
 		}
@@ -126,6 +129,23 @@ func (c *Card) update(card *pulse.Card) {
 
 	// 根据端口优先级排序，顺序由低到高
 	c.sortPortsByPriority(card)
+}
+
+func portBluezMode(port *pulse.CardPortInfo) string {
+	for _, profile := range port.Profiles {
+		logger.Warningf("port<%s> profile<%s> %v", port.Name, profile.Name, profile.Available)
+
+		if strings.Contains(strings.ToLower(profile.Name), bluezModeA2dp) {
+			return bluezModeA2dp
+		}
+		if strings.Contains(strings.ToLower(profile.Name), bluezModeHeadset) {
+			return bluezModeHeadset
+		}
+		if strings.Contains(strings.ToLower(profile.Name), bluezModeHandsfree) {
+			return bluezModeHeadset
+		}
+	}
+	return ""
 }
 
 // sortPortsByPriority 根据端口的 Priority 属性排序，Priority 值小的在前（由低到高）
