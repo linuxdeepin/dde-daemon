@@ -210,8 +210,10 @@ func (pp *PriorityPolicy) GetNextPort(available portList, pos *Position) (*Prior
 	for tp := pos.tp; tp < PortTypeCount; tp++ {
 		for i := pos.index + 1; i < len(pp.Ports[tp]); i++ {
 			port := pp.Ports[tp][i]
-			if _, ok := available[port.CardName]; ok {
-				return port, &Position{tp: tp, index: i}
+			if ports, ok := available[port.CardName]; ok {
+				if ports.Contains(port.PortName) {
+					return port, &Position{tp: tp, index: i}
+				}
 			}
 		}
 	}

@@ -185,17 +185,6 @@
       "description[zh_CN]": "是否禁用ALSA混音器自动静音模式",
       "permissions": "readwrite",
       "visibility": "private"
-    },
-    "outputAutoSwitchCountMax": {
-      "value": 50,
-      "serial": 0,
-      "flags": [],
-      "name": "outputAutoSwitchCountMax",
-      "name[zh_CN]": "输出自动切换最大计数",
-      "description": "The output auto swich count max",
-      "description[zh_CN]": "输出自动切换的最大计数",
-      "permissions": "readwrite",
-      "visibility": "private"
     }
   }
 }

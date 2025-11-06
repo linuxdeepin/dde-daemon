@@ -44,23 +44,6 @@ func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 		index:   sourceInfo.Index,
 		service: audio.service,
 	}
-	if !isPhysicalDevice(sourceInfo.Name) {
-		master := audio.getMasterNameFromVirtualDevice(sourceInfo.Name)
-		if master != "" {
-
-			masterSourceInfo := audio.getSourceInfoByName(master)
-			if masterSourceInfo == nil {
-				logger.Warningf("cannot get master source for %s", sourceInfo.Name)
-			} else {
-				sourceInfo.Card = masterSourceInfo.Card
-				sourceInfo.Ports = masterSourceInfo.Ports
-				sourceInfo.ActivePort = masterSourceInfo.ActivePort
-				logger.Debugf("create reducing noise source on %s", masterSourceInfo.Name)
-			}
-		} else {
-			logger.Warningf("cannot get master source for %s", sourceInfo.Name)
-		}
-	}
 
 	s.update(sourceInfo)
 	return s
@@ -270,23 +253,6 @@ func (*Source) GetInterfaceName() string {
 }
 
 func (s *Source) update(sourceInfo *pulse.Source) {
-	// 如果是虚拟通道，则将card和ports等设为对应主通道的值，这是为了能够正常使用降噪的训通道
-	if !isPhysicalDevice(sourceInfo.Name) {
-		master := s.audio.getMasterNameFromVirtualDevice(sourceInfo.Name)
-		if master != "" {
-			masterSourceInfo := s.audio.getSourceInfoByName(master)
-			if masterSourceInfo == nil {
-				logger.Warningf("cannot get master source for %s", sourceInfo.Name)
-			} else {
-				sourceInfo.Card = masterSourceInfo.Card
-				sourceInfo.Ports = masterSourceInfo.Ports
-				sourceInfo.ActivePort = masterSourceInfo.ActivePort
-			}
-		} else {
-			logger.Warningf("cannot get master source for %s", sourceInfo.Name)
-		}
-	}
-
 	s.PropsMu.Lock()
 	s.cVolume = sourceInfo.Volume
 	s.channelMap = sourceInfo.ChannelMap
@@ -314,13 +280,38 @@ func (s *Source) update(sourceInfo *pulse.Source) {
 
 	s.PropsMu.Unlock()
 
-	if activePortChanged && s.audio.defaultSourceName == s.Name {
-		logger.Debugf("default source update active port %s", sourceInfo.ActivePort.Name)
-		s.audio.resumeSourceConfig(s, isPhysicalDevice(s.Name))
+	defaultSource := s.audio.defaultSource
+	if defaultSource != nil {
+		if activePortChanged && defaultSource.Name == s.Name {
+			logger.Debugf("default source update active port %s", sourceInfo.ActivePort.Name)
+			s.audio.resumeSourceConfig(s)
+		}
 	}
+
 }
 
 func (s *Source) setMute(v bool) {
 	logger.Debugf("Source #%d setMute %v", s.index, v)
 	s.audio.context().SetSourceMuteByIndex(s.index, v)
+}
+
+func (s *Source) setReduceNoise(enable bool) {
+	if isBluezAudio(s.Name) {
+		return
+	}
+	logger.Debug("set source reduce noise :", enable)
+	a := s.audio
+	for _, source := range a.sources {
+		if source.Name == reduceNoiseSourceName {
+			a.unsetReduceNoise()
+			break
+		}
+	}
+	if enable {
+		args := fmt.Sprintf(
+			"source_name=%s use_master_format=1 aec_method=webrtc aec_args=\"analog_gain_control=0 digital_gain_control=1\" source_master=%s",
+			reduceNoiseSourceName, s.Name)
+		logger.Debugf("load moudle %v, args: %v", reduceNoiseSourceName, args)
+		a.context().LoadModule(reduceNoiseSourceModuleName, args)
+	}
 }

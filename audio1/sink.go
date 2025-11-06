@@ -123,17 +123,18 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 	return nil
 }
 
-func (s *Sink) SetMono(enable bool) error {
+func (s *Sink) setMono(enable bool) {
 	logger.Debug("set sink mono :", enable)
-	var err error
 	a := s.audio
 	// 当存在单声道时，都给移除掉
 	a.unsetMono()
 	if enable {
 		// sink_master并非标准接口，而是识别物理设备对应的sink
-		a.context().LoadModule("module-remap-sink", fmt.Sprintf("sink_name=remap-sink-mono channels=1 channel_map=mono sink_master=%s", s.Name))
+		args := fmt.Sprintf("sink_name=%s channels=1 channel_map=mono sink_master=%s",
+			monoSinkName, s.Name)
+		logger.Info("load module", monoSinkModuleName, args)
+		a.context().LoadModule(monoSinkModuleName, args)
 	}
-	return err
 }
 
 // 设置左右声道平衡值
@@ -267,7 +268,6 @@ func (*Sink) GetInterfaceName() string {
 
 func (s *Sink) update(sinkInfo *pulse.Sink) {
 	s.PropsMu.Lock()
-
 	s.Name = sinkInfo.Name
 	s.Description = sinkInfo.Description
 	s.Card = sinkInfo.Card
@@ -292,10 +292,15 @@ func (s *Sink) update(sinkInfo *pulse.Sink) {
 	s.props = sinkInfo.PropList
 	s.PropsMu.Unlock()
 
-	if activePortChanged && s.audio.defaultSinkName == s.Name {
-		logger.Debugf("default sink update active port %s", sinkInfo.ActivePort.Name)
-		s.audio.resumeSinkConfig(s)
+	defaultSink := s.audio.defaultSink
+	if defaultSink != nil {
+		if activePortChanged && defaultSink.Name == s.Name {
+			logger.Debugf("default sink update active port %s", sinkInfo.ActivePort.Name)
+			a := s.audio
+			a.resumeSinkConfig(s)
+		}
 	}
+
 }
 
 func (s *Sink) GetMeter() (meter dbus.ObjectPath, busErr *dbus.Error) {

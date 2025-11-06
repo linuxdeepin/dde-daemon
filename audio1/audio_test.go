@@ -41,23 +41,6 @@ func Test_isPortExists(t *testing.T) {
 	assert.Equal(t, isPortExists("MG", tests), false)
 }
 
-func Test_getBestPort(t *testing.T) {
-	var tests = []pulse.PortInfo{
-		{Name: "MG-T1S", Description: "audio", Priority: 1, Available: pulse.AvailableTypeUnknow},
-		{Name: "MG-T1S", Description: "audio", Priority: 2, Available: pulse.AvailableTypeNo},
-		{Name: "MG-T1S", Description: "audio", Priority: 3, Available: pulse.AvailableTypeYes},
-		{Description: "audio", Priority: 4, Available: pulse.AvailableTypeUnknow},
-		{Description: "audio", Priority: 5, Available: pulse.AvailableTypeNo},
-		{Description: "audio", Priority: 6, Available: pulse.AvailableTypeYes},
-		{Name: "MG-T1S", Description: "audio", Priority: 7, Available: pulse.AvailableTypeUnknow},
-		{Name: "MG-T1S", Description: "audio", Priority: 8, Available: pulse.AvailableTypeNo},
-		{Name: "MG-T1S", Description: "audio", Priority: 9, Available: pulse.AvailableTypeYes},
-	}
-	var ret = pulse.PortInfo{Name: "MG-T1S", Description: "audio", Priority: 9, Available: pulse.AvailableTypeYes}
-	ret1 := getBestPort(tests)
-	assert.Equal(t, ret1, ret)
-}
-
 func Test_isStrvEqual(t *testing.T) {
 	var str = []string{"test1", "test2", "test3", "test4"}
 	var str1 = []string{"test1", "test2", "test4", "test3"}
