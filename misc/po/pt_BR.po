@@ -374,7 +374,7 @@ msgstr "Captura de tela estendida"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:26
 msgid "File manager"
-msgstr "Gerenciador de arquivos"
+msgstr "Gerenciador de Arquivos"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:27
 msgid "Disable Touchpad"
