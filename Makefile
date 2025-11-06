@@ -76,7 +76,6 @@ TEST = \
     ${GOPKG_PREFIX}/system/keyevent1 \
     ${GOPKG_PREFIX}/system/lang \
     ${GOPKG_PREFIX}/system/power1 \
-    ${GOPKG_PREFIX}/system/power_manager1 \
     ${GOPKG_PREFIX}/system/resource_ctl \
     ${GOPKG_PREFIX}/system/scheduler \
     ${GOPKG_PREFIX}/system/swapsched1 \
