@@ -1,3 +1,15 @@
+dde-daemon (6.1.63) unstable; urgency=medium
+
+  * refactor: optimize audio code and fix issues
+  * fix: fix bluetooth audio port priority assignment
+  * chore: remove powermanager module
+  * refactor: replace pactl scripts with pulseaudio API calls
+  * fix: remove virtual device filtering for bluetooth touchpad
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR
+  * fix: code optimization
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 07 Nov 2025 10:13:39 +0800
+
 dde-daemon (6.1.62) unstable; urgency=medium
 
   * fix: update notification center D-Bus interface paths
