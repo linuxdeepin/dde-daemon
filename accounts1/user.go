@@ -522,54 +522,6 @@ func (u *User) getAccountType() int32 {
 	return users.UserTypeStandard
 }
 
-func (u *User) checkIsControlCenter(sender dbus.Sender) bool {
-	pid, err := u.service.GetConnPID(string(sender))
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	p := procfs.Process(pid)
-	exe, err := p.Exe()
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	if exe == controlCenterPath {
-		return true
-	}
-
-	return false
-}
-
-func (u *User) checkIsDeepinDaemon(sender dbus.Sender) bool {
-	pid, err := u.service.GetConnPID(string(sender))
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	p := procfs.Process(pid)
-	exe, err := p.Exe()
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	abs, err := filepath.Abs(exe)
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	if strings.HasPrefix(abs, deepinDaemonDir) {
-		return true
-	}
-
-	return false
-}
-
 func (u *User) checkAuth(sender dbus.Sender, selfPass bool, actionId string) error {
 	uid, err := u.service.GetConnUID(string(sender))
 	if err != nil {

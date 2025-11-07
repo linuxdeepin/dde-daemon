@@ -613,41 +613,20 @@ func getOSNum(entries []Entry) uint32 {
 }
 
 func checkInvokePermission(service *dbusutil.Service, sender dbus.Sender) error {
-	uid, err := service.GetConnUID(string(sender))
+	// 所有用户都需要通过 polkit 鉴权
+	if noCheckAuth {
+		logger.Warning("check auth disabled")
+		return nil
+	}
+
+	isAuthorized, err := checkAuth(string(sender), polikitActionIdCommon)
 	if err != nil {
 		return err
 	}
-	if uid != 0 {
-		pid, err := service.GetConnPID(string(sender))
-		if err != nil {
-			return err
-		}
-		p := procfs.Process(pid)
-		cmd, err := p.Exe()
-		if err != nil {
-			// 当调用者在使用过程中发生了更新,则在获取该进程的exe时,会出现lstat xxx (deleted)此类的error,如果发生的是覆盖,则该路径依旧存在,因此增加以下判断
-			pErr, ok := err.(*os.PathError)
-			if ok {
-				if os.IsNotExist(pErr.Err) {
-					errExecPath := strings.Replace(pErr.Path, "(deleted)", "", -1)
-					oldExecPath := strings.TrimSpace(errExecPath)
-					if dutils.IsFileExist(oldExecPath) {
-						cmd = oldExecPath
-						err = nil
-					}
-				}
-			} else {
-				return err
-			}
-		}
-		if cmd == "/usr/bin/dde-control-center" || cmd == "/usr/libexec/lastore-daemon/lastore-daemon" {
-			return nil
-		} else {
-			return fmt.Errorf("not allow %v call this method", sender)
-		}
-	} else {
-		return nil
+	if !isAuthorized {
+		return errAuthFailed
 	}
+	return nil
 }
 
 func getFstartState() (bool, int) {

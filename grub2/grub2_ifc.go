@@ -33,10 +33,6 @@ func (*Grub2) GetInterfaceName() string {
 // GetSimpleEntryTitles return entry titles only in level one and will
 // filter out some useless entries such as sub-menus and "memtest86+".
 func (grub *Grub2) GetSimpleEntryTitles(sender dbus.Sender) (titles []string, busErr *dbus.Error) {
-	err := checkInvokePermission(grub.service, sender)
-	if err != nil {
-		return nil, dbusutil.ToError(err)
-	}
 	grub.service.DelayAutoQuit()
 
 	grub.readEntries()
@@ -56,10 +52,7 @@ func (grub *Grub2) GetSimpleEntryTitles(sender dbus.Sender) (titles []string, bu
 }
 
 func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) (gfxModes []string, busErr *dbus.Error) {
-	err := checkInvokePermission(g.service, sender)
-	if err != nil {
-		return nil, dbusutil.ToError(err)
-	}
+	// 只读操作，无需鉴权
 	pid, err := g.service.GetConnPID(string(sender))
 	if err != nil {
 		return nil, dbusutil.ToError(err)
