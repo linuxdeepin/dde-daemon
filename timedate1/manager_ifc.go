@@ -15,7 +15,7 @@ import (
 	. "github.com/linuxdeepin/go-lib/gettext"
 )
 
-var customTimeZoneList = []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian", "Asia/Urumqi"}
+var customTimeZoneList = []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian", "Asia/Urumqi", "Asia/Chongqing"}
 
 func (m *Manager) Reset() *dbus.Error {
 	return m.SetNTP(true)
@@ -26,7 +26,7 @@ func (m *Manager) Reset() *dbus.Error {
 // The time may be specified in the format '2015' '1' '1' '18' '18' '18' '8'.
 func (m *Manager) SetDate(year, month, day, hour, min, sec, nsec int32) *dbus.Error {
 	timeZone := m.Timezone
-	customTimeZoneList := []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian", "Asia/Urumqi"}
+	customTimeZoneList := []string{"Asia/Chengdu", "Asia/Beijing", "Asia/Nanjing", "Asia/Wuhan", "Asia/Xian", "Asia/Urumqi", "Asia/Chongqing"}
 	if strv.Strv(customTimeZoneList).Contains(m.Timezone) {
 		timeZone = "Asia/Shanghai"
 	}
