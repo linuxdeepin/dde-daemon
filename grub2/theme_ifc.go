@@ -53,10 +53,7 @@ func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string)
 }
 
 func (theme *Theme) GetBackground(sender dbus.Sender) (background string, busErr *dbus.Error) {
-	err := checkInvokePermission(theme.service, sender)
-	if err != nil {
-		return "", dbusutil.ToError(err)
-	}
+	// 只读操作，无需鉴权
 	theme.service.DelayAutoQuit()
 
 	theme.g.PropsMu.RLock()
