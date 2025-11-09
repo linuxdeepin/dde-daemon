@@ -414,7 +414,7 @@ msgstr "Nachrichtenzentrale"
 #: ../../keybinding1/shortcuts/id_name_map.go:39
 #: ../../keybinding1/shortcuts/id_name_map.go:47
 msgid "Switch Layout"
-msgstr "Wechsele Layout"
+msgstr "Wechsle Layout"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:40
 msgid "Toggle multiple displays"
@@ -422,35 +422,35 @@ msgstr "Mehrere Bildschirme hin-und herschalten"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to left workspace"
-msgstr "Wechsele zum linken Arbeitsbereich"
+msgstr "Wechsle zum linken Arbeitsbereich"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:67
 msgid "Switch to right workspace"
-msgstr "Wechsele zum rechten Arbeitsbereich"
+msgstr "Wechsle zum rechten Arbeitsbereich"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:68
 msgid "Switch to upper workspace"
-msgstr "Wechsele zum oberen Arbeitsbereich"
+msgstr "Wechsle zum oberen Arbeitsbereich"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:69
 msgid "Switch to lower workspace"
-msgstr "Wechsele zum unteren Arbeitsbereich"
+msgstr "Wechsle zum unteren Arbeitsbereich"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:71
 msgid "Switch similar windows"
-msgstr "Wechsele ähnliche Fenster"
+msgstr "Wechsle ähnliche Fenster"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:72
 msgid "Switch similar windows in reverse"
-msgstr "Wechsele ähnliche Fenster zurück"
+msgstr "Wechsle ähnliche Fenster rückwärts"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:73
 msgid "Switch windows"
-msgstr "Wechsele Fenster"
+msgstr "Wechsle Fenster"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:74
 msgid "Switch windows in reverse"
-msgstr "Wechsele Fenster zurück"
+msgstr "Wechsle Fenster rückwärts"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Maximize window"
