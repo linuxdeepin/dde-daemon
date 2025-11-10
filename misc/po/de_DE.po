@@ -478,19 +478,19 @@ msgstr "Fenstergröße ändern"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to left workspace"
-msgstr "Zum linken Arbeitsbereich bewegen"
+msgstr "Zum linken Arbeitsbereich gehen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to right workspace"
-msgstr "Zum rechten Arbeitsbereich bewegen"
+msgstr "Zum rechten Arbeitsbereich gehen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to upper workspace"
-msgstr "Zum oberen Arbeitsbereich bewegen"
+msgstr "Zum oberen Arbeitsbereich gehen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:118
 msgid "Move to lower workspace"
-msgstr "Zum unteren Arbeitsbereich bewegen"
+msgstr "Zum unteren Arbeitsbereich gehen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of all workspaces"
@@ -899,7 +899,7 @@ msgstr "Das 802.11 WLAN-Netzwerk konnte nicht gefunden werden"
 
 #: ../../network1/state_handler.go:77
 msgid "A secondary connection of the base connection failed"
-msgstr ""
+msgstr "Eine sekundäre Verbindung der Basisverbindung schlug fehl"
 
 #: ../../network1/state_handler.go:80
 msgid "DCB or FCoE setup failed"
