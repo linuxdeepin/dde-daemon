@@ -6,10 +6,11 @@ package systemdunit
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/godbus/dbus/v5"
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"strings"
 )
 
 type TransientUnit struct {
@@ -39,6 +40,13 @@ func CheckUnitExist(conn *dbus.Conn, name string) bool {
 
 func (t *TransientUnit) StartTransientUnit() error {
 	systemd := systemd1.NewManager(t.Dbus)
+	if CheckUnitExist(t.Dbus, t.UnitName) {
+		err := systemd.ResetFailedUnit(0, t.UnitName)
+		if err != nil {
+			return fmt.Errorf("failed to reset failed unit: %v", err)
+		}
+	}
+
 	var properties []systemd1.Property
 	var aux []systemd1.PropertyCollection
 	properties = append(properties, systemd1.Property{"Type", dbus.MakeVariant(t.Type)})

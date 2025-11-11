@@ -76,5 +76,10 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetPlymouthTheme,
 			InArgs: []string{"themeName"},
 		},
+		{
+			Name:   "SetReadOnlyProtection",
+			Fn:     v.SetReadOnlyProtection,
+			InArgs: []string{"enable"},
+		},
 	}
 }
