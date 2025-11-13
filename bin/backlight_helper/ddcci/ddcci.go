@@ -113,11 +113,6 @@ func newDDCCI() (*ddcci, error) {
 		displayHandleMap: make(map[string]*displayHandle),
 	}
 
-	status := C.ddca_init2((*C.char)(unsafe.Pointer(nil)), C.DDCA_SYSLOG_NOTICE, C.DDCA_INIT_OPTIONS_CLIENT_OPENED_SYSLOG, (***C.char)(unsafe.Pointer(nil)))
-	if status < C.int(0) {
-		return nil, fmt.Errorf("brightness: Error ddcci init: %d", status)
-	}
-
 	err := ddc.RefreshDisplays()
 	if err != nil {
 		return nil, err
