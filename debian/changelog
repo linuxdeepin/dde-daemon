@@ -1,3 +1,11 @@
+dde-daemon (6.1.64) unstable; urgency=medium
+
+  * feat: add read-only protection switch and translations
+  * fix: resolve timezone display issue when switching to Beijing Time
+  * feat: 安全整改,去掉部分dbus通过GetConnPID鉴权二进制路径的逻辑
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 13 Nov 2025 19:43:08 +0800
+
 dde-daemon (6.1.63) unstable; urgency=medium
 
   * refactor: optimize audio code and fix issues
