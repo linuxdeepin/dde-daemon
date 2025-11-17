@@ -1250,16 +1250,15 @@ func (u *User) SetSecretQuestions(sender dbus.Sender, list map[int][]byte) *dbus
 }
 
 func (u *User) SetSecretKey(sender dbus.Sender, secretKey string) *dbus.Error {
-	senderName := u.getSenderDBus(sender)
-	logger.Debugf("[SetSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, u.UserName)
-	if !strings.Contains(senderName, controlCenter) {
-		return dbusutil.ToError(errors.New("invalid sender"))
+	err := u.checkAuth(sender, true, polkitActionUserAdministration)
+	if err != nil {
+		return dbusutil.ToError(err)
 	}
 
 	if u.uadpInterface == nil {
 		return nil
 	}
-	err := u.uadpInterface.Set(0, u.UserName, []uint8(secretKey))
+	err = u.uadpInterface.Set(0, u.UserName, []uint8(secretKey))
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -1267,10 +1266,9 @@ func (u *User) SetSecretKey(sender dbus.Sender, secretKey string) *dbus.Error {
 }
 
 func (u *User) GetSecretKey(sender dbus.Sender, username string) (string, *dbus.Error) {
-	senderName := u.getSenderDBus(sender)
-	logger.Debugf("[GetSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, username)
-	if !(strings.Contains(senderName, resetPasswordDia) || strings.Contains(senderName, controlCenter)) {
-		return "", dbusutil.ToError(errors.New("invalid sender"))
+	err := u.checkAuth(sender, true, polkitActionUserAdministration)
+	if err != nil {
+		return "", dbusutil.ToError(err)
 	}
 	if u.uadpInterface == nil {
 		return "", nil
@@ -1283,16 +1281,15 @@ func (u *User) GetSecretKey(sender dbus.Sender, username string) (string, *dbus.
 }
 
 func (u *User) DeleteSecretKey(sender dbus.Sender) *dbus.Error {
-	senderName := u.getSenderDBus(sender)
-	logger.Debugf("[DeleteSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, u.UserName)
-	if !strings.Contains(senderName, controlCenter) {
-		return dbusutil.ToError(errors.New("invalid sender"))
+	err := u.checkAuth(sender, true, polkitActionUserAdministration)
+	if err != nil {
+		return dbusutil.ToError(err)
 	}
 
 	if u.uadpInterface == nil {
 		return nil
 	}
-	err := u.uadpInterface.Delete(0, u.UserName)
+	err = u.uadpInterface.Delete(0, u.UserName)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
