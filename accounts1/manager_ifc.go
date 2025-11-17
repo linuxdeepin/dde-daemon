@@ -20,8 +20,6 @@ import (
 	"github.com/linuxdeepin/dde-daemon/accounts1/users"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/gettext"
-	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/users/passwd"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
@@ -303,19 +301,6 @@ func (m *Manager) IsUsernameValid(sender dbus.Sender, name string) (valid bool,
 		busErr = dbusutil.ToError(err)
 	}()
 
-	pid, err := m.service.GetConnPID(string(sender))
-	if err != nil {
-		return
-	}
-
-	p := procfs.Process(pid)
-	environ, err := p.Environ()
-	if err != nil {
-		return
-	}
-
-	locale := environ.Get("LANG")
-
 	// 如果新建用户使用的用户名和域用户名一致，提示用户该用户已经存在
 	if m.isDomainUserExist(name) {
 		info = checkers.ErrCodeExist.Error()
@@ -328,11 +313,6 @@ func (m *Manager) IsUsernameValid(sender dbus.Sender, name string) (valid bool,
 	}
 
 	msg = info.Error.Error()
-	logger.Debug("locale:", locale)
-	if locale != "" {
-		gettext.SetLocale(gettext.LcAll, locale)
-		msg = gettext.Tr(msg)
-	}
 	code = int32(info.Code)
 	return
 }

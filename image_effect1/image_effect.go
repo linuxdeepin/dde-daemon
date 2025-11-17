@@ -15,8 +15,8 @@ import (
 	"time"
 
 	dbus "github.com/godbus/dbus/v5"
+	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/procfs"
 	"golang.org/x/xerrors"
 )
 
@@ -146,30 +146,18 @@ func (ie *ImageEffect) Get(sender dbus.Sender, effect, filename string) (outputF
 		err = xerrors.Errorf("failed to get conn uid: %w", err)
 		return
 	}
-	pid, err := ie.service.GetConnPID(string(sender))
-	if err != nil {
-		err = xerrors.Errorf("failed to get conn pid: %w", err)
-		return
-	}
 
-	usr, err := user.LookupId(string(strconv.Itoa(int(uid))))
+	usr, err := user.LookupId(strconv.Itoa(int(uid)))
 	if err != nil {
 		err = xerrors.Errorf("failed to get user: %w", err)
 		return
 	}
 
-	process := procfs.Process(pid)
-	processEnv, err := process.Environ()
+	// 通过 login1 获取用户 session 的环境变量
+	envVars, err := getSessionEnvVars(ie.service, sender, uid)
 	if err != nil {
-		err = xerrors.Errorf("failed to get process %d environ: %w", pid, err)
+		err = xerrors.Errorf("failed to get session env vars: %w", err)
 		return
-	}
-
-	var envVarNames = []string{"DISPLAY", "XDG_RUNTIME_DIR"}
-	var envVars = make([]string, len(envVarNames))
-	for idx, envVarName := range envVarNames {
-		envVarVal := processEnv.Get(envVarName)
-		envVars[idx] = envVarName + "=" + envVarVal
 	}
 
 	outputFile, err = ie.get(usr.Username, effect, filename, envVars)
@@ -322,4 +310,61 @@ func (ie *ImageEffect) delete(effect, filename string) (err error) {
 		}
 	}
 	return
+}
+
+// getSessionEnvVars 通过 login1 获取用户 session 的环境变量
+// 返回 DISPLAY 和 XDG_RUNTIME_DIR 环境变量
+func getSessionEnvVars(service *dbusutil.Service, sender dbus.Sender, uid uint32) ([]string, error) {
+	// 获取系统总线连接
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		return nil, err
+	}
+
+	// 创建 login1 Manager
+	loginManager := login1.NewManager(systemConn)
+
+	// 通过 UID 获取用户对象路径
+	userPath, err := loginManager.GetUser(0, uid)
+	if err != nil {
+		return nil, err
+	}
+
+	// 创建 User 对象
+	user, err := login1.NewUser(systemConn, userPath)
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取用户的 Display session（主要的图形会话）
+	sessionInfo, err := user.Display().Get(0)
+	if err != nil {
+		return nil, err
+	}
+
+	// 创建 Session 对象
+	session, err := login1.NewSession(systemConn, sessionInfo.Path)
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取 DISPLAY 变量
+	display, err := session.Display().Get(0)
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取 XDG_RUNTIME_DIR（从 login1 User 对象）
+	runtimePath, err := user.RuntimePath().Get(0)
+	if err != nil {
+		return nil, err
+	}
+
+	// 返回环境变量数组
+	envVars := []string{
+		"DISPLAY=" + display,
+		"XDG_RUNTIME_DIR=" + runtimePath,
+	}
+
+	return envVars, nil
 }

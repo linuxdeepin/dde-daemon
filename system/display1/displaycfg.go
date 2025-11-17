@@ -5,11 +5,8 @@
 package display1
 
 import (
-	"bufio"
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -20,7 +17,6 @@ import (
 	"github.com/linuxdeepin/dde-daemon/common/cpuinfo"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 const (
@@ -40,11 +36,8 @@ type Display struct {
 	cfg     *Config
 	cfgMu   sync.Mutex
 
-	rendererWaylandBlackList []string
-	propMu                   sync.RWMutex
-	doDetectMu               sync.Mutex
-	SupportLabc              bool `prop:"access:r"`
-	AutoBacklightEnabled     bool `prop:"access:rw"`
+	SupportLabc          bool `prop:"access:r"`
+	AutoBacklightEnabled bool `prop:"access:rw"`
 
 	signals *struct {
 		ConfigUpdated struct {
@@ -67,24 +60,6 @@ func newDisplay(service *dbusutil.Service) *Display {
 		}
 	}
 	d.cfg = cfg
-	rendererConfig, err := loadRendererConfig(rendererConfigPath)
-	if err != nil {
-		d.rendererWaylandBlackList = []string{
-			"llvmpipe",
-		} // 读取配置文件失败时，使用默认项，默认llvmpipe不支持wayland
-		if !os.IsNotExist(err) {
-			logger.Warning(err)
-		} else {
-			var cfg RendererConfig
-			cfg.BlackList = d.rendererWaylandBlackList
-			err := genRendererConfig(&cfg, rendererConfigPath) // 无该配置文件时，生成默认配置文件
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
-	} else {
-		d.rendererWaylandBlackList = rendererConfig.BlackList
-	}
 
 	content, err := os.ReadFile(supportLabcFilePath)
 	if err != nil {
@@ -248,102 +223,7 @@ func (d *Display) SupportWayland(sender dbus.Sender) (bool, *dbus.Error) {
 	if log.LevelDebug == logger.GetLogLevel() { // debug情况下，默认支持wayland，方便虚拟机调试
 		return true, nil
 	}
-	rendererConfig, err := loadRendererConfig(rendererConfigPath)
-	if err != nil {
-		logger.Warning(err)
-	}
-	d.propMu.Lock()
-	d.rendererWaylandBlackList = rendererConfig.BlackList
-	d.propMu.Unlock()
-
-	supportWayland, err := d.doDetectSupportWayland(sender)
-	return supportWayland, dbusutil.ToError(err)
-}
-
-func (d *Display) doDetectSupportWayland(sender dbus.Sender) (bool, error) {
-	d.doDetectMu.Lock()
-	defer d.doDetectMu.Unlock()
-	if binExist("glxinfo") {
-		pid, err := d.service.GetConnPID(string(sender))
-		if err != nil {
-			logger.Warning(err)
-			return false, err
-		}
-
-		p := procfs.Process(pid)
-		environ, err := p.Environ()
-		if err != nil {
-			logger.Warning(err)
-			return false, err
-		}
-		execPath, err := p.Exe()
-		if err != nil {
-			logger.Warning(err)
-			return false, err
-		}
-		var cmd *exec.Cmd
-		if execPath == "/usr/bin/lightdm-deepin-greeter" {
-			cmd = exec.Command("runuser", "-u", "lightdm", "glxinfo") // runuser -u lightdm glxinfo
-		} else {
-			cmd = exec.Command("glxinfo")
-		}
-		environ = append(os.Environ(), environ.Get("DISPLAY"), "LC_ALL=C")
-		cmd.Env = environ
-		outPipe, err := cmd.StdoutPipe()
-		if err != nil {
-			logger.Warning(err)
-			return false, err
-		}
-		defer outPipe.Close() // 确保管道被关闭
-
-		reader := bufio.NewReader(outPipe)
-		err = cmd.Start()
-		if err != nil {
-			logger.Warning(err)
-			return false, err
-		}
-		defer cmd.Wait() // 确保子进程被正确回收
-
-		for {
-			line, err := reader.ReadBytes('\n')
-			if err != nil {
-				if io.EOF == err {
-					break
-				}
-				logger.Warning(err)
-				return false, err
-			}
-
-			if bytes.Contains(line, []byte("OpenGL renderer string:")) {
-				// 待判断字段
-				d.propMu.RLock()
-				blackList := d.rendererWaylandBlackList
-				d.propMu.RUnlock()
-				// 当有一个renderer满足条件，即可表示支持wayland
-				renderer := string(bytes.TrimSpace(bytes.Replace(line, []byte("OpenGL renderer string:"), []byte(""), 1)))
-				logger.Debug("renderer: ", renderer)
-				if renderer == "" {
-					break
-				}
-				for i, blackRenderer := range blackList {
-					if strings.Contains(renderer, blackRenderer) { // 该renderer包含黑名单的显卡，表示该renderer不支持wayland
-						break
-					}
-					if i == len(blackList)-1 { // 黑名单中全部未命中，表示该显卡支持
-						return true, nil
-					}
-				}
-			}
-		}
-	} else {
-		return !isInVM(), nil // 如果mesa-utils包没有安装，则直接判断是否在虚拟环境中
-	}
-	return false, nil
-}
-
-func binExist(bin string) bool {
-	_, err := exec.LookPath(bin)
-	return err == nil
+	return !isInVM(), nil
 }
 
 func isInVM() bool {
