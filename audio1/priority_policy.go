@@ -91,7 +91,8 @@ type Position struct {
 type PriorityPort struct {
 	CardName string
 	PortName string
-	PortType int // 部分声卡需要在Property里判断类型，只有CardName和PortName不足以用来判断PortType，因此添加此项
+	PortType int    // 部分声卡需要在Property里判断类型，只有CardName和PortName不足以用来判断PortType，因此添加此项
+	Priority uint32 // 端口权重，用于排序
 }
 
 // 端口实例优先级列表
@@ -187,8 +188,44 @@ func (pp *PriorityPolicy) InsertPort(card *pulse.Card, port *pulse.CardPortInfo)
 		CardName: card.Name,
 		PortName: port.Name,
 		PortType: tp,
+		Priority: port.Priority,
 	}
-	// 新端口添加到队列最前
+
+	pp.insertByPriority(newPort, tp)
+}
+
+// 为了解决pms: BUG-340227, 声卡端口会变化的情况
+// insertByPriority 按 priority 插入端口，如果队列中已存在该声卡的端口，
+// 遍历队列找到最后一个权重大于新端口的同声卡端口，插入到其后面，否则插入到队头
+func (pp *PriorityPolicy) insertByPriority(newPort *PriorityPort, tp int) {
+	insertAfterIndex := -1 // 记录最后一个权重大于新端口的同声卡端口位置
+
+	// 遍历队列
+	for i, existingPort := range pp.Ports[tp] {
+		// 如果是相同声卡
+		if existingPort.CardName == newPort.CardName {
+			// 如果该端口权重大于（不能等于）新端口，记录位置
+			if existingPort.Priority > newPort.Priority {
+				insertAfterIndex = i
+			}
+		}
+	}
+
+	// 如果找到了权重大于新端口的同声卡端口，插入到该位置之后
+	if insertAfterIndex != -1 {
+		insertIndex := insertAfterIndex + 1
+		// 如果是插入到末尾
+		if insertIndex >= len(pp.Ports[tp]) {
+			pp.Ports[tp] = append(pp.Ports[tp], newPort)
+		} else {
+			// 插入到中间位置
+			pp.Ports[tp] = append(pp.Ports[tp][:insertIndex],
+				append([]*PriorityPort{newPort}, pp.Ports[tp][insertIndex:]...)...)
+		}
+		return
+	}
+
+	// 否则插入到队头
 	pp.Ports[tp] = append([]*PriorityPort{newPort}, pp.Ports[tp]...)
 }
 
@@ -237,6 +274,7 @@ func (pp *PriorityPolicy) SetTheFirstPort(cardName string, portName string, avai
 					CardName: p.CardName,
 					PortName: p.PortName,
 					PortType: p.PortType,
+					Priority: p.Priority,
 				}
 				targetType = tp
 				// 从列表中删除这个端口
