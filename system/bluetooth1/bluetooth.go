@@ -876,7 +876,7 @@ func (b *SysBluetooth) getAdapter(adapterPath dbus.ObjectPath) (adapter *adapter
 	adapter = b.adapters[adapterPath]
 	if adapter == nil {
 		err = fmt.Errorf("adapter not exists %s", adapterPath)
-		logger.Error(err)
+		logger.Warning(err)
 		return
 	}
 	return

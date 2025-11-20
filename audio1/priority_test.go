@@ -252,3 +252,351 @@ func Test_SetTheFirstPort(t *testing.T) {
 		assert.Equal(t, "headset1", firstPort.PortName)
 	})
 }
+
+func Test_insertByPriority(t *testing.T) {
+	// 测试用例1: 插入到空队列
+	t.Run("insert to empty queue", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		newPort := &PriorityPort{
+			CardName: "card1",
+			PortName: "bt1",
+			PortType: PortTypeBluetooth,
+			Priority: 20000,
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 1, len(pp.Ports[PortTypeBluetooth]))
+		assert.Equal(t, "card1", pp.Ports[PortTypeBluetooth][0].CardName)
+		assert.Equal(t, uint32(20000), pp.Ports[PortTypeBluetooth][0].Priority)
+	})
+
+	// 测试用例2: 新端口权重最大，插入到队头
+	t.Run("insert port with highest priority to head", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
+			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth, Priority: 20000},
+			{CardName: "card1", PortName: "bt2", PortType: PortTypeBluetooth, Priority: 10000},
+		}
+
+		newPort := &PriorityPort{
+			CardName: "card1",
+			PortName: "bt3",
+			PortType: PortTypeBluetooth,
+			Priority: 25000, // 最高权重
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 3, len(pp.Ports[PortTypeBluetooth]))
+		assert.Equal(t, "bt3", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, uint32(25000), pp.Ports[PortTypeBluetooth][0].Priority)
+		assert.Equal(t, "bt1", pp.Ports[PortTypeBluetooth][1].PortName)
+		assert.Equal(t, "bt2", pp.Ports[PortTypeBluetooth][2].PortName)
+	})
+
+	// 测试用例3: 新端口权重最小，插入到最后一个同声卡端口之后
+	t.Run("insert port with lowest priority after last same card port", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
+			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth, Priority: 20000},
+			{CardName: "card1", PortName: "bt2", PortType: PortTypeBluetooth, Priority: 15000},
+		}
+
+		newPort := &PriorityPort{
+			CardName: "card1",
+			PortName: "bt3",
+			PortType: PortTypeBluetooth,
+			Priority: 10000, // 最低权重
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 3, len(pp.Ports[PortTypeBluetooth]))
+		assert.Equal(t, "bt1", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, "bt2", pp.Ports[PortTypeBluetooth][1].PortName)
+		assert.Equal(t, "bt3", pp.Ports[PortTypeBluetooth][2].PortName)
+		assert.Equal(t, uint32(10000), pp.Ports[PortTypeBluetooth][2].Priority)
+	})
+
+	// 测试用例4: 新端口权重居中，插入到中间位置
+	t.Run("insert port with middle priority to middle position", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
+			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth, Priority: 20000},
+			{CardName: "card1", PortName: "bt2", PortType: PortTypeBluetooth, Priority: 10000},
+		}
+
+		newPort := &PriorityPort{
+			CardName: "card1",
+			PortName: "bt3",
+			PortType: PortTypeBluetooth,
+			Priority: 15000, // 中间权重
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 3, len(pp.Ports[PortTypeBluetooth]))
+		assert.Equal(t, "bt1", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, uint32(20000), pp.Ports[PortTypeBluetooth][0].Priority)
+		assert.Equal(t, "bt3", pp.Ports[PortTypeBluetooth][1].PortName)
+		assert.Equal(t, uint32(15000), pp.Ports[PortTypeBluetooth][1].Priority)
+		assert.Equal(t, "bt2", pp.Ports[PortTypeBluetooth][2].PortName)
+		assert.Equal(t, uint32(10000), pp.Ports[PortTypeBluetooth][2].Priority)
+	})
+
+	// 测试用例5: 权重相等，插入到队头（不能等于）
+	t.Run("insert port with equal priority to head", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
+			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth, Priority: 20000},
+		}
+
+		newPort := &PriorityPort{
+			CardName: "card1",
+			PortName: "bt2",
+			PortType: PortTypeBluetooth,
+			Priority: 20000, // 相等权重
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 2, len(pp.Ports[PortTypeBluetooth]))
+		// 因为权重相等（不大于），所以插入到队头
+		assert.Equal(t, "bt2", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, "bt1", pp.Ports[PortTypeBluetooth][1].PortName)
+	})
+
+	// 测试用例6: 不同声卡，插入到队头
+	t.Run("insert port from different card to head", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
+			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth, Priority: 20000},
+			{CardName: "card1", PortName: "bt2", PortType: PortTypeBluetooth, Priority: 10000},
+		}
+
+		newPort := &PriorityPort{
+			CardName: "card2", // 不同声卡
+			PortName: "bt3",
+			PortType: PortTypeBluetooth,
+			Priority: 15000,
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 3, len(pp.Ports[PortTypeBluetooth]))
+		// 不同声卡，插入到队头
+		assert.Equal(t, "card2", pp.Ports[PortTypeBluetooth][0].CardName)
+		assert.Equal(t, "bt3", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, "card1", pp.Ports[PortTypeBluetooth][1].CardName)
+		assert.Equal(t, "card1", pp.Ports[PortTypeBluetooth][2].CardName)
+	})
+
+	// 测试用例7: 多个同声卡端口，插入到正确位置
+	t.Run("insert port among multiple same card ports", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
+			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth, Priority: 30000},
+			{CardName: "card1", PortName: "bt2", PortType: PortTypeBluetooth, Priority: 20000},
+			{CardName: "card1", PortName: "bt3", PortType: PortTypeBluetooth, Priority: 10000},
+		}
+
+		newPort := &PriorityPort{
+			CardName: "card1",
+			PortName: "bt4",
+			PortType: PortTypeBluetooth,
+			Priority: 15000, // 介于 20000 和 10000 之间
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 4, len(pp.Ports[PortTypeBluetooth]))
+		assert.Equal(t, "bt1", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, uint32(30000), pp.Ports[PortTypeBluetooth][0].Priority)
+		assert.Equal(t, "bt2", pp.Ports[PortTypeBluetooth][1].PortName)
+		assert.Equal(t, uint32(20000), pp.Ports[PortTypeBluetooth][1].Priority)
+		assert.Equal(t, "bt4", pp.Ports[PortTypeBluetooth][2].PortName)
+		assert.Equal(t, uint32(15000), pp.Ports[PortTypeBluetooth][2].Priority)
+		assert.Equal(t, "bt3", pp.Ports[PortTypeBluetooth][3].PortName)
+		assert.Equal(t, uint32(10000), pp.Ports[PortTypeBluetooth][3].Priority)
+	})
+
+	// 测试用例8: 混合不同声卡，只考虑同声卡端口
+	t.Run("insert port with mixed cards in queue", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
+			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth, Priority: 25000},
+			{CardName: "card2", PortName: "bt2", PortType: PortTypeBluetooth, Priority: 22000},
+			{CardName: "card1", PortName: "bt3", PortType: PortTypeBluetooth, Priority: 15000},
+			{CardName: "card2", PortName: "bt4", PortType: PortTypeBluetooth, Priority: 12000},
+		}
+
+		newPort := &PriorityPort{
+			CardName: "card1",
+			PortName: "bt5",
+			PortType: PortTypeBluetooth,
+			Priority: 20000, // 介于 card1 的 25000 和 15000 之间
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 5, len(pp.Ports[PortTypeBluetooth]))
+		// 应该插入到 card1 的 bt1 (25000) 之后
+		assert.Equal(t, "bt1", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, "bt5", pp.Ports[PortTypeBluetooth][1].PortName)
+		assert.Equal(t, uint32(20000), pp.Ports[PortTypeBluetooth][1].Priority)
+	})
+
+	// 测试用例9: 真实场景 - A2DP 和 HSP 端口
+	t.Run("real scenario - A2DP and HSP ports", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+
+		// 先插入 HSP (低权重)
+		hspPort := &PriorityPort{
+			CardName: "bluez_card.XX_XX_XX_XX_XX_XX",
+			PortName: "headset-head-unit",
+			PortType: PortTypeBluetooth,
+			Priority: 10000,
+		}
+		pp.insertByPriority(hspPort, PortTypeBluetooth)
+
+		// 再插入 A2DP (高权重)
+		a2dpPort := &PriorityPort{
+			CardName: "bluez_card.XX_XX_XX_XX_XX_XX",
+			PortName: "headset-output",
+			PortType: PortTypeBluetooth,
+			Priority: 20000,
+		}
+		pp.insertByPriority(a2dpPort, PortTypeBluetooth)
+
+		// A2DP 应该在 HSP 之前
+		assert.Equal(t, 2, len(pp.Ports[PortTypeBluetooth]))
+		assert.Equal(t, "headset-output", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, uint32(20000), pp.Ports[PortTypeBluetooth][0].Priority)
+		assert.Equal(t, "headset-head-unit", pp.Ports[PortTypeBluetooth][1].PortName)
+		assert.Equal(t, uint32(10000), pp.Ports[PortTypeBluetooth][1].Priority)
+	})
+
+	// 测试用例10: 边界情况 - 插入到末尾
+	t.Run("boundary case - insert at end", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
+			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth, Priority: 30000},
+			{CardName: "card1", PortName: "bt2", PortType: PortTypeBluetooth, Priority: 20000},
+		}
+
+		newPort := &PriorityPort{
+			CardName: "card1",
+			PortName: "bt3",
+			PortType: PortTypeBluetooth,
+			Priority: 5000, // 最低权重
+		}
+
+		pp.insertByPriority(newPort, PortTypeBluetooth)
+
+		assert.Equal(t, 3, len(pp.Ports[PortTypeBluetooth]))
+		// 应该插入到末尾
+		assert.Equal(t, "bt3", pp.Ports[PortTypeBluetooth][2].PortName)
+		assert.Equal(t, uint32(5000), pp.Ports[PortTypeBluetooth][2].Priority)
+	})
+}
+
+func Test_insertByPriority_AllEqualPriority(t *testing.T) {
+	// 测试所有端口权重相同的情况
+	t.Run("all ports have equal priority", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+
+		// 按顺序插入 4 个相同权重的端口
+		port1 := &PriorityPort{
+			CardName: "card1",
+			PortName: "port1",
+			PortType: PortTypeBluetooth,
+			Priority: 10000,
+		}
+		pp.insertByPriority(port1, PortTypeBluetooth)
+
+		port2 := &PriorityPort{
+			CardName: "card1",
+			PortName: "port2",
+			PortType: PortTypeBluetooth,
+			Priority: 10000,
+		}
+		pp.insertByPriority(port2, PortTypeBluetooth)
+
+		port3 := &PriorityPort{
+			CardName: "card1",
+			PortName: "port3",
+			PortType: PortTypeBluetooth,
+			Priority: 10000,
+		}
+		pp.insertByPriority(port3, PortTypeBluetooth)
+
+		port4 := &PriorityPort{
+			CardName: "card1",
+			PortName: "port4",
+			PortType: PortTypeBluetooth,
+			Priority: 10000,
+		}
+		pp.insertByPriority(port4, PortTypeBluetooth)
+
+		// 验证结果
+		assert.Equal(t, 4, len(pp.Ports[PortTypeBluetooth]))
+
+		// 当前行为：后插入的在前面（LIFO）
+		// 顺序应该是: port4, port3, port2, port1
+		assert.Equal(t, "port4", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, "port3", pp.Ports[PortTypeBluetooth][1].PortName)
+		assert.Equal(t, "port2", pp.Ports[PortTypeBluetooth][2].PortName)
+		assert.Equal(t, "port1", pp.Ports[PortTypeBluetooth][3].PortName)
+
+		// 所有端口权重都相同
+		for i := 0; i < 4; i++ {
+			assert.Equal(t, uint32(10000), pp.Ports[PortTypeBluetooth][i].Priority)
+		}
+	})
+
+	// 测试混合场景：部分相同权重
+	t.Run("mixed equal and different priorities", func(t *testing.T) {
+		pp := NewPriorityPolicy()
+
+		// 插入高权重端口
+		pp.insertByPriority(&PriorityPort{
+			CardName: "card1",
+			PortName: "high1",
+			PortType: PortTypeBluetooth,
+			Priority: 20000,
+		}, PortTypeBluetooth)
+
+		// 插入相同低权重端口
+		pp.insertByPriority(&PriorityPort{
+			CardName: "card1",
+			PortName: "low1",
+			PortType: PortTypeBluetooth,
+			Priority: 10000,
+		}, PortTypeBluetooth)
+
+		pp.insertByPriority(&PriorityPort{
+			CardName: "card1",
+			PortName: "low2",
+			PortType: PortTypeBluetooth,
+			Priority: 10000,
+		}, PortTypeBluetooth)
+
+		pp.insertByPriority(&PriorityPort{
+			CardName: "card1",
+			PortName: "low3",
+			PortType: PortTypeBluetooth,
+			Priority: 10000,
+		}, PortTypeBluetooth)
+
+		// 验证顺序
+		assert.Equal(t, 4, len(pp.Ports[PortTypeBluetooth]))
+		assert.Equal(t, "high1", pp.Ports[PortTypeBluetooth][0].PortName)
+		assert.Equal(t, uint32(20000), pp.Ports[PortTypeBluetooth][0].Priority)
+
+		// 相同权重的端口按 LIFO 顺序
+		assert.Equal(t, "low3", pp.Ports[PortTypeBluetooth][1].PortName)
+		assert.Equal(t, "low2", pp.Ports[PortTypeBluetooth][2].PortName)
+		assert.Equal(t, "low1", pp.Ports[PortTypeBluetooth][3].PortName)
+	})
+}
