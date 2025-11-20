@@ -550,27 +550,36 @@ func (lang *LangSelector) doGenerateLocale(locale string) error {
 		return err
 	}
 
-	select {
-	case <-time.NewTimer(10 * time.Minute).C:
-		return errors.New("wait success signal timed out")
-	case sig := <-sigChan:
-		if len(sig.Body) != 2 {
-			return errSignalBodyInvalid
-		}
-		genLocaleOk, ok := sig.Body[0].(bool)
-		if !ok {
-			return errSignalBodyInvalid
-		}
+	timer := time.NewTimer(10 * time.Minute)
+	defer timer.Stop()
 
-		failReason, ok := sig.Body[1].(string)
-		if !ok {
-			return errSignalBodyInvalid
-		}
+	for {
+		select {
+		case <-timer.C:
+			return errors.New("wait success signal timed out")
+		case sig := <-sigChan:
+			if sig.Path != dbus.ObjectPath("/org/deepin/dde/LocaleHelper1") || sig.Name != "org.deepin.dde.LocaleHelper1.Success" {
+				continue
+			}
 
-		if genLocaleOk {
-			return nil
-		} else {
-			return errors.New(failReason)
+			if len(sig.Body) != 2 {
+				return errSignalBodyInvalid
+			}
+			genLocaleOk, ok := sig.Body[0].(bool)
+			if !ok {
+				return errSignalBodyInvalid
+			}
+
+			failReason, ok := sig.Body[1].(string)
+			if !ok {
+				return errSignalBodyInvalid
+			}
+
+			if genLocaleOk {
+				return nil
+			} else {
+				return errors.New(failReason)
+			}
 		}
 	}
 }
