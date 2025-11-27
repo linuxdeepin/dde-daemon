@@ -28,4 +28,5 @@ int freeAllDisplaysWrapper() {
     if (fp_ddca_free_all_displays) {
         return fp_ddca_free_all_displays();
     }
+    return -1;
 }
