@@ -1,3 +1,13 @@
+dde-daemon (6.1.65) unstable; urgency=medium
+
+  * fix: fix sound card port priority ordering issue
+  * chore: 安全整改, 修改使用GetConnPID来获取用户的环境变量,改成使用GetConnUID
+  * fix: Fix the issue of failing to switch languages
+  * i18n: remove de_DE translation resources
+  * i18n: Updates for project Deepin Desktop Environment (#959)
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 27 Nov 2025 20:06:20 +0800
+
 dde-daemon (6.1.64) unstable; urgency=medium
 
   * feat: add read-only protection switch and translations
