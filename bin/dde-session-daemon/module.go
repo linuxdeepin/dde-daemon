@@ -35,7 +35,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/timedate1"
 	_ "github.com/linuxdeepin/dde-daemon/trayicon1"
 	_ "github.com/linuxdeepin/dde-daemon/x_event_monitor1"
-	_ "github.com/linuxdeepin/dde-daemon/xsettings1"
 )
 
 var (
