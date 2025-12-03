@@ -88,7 +88,6 @@ TEST = \
     ${GOPKG_PREFIX}/x_event_monitor1 \
     ${GOPKG_PREFIX}/bin/default-file-manager \
     ${GOPKG_PREFIX}/display1 \
-    ${GOPKG_PREFIX}/xsettings1
     #${GOPKG_PREFIX}/timedate1/zoneinfo \
 
 BINARIES =  \
