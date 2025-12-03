@@ -23,14 +23,13 @@ import (
 )
 
 const (
-	EnvDeepinWineScale      = "DEEPIN_WINE_SCALE"
-	gsKeyScaleFactor        = "scale-factor"
-	gsKeyWindowScale        = "window-scale"
-	gsKeyGtkCursorThemeSize = "gtk-cursor-theme-size"
-	gsKeyGtkCursorThemeName = "gtk-cursor-theme-name"
-	gsKeyIndividualScaling  = "individual-scaling"
-	baseCursorSize          = 24
-
+	EnvDeepinWineScale           = "DEEPIN_WINE_SCALE"
+	gsKeyScaleFactor             = "scale-factor"
+	gsKeyWindowScale             = "window-scale"
+	gsKeyGtkCursorThemeSize      = "gtk-cursor-theme-size"
+	gsKeyGtkCursorThemeName      = "gtk-cursor-theme-name"
+	gsKeyGtkCursorThemeSizeBase  = "gtk-cursor-theme-size-base"
+	gsKeyIndividualScaling       = "individual-scaling"
 	qtThemeSection               = "Theme"
 	qtThemeKeyScreenScaleFactors = "ScreenScaleFactors"
 	qtThemeKeyScaleFactor        = "ScaleFactor"
@@ -51,6 +50,13 @@ func (m *XSManager) setScaleFactor(scale float64, emitSignal bool) {
 	if int32(oldWindowScale) != windowScale {
 		m.xsettingsConfig.SetValue(gsKeyWindowScale, windowScale)
 	}
+
+	// 设置系统缩放之后，需要同时缩放光标大小
+	baseCursorSizeInt, err := m.xsettingsConfig.GetValueInt(gsKeyGtkCursorThemeSizeBase)
+	if err != nil || baseCursorSizeInt <= 0 {
+		baseCursorSizeInt = 24
+	}
+	baseCursorSize := float64(baseCursorSizeInt)
 
 	cursorSize := int32(baseCursorSize * scale)
 	m.xsettingsConfig.SetValue(gsKeyGtkCursorThemeSize, cursorSize)

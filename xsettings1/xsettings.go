@@ -246,7 +246,16 @@ func (m *XSManager) handleDConfigChangedCb(key string) {
 			},
 		})
 	case gsKeyGtkCursorThemeSize:
-		// 删除updateXResources,阻止设置屏幕缩放后,修改光标大小
+		cursorSize, _ := m.xsettingsConfig.GetValueInt64(gsKeyGtkCursorThemeSize)
+		updateXResources(xresourceInfos{
+			&xresourceInfo{
+				key:   "Xcursor.size",
+				value: fmt.Sprintf("%d", cursorSize),
+			},
+		})
+	case gsKeyGtkCursorThemeSizeBase:
+		cursorSizeBase, _ := m.xsettingsConfig.GetValueInt64(gsKeyGtkCursorThemeSizeBase)
+		m.xsettingsConfig.SetValue(gsKeyGtkCursorThemeSize, cursorSizeBase)
 		return
 	case gsKeyWindowScale:
 		// 删除m.updateDPI()，保证设置屏幕缩放比例不会立刻生效

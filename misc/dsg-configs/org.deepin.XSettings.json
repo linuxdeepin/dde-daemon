@@ -150,8 +150,8 @@
       "value": 24,
       "serial": 0,
       "flags": [],
-      "name": "Timeout before click repeat",
-      "description": "Timeout in milliseconds before a click starts repeating (onspinner buttons for example).",
+      "name": "Cursor theme size",
+      "description": "Cursor theme size.",
       "permissions": "readwrite",
       "visibility": "private"
     },
@@ -345,6 +345,15 @@
       "flags": [],
       "name": "Primary Monitor Rect",
       "description": "x,y,width,height of screen geometry",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "gtk-cursor-theme-size-base": {
+      "value": 24,
+      "serial": 0,
+      "flags": [],
+      "name": "Base Cursor Size",
+      "description": "Base size for cursor scaling",
       "permissions": "readwrite",
       "visibility": "private"
     }
