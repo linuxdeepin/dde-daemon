@@ -1,3 +1,9 @@
+dde-daemon (6.1.66) unstable; urgency=medium
+
+  * chore: remove xsettings module
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 04 Dec 2025 19:12:15 +0800
+
 dde-daemon (6.1.65) unstable; urgency=medium
 
   * fix: fix sound card port priority ordering issue
