@@ -48,37 +48,37 @@ func (d *Daemon) Start() error {
 	d.sigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	d.sigLoop.Start()
 
-	if os.Getenv("XDG_SESSION_TYPE") != "wayland" {
-		// init x conn
-		XConn, err = x.NewConn()
-		if err != nil {
-			return err
-		}
-
-		initX()
-
-		d.manager = NewTrayManager(service)
-
-		err = service.Export(dbusPath, d.manager)
-		if err != nil {
-			return err
-		}
-
-		err = d.manager.sendClientMsgMANAGER()
-		if err != nil {
-			return err
-		}
-
-		err = service.RequestName(dbusServiceName)
-		if err != nil {
-			return err
-		}
-
-		err = service.Emit(d.manager, "Inited")
-		if err != nil {
-			return err
-		}
+	// Enable this on both x11 and wayland(for xwayland support)
+	// #region init x conn
+	XConn, err = x.NewConn()
+	if err != nil {
+		return err
 	}
+
+	initX()
+
+	d.manager = NewTrayManager(service)
+
+	err = service.Export(dbusPath, d.manager)
+	if err != nil {
+		return err
+	}
+
+	err = d.manager.sendClientMsgMANAGER()
+	if err != nil {
+		return err
+	}
+
+	err = service.RequestName(dbusServiceName)
+	if err != nil {
+		return err
+	}
+
+	err = service.Emit(d.manager, "Inited")
+	if err != nil {
+		return err
+	}
+	// #endregion
 
 	if os.Getenv("DDE_DISABLE_STATUS_NOTIFIER_WATCHER") != "1" {
 		d.snw = newStatusNotifierWatcher(service, d.sigLoop)
