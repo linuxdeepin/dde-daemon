@@ -622,7 +622,7 @@ func (lang *LangSelector) installPackages(pkgs []string) error {
 	logger.Debug("install job path:", jobPath)
 
 	jobMatchRule := dbusutil.NewMatchRuleBuilder().ExtPropertiesChanged(
-		string(jobPath), "com.deepin.lastore.Job").Build()
+		string(jobPath), "org.deepin.dde.Lastore1.Job").Build()
 	err = jobMatchRule.AddTo(systemBus)
 	if err != nil {
 		return err
