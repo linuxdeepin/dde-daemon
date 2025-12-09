@@ -121,13 +121,6 @@ func (m *Manager) refreshBatteryDisplay() {
 	}
 }
 
-func (m *Manager) refreshSmartBattery() {
-	for _, bat := range m.batteries {
-		bat.smartBatteryOnThreshold = m.smartBatteryOnThreshold
-		bat.smartBatteryStatus = m.smartBatteryStatus
-	}
-}
-
 func (m *Manager) changeBatteryLowByBatteryPercentage(percentage float64) {
 	logger.Debug("changeBatteryLowByBatteryPercentage, battery percentage: ", percentage)
 	batteryLow := percentage <= float64(m.PowerSavingModeAutoBatteryPercent)
