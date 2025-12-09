@@ -32,8 +32,6 @@ const (
 	dsettingsPowerSavingModeAutoBatteryPercent    = "powerSavingModeAutoBatteryPercent"
 	dsettingsPowerMappingConfig                   = "powerMappingConfig"
 	dsettingsMode                                 = "mode"
-	dsettingsSmartBatteryStatus                   = "smartBatteryStatus"
-	dsettingsSmartBatteryOnThreshold              = "smartBatteryOnThreshold"
 )
 
 type supportMode struct {
@@ -91,12 +89,6 @@ type Manager struct {
 
 	// 开启节能模式时保存的数据
 	PowerSavingModeBrightnessData string `prop:"access:rw"`
-
-	// 是否开启"智能电量"
-	smartBatteryStatus bool
-
-	// 开启"智能电量"阀值
-	smartBatteryOnThreshold float64
 
 	// CPU频率调节模式，支持powersave和performance
 	CpuGovernor string
@@ -418,32 +410,6 @@ func (m *Manager) initDsgConfig() error {
 		}
 	}
 
-	getSmartBatteryStatus := func() {
-		data, err := dsPower.GetValueBool(dsettingsSmartBatteryStatus)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-
-		m.smartBatteryStatus = data
-		logger.Info("dsg of smartBatteryStatus : ", m.smartBatteryStatus)
-	}
-
-	getSmartBatteryOnThreshold := func() {
-		data, err := dsPower.GetValueFloat64(dsettingsSmartBatteryOnThreshold)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		m.smartBatteryOnThreshold = data
-		if m.smartBatteryOnThreshold < 85.0 {
-			m.smartBatteryOnThreshold = 85.0
-		} else if m.smartBatteryOnThreshold > 100.0 {
-			m.smartBatteryOnThreshold = 100.0
-		}
-		logger.Info("dsg of smartBatteryOnThreshold : ", m.smartBatteryOnThreshold)
-	}
-
 	getPowerSavingModeAuto(true)
 	getPowerSavingModeEnabled(true)
 	getPowerSavingModeAutoWhenBatteryLow(true)
@@ -451,8 +417,6 @@ func (m *Manager) initDsgConfig() error {
 	getPowerSavingModeAutoBatteryPercent(true)
 	getMode(true)
 	getPowerMappingConfig()
-	getSmartBatteryStatus()
-	getSmartBatteryOnThreshold()
 
 	dsPower.ConnectValueChanged(func(key string) {
 		logger.Info("dconfig org.deepin.dde.daemon.power valueChanged, key : ", key)
@@ -483,12 +447,6 @@ func (m *Manager) initDsgConfig() error {
 			return
 		case dsettingsPowerMappingConfig:
 			getPowerMappingConfig()
-		case dsettingsSmartBatteryStatus:
-			getSmartBatteryStatus()
-			m.refreshSmartBattery()
-		case dsettingsSmartBatteryOnThreshold:
-			getSmartBatteryOnThreshold()
-			m.refreshSmartBattery()
 		default:
 			logger.Debug("Not process. valueChanged, key : ", key)
 		}
@@ -584,7 +542,6 @@ func (m *Manager) addBattery(dev *gudev.Device) (*Battery, bool) {
 	m.batteriesMu.Lock()
 	m.batteries[sysfsPath] = bat
 	m.refreshBatteryDisplay()
-	m.refreshSmartBattery()
 	m.batteriesMu.Unlock()
 	bat.setRefreshDoneCallback(m.refreshBatteryDisplay)
 	return bat, true

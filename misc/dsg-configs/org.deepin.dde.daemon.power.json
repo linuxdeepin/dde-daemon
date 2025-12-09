@@ -577,30 +577,6 @@
             "name[zh_CN]": "高性能模式开关",
             "description": "high performance enabled",
             "permissions": "readwrite"
-        },
-        "smartBatteryStatus": {
-            "value": true,
-            "serial": 0,
-            "flags": [
-                "global"
-            ],
-            "name": "smart Battery Status",
-            "name[zh_CN]": "智能电池状态",
-            "description": "smart Battery Status",
-            "permissions": "readwrite",
-            "visibility": "public"
-        },
-        "smartBatteryOnThreshold": {
-            "value": 97.0,
-            "serial": 0,
-            "flags": [
-                "global"
-            ],
-            "name": "smart Battery On Threshold",
-            "name[zh_CN]": "智能电量开启阀值, 范围[85, 100]",
-            "description": "smart Battery On Threshold",
-            "permissions": "readwrite",
-            "visibility": "public"
         }
     }
 }
