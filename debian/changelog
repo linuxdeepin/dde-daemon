@@ -1,3 +1,10 @@
+dde-daemon (6.1.67) unstable; urgency=medium
+
+  * refactor: remove smart battery management feature
+  * fix: update DBus job interface name in locale package
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 11 Dec 2025 20:30:38 +0800
+
 dde-daemon (6.1.66) unstable; urgency=medium
 
   * chore: remove xsettings module
