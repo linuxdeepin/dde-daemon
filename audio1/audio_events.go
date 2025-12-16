@@ -404,7 +404,7 @@ func (a *Audio) handleCardRemoved(idx uint32) {
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 	// 如果删除的是当前正在使用的声卡，暂停播放
 	first, _ := GetPriorityManager().GetTheFirstPort(pulse.DirectionSink)
-	if oldCardName != "" && first.CardName == oldCardName {
+	if oldCardName != "" && first != nil && first.CardName == oldCardName {
 		a.autoPause()
 	}
 }
