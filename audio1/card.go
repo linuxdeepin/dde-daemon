@@ -367,6 +367,9 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 
 	// 如果删除的是当前正在使用的声卡，暂停播放
 	first, _ := GetPriorityManager().GetTheFirstPort(pulse.DirectionSink)
+	if first == nil {
+		return changed
+	}
 	// 检查端口变化
 	if len(oldCard.Ports) != len(card.Ports) {
 		logger.Infof("card %s Ports changed", card.Name)
