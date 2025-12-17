@@ -39,47 +39,47 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-auto-login!description" line="0"/>
 			<source>Disable Auto Login</source>
-			<translation>Отключить Автоматический Вход</translation>
+			<translation>Отключить автоматический вход</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-quick-login!message" line="0"/>
 			<source>Authentication is required to enable quick login</source>
-			<translation type="unfinished"/>
+			<translation>Для быстрого входа требуется аутентификация</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>Включить быстрый вход в систему</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!message" line="0"/>
 			<source>Authentication is required to disable quick login</source>
-			<translation type="unfinished"/>
+			<translation>Для отключения быстрого входа требуется аутентификация</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>Отключить быстрый вход в систему</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to enable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>Чтобы включить вход по коду WeChat, требуется аутентификация</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!description" line="0"/>
 			<source>Enable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>Включить вход по коду WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to disable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>Чтобы отключить вход по коду WeChat, требуется аутентификация</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!description" line="0"/>
 			<source>Disable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>Отключение входа по коду WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>
@@ -89,7 +89,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!description" line="0"/>
 			<source>Enable Login without password</source>
-			<translation>Активировать Вход без ввода пароля</translation>
+			<translation>Активировать вход без ввода пароля</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-nopass-login!message" line="0"/>
@@ -99,12 +99,12 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-nopass-login!description" line="0"/>
 			<source>Disable Login without password</source>
-			<translation>Отключить Вход без ввода пароля</translation>
+			<translation>Отключить вход без ввода пароля</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.set-keyboard-layout!message" line="0"/>
 			<source>Authentication is required to set keyboard layout</source>
-			<translation>Для того чтобы  задать раскладку клавиатуры требуется аутентификация</translation>
+			<translation>Для того, чтобы задать раскладку клавиатуры, требуется аутентификация</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.set-keyboard-layout!description" line="0"/>
