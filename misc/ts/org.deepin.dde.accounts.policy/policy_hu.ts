@@ -64,22 +64,22 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to enable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>Hitelesítés szükséges a WeChat kóddal való bejelentkezés engedélyezéséhez</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!description" line="0"/>
 			<source>Enable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>WeChat kóddal való bejelentkezés engedélyezése</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to disable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>Hitelesítés szükséges a WeChat kóddal való bejelentkezés letiltásához</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!description" line="0"/>
 			<source>Disable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>WeChat kóddal való bejelentkezés letiltása</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>
