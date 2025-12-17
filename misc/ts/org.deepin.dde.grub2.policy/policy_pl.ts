@@ -19,7 +19,7 @@
 		<message>
 			<location filename="org.deepin.dde.grub2.prepare-gfxmode-detect!description" line="0"/>
 			<source>Prepare grub display resolution detection</source>
-			<translation>Wykrywanie rozdzielczości wyświetlacza grub2</translation>
+			<translation>Wykrywanie rozdzielczości ekranu Grub</translation>
 		</message>
 	</context>
 </TS>
