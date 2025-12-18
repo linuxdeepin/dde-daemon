@@ -24,82 +24,82 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-auto-login!message" line="0"/>
 			<source>Authentication is required to enable auto login</source>
-			<translation>自動ログインを有効にするには認証が必要です</translation>
+			<translation>自動ログインを有効化するには認証が必要です</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-auto-login!description" line="0"/>
 			<source>Enable Auto Login</source>
-			<translation>自動ログインを有効にする</translation>
+			<translation>自動ログインを有効化</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-auto-login!message" line="0"/>
 			<source>Authentication is required to disable auto login</source>
-			<translation>自動ログインを無効にするには認証が必要です</translation>
+			<translation>自動ログインを無効化するには認証が必要です</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-auto-login!description" line="0"/>
 			<source>Disable Auto Login</source>
-			<translation>自動ログインを無効にする</translation>
+			<translation>自動ログインを無効化</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-quick-login!message" line="0"/>
 			<source>Authentication is required to enable quick login</source>
-			<translation type="unfinished"/>
+			<translation>クイックログインを有効化するには認証が必要です</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>クイックログインを有効化</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!message" line="0"/>
 			<source>Authentication is required to disable quick login</source>
-			<translation type="unfinished"/>
+			<translation>クイックログインを無効化するには認証が必要です</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>クイックログインを無効化</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to enable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>WeChatコードでのログインを有効化するには認証が必要です</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!description" line="0"/>
 			<source>Enable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>WeChatコードでのログインを有効化</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to disable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>WeChatコードでのログインを無効化するには認証が必要です</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!description" line="0"/>
 			<source>Disable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>WeChatコードでのログインを無効化</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>
 			<source>Authentication is required to enable login without password</source>
-			<translation>パスワードなしでのログインを有効にするには認証が必要です</translation>
+			<translation>パスワードなしでのログインを有効化するには認証が必要です</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!description" line="0"/>
 			<source>Enable Login without password</source>
-			<translation>パスワードなしでのログインを有効にする</translation>
+			<translation>パスワードなしでのログインを有効化</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-nopass-login!message" line="0"/>
 			<source>Authentication is required to disable login without password</source>
-			<translation>パスワードなしでのログインを無効にするには認証が必要です</translation>
+			<translation>パスワードなしでのログインを無効化するには認証が必要です</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-nopass-login!description" line="0"/>
 			<source>Disable Login without password</source>
-			<translation>パスワードなしでのログインを無効にする</translation>
+			<translation>パスワードなしでのログインを無効化</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.set-keyboard-layout!message" line="0"/>

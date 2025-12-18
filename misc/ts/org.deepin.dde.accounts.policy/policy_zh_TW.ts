@@ -84,22 +84,22 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>
 			<source>Authentication is required to enable login without password</source>
-			<translation>啟用無密碼登入需要身份核對</translation>
+			<translation>啟用免密登入需要身份核對</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!description" line="0"/>
 			<source>Enable Login without password</source>
-			<translation>啟用無密碼登入</translation>
+			<translation>啟用免密登入</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-nopass-login!message" line="0"/>
 			<source>Authentication is required to disable login without password</source>
-			<translation>停用無密碼登入需要身份核對</translation>
+			<translation>停用免密登入需要身份核對</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-nopass-login!description" line="0"/>
 			<source>Disable Login without password</source>
-			<translation>停用無密碼登入</translation>
+			<translation>停用免密登入</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.set-keyboard-layout!message" line="0"/>
