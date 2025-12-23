@@ -314,15 +314,16 @@ func (m *Manager) init() {
 	} else {
 		m.shortcutManager.AddSystem(m.wm)
 		m.shortcutManager.AddMedia(m.wm)
+		var owner string
 		err := sessionBus.BusObject().Call("org.freedesktop.DBus.GetNameOwner",
-			0, "org.kde.kglobalaccel").Store()
+			0, "org.kde.kglobalaccel").Store(&owner)
 		if err != nil {
 			logger.Warning("kglobalaccel not ready:", err)
 			dbusDaemon := ofdbus.NewDBus(sessionBus)
 			dbusDaemon.InitSignalExt(m.sessionSigLoop, true)
 			dbusDaemon.ConnectNameOwnerChanged(func(name string, oldOwner string, newOwner string) {
 				if name == "org.kde.kglobalaccel" && newOwner != "" {
-					logger.Warning("kglobalaccel ready")
+					logger.Info("kglobalaccel ready")
 					m.shortcutManager.AddKWin(m.wm)
 					dbusDaemon.RemoveAllHandlers()
 				}
