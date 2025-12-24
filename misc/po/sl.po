@@ -1044,7 +1044,7 @@ msgstr "Povezava na %1 ni možna"
 
 #: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
-msgstr ""
+msgstr "Za povezavo na %1 nastavite avtentifikacijo"
 
 #: ../../network1/state_handler.go:379
 msgid "Password is required to connect %q"
@@ -1102,27 +1102,29 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Ne morete zagnati nepreverjeni \"%s\", lahko pa spremenite nastavitve v "
+"varnostnem središču."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Nadaljuj"
 
 #: ../../session/power1/manager.go:928
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "Sistem se bo samodejno zaustavil po %d s"
 
 #: ../../session/power1/manager.go:929
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "Načrtovana zaustavitev"
 
 #: ../../session/power1/manager.go:930
 msgid "Cancle"
-msgstr ""
+msgstr "Prekini"
 
 #: ../../session/power1/manager.go:930
 msgid "Shut down"
-msgstr ""
+msgstr "Zaustavi"
 
 #: ../../session/power1/manager_events.go:266
 msgid "Battery critically low"
@@ -1153,7 +1155,7 @@ msgstr "se bo izklopil zaslon"
 
 #: ../../session/power1/utils.go:644
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "zaslon bo prikazal vmesnik za zaustavitev"
 
 #: ../../session/power1/utils.go:646
 msgid "it will do nothing to your computer"
