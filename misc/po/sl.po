@@ -69,7 +69,7 @@ msgstr "Uporabnik \"%s\" je že obstajal in njegovi podatki so se sinhronizirali
 
 #: ../../accounts1/user_ifc.go:731
 msgid "This system wallpaper is locked. Please contact your admin."
-msgstr ""
+msgstr "To sistemsko ozadje je zaklenjeno. Posvetujte se s skrbnikom."
 
 #: ../../audio1/audio.go:284
 msgid "Failed to change Audio Server, please try later"
@@ -357,11 +357,11 @@ msgstr "Zajem zaslona z zamikom"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:24
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "OCR (slika v besedilo)"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:25
 msgid "Scrollshot"
-msgstr ""
+msgstr "Scrollshot"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:26
 msgid "File manager"
@@ -592,7 +592,7 @@ msgstr ""
 
 #: ../../launcher/item.go:97
 msgid "(Linglong)"
-msgstr ""
+msgstr "(Linglong)"
 
 #: ../../launcher/manager_uninstall.go:55
 msgid "%q removed successfully"
