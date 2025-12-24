@@ -56,7 +56,7 @@ msgstr "To uporabniško ime že obstaja"
 
 #: ../../accounts1/checkers/username.go:60
 msgid "The group name already exists"
-msgstr ""
+msgstr "Ime skupine že obstaja"
 
 #: ../../accounts1/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
@@ -65,7 +65,7 @@ msgstr "Uporabniško ime mora imeti od 3 do 32 znakov"
 #: ../../accounts1/manager.go:570
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
+msgstr "Uporabnik \"%s\" je že obstajal in njegovi podatki so se sinhronizirali"
 
 #: ../../accounts1/user_ifc.go:731
 msgid "This system wallpaper is locked. Please contact your admin."
