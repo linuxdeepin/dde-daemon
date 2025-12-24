@@ -422,7 +422,7 @@ msgstr "Zamenjaj postavitev"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:40
 msgid "Toggle multiple displays"
-msgstr ""
+msgstr "Preklop med več zasloni"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to left workspace"
@@ -510,15 +510,15 @@ msgstr "Prikaži delovne površine"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom In"
-msgstr ""
+msgstr "Približaj"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom Out"
-msgstr ""
+msgstr "Oddalji"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Povečaj na dejansko velikost"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Left"
@@ -554,41 +554,48 @@ msgstr "Neuspešno spreminjanje jezika sistema. Poskusite znova kasneje"
 
 #: ../../lastore1/daemon.go:186
 msgid "Updates failed: it was interrupted."
-msgstr ""
+msgstr "Posodobitev ni uspela: preknitev."
 
 #: ../../lastore1/daemon.go:188
 msgid ""
 "Updates failed: it was interrupted. Please roll back to the old version and "
 "try again."
 msgstr ""
+"Posodobitev ni uspela: prekinitev. Povrnite se na prejšnjo različico in "
+"poskusite znova."
 
 #: ../../lastore1/daemon.go:194
 msgid "Updates failed: DPKG error."
-msgstr ""
+msgstr "Posodobitve niso uspele: DPKG napaka."
 
 #: ../../lastore1/daemon.go:196
 msgid ""
 "Updates failed: DPKG error. Please roll back to the old version and try "
 "again."
 msgstr ""
+"Posodobitev ni uspela: DPKG napaka. Povrnite se na prejšnjo različico in "
+"poskusite znova."
 
 #: ../../lastore1/daemon.go:200
 msgid "Updates failed: insufficient disk space."
-msgstr ""
+msgstr "Posodobitev ni uspela: premalo diskovnega prostora."
 
 #: ../../lastore1/daemon.go:202
 msgid ""
 "Updates failed: insufficient disk space. Please roll back to the old version"
 " and try again."
 msgstr ""
+"Posodobitev ni uspela: premalo diskovnega prostora. Povrnite se na prejšnjo "
+"različico in poskusite znova."
 
 #: ../../lastore1/daemon.go:206
 msgid "Updates failed"
-msgstr ""
+msgstr "Posodobitev ni uspela"
 
 #: ../../lastore1/daemon.go:208
 msgid "Updates failed. Please roll back to the old version and try again."
 msgstr ""
+"Posodobitev ni uspela. Povrnite se na prejšnjo različico in poskusite znova."
 
 #: ../../launcher/item.go:97
 msgid "(Linglong)"
@@ -617,7 +624,7 @@ msgstr "WPA/WPA2 Osebno"
 
 #: ../../network1/manager_active_conn.go:479
 msgid "WPA3 Personal"
-msgstr ""
+msgstr "WPA3 osebno"
 
 #: ../../network1/manager_active_conn.go:487
 msgid "TLS"
@@ -650,7 +657,7 @@ msgstr "Žična povezava"
 
 #: ../../network1/manager_connection.go:389
 msgid "Wired Connection %v"
-msgstr ""
+msgstr "Žična povezava"
 
 #: ../../network1/proxychains/utils_notify.go:49
 msgid "Application proxy is set successfully"
@@ -1033,7 +1040,7 @@ msgstr "Povezava %q ni uspela, napačno geslo"
 
 #: ../../network1/state_handler.go:365
 msgid "Unable to connect %q"
-msgstr ""
+msgstr "Povezava na %1 ni možna"
 
 #: ../../network1/state_handler.go:377
 msgid "To connect %q, please set up your authentication info"
