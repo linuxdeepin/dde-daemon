@@ -1,3 +1,10 @@
+dde-daemon (6.1.69) unstable; urgency=medium
+
+  * fix: initialize GDK in accounts module and remove GTK init
+  * fix: handle kglobalaccel D-Bus name owner properly
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 25 Dec 2025 19:48:14 +0800
+
 dde-daemon (6.1.68) unstable; urgency=medium
 
   * i18n: Updates for project Deepin Desktop Environment (#981)
