@@ -4,11 +4,10 @@
 
 package main
 
-//#cgo pkg-config: x11 gtk+-3.0
+//#cgo pkg-config: x11
 //#cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
 //#include <X11/Xlib.h>
-//#include <gtk/gtk.h>
-//void init(){XInitThreads();gtk_init(0,0);}
+//void init(){XInitThreads();}
 import "C"
 import (
 	"bufio"
