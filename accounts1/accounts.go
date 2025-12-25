@@ -7,6 +7,7 @@ package accounts
 import (
 	"github.com/linuxdeepin/dde-daemon/accounts1/logined"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/gdkpixbuf"
 	"github.com/linuxdeepin/go-lib/log"
 )
 
@@ -23,6 +24,10 @@ func getAccountsManager() *Manager {
 }
 
 func init() {
+	err := gdkpixbuf.InitGdk()
+	if err != nil {
+		logger.Warning("Failed to initialize GDK:", err)
+	}
 	loader.Register(NewDaemon())
 }
 
