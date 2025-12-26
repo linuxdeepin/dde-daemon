@@ -626,7 +626,6 @@ func (a *Audio) refreshSinks() {
 	sinkInfoMap := make(map[uint32]*pulse.Sink)
 	sinkInfoList := a.ctx.GetSinkList()
 
-	hasNullSink := false
 	for _, sinkInfo := range sinkInfoList {
 		if sinkInfo.Name == dndVirtualSinkName {
 			port := pulse.PortInfo{
@@ -637,9 +636,6 @@ func (a *Audio) refreshSinks() {
 			}
 			sinkInfo.Ports = append(sinkInfo.Ports, port)
 			sinkInfo.ActivePort = port
-		}
-		if sinkInfo.Name == nullSinkName {
-			hasNullSink = true
 		}
 		sinkInfoMap[sinkInfo.Index] = sinkInfo
 		sink, exist := a.sinks[sinkInfo.Index]
@@ -662,11 +658,6 @@ func (a *Audio) refreshSinks() {
 			a.service.StopExport(sink)
 			delete(a.sinks, key)
 		}
-	}
-
-	// 加载module-null-sink，噪音抑制时，将sink-input端口Echo-Cancel Playback引入到null-sink
-	if !hasNullSink {
-		a.LoadNullSinkModule()
 	}
 }
 
@@ -795,6 +786,8 @@ func (a *Audio) init() error {
 	if err != nil {
 		return err
 	}
+	// 加载module-null-sink，噪音抑制时，将sink-input端口Echo-Cancel Playback引入到null-sink
+	a.LoadNullSinkModule()
 
 	// 更新本地数据
 	a.refresh()
@@ -1328,9 +1321,14 @@ func (a *Audio) refreshBluetoothOpts() {
 func (a *Audio) updateDefaultSink(sinkName string) {
 	sinkInfo := a.getPhySinkInfoByName(sinkName)
 	if sinkInfo == nil {
-		logger.Warning("failed to get sinkInfo for name:", sinkName)
+		// 如果是null-sink再检查一次，是否可以自动切换端口
 		a.setPropDefaultSink("/")
 		a.defaultSink = nil
+		if strings.Contains(sinkName, "null-sink") {
+			a.autoSwitchOutputPort()
+		} else {
+			logger.Warning("failed to get sinkInfo for name:", sinkName)
+		}
 		return
 	}
 	a.moveSinkInputsToSink(nil)
@@ -1391,9 +1389,13 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 func (a *Audio) updateDefaultSource(sourceName string) {
 	sourceInfo := a.getPhySourceInfoByName(sourceName)
 	if sourceInfo == nil {
-		logger.Warning("failed to get sourceInfo for name:", sourceName)
 		a.setPropDefaultSource("/")
 		a.defaultSource = nil
+		if strings.Contains(sourceName, "null-sink") {
+			a.autoSwitchInputPort()
+		} else {
+			logger.Warning("failed to get sourceInfo for name:", sourceName)
+		}
 		return
 	}
 	if a.defaultSource != nil && a.defaultSource.Name == sourceName {
@@ -1867,7 +1869,9 @@ func (a *Audio) handleVolumeIncrease() {
 }
 
 func (a *Audio) LoadNullSinkModule() {
-	a.context().LoadModule(nullSinkModuleName, "")
+	if !a.isModuleExist(nullSinkModuleName) {
+		a.ctx.LoadModule(nullSinkModuleName, "")
+	}
 }
 
 func (a *Audio) unsetReduceNoise() {
