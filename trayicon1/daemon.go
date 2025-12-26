@@ -48,8 +48,10 @@ func (d *Daemon) Start() error {
 	d.sigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
 	d.sigLoop.Start()
 
-	if os.Getenv("XDG_SESSION_TYPE") != "wayland" {
-		// init x conn
+	// Enable this on both x11 and wayland(for xwayland support)
+	// #region init x conn
+	var enableTraySelectionManager = false
+	if os.Getenv("XDG_SESSION_TYPE") != "wayland" && enableTraySelectionManager {
 		XConn, err = x.NewConn()
 		if err != nil {
 			return err
@@ -79,6 +81,7 @@ func (d *Daemon) Start() error {
 			return err
 		}
 	}
+	// #endregion
 
 	if os.Getenv("DDE_DISABLE_STATUS_NOTIFIER_WATCHER") != "1" {
 		d.snw = newStatusNotifierWatcher(service, d.sigLoop)
