@@ -25,7 +25,7 @@ func log_handler_go(priority C.enum_libinput_log_priority, cstr *C.char) {
 	case C.LIBINPUT_LOG_PRIORITY_INFO:
 		logger.Info(str)
 	case C.LIBINPUT_LOG_PRIORITY_ERROR:
-		logger.Error(str)
+		logger.Warning(str)
 	}
 }
 

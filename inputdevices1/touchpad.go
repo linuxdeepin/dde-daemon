@@ -50,13 +50,14 @@ const (
 )
 
 type Touchpad struct {
-	service    *dbusutil.Service
-	PropsMu    sync.RWMutex
-	Exist      bool
-	DeviceList string
+	service     *dbusutil.Service
+	PropsMu     sync.RWMutex
+	sysTouchPad inputdevices.Touchpad
+	Exist       bool
+	DeviceList  string
 
 	// dbusutil-gen: ignore-below
-	TPadEnable      dconfig.Bool `prop:"access:rw"`
+	TPadEnable      bool         `prop:"access:rw"` // 通过监听 system 端 Enable 属性动态更新，不使用 dconfig
 	LeftHanded      dconfig.Bool `prop:"access:rw"`
 	DisableIfTyping dconfig.Bool `prop:"access:rw"`
 	NaturalScroll   dconfig.Bool `prop:"access:rw"`
@@ -98,7 +99,6 @@ func newTouchpad(service *dbusutil.Service) *Touchpad {
 		panic("Touchpad DConfig initialization failed - cannot continue without dconfig support")
 	}
 
-	tpad.TPadEnable.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadEnabled)
 	tpad.LeftHanded.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadLeftHanded)
 	tpad.DisableIfTyping.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadDisableTyping)
 	tpad.NaturalScroll.Bind(tpad.dsgTouchpadConfig, dconfigKeyTouchpadNaturalScroll)
@@ -117,18 +117,47 @@ func newTouchpad(service *dbusutil.Service) *Touchpad {
 	tpad.DoubleClick.Bind(tpad.dsgMouseConfig, dconfigKeyDoubleClick)
 	tpad.DragThreshold.Bind(tpad.dsgMouseConfig, dconfigKeyDragThreshold)
 
-	// TODO: treeland环境暂不支持
-	if hasTreeLand {
-		return tpad
-	}
-	tpad.updateDXTpads()
-
 	if conn, err := dbus.SystemBus(); err != nil {
 		logger.Warning(err)
 	} else {
 		tpad.systemConn = conn
 		tpad.systemSigLoop = dbusutil.NewSignalLoop(conn, 10)
+		tpad.sysTouchPad, err = inputdevices.NewTouchpad(tpad.systemConn, "/org/deepin/dde/InputDevices1/Touchpad")
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			// 在这里注册信号监听，避免 init 中重复注册
+			tpad.sysTouchPad.InitSignalExt(tpad.systemSigLoop, true)
+			tpad.sysTouchPad.Enable().ConnectChanged(func(hasValue bool, value bool) {
+				if !hasValue {
+					return
+				}
+				logger.Infof("System touchpad Enable changed: %v", value)
+				tpad.enable(value)
+			})
+			// 因为通过udev禁用触控板时， libinput感知不到触控板，通过系统touchpad查询是否存在触控板设备
+			tpad.sysTouchPad.DeviceList().ConnectChanged(func(hasValue bool, value []string) {
+				if !hasValue {
+					return
+				}
+				logger.Infof("System touchpad DeviceList changed: %v", value)
+				if !tpad.TPadEnable {
+					if len(value) == 0 {
+						tpad.setPropExist(false)
+					} else {
+						tpad.setPropExist(true)
+					}
+				}
+			})
+			tpad.systemSigLoop.Start()
+			tpad.TPadEnable, _ = tpad.sysTouchPad.Enable().Get(0)
+		}
 	}
+	// TODO: treeland环境暂不支持
+	if hasTreeLand {
+		return tpad
+	}
+	tpad.updateDXTpads()
 
 	return tpad
 }
@@ -180,28 +209,15 @@ func (tpad *Touchpad) init() {
 		return
 	}
 
-	if tpad.systemConn != nil {
-		sysTouchPad, err := inputdevices.NewTouchpad(tpad.systemConn, "/org/deepin/dde/InputDevices1/Touchpad")
-		if err != nil {
+	// 从 system 端获取初始状态
+	if tpad.sysTouchPad != nil {
+		if enabled, err := tpad.sysTouchPad.Enable().Get(0); err != nil {
 			logger.Warning(err)
 		} else {
-			sysTouchPad.InitSignalExt(tpad.systemSigLoop, true)
-			sysTouchPad.Enable().ConnectChanged(func(hasValue bool, value bool) {
-				if !hasValue {
-					return
-				}
-				tpad.enable(value)
-			})
-			if enabled, err := sysTouchPad.Enable().Get(0); err != nil {
-				logger.Warning(err)
-			} else {
-				tpad.TPadEnable.Set(enabled)
-			}
+			tpad.setPropTPadEnable(enabled)
 		}
 	}
 
-	currentState := tpad.TPadEnable.Get()
-	tpad.forceEnable(currentState)
 	tpad.enableLeftHanded()
 	tpad.enableNaturalScroll()
 	tpad.enableEdgeScroll()
@@ -213,10 +229,6 @@ func (tpad *Touchpad) init() {
 	tpad.disableWhileTyping()
 	tpad.enablePalmDetect()
 	tpad.setPalmDimensions()
-
-	if tpad.systemSigLoop != nil {
-		tpad.systemSigLoop.Start()
-	}
 }
 
 func (tpad *Touchpad) handleDeviceChanged() {
@@ -238,44 +250,46 @@ func (tpad *Touchpad) updateDXTpads() {
 
 	tpad.PropsMu.Lock()
 	var v string
-	if len(tpad.devInfos) == 0 {
-		tpad.setPropExist(false)
+	if tpad.TPadEnable {
+		if len(tpad.devInfos) == 0 {
+			tpad.setPropExist(false)
+		} else {
+			tpad.setPropExist(true)
+			v = tpad.devInfos.string()
+		}
 	} else {
-		tpad.setPropExist(true)
-		v = tpad.devInfos.string()
+		if tpad.sysTouchPad != nil {
+			sysTpList, _ := tpad.sysTouchPad.DeviceList().Get(0)
+			tpad.setPropExist(len(sysTpList) > 0)
+		}
 	}
+
 	tpad.setPropDeviceList(v)
 	tpad.PropsMu.Unlock()
 }
 
 // 受鼠标禁用触控板影响，临时关闭触控板
 func (tpad *Touchpad) setDisableTemporary(disable bool) {
-	if disable == tpad.disableTemporary {
-		return
-	}
 	if len(tpad.devInfos) > 0 {
 		for _, v := range tpad.devInfos {
-			err := v.Enable(!disable && tpad.TPadEnable.Get())
+			err := v.Enable(!disable && tpad.TPadEnable)
 			if err != nil {
 				logger.Warningf("Enable '%v - %v' failed: %v",
 					v.Id, v.Name, err)
 			}
 		}
 	}
-	tpad.disableTemporary = disable
 }
 
 func (tpad *Touchpad) enable(enabled bool) {
-	if enabled == tpad.TPadEnable.Get() {
+	if enabled == tpad.TPadEnable {
 		return
 	}
-	tpad.forceEnable(enabled)
-}
-
-func (tpad *Touchpad) forceEnable(enabled bool) {
-	if len(tpad.devInfos) > 0 {
+	// 禁用时有system 的touchpad设置
+	// 重新开启时，需要考虑插入鼠标时禁用触控板
+	if len(tpad.devInfos) > 0 && enabled {
 		for _, v := range tpad.devInfos {
-			err := v.Enable(!tpad.disableTemporary && enabled)
+			err := v.Enable(!tpad.disableTemporary)
 			if err != nil {
 				logger.Warningf("Enable '%v - %v' failed: %v",
 					v.Id, v.Name, err)
@@ -284,13 +298,7 @@ func (tpad *Touchpad) forceEnable(enabled bool) {
 	}
 
 	enableGesture(enabled)
-	tpad.TPadEnable.Set(enabled)
-	sysTouchPad, err := inputdevices.NewTouchpad(tpad.systemConn, "/org/deepin/dde/InputDevices1/Touchpad")
-	if err == nil && sysTouchPad != nil {
-		if err = sysTouchPad.SetTouchpadEnable(0, enabled); err != nil {
-			logger.Warning(err)
-		}
-	}
+	tpad.setPropTPadEnable(enabled)
 }
 
 func (tpad *Touchpad) enableLeftHanded() {
@@ -544,7 +552,7 @@ func enableGesture(enabled bool) {
 		return
 	}
 
-	dconfig.SetValue("dconfig", enabled)
+	dconfig.SetValue("touchpadEnabled", enabled)
 }
 
 func (tpad *Touchpad) initTouchpadDConfig() error {
@@ -562,13 +570,6 @@ func (tpad *Touchpad) initTouchpadDConfig() error {
 	tpad.dsgTouchpadConfig.ConnectValueChanged(func(key string) {
 		logger.Debugf("Touchpad dconfig value changed: %s", key)
 		switch key {
-		case dconfigKeyTouchpadEnabled:
-			enabled, err := tpad.dsgTouchpadConfig.GetValueBool(dconfigKeyTouchpadEnabled)
-			if err != nil {
-				logger.Warningf("Failed to get touchpad enabled value from dconfig: %v", err)
-			} else {
-				tpad.enable(enabled)
-			}
 		case dconfigKeyTouchpadLeftHanded:
 			tpad.enableLeftHanded()
 		case dconfigKeyTouchpadDisableTyping:

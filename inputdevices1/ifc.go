@@ -5,6 +5,8 @@
 package inputdevices
 
 import (
+	"fmt"
+
 	"github.com/godbus/dbus/v5"
 	langselector "github.com/linuxdeepin/dde-daemon/langselector1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -31,8 +33,12 @@ func (tpad *Touchpad) Reset() *dbus.Error {
 }
 
 func (tpad *Touchpad) Enable(enabled bool) *dbus.Error {
-	tpad.enable(enabled)
-	return nil
+	sysTP := tpad.sysTouchPad
+	if sysTP != nil {
+		return dbusutil.ToError(sysTP.SetTouchpadEnable(0, enabled))
+	} else {
+		return dbusutil.ToError(fmt.Errorf("system touchpad is nul"))
+	}
 }
 
 func (w *Wacom) Reset() *dbus.Error {
