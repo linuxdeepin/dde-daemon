@@ -207,11 +207,13 @@ func (a *Audio) autoSwitchOutputPort() bool {
 	auto, cardId, portName := a.checkAutoSwitchOutputPort()
 	if auto {
 		if cardId == 0 || portName == "" {
-			if !a.isModuleExist(nullSinkModuleName) {
-				a.ctx.LoadModule(nullSinkModuleName, "")
+			if !strings.Contains(a.ctx.GetDefaultSink(), "null-sink") {
+				a.LoadNullSinkModule()
+				logger.Info("no prefer port, set default sink to", nullSinkName)
+				a.ctx.SetDefaultSink(nullSinkName)
+			} else {
+				logger.Info("no prefer port, default sink is null-sink already")
 			}
-			logger.Info("no prefer port, set defaut sink to", nullSinkName)
-			a.ctx.SetDefaultSink(nullSinkName)
 			return true
 		} else {
 			err := a.setPort(cardId, portName, pulse.DirectionSink, true)
@@ -269,11 +271,13 @@ func (a *Audio) autoSwitchInputPort() bool {
 	auto, cardId, portName := a.checkAutoSwitchInputPort()
 	if auto {
 		if cardId == 0 || portName == "" {
-			if !a.isModuleExist(nullSinkModuleName) {
-				a.ctx.LoadModule(nullSinkModuleName, "")
+			if !strings.Contains(a.ctx.GetDefaultSource(), "null-sink") {
+				a.LoadNullSinkModule()
+				logger.Info("no prefer port, set default source to", nullSinkName)
+				a.ctx.SetDefaultSource(nullSinkName + ".monitor")
+			} else {
+				logger.Info("no prefer port, default source is null-sink already")
 			}
-			logger.Info("no prefer port, set defaut source to", nullSinkName)
-			a.ctx.SetDefaultSource(nullSinkName + ".monitor")
 			return true
 		} else {
 			err := a.setPort(cardId, portName, pulse.DirectionSource, true)
