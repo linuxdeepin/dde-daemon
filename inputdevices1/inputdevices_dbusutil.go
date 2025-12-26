@@ -76,6 +76,19 @@ func (v *Touchpad) emitPropChangedDeviceList(value string) error {
 	return v.service.EmitPropertyChanged(v, "DeviceList", value)
 }
 
+func (v *Touchpad) setPropTPadEnable(value bool) (changed bool) {
+	if v.TPadEnable != value {
+		v.TPadEnable = value
+		v.emitPropChangedTPadEnable(value)
+		return true
+	}
+	return false
+}
+
+func (v *Touchpad) emitPropChangedTPadEnable(value bool) error {
+	return v.service.EmitPropertyChanged(v, "TPadEnable", value)
+}
+
 func (v *TrackPoint) setPropDeviceList(value string) (changed bool) {
 	if v.DeviceList != value {
 		v.DeviceList = value

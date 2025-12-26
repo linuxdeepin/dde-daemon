@@ -81,12 +81,16 @@ func (t *TransientUnit) WaitforFinish(sigLoop *dbusutil.SignalLoop) bool {
 		return false
 	}
 	t.unit.InitSignalExt(sigLoop, true)
-	var result = make(chan string)
+	var result = make(chan string, 1) // buffered channel to prevent blocking
 	t.unit.ConnectPropertiesChanged(func(interfaceName string, changedProperties map[string]dbus.Variant, invalidatedProperties []string) {
 		_, ok := changedProperties["ActiveState"]
 		if ok {
 			val := changedProperties["ActiveState"].String()
-			result <- val
+			select {
+			case result <- val:
+			default:
+				// channel is full or closed, skip this update
+			}
 		}
 	})
 	defer func() {

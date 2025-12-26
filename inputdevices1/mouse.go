@@ -95,7 +95,7 @@ func (m *Mouse) init() {
 	tpad := m.touchPad
 
 	if !m.Exist {
-		if tpad.Exist && tpad.TPadEnable.Get() {
+		if tpad.Exist && tpad.TPadEnable {
 			tpad.setDisableTemporary(false)
 		}
 		return
@@ -107,7 +107,7 @@ func (m *Mouse) init() {
 	m.enableAdaptiveAccelProfile()
 	m.motionAcceleration()
 	m.motionThreshold()
-	if m.DisableTpad.Get() && tpad.TPadEnable.Get() {
+	if m.DisableTpad.Get() && tpad.TPadEnable {
 		m.disableTouchPad()
 	}
 }
