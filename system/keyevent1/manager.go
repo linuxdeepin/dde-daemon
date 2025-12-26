@@ -5,10 +5,6 @@
 package keyevent1
 
 import (
-	"errors"
-	"os"
-	"strings"
-
 	"github.com/godbus/dbus/v5"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.inputdevices1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -147,77 +143,23 @@ func (m *Manager) handleEvent(ev *KeyEvent) {
 		if !pressed {
 			return
 		}
-
-		//开关触控板逻辑
-		_, err := os.Stat(touchpadSwitchFile)
-		if err != nil {
-			logger.Warning(err)
+		var TPadEnable bool
+		if m.touchPad != nil {
+			TPadEnable, _ = m.touchPad.Enable().Get(0)
+		} else {
 			return
 		}
 		switch ev.Keycode {
 		case KEY_TOUCHPAD_TOGGLE:
-			go func() {
-				content, err := os.ReadFile(touchpadSwitchFile)
-				if err != nil {
-					logger.Warning(err)
-					return
-				}
-				enable := strings.Contains(string(content), "enable")
-
-				if m.touchPad == nil {
-					err = errors.New("m.TouchPad is nil")
-				} else {
-					err = m.touchPad.SetTouchpadEnable(0, !enable)
-				}
-
-				if err != nil {
-					logger.Warning("Set TouchPad state err : ", err)
-
-					// 接口调用异常时，需要保证开关触摸板正常
-					arg := string(content)
-					if strings.Contains(arg, "enable") {
-						arg = "disable"
-					} else {
-						arg = "enable"
-					}
-					err = os.WriteFile(touchpadSwitchFile, []byte(arg), 0644)
-					if err != nil {
-						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
-					}
-				}
-			}()
+			m.touchPad.SetTouchpadEnable(0, !TPadEnable)
 		case KEY_TOUCHPAD_ON:
-			go func() {
-				if m.touchPad == nil {
-					err = errors.New("m.TouchPad is nil")
-				} else {
-					err = m.touchPad.SetTouchpadEnable(0, true)
-				}
-
-				if err != nil {
-					logger.Warning("Set TouchPad state err : ", err)
-					err = os.WriteFile(touchpadSwitchFile, []byte("enable"), 0644)
-					if err != nil {
-						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
-					}
-				}
-			}()
+			if !TPadEnable {
+				m.touchPad.SetTouchpadEnable(0, true)
+			}
 		case KEY_TOUCHPAD_OFF:
-			go func() {
-				if m.touchPad == nil {
-					err = errors.New("m.TouchPad is nil")
-				} else {
-					err = m.touchPad.SetTouchpadEnable(0, false)
-				}
-
-				if err != nil {
-					logger.Warning("Set TouchPad state err : ", err)
-					err = os.WriteFile(touchpadSwitchFile, []byte("disable"), 0644)
-					if err != nil {
-						logger.Warning("write /proc/uos/touchpad_switch err : ", err)
-					}
-				}
-			}()
+			if TPadEnable {
+				m.touchPad.SetTouchpadEnable(0, false)
+			}
 		}
 	}
 }
