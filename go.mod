@@ -8,10 +8,10 @@ require (
 	github.com/fsnotify/fsnotify v1.8.0
 	github.com/godbus/dbus/v5 v5.1.0
 	github.com/jouyouyun/hardware v0.1.8
-	github.com/linuxdeepin/dde-api v0.0.0-20251010074154-51d1a75add21
-	github.com/linuxdeepin/go-dbus-factory v0.0.0-20251106025636-c57e2e679c9a
-	github.com/linuxdeepin/go-gir v0.0.0-20250812023606-b28aaee32ac9
-	github.com/linuxdeepin/go-lib v0.0.0-20251103025305-67a8f34eebc3
+	github.com/linuxdeepin/dde-api v0.0.0-20260106052450-1253d383da70
+	github.com/linuxdeepin/go-dbus-factory v0.0.0-20260106052008-a72e7263f065
+	github.com/linuxdeepin/go-gir v0.0.0-20251127080441-d9c47dbb6da4
+	github.com/linuxdeepin/go-lib v0.0.0-20251106065207-1fdf101312e6
 	github.com/linuxdeepin/go-x11-client v0.0.0-20240415051504-c8e43d028ff9
 	github.com/mdlayher/netlink v1.7.2
 	github.com/rickb777/date v1.21.1
