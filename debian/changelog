@@ -1,3 +1,12 @@
+dde-daemon (6.1.70) unstable; urgency=medium
+
+  * chore: 更新go.mod
+  * fix: 解决音频端口初始化时为null-sink的问题
+  * feat: replace kernel file with udev for touchpad control
+  * i18n: Updates for project Deepin Desktop Environment (#983)
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 07 Jan 2026 15:20:15 +0800
+
 dde-daemon (6.1.69) unstable; urgency=medium
 
   * fix: initialize GDK in accounts module and remove GTK init
