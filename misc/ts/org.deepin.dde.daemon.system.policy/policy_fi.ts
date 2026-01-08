@@ -4,22 +4,22 @@
 		<message>
 			<location filename="org.deepin.dde.daemon.enable-readonly-protection!message" line="0"/>
 			<source>Authentication required to enable read-only protection.</source>
-			<translation type="unfinished"/>
+			<translation>Vain luku käyttöönotto edellyttää tunnistautumisen.</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.enable-readonly-protection!description" line="0"/>
 			<source>Enable system read-only protection</source>
-			<translation type="unfinished"/>
+			<translation>Kytke vain luku suojaus käyttöön</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.disable-readonly-protection!message" line="0"/>
 			<source>Authentication required to disable read-only protection.</source>
-			<translation type="unfinished"/>
+			<translation>Vain luku poistaminen edellyttää tunnistautumisen.</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.disable-readonly-protection!description" line="0"/>
 			<source>Disable system read-only protection</source>
-			<translation type="unfinished"/>
+			<translation>Poista vain luku suojaus käytöstä</translation>
 		</message>
 	</context>
 </TS>
