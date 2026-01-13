@@ -6,16 +6,15 @@
 # Translators:
 # Thejan Rajapakshe <coder.clix@gmail.com>, 2025
 # Roshan Karunarathna <rkvisit@gmail.com>, 2025
-# deepiner, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"POT-Creation-Date: 2026-01-13 09:49+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2025\n"
 "Language-Team: Sinhala (https://app.transifex.com/linuxdeepin/teams/3617/si/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,46 +60,38 @@ msgstr "පරිශීලක නාමය අක්ෂර 3 ත් 32 ත් �
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../accounts1/user_ifc.go:731
+#: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
-#: ../../audio1/audio.go:284
+#: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
 msgstr ""
 
-#: ../../audio1/audio.go:320
+#: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
 msgstr ""
 
-#: ../../audio1/audio.go:353
+#: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
-#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
-#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
-#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
+#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr ""
 
-#: ../../audio1/audio_events.go:445
+#: ../../audio1/audio_events.go:701
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio1/audio_events.go:446
+#: ../../audio1/audio_events.go:702
 msgid "Open"
 msgstr "විවෘත කරන්න"
-
-#: ../../bin/dde-authority/fprint_transaction.go:25
-msgid "Fingerprint verification failed"
-msgstr "ඇඟිලි සලකුණු සත්‍යාපනය අසාර්ථක විය"
-
-#: ../../bin/dde-authority/fprint_transaction.go:26
-msgid "Fingerprint verification timed out"
-msgstr "ඇඟිලි සලකුණු සත්‍යාපනය කල් ඉකුත් විය"
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -162,57 +153,57 @@ msgstr "පණිවිඩ ප්‍රවේශය"
 msgid "Message notification"
 msgstr "පණිවිඩ දැනුම්දීම්"
 
-#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
-#: ../../bluetooth1/obex_agent.go:396
+#: ../../bluetooth1/obex_agent.go:398
 msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:405
+#: ../../bluetooth1/obex_agent.go:407
 msgid "View"
 msgstr "දැක්ම"
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:413
 msgid "You have received files from %q successfully"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:412
+#: ../../bluetooth1/obex_agent.go:414
 msgid "Done"
 msgstr "සම්පූර්ණයි"
 
-#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
 msgid "Stop Receiving Files"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:429
+#: ../../bluetooth1/obex_agent.go:431
 msgid "You have cancelled the file transfer"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:433
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "බ්ලූටූත් සම්බන්ධතාවය අසාර්ථක විය"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Decline"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Receive"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:477
 msgid "Bluetooth File Transfer"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:476
+#: ../../bluetooth1/obex_agent.go:478
 msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:531
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Receiving %q timed out"
 msgstr ""
 
@@ -228,72 +219,72 @@ msgstr "බ්ලූටූත් උපාංග එක් කරන්න"
 msgid "Pair"
 msgstr "එකිනෙක සම්බන්ධ කරන්න"
 
-#: ../../gesture1/gesture_action.go:38
+#: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:39
+#: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:40
+#: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:41
+#: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:42
+#: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:43
+#: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:44
+#: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:45
+#: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:46
-#: ../../keybinding1/shortcuts/id_name_map.go:85
+#: ../../gesture1/gesture_action.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr "ඩෙස්ක්ටොප් එක පෙන්වන්න"
 
-#: ../../gesture1/gesture_action.go:47
+#: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:48
+#: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:49
+#: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:50
+#: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:51
+#: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:52
+#: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:53
+#: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:54
+#: ../../gesture1/gesture_action.go:55
 msgid "Disable"
 msgstr ""
 
@@ -382,151 +373,151 @@ msgid "Deepin Picker"
 msgstr "Deepin තෝරා ගැනීමේ මෙවලම"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
-msgid "Desktop AI Assistant"
-msgstr "ඩෙස්ක්ටොප් කෘතිම බුද්ධි-AI සහකරු"
-
-#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr "කථාවට පෙළ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:34
+#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Speech to Text"
 msgstr "පෙළට කථාව"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:35
+#: ../../keybinding1/shortcuts/id_name_map.go:34
 msgid "Clipboard"
 msgstr "පසුරු පුවරුව"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:36
+#: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Translation"
 msgstr "පරිවර්තනය"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:37
+#: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
 msgstr "දැනුම්දීම් මධ්‍යස්ථානය"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:39
-#: ../../keybinding1/shortcuts/id_name_map.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr "පිරිසැලසුම මාරු කරන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:40
+#: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:66
+#: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr "වම් වැඩ අවකාශය වෙත මාරු වන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:67
+#: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr "දකුණු වැඩ අවකාශය වෙත මාරු වන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:68
+#: ../../keybinding1/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr "ඉහළ වැඩ අවකාශය වෙත මාරු වන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:69
+#: ../../keybinding1/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr "පහළ වැඩ අවකාශය වෙත මාරු වන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:71
+#: ../../keybinding1/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr "සමාන කවුළු මාරු කරන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:72
+#: ../../keybinding1/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr "සමාන කවුළු ආපසු හරවන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:73
+#: ../../keybinding1/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr "කවුළු මාරු කරන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:74
+#: ../../keybinding1/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr "කවුළු ආපසු හරවන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:94
+#: ../../keybinding1/shortcuts/id_name_map.go:89
+msgid "Activate window menu"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr "කවුළුව දිග හරින්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:95
+#: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr "කවුළුව ප්‍රතිස්ථාපනය කරන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:97
+#: ../../keybinding1/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr "කවුළුව හකුලවන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:98
+#: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr "කවුළුව වසාදමන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:99
+#: ../../keybinding1/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr "කවුළුව චලනය කරන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:100
+#: ../../keybinding1/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr "කවුළු පරිමාණ වෙනස් කරන"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:115
+#: ../../keybinding1/shortcuts/id_name_map.go:114
 msgid "Move to left workspace"
 msgstr "වම් වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:116
+#: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to right workspace"
 msgstr "දකුණු වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:117
+#: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to upper workspace"
 msgstr "ඉහළ වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:118
+#: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to lower workspace"
 msgstr "පහළ වැඩ අවකාශය වෙත ගෙන යන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:140
+#: ../../keybinding1/shortcuts/id_name_map.go:139
 msgid "Display windows of all workspaces"
 msgstr "සියලුම වැඩ අවකාශයන්ගේ පවතින කවුළු පෙන්වන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:141
+#: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of current workspace"
 msgstr "වත්මන් වැඩ අවකාශයේ පවතින කවුළු පෙන්වන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:142
+#: ../../keybinding1/shortcuts/id_name_map.go:141
 msgid "Display workspace"
 msgstr "වැඩ අවකාශය පෙන්වන්න"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:143
+#: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:144
+#: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:145
+#: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:146
+#: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:147
+#: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
 msgstr ""
 
-#: ../../langselector1/locale.go:47
+#: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
 msgstr "භාෂාව මාරු කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:143
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -534,552 +525,17 @@ msgstr ""
 "පද්ධති භාෂාව වෙනස් කිරීම සහ අවශ්‍ය භාෂා පැකේජ ස්ථාපනය කරමින් පවතී, කරුණාකර "
 "රැඳී සිටින්න ..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
 msgstr "පද්ධති භාෂාව වෙනස් කිරීම, කරුණාකර රැඳී සිටින්න ..."
 
-#: ../../langselector1/locale.go:140
+#: ../../langselector1/locale.go:145
 msgid "System language changed, please log out and then log in"
 msgstr "පද්ධති භාෂාව වෙනස් වී ඇත, කරුණාකර පද්ධතියෙන් ඉවත් වී නැවත ඇතුළු වන්න"
 
-#: ../../langselector1/locale.go:379
+#: ../../langselector1/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "පද්ධති භාෂාව වෙනස් කිරීමට අපොහොසත් විය, කරුණාකර පසුව උත්සාහ කරන්න"
-
-#: ../../lastore1/daemon.go:186
-msgid "Updates failed: it was interrupted."
-msgstr ""
-
-#: ../../lastore1/daemon.go:188
-msgid ""
-"Updates failed: it was interrupted. Please roll back to the old version and "
-"try again."
-msgstr ""
-
-#: ../../lastore1/daemon.go:194
-msgid "Updates failed: DPKG error."
-msgstr ""
-
-#: ../../lastore1/daemon.go:196
-msgid ""
-"Updates failed: DPKG error. Please roll back to the old version and try "
-"again."
-msgstr ""
-
-#: ../../lastore1/daemon.go:200
-msgid "Updates failed: insufficient disk space."
-msgstr ""
-
-#: ../../lastore1/daemon.go:202
-msgid ""
-"Updates failed: insufficient disk space. Please roll back to the old version"
-" and try again."
-msgstr ""
-
-#: ../../lastore1/daemon.go:206
-msgid "Updates failed"
-msgstr ""
-
-#: ../../lastore1/daemon.go:208
-msgid "Updates failed. Please roll back to the old version and try again."
-msgstr ""
-
-#: ../../launcher/item.go:97
-msgid "(Linglong)"
-msgstr ""
-
-#: ../../launcher/manager_uninstall.go:55
-msgid "%q removed successfully"
-msgstr "%q සාර්ථකව ඉවත් කර ඇත."
-
-#: ../../launcher/manager_uninstall.go:57
-msgid "Failed to uninstall %q"
-msgstr "%q අස්ථාපනය කිරීමට අසමත් විය."
-
-#: ../../network1/manager_active_conn.go:468
-#: ../../network1/manager_active_conn.go:473
-msgid "None"
-msgstr "කිසිවක් නැත"
-
-#: ../../network1/manager_active_conn.go:475
-msgid "WEP 40/128-bit Key"
-msgstr "WEP 40/128-bit යතුර"
-
-#: ../../network1/manager_active_conn.go:477
-msgid "WPA/WPA2 Personal"
-msgstr "WPA / WPA2 පුද්ගලික"
-
-#: ../../network1/manager_active_conn.go:479
-msgid "WPA3 Personal"
-msgstr ""
-
-#: ../../network1/manager_active_conn.go:487
-msgid "TLS"
-msgstr "TLS"
-
-#: ../../network1/manager_active_conn.go:489
-msgid "MD5"
-msgstr "MD5"
-
-#: ../../network1/manager_active_conn.go:491
-msgid "LEAP"
-msgstr "LEAP"
-
-#: ../../network1/manager_active_conn.go:493
-msgid "FAST"
-msgstr "FAST"
-
-#: ../../network1/manager_active_conn.go:495
-msgid "Tunneled TLS"
-msgstr "උමං TLS"
-
-#: ../../network1/manager_active_conn.go:497
-msgid "Protected EAP"
-msgstr "ආරක්ෂිත EAP"
-
-#: ../../network1/manager_connection.go:346
-#: ../../network1/manager_connection.go:350
-msgid "Wired Connection"
-msgstr "රැහැන් සම්බන්ධතාවය"
-
-#: ../../network1/manager_connection.go:389
-msgid "Wired Connection %v"
-msgstr ""
-
-#: ../../network1/proxychains/utils_notify.go:49
-msgid "Application proxy is set successfully"
-msgstr ""
-
-#: ../../network1/proxychains/utils_notify.go:49
-#: ../../network1/proxychains/utils_notify.go:52
-#: ../../network1/utils_notify.go:182 ../../network1/utils_notify.go:186
-#: ../../network1/utils_notify.go:189
-msgid "Network"
-msgstr "ජාලය"
-
-#: ../../network1/proxychains/utils_notify.go:52
-msgid "Failed to set the application proxy"
-msgstr ""
-
-#: ../../network1/state_handler.go:23
-msgid "Device state changed"
-msgstr "උපාංග තත්වය වෙනස් විය"
-
-#: ../../network1/state_handler.go:24
-msgid "Device state changed, reason unknown"
-msgstr "උපාංග තත්වය වෙනස් විය, හේතුව නොදන්නා කරුණකි"
-
-#: ../../network1/state_handler.go:25
-msgid "The device is now managed"
-msgstr "උපාංගය දැන් කළමනාකරණය කර ඇත"
-
-#: ../../network1/state_handler.go:26
-msgid "The device is no longer managed"
-msgstr "උපාංගය තවදුරටත් කළමනාකරණය නොවේ"
-
-#: ../../network1/state_handler.go:27
-msgid "The device has not been ready for configuration"
-msgstr "උපාංගය සැකසුම් කිරීමට සූදානම් නැත"
-
-#: ../../network1/state_handler.go:28
-msgid ""
-"IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr ""
-"IP වින්‍යාසය වෙන් කරවා ගත නොහැක ( හේතු: ලබා ගත හැකි ලිපිනයක් නැත වීම, කල් "
-"ඉකුත් වීම ආදිය)"
-
-#: ../../network1/state_handler.go:29
-msgid "The IP configuration is no longer valid"
-msgstr "IP වින්‍යාසය තවදුරටත් වලංගු නොවේ"
-
-#: ../../network1/state_handler.go:30
-msgid "Passwords were required but not provided"
-msgstr "මුරපද අත්‍යවශ්‍ය වන නමුත් ලබා දී නැත"
-
-#: ../../network1/state_handler.go:31
-msgid ""
-"The 802.1X supplicant disconnected from the access point or authentication "
-"server"
-msgstr ""
-"802.1X ඉල්ලුම්කරු පිවිසුම් ස්ථානයෙන් හෝ සත්‍යාපන සේවාදායකයෙන් විසන්ධි කර ඇත"
-
-#: ../../network1/state_handler.go:32
-msgid "Configuration of the 802.1X supplicant failed"
-msgstr "802.1X ඉල්ලුම්කරුගේ වින්‍යාසය අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:33
-msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "802.1X ඉල්ලුම්කරුගේ වින්‍යාසය අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:34
-msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "802.1X ඉල්ලුම්කරු සත්‍යාපනය කිරීමට බොහෝ කාලයක් ගත් බව පෙනේ."
-
-#: ../../network1/state_handler.go:35
-msgid "The PPP service failed to start within the allowed time"
-msgstr "PPP සේවාව අවසර ලත් කාලය තුළ ආරම්භ වීමට අසමත් විය"
-
-#: ../../network1/state_handler.go:36
-msgid "The PPP service disconnected unexpectedly"
-msgstr "PPP සේවාව අනපේක්ෂිත ලෙස විසන්ධි විය"
-
-#: ../../network1/state_handler.go:37
-msgid "The PPP service quitted or failed unexpectedly"
-msgstr "PPP සේවාව අනපේක්ෂිත ලෙස ඉවත් වීම හෝ ඇණහිටීම සිදුවී ඇත"
-
-#: ../../network1/state_handler.go:38
-msgid "The DHCP service failed to start within the allowed time"
-msgstr "DHCP සේවාව අවසර ලත් කාලය තුළ ආරම්භ වීමට අසමත් විය"
-
-#: ../../network1/state_handler.go:39
-msgid "The DHCP service reported an unexpected error"
-msgstr "DHCP සේවාව අනපේක්ෂිත දෝෂයක් වාර්තා කළේය"
-
-#: ../../network1/state_handler.go:40
-msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "DHCP සේවාව අනපේක්ෂිත ලෙස ඉවත් වීම හෝ ඇණහිටීම සිදුවී ඇත"
-
-#: ../../network1/state_handler.go:41
-msgid "The shared connection service failed to start"
-msgstr "හවුල් සම්බන්ධතා සේවාව ආරම්භ කිරීමට අසමත් විය"
-
-#: ../../network1/state_handler.go:42
-msgid "The shared connection service quitted or failed unexpectedly"
-msgstr "හවුල් සම්බන්ධතාව අනපේක්ෂිත ලෙස ඉවත් වීම හෝ ඇණහිටීම සිදුවී ඇත"
-
-#: ../../network1/state_handler.go:43
-msgid "The AutoIP service failed to start"
-msgstr "AutoIP සේවාව ආරම්භ කිරීමට අසමත් විය"
-
-#: ../../network1/state_handler.go:44
-msgid "The AutoIP service reported an unexpected error"
-msgstr "AutoIP සේවාව අනපේක්ෂිත දෝෂයක් වාර්තා කළේය"
-
-#: ../../network1/state_handler.go:45
-msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "AutoIP සේවාව අනපේක්ෂිත ලෙස ඉවත් වීම හෝ ඇණහිටීම සිදුවී ඇත"
-
-#: ../../network1/state_handler.go:46
-msgid "Dialing failed due to busy lines"
-msgstr "කාර්යබහුල මාර්ග නිසා ඇමතුම් අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:47
-msgid "Dialing failed due to no dial tone"
-msgstr "ඇමතුම් නාදයක් නොමැති නිසා ඇමතුම ගැනීම අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:48
-msgid "Dialing failed due to the carrier"
-msgstr "වාහකයා-carrier නිසා ඇමතීම අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:49
-msgid "Dialing timed out"
-msgstr "ඇමතුම් කාලය ඉකුත්වී ඇත"
-
-#: ../../network1/state_handler.go:50
-msgid "Dialing failed"
-msgstr "ඇමතීම අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:51
-msgid "Modem initialization failed"
-msgstr "මොඩමය ආරම්භ කිරීම අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:52
-msgid "Failed to select the specified GSM APN"
-msgstr "නිශ්චිත GSM APN තෝරා ගැනීමට අපොහොසත් විය"
-
-#: ../../network1/state_handler.go:53
-msgid "No networks searched"
-msgstr "ජාල කිසිවක් හමු නොවිනි."
-
-#: ../../network1/state_handler.go:54
-msgid "Network registration was denied"
-msgstr "ජාල ලියාපදිංචිය ප්‍රතික්ෂේප විය"
-
-#: ../../network1/state_handler.go:55
-msgid "Network registration timed out"
-msgstr "ජාල ලියාපදිංචිය කල් ඉකුත් වී ඇත"
-
-#: ../../network1/state_handler.go:56
-msgid "Failed to register to the requested GSM network"
-msgstr "ඉල්ලාසිටි GSM ජාලයට ලියාපදිංචි වීමට අපොහොසත් විය"
-
-#: ../../network1/state_handler.go:57
-msgid "PIN check failed"
-msgstr "PIN පරීක්ෂාව අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:58
-msgid "Necessary firmware for the device may be missed"
-msgstr "උපාංගය සඳහා අවශ්‍ය ස්ථිරාංග-firmware මඟ හැරි තිබිය හැක"
-
-#: ../../network1/state_handler.go:59
-msgid "The device was removed"
-msgstr "උපාංගය ඉවත් කරන ලදි"
-
-#: ../../network1/state_handler.go:60
-msgid "NetworkManager went to sleep"
-msgstr "NetworkManager යෙදුම නිද්‍රාගතව ඇත"
-
-#: ../../network1/state_handler.go:61
-msgid "The device's active connection was removed or disappeared"
-msgstr "උපාංගයේ ක්‍රියාකාරී සම්බන්ධතාවය ඉවත් කර හෝ සොයාගත නොහැකිව ඇත"
-
-#: ../../network1/state_handler.go:62
-msgid "A user or client requested to disconnect"
-msgstr "පරිශීලකයෙකුගෙන් හෝ සේවාදායකයෙකුුුුුුගෙන් විසන්ධි කිරීමට ඉල්ලීමක් ඇත"
-
-#: ../../network1/state_handler.go:63
-msgid "The device's carrier/link changed"
-msgstr "උපාංගයේ වාහකය/සබැඳිය වෙනස් විය"
-
-#: ../../network1/state_handler.go:64
-msgid "The device's existing connection was assumed"
-msgstr "උපාංගයේ පවතින සම්බන්ධතාවය උපකල්පනය කරන ලදි"
-
-#: ../../network1/state_handler.go:65
-msgid "The 802.1x supplicant is now available"
-msgstr "802.1x ඉල්ලුම්කරු දැන් ලබා ගත හැකිය"
-
-#: ../../network1/state_handler.go:66
-msgid "The modem could not be found"
-msgstr "මොඩමය සොයාගත නොහැකි විය"
-
-#: ../../network1/state_handler.go:67
-msgid "The Bluetooth connection timed out or failed"
-msgstr "බ්ලූටූත් සම්බන්ධතාවය කල් ඉකුත් වීම හෝ අසාර්ථක වීම සිදුවිනි."
-
-#: ../../network1/state_handler.go:68
-msgid "GSM Modem's SIM Card was not inserted"
-msgstr "GSM මොඩමයේ SIM-සිම් කාඩ් පත ඇතුළත් කර නැත"
-
-#: ../../network1/state_handler.go:69
-msgid "GSM Modem's SIM PIN required"
-msgstr "GSM මොඩමයේ සිම් PIN අංකය අවශ්‍ය වේ"
-
-#: ../../network1/state_handler.go:70
-msgid "GSM Modem's SIM PUK required"
-msgstr "GSM මොඩමයේ සිම් PUK අංකය අවශ්‍යයි"
-
-#: ../../network1/state_handler.go:71
-msgid "SIM card error in GSM Modem"
-msgstr "GSM මොඩමයේ සිම් පතේ දෝෂයකි"
-
-#: ../../network1/state_handler.go:72
-msgid "InfiniBand device does not support connected mode"
-msgstr "සම්බන්ධිත ප්‍රකාරයට InfiniBand උපාංගය සහාය නොදක්වයි"
-
-#: ../../network1/state_handler.go:73
-msgid "A dependency of the connection failed"
-msgstr "සම්බන්ධතාවයට අවශ්‍ය සාධකයක්/පරායත්තතාවය අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:74
-msgid "RFC 2684 Ethernet bridging error to ADSL"
-msgstr "RFC 2684 ADSL වෙත ඊතර්නෙට් හරහා සම්බන්ධ කිරීමේ දෝෂයකි"
-
-#: ../../network1/state_handler.go:75
-msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "මොඩම් කළමනාකරණ යෙදුම අනපේක්ෂිත ලෙස ධාවනය නොවීය"
-
-#: ../../network1/state_handler.go:76
-msgid "The 802.11 WLAN network could not be found"
-msgstr "802.11 WLAN ජාලය සොයාගත නොහැකි විය"
-
-#: ../../network1/state_handler.go:77
-msgid "A secondary connection of the base connection failed"
-msgstr "මූලික සම්බන්ධතාවයේ ද්විතියික සම්බන්ධතාවයක් අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:80
-msgid "DCB or FCoE setup failed"
-msgstr "DCB හෝ FCoE සැකසුම අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:81
-msgid "Network teaming control failed"
-msgstr "ජාල කණ්ඩායම් පාලනය අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:82
-msgid "Modem failed to run or not available"
-msgstr "මොඩමය සම්බන්ධතාවය ක්‍රියාත්මක කිරීමට හෝ හදුනා ගැනීමට අසමත් විය"
-
-#: ../../network1/state_handler.go:83
-msgid "Modem now ready and available"
-msgstr "මොඩමය දැන් සම්බන්ධ කිරීම සඳහා සුදානම්"
-
-#: ../../network1/state_handler.go:84
-msgid "SIM PIN is incorrect"
-msgstr "සිම් පතේ PIN අංකය වැරදිය"
-
-#: ../../network1/state_handler.go:85
-msgid "New connection activation is enqueuing"
-msgstr "නව සම්බන්ධතා සක්‍රිය කිරීම පෙළගස්වමින්"
-
-#: ../../network1/state_handler.go:86
-msgid "Parent device changed"
-msgstr "ප්‍රධාන උපාංගය වෙනස් විය"
-
-#: ../../network1/state_handler.go:87
-msgid "Management status of parent device changed"
-msgstr "මව් උපාංගයේ කළමනාකරණ තත්ත්වය වෙනස් විය"
-
-#: ../../network1/state_handler.go:90
-msgid "Network cable is unplugged"
-msgstr "ජාල කේබලය විසන්ධි වී ඇත"
-
-#: ../../network1/state_handler.go:91
-msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr ""
-"කරුණාකර ජංගම දුරකථන ජාල සම්බන්ධතාවය සමඟ සිම් පත ඇතුළත් කර ඇති බවට වග බලා "
-"ගන්න"
-
-#: ../../network1/state_handler.go:92
-msgid ""
-"Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr ""
-"හිඟ මුදල් නොමැති සිම් පතක් සහ නිවැරදි සබදතා සැලැස්මක් තෝරාගෙන ඇති බවට "
-"කරුණාකර සහතික වන්න"
-
-#: ../../network1/state_handler.go:95
-msgid "Failed to activate VPN connection, reason unknown"
-msgstr "VPN සම්බන්ධතාවය සක්‍රිය කිරීමට අපොහොසත් විය, හේතුව නොදන්නා කරුණකි"
-
-#: ../../network1/state_handler.go:96
-msgid "Failed to activate VPN connection"
-msgstr "VPN සම්බන්ධතාවය සක්‍රිය කිරීමට අසමත් විය"
-
-#: ../../network1/state_handler.go:97
-msgid "The VPN connection state changed due to being disconnected by users"
-msgstr "පරිශීලකයින් විසන්ධි කිරීම හේතුවෙන් VPN සම්බන්ධතා තත්ත්වය වෙනස් විය"
-
-#: ../../network1/state_handler.go:98
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
-msgstr "උපාංග වලින් විසන්ධි වීම නිසා VPN සම්බන්ධතා තත්ත්වය වෙනස් විය"
-
-#: ../../network1/state_handler.go:99
-msgid "VPN service stopped"
-msgstr "VPN සේවාව නතර විය"
-
-#: ../../network1/state_handler.go:100
-msgid "The IP config of VPN connection was invalid"
-msgstr "VPN සම්බන්ධතාවයේ IP වින්‍යාසය අවලංගු විය"
-
-#: ../../network1/state_handler.go:101
-msgid "The connection attempt to VPN service timed out"
-msgstr "VPN සේවාව සඳහා සම්බන්ධතා උත්සාහය කල් ඉකුත් විය"
-
-#: ../../network1/state_handler.go:102
-msgid "The VPN service start timed out"
-msgstr "VPN සේවාව ඇරඹීමේ කාලය ඉකුත්වී ඇත"
-
-#: ../../network1/state_handler.go:103
-msgid "The VPN service failed to start"
-msgstr "VPN සේවාව ආරම්භ කිරීමට අසමත් විය"
-
-#: ../../network1/state_handler.go:104
-msgid "The VPN connection password was not provided"
-msgstr "VPN සම්බන්ධතාවයේ මුරපදය ලබා දී නොමැත"
-
-#: ../../network1/state_handler.go:105
-msgid "Authentication to VPN server failed"
-msgstr "VPN සේවාදායකය-server සත්‍යාපනය කිරීම අසාර්ථක විය"
-
-#: ../../network1/state_handler.go:106
-msgid "The connection was deleted from settings"
-msgstr "සැකසුම් වලින් සම්බන්ධතාවය මකා දමන ලදි"
-
-#: ../../network1/state_handler.go:262
-msgid "Enabling hotspot"
-msgstr "හොට්ස්පොට් සක්‍රීය කරමින්"
-
-#: ../../network1/state_handler.go:266
-msgid "Connecting %q"
-msgstr "%q සම්බන්ධ වෙමින් පවතී"
-
-#: ../../network1/state_handler.go:275
-msgid "Hotspot enabled"
-msgstr "හොට්ස්පොට් සක්‍රීයයි"
-
-#: ../../network1/state_handler.go:277
-msgid "%q connected"
-msgstr "%q සම්බන්ධයි"
-
-#: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
-msgid "Hotspot disabled"
-msgstr "හොට්ස්පොට් අක්‍රීයයි"
-
-#: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
-#: ../../system/bluetooth1/utils_notify.go:50
-msgid "%q disconnected"
-msgstr "%q විසන්ධි විය"
-
-#: ../../network1/state_handler.go:355
-msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "හොට්ස්පොට් බෙදා ගැනීමට නොහැක, කරුණාකර dnsmasq සැකසුම් පරීක්ෂා කරන්න"
-
-#: ../../network1/state_handler.go:357
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
-"%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර රැහැන් රහිත රවුටරයට සමීපව සිටින්න"
-
-#: ../../network1/state_handler.go:359
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr ""
-"%q සම්බන්ධ කිරීමට නොහැකි විය, කරුණාකර ඔබේ රවුටරය හෝ ජාල කේබලය පරීක්ෂා කරන්න."
-
-#: ../../network1/state_handler.go:363
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "සම්බන්ධතාවය අසාර්ථක විය, %q සම්බන්ධ කිරීමට නොහැකි විය, වැරදි මුරපදයකි"
-
-#: ../../network1/state_handler.go:365
-msgid "Unable to connect %q"
-msgstr ""
-
-#: ../../network1/state_handler.go:377
-msgid "To connect %q, please set up your authentication info"
-msgstr ""
-
-#: ../../network1/state_handler.go:379
-msgid "Password is required to connect %q"
-msgstr "%q සම්බන්ධ කිරීමට මුරපදය අවශ්‍ය වේ"
-
-#: ../../network1/state_handler.go:383
-msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
-
-#: ../../network1/utils_dbus_nm.go:278
-msgid "Unknown"
-msgstr "නොදත් "
-
-#: ../../network1/utils_notify.go:170
-msgid "Airplane mode enabled."
-msgstr "ගුවන් යානා ප්‍රකාරය සක්‍රීය කර ඇත."
-
-#: ../../network1/utils_notify.go:170 ../../network1/utils_notify.go:174
-#: ../../network1/utils_notify.go:178 ../../network1/utils_notify.go:196
-#: ../../network1/utils_notify.go:199 ../../network1/utils_notify.go:288
-msgid "Disconnected"
-msgstr "විසන්ධි වි ඇත"
-
-#: ../../network1/utils_notify.go:178
-msgid "Access Point mode is not supported by this device."
-msgstr "ප්‍රවේශ උපාංග ප්‍රකාරයට මෙම උපාංගය සහාය නොදක්වයි."
-
-#: ../../network1/utils_notify.go:182
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr ""
-"WLAN කාඩ්පතේ දෘඩාංග ස්විචය අක්‍රියයි, කරුණාකර අවශ්‍ය පරිදි ක්‍රියාත්මක "
-"කරන්න."
-
-#: ../../network1/utils_notify.go:186
-msgid "System proxy is set successfully."
-msgstr "පද්ධති ප්‍රොක්සිය සාර්ථකව සකසා ඇත."
-
-#: ../../network1/utils_notify.go:189
-msgid "System proxy has been cancelled."
-msgstr "පද්ධති ප්‍රොක්සි අවලංගු කර ඇත."
-
-#: ../../network1/utils_notify.go:193
-msgid "Connected"
-msgstr "සම්බන්ධයි"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
@@ -1097,61 +553,65 @@ msgstr ""
 msgid "Proceed"
 msgstr ""
 
-#: ../../session/power1/manager.go:928
+#: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr ""
 
-#: ../../session/power1/manager.go:929
+#: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
 msgstr ""
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Cancle"
 msgstr ""
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Shut down"
 msgstr ""
 
-#: ../../session/power1/manager_events.go:266
+#: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
 msgstr "බැටරි ධාරිතාවය ඉතා අඩුය"
 
-#: ../../session/power1/manager_events.go:291
-#: ../../session/power1/manager_events.go:296
-#: ../../session/power1/manager_events.go:301
-#: ../../session/power1/manager_events.go:306
+#: ../../session/power1/manager_events.go:308
+#: ../../session/power1/manager_events.go:313
+#: ../../session/power1/manager_events.go:318
+#: ../../session/power1/manager_events.go:323
 msgid "Battery low, please plug in"
 msgstr "අඩු බැටරි ධාරිතාවක් පවතී, කරුණාකර විදුලි සැපයුමක් ලබා දෙන්න"
 
-#: ../../session/power1/utils.go:636
+#: ../../session/power1/utils.go:674
 msgid "your computer will shut down"
 msgstr "ඔබේ පරිගණකය වසා දමනු ඇත"
 
-#: ../../session/power1/utils.go:638
+#: ../../session/power1/utils.go:676
 msgid "your computer will suspend"
 msgstr "ඔබේ පරිගණකය අත්හිටුවනු ඇත"
 
-#: ../../session/power1/utils.go:640
+#: ../../session/power1/utils.go:678
 msgid "your computer will hibernate"
 msgstr ""
 
-#: ../../session/power1/utils.go:642
+#: ../../session/power1/utils.go:680
 msgid "your monitor will turn off"
 msgstr "ඔබගේ මොනිටරය ක්‍රියා විරහිත වනු ඇත"
 
-#: ../../session/power1/utils.go:644
+#: ../../session/power1/utils.go:682
 msgid "your monitor will show the shutdown interface"
 msgstr ""
 
-#: ../../session/power1/utils.go:646
+#: ../../session/power1/utils.go:684
 msgid "it will do nothing to your computer"
 msgstr "එය ඔබේ පරිගණකයට කිසිවක් නොකරනු ඇත"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "%q සාර්ථකව සම්බන්ධ කර ඇත."
+
+#: ../../system/bluetooth1/utils_notify.go:50
+msgid "%q disconnected"
+msgstr "%q විසන්ධි විය"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
@@ -1166,11 +626,11 @@ msgstr ""
 msgid "Space"
 msgstr ""
 
-#: ../../timedate1/manager_ifc.go:59
+#: ../../timedate1/manager_ifc.go:60
 msgid "Authentication is required to set the system time"
 msgstr "පද්ධතියේ වේලාව සකස් කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate1/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:73
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1178,11 +638,11 @@ msgstr ""
 "ජාල කාල සමමුහුර්තකරණය/synchronization සක්‍රීය වීීීම පාලනය කිරීම සඳහා "
 "සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate1/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
 msgstr "NTP සේවාදායකය/server වෙනස් කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate1/manager_ifc.go:125
+#: ../../timedate1/manager_ifc.go:127
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1190,6 +650,6 @@ msgstr ""
 "RTC-තත් කාල ඔරලෝසුවෙහි දේශීය හෝ UTC-සමායෝත සාර්වත්‍ර වේලාව ගබඩා කරන්නේද යන්න"
 " පාලනය කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
-#: ../../timedate1/manager_ifc.go:151
+#: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
 msgstr "පද්ධතියේ වේලා කලාපය සකස් කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
