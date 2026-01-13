@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # artor <arto@rusanen.me>, 2025
 # Joonas Tamminen <hippimunqqi@gmail.com>, 2025
@@ -12,20 +12,21 @@
 # Deathmist, 2025
 # Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025
 # deepiner, 2025
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"POT-Creation-Date: 2026-01-13 09:49+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/linuxdeepin/teams/3617/fi/)\n"
+"Language-Team: Finnish (https://app.transifex.com/linuxdeepin/teams/3617/"
+"fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -38,8 +39,8 @@ msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"Salasanan pitää sisältää kirjaimia (isot ja pienet kirjaimet), numeroita tai"
-" erikoismerkkejä (~!@#$%^&*()[]{}\\|/?,.<>)"
+"Salasanan pitää sisältää kirjaimia (isot ja pienet kirjaimet), numeroita tai "
+"erikoismerkkejä (~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -66,48 +67,39 @@ msgstr "Käyttäjätunnuksen on oltava 3-32 merkin pituinen"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "Käyttäjä \"%s\" oli aiemmin ja sen tiedot synkronoidaan"
 
-#: ../../accounts1/user_ifc.go:731
+#: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
-"Tämä järjestelmän taustakuva on lukittu. Ota yhteyttä "
-"järjestelmänvalvojaasi."
+"Tämä järjestelmän taustakuva on lukittu. Ota yhteyttä järjestelmänvalvojaasi."
 
-#: ../../audio1/audio.go:284
+#: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
 msgstr "Palvelimen Audio Server vaihto epäonnistui, yritä myöhemmin"
 
-#: ../../audio1/audio.go:320
+#: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
 msgstr "Vaihdetaan palvelinta Audio Server, odota..."
 
-#: ../../audio1/audio.go:353
+#: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
 msgstr "Palvelin Audio Server vaihdettu, kirjaudu ulos ja sitten sisään"
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
-#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
-#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
-#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
+#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr "Ohjauspaneli"
 
-#: ../../audio1/audio_events.go:445
+#: ../../audio1/audio_events.go:701
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s poistettu käytöstä"
 
-#: ../../audio1/audio_events.go:446
+#: ../../audio1/audio_events.go:702
 msgid "Open"
 msgstr "Avaa"
-
-#: ../../bin/dde-authority/fprint_transaction.go:25
-msgid "Fingerprint verification failed"
-msgstr "Sormenjäljen tarkistus epäonnistui"
-
-#: ../../bin/dde-authority/fprint_transaction.go:26
-msgid "Fingerprint verification timed out"
-msgstr "Sormenjäljen tarkistus aikakatkaistiin"
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -169,57 +161,57 @@ msgstr "Viesteihin pääsy"
 msgid "Message notification"
 msgstr "Ilmoitusviesti"
 
-#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: ../../bluetooth1/obex_agent.go:396
+#: ../../bluetooth1/obex_agent.go:398
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Vastaanotto %[1]q kohteesta %[2]q"
 
-#: ../../bluetooth1/obex_agent.go:405
+#: ../../bluetooth1/obex_agent.go:407
 msgid "View"
 msgstr "Katsele"
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:413
 msgid "You have received files from %q successfully"
 msgstr "Olet vastaanottanut tiedostoja käyttäjältä %q onnistuneesti"
 
-#: ../../bluetooth1/obex_agent.go:412
+#: ../../bluetooth1/obex_agent.go:414
 msgid "Done"
 msgstr "Valmis"
 
-#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
 msgid "Stop Receiving Files"
 msgstr "Lopeta tiedostojen vastaanotto"
 
-#: ../../bluetooth1/obex_agent.go:429
+#: ../../bluetooth1/obex_agent.go:431
 msgid "You have cancelled the file transfer"
 msgstr "Olet peruuttanut tiedostonsiirron"
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:433
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth-yhteyden muodostaminen epäonnistui"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Decline"
 msgstr "Kieltäydy"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Receive"
 msgstr "Vastaanota"
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:477
 msgid "Bluetooth File Transfer"
 msgstr "Bluetooth-tiedostonsiirto"
 
-#: ../../bluetooth1/obex_agent.go:476
+#: ../../bluetooth1/obex_agent.go:478
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q haluaa lähettää tiedostoja sinulle. Otatko vastaan?"
 
-#: ../../bluetooth1/obex_agent.go:531
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Receiving %q timed out"
 msgstr "Vastaanotto kohteesta %q aikakatkaistiin"
 
@@ -235,72 +227,72 @@ msgstr "Lisää Bluetooth-laitteita"
 msgid "Pair"
 msgstr "Pari"
 
-#: ../../gesture1/gesture_action.go:38
+#: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
 msgstr "Suurenna ikkuna"
 
-#: ../../gesture1/gesture_action.go:39
+#: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
 msgstr "Palauta ikkuna"
 
-#: ../../gesture1/gesture_action.go:40
+#: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
 msgstr "Ikkuna vasemmalle jaettuna"
 
-#: ../../gesture1/gesture_action.go:41
+#: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
 msgstr "Ikkuna oikealle jaettuna"
 
-#: ../../gesture1/gesture_action.go:42
+#: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
 msgstr "Näytä työtilat näkymä"
 
-#: ../../gesture1/gesture_action.go:43
+#: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
 msgstr "Piilota työtilat näkymä"
 
-#: ../../gesture1/gesture_action.go:44
+#: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
 msgstr "Vaihda edelliseen työpöytään"
 
-#: ../../gesture1/gesture_action.go:45
+#: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
 msgstr "Vaihda seuraavaan työpöytään"
 
-#: ../../gesture1/gesture_action.go:46
-#: ../../keybinding1/shortcuts/id_name_map.go:85
+#: ../../gesture1/gesture_action.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr "Näytä työpöytä"
 
-#: ../../gesture1/gesture_action.go:47
+#: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
 msgstr "Piilota työpöytä"
 
-#: ../../gesture1/gesture_action.go:48
+#: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
 msgstr "Näytä tai piillota käynnistin"
 
-#: ../../gesture1/gesture_action.go:49
+#: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
 msgstr "Kun hiiren oikeaa painetaan"
 
-#: ../../gesture1/gesture_action.go:50
+#: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
 msgstr "Kun hiiren oikea vapautettu"
 
-#: ../../gesture1/gesture_action.go:51
+#: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
 msgstr "Näytä tai piillota leikepöytä"
 
-#: ../../gesture1/gesture_action.go:52
+#: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
 msgstr "Näytä tai piillota haku"
 
-#: ../../gesture1/gesture_action.go:53
+#: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
 msgstr "Näytä tai piillota ilmoitukset"
 
-#: ../../gesture1/gesture_action.go:54
+#: ../../gesture1/gesture_action.go:55
 msgid "Disable"
 msgstr "Pois"
 
@@ -389,151 +381,151 @@ msgid "Deepin Picker"
 msgstr "Deepin värinvalitsija"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
-msgid "Desktop AI Assistant"
-msgstr "Työpöydän AI-avustaja"
-
-#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr "Teksti puheeksi"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:34
+#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Speech to Text"
 msgstr "Puhe tekstiksi"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:35
+#: ../../keybinding1/shortcuts/id_name_map.go:34
 msgid "Clipboard"
 msgstr "Leikepöydälle"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:36
+#: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Translation"
 msgstr "Käännös"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:37
+#: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
 msgstr "Suuri haku"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
 msgstr "Ilmoituskeskus"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:39
-#: ../../keybinding1/shortcuts/id_name_map.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr "Vaihda asettelu"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:40
+#: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
 msgstr "Kytke useita näyttöjä"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:66
+#: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr "Siirry vasempaan työtilaan"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:67
+#: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr "Siirry oikeaan työtilaan"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:68
+#: ../../keybinding1/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr "Siirry ylempään työtilaan"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:69
+#: ../../keybinding1/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr "Vaihda alempaan työtilaan"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:71
+#: ../../keybinding1/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr "Vaihda samankaltaiset ikkunat"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:72
+#: ../../keybinding1/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr "Vaihda samankaltaiset ikkunat vastakkaisiksi"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:73
+#: ../../keybinding1/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr "Vaihda ikkunoita"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:74
+#: ../../keybinding1/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr "Vaihda ikkunoita päinvastoin"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:94
+#: ../../keybinding1/shortcuts/id_name_map.go:89
+msgid "Activate window menu"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr "Maksimoi ikkuna"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:95
+#: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr "Palauta ikkuna"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:97
+#: ../../keybinding1/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr "Pienennä ikkuna"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:98
+#: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr "Sulje paneeli"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:99
+#: ../../keybinding1/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr "Siirrä ikkuna"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:100
+#: ../../keybinding1/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr "Ikkunan koko"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:115
+#: ../../keybinding1/shortcuts/id_name_map.go:114
 msgid "Move to left workspace"
 msgstr "Siirry vasempaan työtilaan"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:116
+#: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to right workspace"
 msgstr "Siirry oikeaan työtilaan"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:117
+#: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to upper workspace"
 msgstr "Siirry ylempään työtilaan"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:118
+#: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to lower workspace"
 msgstr "Siirry alempaan työtilaan"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:140
+#: ../../keybinding1/shortcuts/id_name_map.go:139
 msgid "Display windows of all workspaces"
 msgstr "Näytä kaikkien työtilojen ikkunat"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:141
+#: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of current workspace"
 msgstr "Näytä nykyisen työtilan ikkunat"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:142
+#: ../../keybinding1/shortcuts/id_name_map.go:141
 msgid "Display workspace"
 msgstr "Näytä työtila"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:143
+#: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
 msgstr "Suurenna sisään"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:144
+#: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
 msgstr "Suurenna ulos"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:145
+#: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
 msgstr "Suurenna oikeaan kokoon"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:146
+#: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
 msgstr "Ikkuna pikaruutuna vasemmalle"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:147
+#: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
 msgstr "Ikkuna pikaruutuna oikealle"
 
-#: ../../langselector1/locale.go:47
+#: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
 msgstr "Kielen vaihtaminen vaatii tunnistautumisen"
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:143
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -541,558 +533,22 @@ msgstr ""
 "Järjestelmän kielen muuttaminen ja tarvittavien kielipakettien asentaminen "
 "odota ..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
 msgstr "Järjestelmän kielen muuttaminen odota ..."
 
-#: ../../langselector1/locale.go:140
+#: ../../langselector1/locale.go:145
 msgid "System language changed, please log out and then log in"
 msgstr "Järjestelmän kieli muuttui, kirjaudu ulos ja kirjaudu sisään"
 
-#: ../../langselector1/locale.go:379
+#: ../../langselector1/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Järjestelmän kielen vaihtaminen epäonnistui, yritä myöhemmin"
 
-#: ../../lastore1/daemon.go:186
-msgid "Updates failed: it was interrupted."
-msgstr "Päivitykset epäonnistuivat: toiminta keskeytettiin."
-
-#: ../../lastore1/daemon.go:188
-msgid ""
-"Updates failed: it was interrupted. Please roll back to the old version and "
-"try again."
-msgstr ""
-"Päivitykset epäonnistuivat: toiminta keskeytettiin. Palaa vanhaan versioon "
-"ja yritä uudelleen."
-
-#: ../../lastore1/daemon.go:194
-msgid "Updates failed: DPKG error."
-msgstr "Päivitykset epäonnistuivat: DPKG-virhe."
-
-#: ../../lastore1/daemon.go:196
-msgid ""
-"Updates failed: DPKG error. Please roll back to the old version and try "
-"again."
-msgstr ""
-"Päivitykset epäonnistuivat: DPKG-virhe. Palaa vanhaan versioon ja yritä "
-"uudelleen."
-
-#: ../../lastore1/daemon.go:200
-msgid "Updates failed: insufficient disk space."
-msgstr "Päivitykset epäonnistuivat: levytila ei riitä."
-
-#: ../../lastore1/daemon.go:202
-msgid ""
-"Updates failed: insufficient disk space. Please roll back to the old version"
-" and try again."
-msgstr ""
-"Päivitykset epäonnistuivat: levytila ei riitä. Palaa vanhaan versioon ja "
-"yritä uudelleen."
-
-#: ../../lastore1/daemon.go:206
-msgid "Updates failed"
-msgstr "Päivitykset epäonnistuivat"
-
-#: ../../lastore1/daemon.go:208
-msgid "Updates failed. Please roll back to the old version and try again."
-msgstr ""
-"Päivitykset epäonnistuivat. Palaa vanhaan versioon ja yritä uudelleen."
-
-#: ../../launcher/item.go:97
-msgid "(Linglong)"
-msgstr "(Linglong)"
-
-#: ../../launcher/manager_uninstall.go:55
-msgid "%q removed successfully"
-msgstr "%q poistettu onnistuneesti"
-
-#: ../../launcher/manager_uninstall.go:57
-msgid "Failed to uninstall %q"
-msgstr "Kohteen %q poistaminen epäonnistui"
-
-#: ../../network1/manager_active_conn.go:468
-#: ../../network1/manager_active_conn.go:473
-msgid "None"
-msgstr "Mitään"
-
-#: ../../network1/manager_active_conn.go:475
-msgid "WEP 40/128-bit Key"
-msgstr "WEP 40/128-bit-avain"
-
-#: ../../network1/manager_active_conn.go:477
-msgid "WPA/WPA2 Personal"
-msgstr "Oma WPA/WPA2"
-
-#: ../../network1/manager_active_conn.go:479
-msgid "WPA3 Personal"
-msgstr "WPA3"
-
-#: ../../network1/manager_active_conn.go:487
-msgid "TLS"
-msgstr "TLS"
-
-#: ../../network1/manager_active_conn.go:489
-msgid "MD5"
-msgstr "MD5"
-
-#: ../../network1/manager_active_conn.go:491
-msgid "LEAP"
-msgstr "LEAP"
-
-#: ../../network1/manager_active_conn.go:493
-msgid "FAST"
-msgstr "FAST"
-
-#: ../../network1/manager_active_conn.go:495
-msgid "Tunneled TLS"
-msgstr "Tunneloitu TLS"
-
-#: ../../network1/manager_active_conn.go:497
-msgid "Protected EAP"
-msgstr "Suojattu EAP"
-
-#: ../../network1/manager_connection.go:346
-#: ../../network1/manager_connection.go:350
-msgid "Wired Connection"
-msgstr "Yhteys kaapelilla"
-
-#: ../../network1/manager_connection.go:389
-msgid "Wired Connection %v"
-msgstr "Verkkokaapeli %v"
-
-#: ../../network1/proxychains/utils_notify.go:49
-msgid "Application proxy is set successfully"
-msgstr "Sovelluksen välityspalvelin on määritetty onnistuneesti"
-
-#: ../../network1/proxychains/utils_notify.go:49
-#: ../../network1/proxychains/utils_notify.go:52
-#: ../../network1/utils_notify.go:182 ../../network1/utils_notify.go:186
-#: ../../network1/utils_notify.go:189
-msgid "Network"
-msgstr "Verkko"
-
-#: ../../network1/proxychains/utils_notify.go:52
-msgid "Failed to set the application proxy"
-msgstr "Sovelluksen välityspalvelimen määrittäminen epäonnistui"
-
-#: ../../network1/state_handler.go:23
-msgid "Device state changed"
-msgstr "Laitteen tila muuttunut"
-
-#: ../../network1/state_handler.go:24
-msgid "Device state changed, reason unknown"
-msgstr "Laitteen tila muuttui, syy tuntematon"
-
-#: ../../network1/state_handler.go:25
-msgid "The device is now managed"
-msgstr "Laite on nyt hallittu"
-
-#: ../../network1/state_handler.go:26
-msgid "The device is no longer managed"
-msgstr "Laitetta ei enää hallita"
-
-#: ../../network1/state_handler.go:27
-msgid "The device has not been ready for configuration"
-msgstr "Laite ei ole ollut valmis kokoonpanoa varten"
-
-#: ../../network1/state_handler.go:28
-msgid ""
-"IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr ""
-"IP-määrityksiä ei voitu varata (ei käytettävissä olevaa osoitetta, "
-"aikakatkaisua jne.)"
-
-#: ../../network1/state_handler.go:29
-msgid "The IP configuration is no longer valid"
-msgstr "IP-asetukset ei ole enää voimassa"
-
-#: ../../network1/state_handler.go:30
-msgid "Passwords were required but not provided"
-msgstr "Salasanoja vaadittiin, mutta niitä ei toimitettu"
-
-#: ../../network1/state_handler.go:31
-msgid ""
-"The 802.1X supplicant disconnected from the access point or authentication "
-"server"
-msgstr "802.1X-vastaanotto katkaistiin tukiasemasta tai todennuspalvelimesta"
-
-#: ../../network1/state_handler.go:32
-msgid "Configuration of the 802.1X supplicant failed"
-msgstr "802.1X-todennuksen konfiguraatio epäonnistui."
-
-#: ../../network1/state_handler.go:33
-msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "802.1X-haku poistui tai sen yhteys katkesi odottamatta."
-
-#: ../../network1/state_handler.go:34
-msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "802.1X-todennuksen vahvistuksessa meni liikaa aikaa."
-
-#: ../../network1/state_handler.go:35
-msgid "The PPP service failed to start within the allowed time"
-msgstr "PPP-palvelin ei käynnistynyt vaaditussa ajassa."
-
-#: ../../network1/state_handler.go:36
-msgid "The PPP service disconnected unexpectedly"
-msgstr "Yhteys PPP-palveluun katkesi yllättäen."
-
-#: ../../network1/state_handler.go:37
-msgid "The PPP service quitted or failed unexpectedly"
-msgstr "PPP-palvelu keskeytyi tai epäonnistui yllättäen."
-
-#: ../../network1/state_handler.go:38
-msgid "The DHCP service failed to start within the allowed time"
-msgstr "DHCP-palvelu ei käynnistynyt vaaditun ajan sisällä."
-
-#: ../../network1/state_handler.go:39
-msgid "The DHCP service reported an unexpected error"
-msgstr "DHCP-palvelu havaitsi yllättävän virheen."
-
-#: ../../network1/state_handler.go:40
-msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "DHCP-palvelu päättyi tai epäonnistui yllättävästi. "
-
-#: ../../network1/state_handler.go:41
-msgid "The shared connection service failed to start"
-msgstr "Jaetun yhteyspalvelun käynnistys epäonnistui."
-
-#: ../../network1/state_handler.go:42
-msgid "The shared connection service quitted or failed unexpectedly"
-msgstr "Jaettu yhteyspalvelu katkesi tai lakkasi yllättäen toimimasta."
-
-#: ../../network1/state_handler.go:43
-msgid "The AutoIP service failed to start"
-msgstr "Automaattinen IP-palvelu ei käynnistynyt."
-
-#: ../../network1/state_handler.go:44
-msgid "The AutoIP service reported an unexpected error"
-msgstr "AutoIP-palvelu havaitsi odottamattoman virheen."
-
-#: ../../network1/state_handler.go:45
-msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "Automaattinen IP-palvelu poistui tai se katkesi odottamatta."
-
-#: ../../network1/state_handler.go:46
-msgid "Dialing failed due to busy lines"
-msgstr "Numeron valinta epäonnistui linjojen ruuhkan vuoksi."
-
-#: ../../network1/state_handler.go:47
-msgid "Dialing failed due to no dial tone"
-msgstr "Numeron valinta epäonnistui valintaäänen puuttumisen vuoksi."
-
-#: ../../network1/state_handler.go:48
-msgid "Dialing failed due to the carrier"
-msgstr "Numeron valinta epäonnistui puhelinoperaattorista johtuen."
-
-#: ../../network1/state_handler.go:49
-msgid "Dialing timed out"
-msgstr "Yhdistäminen epäonnistui. "
-
-#: ../../network1/state_handler.go:50
-msgid "Dialing failed"
-msgstr "Yhdistäminen epäonnistui. "
-
-#: ../../network1/state_handler.go:51
-msgid "Modem initialization failed"
-msgstr "Modeemin valmistelu epäonnistui."
-
-#: ../../network1/state_handler.go:52
-msgid "Failed to select the specified GSM APN"
-msgstr "Määritetyn GSM APN:n valinta epäonnistui."
-
-#: ../../network1/state_handler.go:53
-msgid "No networks searched"
-msgstr "Ei haettuja tietoverkkoja."
-
-#: ../../network1/state_handler.go:54
-msgid "Network registration was denied"
-msgstr "Tietoverkon rekisteröinti kiellettiin."
-
-#: ../../network1/state_handler.go:55
-msgid "Network registration timed out"
-msgstr "Verkon rekisteröinti aikakatkaistiin."
-
-#: ../../network1/state_handler.go:56
-msgid "Failed to register to the requested GSM network"
-msgstr "Rekisteröityminen pyydettyyn GSM-verkkoon epäonnistui"
-
-#: ../../network1/state_handler.go:57
-msgid "PIN check failed"
-msgstr "PIN-koodin tarkastus epäonnistui."
-
-#: ../../network1/state_handler.go:58
-msgid "Necessary firmware for the device may be missed"
-msgstr "Tarvittavat laiteohjelmat saattavat puuttua."
-
-#: ../../network1/state_handler.go:59
-msgid "The device was removed"
-msgstr "Laite on poistettu."
-
-#: ../../network1/state_handler.go:60
-msgid "NetworkManager went to sleep"
-msgstr "Verkon hallinta vaipui lepotilaan."
-
-#: ../../network1/state_handler.go:61
-msgid "The device's active connection was removed or disappeared"
-msgstr "Laitteen aktiivinen yhteys poistettiin tai katosi"
-
-#: ../../network1/state_handler.go:62
-msgid "A user or client requested to disconnect"
-msgstr "Käyttäjä tai asiakas pyysi yhteytensä katkaisemista."
-
-#: ../../network1/state_handler.go:63
-msgid "The device's carrier/link changed"
-msgstr "Laitteen yhteys muuttui. "
-
-#: ../../network1/state_handler.go:64
-msgid "The device's existing connection was assumed"
-msgstr "Laitteen olemassa oleva yhteys on oletus"
-
-#: ../../network1/state_handler.go:65
-msgid "The 802.1x supplicant is now available"
-msgstr "802.1x-vastaanottaja on nyt saatavilla"
-
-#: ../../network1/state_handler.go:66
-msgid "The modem could not be found"
-msgstr "Modeemia ei löytynyt"
-
-#: ../../network1/state_handler.go:67
-msgid "The Bluetooth connection timed out or failed"
-msgstr "Bluetooth-yhteys katkesi tai päättyi."
-
-#: ../../network1/state_handler.go:68
-msgid "GSM Modem's SIM Card was not inserted"
-msgstr "GSM-modeemissa ei ole SIM-korttia."
-
-#: ../../network1/state_handler.go:69
-msgid "GSM Modem's SIM PIN required"
-msgstr "GSM-modeemin SIM-kortin PIN-koodi vaaditaan"
-
-#: ../../network1/state_handler.go:70
-msgid "GSM Modem's SIM PUK required"
-msgstr "GSM-modeemin SIM-kortin PUK-koodi vaaditaan."
-
-#: ../../network1/state_handler.go:71
-msgid "SIM card error in GSM Modem"
-msgstr "SIM-kortin virhe"
-
-#: ../../network1/state_handler.go:72
-msgid "InfiniBand device does not support connected mode"
-msgstr "InfiniBand-laitteet eivät tue yhteystilaa."
-
-#: ../../network1/state_handler.go:73
-msgid "A dependency of the connection failed"
-msgstr "Yhteyden riippuvuus epäonnistui"
-
-#: ../../network1/state_handler.go:74
-msgid "RFC 2684 Ethernet bridging error to ADSL"
-msgstr "RFC2684 lähiverkon sillan virhe ADSL-modeemissa"
-
-#: ../../network1/state_handler.go:75
-msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "Modemin-hallinta ei käynnistynyt tai yhteys katkesi yllättäen."
-
-#: ../../network1/state_handler.go:76
-msgid "The 802.11 WLAN network could not be found"
-msgstr "802.11 WiFi -verkkoa ei löytynyt"
-
-#: ../../network1/state_handler.go:77
-msgid "A secondary connection of the base connection failed"
-msgstr "Perusyhteyden toissijainen yhteys epäonnistui"
-
-#: ../../network1/state_handler.go:80
-msgid "DCB or FCoE setup failed"
-msgstr "DCB:n tai FCoE:n asennus epäonnistui."
-
-#: ../../network1/state_handler.go:81
-msgid "Network teaming control failed"
-msgstr "Verkkoyhteyden hallinta epäonnistui"
-
-#: ../../network1/state_handler.go:82
-msgid "Modem failed to run or not available"
-msgstr "Modeemi ei käynnisty tai ei ole käytettävissä"
-
-#: ../../network1/state_handler.go:83
-msgid "Modem now ready and available"
-msgstr "Modeemi on saatavilla ja käyttövalmiina."
-
-#: ../../network1/state_handler.go:84
-msgid "SIM PIN is incorrect"
-msgstr "SIM PIN on virheellinen."
-
-#: ../../network1/state_handler.go:85
-msgid "New connection activation is enqueuing"
-msgstr "Uusi yhteys aktivoituu"
-
-#: ../../network1/state_handler.go:86
-msgid "Parent device changed"
-msgstr "Emolaite vaihdettu."
-
-#: ../../network1/state_handler.go:87
-msgid "Management status of parent device changed"
-msgstr "Emolaitteen hallinnan tilaa on muutettu."
-
-#: ../../network1/state_handler.go:90
-msgid "Network cable is unplugged"
-msgstr "Verkkokaapeli ei kytketty"
-
-#: ../../network1/state_handler.go:91
-msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr "Varmista, että SIM-kortti on asetettu ja mobiiliverkossa on signaali."
-
-#: ../../network1/state_handler.go:92
-msgid ""
-"Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr ""
-"Ole hyvä ja varmista, että valitsit oikean suunnitelman poistamatta SIM-"
-"korttia. "
-
-#: ../../network1/state_handler.go:95
-msgid "Failed to activate VPN connection, reason unknown"
-msgstr "VPN-yhteyden aktivointi epäonnistui"
-
-#: ../../network1/state_handler.go:96
-msgid "Failed to activate VPN connection"
-msgstr "VPN-yhteyden aktivointi epäonnistui"
-
-#: ../../network1/state_handler.go:97
-msgid "The VPN connection state changed due to being disconnected by users"
-msgstr "VPN-yhteyden tila on muuttunut käyttäjän toimesta"
-
-#: ../../network1/state_handler.go:98
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
-msgstr "VPN-yhteyden tila on muuttunut laitteen toimesta"
-
-#: ../../network1/state_handler.go:99
-msgid "VPN service stopped"
-msgstr "VPN-palvelu pysähtyi"
-
-#: ../../network1/state_handler.go:100
-msgid "The IP config of VPN connection was invalid"
-msgstr "VPN-yhteyden IP-asetukset olivat virheelliset."
-
-#: ../../network1/state_handler.go:101
-msgid "The connection attempt to VPN service timed out"
-msgstr "VPN-palveluun yhdistäminen aikakatkaistiin"
-
-#: ../../network1/state_handler.go:102
-msgid "The VPN service start timed out"
-msgstr "VPN-palvelun käynnistäminen aikakatkaistiin"
-
-#: ../../network1/state_handler.go:103
-msgid "The VPN service failed to start"
-msgstr "VPN-palvelun käynnistäminen epäonnistui"
-
-#: ../../network1/state_handler.go:104
-msgid "The VPN connection password was not provided"
-msgstr "VPN-yhteyden salasanaa ei annettu"
-
-#: ../../network1/state_handler.go:105
-msgid "Authentication to VPN server failed"
-msgstr "Tunnistautuminen VPN-palvelimeen epäonnistui"
-
-#: ../../network1/state_handler.go:106
-msgid "The connection was deleted from settings"
-msgstr "Yhteys poistettiin asetuksista"
-
-#: ../../network1/state_handler.go:262
-msgid "Enabling hotspot"
-msgstr "Tukiaseman käyttöönotto"
-
-#: ../../network1/state_handler.go:266
-msgid "Connecting %q"
-msgstr "Yhdistää %q"
-
-#: ../../network1/state_handler.go:275
-msgid "Hotspot enabled"
-msgstr "Tukiasema käytössä"
-
-#: ../../network1/state_handler.go:277
-msgid "%q connected"
-msgstr "Yhdistetty kohteeseen %q"
-
-#: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
-msgid "Hotspot disabled"
-msgstr "Tukiasema suljettu"
-
-#: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
-#: ../../system/bluetooth1/utils_notify.go:50
-msgid "%q disconnected"
-msgstr "%q irrotettu"
-
-#: ../../network1/state_handler.go:355
-msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "tukiaseman jakaminen epäonnistui, tarkista dnsmasq asetukset"
-
-#: ../../network1/state_handler.go:357
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
-"Yhteys kohteeseen %q epäonnistui, pysyttele lähempänä langatonta reititintä"
-
-#: ../../network1/state_handler.go:359
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "Yhteys kohteeseen %q epäonnistui, tarkista reititin tai verkkokaapeli"
-
-#: ../../network1/state_handler.go:363
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Yhteys kohteeseen %q epäonnistui, väärä salasana"
-
-#: ../../network1/state_handler.go:365
-msgid "Unable to connect %q"
-msgstr "Ei voitu yhdistää %q"
-
-#: ../../network1/state_handler.go:377
-msgid "To connect %q, please set up your authentication info"
-msgstr "Yhdistä %q määrittämällä tunnistautumisen tiedot"
-
-#: ../../network1/state_handler.go:379
-msgid "Password is required to connect %q"
-msgstr "Yhdistämiseen tarvitaan salasana %q"
-
-#: ../../network1/state_handler.go:383
-msgid "The %q 802.11 WLAN network could not be found"
-msgstr "%q 802.11 WLAN-verkkoa ei löytynyt"
-
-#: ../../network1/utils_dbus_nm.go:278
-msgid "Unknown"
-msgstr "Tuntematon"
-
-#: ../../network1/utils_notify.go:170
-msgid "Airplane mode enabled."
-msgstr "Lentotila käytössä."
-
-#: ../../network1/utils_notify.go:170 ../../network1/utils_notify.go:174
-#: ../../network1/utils_notify.go:178 ../../network1/utils_notify.go:196
-#: ../../network1/utils_notify.go:199 ../../network1/utils_notify.go:288
-msgid "Disconnected"
-msgstr "Katkaistu"
-
-#: ../../network1/utils_notify.go:178
-msgid "Access Point mode is not supported by this device."
-msgstr "Tämä laite ei tue tukiaseman tilaa."
-
-#: ../../network1/utils_notify.go:182
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr ""
-"WLAN-kortin laitteistokytkin on pois päältä, laita tarvittaessa päälle."
-
-#: ../../network1/utils_notify.go:186
-msgid "System proxy is set successfully."
-msgstr "Välityspalvelimen asennus onnistui."
-
-#: ../../network1/utils_notify.go:189
-msgid "System proxy has been cancelled."
-msgstr "Järjestelmän välityspalvelin on peruttu."
-
-#: ../../network1/utils_notify.go:193
-msgid "Connected"
-msgstr "Yhdistetty"
-
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgid ""
+"\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" ei läpäistänyt järjestelmän suojauksen vahvistusta, eikä sitä voi "
 "suorittaa nyt"
@@ -1110,61 +566,65 @@ msgstr ""
 msgid "Proceed"
 msgstr "Jatka"
 
-#: ../../session/power1/manager.go:928
+#: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr "Tietokone sammuu automaattisesti %d s"
 
-#: ../../session/power1/manager.go:929
+#: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
 msgstr "Ajastettu sammutus"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Cancle"
 msgstr "Peruuta"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Shut down"
 msgstr "Sammuta"
 
-#: ../../session/power1/manager_events.go:266
+#: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
 msgstr "Akku kriittisesti alhainen"
 
-#: ../../session/power1/manager_events.go:291
-#: ../../session/power1/manager_events.go:296
-#: ../../session/power1/manager_events.go:301
-#: ../../session/power1/manager_events.go:306
+#: ../../session/power1/manager_events.go:308
+#: ../../session/power1/manager_events.go:313
+#: ../../session/power1/manager_events.go:318
+#: ../../session/power1/manager_events.go:323
 msgid "Battery low, please plug in"
 msgstr "Virtataso alhainen, ole hyvä ja yhdistä verkkovirtaan"
 
-#: ../../session/power1/utils.go:636
+#: ../../session/power1/utils.go:674
 msgid "your computer will shut down"
 msgstr "tietokoneesi sammuu"
 
-#: ../../session/power1/utils.go:638
+#: ../../session/power1/utils.go:676
 msgid "your computer will suspend"
 msgstr "tietokoneesi siirtyy lepotilaan"
 
-#: ../../session/power1/utils.go:640
+#: ../../session/power1/utils.go:678
 msgid "your computer will hibernate"
 msgstr "tietokoneesi siirtyy valmiustilaan"
 
-#: ../../session/power1/utils.go:642
+#: ../../session/power1/utils.go:680
 msgid "your monitor will turn off"
 msgstr "näyttö sammuu"
 
-#: ../../session/power1/utils.go:644
+#: ../../session/power1/utils.go:682
 msgid "your monitor will show the shutdown interface"
 msgstr "näytössäsi näkyy sammutusliittymä"
 
-#: ../../session/power1/utils.go:646
+#: ../../session/power1/utils.go:684
 msgid "it will do nothing to your computer"
 msgstr "se ei tee mitään"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "Yhdistetty %q onnistuneesti"
+
+#: ../../system/bluetooth1/utils_notify.go:50
+msgid "%q disconnected"
+msgstr "%q irrotettu"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
@@ -1181,11 +641,11 @@ msgstr ""
 msgid "Space"
 msgstr "Välilyönti"
 
-#: ../../timedate1/manager_ifc.go:59
+#: ../../timedate1/manager_ifc.go:60
 msgid "Authentication is required to set the system time"
 msgstr "Ajan asettaminen vaatii tunnistautumisen."
 
-#: ../../timedate1/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:73
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1193,16 +653,16 @@ msgstr ""
 "Todennus on tarpeen, jotta voidaan määrittää, onko verkkoajan synkronointi "
 "käytössä"
 
-#: ../../timedate1/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
 msgstr "NTP-palvelimen muuttamiseen tarvitaan tunnistautuminen"
 
-#: ../../timedate1/manager_ifc.go:125
+#: ../../timedate1/manager_ifc.go:127
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr "Todentaminen edellyttää, että RTC tallentaa paikallisen tai UTC-ajan"
 
-#: ../../timedate1/manager_ifc.go:151
+#: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
 msgstr "Aikavyöhykkeen asettaminen vaatii tunnistautumisen"

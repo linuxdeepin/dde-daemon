@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Nam Anh <phamnamanh25@gmail.com>, 2025
 # Vu Thanh An <banzin123@gmail.com>, 2025
@@ -10,20 +10,21 @@
 # Hoan Chu Đình <chudinhhoan277@gmail.com>, 2025
 # Phạm Đông Giang <ginise99@yahoo.com>, 2025
 # deepiner, 2025
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"POT-Creation-Date: 2026-01-13 09:49+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
-"Language-Team: Vietnamese (https://app.transifex.com/linuxdeepin/teams/3617/vi/)\n"
+"Language-Team: Vietnamese (https://app.transifex.com/linuxdeepin/teams/3617/"
+"vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -64,46 +65,38 @@ msgstr "Tên người dùng phải từ 3 đến 32 kí tự"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../accounts1/user_ifc.go:731
+#: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
-#: ../../audio1/audio.go:284
+#: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
 msgstr ""
 
-#: ../../audio1/audio.go:320
+#: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
 msgstr ""
 
-#: ../../audio1/audio.go:353
+#: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
-#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
-#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
-#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
+#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr ""
 
-#: ../../audio1/audio_events.go:445
+#: ../../audio1/audio_events.go:701
 #, c-format
 msgid "%s had been disabled"
 msgstr ""
 
-#: ../../audio1/audio_events.go:446
+#: ../../audio1/audio_events.go:702
 msgid "Open"
 msgstr "Mở"
-
-#: ../../bin/dde-authority/fprint_transaction.go:25
-msgid "Fingerprint verification failed"
-msgstr "Xác minh vân tay không thành công"
-
-#: ../../bin/dde-authority/fprint_transaction.go:26
-msgid "Fingerprint verification timed out"
-msgstr "Đã hết thời gian xác minh dấu vân tay"
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -165,57 +158,57 @@ msgstr "Truy cập tin nhắn"
 msgid "Message notification"
 msgstr "Thông báo tin nhắn"
 
-#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "Hủy"
 
-#: ../../bluetooth1/obex_agent.go:396
+#: ../../bluetooth1/obex_agent.go:398
 msgid "Receiving %[1]q from %[2]q"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:405
+#: ../../bluetooth1/obex_agent.go:407
 msgid "View"
 msgstr "Xem"
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:413
 msgid "You have received files from %q successfully"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:412
+#: ../../bluetooth1/obex_agent.go:414
 msgid "Done"
 msgstr "Xong"
 
-#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
 msgid "Stop Receiving Files"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:429
+#: ../../bluetooth1/obex_agent.go:431
 msgid "You have cancelled the file transfer"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:433
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Kết nối bluetooth đã thất bại"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Decline"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Receive"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:477
 msgid "Bluetooth File Transfer"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:476
+#: ../../bluetooth1/obex_agent.go:478
 msgid "%q wants to send files to you. Receive?"
 msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:531
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Receiving %q timed out"
 msgstr ""
 
@@ -231,72 +224,72 @@ msgstr "Thêm thiết bị Bluetooth"
 msgid "Pair"
 msgstr "Kết nối"
 
-#: ../../gesture1/gesture_action.go:38
+#: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:39
+#: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:40
+#: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:41
+#: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:42
+#: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:43
+#: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:44
+#: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:45
+#: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:46
-#: ../../keybinding1/shortcuts/id_name_map.go:85
+#: ../../gesture1/gesture_action.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr "Hiện màn hình ngoài"
 
-#: ../../gesture1/gesture_action.go:47
+#: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:48
+#: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:49
+#: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:50
+#: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:51
+#: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:52
+#: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:53
+#: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
 msgstr ""
 
-#: ../../gesture1/gesture_action.go:54
+#: ../../gesture1/gesture_action.go:55
 msgid "Disable"
 msgstr ""
 
@@ -385,151 +378,151 @@ msgid "Deepin Picker"
 msgstr "Deepin Picker"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
-msgid "Desktop AI Assistant"
-msgstr "Trợ lý Desktop AI"
-
-#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr "Chuyển văn bản thành giọng nói"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:34
+#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Speech to Text"
 msgstr "Phát biểu thành văn bản"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:35
+#: ../../keybinding1/shortcuts/id_name_map.go:34
 msgid "Clipboard"
 msgstr "Bộ nhớ Clipboard"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:36
+#: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Translation"
 msgstr "Dịch"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:37
+#: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
 msgstr "Trung tâm Thông báo"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:39
-#: ../../keybinding1/shortcuts/id_name_map.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr "Bố trí Bộ chuyển đổi"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:40
+#: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:66
+#: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr "Chuyển sang không gian làm việc bên trái"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:67
+#: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr "Chuyển sang không gian làm việc bên phải"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:68
+#: ../../keybinding1/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr "Chuyển sang không gian làm việc ở trên"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:69
+#: ../../keybinding1/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr "Chuyển sang không gian làm việc ở dưới"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:71
+#: ../../keybinding1/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr "Chuyển sang các cửa sổ tương tự"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:72
+#: ../../keybinding1/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr "Chuyển sang các cửa sổ tương tự theo thứ tự ngược lại"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:73
+#: ../../keybinding1/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr "Chuyển cửa sổ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:74
+#: ../../keybinding1/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr "Chuyển cửa sổ theo thứ tự ngược lại"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:94
+#: ../../keybinding1/shortcuts/id_name_map.go:89
+msgid "Activate window menu"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr "Mở hết cửa sổ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:95
+#: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr "Khôi phục cửa sổ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:97
+#: ../../keybinding1/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr "Thu nhỏ nhất cửa sổ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:98
+#: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr "Đóng cửa sổ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:99
+#: ../../keybinding1/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr "Di chuyển cửa sổ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:100
+#: ../../keybinding1/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr "Đổi kích thước cửa sổ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:115
+#: ../../keybinding1/shortcuts/id_name_map.go:114
 msgid "Move to left workspace"
 msgstr "Di chuyển tới không gian làm việc bên trái"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:116
+#: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to right workspace"
 msgstr "Di chuyển tới không gian làm việc bên phải"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:117
+#: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to upper workspace"
 msgstr "Di chuyển tới không gian làm việc ở trên"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:118
+#: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to lower workspace"
 msgstr "Di chuyển tới không gian làm việc ở dưới"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:140
+#: ../../keybinding1/shortcuts/id_name_map.go:139
 msgid "Display windows of all workspaces"
 msgstr "Hiển thị cửa sổ của tất cả không gian làm việc"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:141
+#: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of current workspace"
 msgstr "Hiển thị cửa sổ của không gian làm việc hiện tại"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:142
+#: ../../keybinding1/shortcuts/id_name_map.go:141
 msgid "Display workspace"
 msgstr "Hiển thị không gian làm việc"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:143
+#: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:144
+#: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:145
+#: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:146
+#: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
 msgstr ""
 
-#: ../../keybinding1/shortcuts/id_name_map.go:147
+#: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
 msgstr ""
 
-#: ../../langselector1/locale.go:47
+#: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
 msgstr "Chứng thực được đòi hỏi để đổi ngôn ngữ"
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:143
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -537,549 +530,22 @@ msgstr ""
 "Thay đổi ngôn ngữ hệ thống và cài đặt các gói ngôn ngữ cần thiết, vui lòng "
 "đợi ..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
 msgstr "Thay đổi ngôn ngữ hệ thống, vui lòng đợi ..."
 
-#: ../../langselector1/locale.go:140
+#: ../../langselector1/locale.go:145
 msgid "System language changed, please log out and then log in"
 msgstr "Ngôn ngữ hệ thống đã thay đổi, vui lòng đăng xuất và sau đó đăng nhập"
 
-#: ../../langselector1/locale.go:379
+#: ../../langselector1/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Không thể thay đổi ngôn ngữ hệ thống, vui lòng thử lại sau"
 
-#: ../../lastore1/daemon.go:186
-msgid "Updates failed: it was interrupted."
-msgstr ""
-
-#: ../../lastore1/daemon.go:188
-msgid ""
-"Updates failed: it was interrupted. Please roll back to the old version and "
-"try again."
-msgstr ""
-
-#: ../../lastore1/daemon.go:194
-msgid "Updates failed: DPKG error."
-msgstr ""
-
-#: ../../lastore1/daemon.go:196
-msgid ""
-"Updates failed: DPKG error. Please roll back to the old version and try "
-"again."
-msgstr ""
-
-#: ../../lastore1/daemon.go:200
-msgid "Updates failed: insufficient disk space."
-msgstr ""
-
-#: ../../lastore1/daemon.go:202
-msgid ""
-"Updates failed: insufficient disk space. Please roll back to the old version"
-" and try again."
-msgstr ""
-
-#: ../../lastore1/daemon.go:206
-msgid "Updates failed"
-msgstr ""
-
-#: ../../lastore1/daemon.go:208
-msgid "Updates failed. Please roll back to the old version and try again."
-msgstr ""
-
-#: ../../launcher/item.go:97
-msgid "(Linglong)"
-msgstr ""
-
-#: ../../launcher/manager_uninstall.go:55
-msgid "%q removed successfully"
-msgstr "%q đã được xóa thành công"
-
-#: ../../launcher/manager_uninstall.go:57
-msgid "Failed to uninstall %q"
-msgstr "Gỡ bỏ %q đã thất bại"
-
-#: ../../network1/manager_active_conn.go:468
-#: ../../network1/manager_active_conn.go:473
-msgid "None"
-msgstr "Không"
-
-#: ../../network1/manager_active_conn.go:475
-msgid "WEP 40/128-bit Key"
-msgstr "Chìa khóa WEP 40/128-bit"
-
-#: ../../network1/manager_active_conn.go:477
-msgid "WPA/WPA2 Personal"
-msgstr "WPA/WPA2 Cá nhân"
-
-#: ../../network1/manager_active_conn.go:479
-msgid "WPA3 Personal"
-msgstr ""
-
-#: ../../network1/manager_active_conn.go:487
-msgid "TLS"
-msgstr "TLS"
-
-#: ../../network1/manager_active_conn.go:489
-msgid "MD5"
-msgstr "MD5"
-
-#: ../../network1/manager_active_conn.go:491
-msgid "LEAP"
-msgstr "LEAP"
-
-#: ../../network1/manager_active_conn.go:493
-msgid "FAST"
-msgstr "FAST"
-
-#: ../../network1/manager_active_conn.go:495
-msgid "Tunneled TLS"
-msgstr "TLS được tạo đường"
-
-#: ../../network1/manager_active_conn.go:497
-msgid "Protected EAP"
-msgstr "EAP được bảo vệ"
-
-#: ../../network1/manager_connection.go:346
-#: ../../network1/manager_connection.go:350
-msgid "Wired Connection"
-msgstr "Kết nối Có dây"
-
-#: ../../network1/manager_connection.go:389
-msgid "Wired Connection %v"
-msgstr ""
-
-#: ../../network1/proxychains/utils_notify.go:49
-msgid "Application proxy is set successfully"
-msgstr ""
-
-#: ../../network1/proxychains/utils_notify.go:49
-#: ../../network1/proxychains/utils_notify.go:52
-#: ../../network1/utils_notify.go:182 ../../network1/utils_notify.go:186
-#: ../../network1/utils_notify.go:189
-msgid "Network"
-msgstr "Mạng"
-
-#: ../../network1/proxychains/utils_notify.go:52
-msgid "Failed to set the application proxy"
-msgstr ""
-
-#: ../../network1/state_handler.go:23
-msgid "Device state changed"
-msgstr "Tình trạng thiết bị đã thay đổi"
-
-#: ../../network1/state_handler.go:24
-msgid "Device state changed, reason unknown"
-msgstr "Trạng thái thiết bị thay đổi, không rõ lý do"
-
-#: ../../network1/state_handler.go:25
-msgid "The device is now managed"
-msgstr "Thiết bị bây giờ đã được quản lý"
-
-#: ../../network1/state_handler.go:26
-msgid "The device is no longer managed"
-msgstr "Thiết bị không còn được quản lý"
-
-#: ../../network1/state_handler.go:27
-msgid "The device has not been ready for configuration"
-msgstr "Thiết bị chưa sẵn sàng để cấu hình"
-
-#: ../../network1/state_handler.go:28
-msgid ""
-"IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr ""
-"Cấu hình IP không thể được giữ lại (không có địa chỉ hiện có, hết thời "
-"gian,...)"
-
-#: ../../network1/state_handler.go:29
-msgid "The IP configuration is no longer valid"
-msgstr "Cấu hình IP không còn giá trị"
-
-#: ../../network1/state_handler.go:30
-msgid "Passwords were required but not provided"
-msgstr "Mật khẩu được đòi hỏi nhưng không được cung cấp"
-
-#: ../../network1/state_handler.go:31
-msgid ""
-"The 802.1X supplicant disconnected from the access point or authentication "
-"server"
-msgstr ""
-"Máy yêu cầu 802.1X đã ngắt kết nối ở điểm truy cập hoặc máy chủ xác thực"
-
-#: ../../network1/state_handler.go:32
-msgid "Configuration of the 802.1X supplicant failed"
-msgstr "Cấu hình của máy đề nghị 802.1X thất bại"
-
-#: ../../network1/state_handler.go:33
-msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "Máy đề nghị 802.1X đã thoát hay thất bại bất ngờ"
-
-#: ../../network1/state_handler.go:34
-msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "Máy đề nghị 802.1X mất quá nhiều thời gian để chứng thực"
-
-#: ../../network1/state_handler.go:35
-msgid "The PPP service failed to start within the allowed time"
-msgstr "Dịch vụ PPP đã khởi động thất bại trong khoảng thời gian cho phép"
-
-#: ../../network1/state_handler.go:36
-msgid "The PPP service disconnected unexpectedly"
-msgstr "Dịch vụ PPP đã ngắt kết nối bất ngờ"
-
-#: ../../network1/state_handler.go:37
-msgid "The PPP service quitted or failed unexpectedly"
-msgstr "Dịch vụ PPP đã thoát hay thất bại bất ngờ"
-
-#: ../../network1/state_handler.go:38
-msgid "The DHCP service failed to start within the allowed time"
-msgstr "Dịch vụ DHCP đã khởi động thất bại trong khoảng thời gian cho phép"
-
-#: ../../network1/state_handler.go:39
-msgid "The DHCP service reported an unexpected error"
-msgstr "Dịch vụ DHCP đã báo cáo một lỗi bất ngờ"
-
-#: ../../network1/state_handler.go:40
-msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "Dịch vụ DHCP đã thoát hay thất bại bất ngờ"
-
-#: ../../network1/state_handler.go:41
-msgid "The shared connection service failed to start"
-msgstr "Dịch vụ kết nối được chia sẻ đã khởi động thất bại"
-
-#: ../../network1/state_handler.go:42
-msgid "The shared connection service quitted or failed unexpectedly"
-msgstr "Dịch vụ kết nối được chia sẻ đã thoát hay thất bại bất ngờ"
-
-#: ../../network1/state_handler.go:43
-msgid "The AutoIP service failed to start"
-msgstr "Dịch vụ AutoIP đã khởi động thất bại"
-
-#: ../../network1/state_handler.go:44
-msgid "The AutoIP service reported an unexpected error"
-msgstr "Dịch vụ AutoIP đã báo cáo một lỗi bất ngờ"
-
-#: ../../network1/state_handler.go:45
-msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "Dịch vụ AutoIP đã thoát hay thất bại bất ngờ"
-
-#: ../../network1/state_handler.go:46
-msgid "Dialing failed due to busy lines"
-msgstr "Quay số thất bại do đường dây bận"
-
-#: ../../network1/state_handler.go:47
-msgid "Dialing failed due to no dial tone"
-msgstr "Quay số thất bại do không có tín hiệu quay số"
-
-#: ../../network1/state_handler.go:48
-msgid "Dialing failed due to the carrier"
-msgstr "Quay số thất bại do vận chuyển"
-
-#: ../../network1/state_handler.go:49
-msgid "Dialing timed out"
-msgstr "Quay số đã hết thời gian"
-
-#: ../../network1/state_handler.go:50
-msgid "Dialing failed"
-msgstr "Quay số đã thất bại"
-
-#: ../../network1/state_handler.go:51
-msgid "Modem initialization failed"
-msgstr "Khởi động modem đã thất bại"
-
-#: ../../network1/state_handler.go:52
-msgid "Failed to select the specified GSM APN"
-msgstr "Thất bại khi lựa chọn GSM APN được chỉ định"
-
-#: ../../network1/state_handler.go:53
-msgid "No networks searched"
-msgstr "Không tìm ra được mạng nào"
-
-#: ../../network1/state_handler.go:54
-msgid "Network registration was denied"
-msgstr "Đăng ký mạng đã bị từ chối"
-
-#: ../../network1/state_handler.go:55
-msgid "Network registration timed out"
-msgstr "Đăng ký mạng đã hết thời gian"
-
-#: ../../network1/state_handler.go:56
-msgid "Failed to register to the requested GSM network"
-msgstr "Không thể đăng ký vào mạng GSM được yêu cầu"
-
-#: ../../network1/state_handler.go:57
-msgid "PIN check failed"
-msgstr "Kiển tra PIN đã thất bại"
-
-#: ../../network1/state_handler.go:58
-msgid "Necessary firmware for the device may be missed"
-msgstr "Phần mềm cần thiết cho thiết bị có thể bị thiếu"
-
-#: ../../network1/state_handler.go:59
-msgid "The device was removed"
-msgstr "Thiết bị đã bị gỡ bỏ"
-
-#: ../../network1/state_handler.go:60
-msgid "NetworkManager went to sleep"
-msgstr "NetworkManager đã tắt"
-
-#: ../../network1/state_handler.go:61
-msgid "The device's active connection was removed or disappeared"
-msgstr "Kết nối đang hiệu lực của thiết bị đã bị xóa hay biến mất"
-
-#: ../../network1/state_handler.go:62
-msgid "A user or client requested to disconnect"
-msgstr "Một người dùng hay khách đã yêu cầu để ngắt kết nối"
-
-#: ../../network1/state_handler.go:63
-msgid "The device's carrier/link changed"
-msgstr "Trình vận chuyển/kết nối của thiết bị đã thay đổi"
-
-#: ../../network1/state_handler.go:64
-msgid "The device's existing connection was assumed"
-msgstr "Kết nối hiện có của thiết bị là giả định"
-
-#: ../../network1/state_handler.go:65
-msgid "The 802.1x supplicant is now available"
-msgstr "Máy yêu cầu 802.1x bây giờ đã có"
-
-#: ../../network1/state_handler.go:66
-msgid "The modem could not be found"
-msgstr "Không thể tìm thấy modem"
-
-#: ../../network1/state_handler.go:67
-msgid "The Bluetooth connection timed out or failed"
-msgstr "Kết nối Bluetooth đã hết thời gian hay thất bại"
-
-#: ../../network1/state_handler.go:68
-msgid "GSM Modem's SIM Card was not inserted"
-msgstr "Thẻ SIM của GSM Modem đã không được gắn vào"
-
-#: ../../network1/state_handler.go:69
-msgid "GSM Modem's SIM PIN required"
-msgstr "Yêu cầu PIN SIM của Modem GSM"
-
-#: ../../network1/state_handler.go:70
-msgid "GSM Modem's SIM PUK required"
-msgstr "Yêu cầu PUK SIM của Modem GSM"
-
-#: ../../network1/state_handler.go:71
-msgid "SIM card error in GSM Modem"
-msgstr "Lỗi thẻ SIM trong Modem GSM"
-
-#: ../../network1/state_handler.go:72
-msgid "InfiniBand device does not support connected mode"
-msgstr "Thiết bị InfiniBand không hỗ trợ chế độ được kết nối"
-
-#: ../../network1/state_handler.go:73
-msgid "A dependency of the connection failed"
-msgstr "Một sự phụ thuộc của kết nối không thành công"
-
-#: ../../network1/state_handler.go:74
-msgid "RFC 2684 Ethernet bridging error to ADSL"
-msgstr "Lỗi cầu nối Ethernet RFC 2684 sang ADSL"
-
-#: ../../network1/state_handler.go:75
-msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "ModemManager đã không chạy hoặc đã thoát bất ngờ"
-
-#: ../../network1/state_handler.go:76
-msgid "The 802.11 WLAN network could not be found"
-msgstr "Không thể tìm thấy mạng WLAN 802.11"
-
-#: ../../network1/state_handler.go:77
-msgid "A secondary connection of the base connection failed"
-msgstr "Một kết nối thứ cấp của kết nối cơ sở đã thất bại"
-
-#: ../../network1/state_handler.go:80
-msgid "DCB or FCoE setup failed"
-msgstr "Thiết lập DCB hoặc FCoE không thành công"
-
-#: ../../network1/state_handler.go:81
-msgid "Network teaming control failed"
-msgstr "Kiểm soát nhóm mạng không thành công"
-
-#: ../../network1/state_handler.go:82
-msgid "Modem failed to run or not available"
-msgstr "Modem không chạy được hoặc không khả dụng"
-
-#: ../../network1/state_handler.go:83
-msgid "Modem now ready and available"
-msgstr "Modem đã sẵn sàng và có sẵn"
-
-#: ../../network1/state_handler.go:84
-msgid "SIM PIN is incorrect"
-msgstr "Mã PIN của SIM không chính xác"
-
-#: ../../network1/state_handler.go:85
-msgid "New connection activation is enqueuing"
-msgstr "Kích hoạt kết nối mới là tuyệt vời"
-
-#: ../../network1/state_handler.go:86
-msgid "Parent device changed"
-msgstr "Thiết bị cha đã thay đổi"
-
-#: ../../network1/state_handler.go:87
-msgid "Management status of parent device changed"
-msgstr "Tình trạng quản lý của thiết bị cha đã thay đổi"
-
-#: ../../network1/state_handler.go:90
-msgid "Network cable is unplugged"
-msgstr "Mạng dây bị tháo ra"
-
-#: ../../network1/state_handler.go:91
-msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr "Vui lòng đảm bảo thẻ SIM đã được lắp với tín hiệu mạng di động"
-
-#: ../../network1/state_handler.go:92
-msgid ""
-"Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr "Vui lòng đảm bảo rằng gói chính xác đã được chọn mà không cần thẻ SIM"
-
-#: ../../network1/state_handler.go:95
-msgid "Failed to activate VPN connection, reason unknown"
-msgstr "Không thể kích hoạt kết nối VPN, không rõ lý do"
-
-#: ../../network1/state_handler.go:96
-msgid "Failed to activate VPN connection"
-msgstr "Không thể kích hoạt kết nối VPN"
-
-#: ../../network1/state_handler.go:97
-msgid "The VPN connection state changed due to being disconnected by users"
-msgstr "Trạng thái kết nối VPN đã thay đổi do người dùng bị ngắt kết nối"
-
-#: ../../network1/state_handler.go:98
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
-msgstr "Trạng thái kết nối VPN đã thay đổi do bị ngắt kết nối khỏi thiết bị"
-
-#: ../../network1/state_handler.go:99
-msgid "VPN service stopped"
-msgstr "Dịch vụ VPN đã dừng"
-
-#: ../../network1/state_handler.go:100
-msgid "The IP config of VPN connection was invalid"
-msgstr "Cấu hình IP của kết nối VPN không hợp lệ"
-
-#: ../../network1/state_handler.go:101
-msgid "The connection attempt to VPN service timed out"
-msgstr "Đã hết thời gian kết nối với dịch vụ VPN"
-
-#: ../../network1/state_handler.go:102
-msgid "The VPN service start timed out"
-msgstr "Dịch vụ VPN đã hết thời gian"
-
-#: ../../network1/state_handler.go:103
-msgid "The VPN service failed to start"
-msgstr "Dịch vụ VPN không khởi động được"
-
-#: ../../network1/state_handler.go:104
-msgid "The VPN connection password was not provided"
-msgstr "Mật khẩu kết nối VPN không được cung cấp"
-
-#: ../../network1/state_handler.go:105
-msgid "Authentication to VPN server failed"
-msgstr "Xác thực với máy chủ VPN không thành công"
-
-#: ../../network1/state_handler.go:106
-msgid "The connection was deleted from settings"
-msgstr "Kết nối đã bị xóa khỏi cài đặt"
-
-#: ../../network1/state_handler.go:262
-msgid "Enabling hotspot"
-msgstr "Kích hoạt điểm truy cập"
-
-#: ../../network1/state_handler.go:266
-msgid "Connecting %q"
-msgstr "Đang kết nối %q"
-
-#: ../../network1/state_handler.go:275
-msgid "Hotspot enabled"
-msgstr "Điểm truy cập được kích hoạt"
-
-#: ../../network1/state_handler.go:277
-msgid "%q connected"
-msgstr "%q đã kết nối"
-
-#: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
-msgid "Hotspot disabled"
-msgstr "Điểm truy cập bị vô hiệu hóa"
-
-#: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
-#: ../../system/bluetooth1/utils_notify.go:50
-msgid "%q disconnected"
-msgstr "%q ngắt kết nối"
-
-#: ../../network1/state_handler.go:355
-msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "Không thể chia sẻ điểm truy cập, vui lòng kiểm tra cài đặt dnsmasq"
-
-#: ../../network1/state_handler.go:357
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "Không thể kết nối %q, vui lòng để gần hơn với bộ phát wifi"
-
-#: ../../network1/state_handler.go:359
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr ""
-"Không thể kết nối %q, vui lòng kiểm tra bộ phát wifi hoặc cáp mạng của bạn."
-
-#: ../../network1/state_handler.go:363
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Kết nối thất bại, không thể kết nối %q, sai mật khẩu"
-
-#: ../../network1/state_handler.go:365
-msgid "Unable to connect %q"
-msgstr ""
-
-#: ../../network1/state_handler.go:377
-msgid "To connect %q, please set up your authentication info"
-msgstr ""
-
-#: ../../network1/state_handler.go:379
-msgid "Password is required to connect %q"
-msgstr "Mật khẩu là bắt buộc để kết nối %q"
-
-#: ../../network1/state_handler.go:383
-msgid "The %q 802.11 WLAN network could not be found"
-msgstr ""
-
-#: ../../network1/utils_dbus_nm.go:278
-msgid "Unknown"
-msgstr "Không rõ"
-
-#: ../../network1/utils_notify.go:170
-msgid "Airplane mode enabled."
-msgstr "Chế độ trên máy bay đã kích hoạt."
-
-#: ../../network1/utils_notify.go:170 ../../network1/utils_notify.go:174
-#: ../../network1/utils_notify.go:178 ../../network1/utils_notify.go:196
-#: ../../network1/utils_notify.go:199 ../../network1/utils_notify.go:288
-msgid "Disconnected"
-msgstr "Đã ngắt kết nối"
-
-#: ../../network1/utils_notify.go:178
-msgid "Access Point mode is not supported by this device."
-msgstr "Chế độ Điểm Truy cập không được hỗ trợ bởi thiết bị này."
-
-#: ../../network1/utils_notify.go:182
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr "Công tắc phần cứng của Thẻ WLAN đang tắt, xin hãy bật lên khi cần."
-
-#: ../../network1/utils_notify.go:186
-msgid "System proxy is set successfully."
-msgstr "Ủy quyền hệ thống được thiết lập thành công."
-
-#: ../../network1/utils_notify.go:189
-msgid "System proxy has been cancelled."
-msgstr "Ủy quyền hệ thống đã bị hủy."
-
-#: ../../network1/utils_notify.go:193
-msgid "Connected"
-msgstr "Đã kết nối"
-
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgid ""
+"\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" đã không vượt qua xác minh bảo mật hệ thống và không thể chạy"
 
 #: ../../service_trigger/msg.go:13
@@ -1093,61 +559,65 @@ msgstr ""
 msgid "Proceed"
 msgstr ""
 
-#: ../../session/power1/manager.go:928
+#: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr ""
 
-#: ../../session/power1/manager.go:929
+#: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
 msgstr ""
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Cancle"
 msgstr ""
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Shut down"
 msgstr ""
 
-#: ../../session/power1/manager_events.go:266
+#: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
 msgstr "Pin cực kỳ thấp"
 
-#: ../../session/power1/manager_events.go:291
-#: ../../session/power1/manager_events.go:296
-#: ../../session/power1/manager_events.go:301
-#: ../../session/power1/manager_events.go:306
+#: ../../session/power1/manager_events.go:308
+#: ../../session/power1/manager_events.go:313
+#: ../../session/power1/manager_events.go:318
+#: ../../session/power1/manager_events.go:323
 msgid "Battery low, please plug in"
 msgstr "Pin yếu,vui lòng cắm sạc"
 
-#: ../../session/power1/utils.go:636
+#: ../../session/power1/utils.go:674
 msgid "your computer will shut down"
 msgstr "máy tính của bạn sẽ tắt"
 
-#: ../../session/power1/utils.go:638
+#: ../../session/power1/utils.go:676
 msgid "your computer will suspend"
 msgstr "máy tính của bạn sẽ dừng"
 
-#: ../../session/power1/utils.go:640
+#: ../../session/power1/utils.go:678
 msgid "your computer will hibernate"
 msgstr "Máy tính của bạn sẽ vào chế độ ngủ dông"
 
-#: ../../session/power1/utils.go:642
+#: ../../session/power1/utils.go:680
 msgid "your monitor will turn off"
 msgstr "màn hình máy tính sẽ tắt"
 
-#: ../../session/power1/utils.go:644
+#: ../../session/power1/utils.go:682
 msgid "your monitor will show the shutdown interface"
 msgstr ""
 
-#: ../../session/power1/utils.go:646
+#: ../../session/power1/utils.go:684
 msgid "it will do nothing to your computer"
 msgstr "nó sẽ không làm gì cho máy tính của bạn"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "Kết nối %q thành công"
+
+#: ../../system/bluetooth1/utils_notify.go:50
+msgid "%q disconnected"
+msgstr "%q ngắt kết nối"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
@@ -1162,11 +632,11 @@ msgstr ""
 msgid "Space"
 msgstr ""
 
-#: ../../timedate1/manager_ifc.go:59
+#: ../../timedate1/manager_ifc.go:60
 msgid "Authentication is required to set the system time"
 msgstr "Cần có xác thực mật khẩu để đặt thời gian hệ thống"
 
-#: ../../timedate1/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:73
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1174,17 +644,17 @@ msgstr ""
 "Cần phải xác thực mật khẩu để kiểm soát xem có bật đồng bộ hóa thời gian "
 "mạng hay không"
 
-#: ../../timedate1/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
 msgstr "Cần phải xác thực để thay đổi máy chủ NTP"
 
-#: ../../timedate1/manager_ifc.go:125
+#: ../../timedate1/manager_ifc.go:127
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
 "Cần phải xác thực để kiểm soát xem RTC lưu trữ thời gian cục bộ hay UTC"
 
-#: ../../timedate1/manager_ifc.go:151
+#: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
 msgstr "Cần có xác thực để đặt múi giờ hệ thống"

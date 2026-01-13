@@ -129,6 +129,19 @@ translate: $(addsuffix /LC_MESSAGES/dde-daemon.mo, $(addprefix out/locale/, ${LA
 pot:
 	deepin-update-pot misc/po/locale_config.ini
 
+update-po:
+	for po in misc/po/*.po; do \
+		echo "Updating $$po..."; \
+		msgmerge --update "$$po" misc/po/dde-daemon.pot; \
+	done
+
+clean-po:
+	for po in misc/po/*.po; do \
+		echo "Cleaning obsolete entries from $$po..."; \
+		msgattrib --no-obsolete "$$po" -o "$$po.tmp"; \
+		mv "$$po.tmp" "$$po"; \
+	done
+
 POLICIES=accounts grub2 daemon.system
 ts:
 	for i in $(POLICIES); do \
