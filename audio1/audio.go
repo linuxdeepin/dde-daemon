@@ -1245,7 +1245,7 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 		logger.Warning(dbusErr)
 	}
 
-	logger.Warningf("set %v mute %v", s.Name, GetConfigKeeper().Mute.MuteOutput || !portConfig.Enabled)
+	logger.Debugf("set %v mute %v", s.Name, GetConfigKeeper().Mute.MuteOutput || !portConfig.Enabled)
 	s.setMute(GetConfigKeeper().Mute.MuteOutput || !portConfig.Enabled)
 	s.setMono(a.Mono)
 }
@@ -1591,7 +1591,7 @@ func (a *Audio) StopAudioService() *dbus.Error {
 			return
 		} else {
 			runningServices, _ = runningServices.Delete(serviceMap[jobPath])
-			logger.Warningf("service %s stopped, %v is running", serviceMap[jobPath], runningServices)
+			logger.Infof("service %s stopped, %v is running", serviceMap[jobPath], runningServices)
 			if len(runningServices) == 0 {
 				done <- true
 			}
