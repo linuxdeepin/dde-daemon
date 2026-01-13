@@ -2,24 +2,24 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Anousak Souphavanh <anousak@gmail.com>, 2025
 # deepiner, 2025
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"POT-Creation-Date: 2026-01-13 09:49+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
 "Language-Team: Lao (https://app.transifex.com/linuxdeepin/teams/3617/lo/)\n"
+"Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: lo\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -58,46 +58,38 @@ msgstr "ຊື່ຜູ້ໃຊ້ຕ້ອງຢູ່ລະຫວ່າງ 3 
 msgid "User \"%s\" existed before and its data is synced"
 msgstr ""
 
-#: ../../accounts1/user_ifc.go:731
+#: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr "ຮູບວໍເປເປີລະບົບນີ້ຖືກລັອກ. ກະລຸນາຕິດຕໍ່ຜູ້ດູແລລະບົບຂອງທ່ານ."
 
-#: ../../audio1/audio.go:284
+#: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
 msgstr "ລົ້ມເຫລວໃນການປ່ຽນເຄື່ອງແມ່ຂ່າຍສຽງ, ກະລຸນາລອງໃນພາຍຫຼັງ"
 
-#: ../../audio1/audio.go:320
+#: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
 msgstr "ການປ່ຽນແປງເຄື່ອງແມ່ຂ່າຍສຽງ, ກະລຸນາລໍຖ້າ..."
 
-#: ../../audio1/audio.go:353
+#: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
 msgstr "ເຄື່ອງແມ່ຂ່າຍສຽງຖືກປ່ຽນແປງ, ກະລຸນາອອກຈາກລະບົບແລະເຂົ້າສູ່ລະບົບໃໝ່"
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
-#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
-#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
-#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
+#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr "ສູນຄວບຄຸມ DDE"
 
-#: ../../audio1/audio_events.go:445
+#: ../../audio1/audio_events.go:701
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s ໄດ້ຖືກປິດການໃຊ້ງານ"
 
-#: ../../audio1/audio_events.go:446
+#: ../../audio1/audio_events.go:702
 msgid "Open"
 msgstr "ເປີດ"
-
-#: ../../bin/dde-authority/fprint_transaction.go:25
-msgid "Fingerprint verification failed"
-msgstr "ການຢັ້ງຢືນລາຍນິ້ວມືລົ້ມເຫລວ"
-
-#: ../../bin/dde-authority/fprint_transaction.go:26
-msgid "Fingerprint verification timed out"
-msgstr "ການຢັ້ງຢືນລາຍນິ້ວມືຫມົດເວລາ"
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -159,57 +151,57 @@ msgstr "ການເຂົ້າເຖິງຂໍ້ຄວາມ"
 msgid "Message notification"
 msgstr "ແຈ້ງການຂໍ້ຄວາມ"
 
-#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "ຍົກເລີກ"
 
-#: ../../bluetooth1/obex_agent.go:396
+#: ../../bluetooth1/obex_agent.go:398
 msgid "Receiving %[1]q from %[2]q"
 msgstr "ໄດ້ຮັບ% [1] q ຈາກ% [2] q"
 
-#: ../../bluetooth1/obex_agent.go:405
+#: ../../bluetooth1/obex_agent.go:407
 msgid "View"
 msgstr "ທັດສະນະ"
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:413
 msgid "You have received files from %q successfully"
 msgstr "ທ່ານໄດ້ຮັບໄຟລ໌ຈາກ %q ສຳເລັດແລ້ວ"
 
-#: ../../bluetooth1/obex_agent.go:412
+#: ../../bluetooth1/obex_agent.go:414
 msgid "Done"
 msgstr "ສຳເລັດ"
 
-#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
 msgid "Stop Receiving Files"
 msgstr "ຢຸດຮັບເອົາເອກະສານ"
 
-#: ../../bluetooth1/obex_agent.go:429
+#: ../../bluetooth1/obex_agent.go:431
 msgid "You have cancelled the file transfer"
 msgstr "ທ່ານໄດ້ຍົກເລີກການໂອນໄຟລ໌"
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:433
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "ການເຊື່ອມຕໍ່ບລູທູດລົ້ມເຫລວ"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Decline"
 msgstr "ຮ່ວງໂຮຍ"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Receive"
 msgstr "ໄດ້ຮັບ"
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:477
 msgid "Bluetooth File Transfer"
 msgstr "ການໂອນໄຟລ໌ຜ່ານບລູທູດ"
 
-#: ../../bluetooth1/obex_agent.go:476
+#: ../../bluetooth1/obex_agent.go:478
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q ຕ້ອງການສົ່ງໄຟລ໌ໃຫ້ທ່ານ. ຮັບບໍ?"
 
-#: ../../bluetooth1/obex_agent.go:531
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Receiving %q timed out"
 msgstr "ການຮັບ %q ຫມົດເວລາ"
 
@@ -225,72 +217,72 @@ msgstr "ເພີ່ມອຸປະກອນບລູທູດ"
 msgid "Pair"
 msgstr "ຄູ່"
 
-#: ../../gesture1/gesture_action.go:38
+#: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
 msgstr "ເຮັດໃຫ້ມີແສງສະຫວ່າງສູງສຸດ"
 
-#: ../../gesture1/gesture_action.go:39
+#: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
 msgstr "ຟື້ນຟູຫນ້າຕ່າງ"
 
-#: ../../gesture1/gesture_action.go:40
+#: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
 msgstr "ປ່ອງຢ້ຽມປະຈຸບັນແບ່ງອອກ"
 
-#: ../../gesture1/gesture_action.go:41
+#: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
 msgstr "ການແບ່ງປັນຫນ້າຕ່າງໃນປະຈຸບັນ"
 
-#: ../../gesture1/gesture_action.go:42
+#: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
 msgstr "ສະແດງມຸມມອງບໍລິຫານງານຫຼາຍ"
 
-#: ../../gesture1/gesture_action.go:43
+#: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
 msgstr "ເຊື່ອງມຸມມອງບໍລິຫານງານຫຼາຍ"
 
-#: ../../gesture1/gesture_action.go:44
+#: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
 msgstr "ປ່ຽນເປັນ desktop ກ່ອນຫນ້ານີ້"
 
-#: ../../gesture1/gesture_action.go:45
+#: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
 msgstr "ປ່ຽນໄປທີ່ desktop ຕໍ່ໄປ"
 
-#: ../../gesture1/gesture_action.go:46
-#: ../../keybinding1/shortcuts/id_name_map.go:85
+#: ../../gesture1/gesture_action.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr "ສະແດງໜ້າເດັສທອບ"
 
-#: ../../gesture1/gesture_action.go:47
+#: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
 msgstr "ເຊື່ອງໜ້າເດັສທອບ"
 
-#: ../../gesture1/gesture_action.go:48
+#: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
 msgstr "ສະແດງ/ເຊື່ອງຕົວເປີດໂປຣແກຣມ"
 
-#: ../../gesture1/gesture_action.go:49
+#: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
 msgstr "ກົດປຸ່ມຂວາຫນູກົດປຸ່ມ"
 
-#: ../../gesture1/gesture_action.go:50
+#: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
 msgstr "ປຸ່ມຂວາຫນູອອກແລ້ວ"
 
-#: ../../gesture1/gesture_action.go:51
+#: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
 msgstr "ສະແດງ / ເຊື່ອງ clipboard"
 
-#: ../../gesture1/gesture_action.go:52
+#: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
 msgstr "ສະແດງ / ເຊື່ອງການຄົ້ນຫາທີ່ຍິ່ງໃຫຍ່"
 
-#: ../../gesture1/gesture_action.go:53
+#: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
 msgstr "ສະແດງ / ສູນແຈ້ງການ"
 
-#: ../../gesture1/gesture_action.go:54
+#: ../../gesture1/gesture_action.go:55
 msgid "Disable"
 msgstr "ປິດການໃຊ້ງານ"
 
@@ -379,702 +371,172 @@ msgid "Deepin Picker"
 msgstr "ຕົວເລືອກໃນ Deepin"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
-msgid "Desktop AI Assistant"
-msgstr "ຜູ້ຊ່ວຍ Desktop Ai"
-
-#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr "ຂໍ້ຄວາມ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:34
+#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Speech to Text"
 msgstr "ການປາກເວົ້າ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:35
+#: ../../keybinding1/shortcuts/id_name_map.go:34
 msgid "Clipboard"
 msgstr "clipboardboard"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:36
+#: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Translation"
 msgstr "ການແປ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:37
+#: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
 msgstr "ການຄົ້ນຫາໃຫຍ່"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
 msgstr "ສູນແຈ້ງການ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:39
-#: ../../keybinding1/shortcuts/id_name_map.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr "ປ່ຽນຮູບແບບ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:40
+#: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
 msgstr "ສະຫຼັບສະແດງການສະແດງຫຼາຍຄັ້ງ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:66
+#: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr "ປ່ຽນໄປທີ່ບ່ອນຫວ່າງງານຊ້າຍ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:67
+#: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr "ປ່ຽນໄປເຮັດວຽກທີ່ຖືກຕ້ອງ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:68
+#: ../../keybinding1/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr "ປ່ຽນໄປເຮັດວຽກເທິງ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:69
+#: ../../keybinding1/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr "ປ່ຽນເປັນບ່ອນເຮັດວຽກທີ່ຕໍ່າ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:71
+#: ../../keybinding1/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr "ສັບປ່ຽນ Windows ທີ່ຄ້າຍຄືກັນ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:72
+#: ../../keybinding1/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr "ປ່ຽນຫນ້າຕ່າງທີ່ຄ້າຍຄືກັນໃນດ້ານຫຼັງ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:73
+#: ../../keybinding1/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr "ປ່ຽນ Windows"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:74
+#: ../../keybinding1/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr "ປ່ຽນ Windows ໃນດ້ານຫຼັງ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:94
+#: ../../keybinding1/shortcuts/id_name_map.go:89
+msgid "Activate window menu"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr "ເຮັດໃຫ້ມີແສງສະຫວ່າງສູງສຸດ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:95
+#: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr "ຟື້ນຟູຫນ້າຕ່າງ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:97
+#: ../../keybinding1/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr "ຫຼຸດຜ່ອນປ່ອງຢ້ຽມ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:98
+#: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr "ປ່ອງຢ້ຽມປິດ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:99
+#: ../../keybinding1/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr "ຍ້າຍປ່ອງຢ້ຽມ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:100
+#: ../../keybinding1/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr "ປັບຂະຫນາດປ່ອງຢ້ຽມ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:115
+#: ../../keybinding1/shortcuts/id_name_map.go:114
 msgid "Move to left workspace"
 msgstr "ຍ້າຍໄປພື້ນທີ່ເຮັດວຽກຊ້າຍ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:116
+#: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to right workspace"
 msgstr "ຍ້າຍໄປພື້ນທີ່ເຮັດວຽກຂວາ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:117
+#: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to upper workspace"
 msgstr "ຍ້າຍໄປພື້ນທີ່ເຮັດວຽກເທິງ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:118
+#: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to lower workspace"
 msgstr "ຍ້າຍໄປພື້ນທີ່ເຮັດວຽກລຸ່ມ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:140
+#: ../../keybinding1/shortcuts/id_name_map.go:139
 msgid "Display windows of all workspaces"
 msgstr "ສະແດງປ່ອງຢ້ຽມຂອງພື້ນທີ່ເຮັດວຽກທັງຫມົດ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:141
+#: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of current workspace"
 msgstr "ສະແດງປ່ອງຢ້ຽມຂອງພື້ນທີ່ເຮັດວຽກໃນປະຈຸບັນ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:142
+#: ../../keybinding1/shortcuts/id_name_map.go:141
 msgid "Display workspace"
 msgstr "ສະແດງພື້ນທີ່ເຮັດວຽກ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:143
+#: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
 msgstr "ຊູມເຂົ້າ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:144
+#: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
 msgstr "ຊູມອອກ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:145
+#: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
 msgstr "ຂະຫຍາຍໄປສູ່ຂະຫນາດຕົວຈິງ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:146
+#: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
 msgstr "ຈັດໜ້າຕ່າງດ່ວນຊ້າຍ"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:147
+#: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
 msgstr "ຈັດໜ້າຕ່າງດ່ວນຂວາ"
 
-#: ../../langselector1/locale.go:47
+#: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
 msgstr "ຕ້ອງມີການຢັ້ງຢືນເພື່ອປ່ຽນພາສາລະບົບ"
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:143
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
-msgstr ""
-"ການປ່ຽນແປງພາສາລະບົບແລະການຕິດຕັ້ງແພັກເກດພາສາທີ່ຕ້ອງການ, ກະລຸນາລໍຖ້າ ..."
+msgstr "ການປ່ຽນແປງພາສາລະບົບແລະການຕິດຕັ້ງແພັກເກດພາສາທີ່ຕ້ອງການ, ກະລຸນາລໍຖ້າ ..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
 msgstr "ປ່ຽນພາສາລະບົບ, ກະລຸນາລໍຖ້າ ..."
 
-#: ../../langselector1/locale.go:140
+#: ../../langselector1/locale.go:145
 msgid "System language changed, please log out and then log in"
 msgstr "ພາສາລະບົບປ່ຽນ, ກະລຸນາອອກຈາກລະບົບແລະຫຼັງຈາກນັ້ນເຂົ້າສູ່ລະບົບ"
 
-#: ../../langselector1/locale.go:379
+#: ../../langselector1/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "ລົ້ມເຫລວໃນການປ່ຽນພາສາລະບົບ, ກະລຸນາລອງໃນພາຍຫຼັງ"
 
-#: ../../lastore1/daemon.go:186
-msgid "Updates failed: it was interrupted."
-msgstr "ການປັບປຸງໃຫມ່ລົ້ມເຫລວ: ມັນຖືກຂັດຂວາງ."
-
-#: ../../lastore1/daemon.go:188
-msgid ""
-"Updates failed: it was interrupted. Please roll back to the old version and "
-"try again."
-msgstr ""
-"ການປັບປຸງໃຫມ່ລົ້ມເຫລວ: ມັນຖືກຂັດຂວາງ. "
-"ກະລຸນາມ້ວນກັບສະບັບເກົ່າແລະລອງໃຫມ່ອີກຄັ້ງ."
-
-#: ../../lastore1/daemon.go:194
-msgid "Updates failed: DPKG error."
-msgstr "ການອັບເດດລົ້ມເຫລວ: ຂໍ້ຜິດພາດຂອງ DPKG."
-
-#: ../../lastore1/daemon.go:196
-msgid ""
-"Updates failed: DPKG error. Please roll back to the old version and try "
-"again."
-msgstr ""
-"ການອັບເດດລົ້ມເຫລວ: ຂໍ້ຜິດພາດຂອງ DPKG. "
-"ກະລຸນາມ້ວນກັບສະບັບເກົ່າແລະລອງໃຫມ່ອີກຄັ້ງ."
-
-#: ../../lastore1/daemon.go:200
-msgid "Updates failed: insufficient disk space."
-msgstr "ການອັບເດດລົ້ມເຫລວ: ຊ່ອງ disk ທີ່ບໍ່ພຽງພໍ."
-
-#: ../../lastore1/daemon.go:202
-msgid ""
-"Updates failed: insufficient disk space. Please roll back to the old version"
-" and try again."
-msgstr ""
-"ການອັບເດດລົ້ມເຫລວ: ຊ່ອງ disk ທີ່ບໍ່ພຽງພໍ. "
-"ກະລຸນາມ້ວນກັບສະບັບເກົ່າແລະລອງໃຫມ່ອີກຄັ້ງ."
-
-#: ../../lastore1/daemon.go:206
-msgid "Updates failed"
-msgstr "ການປັບປຸງລົ້ມເຫລວ"
-
-#: ../../lastore1/daemon.go:208
-msgid "Updates failed. Please roll back to the old version and try again."
-msgstr "ການປັບປຸງແລ້ວລົ້ມເຫລວ. ກະລຸນາມ້ວນກັບສະບັບເກົ່າແລະລອງໃຫມ່ອີກຄັ້ງ."
-
-#: ../../launcher/item.go:97
-msgid "(Linglong)"
-msgstr "(Linglong)"
-
-#: ../../launcher/manager_uninstall.go:55
-msgid "%q removed successfully"
-msgstr "%q ຖືກເອົາອອກສຳເລັດແລ້ວ"
-
-#: ../../launcher/manager_uninstall.go:57
-msgid "Failed to uninstall %q"
-msgstr "ລົ້ມເຫລວໃນການຖອນການຕິດຕັ້ງ %q"
-
-#: ../../network1/manager_active_conn.go:468
-#: ../../network1/manager_active_conn.go:473
-msgid "None"
-msgstr "ບໍ່ມີ"
-
-#: ../../network1/manager_active_conn.go:475
-msgid "WEP 40/128-bit Key"
-msgstr "WEP 40/128-bit ຄີ"
-
-#: ../../network1/manager_active_conn.go:477
-msgid "WPA/WPA2 Personal"
-msgstr "WPA / WPA2 ສ່ວນບຸກຄົນ"
-
-#: ../../network1/manager_active_conn.go:479
-msgid "WPA3 Personal"
-msgstr "WPA3 ສ່ວນບຸກຄົນ"
-
-#: ../../network1/manager_active_conn.go:487
-msgid "TLS"
-msgstr "TLS"
-
-#: ../../network1/manager_active_conn.go:489
-msgid "MD5"
-msgstr "MD5"
-
-#: ../../network1/manager_active_conn.go:491
-msgid "LEAP"
-msgstr "LEAP"
-
-#: ../../network1/manager_active_conn.go:493
-msgid "FAST"
-msgstr "FAST"
-
-#: ../../network1/manager_active_conn.go:495
-msgid "Tunneled TLS"
-msgstr "Tunneled TLS"
-
-#: ../../network1/manager_active_conn.go:497
-msgid "Protected EAP"
-msgstr "Protected EAP"
-
-#: ../../network1/manager_connection.go:346
-#: ../../network1/manager_connection.go:350
-msgid "Wired Connection"
-msgstr "ການເຊື່ອມຕໍ່ສາຍ"
-
-#: ../../network1/manager_connection.go:389
-msgid "Wired Connection %v"
-msgstr "ການເຊື່ອມຕໍ່ສາຍ %v"
-
-#: ../../network1/proxychains/utils_notify.go:49
-msgid "Application proxy is set successfully"
-msgstr "ຕົວແທນສະຫມັກແມ່ນຕັ້ງຄ່າຢ່າງສໍາເລັດຜົນ"
-
-#: ../../network1/proxychains/utils_notify.go:49
-#: ../../network1/proxychains/utils_notify.go:52
-#: ../../network1/utils_notify.go:182 ../../network1/utils_notify.go:186
-#: ../../network1/utils_notify.go:189
-msgid "Network"
-msgstr "ເຄືອຂ່າຍ"
-
-#: ../../network1/proxychains/utils_notify.go:52
-msgid "Failed to set the application proxy"
-msgstr "ລົ້ມເຫລວໃນການກໍານົດຕົວແທນສະຫມັກ"
-
-#: ../../network1/state_handler.go:23
-msgid "Device state changed"
-msgstr "ການປ່ຽນແປງຂອງອຸປະກອນ"
-
-#: ../../network1/state_handler.go:24
-msgid "Device state changed, reason unknown"
-msgstr "ສະຖານະຂອງອຸປະກອນມີການປ່ຽນແປງ, ເຫດຜົນທີ່ບໍ່ຮູ້ຈັກ"
-
-#: ../../network1/state_handler.go:25
-msgid "The device is now managed"
-msgstr "ປະຈຸບັນອຸປະກອນໄດ້ຮັບການຄຸ້ມຄອງ"
-
-#: ../../network1/state_handler.go:26
-msgid "The device is no longer managed"
-msgstr "ອຸປະກອນດັ່ງກ່າວບໍ່ໄດ້ຮັບການຄຸ້ມຄອງອີກແລ້ວ"
-
-#: ../../network1/state_handler.go:27
-msgid "The device has not been ready for configuration"
-msgstr "ອຸປະກອນບໍ່ໄດ້ກຽມພ້ອມສໍາລັບການຕັ້ງຄ່າ"
-
-#: ../../network1/state_handler.go:28
-msgid ""
-"IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr "ການຕັ້ງຄ່າ IP ບໍ່ສາມາດສະຫງວນໄດ້ (ບໍ່ມີທີ່ຢູ່, ຫມົດເວລາ, ແລະອື່ນໆ)"
-
-#: ../../network1/state_handler.go:29
-msgid "The IP configuration is no longer valid"
-msgstr "ການຕັ້ງຄ່າ IP ແມ່ນບໍ່ຖືກຕ້ອງ"
-
-#: ../../network1/state_handler.go:30
-msgid "Passwords were required but not provided"
-msgstr "ຕ້ອງມີລະຫັດຜ່ານແຕ່ບໍ່ໄດ້ສະຫນອງໃຫ້"
-
-#: ../../network1/state_handler.go:31
-msgid ""
-"The 802.1X supplicant disconnected from the access point or authentication "
-"server"
-msgstr "ຜູ້ໃຫ້ບໍລິການ 802.X"
-
-#: ../../network1/state_handler.go:32
-msgid "Configuration of the 802.1X supplicant failed"
-msgstr "ການຕັ້ງຄ່າຂອງ Awother82.x ທີ່ໃຫ້ຄວາມສໍາເລັດ"
-
-#: ../../network1/state_handler.go:33
-msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "ການກ່າວຄໍາເຫັນ 802.1x ຢຸດຫຼືລົ້ມເຫລວໂດຍບໍ່ຄາດຝັນ"
-
-#: ../../network1/state_handler.go:34
-msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "ຜູ້ໃຫ້ບໍລິການ 802.X ໄດ້ໃຊ້ເວລາດົນເກີນໄປໃນການກວດສອບຄວາມຖືກຕ້ອງ"
-
-#: ../../network1/state_handler.go:35
-msgid "The PPP service failed to start within the allowed time"
-msgstr "ບໍລິການ PPP ລົ້ມເຫລວໃນການເລີ່ມຕົ້ນພາຍໃນເວລາທີ່ອະນຸຍາດ"
-
-#: ../../network1/state_handler.go:36
-msgid "The PPP service disconnected unexpectedly"
-msgstr "ການບໍລິການ PPP ໄດ້ຕັດສິນໃຈໂດຍບໍ່ຄາດຝັນ"
-
-#: ../../network1/state_handler.go:37
-msgid "The PPP service quitted or failed unexpectedly"
-msgstr "ການບໍລິການ PPP ຢຸດຫຼືລົ້ມເຫລວໂດຍບໍ່ຄາດຝັນ"
-
-#: ../../network1/state_handler.go:38
-msgid "The DHCP service failed to start within the allowed time"
-msgstr "ບໍລິການ DHCP ລົ້ມເຫລວໃນການເລີ່ມຕົ້ນພາຍໃນເວລາທີ່ອະນຸຍາດ"
-
-#: ../../network1/state_handler.go:39
-msgid "The DHCP service reported an unexpected error"
-msgstr "ບໍລິການ DHCP ລາຍງານຂໍ້ຜິດພາດທີ່ບໍ່ຄາດຄິດ"
-
-#: ../../network1/state_handler.go:40
-msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "ການບໍລິການ DHCP ຢຸດຫຼືລົ້ມເຫລວໂດຍບໍ່ຄາດຝັນ"
-
-#: ../../network1/state_handler.go:41
-msgid "The shared connection service failed to start"
-msgstr "ການບໍລິການເຊື່ອມຕໍ່ທີ່ໃຊ້ຮ່ວມກັນລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:42
-msgid "The shared connection service quitted or failed unexpectedly"
-msgstr "ການບໍລິການເຊື່ອມຕໍ່ທີ່ໃຊ້ຮ່ວມກັນຫຼືລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:43
-msgid "The AutoIP service failed to start"
-msgstr "ການບໍລິການ Autoip ລົ້ມເຫລວໃນການເລີ່ມຕົ້ນ"
-
-#: ../../network1/state_handler.go:44
-msgid "The AutoIP service reported an unexpected error"
-msgstr "ການບໍລິການ Autoip ລາຍງານຂໍ້ຜິດພາດທີ່ບໍ່ຄາດຄິດ"
-
-#: ../../network1/state_handler.go:45
-msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "ການບໍລິການ Autoip ອອກຈາກຫຼືລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:46
-msgid "Dialing failed due to busy lines"
-msgstr "ການໂທລົ້ມເຫລວເນື່ອງຈາກເສັ້ນທາງທຸລະກິດ"
-
-#: ../../network1/state_handler.go:47
-msgid "Dialing failed due to no dial tone"
-msgstr "ການໂທລົ້ມເຫລວຍ້ອນບໍ່ມີສຽງໂທ"
-
-#: ../../network1/state_handler.go:48
-msgid "Dialing failed due to the carrier"
-msgstr "ການໂທລົ້ມເຫລວເນື່ອງຈາກບັນທຸກ"
-
-#: ../../network1/state_handler.go:49
-msgid "Dialing timed out"
-msgstr "ໂທອອກຫມົດເວລາ"
-
-#: ../../network1/state_handler.go:50
-msgid "Dialing failed"
-msgstr "ການໂທລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:51
-msgid "Modem initialization failed"
-msgstr "ການເລີ່ມຕົ້ນຂອງໂມເດັມລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:52
-msgid "Failed to select the specified GSM APN"
-msgstr "ລົ້ມເຫລວໃນການເລືອກ APN APN ທີ່ລະບຸ"
-
-#: ../../network1/state_handler.go:53
-msgid "No networks searched"
-msgstr "ບໍ່ມີເຄືອຂ່າຍຄົ້ນຫາ"
-
-#: ../../network1/state_handler.go:54
-msgid "Network registration was denied"
-msgstr "ການລົງທະບຽນເຄືອຂ່າຍຖືກປະຕິເສດ"
-
-#: ../../network1/state_handler.go:55
-msgid "Network registration timed out"
-msgstr "ການລົງທະບຽນເຄືອຂ່າຍຫມົດເວລາ"
-
-#: ../../network1/state_handler.go:56
-msgid "Failed to register to the requested GSM network"
-msgstr "ລົ້ມເຫລວໃນການລົງທະບຽນເຂົ້າໃນເຄືອຂ່າຍ GSM ທີ່ຮ້ອງຂໍ"
-
-#: ../../network1/state_handler.go:57
-msgid "PIN check failed"
-msgstr "PIN ກວດສອບລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:58
-msgid "Necessary firmware for the device may be missed"
-msgstr "firmware ທີ່ຈໍາເປັນສໍາລັບອຸປະກອນອາດຈະພາດ"
-
-#: ../../network1/state_handler.go:59
-msgid "The device was removed"
-msgstr "ອຸປະກອນໄດ້ຖືກຍ້າຍອອກ"
-
-#: ../../network1/state_handler.go:60
-msgid "NetworkManager went to sleep"
-msgstr "NetworkManager ໄດ້ໄປນອນ"
-
-#: ../../network1/state_handler.go:61
-msgid "The device's active connection was removed or disappeared"
-msgstr "ການເຊື່ອມຕໍ່ທີ່ມີການເຄື່ອນໄຫວຂອງອຸປະກອນໄດ້ຖືກໂຍກຍ້າຍອອກຫຼືຫາຍໄປ"
-
-#: ../../network1/state_handler.go:62
-msgid "A user or client requested to disconnect"
-msgstr "ຜູ້ໃຊ້ຫຼືລູກຄ້າທີ່ຮ້ອງຂໍໃຫ້ຕັດຂາດ"
-
-#: ../../network1/state_handler.go:63
-msgid "The device's carrier/link changed"
-msgstr "ບັນທຸກຜູ້ຂົນສົ່ງ / ການເຊື່ອມຕໍ່ຂອງອຸປະກອນໄດ້ປ່ຽນໄປ"
-
-#: ../../network1/state_handler.go:64
-msgid "The device's existing connection was assumed"
-msgstr "ການເຊື່ອມຕໍ່ທີ່ມີຢູ່ຂອງອຸປະກອນໄດ້ຖືກຄາດວ່າ"
-
-#: ../../network1/state_handler.go:65
-msgid "The 802.1x supplicant is now available"
-msgstr "ເຄື່ອງປ້ອນ 802.X ແມ່ນມີຢູ່ແລ້ວ"
-
-#: ../../network1/state_handler.go:66
-msgid "The modem could not be found"
-msgstr "ບໍ່ສາມາດພົບເຫັນໂມເດັມ"
-
-#: ../../network1/state_handler.go:67
-msgid "The Bluetooth connection timed out or failed"
-msgstr "ການເຊື່ອມຕໍ່ bluetooth ທີ່ຫມົດເວລາອອກຫຼືລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:68
-msgid "GSM Modem's SIM Card was not inserted"
-msgstr "ບັດ SIM ຂອງ GSM Modem ບໍ່ໄດ້ຖືກໃສ່"
-
-#: ../../network1/state_handler.go:69
-msgid "GSM Modem's SIM PIN required"
-msgstr "ລະຫັດ PIN ຂອງ GSM Modem ຂອງ GSM"
-
-#: ../../network1/state_handler.go:70
-msgid "GSM Modem's SIM PUK required"
-msgstr "PSM Modem's SIM PUK PUK"
-
-#: ../../network1/state_handler.go:71
-msgid "SIM card error in GSM Modem"
-msgstr "ຄວາມຜິດພາດຂອງຊິມໃນໂມເດັມ GSM"
-
-#: ../../network1/state_handler.go:72
-msgid "InfiniBand device does not support connected mode"
-msgstr "ອຸປະກອນ Infiniband ບໍ່ສະຫນັບສະຫນູນຮູບແບບທີ່ເຊື່ອມຕໍ່"
-
-#: ../../network1/state_handler.go:73
-msgid "A dependency of the connection failed"
-msgstr "ການເພິ່ງພາອາໄສການເຊື່ອມຕໍ່ສົບຜົນສໍາເລັດ"
-
-#: ../../network1/state_handler.go:74
-msgid "RFC 2684 Ethernet bridging error to ADSL"
-msgstr "RFC 2684 Ethernet Ithernet Mainging ໃນ ADSL"
-
-#: ../../network1/state_handler.go:75
-msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "ModemManager ບໍ່ໄດ້ແລ່ນຫຼືຢຸດໂດຍບໍ່ຄາດຝັນ"
-
-#: ../../network1/state_handler.go:76
-msgid "The 802.11 WLAN network could not be found"
-msgstr "ບໍ່ພົບເຄືອຂ່າຍ 802.11 WLAN ບໍ່ສາມາດຊອກຫາໄດ້"
-
-#: ../../network1/state_handler.go:77
-msgid "A secondary connection of the base connection failed"
-msgstr "ການເຊື່ອມຕໍ່ຂັ້ນສອງຂອງການເຊື່ອມຕໍ່ຖານຂໍ້ມູນລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:80
-msgid "DCB or FCoE setup failed"
-msgstr "ການຕັ້ງຄ່າ DCB ຫຼື FCOE ລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:81
-msgid "Network teaming control failed"
-msgstr "ການຄວບຄຸມການຮ່ວມມືຂອງເຄືອຂ່າຍລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:82
-msgid "Modem failed to run or not available"
-msgstr "ໂມເດັມລົ້ມເຫລວໃນການແລ່ນຫຼືບໍ່ມີ"
-
-#: ../../network1/state_handler.go:83
-msgid "Modem now ready and available"
-msgstr "ຕອນນີ້ Modem ກຽມພ້ອມແລະມີຢູ່"
-
-#: ../../network1/state_handler.go:84
-msgid "SIM PIN is incorrect"
-msgstr "ລະຫັດ PIN ບໍ່ຖືກຕ້ອງ"
-
-#: ../../network1/state_handler.go:85
-msgid "New connection activation is enqueuing"
-msgstr "ການເປີດໃຊ້ການເຊື່ອມຕໍ່ໃຫມ່ແມ່ນ Enqueing"
-
-#: ../../network1/state_handler.go:86
-msgid "Parent device changed"
-msgstr "ອຸປະກອນພໍ່ແມ່ປ່ຽນແປງ"
-
-#: ../../network1/state_handler.go:87
-msgid "Management status of parent device changed"
-msgstr "ສະຖານະພາບການຄຸ້ມຄອງຂອງອຸປະກອນພໍ່ແມ່ໄດ້ປ່ຽນໄປ"
-
-#: ../../network1/state_handler.go:90
-msgid "Network cable is unplugged"
-msgstr "ສາຍເຄືອຂ່າຍແມ່ນບໍ່ມີການຖອດສາຍ"
-
-#: ../../network1/state_handler.go:91
-msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr "ກະລຸນາຮັບປະກັນວ່າຊິມກາດໄດ້ຖືກໃສ່ກັບສັນຍານເຄືອຂ່າຍມືຖື"
-
-#: ../../network1/state_handler.go:92
-msgid ""
-"Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr "ກະລຸນາໃຫ້ແນ່ໃຈວ່າແຜນການທີ່ຖືກຕ້ອງຖືກຄັດເລືອກໂດຍບໍ່ມີການຍັບຍັ້ງຊິມກາດ"
-
-#: ../../network1/state_handler.go:95
-msgid "Failed to activate VPN connection, reason unknown"
-msgstr "ລົ້ມເຫລວໃນການກະຕຸ້ນການເຊື່ອມຕໍ່ VPN, ເຫດຜົນທີ່ບໍ່ຮູ້ຈັກ"
-
-#: ../../network1/state_handler.go:96
-msgid "Failed to activate VPN connection"
-msgstr "ລົ້ມເຫລວໃນການກະຕຸ້ນການເຊື່ອມຕໍ່ VPN"
-
-#: ../../network1/state_handler.go:97
-msgid "The VPN connection state changed due to being disconnected by users"
-msgstr "ສະຖານະການເຊື່ອມຕໍ່ VPN ໄດ້ປ່ຽນແປງຍ້ອນຜູ້ໃຊ້ທີ່ຖືກຕັດຂາດ"
-
-#: ../../network1/state_handler.go:98
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
-msgstr "ລັດເຊື່ອມຕໍ່ VPN ໄດ້ປ່ຽນແປງຍ້ອນການຕັດຂາດຈາກອຸປະກອນຕ່າງໆ"
-
-#: ../../network1/state_handler.go:99
-msgid "VPN service stopped"
-msgstr "ບໍລິການ VPN ຢຸດເຊົາ"
-
-#: ../../network1/state_handler.go:100
-msgid "The IP config of VPN connection was invalid"
-msgstr "IP casfig ຂອງການເຊື່ອມຕໍ່ VPN ແມ່ນບໍ່ຖືກຕ້ອງ"
-
-#: ../../network1/state_handler.go:101
-msgid "The connection attempt to VPN service timed out"
-msgstr "ການເຊື່ອມຕໍ່ຄວາມພະຍາຍາມໃນການໃຫ້ບໍລິການ VPN ຫມົດເວລາ"
-
-#: ../../network1/state_handler.go:102
-msgid "The VPN service start timed out"
-msgstr "ການບໍລິການ VPN ເລີ່ມຕົ້ນຫມົດເວລາ"
-
-#: ../../network1/state_handler.go:103
-msgid "The VPN service failed to start"
-msgstr "ບໍລິການ VPN ລົ້ມເຫລວໃນການເລີ່ມຕົ້ນ"
-
-#: ../../network1/state_handler.go:104
-msgid "The VPN connection password was not provided"
-msgstr "ລະຫັດຜ່ານການເຊື່ອມຕໍ່ VPN ບໍ່ໄດ້ສະຫນອງໃຫ້"
-
-#: ../../network1/state_handler.go:105
-msgid "Authentication to VPN server failed"
-msgstr "ການກວດສອບຄວາມຖືກຕ້ອງກັບ VPN Server ລົ້ມເຫລວ"
-
-#: ../../network1/state_handler.go:106
-msgid "The connection was deleted from settings"
-msgstr "ການເຊື່ອມຕໍ່ໄດ້ຖືກລຶບອອກຈາກ Settings"
-
-#: ../../network1/state_handler.go:262
-msgid "Enabling hotspot"
-msgstr "enabling ຈຸດສຸມ"
-
-#: ../../network1/state_handler.go:266
-msgid "Connecting %q"
-msgstr "ເຊື່ອມຕໍ່ %q"
-
-#: ../../network1/state_handler.go:275
-msgid "Hotspot enabled"
-msgstr "Hotspot ເປີດໃຊ້ງານ"
-
-#: ../../network1/state_handler.go:277
-msgid "%q connected"
-msgstr "%q ເຊື່ອມຕໍ່ແລ້ວ"
-
-#: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
-msgid "Hotspot disabled"
-msgstr "Hotspot ຖືກປິດ"
-
-#: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
-#: ../../system/bluetooth1/utils_notify.go:50
-msgid "%q disconnected"
-msgstr "%q ຖືກຕັດການເຊື່ອມຕໍ່"
-
-#: ../../network1/state_handler.go:355
-msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "ບໍ່ສາມາດແບ່ງປັນ Hotspot ໄດ້, ກະລຸນາກວດເບິ່ງການຕັ້ງຄ່າ dnsmasq"
-
-#: ../../network1/state_handler.go:357
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "ບໍ່ສາມາດເຊື່ອມຕໍ່ %q, ກະລຸນາເຂົ້າໃກ້ເຣົາເຕີໄຮ້ສາຍ"
-
-#: ../../network1/state_handler.go:359
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "ບໍ່ສາມາດເຊື່ອມຕໍ່ %q, ກະລຸນາກວດເບິ່ງເຣົາເຕີຫຼືສາຍເຄືອຂ່າຍຂອງທ່ານ."
-
-#: ../../network1/state_handler.go:363
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "ການເຊື່ອມຕໍ່ລົ້ມເຫລວ, ບໍ່ສາມາດເຊື່ອມຕໍ່ %q, ລະຫັດຜ່ານທີ່ບໍ່ຖືກຕ້ອງ"
-
-#: ../../network1/state_handler.go:365
-msgid "Unable to connect %q"
-msgstr "ບໍ່ສາມາດເຊື່ອມຕໍ່ %q"
-
-#: ../../network1/state_handler.go:377
-msgid "To connect %q, please set up your authentication info"
-msgstr "ເພື່ອເຊື່ອມຕໍ່ %q, ກະລຸນາຕັ້ງຄ່າຂໍ້ມູນການກວດສອບຂອງທ່ານ"
-
-#: ../../network1/state_handler.go:379
-msgid "Password is required to connect %q"
-msgstr "ຕ້ອງມີລະຫັດຜ່ານເພື່ອເຊື່ອມຕໍ່ %q"
-
-#: ../../network1/state_handler.go:383
-msgid "The %q 802.11 WLAN network could not be found"
-msgstr "ບໍ່ພົບເຄືອຂ່າຍ 802.11 WLAN %q"
-
-#: ../../network1/utils_dbus_nm.go:278
-msgid "Unknown"
-msgstr "ບໍ່ຮູ້"
-
-#: ../../network1/utils_notify.go:170
-msgid "Airplane mode enabled."
-msgstr "ໂຫມດຍົນໄດ້ຖືກເປີດໃຊ້ງານ."
-
-#: ../../network1/utils_notify.go:170 ../../network1/utils_notify.go:174
-#: ../../network1/utils_notify.go:178 ../../network1/utils_notify.go:196
-#: ../../network1/utils_notify.go:199 ../../network1/utils_notify.go:288
-msgid "Disconnected"
-msgstr "ບໍ່ມີການເຊື່ອມຕໍ່"
-
-#: ../../network1/utils_notify.go:178
-msgid "Access Point mode is not supported by this device."
-msgstr "ຮູບແບບການເຂົ້າເຖິງແມ່ນບໍ່ໄດ້ຮັບການສະຫນັບສະຫນູນຈາກອຸປະກອນນີ້."
-
-#: ../../network1/utils_notify.go:182
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr "ສະວິດຮາດແວຂອງກາດ WLAN ຖືກປິດ, ກະລຸນາເປີດຕາມຄວາມຈຳເປັນ."
-
-#: ../../network1/utils_notify.go:186
-msgid "System proxy is set successfully."
-msgstr "ຕັ້ງຄ່າພຣັອກຊີລະບົບສຳເລັດແລ້ວ."
-
-#: ../../network1/utils_notify.go:189
-msgid "System proxy has been cancelled."
-msgstr "ພຣັອກຊີລະບົບໄດ້ຖືກຍົກເລີກແລ້ວ."
-
-#: ../../network1/utils_notify.go:193
-msgid "Connected"
-msgstr "ເຊື່ອມໂຍງ"
-
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgid ""
+"\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
 #: ../../service_trigger/msg.go:13
@@ -1088,61 +550,65 @@ msgstr ""
 msgid "Proceed"
 msgstr "ດໍາເນີນການ"
 
-#: ../../session/power1/manager.go:928
+#: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr "ລະບົບຈະຖືກປິດໂດຍອັດຕະໂນມັດຫຼັງຈາກ %d ວິນາທີ"
 
-#: ../../session/power1/manager.go:929
+#: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
 msgstr "ການປິດກໍານົດ"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Cancle"
 msgstr "ຍົກເລີກ"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Shut down"
 msgstr "ປິດລົງ"
 
-#: ../../session/power1/manager_events.go:266
+#: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
 msgstr "ແບດເຕີຣີທີ່ຕໍ່າ"
 
-#: ../../session/power1/manager_events.go:291
-#: ../../session/power1/manager_events.go:296
-#: ../../session/power1/manager_events.go:301
-#: ../../session/power1/manager_events.go:306
+#: ../../session/power1/manager_events.go:308
+#: ../../session/power1/manager_events.go:313
+#: ../../session/power1/manager_events.go:318
+#: ../../session/power1/manager_events.go:323
 msgid "Battery low, please plug in"
 msgstr "ແບດເຕີລີ່ຕໍ່າ, ກະລຸນາສຽບ"
 
-#: ../../session/power1/utils.go:636
+#: ../../session/power1/utils.go:674
 msgid "your computer will shut down"
 msgstr "ຄອມພິວເຕີຂອງທ່ານຈະປິດລົງ"
 
-#: ../../session/power1/utils.go:638
+#: ../../session/power1/utils.go:676
 msgid "your computer will suspend"
 msgstr "ຄອມພິວເຕີຂອງທ່ານຈະໂຈະ"
 
-#: ../../session/power1/utils.go:640
+#: ../../session/power1/utils.go:678
 msgid "your computer will hibernate"
 msgstr "ຄອມພິວເຕີຂອງທ່ານຈະ hibernate"
 
-#: ../../session/power1/utils.go:642
+#: ../../session/power1/utils.go:680
 msgid "your monitor will turn off"
 msgstr "ຈໍພາບຂອງທ່ານຈະປິດ"
 
-#: ../../session/power1/utils.go:644
+#: ../../session/power1/utils.go:682
 msgid "your monitor will show the shutdown interface"
 msgstr "ຈໍພາບຂອງທ່ານຈະສະແດງໃຫ້ເຫັນການໂຕ້ຕອບປິດ"
 
-#: ../../session/power1/utils.go:646
+#: ../../session/power1/utils.go:684
 msgid "it will do nothing to your computer"
 msgstr "ມັນຈະບໍ່ເຮັດຫຍັງກັບຄອມພິວເຕີຂອງທ່ານ"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "ເຊື່ອມຕໍ່ %q ສຳເລັດແລ້ວ"
+
+#: ../../system/bluetooth1/utils_notify.go:50
+msgid "%q disconnected"
+msgstr "%q ຖືກຕັດການເຊື່ອມຕໍ່"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
@@ -1151,36 +617,32 @@ msgstr "ໃຫ້ແນ່ໃຈວ່າ %q ເປີດຢູ່ແລະຢ�
 #: ../../system/bluetooth1/utils_notify.go:74
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
-msgstr ""
-"% q ບໍ່ສາມາດເຊື່ອມຕໍ່ກັບ% q ໄດ້ອີກຕໍ່ໄປ. "
-"ພະຍາຍາມລືມອຸປະກອນນີ້ແລະຈັບຄູ່ມັນອີກຄັ້ງ."
+msgstr "% q ບໍ່ສາມາດເຊື່ອມຕໍ່ກັບ% q ໄດ້ອີກຕໍ່ໄປ. ພະຍາຍາມລືມອຸປະກອນນີ້ແລະຈັບຄູ່ມັນອີກຄັ້ງ."
 
 #: ../../timedate1/manager_format.go:75
 msgid "Space"
 msgstr "ອະວະກາດ"
 
-#: ../../timedate1/manager_ifc.go:59
+#: ../../timedate1/manager_ifc.go:60
 msgid "Authentication is required to set the system time"
 msgstr "ການກວດສອບຄວາມຖືກຕ້ອງແມ່ນຈໍາເປັນຕ້ອງກໍານົດເວລາຂອງລະບົບ"
 
-#: ../../timedate1/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:73
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "ຕ້ອງມີຄວາມຈໍາເປັນໃນການຄວບຄຸມເວລາໃນການຊຸມນຸມເວລາ"
 
-#: ../../timedate1/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
 msgstr "ການກວດສອບຄວາມຖືກຕ້ອງແມ່ນຈໍາເປັນຕ້ອງມີການປ່ຽນເຄື່ອງແມ່ຂ່າຍ NTP"
 
-#: ../../timedate1/manager_ifc.go:125
+#: ../../timedate1/manager_ifc.go:127
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
-msgstr ""
-"ການກວດສອບຄວາມຖືກຕ້ອງແມ່ນຈໍາເປັນໃນການຄວບຄຸມວ່າ RTC ເກັບຮັກສາເວລາທ້ອງຖິ່ນຫລື "
-"UTC"
+msgstr "ການກວດສອບຄວາມຖືກຕ້ອງແມ່ນຈໍາເປັນໃນການຄວບຄຸມວ່າ RTC ເກັບຮັກສາເວລາທ້ອງຖິ່ນຫລື UTC"
 
-#: ../../timedate1/manager_ifc.go:151
+#: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
 msgstr "ການກວດສອບຄວາມຖືກຕ້ອງແມ່ນຈໍາເປັນຕ້ອງກໍານົດລະບົບ TimeZone"

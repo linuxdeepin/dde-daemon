@@ -86,7 +86,7 @@ func getWMIdNameMap() map[string]string {
 		"panelRunDialog":             "Show the run command prompt",
 		// Don't use
 		// "set-spew-mark":                gettext.Tr(""),
-		"activateWindowMenu":        "Activate window menu",
+		"activateWindowMenu":        gettext.Tr("Activate window menu"),
 		"toggleFullscreen":          "toggle-fullscreen",
 		"toggleMaximized":           "Toggle maximization state",
 		"toggleAbove":               "Toggle window always appearing on top",
