@@ -5,7 +5,7 @@
 # 
 # Translators:
 # deepiner, 2025
-# Besnik Bleta <besnik@programeshqip.org>, 2025
+# Besnik Bleta <besnik@programeshqip.org>, 2026
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 09:49+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2025\n"
+"Last-Translator: Besnik Bleta <besnik@programeshqip.org>, 2026\n"
 "Language-Team: Albanian (https://app.transifex.com/linuxdeepin/teams/3617/sq/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,11 +226,11 @@ msgstr "Çiftoje"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
-msgstr ""
+msgstr "Maksimizoje Dritaren"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
-msgstr ""
+msgstr "Riktheje Dritaren"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
@@ -242,11 +242,11 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
-msgstr ""
+msgstr "Shfaq pamje “multitasking”"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "Fshihe pamjen “multitasking”"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
