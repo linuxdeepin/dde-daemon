@@ -4,29 +4,24 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Bruno Gama <brunnogama@gmail.com>, 2025
 # Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2025
-# Cleber Teixeira, 2025
-# 1d1ce5c8357ff895d313b0cce072591e_46a6b98, 2025
+# Paulo Schopf, 2025
 # Raphael Miquelis <raphaelmiquelis@gmail.com>, 2025
-# Felipe André Alves Santos <lip.dre@gmail.com>, 2025
 # RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2025
 # JeffWagen <jeff.wagen@yahoo.com>, 2025
-# Paulo Schopf, 2025
-# Flavio Lima <flaviolimaviolinista@gmail.com>, 2025
 # 380125ae2590f93d3e1eff2258abdf75_6979c31, 2025
 # keven doria, 2025
 # deepiner, 2025
-# Alex, 2025
+# Alex W., 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"POT-Creation-Date: 2026-01-13 09:49+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Alex, 2025\n"
+"Last-Translator: Alex W., 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,50 +67,42 @@ msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "O usuário \"%s\" já existe e seus dados estão sincronizados"
 
-#: ../../accounts1/user_ifc.go:731
+#: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Esse papel de parede do sistema está bloqueado. Entre em contato com o "
 "administrador."
 
-#: ../../audio1/audio.go:284
+#: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
 msgstr "Falha ao alterar o servidor de áudio, tente mais tarde"
 
-#: ../../audio1/audio.go:320
+#: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
 msgstr "Alterando servidor de áudio, aguarde..."
 
-#: ../../audio1/audio.go:353
+#: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 "O servidor de áudio foi alterado, é necessário encerrar a sessão e fazer "
 "login novamente"
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
-#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
-#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
-#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
+#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr "dde-control-center"
 
-#: ../../audio1/audio_events.go:445
+#: ../../audio1/audio_events.go:701
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s foi desativado"
 
-#: ../../audio1/audio_events.go:446
+#: ../../audio1/audio_events.go:702
 msgid "Open"
 msgstr "Abrir"
-
-#: ../../bin/dde-authority/fprint_transaction.go:25
-msgid "Fingerprint verification failed"
-msgstr "Falha ao verificar a impressão digital"
-
-#: ../../bin/dde-authority/fprint_transaction.go:26
-msgid "Fingerprint verification timed out"
-msgstr "O tempo de verificação da impressão digital expirou"
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -177,57 +164,57 @@ msgstr "Acesso às mensagens"
 msgid "Message notification"
 msgstr "Notificação de mensagem"
 
-#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../../bluetooth1/obex_agent.go:396
+#: ../../bluetooth1/obex_agent.go:398
 msgid "Receiving %[1]q from %[2]q"
 msgstr "Recebendo %[1]q de %[2]q"
 
-#: ../../bluetooth1/obex_agent.go:405
+#: ../../bluetooth1/obex_agent.go:407
 msgid "View"
 msgstr "Visualizar"
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:413
 msgid "You have received files from %q successfully"
 msgstr "Os arquivos de %q foram recebidos"
 
-#: ../../bluetooth1/obex_agent.go:412
+#: ../../bluetooth1/obex_agent.go:414
 msgid "Done"
 msgstr "Concluído"
 
-#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
 msgid "Stop Receiving Files"
 msgstr "Interromper o Recebimento de Arquivos"
 
-#: ../../bluetooth1/obex_agent.go:429
+#: ../../bluetooth1/obex_agent.go:431
 msgid "You have cancelled the file transfer"
 msgstr "A transferência do arquivo foi cancelada"
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:433
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "A conexão Bluetooth falhou"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Decline"
 msgstr "Recusar"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Receive"
 msgstr "Receber"
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:477
 msgid "Bluetooth File Transfer"
 msgstr "Transferência de Arquivos por Bluetooth"
 
-#: ../../bluetooth1/obex_agent.go:476
+#: ../../bluetooth1/obex_agent.go:478
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q está enviando arquivos. Receber?"
 
-#: ../../bluetooth1/obex_agent.go:531
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Receiving %q timed out"
 msgstr "O recebimento de %s expirou"
 
@@ -243,72 +230,72 @@ msgstr "Adicionar dispositivos"
 msgid "Pair"
 msgstr "Emparelhar"
 
-#: ../../gesture1/gesture_action.go:38
+#: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
 msgstr "Maximizar Janela"
 
-#: ../../gesture1/gesture_action.go:39
+#: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
 msgstr "Restaurar Janela"
 
-#: ../../gesture1/gesture_action.go:40
+#: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
 msgstr "Janela Atual Dividida à Esquerda"
 
-#: ../../gesture1/gesture_action.go:41
+#: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
 msgstr "Janela Atual Dividida à Direita"
 
-#: ../../gesture1/gesture_action.go:42
+#: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
 msgstr "Mostrar visualização multitarefa"
 
-#: ../../gesture1/gesture_action.go:43
+#: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
 msgstr "Ocultar visualização multitarefa"
 
-#: ../../gesture1/gesture_action.go:44
+#: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
 msgstr "Mudar para a área de trabalho anterior"
 
-#: ../../gesture1/gesture_action.go:45
+#: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
 msgstr "Mudar para a próxima área de trabalho"
 
-#: ../../gesture1/gesture_action.go:46
-#: ../../keybinding1/shortcuts/id_name_map.go:85
+#: ../../gesture1/gesture_action.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr "Área de Trabalho"
 
-#: ../../gesture1/gesture_action.go:47
+#: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
 msgstr "Ocultar área de trabalho"
 
-#: ../../gesture1/gesture_action.go:48
+#: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
 msgstr "Mostrar/ocultar iniciador"
 
-#: ../../gesture1/gesture_action.go:49
+#: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
 msgstr "Botão direito do mouse pressionado"
 
-#: ../../gesture1/gesture_action.go:50
+#: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
 msgstr "Pode soltar o botão direito do mouse "
 
-#: ../../gesture1/gesture_action.go:51
+#: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
 msgstr "Mostrar/ocultar área de transferência"
 
-#: ../../gesture1/gesture_action.go:52
+#: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
 msgstr "Mostrar/ocultar pesquisa geral"
 
-#: ../../gesture1/gesture_action.go:53
+#: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
 msgstr "Mostrar/ocultar centro de notificações"
 
-#: ../../gesture1/gesture_action.go:54
+#: ../../gesture1/gesture_action.go:55
 msgid "Disable"
 msgstr "Desativar"
 
@@ -397,711 +384,169 @@ msgid "Deepin Picker"
 msgstr "deepin Seletor de Cores"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
-msgid "Desktop AI Assistant"
-msgstr "Assistente Virtual"
-
-#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr "Texto para Fala"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:34
+#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Speech to Text"
 msgstr "Fala para Texto"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:35
+#: ../../keybinding1/shortcuts/id_name_map.go:34
 msgid "Clipboard"
 msgstr "Área de transferência"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:36
+#: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Translation"
 msgstr "Tradução"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:37
+#: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
 msgstr "Pesquisa Instantânea"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
 msgstr "Central de Notificações"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:39
-#: ../../keybinding1/shortcuts/id_name_map.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr "Alternar Layout"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:40
+#: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
 msgstr "Alternar entre várias telas"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:66
+#: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr "Alternar para Área de Trabalho à esquerda"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:67
+#: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr "Alternar para Área de Trabalho à direita"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:68
+#: ../../keybinding1/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr "Alternar para Área de Trabalho superior"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:69
+#: ../../keybinding1/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr "Alternar para Área de Trabalho inferior"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:71
+#: ../../keybinding1/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr "Alternar entre janelas similares"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:72
+#: ../../keybinding1/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr "Alternar entre janelas semelhantes em reverso"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:73
+#: ../../keybinding1/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr "Alternar entre janelas"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:74
+#: ../../keybinding1/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr "Alternar entre janelas em reverso"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:94
+#: ../../keybinding1/shortcuts/id_name_map.go:89
+msgid "Activate window menu"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr "Maximizar Janela"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:95
+#: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr "Restaurar Janela"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:97
+#: ../../keybinding1/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr "Minimizar Janela"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:98
+#: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr "Fechar janela"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:99
+#: ../../keybinding1/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr "Mover Janela"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:100
+#: ../../keybinding1/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr "Redimensionar Janela"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:115
+#: ../../keybinding1/shortcuts/id_name_map.go:114
 msgid "Move to left workspace"
 msgstr "Mover para o espaço de trabalho esquerdo"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:116
+#: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to right workspace"
 msgstr "Mover para o espaço de trabalho direito"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:117
+#: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to upper workspace"
 msgstr "Mover para o espaço de trabalho superior"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:118
+#: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to lower workspace"
 msgstr "Mover para o espaço de trabalho inferior"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:140
+#: ../../keybinding1/shortcuts/id_name_map.go:139
 msgid "Display windows of all workspaces"
 msgstr "Exibir as janelas de todas as áreas de trabalho"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:141
+#: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of current workspace"
 msgstr "Exibir as janelas da área de trabalho atual"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:142
+#: ../../keybinding1/shortcuts/id_name_map.go:141
 msgid "Display workspace"
 msgstr "Exibir área de trabalho"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:143
+#: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
 msgstr "Ampliar"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:144
+#: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
 msgstr "Reduzir"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:145
+#: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
 msgstr "Ampliar para tamanho real"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:146
+#: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
 msgstr "Janela no lado esquerdo da tela"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:147
+#: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
 msgstr "Janela no lado direito da tela"
 
-#: ../../langselector1/locale.go:47
+#: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
 msgstr "A autenticação é necessária para alternar o idioma"
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:143
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr "Alterando o idioma do sistema, aguarde..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
 msgstr "Alterando o idioma do sistema, aguarde..."
 
-#: ../../langselector1/locale.go:140
+#: ../../langselector1/locale.go:145
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "O idioma do sistema foi alterado; é necessário encerrar a sessão para "
 "efetivá-lo"
 
-#: ../../langselector1/locale.go:379
+#: ../../langselector1/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Falha ao alterar o idioma do sistema; tente novamente"
-
-#: ../../lastore1/daemon.go:186
-msgid "Updates failed: it was interrupted."
-msgstr "As atualizações falharam: foram interrompidas."
-
-#: ../../lastore1/daemon.go:188
-msgid ""
-"Updates failed: it was interrupted. Please roll back to the old version and "
-"try again."
-msgstr ""
-"As atualizações falharam: foram interrompidas. Volte para a versão antiga e "
-"tente novamente."
-
-#: ../../lastore1/daemon.go:194
-msgid "Updates failed: DPKG error."
-msgstr "As atualizações falharam: Erro do DPKG."
-
-#: ../../lastore1/daemon.go:196
-msgid ""
-"Updates failed: DPKG error. Please roll back to the old version and try "
-"again."
-msgstr ""
-"As atualizações falharam: erro do DPKG. Volte para a versão antiga e tente "
-"novamente."
-
-#: ../../lastore1/daemon.go:200
-msgid "Updates failed: insufficient disk space."
-msgstr "As atualizações falharam: espaço insuficiente em disco."
-
-#: ../../lastore1/daemon.go:202
-msgid ""
-"Updates failed: insufficient disk space. Please roll back to the old version"
-" and try again."
-msgstr ""
-"As atualizações falharam: espaço insuficiente em disco. Volte para a versão "
-"antiga e tente novamente."
-
-#: ../../lastore1/daemon.go:206
-msgid "Updates failed"
-msgstr "As atualizações falharam"
-
-#: ../../lastore1/daemon.go:208
-msgid "Updates failed. Please roll back to the old version and try again."
-msgstr ""
-"As atualizações falharam. Volte para a versão antiga e tente novamente."
-
-#: ../../launcher/item.go:97
-msgid "(Linglong)"
-msgstr "(Linglong)"
-
-#: ../../launcher/manager_uninstall.go:55
-msgid "%q removed successfully"
-msgstr "%q foi desinstalado"
-
-#: ../../launcher/manager_uninstall.go:57
-msgid "Failed to uninstall %q"
-msgstr "Falha ao remover %q"
-
-#: ../../network1/manager_active_conn.go:468
-#: ../../network1/manager_active_conn.go:473
-msgid "None"
-msgstr "Nenhum"
-
-#: ../../network1/manager_active_conn.go:475
-msgid "WEP 40/128-bit Key"
-msgstr "Chave WEP de 40/128-bit"
-
-#: ../../network1/manager_active_conn.go:477
-msgid "WPA/WPA2 Personal"
-msgstr "WPA/WPA2 Pessoal"
-
-#: ../../network1/manager_active_conn.go:479
-msgid "WPA3 Personal"
-msgstr "WPA3 Pessoal"
-
-#: ../../network1/manager_active_conn.go:487
-msgid "TLS"
-msgstr "TLS"
-
-#: ../../network1/manager_active_conn.go:489
-msgid "MD5"
-msgstr "MD5"
-
-#: ../../network1/manager_active_conn.go:491
-msgid "LEAP"
-msgstr "LEAP"
-
-#: ../../network1/manager_active_conn.go:493
-msgid "FAST"
-msgstr "RÁPIDO"
-
-#: ../../network1/manager_active_conn.go:495
-msgid "Tunneled TLS"
-msgstr "TLS em túnel"
-
-#: ../../network1/manager_active_conn.go:497
-msgid "Protected EAP"
-msgstr "EAP Protegido"
-
-#: ../../network1/manager_connection.go:346
-#: ../../network1/manager_connection.go:350
-msgid "Wired Connection"
-msgstr "Conexão Cabeada"
-
-#: ../../network1/manager_connection.go:389
-msgid "Wired Connection %v"
-msgstr "Conexão cabeada %v"
-
-#: ../../network1/proxychains/utils_notify.go:49
-msgid "Application proxy is set successfully"
-msgstr "O proxy do aplicativo foi definido"
-
-#: ../../network1/proxychains/utils_notify.go:49
-#: ../../network1/proxychains/utils_notify.go:52
-#: ../../network1/utils_notify.go:182 ../../network1/utils_notify.go:186
-#: ../../network1/utils_notify.go:189
-msgid "Network"
-msgstr "Rede"
-
-#: ../../network1/proxychains/utils_notify.go:52
-msgid "Failed to set the application proxy"
-msgstr "Falha ao definir o proxy do aplicativo"
-
-#: ../../network1/state_handler.go:23
-msgid "Device state changed"
-msgstr "O estado do dispositivo foi alterado"
-
-#: ../../network1/state_handler.go:24
-msgid "Device state changed, reason unknown"
-msgstr "Estado do dispositivo alterado, motivo desconhecido"
-
-#: ../../network1/state_handler.go:25
-msgid "The device is now managed"
-msgstr "O dispositivo agora é gerenciado"
-
-#: ../../network1/state_handler.go:26
-msgid "The device is no longer managed"
-msgstr "O dispositivo não é gerenciado"
-
-#: ../../network1/state_handler.go:27
-msgid "The device has not been ready for configuration"
-msgstr "O dispositivo não está pronto para configuração"
-
-#: ../../network1/state_handler.go:28
-msgid ""
-"IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr ""
-"A configuração IP não pôde ser reservada (nenhum endereço disponível, tempo "
-"limite, etc.)"
-
-#: ../../network1/state_handler.go:29
-msgid "The IP configuration is no longer valid"
-msgstr "A configuração de IP não é válida"
-
-#: ../../network1/state_handler.go:30
-msgid "Passwords were required but not provided"
-msgstr "As senhas eram necessárias, mas não foram fornecidas"
-
-#: ../../network1/state_handler.go:31
-msgid ""
-"The 802.1X supplicant disconnected from the access point or authentication "
-"server"
-msgstr ""
-"O requisitante 802.1X se desconectou do ponto de acesso ou servidor de "
-"autenticação"
-
-#: ../../network1/state_handler.go:32
-msgid "Configuration of the 802.1X supplicant failed"
-msgstr "A configuração do requisitante 802.1X falhou"
-
-#: ../../network1/state_handler.go:33
-msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "O requisitante 802.1X saiu ou falhou inesperadamente"
-
-#: ../../network1/state_handler.go:34
-msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "O requisitante 802.1X levou muito tempo para autenticar"
-
-#: ../../network1/state_handler.go:35
-msgid "The PPP service failed to start within the allowed time"
-msgstr "O serviço PPP falhou em iniciar dentro do tempo permitido"
-
-#: ../../network1/state_handler.go:36
-msgid "The PPP service disconnected unexpectedly"
-msgstr "O serviço PPP desconectou inesperadamente"
-
-#: ../../network1/state_handler.go:37
-msgid "The PPP service quitted or failed unexpectedly"
-msgstr "O serviço PPP foi encerrado ou falhou inesperadamente"
-
-#: ../../network1/state_handler.go:38
-msgid "The DHCP service failed to start within the allowed time"
-msgstr "O serviço de DHCP falhou em iniciar dentro do tempo permitido"
-
-#: ../../network1/state_handler.go:39
-msgid "The DHCP service reported an unexpected error"
-msgstr "O serviço DHCP relatou um erro inesperado"
-
-#: ../../network1/state_handler.go:40
-msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "O serviço DHCP foi encerrado ou falhou inesperadamente"
-
-#: ../../network1/state_handler.go:41
-msgid "The shared connection service failed to start"
-msgstr "O serviço de conexão compartilhada falhou ao iniciar"
-
-#: ../../network1/state_handler.go:42
-msgid "The shared connection service quitted or failed unexpectedly"
-msgstr ""
-"O serviço de conexão compartilhada foi encerrado ou falhou inesperadamente"
-
-#: ../../network1/state_handler.go:43
-msgid "The AutoIP service failed to start"
-msgstr "O serviço de AutoIP falhou ao iniciar"
-
-#: ../../network1/state_handler.go:44
-msgid "The AutoIP service reported an unexpected error"
-msgstr "O serviço AutoIP relatou um erro inesperado"
-
-#: ../../network1/state_handler.go:45
-msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "O serviço AutoIP foi encerrado ou falhou inesperadamente"
-
-#: ../../network1/state_handler.go:46
-msgid "Dialing failed due to busy lines"
-msgstr "Falha na discagem devido a linhas ocupadas"
-
-#: ../../network1/state_handler.go:47
-msgid "Dialing failed due to no dial tone"
-msgstr "A discagem falhou devido a nenhum tom de discagem"
-
-#: ../../network1/state_handler.go:48
-msgid "Dialing failed due to the carrier"
-msgstr "Falha na discagem devido à operadora"
-
-#: ../../network1/state_handler.go:49
-msgid "Dialing timed out"
-msgstr "A discagem expirou"
-
-#: ../../network1/state_handler.go:50
-msgid "Dialing failed"
-msgstr "Falha na discagem"
-
-#: ../../network1/state_handler.go:51
-msgid "Modem initialization failed"
-msgstr "Falha na inicialização do modem"
-
-#: ../../network1/state_handler.go:52
-msgid "Failed to select the specified GSM APN"
-msgstr "Falha ao selecionar a APN GSM especificada"
-
-#: ../../network1/state_handler.go:53
-msgid "No networks searched"
-msgstr "Nenhuma rede encontrada"
-
-#: ../../network1/state_handler.go:54
-msgid "Network registration was denied"
-msgstr "O registro da rede foi negado"
-
-#: ../../network1/state_handler.go:55
-msgid "Network registration timed out"
-msgstr "O tempo limite para o registro na rede expirou"
-
-#: ../../network1/state_handler.go:56
-msgid "Failed to register to the requested GSM network"
-msgstr "Falha ao registrar-se na rede GSM solicitada"
-
-#: ../../network1/state_handler.go:57
-msgid "PIN check failed"
-msgstr "Falha na verificação do PIN"
-
-#: ../../network1/state_handler.go:58
-msgid "Necessary firmware for the device may be missed"
-msgstr "O firmware necessário para o dispositivo pode estar ausente"
-
-#: ../../network1/state_handler.go:59
-msgid "The device was removed"
-msgstr "O dispositivo foi removido"
-
-#: ../../network1/state_handler.go:60
-msgid "NetworkManager went to sleep"
-msgstr "O Gerenciador de Rede está inativo"
-
-#: ../../network1/state_handler.go:61
-msgid "The device's active connection was removed or disappeared"
-msgstr "A conexão do dispositivo ativo foi removida ou desapareceu"
-
-#: ../../network1/state_handler.go:62
-msgid "A user or client requested to disconnect"
-msgstr "Um usuário ou cliente solicitou desconectar-se"
-
-#: ../../network1/state_handler.go:63
-msgid "The device's carrier/link changed"
-msgstr "A operadora/link do dispositivo mudou"
-
-#: ../../network1/state_handler.go:64
-msgid "The device's existing connection was assumed"
-msgstr "A conexão existente do dispositivo foi assumida"
-
-#: ../../network1/state_handler.go:65
-msgid "The 802.1x supplicant is now available"
-msgstr "O requisitante 802.1x já está disponível"
-
-#: ../../network1/state_handler.go:66
-msgid "The modem could not be found"
-msgstr "Não foi possível encontrar o modem"
-
-#: ../../network1/state_handler.go:67
-msgid "The Bluetooth connection timed out or failed"
-msgstr "A conexão Bluetooth expirou ou falhou"
-
-#: ../../network1/state_handler.go:68
-msgid "GSM Modem's SIM Card was not inserted"
-msgstr "O Cartão SIM do Modem GSM não foi inserido"
-
-#: ../../network1/state_handler.go:69
-msgid "GSM Modem's SIM PIN required"
-msgstr "É necessário o PIN do SIM do Modem GSM"
-
-#: ../../network1/state_handler.go:70
-msgid "GSM Modem's SIM PUK required"
-msgstr "É necessário o PUK do SIM do Modem GSM"
-
-#: ../../network1/state_handler.go:71
-msgid "SIM card error in GSM Modem"
-msgstr "Erro no cartão SIM no Modem GSM"
-
-#: ../../network1/state_handler.go:72
-msgid "InfiniBand device does not support connected mode"
-msgstr "O dispositivo InifiniBand não suporta o modo conectado"
-
-#: ../../network1/state_handler.go:73
-msgid "A dependency of the connection failed"
-msgstr "Uma dependência da conexão falhou"
-
-#: ../../network1/state_handler.go:74
-msgid "RFC 2684 Ethernet bridging error to ADSL"
-msgstr "Erro de ponte de Ethernet RFC 2684 para ADSL"
-
-#: ../../network1/state_handler.go:75
-msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "O Gerenciador do Modem não foi executado ou encerrado inesperadamente"
-
-#: ../../network1/state_handler.go:76
-msgid "The 802.11 WLAN network could not be found"
-msgstr "Não foi possível encontrar a rede Wi-Fi"
-
-#: ../../network1/state_handler.go:77
-msgid "A secondary connection of the base connection failed"
-msgstr "Uma conexão secundária da conexão base falhou"
-
-#: ../../network1/state_handler.go:80
-msgid "DCB or FCoE setup failed"
-msgstr "Falha na instalação do DCB ou FCoE"
-
-#: ../../network1/state_handler.go:81
-msgid "Network teaming control failed"
-msgstr "O controle de agrupamento da rede falhou"
-
-#: ../../network1/state_handler.go:82
-msgid "Modem failed to run or not available"
-msgstr "O modem falhou ao executar ou não está disponível"
-
-#: ../../network1/state_handler.go:83
-msgid "Modem now ready and available"
-msgstr "O modem está pronto e disponível"
-
-#: ../../network1/state_handler.go:84
-msgid "SIM PIN is incorrect"
-msgstr "O PIN do SIM está incorreto"
-
-#: ../../network1/state_handler.go:85
-msgid "New connection activation is enqueuing"
-msgstr "A ativação da nova conexão está na fila"
-
-#: ../../network1/state_handler.go:86
-msgid "Parent device changed"
-msgstr "O dispositivo pai alterou"
-
-#: ../../network1/state_handler.go:87
-msgid "Management status of parent device changed"
-msgstr "O estado de gerenciamento do dispositivo pai foi alterado"
-
-#: ../../network1/state_handler.go:90
-msgid "Network cable is unplugged"
-msgstr "O cabo de rede está desconectado"
-
-#: ../../network1/state_handler.go:91
-msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr "Verifique se o cartão SIM inserido possuí sinal de rede móvel"
-
-#: ../../network1/state_handler.go:92
-msgid ""
-"Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr ""
-"Verifique se o plano selecionado não tem débitos atrasados no cartão SIM"
-
-#: ../../network1/state_handler.go:95
-msgid "Failed to activate VPN connection, reason unknown"
-msgstr "Falha ao ativar a conexão VPN, motivo desconhecido"
-
-#: ../../network1/state_handler.go:96
-msgid "Failed to activate VPN connection"
-msgstr "Falha ao ativar a conexão VPN"
-
-#: ../../network1/state_handler.go:97
-msgid "The VPN connection state changed due to being disconnected by users"
-msgstr ""
-"O estado da conexão VPN foi alterado por ter sido desconectada pelos "
-"usuários"
-
-#: ../../network1/state_handler.go:98
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
-msgstr ""
-"O estado da conexão VPN foi alterado por ter sido desconectada dos "
-"dispositivos"
-
-#: ../../network1/state_handler.go:99
-msgid "VPN service stopped"
-msgstr "Serviço de VPN parado"
-
-#: ../../network1/state_handler.go:100
-msgid "The IP config of VPN connection was invalid"
-msgstr "A configuração de IP da conexão VPN é inválida"
-
-#: ../../network1/state_handler.go:101
-msgid "The connection attempt to VPN service timed out"
-msgstr "A tentativa de conexão com o serviço VPN expirou"
-
-#: ../../network1/state_handler.go:102
-msgid "The VPN service start timed out"
-msgstr "A inicialização do serviço VPN expirou"
-
-#: ../../network1/state_handler.go:103
-msgid "The VPN service failed to start"
-msgstr "O serviço VPN falhou ao iniciar"
-
-#: ../../network1/state_handler.go:104
-msgid "The VPN connection password was not provided"
-msgstr "A senha da conexão VPN não foi fornecida"
-
-#: ../../network1/state_handler.go:105
-msgid "Authentication to VPN server failed"
-msgstr "Falha na autenticação no servidor VPN"
-
-#: ../../network1/state_handler.go:106
-msgid "The connection was deleted from settings"
-msgstr "A conexão foi excluída das configurações"
-
-#: ../../network1/state_handler.go:262
-msgid "Enabling hotspot"
-msgstr "Ativando o Hotspot"
-
-#: ../../network1/state_handler.go:266
-msgid "Connecting %q"
-msgstr "Conectando %q"
-
-#: ../../network1/state_handler.go:275
-msgid "Hotspot enabled"
-msgstr "Hotspot ativado"
-
-#: ../../network1/state_handler.go:277
-msgid "%q connected"
-msgstr "%q conectada"
-
-#: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
-msgid "Hotspot disabled"
-msgstr "Hotspot desativado"
-
-#: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
-#: ../../system/bluetooth1/utils_notify.go:50
-msgid "%q disconnected"
-msgstr "%q desconectado"
-
-#: ../../network1/state_handler.go:355
-msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr ""
-"Impossível compartilhar o hotspot; verifique as configurações do dnsmasq"
-
-#: ../../network1/state_handler.go:357
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "Impossível conectar-se à %q; verifique a intensidade do sinal Wi-Fi"
-
-#: ../../network1/state_handler.go:359
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr "Impossível conectar-se à %q; verifique os dispositivos de rede."
-
-#: ../../network1/state_handler.go:363
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr "Impossível conectar-se à %q; verifique a senha informada"
-
-#: ../../network1/state_handler.go:365
-msgid "Unable to connect %q"
-msgstr "Impossível conectar-se à %q"
-
-#: ../../network1/state_handler.go:377
-msgid "To connect %q, please set up your authentication info"
-msgstr "Para conectar %q, configure as suas informações de autenticação"
-
-#: ../../network1/state_handler.go:379
-msgid "Password is required to connect %q"
-msgstr "Uma senha é necessária para conectar-se à %q"
-
-#: ../../network1/state_handler.go:383
-msgid "The %q 802.11 WLAN network could not be found"
-msgstr "Não foi possível encontrar a rede Wi-Fi %q"
-
-#: ../../network1/utils_dbus_nm.go:278
-msgid "Unknown"
-msgstr "Desconhecido"
-
-#: ../../network1/utils_notify.go:170
-msgid "Airplane mode enabled."
-msgstr "Modo avião ativado."
-
-#: ../../network1/utils_notify.go:170 ../../network1/utils_notify.go:174
-#: ../../network1/utils_notify.go:178 ../../network1/utils_notify.go:196
-#: ../../network1/utils_notify.go:199 ../../network1/utils_notify.go:288
-msgid "Disconnected"
-msgstr "Desconectado"
-
-#: ../../network1/utils_notify.go:178
-msgid "Access Point mode is not supported by this device."
-msgstr "O modo de ponto de acesso não é suportado neste dispositivo."
-
-#: ../../network1/utils_notify.go:182
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr "A placa Wi-Fi está desligada fisicamente"
-
-#: ../../network1/utils_notify.go:186
-msgid "System proxy is set successfully."
-msgstr "O proxy do sistema foi definido."
-
-#: ../../network1/utils_notify.go:189
-msgid "System proxy has been cancelled."
-msgstr "O proxy do sistema foi cancelado."
-
-#: ../../network1/utils_notify.go:193
-msgid "Connected"
-msgstr "Conectado"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
@@ -1122,61 +567,65 @@ msgstr ""
 msgid "Proceed"
 msgstr "Continuar"
 
-#: ../../session/power1/manager.go:928
+#: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr "O sistema será desligado automaticamente após %ds"
 
-#: ../../session/power1/manager.go:929
+#: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
 msgstr "Desligamento programado"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Cancle"
 msgstr "Cancelar"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Shut down"
 msgstr "Desligar"
 
-#: ../../session/power1/manager_events.go:266
+#: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
 msgstr "Bateria criticamente fraca"
 
-#: ../../session/power1/manager_events.go:291
-#: ../../session/power1/manager_events.go:296
-#: ../../session/power1/manager_events.go:301
-#: ../../session/power1/manager_events.go:306
+#: ../../session/power1/manager_events.go:308
+#: ../../session/power1/manager_events.go:313
+#: ../../session/power1/manager_events.go:318
+#: ../../session/power1/manager_events.go:323
 msgid "Battery low, please plug in"
 msgstr "A bateria está com pouca carga; conecte o carregador"
 
-#: ../../session/power1/utils.go:636
+#: ../../session/power1/utils.go:674
 msgid "your computer will shut down"
 msgstr "o computador irá desligar"
 
-#: ../../session/power1/utils.go:638
+#: ../../session/power1/utils.go:676
 msgid "your computer will suspend"
 msgstr "o computador irá suspender"
 
-#: ../../session/power1/utils.go:640
+#: ../../session/power1/utils.go:678
 msgid "your computer will hibernate"
 msgstr "o computador irá hibernar"
 
-#: ../../session/power1/utils.go:642
+#: ../../session/power1/utils.go:680
 msgid "your monitor will turn off"
 msgstr "o monitor irá desligar"
 
-#: ../../session/power1/utils.go:644
+#: ../../session/power1/utils.go:682
 msgid "your monitor will show the shutdown interface"
 msgstr "o seu monitor exibirá a tela de desligamento"
 
-#: ../../session/power1/utils.go:646
+#: ../../session/power1/utils.go:684
 msgid "it will do nothing to your computer"
 msgstr "não irá fazer nada ao computador"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "Conectado à %q"
+
+#: ../../system/bluetooth1/utils_notify.go:50
+msgid "%q disconnected"
+msgstr "%q desconectado"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
@@ -1193,21 +642,21 @@ msgstr ""
 msgid "Space"
 msgstr "Espaço"
 
-#: ../../timedate1/manager_ifc.go:59
+#: ../../timedate1/manager_ifc.go:60
 msgid "Authentication is required to set the system time"
 msgstr "A autenticação é necessária para alterar a hora do sistema"
 
-#: ../../timedate1/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:73
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "A autenticação é necessária para alterar a sincronização da hora"
 
-#: ../../timedate1/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
 msgstr "A autenticação é necessária para alterar o Servidor NTP"
 
-#: ../../timedate1/manager_ifc.go:125
+#: ../../timedate1/manager_ifc.go:127
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1215,6 +664,6 @@ msgstr ""
 "A autenticação é necessária para controlar se o RTC armazena a hora local ou"
 " UTC"
 
-#: ../../timedate1/manager_ifc.go:151
+#: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
 msgstr "A autenticação é necessária para alterar o fuso horário"
