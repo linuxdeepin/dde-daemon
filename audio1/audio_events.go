@@ -339,7 +339,7 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 // 自动切换端口，至少要保证声卡的profile是配置文件中设置的profile
 // 如果不是，可能还在切换中，等待一下
 func (a *Audio) autoSwitchPort() {
-	logger.Warning("auto switch port")
+	logger.Debug("auto switch port")
 	a.autoSwitchOutputPort()
 	a.autoSwitchInputPort()
 }
@@ -353,7 +353,10 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 	case pulse.EventTypeRemove: // 删除声卡
 		a.handleCardRemoved(idx)
 		shouldAutoSwitch = true
-	case pulse.EventTypeChange: // 声卡属性变化,也可能是有线耳机插拔了端口
+	case pulse.EventTypeChange:
+		// 声卡属性变化,也可能是有线耳机插拔了端口
+		// 端口可用性的变化未能引起sink/source的变化，但有可能是优选端口，
+		// 例如：变化的端口和当前端口不属于同一个配置，且变化的端口不在已存在的source中，因此不会有事件变化，需要在此处理
 		shouldAutoSwitch = a.handleCardChanged(idx)
 	default:
 		logger.Warningf("unhandled card event, card=%d, type=%d", idx, eventType)
@@ -528,7 +531,11 @@ func (a *Audio) handleSinkChanged(idx uint32) {
 	if _, ok := a.sinks[idx]; ok {
 		a.sinks[idx].update(sink)
 	}
-
+	// 处理场景： 当sink的端口可用性发生变化时，切换端口
+	// cardchange事件也会触发，但是处理不了，因为这时sink可能还没更新，无可用端口
+	if isPhysicalDevice(sink.Name) && a.checkCardIsReady(sink.Card) {
+		a.autoSwitchPort()
+	}
 }
 
 func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
@@ -571,7 +578,7 @@ func (a *Audio) handleSourceAdded(idx uint32) {
 		// 其他的虚拟通道不做自动切换处理
 		return
 	} else if a.checkCardIsReady(source.Card) {
-		a.autoSwitchPort()
+		a.autoSwitchInputPort()
 	}
 
 }
@@ -598,7 +605,7 @@ func (a *Audio) handleSourceRemoved(idx uint32) {
 		a.defaultSource = nil
 	}
 	if isPhy && a.checkCardIsReady(cardId) {
-		a.autoSwitchPort()
+		a.autoSwitchInputPort()
 	}
 }
 
@@ -613,6 +620,11 @@ func (a *Audio) handleSourceChanged(idx uint32) {
 
 	if _, ok := a.sources[idx]; ok {
 		a.sources[idx].update(source)
+	}
+	// 处理场景： 当source的端口可用性发生变化时，切换端口
+	// cardchange事件也会触发，但是处理不了，因为这时source可能还没更新，无可用端口
+	if isPhysicalDevice(source.Name) && a.checkCardIsReady(source.Card) {
+		a.autoSwitchInputPort()
 	}
 }
 
