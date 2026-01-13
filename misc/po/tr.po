@@ -7,9 +7,9 @@
 # abc Def <hdogan1974@gmail.com>, 2025
 # Muhammet Korkmaz, 2025
 # 9d4282795e87ad099e39d98812f1a822_ade2f01 <c3fa67bcf1b8b90bf10d2d5dae1637ab_127851>, 2025
+# Kaya Zeren <kayazeren@gmail.com>, 2025
 # b83946de5835331df42b9ffcc43e6a33_05e65cd <73a30e0a984b2291d4915f37112ad292_814039>, 2025
 # Adem Çalışkan <ademcal@yahoo.com>, 2025
-# Kaya Zeren <kayazeren@gmail.com>, 2025
 # Serdar Sağlam <teknomobil@msn.com>, 2025
 # deepiner, 2025
 # n n, 2025
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"POT-Creation-Date: 2026-01-13 09:49+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: n n, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/linuxdeepin/teams/3617/tr/)\n"
@@ -67,46 +67,38 @@ msgstr "Kullanıcı adı 3 ile 32 karakter arasında olmalıdır"
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "\"%s\" kullanıcısı daha önce vardı ve verileri senkronize edildi"
 
-#: ../../accounts1/user_ifc.go:731
+#: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr "Bu sistem duvar kağıdı kilitli.Lütfen yöneticinizle iletişime geçin."
 
-#: ../../audio1/audio.go:284
+#: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
 msgstr "Ses Sunucusu değiştirilemedi, lütfen daha sonra deneyin"
 
-#: ../../audio1/audio.go:320
+#: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
 msgstr "Ses Sunucusu Değiştiriliyor, lütfen bekleyin..."
 
-#: ../../audio1/audio.go:353
+#: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
 msgstr "Ses Sunucusu değişti, lütfen oturumu kapatın ve ardından oturum açın"
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
-#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
-#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
-#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
+#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
+#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
+#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr "dde-control-center"
 
-#: ../../audio1/audio_events.go:445
+#: ../../audio1/audio_events.go:701
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s devre dışı bırakılmıştı"
 
-#: ../../audio1/audio_events.go:446
+#: ../../audio1/audio_events.go:702
 msgid "Open"
 msgstr "Aç"
-
-#: ../../bin/dde-authority/fprint_transaction.go:25
-msgid "Fingerprint verification failed"
-msgstr "Parmak izi doğrulanamadı"
-
-#: ../../bin/dde-authority/fprint_transaction.go:26
-msgid "Fingerprint verification timed out"
-msgstr "Parmak izi doğrulaması zaman aşımına uğradı"
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -168,57 +160,57 @@ msgstr "İleti erişimi"
 msgid "Message notification"
 msgstr "İleti bildirimi"
 
-#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "İptal"
 
-#: ../../bluetooth1/obex_agent.go:396
+#: ../../bluetooth1/obex_agent.go:398
 msgid "Receiving %[1]q from %[2]q"
 msgstr "%[2]q 'dan %[1]q alınıyor"
 
-#: ../../bluetooth1/obex_agent.go:405
+#: ../../bluetooth1/obex_agent.go:407
 msgid "View"
 msgstr "Görünüm"
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:413
 msgid "You have received files from %q successfully"
 msgstr "%q üstünden başarıyla dosya aldınız"
 
-#: ../../bluetooth1/obex_agent.go:412
+#: ../../bluetooth1/obex_agent.go:414
 msgid "Done"
 msgstr "Tamamla"
 
-#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
 msgid "Stop Receiving Files"
 msgstr "Dosya Almayı Durdur"
 
-#: ../../bluetooth1/obex_agent.go:429
+#: ../../bluetooth1/obex_agent.go:431
 msgid "You have cancelled the file transfer"
 msgstr "Dosya aktarımını iptal ettiniz"
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:433
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Bluetooth bağlantısı kurulamadı"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Decline"
 msgstr "Reddet"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:472
 msgid "Receive"
 msgstr "Al"
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:477
 msgid "Bluetooth File Transfer"
 msgstr "Bluetooth Dosya Aktarımı"
 
-#: ../../bluetooth1/obex_agent.go:476
+#: ../../bluetooth1/obex_agent.go:478
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q size dosya göndermek istiyor. Teslim alınsın mı?"
 
-#: ../../bluetooth1/obex_agent.go:531
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Receiving %q timed out"
 msgstr "%q alım zaman aşımına uğradı"
 
@@ -234,72 +226,72 @@ msgstr "Bluetooth aygıtları ekle"
 msgid "Pair"
 msgstr "Eşleştir"
 
-#: ../../gesture1/gesture_action.go:38
+#: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
 msgstr "Pencereyi Büyüt"
 
-#: ../../gesture1/gesture_action.go:39
+#: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
 msgstr "Pencereyi Geri Yükle"
 
-#: ../../gesture1/gesture_action.go:40
+#: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
 msgstr "Mevcut Pencere Sol Bölünmüş"
 
-#: ../../gesture1/gesture_action.go:41
+#: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
 msgstr "Mevcut Pencere Sağ Bölünmüş"
 
-#: ../../gesture1/gesture_action.go:42
+#: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
 msgstr "Çoklu görev görünümünü göster"
 
-#: ../../gesture1/gesture_action.go:43
+#: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
 msgstr "Çoklu görev görünümünü gizle"
 
-#: ../../gesture1/gesture_action.go:44
+#: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
 msgstr "Önceki masaüstüne geç"
 
-#: ../../gesture1/gesture_action.go:45
+#: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
 msgstr "Sonraki masaüstüne geç"
 
-#: ../../gesture1/gesture_action.go:46
-#: ../../keybinding1/shortcuts/id_name_map.go:85
+#: ../../gesture1/gesture_action.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr "Masaüstünü görüntüle"
 
-#: ../../gesture1/gesture_action.go:47
+#: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
 msgstr "Masaüstünü gizle"
 
-#: ../../gesture1/gesture_action.go:48
+#: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
 msgstr "Başlatıcıyı göster/gizle"
 
-#: ../../gesture1/gesture_action.go:49
+#: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
 msgstr "Farenin sağ tuşuna basıldı"
 
-#: ../../gesture1/gesture_action.go:50
+#: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
 msgstr "Farenin sağ tuşu serbest bırakıldı"
 
-#: ../../gesture1/gesture_action.go:51
+#: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
 msgstr "Panoyu göster/gizle"
 
-#: ../../gesture1/gesture_action.go:52
+#: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
 msgstr "Genel aramayı göster/gizle"
 
-#: ../../gesture1/gesture_action.go:53
+#: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
 msgstr "Bildirim merkezini göster/gizle"
 
-#: ../../gesture1/gesture_action.go:54
+#: ../../gesture1/gesture_action.go:55
 msgid "Disable"
 msgstr "Devre dışı bırak"
 
@@ -388,151 +380,151 @@ msgid "Deepin Picker"
 msgstr "Deepin Renk Seçici"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
-msgid "Desktop AI Assistant"
-msgstr "Masaüstü Yardımcıları"
-
-#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr "Metinden Konuşmaya"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:34
+#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Speech to Text"
 msgstr "Konuşmadan Metine"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:35
+#: ../../keybinding1/shortcuts/id_name_map.go:34
 msgid "Clipboard"
 msgstr "Pano"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:36
+#: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Translation"
 msgstr "Çeviri"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:37
+#: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
 msgstr "Büyük Ara"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
 msgstr "Bildirim Merkezi"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:39
-#: ../../keybinding1/shortcuts/id_name_map.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr "Görünümü Değiştir"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:40
+#: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
 msgstr "Birden çok ekranı değiştir"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:66
+#: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr "Sol çalışma alanına geç"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:67
+#: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr "Sağ çalışma alanına geç"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:68
+#: ../../keybinding1/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr "Üst çalışma alanına geç"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:69
+#: ../../keybinding1/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr "Alt çalışma alanına geç"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:71
+#: ../../keybinding1/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr "Benzer pencereleri değiştir"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:72
+#: ../../keybinding1/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr "Benzer pencereleri tersine değiştir"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:73
+#: ../../keybinding1/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr "Pencereleri değiştir"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:74
+#: ../../keybinding1/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr "Pencereleri ters çevir"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:94
+#: ../../keybinding1/shortcuts/id_name_map.go:89
+msgid "Activate window menu"
+msgstr ""
+
+#: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr "Pencereyi büyüt"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:95
+#: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr "Pencereyi geri yükle"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:97
+#: ../../keybinding1/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr "Pencereyi küçült"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:98
+#: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr "Pencereyi kapat"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:99
+#: ../../keybinding1/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr "Pencereyi taşı"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:100
+#: ../../keybinding1/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr "Pencereyi boyutlandır"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:115
+#: ../../keybinding1/shortcuts/id_name_map.go:114
 msgid "Move to left workspace"
 msgstr "Sol çalışma alanına taşı"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:116
+#: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to right workspace"
 msgstr "Sağ çalışma alanına taşı"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:117
+#: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to upper workspace"
 msgstr "Üst çalışma alanına taşı"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:118
+#: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to lower workspace"
 msgstr "Alt çalışma alanına taşı"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:140
+#: ../../keybinding1/shortcuts/id_name_map.go:139
 msgid "Display windows of all workspaces"
 msgstr "Çalışma alanlarındaki pencereleri görüntüle"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:141
+#: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of current workspace"
 msgstr "Mevcut çalışma alanının pencerelerini görüntüle"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:142
+#: ../../keybinding1/shortcuts/id_name_map.go:141
 msgid "Display workspace"
 msgstr "Çalışma alanını görüntüle"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:143
+#: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
 msgstr "Yakınlıştır"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:144
+#: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
 msgstr "Uzaklaştır"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:145
+#: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
 msgstr "Gerçek Boyuta Yakınlaştır"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:146
+#: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
 msgstr "Pencere Hızlı Döşeme Sol"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:147
+#: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
 msgstr "Pencere Hızlı Döşeme Sağ"
 
-#: ../../langselector1/locale.go:47
+#: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
 msgstr "Dili değiştirmek için kimlik doğrulaması gerekli"
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:143
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -540,565 +532,17 @@ msgstr ""
 "Sistem dili değiştiriliyor ve gerekli dil paketleri kuruluyor, lütfen "
 "bekleyin..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
 msgstr "Sistem dili değiştiriliyor, lütfen bekleyin..."
 
-#: ../../langselector1/locale.go:140
+#: ../../langselector1/locale.go:145
 msgid "System language changed, please log out and then log in"
 msgstr "Sistem dili değiştirildi, lütfen oturumu kapatıp yeniden açın"
 
-#: ../../langselector1/locale.go:379
+#: ../../langselector1/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr "Sistem dili değiştirilemedi, lütfen daha sonra yeniden dene"
-
-#: ../../lastore1/daemon.go:186
-msgid "Updates failed: it was interrupted."
-msgstr "Güncelleme başarısız oldu: kesintiye uğradı."
-
-#: ../../lastore1/daemon.go:188
-msgid ""
-"Updates failed: it was interrupted. Please roll back to the old version and "
-"try again."
-msgstr ""
-"Güncellemeler başarısız oldu: Kesildi.Lütfen eski sürüme geri dönün ve "
-"tekrar deneyin."
-
-#: ../../lastore1/daemon.go:194
-msgid "Updates failed: DPKG error."
-msgstr "Güncellemeler başarısız oldu: DPKG hatası."
-
-#: ../../lastore1/daemon.go:196
-msgid ""
-"Updates failed: DPKG error. Please roll back to the old version and try "
-"again."
-msgstr ""
-"Güncellemeler başarısız oldu: DPKG hatası.Lütfen eski sürüme geri dönün ve "
-"tekrar deneyin."
-
-#: ../../lastore1/daemon.go:200
-msgid "Updates failed: insufficient disk space."
-msgstr "Güncelleme başarısız oldu: yetersiz disk alanı."
-
-#: ../../lastore1/daemon.go:202
-msgid ""
-"Updates failed: insufficient disk space. Please roll back to the old version"
-" and try again."
-msgstr ""
-"Güncellemeler başarısız oldu: Yetersiz disk alanı.Lütfen eski sürüme geri "
-"dönün ve tekrar deneyin."
-
-#: ../../lastore1/daemon.go:206
-msgid "Updates failed"
-msgstr "Güncelleme başarısız oldu"
-
-#: ../../lastore1/daemon.go:208
-msgid "Updates failed. Please roll back to the old version and try again."
-msgstr ""
-"Güncellemeler başarısız oldu.Lütfen eski sürüme geri dönün ve tekrar "
-"deneyin."
-
-#: ../../launcher/item.go:97
-msgid "(Linglong)"
-msgstr "(Linglong)"
-
-#: ../../launcher/manager_uninstall.go:55
-msgid "%q removed successfully"
-msgstr "%q kaldırıldı"
-
-#: ../../launcher/manager_uninstall.go:57
-msgid "Failed to uninstall %q"
-msgstr "%q kaldırılamadı"
-
-#: ../../network1/manager_active_conn.go:468
-#: ../../network1/manager_active_conn.go:473
-msgid "None"
-msgstr "Yok"
-
-#: ../../network1/manager_active_conn.go:475
-msgid "WEP 40/128-bit Key"
-msgstr "WEP 40/128-bit Anahtar"
-
-#: ../../network1/manager_active_conn.go:477
-msgid "WPA/WPA2 Personal"
-msgstr "WPA/WPA2 Kişisel"
-
-#: ../../network1/manager_active_conn.go:479
-msgid "WPA3 Personal"
-msgstr "WPA3 Kişisel"
-
-#: ../../network1/manager_active_conn.go:487
-msgid "TLS"
-msgstr "TLS"
-
-#: ../../network1/manager_active_conn.go:489
-msgid "MD5"
-msgstr "MD5"
-
-#: ../../network1/manager_active_conn.go:491
-msgid "LEAP"
-msgstr "LEAP"
-
-#: ../../network1/manager_active_conn.go:493
-msgid "FAST"
-msgstr "FAST"
-
-#: ../../network1/manager_active_conn.go:495
-msgid "Tunneled TLS"
-msgstr "Tünellenmiş TLS"
-
-#: ../../network1/manager_active_conn.go:497
-msgid "Protected EAP"
-msgstr "Korumalı EAP"
-
-#: ../../network1/manager_connection.go:346
-#: ../../network1/manager_connection.go:350
-msgid "Wired Connection"
-msgstr "Kablolu Bağlantı"
-
-#: ../../network1/manager_connection.go:389
-msgid "Wired Connection %v"
-msgstr "Kablolu Bağlantı %v"
-
-#: ../../network1/proxychains/utils_notify.go:49
-msgid "Application proxy is set successfully"
-msgstr "Uygulama vekil sunucusu başarıyla ayarlandı"
-
-#: ../../network1/proxychains/utils_notify.go:49
-#: ../../network1/proxychains/utils_notify.go:52
-#: ../../network1/utils_notify.go:182 ../../network1/utils_notify.go:186
-#: ../../network1/utils_notify.go:189
-msgid "Network"
-msgstr "Ağ"
-
-#: ../../network1/proxychains/utils_notify.go:52
-msgid "Failed to set the application proxy"
-msgstr "Uygulama vekil sunucusu ayarlanamadı"
-
-#: ../../network1/state_handler.go:23
-msgid "Device state changed"
-msgstr "Aygıt durumu değişti"
-
-#: ../../network1/state_handler.go:24
-msgid "Device state changed, reason unknown"
-msgstr "Aygıt durumu değişti, nedeni bilinmiyor"
-
-#: ../../network1/state_handler.go:25
-msgid "The device is now managed"
-msgstr "Aygıt artık yönetiliyor"
-
-#: ../../network1/state_handler.go:26
-msgid "The device is no longer managed"
-msgstr "Aygıt artık yönetilmiyor"
-
-#: ../../network1/state_handler.go:27
-msgid "The device has not been ready for configuration"
-msgstr "Bu aygıt yapılandırmaya hazır değil"
-
-#: ../../network1/state_handler.go:28
-msgid ""
-"IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr ""
-"IP yapılandırması kaydedilemedi (kullanılabilecek bir adres yok, zaman "
-"aşımı, vb.)"
-
-#: ../../network1/state_handler.go:29
-msgid "The IP configuration is no longer valid"
-msgstr "IP yapılandırması artık geçerli değil"
-
-#: ../../network1/state_handler.go:30
-msgid "Passwords were required but not provided"
-msgstr "Zorunlu parolalar sağlanmadı"
-
-#: ../../network1/state_handler.go:31
-msgid ""
-"The 802.1X supplicant disconnected from the access point or authentication "
-"server"
-msgstr ""
-"802.1X istemcisinin erişim noktası ya da kimlik doğrulama sunucusu ile "
-"bağlantısını kesildi"
-
-#: ../../network1/state_handler.go:32
-msgid "Configuration of the 802.1X supplicant failed"
-msgstr "802.1X istemcisi yapılandırılamadı"
-
-#: ../../network1/state_handler.go:33
-msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr ""
-"802.1X istemcisi beklenmedik şekilde sonlandırıldı veya başarısız oldu"
-
-#: ../../network1/state_handler.go:34
-msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "802.1X istemcisinin kimlik doğrulaması çok uzun sürüyor"
-
-#: ../../network1/state_handler.go:35
-msgid "The PPP service failed to start within the allowed time"
-msgstr "PPP hizmeti izin verilen süre içinde başlatılamadı"
-
-#: ../../network1/state_handler.go:36
-msgid "The PPP service disconnected unexpectedly"
-msgstr "PPP hizmetinin bağlantısı beklenmedik şekilde kesildi"
-
-#: ../../network1/state_handler.go:37
-msgid "The PPP service quitted or failed unexpectedly"
-msgstr "PPP hizmeti beklenmedik biçimde sona erdi ya da çalıştırılamadı"
-
-#: ../../network1/state_handler.go:38
-msgid "The DHCP service failed to start within the allowed time"
-msgstr "DHCP hizmeti izin verilen süre içinde başlatılamadı"
-
-#: ../../network1/state_handler.go:39
-msgid "The DHCP service reported an unexpected error"
-msgstr "DHCP hizmeti beklenmeyen bir sorunla karşılaştı"
-
-#: ../../network1/state_handler.go:40
-msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "DHCP hizmeti beklenmedik biçimde sona erdi ya da çalıştırılamadı"
-
-#: ../../network1/state_handler.go:41
-msgid "The shared connection service failed to start"
-msgstr "Paylaşılan bağlantı hizmeti başlatılamadı"
-
-#: ../../network1/state_handler.go:42
-msgid "The shared connection service quitted or failed unexpectedly"
-msgstr ""
-"Paylaşılan bağlantı hizmeti beklenmedik biçimde sona erdi ya da "
-"çalıştırılamadı"
-
-#: ../../network1/state_handler.go:43
-msgid "The AutoIP service failed to start"
-msgstr "AutoIP hizmeti başlatılamadı"
-
-#: ../../network1/state_handler.go:44
-msgid "The AutoIP service reported an unexpected error"
-msgstr "AutoIP hizmeti beklenmeyen bir sorunla karşılaştı"
-
-#: ../../network1/state_handler.go:45
-msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "AutoIP hizmeti sonlandırıldı veya başarısız oldu"
-
-#: ../../network1/state_handler.go:46
-msgid "Dialing failed due to busy lines"
-msgstr "Meşgul hatlar nedeniyle arama başarısız"
-
-#: ../../network1/state_handler.go:47
-msgid "Dialing failed due to no dial tone"
-msgstr "Çevir sesi olmadığından arama başarısız"
-
-#: ../../network1/state_handler.go:48
-msgid "Dialing failed due to the carrier"
-msgstr "Operatör nedeniyle arama başarısız"
-
-#: ../../network1/state_handler.go:49
-msgid "Dialing timed out"
-msgstr "Arama zaman aşımı"
-
-#: ../../network1/state_handler.go:50
-msgid "Dialing failed"
-msgstr "Arama başarısız"
-
-#: ../../network1/state_handler.go:51
-msgid "Modem initialization failed"
-msgstr "Modem başlatılamadı"
-
-#: ../../network1/state_handler.go:52
-msgid "Failed to select the specified GSM APN"
-msgstr "Belirtilen GSM APN seçilemedi"
-
-#: ../../network1/state_handler.go:53
-msgid "No networks searched"
-msgstr "Herhangi bir şebeke aranmadı"
-
-#: ../../network1/state_handler.go:54
-msgid "Network registration was denied"
-msgstr "Ağ kaydı reddedildi"
-
-#: ../../network1/state_handler.go:55
-msgid "Network registration timed out"
-msgstr "Ağ kaydı zaman aşımına uğradı"
-
-#: ../../network1/state_handler.go:56
-msgid "Failed to register to the requested GSM network"
-msgstr "İstenilen GSM ağı üzerine kayıt olunamadı"
-
-#: ../../network1/state_handler.go:57
-msgid "PIN check failed"
-msgstr "PIN kodu hatalı"
-
-#: ../../network1/state_handler.go:58
-msgid "Necessary firmware for the device may be missed"
-msgstr "Aygıt için gerekli gömülü yazılım eksik olabilir"
-
-#: ../../network1/state_handler.go:59
-msgid "The device was removed"
-msgstr "Aygıt kaldırıldı"
-
-#: ../../network1/state_handler.go:60
-msgid "NetworkManager went to sleep"
-msgstr "Ağ Yöneticisi uyku kipine geçti"
-
-#: ../../network1/state_handler.go:61
-msgid "The device's active connection was removed or disappeared"
-msgstr "Aygıtın etkin bağlantısı kaldırıldı ya da kayboldu"
-
-#: ../../network1/state_handler.go:62
-msgid "A user or client requested to disconnect"
-msgstr "Bir kullanıcı ya da istemci bağlantıyı kesmek istedi"
-
-#: ../../network1/state_handler.go:63
-msgid "The device's carrier/link changed"
-msgstr "Aygıtın taşıyıcısı/bağlantısı değişti"
-
-#: ../../network1/state_handler.go:64
-msgid "The device's existing connection was assumed"
-msgstr "Aygıtın var olan bağlantısı kullanıldı"
-
-#: ../../network1/state_handler.go:65
-msgid "The 802.1x supplicant is now available"
-msgstr "802.1x istemcisi şimdi kullanılabilir"
-
-#: ../../network1/state_handler.go:66
-msgid "The modem could not be found"
-msgstr "Modem bulunamadı"
-
-#: ../../network1/state_handler.go:67
-msgid "The Bluetooth connection timed out or failed"
-msgstr "Bluetooth bağlantısı zaman aşımına uğradı ya da tamamlanamadı"
-
-#: ../../network1/state_handler.go:68
-msgid "GSM Modem's SIM Card was not inserted"
-msgstr "GSM Modemin SIM Kartı takılı değil"
-
-#: ../../network1/state_handler.go:69
-msgid "GSM Modem's SIM PIN required"
-msgstr "GSM Modemin SIM kart PIN kodu gerekli"
-
-#: ../../network1/state_handler.go:70
-msgid "GSM Modem's SIM PUK required"
-msgstr "GSM Modemin SIM kart PUK kodu gerekli"
-
-#: ../../network1/state_handler.go:71
-msgid "SIM card error in GSM Modem"
-msgstr "GSM Modemde SIM kart sorunu"
-
-#: ../../network1/state_handler.go:72
-msgid "InfiniBand device does not support connected mode"
-msgstr "InfiniBand aygıtı bağlantılı kipi desteklemiyor"
-
-#: ../../network1/state_handler.go:73
-msgid "A dependency of the connection failed"
-msgstr "Bağlantı için bir gereksinim karşılanamadı"
-
-#: ../../network1/state_handler.go:74
-msgid "RFC 2684 Ethernet bridging error to ADSL"
-msgstr "RFC 2684 Ethernet ADSL köprüleme sorunu"
-
-#: ../../network1/state_handler.go:75
-msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "Modem Yöneticisi beklenmedik biçimde sona erdi ya da çalıştırılamadı"
-
-#: ../../network1/state_handler.go:76
-msgid "The 802.11 WLAN network could not be found"
-msgstr "802.11 WLAN ağı bulunamadı"
-
-#: ../../network1/state_handler.go:77
-msgid "A secondary connection of the base connection failed"
-msgstr "Temel bağlantının ikincil bir bağlantısı tamamlanamadı"
-
-#: ../../network1/state_handler.go:80
-msgid "DCB or FCoE setup failed"
-msgstr "DCB ya da FCoE kurulamadı"
-
-#: ../../network1/state_handler.go:81
-msgid "Network teaming control failed"
-msgstr "Ağ takımı denetlenemedi"
-
-#: ../../network1/state_handler.go:82
-msgid "Modem failed to run or not available"
-msgstr "Modem çalışmıyor ya da kullanılamıyor"
-
-#: ../../network1/state_handler.go:83
-msgid "Modem now ready and available"
-msgstr "Modem hazır ve kullanılabilir"
-
-#: ../../network1/state_handler.go:84
-msgid "SIM PIN is incorrect"
-msgstr "SIM PIN kodu yanlış"
-
-#: ../../network1/state_handler.go:85
-msgid "New connection activation is enqueuing"
-msgstr "Yeni bağlantı etkinleştirmesi sıraya alınıyor"
-
-#: ../../network1/state_handler.go:86
-msgid "Parent device changed"
-msgstr "Üst aygıt değiştirildi"
-
-#: ../../network1/state_handler.go:87
-msgid "Management status of parent device changed"
-msgstr "Üst aygıtın yönetim durumu değiştirildi"
-
-#: ../../network1/state_handler.go:90
-msgid "Network cable is unplugged"
-msgstr "Ağ kablosu takılı değil"
-
-#: ../../network1/state_handler.go:91
-msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr ""
-"Lütfen SIM kartın takılmış ve mobil ağ sinyalinin var olduğundan emin olun"
-
-#: ../../network1/state_handler.go:92
-msgid ""
-"Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr ""
-"SIM kartın borçlu duruma düşmemesi için doğru planın seçildiğinden emin olun"
-
-#: ../../network1/state_handler.go:95
-msgid "Failed to activate VPN connection, reason unknown"
-msgstr "VPN bağlantısı bilinmeyen bir nedenle etkinleştirilemedi"
-
-#: ../../network1/state_handler.go:96
-msgid "Failed to activate VPN connection"
-msgstr "VPN bağlantısı etkinleştirilemedi"
-
-#: ../../network1/state_handler.go:97
-msgid "The VPN connection state changed due to being disconnected by users"
-msgstr ""
-"VPN bağlantısının durumu kullanıcıların bağlantıyı kesmesi nedeniyle "
-"değiştirildi"
-
-#: ../../network1/state_handler.go:98
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
-msgstr ""
-"VPN bağlantısının durumu aygıtların bağlantıyı kesmesi nedeniyle "
-"değiştirildi"
-
-#: ../../network1/state_handler.go:99
-msgid "VPN service stopped"
-msgstr "VPN hizmeti durduruldu"
-
-#: ../../network1/state_handler.go:100
-msgid "The IP config of VPN connection was invalid"
-msgstr "VPN bağlantısının IP yapılandırması geçersiz"
-
-#: ../../network1/state_handler.go:101
-msgid "The connection attempt to VPN service timed out"
-msgstr "VPN hizmetine bağlantı girişimi zaman aşımına uğradı"
-
-#: ../../network1/state_handler.go:102
-msgid "The VPN service start timed out"
-msgstr "VPN hizmetinin başlatılması zaman aşımına uğradı"
-
-#: ../../network1/state_handler.go:103
-msgid "The VPN service failed to start"
-msgstr "VPN hizmeti başlatılamadı"
-
-#: ../../network1/state_handler.go:104
-msgid "The VPN connection password was not provided"
-msgstr "VPN bağlantısının parolası yazılmamış"
-
-#: ../../network1/state_handler.go:105
-msgid "Authentication to VPN server failed"
-msgstr "VPN sunucusunda kimlik doğrulanamadı"
-
-#: ../../network1/state_handler.go:106
-msgid "The connection was deleted from settings"
-msgstr "Bağlantı ayarlardan silindi"
-
-#: ../../network1/state_handler.go:262
-msgid "Enabling hotspot"
-msgstr "Erişim noktasını etkinleşir"
-
-#: ../../network1/state_handler.go:266
-msgid "Connecting %q"
-msgstr "Bağlanıyor %q"
-
-#: ../../network1/state_handler.go:275
-msgid "Hotspot enabled"
-msgstr "Erişim noktası etkin"
-
-#: ../../network1/state_handler.go:277
-msgid "%q connected"
-msgstr "%q bağlı"
-
-#: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
-msgid "Hotspot disabled"
-msgstr "Erişim noktası devre dışı"
-
-#: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
-#: ../../system/bluetooth1/utils_notify.go:50
-msgid "%q disconnected"
-msgstr "%q bağlantısı kesildi"
-
-#: ../../network1/state_handler.go:355
-msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr "Erişim noktası paylaşılamadı, dnsmasq ayarlarını denetle"
-
-#: ../../network1/state_handler.go:357
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr "%q bağlanılamıyor, lütfen kablosuz yönlendiriciye yakın tutun"
-
-#: ../../network1/state_handler.go:359
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr ""
-"%q bağlantısı kurulamadı, lütfen erişim noktanızı ya da ağ kablonuzu "
-"denetleyin."
-
-#: ../../network1/state_handler.go:363
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr ""
-"Bağlantı kurulamadı, parola yanlış olduğundan %q bağlantısı kurulamadı"
-
-#: ../../network1/state_handler.go:365
-msgid "Unable to connect %q"
-msgstr "%q 'e bağlanılamıyor"
-
-#: ../../network1/state_handler.go:377
-msgid "To connect %q, please set up your authentication info"
-msgstr "%q'ya bağlanmak için lütfen kimlik doğrulama bilgilerinizi ayarlayın"
-
-#: ../../network1/state_handler.go:379
-msgid "Password is required to connect %q"
-msgstr "%q bağlanmak için parola gerekli"
-
-#: ../../network1/state_handler.go:383
-msgid "The %q 802.11 WLAN network could not be found"
-msgstr "%q  802.11 WLAN ağı bulunamadı"
-
-#: ../../network1/utils_dbus_nm.go:278
-msgid "Unknown"
-msgstr "Bilinmiyor"
-
-#: ../../network1/utils_notify.go:170
-msgid "Airplane mode enabled."
-msgstr "Uçak kipi etkinleştirildi."
-
-#: ../../network1/utils_notify.go:170 ../../network1/utils_notify.go:174
-#: ../../network1/utils_notify.go:178 ../../network1/utils_notify.go:196
-#: ../../network1/utils_notify.go:199 ../../network1/utils_notify.go:288
-msgid "Disconnected"
-msgstr "Bağlantı kesildi"
-
-#: ../../network1/utils_notify.go:178
-msgid "Access Point mode is not supported by this device."
-msgstr "Erişim Noktası kipi bu aygıt tarafından desteklenmiyor."
-
-#: ../../network1/utils_notify.go:182
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr "Kablosuz ağ aygıtının donanım anahtarı kapalı, lütfen açın."
-
-#: ../../network1/utils_notify.go:186
-msgid "System proxy is set successfully."
-msgstr "Sistem vekil sunucusu ayarlandı."
-
-#: ../../network1/utils_notify.go:189
-msgid "System proxy has been cancelled."
-msgstr "Sistem vekil sunucu iptal edildi."
-
-#: ../../network1/utils_notify.go:193
-msgid "Connected"
-msgstr "Bağlandı"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
@@ -1118,61 +562,65 @@ msgstr ""
 msgid "Proceed"
 msgstr "Sürdür"
 
-#: ../../session/power1/manager.go:928
+#: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr "Sistem %d sn sonra otomatik olarak kapanacaktır"
 
-#: ../../session/power1/manager.go:929
+#: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
 msgstr "Planlanmış Kapatma"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Cancle"
 msgstr "İptal"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Shut down"
 msgstr "Kapat"
 
-#: ../../session/power1/manager_events.go:266
+#: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
 msgstr "Pil kritik derecede düşük"
 
-#: ../../session/power1/manager_events.go:291
-#: ../../session/power1/manager_events.go:296
-#: ../../session/power1/manager_events.go:301
-#: ../../session/power1/manager_events.go:306
+#: ../../session/power1/manager_events.go:308
+#: ../../session/power1/manager_events.go:313
+#: ../../session/power1/manager_events.go:318
+#: ../../session/power1/manager_events.go:323
 msgid "Battery low, please plug in"
 msgstr "Düşük pil düzeyi, lütfen fişe takın"
 
-#: ../../session/power1/utils.go:636
+#: ../../session/power1/utils.go:674
 msgid "your computer will shut down"
 msgstr "bilgisayarınız kapanacak"
 
-#: ../../session/power1/utils.go:638
+#: ../../session/power1/utils.go:676
 msgid "your computer will suspend"
 msgstr "bilgisayarınız askıya alınacak"
 
-#: ../../session/power1/utils.go:640
+#: ../../session/power1/utils.go:678
 msgid "your computer will hibernate"
 msgstr "bilgisayarınız hazırda bekleyecek"
 
-#: ../../session/power1/utils.go:642
+#: ../../session/power1/utils.go:680
 msgid "your monitor will turn off"
 msgstr "ekranınız kapanacak"
 
-#: ../../session/power1/utils.go:644
+#: ../../session/power1/utils.go:682
 msgid "your monitor will show the shutdown interface"
 msgstr "Monitörünüz kapatma arayüzünü gösterecektir"
 
-#: ../../session/power1/utils.go:646
+#: ../../session/power1/utils.go:684
 msgid "it will do nothing to your computer"
 msgstr "bilgisayarınıza hiçbir şey yapmaz"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "%q bağlantısı başarılı"
+
+#: ../../system/bluetooth1/utils_notify.go:50
+msgid "%q disconnected"
+msgstr "%q bağlantısı kesildi"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
@@ -1189,21 +637,21 @@ msgstr ""
 msgid "Space"
 msgstr "Boşluk"
 
-#: ../../timedate1/manager_ifc.go:59
+#: ../../timedate1/manager_ifc.go:60
 msgid "Authentication is required to set the system time"
 msgstr "Sistem zamanını ayarlamak için kimlik doğrulaması gerekli"
 
-#: ../../timedate1/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:73
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr "Ağ zaman eşitlemesini etkinleştirmek için kimlik doğrulaması gerekli"
 
-#: ../../timedate1/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
 msgstr "NTP sunucusunu değiştirmek için kimlik doğrulaması gerekli"
 
-#: ../../timedate1/manager_ifc.go:125
+#: ../../timedate1/manager_ifc.go:127
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1211,6 +659,6 @@ msgstr ""
 "RTC'nin yerel veya UTC saatini depolayıp depolamayacağını kontrol etmek için"
 " kimlik doğrulama gerekir"
 
-#: ../../timedate1/manager_ifc.go:151
+#: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
 msgstr "Sistem saat dilimini ayarlamak için kimlik doğrulaması gerekli"
