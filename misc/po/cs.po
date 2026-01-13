@@ -5,11 +5,11 @@
 #
 # Translators:
 # Tomáš Hurta, 2025
+# fri, 2025
 # op6464 <op64@seznam.cz>, 2025
 # 李洪武 <lihongwu1987@gmail.com>, 2025
-# Petr Balvín <petrbalvin@petalmail.com>, 2025
 # Pavel Borecki <pavel.borecki@gmail.com>, 2025
-# fri, 2025
+# Petr Balvín <petrbalvin@petalmail.com>, 2025
 # deepiner, 2025
 #
 #, fuzzy
