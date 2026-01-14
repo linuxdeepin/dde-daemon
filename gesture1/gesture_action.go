@@ -165,8 +165,7 @@ func (m *Manager) doToggleLaunchpad() error {
 }
 
 func (m *Manager) doXdotoolsMouseDown() error {
-	cmd := "xdotool mousedown 3"
-	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
+	out, err := exec.Command("xdotool", "mousedown", "3").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("%s", string(out))
 	}
@@ -174,8 +173,7 @@ func (m *Manager) doXdotoolsMouseDown() error {
 }
 
 func (m *Manager) doXdotoolsMouseUp() error {
-	cmd := "xdotool mousedown 3"
-	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
+	out, err := exec.Command("xdotool", "mouseup", "3").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("%s", string(out))
 	}
