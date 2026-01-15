@@ -1,3 +1,13 @@
+dde-daemon (6.1.71) unstable; urgency=medium
+
+  * fix: enhance system daemon resource management
+  * fix: 解决设置快速登录后,切换用户失败的问题
+  * fix: 解决触控屏拖拽窗口移动异常的问题
+  * fix: 解决接入有限耳机, 输入输出还是null的问题
+  * feat: 更新翻译
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 15 Jan 2026 19:18:33 +0800
+
 dde-daemon (6.1.70) unstable; urgency=medium
 
   * chore: 更新go.mod
