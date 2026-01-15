@@ -7,6 +7,7 @@ package users
 import (
 	"fmt"
 	"os"
+	"os/user"
 	"path"
 	"path/filepath"
 	"strconv"
@@ -277,7 +278,16 @@ func SetQuickLogin(username string, enabled bool) error {
 			// 创建目录失败
 			return err
 		}
-
+		defer func() {
+			// 保持文件所有权为 root:lightdm
+			lightdmUser, err := user.Lookup("lightdm")
+			if err == nil {
+				lightdmGID, err := strconv.Atoi(lightdmUser.Gid)
+				if err == nil {
+					_ = os.Chown(GreeterStateFile, 0, lightdmGID)
+				}
+			}
+		}()
 		return setIniStringList(GreeterStateFile, greeterStateGroup,
 			greeterStateKeyQuickLoginUsers, usernames)
 	}
