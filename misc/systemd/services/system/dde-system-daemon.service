@@ -130,6 +130,8 @@ ReadWritePaths=-/usr/share/tlp/deepin-system-power-control/
 ReadWritePaths=-/etc/tlp.d/
 ReadWritePaths=-/run/tlp/
 
+OOMScoreAdjust=-500
+Nice=-5
 [Install]
 # We pull this in by graphical.target instead of waiting for the bus
 # activation, to speed things up a little: gdm uses this anyway so it is nice
