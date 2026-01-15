@@ -11,7 +11,6 @@ import (
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	x "github.com/linuxdeepin/go-x11-client"
 )
 
 const (
@@ -26,8 +25,7 @@ type Manager struct {
 	service *dbusutil.Service
 	ddcci   *ddcci
 
-	PropsMu         sync.RWMutex
-	configTimestamp x.Timestamp
+	PropsMu sync.RWMutex
 }
 
 func NewManager(service *dbusutil.Service) (*Manager, error) {
