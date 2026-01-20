@@ -279,12 +279,13 @@ func SetQuickLogin(username string, enabled bool) error {
 			return err
 		}
 		defer func() {
-			// 保持文件所有权为 root:lightdm
+			// 保持文件所有权为 root:lightdm，权限为 664（rw-rw-r--）
 			lightdmUser, err := user.Lookup("lightdm")
 			if err == nil {
 				lightdmGID, err := strconv.Atoi(lightdmUser.Gid)
 				if err == nil {
 					_ = os.Chown(GreeterStateFile, 0, lightdmGID)
+					_ = os.Chmod(GreeterStateFile, 0664)
 				}
 			}
 		}()
