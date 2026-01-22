@@ -471,11 +471,14 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 		})
 	}
 	if screenSaverStartDelay > 0 && canAddToTasks("screenSaverStart", screenSaverStartDelay, tasks) {
-		tasks = append(tasks, metaTask{
-			name:  "screenSaverStart",
-			delay: screenSaverStartDelay,
-			fn:    psp.startScreensaver,
-		})
+		// treeland 下屏保由treeland自行管理，后端不控制，这里暂时不处理屏保
+		if os.Getenv("XDG_SESSION_TYPE") != "wayland" {
+			tasks = append(tasks, metaTask{
+				name:  "screenSaverStart",
+				delay: screenSaverStartDelay,
+				fn:    psp.startScreensaver,
+			})
+		}
 	}
 
 	if lockDelay > 0 {
