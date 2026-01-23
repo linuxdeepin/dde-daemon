@@ -1,3 +1,10 @@
+dde-daemon (6.1.72) unstable; urgency=medium
+
+  * fix: 解决设置快速登录后,切换用户失败的问题
+  * feat: dbus安全整改
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 23 Jan 2026 09:37:25 +0800
+
 dde-daemon (6.1.71) unstable; urgency=medium
 
   * fix: enhance system daemon resource management
