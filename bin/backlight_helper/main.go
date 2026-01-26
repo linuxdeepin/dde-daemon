@@ -5,6 +5,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -15,6 +16,7 @@ import (
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/bin/backlight_helper/ddcci"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
 )
@@ -50,8 +52,16 @@ func (*Manager) GetInterfaceName() string {
 	return dbusInterface
 }
 
-func (m *Manager) SetBrightness(type0 byte, name string, value int32) *dbus.Error {
+func (m *Manager) SetBrightness(sender dbus.Sender, type0 byte, name string, value int32) *dbus.Error {
 	m.service.DelayAutoQuit()
+
+	// Check Polkit authorization
+	err := checkAuthorization("org.deepin.dde.backlight-helper.doAction", string(sender))
+	if err != nil {
+		logger.Warning("SetBrightness authorization failed:", err)
+		return dbusutil.ToError(err)
+	}
+
 	filename, err := getBrightnessFilename(type0, name)
 	if err != nil {
 		return dbusutil.ToError(err)
@@ -90,6 +100,26 @@ func getBrightnessFilename(type0 byte, name string) (string, error) {
 	}
 
 	return filepath.Join("/sys/class", subsystem, name, "brightness"), nil
+}
+
+func checkAuthorization(actionId string, sysBusName string) error {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+
+	ret, err := authority.CheckAuthorization(0, subject, actionId,
+		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		return err
+	}
+	if !ret.IsAuthorized {
+		return errors.New("not authorized")
+	}
+	return nil
 }
 
 func (m *Manager) getBacklightGs(name string) bool {
