@@ -108,8 +108,15 @@ func NewManager(service *dbusutil.Service) *Manager {
 }
 
 func (m *Manager) setWheelSpeed() {
+	min := 1
+	max := 100
 	speed := m.WheelSpeed.Get()
 	// speed range is [1,100]
+	if speed < uint32(min) {
+		speed = uint32(min)
+	} else if speed > uint32(max) {
+		speed = uint32(max)
+	}
 	logger.Debug("setWheelSpeed", speed)
 
 	// 为了避免imwheel对kwin影响，先杀死imwheel
