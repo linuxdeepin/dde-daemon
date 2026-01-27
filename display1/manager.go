@@ -2618,21 +2618,6 @@ func (m *Manager) updateTouchscreenMap(outputName string, touchUUID string, auto
 	}
 }
 
-func (m *Manager) removeTouchscreenMap(touchUUID string) {
-	delete(m.touchscreenMap, touchUUID)
-	err := m.setMapOutput(jsonMarshal(m.touchscreenMap))
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	delete(m.TouchMap, touchUUID)
-
-	err = m.emitPropChangedTouchMap(m.TouchMap)
-	if err != nil {
-		logger.Warning("failed to emit TouchMap PropChanged:", err)
-	}
-}
-
 func (m *Manager) associateTouch(monitor *Monitor, touchUUID string, auto bool) error {
 	m.PropsMu.Lock()
 	defer m.PropsMu.Unlock()
@@ -2860,20 +2845,6 @@ func (m *Manager) handleTouchscreenChanged() {
 
 	monitors := m.getConnectedMonitors()
 
-	// 清除已拔下触摸屏的配置
-	for uuid := range m.touchscreenMap {
-		found := false
-		for _, touch := range m.Touchscreens {
-			if touch.UUID == uuid {
-				found = true
-				break
-			}
-		}
-		if !found {
-			m.removeTouchscreenMap(uuid)
-		}
-	}
-
 	if len(m.Touchscreens) == 1 && len(monitors) == 1 {
 		m.associateTouch(monitors[0], m.Touchscreens[0].UUID, true)
 	}
@@ -2890,9 +2861,6 @@ func (m *Manager) handleTouchscreenChanged() {
 				}
 				continue
 			}
-
-			// else 配置中的显示器不存在，忽略配置并删除
-			m.removeTouchscreenMap(touch.UUID)
 		}
 
 		if touch.outputName != "" {
