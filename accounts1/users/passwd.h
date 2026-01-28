@@ -5,7 +5,12 @@
 #ifndef __PASSWORD_H__
 #define __PASSWORD_H__
 
-char *mkpasswd(const char *words);
+#define PASSWD_ALGO_SHA512   "sha512"
+#define PASSWD_ALGO_SHA256   "sha256"
+#define PASSWD_ALGO_YESCRYPT "yescrypt"
+#define PASSWD_ALGO_SM3      "sm3"
+
+char *mkpasswd_with_algo(const char *words, const char *algo);
 
 int lock_shadow_file();
 int unlock_shadow_file();

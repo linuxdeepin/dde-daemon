@@ -32,11 +32,25 @@ var (
 	wLocker sync.Mutex
 )
 
+var PasswdAlgoDefault = "sm3"
+
 func EncodePasswd(words string) string {
+	return CryptUserPassword(words, PasswdAlgoDefault)
+}
+
+func CryptUserPassword(words string, algo string) string {
 	cwords := C.CString(words)
 	defer C.free(unsafe.Pointer(cwords))
 
-	return C.GoString(C.mkpasswd(cwords))
+	calgo := C.CString(algo)
+	defer C.free(unsafe.Pointer(calgo))
+
+	result := C.mkpasswd_with_algo(cwords, calgo)
+	if result == nil {
+		return ""
+	}
+
+	return C.GoString(result)
 }
 
 func ExistPwUid(uid uint32) int {
