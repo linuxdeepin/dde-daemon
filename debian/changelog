@@ -1,3 +1,12 @@
+dde-daemon (6.1.73) unstable; urgency=medium
+
+  * feat: support configurable password encryption algorithms
+  * feat: add polkit authorization for system services
+  * fix: 修复插拔触控屏,触摸屏绑定关系会丢失问题
+  * fix: add wheel speed value validation in setWheelSpeed
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 28 Jan 2026 15:05:46 +0800
+
 dde-daemon (6.1.72) unstable; urgency=medium
 
   * fix: 解决设置快速登录后,切换用户失败的问题
