@@ -1,3 +1,9 @@
+dde-daemon (6.1.74) unstable; urgency=medium
+
+  * Fix build failure on Go 1.24.6
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 29 Jan 2026 21:43:17 +0800
+
 dde-daemon (6.1.73) unstable; urgency=medium
 
   * feat: support configurable password encryption algorithms
