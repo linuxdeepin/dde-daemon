@@ -184,7 +184,7 @@ func checkAuth(actionId string, sysBusName string) error {
 				}
 			}
 		}
-		return fmt.Errorf(ErrCodeAuthFailed.String())
+		return errors.New(ErrCodeAuthFailed.String())
 	}
 	return nil
 }
