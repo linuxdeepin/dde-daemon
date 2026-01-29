@@ -5,7 +5,7 @@
 package inputdevices
 
 import (
-	"fmt"
+	"errors"
 	"os/exec"
 
 	"github.com/linuxdeepin/dde-daemon/common/dconfig"
@@ -149,7 +149,7 @@ func isItemInList(item string, list []string) bool {
 func doAction(cmd string) error {
 	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
 	if err != nil {
-		return fmt.Errorf(string(out))
+		return errors.New(string(out))
 	}
 	return nil
 }

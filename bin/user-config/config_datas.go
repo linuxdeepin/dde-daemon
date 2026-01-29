@@ -6,6 +6,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -236,7 +237,7 @@ func getDefaultLang() string {
 func doAction(cmd string) error {
 	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
 	if err != nil {
-		return fmt.Errorf(string(out))
+		return errors.New(string(out))
 	}
 
 	return nil
