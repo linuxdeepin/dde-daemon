@@ -22,7 +22,6 @@ const (
 	cpuKeyHardware     = "Hardware"
 	lscpuKeyMaxMHz     = "CPU max MHz"
 	lscpuKeyModelName  = "Model name"
-	lscpuKeyCount      = "CPU(s)"
 	lscpuKeyCPUfamily  = "CPU family"
 	lscpuKeyModel      = "Model"
 	lscpuKeyStepping   = "Stepping"
@@ -35,21 +34,10 @@ func getProcessorByLscpuExt(data map[string]string, freq float64) (string, error
 		return "", fmt.Errorf("can not find the key %q", lscpuKeyModelName)
 	}
 
-	cpuCountStr, ok := data[lscpuKeyCount]
-	if !ok {
-		logger.Warningf("can not find the key %q", lscpuKeyCount)
-		return modelName, nil
-	}
-
-	cpuCount, err := strconv.ParseInt(cpuCountStr, 10, 64)
-	if err != nil {
-		logger.Warning(err)
-		return modelName, nil
-	}
 	if strings.Contains(modelName, "Hz") {
-		return fmt.Sprintf("%s x %d", modelName, cpuCount), nil
+		return modelName, nil
 	} else {
-		return fmt.Sprintf("%s @ %.2fGHz x %d", modelName, freq, cpuCount), nil
+		return fmt.Sprintf("%s @ %.2fGHz", modelName, freq), nil
 	}
 }
 
@@ -59,19 +47,7 @@ func getProcessorByLscpu(data map[string]string) (string, error) {
 		return "", fmt.Errorf("can not find the key %q", lscpuKeyModelName)
 	}
 
-	cpuCountStr, ok := data[lscpuKeyCount]
-	if !ok {
-		logger.Warningf("can not find the key %q", lscpuKeyCount)
-		return modelName, nil
-	}
-
-	cpuCount, err := strconv.ParseInt(cpuCountStr, 10, 64)
-	if err != nil {
-		logger.Warning(err)
-		return modelName, nil
-	}
-
-	return fmt.Sprintf("%s x %d", modelName, cpuCount), nil
+	return modelName, nil
 }
 
 func getCPUMaxMHzByLscpu(data map[string]string) (float64, error) {
@@ -125,11 +101,6 @@ func swCPUInfo(data map[string]string) string {
 		cpu = fmt.Sprintf("%s %.2fGHz", cpu, hz)
 	}
 
-	number, _ := getCPUNumber(cpuKeyActive, data)
-	if number != 1 {
-		cpu = fmt.Sprintf("%s x %v", cpu, number)
-	}
-
 	return cpu
 }
 
@@ -139,11 +110,6 @@ func hwKirinCPUInfo(data map[string]string) string {
 		return ""
 	}
 
-	number, _ := getCPUNumber(cpuKeyProcessor, data)
-	if number != 1 {
-		cpu = fmt.Sprintf("%s x %v", cpu, number+1)
-	}
-
 	return cpu
 }
 
@@ -151,11 +117,6 @@ func getCPUInfoFromMap(nameKey, numKey string, data map[string]string) (string, 
 	name, err := getCPUName(nameKey, data)
 	if err != nil {
 		return "", err
-	}
-
-	number, _ := getCPUNumber(numKey, data)
-	if number != 0 {
-		name = fmt.Sprintf("%s x %v", name, number+1)
 	}
 
 	return name, nil
@@ -180,20 +141,6 @@ func getCPUName(key string, data map[string]string) (string, error) {
 	}
 
 	return name, nil
-}
-
-func getCPUNumber(key string, data map[string]string) (int, error) {
-	value, ok := data[key]
-	if !ok {
-		return 0, fmt.Errorf("can not find the key %q", key)
-	}
-
-	number, err := strconv.ParseInt(value, 10, 64)
-	if err != nil {
-		return 0, err
-	}
-
-	return int(number), nil
 }
 
 func getCPUHz(key string, data map[string]string) (float64, error) {
