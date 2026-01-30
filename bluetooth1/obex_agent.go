@@ -28,12 +28,35 @@ const (
 	obexAgentDBusPath      = dbusPath + "/ObexAgent"
 	obexAgentDBusInterface = "org.bluez.obex.Agent1"
 
-	receiveFileNotifyTimeout = 15 * 1000
-	receiveFileTimeout       = 40 * time.Second
+	receiveFileNotifyTimeout = int32(30 * time.Second / time.Millisecond)
 	receiveFileNeverTimeout  = 0
 )
 
 var receiveBaseDir = userdir.Get(userdir.Download)
+
+// https://specifications.freedesktop.org/notification/latest/protocol.html#id-1.10.4.2.4
+type cancelReason uint32
+
+const (
+	_ cancelReason = iota
+	CancelReasonExpired // The notification expired.
+	CancelReasonDismiss // The notification was dismissed by the user.
+	CancelReasonManual // The notification was closed by a call to CloseNotification.
+	CancelReasonUndefined // Undefined/reserved reasons.
+)
+
+func (c cancelReason) String() string {
+	switch c {
+	case CancelReasonExpired:
+		return "expired"
+	case CancelReasonDismiss:
+		return "dismissed by user"
+	case CancelReasonManual:
+		return "closed by call to CloseNotification"
+	default:
+		return "undefined reason"
+	}
+}
 
 type obexAgent struct {
 	b *Bluetooth
@@ -43,13 +66,11 @@ type obexAgent struct {
 
 	obexManager obex.Manager
 
-	requestNotifyCh   chan bool
-	requestNotifyChMu sync.Mutex
+	cancelCh   chan cancelReason
+	cancelChMu sync.Mutex
 
 	receiveCh   chan struct{}
-	recevieChMu sync.Mutex
-
-	isCancel bool
+	receiveChMu sync.Mutex
 
 	acceptedSessions   map[dbus.ObjectPath]int
 	acceptedSessionsMu sync.Mutex
@@ -169,7 +190,7 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 		logger.Warning(err)
 		dbusErr := &dbus.Error{
 			Name: "org.bluez.obex.Error.Rejected",
-			Body: []interface{}{err.Error()},
+			Body: []any{err.Error()},
 		}
 		return "", dbusErr
 	}
@@ -180,40 +201,53 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 }
 
 func (a *obexAgent) isSessionAccepted(transfer *transferObj) (bool, error) {
-	a.acceptedSessionsMu.Lock()
-	defer a.acceptedSessionsMu.Unlock()
 	if transfer == nil {
 		return false, errors.New("valid object")
 	}
+
+	a.acceptedSessionsMu.Lock()
 	_, accepted := a.acceptedSessions[transfer.sessionPath]
+	a.acceptedSessionsMu.Unlock()
+
 	if !accepted {
 		// 多个文件传输时只第一次判断可传输状态
 		if !a.b.Transportable {
 			return false, errors.New("declined")
 		}
-		var err error
-		accepted, err = a.requestReceive(transfer.deviceName, transfer.oriFilename)
-		if err != nil {
-			return false, err
-		}
 
-		if !accepted {
-			return false, nil
+		accepted, err := a.requestReceive(transfer.deviceName, transfer.oriFilename)
+		if err != nil || !accepted {
+            return false, err
+        }
+
+		a.acceptedSessionsMu.Lock()
+		if _, recheck := a.acceptedSessions[transfer.sessionPath]; !recheck {
+			a.acceptedSessions[transfer.sessionPath] = 0
+			a.notify = notifications.NewNotifications(a.service.Conn())
+			a.notify.InitSignalExt(a.sigLoop, true)
+			a.notifyID = 0
+			a.receiveChMu.Lock()
+			a.receiveCh = make(chan struct{}, 1)
+			a.receiveCh <- struct{}{}
+			a.receiveChMu.Unlock()
 		}
-		a.acceptedSessions[transfer.sessionPath] = 0
-		a.notify = notifications.NewNotifications(a.service.Conn())
-		a.notify.InitSignalExt(a.sigLoop, true)
-		a.notifyID = 0
-		a.recevieChMu.Lock()
-		a.receiveCh = make(chan struct{}, 1)
-		a.recevieChMu.Unlock()
-		a.receiveProgress(transfer)
-	} else {
-		<-a.receiveCh
-		a.receiveProgress(transfer)
+		a.acceptedSessionsMu.Unlock()
 	}
 
+	a.receiveChMu.Lock()
+	ch := a.receiveCh
+	a.receiveChMu.Unlock()
+
+	if ch != nil {
+		<- ch
+	}
+
+	a.receiveProgress(transfer)
+
+	a.acceptedSessionsMu.Lock()
 	a.acceptedSessions[transfer.sessionPath]++
+	a.acceptedSessionsMu.Unlock()
+
 	return true, nil
 }
 
@@ -226,6 +260,30 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 	}
 
 	var notifyMu sync.Mutex
+	isThisTransferCanceled := false
+	sessionPath := transfer.sessionPath
+
+	curHandler, err := a.notify.ConnectActionInvoked(func(id uint32, actionKey string) {
+		notifyMu.Lock()
+		targetID := a.notifyID
+		notifyMu.Unlock()
+
+		if targetID != id || actionKey != "cancel" {
+			return
+		}
+
+		notifyMu.Lock()
+		isThisTransferCanceled = true
+		notifyMu.Unlock()
+
+		a.b.setPropTransportable(true)
+		if err = transfer.Cancel(0); err != nil {
+			logger.Warning("failed to cancel transfer via D-Bus:", err)
+		}
+	})
+	if err != nil {
+		logger.Warning("connect action invoked failed:", err)
+	}
 
 	err = transfer.Status().ConnectChanged(func(hasValue bool, value string) {
 		if !hasValue {
@@ -238,8 +296,12 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 		a.b.setPropTransportable(true)
 		// 手机会在一个传送完成之后再开始下一个传送，所以 transfer path 会一样
 		transfer.RemoveAllHandlers()
+		a.notify.RemoveHandler(curHandler)
 
-		a.notify.RemoveAllHandlers()
+		notifyMu.Lock()
+		canceled := isThisTransferCanceled
+		currentID := a.notifyID
+		notifyMu.Unlock()
 
 		if value == transferStatusComplete {
 			// 如果获取不到FileName时，文件应该在~/.cache/obexd下
@@ -250,35 +312,35 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 			// 传送完成，移动到下载目录
 			realFileName := moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
 
+			newID := a.notifyProgress(a.notify, a.notifyID, realFileName, transfer.deviceName, 100)
+
 			notifyMu.Lock()
-			a.notifyID = a.notifyProgress(a.notify, a.notifyID, realFileName, transfer.deviceName, 100)
+			a.notifyID = newID
 			notifyMu.Unlock()
 		} else {
-			// 区分点击取消的传输失败和蓝牙断开的传输失败
-			if a.isCancel {
-				notifyMu.Lock()
-				a.notifyID = a.notifyFailed(a.notify, a.notifyID, true)
-				notifyMu.Unlock()
-				a.isCancel = false
-			} else {
-				notifyMu.Lock()
-				a.notifyID = a.notifyFailed(a.notify, a.notifyID, false)
-				notifyMu.Unlock()
-			}
+			newID := a.notifyFailed(a.notify, currentID, canceled)
+
+			notifyMu.Lock()
+			a.notifyID = newID
+			notifyMu.Unlock()
 		}
 
-		a.recevieChMu.Lock()
-		a.receiveCh <- struct{}{}
-		a.recevieChMu.Unlock()
+		a.receiveChMu.Lock()
+		select {
+			case a.receiveCh <- struct{}{}:
+    		default:
+    	}
+		a.receiveChMu.Unlock()
 
 		// 避免下个传输还没开始就被清空，导致需要重新询问，故加上一秒的延迟
+		//TODO: maybe we can monitor the object 'session' being removed and update a.acceptedSessions?
 		time.AfterFunc(time.Second, func() {
 			a.acceptedSessionsMu.Lock()
-			a.acceptedSessions[transfer.sessionPath]--
-			if a.acceptedSessions[transfer.sessionPath] == 0 {
-				delete(a.acceptedSessions, transfer.sessionPath)
+			defer a.acceptedSessionsMu.Unlock()
+			a.acceptedSessions[sessionPath]--
+			if a.acceptedSessions[sessionPath] <= 0 {
+				delete(a.acceptedSessions, sessionPath)
 			}
-			a.acceptedSessionsMu.Unlock()
 		})
 	})
 	if err != nil {
@@ -287,22 +349,28 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 
 	var progress uint64 = math.MaxUint64
 	err = transfer.Transferred().ConnectChanged(func(hasValue bool, value uint64) {
-		if !hasValue {
+		if !hasValue || value == 0{
 			return
 		}
-		if value == 0 {
+
+		if fileSize == 0 {
+			logger.Warning("transferred file size is zero, cannot calculate progress")
 			return
 		}
-		status, err := transfer.Status().Get(0)
+
+		var status string
+		status, err = transfer.Status().Get(0)
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
+
 		if status == transferStatusComplete || status == transferStatusError {
 			return
 		}
+
 		newProgress := value * 100 / fileSize
-		if progress == newProgress || value == fileSize {
+		if progress == newProgress || value >= fileSize {
 			return
 		}
 
@@ -315,26 +383,6 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 	})
 	if err != nil {
 		logger.Warning("connect transferred changed failed:", err)
-	}
-	_, err = a.notify.ConnectActionInvoked(func(id uint32, actionKey string) {
-		notifyMu.Lock()
-		if a.notifyID != id {
-			notifyMu.Unlock()
-			return
-		}
-		notifyMu.Unlock()
-		if actionKey != "cancel" {
-			return
-		}
-		a.isCancel = true
-		a.b.setPropTransportable(true)
-		err := transfer.Cancel(0)
-		if err != nil {
-			logger.Warning("failed to cancel transfer:", err)
-		}
-	})
-	if err != nil {
-		logger.Warning("connect action invoked failed:", err)
 	}
 }
 
@@ -366,7 +414,7 @@ func getRandstring(length int) string {
 	charArr := strings.Split(char, "")
 	charlen := len(charArr)
 	ran := rand.New(rand.NewSource(time.Now().Unix()))
-	var rchar string = ""
+	var rchar = ""
 	for i := 1; i <= length; i++ {
 		rchar = rchar + charArr[ran.Intn(charlen)]
 	}
@@ -453,14 +501,21 @@ func (a *obexAgent) notifyFailed(notify notifications.Notifications, replaceID u
 func (a *obexAgent) Cancel() *dbus.Error {
 	logger.Info("dbus call obexAgent Cancel")
 
-	a.requestNotifyChMu.Lock()
-	defer a.requestNotifyChMu.Unlock()
-	if a.requestNotifyCh == nil {
+	a.cancelChMu.Lock()
+	defer a.cancelChMu.Unlock()
+
+	if a.cancelCh == nil {
 		err := errors.New("no such process")
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-	a.requestNotifyCh <- false
+
+	select {
+	case a.cancelCh <- CancelReasonManual:
+	default:
+		logger.Info("Cancel signal already pending")
+	}
+
 	return nil
 }
 
@@ -470,6 +525,7 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 	notify.InitSignalExt(a.sigLoop, true)
 
 	actions := []string{"decline", gettext.Tr("Decline"), "receive", gettext.Tr("Receive")}
+	hints := map[string]dbus.Variant{"x-deepin-ShowInNotifyCenter": dbus.MakeVariant(false)}
 	notifyID, err := notify.Notify(0,
 		gettext.Tr("dde-control-center"),
 		0,
@@ -477,46 +533,70 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 		gettext.Tr("Bluetooth File Transfer"),
 		fmt.Sprintf(gettext.Tr("%q wants to send files to you. Receive?"), deviceName),
 		actions,
-		nil,
+		hints,
 		receiveFileNotifyTimeout)
 	if err != nil {
 		logger.Warning("failed to send notify:", err)
 		return false, err
 	}
 
-	a.requestNotifyChMu.Lock()
-	a.requestNotifyCh = make(chan bool, 10)
-	a.requestNotifyChMu.Unlock()
-
+	var requestNotifyCh = make(chan bool, 1)
 	_, err = notify.ConnectActionInvoked(func(id uint32, actionKey string) {
 		if notifyID != id {
 			return
 		}
-		a.requestNotifyChMu.Lock()
-		if a.requestNotifyCh != nil {
-			a.requestNotifyCh <- actionKey == "receive"
-		}
-		a.requestNotifyChMu.Unlock()
+
+		requestNotifyCh <- actionKey == "receive"
 	})
 	if err != nil {
 		logger.Warning("ConnectActionInvoked failed:", err)
 		return false, dbusutil.ToError(err)
 	}
 
-	var result bool
-	select {
-	case result = <-a.requestNotifyCh:
-		if result == false {
-			a.b.setPropTransportable(true)
+	a.cancelChMu.Lock()
+	a.cancelCh = make(chan cancelReason, 1)
+	a.cancelChMu.Unlock()
+	_, err = notify.ConnectNotificationClosed(func(id uint32, reason uint32) {
+		if notifyID != id {
+			return
 		}
-	case <-time.After(receiveFileTimeout):
-		a.b.setPropTransportable(true)
-		a.notifyReceiveFileTimeout(notify, notifyID, filename)
+
+		a.cancelChMu.Lock()
+		defer a.cancelChMu.Unlock()
+
+		if a.cancelCh == nil {
+			return
+		}
+
+		select {
+			case a.cancelCh <- cancelReason(reason):
+			default:
+		}
+	})
+	if err != nil {
+		logger.Warning("ConnectNotificationClosed failed:", err)
+		return false, dbusutil.ToError(err)
 	}
 
-	a.requestNotifyChMu.Lock()
-	a.requestNotifyCh = nil
-	a.requestNotifyChMu.Unlock()
+	var result = false
+	select {
+	case result = <-requestNotifyCh:
+		if !result {
+			logger.Info("user decline file receive request")
+			a.b.setPropTransportable(true)
+		}
+	case reason := <-a.cancelCh:
+		logger.Info("receive file request canceled:", reason.String())
+		a.b.setPropTransportable(true)
+
+		if reason == CancelReasonExpired {
+			a.notifyReceiveFileTimeout(notify, notifyID, filename)
+		}
+	}
+
+	a.cancelChMu.Lock()
+	a.cancelCh = nil
+	a.cancelChMu.Unlock()
 
 	notify.RemoveAllHandlers()
 
