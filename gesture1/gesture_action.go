@@ -36,8 +36,8 @@ const (
 
 func (m *Manager) initActions() {
 	actions = []*actionInfo{
-		{"MaximizeWindow", gettext.Tr("Maximize Window"), m.doToggleMaximize},
-		{"RestoreWindow", gettext.Tr("Restore Window"), m.doToggleMaximize},
+		{"MaximizeWindow", gettext.Tr("Maximize Window"), m.doMaximizeActiveWindow},
+		{"RestoreWindow", gettext.Tr("Restore Window"), m.doUnMaximizeActiveWindow},
 		{"SplitWindowLeft", gettext.Tr("Current Window Left Split"), m.doTileActiveWindowLeft},
 		{"SplitWindowRight", gettext.Tr("Current Window Right Split"), m.doTileActiveWindowRight},
 		{"ShowMultiTask", gettext.Tr("Show multitasking view"), m.doShowMultiTasking},
@@ -108,8 +108,12 @@ func (m *Manager) doHandle4Or5FingersSwipeDown() error {
 	return nil
 }
 
-func (m *Manager) doToggleMaximize() error {
-	return m.wm.PerformAction(0, wmActionToggleMaximize)
+func (m *Manager) doMaximizeActiveWindow() error {
+	return m.wm.MaximizeActiveWindow(0)
+}
+
+func (m *Manager) doUnMaximizeActiveWindow() error {
+	return m.wm.UnMaximizeActiveWindow(0)
 }
 
 func (m *Manager) doMinimize() error {
