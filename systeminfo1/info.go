@@ -5,6 +5,8 @@
 package systeminfo
 
 import (
+	"fmt"
+	"regexp"
 	"sync"
 	"time"
 
@@ -193,11 +195,6 @@ func NewSystemInfo() *SystemInfo {
 
 func (info *SystemInfo) init() {
 	var err error
-	info.Processor, err = GetCPUInfo("/proc/cpuinfo")
-	if err != nil {
-		logger.Warning("Get cpu info failed:", err)
-	}
-
 	info.Version, err = getVersion()
 	if err != nil {
 		logger.Warning("Get version failed:", err)
@@ -227,6 +224,11 @@ func (info *SystemInfo) init() {
 	info.DiskCap, err = getDiskCap()
 	if err != nil {
 		logger.Warning("Get disk capacity failed:", err)
+	}
+
+	info.Processor, err = GetCPUInfo("/proc/cpuinfo")
+	if err != nil {
+		logger.Warning("Get cpu info failed:", err)
 	}
 
 	lscpuRes, err := runLscpu()
@@ -264,6 +266,60 @@ func (info *SystemInfo) init() {
 			}
 		}
 	}
+
+	// Supplement missing frequency information in Processor
+	info.Processor = supplementProcessorFrequency(info.Processor, info.CurrentSpeed, info.CPUMaxMHz)
+}
+
+// supplementProcessorFrequency supplements missing frequency information to the processor string.
+// It checks if the processor string already contains frequency info ("number+[MGT]Hz" pattern).
+// If not, it adds frequency from currentSpeed (in MHz) or cpuMaxMHz (in GHz).
+// Parameters:
+//   - processor: the processor string
+//   - currentSpeed: current CPU speed in MHz
+//   - cpuMaxMHz: max CPU frequency in MHz
+//
+// Returns the processor string with frequency information added if missing.
+func supplementProcessorFrequency(processor string, currentSpeed uint64, cpuMaxMHz float64) string {
+	if processor == "" {
+		return processor
+	}
+
+	// Use regular expression to check if frequency information is already included
+	// (detect "number+unit+Hz" pattern, e.g., "3.20GHz", "@ 3.20GHz", "1400MHz")
+	freqPattern := `\d+\.?\d*\s*[MGT]Hz`
+	matched, err := regexp.MatchString(freqPattern, processor)
+	if err != nil {
+		logger.Warning("Failed to match frequency pattern:", err)
+		return processor
+	}
+
+	if matched {
+		return processor
+	}
+
+	var freqGHz float64
+	// Prioritize CurrentSpeed, then CPUMaxMHz
+	if currentSpeed != 0 {
+		freqGHz = float64(currentSpeed) / 1000
+	} else if !isFloatEqual(cpuMaxMHz, 0.0) {
+		freqGHz = cpuMaxMHz / 1000
+	}
+
+	if freqGHz > 0 {
+		var source string
+		if currentSpeed != 0 {
+			source = "CurrentSpeed"
+		} else {
+			source = "CPUMaxMHz"
+		}
+		formattedProcessor := fmt.Sprintf("%s @ %.2fGHz", processor, freqGHz)
+		logger.Debugf("Added frequency to Processor: %s (from %s)",
+			formattedProcessor, source)
+		return formattedProcessor
+	}
+
+	return processor
 }
 
 func (info *SystemInfo) isValidity() bool {
