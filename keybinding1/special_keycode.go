@@ -380,10 +380,11 @@ func (m *Manager) handlePower() {
 			m.systemHibernateByFront()
 		}
 	case powerActionTurnOffScreen:
-		if screenBlackLock {
-			systemLock()
-		}
 		m.systemTurnOffScreen()
+		if screenBlackLock {
+			// 让性能差的机器先黑屏，再锁屏
+			time.AfterFunc(200*time.Microsecond, systemLock)
+		}
 	case powerActionShowUI:
 		cmd := "/usr/lib/deepin-daemon/dde-shutdown.sh"
 		go func() {
