@@ -632,10 +632,6 @@ func (psp *powerSavePlan) screenBlack() {
 		}
 
 		logger.Info("Screen full black")
-		if manager.ScreenBlackLock {
-			manager.lockWaitShow(5*time.Second, true)
-		}
-
 		if adjustBrightnessEnabled {
 			// set min brightness for all outputs
 			brightnessTable := make(map[string]float64)
@@ -645,6 +641,11 @@ func (psp *powerSavePlan) screenBlack() {
 			manager.setDisplayBrightness(brightnessTable)
 		}
 		manager.setDPMSModeOff()
+		if manager.ScreenBlackLock {
+			time.AfterFunc(200*time.Millisecond, func() {
+				manager.lockWaitShow(5*time.Second, true)
+			})
+		}
 
 	})
 	psp.addTask(taskF)
