@@ -2,17 +2,17 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Hubert Ożga <hubert.ozga@outlook.com>, 2025
 # Pyroxar <kacper-paczos@linux.pl>, 2025
 # Grzegorz Ciężarkiewicz <pegaz19803@gmail.com>, 2025
-# Maggie Liu <maggie.liufei@gmail.com>, 2025
 # Marcin Kozioł <koziol.martin@gmail.com>, 2025
 # Piotr Strebski <strebski@gmail.com>, 2025
+# Maggie Liu <maggie.liufei@gmail.com>, 2025
 # deepiner, 2025
-# Janusz Ruchała, 2025
-#
+# Janusz Ruchała, 2026
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -20,16 +20,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Janusz Ruchała, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/linuxdeepin/teams/3617/"
-"pl/)\n"
-"Language: pl\n"
+"Last-Translator: Janusz Ruchała, 2026\n"
+"Language-Team: Polish (https://app.transifex.com/linuxdeepin/teams/3617/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
@@ -452,7 +449,7 @@ msgstr "Przełącz okna w odwrotnej kolejności"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "Aktywuj menu okna"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
@@ -552,11 +549,10 @@ msgstr "Nie można zmienić języka systemu, proszę spróbować później"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
-"\"%s\" nie przeszedł weryfikacji bezpieczeństwa systemu i nie można go teraz "
-"włączyć"
+"\"%s\" nie przeszedł weryfikacji bezpieczeństwa systemu i nie można go teraz"
+" włączyć"
 
 #: ../../service_trigger/msg.go:13
 #, c-format
@@ -667,8 +663,8 @@ msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
-"Wymagane jest uwierzytelnienie, aby kontrolować, czy RTC będzie przechowywać "
-"czas lokalny lub UTC."
+"Wymagane jest uwierzytelnienie, aby kontrolować, czy RTC będzie przechowywać"
+" czas lokalny lub UTC."
 
 #: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
