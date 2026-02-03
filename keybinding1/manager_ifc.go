@@ -440,21 +440,44 @@ func (m *Manager) AddShortcutKeystroke(id string, type0 int32, keystroke string)
 		}
 	}
 
-	conflictKeystroke, err := m.shortcutManager.FindConflictingKeystroke(ks)
-	if err != nil {
-		return dbusutil.ToError(err)
+	// 检查是否是无修饰键的 super_L 或 super_R，如果是则同时注册两个 Super 键
+	var keystrokesToAdd []*shortcuts.Keystroke
+	keyLower := strings.ToLower(ks.Keystr)
+	if ks.Mods == 0 && (keyLower == "super_l" || keyLower == "super_r") {
+		// 同时添加 super_L 和 super_R
+		ksL, errL := shortcuts.ParseKeystroke("Super_L")
+		ksR, errR := shortcuts.ParseKeystroke("Super_R")
+		if errL != nil || errR != nil {
+			return dbusutil.ToError(errors.New("failed to parse Super_L or Super_R keystroke"))
+		}
+		keystrokesToAdd = []*shortcuts.Keystroke{ksL, ksR}
+		logger.Debug("Super key detected, will register both Super_L and Super_R")
+	} else {
+		keystrokesToAdd = []*shortcuts.Keystroke{ks}
 	}
-	if conflictKeystroke == nil {
-		m.shortcutManager.AddShortcutKeystroke(shortcut, ks)
-		err := shortcut.SaveKeystrokes()
+
+	// 检查所有要添加的 keystroke 是否有冲突
+	for _, ksToAdd := range keystrokesToAdd {
+		conflictKeystroke, err := m.shortcutManager.FindConflictingKeystroke(ksToAdd)
 		if err != nil {
 			return dbusutil.ToError(err)
 		}
-		if shortcut.ShouldEmitSignalChanged() {
-			m.emitShortcutSignal(shortcutSignalChanged, shortcut)
+		if conflictKeystroke != nil && conflictKeystroke.Shortcut != shortcut {
+			return dbusutil.ToError(errKeystrokeUsed)
 		}
-	} else if conflictKeystroke.Shortcut != shortcut {
-		return dbusutil.ToError(errKeystrokeUsed)
+	}
+
+	// 添加所有 keystroke
+	for _, ksToAdd := range keystrokesToAdd {
+		m.shortcutManager.AddShortcutKeystroke(shortcut, ksToAdd)
+	}
+
+	err = shortcut.SaveKeystrokes()
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+	if shortcut.ShouldEmitSignalChanged() {
+		m.emitShortcutSignal(shortcutSignalChanged, shortcut)
 	}
 
 	return nil
