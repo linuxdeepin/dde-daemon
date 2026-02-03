@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Roman <dejitaru.tiger@gmail.com>, 2025
 # Maggie Liu <maggie.liufei@gmail.com>, 2025
 # Marck Hrin, 2025
 # deepiner, 2025
 # Yuri Chornoivan <yurchor@ukr.net>, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -18,16 +18,12 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
-"Language-Team: Ukrainian (https://app.transifex.com/linuxdeepin/teams/3617/"
-"uk/)\n"
-"Language: uk\n"
+"Language-Team: Ukrainian (https://app.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
@@ -71,8 +67,8 @@ msgstr ""
 #: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
-"Фонове зображення у цій системі заблоковано від змін. Будь ласка, зв'яжіться "
-"з адміністратором вашої системи."
+"Фонове зображення у цій системі заблоковано від змін. Будь ласка, зв'яжіться"
+" з адміністратором вашої системи."
 
 #: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
@@ -552,8 +548,7 @@ msgstr "Не вдалося змінити мову системи, спробу
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "«%s» не пройдено перевіркою засобів захисту системи. Цю програму зараз не "
 "можна запускати."
@@ -669,8 +664,8 @@ msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
-"Аутентифікація необхідна для контролю того, чи зберігає RTC місцевий або UTC "
-"час ."
+"Аутентифікація необхідна для контролю того, чи зберігає RTC місцевий або UTC"
+" час ."
 
 #: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
