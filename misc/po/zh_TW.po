@@ -10,16 +10,16 @@
 # 50258c825cd23d94a87a42d4611abbf0_307966e, 2025
 # Maggie Liu <maggie.liufei@gmail.com>, 2025
 # pan93412 <pan93412@gmail.com>, 2025
-# deepiner, 2025
+# deepiner, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 09:49+0800\n"
+"POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: deepiner, 2026\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "該名稱與使用者群組名重複"
 msgid "Username must be between 3 and 32 characters"
 msgstr "使用者名稱長度必須介於 3 至 32 個字元之間"
 
-#: ../../accounts1/manager.go:570
+#: ../../accounts1/manager.go:571
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "“%s”使用者為之前已存在的使用者，原資料已同步"
@@ -69,30 +69,30 @@ msgstr "目前系統桌布已被鎖定，請聯絡管理員"
 
 #: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
-msgstr ""
+msgstr "音訊服務切換失敗，請稍後重試"
 
 #: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
-msgstr ""
+msgstr "正在切換音訊服務，請稍候…"
 
 #: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
-msgstr ""
+msgstr "音訊服務切換成功，請登出後重新登入"
 
-#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
-#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
-#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
-#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
+#: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:485 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:609 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
-msgstr ""
+msgstr "控制中心"
 
-#: ../../audio1/audio_events.go:701
+#: ../../audio1/audio_events.go:713
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s已被禁用"
 
-#: ../../audio1/audio_events.go:702
+#: ../../audio1/audio_events.go:714
 msgid "Open"
 msgstr "開放"
 
@@ -156,57 +156,57 @@ msgstr "存取訊息"
 msgid "Message notification"
 msgstr "訊息通知"
 
-#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:439 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "取消"
 
-#: ../../bluetooth1/obex_agent.go:398
-msgid "Receiving %[1]q from %[2]q"
-msgstr "正在接收來自%[2]q的%[1]q文件"
+#: ../../bluetooth1/obex_agent.go:447
+msgid "Receiving %[1]q"
+msgstr "正在接收%[1]q文件"
 
-#: ../../bluetooth1/obex_agent.go:407
+#: ../../bluetooth1/obex_agent.go:455
 msgid "View"
 msgstr "瀏覽"
 
-#: ../../bluetooth1/obex_agent.go:413
+#: ../../bluetooth1/obex_agent.go:461
 msgid "You have received files from %q successfully"
 msgstr "您已成功接收來自%q的文件"
 
-#: ../../bluetooth1/obex_agent.go:414
+#: ../../bluetooth1/obex_agent.go:462
 msgid "Done"
 msgstr "完成"
 
-#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
+#: ../../bluetooth1/obex_agent.go:477 ../../bluetooth1/obex_agent.go:612
 msgid "Stop Receiving Files"
 msgstr "文件接收中止"
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:479
 msgid "You have cancelled the file transfer"
 msgstr "您已取消接收文件"
 
-#: ../../bluetooth1/obex_agent.go:433
+#: ../../bluetooth1/obex_agent.go:481
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "藍牙連線失敗"
 
-#: ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Decline"
 msgstr "拒絕"
 
-#: ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Receive"
 msgstr "接收"
 
-#: ../../bluetooth1/obex_agent.go:477
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Bluetooth File Transfer"
 msgstr "藍牙文件傳輸"
 
-#: ../../bluetooth1/obex_agent.go:478
+#: ../../bluetooth1/obex_agent.go:534
 msgid "%q wants to send files to you. Receive?"
 msgstr "您收到%q發送給您的文件，是否接收？"
 
-#: ../../bluetooth1/obex_agent.go:533
+#: ../../bluetooth1/obex_agent.go:613
 msgid "Receiving %q timed out"
 msgstr "接收%q超時"
 
@@ -224,35 +224,35 @@ msgstr "配對"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
-msgstr ""
+msgstr "最大化視窗"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
-msgstr ""
+msgstr "恢復視窗"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "當前視窗左分屏"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "當前視窗右分屏"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
-msgstr ""
+msgstr "顯示多工檢視"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "隱藏多工檢視"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "切換至前一個桌面"
 
 #: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "切換至後一個桌面"
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -261,11 +261,11 @@ msgstr "顯示桌面"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
-msgstr ""
+msgstr "隱藏桌面"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "打開/關閉啟動器"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
@@ -277,19 +277,19 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "打開/關閉剪貼簿"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "打開/關閉全域性搜尋"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "打開/關閉通知中心"
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
-msgstr ""
+msgstr "停用"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -442,7 +442,7 @@ msgstr "逆向切換視窗"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "開啟視窗選單"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
@@ -510,11 +510,11 @@ msgstr "重設螢幕縮放"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
-msgstr ""
+msgstr "視窗快速鋪至左側"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
-msgstr ""
+msgstr "視窗快速鋪至右側"
 
 #: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
