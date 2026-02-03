@@ -280,7 +280,6 @@ msgid "Show/hide grand search"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:54
-#, fuzzy
 msgid "Show/hide notification center"
 msgstr "Notification Center"
 

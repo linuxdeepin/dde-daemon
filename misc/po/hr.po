@@ -71,17 +71,14 @@ msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
 #: ../../audio1/audio.go:259
-#, fuzzy
 msgid "Failed to change Audio Server, please try later"
 msgstr "Neuspjela promjena jezika sustava, molim pokušajte ponovno kasnije"
 
 #: ../../audio1/audio.go:295
-#, fuzzy
 msgid "Changing Audio Server, please wait..."
 msgstr "Mijenjam jezik sustava, molim pričekajte..."
 
 #: ../../audio1/audio.go:328
-#, fuzzy
 msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 "Jezik sustava je promijenjen, molim vas odjavite se i zatim se ponovno "
@@ -231,12 +228,10 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
 msgstr "Uvećaj prozor"
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "Vrati prozor"
 
@@ -261,7 +256,6 @@ msgid "Switch to previous desktop"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
-#, fuzzy
 msgid "Switch to the next desktop"
 msgstr "Prebaci na lijevi radni prostor "
 
@@ -271,12 +265,10 @@ msgid "Show desktop"
 msgstr "Prikaži radnu površinu"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "Prikaži radnu površinu"
 
 #: ../../gesture1/gesture_action.go:49
-#, fuzzy
 msgid "Show/hide launcher"
 msgstr "Prikaži/Sakrij dok"
 
@@ -297,12 +289,10 @@ msgid "Show/hide grand search"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:54
-#, fuzzy
 msgid "Show/hide notification center"
 msgstr "Centar obavijesti"
 
 #: ../../gesture1/gesture_action.go:55
-#, fuzzy
 msgid "Disable"
 msgstr "Onemogući Touchpad"
 

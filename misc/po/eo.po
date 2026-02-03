@@ -258,7 +258,6 @@ msgid "Show desktop"
 msgstr "Montri labortablon"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "Montri labortablon"
 

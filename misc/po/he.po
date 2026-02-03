@@ -221,12 +221,10 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
 msgstr "הגדל חלון"
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "שחזר חלון"
 
@@ -251,7 +249,6 @@ msgid "Switch to previous desktop"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
-#, fuzzy
 msgid "Switch to the next desktop"
 msgstr "החלף לסביבת עבודה משמאל"
 
@@ -261,12 +258,10 @@ msgid "Show desktop"
 msgstr "הצגת שולחן העבודה"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "הצגת שולחן העבודה"
 
 #: ../../gesture1/gesture_action.go:49
-#, fuzzy
 msgid "Show/hide launcher"
 msgstr "הצג/הסתר את סרגל התוכנות"
 
@@ -291,7 +286,6 @@ msgid "Show/hide notification center"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:55
-#, fuzzy
 msgid "Disable"
 msgstr "השבתת משטח מגע"
 

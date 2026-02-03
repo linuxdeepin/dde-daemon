@@ -219,12 +219,10 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
 msgstr "Maksimeeri aken"
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "Taasta aken"
 
@@ -258,7 +256,6 @@ msgid "Show desktop"
 msgstr "Näita töölauda"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "Näita töölauda"
 

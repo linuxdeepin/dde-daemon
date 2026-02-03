@@ -222,12 +222,10 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
 msgstr "መስኮት ማሳደጊያ"
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "መስኮት እንደ ነበር መመለሻ"
 
@@ -252,7 +250,6 @@ msgid "Switch to previous desktop"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
-#, fuzzy
 msgid "Switch to the next desktop"
 msgstr "ወደ ግራ የስራ ቦታ መቀየሪያ"
 
@@ -262,12 +259,10 @@ msgid "Show desktop"
 msgstr "ዴስክቶፕ ማሳያ"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "ዴስክቶፕ ማሳያ"
 
 #: ../../gesture1/gesture_action.go:49
-#, fuzzy
 msgid "Show/hide launcher"
 msgstr "ዶክ ማሳያ/መደበቂያ"
 
@@ -292,7 +287,6 @@ msgid "Show/hide notification center"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:55
-#, fuzzy
 msgid "Disable"
 msgstr "ተችፓድ ማሰናከያ"
 

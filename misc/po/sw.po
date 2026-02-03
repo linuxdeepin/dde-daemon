@@ -66,17 +66,14 @@ msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
 #: ../../audio1/audio.go:259
-#, fuzzy
 msgid "Failed to change Audio Server, please try later"
 msgstr "Haiwezekana kubadili lugha ya mfumo , tafadhali jaribu baadaye"
 
 #: ../../audio1/audio.go:295
-#, fuzzy
 msgid "Changing Audio Server, please wait..."
 msgstr "Lugha ya mfumu inabadilikana, tafadhali subiri"
 
 #: ../../audio1/audio.go:328
-#, fuzzy
 msgid "Audio Server changed, please log out and then log in"
 msgstr "Lugha ya mfumo imebadilikana, tafadhali toka alafu ingia"
 
@@ -224,12 +221,10 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
 msgstr "Tanua dirisha"
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "Rejesha dirisha"
 
@@ -254,7 +249,6 @@ msgid "Switch to previous desktop"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
-#, fuzzy
 msgid "Switch to the next desktop"
 msgstr "Badilisha kwa pahali ya kufanya kazi ya kushoto"
 
@@ -264,12 +258,10 @@ msgid "Show desktop"
 msgstr "Onesha eneo ya kazi"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "Onesha eneo ya kazi"
 
 #: ../../gesture1/gesture_action.go:49
-#, fuzzy
 msgid "Show/hide launcher"
 msgstr "Onyesha/ficha kizimbani"
 
@@ -294,7 +286,6 @@ msgid "Show/hide notification center"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:55
-#, fuzzy
 msgid "Disable"
 msgstr "Lemaza kiguso"
 

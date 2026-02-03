@@ -220,12 +220,10 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
 msgstr "சாளரத்தை பெரிதாக்கு "
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "சாளரத்தை மீட்டெடு"
 
@@ -259,7 +257,6 @@ msgid "Show desktop"
 msgstr "டெஸ்க்டாப்பை காட்டு"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "டெஸ்க்டாப்பை காட்டு"
 

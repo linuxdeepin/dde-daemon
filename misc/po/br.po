@@ -226,7 +226,6 @@ msgid "Maximize Window"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "Serriñ ar prenestr"
 

@@ -64,17 +64,14 @@ msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
 #: ../../audio1/audio.go:259
-#, fuzzy
 msgid "Failed to change Audio Server, please try later"
 msgstr "Abeddel n tutlayt ur yeddi ara, ma ulac uɣilif eɛreḍ aredqal"
 
 #: ../../audio1/audio.go:295
-#, fuzzy
 msgid "Changing Audio Server, please wait..."
 msgstr "Abeddel n tutlayt n unagraw, ma ulac uɣilif arǧu..."
 
 #: ../../audio1/audio.go:328
-#, fuzzy
 msgid "Audio Server changed, please log out and then log in"
 msgstr "Tutlayt n unagraw tettwabeddel, ma ulac uɣilif ffeɣ sakin kcem"
 
@@ -222,12 +219,10 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
 msgstr "ABeddel tiddi n usfaylu"
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "ABeddel tiddi n usfaylu"
 
@@ -252,7 +247,6 @@ msgid "Switch to previous desktop"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
-#, fuzzy
 msgid "Switch to the next desktop"
 msgstr "Senfel ɣer tallunt n umahit tazelmaḍt"
 
@@ -262,7 +256,6 @@ msgid "Show desktop"
 msgstr "Beqqeḍ tanarit"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "Beqqeḍ tanarit"
 
@@ -287,7 +280,6 @@ msgid "Show/hide grand search"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:54
-#, fuzzy
 msgid "Show/hide notification center"
 msgstr "Agens n telɣut"
 
