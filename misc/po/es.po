@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 09:49+0800\n"
+"POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: Isaías Gätjens M <igatjens@gmail.com>, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/linuxdeepin/teams/3617/es/)\n"
@@ -70,7 +70,7 @@ msgstr "El nombre del grupo ya existe"
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nombre de usuario debe tener entre 3 y 32 caracteres"
 
-#: ../../accounts1/manager.go:570
+#: ../../accounts1/manager.go:571
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "El usuario \"%s\" ya existía y sus datos están sincronizados"
@@ -93,20 +93,20 @@ msgstr "Cambiando el servidor de audio, espere..."
 msgid "Audio Server changed, please log out and then log in"
 msgstr "El servidor de audio cambió, reinicie la sesión"
 
-#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
-#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
-#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
-#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
+#: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:485 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:609 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr "centro-de-control-dde"
 
-#: ../../audio1/audio_events.go:701
+#: ../../audio1/audio_events.go:713
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s había sido desactivado"
 
-#: ../../audio1/audio_events.go:702
+#: ../../audio1/audio_events.go:714
 msgid "Open"
 msgstr "Abrir"
 
@@ -170,57 +170,57 @@ msgstr "Acceso a mensaje"
 msgid "Message notification"
 msgstr "Notificación de mensaje"
 
-#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:439 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../../bluetooth1/obex_agent.go:398
-msgid "Receiving %[1]q from %[2]q"
-msgstr "Recibiendo %[1]q de %[2]q"
+#: ../../bluetooth1/obex_agent.go:447
+msgid "Receiving %[1]q"
+msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:407
+#: ../../bluetooth1/obex_agent.go:455
 msgid "View"
 msgstr "Ver"
 
-#: ../../bluetooth1/obex_agent.go:413
+#: ../../bluetooth1/obex_agent.go:461
 msgid "You have received files from %q successfully"
 msgstr "Archivos recibidos exitosamente de %q"
 
-#: ../../bluetooth1/obex_agent.go:414
+#: ../../bluetooth1/obex_agent.go:462
 msgid "Done"
 msgstr "Finalizar"
 
-#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
+#: ../../bluetooth1/obex_agent.go:477 ../../bluetooth1/obex_agent.go:612
 msgid "Stop Receiving Files"
 msgstr "Detener recepción de archivos"
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:479
 msgid "You have cancelled the file transfer"
 msgstr "Transferencia de archivos cancelada"
 
-#: ../../bluetooth1/obex_agent.go:433
+#: ../../bluetooth1/obex_agent.go:481
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "La conexión Bluetooth falló"
 
-#: ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Decline"
 msgstr "Declinar"
 
-#: ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Receive"
 msgstr "Recibir"
 
-#: ../../bluetooth1/obex_agent.go:477
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Bluetooth File Transfer"
 msgstr "Transferencia de archivo por Bluetooth"
 
-#: ../../bluetooth1/obex_agent.go:478
+#: ../../bluetooth1/obex_agent.go:534
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q está enviándole archivos. ¿Quiere recibirlos?"
 
-#: ../../bluetooth1/obex_agent.go:533
+#: ../../bluetooth1/obex_agent.go:613
 msgid "Receiving %q timed out"
 msgstr "%q no responde"
 
