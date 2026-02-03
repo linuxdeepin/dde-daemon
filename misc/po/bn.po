@@ -2,13 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Sekander Badsha <badsha_eee@yahoo.com>, 2025
 # deepiner, 2025
 # Emruz Hossain <hossainemruz@gmail.com>, 2025
 # Siam Sami <justfortest16162215@gmail.com>, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -17,17 +16,17 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: Siam Sami <justfortest16162215@gmail.com>, 2025\n"
-"Language-Team: Bengali (https://app.transifex.com/linuxdeepin/teams/3617/"
-"bn/)\n"
-"Language: bn\n"
+"Language-Team: Bengali (https://app.transifex.com/linuxdeepin/teams/3617/bn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: bn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
-msgstr "দয়া করে একটি পাসওয়ার্ড লিখুন যা ইংরেজি 8টি বা বাংলা ৮টি অক্ষরের কম নয়"
+msgstr ""
+"দয়া করে একটি পাসওয়ার্ড লিখুন যা ইংরেজি 8টি বা বাংলা ৮টি অক্ষরের কম নয়"
 
 #: ../../accounts1/checkers/password.go:40
 #, c++-format
@@ -35,8 +34,8 @@ msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"পাসওয়ার্ডটিতে ইংরেজি অক্ষর (কেস-সংবেদনশীল), সংখ্যা বা বিশেষ চিহ্ন (~! @ # $% ^ & "
-"* () [] {} \\ | /?,। <>) থাকতে হবে"
+"পাসওয়ার্ডটিতে ইংরেজি অক্ষর (কেস-সংবেদনশীল), সংখ্যা বা বিশেষ চিহ্ন (~! @ # "
+"$% ^ & * () [] {} \\ | /?,। <>) থাকতে হবে"
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -525,8 +524,8 @@ msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
-"সিস্টেমের ভাষা পরিবর্তন করা হচ্ছে এবং প্রয়োজনীয় ভাষার প্যাকেজ ইন্সটল করা হচ্ছে।  "
-"দয়া করে অপেক্ষা করুন..."
+"সিস্টেমের ভাষা পরিবর্তন করা হচ্ছে এবং প্রয়োজনীয় ভাষার প্যাকেজ ইন্সটল করা "
+"হচ্ছে।  দয়া করে অপেক্ষা করুন..."
 
 #: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
@@ -542,8 +541,7 @@ msgstr "সিস্টেম ভাষা পরিবর্তন করতে
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
 #: ../../service_trigger/msg.go:13
@@ -651,8 +649,8 @@ msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
-"RTC স্থানীয় সময় না UTC সময় সংরক্ষণ করবে সেটা নিয়ন্ত্রণ করার জন্য প্রমাণীকরণের "
-"প্রয়োজন।"
+"RTC স্থানীয় সময় না UTC সময় সংরক্ষণ করবে সেটা নিয়ন্ত্রণ করার জন্য "
+"প্রমাণীকরণের প্রয়োজন।"
 
 #: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
