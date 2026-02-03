@@ -190,11 +190,12 @@ func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb Ke
 	ss.xRecordEventHandler.modKeyReleasedCb = func(code uint8, mods uint16) {
 		isGrabbed := isKbdAlreadyGrabbed(ss.conn)
 		switch mods {
-		case keysyms.ModMaskCapsLock, keysyms.ModMaskSuper:
-			// caps_lock, supper
-			if isGrabbed {
-				return
-			}
+		case keysyms.ModMaskCapsLock:
+			// caps_lock
+			ss.emitKeyEvent(0, Key{Code: Keycode(code)})
+
+		case keysyms.ModMaskSuper:
+			// super key
 			ss.emitKeyEvent(0, Key{Code: Keycode(code)})
 
 		case keysyms.ModMaskNumLock:
