@@ -2,17 +2,16 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # 李洪武 <lihongwu1987@gmail.com>, 2025
-# 凡凡不想平凡 <freddy4212@gmail.com>, 2025
-# Jimmy Young, 2025
-# Maggie Liu <maggie.liufei@gmail.com>, 2025
 # Julian Lai <laichiaheng@outlook.com>, 2025
-# Zhou Rh <jjzrh2@126.com>, 2025
+# 凡凡不想平凡 <freddy4212@gmail.com>, 2025
+# 50258c825cd23d94a87a42d4611abbf0_307966e, 2025
+# Maggie Liu <maggie.liufei@gmail.com>, 2025
 # pan93412 <pan93412@gmail.com>, 2025
-# deepiner, 2025
-#
+# deepiner, 2026
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -20,13 +19,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/linuxdeepin/"
-"teams/3617/zh_TW/)\n"
-"Language: zh_TW\n"
+"Last-Translator: deepiner, 2026\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/linuxdeepin/teams/3617/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -38,9 +36,7 @@ msgstr "請輸入不短於 8 個字元的密碼"
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr ""
-"密碼需包含英文字母（區分大小寫），數字或是特殊符號（~!@#$%^&*()[]{}\\|/?,."
-"<>）"
+msgstr "密碼需包含英文字母（區分大小寫），數字或是特殊符號（~!@#$%^&*()[]{}\\|/?,.<>）"
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -73,15 +69,15 @@ msgstr "目前系統桌布已被鎖定，請聯絡管理員"
 
 #: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
-msgstr ""
+msgstr "音訊服務切換失敗，請稍後重試"
 
 #: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
-msgstr ""
+msgstr "正在切換音訊服務，請稍候…"
 
 #: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
-msgstr ""
+msgstr "音訊服務切換成功，請登出後重新登入"
 
 #: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
 #: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
@@ -89,7 +85,7 @@ msgstr ""
 #: ../../bluetooth1/obex_agent.go:609 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
-msgstr ""
+msgstr "控制中心"
 
 #: ../../audio1/audio_events.go:713
 #, c-format
@@ -228,35 +224,35 @@ msgstr "配對"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
-msgstr ""
+msgstr "最大化視窗"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
-msgstr ""
+msgstr "恢復視窗"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "當前視窗左分屏"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "當前視窗右分屏"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
-msgstr ""
+msgstr "顯示多工檢視"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "隱藏多工檢視"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "切換至前一個桌面"
 
 #: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "切換至後一個桌面"
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -265,11 +261,11 @@ msgstr "顯示桌面"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
-msgstr ""
+msgstr "隱藏桌面"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "打開/關閉啟動器"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
@@ -281,19 +277,19 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "打開/關閉剪貼簿"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "打開/關閉全域性搜尋"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "打開/關閉通知中心"
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
-msgstr ""
+msgstr "停用"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -514,11 +510,11 @@ msgstr "重設螢幕縮放"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
-msgstr ""
+msgstr "視窗快速鋪至左側"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
-msgstr ""
+msgstr "視窗快速鋪至右側"
 
 #: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
@@ -544,8 +540,7 @@ msgstr "無法變更系統語言，請稍候再試"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”沒有通過系統安全驗證，無法執行"
 
 #: ../../service_trigger/msg.go:13
@@ -553,9 +548,7 @@ msgstr "“%s”沒有通過系統安全驗證，無法執行"
 msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
-msgstr ""
-"\"%s\"沒有通過系統安全驗證，無法執行，請前往安全中心-安全工具-應用安全進行調"
-"整"
+msgstr "\"%s\"沒有通過系統安全驗證，無法執行，請前往安全中心-安全工具-應用安全進行調整"
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
