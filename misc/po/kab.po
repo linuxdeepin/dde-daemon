@@ -2,25 +2,24 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Yacine Bouklif <yacinebouklif@gmail.com>, 2021
-# ZiriSut, 2022
-#
+# ZiriSut, 2025
+# Yacine Bouklif <yacinebouklif@gmail.com>, 2025
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: ZiriSut, 2022\n"
-"Language-Team: Kabyle (https://app.transifex.com/linuxdeepin/teams/3617/"
-"kab/)\n"
-"Language: kab\n"
+"PO-Revision-Date: 2025-04-25 07:00+0000\n"
+"Last-Translator: Yacine Bouklif <yacinebouklif@gmail.com>, 2025\n"
+"Language-Team: Kabyle (https://app.transifex.com/linuxdeepin/teams/3617/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: kab\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -64,19 +63,16 @@ msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
 #: ../../audio1/audio.go:259
-#, fuzzy
 msgid "Failed to change Audio Server, please try later"
-msgstr "Abeddel n tutlayt ur yeddi ara, ma ulac uɣilif eɛreḍ aredqal"
+msgstr ""
 
 #: ../../audio1/audio.go:295
-#, fuzzy
 msgid "Changing Audio Server, please wait..."
-msgstr "Abeddel n tutlayt n unagraw, ma ulac uɣilif arǧu..."
+msgstr ""
 
 #: ../../audio1/audio.go:328
-#, fuzzy
 msgid "Audio Server changed, please log out and then log in"
-msgstr "Tutlayt n unagraw tettwabeddel, ma ulac uɣilif ffeɣ sakin kcem"
+msgstr ""
 
 #: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
 #: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
@@ -222,14 +218,12 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
-msgstr "ABeddel tiddi n usfaylu"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
-msgstr "ABeddel tiddi n usfaylu"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
@@ -252,9 +246,8 @@ msgid "Switch to previous desktop"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
-#, fuzzy
 msgid "Switch to the next desktop"
-msgstr "Senfel ɣer tallunt n umahit tazelmaḍt"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -262,9 +255,8 @@ msgid "Show desktop"
 msgstr "Beqqeḍ tanarit"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
-msgstr "Beqqeḍ tanarit"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
@@ -287,9 +279,8 @@ msgid "Show/hide grand search"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:54
-#, fuzzy
 msgid "Show/hide notification center"
-msgstr "Agens n telɣut"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
@@ -529,8 +520,8 @@ msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
-"Abeddel n tutlayt n unagraw akked usbeddi n yikemmusen n tutlayt yettwasran, "
-"ma ulac uɣilif arǧu..."
+"Abeddel n tutlayt n unagraw akked usbeddi n yikemmusen n tutlayt yettwasran,"
+" ma ulac uɣilif arǧu..."
 
 #: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
@@ -546,8 +537,7 @@ msgstr "Abeddel n tutlayt ur yeddi ara, ma ulac uɣilif eɛreḍ aredqal"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
 #: ../../service_trigger/msg.go:13
