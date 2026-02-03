@@ -2,25 +2,24 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Benson Muite, 2021
-# deepiner, 2021
-#
+# deepiner, 2025
+# Benson Muite, 2025
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: deepiner, 2021\n"
-"Language-Team: Swahili (https://app.transifex.com/linuxdeepin/teams/3617/"
-"sw/)\n"
-"Language: sw\n"
+"PO-Revision-Date: 2025-04-25 07:00+0000\n"
+"Last-Translator: Benson Muite, 2025\n"
+"Language-Team: Swahili (https://app.transifex.com/linuxdeepin/teams/3617/sw/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: sw\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -66,19 +65,16 @@ msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
 #: ../../audio1/audio.go:259
-#, fuzzy
 msgid "Failed to change Audio Server, please try later"
-msgstr "Haiwezekana kubadili lugha ya mfumo , tafadhali jaribu baadaye"
+msgstr ""
 
 #: ../../audio1/audio.go:295
-#, fuzzy
 msgid "Changing Audio Server, please wait..."
-msgstr "Lugha ya mfumu inabadilikana, tafadhali subiri"
+msgstr ""
 
 #: ../../audio1/audio.go:328
-#, fuzzy
 msgid "Audio Server changed, please log out and then log in"
-msgstr "Lugha ya mfumo imebadilikana, tafadhali toka alafu ingia"
+msgstr ""
 
 #: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
 #: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
@@ -224,14 +220,12 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
-msgstr "Tanua dirisha"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
-msgstr "Rejesha dirisha"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
@@ -254,9 +248,8 @@ msgid "Switch to previous desktop"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
-#, fuzzy
 msgid "Switch to the next desktop"
-msgstr "Badilisha kwa pahali ya kufanya kazi ya kushoto"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -264,14 +257,12 @@ msgid "Show desktop"
 msgstr "Onesha eneo ya kazi"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
-msgstr "Onesha eneo ya kazi"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:49
-#, fuzzy
 msgid "Show/hide launcher"
-msgstr "Onyesha/ficha kizimbani"
+msgstr ""
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
@@ -294,9 +285,8 @@ msgid "Show/hide notification center"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:55
-#, fuzzy
 msgid "Disable"
-msgstr "Lemaza kiguso"
+msgstr ""
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -549,8 +539,7 @@ msgstr "Haiwezekana kubadili lugha ya mfumo , tafadhali jaribu baadaye"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
 #: ../../service_trigger/msg.go:13
