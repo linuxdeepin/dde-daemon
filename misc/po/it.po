@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 09:49+0800\n"
+"POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/linuxdeepin/teams/3617/"
@@ -59,7 +59,7 @@ msgstr "Il nome del Gruppo esiste già"
 msgid "Username must be between 3 and 32 characters"
 msgstr "L'username deve esser compresa tra 3 e 32 caratteri"
 
-#: ../../accounts1/manager.go:570
+#: ../../accounts1/manager.go:571
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "L'utente \"%s\" esisteva prima e i suoi dati sono sincronizzati"
@@ -80,20 +80,20 @@ msgstr "Modifica server Audio, attendere.."
 msgid "Audio Server changed, please log out and then log in"
 msgstr "Server audio modificato, riavvia la sessione"
 
-#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
-#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
-#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
-#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
+#: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:485 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:609 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr ""
 
-#: ../../audio1/audio_events.go:701
+#: ../../audio1/audio_events.go:713
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s è stato disattivato"
 
-#: ../../audio1/audio_events.go:702
+#: ../../audio1/audio_events.go:714
 msgid "Open"
 msgstr "Apri"
 
@@ -157,57 +157,57 @@ msgstr "Messaggio d'accesso"
 msgid "Message notification"
 msgstr "Messaggio di notifica"
 
-#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:439 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "Annulla"
 
-#: ../../bluetooth1/obex_agent.go:398
-msgid "Receiving %[1]q from %[2]q"
-msgstr "Ricezione %[1]q da %[2]q"
+#: ../../bluetooth1/obex_agent.go:447
+msgid "Receiving %[1]q"
+msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:407
+#: ../../bluetooth1/obex_agent.go:455
 msgid "View"
 msgstr "Visualizza"
 
-#: ../../bluetooth1/obex_agent.go:413
+#: ../../bluetooth1/obex_agent.go:461
 msgid "You have received files from %q successfully"
 msgstr "La ricezione di file da %1 è stata completata"
 
-#: ../../bluetooth1/obex_agent.go:414
+#: ../../bluetooth1/obex_agent.go:462
 msgid "Done"
 msgstr "Fatto"
 
-#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
+#: ../../bluetooth1/obex_agent.go:477 ../../bluetooth1/obex_agent.go:612
 msgid "Stop Receiving Files"
 msgstr "Interrompi ricezione file"
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:479
 msgid "You have cancelled the file transfer"
 msgstr "Hai cancellato il trasferimento file"
 
-#: ../../bluetooth1/obex_agent.go:433
+#: ../../bluetooth1/obex_agent.go:481
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Connessione Bluetooth fallita"
 
-#: ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Decline"
 msgstr "Rifiuta"
 
-#: ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Receive"
 msgstr "Ricevi"
 
-#: ../../bluetooth1/obex_agent.go:477
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Bluetooth File Transfer"
 msgstr "Trasferimento file via Bluetooth"
 
-#: ../../bluetooth1/obex_agent.go:478
+#: ../../bluetooth1/obex_agent.go:534
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q desidera inviarti un file, desideri accettare la richiesta?"
 
-#: ../../bluetooth1/obex_agent.go:533
+#: ../../bluetooth1/obex_agent.go:613
 msgid "Receiving %q timed out"
 msgstr "Ricezione da %q scaduta"
 

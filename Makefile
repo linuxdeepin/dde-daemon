@@ -132,7 +132,7 @@ pot:
 update-po:
 	for po in misc/po/*.po; do \
 		echo "Updating $$po..."; \
-		msgmerge --update "$$po" misc/po/dde-daemon.pot; \
+		msgmerge --update --no-fuzzy-matching "$$po" misc/po/dde-daemon.pot; \
 	done
 
 clean-po:
