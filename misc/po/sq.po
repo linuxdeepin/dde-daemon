@@ -164,7 +164,7 @@ msgstr "Anuloje"
 
 #: ../../bluetooth1/obex_agent.go:447
 msgid "Receiving %[1]q"
-msgstr ""
+msgstr "Po merret %[1]q"
 
 #: ../../bluetooth1/obex_agent.go:455
 msgid "View"
@@ -234,11 +234,11 @@ msgstr "Riktheje Dritaren"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "Ndarje Majtas e Dritares së Tanishme"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "Ndarje Djathtas e Dritares së Tanishme"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
@@ -445,7 +445,7 @@ msgstr "Këmbe dritare në të kundërt"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "Aktivizo menu dritaresh"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
