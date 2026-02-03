@@ -2,23 +2,22 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Vladimir “Hagal” Eloshin, 2025
-# Snow fire R <iceler75@gmail.com>, 2025
 # Владимир Киреев <vovan_kireev@mail.ru>, 2025
 # Serge Kukharski, 2025
 # Transifex Bot <>, 2025
 # Артем Рудаковский <crja72@gmail.com>, 2025
 # gandalfthewhite19890404 <gandalfthewhite@mail.ru>, 2025
 # Анатолий Валерианович <ffox909@mail.ru>, 2025
+# Валерий Владимирович, 2025
 # Basil Russu <basil_russu@hotmail.com>, 2025
 # Dumitru Ciloci, 2025
 # Okubir Gienum, 2025
-# Валерий Владимирович, 2025
 # deepiner, 2025
 # Михаил Комаров, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -27,15 +26,12 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: Михаил Комаров, 2025\n"
-"Language-Team: Russian (https://app.transifex.com/linuxdeepin/teams/3617/"
-"ru/)\n"
-"Language: ru\n"
+"Language-Team: Russian (https://app.transifex.com/linuxdeepin/teams/3617/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
@@ -556,10 +552,10 @@ msgstr "Не удалось изменить язык системы, попро
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
-"\"%s\" не прошел проверку безопасности системы и не может быть запущен сейчас"
+"\"%s\" не прошел проверку безопасности системы и не может быть запущен "
+"сейчас"
 
 #: ../../service_trigger/msg.go:13
 #, c-format
@@ -642,8 +638,8 @@ msgstr "Убедитесь, что %q включено и доступно"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
-"%q больше не может подключено к %q. Попробуйте забыть это устройство и снова "
-"выполнить сопряжение."
+"%q больше не может подключено к %q. Попробуйте забыть это устройство и снова"
+" выполнить сопряжение."
 
 #: ../../timedate1/manager_format.go:75
 msgid "Space"
