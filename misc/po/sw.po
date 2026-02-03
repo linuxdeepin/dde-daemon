@@ -4,8 +4,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# deepiner, 2025
 # Benson Muite, 2025
+# deepiner, 2026
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Benson Muite, 2025\n"
+"Last-Translator: deepiner, 2026\n"
 "Language-Team: Swahili (https://app.transifex.com/linuxdeepin/teams/3617/sw/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,15 +66,15 @@ msgstr ""
 
 #: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
-msgstr ""
+msgstr "Haiwezekana kubadili lugha ya mfumo , tafadhali jaribu baadaye"
 
 #: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
-msgstr ""
+msgstr "Lugha ya mfumu inabadilikana, tafadhali subiri"
 
 #: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
-msgstr ""
+msgstr "Lugha ya mfumo imebadilikana, tafadhali toka alafu ingia"
 
 #: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
 #: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
@@ -221,11 +221,11 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
-msgstr ""
+msgstr "Tanua dirisha"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
-msgstr ""
+msgstr "Rejesha dirisha"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
@@ -249,7 +249,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Badilisha kwa pahali ya kufanya kazi ya kushoto"
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -258,11 +258,11 @@ msgstr "Onesha eneo ya kazi"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
-msgstr ""
+msgstr "Onesha eneo ya kazi"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Onyesha/ficha kizimbani"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
@@ -286,7 +286,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
-msgstr ""
+msgstr "Lemaza kiguso"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
