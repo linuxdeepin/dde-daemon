@@ -2,17 +2,17 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# closeddoors1559 <mrvnp@msn.com>, 2025
 # deepiner, 2025
+# closeddoors1559 <mrvnp@msn.com>, 2025
+# Hans van Schooten <hans@schootenvan.nl>, 2025
 # dragnadh, 2025
 # b619f8b7eb226a70bc7d5cadcfa79734_230f6d0 <5e8718ab95c3ca367d12d9e77a5e9072_4743>, 2025
 # Lars Acou <lars.acou@gmail.com>, 2025
 # Maggie Liu <maggie.liufei@gmail.com>, 2025
-# Hans van Schooten <hans@schootenvan.nl>, 2025
-# Heimen Stoffels <vistausss@fastmail.com>, 2025
-#
+# Heimen Stoffels <vistausss@fastmail.com>, 2026
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -20,12 +20,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2025\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>, 2026\n"
 "Language-Team: Dutch (https://app.transifex.com/linuxdeepin/teams/3617/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -74,7 +74,8 @@ msgstr ""
 
 #: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
-msgstr "De geluidsdienst kan niet worden gewijzigd - probeer het later opnieuw"
+msgstr ""
+"De geluidsdienst kan niet worden gewijzigd - probeer het later opnieuw"
 
 #: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
@@ -447,7 +448,7 @@ msgstr "Schakelen tussen vensters in omgekeerde volgorde"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "Venstermenu openen"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
@@ -547,11 +548,10 @@ msgstr "De systeemtaal kan niet worden gewijzigd - probeer het later opnieuw"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
-"\"%s\" voldeed niet aan de systeemveiligheidsvereisten en kan momenteel niet "
-"worden uitgevoerd"
+"\"%s\" voldeed niet aan de systeemveiligheidsvereisten en kan momenteel niet"
+" worden uitgevoerd"
 
 #: ../../service_trigger/msg.go:13
 #, c-format
@@ -650,8 +650,8 @@ msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
-"Voer je wachtwoord in om te bepalen of netwerktijdsynchronisatie moet worden "
-"ingeschakeld"
+"Voer je wachtwoord in om te bepalen of netwerktijdsynchronisatie moet worden"
+" ingeschakeld"
 
 #: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
