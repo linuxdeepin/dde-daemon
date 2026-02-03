@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 09:49+0800\n"
+"POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: Alex, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/"
@@ -69,7 +69,7 @@ msgstr "O nome do grupo já existe"
 msgid "Username must be between 3 and 32 characters"
 msgstr "O nome de usuário deve conter entre 3 a 32 caracteres"
 
-#: ../../accounts1/manager.go:570
+#: ../../accounts1/manager.go:571
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "O usuário \"%s\" já existe e seus dados estão sincronizados"
@@ -94,20 +94,20 @@ msgstr ""
 "O servidor de áudio foi alterado, é necessário encerrar a sessão e fazer "
 "login novamente"
 
-#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:707
-#: ../../bluetooth1/obex_agent.go:395 ../../bluetooth1/obex_agent.go:410
-#: ../../bluetooth1/obex_agent.go:437 ../../bluetooth1/obex_agent.go:474
-#: ../../bluetooth1/obex_agent.go:529 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
+#: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:485 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:609 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr "dde-control-center"
 
-#: ../../audio1/audio_events.go:701
+#: ../../audio1/audio_events.go:713
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s foi desativado"
 
-#: ../../audio1/audio_events.go:702
+#: ../../audio1/audio_events.go:714
 msgid "Open"
 msgstr "Abrir"
 
@@ -171,57 +171,57 @@ msgstr "Acesso às mensagens"
 msgid "Message notification"
 msgstr "Notificação de mensagem"
 
-#: ../../bluetooth1/obex_agent.go:391 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:439 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../../bluetooth1/obex_agent.go:398
-msgid "Receiving %[1]q from %[2]q"
-msgstr "Recebendo %[1]q de %[2]q"
+#: ../../bluetooth1/obex_agent.go:447
+msgid "Receiving %[1]q"
+msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:407
+#: ../../bluetooth1/obex_agent.go:455
 msgid "View"
 msgstr "Visualizar"
 
-#: ../../bluetooth1/obex_agent.go:413
+#: ../../bluetooth1/obex_agent.go:461
 msgid "You have received files from %q successfully"
 msgstr "Os arquivos de %q foram recebidos"
 
-#: ../../bluetooth1/obex_agent.go:414
+#: ../../bluetooth1/obex_agent.go:462
 msgid "Done"
 msgstr "Concluído"
 
-#: ../../bluetooth1/obex_agent.go:429 ../../bluetooth1/obex_agent.go:532
+#: ../../bluetooth1/obex_agent.go:477 ../../bluetooth1/obex_agent.go:612
 msgid "Stop Receiving Files"
 msgstr "Interromper o Recebimento de Arquivos"
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:479
 msgid "You have cancelled the file transfer"
 msgstr "A transferência do arquivo foi cancelada"
 
-#: ../../bluetooth1/obex_agent.go:433
+#: ../../bluetooth1/obex_agent.go:481
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "A conexão Bluetooth falhou"
 
-#: ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Decline"
 msgstr "Recusar"
 
-#: ../../bluetooth1/obex_agent.go:472
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Receive"
 msgstr "Receber"
 
-#: ../../bluetooth1/obex_agent.go:477
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Bluetooth File Transfer"
 msgstr "Transferência de Arquivos por Bluetooth"
 
-#: ../../bluetooth1/obex_agent.go:478
+#: ../../bluetooth1/obex_agent.go:534
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q está enviando arquivos. Receber?"
 
-#: ../../bluetooth1/obex_agent.go:533
+#: ../../bluetooth1/obex_agent.go:613
 msgid "Receiving %q timed out"
 msgstr "O recebimento de %s expirou"
 

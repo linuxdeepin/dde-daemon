@@ -38,11 +38,11 @@ var receiveBaseDir = userdir.Get(userdir.Download)
 type cancelReason uint32
 
 const (
-	_ cancelReason = iota
-	CancelReasonExpired // The notification expired.
-	CancelReasonDismiss // The notification was dismissed by the user.
-	CancelReasonManual // The notification was closed by a call to CloseNotification.
-	CancelReasonUndefined // Undefined/reserved reasons.
+	_                     cancelReason = iota
+	CancelReasonExpired                // The notification expired.
+	CancelReasonDismiss                // The notification was dismissed by the user.
+	CancelReasonManual                 // The notification was closed by a call to CloseNotification.
+	CancelReasonUndefined              // Undefined/reserved reasons.
 )
 
 func (c cancelReason) String() string {
@@ -217,8 +217,8 @@ func (a *obexAgent) isSessionAccepted(transfer *transferObj) (bool, error) {
 
 		accepted, err := a.requestReceive(transfer.deviceName, transfer.oriFilename)
 		if err != nil || !accepted {
-            return false, err
-        }
+			return false, err
+		}
 
 		a.acceptedSessionsMu.Lock()
 		if _, recheck := a.acceptedSessions[transfer.sessionPath]; !recheck {
@@ -239,7 +239,7 @@ func (a *obexAgent) isSessionAccepted(transfer *transferObj) (bool, error) {
 	a.receiveChMu.Unlock()
 
 	if ch != nil {
-		<- ch
+		<-ch
 	}
 
 	a.receiveProgress(transfer)
@@ -327,9 +327,9 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 
 		a.receiveChMu.Lock()
 		select {
-			case a.receiveCh <- struct{}{}:
-    		default:
-    	}
+		case a.receiveCh <- struct{}{}:
+		default:
+		}
 		a.receiveChMu.Unlock()
 
 		// 避免下个传输还没开始就被清空，导致需要重新询问，故加上一秒的延迟
@@ -349,7 +349,7 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 
 	var progress uint64 = math.MaxUint64
 	err = transfer.Transferred().ConnectChanged(func(hasValue bool, value uint64) {
-		if !hasValue || value == 0{
+		if !hasValue || value == 0 {
 			return
 		}
 
@@ -437,14 +437,17 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 	var err error
 	if progress != 100 {
 		actions = []string{"cancel", gettext.Tr("Cancel")}
-		hints := map[string]dbus.Variant{"suppress-sound": dbus.MakeVariant(true)}
+		hints := map[string]dbus.Variant{
+			"suppress-sound":              dbus.MakeVariant(true),
+			"x-deepin-ShowInNotifyCenter": dbus.MakeVariant(false),
+		}
 
 		notifyID, err = notify.Notify(0,
 			gettext.Tr("dde-control-center"),
 			replaceID,
 			notifyIconBluetoothConnected,
-			fmt.Sprintf(gettext.Tr("Receiving %[1]q from %[2]q"), filename, device),
 			fmt.Sprintf("%d%%", progress),
+			fmt.Sprintf(gettext.Tr("Receiving %[1]q"), filename),
 			actions,
 			hints,
 			receiveFileNeverTimeout)
@@ -569,8 +572,8 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 		}
 
 		select {
-			case a.cancelCh <- cancelReason(reason):
-			default:
+		case a.cancelCh <- cancelReason(reason):
+		default:
 		}
 	})
 	if err != nil {
