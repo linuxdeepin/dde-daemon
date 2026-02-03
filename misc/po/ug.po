@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Muhammadali Abliz <ordam2@163.com>, 2025
+# deepiner, 2025
 # Ug HushBeg <HushBeg@163.com>, 2025
 # مۇختەر مەخمۇت <yeganaaa@163.com>, 2025
 # 阿迪力 买买提明 <251078110@qq.com>, 2025
-# deepiner, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -17,13 +17,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
-"Language-Team: Uyghur (https://app.transifex.com/linuxdeepin/teams/3617/"
-"ug/)\n"
-"Language: ug\n"
+"Last-Translator: 阿迪力 买买提明 <251078110@qq.com>, 2025\n"
+"Language-Team: Uyghur (https://app.transifex.com/linuxdeepin/teams/3617/ug/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ug\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -37,8 +36,8 @@ msgid ""
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
 "پارول چوقۇم ئىنگلىزچە ھەرىپ-بەلگە(چوڭ كىچىك يېزىشنى ئايرىيدۇ) رەقەم ياكى "
-"بوشلۇق ئالاھىدە ھەرپ بەلگىلەر(~!@#$%^&*()[]{}\\|/?,.<>) نى ئۆز ئىچىگە ئېلىشى "
-"كېرەك"
+"بوشلۇق ئالاھىدە ھەرپ بەلگىلەر(~!@#$%^&*()[]{}\\|/?,.<>) نى ئۆز ئىچىگە ئېلىشى"
+" كېرەك"
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -545,8 +544,7 @@ msgstr "سىستېما تىلىنى ئۆزگەرتىش مەغلۇپ بولدى،
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "«%s»سىستېما بىخەتەرلىك تەكشۈرۈشىدىن ئۆتەلمىدى، ئىجرا قىلغىلى بولمايدۇ"
 
 #: ../../service_trigger/msg.go:13
