@@ -6,6 +6,7 @@
 # Translators:
 # ZiriSut, 2025
 # Yacine Bouklif <yacinebouklif@gmail.com>, 2025
+# deepiner, 2026
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Yacine Bouklif <yacinebouklif@gmail.com>, 2025\n"
+"Last-Translator: deepiner, 2026\n"
 "Language-Team: Kabyle (https://app.transifex.com/linuxdeepin/teams/3617/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,15 +65,15 @@ msgstr ""
 
 #: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
-msgstr ""
+msgstr "Abeddel n tutlayt ur yeddi ara, ma ulac uɣilif eɛreḍ aredqal"
 
 #: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
-msgstr ""
+msgstr "Abeddel n tutlayt n unagraw, ma ulac uɣilif arǧu..."
 
 #: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
-msgstr ""
+msgstr "Tutlayt n unagraw tettwabeddel, ma ulac uɣilif ffeɣ sakin kcem"
 
 #: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
 #: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
@@ -219,11 +220,11 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
-msgstr ""
+msgstr "ABeddel tiddi n usfaylu"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
-msgstr ""
+msgstr "ABeddel tiddi n usfaylu"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
@@ -247,7 +248,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Senfel ɣer tallunt n umahit tazelmaḍt"
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -256,7 +257,7 @@ msgstr "Beqqeḍ tanarit"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
-msgstr ""
+msgstr "Beqqeḍ tanarit"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
@@ -280,7 +281,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "Agens n telɣut"
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
