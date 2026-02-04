@@ -4,10 +4,10 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# deepiner, 2025
 # 418c6428bf34b685e2ecb31c7bd5b979, 2025
 # Ḷḷumex03, 2025
 # enolp <enolp@softastur.org>, 2025
+# deepiner, 2026
 # 
 #, fuzzy
 msgid ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: enolp <enolp@softastur.org>, 2025\n"
+"Last-Translator: deepiner, 2026\n"
 "Language-Team: Asturian (https://app.transifex.com/linuxdeepin/teams/3617/ast/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -223,11 +223,11 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
-msgstr ""
+msgstr "Maximizar ventana"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
-msgstr ""
+msgstr "Restaurar ventana"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
@@ -251,7 +251,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Camudar a la estaya de trabayu esquierda"
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -260,11 +260,11 @@ msgstr "Amosar escritoriu"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
-msgstr ""
+msgstr "Amosar escritoriu"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Anubrir/Amosar panel d'anclaxe"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
@@ -288,7 +288,7 @@ msgstr ""
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
-msgstr ""
+msgstr "Deshabilitar panel táutil"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
