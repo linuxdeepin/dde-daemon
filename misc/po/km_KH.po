@@ -2,24 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Samoun El <el.samoun.sna2008@gmail.com>, 2021
-#
+# Samoun El <el.samoun.sna2008@gmail.com>, 2025
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Samoun El <el.samoun.sna2008@gmail.com>, 2021\n"
-"Language-Team: Khmer (Cambodia) (https://app.transifex.com/linuxdeepin/"
-"teams/3617/km_KH/)\n"
-"Language: km_KH\n"
+"PO-Revision-Date: 2025-04-25 07:00+0000\n"
+"Last-Translator: Samoun El <el.samoun.sna2008@gmail.com>, 2025\n"
+"Language-Team: Khmer (Cambodia) (https://app.transifex.com/linuxdeepin/teams/3617/km_KH/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: km_KH\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -535,8 +534,7 @@ msgstr ""
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
 #: ../../service_trigger/msg.go:13

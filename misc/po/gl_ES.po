@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Adrián Ramos García <adrian.ramos.garcia.93@gmail.com>, 2025
 # 55794061bc336d90de42969fbdc28df8_7437f78 <f3b318f732e51e2854926463b55b3f0e_42535>, 2025
 # Rubén <feiticeiro2010@hotmail.es>, 2025
 # David Rebolo Magariños <drgaga345@gmail.com>, 2025
 # deepiner, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -18,12 +18,11 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
-"Language-Team: Galician (Spain) (https://app.transifex.com/linuxdeepin/"
-"teams/3617/gl_ES/)\n"
-"Language: gl_ES\n"
+"Language-Team: Galician (Spain) (https://app.transifex.com/linuxdeepin/teams/3617/gl_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: gl_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -543,8 +542,7 @@ msgstr "Erro ao cambiar a lingua do sistema. Proba máis tarde"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" non superou a verificación de seguridade do sistema e non se pode "
 "executar agora"

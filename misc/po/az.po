@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
+# deepiner, 2025
 # 5b479019091bfbe6651aa39d6d7a201a_3eeaa36, 2025
 # Nicat Məmmədov <n1c4t97@gmail.com>, 2025
-# deepiner, 2025
 # Vagif Khansultanov <Khansultanov@gmail.com>, 2025
 # Xəyyam Qocayev <xxmn77@gmail.com>, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -18,12 +18,11 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: Xəyyam Qocayev <xxmn77@gmail.com>, 2025\n"
-"Language-Team: Azerbaijani (https://app.transifex.com/linuxdeepin/teams/3617/"
-"az/)\n"
-"Language: az\n"
+"Language-Team: Azerbaijani (https://app.transifex.com/linuxdeepin/teams/3617/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: az\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -78,7 +77,8 @@ msgstr "Səs serveri dəyişdirilir, gözləyin..."
 
 #: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
-msgstr "Səs serveri dəyişdirildi, lütfən sistemdən çıxın və yenidən daxil olun"
+msgstr ""
+"Səs serveri dəyişdirildi, lütfən sistemdən çıxın və yenidən daxil olun"
 
 #: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
 #: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
@@ -535,7 +535,8 @@ msgstr "Sistem dili dəyişdirilir, lütfən gözləyin..."
 
 #: ../../langselector1/locale.go:145
 msgid "System language changed, please log out and then log in"
-msgstr "Sistem dili dəyişdirildi, lütfən sistemdən çıxın və yenidən daxil olun"
+msgstr ""
+"Sistem dili dəyişdirildi, lütfən sistemdən çıxın və yenidən daxil olun"
 
 #: ../../langselector1/locale.go:396
 msgid "Failed to change system language, please try later"
@@ -543,8 +544,7 @@ msgstr "Sistem dilinin dəyişdirilməsi baş tutmadı, lütfən sonra cəhd edi
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" sistemin təhlükəsizlik yoxlamasından keçmədi və hal-hazırda işə "
 "salına bilməz"

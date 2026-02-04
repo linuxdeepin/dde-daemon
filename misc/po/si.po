@@ -2,12 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Thejan Rajapakshe <coder.clix@gmail.com>, 2025
 # Roshan Karunarathna <rkvisit@gmail.com>, 2025
-# deepiner, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -15,13 +14,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
-"Language-Team: Sinhala (https://app.transifex.com/linuxdeepin/teams/3617/"
-"si/)\n"
-"Language: si\n"
+"Last-Translator: Roshan Karunarathna <rkvisit@gmail.com>, 2025\n"
+"Language-Team: Sinhala (https://app.transifex.com/linuxdeepin/teams/3617/si/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: si\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -34,8 +32,8 @@ msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"මුරපදයේ ඉංග්‍රීසි අකුරු (සිද්ධි සංවේදී), අංක හෝ විශේෂ සංකේත (~!@#$%^&*()[]{}\\|/?,.<>) "
-"අඩංගු විය යුතුය."
+"මුරපදයේ ඉංග්‍රීසි අකුරු (සිද්ධි සංවේදී), අංක හෝ විශේෂ සංකේත "
+"(~!@#$%^&*()[]{}\\|/?,.<>) අඩංගු විය යුතුය."
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -524,7 +522,8 @@ msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
-"පද්ධති භාෂාව වෙනස් කිරීම සහ අවශ්‍ය භාෂා පැකේජ ස්ථාපනය කරමින් පවතී, කරුණාකර රැඳී සිටින්න ..."
+"පද්ධති භාෂාව වෙනස් කිරීම සහ අවශ්‍ය භාෂා පැකේජ ස්ථාපනය කරමින් පවතී, කරුණාකර "
+"රැඳී සිටින්න ..."
 
 #: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
@@ -540,8 +539,7 @@ msgstr "පද්ධති භාෂාව වෙනස් කිරීමට �
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" සත්‍යාපනය සමත් නොවූ අතර දැන් ක්‍රියාත්මක කළ නොහැක"
 
 #: ../../service_trigger/msg.go:13
@@ -637,7 +635,8 @@ msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
 msgstr ""
-"ජාල කාල සමමුහුර්තකරණය/synchronization සක්‍රීය වීීීම පාලනය කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
+"ජාල කාල සමමුහුර්තකරණය/synchronization සක්‍රීය වීීීම පාලනය කිරීම සඳහා "
+"සත්‍යාපනය අවශ්‍ය වේ"
 
 #: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
@@ -648,8 +647,8 @@ msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
-"RTC-තත් කාල ඔරලෝසුවෙහි දේශීය හෝ UTC-සමායෝත සාර්වත්‍ර වේලාව ගබඩා කරන්නේද යන්න පාලනය "
-"කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
+"RTC-තත් කාල ඔරලෝසුවෙහි දේශීය හෝ UTC-සමායෝත සාර්වත්‍ර වේලාව ගබඩා කරන්නේද යන්න"
+" පාලනය කිරීම සඳහා සත්‍යාපනය අවශ්‍ය වේ"
 
 #: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"

@@ -2,26 +2,24 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Gary Wang <wzc782970009@gmail.com>, 2025
 # Oukiki Saleh <salehoukiki@gmail.com>, 2025
 # monzerissa169 <monzerissa169@yahoo.com>, 2025
+# Mohammed Alotaibi <mx_202@hotmail.com>, 2025
 # ea5b6e8c30cf815b1aed3e5f880f4a98_908896e <4b97d4cb8da17abbf68d43a364316c10_700866>, 2025
-# كريم أولاد الشلحة <herr.linux88@gmail.com>, 2025
 # ahmad nourallah <ahmadnurallah@gmail.com>, 2025
-# Hussain <psvitamine1@gmail.com>, 2025
-# Khodr Abdallah <khodr000@gmail.com>, 2025
+# كريم أولاد الشلحة <herr.linux88@gmail.com>, 2025
+# أشرف بصرى <ashrafmn2008@gmail.com>, 2025
 # Idir Benkhellat <benkhellat.idir@gmail.com>, 2025
 # alibacha19 <alibacha19@gmail.com>, 2025
 # AhmedAyman <ahmedayman321@yahoo.com>, 2025
 # Mahmoud Abdelsalam <mahmoud.ad@tutanota.com>, 2025
 # mo-hd <mo-hd@windowslive.com>, 2025
-# أشرف بصرى <ashrafmn2008@gmail.com>, 2025
-# Mohammed Alotaibi <mx_202@hotmail.com>, 2025
 # MUHAAB SHAAM <muhaab.org@gmail.com>, 2025
 # deepiner, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -30,14 +28,12 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
-"Language-Team: Arabic (https://app.transifex.com/linuxdeepin/teams/3617/"
-"ar/)\n"
-"Language: ar\n"
+"Language-Team: Arabic (https://app.transifex.com/linuxdeepin/teams/3617/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
@@ -554,8 +550,7 @@ msgstr "تعذر تغيير لغة النظام ، يرجى المحاولة ل�
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "\"%s\" لم يجتز تحقق أمان النظام، ولن يمكن تشغيله الآن"
 
 #: ../../service_trigger/msg.go:13

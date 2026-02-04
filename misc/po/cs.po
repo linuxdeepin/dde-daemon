@@ -2,16 +2,16 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Tomáš Hurta, 2025
+# fri, 2025
 # op6464 <op64@seznam.cz>, 2025
 # 李洪武 <lihongwu1987@gmail.com>, 2025
-# Petr Balvín <petrbalvin@petalmail.com>, 2025
 # Pavel Borecki <pavel.borecki@gmail.com>, 2025
-# fri, 2025
+# Petr Balvín <petrbalvin@petalmail.com>, 2025
 # deepiner, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -21,12 +21,11 @@ msgstr ""
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/linuxdeepin/teams/3617/cs/)\n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
@@ -39,8 +38,8 @@ msgid ""
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
 "Je třeba, aby heslo bylo tvořeno písmeny z anglické abecedy (rozlišuje se "
-"velikost písmen), číslicemi a případně ještě speciálními symboly (~!@#$%^&*()"
-"[]{}\\|/?,.<>)"
+"velikost písmen), číslicemi a případně ještě speciálními symboly "
+"(~!@#$%^&*()[]{}\\|/?,.<>)"
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -546,8 +545,7 @@ msgstr "Nepodařilo se změnit jazyk systému, zkuste to znovu později"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "„%s“ neprošlo systémovým ověřením zabezpečení, a proto v tuto chvíli nelze "
 "spustit"

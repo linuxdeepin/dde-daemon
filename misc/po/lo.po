@@ -2,11 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Anousak Souphavanh <anousak@gmail.com>, 2025
 # deepiner, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -16,10 +16,10 @@ msgstr ""
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
 "Language-Team: Lao (https://app.transifex.com/linuxdeepin/teams/3617/lo/)\n"
-"Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: lo\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -519,7 +519,8 @@ msgstr "ຕ້ອງມີການຢັ້ງຢືນເພື່ອປ່ຽ
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
-msgstr "ການປ່ຽນແປງພາສາລະບົບແລະການຕິດຕັ້ງແພັກເກດພາສາທີ່ຕ້ອງການ, ກະລຸນາລໍຖ້າ ..."
+msgstr ""
+"ການປ່ຽນແປງພາສາລະບົບແລະການຕິດຕັ້ງແພັກເກດພາສາທີ່ຕ້ອງການ, ກະລຸນາລໍຖ້າ ..."
 
 #: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
@@ -535,8 +536,7 @@ msgstr "ລົ້ມເຫລວໃນການປ່ຽນພາສາລະບ
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
 #: ../../service_trigger/msg.go:13
@@ -617,7 +617,9 @@ msgstr "ໃຫ້ແນ່ໃຈວ່າ %q ເປີດຢູ່ແລະຢ�
 #: ../../system/bluetooth1/utils_notify.go:74
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
-msgstr "% q ບໍ່ສາມາດເຊື່ອມຕໍ່ກັບ% q ໄດ້ອີກຕໍ່ໄປ. ພະຍາຍາມລືມອຸປະກອນນີ້ແລະຈັບຄູ່ມັນອີກຄັ້ງ."
+msgstr ""
+"% q ບໍ່ສາມາດເຊື່ອມຕໍ່ກັບ% q ໄດ້ອີກຕໍ່ໄປ. "
+"ພະຍາຍາມລືມອຸປະກອນນີ້ແລະຈັບຄູ່ມັນອີກຄັ້ງ."
 
 #: ../../timedate1/manager_format.go:75
 msgid "Space"
@@ -641,7 +643,9 @@ msgstr "ການກວດສອບຄວາມຖືກຕ້ອງແມ່ນ
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
-msgstr "ການກວດສອບຄວາມຖືກຕ້ອງແມ່ນຈໍາເປັນໃນການຄວບຄຸມວ່າ RTC ເກັບຮັກສາເວລາທ້ອງຖິ່ນຫລື UTC"
+msgstr ""
+"ການກວດສອບຄວາມຖືກຕ້ອງແມ່ນຈໍາເປັນໃນການຄວບຄຸມວ່າ RTC ເກັບຮັກສາເວລາທ້ອງຖິ່ນຫລື "
+"UTC"
 
 #: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"

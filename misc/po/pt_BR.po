@@ -2,23 +2,18 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Bruno Gama <brunnogama@gmail.com>, 2025
 # Rubens de Almeida Medeiros <rubens.cejovem@gmail.com>, 2025
-# Cleber Teixeira, 2025
-# 1d1ce5c8357ff895d313b0cce072591e_46a6b98, 2025
+# Paulo Schopf, 2025
 # Raphael Miquelis <raphaelmiquelis@gmail.com>, 2025
-# Felipe André Alves Santos <lip.dre@gmail.com>, 2025
 # RAFAEL GAUNA <rafaelgt.mbin@gmail.com>, 2025
 # JeffWagen <jeff.wagen@yahoo.com>, 2025
-# Paulo Schopf, 2025
-# Flavio Lima <flaviolimaviolinista@gmail.com>, 2025
 # 380125ae2590f93d3e1eff2258abdf75_6979c31, 2025
 # keven doria, 2025
 # deepiner, 2025
-# Alex, 2025
-#
+# Alex W., 2025
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -26,15 +21,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Alex, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/"
-"teams/3617/pt_BR/)\n"
-"Language: pt_BR\n"
+"Last-Translator: Alex W., 2025\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/linuxdeepin/teams/3617/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
@@ -557,8 +550,7 @@ msgstr "Falha ao alterar o idioma do sistema; tente novamente"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" não passou na verificação de segurança e não pode ser executado agora"
 
@@ -669,8 +661,8 @@ msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
-"A autenticação é necessária para controlar se o RTC armazena a hora local ou "
-"UTC"
+"A autenticação é necessária para controlar se o RTC armazena a hora local ou"
+" UTC"
 
 #: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"

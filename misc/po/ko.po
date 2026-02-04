@@ -2,14 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Thomas Sungjin Kang <potopro@gmail.com>, 2025
 # Sangmin Lee <sangminlee7648@gmail.com>, 2025
+# JungHee Lee <daemul72@gmail.com>, 2025
 # Maggie Liu <maggie.liufei@gmail.com>, 2025
-# Junghee Lee <daemul72@gmail.com>, 2025
 # deepiner, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -18,12 +17,11 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: deepiner, 2025\n"
-"Language-Team: Korean (https://app.transifex.com/linuxdeepin/teams/3617/"
-"ko/)\n"
-"Language: ko\n"
+"Language-Team: Korean (https://app.transifex.com/linuxdeepin/teams/3617/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -35,9 +33,7 @@ msgstr "비밀번호를 8자 이상 입력하십시오"
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr ""
-"비밀번호는 영문자(대소문자 구분), 숫자 또는 특수 기호(~!@#$%^&*()[]{}|/?,.<>)"
-"만 포함해야 합니다  "
+msgstr "비밀번호는 영문자(대소문자 구분), 숫자 또는 특수 기호(~!@#$%^&*()[]{}|/?,.<>)만 포함해야 합니다  "
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -525,9 +521,7 @@ msgstr "언어를 전화하려면 인증이 필요합니다"
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
-msgstr ""
-"시스템 언어를 변경하고 필요한 언어 패키지를 설치합니다. 잠시 기다려 주십시"
-"오..."
+msgstr "시스템 언어를 변경하고 필요한 언어 패키지를 설치합니다. 잠시 기다려 주십시오..."
 
 #: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
@@ -543,10 +537,8 @@ msgstr "시스템 언어를 변경하지 못했습니다. 나중에 시도하십
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
-msgstr ""
-"\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 실행할 수 없습니다"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
+msgstr "\"%s\"이(가) 시스템 보안 확인을 통과하지 못하여 지금 실행할 수 없습니다"
 
 #: ../../service_trigger/msg.go:13
 #, c-format

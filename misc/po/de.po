@@ -2,23 +2,21 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Adalbert Saric <saric.adalbert349@gmail.com>, 2025
 # valsu <valsu@hylia.de>, 2025
-# webcrush <chris.plescher@yahoo.de>, 2025
-# corEr <baracus.de@gmail.com>, 2025
-# Antisound <antisound@gmail.com>, 2025
-# Matthäus Beyrle <transifex.com@mmb.entwanderer.de>, 2025
 # Fabian Schillig <xorgmc@gmail.com>, 2025
-# Maggie Liu <maggie.liufei@gmail.com>, 2025
+# corEr <baracus.de@gmail.com>, 2025
 # Marcel Pa <marcelpaluch@me.com>, 2025
-# Timo Kröning, 2025
 # Sebastian Rettig, 2025
+# Antisound <antisound@gmail.com>, 2025
+# Timo Kröning, 2025
+# Maggie Liu <maggie.liufei@gmail.com>, 2025
 # Ettore Atalan <atalanttore@googlemail.com>, 2025
 # deepiner, 2025
 # Keine Werbung, 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -27,12 +25,11 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: Keine Werbung, 2025\n"
-"Language-Team: German (https://app.transifex.com/linuxdeepin/teams/3617/"
-"de/)\n"
-"Language: de\n"
+"Language-Team: German (https://app.transifex.com/linuxdeepin/teams/3617/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -45,8 +42,8 @@ msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"Das Passwort muss Buchstaben (Groß-/Kleinschreibung), Zahlen oder Symbole (~!"
-"@#$%^&*()[]{}\\|/?,.<>) enthalten."
+"Das Passwort muss Buchstaben (Groß-/Kleinschreibung), Zahlen oder Symbole "
+"(~!@#$%^&*()[]{}\\|/?,.<>) enthalten."
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -71,8 +68,7 @@ msgstr "Benutzername muss zwischen 3 und 32 Zeichen lang sein"
 #: ../../accounts1/manager.go:571
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
-"Benutzer \"%s\" bereits vorhanden und dessen Daten wurden synchronisiert"
+msgstr "Benutzer \"%s\" bereits vorhanden und dessen Daten wurden synchronisiert"
 
 #: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
@@ -538,8 +534,8 @@ msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
 msgstr ""
-"Systemsprache wird geändert, fehlende Sprachpakete werden installiert, bitte "
-"warten..."
+"Systemsprache wird geändert, fehlende Sprachpakete werden installiert, bitte"
+" warten..."
 
 #: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
@@ -557,8 +553,7 @@ msgstr ""
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" hat die Sicherheitsüberprüfung des Systems nicht bestanden und kann "
 "jetzt nicht ausgeführt werden"
@@ -678,4 +673,5 @@ msgstr ""
 
 #: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
-msgstr "Zum Festlegen der System-Zeitzone ist eine Authentifizierung notwendig"
+msgstr ""
+"Zum Festlegen der System-Zeitzone ist eine Authentifizierung notwendig"

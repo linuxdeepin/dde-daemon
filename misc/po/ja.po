@@ -2,9 +2,8 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Pedro Lopes <pedrocvl112358@gmail.com>, 2025
 # Katabame Miaya <katabamia@gmail.com>, 2025
 # Maggie Liu <maggie.liufei@gmail.com>, 2025
 # Ryo Nakano, 2025
@@ -14,7 +13,7 @@
 # MMP 0 <mmmmpp0@yahoo.co.jp>, 2025
 # deepiner, 2025
 # Keita Kunishi (Keitan924111), 2025
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -23,12 +22,11 @@ msgstr ""
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
 "Last-Translator: Keita Kunishi (Keitan924111), 2025\n"
-"Language-Team: Japanese (https://app.transifex.com/linuxdeepin/teams/3617/"
-"ja/)\n"
-"Language: ja\n"
+"Language-Team: Japanese (https://app.transifex.com/linuxdeepin/teams/3617/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -41,8 +39,7 @@ msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
 msgstr ""
-"パスワードには英字 (大文字と小文字を区別します)、数字、特殊記号 (~!@#$%^&*()"
-"[]{}\\|/?,.<>) 以外の文字を使用できません"
+"パスワードには英字 (大文字と小文字を区別します)、数字、特殊記号 (~!@#$%^&*()[]{}\\|/?,.<>) 以外の文字を使用できません"
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -546,8 +543,7 @@ msgstr "システム言語を変更できませんでした。もう一度お試
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
 #: ../../service_trigger/msg.go:13

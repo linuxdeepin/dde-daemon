@@ -2,17 +2,17 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
+# transifex deepin <transifex@deepin.com>, 2025
 # 李洪武 <lihongwu1987@gmail.com>, 2025
 # Michael Jay Tong <michaeljayt@gmail.com>, 2025
+# Maggie Liu <maggie.liufei@gmail.com>, 2025
 # Hualet Wang (Hualet Wang) <mr.asianwang@gmail.com>, 2025
-# transifex deepin <transifex@deepin.com>, 2025
 # electricface <songwentai@linuxdeepin.com>, 2025
 # cxbii <mycxbii@gmail.com>, 2025
-# Maggie Liu <maggie.liufei@gmail.com>, 2025
-# deepiner, 2025
-#
+# deepiner, 2026
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -20,13 +20,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/linuxdeepin/"
-"teams/3617/zh_CN/)\n"
-"Language: zh_CN\n"
+"Last-Translator: deepiner, 2026\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/linuxdeepin/teams/3617/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../../accounts1/checkers/password.go:38
@@ -38,8 +37,7 @@ msgstr "请输入长度不小于8位的密码"
 msgid ""
 "The password must contain English letters (case-sensitive), numbers or "
 "special symbols (~!@#$%^&*()[]{}\\|/?,.<>)"
-msgstr ""
-"密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
+msgstr "密码必须包含英文（区分大小写）、数字或特殊符号（~!@#$%^&*()[]{}\\|/?,.<>）"
 
 #: ../../accounts1/checkers/username.go:49
 msgid "Username cannot be empty"
@@ -543,8 +541,7 @@ msgstr "系统语言切换失败，请稍后重试"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr "“%s”没有通过系统安全验证，无法运行"
 
 #: ../../service_trigger/msg.go:13
@@ -552,9 +549,7 @@ msgstr "“%s”没有通过系统安全验证，无法运行"
 msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
-msgstr ""
-"\"%s\"没有通过系统安全验证，无法运行，请前往安全中心-安全工具-应用安全进行调"
-"整"
+msgstr "\"%s\"没有通过系统安全验证，无法运行，请前往安全中心-安全工具-应用安全进行调整"
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"

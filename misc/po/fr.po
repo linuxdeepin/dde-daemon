@@ -2,24 +2,22 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
+# zwpwjwtz <zwpwjwtz@126.com>, 2025
+# Sami G.-D., 2025
 # Charles Monzat <c.monzat@laposte.net>, 2025
 # FFXP <root@ironmail.fr>, 2025
-# zwpwjwtz <zwpwjwtz@126.com>, 2025
 # Kristien <kristien@mailo.com>, 2025
-# Aestan <anthony.margerand@protonmail.com>, 2025
 # Ldm Public <ldmpub@gmail.com>, 2025
+# n1coc4cola <n1coc4cola@gmail.com>, 2025
 # Tristan Denni <tristan.denni@viacesi.fr>, 2025
 # ba56da5c479245883255d97580e861b5_327de87 <cc1517672f7d7ecc8d2a76b655e9f30b_134975>, 2025
-# Jean-Philippe Paumier <paumierj@hotmail.com>, 2025
-# n1coc4cola <n1coc4cola@gmail.com>, 2025
-# roxfr <roxfr@outlook.fr>, 2025
-# Sami G.-D., 2025
+# roxfr, 2025
 # deepiner, 2025
 # Lisa Cintosh, 2025
-# Sykhasamann, 2025
-#
+# Sykhasamann, 2026
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -27,15 +25,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Sykhasamann, 2025\n"
-"Language-Team: French (https://app.transifex.com/linuxdeepin/teams/3617/"
-"fr/)\n"
-"Language: fr\n"
+"Last-Translator: Sykhasamann, 2026\n"
+"Language-Team: French (https://app.transifex.com/linuxdeepin/teams/3617/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
@@ -459,7 +455,7 @@ msgstr "Alterner les fenêtres en sens inverse"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "Activer le menu fenêtre"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
@@ -561,8 +557,7 @@ msgstr ""
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 "\"%s\" n'a pas passé la vérification de sécurité du système et ne peut pas "
 "s'exécuter maintenant"
@@ -676,7 +671,8 @@ msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
 msgstr ""
-"Identification requise pour déterminer si le RTC stocke l'heure locale ou UTC"
+"Identification requise pour déterminer si le RTC stocke l'heure locale ou "
+"UTC"
 
 #: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"

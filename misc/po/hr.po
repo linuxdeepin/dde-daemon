@@ -2,31 +2,29 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# dpnlin, 2020
-# gogo <trebelnik2@gmail.com>, 2020
-# 3e282d1ae4897f0bb79601171df0b2ff, 2020
-# Vlado V. <vlays@mail.com>, 2020
-# deepiner, 2020
-# Ivica  Kolić <ikoli@yahoo.com>, 2024
-#
+# dpnlin, 2025
+# Vlado V. <vlays@mail.com>, 2025
+# 3e282d1ae4897f0bb79601171df0b2ff, 2025
+# Ivica  Kolić <ikoli@yahoo.com>, 2025
+# gogo <trebelnik2@gmail.com>, 2025
+# deepiner, 2026
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
-"PO-Revision-Date: 2020-05-29 07:18+0000\n"
-"Last-Translator: Ivica  Kolić <ikoli@yahoo.com>, 2024\n"
-"Language-Team: Croatian (https://app.transifex.com/linuxdeepin/teams/3617/"
-"hr/)\n"
-"Language: hr\n"
+"PO-Revision-Date: 2025-04-25 07:00+0000\n"
+"Last-Translator: deepiner, 2026\n"
+"Language-Team: Croatian (https://app.transifex.com/linuxdeepin/teams/3617/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #: ../../accounts1/checkers/password.go:38
 msgid "Please enter a password not less than 8 characters"
@@ -71,17 +69,14 @@ msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 
 #: ../../audio1/audio.go:259
-#, fuzzy
 msgid "Failed to change Audio Server, please try later"
 msgstr "Neuspjela promjena jezika sustava, molim pokušajte ponovno kasnije"
 
 #: ../../audio1/audio.go:295
-#, fuzzy
 msgid "Changing Audio Server, please wait..."
 msgstr "Mijenjam jezik sustava, molim pričekajte..."
 
 #: ../../audio1/audio.go:328
-#, fuzzy
 msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 "Jezik sustava je promijenjen, molim vas odjavite se i zatim se ponovno "
@@ -231,12 +226,10 @@ msgid "Pair"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:39
-#, fuzzy
 msgid "Maximize Window"
 msgstr "Uvećaj prozor"
 
 #: ../../gesture1/gesture_action.go:40
-#, fuzzy
 msgid "Restore Window"
 msgstr "Vrati prozor"
 
@@ -261,7 +254,6 @@ msgid "Switch to previous desktop"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:46
-#, fuzzy
 msgid "Switch to the next desktop"
 msgstr "Prebaci na lijevi radni prostor "
 
@@ -271,12 +263,10 @@ msgid "Show desktop"
 msgstr "Prikaži radnu površinu"
 
 #: ../../gesture1/gesture_action.go:48
-#, fuzzy
 msgid "Hide desktop"
 msgstr "Prikaži radnu površinu"
 
 #: ../../gesture1/gesture_action.go:49
-#, fuzzy
 msgid "Show/hide launcher"
 msgstr "Prikaži/Sakrij dok"
 
@@ -297,12 +287,10 @@ msgid "Show/hide grand search"
 msgstr ""
 
 #: ../../gesture1/gesture_action.go:54
-#, fuzzy
 msgid "Show/hide notification center"
 msgstr "Centar obavijesti"
 
 #: ../../gesture1/gesture_action.go:55
-#, fuzzy
 msgid "Disable"
 msgstr "Onemogući Touchpad"
 
@@ -559,8 +547,7 @@ msgstr "Neuspjela promjena jezika sustava, molim pokušajte ponovno kasnije"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
-msgid ""
-"\"%s\" did not pass the system security verification, and cannot run now"
+msgid "\"%s\" did not pass the system security verification, and cannot run now"
 msgstr ""
 
 #: ../../service_trigger/msg.go:13
