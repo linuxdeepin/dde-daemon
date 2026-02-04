@@ -152,6 +152,15 @@ func (m *Manager) DeleteUser(sender dbus.Sender,
 		return dbusutil.ToError(err)
 	}
 
+	// 删除用户的 dconfig 数据
+	if m.cfgManager != nil {
+		id, _ := strconv.Atoi(user.Uid)
+		err = m.cfgManager.RemoveUserData(0, uint32(id))
+		if err != nil {
+			logger.Warningf("RemoveUserData failed for uid %s: %v", user.Uid, err)
+		}
+	}
+
 	if m.isDomainUser(user.Uid) {
 		id, _ := strconv.Atoi(user.Uid)
 
