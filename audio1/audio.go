@@ -813,11 +813,10 @@ func (a *Audio) init() error {
 	go a.handleStateChanged()
 	logger.Debug("init done")
 
-	if !a.autoSwitchOutputPort() {
+	if !a.autoSwitchOutputPort() || a.defaultSink != nil {
 		a.resumeSinkConfig(a.defaultSink)
 	}
-
-	if !a.autoSwitchInputPort() {
+	if !a.autoSwitchInputPort() || a.defaultSource != nil {
 		a.resumeSourceConfig(a.defaultSource)
 	}
 
