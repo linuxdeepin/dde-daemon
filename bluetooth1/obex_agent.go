@@ -455,11 +455,12 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 			logger.Warning("failed to send notify:", err)
 		}
 	} else {
+		notify.CloseNotification(0, replaceID)
 		actions = []string{"_view", gettext.Tr("View")}
 		hints := map[string]dbus.Variant{"x-deepin-action-_view": dbus.MakeVariant("dde-file-manager,--show-item," + filename)}
 		notifyID, err = notify.Notify(0,
 			gettext.Tr("dde-control-center"),
-			replaceID,
+			0,
 			notifyIconBluetoothConnected,
 			fmt.Sprintf(gettext.Tr("You have received files from %q successfully"), device),
 			gettext.Tr("Done"),
@@ -484,9 +485,10 @@ func (a *obexAgent) notifyFailed(notify notifications.Notifications, replaceID u
 		body = gettext.Tr("Bluetooth connection failed")
 	}
 
+	notify.CloseNotification(0, replaceID)
 	notifyID, err := notify.Notify(0,
 		gettext.Tr("dde-control-center"),
-		replaceID,
+		0,
 		notifyIconBluetoothConnectFailed,
 		summary,
 		body,
