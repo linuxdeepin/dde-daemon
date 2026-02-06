@@ -1,3 +1,27 @@
+dde-daemon (6.1.75) unstable; urgency=medium
+
+  * fix: fix audio resume logic for default sink/source
+  * fix: fix sound effect process exit and optimize bluetooth
+    notifications
+  * i18n: Updates for project Deepin Desktop Environment (#1025)
+  * fix: remove user dconfig data when deleting user
+  * i18n: Updates for project Deepin Desktop Environment (#1020)
+  * fix: 调整蓝牙文件传输通知的文案
+  * fix(display): Touch screen config becomes empty after
+    unplugging/replugging and canceling mapping dialog
+  * fix(keybinding): register both Super_L and Super_R when adding Super
+    key shortcut
+  * fix: handle modifier key release events properly
+  * fix(systeminfo): Remove CPU count and enhance frequency logic
+  * fix: 解决系统触发黑屏时, 先显示锁屏再黑屏的问题
+  * chore: update deepin dependency versions
+  * feat: add dedicated maximize and restore window gestures
+  * fix(bluetooth): optimize file transfer cancellation mechanism and
+    notification handling
+  * fix: 解决grub2通过x11检测分辨率失败的问题
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 06 Feb 2026 09:27:52 +0800
+
 dde-daemon (6.1.74) unstable; urgency=medium
 
   * Fix build failure on Go 1.24.6
