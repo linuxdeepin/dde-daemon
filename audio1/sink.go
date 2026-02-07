@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -100,22 +100,23 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 		logger.Warning(err1)
 		return dbusutil.ToError(err1)
 	}
-
-	if value == 0 {
-		value = 0.001
-		s.SetMute(true)
-	}
-	s.PropsMu.Lock()
-	cv := s.cVolume.SetAvg(value)
-	s.PropsMu.Unlock()
-	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
-
 	card, err2 := s.audio.cards.get(s.Card)
 	if err2 != nil {
 		logger.Warning(err2)
 	} else {
 		GetConfigKeeper().SetVolume(card, s.ActivePort.Name, value)
 	}
+
+	if value == 0 {
+		value = 0.001
+		s.setMute(true)
+	} else {
+		s.SetMute(false)
+	}
+	s.PropsMu.Lock()
+	cv := s.cVolume.SetAvg(value)
+	s.PropsMu.Unlock()
+	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 
 	if isPlay {
 		s.playFeedback()
@@ -222,6 +223,10 @@ func (s *Sink) setVBF(v, b, f float64) *dbus.Error {
 	}
 
 	s.PropsMu.RLock()
+	if v == 0 {
+		v = 0.001
+		s.setMute(true)
+	}
 	cv := s.cVolume.SetAvg(v)
 	cv = cv.SetBalance(s.channelMap, b)
 	cv = cv.SetFade(s.channelMap, f)
@@ -235,14 +240,24 @@ func (s *Sink) setVBF(v, b, f float64) *dbus.Error {
 func (s *Sink) SetMute(value bool) *dbus.Error {
 	logger.Infof("dbus call SetMute with value %t, the sink name is %s", value, s.Name)
 
+	if err := s.setMute(value || s.Volume == 0); err != nil {
+		return dbusutil.ToError(err)
+
+	}
+	GetConfigKeeper().SetMuteOutput(value)
+	return nil
+}
+
+func (s *Sink) setMute(value bool) error {
 	err := s.CheckPort()
 	if err != nil {
 		logger.Warning(err.Body...)
 		return err
 	}
-
+	if !s.setPropMute(value) {
+		return nil
+	}
 	s.audio.context().SetSinkMuteByIndex(s.index, value)
-	GetConfigKeeper().SetMuteOutput(value)
 
 	if !value {
 		s.playFeedback()
@@ -313,9 +328,4 @@ func (s *Sink) playFeedback() {
 	name := s.Name
 	s.PropsMu.RUnlock()
 	playFeedbackWithDevice(name)
-}
-
-func (s *Sink) setMute(v bool) {
-	logger.Debugf("Sink #%d setMute %v", s.index, v)
-	s.audio.context().SetSinkMuteByIndex(s.index, v)
 }
