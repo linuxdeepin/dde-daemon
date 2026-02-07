@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -788,11 +788,10 @@ func (a *Audio) init() error {
 	}
 	// 加载module-null-sink，噪音抑制时，将sink-input端口Echo-Cancel Playback引入到null-sink
 	a.LoadNullSinkModule()
+	GetConfigKeeper().Load()
 
 	// 更新本地数据
 	a.refresh()
-	GetConfigKeeper().Load()
-
 	logger.Debug("init cards")
 	a.PropsMu.Lock()
 	a.setPropCards(a.cards.string())
@@ -813,17 +812,7 @@ func (a *Audio) init() error {
 	go a.handleStateChanged()
 	logger.Debug("init done")
 
-	if !a.autoSwitchOutputPort() || a.defaultSink != nil {
-		a.resumeSinkConfig(a.defaultSink)
-	}
-	if !a.autoSwitchInputPort() || a.defaultSource != nil {
-		a.resumeSourceConfig(a.defaultSource)
-	}
-
-	a.moveSinkInputsToSink(nil)
-
-	// 蓝牙支持的模式
-	a.refreshBluetoothOpts()
+	a.autoSwitchPort()
 
 	return nil
 }
@@ -1245,8 +1234,13 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 	}
 
 	logger.Debugf("set %v mute %v", s.Name, GetConfigKeeper().Mute.MuteOutput || !portConfig.Enabled)
-	s.setMute(GetConfigKeeper().Mute.MuteOutput || !portConfig.Enabled)
-	s.setMono(a.Mono)
+	s.setMute(GetConfigKeeper().Mute.MuteOutput || portConfig.Volume == 0)
+	// 即将切换通道，就不要设置单声道了，避免触发多次切换
+	auto, _, _ := a.checkAutoSwitchOutputPort()
+	if !auto {
+		s.setMono(a.Mono)
+	}
+
 }
 
 func (a *Audio) resumeSourceConfig(s *Source) {
@@ -1369,9 +1363,7 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 	defaultSinkPath := sink.getPath()
 	logger.Debugf("set default sink %s", defaultSinkPath)
 
-	// 虚拟通道不需要恢复配置
-	auto, _, _ := a.checkAutoSwitchOutputPort()
-	if isPhysicalDevice(sinkName) && !auto {
+	if isPhysicalDevice(sinkName) {
 		a.resumeSinkConfig(sink)
 	}
 
