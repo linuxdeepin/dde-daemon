@@ -190,16 +190,20 @@ func (pm *PriorityManager) SetTheFirstPort(cardName string, portName string, dir
 	pm.Save()
 }
 
-func (pm *PriorityManager) GetNextPort(direction int, pos *Position) (*PriorityPort, *Position) {
-	switch direction {
-	case pulse.DirectionSink:
-		if len(pm.Output.Ports) > 0 {
-			return pm.Output.GetNextPort(pm.availablePort, pos)
+func (pm *PriorityManager) LoopAvaiablePort(direction int, pos *Position) (*PriorityPort, *Position) {
+	if pos == nil {
+		return pm.GetTheFirstPort(direction)
+	} else {
+		switch direction {
+		case pulse.DirectionSink:
+			if len(pm.Output.Ports) > 0 {
+				return pm.Output.GetNextPort(pm.availablePort, pos)
+			}
+		case pulse.DirectionSource:
+			if len(pm.Input.Ports) > 0 {
+				return pm.Input.GetNextPort(pm.availablePort, pos)
+			}
 		}
-	case pulse.DirectionSource:
-		if len(pm.Input.Ports) > 0 {
-			return pm.Input.GetNextPort(pm.availablePort, pos)
-		}
+		return nil, &Position{tp: PortTypeInvalid, index: -1}
 	}
-	return nil, &Position{tp: PortTypeInvalid, index: -1}
 }
