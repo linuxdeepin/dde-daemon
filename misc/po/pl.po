@@ -169,7 +169,7 @@ msgstr "Anuluj"
 
 #: ../../bluetooth1/obex_agent.go:447
 msgid "Receiving %[1]q"
-msgstr ""
+msgstr "Odbieranie %[1]q"
 
 #: ../../bluetooth1/obex_agent.go:455
 msgid "View"
