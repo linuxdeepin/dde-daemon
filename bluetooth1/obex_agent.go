@@ -595,7 +595,7 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 		a.b.setPropTransportable(true)
 
 		if reason == CancelReasonExpired {
-			a.notifyReceiveFileTimeout(notify, notifyID, filename)
+			a.notifyReceiveFileTimeout(notify, 0, filename)
 		}
 	}
 
