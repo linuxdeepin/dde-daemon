@@ -14,7 +14,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync"
 	"strings"
+	"time"
 
 	"github.com/linuxdeepin/dde-api/dxinput"
 	"github.com/linuxdeepin/dde-api/dxinput/common"
@@ -43,12 +45,20 @@ type Keyboards []*dxinput.Keyboard
 
 var (
 	_devInfos     common.DeviceInfos
+	_devInfosAt   time.Time
 	_mouseInfos   Mouses
 	_tpadInfos    Touchpads
 	_wacomInfos   dxWacoms
 	_keyboardnfos Keyboards
 	_gudevClient  = gudev.NewClient([]string{"input"})
+
+	_deviceChangeMu        sync.Mutex
+	_deviceChangeProcessMu sync.Mutex
+	_deviceChangeTimer     *time.Timer
 )
+
+const deviceChangeDebounce = 400 * time.Millisecond
+const deviceInfoCacheTTL = 2 * time.Second
 
 func startDeviceListener() {
 	C.start_device_listener()
@@ -61,6 +71,19 @@ func endDeviceListener() {
 //export handleDeviceChanged
 func handleDeviceChanged() {
 	logger.Debug("Device changed")
+	_deviceChangeMu.Lock()
+	defer _deviceChangeMu.Unlock()
+
+	if _deviceChangeTimer != nil {
+		_deviceChangeTimer.Stop()
+	}
+
+	_deviceChangeTimer = time.AfterFunc(deviceChangeDebounce, processDeviceChanged)
+}
+
+func processDeviceChanged() {
+	_deviceChangeProcessMu.Lock()
+	defer _deviceChangeProcessMu.Unlock()
 
 	getDeviceInfos(true)
 
@@ -88,8 +111,13 @@ func handleDeviceChanged() {
 }
 
 func getDeviceInfos(force bool) common.DeviceInfos {
+	if len(_devInfos) != 0 && force && !_devInfosAt.IsZero() && time.Since(_devInfosAt) < deviceInfoCacheTTL {
+		return _devInfos
+	}
+
 	if force || len(_devInfos) == 0 {
 		_devInfos = dxutils.ListDevice()
+		_devInfosAt = time.Now()
 	}
 
 	return _devInfos
@@ -182,7 +210,7 @@ func getMouseInfos(force bool) Mouses {
 			// 若 phys 与某个触摸板的 phys 相同，说明是同一个设备（触摸板），忽略此鼠标设备
 			found := false
 			for _, touchpad := range _tpadInfos {
-				logger.Warning(touchpad)
+				logger.Debug(touchpad)
 				if touchpad.phys == mouse.phys {
 					found = true
 					break
