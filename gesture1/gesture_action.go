@@ -6,8 +6,9 @@ package gesture1
 
 import (
 	"fmt"
-	"github.com/linuxdeepin/go-lib/gettext"
 	"os/exec"
+
+	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 type actionInfo struct {
@@ -35,8 +36,8 @@ const (
 
 func (m *Manager) initActions() {
 	actions = []*actionInfo{
-		{"MaximizeWindow", gettext.Tr("Maximize Window"), m.doToggleMaximize},
-		{"RestoreWindow", gettext.Tr("Restore Window"), m.doToggleMaximize},
+		{"MaximizeWindow", gettext.Tr("Maximize Window"), m.doMaximizeActiveWindow},
+		{"RestoreWindow", gettext.Tr("Restore Window"), m.doUnMaximizeActiveWindow},
 		{"SplitWindowLeft", gettext.Tr("Current Window Left Split"), m.doTileActiveWindowLeft},
 		{"SplitWindowRight", gettext.Tr("Current Window Right Split"), m.doTileActiveWindowRight},
 		{"ShowMultiTask", gettext.Tr("Show multitasking view"), m.doShowMultiTasking},
@@ -107,8 +108,12 @@ func (m *Manager) doHandle4Or5FingersSwipeDown() error {
 	return nil
 }
 
-func (m *Manager) doToggleMaximize() error {
-	return m.wm.PerformAction(0, wmActionToggleMaximize)
+func (m *Manager) doMaximizeActiveWindow() error {
+	return m.wm.MaximizeActiveWindow(0)
+}
+
+func (m *Manager) doUnMaximizeActiveWindow() error {
+	return m.wm.UnMaximizeActiveWindow(0)
 }
 
 func (m *Manager) doMinimize() error {
@@ -164,8 +169,7 @@ func (m *Manager) doToggleLaunchpad() error {
 }
 
 func (m *Manager) doXdotoolsMouseDown() error {
-	cmd := "xdotool mousedown 3"
-	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
+	out, err := exec.Command("xdotool", "mousedown", "3").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("%s", string(out))
 	}
@@ -173,8 +177,7 @@ func (m *Manager) doXdotoolsMouseDown() error {
 }
 
 func (m *Manager) doXdotoolsMouseUp() error {
-	cmd := "xdotool mousedown 3"
-	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
+	out, err := exec.Command("xdotool", "mouseup", "3").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("%s", string(out))
 	}
@@ -215,4 +218,13 @@ func (m *Manager) doToggleGrandSearch() error {
 func (m *Manager) doToggleNotifications() error {
 	cmd := "dbus-send --print-reply --dest=org.deepin.dde.Osd1 /org/deepin/dde/shell/notification/center org.deepin.dde.shell.notification.center.Toggle"
 	return exec.Command("/bin/bash", "-c", cmd).Run()
+}
+
+func doActionByName(name string) error {
+	for _, action := range actions {
+		if action.Name == name {
+			return action.fn()
+		}
+	}
+	return fmt.Errorf("action %s not found", name)
 }

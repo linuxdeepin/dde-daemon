@@ -6,8 +6,6 @@ package audio
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
 	"time"
 
 	dbus "github.com/godbus/dbus/v5"
@@ -36,76 +34,16 @@ func (a *Audio) saveConfig() {
 }
 
 func (a *Audio) doSaveConfig() {
-	var info = config{
-		Profiles: make(map[string]string),
-	}
-
 	ctx := a.context()
 	if ctx == nil {
 		logger.Warning("failed to save config, ctx is nil")
 		return
 	}
-
-	for _, card := range ctx.GetCardList() {
-		info.Profiles[card.Name] = card.ActiveProfile.Name
-	}
-
-	for _, sinkInfo := range ctx.GetSinkList() {
-		if a.getDefaultSinkName() != sinkInfo.Name {
-			continue
-		}
-
-		info.Sink = sinkInfo.Name
-		info.SinkPort = sinkInfo.ActivePort.Name
-		info.SinkVolume = sinkInfo.Volume.Avg()
-		break
-	}
-
-	for _, sourceInfo := range ctx.GetSourceList() {
-		if a.getDefaultSourceName() != sourceInfo.Name {
-			continue
-		}
-
-		info.Source = sourceInfo.Name
-		info.SourcePort = sourceInfo.ActivePort.Name
-		info.SourceVolume = sourceInfo.Volume.Avg()
-		break
-	}
-	_, err := readConfig()
-	if err != nil && !os.IsNotExist(err) {
-		logger.Warning(err)
-	}
-	if len(info.SourcePort) != 0 {
-		err = saveConfig(&info)
-		if err != nil {
-			logger.Warning("save config file failed:", info.string(), err)
-		}
-	}
-	err = a.saveAudioState()
+	err := a.saveAudioState()
 	if err != nil {
 		logger.Warning(err)
 	}
 
-}
-
-func (a *Audio) setReduceNoise(enable bool) error {
-	logger.Debug("set reduce noise :", enable)
-	var err error
-	var out []byte
-	if enable {
-		sourceName := a.getDefaultSourceName()
-		logger.Debugf("echoCancelEnable.sh --source_master=%s", sourceName)
-		out, err = exec.Command("/usr/share/dde-daemon/audio/echoCancelEnable.sh", "--source_master="+sourceName).CombinedOutput()
-		if err != nil {
-			logger.Warningf("failed to enable reduce noise %v %s", err, out)
-		}
-	} else {
-		out, err = exec.Command("pactl", "unload-module", "module-echo-cancel").CombinedOutput()
-		if err != nil {
-			logger.Warningf("failed to disable reduce noise %v %s", err, out)
-		}
-	}
-	return err
 }
 
 func (a *Audio) saveAudioState() error {

@@ -19,6 +19,56 @@ linkJavaFallbackFont () {
     fi
 }
 
+# 设置/etc/lightdm/deepin/和/var/lib/lightdm/lightdm-deepin-greeter目录权限，让lightdm组可以写入
+setupLightdmDeepinPermissions () {
+    # 检查 lightdm 用户组是否存在
+    if ! getent group lightdm >/dev/null 2>&1; then
+        return 0
+    fi
+    
+    # 设置 /etc/lightdm/deepin/ 目录权限
+    local etc_dir_path="/etc/lightdm/deepin/"
+    if [ ! -d "$etc_dir_path" ]; then
+        mkdir -p "$etc_dir_path"
+    fi
+    setupDirectoryPermissions "$etc_dir_path"
+    
+    # 特别处理 /var/lib/lightdm/lightdm-deepin-greeter/ 目录
+    local greeter_dir_path="/var/lib/lightdm/lightdm-deepin-greeter/"
+    setupDirectoryPermissions "$greeter_dir_path"
+}
+
+# 设置单个目录的权限
+setupDirectoryPermissions () {
+    local dir_path="$1"
+    
+    if [ ! -d "$dir_path" ]; then
+        # 目录不存在，以root权限创建并设置正确的权限
+        mkdir -p "$dir_path"
+        chown root:lightdm "$dir_path"
+        chmod 775 "$dir_path"
+        # echo "Created $dir_path with lightdm group permissions"
+    else
+        # 目录存在，检查当前所有者
+        local current_owner=$(stat -c %U "$dir_path")
+        local current_group=$(stat -c %G "$dir_path")
+        
+        # 如果所有者不是lightdm用户或组，则修正权限
+        if [ "$current_owner" != "lightdm" ] || [ "$current_group" != "lightdm" ]; then
+            chown root:lightdm "$dir_path"
+            chmod 775 "$dir_path"
+            # echo "Fixed permissions for $dir_path to lightdm group"
+        fi
+    fi
+    
+    # 设置目录中所有文件的权限
+    if [ -d "$dir_path" ]; then
+        find "$dir_path" -type f -exec chown root:lightdm {} \;
+        find "$dir_path" -type f -exec chmod 664 {} \;
+        # echo "Set file permissions in $dir_path for lightdm group"
+    fi
+}
+
 prepareGfxmodeDetect () {
     [ -f /etc/grub.d/35_deepin_gfxmode ] && rm /etc/grub.d/35_deepin_gfxmode
     if echo $arch | grep -q ^mips; then
@@ -43,6 +93,7 @@ case "$1" in
     fi
     linkJavaFallbackFont
     prepareGfxmodeDetect
+    setupLightdmDeepinPermissions
     ;;
     triggered)
     linkJavaFallbackFont

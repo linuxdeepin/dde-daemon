@@ -56,7 +56,7 @@ func (service *Service) getDBusMatchRule() string {
 
 func (service *Service) check() error {
 	if service.Monitor.Type != "DBus" {
-		return fmt.Errorf("unknown Monitor.Type %q" + service.Monitor.Type)
+		return fmt.Errorf("unknown Monitor.Type %q", service.Monitor.Type)
 	}
 
 	if service.Monitor.Type == "DBus" {

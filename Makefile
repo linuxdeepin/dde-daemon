@@ -4,6 +4,15 @@ GOPKG_PREFIX = github.com/linuxdeepin/dde-daemon
 GOBUILD = go build $(GO_BUILD_FLAGS)
 export GOPATH=$(shell go env GOPATH)
 
+# 构建标签控制
+# 设置 BUILD_TAGS 环境变量来控制模块编译
+# 默认不编译scheduler模块，只有在Deepin/UOS平台或手动设置时才编译
+BUILD_TAGS ?= noscheduler
+
+ifneq ($(BUILD_TAGS),)
+    GOBUILD_TAGS = -tags $(BUILD_TAGS)
+endif
+
 ifneq (${shell uname -m}, mips64)
     GOBUILD_OPTIONS = -ldflags '-linkmode=external -extldflags "-pie"'
 endif
@@ -13,8 +22,6 @@ TEST = \
     ${GOPKG_PREFIX}/accounts1/checkers \
     ${GOPKG_PREFIX}/accounts1/logined \
     ${GOPKG_PREFIX}/accounts1/users \
-    ${GOPKG_PREFIX}/appinfo \
-    ${GOPKG_PREFIX}/apps1 \
     ${GOPKG_PREFIX}/audio1 \
     ${GOPKG_PREFIX}/bin/backlight_helper \
     ${GOPKG_PREFIX}/bin/backlight_helper/ddcci \
@@ -46,24 +53,18 @@ TEST = \
     ${GOPKG_PREFIX}/image_effect1 \
     ${GOPKG_PREFIX}/inputdevices1 \
     ${GOPKG_PREFIX}/inputdevices1/iso639 \
-    ${GOPKG_PREFIX}/iw \
     ${GOPKG_PREFIX}/keybinding1 \
     ${GOPKG_PREFIX}/keybinding1/shortcuts \
     ${GOPKG_PREFIX}/keybinding1/util \
     ${GOPKG_PREFIX}/langselector1 \
     ${GOPKG_PREFIX}/lastore1 \
     ${GOPKG_PREFIX}/loader \
-    ${GOPKG_PREFIX}/network1 \
-    ${GOPKG_PREFIX}/network1/nm \
-    ${GOPKG_PREFIX}/network1/nm_generator \
-    ${GOPKG_PREFIX}/network1/proxychains \
     ${GOPKG_PREFIX}/screenedge1 \
     ${GOPKG_PREFIX}/screensaver1 \
     ${GOPKG_PREFIX}/service_trigger \
     ${GOPKG_PREFIX}/session/common \
     ${GOPKG_PREFIX}/session/eventlog \
     ${GOPKG_PREFIX}/session/power1 \
-    ${GOPKG_PREFIX}/session/uadpagent1 \
     ${GOPKG_PREFIX}/sessionwatcher1 \
     ${GOPKG_PREFIX}/soundeffect1 \
     ${GOPKG_PREFIX}/system/airplane_mode1 \
@@ -74,9 +75,7 @@ TEST = \
     ${GOPKG_PREFIX}/system/inputdevices1 \
     ${GOPKG_PREFIX}/system/keyevent1 \
     ${GOPKG_PREFIX}/system/lang \
-    ${GOPKG_PREFIX}/system/network1 \
     ${GOPKG_PREFIX}/system/power1 \
-    ${GOPKG_PREFIX}/system/power_manager1 \
     ${GOPKG_PREFIX}/system/resource_ctl \
     ${GOPKG_PREFIX}/system/scheduler \
     ${GOPKG_PREFIX}/system/swapsched1 \
@@ -89,7 +88,6 @@ TEST = \
     ${GOPKG_PREFIX}/x_event_monitor1 \
     ${GOPKG_PREFIX}/bin/default-file-manager \
     ${GOPKG_PREFIX}/display1 \
-    ${GOPKG_PREFIX}/xsettings1
     #${GOPKG_PREFIX}/timedate1/zoneinfo \
 
 BINARIES =  \
@@ -117,7 +115,7 @@ prepare:
 	@ln -snf ../../../.. ${GOPATH_DIR}/src/${GOPKG_PREFIX};
 
 out/bin/%: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@ ${GOBUILD_OPTIONS} ${GOPKG_PREFIX}/bin/${@F}
+	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" ${GOBUILD} -o $@ ${GOBUILD_OPTIONS} ${GOBUILD_TAGS} ${GOPKG_PREFIX}/bin/${@F}
 
 out/bin/desktop-toggle: bin/desktop-toggle/main.c
 	gcc $^ $(shell pkg-config --cflags --libs x11) $(CFLAGS) -o $@
@@ -131,7 +129,20 @@ translate: $(addsuffix /LC_MESSAGES/dde-daemon.mo, $(addprefix out/locale/, ${LA
 pot:
 	deepin-update-pot misc/po/locale_config.ini
 
-POLICIES=accounts grub2
+update-po:
+	for po in misc/po/*.po; do \
+		echo "Updating $$po..."; \
+		msgmerge --update --no-fuzzy-matching "$$po" misc/po/dde-daemon.pot; \
+	done
+
+clean-po:
+	for po in misc/po/*.po; do \
+		echo "Cleaning obsolete entries from $$po..."; \
+		msgattrib --no-obsolete "$$po" -o "$$po.tmp"; \
+		mv "$$po.tmp" "$$po"; \
+	done
+
+POLICIES=accounts grub2 daemon.system
 ts:
 	for i in $(POLICIES); do \
 		deepin-policy-ts-convert policy2ts misc/polkit-action/org.deepin.dde.$$i.policy.in misc/ts/org.deepin.dde.$$i.policy; \
@@ -191,20 +202,11 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/etc/deepin
 	cp -f misc/etc/deepin/* ${DESTDIR}/etc/deepin
 
-	mkdir -pv ${DESTDIR}/etc/acpi/events
-	cp -f misc/etc/acpi/events/* ${DESTDIR}/etc/acpi/events/
-
-	mkdir -pv ${DESTDIR}/etc/acpi/actions
-	cp -f misc/etc/acpi/actions/* ${DESTDIR}/etc/acpi/actions/
-
 	mkdir -pv ${DESTDIR}/etc/pulse/daemon.conf.d
 	cp -f misc/etc/pulse/daemon.conf.d/*.conf ${DESTDIR}/etc/pulse/daemon.conf.d/
 
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon/service-trigger
 	cp -f misc/service-trigger/*.json ${DESTDIR}${PREFIX}/lib/deepin-daemon/service-trigger/
-
-	mkdir -pv ${DESTDIR}/etc/NetworkManager/conf.d
-	cp -f misc/etc/NetworkManager/conf.d/* ${DESTDIR}/etc/NetworkManager/conf.d/
 
 	mkdir -pv ${DESTDIR}${PREFIX}/libexec/dde-daemon/
 	cp -r misc/libexec/dde-daemon/* ${DESTDIR}${PREFIX}/libexec/dde-daemon/

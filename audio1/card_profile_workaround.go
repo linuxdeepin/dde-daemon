@@ -33,22 +33,15 @@ func cardType(c *pulse.Card) int {
 	return CardUnknow
 }
 
-func profileBlacklist(c *pulse.Card) strv.Strv {
-	var blacklist []string
-	switch cardType(c) {
-	case CardBluethooh:
-		// TODO: bluez not full support headset_head_unit, please skip
-		blacklist = []string{"off"}
-	default:
-		// CardBuildin, CardUnknow and other
-		blacklist = []string{"off"}
+func profileBlacklist() strv.Strv {
+	return strv.Strv{
+		"off",
 	}
-	return strv.Strv(blacklist)
 }
 
 // select New Card Profile By priority, protocl.
 func selectNewCardProfile(c *pulse.Card) {
-	blacklist := profileBlacklist(c)
+	blacklist := profileBlacklist()
 	if !blacklist.Contains(c.ActiveProfile.Name) {
 		logger.Debug("use profile:", c.ActiveProfile)
 		return

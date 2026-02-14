@@ -6,10 +6,11 @@ package audio
 
 import (
 	"encoding/json"
-	"github.com/linuxdeepin/go-lib/pulse"
-	"github.com/linuxdeepin/go-lib/strv"
 	"os"
 	"strings"
+
+	"github.com/linuxdeepin/go-lib/pulse"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 // const (
@@ -256,7 +257,7 @@ func (pr *Priorities) AddAvailable(cards CardList) {
 				continue
 			}
 
-			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
+			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card, port.Name)
 			if !portConfig.Enabled {
 				logger.Debugf("disabled port %s %s", card.core.Name, port.Name)
 				continue
@@ -473,11 +474,11 @@ func (pr *Priorities) checkAvailable(cards CardList, cardName string, portName s
 			}
 
 			if port.Available == pulse.AvailableTypeYes {
-				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardName, portName)
+				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card, portName)
 				return portConfig.Enabled
 			} else if port.Available == pulse.AvailableTypeUnknow {
 				logger.Warningf("port(%s %s) available is unknown", cardName, portName)
-				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(cardName, portName)
+				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card, portName)
 				return portConfig.Enabled
 			} else {
 				return false

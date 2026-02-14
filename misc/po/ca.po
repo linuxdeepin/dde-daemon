@@ -5,18 +5,17 @@
 # 
 # Translators:
 # Jaime Muñoz Martín <jmmartin_5@outlook.com>, 2025
-# el_libre como el chaval <el.libre@gmail.com>, 2025
-# Davidmp <medipas@gmail.com>, 2025
 # deepiner, 2025
+# Davidmp <medipas@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-25 14:46+0800\n"
+"POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: Davidmp <medipas@gmail.com>, 2026\n"
 "Language-Team: Catalan (https://app.transifex.com/linuxdeepin/teams/3617/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,55 +56,47 @@ msgstr "El nom de grup ja existeix."
 msgid "Username must be between 3 and 32 characters"
 msgstr "El nom d'usuari ha de tenir de 3 a 32 caràcters de llargada."
 
-#: ../../accounts1/manager.go:570
+#: ../../accounts1/manager.go:571
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
 msgstr "L'usuari %s existia abans i les seves dades estan sincronitzades."
 
-#: ../../accounts1/user_ifc.go:731
+#: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
 msgstr ""
 "Aquest fons de pantalla del sistema està blocat. Poseu-vos en contacte amb "
 "l'administrador."
 
-#: ../../audio1/audio.go:284
+#: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
 msgstr "Ha fallat canviar el servidor d'àudio. Torneu-ho a provar més tard."
 
-#: ../../audio1/audio.go:320
+#: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
 msgstr "Es canvia el servidor d'àudio. Espereu, si us plau..."
 
-#: ../../audio1/audio.go:353
+#: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
 msgstr ""
 "El servidor d'àudio ha canviat. Si us plau, sortiu de la sessió i torneu-hi "
 "a entrar."
 
-#: ../../audio1/audio.go:368 ../../audio1/audio_events.go:451
-#: ../../bluetooth1/obex_agent.go:393 ../../bluetooth1/obex_agent.go:408
-#: ../../bluetooth1/obex_agent.go:435 ../../bluetooth1/obex_agent.go:472
-#: ../../bluetooth1/obex_agent.go:527 ../../bluetooth1/utils_notify.go:77
+#: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
+#: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
+#: ../../bluetooth1/obex_agent.go:485 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:609 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
 msgstr "dde-control-center"
 
-#: ../../audio1/audio_events.go:445
+#: ../../audio1/audio_events.go:713
 #, c-format
 msgid "%s had been disabled"
 msgstr "%s s'ha inhabilitat"
 
-#: ../../audio1/audio_events.go:446
+#: ../../audio1/audio_events.go:714
 msgid "Open"
 msgstr "Obre"
-
-#: ../../bin/dde-authority/fprint_transaction.go:25
-msgid "Fingerprint verification failed"
-msgstr "La verificació de l'empremta ha fallat."
-
-#: ../../bin/dde-authority/fprint_transaction.go:26
-msgid "Fingerprint verification timed out"
-msgstr "La verificació de l'empremta ha trigat massa."
 
 #: ../../bluetooth1/bluez_profile.go:15
 #: ../../system/bluetooth1/bluez_profile.go:15
@@ -167,57 +158,57 @@ msgstr "Accés a missatges"
 msgid "Message notification"
 msgstr "Notificació de missatge"
 
-#: ../../bluetooth1/obex_agent.go:389 ../../bluetooth1/utils_notify.go:130
+#: ../../bluetooth1/obex_agent.go:439 ../../bluetooth1/utils_notify.go:130
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: ../../bluetooth1/obex_agent.go:396
-msgid "Receiving %[1]q from %[2]q"
-msgstr "Es rep %[1]q de %[2]q"
+#: ../../bluetooth1/obex_agent.go:447
+msgid "Receiving %[1]q"
+msgstr ""
 
-#: ../../bluetooth1/obex_agent.go:405
+#: ../../bluetooth1/obex_agent.go:455
 msgid "View"
 msgstr "Visualització"
 
-#: ../../bluetooth1/obex_agent.go:411
+#: ../../bluetooth1/obex_agent.go:461
 msgid "You have received files from %q successfully"
 msgstr "Heu rebut fitxers de %q correctament."
 
-#: ../../bluetooth1/obex_agent.go:412
+#: ../../bluetooth1/obex_agent.go:462
 msgid "Done"
 msgstr "Fet"
 
-#: ../../bluetooth1/obex_agent.go:427 ../../bluetooth1/obex_agent.go:530
+#: ../../bluetooth1/obex_agent.go:477 ../../bluetooth1/obex_agent.go:612
 msgid "Stop Receiving Files"
 msgstr "Interromp la recepció de fitxers"
 
-#: ../../bluetooth1/obex_agent.go:429
+#: ../../bluetooth1/obex_agent.go:479
 msgid "You have cancelled the file transfer"
 msgstr "Heu cancel·lat la transferència."
 
-#: ../../bluetooth1/obex_agent.go:431
+#: ../../bluetooth1/obex_agent.go:481
 #: ../../system/bluetooth1/utils_notify.go:63
 #: ../../system/bluetooth1/utils_notify.go:72
 msgid "Bluetooth connection failed"
 msgstr "Ha fallat la connexió de Bluetooth."
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Decline"
 msgstr "Rebutja-ho"
 
-#: ../../bluetooth1/obex_agent.go:470
+#: ../../bluetooth1/obex_agent.go:527
 msgid "Receive"
 msgstr "Rep"
 
-#: ../../bluetooth1/obex_agent.go:475
+#: ../../bluetooth1/obex_agent.go:533
 msgid "Bluetooth File Transfer"
 msgstr "Transferència de fitxers per Bluetooth"
 
-#: ../../bluetooth1/obex_agent.go:476
+#: ../../bluetooth1/obex_agent.go:534
 msgid "%q wants to send files to you. Receive?"
 msgstr "%q vol enviar-vos fitxers. Els voleu rebre?"
 
-#: ../../bluetooth1/obex_agent.go:531
+#: ../../bluetooth1/obex_agent.go:613
 msgid "Receiving %q timed out"
 msgstr "S'ha esgotat el temps d'espera per rebre %q."
 
@@ -233,72 +224,72 @@ msgstr "Afegeix dispositius Bluetooth"
 msgid "Pair"
 msgstr "Aparella"
 
-#: ../../gesture1/gesture_action.go:38
+#: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
 msgstr "Maximitza la finestra"
 
-#: ../../gesture1/gesture_action.go:39
+#: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
 msgstr "Restaura la finestra"
 
-#: ../../gesture1/gesture_action.go:40
+#: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
 msgstr "Divisió de la finestra actual a l'esquerra"
 
-#: ../../gesture1/gesture_action.go:41
+#: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
 msgstr "Divisió de la finestra actual a la dreta"
 
-#: ../../gesture1/gesture_action.go:42
+#: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
 msgstr "Mostra la vista de multitasca"
 
-#: ../../gesture1/gesture_action.go:43
+#: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
 msgstr "Amaga la vista de multitasca"
 
-#: ../../gesture1/gesture_action.go:44
+#: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
 msgstr "Canvia a l'escriptori anterior"
 
-#: ../../gesture1/gesture_action.go:45
+#: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
 msgstr "Canvia a l'escriptori següent"
 
-#: ../../gesture1/gesture_action.go:46
-#: ../../keybinding1/shortcuts/id_name_map.go:85
+#: ../../gesture1/gesture_action.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:84
 msgid "Show desktop"
 msgstr "Mostra l'escriptori"
 
-#: ../../gesture1/gesture_action.go:47
+#: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
 msgstr "Amaga l'escriptori"
 
-#: ../../gesture1/gesture_action.go:48
+#: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
 msgstr "Mostra / amaga el llançador"
 
-#: ../../gesture1/gesture_action.go:49
+#: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
 msgstr "Quan es premi el botó dret del ratolí"
 
-#: ../../gesture1/gesture_action.go:50
+#: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
 msgstr "Quan es deixi anar el botó dret del ratolí"
 
-#: ../../gesture1/gesture_action.go:51
+#: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
 msgstr "Mostra / amaga el porta-retalls"
 
-#: ../../gesture1/gesture_action.go:52
+#: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
 msgstr "Mostra / amaga la cerca general"
 
-#: ../../gesture1/gesture_action.go:53
+#: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
 msgstr "Mostra / amaga el centre de notificacions"
 
-#: ../../gesture1/gesture_action.go:54
+#: ../../gesture1/gesture_action.go:55
 msgid "Disable"
 msgstr "Inhabilita"
 
@@ -387,151 +378,151 @@ msgid "Deepin Picker"
 msgstr "Selector del Deepin"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:32
-msgid "Desktop AI Assistant"
-msgstr "Assistent d'IA per a l'escriptori"
-
-#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Text to Speech"
 msgstr "De text a discurs"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:34
+#: ../../keybinding1/shortcuts/id_name_map.go:33
 msgid "Speech to Text"
 msgstr "De discurs a text"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:35
+#: ../../keybinding1/shortcuts/id_name_map.go:34
 msgid "Clipboard"
 msgstr "Porta-retalls"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:36
+#: ../../keybinding1/shortcuts/id_name_map.go:35
 msgid "Translation"
 msgstr "Traducció"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:37
+#: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
 msgstr "Cerca gran"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
 msgstr "Centre de notificacions"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:39
-#: ../../keybinding1/shortcuts/id_name_map.go:47
+#: ../../keybinding1/shortcuts/id_name_map.go:38
+#: ../../keybinding1/shortcuts/id_name_map.go:46
 msgid "Switch Layout"
 msgstr "Commuta la disposició"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:40
+#: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
 msgstr "Commuta les pantalles múltiples"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:66
+#: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
 msgstr "Ves a l'espai de treball de l'esquerra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:67
+#: ../../keybinding1/shortcuts/id_name_map.go:66
 msgid "Switch to right workspace"
 msgstr "Ves a l'espai de treball de la dreta"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:68
+#: ../../keybinding1/shortcuts/id_name_map.go:67
 msgid "Switch to upper workspace"
 msgstr "Ves a l'espai de treball de dalt"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:69
+#: ../../keybinding1/shortcuts/id_name_map.go:68
 msgid "Switch to lower workspace"
 msgstr "Ves a l'espai de treball de baix"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:71
+#: ../../keybinding1/shortcuts/id_name_map.go:70
 msgid "Switch similar windows"
 msgstr "Commuta finestres semblants"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:72
+#: ../../keybinding1/shortcuts/id_name_map.go:71
 msgid "Switch similar windows in reverse"
 msgstr "Commuta finestres semblants a la inversa"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:73
+#: ../../keybinding1/shortcuts/id_name_map.go:72
 msgid "Switch windows"
 msgstr "Commuta finestres"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:74
+#: ../../keybinding1/shortcuts/id_name_map.go:73
 msgid "Switch windows in reverse"
 msgstr "Commuta finestres a la inversa"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:94
+#: ../../keybinding1/shortcuts/id_name_map.go:89
+msgid "Activate window menu"
+msgstr "Activa el menú de la finestra"
+
+#: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
 msgstr "Maximitza la finestra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:95
+#: ../../keybinding1/shortcuts/id_name_map.go:94
 msgid "Restore window"
 msgstr "Restaura la finestra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:97
+#: ../../keybinding1/shortcuts/id_name_map.go:96
 msgid "Minimize window"
 msgstr "Minimitza la finestra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:98
+#: ../../keybinding1/shortcuts/id_name_map.go:97
 msgid "Close window"
 msgstr "Tanca la finestra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:99
+#: ../../keybinding1/shortcuts/id_name_map.go:98
 msgid "Move window"
 msgstr "Mou la finestra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:100
+#: ../../keybinding1/shortcuts/id_name_map.go:99
 msgid "Resize window"
 msgstr "Canvia la mida de la finestra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:115
+#: ../../keybinding1/shortcuts/id_name_map.go:114
 msgid "Move to left workspace"
 msgstr "Mou a l'espai de treball de l'esquerra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:116
+#: ../../keybinding1/shortcuts/id_name_map.go:115
 msgid "Move to right workspace"
 msgstr "Mou a l'espai de treball de la dreta"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:117
+#: ../../keybinding1/shortcuts/id_name_map.go:116
 msgid "Move to upper workspace"
 msgstr "Mou a l'espai de treball de dalt"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:118
+#: ../../keybinding1/shortcuts/id_name_map.go:117
 msgid "Move to lower workspace"
 msgstr "Mou a l'espai de treball de baix"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:140
+#: ../../keybinding1/shortcuts/id_name_map.go:139
 msgid "Display windows of all workspaces"
 msgstr "Mostra les finestres de tots els espais de treball"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:141
+#: ../../keybinding1/shortcuts/id_name_map.go:140
 msgid "Display windows of current workspace"
 msgstr "Mostra les finestres de l'espai de treball actual"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:142
+#: ../../keybinding1/shortcuts/id_name_map.go:141
 msgid "Display workspace"
 msgstr "Mostra l'espai de treball"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:143
+#: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
 msgstr "Apropa"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:144
+#: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
 msgstr "Allunya"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:145
+#: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
 msgstr "Mida real"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:146
+#: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
 msgstr "Mosaic ràpid de finestres a l'esquerra"
 
-#: ../../keybinding1/shortcuts/id_name_map.go:147
+#: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
 msgstr "Mosaic ràpid de finestres a la dreta"
 
-#: ../../langselector1/locale.go:47
+#: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
 msgstr "Cal autenticació per canviar la llengua."
 
-#: ../../langselector1/locale.go:138
+#: ../../langselector1/locale.go:143
 msgid ""
 "Changing system language and installing the required language packages, "
 "please wait..."
@@ -539,573 +530,21 @@ msgstr ""
 "Es canvia la llengua del sistema i s'instal·len els paquets de llengua "
 "necessaris. Espereu, si us plau..."
 
-#: ../../langselector1/locale.go:139
+#: ../../langselector1/locale.go:144
 msgid "Changing system language, please wait..."
 msgstr "Es canvia la llengua del sistema. Espereu, si us plau..."
 
-#: ../../langselector1/locale.go:140
+#: ../../langselector1/locale.go:145
 msgid "System language changed, please log out and then log in"
 msgstr ""
 "S'ha canviat la llengua del sistema. Si us plau, sortiu de la sessió i "
 "torneu-hi a entrar."
 
-#: ../../langselector1/locale.go:379
+#: ../../langselector1/locale.go:396
 msgid "Failed to change system language, please try later"
 msgstr ""
 "Ha fallat canviar la llengua del sistema. Si us plau, torneu-ho a provar més"
 " tard."
-
-#: ../../lastore1/daemon.go:186
-msgid "Updates failed: it was interrupted."
-msgstr "L'actualització ha fallat: s'ha interromput."
-
-#: ../../lastore1/daemon.go:188
-msgid ""
-"Updates failed: it was interrupted. Please roll back to the old version and "
-"try again."
-msgstr ""
-"L'actualització han fallat: s'ha interromput. Torneu a la versió anterior i "
-"torneu-ho a provar."
-
-#: ../../lastore1/daemon.go:194
-msgid "Updates failed: DPKG error."
-msgstr "Les actualitzacions han fallat: error de DPKG."
-
-#: ../../lastore1/daemon.go:196
-msgid ""
-"Updates failed: DPKG error. Please roll back to the old version and try "
-"again."
-msgstr ""
-"Les actualitzacions han fallat: error de DPKG. Torneu a la versió anterior i"
-" torneu-ho a provar."
-
-#: ../../lastore1/daemon.go:200
-msgid "Updates failed: insufficient disk space."
-msgstr "Les actualitzacions han fallat: espai al disc insuficient."
-
-#: ../../lastore1/daemon.go:202
-msgid ""
-"Updates failed: insufficient disk space. Please roll back to the old version"
-" and try again."
-msgstr ""
-"Les actualitzacions han fallat: espai al disc insuficient. Torneu a la "
-"versió anterior i torneu-ho a provar."
-
-#: ../../lastore1/daemon.go:206
-msgid "Updates failed"
-msgstr "Ha fallat l'actualització."
-
-#: ../../lastore1/daemon.go:208
-msgid "Updates failed. Please roll back to the old version and try again."
-msgstr ""
-"Les actualitzacions han fallat. Torneu a la versió anterior i torneu-ho a "
-"provar."
-
-#: ../../launcher/item.go:97
-msgid "(Linglong)"
-msgstr "(Linglong)"
-
-#: ../../launcher/manager_uninstall.go:55
-msgid "%q removed successfully"
-msgstr "%q eliminada correctament"
-
-#: ../../launcher/manager_uninstall.go:57
-msgid "Failed to uninstall %q"
-msgstr "Ha fallat desinstal·lar %q."
-
-#: ../../network1/manager_active_conn.go:468
-#: ../../network1/manager_active_conn.go:473
-msgid "None"
-msgstr "Cap"
-
-#: ../../network1/manager_active_conn.go:475
-msgid "WEP 40/128-bit Key"
-msgstr "Clau WEP de 40/128 bits"
-
-#: ../../network1/manager_active_conn.go:477
-msgid "WPA/WPA2 Personal"
-msgstr "WPA / WPA2 personal"
-
-#: ../../network1/manager_active_conn.go:479
-msgid "WPA3 Personal"
-msgstr "WPA3 personal"
-
-#: ../../network1/manager_active_conn.go:487
-msgid "TLS"
-msgstr "TLS"
-
-#: ../../network1/manager_active_conn.go:489
-msgid "MD5"
-msgstr "MD5"
-
-#: ../../network1/manager_active_conn.go:491
-msgid "LEAP"
-msgstr "SALT"
-
-#: ../../network1/manager_active_conn.go:493
-msgid "FAST"
-msgstr "Ràpid"
-
-#: ../../network1/manager_active_conn.go:495
-msgid "Tunneled TLS"
-msgstr "TLS per túnel"
-
-#: ../../network1/manager_active_conn.go:497
-msgid "Protected EAP"
-msgstr "EAP protegit"
-
-#: ../../network1/manager_connection.go:346
-#: ../../network1/manager_connection.go:350
-msgid "Wired Connection"
-msgstr "Connexió amb fil"
-
-#: ../../network1/manager_connection.go:389
-msgid "Wired Connection %v"
-msgstr "Connexió per cable %v"
-
-#: ../../network1/proxychains/utils_notify.go:49
-msgid "Application proxy is set successfully"
-msgstr "L'intermediari de l'aplicació s'ha configurat correctament."
-
-#: ../../network1/proxychains/utils_notify.go:49
-#: ../../network1/proxychains/utils_notify.go:52
-#: ../../network1/utils_notify.go:182 ../../network1/utils_notify.go:186
-#: ../../network1/utils_notify.go:189
-msgid "Network"
-msgstr "Xarxa"
-
-#: ../../network1/proxychains/utils_notify.go:52
-msgid "Failed to set the application proxy"
-msgstr "Ha fallat configurar l'intermediari de l'aplicació."
-
-#: ../../network1/state_handler.go:23
-msgid "Device state changed"
-msgstr "Ha canviat l'estat del dispositiu."
-
-#: ../../network1/state_handler.go:24
-msgid "Device state changed, reason unknown"
-msgstr "Ha canviat l'estat del dispositiu. No se'n sap el motiu."
-
-#: ../../network1/state_handler.go:25
-msgid "The device is now managed"
-msgstr "El dispositiu ara és gestionat."
-
-#: ../../network1/state_handler.go:26
-msgid "The device is no longer managed"
-msgstr "El dispositiu ja no és gestionat."
-
-#: ../../network1/state_handler.go:27
-msgid "The device has not been ready for configuration"
-msgstr "El dispositiu no estava a punt per configurar."
-
-#: ../../network1/state_handler.go:28
-msgid ""
-"IP configuration could not be reserved (no available address, timeout, etc)"
-msgstr ""
-"La configuració d'IP no s'ha pogut reservar (sense adreça disponible, temps "
-"d'espera, etc.)"
-
-#: ../../network1/state_handler.go:29
-msgid "The IP configuration is no longer valid"
-msgstr "La configuració d'IP ja no és vàlida."
-
-#: ../../network1/state_handler.go:30
-msgid "Passwords were required but not provided"
-msgstr "Les contrasenyes s'han demanat però no s'han proporcionat."
-
-#: ../../network1/state_handler.go:31
-msgid ""
-"The 802.1X supplicant disconnected from the access point or authentication "
-"server"
-msgstr ""
-"El 802.1X sol·licitant s'ha desconnectat del punt d'accés o del servidor "
-"d'autenticació."
-
-#: ../../network1/state_handler.go:32
-msgid "Configuration of the 802.1X supplicant failed"
-msgstr "Ha fallat la configuració del 802.1X sol·licitant."
-
-#: ../../network1/state_handler.go:33
-msgid "The 802.1X supplicant quitted or failed unexpectedly"
-msgstr "El 802.1X sol·licitant ha sortit o ha fallat inesperadament."
-
-#: ../../network1/state_handler.go:34
-msgid "The 802.1X supplicant took too long time to authenticate"
-msgstr "El 802.1X sol·licitant ha trigat massa per a l'autenticació."
-
-#: ../../network1/state_handler.go:35
-msgid "The PPP service failed to start within the allowed time"
-msgstr "El servei PPP ha fallat iniciar-se durant del temps permès."
-
-#: ../../network1/state_handler.go:36
-msgid "The PPP service disconnected unexpectedly"
-msgstr "El servei PPP s'ha desconnectat inesperadament."
-
-#: ../../network1/state_handler.go:37
-msgid "The PPP service quitted or failed unexpectedly"
-msgstr "El servei PPP ha sortit o ha fallat inesperadament."
-
-#: ../../network1/state_handler.go:38
-msgid "The DHCP service failed to start within the allowed time"
-msgstr "El servei DHCP ha fallat iniciar-se durant del temps permès."
-
-#: ../../network1/state_handler.go:39
-msgid "The DHCP service reported an unexpected error"
-msgstr "El servei DHCP ha informat d'un error inesperat."
-
-#: ../../network1/state_handler.go:40
-msgid "The DHCP service quitted or failed unexpectedly"
-msgstr "El servei DHCP ha sortit o ha fallat inesperadament."
-
-#: ../../network1/state_handler.go:41
-msgid "The shared connection service failed to start"
-msgstr "El servei de connexió compartida ha fallat l'inici."
-
-#: ../../network1/state_handler.go:42
-msgid "The shared connection service quitted or failed unexpectedly"
-msgstr ""
-"El servei de connexió compartida ha sortit o ha fallat inesperadament."
-
-#: ../../network1/state_handler.go:43
-msgid "The AutoIP service failed to start"
-msgstr "El servei AutoIP ha fallat l'inici."
-
-#: ../../network1/state_handler.go:44
-msgid "The AutoIP service reported an unexpected error"
-msgstr "El servei AutoIP ha informat d'un error inesperat."
-
-#: ../../network1/state_handler.go:45
-msgid "The AutoIP service quitted or failed unexpectedly"
-msgstr "El servei AutoIP ha sortit o ha fallat inesperadament."
-
-#: ../../network1/state_handler.go:46
-msgid "Dialing failed due to busy lines"
-msgstr "El marcatge ha fallat a causa de línies ocupades."
-
-#: ../../network1/state_handler.go:47
-msgid "Dialing failed due to no dial tone"
-msgstr "El marcatge ha fallat a causa de manca de to."
-
-#: ../../network1/state_handler.go:48
-msgid "Dialing failed due to the carrier"
-msgstr "El marcatge ha fallat a causa del proveïdor."
-
-#: ../../network1/state_handler.go:49
-msgid "Dialing timed out"
-msgstr "El marcatge ha esgotat el temps d'espera."
-
-#: ../../network1/state_handler.go:50
-msgid "Dialing failed"
-msgstr "El marcatge ha fallat."
-
-#: ../../network1/state_handler.go:51
-msgid "Modem initialization failed"
-msgstr "Ha fallat l'inici del mòdem."
-
-#: ../../network1/state_handler.go:52
-msgid "Failed to select the specified GSM APN"
-msgstr "Ha fallat seleccionar el GSM APN especificat."
-
-#: ../../network1/state_handler.go:53
-msgid "No networks searched"
-msgstr "No s'han cercat xarxes."
-
-#: ../../network1/state_handler.go:54
-msgid "Network registration was denied"
-msgstr "S'ha denegat el registre de xarxa."
-
-#: ../../network1/state_handler.go:55
-msgid "Network registration timed out"
-msgstr "El registre de xarxa ha esgotat el temps d'espera."
-
-#: ../../network1/state_handler.go:56
-msgid "Failed to register to the requested GSM network"
-msgstr "Ha fallat connectar-se a la xarxa GSM sol·licitada."
-
-#: ../../network1/state_handler.go:57
-msgid "PIN check failed"
-msgstr "Ha fallat la comprovació del PIN."
-
-#: ../../network1/state_handler.go:58
-msgid "Necessary firmware for the device may be missed"
-msgstr "Pot mancar el microprogramari necessari per al dispositiu."
-
-#: ../../network1/state_handler.go:59
-msgid "The device was removed"
-msgstr "El dispositiu s'ha extret."
-
-#: ../../network1/state_handler.go:60
-msgid "NetworkManager went to sleep"
-msgstr "El NetworkManager s'ha suspès."
-
-#: ../../network1/state_handler.go:61
-msgid "The device's active connection was removed or disappeared"
-msgstr "La connexió activa del dispositiu s'ha eliminat o ha desaparegut."
-
-#: ../../network1/state_handler.go:62
-msgid "A user or client requested to disconnect"
-msgstr "Un usuari o un client ha demanat desconnectar-se."
-
-#: ../../network1/state_handler.go:63
-msgid "The device's carrier/link changed"
-msgstr "Ha canviat el proveïdor / enllaç del dispositiu."
-
-#: ../../network1/state_handler.go:64
-msgid "The device's existing connection was assumed"
-msgstr "S'ha assumit la connexió existent del dispostiu."
-
-#: ../../network1/state_handler.go:65
-msgid "The 802.1x supplicant is now available"
-msgstr "El 802.1X sol·licitant ara està disponible."
-
-#: ../../network1/state_handler.go:66
-msgid "The modem could not be found"
-msgstr "No s'ha pogut trobar el mòdem."
-
-#: ../../network1/state_handler.go:67
-msgid "The Bluetooth connection timed out or failed"
-msgstr "La connexió de Bluetooth ha esgotat el temps d'espera o ha fallat."
-
-#: ../../network1/state_handler.go:68
-msgid "GSM Modem's SIM Card was not inserted"
-msgstr "No s'ha inserit la targeta SIM del mòdem GSM."
-
-#: ../../network1/state_handler.go:69
-msgid "GSM Modem's SIM PIN required"
-msgstr "Cal el PIN de la SIM del mòdem GSM."
-
-#: ../../network1/state_handler.go:70
-msgid "GSM Modem's SIM PUK required"
-msgstr "Cal el PUK de la SIM del mòdem GSM."
-
-#: ../../network1/state_handler.go:71
-msgid "SIM card error in GSM Modem"
-msgstr "Error de la targeta SIM al mòdem de GSM"
-
-#: ../../network1/state_handler.go:72
-msgid "InfiniBand device does not support connected mode"
-msgstr "El dispositiu InfiniBand no admet el mode connectat."
-
-#: ../../network1/state_handler.go:73
-msgid "A dependency of the connection failed"
-msgstr "Ha fallat una dependència de la connexió."
-
-#: ../../network1/state_handler.go:74
-msgid "RFC 2684 Ethernet bridging error to ADSL"
-msgstr "Error de pont d'Ethernet RFC 2684 vers l'ADSL"
-
-#: ../../network1/state_handler.go:75
-msgid "ModemManager did not run or quitted unexpectedly"
-msgstr "El ModemManager no s'executava o ha sortit inesperadament."
-
-#: ../../network1/state_handler.go:76
-msgid "The 802.11 WLAN network could not be found"
-msgstr "La xarxa WLAN 802.11 no s'ha pogut trobar."
-
-#: ../../network1/state_handler.go:77
-msgid "A secondary connection of the base connection failed"
-msgstr "Ha fallat una connexió secundària de la connexió de base."
-
-#: ../../network1/state_handler.go:80
-msgid "DCB or FCoE setup failed"
-msgstr "Ha fallat la configuració de DCB o FCoE."
-
-#: ../../network1/state_handler.go:81
-msgid "Network teaming control failed"
-msgstr "Ha fallat el control de l'equip de xarxa."
-
-#: ../../network1/state_handler.go:82
-msgid "Modem failed to run or not available"
-msgstr "El mòdem ha fallat executar-se o no està disponible."
-
-#: ../../network1/state_handler.go:83
-msgid "Modem now ready and available"
-msgstr "El mòdem ara està a punt i disponible."
-
-#: ../../network1/state_handler.go:84
-msgid "SIM PIN is incorrect"
-msgstr "El PIN de la SIM no és correcte."
-
-#: ../../network1/state_handler.go:85
-msgid "New connection activation is enqueuing"
-msgstr "Activació de la nova connexió a la cua"
-
-#: ../../network1/state_handler.go:86
-msgid "Parent device changed"
-msgstr "Ha canviat el dispostiu pare."
-
-#: ../../network1/state_handler.go:87
-msgid "Management status of parent device changed"
-msgstr "Ha canviat l'estat de gestió del dispositiu pare."
-
-#: ../../network1/state_handler.go:90
-msgid "Network cable is unplugged"
-msgstr "El cable de xarxa està desconnectat."
-
-#: ../../network1/state_handler.go:91
-msgid "Please make sure SIM card has been inserted with mobile network signal"
-msgstr ""
-"Si us plau, assegureu-vos que la targeta SIM estigui inserida i que tingui "
-"senyal de xarxa mòbil."
-
-#: ../../network1/state_handler.go:92
-msgid ""
-"Please make sure a correct plan was selected without arrearage of SIM card"
-msgstr ""
-"Si us plau, assegureu-vos que teniu una contractació correcta sense un "
-"reajustament de la targeta SIM."
-
-#: ../../network1/state_handler.go:95
-msgid "Failed to activate VPN connection, reason unknown"
-msgstr "Ha fallat activar la connexió d'XPV. No se'n sap el motiu."
-
-#: ../../network1/state_handler.go:96
-msgid "Failed to activate VPN connection"
-msgstr "Ha fallat activar la connexió d'XPV."
-
-#: ../../network1/state_handler.go:97
-msgid "The VPN connection state changed due to being disconnected by users"
-msgstr ""
-"La connexió d'XPV ha canviat l'estat a causa de la desconnexió feta per "
-"usuaris."
-
-#: ../../network1/state_handler.go:98
-msgid ""
-"The VPN connection state changed due to being disconnected from devices"
-msgstr ""
-"La connexió d'XPV ha canviat l'estat a causa de la desconnexió de "
-"dispositius."
-
-#: ../../network1/state_handler.go:99
-msgid "VPN service stopped"
-msgstr "El servei d'XPV s'ha aturat."
-
-#: ../../network1/state_handler.go:100
-msgid "The IP config of VPN connection was invalid"
-msgstr "La configuració d'IP de la connexió d'XPV no és vàlida."
-
-#: ../../network1/state_handler.go:101
-msgid "The connection attempt to VPN service timed out"
-msgstr "L'intent de connexió al servei d'XPV ha esgotat el temps d'espera."
-
-#: ../../network1/state_handler.go:102
-msgid "The VPN service start timed out"
-msgstr "L'inici del servei d'XPV ha esgotat el temps d'espera."
-
-#: ../../network1/state_handler.go:103
-msgid "The VPN service failed to start"
-msgstr "El servei d'XPV ha fallat l'inici."
-
-#: ../../network1/state_handler.go:104
-msgid "The VPN connection password was not provided"
-msgstr "No s'ha proporcionat la contrasenya de la connexió d'XPV."
-
-#: ../../network1/state_handler.go:105
-msgid "Authentication to VPN server failed"
-msgstr "Ha fallat l'autenticació al servidor d'XPV."
-
-#: ../../network1/state_handler.go:106
-msgid "The connection was deleted from settings"
-msgstr "La connexió s'ha eliminat de la configuració."
-
-#: ../../network1/state_handler.go:262
-msgid "Enabling hotspot"
-msgstr "S'habilita el punt d'accés."
-
-#: ../../network1/state_handler.go:266
-msgid "Connecting %q"
-msgstr "Es connecta amb %q"
-
-#: ../../network1/state_handler.go:275
-msgid "Hotspot enabled"
-msgstr "Punt d'accés habilitat"
-
-#: ../../network1/state_handler.go:277
-msgid "%q connected"
-msgstr "%q connectada"
-
-#: ../../network1/state_handler.go:292 ../../network1/state_handler.go:347
-msgid "Hotspot disabled"
-msgstr "Punt d'accés inhabilitat"
-
-#: ../../network1/state_handler.go:349 ../../network1/state_handler.go:373
-#: ../../system/bluetooth1/utils_notify.go:50
-msgid "%q disconnected"
-msgstr "%q desconnectada"
-
-#: ../../network1/state_handler.go:355
-msgid "Unable to share hotspot, please check dnsmasq settings"
-msgstr ""
-"No es pot compartir el punt d'accés. Si us plau, comproveu la configuració "
-"de dnsmasq."
-
-#: ../../network1/state_handler.go:357
-msgid "Unable to connect %q, please keep closer to the wireless router"
-msgstr ""
-"No es pot connectar amb %q. Si us plau, mantingueu-vos a prop de "
-"l'encaminador."
-
-#: ../../network1/state_handler.go:359
-msgid "Unable to connect %q, please check your router or net cable."
-msgstr ""
-"No es pot connectar amb %q, comproveu l'encaminador o el cable de xarxa."
-
-#: ../../network1/state_handler.go:363
-msgid "Connection failed, unable to connect %q, wrong password"
-msgstr ""
-"Ha fallat la connexió. No es pot connectar amb %q. Contrasenya incorrecta."
-
-#: ../../network1/state_handler.go:365
-msgid "Unable to connect %q"
-msgstr "No es pot connectar amb %q."
-
-#: ../../network1/state_handler.go:377
-msgid "To connect %q, please set up your authentication info"
-msgstr "Per connectar amb %q, configureu la informació d'autenticació."
-
-#: ../../network1/state_handler.go:379
-msgid "Password is required to connect %q"
-msgstr "Cal la contrasenya per connectar amb %q"
-
-#: ../../network1/state_handler.go:383
-msgid "The %q 802.11 WLAN network could not be found"
-msgstr "No s'ha pogut trobar la xarxa WLAN 802.11 %q "
-
-#: ../../network1/utils_dbus_nm.go:278
-msgid "Unknown"
-msgstr "Desconegut"
-
-#: ../../network1/utils_notify.go:170
-msgid "Airplane mode enabled."
-msgstr "Mode d'avió habilitat."
-
-#: ../../network1/utils_notify.go:170 ../../network1/utils_notify.go:174
-#: ../../network1/utils_notify.go:178 ../../network1/utils_notify.go:196
-#: ../../network1/utils_notify.go:199 ../../network1/utils_notify.go:288
-msgid "Disconnected"
-msgstr "Desconnectat"
-
-#: ../../network1/utils_notify.go:178
-msgid "Access Point mode is not supported by this device."
-msgstr "El mode de punt d'accés no l'admet aquest dispositiu."
-
-#: ../../network1/utils_notify.go:182
-msgid ""
-"The hardware switch of WLAN Card is off, please switch on as necessary."
-msgstr ""
-"L'interruptor de la targeta WLAN està desactivat. Activeu-lo quan calgui."
-
-#: ../../network1/utils_notify.go:186
-msgid "System proxy is set successfully."
-msgstr "L'intermediari del sistema s'ha configurat correctament."
-
-#: ../../network1/utils_notify.go:189
-msgid "System proxy has been cancelled."
-msgstr "L'intermediari del sistema s'ha cancel·lat."
-
-#: ../../network1/utils_notify.go:193
-msgid "Connected"
-msgstr "Connectat"
 
 #: ../../service_trigger/msg.go:11
 #, c-format
@@ -1127,61 +566,65 @@ msgstr ""
 msgid "Proceed"
 msgstr "Precedeix-hi"
 
-#: ../../session/power1/manager.go:928
+#: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
 msgstr "El sistema s'aturarà automàticament d'aquí a %d s."
 
-#: ../../session/power1/manager.go:929
+#: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
 msgstr "Aturada programada"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Cancle"
 msgstr "Cancel·la"
 
-#: ../../session/power1/manager.go:930
+#: ../../session/power1/manager.go:1257
 msgid "Shut down"
 msgstr "Atura't"
 
-#: ../../session/power1/manager_events.go:266
+#: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
 msgstr "Bateria molt baixa"
 
-#: ../../session/power1/manager_events.go:291
-#: ../../session/power1/manager_events.go:296
-#: ../../session/power1/manager_events.go:301
-#: ../../session/power1/manager_events.go:306
+#: ../../session/power1/manager_events.go:308
+#: ../../session/power1/manager_events.go:313
+#: ../../session/power1/manager_events.go:318
+#: ../../session/power1/manager_events.go:323
 msgid "Battery low, please plug in"
 msgstr "Bateria baixa, endolleu-lo, si us plau."
 
-#: ../../session/power1/utils.go:636
+#: ../../session/power1/utils.go:674
 msgid "your computer will shut down"
 msgstr "l'ordinador s'aturarà."
 
-#: ../../session/power1/utils.go:638
+#: ../../session/power1/utils.go:676
 msgid "your computer will suspend"
 msgstr "l'ordinador es posarà en suspens."
 
-#: ../../session/power1/utils.go:640
+#: ../../session/power1/utils.go:678
 msgid "your computer will hibernate"
 msgstr "l'ordinador hibernarà."
 
-#: ../../session/power1/utils.go:642
+#: ../../session/power1/utils.go:680
 msgid "your monitor will turn off"
 msgstr "el monitor s'aturarà."
 
-#: ../../session/power1/utils.go:644
+#: ../../session/power1/utils.go:682
 msgid "your monitor will show the shutdown interface"
 msgstr "el monitor mostrarà la interfície d'aturada"
 
-#: ../../session/power1/utils.go:646
+#: ../../session/power1/utils.go:684
 msgid "it will do nothing to your computer"
 msgstr "no significarà res per a l'ordinador."
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
 msgstr "Connexió amb %q correcta"
+
+#: ../../system/bluetooth1/utils_notify.go:50
+msgid "%q disconnected"
+msgstr "%q desconnectada"
 
 #: ../../system/bluetooth1/utils_notify.go:56
 msgid "Make sure %q is turned on and in range"
@@ -1198,11 +641,11 @@ msgstr ""
 msgid "Space"
 msgstr "Espai"
 
-#: ../../timedate1/manager_ifc.go:59
+#: ../../timedate1/manager_ifc.go:60
 msgid "Authentication is required to set the system time"
 msgstr "Cal autenticació per establir l'hora del sistema."
 
-#: ../../timedate1/manager_ifc.go:72
+#: ../../timedate1/manager_ifc.go:73
 msgid ""
 "Authentication is required to control whether network time synchronization "
 "shall be enabled"
@@ -1210,11 +653,11 @@ msgstr ""
 "Cal autenticació per controlar si s'ha d'habilitar la sincronització amb "
 "l'hora de la xarxa."
 
-#: ../../timedate1/manager_ifc.go:82
+#: ../../timedate1/manager_ifc.go:83
 msgid "Authentication is required to change NTP server"
 msgstr "Cal autenticació per canviar el servidor NTP."
 
-#: ../../timedate1/manager_ifc.go:125
+#: ../../timedate1/manager_ifc.go:127
 msgid ""
 "Authentication is required to control whether the RTC stores the local or "
 "UTC time"
@@ -1222,6 +665,6 @@ msgstr ""
 "Cal autenticació per controlar si l'RTC (rellotge de temps real) desa l'hora"
 " local o l'hora UTC."
 
-#: ../../timedate1/manager_ifc.go:151
+#: ../../timedate1/manager_ifc.go:153
 msgid "Authentication is required to set the system timezone"
 msgstr "Cal autenticació per establir la zona horària del sistema."

@@ -56,15 +56,10 @@ func (*User) GetInterfaceName() string {
 func (u *User) SetFullName(sender dbus.Sender, name string) *dbus.Error {
 	logger.Debugf("[SetFullName] new name: %q", name)
 
-	err := u.checkAuth(sender, true, "")
+	err := u.checkAuth(sender, false, "")
 	if err != nil {
 		logger.Debug("[SetFullName] access denied:", err)
 		return dbusutil.ToError(err)
-	}
-
-	if !u.checkIsControlCenter(sender) {
-		logger.Debug("[SetLocale] access denied: only dde-control-center allowed")
-		return dbusutil.ToError(fmt.Errorf("only dde-control-center allowed to call this method"))
 	}
 
 	u.PropsMu.Lock()
@@ -389,11 +384,6 @@ func (u *User) SetLocale(sender dbus.Sender, locale string) *dbus.Error {
 		return dbusutil.ToError(err)
 	}
 
-	if !u.checkIsDeepinDaemon(sender) {
-		logger.Debug("[SetLocale] access denied: only deepin daemons allowed")
-		return dbusutil.ToError(fmt.Errorf("only deepin daemons allowed to call this method"))
-	}
-
 	if !lang_info.IsSupportedLocale(locale) {
 		err := fmt.Errorf("invalid locale %q", locale)
 		logger.Debug("[SetLocale]", err)
@@ -424,8 +414,6 @@ func (u *User) SetLayout(sender dbus.Sender, layout string) *dbus.Error {
 		logger.Debug("[SetLayout] access denied:", err)
 		return dbusutil.ToError(err)
 	}
-
-	// TODO: check layout validity
 
 	u.PropsMu.Lock()
 	defer u.PropsMu.Unlock()
@@ -610,8 +598,10 @@ func (u *User) DeleteIconFile(sender dbus.Sender, icon string) *dbus.Error {
 func (u *User) EnableWechatAuth(sender dbus.Sender, value bool) *dbus.Error {
 	logger.Infof("DBus call EnableWechatAuth sender %v, enabled %t", sender, value)
 	// 验证调用者权限
-	if !u.checkIsControlCenter(sender) {
-		return dbusutil.ToError(fmt.Errorf("not allow %v call this method", sender))
+	err := u.checkAuth(sender, true, "")
+	if err != nil {
+		logger.Debug("[EnableWechatAuth] access denied:", err)
+		return dbusutil.ToError(err)
 	}
 	return u.enableWechatAuth(value)
 }
@@ -1260,16 +1250,15 @@ func (u *User) SetSecretQuestions(sender dbus.Sender, list map[int][]byte) *dbus
 }
 
 func (u *User) SetSecretKey(sender dbus.Sender, secretKey string) *dbus.Error {
-	senderName := u.getSenderDBus(sender)
-	logger.Debugf("[SetSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, u.UserName)
-	if !strings.Contains(senderName, controlCenter) {
-		return dbusutil.ToError(errors.New("invalid sender"))
+	err := u.checkAuth(sender, true, polkitActionUserAdministration)
+	if err != nil {
+		return dbusutil.ToError(err)
 	}
 
 	if u.uadpInterface == nil {
 		return nil
 	}
-	err := u.uadpInterface.Set(0, u.UserName, []uint8(secretKey))
+	err = u.uadpInterface.Set(0, u.UserName, []uint8(secretKey))
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -1277,10 +1266,9 @@ func (u *User) SetSecretKey(sender dbus.Sender, secretKey string) *dbus.Error {
 }
 
 func (u *User) GetSecretKey(sender dbus.Sender, username string) (string, *dbus.Error) {
-	senderName := u.getSenderDBus(sender)
-	logger.Debugf("[GetSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, username)
-	if !(strings.Contains(senderName, resetPasswordDia) || strings.Contains(senderName, controlCenter)) {
-		return "", dbusutil.ToError(errors.New("invalid sender"))
+	err := u.checkAuth(sender, true, polkitActionUserAdministration)
+	if err != nil {
+		return "", dbusutil.ToError(err)
 	}
 	if u.uadpInterface == nil {
 		return "", nil
@@ -1293,16 +1281,15 @@ func (u *User) GetSecretKey(sender dbus.Sender, username string) (string, *dbus.
 }
 
 func (u *User) DeleteSecretKey(sender dbus.Sender) *dbus.Error {
-	senderName := u.getSenderDBus(sender)
-	logger.Debugf("[DeleteSecretKey] sender : %s, senderName : %s, UserName : %s : ", sender, senderName, u.UserName)
-	if !strings.Contains(senderName, controlCenter) {
-		return dbusutil.ToError(errors.New("invalid sender"))
+	err := u.checkAuth(sender, true, polkitActionUserAdministration)
+	if err != nil {
+		return dbusutil.ToError(err)
 	}
 
 	if u.uadpInterface == nil {
 		return nil
 	}
-	err := u.uadpInterface.Delete(0, u.UserName)
+	err = u.uadpInterface.Delete(0, u.UserName)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}

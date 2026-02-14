@@ -121,11 +121,10 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 		return false
 	}
 
-	inputs := GetPriorityManager().Input
-	firstPort := inputs.GetTheFirstPort()
+	firstPort, _ := GetPriorityManager().GetTheFirstPort(pulse.DirectionSource)
 
 	// 没有可用端口
-	if firstPort.PortType == PortTypeInvalid {
+	if firstPort == nil || firstPort.PortType == PortTypeInvalid {
 		logger.Debug("no input port")
 		return false
 	}
@@ -137,32 +136,15 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 		return false
 	}
 	cp := card.core.ActiveProfile
-	profile := GetConfigKeeper().GetCardPreferProfile(card.core.Name)
-	// 如果配置是空，则可能是第一次新增，应该进行自动切换
-	if profile != "" && cp.Name != profile {
-		logger.Warningf("output profile not match, current: %s, prefer: %s", cp.Name, profile)
-		return false
-	}
-	// 如果port的配置文件和profile也不能自动切换
-	found := false
 	port, err := card.Ports.Get(firstPort.PortName, pulse.DirectionSource)
 	if err != nil {
 		logger.Warning(err)
 		return false
 	}
-	for _, pp := range port.Profiles {
-		if pp.Available != 0 && pp.Name == profile {
-			found = true
-		}
-	}
-	if !found {
-		return false
-	}
 
-	// 同端口切换次数超出限制(切换失败时反复切换同一端口)
-	if a.inputAutoSwitchCount >= 10 &&
-		(a.inputCardName == firstPort.CardName && a.inputPortName == firstPort.PortName) {
-		logger.Debug("input auto switch tried too many times")
+	// 输入端口不应该主动切换配置文件，会导致输入端口不可用或者发生变化
+	// 如果当前端口和当前配置文件匹配，不需要切换端口
+	if port.Profiles.Exists(cp.Name) {
 		return false
 	}
 
@@ -184,55 +166,71 @@ func (a *Audio) needAutoSwitchInputPort() bool {
 	return true
 }
 
-func (a *Audio) autoSwitchOutputPort() error {
+func (a *Audio) checkAutoSwitchOutputPort() (auto bool, cardId uint32, portName string) {
 	// 不支持自动切换端口
 	if !a.canAutoSwitchPort() {
-		return nil
-	}
-	logger.Debug("auto switch output")
-	firstPort := a.tryGetPreferOutPut()
-
-	// 没有可用端口
-	if firstPort.PortType == PortTypeInvalid {
-		return fmt.Errorf("no output port")
+		return
 	}
 
-	// 检查当前profile是否是配置文件中设置的profile
-	card, err := a.cards.getByName(firstPort.CardName)
-	if err != nil {
-		return err
-	}
-	cp := card.core.ActiveProfile
-	profile := GetConfigKeeper().GetCardPreferProfile(card.core.Name)
-	preferPort := GetConfigKeeper().GetCardPreferPort(card.core.Name)
-	// 如果优选的端口和期望的配置文件、期望的端口匹配都可以触发切换
-	if profile != "" &&
-		cp.Name != profile &&
-		firstPort.PortName != preferPort {
-		return fmt.Errorf("output profile not match, current: %s, prefer: %s,firstPort: %s, preferPort: %s", cp.Name, profile, firstPort.PortName, preferPort)
-	}
-
-	var currentCardName, currentPortName string
+	var currentCardName, currentPortName, currentProfile string
 	if a.defaultSink != nil {
-		currentCardName = a.getCardNameById(a.defaultSink.Card)
-		currentPortName = a.defaultSink.ActivePort.Name
+		curentCard, err := a.cards.get(a.defaultSink.Card)
+		if err == nil {
+			currentProfile = curentCard.ActiveProfile.Name
+			currentCardName = a.getCardNameById(a.defaultSink.Card)
+			currentPortName = a.defaultSink.ActivePort.Name
+		}
 	}
-
-	if currentCardName == firstPort.CardName && currentPortName == firstPort.PortName {
-		logger.Debugf("current output<%s,%s> is already the first",
-			currentCardName, currentPortName)
-		return nil
+	prefer, pos := GetPriorityManager().GetTheFirstPort(pulse.DirectionSink)
+	if pos.tp != PortTypeInvalid {
+		logger.Debug("loop prefer port:", *prefer)
+		card, err := a.cards.getByName(prefer.CardName)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		mode := GetConfigKeeper().GetMode(card, prefer.PortName)
+		if currentCardName != prefer.CardName ||
+			currentPortName != prefer.PortName ||
+			mode != currentProfile {
+			logger.Debugf("will auto switch from output<%s,%s> to output<%s,%s>",
+				currentCardName, currentPortName, prefer.CardName, prefer.PortName)
+			return true, card.Id, prefer.PortName
+		}
+	} else {
+		return true, 0, ""
 	}
-
-	logger.Debugf("will auto switch from output<%s,%s> to output<%s,%s>",
-		currentCardName, currentPortName, firstPort.CardName, firstPort.PortName)
-	return a.setPort(card.Id, firstPort.PortName, pulse.DirectionSink, true)
+	return
 }
 
-func (a *Audio) autoSwitchInputPort() error {
+func (a *Audio) autoSwitchOutputPort() bool {
+	auto, cardId, portName := a.checkAutoSwitchOutputPort()
+	if auto {
+		if cardId == 0 || portName == "" {
+			if !strings.Contains(a.ctx.GetDefaultSink(), "null-sink") {
+				a.LoadNullSinkModule()
+				logger.Info("no prefer port, set default sink to", nullSinkName)
+				a.ctx.SetDefaultSink(nullSinkName)
+			} else {
+				logger.Info("no prefer port, default sink is null-sink already")
+			}
+			return true
+		} else {
+			err := a.setPort(cardId, portName, pulse.DirectionSink, true)
+			if err != nil {
+				logger.Warning(err)
+				return false
+			}
+			return true
+		}
+	}
+	return false
+}
+
+func (a *Audio) checkAutoSwitchInputPort() (auto bool, cardId uint32, portName string) {
 	// 不支持自动切换端口
 	if !a.canAutoSwitchPort() {
-		return nil
+		return
 	}
 
 	// 当前端口就是优先级最高的端口
@@ -241,30 +239,56 @@ func (a *Audio) autoSwitchInputPort() error {
 		currentCardName = a.getCardNameById(a.defaultSource.Card)
 		currentPortName = a.defaultSource.ActivePort.Name
 	}
+	prefer, pos := GetPriorityManager().GetTheFirstPort(pulse.DirectionSource)
+	for pos.tp != PortTypeInvalid {
+		logger.Debug("loop prefer port:", *prefer)
+		card, err := a.cards.getByName(prefer.CardName)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		port, err := card.Ports.Get(prefer.PortName, pulse.DirectionSource)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		if port.Profiles.Exists(card.ActiveProfile.Name) {
+			if currentCardName != prefer.CardName ||
+				currentPortName != prefer.PortName {
+				logger.Debugf("will auto switch from input<%s,%s> to input<%s,%s>",
+					currentCardName, currentPortName, prefer.CardName, prefer.PortName)
+				return true, card.Id, prefer.PortName
+			} else {
+				return false, 0, ""
+			}
+		}
+		prefer, pos = GetPriorityManager().GetNextPort(pulse.DirectionSource, pos)
+	}
+	return true, 0, ""
+}
 
-	for _, input := range GetPriorityManager().Input.Ports {
-		cc, pc := GetConfigKeeper().GetCardAndPortConfig(input.CardName, input.PortName)
-		if !pc.Enabled {
-			continue
-		}
-		card, err := a.cards.getByName(cc.Name)
-		if err != nil {
-			logger.Warning(err)
-			continue
-		}
-		cp := card.core.ActiveProfile
-		port, err := card.Ports.Get(pc.Name, pulse.DirectionSource)
-		if err != nil {
-			logger.Warning(err)
-			continue
-		}
-		if port.Profiles.Exists(cp.Name) {
-			logger.Debugf("will auto switch from input<%s,%s> to input<%s,%s>",
-				currentCardName, currentPortName, cc.Name, pc.Name)
-			return a.setPort(card.Id, pc.Name, pulse.DirectionSource, true)
+func (a *Audio) autoSwitchInputPort() bool {
+	auto, cardId, portName := a.checkAutoSwitchInputPort()
+	if auto {
+		if cardId == 0 || portName == "" {
+			if !strings.Contains(a.ctx.GetDefaultSource(), "null-sink") {
+				a.LoadNullSinkModule()
+				logger.Info("no prefer port, set default source to", nullSinkName)
+				a.ctx.SetDefaultSource(nullSinkName + ".monitor")
+			} else {
+				logger.Info("no prefer port, default source is null-sink already")
+			}
+			return true
+		} else {
+			err := a.setPort(cardId, portName, pulse.DirectionSource, true)
+			if err != nil {
+				logger.Warning(err)
+				return false
+			}
+			return true
 		}
 	}
-	return nil
+	return true
 }
 
 func (a *Audio) needAutoSwitchOutputPort() bool {
@@ -273,10 +297,10 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 		return false
 	}
 	logger.Debug("check need auto switch output")
-	firstPort := a.tryGetPreferOutPut()
+	firstPort, _ := GetPriorityManager().GetTheFirstPort(pulse.DirectionSink)
 
 	// 没有可用端口
-	if firstPort.PortType == PortTypeInvalid {
+	if firstPort == nil || firstPort.PortType == PortTypeInvalid {
 		logger.Debug("no output port")
 		return false
 	}
@@ -288,19 +312,19 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 		return false
 	}
 	cp := card.core.ActiveProfile
-	profile := GetConfigKeeper().GetCardPreferProfile(card.core.Name)
+	profile := GetConfigKeeper().GetMode(card, firstPort.PortName)
 	if profile != "" && cp.Name != profile {
 		logger.Warningf("output profile not match, current: %s, prefer: %s", cp.Name, profile)
-		return false
+		return true
 	}
 
-	// 当前端口就是优先级最高的端口
 	var currentCardName, currentPortName string
 	if a.defaultSink != nil {
 		currentCardName = a.getCardNameById(a.defaultSink.Card)
 		currentPortName = a.defaultSink.ActivePort.Name
 	}
 
+	// 当前端口就是优先级最高的端口
 	if currentCardName == firstPort.CardName && currentPortName == firstPort.PortName {
 		logger.Debugf("current output<%s,%s> is already the first",
 			currentCardName, currentPortName)
@@ -315,140 +339,109 @@ func (a *Audio) needAutoSwitchOutputPort() bool {
 // 自动切换端口，至少要保证声卡的profile是配置文件中设置的profile
 // 如果不是，可能还在切换中，等待一下
 func (a *Audio) autoSwitchPort() {
-	logger.Warning("auto switch port")
-	if err := a.autoSwitchOutputPort(); err != nil {
-		logger.Warning(err)
-	}
-	if err := a.autoSwitchInputPort(); err != nil {
-		logger.Warning(err)
-	}
+	logger.Debug("auto switch port")
+	a.autoSwitchOutputPort()
+	a.autoSwitchInputPort()
 }
 
 func (a *Audio) handleCardEvent(eventType int, idx uint32) {
+	var shouldAutoSwitch = false
 	switch eventType {
 	case pulse.EventTypeNew: // 新增声卡
-		a.autoPause()
 		a.handleCardAdded(idx)
+		shouldAutoSwitch = true
 	case pulse.EventTypeRemove: // 删除声卡
-		a.autoPause()
 		a.handleCardRemoved(idx)
-	case pulse.EventTypeChange: // 声卡属性变化,也可能是有线耳机插拔了端口
-		a.handleCardChanged(idx)
+		shouldAutoSwitch = true
+	case pulse.EventTypeChange:
+		// 声卡属性变化,也可能是有线耳机插拔了端口
+		// 端口可用性的变化未能引起sink/source的变化，但有可能是优选端口，
+		// 例如：变化的端口和当前端口不属于同一个配置，且变化的端口不在已存在的source中，因此不会有事件变化，需要在此处理
+		shouldAutoSwitch = a.handleCardChanged(idx)
 	default:
 		logger.Warningf("unhandled card event, card=%d, type=%d", idx, eventType)
 	}
 
 	// 保存旧的cards
-	a.oldCards = a.cards
+	if shouldAutoSwitch {
+		logger.Debug("refresh card...")
+		GetPriorityManager().refreshPorts(a.cards)
+		GetPriorityManager().Save()
+		if a.checkCardIsReady(idx) {
+			a.autoSwitchPort()
+		}
+	}
 }
 
 func (a *Audio) handleCardAdded(idx uint32) {
 	// 数据更新在refreshCards中统一处理，这里只做业务逻辑上的响应
-	logger.Debugf("card %d added", idx)
 	card, err := a.ctx.GetCard(idx)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
+	logger.Infof("card <%s:%d> added", card.Name, idx)
+
 	ac := newCard(card)
 	a.cards = append(a.cards, ac)
 	cards := a.cards.string()
 	a.setPropCards(cards)
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
 
-	GetPriorityManager().SetPorts(a.cards)
-	GetPriorityManager().Save()
-
 	// 这里写所有类型的card事件都需要触发的逻辑
 	/* 新增声卡上的端口如果被处于禁用状态，进行横幅提示 */
-	if isBluezAudio(card.Name) {
-		logger.Debugf("notify bluez card %s", card.Name)
-		a.notifyBluezCardPortInsert(ac)
-	} else {
-		logger.Debugf("notify normal card %s", card.Name)
-		a.notifyCardPortInsert(ac)
-	}
-
-	a.autoSwitchPort()
+	a.notifyCardPortInsert(ac)
 }
 
 func (a *Audio) handleCardRemoved(idx uint32) {
 	// 数据更新在refreshCards中统一处理，这里只做业务逻辑上的响应
 	// 注意，此时idx已经失效了，无法获取已经失去的数据，如果业务需要，应当在refresh前进行数据备份
-	logger.Debugf("card %d removed", idx)
+	var oldCardName string
+	oldCard, err := a.cards.get(idx)
+	if err == nil && oldCard != nil {
+		oldCardName = oldCard.core.Name
+	} else {
+		logger.Debugf("card %d removed", idx)
+		return
+	}
+	logger.Infof("card <%s:%d> added", oldCard.core.Name, idx)
 	a.cards, _ = a.cards.delete(idx)
 	cards := a.cards.string()
 	a.setPropCards(cards)
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
-
-	if a.defaultSink == nil || a.defaultSink.Card == idx || a.defaultSource.Card == idx {
-		logger.Debugf("card %d is default sink or source, auto switch port", idx)
-		a.autoSwitchPort()
+	// 如果删除的是当前正在使用的声卡，暂停播放
+	first, _ := GetPriorityManager().GetTheFirstPort(pulse.DirectionSink)
+	if oldCardName != "" && first != nil && first.CardName == oldCardName {
+		a.autoPause()
 	}
 }
 
-func (a *Audio) handleCardChanged(idx uint32) {
+func (a *Audio) handleCardChanged(idx uint32) (changed bool) {
 	// 数据更新在refreshSinks中统一处理，这里只做业务逻辑上的响应
-	logger.Debugf("card %d changed", idx)
 	pc, err := a.ctx.GetCard(idx)
 	if err != nil {
 		logger.Warning(err)
-		return
+		return false
 	}
+	logger.Infof("card <%s:%d> changed", pc.Name, idx)
 	ac, err := a.cards.get(idx)
-	if err != nil {
-		logger.Warningf("invalid card index #%d", idx)
-		return
+	oldCard := &Card{
+		Profiles:      ac.Profiles,
+		Ports:         ac.Ports,
+		ActiveProfile: ac.ActiveProfile,
 	}
-
-	oldPorts := ac.Ports
-	oldProfile := ac.ActiveProfile
 
 	ac.core = pc
 	ac.update(pc)
 
+	if err == nil && ac != nil {
+		changed = ac.doDiff(oldCard, a.PausePlayer) != NoChange
+	}
+
 	cards := a.cards.string()
 	a.setPropCards(cards)
 	a.setPropCardsWithoutUnavailable(a.cards.stringWithoutUnavailable())
-
-	GetPriorityManager().SetPorts(a.cards)
-	GetPriorityManager().Save()
-
-	if oldProfile.Name != ac.ActiveProfile.Name {
-		logger.Infof("card profile change from %v to %v", oldProfile.Name, ac.ActiveProfile.Name)
-	}
-	// 如果端口发生变化，则需要自动切换端口
-	if len(oldPorts) != len(ac.Ports) {
-		logger.Debug("card port changed")
-		logger.Debugf("card old ports=%+v", oldPorts)
-		logger.Debugf("card old newPorts=%+v", ac.Ports)
-		a.autoSwitchPort()
-	} else if !isBluezAudio(ac.Name) {
-		// 蓝牙声卡不检查状态
-		// 因为蓝牙声卡会处理a2dp模式，会导致端口状态对不上
-		shouldAutoSwitch := false
-		for _, port := range oldPorts {
-			p, err := ac.Ports.Get(port.Name, port.Direction)
-			if err != nil {
-				logger.Warning(err)
-				continue
-			}
-			if p.Available != port.Available {
-				logger.Debugf("card port available changed, %v.%v from %v to %v",
-					pc.Name, port.Name, port.Available, p.Available)
-				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(pc.Name, port.Name)
-				logger.Warningf("portConfig: %+v", portConfig)
-				if !portConfig.Enabled && p.Available != pulse.AvailableTypeNo {
-					logger.Debugf("port<%s,%s> notify", ac.Name, port.Name)
-					a.notifyPortDisabled(ac.Id, port)
-				}
-				shouldAutoSwitch = true
-			}
-		}
-		if shouldAutoSwitch {
-			a.autoSwitchPort()
-		}
-	}
+	return
 }
 
 func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
@@ -463,7 +456,6 @@ func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
 		logger.Warningf("unhandled sink event, sink=%d, type=%d", idx, eventType)
 	}
 
-	// 这里写所有类型的sink事件都需要触发的逻辑
 }
 
 func (a *Audio) handleSinkAdded(idx uint32) {
@@ -473,7 +465,7 @@ func (a *Audio) handleSinkAdded(idx uint32) {
 		logger.Warning(err)
 		return
 	}
-	logger.Debugf("sink %d %s added", idx, sink.Name)
+	logger.Infof("sink <%s:%d> added", sink.Name, idx)
 	if sink.Name == dndVirtualSinkName {
 		port := pulse.PortInfo{
 			Name:        sink.Name,
@@ -491,40 +483,59 @@ func (a *Audio) handleSinkAdded(idx uint32) {
 		a.addSink(sink)
 	}
 
-	if err := a.autoSwitchOutputPort(); err != nil {
-		logger.Warning(err)
+	if sink.Name == monoSinkName && a.Mono {
+		logger.Info("set mono as default sink")
+		a.ctx.SetDefaultSink(monoSinkName)
+	} else if !isPhysicalDevice(sink.Name) {
+		return
+	} else if a.checkCardIsReady(sink.Card) {
+		a.autoSwitchPort()
 	}
 }
 
 func (a *Audio) handleSinkRemoved(idx uint32) {
 	// 数据更新在refreshSinks中统一处理，这里只做业务逻辑上的响应
 	// 注意，此时idx已经失效了，无法获取已经失去的数据，如果业务需要，应当在refresh前进行数据备份
-	logger.Debugf("sink %d removed", idx)
-	if _, exist := a.sinks[idx]; exist {
+	var cardId uint32
+	var isPhy bool
+	if sink, exist := a.sinks[idx]; exist {
+		logger.Infof("sink <%s:%d> removed", sink.Name, idx)
+		cardId = sink.Card
+		isPhy = isPhysicalDevice(sink.Name)
 		a.service.StopExport(a.sinks[idx])
 		delete(a.sinks, idx)
+	} else {
+		return
 	}
 	a.updatePropSinks()
 	if a.defaultSink != nil && a.defaultSink.index == idx {
 		logger.Debugf("set default sink to / because of sink removed")
 		a.setPropDefaultSink("/")
-		a.defaultSinkName = ""
 		a.defaultSink = nil
+	} else {
+		return
+	}
+	if isPhy && a.checkCardIsReady(cardId) {
+		a.autoSwitchPort()
 	}
 }
 
 func (a *Audio) handleSinkChanged(idx uint32) {
 	// 数据更新在refreshSinks中统一处理，这里只做业务逻辑上的响应
-	logger.Debugf("sink %d changed", idx)
 	sink, err := a.ctx.GetSink(idx)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
+	logger.Infof("sink <%s:%d> changed", sink.Name, idx)
 	if _, ok := a.sinks[idx]; ok {
 		a.sinks[idx].update(sink)
 	}
-
+	// 处理场景： 当sink的端口可用性发生变化时，切换端口
+	// cardchange事件也会触发，但是处理不了，因为这时sink可能还没更新，无可用端口
+	if isPhysicalDevice(sink.Name) && a.checkCardIsReady(sink.Card) {
+		a.autoSwitchPort()
+	}
 }
 
 func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
@@ -542,13 +553,14 @@ func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
 
 func (a *Audio) handleSourceAdded(idx uint32) {
 	// 数据更新在refreshSources中统一处理，这里只做业务逻辑上的响应
-	logger.Debugf("source %d added", idx)
 	source, err := a.ctx.GetSource(idx)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
-	if strings.HasSuffix(source.Name, ".monitor") {
+	logger.Infof("source <%s:%d> added", source.Name, idx)
+	if source.Name != nullSinkName+".monitor" &&
+		strings.HasSuffix(source.Name, ".monitor") {
 		logger.Debugf("skip %s source update", source.Name)
 		return
 	}
@@ -559,39 +571,60 @@ func (a *Audio) handleSourceAdded(idx uint32) {
 	}
 	a.updatePropSources()
 
-	if err := a.autoSwitchInputPort(); err != nil {
-		logger.Warning(err)
+	if source.Name == reduceNoiseSourceName && a.ReduceNoise {
+		logger.Info("set reduceNoise as default source", a.getMasterNameFromVirtualDevice(reduceNoiseSourceName))
+		a.ctx.SetDefaultSource(reduceNoiseSourceName)
+	} else if !isPhysicalDevice(source.Name) {
+		// 其他的虚拟通道不做自动切换处理
+		return
+	} else if a.checkCardIsReady(source.Card) {
+		a.autoSwitchInputPort()
 	}
+
 }
 
 func (a *Audio) handleSourceRemoved(idx uint32) {
 	// 数据更新在refreshSources中统一处理，这里只做业务逻辑上的响应
 	// 注意，此时idx已经失效了，无法获取已经失去的数据，如果业务需要，应当在refresh前进行数据备份
-	logger.Debugf("source %d removed", idx)
-	if _, exist := a.sources[idx]; exist {
+	var cardId uint32
+	var isPhy bool
+	if source, exist := a.sources[idx]; exist {
+		logger.Infof("source <%s:%d> removed", source.Name, idx)
+
+		cardId = source.Card
+		isPhy = isPhysicalDevice(source.Name)
 		a.service.StopExport(a.sources[idx])
 		delete(a.sources, idx)
+	} else {
+		return
 	}
 	a.updatePropSources()
 	if a.defaultSource != nil && a.defaultSource.index == idx {
 		logger.Warning("set default source to / because of source removed")
 		a.setPropDefaultSource("/")
-		a.defaultSourceName = ""
 		a.defaultSource = nil
+	}
+	if isPhy && a.checkCardIsReady(cardId) {
+		a.autoSwitchInputPort()
 	}
 }
 
 func (a *Audio) handleSourceChanged(idx uint32) {
 	// 数据更新在refreshSources中统一处理，这里只做业务逻辑上的响应
-	logger.Debugf("source %d changed", idx)
 	source, err := a.ctx.GetSource(idx)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
+	logger.Infof("source <%s:%d> changed", source.Name, idx)
 
 	if _, ok := a.sources[idx]; ok {
 		a.sources[idx].update(source)
+	}
+	// 处理场景： 当source的端口可用性发生变化时，切换端口
+	// cardchange事件也会触发，但是处理不了，因为这时source可能还没更新，无可用端口
+	if isPhysicalDevice(source.Name) && a.checkCardIsReady(source.Card) {
+		a.autoSwitchInputPort()
 	}
 }
 
@@ -617,7 +650,7 @@ func (a *Audio) handleSinkInputAdded(idx uint32) {
 		logger.Warning(err)
 		return
 	}
-	logger.Debugf("sink-input %d %s added", idx, sinkInput.Name)
+	logger.Infof("sink-input <%s:%d> added", sinkInput.Name, idx)
 	if _, exist := a.sinkInputs[idx]; exist {
 		a.sinkInputs[idx].update(sinkInput)
 	} else {
@@ -633,8 +666,9 @@ func (a *Audio) handleSinkInputAdded(idx uint32) {
 func (a *Audio) handleSinkInputRemoved(idx uint32) {
 	// 数据更新在refreshSinkInputs中统一处理，这里只做业务逻辑上的响应
 	// 注意，此时idx已经失效了，无法获取已经失去的数据，如果业务需要，应当在refresh前进行数据备份
-	logger.Debugf("sink-input %d removed", idx)
-	if _, exist := a.sinkInputs[idx]; exist {
+	if sinkInput, exist := a.sinkInputs[idx]; exist {
+		logger.Debugf("sink-input <%s:%d> removed", sinkInput.Name, idx)
+
 		a.service.StopExport(a.sinkInputs[idx])
 		delete(a.sinkInputs, idx)
 	}
@@ -642,13 +676,12 @@ func (a *Audio) handleSinkInputRemoved(idx uint32) {
 
 func (a *Audio) handleSinkInputChanged(idx uint32) {
 	// 数据更新在refreshSinkInputs中统一处理，这里只做业务逻辑上的响应
-	logger.Debugf("sink-input %d changed", idx)
 	sinkInput, err := a.ctx.GetSinkInput(idx)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
-
+	logger.Debugf("sink-input <%s:%d> changed", sinkInput.Name, idx)
 	if _, ok := a.sinkInputs[idx]; ok {
 		a.sinkInputs[idx].update(sinkInput)
 	}
@@ -664,7 +697,7 @@ func makeNotifyCmdEnablePort(cardId uint32, portName string) string {
 }
 
 /* 横幅提示端口被禁用,并提供开启的按钮 */
-func (a *Audio) notifyPortDisabled(cardId uint32, port pulse.CardPortInfo) {
+func notifyPortDisabled(cardId uint32, port pulse.CardPortInfo) {
 	session, err := dbus.SessionBus()
 	if err != nil {
 		logger.Warning(err)
@@ -743,7 +776,11 @@ func (a *Audio) updatePropSinkInputs() {
 
 func isPhysicalDevice(deviceName string) bool {
 	for _, virtualDeviceKey := range []string{
-		"echoCancelSource", "echo-cancel", "Echo-Cancel", "remap-sink-mono", // virtual key
+		"echoCancelSource",
+		"echo-cancel",
+		"Echo-Cancel",
+		"remap-sink-mono",
+		"null-sink",
 	} {
 		if strings.Contains(deviceName, virtualDeviceKey) {
 			return false
@@ -771,94 +808,22 @@ func (a *Audio) handleServerEvent(eventType int) {
 func (a *Audio) writeReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
 	reduce, ok := write.Value.(bool)
 	if !ok {
+		logger.Warning("type is not bool")
 		return dbusutil.ToError(errors.New("type is not bool"))
 	}
-	if a.ReduceNoise == reduce {
-		return nil
-	}
-
-	if reduce && a.defaultSource != nil && isBluezAudio(a.defaultSource.Name) {
-		logger.Debug("bluetooth audio device cannot open reduce-noise")
-		a.ReduceNoise = false
-		a.emitPropChangedReduceNoise(a.ReduceNoise)
-		return dbusutil.ToError(errors.New("bluetooth audio device cannot open reduce-noise"))
-	}
-
-	// 这个配置属性本来应该放在降噪设置成功之后再设置的
-	// 但是在开启降噪，切换到降噪的虚拟通道时，需要用对应主设备的配置进行配置恢复
-	// 如果不放在前面，配置恢复时，主设备的配置里降噪还处于关闭状态
-	// 配置恢复会自动关闭降噪
-	source := a.defaultSource
-	if source == nil {
-		logger.Warning("default source is nil, cannot set reduce noise")
-		return dbusutil.ToError(errors.New("default source is nil"))
-	}
-	GetConfigKeeper().SetReduceNoise(a.getCardNameById(source.Card), source.ActivePort.Name, reduce)
-	// 如果取消降噪,先变更defaultsource,再关闭降噪,避免端口发生频繁切换
-	a.ctx.SetDefaultSource(a.defaultSource.Name)
-	err := a.setReduceNoise(reduce)
-	if err != nil {
-		logger.Warning("set Reduce Noise failed: ", err)
-	}
-	a.inputAutoSwitchCount = 0
+	a.setReduceNoise(reduce)
 	return nil
 }
 
 func (a *Audio) writeKeyPausePlayer(write *dbusutil.PropertyWrite) *dbus.Error {
-	return dbusutil.ToError(a.audioDConfig.SetValue(dsgkeyPausePlayer, write.Value))
-}
-
-func (a *Audio) notifyBluezCardPortInsert(card *Card) {
-	logger.Debugf("notify bluez card %d:%s", card.Id, card.core.Name)
-	oldCard, err := a.oldCards.getByName(card.core.Name)
-	if err != nil {
-		// oldCard不存在
-		logger.Warning(err)
-	}
-
-	// 蓝牙会根据模式过滤端口，因此忽略unknown状态
-	for _, port := range card.Ports {
-		if port.Available == pulse.AvailableTypeNo {
-			// 当前状态为AvailableTypeNo，忽略
-			logger.Debugf("port %s not insert", port.Name)
-			continue
-		}
-
-		isInsert := false
-		if oldCard == nil {
-			// oldCard不存在，即新增声卡
-			isInsert = true
-		} else {
-			oldPort, err := oldCard.getPortByName(port.Name)
-			if err != nil {
-				// oldPort不存在，例如A2DP切换到headset
-				isInsert = true
-
-				// 但是pulseaudio事件时序是乱的，所以可能会因为其它原因进来，导致bug
-				logger.Warning(err)
-			} else if oldPort.Available == pulse.AvailableTypeNo {
-				isInsert = true
-			}
-		}
-
-		if isInsert {
-			logger.Debugf("port<%s,%s> inserted", card.core.Name, port.Name)
-			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
-			if !portConfig.Enabled {
-				logger.Debugf("port<%s,%s> notify", card.core.Name, port.Name)
-				a.notifyPortDisabled(card.Id, port)
-			}
-		}
-	}
+	return dbusutil.ToError(func() error {
+		a.PausePlayer = write.Value.(bool)
+		return a.audioDConfig.SetValue(dsgkeyPausePlayer, write.Value)
+	}())
 }
 
 func (a *Audio) notifyCardPortInsert(card *Card) {
 	logger.Debugf("notify card %d:%s", card.Id, card.core.Name)
-	oldCard, err := a.oldCards.getByName(card.core.Name)
-	if err != nil {
-		// oldCard不存在
-		logger.Warning(err)
-	}
 
 	for _, port := range card.Ports {
 		if port.Available == pulse.AvailableTypeNo {
@@ -866,36 +831,16 @@ func (a *Audio) notifyCardPortInsert(card *Card) {
 			logger.Debugf("port %s not insert", port.Name)
 			continue
 		}
+	}
 
-		isInsert := false
-		if oldCard == nil {
-			// oldCard不存在，即新增声卡
-			isInsert = true
-		} else {
-			oldPort, err := oldCard.getPortByName(port.Name)
-			if err != nil {
-				// oldPort不存在，例如A2DP切换到headset
-				isInsert = true
-
-				// 但是pulseaudio事件时序是乱的，所以可能会因为其它原因进来，导致bug
-				logger.Warning(err)
-
-			} else if oldPort.Available == pulse.AvailableTypeNo {
-				logger.Debugf("port %s from AvailableTypeNo to %d", port.Name, port.Available)
-				isInsert = true
-			} else if oldPort.Available == pulse.AvailableTypeUnknow && port.Available == pulse.AvailableTypeYes {
-				logger.Debugf("port %s from AvailableTypeUnknow to AvailableTypeYes", port.Name)
-				isInsert = true
-			}
+	for _, port := range card.Ports {
+		if port.Available == pulse.AvailableTypeNo {
+			continue
 		}
-
-		if isInsert {
-			logger.Debugf("port<%s,%s> inserted", card.core.Name, port.Name)
-			_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card.core.Name, port.Name)
-			if !portConfig.Enabled {
-				logger.Debugf("port<%s,%s> notify", card.core.Name, port.Name)
-				a.notifyPortDisabled(card.Id, port)
-			}
+		_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card, port.Name)
+		if !portConfig.Enabled {
+			logger.Debugf("port<%s,%s> notify", card.core.Name, port.Name)
+			notifyPortDisabled(card.Id, port)
 		}
 	}
 }

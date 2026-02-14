@@ -77,7 +77,6 @@ type Manager struct {
 	sysDaemon          daemon.Daemon
 	systemSigLoop      *dbusutil.SignalLoop
 	mu                 sync.RWMutex
-	builtinSets        map[string]func() error
 	gesture            gesture.Gesture
 	dock               dock.Dock
 	display            display.Display
@@ -431,14 +430,6 @@ func (m *Manager) Exec(evInfo EventInfo) error {
 	return info.doAction()
 }
 
-func (m *Manager) handleBuiltinAction(cmd string) error {
-	fn := m.builtinSets[cmd]
-	if fn == nil {
-		return fmt.Errorf("invalid built-in action %q", cmd)
-	}
-	return fn()
-}
-
 func (*Manager) GetInterfaceName() string {
 	return dbusServiceIFC
 }
@@ -619,15 +610,16 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge 
 			}
 
 			var dockPly uint32 = 0
-			if position == positionTop || position == positionBottom {
+			switch position {
+			case positionTop, positionBottom:
 				dockPly = rect.Height
-			} else if position == positionRight || position == positionLeft {
+			case positionRight, positionLeft:
 				dockPly = rect.Width
 			}
 
 			if (1-p.Y)*float64(context.screenHeight) > float64(dockPly) {
-				logger.Debug("show work space")
-				return m.handleBuiltinAction("ShowWorkspace")
+				logger.Debug("show muti task")
+				return doActionByName("ShowMultiTask")
 			}
 		}
 	}
@@ -640,11 +632,11 @@ func (m *Manager) showWidgets(show bool) error {
 		logger.Warning(err)
 		return err
 	}
-	obj := sessionBus.Object("org.deepin.dde.Widgets", "/org/deepin/dde/Widgets")
+	obj := sessionBus.Object("org.deepin.dde.shell", "/org/deepin/dde/shell/notification/center")
 	if show {
-		err = obj.Call("org.deepin.dde.Widgets.Show", 0).Err
+		err = obj.Call("org.deepin.dde.shell.notification.center.Show", 0).Err
 	} else {
-		err = obj.Call("org.deepin.dde.Widgets.Hide", 0).Err
+		err = obj.Call("org.deepin.dde.shell.notification.center.Hide", 0).Err
 	}
 	if err != nil {
 		logger.Warning(err)
@@ -658,9 +650,10 @@ func (m *Manager) handleTouchEdgeEvent(context *touchEventContext, edge string, 
 	logger.Debugf("handleTouchEdgeEvent: context:%+v edge:%s p:%+v", *context, edge, *p)
 	switch edge {
 	case context.left:
-		if p.X*float64(context.screenHeight) > 100 && m.oneFingerLeftEnable.Get() {
-			return m.clipboard.Show(0)
-		}
+		// 禁用触摸屏左侧划入唤出剪贴板功能
+		// if p.X*float64(context.screenHeight) > 100 && m.oneFingerLeftEnable.Get() {
+		// 	return m.clipboard.Show(0)
+		// }
 	case context.right:
 		if (1-p.X)*float64(context.screenWidth) > 100 && m.oneFingerRightEnable.Get() {
 			return m.showWidgets(true)
@@ -688,9 +681,10 @@ func (m *Manager) handleTouchMovementEvent(context *touchEventContext, direction
 
 		switch direction {
 		case context.left:
-			if m.oneFingerLeftEnable.Get() {
-				return m.clipboard.Hide(0)
-			}
+			// 禁用触摸屏左侧划入隐藏剪贴板功能
+			// if m.oneFingerLeftEnable.Get() {
+			// 	return m.clipboard.Hide(0)
+			// }
 		case context.right:
 			if m.oneFingerRightEnable.Get() {
 				return m.showWidgets(false)

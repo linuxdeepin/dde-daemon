@@ -248,7 +248,7 @@ func (m *Manager) getActiveSession() login1.Session {
 
 func (m *Manager) IsX11SessionActive(sender dbus.Sender) (active bool, busErr *dbus.Error) {
 	// 从login1获取当前登录的用户是否激活
-	pid, err := m.service.GetConnPID(string(sender))
+	uid, err := m.service.GetConnUID(string(sender))
 	if err != nil {
 		logger.Warning(err)
 		return false, dbusutil.ToError(err)
@@ -261,7 +261,7 @@ func (m *Manager) IsX11SessionActive(sender dbus.Sender) (active bool, busErr *d
 	}
 
 	login1Manager := login1.NewManager(service.Conn())
-	userObjectPath, err := login1Manager.GetUserByPID(0, pid)
+	userObjectPath, err := login1Manager.GetUser(0, uid)
 	if err != nil {
 		logger.Warning(err)
 		return false, dbusutil.ToError(err)

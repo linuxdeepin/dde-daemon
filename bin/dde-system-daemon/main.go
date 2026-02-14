@@ -11,7 +11,6 @@ import (
 
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts1"
-	_ "github.com/linuxdeepin/dde-daemon/apps1"
 	_ "github.com/linuxdeepin/dde-daemon/image_effect1"
 	_ "github.com/linuxdeepin/dde-daemon/system/airplane_mode1"
 	_ "github.com/linuxdeepin/dde-daemon/system/bluetooth1"
@@ -21,9 +20,7 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/inputdevices1"
 	_ "github.com/linuxdeepin/dde-daemon/system/keyevent1"
 	_ "github.com/linuxdeepin/dde-daemon/system/lang"
-	_ "github.com/linuxdeepin/dde-daemon/system/network1"
 	_ "github.com/linuxdeepin/dde-daemon/system/power1"
-	_ "github.com/linuxdeepin/dde-daemon/system/power_manager1"
 	_ "github.com/linuxdeepin/dde-daemon/system/resource_ctl"
 	_ "github.com/linuxdeepin/dde-daemon/system/scheduler"
 	_ "github.com/linuxdeepin/dde-daemon/system/swapsched1"

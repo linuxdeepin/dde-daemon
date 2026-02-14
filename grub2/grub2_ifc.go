@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	dbus "github.com/godbus/dbus/v5"
+	ddedbus "github.com/linuxdeepin/dde-daemon/dbus"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/procfs"
 )
 
 const (
@@ -33,10 +33,6 @@ func (*Grub2) GetInterfaceName() string {
 // GetSimpleEntryTitles return entry titles only in level one and will
 // filter out some useless entries such as sub-menus and "memtest86+".
 func (grub *Grub2) GetSimpleEntryTitles(sender dbus.Sender) (titles []string, busErr *dbus.Error) {
-	err := checkInvokePermission(grub.service, sender)
-	if err != nil {
-		return nil, dbusutil.ToError(err)
-	}
 	grub.service.DelayAutoQuit()
 
 	grub.readEntries()
@@ -56,26 +52,17 @@ func (grub *Grub2) GetSimpleEntryTitles(sender dbus.Sender) (titles []string, bu
 }
 
 func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) (gfxModes []string, busErr *dbus.Error) {
-	err := checkInvokePermission(g.service, sender)
+	// 只读操作，无需鉴权
+	sessionType, err := ddedbus.GetSessionType(g.service, sender)
 	if err != nil {
-		return nil, dbusutil.ToError(err)
-	}
-	pid, err := g.service.GetConnPID(string(sender))
-	if err != nil {
-		return nil, dbusutil.ToError(err)
-	}
-
-	p := procfs.Process(pid)
-	envVars, err := p.Environ()
-	if err != nil {
+		logger.Warning("failed to get session type:", err)
 		return nil, dbusutil.ToError(err)
 	}
 
-	sessionType := envVars.Get("XDG_SESSION_TYPE")
-
-	if sessionType == "wayland" {
+	switch sessionType {
+	case "wayland":
 		logger.Debug("wayland desktop environment, can not acquire output info")
-	} else if sessionType == "x11" {
+	case "x11":
 		g.service.DelayAutoQuit()
 		modes, err := g.getAvailableGfxmodes(sender)
 		if err != nil {
@@ -87,8 +74,8 @@ func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) (gfxModes []string, bus
 		for idx, m := range modes {
 			gfxModes[idx] = m.String()
 		}
-	} else {
-		logger.Debug("unkown session type, can not acquire output info")
+	default:
+		logger.Debug("unknown session type, can not acquire output info")
 	}
 
 	return gfxModes, nil

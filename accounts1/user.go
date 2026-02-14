@@ -22,7 +22,6 @@ import (
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gdkpixbuf"
-	"github.com/linuxdeepin/go-lib/procfs"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
@@ -276,22 +275,6 @@ func getUserGreeterBackground(kf *glib.KeyFile) (string, bool) {
 	return greeterBg, true
 }
 
-func (u *User) getSenderDBus(sender dbus.Sender) string {
-	pid, err := u.service.GetConnPID(string(sender))
-	if err != nil {
-		logger.Warning(err)
-		return ""
-	}
-	proc := procfs.Process(pid)
-	exe, err := proc.Exe()
-	if err != nil {
-		logger.Warning(err)
-		return ""
-	}
-	logger.Debug(" [getSenderDBus] sender exe : ", exe)
-	return exe
-}
-
 func (u *User) updateIconList() {
 	u.IconList = u.getAllIcons()
 	_ = u.emitPropChangedIconList(u.IconList)
@@ -520,54 +503,6 @@ func (u *User) getAccountType() int32 {
 		return users.UserTypeAdmin
 	}
 	return users.UserTypeStandard
-}
-
-func (u *User) checkIsControlCenter(sender dbus.Sender) bool {
-	pid, err := u.service.GetConnPID(string(sender))
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	p := procfs.Process(pid)
-	exe, err := p.Exe()
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	if exe == controlCenterPath {
-		return true
-	}
-
-	return false
-}
-
-func (u *User) checkIsDeepinDaemon(sender dbus.Sender) bool {
-	pid, err := u.service.GetConnPID(string(sender))
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	p := procfs.Process(pid)
-	exe, err := p.Exe()
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	abs, err := filepath.Abs(exe)
-	if err != nil {
-		logger.Warning(err)
-		return false
-	}
-
-	if strings.HasPrefix(abs, deepinDaemonDir) {
-		return true
-	}
-
-	return false
 }
 
 func (u *User) checkAuth(sender dbus.Sender, selfPass bool, actionId string) error {

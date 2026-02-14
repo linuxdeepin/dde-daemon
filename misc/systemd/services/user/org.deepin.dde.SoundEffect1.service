@@ -1,0 +1,16 @@
+[Unit]
+Description=Deepin Sound Effect Service
+RefuseManualStart=no
+RefuseManualStop=no
+CollectMode=inactive-or-failed
+
+PartOf=graphical-session.target
+After=dbus.service
+
+[Service]
+Type=dbus
+BusName=org.deepin.dde.SoundEffect1
+ExecStart=/usr/lib/deepin-daemon/soundeffect
+Slice=session.slice
+Restart=on-failure
+RestartSec=1s

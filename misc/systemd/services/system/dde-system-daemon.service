@@ -100,8 +100,6 @@ ReadWritePaths=-/var/lib/dde-daemon/display/
 ReadWritePaths=-/var/lib/dde-daemon/power/
 # ReadWritePaths=-/etc/tlp.d
 # com.deepin.daemon.SwapSchedHelper
-# 需要操作cgroup
-# com.deepin.daemon.PowerManager
 # 无读写文件
 # com.deepin.daemon.Daemon
 # ReadWritePaths=-/etc/NetworkManager/system-connections
@@ -116,7 +114,6 @@ ReadWritePaths=-/var/tmp
 ReadWritePaths=-/boot
 # com.deepin.daemon.KeyEvent
 # 写/proc/uos/touchpad_switch
-# com.deepin.daemon.PowerManager
 # 无读写文件
 # com.deepin.system.InputDevices
 # 写/proc/uos/touchpad_switch
@@ -133,6 +130,8 @@ ReadWritePaths=-/usr/share/tlp/deepin-system-power-control/
 ReadWritePaths=-/etc/tlp.d/
 ReadWritePaths=-/run/tlp/
 
+OOMScoreAdjust=-500
+Nice=-5
 [Install]
 # We pull this in by graphical.target instead of waiting for the bus
 # activation, to speed things up a little: gdm uses this anyway so it is nice

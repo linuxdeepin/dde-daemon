@@ -15,7 +15,7 @@ import (
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/powersupply"
 	"github.com/linuxdeepin/dde-api/powersupply/battery"
-	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	DisplayManager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.DisplayManager"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -51,7 +51,7 @@ type Manager struct {
 	batteriesMu   sync.Mutex
 	ac            *AC
 	gudevClient   *gudev.Client
-	dsgPower      ConfigManager.Manager
+	dsgPower      *dconfig.DConfig
 	// 电池是否电量低
 	batteryLow bool
 	// 初始化是否完成
@@ -258,13 +258,14 @@ func (m *Manager) init() error {
 func (m *Manager) initDsgConfig() error {
 	logger.Info("org.deepin.dde.Power1 module start init dconfig.")
 	// dsg 配置
-	ds := ConfigManager.NewConfigManager(m.service.Conn())
+	// ds := ConfigManager.NewConfigManager(m.service.Conn())
 
-	dsPowerPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsPowerName, "")
-	if err != nil {
-		return err
-	}
-	dsPower, err := ConfigManager.NewManager(m.service.Conn(), dsPowerPath)
+	// dsPowerPath, err := ds.AcquireManager(0, dsettingsAppID, dsettingsPowerName, "")
+	// if err != nil {
+	// 	return err
+	// }
+	// dsPower, err := ConfigManager.NewManager(m.service.Conn(), dsPowerPath)
+	dsPower, err := dconfig.NewDConfig(dsettingsAppID, dsettingsPowerName, "")
 	if err != nil {
 		return err
 	}
@@ -286,125 +287,93 @@ func (m *Manager) initDsgConfig() error {
 	}
 
 	getPowerSavingModeAuto := func(init bool) {
-		data, err := dsPower.Value(0, dsettingsPowerSavingModeAuto)
+		data, err := dsPower.GetValueBool(dsettingsPowerSavingModeAuto)
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
 
 		if init {
-			m.PowerSavingModeAuto = data.Value().(bool)
+			m.PowerSavingModeAuto = data
 			return
 		}
 
-		m.setPropPowerSavingModeAuto(data.Value().(bool))
+		m.setPropPowerSavingModeAuto(data)
 	}
 
 	getPowerSavingModeEnabled := func(init bool) {
-		data, err := dsPower.Value(0, dsettingsPowerSavingModeEnabled)
+		data, err := dsPower.GetValueBool(dsettingsPowerSavingModeEnabled)
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
 
 		if init {
-			m.PowerSavingModeEnabled = data.Value().(bool)
+			m.PowerSavingModeEnabled = data
 			return
 		}
 
-		m.setPropPowerSavingModeEnabled(data.Value().(bool))
+		m.setPropPowerSavingModeEnabled(data)
 	}
 
 	getPowerSavingModeAutoWhenBatteryLow := func(init bool) {
-		data, err := dsPower.Value(0, dsettingsPowerSavingModeAutoWhenBatteryLow)
+		data, err := dsPower.GetValueBool(dsettingsPowerSavingModeAutoWhenBatteryLow)
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
 
 		if init {
-			m.PowerSavingModeAutoWhenBatteryLow = data.Value().(bool)
+			m.PowerSavingModeAutoWhenBatteryLow = data
 			return
 		}
 
-		m.setPropPowerSavingModeAutoWhenBatteryLow(data.Value().(bool))
+		m.setPropPowerSavingModeAutoWhenBatteryLow(data)
 	}
 
 	getPowerSavingModeBrightnessDropPercent := func(init bool) {
-		data, err := dsPower.Value(0, dsettingsPowerSavingModeBrightnessDropPercent)
+		data, err := dsPower.GetValueInt64(dsettingsPowerSavingModeBrightnessDropPercent)
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
 
 		if init {
-			switch vv := data.Value().(type) {
-			case float64:
-				m.PowerSavingModeBrightnessDropPercent = uint32(vv)
-			case int64:
-				m.PowerSavingModeBrightnessDropPercent = uint32(vv)
-			default:
-				logger.Warning("type is wrong! type : ", vv)
-			}
-
+			m.PowerSavingModeBrightnessDropPercent = uint32(data)
 			return
 		}
 
 		ret := false
-		switch vv := data.Value().(type) {
-		case float64:
-			ret = m.setPropPowerSavingModeBrightnessDropPercent(uint32(vv))
-		case int64:
-			ret = m.setPropPowerSavingModeBrightnessDropPercent(uint32(vv))
-		default:
-			logger.Warning("type is wrong! type : ", vv)
-		}
+		m.setPropPowerSavingModeBrightnessDropPercent(uint32(data))
 		if ret {
 			logger.Info("Set power saving mode brightness drop percent", m.PowerSavingModeBrightnessDropPercent)
 		}
 	}
 	getPowerSavingModeAutoBatteryPercent := func(init bool) {
-		data, err := dsPower.Value(0, dsettingsPowerSavingModeAutoBatteryPercent)
+		data, err := dsPower.GetValueInt64(dsettingsPowerSavingModeAutoBatteryPercent)
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
 
 		if init {
-			switch vv := data.Value().(type) {
-			case float64:
-				m.PowerSavingModeAutoBatteryPercent = uint32(vv)
-			case int64:
-				m.PowerSavingModeAutoBatteryPercent = uint32(vv)
-			default:
-				logger.Warning("type is wrong! type : ", vv)
-			}
-
+			m.PowerSavingModeAutoBatteryPercent = uint32(data)
 			return
 		}
 
 		ret := false
-		switch vv := data.Value().(type) {
-		case float64:
-			ret = m.setPropPowerSavingModeAutoBatteryPercent(uint32(vv))
-		case int64:
-			ret = m.setPropPowerSavingModeAutoBatteryPercent(uint32(vv))
-		default:
-			logger.Warning("type is wrong! type : ", vv)
-		}
+		m.setPropPowerSavingModeAutoBatteryPercent(uint32(data))
 		if ret {
 			logger.Info("Set power saving mode auto battery percent", m.PowerSavingModeAutoBatteryPercent)
 		}
 	}
 
 	getMode := func(init bool) string {
-		ret, err := dsPower.Value(0, dsettingsMode)
+		value, err := dsPower.GetValueString(dsettingsMode)
 		if err != nil {
 			logger.Warning(err)
 			return ddeBalance
 		}
-
-		value := ret.Value().(string)
 		logger.Infof("value:%v", value)
 		// dsg更新配置后，校验mode有效性
 		if !_validPowerModeArray.Contains(value) {
@@ -421,13 +390,12 @@ func (m *Manager) initDsgConfig() error {
 	}
 
 	getPowerMappingConfig := func() {
-		data, err := dsPower.Value(0, dsettingsPowerMappingConfig)
+		configStr, err := dsPower.GetValueString(dsettingsPowerMappingConfig)
 		if err != nil {
 			logger.Warning(err)
 			return
 		}
 		config := make(map[string]powerConfig)
-		configStr := data.Value().(string)
 		err = json.Unmarshal([]byte(configStr), &config)
 		if err != nil {
 			logger.Warning(err)
@@ -450,8 +418,7 @@ func (m *Manager) initDsgConfig() error {
 	getMode(true)
 	getPowerMappingConfig()
 
-	dsPower.InitSignalExt(m.systemSigLoop, true)
-	_, _ = dsPower.ConnectValueChanged(func(key string) {
+	dsPower.ConnectValueChanged(func(key string) {
 		logger.Info("dconfig org.deepin.dde.daemon.power valueChanged, key : ", key)
 		switch key {
 		case dsettingsPowerSavingModeAuto:

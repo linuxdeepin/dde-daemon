@@ -6,6 +6,7 @@ package timedate
 
 import (
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 func (m *Manager) listenPropChanged() {
@@ -58,9 +59,20 @@ func (m *Manager) listenPropChanged() {
 		}
 		logger.Debug("property Timezone changed to", value)
 		m.PropsMu.Lock()
-		m.setPropTimezone(value)
+		// If system timezone is Asia/Shanghai, check installer configuration
+		// If installer configured a city from customTimeZoneList, use installer timezone
+		actualTimezone := value
+		if value == "Asia/Shanghai" {
+			installerTimeZone, err := m.getSystemTimeZoneFromInstaller()
+			if err == nil && installerTimeZone != "" &&
+			   strv.Strv(customTimeZoneList).Contains(installerTimeZone) {
+				actualTimezone = installerTimeZone
+				logger.Debugf("Use installer timezone %s instead of %s", installerTimeZone, value)
+			}
+		}
+		m.setPropTimezone(actualTimezone)
 		m.PropsMu.Unlock()
-		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsTimeZone, dbus.MakeVariant(value))
+		err = m.dConfigManager.SetValue(dbus.Flags(0), dSettingsTimeZone, dbus.MakeVariant(actualTimezone))
 		if err != nil {
 			logger.Warning(err)
 		}

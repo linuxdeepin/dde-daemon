@@ -44,42 +44,42 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-quick-login!message" line="0"/>
 			<source>Authentication is required to enable quick login</source>
-			<translation type="unfinished"/>
+			<translation>L&apos;authentification est requise pour permettre une connexion rapide.</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>Activer la connexion rapide</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!message" line="0"/>
 			<source>Authentication is required to disable quick login</source>
-			<translation type="unfinished"/>
+			<translation>L&apos;authentification est requise pour désactiver la connexion rapide.</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation type="unfinished"/>
+			<translation>Désactiver la connexion rapide</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to enable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>L&apos;authentification est requise pour activer la connexion par code WeChat.</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!description" line="0"/>
 			<source>Enable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>Activer la connexion par code WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to disable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>L&apos;authentification est requise pour désactiver la connexion par code WeChat.</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!description" line="0"/>
 			<source>Disable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>Désactiver la connexion par code WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>

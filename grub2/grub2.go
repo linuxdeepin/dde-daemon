@@ -18,6 +18,7 @@ import (
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
@@ -520,18 +521,21 @@ func (g *Grub2) addModifyTask(task modifyTask) {
 }
 
 func (g *Grub2) getSenderLang(sender dbus.Sender) (string, error) {
-	pid, err := g.service.GetConnPID(string(sender))
+	// 使用 GetConnUID 获取用户 UID
+	uid, err := g.service.GetConnUID(string(sender))
 	if err != nil {
 		return "", err
 	}
 
-	p := procfs.Process(pid)
-	environ, err := p.Environ()
+	// 从 Accounts1 获取用户的 Locale 属性
+	locale, err := getUserLocaleFromAccounts(uid)
 	if err != nil {
-		return "", err
+		logger.Debug("failed to get user locale from Accounts1:", err)
+		// 回退到系统默认 locale
+		return os.Getenv("LANG"), nil
 	}
 
-	return environ.Get("LANG"), nil
+	return locale, nil
 }
 
 func getXEnvWithSender(service *dbusutil.Service, sender dbus.Sender) (map[string]string, error) {
@@ -613,41 +617,20 @@ func getOSNum(entries []Entry) uint32 {
 }
 
 func checkInvokePermission(service *dbusutil.Service, sender dbus.Sender) error {
-	uid, err := service.GetConnUID(string(sender))
+	// 所有用户都需要通过 polkit 鉴权
+	if noCheckAuth {
+		logger.Warning("check auth disabled")
+		return nil
+	}
+
+	isAuthorized, err := checkAuth(string(sender), polikitActionIdCommon)
 	if err != nil {
 		return err
 	}
-	if uid != 0 {
-		pid, err := service.GetConnPID(string(sender))
-		if err != nil {
-			return err
-		}
-		p := procfs.Process(pid)
-		cmd, err := p.Exe()
-		if err != nil {
-			// 当调用者在使用过程中发生了更新,则在获取该进程的exe时,会出现lstat xxx (deleted)此类的error,如果发生的是覆盖,则该路径依旧存在,因此增加以下判断
-			pErr, ok := err.(*os.PathError)
-			if ok {
-				if os.IsNotExist(pErr.Err) {
-					errExecPath := strings.Replace(pErr.Path, "(deleted)", "", -1)
-					oldExecPath := strings.TrimSpace(errExecPath)
-					if dutils.IsFileExist(oldExecPath) {
-						cmd = oldExecPath
-						err = nil
-					}
-				}
-			} else {
-				return err
-			}
-		}
-		if cmd == "/usr/bin/dde-control-center" || cmd == "/usr/libexec/lastore-daemon/lastore-daemon" {
-			return nil
-		} else {
-			return fmt.Errorf("not allow %v call this method", sender)
-		}
-	} else {
-		return nil
+	if !isAuthorized {
+		return errAuthFailed
 	}
+	return nil
 }
 
 func getFstartState() (bool, int) {
@@ -709,4 +692,36 @@ func setFstartState(state bool) error {
 		}
 	}
 	return nil
+}
+
+// getUserLocaleFromAccounts 从 Accounts1 服务获取用户的 Locale 属性
+func getUserLocaleFromAccounts(uid uint32) (string, error) {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		return "", err
+	}
+
+	// 创建 Accounts Manager 对象
+	accountsManager := accounts.NewAccounts(systemConn)
+
+	// 调用 FindUserById 方法获取用户对象路径
+	// 注意：FindUserById 接受 string 类型的 UID
+	userPathStr, err := accountsManager.FindUserById(0, strconv.FormatUint(uint64(uid), 10))
+	if err != nil {
+		return "", err
+	}
+
+	// 创建 User 对象
+	user, err := accounts.NewUser(systemConn, dbus.ObjectPath(userPathStr))
+	if err != nil {
+		return "", err
+	}
+
+	// 获取 Locale 属性
+	locale, err := user.Locale().Get(0)
+	if err != nil {
+		return "", err
+	}
+
+	return locale, nil
 }

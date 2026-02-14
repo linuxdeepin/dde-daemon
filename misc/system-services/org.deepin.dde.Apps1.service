@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name=org.deepin.dde.Apps1
-Exec=/bin/false
-SystemdService=dde-system-daemon.service

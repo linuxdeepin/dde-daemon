@@ -21,18 +21,6 @@ func Test_isInVM(t *testing.T) {
 	}
 }
 
-func Test_binExist(t *testing.T) {
-	const cmdPath = "/usr/bin/apt"
-	_, err := os.Stat(cmdPath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			assert.False(t, binExist(cmdPath))
-		}
-	} else {
-		assert.True(t, binExist(cmdPath))
-	}
-}
-
 func Test_loadRendererConfig(t *testing.T) {
 	const cfgPath = "./test_data"
 

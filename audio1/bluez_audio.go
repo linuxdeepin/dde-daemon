@@ -16,6 +16,12 @@ const (
 	bluezModeHandsfree = "handsfree"
 )
 
+const (
+	PriorityA2dp     = 20000
+	PriorityHandset  = 10000
+	PriorityHandfree = 10000
+)
+
 var (
 	bluezModeDefault    = bluezModeA2dp
 	bluezModeFilterList = []string{"a2dp_source"}

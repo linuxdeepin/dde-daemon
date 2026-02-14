@@ -3,19 +3,16 @@ Description=deepin user lock service
 
 [Service]
 Type=dbus
+# 使用 lightdm 用户和组启动
+User=lightdm
+Group=lightdm
 BusName=org.deepin.dde.LockService1
 ExecStart=/usr/lib/deepin-daemon/dde-lockservice
-# display和lockservice都会读写/var/lib/lightdm/lightdm-deepin-greeter/state_user文件,因此无法将lockservice单独改为非root
-User=root
+# 通过设置/var/lib/lightdm/目录的lightdm组权限，lockservice可以安全地以lightdm用户运行
 StandardOutput=journal
 StandardError=journal
 
 ProtectSystem=strict
-InaccessiblePaths=-/etc/shadow
-InaccessiblePaths=-/etc/NetworkManager/system-connections
-InaccessiblePaths=-/etc/pam.d
-#InaccessiblePaths=-/usr/share/uadp/
-
 ReadWritePaths=-/var/lib/lightdm
 
 NoNewPrivileges=true

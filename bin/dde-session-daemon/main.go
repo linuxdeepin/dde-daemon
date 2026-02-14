@@ -4,11 +4,10 @@
 
 package main
 
-//#cgo pkg-config: x11 gtk+-3.0
+//#cgo pkg-config: x11
 //#cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
 //#include <X11/Xlib.h>
-//#include <gtk/gtk.h>
-//void init(){XInitThreads();gtk_init(0,0);}
+//void init(){XInitThreads();}
 import "C"
 import (
 	"bufio"
@@ -161,7 +160,7 @@ func main() {
 
 	if isInShutdown() {
 		logger.Warning("system is in shutdown, no need to run")
-		return
+		os.Exit(1)
 	}
 
 	flag.Parse()
@@ -248,7 +247,7 @@ func main() {
 
 	if err != nil {
 		logger.Warning(err)
-		return
+		os.Exit(1)
 	}
 
 	err = migrateUserEnv()
@@ -261,10 +260,6 @@ func main() {
 		logger.Warning(err)
 	}
 
-	defer func() {
-		logger.Info("main exit, cleaning up resources...")
-		// TODO: 这里可根据需要添加 glib/gsettings/loader/信号循环等资源清理
-	}()
 	runMainLoop()
 }
 

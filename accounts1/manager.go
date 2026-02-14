@@ -60,11 +60,12 @@ type InterfaceConfig struct {
 }
 
 const (
-	dsettingsAppID             = "org.deepin.dde.daemon"
-	dsettingsAccountName       = "org.deepin.dde.daemon.account"
-	dsettingsIsTerminalLocked  = "isTerminalLocked"
-	gsSchemaDdeControlCenter   = "com.deepin.dde.control-center"
-	settingKeyAutoLoginVisable = "auto-login-visable"
+	dsettingsAppID                 = "org.deepin.dde.daemon"
+	dsettingsAccountName           = "org.deepin.dde.daemon.account"
+	dsettingsIsTerminalLocked      = "isTerminalLocked"
+	gsSchemaDdeControlCenter       = "com.deepin.dde.control-center"
+	settingKeyAutoLoginVisable     = "auto-login-visable"
+	keyPasswordEncryptionAlgorithm = "passwordEncryptionAlgorithm"
 )
 
 //go:generate dbusutil-gen -type Manager,User manager.go user.go
@@ -668,6 +669,23 @@ func (m *Manager) checkGroupCanChange(name string) bool {
 	return gid >= 1000
 }
 
+// 从 dconfig 获取 密码加密算法的配置
+func (m *Manager) getDConfigPasswdEncryptionAlgorithm() (string, error) {
+	if m.dsAccount == nil {
+		return "", errors.New("get accounts dconfig failed")
+	}
+	algoVar, err := m.dsAccount.Value(0, keyPasswordEncryptionAlgorithm)
+	if err != nil {
+		return "", fmt.Errorf("get accounts dconfig passwordEncryptionAlgorithm failed, err: %v", err)
+	}
+
+	alg, ok := algoVar.Value().(string)
+	if !ok {
+		return "", errors.New("algoVar.Value() is not string type")
+	}
+	return alg, nil
+}
+
 func (m *Manager) initAccountDSettings() {
 	m.cfgManager = configManager.NewConfigManager(m.sysSigLoop.Conn())
 
@@ -692,6 +710,16 @@ func (m *Manager) initAccountDSettings() {
 	if data, ok := v.Value().(bool); ok {
 		m.IsTerminalLocked = data
 	}
+	users.PasswdAlgoDefault, _ = m.getDConfigPasswdEncryptionAlgorithm()
+	m.dsAccount.InitSignalExt(m.sysSigLoop, true)
+	m.dsAccount.ConnectValueChanged(func(key string) {
+		switch key {
+		case keyPasswordEncryptionAlgorithm:
+			users.PasswdAlgoDefault, _ = m.getDConfigPasswdEncryptionAlgorithm()
+			logger.Warning("password encrypt algo changed:", users.PasswdAlgoDefault)
+		}
+	})
+
 }
 
 const (

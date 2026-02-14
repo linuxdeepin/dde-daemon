@@ -6,10 +6,11 @@ package systemdunit
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/godbus/dbus/v5"
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"strings"
 )
 
 type TransientUnit struct {
@@ -39,6 +40,13 @@ func CheckUnitExist(conn *dbus.Conn, name string) bool {
 
 func (t *TransientUnit) StartTransientUnit() error {
 	systemd := systemd1.NewManager(t.Dbus)
+	if CheckUnitExist(t.Dbus, t.UnitName) {
+		err := systemd.ResetFailedUnit(0, t.UnitName)
+		if err != nil {
+			return fmt.Errorf("failed to reset failed unit: %v", err)
+		}
+	}
+
 	var properties []systemd1.Property
 	var aux []systemd1.PropertyCollection
 	properties = append(properties, systemd1.Property{"Type", dbus.MakeVariant(t.Type)})
@@ -73,12 +81,16 @@ func (t *TransientUnit) WaitforFinish(sigLoop *dbusutil.SignalLoop) bool {
 		return false
 	}
 	t.unit.InitSignalExt(sigLoop, true)
-	var result = make(chan string)
+	var result = make(chan string, 1) // buffered channel to prevent blocking
 	t.unit.ConnectPropertiesChanged(func(interfaceName string, changedProperties map[string]dbus.Variant, invalidatedProperties []string) {
 		_, ok := changedProperties["ActiveState"]
 		if ok {
 			val := changedProperties["ActiveState"].String()
-			result <- val
+			select {
+			case result <- val:
+			default:
+				// channel is full or closed, skip this update
+			}
 		}
 	})
 	defer func() {

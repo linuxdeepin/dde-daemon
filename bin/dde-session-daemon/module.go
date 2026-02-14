@@ -26,18 +26,15 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/keybinding1"
 	_ "github.com/linuxdeepin/dde-daemon/lastore1"
 
-	_ "github.com/linuxdeepin/dde-daemon/network1"
 	_ "github.com/linuxdeepin/dde-daemon/screensaver1"
 	_ "github.com/linuxdeepin/dde-daemon/service_trigger"
 	_ "github.com/linuxdeepin/dde-daemon/session/eventlog"
 	_ "github.com/linuxdeepin/dde-daemon/session/power1"
-	_ "github.com/linuxdeepin/dde-daemon/session/uadpagent1"
 	_ "github.com/linuxdeepin/dde-daemon/sessionwatcher1"
 	_ "github.com/linuxdeepin/dde-daemon/systeminfo1"
 	_ "github.com/linuxdeepin/dde-daemon/timedate1"
 	_ "github.com/linuxdeepin/dde-daemon/trayicon1"
 	_ "github.com/linuxdeepin/dde-daemon/x_event_monitor1"
-	_ "github.com/linuxdeepin/dde-daemon/xsettings1"
 )
 
 var (

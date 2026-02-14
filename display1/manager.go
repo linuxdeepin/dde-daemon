@@ -95,7 +95,8 @@ const (
 	defaultTemperatureManual     = 6500
 	defaultRotateScreenTimeDelay = 500
 
-	cmdTouchscreenDialogBin = "/usr/lib/deepin-daemon/dde-touchscreen-dialog"
+	touchscreenDialogCooldownSeconds = 5 // Seconds to wait for window manager ready
+	cmdTouchscreenDialogBin          = "/usr/lib/deepin-daemon/dde-touchscreen-dialog"
 )
 
 const (
@@ -200,8 +201,10 @@ type Manager struct {
 	TouchMap       map[string]string
 	touchscreenMap map[string]touchscreenMapValue
 	// touch.uuid -> touchScreenDialog cmd
-	touchScreenDialogMap   map[string]*exec.Cmd
-	touchScreenDialogMutex sync.RWMutex
+	touchScreenDialogMap        map[string]*exec.Cmd
+	touchScreenDialogMutex      sync.RWMutex
+	touchScreenDialogDelayTimer *time.Timer
+	touchScreenDialogReady      bool
 
 	CurrentCustomId        string
 	Primary                string
@@ -2428,6 +2431,18 @@ func (m *Manager) removeTouchscreenByDeviceNode(deviceNode string) {
 }
 
 func (m *Manager) initTouchscreens() {
+	// Start cooldown timer for touchscreen dialog
+	// Wait for window manager to be ready before showing dialogs
+	logger.Debugf("initTouchscreens: start %ds cooldown for touchscreen dialog", touchscreenDialogCooldownSeconds)
+	m.touchScreenDialogDelayTimer = time.AfterFunc(touchscreenDialogCooldownSeconds*time.Second, func() {
+		m.touchScreenDialogMutex.Lock()
+		m.touchScreenDialogReady = true
+		m.touchScreenDialogMutex.Unlock()
+		logger.Debug("initTouchscreens: cooldown ended, touchscreen dialog ready")
+		// Show dialogs for touchscreens without config
+		m.showTouchscreenDialogs()
+	})
+
 	_, err := m.dbusDaemon.ConnectNameOwnerChanged(func(name, oldOwner, newOwner string) {
 		if name == m.inputDevices.ServiceName_() && newOwner == "" {
 			m.setPropTouchscreens(nil)
@@ -2610,27 +2625,21 @@ func (m *Manager) updateTouchscreenMap(outputName string, touchUUID string, auto
 		logger.Warning(err)
 	}
 
+	logger.Debugf("updateTouchscreenMap: %s -> %s", touchUUID, outputName)
 	m.TouchMap[touchUUID] = outputName
-
 	err = m.emitPropChangedTouchMap(m.TouchMap)
 	if err != nil {
 		logger.Warning("failed to emit TouchMap PropChanged:", err)
 	}
 }
 
-func (m *Manager) removeTouchscreenMap(touchUUID string) {
-	delete(m.touchscreenMap, touchUUID)
-	err := m.setMapOutput(jsonMarshal(m.touchscreenMap))
-	if err != nil {
-		logger.Warning(err)
-	}
+func (m *Manager) pureUpdateTouchMap(outputName string, touchUUID string) {
+	logger.Debugf("pureUpdateTouchMap: %s -> %s", touchUUID, outputName)
+	m.PropsMu.Lock()
+	defer m.PropsMu.Unlock()
 
-	delete(m.TouchMap, touchUUID)
-
-	err = m.emitPropChangedTouchMap(m.TouchMap)
-	if err != nil {
-		logger.Warning("failed to emit TouchMap PropChanged:", err)
-	}
+	m.TouchMap[touchUUID] = outputName
+	m.emitPropChangedTouchMap(m.TouchMap)
 }
 
 func (m *Manager) associateTouch(monitor *Monitor, touchUUID string, auto bool) error {
@@ -2860,20 +2869,6 @@ func (m *Manager) handleTouchscreenChanged() {
 
 	monitors := m.getConnectedMonitors()
 
-	// 清除已拔下触摸屏的配置
-	for uuid := range m.touchscreenMap {
-		found := false
-		for _, touch := range m.Touchscreens {
-			if touch.UUID == uuid {
-				found = true
-				break
-			}
-		}
-		if !found {
-			m.removeTouchscreenMap(uuid)
-		}
-	}
-
 	if len(m.Touchscreens) == 1 && len(monitors) == 1 {
 		m.associateTouch(monitors[0], m.Touchscreens[0].UUID, true)
 	}
@@ -2888,11 +2883,9 @@ func (m *Manager) handleTouchscreenChanged() {
 				if err != nil {
 					logger.Warning("failed to map touchscreen:", err)
 				}
+				m.pureUpdateTouchMap(monitor.Name, touch.UUID)
 				continue
 			}
-
-			// else 配置中的显示器不存在，忽略配置并删除
-			m.removeTouchscreenMap(touch.UUID)
 		}
 
 		if touch.outputName != "" {
@@ -2951,6 +2944,39 @@ func (m *Manager) handleTouchscreenChanged() {
 			if err != nil {
 				logger.Warning("failed to map touchscreen:", err)
 			}
+			m.pureUpdateTouchMap(monitor.Name, touch.UUID)
+		}
+	}
+
+	m.cleanupStaleTouchMap()
+}
+
+// cleanupStaleTouchMap removes stale touchscreen mappings from TouchMap
+func (m *Manager) cleanupStaleTouchMap() {
+	m.PropsMu.Lock()
+	defer m.PropsMu.Unlock()
+
+	// Build set of currently existing touchscreen UUIDs
+	existingUUIDs := make(map[string]bool)
+	for _, touch := range m.Touchscreens {
+		existingUUIDs[touch.UUID] = true
+	}
+
+	// Check and remove UUIDs that no longer exist in TouchMap
+	updated := false
+	for touchUUID := range m.TouchMap {
+		if !existingUUIDs[touchUUID] {
+			logger.Debugf("remove stale touchscreen UUID from TouchMap: %s", touchUUID)
+			delete(m.TouchMap, touchUUID)
+			updated = true
+		}
+	}
+
+	// Emit property changed signal if any deletion occurred
+	if updated {
+		err := m.emitPropChangedTouchMap(m.TouchMap)
+		if err != nil {
+			logger.Warning("failed to emit TouchMap PropChanged:", err)
 		}
 	}
 }
@@ -2978,15 +3004,38 @@ func (m *Manager) initScreenRotation() {
 	}
 }
 
-// 检查当前连接的所有触控面板, 如果没有映射配置, 那么调用 OSD 弹窗.
+// showTouchscreenDialogs checks all connected touchscreens, if no mapping config exists, show OSD dialog.
 func (m *Manager) showTouchscreenDialogs() {
+	m.touchScreenDialogMutex.RLock()
+	ready := m.touchScreenDialogReady
+	m.touchScreenDialogMutex.RUnlock()
+
+	if !ready {
+		logger.Debug("showTouchscreenDialogs: skip, still in cooldown period")
+		return
+	}
+
+	m.doShowTouchscreenDialogs()
+}
+
+// doShowTouchscreenDialogs actually shows dialogs for touchscreens without config.
+func (m *Manager) doShowTouchscreenDialogs() {
+	// Collect touchscreens that need configuration
+	m.PropsMu.RLock()
+	var touchscreensNeedConfig []*Touchscreen
 	for _, touch := range m.Touchscreens {
 		if _, ok := m.touchscreenMap[touch.UUID]; !ok {
-			logger.Debug("cannot find touchscreen", touch.UUID, "'s configure, show OSD")
-			err := m.showTouchscreenDialog(touch.UUID)
-			if err != nil {
-				logger.Warning("shotTouchscreenOSD", err)
-			}
+			touchscreensNeedConfig = append(touchscreensNeedConfig, touch)
+		}
+	}
+	m.PropsMu.RUnlock()
+
+	// Show dialogs for touchscreens without config
+	for _, touch := range touchscreensNeedConfig {
+		logger.Debugf("cannot find touchscreen %s configuration, show touchscreen dialog", touch.UUID)
+		err := m.showTouchscreenDialog(touch.UUID)
+		if err != nil {
+			logger.Warning("failed to show touchscreen dialog", err)
 		}
 	}
 }

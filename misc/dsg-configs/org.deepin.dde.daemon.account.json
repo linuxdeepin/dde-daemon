@@ -21,6 +21,16 @@
       "description": "Whether to allow local unlocking of the terminal",
       "permissions": "readwrite",
       "visibility": "private"
+    },
+    "passwordEncryptionAlgorithm": {
+      "value": "sm3",
+      "serial": 0,
+      "flags": ["global"],
+      "name": "passwordEncryptionAlgorithm",
+      "name[zh_CN]": "密码加密算法",
+      "description": "Password encryption algorithm (sha512, sha256, yescrypt, sm3(default))",
+      "permissions": "readonly",
+      "visibility": "private"
     }
   }
 }

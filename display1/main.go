@@ -34,7 +34,7 @@ func NewModule(logger *log.Logger) *daemon {
 }
 
 func (*daemon) GetDependencies() []string {
-	return []string{"xsettings"}
+	return []string{}
 }
 
 var _mainBeginTime time.Time

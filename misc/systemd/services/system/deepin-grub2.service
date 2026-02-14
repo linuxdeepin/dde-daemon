@@ -25,7 +25,8 @@ ReadWritePaths=-/etc/grub.d
 ReadWritePaths=-/boot
 
 NoNewPrivileges=yes
-ProtectHome=yes
+# 允许只读访问 /home 以读取 .Xauthority 文件
+ProtectHome=read-only
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 ProtectControlGroups=yes

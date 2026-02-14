@@ -15,11 +15,10 @@ import (
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/keyfile"
-	"github.com/linuxdeepin/go-lib/procfs"
-	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const clearData = "\033\143\n"
+const polkitActionSystemAdministration = "org.deepin.dde.daemon.system-administration"
 
 func (*Daemon) ClearTtys() *dbus.Error {
 	for _, tty := range getValidTtys() {
@@ -99,41 +98,14 @@ const (
 // resetCustom:重置自定义设置
 // live:实时生效tty控制
 func (d *Daemon) SetLogindTTY(sender dbus.Sender, NAutoVTs int, resetCustom bool, live bool) *dbus.Error {
-	// checkAuth root进程和dde组件管控应用可以调用
-	var cmd string
-	uid, err := d.service.GetConnUID(string(sender))
+	// 所有用户都需要通过 polkit 鉴权
+	err := checkAuth(polkitActionSystemAdministration, string(sender))
 	if err != nil {
+		logger.Warningf("SetLogindTTY auth failed: %v", err)
 		return dbusutil.ToError(err)
 	}
-	if uid != 0 {
-		pid, err := d.service.GetConnPID(string(sender))
-		if err != nil {
-			return dbusutil.ToError(err)
-		}
-		p := procfs.Process(pid)
-		cmd, err = p.Exe()
-		if err != nil {
-			// 当调用者在使用过程中发生了更新,则在获取该进程的exe时,会出现lstat xxx (deleted)此类的error,如果发生的是覆盖,则该路径依旧存在,因此增加以下判断
-			pErr, ok := err.(*os.PathError)
-			if ok {
-				if os.IsNotExist(pErr.Err) {
-					errExecPath := strings.Replace(pErr.Path, "(deleted)", "", -1)
-					oldExecPath := strings.TrimSpace(errExecPath)
-					if dutils.IsFileExist(oldExecPath) {
-						cmd = oldExecPath
-						err = nil
-					}
-				}
-			} else {
-				return dbusutil.ToError(err)
-			}
-		}
-		if cmd != "/usr/bin/dde-component-control" {
-			return dbusutil.ToError(fmt.Errorf("not allow %v call this method", cmd))
-		}
-	}
-	// end check auth
-	logger.Infof("SetLogindTTY NAutoVTs:%v resetCustom:%v live:%v from: %v", NAutoVTs, resetCustom, live, cmd)
+
+	logger.Infof("SetLogindTTY NAutoVTs:%v resetCustom:%v live:%v", NAutoVTs, resetCustom, live)
 	ddeLogindConfPath := filepath.Join(logindConfDir, ddeLogindConf)
 	if resetCustom {
 		err := os.RemoveAll(ddeLogindConfPath)

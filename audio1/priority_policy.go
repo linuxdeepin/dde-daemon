@@ -82,11 +82,17 @@ func DetectPortType(card *pulse.Card, port *pulse.CardPortInfo) int {
 	return PortTypeUnknown
 }
 
+type Position struct {
+	tp    int // 所在队列
+	index int // 在队列中的索引
+}
+
 // 优先级中使用的端口（注意：用于表示端口的结构体有好几个，不要弄混）
 type PriorityPort struct {
 	CardName string
 	PortName string
-	PortType int // 部分声卡需要在Property里判断类型，只有CardName和PortName不足以用来判断PortType，因此添加此项
+	PortType int    // 部分声卡需要在Property里判断类型，只有CardName和PortName不足以用来判断PortType，因此添加此项
+	Priority uint32 // 端口权重，用于排序
 }
 
 // 端口实例优先级列表
@@ -119,14 +125,14 @@ func (typeList *PriorityTypeList) hasElement(value int) bool {
 
 // 管理一组实例和类型的优先级
 type PriorityPolicy struct {
-	Ports PriorityPortList
+	Ports map[int]PriorityPortList
 	Types PriorityTypeList
 }
 
 // 新建一个PriorityPolicy
 func NewPriorityPolicy() *PriorityPolicy {
 	return &PriorityPolicy{
-		Ports: make(PriorityPortList, 0),
+		Ports: make(map[int]PriorityPortList, 0),
 		Types: make(PriorityTypeList, 0),
 	}
 }
@@ -140,34 +146,6 @@ func (pp *PriorityPolicy) completeTypes() {
 		if !pp.Types.hasElement(i) {
 			pp.Types = append(pp.Types, i)
 			logger.Debugf("append type %d", i)
-		}
-	}
-}
-
-// 调整输出端口实例的优先级
-// 当代码中定义的端口类型发生了变化时，某些端口的优先级需要进行调整
-// 例如原先将 多声道 视为 内置扬声器
-// 现在将 多声道 单独分为一类
-// 从旧的配置文件里读出来的多声道实例的优先级就不合理了
-// 此时通过类型优先级对实例优先级进行排序
-// 为了避免原先类型优先级相同的端口在排序时被打乱
-// 不能使用快速排序，这里使用稳定的冒泡排序
-func (pp *PriorityPolicy) sortPorts() {
-	length := len(pp.Ports)
-	for i := 0; i+1 < length; i++ {
-		for j := 0; j+i+1 < length; j++ {
-			port1 := pp.Ports[j]
-			port2 := pp.Ports[j+1]
-			type1 := port1.PortType
-			type2 := port2.PortType
-
-			// type1优先级比type2低，交换
-			if type1 != type2 && pp.GetPreferType(type1, type2) == type2 {
-				pp.Ports[j], pp.Ports[j+1] = pp.Ports[j+1], pp.Ports[j]
-				logger.Debugf("swap <%s:%s> and <%s:%s>",
-					pp.Ports[j].CardName, pp.Ports[j].PortName,
-					pp.Ports[j+1].CardName, pp.Ports[j+1].PortName)
-			}
 		}
 	}
 }
@@ -188,215 +166,149 @@ func (pp *PriorityPolicy) GetPreferType(type1 int, type2 int) int {
 	return -1
 }
 
-// 比较端口实例的优先级
-func (pp *PriorityPolicy) GetPreferPort(port1 *PriorityPort, port2 *PriorityPort) *PriorityPort {
-	for _, port := range pp.Ports {
-		if *port == *port1 || *port == *port2 {
-			return port
-		}
-	}
-
-	return nil
-}
-
-// 查找一个端口的index（这个index仅仅指在优先级列表中的index，和PulseAudio中的index无关）
-func (pp *PriorityPolicy) FindPortIndex(cardName string, portName string) int {
-	for i, port := range pp.Ports {
-		if port.CardName == cardName && port.PortName == portName {
-			return i
-		}
-	}
-
-	return -1
-}
-
-// 在末尾添加一个端口
-func (pp *PriorityPolicy) AppendPort(port *PriorityPort) {
-	pp.Ports = append(pp.Ports, port)
-}
-
-// 在指定位置之前插入一个端口,index <= 0 则插入到开头，index >= len 则添加到末尾
-func (pp *PriorityPolicy) InsertPortBeforeIndex(port *PriorityPort, index int) {
-	if index < 0 {
-		index = 0
-	}
-
-	if index > len(pp.Ports) {
-		index = len(pp.Ports)
-	}
-
-	tail := append(PriorityPortList{}, pp.Ports[index:]...) // deep copy
-	pp.Ports = append(pp.Ports[:index], port)
-	pp.Ports = append(pp.Ports, tail...)
-}
-
-// 添加一个端口，返回插入的位置索引
-func (pp *PriorityPolicy) AddPort(port *PriorityPort) int {
-	// 根据类型优先级，将端口插入到合适的位置
-	length := len(pp.Ports)
-	for i, p := range pp.Ports {
-		if pp.GetPreferType(port.PortType, p.PortType) == port.PortType {
-			pp.InsertPortBeforeIndex(port, i)
-			return i
-		}
-	}
-
-	// 如果其它端口优先级都比它高，添加到末尾
-	pp.AppendPort(port)
-	return length
-}
-
-// 添加一个原始端口，返回插入的位置索引
-func (pp *PriorityPolicy) AddRawPort(card *pulse.Card, port *pulse.CardPortInfo) int {
-	portType := DetectPortType(card, port)
-	newPort := PriorityPort{card.Name, port.Name, portType}
-
-	// 根据类型优先级，将端口插入到合适的位置
-	length := len(pp.Ports)
-	for i, p := range pp.Ports {
-		if pp.GetPreferType(portType, p.PortType) == portType {
-			pp.InsertPortBeforeIndex(&newPort, i)
-			return i
-		}
-	}
-
-	// 如果其它端口优先级都比它高，添加到末尾
-	pp.AppendPort(&newPort)
-	return length
-}
-
-// 通过index删除一个端口
-func (pp *PriorityPolicy) RemovePortByIndex(index int) bool {
-	if index < 0 || index >= len(pp.Ports) {
-		return false
-	}
-
-	pp.Ports = append(pp.Ports[:index], pp.Ports[index+1:]...)
-	return true
-}
-
-// 通过名称删除一个端口
-func (pp *PriorityPolicy) RemovePortByName(cardName string, portName string) bool {
-	index := pp.FindPortIndex(cardName, portName)
-	return pp.RemovePortByIndex(index)
-}
-
-// 删除一个端口
-func (pp *PriorityPolicy) RemovePort(port *PriorityPort) bool {
-	return pp.RemovePortByName(port.CardName, port.PortName)
-}
-
-// 设置有效端口
-// 这是因为从配置文件读出来的数据是上次运行时保存的，两次运行之间（例如关机状态下）可能插拔了设备
-// 因此需要删除无效端口，添加新的有效端口
-func (pp *PriorityPolicy) SetPorts(ports PriorityPortList) {
-	// 清除无效的端口
-	count := len(pp.Ports)
-	for i := 0; i < count; {
-		port := pp.Ports[i]
-		if !ports.hasElement(port) {
-			pp.RemovePort(port)
-			logger.Debugf("remove port <%s:%s>", port.CardName, port.PortName)
-			count--
-		} else {
-			logger.Debugf("valid port <%s:%s>", port.CardName, port.PortName)
-			i++
-		}
-	}
-
-	// 添加缺少的有效端口
-	count = len(ports)
-	for i := 0; i < count; i++ {
-		port := ports[i]
-		if !pp.Ports.hasElement(port) {
-			pp.AddPort(port)
-			logger.Debugf("add port <%s:%s>", port.CardName, port.PortName)
-			if port.PortType < 0 || port.PortType >= PortTypeCount {
-				logger.Warningf("unexpected port type <%d> of port <%s:%s>", port.PortType, port.CardName, port.PortName)
+func (pp *PriorityPolicy) FindPort(cardName string, portName string) *Position {
+	for tp, pList := range pp.Ports {
+		for i, p := range pList {
+			if p.CardName == cardName && p.PortName == portName {
+				return &Position{tp: tp, index: i}
 			}
+		}
+	}
+	return &Position{tp: PortTypeInvalid, index: -1}
+}
+
+func (pp *PriorityPolicy) InsertPort(card *pulse.Card, port *pulse.CardPortInfo) {
+	pos := pp.FindPort(card.Name, port.Name)
+	if pos.tp != PortTypeInvalid {
+		// 已存在，无需插入
+		return
+	}
+	tp := DetectPortType(card, port)
+	newPort := &PriorityPort{
+		CardName: card.Name,
+		PortName: port.Name,
+		PortType: tp,
+		Priority: port.Priority,
+	}
+
+	pp.insertByPriority(newPort, tp)
+}
+
+// 为了解决pms: BUG-340227, 声卡端口会变化的情况
+// insertByPriority 按 priority 插入端口，如果队列中已存在该声卡的端口，
+// 遍历队列找到最后一个权重大于新端口的同声卡端口，插入到其后面，否则插入到队头
+func (pp *PriorityPolicy) insertByPriority(newPort *PriorityPort, tp int) {
+	insertAfterIndex := -1 // 记录最后一个权重大于新端口的同声卡端口位置
+
+	// 遍历队列
+	for i, existingPort := range pp.Ports[tp] {
+		// 如果是相同声卡
+		if existingPort.CardName == newPort.CardName {
+			// 如果该端口权重大于（不能等于）新端口，记录位置
+			if existingPort.Priority > newPort.Priority {
+				insertAfterIndex = i
+			}
+		}
+	}
+
+	// 如果找到了权重大于新端口的同声卡端口，插入到该位置之后
+	if insertAfterIndex != -1 {
+		insertIndex := insertAfterIndex + 1
+		// 如果是插入到末尾
+		if insertIndex >= len(pp.Ports[tp]) {
+			pp.Ports[tp] = append(pp.Ports[tp], newPort)
 		} else {
-			logger.Debugf("exist port <%s:%s>", port.CardName, port.PortName)
+			// 插入到中间位置
+			pp.Ports[tp] = append(pp.Ports[tp][:insertIndex],
+				append([]*PriorityPort{newPort}, pp.Ports[tp][insertIndex:]...)...)
+		}
+		return
+	}
+
+	// 否则插入到队头
+	pp.Ports[tp] = append([]*PriorityPort{newPort}, pp.Ports[tp]...)
+}
+
+func (pp *PriorityPolicy) GetTheFirstPort(available portList) (*PriorityPort, *Position) {
+	for _, tp := range pp.Types {
+		for i, port := range pp.Ports[tp] {
+			if available.isExists(port.CardName, port.PortName) {
+				return port, &Position{tp: tp, index: i}
+			}
 		}
 	}
+	return nil, &Position{tp: PortTypeInvalid, index: -1}
 }
 
-// 获取优先级最高的端口
-func (pp *PriorityPolicy) GetTheFirstPort() PriorityPort {
-	if len(pp.Ports) > 0 {
-		return *(pp.Ports[0])
-	} else {
-		return PriorityPort{
-			"",
-			"",
-			PortTypeInvalid,
+func (pp *PriorityPolicy) GetNextPort(available portList, pos *Position) (*PriorityPort, *Position) {
+	if pos.tp == PortTypeInvalid {
+		return nil, &Position{tp: PortTypeInvalid, index: -1}
+	}
+	for tp := pos.tp; tp < PortTypeCount; tp++ {
+		for i := pos.index + 1; i < len(pp.Ports[tp]); i++ {
+			port := pp.Ports[tp][i]
+			if ports, ok := available[port.CardName]; ok {
+				if ports.Contains(port.PortName) {
+					return port, &Position{tp: tp, index: i}
+				}
+			}
 		}
 	}
+	return nil, &Position{tp: PortTypeInvalid, index: -1}
 }
 
-// 获取优先级最高的类型
-func (pp *PriorityPolicy) GetTheFirstType() int {
-	if len(pp.Types) > 0 {
-		return pp.Types[0]
-	} else {
-		return -1
-	}
-}
-
-// 将指定类型的优先级设为最高，此函数不会提高该类型的端口的优先级
-func (pp *PriorityPolicy) SetTheFirstType(portType int) bool {
-	if portType < 0 || portType >= PortTypeCount {
+func (pp *PriorityPolicy) SetTheFirstPort(cardName string, portName string, available portList) bool {
+	if !available.isExists(cardName, portName) {
+		logger.Warningf("port <%v:%v> not avaiable", cardName, portName)
 		return false
 	}
 
-	newTypes := []int{portType}
-	for _, t := range pp.Types {
-		if t != portType {
-			newTypes = append(newTypes, t)
+	// 第一步：找到并删除指定的端口
+	var targetPort *PriorityPort
+	var targetType int
+	for _, tp := range pp.Types {
+		for i, p := range pp.Ports[tp] {
+			if p.CardName == cardName && p.PortName == portName {
+				// 保存端口信息
+				targetPort = &PriorityPort{
+					CardName: p.CardName,
+					PortName: p.PortName,
+					PortType: p.PortType,
+					Priority: p.Priority,
+				}
+				targetType = tp
+				// 从列表中删除这个端口
+				pp.Ports[tp] = append(pp.Ports[tp][:i], pp.Ports[tp][i+1:]...)
+				break
+			}
+		}
+		if targetPort != nil {
+			break
 		}
 	}
 
-	pp.Types = newTypes
-	return true
-}
-
-// 将指定端口的优先级设为最高，副作用：将该端口类型的优先级设为最高，将同类端口的优先级提高
-func (pp *PriorityPolicy) SetTheFirstPort(cardName string, portName string) bool {
-	portIndex := pp.FindPortIndex(cardName, portName)
-	if portIndex < 0 {
-		logger.Warningf("cannot find <%s:%s> in priority list", cardName, portName)
+	if targetPort == nil {
+		logger.Warning("set first failed: port not found, card,port", cardName, portName)
 		return false
 	}
-
-	// 类型优先级设为最高
-	portType := pp.Ports[portIndex].PortType
-	pp.SetTheFirstType(portType)
-
-	// 端口优先级设为最高
-	port := pp.Ports[portIndex]
-	pp.RemovePortByIndex(portIndex)
-	pp.InsertPortBeforeIndex(port, 0)
-
-	// 提升相同类型端口的优先级
-	insertPos := 0
-	for i, p := range pp.Ports {
-		if p.PortType == portType {
-			pp.RemovePortByIndex(i)
-			pp.InsertPortBeforeIndex(p, insertPos)
-			insertPos++
+	// 第二步：找到第一个可用端口的位置，并在其之前插入目标端口
+	for _, tp := range pp.Types {
+		for i, p := range pp.Ports[tp] {
+			if available.isExists(p.CardName, p.PortName) {
+				// 找到第一个可用端口，在它之前插入目标端口
+				// 创建新的切片以避免切片操作问题
+				newList := make([]*PriorityPort, 0, len(pp.Ports[tp])+1)
+				newList = append(newList, pp.Ports[tp][:i]...)
+				newList = append(newList, targetPort)
+				newList = append(newList, pp.Ports[tp][i:]...)
+				pp.Ports[tp] = newList
+				return true
+			}
 		}
 	}
 
-	return true
-}
-
-// 删除一个声卡上的所有端口
-func (pp *PriorityPolicy) RemoveCard(cardName string) {
-	for i := 0; i < len(pp.Ports); {
-		p := pp.Ports[i]
-		if p.CardName == cardName {
-			pp.RemovePortByIndex(i)
-		} else {
-			i++
-		}
-	}
+	// 如果没有找到任何可用端口，将目标端口放回原来的类型列表的开头
+	pp.Ports[targetType] = append([]*PriorityPort{targetPort}, pp.Ports[targetType]...)
+	logger.Warning("set first failed: no available port found, card,port", cardName, portName)
+	return false
 }

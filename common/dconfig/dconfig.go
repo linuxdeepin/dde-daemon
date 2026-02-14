@@ -93,11 +93,14 @@ func (dConfig *DConfig) GetValueInt64(key string) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	v, ok := value.(int64)
-	if !ok {
+	switch v := value.(type) {
+	case int64:
+		return v, nil
+	case float64:
+		return int64(v), nil
+	default:
 		return 0, fmt.Errorf("dconfig get int error: invalid value")
 	}
-	return v, nil
 }
 
 func (dConfig *DConfig) GetValueFloat64(key string) (float64, error) {

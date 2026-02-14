@@ -1,3 +1,180 @@
+dde-daemon (6.1.75) unstable; urgency=medium
+
+  * fix: fix audio resume logic for default sink/source
+  * fix: fix sound effect process exit and optimize bluetooth
+    notifications
+  * i18n: Updates for project Deepin Desktop Environment (#1025)
+  * fix: remove user dconfig data when deleting user
+  * i18n: Updates for project Deepin Desktop Environment (#1020)
+  * fix: 调整蓝牙文件传输通知的文案
+  * fix(display): Touch screen config becomes empty after
+    unplugging/replugging and canceling mapping dialog
+  * fix(keybinding): register both Super_L and Super_R when adding Super
+    key shortcut
+  * fix: handle modifier key release events properly
+  * fix(systeminfo): Remove CPU count and enhance frequency logic
+  * fix: 解决系统触发黑屏时, 先显示锁屏再黑屏的问题
+  * chore: update deepin dependency versions
+  * feat: add dedicated maximize and restore window gestures
+  * fix(bluetooth): optimize file transfer cancellation mechanism and
+    notification handling
+  * fix: 解决grub2通过x11检测分辨率失败的问题
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 06 Feb 2026 09:27:52 +0800
+
+dde-daemon (6.1.74) unstable; urgency=medium
+
+  * Fix build failure on Go 1.24.6
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 29 Jan 2026 21:43:17 +0800
+
+dde-daemon (6.1.73) unstable; urgency=medium
+
+  * feat: support configurable password encryption algorithms
+  * feat: add polkit authorization for system services
+  * fix: 修复插拔触控屏,触摸屏绑定关系会丢失问题
+  * fix: add wheel speed value validation in setWheelSpeed
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 28 Jan 2026 15:05:46 +0800
+
+dde-daemon (6.1.72) unstable; urgency=medium
+
+  * fix: 解决设置快速登录后,切换用户失败的问题
+  * feat: dbus安全整改
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 23 Jan 2026 09:37:25 +0800
+
+dde-daemon (6.1.71) unstable; urgency=medium
+
+  * fix: enhance system daemon resource management
+  * fix: 解决设置快速登录后,切换用户失败的问题
+  * fix: 解决触控屏拖拽窗口移动异常的问题
+  * fix: 解决接入有限耳机, 输入输出还是null的问题
+  * feat: 更新翻译
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 15 Jan 2026 19:18:33 +0800
+
+dde-daemon (6.1.70) unstable; urgency=medium
+
+  * chore: 更新go.mod
+  * fix: 解决音频端口初始化时为null-sink的问题
+  * feat: replace kernel file with udev for touchpad control
+  * i18n: Updates for project Deepin Desktop Environment (#983)
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 07 Jan 2026 15:20:15 +0800
+
+dde-daemon (6.1.69) unstable; urgency=medium
+
+  * fix: initialize GDK in accounts module and remove GTK init
+  * fix: handle kglobalaccel D-Bus name owner properly
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 25 Dec 2025 19:48:14 +0800
+
+dde-daemon (6.1.68) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#981)
+  * i18n: Translate misc/po/dde-daemon.pot in sq (#973)
+  * chore: update .tx/config based on Transifex platform state
+  * chore: remove es_XX locale variants, update transifex.yaml
+  * fix: add nil check for audio port handling
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 18 Dec 2025 19:47:35 +0800
+
+dde-daemon (6.1.67) unstable; urgency=medium
+
+  * refactor: remove smart battery management feature
+  * fix: update DBus job interface name in locale package
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 11 Dec 2025 20:30:38 +0800
+
+dde-daemon (6.1.66) unstable; urgency=medium
+
+  * chore: remove xsettings module
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 04 Dec 2025 19:12:15 +0800
+
+dde-daemon (6.1.65) unstable; urgency=medium
+
+  * fix: fix sound card port priority ordering issue
+  * chore: 安全整改, 修改使用GetConnPID来获取用户的环境变量,改成使用GetConnUID
+  * fix: Fix the issue of failing to switch languages
+  * i18n: remove de_DE translation resources
+  * i18n: Updates for project Deepin Desktop Environment (#959)
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 27 Nov 2025 20:06:20 +0800
+
+dde-daemon (6.1.64) unstable; urgency=medium
+
+  * feat: add read-only protection switch and translations
+  * fix: resolve timezone display issue when switching to Beijing Time
+  * feat: 安全整改,去掉部分dbus通过GetConnPID鉴权二进制路径的逻辑
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 13 Nov 2025 19:43:08 +0800
+
+dde-daemon (6.1.63) unstable; urgency=medium
+
+  * refactor: optimize audio code and fix issues
+  * fix: fix bluetooth audio port priority assignment
+  * chore: remove powermanager module
+  * refactor: replace pactl scripts with pulseaudio API calls
+  * fix: remove virtual device filtering for bluetooth touchpad
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR
+  * fix: code optimization
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 07 Nov 2025 10:13:39 +0800
+
+dde-daemon (6.1.62) unstable; urgency=medium
+
+  * fix: update notification center D-Bus interface paths
+  * feat: 优化了音频配置.
+  * fix: extend custom timezone mapping list
+  * fix: correct config key in DSG property initialization
+  * fix: update OBEX file transfer notification timeout
+
+ -- Robertkill <lvpeilong@uniontech.com>  Thu, 30 Oct 2025 19:41:40 +0800
+
+dde-daemon (6.1.61) unstable; urgency=medium
+
+  * fix: resolve crash from dconfig type mismatch
+
+ -- fuleyi <fuleyi@uniontech.com>  Mon, 27 Oct 2025 13:51:30 +0800
+
+dde-daemon (6.1.60) unstable; urgency=medium
+
+  * fix: 对智能电池电量增加阀值配置,以及开关
+  * fix: disable touchscreen left edge clipboard gesture
+  * Revert "fix: Modify the default clipboard shortcut key"
+  * Revert "fix: prevent GTK window size change on daemon exit"
+  * fix: check lightdm group existence before permission setup
+  * i18n: Updates for project Deepin Desktop Environment (#906)
+  * fix: Modify the default clipboard shortcut key
+
+ -- wujiangyu <wujiangyu@uniontech.com>  Thu, 23 Oct 2025 17:18:59 +0800
+
+dde-daemon (6.1.59) unstable; urgency=medium
+
+  * fix: revert device listener thread management to fix CPU usage
+  * fix: restrict scheduler module to Deepin/UOS platforms only
+  * fix: remove ACPI event configurations for security compliance
+  * chore: remove deprecated appinfo and apps1 modules
+  * fix: remove uadpagent module and gnome-keyring dependency
+  * fix: remove deepin-proxy dependency for security compliance
+  * fix: security hardening for dde-daemon services
+  * chore: remove iw module
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 16 Oct 2025 16:55:22 +0800
+
+dde-daemon (6.1.58) unstable; urgency=medium
+
+  * feat: 移除网络模块
+  * feat: 移除网络模块
+  * fix: change power mode setting to use transient service
+  * fix: touchpad state not preserved after Bluetooth device
+    reconnection
+  * fix: improve device listener thread management
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 10 Oct 2025 15:39:33 +0800
+
 dde-daemon (6.1.57) unstable; urgency=medium
 
   * fix: initialize power saving brightness drop percent

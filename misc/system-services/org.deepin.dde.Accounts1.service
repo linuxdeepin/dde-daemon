@@ -2,4 +2,3 @@
 Name=org.deepin.dde.Accounts1
 Exec=/bin/false
 SystemdService=dde-system-daemon.service
-SystemdService=deepin-accounts1-daemon.service

@@ -16,27 +16,78 @@
 #define ERROR_NULLPOINTER -1;
 #define ERROR_NOERROR 0;
 
-char *mkpasswd(const char *words) {
-    unsigned long seed[2];
-    char salt[] = "$6$........";
-    const char *const seedchars = "./0123456789ABCDEFGHIJKLMNOPQRST"
-                                  "UVWXYZabcdefghijklmnopqrstuvwxyz";
+#ifndef CRYPT_GENSALT_OUTPUT_SIZE
+#define CRYPT_GENSALT_OUTPUT_SIZE 192
+#endif
+
+typedef struct {
+    const char *name;
+    const char *prefix;
+} PasswordAlgorithm;
+
+static const PasswordAlgorithm SUPPORTED_ALGORITHMS[] = {
+    {"sm3",      "$sm3$"},
+    {"yescrypt", "$y$"},
+    {"sha512",   "$6$"},
+    {"sha256",   "$5$"},
+    {NULL,       NULL}
+};
+
+#define DEFAULT_ALGORITHM 0
+
+static char *try_encrypt_password(const char *words, const char *prefix) {
+    char output[CRYPT_GENSALT_OUTPUT_SIZE];
+    char *setting;
     char *password;
-    int i;
 
-    // Generate a (not very) random seed. You should do it better than this...
-    seed[0] = time(NULL);
-    seed[1] = getpid() ^ (seed[0] >> 14 & 0x30000);
-
-    // Turn it into printable characters from `seedchars'.
-    for (i = 0; i < 8; i++) {
-        salt[3 + i] = seedchars[(seed[i / 5] >> (i % 5) * 6) & 0x3f];
+    setting = crypt_gensalt_rn(prefix, 0, NULL, 0, output, sizeof(output));
+    if (setting == NULL || setting[0] == '*') {
+        return NULL;
     }
 
-    // DES Encrypt
-    password = crypt(words, salt);
+    password = crypt(words, setting);
+    if (password == NULL || password[0] == '*') {
+        return NULL;
+    }
 
     return password;
+}
+
+char *mkpasswd_with_algo(const char *words, const char *algo) {
+    char *password;
+    int i;
+    const PasswordAlgorithm *selected_algo = NULL;
+
+    if (algo != NULL && algo[0] != '\0') {
+        for (i = 0; SUPPORTED_ALGORITHMS[i].name != NULL; i++) {
+            if (strcmp(algo, SUPPORTED_ALGORITHMS[i].name) == 0) {
+                selected_algo = &SUPPORTED_ALGORITHMS[i];
+                break;
+            }
+        }
+    }
+
+    if (selected_algo == NULL) {
+        selected_algo = &SUPPORTED_ALGORITHMS[DEFAULT_ALGORITHM];
+    }
+
+    password = try_encrypt_password(words, selected_algo->prefix);
+    if (password != NULL) {
+        return password;
+    }
+
+    for (i = 0; SUPPORTED_ALGORITHMS[i].name != NULL; i++) {
+        if (&SUPPORTED_ALGORITHMS[i] == selected_algo) {
+            continue;
+        }
+
+        password = try_encrypt_password(words, SUPPORTED_ALGORITHMS[i].prefix);
+        if (password != NULL) {
+            return password;
+        }
+    }
+
+    return NULL;
 }
 
 int lock_shadow_file() {
