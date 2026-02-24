@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -114,8 +114,10 @@ func (m *Manager) setWheelSpeed() {
 	// speed range is [1,100]
 	if speed < uint32(min) {
 		speed = uint32(min)
+		defer m.WheelSpeed.Set(speed)
 	} else if speed > uint32(max) {
 		speed = uint32(max)
+		defer m.WheelSpeed.Set(speed)
 	}
 	logger.Debug("setWheelSpeed", speed)
 
