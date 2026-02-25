@@ -216,17 +216,6 @@ func (c *AudioController) changeSinkVolume(raised bool) error {
 		}
 
 		logger.Debug("[changeSinkVolume] will set volume to:", v)
-		mute, err := sink.Mute().Get(0)
-		if err != nil {
-			return err
-		}
-
-		if mute {
-			err = sink.SetMute(0, false)
-			if err != nil {
-				logger.Warning(err)
-			}
-		}
 
 		err = sink.SetVolume(0, v, true)
 		if err != nil {
