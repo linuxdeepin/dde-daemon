@@ -1,3 +1,12 @@
+dde-daemon (6.1.76) unstable; urgency=medium
+
+  * fix: 优化了音频逻辑
+  * fix: 当设置滚轮配置超出范围时,矫正配置
+  * fix(bluetooth): display notification when file transfer times out
+  * fix(keybinding): fix mute state conflict when volume is reduced to 0
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 27 Feb 2026 15:48:12 +0800
+
 dde-daemon (6.1.75) unstable; urgency=medium
 
   * fix: fix audio resume logic for default sink/source
