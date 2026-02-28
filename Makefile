@@ -199,6 +199,9 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/etc/default/grub.d
 	cp -f misc/etc/default/grub.d/* ${DESTDIR}/etc/default/grub.d
 
+	install -d -m 755 ${DESTDIR}/etc/grub.d
+	install -m 755 misc/etc/grub.d/* ${DESTDIR}/etc/grub.d/
+
 	mkdir -pv ${DESTDIR}/etc/deepin
 	cp -f misc/etc/deepin/* ${DESTDIR}/etc/deepin
 

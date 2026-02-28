@@ -198,6 +198,7 @@ func (s *SessionDaemon) initModules() {
 		"screenedge",
 		"systeminfo",
 		"lastore",
+		"grub-gfx",
 		"calltrace",
 		"debug",
 		"eventlog",

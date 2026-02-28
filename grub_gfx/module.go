@@ -5,8 +5,8 @@
 package grub_gfx
 
 import (
-	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/go-lib/log"
 )
 
 const moduleName = "grub-gfx"

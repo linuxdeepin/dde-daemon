@@ -291,7 +291,7 @@ func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 	} else if gfxmodeDetectState == gfxmodeDetectStateFailed {
 		cur, _, err := grub_common.GetBootArgDeepinGfxmode()
 		if err == nil {
-			if params[grubGfxmode] == gfxmodesStr ||
+			if params[grubGfxmode] == gfxmodesStr &&
 				(len(gfxmodes) > 0 && gfxmodes[0] == cur) {
 				g.finishGfxmodeDetect(params)
 				return nil

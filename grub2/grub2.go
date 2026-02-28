@@ -346,21 +346,25 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 
 	g.fstart = NewFstart(g)
 
-	jobLog, err := loadLog()
-	if err != nil {
-		if !os.IsNotExist(err) {
-			logger.Warning(err)
-		}
-	}
-	if jobLog != nil {
-		if !jobLog.isJobDone(logJobMkConfig) {
-			task := modifyTask{}
-
-			if jobLog.hasJob(logJobAdjustTheme) &&
-				!jobLog.isJobDone(logJobAdjustTheme) {
-				task.adjustTheme = true
+	if grub_common.ShouldFinishGfxmodeDetect(params) {
+		g.finishGfxmodeDetect(params)
+	} else {
+		jobLog, err := loadLog()
+		if err != nil {
+			if !os.IsNotExist(err) {
+				logger.Warning(err)
 			}
-			g.addModifyTask(task)
+		}
+		if jobLog != nil {
+			if !jobLog.isJobDone(logJobMkConfig) {
+				task := modifyTask{}
+
+				if jobLog.hasJob(logJobAdjustTheme) &&
+					!jobLog.isJobDone(logJobAdjustTheme) {
+					task.adjustTheme = true
+				}
+				g.addModifyTask(task)
+			}
 		}
 	}
 
