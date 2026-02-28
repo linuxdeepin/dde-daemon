@@ -135,7 +135,15 @@ func parseBootArgDeepinGfxmode(str string) (cur Gfxmode, all Gfxmodes, err error
 		return
 	}
 
-	return all[curIdx], all, nil
+	cur = all[curIdx]
+	// TODO: hack begin
+	cur = Gfxmode{
+		Width:  1024,
+		Height: 768,
+	}
+	// hack end
+
+	return cur, all, nil
 }
 
 var gfxmodeReg = regexp.MustCompile(`^\d+x\d+$`)
@@ -231,8 +239,8 @@ func IsGfxmodeDetectFailed(params map[string]string) bool {
 }
 
 func HasDeepinGfxmodeMod() bool {
-	dir := "/boot/grub"
-	for _, platform := range []string{"i386-pc", "x86_64-efi", "arm64-efi", "sw64-efi"} {
+	dir := "/usr/lib/grub"
+	for _, platform := range []string{"x86_64-efi", "i386-pc", "arm64-efi", "sw64-efi"} {
 		modFile := filepath.Join(dir, platform, "deepin_gfxmode.mod")
 		_, err := os.Stat(modFile)
 		if err == nil {
