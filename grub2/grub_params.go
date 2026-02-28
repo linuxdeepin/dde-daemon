@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,10 +11,11 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
 
 const (
-	grubParamsFile     = "/etc/default/grub.d/11_dde.cfg"
 	themesDir          = "/boot/grub/themes"
 	themesTmpDir       = themesDir + ".tmp"
 	defaultThemeDir    = themesDir + "/deepin"
@@ -75,9 +76,42 @@ func getTheme(params map[string]string) string {
 	return decodeShellValue(params[grubTheme])
 }
 
-func getGrubParamsContent(params map[string]string) []byte {
-	keys := make(sort.StringSlice, 0, len(params))
-	for k := range params {
+func genGrubParamsContent(params map[string]string) []byte {
+	// copy to avoid modifying the original map
+	paramsCopy := make(map[string]string, len(params))
+	for k, v := range params {
+		paramsCopy[k] = v
+	}
+
+	// Ensure the following critical settings can always be overridden by the latest configuration
+	for _, key := range []string{
+		grub_common.DeepinGfxmodeDetect,
+		grub_common.DeepinGfxmodeAdjusted,
+		grub_common.DeepinGfxmodeNotSupported,
+	} {
+		if _, ok := paramsCopy[key]; !ok {
+			paramsCopy[key] = ""
+		}
+	}
+	// Only the following settings are allowed in /etc/default/11_dde.cfg; all others will be removed
+	allowedKeys := map[string]struct{}{
+		grub_common.DeepinGfxmodeDetect:       {},
+		grub_common.DeepinGfxmodeAdjusted:     {},
+		grub_common.DeepinGfxmodeNotSupported: {},
+		grubBackground: {},
+		grubDefault:    {},
+		grubGfxmode:    {},
+		grubTheme:      {},
+		grubTimeout:    {},
+	}
+	for key := range paramsCopy {
+		if _, ok := allowedKeys[key]; !ok {
+			delete(paramsCopy, key)
+		}
+	}
+
+	keys := make(sort.StringSlice, 0, len(paramsCopy))
+	for k := range paramsCopy {
 		keys = append(keys, k)
 	}
 	keys.Sort()
@@ -86,7 +120,7 @@ func getGrubParamsContent(params map[string]string) []byte {
 	var buf bytes.Buffer
 	buf.WriteString("# Written by " + dbusServiceName + "\n")
 	for _, k := range keys {
-		buf.WriteString(k + "=" + params[k] + "\n")
+		buf.WriteString(k + "=" + paramsCopy[k] + "\n")
 	}
 	// if you want let the update-grub exit with error code,
 	// uncomment the next line.
@@ -96,9 +130,9 @@ func getGrubParamsContent(params map[string]string) []byte {
 
 func writeGrubParams(params map[string]string) error {
 	logger.Debug("write grub params")
-	content := getGrubParamsContent(params)
+	content := genGrubParamsContent(params)
 
-	err := os.WriteFile(grubParamsFile, content, 0644)
+	err := os.WriteFile(grub_common.DDEGrubParamsFile, content, 0644)
 	if err != nil {
 		return err
 	}

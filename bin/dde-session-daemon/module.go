@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -26,6 +26,7 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/keybinding1"
 	_ "github.com/linuxdeepin/dde-daemon/lastore1"
 
+	_ "github.com/linuxdeepin/dde-daemon/grub_gfx"
 	_ "github.com/linuxdeepin/dde-daemon/screensaver1"
 	_ "github.com/linuxdeepin/dde-daemon/service_trigger"
 	_ "github.com/linuxdeepin/dde-daemon/session/eventlog"
