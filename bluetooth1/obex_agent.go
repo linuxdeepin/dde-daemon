@@ -594,6 +594,7 @@ func (a *obexAgent) requestReceive(deviceName, filename string) (bool, error) {
 		logger.Info("receive file request canceled:", reason.String())
 		a.b.setPropTransportable(true)
 
+		notify.CloseNotification(0, notifyID)
 		if reason == CancelReasonExpired {
 			a.notifyReceiveFileTimeout(notify, 0, filename)
 		}
