@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,13 +16,10 @@ func detectChange() {
 		return
 	}
 
-	params, err := grub_common.LoadGrubParams()
-	if err != nil {
-		logger.Warning(err)
-	}
+	params := grub_common.LoadGrubParams()
 	if grub_common.ShouldFinishGfxmodeDetect(params) {
 		logger.Debug("finish gfxmode detect")
-		err = startSysGrubService()
+		err := startSysGrubService()
 		if err != nil {
 			logger.Warning("failed to start sys-grub service:", err)
 		}
@@ -47,15 +44,15 @@ func detectChange() {
 	logger.Debug("currentGfxmode:", currentGfxmode)
 	logger.Debug("allGrubGfxmodes:", allGrubGfxmodes)
 
-	randrGfxmodes, err := grub_common.GetGfxmodesFromXRandr()
+	drmGfxmodes, err := grub_common.GetGfxmodesFromSysDrm()
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
 
-	logger.Debug("randrGfxmodes:", randrGfxmodes)
+	logger.Debug("Gfxmodes from sys drm:", drmGfxmodes)
 
-	maxGfxmode := randrGfxmodes.Intersection(allGrubGfxmodes).Max()
+	maxGfxmode := drmGfxmodes.Intersection(allGrubGfxmodes).Max()
 	logger.Debug("maxGfxmode:", maxGfxmode)
 
 	var maxNotSupported bool

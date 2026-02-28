@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -6,13 +6,14 @@ package grub2
 
 import (
 	"fmt"
-	"github.com/godbus/dbus/v5"
-	"github.com/linuxdeepin/dde-daemon/common/systemdunit"
 	"os"
 	"os/exec"
 	"strings"
 	"sync"
 	"syscall"
+
+	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/systemdunit"
 
 	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
@@ -74,7 +75,7 @@ func (m *modifyManager) start(tasks ...modifyTask) {
 	logger.Infof("modifyManager start")
 	defer logger.Infof("modifyManager start return")
 
-	params, _ := grub_common.LoadDDEGrubParams()
+	params := grub_common.LoadGrubParams()
 
 	logger.Debug("modifyManager.start len(tasks):", len(tasks))
 	var adjustTheme bool

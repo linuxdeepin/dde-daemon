@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -22,7 +22,6 @@ import (
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/go-lib/procfs"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
@@ -312,19 +311,7 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 		logger.Warning("readEntries Failed:", err)
 	}
 
-	params, err := grub_common.LoadDDEGrubParams()
-	if err != nil {
-		logger.Warning(err)
-	}
-	_, ok := params[grubDefault]
-	if !ok {
-		defaultParams, err := grub_common.LoadGrubParams()
-		if err != nil {
-			logger.Warning(err)
-		} else {
-			params[grubDefault] = defaultParams[grubDefault]
-		}
-	}
+	params := grub_common.LoadGrubParams()
 	g.applyParams(params)
 	g.modifyManager = newModifyManager()
 	g.modifyManager.g = g
@@ -346,21 +333,25 @@ func NewGrub2(service *dbusutil.Service) *Grub2 {
 
 	g.fstart = NewFstart(g)
 
-	jobLog, err := loadLog()
-	if err != nil {
-		if !os.IsNotExist(err) {
-			logger.Warning(err)
-		}
-	}
-	if jobLog != nil {
-		if !jobLog.isJobDone(logJobMkConfig) {
-			task := modifyTask{}
-
-			if jobLog.hasJob(logJobAdjustTheme) &&
-				!jobLog.isJobDone(logJobAdjustTheme) {
-				task.adjustTheme = true
+	if grub_common.ShouldFinishGfxmodeDetect(params) {
+		g.finishGfxmodeDetect(params)
+	} else {
+		jobLog, err := loadLog()
+		if err != nil {
+			if !os.IsNotExist(err) {
+				logger.Warning(err)
 			}
-			g.addModifyTask(task)
+		}
+		if jobLog != nil {
+			if !jobLog.isJobDone(logJobMkConfig) {
+				task := modifyTask{}
+
+				if jobLog.hasJob(logJobAdjustTheme) &&
+					!jobLog.isJobDone(logJobAdjustTheme) {
+					task.adjustTheme = true
+				}
+				g.addModifyTask(task)
+			}
 		}
 	}
 
@@ -538,52 +529,24 @@ func (g *Grub2) getSenderLang(sender dbus.Sender) (string, error) {
 	return locale, nil
 }
 
-func getXEnvWithSender(service *dbusutil.Service, sender dbus.Sender) (map[string]string, error) {
-	environ := make(map[string]string)
-	pid, err := service.GetConnPID(string(sender))
+func (g *Grub2) getAvailableGfxmodes() (grub_common.Gfxmodes, error) {
+	drmGfxmodes, err := grub_common.GetGfxmodesFromSysDrm()
 	if err != nil {
 		return nil, err
 	}
-	p := procfs.Process(pid)
-	envVars, err := p.Environ()
-	if err != nil {
-		return nil, err
-	}
-	environ["DISPLAY"] = envVars.Get("DISPLAY")
-	environ["XAUTHORITY"] = envVars.Get("XAUTHORITY")
-	return environ, nil
-}
-
-func (g *Grub2) getGfxmodesFromXRandr(sender dbus.Sender) (grub_common.Gfxmodes, error) {
-	xEnv, err := getXEnvWithSender(g.service, sender)
-	if err != nil {
-		return nil, err
-	}
-	for key, value := range xEnv {
-		os.Setenv(key, value)
-	}
-
-	return grub_common.GetGfxmodesFromXRandr()
-}
-
-func (g *Grub2) getAvailableGfxmodes(sender dbus.Sender) (grub_common.Gfxmodes, error) {
-	randrGfxmodes, err := g.getGfxmodesFromXRandr(sender)
-	if err != nil {
-		return nil, err
-	}
-	logger.Debug("randrGfxmodes:", randrGfxmodes)
+	logger.Debug("Gfxmodes from sys drm:", drmGfxmodes)
 
 	grubGfxmodes, err := getGfxmodesFromBootArg()
 	if err != nil {
 		logger.Warning(err)
 	}
-	logger.Debug("grubGfxmodes:", grubGfxmodes)
+	logger.Debug("Gfxmodes from boot arg:", grubGfxmodes)
 
 	if len(grubGfxmodes) == 0 {
-		return randrGfxmodes, nil
+		return drmGfxmodes, nil
 	}
 
-	return randrGfxmodes.Intersection(grubGfxmodes), nil
+	return drmGfxmodes.Intersection(grubGfxmodes), nil
 }
 
 func getGfxmodesFromBootArg() (grub_common.Gfxmodes, error) {

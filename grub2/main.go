@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -62,10 +62,7 @@ func RunAsDaemon() {
 }
 
 func PrepareGfxmodeDetect() error {
-	defaultParams, err := grub_common.LoadGrubParams()
-	if err != nil {
-		logger.Warning(err)
-	}
+	defaultParams := grub_common.LoadGrubParams()
 
 	params := make(map[string]string)
 	for _, key := range []string{grubBackground, grubGfxmode, grubTheme, grubTimeout} {
@@ -74,9 +71,9 @@ func PrepareGfxmodeDetect() error {
 		}
 	}
 
-	gfxmodes, err := grub_common.GetGfxmodesFromXRandr()
+	gfxmodes, err := grub_common.GetGfxmodesFromSysDrm()
 	if err != nil {
-		logger.Warning("failed to gfxmodes from XRandr:", err)
+		logger.Warning("failed to get gfxmodes from sys drm:", err)
 	}
 
 	gfxmodes.SortDesc()

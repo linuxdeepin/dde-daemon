@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,8 +9,7 @@ import (
 	"os"
 	"strings"
 
-	dbus "github.com/godbus/dbus/v5"
-	ddedbus "github.com/linuxdeepin/dde-daemon/dbus"
+	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -51,31 +50,19 @@ func (grub *Grub2) GetSimpleEntryTitles(sender dbus.Sender) (titles []string, bu
 	return titles, nil
 }
 
-func (g *Grub2) GetAvailableGfxmodes(sender dbus.Sender) (gfxModes []string, busErr *dbus.Error) {
-	// 只读操作，无需鉴权
-	sessionType, err := ddedbus.GetSessionType(g.service, sender)
+func (g *Grub2) GetAvailableGfxmodes() (gfxModes []string, busErr *dbus.Error) {
+	// Read-only operation, no authentication required
+	// Get gfxmodes from /sys/class/drm (works for all session types)
+	g.service.DelayAutoQuit()
+	modes, err := g.getAvailableGfxmodes()
 	if err != nil {
-		logger.Warning("failed to get session type:", err)
+		logger.Warning("failed to get available gfxmodes:", err)
 		return nil, dbusutil.ToError(err)
 	}
-
-	switch sessionType {
-	case "wayland":
-		logger.Debug("wayland desktop environment, can not acquire output info")
-	case "x11":
-		g.service.DelayAutoQuit()
-		modes, err := g.getAvailableGfxmodes(sender)
-		if err != nil {
-			logger.Warning(err)
-			return nil, dbusutil.ToError(err)
-		}
-		modes.SortDesc()
-		gfxModes = make([]string, len(modes))
-		for idx, m := range modes {
-			gfxModes[idx] = m.String()
-		}
-	default:
-		logger.Debug("unknown session type, can not acquire output info")
+	modes.SortDesc()
+	gfxModes = make([]string, len(modes))
+	for idx, m := range modes {
+		gfxModes[idx] = m.String()
 	}
 
 	return gfxModes, nil
@@ -261,23 +248,21 @@ func (g *Grub2) Reset(sender dbus.Sender) *dbus.Error {
 func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 	g.service.DelayAutoQuit()
 
-	gfxmodes, err := g.getGfxmodesFromXRandr(sender)
+	gfxmodes, err := grub_common.GetGfxmodesFromSysDrm()
 	if err != nil {
-		logger.Debug("failed to get gfxmodes from XRandr:", err)
+		logger.Debug("failed to get gfxmodes from sys drm:", err)
 	}
+	logger.Debug("Gfxmodes from drm:", gfxmodes)
 
 	gfxmodes.SortDesc()
 	gfxmodesStr := joinGfxmodesForDetect(gfxmodes)
+	logger.Debug("Gfxmodes str for detect:", gfxmodesStr)
 
 	g.PropsMu.RLock()
 	gfxmodeDetectState := g.gfxmodeDetectState
 	g.PropsMu.RUnlock()
 
-	defaultParams, err := grub_common.LoadGrubParams()
-	if err != nil {
-		logger.Warning("failed to load grub params:", err)
-		return dbusutil.ToError(err)
-	}
+	defaultParams := grub_common.LoadGrubParams()
 
 	params := make(map[string]string)
 	for _, key := range []string{grubBackground, grubGfxmode, grubTheme, grubTimeout} {
@@ -291,11 +276,27 @@ func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 	} else if gfxmodeDetectState == gfxmodeDetectStateFailed {
 		cur, _, err := grub_common.GetBootArgDeepinGfxmode()
 		if err == nil {
-			if params[grubGfxmode] == gfxmodesStr ||
+			if params[grubGfxmode] == gfxmodesStr &&
 				(len(gfxmodes) > 0 && gfxmodes[0] == cur) {
 				g.finishGfxmodeDetect(params)
 				return nil
 			}
+		}
+	}
+
+	availableGfxmodes, err := g.getAvailableGfxmodes()
+	if err != nil {
+		logger.Warning("failed to get available gfxmodes:", err)
+	} else if len(availableGfxmodes) == 1 {
+		// If available gfxmodes only has one, then check if it
+		// is the same as current gfxmode
+		currentGfxmode, _, err := grub_common.GetBootArgDeepinGfxmode()
+		if err != nil {
+			logger.Warning("failed to get current gfxmode:", err)
+		} else if currentGfxmode == availableGfxmodes[0] {
+			// Complete detection immediately
+			g.finishGfxmodeDetect(params)
+			return nil
 		}
 	}
 

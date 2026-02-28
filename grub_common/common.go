@@ -1,10 +1,11 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package grub_common
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -26,6 +27,10 @@ const (
 	DeepinGfxmodeDetect       = "DEEPIN_GFXMODE_DETECT"
 	DeepinGfxmodeAdjusted     = "DEEPIN_GFXMODE_ADJUSTED"
 	DeepinGfxmodeNotSupported = "DEEPIN_GFXMODE_NOT_SUPPORTED"
+	sysClassDrm               = "/sys/class/drm"
+	deepinGfxmodeMod          = "deepin_gfxmode.mod"
+	GrubDistributor           = "GRUB_DISTRIBUTOR"
+	GrubCmdlineLinuxDefault   = "GRUB_CMDLINE_LINUX_DEFAULT"
 )
 
 func LoadGrubParamsFile(file string) (map[string]string, error) {
@@ -53,12 +58,54 @@ func LoadGrubParamsFile(file string) (map[string]string, error) {
 	return params, nil
 }
 
-func LoadGrubParams() (map[string]string, error) {
-	return LoadGrubParamsFile(GrubParamsFile)
+func LoadGrubParams() map[string]string {
+	params := make(map[string]string)
+
+	// First read the main configuration file
+	if err := readGrubParamsFile(GrubParamsFile, params); err != nil {
+		fmt.Fprintf(os.Stderr, "failed to load %s: %v\n", GrubParamsFile, err)
+	}
+	// Then read the DDE configuration file
+	if err := readGrubParamsFile(DDEGrubParamsFile, params); err != nil {
+		fmt.Fprintf(os.Stderr, "failed to load %s: %v\n", DDEGrubParamsFile, err)
+	}
+
+	return params
 }
 
-func LoadDDEGrubParams() (map[string]string, error) {
-	return LoadGrubParamsFile(DDEGrubParamsFile)
+func readGrubParamsFile(filePath string, params map[string]string) error {
+	f, err := os.Open(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+	defer func() {
+		_ = f.Close()
+	}()
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		// Skip empty lines and comment lines
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		// Find the position of the first equal sign
+		eqIdx := strings.Index(line, "=")
+		if eqIdx == -1 {
+			// Not in key=value format, skip
+			continue
+		}
+		key := strings.TrimSpace(line[:eqIdx])
+		value := strings.TrimSpace(line[eqIdx+1:])
+		if key == "" {
+			continue
+		}
+		params[key] = value
+	}
+	return scanner.Err()
 }
 
 func DecodeShellValue(in string) string {
@@ -135,7 +182,8 @@ func parseBootArgDeepinGfxmode(str string) (cur Gfxmode, all Gfxmodes, err error
 		return
 	}
 
-	return all[curIdx], all, nil
+	cur = all[curIdx]
+	return cur, all, nil
 }
 
 var gfxmodeReg = regexp.MustCompile(`^\d+x\d+$`)
@@ -231,13 +279,108 @@ func IsGfxmodeDetectFailed(params map[string]string) bool {
 }
 
 func HasDeepinGfxmodeMod() bool {
-	dir := "/boot/grub"
-	for _, platform := range []string{"i386-pc", "x86_64-efi", "arm64-efi", "sw64-efi"} {
-		modFile := filepath.Join(dir, platform, "deepin_gfxmode.mod")
-		_, err := os.Stat(modFile)
-		if err == nil {
+	const dir = "/usr/lib/grub"
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return false
+	}
+
+	hasI386PC := false
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		// Prefer -efi platforms, check immediately
+		if strings.Contains(name, "-efi") {
+			if _, err := os.Stat(filepath.Join(dir, name, deepinGfxmodeMod)); err == nil {
+				return true
+			}
+		} else if name == "i386-pc" {
+			hasI386PC = true
+		}
+	}
+
+	// Fallback to i386-pc
+	if hasI386PC {
+		if _, err := os.Stat(filepath.Join(dir, "i386-pc", deepinGfxmodeMod)); err == nil {
 			return true
 		}
 	}
+
 	return false
+}
+
+var regCardOutput = regexp.MustCompile(`^card\d+-.+`)
+
+// GetGfxmodesFromSysDrm reads graphics modes from /sys/class/drm/
+// This function does not require X11 and works in headless environments.
+func GetGfxmodesFromSysDrm() (Gfxmodes, error) {
+	fileInfos, err := os.ReadDir(sysClassDrm)
+	if err != nil {
+		return nil, err
+	}
+
+	var connectedOutputs []string
+	for _, info := range fileInfos {
+		name := info.Name()
+		if regCardOutput.MatchString(name) {
+			status, err := os.ReadFile(filepath.Join(sysClassDrm, name, "status"))
+			if err != nil {
+				continue
+			}
+			if strings.TrimSpace(string(status)) == "connected" {
+				connectedOutputs = append(connectedOutputs, name)
+			}
+		}
+	}
+
+	if len(connectedOutputs) == 0 {
+		return Gfxmodes{Gfxmode{Width: 1024, Height: 768}}, nil
+	}
+
+	// Collect modes from all connected outputs
+	gfxmodeMap := make(map[Gfxmode]int)
+	for _, output := range connectedOutputs {
+		modesPath := filepath.Join(sysClassDrm, output, "modes")
+		modesFile, err := os.Open(modesPath)
+		if err != nil {
+			continue
+		}
+		defer modesFile.Close()
+
+		// Use a map to deduplicate modes for this output
+		outputModes := make(map[Gfxmode]struct{})
+		scanner := bufio.NewScanner(modesFile)
+		for scanner.Scan() {
+			modeStr := scanner.Text()
+			mode, err := ParseGfxmode(modeStr)
+			if err != nil {
+				continue
+			}
+			if mode.Width < 1024 || mode.Height < 720 {
+				continue
+			}
+			outputModes[mode] = struct{}{}
+		}
+
+		// Add unique modes to the global map
+		for mode := range outputModes {
+			gfxmodeMap[mode]++
+		}
+	}
+
+	// Find modes supported by all connected outputs
+	var result Gfxmodes
+	for mode, count := range gfxmodeMap {
+		if count == len(connectedOutputs) {
+			result = result.Add(mode)
+		}
+	}
+
+	if len(result) == 0 {
+		result = Gfxmodes{Gfxmode{Width: 1024, Height: 768}}
+	}
+
+	return result, nil
 }
