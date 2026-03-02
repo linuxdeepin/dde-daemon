@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -347,15 +347,6 @@ func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bo
 	psp.manager.setDsgData(dsettingsPowerSavingModeEnabled, enabled, psp.manager.dsPowerConfigManager)
 
 	if !psp.manager.isSessionActive() { // 系统级的调节保证只有激活用户才能做逻辑
-		return
-	}
-
-	bInBootTime, err := psp.manager.helper.Power.IsInBootTime().Get(0)
-	if err != nil {
-		logger.Warning(err)
-	}
-	if bInBootTime {
-		logger.Debug("handlePowerSavingModeChanged InBootTime, Can't change brightness.")
 		return
 	}
 
