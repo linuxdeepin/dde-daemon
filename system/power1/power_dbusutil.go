@@ -279,19 +279,6 @@ func (v *Manager) emitPropChangedMode(value string) error {
 	return v.service.EmitPropertyChanged(v, "Mode", value)
 }
 
-func (v *Manager) setPropIsInBootTime(value bool) (changed bool) {
-	if v.IsInBootTime != value {
-		v.IsInBootTime = value
-		v.emitPropChangedIsInBootTime(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedIsInBootTime(value bool) error {
-	return v.service.EmitPropertyChanged(v, "IsInBootTime", value)
-}
-
 func (v *Battery) setPropSysfsPath(value string) (changed bool) {
 	if v.SysfsPath != value {
 		v.SysfsPath = value

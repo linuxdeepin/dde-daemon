@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -110,15 +110,15 @@ type Manager struct {
 	// 当前模式
 	Mode string
 
-	// 是否在启动阶段，启动阶段不允许调节亮度; 若在启动阶段切换模式后(切节能模式降低亮度)，可以调节亮度.
-	IsInBootTime bool
-
 	// 上次非低电量时的模式
 	lastMode string
 
 	displayManager DisplayManager.DisplayManager
 
 	isLowBatteryMode bool
+
+	dspcMu sync.Mutex
+
 	// nolint
 	signals *struct {
 		BatteryDisplayUpdate struct {
@@ -745,7 +745,6 @@ func (m *Manager) doSetMode(mode string) {
 	modeChanged := m.setPropMode(fixMode)
 	if modeChanged {
 		logger.Info("Set power mode", fixMode)
-		m.IsInBootTime = false
 	}
 
 	// 处理ddeLowBattery情况，所以每次都要设置
@@ -774,6 +773,5 @@ func (m *Manager) enablePerformanceInBoot() bool {
 	}
 	go m.setDSPCState(DSPCPerformance)
 	logger.Info("enablePerformanceInBoot performance")
-	m.IsInBootTime = true
 	return true
 }

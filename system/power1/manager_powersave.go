@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -45,6 +45,8 @@ var _powerConfigMap = map[string]*powerConfig{
 }
 
 func (m *Manager) setDSPCState(state DSPCMode) {
+	m.dspcMu.Lock()
+	defer m.dspcMu.Unlock()
 	conn, err := dbus.SystemBus()
 	if err != nil {
 		logger.Warning("Failed to connect to system bus:", err)

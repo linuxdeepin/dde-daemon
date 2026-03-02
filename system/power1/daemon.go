@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -120,7 +120,6 @@ func (d *Daemon) Start() (err error) {
 			once.Do(func() {
 				highTimer = time.AfterFunc(time.Minute*2, func() {
 					logger.Infof(" ## time.AfterFunc 2 min manager.Mod : %s", d.manager.Mode)
-					d.manager.IsInBootTime = false
 					// ② 超时后恢复流程
 					d.manager.doSetMode(d.manager.Mode)
 					d.manager.displayManager.RemoveHandler(handlerId)
@@ -147,7 +146,6 @@ func (d *Daemon) Start() (err error) {
 					logger.Warning(err)
 				}
 			}()
-			d.manager.IsInBootTime = false
 			d.manager.doSetMode(d.manager.Mode)
 			logger.Infof(" SetReadCallback manager.Mode : %s", d.manager.Mode)
 			return nil
