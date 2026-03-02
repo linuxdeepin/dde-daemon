@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -27,7 +27,7 @@ import (
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/procfs"
-	dutils "github.com/linuxdeepin/go-lib/utils"
+	"golang.org/x/sys/unix"
 )
 
 // 这里出于安全考虑, 一方面为了防止被 debug, 另一方面为了防止环境变量被篡改,
@@ -686,23 +686,50 @@ func doSetPwdWithUnionID(u *User, sender dbus.Sender, count int) error {
 // 删除用户的 login keyring
 // 由于重置密码时没有输入原密码, 所以恢复 keyring 中的数据是不可能的, 只能直接移除掉.
 func removeLoginKeyring(user *User) (err error) {
-	//白盒密钥生效后，就不需要再删除keyring文件
-	dir := path.Join(user.HomeDir, "/.local/share/deepin-keyrings-wb")
-	isUseWhiteboxFunc := func() bool {
-		statusFile := fmt.Sprintf("%s/status", dir)
-		if dutils.IsFileExist(dir) && dutils.IsFileExist(statusFile) {
-			content, err := os.ReadFile(statusFile)
-			if err != nil {
-				return false
-			}
-			if len(content) < 2 {
-				return false
-			}
-			if content[0] == '1' && content[1] == '1' {
-				logger.Info("[removeLoginKeyring] The WhiteBox keyring password has taken effect.")
-				return true
-			}
+	// 白盒密钥生效后，就不需要再删除keyring文件
+	dir := filepath.Join(user.HomeDir, ".local", "share", "deepin-keyrings-wb")
+	dirFd, err := unix.Open(dir, unix.O_DIRECTORY|unix.O_RDONLY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		} else {
+			return
 		}
+	}
+	defer unix.Close(dirFd)
+
+	isUseWhiteboxFunc := func() bool {
+		statusFd, err := unix.Openat(dirFd, "status", unix.O_RDONLY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
+		if err != nil {
+			logger.Warning("failed to open keyring status file:", err)
+			return false
+		}
+		defer unix.Close(statusFd)
+
+		var stat unix.Stat_t
+		err = unix.Fstat(statusFd, &stat)
+		if err != nil {
+			logger.Warning("failed to stat keyring status file:", err)
+			return false
+		}
+
+		if stat.Mode&unix.S_IFMT != unix.S_IFREG {
+			logger.Warning("keyring status file is not a regular file.")
+			return false
+		}
+
+		buf := make([]byte, 2)
+		n, err := unix.Read(statusFd, buf)
+		if err != nil || n < 2 {
+			logger.Warning("failed to read keyring status file:", err)
+			return false
+		}
+
+		if buf[0] == '1' && buf[1] == '1' {
+			logger.Info("[removeLoginKeyring] The WhiteBox keyring password has taken effect.")
+			return true
+		}
+
 		return false
 	}
 
@@ -711,10 +738,7 @@ func removeLoginKeyring(user *User) (err error) {
 		// greeter 界面触发该功能时 user 的 session bus 不存在,
 		// 所以只能简单地直接删除文件, 而不可能通过 keyring 的 daemon 删除密钥环
 		// FIXME login keyring 的位置有没可能变化?
-		loginFile := fmt.Sprintf("%s/login.keyring", dir)
-		if dutils.IsFileExist(loginFile) {
-			err = os.Remove(loginFile)
-		}
+		err = unix.Unlinkat(dirFd, "login.keyring", 0)
 	}
 
 	return
