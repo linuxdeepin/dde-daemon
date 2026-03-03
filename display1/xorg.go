@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -304,7 +304,29 @@ func (mm *xMonitorManager) doDiff() {
 				}
 			}
 		} else {
-			logger.Warning("can not handle new monitor")
+			logger.Info("need add new monitor")
+			if mm.monitorChangedCbEnabled {
+				if mm.hooks != nil {
+					mm.mu.Unlock()
+					mm.hooks.handleMonitorChanged(monitor)
+					mm.mu.Lock()
+				}
+			} else {
+				logger.Debug("monitorChangedCb disabled")
+			}
+		}
+	}
+	newMap := toMonitorInfoMap(newMonitors)
+	if len(newMonitors) < len(oldMonitors) {
+		for k, monitor := range oldMonitors {
+			_, ok := newMap[k]
+			if !ok {
+				// 需要移除的monitor
+				mm.mu.Unlock()
+				logger.Info("remove monitor:", monitor.ID)
+				mm.hooks.handleMonitorRemoved(monitor.ID)
+				mm.mu.Lock()
+			}
 		}
 	}
 }
@@ -345,6 +367,9 @@ func (mm *xMonitorManager) compareAll(crtcCfgs map[randr.Crtc]crtcConfig, disabl
 
 	for crtc, crtcCfg := range crtcCfgs {
 		crtcInfo := mm.crtcs[crtc]
+		if crtcInfo == nil {
+			continue
+		}
 		if len(crtcCfg.outputs) > 0 {
 			// 启用 crtc 的情况
 			if !(crtcCfg.x == crtcInfo.X &&
@@ -382,7 +407,7 @@ func (mm *xMonitorManager) compareAll(crtcCfgs map[randr.Crtc]crtcConfig, disabl
 
 	for output := range disabledOutputs {
 		outputInfo := mm.outputs[output]
-		if outputInfo.Crtc != 0 {
+		if outputInfo != nil && outputInfo.Crtc != 0 {
 			logger.Debugf("[compareAll] output %v crtc != 0", output)
 			return false
 		}
@@ -765,7 +790,8 @@ func (mm *xMonitorManager) apply(monitorsId monitorsId, monitorMap map[uint32]*M
 }
 
 func (mm *xMonitorManager) setMonitorFillMode(monitor *Monitor, fillMode string) error {
-	if !monitor.Enabled {
+	if monitor == nil || !monitor.Enabled {
+		logger.Warning("setMonitorFillMode monitor is nil, return.")
 		return nil
 	}
 	if len(monitor.AvailableFillModes) == 0 {
@@ -1090,6 +1116,7 @@ func (mm *xMonitorManager) handleOutputChanged(e *randr.OutputChangeNotifyEvent)
 		reply, err := mm.getOutputInfo(e.Output)
 		if err != nil {
 			logger.Warningf("get output %v info failed: %v", e.Output, err)
+			delete(mm.outputs, e.Output)
 			return
 		}
 		mm.outputs[e.Output] = (*OutputInfo)(reply)
