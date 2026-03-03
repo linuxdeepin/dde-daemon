@@ -7,6 +7,7 @@ package accounts
 import (
 	"bufio"
 	"bytes"
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"io"
@@ -34,8 +35,11 @@ import (
 // 所以需要将重置密码的对话框 (文件位于 resetPwdDialogPath)
 // 以一个特殊的用户的身份运行, 这个用户只做运行对话框这一件事情.
 
-var pwdChangerUserName = "deepin-password-admin"                               //#nosec G101
-const resetPwdDialogPath = "/usr/lib/dde-control-center/reset-password-dialog" //#nosec G101
+var pwdChangerUserName = "deepin-password-admin" //#nosec G101
+const (
+	resetPwdDialogPath = "/usr/lib/dde-control-center/reset-password-dialog" //#nosec G101
+	XAuthFileName      = ".Xauthority"
+)
 
 func init() {
 	fileInfo, err := os.Stat(resetPwdDialogPath)
@@ -60,7 +64,6 @@ func init() {
 // In particular, it is not suitable for use as input to a shell.
 // The output of String may vary across Go releases.
 func cmdToString(c *exec.Cmd) string {
-
 	// if c.lookPathErr != nil {
 	// // failed to resolve path; report the original requested path (plus args)
 	// return strings.Join(c.Args, " ")
@@ -226,7 +229,9 @@ type pwdChangerBase struct {
 
 type pwdChangerX struct {
 	*pwdChangerBase
-	xauthDir string
+	parentDir    int
+	xauthDir     int
+	xauthDirName string
 }
 
 type pwdChangerWayland struct {
@@ -357,9 +362,32 @@ func (pcrb *pwdChangerBase) clean() {
 func (pcrx *pwdChangerX) clean() {
 	pcrx.pwdChangerBase.clean()
 
-	err := os.RemoveAll(pcrx.xauthDir)
-	if err != nil {
-		logger.Warningf("fail to remove tmp xauth dir: %v", err)
+	defer func() {
+		if pcrx.xauthDir != -1 {
+			_ = unix.Close(pcrx.xauthDir)
+			pcrx.xauthDir = -1
+		}
+
+		if pcrx.parentDir != -1 {
+			_ = unix.Close(pcrx.parentDir)
+			pcrx.parentDir = -1
+		}
+	}()
+
+	if pcrx.xauthDir != -1 {
+		err := unix.Unlinkat(pcrx.xauthDir, XAuthFileName, 0)
+		if err != nil && !errors.Is(err, unix.ENOENT) {
+			logger.Warningf("failed to remove tmp xauth file %s: %v", XAuthFileName, err)
+		}
+	}
+
+	if pcrx.parentDir != -1 && pcrx.xauthDirName != "" {
+		err := unix.Unlinkat(pcrx.parentDir, pcrx.xauthDirName, unix.AT_REMOVEDIR)
+		if err != nil && !errors.Is(err, unix.ENOENT) {
+			logger.Warningf("failed to remove tmp xauth dir %s: %v", pcrx.xauthDirName, err)
+		}
+
+		pcrx.xauthDirName = ""
 	}
 }
 
@@ -411,7 +439,7 @@ func newPwdChangerBase(caller *caller, u *User) (ret *pwdChangerBase, err error)
 	}
 
 	// TODO does this convert to uint32 safe?
-	if !(fInfo.Mode() == 0500 && stat.Uid == uint32(selfUid)) {
+	if !(fInfo.Mode() == 0o500 && stat.Uid == uint32(selfUid)) {
 		err = errors.New("reset-password-dialog permission check failed")
 		return
 	}
@@ -485,91 +513,157 @@ func newPwdChanger(caller *caller, u *User) (ret pwdChanger, err error) {
 	return
 }
 
+func randomString(n int) (string, error) {
+	const charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	const maxByte = 255 - (256 % len(charset)) // reject bytes greater than maxByte to avoid modulo bias
+
+	ret := make([]byte, n)
+	buf := make([]byte, n+(n/4))
+
+	idx := 0
+	for idx < n {
+		if _, err := rand.Read(buf); err != nil {
+			return "", err
+		}
+
+		for _, b := range buf {
+			if int(b) <= maxByte {
+				ret[idx] = charset[int(b)%len(charset)]
+				idx++
+
+				if idx == n {
+					return string(ret), nil
+				}
+			}
+		}
+	}
+
+	return string(ret), nil
+}
+
 // 此函数负责将来自 caller 的 xauth 凭证发送给 deepin-password-admin 用户
 func newPwdChangerX(caller *caller, u *User, base *pwdChangerBase) (ret *pwdChangerX, err error) {
-	xAuthDir := filepath.Join("/run", "user", fmt.Sprint(base.selfUid))
+	var (
+		run      = -1
+		xAuthDir = -1
+		tmpName  string
+	)
+
 	defer func() {
-		if err != nil {
-			err := os.RemoveAll(xAuthDir)
-			if err != nil {
-				logger.Warningf("fail to remove tmp xauth dir: %v", err)
+		if err == nil {
+			return
+		}
+
+		if xAuthDir != -1 {
+			_ = unix.Unlinkat(xAuthDir, XAuthFileName, 0)
+			_ = unix.Close(xAuthDir)
+		}
+
+		if run != -1 {
+			if tmpName != "" {
+				_ = unix.Unlinkat(run, tmpName, unix.AT_REMOVEDIR)
 			}
+
+			_ = unix.Close(run)
 		}
 	}()
 
-	err = os.Mkdir(xAuthDir, os.FileMode(0700))
+	run, err = unix.Open("/run", unix.O_PATH|unix.O_DIRECTORY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
 	if err != nil {
-		if os.IsExist(err) {
-			logger.Warningf("path %s existed, remove it now", xAuthDir)
-			err = os.RemoveAll(xAuthDir)
-			if err != nil {
-				err = fmt.Errorf("fail to remove existed dir that hold .Xauthority: %v", err)
-				return
-			}
-			err = os.Mkdir(xAuthDir, os.FileMode(0700))
-		}
-		if err != nil {
-			err = fmt.Errorf("fail to create dir that hold .Xauthority: %v", err)
-			return
-		}
-	}
-
-	err = os.Chown(xAuthDir, base.selfUid, base.selfGid)
-	if err != nil {
-		err = fmt.Errorf("fail to chown dir that hold .Xauthority: %v", err)
 		return
 	}
 
-	xauthPath := filepath.Join(xAuthDir, ".Xauthority")
-	file, err := os.Create(xauthPath)
+	for i := 0; i < 64; i++ {
+		randomName, e := randomString(12)
+		if e != nil {
+			err = fmt.Errorf("fail to generate random string: %v", e)
+			return
+		}
+
+		tmpName = ".pwdChanger_x-" + randomName
+		err = unix.Mkdirat(run, tmpName, 0o700)
+		if err != nil {
+			if os.IsExist(err) {
+				continue
+			}
+
+			return nil, fmt.Errorf("fail to create tmp dir: %v", err)
+		}
+
+		xAuthDir, err = unix.Openat(run, tmpName, unix.O_PATH|unix.O_NOFOLLOW|unix.O_DIRECTORY|unix.O_CLOEXEC, 0)
+		if err != nil {
+			_ = unix.Unlinkat(run, tmpName, unix.AT_REMOVEDIR)
+			tmpName = ""
+			continue
+		}
+
+		err = unix.Fchownat(xAuthDir, "", base.selfUid, base.selfGid, unix.AT_EMPTY_PATH)
+		if err != nil {
+			_ = unix.Unlinkat(run, tmpName, unix.AT_REMOVEDIR)
+			return nil, fmt.Errorf("fail to chown tmp dir: %v", err)
+		}
+
+		break
+	}
+
+	if xAuthDir == -1 {
+		err = fmt.Errorf("fail to create tmp dir, out of retry")
+		return
+	}
+
+	xauthFd, err := unix.Openat(xAuthDir, XAuthFileName, unix.O_RDWR|unix.O_CREAT|unix.O_EXCL|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0o600)
 	if err != nil {
 		err = fmt.Errorf("fail to create .Xauthority: %v", err)
 		return
 	}
+	defer unix.Close(xauthFd)
 
-	err = file.Chown(base.selfUid, base.selfGid)
+	err = unix.Fchown(xauthFd, base.selfUid, base.selfGid)
 	if err != nil {
 		err = fmt.Errorf("fail to chown .Xauthority: %v", err)
 		return
 	}
 
-	err = file.Close()
-	if err != nil {
-		err = fmt.Errorf("fail to close .Xauthority: %v", err)
-		return
-	}
-
 	// get caller's xauth
-	cmd := exec.Command("runuser", "-u", caller.user.Username, "--", "xauth", "list") //#nosec G204
-	cmd.Env = append(cmd.Env, "XAUTHORITY="+caller.xauth)
-	logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
-
+	var stderr bytes.Buffer
+	cmd := exec.Command("runuser", "-u", caller.user.Username, "--", "xauth", "-f", caller.xauth, "list")
+	cmd.Stderr = &stderr
 	xauths, err := cmd.Output()
 	if err != nil {
-		err = fmt.Errorf("get xauth cookie failed: %v", err)
+		err = fmt.Errorf("get xauth cookie failed: %v, stderr: %s", err, stderr.String())
 		return
 	}
 
+	stderr.Reset()
 	// Add all xauth entries from caller to pwdChanger
 	// After change hostname, some werid things happen to .Xauthority before a reboot
 	// The prefix match not working here. So we have to add all entries to pwdChanger's .Xauthority file
+	xauthPath := filepath.Join("/run", tmpName, XAuthFileName)
 	lines := strings.Split(string(xauths), "\n")
-	args := []string{"-u", pwdChangerUserName, "--", "xauth", "add"}
-	for _, line := range lines {
-		fields := strings.Split(line, "  ")
-		if fields[0] == "" {
-			continue
-		}
-		arg := append(args, fields...)
-		cmd = exec.Command("runuser", arg...) //#nosec G204
-		cmd.Env = append(cmd.Env, "XAUTHORITY="+xauthPath)
-		logger.Debugf("set password with union id: run \"%s\", envs: %v", cmdToString(cmd), cmd.Env)
+	cmd = exec.Command("runuser", "-u", pwdChangerUserName, "--", "xauth", "-f", xauthPath)
+	cmd.Stderr = &stderr
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		err = fmt.Errorf("fail to get stdin pipe: %v", err)
+		return
+	}
 
-		err = cmd.Run()
-		if err != nil {
-			err = fmt.Errorf("add xauth fail: %v", err)
-			return
+	go func() {
+		defer stdin.Close()
+		for _, line := range lines {
+			fields := strings.Fields(line)
+			if len(fields) >= 3 {
+				fmt.Fprintf(stdin, "add %s %s %s\n", fields[0], fields[1], fields[2])
+			}
 		}
+
+		fmt.Fprintln(stdin, "exit")
+	}()
+
+	err = cmd.Run()
+	if err != nil {
+		err = fmt.Errorf("add xauth cookie failed: %v, stderr: %s", err, stderr.String())
+		return
 	}
 
 	base.cmd.Env = append(base.cmd.Env,
@@ -579,8 +673,15 @@ func newPwdChangerX(caller *caller, u *User, base *pwdChangerBase) (ret *pwdChan
 
 	ret = &pwdChangerX{
 		pwdChangerBase: base,
+		xauthDirName:   tmpName,
+		parentDir:      run,
 		xauthDir:       xAuthDir,
 	}
+
+	// move ownership to caller
+	run = -1
+	xAuthDir = -1
+
 	return
 }
 
@@ -628,8 +729,10 @@ func (u *User) setPwdWithUnionID(sender dbus.Sender) (err error) {
 	return doSetPwdWithUnionID(u, sender, 3)
 }
 
-var pwdChangerLock sync.Mutex
-var pwdChangerProcess *os.Process
+var (
+	pwdChangerLock    sync.Mutex
+	pwdChangerProcess *os.Process
+)
 
 func doSetPwdWithUnionID(u *User, sender dbus.Sender, count int) error {
 	pwdChangerLock.Lock()
