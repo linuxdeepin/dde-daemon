@@ -264,7 +264,6 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 		logger.Warning("failed to get detect gfxmodes")
 	}
 	logger.Debug("maxGfxmode:", maxGfxmode)
-	notMax := maxGfxmode.Width != 0 && currentGfxmode != maxGfxmode
 
 	themeEnabled := params[grubTheme] != ""
 
@@ -288,9 +287,7 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 			params[grubGfxmode] = currentGfxmodeStr
 			params[grub_common.DeepinGfxmodeAdjusted] = "1"
 			delete(params, grub_common.DeepinGfxmodeDetect)
-			if notMax {
-				params[grub_common.DeepinGfxmodeNotSupported] = maxGfxmode.String()
-			}
+			delete(params, grub_common.DeepinGfxmodeNotSupported)
 		},
 		adjustTheme: themeEnabled,
 	}

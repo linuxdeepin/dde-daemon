@@ -17,6 +17,7 @@ func detectChange() {
 	}
 
 	params := grub_common.LoadGrubParams()
+	logger.Debugf("grub params: %+v", params)
 	if grub_common.ShouldFinishGfxmodeDetect(params) {
 		logger.Debug("finish gfxmode detect")
 		err := startSysGrubService()
@@ -49,42 +50,73 @@ func detectChange() {
 		logger.Warning(err)
 		return
 	}
-
 	logger.Debug("Gfxmodes from sys drm:", drmGfxmodes)
 
 	maxGfxmode := drmGfxmodes.Intersection(allGrubGfxmodes).Max()
-	logger.Debug("maxGfxmode:", maxGfxmode)
-
-	var maxNotSupported bool
-	if params[grub_common.DeepinGfxmodeNotSupported] == maxGfxmode.String() {
-		maxNotSupported = true
-	}
-	logger.Debug("maxNotSupported:", maxNotSupported)
 
 	cfgGfxmodeStr := grub_common.DecodeShellValue(params["GRUB_GFXMODE"])
 	logger.Debug("cfgGfxmodeStr:", cfgGfxmodeStr)
 	cfgGfxmode, cfgGfxmodeErr := grub_common.ParseGfxmode(cfgGfxmodeStr)
 	if cfgGfxmodeErr != nil {
 		logger.Warning("failed to parse cfgGfxmodeStr:", cfgGfxmodeErr)
-	} else {
-		logger.Debug("cfgGfxmode:", cfgGfxmode)
 	}
-	need := needDetect(cfgGfxmode, cfgGfxmodeErr, currentGfxmode, maxGfxmode, maxNotSupported)
-	logger.Debug("need detect:", need)
-	if need {
-		err = prepareGfxmodeDetect()
-		if err != nil {
-			logger.Warning(err)
-		}
+
+	edidsHash, err := grub_common.GetConnectedEdidsHash()
+	if err != nil {
+		logger.Warning("failed to get connected edids hash:", err)
+	}
+	logger.Debug("current edids hash:", edidsHash)
+
+	// detectCacheStale is true when the cache is missing, unreadable, or no longer
+	// matches the current EDID hash and maximum gfxmode, meaning a fresh detection
+	// may be required.
+	detectCacheStale := true
+	detectCache, err := loadDetectCache()
+	logger.Debugf("loaded detect cache: %+v", detectCache)
+	if err == nil && detectCache.equal(edidsHash, maxGfxmode) {
+		// cache is still valid — no detection needed due to cache staleness
+		detectCacheStale = false
+	}
+
+	need := needDetect(cfgGfxmode, cfgGfxmodeErr, currentGfxmode, maxGfxmode, detectCacheStale)
+	if !need {
+		return
+	}
+	err = prepareGfxmodeDetect()
+	if err != nil {
+		logger.Warning("failed to prepare gfxmode detect:", err)
+		return
+	}
+
+	// save detect cache
+	if err := saveDetectCache(DetectCache{
+		EdidsHash:  edidsHash,
+		MaxGfxmode: maxGfxmode.String(),
+	}); err != nil {
+		logger.Warning("failed to save detect cache:", err)
 	}
 }
 
+// needDetect reports whether a gfxmode detection run is required.
+// It returns true in any of the following cases:
+//   - the configured gfxmode could not be parsed (cfgGfxmodeErr != nil)
+//   - the configured gfxmode differs from the currently active gfxmode
+//   - the current gfxmode is not the maximum supported value and the detect cache is stale
 func needDetect(cfgGfxmode grub_common.Gfxmode, cfgGfxmodeErr error,
-	currentGfxmode, maxGfxmode grub_common.Gfxmode, maxNotSupported bool) bool {
+	currentGfxmode, maxGfxmode grub_common.Gfxmode, detectCacheStale bool) bool {
 
-	return cfgGfxmodeErr != nil ||
-		cfgGfxmode != currentGfxmode ||
-		(currentGfxmode != maxGfxmode && !maxNotSupported)
+	// condCfgGfxmodeErr: config gfxmode is invalid or missing
+	condCfgGfxmodeErr := cfgGfxmodeErr != nil
+	// condCfgNeqCurrent: config gfxmode is out of sync with the current gfxmode
+	condCfgNeqCurrent := cfgGfxmode != currentGfxmode
+	// condCurrentNeqMaxAndCacheStale: current gfxmode may be upgradeable and the cache is stale
+	condCurrentNeqMaxAndCacheStale := currentGfxmode != maxGfxmode && detectCacheStale
+	logger.Debugf("needDetect: cfgGfxmodeErr != nil: %v (cfgGfxmodeErr: %v)", condCfgGfxmodeErr, cfgGfxmodeErr)
+	logger.Debugf("needDetect: cfgGfxmode != currentGfxmode: %v (cfgGfxmode: %v, currentGfxmode: %v)", condCfgNeqCurrent, cfgGfxmode, currentGfxmode)
+	logger.Debugf("needDetect: currentGfxmode != maxGfxmode && detectCacheStale: %v (currentGfxmode: %v, maxGfxmode: %v, detectCacheStale: %v)", condCurrentNeqMaxAndCacheStale, currentGfxmode, maxGfxmode, detectCacheStale)
+	result := condCfgGfxmodeErr || condCfgNeqCurrent || condCurrentNeqMaxAndCacheStale
+	logger.Debug("needDetect result:", result)
+	return result
 }
 
 func startSysGrubService() error {
