@@ -180,7 +180,19 @@ func ModifyPasswd(words, username string) error {
 		return errInvalidParam
 	}
 
-	return doAction(userCmdModify, []string{"-p", words, username})
+	cmd := exec.Command(pwdCmdModify, "-e")
+	input := fmt.Sprintf("%s:%s\n", username, words)
+	cmd.Stdin = bytes.NewBufferString(input)
+
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("failed to modify password: %v, %s", err, stderr.String())
+	}
+
+	return nil
 }
 
 func ModifyMaxPasswordAge(username string, nDays int) error {

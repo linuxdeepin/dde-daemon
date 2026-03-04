@@ -19,6 +19,7 @@ const (
 	userCmdDelete = "userdel"
 	userCmdModify = "usermod"
 	userCmdGroup  = "gpasswd"
+	pwdCmdModify  = "chpasswd"
 
 	cmdGroupDel = "groupdel"
 	cmdChAge    = "chage"
