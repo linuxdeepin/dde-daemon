@@ -7,6 +7,8 @@ package grub_common
 import (
 	"bufio"
 	"bytes"
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"os"
@@ -18,7 +20,10 @@ import (
 	"strings"
 
 	"github.com/linuxdeepin/go-lib/encoding/kv"
+	"github.com/linuxdeepin/go-lib/log"
 )
+
+var logger = log.NewLogger("grub_common")
 
 const (
 	GrubParamsFile            = "/etc/default/grub"
@@ -382,5 +387,62 @@ func GetGfxmodesFromSysDrm() (Gfxmodes, error) {
 		result = Gfxmodes{Gfxmode{Width: 1024, Height: 768}}
 	}
 
+	return result, nil
+}
+
+// GetConnectedEdidsHash reads the EDID of every connected DRM output,
+// sorts the collected EDID blobs lexicographically, feeds them in order
+// into an MD5 hasher, and returns the resulting digest as a lowercase
+// hex string.
+func GetConnectedEdidsHash() (string, error) {
+	fileInfos, err := os.ReadDir(sysClassDrm)
+	if err != nil {
+		return "", err
+	}
+
+	var edids [][]byte
+	for _, info := range fileInfos {
+		name := info.Name()
+		if !regCardOutput.MatchString(name) {
+			continue
+		}
+
+		statusPath := filepath.Join(sysClassDrm, name, "status")
+		status, err := os.ReadFile(statusPath)
+		if err != nil {
+			logger.Warningf("GetConnectedEdidsHash: failed to read %s: %v", statusPath, err)
+			continue
+		}
+		statusStr := strings.TrimSpace(string(status))
+		logger.Debugf("GetConnectedEdidsHash: %s status=%q", statusPath, statusStr)
+		if statusStr != "connected" {
+			continue
+		}
+
+		edidPath := filepath.Join(sysClassDrm, name, "edid")
+		edid, err := os.ReadFile(edidPath)
+		if err != nil {
+			logger.Warningf("GetConnectedEdidsHash: failed to read %s: %v", edidPath, err)
+			continue
+		}
+		if len(edid) == 0 {
+			logger.Debugf("GetConnectedEdidsHash: %s is empty, skipped", edidPath)
+			continue
+		}
+		logger.Debugf("GetConnectedEdidsHash: %s (%d bytes):\n%s",
+			edidPath, len(edid), hex.Dump(edid))
+		edids = append(edids, edid)
+	}
+
+	sort.Slice(edids, func(i, j int) bool {
+		return bytes.Compare(edids[i], edids[j]) < 0
+	})
+
+	h := md5.New()
+	for _, edid := range edids {
+		h.Write(edid)
+	}
+	result := fmt.Sprintf("%x", h.Sum(nil))
+	logger.Debugf("GetConnectedEdidsHash: total %d EDIDs, hash=%s", len(edids), result)
 	return result, nil
 }

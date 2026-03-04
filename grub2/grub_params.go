@@ -87,7 +87,6 @@ func genGrubParamsContent(params map[string]string) []byte {
 	for _, key := range []string{
 		grub_common.DeepinGfxmodeDetect,
 		grub_common.DeepinGfxmodeAdjusted,
-		grub_common.DeepinGfxmodeNotSupported,
 	} {
 		if _, ok := paramsCopy[key]; !ok {
 			paramsCopy[key] = ""
@@ -95,14 +94,13 @@ func genGrubParamsContent(params map[string]string) []byte {
 	}
 	// Only the following settings are allowed in /etc/default/11_dde.cfg; all others will be removed
 	allowedKeys := map[string]struct{}{
-		grub_common.DeepinGfxmodeDetect:       {},
-		grub_common.DeepinGfxmodeAdjusted:     {},
-		grub_common.DeepinGfxmodeNotSupported: {},
-		grubBackground: {},
-		grubDefault:    {},
-		grubGfxmode:    {},
-		grubTheme:      {},
-		grubTimeout:    {},
+		grub_common.DeepinGfxmodeDetect:   {},
+		grub_common.DeepinGfxmodeAdjusted: {},
+		grubBackground:                    {},
+		grubDefault:                       {},
+		grubGfxmode:                       {},
+		grubTheme:                         {},
+		grubTimeout:                       {},
 	}
 	for key := range paramsCopy {
 		if _, ok := allowedKeys[key]; !ok {
