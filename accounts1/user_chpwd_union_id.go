@@ -119,25 +119,26 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 		return
 	}
 
-	exe, err := proc.Exe()
-	if err != nil {
-		err = fmt.Errorf("get sender exe error: %v", err)
-		return
-	}
+	// exe, err := proc.Exe()
+	// if err != nil {
+	// 	err = fmt.Errorf("get sender exe error: %v", err)
+	// 	return
+	// }
 
 	// 只允许来自控制中心, 锁屏和 greetter 的调用
-	var app string
-	switch exe {
-	case "/usr/bin/dde-control-center":
-		app = "control-center"
-	case "/usr/bin/dde-lock":
-		app = "lock"
-	case "/usr/bin/lightdm-deepin-greeter":
-		app = "greeter"
-	default:
-		err = fmt.Errorf("set password with Union ID called by %s, which is not allow", exe)
-		return
-	}
+	//FIXME: we shouldn't use the executable path to identify caller
+	// var app string
+	// switch exe {
+	// case "/usr/bin/dde-control-center":
+	// 	app = "control-center"
+	// case "/usr/bin/dde-lock":
+	// 	app = "lock"
+	// case "/usr/bin/lightdm-deepin-greeter":
+	// 	app = "greeter"
+	// default:
+	// 	err = fmt.Errorf("set password with Union ID called by %s, which is not allow", exe)
+	// 	return
+	// }
 
 	status, err := proc.Status()
 	if err != nil {
@@ -189,7 +190,7 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err 
 		xauth:   xauth,
 		proc:    proc,
 		user:    user,
-		app:     app,
+		app:     "unknown",
 		wayland: waylandSocket,
 	}
 	return

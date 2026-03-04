@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -149,12 +149,7 @@ func (u *User) SetPassword(sender dbus.Sender, password string) *dbus.Error {
 
 	// set password from UnionID
 	if password == "" {
-		err := u.setPwdWithUnionID(sender)
-		if err != nil {
-			return dbusutil.ToError(err)
-		} else {
-			return nil
-		}
+		return nil
 	}
 
 	err := u.checkAuth(sender, false, "")
