@@ -111,7 +111,15 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 		value = 0.001
 		s.setMute(true)
 	} else {
-		s.SetMute(false)
+		// SetMute中判断了音量是否为0，但是Volume是根据事件刷新的，此时还不是设置后的音量，因此会影响判断
+		if err := s.setMute(false); err == nil {
+			if GetConfigKeeper().Mute.MuteOutput {
+				GetConfigKeeper().SetMuteOutput(false)
+			}
+		} else {
+			logger.Warning(err)
+		}
+
 	}
 	s.PropsMu.Lock()
 	cv := s.cVolume.SetAvg(value)
