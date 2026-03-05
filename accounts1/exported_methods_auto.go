@@ -24,19 +24,9 @@ func (v *ImageBlur) GetExportedMethods() dbusutil.ExportedMethods {
 func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
-			Name:   "AllowGuestAccount",
-			Fn:     v.AllowGuestAccount,
-			InArgs: []string{"allow"},
-		},
-		{
 			Name:   "CreateGroup",
 			Fn:     v.CreateGroup,
 			InArgs: []string{"groupName", "gid", "isSystem"},
-		},
-		{
-			Name:    "CreateGuestAccount",
-			Fn:      v.CreateGuestAccount,
-			OutArgs: []string{"user"},
 		},
 		{
 			Name:    "CreateUser",

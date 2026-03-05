@@ -2,19 +2,6 @@
 
 package accounts
 
-func (v *Manager) setPropAllowGuest(value bool) (changed bool) {
-	if v.AllowGuest != value {
-		v.AllowGuest = value
-		v.emitPropChangedAllowGuest(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedAllowGuest(value bool) error {
-	return v.service.EmitPropertyChanged(v, "AllowGuest", value)
-}
-
 func (v *Manager) setPropGroupList(value []string) (changed bool) {
 	if !isStrvEqual(v.GroupList, value) {
 		v.GroupList = value

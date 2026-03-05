@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -38,7 +38,6 @@ const (
 
 	actConfigFile       = actConfigDir + "/accounts.ini"
 	actConfigGroupGroup = "Accounts"
-	actConfigKeyGuest   = "AllowGuest"
 
 	interfacesFile = "/usr/share/dde-daemon/accounts/dbus-udcp.json"
 )
@@ -80,9 +79,6 @@ type Manager struct {
 	UserList   []string
 	UserListMu sync.RWMutex
 
-	// dbusutil-gen: ignore
-	GuestIcon  string
-	AllowGuest bool
 	// dbusutil-gen: equal=isStrvEqual
 	GroupList []string
 
@@ -137,9 +133,6 @@ func NewManager(service *dbusutil.Service) *Manager {
 	}
 	m.usersMap = make(map[string]*User)
 	m.userAddedChanMap = make(map[string]chan string)
-
-	m.GuestIcon = getRandomIcon()
-	m.AllowGuest = isGuestUserEnabled()
 
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
@@ -537,21 +530,6 @@ func getUserPaths() []string {
 	}
 
 	return paths
-}
-
-func isGuestUserEnabled() bool {
-	v, exist := dutils.ReadKeyFromKeyFile(actConfigFile,
-		actConfigGroupGroup, actConfigKeyGuest, true)
-	if !exist {
-		return false
-	}
-
-	ret, ok := v.(bool)
-	if !ok {
-		return false
-	}
-
-	return ret
 }
 
 func (m *Manager) checkAuth(sender dbus.Sender) error {
