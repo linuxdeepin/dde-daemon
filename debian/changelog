@@ -1,3 +1,21 @@
+dde-daemon (6.1.77) unstable; urgency=medium
+
+  * refactor(accounts1): remove guest user functionality
+  * refactor(accounts): disable UnionID password setting due to security
+    check race condition
+  * fix: prevent password leakage in ModifyPasswd
+  * fix: prevent local root exploit via directory hijacking
+  * fix(grub): Replace DeepinGfxmodeNotSupported mechanism with EDID
+    hash caching
+  * fix: 修复usb手写屏热插拔不生效问题
+  * fix(grub-theme): fix incomplete text display in GRUB theme menu on
+    arm64, loongarch64, and sw64 architectures
+  * fix: 解决低电量进入系统后, 系统触发的节能模式, 电量没有变化的问题
+  * fix: prevent symlink attack in removeLoginKeyring
+  * fix(bluetooth): close notification when peer cancels transfer
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 05 Mar 2026 20:43:23 +0800
+
 dde-daemon (6.1.76) unstable; urgency=medium
 
   * fix: 优化了音频逻辑
