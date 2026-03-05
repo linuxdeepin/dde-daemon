@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -21,7 +21,6 @@ import (
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/users/passwd"
-	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
@@ -338,49 +337,6 @@ func (m *Manager) IsPasswordValid(password string) (valid bool, msg string, code
 	logger.Infof("release type %q", releaseType)
 	errCode := checkers.CheckPasswordValid(releaseType, password)
 	return errCode.IsOk(), errCode.Prompt(), int32(errCode), nil
-}
-
-func (m *Manager) AllowGuestAccount(sender dbus.Sender, allow bool) *dbus.Error {
-	err := m.checkAuth(sender)
-	if err != nil {
-		return dbusutil.ToError(err)
-	}
-
-	m.PropsMu.Lock()
-	defer m.PropsMu.Unlock()
-
-	if m.AllowGuest == allow {
-		return nil
-	}
-
-	success := dutils.WriteKeyToKeyFile(actConfigFile,
-		actConfigGroupGroup, actConfigKeyGuest, allow)
-	if !success {
-		return dbusutil.ToError(errors.New("enable guest user failed"))
-	}
-
-	m.AllowGuest = allow
-	_ = m.emitPropChangedAllowGuest(allow)
-	return nil
-}
-
-func (m *Manager) CreateGuestAccount(sender dbus.Sender) (user string, busErr *dbus.Error) {
-	err := m.checkAuth(sender)
-	if err != nil {
-		return "", dbusutil.ToError(err)
-	}
-
-	name, err := users.CreateGuestUser()
-	if err != nil {
-		return "", dbusutil.ToError(err)
-	}
-
-	info, err := users.GetUserInfoByName(name)
-	if err != nil {
-		return "", dbusutil.ToError(err)
-	}
-
-	return userDBusPathPrefix + info.Uid, nil
 }
 
 func (m *Manager) GetGroups() (groups []string, busErr *dbus.Error) {
