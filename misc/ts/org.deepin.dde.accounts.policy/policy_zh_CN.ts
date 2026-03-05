@@ -69,7 +69,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!description" line="0"/>
 			<source>Enable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>开启微信扫码登录</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!message" line="0"/>
@@ -79,7 +79,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!description" line="0"/>
 			<source>Disable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>关闭微信扫码登录</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>
