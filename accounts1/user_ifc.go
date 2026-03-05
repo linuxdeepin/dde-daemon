@@ -78,35 +78,6 @@ func (u *User) SetFullName(sender dbus.Sender, name string) *dbus.Error {
 	return nil
 }
 
-func (u *User) SetHomeDir(sender dbus.Sender, home string) *dbus.Error {
-	logger.Debug("[SetHomeDir] new home:", home)
-
-	err := u.checkAuth(sender, false, "")
-	if err != nil {
-		logger.Debug("[SetHomeDir] access denied:", err)
-		return dbusutil.ToError(err)
-	}
-
-	if dutils.IsFileExist(home) {
-		// if new home already exists, the `usermod -m -d` command will fail.
-		return dbusutil.ToError(errors.New("new home already exists"))
-	}
-
-	u.PropsMu.Lock()
-	defer u.PropsMu.Unlock()
-
-	if u.HomeDir != home {
-		if err := users.ModifyHome(home, u.UserName); err != nil {
-			logger.Warning("DoAction: modify home failed:", err)
-			return dbusutil.ToError(err)
-		}
-		u.HomeDir = home
-		_ = u.emitPropChangedHomeDir(home)
-	}
-
-	return nil
-}
-
 func (u *User) SetShell(sender dbus.Sender, shell string) *dbus.Error {
 	logger.Debug("[SetShell] new shell:", shell)
 

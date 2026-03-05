@@ -200,11 +200,6 @@ func (v *User) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"list"},
 		},
 		{
-			Name:   "SetHomeDir",
-			Fn:     v.SetHomeDir,
-			InArgs: []string{"home"},
-		},
-		{
 			Name:   "SetIconFile",
 			Fn:     v.SetIconFile,
 			InArgs: []string{"iconURI"},

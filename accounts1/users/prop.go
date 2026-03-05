@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -137,24 +137,6 @@ func ModifyFullName(fullName, username string) error {
 func modifyComment(comment, username string) error {
 	cmd := exec.Command(userCmdModify, "-c", comment, username)
 	return cmd.Run()
-}
-
-func ModifyHome(dir, username string) error {
-	if len(dir) == 0 {
-		return errInvalidParam
-	}
-
-	user, err := GetUserInfoByName(username)
-	if err != nil {
-		return err
-	}
-	user.Home = dir
-	err = user.checkLength()
-	if err != nil {
-		return err
-	}
-
-	return doAction(userCmdModify, []string{"-m", "-d", dir, username})
 }
 
 func ModifyShell(shell, username string) error {
