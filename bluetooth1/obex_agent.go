@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -312,7 +312,9 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 			// 传送完成，移动到下载目录
 			realFileName := moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
 
-			newID := a.notifyProgress(a.notify, a.notifyID, realFileName, transfer.deviceName, 100)
+			// Use the last progress notification id as replaces_id so
+			// the progress bubble (e.g. 99%) won't linger after completion.
+			newID := a.notifyProgress(a.notify, currentID, realFileName, transfer.deviceName, 100)
 
 			notifyMu.Lock()
 			a.notifyID = newID
@@ -455,12 +457,11 @@ func (a *obexAgent) notifyProgress(notify notifications.Notifications, replaceID
 			logger.Warning("failed to send notify:", err)
 		}
 	} else {
-		notify.CloseNotification(0, replaceID)
 		actions = []string{"_view", gettext.Tr("View")}
 		hints := map[string]dbus.Variant{"x-deepin-action-_view": dbus.MakeVariant("dde-file-manager,--show-item," + filename)}
 		notifyID, err = notify.Notify(0,
 			gettext.Tr("dde-control-center"),
-			0,
+			replaceID,
 			notifyIconBluetoothConnected,
 			fmt.Sprintf(gettext.Tr("You have received files from %q successfully"), device),
 			gettext.Tr("Done"),
@@ -485,10 +486,9 @@ func (a *obexAgent) notifyFailed(notify notifications.Notifications, replaceID u
 		body = gettext.Tr("Bluetooth connection failed")
 	}
 
-	notify.CloseNotification(0, replaceID)
 	notifyID, err := notify.Notify(0,
 		gettext.Tr("dde-control-center"),
-		0,
+		replaceID,
 		notifyIconBluetoothConnectFailed,
 		summary,
 		body,
