@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -126,9 +126,6 @@ func (c *Card) update(card *pulse.Card) {
 		}
 		c.Ports = append(c.Ports, port)
 	}
-
-	// 根据端口优先级排序，顺序由低到高
-	c.sortPortsByPriority(card)
 }
 
 func portBluezMode(port *pulse.CardPortInfo) string {

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -191,7 +191,8 @@ func (pp *PriorityPolicy) InsertPort(card *pulse.Card, port *pulse.CardPortInfo)
 		Priority: port.Priority,
 	}
 
-	pp.insertByPriority(newPort, tp)
+	// 新增设备插入到该类型队列的最前面
+	pp.Ports[tp] = append([]*PriorityPort{newPort}, pp.Ports[tp]...)
 }
 
 // 为了解决pms: BUG-340227, 声卡端口会变化的情况
@@ -229,86 +230,75 @@ func (pp *PriorityPolicy) insertByPriority(newPort *PriorityPort, tp int) {
 	pp.Ports[tp] = append([]*PriorityPort{newPort}, pp.Ports[tp]...)
 }
 
-func (pp *PriorityPolicy) GetTheFirstPort(available portList) (*PriorityPort, *Position) {
+func (pp *PriorityPolicy) GetTheFirstPort() (*PriorityPort, *Position) {
 	for _, tp := range pp.Types {
 		for i, port := range pp.Ports[tp] {
-			if available.isExists(port.CardName, port.PortName) {
-				return port, &Position{tp: tp, index: i}
-			}
+			return port, &Position{tp: tp, index: i}
 		}
 	}
 	return nil, &Position{tp: PortTypeInvalid, index: -1}
 }
 
-func (pp *PriorityPolicy) GetNextPort(available portList, pos *Position) (*PriorityPort, *Position) {
+func (pp *PriorityPolicy) GetNextPort(pos *Position) (*PriorityPort, *Position) {
 	if pos.tp == PortTypeInvalid {
 		return nil, &Position{tp: PortTypeInvalid, index: -1}
 	}
-	for tp := pos.tp; tp < PortTypeCount; tp++ {
-		for i := pos.index + 1; i < len(pp.Ports[tp]); i++ {
-			port := pp.Ports[tp][i]
-			if ports, ok := available[port.CardName]; ok {
-				if ports.Contains(port.PortName) {
-					return port, &Position{tp: tp, index: i}
-				}
-			}
-		}
-	}
-	return nil, &Position{tp: PortTypeInvalid, index: -1}
-}
 
-func (pp *PriorityPolicy) SetTheFirstPort(cardName string, portName string, available portList) bool {
-	if !available.isExists(cardName, portName) {
-		logger.Warningf("port <%v:%v> not avaiable", cardName, portName)
-		return false
-	}
-
-	// 第一步：找到并删除指定的端口
-	var targetPort *PriorityPort
-	var targetType int
-	for _, tp := range pp.Types {
-		for i, p := range pp.Ports[tp] {
-			if p.CardName == cardName && p.PortName == portName {
-				// 保存端口信息
-				targetPort = &PriorityPort{
-					CardName: p.CardName,
-					PortName: p.PortName,
-					PortType: p.PortType,
-					Priority: p.Priority,
-				}
-				targetType = tp
-				// 从列表中删除这个端口
-				pp.Ports[tp] = append(pp.Ports[tp][:i], pp.Ports[tp][i+1:]...)
-				break
-			}
-		}
-		if targetPort != nil {
+	// 找到当前类型在 Types 队列中的位置
+	currentTypeIndex := -1
+	for i, tp := range pp.Types {
+		if tp == pos.tp {
+			currentTypeIndex = i
 			break
 		}
 	}
 
-	if targetPort == nil {
+	if currentTypeIndex == -1 {
+		return nil, &Position{tp: PortTypeInvalid, index: -1}
+	}
+
+	// 从当前类型开始遍历
+	for i := currentTypeIndex; i < len(pp.Types); i++ {
+		tp := pp.Types[i]
+		startIndex := 0
+		if tp == pos.tp {
+			// 如果是当前类型，从下一个索引开始
+			startIndex = pos.index + 1
+		}
+		for j := startIndex; j < len(pp.Ports[tp]); j++ {
+			port := pp.Ports[tp][j]
+			return port, &Position{tp: tp, index: j}
+		}
+	}
+	return nil, &Position{tp: PortTypeInvalid, index: -1}
+}
+
+func (pp *PriorityPolicy) SetTheFirstPort(cardName string, portName string) bool {
+	// 找到目标端口
+	pos := pp.FindPort(cardName, portName)
+	if pos.tp == PortTypeInvalid {
 		logger.Warning("set first failed: port not found, card,port", cardName, portName)
 		return false
 	}
-	// 第二步：找到第一个可用端口的位置，并在其之前插入目标端口
-	for _, tp := range pp.Types {
-		for i, p := range pp.Ports[tp] {
-			if available.isExists(p.CardName, p.PortName) {
-				// 找到第一个可用端口，在它之前插入目标端口
-				// 创建新的切片以避免切片操作问题
-				newList := make([]*PriorityPort, 0, len(pp.Ports[tp])+1)
-				newList = append(newList, pp.Ports[tp][:i]...)
-				newList = append(newList, targetPort)
-				newList = append(newList, pp.Ports[tp][i:]...)
-				pp.Ports[tp] = newList
-				return true
+
+	// 将目标端口的类型移到类型列表的最前面
+	if pp.Types[0] != pos.tp {
+		newTypes := make(PriorityTypeList, 0, len(pp.Types))
+		newTypes = append(newTypes, pos.tp)
+		for _, tp := range pp.Types {
+			if tp != pos.tp {
+				newTypes = append(newTypes, tp)
 			}
 		}
+		pp.Types = newTypes
 	}
 
-	// 如果没有找到任何可用端口，将目标端口放回原来的类型列表的开头
-	pp.Ports[targetType] = append([]*PriorityPort{targetPort}, pp.Ports[targetType]...)
-	logger.Warning("set first failed: no available port found, card,port", cardName, portName)
-	return false
+	// 在原队列中将目标端口移到最前面
+	if pos.index > 0 {
+		targetPort := pp.Ports[pos.tp][pos.index]
+		pp.Ports[pos.tp] = append(pp.Ports[pos.tp][:pos.index], pp.Ports[pos.tp][pos.index+1:]...)
+		pp.Ports[pos.tp] = append([]*PriorityPort{targetPort}, pp.Ports[pos.tp]...)
+	}
+
+	return true
 }
