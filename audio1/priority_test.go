@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -57,8 +57,8 @@ func Test_IsOutputTypeAfter(t *testing.T) {
 }
 
 func Test_SetTheFirstPort(t *testing.T) {
-	// 测试用例1: 正常情况 - 将端口移到第一个可用端口之前
-	t.Run("move port to first available position", func(t *testing.T) {
+	// 测试用例1: 正常情况 - 将端口移到第一个位置
+	t.Run("move port to first position", func(t *testing.T) {
 		pp := NewPriorityPolicy()
 		pp.Types = []int{PortTypeBluetooth, PortTypeHeadset, PortTypeBuiltin}
 
@@ -74,37 +74,17 @@ func Test_SetTheFirstPort(t *testing.T) {
 			{CardName: "card4", PortName: "builtin1", PortType: PortTypeBuiltin},
 		}
 
-		// card1 和 card3 可用
-		available := portList{
-			"card1": []string{"bt1"},
-			"card3": []string{"headset1"},
-		}
-
 		// 将 card3 的端口设为第一优先级
-		result := pp.SetTheFirstPort("card3", "headset1", available)
+		result := pp.SetTheFirstPort("card3", "headset1")
 
 		assert.True(t, result)
-		// card3 应该被移到 card1 之前
-		firstPort, _ := pp.GetTheFirstPort(available)
+		// card3 应该被移到第一位
+		firstPort, _ := pp.GetTheFirstPort()
 		assert.Equal(t, "card3", firstPort.CardName)
 		assert.Equal(t, "headset1", firstPort.PortName)
 	})
 
-	// 测试用例2: 端口不在可用列表中
-	t.Run("port not in available list", func(t *testing.T) {
-		pp := NewPriorityPolicy()
-		pp.Types = []int{PortTypeBluetooth}
-		pp.Ports[PortTypeBluetooth] = []*PriorityPort{
-			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth},
-		}
-
-		available := portList{}
-
-		result := pp.SetTheFirstPort("card1", "bt1", available)
-		assert.False(t, result)
-	})
-
-	// 测试用例3: 端口不存在
+	// 测试用例2: 端口不存在
 	t.Run("port not found", func(t *testing.T) {
 		pp := NewPriorityPolicy()
 		pp.Types = []int{PortTypeBluetooth}
@@ -112,13 +92,11 @@ func Test_SetTheFirstPort(t *testing.T) {
 			{CardName: "card1", PortName: "bt1", PortType: PortTypeBluetooth},
 		}
 
-		available := portList{"card2": []string{"bt2"}}
-
-		result := pp.SetTheFirstPort("card2", "bt2", available)
+		result := pp.SetTheFirstPort("card2", "bt2")
 		assert.False(t, result)
 	})
 
-	// 测试用例4: 端口已经是第一个
+	// 测试用例3: 端口已经是第一个
 	t.Run("port already first", func(t *testing.T) {
 		pp := NewPriorityPolicy()
 		pp.Types = []int{PortTypeBluetooth, PortTypeHeadset}
@@ -127,19 +105,14 @@ func Test_SetTheFirstPort(t *testing.T) {
 			{CardName: "card2", PortName: "bt2", PortType: PortTypeBluetooth},
 		}
 
-		available := portList{
-			"card1": []string{"bt1"},
-			"card2": []string{"bt2"},
-		}
-
-		result := pp.SetTheFirstPort("card1", "bt1", available)
+		result := pp.SetTheFirstPort("card1", "bt1")
 
 		assert.True(t, result)
-		firstPort, _ := pp.GetTheFirstPort(available)
+		firstPort, _ := pp.GetTheFirstPort()
 		assert.Equal(t, "card1", firstPort.CardName)
 	})
 
-	// 测试用例5: 跨类型移动端口
+	// 测试用例4: 跨类型移动端口
 	t.Run("move port across types", func(t *testing.T) {
 		pp := NewPriorityPolicy()
 		pp.Types = []int{PortTypeBluetooth, PortTypeHeadset, PortTypeBuiltin}
@@ -154,21 +127,16 @@ func Test_SetTheFirstPort(t *testing.T) {
 			{CardName: "card3", PortName: "builtin1", PortType: PortTypeBuiltin},
 		}
 
-		available := portList{
-			"card1": []string{"bt1"},
-			"card3": []string{"builtin1"},
-		}
-
 		// 将 builtin 端口移到第一位
-		result := pp.SetTheFirstPort("card3", "builtin1", available)
+		result := pp.SetTheFirstPort("card3", "builtin1")
 
 		assert.True(t, result)
-		firstPort, _ := pp.GetTheFirstPort(available)
+		firstPort, _ := pp.GetTheFirstPort()
 		assert.Equal(t, "card3", firstPort.CardName)
 		assert.Equal(t, "builtin1", firstPort.PortName)
 	})
 
-	// 测试用例6: 没有其他可用端口
+	// 测试用例5: 端口已经在第一位
 	t.Run("no other available ports", func(t *testing.T) {
 		pp := NewPriorityPolicy()
 		pp.Types = []int{PortTypeBluetooth, PortTypeHeadset}
@@ -180,22 +148,17 @@ func Test_SetTheFirstPort(t *testing.T) {
 			{CardName: "card2", PortName: "headset1", PortType: PortTypeHeadset},
 		}
 
-		// 只有 card1 可用
-		available := portList{
-			"card1": []string{"bt1"},
-		}
+		// 尝试将 card1 设为第一（它已经在第一位）
+		result := pp.SetTheFirstPort("card1", "bt1")
 
-		// 尝试将 card1 设为第一（它已经是唯一可用的）
-		result := pp.SetTheFirstPort("card1", "bt1", available)
-
-		// 应该返回 false，因为没有其他可用端口
-		assert.False(t, result)
-		// 但端口应该被放回原位置
+		// 应该返回 true，因为操作成功（即使端口已经在第一位）
+		assert.True(t, result)
+		// 端口应该保持在原位置
 		assert.Equal(t, 1, len(pp.Ports[PortTypeBluetooth]))
 		assert.Equal(t, "card1", pp.Ports[PortTypeBluetooth][0].CardName)
 	})
 
-	// 测试用例7: 同类型内移动端口
+	// 测试用例6: 同类型内移动端口
 	t.Run("move port within same type", func(t *testing.T) {
 		pp := NewPriorityPolicy()
 		pp.Types = []int{PortTypeBluetooth}
@@ -206,14 +169,8 @@ func Test_SetTheFirstPort(t *testing.T) {
 			{CardName: "card3", PortName: "bt3", PortType: PortTypeBluetooth},
 		}
 
-		available := portList{
-			"card1": []string{"bt1"},
-			"card2": []string{"bt2"},
-			"card3": []string{"bt3"},
-		}
-
 		// 将 card3 移到第一位
-		result := pp.SetTheFirstPort("card3", "bt3", available)
+		result := pp.SetTheFirstPort("card3", "bt3")
 
 		assert.True(t, result)
 		assert.Equal(t, 3, len(pp.Ports[PortTypeBluetooth]))
@@ -235,19 +192,13 @@ func Test_SetTheFirstPort(t *testing.T) {
 			{CardName: "card3", PortName: "headset2", PortType: PortTypeHeadset},
 		}
 
-		// 只有 headset 端口可用
-		available := portList{
-			"card2": []string{"headset1"},
-			"card3": []string{"headset2"},
-		}
+		// 尝试将 card2 设为第一（它已经是第一个）
+		result := pp.SetTheFirstPort("card2", "headset1")
 
-		// 尝试将 card2 设为第一（它已经是第一个可用的）
-		result := pp.SetTheFirstPort("card2", "headset1", available)
-
-		// 应该成功，因为还有其他可用端口
+		// 应该成功
 		assert.True(t, result)
 		// card2 应该仍然是第一个
-		firstPort, _ := pp.GetTheFirstPort(available)
+		firstPort, _ := pp.GetTheFirstPort()
 		assert.Equal(t, "card2", firstPort.CardName)
 		assert.Equal(t, "headset1", firstPort.PortName)
 	})

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
@@ -25,8 +26,10 @@ type PortConfig struct {
 }
 
 type CardConfig struct {
-	Name  string
-	Ports map[string]*PortConfig // Name => PortConfig
+	Name              string
+	Ports             map[string]*PortConfig // Name => PortConfig
+	DefaultOutputPort string                 // 默认输出端口名称，手动设置时记录
+	DefaultInputPort  string                 // 默认输入端口名称，手动设置时记录
 }
 
 type MuteConfig struct {
@@ -77,8 +80,10 @@ func NewMuteConfig() *MuteConfig {
 
 func NewCardConfig(name string) *CardConfig {
 	return &CardConfig{
-		Name:  name,
-		Ports: make(map[string]*PortConfig),
+		Name:              name,
+		Ports:             make(map[string]*PortConfig),
+		DefaultOutputPort: "",
+		DefaultInputPort:  "",
 	}
 }
 
@@ -284,6 +289,47 @@ func (ck *ConfigKeeper) SetMuteAll(mute bool) {
 		}
 	}
 	ck.Save()
+}
+
+// SetDefaultPort 设置声卡的默认端口
+func (ck *ConfigKeeper) SetDefaultPort(cardName string, portName string, direction int) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	cardConfig, ok := ck.Cards[cardName]
+	if !ok {
+		logger.Warningf("card %s not found in config", cardName)
+		return
+	}
+
+	if direction == pulse.DirectionSink {
+		cardConfig.DefaultOutputPort = portName
+	} else if direction == pulse.DirectionSource {
+		cardConfig.DefaultInputPort = portName
+	} else {
+		logger.Warningf("unexpected direction %d of port <%s:%s>",
+			direction, cardName, portName)
+		return
+	}
+	ck.Save()
+}
+
+// GetDefaultPort 获取声卡的默认端口
+func (ck *ConfigKeeper) GetDefaultPort(cardName string, direction int) string {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	cardConfig, ok := ck.Cards[cardName]
+	if !ok {
+		return ""
+	}
+
+	if direction == pulse.DirectionSink {
+		return cardConfig.DefaultOutputPort
+	} else if direction == pulse.DirectionSource {
+		return cardConfig.DefaultInputPort
+	}
+	return ""
 }
 
 func (card *CardConfig) UpdatePortConfig(portConfig *PortConfig) {
