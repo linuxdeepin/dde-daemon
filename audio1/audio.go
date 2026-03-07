@@ -806,7 +806,6 @@ func (a *Audio) init() error {
 
 	// priorities.Load(globalPrioritiesFilePath, a.cards) // TODO: 删除
 	GetPriorityManager().Init(a.cards)
-	GetPriorityManager().Print()
 
 	go a.handleEvent()
 	go a.handleStateChanged()
