@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/linuxdeepin/go-lib/pulse"
-	"github.com/linuxdeepin/go-lib/strv"
 	"github.com/linuxdeepin/go-lib/xdg/basedir"
 )
 
@@ -20,31 +20,20 @@ var (
 	outputDefaultPriorities = []int{}
 )
 
-type portList map[string]strv.Strv
-
 // 优先级策略组，包含输入和输出
 type PriorityManager struct {
-	availablePort portList // 可用端口列表，key=cardName，value=portName
-	Output        *PriorityPolicy
-	Input         *PriorityPolicy
+	Output *PriorityPolicy
+	Input  *PriorityPolicy
 
 	file string // 配置文件的路径，私有成员不会被json导出
-}
-
-func (pl portList) isExists(cardName string, portName string) bool {
-	if ports, ok := pl[cardName]; ok {
-		return ports.Contains(portName)
-	}
-	return false
 }
 
 // 创建优先级组
 func NewPriorityManager(path string) *PriorityManager {
 	return &PriorityManager{
-		availablePort: make(portList),
-		Output:        NewPriorityPolicy(),
-		Input:         NewPriorityPolicy(),
-		file:          path,
+		Output: NewPriorityPolicy(),
+		Input:  NewPriorityPolicy(),
+		file:   path,
 	}
 }
 
@@ -126,49 +115,228 @@ func (pm *PriorityManager) completeDefaultTypes() {
 
 }
 
+// cleanupMismatchedPorts 检查配置，删除端口类型和队列类型不匹配的问题
+func (pm *PriorityManager) cleanupMismatchedPorts() {
+	pm.cleanupPolicyMismatchedPorts(pm.Output, "Output")
+	pm.cleanupPolicyMismatchedPorts(pm.Input, "Input")
+}
+
+// cleanupPolicyMismatchedPorts 清理单个策略中端口类型与队列类型不匹配的端口
+func (pm *PriorityManager) cleanupPolicyMismatchedPorts(policy *PriorityPolicy, policyName string) {
+	if policy == nil || policy.Ports == nil {
+		return
+	}
+
+	removedCount := 0
+	for queueType, portList := range policy.Ports {
+		// 检查队列类型是否有效
+		if queueType < 0 || queueType >= PortTypeCount {
+			logger.Warningf("Invalid queue type %d in %s policy, removing all ports", queueType, policyName)
+			delete(policy.Ports, queueType)
+			removedCount += len(portList)
+			continue
+		}
+
+		// 检查每个端口的类型是否与队列类型匹配
+		validPorts := make([]*PriorityPort, 0, len(portList))
+		for _, port := range portList {
+			if port == nil {
+				logger.Warningf("Found nil port in %s policy queue %d, skipping", policyName, queueType)
+				removedCount++
+				continue
+			}
+
+			// 检查端口类型是否与队列类型匹配
+			if port.PortType != queueType {
+				logger.Warningf("Port type mismatch in %s policy: port %s:%s has type %d but is in queue %d, removing",
+					policyName, port.CardName, port.PortName, port.PortType, queueType)
+				removedCount++
+				continue
+			}
+
+			// 检查端口类型是否有效
+			if port.PortType < 0 || port.PortType >= PortTypeCount {
+				logger.Warningf("Invalid port type %d for port %s:%s in %s policy, removing",
+					port.PortType, port.CardName, port.PortName, policyName)
+				removedCount++
+				continue
+			}
+
+			validPorts = append(validPorts, port)
+		}
+
+		// 更新队列，只保留有效的端口
+		if len(validPorts) != len(portList) {
+			policy.Ports[queueType] = validPorts
+		}
+
+		// 如果队列为空，删除该队列
+		if len(validPorts) == 0 {
+			delete(policy.Ports, queueType)
+		}
+	}
+
+	if removedCount > 0 {
+		logger.Infof("Cleaned up %d mismatched ports from %s policy", removedCount, policyName)
+	}
+}
+
 // 进行初始化
 func (pm *PriorityManager) Init(cards CardList) {
 	pm.Load()
 	// 补充缺少的类型（产品修改了端口类型），并更新端口排序
 	pm.completeDefaultTypes()
+	// 检查配置，删除端口类型和队列类型不匹配的问题
+	pm.cleanupMismatchedPorts()
 	pm.refreshPorts(cards)
 
 	pm.Save()
 }
 
 func (pm *PriorityManager) refreshPorts(cards CardList) {
-	pm.availablePort = make(map[string]strv.Strv)
+	// 收集当前所有可用的端口
+	currentPorts := make(map[int]map[string]map[string]bool) // [direction][cardName][portName]
+	currentPorts[pulse.DirectionSink] = make(map[string]map[string]bool)
+	currentPorts[pulse.DirectionSource] = make(map[string]map[string]bool)
+
 	for _, card := range cards {
-		plist := make([]string, 0)
+		// 先对声卡的端口进行排序和调整
+		pm.arrangeCardPorts(card)
+
+		// 收集该声卡的新端口（按方向分组）
+		newSinkPorts := make([]pulse.CardPortInfo, 0)
+		newSourcePorts := make([]pulse.CardPortInfo, 0)
+
 		for _, port := range card.Ports {
-			switch port.Direction {
-			case pulse.DirectionSink:
-				pm.Output.InsertPort(card.core, &port)
-			case pulse.DirectionSource:
-				pm.Input.InsertPort(card.core, &port)
-			}
-			// 端口不可用或被禁用时，不插入插入到优先级列表中
+			// 端口不可用或被禁用时，不插入到优先级列表中
 			_, pc := GetConfigKeeper().GetCardAndPortConfig(card, port.Name)
 			if port.Available == pulse.AvailableTypeNo || !pc.Enabled {
 				continue
+			}
+
+			// 记录当前可用端口
+			if currentPorts[port.Direction][card.core.Name] == nil {
+				currentPorts[port.Direction][card.core.Name] = make(map[string]bool)
+			}
+			currentPorts[port.Direction][card.core.Name][port.Name] = true
+
+			// 检查是否为新端口
+			var policy *PriorityPolicy
+			if port.Direction == pulse.DirectionSink {
+				policy = pm.Output
 			} else {
-				plist = append(plist, port.Name)
+				policy = pm.Input
+			}
+
+			pos := policy.FindPort(card.core.Name, port.Name)
+			if pos.tp == PortTypeInvalid {
+				// 收集新端口
+				if port.Direction == pulse.DirectionSink {
+					newSinkPorts = append(newSinkPorts, port)
+				} else {
+					newSourcePorts = append(newSourcePorts, port)
+				}
 			}
 		}
-		pm.availablePort[card.core.Name] = plist
+
+		// 插入该声卡的新端口（倒序插入以保持优先级顺序）
+		// 排序后：[默认端口, 高优先级, 中优先级, 低优先级]
+		// 倒序插入到队首：低 → 中 → 高 → 默认端口
+		// 最终队列：[默认端口, 高优先级, 中优先级, 低优先级] 在队首
+		for i := len(newSinkPorts) - 1; i >= 0; i-- {
+			pm.Output.InsertPort(card.core, &newSinkPorts[i])
+		}
+		for i := len(newSourcePorts) - 1; i >= 0; i-- {
+			pm.Input.InsertPort(card.core, &newSourcePorts[i])
+		}
 	}
-	logger.Debugf("refresh avaiable Ports: %+v", pm.availablePort)
+
+	// 删除不存在的端口
+	pm.removeNonExistentPorts(pm.Output, currentPorts[pulse.DirectionSink])
+	pm.removeNonExistentPorts(pm.Input, currentPorts[pulse.DirectionSource])
+
+	pm.Print()
+	logger.Debugf("refresh ports completed")
+}
+
+// removeNonExistentPorts 删除不存在的端口和声卡
+func (pm *PriorityManager) removeNonExistentPorts(policy *PriorityPolicy, currentPorts map[string]map[string]bool) {
+	for tp := range policy.Ports {
+		newList := make([]*PriorityPort, 0)
+		for _, port := range policy.Ports[tp] {
+			// 检查声卡是否还存在
+			if ports, ok := currentPorts[port.CardName]; ok {
+				// 检查端口是否还存在
+				if ports[port.PortName] {
+					newList = append(newList, port)
+				}
+			}
+			// 如果声卡不存在（!ok），端口会被自动过滤掉
+		}
+		policy.Ports[tp] = newList
+	}
+}
+
+// arrangeCardPorts 对声卡的端口列表进行排序和调整
+// 1. 按 Priority 从高到低排序（值大的在前）
+// 2. 将默认端口移到最前面（倒序插入时会最后插入，获得最高优先级）
+func (pm *PriorityManager) arrangeCardPorts(card *Card) {
+	if card == nil || len(card.Ports) == 0 {
+		return
+	}
+
+	// 按 Priority 从高到低排序（Priority 值大的在前）
+	sort.SliceStable(card.Ports, func(i, j int) bool {
+		return card.Ports[i].Priority > card.Ports[j].Priority
+	})
+
+	// 获取默认端口
+	defaultOutputPort := GetConfigKeeper().GetDefaultPort(card.core.Name, pulse.DirectionSink)
+	defaultInputPort := GetConfigKeeper().GetDefaultPort(card.core.Name, pulse.DirectionSource)
+
+	// 将默认端口移到最前面（倒序插入时会最后插入，获得最高优先级）
+	if defaultOutputPort != "" {
+		pm.moveCardPortToFirst(card.Ports, defaultOutputPort)
+	}
+	if defaultInputPort != "" {
+		pm.moveCardPortToFirst(card.Ports, defaultInputPort)
+	}
+}
+
+// moveCardPortToFirst 将指定端口移到声卡端口列表的最前面
+func (pm *PriorityManager) moveCardPortToFirst(ports pulse.CardPortInfos, portName string) {
+	if len(ports) == 0 {
+		return
+	}
+
+	// 查找端口的索引
+	portIndex := -1
+	for i, port := range ports {
+		if port.Name == portName {
+			portIndex = i
+			break
+		}
+	}
+
+	// 如果找到端口且不在第一个位置，将其移到最前面
+	if portIndex > 0 {
+		port := ports[portIndex]
+		// 将前面的端口向后移动
+		copy(ports[1:portIndex+1], ports[0:portIndex])
+		// 插入到最前面
+		ports[0] = port
+	}
 }
 
 func (pm *PriorityManager) GetTheFirstPort(direction int) (*PriorityPort, *Position) {
 	switch direction {
 	case pulse.DirectionSink:
 		if len(pm.Output.Ports) > 0 {
-			return pm.Output.GetTheFirstPort(pm.availablePort)
+			return pm.Output.GetTheFirstPort()
 		}
 	case pulse.DirectionSource:
 		if len(pm.Input.Ports) > 0 {
-			return pm.Input.GetTheFirstPort(pm.availablePort)
+			return pm.Input.GetTheFirstPort()
 		}
 	}
 	return nil, &Position{tp: PortTypeInvalid, index: -1}
@@ -177,13 +345,17 @@ func (pm *PriorityManager) GetTheFirstPort(direction int) (*PriorityPort, *Posit
 func (pm *PriorityManager) SetTheFirstPort(cardName string, portName string, direction int) {
 	switch direction {
 	case pulse.DirectionSink:
-		pm.Output.SetTheFirstPort(cardName, portName, pm.availablePort)
+		pm.Output.SetTheFirstPort(cardName, portName)
 	case pulse.DirectionSource:
-		pm.Input.SetTheFirstPort(cardName, portName, pm.availablePort)
+		pm.Input.SetTheFirstPort(cardName, portName)
 	default:
 		logger.Warningf("unexpected direction %d of port <%s:%s>",
 			direction, cardName, portName)
+		return
 	}
+
+	// 设置为声卡的默认端口（根据方向）
+	GetConfigKeeper().SetDefaultPort(cardName, portName, direction)
 
 	// 打印并保存
 	pm.Print()
@@ -197,11 +369,11 @@ func (pm *PriorityManager) LoopAvaiablePort(direction int, pos *Position) (*Prio
 		switch direction {
 		case pulse.DirectionSink:
 			if len(pm.Output.Ports) > 0 {
-				return pm.Output.GetNextPort(pm.availablePort, pos)
+				return pm.Output.GetNextPort(pos)
 			}
 		case pulse.DirectionSource:
 			if len(pm.Input.Ports) > 0 {
-				return pm.Input.GetNextPort(pm.availablePort, pos)
+				return pm.Input.GetNextPort(pos)
 			}
 		}
 		return nil, &Position{tp: PortTypeInvalid, index: -1}
