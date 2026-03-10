@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -21,13 +21,29 @@ const (
 
 	// udev 规则文件路径
 	udevRuleFile = "/etc/udev/rules.d/90-dde-touchpad.rules"
-	// udev 规则内容（禁用触控板）
-	// ENV{LIBINPUT_IGNORE_DEVICE}="1": 让 libinput 忽略设备
-	// 注意：这只影响 libinput，evtest 仍能读取内核事件
-	udevRuleContent = `# DDE - Disable touchpad via libinput
+
+	// dconfig 配置项
+	_dsettingsPS2MouseAsTouchpadKey = "ps2MouseAsTouchPadEnabled"
+)
+
+// generateUdevRuleContent 根据配置生成 udev 规则内容
+func generateUdevRuleContent() string {
+	baseRule := `# DDE - Disable touchpad via libinput
+# 标准触控板设备
 SUBSYSTEM=="input", KERNEL=="event*", ENV{ID_INPUT_TOUCHPAD}=="1", ENV{LIBINPUT_IGNORE_DEVICE}="1"
 `
-)
+
+	// 检查是否启用 PS/2 鼠标作为触控板的功能
+	if getPS2MouseAsTouchpadEnabled() {
+		baseRule += `# PS/2 接口设备（通常是触控板被误识别为鼠标）- 大写
+SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="*PS/2*", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+# PS/2 接口设备（通常是触控板被误识别为鼠标）- 小写
+SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="*ps/2*", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+`
+	}
+
+	return baseRule
+}
 
 type Touchpad struct {
 	service     *dbusutil.Service
@@ -99,7 +115,10 @@ func (t *Touchpad) setTouchpadEnableViaUdev(enabled bool) error {
 		}
 		logger.Info("removed udev rule file:", udevRuleFile)
 	} else {
-		// 禁用：检查文件是否已存在且内容相同
+		// 禁用：生成动态的 udev 规则内容
+		udevRuleContent := generateUdevRuleContent()
+
+		// 检查文件是否已存在且内容相同
 		existingContent, err := os.ReadFile(udevRuleFile)
 		if err == nil && string(existingContent) == udevRuleContent {
 			logger.Debug("udev rule file already exists with correct content, skip writing")
@@ -197,6 +216,32 @@ func (t *Touchpad) triggerTouchpadDevices() error {
 	}
 
 	return nil
+}
+
+func getPS2MouseAsTouchpadEnabled() bool {
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("failed to connect to system bus:", err)
+		return true // 默认启用
+	}
+	ds := configManager.NewConfigManager(sysBus)
+	confPath, err := ds.AcquireManager(0, _dsettingsAppID, _dsettingsInputdevicesName, "")
+	if err != nil {
+		logger.Warning("failed to acquire config manager:", err)
+		return true // 默认启用
+	}
+	dsManager, err := configManager.NewManager(sysBus, confPath)
+	if err != nil {
+		logger.Warning("failed to create config manager:", err)
+		return true // 默认启用
+	}
+	data, err := dsManager.Value(0, _dsettingsPS2MouseAsTouchpadKey)
+	if err != nil {
+		logger.Warning("failed to get ps2MouseAsTouchPadEnabled config:", err)
+		return true // 默认启用
+	}
+	v, ok := data.Value().(bool)
+	return !ok || v
 }
 
 func setDsgConf(enable bool) error {
