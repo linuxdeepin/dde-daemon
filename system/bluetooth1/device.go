@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -349,7 +349,7 @@ func (d *device) connectProperties() {
 			logger.Debug("sinceConnected:", sinceConnected)
 			logger.Debug("retryConnectCount:", d.retryConnectCount)
 
-			if sinceConnected < 300*time.Millisecond {
+			if sinceConnected < 300*time.Millisecond && d.Paired {
 				if d.retryConnectCount == 0 {
 					go func() {
 						err := d.Connect()
