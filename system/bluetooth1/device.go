@@ -304,10 +304,11 @@ func (d *device) connectProperties() {
 		}
 		logger.Debugf("%s Connected: %v", d, connected)
 		d.connected = connected
-
-		//音频设备主动发起连接时也断开之前的音频连接
-		if d.connected && d.Paired {
-			go d.audioA2DPWorkaround()
+		if strings.Contains(d.Icon, "audio") {
+			dev := _bt.getConflictingConnectedDevice(d.Icon)
+			if dev != nil && dev.connected && d.connected && d.Paired {
+				dev.Disconnect()
+			}
 		}
 
 		// check if device need to be removed, if is, remove device
@@ -600,8 +601,12 @@ func (d *device) doConnect(hasNotify bool) error {
 		}
 		return err
 	}
-
-	d.audioA2DPWorkaround()
+	if strings.Contains(d.Icon, "audio") {
+		dev := _bt.getConflictingConnectedDevice(d.Icon)
+		if dev != nil && dev.connected {
+			dev.Disconnect()
+		}
+	}
 
 	err = d.doRealConnect()
 	if err != nil {
@@ -740,17 +745,6 @@ func (d *device) getAndResetNeedRemove() bool {
 		d.needRemove = false
 	}
 	return needRemove
-}
-
-func (d *device) audioA2DPWorkaround() {
-	// TODO: remove work code if bluez a2dp is ok
-	// bluez do not support muti a2dp devices
-	// disconnect a2dp device before connect
-	for _, uuid := range d.UUIDs {
-		if uuid == A2DP_SINK_UUID {
-			_bt.disconnectA2DPDeviceExcept(d)
-		}
-	}
 }
 
 func (d *device) Connect() error {
