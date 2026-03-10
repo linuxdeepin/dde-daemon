@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,6 +18,7 @@ import (
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/strv"
 )
 
 const (
@@ -38,18 +39,23 @@ const (
 )
 
 const (
-	devIconComputer        = "computer"
-	devIconPhone           = "phone"
-	devIconModem           = "modem"
-	devIconNetworkWireless = "network-wireless"
-	devIconAudioCard       = "audio-card"
-	devIconCameraVideo     = "camera-video"
-	devIconCameraPhoto     = "camera-photo"
-	devIconPrinter         = "printer"
-	devIconInputGaming     = "input-gaming"
-	devIconInputKeyboard   = "input-keyboard"
-	devIconInputTablet     = "input-tablet"
-	devIconInputMouse      = "input-mouse"
+	devIconComputer         = "computer"
+	devIconPhone            = "phone"
+	devIconModem            = "modem"
+	devIconNetworkWireless  = "network-wireless"
+	devIconAudioCard        = "audio-card"
+	devIconCameraVideo      = "camera-video"
+	devIconCameraPhoto      = "camera-photo"
+	devIconPrinter          = "printer"
+	devIconInputGaming      = "input-gaming"
+	devIconInputKeyboard    = "input-keyboard"
+	devIconInputTablet      = "input-tablet"
+	devIconInputMouse       = "input-mouse"
+	devIconAudioHeadset     = "audio-headset"
+	devIconAudioHeadPhones  = "audio-headphones"
+	devIconVideoDisplay     = "video-display"
+	devIconMultimediaPlayer = "multimedia-player"
+	devIconScanner          = "scanner"
 )
 
 const (
@@ -1013,15 +1019,11 @@ func (b *SysBluetooth) autoConnectPairedDevice(devPath dbus.ObjectPath, adapterP
 		return nil
 	}
 
-	switch device.Icon {
-	// 只自动连接一个这些图标的设备
-	case devIconAudioCard, devIconInputKeyboard, devIconInputMouse, devIconInputTablet:
-		connectedDevice := b.findFirstConnectedDeviceByIcon(device.Icon)
-		if connectedDevice != nil {
-			logger.Debugf("there is already a connected %v, icon: %v, do not auto connect it: %v",
-				connectedDevice, device.Icon, device)
-			return nil
-		}
+	connectedDevice := b.getConflictingConnectedDevice(device.Icon)
+	if connectedDevice != nil {
+		logger.Debugf("there is already a connected %v, icon: %v, do not auto connect it: %v",
+			connectedDevice, device.Icon, device)
+		return nil
 	}
 
 	logger.Debug("auto connect paired", device)
@@ -1126,16 +1128,35 @@ func (b *SysBluetooth) getConnectedDeviceByAddress(address string) *device {
 	return nil
 }
 
-func (b *SysBluetooth) findFirstConnectedDeviceByIcon(icon string) *device {
+func (b *SysBluetooth) findFirstConnectedDeviceByIcons(icon strv.Strv) *device {
 	b.connectedMu.Lock()
 	defer b.connectedMu.Unlock()
 
 	for _, devices := range b.connectedDevices {
 		for _, dev := range devices {
-			if dev.Icon == icon {
+			if icon.Contains(dev.Icon) {
 				return dev
 			}
 		}
+	}
+	return nil
+}
+
+// getConflictingConnectedDevice 检查是否已有冲突的已连接设备
+// 对于输入设备（键盘、鼠标、平板），只允许连接一个同类型设备
+// 对于音频设备，只允许连接一个音频设备
+// getConflictingConnectedDevice 检查是否已有冲突的已连接设备
+// 对于输入设备（键盘、鼠标、平板），只允许连接一个同类型设备
+// 对于音频设备，只允许连接一个音频设备
+// 返回已连接的冲突设备，如果没有冲突则返回nil
+func (b *SysBluetooth) getConflictingConnectedDevice(deviceIcon string) *device {
+	switch deviceIcon {
+	// 只自动连接一个这些图标的设备
+	case devIconInputKeyboard, devIconInputMouse, devIconInputTablet:
+		return b.findFirstConnectedDeviceByIcons(strv.Strv{deviceIcon})
+	// 这些可能都是音频设备，只连接一个
+	case devIconAudioCard, devIconAudioHeadset, devIconAudioHeadPhones:
+		return b.findFirstConnectedDeviceByIcons(strv.Strv{devIconAudioCard, devIconAudioHeadset, devIconAudioHeadPhones})
 	}
 	return nil
 }
