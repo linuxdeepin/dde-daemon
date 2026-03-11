@@ -164,7 +164,7 @@ msgstr "Cancel·la"
 
 #: ../../bluetooth1/obex_agent.go:447
 msgid "Receiving %[1]q"
-msgstr ""
+msgstr "Es rep %[1]q"
 
 #: ../../bluetooth1/obex_agent.go:455
 msgid "View"
