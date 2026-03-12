@@ -1,3 +1,18 @@
+dde-daemon (6.1.78) unstable; urgency=medium
+
+  * fix(audio): 设置端口时, 调整端口的优先级
+  * fix: fix touchscreen mapping after display switching
+  * i18n: Updates for project Deepin Desktop Environment (#1027)
+  * fix(bluetooth): 解决多个蓝牙设备回连时,反复断开连接的情况
+  * chore: update go dependencies
+  * fix(touchpad): 适配ps/2鼠标视为触控板时全局禁用失效的问题
+  * fix: 修复未配对状态的设备发起回连的问题
+  * fix: 解决使用音量快捷键设置时静音状态异常的问题
+  * fix(accounts1): remove SetHomeDir to prevent local privilege
+    escalation
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 12 Mar 2026 21:30:23 +0800
+
 dde-daemon (6.1.77) unstable; urgency=medium
 
   * refactor(accounts1): remove guest user functionality
