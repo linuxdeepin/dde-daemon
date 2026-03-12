@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1638,6 +1638,11 @@ func (m *Manager) apply(monitorsId monitorsId, monitorMap map[uint32]*Monitor, o
 	m.applyMu.Unlock()
 
 	m.setInApply(false)
+
+	// Since we skip mapping events during the 'inApply' phase to prevent deadlocks,
+	// we must explicitly trigger a touchscreen remap after the display configuration has been securely applied and the X server ungrabbed.
+	go m.handleTouchscreenChanged()
+
 	return err
 }
 
@@ -2865,6 +2870,11 @@ func (m *Manager) showTouchscreenDialog(touchScreenUUID string) error {
 }
 
 func (m *Manager) handleTouchscreenChanged() {
+	if m.getInApply() {
+		logger.Debugf("handleTouchscreenChanged: skipped because Manager is in inApply state")
+		return
+	}
+
 	logger.Debugf("touchscreens changed %#v", m.Touchscreens)
 
 	monitors := m.getConnectedMonitors()
