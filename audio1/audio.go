@@ -756,6 +756,8 @@ func (a *Audio) refresh() {
 	a.refreshSources()
 	logger.Debug("refresh sinkinputs")
 	a.refershSinkInputs()
+	logger.Debug("refresh config")
+	GetPriorityManager().Init(a.cards)
 	logger.Debug("refresh default")
 	a.refreshDefaultSinkSource()
 	logger.Debug("refresh bluetooth mode opts")
@@ -803,9 +805,6 @@ func (a *Audio) init() error {
 	a.quit = make(chan struct{})
 	a.ctx.AddEventChan(a.eventChan)
 	a.ctx.AddStateChan(a.stateChan)
-
-	// priorities.Load(globalPrioritiesFilePath, a.cards) // TODO: 删除
-	GetPriorityManager().Init(a.cards)
 
 	go a.handleEvent()
 	go a.handleStateChanged()
