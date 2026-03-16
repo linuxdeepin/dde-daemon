@@ -797,6 +797,15 @@ func (mm *xMonitorManager) setMonitorFillMode(monitor *Monitor, fillMode string)
 	if len(monitor.AvailableFillModes) == 0 {
 		return nil
 	}
+	if !monitor.AvailableFillModes.Contains(fillMode) {
+		// 如果选择的是非可行的填充模式，按default, full, center, full aspect 进行选择合适的。
+		for _, mode := range []string{fillModeDefault, fillModeFull, fillModeCenter, fillModeFullaspect} {
+			if monitor.AvailableFillModes.Contains(mode) {
+				fillMode = mode
+				break
+			}
+		}
+	}
 	if fillMode == "" {
 		fillMode = fillModeDefault
 	}
