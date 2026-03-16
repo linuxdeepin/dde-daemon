@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -22,6 +23,8 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/xdg/userdir"
+
+	sessionwatcher "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionwatcher1"
 )
 
 const (
@@ -64,7 +67,8 @@ type obexAgent struct {
 	service *dbusutil.Service
 	sigLoop *dbusutil.SignalLoop
 
-	obexManager obex.Manager
+	obexManager    obex.Manager
+	sessionWatcher sessionwatcher.SessionWatcher
 
 	cancelCh   chan cancelReason
 	cancelChMu sync.Mutex
@@ -102,26 +106,59 @@ func newObexAgent(service *dbusutil.Service, bluetooth *Bluetooth) *obexAgent {
 func (a *obexAgent) init() {
 	sessionBus := a.service.Conn()
 	a.obexManager = obex.NewManager(sessionBus)
-	a.registerAgent()
 
-	a.sigLoop = dbusutil.NewSignalLoop(a.service.Conn(), 0)
+	a.sigLoop = dbusutil.NewSignalLoop(sessionBus, 0)
 	a.sigLoop.Start()
+
+	a.sessionWatcher = sessionwatcher.NewSessionWatcher(sessionBus)
+	a.sessionWatcher.InitSignalExt(a.sigLoop, true)
+
+	active, err := a.sessionWatcher.IsActive().Get(0)
+	if err != nil {
+		logger.Debug("failed to get session active status:", err)
+		active = true // default to true if failed
+	}
+
+	if active {
+		a.registerAgent()
+	}
+
+	err = a.sessionWatcher.IsActive().ConnectChanged(func(hasValue bool, val bool) {
+		logger.Debug("session active changed:", hasValue, val)
+		if !hasValue {
+			return
+		}
+		if val {
+			a.registerAgent()
+		} else {
+			a.unregisterAgent()
+		}
+	})
+	if err != nil {
+		logger.Warning("failed to connect session active changed signal:", err)
+	}
 }
 
 // registerAgent 注册 OBEX 的代理
 func (a *obexAgent) registerAgent() {
+	logger.Info("register obex agent", obexAgentDBusPath)
 	err := a.obexManager.AgentManager().RegisterAgent(0, obexAgentDBusPath)
 	if err != nil {
 		logger.Error("failed to register obex agent:", err)
 	}
 }
 
-// nolint
 // unregisterAgent 注销 OBEX 的代理
 func (a *obexAgent) unregisterAgent() {
+	logger.Info("unregister obex agent", obexAgentDBusPath)
 	err := a.obexManager.AgentManager().UnregisterAgent(0, obexAgentDBusPath)
 	if err != nil {
 		logger.Error("failed to unregister obex agent:", err)
+	}
+
+	cmd := exec.Command("systemctl", "--user", "stop", "obex.service")
+	if err := cmd.Run(); err != nil {
+		logger.Warning("failed to stop obex.service:", err)
 	}
 }
 
