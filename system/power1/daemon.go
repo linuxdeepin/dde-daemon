@@ -108,6 +108,14 @@ func (d *Daemon) Start() (err error) {
 		logger.Warning(err)
 	}
 
+	err = serverObj.ConnectChanged(d.manager, "PowerSavingModeAutoBatteryPercent", func(change *dbusutil.PropertyChanged) {
+		d.manager.refreshBatteryDisplay()
+		d.manager.updatePowerMode(false) // PowerSavingModeAutoBatteryPercent change
+		err := d.manager.saveDsgConfig("PowerSavingModeAutoBatteryPercent")
+		if err != nil {
+			logger.Warning(err)
+		}
+	})
 	if err != nil {
 		logger.Warning(err)
 	}
