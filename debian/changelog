@@ -1,3 +1,13 @@
+dde-daemon (6.1.79) unstable; urgency=medium
+
+  * fix: fix display mode switching issue with three or more screens
+  * fix: fix low battery threshold not persisting after reboot
+  * fix(display): 修复默认填充模式不支持问题
+  * fix: fix bluetooth file transfer failure during multi user switching
+  * fix: fix audio input volume initialization issue
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 18 Mar 2026 14:14:26 +0800
+
 dde-daemon (6.1.78) unstable; urgency=medium
 
   * fix(audio): 设置端口时, 调整端口的优先级
