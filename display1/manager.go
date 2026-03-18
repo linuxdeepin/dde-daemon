@@ -1030,18 +1030,9 @@ func (m *Manager) applyConfig(setColorTemp bool, options applyOptions) (paths []
 	displayMode := m.DisplayMode
 	m.PropsMu.RUnlock()
 
-	// 3个及以上屏幕，如果当前显示模式是 OnlyOne，需要自动切换到 Mirror 显示模式。
-	if displayMode == DisplayModeOnlyOne && len(monitors) >= 3 {
-		logger.Debug("switchMode mirror", monitorsId)
-		err := m.switchModeAux(DisplayModeMirror, displayMode, monitorsId, monitorMap, setColorTemp, options)
-		if err != nil {
-			logger.Warning(err)
-		}
-	} else {
-		err := m.applyDisplayConfig(displayMode, monitorsId, monitorMap, setColorTemp, options)
-		if err != nil {
-			logger.Warning(err)
-		}
+	err := m.applyDisplayConfig(displayMode, monitorsId, monitorMap, setColorTemp, options)
+	if err != nil {
+		logger.Warning(err)
 	}
 
 	return monitors.getPaths()
