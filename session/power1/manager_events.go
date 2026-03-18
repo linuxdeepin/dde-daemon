@@ -16,10 +16,10 @@ import (
 const (
 	suspendStateUnknown = iota + 1
 	suspendStateLidOpen
+	suspendStateLidClose
 	suspendStateFinish
 	suspendStateWakeup
 	suspendStatePrepare
-	suspendStateLidClose
 	suspendStateButtonClick
 )
 
