@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -62,6 +62,17 @@ func initNotifications() error {
 	})
 	if err != nil {
 		logger.Warningf("listen action invoked failed,err:%v", err)
+	}
+
+	_, err = globalNotifications.ConnectNotificationClosed(func(id uint32, reason uint32) {
+		globalNotifyMu.Lock()
+		if globalNotifyId == id {
+			globalNotifyId = 0
+		}
+		globalNotifyMu.Unlock()
+	})
+	if err != nil {
+		logger.Warningf("listen notification closed failed,err:%v", err)
 	}
 
 	return nil
