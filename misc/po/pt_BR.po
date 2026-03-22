@@ -174,7 +174,7 @@ msgstr ""
 
 #: ../../bluetooth1/obex_agent.go:455
 msgid "View"
-msgstr "Visualizar"
+msgstr "Exibir"
 
 #: ../../bluetooth1/obex_agent.go:461
 msgid "You have received files from %q successfully"
