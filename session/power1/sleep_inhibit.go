@@ -1,10 +1,12 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package power
 
 import (
+	"os"
+	"os/exec"
 	"syscall"
 
 	"github.com/godbus/dbus/v5"
@@ -13,6 +15,21 @@ import (
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
+
+const pipewireSuspendScript = "/usr/libexec/deepin/os-config/pipewire-suspend.sh"
+
+func runPipewireSuspendScriptIfExists(action string) bool {
+	if _, err := os.Stat(pipewireSuspendScript); err != nil {
+		return false
+	}
+
+	err := exec.Command(pipewireSuspendScript, action).Run()
+	if err != nil {
+		logger.Warning("failed to run pipewire suspend script:", err)
+		return false
+	}
+	return true
+}
 
 type sleepInhibitor struct {
 	loginManager      login1.Manager
@@ -59,8 +76,10 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 			if inhibitor.OnBeforeSuspend != nil {
 				inhibitor.OnBeforeSuspend()
 			}
-			suspendPulseSinks(1)
-			suspendPulseSources(1)
+			if !runPipewireSuspendScriptIfExists("1") {
+				suspendPulseSinks(1)
+				suspendPulseSources(1)
+			}
 			err := inhibitor.unblock()
 			if err != nil {
 				logger.Warning(err)
@@ -70,8 +89,10 @@ func newSleepInhibitor(login1Manager login1.Manager, daemon daemon.Daemon) *slee
 				logger.Debug("not run before sleep,don't need run after sleep")
 				return
 			}
-			suspendPulseSources(0)
-			suspendPulseSinks(0)
+			if !runPipewireSuspendScriptIfExists("0") {
+				suspendPulseSources(0)
+				suspendPulseSinks(0)
+			}
 			if inhibitor.OnWakeup != nil {
 				inhibitor.OnWakeup()
 			}
