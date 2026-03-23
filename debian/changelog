@@ -1,3 +1,10 @@
+dde-daemon (6.1.81) unstable; urgency=medium
+
+  * fix: temporarily handle audio loss after sleep on some devices
+  * fix: handle notification closed signal properly
+
+ -- zhangkun <zhangkun2@uniontech.com>  Mon, 23 Mar 2026 15:14:49 +0800
+
 dde-daemon (6.1.80) unstable; urgency=medium
 
   * feat: adjust suspend state constants order
