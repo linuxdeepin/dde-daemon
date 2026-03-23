@@ -58,6 +58,7 @@ type powerSavePlan struct {
 	psmPercentChangedTime  time.Time
 	modeBeforeIdle         string
 	allowScreenSaver       bool
+	isIdle                 bool
 }
 
 func newPowerSavePlan(manager *Manager) (string, submodule, error) {
@@ -486,13 +487,19 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 	}
 
 	min := tasks.min()
-	tasks.setRealDelay(min)
 	err := psp.setScreenSaverTimeout(min)
 	if err != nil {
 		logger.Warning("failed to set screen saver timeout:", err)
 	}
 
 	psp.metaTasks = tasks
+
+	if psp.isIdle {
+		logger.Info("System is already idle, restarting power delay tasks.")
+		psp.startIdleTasksLocked()
+	} else {
+		psp.metaTasks.setRealDelay(min)
+	}
 }
 
 func (psp *powerSavePlan) setScreenSaverTimeout(seconds int32) error {
@@ -697,6 +704,11 @@ func (psp *powerSavePlan) HandleIdleOn() {
 
 	logger.Info("HandleIdleOn")
 
+	psp.isIdle = true
+	psp.startIdleTasksLocked()
+}
+
+func (psp *powerSavePlan) startIdleTasksLocked() {
 	// check window, only x11 is supported, not apply to wayland
 	if !psp.manager.UseWayland {
 		preventIdle, err := psp.shouldPreventIdle()
@@ -765,6 +777,8 @@ func (ps *powerSavePlan) restoreDpmsStateFile() {
 func (psp *powerSavePlan) handleIdleOff() {
 	psp.mu.Lock()
 	defer psp.mu.Unlock()
+
+	psp.isIdle = false
 
 	if psp.manager.shouldIgnoreIdleOff() {
 		psp.manager.setPrepareSuspend(suspendStateFinish)
