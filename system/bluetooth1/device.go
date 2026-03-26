@@ -306,7 +306,11 @@ func (d *device) connectProperties() {
 		d.connected = connected
 		if strings.Contains(d.Icon, "audio") {
 			dev := _bt.getConflictingConnectedDevice(d.Icon)
-			if dev != nil && dev.connected && d.connected && d.Paired {
+			if dev != nil &&
+				dev.connected &&
+				d.connected &&
+				d.Paired &&
+				dev.Address != d.Address {
 				dev.Disconnect()
 			}
 		}
@@ -603,7 +607,7 @@ func (d *device) doConnect(hasNotify bool) error {
 	}
 	if strings.Contains(d.Icon, "audio") {
 		dev := _bt.getConflictingConnectedDevice(d.Icon)
-		if dev != nil && dev.connected {
+		if dev != nil && dev.connected && dev.Address != d.Address {
 			dev.Disconnect()
 		}
 	}
