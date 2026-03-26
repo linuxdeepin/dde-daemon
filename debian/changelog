@@ -1,3 +1,9 @@
+dde-daemon (6.1.83) unstable; urgency=medium
+
+  * fix: prevent disconnecting same audio device during connection
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 26 Mar 2026 21:45:58 +0800
+
 dde-daemon (6.1.82) unstable; urgency=medium
 
   * fix: handle idle state properly in power save plan
