@@ -239,15 +239,15 @@ func (pm *PriorityManager) refreshPorts(cards CardList) {
 			}
 		}
 
-		// 插入该声卡的新端口（倒序插入以保持优先级顺序）
+		// 插入该声卡的新端口
 		// 排序后：[默认端口, 高优先级, 中优先级, 低优先级]
-		// 倒序插入到队首：低 → 中 → 高 → 默认端口
-		// 最终队列：[默认端口, 高优先级, 中优先级, 低优先级] 在队首
-		for i := len(newSinkPorts) - 1; i >= 0; i-- {
-			pm.Output.InsertPort(card.core, &newSinkPorts[i])
+		// 依次插入：默认端口 → 高 → 中 → 低
+		// 插入逻辑会保证它们在队列中也是这个顺序，并且尽量靠近该声卡已有的端口
+		for i := 0; i < len(newSinkPorts); i++ {
+			pm.Output.InsertPort(card.core, &newSinkPorts[i], card.Ports)
 		}
-		for i := len(newSourcePorts) - 1; i >= 0; i-- {
-			pm.Input.InsertPort(card.core, &newSourcePorts[i])
+		for i := 0; i < len(newSourcePorts); i++ {
+			pm.Input.InsertPort(card.core, &newSourcePorts[i], card.Ports)
 		}
 	}
 
