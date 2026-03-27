@@ -1813,16 +1813,19 @@ func (a *Audio) setMono(enable bool) error {
 	if a.Mono == enable {
 		return nil
 	}
-	sink := a.getDefaultSink()
-	if sink != nil {
-		logger.Infof("set sink %v mono: %v", sink.Name, enable)
-		sink.setMono(enable)
-	}
-
 	a.setPropMono(enable)
 	err := a.audioDConfig.SetValue(dsgKeyMonoEnabled, enable)
 	if err != nil {
 		return dbusutil.ToError(errors.New("dconfig Cannot set value " + dsgKeyMonoEnabled))
+	}
+	sink := a.getDefaultSink()
+	if sink != nil {
+		logger.Infof("set sink %v mono: %v", sink.Name, enable)
+		// 如果是关闭单声道，且当前默认设备是单声道虚拟设备，则先将默认设备切换回物理设备
+		if !enable {
+			a.ctx.SetDefaultSink(sink.Name)
+		}
+		sink.setMono(enable)
 	}
 	return nil
 }
@@ -1877,15 +1880,20 @@ func (a *Audio) setReduceNoise(enable bool) error {
 	if a.ReduceNoise == enable {
 		return nil
 	}
-	source := a.getDefaultSource()
-	if source != nil {
-		logger.Infof("set source <%s> reduce noise <%t>", source.Name, enable)
-		source.setReduceNoise(enable)
-	}
 	a.setPropReduceNoise(enable)
 	err := a.audioDConfig.SetValue(dsgKeyReduceNoiseEnabled, enable)
 	if err != nil {
-		return dbusutil.ToError(errors.New("dconfig Cannot set value " + dsgKeyMonoEnabled))
+		return dbusutil.ToError(errors.New("dconfig Cannot set value " + dsgKeyReduceNoiseEnabled))
+	}
+
+	source := a.getDefaultSource()
+	if source != nil {
+		logger.Infof("set source <%s> reduce noise <%t>", source.Name, enable)
+		// 如果是关闭降噪，且当前默认设备是降噪虚拟设备，则先将默认设备切换回物理设备
+		if !enable {
+			a.ctx.SetDefaultSource(source.Name)
+		}
+		source.setReduceNoise(enable)
 	}
 	return nil
 }
