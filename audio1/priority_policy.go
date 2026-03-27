@@ -177,57 +177,51 @@ func (pp *PriorityPolicy) FindPort(cardName string, portName string) *Position {
 	return &Position{tp: PortTypeInvalid, index: -1}
 }
 
-func (pp *PriorityPolicy) InsertPort(card *pulse.Card, port *pulse.CardPortInfo) {
-	pos := pp.FindPort(card.Name, port.Name)
-	if pos.tp != PortTypeInvalid {
-		// 已存在，无需插入
+func (pp *PriorityPolicy) InsertPort(card *pulse.Card, port *pulse.CardPortInfo, allCardPorts pulse.CardPortInfos) {
+	if pos := pp.FindPort(card.Name, port.Name); pos.tp != PortTypeInvalid {
 		return
 	}
+
 	tp := DetectPortType(card, port)
 	newPort := &PriorityPort{
-		CardName: card.Name,
-		PortName: port.Name,
-		PortType: tp,
-		Priority: port.Priority,
+		CardName: card.Name, PortName: port.Name,
+		PortType: tp, Priority: port.Priority,
+	}
+	queue := pp.Ports[tp]
+
+	// 1. 构建权重 Map，显式处理“未记录端口”的权重
+	orderMap := make(map[string]int, len(allCardPorts))
+	for i, p := range allCardPorts {
+		orderMap[p.Name] = i
+	}
+	myWeight, ok := orderMap[port.Name]
+	if !ok {
+		// 防御性处理：如果端口名不在声卡列表中，默认排在该卡集群的末尾
+		myWeight = len(allCardPorts)
 	}
 
-	// 新增设备插入到该类型队列的最前面
-	pp.Ports[tp] = append([]*PriorityPort{newPort}, pp.Ports[tp]...)
-}
-
-// 为了解决pms: BUG-340227, 声卡端口会变化的情况
-// insertByPriority 按 priority 插入端口，如果队列中已存在该声卡的端口，
-// 遍历队列找到最后一个权重大于新端口的同声卡端口，插入到其后面，否则插入到队头
-func (pp *PriorityPolicy) insertByPriority(newPort *PriorityPort, tp int) {
-	insertAfterIndex := -1 // 记录最后一个权重大于新端口的同声卡端口位置
-
-	// 遍历队列
-	for i, existingPort := range pp.Ports[tp] {
-		// 如果是相同声卡
-		if existingPort.CardName == newPort.CardName {
-			// 如果该端口权重大于（不能等于）新端口，记录位置
-			if existingPort.Priority > newPort.Priority {
-				insertAfterIndex = i
+	// 2. 寻找插入点
+	insertIdx := 0 // 默认为新卡置顶逻辑
+	foundSameCard := false
+	for i, p := range queue {
+		if p.CardName == card.Name {
+			if !foundSameCard {
+				foundSameCard = true
+				insertIdx = i // 找到集群后，默认插在集群首位
+			}
+			// 在声卡集群内部，依据 orderMap 权重进行排序
+			if otherWeight, ok := orderMap[p.PortName]; ok && myWeight > otherWeight {
+				insertIdx = i + 1
 			}
 		}
 	}
 
-	// 如果找到了权重大于新端口的同声卡端口，插入到该位置之后
-	if insertAfterIndex != -1 {
-		insertIndex := insertAfterIndex + 1
-		// 如果是插入到末尾
-		if insertIndex >= len(pp.Ports[tp]) {
-			pp.Ports[tp] = append(pp.Ports[tp], newPort)
-		} else {
-			// 插入到中间位置
-			pp.Ports[tp] = append(pp.Ports[tp][:insertIndex],
-				append([]*PriorityPort{newPort}, pp.Ports[tp][insertIndex:]...)...)
-		}
-		return
+	// 3. 执行切片插入
+	if insertIdx >= len(queue) {
+		pp.Ports[tp] = append(queue, newPort)
+	} else {
+		pp.Ports[tp] = append(queue[:insertIdx], append([]*PriorityPort{newPort}, queue[insertIdx:]...)...)
 	}
-
-	// 否则插入到队头
-	pp.Ports[tp] = append([]*PriorityPort{newPort}, pp.Ports[tp]...)
 }
 
 func (pp *PriorityPolicy) GetTheFirstPort() (*PriorityPort, *Position) {
