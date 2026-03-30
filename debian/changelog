@@ -1,3 +1,11 @@
+dde-daemon (6.1.84) unstable; urgency=medium
+
+  * fix: fix audio feature switching sequence
+  * fix: fix card profile change detection logic
+  * refactor: improve audio port insertion logic
+
+ -- zhangkun <zhangkun2@uniontech.com>  Mon, 30 Mar 2026 16:42:51 +0800
+
 dde-daemon (6.1.83) unstable; urgency=medium
 
   * fix: prevent disconnecting same audio device during connection
