@@ -350,9 +350,9 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 	pc := card.core
 	// 检查配置文件变化
 	if card.ActiveProfile != nil {
-		if pc.ActiveProfile.Name != card.ActiveProfile.Name {
+		if pc.ActiveProfile.Name != oldCard.ActiveProfile.Name {
 			logger.Infof("card %s profile changed from %v to %v",
-				card.Name, pc.ActiveProfile.Name, card.ActiveProfile.Name)
+				card.Name, oldCard.ActiveProfile.Name, pc.ActiveProfile.Name)
 			changed |= ProfileChanged
 		}
 	}

@@ -466,6 +466,13 @@ func (a *Audio) handleSinkChanged(idx uint32) {
 	if isPhysicalDevice(sink.Name) && a.checkCardIsReady(sink.Card) {
 		a.autoSwitchPort()
 	}
+
+	if a.defaultSink != nil && a.defaultSink.index == idx && isBluezAudio(sink.Name) {
+		card, err := a.cards.get(sink.Card)
+		if err == nil && card.ActiveProfile != nil && a.BluetoothAudioMode != card.ActiveProfile.Name {
+			a.refreshBluetoothOpts()
+		}
+	}
 }
 
 func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
