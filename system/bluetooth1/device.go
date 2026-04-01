@@ -340,15 +340,8 @@ func (d *device) connectProperties() {
 				logger.Debug("connectedDevices", _bt.connectedDevices)
 			}
 		} else {
-			//If the pairing is successful and connected, the signal will be sent when the device is disconnected
-			if d.Paired && d.ConnectState {
-				notifyDisconnected(d.Alias)
-			}
-			d.needNotify = true
-			d.ConnectState = false
+			d.onDisconnected()
 
-			// if disconnect success, remove device from map
-			_bt.removeConnectedDevice(d)
 			// when disconnected quickly after connecting, automatically try to connect
 			sinceConnected := time.Since(d.connectedTime)
 			logger.Debug("sinceConnected:", sinceConnected)
@@ -795,14 +788,13 @@ func (d *device) Disconnect() {
 	err = d.core.Device().Disconnect(0)
 	if err != nil {
 		logger.Warningf("failed to disconnect %s: %v", d, err)
+		select {
+		case d.disconnectChan <- struct{}{}:
+		default:
+		}
 	}
 	d.setDisconnectPhase(disconnectPhaseDisconnectEnd)
-	d.ConnectState = false
-	d.notifyDevicePropertiesChanged()
-
 	<-ch
-	notifyDisconnected(d.Alias)
-	d.needNotify = true
 }
 
 func (d *device) maybeReconnectByDevice() bool {
@@ -872,14 +864,32 @@ func (d *device) getInputReconnectModeRaw() (string, error) {
 	return "", nil
 }
 
+func (d *device) onDisconnected() {
+	if d.ConnectState {
+		if d.Paired {
+			notifyDisconnected(d.Alias)
+		}
+		d.ConnectState = false
+		_bt.removeConnectedDevice(d)
+	}
+	d.connected = false
+	d.needNotify = true
+	d.updateState()
+	d.notifyDevicePropertiesChanged()
+}
+
 func (d *device) goWaitDisconnect() chan struct{} {
 	ch := make(chan struct{})
 	go func() {
+		timer := time.NewTimer(60 * time.Second)
+		defer timer.Stop()
+
 		select {
 		case <-d.disconnectChan:
 			logger.Debugf("%s disconnectChan receive ok", d)
-		case <-time.After(60 * time.Second):
+		case <-timer.C:
 			logger.Debugf("%s disconnectChan receive timed out", d)
+			d.onDisconnected()
 		}
 		ch <- struct{}{}
 	}()
