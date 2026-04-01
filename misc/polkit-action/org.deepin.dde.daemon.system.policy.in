@@ -8,7 +8,7 @@
 
     <action id="org.deepin.dde.daemon.enable-readonly-protection">
         <description>Enable system read-only protection</description>
-        <message>Authentication required to enable read-only protection.</message>
+        <message>Authentication required to enable Solid System Read-Only protection</message>
         <defaults>
             <allow_any>no</allow_any>
             <allow_inactive>no</allow_inactive>
@@ -17,7 +17,7 @@
     </action>
     <action id="org.deepin.dde.daemon.disable-readonly-protection">
         <description>Disable system read-only protection</description>
-        <message>Authentication required to disable read-only protection.</message>
+        <message>Authentication required to disable Solid System Read-Only protection</message>
         <defaults>
             <allow_any>no</allow_any>
             <allow_inactive>no</allow_inactive>

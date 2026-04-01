@@ -5,7 +5,7 @@
 		<name>policy</name>
 		<message>
 			<location filename="org.deepin.dde.daemon.enable-readonly-protection!message" line="0" />
-			<source>Authentication required to enable read-only protection.</source>
+			<source>Authentication required to enable Solid System Read-Only protection</source>
 			<translation type="unfinished" />
 		</message>
 		<message>
