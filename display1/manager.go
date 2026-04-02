@@ -92,7 +92,7 @@ const (
 	customModeDelim              = "+"
 	monitorsIdDelimiter          = ","
 	defaultTemperatureMode       = ColorTemperatureModeNone
-	defaultTemperatureManual     = 6500
+	defaultTemperatureManual     = 6500 // 默认色温.主要用于配置缺失、不开启色温、配置的值超出范围的默认值
 	defaultRotateScreenTimeDelay = 500
 
 	touchscreenDialogCooldownSeconds = 5 // Seconds to wait for window manager ready
@@ -247,7 +247,7 @@ type monitorSizeInfo struct {
 var _ monitorManagerHooks = (*Manager)(nil)
 var _timeZone string
 var _dsConfigManager configManager.Manager
-var _dsDefaultTemperatureManual int32
+var _dsDefaultTemperatureManual int32 // 开启色温时，手动调节色温的默认值
 
 func newManager(service *dbusutil.Service) *Manager {
 	isVM, _ := isInVM()
@@ -276,7 +276,6 @@ func newManager(service *dbusutil.Service) *Manager {
 		m.hasBuiltinMonitor = true
 	}
 
-	m.ColorTemperatureManual = defaultTemperatureManual
 	m.ColorTemperatureMode = defaultTemperatureMode
 
 	m.xConn = _xConn
@@ -498,6 +497,8 @@ func (m *Manager) getDefaultTemperatureManual() {
 		logger.Warning("type is wrong!")
 	}
 	logger.Info("Default temperature manual:", _dsDefaultTemperatureManual)
+	m.ColorTemperatureManual = _dsDefaultTemperatureManual
+
 }
 
 func (m *Manager) getCustomTemperatureTime() {

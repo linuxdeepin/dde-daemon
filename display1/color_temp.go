@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -38,7 +38,6 @@ const (
 	timeZoneFile = "/usr/share/zoneinfo/zone1970.tab"
 
 	defaultAutoColorTemperatureConf = "6500:3500"
-	defaultTemperature              = 6500
 )
 
 func isValidColorTempMode(mode int32) bool {
@@ -392,19 +391,19 @@ func (m *Manager) getColorTemperatureValue() int {
 	case ColorTemperatureModeAuto:
 		value := m.redshiftRunner.getValue()
 		// 日落时，返回手动设置的色温(from v20)
-		if value != defaultTemperature {
+		if value != defaultTemperatureManual {
 			value = int(manual)
 		}
 		return value
 	case ColorTemperatureModeCustom:
-		value := defaultTemperature
+		value := defaultTemperatureManual
 		if m.customColorTempFlag {
 			value = int(manual)
 		}
 		return value
 	}
 
-	return defaultTemperatureManual
+	return int(_dsDefaultTemperatureManual)
 }
 
 // applyColorTempConfig 应用色温设置

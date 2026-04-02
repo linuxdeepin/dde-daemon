@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -82,7 +82,7 @@ func (c *UserMonitorModeConfig) fix() {
 		c.ColorTemperatureMode = defaultTemperatureMode
 	}
 	if !isValidColorTempValue(c.ColorTemperatureManual) {
-		c.ColorTemperatureManual = defaultTemperatureManual
+		c.ColorTemperatureManual = _dsDefaultTemperatureManual
 	}
 	if c.ColorTemperatureMode != ColorTemperatureModeNone {
 		c.ColorTemperatureModeOn = c.ColorTemperatureMode
@@ -100,7 +100,7 @@ func (c *UserMonitorModeConfig) clone() *UserMonitorModeConfig {
 func getDefaultUserMonitorModeConfig() *UserMonitorModeConfig {
 	return &UserMonitorModeConfig{
 		ColorTemperatureMode:   defaultTemperatureMode,
-		ColorTemperatureManual: defaultTemperatureManual,
+		ColorTemperatureManual: _dsDefaultTemperatureManual,
 		// TODO: 如果配置缺失，需要一个色温使能的模式
 		ColorTemperatureModeOn: ColorTemperatureModeAuto,
 	}
