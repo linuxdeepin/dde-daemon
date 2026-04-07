@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,6 +11,7 @@ import (
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
 	"github.com/linuxdeepin/go-lib/utils"
@@ -117,6 +118,30 @@ func sendNotify2(icon, summary, body, action, call string, timeout int32) error 
 	return err
 }
 
+func isHMIScreenServiceAvailable() bool {
+	sessionBus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning("Failed to connect session bus:", err)
+		return false
+	}
+
+	dbusDaemon := ofdbus.NewDBus(sessionBus)
+
+	names, err := dbusDaemon.ListActivatableNames(0)
+	if err != nil {
+		logger.Warning("Failed to list activatable names:", err)
+		return false
+	}
+
+	for _, name := range names {
+		if name == "com.deepin.defender.hmiscreen" {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (d *Daemon) checkSpace(dir string, state bool) bool {
 	if state {
 		dir = os.Getenv(dir)
@@ -132,14 +157,24 @@ func (d *Daemon) checkSpace(dir string, state bool) bool {
 		return true
 	}
 	logger.Info("checkSpace fs.AvailSize(M) : ", dir, fs.AvailSize/1024/1024)
-	err = sendNotify2("dialog-warning", "",
-		Tr("Insufficient disk space, please clean up in time!"),
-		Tr("Go to clean up"),
-		"dbus-send,--type=method_call,--dest=com.deepin.defender.hmiscreen,/com/deepin/defender/hmiscreen,com.deepin.defender.hmiscreen.ShowModule,string:diskcleaner",
-		5000,
-	)
-	if err != nil {
-		logger.Warning("Failed to send notification for", dir, ":", err)
+	
+	var notifyErr error
+	// 通过判断 hmiscreen D-Bus 服务是否存在，决定是否展示“前往清理”动作。
+	if isHMIScreenServiceAvailable() {
+		notifyErr = sendNotify2("dialog-warning", "",
+			Tr("Insufficient disk space, please clean up in time!"),
+			Tr("Go to clean up"),
+			"dbus-send,--type=method_call,--dest=com.deepin.defender.hmiscreen,/com/deepin/defender/hmiscreen,com.deepin.defender.hmiscreen.ShowModule,string:diskcleaner",
+			5000,
+		)
+	} else {
+		notifyErr = sendNotify("dialog-warning", "",
+			Tr("Insufficient disk space, please clean up in time!"),
+		)
+	}
+
+	if notifyErr != nil {
+		logger.Warning("Failed to send notification for", dir, ":", notifyErr)
 	}
 	return false
 }
