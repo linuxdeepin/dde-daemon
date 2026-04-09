@@ -13,8 +13,8 @@
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.disable-readonly-protection!message" line="0"/>
-			<source>Authentication required to disable read-only protection.</source>
-			<translation>ཀློག་ཙམ་སྲུང་སྐྱོབ་སྒོ་རྒྱག་པར་བདེན་དཔང་ར་སྤྲོད་བྱེད་དགོས།</translation>
+			<source>Authentication required to disable Solid System Read-Only protection</source>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.disable-readonly-protection!description" line="0"/>
