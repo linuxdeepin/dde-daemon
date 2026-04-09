@@ -3,8 +3,8 @@
 		<name>policy</name>
 		<message>
 			<location filename="org.deepin.dde.daemon.enable-readonly-protection!message" line="0"/>
-			<source>Authentication required to enable read-only protection.</source>
-			<translation>読み取り専用保護を有効にするには認証が必要です。</translation>
+			<source>Authentication required to enable Solid System Read-Only protection</source>
+			<translation type="unfinished"/>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.enable-readonly-protection!description" line="0"/>
