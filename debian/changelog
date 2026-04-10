@@ -1,3 +1,35 @@
+dde-daemon (6.1.85) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#1083)
+  * * i18n: Updates for project Deepin Desktop Environment (#1082)
+  * i18n: update translation
+  * i18n: Translate policy.ts in es
+  * i18n: Translate policy.ts in zh_CN
+  * i18n: Translate policy.ts in zh_HK
+  * i18n: Translate policy.ts in de
+  * i18n: Translate policy.ts in pt_BR
+  * i18n: Translate policy.ts in bo
+  * i18n: Translate policy.ts in ug
+  * i18n: Translate policy.ts in ru
+  * i18n: Translate policy.ts in zh_TW
+  * i18n: Translate policy.ts in nl
+  * i18n: Translate policy.ts in sq
+  * i18n: Translate policy.ts in pl
+  * i18n: Translate policy.ts in fr
+  * i18n: Translate policy.ts in ja
+  * i18n: Translate policy.ts in fi
+  * i18n: Translate policy.ts in ca
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR
+  * fix: Fix incorrect punctuation
+  * fix: correct initial color temperature value when enabled
+  * fix: modify disk space notification based on D-Bus service
+    availability
+  * fix: fix duplicate disconnect notifications
+  * fix: change polkit action from auth_admin_keep to auth_admin
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 10 Apr 2026 08:47:12 +0800
+
 dde-daemon (6.1.84) unstable; urgency=medium
 
   * fix: fix audio feature switching sequence
