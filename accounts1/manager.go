@@ -68,7 +68,7 @@ const (
 )
 
 //go:generate dbusutil-gen -type Manager,User manager.go user.go
-//go:generate dbusutil-gen em -type Manager,User,ImageBlur
+//go:generate dbusutil-gen em -type Manager,User
 
 type Manager struct {
 	service       *dbusutil.Service

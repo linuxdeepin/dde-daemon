@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,7 +11,9 @@ import (
 
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts1"
-	_ "github.com/linuxdeepin/dde-daemon/image_effect1"
+	// image_effect1 module disabled: org.deepin.dde.ImageEffect1 D-Bus service
+	// has been migrated to dde-wallpaper-cache.
+	// _ "github.com/linuxdeepin/dde-daemon/image_effect1"
 	_ "github.com/linuxdeepin/dde-daemon/system/airplane_mode1"
 	_ "github.com/linuxdeepin/dde-daemon/system/bluetooth1"
 	_ "github.com/linuxdeepin/dde-daemon/system/display1"
