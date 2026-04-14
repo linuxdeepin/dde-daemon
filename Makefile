@@ -50,7 +50,6 @@ TEST = \
     ${GOPKG_PREFIX}/grub_common \
     ${GOPKG_PREFIX}/grub_gfx \
     ${GOPKG_PREFIX}/housekeeping \
-    ${GOPKG_PREFIX}/image_effect1 \
     ${GOPKG_PREFIX}/inputdevices1 \
     ${GOPKG_PREFIX}/inputdevices1/iso639 \
     ${GOPKG_PREFIX}/keybinding1 \

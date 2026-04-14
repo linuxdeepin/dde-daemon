@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	_imageBlur         *ImageBlur
 	_userStandardIcons []string
 	_accountsManager   *Manager
 	_userCustomIcons   []string
@@ -35,7 +34,6 @@ type Daemon struct {
 	*loader.ModuleBase
 	manager        *Manager
 	loginedManager *logined.Manager
-	imageBlur      *ImageBlur
 }
 
 func NewDaemon() *Daemon {
@@ -68,15 +66,6 @@ func (d *Daemon) Start() error {
 	}
 
 	d.manager.exportUsers()
-
-	d.imageBlur = newImageBlur(service)
-	_imageBlur = d.imageBlur
-
-	err = service.Export(imageBlurDBusPath, d.imageBlur)
-	if err != nil {
-		d.imageBlur = nil
-		return err
-	}
 
 	d.loginedManager, err = logined.Register(logger, service)
 	if err != nil {
@@ -112,12 +101,6 @@ func (d *Daemon) Stop() error {
 	}
 
 	service := loader.GetService()
-
-	if d.imageBlur != nil {
-		_ = service.StopExport(d.imageBlur)
-		d.imageBlur = nil
-		_imageBlur = nil
-	}
 
 	if d.loginedManager != nil {
 		_ = service.StopExport(d.loginedManager)
