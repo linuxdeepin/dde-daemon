@@ -18,6 +18,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	dbus "github.com/godbus/dbus/v5"
@@ -128,6 +129,9 @@ type Manager struct {
 	sessionSigLoop *dbusutil.SignalLoop
 	systemSigLoop  *dbusutil.SignalLoop
 	//startManager              sessionmanager.StartManager
+	
+	// 记录当前正在通过 API 修改的 shortcuts，避免和 dconfig 监听竞争
+	modifyingShortcuts *StringSet
 	sessionManager            sessionmanager.SessionManager
 	airplane                  airplanemode.AirplaneMode
 	networkmanager            networkmanager.Manager
@@ -238,6 +242,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		conn:                conn,
 		keySymbols:          keysyms.NewKeySymbols(conn),
 		handlers:            make([]shortcuts.KeyEventFunc, shortcuts.ActionTypeCount),
+		modifyingShortcuts:  NewStringSet(),
 	}
 
 	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionBus, 10)
@@ -663,6 +668,7 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 			m.shortcutKey = sig.Body[0].(string)
 			m.shortcutKeyCmd = sig.Body[1].(string)
 			shortId := kwinSysActionCmdMap[m.shortcutKeyCmd]
+			logger.Infof("[keybinding][wayland] globalShortcutPressed component=%q action=%q mappedId=%q", m.shortcutKey, m.shortcutKeyCmd, shortId)
 			if shortId != "" && m.DisabledSystemShortcutsList.Contains(shortId) {
 				logger.Warningf("shortcut id: %s is disabled", shortId)
 				return
@@ -678,6 +684,7 @@ func (m *Manager) listenGlobalAccel(sessionBus *dbus.Conn) error {
 					if m.shortcutCmd == "" {
 						m.shortcutCmd = m.shortcutManager.WaylandCustomShortCutMap[m.shortcutKeyCmd]
 					}
+					logger.Infof("[keybinding][wayland] resolved action=%q mappedId=%q cmd=%q", m.shortcutKeyCmd, kwinSysActionCmdMap[m.shortcutKeyCmd], m.shortcutCmd)
 					logger.Debug("WaylandCustomShortCutMap", m.shortcutCmd)
 					if m.shortcutCmd == "" {
 						m.handleKeyEventByWayland(waylandMediaIdMap[m.shortcutKeyCmd])
@@ -1239,6 +1246,12 @@ func (m *Manager) listenDConfigChanged(config configManager.Manager, type0 int32
 		if !m.enableListenDConfig {
 			return
 		}
+		// 如果当前正在通过 API 修改这个 shortcut，跳过监听回调
+		// 避免控制中心的 Add/Clear 操作和 dconfig 监听之间的竞争
+		if m.modifyingShortcuts != nil && m.modifyingShortcuts.Has(key) {
+			logger.Debugf("listenDConfigChanged skipping %s, currently being modified via API", key)
+			return
+		}
 
 		shortcut := m.shortcutManager.GetByIdType(key, type0)
 		if shortcut == nil {
@@ -1256,6 +1269,24 @@ func (m *Manager) listenDConfigChanged(config configManager.Manager, type0 int32
 			return
 		}
 		m.shortcutManager.ModifyShortcutKeystrokes(shortcut, shortcuts.ParseKeystrokes(keystrokes))
+		if _useWayland && type0 == shortcuts.ShortcutTypeSystem {
+			keystrokes = shortcuts.NormalizeSystemKeystrokesForKWin(key, keystrokes)
+			accelJson, err := json.Marshal(struct {
+				Id         string   `json:"Id"`
+				Keystrokes []string `json:"Accels"`
+			}{
+				Id:         key,
+				Keystrokes: keystrokes,
+			})
+			if err != nil {
+				logger.Warning("failed to marshal KWin accel json:", err)
+			} else {
+				ok, setErr := m.wm.SetAccel(0, string(accelJson))
+				if !ok {
+					logger.Warning("failed to update KWin accel:", key, keystrokes, setErr)
+				}
+			}
+		}
 		m.emitShortcutSignal(shortcutSignalChanged, shortcut)
 	})
 }
@@ -1425,4 +1456,36 @@ func (m *Manager) eliminateKeystrokeConflict() {
 
 	m.shortcutManager.ConflictingKeystrokes = nil
 	m.shortcutManager.EliminateConflictDone = true
+}
+
+// StringSet 是一个简单的字符串集合，用于并发安全的标记
+
+type StringSet struct {
+	mu sync.RWMutex
+	m  map[string]struct{}
+}
+
+func NewStringSet() *StringSet {
+	return &StringSet{
+		m: make(map[string]struct{}),
+	}
+}
+
+func (s *StringSet) Add(key string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.m[key] = struct{}{}
+}
+
+func (s *StringSet) Remove(key string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.m, key)
+}
+
+func (s *StringSet) Has(key string) bool {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	_, ok := s.m[key]
+	return ok
 }

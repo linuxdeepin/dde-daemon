@@ -170,6 +170,10 @@ func convertToStringSlice(value interface{}) ([]string, error) {
 	return nil, fmt.Errorf("unsupported type for string slice conversion: %T", value)
 }
 
+func ConvertToStringSliceForWayland(value interface{}) ([]string, error) {
+	return convertToStringSlice(value)
+}
+
 func NewShortcutManager(conn *x.Conn, keySymbols *keysyms.KeySymbols, eventCb KeyEventFunc) *ShortcutManager {
 	setUseWayland(strings.Contains(os.Getenv("XDG_SESSION_TYPE"), "wayland"))
 	ss := &ShortcutManager{
@@ -541,9 +545,10 @@ func (sm *ShortcutManager) storeConflictingKeystroke(ks *Keystroke) {
 func (sm *ShortcutManager) grabKeystroke(shortcut Shortcut, ks *Keystroke, dummy bool) {
 	keyList, err := ks.ToKeyList(sm.keySymbols)
 	if err != nil {
-		logger.Debugf("grabKeystroke failed, shortcut: %v, ks: %v, err: %v", shortcut.GetId(), ks, err)
+		logger.Warningf("[keybinding] grabKeystroke failed, shortcut: %v, ks: %v, err: %v", shortcut.GetId(), ks, err)
 		return
 	}
+	logger.Debugf("grabKeystroke shortcut: %s, ks: %s, dummy: %v", shortcut.GetId(), ks, dummy)
 
 	var conflictCount int
 	var idx = -1
@@ -1342,6 +1347,7 @@ func setShortForWayland(shortcut Shortcut, wmObj wm.Wm) (bool, error) {
 	}
 	keystrokesStrv := shortcut.getKeystrokesStrv()
 	logger.Debugf("Id: %+v, keystrokesStrv: %+v", id, keystrokesStrv)
+	logger.Infof("[keybinding][wayland] setShortForWayland id=%q keystrokes=%v isCustom=%v", id, keystrokesStrv, isCustom)
 	accelJson, err := util.MarshalJSON(util.KWinAccel{
 		Id:         id,
 		Keystrokes: keystrokesStrv,
@@ -1469,6 +1475,27 @@ func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
 	}
 }
 
+func NormalizeSystemKeystrokesForKWin(id string, keystrokes []string) []string {
+	result := append([]string(nil), keystrokes...)
+
+	for i := 0; i < len(result); i++ {
+		result[i] = strings.Replace(result[i], "Del", "Delete", 1)
+		result[i] = strings.Replace(result[i], "Esc", "Escape", 1)
+	}
+
+	if id == "screenshotWindow" {
+		return []string{"SysReq"} // Alt+Print 对应 kwin 识别的键 SysReq
+	}
+	if id == "launcher" {
+		return []string{"Super_L"} // wayland左右super对应的都是Super_L
+	}
+	if id == "systemMonitor" {
+		return []string{"<Crtl><Alt>Escape"} // KWin需要这个特定格式
+	}
+
+	return result
+}
+
 func (sm *ShortcutManager) AddSystemToKwin(wmObj wm.Wm) {
 	logger.Debug("AddSystemToKwin")
 	idNameMap := getSystemIdNameMap()
@@ -1493,29 +1520,28 @@ func (sm *ShortcutManager) AddSystemToKwin(wmObj wm.Wm) {
 			logger.Warning("Failed to convert keystrokes:", err)
 			continue
 		}
-		accelJson, err := util.MarshalJSON(util.KWinAccel{
-			Id:         id,
-			Keystrokes: keystrokes,
-		})
+		keystrokes = NormalizeSystemKeystrokesForKWin(id, keystrokes)
 
+		var accelJson string
 		if id == "screenshotWindow" {
 			accelJson = `{"Id":"screenshotWindow","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
-		}
-		if id == "launcher" {
+		} else if id == "launcher" {
 			accelJson = `{"Id":"launcher","Accels":["Super_L"]}`
-		}
-		if id == "system_monitor" {
-			accelJson = `{"Id":"system_monitor","Accels":["<Crtl><Alt>Escape"]}`
-		}
-		if err != nil {
-			logger.Warning("failed to get json:", err)
-			continue
+		} else if id == "systemMonitor" {
+			accelJson = `{"Id":"systemMonitor","Accels":["<Crtl><Alt>Escape"]}`
+		} else {
+			accelJson, err = util.MarshalJSON(util.KWinAccel{
+				Id:         id,
+				Keystrokes: keystrokes,
+			})
+			if err != nil {
+				logger.Warning("failed to get json:", err)
+				continue
+			}
 		}
 		ok, err := wmObj.SetAccel(0, accelJson)
 		if !ok {
-
-			logKeystrokes, _ := convertToStringSlice(strokesValue.Value())
-			logger.Warning("failed to set KWin accels:", id, logKeystrokes, err)
+			logger.Warning("failed to set KWin accels:", id, keystrokes, err)
 		}
 		sm.AddSystemById(wmObj, id)
 	}
