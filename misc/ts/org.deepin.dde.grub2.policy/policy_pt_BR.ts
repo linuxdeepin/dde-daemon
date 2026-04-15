@@ -4,12 +4,12 @@
 		<message>
 			<location filename="org.deepin.dde.grub2!message" line="0"/>
 			<source>Authentication is required to change the grub configuration</source>
-			<translation>A autenticação é necessária para alterar a configuração do grub</translation>
+			<translation>A autenticação é necessária para alterar a configuração do GRUB</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.grub2!description" line="0"/>
 			<source>Change the grub configuration</source>
-			<translation>Alterar configuração do grub</translation>
+			<translation>Alterar a configuração do GRUB</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.grub2.prepare-gfxmode-detect!message" line="0"/>
