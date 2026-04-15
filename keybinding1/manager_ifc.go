@@ -73,21 +73,31 @@ func (m *Manager) setAccelForWayland(config configManager.Manager, wmObj wm.Wm) 
 	for _, id := range keys {
 		var accelJson string
 		var err error
+
+		// 特殊处理：这些快捷键需要固定的 KWin 格式
 		if id == "screenshotWindow" {
-			accelJson = `{"Id":"screenshotWindow","Accels":["SysReq"]}` //+ Alt+print对应kwin识别的键SysReq
+			accelJson = `{"Id":"screenshotWindow","Accels":["SysReq"]}` // Alt+print对应kwin识别的键SysReq
 		} else if id == "launcher" {
 			accelJson = `{"Id":"launcher","Accels":["Super_L"]}` // wayland左右super对应的都是Super_L
-		} else if id == "system_monitor" {
-			accelJson = `{"Id":"system_monitor","Accels":["<Crtl><Alt>Escape"]}`
+		} else if id == "systemMonitor" {
+			accelJson = `{"Id":"systemMonitor","Accels":["<Crtl><Alt>Escape"]}`
 		} else {
-			KeystrokesValue, err := config.Value(0, id)
+			keystrokesValue, err := config.Value(0, id)
 			if err != nil {
 				logger.Warning("failed to get value:", err)
 				continue
 			}
+
+			keystrokes, err := shortcuts.ConvertToStringSliceForWayland(keystrokesValue.Value())
+			if err != nil {
+				logger.Warning("failed to convert keystrokes:", err)
+				continue
+			}
+			keystrokes = shortcuts.NormalizeSystemKeystrokesForKWin(id, keystrokes)
+
 			accelJson, err = util.MarshalJSON(util.KWinAccel{
 				Id:         id,
-				Keystrokes: KeystrokesValue.Value().([]string),
+				Keystrokes: keystrokes,
 			})
 			if err != nil {
 				logger.Warning("failed to get json:", err)
@@ -95,9 +105,10 @@ func (m *Manager) setAccelForWayland(config configManager.Manager, wmObj wm.Wm) 
 			}
 		}
 
+		logger.Infof("[keybinding][wayland] setAccelForWayland id=%q", id)
 		ok, err := wmObj.SetAccel(0, accelJson)
 		if !ok {
-			logger.Warning("failed to set KWin accels:", err)
+			logger.Warning("failed to set KWin accels:", id, err)
 		}
 	}
 }
@@ -288,6 +299,11 @@ func (m *Manager) DeleteCustomShortcut(id string) *dbus.Error {
 
 func (m *Manager) ClearShortcutKeystrokes(id string, type0 int32) *dbus.Error {
 	logger.Debug("ClearShortcutKeystrokes", id, type0)
+	// 标记正在修改，避免 dconfig 监听回调干扰
+	if m.modifyingShortcuts != nil {
+		m.modifyingShortcuts.Add(id)
+		defer m.modifyingShortcuts.Remove(id)
+	}
 	shortcut := m.shortcutManager.GetByIdType(id, type0)
 	if shortcut == nil {
 		return dbusutil.ToError(ErrShortcutNotFound{id, type0})
@@ -417,6 +433,11 @@ func (m *Manager) ModifyCustomShortcut(id, name, cmd, keystroke string) *dbus.Er
 
 func (m *Manager) AddShortcutKeystroke(id string, type0 int32, keystroke string) *dbus.Error {
 	logger.Debug("AddShortcutKeystroke", id, type0, keystroke)
+	// 标记正在修改，避免 dconfig 监听回调干扰
+	if m.modifyingShortcuts != nil {
+		m.modifyingShortcuts.Add(id)
+		defer m.modifyingShortcuts.Remove(id)
+	}
 	shortcut := m.shortcutManager.GetByIdType(id, type0)
 	if shortcut == nil {
 		return dbusutil.ToError(ErrShortcutNotFound{id, type0})
@@ -467,6 +488,25 @@ func (m *Manager) AddShortcutKeystroke(id string, type0 int32, keystroke string)
 		}
 	}
 
+	// 对于系统快捷键，如果已有 keystrokes 且不是 Delete 相关，则清空
+	// Delete 类快捷键需要保留双绑（Delete + KP_Delete）
+	if type0 == shortcuts.ShortcutTypeSystem && len(shortcut.GetKeystrokes()) > 0 {
+		// 检查是否涉及 Delete 键
+		hasDelete := false
+		for _, ks := range shortcut.GetKeystrokes() {
+			if strings.Contains(ks.String(), "Delete") {
+				hasDelete = true
+				break
+			}
+		}
+		if !hasDelete {
+			// 非 Delete 类系统快捷键，清空后添加
+			m.shortcutManager.ModifyShortcutKeystrokes(shortcut, nil)
+		} else {
+			// Delete 类快捷键保留双绑
+		}
+	}
+
 	// 添加所有 keystroke
 	for _, ksToAdd := range keystrokesToAdd {
 		m.shortcutManager.AddShortcutKeystroke(shortcut, ksToAdd)
@@ -484,7 +524,7 @@ func (m *Manager) AddShortcutKeystroke(id string, type0 int32, keystroke string)
 }
 
 func (m *Manager) DeleteShortcutKeystroke(id string, type0 int32, keystroke string) *dbus.Error {
-	logger.Debug("DeleteShortcutKeystroke", id, type0, keystroke)
+	logger.Infof("[keybinding] DeleteShortcutKeystroke id=%q type=%d keystroke=%q", id, type0, keystroke)
 	shortcut := m.shortcutManager.GetByIdType(id, type0)
 	if shortcut == nil {
 		return dbusutil.ToError(ErrShortcutNotFound{id, type0})
@@ -500,11 +540,14 @@ func (m *Manager) DeleteShortcutKeystroke(id string, type0 int32, keystroke stri
 	}
 	logger.Debug("keystroke:", ks.DebugString())
 
+	logger.Infof("[keybinding] DeleteShortcutKeystroke before delete: id=%q currentKeystrokes=%v", id, shortcut.GetKeystrokes())
 	m.shortcutManager.DeleteShortcutKeystroke(shortcut, ks)
+	logger.Infof("[keybinding] DeleteShortcutKeystroke after delete: id=%q remainingKeystrokes=%v", id, shortcut.GetKeystrokes())
 	err = shortcut.SaveKeystrokes()
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
+	logger.Infof("[keybinding] DeleteShortcutKeystroke after save: id=%q savedKeystrokes=%v", id, shortcut.GetKeystrokes())
 	if shortcut.ShouldEmitSignalChanged() {
 		m.emitShortcutSignal(shortcutSignalChanged, shortcut)
 	}
