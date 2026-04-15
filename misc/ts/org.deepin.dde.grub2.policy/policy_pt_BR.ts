@@ -14,7 +14,7 @@
 		<message>
 			<location filename="org.deepin.dde.grub2.prepare-gfxmode-detect!message" line="0"/>
 			<source>Authentication is required to prepare grub display resolution detection</source>
-			<translation>A autenticação é necessária para a detecção da resolução de exibição do grub</translation>
+			<translation>A autenticação é necessária para preparar a detecção da resolução de tela do GRUB</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.grub2.prepare-gfxmode-detect!description" line="0"/>
