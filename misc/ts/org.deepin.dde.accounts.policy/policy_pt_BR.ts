@@ -19,7 +19,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.user-administration!description" line="0"/>
 			<source>Manage user accounts</source>
-			<translation>Gerenciar Contas de Usuário</translation>
+			<translation>Gerenciar contas de usuário</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-auto-login!message" line="0"/>
@@ -49,7 +49,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation>Ativar login rápido</translation>
+			<translation>Login rápido</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!message" line="0"/>
@@ -59,7 +59,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation>Desativar login rápido</translation>
+			<translation>Login rápido</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!message" line="0"/>
