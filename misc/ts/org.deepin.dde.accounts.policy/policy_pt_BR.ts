@@ -4,7 +4,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.change-own-user-data!message" line="0"/>
 			<source>Authentication is required to change your own user data</source>
-			<translation>A autenticação é necessária para alterar os dados do usuário</translation>
+			<translation>A autenticação é necessária para alterar seus próprios dados de usuário</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.change-own-user-data!description" line="0"/>
@@ -14,7 +14,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.user-administration!message" line="0"/>
 			<source>Authentication is required to change user data</source>
-			<translation>A autenticação é necessária para alterar os dados do usuário</translation>
+			<translation>A autenticação é necessária para alterar dados de usuário</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.user-administration!description" line="0"/>
