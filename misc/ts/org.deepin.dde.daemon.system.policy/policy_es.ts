@@ -14,7 +14,7 @@
 		<message>
 			<location filename="org.deepin.dde.daemon.disable-readonly-protection!message" line="0"/>
 			<source>Authentication required to disable Solid System Read-Only protection</source>
-			<translation type="unfinished"/>
+			<translation>Se requiere autenticación  para desactivar la protección de solo lectura del sistema inmutable.</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.disable-readonly-protection!description" line="0"/>
