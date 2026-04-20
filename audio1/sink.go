@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strconv"
 	"sync"
+	"time"
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -54,7 +55,14 @@ type Sink struct {
 
 	// 当前是否是可插拔sink
 	pluggable bool
+
+	// volumeFeedbackTimer 音量变化音效播放定时器
+	volumeFeedbackTimer *time.Timer
 }
+
+const (
+	volumeFeedbackTimeout = 500 * time.Millisecond
+)
 
 func newSink(sinkInfo *pulse.Sink, audio *Audio) *Sink {
 	s := &Sink{
@@ -127,7 +135,7 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 	s.audio.context().SetSinkVolumeByIndex(s.index, cv)
 
 	if isPlay {
-		s.playFeedback()
+		s.resetVolumeFeedbackTimer()
 	}
 	return nil
 }
@@ -289,41 +297,83 @@ func (*Sink) GetInterfaceName() string {
 	return dbusInterface + ".Sink"
 }
 
-func (s *Sink) update(sinkInfo *pulse.Sink) {
+func (s *Sink) update(sinkInfo *pulse.Sink) (portChanged bool) {
 	s.PropsMu.Lock()
-	s.Name = sinkInfo.Name
-	s.Description = sinkInfo.Description
-	s.Card = sinkInfo.Card
-	s.BaseVolume = sinkInfo.BaseVolume.ToPercent()
+	if s.Name != sinkInfo.Name {
+		logger.Debugf("sink %s name changed from %s to %s", s.Name, s.Name, sinkInfo.Name)
+		s.Name = sinkInfo.Name
+	}
+	if s.Description != sinkInfo.Description {
+		logger.Debugf("sink %s description changed from %s to %s", s.Name, s.Description, sinkInfo.Description)
+		s.Description = sinkInfo.Description
+	}
+	if s.Card != sinkInfo.Card {
+		logger.Debugf("sink %s card changed from %d to %d", s.Name, s.Card, sinkInfo.Card)
+		s.Card = sinkInfo.Card
+	}
+	newBaseVolume := sinkInfo.BaseVolume.ToPercent()
+	if s.BaseVolume != newBaseVolume {
+		logger.Debugf("sink %s base volume changed from %v to %v", s.Name, s.BaseVolume, newBaseVolume)
+		s.BaseVolume = newBaseVolume
+	}
+	if s.cVolume.Avg() != sinkInfo.Volume.Avg() {
+		logger.Debugf("sink %s volume changed from %v to %v", s.Name, s.cVolume.Avg(), sinkInfo.Volume.Avg())
+		if s.volumeFeedbackTimer != nil {
+			s.volumeFeedbackTimer.Stop()
+			s.volumeFeedbackTimer.Reset(volumeFeedbackTimeout)
+		}
+	}
 	s.cVolume = sinkInfo.Volume
 	s.channelMap = sinkInfo.ChannelMap
 
+	if s.Mute != sinkInfo.Mute {
+		logger.Debugf("sink %s mute changed from %t to %t", s.Name, s.Mute, sinkInfo.Mute)
+	}
 	s.setPropMute(sinkInfo.Mute)
 	s.setPropVolume(floatPrecision(sinkInfo.Volume.Avg()))
 
 	s.setPropSupportFade(false)
-	s.setPropFade(sinkInfo.Volume.Fade(sinkInfo.ChannelMap))
+	newFade := sinkInfo.Volume.Fade(sinkInfo.ChannelMap)
+	if s.Fade != newFade {
+		logger.Debugf("sink %s fade changed from %v to %v", s.Name, s.Fade, newFade)
+	}
+	s.setPropFade(newFade)
+
 	s.setPropSupportBalance(true)
-	s.setPropBalance(sinkInfo.Volume.Balance(sinkInfo.ChannelMap))
+	newBalance := sinkInfo.Volume.Balance(sinkInfo.ChannelMap)
+	if s.Balance != newBalance {
+		logger.Debugf("sink %s balance changed from %v to %v", s.Name, s.Balance, newBalance)
+	}
+	s.setPropBalance(newBalance)
 
 	newActivePort := toPort(sinkInfo.ActivePort)
-	var activePortChanged bool
 
-	s.setPropPorts(toPorts(sinkInfo.Ports))
-	activePortChanged = s.setPropActivePort(newActivePort)
+	newPorts := toPorts(sinkInfo.Ports)
+	if !portsEqual(s.Ports, newPorts) {
+		portChanged = true
+		logger.Debugf("sink %s ports changed from %v to %v", s.Name, s.Ports, newPorts)
+	}
+	s.setPropPorts(newPorts)
+
+	if s.ActivePort.Name != newActivePort.Name {
+		portChanged = true
+		logger.Debugf("sink %s active port changed from %s to %s", s.Name, s.ActivePort.Name, newActivePort.Name)
+		s.setPropActivePort(newActivePort)
+	}
 
 	s.props = sinkInfo.PropList
 	s.PropsMu.Unlock()
 
 	defaultSink := s.audio.defaultSink
 	if defaultSink != nil {
-		if activePortChanged && defaultSink.Name == s.Name {
+		if portChanged && defaultSink.Name == s.Name {
 			logger.Debugf("default sink update active port %s", sinkInfo.ActivePort.Name)
 			a := s.audio
 			a.resumeSinkConfig(s)
 		}
 	}
 
+	return
 }
 
 func (s *Sink) GetMeter() (meter dbus.ObjectPath, busErr *dbus.Error) {
@@ -336,4 +386,14 @@ func (s *Sink) playFeedback() {
 	name := s.Name
 	s.PropsMu.RUnlock()
 	playFeedbackWithDevice(name)
+}
+
+func (s *Sink) resetVolumeFeedbackTimer() {
+	if s.volumeFeedbackTimer != nil {
+		s.volumeFeedbackTimer.Stop()
+	}
+	s.volumeFeedbackTimer = time.AfterFunc(volumeFeedbackTimeout, func() {
+		s.volumeFeedbackTimer = nil
+		s.playFeedback()
+	})
 }
