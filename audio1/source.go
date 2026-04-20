@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -252,42 +252,77 @@ func (*Source) GetInterfaceName() string {
 	return dbusInterface + ".Source"
 }
 
-func (s *Source) update(sourceInfo *pulse.Source) {
+func (s *Source) update(sourceInfo *pulse.Source) (portChanged bool) {
 	s.PropsMu.Lock()
+	if s.cVolume.Avg() != sourceInfo.Volume.Avg() {
+		logger.Debugf("source %s volume changed from %v to %v", s.Name, s.cVolume.Avg(), sourceInfo.Volume.Avg())
+	}
 	s.cVolume = sourceInfo.Volume
 	s.channelMap = sourceInfo.ChannelMap
-	s.Name = sourceInfo.Name
-	s.Description = sourceInfo.Description
-	s.Card = sourceInfo.Card
-	s.BaseVolume = sourceInfo.BaseVolume.ToPercent()
+	if s.Name != sourceInfo.Name {
+		logger.Debugf("source %s name changed from %s to %s", s.Name, s.Name, sourceInfo.Name)
+		s.Name = sourceInfo.Name
+	}
+	if s.Description != sourceInfo.Description {
+		logger.Debugf("source %s description changed from %s to %s", s.Name, s.Description, sourceInfo.Description)
+		s.Description = sourceInfo.Description
+	}
+	if s.Card != sourceInfo.Card {
+		logger.Debugf("source %s card changed from %d to %d", s.Name, s.Card, sourceInfo.Card)
+		s.Card = sourceInfo.Card
+	}
+	newBaseVolume := sourceInfo.BaseVolume.ToPercent()
+	if s.BaseVolume != newBaseVolume {
+		logger.Debugf("source %s base volume changed from %v to %v", s.Name, s.BaseVolume, newBaseVolume)
+		s.BaseVolume = newBaseVolume
+	}
 
 	s.setPropVolume(floatPrecision(sourceInfo.Volume.Avg()))
+	if s.Mute != sourceInfo.Mute {
+		logger.Debugf("source %s mute changed from %t to %t", s.Name, s.Mute, sourceInfo.Mute)
+	}
 	s.setPropMute(sourceInfo.Mute)
 
 	//TODO: handle this
 	s.setPropSupportFade(false)
-	s.setPropFade(sourceInfo.Volume.Fade(sourceInfo.ChannelMap))
-	s.setPropSupportBalance(true)
-	s.setPropBalance(sourceInfo.Volume.Balance(sourceInfo.ChannelMap))
+	newFade := sourceInfo.Volume.Fade(sourceInfo.ChannelMap)
+	if s.Fade != newFade {
+		logger.Debugf("source %s fade changed from %v to %v", s.Name, s.Fade, newFade)
+	}
+	s.setPropFade(newFade)
 
-	var ports []Port
-	for _, p := range sourceInfo.Ports {
-		ports = append(ports, toPort(p))
+	s.setPropSupportBalance(true)
+	newBalance := sourceInfo.Volume.Balance(sourceInfo.ChannelMap)
+	if s.Balance != newBalance {
+		logger.Debugf("source %s balance changed from %v to %v", s.Name, s.Balance, newBalance)
+	}
+	s.setPropBalance(newBalance)
+
+	newPorts := toPorts(sourceInfo.Ports)
+	if !portsEqual(s.Ports, newPorts) {
+		portChanged = true
+		logger.Debugf("source %s ports changed from %v to %v", s.Name, s.Ports, newPorts)
+		s.setPropPorts(newPorts)
 	}
 
-	s.setPropPorts(ports)
-	activePortChanged := s.setPropActivePort(toPort(sourceInfo.ActivePort))
+	newActivePort := toPort(sourceInfo.ActivePort)
+	if s.ActivePort.Name != newActivePort.Name {
+		portChanged = true
+		logger.Debugf("source %s active port changed from %s to %s", s.Name, s.ActivePort.Name, newActivePort.Name)
+		s.setPropActivePort(newActivePort)
+	}
 
 	s.PropsMu.Unlock()
 
 	defaultSource := s.audio.defaultSource
 	if defaultSource != nil {
-		if activePortChanged && defaultSource.Name == s.Name {
+		if portChanged && defaultSource.Name == s.Name {
 			logger.Debugf("default source update active port %s", sourceInfo.ActivePort.Name)
 			s.audio.resumeSourceConfig(s)
 		}
 	}
 
+	return
 }
 
 func (s *Source) setMute(v bool) {

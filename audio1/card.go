@@ -347,6 +347,9 @@ const (
 
 func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 	var changed ChangeType = NoChange
+	if card.Name != oldCard.Name {
+		logger.Infof("card name changed from %s to %s", oldCard.Name, card.Name)
+	}
 	pc := card.core
 	// 检查配置文件变化
 	if card.ActiveProfile != nil {
@@ -358,7 +361,7 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 	}
 	// 检查配置文件列表变化
 	if len(oldCard.Profiles) != len(card.Profiles) {
-		logger.Infof("card %s profiles changed", card.Name)
+		logger.Infof("card %s profiles list length changed from %d to %d", card.Name, len(oldCard.Profiles), len(card.Profiles))
 		changed |= ProfileChanged
 	}
 

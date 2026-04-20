@@ -334,7 +334,7 @@ func (a *Audio) handleCardRemoved(idx uint32) {
 		logger.Debugf("card %d removed", idx)
 		return
 	}
-	logger.Infof("card <%s:%d> added", oldCard.core.Name, idx)
+	logger.Infof("card <%s:%d> removed", oldCard.core.Name, idx)
 	a.cards, _ = a.cards.delete(idx)
 	cards := a.cards.string()
 	a.setPropCards(cards)
@@ -407,10 +407,13 @@ func (a *Audio) handleSinkAdded(idx uint32) {
 		sink.ActivePort = port
 	}
 
+	var isNewSink bool
+	var portChanged bool
 	if _, exist := a.sinks[idx]; exist {
-		a.sinks[idx].update(sink)
+		portChanged = a.sinks[idx].update(sink)
 	} else {
 		a.addSink(sink)
+		isNewSink = true
 	}
 
 	if sink.Name == monoSinkName && a.Mono {
@@ -419,7 +422,10 @@ func (a *Audio) handleSinkAdded(idx uint32) {
 	} else if !isPhysicalDevice(sink.Name) {
 		return
 	} else if a.checkCardIsReady(sink.Card) {
-		a.autoSwitchPort()
+		// 只有新增sink或端口列表/活跃端口变化时才触发自动切换
+		if isNewSink || portChanged {
+			a.autoSwitchPort()
+		}
 	}
 }
 
@@ -458,12 +464,14 @@ func (a *Audio) handleSinkChanged(idx uint32) {
 		return
 	}
 	logger.Infof("sink <%s:%d> changed", sink.Name, idx)
+	var portChanged bool
 	if _, ok := a.sinks[idx]; ok {
-		a.sinks[idx].update(sink)
+		portChanged = a.sinks[idx].update(sink)
 	}
 	// 处理场景： 当sink的端口可用性发生变化时，切换端口
 	// cardchange事件也会触发，但是处理不了，因为这时sink可能还没更新，无可用端口
-	if isPhysicalDevice(sink.Name) && a.checkCardIsReady(sink.Card) {
+	// 只有当端口列表或活跃端口发生变化时，才触发自动切换
+	if portChanged && isPhysicalDevice(sink.Name) && a.checkCardIsReady(sink.Card) {
 		a.autoSwitchPort()
 	}
 
@@ -501,10 +509,13 @@ func (a *Audio) handleSourceAdded(idx uint32) {
 		logger.Debugf("skip %s source update", source.Name)
 		return
 	}
+	var isNewSource bool
+	var portChanged bool
 	if _, exist := a.sources[idx]; exist {
-		a.sources[idx].update(source)
+		portChanged = a.sources[idx].update(source)
 	} else {
 		a.addSource(source)
+		isNewSource = true
 	}
 	a.updatePropSources()
 
@@ -515,7 +526,10 @@ func (a *Audio) handleSourceAdded(idx uint32) {
 		// 其他的虚拟通道不做自动切换处理
 		return
 	} else if a.checkCardIsReady(source.Card) {
-		a.autoSwitchInputPort()
+		// 只有新增source或端口列表/活跃端口变化时才触发自动切换
+		if isNewSource || portChanged {
+			a.autoSwitchInputPort()
+		}
 	}
 
 }
@@ -555,12 +569,14 @@ func (a *Audio) handleSourceChanged(idx uint32) {
 	}
 	logger.Infof("source <%s:%d> changed", source.Name, idx)
 
+	var portChanged bool
 	if _, ok := a.sources[idx]; ok {
-		a.sources[idx].update(source)
+		portChanged = a.sources[idx].update(source)
 	}
 	// 处理场景： 当source的端口可用性发生变化时，切换端口
 	// cardchange事件也会触发，但是处理不了，因为这时source可能还没更新，无可用端口
-	if isPhysicalDevice(source.Name) && a.checkCardIsReady(source.Card) {
+	// 只有当端口列表或活跃端口发生变化时，才触发自动切换
+	if portChanged && isPhysicalDevice(source.Name) && a.checkCardIsReady(source.Card) {
 		a.autoSwitchInputPort()
 	}
 }
