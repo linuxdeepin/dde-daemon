@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -292,6 +292,13 @@ func (m *Manager) ClearShortcutKeystrokes(id string, type0 int32) *dbus.Error {
 	if shortcut == nil {
 		return dbusutil.ToError(ErrShortcutNotFound{id, type0})
 	}
+	// 临时关闭监听，避免自身写入触发的 gsettings 变更信号覆盖刚设置的状态
+	m.enableListenDConifigChanged(false)
+	defer func() {
+		time.AfterFunc(100*time.Millisecond, func() {
+			m.enableListenDConifigChanged(true)
+		})
+	}()
 	m.shortcutManager.ModifyShortcutKeystrokes(shortcut, nil)
 	err := shortcut.SaveKeystrokes()
 	if err != nil {
@@ -466,7 +473,13 @@ func (m *Manager) AddShortcutKeystroke(id string, type0 int32, keystroke string)
 			return dbusutil.ToError(errKeystrokeUsed)
 		}
 	}
-
+	// 临时关闭监听，避免自身写入触发的 gsettings 变更信号覆盖刚设置的状态
+	m.enableListenDConifigChanged(false)
+	defer func() {
+		time.AfterFunc(100*time.Millisecond, func() {
+			m.enableListenDConifigChanged(true)
+		})
+	}()
 	// 添加所有 keystroke
 	for _, ksToAdd := range keystrokesToAdd {
 		m.shortcutManager.AddShortcutKeystroke(shortcut, ksToAdd)
@@ -499,7 +512,13 @@ func (m *Manager) DeleteShortcutKeystroke(id string, type0 int32, keystroke stri
 		return dbusutil.ToError(err)
 	}
 	logger.Debug("keystroke:", ks.DebugString())
-
+	// 临时关闭监听，避免自身写入触发的 gsettings 变更信号覆盖刚设置的状态
+	m.enableListenDConifigChanged(false)
+	defer func() {
+		time.AfterFunc(100*time.Millisecond, func() {
+			m.enableListenDConifigChanged(true)
+		})
+	}()
 	m.shortcutManager.DeleteShortcutKeystroke(shortcut, ks)
 	err = shortcut.SaveKeystrokes()
 	if err != nil {
