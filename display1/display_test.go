@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -58,7 +58,7 @@ func Test_filterModeInfos(t *testing.T) {
 			Height: 768,
 			Rate:   60.1,
 		},
-	}, filterModeInfos(modes, ModeInfo{}))
+	}, filterModeInfos(modes, []ModeInfo{}))
 
 	// --------------------------
 	modes = []ModeInfo{
@@ -78,11 +78,21 @@ func Test_filterModeInfos(t *testing.T) {
 		},
 	}
 	assert.Equal(t, modes, filterModeInfos(modes,
-		ModeInfo{Id: 2,
-			name:   "1024x768i",
-			Width:  1024,
-			Height: 768,
-			Rate:   60.1,
+		[]ModeInfo{
+			{
+				Id:     1,
+				name:   "1024x768",
+				Width:  1024,
+				Height: 768,
+				Rate:   60.1,
+			},
+			{
+				Id:     2,
+				name:   "1024x768i",
+				Width:  1024,
+				Height: 768,
+				Rate:   60.1,
+			},
 		}))
 
 	// --------------------------
@@ -111,20 +121,20 @@ func Test_filterModeInfos(t *testing.T) {
 	}
 	assert.Equal(t, []ModeInfo{
 		{
-			Id:     1,
-			name:   "1024x768",
-			Width:  1024,
-			Height: 768,
-			Rate:   60.1,
-		},
-		{
 			Id:     3,
 			name:   "1024x768",
 			Width:  1024,
 			Height: 768,
 			Rate:   60.3,
 		},
-	}, filterModeInfos(modes, ModeInfo{}))
+		{
+			Id:     2,
+			name:   "1024x768",
+			Width:  1024,
+			Height: 768,
+			Rate:   60.10000001,
+		},
+	}, filterModeInfos(modes, []ModeInfo{}))
 
 	// --------------------------
 	// 混合
@@ -164,15 +174,15 @@ func Test_filterModeInfos(t *testing.T) {
 			Height: 768,
 			Rate:   60.3,
 		},
-	}
-	assert.Equal(t, []ModeInfo{
 		{
-			Id:     1,
+			Id:     6,
 			name:   "1024x768",
 			Width:  1024,
 			Height: 768,
-			Rate:   60.1,
+			Rate:   60.3,
 		},
+	}
+	assert.Equal(t, []ModeInfo{
 		{
 			Id:     3,
 			name:   "1024x768",
@@ -180,5 +190,12 @@ func Test_filterModeInfos(t *testing.T) {
 			Height: 768,
 			Rate:   60.3,
 		},
-	}, filterModeInfos(modes, ModeInfo{}))
+		{
+			Id:     2,
+			name:   "1024x768",
+			Width:  1024,
+			Height: 768,
+			Rate:   60.10000001,
+		},
+	}, filterModeInfos(modes, []ModeInfo{}))
 }

@@ -1194,7 +1194,7 @@ func (m *Manager) init() {
 }
 
 // 过滤掉部分模式，尽量不过滤掉 saveMode。
-func (m *Manager) filterModeInfos(modeInfos []ModeInfo, saveMode ModeInfo) []ModeInfo {
+func (m *Manager) filterModeInfos(modeInfos []ModeInfo, saveMode []ModeInfo) []ModeInfo {
 	result := filterModeInfosByRefreshRate(filterModeInfos(modeInfos, saveMode), m.getRateFilterMap())
 	return result
 }
@@ -1336,12 +1336,16 @@ func (m *Manager) addMonitor(monitorInfo *MonitorInfo) error {
 		Model:              monitorInfo.Model,
 		AvailableFillModes: monitorInfo.AvailableFillModes,
 	}
-
-	monitor.Modes = m.filterModeInfos(monitorInfo.Modes, monitorInfo.PreferredMode)
-	monitor.BestMode = getBestMode(monitor.Modes, monitorInfo.PreferredMode)
-	if !monitor.BestMode.isZero() {
-		monitor.PreferredModes = []ModeInfo{monitor.BestMode}
+	preferredMode := monitorInfo.PreferredMode
+	monitor.Modes = m.filterModeInfos(monitorInfo.Modes, []ModeInfo{
+		preferredMode,
+		monitorInfo.CurrentMode,
+	})
+	monitor.setPropModes(monitor.Modes)
+	if len(monitor.Modes) == 0 {
+		return errors.New("the monitor modes is nil")
 	}
+	m.updateBestmodeRefreshRate(monitor, preferredMode)
 	monitor.X = monitorInfo.X
 	monitor.Y = monitorInfo.Y
 	monitor.Width = monitorInfo.Width
@@ -1376,6 +1380,40 @@ func (m *Manager) addMonitor(monitorInfo *MonitorInfo) error {
 	return nil
 }
 
+func (m *Manager) updateBestmodeRefreshRate(monitor *Monitor, preferredMode ModeInfo) (bestMode ModeInfo) {
+	logger.Infof("updateBestmodeRefreshRate monitor name: %s, preferredMode: %v", monitor.Name, preferredMode)
+	var preferredModes []ModeInfo
+	for _, mode := range monitor.Modes {
+		if mode.Width == preferredMode.Width && mode.Height == preferredMode.Height {
+			preferredModes = append(preferredModes, mode)
+		}
+	}
+
+	// 如果没有匹配到与 preferredMode 同分辨率的模式，则使用 monitor.Modes 中的第一个模式
+	if len(preferredModes) == 0 {
+		if len(monitor.Modes) == 0 {
+			logger.Warning("updateBestmodeRefreshRate: monitor.Modes is empty, return preferredMode")
+			bestMode = preferredMode
+			monitor.BestMode = bestMode
+			return bestMode
+		}
+		bestMode = monitor.Modes[0]
+		monitor.BestMode = bestMode
+		logger.Warningf("updateBestmodeRefreshRate: no mode found with preferred resolution %dx%d, fallback to first mode %v", preferredMode.Width, preferredMode.Height, bestMode)
+		return bestMode
+	}
+
+	// 使用preferredModes中Rate最大的值
+	for _, mode := range preferredModes {
+		if bestMode.Id == 0 || mode.Rate > bestMode.Rate {
+			bestMode = mode
+		}
+	}
+	monitor.BestMode = bestMode
+	logger.Info("updateBestmodeRefreshRate bestMode : ", bestMode)
+	return bestMode
+}
+
 // updateMonitor 根据 outputInfo 中的信息更新 dbus 上的 Monitor 对象的属性
 func (m *Manager) updateMonitor(monitorInfo *MonitorInfo) {
 	m.monitorMapMu.Lock()
@@ -1405,8 +1443,16 @@ func (m *Manager) updateMonitor(monitorInfo *MonitorInfo) {
 	monitor.setPropAvailableFillModes(monitorInfo.AvailableFillModes)
 	monitor.setPropManufacturer(monitorInfo.Manufacturer)
 	monitor.setPropModel(monitorInfo.Model)
-	monitor.setPropModes(m.filterModeInfos(monitorInfo.Modes, monitorInfo.PreferredMode))
-	bestMode := getBestMode(monitor.Modes, monitorInfo.PreferredMode)
+	preferredMode := monitorInfo.PreferredMode
+	monitor.Modes = m.filterModeInfos(monitorInfo.Modes, []ModeInfo{
+		preferredMode,
+		monitorInfo.CurrentMode,
+	})
+	monitor.setPropModes(monitor.Modes)
+	if len(monitor.Modes) == 0 {
+		return
+	}
+	bestMode := m.updateBestmodeRefreshRate(monitor, preferredMode)
 	monitor.setPropBestMode(bestMode)
 	var preferredModes []ModeInfo
 	if !bestMode.isZero() {
