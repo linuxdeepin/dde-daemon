@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,6 +7,7 @@ package display1
 import (
 	"math"
 	"regexp"
+	"sort"
 	"strconv"
 
 	"github.com/linuxdeepin/go-lib/strv"
@@ -58,26 +59,38 @@ func toModeInfo(info randr.ModeInfo) ModeInfo {
 var regMode = regexp.MustCompile(`^(\d+)x(\d+)(\D+)$`)
 
 // 过滤重复的模式，一定要保留 saveMode。
-func filterModeInfos(modes []ModeInfo, saveMode ModeInfo) []ModeInfo {
+func filterModeInfos(modes []ModeInfo, saveModes []ModeInfo) []ModeInfo {
 	result := make([]ModeInfo, 0, len(modes))
-	var filteredModeNames strv.Strv
+	remaining := make([]ModeInfo, 0, len(modes))
 	for idx := range modes {
 		mode := modes[idx]
-		// TODO 也许这个实现不够好
-		if mode.Id == saveMode.Id {
-			// not skip
-			result = append(result, mode)
-			continue
+		found := false
+		for _, saveMode := range saveModes {
+			if mode.Id == saveMode.Id {
+				// not skip
+				result = append(result, mode)
+				found = true
+				break
+			}
 		}
+		if !found {
+			remaining = append(remaining, mode)
+		}
+	}
+	// 从大到小排序,避免保留较大id的mode
+	sort.Sort(sort.Reverse(ModeInfos(remaining)))
+	var filteredModeNames strv.Strv
+	for idx := range remaining {
+		mode := remaining[idx]
+		// TODO 也许这个实现不够好
 		// 是否被过滤掉
 		skip := false
-
 		if filteredModeNames.Contains(mode.name) {
 			skip = true
 		} else {
 			match := regMode.FindStringSubmatch(mode.name)
 			if match != nil {
-				m := findFirstMode(modes, func(mode1 ModeInfo) bool {
+				m := findFirstMode(remaining, func(mode1 ModeInfo) bool {
 					return mode.Width == mode1.Width &&
 						mode.Height == mode1.Height &&
 						len(mode1.name) > 0 &&
@@ -98,7 +111,7 @@ func filterModeInfos(modes []ModeInfo, saveMode ModeInfo) []ModeInfo {
 						formatRate(mode.Rate) == formatRate(mode1.Rate)
 				})
 				if !m.isZero() {
-					//logger.Debugf("compare mode: %s, find m: %s",
+					// logger.Debugf("compare mode: %s, find m: %s",
 					//	spew.Sdump(mode), spew.Sdump(m))
 					skip = true
 				}
@@ -106,9 +119,9 @@ func filterModeInfos(modes []ModeInfo, saveMode ModeInfo) []ModeInfo {
 		}
 
 		if skip {
-			//logger.Debugf("filterModeInfos skip mode %d|%x %s %.2f", mode.Id, mode.Id, mode.name, mode.Rate)
+			logger.Debugf("filterModeInfos skip mode %d|%x %s %.2f", mode.Id, mode.Id, mode.name, mode.Rate)
 		} else {
-			//logger.Debugf("add mode %d|%x %s %.2f", mode.Id, mode.Id, mode.name, mode.Rate)
+			logger.Debugf("add mode %d|%x %s %.2f", mode.Id, mode.Id, mode.name, mode.Rate)
 			result = append(result, mode)
 		}
 	}
@@ -228,21 +241,6 @@ func getPreferredMode(modes []ModeInfo, modeId uint32) ModeInfo {
 	return ModeInfo{}
 }
 
-func getBestMode(modes []ModeInfo, preferredMode ModeInfo) ModeInfo {
-	mode := findMode(modes, preferredMode.Id)
-	if !mode.isZero() {
-		return mode
-	}
-	mode = getFirstModeBySize(modes, preferredMode.Width, preferredMode.Height)
-	if !mode.isZero() {
-		return mode
-	}
-	if len(modes) > 0 {
-		return modes[0]
-	}
-	return ModeInfo{}
-}
-
 func getFirstModeBySize(modes []ModeInfo, width, height uint16) ModeInfo {
 	for _, modeInfo := range modes {
 		if modeInfo.Width == width && modeInfo.Height == height {
@@ -256,7 +254,7 @@ func getFirstModeBySizeRate(modes []ModeInfo, width, height uint16, rate float64
 	roundedRate := math.Round(rate * 100)
 	for _, modeInfo := range modes {
 		if modeInfo.Width == width && modeInfo.Height == height &&
-			math.Round(modeInfo.Rate * 100) == roundedRate {
+			math.Round(modeInfo.Rate*100) == roundedRate {
 			return modeInfo
 		}
 	}
