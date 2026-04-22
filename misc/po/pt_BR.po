@@ -170,7 +170,7 @@ msgstr "Cancelar"
 
 #: ../../bluetooth1/obex_agent.go:447
 msgid "Receiving %[1]q"
-msgstr ""
+msgstr "Recebendo %[1]q"
 
 #: ../../bluetooth1/obex_agent.go:455
 msgid "View"
@@ -450,7 +450,7 @@ msgstr "Alternar entre janelas em reverso"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "Ativar menu da janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
