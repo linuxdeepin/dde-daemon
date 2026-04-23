@@ -1,3 +1,14 @@
+dde-daemon (6.1.86) unstable; urgency=medium
+
+  * feat: add event logging for display and input devices
+  * refactor: rename power control binary and remove TLP paths
+  * refactor: improve display mode filtering logic
+  * fix: 修复修改快捷键后快捷键失效的问题
+  * fix: add debounce for volume feedback and optimize port change
+    detection
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 23 Apr 2026 21:46:10 +0800
+
 dde-daemon (6.1.85) unstable; urgency=medium
 
   * i18n: Updates for project Deepin Desktop Environment (#1083)
