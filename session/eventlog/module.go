@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,7 +12,6 @@ package eventlog
 import "C"
 import (
 	"errors"
-	"fmt"
 	"sync"
 	"unsafe"
 
@@ -108,10 +107,8 @@ func start() error {
 	if has {
 		return errors.New("do not need to start eventlog")
 	}
-	ret := C.InitEventSDK()
-	if ret != 0 {
-		err := fmt.Errorf("failed to initialize event SDK:%d", ret)
-		return err
+	if !InitEventSDK() {
+		return errors.New("failed to initialize event SDK")
 	}
 	return nil
 }
@@ -128,7 +125,7 @@ func (m *Module) Stop() error {
 }
 
 func stop() error {
-	C.CloseEventLog()
+	CloseEventSDK()
 	_collectorMap = make(map[string]BaseCollector)
 	return nil
 }
