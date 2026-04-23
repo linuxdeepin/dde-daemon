@@ -79,7 +79,7 @@ Depends:
  network-manager,
  procps,
  rfkill,
- tlp,
+ deepin-power-control (>= 2.0.1),
  xdotool,
  x11-utils,
  xkb-data,
@@ -96,7 +96,6 @@ Provides:
 Recommends:
  flatpak,
  iio-sensor-proxy,
- tlp,
  proxychains4,
  mesa-utils,
 Suggests:

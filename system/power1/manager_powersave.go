@@ -60,7 +60,7 @@ func (m *Manager) setDSPCState(state DSPCMode) {
 		Type:        "oneshot",
 		Description: "Transient Unit set deepin system power control",
 		Environment: []string{},
-		Commands:    []string{"/usr/sbin/deepin-system-power-control", "set", string(state)},
+		Commands:    []string{"/usr/sbin/deepin-power-control", "set", string(state)},
 	}
 	err = unitInfo.StartTransientUnit()
 	if err != nil {
