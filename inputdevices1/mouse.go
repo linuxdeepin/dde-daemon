@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -211,6 +211,8 @@ func (m *Mouse) enableNaturalScroll() {
 				v.Id, v.Name, err)
 		}
 	}
+	// Log event
+	LogMouseNaturalScroll(enabled)
 }
 
 func (m *Mouse) enableMidBtnEmu() {

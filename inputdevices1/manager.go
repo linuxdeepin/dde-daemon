@@ -224,6 +224,9 @@ func (m *Manager) init() {
 		SetGlobalMouse(m.mouse)
 
 		m.trackPoint.init()
+
+		// Log natural scroll states on startup
+		LogOnStartup(m.tpad.NaturalScroll.Get(), m.mouse.NaturalScroll.Get())
 	}
 
 	m.setWheelSpeed()

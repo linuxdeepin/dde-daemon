@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -321,6 +321,8 @@ func (tpad *Touchpad) enableNaturalScroll() {
 				v.Id, v.Name, err)
 		}
 	}
+	// Log event
+	LogTouchpadNaturalScroll(enabled)
 }
 
 func (tpad *Touchpad) setScrollDistance() {

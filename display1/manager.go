@@ -1191,6 +1191,9 @@ func (m *Manager) init() {
 		// 没有内建屏,不监听内核信号
 		logger.Info("built-in screen does not exist")
 	}
+
+	// 埋点：启动时记录屏幕信息
+	m.logDisplayScreenEvent()
 }
 
 // 过滤掉部分模式，尽量不过滤掉 saveMode。
@@ -1511,6 +1514,9 @@ func (m *Manager) handleMonitorConnectedChanged(monitor *Monitor, connected bool
 		// 断开
 		m.updateBuiltinMonitorOnDisconnected(monitor.ID)
 	}
+
+	// 埋点：屏幕接入或拔出时记录
+	m.logDisplayScreenEvent()
 }
 
 func (m *Manager) buildConfigForModeMirror(monitors Monitors) (monitorCfgs SysMonitorConfigs, err error) {
@@ -1945,6 +1951,9 @@ func (m *Manager) switchModeAux(mode, oldMode byte, monitorsId monitorsId, monit
 			return err
 		}
 	}
+
+	// 埋点：设置显示模式时记录
+	m.logDisplayScreenEvent()
 
 	return nil
 }
@@ -3300,3 +3309,23 @@ func (m *Manager) tryToChangeScaleFactor(monitorWidth, monitorHeight uint16) {
 		m.xsManager.SetScaleFactor(0, recommendScaleFactor)
 	}
 }
+
+
+// logDisplayScreenEvent records display screen information for event logging
+func (m *Manager) logDisplayScreenEvent() {
+	monitors := m.getConnectedMonitors()
+	screenCount := len(monitors)
+
+	// 获取当前显示模式
+	displayMode := m.DisplayMode
+
+	// 获取主显示器名称
+	primaryMonitor := m.Primary
+	if primaryMonitor == "" && len(monitors) > 0 {
+		primaryMonitor = monitors[0].Name
+	}
+
+	// 使用延迟日志确保事件系统就绪
+	LogOnStartup(screenCount, displayMode, primaryMonitor)
+}
+
