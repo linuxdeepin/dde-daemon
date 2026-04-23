@@ -125,11 +125,6 @@ ReadWritePaths=-/var/lib/dde-daemon/apps
 ReadWritePaths=-/tmp
 ReadWritePaths=-/home
 
-# TLP
-ReadWritePaths=-/usr/share/tlp/deepin-system-power-control/
-ReadWritePaths=-/etc/tlp.d/
-ReadWritePaths=-/run/tlp/
-
 OOMScoreAdjust=-500
 Nice=-5
 [Install]
