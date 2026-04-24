@@ -8,7 +8,7 @@
 # Maggie Liu <maggie.liufei@gmail.com>, 2025
 # Marck Hrin, 2025
 # deepiner, 2025
-# Yuri Chornoivan <yurchor@ukr.net>, 2025
+# Yuri Chornoivan <yurchor@ukr.net>, 2026
 # 
 #, fuzzy
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2026\n"
 "Language-Team: Ukrainian (https://app.transifex.com/linuxdeepin/teams/3617/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,7 +168,7 @@ msgstr "Скасувати"
 
 #: ../../bluetooth1/obex_agent.go:447
 msgid "Receiving %[1]q"
-msgstr ""
+msgstr "Отримуємо %[1]q"
 
 #: ../../bluetooth1/obex_agent.go:455
 msgid "View"
@@ -448,7 +448,7 @@ msgstr "Перемикання між вікнами у зворотному п�
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "Активувати меню вікна"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"

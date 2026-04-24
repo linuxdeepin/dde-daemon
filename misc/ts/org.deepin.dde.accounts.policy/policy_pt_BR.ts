@@ -4,7 +4,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.change-own-user-data!message" line="0"/>
 			<source>Authentication is required to change your own user data</source>
-			<translation>A autenticação é necessária para alterar os dados do usuário</translation>
+			<translation>A autenticação é necessária para alterar seus próprios dados de usuário</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.change-own-user-data!description" line="0"/>
@@ -14,12 +14,12 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.user-administration!message" line="0"/>
 			<source>Authentication is required to change user data</source>
-			<translation>A autenticação é necessária para alterar os dados do usuário</translation>
+			<translation>A autenticação é necessária para alterar dados de usuário</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.user-administration!description" line="0"/>
 			<source>Manage user accounts</source>
-			<translation>Gerenciar Contas de Usuário</translation>
+			<translation>Gerenciar contas de usuário</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-auto-login!message" line="0"/>
@@ -49,7 +49,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-quick-login!description" line="0"/>
 			<source>Enable Quick Login</source>
-			<translation>Ativar login rápido</translation>
+			<translation>Login rápido</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!message" line="0"/>
@@ -59,7 +59,7 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-quick-login!description" line="0"/>
 			<source>Disable Quick Login</source>
-			<translation>Desativar login rápido</translation>
+			<translation>Login rápido</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!message" line="0"/>
@@ -69,17 +69,17 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!description" line="0"/>
 			<source>Enable WeChat Code Login</source>
-			<translation>Ativar login por código do WeChat</translation>
+			<translation>Login por código do WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to disable WeChat code login</source>
-			<translation>A autenticação é necessária para ativar o login por código do WeChat</translation>
+			<translation>A autenticação é necessária para desativar o login por código do WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!description" line="0"/>
 			<source>Disable WeChat Code Login</source>
-			<translation>Desativar login por código do WeChat</translation>
+			<translation>Login por código do WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>

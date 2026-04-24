@@ -4,22 +4,22 @@
 		<message>
 			<location filename="org.deepin.dde.daemon.enable-readonly-protection!message" line="0"/>
 			<source>Authentication required to enable Solid System Read-Only protection</source>
-			<translation type="unfinished"/>
+			<translation>A autenticação é necessária para ativar a proteção do Sistema Solid em modo somente leitura</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.enable-readonly-protection!description" line="0"/>
 			<source>Enable system read-only protection</source>
-			<translation>Ativar proteção somente leitura do sistema</translation>
+			<translation>Ativar proteção do sistema em modo somente leitura</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.disable-readonly-protection!message" line="0"/>
 			<source>Authentication required to disable Solid System Read-Only protection</source>
-			<translation type="unfinished"/>
+			<translation>A autenticação é necessária para desativar a proteção do Sistema Solid em modo somente leitura</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.disable-readonly-protection!description" line="0"/>
 			<source>Disable system read-only protection</source>
-			<translation>Desativar proteção somente leitura do sistema</translation>
+			<translation>Desativar proteção do sistema em modo somente leitura</translation>
 		</message>
 	</context>
 </TS>
