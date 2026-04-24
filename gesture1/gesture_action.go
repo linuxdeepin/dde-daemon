@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -109,11 +109,11 @@ func (m *Manager) doHandle4Or5FingersSwipeDown() error {
 }
 
 func (m *Manager) doMaximizeActiveWindow() error {
-	return m.wm.MaximizeActiveWindow(0)
+	return m.wm.PerformAction(0, wmActionToggleMaximize)
 }
 
 func (m *Manager) doUnMaximizeActiveWindow() error {
-	return m.wm.UnMaximizeActiveWindow(0)
+	return m.wm.PerformAction(0, wmActionToggleMaximize)
 }
 
 func (m *Manager) doMinimize() error {
