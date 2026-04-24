@@ -1,3 +1,11 @@
+dde-daemon (6.1.87) unstable; urgency=medium
+
+  * perf: remove wallpaper blur and effect features and migrate
+    ImageBlur1 DBus call
+  * perf: cleanup systemd service dependencies for dde-session-daemon
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 24 Apr 2026 09:58:17 +0800
+
 dde-daemon (6.1.86) unstable; urgency=medium
 
   * feat: add event logging for display and input devices
