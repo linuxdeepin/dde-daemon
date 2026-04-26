@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -85,7 +85,11 @@ func (m *Manager) doHandle4Or5FingersSwipeUp() error {
 
 	if !isShowMultiTask {
 		if !isShowDesktop {
-			return m.toggleShowMultiTasking()
+			if err := m.toggleShowMultiTasking(); err != nil {
+				return err
+			}
+			logMultiTaskViewEvent(eventLaunchTypeTouchPad)
+			return nil
 		}
 		return m.toggleShowDesktop()
 	}
@@ -145,11 +149,19 @@ func (m *Manager) doReverseSwitchWorkspace() error {
 }
 
 func (m *Manager) doTileActiveWindowLeft() error {
-	return m.wm.TileActiveWindow(0, wmTileDirectionLeft)
+	if err := m.wm.TileActiveWindow(0, wmTileDirectionLeft); err != nil {
+		return err
+	}
+	logSplitScreenEvent()
+	return nil
 }
 
 func (m *Manager) doTileActiveWindowRight() error {
-	return m.wm.TileActiveWindow(0, wmTileDirectionRight)
+	if err := m.wm.TileActiveWindow(0, wmTileDirectionRight); err != nil {
+		return err
+	}
+	logSplitScreenEvent()
+	return nil
 }
 
 func (m *Manager) doMoveActiveWindow() error {
@@ -184,15 +196,22 @@ func (m *Manager) doXdotoolsMouseUp() error {
 	return nil
 }
 
-func (m *Manager) doShowMultiTasking() error {
+func (m *Manager) showMultiTaskingWithLaunchType(launchType string) error {
 	isShowMultiTask, err := m.wm.GetMultiTaskingStatus(0)
 	if err != nil {
 		return err
 	}
 	if !isShowMultiTask {
-		return m.toggleShowMultiTasking()
+		if err := m.toggleShowMultiTasking(); err != nil {
+			return err
+		}
+		logMultiTaskViewEvent(launchType)
 	}
 	return nil
+}
+
+func (m *Manager) doShowMultiTasking() error {
+	return m.showMultiTaskingWithLaunchType(eventLaunchTypeTouchPad)
 }
 
 func (m *Manager) doHideMultiTasking() error {

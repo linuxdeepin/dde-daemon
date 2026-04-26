@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -619,7 +619,7 @@ func (m *Manager) handleTouchEdgeMoveStopLeave(context *touchEventContext, edge 
 
 			if (1-p.Y)*float64(context.screenHeight) > float64(dockPly) {
 				logger.Debug("show muti task")
-				return doActionByName("ShowMultiTask")
+				return m.showMultiTaskingWithLaunchType(eventLaunchTypeTouchScreen)
 			}
 		}
 	}
