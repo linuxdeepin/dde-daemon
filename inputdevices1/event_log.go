@@ -13,7 +13,7 @@ import (
 // Event IDs for input devices (10-digit numbers)
 const (
 	// Combined event ID for natural scroll settings on startup
-	EventTidNaturalScroll = 1000600013 // 自然滚动设置（触控板和鼠标合并）
+	EventTidNaturalScroll = 1000610009 // 自然滚动设置（触控板和鼠标合并）
 )
 
 // LogNaturalScroll logs natural scroll state for both touchpad and mouse in one event
