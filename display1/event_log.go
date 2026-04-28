@@ -13,7 +13,7 @@ import (
 )
 
 // Event ID for display screen (10-digit number)
-const EventTidDisplayScreen = 1000600015
+const EventTidDisplayScreen = 1000610004
 
 // Debounce delay for display screen events
 const displayEventDebounceDelay = 1 * time.Second
