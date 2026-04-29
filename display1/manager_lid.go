@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2025 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -42,12 +42,14 @@ func (m *Manager) initLidSwitch() {
 		sysPower.InitSignalExt(m.sysSigLoop, true)
 		sysPower.ConnectLidClosed(func() {
 			logger.Warning("lid closed signal")
+			m.holdAutoBrightness()
 			m.handleLidSwitch(sysPower, func(closed bool) {
 				m.setLidClosed(closed)
 			})
 		})
 		sysPower.ConnectLidOpened(func() {
 			logger.Warning("lid open signal")
+			m.resumeAutoBrightness()
 			m.handleLidSwitch(sysPower, func(closed bool) {
 				m.setLidClosed(closed)
 			})

@@ -95,6 +95,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"outputName", "value"},
 		},
 		{
+			Name:   "SetAutoBrightnessEnabled",
+			Fn:     v.SetAutoBrightnessEnabled,
+			InArgs: []string{"enabled"},
+		},
+		{
 			Name:   "SetBrightness",
 			Fn:     v.SetBrightness,
 			InArgs: []string{"outputName", "value"},
