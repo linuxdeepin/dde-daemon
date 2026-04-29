@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -131,7 +131,7 @@ func (m *Manager) initBrightness() {
 	m.Brightness = brightnessTable
 }
 
-func (m *Manager) getBrightnessSetter() int {
+func (m *Manager) getSetterConfig() int {
 	// NOTE: 特殊处理龙芯笔记本亮度设置问题
 	blDir := "/sys/class/backlight/loongson"
 	_, err := os.Stat(blDir)
@@ -149,6 +149,24 @@ func (m *Manager) getBrightnessSetter() int {
 	}
 
 	return int(v.Value().(int64))
+}
+
+// createBrightnessSetter 创建亮度设置闭包函数，用于亮度渐变管理器
+func (m *Manager) createBrightnessSetter(monitor *Monitor) func(float64) error {
+	temperature := m.getColorTemperatureValue()
+	if !isValidColorTempValue(int32(temperature)) {
+		temperature = defaultTemperatureManual
+	}
+
+	isBuiltin := m.isBuiltinMonitor(monitor.Name)
+	setterConfig := m.getSetterConfig()
+
+	logger.Debugf("Create brightness setter config %d for monitor %s, isBuiltin: %v, temperature: %v", setterConfig, monitor.Name, isBuiltin, temperature)
+
+	// 返回一个只接收亮度值参数的闭包
+	return func(brightnessValue float64) error {
+		return brightness.Set(brightnessValue, temperature, setterConfig, isBuiltin, monitor.ID, m.xConn)
+	}
 }
 
 // see also: gnome-desktop/libgnome-desktop/gnome-rr.c
@@ -181,15 +199,21 @@ func (m *Manager) isBuiltinMonitor(name string) bool {
 	return false
 }
 
-func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64, temperature int) error {
-	if !isValidColorTempValue(int32(temperature)) {
-		temperature = defaultTemperatureManual
+func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64, forceTransition bool) error {
+	setter := m.createBrightnessSetter(monitor)
+	if setter == nil {
+		return fmt.Errorf("failed to create brightness setter for monitor %s", monitor.Name)
 	}
 
-	isBuiltin := m.isBuiltinMonitor(monitor.Name)
-	err := brightness.Set(brightnessValue, temperature, m.getBrightnessSetter(), isBuiltin,
-		monitor.ID, m.xConn)
-	return err
+	logger.Debug("setMonitorBrightness reality value:", brightnessValue)
+
+	if m.brightnessTransition != nil {
+		// TODO ： 我们可以优化setter的使用来避免频繁create，但是需要处理屏幕插拔或其它变动信号
+		m.brightnessTransition.SetBrightnessSetter(monitor.Name, setter)
+		return m.brightnessTransition.SetBrightness(monitor.Name, brightnessValue, forceTransition)
+	} else {
+		return setter(brightnessValue)
+	}
 }
 
 func (m *Manager) setBrightnessAux(fake bool, name string, value float64) error {
@@ -205,12 +229,11 @@ func (m *Manager) setBrightnessAux(fake bool, name string, value float64) error 
 
 	value = math.Round(value*1000) / 1000 // 通过该方法，用来对亮度值(亮度值范围为0-1)四舍五入保留小数点后三位有效数字
 	if !fake && enabled {
-		temperature := m.getColorTemperatureValue()
 		// 保持最小亮度，不能全黑
 		if value <= 0.1 {
 			value = 0.1
 		}
-		err := m.setMonitorBrightness(monitor, value, temperature)
+		err := m.setMonitorBrightness(monitor, value, false)
 		if err != nil {
 			logger.Warningf("failed to set brightness for %s: %v", name, err)
 			return err
@@ -230,6 +253,8 @@ func (m *Manager) setBrightnessAndSync(name string, value float64) error {
 	err := m.setBrightness(name, value)
 	if err == nil {
 		m.syncPropBrightness()
+		// 通知自动亮度管理器手动调节
+		m.notifyManualBrightnessChange()
 	}
 	return err
 }

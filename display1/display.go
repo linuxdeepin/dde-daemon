@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -92,4 +92,12 @@ func StartPart2() error {
 
 func SetLogLevel(level log.Priority) {
 	logger.SetLogLevel(level)
+}
+
+// Cleanup 清理display模块资源
+func Cleanup() {
+	if _dpy != nil {
+		_dpy.cleanupAutoBrightness()
+		logger.Info("Display module cleaned up")
+	}
 }

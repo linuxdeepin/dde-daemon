@@ -89,6 +89,22 @@ const (
 	DSettingsKeyRotateScreenTimeDelay    = "rotateScreenTimeDelay"
 	DSettingsKeyCustomDisplayMode        = "customDisplayMode"
 
+	// 渐变亮度配置
+	DSettingsKeyABTransitionEnabled      = "transition-enabled"
+	DSettingsKeyABTransitionDuration     = "transition-duration"
+	DSettingsKeyABTransitionStepInterval = "transition-step-interval"
+
+	// 自动亮度配置（独立配置文件）
+	DSettingsAutoBrightnessAppID               = "org.deepin.dde.daemon"
+	DSettingsAutoBrightnessName                = "org.deepin.Display.AutoBrightness"
+	DSettingsKeyABEnabled                      = "enabled"
+	DSettingsKeyABSensitivity                  = "sensitivity"
+	DSettingsKeyABChangeThreshold              = "change-threshold"
+	DSettingsKeyABPollingInterval              = "polling-interval"
+	DSettingsKeyABManualOverride               = "manual-override-duration"
+	DSettingsKeyABManualAdjustDisablesAutoMode = "manual-adjust-disables-auto-mode"
+	DSettingsKeyABUseTransition                = "use-transition"
+
 	customModeDelim              = "+"
 	monitorsIdDelimiter          = ","
 	defaultTemperatureMode       = ColorTemperatureModeNone
@@ -237,6 +253,18 @@ type Manager struct {
 	xsManager xs.XSettings
 
 	isVM bool
+
+	// 自动亮度相关属性
+	AutoBrightnessEnabled   bool `prop:"access:rw"`
+	AutoBrightnessSupported bool `prop:"access:r"`
+
+	// 自动亮度管理器
+	autoBrightnessManager *AutoBrightnessManager
+
+	// 亮度渐变管理器
+	brightnessTransition *BrightnessTransition
+
+	powerSaving bool
 }
 
 type monitorSizeInfo struct {
@@ -382,8 +410,10 @@ func newManager(service *dbusutil.Service) *Manager {
 
 		m.sessionActive = active
 		if !active {
+			m.holdAutoBrightness()
 			return
 		}
+		m.resumeAutoBrightness()
 		if m.newSysCfg != nil {
 			m.handleSysConfigUpdated(m.newSysCfg)
 			m.newSysCfg = nil
@@ -1194,6 +1224,11 @@ func (m *Manager) init() {
 
 	// 埋点：启动时记录屏幕信息
 	m.logDisplayScreenEvent()
+
+	go func() {
+		m.initBrightnessTransition()
+		m.initAutoBrightness()
+	}()
 }
 
 // 过滤掉部分模式，尽量不过滤掉 saveMode。
@@ -3304,7 +3339,6 @@ func (m *Manager) tryToChangeScaleFactor(monitorWidth, monitorHeight uint16) {
 	}
 }
 
-
 // logDisplayScreenEvent records display screen information for event logging
 func (m *Manager) logDisplayScreenEvent() {
 	monitors := m.getConnectedMonitors()
@@ -3323,3 +3357,141 @@ func (m *Manager) logDisplayScreenEvent() {
 	LogOnStartup(screenCount, displayMode, primaryMonitor)
 }
 
+// getMonitorBrightness 获取显示器当前亮度
+func (m *Manager) getMonitorBrightness(name string) float64 {
+	m.PropsMu.RLock()
+	defer m.PropsMu.RUnlock()
+
+	if v, ok := m.Brightness[name]; ok {
+		return v
+	}
+	return -1 // 返回 -1 表示无法获取
+}
+
+// 手动添加自动亮度相关的属性设置方法
+func (m *Manager) setPropAutoBrightnessEnabled(value bool) (changed bool) {
+	if m.AutoBrightnessEnabled != value {
+		m.AutoBrightnessEnabled = value
+		m.emitPropChangedAutoBrightnessEnabled(value)
+		return true
+	}
+	return false
+}
+
+func (m *Manager) emitPropChangedAutoBrightnessEnabled(value bool) error {
+	return m.service.EmitPropertyChanged(m, "AutoBrightnessEnabled", value)
+}
+
+func (m *Manager) setPropAutoBrightnessSupported(value bool) (changed bool) {
+	if m.AutoBrightnessSupported != value {
+		m.AutoBrightnessSupported = value
+		m.emitPropChangedAutoBrightnessSupported(value)
+		return true
+	}
+	return false
+}
+
+func (m *Manager) emitPropChangedAutoBrightnessSupported(value bool) error {
+	return m.service.EmitPropertyChanged(m, "AutoBrightnessSupported", value)
+}
+
+// 自动亮度管理器集成方法
+
+// initAutoBrightness 初始化自动亮度管理器
+func (m *Manager) initAutoBrightness() {
+	logger.Debug("Initializing auto brightness manager")
+
+	m.autoBrightnessManager = NewAutoBrightnessManager()
+	err := m.autoBrightnessManager.Initialize(m)
+	if err != nil {
+		logger.Info("Auto brightness not supported:", err)
+		m.setPropAutoBrightnessSupported(false)
+		m.setPropAutoBrightnessEnabled(false)
+		return
+	}
+
+	// 设置支持状态
+	m.setPropAutoBrightnessSupported(m.autoBrightnessManager.IsSupported())
+
+	// 获取配置（已在 Initialize 中加载）
+	config, err := m.autoBrightnessManager.getConfig()
+	if err != nil {
+		logger.Warning("Failed to get auto brightness config:", err)
+		config = DefaultAutoBrightnessConfig
+	}
+
+	// 设置启用状态属性
+	m.setPropAutoBrightnessEnabled(config.Enabled)
+
+	// 如果配置启用且支持，则启动
+	if config.Enabled && m.autoBrightnessManager.IsSupported() {
+		err = m.autoBrightnessManager.Start()
+		if err != nil {
+			logger.Warning("Failed to start auto brightness manager:", err)
+		}
+	}
+
+	logger.Info("Auto brightness manager initialized successfully")
+}
+
+// initBrightnessTransition 初始化亮度渐变管理器
+func (m *Manager) initBrightnessTransition() {
+	logger.Debug("Initializing brightness transition manager")
+
+	// 创建亮度渐变管理器
+	m.brightnessTransition = NewBrightnessTransition(m)
+
+	// 加载配置
+	err := m.brightnessTransition.LoadConfig(m.sysBus)
+	if err != nil {
+		logger.Warning("Failed to load brightness transition config:", err)
+		return
+	}
+
+	// 监听配置变化
+	err = m.brightnessTransition.WatchConfigChanges(m.sysSigLoop)
+	if err != nil {
+		logger.Warning("Failed to watch brightness transition config changes:", err)
+	}
+
+	logger.Info("Brightness transition manager initialized successfully")
+}
+
+// notifyManualBrightnessChange 通知手动亮度调节
+func (m *Manager) notifyManualBrightnessChange() {
+	if m.autoBrightnessManager != nil {
+		m.autoBrightnessManager.OnManualBrightnessChange()
+	}
+}
+
+// setSystemAdjusting 设置系统调整标志（用于区分系统自动调整和用户手动调整）
+func (m *Manager) setSystemAdjusting(adjusting bool) {
+	if m.autoBrightnessManager != nil {
+		m.autoBrightnessManager.setSystemAdjusting(adjusting)
+	}
+}
+
+// holdAutoBrightness 通知系统休眠
+func (m *Manager) holdAutoBrightness() {
+	if m.autoBrightnessManager != nil {
+		m.autoBrightnessManager.hold()
+	}
+}
+
+// resumeAutoBrightness 通知系统唤醒
+func (m *Manager) resumeAutoBrightness() {
+	if m.autoBrightnessManager != nil {
+		m.autoBrightnessManager.resume()
+	}
+}
+
+// cleanupAutoBrightness 清理自动亮度资源
+func (m *Manager) cleanupAutoBrightness() {
+	if m.autoBrightnessManager != nil {
+		err := m.autoBrightnessManager.Cleanup()
+		if err != nil {
+			logger.Warning("Failed to cleanup auto brightness manager:", err)
+		}
+		m.autoBrightnessManager = nil
+	}
+}

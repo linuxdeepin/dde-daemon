@@ -177,6 +177,33 @@
       "description[zh_CN]": "自定义显示模式类型（范围：1-2）",
       "permissions": "readwrite",
       "visibility": "public"
+    },
+    "transition-enabled": {
+      "value": true,
+      "serial": 0,
+      "flags": [],
+      "name": "Brightness Transition Enabled",
+      "description": "是否启用亮度渐变效果",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "transition-duration": {
+      "value": 4,
+      "serial": 0,
+      "flags": [],
+      "name": "Brightness Transition Duration",
+      "description": "从 0% 到 100% 完整渐变所需的时间（秒）",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "transition-step-interval": {
+      "value": 100,
+      "serial": 0,
+      "flags": [],
+      "name": "Brightness Transition Step Interval",
+      "description": "渐变过程中每次调整亮度的时间间隔（毫秒）",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }

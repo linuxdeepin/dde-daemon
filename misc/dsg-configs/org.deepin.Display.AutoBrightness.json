@@ -1,0 +1,69 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "enabled": {
+            "name": "Auto Brightness Enabled",
+            "description": "启用基于环境光传感器的自动亮度调节",
+            "value": true,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "sensitivity": {
+            "name": "Auto Brightness Sensitivity",
+            "description": "自动亮度调节的敏感度，值越大时调整范围越大",
+            "value": 0.5,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "change-threshold": {
+            "name": "Light Change Threshold",
+            "description": "触发亮度调节的环境光变化阈值",
+            "value": 31.0,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "polling-interval": {
+            "name": "Polling Interval",
+            "description": "环境光采样间隔（秒）",
+            "value": 2,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "manual-override-duration": {
+            "name": "Manual Override Duration",
+            "description": "手动调节后暂停自动调节的时长（秒）",
+            "value": 300,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "manual-adjust-disables-auto-mode": {
+            "name": "Manual adjust disables auto mode",
+            "description": "手动调节后是否立即停止功能",
+            "value": true,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "use-transition": {
+            "name": "Use Transition for Auto Brightness",
+            "description": "自动亮度调节时是否使用渐变效果（即使全局渐变功能关闭）",
+            "value": true,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        }
+    }
+}

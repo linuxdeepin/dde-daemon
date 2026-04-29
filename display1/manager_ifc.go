@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -112,6 +112,23 @@ func (m *Manager) ChangeBrightness(raised bool) *dbus.Error {
 	logger.Debug("dbus call ChangeBrightness", raised)
 	err := m.changeBrightness(raised)
 	return dbusutil.ToError(err)
+}
+
+// SetAutoBrightnessEnabled 设置自动亮度启用状态
+func (m *Manager) SetAutoBrightnessEnabled(enabled bool) *dbus.Error {
+	logger.Debug("dbus call SetAutoBrightnessEnabled", enabled)
+	if m.autoBrightnessManager == nil {
+		return dbusutil.ToError(errors.New("auto brightness not supported"))
+	}
+
+	err := m.autoBrightnessManager.SetEnabled(enabled)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
+	m.setPropAutoBrightnessEnabled(enabled)
+
+	return nil
 }
 
 func (m *Manager) GetBrightness() (map[string]float64, *dbus.Error) {
