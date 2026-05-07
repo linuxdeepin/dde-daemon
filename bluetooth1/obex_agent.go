@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -162,6 +163,38 @@ func (a *obexAgent) unregisterAgent() {
 	}
 }
 
+// validateFilename validates that the filename is safe and does not contain
+// path traversal sequences. Only pure filenames are accepted.
+//
+// Security: Prevents path traversal attacks where a malicious remote device
+// sends filenames like "../.config/autostart/evil.desktop" to write files
+// outside the intended download directory.
+func validateFilename(name string) error {
+	// Reject empty filename
+	if name == "" {
+		return errors.New("empty filename")
+	}
+
+	// Reject special directory names
+	if name == "." || name == ".." {
+		return errors.New("invalid filename: . or ..")
+	}
+
+	// Reject path separators - filename must not contain '/' or '\'
+	// This prevents absolute paths and relative path traversal
+	if strings.ContainsAny(name, "/\\") {
+		return errors.New("path separator not allowed in filename")
+	}
+
+	// Ensure the name is a pure filename, not a path
+	// filepath.Base("../foo") returns "foo", which != "../foo"
+	if filepath.Base(name) != name {
+		return errors.New("not a pure filename")
+	}
+
+	return nil
+}
+
 // AuthorizePush 用于请求用户接收文件
 func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName string, busErr *dbus.Error) {
 	logger.Infof("dbus call obexAgent AuthorizePush with transferPath %v", transferPath)
@@ -177,6 +210,16 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
 	}
+
+	// Security: Validate filename to prevent path traversal attacks.
+	// The remote device should only send a pure filename (e.g., "photo.jpg"),
+	// not a path (e.g., "../.config/autostart/evil.desktop").
+	// Reject any filename containing path separators or ".." sequences.
+	if err := validateFilename(oriFilename); err != nil {
+		logger.Warning("rejected unsafe filename from remote device:", oriFilename, "reason:", err)
+		return "", dbusutil.ToError(errors.New("invalid filename"))
+	}
+
 	tempFileName = randFileName(oriFilename)
 	if len(tempFileName) > 255 {
 		tempFileName = tempFileName[:255]
@@ -424,6 +467,17 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 }
 
 func moveTempFile(src, dest string) string {
+	// Security: Check if destination is a symlink to prevent symlink attacks.
+	// A malicious local user could create a symlink in the download directory
+	// pointing to a sensitive file (e.g., ~/.bashrc, ~/.config/autostart/*.desktop).
+	// Use os.Lstat to detect symlinks without following them.
+	if fi, err := os.Lstat(dest); err == nil {
+		if fi.Mode()&os.ModeSymlink != 0 {
+			logger.Error("refusing to overwrite symlink:", dest)
+			return ""
+		}
+	}
+
 	count := 0
 	suffix := filepath.Ext(dest)
 	fileName := strings.TrimSuffix(dest, suffix)
