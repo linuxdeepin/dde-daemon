@@ -287,7 +287,9 @@ type Manager struct {
 	backlightMinValue  int32
 	backlightMidValue  int32
 
-	powerSaving bool
+	powerSaving            bool
+	systemAdjustingTimer   *time.Timer
+	systemAdjustingTimerMu sync.Mutex
 }
 
 type monitorSizeInfo struct {
@@ -3609,6 +3611,12 @@ func (m *Manager) notifyManualBrightnessChange() {
 }
 
 // setSystemAdjusting 设置系统调整标志（用于区分系统自动调整和用户手动调整）
+func (m *Manager) isPowerSaving() bool {
+	m.PropsMu.RLock()
+	defer m.PropsMu.RUnlock()
+	return m.powerSaving
+}
+
 func (m *Manager) setSystemAdjusting(adjusting bool) {
 	if m.autoBrightnessManager != nil {
 		m.autoBrightnessManager.setSystemAdjusting(adjusting)
@@ -3629,8 +3637,29 @@ func (m *Manager) resumeAutoBrightness() {
 	}
 }
 
+// scheduleSystemAdjustingClear 延迟清除系统调整标志
+func (m *Manager) scheduleSystemAdjustingClear(delay time.Duration) {
+	m.systemAdjustingTimerMu.Lock()
+	defer m.systemAdjustingTimerMu.Unlock()
+
+	if m.systemAdjustingTimer != nil {
+		m.systemAdjustingTimer.Stop()
+	}
+	m.systemAdjustingTimer = time.AfterFunc(delay, func() {
+		m.setSystemAdjusting(false)
+		logger.Debug("system adjusting flag cleared after delay")
+	})
+}
+
 // cleanupAutoBrightness 清理自动亮度资源
 func (m *Manager) cleanupAutoBrightness() {
+	m.systemAdjustingTimerMu.Lock()
+	if m.systemAdjustingTimer != nil {
+		m.systemAdjustingTimer.Stop()
+		m.systemAdjustingTimer = nil
+	}
+	m.systemAdjustingTimerMu.Unlock()
+
 	if m.autoBrightnessManager != nil {
 		err := m.autoBrightnessManager.Cleanup()
 		if err != nil {
