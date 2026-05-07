@@ -205,6 +205,44 @@ func (c *SensorProxyClient) GetCachedLightLevel() (int, error) {
 	return c.lastLightLevel, nil
 }
 
+// GetLightLevel 获取实时的环境光强度（从 D-Bus 属性读取）
+func (c *SensorProxyClient) GetLightLevel() (int, error) {
+	c.mutex.Lock()
+	if !c.serviceAvailable {
+		c.mutex.Unlock()
+		return 0, errors.New("SensorProxy service not available")
+	}
+
+	if !c.hasAmbientLight {
+		c.mutex.Unlock()
+		return 0, errors.New("no ambient light sensor")
+	}
+
+	if !c.claimed {
+		c.mutex.Unlock()
+		return 0, errors.New("light sensor not claimed")
+	}
+
+	sensorProxy := c.sensorProxy
+	c.mutex.Unlock()
+
+	if sensorProxy == nil {
+		return 0, errors.New("sensor proxy is nil")
+	}
+
+	variant, err := sensorProxy.GetProperty(hadessProxyInterface + "." + propLightLevel)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get LightLevel property: %w", err)
+	}
+
+	lightLevel, ok := variant.Value().(float64)
+	if !ok {
+		return 0, errors.New("invalid LightLevel property type")
+	}
+
+	return int(lightLevel), nil
+}
+
 // HasAmbientLight 检查是否有环境光传感器
 func (c *SensorProxyClient) HasAmbientLight() (bool, error) {
 	c.mutex.Lock()
