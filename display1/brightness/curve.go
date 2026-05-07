@@ -24,6 +24,12 @@ type BrightnessPoint struct {
 	Value      int32 `json:"value"`      // 对应的亮度百分比 (0-100)，表示最大亮度的百分比
 }
 
+// AutoBrightnessCurvePoint 自动亮度曲线控制点
+type AutoBrightnessCurvePoint struct {
+	Lux int     `json:"lux"` // 光感值
+	Br  float64 `json:"br"`  // 亮度百分比 (0-100)
+}
+
 // 自定义亮度曲线配置
 type BrightnessCurveConfig struct {
 	EDID        string            `json:"edid,omitempty"` // 屏幕EDID标识（可选，默认曲线不需要）
@@ -60,6 +66,10 @@ type CurveManager struct {
 	// FLM曲线参数
 	backLightMinValue int32
 	backlightMidValue int32
+
+	// 自动亮度曲线
+	autoBrightnessCurve     []AutoBrightnessCurvePoint
+	autoBrightnessCurveFunc func(lux int) float64
 }
 
 // 全局 CurveManager 实例
@@ -487,4 +497,148 @@ func (cm *CurveManager) setCurveType(curveType string) {
 	defer cm.mu.Unlock()
 	cm.curveType = curveType
 	logger.Infof("Set curve type: %s", curveType)
+}
+
+// SetAutoBrightnessCurve 设置自动亮度曲线配置（JSON字符串）
+func SetAutoBrightnessCurve(jsonStr string) {
+	_curveManager.setAutoBrightnessCurve(jsonStr)
+}
+
+// SetAutoBrightnessCurveFromPoints 设置自动亮度曲线配置（数组）
+func SetAutoBrightnessCurveFromPoints(points []AutoBrightnessCurvePoint) {
+	_curveManager.setAutoBrightnessCurveFromPoints(points)
+}
+
+// GetAutoBrightnessValue 根据光照值获取目标亮度百分比 (0-1)
+func GetAutoBrightnessValue(lux int) float64 {
+	return _curveManager.getAutoBrightnessValue(lux)
+}
+
+// HasAutoBrightnessCurve 检查是否配置了自动亮度曲线
+func HasAutoBrightnessCurve() bool {
+	return _curveManager.hasAutoBrightnessCurve()
+}
+
+// setAutoBrightnessCurve 设置自动亮度曲线（内部方法，从JSON字符串解析）
+func (cm *CurveManager) setAutoBrightnessCurve(jsonStr string) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+
+	cm.autoBrightnessCurveFunc = nil
+	cm.autoBrightnessCurve = nil
+
+	if jsonStr == "" {
+		logger.Info("Auto brightness curve cleared")
+		return
+	}
+
+	jsonStr = strings.ReplaceAll(jsonStr, "\\", "")
+	logger.Debugf("Parsing auto brightness curve: %s", jsonStr)
+
+	var points []AutoBrightnessCurvePoint
+	if err := json.Unmarshal([]byte(jsonStr), &points); err != nil {
+		logger.Warningf("Failed to parse auto brightness curve: %v", err)
+		return
+	}
+
+	cm.setAutoBrightnessCurveFromPointsLocked(points)
+}
+
+// setAutoBrightnessCurveFromPoints 设置自动亮度曲线（内部方法，从数组）
+func (cm *CurveManager) setAutoBrightnessCurveFromPoints(points []AutoBrightnessCurvePoint) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	cm.setAutoBrightnessCurveFromPointsLocked(points)
+}
+
+// setAutoBrightnessCurveFromPointsLocked 设置自动亮度曲线（内部方法，需持有锁）
+func (cm *CurveManager) setAutoBrightnessCurveFromPointsLocked(points []AutoBrightnessCurvePoint) {
+	cm.autoBrightnessCurveFunc = nil
+	cm.autoBrightnessCurve = nil
+
+	if len(points) == 0 {
+		logger.Info("Auto brightness curve cleared")
+		return
+	}
+
+	if err := validateAutoBrightnessCurve(points); err != nil {
+		logger.Warningf("Invalid auto brightness curve: %v", err)
+		return
+	}
+
+	cm.autoBrightnessCurve = points
+	cm.autoBrightnessCurveFunc = cm.generateAutoBrightnessCurveFunc(points)
+	logger.Infof("Auto brightness curve set successfully with %d points", len(points))
+}
+
+// validateAutoBrightnessCurve 验证自动亮度曲线配置
+func validateAutoBrightnessCurve(points []AutoBrightnessCurvePoint) error {
+	if len(points) == 0 {
+		return fmt.Errorf("curve points cannot be empty")
+	}
+
+	for i, p := range points {
+		if p.Br < 0 || p.Br > 100 {
+			return fmt.Errorf("brightness at index %d must be between 0 and 100, got: %f", i, p.Br)
+		}
+		if i > 0 && p.Lux <= points[i-1].Lux {
+			return fmt.Errorf("lux values must be in ascending order at index %d", i)
+		}
+	}
+
+	return nil
+}
+
+// generateAutoBrightnessCurveFunc 生成自动亮度曲线函数
+func (cm *CurveManager) generateAutoBrightnessCurveFunc(points []AutoBrightnessCurvePoint) func(lux int) float64 {
+	return func(lux int) float64 {
+		if len(points) == 0 {
+			return -1
+		}
+
+		if len(points) == 1 {
+			return points[0].Br / 100.0
+		}
+
+		luxFloat := float64(lux)
+
+		if luxFloat <= float64(points[0].Lux) {
+			return points[0].Br / 100.0
+		}
+
+		if luxFloat >= float64(points[len(points)-1].Lux) {
+			return points[len(points)-1].Br / 100.0
+		}
+
+		for i := 0; i < len(points)-1; i++ {
+			p1, p2 := points[i], points[i+1]
+			if luxFloat >= float64(p1.Lux) && luxFloat <= float64(p2.Lux) {
+				x1, x2 := float64(p1.Lux), float64(p2.Lux)
+				y1, y2 := p1.Br, p2.Br
+				br := y1 + (y2-y1)*(luxFloat-x1)/(x2-x1)
+				return br / 100.0
+			}
+		}
+
+		return points[len(points)-1].Br / 100.0
+	}
+}
+
+// getAutoBrightnessValue 根据光照值获取目标亮度百分比 (0-1)
+func (cm *CurveManager) getAutoBrightnessValue(lux int) float64 {
+	cm.mu.RLock()
+	defer cm.mu.RUnlock()
+
+	if cm.autoBrightnessCurveFunc == nil {
+		return -1
+	}
+
+	return cm.autoBrightnessCurveFunc(lux)
+}
+
+// hasAutoBrightnessCurve 检查是否配置了自动亮度曲线
+func (cm *CurveManager) hasAutoBrightnessCurve() bool {
+	cm.mu.RLock()
+	defer cm.mu.RUnlock()
+	return cm.autoBrightnessCurveFunc != nil
 }
