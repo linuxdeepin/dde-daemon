@@ -68,7 +68,7 @@
         "kalman-process-noise": {
             "name": "Kalman Filter Process Noise Q",
             "description": "卡尔曼滤波器过程噪声协方差（Q），值越大对环境光变化响应越快",
-            "value": 0.5,
+            "value": 0.8,
             "visibility": "private",
             "permissions": "readwrite",
             "serial": 0,
@@ -77,7 +77,7 @@
         "kalman-measurement-noise": {
             "name": "Kalman Filter Measurement Noise R",
             "description": "卡尔曼滤波器测量噪声协方差（R），值越大滤波效果越强",
-            "value": 0.1,
+            "value": 0.05,
             "visibility": "private",
             "permissions": "readwrite",
             "serial": 0,
@@ -104,7 +104,7 @@
         "kalman-window-size": {
             "name": "Kalman Filter Window Size",
             "description": "自适应卡尔曼滤波器滑动窗口大小，用于计算测量方差",
-            "value": 5,
+            "value": 3,
             "visibility": "private",
             "permissions": "readwrite",
             "serial": 0,
