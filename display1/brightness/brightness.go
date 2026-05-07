@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -218,6 +218,13 @@ func setBacklight(value float64, output randr.Output, conn *x.Conn) error {
 
 func _setBacklight(value float64, controller *displayBl.Controller) error {
 	br := int32(float64(controller.MaxBrightness) * value)
+
+	v, ok := GetBacklightCurveValue(value, controller)
+	if ok {
+		logger.Debugf("Brightness curve value: %v", v)
+		br = v
+	}
+
 	const backlightTypeDisplay = 1
 	fmt.Printf("help set brightness %q max %v value %v br %v\n",
 		controller.Name, controller.MaxBrightness, value, br)

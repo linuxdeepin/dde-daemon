@@ -204,6 +204,78 @@
       "description": "渐变过程中每次调整亮度的时间间隔（毫秒）",
       "permissions": "readwrite",
       "visibility": "private"
+    },
+    "backlight-curve-type": {
+      "value": "default",
+      "serial": 0,
+      "flags": ["global"],
+      "name": "backlightCurveType",
+      "description": "背光曲线类型",
+      "permissions": "readonly",
+      "visibility": "private"
+    },
+    "backlight-curve-min-value": {
+      "value": 4,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "backlightMinValue",
+      "description": "背光曲线起始点",
+      "permissions": "readonly",
+      "visibility": "private"
+    },
+    "backlight-curve-mid-value": {
+      "value": 50,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "backlightMidValue",
+      "description": "背光曲线中间点",
+      "permissions": "readonly",
+      "visibility": "private"
+    },
+    "brightness-percentage": {
+      "value": 100,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "brightnessPercentage",
+      "description": "实际亮度百分比, 取值范围：[50, 100]",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "can-set-brightness-delay-interval": {
+      "value": 0,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "canSetBrightnessDelayInterval",
+      "description": "新增显示器延时获取是否支持亮度调节",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "max-brightness-unlimited": {
+      "value": false,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "maxBrightnessUnlimited",
+      "description": "内置屏幕最大亮度不受限制开关",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "custom-brightness-curves": {
+      "value": "",
+      "serial": 0,
+      "flags": ["global"],
+      "name": "customBrightnessCurves",
+      "description": "内置屏亮度曲线与最大限制",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "default-brightness-curve": {
+      "value": "",
+      "serial": 0,
+      "flags": ["global"],
+      "name": "defaultBrightnessCurve",
+      "description": "默认亮度曲线配置（不依赖硬件信息）",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }

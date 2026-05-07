@@ -89,6 +89,16 @@ const (
 	DSettingsKeyRotateScreenTimeDelay    = "rotateScreenTimeDelay"
 	DSettingsKeyCustomDisplayMode        = "customDisplayMode"
 
+	// 亮度曲线配置
+	DSettingsKeyBacklightCurveType       = "backlight-curve-type"
+	DSettingsKeyBacklightMinValue        = "backlight-curve-min-value"
+	DSettingsKeyBacklightMidValue        = "backlight-curve-mid-value"
+	DSettingsKeyBrightnessPercentage     = "brightness-percentage"
+	DSettingsKeyCanSetBrightnessDelay    = "can-set-brightness-delay-interval"
+	DSettingsKeyCustomBrightnessCurves   = "custom-brightness-curves"
+	DSettingsKeyDefaultBrightnessCurve   = "default-brightness-curve"
+	DSettingsKeyMaxBrightnessUnlimited   = "max-brightness-unlimited"
+
 	// 渐变亮度配置
 	DSettingsKeyABTransitionEnabled      = "transition-enabled"
 	DSettingsKeyABTransitionDuration     = "transition-duration"
@@ -255,14 +265,20 @@ type Manager struct {
 	isVM bool
 
 	// 自动亮度相关属性
-	AutoBrightnessEnabled   bool `prop:"access:rw"`
-	AutoBrightnessSupported bool `prop:"access:r"`
+	AutoBrightnessEnabled   bool   `prop:"access:rw"`
+	AutoBrightnessSupported bool   `prop:"access:r"`
+	CurveMaxScale          int32  `prop:"access:r"`
 
 	// 自动亮度管理器
 	autoBrightnessManager *AutoBrightnessManager
 
 	// 亮度渐变管理器
 	brightnessTransition *BrightnessTransition
+
+	// 背光曲线配置
+	backlightCurveType string
+	backlightMinValue  int32
+	backlightMidValue  int32
 
 	powerSaving bool
 }
@@ -494,6 +510,18 @@ func (m *Manager) initDConfig(sysBus *dbus.Conn) {
 			m.getCurrentCustomId()
 		case DSettingsKeyRotateScreenTimeDelay:
 			m.getRotateScreenTimeDelay()
+		case DSettingsKeyCustomBrightnessCurves:
+			m.getCustomBrightnessCurves()
+		case DSettingsKeyDefaultBrightnessCurve:
+			m.getDefaultBrightnessCurve()
+		case DSettingsKeyBacklightMinValue, DSettingsKeyBacklightMidValue:
+			m.getBacklightMinValue()
+			m.getBacklightMidValue()
+			brightness.InitFlmCurves(m.backlightMinValue, m.backlightMidValue)
+		case DSettingsKeyBacklightCurveType:
+			m.getBacklightCurveType()
+		case DSettingsKeyMaxBrightnessUnlimited:
+			m.getMaxBrightnessUnlimited()
 		default:
 			break
 		}
@@ -510,6 +538,14 @@ func (m *Manager) loadInitialConfigValues() {
 	m.getCurrentCustomId()
 	m.getRotateScreenTimeDelay()
 	// ColorTemperatureManual will be loaded from user config via applyColorTempConfig()
+	m.getBacklightCurveType()
+	m.getBacklightMinValue()
+	m.getBacklightMidValue()
+	m.getCustomBrightnessCurves()
+	m.getDefaultBrightnessCurve()
+	m.getMaxBrightnessUnlimited()
+	// 初始化FLM曲线
+	brightness.InitFlmCurves(m.backlightMinValue, m.backlightMidValue)
 }
 
 func (m *Manager) getDefaultTemperatureManual() {
@@ -627,6 +663,107 @@ func (m *Manager) getBrightness() string {
 		return ""
 	}
 	return v.Value().(string)
+}
+
+func (m *Manager) getBacklightCurveType() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBacklightCurveType)
+	if err != nil {
+		logger.Warning(err)
+		m.backlightCurveType = "default"
+		brightness.SetCurveType("default")
+		return
+	}
+	m.backlightCurveType = v.Value().(string)
+	logger.Info("Backlight Curve Type:", m.backlightCurveType)
+	brightness.SetCurveType(m.backlightCurveType)
+}
+
+func (m *Manager) getBacklightMinValue() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBacklightMinValue)
+	if err != nil {
+		logger.Warning(err)
+		m.backlightMinValue = 4
+		return
+	}
+	switch vType := v.Value().(type) {
+	case int64:
+		m.backlightMinValue = int32(vType)
+	case float64:
+		m.backlightMinValue = int32(vType)
+	default:
+		m.backlightMinValue = 4
+	}
+	logger.Info("Backlight min value:", m.backlightMinValue)
+}
+
+func (m *Manager) getBacklightMidValue() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBacklightMidValue)
+	if err != nil {
+		logger.Warning(err)
+		m.backlightMidValue = 50
+		return
+	}
+	switch vType := v.Value().(type) {
+	case int64:
+		m.backlightMidValue = int32(vType)
+	case float64:
+		m.backlightMidValue = int32(vType)
+	default:
+		m.backlightMidValue = 50
+	}
+	logger.Info("Backlight mid value:", m.backlightMidValue)
+}
+
+func (m *Manager) getCustomBrightnessCurves() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyCustomBrightnessCurves)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	jsonStr, ok := v.Value().(string)
+	if !ok {
+		logger.Warning("Custom brightness curves configuration is not a string")
+		return
+	}
+
+	brightness.SetCustomBrightnessCurves(jsonStr)
+	// 更新当前最大缩放值
+	curveMaxScale := brightness.GetCurrentMaxScale()
+
+	m.PropsMu.Lock()
+	m.setPropCurveMaxScale(curveMaxScale)
+	m.PropsMu.Unlock()
+}
+
+func (m *Manager) getDefaultBrightnessCurve() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyDefaultBrightnessCurve)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	jsonStr, ok := v.Value().(string)
+	if !ok {
+		logger.Warning("Default brightness curve configuration is not a string")
+		return
+	}
+
+	brightness.SetDefaultBrightnessCurve(jsonStr)
+}
+
+func (m *Manager) getMaxBrightnessUnlimited() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyMaxBrightnessUnlimited)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	enabled, ok := v.Value().(bool)
+	if !ok {
+		logger.Warning("Max brightness unlimited configuration is not a bool")
+		return
+	}
+	brightness.SetMaxBrightnessUnlimited(enabled)
 }
 
 // 初始化系统级 display 服务的信号处理
