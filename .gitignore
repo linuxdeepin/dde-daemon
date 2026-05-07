@@ -50,3 +50,9 @@ vendor/
 a.out
 misc/polkit-action/*.policy
 coverage.csv
+
+# AI
+.cursor/
+.kiro/
+*/AGENTS.md
+AGENTS.md
