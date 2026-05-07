@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	compensationInterval  = 300 * time.Millisecond
+	compensationInterval  = 150 * time.Millisecond
 	sensorDataTimeout     = 1 * time.Second
 	compensationThreshold = 5.0
 )
@@ -377,6 +377,10 @@ func (abm *AutoBrightnessManager) resetHistoryState() {
 	abm.lastLightLevel = -1
 	abm.lastBrightness = -1
 	abm.lastAdjustTime = time.Time{}
+	abm.lastSensorDataTime = time.Time{}
+	if abm.kalmanFilter != nil {
+		abm.kalmanFilter.Reset()
+	}
 }
 
 // hold 暂停自动亮度调节
@@ -401,11 +405,6 @@ func (abm *AutoBrightnessManager) resume() {
 	abm.resetHistoryState()
 	abm.startCompensationTimer()
 	abm.mutex.Unlock()
-
-	go func() {
-		time.Sleep(time.Second)
-		abm.adjustBrightnessOnce()
-	}()
 }
 
 // OnConfigChanged 处理配置变更
@@ -758,7 +757,7 @@ func (abm *AutoBrightnessManager) needCompensationWithClient(sensorClient *Senso
 		return false, 0
 	}
 
-	sensorValue, err := sensorClient.GetCachedLightLevel()
+	sensorValue, err := sensorClient.GetLightLevel()
 	if err != nil {
 		return false, 0
 	}
