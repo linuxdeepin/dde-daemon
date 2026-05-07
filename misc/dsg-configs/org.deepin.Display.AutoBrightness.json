@@ -23,7 +23,16 @@
         "change-threshold": {
             "name": "Light Change Threshold",
             "description": "触发亮度调节的环境光变化阈值",
-            "value": 31.0,
+            "value": 20.0,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "brightness-change-threshold": {
+            "name": "Brightness Change Threshold",
+            "description": "触发亮度调节的亮度变化阈值（0.01表示1%）",
+            "value": 0.05,
             "visibility": "private",
             "permissions": "readwrite",
             "serial": 0,
@@ -48,9 +57,27 @@
             "flags": []
         },
         "manual-adjust-disables-auto-mode": {
-            "name": "Manual adjust disables auto mode",
-            "description": "手动调节后是否立即停止功能",
+            "name": "Manual Adjust Disables Auto Mode",
+            "description": "手动调节是否禁用自动模式",
             "value": true,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "kalman-process-noise": {
+            "name": "Kalman Filter Process Noise Q",
+            "description": "卡尔曼滤波器过程噪声协方差（Q），值越大对环境光变化响应越快",
+            "value": 0.5,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "kalman-measurement-noise": {
+            "name": "Kalman Filter Measurement Noise R",
+            "description": "卡尔曼滤波器测量噪声协方差（R），值越大滤波效果越强",
+            "value": 0.1,
             "visibility": "private",
             "permissions": "readwrite",
             "serial": 0,
@@ -60,6 +87,24 @@
             "name": "Use Transition for Auto Brightness",
             "description": "自动亮度调节时是否使用渐变效果（即使全局渐变功能关闭）",
             "value": true,
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "lux-brightness-curve": {
+            "name": "Lux to Brightness Curve",
+            "description": "环境光到亮度的映射曲线配置",
+            "value": [],
+            "visibility": "private",
+            "permissions": "readwrite",
+            "serial": 0,
+            "flags": []
+        },
+        "kalman-window-size": {
+            "name": "Kalman Filter Window Size",
+            "description": "自适应卡尔曼滤波器滑动窗口大小，用于计算测量方差",
+            "value": 5,
             "visibility": "private",
             "permissions": "readwrite",
             "serial": 0,

@@ -12,6 +12,8 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+
+	"github.com/linuxdeepin/dde-daemon/display1/brightness"
 )
 
 // AutoBrightnessConfig 自动亮度配置结构体
@@ -20,9 +22,13 @@ type AutoBrightnessConfig struct {
 	Sensitivity                  float64 `json:"sensitivity"`                      // 敏感度 (0.1-3.0)
 	PollingInterval              int     `json:"polling_interval"`                 // 轮询间隔(秒) (1-60)
 	ChangeThreshold              float64 `json:"change_threshold"`                 // 变化阈值 (1.0-50.0)
+	BrightnessChangeThreshold    float64 `json:"brightness_change_threshold"`      // 亮度变化阈值 (0.01-1.0)
 	ManualOverrideDuration       int     `json:"manual_override_duration"`         // 手动调节暂停时间(秒) (60-1800)
 	ManualAdjustDisablesAutoMode bool    `json:"manual_adjust_disables_auto_mode"` // 手动调节是否禁用自动模式
 	UseTransition                bool    `json:"use_transition"`                   // 自动调节时是否使用渐变效果
+	KalmanProcessNoise           float64 `json:"kalman_process_noise"`             // 卡尔曼滤波器过程噪声协方差 Q
+	KalmanMeasurementNoise       float64 `json:"kalman_measurement_noise"`         // 卡尔曼滤波器测量噪声协方差 R
+	KalmanWindowSize             int     `json:"kalman_window_size"`               // 卡尔曼滤波器窗口大小
 }
 
 // DefaultAutoBrightnessConfig 默认自动亮度配置
@@ -31,41 +37,47 @@ var DefaultAutoBrightnessConfig = AutoBrightnessConfig{
 	Sensitivity:                  0.5,
 	PollingInterval:              5,
 	ChangeThreshold:              20.0,
+	BrightnessChangeThreshold:    0.01,
 	ManualOverrideDuration:       300,
 	ManualAdjustDisablesAutoMode: true,
 	UseTransition:                true,
+	KalmanProcessNoise:           0.01,
+	KalmanMeasurementNoise:       0.1,
+	KalmanWindowSize:             10,
 }
 
 // DSettings键名已在manager.go中定义
 // AutoBrightnessManager 自动亮度管理器
 type AutoBrightnessManager struct {
-	// 依赖注入 - 复用现有Manager
 	manager *Manager
-	// 独立组件
+
 	sensorClient *SensorProxyClient
-	// 配置管理
+
 	config        AutoBrightnessConfig
 	configManager configManager.Manager
 	sysBus        *dbus.Conn
-	// 状态管理
+
 	enabled        bool
 	supported      bool
 	manualOverride time.Time
 	lastLightLevel int
 	lastAdjustTime time.Time
 	lastBrightness float64
-	// 轮询控制
+
 	pollInterval time.Duration
-	stopChan     chan struct{} // 停止信号（通过写入来停止goroutine）
+	stopChan     chan struct{}
 	ticker       *time.Ticker
-	pollingWg    sync.WaitGroup // 等待轮询 goroutine 退出
+	pollingWg    sync.WaitGroup
+
+	kalmanFilter *brightness.AdaptiveKalmanFilter
+
+	systemAdjusting bool
+	running         bool
+	polling         bool
+
 	// 同步控制
 	mutex sync.RWMutex
-	// 运行状态
-	running bool
-	polling bool // 标记是否有轮询 goroutine 在运行
-	// 系统调整标志（用于区分系统自动调整和用户手动调整）
-	systemAdjusting bool
+
 	// 重试和降级配置
 	maxRetries          int
 	retryInterval       time.Duration
@@ -86,51 +98,68 @@ func NewAutoBrightnessManager() *AutoBrightnessManager {
 
 // Initialize 初始化自动亮度管理器
 func (abm *AutoBrightnessManager) Initialize(manager *Manager) error {
-	abm.mutex.Lock()
-	defer abm.mutex.Unlock()
 	if manager == nil {
 		return errors.New("manager cannot be nil")
 	}
+
+	logger.Info("[AutoBrightness] Initializing AutoBrightnessManager")
+
+	abm.mutex.Lock()
 	abm.manager = manager
 	abm.sysBus = manager.sysBus
-	logger.Info("[AutoBrightness] Initializing AutoBrightnessManager")
-	// 初始化配置管理器
+	abm.mutex.Unlock()
+
 	err := abm.initConfigManager()
 	if err != nil {
 		logger.Warning("[AutoBrightness] Failed to initialize config manager:", err)
 	}
-	// 检查是否有内置显示器
-	builtinMonitor := abm.manager.getBuiltinMonitor()
+
+	builtinMonitor := manager.getBuiltinMonitor()
 	if builtinMonitor == nil {
+		abm.mutex.Lock()
 		abm.supported = false
-		return fmt.Errorf("no builtin monitor found (total monitors: %d)", len(abm.manager.getConnectedMonitors()))
+		abm.mutex.Unlock()
+		return fmt.Errorf("no builtin monitor found (total monitors: %d)", len(manager.getConnectedMonitors()))
 	}
-	// 检查是否可以设置亮度
-	canSet, _ := abm.manager.CanSetBrightness(builtinMonitor.Name)
+
+	canSet, _ := manager.CanSetBrightness(builtinMonitor.Name)
 	if !canSet {
+		abm.mutex.Lock()
 		abm.supported = false
+		abm.mutex.Unlock()
 		return fmt.Errorf("cannot set brightness for builtin monitor: %s", builtinMonitor.Name)
 	}
-	// 创建传感器客户端（但不连接）
-	abm.sensorClient = NewSensorProxyClient(abm.manager.sysBus)
-	// 检查传感器是否可用（不连接，只检查服务是否存在）
-	// 实际的连接和传感器声明将在Start()时进行
+
+	sensorClient := NewSensorProxyClient(manager.sysBus)
+
+	abm.mutex.Lock()
+	abm.sensorClient = sensorClient
+	abm.mutex.Unlock()
+
 	err = abm.checkSensorAvailability()
 	if err != nil {
+		abm.mutex.Lock()
 		abm.supported = false
+		abm.mutex.Unlock()
 		logger.Warning("[AutoBrightness] Sensor not available:", err)
 		return fmt.Errorf("sensor not available: %w", err)
 	}
-	abm.supported = true
-	// 设置服务状态变化回调（在连接前设置，这样Start时就可以使用）
-	abm.sensorClient.SetServiceChangeCallback(abm.onServiceChange)
-	// 加载配置
-	err = abm.loadConfig()
+
+	sensorClient.SetServiceChangeCallback(abm.onServiceChange)
+	sensorClient.SetLightLevelChangeCallback(abm.onLightLevelChange)
+
+	abm.mutex.Lock()
+	config, err := abm.getConfig()
 	if err != nil {
 		logger.Warning("[AutoBrightness] Failed to load config, using default:", err)
-		abm.config = DefaultAutoBrightnessConfig
+		config = DefaultAutoBrightnessConfig
 	}
+	abm.config = config
+	abm.supported = true
+	abm.applyKalmanFilterConfig()
 	abm.pollInterval = time.Duration(abm.config.PollingInterval) * time.Second
+	abm.mutex.Unlock()
+
 	logger.Info("[AutoBrightness] AutoBrightnessManager initialized successfully")
 	return nil
 }
@@ -357,29 +386,50 @@ func (abm *AutoBrightnessManager) OnConfigChanged(config AutoBrightnessConfig) {
 	needStart := config.Enabled && !oldEnabled && !abm.running
 	needStop := !config.Enabled && oldEnabled && abm.running
 	needRestart := config.Enabled == oldEnabled && abm.running
-	// 检查是否需要立即应用新配置（仅敏感度变化需要立即调整）
-	// ChangeThreshold 只是判断门槛，不影响亮度计算，无需立即调整
+
 	sensitivityChanged := oldSensitivity != config.Sensitivity
 	needImmediateAdjust := sensitivityChanged && abm.running && config.Enabled
-	// 如果需要重启轮询（配置变更但状态未变），在持有锁的情况下重启
+
+	abm.applyKalmanFilterConfig()
+
 	if needRestart {
 		abm.stopPolling()
 		abm.startPolling()
 	}
+
 	abm.mutex.Unlock()
-	// 在锁外执行状态变更操作
+
 	if needStart {
 		abm.Start()
 	} else if needStop {
 		abm.Stop()
 	}
-	// 如果敏感度变化，立即触发一次亮度调整
+
 	if needImmediateAdjust {
 		logger.Infof("[AutoBrightness] Sensitivity changed from %.2f to %.2f, triggering immediate adjustment", oldSensitivity, config.Sensitivity)
 		go abm.adjustBrightnessOnce()
 	}
 	logger.Infof("[AutoBrightness] Config updated: enabled=%v, sensitivity=%.2f, polling=%ds, threshold=%.1f",
 		config.Enabled, config.Sensitivity, config.PollingInterval, config.ChangeThreshold)
+}
+
+// applyKalmanFilterConfig 应用卡尔曼滤波器配置
+func (abm *AutoBrightnessManager) applyKalmanFilterConfig() {
+	if abm.kalmanFilter == nil {
+		abm.kalmanFilter = brightness.NewAdaptiveKalmanFilter(
+			abm.config.KalmanProcessNoise,
+			abm.config.KalmanMeasurementNoise,
+			abm.config.KalmanWindowSize,
+		)
+		logger.Debug("[AutoBrightness] Kalman filter created with config params")
+		return
+	}
+
+	abm.kalmanFilter.SetProcessNoise(abm.config.KalmanProcessNoise)
+	abm.kalmanFilter.SetMeasurementNoise(abm.config.KalmanMeasurementNoise)
+	abm.kalmanFilter.SetWindowSize(abm.config.KalmanWindowSize)
+	logger.Debugf("[AutoBrightness] Kalman filter params updated: Q=%.4f, R=%.4f, window=%d",
+		abm.config.KalmanProcessNoise, abm.config.KalmanMeasurementNoise, abm.config.KalmanWindowSize)
 }
 
 // IsSupported 检查是否支持自动亮度
@@ -601,36 +651,34 @@ func (abm *AutoBrightnessManager) pollLightLevel() {
 		}
 		logger.Info("[AutoBrightness] Re-claimed light sensor after manual override period")
 	}
-	// 从传感器获取光照强度
-	lightLevel, err := abm.sensorClient.GetLightLevel()
+	// 从传感器获取缓存的原始光照强度
+	rawLightLevel, err := abm.sensorClient.GetCachedLightLevel()
 	if err != nil {
-		logger.Warningf("[AutoBrightness] Failed to get light level: %v", err)
+		logger.Debugf("[AutoBrightness] Failed to get cached light level: %v", err)
 		return
 	}
-	abm.processLightChange(lightLevel)
+
+	// 处理原始值（包括滤波和亮度调整）
+	abm.processLightChange(rawLightLevel)
 }
 
 // onServiceChange 服务状态变化回调
 func (abm *AutoBrightnessManager) onServiceChange(available bool) {
+	var shouldStart bool
+
 	abm.mutex.Lock()
-	defer abm.mutex.Unlock()
+
 	if available {
 		logger.Info("[AutoBrightness] SensorProxy service became available")
-		// 服务恢复，重新检查传感器
 		if abm.sensorClient != nil {
 			hasLight, err := abm.sensorClient.HasAmbientLight()
 			if err == nil && hasLight {
 				abm.supported = true
-				if abm.config.Enabled && !abm.running {
-					abm.mutex.Unlock()
-					abm.Start()
-					abm.mutex.Lock()
-				}
+				shouldStart = abm.config.Enabled && !abm.running
 			}
 		}
 	} else {
 		logger.Warning("[AutoBrightness] SensorProxy service became unavailable")
-		// 服务不可用，停止功能
 		if abm.running {
 			abm.stopPolling()
 			abm.running = false
@@ -638,10 +686,31 @@ func (abm *AutoBrightnessManager) onServiceChange(available bool) {
 		}
 		abm.supported = false
 	}
-	// 更新Manager属性
+
 	if abm.manager != nil {
 		abm.manager.setPropAutoBrightnessSupported(abm.supported)
 	}
+
+	abm.mutex.Unlock()
+
+	if shouldStart {
+		abm.Start()
+	}
+}
+
+// onLightLevelChange 光照值变化回调（推送模式）
+func (abm *AutoBrightnessManager) onLightLevelChange(rawLightLevel int) {
+	abm.mutex.Lock()
+	running := abm.running
+	polling := abm.polling
+	inManualOverride := abm.isInManualOverride()
+	abm.mutex.Unlock()
+
+	if !running || !polling || inManualOverride {
+		return
+	}
+
+	abm.processLightChange(rawLightLevel)
 }
 
 // adjustBrightnessOnce 立即执行一次亮度调整（用于配置变化时）
@@ -678,37 +747,56 @@ func (abm *AutoBrightnessManager) adjustBrightnessOnce() {
 	abm.mutex.Unlock()
 }
 
-// processLightChange 处理环境光变化
-func (abm *AutoBrightnessManager) processLightChange(lightLevel int) {
+// processLightChange 处理环境光变化（包括卡尔曼滤波和亮度调整）
+func (abm *AutoBrightnessManager) processLightChange(rawLightLevel int) {
 	abm.mutex.Lock()
+
 	if !abm.running {
 		abm.mutex.Unlock()
 		return
 	}
-	// 计算目标亮度
-	targetBrightness := abm.calculateTargetBrightness(lightLevel)
-	// 检查是否应该调节亮度（包含所有阈值和频率控制逻辑）
-	if !abm.shouldAdjustBrightness(lightLevel, targetBrightness) {
+
+	// 应用卡尔曼滤波器处理原始光值
+	if abm.kalmanFilter == nil {
+		logger.Warning("[AutoBrightness] Kalman filter is nil, skipping light change processing")
 		abm.mutex.Unlock()
 		return
 	}
+
+	estimate := abm.kalmanFilter.Update(float64(rawLightLevel))
+	filteredLightLevel := int(estimate)
+	logger.Infof("[AutoBrightness] Kalman filter: raw=%d lux -> filtered=%d lux", rawLightLevel, filteredLightLevel)
+
+	// 计算目标亮度（使用滤波后的值）
+	targetBrightness := abm.calculateTargetBrightness(filteredLightLevel)
+
+	// 检查是否应该调节亮度（包含所有阈值和频率控制逻辑）
+	if !abm.shouldAdjustBrightness(filteredLightLevel, targetBrightness) {
+		abm.mutex.Unlock()
+		return
+	}
+
 	// 释放锁后再设置亮度（避免在渐变时持有锁）
 	abm.mutex.Unlock()
+
 	// 设置亮度（不重试，下次轮询会自动重试）
 	err := abm.setBrightness(targetBrightness)
 	if err != nil {
-		logger.Warningf("[AutoBrightness] Failed to set brightness (light=%d, target=%.1f%%): %v",
-			lightLevel, targetBrightness*100, err)
+		logger.Warningf("[AutoBrightness] Failed to set brightness (raw=%d, filtered=%d, target=%.1f%%): %v",
+			rawLightLevel, filteredLightLevel, targetBrightness*100, err)
 		return
 	}
+
 	// 更新状态
 	abm.mutex.Lock()
 	now := time.Now()
-	abm.lastLightLevel = lightLevel
+	abm.lastLightLevel = filteredLightLevel
 	abm.lastBrightness = targetBrightness
 	abm.lastAdjustTime = now
 	abm.mutex.Unlock()
-	logger.Infof("[AutoBrightness] Brightness adjusted: light=%d lux -> brightness=%.1f%%", lightLevel, targetBrightness*100)
+
+	logger.Infof("[AutoBrightness] Brightness adjusted: raw=%d lux -> filtered=%d lux -> brightness=%.1f%%",
+		rawLightLevel, filteredLightLevel, targetBrightness*100)
 }
 
 // isInManualOverride 检查是否在手动调节暂停期间
@@ -723,17 +811,38 @@ func (abm *AutoBrightnessManager) isInManualOverride() bool {
 
 // calculateTargetBrightness 计算目标亮度
 func (abm *AutoBrightnessManager) calculateTargetBrightness(lightLevel int) float64 {
+	// 优先使用曲线配置
+	if brightness.HasAutoBrightnessCurve() {
+		br := brightness.GetAutoBrightnessValue(lightLevel)
+		if br >= 0 {
+			// 约束到有效范围
+			if br < 0.0 {
+				br = 0.0
+			} else if br > 1.0 {
+				br = 1.0
+			}
+			// 设置最小亮度，避免屏幕过暗
+			minBrightness := 0.1 // 10% 最小亮度
+			if br < minBrightness {
+				br = minBrightness
+			}
+			return br
+		}
+	}
+
 	// 应用敏感度调整
 	adjustedLevel := float64(lightLevel) * abm.config.Sensitivity
-	// 简单线性映射 (后续可扩展为更复杂的曲线)
-	// 假设环境光范围 0-1024，映射到亮度 0.0-1.0，通过敏感度调整变化速率
+
+	// 简单线性映射
 	brightness := adjustedLevel / 1024.0
+
 	// 约束到有效范围
 	if brightness < 0.0 {
 		brightness = 0.0
 	} else if brightness > 1.0 {
 		brightness = 1.0
 	}
+
 	// 设置最小亮度，避免屏幕过暗
 	minBrightness := 0.1 // 10% 最小亮度
 	if brightness < minBrightness {
@@ -742,14 +851,10 @@ func (abm *AutoBrightnessManager) calculateTargetBrightness(lightLevel int) floa
 	return brightness
 }
 
-// shouldAdjustBrightness 检查是否应该调节亮度（变化阈值和频率控制）
-// 注意：此函数需要读取多个字段，调用者应该持有至少读锁
+// shouldAdjustBrightness 检查是否应该调节亮度(变化阈值和频率控制)
 func (abm *AutoBrightnessManager) shouldAdjustBrightness(lightLevel int, targetBrightness float64) bool {
 	now := time.Now()
-	// 检查是否在手动调节暂停期间
-	if abm.isInManualOverride() {
-		return false
-	}
+
 	// 检查环境光变化阈值
 	if abm.lastLightLevel >= 0 {
 		lightChange := math.Abs(float64(lightLevel - abm.lastLightLevel))
@@ -757,6 +862,7 @@ func (abm *AutoBrightnessManager) shouldAdjustBrightness(lightLevel int, targetB
 			return false
 		}
 	}
+
 	// 检查调节频率限制
 	if !abm.lastAdjustTime.IsZero() {
 		timeSinceLastAdjust := now.Sub(abm.lastAdjustTime)
@@ -765,11 +871,11 @@ func (abm *AutoBrightnessManager) shouldAdjustBrightness(lightLevel int, targetB
 			return false
 		}
 	}
+
 	// 检查亮度变化是否足够大
 	if abm.lastBrightness >= 0 {
 		brightnessChange := math.Abs(targetBrightness - abm.lastBrightness)
-		minBrightnessChange := 0.05 // 5% 最小变化
-		if brightnessChange < minBrightnessChange {
+		if brightnessChange < abm.config.BrightnessChangeThreshold {
 			return false
 		}
 	}
@@ -870,7 +976,16 @@ func (config *AutoBrightnessConfig) Validate() error {
 		return errors.New("change threshold too small")
 	}
 	if config.ManualOverrideDuration < 1 {
-		return errors.New("manual override duration to small")
+		return errors.New("manual override duration too small")
+	}
+	if config.KalmanProcessNoise <= 0 || config.KalmanProcessNoise > 100 {
+		return errors.New("kalman process noise must be positive and less than 100")
+	}
+	if config.KalmanMeasurementNoise <= 0 || config.KalmanMeasurementNoise > 100 {
+		return errors.New("kalman measurement noise must be positive and less than 100")
+	}
+	if config.KalmanWindowSize < 2 || config.KalmanWindowSize > 100 {
+		return errors.New("kalman window size must be between 2 and 100")
 	}
 	return nil
 }
@@ -959,6 +1074,15 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 		logger.Warning("[AutoBrightness] Config convert faild, using default changeThreshold")
 		config.ChangeThreshold = DefaultAutoBrightnessConfig.ChangeThreshold
 	}
+
+	// BrightnessChangeThreshold
+	if val, err := abm.configManager.Value(0, DSettingsKeyABBrightnessChangeThreshold); err == nil {
+		config.BrightnessChangeThreshold = val.Value().(float64)
+	} else {
+		logger.Warning("[AutoBrightness] Config convert faild, using default brightnessChangeThreshold")
+		config.BrightnessChangeThreshold = DefaultAutoBrightnessConfig.BrightnessChangeThreshold
+	}
+
 	// PollingInterval
 	if val, err := abm.configManager.Value(0, DSettingsKeyABPollingInterval); err == nil {
 		switch v := val.Value().(type) {
@@ -1009,6 +1133,75 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 		logger.Warning("[AutoBrightness] Config convert faild, using default useTransition")
 		config.UseTransition = DefaultAutoBrightnessConfig.UseTransition
 	}
+
+	// Curve
+	if val, err := abm.configManager.Value(0, DSettingsKeyABCurve); err == nil {
+		itemList, ok := val.Value().([]dbus.Variant)
+		if ok && len(itemList) > 0 {
+			var points []brightness.AutoBrightnessCurvePoint
+			for _, item := range itemList {
+				pointMap, ok := item.Value().(map[string]dbus.Variant)
+				if !ok {
+					continue
+				}
+				var point brightness.AutoBrightnessCurvePoint
+				if luxVal, ok := pointMap["lux"]; ok {
+					switch v := luxVal.Value().(type) {
+					case int64:
+						point.Lux = int(v)
+					case float64:
+						point.Lux = int(v)
+					}
+				}
+				if brVal, ok := pointMap["br"]; ok {
+					switch v := brVal.Value().(type) {
+					case int64:
+						point.Br = float64(v)
+					case float64:
+						point.Br = v
+					}
+				}
+				points = append(points, point)
+			}
+			brightness.SetAutoBrightnessCurveFromPoints(points)
+		} else {
+			logger.Debug("[AutoBrightness] Curve config is empty, using default linear mapping")
+		}
+	} else {
+		logger.Debug("[AutoBrightness] No curve config found, using default linear mapping")
+	}
+
+	// KalmanProcessNoise
+	if val, err := abm.configManager.Value(0, DSettingsKeyABKalmanProcessNoise); err == nil {
+		config.KalmanProcessNoise = val.Value().(float64)
+	} else {
+		logger.Warning("[AutoBrightness] Config convert failed, using default kalmanProcessNoise")
+		config.KalmanProcessNoise = DefaultAutoBrightnessConfig.KalmanProcessNoise
+	}
+
+	// KalmanMeasurementNoise
+	if val, err := abm.configManager.Value(0, DSettingsKeyABKalmanMeasurementNoise); err == nil {
+		config.KalmanMeasurementNoise = val.Value().(float64)
+	} else {
+		logger.Warning("[AutoBrightness] Config convert failed, using default kalmanMeasurementNoise")
+		config.KalmanMeasurementNoise = DefaultAutoBrightnessConfig.KalmanMeasurementNoise
+	}
+
+	// KalmanWindowSize
+	if val, err := abm.configManager.Value(0, DSettingsKeyABKalmanWindowSize); err == nil {
+		switch v := val.Value().(type) {
+		case int64:
+			config.KalmanWindowSize = int(v)
+		case float64:
+			config.KalmanWindowSize = int(v)
+		default:
+			config.KalmanWindowSize = DefaultAutoBrightnessConfig.KalmanWindowSize
+		}
+	} else {
+		logger.Warning("[AutoBrightness] Config convert failed, using default kalmanWindowSize")
+		config.KalmanWindowSize = DefaultAutoBrightnessConfig.KalmanWindowSize
+	}
+
 	// 验证配置有效性
 	logger.Debugf("[AutoBrightness] Apply config: %v", config)
 	err := config.Validate()

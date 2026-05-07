@@ -114,6 +114,13 @@ const (
 	DSettingsKeyABManualOverride               = "manual-override-duration"
 	DSettingsKeyABManualAdjustDisablesAutoMode = "manual-adjust-disables-auto-mode"
 	DSettingsKeyABUseTransition                = "use-transition"
+	DSettingsKeyABBrightnessChangeThreshold    = "brightness-change-threshold"
+	DSettingsKeyABCurve                        = "lux-brightness-curve"
+
+	// 卡尔曼滤波器配置
+	DSettingsKeyABKalmanProcessNoise    = "kalman-process-noise"
+	DSettingsKeyABKalmanMeasurementNoise = "kalman-measurement-noise"
+	DSettingsKeyABKalmanWindowSize       = "kalman-window-size"
 
 	customModeDelim              = "+"
 	monitorsIdDelimiter          = ","
