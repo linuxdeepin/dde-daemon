@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -150,6 +150,5 @@ func parseLsblkOutput(out []byte) (*lsblkOutput, error) {
 }
 
 func execLsblk() ([]byte, error) {
-	lsblk := "lsblk -J -bno NAME,SERIAL,TYPE,SIZE,VENDOR,MODEL,MOUNTPOINT,UUID"
-	return exec.Command("/bin/sh", "-c", lsblk).CombinedOutput()
+	return exec.Command("lsblk", "-J", "-bno", "NAME,SERIAL,TYPE,SIZE,VENDOR,MODEL,MOUNTPOINT,UUID").CombinedOutput()
 }

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"regexp"
 
 	"github.com/linuxdeepin/go-lib/appinfo/desktopappinfo"
 	"github.com/linuxdeepin/go-lib/strv"
@@ -1290,22 +1291,14 @@ func (m *Manager) listenSystemPlatformChanged() {
 	})
 }
 
-func runCommand(cmd string) (string, error) {
-	result, err := exec.Command("/bin/sh", "-c", cmd).Output()
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(string(result)), err
-}
-
 func checkProRunning(serverName string) bool {
-	cmd := `ps ux | awk '/` + serverName + `/ && !/awk/ {print $2}'`
-	pid, err := runCommand(cmd)
-	if err != nil {
-		logger.Warning(err)
+	// Validate serverName to prevent command injection
+	if !regexp.MustCompile(`^[a-zA-Z0-9._@:/-]+$`).MatchString(serverName) {
+		logger.Warningf("invalid server name: %s", serverName)
 		return false
 	}
-	return pid != ""
+	err := exec.Command("pgrep", "-f", serverName).Run()
+	return err == nil
 }
 
 func (m *Manager) execCmd(cmd string, viaStartdde bool) error {

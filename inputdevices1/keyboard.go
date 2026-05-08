@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/user"
 	"path"
 	"regexp"
@@ -306,17 +307,17 @@ func (kbd *Keyboard) applyOptions() {
 	}
 
 	// the old value wouldn't be cleared, so we will force clear it.
-	err := doAction(cmdSetKbd + " -option")
+	err := exec.Command(cmdSetKbd, "-option").Run()
 	if err != nil {
 		logger.Warning("failed to clear keymap option:", err)
 		return
 	}
 
-	cmd := cmdSetKbd
+	args := []string{}
 	for _, opt := range options {
-		cmd += fmt.Sprintf(" -option %q", opt)
+		args = append(args, "-option", opt)
 	}
-	err = doAction(cmd)
+	err = exec.Command(cmdSetKbd, args...).Run()
 	if err != nil {
 		logger.Warning("failed to set keymap options:", err)
 	}
@@ -555,9 +556,8 @@ func applyLayout(value string) error {
 		}
 	}
 
-	var cmd = fmt.Sprintf("%s -layout \"%s\" -variant \"%s\"",
-		cmdSetKbd, layout, variant)
-	return doAction(cmd)
+	var cmd = exec.Command(cmdSetKbd, "-layout", layout, "-variant", variant)
+	return cmd.Run()
 }
 
 func setQtCursorBlink(rate int32, file string) error {
@@ -621,7 +621,7 @@ func getValueFromLine(line, delim string) string {
 }
 
 func applyXmodmapConfig() error {
-	err := doAction("xmodmap -e 'keycode 247 = XF86Away NoSymbol NoSymbol'")
+	err := exec.Command("xmodmap", "-e", "keycode 247 = XF86Away NoSymbol NoSymbol").Run()
 	if err != nil {
 		return err
 	}
@@ -629,7 +629,7 @@ func applyXmodmapConfig() error {
 	if !dutils.IsFileExist(config) {
 		return nil
 	}
-	return doAction("xmodmap " + config)
+	return exec.Command("xmodmap", config).Run()
 }
 
 func (kbd *Keyboard) listenRootWindowXEvent() {

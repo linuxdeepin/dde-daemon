@@ -1,13 +1,10 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package inputdevices
 
 import (
-	"errors"
-	"os/exec"
-
 	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 )
 
@@ -144,12 +141,4 @@ func isItemInList(item string, list []string) bool {
 		}
 	}
 	return false
-}
-
-func doAction(cmd string) error {
-	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
-	if err != nil {
-		return errors.New(string(out))
-	}
-	return nil
 }

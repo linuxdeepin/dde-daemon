@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -6,7 +6,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -203,8 +202,7 @@ func copyXDGDirConfig(home, lang string) error {
 }
 
 func changeDirOwner(user, dir string) error {
-	cmd := fmt.Sprintf("chown -hR %s:%s %s", user, user, dir)
-	return doAction(cmd)
+	return exec.Command("chown", "-hR", user+":"+user, dir).Run()
 }
 
 func getDefaultLang() string {
@@ -232,13 +230,4 @@ func getDefaultLang() string {
 	}
 
 	return strings.Split(locale, ".")[0]
-}
-
-func doAction(cmd string) error {
-	out, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
-	if err != nil {
-		return errors.New(string(out))
-	}
-
-	return nil
 }

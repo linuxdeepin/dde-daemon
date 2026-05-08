@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -633,11 +632,5 @@ func setSupportAcpiDeviceEnable(devicePath string) error {
 		return err
 	}
 	logger.Infof("paths[0] %s,paths[1] %s", paths[0], paths[1])
-
-	cmd := exec.Command("/bin/sh", "-c", "echo "+paths[1]+"> "+paths[0])
-	err := cmd.Run()
-	if err != nil {
-		return err
-	}
-	return nil
+	return os.WriteFile(paths[0], []byte(paths[1]+"\n"), 0644)
 }
