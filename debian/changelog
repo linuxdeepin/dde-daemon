@@ -1,3 +1,9 @@
+dde-daemon (6.1.88) unstable; urgency=medium
+
+  * fix(bluetooth): prevent path traversal in OBEX file receive
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 08 May 2026 15:03:28 +0800
+
 dde-daemon (6.1.87) unstable; urgency=medium
 
   * perf: remove wallpaper blur and effect features and migrate
