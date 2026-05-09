@@ -367,11 +367,12 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 
 	// 如果删除的是当前正在使用的声卡，暂停播放
 	first, _ := GetPriorityManager().GetTheFirstPort(pulse.DirectionSink)
-	if first == nil {
-		return changed
-	}
 	// 检查端口变化
 	if len(oldCard.Ports) != len(card.Ports) {
+		if first == nil {
+			return changed
+		}
+
 		logger.Infof("card %s Ports changed", card.Name)
 		if autoPause && first.CardName == card.Name {
 			for _, p := range card.Ports {
@@ -393,17 +394,22 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 			}
 
 			if newPort.Available != oldPort.Available {
-				logger.Debugf("card port available changed, %v.%v from %v to %v",
-					oldCard.Name, oldPort.Name, oldPort.Available, newPort.Available)
-				changed |= PortChanged
-
 				// 处理端口禁用通知
 				_, portConfig := GetConfigKeeper().GetCardAndPortConfig(card, oldPort.Name)
 				if !portConfig.Enabled && newPort.Available != pulse.AvailableTypeNo {
 					logger.Debugf("port<%s,%s> notify", card.Name, oldPort.Name)
 					notifyPortDisabled(card.Id, oldPort)
 				}
-				if first != nil && first.CardName == card.core.Name && first.PortName == newPort.Name {
+
+				if first == nil {
+					continue
+				}
+
+				logger.Debugf("card port available changed, %v.%v from %v to %v",
+					oldCard.Name, oldPort.Name, oldPort.Available, newPort.Available)
+				changed |= PortChanged
+
+				if first.CardName == card.core.Name && first.PortName == newPort.Name {
 					if newPort.Available == pulse.AvailableTypeNo {
 						// 当前使用的端口被禁用，暂停播放
 						if autoPause {
