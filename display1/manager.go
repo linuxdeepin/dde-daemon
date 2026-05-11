@@ -1345,9 +1345,6 @@ func (m *Manager) addMonitor(monitorInfo *MonitorInfo) error {
 		monitorInfo.CurrentMode,
 	})
 	monitor.setPropModes(monitor.Modes)
-	if len(monitor.Modes) == 0 {
-		return errors.New("the monitor modes is nil")
-	}
 	m.updateBestmodeRefreshRate(monitor, preferredMode)
 	monitor.X = monitorInfo.X
 	monitor.Y = monitorInfo.Y
@@ -1452,9 +1449,6 @@ func (m *Manager) updateMonitor(monitorInfo *MonitorInfo) {
 		monitorInfo.CurrentMode,
 	})
 	monitor.setPropModes(monitor.Modes)
-	if len(monitor.Modes) == 0 {
-		return
-	}
 	bestMode := m.updateBestmodeRefreshRate(monitor, preferredMode)
 	monitor.setPropBestMode(bestMode)
 	var preferredModes []ModeInfo
