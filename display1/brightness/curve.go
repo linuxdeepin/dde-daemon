@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -311,9 +311,7 @@ func (cm *CurveManager) parseCustomBrightnessCurves(jsonStr string) error {
 	}
 
 	// 存储 boardName
-	cm.mu.Lock()
 	cm.configBoardName = config.BoardName
-	cm.mu.Unlock()
 
 	if config.Curves == nil {
 		return fmt.Errorf("Custom curve json contains nothing")
@@ -615,6 +613,9 @@ func (cm *CurveManager) generateAutoBrightnessCurveFunc(points []AutoBrightnessC
 			if luxFloat >= float64(p1.Lux) && luxFloat <= float64(p2.Lux) {
 				x1, x2 := float64(p1.Lux), float64(p2.Lux)
 				y1, y2 := p1.Br, p2.Br
+				if math.Abs(x1-x2) < 1e-6 {
+					return y1 / 100.0
+				}
 				br := y1 + (y2-y1)*(luxFloat-x1)/(x2-x1)
 				return br / 100.0
 			}
@@ -641,4 +642,112 @@ func (cm *CurveManager) hasAutoBrightnessCurve() bool {
 	cm.mu.RLock()
 	defer cm.mu.RUnlock()
 	return cm.autoBrightnessCurveFunc != nil
+}
+
+// GetBacklightCurvePercent 返回当前控制器的实际亮度值对应的百分比
+func GetBacklightCurvePercent(c *displayBl.Controller) float64 {
+	return _curveManager.getBacklightCurvePercent(c)
+}
+
+// 返回当前控制器的实际亮度值对应的百分比
+func (cm *CurveManager) getBacklightCurvePercent(c *displayBl.Controller) float64 {
+	currentBrightness, err := c.GetBrightness()
+	if err != nil {
+		return 1.0
+	}
+	// 其他曲线需根据曲线类型进行逆函数查找
+	if cm.curveType == "flm" {
+		if cm.flmCurveFunc == nil {
+			logger.Warning("FLM curve function is not initialized")
+			return float64(currentBrightness) / float64(c.MaxBrightness)
+		}
+
+		return findBrightnessPercentByCurve(int32(currentBrightness), cm.flmCurveFunc, cm.backLightMinValue, cm.backlightMidValue, int32(c.MaxBrightness))
+	}
+	return float64(currentBrightness) / float64(c.MaxBrightness)
+}
+
+// findBrightnessPercentByCurve 通过背光曲线逆函数查找对应的百分比值
+func findBrightnessPercentByCurve(targetBrightness int32, curveFunc func(float64, int) int32, backLightMinValue int32, backlightMidValue int32, maxBrightness int32) float64 {
+	const (
+		x1            = 10.0
+		x2            = 100.0
+		maxIterations = 50
+		tolerance     = 0.01
+	)
+
+	// 边界条件检查
+	if targetBrightness <= backLightMinValue {
+		return x1
+	}
+	if targetBrightness >= maxBrightness {
+		return x2
+	}
+
+	// 计算中间点的亮度值，用于确定搜索范围
+	midBrightness := curveFunc(float64(backlightMidValue), int(maxBrightness))
+
+	// 根据目标亮度值确定搜索范围
+	var left, right float64
+	if targetBrightness <= midBrightness {
+		left = x1
+		right = float64(backlightMidValue)
+	} else {
+		left = float64(backlightMidValue)
+		right = x2
+	}
+
+	// 预计算边界值，避免重复计算
+	leftBrightness := curveFunc(left, int(maxBrightness))
+	rightBrightness := curveFunc(right, int(maxBrightness))
+
+	if leftBrightness == targetBrightness {
+		return left
+	}
+	if rightBrightness == targetBrightness {
+		return right
+	}
+
+	// 使用二分查找法查找对应的百分比值
+	iterations := 0
+	var bestResult float64
+	var bestDiff int32 = maxBrightness
+
+	for right-left > tolerance && iterations < maxIterations {
+		mid := (left + right) / 2
+		calculatedBrightness := curveFunc(mid, int(maxBrightness))
+
+		diff := calculatedBrightness - targetBrightness
+		if diff < 0 {
+			diff = -diff
+		}
+
+		if diff < bestDiff {
+			bestDiff = diff
+			bestResult = mid
+		}
+
+		if calculatedBrightness < targetBrightness {
+			left = mid
+		} else if calculatedBrightness > targetBrightness {
+			right = mid
+		} else {
+			return mid
+		}
+		iterations++
+	}
+
+	result := bestResult
+	if result < x1 {
+		result = x1
+	} else if result > x2 {
+		result = x2
+	}
+
+	if iterations >= maxIterations {
+		logger.Debugf("findBrightnessPercentByCurve: reached max iterations (%d), target: %d, result: %f",
+			maxIterations, targetBrightness, result)
+	}
+
+	return result
 }

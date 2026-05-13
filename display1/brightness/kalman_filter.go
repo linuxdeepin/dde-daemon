@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package brightness
 
 import (
-	"math"
+	"sync"
 )
 
 // 卡尔曼滤波器默认参数
@@ -19,6 +19,8 @@ const (
 // KalmanFilter1D 一维卡尔曼滤波器
 // 用于传感器数据的平滑和噪声抑制
 type KalmanFilter1D struct {
+	mu sync.Mutex
+
 	// 系统状态
 	xEst float64 // 估计值
 	PEst float64 // 估计协方差
@@ -53,6 +55,13 @@ func NewKalmanFilter1D(q, r, initialValue float64) *KalmanFilter1D {
 // measurement: 测量值
 // 返回: 滤波后的估计值
 func (kf *KalmanFilter1D) Update(measurement float64) float64 {
+	kf.mu.Lock()
+	defer kf.mu.Unlock()
+	return kf.updateUnlocked(measurement)
+}
+
+// updateUnlocked 内部无锁版本，供 AdaptiveKalmanFilter 调用（调用者已持有锁）
+func (kf *KalmanFilter1D) updateUnlocked(measurement float64) float64 {
 	if !kf.initialized {
 		kf.xEst = measurement
 		kf.PEst = 1.0
@@ -87,33 +96,55 @@ func (kf *KalmanFilter1D) Update(measurement float64) float64 {
 
 // Reset 重置滤波器
 func (kf *KalmanFilter1D) Reset() {
+	kf.mu.Lock()
+	defer kf.mu.Unlock()
 	kf.initialized = false
 	kf.PEst = 1.0
 }
 
 // GetEstimate 获取当前估计值
 func (kf *KalmanFilter1D) GetEstimate() float64 {
+	kf.mu.Lock()
+	defer kf.mu.Unlock()
 	return kf.xEst
 }
 
 // GetCovariance 获取当前协方差
 func (kf *KalmanFilter1D) GetCovariance() float64 {
+	kf.mu.Lock()
+	defer kf.mu.Unlock()
 	return kf.PEst
 }
 
 // SetProcessNoise 设置过程噪声协方差
 func (kf *KalmanFilter1D) SetProcessNoise(q float64) {
+	kf.mu.Lock()
+	defer kf.mu.Unlock()
 	kf.Q = q
 }
 
 // SetMeasurementNoise 设置测量噪声协方差
 func (kf *KalmanFilter1D) SetMeasurementNoise(r float64) {
+	kf.mu.Lock()
+	defer kf.mu.Unlock()
 	kf.R = r
+}
+
+// setMeasurementNoiseUnlocked 无锁版本，供已持有 KalmanFilter1D.mu 的调用者使用
+func (kf *KalmanFilter1D) setMeasurementNoiseUnlocked(r float64) {
+	kf.R = r
+}
+
+// resetUnlocked 无锁重置版本，供已持有 KalmanFilter1D.mu 的调用者使用
+func (kf *KalmanFilter1D) resetUnlocked() {
+	kf.initialized = false
+	kf.PEst = 1.0
 }
 
 // AdaptiveKalmanFilter 自适应卡尔曼滤波器
 // 根据测量值的方差自动调整噪声参数
 type AdaptiveKalmanFilter struct {
+	mu sync.Mutex
 	*KalmanFilter1D
 	window              []float64 // 测量值窗口
 	windowSize          int       // 窗口大小
@@ -139,6 +170,9 @@ func NewDefaultAdaptiveKalmanFilter() *AdaptiveKalmanFilter {
 
 // Update 更新滤波器（自适应版本）
 func (akf *AdaptiveKalmanFilter) Update(measurement float64) float64 {
+	akf.mu.Lock()
+	defer akf.mu.Unlock()
+
 	// 添加到窗口
 	akf.window = append(akf.window, measurement)
 	if len(akf.window) > akf.windowSize {
@@ -171,40 +205,50 @@ func (akf *AdaptiveKalmanFilter) Update(measurement float64) float64 {
 		if akf.measurementVariance > 0 {
 			oldR := akf.R
 			newR := akf.measurementVariance * 0.1
-			akf.SetMeasurementNoise(newR)
+			akf.KalmanFilter1D.setMeasurementNoiseUnlocked(newR)
 			logger.Debugf("[AutoBrightness::AdaptiveKalmanFilter] Adjusted measurement noise: R=%.4f -> %.4f",
 				oldR, newR)
 		}
 	}
 
-	// 调用基类的更新方法
-	return akf.KalmanFilter1D.Update(measurement)
+	// 调用基类的无锁更新方法（已持有 akf.mu，避免死锁）
+	return akf.KalmanFilter1D.updateUnlocked(measurement)
 }
 
 // Reset 重置滤波器
 func (akf *AdaptiveKalmanFilter) Reset() {
-	akf.KalmanFilter1D.Reset()
+	akf.mu.Lock()
+	defer akf.mu.Unlock()
+	akf.KalmanFilter1D.resetUnlocked()
 	akf.window = akf.window[:0]
 	akf.measurementVariance = 0
 }
 
 // GetMeasurementVariance 获取当前测量方差
 func (akf *AdaptiveKalmanFilter) GetMeasurementVariance() float64 {
+	akf.mu.Lock()
+	defer akf.mu.Unlock()
 	return akf.measurementVariance
 }
 
 // GetWindowSize 获取窗口大小
 func (akf *AdaptiveKalmanFilter) GetWindowSize() int {
+	akf.mu.Lock()
+	defer akf.mu.Unlock()
 	return len(akf.window)
 }
 
 // IsInitialized 检查滤波器是否已初始化（是否收到过数据）
 func (akf *AdaptiveKalmanFilter) IsInitialized() bool {
+	akf.mu.Lock()
+	defer akf.mu.Unlock()
 	return akf.initialized
 }
 
 // SetWindowSize 设置窗口大小
 func (akf *AdaptiveKalmanFilter) SetWindowSize(size int) {
+	akf.mu.Lock()
+	defer akf.mu.Unlock()
 	if size < 2 {
 		size = 2
 	}
@@ -213,88 +257,4 @@ func (akf *AdaptiveKalmanFilter) SetWindowSize(size int) {
 	if len(akf.window) > akf.windowSize {
 		akf.window = akf.window[len(akf.window)-akf.windowSize:]
 	}
-}
-
-// ExponentialMovingAverage 指数移动平均滤波器（保留用于对比）
-type ExponentialMovingAverage struct {
-	alpha       float64 // 平滑系数
-	lastValue   float64 // 上一次的值
-	initialized bool
-}
-
-// NewExponentialMovingAverage 创建指数移动平均滤波器
-// alpha: 平滑系数 (0-1)，值越大对新数据响应越快
-func NewExponentialMovingAverage(alpha float64) *ExponentialMovingAverage {
-	return &ExponentialMovingAverage{
-		alpha: alpha,
-	}
-}
-
-// Update 更新滤波器
-func (ema *ExponentialMovingAverage) Update(value float64) float64 {
-	if !ema.initialized {
-		ema.lastValue = value
-		ema.initialized = true
-		return value
-	}
-
-	ema.lastValue = ema.alpha*value + (1-ema.alpha)*ema.lastValue
-	return ema.lastValue
-}
-
-// Reset 重置滤波器
-func (ema *ExponentialMovingAverage) Reset() {
-	ema.initialized = false
-}
-
-// GetValue 获取当前值
-func (ema *ExponentialMovingAverage) GetValue() float64 {
-	return ema.lastValue
-}
-
-// MovingAverage 移动平均滤波器
-type MovingAverage struct {
-	window     []float64
-	windowSize int
-	sum        float64
-}
-
-// NewMovingAverage 创建移动平均滤波器
-func NewMovingAverage(windowSize int) *MovingAverage {
-	return &MovingAverage{
-		window:     make([]float64, 0, windowSize),
-		windowSize: windowSize,
-	}
-}
-
-// Update 更新滤波器
-func (ma *MovingAverage) Update(value float64) float64 {
-	ma.window = append(ma.window, value)
-	ma.sum += value
-
-	if len(ma.window) > ma.windowSize {
-		ma.sum -= ma.window[0]
-		ma.window = ma.window[1:]
-	}
-
-	return ma.sum / float64(len(ma.window))
-}
-
-// Reset 重置滤波器
-func (ma *MovingAverage) Reset() {
-	ma.window = ma.window[:0]
-	ma.sum = 0
-}
-
-// GetValue 获取当前平均值
-func (ma *MovingAverage) GetValue() float64 {
-	if len(ma.window) == 0 {
-		return 0
-	}
-	return ma.sum / float64(len(ma.window))
-}
-
-// clampFloat64 将值限制在指定范围内
-func clampFloat64(value, min, max float64) float64 {
-	return math.Max(min, math.Min(max, value))
 }

@@ -435,15 +435,31 @@ func (m *Manager) setColorTempOneShot() {
 	defer _setColorTempMu.Unlock()
 
 	monitors := m.getConnectedMonitors()
+	// bug204347 部分场景下monitor.Brightness为默认值 从系统配置中获取亮度
+	monitorsId := monitors.getMonitorsId()
+	configs := m.getSuitableSysMonitorConfigs(m.DisplayMode, monitorsId, monitors)
 	for _, monitor := range monitors {
 		monitor.PropsMu.RLock()
 		br := monitor.Brightness
 		name := monitor.Name
 		monitor.PropsMu.RUnlock()
 
-		err := m.setBrightness(name, br)
-		if err != nil {
-			logger.Warning(err)
+		var config *SysMonitorConfig
+		for _, c := range configs {
+			if c.Name == name {
+				config = c
+				break
+			}
+		}
+		if config != nil {
+			br = config.Brightness
+		}
+
+		if canSet, _ := m.CanSetBrightness(name); canSet && br > 0 && monitor.Enabled {
+			err := m.setColorTemperature(monitor, br)
+			if err != nil {
+				logger.Warning(err)
+			}
 		}
 	}
 }

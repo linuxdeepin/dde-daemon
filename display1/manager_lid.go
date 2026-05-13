@@ -6,6 +6,7 @@ package display1
 
 import (
 	"fmt"
+	"time"
 
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	syspower "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
@@ -25,6 +26,46 @@ const (
 func (m *Manager) initLidSwitch() {
 	logger.Debug("init lid switch")
 	sysPower := syspower.NewPower(m.sysBus)
+	sysPower.InitSignalExt(m.sysSigLoop, true)
+
+	// 初始化电源模式状态
+	powerMode, err := sysPower.Mode().Get(0)
+	if err != nil {
+		m.PropsMu.Lock()
+		m.powerSaving = false
+		m.PropsMu.Unlock()
+		logger.Warning("failed to get system power mode:", err)
+	} else {
+		m.PropsMu.Lock()
+		m.powerSaving = powerMode == "powersave"
+		m.PropsMu.Unlock()
+		logger.Info("Initial power mode:", powerMode, "powerSaving:", m.powerSaving)
+	}
+
+	// 监听电源模式变化
+	err = sysPower.Mode().ConnectChanged(func(hasValue bool, value string) {
+		if !hasValue {
+			return
+		}
+
+		logger.Debug("system power mode changed:", value)
+		m.setSystemAdjusting(true)
+		m.scheduleSystemAdjustingClear(500 * time.Millisecond)
+		m.PropsMu.Lock()
+		m.powerSaving = value == "powersave"
+		isPowerSaving := m.powerSaving
+		m.PropsMu.Unlock()
+
+		if isPowerSaving {
+			m.holdAutoBrightness()
+		} else {
+			m.resumeAutoBrightness()
+		}
+	})
+	if err != nil {
+		logger.Warning("failed to connect system power mode change:", err)
+	}
+
 	hasLid, err := sysPower.HasLidSwitch().Get(0)
 	if err != nil {
 		logger.Warningf("failed to get lid switch info: %v", err)
@@ -39,7 +80,6 @@ func (m *Manager) initLidSwitch() {
 				m.builtinMonitor.lidClosed = closed
 			}
 		})
-		sysPower.InitSignalExt(m.sysSigLoop, true)
 		sysPower.ConnectLidClosed(func() {
 			logger.Warning("lid closed signal")
 			m.holdAutoBrightness()

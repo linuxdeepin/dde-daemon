@@ -179,7 +179,7 @@
       "visibility": "public"
     },
     "transition-enabled": {
-      "value": true,
+      "value": false,
       "serial": 0,
       "flags": [],
       "name": "Brightness Transition Enabled",
@@ -188,11 +188,22 @@
       "visibility": "private"
     },
     "transition-duration": {
-      "value": 4,
+      "value": 4000,
       "serial": 0,
       "flags": [],
       "name": "Brightness Transition Duration",
-      "description": "从 0% 到 100% 完整渐变所需的时间（秒）",
+      "description": "从 0% 到 100% 完整渐变所需的时间（毫秒）",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "transition-step-percent": {
+      "value": 1,
+      "serial": 0,
+      "flags": [],
+      "name": "Transition Step Percent",
+      "name[zh_CN]": "过渡步进百分比",
+      "description": "Step percentage for brightness transition (e.g., 1 means 1%)",
+      "description[zh_CN]": "亮度过渡步进百分比（如 1 表示每次调节 1%）",
       "permissions": "readwrite",
       "visibility": "private"
     },
