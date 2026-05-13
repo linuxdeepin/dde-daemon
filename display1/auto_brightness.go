@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 package display1
@@ -8,10 +8,12 @@ import (
 	"fmt"
 	"math"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/godbus/dbus/v5"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	sensorproxy "github.com/linuxdeepin/go-dbus-factory/system/net.hadess.sensorproxy"
 
 	"github.com/linuxdeepin/dde-daemon/display1/brightness"
 )
@@ -20,6 +22,8 @@ const (
 	compensationInterval  = 150 * time.Millisecond
 	sensorDataTimeout     = 1 * time.Second
 	compensationThreshold = 5.0
+	maxSensorLux          = 1024.0 // 传感器最大勒克斯值
+	minBrightnessLimit    = 0.1    // 最小亮度限制 (10%)
 )
 
 // AutoBrightnessConfig 自动亮度配置结构体
@@ -74,6 +78,7 @@ type AutoBrightnessManager struct {
 
 	systemAdjusting bool
 	running         bool
+	stopping        int32 // atomic: 1 when Stop is in progress
 
 	lastSensorDataTime time.Time
 	compensationTicker *time.Ticker
@@ -134,7 +139,8 @@ func (abm *AutoBrightnessManager) Initialize(manager *Manager) error {
 		return fmt.Errorf("cannot set brightness for builtin monitor: %s", builtinMonitor.Name)
 	}
 
-	sensorClient := NewSensorProxyClient(manager.sysBus)
+	sensorProxy := sensorproxy.NewSensorProxy(manager.sysBus)
+	sensorClient := NewSensorProxyClient(sensorProxy, manager.dbusDaemon)
 
 	abm.mutex.Lock()
 	abm.sensorClient = sensorClient
@@ -183,6 +189,12 @@ func (abm *AutoBrightnessManager) Start() error {
 		return nil
 	}
 
+	// 如果正在执行 Stop，不启动新实例
+	if atomic.LoadInt32(&abm.stopping) != 0 {
+		abm.mutex.Unlock()
+		return errors.New("auto brightness is stopping")
+	}
+
 	if !abm.config.Enabled {
 		abm.mutex.Unlock()
 		return nil
@@ -192,7 +204,7 @@ func (abm *AutoBrightnessManager) Start() error {
 	manager := abm.manager
 	abm.mutex.Unlock()
 
-	err := sensorClient.Connect()
+	err := sensorClient.Connect(manager.sysSigLoop)
 	if err != nil {
 		logger.Warning("[AutoBrightness] Failed to connect to sensor proxy:", err)
 		return fmt.Errorf("failed to connect to sensor proxy: %w", err)
@@ -238,7 +250,10 @@ func (abm *AutoBrightnessManager) Stop() error {
 		return nil
 	}
 
+	// 标记正在停止，防止窗口期内 Start() 创建新 ticker
+	atomic.StoreInt32(&abm.stopping, 1)
 	abm.stopCompensationTimer()
+	atomic.StoreInt32(&abm.stopping, 0)
 	abm.restoreSavedBrightness()
 
 	if abm.sensorClient != nil {
@@ -263,28 +278,23 @@ func (abm *AutoBrightnessManager) Stop() error {
 
 // Cleanup 清理资源
 func (abm *AutoBrightnessManager) Cleanup() error {
+	// Stop 会处理 running 状态下的完整清理（补偿定时器、亮度恢复、传感器释放与断开）
+	if err := abm.Stop(); err != nil {
+		logger.Warning("[AutoBrightness] Stop during cleanup failed:", err)
+	}
+
 	abm.mutex.Lock()
 	defer abm.mutex.Unlock()
-	var cleanupErrors []error
-	// 停止运行
-	if abm.running {
-		abm.stopCompensationTimer()
-		abm.running = false
-	}
-	// 断开传感器连接
+
+	// Stop 在 running=false 时不会断开连接，需确保 sensorClient 被释放
 	if abm.sensorClient != nil {
-		err := abm.sensorClient.Disconnect()
-		if err != nil {
+		if err := abm.sensorClient.Disconnect(); err != nil {
 			logger.Warning("[AutoBrightness] Failed to disconnect sensor client:", err)
-			cleanupErrors = append(cleanupErrors, err)
 		}
 		abm.sensorClient = nil
 	}
-	// 注意：stopChan 和 transitionStop 不需要关闭，它们会一直存在直到对象被GC
+
 	logger.Info("[AutoBrightness] AutoBrightnessManager cleaned up")
-	if len(cleanupErrors) > 0 {
-		return cleanupErrors[0] // 返回第一个错误
-	}
 	return nil
 }
 
@@ -325,21 +335,23 @@ func (abm *AutoBrightnessManager) setSystemAdjusting(adjusting bool) {
 // OnManualBrightnessChange 处理手动亮度调节
 func (abm *AutoBrightnessManager) OnManualBrightnessChange() {
 	abm.mutex.Lock()
-	defer abm.mutex.Unlock()
 	// 如果是系统自动调整（如节能模式），忽略此次调用
 	if abm.systemAdjusting {
 		logger.Debug("[AutoBrightness] Ignoring brightness change from system adjustment")
+		abm.mutex.Unlock()
 		return
 	}
 	if !abm.running {
 		logger.Info("[AutoBrightness] Manual brightness change")
+		abm.mutex.Unlock()
 		return
 	}
 	// 检查配置：手动调节是否禁用自动模式
 	if abm.config.ManualAdjustDisablesAutoMode {
-		logger.Info("[AutoBrightness] Manual brightness change detected, disabling auto brightness mode")
-		// 禁用自动亮度功能
 		abm.config.Enabled = false
+		manager := abm.manager
+		abm.mutex.Unlock()
+		logger.Info("[AutoBrightness] Manual brightness change detected, disabling auto brightness mode")
 		// 异步保存配置并停止功能
 		go func() {
 			err := abm.saveConfig()
@@ -352,19 +364,22 @@ func (abm *AutoBrightnessManager) OnManualBrightnessChange() {
 				logger.Warning("[AutoBrightness] Failed to stop auto brightness:", err)
 			}
 			// 更新 Manager 属性
-			if abm.manager != nil {
-				abm.manager.setPropAutoBrightnessEnabled(false)
+			if manager != nil {
+				manager.setPropAutoBrightnessEnabled(false)
 			}
 		}()
 		return
 	}
-	// 默认行为：临时暂停
 	abm.resetHistoryState()
 	abm.manualOverride = time.Now()
-	logger.Infof("[AutoBrightness] Manual brightness change detected, pausing auto adjustment for %d seconds", abm.config.ManualOverrideDuration)
-	// 释放传感器，停止收集亮度数据
-	if abm.sensorClient != nil && abm.sensorClient.IsClaimed() {
-		err := abm.sensorClient.ReleaseLight()
+	overrideDuration := abm.config.ManualOverrideDuration
+	sensorClient := abm.sensorClient
+	abm.mutex.Unlock()
+
+	logger.Infof("[AutoBrightness] Manual brightness change detected, pausing auto adjustment for %d seconds", overrideDuration)
+
+	if sensorClient != nil && sensorClient.IsClaimed() {
+		err := sensorClient.ReleaseLight()
 		if err != nil {
 			logger.Warning("[AutoBrightness] Failed to release light sensor on manual override:", err)
 		}
@@ -539,52 +554,6 @@ func (abm *AutoBrightnessManager) claimLightWithRetry() error {
 	return lastErr
 }
 
-// gracefulDegradeService 优雅降级服务
-// 注意：此函数假设调用者已经持有锁
-func (abm *AutoBrightnessManager) gracefulDegradeService() {
-	abm.stopCompensationTimer()
-
-	if abm.sensorClient != nil {
-		err := abm.sensorClient.ReleaseLight()
-		if err != nil {
-			logger.Warning("[AutoBrightness] Failed to release light sensor during degradation:", err)
-		}
-	}
-	abm.running = false
-	abm.supported = false
-}
-
-// recoverService 尝试恢复服务
-func (abm *AutoBrightnessManager) recoverService() error {
-	// 重新初始化传感器连接
-	if abm.sensorClient != nil {
-		err := abm.sensorClient.Connect()
-		if err != nil {
-			return fmt.Errorf("failed to reconnect sensor during recovery: %w", err)
-		}
-		hasLight, err := abm.sensorClient.HasAmbientLight()
-		if err != nil || !hasLight {
-			return fmt.Errorf("ambient light sensor not available during recovery: %w", err)
-		}
-		abm.supported = true
-		if abm.config.Enabled {
-			return abm.Start()
-		}
-	}
-	return nil
-}
-
-// loadConfig 加载配置
-// 注意：此函数假设调用者已经持有锁（如果需要修改 abm.config）
-func (abm *AutoBrightnessManager) loadConfig() error {
-	config, err := abm.getConfig()
-	if err != nil {
-		return err
-	}
-	abm.config = config
-	return nil
-}
-
 // onServiceChange 服务状态变化回调
 func (abm *AutoBrightnessManager) onServiceChange(available bool) {
 	var shouldStart bool
@@ -714,6 +683,9 @@ func (abm *AutoBrightnessManager) processLightChange(rawLightLevel int) {
 		return
 	}
 
+	// 记录时间戳（在释放锁之前），用于频率控制
+	now := time.Now()
+
 	// 释放锁后再设置亮度（避免在渐变时持有锁）
 	abm.mutex.Unlock()
 
@@ -727,7 +699,6 @@ func (abm *AutoBrightnessManager) processLightChange(rawLightLevel int) {
 
 	// 设置成功后更新状态
 	abm.mutex.Lock()
-	now := time.Now()
 	abm.lastLightLevel = filteredLightLevel
 	abm.lastBrightness = targetBrightness
 	abm.lastAdjustTime = now
@@ -839,7 +810,13 @@ func (abm *AutoBrightnessManager) startCompensationTimer() {
 		for {
 			select {
 			case <-abm.compensationTicker.C:
-				abm.compensationTick()
+				// 检查停止信号，避免在持有锁的情况下调用 compensationTick()
+				select {
+				case <-abm.compensationStopCh:
+					return
+				default:
+					abm.compensationTick()
+				}
 			case <-abm.compensationStopCh:
 				return
 			}
@@ -849,25 +826,23 @@ func (abm *AutoBrightnessManager) startCompensationTimer() {
 
 // stopCompensationTimer 停止补偿定时器并等待补偿 goroutine 退出
 // 注意：调用者必须持有 abm.mutex 锁
-//
-// 为什么需要 Unlock/Wait/Lock：
-// compensationTick() 开头需要获取 mutex，如果调用者持有锁直接 Wait() 会死锁。
-// 因此必须先 Unlock 让 goroutine 能获取锁并检测到停止信号，Wait 等待其退出后，再 Lock 恢复锁状态。
 func (abm *AutoBrightnessManager) stopCompensationTimer() {
 	if abm.compensationTicker == nil {
 		return
 	}
 
+	// 先停止 ticker，防止新的 tick 事件
 	abm.compensationTicker.Stop()
 	abm.compensationTicker = nil
+
+	// 关闭停止通道，通知 goroutine 退出
 	if abm.compensationStopCh != nil {
 		close(abm.compensationStopCh)
 		abm.compensationStopCh = nil
 	}
 
-	abm.mutex.Unlock()
+	// 等待 goroutine 退出
 	abm.compensationWg.Wait()
-	abm.mutex.Lock()
 }
 
 // isInManualOverride 检查是否在手动调节暂停期间
@@ -887,15 +862,12 @@ func (abm *AutoBrightnessManager) calculateTargetBrightness(lightLevel int) floa
 		br := brightness.GetAutoBrightnessValue(lightLevel)
 		if br >= 0 {
 			// 约束到有效范围
-			if br < 0.0 {
-				br = 0.0
-			} else if br > 1.0 {
+			if br > 1.0 {
 				br = 1.0
 			}
 			// 设置最小亮度，避免屏幕过暗
-			minBrightness := 0.1 // 10% 最小亮度
-			if br < minBrightness {
-				br = minBrightness
+			if br < minBrightnessLimit {
+				br = minBrightnessLimit
 			}
 			return br
 		}
@@ -905,7 +877,7 @@ func (abm *AutoBrightnessManager) calculateTargetBrightness(lightLevel int) floa
 	adjustedLevel := float64(lightLevel) * abm.config.Sensitivity
 
 	// 简单线性映射
-	brightness := adjustedLevel / 1024.0
+	brightness := adjustedLevel / maxSensorLux
 
 	// 约束到有效范围
 	if brightness < 0.0 {
@@ -915,9 +887,8 @@ func (abm *AutoBrightnessManager) calculateTargetBrightness(lightLevel int) floa
 	}
 
 	// 设置最小亮度，避免屏幕过暗
-	minBrightness := 0.1 // 10% 最小亮度
-	if brightness < minBrightness {
-		brightness = minBrightness
+	if brightness < minBrightnessLimit {
+		brightness = minBrightnessLimit
 	}
 	return brightness
 }
@@ -955,6 +926,9 @@ func (abm *AutoBrightnessManager) shouldAdjustBrightness(lightLevel int, targetB
 
 // setBrightness 设置亮度（自动调节专用，不触发手动调节检测）
 func (abm *AutoBrightnessManager) setBrightness(value float64) error {
+	if abm.manager == nil {
+		return errors.New("manager is nil")
+	}
 	// 使用内置显示器
 	builtinMonitor := abm.manager.getBuiltinMonitor()
 	if builtinMonitor == nil {
@@ -967,15 +941,17 @@ func (abm *AutoBrightnessManager) setBrightness(value float64) error {
 	var err error
 	if useTransition {
 		// 使用渐变效果（即使全局渐变功能关闭）
-		if abm.manager.brightnessTransition != nil {
-			// 使用 SetBrightness 强制启用渐变，忽略全局 enabled 标志
-			err = abm.manager.brightnessTransition.SetBrightness(builtinMonitor.Name, value, true)
+		if abm.manager.transitionManager != nil {
+			// 使用 setBrightnessWithTransition 强制启用渐变，忽略全局 enabled 标志
+			err = abm.manager.setBrightnessWithTransition(builtinMonitor.Name, value)
+
+			abm.manager.syncPropBrightness()
+
 			if err == nil {
-				// 渐变会在完成时自动同步属性，这里不需要再次同步
 				return nil
 			}
-			// 如果渐变失败，回退到直接设置
-			logger.Warning("[AutoBrightness] Transition failed, fallback to direct set:", err)
+			// 渐变失败，返回错误
+			logger.Warning("[AutoBrightness] Transition failed:", err)
 			return err
 		}
 	}
@@ -990,19 +966,14 @@ func (abm *AutoBrightnessManager) setBrightness(value float64) error {
 }
 
 // restoreSavedBrightness 恢复配置中保存的亮度
-// 注意：此函数假设调用者已经持有锁
 func (abm *AutoBrightnessManager) restoreSavedBrightness() {
-	// 使用内置显示器
 	builtinMonitor := abm.manager.getBuiltinMonitor()
 	if builtinMonitor == nil {
 		return
 	}
 	// 从配置中获取保存的亮度
-	savedBrightness := abm.manager.getMonitorBrightness(builtinMonitor.Name)
-	if savedBrightness < 0 {
-		savedBrightness = 1.0 // 默认亮度
-	}
-	// 恢复亮度（自动处理渐变和属性同步）
+	savedBrightness := abm.manager.getDefaultMonitorBrightness(builtinMonitor.Name)
+
 	err := abm.manager.setBrightnessAndSync(builtinMonitor.Name, savedBrightness)
 	if err != nil {
 		logger.Warning("[AutoBrightness] Failed to restore brightness:", err)
@@ -1014,23 +985,21 @@ func (abm *AutoBrightnessManager) restoreSavedBrightness() {
 // checkSensorAvailability 检查传感器是否可用（不连接）
 func (abm *AutoBrightnessManager) checkSensorAvailability() error {
 	// 临时连接以检查传感器
-	err := abm.sensorClient.Connect()
+	err := abm.sensorClient.Connect(abm.manager.sysSigLoop)
 	if err != nil {
 		return fmt.Errorf("failed to connect to sensor proxy: %w", err)
 	}
+	// 检查完成后立即断开连接
+	// 实际使用时会在Start()中重新连接
+	defer abm.sensorClient.Disconnect()
 	// 检查是否有环境光传感器
 	hasLight, err := abm.sensorClient.HasAmbientLight()
 	if err != nil {
-		abm.sensorClient.Disconnect()
 		return fmt.Errorf("failed to check ambient light sensor: %w", err)
 	}
 	if !hasLight {
-		abm.sensorClient.Disconnect()
 		return errors.New("no ambient light sensor available")
 	}
-	// 检查完成后立即断开连接
-	// 实际使用时会在Start()中重新连接
-	abm.sensorClient.Disconnect()
 	return nil
 }
 
@@ -1127,7 +1096,7 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 			config.Sensitivity = DefaultAutoBrightnessConfig.Sensitivity
 		}
 	} else {
-		logger.Warning("[AutoBrightness] Config convert faild, using default sensitivity")
+		logger.Warning("[AutoBrightness] Config convert failed, using default sensitivity")
 		config.Sensitivity = DefaultAutoBrightnessConfig.Sensitivity
 	}
 	// ChangeThreshold
@@ -1142,15 +1111,23 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 			config.ChangeThreshold = DefaultAutoBrightnessConfig.ChangeThreshold
 		}
 	} else {
-		logger.Warning("[AutoBrightness] Config convert faild, using default changeThreshold")
+		logger.Warning("[AutoBrightness] Config convert failed, using default changeThreshold")
 		config.ChangeThreshold = DefaultAutoBrightnessConfig.ChangeThreshold
 	}
 
 	// BrightnessChangeThreshold
 	if val, err := abm.configManager.Value(0, DSettingsKeyABBrightnessChangeThreshold); err == nil {
-		config.BrightnessChangeThreshold = val.Value().(float64)
+		switch v := val.Value().(type) {
+		case float64:
+			config.BrightnessChangeThreshold = v
+		case int64:
+			config.BrightnessChangeThreshold = float64(v)
+		default:
+			logger.Warningf("[AutoBrightness] Invalid type for brightnessChangeThreshold: %T", v)
+			config.BrightnessChangeThreshold = DefaultAutoBrightnessConfig.BrightnessChangeThreshold
+		}
 	} else {
-		logger.Warning("[AutoBrightness] Config convert faild, using default brightnessChangeThreshold")
+		logger.Warning("[AutoBrightness] Config convert failed, using default brightnessChangeThreshold")
 		config.BrightnessChangeThreshold = DefaultAutoBrightnessConfig.BrightnessChangeThreshold
 	}
 
@@ -1165,7 +1142,7 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 			config.PollingInterval = DefaultAutoBrightnessConfig.PollingInterval
 		}
 	} else {
-		logger.Warning("[AutoBrightness] Config convert faild, using default pollingInterval")
+		logger.Warning("[AutoBrightness] Config convert failed, using default pollingInterval")
 		config.PollingInterval = DefaultAutoBrightnessConfig.PollingInterval
 	}
 	// ManualOverrideDuration
@@ -1179,7 +1156,7 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 			config.ManualOverrideDuration = DefaultAutoBrightnessConfig.ManualOverrideDuration
 		}
 	} else {
-		logger.Warning("[AutoBrightness] Config convert faild, using default manualOverrideDuration")
+		logger.Warning("[AutoBrightness] Config convert failed, using default manualOverrideDuration")
 		config.ManualOverrideDuration = DefaultAutoBrightnessConfig.ManualOverrideDuration
 	}
 	// ManualAdjustDisablesAutoMode
@@ -1190,7 +1167,7 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 			config.ManualAdjustDisablesAutoMode = DefaultAutoBrightnessConfig.ManualAdjustDisablesAutoMode
 		}
 	} else {
-		logger.Warning("[AutoBrightness] Config convert faild, using default manualAdjustDisablesAutoMode")
+		logger.Warning("[AutoBrightness] Config convert failed, using default manualAdjustDisablesAutoMode")
 		config.ManualAdjustDisablesAutoMode = DefaultAutoBrightnessConfig.ManualAdjustDisablesAutoMode
 	}
 	// UseTransition
@@ -1201,7 +1178,7 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 			config.UseTransition = DefaultAutoBrightnessConfig.UseTransition
 		}
 	} else {
-		logger.Warning("[AutoBrightness] Config convert faild, using default useTransition")
+		logger.Warning("[AutoBrightness] Config convert failed, using default useTransition")
 		config.UseTransition = DefaultAutoBrightnessConfig.UseTransition
 	}
 
@@ -1244,7 +1221,15 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 
 	// KalmanProcessNoise
 	if val, err := abm.configManager.Value(0, DSettingsKeyABKalmanProcessNoise); err == nil {
-		config.KalmanProcessNoise = val.Value().(float64)
+		switch v := val.Value().(type) {
+		case float64:
+			config.KalmanProcessNoise = v
+		case int64:
+			config.KalmanProcessNoise = float64(v)
+		default:
+			logger.Warningf("[AutoBrightness] Invalid type for kalmanProcessNoise: %T", v)
+			config.KalmanProcessNoise = DefaultAutoBrightnessConfig.KalmanProcessNoise
+		}
 	} else {
 		logger.Warning("[AutoBrightness] Config convert failed, using default kalmanProcessNoise")
 		config.KalmanProcessNoise = DefaultAutoBrightnessConfig.KalmanProcessNoise
@@ -1252,7 +1237,15 @@ func (abm *AutoBrightnessManager) getConfig() (AutoBrightnessConfig, error) {
 
 	// KalmanMeasurementNoise
 	if val, err := abm.configManager.Value(0, DSettingsKeyABKalmanMeasurementNoise); err == nil {
-		config.KalmanMeasurementNoise = val.Value().(float64)
+		switch v := val.Value().(type) {
+		case float64:
+			config.KalmanMeasurementNoise = v
+		case int64:
+			config.KalmanMeasurementNoise = float64(v)
+		default:
+			logger.Warningf("[AutoBrightness] Invalid type for kalmanMeasurementNoise: %T", v)
+			config.KalmanMeasurementNoise = DefaultAutoBrightnessConfig.KalmanMeasurementNoise
+		}
 	} else {
 		logger.Warning("[AutoBrightness] Config convert failed, using default kalmanMeasurementNoise")
 		config.KalmanMeasurementNoise = DefaultAutoBrightnessConfig.KalmanMeasurementNoise
@@ -1288,44 +1281,48 @@ func (abm *AutoBrightnessManager) saveConfig() error {
 	if abm.configManager == nil {
 		return errors.New("config manager is nil")
 	}
+	// 在锁内复制配置，避免数据竞争
+	abm.mutex.RLock()
+	config := abm.config
+	abm.mutex.RUnlock()
 	// 验证配置有效性
-	err := abm.config.Validate()
+	err := config.Validate()
 	if err != nil {
 		return err
 	}
 	// 保存各个配置项
 	err = setGlobalDconfValue(DSettingsAutoBrightnessAppID, DSettingsAutoBrightnessName, "",
-		DSettingsKeyABEnabled, dbus.MakeVariant(abm.config.Enabled))
+		DSettingsKeyABEnabled, dbus.MakeVariant(config.Enabled))
 	if err != nil {
 		return err
 	}
 	err = setGlobalDconfValue(DSettingsAutoBrightnessAppID, DSettingsAutoBrightnessName, "",
-		DSettingsKeyABSensitivity, dbus.MakeVariant(abm.config.Sensitivity))
+		DSettingsKeyABSensitivity, dbus.MakeVariant(config.Sensitivity))
 	if err != nil {
 		return err
 	}
 	err = setGlobalDconfValue(DSettingsAutoBrightnessAppID, DSettingsAutoBrightnessName, "",
-		DSettingsKeyABChangeThreshold, dbus.MakeVariant(abm.config.ChangeThreshold))
+		DSettingsKeyABChangeThreshold, dbus.MakeVariant(config.ChangeThreshold))
 	if err != nil {
 		return err
 	}
 	err = setGlobalDconfValue(DSettingsAutoBrightnessAppID, DSettingsAutoBrightnessName, "",
-		DSettingsKeyABPollingInterval, dbus.MakeVariant(abm.config.PollingInterval))
+		DSettingsKeyABPollingInterval, dbus.MakeVariant(config.PollingInterval))
 	if err != nil {
 		return err
 	}
 	err = setGlobalDconfValue(DSettingsAutoBrightnessAppID, DSettingsAutoBrightnessName, "",
-		DSettingsKeyABManualOverride, dbus.MakeVariant(abm.config.ManualOverrideDuration))
+		DSettingsKeyABManualOverride, dbus.MakeVariant(config.ManualOverrideDuration))
 	if err != nil {
 		return err
 	}
 	err = setGlobalDconfValue(DSettingsAutoBrightnessAppID, DSettingsAutoBrightnessName, "",
-		DSettingsKeyABManualAdjustDisablesAutoMode, dbus.MakeVariant(abm.config.ManualAdjustDisablesAutoMode))
+		DSettingsKeyABManualAdjustDisablesAutoMode, dbus.MakeVariant(config.ManualAdjustDisablesAutoMode))
 	if err != nil {
 		return err
 	}
 	err = setGlobalDconfValue(DSettingsAutoBrightnessAppID, DSettingsAutoBrightnessName, "",
-		DSettingsKeyABUseTransition, dbus.MakeVariant(abm.config.UseTransition))
+		DSettingsKeyABUseTransition, dbus.MakeVariant(config.UseTransition))
 	if err != nil {
 		return err
 	}

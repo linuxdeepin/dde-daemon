@@ -111,6 +111,10 @@ func (m *Manager) AssociateTouchByUUID(outputName, touchUUID string) *dbus.Error
 func (m *Manager) ChangeBrightness(raised bool) *dbus.Error {
 	logger.Debug("dbus call ChangeBrightness", raised)
 	err := m.changeBrightness(raised)
+	if err == nil {
+		// 通知自动亮度管理器手动调节
+		m.notifyManualBrightnessChange()
+	}
 	return dbusutil.ToError(err)
 }
 
@@ -213,6 +217,9 @@ func (m *Manager) SetAndSaveBrightness(outputName string, value float64) *dbus.E
 		return dbusutil.ToError(err)
 	}
 
+	// 通知自动亮度管理器手动调节
+	m.notifyManualBrightnessChange()
+
 	err = m.saveBrightnessInCfg(map[string]float64{
 		outputName: value,
 	})
@@ -240,6 +247,10 @@ func (m *Manager) SetBrightness(outputName string, value float64) *dbus.Error {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
+
+	// 通知自动亮度管理器手动调节
+	m.notifyManualBrightnessChange()
+
 	return nil
 }
 

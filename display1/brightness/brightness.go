@@ -7,12 +7,12 @@ package brightness
 import (
 	"fmt"
 	"math"
+	"sync"
 
 	"github.com/godbus/dbus/v5"
 	backlight "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.backlighthelper1"
 	displayBl "github.com/linuxdeepin/go-lib/backlight/display"
 	"github.com/linuxdeepin/go-lib/log"
-	"github.com/linuxdeepin/go-lib/multierr"
 	x "github.com/linuxdeepin/go-x11-client"
 	"github.com/linuxdeepin/go-x11-client/ext/randr"
 )
@@ -42,52 +42,18 @@ func InitBacklightHelper() {
 	helper = backlight.NewBacklight(sysBus)
 }
 
-func Set(brightness float64, temperature int, setter int, isBuiltin bool, outputId uint32, conn *x.Conn) error {
-	if brightness < 0 {
-		brightness = 0
-	} else if brightness > 1 {
-		brightness = 1
-	}
-
+// SetOutputGama 设置 Gamma 亮度和色温
+func SetOutputGama(brightness float64, temperature int, outputId uint32, conn *x.Conn, uuid string) error {
 	output := randr.Output(outputId)
+	return setOutputCrtcGamma(gammaSetting{
+		brightness:  brightness,
+		temperature: temperature,
+	}, output, conn)
+}
 
-	// 亮度和色温分开设置，亮度用背光，色温用 gamma
-	setBlGamma := func() error {
-		var errs error
-		err := setBacklight(brightness, output, conn)
-		if err != nil {
-			errs = multierr.Append(errs, err)
-		}
-
-		err = setOutputCrtcGamma(gammaSetting{
-			brightness:  1,
-			temperature: temperature,
-		}, output, conn)
-		if err != nil {
-			errs = multierr.Append(errs, err)
-		}
-		return errs
-	}
-
-	// 亮度和色温都用 gamma 值设置
-	setGamma := func() error {
-		return setOutputCrtcGamma(gammaSetting{
-			brightness:  brightness,
-			temperature: temperature,
-		}, output, conn)
-	}
-
-	setFn := setGamma
-	switch setter {
-	case BrightnessSetterBacklight:
-		setFn = setBlGamma
-	case BrightnessSetterAuto:
-		if isBuiltin && supportBacklight() {
-			setFn = setBlGamma
-		}
-		//case BrightnessSetterGamma
-	}
-	return setFn()
+// SupportBacklight 检查是否支持背光调节
+func SupportBacklight() bool {
+	return supportBacklight()
 }
 
 // unused function
@@ -206,16 +172,6 @@ func init() {
 	}
 }
 
-func setBacklight(value float64, output randr.Output, conn *x.Conn) error {
-	for _, controller := range controllers {
-		err := _setBacklight(value, controller)
-		if err != nil {
-			fmt.Printf("WARN: failed to set backlight %s: %v", controller.Name, err)
-		}
-	}
-	return nil
-}
-
 func _setBacklight(value float64, controller *displayBl.Controller) error {
 	br := int32(float64(controller.MaxBrightness) * value)
 
@@ -229,4 +185,73 @@ func _setBacklight(value float64, controller *displayBl.Controller) error {
 	fmt.Printf("help set brightness %q max %v value %v br %v\n",
 		controller.Name, controller.MaxBrightness, value, br)
 	return helper.SetBrightness(0, backlightTypeDisplay, controller.Name, br)
+}
+
+// backlightControllerCache 背光控制器缓存
+var (
+	cachedBacklightControllers displayBl.Controllers
+	backlightControllersMu     sync.RWMutex
+)
+
+// getBacklightControllers 获取缓存的背光控制器列表
+func getBacklightControllers() displayBl.Controllers {
+	backlightControllersMu.RLock()
+	if len(cachedBacklightControllers) > 0 {
+		defer backlightControllersMu.RUnlock()
+		return cachedBacklightControllers
+	}
+	backlightControllersMu.RUnlock()
+
+	backlightControllersMu.Lock()
+	defer backlightControllersMu.Unlock()
+
+	// 双重检查
+	if len(cachedBacklightControllers) > 0 {
+		return cachedBacklightControllers
+	}
+
+	var err error
+	cachedBacklightControllers, err = displayBl.List()
+	if err != nil {
+		logger.Warningf("Failed to list backlight controllers: %v", err)
+		return nil
+	}
+	return cachedBacklightControllers
+}
+
+// SetBacklight 设置背光亮度（供 TransitionManager 回调使用）
+func SetBacklight(brightness float64) error {
+	controllers := getBacklightControllers()
+	if len(controllers) == 0 {
+		return fmt.Errorf("no backlight controllers available")
+	}
+
+	for _, controller := range controllers {
+		err := _setBacklight(brightness, controller)
+		if err != nil {
+			logger.Warningf("Failed to set backlight %s: %v", controller.Name, err)
+		}
+	}
+	return nil
+}
+
+// GetBacklightCurrentValue 获取当前背光亮度百分比 (0.0 - 1.0)
+func GetBacklightCurrentValue() (float64, error) {
+	controllers := getBacklightControllers()
+	if len(controllers) == 0 {
+		return 0.5, fmt.Errorf("no backlight controllers available")
+	}
+
+	// 使用第一个控制器的当前亮度
+	controller := controllers[0]
+	currentBrightness, err := controller.GetActualBrightness()
+	if err != nil {
+		return 0.5, fmt.Errorf("failed to get current brightness: %v", err)
+	}
+
+	if controller.MaxBrightness <= 0 {
+		return 0.5, fmt.Errorf("invalid max brightness: %d", controller.MaxBrightness)
+	}
+
+	return float64(currentBrightness) / float64(controller.MaxBrightness), nil
 }

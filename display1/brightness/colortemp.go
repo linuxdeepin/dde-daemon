@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -271,8 +271,17 @@ type gammaSetting struct {
 }
 
 func fillColorRamp(gammaR, gammaG, gammaB []uint16, setting gammaSetting) {
-	alpha := float64(setting.temperature%100) / 100.0
-	tempIndex := ((setting.temperature - 1000) / 100) * 3
+	temperature := setting.temperature
+	if temperature < 1000 {
+		temperature = 1000
+	}
+	maxTemp := 1000 + (len(blackBodyColor)/3-1)*100
+	if temperature > maxTemp {
+		temperature = maxTemp
+	}
+
+	alpha := float64(temperature%100) / 100.0
+	tempIndex := ((temperature - 1000) / 100) * 3
 
 	// Approximate white point
 	whitePoint := interpolateColor(alpha, blackBodyColor[tempIndex:tempIndex+3],

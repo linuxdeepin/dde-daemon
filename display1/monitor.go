@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -540,6 +540,15 @@ func (monitors Monitors) GetById(id uint32) *Monitor {
 func (monitors Monitors) GetByUuid(uuid string) *Monitor {
 	for _, monitor := range monitors {
 		if monitor.getUuids().Contains(uuid) {
+			return monitor
+		}
+	}
+	return nil
+}
+
+func (monitors Monitors) GetByUuidAndName(uuid, name string) *Monitor {
+	for _, monitor := range monitors {
+		if monitor.Name == name && monitor.getUuids().Contains(uuid) {
 			return monitor
 		}
 	}

@@ -5,7 +5,6 @@
 package display1
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
 	"os"
@@ -45,6 +44,11 @@ func (m *Manager) saveBrightnessInCfg(valueMap map[string]float64) error {
 					}
 
 					if config.UUID == monitor.uuid {
+						other := monitors.GetByUuidAndName(config.UUID, config.Name)
+						if other != nil && other != monitor {
+							// 存在其他的名字和UUID都对应配置的显示器，不要改该配置
+							continue
+						}
 						config.Name = name
 						config.Brightness = v
 					}
@@ -110,25 +114,16 @@ func (m *Manager) changeBrightness(raised bool) error {
 	return nil
 }
 
-func (m *Manager) getSavedBrightnessTable() (map[string]float64, error) {
-	value := m.getBrightness()
-	if value == "" {
-		return nil, nil
-	}
-	var result map[string]float64
-	err := json.Unmarshal([]byte(value), &result)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
 func (m *Manager) initBrightness() {
-	brightnessTable, err := m.getSavedBrightnessTable()
-	if err != nil {
-		logger.Warning(err)
+	m.Brightness = make(map[string]float64)
+	monitors := m.getConnectedMonitors()
+	monitorsId := monitors.getMonitorsId()
+	configs := m.getSuitableSysMonitorConfigs(m.DisplayMode, monitorsId, monitors)
+	for _, config := range configs {
+		if config.Enabled {
+			m.Brightness[config.Name] = config.Brightness
+		}
 	}
-	m.Brightness = brightnessTable
 }
 
 func (m *Manager) getSetterConfig() int {
@@ -149,24 +144,6 @@ func (m *Manager) getSetterConfig() int {
 	}
 
 	return int(v.Value().(int64))
-}
-
-// createBrightnessSetter 创建亮度设置闭包函数，用于亮度渐变管理器
-func (m *Manager) createBrightnessSetter(monitor *Monitor) func(float64) error {
-	temperature := m.getColorTemperatureValue()
-	if !isValidColorTempValue(int32(temperature)) {
-		temperature = defaultTemperatureManual
-	}
-
-	isBuiltin := m.isBuiltinMonitor(monitor.Name)
-	setterConfig := m.getSetterConfig()
-
-	logger.Debugf("Create brightness setter config %d for monitor %s, isBuiltin: %v, temperature: %v", setterConfig, monitor.Name, isBuiltin, temperature)
-
-	// 返回一个只接收亮度值参数的闭包
-	return func(brightnessValue float64) error {
-		return brightness.Set(brightnessValue, temperature, setterConfig, isBuiltin, monitor.ID, m.xConn)
-	}
 }
 
 // see also: gnome-desktop/libgnome-desktop/gnome-rr.c
@@ -200,26 +177,84 @@ func (m *Manager) isBuiltinMonitor(name string) bool {
 }
 
 func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64, forceTransition bool) error {
+	logger.Debug("setMonitorBrightness reality value:", brightnessValue)
+
+	// 使用统一过渡管理器
+	if m.transitionManager != nil {
+		return m.transitionManager.SetBrightness(monitor.Name, brightnessValue, forceTransition)
+	}
+
+	// 降级：直接设置亮度
 	setter := m.createBrightnessSetter(monitor)
 	if setter == nil {
 		return fmt.Errorf("failed to create brightness setter for monitor %s", monitor.Name)
 	}
-
-	logger.Debug("setMonitorBrightness reality value:", brightnessValue)
-
-	if m.brightnessTransition != nil {
-		// TODO ： 我们可以优化setter的使用来避免频繁create，但是需要处理屏幕插拔或其它变动信号
-		m.brightnessTransition.SetBrightnessSetter(monitor.Name, setter)
-		return m.brightnessTransition.SetBrightness(monitor.Name, brightnessValue, forceTransition)
-	} else {
-		return setter(brightnessValue)
-	}
+	return setter(brightnessValue)
 }
 
-func (m *Manager) setBrightnessAux(fake bool, name string, value float64) error {
+func (m *Manager) createBrightnessSetter(monitor *Monitor) func(float64) error {
+	isBuiltin := m.isBuiltinMonitor(monitor.Name)
+	_uuid := monitor.uuid
+	if _useWayland {
+		_uuid = monitor.uuidV0
+	}
+
+	// 获取当前色温值，用于 gamma 设置路径
+	temperature := m.getColorTemperatureValue()
+
+	setter := m.getSetterConfig()
+
+	var setterFunc func(float64) error
+
+	switch setter {
+	case brightness.BrightnessSetterBacklight:
+		setterFunc = func(brightnessValue float64) error {
+			return brightness.SetBacklight(brightnessValue)
+		}
+	case brightness.BrightnessSetterAuto:
+		if isBuiltin && brightness.SupportBacklight() {
+			setterFunc = func(brightnessValue float64) error {
+				return brightness.SetBacklight(brightnessValue)
+			}
+		} else {
+			setterFunc = func(brightnessValue float64) error {
+				return brightness.SetOutputGama(brightnessValue, temperature, monitor.ID, m.xConn, _uuid)
+			}
+		}
+	default: // BrightnessSetterGamma
+		setterFunc = func(brightnessValue float64) error {
+			return brightness.SetOutputGama(brightnessValue, temperature, monitor.ID, m.xConn, _uuid)
+		}
+	}
+
+	return setterFunc
+}
+
+// setColorTemperature 设置色温（通过 gamma）
+func (m *Manager) setColorTemperature(monitor *Monitor, brightnessVal float64) error {
+	temperature := m.getColorTemperatureValue()
+	logger.Debug("setColorTemperature", monitor.Name, temperature)
+
+	isBuiltin := m.isBuiltinMonitor(monitor.Name)
+	_uuid := monitor.uuid
+	if _useWayland {
+		_uuid = monitor.uuidV0
+	}
+
+	// 内建显示器使用背光时，色温通过 gamma 设置（亮度为1）
+	if isBuiltin && brightness.SupportBacklight() {
+		brightnessVal = 1
+	}
+
+	return brightness.SetOutputGama(brightnessVal, temperature, monitor.ID, m.xConn, _uuid)
+}
+
+func (m *Manager) setBrightness(name string, value float64) error {
+	logger.Debug("Starting brightness setting", name, value)
 	monitors := m.getConnectedMonitors()
 	monitor := monitors.GetByName(name)
 	if monitor == nil {
+		logger.Debug("Monitor not found:", name)
 		return InvalidOutputNameError{Name: name}
 	}
 
@@ -228,11 +263,14 @@ func (m *Manager) setBrightnessAux(fake bool, name string, value float64) error 
 	monitor.PropsMu.RUnlock()
 
 	value = math.Round(value*1000) / 1000 // 通过该方法，用来对亮度值(亮度值范围为0-1)四舍五入保留小数点后三位有效数字
-	if !fake && enabled {
+	if enabled {
 		// 保持最小亮度，不能全黑
 		if value <= 0.1 {
 			value = 0.1
+		} else if value > 1 {
+			value = 1
 		}
+
 		err := m.setMonitorBrightness(monitor, value, false)
 		if err != nil {
 			logger.Warningf("failed to set brightness for %s: %v", name, err)
@@ -242,19 +280,62 @@ func (m *Manager) setBrightnessAux(fake bool, name string, value float64) error 
 
 	monitor.setPropBrightnessWithLock(value)
 
-	return nil
-}
+	logger.Debug("end set brightness", name, value)
 
-func (m *Manager) setBrightness(name string, value float64) error {
-	return m.setBrightnessAux(false, name, value)
+	return nil
 }
 
 func (m *Manager) setBrightnessAndSync(name string, value float64) error {
 	err := m.setBrightness(name, value)
 	if err == nil {
 		m.syncPropBrightness()
-		// 通知自动亮度管理器手动调节
-		m.notifyManualBrightnessChange()
 	}
 	return err
+}
+
+// setBrightnessWithTransition 使用渐变效果设置亮度（强制启用渐变）
+func (m *Manager) setBrightnessWithTransition(name string, value float64) error {
+	logger.Debug("Starting brightness setting with transition", name, value)
+	monitors := m.getConnectedMonitors()
+	monitor := monitors.GetByName(name)
+	if monitor == nil {
+		logger.Debug("Monitor not found:", name)
+		return InvalidOutputNameError{Name: name}
+	}
+
+	monitor.PropsMu.RLock()
+	enabled := monitor.Enabled
+	monitor.PropsMu.RUnlock()
+
+	value = math.Round(value*1000) / 1000
+	if enabled {
+		if value <= 0.1 {
+			value = 0.1
+		} else if value > 1 {
+			value = 1
+		}
+
+		err := m.setMonitorBrightness(monitor, value, true)
+		if err != nil {
+			logger.Warningf("failed to set brightness for %s: %v", name, err)
+			return err
+		}
+	}
+
+	monitor.setPropBrightnessWithLock(value)
+
+	logger.Debug("end set brightness with transition", name, value)
+
+	return nil
+}
+
+// getDefaultMonitorBrightness 获取默认显示器亮度（带 fallback 逻辑）
+func (m *Manager) getDefaultMonitorBrightness(name string) float64 {
+	if v, ok := m.Brightness[name]; ok {
+		return v
+	}
+	if v, ok := m.Brightness["default"]; ok {
+		return v
+	}
+	return 1
 }

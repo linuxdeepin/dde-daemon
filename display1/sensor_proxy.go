@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 package display1
@@ -10,34 +10,21 @@ import (
 	"time"
 
 	"github.com/godbus/dbus/v5"
-)
-
-const (
-	// net.hadess.SensorProxy D-Bus 接口常量
-	hadessProxyService    = "net.hadess.SensorProxy"
-	hadessProxyObjectPath = "/net/hadess/SensorProxy"
-	hadessProxyInterface  = "net.hadess.SensorProxy"
-	// 属性名称
-	propHasAmbientLight = "HasAmbientLight"
-	propLightLevel      = "LightLevel"
-	propLightLevelUnit  = "LightLevelUnit"
-	// 方法名称
-	methodClaimLight   = "ClaimLight"
-	methodReleaseLight = "ReleaseLight"
-	// 信号名称
-	signalPropertiesChanged = "org.freedesktop.DBus.Properties.PropertiesChanged"
+	sensorproxy "github.com/linuxdeepin/go-dbus-factory/system/net.hadess.sensorproxy"
+	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
+	"github.com/linuxdeepin/go-lib/dbusutil"
+	"github.com/linuxdeepin/go-lib/dbusutil/proxy"
 )
 
 // SensorProxyClient 环境光传感器D-Bus客户端
 // 职责：负责从光感服务获取数据并缓存，不负责滤波处理
 type SensorProxyClient struct {
-	conn            *dbus.Conn
-	sensorProxy     dbus.BusObject
+	sensorProxy     sensorproxy.SensorProxy
+	dbusDaemon      ofdbus.DBus
 	hasAmbientLight bool
 	claimed         bool
 
 	// 事件处理
-	signalChan         chan *dbus.Signal
 	onServiceChange    func(bool)
 	onLightLevelChange func(int)
 
@@ -46,7 +33,7 @@ type SensorProxyClient struct {
 
 	// 服务监控
 	serviceAvailable bool
-	ownerWatcher     chan *dbus.Signal
+	serviceSigLoop   *dbusutil.SignalLoop // 服务监控的 SignalLoop
 
 	// 错误处理
 	maxRetries int
@@ -58,11 +45,10 @@ type SensorProxyClient struct {
 }
 
 // NewSensorProxyClient 创建新的传感器代理客户端
-func NewSensorProxyClient(conn *dbus.Conn) *SensorProxyClient {
+func NewSensorProxyClient(proxy sensorproxy.SensorProxy, dbusDaemon ofdbus.DBus) *SensorProxyClient {
 	return &SensorProxyClient{
-		conn:           conn,
-		signalChan:     make(chan *dbus.Signal, 10),
-		ownerWatcher:   make(chan *dbus.Signal, 10),
+		sensorProxy:    proxy,
+		dbusDaemon:     dbusDaemon,
 		maxRetries:     3,
 		retryDelay:     time.Millisecond * 500,
 		lastLightLevel: -1,
@@ -70,14 +56,14 @@ func NewSensorProxyClient(conn *dbus.Conn) *SensorProxyClient {
 }
 
 // Connect 连接到SensorProxy服务
-func (c *SensorProxyClient) Connect() error {
+func (c *SensorProxyClient) Connect(sigLoop *dbusutil.SignalLoop) error {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
-	if c.conn == nil {
-		return errors.New("D-Bus connection is nil")
+	if c.sensorProxy == nil {
+		return errors.New("SensorProxy is nil")
 	}
-	// 创建D-Bus对象
-	c.sensorProxy = c.conn.Object(hadessProxyService, hadessProxyObjectPath)
+	// 初始化信号处理
+	c.sensorProxy.InitSignalExt(sigLoop, true)
 	// 检查服务是否可用（带重试机制）
 	err := c.checkServiceAvailableWithRetry()
 	if err != nil {
@@ -94,9 +80,9 @@ func (c *SensorProxyClient) Connect() error {
 	if !hasLight {
 		return errors.New("no ambient light sensor available")
 	}
-	// 启动信号监听
+	// 订阅属性变化信号（LightLevel 等）
 	c.startSignalWatching()
-	// 启动服务监控
+	// 订阅服务所有者变化信号
 	c.startServiceWatching()
 	return nil
 }
@@ -111,13 +97,17 @@ func (c *SensorProxyClient) Disconnect() error {
 		if err != nil {
 			logger.Warning("[SensorProxy] Failed to release light sensor:", err)
 		}
+		c.claimed = false
 	}
-	// 停止信号监听
-	c.stopSignalWatching()
-	// 停止服务监控
-	c.stopServiceWatching()
+	// 停止服务监控的 SignalLoop
+	if c.serviceSigLoop != nil {
+		c.serviceSigLoop.Stop()
+		c.serviceSigLoop = nil
+	}
+	// 移除所有信号处理器
+	c.sensorProxy.RemoveHandler(proxy.RemoveAllHandlers)
+	c.dbusDaemon.RemoveHandler(proxy.RemoveAllHandlers)
 
-	c.sensorProxy = nil
 	c.serviceAvailable = false
 	c.hasAmbientLight = false
 	c.lastLightLevel = -1
@@ -188,10 +178,7 @@ func (c *SensorProxyClient) GetCachedLightLevel() (int, error) {
 	c.mutex.Unlock()
 
 	if needInit {
-		c.mutex.Lock()
-		sensorProxy := c.sensorProxy
-		c.mutex.Unlock()
-		c.initializeCacheFromPropertyWithProxy(sensorProxy)
+		c.initializeCacheFromProperty()
 	}
 
 	c.mutex.Lock()
@@ -222,22 +209,11 @@ func (c *SensorProxyClient) GetLightLevel() (int, error) {
 		c.mutex.Unlock()
 		return 0, errors.New("light sensor not claimed")
 	}
-
-	sensorProxy := c.sensorProxy
 	c.mutex.Unlock()
 
-	if sensorProxy == nil {
-		return 0, errors.New("sensor proxy is nil")
-	}
-
-	variant, err := sensorProxy.GetProperty(hadessProxyInterface + "." + propLightLevel)
+	lightLevel, err := c.sensorProxy.LightLevel().Get(0)
 	if err != nil {
 		return 0, fmt.Errorf("failed to get LightLevel property: %w", err)
-	}
-
-	lightLevel, ok := variant.Value().(float64)
-	if !ok {
-		return 0, errors.New("invalid LightLevel property type")
 	}
 
 	return int(lightLevel), nil
@@ -250,10 +226,9 @@ func (c *SensorProxyClient) HasAmbientLight() (bool, error) {
 		c.mutex.Unlock()
 		return false, errors.New("SensorProxy service not available")
 	}
-	sensorProxy := c.sensorProxy
 	c.mutex.Unlock()
 
-	return c.hasAmbientLightInternalWithProxy(sensorProxy)
+	return c.hasAmbientLightInternal()
 }
 
 // SetServiceChangeCallback 设置服务状态变化回调
@@ -289,7 +264,7 @@ func (c *SensorProxyClient) IsClaimed() bool {
 func (c *SensorProxyClient) checkServiceAvailableWithRetry() error {
 	var lastErr error
 	for i := 0; i < c.maxRetries; i++ {
-		err := c.checkServiceAvailable()
+		_, err := c.hasAmbientLightInternal()
 		if err == nil {
 			return nil
 		}
@@ -317,201 +292,99 @@ func (c *SensorProxyClient) claimLightWithRetry() error {
 	return lastErr
 }
 
-// checkServiceAvailable 检查服务是否可用
-func (c *SensorProxyClient) checkServiceAvailable() error {
-	// 尝试调用一个简单的属性获取来检查服务是否可用
-	_, err := c.sensorProxy.GetProperty(hadessProxyInterface + "." + propHasAmbientLight)
-	return err
-}
-
-// hasAmbientLightInternalWithProxy 内部检查环境光传感器（不加锁版本）
-func (c *SensorProxyClient) hasAmbientLightInternalWithProxy(sensorProxy dbus.BusObject) (bool, error) {
-	if sensorProxy == nil {
-		return false, errors.New("sensor proxy is nil")
-	}
-
-	variant, err := sensorProxy.GetProperty(hadessProxyInterface + "." + propHasAmbientLight)
+// hasAmbientLightInternal 内部检查环境光传感器
+func (c *SensorProxyClient) hasAmbientLightInternal() (bool, error) {
+	hasLight, err := c.sensorProxy.HasAmbientLight().Get(0)
 	if err != nil {
 		return false, err
-	}
-	hasLight, ok := variant.Value().(bool)
-	if !ok {
-		return false, errors.New("invalid HasAmbientLight type")
 	}
 	return hasLight, nil
 }
 
-// hasAmbientLightInternal 内部检查环境光传感器
-func (c *SensorProxyClient) hasAmbientLightInternal() (bool, error) {
-	return c.hasAmbientLightInternalWithProxy(c.sensorProxy)
-}
-
 // claimLightInternal 内部声明环境光传感器
 func (c *SensorProxyClient) claimLightInternal() error {
-	call := c.sensorProxy.Call(hadessProxyInterface+"."+methodClaimLight, 0)
-	return call.Err
+	return c.sensorProxy.ClaimLight(0)
 }
 
 // releaseLightInternal 内部释放环境光传感器
 func (c *SensorProxyClient) releaseLightInternal() error {
-	call := c.sensorProxy.Call(hadessProxyInterface+"."+methodReleaseLight, 0)
-	return call.Err
+	return c.sensorProxy.ReleaseLight(0)
 }
 
-// startSignalWatching 启动信号监听
+// startSignalWatching 通过 proxy.Object 订阅属性变化信号
 func (c *SensorProxyClient) startSignalWatching() {
-	// 添加属性变化信号监听，只监听特定服务的特定对象路径
-	matchRule := "type='signal'," +
-		"sender='" + hadessProxyService + "'," +
-		"interface='org.freedesktop.DBus.Properties'," +
-		"member='PropertiesChanged'," +
-		"path='" + hadessProxyObjectPath + "'," +
-		"arg0='" + hadessProxyInterface + "'"
-	err := c.conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, matchRule).Err
-	if err != nil {
-		logger.Warning("[SensorProxy] Failed to add PropertiesChanged signal match:", err)
-		return
-	}
-	// 启动信号处理协程
-	go c.handleSignals()
-}
-
-// stopSignalWatching 停止信号监听
-func (c *SensorProxyClient) stopSignalWatching() {
-	// 移除信号监听
-	matchRule := "type='signal'," +
-		"sender='" + hadessProxyService + "'," +
-		"interface='org.freedesktop.DBus.Properties'," +
-		"member='PropertiesChanged'," +
-		"path='" + hadessProxyObjectPath + "'," +
-		"arg0='" + hadessProxyInterface + "'"
-	err := c.conn.BusObject().Call("org.freedesktop.DBus.RemoveMatch", 0, matchRule).Err
-	if err != nil {
-		logger.Warning("[SensorProxy] Failed to remove PropertiesChanged signal match:", err)
-	}
-}
-
-// startServiceWatching 启动服务监控
-func (c *SensorProxyClient) startServiceWatching() {
-	// 监听特定服务的所有者变化
-	matchRule := "type='signal'," +
-		"sender='org.freedesktop.DBus'," +
-		"interface='org.freedesktop.DBus'," +
-		"member='NameOwnerChanged'," +
-		"path='/org/freedesktop/DBus'," +
-		"arg0='" + hadessProxyService + "'"
-	err := c.conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, matchRule).Err
-	if err != nil {
-		logger.Warning("[SensorProxy] Failed to add NameOwnerChanged signal match:", err)
-		return
-	}
-	// 启动服务监控协程
-	go c.handleServiceChanges()
-}
-
-// stopServiceWatching 停止服务监控
-func (c *SensorProxyClient) stopServiceWatching() {
-	// 移除服务监听
-	matchRule := "type='signal'," +
-		"sender='org.freedesktop.DBus'," +
-		"interface='org.freedesktop.DBus'," +
-		"member='NameOwnerChanged'," +
-		"path='/org/freedesktop/DBus'," +
-		"arg0='" + hadessProxyService + "'"
-	err := c.conn.BusObject().Call("org.freedesktop.DBus.RemoveMatch", 0, matchRule).Err
-	if err != nil {
-		logger.Warning("[SensorProxy] Failed to remove NameOwnerChanged signal match:", err)
-	}
-}
-
-// handleSignals 处理D-Bus信号
-func (c *SensorProxyClient) handleSignals() {
-	c.conn.Signal(c.signalChan)
-	for signal := range c.signalChan {
-		if signal.Name == "org.freedesktop.DBus.Properties.PropertiesChanged" {
-			c.handlePropertiesChanged(signal)
-		}
-	}
-}
-
-// handleServiceChanges 处理服务状态变化
-func (c *SensorProxyClient) handleServiceChanges() {
-	c.conn.Signal(c.ownerWatcher)
-	for signal := range c.ownerWatcher {
-		if signal.Name == "org.freedesktop.DBus.NameOwnerChanged" {
-			c.handleNameOwnerChanged(signal)
-		}
-	}
-}
-
-// handlePropertiesChanged 处理属性变化信号
-func (c *SensorProxyClient) handlePropertiesChanged(signal *dbus.Signal) {
-	if len(signal.Body) < 2 {
-		logger.Warning("[SensorProxy] Invalid PropertiesChanged signal body")
-		return
-	}
-
-	changedProps, ok := signal.Body[1].(map[string]dbus.Variant)
-	if !ok {
-		logger.Warning("[SensorProxy] Invalid PropertiesChanged signal format")
-		return
-	}
-
-	if lightLevelVariant, exists := changedProps[propLightLevel]; exists {
-		if lightLevel, ok := lightLevelVariant.Value().(float64); ok {
+	_, err := c.sensorProxy.ConnectPropertiesChanged(
+		func(interfaceName string, changedProperties map[string]dbus.Variant,
+			invalidatedProperties []string) {
+			lightLevelVariant, exists := changedProperties["LightLevel"]
+			if !exists {
+				return
+			}
+			lightLevel, ok := lightLevelVariant.Value().(float64)
+			if !ok {
+				logger.Warning("[SensorProxy] Failed to convert LightLevel value to float")
+				return
+			}
 			c.mutex.Lock()
 			claimed := c.claimed
 			c.mutex.Unlock()
-
 			if claimed {
 				c.lightValueFilter(int(lightLevel))
 			}
-		} else {
-			logger.Warning("[SensorProxy] Failed to convert LightLevel value to float")
-		}
+		})
+	if err != nil {
+		logger.Warning("[SensorProxy] Failed to connect PropertiesChanged signal:", err)
 	}
 }
 
-// handleNameOwnerChanged 处理服务所有者变化
-func (c *SensorProxyClient) handleNameOwnerChanged(signal *dbus.Signal) {
-	if len(signal.Body) < 3 {
-		logger.Warning("[SensorProxy] Invalid NameOwnerChanged signal body")
+// startServiceWatching 通过 ofdbus.DBus 订阅服务所有者变化信号
+func (c *SensorProxyClient) startServiceWatching() {
+	// 如果已有 sigLoop，先停止它
+	if c.serviceSigLoop != nil {
+		c.serviceSigLoop.Stop()
+		c.serviceSigLoop = nil
+	}
+
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("[SensorProxy] Failed to connect to system bus for service watching:", err)
 		return
 	}
-	serviceName, ok := signal.Body[0].(string)
-	if !ok || serviceName != hadessProxyService {
-		return
-	}
-	newOwner, ok := signal.Body[2].(string)
-	if !ok {
-		return
-	}
-	// 服务状态变化
-	serviceAvailable := newOwner != ""
-	c.mutex.Lock()
-	oldAvailable := c.serviceAvailable
-	c.serviceAvailable = serviceAvailable
-	if !serviceAvailable {
-		// 服务不可用，重置状态
-		c.claimed = false
-		c.hasAmbientLight = false
-	} else if !oldAvailable {
-		// 服务重新可用，重新检查传感器
-		go func() {
-			time.Sleep(100 * time.Millisecond) // 等待服务完全启动
-			hasLight, err := c.HasAmbientLight()
-			if err == nil {
-				c.mutex.Lock()
-				c.hasAmbientLight = hasLight
-				c.mutex.Unlock()
+	sigLoop := dbusutil.NewSignalLoop(systemBus, 10)
+	sigLoop.Start()
+	c.serviceSigLoop = sigLoop
+	c.dbusDaemon.InitSignalExt(sigLoop, true)
+	_, err = c.dbusDaemon.ConnectNameOwnerChanged(
+		func(name, oldOwner, newOwner string) {
+			if name != "net.hadess.SensorProxy" {
+				return
 			}
-		}()
-	}
-	callback := c.onServiceChange
-	c.mutex.Unlock()
-	// 调用服务状态变化回调
-	if callback != nil {
-		go callback(serviceAvailable)
+			serviceAvailable := newOwner != ""
+			c.mutex.Lock()
+			oldAvailable := c.serviceAvailable
+			c.serviceAvailable = serviceAvailable
+			if !serviceAvailable {
+				c.claimed = false
+				c.hasAmbientLight = false
+			} else if !oldAvailable {
+				go func() {
+					time.Sleep(100 * time.Millisecond)
+					hasLight, err := c.HasAmbientLight()
+					if err == nil {
+						c.mutex.Lock()
+						c.hasAmbientLight = hasLight
+						c.mutex.Unlock()
+					}
+				}()
+			}
+			callback := c.onServiceChange
+			c.mutex.Unlock()
+			if callback != nil {
+				go callback(serviceAvailable)
+			}
+		})
+	if err != nil {
+		logger.Warning("[SensorProxy] Failed to connect NameOwnerChanged signal:", err)
 	}
 }
 func (c *SensorProxyClient) lightValueFilter(newValue int) {
@@ -530,21 +403,11 @@ func (c *SensorProxyClient) lightValueFilter(newValue int) {
 	}
 }
 
-// initializeCacheFromPropertyWithProxy 从 D-Bus 属性读取当前光照值并缓存（不加锁版本）
-func (c *SensorProxyClient) initializeCacheFromPropertyWithProxy(sensorProxy dbus.BusObject) {
-	if sensorProxy == nil {
-		return
-	}
-
-	variant, err := sensorProxy.GetProperty(hadessProxyInterface + "." + propLightLevel)
+// initializeCacheFromProperty 从 D-Bus 属性读取当前光照值并缓存
+func (c *SensorProxyClient) initializeCacheFromProperty() {
+	lightLevel, err := c.sensorProxy.LightLevel().Get(0)
 	if err != nil {
 		logger.Warning("[AutoBrightness::LightSensor] Failed to get LightLevel property:", err)
-		return
-	}
-
-	lightLevel, ok := variant.Value().(float64)
-	if !ok {
-		logger.Warning("[AutoBrightness::LightSensor] Invalid LightLevel property type")
 		return
 	}
 
