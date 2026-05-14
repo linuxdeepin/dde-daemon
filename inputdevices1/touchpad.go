@@ -232,8 +232,19 @@ func (tpad *Touchpad) init() {
 }
 
 func (tpad *Touchpad) handleDeviceChanged() {
+	oldExist := tpad.Exist
 	tpad.updateDXTpads()
 	tpad.init()
+
+	if oldExist != tpad.Exist {
+		if tpad.Exist {
+			// Touchpad plugged in: report real value
+			LogTouchpadNaturalScroll(tpad.NaturalScroll.Get(), true)
+		} else {
+			// Touchpad unplugged: report empty value
+			LogTouchpadNaturalScroll(false, false)
+		}
+	}
 }
 
 func (tpad *Touchpad) updateDXTpads() {
@@ -321,8 +332,6 @@ func (tpad *Touchpad) enableNaturalScroll() {
 				v.Id, v.Name, err)
 		}
 	}
-	// Log event
-	LogTouchpadNaturalScroll(enabled)
 }
 
 func (tpad *Touchpad) setScrollDistance() {
@@ -578,6 +587,7 @@ func (tpad *Touchpad) initTouchpadDConfig() error {
 			tpad.disableWhileTyping()
 		case dconfigKeyTouchpadNaturalScroll:
 			tpad.enableNaturalScroll()
+			LogTouchpadNaturalScroll(tpad.NaturalScroll.Get(), true)
 		case dconfigKeyTouchpadEdgeScroll:
 			tpad.enableEdgeScroll()
 		case dconfigKeyTouchpadHorizScroll:
