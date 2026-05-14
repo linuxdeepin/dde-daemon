@@ -211,8 +211,6 @@ func (m *Mouse) enableNaturalScroll() {
 				v.Id, v.Name, err)
 		}
 	}
-	// Log event
-	LogMouseNaturalScroll(enabled)
 }
 
 func (m *Mouse) enableMidBtnEmu() {
@@ -318,6 +316,7 @@ func (m *Mouse) initMouseDConfig() error {
 			m.disableTouchPad()
 		case dconfigKeyNaturalScroll:
 			m.enableNaturalScroll()
+			LogMouseNaturalScroll(m.NaturalScroll.Get())
 		case dconfigKeyMiddleButtonEnabled:
 			m.enableMidBtnEmu()
 		case dconfigKeyAdaptiveAccelProfile:

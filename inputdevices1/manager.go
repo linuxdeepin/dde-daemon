@@ -225,8 +225,9 @@ func (m *Manager) init() {
 
 		m.trackPoint.init()
 
-		// Log natural scroll states on startup
-		LogOnStartup(m.tpad.NaturalScroll.Get(), m.mouse.NaturalScroll.Get())
+		// Log natural scroll states separately on startup
+		LogMouseNaturalScroll(m.mouse.NaturalScroll.Get())
+		LogTouchpadNaturalScroll(m.tpad.NaturalScroll.Get(), m.tpad.Exist)
 	}
 
 	m.setWheelSpeed()
