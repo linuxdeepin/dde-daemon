@@ -559,11 +559,11 @@ func enableGesture(enabled bool) {
 	if err != nil {
 		return
 	}
-	if value, _ := dconfig.GetValueBool("touchpadEnabled"); value == enabled {
+	if value, _ := dconfig.GetValueBool("touchPadEnabled"); value == enabled {
 		return
 	}
 
-	dconfig.SetValue("touchpadEnabled", enabled)
+	dconfig.SetValue("touchPadEnabled", enabled)
 }
 
 func (tpad *Touchpad) initTouchpadDConfig() error {
