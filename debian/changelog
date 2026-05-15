@@ -1,3 +1,28 @@
+dde-daemon (6.1.89) unstable; urgency=medium
+
+  * refactor: optimize light sensor interface
+  * fix: 优化自动亮度调节响应速度和准确性
+  * refactor: 重构自动亮度管理器的轮询机制
+  * docs: 更新自动亮度设计文档和使用指南
+  * feat: 优化自动亮度卡尔曼滤波器参数并添加补偿机制
+  * feat: 增强自动亮度功能支持曲线映射和卡尔曼滤波
+  * feat: 默认亮度曲线功能
+  * feat: 新增光感亮度调节功能
+  * fix(inputdevices): refactor natural scroll event logging for
+    accurate reporting
+  * chore: dconfig to control if trayicon1 register itself as selection
+    manager
+  * fix: Resolve the issue where the shortcut keys stop working after
+    being modified.
+  * Revert "fix: 修复修改快捷键后快捷键失效的问题"
+  * i18n: Updates for project Deepin Desktop Environment (#1085)
+  * fix(security): replace shell command execution with direct exec
+    calls
+  * fix: restore disabled port notification when replugging device
+  * fix: remove early returns when monitor modes are empty
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 15 May 2026 13:17:58 +0800
+
 dde-daemon (6.1.88) unstable; urgency=medium
 
   * fix(bluetooth): prevent path traversal in OBEX file receive
