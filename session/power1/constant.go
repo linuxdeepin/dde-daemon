@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -56,6 +56,12 @@ const (
 	dsettingCustomShutdownWeekDays               = "customShutdownWeekDays"
 	dsettingShutdownCountdown                    = "shutdownCountdown"
 	dsettingNextShutdownTime                     = "nextShutdownTime"
+	dsettingsSystemApplications                  = "systemApplications"
+	dsettingsShortIdleState                      = "shortIdleState"
+	dsettingsShortIdleEnable                     = "shortIdleEnable"
+	dsettingsShortIdleBlacklistApplications      = "shortIdleBlacklistApplications"
+	dsettingsLinePowerShortIdleDelay             = "linePowerShortIdleDelay"
+	dsettingsBatteryShortIdleDelay               = "batteryShortIdleDelay"
 )
 
 const (

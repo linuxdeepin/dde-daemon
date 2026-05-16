@@ -7,6 +7,7 @@ package power
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"sync"
@@ -32,6 +33,8 @@ const (
 	dsettingsPowerSavingModeAutoBatteryPercent    = "powerSavingModeAutoBatteryPercent"
 	dsettingsPowerMappingConfig                   = "powerMappingConfig"
 	dsettingsMode                                 = "mode"
+	dsettingsShortIdleEnable                      = "shortIdleEnable"
+	dsettingsShortIdleState                       = "shortIdleState"
 )
 
 type supportMode struct {
@@ -90,6 +93,15 @@ type Manager struct {
 	// 开启节能模式时保存的数据
 	PowerSavingModeBrightnessData string `prop:"access:rw"`
 
+	// 当前短idle状态
+	ShortIdleState bool
+
+	// 是否支持短idle方案
+	shortIdleEnable bool
+
+	// 直接设置tlp配置
+	TlpMode string
+
 	// CPU频率调节模式，支持powersave和performance
 	CpuGovernor string
 
@@ -143,6 +155,9 @@ const (
 	ddeBalance     = "balance"
 	ddePerformance = "performance"
 	ddeLowBattery  = "lowBattery" // 内部使用，在对外暴露的时候，会切换成powersave
+
+	shortIdleWifiOn  = "on"
+	shortIdleWifiOff = "off"
 )
 
 var _allPowerModeArray = []string{
@@ -418,6 +433,17 @@ func (m *Manager) initDsgConfig() error {
 	getMode(true)
 	getPowerMappingConfig()
 
+	getShortIdleEnable := func() {
+		data, err := dsPower.GetValueBool(dsettingsShortIdleEnable)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		m.shortIdleEnable = data
+		logger.Info("dsg of shortIdleEnable : ", m.shortIdleEnable)
+	}
+	getShortIdleEnable()
+
 	dsPower.ConnectValueChanged(func(key string) {
 		logger.Info("dconfig org.deepin.dde.daemon.power valueChanged, key : ", key)
 		switch key {
@@ -447,6 +473,8 @@ func (m *Manager) initDsgConfig() error {
 			return
 		case dsettingsPowerMappingConfig:
 			getPowerMappingConfig()
+		case dsettingsShortIdleEnable:
+			getShortIdleEnable()
 		default:
 			logger.Debug("Not process. valueChanged, key : ", key)
 		}
@@ -726,6 +754,74 @@ func (m *Manager) saveDsgConfig(value string) (err error) {
 	return m.setDsgData(dsettingsMode, m.Mode, m.dsgPower)
 }
 
+func (m *Manager) setTlpMode(mode string) error {
+	logger.Info(" setTlpMode, mode : ", mode)
+	if m.TlpMode == mode {
+		return errors.New("repeat set tlp mode")
+	}
+	if !_validPowerModeArray.Contains(mode) {
+		return fmt.Errorf("PowerMode %q mode is not supported", mode)
+	}
+	if mode == ddePowerSave && m.batteryLow {
+		mode = ddeLowBattery
+	}
+	go m.setDSPCState(_powerConfigMap[mode].DSPCConfig)
+	return nil
+}
+
+// 仅对性能模式做设置，不记录状态
+// deepin-power-control idle wifi <on|off>
+func (m *Manager) setShortIdleState(state bool) {
+	logger.Info(" setShortIdleState state : ", state)
+	if !m.shortIdleEnable {
+		logger.Info("System not open dsg of shortIdleEnable.")
+		return
+	}
+
+	if m.ShortIdleState != state {
+		m.ShortIdleState = state
+		if m.dsgPower != nil {
+			err := m.setDsgData(dsettingsShortIdleState, state, m.dsgPower)
+			if err != nil {
+				logger.Warning(err)
+			}
+		}
+	} else {
+		logger.Info("setShortIdleState the same state : ", state)
+		return
+	}
+
+	// 进入短idle：
+	// 1. deepin-power-control idle wifi on : 执行 `wifi on` 时，启动后台守护进程，开始监测无线网卡流量并在空闲时启用节能
+	// 2. 电源模式切换为节能模式
+	// 3. 进入短idle时，如果电量<=20%，则设置节能模式为lowBattery，否则为powersave
+	wifiState := shortIdleWifiOn
+	powerState := ddePowerSave
+	if m.batteryLow {
+		powerState = ddeLowBattery
+	}
+	if !m.ShortIdleState {
+		// 退出短idle：
+		// 1. deepin-power-control idle wifi off : 执行 `wifi off` 时，停止守护进程，恢复网卡默认行为
+		// 2. 电源模式切换为节能模式
+		// 3. 退出短idle时，如果电量<=20%，此时如果Mode为节能模式，则设置tlp模式为lowBattery，否则为powersave
+		wifiState = shortIdleWifiOff
+
+		if m.Mode == ddePowerSave && m.batteryLow {
+			powerState = ddeLowBattery
+		} else {
+			powerState = m.Mode
+		}
+	}
+	go func() {
+		// 设置电源模式，仅设置tlp，不记录
+		m.setDSPCState(_powerConfigMap[powerState].DSPCConfig)
+
+		// 设置wifi短idle模式
+		m.setDPCWifiState(wifiState)
+	}()
+}
+
 func (m *Manager) doSetMode(mode string) {
 	logger.Info(" doSetMode, mode : ", mode)
 	if !_validPowerModeArray.Contains(mode) {
@@ -756,6 +852,18 @@ func (m *Manager) doSetMode(mode string) {
 	}
 	if modeChanged {
 		_ = m.setDsgData(dsettingsMode, fixMode, m.dsgPower)
+	}
+
+	logger.Info(" doSetMode, shortIdleState : ", m.ShortIdleState)
+	// 如果恢复性能模式时，当前处于短idle状态，则需要恢复模式后，将TlpMode设置为节能模式
+	if m.ShortIdleState {
+		// 连续两次调用deepin-power-control，有概率会设置失败，因此使用延时500ms
+		time.AfterFunc(500*time.Millisecond, func() {
+			err := m.setTlpMode(ddePowerSave)
+			if err != nil {
+				logger.Warning(err)
+			}
+		})
 	}
 }
 

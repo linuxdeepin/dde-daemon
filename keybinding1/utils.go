@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -319,6 +319,8 @@ func (m *Manager) systemTurnOffScreen() {
 	}
 	if err != nil {
 		logger.Warning("Set DPMS off error:", err)
+	} else {
+		callSetScreenState(true)
 	}
 
 	if bScreenBlackLock && m.isWmBlackScreenActive() {
@@ -434,6 +436,23 @@ func (m *Manager) doLock(autoStartAuth bool) {
 	if err != nil {
 		logger.Warning("failed to call lockFront ShowAuth:", err)
 	}
+}
+
+func callSetScreenState(state bool) {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("Failed to get system bus:", err)
+		return
+	}
+
+	logger.Infof("callSetScreenState: calling SetScreenState with state=%v", state)
+	err = systemConn.Object("org.deepin.dde.Daemon1", "/org/deepin/dde/Daemon1").Call("org.deepin.dde.Daemon1.SetScreenState", 0, dbus.MakeVariant(state)).Err
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	logger.Infof("callSetScreenState: SetScreenState called successfully with state=%v", state)
 }
 
 func doPrepareSuspend() {

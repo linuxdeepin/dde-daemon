@@ -8,6 +8,7 @@ import (
 	"os"
 
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	systemPower "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
 
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts1"
@@ -42,12 +43,15 @@ import (
 //go:generate dbusutil-gen em -type Daemon
 
 type Daemon struct {
-	loginManager  login1.Manager
-	systemSigLoop *dbusutil.SignalLoop
-	service       *dbusutil.Service
-	systemd       systemd1.Manager
-	dsSystem      configManager.Manager
-	signals       *struct { // nolint
+	loginManager        login1.Manager
+	systemSigLoop       *dbusutil.SignalLoop
+	service             *dbusutil.Service
+	systemd             systemd1.Manager
+	dsSystem            configManager.Manager
+	systemPower         systemPower.Power
+	idleStatePath       string
+	idleScreenStatePath string
+	signals             *struct { // nolint
 		HandleForSleep struct {
 			start bool
 		}
@@ -110,11 +114,15 @@ func main() {
 	logger.SetRestartCommand("/usr/lib/deepin-daemon/dde-system-daemon")
 
 	_daemon = &Daemon{
-		loginManager:  login1.NewManager(service.Conn()),
-		service:       service,
-		systemSigLoop: dbusutil.NewSignalLoop(service.Conn(), 10),
-		systemd:       systemd1.NewManager(service.Conn()),
+		loginManager:        login1.NewManager(service.Conn()),
+		service:             service,
+		systemSigLoop:       dbusutil.NewSignalLoop(service.Conn(), 10),
+		systemd:             systemd1.NewManager(service.Conn()),
+		systemPower:         systemPower.NewPower(service.Conn()),
+		idleStatePath:       IdleFile,
+		idleScreenStatePath: IdleScreenFile,
 	}
+	_daemon.getDsgValue()
 	_daemon.service = service
 	_daemon.initSystemDaemonDConfig()
 	err = service.Export(dbusPath, _daemon)

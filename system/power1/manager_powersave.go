@@ -44,7 +44,39 @@ var _powerConfigMap = map[string]*powerConfig{
 	},
 }
 
+func (m *Manager) setDPCWifiState(state string) error {
+	logger.Infof("setDPCWifiState, state: %s", state)
+	m.dspcMu.Lock()
+	defer m.dspcMu.Unlock()
+	conn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("Failed to connect to system bus:", err)
+		return err
+	}
+
+	unitName := "dde-system-power-control-wifi.service"
+	unitInfo := systemdunit.TransientUnit{
+		Dbus:        conn,
+		UnitName:    unitName,
+		Type:        "oneshot",
+		Description: "Transient Unit set deepin power control wifi state",
+		Environment: []string{},
+		Commands:    []string{"/usr/sbin/deepin-power-control", "idle", "wifi", state},
+	}
+	err = unitInfo.StartTransientUnit()
+	if err != nil {
+		logger.Warningf("failed create unit: %v, err: %v", unitName, err)
+		return err
+	}
+	if !unitInfo.WaitforFinish(m.systemSigLoop) {
+		logger.Warningf("%v run failed", unitName)
+		return err
+	}
+	return nil
+}
+
 func (m *Manager) setDSPCState(state DSPCMode) {
+	logger.Infof("setDSPCState, state: %s", state)
 	m.dspcMu.Lock()
 	defer m.dspcMu.Unlock()
 	conn, err := dbus.SystemBus()
@@ -93,7 +125,7 @@ func (m *Manager) updatePowerMode(init bool) {
 	}
 	logger.Infof("PowerSavingModeAuto: %v\n OnBattery:%v \n PowerSavingModeAutoWhenBatteryLow:%v \n batteryLow:%v \n",
 		m.PowerSavingModeAuto, m.OnBattery, m.PowerSavingModeAutoWhenBatteryLow, m.batteryLow)
-	logger.Infof("lastMode: %v", m.lastMode)
+	logger.Infof("lastMode: %v, ShortIdleState : %v", m.lastMode, m.ShortIdleState)
 	if !m.PowerSavingModeAuto && !m.PowerSavingModeAutoWhenBatteryLow && !init {
 		return
 	}

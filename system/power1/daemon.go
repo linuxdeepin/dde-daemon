@@ -122,11 +122,10 @@ func (d *Daemon) Start() (err error) {
 	if d.manager.enablePerformanceInBoot() {
 		var once sync.Once
 		var handlerId dbusutil.SignalHandlerId
-		var highTimer *time.Timer
 		handlerId, err = d.manager.displayManager.ConnectSessionAdded(func(session dbus.ObjectPath) {
 			// 登录后两分钟内高性能,两分钟后修改回原有的mode
 			once.Do(func() {
-				highTimer = time.AfterFunc(time.Minute*2, func() {
+				time.AfterFunc(time.Minute*2, func() {
 					logger.Infof(" ## time.AfterFunc 2 min manager.Mod : %s", d.manager.Mode)
 					// ② 超时后恢复流程
 					d.manager.doSetMode(d.manager.Mode)
@@ -142,22 +141,6 @@ func (d *Daemon) Start() (err error) {
 		if err != nil {
 			logger.Warning(err)
 		}
-		// ③ 查看mode时, 恢复当前设置
-		err = serverObj.SetReadCallback(d.manager, "Mode", func(read *dbusutil.PropertyRead) *dbus.Error {
-			logger.Info("change to record mode")
-			if highTimer != nil {
-				highTimer.Stop()
-			}
-			defer func() {
-				err := serverObj.SetReadCallback(d.manager, "Mode", nil)
-				if err != nil {
-					logger.Warning(err)
-				}
-			}()
-			d.manager.doSetMode(d.manager.Mode)
-			logger.Infof(" SetReadCallback manager.Mode : %s", d.manager.Mode)
-			return nil
-		})
 	}
 	if err != nil {
 		logger.Warning(err)
