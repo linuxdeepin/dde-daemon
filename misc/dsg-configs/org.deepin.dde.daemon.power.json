@@ -577,6 +577,176 @@
             "name[zh_CN]": "高性能模式开关",
             "description": "high performance enabled",
             "permissions": "readwrite"
+        },
+        "idleStatePath": {
+            "value": "/sys/devices/system/loongarch/relax_state",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "idle state path",
+            "name[zh_CN]": "通知EC进入短idle的内核节点",
+            "description": "kernel node to notify EC of short idle state, write 1 to enter, 0 to exit",
+            "permissions": "readonly",
+            "visibility": "private"
+        },
+        "idleScreenStatePath": {
+            "value": "/sys/devices/system/loongarch/idle_state",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "idle screen state path",
+            "name[zh_CN]": "通知EC显示器开关状态的内核节点",
+            "description": "kernel node to notify EC of display state, write 1 to turn off, 0 to turn on",
+            "permissions": "readonly",
+            "visibility": "private"
+        },
+        "linePowerShortIdleDelay": {
+            "value": 300,
+            "serial": 0,
+            "flags": [],
+            "name": "line power short idle delay",
+            "name[zh_CN]": "插电时短idle延时",
+            "description": "line power short idle delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryShortIdleDelay": {
+            "value": 300,
+            "serial": 0,
+            "flags": [],
+            "name": "battery short idle delay",
+            "name[zh_CN]": "使用电池时短idle延时",
+            "description": "battery short idle delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "shortIdleEnable": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "short idle enable",
+            "name[zh_CN]": "是否开启短idle方案",
+            "description": "enable short idle feature, readonly, override via os-config",
+            "permissions": "readonly",
+            "visibility": "private"
+        },
+        "shortIdleState": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "short idle state",
+            "name[zh_CN]": "短idle状态",
+            "description": "current short idle state, true means entered short idle",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "shortIdleBlacklistApplications": {
+            "value": [
+                "org.deepin.browser.desktop",
+                "deepin-terminal.desktop"
+            ],
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "short idle blacklist applications",
+            "name[zh_CN]": "短idle黑名单应用列表",
+            "description": "applications that prevent entering short idle when running",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "systemApplications": {
+            "value": [
+                "dde-lock.desktop",
+                "dde-clipboard.desktop",
+                "dde-clipboard-daemon.desktop",
+                "dde-file-manager.desktop",
+                "dde-open.desktop",
+                "dde-computer.desktop",
+                "dde-home.desktop",
+                "dde-trash.desktop",
+                "org.deepin.dde.control-center.desktop",
+                "dde-printer.desktop",
+                "dde-printer-watch.desktop",
+                "dde-calendar.desktop",
+                "dde-introduction.desktop",
+                "dde-cooperation.desktop",
+                "dde-update-autostart.desktop",
+                "dde-calendar-service.desktop",
+                "deepin-app-store.desktop",
+                "deepin-app-store-b.desktop",
+                "deepin-music.desktop",
+                "deepin-movie.desktop",
+                "deepin-screen-recorder.desktop",
+                "deepin-image-viewer.desktop",
+                "deepin-album.desktop",
+                "deepin-draw.desktop",
+                "deepin-reader.desktop",
+                "deepin-editor.desktop",
+                "deepin-mail.desktop",
+                "deepin-voice-note.desktop",
+                "deepin-manual.desktop",
+                "deepin-system-monitor.desktop",
+                "deepin-boot-maker.desktop",
+                "deepin-devicemanager.desktop",
+                "deepin-log-viewer.desktop",
+                "deepin-calculator.desktop",
+                "deepin-font-manager.desktop",
+                "deepin-compressor.desktop",
+                "deepin-deb-installer.desktop",
+                "deepin-diskmanager.desktop",
+                "deepin-camera.desktop",
+                "deepin-data-transfer.desktop",
+                "deepin-activator-notify.desktop",
+                "deepin-defender.desktop",
+                "deepin-defender-session-daemon.desktop",
+                "deepin-defender-nativirus.desktop",
+                "uos-service-support.desktop",
+                "uos-remote-assistance.desktop",
+                "uos-recovery-gui.desktop",
+                "uos-ai-assistant.autostart.desktop",
+                "uos-ai-assistant.desktop",
+                "auth-dialog.desktop",
+                "udcp-vnc-exec.desktop",
+                "udcp-session-exec.desktop",
+                "udcp-wizzard-exec.desktop",
+                "deepin-scanner.desktop",
+                "org.remmina.Remmina.desktop",
+                "org.remmina.Remmina-file.desktop",
+                "booster-dtkwidget.desktop",
+                "gnome-keyring-ssh.desktop",
+                "gnome-keyring-pkcs11.desktop",
+                "gnome-keyring-secrets.desktop",
+                "org.fcitx.Fcitx5.desktop",
+                "xdg-user-dirs.desktop",
+                "permission_manager_dbus_session_daemon.desktop",
+                "downloader.desktop",
+                "geoclue-demo-agent.desktop",
+                "filearmor_notify.desktop",
+                "im-launch.desktop",
+                "oom-score-adjust.desktop",
+                "pulseaudio.desktop",
+                "dde-grand-search.desktop",
+                "deepin-offline-update-tool.desktop",
+                "com.uos.drive.desktop",
+                "com.sogou.ime.ng.fcitx5.uos.configurer.desktop",
+                "xdg-desktop-portal-gtk.desktop"
+            ],
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "system applications",
+            "name[zh_CN]": "系统预装应用列表",
+            "description": "system pre-installed applications whitelist for short idle",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }

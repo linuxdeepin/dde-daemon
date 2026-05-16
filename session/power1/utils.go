@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -186,6 +186,8 @@ func (m *Manager) setDPMSModeOn() {
 
 	if err != nil {
 		logger.Warning("set DPMS on error:", err)
+	} else {
+		callSetScreenState(false)
 	}
 
 	if autoWm {
@@ -205,6 +207,8 @@ func (m *Manager) setDPMSModeOff() {
 	}
 	if err != nil {
 		logger.Warning("set DPMS off error:", err)
+	} else {
+		callSetScreenState(true)
 	}
 	os.WriteFile("/tmp/dpms-state", []byte("1"), 0644)
 }

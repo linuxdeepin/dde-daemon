@@ -81,5 +81,15 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetReadOnlyProtection,
 			InArgs: []string{"enable"},
 		},
+		{
+			Name:   "SetIdleState",
+			Fn:     v.SetIdleState,
+			InArgs: []string{"state"},
+		},
+		{
+			Name:   "SetScreenState",
+			Fn:     v.SetScreenState,
+			InArgs: []string{"state"},
+		},
 	}
 }

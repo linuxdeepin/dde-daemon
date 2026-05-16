@@ -59,6 +59,7 @@ type powerSavePlan struct {
 	modeBeforeIdle         string
 	allowScreenSaver       bool
 	isIdle                 bool
+	shortIdleEnable        bool
 }
 
 func newPowerSavePlan(manager *Manager) (string, submodule, error) {
@@ -109,7 +110,8 @@ func (psp *powerSavePlan) initSettingsChangedHandler() {
 		case dsettingLinePowerScreensaverDelay,
 			dsettingLinePowerScreenBlackDelay,
 			dsettingLinePowerLockDelay,
-			dsettingLinePowerSleepDelay:
+			dsettingLinePowerSleepDelay,
+			dsettingsLinePowerShortIdleDelay:
 			if !m.OnBattery {
 				logger.Debug("Change OnLinePower plan")
 				psp.OnLinePower()
@@ -118,7 +120,8 @@ func (psp *powerSavePlan) initSettingsChangedHandler() {
 		case dsettingBatteryScreensaverDelay,
 			dsettingBatteryScreenBlackDelay,
 			dsettingBatteryLockDelay,
-			dsettingBatterySleepDelay:
+			dsettingBatterySleepDelay,
+			dsettingsBatteryShortIdleDelay:
 			if m.OnBattery {
 				logger.Debug("Change OnBattery plan")
 				psp.OnBattery()
@@ -135,7 +138,8 @@ func (psp *powerSavePlan) OnBattery() {
 	m := psp.manager
 	psp.Update(int32(m.BatteryScreensaverDelay), int32(m.BatteryLockDelay),
 		int32(m.BatteryScreenBlackDelay),
-		int32(m.BatterySleepDelay))
+		int32(m.BatterySleepDelay),
+		int32(m.BatteryShortIdleDelay))
 }
 
 func (psp *powerSavePlan) OnLinePower() {
@@ -143,7 +147,8 @@ func (psp *powerSavePlan) OnLinePower() {
 	m := psp.manager
 	psp.Update(int32(m.LinePowerScreensaverDelay), int32(m.LinePowerLockDelay),
 		int32(m.LinePowerScreenBlackDelay),
-		int32(m.LinePowerSleepDelay))
+		int32(m.LinePowerSleepDelay),
+		int32(m.LinePowerShortIdleDelay))
 }
 
 func (psp *powerSavePlan) Reset() {
@@ -443,14 +448,14 @@ func (mts metaTasks) setRealDelay(min int32) {
 }
 
 func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
-	screenBlackDelay, sleepDelay int32) {
+	screenBlackDelay, sleepDelay, shortIdleDelay int32) {
 	psp.mu.Lock()
 	defer psp.mu.Unlock()
 
 	psp.interruptTasks()
 	logger.Debugf("update(screenSaverStartDelay=%vs, lockDelay=%vs,"+
-		" screenBlackDelay=%vs, sleepDelay=%vs)",
-		screenSaverStartDelay, lockDelay, screenBlackDelay, sleepDelay)
+		" screenBlackDelay=%vs, sleepDelay=%vs, shortIdleDelay=%vs)",
+		screenSaverStartDelay, lockDelay, screenBlackDelay, sleepDelay, shortIdleDelay)
 
 	// 按照优先级 待机=屏保>关闭显示器=自动锁屏
 	tasks := make(metaTasks, 0, 5)
@@ -483,6 +488,14 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 			name:  "screenBlack",
 			delay: screenBlackDelay,
 			fn:    psp.screenBlack,
+		})
+	}
+
+	if shortIdleDelay > 0 {
+		tasks = append(tasks, metaTask{
+			name:  "shortIdleDelay",
+			delay: shortIdleDelay,
+			fn:    psp.startShortIdleState,
 		})
 	}
 
@@ -586,6 +599,195 @@ func (psp *powerSavePlan) makeSystemSleep() {
 
 func (psp *powerSavePlan) lock() {
 	psp.manager.doLock(true)
+}
+
+func (psp *powerSavePlan) getDesktopName(value string) (ret string) {
+	if !strings.Contains(value, "/") {
+		ret = value
+		return ret
+	}
+	parts := strings.Split(value, "/")
+	partsLength := len(parts)
+	if partsLength >= 1 {
+		ret = parts[partsLength-1]
+		logger.Info("getDesktopName value : ", value, ret)
+	}
+	return ret
+}
+
+func getLaunchedApplications() []string {
+	bus, err := dbus.SessionBus()
+	if err != nil {
+		logger.Warning("getLaunchedApplications: failed to get session bus:", err)
+		return nil
+	}
+
+	obj := bus.Object("org.desktopspec.ApplicationManager1", "/org/desktopspec/ApplicationManager1")
+	var result map[dbus.ObjectPath]map[string]map[string]dbus.Variant
+	err = obj.Call("org.desktopspec.DBus.ObjectManager.GetManagedObjects", 0).Store(&result)
+	if err != nil {
+		logger.Warning("getLaunchedApplications: failed to call GetManagedObjects:", err)
+		return nil
+	}
+
+	var launched []string
+	for _, interfaces := range result {
+		appProps, ok := interfaces["org.desktopspec.ApplicationManager1.Application"]
+		if !ok {
+			continue
+		}
+
+		instancesVariant, ok := appProps["Instances"]
+		if !ok {
+			continue
+		}
+		instances := instancesVariant.Value().([]dbus.ObjectPath)
+		if len(instances) == 0 {
+			continue
+		}
+
+		desktopPathVariant, ok := appProps["DesktopSourcePath"]
+		if !ok {
+			continue
+		}
+		desktopPath := desktopPathVariant.Value().(string)
+		if desktopPath != "" {
+			launched = append(launched, desktopPath)
+		}
+	}
+
+	return launched
+}
+
+func interfaceToArrayString(v interface{}) (d []string) {
+	if v == nil {
+		return
+	}
+
+	if d, ok := v.([]string); ok {
+		return d
+	}
+
+	if variants, ok := v.([]dbus.Variant); ok {
+		d = make([]string, len(variants))
+		for i, variant := range variants {
+			if str, ok := variant.Value().(string); ok {
+				d[i] = str
+			} else {
+				logger.Warningf("interfaceToArrayString: variant %d is not string: %#v", i, variant.Value())
+			}
+		}
+		return d
+	}
+
+	logger.Warningf("interfaceToArrayString() failed: unexpected type %T, value: %#v", v, v)
+	return
+}
+
+func (psp *powerSavePlan) isThirdPartyAppRunning() (ret bool) {
+	launchedApplications := getLaunchedApplications()
+	logger.Info("launched applications: ", launchedApplications)
+
+	if psp.manager == nil {
+		return
+	}
+	logger.Info("system applications: ", psp.manager.systemApplicationsMap)
+
+	// 检查启动应用的desktop，是否在系统应用psp.manager.systemApplicationsMap中
+	// 只要有一个运行中的desktop不存在于psp.manager.systemApplicationsMap中，说明就有第三方应用运行
+	for _, app := range launchedApplications {
+		desktop := strings.ToLower(psp.getDesktopName(app))
+		// 如果存在短idle黑名单应用在运行，则返回true -> 不进短idle
+		if _, exists := psp.manager.shortIdleBlackListApplicationsMap[desktop]; exists {
+			logger.Info("Found shortIdle blacklist application running: ", app, desktop)
+			ret = true
+			break
+		}
+
+		if _, exists := psp.manager.systemApplicationsMap[desktop]; !exists {
+			// 如果不存在的应用的desktop包含deepin、dde、uos说明也是系统应用，这个应用应该加到系统应用列表中
+			if strings.Contains(desktop, "deepin") || strings.Contains(desktop, "dde") || strings.Contains(desktop, "uos") {
+				logger.Warning("Need add systemApplicationsMap, Running app : ", app, desktop)
+				continue
+			}
+			logger.Info("Found third-party application running: ", app, desktop)
+			ret = true
+			break
+		}
+	}
+	return ret
+}
+
+func (psp *powerSavePlan) setDsg(key string, state bool) error {
+	if psp.dsgPower == nil {
+		return errors.New("dconfig interface dsgPower is nil")
+	}
+
+	err := psp.dsgPower.SetValue(0, key, dbus.MakeVariant(state))
+	if err != nil {
+		logger.Warning("setDsg failed : ", err)
+	}
+	return err
+}
+
+// true: 进入短idle， false: 退出短idle
+func (psp *powerSavePlan) changeShortIdleState(state bool) {
+	if !psp.shortIdleEnable {
+		logger.Info("short idle dsg of shortIdleEnable is close, not support.")
+		return
+	}
+
+	if state {
+		if psp.isThirdPartyAppRunning() {
+			logger.Info("third-party application is running, Can't enter short idle.")
+			return
+		}
+	}
+
+	psp.setDsg(dsettingsShortIdleState, state)
+	time.Sleep(300 * time.Millisecond)
+	callSetIdleState(state)
+}
+
+// dde-system-daemon 写文件: /sys/devices/system/loongarch/relax_state
+func callSetIdleState(state bool) {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Errorf("Failed to get system bus: %v", err)
+		return
+	}
+
+	logger.Infof("callSetIdleState: calling SetIdleState with state=%v", state)
+	err = systemConn.Object("org.deepin.dde.Daemon1", "/org/deepin/dde/Daemon1").Call("org.deepin.dde.Daemon1.SetIdleState", 0, dbus.MakeVariant(state)).Err
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	logger.Infof("callSetIdleState: SetIdleState called successfully with state=%v", state)
+}
+
+// dde-system-daemon 写文件: /sys/devices/system/loongarch/idle_state
+func callSetScreenState(state bool) {
+	systemConn, err := dbus.SystemBus()
+	if err != nil {
+		logger.Errorf("Failed to get system bus: %v", err)
+		return
+	}
+
+	logger.Infof("callSetScreenState: calling SetScreenState with state=%v", state)
+	err = systemConn.Object("org.deepin.dde.Daemon1", "/org/deepin/dde/Daemon1").Call("org.deepin.dde.Daemon1.SetScreenState", 0, dbus.MakeVariant(state)).Err
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+
+	logger.Infof("callSetScreenState: SetScreenState called successfully with state=%v", state)
+}
+
+func (psp *powerSavePlan) startShortIdleState() {
+	logger.Info("Start short idle state")
+	psp.changeShortIdleState(true)
 }
 
 // 降低显示器亮度，最终关闭显示器
@@ -779,6 +981,8 @@ func (psp *powerSavePlan) handleIdleOff() {
 	defer psp.mu.Unlock()
 
 	psp.isIdle = false
+	psp.changeShortIdleState(false)
+	callSetScreenState(false)
 
 	if psp.manager.shouldIgnoreIdleOff() {
 		psp.manager.setPrepareSuspend(suspendStateFinish)
@@ -1157,6 +1361,51 @@ func (psp *powerSavePlan) initDsgConfig() error {
 	}
 	getDelayHandleIdleOffIntervalWhenScreenBlack()
 
+	getSystemApplications := func() {
+		v, err := dsPower.Value(0, dsettingsSystemApplications)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		dsgSystemApplications := interfaceToArrayString(v.Value())
+		if len(psp.manager.systemApplicationsMap) != 0 {
+			psp.manager.systemApplicationsMap = make(map[string]string)
+		}
+		for _, app := range dsgSystemApplications {
+			psp.manager.systemApplicationsMap[strings.ToLower(psp.getDesktopName(app))] = app
+		}
+		logger.Info("system applications []string -> map : ", psp.manager.systemApplicationsMap)
+	}
+	getSystemApplications()
+
+	getShortIdleEnable := func() {
+		data, err := dsPower.Value(0, dsettingsShortIdleEnable)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		psp.shortIdleEnable = data.Value().(bool)
+		logger.Info("dsg of shortIdleEnable : ", psp.shortIdleEnable)
+	}
+	getShortIdleEnable()
+
+	getShortIdleBlacklistApplications := func() {
+		v, err := dsPower.Value(0, dsettingsShortIdleBlacklistApplications)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		dsgShortIdleBlacklistApplications := interfaceToArrayString(v.Value())
+		if len(psp.manager.shortIdleBlackListApplicationsMap) != 0 {
+			psp.manager.shortIdleBlackListApplicationsMap = make(map[string]string)
+		}
+		for _, app := range dsgShortIdleBlacklistApplications {
+			psp.manager.shortIdleBlackListApplicationsMap[strings.ToLower(psp.getDesktopName(app))] = app
+		}
+		logger.Info("shortIdle blackList system applications []string -> map : ", psp.manager.shortIdleBlackListApplicationsMap)
+	}
+	getShortIdleBlacklistApplications()
+
 	dsPower.InitSignalExt(psp.systemSigLoop, true)
 	dsPower.ConnectValueChanged(func(key string) {
 		logger.Info("DSG org.deepin.dde.daemon.power valueChanged, key : ", key)
@@ -1167,6 +1416,12 @@ func (psp *powerSavePlan) initDsgConfig() error {
 			getDelayWakeupInterval()
 		case dsettingsDelayHandleIdleOffIntervalWhenScreenBlack:
 			getDelayHandleIdleOffIntervalWhenScreenBlack()
+		case dsettingsSystemApplications:
+			getSystemApplications()
+		case dsettingsShortIdleBlacklistApplications:
+			getShortIdleBlacklistApplications()
+		case dsettingsShortIdleEnable:
+			getShortIdleEnable()
 		default:
 		}
 	})

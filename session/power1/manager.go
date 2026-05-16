@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -143,6 +143,11 @@ type Manager struct {
 	// 使用电池时，不做任何操作，到睡眠的时间
 	BatterySleepDelay int `prop:"access:rw"`
 
+	// 接通电源时，不做任何操作，到短idle的时间
+	LinePowerShortIdleDelay int `prop:"access:rw"`
+	// 使用电池时，不做任何操作，到短idle的时间
+	BatteryShortIdleDelay int `prop:"access:rw"`
+
 	// 关闭屏幕前是否锁定
 	ScreenBlackLock bool `prop:"access:rw"`
 	// 睡眠前是否锁定
@@ -215,6 +220,9 @@ type Manager struct {
 	screensaverLockAtAwake bool
 	// 是否已在进入待机流程前抓取过屏幕保护状态
 	screensaverStateCaptured bool
+
+	systemApplicationsMap             map[string]string
+	shortIdleBlackListApplicationsMap map[string]string
 }
 
 var _manager *Manager
@@ -307,6 +315,9 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.timeDate = timedate.NewTimedate(systemBus)
 	m.timeDate.InitSignalExt(m.systemSigLoop, true)
+
+	m.systemApplicationsMap = make(map[string]string)
+	m.shortIdleBlackListApplicationsMap = make(map[string]string)
 	return m, nil
 }
 
@@ -748,6 +759,30 @@ func (m *Manager) initDBusPropCallback() {
 			return dbusutil.ToError(err)
 		})
 
+		err = so.SetWriteCallback(m, "LinePowerShortIdleDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int32")
+			} else {
+				logger.Info("LinePowerShortIdleDelay change to", value)
+			}
+			m.setPropLinePowerShortIdleDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingsLinePowerShortIdleDelay)
+			return dbusutil.ToError(err)
+		})
+
+		err = so.SetWriteCallback(m, "BatteryShortIdleDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
+			value, ok := write.Value.(int32)
+			if !ok {
+				logger.Warning("Type is not int32")
+			} else {
+				logger.Info("BatteryShortIdleDelay change to", value)
+			}
+			m.setPropBatteryShortIdleDelay(int(value))
+			err = m.savePowerDsgConfig(dsettingsBatteryShortIdleDelay)
+			return dbusutil.ToError(err)
+		})
+
 		err = so.SetWriteCallback(m, "LowPowerAutoSleepThreshold", func(write *dbusutil.PropertyWrite) *dbus.Error {
 			value, ok := write.Value.(int32)
 			if !ok {
@@ -826,6 +861,9 @@ func (m *Manager) Reset() *dbus.Error {
 		dsettingLowPowerNotifyThreshold,
 		dsettingPercentageAction,
 		dsettingPowerSavingModeBrightnessDropPercent,
+
+		dsettingsLinePowerShortIdleDelay,
+		dsettingsBatteryShortIdleDelay,
 	}
 	for _, key := range settingKeys {
 		logger.Debug("reset setting", key)
@@ -971,6 +1009,10 @@ func (m *Manager) initDsg() {
 			if init {
 				m.savingModeBrightnessDropPercent = int32(transTypeToInt(data.Value(), 0))
 			}
+		case dsettingsLinePowerShortIdleDelay:
+			m.LinePowerShortIdleDelay = int(transTypeToInt(data.Value(), 300))
+		case dsettingsBatteryShortIdleDelay:
+			m.BatteryShortIdleDelay = int(transTypeToInt(data.Value(), 300))
 		}
 
 		// m.scheduledShutdownSwitch(false, false)
@@ -1006,6 +1048,8 @@ func (m *Manager) initDsg() {
 	getDsPowerConfig(dsettingHighPerformanceEnabled, true)
 	getDsPowerConfig(dsettingLowPowerNotifyThreshold, true)
 	getDsPowerConfig(dsettingPercentageAction, true)
+	getDsPowerConfig(dsettingsLinePowerShortIdleDelay, true)
+	getDsPowerConfig(dsettingsBatteryShortIdleDelay, true)
 
 	m.dsPowerConfigManager.InitSignalExt(m.systemSigLoop, true)
 	m.dsPowerConfigManager.ConnectValueChanged(func(key string) {
@@ -1093,6 +1137,10 @@ func (m *Manager) savePowerDsgConfig(key string) (err error) {
 		value = m.LowPowerNotifyThreshold
 	case dsettingPercentageAction:
 		value = m.LowPowerAutoSleepThreshold
+	case dsettingsLinePowerShortIdleDelay:
+		value = m.LinePowerShortIdleDelay
+	case dsettingsBatteryShortIdleDelay:
+		value = m.BatteryShortIdleDelay
 	}
 	err = m.setDsgData(key, value, m.dsPowerConfigManager)
 	if err != nil {

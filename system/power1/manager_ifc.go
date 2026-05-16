@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -103,6 +103,17 @@ func (m *Manager) SetMode(mode string) *dbus.Error {
 		m.PropsMu.Unlock()
 	}
 	m.doSetMode(mode)
+	return nil
+}
+
+func (m *Manager) SetTlpMode(mode string) *dbus.Error {
+	logger.Info("SetTlpMode : ", mode)
+	return dbusutil.ToError(m.setTlpMode(mode))
+}
+
+func (m *Manager) SetShortIdleState(state bool) *dbus.Error {
+	logger.Info(" SetShortIdleState : ", state)
+	m.setShortIdleState(state)
 	return nil
 }
 

@@ -378,3 +378,29 @@ func (v *Manager) setPropIsHighPerformanceSupported(value bool) (changed bool) {
 func (v *Manager) emitPropChangedIsHighPerformanceSupported(value bool) error {
 	return v.service.EmitPropertyChanged(v, "IsHighPerformanceSupported", value)
 }
+
+func (v *Manager) setPropLinePowerShortIdleDelay(value int) (changed bool) {
+	if v.LinePowerShortIdleDelay != value {
+		v.LinePowerShortIdleDelay = value
+		v.emitPropChangedLinePowerShortIdleDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedLinePowerShortIdleDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "LinePowerShortIdleDelay", value)
+}
+
+func (v *Manager) setPropBatteryShortIdleDelay(value int) (changed bool) {
+	if v.BatteryShortIdleDelay != value {
+		v.BatteryShortIdleDelay = value
+		v.emitPropChangedBatteryShortIdleDelay(value)
+		return true
+	}
+	return false
+}
+
+func (v *Manager) emitPropChangedBatteryShortIdleDelay(value int) error {
+	return v.service.EmitPropertyChanged(v, "BatteryShortIdleDelay", value)
+}
