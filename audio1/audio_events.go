@@ -528,7 +528,7 @@ func (a *Audio) handleSourceAdded(idx uint32) {
 	} else if a.checkCardIsReady(source.Card) {
 		// 只有新增source或端口列表/活跃端口变化时才触发自动切换
 		if isNewSource || portChanged {
-			a.autoSwitchInputPort()
+			a.autoSwitchPort()
 		}
 	}
 
@@ -556,7 +556,7 @@ func (a *Audio) handleSourceRemoved(idx uint32) {
 		a.defaultSource = nil
 	}
 	if isPhy && a.checkCardIsReady(cardId) {
-		a.autoSwitchInputPort()
+		a.autoSwitchPort()
 	}
 }
 
@@ -577,7 +577,7 @@ func (a *Audio) handleSourceChanged(idx uint32) {
 	// cardchange事件也会触发，但是处理不了，因为这时source可能还没更新，无可用端口
 	// 只有当端口列表或活跃端口发生变化时，才触发自动切换
 	if portChanged && isPhysicalDevice(source.Name) && a.checkCardIsReady(source.Card) {
-		a.autoSwitchInputPort()
+		a.autoSwitchPort()
 	}
 }
 
