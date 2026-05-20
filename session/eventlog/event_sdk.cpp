@@ -21,7 +21,7 @@ WriteEventLog fp_writeEventLog = nullptr;
 void *handler = nullptr;
 
 // Check if event logging should be enabled based on system edition
-// Only UosProfessional is enabled by default
+// Not UosCommunity is enabled by default
 // Reads /etc/os-version to determine edition
 static bool shouldEnableEventLog()
 {
@@ -29,24 +29,24 @@ static bool shouldEnableEventLog()
     // Debug mode: enable for current system version
     return true;
 #else
-    // Production mode: only enable for UosProfessional edition
+    // Production mode: disable for UosCommunity edition
     // Read /etc/os-version and check EditionName
     ifstream osVersion("/etc/os-version");
     if (!osVersion.is_open()) {
-        return false;
+        return true;
     }
 
     string line;
     while (getline(osVersion, line)) {
-        // Look for EditionName=Professional
+        // Check if edition is not Community
         if (line.find("EditionName=") == 0) {
             string edition = line.substr(12); // Skip "EditionName="
             osVersion.close();
-            return edition == "Professional";
+            return edition != "Community";
         }
     }
     osVersion.close();
-    return false;
+    return true;
 #endif
 }
 
