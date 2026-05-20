@@ -254,6 +254,9 @@ func (abm *AutoBrightnessManager) Stop() error {
 	atomic.StoreInt32(&abm.stopping, 1)
 	abm.stopCompensationTimer()
 	atomic.StoreInt32(&abm.stopping, 0)
+
+	// 先取消正在进行的渐变，再恢复亮度
+	abm.cancelOngoingTransition(abm.manager)
 	abm.restoreSavedBrightness()
 
 	if abm.sensorClient != nil {
@@ -352,6 +355,8 @@ func (abm *AutoBrightnessManager) OnManualBrightnessChange() {
 		manager := abm.manager
 		abm.mutex.Unlock()
 		logger.Info("[AutoBrightness] Manual brightness change detected, disabling auto brightness mode")
+		// 立即取消正在进行的渐变，防止渐变继续覆盖用户手动设置的亮度
+		abm.cancelOngoingTransition(manager)
 		// 异步保存配置并停止功能
 		go func() {
 			err := abm.saveConfig()
@@ -374,9 +379,13 @@ func (abm *AutoBrightnessManager) OnManualBrightnessChange() {
 	abm.manualOverride = time.Now()
 	overrideDuration := abm.config.ManualOverrideDuration
 	sensorClient := abm.sensorClient
+	manager := abm.manager
 	abm.mutex.Unlock()
 
 	logger.Infof("[AutoBrightness] Manual brightness change detected, pausing auto adjustment for %d seconds", overrideDuration)
+
+	// 立即取消正在进行的渐变
+	abm.cancelOngoingTransition(manager)
 
 	if sensorClient != nil && sensorClient.IsClaimed() {
 		err := sensorClient.ReleaseLight()
@@ -384,6 +393,18 @@ func (abm *AutoBrightnessManager) OnManualBrightnessChange() {
 			logger.Warning("[AutoBrightness] Failed to release light sensor on manual override:", err)
 		}
 	}
+}
+
+// cancelOngoingTransition 立即取消指定显示器上正在进行的渐变
+func (abm *AutoBrightnessManager) cancelOngoingTransition(manager *Manager) {
+	if manager == nil || manager.transitionManager == nil {
+		return
+	}
+	builtinMonitor := manager.getBuiltinMonitor()
+	if builtinMonitor == nil {
+		return
+	}
+	manager.transitionManager.StopMonitor(builtinMonitor.Name)
 }
 
 // resetHistoryState 重置历史状态，使下次能立即触发亮度调节
@@ -594,11 +615,12 @@ func (abm *AutoBrightnessManager) onServiceChange(available bool) {
 func (abm *AutoBrightnessManager) onLightLevelChange(rawLightLevel int) {
 	abm.mutex.Lock()
 	running := abm.running
+	enabled := abm.config.Enabled
 	inManualOverride := abm.isInManualOverride()
 	abm.lastSensorDataTime = time.Now()
 	abm.mutex.Unlock()
 
-	if !running || inManualOverride {
+	if !running || !enabled || inManualOverride {
 		return
 	}
 
@@ -760,7 +782,7 @@ func (abm *AutoBrightnessManager) ensureSensorClaimed(sensorClient *SensorProxyC
 
 func (abm *AutoBrightnessManager) compensationTick() {
 	abm.mutex.Lock()
-	if !abm.running {
+	if !abm.running || !abm.config.Enabled {
 		abm.mutex.Unlock()
 		return
 	}

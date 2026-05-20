@@ -294,6 +294,7 @@ func (m *Manager) setBrightnessAndSync(name string, value float64) error {
 }
 
 // setBrightnessWithTransition 使用渐变效果设置亮度（强制启用渐变）
+// 亮度属性会在渐变过程中通过 onStepFunc 回调逐步更新，而非立即跳到目标值
 func (m *Manager) setBrightnessWithTransition(name string, value float64) error {
 	logger.Debug("Starting brightness setting with transition", name, value)
 	monitors := m.getConnectedMonitors()
@@ -321,8 +322,6 @@ func (m *Manager) setBrightnessWithTransition(name string, value float64) error 
 			return err
 		}
 	}
-
-	monitor.setPropBrightnessWithLock(value)
 
 	logger.Debug("end set brightness with transition", name, value)
 

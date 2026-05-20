@@ -106,6 +106,9 @@ type TransitionExecutor struct {
 	// 获取当前亮度百分比函数
 	getterFunc func() (float64, error)
 
+	// 每步回调（用于同步亮度属性到 D-Bus），参数为(显示器名称, 当前亮度百分比)
+	onStepFunc func(monitorName string, percent float64)
+
 	// 配置参数
 	config TransitionConfig
 
@@ -124,6 +127,13 @@ func NewTransitionExecutor(monitorName string, brightnessType BrightnessType, se
 		getterFunc:     getter,
 		config:         config,
 	}
+}
+
+// SetOnStepFunc 设置每步回调（用于在过渡过程中同步亮度属性到 D-Bus），参数为(显示器名称, 当前亮度百分比)
+func (e *TransitionExecutor) SetOnStepFunc(fn func(monitorName string, percent float64)) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	e.onStepFunc = fn
 }
 
 // SetBrightness 设置亮度（百分比，0.0 - 1.0）
@@ -281,10 +291,15 @@ func (e *TransitionExecutor) runTransition(task *transitionTask) {
 			return
 		}
 
-		// 更新实时值
+		// 更新实时值并通知回调
 		e.mu.Lock()
 		e.currentPercent = currentPercent
+		onStep := e.onStepFunc
 		e.mu.Unlock()
+
+		if onStep != nil {
+			onStep(e.monitorName, currentPercent)
+		}
 
 		// 如果达到目标值，结束过渡
 		if abs(currentPercent-task.target) < epsilon {
@@ -419,6 +434,9 @@ type TransitionManager struct {
 
 	// 获取 Gamma 当前亮度的回调
 	getGammaFunc func(monitorName string) (float64, error)
+
+	// 每步回调（用于同步亮度属性到 D-Bus），参数为(显示器名称, 当前亮度百分比)
+	onStepFunc func(monitorName string, percent float64)
 }
 
 // NewTransitionManager 创建统一过渡管理器
@@ -436,6 +454,16 @@ func (m *TransitionManager) SetEnabled(enabled bool) {
 	m.config.Enabled = enabled
 	for _, executor := range m.executors {
 		executor.UpdateConfig(m.config)
+	}
+}
+
+// SetOnStepFunc 设置每步回调（用于在过渡过程中同步亮度属性到 D-Bus），参数为(显示器名称, 当前亮度百分比)
+func (m *TransitionManager) SetOnStepFunc(fn func(monitorName string, percent float64)) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.onStepFunc = fn
+	for _, executor := range m.executors {
+		executor.SetOnStepFunc(fn)
 	}
 }
 
@@ -523,7 +551,12 @@ func (m *TransitionManager) SetBrightness(monitorName string, targetPercent floa
 
 		m.mu.Lock()
 		m.executors[monitorName] = executor
+		onStep := m.onStepFunc
 		m.mu.Unlock()
+
+		if onStep != nil {
+			executor.SetOnStepFunc(onStep)
+		}
 	}
 
 	return executor.SetBrightnessWithForce(targetPercent, forceTransition)
@@ -585,6 +618,17 @@ func (m *TransitionManager) Stop() {
 	m.mu.Unlock()
 
 	for _, executor := range executors {
+		executor.Stop()
+	}
+}
+
+// StopMonitor 停止指定显示器的过渡
+func (m *TransitionManager) StopMonitor(monitorName string) {
+	m.mu.Lock()
+	executor, exists := m.executors[monitorName]
+	m.mu.Unlock()
+
+	if exists {
 		executor.Stop()
 	}
 }
