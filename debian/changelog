@@ -1,3 +1,16 @@
+dde-daemon (6.1.90) unstable; urgency=medium
+
+  * feat: add screen magnifier toggle
+  * fix: expand event log to all non-community editions /
+    修复事件日志启用条件为非社区版
+  * fix: stop brightness transition on disable
+  * fix(eventlog): avoid shell injection via .desktop filename in dpkg -
+    S lookup
+  * fix(audio): retry full port auto-switch on source events
+  * fix(touchpad): correct DConfig key name for gesture enabled
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 20 May 2026 15:16:51 +0800
+
 dde-daemon (6.1.89) unstable; urgency=medium
 
   * refactor: optimize light sensor interface
