@@ -197,10 +197,10 @@ type Manager struct {
 	debugOpts      debugOptions
 	redshiftRunner *redshiftRunner
 
-	sessionActive    bool
-	sessionActiveMu  sync.RWMutex
-	newSysCfg        *SysRootConfig
-	cursorShowed  bool
+	sessionActive   bool
+	sessionActiveMu sync.RWMutex
+	newSysCfg       *SysRootConfig
+	cursorShowed    bool
 
 	// dconfig com.deepin.Display
 	displayConfigMgr         configManager.Manager
@@ -3715,6 +3715,14 @@ func (m *Manager) initTransitionManager() {
 			return currentBrightness, nil
 		},
 	)
+
+	// 设置每步回调：在渐变过程中同步亮度属性到 D-Bus
+	m.transitionManager.SetOnStepFunc(func(monitorName string, percent float64) {
+		if m.builtinMonitor != nil && m.builtinMonitor.Name == monitorName {
+			m.builtinMonitor.setPropBrightnessWithLock(percent)
+		}
+		m.syncPropBrightness()
+	})
 
 	logger.Infof("Unified transition manager initialized: enabled=%v, duration=%dms, stepPercent=%.2f%%, minInterval=%dms",
 		m.transitionEnabled, m.transitionDuration, m.transitionStepPercent, m.transitionMinStepInterval)
