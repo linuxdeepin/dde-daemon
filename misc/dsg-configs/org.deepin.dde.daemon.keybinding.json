@@ -34,6 +34,16 @@
       "description": "DeviceManager shortcut effected by DDE software",
       "permissions": "readonly",
       "visibility": "private"
+    },
+    "viewZoomEnable": {
+      "value": true,
+      "serial": 0,
+      "flags": [],
+      "name": "viewZoomEnable",
+      "name[zh_CN]": "启用/禁用缩放快捷键",
+      "description": "enable/disable view zoom shortcuts",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }

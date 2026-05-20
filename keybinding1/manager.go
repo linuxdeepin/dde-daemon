@@ -334,6 +334,9 @@ func (m *Manager) init() {
 		}
 	}
 
+	// 初始化时根据 viewZoomEnable 配置启用/禁用缩放功能
+	m.shortcutManager.SetViewZoomEnabled(m.wm, m.shortcutManager.IsViewZoomEnabled())
+
 	// init custom shortcuts
 	customConfigFilePath := filepath.Join(basedir.GetUserConfigDir(), customConfigFile)
 	m.customShortcutManager = shortcuts.NewCustomShortcutManager(customConfigFilePath)
@@ -485,6 +488,8 @@ func (m *Manager) initDConfig(bus *dbus.Conn) {
 			getNeedXrandrQConfig()
 		case constants.DSettingsKeyDeviceManagerControlEnable:
 			getDeviceManagerControlEnableConfig()
+		case constants.DSettingsKeyViewZoomEnable:
+			m.shortcutManager.SetViewZoomEnabled(m.wm, m.shortcutManager.IsViewZoomEnabled())
 		}
 	})
 	if err != nil {

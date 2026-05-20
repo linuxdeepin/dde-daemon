@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -141,6 +141,7 @@ type ShortcutManager struct {
 	shortcutWrapGnomeWmConfigMgr configManager.Manager
 	shortcutEnableConfigMgr      configManager.Manager
 	shortcutPlatformMgr          configManager.Manager
+	keybindingConfigMgr          configManager.Manager
 }
 
 type KeyEvent struct {
@@ -293,6 +294,17 @@ func (sm *ShortcutManager) initDconfig() {
 	}
 
 	sm.shortcutPlatformMgr, err = configManager.NewManager(bus, keybindingPlatformConfigPath)
+	if err != nil {
+		logger.Warning(err)
+	}
+
+	keybindingConfigPath, err := ds.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsKeyBindingName, "")
+	if err != nil || keybindingConfigPath == "" {
+		logger.Warning(err)
+		return
+	}
+
+	sm.keybindingConfigMgr, err = configManager.NewManager(bus, keybindingConfigPath)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -1385,6 +1397,94 @@ func (sm *ShortcutManager) AddSpecial() {
 	sm.addWithoutLock(s0)
 }
 
+var viewZoomIds = map[string]bool{
+	"viewZoomIn":     true,
+	"viewZoomOut":    true,
+	"viewActualSize": true,
+}
+
+func (sm *ShortcutManager) IsViewZoomEnabled() bool {
+	if sm.keybindingConfigMgr == nil {
+		return true
+	}
+	v, err := sm.keybindingConfigMgr.Value(0, constants.DSettingsKeyViewZoomEnable)
+	if err != nil {
+		return true
+	}
+	return v.Value().(bool)
+}
+
+func (sm *ShortcutManager) DelViewZoomShortcuts() {
+	for id := range viewZoomIds {
+		shortcut := sm.GetByIdType(id, ShortcutTypeWM)
+		if shortcut != nil {
+			sm.Delete(shortcut)
+		}
+	}
+}
+
+func (sm *ShortcutManager) SetViewZoomEnabled(wmObj wm.Wm, enabled bool) {
+	logger.Debugf("SetViewZoomEnabled: %v", enabled)
+
+	gdbusArgs := func(method string) []string {
+		return []string{"call", "--session", "--dest", "org.kde.KWin",
+			"--object-path", "/Effects",
+			"--method", "org.kde.kwin.Effects." + method, "zoom"}
+	}
+
+	runGdbus := func(method string) {
+		if _, err := exec.Command("gdbus", gdbusArgs(method)...).Output(); err != nil {
+			logger.Warningf("Failed to %s zoom effect: %v", method, err)
+		} else {
+			logger.Infof("Successfully %s zoom effect", method)
+		}
+	}
+
+	output, err := exec.Command("gdbus", gdbusArgs("isEffectLoaded")...).Output()
+	if err != nil {
+		sm.DelViewZoomShortcuts()
+		logger.Warning(err)
+		return
+	}
+	loadzoom := strings.Contains(strings.ToLower(string(output)), "true")
+
+	if enabled {
+		sm.addViewZoomKWin(wmObj)
+		if !loadzoom {
+			runGdbus("loadEffect")
+		}
+	} else {
+		sm.DelViewZoomShortcuts()
+		if loadzoom {
+			runGdbus("unloadEffect")
+		}
+	}
+}
+
+func (sm *ShortcutManager) addViewZoomKWin(wmObj wm.Wm) {
+	idNameMap := getWMIdNameMap()
+	for id := range viewZoomIds {
+		keystrokes, err := wmObj.GetAccel(0, id)
+		if err != nil {
+			logger.Warningf("failed to get accel for '%s': %v", id, err)
+			continue
+		}
+		if len(keystrokes) == 0 {
+			keystrokes, err = wmObj.GetDefaultAccel(0, id)
+			if err != nil {
+				logger.Warningf("failed to get default accel for '%s': %v", id, err)
+				continue
+			}
+		}
+		name := idNameMap[id]
+		if name == "" {
+			name = id
+		}
+		ks := newKWinShortcut(id, name, keystrokes, wmObj)
+		sm.addWithoutLock(ks)
+	}
+}
+
 func (sm *ShortcutManager) AddKWin(wmObj wm.Wm) {
 	logger.Debug("AddKWin")
 	accels, err := util.GetAllKWinAccels(wmObj)
@@ -1403,6 +1503,10 @@ func (sm *ShortcutManager) AddKWin(wmObj wm.Wm) {
 		}
 		if accel.Id == "exposeAllWindows" || accel.Id == "exposeWindows" {
 			logger.Debugf("'%s' is abandoned!", accel.Id)
+			continue
+		}
+		// zoom功能需要根据配置决定是否添加, 这里先不添加，避免在初始化配置时重复设置，导致快捷键失效
+		if viewZoomIds[accel.Id] {
 			continue
 		}
 		name := idNameMap[accel.Id]
@@ -1429,6 +1533,10 @@ func (sm *ShortcutManager) AddKWinForWayland(wmObj wm.Wm) {
 			continue
 		}
 		if getSystemIdNameMap()[accel.Id] != "" || getMediaIdNameMap()[accel.Id] != "" {
+			continue
+		}
+		// zoom功能需要根据配置决定是否添加, 这里先不添加，避免在初始化配置时重复设置，导致快捷键失效
+		if viewZoomIds[accel.Id] {
 			continue
 		}
 
