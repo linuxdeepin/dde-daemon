@@ -196,8 +196,7 @@ func (c *appEventCollector) monitor(entryObj dock.Entry) {
 				logger.Debugf("desktop file is link file, real path is %v", desktop)
 			}
 			// run dpkg to get package name
-			dpkg := []string{"dpkg", "-S", desktop}
-			cmd := exec.Command("/bin/bash", "-c", strings.Join(dpkg, " "))
+			cmd := exec.Command("dpkg", "-S", desktop)
 			logger.Debugf("dpkg command is %v", cmd)
 			// run command to get package
 			buf, err := cmd.Output()
