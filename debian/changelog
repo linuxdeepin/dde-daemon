@@ -1,3 +1,9 @@
+dde-daemon (6.1.91) unstable; urgency=medium
+
+  * fix: disable SetPassword DBus method and prevent chpasswd injection
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 22 May 2026 18:12:24 +0800
+
 dde-daemon (6.1.90) unstable; urgency=medium
 
   * feat: add screen magnifier toggle
