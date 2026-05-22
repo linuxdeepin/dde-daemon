@@ -161,6 +161,10 @@ func ModifyPasswd(words, username string) error {
 	if len(words) == 0 {
 		return errInvalidParam
 	}
+	// 防止命令注入
+	if strings.ContainsAny(words, "\n\r") || strings.ContainsAny(username, "\n\r:") {
+		return errInvalidParam
+	}
 
 	cmd := exec.Command(pwdCmdModify, "-e")
 	input := fmt.Sprintf("%s:%s\n", username, words)
