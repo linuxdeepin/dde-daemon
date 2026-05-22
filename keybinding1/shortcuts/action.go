@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,6 +11,9 @@ const (
 	ActionTypeExecCmd
 	ActionTypeOpenMimeType
 	ActionTypeDesktopFile
+	ActionTypeLaunchMimeType
+	ActionTypeLaunchTerminal
+	ActionTypeLockScreen
 	ActionTypeShowNumLockOSD
 	ActionTypeShowCapsLockOSD
 	ActionTypeSystemShutdown
@@ -66,6 +69,28 @@ func NewOpenMimeTypeAction(mimeType string) *Action {
 	return &Action{
 		Type: ActionTypeOpenMimeType,
 		Arg:  mimeType,
+	}
+}
+
+// launch the default application for the given mime type via AM (in-process)
+func NewLaunchMimeTypeAction(mimeType string) *Action {
+	return &Action{
+		Type: ActionTypeLaunchMimeType,
+		Arg:  mimeType,
+	}
+}
+
+// launch the default terminal via AM (in-process) using GSettings
+func NewLaunchTerminalAction() *Action {
+	return &Action{
+		Type: ActionTypeLaunchTerminal,
+	}
+}
+
+// lock screen, X11 grab cleanup + in-process DBus (no dbus-send subprocess)
+func NewLockScreenAction() *Action {
+	return &Action{
+		Type: ActionTypeLockScreen,
 	}
 }
 

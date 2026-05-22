@@ -1204,6 +1204,18 @@ func (sm *ShortcutManager) AddSystemById(wmObj wm.Wm, id string) {
 			Cmd: cmd,
 		},
 	}
+	// fileManager 走 in-process AM Launch，不 spawn 子进程
+	if id == "fileManager" {
+		sysShortcut.customAction = NewLaunchMimeTypeAction("inode/directory")
+	}
+	// terminal 走 in-process AM Launch，不 spawn 子进程
+	if id == "terminal" {
+		sysShortcut.customAction = NewLaunchTerminalAction()
+	}
+	// lockScreen 走 in-process DBus，不 spawn dbus-send
+	if id == "lockScreen" || id == "lockScreen-wayland" {
+		sysShortcut.customAction = NewLockScreenAction()
+	}
 
 	sm.addWithoutLock(sysShortcut)
 }

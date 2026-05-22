@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -6,11 +6,20 @@ package keybinding
 
 import (
 	"fmt"
+	"os/exec"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	. "github.com/linuxdeepin/dde-daemon/keybinding1/shortcuts"
+	gio "github.com/linuxdeepin/go-gir/gio-2.0"
+)
+
+const (
+	gsSchemaDefaultTerminal = "com.deepin.desktop.default-applications.terminal"
+	gsKeyTerminalAppId      = "app-id"
 )
 
 func (m *Manager) shouldShowCapsLockOSD() bool {
@@ -146,6 +155,24 @@ func (m *Manager) initHandlers() {
 		}()
 	}
 
+	m.handlers[ActionTypeLaunchMimeType] = func(ev *KeyEvent) {
+		action := ev.Shortcut.GetAction()
+		mimeType, ok := action.Arg.(string)
+		if !ok {
+			logger.Warning(ErrTypeAssertionFail)
+			return
+		}
+		go m.launchDefaultForMimeType(mimeType)
+	}
+
+	m.handlers[ActionTypeLaunchTerminal] = func(ev *KeyEvent) {
+		go m.launchDefaultTerminal()
+	}
+
+	m.handlers[ActionTypeLockScreen] = func(ev *KeyEvent) {
+		go m.lockScreen()
+	}
+
 	m.handlers[ActionTypeAudioCtrl] = buildHandlerFromController(m.audioController)
 	m.handlers[ActionTypeMediaPlayerCtrl] = buildHandlerFromController(m.mediaPlayerController)
 	m.handlers[ActionTypeDisplayCtrl] = buildHandlerFromController(m.displayController)
@@ -274,4 +301,101 @@ type ErrIsNil struct {
 
 func (err ErrIsNil) Error() string {
 	return fmt.Sprintf("%s is nil", err.Name)
+}
+
+// launchDefaultForMimeType launches the default application for the given mime type
+// via AM in-process, avoiding subprocess spawning.
+func (m *Manager) launchDefaultForMimeType(mimeType string) {
+	appInfo := gio.AppInfoGetDefaultForType(mimeType, false)
+	if appInfo == nil {
+		logger.Warning("no default app for mime type:", mimeType)
+		return
+	}
+	defer appInfo.Unref()
+
+	dAppInfo := gio.ToDesktopAppInfo(appInfo)
+	desktopFile := filepath.Base(dAppInfo.GetFilename())
+
+	err := m.runDesktopFile(desktopFile)
+	if err != nil {
+		logger.Warning("launch mime type error:", err)
+	}
+}
+
+// launchDefaultTerminal launches the default terminal via AM in-process,
+// using GSettings to find the configured terminal application.
+func (m *Manager) launchDefaultTerminal() {
+	settings := gio.NewSettings(gsSchemaDefaultTerminal)
+	if settings == nil {
+		logger.Warning("failed to get terminal settings")
+		return
+	}
+	defer settings.Unref()
+
+	appId := settings.GetString(gsKeyTerminalAppId)
+	err := m.runDesktopFile(appId)
+	if err != nil {
+		logger.Warning("launch terminal error:", err)
+	}
+}
+
+// lockScreen performs X11 grab cleanup and shows the lock screen via
+// in-process DBus, avoiding subprocess spawning for dbus-send.
+func (m *Manager) lockScreen() {
+	origOption := m.getCurrentXkbOption()
+	logger.Debug("lockScreen: orig option:", origOption)
+
+	m.breakXGrab()
+	defer m.restoreXkbOption(origOption)
+
+	m.showLockFront()
+}
+
+// getCurrentXkbOption returns the current keyboard options from setxkbmap -query.
+// Returns empty string if no options are set or an error occurs.
+func (m *Manager) getCurrentXkbOption() string {
+	out, err := exec.Command("setxkbmap", "-query").Output()
+	if err != nil {
+		logger.Warning("lockScreen: setxkbmap -query failed:", err)
+		return ""
+	}
+
+	for _, line := range strings.Split(string(out), "\n") {
+		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, "options:") {
+			// line format: "options:   grp:alt_shift_toggle,terminate:ctrl_alt_bksp"
+			fields := strings.Fields(line)
+			if len(fields) >= 2 {
+				return fields[1]
+			}
+		}
+	}
+	return ""
+}
+
+// breakXGrab sets grab:break_actions and sends XF86Ungrab to break X11 keyboard grabs.
+// On Wayland, the xdotool step is skipped (see Bug-224309).
+func (m *Manager) breakXGrab() {
+	exec.Command("setxkbmap", "-option", "grab:break_actions").Run()
+	if !_useWayland {
+		exec.Command("xdotool", "key", "XF86Ungrab").Run()
+	}
+}
+
+// restoreXkbOption restores the previous keyboard options if non-empty.
+func (m *Manager) restoreXkbOption(orig string) {
+	if orig != "" {
+		exec.Command("setxkbmap", "-option", orig).Run()
+	}
+}
+
+// showLockFront calls LockFront1.Show via in-process DBus.
+func (m *Manager) showLockFront() {
+	lockObj := m.sessionSigLoop.Conn().Object(
+		"org.deepin.dde.LockFront1",
+		"/org/deepin/dde/LockFront1")
+	err := lockObj.Call("org.deepin.dde.LockFront1.Show", 0).Err
+	if err != nil {
+		logger.Warning("lockScreen: failed to show lock front:", err)
+	}
 }

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -22,7 +22,8 @@ const (
 
 type SystemShortcut struct {
 	*ShortcutObject
-	arg *ActionExecCmdArg
+	arg          *ActionExecCmdArg
+	customAction *Action
 }
 
 func (ss *SystemShortcut) SetName(name string) error {
@@ -30,6 +31,9 @@ func (ss *SystemShortcut) SetName(name string) error {
 }
 
 func (ss *SystemShortcut) GetAction() *Action {
+	if ss.customAction != nil {
+		return ss.customAction
+	}
 	return &Action{
 		Type: ActionTypeExecCmd,
 		Arg:  ss.arg,
@@ -40,15 +44,16 @@ func (ss *SystemShortcut) SetAction(newAction *Action) error {
 	if newAction == nil {
 		return ErrNilAction
 	}
-	if newAction.Type != ActionTypeExecCmd {
-		return ErrInvalidActionType
+	if newAction.Type == ActionTypeExecCmd {
+		arg, ok := newAction.Arg.(*ActionExecCmdArg)
+		if !ok {
+			return ErrTypeAssertionFail
+		}
+		ss.arg = arg
+		ss.customAction = nil
+	} else {
+		ss.customAction = newAction
 	}
-
-	arg, ok := newAction.Arg.(*ActionExecCmdArg)
-	if !ok {
-		return ErrTypeAssertionFail
-	}
-	ss.arg = arg
 	return nil
 }
 
