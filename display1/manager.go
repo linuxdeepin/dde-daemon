@@ -3565,6 +3565,10 @@ func (m *Manager) logDisplayScreenEvent() {
 
 	// 获取当前显示模式
 	displayMode := m.DisplayMode
+	// 如果只有一个屏幕，强制使用单屏模式
+	if screenCount == 1 {
+		displayMode = DisplayModeOnlyOne
+	}
 
 	// 获取主显示器名称
 	primaryMonitor := m.Primary
