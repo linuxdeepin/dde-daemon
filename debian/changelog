@@ -1,3 +1,15 @@
+dde-daemon (6.1.92) unstable; urgency=medium
+
+  * test(users): add validation tests for isValidUsername and
+    isValidCryptHash
+  * fix(users): harden password hash handling in ModifyPasswd
+  * fix: correct display mode in event log for single screen /
+    修复单屏时事件日志显示模式错误
+  * fix: revert SetPassword disable, restore with admin auth
+  * refactor: rename display transition config
+
+ -- zhangkun <zhangkun2@uniontech.com>  Mon, 25 May 2026 16:14:05 +0800
+
 dde-daemon (6.1.91) unstable; urgency=medium
 
   * fix: disable SetPassword DBus method and prevent chpasswd injection
