@@ -116,7 +116,55 @@ func (u *User) SetShell(sender dbus.Sender, shell string) *dbus.Error {
 }
 
 func (u *User) SetPassword(sender dbus.Sender, password string) *dbus.Error {
-	return dbusutil.ToError(fmt.Errorf("SetPassword is deprecated and no longer supported"))
+	logger.Debug("[SetPassword] start ...")
+
+	// set password from UnionID
+	if password == "" {
+		return nil
+	}
+
+	err := u.checkAuth(sender, false, polkitActionUserAdministration)
+	if err != nil {
+		logger.Debug("[SetPassword] access denied:", err)
+		return dbusutil.ToError(err)
+	}
+
+	var count = 10
+	for {
+		_, err := users.GetShadowInfo(u.UserName)
+
+		if err == nil {
+			break
+		}
+		count--
+		if count == 0 {
+			return dbusutil.ToError(err)
+		}
+		time.Sleep(time.Second)
+	}
+
+	if err := users.ModifyPasswd(password, u.UserName); err != nil {
+		logger.Warning("DoAction: modify password failed:", err)
+		return dbusutil.ToError(err)
+	}
+
+	err = removeLoginKeyring(u)
+	if err != nil {
+		logger.Warningf("DoAction: remove login keyring failed: %v", err)
+	}
+
+	u.PropsMu.Lock()
+	defer u.PropsMu.Unlock()
+
+	if u.Locked {
+		if err := users.LockedUser(false, u.UserName); err != nil {
+			logger.Warning("DoAction: unlock user failed:", err)
+			return dbusutil.ToError(err)
+		}
+		u.Locked = false
+		_ = u.emitPropChangedLocked(false)
+	}
+	return nil
 }
 
 func (u *User) SetMaxPasswordAge(sender dbus.Sender, nDays int32) *dbus.Error {
