@@ -20,9 +20,7 @@ import (
 	libdate "github.com/rickb777/date"
 )
 
-var (
-	errInvalidParam = fmt.Errorf("Invalid or empty parameter")
-)
+var errInvalidParam = fmt.Errorf("Invalid or empty parameter")
 
 var (
 	groupFileTimestamp int64 = 0
@@ -157,25 +155,142 @@ func ModifyShell(shell, username string) error {
 	return doAction(userCmdModify, []string{"-s", shell, username})
 }
 
-func ModifyPasswd(words, username string) error {
-	if len(words) == 0 {
-		return errInvalidParam
+// isValidCryptHash validates the format of a crypt password hash string.
+// It enforces printable ASCII boundaries and blocks high-risk delimiters.
+// from: https://manpages.debian.org/unstable/libcrypt-dev/crypt.5.en.html
+func isValidCryptHash(hash string) error {
+	if hash == "" {
+		return errors.New("password hash is empty")
 	}
-	// 防止命令注入
-	if strings.ContainsAny(words, "\n\r") || strings.ContainsAny(username, "\n\r:") {
-		return errInvalidParam
+
+	for i := 0; i < len(hash); i++ {
+		b := hash[i]
+
+		// This keeps the error generic and avoids leaking hash structure details.
+		if b < 32 || b > 126 {
+			return errors.New("password hash contains non-printable ASCII characters")
+		}
+
+		switch b {
+		case ' ', ':', ';', '*', '!', '\\':
+			return errors.New("password hash contains forbidden characters")
+		}
+	}
+
+	return nil
+}
+
+// isValidUsername validates the input username.
+// It follows useradd's strict rules instead of adduser's NAME_REGEX
+// to prevent control flow injection (e.g., line/field truncation)
+// when feeding "username:password" into chpasswd via stdin.
+// from: https://github.com/shadow-maint/shadow/blob/710c4d4f88fa32dfc4c4d1f714e935d8bff6ae00/lib/chkname.c#L103
+func isValidUsername(name string) error {
+	if name == "" || name == "." || name == ".." {
+		return errors.New("username can't be '.' or '..' or empty")
+	}
+
+	if len(name) > LoginNameMaxSize() {
+		return errors.New("username too long")
+	}
+
+	if strings.Trim(name, "-") == "" {
+		return errors.New("username cannot consist entirely of hyphens")
+	}
+
+	// below check follows BRE: [a-zA-Z0-9_.][a-zA-Z0-9_.-]*$\?
+	first := name[0]
+	isFirstValid := (first >= 'a' && first <= 'z') ||
+		(first >= 'A' && first <= 'Z') ||
+		(first >= '0' && first <= '9') ||
+		first == '_' ||
+		first == '.'
+	if !isFirstValid {
+		return errors.New("first character must be alphanumeric, underscore, or dot")
+	}
+
+	isAllDigit := (first >= '0' && first <= '9')
+	for i := 1; i < len(name); i++ {
+		ch := name[i]
+
+		if ch < '0' || ch > '9' {
+			isAllDigit = false
+		}
+
+		isValidChar := (ch >= 'a' && ch <= 'z') ||
+			(ch >= 'A' && ch <= 'Z') ||
+			(ch >= '0' && ch <= '9') ||
+			ch == '_' ||
+			ch == '.' ||
+			ch == '-'
+
+		if isValidChar {
+			continue
+		}
+
+		if ch == '$' && i == len(name)-1 {
+			continue
+		}
+
+		return errors.New("username contains invalid characters or '$' is not at the end")
+	}
+
+	if isAllDigit {
+		return errors.New("username cannot consist entirely of digits")
+	}
+
+	return nil
+}
+
+func ModifyPasswd(words, username string) error {
+	if words == "" || username == "" {
+		return errors.New("password hash or username is empty")
+	}
+
+	if err := isValidUsername(username); err != nil {
+		return fmt.Errorf("username is invalid: %w", err)
+	}
+
+	if err := isValidCryptHash(words); err != nil {
+		return fmt.Errorf("invalid password hash: %w", err)
 	}
 
 	cmd := exec.Command(pwdCmdModify, "-e")
-	input := fmt.Sprintf("%s:%s\n", username, words)
-	cmd.Stdin = bytes.NewBufferString(input)
+	// clear environments for security, if it works unexpectedly then add env which chpasswd needs
+	cmd.Env = []string{}
+
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return fmt.Errorf("failed to create stdin pipe: %w", err)
+	}
 
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 
-	err := cmd.Run()
-	if err != nil {
-		return fmt.Errorf("failed to modify password: %v, %s", err, stderr.String())
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("failed to start command: %w", err)
+	}
+
+	// Write the password hash to stdin
+	// no need to erase this data, because this hash already exist in go string
+	buf := bytes.NewBuffer(make([]byte, 0, len(username)+len(words)+2))
+	buf.WriteString(username)
+	buf.WriteString(":")
+	buf.WriteString(words)
+	buf.WriteString("\n")
+
+	input := buf.Bytes()
+	_, writeErr := stdin.Write(input)
+	stdin.Close()
+
+	if writeErr != nil {
+		_ = cmd.Process.Kill()
+		_ = cmd.Wait()
+		return fmt.Errorf("failed to write to stdin: %w", writeErr)
+	}
+
+	if err := cmd.Wait(); err != nil {
+		return fmt.Errorf("failed to update system password configuration %s", stderr.String())
 	}
 
 	return nil
