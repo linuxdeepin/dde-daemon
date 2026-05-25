@@ -1,1 +1,2 @@
 debian/reconfigure-dde-daemon /etc/kernel/postinst.d/
+misc/thp/dde-thp-disable usr/libexec/

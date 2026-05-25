@@ -7,6 +7,7 @@ Type=dbus
 User=lightdm
 Group=lightdm
 BusName=org.deepin.dde.LockService1
+ExecStartPre=-/usr/libexec/dde-thp-disable
 ExecStart=/usr/lib/deepin-daemon/dde-lockservice
 # 通过设置/var/lib/lightdm/目录的lightdm组权限，lockservice可以安全地以lightdm用户运行
 StandardOutput=journal

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+CG=$(awk -F: '$1=="0"{print $3}' /proc/self/cgroup | head -n1)
+
+[ -n "${CG:-}" ] || exit 0
+
+FILE="/sys/fs/cgroup${CG}/memory.thp_mode"
+
+if [ -e "$FILE" ]; then
+    if ! echo disable > "$FILE" 2>/dev/null; then
+        logger -t thp-disable "failed to write disable to $FILE"
+    fi
+fi
+
+exit 0

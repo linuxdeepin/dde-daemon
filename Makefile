@@ -163,6 +163,9 @@ print_gopath: prepare
 	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
 
 install: build install-dde-data install-icons
+	mkdir -pv ${DESTDIR}${PREFIX}/libexec
+	install -Dm755 misc/thp/dde-thp-disable ${DESTDIR}${PREFIX}/libexec/dde-thp-disable
+
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
 	cp -f out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 
