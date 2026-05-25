@@ -207,7 +207,7 @@
       "permissions": "readwrite",
       "visibility": "private"
     },
-    "transition-step-interval": {
+    "transition-min-step-interval": {
       "value": 100,
       "serial": 0,
       "flags": [],
