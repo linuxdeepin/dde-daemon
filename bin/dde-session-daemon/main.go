@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -40,7 +40,7 @@ var logger = log.NewLogger("daemon/dde-session-daemon")
 var hasDDECookie bool
 var hasTreeLand bool
 
-var treeLandNotAllowModules = []string{"x-event-monitor", "keybinding", "screensaver", "display", "xsettings"}
+var treeLandNotAllowModules = []string{"x-event-monitor", "keybinding", "screensaver", "display", "xsettings", "power"}
 
 func isInShutdown() bool {
 	bus, err := dbus.SystemBus()
