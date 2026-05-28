@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -77,7 +77,8 @@ func getCurrentActionWindowCmd() string {
 		logger.Warning("Failed to read cmdline:", err)
 		return ""
 	}
-	return string(data)
+	// /proc/<pid>/cmdline 用 null 字节分隔参数，替换为空格以便黑名单匹配
+	return strings.ReplaceAll(string(data), "\x00", " ")
 }
 
 func isSessionActive(sessionPath dbus.ObjectPath) bool {
