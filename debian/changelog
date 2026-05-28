@@ -1,3 +1,9 @@
+dde-daemon (6.1.93) unstable; urgency=medium
+
+  * fix: add dde-shell to touchscreen longpress blacklist
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 28 May 2026 16:32:43 +0800
+
 dde-daemon (6.1.92) unstable; urgency=medium
 
   * test(users): add validation tests for isValidUsername and
