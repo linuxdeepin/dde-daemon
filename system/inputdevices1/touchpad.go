@@ -86,7 +86,11 @@ func (t *Touchpad) SetTouchpadEnable(enabled bool) *dbus.Error {
 
 func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 	logger.Debugf("setTouchpadEnable: %v", enabled)
-	if !t.setPropEnable(enabled) {
+	changed := t.setPropEnable(enabled)
+	if !changed && enabled {
+		return t.refreshTouchpadDevices()
+	}
+	if !changed {
 		return nil
 	}
 
@@ -103,6 +107,17 @@ func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 		return err
 	}
 
+	return nil
+}
+
+func (t *Touchpad) refreshTouchpadDevices() error {
+	if err := reloadUdevRules(); err != nil {
+		logger.Warning("failed to reload udev rules:", err)
+	}
+	if err := t.triggerTouchpadDevices(); err != nil {
+		logger.Warning("failed to trigger touchpad devices:", err)
+		return err
+	}
 	return nil
 }
 
@@ -132,17 +147,7 @@ func (t *Touchpad) setTouchpadEnableViaUdev(enabled bool) error {
 		logger.Info("created udev rule file:", udevRuleFile)
 	}
 
-	// 重新加载 udev 规则
-	if err := reloadUdevRules(); err != nil {
-		logger.Warning("failed to reload udev rules:", err)
-	}
-
-	// 只触发触控板设备，减少不必要的事件
-	if err := t.triggerTouchpadDevices(); err != nil {
-		logger.Warning("failed to trigger touchpad devices:", err)
-	}
-
-	return nil
+	return t.refreshTouchpadDevices()
 }
 
 // reloadUdevRules 重新加载 udev 规则

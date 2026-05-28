@@ -281,14 +281,33 @@ func (tpad *Touchpad) updateDXTpads() {
 
 // 受鼠标禁用触控板影响，临时关闭触控板
 func (tpad *Touchpad) setDisableTemporary(disable bool) {
+	oldDisableTemporary := tpad.disableTemporary
+	tpad.disableTemporary = disable
+	enabled := !disable && tpad.TPadEnable
+	recovered := oldDisableTemporary && !disable && enabled
+
 	if len(tpad.devInfos) > 0 {
 		for _, v := range tpad.devInfos {
-			err := v.Enable(!disable && tpad.TPadEnable)
+			err := v.Enable(enabled)
 			if err != nil {
 				logger.Warningf("Enable '%v - %v' failed: %v",
 					v.Id, v.Name, err)
 			}
 		}
+	}
+
+	if recovered {
+		tpad.refreshSystemTouchpadDevices()
+	}
+}
+
+func (tpad *Touchpad) refreshSystemTouchpadDevices() {
+	if tpad.sysTouchPad == nil {
+		logger.Warning("skip system touchpad refresh because system touchpad proxy is nil")
+		return
+	}
+	if err := tpad.sysTouchPad.SetTouchpadEnable(0, true); err != nil {
+		logger.Warning("request system touchpad refresh failed:", err)
 	}
 }
 
