@@ -273,7 +273,7 @@ msgstr "Ocultar área de trabalho"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
-msgstr "Mostrar/ocultar iniciador"
+msgstr "Exibir/ocultar launcher"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
@@ -309,7 +309,7 @@ msgstr "Ir para a limpeza"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
-msgstr "Lançador"
+msgstr "Launcher"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:14
 msgid "Terminal"
