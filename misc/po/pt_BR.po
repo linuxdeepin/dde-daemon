@@ -293,7 +293,7 @@ msgstr "Mostrar/ocultar pesquisa geral"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
-msgstr "Mostrar/ocultar centro de notificações"
+msgstr "Exibir/ocultar notificações"
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
@@ -405,7 +405,7 @@ msgstr "Pesquisa Instantânea"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
-msgstr "Central de Notificações"
+msgstr "Notificações"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:38
 #: ../../keybinding1/shortcuts/id_name_map.go:46
