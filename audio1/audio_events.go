@@ -335,6 +335,7 @@ func (a *Audio) handleCardRemoved(idx uint32) {
 		return
 	}
 	logger.Infof("card <%s:%d> removed", oldCard.core.Name, idx)
+	a.cardFixGroup.deleteFix(idx)
 	a.cards, _ = a.cards.delete(idx)
 	cards := a.cards.string()
 	a.setPropCards(cards)

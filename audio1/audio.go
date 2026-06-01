@@ -178,7 +178,8 @@ type Audio struct {
 	mu            sync.Mutex
 	quit          chan struct{}
 
-	cards CardList
+	cards        CardList
+	cardFixGroup *CardFixGroup
 
 	isSaving    bool
 	saverLocker sync.Mutex
@@ -205,10 +206,11 @@ type Audio struct {
 
 func newAudio(service *dbusutil.Service) *Audio {
 	a := &Audio{
-		service:          service,
-		meters:           make(map[string]*Meter),
-		MaxUIVolume:      pulse.VolumeUIMax,
+		service:       service,
+		meters:        make(map[string]*Meter),
+		MaxUIVolume:   pulse.VolumeUIMax,
 		AudioServerState: AudioStateChanged,
+		cardFixGroup:  newCardFixGroup(),
 	}
 
 	var err error
@@ -991,13 +993,39 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int, auto bool
 		logger.Warning(err)
 		return err
 	}
+
+	// 提前校验：sink 方向的端口必须有可用的 profiles
+	if direction == pulse.DirectionSink && port.Profiles == nil {
+		logger.Warningf("setPort: card %d port %s has nil profiles", cardId, portName)
+		return fmt.Errorf("card %d port %s has nil profiles", cardId, portName)
+	}
+
 	// 获取声卡配置中的profile
 	var profile string
 	if direction == pulse.DirectionSink {
 		profile = GetConfigKeeper().GetMode(card, portName)
 		if profile == "" {
 			profile = port.Profiles.SelectProfile()
+			if profile == "" {
+				logger.Warningf("setPort: no available profile for card %d port %s", cardId, portName)
+				return fmt.Errorf("no available profile for card %d port %s", cardId, portName)
+			}
 			GetConfigKeeper().SetMode(card, portName, profile)
+		} else {
+			// 情况一：兼容pipewire升级导致的声卡的配置文件的发生变化，导致配置找不到
+			// 情况二：另一种情况是pipewire初始化时，音频端口不是同时上报上来的，导致配置文件找不到，暂时先切换到已存在的profile
+			// 由于情况二的场景存在，不能在这里修改profile
+			if !card.Profiles.Exists(profile) {
+				oldProfile := profile
+				profile = port.Profiles.SelectProfile()
+				if profile == "" {
+					logger.Warningf("setPort: no available fallback profile for card %d port %s", cardId, portName)
+					return fmt.Errorf("no available fallback profile for card %d port %s", cardId, portName)
+				}
+				a.cardFixGroup.addFix(cardId, 30*time.Second, func() {
+					card.fixProfile(a, portName, oldProfile)
+				})
+			}
 		}
 	} else {
 		profile = card.ActiveProfile.Name

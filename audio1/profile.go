@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -32,6 +32,18 @@ func newProfile(info pulse.ProfileInfo2) *Profile {
 }
 
 type ProfileList []*Profile
+
+func (l ProfileList) Exists(name string) bool {
+	if l == nil {
+		return false
+	}
+	for _, p := range l {
+		if p != nil && p.Name == name {
+			return true
+		}
+	}
+	return false
+}
 
 func newProfileList(src []pulse.ProfileInfo2) ProfileList {
 	var result ProfileList

@@ -9,6 +9,8 @@ import (
 	"math"
 	"sort"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-lib/strv"
@@ -424,4 +426,109 @@ func (card *Card) doDiff(oldCard *Card, autoPause bool) ChangeType {
 		logger.Infof("card <%s> changed:%v", card.Name, changed)
 	}
 	return changed
+}
+
+// CardFixGroup 管理需要延迟修复的声卡
+type CardFixGroup struct {
+	mu    sync.Mutex
+	fixes map[uint32]*CardFix
+}
+
+func newCardFixGroup() *CardFixGroup {
+	return &CardFixGroup{
+		fixes: make(map[uint32]*CardFix),
+	}
+}
+
+// addFix 添加一个待修复的声卡，延迟delay后执行fixFn（sync.Once保证只执行一次）
+func (cfg *CardFixGroup) addFix(cardId uint32, delay time.Duration, fixFn func()) {
+	if fixFn == nil {
+		logger.Warning("addFix: fixFn is nil, skip")
+		return
+	}
+
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
+
+	// 已存在则跳过
+	if _, exists := cfg.fixes[cardId]; exists {
+		return
+	}
+
+	fix := &CardFix{
+		cardId: cardId,
+		fixFn:  fixFn,
+	}
+	fix.timer = time.AfterFunc(delay, func() {
+		fix.once.Do(func() {
+			fix.fixFn()
+		})
+	})
+	cfg.fixes[cardId] = fix
+}
+
+// deleteFix 删除并停止指定声卡的修复定时器
+func (cfg *CardFixGroup) deleteFix(cardId uint32) {
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
+
+	if fix, exists := cfg.fixes[cardId]; exists {
+		if fix.timer != nil {
+			fix.timer.Stop()
+		}
+		delete(cfg.fixes, cardId)
+	}
+}
+
+// fixProfile 修复声卡配置中的profile：配置中保存的profile一直不在card的profile列表中，则更新配置
+func (c *Card) fixProfile(a *Audio, portName string, oldProfile string) {
+	if a == nil {
+		logger.Warning("fixProfile: audio is nil")
+		return
+	}
+
+	// 加锁保护 a.cards 的并发访问，避免与 handleCardRemoved 产生数据竞争
+	a.mu.Lock()
+	currentCard, err := a.cards.get(c.Id)
+	a.mu.Unlock()
+
+	if err != nil {
+		logger.Warningf("fixProfile: card %d not found", c.Id)
+		return
+	}
+
+	if currentCard == nil {
+		logger.Warningf("fixProfile: card %d is nil", c.Id)
+		return
+	}
+
+	// 配置已经被其他流程更新，无需修复
+	currentMode := GetConfigKeeper().GetMode(currentCard, portName)
+	if currentMode != oldProfile {
+		logger.Debugf("fixProfile: config already changed to %s, skip", currentMode)
+		return
+	}
+
+	// 配置中保存的profile又出现了，说明是临时性变化，跳过修复
+	if currentCard.Profiles.Exists(oldProfile) {
+		logger.Debugf("fixProfile: old profile %s exists again, skip", oldProfile)
+		return
+	}
+
+	if currentCard.ActiveProfile == nil {
+		logger.Warningf("fixProfile: card %d ActiveProfile is nil", c.Id)
+		return
+	}
+
+	logger.Infof("fixProfile: update config profile from %s to %s for port %s",
+		oldProfile, currentCard.ActiveProfile.Name, portName)
+	GetConfigKeeper().SetMode(currentCard, portName, currentCard.ActiveProfile.Name)
+}
+
+// CardFix 单个声卡的修复项，fixFn由调用方提供具体修复逻辑
+type CardFix struct {
+	cardId uint32
+	fixFn  func()
+	timer  *time.Timer
+	once   sync.Once
 }
