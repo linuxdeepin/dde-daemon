@@ -20,6 +20,7 @@ import (
 	clipboard "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.clipboard1"
 	dock "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.daemon.dock1"
 	display "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
+	inputdevices "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.inputdevices1"
 	launchpad "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.launcher1"
 	notification "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.notification1"
 	sessionmanager "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.sessionmanager1"
@@ -76,6 +77,7 @@ type Manager struct {
 	service            *dbusutil.Service
 	sysDaemon          daemon.Daemon
 	systemSigLoop      *dbusutil.SignalLoop
+	sessionSigLoop     *dbusutil.SignalLoop
 	mu                 sync.RWMutex
 	gesture            gesture.Gesture
 	dock               dock.Dock
@@ -98,6 +100,8 @@ type Manager struct {
 	dconfigGesture     *dconfig.DConfig
 	dconfigTouchScreen *dconfig.DConfig
 	availableGestures  map[string][]string
+
+	gestureDisabledTemp bool
 }
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
@@ -155,6 +159,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	m.gesture = gesture.NewGesture(systemConn)
 	m.systemSigLoop = dbusutil.NewSignalLoop(systemConn, 10)
+	m.sessionSigLoop = dbusutil.NewSignalLoop(sessionConn, 10)
 
 	if _useWayland {
 		m.sessionWatcher = sessionwatcher.NewSessionWatcher(sessionConn)
@@ -221,6 +226,72 @@ func (m *Manager) saveGestureConfig() {
 func (m *Manager) destroy() {
 	m.gesture.RemoveHandler(proxy.RemoveAllHandlers)
 	m.systemSigLoop.Stop()
+	m.sessionSigLoop.Stop()
+}
+
+// initMouseExistWatcher 监听 inputdevices1 的 Mouse Exist 和 DisableTpad 属性变更
+// 当鼠标插入/拔出或用户切换"插入鼠标时禁用触控板"时，更新手势临时禁用状态
+func (m *Manager) initMouseExistWatcher() {
+	sessionConn := m.sessionSigLoop.Conn()
+	mouse := inputdevices.NewMouse(sessionConn)
+	mouse.InitSignalExt(m.sessionSigLoop, true)
+
+	err := mouse.Exist().ConnectChanged(func(hasValue bool, exist bool) {
+		if !hasValue {
+			logger.Debug("Mouse Exist property invalidated, enable gestures")
+			m.setGestureDisabledTemp(false)
+			return
+		}
+		m.syncGestureDisabledTemp(mouse)
+	})
+	if err != nil {
+		logger.Warningf("initMouseExistWatcher failed to watch Exist: %v", err)
+		return
+	}
+
+	err = mouse.DisableTpad().ConnectChanged(func(hasValue bool, disableTpad bool) {
+		if !hasValue {
+			return
+		}
+		if !disableTpad {
+			m.setGestureDisabledTemp(false)
+			return
+		}
+		// DisableTpad 开启时，还需检查鼠标是否实际存在
+		m.syncGestureDisabledTemp(mouse)
+	})
+	if err != nil {
+		logger.Warningf("initMouseExistWatcher failed to watch DisableTpad: %v", err)
+		return
+	}
+
+	m.syncGestureDisabledTemp(mouse)
+}
+
+func (m *Manager) setGestureDisabledTemp(disable bool) {
+	m.mu.Lock()
+	m.gestureDisabledTemp = disable
+	m.mu.Unlock()
+}
+
+func (m *Manager) syncGestureDisabledTemp(mouse inputdevices.Mouse) {
+	exist, err := mouse.Exist().Get(0)
+	if err != nil {
+		logger.Warningf("syncGestureDisabledTemp failed to get Exist: %v", err)
+		return
+	}
+	if !exist {
+		m.setGestureDisabledTemp(false)
+		return
+	}
+
+	disable, err := mouse.DisableTpad().Get(0)
+	if err != nil {
+		logger.Warningf("syncGestureDisabledTemp failed to get DisableTpad: %v", err)
+		return
+	}
+
+	m.setGestureDisabledTemp(disable)
 }
 
 func (m *Manager) init() {
@@ -262,6 +333,9 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	}
 
+	m.initMouseExistWatcher()
+
+	m.sessionSigLoop.Start()
 	m.systemSigLoop.Start()
 	m.gesture.InitSignalExt(m.systemSigLoop, true)
 	_, err = m.gesture.ConnectEvent(func(name string, direction string, fingers int32) {
@@ -726,6 +800,10 @@ func (m *Manager) shouldHandleEvent(devType deviceType) (bool, error) {
 
 	switch devType {
 	case deviceTouchPad:
+		if m.gestureDisabledTemp {
+			logger.Debug("touch pad is temporarily disabled by mouse, do not handle touchpad gesture event")
+			return false, nil
+		}
 		if !m.touchPadEnabled.Get() {
 			logger.Debug("touch pad is disabled, do not handle touchpad gesture event")
 			return false, nil

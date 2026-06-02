@@ -279,7 +279,7 @@ func (tpad *Touchpad) updateDXTpads() {
 	tpad.PropsMu.Unlock()
 }
 
-// 受鼠标禁用触控板影响，临时关闭触控板
+// 受鼠标禁用触控板影响，临时关闭触控板及手势
 func (tpad *Touchpad) setDisableTemporary(disable bool) {
 	oldDisableTemporary := tpad.disableTemporary
 	tpad.disableTemporary = disable
