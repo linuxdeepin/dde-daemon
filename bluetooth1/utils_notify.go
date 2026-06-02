@@ -143,14 +143,9 @@ func notifyPassiveConnect(dev *DeviceInfo, pinCode string) error {
 	cmd := notifyDdeDialogPath + "," + pinCode + "," + string(dev.Path) + "," + timestamp
 	hints := map[string]dbus.Variant{"x-deepin-action-pair": dbus.MakeVariant(cmd)}
 
-	// to make sure last notification has been closed
-	err := globalNotifications.CloseNotification(0, nid)
-	if err != nil {
-		logger.Warningf("close last notification failed,err:%v", err)
-	}
-
 	// notify connect request to dde-control-center
 	// set notify time out as -1, default time out is 5 seconds
+	var err error
 	nid, err = globalNotifications.Notify(0, Tr("dde-control-center"), nid, notifyIconBluetoothConnected,
 		summary, body, as, hints, 30*1000)
 	if err != nil {
