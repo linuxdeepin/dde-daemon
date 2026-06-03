@@ -1314,7 +1314,7 @@ func (a *Audio) refreshBluetoothOpts() {
 		return
 	}
 
-	if !isBluezAudio(card.Name) {
+	if !isBluezAudio(card.core.Name) {
 		return
 	}
 
