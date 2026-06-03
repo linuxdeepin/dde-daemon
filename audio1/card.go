@@ -51,7 +51,7 @@ func getCardName(card *pulse.Card) (name string) {
 	propAlsaCardName := card.PropList["alsa.card_name"]
 	propDeviceApi := card.PropList["device.api"]
 	propDeviceDesc := card.PropList["device.description"]
-	if propDeviceApi == "bluez" && propDeviceDesc != "" {
+	if (propDeviceApi == "bluez5" || propDeviceApi == "bluez") && propDeviceDesc != "" {
 		name = propDeviceDesc
 	} else if propAlsaCardName != "" {
 		name = propAlsaCardName
