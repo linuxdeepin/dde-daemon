@@ -14,7 +14,7 @@
       "visibility": "private"
     },
     "defaultTemperatureManual": {
-      "value": 6500,
+      "value": 3500,
       "serial": 0,
       "flags": [],
       "name": "default temperature manual",
