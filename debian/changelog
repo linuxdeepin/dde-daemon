@@ -1,3 +1,20 @@
+dde-daemon (6.1.94) unstable; urgency=medium
+
+  * fix(audio): fix BluetoothAudioMode empty after bluez5 support
+  * Revert "fix(display): adjust default manual color temperature"
+  * feat(inputdevices): disable touchpad gestures when mouse is plugged
+    in
+  * fix: resolve Bluetooth connection notification issue
+  * fix: optimize shortcut launch performance by replacing subprocess
+    spawning with in-process handlers
+  * fix: resolve audio silence after upgrade
+  * fix: disable gesture module on Treeland
+  * fix(inputdevices): refresh touchpad devices after mouse removal
+  * fix(dde-power): temporarily remove D-Bus service to prevent
+    incorrect activation on Treeland
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 04 Jun 2026 20:30:45 +0800
+
 dde-daemon (6.1.93) unstable; urgency=medium
 
   * fix: add dde-shell to touchscreen longpress blacklist
