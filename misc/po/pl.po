@@ -264,7 +264,7 @@ msgstr "Przejdź do następnego pulpitu"
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
 msgid "Show desktop"
-msgstr "Wyświetl pulpit"
+msgstr "Pokaż pulpit"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
