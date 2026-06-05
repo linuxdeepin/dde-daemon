@@ -289,7 +289,7 @@ msgstr "Mostrar/ocultar área de transferência"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
-msgstr "Mostrar/ocultar pesquisa geral"
+msgstr "Exibir/ocultar pesquisa global"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
@@ -401,7 +401,7 @@ msgstr "Tradução"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
-msgstr "Pesquisa Instantânea"
+msgstr "Pesquisa global"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
