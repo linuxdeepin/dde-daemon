@@ -349,7 +349,7 @@ msgstr "Captura da Janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:23
 msgid "Delay screenshot"
-msgstr "Atrasar captura"
+msgstr "Capturar tela com atraso"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:24
 msgid "OCR (Image to Text)"
