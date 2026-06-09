@@ -29,7 +29,7 @@
       "name": "passwordEncryptionAlgorithm",
       "name[zh_CN]": "密码加密算法",
       "description": "Password encryption algorithm (sha512, sha256, yescrypt, sm3(default))",
-      "permissions": "readonly",
+      "permissions": "readwrite",
       "visibility": "private"
     }
   }
