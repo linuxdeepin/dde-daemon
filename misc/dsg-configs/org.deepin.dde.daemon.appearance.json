@@ -5,8 +5,7 @@
         "irregularFontOverride": {
             "value": "{\"GB_SS_GB18030_Extended\":{\"AppendLang\":[\"zh-cn\",\"zh-sg\"]}}",
             "serial": 0,
-            "flags": [],
-            "global": true,
+            "flags": ["global"],
             "name": "IrregularFontOverride",
             "name[zh_CN]": "不规范字体参数override",
             "description": "不规范字体override",
@@ -19,7 +18,6 @@
             "flags": [
                 "global"
             ],
-            "global": true,
             "name": "scale without plymouth",
             "name[zh_CN]": "设置不包含plymouth的缩放",
             "description": "设置不包含plymouth的缩放",

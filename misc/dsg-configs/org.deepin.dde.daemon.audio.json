@@ -15,8 +15,7 @@
     "autoSwitchPort": {
       "value": true,
       "serial": 0,
-      "flags": [],
-      "global": true,
+      "flags": ["global"],
       "name": "AutoSwitchPort",
       "name[zh_CN]": "根据dde优先级管理自动切换端口",
       "description": "auto switch pulse port",
@@ -26,8 +25,7 @@
     "bluezModeFilterList": {
       "value": ["a2dp_source"],
       "serial": 0,
-      "flags": [],
-      "global": true,
+      "flags": ["global"],
       "name": "BluezModeFilterList",
       "name[zh_CN]": "需要过滤的蓝牙音频模式",
       "description": "bluetooth audio mode that requires filtering",
@@ -42,8 +40,7 @@
 	"unknown-output"
       ],
       "serial": 0,
-      "flags": [],
-      "global": true,
+      "flags": ["global"],
       "name": "PortFilterList",
       "name[zh_CN]": "需要过滤的端口",
       "description": "port filter list",
@@ -79,8 +76,7 @@
     "bluezModeDefault": {
       "value": "a2dp",
       "serial": 0,
-      "flags": [],
-      "global": true,
+      "flags": ["global"],
       "name": "BluezModeDefault",
       "name[zh_CN]": "蓝牙默认模式",
       "description": "bluetooth audio default mode",
@@ -90,8 +86,7 @@
     "monoEnabled":{
       "value": false,
       "serial": 0,
-      "flags": [],
-      "global": true,
+      "flags": ["global"],
       "name": "monoEnabled",
       "name[zh_CN]": "单声道开关",
       "description": "audio channel mono enabled set",
@@ -101,8 +96,7 @@
     "reduceNoiseEnabled":{
       "value": false,
       "serial": 0,
-      "flags": [],
-      "global": true,
+      "flags": ["global"],
       "name": "reduceNoiseEnabled",
       "name[zh_CN]": "噪音抑制开关",
       "description": "audio channel noise reduce enabled set",
