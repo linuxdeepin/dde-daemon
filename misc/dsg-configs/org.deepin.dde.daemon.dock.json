@@ -5,8 +5,7 @@
     "hideRequestDockAndUndockByName": {
       "value": ["Deepin-Deepinid-Client"],
       "serial": 0,
-      "flags": [],
-      "global": true,
+      "flags": ["global"],
       "name": "HideRequestDockAndUndockByName",
       "name[zh_CN]": "通过名称隐藏驻留和移除驻留",
       "description": "hide request dock and undock by name",

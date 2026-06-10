@@ -5,8 +5,7 @@
         "supportDdcci": {
             "value": false,
             "serial": 0,
-            "flags": [],
-            "global": true,
+            "flags": ["global"],
             "name": "SupportDdcci",
             "name[zh_CN]": "支持ddcci亮度调节",
             "description": "brightness ddcci support",
@@ -16,8 +15,7 @@
         "isBacklightHelperHold": {
             "value": false,
             "serial": 0,
-            "flags": [],
-            "global": true,
+            "flags": ["global"],
             "name": "IsBacklightHelperHold",
             "name[zh_CN]": "亮度调节是否驻留",
             "description": "config backlight-helper progress hold",
