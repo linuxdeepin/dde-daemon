@@ -1,3 +1,14 @@
+dde-daemon (6.1.95) unstable; urgency=medium
+
+  * fix(display): migrate concat screen management to daemon
+  * feat: add third-party service detection for short idle power
+    management
+  * fix: correct dconfig global flag format
+  * feat(account): make passwordEncryptionAlgorithm config writable
+  * feat: add short idle and TLP mode support
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 11 Jun 2026 21:45:05 +0800
+
 dde-daemon (6.1.94) unstable; urgency=medium
 
   * fix(audio): fix BluetoothAudioMode empty after bluez5 support
