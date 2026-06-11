@@ -57,6 +57,7 @@ const (
 	dsettingShutdownCountdown                    = "shutdownCountdown"
 	dsettingNextShutdownTime                     = "nextShutdownTime"
 	dsettingsSystemApplications                  = "systemApplications"
+	dsettingsSystemServices                      = "systemServices"
 	dsettingsShortIdleState                      = "shortIdleState"
 	dsettingsShortIdleEnable                     = "shortIdleEnable"
 	dsettingsShortIdleBlacklistApplications      = "shortIdleBlacklistApplications"

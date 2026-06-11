@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -82,6 +82,86 @@ func Test_getWarnLevel(t *testing.T) {
 	assert.Equal(t, getWarnLevel(config, onBattery, 0, 901), WarnLevelLow)
 	assert.Equal(t, getWarnLevel(config, onBattery, 0, 1200), WarnLevelLow)
 	assert.Equal(t, getWarnLevel(config, onBattery, 0, 12001), WarnLevelNone)
+}
+
+func TestManagerSystemApplicationsSnapshotReturnsCopy(t *testing.T) {
+	m := &Manager{
+		systemApplicationsMap: map[string]string{"deepin-terminal.desktop": "/usr/share/applications/deepin-terminal.desktop"},
+	}
+
+	snapshot := m.systemApplicationsSnapshot()
+	snapshot["browser.desktop"] = "/usr/share/applications/browser.desktop"
+
+	_, exists := m.systemApplicationsMap["browser.desktop"]
+	assert.False(t, exists)
+	assert.Equal(t, "/usr/share/applications/deepin-terminal.desktop", snapshot["deepin-terminal.desktop"])
+}
+
+func TestManagerReplaceSystemApplicationsReplacesContents(t *testing.T) {
+	m := &Manager{
+		systemApplicationsMap: map[string]string{"old.desktop": "old.desktop"},
+	}
+	psp := &powerSavePlan{manager: m}
+
+	m.replaceSystemApplications([]string{"/usr/share/applications/deepin-terminal.desktop", "browser.desktop"}, psp.getDesktopName)
+
+	assert.Equal(t, map[string]string{
+		"deepin-terminal.desktop": "/usr/share/applications/deepin-terminal.desktop",
+		"browser.desktop":         "browser.desktop",
+	}, m.systemApplicationsSnapshot())
+}
+
+func TestManagerShortIdleBlacklistSnapshotReturnsCopy(t *testing.T) {
+	m := &Manager{
+		shortIdleBlackListApplicationsMap: map[string]string{"deepin-movie.desktop": "/usr/share/applications/deepin-movie.desktop"},
+	}
+
+	snapshot := m.shortIdleBlacklistApplicationsSnapshot()
+	snapshot["browser.desktop"] = "/usr/share/applications/browser.desktop"
+
+	_, exists := m.shortIdleBlackListApplicationsMap["browser.desktop"]
+	assert.False(t, exists)
+	assert.Equal(t, "/usr/share/applications/deepin-movie.desktop", snapshot["deepin-movie.desktop"])
+}
+
+func TestManagerReplaceShortIdleBlacklistApplicationsReplacesContents(t *testing.T) {
+	m := &Manager{
+		shortIdleBlackListApplicationsMap: map[string]string{"old.desktop": "old.desktop"},
+	}
+	psp := &powerSavePlan{manager: m}
+
+	m.replaceShortIdleBlacklistApplications([]string{"/usr/share/applications/deepin-movie.desktop", "browser.desktop"}, psp.getDesktopName)
+
+	assert.Equal(t, map[string]string{
+		"deepin-movie.desktop": "/usr/share/applications/deepin-movie.desktop",
+		"browser.desktop":      "browser.desktop",
+	}, m.shortIdleBlacklistApplicationsSnapshot())
+}
+
+func TestManagerSystemServicesSnapshotReturnsCopy(t *testing.T) {
+	m := &Manager{
+		systemServicesMap: map[string]string{"dde-session-daemon.service": "dde-session-daemon.service"},
+	}
+
+	snapshot := m.systemServicesSnapshot()
+	snapshot["custom.service"] = "custom.service"
+
+	_, exists := m.systemServicesMap["custom.service"]
+	assert.False(t, exists)
+	assert.Equal(t, "dde-session-daemon.service", snapshot["dde-session-daemon.service"])
+}
+
+func TestManagerReplaceSystemServicesReplacesContents(t *testing.T) {
+	m := &Manager{
+		systemServicesMap: map[string]string{"old.service": "old.service"},
+	}
+
+	m.replaceSystemServices([]string{"dde-session-daemon.service", "NetworkManager.service"})
+
+	assert.Equal(t, map[string]string{
+		"dde-session-daemon.service": "dde-session-daemon.service",
+		"NetworkManager.service":     "NetworkManager.service",
+	}, m.systemServicesSnapshot())
 }
 
 func TestMetaTasksMin(t *testing.T) {
