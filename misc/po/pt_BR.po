@@ -273,7 +273,7 @@ msgstr "Ocultar área de trabalho"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
-msgstr "Mostrar/ocultar iniciador"
+msgstr "Exibir/ocultar launcher"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
@@ -289,11 +289,11 @@ msgstr "Mostrar/ocultar área de transferência"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
-msgstr "Mostrar/ocultar pesquisa geral"
+msgstr "Exibir/ocultar pesquisa global"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
-msgstr "Mostrar/ocultar centro de notificações"
+msgstr "Exibir/ocultar notificações"
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
@@ -309,7 +309,7 @@ msgstr "Ir para a limpeza"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
-msgstr "Lançador"
+msgstr "Launcher"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:14
 msgid "Terminal"
@@ -349,7 +349,7 @@ msgstr "Captura da Janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:23
 msgid "Delay screenshot"
-msgstr "Atrasar captura"
+msgstr "Capturar tela com atraso"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:24
 msgid "OCR (Image to Text)"
@@ -401,11 +401,11 @@ msgstr "Tradução"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
-msgstr "Pesquisa Instantânea"
+msgstr "Pesquisa global"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
-msgstr "Central de Notificações"
+msgstr "Notificações"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:38
 #: ../../keybinding1/shortcuts/id_name_map.go:46
