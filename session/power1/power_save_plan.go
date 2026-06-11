@@ -5,10 +5,12 @@
 package power
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"math"
 	"os"
+	"os/exec"
 	"strings"
 	"sync"
 	"time"
@@ -60,6 +62,11 @@ type powerSavePlan struct {
 	allowScreenSaver       bool
 	isIdle                 bool
 	shortIdleEnable        bool
+	runningServicesMu      sync.Mutex
+	runningServicesCache   []string
+	runningServicesTime    time.Time
+	runningServicesErr     error
+	runningServicesErrTime time.Time
 }
 
 func newPowerSavePlan(manager *Manager) (string, submodule, error) {
@@ -610,7 +617,6 @@ func (psp *powerSavePlan) getDesktopName(value string) (ret string) {
 	partsLength := len(parts)
 	if partsLength >= 1 {
 		ret = parts[partsLength-1]
-		logger.Info("getDesktopName value : ", value, ret)
 	}
 	return ret
 }
@@ -691,26 +697,112 @@ func (psp *powerSavePlan) isThirdPartyAppRunning() (ret bool) {
 	if psp.manager == nil {
 		return
 	}
-	logger.Info("system applications: ", psp.manager.systemApplicationsMap)
 
-	// 检查启动应用的desktop，是否在系统应用psp.manager.systemApplicationsMap中
-	// 只要有一个运行中的desktop不存在于psp.manager.systemApplicationsMap中，说明就有第三方应用运行
+	systemApplicationsMap := psp.manager.systemApplicationsSnapshot()
+	shortIdleBlacklistApplicationsMap := psp.manager.shortIdleBlacklistApplicationsSnapshot()
+	logger.Debug("system applications: ", systemApplicationsMap)
+
+	// 检查启动应用的desktop，是否在系统应用 systemApplicationsMap 中
+	// 只要有一个运行中的desktop不存在于 systemApplicationsMap 中，说明就有第三方应用运行
 	for _, app := range launchedApplications {
 		desktop := strings.ToLower(psp.getDesktopName(app))
 		// 如果存在短idle黑名单应用在运行，则返回true -> 不进短idle
-		if _, exists := psp.manager.shortIdleBlackListApplicationsMap[desktop]; exists {
+		if _, exists := shortIdleBlacklistApplicationsMap[desktop]; exists {
 			logger.Info("Found shortIdle blacklist application running: ", app, desktop)
 			ret = true
 			break
 		}
 
-		if _, exists := psp.manager.systemApplicationsMap[desktop]; !exists {
+		if _, exists := systemApplicationsMap[desktop]; !exists {
 			// 如果不存在的应用的desktop包含deepin、dde、uos说明也是系统应用，这个应用应该加到系统应用列表中
 			if strings.Contains(desktop, "deepin") || strings.Contains(desktop, "dde") || strings.Contains(desktop, "uos") {
 				logger.Warning("Need add systemApplicationsMap, Running app : ", app, desktop)
 				continue
 			}
 			logger.Info("Found third-party application running: ", app, desktop)
+			ret = true
+			break
+		}
+	}
+	return ret
+}
+
+func listRunningSystemServices() ([]string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	out, err := exec.CommandContext(ctx, "systemctl", "list-units", "--state=running", "--no-pager", "--no-legend", "--type=service").Output()
+	if err != nil {
+		logger.Warning("failed to list running services:", err)
+		return nil, err
+	}
+
+	var runningServices []string
+	for _, line := range strings.Split(string(out), "\n") {
+		fields := strings.Fields(line)
+		if len(fields) == 0 {
+			continue
+		}
+		runningServices = append(runningServices, fields[0])
+	}
+	logger.Debug("running services: ", runningServices)
+	return runningServices, nil
+}
+
+func isSystemServiceName(name string) bool {
+	lowerName := strings.ToLower(name)
+	return strings.HasPrefix(lowerName, "dde-") ||
+		strings.HasPrefix(lowerName, "deepin-") ||
+		strings.HasPrefix(lowerName, "uos-") ||
+		strings.HasPrefix(lowerName, "org.deepin.") ||
+		strings.HasPrefix(lowerName, "com.deepin.") ||
+		strings.HasPrefix(lowerName, "user@")
+}
+
+func (psp *powerSavePlan) getRunningSystemServices() ([]string, error) {
+	psp.runningServicesMu.Lock()
+	defer psp.runningServicesMu.Unlock()
+
+	if time.Since(psp.runningServicesTime) < 10*time.Second {
+		return append([]string(nil), psp.runningServicesCache...), nil
+	}
+	if psp.runningServicesErr != nil && time.Since(psp.runningServicesErrTime) < 5*time.Second {
+		return nil, psp.runningServicesErr
+	}
+
+	runningServices, err := listRunningSystemServices()
+	if err != nil {
+		psp.runningServicesErr = err
+		psp.runningServicesErrTime = time.Now()
+		return nil, err
+	}
+
+	psp.runningServicesCache = runningServices
+	psp.runningServicesTime = time.Now()
+	psp.runningServicesErr = nil
+	return append([]string(nil), psp.runningServicesCache...), nil
+}
+
+func (psp *powerSavePlan) isThirdPartyServiceRunning() (ret bool) {
+	if psp.manager == nil {
+		return
+	}
+
+	runningServices, err := psp.getRunningSystemServices()
+	if err != nil {
+		logger.Warning("failed to get running services, prevent short idle:", err)
+		return true
+	}
+
+	systemServicesMap := psp.manager.systemServicesSnapshot()
+
+	for _, name := range runningServices {
+		if _, exists := systemServicesMap[name]; !exists {
+			// 如果不存在的服务名带有系统服务前缀，该服务应该加到系统服务列表中
+			if isSystemServiceName(name) {
+				logger.Debug("system Services, Running service: ", name)
+				continue
+			}
+			logger.Info("Found third-party service running: ", name)
 			ret = true
 			break
 		}
@@ -740,6 +832,10 @@ func (psp *powerSavePlan) changeShortIdleState(state bool) {
 	if state {
 		if psp.isThirdPartyAppRunning() {
 			logger.Info("third-party application is running, Can't enter short idle.")
+			return
+		}
+		if psp.isThirdPartyServiceRunning() {
+			logger.Info("third-party service is running, Can't enter short idle.")
 			return
 		}
 	}
@@ -1367,16 +1463,24 @@ func (psp *powerSavePlan) initDsgConfig() error {
 			logger.Warning(err)
 			return
 		}
+
 		dsgSystemApplications := interfaceToArrayString(v.Value())
-		if len(psp.manager.systemApplicationsMap) != 0 {
-			psp.manager.systemApplicationsMap = make(map[string]string)
-		}
-		for _, app := range dsgSystemApplications {
-			psp.manager.systemApplicationsMap[strings.ToLower(psp.getDesktopName(app))] = app
-		}
-		logger.Info("system applications []string -> map : ", psp.manager.systemApplicationsMap)
+		psp.manager.replaceSystemApplications(dsgSystemApplications, psp.getDesktopName)
+		logger.Info("system applications []string -> map : ", psp.manager.systemApplicationsSnapshot())
 	}
 	getSystemApplications()
+
+	getSystemServices := func() {
+		v, err := dsPower.Value(0, dsettingsSystemServices)
+		if err != nil {
+			logger.Warning(err)
+			return
+		}
+		dsgSystemServices := interfaceToArrayString(v.Value())
+		psp.manager.replaceSystemServices(dsgSystemServices)
+		logger.Debug("system services []string -> map : ", psp.manager.systemServicesSnapshot())
+	}
+	getSystemServices()
 
 	getShortIdleEnable := func() {
 		data, err := dsPower.Value(0, dsettingsShortIdleEnable)
@@ -1395,14 +1499,10 @@ func (psp *powerSavePlan) initDsgConfig() error {
 			logger.Warning(err)
 			return
 		}
+
 		dsgShortIdleBlacklistApplications := interfaceToArrayString(v.Value())
-		if len(psp.manager.shortIdleBlackListApplicationsMap) != 0 {
-			psp.manager.shortIdleBlackListApplicationsMap = make(map[string]string)
-		}
-		for _, app := range dsgShortIdleBlacklistApplications {
-			psp.manager.shortIdleBlackListApplicationsMap[strings.ToLower(psp.getDesktopName(app))] = app
-		}
-		logger.Info("shortIdle blackList system applications []string -> map : ", psp.manager.shortIdleBlackListApplicationsMap)
+		psp.manager.replaceShortIdleBlacklistApplications(dsgShortIdleBlacklistApplications, psp.getDesktopName)
+		logger.Info("shortIdle blackList system applications []string -> map : ", psp.manager.shortIdleBlacklistApplicationsSnapshot())
 	}
 	getShortIdleBlacklistApplications()
 
@@ -1418,6 +1518,8 @@ func (psp *powerSavePlan) initDsgConfig() error {
 			getDelayHandleIdleOffIntervalWhenScreenBlack()
 		case dsettingsSystemApplications:
 			getSystemApplications()
+		case dsettingsSystemServices:
+			getSystemServices()
 		case dsettingsShortIdleBlacklistApplications:
 			getShortIdleBlacklistApplications()
 		case dsettingsShortIdleEnable:

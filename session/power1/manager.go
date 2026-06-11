@@ -102,6 +102,8 @@ type Manager struct {
 	timeDate        timedate.Timedate
 
 	PropsMu sync.RWMutex
+	dsgMu   sync.Mutex
+
 	// 是否有盖子，一般笔记本电脑才有
 	LidIsPresent bool
 	// 是否使用电池, 接通电源时为 false, 使用电池时为 true
@@ -222,10 +224,70 @@ type Manager struct {
 	screensaverStateCaptured bool
 
 	systemApplicationsMap             map[string]string
+	systemServicesMap                 map[string]string
 	shortIdleBlackListApplicationsMap map[string]string
 }
 
 var _manager *Manager
+
+func copyStringMap(src map[string]string) map[string]string {
+	dst := make(map[string]string, len(src))
+	for key, value := range src {
+		dst[key] = value
+	}
+	return dst
+}
+
+func (m *Manager) systemApplicationsSnapshot() map[string]string {
+	m.dsgMu.Lock()
+	defer m.dsgMu.Unlock()
+	return copyStringMap(m.systemApplicationsMap)
+}
+
+func (m *Manager) replaceSystemApplications(applications []string, getDesktopName func(string) string) {
+	systemApplicationsMap := make(map[string]string, len(applications))
+	for _, app := range applications {
+		systemApplicationsMap[getDesktopName(app)] = app
+	}
+
+	m.dsgMu.Lock()
+	m.systemApplicationsMap = systemApplicationsMap
+	m.dsgMu.Unlock()
+}
+
+func (m *Manager) systemServicesSnapshot() map[string]string {
+	m.dsgMu.Lock()
+	defer m.dsgMu.Unlock()
+	return copyStringMap(m.systemServicesMap)
+}
+
+func (m *Manager) replaceSystemServices(services []string) {
+	systemServicesMap := make(map[string]string, len(services))
+	for _, service := range services {
+		systemServicesMap[service] = service
+	}
+
+	m.dsgMu.Lock()
+	m.systemServicesMap = systemServicesMap
+	m.dsgMu.Unlock()
+}
+
+func (m *Manager) shortIdleBlacklistApplicationsSnapshot() map[string]string {
+	m.dsgMu.Lock()
+	defer m.dsgMu.Unlock()
+	return copyStringMap(m.shortIdleBlackListApplicationsMap)
+}
+
+func (m *Manager) replaceShortIdleBlacklistApplications(applications []string, getDesktopName func(string) string) {
+	shortIdleBlackListApplicationsMap := make(map[string]string, len(applications))
+	for _, app := range applications {
+		shortIdleBlackListApplicationsMap[getDesktopName(app)] = app
+	}
+
+	m.dsgMu.Lock()
+	m.shortIdleBlackListApplicationsMap = shortIdleBlackListApplicationsMap
+	m.dsgMu.Unlock()
+}
 
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	systemBus, err := dbus.SystemBus()
@@ -317,6 +379,7 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	m.timeDate.InitSignalExt(m.systemSigLoop, true)
 
 	m.systemApplicationsMap = make(map[string]string)
+	m.systemServicesMap = make(map[string]string)
 	m.shortIdleBlackListApplicationsMap = make(map[string]string)
 	return m, nil
 }

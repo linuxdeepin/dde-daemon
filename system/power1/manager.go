@@ -446,6 +446,7 @@ func (m *Manager) initDsgConfig() error {
 
 	dsPower.ConnectValueChanged(func(key string) {
 		logger.Info("dconfig org.deepin.dde.daemon.power valueChanged, key : ", key)
+		validValue := true
 		switch key {
 		case dsettingsPowerSavingModeAuto:
 			getPowerSavingModeAuto(false)
@@ -476,9 +477,12 @@ func (m *Manager) initDsgConfig() error {
 		case dsettingsShortIdleEnable:
 			getShortIdleEnable()
 		default:
+			validValue = false
 			logger.Debug("Not process. valueChanged, key : ", key)
 		}
-		m.updatePowerMode(false) // dconfig change
+		if validValue {
+			m.updatePowerMode(false) // dconfig change
+		}
 	})
 
 	return nil
