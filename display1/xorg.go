@@ -21,6 +21,8 @@ import (
 	"github.com/linuxdeepin/go-x11-client/ext/xfixes"
 )
 
+const concatScreenName = "DDE-CONCAT-SCREEN"
+
 var _hasRandr1d2 bool // 是否 randr 版本大于等于 1.2
 
 var _useWayland bool
@@ -141,6 +143,8 @@ type monitorManager interface {
 	showCursor(show bool) error
 	HandleEvent(ev interface{})
 	HandleScreenChanged(e *randr.ScreenChangeNotifyEvent) (cfgTsChanged bool)
+	setConcatScreen(outputNames []string) error
+	deleteConcatScreen() error
 }
 
 type xMonitorManager struct {
@@ -1098,6 +1102,124 @@ func (mm *xMonitorManager) getScreenResourcesCurrent() (*randr.GetScreenResource
 	root := mm.xConn.GetDefaultScreen().Root
 	resources, err := randr.GetScreenResourcesCurrent(mm.xConn, root).Reply(mm.xConn)
 	return resources, err
+}
+
+func (mm *xMonitorManager) setConcatScreen(outputNames []string) error {
+	rootWindow := mm.xConn.GetDefaultScreen().Root
+
+	screenRes, err := mm.getScreenResources(mm.xConn)
+	if err != nil {
+		return fmt.Errorf("getScreenResources failed: %w", err)
+	}
+
+	// 单轮扫描所有 output，建立 name → output 映射，同时缓存 outputInfo 避免重复 X11 调用
+	type outputEntry struct {
+		id      randr.Output
+		outInfo *randr.GetOutputInfoReply
+	}
+	nameMap := make(map[string]outputEntry)
+	for _, output := range screenRes.Outputs {
+		outInfo, err := randr.GetOutputInfo(mm.xConn, output, screenRes.ConfigTimestamp).Reply(mm.xConn)
+		if err != nil || outInfo == nil {
+			continue
+		}
+
+		for _, name := range outputNames {
+			if outInfo.Name == name {
+				nameMap[name] = outputEntry{id: output, outInfo: outInfo}
+				break
+			}
+		}
+	}
+
+	var outputs []randr.Output
+	var outInfos []*randr.GetOutputInfoReply
+	for _, name := range outputNames {
+		if entry, ok := nameMap[name]; ok {
+			outputs = append(outputs, entry.id)
+			outInfos = append(outInfos, entry.outInfo)
+		}
+	}
+	if len(outputs) < 2 {
+		return errors.New("need at least 2 outputs for concat screen")
+	}
+
+	nameAtom, err := x.InternAtom(mm.xConn, true, concatScreenName).Reply(mm.xConn)
+	if err != nil {
+		return fmt.Errorf("InternAtom failed: %w", err)
+	}
+	if nameAtom.Atom == 0 {
+		nameAtom, err = x.InternAtom(mm.xConn, false, concatScreenName).Reply(mm.xConn)
+		if err != nil {
+			return fmt.Errorf("InternAtom create failed: %w", err)
+		}
+	}
+
+	var boundMinX, boundMinY int16 = math.MaxInt16, math.MaxInt16
+	var boundMaxX, boundMaxY int16
+	for _, outInfo := range outInfos {
+		if outInfo.Crtc == 0 {
+			continue
+		}
+		crtcInfo, err := randr.GetCrtcInfo(mm.xConn, outInfo.Crtc, screenRes.ConfigTimestamp).Reply(mm.xConn)
+		if err != nil || crtcInfo == nil {
+			continue
+		}
+		if crtcInfo.X < boundMinX {
+			boundMinX = crtcInfo.X
+		}
+		if crtcInfo.Y < boundMinY {
+			boundMinY = crtcInfo.Y
+		}
+		if right := crtcInfo.X + int16(crtcInfo.Width); right > boundMaxX {
+			boundMaxX = right
+		}
+		if bottom := crtcInfo.Y + int16(crtcInfo.Height); bottom > boundMaxY {
+			boundMaxY = bottom
+		}
+	}
+	if boundMinX > boundMaxX || boundMinY > boundMaxY {
+		return errors.New("no valid CRTC info for concat screen outputs")
+	}
+
+	monInfo := randr.MonitorInfo{
+		Name:      nameAtom.Atom,
+		Primary:   false,
+		Automatic: false,
+		NOutputs:  uint16(len(outputs)),
+		X:         boundMinX,
+		Y:         boundMinY,
+		Width:     uint16(boundMaxX - boundMinX),
+		Height:    uint16(boundMaxY - boundMinY),
+		Outputs:   outputs,
+	}
+
+	cookie := randr.SetMonitorChecked(mm.xConn, rootWindow, &monInfo)
+	if err := cookie.Check(mm.xConn); err != nil {
+		return fmt.Errorf("SetMonitor failed: %w", err)
+	}
+	logger.Debug("concat screen set with", len(outputs), "outputs")
+	return nil
+}
+
+func (mm *xMonitorManager) deleteConcatScreen() error {
+	rootWindow := mm.xConn.GetDefaultScreen().Root
+
+	nameAtom, err := x.InternAtom(mm.xConn, true, concatScreenName).Reply(mm.xConn)
+	if err != nil {
+		return fmt.Errorf("InternAtom failed: %w", err)
+	}
+	if nameAtom.Atom == 0 {
+		logger.Debug("concat screen not found, nothing to delete")
+		return nil
+	}
+
+	cookie := randr.DeleteMonitorChecked(mm.xConn, rootWindow, nameAtom.Atom)
+	if err := cookie.Check(mm.xConn); err != nil {
+		return fmt.Errorf("DeleteMonitor failed: %w", err)
+	}
+	logger.Debug("concat screen deleted")
+	return nil
 }
 
 func (mm *xMonitorManager) handleCrtcChanged(e *randr.CrtcChangeNotifyEvent) {
