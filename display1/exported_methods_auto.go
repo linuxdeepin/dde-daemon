@@ -125,6 +125,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"outputName"},
 		},
 		{
+			Name:   "SetConcatScreen",
+			Fn:     v.SetConcatScreen,
+			InArgs: []string{"enable"},
+		},
+		{
 			Name:    "SupportSetColorTemperature",
 			Fn:      v.SupportSetColorTemperature,
 			OutArgs: []string{"outArg0"},

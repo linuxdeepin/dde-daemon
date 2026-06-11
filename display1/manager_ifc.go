@@ -260,6 +260,29 @@ func (m *Manager) SetPrimary(outputName string) *dbus.Error {
 	return dbusutil.ToError(err)
 }
 
+func (m *Manager) SetConcatScreen(enable bool) *dbus.Error {
+	if _useWayland {
+		return dbusutil.ToError(errors.New("concat screen not supported on wayland"))
+	}
+
+	if enable {
+		m.PropsMu.RLock()
+		displayMode := m.DisplayMode
+		m.PropsMu.RUnlock()
+		if displayMode != DisplayModeExtend {
+			return dbusutil.ToError(errors.New("concat screen is only supported in extend mode"))
+		}
+		if err := m.applyConcatScreen(); err != nil {
+			return dbusutil.ToError(err)
+		}
+	} else {
+		if err := m.removeConcatScreen(); err != nil {
+			return dbusutil.ToError(err)
+		}
+	}
+	return nil
+}
+
 func (m *Manager) CanRotate() (bool, *dbus.Error) {
 	if os.Getenv("DEEPIN_DISPLAY_DISABLE_ROTATE") == "1" {
 		return false, nil

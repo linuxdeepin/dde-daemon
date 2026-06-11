@@ -223,9 +223,10 @@ type Manager struct {
 	// dbusutil-gen: equal=objPathsEqual
 	Monitors []dbus.ObjectPath
 	// dbusutil-gen: equal=nil
-	CustomIdList []string
-	HasChanged   bool
-	DisplayMode  byte
+	CustomIdList        []string
+	HasChanged          bool
+	DisplayMode         byte
+	ConcatScreenEnabled bool
 	// dbusutil-gen: equal=nil
 	Brightness map[string]float64
 	// dbusutil-gen: equal=nil
@@ -1275,6 +1276,16 @@ func (m *Manager) applyConfig(setColorTemp bool, options applyOptions) (paths []
 		logger.Warning(err)
 	}
 
+	// 热插拔/配置重应用时自动退出跨屏拼接
+	m.PropsMu.RLock()
+	concatEnabled := m.ConcatScreenEnabled
+	m.PropsMu.RUnlock()
+	if concatEnabled {
+		if err := m.removeConcatScreen(); err != nil {
+			logger.Warning("applyConfig: failed to remove concat screen:", err)
+		}
+	}
+
 	return monitors.getPaths()
 }
 
@@ -2229,6 +2240,16 @@ func (m *Manager) switchMode(mode byte, name string) (err error) {
 		return nil
 	}
 
+	// 非扩展模式时自动清理拼接
+	m.PropsMu.RLock()
+	concatEnabled := m.ConcatScreenEnabled
+	m.PropsMu.RUnlock()
+	if mode != DisplayModeExtend && concatEnabled {
+		if err := m.removeConcatScreen(); err != nil {
+			logger.Warning("switchMode: failed to remove concat screen:", err)
+		}
+	}
+
 	monitorsId := monitors.getMonitorsId()
 	options := getSwitchModeOptions(mode, name)
 	err = m.switchModeAux(mode, oldMode, monitorsId, monitorMap, true, options)
@@ -2259,6 +2280,56 @@ func getSwitchModeOptions(mode byte, name string) applyOptions {
 func (m *Manager) setDisplayMode(mode byte) {
 	m.setPropDisplayMode(mode)
 	m.sysConfig.Config.DisplayMode = mode
+}
+
+func (m *Manager) applyConcatScreen() error {
+	if _useWayland {
+		return errors.New("concat screen not supported on wayland")
+	}
+
+	monitors := m.getConnectedMonitors()
+	if len(monitors) < 2 {
+		return errors.New("need at least 2 connected monitors for concat screen")
+	}
+
+	var outputNames []string
+	for _, mon := range monitors {
+		if mon.Enabled {
+			outputNames = append(outputNames, mon.Name)
+		}
+	}
+	if len(outputNames) < 2 {
+		return errors.New("need at least 2 enabled monitors for concat screen")
+	}
+
+	if err := m.mm.setConcatScreen(outputNames); err != nil {
+		return err
+	}
+
+	m.PropsMu.Lock()
+	m.ConcatScreenEnabled = true
+	m.PropsMu.Unlock()
+
+	_ = m.service.EmitPropertyChanged(m, "ConcatScreenEnabled", true)
+	return nil
+}
+
+func (m *Manager) removeConcatScreen() error {
+	if _useWayland {
+		return errors.New("concat screen not supported on wayland")
+	}
+
+	if err := m.mm.deleteConcatScreen(); err != nil {
+		logger.Warning("deleteConcatScreen failed:", err)
+		return err
+	}
+
+	m.PropsMu.Lock()
+	m.ConcatScreenEnabled = false
+	m.PropsMu.Unlock()
+
+	_ = m.service.EmitPropertyChanged(m, "ConcatScreenEnabled", false)
+	return nil
 }
 
 func (m *Manager) save() (err error) {
@@ -2392,6 +2463,16 @@ func (m *Manager) applyChanges() error {
 	} else {
 		m.futureConfig.setConfigs(monitorsId, configs)
 	}
+	// 分辨率/位置变更时自动退出跨屏拼接
+	m.PropsMu.RLock()
+	concatEnabled := m.ConcatScreenEnabled
+	m.PropsMu.RUnlock()
+	if concatEnabled {
+		if err := m.removeConcatScreen(); err != nil {
+			logger.Warning("applyChanges: failed to remove concat screen:", err)
+		}
+	}
+
 	return err
 }
 
