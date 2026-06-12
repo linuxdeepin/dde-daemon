@@ -1,14 +1,15 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package main
 
 import (
+	"crypto/md5"
 	"errors"
 	"fmt"
+	"io"
 	"os"
-	"os/exec"
 	"os/user"
 	"path/filepath"
 	"sort"
@@ -20,6 +21,7 @@ import (
 	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+	"golang.org/x/sys/unix"
 )
 
 const maxCount = 20
@@ -219,7 +221,16 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		file = strings.TrimPrefix(file, solidPrefix)
 		isSolid = true
 	}
-	info, err := os.Stat(file)
+	// Use O_NOFOLLOW to atomically reject symlinks, eliminating TOCTOU race.
+	fd, err := unix.Open(file, unix.O_RDONLY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
+	if err != nil {
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
+	}
+	f := os.NewFile(uintptr(fd), file)
+	defer f.Close()
+
+	info, err := f.Stat()
 	if err != nil {
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
@@ -253,7 +264,13 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		err = fmt.Errorf("%s not allowed to set %s wallpaper", user.Username, username)
 		return "", dbusutil.ToError(err)
 	}
-	md5sum, _ := dutils.SumFileMd5(file)
+	src, err := io.ReadAll(f)
+	if err != nil {
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
+	}
+	// Compute MD5 from the already-read content to avoid re-opening the file.
+	md5sum := fmt.Sprintf("%x", md5.Sum(src))
 
 	var prefix string
 	if isSolid {
@@ -278,17 +295,6 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 	destFile = destFile + filepath.Ext(file)
 	if dutils.IsFileExist(destFile) {
 		return destFile, nil
-	}
-	src, err := exec.Command("runuser", []string{
-		"-u",
-		username,
-		"--",
-		"cat",
-		file,
-	}...).Output()
-	if err != nil {
-		err = fmt.Errorf("permission denied, %s is not allowed to read this file:%s", username, file)
-		return "", dbusutil.ToError(err)
 	}
 
 	err = os.WriteFile(destFile, src, 0644)
