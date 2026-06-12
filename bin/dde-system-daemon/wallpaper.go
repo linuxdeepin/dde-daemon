@@ -1,10 +1,12 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package main
 
 import (
+	"bytes"
+	"crypto/md5"
 	"errors"
 	"fmt"
 	"os"
@@ -23,11 +25,11 @@ import (
 )
 
 const maxCount = 20
-const maxSize = 32 * 1024 * 1024
 const wallPaperDir = "/var/cache/wallpapers/custom-wallpapers/"
 const solidWallPaperPath = "/var/cache/wallpapers/custom-solidwallpapers/"
 const solidPrefix = "solid::"
 const polkitActionUserAdministration = "org.deepin.dde.accounts.user-administration"
+const wallpaperHelperPath = "/usr/lib/deepin-daemon/dde-wallpaper-helper"
 
 var wallPaperDirs = []string{
 	wallPaperDir,
@@ -41,7 +43,9 @@ const (
 
 func checkPath(path string, dirs []string) string {
 	for _, dir := range dirs {
-		if strings.HasPrefix(path, dir) {
+		// 确保目录路径以分隔符结尾，防止 "user1" 匹配 "user10"
+		prefix := dir + string(filepath.Separator)
+		if path == dir || strings.HasPrefix(path, prefix) {
 			return dir
 		}
 	}
@@ -210,6 +214,21 @@ func (d *Daemon) checkAuth(sender dbus.Sender) error {
 	return checkAuth(polkitActionUserAdministration, string(sender))
 }
 
+// readWallpaperSourceAsUser reads the wallpaper source file with the target
+// user's privileges. It executes dde-wallpaper-helper via runuser so the
+// kernel enforces the target user's file permissions, and the helper opens
+// the file atomically with O_NOFOLLOW to prevent TOCTOU races.
+func readWallpaperSourceAsUser(username string, file string) ([]byte, error) {
+	cmd := exec.Command("runuser", "-u", username, "--", wallpaperHelperPath, file)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	src, err := cmd.Output()
+	if err != nil {
+		return nil, fmt.Errorf("permission denied, %s is not allowed to read this file:%s: %s", username, file, strings.TrimSpace(stderr.String()))
+	}
+	return src, nil
+}
+
 func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file string) (string, *dbus.Error) {
 	var err error
 	var isSolid bool = false
@@ -219,18 +238,7 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		file = strings.TrimPrefix(file, solidPrefix)
 		isSolid = true
 	}
-	info, err := os.Stat(file)
-	if err != nil {
-		logger.Warning(err)
-		return "", dbusutil.ToError(err)
-	}
-
-	if info.Size() > maxSize {
-		err = fmt.Errorf("file size %d > %d", info.Size(), maxSize)
-		logger.Warning(err)
-		return "", dbusutil.ToError(err)
-	}
-	dirs, _ := GetUserDirs(username)
+	dirs, err := GetUserDirs(username)
 
 	if err != nil {
 		logger.Warning(err)
@@ -253,7 +261,13 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		err = fmt.Errorf("%s not allowed to set %s wallpaper", user.Username, username)
 		return "", dbusutil.ToError(err)
 	}
-	md5sum, _ := dutils.SumFileMd5(file)
+
+	src, err := readWallpaperSourceAsUser(username, file)
+	if err != nil {
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
+	}
+	md5sum := fmt.Sprintf("%x", md5.Sum(src))
 
 	var prefix string
 	if isSolid {
@@ -278,17 +292,6 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 	destFile = destFile + filepath.Ext(file)
 	if dutils.IsFileExist(destFile) {
 		return destFile, nil
-	}
-	src, err := exec.Command("runuser", []string{
-		"-u",
-		username,
-		"--",
-		"cat",
-		file,
-	}...).Output()
-	if err != nil {
-		err = fmt.Errorf("permission denied, %s is not allowed to read this file:%s", username, file)
-		return "", dbusutil.ToError(err)
 	}
 
 	err = os.WriteFile(destFile, src, 0644)
