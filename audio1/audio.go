@@ -190,6 +190,8 @@ type Audio struct {
 	noRestartPulseAudio bool
 	// 自动端口切换
 	enableAutoSwitchPort bool
+	pendingManualPortMu  sync.Mutex
+	pendingManualPort    *pendingManualPortSwitch
 
 	// 控制中心-声音-设备管理 是否显示
 	controlCenterDeviceManager dconfig.Bool
@@ -204,13 +206,19 @@ type Audio struct {
 	}
 }
 
+type pendingManualPortSwitch struct {
+	cardId    uint32
+	portName  string
+	direction int
+}
+
 func newAudio(service *dbusutil.Service) *Audio {
 	a := &Audio{
-		service:       service,
-		meters:        make(map[string]*Meter),
-		MaxUIVolume:   pulse.VolumeUIMax,
+		service:          service,
+		meters:           make(map[string]*Meter),
+		MaxUIVolume:      pulse.VolumeUIMax,
 		AudioServerState: AudioStateChanged,
-		cardFixGroup:  newCardFixGroup(),
+		cardFixGroup:     newCardFixGroup(),
 	}
 
 	var err error
@@ -1032,15 +1040,81 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int, auto bool
 	}
 
 	if card.ActiveProfile.Name == profile {
+		if !auto {
+			return a.setManualPortDirectly(cardId, portName, direction)
+		}
 		return a.setPortDirectly(cardId, portName, direction)
 	} else {
 		// 暂不设置端口，先切换配置文件
-		// 等待事件完成后，再自动设置端口
+		// 等待事件完成后，自动切换通过 autoSwitchPort 继续；手动切换通过 pendingManualPort 继续
 		logger.Info("modify card profile:", card.core.Name, "from", card.ActiveProfile.Name, "to", profile)
+		if !auto {
+			a.setPendingManualPort(cardId, portName, direction)
+		}
 		card.core.SetProfile(profile)
 	}
 
 	return nil
+}
+
+func (a *Audio) setPendingManualPort(cardId uint32, portName string, direction int) {
+	logger.Debugf("setPendingManualPort: cardId=%d, portName=%s, direction=%d", cardId, portName, direction)
+
+	a.pendingManualPortMu.Lock()
+	defer a.pendingManualPortMu.Unlock()
+
+	a.pendingManualPort = &pendingManualPortSwitch{
+		cardId:    cardId,
+		portName:  portName,
+		direction: direction,
+	}
+}
+
+func (a *Audio) setManualPortDirectly(cardId uint32, portName string, direction int) error {
+	a.clearPendingManualPort(cardId, direction)
+	return a.setPortDirectly(cardId, portName, direction)
+}
+
+func (a *Audio) clearPendingManualPort(cardId uint32, direction int) {
+	logger.Debugf("clearPendingManualPort: cardId=%d, direction=%d", cardId, direction)
+
+	a.pendingManualPortMu.Lock()
+	defer a.pendingManualPortMu.Unlock()
+
+	if a.pendingManualPort != nil &&
+		a.pendingManualPort.cardId == cardId &&
+		a.pendingManualPort.direction == direction {
+		a.pendingManualPort = nil
+	}
+}
+
+func (a *Audio) completePendingManualPort(cardId uint32) (handled bool, applied bool) {
+	logger.Debugf("completePendingManualPort: cardId=%d", cardId)
+
+	a.pendingManualPortMu.Lock()
+	if a.pendingManualPort == nil || a.pendingManualPort.cardId != cardId {
+		a.pendingManualPortMu.Unlock()
+		return false, false
+	}
+	pending := *a.pendingManualPort
+	a.pendingManualPortMu.Unlock()
+
+	err := a.setPortDirectly(pending.cardId, pending.portName, pending.direction)
+	if err != nil {
+		logger.Warningf("failed to complete pending manual port: cardId=%d, portName=%s, direction=%d, err=%v",
+			pending.cardId, pending.portName, pending.direction, err)
+		return true, false
+	}
+
+	a.pendingManualPortMu.Lock()
+	if a.pendingManualPort != nil &&
+		a.pendingManualPort.cardId == pending.cardId &&
+		a.pendingManualPort.portName == pending.portName &&
+		a.pendingManualPort.direction == pending.direction {
+		a.pendingManualPort = nil
+	}
+	a.pendingManualPortMu.Unlock()
+	return true, true
 }
 
 // setPortDirectly 直接设置端口，无需切换配置文件
