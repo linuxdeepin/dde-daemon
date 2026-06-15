@@ -274,6 +274,18 @@ func (a *Audio) autoSwitchPort() {
 	a.autoSwitchInputPort()
 }
 
+func (a *Audio) switchPortAfterCardReady(cardId uint32) {
+	handledPending, applied := a.completePendingManualPort(cardId)
+	if !handledPending {
+		a.autoSwitchPort()
+		return
+	}
+	if !applied {
+		logger.Warningf("pending manual switch for cardId=%d was not applied, skip auto switch", cardId)
+		return
+	}
+}
+
 func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 	var shouldAutoSwitch = false
 	switch eventType {
@@ -298,7 +310,7 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 		GetPriorityManager().refreshPorts(a.cards)
 		GetPriorityManager().Save()
 		if a.checkCardIsReady(idx) {
-			a.autoSwitchPort()
+			a.switchPortAfterCardReady(idx)
 		}
 	}
 }
@@ -425,7 +437,7 @@ func (a *Audio) handleSinkAdded(idx uint32) {
 	} else if a.checkCardIsReady(sink.Card) {
 		// 只有新增sink或端口列表/活跃端口变化时才触发自动切换
 		if isNewSink || portChanged {
-			a.autoSwitchPort()
+			a.switchPortAfterCardReady(sink.Card)
 		}
 	}
 }
@@ -453,7 +465,7 @@ func (a *Audio) handleSinkRemoved(idx uint32) {
 		return
 	}
 	if isPhy && a.checkCardIsReady(cardId) {
-		a.autoSwitchPort()
+		a.switchPortAfterCardReady(cardId)
 	}
 }
 
@@ -473,7 +485,7 @@ func (a *Audio) handleSinkChanged(idx uint32) {
 	// cardchange事件也会触发，但是处理不了，因为这时sink可能还没更新，无可用端口
 	// 只有当端口列表或活跃端口发生变化时，才触发自动切换
 	if portChanged && isPhysicalDevice(sink.Name) && a.checkCardIsReady(sink.Card) {
-		a.autoSwitchPort()
+		a.switchPortAfterCardReady(sink.Card)
 	}
 
 	if a.defaultSink != nil && a.defaultSink.index == idx && isBluezAudio(sink.Name) {
@@ -529,7 +541,7 @@ func (a *Audio) handleSourceAdded(idx uint32) {
 	} else if a.checkCardIsReady(source.Card) {
 		// 只有新增source或端口列表/活跃端口变化时才触发自动切换
 		if isNewSource || portChanged {
-			a.autoSwitchPort()
+			a.switchPortAfterCardReady(source.Card)
 		}
 	}
 
@@ -557,7 +569,7 @@ func (a *Audio) handleSourceRemoved(idx uint32) {
 		a.defaultSource = nil
 	}
 	if isPhy && a.checkCardIsReady(cardId) {
-		a.autoSwitchPort()
+		a.switchPortAfterCardReady(cardId)
 	}
 }
 
@@ -578,7 +590,7 @@ func (a *Audio) handleSourceChanged(idx uint32) {
 	// cardchange事件也会触发，但是处理不了，因为这时source可能还没更新，无可用端口
 	// 只有当端口列表或活跃端口发生变化时，才触发自动切换
 	if portChanged && isPhysicalDevice(source.Name) && a.checkCardIsReady(source.Card) {
-		a.autoSwitchPort()
+		a.switchPortAfterCardReady(source.Card)
 	}
 }
 
