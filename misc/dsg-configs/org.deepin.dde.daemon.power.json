@@ -723,6 +723,7 @@
                 "gnome-keyring-ssh.desktop",
                 "gnome-keyring-pkcs11.desktop",
                 "gnome-keyring-secrets.desktop",
+                "fcitx5-helper.desktop",
                 "org.fcitx.Fcitx5.desktop",
                 "xdg-user-dirs.desktop",
                 "permission_manager_dbus_session_daemon.desktop",
@@ -817,7 +818,11 @@
                 "upower.service",
                 "usecd.service",
                 "wpa_supplicant.service",
-                "wtmpdb-update-boot.service"
+                "wtmpdb-update-boot.service",
+                "ssh.service",
+                "udcp-guard.service",
+                "com.home.appstore.daemon.service",
+                "serial-getty@ttyAMA0.service"
             ],
             "serial": 0,
             "flags": [

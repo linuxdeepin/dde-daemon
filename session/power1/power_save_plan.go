@@ -707,7 +707,7 @@ func (psp *powerSavePlan) isThirdPartyAppRunning() (ret bool) {
 	// 检查启动应用的desktop，是否在系统应用 systemApplicationsMap 中
 	// 只要有一个运行中的desktop不存在于 systemApplicationsMap 中，说明就有第三方应用运行
 	for _, app := range launchedApplications {
-		desktop := strings.ToLower(psp.getDesktopName(app))
+		desktop := psp.getDesktopName(app)
 		// 如果存在短idle黑名单应用在运行，则返回true -> 不进短idle
 		if _, exists := shortIdleBlacklistApplicationsMap[desktop]; exists {
 			logger.Info("Found shortIdle blacklist application running: ", app, desktop)
@@ -716,6 +716,7 @@ func (psp *powerSavePlan) isThirdPartyAppRunning() (ret bool) {
 		}
 
 		if _, exists := systemApplicationsMap[desktop]; !exists {
+			desktop = strings.ToLower(desktop)
 			// 如果不存在的应用的desktop包含deepin、dde、uos说明也是系统应用，这个应用应该加到系统应用列表中
 			if strings.Contains(desktop, "deepin") || strings.Contains(desktop, "dde") || strings.Contains(desktop, "uos") {
 				logger.Warning("Need add systemApplicationsMap, Running app : ", app, desktop)
