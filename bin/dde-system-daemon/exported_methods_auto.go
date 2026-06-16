@@ -41,16 +41,6 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"isVM"},
 		},
 		{
-			Name:    "NetworkGetConnections",
-			Fn:      v.NetworkGetConnections,
-			OutArgs: []string{"data"},
-		},
-		{
-			Name:   "NetworkSetConnections",
-			Fn:     v.NetworkSetConnections,
-			InArgs: []string{"data"},
-		},
-		{
 			Name:    "SaveCustomWallPaper",
 			Fn:      v.SaveCustomWallPaper,
 			InArgs:  []string{"username", "file"},
