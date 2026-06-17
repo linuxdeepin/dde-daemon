@@ -1,3 +1,12 @@
+dde-daemon (6.1.96) unstable; urgency=medium
+
+  * fix(audio): honor manual output selection
+  * fix: optimize power key screen off logic and secure file operations
+  * fix: fix TOCTOU race in wallpaper save function
+  * chore: remove unused network connection sync interfaces
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 17 Jun 2026 16:28:16 +0800
+
 dde-daemon (6.1.95) unstable; urgency=medium
 
   * fix(display): migrate concat screen management to daemon
