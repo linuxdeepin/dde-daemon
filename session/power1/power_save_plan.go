@@ -13,6 +13,8 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+
+	"github.com/linuxdeepin/dde-daemon/common/fileutil"
 	"time"
 
 	"github.com/godbus/dbus/v5"
@@ -1059,15 +1061,15 @@ func (psp *powerSavePlan) startIdleTasksLocked() {
 }
 
 func (ps *powerSavePlan) restoreDpmsStateFile() {
-	v, err := os.ReadFile("/tmp/dpms-state")
+	v, err := fileutil.SafeReadFile("/tmp/dpms-state")
 	if err != nil {
 		return
 	}
 
 	if string(v) == "1" {
-		err = os.WriteFile("/tmp/dpms-state", []byte("0"), 0644)
+		err = fileutil.SafeWriteFile("/tmp/dpms-state", []byte("0"), 0600)
 		if err != nil {
-			logger.Warning("WriteFile /tmp/dpms-state:", err)
+			logger.Warning("write dpms state:", err)
 		}
 	}
 }
