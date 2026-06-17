@@ -1,3 +1,10 @@
+dde-daemon (6.1.97) unstable; urgency=medium
+
+  * feat: optimize system application recognition and add power save
+    services
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 17 Jun 2026 17:53:59 +0800
+
 dde-daemon (6.1.96) unstable; urgency=medium
 
   * fix(audio): honor manual output selection
