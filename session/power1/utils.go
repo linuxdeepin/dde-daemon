@@ -6,13 +6,13 @@ package power
 
 import (
 	"math"
-	"os"
 	"os/exec"
 	"strings"
 	"time"
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-api/soundutils"
+	"github.com/linuxdeepin/dde-daemon/common/fileutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/pulse"
 	"github.com/linuxdeepin/go-x11-client/ext/dpms"
@@ -210,7 +210,7 @@ func (m *Manager) setDPMSModeOff() {
 	} else {
 		callSetScreenState(true)
 	}
-	os.WriteFile("/tmp/dpms-state", []byte("1"), 0644)
+	fileutil.SafeWriteFile("/tmp/dpms-state", []byte("1"), 0600)
 }
 
 const (

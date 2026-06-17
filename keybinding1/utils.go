@@ -20,6 +20,7 @@ import (
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/util"
+	"github.com/linuxdeepin/dde-daemon/common/fileutil"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
@@ -31,10 +32,10 @@ import (
 const (
 	suspendStateUnknown = iota + 1
 	suspendStateLidOpen
+	suspendStateLidClose
 	suspendStateFinish
 	suspendStateWakeup
 	suspendStatePrepare
-	suspendStateLidClose
 	suspendStateButtonClick
 )
 
@@ -287,6 +288,9 @@ func (m *Manager) systemShutdown() {
 }
 
 func (m *Manager) systemTurnOffScreen() {
+	if isDpmsOff() {
+		return
+	}
 	logger.Info("DPMS Off")
 	var err error
 	var useWayland bool
@@ -327,7 +331,16 @@ func (m *Manager) systemTurnOffScreen() {
 		m.setWmBlackScreenActive(false)
 	}
 	undoPrepareSuspend()
-	os.WriteFile("/tmp/dpms-state", []byte("1"), 0644)
+	fileutil.SafeWriteFile("/tmp/dpms-state", []byte("1"), 0600)
+}
+
+func isDpmsOff() bool {
+	content, err := fileutil.SafeReadFile("/tmp/dpms-state")
+	if err != nil {
+		logger.Debug("read dpms state error:", err)
+		return false
+	}
+	return bytes.Equal(bytes.TrimSpace(content), []byte("1"))
 }
 
 func (m *Manager) systemLogout() {
