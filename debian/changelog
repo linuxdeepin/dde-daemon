@@ -1,3 +1,9 @@
+dde-daemon (6.1.98) unstable; urgency=medium
+
+  * fix: adjust dpms-state file permissions
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 18 Jun 2026 13:29:03 +0800
+
 dde-daemon (6.1.97) unstable; urgency=medium
 
   * feat: optimize system application recognition and add power save
