@@ -331,7 +331,7 @@ func (m *Manager) systemTurnOffScreen() {
 		m.setWmBlackScreenActive(false)
 	}
 	undoPrepareSuspend()
-	fileutil.SafeWriteFile("/tmp/dpms-state", []byte("1"), 0600)
+	fileutil.SafeWriteFile("/tmp/dpms-state", []byte("1"), 0644)
 }
 
 func isDpmsOff() bool {

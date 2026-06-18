@@ -1068,7 +1068,7 @@ func (ps *powerSavePlan) restoreDpmsStateFile() {
 	}
 
 	if string(v) == "1" {
-		err = fileutil.SafeWriteFile("/tmp/dpms-state", []byte("0"), 0600)
+		err = fileutil.SafeWriteFile("/tmp/dpms-state", []byte("0"), 0644)
 		if err != nil {
 			logger.Warning("write dpms state:", err)
 		}
