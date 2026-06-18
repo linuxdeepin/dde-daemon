@@ -210,7 +210,7 @@ func (m *Manager) setDPMSModeOff() {
 	} else {
 		callSetScreenState(true)
 	}
-	fileutil.SafeWriteFile("/tmp/dpms-state", []byte("1"), 0600)
+	fileutil.SafeWriteFile("/tmp/dpms-state", []byte("1"), 0644)
 }
 
 const (
