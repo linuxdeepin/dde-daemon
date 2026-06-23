@@ -1348,10 +1348,6 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 	}
 
 	appManager := newAppmanager.NewManager(m.sessionSigLoop.Conn())
-	err = appManager.ReloadApplications(0)
-	if err != nil {
-		logger.Warning("reload applications error: ", err)
-	}
 	desktopFileName, err = appManager.AddUserApplication(0, desktopInfoMap, desktopFileName)
 	if err != nil {
 		logger.Warning("adding user application error: ", err)
