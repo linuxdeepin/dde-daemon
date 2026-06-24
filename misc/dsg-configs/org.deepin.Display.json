@@ -178,6 +178,16 @@
       "permissions": "readwrite",
       "visibility": "public"
     },
+    "autoChangeScaleEnabled": {
+      "value": true,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "autoChangeScaleEnabled",
+      "description": "auto change scale enabled",
+      "description[zh_CN]": "是否启用自动缩放",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
     "transition-enabled": {
       "value": false,
       "serial": 0,
