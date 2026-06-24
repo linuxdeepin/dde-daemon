@@ -1,3 +1,14 @@
+dde-daemon (6.1.99) unstable; urgency=medium
+
+  * feat: add services and desktop entry to whitelist
+  * fix(display): add switch for auto change scale factor
+  * fix(keybinding): remove redundant app reload after cmd exec
+  * chore: Sync by
+    https://github.com/linuxdeepin/.github/commit/88706fa723e3771211cb07
+    81d3d97fd4a6cd2a68
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 24 Jun 2026 15:35:29 +0800
+
 dde-daemon (6.1.98) unstable; urgency=medium
 
   * fix: adjust dpms-state file permissions
