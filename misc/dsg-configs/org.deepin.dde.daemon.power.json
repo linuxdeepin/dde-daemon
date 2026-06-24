@@ -737,7 +737,8 @@
                 "deepin-offline-update-tool.desktop",
                 "com.uos.drive.desktop",
                 "com.sogou.ime.ng.fcitx5.uos.configurer.desktop",
-                "xdg-desktop-portal-gtk.desktop"
+                "xdg-desktop-portal-gtk.desktop",
+                "uos-activator.desktop"
             ],
             "serial": 0,
             "flags": [
@@ -822,7 +823,10 @@
                 "ssh.service",
                 "udcp-guard.service",
                 "com.home.appstore.daemon.service",
-                "serial-getty@ttyAMA0.service"
+                "serial-getty@ttyAMA0.service",
+                "winbind.service",
+                "tpm2-abrmd.service",
+                "fprintd.service"
             ],
             "serial": 0,
             "flags": [
