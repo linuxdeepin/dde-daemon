@@ -88,6 +88,7 @@ const (
 	DSettingsKeyColorTemperatureManual   = "colorTemperatureManual"
 	DSettingsKeyRotateScreenTimeDelay    = "rotateScreenTimeDelay"
 	DSettingsKeyCustomDisplayMode        = "customDisplayMode"
+	DSettingsAutoChangeScaleEnabled      = "autoChangeScaleEnabled"
 
 	// 亮度曲线配置
 	DSettingsKeyBacklightCurveType     = "backlight-curve-type"
@@ -296,6 +297,8 @@ type Manager struct {
 	backlightCurveType string
 	backlightMinValue  int32
 	backlightMidValue  int32
+
+	dsAutoChangeScaleEnabled bool
 
 	powerSaving            bool
 	systemAdjustingTimer   *time.Timer
@@ -548,6 +551,8 @@ func (m *Manager) initDConfig(sysBus *dbus.Conn) {
 			m.getBacklightCurveType()
 		case DSettingsKeyMaxBrightnessUnlimited:
 			m.getMaxBrightnessUnlimited()
+		case DSettingsAutoChangeScaleEnabled:
+			m.getAutoChangeScaleEnabled()
 		case DSettingsKeyTransitionEnabled,
 			DSettingsKeyTransitionDuration,
 			DSettingsKeyTransitionStepPercent,
@@ -606,6 +611,7 @@ func (m *Manager) loadInitialConfigValues() {
 	m.getCustomBrightnessCurves()
 	m.getDefaultBrightnessCurve()
 	m.getMaxBrightnessUnlimited()
+	m.getAutoChangeScaleEnabled()
 	// 初始化FLM曲线
 	brightness.InitFlmCurves(m.backlightMinValue, m.backlightMidValue)
 }
@@ -826,6 +832,21 @@ func (m *Manager) getMaxBrightnessUnlimited() {
 		return
 	}
 	brightness.SetMaxBrightnessUnlimited(enabled)
+}
+
+func (m *Manager) getAutoChangeScaleEnabled() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsAutoChangeScaleEnabled)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	enabled, ok := v.Value().(bool)
+	if !ok {
+		logger.Warning("autoChangeScaleEnabled configuration is not a bool")
+		return
+	}
+	m.dsAutoChangeScaleEnabled = enabled
+	logger.Info("auto change scale enabled:", m.dsAutoChangeScaleEnabled)
 }
 
 // 初始化系统级 display 服务的信号处理
@@ -3617,7 +3638,7 @@ func calcMaxScaleFactor(width, height uint16) float64 {
 
 func (m *Manager) tryToChangeScaleFactor(monitorWidth, monitorHeight uint16) {
 	// x 下拔掉显示器会触发更新操作，高宽均为0
-	if monitorWidth == 0 || monitorHeight == 0 {
+	if monitorWidth == 0 || monitorHeight == 0 || !m.dsAutoChangeScaleEnabled {
 		return
 	}
 
