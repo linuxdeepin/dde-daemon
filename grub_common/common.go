@@ -28,7 +28,7 @@ var logger = log.NewLogger("grub_common")
 const (
 	GrubParamsFile            = "/etc/default/grub"
 	DDEGrubParamsFile         = "/etc/default/grub.d/11_dde.cfg"
-	GfxmodeDetectReadyPath    = "/tmp/deepin-gfxmode-detect-ready"
+	GfxmodeDetectReadyPath    = "/run/deepin-gfxmode-detect/ready"
 	DeepinGfxmodeDetect       = "DEEPIN_GFXMODE_DETECT"
 	DeepinGfxmodeAdjusted     = "DEEPIN_GFXMODE_ADJUSTED"
 	DeepinGfxmodeNotSupported = "DEEPIN_GFXMODE_NOT_SUPPORTED"
@@ -263,6 +263,21 @@ func (v Gfxmodes) Intersection(v1 Gfxmodes) (result Gfxmodes) {
 
 func (v Gfxmodes) SortDesc() {
 	sort.Sort(sort.Reverse(v))
+}
+
+// CreateGfxmodeDetectReady 创建 gfxmode 探测完成信号文件。
+//
+// MkdirAll 兜底 unit 外调用（如 postinst 的 `grub2 -prepare-gfxmode-detect`）——此时无
+// RuntimeDirectory 托管父目录；服务内调用时父目录已由 systemd 建好，MkdirAll 为 no-op。
+func CreateGfxmodeDetectReady() error {
+	dir := filepath.Dir(GfxmodeDetectReadyPath)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("failed to mkdir %s: %w", dir, err)
+	}
+	if err := os.WriteFile(GfxmodeDetectReadyPath, nil, 0644); err != nil {
+		return fmt.Errorf("failed to create %s: %w", GfxmodeDetectReadyPath, err)
+	}
+	return nil
 }
 
 func ShouldFinishGfxmodeDetect(params map[string]string) bool {

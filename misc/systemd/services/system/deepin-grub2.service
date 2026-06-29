@@ -16,7 +16,9 @@ InaccessiblePaths=-/etc/pam.d
 #InaccessiblePaths=-/usr/share/uadp/
 # 创建/etc/default/grub.d/11_dde.cfg
 ReadWritePaths=-/etc/default/grub.d
-# 创建/tmp/deepin-gfxmode-detect-ready // TODO分析该文件是否有被其他进程使用，该文件存放需要修改
+# /run/deepin-gfxmode-detect/ready，作为 gfxmode 探测完成信号文件
+RuntimeDirectory=deepin-gfxmode-detect
+RuntimeDirectoryPreserve=yes
 ReadWritePaths=-/tmp/
 # /var/cache/deepin/grub2.log
 ReadWritePaths=-/var/cache/deepin
