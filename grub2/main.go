@@ -81,7 +81,7 @@ func PrepareGfxmodeDetect() error {
 	gfxmodesStr := joinGfxmodesForDetect(gfxmodes)
 	getModifyFuncPrepareGfxmodeDetect(gfxmodesStr)(params)
 
-	err = os.WriteFile(grub_common.GfxmodeDetectReadyPath, nil, 0644)
+	err = grub_common.CreateGfxmodeDetectReady()
 	if err != nil {
 		return err
 	}

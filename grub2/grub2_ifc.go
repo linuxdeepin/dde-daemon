@@ -6,7 +6,6 @@ package grub2
 
 import (
 	"errors"
-	"os"
 	"strings"
 
 	"github.com/godbus/dbus/v5"
@@ -316,7 +315,7 @@ func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 
 	g.addModifyTask(getModifyTaskPrepareGfxmodeDetect(gfxmodesStr))
 
-	err = os.WriteFile(grub_common.GfxmodeDetectReadyPath, nil, 0644)
+	err = grub_common.CreateGfxmodeDetectReady()
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
