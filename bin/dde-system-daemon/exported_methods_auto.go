@@ -43,7 +43,7 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 		{
 			Name:    "SaveCustomWallPaper",
 			Fn:      v.SaveCustomWallPaper,
-			InArgs:  []string{"username", "file"},
+			InArgs:  []string{"username", "fd", "isSolid"},
 			OutArgs: []string{"outArg0"},
 		},
 		{

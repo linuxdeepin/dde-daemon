@@ -92,7 +92,6 @@ TEST = \
 BINARIES =  \
 	    dde-session-daemon \
 	    dde-system-daemon \
-	    dde-wallpaper-helper \
 	    grub2 \
 	    search \
 	    backlight_helper \
