@@ -3614,8 +3614,18 @@ func (m *Manager) detectDrmSupportGamma() bool {
 func calcMaxScaleFactor(width, height uint16) float64 {
 	scaleFactors := []float64{1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0}
 
-	maxWScale := float64(width) / 1024.0
-	maxHScale := float64(height) / 768.0
+	// 用长边/短边计算，使结果与屏幕方向无关。90°/270° 旋转会交换 CRTC 的宽高，
+	// 若直接按当前宽高计算，外接屏（如 1920×1080 旋转后变为 1080×1920）的宽仅
+	// 1080，1080/1024≈1.05，会把可支持的最大缩放错误压低到 1.0，进而触发
+	// tryToChangeScaleFactor 把用户已设置的缩放重置回 1.0。屏幕的物理像素总数与
+	// 方向无关，因此应基于长/短边（即原始分辨率）来判断。
+	w, h := width, height
+	if w < h {
+		w, h = h, w
+	}
+
+	maxWScale := float64(w) / 1024.0
+	maxHScale := float64(h) / 768.0
 
 	maxValue := 0.0
 	if maxWScale < maxHScale {
