@@ -1,11 +1,14 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package uadp
 
 import (
-	"github.com/godbus/dbus/v5"
+	"errors"
+
+	dbus "github.com/godbus/dbus/v5"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/procfs"
 )
@@ -15,6 +18,28 @@ import (
 // RSA-2048
 const uadpEncryptMaxSize = 256 - 11
 const uadpDecryptMaxSize = 256
+
+const uadpActionId = "org.deepin.dde.uadp.doAction"
+
+func checkAuthorization(actionId string, sysBusName string) error {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+
+	ret, err := authority.CheckAuthorization(0, subject, actionId,
+		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		return err
+	}
+	if !ret.IsAuthorized {
+		return errors.New("not authorized")
+	}
+	return nil
+}
 
 type Manager struct {
 	service *dbusutil.Service
@@ -60,6 +85,12 @@ func (m *Manager) Available() (bool, *dbus.Error) {
 }
 
 func (m *Manager) ListName(sender dbus.Sender) ([]string, *dbus.Error) {
+	err := checkAuthorization(uadpActionId, string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return []string{}, dbusutil.ToError(err)
+	}
+
 	exec, err := m.getExecPath(sender)
 	if err != nil {
 		logger.Warning(err)
@@ -70,6 +101,12 @@ func (m *Manager) ListName(sender dbus.Sender) ([]string, *dbus.Error) {
 }
 
 func (m *Manager) Set(sender dbus.Sender, name string, data []byte) *dbus.Error {
+	err := checkAuthorization(uadpActionId, string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
 	exec, err := m.getExecPath(sender)
 	if err != nil {
 		logger.Warning(err)
@@ -102,6 +139,12 @@ func (m *Manager) Set(sender dbus.Sender, name string, data []byte) *dbus.Error 
 }
 
 func (m *Manager) Get(sender dbus.Sender, name string) ([]byte, *dbus.Error) {
+	err := checkAuthorization(uadpActionId, string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return []byte{}, dbusutil.ToError(err)
+	}
+
 	exec, err := m.getExecPath(sender)
 	if err != nil {
 		logger.Warning(err)
@@ -123,6 +166,12 @@ func (m *Manager) Get(sender dbus.Sender, name string) ([]byte, *dbus.Error) {
 }
 
 func (m *Manager) Delete(sender dbus.Sender, name string) *dbus.Error {
+	err := checkAuthorization(uadpActionId, string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
 	exec, err := m.getExecPath(sender)
 	if err != nil {
 		logger.Warning(err)
@@ -140,6 +189,12 @@ func (m *Manager) Delete(sender dbus.Sender, name string) *dbus.Error {
 }
 
 func (m *Manager) Release(sender dbus.Sender) *dbus.Error {
+	err := checkAuthorization(uadpActionId, string(sender))
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+
 	exec, err := m.getExecPath(sender)
 	if err != nil {
 		logger.Warning(err)
