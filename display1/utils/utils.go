@@ -1,8 +1,10 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package utils
+
+import "encoding/base64"
 
 //func GetOutputEDID(conn *x.Conn, output randr.Output) ([]byte, error) {
 //	atomEDID, err := conn.GetAtom("EDID")
@@ -27,3 +29,11 @@ package utils
 //	id, _ := libutils.SumStrMd5(string(edid[:128]))
 //	return id
 //}
+
+func DecodeEdidBase64(edidB64 string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(edidB64)
+}
+
+func EncodeEdidBase64(edid []byte) string {
+	return base64.StdEncoding.EncodeToString(edid)
+}
