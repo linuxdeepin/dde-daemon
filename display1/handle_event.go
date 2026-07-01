@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -72,6 +72,7 @@ func (m *Manager) handleMonitorRemoved(monitorId uint32) {
 	m.handleMonitorConnectedChanged(monitor, false)
 	m.updatePropMonitors()
 	m.updateMonitorsId(nil)
+	m.removeCanSetBrightness(monitor.Name)
 }
 
 func (m *Manager) handleOutputPropertyChanged(ev *randr.OutputPropertyNotifyEvent) {

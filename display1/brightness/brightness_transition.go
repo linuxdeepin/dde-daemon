@@ -21,6 +21,8 @@ const (
 	TypeBacklight
 	// TypeGamma Gamma 调节
 	TypeGamma
+	// TypeDDCCI DDCCI 调节
+	TypeDDCCI
 )
 
 const (
@@ -437,6 +439,12 @@ type TransitionManager struct {
 
 	// 每步回调（用于同步亮度属性到 D-Bus），参数为(显示器名称, 当前亮度百分比)
 	onStepFunc func(monitorName string, percent float64)
+
+	// 设置 DDCCI 亮度的回调
+	setDDCCIFunc func(edid string, percent float64) error
+
+	// 获取 DDCCI 当前亮度的回调
+	getDDCCIFunc func(edid string) (float64, error)
 }
 
 // NewTransitionManager 创建统一过渡管理器
@@ -529,8 +537,19 @@ func (m *TransitionManager) SetGammaFuncs(
 	m.getGammaFunc = getFunc
 }
 
+// SetDDCCIFuncs 设置 DDCCI 回调
+func (m *TransitionManager) SetDDCCIFuncs(
+	setFunc func(edid string, percent float64) error,
+	getFunc func(edid string) (float64, error),
+) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.setDDCCIFunc = setFunc
+	m.getDDCCIFunc = getFunc
+}
+
 // SetBrightness 设置指定显示器的亮度（百分比，0.0 - 1.0）
-func (m *TransitionManager) SetBrightness(monitorName string, targetPercent float64, forceTransition bool) error {
+func (m *TransitionManager) SetBrightness(monitorName string, targetPercent float64, edidBase64 string, forceTransition bool) error {
 	m.mu.Lock()
 	executor, exists := m.executors[monitorName]
 	config := m.config
@@ -544,7 +563,7 @@ func (m *TransitionManager) SetBrightness(monitorName string, targetPercent floa
 			brightnessType = getBrightnessType(monitorName)
 		}
 
-		executor = m.createExecutor(monitorName, brightnessType, config)
+		executor = m.createExecutor(monitorName, brightnessType, edidBase64, config)
 		if executor == nil {
 			return fmt.Errorf("failed to create executor for monitor %s", monitorName)
 		}
@@ -563,12 +582,14 @@ func (m *TransitionManager) SetBrightness(monitorName string, targetPercent floa
 }
 
 // createExecutor 创建执行器
-func (m *TransitionManager) createExecutor(monitorName string, brightnessType BrightnessType, config TransitionConfig) *TransitionExecutor {
+func (m *TransitionManager) createExecutor(monitorName string, brightnessType BrightnessType, edidBase64 string, config TransitionConfig) *TransitionExecutor {
 	m.mu.Lock()
 	setBacklight := m.setBacklightFunc
 	getBacklight := m.getBacklightFunc
 	setGamma := m.setGammaFunc
 	getGamma := m.getGammaFunc
+	setDDCCI := m.setDDCCIFunc
+	getDDCCI := m.getDDCCIFunc
 	m.mu.Unlock()
 
 	switch brightnessType {
@@ -588,6 +609,23 @@ func (m *TransitionManager) createExecutor(monitorName string, brightnessType Br
 		}
 
 		return NewTransitionExecutor(monitorName, TypeBacklight, setter, getter, config)
+
+	case TypeDDCCI:
+		setter := func(percent float64) error {
+			if setDDCCI != nil {
+				return setDDCCI(edidBase64, percent)
+			}
+			return fmt.Errorf("ddcci setter not configured")
+		}
+
+		getter := func() (float64, error) {
+			if getDDCCI == nil {
+				return 0.5, fmt.Errorf("ddcci getter not configured")
+			}
+			return getDDCCI(edidBase64)
+		}
+
+		return NewTransitionExecutor(monitorName, TypeDDCCI, setter, getter, config)
 
 	default: // TypeGamma
 		setter := func(percent float64) error {

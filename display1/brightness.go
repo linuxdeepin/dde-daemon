@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/linuxdeepin/dde-daemon/display1/brightness"
+	"github.com/linuxdeepin/dde-daemon/display1/utils"
 )
 
 type InvalidOutputNameError struct {
@@ -133,14 +134,14 @@ func (m *Manager) getSetterConfig() int {
 	if err == nil {
 		_, err := os.Stat(filepath.Join(blDir, "device/edid"))
 		if err != nil {
-			return brightness.BrightnessSetterBacklight
+			return brightness.SetterBacklight
 		}
 	}
 
 	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBrightnessSetter)
 	if err != nil {
 		logger.Warning(err)
-		return brightness.BrightnessSetterAuto
+		return brightness.SetterAuto
 	}
 
 	return int(v.Value().(int64))
@@ -178,10 +179,10 @@ func (m *Manager) isBuiltinMonitor(name string) bool {
 
 func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64, forceTransition bool) error {
 	logger.Debug("setMonitorBrightness reality value:", brightnessValue)
-
+	edid := utils.EncodeEdidBase64(monitor.edid)
 	// 使用统一过渡管理器
 	if m.transitionManager != nil {
-		return m.transitionManager.SetBrightness(monitor.Name, brightnessValue, forceTransition)
+		return m.transitionManager.SetBrightness(monitor.Name, brightnessValue, edid, forceTransition)
 	}
 
 	// 降级：直接设置亮度
@@ -194,6 +195,7 @@ func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64
 
 func (m *Manager) createBrightnessSetter(monitor *Monitor) func(float64) error {
 	isBuiltin := m.isBuiltinMonitor(monitor.Name)
+	edid := utils.EncodeEdidBase64(monitor.edid)
 	_uuid := monitor.uuid
 	if _useWayland {
 		_uuid = monitor.uuidV0
@@ -207,11 +209,11 @@ func (m *Manager) createBrightnessSetter(monitor *Monitor) func(float64) error {
 	var setterFunc func(float64) error
 
 	switch setter {
-	case brightness.BrightnessSetterBacklight:
+	case brightness.SetterBacklight:
 		setterFunc = func(brightnessValue float64) error {
 			return brightness.SetBacklight(brightnessValue)
 		}
-	case brightness.BrightnessSetterAuto:
+	case brightness.SetterAuto:
 		if isBuiltin && brightness.SupportBacklight() {
 			setterFunc = func(brightnessValue float64) error {
 				return brightness.SetBacklight(brightnessValue)
@@ -221,6 +223,18 @@ func (m *Manager) createBrightnessSetter(monitor *Monitor) func(float64) error {
 				return brightness.SetOutputGama(brightnessValue, temperature, monitor.ID, m.xConn, _uuid)
 			}
 		}
+	case brightness.SetterDDCCI:
+		if isBuiltin {
+			setterFunc = func(brightnessValue float64) error {
+				return brightness.SetBacklight(brightnessValue)
+			}
+		} else {
+			setterFunc = func(brightnessValue float64) error {
+				return brightness.SetDDCCIBrightness(brightnessValue, edid)
+			}
+		}
+	case brightness.SetterGamma:
+	case brightness.SetterDRM:
 	default: // BrightnessSetterGamma
 		setterFunc = func(brightnessValue float64) error {
 			return brightness.SetOutputGama(brightnessValue, temperature, monitor.ID, m.xConn, _uuid)
@@ -337,4 +351,8 @@ func (m *Manager) getDefaultMonitorBrightness(name string) float64 {
 		return v
 	}
 	return 1
+}
+
+func (m *Manager) shouldUseDDCCIBrightness(name string) bool {
+	return m.getSetterConfig() == brightness.SetterDDCCI && !m.isBuiltinMonitor(name)
 }
