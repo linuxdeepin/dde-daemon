@@ -1,25 +1,21 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package ddcci
 
 //#cgo CFLAGS: -W -Wall -fstack-protector-all -fPIC
-//#cgo LDFLAGS:-ldl
 //#cgo pkg-config: ddcutil
 //#include <ddcutil_c_api.h>
 //#include <ddcutil_types.h>
 //#include <stdlib.h>
-//#include "ddcci_wrapper.h"
 import "C"
 import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	"os/exec"
-	"path/filepath"
 	"reflect"
-	"strings"
+	"runtime"
 	"sync"
 	"unsafe"
 
@@ -74,10 +70,6 @@ func (d *displayHandle) Close() error {
 	return nil
 }
 
-func (d *displayHandle) getState() int {
-	return d.state
-}
-
 func (d *displayHandle) initEdid() {
 	edid := C.GoBytes(unsafe.Pointer(&d.info.edid_bytes), 128)
 	copy(d.edid[:], edid)
@@ -123,40 +115,20 @@ func newDDCCI() (*ddcci, error) {
 		return nil, err
 	}
 
-	content, err := exec.Command("/usr/bin/dpkg-architecture", "-qDEB_HOST_MULTIARCH").Output()
-	if err != nil {
-		// use dlopen search library when dpkg-architecture not available
-		cStr := C.CString("libddcutil.so.5")
-		defer C.free(unsafe.Pointer(cStr))
-		ret := C.InitDDCCISo(cStr)
-		if ret == -2 {
-			logger.Debug("failed to initialize ddca_free_all_displays sym")
-		}
-	} else {
-		path := filepath.Join("/usr/lib", strings.TrimSpace(string(content)), "libddcutil.so.5")
-		logger.Debug("so path:", path)
-		cStr := C.CString(path)
-		defer C.free(unsafe.Pointer(cStr))
-		ret := C.InitDDCCISo(cStr)
-		if ret == -2 {
-			logger.Debug("failed to initialize ddca_free_all_displays sym")
-		}
-	}
-
 	return ddc, nil
 }
 
 func (d *ddcci) freeList() {
-	//logger.Debug("brightness: freeList, clear all display cache d.lisPointer", d.listPointer)
-	for _, handle := range d.displayHandleMap {
-		handle.Close()
-	}
-
+	// handle 不再常驻打开，open/close 生命周期严格局限于 Get/Set 调用内部。
+	// 注意：ddcutil 的显示锁是线程亲和的，ddca_open_display2 和 ddca_close_display
+	// 必须在同一个 OS 线程内成对调用，否则跨线程解锁会触发 DDCRC_LOCKED。
+	// 因此此处不能也不需要 Close 任何 handle——若曾有线程在 Get/Set 中 open 了
+	// handle 却未 close，那已是对约束的违反；正确做法是保证 Get/Set 内部即用即关，
+	// 让 freeList 只负责释放列表内存并清空 map。
 	d.displayHandleMap = make(map[string]*displayHandle)
 
 	if d.listPointer != nil {
 		C.ddca_free_display_info_list(d.listPointer)
-		_ = C.freeAllDisplaysWrapper()
 		d.listPointer = nil
 	}
 }
@@ -166,6 +138,16 @@ func (d *ddcci) RefreshDisplays() error {
 	defer d.listMu.Unlock()
 
 	d.freeList()
+
+	// ddcutil 的显示器探测是「探测一次永久缓存」（ddc_ensure_displays_detected
+	// 仅在 all_display_refs 为 NULL 时探测），ddca_get_display_info_list2 只是
+	// 从缓存重建列表、不重新探测总线。因此热插拔后若不先丢弃缓存，新接入的显示器
+	// 不会被识别（列表不变）。ddca_redetect_displays 会丢弃缓存并重新探测 I2C 总线。
+	// 仅在 libddcutil 编译时启用 --enable-watch-displays 时生效，否则返回非 0，
+	// 此时退化为使用缓存的 get_display_info_list2。
+	if rc := C.ddca_redetect_displays(); rc != C.int(0) {
+		logger.Warningf("brightness: ddca_redetect_displays failed: %d", int(rc))
+	}
 
 	status := C.ddca_get_display_info_list2(C.bool(true), &d.listPointer)
 	if status != C.int(0) {
@@ -184,7 +166,8 @@ func (d *ddcci) RefreshDisplays() error {
 func (d *ddcci) initDisplay(idx int) error {
 	logger.Debug("brightness: initDisplay enter, index=", idx)
 	dh := d.newDisplayHandle(idx)
-	dh.Open()
+	// 方案A：不在初始化期 open，仅缓存 dref/edid；Get/Set 时即用即开，
+	// 避免 ddcutil 显示锁跨 goroutine 长生命周期持有导致 DDCRC_LOCKED。
 	dh.initEdid()
 	d.displayHandleMap[dh.getEdidBase64()] = dh
 	return nil
@@ -203,6 +186,11 @@ func (d *ddcci) GetBrightness(edidBase64 string) (brightness int, err error) {
 	d.listMu.Lock()
 	defer d.listMu.Unlock()
 
+	// 固定到当前 OS 线程，保证 ddca_open_display2 与 ddca_close_display 同线程，
+	// ddcutil 显示锁不再跨越 goroutine 边界 → 消除 DDCRC_LOCKED。
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
 	handle, ok := d.displayHandleMap[edidBase64]
 	if !ok || handle == nil {
 		//ignore any bytes
@@ -210,11 +198,19 @@ func (d *ddcci) GetBrightness(edidBase64 string) (brightness int, err error) {
 		if find {
 			handle = d.getDisplayHandleByIdx(idx)
 			logger.Info("get display handle by index:", idx)
-		} else {
+		}
+
+		if !find || handle == nil {
 			err = fmt.Errorf("brightness: failed to find monitor")
 			return
 		}
 	}
+
+	// 即用即开：本次调用内 open，defer close，锁生命周期局限于此线程上的这一次调用。
+	if err = handle.Open(); err != nil {
+		return
+	}
+	defer handle.Close()
 
 	var val C.DDCA_Non_Table_Vcp_Value
 	status := C.ddca_get_non_table_vcp_value(handle.handle, brightnessVCP, &val)
@@ -231,6 +227,9 @@ func (d *ddcci) SetBrightness(edidBase64 string, percent int) error {
 	d.listMu.Lock()
 	defer d.listMu.Unlock()
 
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
 	// 开启结果验证，防止返回设置成功，但实际上没有生效的情况
 	// 此方法仅对当前线程生效
 	C.ddca_enable_verify(false)
@@ -246,9 +245,11 @@ func (d *ddcci) SetBrightness(edidBase64 string, percent int) error {
 		}
 	}
 
-	if dh.getState() == 0 {
-		dh.Open()
+	// 即用即开：同线程内 open/close，避免跨线程解锁 DDCRC_LOCKED。
+	if err := dh.Open(); err != nil {
+		return err
 	}
+	defer dh.Close()
 	return dh.setBrightness(percent)
 }
 

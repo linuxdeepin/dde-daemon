@@ -24,14 +24,17 @@ func SetUseWayland(value bool) {
 }
 
 const (
-	BrightnessSetterAuto      = 0 // auto
-	BrightnessSetterGamma     = 1 // gamma
-	BrightnessSetterBacklight = 2 // backlight
+	SetterAuto      = 0 // auto
+	SetterGamma     = 1 // gamma
+	SetterBacklight = 2 // backlight
+	SetterDDCCI     = 3
+	SetterDRM       = 4
 )
 
 var logger = log.NewLogger("daemon/display/brightness")
 
 var helper backlight.Backlight
+var ddcciHelper backlight.DDCCI
 
 func InitBacklightHelper() {
 	var err error
@@ -40,6 +43,7 @@ func InitBacklightHelper() {
 		return
 	}
 	helper = backlight.NewBacklight(sysBus)
+	ddcciHelper = backlight.NewDDCCI(sysBus)
 }
 
 // SetOutputGama 设置 Gamma 亮度和色温
@@ -254,4 +258,70 @@ func GetBacklightCurrentValue() (float64, error) {
 	}
 
 	return float64(currentBrightness) / float64(controller.MaxBrightness), nil
+}
+
+// RefreshAndSupportDDCCIBrightness 刷新 DDCCI 显示列表并返回指定显示器是否支持
+// DDCCI 亮度调节。调用方应在独立 goroutine 中调用（例如 time.AfterFunc 回调），
+// 因为 RefreshDisplays 探测 I2C 总线较慢。
+func RefreshAndSupportDDCCIBrightness(edidBase64 string) bool {
+	if helper == nil {
+		return false
+	}
+	res, err := helper.CheckCfgSupport(0, "ddcci")
+	if err != nil {
+		logger.Warningf("brightness: failed to check ddc/ci support: %v", err)
+		return false
+	}
+	if !res {
+		return false
+	}
+	logger.Debug("refresh ddcci display")
+	if err = ddcciHelper.RefreshDisplays(0); err != nil {
+		logger.Warningf("brightness: failed to refresh ddc/ci display list: %v", err)
+		return false
+	}
+	res, err = ddcciHelper.CheckSupport(0, edidBase64)
+	if err != nil {
+		logger.Warningf("brightness: failed to check ddc/ci support: %v", err)
+		return false
+	}
+	return res
+}
+
+func SetDDCCIBrightness(value float64, edidBase64 string) error {
+	if helper == nil {
+		return fmt.Errorf("brightness: backlight helper not initialized")
+	}
+	res, err := helper.CheckCfgSupport(0, "ddcci")
+	if err != nil {
+		logger.Warningf("brightness: failed to check ddc/ci support: %v", err)
+		return err
+	}
+	if !res {
+		logger.Warning("brightness: check ddc/ci config not support")
+		return nil
+	}
+	// 限制 value 在 [0, 1] 范围内，避免 DDC/CI percent 超出 0-100 规范
+	if value < 0 {
+		value = 0
+	} else if value > 1 {
+		value = 1
+	}
+	percent := int32(value * 100)
+	logger.Debugf("brightness: ddcci set brightness %d", percent)
+	return ddcciHelper.SetBrightness(0, edidBase64, percent)
+}
+
+func getDDCCIBrightness(edidBase64 string) (float64, error) {
+	br, err := ddcciHelper.GetBrightness(0, edidBase64)
+	if err != nil {
+		return 1, err
+	} else {
+		return float64(br) / 100.0, err
+	}
+}
+
+// GetDDCCIBrightness 获取 DDCCI 亮度值（公开接口）
+func GetDDCCIBrightness(edidBase64 string) (float64, error) {
+	return getDDCCIBrightness(edidBase64)
 }

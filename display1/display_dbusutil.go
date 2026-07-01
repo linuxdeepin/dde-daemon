@@ -5,7 +5,7 @@ package display1
 import (
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/strv"
-	"github.com/linuxdeepin/go-x11-client"
+	x "github.com/linuxdeepin/go-x11-client"
 )
 
 func (v *Manager) setPropMonitors(value []dbus.ObjectPath) (changed bool) {
@@ -59,6 +59,10 @@ func (v *Manager) emitPropChangedDisplayMode(value byte) error {
 func (v *Manager) setPropBrightness(value map[string]float64) {
 	v.Brightness = value
 	v.emitPropChangedBrightness(value)
+}
+
+func (v *Manager) emitPropChangedCanSetBrightnessMap(value map[string]bool) error {
+	return v.service.EmitPropertyChanged(v, "CanSetBrightnessMap", value)
 }
 
 func (v *Manager) emitPropChangedBrightness(value map[string]float64) error {
