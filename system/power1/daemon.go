@@ -5,9 +5,6 @@
 package power
 
 import (
-	"sync"
-	"time"
-
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -120,32 +117,22 @@ func (d *Daemon) Start() (err error) {
 		logger.Warning(err)
 	}
 	if d.manager.enablePerformanceInBoot() {
-		var once sync.Once
 		var handlerId dbusutil.SignalHandlerId
 		handlerId, err = d.manager.displayManager.ConnectSessionAdded(func(session dbus.ObjectPath) {
-			// 登录后两分钟内高性能,两分钟后修改回原有的mode
-			once.Do(func() {
-				time.AfterFunc(time.Minute*2, func() {
-					logger.Infof(" ## time.AfterFunc 2 min manager.Mod : %s", d.manager.Mode)
-					// ② 超时后恢复流程
-					d.manager.doSetMode(d.manager.Mode)
-					d.manager.displayManager.RemoveHandler(handlerId)
-					err = serverObj.SetReadCallback(d.manager, "Mode", nil)
-					if err != nil {
-						logger.Warning(err)
-					}
-				})
-			})
-
+			// 登录前tlpMode都是performance，不设置电源模式，直到有第一个用户登录了才设置电源模式
+			displaySessions, err := d.manager.displayManager.Sessions().Get(0)
+			if err != nil {
+				logger.Warning(err)
+			}
+			if len(displaySessions) == 1 {
+				d.manager.updatePowerMode(true)
+			}
+			d.manager.displayManager.RemoveHandler(handlerId)
 		})
 		if err != nil {
 			logger.Warning(err)
 		}
 	}
-	if err != nil {
-		logger.Warning(err)
-	}
-
 	err = serverObj.Export()
 	if err != nil {
 		logger.Warning(err)
