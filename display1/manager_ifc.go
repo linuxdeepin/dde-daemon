@@ -8,8 +8,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/display1/brightness"
+	"github.com/linuxdeepin/dde-daemon/display1/utils"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/strv"
 )
@@ -290,18 +293,110 @@ func (m *Manager) CanRotate() (bool, *dbus.Error) {
 	return true, nil
 }
 
+func (m *Manager) canSetBrightnessDDCCI(name string) (ret bool) {
+	if m.CanSetBrightnessMap == nil {
+		logger.Warning("canSetBrightness, return false -> CanSetBrightnessMap is nil ")
+		return ret
+	}
+	m.brightnessMapMu.RLock()
+	value, ok := m.CanSetBrightnessMap[name]
+	m.brightnessMapMu.RUnlock()
+	ret = value
+	if !ok {
+		logger.Warning("canSetBrightness, return false -> CanSetBrightnessMap not have the monitor : ", name)
+		return false
+	}
+	return ret
+}
+
+func (m *Manager) canSetBrightnessGeneral(name string) (ret bool) {
+	// 如果是龙芯集显，且不是内置显示器，则不支持调节亮度
+	if os.Getenv("CAN_SET_BRIGHTNESS") == "N" {
+		if m.builtinMonitor == nil || m.builtinMonitor.Name != name {
+			return false
+		}
+	}
+
+	return true
+}
+
+// copyCanSetBrightnessMapLocked 返回 CanSetBrightnessMap 的快照，调用方必须持有
+// brightnessMapMu（读或写锁）。发出 D-Bus 属性变更信号前先拷贝快照，避免信号
+// 处理期间其他 goroutine 并发 delete 触发 map 读写的 fatal error。
+func (m *Manager) copyCanSetBrightnessMapLocked() map[string]bool {
+	snapshot := make(map[string]bool, len(m.CanSetBrightnessMap))
+	for k, v := range m.CanSetBrightnessMap {
+		snapshot[k] = v
+	}
+	return snapshot
+}
+
+func (m *Manager) checkMonitorConnection(id uint32) bool {
+	m.monitorMapMu.Lock()
+	monitor, ok := m.monitorMap[id]
+	m.monitorMapMu.Unlock()
+	if !ok || monitor == nil {
+		return false
+	}
+	monitor.PropsMu.RLock()
+	defer monitor.PropsMu.RUnlock()
+	return monitor.realConnected
+}
+
+// updateCanSetBrightnessAsync 延迟检测显示器亮度调节能力并更新 CanSetBrightnessMap。
+// 在屏幕接入后调用：等待 dsgCanSetBrightnessInterval 毫秒后，根据是否走 DDCCI
+func (m *Manager) updateCanSetBrightnessAsync(monitor *Monitor) {
+	edid := utils.EncodeEdidBase64(monitor.edid)
+	name := monitor.Name
+	id := monitor.ID
+	time.AfterFunc(time.Duration(m.dsgCanSetBrightnessInterval)*time.Millisecond, func() {
+		if !m.checkMonitorConnection(id) {
+			return
+		}
+		var canSetBrightness bool
+		if m.shouldUseDDCCIBrightness(name) {
+			// 屏幕接入且走 DDCCI 路径：刷新显示列表后检测支持情况
+			canSetBrightness = brightness.RefreshAndSupportDDCCIBrightness(edid)
+		} else {
+			canSetBrightness = m.canSetBrightnessGeneral(name)
+		}
+		m.brightnessMapMu.Lock()
+		m.CanSetBrightnessMap[name] = canSetBrightness
+		snapshot := m.copyCanSetBrightnessMapLocked()
+		m.brightnessMapMu.Unlock()
+		m.emitPropChangedCanSetBrightnessMap(snapshot)
+		logger.Infof("updateCanSetBrightness: %s, canSetBrightness : %v", name, canSetBrightness)
+	})
+}
+
+// removeCanSetBrightness 删除指定显示器的亮度能力条目并发出 D-Bus 信号。
+// 用于屏幕断开连接时清理 CanSetBrightnessMap。
+func (m *Manager) removeCanSetBrightness(name string) {
+	m.brightnessMapMu.Lock()
+	delete(m.CanSetBrightnessMap, name)
+	snapshot := m.copyCanSetBrightnessMapLocked()
+	m.brightnessMapMu.Unlock()
+	m.emitPropChangedCanSetBrightnessMap(snapshot)
+}
+
+func (m *Manager) canSetBrightness(name string) (ret bool) {
+	if m.shouldUseDDCCIBrightness(name) {
+		ret = m.canSetBrightnessDDCCI(name)
+		logger.Debug("canSetBrightness : ", name, ret)
+		return ret
+	}
+
+	ret = m.canSetBrightnessGeneral(name)
+	logger.Debug("canSetBrightness : ", name, ret)
+	return ret
+}
+
 func (m *Manager) CanSetBrightness(outputName string) (bool, *dbus.Error) {
 	if outputName == "" {
 		return false, dbusutil.ToError(errors.New("monitor Name is err"))
 	}
 
-	//如果是龙芯集显，且不是内置显示器，则不支持调节亮度
-	if os.Getenv("CAN_SET_BRIGHTNESS") == "N" {
-		if m.builtinMonitor == nil || m.builtinMonitor.Name != outputName {
-			return false, nil
-		}
-	}
-	return true, nil
+	return m.canSetBrightness(outputName), nil
 }
 
 func (m *Manager) getBuiltinMonitor() *Monitor {
