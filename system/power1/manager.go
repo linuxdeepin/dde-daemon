@@ -263,7 +263,7 @@ func (m *Manager) init() error {
 	m.gudevClient.Connect("uevent", m.handleUEvent)
 	m.initDone = true
 
-	m.updatePowerMode(true) // init
+	// m.updatePowerMode(true) // init
 
 	m.displayManager = DisplayManager.NewDisplayManager(m.service.Conn())
 	m.displayManager.InitSignalExt(m.systemSigLoop, true)
@@ -875,6 +875,7 @@ func (m *Manager) doSetMode(mode string) {
 // ① 为了减小耦合性，仅写文件(doSetCpuGovernor)，不修改后端相关属性
 func (m *Manager) enablePerformanceInBoot() bool {
 	if m.Mode == ddePerformance {
+		m.updatePowerMode(true)
 		return false
 	}
 	displaySessions, err := m.displayManager.Sessions().Get(0)
