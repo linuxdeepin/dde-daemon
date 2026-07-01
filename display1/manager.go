@@ -3864,7 +3864,11 @@ func (m *Manager) initTransitionManager() {
 		case brightness.SetterBacklight:
 			return brightness.TypeBacklight
 		case brightness.SetterAuto:
-			if isBuiltin {
+			// 必须同时检查 SupportBacklight()：DVI 等"isBuiltin 为真但实际无背光控制器"
+			// 的外接输出（见 isBuiltinMonitor 历史遗留）应走 Gamma 路径，否则会被误路由到
+			// TypeBacklight，写入 /sys/class/backlight/ 对该输出不生效，亮度调节失效。
+			// 与 createBrightnessSetter 的降级路径保持一致。
+			if isBuiltin && brightness.SupportBacklight() {
 				return brightness.TypeBacklight
 			}
 			return brightness.TypeGamma
