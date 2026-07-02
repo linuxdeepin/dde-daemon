@@ -392,11 +392,20 @@ func (m *Manager) stopExportUsers(list []string) {
 }
 
 func (m *Manager) exportUserByUid(uId string) error {
+	userPath := userDBusPathPrefix + uId
+	id, _ := strconv.Atoi(uId)
+
+	// 快速路径：已导出则直接返回
+	m.usersMapMu.Lock()
+	_, alreadyExported := m.usersMap[userPath]
+	m.usersMapMu.Unlock()
+	if alreadyExported {
+		return nil
+	}
+
 	var err error
 	var u *User
 	var userGroups []string
-	userPath := userDBusPathPrefix + uId
-	id, _ := strconv.Atoi(uId)
 
 	if /*m.isUserJoinUdcp()*/ id > 10000 {
 		if users.ExistPwUid(uint32(id)) != 0 {
@@ -455,12 +464,27 @@ func (m *Manager) exportUserByUid(uId string) error {
 		}
 	}
 
+	// 临界区：检查 + Export + 写入 usersMap 原子化，防止并发重复导出
 	m.usersMapMu.Lock()
+
+	// 双检：再次确认未被其他 goroutine 抢先导出
+	_, alreadyExported = m.usersMap[userPath]
+	if alreadyExported {
+		m.usersMapMu.Unlock()
+		return nil
+	}
+
 	ch := m.userAddedChanMap[u.UserName]
-	m.usersMapMu.Unlock()
 
 	err = m.service.Export(dbus.ObjectPath(userPath), u)
 	logger.Debugf("export user %q err: %v", userPath, err)
+
+	if err == nil {
+		m.usersMap[userPath] = u
+	}
+	m.usersMapMu.Unlock()
+
+	// channel 通知在锁外完成，避免与 CreateUser 的 defer（需拿 usersMapMu 清理 map）形成死锁
 	if ch != nil {
 		if err != nil {
 			ch <- ""
@@ -470,15 +494,7 @@ func (m *Manager) exportUserByUid(uId string) error {
 		logger.Debug("after ch <- userPath")
 	}
 
-	if err != nil {
-		return err
-	}
-
-	m.usersMapMu.Lock()
-	m.usersMap[userPath] = u
-	m.usersMapMu.Unlock()
-
-	return nil
+	return err
 }
 
 func (m *Manager) stopExportUser(userPath string) {

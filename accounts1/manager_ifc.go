@@ -11,6 +11,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	osuser "os/user"
 	"strconv"
 	"strings"
 	"time"
@@ -248,7 +249,7 @@ func (m *Manager) FindUserById(uid string) (user string, busErr *dbus.Error) {
 	return "", dbusutil.ToError(fmt.Errorf("invalid uid: %s", uid))
 }
 
-func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) {
+func (m *Manager) FindUserByName(sender dbus.Sender, name string) (user string, busErr *dbus.Error) {
 	pwd, err := passwd.GetPasswdByName(name)
 	if err != nil {
 		logger.Warning(err)
@@ -258,12 +259,40 @@ func (m *Manager) FindUserByName(name string) (user string, busErr *dbus.Error) 
 	}
 
 	m.usersMapMu.Lock()
-	defer m.usersMapMu.Unlock()
-
 	for p, u := range m.usersMap {
 		if u.UserName == pwd.Name {
+			m.usersMapMu.Unlock()
 			return p, nil
 		}
+	}
+	m.usersMapMu.Unlock()
+
+	// getpwnam 成功但用户不在 usersMap 中，自动导出。
+	// 典型场景：域管用户首次登录时 addDomainUser 尚未被触发。
+	// 仅处理 uid > 10000 的域管用户，避免系统用户（如 lightdm）
+	// 被意外导出到 DBus。
+	if err == nil && pwd.Uid > 10000 {
+		uidStr := strconv.FormatUint(uint64(pwd.Uid), 10)
+
+		// 仅 lightdm 用户可触发自动导出
+		callerUid, connErr := m.service.GetConnUID(string(sender))
+		if connErr != nil {
+			return "", dbusutil.ToError(connErr)
+		}
+		callerUser, lookupErr := osuser.LookupId(strconv.Itoa(int(callerUid)))
+		if lookupErr != nil || callerUser.Username != "lightdm" {
+			return "", dbusutil.ToError(fmt.Errorf("invalid username: %s", pwd.Name))
+		}
+
+		if exportErr := m.exportUserByUid(uidStr); exportErr != nil {
+			logger.Warningf("FindUserByName: auto export user %s (uid:%s) FAILED: %v", name, uidStr, exportErr)
+			return "", dbusutil.ToError(fmt.Errorf("invalid username: %s", pwd.Name))
+		}
+		userPath := userDBusPathPrefix + uidStr
+		if emitErr := m.service.Emit(m, "UserAdded", userPath); emitErr != nil {
+			logger.Warningf("FindUserByName: emit UserAdded failed: %v", emitErr)
+		}
+		return userPath, nil
 	}
 
 	return "", dbusutil.ToError(fmt.Errorf("invalid username: %s", pwd.Name))
