@@ -14,8 +14,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/linuxdeepin/dde-daemon/common/fileutil"
 	"time"
+
+	"github.com/linuxdeepin/dde-daemon/common/fileutil"
 
 	"github.com/godbus/dbus/v5"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
@@ -204,7 +205,7 @@ func (psp *powerSavePlan) Start() error {
 
 	// OnBattery changed will effect current PowerSavePlan
 	err := power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
-		psp.Reset()
+		psp.ResetFromNow()
 	})
 	if err != nil {
 		logger.Warning("failed to connectChanged OnBattery:", err)
@@ -456,8 +457,20 @@ func (mts metaTasks) setRealDelay(min int32) {
 	}
 }
 
+func (mts metaTasks) setRealDelayFromNow() {
+	for idx := range mts {
+		t := &mts[idx]
+		t.realDelay = time.Second * time.Duration(t.delay)
+	}
+}
+
 func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 	screenBlackDelay, sleepDelay, shortIdleDelay int32) {
+	psp.doUpdate(screenSaverStartDelay, lockDelay, screenBlackDelay, sleepDelay, shortIdleDelay, false)
+}
+
+func (psp *powerSavePlan) doUpdate(screenSaverStartDelay, lockDelay,
+	screenBlackDelay, sleepDelay, shortIdleDelay int32, resetFromNow bool) {
 	psp.mu.Lock()
 	defer psp.mu.Unlock()
 
@@ -517,10 +530,30 @@ func (psp *powerSavePlan) Update(screenSaverStartDelay, lockDelay,
 	psp.metaTasks = tasks
 
 	if psp.isIdle {
+		if resetFromNow {
+			psp.metaTasks.setRealDelayFromNow()
+		}
 		logger.Info("System is already idle, restarting power delay tasks.")
-		psp.startIdleTasksLocked()
+		psp.startIdleTasksLocked(!resetFromNow)
 	} else {
 		psp.metaTasks.setRealDelay(min)
+	}
+}
+
+func (psp *powerSavePlan) ResetFromNow() {
+	m := psp.manager
+	if m.OnBattery {
+		psp.doUpdate(int32(m.BatteryScreensaverDelay), int32(m.BatteryLockDelay),
+			int32(m.BatteryScreenBlackDelay),
+			int32(m.BatterySleepDelay),
+			int32(m.BatteryShortIdleDelay),
+			true)
+	} else {
+		psp.doUpdate(int32(m.LinePowerScreensaverDelay), int32(m.LinePowerLockDelay),
+			int32(m.LinePowerScreenBlackDelay),
+			int32(m.LinePowerSleepDelay),
+			int32(m.LinePowerShortIdleDelay),
+			true)
 	}
 }
 
@@ -1006,12 +1039,12 @@ func (psp *powerSavePlan) HandleIdleOn() {
 	logger.Info("HandleIdleOn")
 
 	psp.isIdle = true
-	psp.startIdleTasksLocked()
+	psp.startIdleTasksLocked(true)
 }
 
-func (psp *powerSavePlan) startIdleTasksLocked() {
+func (psp *powerSavePlan) startIdleTasksLocked(useElapsedIdle bool) {
 	// check window, only x11 is supported, not apply to wayland
-	if !psp.manager.UseWayland {
+	if useElapsedIdle && !psp.manager.UseWayland {
 		preventIdle, err := psp.shouldPreventIdle()
 		if err != nil {
 			logger.Warning(err)
