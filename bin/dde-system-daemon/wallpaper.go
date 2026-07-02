@@ -9,8 +9,9 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+	"image"
+	"io"
 	"os"
-	"os/exec"
 	"os/user"
 	"path/filepath"
 	"sort"
@@ -18,18 +19,22 @@ import (
 	"strings"
 	"sync"
 
+	_ "image/jpeg"
+	_ "image/png"
+
 	dbus "github.com/godbus/dbus/v5"
 	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+	_ "golang.org/x/image/bmp"
+	_ "golang.org/x/image/tiff"
 )
 
 const maxCount = 20
+const maxWallpaperSize = 32 * 1024 * 1024
 const wallPaperDir = "/var/cache/wallpapers/custom-wallpapers/"
 const solidWallPaperPath = "/var/cache/wallpapers/custom-solidwallpapers/"
-const solidPrefix = "solid::"
 const polkitActionUserAdministration = "org.deepin.dde.accounts.user-administration"
-const wallpaperHelperPath = "/usr/lib/deepin-daemon/dde-wallpaper-helper"
 
 var wallPaperDirs = []string{
 	wallPaperDir,
@@ -214,40 +219,62 @@ func (d *Daemon) checkAuth(sender dbus.Sender) error {
 	return checkAuth(polkitActionUserAdministration, string(sender))
 }
 
-// readWallpaperSourceAsUser reads the wallpaper source file with the target
-// user's privileges. It executes dde-wallpaper-helper via runuser so the
-// kernel enforces the target user's file permissions, and the helper opens
-// the file atomically with O_NOFOLLOW to prevent TOCTOU races.
-func readWallpaperSourceAsUser(username string, file string) ([]byte, error) {
-	cmd := exec.Command("runuser", "-u", username, "--", wallpaperHelperPath, file)
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	src, err := cmd.Output()
+func readWallpaperSourceFromFD(fd dbus.UnixFD) ([]byte, error) {
+	if fd < 0 {
+		return nil, errors.New("invalid wallpaper fd")
+	}
+
+	f := os.NewFile(uintptr(fd), "wallpaper")
+	if f == nil {
+		return nil, errors.New("invalid wallpaper fd")
+	}
+	defer f.Close()
+
+	info, err := f.Stat()
 	if err != nil {
-		return nil, fmt.Errorf("permission denied, %s is not allowed to read this file:%s: %s", username, file, strings.TrimSpace(stderr.String()))
+		return nil, err
+	}
+	if !info.Mode().IsRegular() {
+		return nil, errors.New("wallpaper source is not a regular file")
+	}
+	if info.Size() > maxWallpaperSize {
+		return nil, fmt.Errorf("file size %d > %d", info.Size(), maxWallpaperSize)
+	}
+
+	src, err := io.ReadAll(io.NewSectionReader(f, 0, maxWallpaperSize+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(src) > maxWallpaperSize {
+		return nil, fmt.Errorf("file size > %d", maxWallpaperSize)
 	}
 	return src, nil
 }
 
-func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file string) (string, *dbus.Error) {
+func wallpaperExtFromContent(src []byte) (string, error) {
+	_, format, err := image.DecodeConfig(bytes.NewReader(src))
+	if err != nil {
+		return "", fmt.Errorf("invalid wallpaper image: %w", err)
+	}
+
+	switch format {
+	case "jpeg":
+		return ".jpg", nil
+	case "png":
+		return ".png", nil
+	case "bmp":
+		return ".bmp", nil
+	case "tiff":
+		return ".tiff", nil
+	default:
+		return "", fmt.Errorf("unsupported wallpaper format: %s", format)
+	}
+}
+
+func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, fd dbus.UnixFD, isSolid bool) (string, *dbus.Error) {
 	var err error
-	var isSolid bool = false
 	wallpaperMutex.Lock()
 	defer wallpaperMutex.Unlock()
-	if strings.HasPrefix(file, solidPrefix) {
-		file = strings.TrimPrefix(file, solidPrefix)
-		isSolid = true
-	}
-	dirs, err := GetUserDirs(username)
-
-	if err != nil {
-		logger.Warning(err)
-		return "", dbusutil.ToError(err)
-	}
-
-	if checkPath(file, dirs) != "" {
-		return file, nil
-	}
 
 	uid, err := d.service.GetConnUID(string(sender))
 	if err != nil {
@@ -262,7 +289,18 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		return "", dbusutil.ToError(err)
 	}
 
-	src, err := readWallpaperSourceAsUser(username, file)
+	dirs, err := GetUserDirs(username)
+	if err != nil {
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
+	}
+
+	src, err := readWallpaperSourceFromFD(fd)
+	if err != nil {
+		logger.Warning(err)
+		return "", dbusutil.ToError(err)
+	}
+	ext, err := wallpaperExtFromContent(src)
 	if err != nil {
 		logger.Warning(err)
 		return "", dbusutil.ToError(err)
@@ -289,7 +327,7 @@ func (d *Daemon) SaveCustomWallPaper(sender dbus.Sender, username string, file s
 		return "", dbusutil.ToError(err)
 	}
 	destFile := filepath.Join(path, md5sum)
-	destFile = destFile + filepath.Ext(file)
+	destFile = destFile + ext
 	if dutils.IsFileExist(destFile) {
 		return destFile, nil
 	}
