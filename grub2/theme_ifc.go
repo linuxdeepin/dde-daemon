@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,13 +8,11 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
 	"strings"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/utils"
-	dutils "github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
@@ -79,19 +77,35 @@ func (theme *Theme) GetBackground(sender dbus.Sender) (background string, busErr
 
 	if len(background) == 0 {
 		return "", nil
-	} else {
-
-		tmpBackground := "dde-grub-background" + path.Ext(defaultGrubBackground)
-		backGroundTmpPath := filepath.Join("/tmp", tmpBackground)
-		//copy file to /tmp
-		err := dutils.CopyFile(background, backGroundTmpPath)
-		if err != nil {
-			return "", dbusutil.ToError(err)
-		}
-		logger.Debugf("Copy file %s to %s", background, backGroundTmpPath)
-
-		return backGroundTmpPath, nil
 	}
+
+	ext := path.Ext(background)
+	backGroundTmpFile, err := os.CreateTemp("/tmp", "dde-grub-background-*"+ext)
+	if err != nil {
+		return "", dbusutil.ToError(err)
+	}
+
+	backGroundTmpPath := backGroundTmpFile.Name()
+	backGroundTmpFile.Close()
+
+	err = utils.CopyFile(background, backGroundTmpPath)
+	if err != nil {
+		logger.Warningf("GetBackground: copy %q to %q failed: %v", background, backGroundTmpPath, err)
+		_ = os.Remove(backGroundTmpPath)
+		return "", dbusutil.ToError(err)
+	}
+
+	err = os.Chmod(backGroundTmpPath, 0644)
+	if err != nil {
+		logger.Warningf("GetBackground: chmod %q 0644 failed: %v", backGroundTmpPath, err)
+		_ = os.Remove(backGroundTmpPath)
+		return "", dbusutil.ToError(err)
+	}
+	logger.Debugf("Copy file %s to %s", background, backGroundTmpPath)
+
+	// 已知问题：返回的临时文件由调用方使用，本服务不清理。每次调用产生一个
+	// 唯一命名的新文件，重复调用会在 /tmp 中累积（依赖重启清空 tmpfs）。
+	return backGroundTmpPath, nil
 }
 
 func (theme *Theme) emitSignalBackgroundChanged() {

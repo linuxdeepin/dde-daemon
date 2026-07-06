@@ -229,7 +229,9 @@ type Manager struct {
 	DisplayMode         byte
 	ConcatScreenEnabled bool
 	// dbusutil-gen: equal=nil
-	Brightness map[string]float64
+	Brightness          map[string]float64
+	CanSetBrightnessMap map[string]bool
+	brightnessMapMu     sync.RWMutex
 	// dbusutil-gen: equal=nil
 	Touchscreens dxTouchscreens
 	// dbusutil-gen: equal=nil
@@ -254,7 +256,8 @@ type Manager struct {
 	// 存在gsetting中的色温模式
 	gsColorTemperatureMode int32
 	// 存在gsetting中的色温值
-	gsColorTemperatureManual int32
+	gsColorTemperatureManual    int32
+	dsgCanSetBrightnessInterval int32
 
 	// 不支持调节色温的显卡型号
 	unsupportGammaDrmList []string
@@ -318,10 +321,11 @@ var _dsDefaultTemperatureManual int32 // 开启色温时，手动调节色温的
 func newManager(service *dbusutil.Service) *Manager {
 	isVM, _ := isInVM()
 	m := &Manager{
-		service:        service,
-		monitorMap:     make(map[uint32]*Monitor),
-		Brightness:     make(map[string]float64),
-		redshiftRunner: newRedshiftRunner(),
+		service:             service,
+		monitorMap:          make(map[uint32]*Monitor),
+		Brightness:          make(map[string]float64),
+		CanSetBrightnessMap: make(map[string]bool),
+		redshiftRunner:      newRedshiftRunner(),
 		unsupportGammaDrmList: []string{
 			"Loongson",
 		},
@@ -553,6 +557,8 @@ func (m *Manager) initDConfig(sysBus *dbus.Conn) {
 			m.getMaxBrightnessUnlimited()
 		case DSettingsAutoChangeScaleEnabled:
 			m.getAutoChangeScaleEnabled()
+		case DSettingsKeyCanSetBrightnessDelay:
+			m.getBrightnessDelaySet()
 		case DSettingsKeyTransitionEnabled,
 			DSettingsKeyTransitionDuration,
 			DSettingsKeyTransitionStepPercent,
@@ -604,6 +610,7 @@ func (m *Manager) loadInitialConfigValues() {
 	m.getColorTemperatureModeOn()
 	m.getCurrentCustomId()
 	m.getRotateScreenTimeDelay()
+	m.getBrightnessDelaySet()
 	// ColorTemperatureManual will be loaded from user config via applyColorTempConfig()
 	m.getBacklightCurveType()
 	m.getBacklightMinValue()
@@ -847,6 +854,25 @@ func (m *Manager) getAutoChangeScaleEnabled() {
 	}
 	m.dsAutoChangeScaleEnabled = enabled
 	logger.Info("auto change scale enabled:", m.dsAutoChangeScaleEnabled)
+}
+
+func (m *Manager) getBrightnessDelaySet() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyCanSetBrightnessDelay)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	switch vType := v.Value().(type) {
+	case float64:
+		m.dsgCanSetBrightnessInterval = int32(vType)
+	case int64:
+		m.dsgCanSetBrightnessInterval = int32(vType)
+	default:
+		logger.Warning("type is wrong!")
+		m.dsgCanSetBrightnessInterval = 0
+	}
+
+	logger.Info("Get Can Set Brightness Delay Interval: ", m.dsgCanSetBrightnessInterval)
 }
 
 // 初始化系统级 display 服务的信号处理
@@ -1518,6 +1544,7 @@ func (m *Manager) addMonitorFallback(screenInfo *randr.GetScreenInfoReply) (*Mon
 	m.monitorMapMu.Lock()
 	m.monitorMap[uint32(output)] = monitor
 	m.monitorMapMu.Unlock()
+	m.updateCanSetBrightnessAsync(monitor)
 	return monitor, nil
 }
 
@@ -1611,6 +1638,7 @@ func (m *Manager) addMonitor(monitorInfo *MonitorInfo) error {
 		MmHeight:           monitorInfo.MmHeight,
 		Enabled:            monitorInfo.Enabled,
 		uuid:               monitorInfo.UUID,
+		edid:               monitorInfo.EDID,
 		uuidV0:             monitorInfo.UuidV0,
 		Manufacturer:       monitorInfo.Manufacturer,
 		Model:              monitorInfo.Model,
@@ -1653,6 +1681,8 @@ func (m *Manager) addMonitor(monitorInfo *MonitorInfo) error {
 		logger.Warning("call SetWriteCallback err:", err)
 		return err
 	}
+
+	m.updateCanSetBrightnessAsync(monitor)
 
 	return nil
 }
@@ -1715,6 +1745,7 @@ func (m *Manager) updateMonitor(monitorInfo *MonitorInfo) {
 		logger.Debugf("%v uuid changed, old:%q, new %q", monitor, monitor.uuid, monitorInfo.UUID)
 	}
 	monitor.uuid = monitorInfo.UUID
+	monitor.edid = monitorInfo.EDID
 	monitor.uuidV0 = monitorInfo.UuidV0
 	monitor.realConnected = monitorInfo.Connected
 	monitor.setPropAvailableFillModes(monitorInfo.AvailableFillModes)
@@ -1740,7 +1771,16 @@ func (m *Manager) updateMonitor(monitorInfo *MonitorInfo) {
 	monitor.setPropWidth(monitorInfo.Width)
 	monitor.setPropHeight(monitorInfo.Height)
 	// NOTE: 前端 dcc 要求在设置了 Width 和 Height 之后，再设置 Connected 和 Enabled。
-	monitor.setPropConnected(monitorInfo.VirtualConnected)
+	connectionChanged := monitor.setPropConnected(monitorInfo.VirtualConnected)
+	if connectionChanged {
+		if monitorInfo.VirtualConnected {
+			// 连接
+			m.updateCanSetBrightnessAsync(monitor)
+		} else {
+			// 断开
+			m.removeCanSetBrightness(monitor.Name)
+		}
+	}
 	monitor.setPropEnabled(monitorInfo.Enabled)
 
 	monitor.setPropReflects(getReflects(monitorInfo.Rotations))
@@ -3614,8 +3654,18 @@ func (m *Manager) detectDrmSupportGamma() bool {
 func calcMaxScaleFactor(width, height uint16) float64 {
 	scaleFactors := []float64{1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0}
 
-	maxWScale := float64(width) / 1024.0
-	maxHScale := float64(height) / 768.0
+	// 用长边/短边计算，使结果与屏幕方向无关。90°/270° 旋转会交换 CRTC 的宽高，
+	// 若直接按当前宽高计算，外接屏（如 1920×1080 旋转后变为 1080×1920）的宽仅
+	// 1080，1080/1024≈1.05，会把可支持的最大缩放错误压低到 1.0，进而触发
+	// tryToChangeScaleFactor 把用户已设置的缩放重置回 1.0。屏幕的物理像素总数与
+	// 方向无关，因此应基于长/短边（即原始分辨率）来判断。
+	w, h := width, height
+	if w < h {
+		w, h = h, w
+	}
+
+	maxWScale := float64(w) / 1024.0
+	maxHScale := float64(h) / 768.0
 
 	maxValue := 0.0
 	if maxWScale < maxHScale {
@@ -3776,13 +3826,18 @@ func (m *Manager) initTransitionManager() {
 		isBuiltin := m.isBuiltinMonitor(monitorName)
 
 		switch setter {
-		case brightness.BrightnessSetterBacklight:
+		case brightness.SetterBacklight:
 			return brightness.TypeBacklight
-		case brightness.BrightnessSetterAuto:
+		case brightness.SetterAuto:
 			if isBuiltin {
 				return brightness.TypeBacklight
 			}
 			return brightness.TypeGamma
+		case brightness.SetterDDCCI:
+			if isBuiltin {
+				return brightness.TypeBacklight
+			}
+			return brightness.TypeDDCCI
 		default: // BrightnessSetterGamma
 			return brightness.TypeGamma
 		}
@@ -3819,6 +3874,16 @@ func (m *Manager) initTransitionManager() {
 				return 0.5, nil
 			}
 			return currentBrightness, nil
+		},
+	)
+
+	// 设置 DDCCI 回调
+	m.transitionManager.SetDDCCIFuncs(
+		func(edid string, percent float64) error {
+			return brightness.SetDDCCIBrightness(percent, edid)
+		},
+		func(edid string) (float64, error) {
+			return brightness.GetDDCCIBrightness(edid)
 		},
 	)
 

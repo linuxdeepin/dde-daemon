@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -241,4 +241,33 @@ func Test_parseEdid(t *testing.T) {
 		assert.Equal(t, model, v.model)
 	}
 
+}
+
+// Test_calcMaxScaleFactor 校验最大可支持缩放与屏幕方向无关：90°/270° 旋转会交换
+// CRTC 宽高，旋转前后应得到相同的上限，避免因旋转把上限错误压低（如 1080×1920
+// 被压到 1.0）而在登录应用配置时触发 tryToChangeScaleFactor 重置用户缩放。
+func Test_calcMaxScaleFactor(t *testing.T) {
+	testdata := []struct {
+		name   string
+		width  uint16
+		height uint16
+		want   float64
+	}{
+		{"1920x1080 landscape", 1920, 1080, 1.25},
+		{"1920x1080 rotated 90 (1080x1920)", 1080, 1920, 1.25},
+		{"1920x1080 rotated 180", 1920, 1080, 1.25},
+		{"4K landscape", 3840, 2160, 2.75},
+		{"4K rotated 90 (2160x3840)", 2160, 3840, 2.75},
+		{"1600x900", 1600, 900, 1.0},
+		{"1600x900 rotated 90 (900x1600)", 900, 1600, 1.0},
+		{"1024x768 baseline", 1024, 768, 1.0},
+		{"1024x768 rotated 90 (768x1024)", 768, 1024, 1.0},
+		{"800x600 below baseline", 800, 600, 0.0},
+		{"800x600 rotated 90 (600x800)", 600, 800, 0.0},
+	}
+	for _, v := range testdata {
+		t.Run(v.name, func(t *testing.T) {
+			assert.Equal(t, v.want, calcMaxScaleFactor(v.width, v.height))
+		})
+	}
 }
