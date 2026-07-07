@@ -1370,7 +1370,8 @@ func (m *Manager) shutdownCountdownNotify(count int, playSound bool) {
 		"urgency":                     dbus.MakeVariant(2), //取消关闭按钮
 		"x-deepin-ShowInNotifyCenter": dbus.MakeVariant(false),
 		"x-deepin-ClickToDisappear":   dbus.MakeVariant(false),
-		"x-deepin-DisappearAfterLock": dbus.MakeVariant(false)}
+		"x-deepin-DisappearAfterLock": dbus.MakeVariant(false),
+		"x-deepin-SilentReplace":      dbus.MakeVariant(true)}
 	m.notifyIdMu.Lock()
 	nid := m.notifyId
 	m.notifyIdMu.Unlock()
