@@ -228,6 +228,7 @@ type Manager struct {
 	HasChanged          bool
 	DisplayMode         byte
 	ConcatScreenEnabled bool
+	ConcatScreenName    string
 	// dbusutil-gen: equal=nil
 	Brightness          map[string]float64
 	CanSetBrightnessMap map[string]bool
@@ -2368,10 +2369,8 @@ func (m *Manager) applyConcatScreen() error {
 	}
 
 	m.PropsMu.Lock()
-	m.ConcatScreenEnabled = true
+	m.setConcatScreenEnabled(true, concatScreenName)
 	m.PropsMu.Unlock()
-
-	_ = m.service.EmitPropertyChanged(m, "ConcatScreenEnabled", true)
 	return nil
 }
 
@@ -2386,11 +2385,20 @@ func (m *Manager) removeConcatScreen() error {
 	}
 
 	m.PropsMu.Lock()
-	m.ConcatScreenEnabled = false
+	m.setConcatScreenEnabled(false, "")
 	m.PropsMu.Unlock()
-
-	_ = m.service.EmitPropertyChanged(m, "ConcatScreenEnabled", false)
 	return nil
+}
+
+func (m *Manager) setConcatScreenEnabled(enabled bool, name string) (changed bool) {
+	if m.ConcatScreenEnabled != enabled {
+		m.ConcatScreenEnabled = enabled
+		m.ConcatScreenName = name
+		_ = m.service.EmitPropertyChanged(m, "ConcatScreenEnabled", enabled)
+		_ = m.service.EmitPropertyChanged(m, "ConcatScreenName", name)
+		return true
+	}
+	return false
 }
 
 func (m *Manager) save() (err error) {
