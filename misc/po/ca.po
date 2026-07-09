@@ -315,7 +315,7 @@ msgstr "Gravador de pantalla"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:16
 msgid "Lock screen"
-msgstr "Pantalla de bloqueig"
+msgstr "Pantalla de blocatge"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:17
 msgid "Show/Hide the dock"
@@ -323,7 +323,7 @@ msgstr "Mostra / amaga l'acoblador"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:18
 msgid "Shutdown interface"
-msgstr "Atura la interfície."
+msgstr "Interfície d'aturada"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:19
 msgid "Terminal Quake Window"
