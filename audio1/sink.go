@@ -120,7 +120,7 @@ func (s *Sink) SetVolume(value float64, isPlay bool) *dbus.Error {
 		s.setMute(true)
 	} else {
 		// SetMute中判断了音量是否为0，但是Volume是根据事件刷新的，此时还不是设置后的音量，因此会影响判断
-		if err := s.setMute(false); err == nil {
+		if err := s.setMuteWithoutFeedback(false); err == nil {
 			if GetConfigKeeper().Mute.MuteOutput {
 				GetConfigKeeper().SetMuteOutput(false)
 			}
@@ -265,6 +265,14 @@ func (s *Sink) SetMute(value bool) *dbus.Error {
 }
 
 func (s *Sink) setMute(value bool) error {
+	return s.setMuteInternal(value, true)
+}
+
+func (s *Sink) setMuteWithoutFeedback(value bool) error {
+	return s.setMuteInternal(value, false)
+}
+
+func (s *Sink) setMuteInternal(value bool, isPlayFeedback bool) error {
 	err := s.CheckPort()
 	if err != nil {
 		logger.Warning(err.Body...)
@@ -275,7 +283,7 @@ func (s *Sink) setMute(value bool) error {
 	}
 	s.audio.context().SetSinkMuteByIndex(s.index, value)
 
-	if !value {
+	if !value && isPlayFeedback {
 		s.playFeedback()
 	}
 	return nil
