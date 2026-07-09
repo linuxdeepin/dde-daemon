@@ -1,3 +1,21 @@
+dde-daemon (6.1.100) unstable; urgency=medium
+
+  * fix(display): keep max scale independent of rotation
+  * feat: support brightness via ddcutil
+  * fix(power): move power mode init to post-login to avoid racing with
+    deepin-power-control
+  * fix: improve temporary background file creation in theme
+  * fix: improve gfxmode signal file creation safety
+  * fix: prevent concurrent export and auto-export domain users during
+    find
+  * feat: add polkit authorization for uadp manager methods
+  * fix(wallpaper): read custom wallpaper from fd
+  * fix: avoid unnecessary feedback sound when unmuting sink
+  * i18n: Updates for project Deepin Desktop Environment (#1110)
+  * fix: add ConcatScreenName property for multi-screen display
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 09 Jul 2026 19:29:23 +0800
+
 dde-daemon (6.1.99) unstable; urgency=medium
 
   * feat: add services and desktop entry to whitelist
