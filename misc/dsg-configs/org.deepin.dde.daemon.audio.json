@@ -95,7 +95,7 @@
     },
     "reduceNoiseEnabled":{
       "value": false,
-      "serial": 0,
+      "serial": 1,
       "flags": ["global"],
       "name": "reduceNoiseEnabled",
       "name[zh_CN]": "噪音抑制开关",
@@ -177,6 +177,15 @@
       "name[zh_CN]": "禁用自动静音",
       "description": "Whether to disable ALSA Mixer Auto-Mute Mode",
       "description[zh_CN]": "是否禁用ALSA混音器自动静音模式",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "aiReduceNoiseEnabled": {
+      "value": true,
+      "serial": 0,
+      "name": "AiReduceNoiseEnabled",
+      "name[zh_CN]": "AI降噪",
+      "description": "enable ai reduce noise",
       "permissions": "readwrite",
       "visibility": "private"
     }
