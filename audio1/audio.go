@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"os/exec"
 	"regexp"
 	"sort"
 	"strings"
@@ -63,6 +64,8 @@ const (
 	dsgKeyBluezModeDefault        = "bluezModeDefault"
 	dsgKeyMonoEnabled             = "monoEnabled"
 	dsgKeyReduceNoiseEnabled      = "reduceNoiseEnabled" // 降噪配置，保存用户数据
+	dsgKeyAiReduceNoiseEnabled    = "aiReduceNoiseEnabled"
+	rnnoiseSourceName             = "effect_output.rnnoise"
 
 	dsgKeyFirstRun                 = "firstRun"
 	dsgKeyInputVolume              = "inputVolume"
@@ -95,7 +98,7 @@ const (
 	AudioStateChanging = false
 )
 
-//go:generate dbusutil-gen -type Audio,Sink,SinkInput,Source,Meter -import github.com/godbus/dbus audio.go sink.go sinkinput.go source.go meter.go
+//go:generate dbusutil-gen -type Audio,Sink,SinkInput,Source,Meter -import github.com/godbus/dbus/v5 audio.go sink.go sinkinput.go source.go meter.go
 //go:generate dbusutil-gen em -type Audio,Sink,SinkInput,Source,Meter
 
 func objectPathSliceEqual(v1, v2 []dbus.ObjectPath) bool {
@@ -150,6 +153,12 @@ type Audio struct {
 	PausePlayer bool `prop:"access:rw"`
 
 	ReduceNoise bool `prop:"access:rw"`
+
+	AiReduceNoise bool `prop:"access:rw"`
+
+	AiNoiseSourcePath dbus.ObjectPath
+
+	aiNoiseSourceName string
 
 	defaultPaCfg defaultPaConfig
 
@@ -240,6 +249,10 @@ func newAudio(service *dbusutil.Service) *Audio {
 	a.PausePlayer = false
 	a.ReduceNoise = false
 	a.emitPropChangedReduceNoise(a.ReduceNoise)
+	a.AiReduceNoise = false
+	a.emitPropChangedAiReduceNoise(a.AiReduceNoise)
+	a.AiNoiseSourcePath = "/"
+	a.emitPropChangedAiNoiseSourcePath(a.AiNoiseSourcePath)
 	a.CurrentAudioServer = a.getCurrentAudioServer()
 	a.headphoneUnplugAutoPause, err = a.audioDConfig.GetValueBool(dsgKeyHeadphoneUnplugAutoPause)
 	if err != nil {
@@ -804,6 +817,10 @@ func (a *Audio) init() error {
 
 	// 更新本地数据
 	a.refresh()
+
+	// After refresh, run AI noise-reduction init with both DConfig and
+	// source list available.
+	a.initAiReduceNoise()
 	logger.Debug("init cards")
 	a.PropsMu.Lock()
 	a.setPropCards(a.cards.string())
@@ -943,6 +960,29 @@ func (a *Audio) findSource(cardId uint32, activePortName string) *Source {
 	}
 
 	return nil
+}
+
+// getSourcePathByName returns the D-Bus object path of the source whose Name
+// matches, or "/" if not found. Used to expose the physical mic's Source path
+// to control center while AI noise reduction is enabled.
+func (a *Audio) getSourcePathByName(name string) dbus.ObjectPath {
+	if name == "" {
+		return "/"
+	}
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	for _, source := range a.sources {
+		if source.Name == name {
+			return source.getPath()
+		}
+	}
+	return "/"
+}
+
+// updateAiNoiseSourcePath refreshes the AiNoiseSourcePath D-Bus property from
+// aiNoiseSourceName. Call under PropsMu.
+func (a *Audio) updateAiNoiseSourcePath() {
+	a.setPropAiNoiseSourcePath(a.getSourcePathByName(a.aiNoiseSourceName))
 }
 
 func (a *Audio) SetPortEnabled(cardId uint32, portName string, enabled bool) *dbus.Error {
@@ -1372,7 +1412,7 @@ func (a *Audio) resumeSourceConfig(s *Source) {
 	}
 
 	s.setMute(GetConfigKeeper().Mute.MuteInput || !portConfig.Enabled)
-	s.setReduceNoise(a.ReduceNoise)
+	s.audio.setAiReduceNoise(a.AiReduceNoise, "")
 }
 
 func (a *Audio) refreshBluetoothOpts() {
@@ -1527,6 +1567,14 @@ func (a *Audio) updateDefaultSource(sourceName string) {
 
 	a.PropsMu.Lock()
 	a.setPropDefaultSource(defaultSourcePath)
+	if a.AiReduceNoise && source != nil {
+		a.aiNoiseSourceName = source.Name
+		if isBluezAudio(source.Name) {
+			a.setPropAiNoiseSourcePath("/")
+		} else {
+			a.updateAiNoiseSourcePath()
+		}
+	}
 	a.PropsMu.Unlock()
 
 	logger.Debug("set prop default source:", defaultSourcePath)
@@ -1591,6 +1639,31 @@ func (a *Audio) getMasterNameFromVirtualDevice(device string) string {
 			match := re.FindStringSubmatch(module.Argument)
 			if len(match) > 1 {
 				return match[1]
+			}
+		}
+	}
+	if strings.Contains(device, "rnnoise") {
+		out, err := exec.Command("pw-link", "-l").Output()
+		if err != nil {
+			return ""
+		}
+		lines := strings.Split(string(out), "\n")
+		for i, line := range lines {
+			if !strings.Contains(line, "effect_input.rnnoise:input") {
+				continue
+			}
+			for _, s := range lines[i+1:] {
+				s = strings.TrimSpace(s)
+				if strings.HasPrefix(s, "|<-") {
+					name := strings.Fields(s)[1]
+					if idx := strings.LastIndex(name, ":"); idx > 0 {
+						return name[:idx]
+					}
+					return name
+				}
+				if s == "" || !strings.HasPrefix(s, "|") {
+					break
+				}
 			}
 		}
 	}
@@ -1872,6 +1945,19 @@ func (a *Audio) initDsgProp() error {
 	}
 	getReduceNoiseEnabled()
 
+	getAiReduceNoiseEnabled := func() {
+		aiReduceNoiseEnabled, err := a.audioDConfig.GetValueBool(dsgKeyAiReduceNoiseEnabled)
+		if err != nil {
+			logger.Warningf("aiReduceNoise DConfig: GetValueBool failed: %v", err)
+			return
+		}
+		logger.Infof("aiReduceNoise: DConfig=%v, calling setAiReduceNoise", aiReduceNoiseEnabled)
+		a.setAiReduceNoise(aiReduceNoiseEnabled, "")
+	}
+	// NOTE: do NOT call getAiReduceNoiseEnabled() during initDsgProp — it runs
+	// before refresh() and would get an empty default-source name. The actual
+	// init is done in initAiReduceNoise() after refresh().
+
 	a.audioDConfig.ConnectValueChanged(func(key string) {
 		switch key {
 		case dsgKeyAutoSwitchPort:
@@ -1888,6 +1974,8 @@ func (a *Audio) initDsgProp() error {
 			getMonoEnabled()
 		case dsgKeyVolumeIncrease:
 			a.handleVolumeIncrease()
+		case dsgKeyAiReduceNoiseEnabled:
+			getAiReduceNoiseEnabled()
 		}
 	})
 
@@ -2012,4 +2100,144 @@ func (a *Audio) isModuleExist(name string) bool {
 		}
 	}
 	return false
+}
+
+func (a *Audio) setAiReduceNoise(enable bool, sourceName string) error {
+	a.PropsMu.Lock()
+	if !enable && a.AiReduceNoise == enable {
+		// Already disabled, nothing to do.
+		a.PropsMu.Unlock()
+		return nil
+	}
+
+	var micName string
+	if enable {
+		micName = sourceName
+		if micName == "" {
+			micName = a.getDefaultSourceName()
+		}
+		if micName == rnnoiseSourceName {
+			micName = a.getMasterNameFromVirtualDevice(micName)
+		}
+		a.aiNoiseSourceName = micName
+	} else {
+		micName = a.aiNoiseSourceName
+	}
+	a.PropsMu.Unlock()
+
+	// Phase 2: Execute PA operations (outside PropsMu to avoid blocking
+	// PA event handlers like updateDefaultSource).
+
+	// Check current rnnoise status first.
+	statusCmd := exec.Command("rnnoise-toggle", "status")
+	statusOut, statusErr := statusCmd.Output()
+	rnnoiseStatus := ""
+	if statusErr == nil {
+		rnnoiseStatus = strings.TrimSpace(string(statusOut))
+	}
+
+	if enable {
+		if rnnoiseStatus == "on" {
+			logger.Infof("rnnoise-toggle status is on, skip enable")
+		} else {
+			cmd := exec.Command("rnnoise-toggle", "-q", "on")
+			err := cmd.Run()
+			if err != nil {
+				logger.Warning("failed to enable ai reduce noise:", err)
+				return err
+			}
+		}
+	} else {
+		if rnnoiseStatus == "off" {
+			logger.Infof("rnnoise-toggle status is off, skip disable")
+		} else {
+			args := []string{"-q", "off"}
+			if micName != "" {
+				args = append(args, micName)
+			}
+			cmd := exec.Command("rnnoise-toggle", args...)
+			err := cmd.Run()
+			if err != nil {
+				logger.Warning("failed to disable ai reduce noise:", err)
+				return err
+			}
+		}
+	}
+
+	// Phase 3: Update property and persist DConfig (only on success).
+	a.PropsMu.Lock()
+	a.setPropAiReduceNoise(enable)
+	if enable {
+		// AiNoiseSourceName was computed in Phase 1; refresh the path so
+		// control center can bind the volume slider to the physical mic.
+		a.updateAiNoiseSourcePath()
+	} else {
+		// Clear the path — DefaultSource is the physical mic again.
+		if a.AiNoiseSourcePath != "/" {
+			a.AiNoiseSourcePath = "/"
+			a.emitPropChangedAiNoiseSourcePath(a.AiNoiseSourcePath)
+		}
+	}
+	a.PropsMu.Unlock()
+	if err := a.audioDConfig.SetValue(dsgKeyAiReduceNoiseEnabled, enable); err != nil {
+		logger.Warning("failed to persist aiReduceNoiseEnabled to dconfig:", err)
+	}
+	return nil
+}
+
+func (a *Audio) initAiReduceNoise() {
+	logger.Debug("initAiReduceNoise")
+
+	// 1. Check if rnnoise source already exists in the source list.
+	a.mu.Lock()
+	rnnoiseFound := false
+	for _, src := range a.sources {
+		if src.Name == rnnoiseSourceName {
+			rnnoiseFound = true
+			break
+		}
+	}
+	a.mu.Unlock()
+
+	// 2. Check DConfig value.
+	aiReduceNoiseEnabled, err := a.audioDConfig.GetValueBool(dsgKeyAiReduceNoiseEnabled)
+	if err != nil {
+		logger.Warningf("initAiReduceNoise: DConfig GetValueBool failed: %v", err)
+	}
+
+	shouldEnable := aiReduceNoiseEnabled
+	if err != nil && rnnoiseFound {
+		shouldEnable = true
+	}
+	if !shouldEnable {
+		logger.Infof("initAiReduceNoise: DConfig=%v (err=%v), rnnoiseFound=%v, nothing to do",
+			aiReduceNoiseEnabled, err != nil, rnnoiseFound)
+		return
+	}
+
+	logger.Infof("initAiReduceNoise: DConfig=%v, rnnoiseFound=%v, calling setAiReduceNoise(true)",
+		aiReduceNoiseEnabled, rnnoiseFound)
+	if err := a.setAiReduceNoise(true, ""); err != nil {
+		logger.Warning("initAiReduceNoise: setAiReduceNoise(true) failed:", err)
+		return
+	}
+
+	a.PropsMu.RLock()
+	micName := a.aiNoiseSourceName
+	a.PropsMu.RUnlock()
+	if micName != "" {
+		a.mu.Lock()
+		var micSource *Source
+		for _, s := range a.sources {
+			if s.Name == micName {
+				micSource = s
+				break
+			}
+		}
+		a.mu.Unlock()
+		if micSource != nil {
+			logger.Infof("initAiReduceNoise: resumeSourceConfig for %s", micName)
+			a.resumeSourceConfig(micSource)
+		}
+	}
 }
