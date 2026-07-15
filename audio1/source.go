@@ -49,8 +49,14 @@ func newSource(sourceInfo *pulse.Source, audio *Audio) *Source {
 	return s
 }
 
-// 检测端口是否被禁用
+// 检测端口是否被禁用。
+// 对于虚拟声源（如 AI 降噪 rnnoise 虚拟设备），无声卡/活跃端口，跳过检查。
 func (s *Source) CheckPort() *dbus.Error {
+	if s.Card == 0 && s.ActivePort.Name == "" {
+		// 虚拟声源没有声卡/活跃端口，跳过端口启用状态检查
+		return nil
+	}
+
 	enabled, err := s.audio.IsPortEnabled(s.Card, s.ActivePort.Name)
 	if err != nil {
 		return err

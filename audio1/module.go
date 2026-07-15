@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -66,6 +66,11 @@ func (m *Module) start() error {
 
 	if err != nil {
 		logger.Warning("failed to bind callback for ReduceNoise:", err)
+	}
+
+	err = so.SetWriteCallback(m.audio, "AiReduceNoise", m.audio.writeAiReduceNoise)
+	if err != nil {
+		logger.Warning("failed to bind callback for AiReduceNoise:", err)
 	}
 
 	err = so.SetWriteCallback(m.audio, "PausePlayer", m.audio.writeKeyPausePlayer)
