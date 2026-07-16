@@ -377,7 +377,7 @@ msgstr "Desligar Rapidamente a Tela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:30
 msgid "System Monitor"
-msgstr "Monitor do Sistema"
+msgstr "Monitor do sistema"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:31
 msgid "Deepin Picker"
