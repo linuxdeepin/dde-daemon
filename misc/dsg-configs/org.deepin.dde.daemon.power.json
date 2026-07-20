@@ -826,7 +826,8 @@
                 "serial-getty@ttyAMA0.service",
                 "winbind.service",
                 "tpm2-abrmd.service",
-                "fprintd.service"
+                "fprintd.service",
+                "iio-sensor-proxy.service"
             ],
             "serial": 0,
             "flags": [
