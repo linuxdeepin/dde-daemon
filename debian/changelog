@@ -1,3 +1,11 @@
+dde-daemon (6.1.101) unstable; urgency=medium
+
+  * fix: add iio-sensor-proxy to short idle service config
+  * fix(display): add a DBus method ListEffectiveOutputNames
+  * feat(shortcut): migrate shortcut handling to dde-services
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 23 Jul 2026 21:46:40 +0800
+
 dde-daemon (6.1.100) unstable; urgency=medium
 
   * fix(display): keep max scale independent of rotation
