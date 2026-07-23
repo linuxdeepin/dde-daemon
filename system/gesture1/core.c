@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,6 +9,8 @@
 #include <syslog.h>
 #include <libinput.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include <glib.h>
 #include <poll.h>
@@ -28,11 +30,22 @@ struct raw_multitouch_event {
     int fingers;
     uint64_t t_start_tap;
     guint tap_id;
+    guint tap_generation;
+    char *device_node;
     bool dblclick;
     bool ignore;
 };
 
+struct tap_timer_data {
+    char *device_node;
+    guint generation;
+    int fingers;
+};
+
 static void raw_event_reset(struct raw_multitouch_event *event, bool reset_dblclick);
+static struct raw_multitouch_event *raw_event_new(const char *device_node);
+static void raw_event_free(gpointer data);
+static void handle_tap_stop(struct raw_multitouch_event *event);
 
 static int is_touchpad(struct libinput_device *dev);
 static const char* get_multitouch_device_node(struct libinput_event *ev);
@@ -44,11 +57,28 @@ static gboolean touch_timer_handler(gpointer data);
 static void touch_timer_destroy(gpointer data);
 static void start_touch_timer();
 static void stop_touch_timer();
+static void release_touch_right_button(void);
+static int touch_right_button_sent(void);
+static void stop_all_active_swipes(void);
 static int valid_long_press_touch(double x, double y);
 
 static GHashTable *ev_table = NULL;
 struct raw_multitouch_event *raw = NULL;
-static int quit = 0;
+static GMutex tap_mutex;
+static GMutex right_button_mutex;
+
+static GMutex timer_callback_mutex;
+static GCond timer_callback_cond;
+static guint active_timer_callbacks = 0;
+static bool timer_callbacks_stopping = true;
+
+static GMutex loop_mutex;
+static GCond loop_start_cond;
+static int quit_requested = 0;
+static int quit_write_fd = -1;
+static bool loop_active = false;
+static bool loop_start_reported = false;
+static int loop_start_result = 0;
 
 static struct _long_press_timer {
     guint id;
@@ -75,11 +105,173 @@ static uint64_t _prev_ev_time; // 前一个非 TOUCH_FRAME 事件的时间，单
 static int _prev_ev_type; // 前一个非 TOUCH_FRAME 事件的类型
 static uint64_t _prev_frame_ev_time; // 前一个 TOUCH_FRAME 事件的时间，单位 usec
 
+static bool
+timer_callback_enter(void)
+{
+    bool allowed = false;
+
+    g_mutex_lock(&timer_callback_mutex);
+    if (!timer_callbacks_stopping) {
+        active_timer_callbacks++;
+        allowed = true;
+    }
+    g_mutex_unlock(&timer_callback_mutex);
+    return allowed;
+}
+
+static void
+timer_callback_leave(void)
+{
+    g_mutex_lock(&timer_callback_mutex);
+    active_timer_callbacks--;
+    if (timer_callbacks_stopping && active_timer_callbacks == 0) {
+        g_cond_signal(&timer_callback_cond);
+    }
+    g_mutex_unlock(&timer_callback_mutex);
+}
+
+static void
+start_timer_callbacks(void)
+{
+    g_mutex_lock(&timer_callback_mutex);
+    timer_callbacks_stopping = false;
+    g_mutex_unlock(&timer_callback_mutex);
+}
+
+static void
+stop_timer_callbacks(void)
+{
+    g_mutex_lock(&timer_callback_mutex);
+    timer_callbacks_stopping = true;
+    while (active_timer_callbacks != 0) {
+        g_cond_wait(&timer_callback_cond, &timer_callback_mutex);
+    }
+    g_mutex_unlock(&timer_callback_mutex);
+}
+
+static struct raw_multitouch_event *
+raw_event_new(const char *device_node)
+{
+    struct raw_multitouch_event *event = g_new0(struct raw_multitouch_event, 1);
+    event->device_node = g_strdup(device_node);
+    return event;
+}
+
+static void
+raw_event_free(gpointer data)
+{
+    struct raw_multitouch_event *event = data;
+    if (!event) {
+        return;
+    }
+    g_free(event->device_node);
+    g_free(event);
+}
+
+static void
+cancel_all_tap_timers(void)
+{
+    GArray *tap_ids = g_array_new(FALSE, FALSE, sizeof(guint));
+
+    g_mutex_lock(&tap_mutex);
+    if (ev_table) {
+        GHashTableIter iter;
+        gpointer value;
+        g_hash_table_iter_init(&iter, ev_table);
+        while (g_hash_table_iter_next(&iter, NULL, &value)) {
+            struct raw_multitouch_event *event = value;
+            if (event->tap_id) {
+                g_array_append_val(tap_ids, event->tap_id);
+                event->tap_id = 0;
+                event->tap_generation++;
+            }
+        }
+    }
+    g_mutex_unlock(&tap_mutex);
+
+    for (guint i = 0; i < tap_ids->len; i++) {
+        g_source_remove(g_array_index(tap_ids, guint, i));
+    }
+    g_array_free(tap_ids, TRUE);
+}
+
+static void
+reset_loop_state(void)
+{
+    g_mutex_lock(&loop_mutex);
+    quit_write_fd = -1;
+    quit_requested = 0;
+    loop_active = false;
+    g_mutex_unlock(&loop_mutex);
+}
+
+static void
+report_loop_start(int result)
+{
+    g_mutex_lock(&loop_mutex);
+    loop_start_result = result;
+    loop_start_reported = true;
+    g_cond_broadcast(&loop_start_cond);
+    g_mutex_unlock(&loop_mutex);
+}
+
+void
+prepare_loop(void)
+{
+    g_mutex_lock(&loop_mutex);
+    quit_requested = 0;
+    loop_active = true;
+    loop_start_reported = false;
+    loop_start_result = 0;
+    g_mutex_unlock(&loop_mutex);
+}
+
+int
+wait_loop_ready(void)
+{
+    g_mutex_lock(&loop_mutex);
+    while (!loop_start_reported) {
+        g_cond_wait(&loop_start_cond, &loop_mutex);
+    }
+    int result = loop_start_result;
+    g_mutex_unlock(&loop_mutex);
+    return result;
+}
+
 int
 start_loop(int verbose, double distance)
 {
+    int wake_pipe[2] = {-1, -1};
+    if (pipe(wake_pipe) < 0) {
+        fprintf(stderr, "Failed to create gesture wake pipe: %s\n", strerror(errno));
+        report_loop_start(0);
+        reset_loop_state();
+        return -1;
+    }
+    fcntl(wake_pipe[0], F_SETFL, fcntl(wake_pipe[0], F_GETFL) | O_NONBLOCK);
+    fcntl(wake_pipe[1], F_SETFL, fcntl(wake_pipe[1], F_GETFL) | O_NONBLOCK);
+    fcntl(wake_pipe[0], F_SETFD, FD_CLOEXEC);
+    fcntl(wake_pipe[1], F_SETFD, FD_CLOEXEC);
+
+    g_mutex_lock(&loop_mutex);
+    if (quit_requested) {
+        quit_requested = 0;
+        loop_active = false;
+        g_mutex_unlock(&loop_mutex);
+        close(wake_pipe[0]);
+        close(wake_pipe[1]);
+        report_loop_start(0);
+        return 0;
+    }
+    quit_write_fd = wake_pipe[1];
+    g_mutex_unlock(&loop_mutex);
+
     struct libinput *li = open_from_udev("seat0", NULL, verbose);
     if (!li) {
+        report_loop_start(0);
+        reset_loop_state();
+        close(wake_pipe[0]);
+        close(wake_pipe[1]);
         return -1;
     }
 
@@ -92,12 +284,18 @@ start_loop(int verbose, double distance)
     ev_table = g_hash_table_new_full(g_str_hash,
                                      g_str_equal,
                                      (GDestroyNotify)g_free,
-                                     (GDestroyNotify)g_free);
+                                     raw_event_free);
     if (!ev_table) {
         fprintf(stderr, "Failed to initialize event table\n");
         libinput_unref(li);
+        report_loop_start(0);
+        reset_loop_state();
+        close(wake_pipe[0]);
+        close(wake_pipe[1]);
         return -1;
     }
+    start_timer_callbacks();
+    report_loop_start(1);
 
     // movements have pointer structs inside
     struct movement movements[MOV_SLOTS] = {{{0}}};
@@ -105,29 +303,70 @@ start_loop(int verbose, double distance)
     // firstly handle all devices
     handle_events(li, movements);
 
-    struct pollfd fds;
-    fds.fd = libinput_get_fd(li);
-    fds.events = POLLIN;
-    fds.revents = 0;
+    struct pollfd fds[2] = {
+        {.fd = libinput_get_fd(li), .events = POLLIN, .revents = 0},
+        {.fd = wake_pipe[0], .events = POLLIN, .revents = 0},
+    };
 
-    quit = 0;
-    while(!quit) {
-        if(poll(&fds, 1, -1) < 0)
-        {
-            continue;
+    while (true) {
+        if (poll(fds, 2, -1) < 0) {
+            if (errno == EINTR) {
+                continue;
+            }
+            fprintf(stderr, "Gesture event poll failed: %s\n", strerror(errno));
+            break;
         }
 
-        handle_events(li, movements);
-        handle_movements(movements);        //handle touch screen
+        if (fds[1].revents & (POLLIN | POLLERR | POLLHUP)) {
+            char buffer[16];
+            while (read(wake_pipe[0], buffer, sizeof(buffer)) > 0) {
+            }
+            break;
+        }
+
+        if (fds[0].revents & POLLIN) {
+            handle_events(li, movements);
+            handle_movements(movements);        //handle touch screen
+        }
     }
 
+    stop_timer_callbacks();
+    stop_touch_timer();
+    release_touch_right_button();
+    stop_all_active_swipes();
+    cancel_all_tap_timers();
+
+    g_mutex_lock(&tap_mutex);
+    raw = NULL;
+    g_hash_table_destroy(ev_table);
+    ev_table = NULL;
+    g_mutex_unlock(&tap_mutex);
+
+    libinput_unref(li);
+    reset_loop_state();
+    close(wake_pipe[0]);
+    close(wake_pipe[1]);
     return 0;
 }
 
 void
 quit_loop(void)
 {
-    quit = 1;
+    int wake_fd;
+
+    g_mutex_lock(&loop_mutex);
+    if (!loop_active) {
+        g_mutex_unlock(&loop_mutex);
+        return;
+    }
+    quit_requested = 1;
+    wake_fd = quit_write_fd;
+    if (wake_fd >= 0) {
+        const char wake = 1;
+        ssize_t unused = write(wake_fd, &wake, sizeof(wake));
+        (void)unused;
+    }
+    g_mutex_unlock(&loop_mutex);
 }
 
 void
@@ -171,7 +410,7 @@ raw_event_reset(struct raw_multitouch_event *event, bool reset_dblclick)
     event->scale = 0.0;
     event->fingers = 0;
     event->t_start_tap = 0;
-    event->tap_id = 0;
+    handle_tap_stop(event);
     if (reset_dblclick)
         event->dblclick = false;
 }
@@ -204,26 +443,42 @@ is_touchpad(struct libinput_device *dev)
 static gboolean
 touch_timer_handler(gpointer data)
 {
+    if (!timer_callback_enter()) {
+        return FALSE;
+    }
     g_debug("touch timer arrived: %u, data: (%f. %f)", touch_timer.id,
             touch_timer.x, touch_timer.y);
-    handleTouchEvent(TOUCH_TYPE_RIGHT_BUTTON, BUTTON_TYPE_DOWN);
-    touch_timer.sent = 1;
+    g_mutex_lock(&right_button_mutex);
+    if (!touch_timer.sent) {
+        touch_timer.sent = 1;
+        handleTouchEvent(TOUCH_TYPE_RIGHT_BUTTON, BUTTON_TYPE_DOWN);
+    }
+    g_mutex_unlock(&right_button_mutex);
+    timer_callback_leave();
     return FALSE;
 }
 
 static gboolean
 short_press_timer_handler(gpointer data)
 {
+    if (!timer_callback_enter()) {
+        return FALSE;
+    }
     point scale = get_last_point_scale();
     handleTouchShortPress(short_press_duration, scale.x, scale.y);
+    timer_callback_leave();
     return FALSE;
 }
 
 static gboolean
 long_press_timer_handler2(gpointer data)
 {
+    if (!timer_callback_enter()) {
+        return FALSE;
+    }
     point scale = get_last_point_scale();
     handleTouchPressTimeout(1, long_press_duration2, scale.x, scale.y);
+    timer_callback_leave();
     return FALSE;
 }
 
@@ -283,6 +538,53 @@ stop_touch_timer()
     }
 }
 
+static void
+release_touch_right_button(void)
+{
+    g_mutex_lock(&right_button_mutex);
+    if (touch_timer.sent) {
+        touch_timer.sent = 0;
+        handleTouchEvent(TOUCH_TYPE_RIGHT_BUTTON, BUTTON_TYPE_UP);
+    }
+    g_mutex_unlock(&right_button_mutex);
+}
+
+static int
+touch_right_button_sent(void)
+{
+    g_mutex_lock(&right_button_mutex);
+    int sent = touch_timer.sent;
+    g_mutex_unlock(&right_button_mutex);
+    return sent;
+}
+
+static void
+stop_all_active_swipes(void)
+{
+    GArray *fingers = g_array_new(FALSE, FALSE, sizeof(int));
+
+    g_mutex_lock(&tap_mutex);
+    if (ev_table) {
+        GHashTableIter iter;
+        gpointer value;
+        g_hash_table_iter_init(&iter, ev_table);
+        while (g_hash_table_iter_next(&iter, NULL, &value)) {
+            struct raw_multitouch_event *event = value;
+            if (event->dblclick) {
+                int finger_count = event->fingers;
+                event->dblclick = false;
+                g_array_append_val(fingers, finger_count);
+            }
+        }
+    }
+    g_mutex_unlock(&tap_mutex);
+
+    for (guint i = 0; i < fingers->len; i++) {
+        handleSwipeStop(g_array_index(fingers, int, i));
+    }
+    g_array_free(fingers, TRUE);
+}
+
 static int
 valid_long_press_touch(double x, double y)
 {
@@ -296,35 +598,88 @@ valid_long_press_touch(double x, double y)
 }
 
 static gboolean
- handle_tap(gpointer data)
+handle_tap(gpointer data)
 {
-    g_debug("[Tap] fingers: %d", raw->fingers);
-    handleGestureEvent(GESTURE_TYPE_TAP, GESTURE_DIRECTION_NONE, raw->fingers);
+    struct tap_timer_data *timer_data = data;
+    if (!timer_data || !timer_callback_enter()) {
+        return FALSE;
+    }
+
+    bool valid = false;
+    g_mutex_lock(&tap_mutex);
+    if (ev_table) {
+        struct raw_multitouch_event *event = g_hash_table_lookup(ev_table, timer_data->device_node);
+        if (event && event->tap_id != 0 && event->tap_generation == timer_data->generation) {
+            event->tap_id = 0;
+            valid = true;
+        }
+    }
+    g_mutex_unlock(&tap_mutex);
+
+    if (valid) {
+        g_debug("[Tap] fingers: %d", timer_data->fingers);
+        handleGestureEvent(GESTURE_TYPE_TAP, GESTURE_DIRECTION_NONE, timer_data->fingers);
+    }
+    timer_callback_leave();
     return FALSE;
 }
 
 static void
 handle_tap_destroy(gpointer data)
 {
-    if (raw && raw->tap_id) {
-        raw->tap_id = 0;
+    struct tap_timer_data *timer_data = data;
+    if (!timer_data) {
+        return;
     }
+    g_free(timer_data->device_node);
+    g_free(timer_data);
 }
 
 static void
-handle_tap_stop()
+handle_tap_stop(struct raw_multitouch_event *event)
 {
-    if (raw && raw->tap_id) {
-         g_source_remove(raw->tap_id);
-         raw->tap_id = 0;
+    guint tap_id = 0;
+
+    g_mutex_lock(&tap_mutex);
+    if (event && event->tap_id) {
+        tap_id = event->tap_id;
+        event->tap_id = 0;
+        event->tap_generation++;
+    }
+    g_mutex_unlock(&tap_mutex);
+
+    if (tap_id) {
+        g_source_remove(tap_id);
     }
 }
 
 static int
-handle_tap_delay()
+handle_tap_delay(struct raw_multitouch_event *event)
 {
-    raw->tap_id = g_timeout_add_full(G_PRIORITY_DEFAULT, dblclick_duration,
-                                                       handle_tap, NULL, handle_tap_destroy);
+    if (!event || !event->device_node) {
+        return 0;
+    }
+
+    struct tap_timer_data *timer_data = g_new0(struct tap_timer_data, 1);
+    timer_data->device_node = g_strdup(event->device_node);
+    timer_data->fingers = event->fingers;
+
+    g_mutex_lock(&tap_mutex);
+    if (event->tap_id) {
+        g_mutex_unlock(&tap_mutex);
+        handle_tap_destroy(timer_data);
+        return 0;
+    }
+    timer_data->generation = ++event->tap_generation;
+    event->tap_id = g_timeout_add_full(G_PRIORITY_DEFAULT, dblclick_duration,
+                                      handle_tap, timer_data, handle_tap_destroy);
+    guint tap_id = event->tap_id;
+    g_mutex_unlock(&tap_mutex);
+
+    if (!tap_id) {
+        handle_tap_destroy(timer_data);
+    }
+    return tap_id != 0;
 }
 
 /**
@@ -349,7 +704,9 @@ handle_gesture_events(struct libinput_event *ev, int type)
     }
 
     const char *node = udev_device_get_devnode(libinput_device_get_udev_device(dev));
-    raw = g_hash_table_lookup(ev_table, node);
+    g_mutex_lock(&tap_mutex);
+    raw = ev_table ? g_hash_table_lookup(ev_table, node) : NULL;
+    g_mutex_unlock(&tap_mutex);
     if (!raw) {
         fprintf(stderr, "Not found '%s' in table\n", node);
         return ;
@@ -370,6 +727,7 @@ handle_gesture_events(struct libinput_event *ev, int type)
     case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
         // reset
         raw_event_reset(raw, false);
+        raw->fingers = libinput_event_gesture_get_finger_count(gesture);
         break;
     case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:{
         double scale = libinput_event_gesture_get_scale(gesture);
@@ -384,6 +742,7 @@ handle_gesture_events(struct libinput_event *ev, int type)
         raw->dy_unaccel += dy_unaccel;
 
         int fingers = libinput_event_gesture_get_finger_count(gesture);
+        raw->fingers = fingers;
         if (raw->dblclick) {
             handleSwipeMoving(fingers, dx_unaccel, dy_unaccel);
         }
@@ -408,6 +767,10 @@ handle_gesture_events(struct libinput_event *ev, int type)
     }
     case LIBINPUT_EVENT_GESTURE_SWIPE_END:
         if (libinput_event_gesture_get_cancelled(gesture)) {
+            raw->fingers = libinput_event_gesture_get_finger_count(gesture);
+            if (raw->dblclick) {
+                handleSwipeStop(raw->fingers);
+            }
             raw_event_reset(raw, true);
             break;
         }
@@ -447,25 +810,29 @@ handle_gesture_events(struct libinput_event *ev, int type)
         if (raw->t_start_tap > 0
         &&  (libinput_event_gesture_get_time_usec(gesture) - raw->t_start_tap) / 1000 <= dblclick_duration
         && raw->fingers == libinput_event_gesture_get_finger_count(gesture)) {
+            int fingers = raw->fingers;
             handleDbclickDown(raw->fingers);
-            handle_tap_stop();
+            handle_tap_stop(raw);
             raw_event_reset(raw, true);
+            raw->fingers = fingers;
             raw->dblclick = true;
         }
         break;
     case LIBINPUT_EVENT_GESTURE_HOLD_END:
+        raw->fingers = libinput_event_gesture_get_finger_count(gesture);
+        if (raw->dblclick) {
+            handleSwipeStop(raw->fingers);
+            raw_event_reset(raw, true);
+            break;
+        }
+
         if (libinput_event_gesture_get_cancelled(gesture)) {
             raw_event_reset(raw, true);
             break;
         }
 
-        if (!raw->dblclick) {
-            raw->fingers = libinput_event_gesture_get_finger_count(gesture);
-            raw->t_start_tap = libinput_event_gesture_get_time_usec(gesture);
-            handle_tap_delay();
-        } else {
-            raw_event_reset(raw, true);
-        }
+        raw->t_start_tap = libinput_event_gesture_get_time_usec(gesture);
+        handle_tap_delay(raw);
         break;
     }
 }
@@ -484,7 +851,9 @@ handle_touch_events(struct libinput_event *ev, int ty,struct movement *m)
     }
 
     node = get_multitouch_device_node(ev);
-    rme = g_hash_table_lookup(ev_table, node);
+    g_mutex_lock(&tap_mutex);
+    rme = ev_table ? g_hash_table_lookup(ev_table, node) : NULL;
+    g_mutex_unlock(&tap_mutex);
     if (rme && rme->ignore) {
         return;
     }
@@ -516,7 +885,7 @@ handle_touch_events(struct libinput_event *ev, int ty,struct movement *m)
     case LIBINPUT_EVENT_TOUCH_MOTION:{
         handle_touch_event_motion(ev, m);
         g_debug("Touch motion, id: %u, fingers: %d, sent: %d ",
-                touch_timer.id, touch_timer.fingers, touch_timer.sent);
+                touch_timer.id, touch_timer.fingers, touch_right_button_sent());
         if (touch_timer.id == 0) {
             break;
         }
@@ -535,15 +904,12 @@ handle_touch_events(struct libinput_event *ev, int ty,struct movement *m)
     case LIBINPUT_EVENT_TOUCH_UP:
         handle_touch_event_up(ev, m);
         g_debug("Touch up, id: %u, fingers: %d, sent: %d ",
-                touch_timer.id, touch_timer.fingers, touch_timer.sent);
+                touch_timer.id, touch_timer.fingers, touch_right_button_sent());
         stop_touch_timer();
         if (touch_timer.fingers > 0) {
             touch_timer.fingers--;
         }
-        if (touch_timer.sent) {
-            touch_timer.sent = 0;
-            handleTouchEvent(TOUCH_TYPE_RIGHT_BUTTON, BUTTON_TYPE_UP);
-        }
+        release_touch_right_button();
 
         scale = get_last_point_scale();
         handleTouchUpOrCancel(scale.x, scale.y);
@@ -551,16 +917,18 @@ handle_touch_events(struct libinput_event *ev, int ty,struct movement *m)
     case LIBINPUT_EVENT_TOUCH_DOWN: {
         handle_touch_event_down(ev, m);
         g_debug("Touch down, id: %u, fingers: %d, sent: %d ",
-                touch_timer.id, touch_timer.fingers, touch_timer.sent);
+                touch_timer.id, touch_timer.fingers, touch_right_button_sent());
         if (touch_timer.id != 0 || touch_timer.fingers > 0) {
             stop_touch_timer();
             touch_timer.fingers++;
             break;
         }
         struct libinput_event_touch *touch = libinput_event_get_touch_event(ev);
+        g_mutex_lock(&right_button_mutex);
+        touch_timer.sent = 0;
+        g_mutex_unlock(&right_button_mutex);
         start_touch_timer();
         touch_timer.fingers = 1;
-        touch_timer.sent = 0;
         //w和h需要赋初值，防止libinput_device_get_size函数异常返回后，w和h的随机值>1而导致获取的坐标异常
         double w=0.0, h=0.0;
         int iret = libinput_device_get_size(dev, &w, &h);
@@ -581,13 +949,10 @@ handle_touch_events(struct libinput_event *ev, int ty,struct movement *m)
     case LIBINPUT_EVENT_TOUCH_CANCEL:
         handle_touch_event_cancel(ev, m);
         g_debug("Touch cancel, id: %u, fingers: %d, sent: %d ",
-                touch_timer.id, touch_timer.fingers, touch_timer.sent);
+                touch_timer.id, touch_timer.fingers, touch_right_button_sent());
         stop_touch_timer();
         touch_timer.fingers = 0;
-        if (touch_timer.sent) {
-            touch_timer.sent = 0;
-            handleTouchEvent(TOUCH_TYPE_RIGHT_BUTTON, BUTTON_TYPE_UP);
-        }
+        release_touch_right_button();
 
         scale = get_last_point_scale();
         handleTouchUpOrCancel(scale.x, scale.y);
@@ -642,16 +1007,37 @@ handle_events(struct libinput *li, struct movement *m)
             const char *path = get_multitouch_device_node(ev);
             if (path) {
                 /* g_debug("Device added: %s", path); */
-                g_hash_table_insert(ev_table, g_strdup(path),
-                                    g_new0(struct raw_multitouch_event, 1));
+                g_mutex_lock(&tap_mutex);
+                if (ev_table && !g_hash_table_contains(ev_table, path)) {
+                    g_hash_table_insert(ev_table, g_strdup(path), raw_event_new(path));
+                }
+                g_mutex_unlock(&tap_mutex);
             }
             break;
         }
         case LIBINPUT_EVENT_DEVICE_REMOVED: {
             const char *path = get_multitouch_device_node(ev);
             if (path) {
+                release_touch_right_button();
                 /* g_debug("Will remove '%s' to table", path); */
-                g_hash_table_remove(ev_table, path);
+                g_mutex_lock(&tap_mutex);
+                struct raw_multitouch_event *event = ev_table ? g_hash_table_lookup(ev_table, path) : NULL;
+                g_mutex_unlock(&tap_mutex);
+                if (event) {
+                    handle_tap_stop(event);
+                    if (event->dblclick) {
+                        handleSwipeStop(event->fingers);
+                    }
+                    raw_event_reset(event, true);
+                    if (raw == event) {
+                        raw = NULL;
+                    }
+                }
+                g_mutex_lock(&tap_mutex);
+                if (ev_table) {
+                    g_hash_table_remove(ev_table, path);
+                }
+                g_mutex_unlock(&tap_mutex);
             }
             break;
         }
@@ -691,9 +1077,11 @@ handle_events(struct libinput *li, struct movement *m)
 }
 
 void set_device_ignore(const char* node, bool ignore) {
-    struct raw_multitouch_event *rme = g_hash_table_lookup(ev_table, node);
+    g_mutex_lock(&tap_mutex);
+    struct raw_multitouch_event *rme = ev_table ? g_hash_table_lookup(ev_table, node) : NULL;
     if (rme) {
         g_debug("[gesture] set device ignore: %s", ignore ? "true" : "false");
         rme->ignore = ignore;
     }
+    g_mutex_unlock(&tap_mutex);
 }

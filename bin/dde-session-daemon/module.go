@@ -23,7 +23,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/gesture1"
 	_ "github.com/linuxdeepin/dde-daemon/housekeeping"
 	_ "github.com/linuxdeepin/dde-daemon/inputdevices1"
-	_ "github.com/linuxdeepin/dde-daemon/keybinding1"
 	_ "github.com/linuxdeepin/dde-daemon/lastore1"
 
 	_ "github.com/linuxdeepin/dde-daemon/grub_gfx"

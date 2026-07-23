@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,8 +16,6 @@ type Daemon struct {
 
 const (
 	dbusServiceName = "org.deepin.dde.Gesture1"
-	dbusServicePath = "/org/deepin/dde/Gesture1"
-	dbusServiceIFC  = dbusServiceName
 )
 
 var (
@@ -42,28 +40,10 @@ func (d *Daemon) Start() error {
 	if d.manager != nil {
 		return nil
 	}
-	service := loader.GetService()
 	var err error
-	d.manager, err = newManager(service)
+	d.manager, err = newManager()
 	if err != nil {
 		logger.Error("failed to initialize gesture manager:", err)
-		return err
-	}
-
-	err = service.Export(dbusServicePath, d.manager)
-	if err != nil {
-		logger.Error("failed to export gesture:", err)
-		return err
-	}
-
-	err = service.RequestName(dbusServiceName)
-	if err != nil {
-		logger.Error("failed to request gesture name:", err)
-		d.manager.destroy()
-		err1 := service.StopExport(d.manager)
-		if err1 != nil {
-			logger.Error("failed to StopExport:", err1)
-		}
 		return err
 	}
 

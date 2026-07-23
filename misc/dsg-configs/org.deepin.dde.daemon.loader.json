@@ -133,7 +133,7 @@
           "visibility": "private"
         },
         "keybinding": {
-          "value": true,
+          "value": false,
           "serial": 0,
           "flags": [],
           "name": "keybindingEnable",
@@ -324,5 +324,3 @@
       }
     }
 }
-
-  
