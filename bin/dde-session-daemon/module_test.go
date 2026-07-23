@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,8 +7,13 @@ package main
 import (
 	"testing"
 
+	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestGestureModuleRegistered(t *testing.T) {
+	assert.NotNil(t, loader.GetModule("gesture"))
+}
 
 func Test_isStrInList(t *testing.T) {
 	type args struct {

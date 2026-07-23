@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,6 +12,9 @@ package gesture1
 import "C"
 
 import (
+	"errors"
+	"sync"
+
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -124,7 +127,8 @@ func (t TouchDirection) String() string {
 }
 
 type Manager struct {
-	service *dbusutil.Service
+	service  *dbusutil.Service
+	loopDone chan struct{}
 
 	// nolint
 	signals *struct {
@@ -205,8 +209,9 @@ type Manager struct {
 }
 
 var (
-	_m     *Manager
-	logger = log.NewLogger(dbusServiceName)
+	_m                *Manager
+	daemonLifecycleMu sync.Mutex
+	logger            = log.NewLogger(dbusServiceName)
 )
 
 type Daemon struct {
@@ -375,19 +380,30 @@ func handleTouchUpOrCancel(scalex, scaley C.double) {
 }
 
 func (d *Daemon) Start() error {
+	daemonLifecycleMu.Lock()
+	defer daemonLifecycleMu.Unlock()
+
+	if _m != nil {
+		return errors.New("gesture daemon is already running")
+	}
+
 	logger.BeginTracing()
 	logger.Info("start gesture daemon")
 	service := loader.GetService()
-	_m = &Manager{
-		service: service,
-	}
-	err := service.Export(dbusPath, _m)
+	manager := &Manager{service: service}
+	_m = manager
+	err := service.Export(dbusPath, manager)
 	if err != nil {
+		_m = nil
 		return err
 	}
 
 	err = service.RequestName(dbusServiceName)
 	if err != nil {
+		if stopErr := service.StopExport(manager); stopErr != nil {
+			logger.Warning("stop export after request name failed:", stopErr)
+		}
+		_m = nil
 		return err
 	}
 
@@ -396,22 +412,45 @@ func (d *Daemon) Start() error {
 		logger.Warning("Failed to load gesture config:", err)
 		conf = &Config{}
 	}
-	go C.start_loop(C.int(conf.Verbose), C.double(conf.LongPressDistance))
+	manager.loopDone = make(chan struct{})
+	C.prepare_loop()
+	go func() {
+		C.start_loop(C.int(conf.Verbose), C.double(conf.LongPressDistance))
+		close(manager.loopDone)
+	}()
+	if C.wait_loop_ready() == 0 {
+		<-manager.loopDone
+		if releaseErr := service.ReleaseName(dbusServiceName); releaseErr != nil {
+			logger.Warning("release name after gesture loop start failed:", releaseErr)
+		}
+		if stopErr := service.StopExport(manager); stopErr != nil {
+			logger.Warning("stop export after gesture loop start failed:", stopErr)
+		}
+		_m = nil
+		return errors.New("failed to start gesture input loop")
+	}
 	return nil
 }
 
 func (*Daemon) Stop() error {
-	if _m == nil {
+	daemonLifecycleMu.Lock()
+	defer daemonLifecycleMu.Unlock()
+
+	manager := _m
+	if manager == nil {
 		return nil
 	}
 	C.quit_loop()
+	<-manager.loopDone
 	service := loader.GetService()
-	err := service.StopExport(_m)
+	err := service.StopExport(manager)
 	if err != nil {
 		return err
 	}
 
-	_m = nil
+	if _m == manager {
+		_m = nil
+	}
 	return nil
 }
 

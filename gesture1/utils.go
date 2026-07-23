@@ -62,12 +62,17 @@ func isKbdAlreadyGrabbed() bool {
 }
 
 func getCurrentActionWindowCmd() string {
-	win, err := ewmh.GetActiveWindow(xconn).Reply(xconn)
+	conn := getX11Conn()
+	if conn == nil {
+		return ""
+	}
+
+	win, err := ewmh.GetActiveWindow(conn).Reply(conn)
 	if err != nil {
 		logger.Warning("Failed to get current active window:", err)
 		return ""
 	}
-	pid, err := ewmh.GetWMPid(xconn, win).Reply(xconn)
+	pid, err := ewmh.GetWMPid(conn, win).Reply(conn)
 	if err != nil {
 		logger.Warning("Failed to get current window pid:", err)
 		return ""

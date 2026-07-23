@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -29,6 +29,8 @@
 #define GESTURE_DIRECTION_OUT 15
 
 int start_loop(int verbose, double distance);
+void prepare_loop(void);
+int wait_loop_ready(void);
 void quit_loop(void);
 void set_timer_duration(int duration);
 void set_timer_short_duration(int duration);
