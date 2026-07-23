@@ -155,6 +155,22 @@ func (m *Manager) ListOutputNames() ([]string, *dbus.Error) {
 	return names, nil
 }
 
+// ListEffectiveOutputNames 返回当前所有有效显示器名
+// X11 下使用 randr.GetMonitors 返回物理 + 虚拟屏
+// Wayland 下复用 ListOutputNames 返回物理屏,
+func (m *Manager) ListEffectiveOutputNames() ([]string, *dbus.Error) {
+	logger.Debug("dbus call ListEffectiveOutputNames")
+	if _useWayland {
+		return m.ListOutputNames()
+	}
+
+	names, err := m.getEffectiveOutputNames()
+	if err != nil {
+		return nil, dbusutil.ToError(err)
+	}
+	return names, nil
+}
+
 func (m *Manager) ListOutputsCommonModes() ([]ModeInfo, *dbus.Error) {
 	logger.Debug("dbus call ListOutputsCommonModes")
 	monitors := m.getConnectedMonitors()

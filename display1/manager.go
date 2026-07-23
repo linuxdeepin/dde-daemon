@@ -228,7 +228,6 @@ type Manager struct {
 	HasChanged          bool
 	DisplayMode         byte
 	ConcatScreenEnabled bool
-	ConcatScreenName    string
 	// dbusutil-gen: equal=nil
 	Brightness          map[string]float64
 	CanSetBrightnessMap map[string]bool
@@ -2369,7 +2368,7 @@ func (m *Manager) applyConcatScreen() error {
 	}
 
 	m.PropsMu.Lock()
-	m.setConcatScreenEnabled(true, concatScreenName)
+	m.setConcatScreenEnabled(true)
 	m.PropsMu.Unlock()
 	return nil
 }
@@ -2385,17 +2384,15 @@ func (m *Manager) removeConcatScreen() error {
 	}
 
 	m.PropsMu.Lock()
-	m.setConcatScreenEnabled(false, "")
+	m.setConcatScreenEnabled(false)
 	m.PropsMu.Unlock()
 	return nil
 }
 
-func (m *Manager) setConcatScreenEnabled(enabled bool, name string) (changed bool) {
+func (m *Manager) setConcatScreenEnabled(enabled bool) (changed bool) {
 	if m.ConcatScreenEnabled != enabled {
 		m.ConcatScreenEnabled = enabled
-		m.ConcatScreenName = name
 		_ = m.service.EmitPropertyChanged(m, "ConcatScreenEnabled", enabled)
-		_ = m.service.EmitPropertyChanged(m, "ConcatScreenName", name)
 		return true
 	}
 	return false
@@ -2565,6 +2562,36 @@ func (m *Manager) getConnectedMonitors() Monitors {
 	m.monitorMapMu.Lock()
 	defer m.monitorMapMu.Unlock()
 	return getConnectedMonitors(m.monitorMap)
+}
+
+func (m *Manager) getEffectiveOutputNames() ([]string, error) {
+	if _useWayland {
+		return nil, errors.New("not supported on wayland")
+	}
+
+	if m.xConn == nil {
+		return nil, errors.New("x connection not available")
+	}
+
+	rootWindow := m.xConn.GetDefaultScreen().Root
+	cookie := randr.GetMonitors(m.xConn, rootWindow, true)
+	reply, err := cookie.Reply(m.xConn)
+	if err != nil {
+		return nil, fmt.Errorf("GetMonitors failed: %w", err)
+	}
+	var names []string
+	for i := range reply.Monitors {
+		atom := reply.Monitors[i].Name
+		if atom == 0 {
+			continue
+		}
+		name, err := m.xConn.GetAtomName(atom)
+		if err != nil || name == "" {
+			continue
+		}
+		names = append(names, name)
+	}
+	return names, nil
 }
 
 func (m *Manager) cloneMonitorMap() map[uint32]*Monitor {

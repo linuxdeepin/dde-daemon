@@ -59,6 +59,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			OutArgs: []string{"outArg0"},
 		},
 		{
+			Name:    "ListEffectiveOutputNames",
+			Fn:      v.ListEffectiveOutputNames,
+			OutArgs: []string{"outArg0"},
+		},
+		{
 			Name:    "ListOutputNames",
 			Fn:      v.ListOutputNames,
 			OutArgs: []string{"outArg0"},
