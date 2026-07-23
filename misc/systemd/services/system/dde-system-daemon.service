@@ -9,6 +9,7 @@ Wants=nss-user-lookup.target fprintd.service
 
 [Service]
 User=root
+ExecStartPre=-/usr/libexec/dde-thp-disable
 ExecStart=/usr/lib/deepin-daemon/dde-system-daemon
 StandardOutput=null
 StandardError=journal
