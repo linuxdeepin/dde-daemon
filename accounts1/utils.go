@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -354,7 +354,7 @@ func recoverOwnership(u *User) error {
 	}
 	return filepath.Walk(u.HomeDir, func(name string, info os.FileInfo, err error) error {
 		if err == nil {
-			err = os.Chown(name, uid, gid)
+			err = os.Lchown(name, uid, gid)
 		}
 		return err
 	})
