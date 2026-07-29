@@ -827,7 +827,8 @@
                 "winbind.service",
                 "tpm2-abrmd.service",
                 "fprintd.service",
-                "iio-sensor-proxy.service"
+                "iio-sensor-proxy.service",
+                "avahi-daemon.service"
             ],
             "serial": 0,
             "flags": [
