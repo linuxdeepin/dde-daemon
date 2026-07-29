@@ -1,10 +1,13 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package accounts
 
 import (
+	"os"
+	"path/filepath"
+	"strconv"
 	"testing"
 
 	"github.com/godbus/dbus/v5"
@@ -59,6 +62,24 @@ func TestIsStrvEqual(t *testing.T) {
 func TestGetValueFromLine(t *testing.T) {
 	ret := getValueFromLine("testdata/shells", "/")
 	assert.Equal(t, ret, "shells")
+}
+
+func TestRecoverOwnershipDoesNotDereferenceSymlink(t *testing.T) {
+	homeDir := t.TempDir()
+	linkPath := filepath.Join(homeDir, "dde-computer.desktop")
+	missingTarget := filepath.Join(homeDir, "missing-target")
+	if err := os.Symlink(missingTarget, linkPath); err != nil {
+		t.Fatal(err)
+	}
+
+	user := &User{
+		Uid:     strconv.Itoa(os.Getuid()),
+		Gid:     strconv.Itoa(os.Getgid()),
+		HomeDir: homeDir,
+	}
+	if err := recoverOwnership(user); err != nil {
+		t.Fatalf("recoverOwnership followed the symbolic link: %v", err)
+	}
 }
 
 func Test_getDetailsKey(t *testing.T) {
