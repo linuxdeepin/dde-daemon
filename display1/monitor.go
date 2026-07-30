@@ -467,7 +467,7 @@ func (m *Monitor) toSysConfig() *SysMonitorConfig {
 		Rotation:    m.Rotation,
 		Reflect:     m.Reflect,
 		RefreshRate: m.RefreshRate,
-		Brightness:  m.Brightness,
+		Brightness:  1, // 新建配置时使用默认原始值，不用当前实际亮度（可能被节能缩放）
 	}
 }
 

@@ -6,9 +6,7 @@ package power
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"math"
 	"os"
 	"os/exec"
 	"strings"
@@ -56,10 +54,6 @@ type powerSavePlan struct {
 	atomNetWMStateFocused       x.Atom
 	fullscreenWorkaroundAppList []string
 
-	brightnessSave         string
-	multiBrightnessWithPsm *multiBrightnessWithPsm
-	psmEnabledTime         time.Time
-	psmPercentChangedTime  time.Time
 	modeBeforeIdle         string
 	allowScreenSaver       bool
 	isIdle                 bool
@@ -136,8 +130,6 @@ func (psp *powerSavePlan) initSettingsChangedHandler() {
 				psp.OnBattery()
 			}
 
-		case dsettingAmbientLightAdjustBrightness:
-			psp.manager.claimOrReleaseAmbientLight()
 		}
 	})
 }
@@ -170,37 +162,14 @@ func (psp *powerSavePlan) Reset() {
 	}
 }
 
-func (psp *powerSavePlan) syncBrightnessData(value string) {
-	psp.multiBrightnessWithPsm.init()
-	err := psp.multiBrightnessWithPsm.toObject(value)
-	if err != nil {
-		logger.Warning(err)
-	}
-	psp.brightnessSave = value
-}
 
 func (psp *powerSavePlan) Start() error {
 	psp.Reset()
 	psp.initSettingsChangedHandler()
 
-	brightnessSaveConfig, e := psp.manager.dsPowerConfigManager.Value(0, dsettingSaveBrightnessWhilePsm)
-	if e != nil {
-		logger.Warning(e)
-	} else {
-		psp.brightnessSave = brightnessSaveConfig.Value().(string)
-	}
-	psp.multiBrightnessWithPsm = newMultiBrightnessWithPsm()
-
 	helper := psp.manager.helper
 	power := helper.Power
-	display := helper.Display
 	screenSaver := helper.ScreenSaver
-
-	data, _ := power.PowerSavingModeBrightnessData().Get(0)
-	if data == "" {
-		// 有system级缓存数据时不需要从本地读，后面会同步。
-		psp.initMultiBrightnessWithPsm()
-	}
 
 	// OnBattery changed will effect current PowerSavePlan
 	err := power.OnBattery().ConnectChanged(func(hasValue bool, value bool) {
@@ -212,23 +181,6 @@ func (psp *powerSavePlan) Start() error {
 	err = power.PowerSavingModeEnabled().ConnectChanged(psp.handlePowerSavingModeChanged)
 	if err != nil {
 		logger.Warning("failed to connectChanged PowerSavingModeEnabled:", err)
-	}
-	err = power.PowerSavingModeBrightnessDropPercent().ConnectChanged(psp.handlePowerSavingModeBrightnessDropPercentChanged) // 监听自动降低亮度的属性的改变
-	if err != nil {
-		logger.Warning("failed to connectChanged PowerSavingModeBrightnessDropPercent:", err)
-	}
-	err = power.PowerSavingModeBrightnessData().ConnectChanged(func(hasValue bool, value string) {
-		if !hasValue {
-			return
-		}
-		if psp.manager.isSessionActive() {
-			return
-		}
-		// 非激活用户通过此属性同步激活用户配置的数据
-		psp.syncBrightnessData(value)
-	})
-	if err != nil {
-		logger.Warning("failed to connectChanged PowerSavingModeBrightnessData:", err)
 	}
 	sessionType := os.Getenv("XDG_SESSION_TYPE")
 	if strings.Contains(sessionType, "wayland") {
@@ -246,18 +198,8 @@ func (psp *powerSavePlan) Start() error {
 			logger.Warning("failed to ConnectIdleOff:", err)
 		}
 	}
-	err = display.Brightness().ConnectChanged(psp.handleBrightnessPropertyChanged)
-	if err != nil {
-		logger.Warning("failed to connectChanged Brightness:", err)
-	}
 
-	if data != "" {
-		psp.syncBrightnessData(data)
-		state, _ := power.PowerSavingModeEnabled().Get(0)
-		psp.manager.setDsgData(dsettingsPowerSavingModeEnabled, state, psp.manager.dsPowerConfigManager)
-	} else {
-		psp.dealWithPowerSavingModeWhenSystemBoot()
-	}
+	psp.dealWithPowerSavingModeWhenSystemBoot()
 	return nil
 }
 
@@ -276,128 +218,15 @@ func (psp *powerSavePlan) dealWithPowerSavingModeWhenSystemBoot() {
 	}
 }
 
-// 分级以前逻辑有问题，目前先按无分级处理，保留该判断方式后续观望
-func (psp *powerSavePlan) powerSavingModeIsMultiLevelAdjustment(maxBacklightBrightness float64) bool {
-	const (
-		multiLevelAdjustmentThreshold = 100 // 分级调节判断阈值，最大亮度值小于该值且不为0时，调节方式为分级调节
-	)
-	// 判断亮度调节方式是分级调节还是百分比滑动：最大亮度小于100且最大亮度不为0时，为分级调节
-	return maxBacklightBrightness < multiLevelAdjustmentThreshold && maxBacklightBrightness != 0
-}
-
-// 节能模式亮度统一策略处理：根据当前非节能模式亮度和自动降低亮度比例配置，计算出节能模式需要降低的亮度
-func (psp *powerSavePlan) powerSavingModeBrightnessDrop(brightness, scale float64) float64 {
-	newBrightness := math.Round(brightness * 100 * (1 - scale/100))
-	newBrightness = newBrightness / 100
-	if newBrightness > 1.0 {
-		newBrightness = 1.0
-	} else if newBrightness < 0.1 {
-		newBrightness = 0.1
-	}
-	return newBrightness
-}
-
-// 节能模式亮度统一策略处理：根据当前节能模式下的亮度和自动降低亮度比例配置，计算出恢复到非节能模式后的亮度
-func (psp *powerSavePlan) powerSavingModeBrightnessRestored(brightness, scale float64) float64 {
-	newBrightness := math.Round(brightness * 100 / (1 - scale/100))
-	newBrightness = newBrightness / 100
-	if newBrightness > 1.0 {
-		newBrightness = 1.0
-	} else if newBrightness < 0.1 {
-		newBrightness = 0.1
-	}
-	return newBrightness
-}
-
-// 节能模式降低亮度的比例,并降低亮度
-func (psp *powerSavePlan) handlePowerSavingModeBrightnessDropPercentChanged(hasValue bool, lowerValue uint32) {
-	if !hasValue {
-		return
-	}
-	logger.Debug("power saving mode lower brightness changed to", lowerValue)
-	psp.manager.PropsMu.RLock()
-	hasLightSensor := psp.manager.HasAmbientLightSensor
-	psp.manager.PropsMu.RUnlock()
-	if hasLightSensor && psp.manager.AmbientLightAdjustBrightness {
-		return
-	}
-	if !psp.manager.isSessionActive() { // 系统级的调节保证只有激活用户才能做逻辑
-		return
-	}
-
-	brightnessTable, err := psp.manager.helper.Display.GetBrightness(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-	oldLowerBrightnessScale := float64(psp.manager.savingModeBrightnessDropPercent)
-	newLowerBrightnessScale := float64(lowerValue)
-	psp.manager.savingModeBrightnessDropPercent = int32(lowerValue)
-	savingModeEnable, err := psp.manager.helper.Power.PowerSavingModeEnabled().Get(0)
-	if err != nil {
-		logger.Error("get current power savingMode state error : ", err)
-	}
-
-	if savingModeEnable {
-		for key, value := range brightnessTable {
-			value = psp.powerSavingModeBrightnessRestored(value, oldLowerBrightnessScale)
-			value = psp.powerSavingModeBrightnessDrop(value, newLowerBrightnessScale)
-			brightnessTable[key] = value
-			psp.psmPercentChangedTime = time.Now()
-		}
-	} else {
-		// else中(非节能状态下的调节)不需要做响应,需要降低亮度的预设值在之前已经保存了
-		return
-	}
-	psp.manager.setAndSaveDisplayBrightness(brightnessTable)
-}
-
-// 节能模式变化后的亮度修改
+// 节能模式降低亮度比例变化。亮度缩放由 Display1 根据 Power1 的 PowerSavingModeBrightnessScale 属性处理，
+// 节能模式变化后的处理。亮度缩放由 Display1 根据 Power1 的 PowerSavingModeBrightnessScale 属性处理，
+// session/power1 不再直接修改亮度。
 func (psp *powerSavePlan) handlePowerSavingModeChanged(hasValue bool, enabled bool) {
 	if !hasValue {
 		return
 	}
 	logger.Debug("power saving mode enabled changed to", enabled)
-
 	psp.manager.setDsgData(dsettingsPowerSavingModeEnabled, enabled, psp.manager.dsPowerConfigManager)
-
-	if !psp.manager.isSessionActive() { // 系统级的调节保证只有激活用户才能做逻辑
-		return
-	}
-
-	psp.manager.PropsMu.RLock()
-	hasLightSensor := psp.manager.HasAmbientLightSensor
-	psp.manager.PropsMu.RUnlock()
-
-	if hasLightSensor && psp.manager.AmbientLightAdjustBrightness {
-		return
-	}
-
-	brightnessTable, err := psp.manager.helper.Display.GetBrightness(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-	brightnessScale := float64(psp.manager.savingModeBrightnessDropPercent)
-	for key, value := range brightnessTable {
-		if enabled {
-			value = psp.powerSavingModeBrightnessDrop(value, brightnessScale)
-		} else {
-			value = psp.powerSavingModeBrightnessRestored(value, brightnessScale)
-		}
-		brightnessTable[key] = value
-	}
-
-	if enabled {
-		psp.multiBrightnessWithPsm.init()
-		psp.setBrightnessFromDisplay()
-		psp.multiBrightnessWithPsm.mapToObject()
-		psp.setToBrightnessSave()
-		psp.psmEnabledTime = time.Now()
-	} else {
-		psp.brightnessSave = ""
-	}
-	psp.manager.setAndSaveDisplayBrightness(brightnessTable)
 }
 
 // 取消之前的任务
@@ -1147,165 +976,6 @@ func (psp *powerSavePlan) isWindowFullScreenAndFocused(xid x.Window) (bool, erro
 	return false, nil
 }
 
-func (psp *powerSavePlan) setBrightnessFromDisplay() {
-	d := psp.manager.helper.Display
-	var err error
-	psp.multiBrightnessWithPsm.valueTmp, err = d.Brightness().Get(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-}
-
-func (psp *powerSavePlan) initMultiBrightnessWithPsm() {
-	b := psp.brightnessSave
-
-	err := psp.multiBrightnessWithPsm.toObject(b)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	psp.setBrightnessFromDisplay()
-	// 开机重启注销等操作后，去掉手动调整亮度的限制条件，关闭节能模式亮度提升
-	brightnessDropPercent, err := psp.manager.helper.Power.PowerSavingModeBrightnessDropPercent().Get(0)
-	if err != nil {
-		logger.Warning("failed to get PowerSavingModeBrightnessDropPercent:", err)
-		return
-	}
-	for _, val := range psp.multiBrightnessWithPsm.MultiBrightness {
-		if val.ManuallyModified {
-			val.ManuallyModified = false
-			val.BrightnessSaved = val.BrightnessLatest / (1 - float64(brightnessDropPercent)/100)
-			if val.BrightnessSaved > 1 {
-				val.BrightnessSaved = 1
-			}
-		}
-	}
-	psp.setToBrightnessSave()
-}
-
-func (psp *powerSavePlan) setToBrightnessSave() {
-	data, err := psp.multiBrightnessWithPsm.toString()
-	if err != nil {
-		logger.Warning(err)
-	}
-	psp.brightnessSave = data
-	psp.manager.helper.Power.PowerSavingModeBrightnessData().Set(0, data)
-}
-
-func (psp *powerSavePlan) handleBrightnessPropertyChanged(value bool, value2 map[string]float64) {
-	if !value {
-		return
-	}
-
-	p := psp.manager.helper.Power
-	psmEnabled, err := p.PowerSavingModeEnabled().Get(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	if psmEnabled {
-		defer func() {
-			psp.multiBrightnessWithPsm.valueTmp = value2
-		}()
-
-		now := time.Now()
-		if now.Sub(psp.psmEnabledTime) < time.Second*2 {
-			return
-		}
-		if now.Sub(psp.psmPercentChangedTime) < time.Second*2 {
-			return
-		}
-
-		// 切换用户会配置亮度，这里加上会话激活的时间做为是否手动调节亮度的判断
-		var t time.Time
-		psp.manager.PropsMu.Lock()
-		t = psp.manager.sessionActiveTime
-		psp.manager.PropsMu.Unlock()
-
-		if now.Sub(t) < time.Second*3 {
-			return
-		}
-
-		changed := psp.multiBrightnessWithPsm.checkBrightnessChanged(value2)
-		if changed {
-			psp.setToBrightnessSave()
-		}
-
-	}
-}
-
-type brightnessWithPsp struct {
-	MonitorName      string
-	BrightnessSaved  float64 // 开启节能模式之前的亮度值
-	BrightnessLatest float64 // 开启节能模式之后每次手动设置的亮度
-	ManuallyModified bool
-}
-
-type multiBrightnessWithPsm struct {
-	MultiBrightness []*brightnessWithPsp
-	valueTmp        map[string]float64
-}
-
-func newMultiBrightnessWithPsm() *multiBrightnessWithPsm {
-	return &multiBrightnessWithPsm{valueTmp: make(map[string]float64)}
-}
-
-func (mb *multiBrightnessWithPsm) init() {
-	mb.MultiBrightness = mb.MultiBrightness[:0]
-}
-
-func (mb *multiBrightnessWithPsm) setBrightnessManuallyModified(name string, m bool, val float64) {
-	for i, b := range mb.MultiBrightness {
-		if b.MonitorName == name {
-			mb.MultiBrightness[i].ManuallyModified = m
-			mb.MultiBrightness[i].BrightnessLatest = val
-			break
-		}
-	}
-}
-
-// 检查哪一个屏幕的亮度改变了
-func (mb *multiBrightnessWithPsm) checkBrightnessChanged(data map[string]float64) bool {
-	var changed bool
-	for k, v := range data {
-		if vTmp, ok := mb.valueTmp[k]; ok {
-			if !isFloatEqual(v, vTmp) {
-				changed = true
-				mb.setBrightnessManuallyModified(k, true, v)
-			}
-		}
-	}
-
-	return changed
-}
-
-func (mb *multiBrightnessWithPsm) toString() (string, error) {
-	bytes, err := json.Marshal(mb.MultiBrightness)
-	if err != nil {
-		return "", err
-	}
-	return string(bytes), nil
-}
-
-func (mb *multiBrightnessWithPsm) toObject(b string) error {
-	if b == "" {
-		return nil
-	}
-	err := json.Unmarshal([]byte(b), &mb.MultiBrightness)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (mb *multiBrightnessWithPsm) mapToObject() {
-	for k, v := range mb.valueTmp {
-		mb.MultiBrightness = append(mb.MultiBrightness, &brightnessWithPsp{MonitorName: k, BrightnessSaved: v})
-	}
-}
 
 // 判断休眠、待机、屏保、锁屏、关闭显示器等任务能否加入任务队列
 // 优先级为：休眠 > 待机=屏保 > 锁屏=关闭显示器
