@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -86,7 +86,6 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 	m.PropsMu.Lock()
 	m.lidSwitchState = lidSwitchStateClose
 	m.PropsMu.Unlock()
-	m.claimOrReleaseAmbientLight()
 
 	// 合盖
 	if !state {

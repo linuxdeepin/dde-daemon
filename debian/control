@@ -18,7 +18,7 @@ Build-Depends:
  golang-github-gosexy-gettext-dev,
  golang-github-jinzhu-gorm-dev,
  golang-github-kelvins-sunrisesunset-dev,
- golang-github-linuxdeepin-go-dbus-factory-dev (>= 1.4.0),
+ golang-github-linuxdeepin-go-dbus-factory-dev (>= 2.0.30),
  golang-github-linuxdeepin-go-x11-client-dev (>= 0.0.4),
  golang-github-lofanmi-pinyin-dev,
  golang-github-mattn-go-sqlite3-dev,
@@ -84,6 +84,7 @@ Depends:
  x11-utils,
  xkb-data,
  dde-dconfig-daemon,
+ dde-services (>= 1.0.40),
  ${dist:Depends},
  ${misc:Depends},
  ${shlibs:Depends},
@@ -95,7 +96,6 @@ Provides:
  lastore-daemon-migration,
 Recommends:
  flatpak,
- iio-sensor-proxy,
  proxychains4,
  mesa-utils,
 Suggests:

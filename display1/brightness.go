@@ -122,7 +122,7 @@ func (m *Manager) initBrightness() {
 	configs := m.getSuitableSysMonitorConfigs(m.DisplayMode, monitorsId, monitors)
 	for _, config := range configs {
 		if config.Enabled {
-			m.Brightness[config.Name] = config.Brightness
+			m.Brightness[config.Name] = scaleBrightness(config.Brightness, m.getBrightnessScale())
 		}
 	}
 }
@@ -177,15 +177,7 @@ func (m *Manager) isBuiltinMonitor(name string) bool {
 	return false
 }
 
-func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64, forceTransition bool) error {
-	logger.Debug("setMonitorBrightness reality value:", brightnessValue)
-	edid := utils.EncodeEdidBase64(monitor.edid)
-	// 使用统一过渡管理器
-	if m.transitionManager != nil {
-		return m.transitionManager.SetBrightness(monitor.Name, brightnessValue, edid, forceTransition)
-	}
-
-	// 降级：直接设置亮度
+func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64) error {
 	setter := m.createBrightnessSetter(monitor)
 	if setter == nil {
 		return fmt.Errorf("failed to create brightness setter for monitor %s", monitor.Name)
@@ -264,6 +256,8 @@ func (m *Manager) setColorTemperature(monitor *Monitor, brightnessVal float64) e
 }
 
 func (m *Manager) setBrightness(name string, value float64) error {
+	m.brightnessWriteMu.Lock()
+	defer m.brightnessWriteMu.Unlock()
 	logger.Debug("Starting brightness setting", name, value)
 	monitors := m.getConnectedMonitors()
 	monitor := monitors.GetByName(name)
@@ -285,7 +279,7 @@ func (m *Manager) setBrightness(name string, value float64) error {
 			value = 1
 		}
 
-		err := m.setMonitorBrightness(monitor, value, false)
+		err := m.setMonitorBrightness(monitor, value)
 		if err != nil {
 			logger.Warningf("failed to set brightness for %s: %v", name, err)
 			return err
@@ -305,41 +299,6 @@ func (m *Manager) setBrightnessAndSync(name string, value float64) error {
 		m.syncPropBrightness()
 	}
 	return err
-}
-
-// setBrightnessWithTransition 使用渐变效果设置亮度（强制启用渐变）
-// 亮度属性会在渐变过程中通过 onStepFunc 回调逐步更新，而非立即跳到目标值
-func (m *Manager) setBrightnessWithTransition(name string, value float64) error {
-	logger.Debug("Starting brightness setting with transition", name, value)
-	monitors := m.getConnectedMonitors()
-	monitor := monitors.GetByName(name)
-	if monitor == nil {
-		logger.Debug("Monitor not found:", name)
-		return InvalidOutputNameError{Name: name}
-	}
-
-	monitor.PropsMu.RLock()
-	enabled := monitor.Enabled
-	monitor.PropsMu.RUnlock()
-
-	value = math.Round(value*1000) / 1000
-	if enabled {
-		if value <= 0.1 {
-			value = 0.1
-		} else if value > 1 {
-			value = 1
-		}
-
-		err := m.setMonitorBrightness(monitor, value, true)
-		if err != nil {
-			logger.Warningf("failed to set brightness for %s: %v", name, err)
-			return err
-		}
-	}
-
-	logger.Debug("end set brightness with transition", name, value)
-
-	return nil
 }
 
 // getDefaultMonitorBrightness 获取默认显示器亮度（带 fallback 逻辑）

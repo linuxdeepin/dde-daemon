@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018-2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -30,7 +30,6 @@ type DisplayController struct {
 	display           display.Display
 	backlightHelper   backlight.Backlight
 	keyboardConfigMgr configManager.Manager
-	powerConfigMgr    configManager.Manager
 	brightStatusBusy  bool
 	brightStatusMu    sync.Mutex
 	m                 *Manager
@@ -53,16 +52,6 @@ func NewDisplayController(backlightHelper backlight.Backlight, sessionConn *dbus
 	}
 
 	c.keyboardConfigMgr, err = configManager.NewManager(bus, dsgPath)
-	if err != nil {
-		logger.Warning(err)
-	}
-
-	dsgPath, err = dsg.AcquireManager(0, constants.DSettingsAppID, constants.DSettingsPowerId, "")
-	if err != nil || dsgPath == "" {
-		logger.Warning(err)
-		return c
-	}
-	c.powerConfigMgr, err = configManager.NewManager(bus, dsgPath)
 	if err != nil {
 		logger.Warning(err)
 	}
@@ -140,15 +129,6 @@ func (c *DisplayController) changeBrightness(raised bool) error {
 
 	// 只有当OsdAdjustBrightnessState的值为BrightnessAdjustEnable时，才会去执行调整亮度的操作
 	if BrightnessAdjustEnable == state {
-
-		autoAdjustBrightnessEnabledValue, err := c.powerConfigMgr.Value(0, constants.DSettingsKeyAmbientLightAdjustBrightness)
-		if err != nil {
-			logger.Warning(err)
-		}
-		autoAdjustBrightnessEnabled := autoAdjustBrightnessEnabledValue.Value().(bool)
-		if autoAdjustBrightnessEnabled {
-			c.powerConfigMgr.SetValue(0, constants.DSettingsKeyAmbientLightAdjustBrightness, dbus.MakeVariant(false))
-		}
 
 		err = c.display.ChangeBrightness(dbus.FlagNoAutoStart, raised)
 		if err != nil {
