@@ -95,7 +95,6 @@ Provides:
  lastore-daemon-migration,
 Recommends:
  flatpak,
- iio-sensor-proxy,
  proxychains4,
  mesa-utils,
 Suggests:
