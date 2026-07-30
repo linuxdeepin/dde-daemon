@@ -172,22 +172,14 @@ func init() {
 	var err error
 	controllers, err = displayBl.List()
 	if err != nil {
-		fmt.Println("failed to list backlight controller:", err)
+		logger.Warning("failed to list backlight controller:", err)
 	}
 }
 
 func _setBacklight(value float64, controller *displayBl.Controller) error {
 	br := int32(float64(controller.MaxBrightness) * value)
 
-	v, ok := GetBacklightCurveValue(value, controller)
-	if ok {
-		logger.Debugf("Brightness curve value: %v", v)
-		br = v
-	}
-
 	const backlightTypeDisplay = 1
-	fmt.Printf("help set brightness %q max %v value %v br %v\n",
-		controller.Name, controller.MaxBrightness, value, br)
 	return helper.SetBrightness(0, backlightTypeDisplay, controller.Name, br)
 }
 
@@ -223,7 +215,7 @@ func getBacklightControllers() displayBl.Controllers {
 	return cachedBacklightControllers
 }
 
-// SetBacklight 设置背光亮度（供 TransitionManager 回调使用）
+// SetBacklight 设置背光亮度（供 createBrightnessSetter 回调使用）
 func SetBacklight(brightness float64) error {
 	controllers := getBacklightControllers()
 	if len(controllers) == 0 {

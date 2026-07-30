@@ -113,11 +113,8 @@ func (m *Manager) AssociateTouchByUUID(outputName, touchUUID string) *dbus.Error
 // ChangeBrightness 通过键盘控制所有显示器一起亮度加或减，保存配置。
 func (m *Manager) ChangeBrightness(raised bool) *dbus.Error {
 	logger.Debug("dbus call ChangeBrightness", raised)
+	m.prepareManualBrightnessChange()
 	err := m.changeBrightness(raised)
-	if err == nil {
-		// 通知自动亮度管理器手动调节
-		m.notifyManualBrightnessChange()
-	}
 	return dbusutil.ToError(err)
 }
 
@@ -132,8 +129,6 @@ func (m *Manager) SetAutoBrightnessEnabled(enabled bool) *dbus.Error {
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
-
-	m.setPropAutoBrightnessEnabled(enabled)
 
 	return nil
 }
@@ -192,7 +187,7 @@ func (m *Manager) RefreshBrightness() *dbus.Error {
 	configs := m.getSuitableSysMonitorConfigs(m.DisplayMode, monitorsId, monitors)
 	for _, config := range configs {
 		if config.Enabled {
-			err := m.setBrightness(config.Name, config.Brightness)
+			err := m.setBrightness(config.Name, scaleBrightness(config.Brightness, m.getBrightnessScale()))
 			if err != nil {
 				logger.Warning(err)
 			}
@@ -214,14 +209,14 @@ func (m *Manager) SetAndSaveBrightness(outputName string, value float64) *dbus.E
 	if !can {
 		return dbusutil.ToError(fmt.Errorf("the port %s cannot set brightness", outputName))
 	}
+	if m.isBuiltinMonitor(outputName) {
+		m.prepareManualBrightnessChange()
+	}
 	err := m.setBrightnessAndSync(outputName, value)
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-
-	// 通知自动亮度管理器手动调节
-	m.notifyManualBrightnessChange()
 
 	err = m.saveBrightnessInCfg(map[string]float64{
 		outputName: value,
@@ -244,15 +239,15 @@ func (m *Manager) SetBrightness(outputName string, value float64) *dbus.Error {
 	if !can {
 		return dbusutil.ToError(fmt.Errorf("the port %s cannot set brightness", outputName))
 	}
+	if m.isBuiltinMonitor(outputName) {
+		m.prepareManualBrightnessChange()
+	}
 
 	err := m.setBrightnessAndSync(outputName, value)
 	if err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-
-	// 通知自动亮度管理器手动调节
-	m.notifyManualBrightnessChange()
 
 	return nil
 }
