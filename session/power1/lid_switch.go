@@ -86,7 +86,6 @@ func (h *LidSwitchHandler) doLidStateChanged(state bool) {
 	m.PropsMu.Lock()
 	m.lidSwitchState = lidSwitchStateClose
 	m.PropsMu.Unlock()
-	m.claimOrReleaseAmbientLight()
 
 	// 合盖
 	if !state {

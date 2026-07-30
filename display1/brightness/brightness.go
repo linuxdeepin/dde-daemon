@@ -179,12 +179,6 @@ func init() {
 func _setBacklight(value float64, controller *displayBl.Controller) error {
 	br := int32(float64(controller.MaxBrightness) * value)
 
-	v, ok := GetBacklightCurveValue(value, controller)
-	if ok {
-		logger.Debugf("Brightness curve value: %v", v)
-		br = v
-	}
-
 	const backlightTypeDisplay = 1
 	fmt.Printf("help set brightness %q max %v value %v br %v\n",
 		controller.Name, controller.MaxBrightness, value, br)

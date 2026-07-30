@@ -26,8 +26,10 @@ import (
 	dxutil "github.com/linuxdeepin/dde-api/dxinput/utils"
 	"github.com/linuxdeepin/dde-daemon/common/scale"
 	"github.com/linuxdeepin/dde-daemon/display1/brightness"
+	ambientbrightness1 "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.ambientbrightness1"
 	xs "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.xsettings1"
 	sysdisplay "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.display1"
+	syspower "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
 	dgesture "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.gesture1"
 	inputdevices "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.inputdevices1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
@@ -89,40 +91,13 @@ const (
 	DSettingsKeyRotateScreenTimeDelay    = "rotateScreenTimeDelay"
 	DSettingsKeyCustomDisplayMode        = "customDisplayMode"
 	DSettingsAutoChangeScaleEnabled      = "autoChangeScaleEnabled"
-
-	// 亮度曲线配置
-	DSettingsKeyBacklightCurveType     = "backlight-curve-type"
-	DSettingsKeyBacklightMinValue      = "backlight-curve-min-value"
-	DSettingsKeyBacklightMidValue      = "backlight-curve-mid-value"
-	DSettingsKeyBrightnessPercentage   = "brightness-percentage"
-	DSettingsKeyCanSetBrightnessDelay  = "can-set-brightness-delay-interval"
-	DSettingsKeyCustomBrightnessCurves = "custom-brightness-curves"
-	DSettingsKeyDefaultBrightnessCurve = "default-brightness-curve"
-	DSettingsKeyMaxBrightnessUnlimited = "max-brightness-unlimited"
+	DSettingsKeyCanSetBrightnessDelay    = "can-set-brightness-delay-interval"
 
 	// 统一亮度过渡配置
 	DSettingsKeyTransitionEnabled         = "transition-enabled"
 	DSettingsKeyTransitionDuration        = "transition-duration"
 	DSettingsKeyTransitionStepPercent     = "transition-step-percent"
 	DSettingsKeyTransitionMinStepInterval = "transition-min-step-interval"
-
-	// 自动亮度配置（独立配置文件）
-	DSettingsAutoBrightnessAppID               = "org.deepin.dde.daemon"
-	DSettingsAutoBrightnessName                = "org.deepin.Display.AutoBrightness"
-	DSettingsKeyABEnabled                      = "enabled"
-	DSettingsKeyABSensitivity                  = "sensitivity"
-	DSettingsKeyABChangeThreshold              = "change-threshold"
-	DSettingsKeyABPollingInterval              = "polling-interval"
-	DSettingsKeyABManualOverride               = "manual-override-duration"
-	DSettingsKeyABManualAdjustDisablesAutoMode = "manual-adjust-disables-auto-mode"
-	DSettingsKeyABUseTransition                = "use-transition"
-	DSettingsKeyABBrightnessChangeThreshold    = "brightness-change-threshold"
-	DSettingsKeyABCurve                        = "lux-brightness-curve"
-
-	// 卡尔曼滤波器配置
-	DSettingsKeyABKalmanProcessNoise     = "kalman-process-noise"
-	DSettingsKeyABKalmanMeasurementNoise = "kalman-measurement-noise"
-	DSettingsKeyABKalmanWindowSize       = "kalman-window-size"
 
 	customModeDelim              = "+"
 	monitorsIdDelimiter          = ","
@@ -232,6 +207,9 @@ type Manager struct {
 	Brightness          map[string]float64
 	CanSetBrightnessMap map[string]bool
 	brightnessMapMu     sync.RWMutex
+	brightnessWriteMu   sync.Mutex
+	brightnessScale     float64 // 节能模式亮度缩放系数，1.0=不缩放；由 Power1 派生，不持久化
+	brightnessScaleMu   sync.RWMutex
 	// dbusutil-gen: equal=nil
 	Touchscreens dxTouchscreens
 	// dbusutil-gen: equal=nil
@@ -286,26 +264,10 @@ type Manager struct {
 	// 自动亮度管理器
 	autoBrightnessManager *AutoBrightnessManager
 
-	// 统一亮度过渡管理器
-	transitionManager *brightness.TransitionManager
-
-	// 统一亮度过渡配置
-	transitionMu              sync.RWMutex
-	transitionEnabled         bool
-	transitionDuration        int     // 毫秒
-	transitionStepPercent     float64 // 步进百分比
-	transitionMinStepInterval int     // 最小步进间隔（毫秒）
-
-	// 背光曲线配置
-	backlightCurveType string
-	backlightMinValue  int32
-	backlightMidValue  int32
+	// 缓存 system Power1 客户端，用于监听节能属性
+	sysPower syspower.Power
 
 	dsAutoChangeScaleEnabled bool
-
-	powerSaving            bool
-	systemAdjustingTimer   *time.Timer
-	systemAdjustingTimerMu sync.Mutex
 }
 
 type monitorSizeInfo struct {
@@ -325,6 +287,7 @@ func newManager(service *dbusutil.Service) *Manager {
 		monitorMap:          make(map[uint32]*Monitor),
 		Brightness:          make(map[string]float64),
 		CanSetBrightnessMap: make(map[string]bool),
+		brightnessScale:     1.0,
 		redshiftRunner:      newRedshiftRunner(),
 		unsupportGammaDrmList: []string{
 			"Loongson",
@@ -543,58 +506,10 @@ func (m *Manager) initDConfig(sysBus *dbus.Conn) {
 			m.getCurrentCustomId()
 		case DSettingsKeyRotateScreenTimeDelay:
 			m.getRotateScreenTimeDelay()
-		case DSettingsKeyCustomBrightnessCurves:
-			m.getCustomBrightnessCurves()
-		case DSettingsKeyDefaultBrightnessCurve:
-			m.getDefaultBrightnessCurve()
-		case DSettingsKeyBacklightMinValue, DSettingsKeyBacklightMidValue:
-			m.getBacklightMinValue()
-			m.getBacklightMidValue()
-			brightness.InitFlmCurves(m.backlightMinValue, m.backlightMidValue)
-		case DSettingsKeyBacklightCurveType:
-			m.getBacklightCurveType()
-		case DSettingsKeyMaxBrightnessUnlimited:
-			m.getMaxBrightnessUnlimited()
 		case DSettingsAutoChangeScaleEnabled:
 			m.getAutoChangeScaleEnabled()
 		case DSettingsKeyCanSetBrightnessDelay:
 			m.getBrightnessDelaySet()
-		case DSettingsKeyTransitionEnabled,
-			DSettingsKeyTransitionDuration,
-			DSettingsKeyTransitionStepPercent,
-			DSettingsKeyTransitionMinStepInterval:
-			m.transitionMu.Lock()
-			// 重新读取所有过渡配置
-			if v, err := _dsConfigManager.Value(0, DSettingsKeyTransitionEnabled); err == nil {
-				m.transitionEnabled = v.Value().(bool)
-			}
-			if v, err := _dsConfigManager.Value(0, DSettingsKeyTransitionDuration); err == nil {
-				switch val := v.Value().(type) {
-				case int64:
-					m.transitionDuration = int(val)
-				case float64:
-					m.transitionDuration = int(val)
-				}
-			}
-			if v, err := _dsConfigManager.Value(0, DSettingsKeyTransitionStepPercent); err == nil {
-				m.transitionStepPercent = v.Value().(float64)
-			}
-			if v, err := _dsConfigManager.Value(0, DSettingsKeyTransitionMinStepInterval); err == nil {
-				switch val := v.Value().(type) {
-				case int64:
-					m.transitionMinStepInterval = int(val)
-				case float64:
-					m.transitionMinStepInterval = int(val)
-				}
-			}
-			m.transitionMu.Unlock()
-			// 更新统一 TransitionManager 配置
-			if m.transitionManager != nil {
-				m.transitionManager.SetEnabled(m.transitionEnabled)
-				m.transitionManager.SetDuration(m.transitionDuration)
-				m.transitionManager.SetStepPercent(m.transitionStepPercent)
-				m.transitionManager.SetMinStepInterval(m.transitionMinStepInterval)
-			}
 		default:
 			break
 		}
@@ -612,15 +527,7 @@ func (m *Manager) loadInitialConfigValues() {
 	m.getRotateScreenTimeDelay()
 	m.getBrightnessDelaySet()
 	// ColorTemperatureManual will be loaded from user config via applyColorTempConfig()
-	m.getBacklightCurveType()
-	m.getBacklightMinValue()
-	m.getBacklightMidValue()
-	m.getCustomBrightnessCurves()
-	m.getDefaultBrightnessCurve()
-	m.getMaxBrightnessUnlimited()
 	m.getAutoChangeScaleEnabled()
-	// 初始化FLM曲线
-	brightness.InitFlmCurves(m.backlightMinValue, m.backlightMidValue)
 }
 
 func (m *Manager) getDefaultTemperatureManual() {
@@ -738,107 +645,6 @@ func (m *Manager) getBrightness() string {
 		return ""
 	}
 	return v.Value().(string)
-}
-
-func (m *Manager) getBacklightCurveType() {
-	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBacklightCurveType)
-	if err != nil {
-		logger.Warning(err)
-		m.backlightCurveType = "default"
-		brightness.SetCurveType("default")
-		return
-	}
-	m.backlightCurveType = v.Value().(string)
-	logger.Info("Backlight Curve Type:", m.backlightCurveType)
-	brightness.SetCurveType(m.backlightCurveType)
-}
-
-func (m *Manager) getBacklightMinValue() {
-	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBacklightMinValue)
-	if err != nil {
-		logger.Warning(err)
-		m.backlightMinValue = 4
-		return
-	}
-	switch vType := v.Value().(type) {
-	case int64:
-		m.backlightMinValue = int32(vType)
-	case float64:
-		m.backlightMinValue = int32(vType)
-	default:
-		m.backlightMinValue = 4
-	}
-	logger.Info("Backlight min value:", m.backlightMinValue)
-}
-
-func (m *Manager) getBacklightMidValue() {
-	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBacklightMidValue)
-	if err != nil {
-		logger.Warning(err)
-		m.backlightMidValue = 50
-		return
-	}
-	switch vType := v.Value().(type) {
-	case int64:
-		m.backlightMidValue = int32(vType)
-	case float64:
-		m.backlightMidValue = int32(vType)
-	default:
-		m.backlightMidValue = 50
-	}
-	logger.Info("Backlight mid value:", m.backlightMidValue)
-}
-
-func (m *Manager) getCustomBrightnessCurves() {
-	v, err := m.displayConfigMgr.Value(0, DSettingsKeyCustomBrightnessCurves)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	jsonStr, ok := v.Value().(string)
-	if !ok {
-		logger.Warning("Custom brightness curves configuration is not a string")
-		return
-	}
-
-	brightness.SetCustomBrightnessCurves(jsonStr)
-	// 更新当前最大缩放值
-	curveMaxScale := brightness.GetCurrentMaxScale()
-
-	m.PropsMu.Lock()
-	m.setPropCurveMaxScale(curveMaxScale)
-	m.PropsMu.Unlock()
-}
-
-func (m *Manager) getDefaultBrightnessCurve() {
-	v, err := m.displayConfigMgr.Value(0, DSettingsKeyDefaultBrightnessCurve)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-
-	jsonStr, ok := v.Value().(string)
-	if !ok {
-		logger.Warning("Default brightness curve configuration is not a string")
-		return
-	}
-
-	brightness.SetDefaultBrightnessCurve(jsonStr)
-}
-
-func (m *Manager) getMaxBrightnessUnlimited() {
-	v, err := m.displayConfigMgr.Value(0, DSettingsKeyMaxBrightnessUnlimited)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
-	enabled, ok := v.Value().(bool)
-	if !ok {
-		logger.Warning("Max brightness unlimited configuration is not a bool")
-		return
-	}
-	brightness.SetMaxBrightnessUnlimited(enabled)
 }
 
 func (m *Manager) getAutoChangeScaleEnabled() {
@@ -983,12 +789,12 @@ func (m *Manager) handleSysConfigUpdated(newSysConfig *SysRootConfig) {
 						// 如果开启了自动亮度且当前处理的是内置显示器，则跳过应用旧的手动亮度
 						builtin := m.getBuiltinMonitor()
 						if builtin != nil && builtin.Name == config.Name && m.AutoBrightnessEnabled && m.autoBrightnessManager != nil {
-							logger.Debugf("Auto brightness enabled, skip manual brightness setup for %s and trigger adjust", config.Name)
-							m.autoBrightnessManager.adjustBrightnessOnce()
+							logger.Debugf("Auto brightness enabled, skip manual brightness setup for %s and apply current recommendation", config.Name)
+							m.autoBrightnessManager.applyRecommendedBrightness()
 							continue
 						}
 
-						err := m.setBrightness(config.Name, config.Brightness)
+						err := m.setBrightness(config.Name, scaleBrightness(config.Brightness, m.getBrightnessScale()))
 						if err != nil {
 							logger.Warning(err)
 						}
@@ -1493,8 +1299,7 @@ func (m *Manager) init() {
 	m.logDisplayScreenEvent()
 
 	go func() {
-		m.initTransitionConfig()
-		m.initTransitionManager()
+		m.initBrightnessScale()
 		m.initAutoBrightness()
 	}()
 }
@@ -2690,16 +2495,31 @@ func (m *Manager) applySysMonitorConfigs(mode byte, monitorsId monitorsId, monit
 	// TODO：色温和设置亮度都调用了setBrightness的接口，逻辑重复了，需要优化。
 	for _, config := range configs {
 		if config.Enabled {
-			// 如果开启了自动亮度且当前处理的是内置显示器，则跳过应用旧的手动亮度
-			// 并触发一次自动亮度调节
+			// 如果开启了自动亮度且当前处理的是内置显示器，则直接查询 AmbientBrightness1 的当前状态：
+			// - 推荐服务 Active 且推荐值有效 → 用推荐亮度，跳过旧配置亮度；
+			// - 推荐服务暂不可用 → 用旧配置亮度，等光感恢复后自动切换。
 			builtin := m.getBuiltinMonitor()
-			if builtin != nil && builtin.Name == config.Name && m.AutoBrightnessEnabled && m.autoBrightnessManager != nil {
-				logger.Debugf("Auto brightness enabled, skip manual brightness setup for %s and trigger adjust", config.Name)
-				m.autoBrightnessManager.adjustBrightnessOnce()
-				continue
+			if builtin != nil && builtin.Name == config.Name {
+				ambientState := m.queryAmbientStateSync()
+				if ambientState.Enabled && ambientState.State == ambientBrightnessStateActive &&
+					ambientState.Supported && isValidRecommendedBrightness(ambientState.RecommendedBrightness) {
+					logger.Debugf("[AutoBrightness] init: use recommended brightness %.3f for %s (ambient State=%q)",
+						ambientState.RecommendedBrightness, config.Name, ambientState.State)
+					err := m.setBrightness(config.Name, scaleBrightness(ambientState.RecommendedBrightness, m.getBrightnessScale()))
+					if err != nil {
+						logger.Warningf("[AutoBrightness] init: failed to set recommended brightness for %s: %v", config.Name, err)
+					}
+					continue
+				}
+				if ambientState.Enabled {
+					logger.Debugf("[AutoBrightness] init: ambient enabled but not ready (state=%q supp=%v rec=%.3f), fallback to saved brightness for %s",
+						ambientState.State, ambientState.Supported, ambientState.RecommendedBrightness, config.Name)
+				} else {
+					logger.Debugf("[AutoBrightness] init: ambient disabled, use saved brightness for %s", config.Name)
+				}
 			}
 
-			err := m.setBrightness(config.Name, config.Brightness)
+			err := m.setBrightness(config.Name, scaleBrightness(config.Brightness, m.getBrightnessScale()))
 			if err != nil {
 				logger.Warningf("call setBrightness err: %v, config.Name: %s", err, config.Name)
 				monitors := m.getConnectedMonitors()
@@ -2710,7 +2530,7 @@ func (m *Manager) applySysMonitorConfigs(mode byte, monitorsId monitorsId, monit
 					continue
 				}
 
-				err := m.setBrightness(monitor.Name, config.Brightness)
+				err := m.setBrightness(monitor.Name, scaleBrightness(config.Brightness, m.getBrightnessScale()))
 				if err != nil {
 					logger.Warningf("call setBrightness err: %v, monitor.Name: %s", err, monitor.Name)
 				}
@@ -3807,6 +3627,61 @@ func (m *Manager) emitPropChangedAutoBrightnessSupported(value bool) error {
 
 // 自动亮度管理器集成方法
 
+// queryAmbientStateSync 同步查询 AmbientBrightness1 的当前状态。
+// 用于 Display1 初始化时决定使用推荐亮度还是旧配置亮度。
+// 任何属性读取失败都视为该条件不满足，不会阻塞初始化流程。
+func (m *Manager) queryAmbientStateSync() RecommendationState {
+	conn := m.service.Conn()
+	if conn == nil {
+		return RecommendationState{}
+	}
+	state, err := readAmbientStateFromBus(conn)
+	if err != nil {
+		logger.Debug("[AutoBrightness] queryAmbientStateSync failed:", err)
+		return RecommendationState{}
+	}
+	logger.Infof("[AutoBrightness] init ambient state: enabled=%v state=%q supp=%v rec=%.3f",
+		state.Enabled, state.State, state.Supported, state.RecommendedBrightness)
+	return state
+}
+
+// readAmbientStateFromBus 通过 go-dbus-factory 客户端读取 AmbientBrightness1 的完整状态。
+// 不创建信号订阅，用于 one-shot 查询。
+func readAmbientStateFromBus(conn *dbus.Conn) (RecommendationState, error) {
+	ambient := ambientbrightness1.NewAmbientBrightness(conn)
+
+	supported, err := ambient.Supported().Get(0)
+	if err != nil {
+		return RecommendationState{}, fmt.Errorf("get Supported: %w", err)
+	}
+
+	enabled, err := ambient.Enabled().Get(0)
+	if err != nil {
+		return RecommendationState{}, fmt.Errorf("get Enabled: %w", err)
+	}
+
+	stateName, err := ambient.State().Get(0)
+	if err != nil {
+		return RecommendationState{}, fmt.Errorf("get State: %w", err)
+	}
+
+	recommended, err := ambient.RecommendedBrightness().Get(0)
+	if err != nil {
+		return RecommendationState{}, fmt.Errorf("get RecommendedBrightness: %w", err)
+	}
+	if !isValidRecommendedBrightness(recommended) {
+		return RecommendationState{}, fmt.Errorf("invalid RecommendedBrightness value %v", recommended)
+	}
+
+	return RecommendationState{
+		Available:             true,
+		Enabled:               enabled,
+		Supported:             supported,
+		State:                 stateName,
+		RecommendedBrightness: recommended,
+	}, nil
+}
+
 // initAutoBrightness 初始化自动亮度管理器
 func (m *Manager) initAutoBrightness() {
 	logger.Debug("Initializing auto brightness manager")
@@ -3820,219 +3695,21 @@ func (m *Manager) initAutoBrightness() {
 		return
 	}
 
-	// 设置支持状态
 	m.setPropAutoBrightnessSupported(m.autoBrightnessManager.IsSupported())
-
-	// 获取配置（已在 Initialize 中加载）
-	config, err := m.autoBrightnessManager.getConfig()
-	if err != nil {
-		logger.Warning("Failed to get auto brightness config:", err)
-		config = DefaultAutoBrightnessConfig
-	}
-
-	// 设置启用状态属性
-	m.setPropAutoBrightnessEnabled(config.Enabled)
-
-	// 如果配置启用且支持，则启动
-	if config.Enabled && m.autoBrightnessManager.IsSupported() {
-		err = m.autoBrightnessManager.Start()
-		if err != nil {
-			logger.Warning("Failed to start auto brightness manager:", err)
-		}
-	}
+	m.setPropAutoBrightnessEnabled(m.autoBrightnessManager.IsEnabled())
 
 	logger.Info("Auto brightness manager initialized successfully")
 }
 
-// initTransitionManager 初始化亮度过渡管理器
-func (m *Manager) initTransitionManager() {
-	logger.Info("Initializing unified transition manager")
 
-	// 创建统一过渡管理器
-	m.transitionManager = brightness.NewTransitionManager()
-	m.transitionManager.SetEnabled(m.transitionEnabled)
-	m.transitionManager.SetDuration(m.transitionDuration)
-	m.transitionManager.SetStepPercent(m.transitionStepPercent)
-	m.transitionManager.SetMinStepInterval(m.transitionMinStepInterval)
-
-	// 设置亮度类型判断回调
-	m.transitionManager.SetGetBrightnessTypeFunc(func(monitorName string) brightness.BrightnessType {
-		setter := m.getSetterConfig()
-		isBuiltin := m.isBuiltinMonitor(monitorName)
-
-		switch setter {
-		case brightness.SetterBacklight:
-			return brightness.TypeBacklight
-		case brightness.SetterAuto:
-			// 必须同时检查 SupportBacklight()：DVI 等"isBuiltin 为真但实际无背光控制器"
-			// 的外接输出（见 isBuiltinMonitor 历史遗留）应走 Gamma 路径，否则会被误路由到
-			// TypeBacklight，写入 /sys/class/backlight/ 对该输出不生效，亮度调节失效。
-			// 与 createBrightnessSetter 的降级路径保持一致。
-			if isBuiltin && brightness.SupportBacklight() {
-				return brightness.TypeBacklight
-			}
-			return brightness.TypeGamma
-		case brightness.SetterDDCCI:
-			if isBuiltin {
-				return brightness.TypeBacklight
-			}
-			return brightness.TypeDDCCI
-		default: // BrightnessSetterGamma
-			return brightness.TypeGamma
-		}
-	})
-
-	// 设置 Backlight 回调
-	m.transitionManager.SetBacklightFuncs(
-		func(percent float64) error {
-			return brightness.SetBacklight(percent)
-		},
-		func() (float64, error) {
-			return brightness.GetBacklightCurrentValue()
-		},
-	)
-
-	// 设置 Gamma 回调
-	m.transitionManager.SetGammaFuncs(
-		func(monitorName string, percent float64) error {
-			temperature := m.getColorTemperatureValue()
-			monitors := m.getConnectedMonitors()
-			monitor := monitors.GetByName(monitorName)
-			if monitor == nil {
-				return fmt.Errorf("monitor not found: %s", monitorName)
-			}
-			_uuid := monitor.uuid
-			if _useWayland {
-				_uuid = monitor.uuidV0
-			}
-			return brightness.SetOutputGama(percent, temperature, monitor.ID, m.xConn, _uuid)
-		},
-		func(monitorName string) (float64, error) {
-			currentBrightness := m.getMonitorBrightness(monitorName)
-			if currentBrightness < 0 {
-				return 0.5, nil
-			}
-			return currentBrightness, nil
-		},
-	)
-
-	// 设置 DDCCI 回调
-	m.transitionManager.SetDDCCIFuncs(
-		func(edid string, percent float64) error {
-			return brightness.SetDDCCIBrightness(percent, edid)
-		},
-		func(edid string) (float64, error) {
-			return brightness.GetDDCCIBrightness(edid)
-		},
-	)
-
-	// 设置每步回调：在渐变过程中同步亮度属性到 D-Bus
-	m.transitionManager.SetOnStepFunc(func(monitorName string, percent float64) {
-		if m.builtinMonitor != nil && m.builtinMonitor.Name == monitorName {
-			m.builtinMonitor.setPropBrightnessWithLock(percent)
-		}
-		m.syncPropBrightness()
-	})
-
-	logger.Infof("Unified transition manager initialized: enabled=%v, duration=%dms, stepPercent=%.2f%%, minInterval=%dms",
-		m.transitionEnabled, m.transitionDuration, m.transitionStepPercent, m.transitionMinStepInterval)
-}
-
-// initTransitionConfig 初始化亮度过渡配置
-func (m *Manager) initTransitionConfig() {
-	m.transitionMu.Lock()
-	defer m.transitionMu.Unlock()
-
-	// 默认配置
-	m.transitionEnabled = false
-	m.transitionDuration = 4000
-	m.transitionStepPercent = 1.0
-	m.transitionMinStepInterval = 100
-
-	// 从 DSettings 读取配置
-	getTransitionEnabled := func() {
-		v, err := _dsConfigManager.Value(0, DSettingsKeyTransitionEnabled)
-		if err != nil {
-			logger.Warning(err)
-			m.transitionEnabled = false
-			return
-		}
-		m.transitionEnabled = v.Value().(bool)
-		logger.Info("Transition enabled:", m.transitionEnabled)
+// prepareManualBrightnessChange 让手动亮度事务抢占并关闭自动亮度。
+func (m *Manager) prepareManualBrightnessChange() {
+	if m.autoBrightnessManager == nil {
+		return
 	}
-
-	getTransitionDuration := func() {
-		v, err := _dsConfigManager.Value(0, DSettingsKeyTransitionDuration)
-		if err != nil {
-			logger.Warning(err)
-			m.transitionDuration = 4000
-			return
-		}
-		switch val := v.Value().(type) {
-		case int64:
-			m.transitionDuration = int(val)
-		case float64:
-			m.transitionDuration = int(val)
-		default:
-			m.transitionDuration = 4000
-		}
-		logger.Info("Transition duration:", m.transitionDuration, "ms")
+	if err := m.autoBrightnessManager.DisableForManualAdjustment(); err != nil {
+		logger.Warning("Failed to disable automatic brightness for manual adjustment:", err)
 	}
-
-	getTransitionStepPercent := func() {
-		v, err := _dsConfigManager.Value(0, DSettingsKeyTransitionStepPercent)
-		if err != nil {
-			logger.Warning(err)
-			m.transitionStepPercent = 1.0
-			return
-		}
-		switch val := v.Value().(type) {
-		case int64:
-			m.transitionStepPercent = float64(val)
-		case float64:
-			m.transitionStepPercent = val
-		default:
-			m.transitionStepPercent = 1.0
-		}
-		logger.Info("Transition step percent:", m.transitionStepPercent)
-	}
-
-	getTransitionMinStepInterval := func() {
-		v, err := _dsConfigManager.Value(0, DSettingsKeyTransitionMinStepInterval)
-		if err != nil {
-			logger.Warning(err)
-			m.transitionMinStepInterval = 100
-			return
-		}
-		switch val := v.Value().(type) {
-		case int64:
-			m.transitionMinStepInterval = int(val)
-		case float64:
-			m.transitionMinStepInterval = int(val)
-		default:
-			m.transitionMinStepInterval = 100
-		}
-		logger.Info("Transition min step interval:", m.transitionMinStepInterval, "ms")
-	}
-
-	getTransitionEnabled()
-	getTransitionDuration()
-	getTransitionStepPercent()
-	getTransitionMinStepInterval()
-}
-
-// notifyManualBrightnessChange 通知手动亮度调节
-func (m *Manager) notifyManualBrightnessChange() {
-	if m.autoBrightnessManager != nil {
-		m.autoBrightnessManager.OnManualBrightnessChange()
-	}
-}
-
-// setSystemAdjusting 设置系统调整标志（用于区分系统自动调整和用户手动调整）
-func (m *Manager) isPowerSaving() bool {
-	m.PropsMu.RLock()
-	defer m.PropsMu.RUnlock()
-	return m.powerSaving
 }
 
 // holdAutoBrightness 通知系统休眠
@@ -4049,34 +3726,8 @@ func (m *Manager) resumeAutoBrightness() {
 	}
 }
 
-// setSystemAdjusting 设置系统调整标志（用于区分系统自动调整和用户手动调整）
-func (m *Manager) setSystemAdjusting(adjusting bool) {
-	if m.autoBrightnessManager != nil {
-		m.autoBrightnessManager.setSystemAdjusting(adjusting)
-	}
-}
-
-// scheduleSystemAdjustingClear 延迟清除系统调整标志
-func (m *Manager) scheduleSystemAdjustingClear(delay time.Duration) {
-	m.systemAdjustingTimerMu.Lock()
-	defer m.systemAdjustingTimerMu.Unlock()
-	if m.systemAdjustingTimer != nil {
-		m.systemAdjustingTimer.Stop()
-	}
-	m.systemAdjustingTimer = time.AfterFunc(delay, func() {
-		m.setSystemAdjusting(false)
-		logger.Debug("system adjusting flag cleared after delay")
-	})
-}
-
 // cleanupAutoBrightness 清理自动亮度资源
 func (m *Manager) cleanupAutoBrightness() {
-	m.systemAdjustingTimerMu.Lock()
-	if m.systemAdjustingTimer != nil {
-		m.systemAdjustingTimer.Stop()
-		m.systemAdjustingTimer = nil
-	}
-	m.systemAdjustingTimerMu.Unlock()
 
 	if m.autoBrightnessManager != nil {
 		err := m.autoBrightnessManager.Cleanup()

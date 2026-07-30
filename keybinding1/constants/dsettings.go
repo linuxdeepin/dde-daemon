@@ -36,6 +36,5 @@ const (
 	DSettingsKeyOsdAdjustBrightnessState = "osdAdjustBrightnessEnabled"
 	DSettingsKeyOsdAdjustVolumeState     = "osdAdjustVolumeEnabled"
 
-	DSettingsKeyAmbientLightAdjustBrightness = "ambientLightAdjustBrightness"
-	DSettingsKeyViewZoomEnable               = "viewZoomEnable"
+	DSettingsKeyViewZoomEnable = "viewZoomEnable"
 )

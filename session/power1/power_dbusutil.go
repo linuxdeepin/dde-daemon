@@ -106,19 +106,6 @@ func (v *Manager) emitPropChangedWarnLevel(value WarnLevel) error {
 	return v.service.EmitPropertyChanged(v, "WarnLevel", value)
 }
 
-func (v *Manager) setPropHasAmbientLightSensor(value bool) (changed bool) {
-	if v.HasAmbientLightSensor != value {
-		v.HasAmbientLightSensor = value
-		v.emitPropChangedHasAmbientLightSensor(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedHasAmbientLightSensor(value bool) error {
-	return v.service.EmitPropertyChanged(v, "HasAmbientLightSensor", value)
-}
-
 func (v *Manager) setPropLinePowerScreensaverDelay(value int) (changed bool) {
 	if v.LinePowerScreensaverDelay != value {
 		v.LinePowerScreensaverDelay = value
@@ -351,19 +338,6 @@ func (v *Manager) setPropLowPowerAction(value int32) (changed bool) {
 
 func (v *Manager) emitPropChangedLowPowerAction(value int32) error {
 	return v.service.EmitPropertyChanged(v, "LowPowerAction", value)
-}
-
-func (v *Manager) setPropAmbientLightAdjustBrightness(value bool) (changed bool) {
-	if v.AmbientLightAdjustBrightness != value {
-		v.AmbientLightAdjustBrightness = value
-		v.emitPropChangedAmbientLightAdjustBrightness(value)
-		return true
-	}
-	return false
-}
-
-func (v *Manager) emitPropChangedAmbientLightAdjustBrightness(value bool) error {
-	return v.service.EmitPropertyChanged(v, "AmbientLightAdjustBrightness", value)
 }
 
 func (v *Manager) setPropIsHighPerformanceSupported(value bool) (changed bool) {

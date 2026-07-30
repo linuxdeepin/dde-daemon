@@ -77,7 +77,6 @@ type Manager struct {
 	objLogin             login1.Manager
 	ddeShutdown          shutdownfront.ShutdownFront
 	displayManager       DisplayManager.DisplayManager
-	lightSensorEnabled   bool
 
 	sessionManager     sessionmanager.SessionManager
 	currentSessionPath dbus.ObjectPath
@@ -112,9 +111,6 @@ type Manager struct {
 	UseWayland bool
 	// 警告级别
 	WarnLevel WarnLevel
-
-	// 是否有环境光传感器
-	HasAmbientLightSensor bool
 
 	// 电池是否可用，是否存在
 
@@ -185,16 +181,11 @@ type Manager struct {
 	// 低电量操作
 	LowPowerAction int32 `prop:"access:rw"`
 
-	savingModeBrightnessDropPercent int32 // 用来接收和保存来自system power中降低的屏幕亮度值
-
-	AmbientLightAdjustBrightness bool `prop:"access:rw"`
 	// dbusutil-gen: ignore-below
 
-	ambientLightClaimed bool
-	lightLevelUnit      string
-	lidSwitchState      uint
-	sessionActive       bool
-	sessionActiveTime   time.Time
+	lidSwitchState    uint
+	sessionActive     bool
+	sessionActiveTime time.Time
 
 	// if prepare suspend, ignore idle off
 	prepareSuspend       int
@@ -346,14 +337,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 
 	logger.Info("LidIsPresent", m.LidIsPresent)
 
-	if m.lightSensorEnabled {
-		m.HasAmbientLightSensor, _ = helper.SensorProxy.HasAmbientLight().Get(0)
-		logger.Debug("HasAmbientLightSensor:", m.HasAmbientLightSensor)
-		if m.HasAmbientLightSensor {
-			m.lightLevelUnit, _ = helper.SensorProxy.LightLevelUnit().Get(0)
-		}
-	}
-
 	m.sessionActive, _ = helper.SessionWatcher.IsActive().Get(0)
 
 	// init battery display
@@ -385,7 +368,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 }
 
 func (m *Manager) init() {
-	m.claimOrReleaseAmbientLight()
 	m.sessionSigLoop.Start()
 	m.systemSigLoop.Start()
 
@@ -417,40 +399,9 @@ func (m *Manager) init() {
 		logger.Warning(err)
 	}
 
-	if m.lightSensorEnabled {
-		err = m.helper.SensorProxy.LightLevel().ConnectChanged(func(hasValue bool, value float64) {
-			if !hasValue {
-				return
-			}
-			m.handleLightLevelChanged(value)
-		})
-		if err != nil {
-			logger.Warning(err)
-		}
-	}
-
 	_, err = m.helper.SysDBusDaemon.ConnectNameOwnerChanged(
 		func(name string, oldOwner string, newOwner string) {
-			if m.lightSensorEnabled {
-				serviceName := m.helper.SensorProxy.ServiceName_()
-				if name == serviceName && newOwner != "" {
-					logger.Debug("sensorProxy restarted")
-					hasSensor, _ := m.helper.SensorProxy.HasAmbientLight().Get(0)
-					var lightLevelUnit string
-					if hasSensor {
-						lightLevelUnit, _ = m.helper.SensorProxy.LightLevelUnit().Get(0)
-					}
-
-					m.PropsMu.Lock()
-					m.setPropHasAmbientLightSensor(hasSensor)
-					m.ambientLightClaimed = false
-					m.lightLevelUnit = lightLevelUnit
-					m.PropsMu.Unlock()
-
-					m.claimOrReleaseAmbientLight()
-				}
-			}
-			if name == m.helper.LoginManager.ServiceName_() && oldOwner != "" && newOwner == "" {
+		if name == m.helper.LoginManager.ServiceName_() && oldOwner != "" && newOwner == "" {
 				if m.prepareSuspend == suspendStatePrepare {
 					logger.Info("auto handleWakeup if systemd-logind coredump")
 					m.handleWakeup()
@@ -507,7 +458,6 @@ func (m *Manager) init() {
 		m.PropsMu.Unlock()
 
 		logger.Debug("session active changed to:", value)
-		m.claimOrReleaseAmbientLight()
 		// 出发关机定时器
 		m.scheduledShutdown(Init)
 	})
@@ -810,18 +760,6 @@ func (m *Manager) initDBusPropCallback() {
 			return dbusutil.ToError(err)
 		})
 
-		err = so.SetWriteCallback(m, "AmbientLightAdjustBrightness", func(write *dbusutil.PropertyWrite) *dbus.Error {
-			value, ok := write.Value.(bool)
-			if !ok {
-				logger.Warning("Type is not bool")
-			} else {
-				logger.Info("AmbientLightAdjustBrightness change to", value)
-			}
-			m.setPropAmbientLightAdjustBrightness(value)
-			err = m.savePowerDsgConfig(dsettingAmbientLightAdjustBrightness)
-			return dbusutil.ToError(err)
-		})
-
 		err = so.SetWriteCallback(m, "LinePowerShortIdleDelay", func(write *dbusutil.PropertyWrite) *dbus.Error {
 			value, ok := write.Value.(int32)
 			if !ok {
@@ -875,7 +813,6 @@ func (m *Manager) initDBusPropCallback() {
 
 func (m *Manager) destroy() {
 	m.destroySubmodules()
-	m.releaseAmbientLight()
 	m.permitLogind()
 
 	if m.helper != nil {
@@ -923,7 +860,6 @@ func (m *Manager) Reset() *dbus.Error {
 		dsettingLowPowerNotifyEnable,
 		dsettingLowPowerNotifyThreshold,
 		dsettingPercentageAction,
-		dsettingPowerSavingModeBrightnessDropPercent,
 
 		dsettingsLinePowerShortIdleDelay,
 		dsettingsBatteryShortIdleDelay,
@@ -1042,8 +978,6 @@ func (m *Manager) initDsg() {
 			m.LinePowerLockDelay = int(transTypeToInt(data.Value(), 0))
 		case dsettingBatteryLockDelay:
 			m.BatteryLockDelay = int(transTypeToInt(data.Value(), 0))
-		case dsettingAmbientLightAdjustBrightness:
-			m.AmbientLightAdjustBrightness = data.Value().(bool)
 		case dsettingScreenBlackLock:
 			m.ScreenBlackLock = data.Value().(bool)
 		case dsettingSleepLock:
@@ -1060,18 +994,12 @@ func (m *Manager) initDsg() {
 			m.BatteryPressPowerBtnAction = int32(transTypeToInt(data.Value(), 0))
 		case dsettingLowPowerNotifyEnable:
 			m.LowPowerNotifyEnable = data.Value().(bool)
-		case dsettingLightSensorEnabled:
-			m.lightSensorEnabled = data.Value().(bool)
 		case dsettingHighPerformanceEnabled:
 			m.gsHighPerformanceEnabled = data.Value().(bool)
 		case dsettingLowPowerNotifyThreshold:
 			m.LowPowerNotifyThreshold = int32(transTypeToInt(data.Value(), 0))
 		case dsettingPercentageAction:
 			m.LowPowerAutoSleepThreshold = int32(transTypeToInt(data.Value(), 0))
-		case dsettingPowerSavingModeBrightnessDropPercent:
-			if init {
-				m.savingModeBrightnessDropPercent = int32(transTypeToInt(data.Value(), 0))
-			}
 		case dsettingsLinePowerShortIdleDelay:
 			m.LinePowerShortIdleDelay = int(transTypeToInt(data.Value(), 300))
 		case dsettingsBatteryShortIdleDelay:
@@ -1083,7 +1011,6 @@ func (m *Manager) initDsg() {
 
 	}
 
-	getDsPowerConfig(dsettingPowerSavingModeBrightnessDropPercent, true)
 	getDsPowerConfig(dsettingCustomShutdownWeekDays, true)
 	getDsPowerConfig(dsettingShutdownCountdown, true)
 	getDsPowerConfig(dsettingShutdownRepetition, true)
@@ -1098,7 +1025,6 @@ func (m *Manager) initDsg() {
 	getDsPowerConfig(dsettingLinePowerSleepDelay, true)
 	getDsPowerConfig(dsettingLinePowerLockDelay, true)
 	getDsPowerConfig(dsettingBatteryLockDelay, true)
-	getDsPowerConfig(dsettingAmbientLightAdjustBrightness, true)
 	getDsPowerConfig(dsettingScreenBlackLock, true)
 	getDsPowerConfig(dsettingSleepLock, true)
 	getDsPowerConfig(dsettingLowPowerAction, true)
@@ -1107,7 +1033,6 @@ func (m *Manager) initDsg() {
 	getDsPowerConfig(dsettingBatteryLidClosedAction, true)
 	getDsPowerConfig(dsettingBatteryPressPowerButton, true)
 	getDsPowerConfig(dsettingLowPowerNotifyEnable, true)
-	getDsPowerConfig(dsettingLightSensorEnabled, true)
 	getDsPowerConfig(dsettingHighPerformanceEnabled, true)
 	getDsPowerConfig(dsettingLowPowerNotifyThreshold, true)
 	getDsPowerConfig(dsettingPercentageAction, true)
@@ -1174,8 +1099,6 @@ func (m *Manager) savePowerDsgConfig(key string) (err error) {
 		value = m.LinePowerLockDelay
 	case dsettingBatteryLockDelay:
 		value = m.BatteryLockDelay
-	case dsettingAmbientLightAdjustBrightness:
-		value = m.AmbientLightAdjustBrightness
 	case dsettingScreenBlackLock:
 		value = m.ScreenBlackLock
 	case dsettingSleepLock:
@@ -1192,8 +1115,6 @@ func (m *Manager) savePowerDsgConfig(key string) (err error) {
 		value = m.BatteryPressPowerBtnAction
 	case dsettingLowPowerNotifyEnable:
 		value = m.LowPowerNotifyEnable
-	case dsettingLightSensorEnabled:
-		value = m.lightSensorEnabled
 	case dsettingHighPerformanceEnabled:
 		value = m.gsHighPerformanceEnabled
 	case dsettingLowPowerNotifyThreshold:
