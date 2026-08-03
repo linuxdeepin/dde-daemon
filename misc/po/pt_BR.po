@@ -357,7 +357,7 @@ msgstr "OCR (Imagem em Texto)"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:25
 msgid "Scrollshot"
-msgstr "Captura de tela estendida"
+msgstr "Captura de tela por rolagem"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:26
 msgid "File manager"
