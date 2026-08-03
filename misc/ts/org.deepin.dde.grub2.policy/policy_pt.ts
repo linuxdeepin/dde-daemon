@@ -4,22 +4,22 @@
 		<message>
 			<location filename="org.deepin.dde.grub2!message" line="0"/>
 			<source>Authentication is required to change the grub configuration</source>
-			<translation type="unfinished"/>
+			<translation>Para mudar a configuração do grub é necessária autenticação</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.grub2!description" line="0"/>
 			<source>Change the grub configuration</source>
-			<translation type="unfinished"/>
+			<translation>Modificar a configuração do grub</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.grub2.prepare-gfxmode-detect!message" line="0"/>
 			<source>Authentication is required to prepare grub display resolution detection</source>
-			<translation type="unfinished"/>
+			<translation>Para preparar o grub para deteção de resolução de ecrã é necessária autenticação</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.grub2.prepare-gfxmode-detect!description" line="0"/>
 			<source>Prepare grub display resolution detection</source>
-			<translation type="unfinished"/>
+			<translation>Preparar grub para deteção de resolução de ecrã</translation>
 		</message>
 	</context>
 </TS>
