@@ -64,22 +64,22 @@
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to enable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>Para ativar o código de início de sessão no WeChat é necessária autenticação</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-wechat-auth!description" line="0"/>
 			<source>Enable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>Ativar Código de início de sessão no WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!message" line="0"/>
 			<source>Authentication is required to disable WeChat code login</source>
-			<translation type="unfinished"/>
+			<translation>Para desativar o código de inicio de sessão no WeChat é necessário autenticação</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.disable-wechat-auth!description" line="0"/>
 			<source>Disable WeChat Code Login</source>
-			<translation type="unfinished"/>
+			<translation>Desativar Código de Início de Sessão no WeChat</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.accounts.enable-nopass-login!message" line="0"/>
