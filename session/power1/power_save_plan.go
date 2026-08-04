@@ -1089,13 +1089,7 @@ func (psp *powerSavePlan) handleIdleOff() {
 		return
 	}
 
-	if psp.modeBeforeIdle != "" && psp.modeBeforeIdle != "performance" {
-		err := psp.manager.helper.Power.SetMode(0, psp.modeBeforeIdle)
-		if err != nil {
-			logger.Warning(err)
-		}
-		psp.modeBeforeIdle = ""
-	}
+	psp.modeBeforeIdle = ""
 
 	psp.manager.setPrepareSuspend(suspendStateFinish)
 	logger.Info("HandleIdleOff")
