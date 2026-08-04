@@ -239,11 +239,11 @@ msgstr "Przywróć okno"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
-msgstr "Podział do lewej wybranego okna"
+msgstr "Podział do lewej bieżącego okna"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
-msgstr "Podział do prawej wybranego okna"
+msgstr "Podział do prawej bieżącego okna"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"

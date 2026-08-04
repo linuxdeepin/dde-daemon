@@ -248,11 +248,11 @@ msgstr "Janela Atual Dividida à Direita"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
-msgstr "Mostrar visualização multitarefa"
+msgstr "Exibir visão multitarefa"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
-msgstr "Ocultar visualização multitarefa"
+msgstr "Ocultar visão multitarefa"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
@@ -357,7 +357,7 @@ msgstr "OCR (Imagem em Texto)"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:25
 msgid "Scrollshot"
-msgstr "Captura de tela estendida"
+msgstr "Captura de tela por rolagem"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:26
 msgid "File manager"
@@ -377,7 +377,7 @@ msgstr "Desligar Rapidamente a Tela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:30
 msgid "System Monitor"
-msgstr "Monitor de Sistema"
+msgstr "Monitor do sistema"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:31
 msgid "Deepin Picker"
