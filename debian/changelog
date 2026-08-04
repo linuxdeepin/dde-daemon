@@ -1,3 +1,13 @@
+dde-daemon (6.1.100) unstable; urgency=medium
+
+  * fix: improve temporary background file creation in theme
+  * feat: add polkit authorization for uadp manager methods
+  * fix: improve gfxmode signal file creation safety
+  * feat: support brightness via ddcutil
+  * refactor(display): refactor auto brightness logic
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 04 Aug 2026 17:39:36 +0800
+
 dde-daemon (6.1.99) unstable; urgency=medium
 
   * feat: add services and desktop entry to whitelist
