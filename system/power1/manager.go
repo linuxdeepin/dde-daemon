@@ -860,9 +860,14 @@ func (m *Manager) doSetMode(mode string) {
 
 	logger.Info(" doSetMode, shortIdleState : ", m.ShortIdleState)
 	// 如果恢复性能模式时，当前处于短idle状态，则需要恢复模式后，将TlpMode设置为节能模式
+	// 在延时回调中重新检查短idle状态，避免在延时期间短idle退出后，错误地恢复节能模式
 	if m.ShortIdleState {
 		// 连续两次调用deepin-power-control，有概率会设置失败，因此使用延时500ms
 		time.AfterFunc(500*time.Millisecond, func() {
+			if !m.ShortIdleState {
+				logger.Info("shortIdle state has changed, skip restoring power save mode")
+				return
+			}
 			err := m.setTlpMode(ddePowerSave)
 			if err != nil {
 				logger.Warning(err)
