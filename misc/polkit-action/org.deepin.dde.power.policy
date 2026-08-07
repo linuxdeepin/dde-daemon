@@ -27,4 +27,22 @@
                 <description xml:lang="fi">Check Authentication</description>
                 <message xml:lang="fi">Tämän toiminnon suorittaminen edellyttää todennusta</message>
         </action>
+        <action id="org.deepin.dde.power.set-short-idle-state">
+                <description>Set short idle state</description>
+                <message>Authentication is required to set the short idle state</message>
+                <defaults>
+                        <allow_any>no</allow_any>
+                        <allow_inactive>no</allow_inactive>
+                        <allow_active>yes</allow_active>
+                </defaults>
+        </action>
+        <action id="org.deepin.dde.power.set-tlp-mode">
+                <description>Set TLP power mode</description>
+                <message>Authentication is required to set the TLP power mode</message>
+                <defaults>
+                        <allow_any>no</allow_any>
+                        <allow_inactive>no</allow_inactive>
+                        <allow_active>yes</allow_active>
+                </defaults>
+        </action>
 </policyconfig>

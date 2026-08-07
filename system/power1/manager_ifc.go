@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	dbus "github.com/godbus/dbus/v5"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -16,6 +17,10 @@ const (
 	dbusServiceName = "org.deepin.dde.Power1"
 	dbusPath        = "/org/deepin/dde/Power1"
 	dbusInterface   = dbusServiceName
+
+	// polkit action ids used by checkAuthorization for the Power1 setters
+	actionSetTlpMode        = "org.deepin.dde.power.set-tlp-mode"
+	actionSetShortIdleState = "org.deepin.dde.power.set-short-idle-state"
 )
 
 func (*Manager) GetInterfaceName() string {
@@ -106,13 +111,23 @@ func (m *Manager) SetMode(mode string) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) SetTlpMode(mode string) *dbus.Error {
+func (m *Manager) SetTlpMode(sender dbus.Sender, mode string) *dbus.Error {
 	logger.Info("SetTlpMode : ", mode)
+	err := checkAuthorization(actionSetTlpMode, string(sender))
+	if err != nil {
+		logger.Warningf("checkAuthorization failed, err: %v, actionId=%v", err, actionSetTlpMode)
+		return dbusutil.ToError(err)
+	}
 	return dbusutil.ToError(m.setTlpMode(mode))
 }
 
-func (m *Manager) SetShortIdleState(state bool) *dbus.Error {
+func (m *Manager) SetShortIdleState(sender dbus.Sender, state bool) *dbus.Error {
 	logger.Info(" SetShortIdleState : ", state)
+	err := checkAuthorization(actionSetShortIdleState, string(sender))
+	if err != nil {
+		logger.Warningf("checkAuthorization failed, err: %v, actionId=%v", err, actionSetShortIdleState)
+		return dbusutil.ToError(err)
+	}
 	m.setShortIdleState(state)
 	return nil
 }
@@ -139,5 +154,29 @@ func (m *Manager) LockCpuFreq(governor string, lockTime int32) *dbus.Error {
 	// 	})
 	// }
 
+	return nil
+}
+
+// checkAuthorization verifies that the caller identified by sysBusName is
+// allowed to perform the polkit action identified by actionId. It mirrors
+// the pattern used by system/airplane_mode1 so that active local users are
+// allowed without an authentication dialog (allow_active: yes).
+func checkAuthorization(actionId string, sysBusName string) error {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+
+	ret, err := authority.CheckAuthorization(0, subject, actionId,
+		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		return err
+	}
+	if !ret.IsAuthorized {
+		return errors.New("not authorized")
+	}
 	return nil
 }

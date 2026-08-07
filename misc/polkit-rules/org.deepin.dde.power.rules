@@ -1,0 +1,11 @@
+polkit.addRule(function(action, subject) {
+    // Allow root internal callers (e.g. dde-system-daemon invoking
+    // org.deepin.dde.Power1.SetShortIdleState over the system bus) to set
+    // the short idle state. Root has no active local session, so the
+    // allow_active:yes default in the .policy does not match and would
+    // otherwise fall back to allow_any:no and silently deny the call.
+    if (action.id === "org.deepin.dde.power.set-short-idle-state" &&
+        subject.user === "root") {
+        return polkit.Result.YES;
+    }
+});

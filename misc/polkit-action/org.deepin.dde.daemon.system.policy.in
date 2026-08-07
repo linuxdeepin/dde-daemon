@@ -24,5 +24,23 @@
             <allow_active>auth_admin</allow_active>
         </defaults>
     </action>
+    <action id="org.deepin.dde.daemon.set-idle-state">
+        <description>Set short idle state</description>
+        <message>Authentication is required to set the short idle state</message>
+        <defaults>
+            <allow_any>no</allow_any>
+            <allow_inactive>no</allow_inactive>
+            <allow_active>yes</allow_active>
+        </defaults>
+    </action>
+    <action id="org.deepin.dde.daemon.set-screen-state">
+        <description>Set screen idle state</description>
+        <message>Authentication is required to set the screen idle state</message>
+        <defaults>
+            <allow_any>no</allow_any>
+            <allow_inactive>no</allow_inactive>
+            <allow_active>yes</allow_active>
+        </defaults>
+    </action>
 
 </policyconfig>

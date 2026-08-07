@@ -28,6 +28,10 @@ const (
 	dsettingsPowerName           = "org.deepin.dde.daemon.power"
 	dsettingsIdleStatePath       = "idleStatePath"
 	dsettingsIdleScreenStatePath = "idleScreenStatePath"
+
+	// polkit action ids used by checkAuth for SetIdleState / SetScreenState
+	actionSetIdleState   = "org.deepin.dde.daemon.set-idle-state"
+	actionSetScreenState = "org.deepin.dde.daemon.set-screen-state"
 )
 
 func isStrInList(item string, items []string) bool {
@@ -172,12 +176,20 @@ func (d *Daemon) setState(file string, state bool) error {
 	return nil
 }
 
-func (d *Daemon) SetIdleState(state bool) *dbus.Error {
+func (d *Daemon) SetIdleState(sender dbus.Sender, state bool) *dbus.Error {
+	err := checkAuth(actionSetIdleState, string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	logger.Infof("SetIdleState %s try set state: %v", d.idleStatePath, state)
 	return dbusutil.ToError(d.setState(d.idleStatePath, state))
 }
 
-func (d *Daemon) SetScreenState(state bool) *dbus.Error {
+func (d *Daemon) SetScreenState(sender dbus.Sender, state bool) *dbus.Error {
+	err := checkAuth(actionSetScreenState, string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
 	logger.Infof("SetScreenState %s try set state: %v", d.idleScreenStatePath, state)
 	return dbusutil.ToError(d.setState(d.idleScreenStatePath, state))
 }
