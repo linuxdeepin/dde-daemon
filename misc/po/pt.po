@@ -286,15 +286,15 @@ msgstr "Mostrar/Esconder área de transferência"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "Mostrar/Esconder grande pesquisa"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "Mostrar/Esconder centro de notificação"
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
-msgstr ""
+msgstr "Desativar"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -302,7 +302,7 @@ msgstr "Espaço insuficiente no disco, limpe-o atempadamente!"
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "Ir para limpeza"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
@@ -411,7 +411,7 @@ msgstr "Alterar esquema"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
-msgstr ""
+msgstr "Alterar múltiplos ecrãs"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
@@ -447,7 +447,7 @@ msgstr "Alternar janelas em ordem inversa"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "Ativar menu de janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
@@ -503,23 +503,23 @@ msgstr "Mostrar área de trabalho virtual"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
-msgstr ""
+msgstr "Aumentar Zoom"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
-msgstr ""
+msgstr "Diminuir Zoom"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "Aumentar para o Tamanho Atual"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
-msgstr ""
+msgstr "Janela Quick Tile Esquerda"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
-msgstr ""
+msgstr "Janela Quick Tile Direita"
 
 #: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
