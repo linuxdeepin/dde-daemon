@@ -249,15 +249,15 @@ msgstr "Mostrar vista multi-tarefa"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "Esconder vista multi-tarefa"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "Trocar para o ambiente de trabalho anterior"
 
 #: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "Trocar para o ambiente de trabalho seguinte"
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -266,23 +266,23 @@ msgstr "Mostrar ambiente de trabalho"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
-msgstr ""
+msgstr "Esconder ambiente de trabalho"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "Mostrar/Esconder lançador"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "Botão direito do rato premido"
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
-msgstr ""
+msgstr "Botão direito do rato libertado"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "Mostrar/Esconder área de transferência"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
