@@ -558,27 +558,29 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"Não pode correr o não-verificado \"%s\", mas pode alterar as definições no "
+"Centro de Segurança."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "Avançar"
 
 #: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "O sistema vai encerrar automaticamente depois de %d s"
 
 #: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "Encerramento Agendado"
 
 #: ../../session/power1/manager.go:1257
 msgid "Cancle"
-msgstr ""
+msgstr "Cancelar"
 
 #: ../../session/power1/manager.go:1257
 msgid "Shut down"
-msgstr ""
+msgstr "Encerrar"
 
 #: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
