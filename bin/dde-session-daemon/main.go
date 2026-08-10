@@ -163,6 +163,11 @@ func main() {
 			DBusPath:      "/org/deepin/dde/Daemon1",
 			DBusInterface: "org.deepin.dde.Daemon1",
 		},
+		{
+			DBusName:      "org.deepin.dde.InputDevices1",
+			DBusPath:      "/org/deepin/dde/InputDevices1",
+			DBusInterface: "org.deepin.dde.InputDevices1",
+		},
 	})
 	os.Args = cleanedArgs
 	if err != nil {

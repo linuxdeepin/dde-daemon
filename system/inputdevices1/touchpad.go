@@ -5,6 +5,7 @@
 package inputdevices1
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -47,14 +49,16 @@ SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="*ps/2*", ENV{LIBINPUT_IGNORE
 
 type Touchpad struct {
 	service     *dbusutil.Service
+	allowCallers  *securityloader.AllowCallerRegistry
 	Enable      bool
 	DeviceList  []string
 	udevMonitor *udevMonitor
 }
 
-func newTouchpad(service *dbusutil.Service) *Touchpad {
+func newTouchpad(service *dbusutil.Service, allowCallers *securityloader.AllowCallerRegistry) *Touchpad {
 	t := &Touchpad{
-		service: service,
+		service:     service,
+		allowCallers: allowCallers,
 		Enable:  getDsgConf(),
 	}
 
@@ -79,7 +83,12 @@ func (t *Touchpad) handleDeviceChange(devices []string) {
 	logger.Infof("touchpad devices updated: %d device(s)", len(devices))
 }
 
-func (t *Touchpad) SetTouchpadEnable(enabled bool) *dbus.Error {
+func (t *Touchpad) SetTouchpadEnable(sender dbus.Sender, enabled bool) *dbus.Error {
+	result, _ := t.allowCallers.Authorize(securityloader.InputDevicesScope, sender)
+	if result == securityloader.AuthDenied {
+		logger.Warning("SetTouchpadEnable access denied:", err)
+		return dbusutil.ToError(err)
+	}
 	err := t.setTouchpadEnable(enabled)
 	return dbusutil.ToError(err)
 }

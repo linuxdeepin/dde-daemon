@@ -9,6 +9,11 @@ import (
 func (v *InputDevices) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
+			Name:   "SetAllowCaller",
+			Fn:     v.SetAllowCaller,
+			InArgs: []string{"uniqueName"},
+		},
+		{
 			Name:   "SetWakeupDevices",
 			Fn:     v.SetWakeupDevices,
 			InArgs: []string{"path", "value"},
