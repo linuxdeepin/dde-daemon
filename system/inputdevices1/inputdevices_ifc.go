@@ -6,8 +6,13 @@ package inputdevices1
 
 import (
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
+
+func (m *InputDevices) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
+	return dbusutil.ToError(m.allowCallers.AddCaller(securityloader.InputDevicesScope, sender, uniqueName))
+}
 
 func (m *InputDevices) SetWakeupDevices(sender dbus.Sender, path string, value string) *dbus.Error {
 	err := m.setWakeupDevices(path, value)
