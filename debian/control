@@ -53,6 +53,7 @@ Build-Depends:
  libxtst-dev,
  libddcutil-dev,
  python3,
+ deepin-security-loader,
 Standards-Version: 4.5.1
 Homepage: http://www.deepin.org
 
@@ -67,6 +68,7 @@ Depends:
  deepin-desktop-schemas (>> 5.1.2+),
  deepin-installer-timezones,
  deepin-sound-theme,
+ deepin-security-loader,
  dmidecode,
  libglib2.0-bin,
  hwinfo,
