@@ -63,6 +63,7 @@ Requires:       xdotool
 Requires:       gnome-keyring-pam
 Requires:       imwheel
 Requires:       deepin-installer-timezones
+Requires:       deepin-security-loader
 
 Recommends:     lshw
 Recommends:     iso-codes
@@ -78,10 +79,10 @@ Daemon handling the DDE session settings
 patch langselector/locale.go < rpm/locale.go.patch
 patch accounts/users/passwd.go < rpm/passwd.go.patch
 
-# Fix library exec path
-sed -i '/deepin/s|lib|libexec|' Makefile
+# Fix library exec path while preserving security-loader targets under
+# /usr/libexec/deepin.
 sed -i '/${DESTDIR}\/usr\/lib\/deepin-daemon\/service-trigger/s|${DESTDIR}/usr/lib/deepin-daemon/service-trigger|${DESTDIR}/usr/libexec/deepin-daemon/service-trigger|g' Makefile
-sed -i '/${DESTDIR}${PREFIX}\/lib\/deepin-daemon/s|${DESTDIR}${PREFIX}/lib/deepin-daemon|${DESTDIR}${PREFIX}/usr/libexec/deepin-daemon|g' Makefile
+sed -i 's|${DESTDIR}${PREFIX}/lib/deepin-daemon|${DESTDIR}${PREFIX}/libexec/deepin-daemon|g' Makefile
 sed -i 's|lib/NetworkManager|libexec|' network/utils_test.go
 
 for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
@@ -110,7 +111,8 @@ After=user.slice dbus.socket
 [Service]
 Type=dbus
 BusName=org.deepin.dde.LockService1
-ExecStart=%{_libexecdir}/%{sname}/dde-lockservice
+ExecStart=%{_libexecdir}/%{sname}/
+%{_libexecdir}/deepin/dde-lockservice
 
 [Install]
 WantedBy=graphical.target
