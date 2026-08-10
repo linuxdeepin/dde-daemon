@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	dbus "github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -106,7 +107,16 @@ func (m *Manager) SetMode(mode string) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) SetTlpMode(mode string) *dbus.Error {
+func (m *Manager) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
+	return dbusutil.ToError(m.allowCallers.AddCaller(securityloader.PowerScope, sender, uniqueName))
+}
+
+func (m *Manager) SetTlpMode(sender dbus.Sender, mode string) *dbus.Error {
+	result, _ := m.allowCallers.Authorize(securityloader.PowerScope, sender)
+	if result == securityloader.AuthDenied {
+		logger.Warning("SetTlpMode access denied:", err)
+		return dbusutil.ToError(err)
+	}
 	logger.Info("SetTlpMode : ", mode)
 	return dbusutil.ToError(m.setTlpMode(mode))
 }

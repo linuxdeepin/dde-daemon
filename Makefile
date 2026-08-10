@@ -166,6 +166,11 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
 	cp -f out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 
+	rm -f ${DESTDIR}${PREFIX}/lib/deepin-daemon/dde-session-daemon
+	cp -f out/bin/dde-session-daemon ${DESTDIR}${PREFIX}/libexec/deepin/
+	install -m755 misc/scripts/dde-session-daemon-loader-wrapper \
+		${DESTDIR}${PREFIX}/lib/deepin-daemon/dde-session-daemon
+
 	mkdir -pv ${DESTDIR}${PREFIX}/share/locale
 	cp -r out/locale/* ${DESTDIR}${PREFIX}/share/locale
 

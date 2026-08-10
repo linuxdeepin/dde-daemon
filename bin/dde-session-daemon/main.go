@@ -26,6 +26,7 @@ import (
 	"github.com/linuxdeepin/dde-api/userenv"
 	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/dde-daemon/loader"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -156,6 +157,22 @@ func init() {
 }
 
 func main() {
+	cleanedArgs, loadedBySecurityLoader, err := securityloader.Handshake(os.Args, []securityloader.Destination{
+		{
+			DBusName:      "org.deepin.dde.Daemon1",
+			DBusPath:      "/org/deepin/dde/Daemon1",
+			DBusInterface: "org.deepin.dde.Daemon1",
+		},
+	})
+	os.Args = cleanedArgs
+	if err != nil {
+		if loadedBySecurityLoader {
+			logger.Error("security-loader handshake failed, refusing to start:", err)
+			os.Exit(1)
+		}
+		logger.Warning("security-loader handshake failed:", err)
+	}
+
 	logger.SetLogLevel(log.LevelInfo)
 
 	if isInShutdown() {

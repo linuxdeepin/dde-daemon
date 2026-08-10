@@ -72,6 +72,11 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"enable"},
 		},
 		{
+			Name:   "SetAllowCaller",
+			Fn:     v.SetAllowCaller,
+			InArgs: []string{"uniqueName"},
+		},
+		{
 			Name:   "SetIdleState",
 			Fn:     v.SetIdleState,
 			InArgs: []string{"state"},
