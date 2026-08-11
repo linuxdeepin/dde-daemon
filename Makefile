@@ -141,7 +141,7 @@ clean-po:
 		mv "$$po.tmp" "$$po"; \
 	done
 
-POLICIES=accounts grub2 daemon.system
+POLICIES=accounts grub2 daemon.system hardware-control
 ts:
 	for i in $(POLICIES); do \
 		deepin-policy-ts-convert policy2ts misc/polkit-action/org.deepin.dde.$$i.policy.in misc/ts/org.deepin.dde.$$i.policy; \
