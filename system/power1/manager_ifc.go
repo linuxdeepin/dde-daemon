@@ -10,6 +10,7 @@ import (
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/securityloader"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -113,9 +114,14 @@ func (m *Manager) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Er
 
 func (m *Manager) SetTlpMode(sender dbus.Sender, mode string) *dbus.Error {
 	result, _ := m.allowCallers.Authorize(securityloader.PowerScope, sender)
-	if result == securityloader.AuthDenied {
-		logger.Warning("SetTlpMode access denied:", err)
-		return dbusutil.ToError(err)
+	switch result {
+	case securityloader.AuthDenied:
+		logger.Warning("SetTlpMode access denied")
+		return dbusutil.ToError(errors.New("access denied"))
+	case securityloader.AuthNotEnabled:
+		if ok, er := checkPowerAuth(string(sender)); !ok || er != nil {
+			return dbusutil.ToError(er)
+		}
 	}
 	logger.Info("SetTlpMode : ", mode)
 	return dbusutil.ToError(m.setTlpMode(mode))
@@ -125,6 +131,23 @@ func (m *Manager) SetShortIdleState(state bool) *dbus.Error {
 	logger.Info(" SetShortIdleState : ", state)
 	m.setShortIdleState(state)
 	return nil
+}
+
+func checkPowerAuth(sysBusName string) (bool, error) {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return false, err
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+	result, err := authority.CheckAuthorization(0, subject,
+		"org.deepin.dde.power.doAction",
+		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		return false, err
+	}
+	return result.IsAuthorized, nil
 }
 
 func (m *Manager) LockCpuFreq(governor string, lockTime int32) *dbus.Error {

@@ -14,6 +14,7 @@ import (
 	"github.com/godbus/dbus/v5"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/dde-daemon/securityloader"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -85,9 +86,14 @@ func (t *Touchpad) handleDeviceChange(devices []string) {
 
 func (t *Touchpad) SetTouchpadEnable(sender dbus.Sender, enabled bool) *dbus.Error {
 	result, _ := t.allowCallers.Authorize(securityloader.InputDevicesScope, sender)
-	if result == securityloader.AuthDenied {
-		logger.Warning("SetTouchpadEnable access denied:", err)
-		return dbusutil.ToError(err)
+	switch result {
+	case securityloader.AuthDenied:
+		logger.Warning("SetTouchpadEnable access denied")
+		return dbusutil.ToError(errors.New("access denied"))
+	case securityloader.AuthNotEnabled:
+		if ok, er := checkTouchpadAuth(string(sender)); !ok || er != nil {
+			return dbusutil.ToError(er)
+		}
 	}
 	err := t.setTouchpadEnable(enabled)
 	return dbusutil.ToError(err)
@@ -321,4 +327,21 @@ func (t *Touchpad) destroy() {
 		t.udevMonitor.destroy()
 		t.udevMonitor = nil
 	}
+}
+
+func checkTouchpadAuth(sysBusName string) (bool, error) {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return false, err
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+	result, err := authority.CheckAuthorization(0, subject,
+		"org.deepin.dde.inputdevices.set-touchpad",
+		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		return false, err
+	}
+	return result.IsAuthorized, nil
 }

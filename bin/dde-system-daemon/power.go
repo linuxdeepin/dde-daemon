@@ -16,6 +16,7 @@ import (
 	"github.com/godbus/dbus/v5"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/dde-daemon/securityloader"
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/utils"
 )
@@ -179,9 +180,14 @@ func (d *Daemon) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Err
 
 func (d *Daemon) SetIdleState(sender dbus.Sender, state bool) *dbus.Error {
 	result, _ := d.allowCallers.Authorize(securityloader.DaemonScope, sender)
-	if result == securityloader.AuthDenied {
-		logger.Warning("SetIdleState access denied:", err)
-		return dbusutil.ToError(err)
+	switch result {
+	case securityloader.AuthDenied:
+		logger.Warning("SetIdleState access denied")
+		return dbusutil.ToError(errors.New("access denied"))
+	case securityloader.AuthNotEnabled:
+		if ok, er := checkDaemonAuth(string(sender), "org.deepin.dde.daemon.set-idle-state"); !ok || er != nil {
+			return dbusutil.ToError(er)
+		}
 	}
 	logger.Infof("SetIdleState %s try set state: %v", d.idleStatePath, state)
 	return dbusutil.ToError(d.setState(d.idleStatePath, state))
@@ -189,10 +195,31 @@ func (d *Daemon) SetIdleState(sender dbus.Sender, state bool) *dbus.Error {
 
 func (d *Daemon) SetScreenState(sender dbus.Sender, state bool) *dbus.Error {
 	result, _ := d.allowCallers.Authorize(securityloader.DaemonScope, sender)
-	if result == securityloader.AuthDenied {
-		logger.Warning("SetScreenState access denied:", err)
-		return dbusutil.ToError(err)
+	switch result {
+	case securityloader.AuthDenied:
+		logger.Warning("SetScreenState access denied")
+		return dbusutil.ToError(errors.New("access denied"))
+	case securityloader.AuthNotEnabled:
+		if ok, er := checkDaemonAuth(string(sender), "org.deepin.dde.daemon.set-screen-state"); !ok || er != nil {
+			return dbusutil.ToError(er)
+		}
 	}
 	logger.Infof("SetScreenState %s try set state: %v", d.idleScreenStatePath, state)
 	return dbusutil.ToError(d.setState(d.idleScreenStatePath, state))
+}
+
+func checkDaemonAuth(sysBusName, actionId string) (bool, error) {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return false, err
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+	result, err := authority.CheckAuthorization(0, subject, actionId,
+		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		return false, err
+	}
+	return result.IsAuthorized, nil
 }
