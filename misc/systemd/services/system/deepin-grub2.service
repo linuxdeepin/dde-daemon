@@ -18,6 +18,8 @@ InaccessiblePaths=-/etc/pam.d
 ReadWritePaths=-/etc/default/grub.d
 # /run/deepin-gfxmode-detect/ready，作为 gfxmode 探测完成信号文件
 RuntimeDirectory=deepin-gfxmode-detect
+# /run/deepin-grub2/background.<ext>，作为控制中心可读的启动菜单壁纸
+RuntimeDirectory=deepin-grub2
 RuntimeDirectoryPreserve=yes
 ReadWritePaths=-/tmp/
 # /var/cache/deepin/grub2.log
