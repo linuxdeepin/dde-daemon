@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,7 +16,8 @@ type Theme struct {
 	g       *Grub2
 	service *dbusutil.Service
 
-	PropsMu sync.RWMutex
+	PropsMu            sync.RWMutex
+	backgroundExportMu sync.Mutex
 
 	//nolint
 	signals *struct {

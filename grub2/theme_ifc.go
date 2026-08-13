@@ -5,9 +5,10 @@
 package grub2
 
 import (
+	"io"
 	"os"
 	"os/exec"
-	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/godbus/dbus/v5"
@@ -16,8 +17,9 @@ import (
 )
 
 const (
-	themeDBusPath      = dbusPath + "/Theme"
-	themeDBusInterface = dbusInterface + ".Theme"
+	themeDBusPath            = dbusPath + "/Theme"
+	themeDBusInterface       = dbusInterface + ".Theme"
+	grubBackgroundRuntimeDir = "/run/deepin-grub2"
 )
 
 func (*Theme) GetInterfaceName() string {
@@ -79,33 +81,63 @@ func (theme *Theme) GetBackground(sender dbus.Sender) (background string, busErr
 		return "", nil
 	}
 
-	ext := path.Ext(background)
-	backGroundTmpFile, err := os.CreateTemp("/tmp", "dde-grub-background-*"+ext)
+	// source is selected from the fixed packaged default/fallback theme paths above,
+	// so it is not controlled by the D-Bus caller.
+	theme.backgroundExportMu.Lock()
+	defer theme.backgroundExportMu.Unlock()
+
+	destination, err := exportBackground(background, grubBackgroundRuntimeDir)
 	if err != nil {
+		logger.Warningf("GetBackground: export %q failed: %v", background, err)
 		return "", dbusutil.ToError(err)
 	}
+	return destination, nil
+}
 
-	backGroundTmpPath := backGroundTmpFile.Name()
-	backGroundTmpFile.Close()
-
-	err = utils.CopyFile(background, backGroundTmpPath)
+func exportBackground(source, destinationDir string) (string, error) {
+	sourceFile, err := os.Open(source)
 	if err != nil {
-		logger.Warningf("GetBackground: copy %q to %q failed: %v", background, backGroundTmpPath, err)
-		_ = os.Remove(backGroundTmpPath)
-		return "", dbusutil.ToError(err)
+		return "", err
+	}
+	defer sourceFile.Close()
+
+	ext := filepath.Ext(source)
+	destination := filepath.Join(destinationDir, "background"+ext)
+	tempFile, err := os.CreateTemp(destinationDir, ".background-*"+ext)
+	if err != nil {
+		return "", err
+	}
+	tempPath := tempFile.Name()
+	removeTemp := true
+	tempClosed := false
+	defer func() {
+		if !tempClosed {
+			_ = tempFile.Close()
+		}
+		if removeTemp {
+			_ = os.Remove(tempPath)
+		}
+	}()
+
+	// The selected sources are bounded regular theme images; arbitrary paths or
+	// unbounded streams cannot reach this exporter through GetBackground.
+	if _, err := io.Copy(tempFile, sourceFile); err != nil {
+		return "", err
+	}
+	if err := tempFile.Chmod(0644); err != nil {
+		return "", err
+	}
+	closeErr := tempFile.Close()
+	tempClosed = true
+	if closeErr != nil {
+		return "", closeErr
+	}
+	if err := os.Rename(tempPath, destination); err != nil {
+		return "", err
 	}
 
-	err = os.Chmod(backGroundTmpPath, 0644)
-	if err != nil {
-		logger.Warningf("GetBackground: chmod %q 0644 failed: %v", backGroundTmpPath, err)
-		_ = os.Remove(backGroundTmpPath)
-		return "", dbusutil.ToError(err)
-	}
-	logger.Debugf("Copy file %s to %s", background, backGroundTmpPath)
-
-	// 已知问题：返回的临时文件由调用方使用，本服务不清理。每次调用产生一个
-	// 唯一命名的新文件，重复调用会在 /tmp 中累积（依赖重启清空 tmpfs）。
-	return backGroundTmpPath, nil
+	removeTemp = false
+	return destination, nil
 }
 
 func (theme *Theme) emitSignalBackgroundChanged() {
