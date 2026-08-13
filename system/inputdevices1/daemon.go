@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,6 +16,9 @@ const (
 	dbusServiceName = "org.deepin.dde.InputDevices1"
 	dbusPath        = "/org/deepin/dde/InputDevices1"
 	dbusInterface   = dbusServiceName
+
+	// polkit action id used by checkAuthorization for SetTouchpadEnable
+	actionSetTouchpadEnable = "org.deepin.dde.inputdevices.set-touchpad-enable"
 )
 
 func init() {

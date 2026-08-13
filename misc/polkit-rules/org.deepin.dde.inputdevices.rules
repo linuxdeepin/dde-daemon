@@ -1,0 +1,12 @@
+polkit.addRule(function(action, subject) {
+    // Allow root internal callers (e.g. keyevent1 running inside
+    // dde-system-daemon invoking org.deepin.dde.InputDevices1.Touchpad
+    // .SetTouchpadEnable over the system bus) to toggle the touchpad.
+    // Root has no active local session, so the allow_active:yes default in
+    // the .policy does not match and would otherwise fall back to
+    // allow_any:no and silently deny the call.
+    if (action.id === "org.deepin.dde.inputdevices.set-touchpad-enable" &&
+        subject.user === "root") {
+        return polkit.Result.YES;
+    }
+});

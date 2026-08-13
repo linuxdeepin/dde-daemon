@@ -79,8 +79,13 @@ func (t *Touchpad) handleDeviceChange(devices []string) {
 	logger.Infof("touchpad devices updated: %d device(s)", len(devices))
 }
 
-func (t *Touchpad) SetTouchpadEnable(enabled bool) *dbus.Error {
-	err := t.setTouchpadEnable(enabled)
+func (t *Touchpad) SetTouchpadEnable(sender dbus.Sender, enabled bool) *dbus.Error {
+	err := checkAuthorization(actionSetTouchpadEnable, string(sender))
+	if err != nil {
+		logger.Warningf("checkAuthorization failed, err: %v, actionId=%v", err, actionSetTouchpadEnable)
+		return dbusutil.ToError(err)
+	}
+	err = t.setTouchpadEnable(enabled)
 	return dbusutil.ToError(err)
 }
 
