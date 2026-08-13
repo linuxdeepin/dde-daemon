@@ -129,7 +129,7 @@ func Handshake(args []string, destinations []Destination) ([]string, bool, error
 		return cleanedArgs, true, fmt.Errorf("decode security-loader response failed: %w", err)
 	}
 	if !response.Result {
-		return cleanedArgs, true, fmt.Errorf("security-loader authorization failed: %s", response.Message)
+		return cleanedArgs, true, fmt.Errorf("security-loader authorization failed: %q", response.Message)
 	}
 	return cleanedArgs, true, nil
 }

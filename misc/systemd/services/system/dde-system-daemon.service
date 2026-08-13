@@ -19,7 +19,7 @@ Environment=GVFS_REMOTE_VOLUME_MONITOR_IGNORE=1
 ProtectSystem=strict
 
 RuntimeDirectory=dde-daemon
-RuntimeDirectoryMode=0777
+RuntimeDirectoryMode=0750
 RuntimeDirectoryPreserve=yes
 ReadWritePaths=/run/dde-daemon
 

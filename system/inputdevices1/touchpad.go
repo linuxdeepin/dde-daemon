@@ -5,16 +5,15 @@
 package inputdevices1
 
 import (
-	"errors"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/godbus/dbus/v5"
-	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 	"github.com/linuxdeepin/dde-daemon/securityloader"
-	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
+	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -49,18 +48,18 @@ SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="*ps/2*", ENV{LIBINPUT_IGNORE
 }
 
 type Touchpad struct {
-	service     *dbusutil.Service
-	allowCallers  *securityloader.AllowCallerRegistry
-	Enable      bool
-	DeviceList  []string
-	udevMonitor *udevMonitor
+	service      *dbusutil.Service
+	allowCallers *securityloader.AllowCallerRegistry
+	Enable       bool
+	DeviceList   []string
+	udevMonitor  *udevMonitor
 }
 
 func newTouchpad(service *dbusutil.Service, allowCallers *securityloader.AllowCallerRegistry) *Touchpad {
 	t := &Touchpad{
-		service:     service,
+		service:      service,
 		allowCallers: allowCallers,
-		Enable:  getDsgConf(),
+		Enable:       getDsgConf(),
 	}
 
 	// 初始化 udev 监听器
@@ -85,18 +84,18 @@ func (t *Touchpad) handleDeviceChange(devices []string) {
 }
 
 func (t *Touchpad) SetTouchpadEnable(sender dbus.Sender, enabled bool) *dbus.Error {
-	result, _ := t.allowCallers.Authorize(securityloader.InputDevicesScope, sender)
-	switch result {
-	case securityloader.AuthDenied:
-		logger.Warning("SetTouchpadEnable access denied")
-		return dbusutil.ToError(errors.New("access denied"))
-	case securityloader.AuthNotEnabled:
-		if ok, er := checkTouchpadAuth(string(sender)); !ok || er != nil {
-			return dbusutil.ToError(er)
-		}
+	err := securityloader.AuthorizeWithPolkit(
+		t.allowCallers,
+		securityloader.InputDevicesScope,
+		sender,
+		t.service.Conn(),
+		"org.deepin.dde.inputdevices.set-touchpad",
+	)
+	if err != nil {
+		logger.Warningf("SetTouchpadEnable authorization failed: %q", err.Error())
+		return dbusutil.ToError(err)
 	}
-	err := t.setTouchpadEnable(enabled)
-	return dbusutil.ToError(err)
+	return dbusutil.ToError(t.setTouchpadEnable(enabled))
 }
 
 func (t *Touchpad) setTouchpadEnable(enabled bool) error {
@@ -327,21 +326,4 @@ func (t *Touchpad) destroy() {
 		t.udevMonitor.destroy()
 		t.udevMonitor = nil
 	}
-}
-
-func checkTouchpadAuth(sysBusName string) (bool, error) {
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		return false, err
-	}
-	authority := polkit.NewAuthority(systemBus)
-	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
-	subject.SetDetail("name", sysBusName)
-	result, err := authority.CheckAuthorization(0, subject,
-		"org.deepin.dde.inputdevices.set-touchpad",
-		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
-	if err != nil {
-		return false, err
-	}
-	return result.IsAuthorized, nil
 }
