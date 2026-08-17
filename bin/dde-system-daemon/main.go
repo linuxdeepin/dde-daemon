@@ -6,7 +6,6 @@ package main
 
 import (
 	"os"
-	"sync"
 
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 
@@ -23,7 +22,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/system/inputdevices1"
 	_ "github.com/linuxdeepin/dde-daemon/system/keyevent1"
 	_ "github.com/linuxdeepin/dde-daemon/system/lang"
-	_ "github.com/linuxdeepin/dde-daemon/system/power1"
 	_ "github.com/linuxdeepin/dde-daemon/system/resource_ctl"
 	_ "github.com/linuxdeepin/dde-daemon/system/scheduler"
 	_ "github.com/linuxdeepin/dde-daemon/system/swapsched1"
@@ -35,7 +33,6 @@ import (
 	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/dde-daemon/securityloader"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
-	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/log"
@@ -44,16 +41,13 @@ import (
 //go:generate dbusutil-gen em -type Daemon
 
 type Daemon struct {
-	loginManager        login1.Manager
-	systemSigLoop       *dbusutil.SignalLoop
-	service             *dbusutil.Service
-	systemd             systemd1.Manager
-	dsSystem            configManager.Manager
-	allowCallers        *securityloader.AllowCallerRegistry
-	idleStateMu         sync.Mutex
-	idleStatePath       string
-	idleScreenStatePath string
-	signals             *struct { // nolint
+	loginManager  login1.Manager
+	systemSigLoop *dbusutil.SignalLoop
+	service       *dbusutil.Service
+	systemd       systemd1.Manager
+	dsSystem      configManager.Manager
+	allowCallers  *securityloader.AllowCallerRegistry
+	signals       *struct { // nolint
 		HandleForSleep struct {
 			start bool
 		}
@@ -120,15 +114,12 @@ func main() {
 	logger.SetRestartCommand("/usr/lib/deepin-daemon/dde-system-daemon")
 
 	_daemon = &Daemon{
-		loginManager:        login1.NewManager(service.Conn()),
-		service:             service,
-		systemSigLoop:       dbusutil.NewSignalLoop(service.Conn(), 10),
-		systemd:             systemd1.NewManager(service.Conn()),
-		allowCallers:        allowCallers,
-		idleStatePath:       IdleFile,
-		idleScreenStatePath: IdleScreenFile,
+		loginManager:  login1.NewManager(service.Conn()),
+		service:       service,
+		systemSigLoop: dbusutil.NewSignalLoop(service.Conn(), 10),
+		systemd:       systemd1.NewManager(service.Conn()),
+		allowCallers:  allowCallers,
 	}
-	_daemon.getDsgValue()
 	_daemon.service = service
 	_daemon.initSystemDaemonDConfig()
 	err = service.Export(dbusPath, _daemon)
@@ -146,8 +137,6 @@ func main() {
 	loader.StartAll()
 	defer loader.StopAll()
 
-	// NOTE: system/power module requires glib loop
-	go glib.StartLoop()
 	_daemon.systemSigLoop.Start()
 	err = _daemon.forwardPrepareForSleepSignal(service)
 	if err != nil {

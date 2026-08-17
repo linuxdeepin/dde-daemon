@@ -85,7 +85,7 @@ Depends:
  x11-utils,
  xkb-data,
  dde-dconfig-daemon,
- dde-services (>> 1.0.39),
+ dde-services (>> 1.0.41),
  ${dist:Depends},
  ${misc:Depends},
  ${shlibs:Depends},

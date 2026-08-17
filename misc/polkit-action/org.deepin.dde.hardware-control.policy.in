@@ -5,27 +5,6 @@
 <policyconfig>
     <vendor/>
     <vendor_url/>
-
-    <action id="org.deepin.dde.daemon.set-idle-state">
-        <description>Set idle state</description>
-        <message>Authentication is required to set idle state</message>
-        <defaults>
-            <allow_any>no</allow_any>
-            <allow_inactive>no</allow_inactive>
-            <allow_active>auth_admin_keep</allow_active>
-        </defaults>
-    </action>
-
-    <action id="org.deepin.dde.daemon.set-screen-state">
-        <description>Set screen state</description>
-        <message>Authentication is required to set screen state</message>
-        <defaults>
-            <allow_any>no</allow_any>
-            <allow_inactive>no</allow_inactive>
-            <allow_active>auth_admin_keep</allow_active>
-        </defaults>
-    </action>
-
     <action id="org.deepin.dde.inputdevices.set-touchpad">
         <description>Enable or disable touchpad</description>
         <message>Authentication is required to enable or disable touchpad</message>
