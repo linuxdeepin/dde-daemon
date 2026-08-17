@@ -18,9 +18,9 @@ import (
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 
 	dbus "github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/fileutil"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/constants"
 	"github.com/linuxdeepin/dde-daemon/keybinding1/util"
-	"github.com/linuxdeepin/dde-daemon/common/fileutil"
 	wm "github.com/linuxdeepin/go-dbus-factory/session/com.deepin.wm"
 
 	gio "github.com/linuxdeepin/go-gir/gio-2.0"
@@ -458,14 +458,14 @@ func callSetScreenState(state bool) {
 		return
 	}
 
-	logger.Infof("callSetScreenState: calling SetScreenState with state=%v", state)
-	err = systemConn.Object("org.deepin.dde.Daemon1", "/org/deepin/dde/Daemon1").Call("org.deepin.dde.Daemon1.SetScreenState", 0, dbus.MakeVariant(state)).Err
+	logger.Infof("callSetScreenState: calling Power1.SetScreenState with state=%v", state)
+	err = systemConn.Object("org.deepin.dde.Power1", "/org/deepin/dde/Power1").Call("org.deepin.dde.Power1.SetScreenState", 0, dbus.MakeVariant(state)).Err
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
 
-	logger.Infof("callSetScreenState: SetScreenState called successfully with state=%v", state)
+	logger.Infof("callSetScreenState: Power1.SetScreenState called successfully with state=%v", state)
 }
 
 func doPrepareSuspend() {
