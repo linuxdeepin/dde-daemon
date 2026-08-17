@@ -333,7 +333,7 @@ msgstr "Interface de desligamento"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:19
 msgid "Terminal Quake Window"
-msgstr "Janela Quake do Terminal"
+msgstr "Janela suspensa do terminal"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:20
 msgid "Screenshot"
@@ -341,7 +341,7 @@ msgstr "Captura de Tela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:21
 msgid "Full screenshot"
-msgstr "Capturar em tela cheia"
+msgstr "Capturar tela inteira"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:22
 msgid "Window screenshot"
@@ -349,7 +349,7 @@ msgstr "Captura da Janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:23
 msgid "Delay screenshot"
-msgstr "Capturar tela com atraso"
+msgstr "Atrasar captura de tela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:24
 msgid "OCR (Image to Text)"
