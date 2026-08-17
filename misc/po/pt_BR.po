@@ -317,7 +317,7 @@ msgstr "Terminal"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:15
 msgid "Screen Recorder"
-msgstr "Gravador de Tela"
+msgstr "Gravar tela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:16
 msgid "Lock screen"
@@ -345,7 +345,7 @@ msgstr "Capturar tela inteira"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:22
 msgid "Window screenshot"
-msgstr "Captura da Janela"
+msgstr "Captura de janela"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:23
 msgid "Delay screenshot"
