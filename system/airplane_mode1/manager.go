@@ -75,6 +75,18 @@ func (mgr *Manager) DumpState() *dbus.Error {
 }
 
 
+// authorize checks the caller's authorization via polkit.
+//
+// Airplane Mode is a system service running in dde-system-daemon, not in
+// dde-session-daemon. It is NOT subject to security-loader's AllowCaller
+// whitelist mechanism, which only applies to session-daemon's DBus interfaces.
+// Authorization relies solely on polkit, consistent with the behavior before
+// security-loader integration.
+//
+// The service is registered in airplane_mode.go:Start() via
+// service.Export() + service.RequestName() — the security-loader Handshake
+// target list entry that was removed only registered the session-daemon as a
+// privileged AllowCaller caller, not the service itself.
 func (mgr *Manager) authorize(sender dbus.Sender) error {
 	ok, err := securityloader.CheckPolkitAuth(mgr.service.Conn(), string(sender), actionId)
 	if err != nil {
