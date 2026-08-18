@@ -96,10 +96,12 @@ type Manager struct {
 	PowerSavingModeBrightnessData string `prop:"access:rw"`
 
 	// 当前短idle状态
-	ShortIdleState bool
+	ShortIdleState   bool
+	ShortIdleStateMu sync.RWMutex
 
 	// 是否支持短idle方案
-	shortIdleEnable bool
+	shortIdleEnableMu sync.RWMutex
+	shortIdleEnable   bool
 
 	// 直接设置tlp配置
 	TlpMode string
@@ -441,8 +443,8 @@ func (m *Manager) initDsgConfig() error {
 			logger.Warning(err)
 			return
 		}
-		m.shortIdleEnable = data
-		logger.Info("dsg of shortIdleEnable : ", m.shortIdleEnable)
+		m.setShortIdleEnable(data)
+		logger.Info("dsg of shortIdleEnable : ", data)
 	}
 	getShortIdleEnable()
 
@@ -775,14 +777,35 @@ func (m *Manager) setTlpMode(mode string) error {
 	return nil
 }
 
-// 仅对性能模式做设置，不记录状态
-// deepin-power-control idle wifi <on|off>
-func (m *Manager) setShortIdleState(state bool) {
+func (m *Manager) getShortIdleEnable() bool {
+	m.shortIdleEnableMu.RLock()
+	defer m.shortIdleEnableMu.RUnlock()
+	return m.shortIdleEnable
+}
+
+func (m *Manager) setShortIdleEnable(enabled bool) {
+	m.shortIdleEnableMu.Lock()
+	m.shortIdleEnable = enabled
+	m.shortIdleEnableMu.Unlock()
+}
+
+func (m *Manager) getShortIdleState() bool {
+	m.ShortIdleStateMu.RLock()
+	defer m.ShortIdleStateMu.RUnlock()
+	return m.ShortIdleState
+}
+
+//仅对性能模式做设置，不记录状态
+//deepin-power-control idle wifi <on|off>
+func (m *Manager) setShortIdleState(state bool) error {
 	logger.Info(" setShortIdleState state : ", state)
-	if !m.shortIdleEnable {
+	if !m.getShortIdleEnable() {
 		logger.Info("System not open dsg of shortIdleEnable.")
-		return
+		return nil
 	}
+
+	m.ShortIdleStateMu.Lock()
+	defer m.ShortIdleStateMu.Unlock()
 
 	if m.ShortIdleState != state {
 		m.ShortIdleState = state
@@ -794,7 +817,7 @@ func (m *Manager) setShortIdleState(state bool) {
 		}
 	} else {
 		logger.Info("setShortIdleState the same state : ", state)
-		return
+		return nil
 	}
 
 	// 进入短idle：
@@ -806,7 +829,7 @@ func (m *Manager) setShortIdleState(state bool) {
 	if m.batteryLow {
 		powerState = ddeLowBattery
 	}
-	if !m.ShortIdleState {
+	if !state {
 		// 退出短idle：
 		// 1. deepin-power-control idle wifi off : 执行 `wifi off` 时，停止守护进程，恢复网卡默认行为
 		// 2. 电源模式切换为节能模式
@@ -826,6 +849,7 @@ func (m *Manager) setShortIdleState(state bool) {
 		// 设置wifi短idle模式
 		m.setDPCWifiState(wifiState)
 	}()
+	return nil
 }
 
 func (m *Manager) doSetMode(mode string) {
@@ -860,13 +884,13 @@ func (m *Manager) doSetMode(mode string) {
 		_ = m.setDsgData(dsettingsMode, fixMode, m.dsgPower)
 	}
 
-	logger.Info(" doSetMode, shortIdleState : ", m.ShortIdleState)
+	logger.Info(" doSetMode, shortIdleState : ", m.getShortIdleState())
 	// 如果恢复性能模式时，当前处于短idle状态，则需要恢复模式后，将TlpMode设置为节能模式
 	// 在延时回调中重新检查短idle状态，避免在延时期间短idle退出后，错误地恢复节能模式
-	if m.ShortIdleState {
+	if m.getShortIdleState() {
 		// 连续两次调用deepin-power-control，有概率会设置失败，因此使用延时500ms
 		time.AfterFunc(500*time.Millisecond, func() {
-			if !m.ShortIdleState {
+			if !m.getShortIdleState() {
 				logger.Info("shortIdle state has changed, skip restoring power save mode")
 				return
 			}

@@ -58,10 +58,5 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetTlpMode,
 			InArgs: []string{"mode"},
 		},
-		{
-			Name:   "SetShortIdleState",
-			Fn:     v.SetShortIdleState,
-			InArgs: []string{"state"},
-		},
 	}
 }

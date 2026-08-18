@@ -6,9 +6,9 @@ package main
 
 import (
 	"os"
+	"sync"
 
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
-	systemPower "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
 
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts1"
@@ -50,7 +50,7 @@ type Daemon struct {
 	systemd             systemd1.Manager
 	dsSystem            configManager.Manager
 	allowCallers        *securityloader.AllowCallerRegistry
-	systemPower         systemPower.Power
+	idleStateMu         sync.Mutex
 	idleStatePath       string
 	idleScreenStatePath string
 	signals             *struct { // nolint
@@ -125,7 +125,6 @@ func main() {
 		systemSigLoop:       dbusutil.NewSignalLoop(service.Conn(), 10),
 		systemd:             systemd1.NewManager(service.Conn()),
 		allowCallers:        allowCallers,
-		systemPower:         systemPower.NewPower(service.Conn()),
 		idleStatePath:       IdleFile,
 		idleScreenStatePath: IdleScreenFile,
 	}
