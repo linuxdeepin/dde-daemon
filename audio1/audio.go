@@ -933,8 +933,12 @@ func (a *Audio) findSink(cardId uint32, activePortName string) *Sink {
 
 func (a *Audio) findSource(cardId uint32, activePortName string) *Source {
 	for _, source := range a.sources {
-		if source.Card == cardId && source.ActivePort.Name == activePortName {
-			return source
+		if source.Card == cardId {
+			for _, port := range source.Ports {
+				if port.Name == activePortName {
+					return source
+				}
+			}
 		}
 	}
 
