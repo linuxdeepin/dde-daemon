@@ -28,12 +28,12 @@ const (
 	DaemonScope       = "org.deepin.dde.Daemon1:/org/deepin/dde/Daemon1"
 	PowerScope        = "org.deepin.dde.Power1:/org/deepin/dde/Power1"
 	InputDevicesScope = "org.deepin.dde.InputDevices1:/org/deepin/dde/InputDevices1"
-	AirplaneModeScope = "org.deepin.dde.AirplaneMode1:/org/deepin/dde/AirplaneMode1"
+
+	privilegedGroup = "deepin-daemon"
+	invalidGroupID  = ^uint32(0)
 
 	defaultRuntimeDir = "/run/dde-daemon"
 	defaultStateFile  = defaultRuntimeDir + "/security_loader_allow_callers.json"
-	privilegedGroup   = "deepin-daemon"
-	invalidGroupID    = ^uint32(0)
 )
 
 // AuthResult describes how a caller should be authorized.

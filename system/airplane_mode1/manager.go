@@ -5,6 +5,7 @@
 package airplane_mode
 
 import (
+	"errors"
 	"sync"
 	"time"
 
@@ -34,7 +35,6 @@ type device struct {
 
 type Manager struct {
 	service         *dbusutil.Service
-	allowCallers    *securityloader.AllowCallerRegistry
 	btRfkillDevices map[uint32]device
 	btDevicesMu     sync.RWMutex
 	// Airplane Mode status
@@ -55,7 +55,6 @@ type Manager struct {
 func newManager(service *dbusutil.Service) *Manager {
 	mgr := &Manager{
 		service:         service,
-		allowCallers:    securityloader.DefaultRegistry(),
 		btRfkillDevices: make(map[uint32]device),
 		config:          NewConfig(),
 	}
@@ -75,18 +74,16 @@ func (mgr *Manager) DumpState() *dbus.Error {
 	return nil
 }
 
-func (mgr *Manager) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
-	return dbusutil.ToError(mgr.allowCallers.AddCaller(securityloader.AirplaneModeScope, sender, uniqueName))
-}
 
 func (mgr *Manager) authorize(sender dbus.Sender) error {
-	return securityloader.AuthorizeWithPolkit(
-		mgr.allowCallers,
-		securityloader.AirplaneModeScope,
-		sender,
-		mgr.service.Conn(),
-		actionId,
-	)
+	ok, err := securityloader.CheckPolkitAuth(mgr.service.Conn(), string(sender), actionId)
+	if err != nil {
+		return err
+	}
+	if !ok {
+		return errors.New("access denied")
+	}
+	return nil
 }
 
 // Enable enable or disable *Airplane Mode*, isn't enable the devices
