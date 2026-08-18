@@ -7,13 +7,14 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"syscall"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/loader"
 	"github.com/linuxdeepin/dde-daemon/securityloader"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
 
@@ -116,30 +117,69 @@ func (d *Daemon) forwardPrepareForSleepSignal(service *dbusutil.Service) error {
 	return nil
 }
 
-func (d *Daemon) systemPowerSetShortIdleState(state bool) {
-	logger.Info("systemPowerSetShortIdleState : ", state)
-	if d.systemPower != nil {
-		err := d.systemPower.SetShortIdleState(0, state)
-		if err != nil {
-			logger.Warning("failed to SetShortIdleState, err : ", err)
-		}
-	}
+type shortIdleController interface {
+	ShortIdleState() (bool, error)
+	SetShortIdleState(bool) error
 }
 
+func getShortIdleController() (shortIdleController, error) {
+	module := loader.GetModule("power")
+	if module == nil {
+		return nil, errors.New("power module is not registered")
+	}
+	if !module.IsEnable() {
+		return nil, errors.New("power module is not enabled")
+	}
+	controller, ok := module.(shortIdleController)
+	if !ok {
+		return nil, errors.New("power module does not support short idle control")
+	}
+	return controller, nil
+}
+
+func systemPowerSetShortIdleState(controller shortIdleController, state bool) error {
+	logger.Info("systemPowerSetShortIdleState : ", state)
+	if err := controller.SetShortIdleState(state); err != nil {
+		return fmt.Errorf("failed to set short idle mode: %w", err)
+	}
+	return nil
+}
+
+// 1.设置 system/power 模块的短 idle 状态
+// 2.写file内核文件
 func (d *Daemon) setState(file string, state bool) error {
-	shortIdleState, err := d.systemPower.ShortIdleState().Get(0)
+	if file != d.idleStatePath {
+		return d.writeStateFile(file, state)
+	}
+
+	controller, err := getShortIdleController()
 	if err != nil {
-		logger.Warning("Get systemPower.ShortIdleState err :", err)
+		return fmt.Errorf("failed to get short idle controller: %w", err)
+	}
+	return d.setStateWithController(controller, file, state)
+}
+
+func (d *Daemon) setStateWithController(controller shortIdleController, file string, state bool) error {
+	d.idleStateMu.Lock()
+	defer d.idleStateMu.Unlock()
+
+	shortIdleState, err := controller.ShortIdleState()
+	if err != nil {
+		return fmt.Errorf("failed to get short idle state: %w", err)
 	}
 	logger.Infof("##### setState shortIdleState : %v, state : %v", shortIdleState, state)
 	if shortIdleState == state {
 		logger.Info("shortIdleState is same with state : ", state)
-		return errors.New("Short idle state not exchange.")
+		return d.writeStateFile(file, state)
 	}
-	if file == d.idleStatePath {
-		d.systemPowerSetShortIdleState(state)
+	// 设置 system/power 模块的短 idle 状态
+	if err := systemPowerSetShortIdleState(controller, state); err != nil {
+		return err
 	}
+	return d.writeStateFile(file, state)
+}
 
+func (d *Daemon) writeStateFile(file string, state bool) error {
 	// 写file内核文件
 	if !utils.IsFileExist(file) {
 		err := fmt.Errorf("%s not found", file)
@@ -148,7 +188,7 @@ func (d *Daemon) setState(file string, state bool) error {
 	}
 
 	// 读取file文件内容
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		logger.Errorf("Failed to read file %s: %v", file, err)
 		return err
@@ -164,7 +204,7 @@ func (d *Daemon) setState(file string, state bool) error {
 	logger.Infof("Current content=%s, will set %v", contentStr, newValue)
 	// 将值写入文件
 	newContent := strconv.Itoa(newValue)
-	err = ioutil.WriteFile(file, []byte(newContent), 0644)
+	err = os.WriteFile(file, []byte(newContent), 0644)
 	if err != nil {
 		logger.Errorf("Failed to write file %s: %v", file, err)
 		return err

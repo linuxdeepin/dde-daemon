@@ -125,7 +125,7 @@ func (m *Manager) updatePowerMode(init bool) {
 	}
 	logger.Infof("PowerSavingModeAuto: %v\n OnBattery:%v \n PowerSavingModeAutoWhenBatteryLow:%v \n batteryLow:%v \n",
 		m.PowerSavingModeAuto, m.OnBattery, m.PowerSavingModeAutoWhenBatteryLow, m.batteryLow)
-	logger.Infof("lastMode: %v, ShortIdleState : %v", m.lastMode, m.ShortIdleState)
+	logger.Infof("lastMode: %v, ShortIdleState : %v", m.lastMode, m.getShortIdleState())
 	if !m.PowerSavingModeAuto && !m.PowerSavingModeAutoWhenBatteryLow && !init {
 		return
 	}
