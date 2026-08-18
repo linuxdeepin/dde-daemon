@@ -1,3 +1,31 @@
+dde-daemon (6.1.102) unstable; urgency=medium
+
+  * fix: add Avahi daemon to the short idle service whitelist
+  * fix(accounts): avoid following symlinks when recovering ownership
+  * fix(display): add SupportBacklight() check in transition type
+    decision
+  * fix: add rollback hook to clean user locale settings
+  * fix(power1): avoid incorrect power mode restoration during short
+    idle
+  * i18n: Updates for project Deepin Desktop Environment (#1174)
+  * i18n: Updates for project Deepin Desktop Environment (#1198)
+  * refactor(display): refactor auto brightness logic
+  * chore(debian): adjust dde-services version requirement
+  * fix: avoid duplicate GRUB background preview refresh
+  * i18n: Updates for project Deepin Desktop Environment (#1204)
+  * feat: 集成 security-loader 加强安全
+  * feat: 为输入设备 org.deepin.dde.InputDevices1 添加 AllowCaller 权限控制
+  * refactor: 重构飞行模式鉴权机制
+  * feat: 为 lastore Agent 注册适配 security-loader
+  * feat: 添加 org.deepin.dde.LocaleHelper1 到安全加载目标列表
+  * feat: 为未启用 security-loader 的接口增加 polkit 提权回退
+  * fix: 修复 dde-session-daemon 的 security-loader 启动流程
+  * fix: correct security-loader authorization fallback
+  * fix(audio): find source by port list instead of active port
+  * refactor: 重构短休眠状态设置方式为内部模块调用
+
+ -- zhangkun <zhangkun2@uniontech.com>  Tue, 18 Aug 2026 15:00:18 +0800
+
 dde-daemon (6.1.101) unstable; urgency=medium
 
   * fix: add iio-sensor-proxy to short idle service config
