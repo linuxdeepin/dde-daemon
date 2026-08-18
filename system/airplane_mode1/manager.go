@@ -78,7 +78,8 @@ func (mgr *Manager) DumpState() *dbus.Error {
 func (mgr *Manager) authorize(sender dbus.Sender) error {
 	ok, err := securityloader.CheckPolkitAuth(mgr.service.Conn(), string(sender), actionId)
 	if err != nil {
-		return err
+		logger.Warningf("polkit auth failed for %q: %v", sender, err)
+		return errors.New("authorization check failed")
 	}
 	if !ok {
 		return errors.New("access denied")
