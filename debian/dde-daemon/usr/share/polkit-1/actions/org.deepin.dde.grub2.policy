@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+"http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
+<policyconfig>
+	<vendor>LinuxDeepin</vendor>
+	<vendor_url>https://www.deepin.com/</vendor_url>
+	<action id="org.deepin.dde.grub2">
+		<description>Change the grub configuration</description>
+		<message>Authentication is required to change the grub configuration</message>
+		<defaults>
+			<allow_any>no</allow_any>
+			<allow_inactive>no</allow_inactive>
+			<allow_active>auth_admin_keep</allow_active>
+		</defaults>
+		<description xml:lang="az">GRUB tənzimləməsini dəyişmək</description>
+		<message xml:lang="az">GRUB tənzimləmələrini dəyişdirmək üçün kimlik doğrulaması tələb olunur</message>
+		<description xml:lang="bo">འགོ་སློང་འདེམས་བྱང་གི་སྒྲིག་འགོད་བཟོ་བཅོས།</description>
+		<message xml:lang="bo">འགོ་སློང་འདེམས་བྱང་གི་སྒྲིག་འགོད་བཟོ་བཅོས་བྱེད་དགོས་ན་བདེན་དཔང་ར་སྤྲོད་བྱེད་དགོས།</message>
+		<description xml:lang="ca">Canvieu la configuració del grub</description>
+		<message xml:lang="ca">Cal autenticació per canviar la configuració del grub.</message>
+		<description xml:lang="es">Cambiar la configuración del GRUB</description>
+		<message xml:lang="es">Se requiere autenticación para modificar la configuración del GRUB</message>
+		<description xml:lang="fi">Muuta grub-kokoonpanoa</description>
+		<message xml:lang="fi">Todennus vaaditaan grub-kokoonpanon muuttamiseen</message>
+		<description xml:lang="fr">Modifier la configuration de grub</description>
+		<message xml:lang="fr">Une authentification est requise pour modifier la configuration de grub.</message>
+		<description xml:lang="hu">Módosítsa a grub konfigurációt</description>
+		<message xml:lang="hu">Hitelesítés szükséges a grub konfiguráció módosításához </message>
+		<description xml:lang="ja">GRUBの設定を変更</description>
+		<message xml:lang="ja">GRUBの設定を変更するには認証が必要です</message>
+		<description xml:lang="nl">Grub-instellingen aanpassen</description>
+		<message xml:lang="nl">Verificatie vereist om de grub-instellingen aan te passen</message>
+		<description xml:lang="pl">Zmień konfigurację grub</description>
+		<message xml:lang="pl">Wymagane jest uwierzytelnienie, aby zmienić konfigurację grub</message>
+		<description xml:lang="pt">Modificar a configuração do grub</description>
+		<message xml:lang="pt">Para mudar a configuração do grub é necessária autenticação</message>
+		<description xml:lang="pt_BR">Alterar a configuração do GRUB</description>
+		<message xml:lang="pt_BR">A autenticação é necessária para alterar a configuração do GRUB</message>
+		<description xml:lang="ru">Изменить конфигурацию grub</description>
+		<message xml:lang="ru">Для изменения конфигурации grub требуется аутентификация</message>
+		<description xml:lang="sq">Ndryshoni formësimin për grub</description>
+		<message xml:lang="sq">Që të ndryshoni formësim për grub, duhet bërë mirëfilltësimi</message>
+		<description xml:lang="tr">Grub yapılandırmasını değiştir</description>
+		<message xml:lang="tr">Grub yapılandırması değişimi için kimlik doğrulaması gerekli</message>
+		<description xml:lang="ug">قوزغىتىش تىزىملىكىنىڭ سەپلىمىسىنى ئۆزگەرتىش</description>
+		<message xml:lang="ug">قوزغىتىش تىزىملىكىنىڭ سەپلىمىسىنى ئۆزگەرتىش ئۈچۈن دەلىللىشىڭىز كېرەك</message>
+		<description xml:lang="uk">Зміна налаштувань grub</description>
+		<message xml:lang="uk">Для зміни налаштувань grub слід пройти розпізнавання</message>
+		<description xml:lang="zh_CN">修改启动菜单配置</description>
+		<message xml:lang="zh_CN">修改启动菜单配置需要认证</message>
+		<description xml:lang="zh_HK">修改啟動菜單配置</description>
+		<message xml:lang="zh_HK">修改啟動菜單配置需要認證</message>
+		<description xml:lang="zh_TW">修改啟動選單配置</description>
+		<message xml:lang="zh_TW">修改啟動選單配置需要認證</message>
+	</action>
+	<action id="org.deepin.dde.grub2.prepare-gfxmode-detect">
+		<description>Prepare grub display resolution detection</description>
+		<message>Authentication is required to prepare grub display resolution detection</message>
+		<defaults>
+			<allow_any>no</allow_any>
+			<allow_inactive>no</allow_inactive>
+			<allow_active>auth_admin_keep</allow_active>
+		</defaults>
+		<description xml:lang="az">Ekran icazəsinin aşkarlanmasına hazırlıq</description>
+		<message xml:lang="az">GRUB ekran icazəsini aşkarlamaq üçün kimlik doğrulaması tələb olunur</message>
+		<description xml:lang="bo">གྲ་སྒྲིག་འགོ་སློང་འདེམས་བྱང་གི་མངོན་སྟོན་འབྱེད་ཕྱོད་དཔྱད་འཇལ།</description>
+		<message xml:lang="bo">གྲ་སྒྲིག་འགོ་སློང་འདེམས་བྱང་གི་མངོན་སྟོན་འབྱེད་ཕྱོད་དཔྱད་འཇལ་བྱེད་ཚེ་ར་སྤྲོད་བྱེད་དགོས།</message>
+		<description xml:lang="ca">Preparació de la detecció de la resolució de pantalla per al grub</description>
+		<message xml:lang="ca">Cal autenticació per preparar la detecció de la resolució de pantalla per al grub.</message>
+		<description xml:lang="es">Habilitar detección de resolución de pantalla de GRUB</description>
+		<message xml:lang="es">Se requiere autenticación para preparar la detección de resolución de pantalla del GRUB</message>
+		<description xml:lang="fi">Valmistele grub-näytön resoluution tunnistus</description>
+		<message xml:lang="fi">Todennus vaaditaan grub-näytön resoluution tunnistamisen valmistelemiseksi</message>
+		<description xml:lang="fr">Préparer la détection de la résolution d'affichage de grub</description>
+		<message xml:lang="fr">L'authentification est requise pour préparer la détection de la résolution d'affichage de grub.</message>
+		<description xml:lang="hu">Grub képernyőfelbontás érzékelése</description>
+		<message xml:lang="hu">Hitelesítés szükséges a grub képernyőfelbontás érzékeléshez</message>
+		<description xml:lang="ja">GRUBの画面解像度検出を準備</description>
+		<message xml:lang="ja">GRUBの画面解像度検出を準備するには認証が必要です</message>
+		<description xml:lang="nl">Grub-schermresolutiedetectie voorbereiden</description>
+		<message xml:lang="nl">Verificatie vereist om de grub-schermresolutiedetectie voor te bereiden</message>
+		<description xml:lang="pl">Wykrywanie rozdzielczości ekranu Grub</description>
+		<message xml:lang="pl">Wymagane jest uwierzytelnienie do wykrywania rozdzielczości grub</message>
+		<description xml:lang="pt">Preparar grub para deteção de resolução de ecrã</description>
+		<message xml:lang="pt">Para preparar o grub para deteção de resolução de ecrã é necessária autenticação</message>
+		<description xml:lang="pt_BR">Preparar a detecção da resolução de tela do GRUB</description>
+		<message xml:lang="pt_BR">A autenticação é necessária para preparar a detecção da resolução de tela do GRUB</message>
+		<description xml:lang="ru">Подготовить определение разрешения экрана для grub</description>
+		<message xml:lang="ru">Аутентификация необходима для подготовки определения разрешения экрана grub</message>
+		<description xml:lang="sq">Përgatit pikasje qartësie ekrani nga grub</description>
+		<message xml:lang="sq">Që të përgatitet pikasje qartësie ekrani nga grub-i, duhet bërë mirëfilltësimi</message>
+		<description xml:lang="tr">Grub ekran çözünürlüğü algılaması hazırlama</description>
+		<message xml:lang="tr">Grub ekran çözünürlüğü algılamasını hazırlamak için kimlik doğrulama gereklidir</message>
+		<description xml:lang="ug">كۆرسىتىش ئېنىقلىق دەرىجىسىنى تەكشۈرۈشنى ئالدىن قوزغىتىش</description>
+		<message xml:lang="ug">كۆرسىتىش ئېنىقلىق دەرىجىسىنى تەكشۈرۈشنى ئالدىن قوزغىتىش ئۈچۈن دەلىللىشىڭىز كېرەك</message>
+		<description xml:lang="uk">Приготування до виявлення роздільної здатності дисплея у grub</description>
+		<message xml:lang="uk">Для приготування до виявлення роздільності дисплея у grub слід пройти розпізнавання</message>
+		<description xml:lang="zh_CN">预备启动菜单显示分辨率探测</description>
+		<message xml:lang="zh_CN">预备启动菜单显示分辨率探测需要认证</message>
+		<description xml:lang="zh_HK">預備啟動菜單顯示解像度探測</description>
+		<message xml:lang="zh_HK">預備啟動菜單顯示解像度探測需要認證</message>
+		<description xml:lang="zh_TW">預備啟動選單顯示解析度探測</description>
+		<message xml:lang="zh_TW">預備啟動選單顯示解析度探測需要認證</message>
+	</action>
+</policyconfig>

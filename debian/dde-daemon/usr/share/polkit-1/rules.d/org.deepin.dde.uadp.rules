@@ -1,0 +1,17 @@
+polkit.addRule(function(action, subject) {
+    if (action.id === "org.deepin.dde.uadp.doAction") {
+        // lightdm 活跃会话放行（greeter 免密码调用）
+        if (subject.user === "lightdm") {
+            if (subject.active) {
+                return polkit.Result.YES;
+            } else {
+                return polkit.Result.NO;
+            }
+        }
+
+        // deepin-daemon 用户及组放行
+        if (subject.user === "deepin-daemon" || subject.isInGroup("deepin-daemon")) {
+            return polkit.Result.YES;
+        }
+    }
+});

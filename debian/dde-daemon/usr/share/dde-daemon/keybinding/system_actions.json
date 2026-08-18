@@ -1,0 +1,97 @@
+{
+    "Actions": [
+        {
+            "Action": "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle",
+            "Key": "launcher"
+        },
+        {
+            "Action": "/usr/lib/deepin-daemon/default-terminal",
+            "Key": "terminal"
+        },
+        {
+            "Key": "deepinScreenRecorder",
+            "Action": "dbus-send --print-reply --dest=com.deepin.ScreenRecorder /com/deepin/ScreenRecorder com.deepin.ScreenRecorder.stopRecord"
+        },
+        {
+            "Key": "systemMonitor",
+            "Action": "dde-am deepin-system-monitor"
+        },
+        {
+            "Key": "deepin-picker",
+            "Action": "dbus-send --print-reply --dest=com.deepin.Picker /com/deepin/Picker com.deepin.Picker.Show"
+        },
+        {
+            "Action": "/usr/lib/deepin-daemon/dde-lock.sh",
+            "Key": "lockScreen"
+        },
+        {
+            "Action": "dbus-send --print-reply --dest=org.deepin.dde.ShutdownFront1 /org/deepin/dde/ShutdownFront1 org.deepin.dde.ShutdownFront1.Show",
+            "Key": "logout"
+        },
+        {
+            "Action": "deepin-terminal --quake-mode",
+            "Key": "terminalQuake"
+        },
+        {
+            "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.StartScreenshot",
+            "Key": "screenshot"
+        },
+        {
+            "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.FullscreenScreenshot",
+            "Key": "screenshotFullscreen"
+        },
+        {
+            "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.TopWindowScreenshot",
+            "Key": "screenshotWindow"
+        },
+        {
+            "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.DelayScreenshot int64:5",
+            "Key": "screenshotDelayed"
+        },
+        {
+            "Action": "/usr/lib/deepin-daemon/default-file-manager",
+            "Key": "fileManager"
+        },
+        {
+            "Action": "gsettings set com.deepin.dde.touchpad touchpad-enabled false",
+            "Key": "disableTouchpad"
+        },
+        {
+            "Action": "dbus-send --type=method_call --dest=org.deepin.dde.WMSwitcher1 /org/deepin/dde/WMSwitcher1 org.deepin.dde.WMSwitcher1.RequestSwitchWM",
+            "Key": "wmSwitcher"
+        },
+        {
+            "Action": "sleep 0.5; xset dpms force off",
+            "Key": "turnOffScreen"
+        },
+        {
+            "Key": "textToSpeech",
+            "Action": "/usr/share/uos-ai-assistant/shell/tts.sh"
+        },
+        {
+            "Key": "speechToText",
+            "Action": "dbus-send  --print-reply --dest=com.iflytek.aiassistant /aiassistant/deepinmain com.iflytek.aiassistant.mainWindow.SpeechToText"
+        },
+        {
+            "Key": "clipboard",
+            "Action": "dbus-send --print-reply --dest=org.deepin.dde.Clipboard1 /org/deepin/dde/Clipboard1 org.deepin.dde.Clipboard1.Toggle"
+        },
+        {
+            "Key": "translation",
+            "Action": "/usr/share/uos-ai-assistant/shell/translation.sh"
+        },
+		{
+            "key":"notificationCenter",
+            "Action":"dbus-send --print-reply --dest=org.deepin.dde.Widgets1 /org/deepin/dde/Widgets1 org.deepin.dde.Widgets1.Toggle"
+        },
+        {
+            "Key": "screenshotOcr",
+            "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.OcrScreenshot"
+        },
+		{
+            "key":"screenshotScroll",
+            "Action": "dbus-send --print-reply --dest=com.deepin.Screenshot /com/deepin/Screenshot com.deepin.Screenshot.ScrollScreenshot"
+        }
+
+    ]
+}

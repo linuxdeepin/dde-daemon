@@ -91,6 +91,13 @@ func (mgr *Manager) authorize(sender dbus.Sender) error {
 	ok, err := securityloader.CheckPolkitAuth(mgr.service.Conn(), string(sender), actionId)
 	if err != nil {
 		logger.Warningf("polkit auth failed for %q: %v", sender, err)
+		// Fallback: allow root when polkit is unavailable, preventing DoS
+		// if the polkit daemon, policy file, or DBus connection fails.
+		uid, uidErr := mgr.service.GetConnUID(string(sender))
+		if uidErr == nil && uid == 0 {
+			logger.Warningf("polkit unavailable, falling back to root for %q", sender)
+			return nil
+		}
 		return errors.New("authorization check failed")
 	}
 	if !ok {

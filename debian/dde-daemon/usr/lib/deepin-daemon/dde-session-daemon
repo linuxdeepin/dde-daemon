@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -u
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+
+REAL_BINARY="/usr/libexec/deepin/dde-session-daemon"
+LOADER="/usr/bin/deepin-security-loader"
+LOADER_EXEC="/usr/bin/deepin-security-loader-exec"
+
+if [ -x "$LOADER" ] && [ -x "$LOADER_EXEC" ] && \
+    getcap "$LOADER_EXEC" 2>/dev/null | grep -q cap_setgid; then
+    logger -t dde-session-daemon "starting via deepin-security-loader"
+    exec "$LOADER" --group deepin-daemon -- "$REAL_BINARY" "$@"
+fi
+logger -t dde-session-daemon "starting directly"
+exec "$REAL_BINARY" "$@"

@@ -1,0 +1,1073 @@
+dde-daemon (6.1.102) unstable; urgency=medium
+
+  * fix: add iio-sensor-proxy to short idle service config
+  * fix(display): add a DBus method ListEffectiveOutputNames
+  * feat(shortcut): migrate shortcut handling to dde-services
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 23 Jul 2026 21:46:40 +0800
+
+dde-daemon (6.1.100) unstable; urgency=medium
+
+  * fix(display): keep max scale independent of rotation
+  * feat: support brightness via ddcutil
+  * fix(power): move power mode init to post-login to avoid racing with
+    deepin-power-control
+  * fix: improve temporary background file creation in theme
+  * fix: improve gfxmode signal file creation safety
+  * fix: prevent concurrent export and auto-export domain users during
+    find
+  * feat: add polkit authorization for uadp manager methods
+  * fix(wallpaper): read custom wallpaper from fd
+  * fix: avoid unnecessary feedback sound when unmuting sink
+  * i18n: Updates for project Deepin Desktop Environment (#1110)
+  * fix: add ConcatScreenName property for multi-screen display
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 09 Jul 2026 19:29:23 +0800
+
+dde-daemon (6.1.99) unstable; urgency=medium
+
+  * feat: add services and desktop entry to whitelist
+  * fix(display): add switch for auto change scale factor
+  * fix(keybinding): remove redundant app reload after cmd exec
+  * chore: Sync by
+    https://github.com/linuxdeepin/.github/commit/88706fa723e3771211cb07
+    81d3d97fd4a6cd2a68
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 24 Jun 2026 15:35:29 +0800
+
+dde-daemon (6.1.98) unstable; urgency=medium
+
+  * fix: adjust dpms-state file permissions
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 18 Jun 2026 13:29:03 +0800
+
+dde-daemon (6.1.97) unstable; urgency=medium
+
+  * feat: optimize system application recognition and add power save
+    services
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 17 Jun 2026 17:53:59 +0800
+
+dde-daemon (6.1.96) unstable; urgency=medium
+
+  * fix(audio): honor manual output selection
+  * fix: optimize power key screen off logic and secure file operations
+  * fix: fix TOCTOU race in wallpaper save function
+  * chore: remove unused network connection sync interfaces
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 17 Jun 2026 16:28:16 +0800
+
+dde-daemon (6.1.95) unstable; urgency=medium
+
+  * fix(display): migrate concat screen management to daemon
+  * feat: add third-party service detection for short idle power
+    management
+  * fix: correct dconfig global flag format
+  * feat(account): make passwordEncryptionAlgorithm config writable
+  * feat: add short idle and TLP mode support
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 11 Jun 2026 21:45:05 +0800
+
+dde-daemon (6.1.94) unstable; urgency=medium
+
+  * fix(audio): fix BluetoothAudioMode empty after bluez5 support
+  * Revert "fix(display): adjust default manual color temperature"
+  * feat(inputdevices): disable touchpad gestures when mouse is plugged
+    in
+  * fix: resolve Bluetooth connection notification issue
+  * fix: optimize shortcut launch performance by replacing subprocess
+    spawning with in-process handlers
+  * fix: resolve audio silence after upgrade
+  * fix: disable gesture module on Treeland
+  * fix(inputdevices): refresh touchpad devices after mouse removal
+  * fix(dde-power): temporarily remove D-Bus service to prevent
+    incorrect activation on Treeland
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 04 Jun 2026 20:30:45 +0800
+
+dde-daemon (6.1.93) unstable; urgency=medium
+
+  * fix: add dde-shell to touchscreen longpress blacklist
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 28 May 2026 16:32:43 +0800
+
+dde-daemon (6.1.92) unstable; urgency=medium
+
+  * test(users): add validation tests for isValidUsername and
+    isValidCryptHash
+  * fix(users): harden password hash handling in ModifyPasswd
+  * fix: correct display mode in event log for single screen /
+    修复单屏时事件日志显示模式错误
+  * fix: revert SetPassword disable, restore with admin auth
+  * refactor: rename display transition config
+
+ -- zhangkun <zhangkun2@uniontech.com>  Mon, 25 May 2026 16:14:05 +0800
+
+dde-daemon (6.1.91) unstable; urgency=medium
+
+  * fix: disable SetPassword DBus method and prevent chpasswd injection
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 22 May 2026 18:12:24 +0800
+
+dde-daemon (6.1.90) unstable; urgency=medium
+
+  * feat: add screen magnifier toggle
+  * fix: expand event log to all non-community editions /
+    修复事件日志启用条件为非社区版
+  * fix: stop brightness transition on disable
+  * fix(eventlog): avoid shell injection via .desktop filename in dpkg -
+    S lookup
+  * fix(audio): retry full port auto-switch on source events
+  * fix(touchpad): correct DConfig key name for gesture enabled
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 20 May 2026 15:16:51 +0800
+
+dde-daemon (6.1.89) unstable; urgency=medium
+
+  * refactor: optimize light sensor interface
+  * fix: 优化自动亮度调节响应速度和准确性
+  * refactor: 重构自动亮度管理器的轮询机制
+  * docs: 更新自动亮度设计文档和使用指南
+  * feat: 优化自动亮度卡尔曼滤波器参数并添加补偿机制
+  * feat: 增强自动亮度功能支持曲线映射和卡尔曼滤波
+  * feat: 默认亮度曲线功能
+  * feat: 新增光感亮度调节功能
+  * fix(inputdevices): refactor natural scroll event logging for
+    accurate reporting
+  * chore: dconfig to control if trayicon1 register itself as selection
+    manager
+  * fix: Resolve the issue where the shortcut keys stop working after
+    being modified.
+  * Revert "fix: 修复修改快捷键后快捷键失效的问题"
+  * i18n: Updates for project Deepin Desktop Environment (#1085)
+  * fix(security): replace shell command execution with direct exec
+    calls
+  * fix: restore disabled port notification when replugging device
+  * fix: remove early returns when monitor modes are empty
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 15 May 2026 13:17:58 +0800
+
+dde-daemon (6.1.88) unstable; urgency=medium
+
+  * fix(bluetooth): prevent path traversal in OBEX file receive
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 08 May 2026 15:03:28 +0800
+
+dde-daemon (6.1.87) unstable; urgency=medium
+
+  * perf: remove wallpaper blur and effect features and migrate
+    ImageBlur1 DBus call
+  * perf: cleanup systemd service dependencies for dde-session-daemon
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 24 Apr 2026 09:58:17 +0800
+
+dde-daemon (6.1.86) unstable; urgency=medium
+
+  * feat: add event logging for display and input devices
+  * refactor: rename power control binary and remove TLP paths
+  * refactor: improve display mode filtering logic
+  * fix: 修复修改快捷键后快捷键失效的问题
+  * fix: add debounce for volume feedback and optimize port change
+    detection
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 23 Apr 2026 21:46:10 +0800
+
+dde-daemon (6.1.85) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#1083)
+  * * i18n: Updates for project Deepin Desktop Environment (#1082)
+  * i18n: update translation
+  * i18n: Translate policy.ts in es
+  * i18n: Translate policy.ts in zh_CN
+  * i18n: Translate policy.ts in zh_HK
+  * i18n: Translate policy.ts in de
+  * i18n: Translate policy.ts in pt_BR
+  * i18n: Translate policy.ts in bo
+  * i18n: Translate policy.ts in ug
+  * i18n: Translate policy.ts in ru
+  * i18n: Translate policy.ts in zh_TW
+  * i18n: Translate policy.ts in nl
+  * i18n: Translate policy.ts in sq
+  * i18n: Translate policy.ts in pl
+  * i18n: Translate policy.ts in fr
+  * i18n: Translate policy.ts in ja
+  * i18n: Translate policy.ts in fi
+  * i18n: Translate policy.ts in ca
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR
+  * fix: Fix incorrect punctuation
+  * fix: correct initial color temperature value when enabled
+  * fix: modify disk space notification based on D-Bus service
+    availability
+  * fix: fix duplicate disconnect notifications
+  * fix: change polkit action from auth_admin_keep to auth_admin
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 10 Apr 2026 08:47:12 +0800
+
+dde-daemon (6.1.84) unstable; urgency=medium
+
+  * fix: fix audio feature switching sequence
+  * fix: fix card profile change detection logic
+  * refactor: improve audio port insertion logic
+
+ -- zhangkun <zhangkun2@uniontech.com>  Mon, 30 Mar 2026 16:42:51 +0800
+
+dde-daemon (6.1.83) unstable; urgency=medium
+
+  * fix: prevent disconnecting same audio device during connection
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 26 Mar 2026 21:45:58 +0800
+
+dde-daemon (6.1.82) unstable; urgency=medium
+
+  * fix: handle idle state properly in power save plan
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 25 Mar 2026 17:15:56 +0800
+
+dde-daemon (6.1.81) unstable; urgency=medium
+
+  * fix: temporarily handle audio loss after sleep on some devices
+  * fix: handle notification closed signal properly
+
+ -- zhangkun <zhangkun2@uniontech.com>  Mon, 23 Mar 2026 15:14:49 +0800
+
+dde-daemon (6.1.80) unstable; urgency=medium
+
+  * feat: adjust suspend state constants order
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 18 Mar 2026 15:05:12 +0800
+
+dde-daemon (6.1.79) unstable; urgency=medium
+
+  * fix: fix display mode switching issue with three or more screens
+  * fix: fix low battery threshold not persisting after reboot
+  * fix(display): 修复默认填充模式不支持问题
+  * fix: fix bluetooth file transfer failure during multi user switching
+  * fix: fix audio input volume initialization issue
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 18 Mar 2026 14:14:26 +0800
+
+dde-daemon (6.1.78) unstable; urgency=medium
+
+  * fix(audio): 设置端口时, 调整端口的优先级
+  * fix: fix touchscreen mapping after display switching
+  * i18n: Updates for project Deepin Desktop Environment (#1027)
+  * fix(bluetooth): 解决多个蓝牙设备回连时,反复断开连接的情况
+  * chore: update go dependencies
+  * fix(touchpad): 适配ps/2鼠标视为触控板时全局禁用失效的问题
+  * fix: 修复未配对状态的设备发起回连的问题
+  * fix: 解决使用音量快捷键设置时静音状态异常的问题
+  * fix(accounts1): remove SetHomeDir to prevent local privilege
+    escalation
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 12 Mar 2026 21:30:23 +0800
+
+dde-daemon (6.1.77) unstable; urgency=medium
+
+  * refactor(accounts1): remove guest user functionality
+  * refactor(accounts): disable UnionID password setting due to security
+    check race condition
+  * fix: prevent password leakage in ModifyPasswd
+  * fix: prevent local root exploit via directory hijacking
+  * fix(grub): Replace DeepinGfxmodeNotSupported mechanism with EDID
+    hash caching
+  * fix: 修复usb手写屏热插拔不生效问题
+  * fix(grub-theme): fix incomplete text display in GRUB theme menu on
+    arm64, loongarch64, and sw64 architectures
+  * fix: 解决低电量进入系统后, 系统触发的节能模式, 电量没有变化的问题
+  * fix: prevent symlink attack in removeLoginKeyring
+  * fix(bluetooth): close notification when peer cancels transfer
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 05 Mar 2026 20:43:23 +0800
+
+dde-daemon (6.1.76) unstable; urgency=medium
+
+  * fix: 优化了音频逻辑
+  * fix: 当设置滚轮配置超出范围时,矫正配置
+  * fix(bluetooth): display notification when file transfer times out
+  * fix(keybinding): fix mute state conflict when volume is reduced to 0
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 27 Feb 2026 15:48:12 +0800
+
+dde-daemon (6.1.75) unstable; urgency=medium
+
+  * fix: fix audio resume logic for default sink/source
+  * fix: fix sound effect process exit and optimize bluetooth
+    notifications
+  * i18n: Updates for project Deepin Desktop Environment (#1025)
+  * fix: remove user dconfig data when deleting user
+  * i18n: Updates for project Deepin Desktop Environment (#1020)
+  * fix: 调整蓝牙文件传输通知的文案
+  * fix(display): Touch screen config becomes empty after
+    unplugging/replugging and canceling mapping dialog
+  * fix(keybinding): register both Super_L and Super_R when adding Super
+    key shortcut
+  * fix: handle modifier key release events properly
+  * fix(systeminfo): Remove CPU count and enhance frequency logic
+  * fix: 解决系统触发黑屏时, 先显示锁屏再黑屏的问题
+  * chore: update deepin dependency versions
+  * feat: add dedicated maximize and restore window gestures
+  * fix(bluetooth): optimize file transfer cancellation mechanism and
+    notification handling
+  * fix: 解决grub2通过x11检测分辨率失败的问题
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 06 Feb 2026 09:27:52 +0800
+
+dde-daemon (6.1.74) unstable; urgency=medium
+
+  * Fix build failure on Go 1.24.6
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 29 Jan 2026 21:43:17 +0800
+
+dde-daemon (6.1.73) unstable; urgency=medium
+
+  * feat: support configurable password encryption algorithms
+  * feat: add polkit authorization for system services
+  * fix: 修复插拔触控屏,触摸屏绑定关系会丢失问题
+  * fix: add wheel speed value validation in setWheelSpeed
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 28 Jan 2026 15:05:46 +0800
+
+dde-daemon (6.1.72) unstable; urgency=medium
+
+  * fix: 解决设置快速登录后,切换用户失败的问题
+  * feat: dbus安全整改
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 23 Jan 2026 09:37:25 +0800
+
+dde-daemon (6.1.71) unstable; urgency=medium
+
+  * fix: enhance system daemon resource management
+  * fix: 解决设置快速登录后,切换用户失败的问题
+  * fix: 解决触控屏拖拽窗口移动异常的问题
+  * fix: 解决接入有限耳机, 输入输出还是null的问题
+  * feat: 更新翻译
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 15 Jan 2026 19:18:33 +0800
+
+dde-daemon (6.1.70) unstable; urgency=medium
+
+  * chore: 更新go.mod
+  * fix: 解决音频端口初始化时为null-sink的问题
+  * feat: replace kernel file with udev for touchpad control
+  * i18n: Updates for project Deepin Desktop Environment (#983)
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 07 Jan 2026 15:20:15 +0800
+
+dde-daemon (6.1.69) unstable; urgency=medium
+
+  * fix: initialize GDK in accounts module and remove GTK init
+  * fix: handle kglobalaccel D-Bus name owner properly
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 25 Dec 2025 19:48:14 +0800
+
+dde-daemon (6.1.68) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#981)
+  * i18n: Translate misc/po/dde-daemon.pot in sq (#973)
+  * chore: update .tx/config based on Transifex platform state
+  * chore: remove es_XX locale variants, update transifex.yaml
+  * fix: add nil check for audio port handling
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 18 Dec 2025 19:47:35 +0800
+
+dde-daemon (6.1.67) unstable; urgency=medium
+
+  * refactor: remove smart battery management feature
+  * fix: update DBus job interface name in locale package
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 11 Dec 2025 20:30:38 +0800
+
+dde-daemon (6.1.66) unstable; urgency=medium
+
+  * chore: remove xsettings module
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 04 Dec 2025 19:12:15 +0800
+
+dde-daemon (6.1.65) unstable; urgency=medium
+
+  * fix: fix sound card port priority ordering issue
+  * chore: 安全整改, 修改使用GetConnPID来获取用户的环境变量,改成使用GetConnUID
+  * fix: Fix the issue of failing to switch languages
+  * i18n: remove de_DE translation resources
+  * i18n: Updates for project Deepin Desktop Environment (#959)
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 27 Nov 2025 20:06:20 +0800
+
+dde-daemon (6.1.64) unstable; urgency=medium
+
+  * feat: add read-only protection switch and translations
+  * fix: resolve timezone display issue when switching to Beijing Time
+  * feat: 安全整改,去掉部分dbus通过GetConnPID鉴权二进制路径的逻辑
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 13 Nov 2025 19:43:08 +0800
+
+dde-daemon (6.1.63) unstable; urgency=medium
+
+  * refactor: optimize audio code and fix issues
+  * fix: fix bluetooth audio port priority assignment
+  * chore: remove powermanager module
+  * refactor: replace pactl scripts with pulseaudio API calls
+  * fix: remove virtual device filtering for bluetooth touchpad
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR
+  * fix: code optimization
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 07 Nov 2025 10:13:39 +0800
+
+dde-daemon (6.1.62) unstable; urgency=medium
+
+  * fix: update notification center D-Bus interface paths
+  * feat: 优化了音频配置.
+  * fix: extend custom timezone mapping list
+  * fix: correct config key in DSG property initialization
+  * fix: update OBEX file transfer notification timeout
+
+ -- Robertkill <lvpeilong@uniontech.com>  Thu, 30 Oct 2025 19:41:40 +0800
+
+dde-daemon (6.1.61) unstable; urgency=medium
+
+  * fix: resolve crash from dconfig type mismatch
+
+ -- fuleyi <fuleyi@uniontech.com>  Mon, 27 Oct 2025 13:51:30 +0800
+
+dde-daemon (6.1.60) unstable; urgency=medium
+
+  * fix: 对智能电池电量增加阀值配置,以及开关
+  * fix: disable touchscreen left edge clipboard gesture
+  * Revert "fix: Modify the default clipboard shortcut key"
+  * Revert "fix: prevent GTK window size change on daemon exit"
+  * fix: check lightdm group existence before permission setup
+  * i18n: Updates for project Deepin Desktop Environment (#906)
+  * fix: Modify the default clipboard shortcut key
+
+ -- wujiangyu <wujiangyu@uniontech.com>  Thu, 23 Oct 2025 17:18:59 +0800
+
+dde-daemon (6.1.59) unstable; urgency=medium
+
+  * fix: revert device listener thread management to fix CPU usage
+  * fix: restrict scheduler module to Deepin/UOS platforms only
+  * fix: remove ACPI event configurations for security compliance
+  * chore: remove deprecated appinfo and apps1 modules
+  * fix: remove uadpagent module and gnome-keyring dependency
+  * fix: remove deepin-proxy dependency for security compliance
+  * fix: security hardening for dde-daemon services
+  * chore: remove iw module
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 16 Oct 2025 16:55:22 +0800
+
+dde-daemon (6.1.58) unstable; urgency=medium
+
+  * feat: 移除网络模块
+  * feat: 移除网络模块
+  * fix: change power mode setting to use transient service
+  * fix: touchpad state not preserved after Bluetooth device
+    reconnection
+  * fix: improve device listener thread management
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 10 Oct 2025 15:39:33 +0800
+
+dde-daemon (6.1.57) unstable; urgency=medium
+
+  * fix: initialize power saving brightness drop percent
+  * fix: handle dconfig initialization failure properly
+  * refactor: remove fprintd and dde-authority modules
+  * chore: update package dependencies
+  * refactor: remove xsettings dependency
+  * feat: migrate polkit rules from pkla to rules format
+  * feat: add StopAudioService interface for session logout
+  * fix: resolve NumLock state sync issue between daemon and frontend
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 25 Sep 2025 20:52:08 +0800
+
+dde-daemon (6.1.56) unstable; urgency=medium
+
+  * refactor: migrate from custom config helpers to dconfig module
+  * feat: 多屏场景下支持合盖后自动切换仅外屏显示
+  * fix: 解决焦点在控制中心更新模块，仍有更新的横幅通知的问题
+  * refactor: migrate audio configuration from gsettings to dconfig
+  * refactor: migrate gesture configuration from GSettings to DConfig
+  * chore: remove GNOME wrapper configuration
+  * fix: touchpad cannot be properly disabled
+  * fix: Password authentication is required when system was waked up
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 18 Sep 2025 20:00:38 +0800
+
+dde-daemon (6.1.55) unstable; urgency=medium
+
+  * fix: correct logger method call in sync config
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 12 Sep 2025 10:09:08 +0800
+
+dde-daemon (6.1.54) unstable; urgency=medium
+
+  * refactor: migrate sound effect settings to dconfig
+  * i18n: Updates for project Deepin Desktop Environment (#884)
+  * refactor: migrate locale settings from GSettings to DConfig
+  * fix: prevent GTK window size change on daemon exit
+  * feat: 单声道模式支持
+  * feat: uadpdbus接口支持20风格
+  * feat(inputdevice): Change gsettings to dconfig
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 11 Sep 2025 20:58:23 +0800
+
+dde-daemon (6.1.53) unstable; urgency=medium
+
+  * fix: Update Bluetooth state as soon as possible
+  * fix: correct touchpad enable function parameter
+  * fix: resolve touchpad state persistence issue after system restart
+  * refactor: migrate display settings from gsettings to dconfig
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 04 Sep 2025 21:48:37 +0800
+
+dde-daemon (6.1.52) unstable; urgency=medium
+
+  * fix: 解决蓝牙文件传输拒绝后，依旧在传输的问题
+  * feat(power&keybinding): Change backend configuration to dconfig
+  * i18n: Translate misc/po/dde-daemon.pot in pt_BR (#872)
+  * fix: 解决内置声卡被禁用端口插拔时没有通知的问题
+  * fix: 解决控制中心时区列表格式不统一的问题
+  * fix: Fixed the issue of password modification date
+  * chore: remove ipwatchd dependency
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 28 Aug 2025 14:36:05 +0200
+
+dde-daemon (6.1.51) unstable; urgency=medium
+
+  * fix: 解决崩溃问题 默认sink没有判空导致崩溃
+  * fix: 解决电源管理性能模式设置后实际不生效的问题
+  * fix: 解决配置声音输入设备优先级，没有生效
+  * fix: 蓝牙默认模式不是最高质量的
+  * fix:  设置输出端口的插拔管理默认开启
+  * fix: 解决禁用声卡端口后，插拔耳机没有通知
+  * fix: 解决端口禁用没有切换的问题
+  * Fix: Error in modifying Bluetooth data
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 21 Aug 2025 14:15:22 +0800
+
+dde-daemon (6.1.50) unstable; urgency=medium
+
+  * chore: Updates for go.mod
+  * Fix: replace TrustedExe with Exe due to systemd namespace changes
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 15 Aug 2025 10:31:02 +0800
+
+dde-daemon (6.1.49) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#848)
+
+ -- wujiangyu <wujiangyu@uniontech.com>  Tue, 12 Aug 2025 10:39:53 +0800
+
+dde-daemon (6.1.48) unstable; urgency=medium
+
+  * feat: 优化音频事件的处理
+  * chore: update go.mod and gitignore
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 08 Aug 2025 11:05:36 +0800
+
+dde-daemon (6.1.47) unstable; urgency=medium
+
+  * fix: remove redundant kernel version check in plymouth theme setup
+
+  -- lvpeilong <lvpeilong@uniontech.com>  Fri, 01 Aug 2025 10:00:00 +0800
+
+dde-daemon (6.1.46) unstable; urgency=medium
+
+  * fix: update initramfs for all kernels instead of current
+  * fix: Double click setting does not take effect
+  * fix: simplify desktop file creation logic
+  * fix: update NTP server configuration and fallback logic
+  * fix: correct flags format in system config
+  * fix: QuickLogin enable state only response to dconfig changes
+  * chore: update  go.mod
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Thu, 31 Jul 2025 19:43:17 +0800
+
+dde-daemon (6.1.45) unstable; urgency=medium
+
+  * fix: add nil checks for audio sink/source updates
+  * fix: The scheduled shutdown during holidays takes effect
+
+ -- zhangkun <zhangkun2@uniontech.com>  Tue, 22 Jul 2025 11:26:59 +0800
+
+dde-daemon (6.1.44) unstable; urgency=medium
+
+  * fix: fix some modules loaded failed
+  * fix: fix failure to change audio input device
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 15 Jul 2025 20:50:41 +0800
+
+dde-daemon (6.1.43) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#823)
+  * feat: add GenLocale method and improve locale state handling
+  * fix: avoid dpkg packaging failures
+  * feat: root进程需要判断调用者时，使用TrustedExe替换Exe
+  * Revert "chore: prohibit the startup and auto start of some services"
+
+ -- WuJiangYu <wujiangyu@uniontech.com>  Thu, 10 Jul 2025 20:58:57 +0800
+
+dde-daemon (6.1.42) unstable; urgency=medium
+
+  * fix: add tlp dependency to debian control file
+  * fix: add nil check for xsManager in tryToChangeScaleFactor
+  * chore: prohibit the startup and auto start of some services
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 03 Jul 2025 17:22:54 +0800
+
+dde-daemon (6.1.41) unstable; urgency=medium
+
+  * fix: remove redundant own policy in Accounts1 config
+  * fix: Fix incompatible function pointer types with g_timeout_add_full
+    on GCC 15
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Fri, 27 Jun 2025 15:47:51 +0800
+
+dde-daemon (6.1.40) unstable; urgency=medium
+
+  * chore: remove regional variants for es languages
+  * i18n: Updates for project Deepin Desktop Environment (#813)
+
+ -- WuJiangYu <wujiangyu@uniontech.com>  Mon, 23 Jun 2025 17:16:10 +0800
+
+dde-daemon (6.1.39) unstable; urgency=medium
+
+  * fix: reorder module dependencies in session daemon and update
+    imports
+
+ -- fuleyi <fuleyi@uniontech.com>  Sat, 21 Jun 2025 15:35:24 +0800
+
+dde-daemon (6.1.38) unstable; urgency=medium
+
+  * fix: update text scale factor in XSettings configuration
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 20 Jun 2025 18:26:08 +0800
+
+dde-daemon (6.1.37) unstable; urgency=medium
+
+  * fix: Add interface to obtain all keyboard layouts
+  * i18n: Updates for project Deepin Desktop Environment (#807)
+
+ -- caixiangrong <caixiangrong@uniontech.com>  Thu, 19 Jun 2025 16:38:27 +0800
+
+dde-daemon (6.1.36) unstable; urgency=medium
+
+  * fix: Modify translations to align with Control Center
+  * fix: adjust gesture feature translations and reorder options
+  * fix: Modify the refresh rate accuracy to 0.01
+  * i18n: Updates for project Deepin Desktop Environment (#774)
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 12 Jun 2025 20:50:06 +0800
+
+dde-daemon (6.1.35) unstable; urgency=medium
+
+  * feat: add lightdm-deepin-greeter configuration files to installation
+    for quick login
+  * refactor: remove ai-assistant shortcuts and related actions
+  * fix: 修复换不同显示器后系统缩放未改变的问题。
+  * feat: integrate keyboard management with dsg configuration
+  * fix: remove manual mode check and adjust auto mode logic
+  * feat: 快捷键切换屏幕时判断有效屏幕数量
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 05 Jun 2025 20:48:02 +0800
+
+dde-daemon (6.1.34) unstable; urgency=medium
+
+  * chore: 更正一些dbus的调用，使用org风格接口名进行调用
+  * fix: 解决降噪设置被重复触发的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 29 May 2025 15:36:14 +0800
+
+dde-daemon (6.1.33) unstable; urgency=medium
+
+  * fix: 修复认证漏洞
+  * fix: extend custom timezone list
+  * fix: 解决亮度概率异常的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 27 May 2025 20:26:35 +0800
+
+dde-daemon (6.1.32) unstable; urgency=medium
+
+  * feat: add fallback NTP server support
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Tue, 13 May 2025 21:20:26 +0800
+
+dde-daemon (6.1.31) unstable; urgency=medium
+
+  * fix: 修改噪音抑制脚本
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 13 May 2025 19:37:31 +0800
+
+dde-daemon (6.1.30) unstable; urgency=medium
+
+  * fix: 解决蓝牙文件传输失败的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 08 May 2025 17:11:02 +0800
+
+dde-daemon (6.1.29) unstable; urgency=medium
+
+  * chore: add transifex config file
+  * fix: starting with none screen, then inserted a screen, the screen
+    cannot be lit
+  * feat: Provide osbuild properties
+  * fix: 解决dde-session-daemon启动慢的问题
+
+ -- YeShanShan <yeshanshan@uniontech.com>  Tue, 29 Apr 2025 10:56:39 +0800
+
+dde-daemon (6.1.28) unstable; urgency=medium
+
+  * feat: change default lock wallpaper path
+
+ -- zhangkun <zhangkun2@uniontech.com>  Tue, 22 Apr 2025 20:32:29 +0800
+
+dde-daemon (6.1.27) unstable; urgency=medium
+
+  * fix: 解决屏保没有同步的问题
+  * fix: 解决kwin升级后导致快捷键的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 17 Apr 2025 20:48:57 +0800
+
+dde-daemon (6.1.26) unstable; urgency=medium
+
+  * chore: display & xsettings moved to dde-daemon
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 02 Apr 2025 14:26:56 +0800
+
+dde-daemon (6.1.25) unstable; urgency=medium
+
+  * fix: 用户添加删除壁纸，发送信号
+  * fix: 热键使用dde-am启动应用，兼容玲珑应用
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 27 Mar 2025 14:43:33 +0800
+
+dde-daemon (6.1.24) unstable; urgency=medium
+
+  * fix: 解决控制中心设置启动动画尺寸后，重启无法进入系统的问题
+  * fix: 磁盘不足的通知，前往清理的文案没有翻译 
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 13 Mar 2025 17:07:00 +0800
+
+dde-daemon (6.1.23) unstable; urgency=medium
+
+  * feat: custom wallpaper maximum 20
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 05 Mar 2025 17:35:43 +0800
+
+dde-daemon (6.1.22) unstable; urgency=medium
+
+  * fix: 解决磐石系统下uadp存储的问题
+
+ -- Chengqi E <echengqi@uniontech.com>  Thu, 27 Feb 2025 16:04:06 +0800
+
+dde-daemon (6.1.21) unstable; urgency=medium
+
+  * fix: 解决磐石系统下设置不了壁纸的问题
+  * chore: 解决壁纸没有保存的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 20 Feb 2025 17:34:06 +0800
+
+dde-daemon (6.1.20) unstable; urgency=medium
+
+  * fix: 修复台式机电源管理中使用电源界面,显示有笔记本合盖时设置项问题
+  * fix: Accept bluetooth file notification will never timeout (#743)
+  * fix: 修复低电量阈值下拉框显示空白问题
+  * fix: 修复电源管理模块崩溃问题
+  * fix: 修复手势翻译错误的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 13 Feb 2025 15:28:30 +0800
+
+dde-daemon (6.1.19) unstable; urgency=medium
+
+  * fix: 解决切换grub启动菜单失败的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 24 Jan 2025 09:59:48 +0800
+
+dde-daemon (6.1.18) unstable; urgency=medium
+
+  * fix: 设置手势的动作后，发送infos变化的信号
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 16 Jan 2025 17:38:52 +0800
+
+dde-daemon (6.1.17) unstable; urgency=medium
+
+  * feat: 设置三指短触手势为打开关闭全局搜索
+  * fix: 添加窗口铺至左右侧快捷键的翻译，更新go.mod
+  * fix: 优化触控板逻辑
+  * fix: 手势动作支持设置
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 09 Jan 2025 11:18:00 +0800
+
+dde-daemon (6.1.16) unstable; urgency=medium
+
+  * fix: 适配libinput的升级，解决收不到tap事件的问题
+  * fix: 解决ImageEffect1接口调用失败的问题
+  * fix: 由于权限管控，预先创建/var/cache/deepin/dde-daemon目录
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 03 Jan 2025 11:03:48 +0800
+
+dde-daemon (6.1.15) unstable; urgency=medium
+
+  * fix: 适配pipewire，解决音频设备模式切换失败的问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 24 Dec 2024 11:43:20 +0800
+
+dde-daemon (6.1.14) unstable; urgency=medium
+
+  * fix: 解决禁用触控板无法禁用的问题
+  * fix: 修复按电源键“关闭显示器”无法再次按电源键点亮显示器问题
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 19 Dec 2024 11:10:23 +0800
+
+dde-daemon (6.1.13) unstable; urgency=medium
+
+  * fix: 定时关闭倒计时通知取消关闭按钮
+  * feat: 音频单声道设置取消pipewire限制
+  * feat: 音频框架默认pipewire，且treeland环境强制切换为pipewire框架
+  * feat: 设置默认主题为nirvana
+  * chore: update translations
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 13 Dec 2024 14:47:41 +0800
+
+dde-daemon (6.1.12) unstable; urgency=medium
+
+  * fix: 解决dconfig属性类型不对导致崩溃的问题
+  * fix: 修复节能设置中低电量时自动开启节能模式和使用电池时自动开启节能模式默认值与需求不符问题
+  * fix: 解决安全加固导致image-blur创建不了文件的问题
+  * fix: treeland下可以导出StatusNotifierWatcher接口
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 06 Dec 2024 17:17:38 +0800
+
+dde-daemon (6.1.11) unstable; urgency=medium
+
+  * feat: 修改语音朗读快捷键动作
+  * feat: treeland环境下音频框架默认使用pipewire
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 29 Nov 2024 11:34:39 +0800
+
+dde-daemon (6.1.10) unstable; urgency=medium
+
+  * feat: 修复安全漏洞
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 22 Nov 2024 10:59:32 +0800
+
+dde-daemon (6.1.9) unstable; urgency=medium
+
+  * feat: automatic switch power saving mode threshold
+  * fix: 创建配置目录: /var/lib/dde-daemon
+  * fix: 解决power的dconfig配置初始化失败的问题
+  * fix: 解决热键不响应问题
+  * chore: 更正bluez属性Percentage的类型
+  * feat: support selecting the action when the battery is low
+  * fix: wrong bus name of dde-lock-service
+
+ -- fuleyi <fuleyi@uniontech.com>  Wed, 20 Nov 2024 14:21:58 +0800
+
+dde-daemon (6.1.8) unstable; urgency=medium
+
+  * fix: 修复用户体验计划不可用问题
+  * chore: 修改遗漏的dbus接口变更
+  * chore: 解决super+lock不锁屏的问题
+  * chore: 添加时区，并且将时间的配置改为dconfig控制
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 07 Nov 2024 13:49:01 +0800
+
+dde-daemon (6.1.7) unstable; urgency=medium
+
+  * chore: 修改网络代理dbus接口名称
+
+  -- caixiangrong <caixiangrong@uniontech.com>  Thu, 24 Oct 2024 17:15:40 +0800
+
+dde-daemon (6.1.6) unstable; urgency=medium
+
+  * feat: 解决dde-system-daemon服务启动不了的问题 (#663)
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 22 Oct 2024 17:03:02 +0800
+
+dde-daemon (6.1.5) unstable; urgency=medium
+
+  * feat: 解决dde-system-daemon服务启动不了的问题 (#663)
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 22 Oct 2024 13:20:09 +0800
+
+dde-daemon (6.1.4) unstable; urgency=medium
+
+  * feat: 增加deepin-daemon和deepin-admin-daemon两个用户
+
+ -- fuleyi <fuleyi@uniontech.com>  Mon, 21 Oct 2024 19:14:24 +0800
+
+dde-daemon (6.1.3) unstable; urgency=medium
+
+  * 添加dde-session-daemon 的service文件
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 18 Oct 2024 19:08:32 +0800
+
+dde-daemon (6.1.2) unstable; urgency=medium
+
+  * chore:修复dde-daemon编译问题
+  * chore: remove deprecated ioutil
+  * chore: systemd hardening
+  * chore: systemd文件调整，makefile去掉冗余的安装 (linuxdeepin#654)
+
+ -- fuleyi <fuleyi@uniontech.com>  Fri, 18 Oct 2024 14:34:13 +0800
+
+dde-daemon (6.1.1) unstable; urgency=medium
+
+  * chore: cherry-pick paths from professional
+
+ -- fuleyi <fuleyi@uniontech.com>  Mon, 02 Sep 2024 15:18:43 +0800
+
+dde-daemon (6.1.0) unstable; urgency=medium
+
+  * 1070代码迁移，接口调整为v23风格
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 16 Jul 2024 09:47:14 +0800
+
+dde-daemon (5.15.13.1) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 监听飞行模式和WIFI状态改变时使用定时显示OSD(Bug: 189383)(Influence: 显示飞行模式OSD时不显示WIFI连接OSD)
+  * chore: 增加lastore日志(Influence: 日志)
+  * fix: 修复播放器无法暂停导致音频服务阻塞问题(Bug: 198489)(Influence: 声音)
+  * fix: dconfig类型默认为float64，直接转化成uint32会导致崩溃(Influence: dde-session-daemon崩溃)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Tue, 13 Jun 2023 10:57:33 +0800
+
+dde-daemon (5.15.12.3) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 修复战斗版镜像待机/休眠后无法通过电源键唤醒的问题(Bug: 196477)(Influence: 待机/休眠功能)
+  * fix: 修复待机唤醒后黑屏问题(Bug: 196477)(Influence: 修复待机唤醒后黑屏问题)
+  * fix: 修复平衡模式错误问题(Bug: 199681)(Influence: 无)
+  * chore: 更新翻译(Task: 267299)(Influence: 翻译)
+  * fix: 第一次进入登陆界面界面缩放异常(Bug: 202729)(Influence: 升级之后缩放)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Fri, 02 Jun 2023 17:07:13 +0800
+
+dde-daemon (5.15.12.2) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 默认开启aspm(Bug: 197329)(Influence: aspm)
+  * feat: uosid等无原密码去修改密码的方式，keyring白盒加密不删除login.keyring(Task: 262399)(Influence: keyring白盒功能)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Fri, 26 May 2023 17:11:02 +0800
+
+dde-daemon (5.15.12.1) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 处理飞行模式硬按键事件(KEY_RFKILL)(Bug: 196693)(Influence: 飞行模式硬开关)
+  * fix: 修改存在pstate时,是否支持节能模式的判断(Bug: 200513)(Influence: 性能模式)
+  * fix: grub2 获取os num的忽略标题修改(Task: 267459)(Influence: grub get os num)
+  * feat: 扩展org.kde.StatusNotifierWatcher服务，允许托盘获取自身位置(Task: 266755)(Influence: 暂无)
+  * feat: 修改应用管控通知(Task: 268523)(Influence: 应用管控通知)
+  * feat: 新keyring白盒方案解耦dde-daemon，删除相关代码(Task: 262399)(Influence: keyring白盒功能)
+  * feat: 修改应用管控通知内容(Task: 268523)(Influence: 应用管控通知)
+  * chore(power): 性能模式优化，默认开启aspm(Task: 254685)(Influence: 性能模式)
+  * chore: 更新翻译(Task: 267299)(Influence: 翻译)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Thu, 25 May 2023 15:06:33 +0800
+
+dde-daemon (5.15.11.1) unstable; urgency=medium
+
+  [ Deepin Packages Builder ]
+  * fix: 修复性能模式切换dbus属性不发出改变信号的问题(Task: 251417)(Influence: 可能影响性能模式切换导致的亮度不变的问题)
+  * fix: 增加越界和空指针的判断(Influence: 进程崩溃)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Thu, 11 May 2023 14:47:06 +0800
+
+dde-daemon (5.15.11) unstable; urgency=medium
+
+  [ lichangze ]
+  * bump version to 5.15.4
+
+  [ Deepin Packages Builder ]
+  * fix: amdgpu balance use auto(Influence: amdgpu)
+  * perf: 优化eventlog启动过程中的资源占用(Influence: 性能优化)
+  * feat: 个性化提供界面模式设置(Task: 212923)(Influence: 个性化提供界面模式设置)
+  * fix: 按照配置隐藏entry的驻留项(Bug: 180677)(Influence: dock应用驻留)
+  * fix: wayland下关闭触控屏长按手势后，不响应菜单(Task: 21917)(Influence: 长按手势)
+  * feat: 优化蓝牙接收文件后查看的选中效果(Bug: 183467)(Influence: 文件选中效果)
+  * fix: 完善grub2的权限检查(Task: 220827)(Influence: grub2接口调用权限管控)
+  * fix: 规避fonts-gb-st-super字体不显示问题(Bug: 182839)(Influence: 字体过滤条件)
+  * fix: 修改DMIInfo数据类型(Bug: 183185)(Influence: DMIInfo数据类型)
+  * feat: 支持ldap域用户登录(Task: 235581)(Influence: 域用户登录)
+  * fix: 控制中心删除LDAP账户异常(Task: 235581)(Influence: 控制中心删除LDAP账户)
+  * fix: 控制中心新建用户LDAP账户消失(Bug: 183531)(Influence: 控制中心新建用户)
+  * fix: 控制中心删除域账户异常(Bug: 183747)(Influence: 控制中心删除账户)
+  * fix: 控制中心LDAP域账户显示异常(Bug: 183741)(Influence: 控制中心LDAP域账户显示)
+  * fix: 控制中心创建与AD域账户同名的账户异常(Bug: 184611)(Influence: 控制账户新建账户)
+  * feat: 增加用户组增改删接口(Influence: 用户组接口)
+  * feat: 增加对group修改删除的管控(Task: 237371)(Influence: group修改删除)
+  * fix: 修改密码过期天数计算方法(Bug: 185533, 180171)
+  * fix: 修复部分机器监控不到开合盖信号问题(Bug: 170577)(Influence: 监听开合盖信号)
+  * chore: optimize imports(Influence: 优化导入)
+  * fix: 修复传输文件名重复时查看选中的文件错误问题(Bug: 185919)(Influence: 蓝牙文件传输查看)
+  * fix: 删除忘记密码重置密码清空keyring数据(Task: 241129)(Influence: 重置密码不情况密钥环)
+  * feat: 802-1x 可以修改 identity 字段(Task: 212907)(Influence: 网络)
+  * feat: 增加wpa-eap-suite-b-192(Task: 212881)(Influence: wifi)
+  * feat: lastore模块逻辑修改(Task: 214983)(Influence: 通知和apt代理获取)
+  * feat: 新增greeter壁纸管控(Task: 244565)(Influence: greeter壁纸管控)
+  * feat: 1060埋点需求新增接口(Task: 212925)(Influence: 无)
+  * fix: 修复jenkins单元测试报错(Influence: 构建)
+  * fix: 新用户进入桌面时很卡问题修复(Bug: 187571)(Influence: 新用户进入桌面)
+  * feat: 增加更新模式开关(Bug: 188459, 188481)(Influence: 更新模式)
+  * fix: 解决弹出重置密码框后任务栏图标异常问题(Bug: 188605)(Influence: 打开重置密码框任务栏状态)
+  * fix: 密码过期当天24时后，依然保持当天过期的提示和状态(Bug: 187343)
+  * chore: 调出剪切板时隐藏启动器(Task: 246121)(Influence: 焦点变化)
+  * fix: 提供自动回连配置(Bug: 187445)(Influence: 无)
+  * fix: 点击一个无法被删除的用户组的删除图标后，点击添加用户组按钮没有响应(Bug: 188753)(Influence: 账户模块)
+  * fix: 完善grub2的权限检查(Task: 220827)(Influence: grub2接口调用权限管控)
+  * 已调研GNOME、KDE、麒麟等桌面环境，均未对时区做对应处理(Bug: 187343)
+  * feat: login1重启后,重新inhibit(Task: 242863)(Influence: inhibit)
+  * feat: 适配玲珑应用(Task: 229687)(Influence: 适配玲珑应用)
+  * feat: 新增tty管控接口(Task: 242863)(Influence: tty管控)
+  * fix: 拔掉电源时电池，延迟更新剩余时间计算(Bug: 100570)(Influence: 电池状态)
+  * feat: 修改更新通知逻辑和触发时机(Task: 248045)(Influence: 更新通知)
+  * fix: 修改loader异常处理(Influence: loader)
+  * fix: 修复dock空指针问题(Influence: dock空指针)
+  * fix: 修复蓝牙文件传输255字符失败问题(Bug: 191097)(Influence: 蓝牙文件传输)
+  * fix: 玲珑应用后缀默认改为不显示(Bug: 190963)(Influence: 玲珑应用后缀)
+  * fix: 修复按两次物理电源键，进入锁屏界面，按物理电源键，没有响应的问题(Bug: 191375)(Influence: 连续按两次电源键后锁屏)
+  * fix: 完善代码，增加判空处理(Task: 252005)(Influence: 代码完善)
+  * fix: 只要收到了systemd-login1的唤醒信号，就认为当前处于开盖状态(Bug: 191235)(Influence: 合盖休眠)
+  * chore: 优化launcher模块启动时机(Task: 251417)(Influence: 桌面登录速度)
+  * perf: 提供获取硬件数据的接口(Task: 251417)(Influence: com.deepin.system.SystemInfo系统服务下 GetLshwInfo 接口功能正常)
+  * perf: 修正lshw的使用方法(Task: 251417)(Influence: systemInfo导出数据)
+  * feat: XF86WebCam支持开/关相机(Bug: 192009)(Influence: 开关相机)
+  * fix: DPMS on多次导致闪屏，改为300ms内触发多次不响应(Bug: 188981)(Influence: DPMS on多次)
+  * feat(power): PANGU M900芯片性能模式适配(Task: 245915)(Influence: 电源-性能模式)
+  * fix: 开启‘插入鼠标时禁用触控板’, 切换用户后, 拔掉鼠标, 触控板不可用(Bug: 193683)(Influence: 获取鼠标信息)
+  * feat(systeminfo): 增加 CPUHardware 属性(Task: 248027)(Influence: 无)
+  * feat: 新增安装错误提示通知(Task: 251749)(Influence: 更新提示通知)
+  * fix: 增加是否允许显示WIFI连接断开OSD提示的配置(Bug: 189383)(Influence: 进入或退出飞行模式时不显示WIFI连接断开的OSD提示)
+  * chore: 翻译通知文案(Task: 251749)(Influence: 翻译)
+  * fix: 备份service使用错误(Task: 260263)(Influence: 通知)
+  * fix: 正常系统更新不处理通知(Task: 260263)(Influence: 通知)
+  * fix: 通知service使用错误(Task: 260263)(Influence: 通知)
+  * fix: 修复几个用户数据没清除导致keyring无法解锁从而弹窗的问题(Task: 260271)(Influence: keyring弹窗)
+  * ref: 使用override的方式规避规避fonts-gb-st-super字体不显示问题(Bug: 182839)(Influence: 字体过滤条件)
+  * fix(bluetooth): 移除飞行模式蓝牙状态控制代码(Bug: 189125)(Influence: 飞行模式-蓝牙开关)
+  * fix(systeminfo): 显示频率的值不正确(Bug: 191563)(Influence: 显示频率)
+  * feat(display): 增加自动背光功能(Task: 250099)(Influence: 亮度)
+  * fix: deepin-reader.desktop不支持image/tif删除SupportedType(Task: 255729)(Influence: 打开tif格式图片)
+  * fix: add image/tif到deepin-image-viewer.desktop(Task: 255729)(Influence: 打开tif格式图片)
+  * fix: 社区版调用账户IsUsernameValid崩溃(Bug: 189383)(Influence: 社区版本执行该接口)
+  * feat: 系统不存在tpm设备时，不启动tpm服务(Task: 257009)(Influence: 按照操作步骤，当系统不存在tpm设备时，服务不启动，否则，服务启动)
+  * feat(audio): 增加ReduceNoise默认值可配置(Task: 256189)(Influence: ReduceNoise 初值可配置)
+  * fix: S3前关闭特效(Bug: 188981, 187917)(Influence: 闪屏)
+  * fix: 修复icon误删问题(Bug: 197937)(Influence: 修改用户头像)
+  * fix: 修复icon无法选中问题(Bug: 197947)(Influence: 修改用户头像)
+  * fix: 打开播放器后dde-session-daemon崩溃(Bug: 197329)(Influence: 低电量播放视频导致崩溃)
+  * fix: 修复按快捷键win+d ，启动器窗口不隐藏的问题(Bug: 198129)(Influence: 显示桌面快捷键)
+  * feat(power): 性能模式优化(Task: 254685)(Influence: 性能模式)
+  * feat: 增加系统默认高性能启动(Influence: 性能模式)
+  * fix: 避免开机后高性能模式恢复后带来的亮度变化(Task: 251417)(Influence: 性能模式)
+
+ -- Deepin Packages Builder <packages@deepin.org>  Sat, 06 May 2023 13:57:32 +0800
+
+dde-daemon (5.15.3) unstable; urgency=low
+
+  * bump version to 5.15.3
+
+ -- lichangze <lichangze@uniontech.com>  Mon, 9 Jan 2023 16:20:17 +0000
+
+# Older entries have been removed from this changelog.
+# To read the complete changelog use `apt changelog dde-daemon`.

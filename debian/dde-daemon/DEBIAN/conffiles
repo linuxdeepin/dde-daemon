@@ -1,0 +1,6 @@
+/etc/deepin/grub2_edit_auth.conf
+/etc/default/grub.d/10_deepin.cfg
+/etc/grub.d/35_deepin_gfxmode
+/etc/kernel/postinst.d/reconfigure-dde-daemon
+/etc/pam.d/deepin-auth-keyboard
+/etc/pulse/daemon.conf.d/10-deepin.conf

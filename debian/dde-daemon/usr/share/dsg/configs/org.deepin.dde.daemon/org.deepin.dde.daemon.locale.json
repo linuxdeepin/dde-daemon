@@ -1,0 +1,16 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "locales": {
+            "value": [],
+            "serial": 0,
+            "flags": [],
+            "name": "language list",
+            "name[zh_CN]": "语言列表",
+            "description": "language list",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}

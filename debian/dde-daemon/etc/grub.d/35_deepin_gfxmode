@@ -1,0 +1,10 @@
+#!/bin/sh
+for mod in /boot/grub/*/deepin_gfxmode.mod; do
+    if [ -f "$mod" ]; then
+        cat << EOF
+insmod deepin_gfxmode
+deepin_gfxmode
+EOF
+        break
+    fi
+done

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -u
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+
+REAL_BINARY="/usr/libexec/deepin/langselector"
+LOADER="/usr/bin/deepin-security-loader"
+LOADER_EXEC="/usr/bin/deepin-security-loader-exec"
+LOGGER="/usr/bin/logger"
+
+log_to_journal() {
+    priority="$1"
+    message="$2"
+    if [ -x "$LOGGER" ]; then
+        "$LOGGER" -t dde-langselector -p "$priority" -- "$message"
+    fi
+}
+
+if [ -x "$LOADER" ] && [ -x "$LOADER_EXEC" ] && \
+    getcap "$LOADER_EXEC" 2>/dev/null | grep -q 'cap_setgid'; then
+    log_to_journal user.info "Starting through deepin-security-loader."
+    exec "$LOADER" --group deepin-daemon -- "$REAL_BINARY" "$@"
+fi
+
+# Without loader-injected file descriptors, Handshake treats this as a normal
+# launch and protected system-service calls fall back to Polkit authorization.
+log_to_journal user.warning \
+    "deepin-security-loader unavailable; falling back to Polkit."
+exec "$REAL_BINARY" "$@"

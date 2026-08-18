@@ -1,0 +1,10 @@
+polkit.addRule(function(action, subject) {
+    if (action.id === "org.deepin.dde.grub2.prepare-gfxmode-detect" &&
+        subject.isInGroup("sudo")) {
+        if (subject.active) {
+            return polkit.Result.YES;  // 活跃会话允许操作
+        } else {
+            return polkit.Result.NO;   // 非活跃会话拒绝
+        }
+    }
+});

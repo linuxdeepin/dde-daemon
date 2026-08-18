@@ -1,0 +1,12 @@
+Package: dde-daemon-dbgsym
+Source: dde-daemon
+Version: 6.1.102
+Auto-Built-Package: debug-symbols
+Architecture: amd64
+Maintainer: Deepin Packages Builder <packages@deepin.com>
+Installed-Size: 41442
+Depends: dde-daemon (= 6.1.102)
+Section: debug
+Priority: optional
+Description: debug symbols for dde-daemon
+Build-Ids: 0178d8a3b43069dfe99382fb73bb9a207e7e66e4 0aaabf8e42adaaf0e3c7e53fda37586ea580f2e3 1ff9d74426cc306e3598db462e5c3f016ca8b10f 210e0cc2051f496713e6a7efeafa361a86eaf011 2c2b5cdfbc8c237f73eeddb72bf38158635aa365 48a0999c8869e142e90f25c688d42fb1167685d5 517dd632991bf2f386d02633d4ef9ff7bf96c70a 51ee6ac3b200dc43bf31b5c65950eaa28e09dc90 82c5f72311aeda2a4de7b9f1f00b8033d5921d7f 871cf8e8d3d78bf8ae190975def76940e63ca7a7 935f18574b5a02baf3d6cd9d3c6a3fcc97193c18 999c9e5a50f46d86b037a6106cd0e7689d3ff21f dd85465f563ece04b9175f340771c34e183d1c91 ead7014491aed310856152c453e15848b1724ee3

@@ -1,0 +1,116 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+      "middleButtonEnabled": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "middleButtonEnabled",
+        "name[zh_CN]": "启用中键模拟",
+        "description[zh_CN]": "启用TrackPoint中键模拟",
+        "description": "Enables TrackPoint middle button emulation",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "middleButtonTimeout": {
+        "value": 50,
+        "serial": 0,
+        "flags": [],
+        "name": "middleButtonTimeout",
+        "name[zh_CN]": "中键超时时间",
+        "description[zh_CN]": "TrackPoint中键超时时间",
+        "description": "TrackPoint middle button timeout",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "wheelEmulation": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "wheelEmulation",
+        "name[zh_CN]": "滚轮模拟",
+        "description[zh_CN]": "启用TrackPoint滚轮模拟",
+        "description": "Enables TrackPoint wheel emulation",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "wheelEmulationButton": {
+        "value": 2,
+        "serial": 0,
+        "flags": [],
+        "name": "wheelEmulationButton",
+        "name[zh_CN]": "滚轮模拟按键",
+        "description[zh_CN]": "用于滚轮模拟的TrackPoint按键",
+        "description": "TrackPoint button for wheel emulation",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "wheelEmulationTimeout": {
+        "value": 200,
+        "serial": 0,
+        "flags": [],
+        "name": "wheelEmulationTimeout",
+        "name[zh_CN]": "滚轮模拟超时",
+        "description[zh_CN]": "TrackPoint滚轮模拟超时时间",
+        "description": "TrackPoint wheel emulation timeout",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "wheelHorizScroll": {
+        "value": true,
+        "serial": 0,
+        "flags": [],
+        "name": "wheelHorizScroll",
+        "name[zh_CN]": "滚轮水平滚动",
+        "description[zh_CN]": "启用TrackPoint滚轮模拟水平滚动",
+        "description": "Enables TrackPoint wheel emulation horizontal scrolling",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionAcceleration": {
+        "value": 1.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionAcceleration",
+        "name[zh_CN]": "TrackPoint加速",
+        "description[zh_CN]": "TrackPoint移动加速倍数，-1为系统默认值",
+        "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionThreshold": {
+        "value": 1.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionThreshold",
+        "name[zh_CN]": "TrackPoint加速阈值",
+        "description[zh_CN]": "激活TrackPoint加速前指针必须移动的距离（像素），-1为系统默认值",
+        "description": "Distance in pixels the pointer must move before accelerated mouse motion is activated. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "motionScaling": {
+        "value": 10.0,
+        "serial": 0,
+        "flags": [],
+        "name": "motionScaling",
+        "name[zh_CN]": "TrackPoint速度缩放",
+        "description[zh_CN]": "TrackPoint移动速度倍数，-1为系统默认值",
+        "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
+        "permissions": "readwrite",
+        "visibility": "public"
+      },
+      "leftHanded": {
+        "value": false,
+        "serial": 0,
+        "flags": [],
+        "name": "leftHanded",
+        "name[zh_CN]": "左手模式",
+        "description[zh_CN]": "设置为true以启用左手模式",
+        "description": "Set it to true to enable left-handed mode",
+        "permissions": "readwrite",
+        "visibility": "public"
+      }
+  }
+}

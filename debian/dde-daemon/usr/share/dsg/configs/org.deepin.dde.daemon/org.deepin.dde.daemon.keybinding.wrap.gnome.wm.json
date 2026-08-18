@@ -1,0 +1,456 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "switchToWorkspaceLeft": {
+            "value": ["<Control><Alt>Left"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchToWorkspaceLeft",
+            "name[zh_CN]": "切换到左侧工作区",
+            "description": "Switch to workspace left",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchToWorkspaceRight": {
+            "value": ["<Control><Alt>Right"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchToWorkspaceRight",
+            "name[zh_CN]": "切换到右侧工作区",
+            "description": "Switch to workspace right",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchToWorkspaceUp": {
+            "value": ["<Super>Page_Up","<Control><Alt>Up"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchToWorkspaceUp",
+            "name[zh_CN]": "切换到上方工作区",
+            "description": "Switch to workspace above",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchToWorkspaceDown": {
+            "value": ["<Super>Page_Down","<Control><Alt>Down"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchToWorkspaceDown",
+            "name[zh_CN]": "切换到下方工作区",
+            "description": "Switch to workspace below",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchToWorkspaceFirst": {
+            "value": ["<Super>Home"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchToWorkspaceFirst",
+            "name[zh_CN]": "切换到第一个工作区",
+            "description": "Switch to workspace 1",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchToWorkspaceLast": {
+            "value": ["<Super>End"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchToWorkspaceLast",
+            "name[zh_CN]": "切换到最后一个工作区",
+            "description": "Switch to last workspace",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchGroup": {
+            "value": ["<Super>Above_Tab","<Alt>Above_Tab"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchGroup",
+            "name[zh_CN]": "切换应用程序窗口",
+            "description": "Switch windows of an application",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchGroupBackward": {
+            "value": ["<Shift><Super>Above_Tab","<Shift><Alt>Above_Tab"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchGroupBackward",
+            "name[zh_CN]": "反向切换应用程序窗口",
+            "description": "Reverse switch windows of an application",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchApplications": {
+            "value": ["<Super>Tab","<Alt>Tab"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchApplications",
+            "name[zh_CN]": "切换应用程序",
+            "description": "Switch applications",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchApplicationsBackward": {
+            "value": ["<Shift><Super>Tab","<Shift><Alt>Tab"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchApplicationsBackward",
+            "name[zh_CN]": "反向切换应用程序",
+            "description": "Reverse switch applications",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchPanels": {
+            "value": ["<Control><Alt>Tab"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchPanels",
+            "name[zh_CN]": "切换系统控件",
+            "description": "Switch system controls",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchPanelsBackward": {
+            "value": ["<Shift><Control><Alt>Tab"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchPanelsBackward",
+            "name[zh_CN]": "反向切换系统控件",
+            "description": "Reverse switch system controls",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "cycleGroup": {
+            "value": ["<Alt>F6"],
+            "serial": 0,
+            "flags": [],
+            "name": "cycleGroup",
+            "name[zh_CN]": "直接切换应用窗口",
+            "description": "Switch windows of an app directly",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "cycleGroupBackward": {
+            "value": ["<Shift><Alt>F6"],
+            "serial": 0,
+            "flags": [],
+            "name": "cycleGroupBackward",
+            "name[zh_CN]": "反向直接切换应用窗口",
+            "description": "Reverse switch windows of an app directly",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "cycleWindows": {
+            "value": ["<Alt>Escape"],
+            "serial": 0,
+            "flags": [],
+            "name": "cycleWindows",
+            "name[zh_CN]": "直接切换窗口",
+            "description": "Switch windows directly",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "cycleWindowsBackward": {
+            "value": ["<Shift><Alt>Escape"],
+            "serial": 0,
+            "flags": [],
+            "name": "cycleWindowsBackward",
+            "name[zh_CN]": "反向直接切换窗口",
+            "description": "Reverse switch windows directly",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "cyclePanels": {
+            "value": ["<Control><Alt>Escape"],
+            "serial": 0,
+            "flags": [],
+            "name": "cyclePanels",
+            "name[zh_CN]": "直接切换系统控件",
+            "description": "Switch system controls directly",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "cyclePanelsBackward": {
+            "value": ["<Shift><Control><Alt>Escape"],
+            "serial": 0,
+            "flags": [],
+            "name": "cyclePanelsBackward",
+            "name[zh_CN]": "反向直接切换系统控件",
+            "description": "Reverse switch system controls directly",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "panelMainMenu": {
+            "value": ["<Super>s","<Alt>F1"],
+            "serial": 0,
+            "flags": [],
+            "name": "panelMainMenu",
+            "name[zh_CN]": "显示活动概览",
+            "description": "Show the activities overview",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "panelRunDialog": {
+            "value": ["<Alt>F2"],
+            "serial": 0,
+            "flags": [],
+            "name": "panelRunDialog",
+            "name[zh_CN]": "显示运行命令提示",
+            "description": "Show the run command prompt",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "activateWindowMenu": {
+            "value": ["<Alt>space"],
+            "serial": 0,
+            "flags": [],
+            "name": "activateWindowMenu",
+            "name[zh_CN]": "激活窗口菜单",
+            "description": "Activate the window menu",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "toggleMaximized": {
+            "value": ["<Alt>F10"],
+            "serial": 0,
+            "flags": [],
+            "name": "toggleMaximized",
+            "name[zh_CN]": "切换最大化状态",
+            "description": "Toggle maximization state",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "maximize": {
+            "value": ["<Super>Up"],
+            "serial": 0,
+            "flags": [],
+            "name": "maximize",
+            "name[zh_CN]": "最大化窗口",
+            "description": "Maximize window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "unmaximize": {
+            "value": ["<Super>Down","<Alt>F5"],
+            "serial": 0,
+            "flags": [],
+            "name": "unmaximize",
+            "name[zh_CN]": "还原窗口",
+            "description": "Restore window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "minimize": {
+            "value": ["<Super>h"],
+            "serial": 0,
+            "flags": [],
+            "name": "minimize",
+            "name[zh_CN]": "最小化窗口",
+            "description": "Minimize window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "close": {
+            "value": ["<Alt>F4"],
+            "serial": 0,
+            "flags": [],
+            "name": "close",
+            "name[zh_CN]": "关闭窗口",
+            "description": "Close window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "beginMove": {
+            "value": ["<Alt>F7"],
+            "serial": 0,
+            "flags": [],
+            "name": "beginMove",
+            "name[zh_CN]": "移动窗口",
+            "description": "Move window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "beginResize": {
+            "value": ["<Alt>F8"],
+            "serial": 0,
+            "flags": [],
+            "name": "beginResize",
+            "name[zh_CN]": "调整窗口大小",
+            "description": "Resize window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToWorkspaceFirst": {
+            "value": ["<Super><Shift>Home"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToWorkspaceFirst",
+            "name[zh_CN]": "移动窗口到第一个工作区",
+            "description": "Move window to workspace 1",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToWorkspaceLast": {
+            "value": ["<Super><Shift>End"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToWorkspaceLast",
+            "name[zh_CN]": "移动窗口到最后一个工作区",
+            "description": "Move window to last workspace",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToWorkspaceLeft": {
+            "value": ["<Control><Shift><Alt>Left"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToWorkspaceLeft",
+            "name[zh_CN]": "移动窗口到左侧工作区",
+            "description": "Move window one workspace to the left",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToWorkspaceRight": {
+            "value": ["<Control><Shift><Alt>Right"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToWorkspaceRight",
+            "name[zh_CN]": "移动窗口到右侧工作区",
+            "description": "Move window one workspace to the right",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToWorkspaceUp": {
+            "value": ["<Super><Shift>Page_Up","<Control><Shift><Alt>Up"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToWorkspaceUp",
+            "name[zh_CN]": "移动窗口到上方工作区",
+            "description": "Move window one workspace up",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToWorkspaceDown": {
+            "value": ["<Super><Shift>Page_Down","<Control><Shift><Alt>Down"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToWorkspaceDown",
+            "name[zh_CN]": "移动窗口到下方工作区",
+            "description": "Move window one workspace down",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToMonitorLeft": {
+            "value": ["<Super><Shift>Left"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToMonitorLeft",
+            "name[zh_CN]": "移动窗口到左侧显示器",
+            "description": "Move window to the next monitor on the left",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToMonitorRight": {
+            "value": ["<Super><Shift>Right"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToMonitorRight",
+            "name[zh_CN]": "移动窗口到右侧显示器",
+            "description": "Move window to the next monitor on the right",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToMonitorUp": {
+            "value": ["<Super><Shift>Up"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToMonitorUp",
+            "name[zh_CN]": "移动窗口到上方显示器",
+            "description": "Move window to the next monitor above",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "moveToMonitorDown": {
+            "value": ["<Super><Shift>Down"],
+            "serial": 0,
+            "flags": [],
+            "name": "moveToMonitorDown",
+            "name[zh_CN]": "移动窗口到下方显示器",
+            "description": "Move window to the next monitor below",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchInputSource": {
+            "value": ["<Super>space"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchInputSource",
+            "name[zh_CN]": "切换输入法",
+            "description": "Switch input source",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchInputSourceBackward": {
+            "value": ["<Shift><Super>space"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchInputSourceBackward",
+            "name[zh_CN]": "反向切换输入法",
+            "description": "Switch input source backward",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "exposeWindows": {
+            "value": ["<Super>w"],
+            "serial": 0,
+            "flags": [],
+            "name": "exposeWindows",
+            "name[zh_CN]": "打开窗口概览",
+            "description": "Shortcut to open the window overview",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "exposeAllWindows": {
+            "value": ["<Super>a"],
+            "serial": 0,
+            "flags": [],
+            "name": "exposeAllWindows",
+            "name[zh_CN]": "打开所有窗口概览",
+            "description": "Shortcut to open the window overview for all windows",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "previewWorkspace": {
+            "value": ["<Super>s"],
+            "serial": 0,
+            "flags": [],
+            "name": "previewWorkspace",
+            "name[zh_CN]": "预览所有工作区",
+            "description": "Preview all workspaces",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "zoomIn": {
+            "value": ["<Super>plus","<Super>KP_Add"],
+            "serial": 0,
+            "flags": [],
+            "name": "zoomIn",
+            "name[zh_CN]": "放大",
+            "description": "Zoom in",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "zoomOut": {
+            "value": ["<Super>minus","<Super>KP_Subtract"],
+            "serial": 0,
+            "flags": [],
+            "name": "zoomOut",
+            "name[zh_CN]": "缩小",
+            "description": "Zoom out",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}

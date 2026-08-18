@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.deepin.dde.SoundEffect1
+Exec=/bin/false
+SystemdService=org.deepin.dde.SoundEffect1.service

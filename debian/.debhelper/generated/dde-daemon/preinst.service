@@ -1,0 +1,5 @@
+# Automatically added by dh_installsystemd/13.24.2
+if [ -z "$DPKG_ROOT" ] && [ "$1" = upgrade ] && [ -d /run/systemd/system ] ; then
+	deb-systemd-invoke stop 'dde-backlight-helper.service' 'dde-greeter-setter.service' 'dde-lock-service.service' 'dde-system-daemon.service' 'deepin-grub2.service' >/dev/null || true
+fi
+# End automatically added section

@@ -1,0 +1,39 @@
+[Unit]
+Description=deepin user lock service
+
+[Service]
+Type=dbus
+# 使用 lightdm 用户和组启动
+User=lightdm
+Group=lightdm
+BusName=org.deepin.dde.LockService1
+ExecStart=/usr/lib/deepin-daemon/dde-lockservice
+# 通过设置/var/lib/lightdm/目录的lightdm组权限，lockservice可以安全地以lightdm用户运行
+StandardOutput=journal
+StandardError=journal
+
+ProtectSystem=strict
+ReadWritePaths=-/var/lib/lightdm
+
+NoNewPrivileges=true
+PrivateMounts=yes
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+PrivateMounts=yes
+PrivateTmp=yes
+PrivateDevices=yes
+PrivateNetwork=yes
+# 需要读取/proc的exe字段数据
+#PrivateUsers=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RemoveIPC=yes
+# 和golang -pie参数冲突，导致进程无法启动
+#MemoryDenyWriteExecute=yes
+#MemoryLimit=100M
+
+[Install]
+Alias=dbus-org.deepin.dde.LockService1.service

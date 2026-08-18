@@ -1,0 +1,246 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "launcher": {
+            "value": ["Super_L","Super_R"],
+            "serial": 0,
+            "flags": [],
+            "name": "launcher",
+            "name[zh_CN]": "显示隐藏启动器",
+            "description": "Show or hide dde-launcher",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "switchMonitors": {
+            "value": ["<Super>P"],
+            "serial": 0,
+            "flags": [],
+            "name": "switchMonitors",
+            "name[zh_CN]": "切换显示器",
+            "description": "allow switch monitors display mode",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "terminal": {
+            "value": ["<Control><Alt>T"],
+            "serial": 0,
+            "flags": [],
+            "name": "terminal",
+            "name[zh_CN]": "启动终端",
+            "description": "Launch default terminal emulator",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "deepinScreenRecorder": {
+            "value": ["<Control><Alt>R"],
+            "serial": 0,
+            "flags": [],
+            "name": "deepinScreenRecorder",
+            "name[zh_CN]": "启动屏幕录制",
+            "description": "Launch screen recorder",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "systemMonitor": {
+            "value": ["<Control><Alt>Escape"],
+            "serial": 0,
+            "flags": [],
+            "name": "systemMonitor",
+            "name[zh_CN]": "启动系统监视器",
+            "description": "Launch system monitor",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "lockScreen": {
+            "value": ["<Super>L"],
+            "serial": 0,
+            "flags": [],
+            "name": "lockScreen",
+            "name[zh_CN]": "锁定屏幕",
+            "description": "Lock screen",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "logout": {
+            "value": ["<Control><Alt>Delete","<Control><Alt>KP_Delete","<Control><Alt>."],
+            "serial": 0,
+            "flags": [],
+            "name": "logout",
+            "name[zh_CN]": "显示关机界面",
+            "description": "Show shutdown interface",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "terminalQuake": {
+            "value": ["<Alt>F2"],
+            "serial": 0,
+            "flags": [],
+            "name": "terminalQuake",
+            "name[zh_CN]": "雷神终端",
+            "description": "Show or hide quake mode deepin terminal",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshot": {
+            "value": ["<Control><Alt>A"],
+            "serial": 0,
+            "flags": [],
+            "name": "screenshot",
+            "name[zh_CN]": "截图",
+            "description": "Take a screenshot",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshotFullscreen": {
+            "value": ["Print"],
+            "serial": 0,
+            "flags": [],
+            "name": "screenshotFullscreen",
+            "name[zh_CN]": "全屏截图",
+            "description": "Take a screenshot the whole screen",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshotWindow": {
+            "value": ["<Alt>Print"],
+            "serial": 0,
+            "flags": [],
+            "name": "screenshotWindow",
+            "name[zh_CN]": "窗口截图",
+            "description": "Take a screenshot of the most top window",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshotDelayed": {
+            "value": ["<Control>Print"],
+            "serial": 0,
+            "flags": [],
+            "name": "screenshotDelayed",
+            "name[zh_CN]": "延时截图",
+            "description": "Take a screenshot after a few seconds",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "fileManager": {
+            "value": ["<Super>E"],
+            "serial": 0,
+            "flags": [],
+            "name": "fileManager",
+            "name[zh_CN]": "启动文件管理器",
+            "description": "Launch default file manager",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "disableTouchpad": {
+            "value": [""],
+            "serial": 0,
+            "flags": [],
+            "name": "disableTouchpad",
+            "name[zh_CN]": "禁用触摸板",
+            "description": "Disable touchpad",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "wmSwitcher": {
+            "value": ["<Shift><Super>Tab"],
+            "serial": 0,
+            "flags": [],
+            "name": "wmSwitcher",
+            "name[zh_CN]": "切换窗口特效",
+            "description": "Switch window effects",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "turnOffScreen": {
+            "value": ["<Shift><Super>L"],
+            "serial": 0,
+            "flags": [],
+            "name": "turnOffScreen",
+            "name[zh_CN]": "关闭屏幕",
+            "description": "Turn off the screen",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "textToSpeech": {
+            "value": ["<Control><Alt>P"],
+            "serial": 0,
+            "flags": [],
+            "name": "textToSpeech",
+            "name[zh_CN]": "语音朗读",
+            "description": "Text to speech",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "speechToText": {
+            "value": ["<Control><Alt>D"],
+            "serial": 0,
+            "flags": [],
+            "name": "speechToText",
+            "name[zh_CN]": "语音转文字",
+            "description": "Speech to text",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "clipboard": {
+            "value": ["<Super>V","<Meta>V"],
+            "serial": 0,
+            "flags": [],
+            "name": "clipboard",
+            "name[zh_CN]": "显示剪贴板",
+            "description": "Show clipboard",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "translation": {
+            "value": ["<Control><Alt>U"],
+            "serial": 0,
+            "flags": [],
+            "name": "translation",
+            "name[zh_CN]": "翻译",
+            "description": "Translation",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "notificationCenter": {
+            "value": ["<Super>M","<Meta>M"],
+            "serial": 0,
+            "flags": [],
+            "name": "notificationCenter",
+            "name[zh_CN]": "打开通知中心",
+            "description": "open notification center",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshotOcr": {
+            "value": ["<Control><Alt>C"],
+            "serial": 0,
+            "flags": [],
+            "name": "screenshotOcr",
+            "name[zh_CN]": "OCR截图",
+            "description": "Take a screenshot for ocr",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "screenshotScroll": {
+            "value": ["<Control><Alt>I"],
+            "serial": 0,
+            "flags": [],
+            "name": "screenshotScroll",
+            "name[zh_CN]": "滚动截图",
+            "description": "Take a screenshot the scroll screen",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "globalSearch": {
+            "value": ["<Shift>space"],
+            "serial": 0,
+            "flags": [],
+            "name": "globalSearch",
+            "name[zh_CN]": "全局搜索",
+            "description": "filemanager global search",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}

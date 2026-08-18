@@ -1,0 +1,2 @@
+./debian/reconfigure-dde-daemon
+./misc/scripts/reset-user-locale.sh

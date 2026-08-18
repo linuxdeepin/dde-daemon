@@ -1,0 +1,17 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "traySelectionManagerScope": {
+            "value": "x11-only",
+            "serial": 0,
+            "flags": [],
+            "name": "traySelectionManagerScope",
+            "name[zh_CN]": "托盘 Selection Manager 注册范围",
+            "description": "Control when to register tray selection manager: never, x11-only, wayland-only, always",
+            "description[zh_CN]": "控制何时注册托盘 Selection Manager：never（不注册）、x11-only（仅 X11）、wayland-only（仅 Wayland）、always（始终注册）",
+            "permissions": "readwrite",
+            "visibility": "public"
+        }
+    }
+}

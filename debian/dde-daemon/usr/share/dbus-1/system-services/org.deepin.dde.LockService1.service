@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.deepin.dde.LockService1
+Exec=/bin/false
+SystemdService=dde-lock-service.service

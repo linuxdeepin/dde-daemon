@@ -1,0 +1,49 @@
+{
+  "magic": "dsg.config.meta",
+  "version": "1.0",
+  "contents": {
+    "wirelessControlEnable": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "name": "wirelessControlEnable",
+      "name[zh_CN]": "通过DDE控制实现wifi热键功能",
+      "description": "Wifi shortcut effected by DDE software",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "needXrandrQDevices": {
+      "value": [
+        ""
+      ],
+      "serial": 0,
+      "flags": [
+        "global"
+      ],
+      "name": "NeedXrandrQDevices",
+      "description": "system-product-names need xrandr+q to resolve hot plug",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "deviceManagerControlEnable": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "name": "deviceManagerControlEnable",
+      "name[zh_CN]": "通过DDE控制实现设备管理器热键功能",
+      "description": "DeviceManager shortcut effected by DDE software",
+      "permissions": "readonly",
+      "visibility": "private"
+    },
+    "viewZoomEnable": {
+      "value": true,
+      "serial": 0,
+      "flags": [],
+      "name": "viewZoomEnable",
+      "name[zh_CN]": "启用/禁用缩放快捷键",
+      "description": "enable/disable view zoom shortcuts",
+      "permissions": "readwrite",
+      "visibility": "private"
+    }
+  }
+}

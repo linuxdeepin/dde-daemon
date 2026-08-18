@@ -1,0 +1,176 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "user-layout-list": {
+            "value": [],
+            "serial": 0,
+            "flags": [],
+            "name": "user-layout-list",
+            "name[zh_CN]": "用户添加的布局列表",
+            "description": "User Add Layout List",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "layoutOptions": {
+            "value": [],
+            "serial": 0,
+            "flags": [],
+            "name": "layoutOptions",
+            "name[zh_CN]": "布局选项列表",
+            "description": "Layout Option List",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "layout": {
+            "value": "",
+            "serial": 0,
+            "flags": [],
+            "name": "layout",
+            "name[zh_CN]": "键盘布局",
+            "description": "Keyboard Layout",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "layout-scope": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "layout-scope",
+            "name[zh_CN]": "键盘布局作用域",
+            "description": "Keyboard Layout Scope. Enum values: 0=global, 1=application",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "app-layout-map": {
+            "value": "",
+            "serial": 0,
+            "flags": [],
+            "name": "app-layout-map",
+            "name[zh_CN]": "应用键盘布局映射",
+            "description": "App keyboard layout map",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "shortcutSwitchLayout": {
+            "value": 6,
+            "serial": 0,
+            "flags": [],
+            "name": "shortcutSwitchLayout",
+            "name[zh_CN]": "切换键盘布局快捷键",
+            "description": "Shortcuts for switch keyboard layout. Range: 0-7. Perform bitwise or operation: Ctrl-Shift=1, Alt-Shift=2, Super-Space=4",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "repeatEnabled": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "repeatEnabled",
+            "name[zh_CN]": "启用按键重复",
+            "description": "Enable key repeat",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "click": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "click",
+            "name[zh_CN]": "按键点击声",
+            "description": "Key click sound",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "repeatInterval": {
+            "value": 50,
+            "serial": 0,
+            "flags": [],
+            "name": "repeatInterval",
+            "name[zh_CN]": "按键重复间隔",
+            "description": "Key Repeat Interval. Delay between repeats in milliseconds.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "delay": {
+            "value": 250,
+            "serial": 0,
+            "flags": [],
+            "name": "delay",
+            "name[zh_CN]": "初始按键重复延迟",
+            "description": "Initial Key Repeat Delay. Initial key repeat delay in milliseconds.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "click-volume": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "click-volume",
+            "name[zh_CN]": "点击音量",
+            "description": "Key click volume",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "cursorBlinkTime": {
+            "value": 1200,
+            "serial": 0,
+            "flags": [],
+            "name": "cursorBlinkTime",
+            "name[zh_CN]": "光标闪烁时间",
+            "description": "Cursor blink time in milliseconds",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "capslockToggle": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "capslockToggle",
+            "name[zh_CN]": "大写锁定切换通知",
+            "description": "Control whether show CapsLock notify",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "saveNumlockState": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "saveNumlockState",
+            "name[zh_CN]": "保存数字锁定状态",
+            "description": "Save NumLock state",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "numlockState": {
+            "value": 2,
+            "serial": 0,
+            "flags": [],
+            "name": "numlockState",
+            "name[zh_CN]": "数字锁定状态",
+            "description": "NumLock state. Enum values: 0=off, 1=on, 2=unknown",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "osdAdjustVolumeEnabled": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "osdAdjustVolumeEnabled",
+            "name[zh_CN]": "音量调节快捷键启用",
+            "description": "Control whether Volume shortcut works. Enum values: 0=enable, 1=forbidden, 2=hidden",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "osdAdjustBrightnessEnabled": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "osdAdjustBrightnessEnabled",
+            "name[zh_CN]": "亮度调节快捷键启用",
+            "description": "Control whether Brightness shortcut works. Enum values: 0=enable, 1=forbidden, 2=hidden",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}

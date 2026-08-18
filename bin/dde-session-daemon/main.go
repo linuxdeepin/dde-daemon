@@ -173,6 +173,14 @@ func main() {
 			DBusPath:      "/org/deepin/dde/InputDevices1",
 			DBusInterface: "org.deepin.dde.InputDevices1",
 		},
+		{
+			// AirplaneMode1 is a dde-system-daemon service, but the Handshake
+			// entry registers the session-daemon's system-bus unique name as a
+			// valid caller for backward compatibility with security-loader.
+			DBusName:      "org.deepin.dde.AirplaneMode1",
+			DBusPath:      "/org/deepin/dde/AirplaneMode1",
+			DBusInterface: "org.deepin.dde.AirplaneMode1",
+		},
 	})
 	os.Args = cleanedArgs
 	if err != nil {

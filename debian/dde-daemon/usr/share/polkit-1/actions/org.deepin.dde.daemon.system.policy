@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+"http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
+<policyconfig>
+	<vendor />
+	<vendor_url />
+	<action id="org.deepin.dde.daemon.enable-readonly-protection">
+		<description>Enable system read-only protection</description>
+		<message>Authentication required to enable Solid System Read-Only protection</message>
+		<defaults>
+			<allow_any>no</allow_any>
+			<allow_inactive>no</allow_inactive>
+			<allow_active>auth_admin</allow_active>
+		</defaults>
+		<description xml:lang="bo">རྒྱུད་ཁོངས་ཀློག་ཙམ་སྲུང་སྐྱོབ་ཕྱེ་བ།</description>
+		<description xml:lang="ca">Activa la protecció de només lectura del sistema.</description>
+		<message xml:lang="ca">Cal autenticació per habilitar la protecció de només lectura de Solid System.</message>
+		<description xml:lang="de">System-Schreibschutz aktivieren</description>
+		<description xml:lang="en">Enable system read-only protection</description>
+		<description xml:lang="es">Habilitar protección de solo lectura del sistema</description>
+		<message xml:lang="es">Se requiere autenticación para habilitar la protección de solo lectura del sistema.</message>
+		<description xml:lang="fi">Kytke vain luku suojaus käyttöön</description>
+		<message xml:lang="fi">Solid Systemin "vain luku" -suojauksen käyttöönotto edellyttää todennusta</message>
+		<description xml:lang="fr">Activer la protection en lecture seule du système</description>
+		<description xml:lang="ja">システム読み取り専用保護を有効化</description>
+		<description xml:lang="nl">Alleen-lezen inschakelen</description>
+		<description xml:lang="pl">Włącz ochronę tylko-do-odczytu systemu</description>
+		<message xml:lang="pl">Wymagane jest uwierzytelnienie, aby włączyć ochronę tylko-do-odczytu</message>
+		<description xml:lang="pt">Ativar proteção de apenas-leitura do sistema</description>
+		<message xml:lang="pt">Para ativar a proteção de Apenas-Leitura para Sistema Sólido é necessária autenticação</message>
+		<description xml:lang="pt_BR">Ativar proteção do sistema em modo somente leitura</description>
+		<message xml:lang="pt_BR">A autenticação é necessária para ativar a proteção do Sistema Solid em modo somente leitura</message>
+		<description xml:lang="ru">Включить защиту системы от записи</description>
+		<description xml:lang="sq">Aktivizo mbrojtje vetë-lexim sistemi</description>
+		<description xml:lang="ug">سىستېما پەقەت ئوقۇش قوغداشنى ئېچىش</description>
+		<description xml:lang="uk">Увімкнути захист системи режимом «лише читання»</description>
+		<message xml:lang="uk">Для вмикання суцільного захисту системи лише читанням слід пройти розпізнавання</message>
+		<description xml:lang="zh_CN">开启系统只读保护</description>
+		<message xml:lang="zh_CN">开启磐石只读保护需认证</message>
+		<description xml:lang="zh_HK">開啟系統唯讀保護</description>
+		<message xml:lang="zh_HK">開啓磐石只讀保護需認證</message>
+		<description xml:lang="zh_TW">開啟系統唯讀保護</description>
+		<message xml:lang="zh_TW">開啟磐石只讀保護需認證</message>
+	</action>
+	<action id="org.deepin.dde.daemon.disable-readonly-protection">
+		<description>Disable system read-only protection</description>
+		<message>Authentication required to disable Solid System Read-Only protection</message>
+		<defaults>
+			<allow_any>no</allow_any>
+			<allow_inactive>no</allow_inactive>
+			<allow_active>auth_admin</allow_active>
+		</defaults>
+		<description xml:lang="bo">རྒྱུད་ཁོངས་ཀློག་ཙམ་སྲུང་སྐྱོབ་སྒོ་རྒྱག་པ།</description>
+		<description xml:lang="ca">Desactiva la protecció de només lectura del sistema.</description>
+		<message xml:lang="ca">Cal autenticació per inhabilitar la protecció de només lectura de Solid System.</message>
+		<description xml:lang="de">System-Schreibschutz deaktivieren</description>
+		<description xml:lang="en">Disable system read-only protection</description>
+		<description xml:lang="es">Deshabilitar protección de solo lectura del sistema</description>
+		<message xml:lang="es">Se requiere autenticación  para desactivar la protección de solo lectura del sistema.</message>
+		<description xml:lang="fi">Poista vain luku suojaus käytöstä</description>
+		<message xml:lang="fi">Solid Systemin "vain luku" -suojauksen poistaminen edellyttää todennusta</message>
+		<description xml:lang="fr">Désactiver la protection en lecture seule du système</description>
+		<description xml:lang="ja">システム読み取り専用保護を無効化</description>
+		<description xml:lang="nl">Alleen-lezen uitschakelen</description>
+		<description xml:lang="pl">Wyłącz ochronę tylko-do-odczytu systemu</description>
+		<message xml:lang="pl">Wymagane jest uwierzytelnienie, aby wyłączyć ochronę tylko-do-odczytu</message>
+		<description xml:lang="pt">Desativar proteção de apenas-leitura do sistema</description>
+		<message xml:lang="pt">Autenticação requerida para desativar proteção de Apenas-Leitura do Sistema Sólido</message>
+		<description xml:lang="pt_BR">Desativar proteção do sistema em modo somente leitura</description>
+		<message xml:lang="pt_BR">A autenticação é necessária para desativar a proteção do Sistema Solid em modo somente leitura</message>
+		<description xml:lang="ru">Отключить защиту системы от записи</description>
+		<description xml:lang="sq">Çaktivizo mbrojtje vetë-lexim sistemi</description>
+		<description xml:lang="ug">سىستېما پەقەت ئوقۇش قوغداشنى تاقاش</description>
+		<description xml:lang="uk">Вимкнути захист системи режимом «лише читання»</description>
+		<message xml:lang="uk">Для вимикання суцільного захисту системи лише читанням слід пройти розпізнавання</message>
+		<description xml:lang="zh_CN">关闭系统只读保护</description>
+		<message xml:lang="zh_CN">关闭磐石只读保护需认证</message>
+		<description xml:lang="zh_HK">關閉系統唯讀保護</description>
+		<message xml:lang="zh_HK">關閉磐石只讀保護需認證</message>
+		<description xml:lang="zh_TW">關閉系統唯讀保護</description>
+		<message xml:lang="zh_TW">關閉磐石只讀保護需認證</message>
+	</action>
+</policyconfig>

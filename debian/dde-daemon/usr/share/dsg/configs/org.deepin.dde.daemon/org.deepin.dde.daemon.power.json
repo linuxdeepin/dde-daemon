@@ -1,0 +1,835 @@
+
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "BalanceCpuGovernor": {
+            "value": "ondemand",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "BalanceCpuGovernor",
+            "name[zh_CN]": "电源设置-性能模式-平衡模式状态",
+            "description": "balance cpu governor",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "isFirstGetCpuGovernor": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "isFirstGetCpuGovernor",
+            "name[zh_CN]": "是否第一次获取Cpu支持的Governor模式",
+            "description": "is first get cpu governor",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "supportCpuGovernors": {
+            "value": [
+                "performance",
+                "powersave",
+                "userspace",
+                "ondemand",
+                "conservative",
+                "schedutil"
+            ],
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "supportCpuGovernors",
+            "name[zh_CN]": "Cpu支持的Governor模式",
+            "description": "",
+            "description[zh_CN]": "",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "specialCpuModeJson": {
+            "value": "{\"PANGU\":{\"Balance\":true,\"Performace\":true,\"PowerSave\":true}}",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "specialCpuModeJson",
+            "name[zh_CN]": "特殊处理的cpu配置",
+            "description": "",
+            "description[zh_CN]": "需要进行特殊处理的cpu配置",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "idlePowersaveAspmEnabled": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "idle powersave aspm enable",
+            "name[zh_CN]": "idle时节能模式Aspm启动",
+            "description": "idle时节能模式Aspm状态",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "powerSavingModeAuto": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode auto",
+            "name[zh_CN]": "使用电池自动开启节能模式",
+            "description": "使用电池自动开启节能模式",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerSavingModeEnabled": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode enabled",
+            "name[zh_CN]": "是否开启节能模式",
+            "description": "是否开启节能模式",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerSavingModeAutoWhenBatteryLow": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode auto when battery low",
+            "name[zh_CN]": "低电量时自动开启节能模式",
+            "description": "低电量时自动开启节能模式",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerSavingModeAutoBatteryPercent": {
+            "value": 20,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode auto threshold",
+            "name[zh_CN]": "自动开启节能模式阈值",
+            "description": "自动开启节能模式阈值",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerSavingModeBrightnessDropPercent": {
+            "value": 20,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power saving mode brightness drop percent",
+            "name[zh_CN]": "节能模式亮度降低百分比",
+            "description": "节能模式亮度降低百分比",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "mode": {
+            "value": "balance",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power mode",
+            "name[zh_CN]": "性能模式",
+            "description": "性能模式",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "allowScreenSaver": {
+            "value": true,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "allow screen saver",
+            "name[zh_CN]": "允许屏幕保护",
+            "description": "allow screen saver",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "scheduledShutdownState": {
+            "value": false,
+            "serial": 0,
+            "flags": [],
+            "name": "Scheduled shutdown switch",
+            "name[zh_CN]": "定时关机开关",
+            "description": "Scheduled shutdown switch",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "shutdownTime": {
+            "value": "19:00",
+            "serial": 0,
+            "flags": [],
+            "name": "time of timed shutdown",
+            "name[zh_CN]": "关机时间",
+            "description": "time of timed shutdown",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "shutdownRepetition": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "type of the shutdown repetition",
+            "name[zh_CN]": "重复类型, 0-3",
+            "description": "type of the shutdown repetition",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "customShutdownWeekDays": {
+            "value": [],
+            "serial": 0,
+            "flags": [],
+            "name": "custom shutdown week days",
+            "name[zh_CN]": "自定义关机重复日期",
+            "description": "custom shutdown week days",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "shutdownCountdown": {
+            "value": 60,
+            "serial": 0,
+            "flags": [],
+            "name": "shutdown countdown",
+            "name[zh_CN]": "关机倒计时",
+            "description": "shutdown countdown",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "delayWakeupInterval": {
+            "value": 0,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "delay Wake up Interval",
+            "name[zh_CN]": "延时关闭DDE黑屏程序时间间隔",
+            "description": "延时关闭DDE黑屏程序时间间隔",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "nextShutdownTime": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "next shutdown time",
+            "name[zh_CN]": "下一次关机时间",
+            "description": "next shutdown time",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerMappingConfig":{
+            "value": "{\"balance\":{\"DSPCConfig\":\"balance\"},\"lowBattery\":{\"DSPCConfig\":\"lowbat\"},\"performance\":{\"DSPCConfig\":\"performance\"},\"powersave\":{\"DSPCConfig\":\"saving\"}}",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "power mapping config",
+            "name[zh_CN]": "电源性能模式映射配置",
+            "description": "四种功耗模式对应的配置",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "delayHandleIdleOffIntervalWhenScreenBlack": {
+            "value": 800,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "delay HandleIdleOff Interval When ScreenBlack",
+            "name[zh_CN]": "延时调用HandleIdleOff时间间隔，单位ms",
+            "description": "延时调用HandleIdleOff时间间隔，单位ms",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "linePowerScreensaverDelay": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "linePowerScreensaverDelay",
+            "name[zh_CN]": "插电时显示屏保的超时时间",
+            "description": "line power screen saver delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryScreensaverDelay": {
+            "value": 0,
+            "serial": 0,
+            "flags": [],
+            "name": "batteryScreensaverDelay",
+            "name[zh_CN]": "使用电池时显示屏保的超时时间",
+            "description": "battery screen saver delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryScreenBlackDelay": {
+            "value": 300,
+            "serial": 0,
+            "flags": [],
+            "name": "batteryScreenBlackDelay",
+            "name[zh_CN]": "使用电池时的屏幕黑屏延时",
+            "description": "battery screen black delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batterySleepDelay": {
+            "value": 900,
+            "serial": 0,
+            "flags": [],
+            "name": "batterySleepDelay",
+            "name[zh_CN]": "使用电池时的休眠延时",
+            "description": "battery sleep delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "linePowerScreenBlackDelay": {
+            "value": 900,
+            "serial": 0,
+            "flags": [],
+            "name": "linePowerScreenBlackDelay",
+            "name[zh_CN]": "插电时屏幕黑屏延时",
+            "description": "line power screen black delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "linePowerSleepDelay": {
+            "value": 1800,
+            "serial": 0,
+            "flags": [],
+            "name": "linePowerSleepDelay",
+            "name[zh_CN]": "插电时休眠延时",
+            "description": "line power sleep delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "linePowerLockDelay": {
+            "value": 900,
+            "serial": 0,
+            "flags": [],
+            "name": "linePowerLockDelay",
+            "name[zh_CN]": "插电时锁屏延时",
+            "description": "line power lock delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryLockDelay": {
+            "value": 300,
+            "serial": 0,
+            "flags": [],
+            "name": "batteryLockDelay",
+            "name[zh_CN]": "使用电池时锁屏延时",
+            "description": "battery lock delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "adjustBrightnessEnabled": {
+            "value": false,
+            "serial": 0,
+            "flags": [],
+            "name": "adjustBrightnessEnabled",
+            "name[zh_CN]": "启用自动调节亮度",
+            "description": "adjust display brigtness enabled",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "screenBlackLock": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "screenBlackLock",
+            "name[zh_CN]": "关闭屏幕前锁定",
+            "description": "screen black lock",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "sleepLock": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "sleep lock",
+            "name[zh_CN]": "睡眠前锁定",
+            "description": "sleep lock",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "lidClosedSleep": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "lidClosedSleep",
+            "name[zh_CN]": "插电时合盖休眠",
+            "description": "Sleep when close the lid if use line power",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryLidClosedSleep": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "batteryLidClosedSleep",
+            "name[zh_CN]": "使用电池时合盖休眠",
+            "description": "Sleep when close the lid if use battery",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerButtonPressedExec": {
+            "value": "dde-shutdown",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "powerButtonPressedExec",
+            "name[zh_CN]": "电源键按下执行的命令",
+            "description": "power button pressed exec",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "fullscreenWorkaroundAppList": {
+            "value": ["libflash", "chrome", "firefox","mplayer", "operaplugin", "soffice", "wpp", "evince", "vlc", "totem"],
+            "serial": 0,
+            "flags": [],
+            "name": "fullscreenWorkaroundAppList",
+            "name[zh_CN]": "全屏工作模式应用列表",
+            "description": "app in list fullscreen inhbit screensaver",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "usePercentageForPolicy": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "usePercentageForPolicy",
+            "name[zh_CN]": "使用基于电池百分比的策略",
+            "description": "Whether battery percentage based policy should be used. It should work around broken firmwares. It is also more reliable than the time left.",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "powerModuleInitialized": {
+            "value": false,
+            "serial": 0,
+            "flags": [],
+            "name": "powerModuleInitialized",
+            "name[zh_CN]": "电源模块是否初始化",
+            "description": "power module initialized",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "lowPowerNotifyThreshold": {
+            "value": 20,
+            "serial": 0,
+            "flags": [],
+            "name": "lowPowerNotifyThreshold",
+            "name[zh_CN]": "低电量通知阈值",
+            "description": "low power notify threshold",
+            "permissions": "readwrite"
+        },
+        "lowPowerAction": {
+            "value": 1,
+            "serial": 0,
+            "flags": [],
+            "name": "lowPowerAction",
+            "name[zh_CN]": "低电量时系统动作",
+            "description": "0: suspend, 1: hibernate",
+            "permissions": "readwrite"
+        },
+        "percentageAction": {
+            "value": 5,
+            "serial": 0,
+            "flags": [],
+            "name": "percentageAction",
+            "name[zh_CN]": "执行动作的百分比",
+            "description": "system action when battery low",
+            "permissions": "readwrite"
+        },
+        "timeToEmptyLow": {
+            "value": 1200,
+            "serial": 0,
+            "flags": [],
+            "name": "timeToEmptyLow",
+            "name[zh_CN]": "time to empty low",
+            "description": "time to empty low",
+            "permissions": "readwrite"
+        },
+        "timeToEmptyDanger": {
+            "value": 900,
+            "serial": 0,
+            "flags": [],
+            "name": "timeToEmptyDanger",
+            "name[zh_CN]": "time to empty low",
+            "description": "time to empty low",
+            "permissions": "readwrite"
+        },
+        "timeToEmptyCritical": {
+            "value": 600,
+            "serial": 0,
+            "flags": [],
+            "name": "timeToEmptyCritical",
+            "name[zh_CN]": "time to empty low",
+            "description": "time to empty low",
+            "permissions": "readwrite"
+        },
+        "timeToEmptyAction": {
+            "value": 300,
+            "serial": 0,
+            "flags": [],
+            "name": "timeToEmptyAction",
+            "name[zh_CN]": "system action when battery low",
+            "description": "system action when battery low",
+            "permissions": "readwrite"
+        },
+        "linePowerLidClosedAction": {
+            "value": 1,
+            "serial": 0,
+            "flags": [],
+            "name": "linePowerLidClosedAction",
+            "name[zh_CN]": "插电状态下合盖执行的动作",
+            "description": "0:shutdown, 1:suspend, 2:hibernate, 3:turnOffScreen, 4:showSessionUI, 5:doNothing",
+            "permissions": "readwrite"
+        },
+        "linePowerPressPowerButton": {
+            "value": 4,
+            "serial": 0,
+            "flags": [],
+            "name": "linePowerPressPowerButton",
+            "name[zh_CN]": "插电状态下按电源键的动作",
+            "description": "0:shutdown, 1:suspend, 2:hibernate, 3:turnOffScreen, 4:showSessionUI, 5:doNothing",
+            "permissions": "readwrite"
+        },
+        "batteryLidClosedAction": {
+            "value": 1,
+            "serial": 0,
+            "flags": [],
+            "name": "batteryLidClosedAction",
+            "name[zh_CN]": "使用电池时合盖执行的动作",
+            "description": "0:shutdown, 1:suspend, 2:hibernate, 3:turnOffScreen, 4:showSessionUI, 5:doNothing",
+            "permissions": "readwrite"
+        },
+        "batteryPressPowerButton": {
+            "value": 4,
+            "serial": 0,
+            "flags": [],
+            "name": "batteryPressPowerButton",
+            "name[zh_CN]": "使用电池时按电源键执行的动作",
+            "description": "0:shutdown, 1:suspend, 2:hibernate, 3:turnOffScreen, 4:showSessionUI, 5:doNothing",
+            "permissions": "readwrite"
+        },
+        "lowPowerNotifyEnable": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "lowPowerNotifyEnable",
+            "name[zh_CN]": "低电量时打开系统通知",
+            "description": "enable system notify when low power",
+            "permissions": "readwrite"
+        },
+        "saveBrightnessWhilePsm": {
+            "value": "",
+            "serial": 0,
+            "flags": [],
+            "name": "saveBrightnessWhilePsm",
+            "name[zh_CN]": "省电模式时自动降低亮度",
+            "description": "brightness saved while power saving mode enabled",
+            "permissions": "readwrite"
+        },
+        "lightSensorEnabled": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "lightSensorEnabled",
+            "name[zh_CN]": "光感应器开关",
+            "description": "light sensor enabled",
+            "permissions": "readwrite"
+        },
+        "lowPowerPercentInUpdatingNotify": {
+            "value": 50,
+            "serial": 0,
+            "flags":[],
+            "name": "lowPowerPercentInUpdatingNotify",
+            "name[zh_CN]": "更新系统时触发警告的电量",
+            "description": "low power percent in updating notify",
+            "permissions": "readwrite"
+        },
+        "highPerformanceEnabled": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "highPerformanceEnabled",
+            "name[zh_CN]": "高性能模式开关",
+            "description": "high performance enabled",
+            "permissions": "readwrite"
+        },
+        "idleStatePath": {
+            "value": "/sys/devices/system/loongarch/relax_state",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "idle state path",
+            "name[zh_CN]": "通知EC进入短idle的内核节点",
+            "description": "kernel node to notify EC of short idle state, write 1 to enter, 0 to exit",
+            "permissions": "readonly",
+            "visibility": "private"
+        },
+        "idleScreenStatePath": {
+            "value": "/sys/devices/system/loongarch/idle_state",
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "idle screen state path",
+            "name[zh_CN]": "通知EC显示器开关状态的内核节点",
+            "description": "kernel node to notify EC of display state, write 1 to turn off, 0 to turn on",
+            "permissions": "readonly",
+            "visibility": "private"
+        },
+        "linePowerShortIdleDelay": {
+            "value": 300,
+            "serial": 0,
+            "flags": [],
+            "name": "line power short idle delay",
+            "name[zh_CN]": "插电时短idle延时",
+            "description": "line power short idle delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "batteryShortIdleDelay": {
+            "value": 300,
+            "serial": 0,
+            "flags": [],
+            "name": "battery short idle delay",
+            "name[zh_CN]": "使用电池时短idle延时",
+            "description": "battery short idle delay",
+            "permissions": "readwrite",
+            "visibility": "public"
+        },
+        "shortIdleEnable": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "short idle enable",
+            "name[zh_CN]": "是否开启短idle方案",
+            "description": "enable short idle feature, readonly, override via os-config",
+            "permissions": "readonly",
+            "visibility": "private"
+        },
+        "shortIdleState": {
+            "value": false,
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "short idle state",
+            "name[zh_CN]": "短idle状态",
+            "description": "current short idle state, true means entered short idle",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "shortIdleBlacklistApplications": {
+            "value": [
+                "org.deepin.browser.desktop",
+                "deepin-terminal.desktop"
+            ],
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "short idle blacklist applications",
+            "name[zh_CN]": "短idle黑名单应用列表",
+            "description": "applications that prevent entering short idle when running",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "systemApplications": {
+            "value": [
+                "dde-lock.desktop",
+                "dde-clipboard.desktop",
+                "dde-clipboard-daemon.desktop",
+                "dde-file-manager.desktop",
+                "dde-open.desktop",
+                "dde-computer.desktop",
+                "dde-home.desktop",
+                "dde-trash.desktop",
+                "org.deepin.dde.control-center.desktop",
+                "dde-printer.desktop",
+                "dde-printer-watch.desktop",
+                "dde-calendar.desktop",
+                "dde-introduction.desktop",
+                "dde-cooperation.desktop",
+                "dde-update-autostart.desktop",
+                "dde-calendar-service.desktop",
+                "deepin-app-store.desktop",
+                "deepin-app-store-b.desktop",
+                "deepin-music.desktop",
+                "deepin-movie.desktop",
+                "deepin-screen-recorder.desktop",
+                "deepin-image-viewer.desktop",
+                "deepin-album.desktop",
+                "deepin-draw.desktop",
+                "deepin-reader.desktop",
+                "deepin-editor.desktop",
+                "deepin-mail.desktop",
+                "deepin-voice-note.desktop",
+                "deepin-manual.desktop",
+                "deepin-system-monitor.desktop",
+                "deepin-boot-maker.desktop",
+                "deepin-devicemanager.desktop",
+                "deepin-log-viewer.desktop",
+                "deepin-calculator.desktop",
+                "deepin-font-manager.desktop",
+                "deepin-compressor.desktop",
+                "deepin-deb-installer.desktop",
+                "deepin-diskmanager.desktop",
+                "deepin-camera.desktop",
+                "deepin-data-transfer.desktop",
+                "deepin-activator-notify.desktop",
+                "deepin-defender.desktop",
+                "deepin-defender-session-daemon.desktop",
+                "deepin-defender-nativirus.desktop",
+                "uos-service-support.desktop",
+                "uos-remote-assistance.desktop",
+                "uos-recovery-gui.desktop",
+                "uos-ai-assistant.autostart.desktop",
+                "uos-ai-assistant.desktop",
+                "auth-dialog.desktop",
+                "udcp-vnc-exec.desktop",
+                "udcp-session-exec.desktop",
+                "udcp-wizzard-exec.desktop",
+                "deepin-scanner.desktop",
+                "org.remmina.Remmina.desktop",
+                "org.remmina.Remmina-file.desktop",
+                "booster-dtkwidget.desktop",
+                "gnome-keyring-ssh.desktop",
+                "gnome-keyring-pkcs11.desktop",
+                "gnome-keyring-secrets.desktop",
+                "fcitx5-helper.desktop",
+                "org.fcitx.Fcitx5.desktop",
+                "xdg-user-dirs.desktop",
+                "permission_manager_dbus_session_daemon.desktop",
+                "downloader.desktop",
+                "geoclue-demo-agent.desktop",
+                "filearmor_notify.desktop",
+                "im-launch.desktop",
+                "oom-score-adjust.desktop",
+                "pulseaudio.desktop",
+                "dde-grand-search.desktop",
+                "deepin-offline-update-tool.desktop",
+                "com.uos.drive.desktop",
+                "com.sogou.ime.ng.fcitx5.uos.configurer.desktop",
+                "xdg-desktop-portal-gtk.desktop",
+                "uos-activator.desktop"
+            ],
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "system applications",
+            "name[zh_CN]": "系统预装应用列表",
+            "description": "system pre-installed applications whitelist for short idle",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "systemServices": {
+            "value": [
+                "accounts-daemon.service",
+                "alsa-restore.service",
+                "blk-availability.service",
+                "bluetooth.service",
+                "cache-udcp.service",
+                "cron.service",
+                "cups.service",
+                "dbus.service",
+                "dde-api-dbus-proxy-v1.service",
+                "dde-dconfig-daemon.service",
+                "dde-system-daemon.service",
+                "deepin-anything-server.service",
+                "deepin-authenticate.service",
+                "deepin-debug-config-service.service",
+                "deepin-defender-monitornetflow.service",
+                "deepin-devicecontrol.service",
+                "deepin-elf-verify.service",
+                "deepin-grub2.service",
+                "deepin-login-sound.service",
+                "deepin-service-group@app.service",
+                "deepin-service-manager.service",
+                "deepin-shutdown-sound.service",
+                "deepin.sync.helper.service",
+                "event-log.service",
+                "ftg340conf.service",
+                "kmod-static-nodes.service",
+                "lastore-daemon.service",
+                "ldconfig.service",
+                "license.service",
+                "lightdm.service",
+                "ModemManager.service",
+                "NetworkManager-wait-online.service",
+                "NetworkManager.service",
+                "org.deepin.linglong.PackageManager.service",
+                "plymouth-quit-wait.service",
+                "plymouth-read-write.service",
+                "plymouth-start.service",
+                "polkit.service",
+                "rsyslog.service",
+                "selinux-autorelabel-mark.service",
+                "systemd-binfmt.service",
+                "systemd-journal-catalog-update.service",
+                "systemd-journal-flush.service",
+                "systemd-journald.service",
+                "systemd-logind.service",
+                "systemd-modules-load.service",
+                "systemd-random-seed.service",
+                "systemd-remount-fs.service",
+                "systemd-sysctl.service",
+                "systemd-sysusers.service",
+                "systemd-timesyncd.service",
+                "systemd-tmpfiles-setup-dev-early.service",
+                "systemd-tmpfiles-setup-dev.service",
+                "systemd-tmpfiles-setup.service",
+                "systemd-udev-trigger.service",
+                "systemd-udevd.service",
+                "systemd-update-done.service",
+                "systemd-update-utmp.service",
+                "systemd-user-sessions.service",
+                "udcp-log.service",
+                "udisks2.service",
+                "uos-ste-eventd.service",
+                "uos-ste-resourced.service",
+                "uos-upgrade-delivery-daemon.service",
+                "upower.service",
+                "usecd.service",
+                "wpa_supplicant.service",
+                "wtmpdb-update-boot.service",
+                "ssh.service",
+                "udcp-guard.service",
+                "com.home.appstore.daemon.service",
+                "serial-getty@ttyAMA0.service",
+                "winbind.service",
+                "tpm2-abrmd.service",
+                "fprintd.service",
+                "iio-sensor-proxy.service",
+                "avahi-daemon.service"
+            ],
+            "serial": 0,
+            "flags": [
+                "global"
+            ],
+            "name": "system services",
+            "name[zh_CN]": "系统服务",
+            "description": "System services",
+            "description[zh_CN]": "系统服务列表，包含系统级别的后台服务和守护进程，如网络管理、蓝牙服务、电源管理服务等。这些服务在系统启动时自动运行，提供核心功能支持。此配置用于判断是否开启了第三方service文件，如果开启了则不能进入短idle状态。",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
+}
