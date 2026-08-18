@@ -1,3 +1,9 @@
+dde-daemon (6.1.99.2) unstable; urgency=medium
+
+  * fix(audio): find source by port list instead of active port
+
+ -- fuleyi <fuleyi@uniontech.com>  Tue, 18 Aug 2026 20:15:02 +0800
+
 dde-daemon (6.1.99.1) unstable; urgency=medium
 
   * fix: improve temporary background file creation in theme
