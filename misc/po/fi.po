@@ -502,11 +502,11 @@ msgstr "Näytä työtila"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
-msgstr "Suurenna sisään"
+msgstr "Lähemmäksi"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
-msgstr "Suurenna ulos"
+msgstr "Kauemmaksi"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
