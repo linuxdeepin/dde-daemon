@@ -164,11 +164,6 @@ func main() {
 			DBusInterface: "org.deepin.dde.Daemon1",
 		},
 		{
-			DBusName:      "org.deepin.dde.Lastore1",
-			DBusPath:      "/org/deepin/dde/Lastore1",
-			DBusInterface: "org.deepin.dde.Lastore1.Manager",
-		},
-		{
 			DBusName:      "org.deepin.dde.InputDevices1",
 			DBusPath:      "/org/deepin/dde/InputDevices1",
 			DBusInterface: "org.deepin.dde.InputDevices1",
