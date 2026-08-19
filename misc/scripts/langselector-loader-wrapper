@@ -1,4 +1,0 @@
-#!/bin/bash
-
-exec /usr/bin/deepin-security-loader --group deepin-daemon -- \
-    /usr/libexec/deepin/langselector "$@"

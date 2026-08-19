@@ -7,7 +7,7 @@ dde-daemon: unstripped-binary-or-object usr/lib/deepin-daemon/default-file-manag
 dde-daemon: unstripped-binary-or-object usr/lib/deepin-daemon/default-terminal
 dde-daemon: unstripped-binary-or-object usr/lib/deepin-daemon/desktop-toggle
 dde-daemon: unstripped-binary-or-object usr/lib/deepin-daemon/grub2
-dde-daemon: unstripped-binary-or-object usr/libexec/deepin/langselector
+dde-daemon: unstripped-binary-or-object usr/lib/deepin-daemon/langselector
 dde-daemon: unstripped-binary-or-object usr/lib/deepin-daemon/search
 dde-daemon: unstripped-binary-or-object usr/lib/deepin-daemon/soundeffect
 dde-daemon: unstripped-binary-or-object usr/lib/deepin-daemon/theme-thumb-tool

@@ -167,15 +167,9 @@ install: build install-dde-data install-icons
 	cp -f out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 
 	rm -f ${DESTDIR}${PREFIX}/lib/deepin-daemon/dde-session-daemon
-	mkdir -pv ${DESTDIR}${PREFIX}/libexec/deepin
 	cp -f out/bin/dde-session-daemon ${DESTDIR}${PREFIX}/libexec/deepin/
 	install -m755 misc/scripts/dde-session-daemon-loader-wrapper \
 		${DESTDIR}${PREFIX}/lib/deepin-daemon/dde-session-daemon
-
-	rm -f ${DESTDIR}${PREFIX}/lib/deepin-daemon/langselector
-	cp -f out/bin/langselector ${DESTDIR}${PREFIX}/libexec/deepin/
-	install -m755 misc/scripts/langselector-loader-wrapper \
-		${DESTDIR}${PREFIX}/lib/deepin-daemon/langselector
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/locale
 	cp -r out/locale/* ${DESTDIR}${PREFIX}/share/locale
