@@ -182,10 +182,10 @@ func main() {
 	os.Args = cleanedArgs
 	if err != nil {
 		if loadedBySecurityLoader {
-			logger.Errorf("security-loader handshake failed, refusing to start: %q", err.Error())
+			logger.Error("security-loader handshake failed, refusing to start:", err)
 			os.Exit(1)
 		}
-		logger.Warningf("security-loader handshake failed: %q", err.Error())
+		logger.Warning("security-loader handshake failed:", err)
 	}
 
 	logger.SetLogLevel(log.LevelInfo)

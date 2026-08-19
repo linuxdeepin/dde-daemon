@@ -1,17 +1,18 @@
-// SPDX-FileCopyrightText: 2022-2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package airplane_mode
 
 import (
+	"errors"
 	"sync"
 	"time"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/securityloader"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
-
+	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -79,21 +80,19 @@ func (mgr *Manager) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.
 	return dbusutil.ToError(mgr.allowCallers.AddCaller(securityloader.AirplaneModeScope, sender, uniqueName))
 }
 
-func (mgr *Manager) authorize(sender dbus.Sender) error {
-	return securityloader.AuthorizeWithPolkit(
-		mgr.allowCallers,
-		securityloader.AirplaneModeScope,
-		sender,
-		mgr.service.Conn(),
-		actionId,
-	)
-}
-
 // Enable enable or disable *Airplane Mode*, isn't enable the devices
 func (mgr *Manager) Enable(sender dbus.Sender, enableAirplaneMode bool) *dbus.Error {
-	if err := mgr.authorize(sender); err != nil {
-		logger.Warningf("Enable authorization failed: %q", err.Error())
-		return dbusutil.ToError(err)
+	result, _ := mgr.allowCallers.Authorize(securityloader.AirplaneModeScope, sender)
+	switch result {
+	case securityloader.AuthDenied:
+		logger.Warning("Enable access denied")
+		return dbusutil.ToError(errors.New("access denied"))
+	case securityloader.AuthNotEnabled:
+		// Fall back to Polkit when not launched via security-loader.
+		if er := checkAuthorization(actionId, string(sender)); er != nil {
+			logger.Warningf("checkAuthorization failed, err: %v, actionId=%v", er, actionId)
+			return dbusutil.ToError(er)
+		}
 	}
 
 	// try to block
@@ -108,9 +107,15 @@ func (mgr *Manager) Enable(sender dbus.Sender, enableAirplaneMode bool) *dbus.Er
 
 // EnableWifi enable or disable *Airplane Mode* for wlan, isn't enable the wlan devices
 func (mgr *Manager) EnableWifi(sender dbus.Sender, enableAirplaneMode bool) *dbus.Error {
-	if err := mgr.authorize(sender); err != nil {
-		logger.Warningf("EnableWifi authorization failed: %q", err.Error())
-		return dbusutil.ToError(err)
+	result, _ := mgr.allowCallers.Authorize(securityloader.AirplaneModeScope, sender)
+	switch result {
+	case securityloader.AuthDenied:
+		logger.Warning("EnableWifi access denied")
+		return dbusutil.ToError(errors.New("access denied"))
+	case securityloader.AuthNotEnabled:
+		if er := checkAuthorization(actionId, string(sender)); er != nil {
+			return dbusutil.ToError(er)
+		}
 	}
 
 	// try to block
@@ -125,9 +130,15 @@ func (mgr *Manager) EnableWifi(sender dbus.Sender, enableAirplaneMode bool) *dbu
 
 // EnableBluetooth enable or disable *Airplane Mode* for bluetooth, isn't enable the bluetooth devices
 func (mgr *Manager) EnableBluetooth(sender dbus.Sender, enableAirplaneMode bool) *dbus.Error {
-	if err := mgr.authorize(sender); err != nil {
-		logger.Warningf("EnableBluetooth authorization failed: %q", err.Error())
-		return dbusutil.ToError(err)
+	result, _ := mgr.allowCallers.Authorize(securityloader.AirplaneModeScope, sender)
+	switch result {
+	case securityloader.AuthDenied:
+		logger.Warning("EnableBluetooth access denied")
+		return dbusutil.ToError(errors.New("access denied"))
+	case securityloader.AuthNotEnabled:
+		if er := checkAuthorization(actionId, string(sender)); er != nil {
+			return dbusutil.ToError(er)
+		}
 	}
 
 	// try to block
@@ -213,6 +224,27 @@ func (mgr *Manager) block(typ rfkillType, enableAirplaneMode bool) error {
 		}
 	}
 	return rfkillAction(typ, state)
+}
+
+
+func checkAuthorization(actionId string, sysBusName string) error {
+	systemBus, err := dbus.SystemBus()
+	if err != nil {
+		return err
+	}
+	authority := polkit.NewAuthority(systemBus)
+	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
+	subject.SetDetail("name", sysBusName)
+
+	ret, err := authority.CheckAuthorization(0, subject, actionId,
+		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+	if err != nil {
+		return err
+	}
+	if !ret.IsAuthorized {
+		return errors.New("not authorized")
+	}
+	return nil
 }
 
 func (mgr *Manager) listenWirelessEnabled() {

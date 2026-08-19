@@ -1,5 +1,4 @@
 PREFIX = /usr
-DAEMON_LIBDIR ?= ${PREFIX}/lib/deepin-daemon
 GOPATH_DIR = gopath
 GOPKG_PREFIX = github.com/linuxdeepin/dde-daemon
 GOBUILD = go build $(GO_BUILD_FLAGS)
@@ -164,19 +163,19 @@ print_gopath: prepare
 	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
 
 install: build install-dde-data install-icons
-	mkdir -pv ${DESTDIR}${DAEMON_LIBDIR}
-	cp -f out/bin/* ${DESTDIR}${DAEMON_LIBDIR}/
+	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon
+	cp -f out/bin/* ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 
-	rm -f ${DESTDIR}${DAEMON_LIBDIR}/dde-session-daemon
+	rm -f ${DESTDIR}${PREFIX}/lib/deepin-daemon/dde-session-daemon
 	mkdir -pv ${DESTDIR}${PREFIX}/libexec/deepin
 	cp -f out/bin/dde-session-daemon ${DESTDIR}${PREFIX}/libexec/deepin/
 	install -m755 misc/scripts/dde-session-daemon-loader-wrapper \
-		${DESTDIR}${DAEMON_LIBDIR}/dde-session-daemon
+		${DESTDIR}${PREFIX}/lib/deepin-daemon/dde-session-daemon
 
-	rm -f ${DESTDIR}${DAEMON_LIBDIR}/langselector
+	rm -f ${DESTDIR}${PREFIX}/lib/deepin-daemon/langselector
 	cp -f out/bin/langselector ${DESTDIR}${PREFIX}/libexec/deepin/
 	install -m755 misc/scripts/langselector-loader-wrapper \
-		${DESTDIR}${DAEMON_LIBDIR}/langselector
+		${DESTDIR}${PREFIX}/lib/deepin-daemon/langselector
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/locale
 	cp -r out/locale/* ${DESTDIR}${PREFIX}/share/locale
@@ -219,8 +218,8 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}/etc/pulse/daemon.conf.d
 	cp -f misc/etc/pulse/daemon.conf.d/*.conf ${DESTDIR}/etc/pulse/daemon.conf.d/
 
-	mkdir -pv ${DESTDIR}${DAEMON_LIBDIR}/service-trigger
-	cp -f misc/service-trigger/*.json ${DESTDIR}${DAEMON_LIBDIR}/service-trigger/
+	mkdir -pv ${DESTDIR}${PREFIX}/lib/deepin-daemon/service-trigger
+	cp -f misc/service-trigger/*.json ${DESTDIR}${PREFIX}/lib/deepin-daemon/service-trigger/
 
 	mkdir -pv ${DESTDIR}${PREFIX}/libexec/dde-daemon/
 	cp -r misc/libexec/dde-daemon/* ${DESTDIR}${PREFIX}/libexec/dde-daemon/
@@ -231,8 +230,8 @@ install: build install-dde-data install-icons
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.lightdm-deepin-greeter
 	cp -r misc/dsg-configs/org.deepin.dde.lightdm-deepin-greeter/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.lightdm-deepin-greeter/
 
-	cp -f misc/scripts/dde-lock.sh ${DESTDIR}${DAEMON_LIBDIR}/
-	cp -f misc/scripts/dde-shutdown.sh ${DESTDIR}${DAEMON_LIBDIR}/
+	cp -f misc/scripts/dde-lock.sh ${DESTDIR}${PREFIX}/lib/deepin-daemon/
+	cp -f misc/scripts/dde-shutdown.sh ${DESTDIR}${PREFIX}/lib/deepin-daemon/
 install-dde-data:
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dde/
 	cp -r misc/data misc/zoneinfo ${DESTDIR}${PREFIX}/share/dde/

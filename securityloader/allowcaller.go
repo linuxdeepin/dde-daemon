@@ -5,15 +5,14 @@
 package securityloader
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
-
+	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -36,19 +35,18 @@ const (
 	invalidGroupID    = ^uint32(0)
 )
 
-// AuthResult describes how a caller should be authorized.
+// AuthResult describes the result of an Authorize call.
 type AuthResult int
 
 const (
-	// AuthError means the registry could not determine whether the caller is
-	// authorized. err describes the internal authorization failure.
-	AuthError AuthResult = iota
-	// AuthOK means the caller is authorized by the allow-caller registry and
-	// does not need the service's original authorization mechanism.
+	// AuthDenied means the caller is explicitly rejected. err is the reason.
+	AuthDenied AuthResult = iota
+	// AuthOK means the caller is authorized by the allow-caller registry.
 	AuthOK
-	// AuthPolkit means the caller is not registered for the requested scope.
-	// Callers should fall back to their original Polkit authorization.
-	AuthPolkit
+	// AuthNotEnabled means no caller has been registered for this scope.
+	// The service was not started via deepin-security-loader.
+	// Callers should fall back to their original authorization mechanism.
+	AuthNotEnabled
 )
 
 var logger = log.NewLogger("daemon/security-loader")
@@ -79,17 +77,9 @@ func (s serviceBus) GetConnGroups(name string) ([]uint32, error) {
 	return getProcessGroups(pid)
 }
 
-// callerInfo stores the credentials recorded for an authorized D-Bus
-// connection. Checking both fields prevents a recycled name owned by another
-// process, including one under the same UID, from inheriting authorization.
-type callerInfo struct {
-	UID uint32 `json:"uid"`
-	PID uint32 `json:"pid"`
-}
-
 type persistedState struct {
-	BusID   string                           `json:"busId"`
-	Callers map[string]map[string]callerInfo `json:"callers"`
+	BusID   string              `json:"busId"`
+	Callers map[string][]string `json:"callers"`
 }
 
 // AllowCallerRegistry stores the exact system-bus unique names authorized by
@@ -102,7 +92,7 @@ type AllowCallerRegistry struct {
 	processParent     func(uint32) (uint32, error)
 
 	mu        sync.RWMutex
-	callers   map[string]map[string]callerInfo
+	callers   map[string]map[string]struct{}
 	persistMu sync.Mutex
 
 	signalLoop   *dbusutil.SignalLoop
@@ -152,7 +142,7 @@ func newAllowCallerRegistry(service busService, stateFile string, privilegedGrou
 		busID:             busID,
 		privilegedGroupID: privilegedGroupID,
 		processParent:     getProcessParentPID,
-		callers:           make(map[string]map[string]callerInfo),
+		callers:           make(map[string]map[string]struct{}),
 	}
 }
 
@@ -169,7 +159,7 @@ func lookupGroupID(name string) (uint32, error) {
 }
 
 func getProcessGroups(pid uint32) ([]uint32, error) {
-	content, err := os.ReadFile(fmt.Sprintf("/proc/%d/status", pid))
+	content, err := ioutil.ReadFile(fmt.Sprintf("/proc/%d/status", pid))
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +184,7 @@ func getProcessGroups(pid uint32) ([]uint32, error) {
 }
 
 func getProcessParentPID(pid uint32) (uint32, error) {
-	content, err := os.ReadFile(fmt.Sprintf("/proc/%d/status", pid))
+	content, err := ioutil.ReadFile(fmt.Sprintf("/proc/%d/status", pid))
 	if err != nil {
 		return 0, err
 	}
@@ -281,17 +271,7 @@ func (r *AllowCallerRegistry) AddCaller(scope string, sender dbus.Sender, unique
 	if !hasOwner {
 		return fmt.Errorf("D-Bus caller %q has no owner", uniqueName)
 	}
-
-	targetUID, err := r.service.GetConnUID(uniqueName)
-	if err != nil {
-		return fmt.Errorf("get target caller %q UID failed: %w", uniqueName, err)
-	}
-	targetPID, err := r.service.GetConnPID(uniqueName)
-	if err != nil {
-		return fmt.Errorf("get target caller %q PID failed: %w", uniqueName, err)
-	}
-	info := callerInfo{UID: targetUID, PID: targetPID}
-	if err := r.authorizeRegistrar(sender, uniqueName, info); err != nil {
+	if err := r.authorizeRegistrar(sender, uniqueName); err != nil {
 		return err
 	}
 
@@ -301,72 +281,76 @@ func (r *AllowCallerRegistry) AddCaller(scope string, sender dbus.Sender, unique
 	r.mu.Lock()
 	callers := r.callers[scope]
 	if callers == nil {
-		callers = make(map[string]callerInfo)
+		callers = make(map[string]struct{})
 		r.callers[scope] = callers
 	}
-	previous, existed := callers[uniqueName]
-	if existed && previous == info {
+	if _, exists := callers[uniqueName]; exists {
 		r.mu.Unlock()
 		return nil
 	}
-	callers[uniqueName] = info
+	callers[uniqueName] = struct{}{}
 	if err := r.saveLocked(); err != nil {
-		if existed {
-			callers[uniqueName] = previous
-		} else {
-			delete(callers, uniqueName)
-			if len(callers) == 0 {
-				delete(r.callers, scope)
-			}
+		delete(r.callers[scope], uniqueName)
+		if len(r.callers[scope]) == 0 {
+			delete(r.callers, scope)
 		}
 		r.mu.Unlock()
 		return err
 	}
 	r.mu.Unlock()
 
-	logger.Infof("registered security-loader caller %q for %q", uniqueName, scope)
+	logger.Infof("registered security-loader caller %s for %s", uniqueName, scope)
 	return nil
 }
 
-func (r *AllowCallerRegistry) authorizeRegistrar(sender dbus.Sender, uniqueName string, target callerInfo) error {
+func (r *AllowCallerRegistry) authorizeRegistrar(sender dbus.Sender, uniqueName string) error {
 	senderUID, err := r.service.GetConnUID(string(sender))
 	if err != nil {
-		return fmt.Errorf("get SetAllowCaller sender %q UID failed: %w", sender, err)
+		return fmt.Errorf("get SetAllowCaller sender %s UID failed: %w", sender, err)
 	}
 	// Root is trusted to register a process running under another account.
 	if senderUID == 0 {
 		return nil
 	}
 	if r.privilegedGroupID == invalidGroupID {
-		return fmt.Errorf("privileged group %q is unavailable", privilegedGroup)
+		return fmt.Errorf("privileged group %s is unavailable", privilegedGroup)
 	}
 
 	groups, err := r.service.GetConnGroups(string(sender))
 	if err != nil {
-		return fmt.Errorf("get SetAllowCaller sender %q groups failed: %w", sender, err)
+		return fmt.Errorf("get SetAllowCaller sender %s groups failed: %w", sender, err)
 	}
 	if !containsGroup(groups, r.privilegedGroupID) {
-		return fmt.Errorf("D-Bus caller %q is not in privileged group %q", sender, privilegedGroup)
+		return fmt.Errorf("D-Bus caller %s is not in privileged group %s", sender, privilegedGroup)
 	}
-	if target.UID != senderUID {
-		return fmt.Errorf("SetAllowCaller sender UID %d does not own target %q with UID %d", senderUID, uniqueName, target.UID)
+
+	targetUID, err := r.service.GetConnUID(uniqueName)
+	if err != nil {
+		return fmt.Errorf("get target caller %s UID failed: %w", uniqueName, err)
+	}
+	if targetUID != senderUID {
+		return fmt.Errorf("SetAllowCaller sender UID %d does not own target %s with UID %d", senderUID, uniqueName, targetUID)
 	}
 
 	senderPID, err := r.service.GetConnPID(string(sender))
 	if err != nil {
-		return fmt.Errorf("get SetAllowCaller sender %q PID failed: %w", sender, err)
+		return fmt.Errorf("get SetAllowCaller sender %s PID failed: %w", sender, err)
+	}
+	targetPID, err := r.service.GetConnPID(uniqueName)
+	if err != nil {
+		return fmt.Errorf("get target caller %s PID failed: %w", uniqueName, err)
 	}
 	if r.processParent == nil {
 		return errors.New("process ancestry resolver is unavailable")
 	}
-	isDescendant, err := isProcessDescendant(target.PID, senderPID, r.processParent)
+	isDescendant, err := isProcessDescendant(targetPID, senderPID, r.processParent)
 	if err != nil {
-		return fmt.Errorf("verify target caller %q process ancestry failed: %w", uniqueName, err)
+		return fmt.Errorf("verify target caller %s process ancestry failed: %w", uniqueName, err)
 	}
 	if !isDescendant {
 		return fmt.Errorf(
-			"target caller %q PID %d is not a descendant of SetAllowCaller sender %q PID %d",
-			uniqueName, target.PID, sender, senderPID,
+			"target caller %s PID %d is not a descendant of SetAllowCaller sender %s PID %d",
+			uniqueName, targetPID, sender, senderPID,
 		)
 	}
 	return nil
@@ -381,74 +365,34 @@ func containsGroup(groups []uint32, target uint32) bool {
 	return false
 }
 
-// Authorize checks whether the caller identified by its D-Bus sender is
-// authorized for the given scope. Registered UID and PID are both rechecked
-// to prevent a recycled D-Bus name from inheriting authorization.
 func (r *AllowCallerRegistry) Authorize(scope string, sender dbus.Sender) (AuthResult, error) {
 	if r == nil {
-		return AuthError, errors.New("security-loader caller registry is nil")
+		return AuthDenied, errors.New("security-loader caller registry is nil")
 	}
 	if sender == "" {
-		return AuthError, errors.New("D-Bus sender is empty")
+		return AuthDenied, errors.New("D-Bus sender is empty")
 	}
 
 	uid, err := r.service.GetConnUID(string(sender))
 	if err != nil {
-		return AuthError, fmt.Errorf("get caller %q UID failed: %w", sender, err)
+		return AuthDenied, fmt.Errorf("get caller %s UID failed: %w", sender, err)
 	}
 	if uid == 0 {
 		return AuthOK, nil
 	}
 
 	r.mu.RLock()
-	registered, callerExists := r.callers[scope][string(sender)]
+	scopeCallers, scopeExists := r.callers[scope]
+	_, callerExists := scopeCallers[string(sender)]
 	r.mu.RUnlock()
+
+	if !scopeExists || len(scopeCallers) == 0 {
+		return AuthNotEnabled, nil
+	}
 	if !callerExists {
-		return AuthPolkit, nil
+		return AuthDenied, fmt.Errorf("D-Bus caller %s is not authorized for %s", sender, scope)
 	}
-
-	pid, err := r.service.GetConnPID(string(sender))
-	if err != nil {
-		return AuthError, fmt.Errorf("get caller %q PID failed: %w", sender, err)
-	}
-	if registered.UID != uid || registered.PID != pid {
-		logger.Warningf(
-			"security-loader credentials changed for caller %q in scope %q; falling back to Polkit",
-			sender, scope,
-		)
-		r.removeCallerIfMatches(scope, string(sender), registered)
-		return AuthPolkit, nil
-	}
-
 	return AuthOK, nil
-}
-
-// removeCallerIfMatches removes only the registration observed by Authorize.
-// A concurrent AddCaller may replace it before cleanup starts; comparing the
-// recorded credentials prevents that newer registration from being deleted.
-// Locks follow the registry-wide persistMu -> mu order to avoid deadlocks.
-func (r *AllowCallerRegistry) removeCallerIfMatches(scope, uniqueName string, expected callerInfo) bool {
-	r.persistMu.Lock()
-	defer r.persistMu.Unlock()
-
-	r.mu.Lock()
-	callers := r.callers[scope]
-	current, exists := callers[uniqueName]
-	if !exists || current != expected {
-		r.mu.Unlock()
-		return false
-	}
-	delete(callers, uniqueName)
-	if len(callers) == 0 {
-		delete(r.callers, scope)
-	}
-	saveErr := r.saveLocked()
-	r.mu.Unlock()
-
-	if saveErr != nil {
-		logger.Warningf("failed to persist removal of security-loader caller %q: %q", uniqueName, saveErr.Error())
-	}
-	return true
 }
 
 func (r *AllowCallerRegistry) RemoveCaller(uniqueName string) {
@@ -476,18 +420,20 @@ func (r *AllowCallerRegistry) RemoveCaller(uniqueName string) {
 		return
 	}
 	if err := r.saveLocked(); err != nil {
-		logger.Warningf("failed to persist removal of security-loader caller %q: %q", uniqueName, err.Error())
+		logger.Warningf("failed to persist removal of security-loader caller %s: %v", uniqueName, err)
 	}
 	r.mu.Unlock()
 }
 
 func (r *AllowCallerRegistry) saveLocked() error {
-	state := make(map[string]map[string]callerInfo, len(r.callers))
+	state := make(map[string][]string, len(r.callers))
 	for scope, callers := range r.callers {
-		state[scope] = make(map[string]callerInfo, len(callers))
-		for uniqueName, info := range callers {
-			state[scope][uniqueName] = info
+		uniqueNames := make([]string, 0, len(callers))
+		for uniqueName := range callers {
+			uniqueNames = append(uniqueNames, uniqueName)
 		}
+		sort.Strings(uniqueNames)
+		state[scope] = uniqueNames
 	}
 
 	if r.busID == "" {
@@ -500,25 +446,6 @@ func (r *AllowCallerRegistry) saveLocked() error {
 	return r.writeState(persisted)
 }
 
-func createPrivateTempFile(dir string) (*os.File, error) {
-	const maxAttempts = 10
-	var random [16]byte
-	for attempt := 0; attempt < maxAttempts; attempt++ {
-		if _, err := rand.Read(random[:]); err != nil {
-			return nil, fmt.Errorf("generate security-loader state file name failed: %w", err)
-		}
-		name := filepath.Join(dir, ".allow-callers-"+hex.EncodeToString(random[:]))
-		file, err := os.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
-		if err == nil {
-			return file, nil
-		}
-		if !os.IsExist(err) {
-			return nil, err
-		}
-	}
-	return nil, errors.New("create unique security-loader state file failed")
-}
-
 func (r *AllowCallerRegistry) writeState(state persistedState) error {
 	content, err := json.Marshal(state)
 	if err != nil {
@@ -529,12 +456,17 @@ func (r *AllowCallerRegistry) writeState(state persistedState) error {
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return fmt.Errorf("create security-loader runtime directory failed: %w", err)
 	}
-	tmp, err := createPrivateTempFile(dir)
+	tmp, err := ioutil.TempFile(dir, ".allow-callers-")
 	if err != nil {
 		return fmt.Errorf("create security-loader state file failed: %w", err)
 	}
 	tmpName := tmp.Name()
 	defer os.Remove(tmpName)
+
+	if err := tmp.Chmod(0600); err != nil {
+		tmp.Close()
+		return err
+	}
 	if _, err := tmp.Write(content); err != nil {
 		tmp.Close()
 		return fmt.Errorf("write security-loader state failed: %w", err)
@@ -549,7 +481,7 @@ func (r *AllowCallerRegistry) writeState(state persistedState) error {
 }
 
 func (r *AllowCallerRegistry) load() error {
-	content, err := os.ReadFile(r.stateFile)
+	content, err := ioutil.ReadFile(r.stateFile)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil
@@ -569,7 +501,7 @@ func (r *AllowCallerRegistry) load() error {
 		if scope == "" {
 			continue
 		}
-		for uniqueName, registered := range callers {
+		for _, uniqueName := range callers {
 			if !strings.HasPrefix(uniqueName, ":") {
 				continue
 			}
@@ -577,18 +509,10 @@ func (r *AllowCallerRegistry) load() error {
 			if err != nil || !hasOwner {
 				continue
 			}
-			uid, err := r.service.GetConnUID(uniqueName)
-			if err != nil || uid != registered.UID {
-				continue
-			}
-			pid, err := r.service.GetConnPID(uniqueName)
-			if err != nil || pid != registered.PID {
-				continue
-			}
 			if r.callers[scope] == nil {
-				r.callers[scope] = make(map[string]callerInfo)
+				r.callers[scope] = make(map[string]struct{})
 			}
-			r.callers[scope][uniqueName] = registered
+			r.callers[scope][uniqueName] = struct{}{}
 		}
 	}
 	return nil

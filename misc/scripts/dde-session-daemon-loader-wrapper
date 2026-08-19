@@ -10,8 +10,9 @@ LOADER_EXEC="/usr/bin/deepin-security-loader-exec"
 
 if [ -x "$LOADER" ] && [ -x "$LOADER_EXEC" ] && \
     getcap "$LOADER_EXEC" 2>/dev/null | grep -q cap_setgid; then
-    logger -t dde-session-daemon "starting via deepin-security-loader"
     exec "$LOADER" --group deepin-daemon -- "$REAL_BINARY" "$@"
 fi
-logger -t dde-session-daemon "starting directly"
-exec "$REAL_BINARY" "$@"
+
+# Type=forking requires the wrapper to leave a child for systemd to adopt.
+"$REAL_BINARY" "$@" &
+exit 0

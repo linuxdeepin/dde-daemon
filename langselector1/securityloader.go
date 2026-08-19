@@ -6,7 +6,6 @@ package langselector
 
 import (
 	"fmt"
-	"os"
 	"os/user"
 
 	"github.com/godbus/dbus/v5"
@@ -31,14 +30,13 @@ func DoSecurityLoader(args []string) {
 	destList := buildDestList()
 
 	_, loaded, err := securityloader.Handshake(args, destList)
-	if err == nil {
-		return
+	if err != nil {
+		if loaded {
+			logger.Warning("security loader handshake failed:", err)
+		} else {
+			logger.Warning("security loader handshake skipped:", err)
+		}
 	}
-	if loaded {
-		logger.Errorf("security loader handshake failed, refusing to start: %q", err.Error())
-		os.Exit(1)
-	}
-	logger.Warningf("security loader handshake skipped: %q", err.Error())
 }
 
 // buildDestList 构建需要授权的 D-Bus 接口列表
@@ -73,6 +71,10 @@ func getCurrentUserAccountsPath() (string, error) {
 	currentUser, err := user.Current()
 	if err != nil {
 		return "", err
+	}
+
+	if currentUser == nil {
+		return "", fmt.Errorf("current user is nil")
 	}
 
 	// 通过 D-Bus 调用 FindUserById

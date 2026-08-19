@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -19,13 +20,12 @@ import (
 )
 
 type fakeBusService struct {
-	owners    map[string]bool
-	uids      map[string]uint32
-	uidErrors map[string]error
-	groups    map[string][]uint32
-	pids      map[string]uint32
-	parents   map[uint32]uint32
-	busID     string
+	owners  map[string]bool
+	uids    map[string]uint32
+	groups  map[string][]uint32
+	pids    map[string]uint32
+	parents map[uint32]uint32
+	busID   string
 }
 
 const testPrivilegedGroupID = 996
@@ -35,9 +35,6 @@ func (s *fakeBusService) NameHasOwner(name string) (bool, error) {
 }
 
 func (s *fakeBusService) GetConnUID(name string) (uint32, error) {
-	if err := s.uidErrors[name]; err != nil {
-		return 0, err
-	}
 	return s.uids[name], nil
 }
 
@@ -84,47 +81,21 @@ func TestAllowCallerRegistryAuthorize(t *testing.T) {
 	if err := registry.AddCaller(DaemonScope, dbus.Sender(":1.1"), ":1.10"); err != nil {
 		t.Fatal(err)
 	}
-	result, err := registry.Authorize(DaemonScope, dbus.Sender(":1.10"))
-	if result != AuthOK || err != nil {
-		t.Fatalf("registered caller authorization = (%v, %v), want (AuthOK, nil)", result, err)
+	result, _ := registry.Authorize(DaemonScope, dbus.Sender(":1.10"))
+	if result != AuthOK {
+		t.Fatalf("registered caller was denied")
 	}
-	result, err = registry.Authorize(DaemonScope, dbus.Sender(":1.11"))
-	if result != AuthPolkit || err != nil {
-		t.Fatalf("unregistered caller authorization = (%v, %v), want (AuthPolkit, nil)", result, err)
+	result, _ = registry.Authorize(DaemonScope, dbus.Sender(":1.11"))
+	if result != AuthDenied {
+		t.Fatal("same-UID unregistered caller was allowed")
 	}
-	result, err = registry.Authorize(PowerScope, dbus.Sender(":1.10"))
-	if result != AuthPolkit || err != nil {
-		t.Fatalf("caller in unregistered scope authorization = (%v, %v), want (AuthPolkit, nil)", result, err)
+	result, _ = registry.Authorize(PowerScope, dbus.Sender(":1.10"))
+	if result != AuthNotEnabled {
+		t.Fatal("caller registered for another scope should return AuthNotEnabled")
 	}
-	result, err = registry.Authorize(PowerScope, dbus.Sender(":1.12"))
-	if result != AuthOK || err != nil {
-		t.Fatalf("root caller authorization = (%v, %v), want (AuthOK, nil)", result, err)
-	}
-}
-
-func TestAllowCallerRegistryAuthorizationErrorsDoNotFallBack(t *testing.T) {
-	uidErr := errors.New("UID lookup failed")
-	registry := newTestAllowCallerRegistry(&fakeBusService{
-		uids:      make(map[string]uint32),
-		uidErrors: map[string]error{":1.20": uidErr},
-	}, filepath.Join(t.TempDir(), "allow-callers.json"), testPrivilegedGroupID)
-
-	tests := []struct {
-		name     string
-		registry *AllowCallerRegistry
-		sender   dbus.Sender
-	}{
-		{name: "nil registry", sender: ":1.20"},
-		{name: "empty sender", registry: registry},
-		{name: "UID lookup failure", registry: registry, sender: ":1.20"},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result, err := tt.registry.Authorize(DaemonScope, tt.sender)
-			if result != AuthError || err == nil {
-				t.Fatalf("authorization = (%v, %v), want (AuthError, non-nil error)", result, err)
-			}
-		})
+	result, _ = registry.Authorize(PowerScope, dbus.Sender(":1.12"))
+	if result != AuthOK {
+		t.Fatalf("root caller was denied")
 	}
 }
 
@@ -133,20 +104,19 @@ func TestAllowCallerRegistryPersistenceAndRemoval(t *testing.T) {
 	service := &fakeBusService{
 		owners: map[string]bool{":1.20": true, ":1.21": false},
 		uids:   map[string]uint32{":1.20": 1000},
-		pids:   map[string]uint32{":1.20": 120},
 		groups: make(map[string][]uint32),
 		busID:  "bus-a",
 	}
 	content, err := json.Marshal(persistedState{
 		BusID: "bus-a",
-		Callers: map[string]map[string]callerInfo{
-			DaemonScope: {":1.20": {UID: 1000, PID: 120}, ":1.21": {}},
+		Callers: map[string][]string{
+			DaemonScope: {":1.20", ":1.21"},
 		},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(stateFile, content, 0600); err != nil {
+	if err := ioutil.WriteFile(stateFile, content, 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -165,39 +135,18 @@ func TestAllowCallerRegistryPersistenceAndRemoval(t *testing.T) {
 	}
 }
 
-func TestWriteStateUsesPrivatePermissions(t *testing.T) {
-	dir := t.TempDir()
-	stateFile := filepath.Join(dir, "allow-callers.json")
-	registry := &AllowCallerRegistry{stateFile: stateFile, busID: "bus-a"}
-	if err := registry.writeState(persistedState{BusID: "bus-a"}); err != nil {
-		t.Fatal(err)
-	}
-	info, err := os.Stat(stateFile)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if got := info.Mode().Perm(); got != 0600 {
-		t.Fatalf("state file mode = %o, want 600", got)
-	}
-	if leftovers, err := filepath.Glob(filepath.Join(dir, ".allow-callers-*")); err != nil {
-		t.Fatal(err)
-	} else if len(leftovers) != 0 {
-		t.Fatalf("temporary state files remain: %v", leftovers)
-	}
-}
-
 func TestAllowCallerRegistryRejectsStateFromAnotherBus(t *testing.T) {
 	stateFile := filepath.Join(t.TempDir(), "allow-callers.json")
 	content, err := json.Marshal(persistedState{
 		BusID: "old-bus",
-		Callers: map[string]map[string]callerInfo{
-			DaemonScope: {":1.30": {UID: 1000, PID: 130}},
+		Callers: map[string][]string{
+			DaemonScope: {":1.30"},
 		},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(stateFile, content, 0600); err != nil {
+	if err := ioutil.WriteFile(stateFile, content, 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -255,7 +204,7 @@ func TestAllowCallerRegistryConcurrentAddsPersistAllCallers(t *testing.T) {
 		}
 	}
 
-	content, err := os.ReadFile(stateFile)
+	content, err := ioutil.ReadFile(stateFile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -385,95 +334,6 @@ func TestAddCallerIsNotVisibleBeforePersistenceSucceeds(t *testing.T) {
 	}
 	if result := <-authorizeResult; result == AuthOK {
 		t.Fatal("failed registration became authorized")
-	}
-}
-
-func TestAllowCallerRegistryTOCTOUProtection(t *testing.T) {
-	tests := []struct {
-		name   string
-		mutate func(*fakeBusService)
-	}{
-		{
-			name: "different UID",
-			mutate: func(service *fakeBusService) {
-				service.uids[":1.10"] = 1001
-			},
-		},
-		{
-			name: "same UID different process",
-			mutate: func(service *fakeBusService) {
-				service.pids[":1.10"] = 111
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			service := &fakeBusService{
-				owners:  map[string]bool{":1.1": true, ":1.10": true},
-				uids:    map[string]uint32{":1.1": 1000, ":1.10": 1000},
-				groups:  map[string][]uint32{":1.1": {testPrivilegedGroupID}},
-				pids:    map[string]uint32{":1.1": 101, ":1.10": 110},
-				parents: map[uint32]uint32{110: 101},
-				busID:   "bus-a",
-			}
-			registry := newTestAllowCallerRegistry(
-				service,
-				filepath.Join(t.TempDir(), "allow-callers.json"),
-				testPrivilegedGroupID,
-			)
-
-			if err := registry.AddCaller(DaemonScope, dbus.Sender(":1.1"), ":1.10"); err != nil {
-				t.Fatal(err)
-			}
-			result, err := registry.Authorize(DaemonScope, dbus.Sender(":1.10"))
-			if result != AuthOK || err != nil {
-				t.Fatalf("authorization before recycling = (%v, %v), want (AuthOK, nil)", result, err)
-			}
-
-			tt.mutate(service)
-			result, err = registry.Authorize(DaemonScope, dbus.Sender(":1.10"))
-			if result != AuthPolkit || err != nil {
-				t.Fatalf("authorization after recycling = (%v, %v), want (AuthPolkit, nil)", result, err)
-			}
-		})
-	}
-}
-
-func TestRemoveCallerIfMatchesPreservesReregistration(t *testing.T) {
-	service := &fakeBusService{
-		owners:  map[string]bool{":1.1": true, ":1.10": true},
-		uids:    map[string]uint32{":1.1": 1000, ":1.10": 1000},
-		groups:  map[string][]uint32{":1.1": {testPrivilegedGroupID}},
-		pids:    map[string]uint32{":1.1": 101, ":1.10": 110},
-		parents: map[uint32]uint32{110: 101},
-		busID:   "bus-a",
-	}
-	registry := newTestAllowCallerRegistry(
-		service,
-		filepath.Join(t.TempDir(), "allow-callers.json"),
-		testPrivilegedGroupID,
-	)
-	if err := registry.AddCaller(DaemonScope, dbus.Sender(":1.1"), ":1.10"); err != nil {
-		t.Fatal(err)
-	}
-
-	registry.mu.RLock()
-	stale := registry.callers[DaemonScope][":1.10"]
-	registry.mu.RUnlock()
-
-	service.pids[":1.10"] = 111
-	service.parents[111] = 101
-	if err := registry.AddCaller(DaemonScope, dbus.Sender(":1.1"), ":1.10"); err != nil {
-		t.Fatal(err)
-	}
-	if registry.removeCallerIfMatches(DaemonScope, ":1.10", stale) {
-		t.Fatal("stale cleanup removed a newer registration")
-	}
-
-	result, err := registry.Authorize(DaemonScope, dbus.Sender(":1.10"))
-	if result != AuthOK || err != nil {
-		t.Fatalf("new registration authorization = (%v, %v), want (AuthOK, nil)", result, err)
 	}
 }
 
