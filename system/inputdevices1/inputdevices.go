@@ -15,7 +15,6 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
-	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
@@ -34,7 +33,6 @@ const (
 //go:generate dbusutil-gen em -type InputDevices,Touchpad
 type InputDevices struct {
 	service       *dbusutil.Service
-	allowCallers  *securityloader.AllowCallerRegistry
 	systemSigLoop *dbusutil.SignalLoop
 	l             *libinput
 
@@ -72,14 +70,12 @@ type InputDevices struct {
 func newInputDevices() *InputDevices {
 	return &InputDevices{
 		touchscreens: make(map[dbus.ObjectPath]*Touchscreen),
-		allowCallers: securityloader.DefaultRegistry(),
 	}
 }
 
 func (*InputDevices) GetInterfaceName() string {
 	return dbusInterface
 }
-
 
 func (m *InputDevices) init() {
 	m.initDSettings(m.service)
@@ -404,7 +400,7 @@ func (m *InputDevices) newTouchpad() {
 	m.touchpadMu.Lock()
 	defer m.touchpadMu.Unlock()
 
-	t := newTouchpad(m.service, m.allowCallers)
+	t := newTouchpad(m.service)
 	err := t.export(dbus.ObjectPath(touchpadDBusPath))
 	if err != nil {
 		logger.Warning(err)

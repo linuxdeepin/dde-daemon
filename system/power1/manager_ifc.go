@@ -9,8 +9,6 @@ import (
 	"fmt"
 
 	dbus "github.com/godbus/dbus/v5"
-	"github.com/linuxdeepin/dde-daemon/securityloader"
-
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -108,24 +106,15 @@ func (m *Manager) SetMode(mode string) *dbus.Error {
 	return nil
 }
 
-func (m *Manager) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
-	return dbusutil.ToError(m.allowCallers.AddCaller(securityloader.PowerScope, sender, uniqueName))
-}
-
-func (m *Manager) SetTlpMode(sender dbus.Sender, mode string) *dbus.Error {
-	err := securityloader.AuthorizeWithPolkit(
-		m.allowCallers,
-		securityloader.PowerScope,
-		sender,
-		m.service.Conn(),
-		"org.deepin.dde.power.doAction",
-	)
-	if err != nil {
-		logger.Warningf("SetTlpMode authorization failed: %q", err.Error())
-		return dbusutil.ToError(err)
-	}
+func (m *Manager) SetTlpMode(mode string) *dbus.Error {
 	logger.Info("SetTlpMode : ", mode)
 	return dbusutil.ToError(m.setTlpMode(mode))
+}
+
+func (m *Manager) SetShortIdleState(state bool) *dbus.Error {
+	logger.Info(" SetShortIdleState : ", state)
+	m.setShortIdleState(state)
+	return nil
 }
 
 func (m *Manager) LockCpuFreq(governor string, lockTime int32) *dbus.Error {

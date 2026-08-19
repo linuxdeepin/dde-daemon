@@ -26,7 +26,6 @@ import (
 	"github.com/linuxdeepin/dde-api/userenv"
 	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/dde-daemon/loader"
-	"github.com/linuxdeepin/dde-daemon/securityloader"
 	soundthemeplayer "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.soundthemeplayer1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -157,37 +156,6 @@ func init() {
 }
 
 func main() {
-	cleanedArgs, loadedBySecurityLoader, err := securityloader.Handshake(os.Args, []securityloader.Destination{
-		{
-			DBusName:      "org.deepin.dde.Daemon1",
-			DBusPath:      "/org/deepin/dde/Daemon1",
-			DBusInterface: "org.deepin.dde.Daemon1",
-		},
-		{
-			DBusName:      "org.deepin.dde.Lastore1",
-			DBusPath:      "/org/deepin/dde/Lastore1",
-			DBusInterface: "org.deepin.dde.Lastore1.Manager",
-		},
-		{
-			DBusName:      "org.deepin.dde.InputDevices1",
-			DBusPath:      "/org/deepin/dde/InputDevices1",
-			DBusInterface: "org.deepin.dde.InputDevices1",
-		},
-		{
-			DBusName:      "org.deepin.dde.AirplaneMode1",
-			DBusPath:      "/org/deepin/dde/AirplaneMode1",
-			DBusInterface: "org.deepin.dde.AirplaneMode1",
-		},
-	})
-	os.Args = cleanedArgs
-	if err != nil {
-		if loadedBySecurityLoader {
-			logger.Errorf("security-loader handshake failed, refusing to start: %q", err.Error())
-			os.Exit(1)
-		}
-		logger.Warningf("security-loader handshake failed: %q", err.Error())
-	}
-
 	logger.SetLogLevel(log.LevelInfo)
 
 	if isInShutdown() {

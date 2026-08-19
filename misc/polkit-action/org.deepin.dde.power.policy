@@ -10,7 +10,7 @@
                 <defaults>
                         <allow_any>no</allow_any>
                         <allow_inactive>no</allow_inactive>
-                        <allow_active>auth_admin_keep</allow_active>
+                        <allow_active>auth_admin</allow_active>
                 </defaults>
                 <description xml:lang="en_US">Check Authentication</description>
                 <message xml:lang="en_US">Authentication is required to perform this action</message>

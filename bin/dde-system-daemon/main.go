@@ -6,9 +6,9 @@ package main
 
 import (
 	"os"
-	"sync"
 
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	systemPower "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.power1"
 
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts1"
@@ -33,7 +33,6 @@ import (
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 
 	"github.com/linuxdeepin/dde-daemon/loader"
-	"github.com/linuxdeepin/dde-daemon/securityloader"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -49,8 +48,7 @@ type Daemon struct {
 	service             *dbusutil.Service
 	systemd             systemd1.Manager
 	dsSystem            configManager.Manager
-	allowCallers        *securityloader.AllowCallerRegistry
-	idleStateMu         sync.Mutex
+	systemPower         systemPower.Power
 	idleStatePath       string
 	idleScreenStatePath string
 	signals             *struct { // nolint
@@ -113,10 +111,6 @@ func main() {
 	BindTextdomainCodeset("dde-daemon", "UTF-8")
 	Textdomain("dde-daemon")
 
-	allowCallers := securityloader.NewAllowCallerRegistry(service)
-	securityloader.SetDefaultRegistry(allowCallers)
-	defer allowCallers.Close()
-
 	logger.SetRestartCommand("/usr/lib/deepin-daemon/dde-system-daemon")
 
 	_daemon = &Daemon{
@@ -124,7 +118,7 @@ func main() {
 		service:             service,
 		systemSigLoop:       dbusutil.NewSignalLoop(service.Conn(), 10),
 		systemd:             systemd1.NewManager(service.Conn()),
-		allowCallers:        allowCallers,
+		systemPower:         systemPower.NewPower(service.Conn()),
 		idleStatePath:       IdleFile,
 		idleScreenStatePath: IdleScreenFile,
 	}

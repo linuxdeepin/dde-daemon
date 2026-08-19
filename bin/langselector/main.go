@@ -5,15 +5,11 @@
 package main
 
 import (
-	"os"
-
 	"github.com/linuxdeepin/dde-daemon/langselector1"
 	"github.com/linuxdeepin/go-lib/gettext"
 )
 
 func main() {
-	langselector.DoSecurityLoader(os.Args)
-
 	gettext.InitI18n()
 	gettext.BindTextdomainCodeset("dde-daemon", "UTF-8")
 	gettext.Textdomain("dde-daemon")

@@ -63,7 +63,6 @@ Requires:       xdotool
 Requires:       gnome-keyring-pam
 Requires:       imwheel
 Requires:       deepin-installer-timezones
-Requires:       deepin-security-loader
 
 Recommends:     lshw
 Recommends:     iso-codes
@@ -79,8 +78,10 @@ Daemon handling the DDE session settings
 patch langselector/locale.go < rpm/locale.go.patch
 patch accounts/users/passwd.go < rpm/passwd.go.patch
 
-# Select the RPM daemon directory explicitly. Security-loader targets remain
-# under /usr/libexec/deepin and are not rewritten.
+# Fix library exec path
+sed -i '/deepin/s|lib|libexec|' Makefile
+sed -i '/${DESTDIR}\/usr\/lib\/deepin-daemon\/service-trigger/s|${DESTDIR}/usr/lib/deepin-daemon/service-trigger|${DESTDIR}/usr/libexec/deepin-daemon/service-trigger|g' Makefile
+sed -i '/${DESTDIR}${PREFIX}\/lib\/deepin-daemon/s|${DESTDIR}${PREFIX}/lib/deepin-daemon|${DESTDIR}${PREFIX}/usr/libexec/deepin-daemon|g' Makefile
 sed -i 's|lib/NetworkManager|libexec|' network/utils_test.go
 
 for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
@@ -109,7 +110,7 @@ After=user.slice dbus.socket
 [Service]
 Type=dbus
 BusName=org.deepin.dde.LockService1
-ExecStart=%{_libexecdir}/deepin/dde-lockservice
+ExecStart=%{_libexecdir}/%{sname}/dde-lockservice
 
 [Install]
 WantedBy=graphical.target
@@ -127,7 +128,7 @@ export GOPATH=/usr/share/gocode
 %install
 BUILDID="0x$(head -c20 /dev/urandom|od -An -tx1|tr -d ' \n')"
 export GOPATH=/usr/share/gocode
-%make_install PAM_MODULE_DIR=%{_libdir}/security DAEMON_LIBDIR=%{_libexecdir}/%{sname} GOBUILD="go build -compiler gc -ldflags \"-B $BUILDID\""
+%make_install PAM_MODULE_DIR=%{_libdir}/security GOBUILD="go build -compiler gc -ldflags \"-B $BUILDID\""
 
 # fix systemd/logind config
 install -d %{buildroot}/usr/lib/systemd/logind.conf.d/

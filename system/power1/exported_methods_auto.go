@@ -34,11 +34,6 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:   v.RefreshMains,
 		},
 		{
-			Name:   "SetAllowCaller",
-			Fn:     v.SetAllowCaller,
-			InArgs: []string{"uniqueName"},
-		},
-		{
 			Name:   "SetCpuBoost",
 			Fn:     v.SetCpuBoost,
 			InArgs: []string{"enabled"},
@@ -57,6 +52,11 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:   "SetTlpMode",
 			Fn:     v.SetTlpMode,
 			InArgs: []string{"mode"},
+		},
+		{
+			Name:   "SetShortIdleState",
+			Fn:     v.SetShortIdleState,
+			InArgs: []string{"state"},
 		},
 	}
 }
