@@ -128,6 +128,12 @@ func (m *Manager) SetTlpMode(sender dbus.Sender, mode string) *dbus.Error {
 	return dbusutil.ToError(m.setTlpMode(mode))
 }
 
+func (m *Manager) SetShortIdleState(state bool) *dbus.Error {
+	logger.Info(" SetShortIdleState : ", state)
+	m.setShortIdleState(state)
+	return nil
+}
+
 func (m *Manager) LockCpuFreq(governor string, lockTime int32) *dbus.Error {
 	// TODO 改用tlp
 	// currentGovernor, err := m.cpus.GetGovernor()
