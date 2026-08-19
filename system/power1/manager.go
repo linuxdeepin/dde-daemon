@@ -17,7 +17,6 @@ import (
 	"github.com/linuxdeepin/dde-api/powersupply"
 	"github.com/linuxdeepin/dde-api/powersupply/battery"
 	"github.com/linuxdeepin/dde-daemon/common/dconfig"
-	"github.com/linuxdeepin/dde-daemon/securityloader"
 	DisplayManager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.DisplayManager"
 	gudev "github.com/linuxdeepin/go-gir/gudev-1.0"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -50,7 +49,6 @@ type supportMode struct {
 // https://www.kernel.org/doc/Documentation/power/power_supply_class.txt
 type Manager struct {
 	service       *dbusutil.Service
-	allowCallers  *securityloader.AllowCallerRegistry
 	systemSigLoop *dbusutil.SignalLoop
 	batteries     map[string]*Battery
 	batteriesMu   sync.Mutex
@@ -175,6 +173,7 @@ var _validPowerModeArray = strv.Strv{
 	ddePerformance,
 	ddeLowBattery,
 }
+
 func newManager(service *dbusutil.Service) (*Manager, error) {
 	m := &Manager{
 		service:                    service,
@@ -184,7 +183,6 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 		IsBalanceSupported:         true,
 		IsPowerSaveSupported:       true,
 		CpuBoost:                   true,
-		allowCallers:               securityloader.DefaultRegistry(),
 	}
 
 	err := m.init()

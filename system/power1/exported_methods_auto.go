@@ -34,11 +34,6 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:   v.RefreshMains,
 		},
 		{
-			Name:   "SetAllowCaller",
-			Fn:     v.SetAllowCaller,
-			InArgs: []string{"uniqueName"},
-		},
-		{
 			Name:   "SetCpuBoost",
 			Fn:     v.SetCpuBoost,
 			InArgs: []string{"enabled"},

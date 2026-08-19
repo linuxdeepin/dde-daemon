@@ -15,7 +15,6 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
-	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/utils"
 )
@@ -173,26 +172,12 @@ func (d *Daemon) setState(file string, state bool) error {
 	return nil
 }
 
-func (d *Daemon) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
-	return dbusutil.ToError(d.allowCallers.AddCaller(securityloader.DaemonScope, sender, uniqueName))
-}
-
-func (d *Daemon) SetIdleState(sender dbus.Sender, state bool) *dbus.Error {
-	result, _ := d.allowCallers.Authorize(securityloader.DaemonScope, sender)
-	if result == securityloader.AuthDenied {
-		logger.Warning("SetIdleState access denied:", err)
-		return dbusutil.ToError(err)
-	}
+func (d *Daemon) SetIdleState(state bool) *dbus.Error {
 	logger.Infof("SetIdleState %s try set state: %v", d.idleStatePath, state)
 	return dbusutil.ToError(d.setState(d.idleStatePath, state))
 }
 
-func (d *Daemon) SetScreenState(sender dbus.Sender, state bool) *dbus.Error {
-	result, _ := d.allowCallers.Authorize(securityloader.DaemonScope, sender)
-	if result == securityloader.AuthDenied {
-		logger.Warning("SetScreenState access denied:", err)
-		return dbusutil.ToError(err)
-	}
+func (d *Daemon) SetScreenState(state bool) *dbus.Error {
 	logger.Infof("SetScreenState %s try set state: %v", d.idleScreenStatePath, state)
 	return dbusutil.ToError(d.setState(d.idleScreenStatePath, state))
 }
