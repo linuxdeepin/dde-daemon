@@ -24,9 +24,8 @@ import (
 )
 
 const (
-	DaemonScope       = "org.deepin.dde.Daemon1:/org/deepin/dde/Daemon1"
-	PowerScope        = "org.deepin.dde.Power1:/org/deepin/dde/Power1"
-	InputDevicesScope = "org.deepin.dde.InputDevices1:/org/deepin/dde/InputDevices1"
+	DaemonScope = "org.deepin.dde.Daemon1:/org/deepin/dde/Daemon1"
+	PowerScope  = "org.deepin.dde.Power1:/org/deepin/dde/Power1"
 
 	defaultRuntimeDir = "/run/dde-daemon"
 	defaultStateFile  = defaultRuntimeDir + "/security_loader_allow_callers.json"
