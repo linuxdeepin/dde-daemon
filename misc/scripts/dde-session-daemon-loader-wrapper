@@ -1,18 +1,4 @@
 #!/bin/bash
 
-set -u
-PATH=/usr/sbin:/usr/bin:/sbin:/bin
-export PATH
-
-REAL_BINARY="/usr/libexec/deepin/dde-session-daemon"
-LOADER="/usr/bin/deepin-security-loader"
-LOADER_EXEC="/usr/bin/deepin-security-loader-exec"
-
-if [ -x "$LOADER" ] && [ -x "$LOADER_EXEC" ] && \
-    getcap "$LOADER_EXEC" 2>/dev/null | grep -q cap_setgid; then
-    exec "$LOADER" --group deepin-daemon -- "$REAL_BINARY" "$@"
-fi
-
-# Type=forking requires the wrapper to leave a child for systemd to adopt.
-"$REAL_BINARY" "$@" &
-exit 0
+exec /usr/bin/deepin-security-loader --group deepin-daemon -- \
+    /usr/libexec/deepin/dde-session-daemon "$@"

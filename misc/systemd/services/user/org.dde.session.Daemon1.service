@@ -11,12 +11,10 @@ Wants=treeland-xwayland.service
 After=treeland-xwayland.service
 
 [Service]
-# deepin-security-loader exits after authorization; adopt the remaining daemon.
-Type=forking
-GuessMainPID=yes
+Type=dbus
+BusName=org.deepin.dde.Daemon1
 ExecStart=/usr/lib/deepin-daemon/dde-session-daemon
-# Keep the original D-Bus readiness semantics before starting dependent units.
-ExecStartPost=/usr/bin/gdbus wait --session --timeout=30 org.deepin.dde.Daemon1
 Slice=app.slice
 Restart=on-failure
+NotifyAccess=main
 RestartSec=1s
