@@ -1,3 +1,10 @@
+dde-daemon (6.1.103) unstable; urgency=medium
+
+  * fix: 解决未适配安全启动的应用调用接口弹出提权弹窗问题 fix: resolve authorization popup issue
+    for apps not adapted to secure boot
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 19 Aug 2026 17:09:57 +0800
+
 dde-daemon (6.1.102) unstable; urgency=medium
 
   * fix: add Avahi daemon to the short idle service whitelist
