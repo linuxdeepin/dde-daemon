@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/godbus/dbus/v5"
-	"github.com/linuxdeepin/dde-daemon/securityloader"
 	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -35,7 +34,6 @@ type device struct {
 
 type Manager struct {
 	service         *dbusutil.Service
-	allowCallers    *securityloader.AllowCallerRegistry
 	btRfkillDevices map[uint32]device
 	btDevicesMu     sync.RWMutex
 	// Airplane Mode status
@@ -56,7 +54,6 @@ type Manager struct {
 func newManager(service *dbusutil.Service) *Manager {
 	mgr := &Manager{
 		service:         service,
-		allowCallers:    securityloader.DefaultRegistry(),
 		btRfkillDevices: make(map[uint32]device),
 		config:          NewConfig(),
 	}
@@ -76,27 +73,17 @@ func (mgr *Manager) DumpState() *dbus.Error {
 	return nil
 }
 
-func (mgr *Manager) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
-	return dbusutil.ToError(mgr.allowCallers.AddCaller(securityloader.AirplaneModeScope, sender, uniqueName))
-}
-
 // Enable enable or disable *Airplane Mode*, isn't enable the devices
 func (mgr *Manager) Enable(sender dbus.Sender, enableAirplaneMode bool) *dbus.Error {
-	result, _ := mgr.allowCallers.Authorize(securityloader.AirplaneModeScope, sender)
-	switch result {
-	case securityloader.AuthDenied:
-		logger.Warning("Enable access denied")
-		return dbusutil.ToError(errors.New("access denied"))
-	case securityloader.AuthNotEnabled:
-		// Fall back to Polkit when not launched via security-loader.
-		if er := checkAuthorization(actionId, string(sender)); er != nil {
-			logger.Warningf("checkAuthorization failed, err: %v, actionId=%v", er, actionId)
-			return dbusutil.ToError(er)
-		}
+	// check auth
+	err := checkAuthorization(actionId, string(sender))
+	if err != nil {
+		logger.Warningf("checkAuthorization failed, err: %v, actionId=%v", err, actionId)
+		return dbusutil.ToError(err)
 	}
 
 	// try to block
-	err := mgr.block(rfkillTypeAll, enableAirplaneMode)
+	err = mgr.block(rfkillTypeAll, enableAirplaneMode)
 	if err != nil {
 		logger.Warningf("block all radio failed, err: %v", err)
 		return dbusutil.ToError(err)
@@ -107,19 +94,13 @@ func (mgr *Manager) Enable(sender dbus.Sender, enableAirplaneMode bool) *dbus.Er
 
 // EnableWifi enable or disable *Airplane Mode* for wlan, isn't enable the wlan devices
 func (mgr *Manager) EnableWifi(sender dbus.Sender, enableAirplaneMode bool) *dbus.Error {
-	result, _ := mgr.allowCallers.Authorize(securityloader.AirplaneModeScope, sender)
-	switch result {
-	case securityloader.AuthDenied:
-		logger.Warning("EnableWifi access denied")
-		return dbusutil.ToError(errors.New("access denied"))
-	case securityloader.AuthNotEnabled:
-		if er := checkAuthorization(actionId, string(sender)); er != nil {
-			return dbusutil.ToError(er)
-		}
+	err := checkAuthorization(actionId, string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
 	}
 
 	// try to block
-	err := mgr.block(rfkillTypeWifi, enableAirplaneMode)
+	err = mgr.block(rfkillTypeWifi, enableAirplaneMode)
 	if err != nil {
 		logger.Warningf("block wifi radio failed, err: %v", err)
 		return dbusutil.ToError(err)
@@ -130,19 +111,13 @@ func (mgr *Manager) EnableWifi(sender dbus.Sender, enableAirplaneMode bool) *dbu
 
 // EnableBluetooth enable or disable *Airplane Mode* for bluetooth, isn't enable the bluetooth devices
 func (mgr *Manager) EnableBluetooth(sender dbus.Sender, enableAirplaneMode bool) *dbus.Error {
-	result, _ := mgr.allowCallers.Authorize(securityloader.AirplaneModeScope, sender)
-	switch result {
-	case securityloader.AuthDenied:
-		logger.Warning("EnableBluetooth access denied")
-		return dbusutil.ToError(errors.New("access denied"))
-	case securityloader.AuthNotEnabled:
-		if er := checkAuthorization(actionId, string(sender)); er != nil {
-			return dbusutil.ToError(er)
-		}
+	err := checkAuthorization(actionId, string(sender))
+	if err != nil {
+		return dbusutil.ToError(err)
 	}
 
 	// try to block
-	err := mgr.block(rfkillTypeBT, enableAirplaneMode)
+	err = mgr.block(rfkillTypeBT, enableAirplaneMode)
 	if err != nil {
 		logger.Warningf("block bluetooth radio failed, err: %v", err)
 		return dbusutil.ToError(err)
@@ -225,7 +200,6 @@ func (mgr *Manager) block(typ rfkillType, enableAirplaneMode bool) error {
 	}
 	return rfkillAction(typ, state)
 }
-
 
 func checkAuthorization(actionId string, sysBusName string) error {
 	systemBus, err := dbus.SystemBus()

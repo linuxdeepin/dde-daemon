@@ -27,10 +27,5 @@ func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.EnableWifi,
 			InArgs: []string{"enableAirplaneMode"},
 		},
-		{
-			Name:   "SetAllowCaller",
-			Fn:     v.SetAllowCaller,
-			InArgs: []string{"uniqueName"},
-		},
 	}
 }

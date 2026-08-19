@@ -168,11 +168,6 @@ func main() {
 			DBusPath:      "/org/deepin/dde/InputDevices1",
 			DBusInterface: "org.deepin.dde.InputDevices1",
 		},
-		{
-			DBusName:      "org.deepin.dde.AirplaneMode1",
-			DBusPath:      "/org/deepin/dde/AirplaneMode1",
-			DBusInterface: "org.deepin.dde.AirplaneMode1",
-		},
 	})
 	os.Args = cleanedArgs
 	if err != nil {
