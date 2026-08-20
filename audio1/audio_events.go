@@ -83,6 +83,9 @@ func (a *Audio) handleStateChanged() {
 		select {
 		case state := <-a.stateChan:
 			switch state {
+			case pulse.ContextStateReady:
+				logger.Debug("re-checking AI noise reduction")
+				a.initAiReduceNoise()
 			case pulse.ContextStateFailed:
 				logger.Warning("pulseaudio context state failed")
 				a.destroyCtxRelated()
@@ -747,6 +750,7 @@ func isPhysicalDevice(deviceName string) bool {
 		"Echo-Cancel",
 		"remap-sink-mono",
 		"null-sink",
+		"effect_output.rnnoise",
 	} {
 		if strings.Contains(deviceName, virtualDeviceKey) {
 			return false
@@ -779,6 +783,16 @@ func (a *Audio) writeReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
 	}
 	a.setReduceNoise(reduce)
 	return nil
+}
+
+// 外部修改AiReduceNoise时触发回调
+func (a *Audio) writeAiReduceNoise(write *dbusutil.PropertyWrite) *dbus.Error {
+	reduce, ok := write.Value.(bool)
+	if !ok {
+		logger.Warning("type is not bool")
+		return dbusutil.ToError(errors.New("type is not bool"))
+	}
+	return dbusutil.ToError(a.setAiReduceNoise(reduce, ""))
 }
 
 func (a *Audio) writeKeyPausePlayer(write *dbusutil.PropertyWrite) *dbus.Error {
