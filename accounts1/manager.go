@@ -154,7 +154,7 @@ func NewManager(service *dbusutil.Service) *Manager {
 		}
 	}
 
-	m.GroupList, _ = m.GetGroups()
+	m.GroupList, _ = users.GetAllGroups()
 	m.watcher = dutils.NewWatchProxy()
 	if m.watcher != nil {
 		m.delayTaskManager = tasker.NewDelayTaskManager()
