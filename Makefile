@@ -183,13 +183,16 @@ install: build install-dde-data install-icons
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dbus-1/system.d
 	cp misc/conf/*.conf ${DESTDIR}${PREFIX}/share/dbus-1/system.d/
+	rm -f ${DESTDIR}${PREFIX}/share/dbus-1/system.d/org.deepin.dde.Power1.conf
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dbus-1
 	cp -r misc/services ${DESTDIR}${PREFIX}/share/dbus-1/
 	cp -r misc/system-services ${DESTDIR}${PREFIX}/share/dbus-1/
+	rm -f ${DESTDIR}${PREFIX}/share/dbus-1/system-services/org.deepin.dde.Power1.service
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/polkit-1/actions
 	cp misc/polkit-action/*.policy ${DESTDIR}${PREFIX}/share/polkit-1/actions/
+	rm -f ${DESTDIR}${PREFIX}/share/polkit-1/actions/org.deepin.dde.power.policy
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/polkit-1/rules.d/
 	cp misc/polkit-rules/*.rules ${DESTDIR}${PREFIX}/share/polkit-1/rules.d/
@@ -227,6 +230,7 @@ install: build install-dde-data install-icons
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
 	cp -r misc/dsg-configs/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
+	rm -f ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/org.deepin.dde.daemon.power.json
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.lightdm-deepin-greeter
 	cp -r misc/dsg-configs/org.deepin.dde.lightdm-deepin-greeter/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.lightdm-deepin-greeter/

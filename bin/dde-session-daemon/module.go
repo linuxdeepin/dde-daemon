@@ -29,7 +29,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/screensaver1"
 	_ "github.com/linuxdeepin/dde-daemon/service_trigger"
 	_ "github.com/linuxdeepin/dde-daemon/session/eventlog"
-	_ "github.com/linuxdeepin/dde-daemon/session/power1"
 	_ "github.com/linuxdeepin/dde-daemon/sessionwatcher1"
 	_ "github.com/linuxdeepin/dde-daemon/systeminfo1"
 	_ "github.com/linuxdeepin/dde-daemon/timedate1"
