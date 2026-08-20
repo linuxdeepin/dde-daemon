@@ -1,3 +1,9 @@
+dde-daemon (6.1.104) unstable; urgency=medium
+
+  * fix: do not stop dde-daemon service on upgrade
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 20 Aug 2026 11:24:37 +0800
+
 dde-daemon (6.1.103) unstable; urgency=medium
 
   * fix: 解决未适配安全启动的应用调用接口弹出提权弹窗问题 fix: resolve authorization popup issue
