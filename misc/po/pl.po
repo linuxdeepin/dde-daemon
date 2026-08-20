@@ -368,7 +368,7 @@ msgstr "Wyłącz touchpad"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:28
 msgid "Switch window effects"
-msgstr "Przełącz efekty okna"
+msgstr "Przełącz efekty okien"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:29
 msgid "Fast Screen Off"
