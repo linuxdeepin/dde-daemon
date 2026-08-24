@@ -97,7 +97,12 @@ func (m *InputDevices) init() {
 			logger.Warning(err)
 			return
 		}
-		err = m.touchpad.setTouchpadEnable(v.Value().(bool))
+		enabled := v.Value().(bool)
+		// 启动恢复：直接根据 dconfig 重建 udev 规则文件。
+		// 不调用 setTouchpadEnable，因为 newTouchpad 已将 Enable 设为 dconfig 值，
+		// setPropEnable 会判定 changed=false 从而跳过 udev 写入，
+		// 导致强制关机后 udev 规则文件丢失但无法重建。
+		err = m.touchpad.setTouchpadEnableViaUdev(enabled)
 		if err != nil {
 			logger.Warning(err)
 		}
