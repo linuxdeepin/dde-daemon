@@ -154,8 +154,24 @@ func (t *Touchpad) setTouchpadEnableViaUdev(enabled bool) error {
 			return nil
 		}
 
-		// 创建或覆盖 udev 规则文件
-		if err := os.WriteFile(udevRuleFile, []byte(udevRuleContent), 0644); err != nil {
+		// 创建或覆盖 udev 规则文件，使用 fsync 确保落盘，
+		// 防止强制关机（断电）时 page cache 丢失导致规则文件丢失
+		f, err := os.Create(udevRuleFile)
+		if err != nil {
+			return err
+		}
+		_, err = f.Write([]byte(udevRuleContent))
+		if err != nil {
+			f.Close()
+			return err
+		}
+		err = f.Sync()
+		if err != nil {
+			f.Close()
+			return err
+		}
+		err = f.Close()
+		if err != nil {
 			return err
 		}
 		logger.Info("created udev rule file:", udevRuleFile)
