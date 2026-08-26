@@ -18,7 +18,7 @@
 # Mahmoud Abdelsalam <mahmoud.ad@tutanota.com>, 2025
 # mo-hd <mo-hd@windowslive.com>, 2025
 # MUHAAB SHAAM <muhaab.org@gmail.com>, 2025
-# deepiner, 2025
+# deepiner, 2026
 # 
 #, fuzzy
 msgid ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-03 14:27+0800\n"
 "PO-Revision-Date: 2025-04-25 07:00+0000\n"
-"Last-Translator: deepiner, 2025\n"
+"Last-Translator: deepiner, 2026\n"
 "Language-Team: Arabic (https://app.transifex.com/linuxdeepin/teams/3617/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +62,7 @@ msgstr "إسم المستخدم موجود مسبقاً"
 
 #: ../../accounts1/checkers/username.go:60
 msgid "The group name already exists"
-msgstr ""
+msgstr "اسم المجموعة موجود بالفعل"
 
 #: ../../accounts1/checkers/username.go:62
 msgid "Username must be between 3 and 32 characters"
@@ -71,23 +71,23 @@ msgstr "يجب أن يكون اسم المستخدم بين 3-32 حرفاً"
 #: ../../accounts1/manager.go:571
 #, c-format
 msgid "User \"%s\" existed before and its data is synced"
-msgstr ""
+msgstr "المستخدم \"%s\" موجود مسبقاً وتمت مزامنة بياناته"
 
 #: ../../accounts1/user_ifc.go:728
 msgid "This system wallpaper is locked. Please contact your admin."
-msgstr ""
+msgstr "خلفية النظام هذه مقفلة. يرجى الاتصال بالمسؤول."
 
 #: ../../audio1/audio.go:259
 msgid "Failed to change Audio Server, please try later"
-msgstr ""
+msgstr "فشل تغيير خادم الصوت، يرجى المحاولة لاحقاً"
 
 #: ../../audio1/audio.go:295
 msgid "Changing Audio Server, please wait..."
-msgstr ""
+msgstr "جارٍ تغيير خادم الصوت، يرجى الانتظار..."
 
 #: ../../audio1/audio.go:328
 msgid "Audio Server changed, please log out and then log in"
-msgstr ""
+msgstr "تم تغيير خادم الصوت، يرجى تسجيل الخروج ثم تسجيل الدخول"
 
 #: ../../audio1/audio.go:343 ../../audio1/audio_events.go:719
 #: ../../bluetooth1/obex_agent.go:443 ../../bluetooth1/obex_agent.go:458
@@ -95,12 +95,12 @@ msgstr ""
 #: ../../bluetooth1/obex_agent.go:609 ../../bluetooth1/utils_notify.go:77
 #: ../../bluetooth1/utils_notify.go:143
 msgid "dde-control-center"
-msgstr ""
+msgstr "dde-control-center"
 
 #: ../../audio1/audio_events.go:713
 #, c-format
 msgid "%s had been disabled"
-msgstr ""
+msgstr "تم تعطيل %s"
 
 #: ../../audio1/audio_events.go:714
 msgid "Open"
@@ -172,7 +172,7 @@ msgstr "إلغاء"
 
 #: ../../bluetooth1/obex_agent.go:447
 msgid "Receiving %[1]q"
-msgstr ""
+msgstr "جارٍ استلام %[1]q"
 
 #: ../../bluetooth1/obex_agent.go:455
 msgid "View"
@@ -180,7 +180,7 @@ msgstr "عرض"
 
 #: ../../bluetooth1/obex_agent.go:461
 msgid "You have received files from %q successfully"
-msgstr ""
+msgstr "لقد استلمت الملفات من %q بنجاح"
 
 #: ../../bluetooth1/obex_agent.go:462
 msgid "Done"
@@ -188,11 +188,11 @@ msgstr "تم"
 
 #: ../../bluetooth1/obex_agent.go:477 ../../bluetooth1/obex_agent.go:612
 msgid "Stop Receiving Files"
-msgstr ""
+msgstr "إيقاف استلام الملفات"
 
 #: ../../bluetooth1/obex_agent.go:479
 msgid "You have cancelled the file transfer"
-msgstr ""
+msgstr "لقد ألغيت نقل الملفات"
 
 #: ../../bluetooth1/obex_agent.go:481
 #: ../../system/bluetooth1/utils_notify.go:63
@@ -202,67 +202,67 @@ msgstr "فشل الاتصال بالبلوتوث"
 
 #: ../../bluetooth1/obex_agent.go:527
 msgid "Decline"
-msgstr ""
+msgstr "رفض"
 
 #: ../../bluetooth1/obex_agent.go:527
 msgid "Receive"
-msgstr ""
+msgstr "استلام"
 
 #: ../../bluetooth1/obex_agent.go:533
 msgid "Bluetooth File Transfer"
-msgstr ""
+msgstr "نقل الملفات عبر البلوتوث"
 
 #: ../../bluetooth1/obex_agent.go:534
 msgid "%q wants to send files to you. Receive?"
-msgstr ""
+msgstr "يريد %q إرسال ملفات إليك. هل تريد الاستلام؟"
 
 #: ../../bluetooth1/obex_agent.go:613
 msgid "Receiving %q timed out"
-msgstr ""
+msgstr "انتهت مهلة استلام %q"
 
 #: ../../bluetooth1/utils_notify.go:119
 msgid "Click here to connect to %q"
-msgstr ""
+msgstr "انقر هنا للاتصال بـ %q"
 
 #: ../../bluetooth1/utils_notify.go:120
 msgid "Add Bluetooth devices"
-msgstr ""
+msgstr "إضافة أجهزة بلوتوث"
 
 #: ../../bluetooth1/utils_notify.go:130
 msgid "Pair"
-msgstr ""
+msgstr "إقران"
 
 #: ../../gesture1/gesture_action.go:39
 msgid "Maximize Window"
-msgstr ""
+msgstr "تكبير النافذة"
 
 #: ../../gesture1/gesture_action.go:40
 msgid "Restore Window"
-msgstr ""
+msgstr "استعادة النافذة"
 
 #: ../../gesture1/gesture_action.go:41
 msgid "Current Window Left Split"
-msgstr ""
+msgstr "تقسيم النافذة الحالية يساراً"
 
 #: ../../gesture1/gesture_action.go:42
 msgid "Current Window Right Split"
-msgstr ""
+msgstr "تقسيم النافذة الحالية يميناً"
 
 #: ../../gesture1/gesture_action.go:43
 msgid "Show multitasking view"
-msgstr ""
+msgstr "إظهار عرض تعدد المهام"
 
 #: ../../gesture1/gesture_action.go:44
 msgid "Hide multitasking view"
-msgstr ""
+msgstr "إخفاء عرض تعدد المهام"
 
 #: ../../gesture1/gesture_action.go:45
 msgid "Switch to previous desktop"
-msgstr ""
+msgstr "التبديل إلى سطح المكتب السابق"
 
 #: ../../gesture1/gesture_action.go:46
 msgid "Switch to the next desktop"
-msgstr ""
+msgstr "التبديل إلى سطح المكتب التالي"
 
 #: ../../gesture1/gesture_action.go:47
 #: ../../keybinding1/shortcuts/id_name_map.go:84
@@ -271,35 +271,35 @@ msgstr "إظهار سطح المكتب"
 
 #: ../../gesture1/gesture_action.go:48
 msgid "Hide desktop"
-msgstr ""
+msgstr "إخفاء سطح المكتب"
 
 #: ../../gesture1/gesture_action.go:49
 msgid "Show/hide launcher"
-msgstr ""
+msgstr "إظهار/إخفاء المشغل"
 
 #: ../../gesture1/gesture_action.go:50
 msgid "Mouse right button pressed"
-msgstr ""
+msgstr "تم الضغط على الزر الأيمن للفأرة"
 
 #: ../../gesture1/gesture_action.go:51
 msgid "Mouse right button released"
-msgstr ""
+msgstr "تم تحرير الزر الأيمن للفأرة"
 
 #: ../../gesture1/gesture_action.go:52
 msgid "Show/hide clipboard"
-msgstr ""
+msgstr "إظهار/إخفاء الحافظة"
 
 #: ../../gesture1/gesture_action.go:53
 msgid "Show/hide grand search"
-msgstr ""
+msgstr "إظهار/إخفاء البحث الشامل"
 
 #: ../../gesture1/gesture_action.go:54
 msgid "Show/hide notification center"
-msgstr ""
+msgstr "إظهار/إخفاء مركز الإشعارات"
 
 #: ../../gesture1/gesture_action.go:55
 msgid "Disable"
-msgstr ""
+msgstr "تعطيل"
 
 #: ../../housekeeping/init.go:136
 msgid "Insufficient disk space, please clean up in time!"
@@ -307,7 +307,7 @@ msgstr "مساحة القرص غير كافية، يرجى التنظيف في �
 
 #: ../../housekeeping/init.go:137
 msgid "Go to clean up"
-msgstr ""
+msgstr "الذهاب للتنظيف"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:13
 msgid "Launcher"
@@ -355,11 +355,11 @@ msgstr "تأخير لقطة الشاشة"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:24
 msgid "OCR (Image to Text)"
-msgstr ""
+msgstr "التعرف الضوئي على الحروف (صورة إلى نص)"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:25
 msgid "Scrollshot"
-msgstr ""
+msgstr "لقطة تمرير"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:26
 msgid "File manager"
@@ -403,7 +403,7 @@ msgstr "الترجمة"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:36
 msgid "Grand Search"
-msgstr ""
+msgstr "البحث الشامل"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:37
 msgid "Notification Center"
@@ -416,7 +416,7 @@ msgstr "تبديل التخطيط"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:39
 msgid "Toggle multiple displays"
-msgstr ""
+msgstr "تبديل العرض المتعدد"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:65
 msgid "Switch to left workspace"
@@ -452,7 +452,7 @@ msgstr "تبديل النوافذ عكسياً"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:89
 msgid "Activate window menu"
-msgstr ""
+msgstr "تنشيط قائمة النافذة"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:93
 msgid "Maximize window"
@@ -508,23 +508,23 @@ msgstr "عرض مساحة العمل"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:142
 msgid "Zoom In"
-msgstr ""
+msgstr "تكبير"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:143
 msgid "Zoom Out"
-msgstr ""
+msgstr "تصغير"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:144
 msgid "Zoom to Actual Size"
-msgstr ""
+msgstr "تكبير إلى الحجم الفعلي"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:145
 msgid "Window Quick Tile Left"
-msgstr ""
+msgstr "تجانب سريع للنافذة يساراً"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:146
 msgid "Window Quick Tile Right"
-msgstr ""
+msgstr "تجانب سريع للنافذة يميناً"
 
 #: ../../langselector1/locale.go:46
 msgid "Authentication is required to switch language"
@@ -559,27 +559,28 @@ msgid ""
 "You cannot run the unverified \"%s\", but you can change the settings in "
 "Security Center."
 msgstr ""
+"لا يمكنك تشغيل \"%s\" غير الموثق، ولكن يمكنك تغيير الإعدادات في مركز الأمان."
 
 #: ../../service_trigger/msg.go:15
 msgid "Proceed"
-msgstr ""
+msgstr "متابعة"
 
 #: ../../session/power1/manager.go:1255
 #, c-format
 msgid "The system will shut down automatically after %d s"
-msgstr ""
+msgstr "سيتم إيقاف تشغيل النظام تلقائياً بعد %d ثانية"
 
 #: ../../session/power1/manager.go:1256
 msgid "Scheduled Shutdown"
-msgstr ""
+msgstr "إيقاف تشغيل مجدول"
 
 #: ../../session/power1/manager.go:1257
 msgid "Cancle"
-msgstr ""
+msgstr "إلغاء"
 
 #: ../../session/power1/manager.go:1257
 msgid "Shut down"
-msgstr ""
+msgstr "إيقاف التشغيل"
 
 #: ../../session/power1/manager_events.go:283
 msgid "Battery critically low"
@@ -594,27 +595,27 @@ msgstr "البطارية منخفضة، رجاءً اشبك السلك الكه�
 
 #: ../../session/power1/utils.go:674
 msgid "your computer will shut down"
-msgstr ""
+msgstr "سيتم إيقاف تشغيل جهاز الكمبيوتر الخاص بك"
 
 #: ../../session/power1/utils.go:676
 msgid "your computer will suspend"
-msgstr ""
+msgstr "سيتم تعليق جهاز الكمبيوتر الخاص بك"
 
 #: ../../session/power1/utils.go:678
 msgid "your computer will hibernate"
-msgstr ""
+msgstr "سيتم إسبات جهاز الكمبيوتر الخاص بك"
 
 #: ../../session/power1/utils.go:680
 msgid "your monitor will turn off"
-msgstr ""
+msgstr "سيتم إيقاف تشغيل الشاشة"
 
 #: ../../session/power1/utils.go:682
 msgid "your monitor will show the shutdown interface"
-msgstr ""
+msgstr "ستعرض الشاشة واجهة إيقاف التشغيل"
 
 #: ../../session/power1/utils.go:684
 msgid "it will do nothing to your computer"
-msgstr ""
+msgstr "لن يتم فعل أي شيء لجهاز الكمبيوتر الخاص بك"
 
 #: ../../system/bluetooth1/utils_notify.go:43
 msgid "Connect %q successfully"
@@ -632,10 +633,11 @@ msgstr "تأكد أن %q مشغل و بالمدى نفسه"
 msgid ""
 "%q can no longer connect to %q. Try to forget this device and pair it again."
 msgstr ""
+"لم يعد %q قادراً على الاتصال بـ %q. حاول نسيان هذا الجهاز وإقرانه مرة أخرى."
 
 #: ../../timedate1/manager_format.go:75
 msgid "Space"
-msgstr ""
+msgstr "مسافة"
 
 #: ../../timedate1/manager_ifc.go:60
 msgid "Authentication is required to set the system time"
