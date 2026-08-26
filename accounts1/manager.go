@@ -98,6 +98,8 @@ type Manager struct {
 	dsAccount        configManager.Manager
 	// greeter 的 dconfig 配置
 	dsGreeterAccounts configManager.Manager
+	// ddm 的 dconfig 配置
+	dsDDM configManager.Manager
 
 	dbusDaemon       ofdbus.DBus
 	IsTerminalLocked bool
@@ -720,6 +722,11 @@ const (
 	greeterAppId             = "org.deepin.dde.lightdm-deepin-greeter"
 	daemonAccountsResourceId = "org.deepin.dde.daemon.accounts"
 	keyEnableQuickLogin      = "enableQuickLogin"
+
+	// ddm 的自动登录配置由 dconfig 统一管理
+	ddmAppID            = "org.deepin.dde.ddm"
+	ddmResourceID       = "org.deepin.dde.ddm"
+	keyDDMAutologinUser = "autologinUser"
 )
 
 // 在 dconfig 设置 quick login （总开关）
@@ -801,6 +808,38 @@ func (m *Manager) removeGreeterDConfigWatch() {
 	}
 }
 
+func (m *Manager) initDConfigDDMWatch() error {
+	if m.cfgManager == nil {
+		return errors.New("config manager not initialized")
+	}
+
+	ddmPath, err := m.cfgManager.AcquireManager(0, ddmAppID, ddmResourceID, "")
+	if err != nil {
+		return err
+	}
+
+	m.dsDDM, err = configManager.NewManager(m.sysSigLoop.Conn(), ddmPath)
+	if err != nil {
+		return err
+	}
+
+	m.dsDDM.InitSignalExt(m.sysSigLoop, true)
+	m.dsDDM.ConnectValueChanged(func(key string) {
+		if key != keyDDMAutologinUser {
+			return
+		}
+		logger.Debug("ddm autologin user changed, refresh AutomaticLogin")
+		m.handleDMConfigChanged()
+	})
+	return nil
+}
+
+func (m *Manager) removeDDMDConfigWatch() {
+	if m.dsDDM != nil {
+		m.dsDDM.RemoveAllHandlers()
+	}
+}
+
 // 监控 dconfig-daemon 服务是否重新启动, 如果重新启动了，需要重新注册监控器。
 func (m *Manager) initDBusDaemonWatch() {
 	systemBus, err := dbus.SystemBus()
@@ -831,6 +870,12 @@ func (m *Manager) initDBusDaemonWatch() {
 			time.Sleep(2 * time.Second)
 			m.removeGreeterDConfigWatch()
 			m.initDConfigGreeterWatch()
+			// dconfig-daemon 重启后 DDM 的连接已失效，需要重建连接和监听
+			users.ResetDDMDConfig()
+			m.removeDDMDConfigWatch()
+			if err := m.initDConfigDDMWatch(); err != nil {
+				logger.Warning("re-init ddm dconfig watch failed, err:", err)
+			}
 		}
 	})
 	if err != nil {
