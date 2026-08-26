@@ -143,41 +143,102 @@ func (t *Touchpad) setTouchpadEnableViaUdev(enabled bool) error {
 			return err
 		}
 		logger.Info("removed udev rule file:", udevRuleFile)
-	} else {
-		// 禁用：生成动态的 udev 规则内容
-		udevRuleContent := generateUdevRuleContent()
-
-		// 检查文件是否已存在且内容相同
-		existingContent, err := os.ReadFile(udevRuleFile)
-		if err == nil && string(existingContent) == udevRuleContent {
-			logger.Debug("udev rule file already exists with correct content, skip writing")
-			return nil
-		}
-
-		// 创建或覆盖 udev 规则文件，使用 fsync 确保落盘，
-		// 防止强制关机（断电）时 page cache 丢失导致规则文件丢失
-		f, err := os.Create(udevRuleFile)
-		if err != nil {
-			return err
-		}
-		_, err = f.Write([]byte(udevRuleContent))
-		if err != nil {
-			f.Close()
-			return err
-		}
-		err = f.Sync()
-		if err != nil {
-			f.Close()
-			return err
-		}
-		err = f.Close()
-		if err != nil {
-			return err
-		}
-		logger.Info("created udev rule file:", udevRuleFile)
+		return t.refreshTouchpadDevices()
 	}
 
+	// 禁用：写入 udev 规则文件；若内容未变则无需刷新设备
+	changed, err := writeUdevRuleFile(generateUdevRuleContent())
+	if err != nil {
+		return err
+	}
+	if !changed {
+		return nil
+	}
 	return t.refreshTouchpadDevices()
+}
+
+// writeUdevRuleFile 以 0644 权限原子地写入 udev 规则文件，并确保数据与目录项落盘。
+// 返回 changed 表示文件内容是否发生变化（true=已写入或新建，false=内容未变跳过写入）。
+// 安全要点：
+//   - fast path 内容已正确时仍收窄权限，防止外部改宽的 0666 等遗留
+//   - 用 O_EXCL 原子探测是否为首次新建，避免 Stat/OpenFile TOCTOU 竞态
+//   - 先 Chmod 成功再 Truncate，避免权限修改失败时 O_TRUNC 已清空原内容
+//   - 文件数据 fsync 后，首次创建还需 fsync 父目录以保证目录项断电不丢
+func writeUdevRuleFile(udevRuleContent string) (changed bool, err error) {
+	// 内容已正确时，仅做权限兜底与父目录 best-effort sync 后直接返回
+	if existingContent, rerr := os.ReadFile(udevRuleFile); rerr == nil &&
+		string(existingContent) == udevRuleContent {
+		if err := os.Chmod(udevRuleFile, 0644); err != nil {
+			return false, err
+		}
+		syncDirBestEffort(filepath.Dir(udevRuleFile))
+		logger.Debug("udev rule file already exists with correct content, skip writing")
+		return false, nil
+	}
+
+	// 尝试以 O_EXCL 独占创建，原子判断是否为首次新建，
+	// 避免 Stat/OpenFile 之间因并发删除导致的 TOCTOU 竞态使父目录漏 sync
+	f, err := os.OpenFile(udevRuleFile, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0644)
+	isNew := err == nil
+	if err != nil && !os.IsExist(err) {
+		return false, err
+	}
+	if os.IsExist(err) {
+		// 文件已存在，以 O_WRONLY 打开但不立即截断
+		f, err = os.OpenFile(udevRuleFile, os.O_WRONLY, 0644)
+		if err != nil {
+			return false, err
+		}
+	}
+	// 先收窄权限，成功后再截断写入，避免 Chmod 失败时 O_TRUNC 已清空原内容导致规则丢失
+	if err := f.Chmod(0644); err != nil {
+		f.Close()
+		return false, err
+	}
+	if err := f.Truncate(0); err != nil {
+		f.Close()
+		return false, err
+	}
+	if _, err := f.Write([]byte(udevRuleContent)); err != nil {
+		f.Close()
+		return false, err
+	}
+	// fsync 确保文件数据落盘，
+	// 防止强制关机（断电）时 page cache 丢失导致规则文件丢失
+	if err := f.Sync(); err != nil {
+		f.Close()
+		return false, err
+	}
+	if err := f.Close(); err != nil {
+		return false, err
+	}
+	// 首次创建文件时，还需 fsync 父目录以确保目录项落盘，
+	// 否则断电后文件数据虽已持久但目录项丢失，规则文件仍会缺失
+	if isNew {
+		dir, err := os.Open(filepath.Dir(udevRuleFile))
+		if err != nil {
+			return false, err
+		}
+		err = dir.Sync()
+		dir.Close()
+		if err != nil {
+			return false, err
+		}
+	}
+	logger.Info("created udev rule file:", udevRuleFile)
+	return true, nil
+}
+
+// syncDirBestEffort 尽力同步目录元数据，失败仅记录不返回错误。
+func syncDirBestEffort(dir string) {
+	d, err := os.Open(dir)
+	if err != nil {
+		return
+	}
+	defer d.Close()
+	if err := d.Sync(); err != nil {
+		logger.Warning("failed to sync parent directory:", err)
+	}
 }
 
 // reloadUdevRules 重新加载 udev 规则
