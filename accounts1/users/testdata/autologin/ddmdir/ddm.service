@@ -1,0 +1,8 @@
+[Unit]
+Description=Deepin Display Manager
+
+[Service]
+ExecStart=/usr/bin/ddm
+
+[Install]
+Alias=display-manager.service
