@@ -1,3 +1,9 @@
+dde-daemon (6.1.99.3) unstable; urgency=medium
+
+  * fix(inputdevices): fsync udev rule and rebuild on boot for touchpad
+
+ -- fuleyi <fuleyi@uniontech.com>  Thu, 27 Aug 2026 14:59:30 +0800
+
 dde-daemon (6.1.99.2) unstable; urgency=medium
 
   * fix(audio): find source by port list instead of active port
