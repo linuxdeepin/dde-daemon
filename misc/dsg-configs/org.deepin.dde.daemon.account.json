@@ -14,13 +14,13 @@
     },
     "isAllowLocalUnlockTerminal": {
       "value": false,
-      "serial": 0,
+      "serial": 1,
       "flags": ["global"],
       "name": "isAllowLocalUnlockTerminal",
       "name[zh_CN]": "是否容许本地解锁终端",
       "description": "Whether to allow local unlocking of the terminal",
       "permissions": "readwrite",
-      "visibility": "private"
+      "visibility": "public"
     },
     "passwordEncryptionAlgorithm": {
       "value": "sm3",
