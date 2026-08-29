@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -26,6 +26,7 @@ const (
 	gdmConfig             = "/etc/gdm/custom.conf"
 	sddmConfig            = "/etc/sddm.conf"
 	lxdmConfig            = "/etc/lxdm/lxdm.conf"
+	ddmConfig             = "/etc/ddm.conf"
 
 	kfGroupLightdmSeat            = "Seat:*"
 	kfKeyLightdmAutoLoginUser     = "autologin-user"
@@ -42,6 +43,9 @@ const (
 	kfKeySDDMSession              = "Session"
 	kfGroupLXDMBase               = "base"
 	kfKeyLXDMAutologin            = "autologin"
+	kfGroupDDMAutologin           = "Autologin"
+	kfKeyDDMUser                  = "User"
+	kfKeyDDMSession               = "Session"
 
 	// values: 'yes', 'no'
 	slimKeyAutoLogin   = "auto_login"
@@ -116,6 +120,15 @@ func SetAutoLoginUser(username, session string) error {
 		}
 		return setIniKeys(sddmConfig, kfGroupSDDMAutologin,
 			keys, values)
+	case "ddm":
+		keys := []string{kfKeyDDMUser}
+		values := []string{username}
+		if session != "" {
+			keys = append(keys, kfKeyDDMSession)
+			values = append(values, session)
+		}
+		return setIniKeys(ddmConfig, kfGroupDDMAutologin,
+			keys, values)
 	case "lxdm":
 		keys := []string{kfKeySDDMUser}
 		values := []string{username}
@@ -159,6 +172,9 @@ func GetAutoLoginUser() (string, error) {
 	case "sddm":
 		return getIniKeys(sddmConfig, kfGroupSDDMAutologin,
 			[]string{kfKeySDDMUser}, []string{""})
+	case "ddm":
+		return getIniKeys(ddmConfig, kfGroupDDMAutologin,
+			[]string{kfKeyDDMUser}, []string{""})
 	case "lxdm":
 		return getIniKeys(lxdmConfig, kfGroupLXDMBase,
 			[]string{kfKeyLXDMAutologin}, []string{""})
@@ -322,6 +338,8 @@ func GetDefaultXSession() (string, error) {
 			return "", err
 		}
 		return strings.TrimRight(v, ".desktop"), nil
+	case "ddm":
+		return "treeland", nil
 	case "lxdm":
 		// TODO: the session value is the binary file path
 		// such as: session=/usr/bin/startlxde
@@ -347,6 +365,8 @@ func GetDMConfig() (string, error) {
 		return kdmConfig, nil
 	case "gdm", "gdm3":
 		return gdmConfig, nil
+	case "ddm":
+		return ddmConfig, nil
 	}
 	return "", fmt.Errorf("Not supported the display manager: %q", dm)
 }
@@ -442,6 +462,18 @@ func setIniKeys(filename, group string, keys, values []string) error {
 	return err
 }
 
+// GetDefaultDM return the current display manager name
+func GetDefaultDM() (string, error) {
+	dm, err := getDefaultDM(defaultDMFile)
+	if err != nil {
+		dm, err = getDMFromSystemService(defaultDisplayService)
+		if err != nil {
+			return "", err
+		}
+	}
+	return dm, nil
+}
+
 // Default config: /etc/X11/default-display-manager
 func getDefaultDM(file string) (string, error) {
 	if !dutils.IsFileExist(file) {
@@ -482,6 +514,8 @@ func getDMFromSystemService(service string) (string, error) {
 		return "lightdm", nil
 	case base == "gdm.service" || base == "gdm3.service":
 		return "gdm", nil
+	case base == "ddm.service":
+		return "ddm", nil
 	}
 	return "", fmt.Errorf("Unsupported the login manager: %s", base)
 }
