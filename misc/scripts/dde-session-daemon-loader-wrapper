@@ -14,4 +14,5 @@ if [ -x "$LOADER" ] && [ -x "$LOADER_EXEC" ] && \
     exec "$LOADER" --group deepin-daemon -- "$REAL_BINARY" "$@"
 fi
 logger -t dde-session-daemon "starting directly"
-exec "$REAL_BINARY" "$@"
+"$REAL_BINARY" "$@" &
+exit 0
