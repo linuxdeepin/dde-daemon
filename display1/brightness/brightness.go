@@ -5,6 +5,7 @@
 package brightness
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"sync"
@@ -18,9 +19,30 @@ import (
 )
 
 var _useWayland bool
+var _productName string
+var _chooseBigProductNames []string
 
 func SetUseWayland(value bool) {
 	_useWayland = value
+}
+
+// SetProductName 设置设备 ProductName，用于 backLight-max-brightness-choose-big 特征判断
+func SetProductName(productName string) {
+	_productName = productName
+}
+
+// SetChooseBigProductNames 设置 ProductName 命中后选最大背光亮度的机型列表
+func SetChooseBigProductNames(list []string) {
+	_chooseBigProductNames = list
+}
+
+func isChooseBigProduct() bool {
+	for _, name := range _chooseBigProductNames {
+		if name == _productName {
+			return true
+		}
+	}
+	return false
 }
 
 const (
@@ -83,10 +105,20 @@ func GetMaxBacklightBrightness() int {
 	if len(controllers) == 0 {
 		return 0
 	}
+
 	maxBrightness := controllers[0].MaxBrightness
-	for _, controller := range controllers {
-		if maxBrightness > controller.MaxBrightness {
-			maxBrightness = controller.MaxBrightness
+	if isChooseBigProduct() {
+		// backLight-max-brightness-choose-big 命中的机型取最大亮度
+		for _, controller := range controllers {
+			if maxBrightness < controller.MaxBrightness {
+				maxBrightness = controller.MaxBrightness
+			}
+		}
+	} else {
+		for _, controller := range controllers {
+			if maxBrightness > controller.MaxBrightness {
+				maxBrightness = controller.MaxBrightness
+			}
 		}
 	}
 	return maxBrightness
@@ -177,10 +209,43 @@ func init() {
 }
 
 func _setBacklight(value float64, controller *displayBl.Controller) error {
+	// 通过曲线函数计算亮度值
 	br := int32(float64(controller.MaxBrightness) * value)
 
+	v, ok := GetBacklightCurveValue(value, controller)
+	if ok {
+		logger.Debugf("Brightness curve value: %v", v)
+		br = v
+	}
+
 	const backlightTypeDisplay = 1
+	logger.Infof("help set brightness %q max %v value %v br %v",
+		controller.Name, controller.MaxBrightness, value, br)
 	return helper.SetBrightness(0, backlightTypeDisplay, controller.Name, br)
+}
+
+// search the backlight devices and prefer the types:
+// firmware -> platform -> raw
+func getBestBacklightController(controllers displayBl.Controllers) *displayBl.Controller {
+	var ret *displayBl.Controller
+	for _, controller := range controllers {
+		if ret == nil || ret.Type > controller.Type {
+			ret = controller
+		}
+	}
+
+	return ret
+}
+
+func setBestBacklightController(controllers displayBl.Controllers, value float64) error {
+	if controller := getBestBacklightController(controllers); controller != nil {
+		err := _setBacklight(value, controller)
+		if err != nil {
+			logger.Warningf("failed to set backlight by %s: %v", controller.Name, err)
+		}
+		return err
+	}
+	return errors.New("setBestBacklightController failed to set best backlight.")
 }
 
 // backlightControllerCache 背光控制器缓存
@@ -222,12 +287,26 @@ func SetBacklight(brightness float64) error {
 		return fmt.Errorf("no backlight controllers available")
 	}
 
-	for _, controller := range controllers {
-		err := _setBacklight(brightness, controller)
-		if err != nil {
-			logger.Warningf("Failed to set backlight %s: %v", controller.Name, err)
-		}
+	return setBacklight(brightness, controllers)
+}
+
+func setBacklight(value float64, controllers displayBl.Controllers) error {
+	if err := setBestBacklightController(controllers, value); err != nil {
+		logger.Warning(err)
+	} else {
+		return nil
 	}
+
+	// 有些厂商机器存在写背光文件延时，bug-307835
+	go func() {
+		for _, controller := range controllers {
+			err := _setBacklight(value, controller)
+			if err != nil {
+				logger.Warningf("WARN: failed to set backlight %s: %v", controller.Name, err)
+			}
+		}
+	}()
+
 	return nil
 }
 
