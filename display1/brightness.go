@@ -5,11 +5,14 @@
 package display1
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/godbus/dbus/v5"
 
 	"github.com/linuxdeepin/dde-daemon/display1/brightness"
 	"github.com/linuxdeepin/dde-daemon/display1/utils"
@@ -17,6 +20,218 @@ import (
 
 type InvalidOutputNameError struct {
 	Name string
+}
+
+// initBacklightCurve 初始化背光曲线相关特征配置
+// 与 startdde 保持相同的特征判定逻辑：
+//  1. backLight-max-brightness-choose-big：ProductName 命中列表
+//  2. BoardName 匹配：custom-brightness-curves 配置 boardName 与 DMI 板名匹配
+func (m *Manager) initBacklightCurve() {
+	brightness.SetProductName(getDmiProductName())
+	brightness.SetDeviceBoardName(getDmiBoardName())
+
+	m.getBackLightMaxBrightnessChooseBigConfig()
+	m.getDsgBrightnessPercentage()
+	m.getCustomBrightnessCurves()
+	m.getDefaultBrightnessCurve()
+	m.getMaxBrightnessUnlimited()
+
+	m.refreshMaxBacklightBrightness()
+}
+
+// getDsgBrightnessPercentage 读取实际亮度百分比（取值范围 [50,100]）
+func (m *Manager) getDsgBrightnessPercentage() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBrightnessPercentage)
+	if err != nil {
+		logger.Warning(err)
+		m.dsgBrightnessPercentage = 100
+		return
+	}
+	switch vType := v.Value().(type) {
+	case float64:
+		m.dsgBrightnessPercentage = int32(vType)
+	case int64:
+		m.dsgBrightnessPercentage = int32(vType)
+	default:
+		logger.Warning("type is wrong!")
+		m.dsgBrightnessPercentage = 100
+	}
+
+	// limit min/max value
+	if m.dsgBrightnessPercentage < 50 {
+		m.dsgBrightnessPercentage = 50
+	} else if m.dsgBrightnessPercentage > 100 {
+		m.dsgBrightnessPercentage = 100
+	}
+	logger.Info("Brightness percentage value:", m.dsgBrightnessPercentage)
+}
+
+// refreshMaxBacklightBrightness 重新计算并刷新 MaxBacklightBrightness 属性
+func (m *Manager) refreshMaxBacklightBrightness() {
+	m.setPropMaxBacklightBrightness(uint32(brightness.GetMaxBacklightBrightness()))
+}
+
+// getBackLightMaxBrightnessChooseBigConfig 读取 ProductName 命中后选最大亮度的机型列表
+func (m *Manager) getBackLightMaxBrightnessChooseBigConfig() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBackLightMaxBrightnessChooseBigConfig)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	itemList, ok := v.Value().([]dbus.Variant)
+	if !ok {
+		logger.Warning("Backlight choose big product names configuration is not a list")
+		return
+	}
+	var list []string
+	for _, i := range itemList {
+		item, ok := i.Value().(string)
+		if !ok {
+			logger.Warning("Backlight choose big product name is not a string")
+			return
+		}
+		list = append(list, item)
+	}
+	m.chooseBigProductNames = list
+	brightness.SetChooseBigProductNames(list)
+	logger.Info("Backlight choose big product names:", list)
+}
+
+// getCustomBrightnessCurves 读取自定义亮度曲线配置
+func (m *Manager) getCustomBrightnessCurves() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyCustomBrightnessCurves)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	jsonStr, ok := v.Value().(string)
+	if !ok {
+		logger.Warning("Custom brightness curves configuration is not a string")
+		return
+	}
+	brightness.SetCustomBrightnessCurves(jsonStr)
+	m.setPropCurveMaxScale(brightness.GetCurrentMaxScale())
+}
+
+// getDefaultBrightnessCurve 读取默认亮度曲线配置
+func (m *Manager) getDefaultBrightnessCurve() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyDefaultBrightnessCurve)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	jsonStr, ok := v.Value().(string)
+	if !ok {
+		logger.Warning("Default brightness curve configuration is not a string")
+		return
+	}
+	brightness.SetDefaultBrightnessCurve(jsonStr)
+}
+
+// getMaxBrightnessUnlimited 读取最大亮度不受限开关，并在 BoardName 匹配时启用
+func (m *Manager) getMaxBrightnessUnlimited() {
+	v, err := m.displayConfigMgr.Value(0, DSettingsKeyMaxBrightnessUnlimited)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	enabled, ok := v.Value().(bool)
+	if !ok {
+		logger.Warning("max-brightness-unlimited is not bool type")
+		return
+	}
+
+	brightness.SetDeviceBoardName(getDmiBoardName())
+	boardSupported := brightness.IsDeviceSupported()
+	if !boardSupported {
+		logger.Warningf("Current board %s not match config", getDmiBoardName())
+		return
+	}
+
+	maxScale := brightness.GetCurrentMaxScale()
+	if maxScale <= 100 {
+		logger.Warningf("Curve scale %d too low", maxScale)
+		return
+	}
+
+	logger.Info("Max brightness unlimited:", enabled)
+
+	// 同步 DBus 属性与受限亮度（setMaxBrightnessUnlimited 内部会触发 resetLimitedBrightness）
+	m.setMaxBrightnessUnlimited(enabled)
+}
+
+// resetLimitedBrightness 根据缩放值变化调整亮度属性值
+func (m *Manager) resetLimitedBrightness() {
+	builtinMonitor := m.getBuiltinMonitor()
+	if builtinMonitor == nil {
+		return
+	}
+	currentBr := builtinMonitor.Brightness
+	var newBr float64
+	maxScale := brightness.GetCurrentMaxScale()
+	if maxScale <= 100 {
+		return
+	}
+	if m.MaxBrightnessUnlimited {
+		newBr = currentBr * 100.0 / float64(maxScale)
+	} else {
+		newBr = currentBr * float64(maxScale) / 100.0
+	}
+	logger.Debugf("Updating brightness property for scale change: %f -> %f", currentBr, newBr)
+
+	if newBr > 1.0 {
+		newBr = 1.0
+		m.SetBrightness(builtinMonitor.Name, newBr)
+	} else {
+		builtinMonitor.setPropBrightnessWithLock(newBr)
+		m.syncPropBrightness()
+	}
+}
+
+// setMaxBrightnessUnlimited 设置最大亮度不受限功能（DBus 属性写回调）
+func (m *Manager) setMaxBrightnessUnlimited(enabled bool) error {
+	logger.Infof("SetMaxBrightnessUnlimited called with: %v", enabled)
+
+	brightness.SetDeviceBoardName(getDmiBoardName())
+	boardSupported := brightness.IsDeviceSupported()
+	if !boardSupported {
+		logger.Warningf("Current board %s not match config, cannot enable max brightness limit", getDmiBoardName())
+		return errors.New("board name mismatch: current board not supported")
+	}
+
+	maxScale := brightness.GetCurrentMaxScale()
+	if maxScale <= 100 {
+		logger.Warningf("Curve max scale too small: %d", maxScale)
+		return errors.New("Curve config: max scale too low")
+	}
+
+	brightness.SetMaxBrightnessUnlimited(enabled)
+
+	if m.MaxBrightnessUnlimited != enabled {
+		m.MaxBrightnessUnlimited = enabled
+		m.emitPropChangedMaxBrightnessUnlimited(enabled)
+	}
+
+	m.resetLimitedBrightness()
+
+	return nil
+}
+
+// emitPropChangedMaxBrightnessUnlimited 发送 MaxBrightnessUnlimited 属性变化信号
+func (m *Manager) emitPropChangedMaxBrightnessUnlimited(value bool) error {
+	return m.service.EmitPropertyChanged(m, "MaxBrightnessUnlimited", value)
+}
+
+// setPropCurveMaxScale 设置 CurveMaxScale 属性
+func (m *Manager) setPropCurveMaxScale(value int32) {
+	if m.CurveMaxScale != value {
+		m.CurveMaxScale = value
+		m.emitPropChangedCurveMaxScale(value)
+	}
+}
+
+func (m *Manager) emitPropChangedCurveMaxScale(value int32) error {
+	return m.service.EmitPropertyChanged(m, "CurveMaxScale", value)
 }
 
 func (err InvalidOutputNameError) Error() string {
@@ -178,6 +393,10 @@ func (m *Manager) isBuiltinMonitor(name string) bool {
 }
 
 func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64) error {
+	// 根据dsg调整实际亮度百分比
+	brightnessValue = math.Round(brightnessValue*float64(m.dsgBrightnessPercentage)) / 100.0
+	logger.Debug("setMonitorBrightness reality value:", brightnessValue)
+
 	setter := m.createBrightnessSetter(monitor)
 	if setter == nil {
 		return fmt.Errorf("failed to create brightness setter for monitor %s", monitor.Name)
