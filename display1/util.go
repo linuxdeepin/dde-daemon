@@ -308,6 +308,28 @@ func getConfigVersion(filename string) (string, error) {
 	return string(bytes.TrimSpace(content)), nil
 }
 
+// getDmiBoardName 获取设备主板名称（DMI board_name）
+func getDmiBoardName() string {
+	const boardNamePath = "/sys/class/dmi/id/board_name"
+	content, err := os.ReadFile(boardNamePath)
+	if err != nil {
+		logger.Warning("failed to read dmi board name:", err)
+		return ""
+	}
+	return strings.TrimSpace(string(content))
+}
+
+// getDmiProductName 获取设备产品名称（DMI product_name）
+func getDmiProductName() string {
+	const productNamePath = "/sys/class/dmi/id/product_name"
+	content, err := os.ReadFile(productNamePath)
+	if err != nil {
+		logger.Warning("failed to read dmi product name:", err)
+		return ""
+	}
+	return strings.TrimSpace(string(content))
+}
+
 func getComputeChassis() (string, error) {
 	const chassisTypeFilePath = "/sys/class/dmi/id/chassis_type"
 	systemBus, err := dbus.SystemBus()

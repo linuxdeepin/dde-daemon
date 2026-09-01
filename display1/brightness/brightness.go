@@ -5,6 +5,9 @@
 package brightness
 
 import (
+	"bytes"
+	"encoding/base64"
+	"errors"
 	"fmt"
 	"math"
 	"sync"
@@ -18,9 +21,45 @@ import (
 )
 
 var _useWayland bool
+var _isM900Config bool
+var _hasBuiltinMonitor bool
+var _productName string
+var _chooseBigProductNames []string
 
 func SetUseWayland(value bool) {
 	_useWayland = value
+}
+
+func SetIsM900Config(value bool) {
+	_isM900Config = value
+}
+
+func GetIsM900Config() bool {
+	return _isM900Config
+}
+
+// SetHasBuiltinMonitor 设置当前是否有内置屏，用于 M900 的 MaxBacklightBrightness 门控
+func SetHasBuiltinMonitor(value bool) {
+	_hasBuiltinMonitor = value
+}
+
+// SetProductName 设置设备 ProductName，用于 backLight-max-brightness-choose-big 特征判断
+func SetProductName(productName string) {
+	_productName = productName
+}
+
+// SetChooseBigProductNames 设置 ProductName 命中后选最大背光亮度的机型列表
+func SetChooseBigProductNames(list []string) {
+	_chooseBigProductNames = list
+}
+
+func isChooseBigProduct() bool {
+	for _, name := range _chooseBigProductNames {
+		if name == _productName {
+			return true
+		}
+	}
+	return false
 }
 
 const (
@@ -83,10 +122,25 @@ func GetMaxBacklightBrightness() int {
 	if len(controllers) == 0 {
 		return 0
 	}
+
+	// 非M900且沒有內建屏，则直接将MaxBacklightBrightness设置为0
+	if !_isM900Config && !_hasBuiltinMonitor {
+		return 0
+	}
+
 	maxBrightness := controllers[0].MaxBrightness
-	for _, controller := range controllers {
-		if maxBrightness > controller.MaxBrightness {
-			maxBrightness = controller.MaxBrightness
+	if isChooseBigProduct() {
+		// backLight-max-brightness-choose-big 命中的机型取最大亮度
+		for _, controller := range controllers {
+			if maxBrightness < controller.MaxBrightness {
+				maxBrightness = controller.MaxBrightness
+			}
+		}
+	} else {
+		for _, controller := range controllers {
+			if maxBrightness > controller.MaxBrightness {
+				maxBrightness = controller.MaxBrightness
+			}
 		}
 	}
 	return maxBrightness
@@ -177,10 +231,43 @@ func init() {
 }
 
 func _setBacklight(value float64, controller *displayBl.Controller) error {
+	// 通过曲线函数计算亮度值
 	br := int32(float64(controller.MaxBrightness) * value)
 
+	v, ok := GetBacklightCurveValue(value, controller)
+	if ok {
+		logger.Debugf("Brightness curve value: %v", v)
+		br = v
+	}
+
 	const backlightTypeDisplay = 1
+	logger.Infof("help set brightness %q max %v value %v br %v",
+		controller.Name, controller.MaxBrightness, value, br)
 	return helper.SetBrightness(0, backlightTypeDisplay, controller.Name, br)
+}
+
+// search the backlight devices and prefer the types:
+// firmware -> platform -> raw
+func getBestBacklightController(controllers displayBl.Controllers) *displayBl.Controller {
+	var ret *displayBl.Controller
+	for _, controller := range controllers {
+		if ret == nil || ret.Type > controller.Type {
+			ret = controller
+		}
+	}
+
+	return ret
+}
+
+func setBestBacklightController(controllers displayBl.Controllers, value float64) error {
+	if controller := getBestBacklightController(controllers); controller != nil {
+		err := _setBacklight(value, controller)
+		if err != nil {
+			logger.Warningf("failed to set backlight by %s: %v", controller.Name, err)
+		}
+		return err
+	}
+	return errors.New("setBestBacklightController failed to set best backlight.")
 }
 
 // backlightControllerCache 背光控制器缓存
@@ -216,18 +303,73 @@ func getBacklightControllers() displayBl.Controllers {
 }
 
 // SetBacklight 设置背光亮度（供 createBrightnessSetter 回调使用）
-func SetBacklight(brightness float64) error {
+func SetBacklight(brightness float64, edidBase64 string) error {
 	controllers := getBacklightControllers()
 	if len(controllers) == 0 {
 		return fmt.Errorf("no backlight controllers available")
 	}
 
-	for _, controller := range controllers {
-		err := _setBacklight(brightness, controller)
+	return setBacklight(brightness, edidBase64, controllers)
+}
+
+func setBacklight(value float64, edidBase64 string, controllers displayBl.Controllers) error {
+	if edidBase64 != "" {
+		// M900 适配, 按EDID匹配的设置背光亮度
+		if edid, err := base64.StdEncoding.DecodeString(edidBase64); err != nil {
+			logger.Warning(err)
+		} else {
+			found := false
+			for _, controller := range controllers {
+				logger.Debugf("check controller: %s", controller.Name)
+				if controller.DeviceEDID == nil || bytes.HasPrefix(controller.DeviceEDID, edid) {
+					found = true
+					err := _setBacklight(value, controller)
+					if err != nil {
+						logger.Warningf("failed to set backlight by EDID %s: %v", controller.Name, err)
+					}
+				}
+			}
+			if found {
+				return nil
+			}
+		}
+
+		//找不到edid时，如果是M900，则按照getBestBacklightController去设置
+		if _isM900Config {
+			err := setBestBacklightController(controllers, value)
+			if err != nil {
+				logger.Warning(err)
+			} else {
+				return nil
+			}
+		} else {
+			logger.Warning("can't find controller with edid:", edidBase64)
+		}
+	} else {
+		err := setBestBacklightController(controllers, value)
 		if err != nil {
-			logger.Warningf("Failed to set backlight %s: %v", controller.Name, err)
+			logger.Warning(err)
+		} else {
+			return nil
 		}
 	}
+
+	//M900不设置所有节点
+	if _isM900Config {
+		logger.Debug("The current machine is M900 and does not set all backlight nodes.")
+		return nil
+	}
+
+	// 有些厂商机器存在写背光文件延时，bug-307835
+	go func() {
+		for _, controller := range controllers {
+			err := _setBacklight(value, controller)
+			if err != nil {
+				logger.Warningf("WARN: failed to set backlight %s: %v", controller.Name, err)
+			}
+		}
+	}()
+
 	return nil
 }
 

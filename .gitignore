@@ -56,3 +56,4 @@ coverage.csv
 .kiro/
 */AGENTS.md
 AGENTS.md
+debian/*

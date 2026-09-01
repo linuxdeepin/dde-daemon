@@ -63,6 +63,25 @@ func Start(service *dbusutil.Service) error {
 				err = m.setColorTempMode(mode)
 				return dbusutil.ToError(err)
 			})
+
+			err = so.SetWriteCallback(m, "MaxBrightnessUnlimited", func(write *dbusutil.PropertyWrite) *dbus.Error {
+				value, ok := write.Value.(bool)
+				if !ok {
+					err = errors.New("Type is not bool")
+					logger.Warning(err)
+					return dbusutil.ToError(err)
+				}
+				err = m.setMaxBrightnessUnlimited(value)
+				if err != nil {
+					return dbusutil.ToError(err)
+				}
+				// 持久化配置
+				err = setGlobalDconfValue(DSettingsAppID, DSettingsDisplayName, "", DSettingsKeyMaxBrightnessUnlimited, dbus.MakeVariant(value))
+				if err != nil {
+					logger.Warning("failed to save max brightness unlimited config:", err)
+				}
+				return nil
+			})
 		}
 
 		err = service.RequestName(dbusServiceName)

@@ -99,6 +99,16 @@ const (
 	DSettingsKeyTransitionStepPercent     = "transition-step-percent"
 	DSettingsKeyTransitionMinStepInterval = "transition-min-step-interval"
 
+	// 背光曲线配置
+	DSettingsKeyBackLightMaxBrightnessChooseBigConfig = "backLight-max-brightness-choose-big"
+	DSettingsKeyBacklightCurveType                    = "backlight-curve-type"
+	DSettingsKeyBacklightMinValue                     = "backlight-curve-min-value"
+	DSettingsKeyBacklightMidValue                     = "backlight-curve-mid-value"
+	DSettingsKeyBrightnessPercentage                  = "brightness-percentage"
+	DSettingsKeyCustomBrightnessCurves                = "custom-brightness-curves"
+	DSettingsKeyDefaultBrightnessCurve                = "default-brightness-curve"
+	DSettingsKeyMaxBrightnessUnlimited                = "max-brightness-unlimited"
+
 	customModeDelim              = "+"
 	monitorsIdDelimiter          = ","
 	defaultTemperatureMode       = ColorTemperatureModeNone
@@ -230,6 +240,10 @@ type Manager struct {
 	ScreenHeight           uint16
 	MaxBacklightBrightness uint32
 
+	// 背光曲线相关属性
+	CurveMaxScale          int32 `prop:"access:r"`
+	MaxBrightnessUnlimited bool  `prop:"access:rw"`
+
 	// TODO 删除下面 2 个色温相关字段
 	// 存在gsetting中的色温模式
 	gsColorTemperatureMode int32
@@ -267,6 +281,17 @@ type Manager struct {
 	sysPower syspower.Power
 
 	dsAutoChangeScaleEnabled bool
+
+	// 背光曲线相关配置
+	backlightCurveType      string
+	backlightMinValue       int32
+	backlightMidValue       int32
+	dsgBrightnessPercentage int32
+	chooseBigProductNames   []string
+
+	// 硬件信息
+	dmiBoardName   string
+	dmiProductName string
 }
 
 type monitorSizeInfo struct {
@@ -509,6 +534,32 @@ func (m *Manager) initDConfig(sysBus *dbus.Conn) {
 			m.getAutoChangeScaleEnabled()
 		case DSettingsKeyCanSetBrightnessDelay:
 			m.getBrightnessDelaySet()
+		case DSettingsKeyBacklightCurveType:
+			m.getBacklightCurveType()
+			if m.backlightCurveType == "flm" {
+				brightness.InitFlmCurves(m.backlightMinValue, m.backlightMidValue)
+			}
+		case DSettingsKeyBacklightMinValue:
+			m.getBacklightMinValue()
+			if m.backlightCurveType == "flm" {
+				brightness.InitFlmCurves(m.backlightMinValue, m.backlightMidValue)
+			}
+		case DSettingsKeyBacklightMidValue:
+			m.getBacklightMidValue()
+			if m.backlightCurveType == "flm" {
+				brightness.InitFlmCurves(m.backlightMinValue, m.backlightMidValue)
+			}
+		case DSettingsKeyBrightnessPercentage:
+			m.getDsgBrightnessPercentage()
+		case DSettingsKeyCustomBrightnessCurves:
+			m.getCustomBrightnessCurves()
+		case DSettingsKeyDefaultBrightnessCurve:
+			m.getDefaultBrightnessCurve()
+		case DSettingsKeyMaxBrightnessUnlimited:
+			m.getMaxBrightnessUnlimited()
+		case DSettingsKeyBackLightMaxBrightnessChooseBigConfig:
+			m.getBackLightMaxBrightnessChooseBigConfig()
+			m.refreshMaxBacklightBrightness()
 		default:
 			break
 		}
@@ -527,6 +578,7 @@ func (m *Manager) loadInitialConfigValues() {
 	m.getBrightnessDelaySet()
 	// ColorTemperatureManual will be loaded from user config via applyColorTempConfig()
 	m.getAutoChangeScaleEnabled()
+	m.initBacklightCurve()
 }
 
 func (m *Manager) getDefaultTemperatureManual() {

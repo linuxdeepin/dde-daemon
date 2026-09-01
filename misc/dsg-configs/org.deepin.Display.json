@@ -181,10 +181,105 @@
     "autoChangeScaleEnabled": {
       "value": true,
       "serial": 0,
-      "flags": ["global"],
+      "flags": [
+        "global"
+      ],
       "name": "autoChangeScaleEnabled",
       "description": "auto change scale enabled",
       "description[zh_CN]": "是否启用自动缩放",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "backLight-max-brightness-choose-big": {
+      "value": [
+        "PN100F3",
+        "ChaoXiang Series"
+      ],
+      "serial": 0,
+      "flags": [
+        "global"
+      ],
+      "name": "backLight max brightness choose big",
+      "name[zh_CN]": "背光最大亮度选大机型列表",
+      "description": "Product names whose backlight max brightness chooses the biggest controller",
+      "description[zh_CN]": "ProductName 命中该列表时，MaxBacklightBrightness 选择最大亮度的背光控制器",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "backlight-curve-type": {
+      "value": "default",
+      "serial": 0,
+      "flags": [],
+      "name": "backlightCurveType",
+      "name[zh_CN]": "背光曲线类型",
+      "description": "backlight curve type, default or flm",
+      "description[zh_CN]": "背光曲线类型（default/flm）",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "backlight-curve-min-value": {
+      "value": 4,
+      "serial": 0,
+      "flags": [],
+      "name": "backlightMinValue",
+      "name[zh_CN]": "背光曲线起始点",
+      "description": "backlight curve min value",
+      "description[zh_CN]": "背光曲线起始点",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "backlight-curve-mid-value": {
+      "value": 50,
+      "serial": 0,
+      "flags": [],
+      "name": "backlightMidValue",
+      "name[zh_CN]": "背光曲线中间点",
+      "description": "backlight curve mid value",
+      "description[zh_CN]": "背光曲线中间点",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "brightness-percentage": {
+      "value": 100,
+      "serial": 0,
+      "flags": [],
+      "name": "brightnessPercentage",
+      "name[zh_CN]": "实际亮度百分比",
+      "description": "actual brightness percentage, range [50, 100], default 100",
+      "description[zh_CN]": "实际亮度百分比，取值范围：[50, 100]，默认100",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "custom-brightness-curves": {
+      "value": "",
+      "serial": 0,
+      "flags": [],
+      "name": "customBrightnessCurves",
+      "name[zh_CN]": "自定义亮度曲线",
+      "description": "custom brightness curves and max limit config",
+      "description[zh_CN]": "内置屏亮度曲线与最大限制配置",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "default-brightness-curve": {
+      "value": "",
+      "serial": 0,
+      "flags": [],
+      "name": "defaultBrightnessCurve",
+      "name[zh_CN]": "默认亮度曲线",
+      "description": "default brightness curve config (not depends on hardware)",
+      "description[zh_CN]": "默认亮度曲线配置（不依赖硬件信息）",
+      "permissions": "readwrite",
+      "visibility": "private"
+    },
+    "max-brightness-unlimited": {
+      "value": false,
+      "serial": 0,
+      "flags": [],
+      "name": "maxBrightnessUnlimited",
+      "name[zh_CN]": "最大亮度不受限开关",
+      "description": "builtin screen max brightness unlimited switch, default false",
+      "description[zh_CN]": "内置屏幕最大亮度不受限制开关，默认为false",
       "permissions": "readwrite",
       "visibility": "private"
     }
