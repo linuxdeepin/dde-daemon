@@ -5,6 +5,8 @@
 package grub2
 
 import (
+	"errors"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -13,34 +15,42 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/go-lib/dbusutil"
-	"github.com/linuxdeepin/go-lib/utils"
 )
 
 const (
 	themeDBusPath            = dbusPath + "/Theme"
 	themeDBusInterface       = dbusInterface + ".Theme"
 	grubBackgroundRuntimeDir = "/run/deepin-grub2"
+
+	// maxBackgroundSourceSize 限制通过 dbus fd 传入的壁纸源文件大小，避免资源耗尽
+	maxBackgroundSourceSize = 32 * 1024 * 1024
 )
 
 func (*Theme) GetInterfaceName() string {
 	return themeDBusInterface
 }
 
-func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string) *dbus.Error {
+func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, fd dbus.UnixFD) *dbus.Error {
 	err := checkInvokePermission(theme.service, sender)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
 	theme.service.DelayAutoQuit()
 
-	logger.Debugf("SetBackgroundSourceFile: %q", filename)
+	logger.Debugf("SetBackgroundSourceFile: fd %d", fd)
 	err = theme.g.checkAuth(sender, polikitActionIdCommon)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
 
-	filename = utils.DecodeURI(filename)
-	cmd := exec.Command(adjustThemeCmd, "-set-background", filename)
+	tempPath, err := writeBackgroundSourceToTemp(fd)
+	if err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
+	defer os.Remove(tempPath)
+
+	cmd := exec.Command(adjustThemeCmd, "-set-background", tempPath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
@@ -50,6 +60,60 @@ func (theme *Theme) SetBackgroundSourceFile(sender dbus.Sender, filename string)
 	}
 	theme.emitSignalBackgroundChanged()
 	return nil
+}
+
+// writeBackgroundSourceToTemp 将 dbus fd 中的壁纸源文件内容写入运行时目录下的临时文件，
+// 并返回临时文件路径。调用方使用完后应删除返回的文件；fd 在读取后被关闭。
+func writeBackgroundSourceToTemp(fd dbus.UnixFD) (string, error) {
+	if fd < 0 {
+		return "", errors.New("invalid background source fd")
+	}
+	f := os.NewFile(uintptr(fd), "background-source")
+	if f == nil {
+		return "", errors.New("invalid background source fd")
+	}
+	defer f.Close()
+
+	info, err := f.Stat()
+	if err != nil {
+		return "", err
+	}
+	if !info.Mode().IsRegular() {
+		return "", errors.New("background source is not a regular file")
+	}
+	if info.Size() > maxBackgroundSourceSize {
+		return "", fmt.Errorf("file size %d > %d", info.Size(), maxBackgroundSourceSize)
+	}
+	if _, err := f.Seek(0, io.SeekStart); err != nil {
+		return "", err
+	}
+
+	tempFile, err := os.CreateTemp(grubBackgroundRuntimeDir, ".background-source-*")
+	if err != nil {
+		return "", err
+	}
+	tempPath := tempFile.Name()
+	removeTemp := true
+	defer func() {
+		if removeTemp {
+			_ = os.Remove(tempPath)
+		}
+	}()
+
+	n, err := io.Copy(tempFile, io.LimitReader(f, maxBackgroundSourceSize+1))
+	if err != nil {
+		_ = tempFile.Close()
+		return "", err
+	}
+	if n > maxBackgroundSourceSize {
+		_ = tempFile.Close()
+		return "", fmt.Errorf("file size %d > %d", n, maxBackgroundSourceSize)
+	}
+	if err := tempFile.Close(); err != nil {
+		return "", err
+	}
+	removeTemp = false
+	return tempPath, nil
 }
 
 func (theme *Theme) GetBackground(sender dbus.Sender) (background string, busErr *dbus.Error) {

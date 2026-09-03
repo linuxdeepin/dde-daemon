@@ -81,7 +81,7 @@ func (v *Theme) GetExportedMethods() dbusutil.ExportedMethods {
 		{
 			Name:   "SetBackgroundSourceFile",
 			Fn:     v.SetBackgroundSourceFile,
-			InArgs: []string{"filename"},
+			InArgs: []string{"fd"},
 		},
 	}
 }

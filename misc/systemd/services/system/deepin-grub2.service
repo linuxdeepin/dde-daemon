@@ -29,13 +29,13 @@ ReadWritePaths=-/etc/grub.d
 ReadWritePaths=-/boot
 
 NoNewPrivileges=yes
-# 允许只读访问 /home 以读取 .Xauthority 文件
-ProtectHome=read-only
+# 壁纸源文件通过 dbus fd 传入，服务无需访问 /home
+ProtectHome=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 ProtectControlGroups=yes
 PrivateMounts=yes
-#PrivateTmp=yes
+PrivateTmp=yes
 # /usr/sbin/grub-probe需要使用
 #PrivateDevices=yes
 PrivateNetwork=yes
