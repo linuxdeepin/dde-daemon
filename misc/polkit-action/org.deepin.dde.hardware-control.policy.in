@@ -5,6 +5,17 @@
 <policyconfig>
     <vendor/>
     <vendor_url/>
+
+    <action id="org.deepin.dde.daemon.set-camera-privacy">
+        <description>Set camera privacy</description>
+        <message>Authentication is required to set camera privacy</message>
+        <defaults>
+            <allow_any>no</allow_any>
+            <allow_inactive>no</allow_inactive>
+            <allow_active>yes</allow_active>
+        </defaults>
+    </action>
+
     <action id="org.deepin.dde.inputdevices.set-touchpad">
         <description>Enable or disable touchpad</description>
         <message>Authentication is required to enable or disable touchpad</message>
