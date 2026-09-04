@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -31,7 +31,7 @@ const (
 	cmdTerminal   = "/usr/lib/deepin-daemon/default-terminal"
 	cmdMessenger  = "dbus-send --print-reply --dest=org.deepin.dde.Osd1 /org/deepin/dde/Notification1 org.deepin.dde.Notification1.Toggle"
 	cmdLauncher   = "dbus-send --print-reply --dest=org.deepin.dde.Launcher1 /org/deepin/dde/Launcher1 org.deepin.dde.Launcher1.Toggle"
-	cmdCamera     = "/usr/share/dde-daemon/keybinding/cameraSwitch.sh"
+	cmdCamera     = "deepin-camera"
 )
 
 var mediaIdActionMap = map[string]*Action{
