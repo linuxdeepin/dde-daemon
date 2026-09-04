@@ -11,6 +11,16 @@
       "description": "Maximum Custom Wallpaper Limit",
       "permissions": "readwrite",
       "visibility": "private"
+    },
+    "cameraPrivacyEnabled": {
+      "value": false,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "cameraPrivacyEnabled",
+      "name[zh_CN]": "摄像头隐私开关",
+      "description": "Whether the camera hardware privacy switch is enabled",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }

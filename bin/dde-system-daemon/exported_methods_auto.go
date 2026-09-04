@@ -29,6 +29,11 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"username", "file"},
 		},
 		{
+			Name:    "GetCameraPrivacy",
+			Fn:      v.GetCameraPrivacy,
+			OutArgs: []string{"privacy", "known"},
+		},
+		{
 			Name:    "GetCustomWallPapers",
 			Fn:      v.GetCustomWallPapers,
 			InArgs:  []string{"username"},
@@ -52,6 +57,17 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"scale"},
 		},
 		{
+			Name:   "SetAllowCaller",
+			Fn:     v.SetAllowCaller,
+			InArgs: []string{"uniqueName"},
+		},
+		{
+			Name:    "SetCameraPrivacy",
+			Fn:      v.SetCameraPrivacy,
+			InArgs:  []string{"state"},
+			OutArgs: []string{"applied"},
+		},
+		{
 			Name:   "SetLogindTTY",
 			Fn:     v.SetLogindTTY,
 			InArgs: []string{"NAutoVTs", "resetCustom", "live"},
@@ -70,11 +86,6 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:   "SetReadOnlyProtection",
 			Fn:     v.SetReadOnlyProtection,
 			InArgs: []string{"enable"},
-		},
-		{
-			Name:   "SetAllowCaller",
-			Fn:     v.SetAllowCaller,
-			InArgs: []string{"uniqueName"},
 		},
 	}
 }
