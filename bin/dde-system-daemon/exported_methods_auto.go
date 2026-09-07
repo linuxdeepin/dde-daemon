@@ -29,6 +29,11 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			InArgs: []string{"username", "file"},
 		},
 		{
+			Name:    "GetCameraPrivacy",
+			Fn:      v.GetCameraPrivacy,
+			OutArgs: []string{"privacy", "known"},
+		},
+		{
 			Name:    "GetCustomWallPapers",
 			Fn:      v.GetCustomWallPapers,
 			InArgs:  []string{"username"},
@@ -50,6 +55,12 @@ func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 			Name:   "ScalePlymouth",
 			Fn:     v.ScalePlymouth,
 			InArgs: []string{"scale"},
+		},
+		{
+			Name:    "SetCameraPrivacy",
+			Fn:      v.SetCameraPrivacy,
+			InArgs:  []string{"state"},
+			OutArgs: []string{"applied"},
 		},
 		{
 			Name:   "SetLogindTTY",
