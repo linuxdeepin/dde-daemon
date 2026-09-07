@@ -5,7 +5,6 @@
 package display1
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -240,9 +239,7 @@ type Manager struct {
 
 	// 不支持调节色温的显卡型号
 	unsupportGammaDrmList []string
-	gammaSupportUpdates   chan struct{}
-	gammaSupportCtx       context.Context
-	gammaSupportCancel    context.CancelFunc
+	drmSupportGamma       bool
 
 	customColorTempTimer    *time.Timer
 	customColorTempFlag     bool
@@ -284,7 +281,6 @@ var _dsDefaultTemperatureManual int32 // 开启色温时，手动调节色温的
 
 func newManager(service *dbusutil.Service) *Manager {
 	isVM, _ := isInVM()
-	gammaSupportCtx, gammaSupportCancel := context.WithCancel(context.Background())
 	m := &Manager{
 		service:             service,
 		monitorMap:          make(map[uint32]*Monitor),
@@ -295,10 +291,7 @@ func newManager(service *dbusutil.Service) *Manager {
 		unsupportGammaDrmList: []string{
 			"Loongson",
 		},
-		gammaSupportUpdates: make(chan struct{}, 1),
-		gammaSupportCtx:     gammaSupportCtx,
-		gammaSupportCancel:  gammaSupportCancel,
-		isVM:                isVM,
+		isVM: isVM,
 	}
 	if !_greeterMode {
 		m.xsManager = xs.NewXSettings(m.service.Conn())
@@ -720,16 +713,12 @@ func (m *Manager) initSysDisplay() {
 		logger.Warning(err)
 	}
 	go func() {
-		supported := m.detectDrmSupportGamma()
-		if m.gammaSupportCtx.Err() != nil {
-			return
-		}
-		if supported {
+		m.drmSupportGamma = m.detectDrmSupportGamma()
+		if m.drmSupportGamma {
 			logger.Debug("setColorTempModeReal")
 			m.setColorTempModeReal(ColorTemperatureModeNone)
 		}
-		m.updateGammaSupport(supported)
-		m.watchGammaSupport(m.detectDrmSupportGamma)
+		m.setPropSupportColorTemperature(!_inVM && m.drmSupportGamma)
 	}()
 }
 
@@ -3484,177 +3473,32 @@ func (m *Manager) updateScreenSize() {
 	m.PropsMu.Unlock()
 }
 
-func getLspci() (string, error) {
+func getLspci() string {
 	out, err := exec.Command("lspci").Output()
-	return string(out), err
+	if err != nil {
+		logger.Warning(err)
+		return ""
+	} else {
+		return string(out)
+	}
 }
 
 func (m *Manager) detectDrmSupportGamma() bool {
-	return detectGammaSupport(getLspci, m.unsupportGammaDrmList, m.probeGammaSupport)
-}
-
-func (m *Manager) updateGammaSupport(supported bool) {
-	m.PropsMu.Lock()
-	defer m.PropsMu.Unlock()
-	m.setPropSupportColorTemperature(!m.isVM && supported)
-}
-
-// 合并积压的 RandR 通知，不阻塞显示事件处理。
-func (m *Manager) queueGammaSupportUpdate() {
-	select {
-	case m.gammaSupportUpdates <- struct{}{}:
-	default:
-	}
-}
-
-// 同一个工作循环串行探测，避免旧结果覆盖新结果；刷新不改变用户的色温设置。
-func (m *Manager) watchGammaSupport(detect func() bool) {
-	for {
-		select {
-		case <-m.gammaSupportCtx.Done():
-			return
-		case <-m.gammaSupportUpdates:
-			supported := detect()
-			if m.gammaSupportCtx.Err() != nil {
-				return
+	pciInfos := strings.Split(getLspci(), "\n")
+	for _, info := range pciInfos {
+		if strings.Contains(info, "VGA") {
+			vgaSupportGamma := true
+			for _, drm := range m.unsupportGammaDrmList {
+				lowDrm := strings.ToLower(drm)
+				lowInfo := strings.ToLower(info)
+				if strings.Contains(lowInfo, lowDrm) {
+					vgaSupportGamma = false
+					break
+				}
 			}
-			m.updateGammaSupport(supported)
-		}
-	}
-}
-
-func detectGammaSupport(scanPCI func() (string, error), blacklist []string, probe func() bool) bool {
-	lspciOut, err := scanPCI()
-	if err != nil {
-		// 扫描失败不能视为空设备列表，否则平台 GPU 回退会绕过黑名单。
-		logger.Warning("detectGammaSupport: scan PCI devices failed:", err)
-		return false
-	}
-	foundBlacklisted := false
-	for _, info := range strings.Split(lspciOut, "\n") {
-		isVGA := strings.Contains(info, "VGA")
-		if !isVGA && !isAccelDisplayDevice(info) {
-			continue
-		}
-		if isBlacklistedDisplay(info, blacklist) {
-			foundBlacklisted = true
-			continue
-		}
-		if isVGA {
-			// 保留未命中黑名单的 VGA 设备的原有行为。
-			return true
-		}
-	}
-	if foundBlacklisted {
-		// 没有可用 VGA 时，全局 RandR 探测无法确认输出属于哪块 PCI 显卡，
-		// 因此不能让其他加速卡或黑名单设备报告的 gamma 大小覆盖黑名单。
-		return false
-	}
-	// 加速类设备和非 PCI GPU（如 ARM SoC）都需要验证输出的 gamma 能力。
-	return probe()
-}
-
-// accelDisplayClasses 为 lspci 中可能表示无输出加速卡的设备类关键字，
-// 如双显卡机器上的 "3D controller"（NVIDIA 独显/Tesla）和部分设备的
-// "Display controller"。这类设备不能仅凭存在即判定支持 gamma。
-var accelDisplayClasses = []string{"3D controller", "Display controller"}
-
-func isAccelDisplayDevice(lspciLine string) bool {
-	lowLine := strings.ToLower(lspciLine)
-	for _, class := range accelDisplayClasses {
-		if strings.Contains(lowLine, strings.ToLower(class)) {
-			return true
-		}
-	}
-	return false
-}
-
-func isBlacklistedDisplay(lspciLine string, blacklist []string) bool {
-	lowInfo := strings.ToLower(lspciLine)
-	for _, drm := range blacklist {
-		if strings.Contains(lowInfo, strings.ToLower(drm)) {
-			return true
-		}
-	}
-	return false
-}
-
-// probeGammaSupport 查询 RandR 输出的 CRTC gamma 表大小，
-// 与 brightness.setOutputCrtcGamma 的前置检查保持一致。
-// 已知黑名单由 detectGammaSupport 处理，不能仅凭 gamma 表大小解除。
-// 输出尚未启用时，只探测这些输出可使用的 CRTC，避免把无输出加速卡判为支持。
-func (m *Manager) probeGammaSupport() bool {
-	if _useWayland || m.xConn == nil || !_hasRandr1d2 {
-		return false
-	}
-	xConn := m.xConn
-	root := xConn.GetDefaultScreen().Root
-	var resources *randr.GetScreenResourcesReply
-	var err error
-	if _hasRandr1d3 {
-		// RandR 1.3 起读取当前配置，避免每次显示事件刷新都触发硬件轮询。
-		var current *randr.GetScreenResourcesCurrentReply
-		current, err = randr.GetScreenResourcesCurrent(xConn, root).Reply(xConn)
-		resources = (*randr.GetScreenResourcesReply)(current)
-	} else {
-		resources, err = randr.GetScreenResources(xConn, root).Reply(xConn)
-	}
-	if err != nil {
-		logger.Warning("probeGammaSupport: get screen resources failed:", err)
-		return false
-	}
-	return probeRandrGammaSupport(resources,
-		func(output randr.Output) (*randr.GetOutputInfoReply, error) {
-			return randr.GetOutputInfo(xConn, output, resources.ConfigTimestamp).Reply(xConn)
-		},
-		func(crtc randr.Crtc) (uint16, error) {
-			gamma, err := randr.GetCrtcGammaSize(xConn, crtc).Reply(xConn)
-			if err != nil {
-				logger.Warningf("probeGammaSupport: get gamma size for crtc %v failed: %v", crtc, err)
-				return 0, err
+			if vgaSupportGamma {
+				return true
 			}
-			return gamma.Size, nil
-		})
-}
-
-func probeRandrGammaSupport(resources *randr.GetScreenResourcesReply,
-	getOutputInfo func(randr.Output) (*randr.GetOutputInfoReply, error),
-	getGammaSize func(randr.Crtc) (uint16, error)) bool {
-	var inactiveCrtcs []randr.Crtc
-	canProbeInactive := true
-	for _, output := range resources.Outputs {
-		outputInfo, err := getOutputInfo(output)
-		if err != nil || outputInfo.Status != randr.StatusSuccess {
-			canProbeInactive = false
-			continue
-		}
-		if outputInfo.Connection != randr.ConnectionConnected || outputInfo.Crtc == 0 {
-			inactiveCrtcs = append(inactiveCrtcs, outputInfo.Crtcs...)
-			continue
-		}
-		canProbeInactive = false
-		size, err := getGammaSize(outputInfo.Crtc)
-		if err != nil {
-			continue
-		}
-		if size > 0 {
-			return true
-		}
-	}
-	// 仅在所有输出均未启用时回退；活动输出探测失败不能由其他 CRTC 代替。
-	if !canProbeInactive {
-		return false
-	}
-	for _, crtc := range inactiveCrtcs {
-		if crtc == 0 {
-			continue
-		}
-		size, err := getGammaSize(crtc)
-		if err != nil {
-			continue
-		}
-		if size > 0 {
-			return true
 		}
 	}
 	return false
