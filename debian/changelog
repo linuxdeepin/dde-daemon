@@ -1,3 +1,9 @@
+dde-daemon (6.1.99.4) unstable; urgency=medium
+
+  * feat: tiered camera disable hotkey with hardware persistence
+
+ -- fuleyi <fuleyi@uniontech.com>  Mon, 07 Sep 2026 16:57:38 +0800
+
 dde-daemon (6.1.99.3) unstable; urgency=medium
 
   * fix(inputdevices): fsync udev rule and rebuild on boot for touchpad
