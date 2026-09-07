@@ -125,6 +125,9 @@ func main() {
 	_daemon.getDsgValue()
 	_daemon.service = service
 	_daemon.initSystemDaemonDConfig()
+	// Start the camera privacy switch: restore persisted state and watch
+	// hotplug so a re-plugged camera stays disabled while privacy is on.
+	initCameraPrivacy()
 	err = service.Export(dbusPath, _daemon)
 	if err != nil {
 		logger.Fatal("failed to export:", err)

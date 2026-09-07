@@ -1375,14 +1375,55 @@ func (m *Manager) execCmd(cmd string, viaStartdde bool) error {
 	return nil
 }
 
+// handleCheckCamera toggles the camera hardware privacy switch via the
+// system daemon (org.deepin.dde.Daemon1.SetCameraPrivacy) and shows the
+// corresponding OSD. It no longer launches or kills the camera app: the
+// hotkey only switches the hardware privacy state.
 func (m *Manager) handleCheckCamera() error {
-	cmd := "deepin-camera"
-	viaStartdde := true
-	if checkProRunning(cmd) {
-		cmd = "killall deepin-camera"
-		viaStartdde = false
+	sysBus, err := dbus.SystemBus()
+	if err != nil {
+		logger.Warning("connect to system bus failed:", err)
+		return err
 	}
-	return m.execCmd(cmd, viaStartdde)
+
+	const (
+		daemon1SvcName = "org.deepin.dde.Daemon1"
+		daemon1Path    = "/org/deepin/dde/Daemon1"
+		daemon1Iface   = "org.deepin.dde.Daemon1"
+	)
+	obj := sysBus.Object(daemon1SvcName, daemon1Path)
+
+	var privacy, known bool
+	err = obj.Call(daemon1Iface+".GetCameraPrivacy", 0).Store(&privacy, &known)
+	if err != nil {
+		logger.Warning("get camera privacy failed:", err)
+		return err
+	}
+	if !known {
+		// No camera present or state unreadable; nothing to toggle.
+		logger.Debug("camera privacy state unknown, skip toggle")
+		return nil
+	}
+
+	var applied bool
+	newState := !privacy
+	err = obj.Call(daemon1Iface+".SetCameraPrivacy", 0, newState).Store(&applied)
+	if err != nil {
+		logger.Warningf("set camera privacy to %v failed: %v", newState, err)
+		return err
+	}
+	if !applied {
+		// The system daemon found no switchable camera (no V4L2 privacy
+		// control and no UVC video interface); keep the previous state.
+		logger.Infof("camera privacy switch not applied, keep state %v", privacy)
+	}
+
+	if newState && applied {
+		showOSD("CameraOff")
+	} else {
+		showOSD("CameraOn")
+	}
+	return nil
 }
 
 func (m *Manager) runDesktopFile(desktop string) error {
