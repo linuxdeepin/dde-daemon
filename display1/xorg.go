@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/linuxdeepin/dde-daemon/common/scale"
+
 	"github.com/davecgh/go-spew/spew"
 	"github.com/linuxdeepin/go-lib/log"
 	x "github.com/linuxdeepin/go-x11-client"
@@ -22,7 +24,6 @@ import (
 const concatScreenName = "DDE-CONCAT-SCREEN"
 
 var _hasRandr1d2 bool // 是否 randr 版本大于等于 1.2
-var _hasRandr1d3 bool // 是否支持 RandR 1.3 的 GetScreenResourcesCurrent
 
 var _useWayland bool
 
@@ -32,19 +33,9 @@ func Init(xConn *x.Conn, useWayland bool, inVM bool) {
 	_xConn = xConn
 	_useWayland = useWayland
 	_inVM = inVM
-	_hasRandr1d2 = false
-	_hasRandr1d3 = false
-	version, err := randr.QueryVersion(xConn, randr.MajorVersion, randr.MinorVersion).Reply(xConn)
-	if err != nil {
-		logger.Warning("query RandR version failed:", err)
-	} else {
-		logger.Debugf("randr version %d.%d", version.ServerMajorVersion, version.ServerMinorVersion)
-		_hasRandr1d2 = version.ServerMajorVersion > 1 ||
-			(version.ServerMajorVersion == 1 && version.ServerMinorVersion >= 2)
-		_hasRandr1d3 = version.ServerMajorVersion > 1 ||
-			(version.ServerMajorVersion == 1 && version.ServerMinorVersion >= 3)
-	}
+	_hasRandr1d2 = scale.HasRandr1d2(xConn)
 
+	var err error
 	if _greeterMode {
 		// 仅 greeter 需要
 		_, err = xfixes.QueryVersion(xConn, xfixes.MajorVersion, xfixes.MinorVersion).Reply(xConn)
@@ -98,12 +89,10 @@ func (m *Manager) listenXEvents() {
 				case randr.NotifyOutputChange:
 					e, _ := event.NewOutputChangeNotifyEvent()
 					m.mm.HandleEvent(e)
-					m.queueGammaSupportUpdate()
 
 				case randr.NotifyCrtcChange:
 					e, _ := event.NewCrtcChangeNotifyEvent()
 					m.mm.HandleEvent(e)
-					m.queueGammaSupportUpdate()
 
 				case randr.NotifyOutputProperty:
 					e, _ := event.NewOutputPropertyNotifyEvent()
@@ -115,7 +104,6 @@ func (m *Manager) listenXEvents() {
 				event, _ := randr.NewScreenChangeNotifyEvent(ev)
 				cfgTsChanged := m.mm.HandleScreenChanged(event)
 				m.handleScreenChanged(event, cfgTsChanged)
-				m.queueGammaSupportUpdate()
 
 			case x.GeGenericEventCode:
 				if !_greeterMode {
