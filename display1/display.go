@@ -97,6 +97,9 @@ func SetLogLevel(level log.Priority) {
 // Cleanup 清理display模块资源
 func Cleanup() {
 	if _dpy != nil {
+		if _dpy.gammaSupportCancel != nil {
+			_dpy.gammaSupportCancel()
+		}
 		_dpy.cleanupAutoBrightness()
 		logger.Info("Display module cleaned up")
 	}
