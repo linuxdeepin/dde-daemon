@@ -106,7 +106,7 @@ func (m *Manager) changeBrightness(raised bool) error {
 			logger.Warning(err)
 			continue
 		}
-		successMap[monitor.Name] = br
+		successMap[monitor.Name] = unscaleBrightness(br, m.getBrightnessScale())
 	}
 	err := m.saveBrightnessInCfg(successMap)
 	if err != nil {
