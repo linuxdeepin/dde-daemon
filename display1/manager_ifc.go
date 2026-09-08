@@ -235,7 +235,7 @@ func (m *Manager) SetAndSaveBrightness(outputName string, value float64) *dbus.E
 	}
 
 	err = m.saveBrightnessInCfg(map[string]float64{
-		outputName: value,
+		outputName: unscaleBrightness(value, m.getBrightnessScale()),
 	})
 	if err != nil {
 		logger.Warning(err)

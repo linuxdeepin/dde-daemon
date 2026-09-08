@@ -165,3 +165,24 @@ func scaleBrightness(base, scale float64) float64 {
 	}
 	return math.Round(v*1000) / 1000
 }
+
+// unscaleBrightness 将硬件实际亮度还原为未缩放的原始亮度，用于保存到配置。
+// 与 scaleBrightness 互逆：scaleBrightness(unscaleBrightness(v, s), s) == v（未饱和区间内）。
+func unscaleBrightness(effective, scale float64) float64 {
+	if effective <= minBrightness {
+		return minBrightness
+	}
+	if scale <= 0 {
+		// scale 为 0 时缩放不可逆（任意原始值都映射到最低亮度），
+		// 保持原值，避免覆盖用户设置的亮度。
+		return effective
+	}
+	v := effective / scale
+	if v < minBrightness {
+		v = minBrightness
+	}
+	if v > 1.0 {
+		v = 1.0
+	}
+	return math.Round(v*1000) / 1000
+}
