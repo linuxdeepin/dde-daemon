@@ -474,9 +474,7 @@ func (m *Manager) GetRealDisplayMode() (uint8, *dbus.Error) {
 }
 
 func (m *Manager) SupportSetColorTemperature() (bool, *dbus.Error) {
-	m.PropsMu.RLock()
-	defer m.PropsMu.RUnlock()
-	return m.SupportColorTemperature, nil
+	return !(m.isVM || !m.drmSupportGamma), nil
 }
 
 func (m *Manager) SetCustomColorTempTimePeriod(timePeriod string) *dbus.Error {
