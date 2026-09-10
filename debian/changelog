@@ -1,3 +1,9 @@
+dde-daemon (6.1.99.5) unstable; urgency=medium
+
+  * feat(display1): migrate default brightness curve from startdde
+
+ -- Ivy233 <wangjinrun@uniontech.com>  Thu, 10 Sep 2026 15:07:03 +0800
+
 dde-daemon (6.1.99.4) unstable; urgency=medium
 
   * feat: tiered camera disable hotkey with hardware persistence
