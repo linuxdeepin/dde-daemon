@@ -167,11 +167,9 @@ func scaleBrightness(base, scale float64) float64 {
 }
 
 // unscaleBrightness 将硬件实际亮度还原为未缩放的原始亮度，用于保存到配置。
-// 与 scaleBrightness 互逆：scaleBrightness(unscaleBrightness(v, s), s) == v（未饱和区间内）。
+// 用户主动调节的亮度是缩放后的显示值，必须无条件除以 scale 还原为原始值，
+// 否则节能模式下调到最低亮度（如 10%）时，保存的原始值错误，切回非节能模式无法恢复。
 func unscaleBrightness(effective, scale float64) float64 {
-	if effective <= minBrightness {
-		return minBrightness
-	}
 	if scale <= 0 {
 		// scale 为 0 时缩放不可逆（任意原始值都映射到最低亮度），
 		// 保持原值，避免覆盖用户设置的亮度。
