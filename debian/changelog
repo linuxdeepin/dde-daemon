@@ -1,3 +1,23 @@
+dde-daemon (6.1.105) unstable; urgency=medium
+
+  * fix(inputdevices): fsync udev rule and rebuild on boot for touchpad
+  * i18n: Updates for project Deepin Desktop Environment (#1219)
+  * fix: harden udev rule file permission and durability on write
+  * i18n: Translate policy.ts in ar (#1227)
+  * fix: keep Type=forking behavior in dde-session-daemon-loader-wrapper
+  * feat(power): hand service to dde-services
+  * feat(audio1): add AI noise reduction support
+  * fix(grub2): harden SetBackgroundSourceFile with fd passing
+  * feat: tiered camera disable hotkey with hardware persistence
+  * fix: detect and refresh display gamma capability
+  * chore: revert display gamma capability pending review
+  * fix: unscale brightness before saving when power-saving mode is on
+  * fix: detect and refresh display gamma capability
+  * fix: unscale brightness even at minimum brightness in power-saving
+    mode
+
+ -- zhangkun <zhangkun2@uniontech.com>  Thu, 10 Sep 2026 20:29:18 +0800
+
 dde-daemon (6.1.104) unstable; urgency=medium
 
   * fix: do not stop dde-daemon service on upgrade
