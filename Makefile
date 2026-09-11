@@ -41,6 +41,8 @@ TEST = \
     ${GOPKG_PREFIX}/clipboard1 \
     ${GOPKG_PREFIX}/clipboard1/mocks \
     ${GOPKG_PREFIX}/common/bluetooth \
+    ${GOPKG_PREFIX}/common/cpuinfo \
+    ${GOPKG_PREFIX}/common/scale \
     ${GOPKG_PREFIX}/common/dsync \
     ${GOPKG_PREFIX}/common/sessionmsg \
     ${GOPKG_PREFIX}/dbus \
@@ -51,6 +53,7 @@ TEST = \
     ${GOPKG_PREFIX}/grub_common \
     ${GOPKG_PREFIX}/grub_gfx \
     ${GOPKG_PREFIX}/housekeeping \
+    ${GOPKG_PREFIX}/image_effect1 \
     ${GOPKG_PREFIX}/inputdevices1 \
     ${GOPKG_PREFIX}/inputdevices1/iso639 \
     ${GOPKG_PREFIX}/keybinding1 \
@@ -86,6 +89,9 @@ TEST = \
     ${GOPKG_PREFIX}/x_event_monitor1 \
     ${GOPKG_PREFIX}/bin/default-file-manager \
     ${GOPKG_PREFIX}/display1 \
+    ${GOPKG_PREFIX}/display1/brightness \
+    ${GOPKG_PREFIX}/display1/utils \
+    ${GOPKG_PREFIX}/common/fileutil \
     #${GOPKG_PREFIX}/timedate1/zoneinfo \
 
 BINARIES =  \
@@ -156,7 +162,7 @@ build: prepare out/bin/default-terminal out/bin/default-file-manager out/bin/des
 test: prepare
 	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -v ${TEST}
 test-coverage: prepare
-	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -cover -v ./... | awk '$$2 ~ "_${CURDIR}" {print $$2","$$5}' | sed "s:${CURDIR}::g" | sed 's/files\]/0\.0%/g' > coverage.csv
+	env GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}" go test -cover -v ${TEST} | awk '$$2 ~ "${GOPKG_PREFIX}" {print $$2","$$5}' | sed "s:${GOPKG_PREFIX}/::g" | sed 's/files\]/0\.0%/g' > coverage.csv
 
 print_gopath: prepare
 	GOPATH="${CURDIR}/${GOPATH_DIR}:${GOPATH}"
