@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -373,9 +373,11 @@ func (b *SysBluetooth) UnregisterAgent(sender dbus.Sender, agentPath dbus.Object
 	return nil
 }
 
+// DebugInfo is retained for D-Bus compatibility but no longer exposes
+// adapter or device details.
 func (b *SysBluetooth) DebugInfo() (info string, busErr *dbus.Error) {
-	info = fmt.Sprintf("adapters: %s\ndevices: %s", marshalJSON(b.adapters), marshalJSON(b.devices))
-	return info, nil
+	logger.Debug("dbus call DebugInfo")
+	return "", nil
 }
 
 // ClearUnpairedDevice will remove all device in unpaired list
