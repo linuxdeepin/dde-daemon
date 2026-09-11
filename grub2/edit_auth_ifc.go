@@ -6,6 +6,7 @@ package grub2
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"unicode"
 
@@ -17,6 +18,10 @@ const (
 	editAuthDBusPath      = dbusPath + "/EditAuthentication"
 	editAuthDBusInterface = dbusInterface + ".EditAuthentication"
 )
+
+// pbkdf2HashReg 用于校验 grub 编辑认证密码的 PBKDF2 哈希格式：
+// grub.pbkdf2.sha<alg>.<iterations>.<salt>.<hash>
+var pbkdf2HashReg = regexp.MustCompile(`^grub\.pbkdf2\.sha\d+\.\d+\.[0-9A-Fa-f]+\.[0-9A-Fa-f]+$`)
 
 func (e *EditAuth) GetInterfaceName() string {
 	return editAuthDBusInterface
@@ -35,6 +40,10 @@ func (e *EditAuth) Enable(sender dbus.Sender, username, password string) *dbus.E
 		!e.reg.MatchString(username) ||
 		strings.IndexFunc(password, unicode.IsSpace) >= 0 {
 		return dbusutil.ToError(fmt.Errorf("username or password invalid"))
+	}
+
+	if !pbkdf2HashReg.MatchString(password) {
+		return dbusutil.ToError(fmt.Errorf("invalid pbkdf2 hash format"))
 	}
 
 	err = e.setGrubEditShellAuth(username, password)

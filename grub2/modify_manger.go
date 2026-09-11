@@ -162,8 +162,7 @@ func (m *modifyManager) runUpdateGrubWithUnit() error {
 	var command []string
 	path, err := exec.LookPath(updateGrubCmd)
 	if err != nil {
-		path = grubMkconfigCmd
-		command = append(command, updateGrubCmd, "-o", grubScriptFile)
+		command = append(command, grubMkconfigCmd, "-o", grubScriptFile)
 	} else {
 		command = append(command, path)
 	}
