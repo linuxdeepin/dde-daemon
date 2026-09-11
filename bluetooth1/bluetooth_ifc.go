@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -291,6 +291,8 @@ func (b *Bluetooth) FeedPasskey(device dbus.ObjectPath, accept bool, passkey uin
 	return nil
 }
 
+// DebugInfo is retained for D-Bus compatibility. The system service returns
+// an empty snapshot so this proxy cannot expose adapter or device details.
 func (b *Bluetooth) DebugInfo() (info string, busErr *dbus.Error) {
 	logger.Info("dbus call DebugInfo")
 

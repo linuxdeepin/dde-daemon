@@ -9,12 +9,6 @@ import (
 func (v *Daemon) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
-			Name:    "BluetoothGetDeviceTechnologies",
-			Fn:      v.BluetoothGetDeviceTechnologies,
-			InArgs:  []string{"adapter", "device"},
-			OutArgs: []string{"technologies"},
-		},
-		{
 			Name:   "ClearTty",
 			Fn:     v.ClearTty,
 			InArgs: []string{"number"},
