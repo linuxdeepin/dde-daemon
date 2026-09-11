@@ -124,13 +124,13 @@
         },
         "capslockToggle": {
             "value": true,
-            "serial": 0,
+            "serial": 1,
             "flags": [],
             "name": "capslockToggle",
             "name[zh_CN]": "大写锁定切换通知",
             "description": "Control whether show CapsLock notify",
             "permissions": "readwrite",
-            "visibility": "private"
+            "visibility": "public"
         },
         "saveNumlockState": {
             "value": true,

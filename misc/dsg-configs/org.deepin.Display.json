@@ -15,14 +15,14 @@
     },
     "defaultTemperatureManual": {
       "value": 3500,
-      "serial": 0,
+      "serial": 1,
       "flags": [],
       "name": "default temperature manual",
       "name[zh_CN]": "手动模式下的色温默认值",
       "description": "default temperature by manual",
       "description[zh_CN]": "手动模式下的默认色温值",
       "permissions": "readwrite",
-      "visibility": "private"
+      "visibility": "public"
     },
     "customModeTime": {
       "value": "22:00-7:00",
