@@ -10,6 +10,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 	"sync"
 
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -101,6 +102,14 @@ exec tail -n +3 $0
 
 	b := bytes.NewBuffer(e.buffer[:0])
 	b.WriteString(head)
+
+	if len(e.userAuthInfoMap) > 0 {
+		users := make([]string, 0, len(e.userAuthInfoMap))
+		for user := range e.userAuthInfoMap {
+			users = append(users, user)
+		}
+		fmt.Fprintf(b, "set superusers=\"%s\"\n", strings.Join(users, " "))
+	}
 
 	for _, v := range e.userAuthInfoMap {
 		b.Write(v)
