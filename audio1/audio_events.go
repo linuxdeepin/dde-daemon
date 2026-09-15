@@ -223,7 +223,7 @@ func (a *Audio) autoSwitchPort() {
 
 		if err == nil {
 			logger.Infof("auto switch output to #%d %s:%s", card.Id, card.core.Name, firstOutput.PortName)
-			a.setPort(card.Id, firstOutput.PortName, pulse.DirectionSink)
+			a.setPort(card.Id, firstOutput.PortName, pulse.DirectionSink, true)
 		} else {
 			logger.Warning(err)
 		}
@@ -245,7 +245,7 @@ func (a *Audio) autoSwitchPort() {
 
 		if err == nil {
 			logger.Infof("auto switch input to #%d %s:%s", card.Id, card.core.Name, firstInput.PortName)
-			a.setPort(card.Id, firstInput.PortName, pulse.DirectionSource)
+			a.setPort(card.Id, firstInput.PortName, pulse.DirectionSource, true)
 		} else {
 			logger.Warning(err)
 		}
@@ -258,6 +258,18 @@ func (a *Audio) autoSwitchPort() {
 			a.inputCardName = firstInput.CardName
 			a.inputPortName = firstInput.PortName
 		}
+	}
+}
+
+func (a *Audio) switchPortAfterCardReady() {
+	handled, applied := a.completePendingManualPort()
+	if !handled {
+		a.autoSwitchPort()
+		return
+	}
+	if !applied {
+		logger.Warning("pending manual switch was not applied, skip auto switch")
+		return
 	}
 }
 
@@ -292,7 +304,7 @@ func (a *Audio) handleCardEvent(eventType int, idx uint32) {
 	a.oldCards = a.cards
 
 	// 触发自动切换
-	a.autoSwitchPort()
+	a.switchPortAfterCardReady()
 }
 
 func (a *Audio) handleCardAdded(idx uint32) {
@@ -351,7 +363,7 @@ func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
 	// 这里写所有类型的sink事件都需要触发的逻辑
 
 	// 触发自动切换
-	a.autoSwitchPort()
+	a.switchPortAfterCardReady()
 }
 
 func (a *Audio) handleSinkAdded(idx uint32) {
@@ -395,7 +407,7 @@ func (a *Audio) handleSourceEvent(eventType int, idx uint32) {
 	// 这里写所有类型的source事件都需要触发的逻辑
 
 	// 触发自动切换
-	a.autoSwitchPort()
+	a.switchPortAfterCardReady()
 }
 
 func (a *Audio) handleSourceAdded(idx uint32) {
