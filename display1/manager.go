@@ -383,6 +383,7 @@ func newManager(service *dbusutil.Service) *Manager {
 				logger.Warning("Cancel wm blackscreen failed", error)
 			}
 			m.resumeAutoBrightness()
+			m.mm.refreshAndDiff()
 		}
 	})
 

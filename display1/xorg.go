@@ -156,6 +156,7 @@ type monitorManager interface {
 	HandleEvent(ev interface{})
 	HandleScreenChanged(e *randr.ScreenChangeNotifyEvent) (cfgTsChanged bool)
 	setConcatScreen(outputNames []string) error
+	refreshAndDiff()
 	deleteConcatScreen() error
 }
 
@@ -1309,6 +1310,12 @@ func (mm *xMonitorManager) handleScreenChanged(e *randr.ScreenChangeNotifyEvent)
 		return false
 	}
 	cfgTsChanged = true
+	mm.refreshScreenResources()
+	return
+}
+
+func (mm *xMonitorManager) refreshScreenResources() {
+	// NOTE: 不要加锁
 	resources, err := mm.getScreenResourcesCurrent()
 	if err != nil {
 		logger.Warning("get current screen resources failed:", err)
@@ -1336,7 +1343,14 @@ func (mm *xMonitorManager) handleScreenChanged(e *randr.ScreenChangeNotifyEvent)
 		}
 		mm.crtcs[crtcId] = (*CrtcInfo)(reply)
 	}
-	return
+}
+
+func (mm *xMonitorManager) refreshAndDiff() {
+	mm.mu.Lock()
+	defer mm.mu.Unlock()
+	logger.Info("mm.refreshAndDiff: refresh screen resources and detect changes on system wakeup")
+	mm.refreshScreenResources()
+	mm.doDiff()
 }
 
 func (mm *xMonitorManager) showCursor(show bool) error {
