@@ -137,16 +137,51 @@ func (m *Manager) applyBrightnessScale() {
 	monitors := m.getConnectedMonitors()
 	monitorsId := monitors.getMonitorsId()
 	configs := m.getSuitableSysMonitorConfigs(m.DisplayMode, monitorsId, monitors)
+	baseUpdates := make(map[string]float64)
 	for _, config := range configs {
 		if config.Enabled {
 			effective := scaleBrightness(config.Brightness, scale)
 			err := m.setBrightness(config.Name, effective)
 			if err != nil {
+				// 硬件写入失败时显示值没有变化，不能改写逻辑基准
 				logger.Warning(err)
+				continue
+			}
+			if base, changed := brightnessBaseAfterScale(config.Brightness, scale); changed {
+				baseUpdates[config.Name] = base
 			}
 		}
 	}
+	// 显示值被钳到最低亮度时，逻辑基准按最低亮度反算并落盘，
+	// 否则关闭节能后只能恢复到钳制前的基准，与需求不符。
+	if len(baseUpdates) > 0 {
+		err := m.saveBrightnessInCfg(baseUpdates)
+		if err != nil {
+			logger.Warning(err)
+		}
+	}
 	m.syncPropBrightness()
+}
+
+// brightnessBaseAfterScale 返回应用 scale 后应记录的逻辑基准亮度。
+// 缩放结果低于最低亮度时显示值被钳到 minBrightness，需求要求关闭节能时
+// 以最低亮度为基准提高亮度（minBrightness/scale），因此把逻辑基准改写为
+// minBrightness/scale；第二个返回值表示基准是否需要更新。
+func brightnessBaseAfterScale(base, scale float64) (float64, bool) {
+	if scale <= 0 {
+		// scale 为 0 时缩放不可逆，保持原值
+		return base, false
+	}
+	if base*scale >= minBrightness {
+		return base, false
+	}
+	v := minBrightness / scale
+	if v > 1.0 {
+		v = 1.0
+	}
+	v = math.Round(v*1000) / 1000
+	// 已按同一 scale 改写过的基准不再重复落盘
+	return v, v != base
 }
 
 // scaleBrightness 将原始亮度乘以缩放系数，保证最低 0.1、最高 1.0。
