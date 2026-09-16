@@ -1,3 +1,9 @@
+dde-daemon (6.1.99.6) unstable; urgency=medium
+
+  * fix(display): inherit primary in mirror mode
+
+ -- Kun Zhang <zhangkun2@uniontech.com>  Wed, 16 Sep 2026 16:48:23 +0800
+
 dde-daemon (6.1.99.5) unstable; urgency=medium
 
   * feat(display1): migrate default brightness curve from startdde
