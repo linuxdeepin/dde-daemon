@@ -56,6 +56,12 @@ const (
 	kbdSystemConfig = "/etc/default/keyboard"
 	qtDefaultConfig = ".config/Trolltech.conf"
 	cmdSetKbd       = "/usr/bin/setxkbmap"
+
+	// Treeland keyboard layout DConfig
+	treelandAppID         = "org.deepin.dde.treeland"
+	treelandSeatName      = "org.deepin.dde.treeland.user.seat"
+	treelandKeyXkbLayout  = "xkbLayout"
+	treelandKeyXkbVariant = "xkbVariant"
 )
 
 type Keyboard struct {
@@ -89,6 +95,9 @@ type Keyboard struct {
 	devNumber      int
 	devInfos       Keyboards
 	dsgInputConfig *dconfig.DConfig
+
+	// treelandSeatConfig 用于在 Treeland 环境下跨 app 写入 user seat DConfig
+	treelandSeatConfig *dconfig.DConfig
 }
 
 func newKeyboard(service *dbusutil.Service) *Keyboard {
@@ -116,6 +125,11 @@ func newKeyboard(service *dbusutil.Service) *Keyboard {
 		if err != nil {
 			logger.Error("failed to get X conn:", err)
 			return nil
+		}
+	} else {
+		kbd.treelandSeatConfig, err = dconfig.NewDConfig(treelandAppID, treelandSeatName, "")
+		if err != nil {
+			logger.Warning("failed to init treeland seat dconfig:", err)
 		}
 	}
 
@@ -288,6 +302,11 @@ func (kbd *Keyboard) applyLayout() {
 	currentLayout := kbd.CurrentLayout.Get()
 	kbd.PropsMu.RUnlock()
 
+	if hasTreeLand {
+		kbd.applyLayoutTreeLand(currentLayout)
+		return
+	}
+
 	err := applyLayout(currentLayout)
 	if err != nil {
 		logger.Warningf("failed to set layout to %q: %v", currentLayout, err)
@@ -301,6 +320,10 @@ func (kbd *Keyboard) applyLayout() {
 }
 
 func (kbd *Keyboard) applyOptions() {
+	if hasTreeLand {
+		return
+	}
+
 	options := kbd.UserOptionList.Get()
 	if len(options) == 0 {
 		return
@@ -558,6 +581,39 @@ func applyLayout(value string) error {
 
 	var cmd = exec.Command(cmdSetKbd, "-layout", layout, "-variant", variant)
 	return cmd.Run()
+}
+
+func (kbd *Keyboard) applyLayoutTreeLand(value string) {
+	if kbd.treelandSeatConfig == nil {
+		logger.Warning("treeland seat dconfig is nil, skip applying layout")
+		return
+	}
+
+	array := strings.Split(value, layoutDelim)
+	if len(array) != 2 {
+		logger.Warningf("invalid layout: %s", value)
+		return
+	}
+
+	layout, variant := array[0], array[1]
+	if layout != "us" {
+		layout += ",us"
+
+		if variant != "" {
+			variant += ","
+		}
+	}
+
+	err := kbd.treelandSeatConfig.SetValue(treelandKeyXkbLayout, layout)
+	if err != nil {
+		logger.Warning("failed to set treeland xkbLayout:", err)
+		return
+	}
+
+	err = kbd.treelandSeatConfig.SetValue(treelandKeyXkbVariant, variant)
+	if err != nil {
+		logger.Warning("failed to set treeland xkbVariant:", err)
+	}
 }
 
 func setQtCursorBlink(rate int32, file string) error {
