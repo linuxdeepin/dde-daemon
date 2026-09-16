@@ -1669,7 +1669,11 @@ func (m *Manager) buildConfigForModeMirror(monitors Monitors) (monitorCfgs SysMo
 		return
 	}
 	maxSize := getMaxAreaSize(commonSizes)
-	primaryMonitor := m.getDefaultPrimaryMonitor(monitors)
+	// 优先沿用进入复制模式前的主屏（通常是扩展模式当时的主屏），拿不到再用默认规则。
+	primaryMonitor := m.getInheritedPrimaryMonitor(monitors)
+	if primaryMonitor == nil {
+		primaryMonitor = m.getDefaultPrimaryMonitor(monitors)
+	}
 	for _, monitor := range monitors {
 		cfg := monitor.toBasicSysConfig()
 		cfg.Enabled = true
@@ -1690,21 +1694,36 @@ func (m *Manager) buildConfigForModeMirror(monitors Monitors) (monitorCfgs SysMo
 	return
 }
 
+// getMirrorConfigs 获取本次复制模式要应用的显示器配置。
+// 已保存的复制配置会被一直复用，其主屏标记要按当前主屏刷新，否则会冻结在首次生成时的值上。
+// needSaveCfg 表示配置发生了变化，需要存盘。
+func (m *Manager) getMirrorConfigs(monitorsId monitorsId, monitors Monitors) (configs SysMonitorConfigs, needSaveCfg bool, err error) {
+	configs = m.getSysScreenConfig(monitorsId).getMonitorConfigs(DisplayModeMirror, "")
+	if len(configs) == 0 {
+		configs, err = m.buildConfigForModeMirror(monitors)
+		return configs, err == nil, err
+	}
+
+	primaryMonitor := m.getInheritedPrimaryMonitor(monitors)
+	if primaryMonitor == nil {
+		logger.Debug("keep the saved mirror primary, no primary to inherit")
+		return configs, false, nil
+	}
+
+	if config := configs.getByUuid(primaryMonitor.uuid); config != nil && config.Enabled && !config.Primary {
+		configs.setPrimary(primaryMonitor.uuid)
+		return configs, true, nil
+	}
+	return configs, false, nil
+}
+
 func (m *Manager) applyModeMirror(monitorsId monitorsId, monitorMap map[uint32]*Monitor, options applyOptions) (err error) {
 	logger.Debug("apply mode mirror")
 	monitors := getConnectedMonitors(monitorMap)
-	screenCfg := m.getSysScreenConfig(monitorsId)
 
-	needSaveCfg := false
-
-	configs := screenCfg.getMonitorConfigs(DisplayModeMirror, "")
-
-	if len(configs) == 0 {
-		needSaveCfg = true
-		configs, err = m.buildConfigForModeMirror(monitors)
-		if err != nil {
-			return
-		}
+	configs, needSaveCfg, err := m.getMirrorConfigs(monitorsId, monitors)
+	if err != nil {
+		return
 	}
 
 	err = m.applySysMonitorConfigs(DisplayModeMirror, monitorsId, monitorMap, configs, options)
@@ -1713,6 +1732,7 @@ func (m *Manager) applyModeMirror(monitorsId monitorsId, monitorMap map[uint32]*
 	}
 
 	if needSaveCfg {
+		screenCfg := m.getSysScreenConfig(monitorsId)
 		screenCfg.setMonitorConfigs(DisplayModeMirror, "", configs)
 		m.setSysScreenConfig(monitorsId, screenCfg)
 		return m.saveSysConfig("mode mirror")
@@ -2551,6 +2571,19 @@ const (
 
 func (err *applyFailed) Error() string {
 	return fmt.Sprintf("apply failed, reason: %v, original error: %v", err.reason, err.err)
+}
+
+// getInheritedPrimaryMonitor 返回要继续沿用的主屏，即当前主屏（通常是进入复制模式前的扩展模式主屏）。
+// 当前主屏未知、或已不在可用显示器列表中时返回 nil，由调用方决定兜底策略。
+func (m *Manager) getInheritedPrimaryMonitor(monitors Monitors) *Monitor {
+	m.PropsMu.RLock()
+	name := m.Primary
+	m.PropsMu.RUnlock()
+
+	if name == "" {
+		return nil
+	}
+	return monitors.GetByName(name)
 }
 
 func (m *Manager) getDefaultPrimaryMonitor(monitors []*Monitor) *Monitor {
