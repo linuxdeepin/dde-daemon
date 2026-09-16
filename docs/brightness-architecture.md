@@ -127,6 +127,13 @@ func scaleBrightness(base, scale float64) float64 {
 }
 ```
 
+显示值被钳到最低亮度时，逻辑基准同步反算改写：若 `base × scale < minBrightness`，
+说明缩放已触底，配置中的逻辑基准改写为 `minBrightness / scale`。
+这样关闭节能时按 `minBrightness / (1 - X)` 恢复亮度，之后改降低比例也从该基准折算
+（需求：自动降低后低于总亮度 10% 时显示 10%，关闭节能时以 10% 为基准提高亮度）。
+未被钳制（`base × scale ≥ minBrightness`）时逻辑基准保持原值，比例切换按原始亮度折算；
+改写仅在硬件写入成功且基准值确实变化时落盘一次。
+
 ### 3.5 各亮度写入路径
 
 | 路径 | 写入值 | 缩放 | 保存配置 |
@@ -137,7 +144,7 @@ func scaleBrightness(base, scale float64) float64 {
 | `RefreshBrightness` | `scaleBrightness(config.Brightness, scale)` | 是 | 否 |
 | 配置应用（新显示器接入、模式切换） | `scaleBrightness(config.Brightness, scale)` | 是 | 否 |
 | 自动亮度推荐值 | `scaleBrightness(recommended, scale)` | 是 | 渐变完成后保存 `recommended` |
-| Scale 变化（节能开关/比例变化） | `scaleBrightness(config.Brightness, newScale)` | 是 | 否 |
+| Scale 变化（节能开关/比例变化） | `scaleBrightness(config.Brightness, newScale)` | 是 | 被钳到最低亮度时改写基准 |
 | 色温 gamma 重设 | `monitor.Brightness`（实际值） | 否 | 否 |
 | 熄屏半亮（screenBlack） | `oldBrightness * 0.5` 或 `0.02` | 否 | 否 |
 
@@ -178,8 +185,9 @@ transition.Update(T)     ← 平滑渐变到新目标
 | `SetAndSaveBrightness(V)` | `V`（用户输入） | `saveBrightnessInCfg` |
 | `ChangeBrightness` | 新步进值 | `saveBrightnessInCfg` |
 | 自动亮度渐变完成 | `recommendedBrightness` | `saveBrightnessInCfg` |
+| Scale 变化且显示值被钳到最低亮度 | `minBrightness / scale` | `saveBrightnessInCfg` |
 
-Scale 变化、`RefreshBrightness`、配置应用、色温重设 **不保存配置**。
+Scale 变化（未钳制）、`RefreshBrightness`、配置应用、色温重设 **不保存配置**。
 
 ---
 
