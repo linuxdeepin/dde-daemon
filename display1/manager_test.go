@@ -63,18 +63,37 @@ func Test_getInheritedPrimaryMonitor(t *testing.T) {
 	edp := newMirrorTestMonitor(1, "eDP-1", "uuid-edp")
 	hdmi := newMirrorTestMonitor(2, "HDMI-0", "uuid-hdmi")
 	monitors := Monitors{edp, hdmi}
+	id := monitorsId{v1: "uuid-edp,uuid-hdmi"}
 	m := newMirrorTestManager()
 
+	// 扩展模式下用当前主屏
+	m.DisplayMode = DisplayModeExtend
 	m.Primary = "HDMI-0"
-	assert.Equal(t, hdmi, m.getInheritedPrimaryMonitor(monitors))
+	assert.Equal(t, hdmi, m.getInheritedPrimaryMonitor(id, monitors))
+
+	// 仅显示模式下当前主屏是用户选中的那块唯一显示器，不代表扩展模式主屏
+	m.DisplayMode = DisplayModeOnlyOne
+	assert.Nil(t, m.getInheritedPrimaryMonitor(id, monitors))
 
 	// 当前主屏未知时不作继承
+	m.DisplayMode = DisplayModeExtend
 	m.Primary = ""
-	assert.Nil(t, m.getInheritedPrimaryMonitor(monitors))
+	assert.Nil(t, m.getInheritedPrimaryMonitor(id, monitors))
 
 	// randr 1.2 以下的老回退路径会把主屏名设成 Default
 	m.Primary = "Default"
-	assert.Nil(t, m.getInheritedPrimaryMonitor(monitors))
+	assert.Nil(t, m.getInheritedPrimaryMonitor(id, monitors))
+
+	// 扩展模式下保存的主屏优先，即便当前处于仅显示模式、当前主屏是副屏
+	m.DisplayMode = DisplayModeOnlyOne
+	m.Primary = "eDP-1"
+	saveExtendPrimary(m, id, "uuid-hdmi")
+	assert.Equal(t, hdmi, m.getInheritedPrimaryMonitor(id, monitors))
+
+	// 扩展模式下保存的主屏已不在可用显示器列表中：回落到当前主屏
+	m.DisplayMode = DisplayModeExtend
+	saveExtendPrimary(m, id, "uuid-gone")
+	assert.Equal(t, edp, m.getInheritedPrimaryMonitor(id, monitors))
 }
 
 func Test_getMirrorConfigs(t *testing.T) {
@@ -83,9 +102,10 @@ func Test_getMirrorConfigs(t *testing.T) {
 	monitors := Monitors{edp, hdmi}
 	id := monitorsId{v1: "uuid-edp,uuid-hdmi"}
 
-	// 首次生成复制配置：主屏沿用当前主屏，而不是内置屏优先的默认规则
+	// 首次生成复制配置：主屏沿用扩展模式主屏，而不是内置屏优先的默认规则
 	m := newMirrorTestManager()
 	m.builtinMonitor = edp
+	m.DisplayMode = DisplayModeExtend
 	m.Primary = "HDMI-0"
 	configs, needSaveCfg, err := m.getMirrorConfigs(id, monitors)
 	assert.NoError(t, err)
@@ -101,7 +121,31 @@ func Test_getMirrorConfigs(t *testing.T) {
 	assert.True(t, configs.getByUuid("uuid-edp").Primary)
 	assert.False(t, configs.getByUuid("uuid-hdmi").Primary)
 
+	// 先切到仅副屏显示，再切复制模式：主屏要跟随扩展模式主屏，而不是那块副屏
+	m = newMirrorTestManager()
+	m.builtinMonitor = edp
+	m.DisplayMode = DisplayModeOnlyOne
+	m.Primary = "HDMI-0"
+	saveExtendPrimary(m, id, "uuid-edp")
+	configs, needSaveCfg, err = m.getMirrorConfigs(id, monitors)
+	assert.NoError(t, err)
+	assert.True(t, needSaveCfg)
+	assert.True(t, configs.getByUuid("uuid-edp").Primary)
+	assert.False(t, configs.getByUuid("uuid-hdmi").Primary)
+
+	// 没有扩展模式记录时，仅显示模式下的当前主屏同样不能作为继承源
+	m = newMirrorTestManager()
+	m.builtinMonitor = edp
+	m.DisplayMode = DisplayModeOnlyOne
+	m.Primary = "HDMI-0"
+	configs, needSaveCfg, err = m.getMirrorConfigs(id, monitors)
+	assert.NoError(t, err)
+	assert.True(t, needSaveCfg)
+	assert.True(t, configs.getByUuid("uuid-edp").Primary)
+
 	// 已保存的复制配置：主屏标记要刷新成当前主屏
+	m = newMirrorTestManager()
+	m.DisplayMode = DisplayModeExtend
 	saveMirrorConfigs := func(primary, disabledName string) {
 		configs := SysMonitorConfigs{
 			{Name: "eDP-1", UUID: "uuid-edp", Enabled: true},
@@ -148,4 +192,14 @@ func Test_getMirrorConfigs(t *testing.T) {
 	assert.NoError(t, err)
 	assert.False(t, needSaveCfg)
 	assert.True(t, configs.getByUuid("uuid-edp").Primary)
+}
+
+// saveExtendPrimary 模拟"扩展模式主屏"：把扩展模式配置里的主屏写成 primaryUuid。
+func saveExtendPrimary(m *Manager, id monitorsId, primaryUuid string) {
+	m.sysConfig.Config.Screens[id.v1] = &SysScreenConfig{
+		Extend: &SysMonitorModeConfig{Monitors: SysMonitorConfigs{
+			{Name: "eDP-1", UUID: "uuid-edp", Enabled: true, Primary: primaryUuid == "uuid-edp"},
+			{Name: "HDMI-0", UUID: "uuid-hdmi", Enabled: true, Primary: primaryUuid == "uuid-hdmi"},
+		}},
+	}
 }
