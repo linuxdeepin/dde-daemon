@@ -1661,7 +1661,7 @@ func (m *Manager) handleMonitorConnectedChanged(monitor *Monitor, connected bool
 	m.logDisplayScreenEvent()
 }
 
-func (m *Manager) buildConfigForModeMirror(monitors Monitors) (monitorCfgs SysMonitorConfigs, err error) {
+func (m *Manager) buildConfigForModeMirror(monitorsId monitorsId, monitors Monitors) (monitorCfgs SysMonitorConfigs, err error) {
 	logger.Debug("switch mode mirror")
 	commonSizes := getMonitorsCommonSizes(monitors)
 	if len(commonSizes) == 0 {
@@ -1670,7 +1670,7 @@ func (m *Manager) buildConfigForModeMirror(monitors Monitors) (monitorCfgs SysMo
 	}
 	maxSize := getMaxAreaSize(commonSizes)
 	// 优先沿用进入复制模式前的主屏（通常是扩展模式当时的主屏），拿不到再用默认规则。
-	primaryMonitor := m.getInheritedPrimaryMonitor(monitors)
+	primaryMonitor := m.getInheritedPrimaryMonitor(monitorsId, monitors)
 	if primaryMonitor == nil {
 		primaryMonitor = m.getDefaultPrimaryMonitor(monitors)
 	}
@@ -1700,11 +1700,11 @@ func (m *Manager) buildConfigForModeMirror(monitors Monitors) (monitorCfgs SysMo
 func (m *Manager) getMirrorConfigs(monitorsId monitorsId, monitors Monitors) (configs SysMonitorConfigs, needSaveCfg bool, err error) {
 	configs = m.getSysScreenConfig(monitorsId).getMonitorConfigs(DisplayModeMirror, "")
 	if len(configs) == 0 {
-		configs, err = m.buildConfigForModeMirror(monitors)
+		configs, err = m.buildConfigForModeMirror(monitorsId, monitors)
 		return configs, err == nil, err
 	}
 
-	primaryMonitor := m.getInheritedPrimaryMonitor(monitors)
+	primaryMonitor := m.getInheritedPrimaryMonitor(monitorsId, monitors)
 	if primaryMonitor == nil {
 		logger.Debug("keep the saved mirror primary, no primary to inherit")
 		return configs, false, nil
@@ -2573,14 +2573,26 @@ func (err *applyFailed) Error() string {
 	return fmt.Sprintf("apply failed, reason: %v, original error: %v", err.reason, err.err)
 }
 
-// getInheritedPrimaryMonitor 返回要继续沿用的主屏，即当前主屏（通常是进入复制模式前的扩展模式主屏）。
-// 当前主屏未知、或已不在可用显示器列表中时返回 nil，由调用方决定兜底策略。
-func (m *Manager) getInheritedPrimaryMonitor(monitors Monitors) *Monitor {
+// getInheritedPrimaryMonitor 返回复制模式要沿用的主屏，即扩展模式的主屏：
+// 优先取该显示器组合在扩展模式下保存的主屏；其次取当前主屏，但仅显示模式下的当前主屏
+// 是用户选中的那块唯一显示器，不代表扩展模式主屏，不能作为继承源。
+// 都取不到时返回 nil，由调用方回落到默认规则或保留已保存的主屏。
+func (m *Manager) getInheritedPrimaryMonitor(monitorsId monitorsId, monitors Monitors) *Monitor {
+	for _, config := range m.getSysScreenConfig(monitorsId).getMonitorConfigs(DisplayModeExtend, "") {
+		if !config.Primary {
+			continue
+		}
+		if monitor := monitors.GetByUuid(config.UUID); monitor != nil {
+			return monitor
+		}
+		break
+	}
+
 	m.PropsMu.RLock()
-	name := m.Primary
+	mode, name := m.DisplayMode, m.Primary
 	m.PropsMu.RUnlock()
 
-	if name == "" {
+	if mode == DisplayModeOnlyOne || name == "" {
 		return nil
 	}
 	return monitors.GetByName(name)
