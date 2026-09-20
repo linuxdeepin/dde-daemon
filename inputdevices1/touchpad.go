@@ -259,20 +259,21 @@ func (tpad *Touchpad) updateDXTpads() {
 		tpad.devInfos = append(tpad.devInfos, info)
 	}
 
-	tpad.PropsMu.Lock()
-	var v string
-	if tpad.TPadEnable {
-		if len(tpad.devInfos) == 0 {
-			tpad.setPropExist(false)
-		} else {
-			tpad.setPropExist(true)
-			v = tpad.devInfos.string()
-		}
-	} else {
+	hasSystemTouchpad := func() bool {
 		if tpad.sysTouchPad != nil {
 			sysTpList, _ := tpad.sysTouchPad.DeviceList().Get(0)
-			tpad.setPropExist(len(sysTpList) > 0)
+			return len(sysTpList) > 0
 		}
+		return false
+	}
+
+	tpad.PropsMu.Lock()
+	var v string
+	if len(tpad.devInfos) == 0 && !hasSystemTouchpad() {
+		tpad.setPropExist(false)
+	} else {
+		tpad.setPropExist(true)
+		v = tpad.devInfos.string()
 	}
 
 	tpad.setPropDeviceList(v)
