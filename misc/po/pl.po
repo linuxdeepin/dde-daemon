@@ -324,7 +324,7 @@ msgstr "Ekran blokady"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:17
 msgid "Show/Hide the dock"
-msgstr "Wyświetl/Ukryj dok"
+msgstr "Pokaż/ukryj dok"
 
 #: ../../keybinding1/shortcuts/id_name_map.go:18
 msgid "Shutdown interface"
