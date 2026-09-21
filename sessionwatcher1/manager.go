@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-api/soundutils"
 	libdisplay "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.display1"
 	login1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.login1"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -58,6 +59,22 @@ func newManager(service *dbusutil.Service) (*Manager, error) {
 	manager.systemSigLoop = dbusutil.NewSignalLoop(systemConn, 10)
 	manager.systemSigLoop.Start()
 	manager.loginManager.InitSignalExt(manager.systemSigLoop, true)
+
+	_, err = manager.loginManager.ConnectPrepareForSleep(func(isSleep bool) {
+		logger.Infof("PrepareForSleep: %v", isSleep)
+		if !isSleep {
+			logger.Info("system wakeup, play wakeup sound")
+			go func() {
+				err := soundutils.PlaySystemSound(soundutils.EventWakeup, "")
+				if err != nil {
+					logger.Warning("play wakeup sound failed:", err)
+				}
+			}()
+		}
+	})
+	if err != nil {
+		logger.Warning("failed to connect signal PrepareForSleep:", err)
+	}
 
 	// default as active
 	manager.IsActive = true
