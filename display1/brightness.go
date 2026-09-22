@@ -106,7 +106,13 @@ func (m *Manager) changeBrightness(raised bool) error {
 			logger.Warning(err)
 			continue
 		}
-		successMap[monitor.Name] = unscaleBrightness(br, m.getBrightnessScale())
+		// 配置保存屏幕实际显示值：setBrightness 会把 <=0.1 钳到最低亮度，
+		// 这里同样钳制，避免存入低于最低亮度的值破坏"配置=显示值"的不变量。
+		displayed := br
+		if displayed < minBrightness {
+			displayed = minBrightness
+		}
+		successMap[monitor.Name] = displayed
 	}
 	err := m.saveBrightnessInCfg(successMap)
 	if err != nil {
@@ -122,7 +128,8 @@ func (m *Manager) initBrightness() {
 	configs := m.getSuitableSysMonitorConfigs(m.DisplayMode, monitorsId, monitors)
 	for _, config := range configs {
 		if config.Enabled {
-			m.Brightness[config.Name] = scaleBrightness(config.Brightness, m.getBrightnessScale())
+			// 配置中保存的即屏幕实际显示值，直接使用
+			m.Brightness[config.Name] = config.Brightness
 		}
 	}
 }

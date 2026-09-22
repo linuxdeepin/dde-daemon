@@ -203,7 +203,8 @@ func (m *Manager) RefreshBrightness() *dbus.Error {
 	configs := m.getSuitableSysMonitorConfigs(m.DisplayMode, monitorsId, monitors)
 	for _, config := range configs {
 		if config.Enabled {
-			err := m.setBrightness(config.Name, scaleBrightness(config.Brightness, m.getBrightnessScale()))
+			// 配置中保存的即屏幕实际显示值，直接恢复，不再施加缩放
+			err := m.setBrightness(config.Name, config.Brightness)
 			if err != nil {
 				logger.Warning(err)
 			}
@@ -234,8 +235,9 @@ func (m *Manager) SetAndSaveBrightness(outputName string, value float64) *dbus.E
 		return dbusutil.ToError(err)
 	}
 
+	// 保存屏幕实际显示值本身，唤醒/刷新时直接恢复
 	err = m.saveBrightnessInCfg(map[string]float64{
-		outputName: unscaleBrightness(value, m.getBrightnessScale()),
+		outputName: value,
 	})
 	if err != nil {
 		logger.Warning(err)

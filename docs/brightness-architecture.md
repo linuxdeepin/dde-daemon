@@ -110,42 +110,55 @@ func calcBrightnessScale(enabled bool, dropPercent uint32) float64 {
 | 开启 | 20 | 0.8 |
 | 开启 | 0 | 1.0 |
 
-### 3.4 Scale 应用策略
+### 3.4 Scale 应用策略（存显示值、切换时换算）
 
-亮度有"逻辑值"和"实际值"两个概念：
+采用**"存显示值、切换时换算一次"**模型：
 
-- **逻辑值**：配置中保存的原始亮度，不受节能影响
-- **实际值**：写入硬件的亮度，前端 `Brightness` 属性显示的值
+- **显示值**：写入硬件、前端 `Brightness` 属性显示、并**保存到配置**的值
+- 缩放**只在节能开关切换或降低比例变化的那一刻一次性换算**；唤醒、刷新、
+  配置应用等恢复路径**直接使用配置里保存的显示值**，不再反复施加缩放
+
+> 为什么放弃旧的"存逻辑值 × scale"模型：`scale = 0.9` 时逻辑值最大为 1.0，
+> 显示值最大只能到 `1.0 × 0.9 = 0.9`，节能开启时**永远无法显示 100%**；
+> 且 `unscale` 反算的基准被 `isValidBrightness`（≤ 1.0）钳制后往返丢失，
+> 待机唤醒后 `RefreshBrightness` 重新乘 scale 会把用户设置的 100% 降到 90%。
+
+节能开关/比例变化时的换算函数：
 
 ```go
-func scaleBrightness(base, scale float64) float64 {
-    if base <= 0.1 {
-        return 0.1           // 最低亮度不缩放
+// 先按旧系数还原逻辑亮度（上限 100%），再乘新系数，钳制到 [0.1, 1.0]
+func rescaleBrightness(displayed, oldScale, newScale float64) float64 {
+    if oldScale <= 0 {
+        return displayed // 旧系数为 0 不可逆，保持原值
     }
-    v := base * scale
-    return max(0.1, min(1.0, v))
+    logical := min(displayed/oldScale, 1.0)
+    return clamp(logical*newScale, minBrightness, 1.0)
 }
 ```
 
-显示值被钳到最低亮度时，逻辑基准同步反算改写：若 `base × scale < minBrightness`，
-说明缩放已触底，配置中的逻辑基准改写为 `minBrightness / scale`。
-这样关闭节能时按 `minBrightness / (1 - X)` 恢复亮度，之后改降低比例也从该基准折算
-（需求：自动降低后低于总亮度 10% 时显示 10%，关闭节能时以 10% 为基准提高亮度）。
-未被钳制（`base × scale ≥ minBrightness`）时逻辑基准保持原值，比例切换按原始亮度折算；
-改写仅在硬件写入成功且基准值确实变化时落盘一次。
+对应需求：
+
+- 开启节能（oldScale=1.0 → 1-X%）：显示 = 当前 × (1-X%)
+- 关闭节能（oldScale=1-X% → 1.0）：显示 = 当前 / (1-X%)，上限 100%
+- 换算后低于 10% 显示 10%（低于总亮度 10% 时显示 10%）
+- 关闭节能以 10% 为基准提高 = 10% / (1-X%)
+- 改降低比例时按"提高后的值"折算，逻辑值超 100% 按 100% 上限折算
+
+自动亮度的推荐值仍是实时重算，用 `scaleBrightness(recommended, scale)` 连续缩放；
+因其不作为显示基准往返读取，不存在丢失问题。
 
 ### 3.5 各亮度写入路径
 
 | 路径 | 写入值 | 缩放 | 保存配置 |
 |---|---|---|---|
 | `SetBrightness(V)` | 直接写 `V` | 否 | 否 |
-| `SetAndSaveBrightness(V)` | 直接写 `V` | 否 | 是，存 `V` |
-| `ChangeBrightness` | 基于实际值加减步长 | 否 | 是，存新值 |
-| `RefreshBrightness` | `scaleBrightness(config.Brightness, scale)` | 是 | 否 |
-| 配置应用（新显示器接入、模式切换） | `scaleBrightness(config.Brightness, scale)` | 是 | 否 |
-| 自动亮度推荐值 | `scaleBrightness(recommended, scale)` | 是 | 渐变完成后保存 `recommended` |
-| Scale 变化（节能开关/比例变化） | `scaleBrightness(config.Brightness, newScale)` | 是 | 被钳到最低亮度时改写基准 |
-| 色温 gamma 重设 | `monitor.Brightness`（实际值） | 否 | 否 |
+| `SetAndSaveBrightness(V)` | 直接写 `V` | 否 | 是，存显示值 `V` |
+| `ChangeBrightness` | 基于显示值加减步长 | 否 | 是，存新显示值 |
+| `RefreshBrightness` | `config.Brightness`（显示值） | 否 | 否 |
+| 配置应用（新显示器接入、模式切换） | `config.Brightness`（显示值） | 否 | 否 |
+| 自动亮度推荐值 | `scaleBrightness(recommended, scale)` | 是 | 渐变完成后存显示值 |
+| Scale 变化（节能开关/比例变化） | `rescaleBrightness(显示值, oldScale, newScale)` | 换算 | 显示值变化时落盘 |
+| 色温 gamma 重设 | `monitor.Brightness`（显示值） | 否 | 否 |
 | 熄屏半亮（screenBlack） | `oldBrightness * 0.5` 或 `0.02` | 否 | 否 |
 
 ### 3.6 自动亮度与缩放同时生效
@@ -155,18 +168,19 @@ func scaleBrightness(base, scale float64) float64 {
 ```text
 自动推荐值 R（逻辑值）
     ↓ × scale
-缩放后目标 T（实际值）
+缩放后目标 T（显示值）
     ↓
 transition.Update(T)     ← 平滑渐变到新目标
 ```
 
-渐变完成时保存的是 `R`（原始推荐值），不是 `T`（缩放后目标值）。
+渐变完成时保存的是显示值 `T = scaleBrightness(R, scale)`，
+这样自动亮度关闭后恢复路径可直接沿用，节能开关切换时也按显示值统一换算。
 
-手动设置亮度时，自动亮度被禁用，后续 scale 变化不影响手动值。
+手动设置亮度时，自动亮度被禁用，后续 scale 变化按显示值换算。
 
 ### 3.7 低电量
 
-低电量通过 `PowerSavingModeAutoWhenBatteryLow` 自动触发节能模式，走同样的缩放路径。Display1 不需要额外处理。
+低电量通过 `PowerSavingModeAutoWhenBatteryLow` 自动触发节能模式，走同样的换算路径。Display1 不需要额外处理。
 
 ---
 
@@ -174,30 +188,35 @@ transition.Update(T)     ← 平滑渐变到新目标
 
 ### 4.1 配置内容
 
-`SysMonitorConfig.Brightness` 始终保存**逻辑值**（未缩放）。
+`SysMonitorConfig.Brightness` 保存**显示值**（屏幕实际显示、含节能缩放后的值）。
 
-`Manager.Brightness` 属性保存**实际值**（缩放后），供前端 D-Bus 消费者显示。
+`Manager.Brightness` 属性同样是**显示值**，供前端 D-Bus 消费者显示，两者一致。
+
+缩放系数（`m.brightnessScale`）**不持久化**：启动时从 Power1 读取当前节能状态，
+仅记录系数供自动亮度使用，不换算已保存的显示值。若节能状态相对上次关机发生变化，
+亮度会在下一次节能开关/比例变化时重新同步。
 
 ### 4.2 保存时序
 
 | 触发 | 保存值 | 调用 |
 |---|---|---|
-| `SetAndSaveBrightness(V)` | `V`（用户输入） | `saveBrightnessInCfg` |
-| `ChangeBrightness` | 新步进值 | `saveBrightnessInCfg` |
-| 自动亮度渐变完成 | `recommendedBrightness` | `saveBrightnessInCfg` |
-| Scale 变化且显示值被钳到最低亮度 | `minBrightness / scale` | `saveBrightnessInCfg` |
+| `SetAndSaveBrightness(V)` | `V`（用户输入的显示值） | `saveBrightnessInCfg` |
+| `ChangeBrightness` | 新步进显示值 | `saveBrightnessInCfg` |
+| 自动亮度渐变完成 | `scaleBrightness(recommended, scale)`（显示值） | `saveBrightnessInCfg` |
+| Scale 变化（节能开关/比例变化）且显示值改变 | `rescaleBrightness(...)` | `saveBrightnessInCfg` |
 
-Scale 变化（未钳制）、`RefreshBrightness`、配置应用、色温重设 **不保存配置**。
+`RefreshBrightness`、配置应用、色温重设 **不保存配置**。
 
 ---
 
 ## 5. 前向兼容
 
-旧版本（无节能缩放）的配置格式不变，`SysMonitorConfig.Brightness` 语义始终是逻辑值。升级后：
+配置格式不变，`SysMonitorConfig.Brightness` 为显示值。升级后：
 
-- 首次启动时 `initBrightnessScale` 读取 Power1 属性
-- 若节能已开启，立即通过 `applyBrightnessScale()` 降低亮度
-- 若节能关闭，`scale = 1.0`，行为与旧版本完全一致
+- 首次启动时 `initBrightnessScale` 读取 Power1 属性，仅记录缩放系数，不换算已存显示值
+- 节能关闭（`scale = 1.0`）时显示值即逻辑值，行为与旧版本完全一致
+- 若从旧"存逻辑值"版本升级且升级时节能恰好开启：配置里的旧逻辑值会被当作显示值
+  直接恢复（略偏亮），在下一次节能开关/比例变化时按新模型重新换算归位
 
 旧 session/power1 的 `PowerSavingModeBrightnessData`、`multiBrightnessWithPsm`、`saveBrightnessWhilePsm` 已全部移除，无需迁移。
 
