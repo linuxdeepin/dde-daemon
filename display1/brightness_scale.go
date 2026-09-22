@@ -214,8 +214,5 @@ func unscaleBrightness(effective, scale float64) float64 {
 	if v < minBrightness {
 		v = minBrightness
 	}
-	if v > 1.0 {
-		v = 1.0
-	}
 	return math.Round(v*1000) / 1000
 }

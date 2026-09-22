@@ -30,9 +30,14 @@ func TestUnscaleBrightnessBoundary(t *testing.T) {
 	if got := unscaleBrightness(0.5, 0.0); math.Abs(got-0.5) > 1e-9 {
 		t.Errorf("scale=0: got %v, want 0.5", got)
 	}
-	// 场景6：还原后不超过 1.0（节能设 100%，drop=40% → 1.67 clamp 到 1.0）
-	if got := unscaleBrightness(1.0, 0.6); math.Abs(got-1.0) > 1e-9 {
-		t.Errorf("上限 clamp: got %v, want 1.0", got)
+	// 场景6：节能设 100%（drop=40%），还原为 1.667（不再钳制到 1.0）
+	// round-trip 验证：scaleBrightness(1.667, 0.6) = 1.0，唤醒后亮度保持 100%
+	got = unscaleBrightness(1.0, 0.6)
+	if math.Abs(got-1.667) > 0.001 {
+		t.Errorf("节能设100%%: got %v, want 1.667", got)
+	}
+	if restored := scaleBrightness(got, 0.6); math.Abs(restored-1.0) > 1e-9 {
+		t.Errorf("round-trip 恢复失败: %v, want 1.0", restored)
 	}
 }
 
