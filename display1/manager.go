@@ -832,7 +832,8 @@ func (m *Manager) handleSysConfigUpdated(newSysConfig *SysRootConfig) {
 							continue
 						}
 
-						err := m.setBrightness(config.Name, scaleBrightness(config.Brightness, m.getBrightnessScale()))
+						// 配置中保存的即屏幕实际显示值，直接恢复
+						err := m.setBrightness(config.Name, config.Brightness)
 						if err != nil {
 							logger.Warning(err)
 						}
@@ -2577,7 +2578,8 @@ func (m *Manager) applySysMonitorConfigs(mode byte, monitorsId monitorsId, monit
 				}
 			}
 
-			err := m.setBrightness(config.Name, scaleBrightness(config.Brightness, m.getBrightnessScale()))
+			// 配置中保存的即屏幕实际显示值，直接恢复
+			err := m.setBrightness(config.Name, config.Brightness)
 			if err != nil {
 				logger.Warningf("call setBrightness err: %v, config.Name: %s", err, config.Name)
 				monitors := m.getConnectedMonitors()
@@ -2588,7 +2590,7 @@ func (m *Manager) applySysMonitorConfigs(mode byte, monitorsId monitorsId, monit
 					continue
 				}
 
-				err := m.setBrightness(monitor.Name, scaleBrightness(config.Brightness, m.getBrightnessScale()))
+				err := m.setBrightness(monitor.Name, config.Brightness)
 				if err != nil {
 					logger.Warningf("call setBrightness err: %v, monitor.Name: %s", err, monitor.Name)
 				}
