@@ -28,6 +28,13 @@
 **XSession**: =Autologin/Session=
 
 
+** DDM
+
+**Config**: =/etc/ddm.conf=
+**Autologin**: =Autologin/User=
+**XSession**: =Autologin/Session=
+
+
 ** Slim
 
 **Config**: =/etc/slim.conf=
