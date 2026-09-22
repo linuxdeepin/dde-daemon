@@ -252,7 +252,8 @@ func (abm *AutoBrightnessManager) setBrightness(value float64) error {
 }
 
 // onTransitionComplete 渐变正常完成后保存亮度到配置。
-// 保存的是推荐原始值（未缩放），不是 transition 完成时的实际亮度值。
+// 配置中保存的是屏幕实际显示值（推荐值按当前系数缩放后的结果），
+// 这样自动亮度关闭后 RefreshBrightness 可直接恢复，且节能开关切换时统一换算。
 func (abm *AutoBrightnessManager) onTransitionComplete(value float64) {
 	abm.mutex.RLock()
 	manager := abm.manager
@@ -265,9 +266,10 @@ func (abm *AutoBrightnessManager) onTransitionComplete(value float64) {
 	if builtinMonitor == nil {
 		return
 	}
-	logger.Infof("[AutoBrightness] transition complete (effective=%.3f), saving recommended brightness %.3f for %s", value, recommended, builtinMonitor.Name)
+	displayed := scaleBrightness(recommended, manager.getBrightnessScale())
+	logger.Infof("[AutoBrightness] transition complete (effective=%.3f), saving displayed brightness %.3f (recommended=%.3f) for %s", value, displayed, recommended, builtinMonitor.Name)
 	if err := manager.saveBrightnessInCfg(map[string]float64{
-		builtinMonitor.Name: recommended,
+		builtinMonitor.Name: displayed,
 	}); err != nil {
 		logger.Warning("[AutoBrightness] failed to save brightness after transition:", err)
 	}
