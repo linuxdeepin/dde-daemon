@@ -11,7 +11,6 @@ import (
 	_ "github.com/linuxdeepin/dde-daemon/display1"
 	"github.com/linuxdeepin/dde-daemon/loader"
 
-	_ "github.com/linuxdeepin/dde-daemon/audio1"
 	_ "github.com/linuxdeepin/dde-daemon/bluetooth1"
 	_ "github.com/linuxdeepin/dde-daemon/screenedge1"
 
