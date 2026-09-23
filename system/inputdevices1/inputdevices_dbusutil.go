@@ -51,6 +51,32 @@ func (v *Touchpad) emitPropChangedEnable(value bool) error {
 	return v.service.EmitPropertyChanged(v, "Enable", value)
 }
 
+func (v *Touchpad) setPropExpandEnable(value bool) (changed bool) {
+	if v.ExpandEnable != value {
+		v.ExpandEnable = value
+		v.emitPropChangedExpandEnable(value)
+		return true
+	}
+	return false
+}
+
+func (v *Touchpad) emitPropChangedExpandEnable(value bool) error {
+	return v.service.EmitPropertyChanged(v, "ExpandEnable", value)
+}
+
+func (v *Touchpad) setPropExpandIsExist(value bool) (changed bool) {
+	if v.ExpandIsExist != value {
+		v.ExpandIsExist = value
+		v.emitPropChangedExpandIsExist(value)
+		return true
+	}
+	return false
+}
+
+func (v *Touchpad) emitPropChangedExpandIsExist(value bool) error {
+	return v.service.EmitPropertyChanged(v, "ExpandIsExist", value)
+}
+
 func (v *Touchpad) emitPropChangedIsExist(value bool) error {
 	return v.service.EmitPropertyChanged(v, "IsExist", value)
 }

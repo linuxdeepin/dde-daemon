@@ -27,5 +27,10 @@ func (v *Touchpad) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     v.SetTouchpadEnable,
 			InArgs: []string{"enabled"},
 		},
+		{
+			Name:   "SetTouchpadExpandEnable",
+			Fn:     v.SetTouchpadExpandEnable,
+			InArgs: []string{"enabled"},
+		},
 	}
 }
