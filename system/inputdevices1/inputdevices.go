@@ -20,13 +20,14 @@ import (
 )
 
 const (
-	_usbDevicePath                  = "/sys/bus/usb/devices"
-	_pciWakeupDevicePath            = "/proc/acpi/wakeup"
-	_dsettingsAppID                 = "org.deepin.dde.daemon"
-	_dsettingsInputdevicesName      = "org.deepin.dde.daemon.inputdevices"
-	_dsettingsDeviceWakeupStatusKey = "deviceWakeupStatus"
-	_dsettingsTouchpadEnabledKey    = "touchpadEnabled"
-	_ps2mDevice                     = "PS2M"
+	_usbDevicePath                     = "/sys/bus/usb/devices"
+	_pciWakeupDevicePath               = "/proc/acpi/wakeup"
+	_dsettingsAppID                    = "org.deepin.dde.daemon"
+	_dsettingsInputdevicesName         = "org.deepin.dde.daemon.inputdevices"
+	_dsettingsDeviceWakeupStatusKey    = "deviceWakeupStatus"
+	_dsettingsTouchpadEnabledKey       = "touchpadEnabled"
+	_dsettingsTouchpadExpandEnabledKey = "touchpadExpandEnabled"
+	_ps2mDevice                        = "PS2M"
 )
 
 //go:generate dbusutil-gen -type InputDevices,Touchpad inputdevices.go touchpad.go
@@ -85,6 +86,10 @@ func (m *InputDevices) init() {
 		m.SupportWakeupDevices = make(map[string]string)
 		m.updateSupportWakeupDevices()
 		m.newTouchpad()
+		touchpad := m.getTouchpad()
+		if touchpad == nil {
+			return
+		}
 		if m.dsgInputDevices == nil {
 			return
 		}
@@ -93,13 +98,20 @@ func (m *InputDevices) init() {
 			logger.Warning(err)
 			return
 		}
-		enabled := v.Value().(bool)
+		enabled, ok := v.Value().(bool)
+		if !ok {
+			logger.Warning("invalid touchpad enabled config value type")
+			return
+		}
 		// 启动恢复：直接根据 dconfig 重建 udev 规则文件。
 		// 不调用 setTouchpadEnable，因为 newTouchpad 已将 Enable 设为 dconfig 值，
 		// setPropEnable 会判定 changed=false 从而跳过 udev 写入，
 		// 导致强制关机后 udev 规则文件丢失但无法重建。
-		err = m.touchpad.setTouchpadEnableViaUdev(enabled)
+		err = touchpad.setTouchpadEnableViaUdev(enabled)
 		if err != nil {
+			logger.Warning(err)
+		}
+		if err := touchpad.syncTouchpadExpand(enabled); err != nil {
 			logger.Warning(err)
 		}
 	}()
@@ -247,8 +259,47 @@ func (m *InputDevices) initDSettings(sysBus *dbusutil.Service) {
 		//dsg配置数据改变
 		m.dsgInputDevices.InitSignalExt(m.systemSigLoop, true)
 		_, err = m.dsgInputDevices.ConnectValueChanged(func(key string) {
-			if key == _dsettingsDeviceWakeupStatusKey {
+			switch key {
+			case _dsettingsDeviceWakeupStatusKey:
 				getDeviceWakeupStatusFunc()
+			case _dsettingsTouchpadEnabledKey:
+				v, err := m.dsgInputDevices.Value(0, _dsettingsTouchpadEnabledKey)
+				if err != nil {
+					logger.Warning(err)
+					return
+				}
+				enabled, ok := v.Value().(bool)
+				if !ok {
+					logger.Warning("invalid touchpad enabled config value type")
+					return
+				}
+				touchpad := m.getTouchpad()
+				if touchpad == nil {
+					return
+				}
+				if err := touchpad.setTouchpadEnable(enabled); err != nil {
+					logger.Warning(err)
+				}
+				if err := touchpad.syncTouchpadExpand(enabled); err != nil {
+					logger.Warning(err)
+				}
+			case _dsettingsTouchpadExpandEnabledKey:
+				v, err := m.dsgInputDevices.Value(0, _dsettingsTouchpadExpandEnabledKey)
+				if err != nil {
+					logger.Warning(err)
+					return
+				}
+				if _, ok := v.Value().(bool); !ok {
+					logger.Warning("invalid touchpad expand enabled config value type")
+					return
+				}
+				touchpad := m.getTouchpad()
+				if touchpad == nil {
+					return
+				}
+				if err := touchpad.syncTouchpadExpand(touchpad.Enable); err != nil {
+					logger.Warning(err)
+				}
 			}
 		})
 	}
@@ -412,6 +463,12 @@ func (m *InputDevices) newTouchpad() {
 	}
 
 	m.touchpad = t
+}
+
+func (m *InputDevices) getTouchpad() *Touchpad {
+	m.touchpadMu.Lock()
+	defer m.touchpadMu.Unlock()
+	return m.touchpad
 }
 
 func (m *InputDevices) removeTouchscreen(dev *libinputDevice) {
