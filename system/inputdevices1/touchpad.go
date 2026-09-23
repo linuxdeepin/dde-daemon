@@ -5,6 +5,7 @@
 package inputdevices1
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -23,6 +24,9 @@ const (
 
 	// udev 规则文件路径
 	udevRuleFile = "/etc/udev/rules.d/90-dde-touchpad.rules"
+
+	// 触控板防误触开关节点路径
+	touchpadExpandSwitchFile = "/proc/uos/touchpad_expand_switch"
 
 	// dconfig 配置项
 	_dsettingsPS2MouseAsTouchpadKey = "ps2MouseAsTouchPadEnabled"
@@ -48,18 +52,24 @@ SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="*ps/2*", ENV{LIBINPUT_IGNORE
 }
 
 type Touchpad struct {
-	service      *dbusutil.Service
-	allowCallers *securityloader.AllowCallerRegistry
-	Enable       bool
-	DeviceList   []string
-	udevMonitor  *udevMonitor
+	service       *dbusutil.Service
+	allowCallers  *securityloader.AllowCallerRegistry
+	Enable        bool
+	DeviceList    []string
+	ExpandIsExist bool
+	ExpandEnable  bool
+	udevMonitor   *udevMonitor
 }
 
 func newTouchpad(service *dbusutil.Service, allowCallers *securityloader.AllowCallerRegistry) *Touchpad {
+	enabled, err := getDsgConf(_dsettingsTouchpadEnabledKey)
+	if err != nil {
+		logger.Warning(err)
+	}
 	t := &Touchpad{
 		service:      service,
 		allowCallers: allowCallers,
-		Enable:       getDsgConf(),
+		Enable:       enabled,
 	}
 
 	// 初始化 udev 监听器
@@ -95,7 +105,28 @@ func (t *Touchpad) SetTouchpadEnable(sender dbus.Sender, enabled bool) *dbus.Err
 		logger.Warningf("SetTouchpadEnable authorization failed: %q", err.Error())
 		return dbusutil.ToError(err)
 	}
-	return dbusutil.ToError(t.setTouchpadEnable(enabled))
+	if err := t.setTouchpadEnable(enabled); err != nil {
+		return dbusutil.ToError(err)
+	}
+	if err := t.syncTouchpadExpand(enabled); err != nil {
+		logger.Warning("failed to sync touchpad expand:", err)
+	}
+	return nil
+}
+
+func (t *Touchpad) SetTouchpadExpandEnable(sender dbus.Sender, enabled bool) *dbus.Error {
+	err := securityloader.AuthorizeWithPolkit(
+		t.allowCallers,
+		securityloader.InputDevicesScope,
+		sender,
+		t.service.Conn(),
+		"org.deepin.dde.inputdevices.set-touchpad",
+	)
+	if err != nil {
+		logger.Warningf("SetTouchpadExpandEnable authorization failed: %q", err.Error())
+		return dbusutil.ToError(err)
+	}
+	return dbusutil.ToError(t.setTouchpadExpandEnable(enabled, true))
 }
 
 func (t *Touchpad) setTouchpadEnable(enabled bool) error {
@@ -109,7 +140,7 @@ func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 	}
 
 	// 1. 保存到 dconfig（持久化配置）
-	err := setDsgConf(enabled)
+	err := setDsgConf(_dsettingsTouchpadEnabledKey, enabled)
 	if err != nil {
 		logger.Warning("failed to save to dconfig:", err)
 		return err
@@ -122,6 +153,61 @@ func (t *Touchpad) setTouchpadEnable(enabled bool) error {
 	}
 
 	return nil
+}
+
+// syncTouchpadExpand 根据全局触控板状态和 DConfig 偏好同步防误触开关。
+// 该函数只写 proc 节点，不更新 DConfig。
+func (t *Touchpad) syncTouchpadExpand(globalEnabled bool) error {
+	if err := touchpadExpandExist(touchpadExpandSwitchFile); err != nil {
+		t.setPropExpandIsExist(false)
+		logger.Info("/proc/uos/touchpad_expand_switch not exist.")
+		return nil
+	}
+	t.setPropExpandIsExist(true)
+
+	expandEnabled, err := getDsgConf(_dsettingsTouchpadExpandEnabledKey)
+	if err != nil {
+		logger.Warning(err)
+		// DConfig 默认值为 true，读取失败时按默认值恢复实际状态。
+		expandEnabled = true
+	}
+	return t.setTouchpadExpandEnable(globalEnabled && expandEnabled, false)
+}
+
+func (t *Touchpad) setTouchpadExpandEnable(enabled bool, updateDsg bool) error {
+	logger.Infof("setTouchpadExpandEnable: %v", enabled)
+	if err := touchpadExpandExist(touchpadExpandSwitchFile); err != nil {
+		return err
+	}
+	t.setPropExpandIsExist(true)
+
+	if updateDsg {
+		if err := setDsgConf(_dsettingsTouchpadExpandEnabledKey, enabled); err != nil {
+			logger.Warning("failed to save touchpad expand config:", err)
+			return err
+		}
+		// DConfig 保存用户偏好；全局触控板关闭时，实际防误触状态仍保持关闭。
+		enabled = t.Enable && enabled
+	}
+
+	arg := "enable"
+	if !enabled {
+		arg = "disable"
+	}
+	if err := os.WriteFile(touchpadExpandSwitchFile, []byte(arg), 0644); err != nil {
+		logger.Warning("failed to write touchpad expand switch:", err)
+		return err
+	}
+	t.setPropExpandEnable(enabled)
+	return nil
+}
+
+func touchpadExpandExist(filePath string) error {
+	if filePath != touchpadExpandSwitchFile {
+		return errors.New("filePath is invalid")
+	}
+	_, err := os.Stat(touchpadExpandSwitchFile)
+	return err
 }
 
 func (t *Touchpad) refreshTouchpadDevices() error {
@@ -340,7 +426,7 @@ func getPS2MouseAsTouchpadEnabled() bool {
 	return !ok || v
 }
 
-func setDsgConf(enable bool) error {
+func setDsgConf(key string, enable bool) error {
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
 		return err
@@ -354,32 +440,36 @@ func setDsgConf(enable bool) error {
 	if err != nil {
 		return err
 	}
-	err = dsManager.SetValue(0, _dsettingsTouchpadEnabledKey, dbus.MakeVariant(enable))
+	err = dsManager.SetValue(0, key, dbus.MakeVariant(enable))
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func getDsgConf() bool {
+func getDsgConf(key string) (bool, error) {
 	sysBus, err := dbus.SystemBus()
 	if err != nil {
-		return false
+		return false, err
 	}
 	ds := configManager.NewConfigManager(sysBus)
 	confPath, err := ds.AcquireManager(0, _dsettingsAppID, _dsettingsInputdevicesName, "")
 	if err != nil {
-		return false
+		return false, err
 	}
 	dsManager, err := configManager.NewManager(sysBus, confPath)
 	if err != nil {
-		return false
+		return false, err
 	}
-	data, err := dsManager.Value(0, _dsettingsTouchpadEnabledKey)
+	data, err := dsManager.Value(0, key)
 	if err != nil {
-		return false
+		return false, err
 	}
-	return data.Value().(bool)
+	value, ok := data.Value().(bool)
+	if !ok {
+		return false, errors.New("invalid dconfig value type")
+	}
+	return value, nil
 }
 
 func (t *Touchpad) GetInterfaceName() string {
