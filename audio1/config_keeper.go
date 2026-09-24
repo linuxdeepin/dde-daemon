@@ -22,7 +22,7 @@ type PortConfig struct {
 	IncreaseVolume bool
 	Balance        float64
 	Mode           string // 端口可选的配置文件(模式/编解码等)
-	Mute           bool   // 静音改为全局，此配置废弃
+	Mute           bool   // 按设备静音时该端口的静音状态
 }
 
 type CardConfig struct {
@@ -261,6 +261,15 @@ func (ck *ConfigKeeper) GetMode(card *Card, portName string) string {
 
 	_, port := ck.GetCardAndPortConfig(card, portName)
 	return port.Mode
+}
+
+func (ck *ConfigKeeper) SetMute(card *Card, portName string, mute bool) {
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
+
+	_, port := ck.GetCardAndPortConfig(card, portName)
+	port.Mute = mute
+	ck.Save()
 }
 
 func (ck *ConfigKeeper) SetMuteOutput(mute bool) {

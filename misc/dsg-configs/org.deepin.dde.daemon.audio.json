@@ -179,6 +179,17 @@
       "description[zh_CN]": "是否禁用ALSA混音器自动静音模式",
       "permissions": "readwrite",
       "visibility": "private"
+    },
+    "globalMuteEnabled": {
+      "value": true,
+      "serial": 0,
+      "flags": ["global"],
+      "name": "GlobalMuteEnabled",
+      "name[zh_CN]": "全局静音",
+      "description": "global mute switch",
+      "description[zh_CN]": "全局静音开关，true为全局静音，false为按设备静音",
+      "permissions": "readwrite",
+      "visibility": "private"
     }
   }
 }
