@@ -13,6 +13,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/linuxdeepin/go-lib/strv"
@@ -63,6 +64,7 @@ const (
 	dsgKeyBluezModeDefault        = "bluezModeDefault"
 	dsgKeyMonoEnabled             = "monoEnabled"
 	dsgKeyReduceNoiseEnabled      = "reduceNoiseEnabled" // 降噪配置，保存用户数据
+	dsgKeyGlobalMuteEnabled       = "globalMuteEnabled"
 
 	dsgKeyFirstRun                 = "firstRun"
 	dsgKeyInputVolume              = "inputVolume"
@@ -193,6 +195,9 @@ type Audio struct {
 	pendingManualPortMu  sync.Mutex
 	pendingManualPort    *pendingManualPortSwitch
 
+	// 全局静音开关：true=全局静音，false=按设备(端口)静音
+	globalMuteEnabled atomic.Bool
+
 	// 控制中心-声音-设备管理 是否显示
 	controlCenterDeviceManager dconfig.Bool
 
@@ -220,6 +225,8 @@ func newAudio(service *dbusutil.Service) *Audio {
 		AudioServerState: AudioStateChanged,
 		cardFixGroup:     newCardFixGroup(),
 	}
+	// 默认使用全局静音，保持历史行为
+	a.globalMuteEnabled.Store(true)
 
 	var err error
 	a.audioDConfig, err = dconfig.NewDConfig(dconfigDaemonAppId, dconfigAudioId, "")
@@ -1337,8 +1344,12 @@ func (a *Audio) resumeSinkConfig(s *Sink) {
 		logger.Warning(dbusErr)
 	}
 
-	logger.Debugf("set %v mute %v", s.Name, GetConfigKeeper().Mute.MuteOutput || !portConfig.Enabled)
-	s.setMute(GetConfigKeeper().Mute.MuteOutput || portConfig.Volume == 0)
+	mute := GetConfigKeeper().Mute.MuteOutput || portConfig.Volume == 0
+	if !a.globalMuteEnabled.Load() {
+		mute = portConfig.Mute || portConfig.Volume == 0
+	}
+	logger.Debugf("set %v mute %v", s.Name, mute)
+	s.setMute(mute)
 	// 即将切换通道，就不要设置单声道了，避免触发多次切换
 	auto, _, _ := a.checkAutoSwitchOutputPort()
 	if !auto {
@@ -1371,7 +1382,11 @@ func (a *Audio) resumeSourceConfig(s *Source) {
 		logger.Warning(dbusError)
 	}
 
-	s.setMute(GetConfigKeeper().Mute.MuteInput || !portConfig.Enabled)
+	mute := GetConfigKeeper().Mute.MuteInput || !portConfig.Enabled
+	if !a.globalMuteEnabled.Load() {
+		mute = portConfig.Mute || !portConfig.Enabled
+	}
+	s.setMute(mute)
 	s.setReduceNoise(a.ReduceNoise)
 }
 
@@ -1872,6 +1887,17 @@ func (a *Audio) initDsgProp() error {
 	}
 	getReduceNoiseEnabled()
 
+	getGlobalMuteEnabled := func() {
+		val, err := a.audioDConfig.GetValueBool(dsgKeyGlobalMuteEnabled)
+		if err != nil {
+			logger.Warning(err)
+		} else {
+			a.globalMuteEnabled.Store(val)
+			logger.Info("global mute enabled:", val)
+		}
+	}
+	getGlobalMuteEnabled()
+
 	a.audioDConfig.ConnectValueChanged(func(key string) {
 		switch key {
 		case dsgKeyAutoSwitchPort:
@@ -1888,6 +1914,8 @@ func (a *Audio) initDsgProp() error {
 			getMonoEnabled()
 		case dsgKeyVolumeIncrease:
 			a.handleVolumeIncrease()
+		case dsgKeyGlobalMuteEnabled:
+			getGlobalMuteEnabled()
 		}
 	})
 
