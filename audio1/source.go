@@ -197,7 +197,19 @@ func (s *Source) SetMute(value bool) *dbus.Error {
 	}
 
 	s.audio.context().SetSourceMuteByIndex(s.index, value)
-	GetConfigKeeper().SetMuteInput(value)
+	if s.audio.globalMuteEnabled.Load() {
+		GetConfigKeeper().SetMuteInput(value)
+	} else {
+		s.PropsMu.RLock()
+		cardID := s.Card
+		portName := s.ActivePort.Name
+		s.PropsMu.RUnlock()
+		if card, err := s.audio.cards.get(cardID); err != nil {
+			logger.Warning(err)
+		} else {
+			GetConfigKeeper().SetMute(card, portName, value)
+		}
+	}
 
 	if !value {
 		playFeedback()
