@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -168,6 +168,18 @@ func TestGetAutoLoginUser(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, name, "")
 
+	// ddm
+	name, err = getIniKeys("testdata/autologin/ddm_autologin.conf",
+		kfGroupDDMAutologin,
+		[]string{kfKeyDDMUser}, []string{""})
+	assert.NoError(t, err)
+	assert.Equal(t, name, "wen")
+	name, err = getIniKeys("testdata/autologin/ddm.conf",
+		kfGroupDDMAutologin,
+		[]string{kfKeyDDMUser}, []string{""})
+	assert.NoError(t, err)
+	assert.Equal(t, name, "")
+
 	// lxdm
 	name, err = getIniKeys("testdata/autologin/lxdm_autologin.conf",
 		kfGroupLXDMBase,
@@ -209,6 +221,9 @@ func Test_XSession(t *testing.T) {
 	session, _ = getIniKeys("testdata/autologin/sddm.conf", kfGroupSDDMAutologin,
 		[]string{kfKeySDDMSession}, []string{""})
 	assert.Equal(t, session, "kde-plasma.desktop")
+	session, _ = getIniKeys("testdata/autologin/ddm.conf", kfGroupDDMAutologin,
+		[]string{kfKeyDDMSession}, []string{""})
+	assert.Equal(t, session, "treeland.desktop")
 }
 
 func Test_WriteStrvData(t *testing.T) {
@@ -278,6 +293,9 @@ func Test_GetAdmGroup(t *testing.T) {
 func Test_DMFromService(t *testing.T) {
 	dm, _ := getDMFromSystemService("testdata/autologin/display-manager.service")
 	assert.Equal(t, dm, "lightdm")
+
+	dm, _ = getDMFromSystemService("testdata/autologin/ddm.service")
+	assert.Equal(t, dm, "ddm")
 }
 
 func Test_IsPasswordExpired(t *testing.T) {
