@@ -221,9 +221,7 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 	}
 
 	tempFileName = randFileName(oriFilename)
-	if len(tempFileName) > 255 {
-		tempFileName = tempFileName[:255]
-	}
+	tempFileName = truncateToBytes(tempFileName, 255)
 	sessionPath, err := transfer.Session().Get(0)
 	if err != nil {
 		logger.Warning(err)
@@ -390,13 +388,21 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 				oriFilepath = filepath.Join(dutils.GetCacheDir(), "obexd", transfer.tempFileName)
 			}
 			// 传送完成，移动到下载目录
-			realFileName := moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
+			realFileName, err := moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
+			if err != nil {
+				logger.Warning("failed to move temp file:", err)
+				newID := a.notifyFailed(a.notify, currentID, canceled)
 
-			newID := a.notifyProgress(a.notify, a.notifyID, realFileName, transfer.deviceName, 100)
+				notifyMu.Lock()
+				a.notifyID = newID
+				notifyMu.Unlock()
+			} else {
+				newID := a.notifyProgress(a.notify, a.notifyID, realFileName, transfer.deviceName, 100)
 
-			notifyMu.Lock()
-			a.notifyID = newID
-			notifyMu.Unlock()
+				notifyMu.Lock()
+				a.notifyID = newID
+				notifyMu.Unlock()
+			}
 		} else {
 			newID := a.notifyFailed(a.notify, currentID, canceled)
 
@@ -466,7 +472,41 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 	}
 }
 
-func moveTempFile(src, dest string) string {
+// truncateToBytes truncates s to at most maxBytes bytes without breaking
+// UTF-8 rune boundaries. If maxBytes is too small to hold any rune, returns
+// an empty string.
+func truncateToBytes(s string, maxBytes int) string {
+	if len(s) <= maxBytes {
+		return s
+	}
+	runes := []rune(s)
+	for len(runes) > 0 {
+		runes = runes[:len(runes)-1]
+		if len(string(runes)) <= maxBytes {
+			return string(runes)
+		}
+	}
+	return ""
+}
+
+// truncateFilenameToBytes truncates the basename of path to at most maxBytes
+// bytes without breaking UTF-8 rune boundaries, preserving the file extension.
+func truncateFilenameToBytes(path string, maxBytes int) string {
+	dir := filepath.Dir(path)
+	base := filepath.Base(path)
+	if len(base) <= maxBytes {
+		return path
+	}
+	ext := filepath.Ext(base)
+	name := strings.TrimSuffix(base, ext)
+	availableBytes := maxBytes - len(ext)
+	if availableBytes <= 0 {
+		return filepath.Join(dir, truncateToBytes(base, maxBytes))
+	}
+	return filepath.Join(dir, truncateToBytes(name, availableBytes)+ext)
+}
+
+func moveTempFile(src, dest string) (string, error) {
 	// Security: Check if destination is a symlink to prevent symlink attacks.
 	// A malicious local user could create a symlink in the download directory
 	// pointing to a sensitive file (e.g., ~/.bashrc, ~/.config/autostart/*.desktop).
@@ -474,9 +514,13 @@ func moveTempFile(src, dest string) string {
 	if fi, err := os.Lstat(dest); err == nil {
 		if fi.Mode()&os.ModeSymlink != 0 {
 			logger.Error("refusing to overwrite symlink:", dest)
-			return ""
+			return "", errors.New("refusing to overwrite symlink")
 		}
 	}
+
+	// Truncate filename to fit within filesystem NAME_MAX (255 bytes)
+	// without breaking UTF-8 rune boundaries, preserving file extension.
+	dest = truncateFilenameToBytes(dest, 255)
 
 	count := 0
 	suffix := filepath.Ext(dest)
@@ -488,12 +532,13 @@ func moveTempFile(src, dest string) string {
 		} else {
 			err := dutils.MoveFile(src, dest)
 			if err != nil {
-				fmt.Println("failed to move file:", err)
+				logger.Error("failed to move file:", err)
+				return dest, err
 			}
 			break
 		}
 	}
-	return dest
+	return dest, nil
 }
 
 // 获取随机字母+数字组合字符串
