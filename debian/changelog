@@ -1,3 +1,11 @@
+dde-daemon (6.1.108) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#1257)
+  * feat: support touchpad expand switch
+  * fix(gesture): restore glib loop for touch timers
+
+ -- zhangkun <zhangkun2@uniontech.com>  Mon, 12 Oct 2026 18:17:52 +0800
+
 dde-daemon (6.1.107) unstable; urgency=medium
 
   * fix: keep brightness baseline in sync when power-saving scaling
