@@ -15,6 +15,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	dutils "github.com/linuxdeepin/go-lib/utils"
 
@@ -34,6 +35,8 @@ const (
 
 	receiveFileNotifyTimeout = int32(30 * time.Second / time.Millisecond)
 	receiveFileNeverTimeout  = 0
+
+	nameMaxBytes = 255
 )
 
 var receiveBaseDir = userdir.Get(userdir.Download)
@@ -195,6 +198,64 @@ func validateFilename(name string) error {
 	return nil
 }
 
+// truncateFileName trims name to at most maxBytes bytes without splitting a
+// multibyte UTF-8 rune, preserving the extension when possible.
+// name must be valid UTF-8. Non-positive limits produce an empty name.
+func truncateFileName(name string, maxBytes int) string {
+	if maxBytes <= 0 {
+		return ""
+	}
+	if len(name) <= maxBytes {
+		return name
+	}
+
+	ext := filepath.Ext(name)
+	base := strings.TrimSuffix(name, ext)
+
+	if maxBytes <= len(ext) {
+		return runeTruncate(name, maxBytes)
+	}
+
+	stem := runeTruncate(base, maxBytes-len(ext))
+	if stem == "" {
+		return runeTruncate(name, maxBytes)
+	}
+	return stem + ext
+}
+
+// runeTruncate trims s to at most maxBytes bytes on a rune boundary.
+// s must be valid UTF-8. Non-positive limits produce an empty string.
+func runeTruncate(s string, maxBytes int) string {
+	if maxBytes <= 0 {
+		return ""
+	}
+	var b strings.Builder
+	for _, r := range s {
+		if b.Len()+utf8.RuneLen(r) > maxBytes {
+			break
+		}
+		b.WriteRune(r)
+	}
+	return b.String()
+}
+
+// collisionFileName inserts a uniqueness suffix before the extension of baseName.
+// For valid UTF-8 inputs and a positive limit, the result is at most maxBytes
+// bytes and preserves UTF-8 rune boundaries. Non-positive limits return "".
+func collisionFileName(baseName, suffix string, maxBytes int) string {
+	if maxBytes <= 0 {
+		return ""
+	}
+	avail := maxBytes - len(suffix)
+	if avail <= 0 {
+		return runeTruncate(suffix, maxBytes)
+	}
+	name := truncateFileName(baseName, avail)
+	ext := filepath.Ext(name)
+	stem := strings.TrimSuffix(name, ext)
+	return stem + suffix + ext
+}
+
 // AuthorizePush 用于请求用户接收文件
 func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName string, busErr *dbus.Error) {
 	logger.Infof("dbus call obexAgent AuthorizePush with transferPath %v", transferPath)
@@ -221,9 +282,7 @@ func (a *obexAgent) AuthorizePush(transferPath dbus.ObjectPath) (tempFileName st
 	}
 
 	tempFileName = randFileName(oriFilename)
-	if len(tempFileName) > 255 {
-		tempFileName = tempFileName[:255]
-	}
+	tempFileName = truncateFileName(tempFileName, nameMaxBytes)
 	sessionPath, err := transfer.Session().Get(0)
 	if err != nil {
 		logger.Warning(err)
@@ -383,6 +442,7 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 		currentID := a.notifyID
 		notifyMu.Unlock()
 
+		var newID uint32
 		if value == transferStatusComplete {
 			// 如果获取不到FileName时，文件应该在~/.cache/obexd下
 			oriFilepath, err := transfer.Filename().Get(0)
@@ -390,20 +450,19 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 				oriFilepath = filepath.Join(dutils.GetCacheDir(), "obexd", transfer.tempFileName)
 			}
 			// 传送完成，移动到下载目录
-			realFileName := moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
-
-			newID := a.notifyProgress(a.notify, a.notifyID, realFileName, transfer.deviceName, 100)
-
-			notifyMu.Lock()
-			a.notifyID = newID
-			notifyMu.Unlock()
+			realFileName, err := moveTempFile(oriFilepath, filepath.Join(receiveBaseDir, transfer.oriFilename))
+			if err != nil {
+				logger.Warning("failed to move temp file:", err)
+				newID = a.notifyFailed(a.notify, currentID, canceled)
+			} else {
+				newID = a.notifyProgress(a.notify, currentID, realFileName, transfer.deviceName, 100)
+			}
 		} else {
-			newID := a.notifyFailed(a.notify, currentID, canceled)
-
-			notifyMu.Lock()
-			a.notifyID = newID
-			notifyMu.Unlock()
+			newID = a.notifyFailed(a.notify, currentID, canceled)
 		}
+		notifyMu.Lock()
+		a.notifyID = newID
+		notifyMu.Unlock()
 
 		a.receiveChMu.Lock()
 		select {
@@ -466,34 +525,38 @@ func (a *obexAgent) receiveProgress(transfer *transferObj) {
 	}
 }
 
-func moveTempFile(src, dest string) string {
-	// Security: Check if destination is a symlink to prevent symlink attacks.
-	// A malicious local user could create a symlink in the download directory
-	// pointing to a sensitive file (e.g., ~/.bashrc, ~/.config/autostart/*.desktop).
-	// Use os.Lstat to detect symlinks without following them.
-	if fi, err := os.Lstat(dest); err == nil {
-		if fi.Mode()&os.ModeSymlink != 0 {
-			logger.Error("refusing to overwrite symlink:", dest)
-			return ""
+func moveTempFile(src, dest string) (string, error) {
+	// Security: Use os.Lstat to detect symlinks and existing entries.
+	// A malicious local user could create a symlink in the download
+	// directory pointing to a sensitive file. Lstat (without following
+	// symlinks) ensures we skip any existing entry, including symlinks.
+	dir := filepath.Dir(dest)
+	baseName := truncateFileName(filepath.Base(dest), nameMaxBytes)
+
+	var candidate string
+	for count := 0; ; count++ {
+		candidateName := baseName
+		if count > 0 {
+			suffix := fmt.Sprintf("(%d)", count)
+			candidateName = collisionFileName(baseName, suffix, nameMaxBytes)
 		}
+		candidate = filepath.Join(dir, candidateName)
+
+		if _, err := os.Lstat(candidate); err == nil {
+			continue
+		} else if !errors.Is(err, os.ErrNotExist) {
+			return "", err
+		}
+		break
 	}
 
-	count := 0
-	suffix := filepath.Ext(dest)
-	fileName := strings.TrimSuffix(dest, suffix)
-	for {
-		if dutils.IsFileExist(dest) {
-			count++
-			dest = fmt.Sprintf("%v(%v)%v", fileName, count, suffix)
-		} else {
-			err := dutils.MoveFile(src, dest)
-			if err != nil {
-				fmt.Println("failed to move file:", err)
-			}
-			break
-		}
+	if err := dutils.MoveFile(src, candidate); err != nil {
+		return "", err
 	}
-	return dest
+	if !dutils.IsFileExist(candidate) {
+		return "", errors.New("failed to move file: destination not found")
+	}
+	return candidate, nil
 }
 
 // 获取随机字母+数字组合字符串
