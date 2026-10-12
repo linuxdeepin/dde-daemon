@@ -8,6 +8,7 @@ import (
 	"os"
 
 	configManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
+	glib "github.com/linuxdeepin/go-gir/glib-2.0"
 
 	// modules:
 	_ "github.com/linuxdeepin/dde-daemon/accounts1"
@@ -136,6 +137,12 @@ func main() {
 	}
 
 	startBacklightHelperAsync(service.Conn())
+
+	// system/gesture1 的 g_timeout（触屏长按/短按/tap 判定）挂在 GLib 默认主上下文上，
+	// 必须有人迭代该上下文才会触发；这里恢复 Go 侧的 g_main_loop_run（2026-08
+	// 随 power 模块迁移被一并删除，导致长按右键、短按、tap 全部失效）。
+	go glib.StartLoop()
+
 	loader.SetService(service)
 	loader.StartAll()
 	defer loader.StopAll()
