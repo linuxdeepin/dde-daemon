@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -383,11 +383,19 @@ func (m *Manager) isUnitEnable(unit string) bool {
 }
 
 func (m *Manager) writeInstallerTimeZone(timezone string) error {
-	fh, err := os.OpenFile(installerTimeZoneFile, os.O_WRONLY|os.O_TRUNC, 0666)
+	fh, err := os.OpenFile(installerTimeZoneFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
 	defer fh.Close()
+
+	// The mode passed to OpenFile is masked by the process umask, but the
+	// session daemon reads this file as the desktop user, so force 0644.
+	err = fh.Chmod(0644)
+	if err != nil {
+		return err
+	}
+
 	_, err = fh.WriteString(timezone)
 	if err != nil {
 		return err
