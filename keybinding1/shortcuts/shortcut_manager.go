@@ -556,6 +556,12 @@ func (sm *ShortcutManager) grabKeystroke(shortcut Shortcut, ks *Keystroke, dummy
 		logger.Debugf("grabKeystroke failed, shortcut: %v, ks: %v, err: %v", shortcut.GetId(), ks, err)
 		return
 	}
+	// Missing keycodes are not conflicts. Conflict cleanup persists deletions
+	// to DConfig, so it must not remove temporarily unavailable bindings.
+	if len(keyList) == 0 {
+		logger.Warningf("no X11 keycodes for shortcut %q (%s); keeping configured binding", shortcut.GetId(), ks)
+		return
+	}
 
 	var conflictCount int
 	var idx = -1
@@ -581,7 +587,7 @@ func (sm *ShortcutManager) grabKeystroke(shortcut Shortcut, ks *Keystroke, dummy
 		if !dummy {
 			err = key.Grab(sm.conn)
 			if err != nil {
-				logger.Debug(err)
+				logger.Warningf("failed to grab X11 shortcut %q (%s), key %v: %v", shortcut.GetId(), ks, key, err)
 				// Rollback
 				idx = i
 				break
@@ -1293,7 +1299,8 @@ func (sm *ShortcutManager) AddMedia(wmObj wm.Wm) {
 
 	keys, err := sm.shortcutMediaConfigMgr.KeyList().Get(0)
 	if err != nil {
-		logger.Warning(err)
+		logger.Warningf("failed to list DConfig keys for %s: %v", constants.DSettingsKeybindingMediaKeyId, err)
+		return
 	}
 
 	for _, id := range keys {
@@ -1306,12 +1313,16 @@ func (sm *ShortcutManager) AddMedia(wmObj wm.Wm) {
 		}
 		strokesValue, err := sm.shortcutMediaConfigMgr.Value(0, id)
 		if err != nil {
-			logger.Warning(err)
+			logger.Warningf("failed to read DConfig %s key %q: %v", constants.DSettingsKeybindingMediaKeyId, id, err)
+			continue
 		}
 		keystrokes, err := convertToStringSlice(strokesValue.Value())
 		if err != nil {
-			logger.Warning("Failed to convert keystrokes:", err)
+			logger.Warningf("invalid DConfig %s key %q (type %T): %v", constants.DSettingsKeybindingMediaKeyId, id, strokesValue.Value(), err)
 			continue
+		}
+		if len(keystrokes) == 0 {
+			logger.Warningf("DConfig %s key %q returned an empty binding (type %T); no X11 key to register", constants.DSettingsKeybindingMediaKeyId, id, strokesValue.Value())
 		}
 		saveCallback, loadCallback := sm.getMediaConfigCallbacks()
 		gs := NewShortcut(wmObj, id, ShortcutTypeMedia, keystrokes, name, saveCallback, loadCallback)
