@@ -37,11 +37,11 @@ const (
 var mediaIdActionMap = map[string]*Action{
 	"numlock":  &Action{Type: ActionTypeShowNumLockOSD},
 	"capslock": &Action{Type: ActionTypeShowCapsLockOSD},
-	// Open MimeType
+	// MIME applications
 	"homePage":   NewOpenMimeTypeAction(mimeTypeBrowser),
 	"www":        NewOpenMimeTypeAction(mimeTypeBrowser),
 	"explorer":   NewOpenMimeTypeAction(mimeTypeDir),
-	"mail":       NewOpenMimeTypeAction(mimeTypeMail),
+	"mail":       NewLaunchMimeTypeAction(mimeTypeMail), // Preserve desktop Exec arguments.
 	"audioMedia": NewOpenMimeTypeAction(mimeTypeAudioMedia),
 	"music":      NewOpenMimeTypeAction(mimeTypeAudioMedia),
 	"pictures":   NewOpenMimeTypeAction(mimeTypeImagePng),

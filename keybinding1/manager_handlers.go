@@ -7,7 +7,6 @@ package keybinding
 import (
 	"fmt"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -313,8 +312,12 @@ func (m *Manager) launchDefaultForMimeType(mimeType string) {
 	}
 	defer appInfo.Unref()
 
-	dAppInfo := gio.ToDesktopAppInfo(appInfo)
-	desktopFile := filepath.Base(dAppInfo.GetFilename())
+	// Use the desktop ID directly, as expected by the application manager.
+	desktopFile := appInfo.GetId()
+	if desktopFile == "" {
+		logger.Warning("no desktop file for mime type:", mimeType)
+		return
+	}
 
 	err := m.runDesktopFile(desktopFile)
 	if err != nil {
