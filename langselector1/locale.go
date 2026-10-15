@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -22,10 +22,10 @@ import (
 	"github.com/linuxdeepin/dde-api/userenv"
 	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
-	libnetwork "github.com/linuxdeepin/go-dbus-factory/session/org.deepin.dde.network1"
 	notifications "github.com/linuxdeepin/go-dbus-factory/session/org.freedesktop.notifications"
 	lastore "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.lastore1"
 	localehelper "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.localehelper1"
+	networkmanager "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.networkmanager"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	. "github.com/linuxdeepin/go-lib/gettext"
 	"github.com/linuxdeepin/go-lib/strv"
@@ -260,21 +260,18 @@ func sendNotify(icon, summary, body string) {
 }
 
 func isNetworkEnable() (bool, error) {
-	sessionBus, err := dbus.SessionBus()
+	systemBus, err := dbus.SystemBus()
 	if err != nil {
 		return false, err
 	}
-	network := libnetwork.NewNetwork(sessionBus)
-	state, err := network.State().Get(0)
+	network := networkmanager.NewManager(systemBus)
+	state, err := network.PropState().Get(0)
 	if err != nil {
 		return false, err
 	}
-	// if state < 50, network disconnect
-	if state < 50 {
-		return false, nil
-	}
-
-	return true, nil
+	// NM_STATE_CONNECTED_GLOBAL: local/site connectivity alone is insufficient.
+	const connectedGlobal = 70
+	return state == connectedGlobal, nil
 }
 
 func getCurrentUserLocale() (locale string) {
@@ -420,15 +417,13 @@ func (lang *LangSelector) setLocale(locale string) {
 		logger.Debug("failed to get support packages", err)
 	}
 
-	// only language support packages not installed and network enabled should install
-	isInstalled := len(pkg) != 0
+	// ByLocale excludes installed packages, so a nonempty list needs installation.
+	needsInstall := len(pkg) != 0
 
-	if !isInstalled {
-		if networkEnabled {
-			sendNotify(localeIconStart, "", notifyTxtStartWithInstall)
-		} else {
-			sendNotify(localeIconStart, "", notifyTxtStart)
-		}
+	if needsInstall && networkEnabled {
+		sendNotify(localeIconStart, "", notifyTxtStartWithInstall)
+	} else {
+		sendNotify(localeIconStart, "", notifyTxtStart)
 	}
 
 	// generate locale
@@ -466,7 +461,7 @@ func (lang *LangSelector) setLocale(locale string) {
 	}
 
 	// install language support packages
-	if !isInstalled && networkEnabled {
+	if needsInstall && networkEnabled {
 		err = lang.installLangSupportPackages(locale)
 		if err != nil {
 			logger.Warning("failed to install packages:", err)
@@ -590,20 +585,15 @@ func (lang *LangSelector) getInstallLangSupportPackages(locale string) ([]string
 		return nil, dbusutil.ToError(err)
 	}
 
-	packages := ls.ByLocale(locale, false)
-	ls.Destroy()
-	return packages, nil
+	return ls.ByLocale(locale, false), nil
 }
 
 func (lang *LangSelector) installLangSupportPackages(locale string) error {
 	logger.Debug("install language support packages for locale", locale)
-	ls, err := language_support.NewLanguageSupport()
+	pkgs, err := lang.getInstallLangSupportPackages(locale)
 	if err != nil {
 		return err
 	}
-
-	pkgs := ls.ByLocale(locale, false)
-	ls.Destroy()
 	logger.Info("need to install:", pkgs)
 	return lang.installPackages(pkgs)
 }
