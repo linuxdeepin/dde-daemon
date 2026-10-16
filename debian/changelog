@@ -1,3 +1,12 @@
+dde-daemon (6.1.109) unstable; urgency=medium
+
+  * i18n: Updates for project Deepin Desktop Environment (#1275)
+  * fix: create /etc/timezone when it does not exist
+  * fix(bluetooth): receive long filenames within NAME_MAX limit
+  * fix(langselector): install missing language packages
+
+ -- zhangkun <zhangkun2@uniontech.com>  Fri, 16 Oct 2026 10:28:38 +0800
+
 dde-daemon (6.1.108) unstable; urgency=medium
 
   * i18n: Updates for project Deepin Desktop Environment (#1257)
