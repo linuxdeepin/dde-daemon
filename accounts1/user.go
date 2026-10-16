@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -780,7 +780,12 @@ func loadUserConfigInfo(u *User) {
 	var isSave = false
 	xSession, _ := kf.GetString(confGroupUser, confKeyXSession)
 	u.XSession = xSession
-	if u.XSession == "" {
+	if dm, _ := users.GetDefaultDM(); dm == "ddm" {
+		if u.XSession != "treeland" {
+			u.XSession = "treeland"
+			isSave = true
+		}
+	} else if u.XSession == "" {
 		xSession, _ = users.GetDefaultXSession()
 		u.XSession = xSession
 		isSave = true

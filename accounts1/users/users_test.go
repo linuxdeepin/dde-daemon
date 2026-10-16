@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -278,6 +278,9 @@ func Test_GetAdmGroup(t *testing.T) {
 func Test_DMFromService(t *testing.T) {
 	dm, _ := getDMFromSystemService("testdata/autologin/display-manager.service")
 	assert.Equal(t, dm, "lightdm")
+
+	dm, _ = getDMFromSystemService("testdata/autologin/ddm.service")
+	assert.Equal(t, dm, "ddm")
 }
 
 func Test_IsPasswordExpired(t *testing.T) {

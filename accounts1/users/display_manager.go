@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,7 +12,9 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
 )
@@ -43,10 +45,46 @@ const (
 	kfGroupLXDMBase               = "base"
 	kfKeyLXDMAutologin            = "autologin"
 
+	dconfigDDMAppID = "org.deepin.dde.ddm"
+	dconfigDDMName  = "org.deepin.dde.ddm"
+
+	dconfigKeyDDMAutologinUser    = "autologinUser"
+	dconfigKeyDDMAutologinSession = "autologinSession"
+
 	// values: 'yes', 'no'
 	slimKeyAutoLogin   = "auto_login"
 	slimKeyDefaultUser = "default_user"
 )
+
+var (
+	ddmDConfigMu sync.Mutex
+	ddmDConfig   *dconfig.DConfig
+)
+
+// getDDMDConfig returns the shared DConfig instance of DDM.
+// 实例懒创建，且不缓存创建错误，避免 dconfig 服务尚未就绪等瞬时失败被永久记住。
+func getDDMDConfig() (*dconfig.DConfig, error) {
+	ddmDConfigMu.Lock()
+	defer ddmDConfigMu.Unlock()
+
+	if ddmDConfig != nil {
+		return ddmDConfig, nil
+	}
+
+	cfg, err := dconfig.NewDConfig(dconfigDDMAppID, dconfigDDMName, "")
+	if err != nil {
+		return nil, err
+	}
+	ddmDConfig = cfg
+	return cfg, nil
+}
+
+// ResetDDMDConfig 丢弃缓存的 DDM DConfig 实例，供 dconfig 服务重启后重新建立连接使用。
+func ResetDDMDConfig() {
+	ddmDConfigMu.Lock()
+	defer ddmDConfigMu.Unlock()
+	ddmDConfig = nil
+}
 
 // SetAutoLoginUser set the autologin user,
 // if disable autologin, set the 'username' to empty string
@@ -60,7 +98,7 @@ func SetAutoLoginUser(username, session string) error {
 	}
 
 	name, _ := GetAutoLoginUser()
-	if name == username {
+	if name == username && username != "" {
 		return nil
 	}
 
@@ -116,6 +154,25 @@ func SetAutoLoginUser(username, session string) error {
 		}
 		return setIniKeys(sddmConfig, kfGroupSDDMAutologin,
 			keys, values)
+	case "ddm":
+		cfg, err := getDDMDConfig()
+		if err != nil {
+			return err
+		}
+		if username == "" {
+			// 禁用自动登录，同时清除用户和会话
+			if err := cfg.SetValue(dconfigKeyDDMAutologinUser, ""); err != nil {
+				return err
+			}
+			return cfg.SetValue(dconfigKeyDDMAutologinSession, "")
+		}
+		if err := cfg.SetValue(dconfigKeyDDMAutologinUser, username); err != nil {
+			return err
+		}
+		if session != "" {
+			return cfg.SetValue(dconfigKeyDDMAutologinSession, session)
+		}
+		return nil
 	case "lxdm":
 		keys := []string{kfKeySDDMUser}
 		values := []string{username}
@@ -159,6 +216,12 @@ func GetAutoLoginUser() (string, error) {
 	case "sddm":
 		return getIniKeys(sddmConfig, kfGroupSDDMAutologin,
 			[]string{kfKeySDDMUser}, []string{""})
+	case "ddm":
+		cfg, err := getDDMDConfig()
+		if err != nil {
+			return "", err
+		}
+		return cfg.GetValueString(dconfigKeyDDMAutologinUser)
 	case "lxdm":
 		return getIniKeys(lxdmConfig, kfGroupLXDMBase,
 			[]string{kfKeyLXDMAutologin}, []string{""})
@@ -322,6 +385,8 @@ func GetDefaultXSession() (string, error) {
 			return "", err
 		}
 		return strings.TrimRight(v, ".desktop"), nil
+	case "ddm":
+		return "treeland", nil
 	case "lxdm":
 		// TODO: the session value is the binary file path
 		// such as: session=/usr/bin/startlxde
@@ -347,6 +412,9 @@ func GetDMConfig() (string, error) {
 		return kdmConfig, nil
 	case "gdm", "gdm3":
 		return gdmConfig, nil
+	case "ddm":
+		// DDM 配置由 dconfig 管理，没有可监控的配置文件
+		return "", fmt.Errorf("Not supported: DDM config is managed by dconfig")
 	}
 	return "", fmt.Errorf("Not supported the display manager: %q", dm)
 }
@@ -442,6 +510,18 @@ func setIniKeys(filename, group string, keys, values []string) error {
 	return err
 }
 
+// GetDefaultDM return the current display manager name
+func GetDefaultDM() (string, error) {
+	dm, err := getDefaultDM(defaultDMFile)
+	if err != nil {
+		dm, err = getDMFromSystemService(defaultDisplayService)
+		if err != nil {
+			return "", err
+		}
+	}
+	return dm, nil
+}
+
 // Default config: /etc/X11/default-display-manager
 func getDefaultDM(file string) (string, error) {
 	if !dutils.IsFileExist(file) {
@@ -482,6 +562,8 @@ func getDMFromSystemService(service string) (string, error) {
 		return "lightdm", nil
 	case base == "gdm.service" || base == "gdm3.service":
 		return "gdm", nil
+	case base == "ddm.service":
+		return "ddm", nil
 	}
 	return "", fmt.Errorf("Unsupported the login manager: %s", base)
 }
