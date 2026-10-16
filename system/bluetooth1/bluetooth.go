@@ -438,6 +438,10 @@ func (b *SysBluetooth) removeAllObjects() {
 	}
 	b.adapters = make(map[dbus.ObjectPath]*adapter)
 	b.adaptersMu.Unlock()
+
+	b.connectedMu.Lock()
+	b.connectedDevices = make(map[dbus.ObjectPath][]*device)
+	b.connectedMu.Unlock()
 }
 
 func (b *SysBluetooth) handleInterfacesAdded(path dbus.ObjectPath, data map[string]map[string]dbus.Variant) {
@@ -863,6 +867,9 @@ func (b *SysBluetooth) removeAdapter(adapterPath dbus.ObjectPath) {
 	b.devicesMu.Lock()
 	b.devices[adapterPath] = nil
 	b.devicesMu.Unlock()
+	b.connectedMu.Lock()
+	delete(b.connectedDevices, adapterPath)
+	b.connectedMu.Unlock()
 	b.syncCommonToBackupDevices(adapterPath)
 }
 
