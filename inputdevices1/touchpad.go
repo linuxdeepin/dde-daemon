@@ -344,11 +344,15 @@ func (tpad *Touchpad) enableLeftHanded() {
 }
 
 func (tpad *Touchpad) enableNaturalScroll() {
-	enabled := tpad.NaturalScroll.Get()
+	enabled, err := tpad.NaturalScroll.GetWithError()
+	if err != nil {
+		logger.Warningf("skip natural-scroll apply, dconfig unreadable: %v", err)
+		return
+	}
 	for _, v := range tpad.devInfos {
 		err := v.EnableNaturalScroll(enabled)
 		if err != nil {
-			logger.Debugf("Enable natural scroll '%v - %v' failed: %v",
+			logger.Warningf("Enable natural scroll '%v - %v' failed: %v",
 				v.Id, v.Name, err)
 		}
 	}
@@ -366,34 +370,50 @@ func (tpad *Touchpad) setScrollDistance() {
 }
 
 func (tpad *Touchpad) enableEdgeScroll() {
-	enabled := tpad.EdgeScroll.Get()
+	enabled, err := tpad.EdgeScroll.GetWithError()
+	if err != nil {
+		logger.Warningf("skip edge-scroll apply, dconfig unreadable: %v", err)
+		return
+	}
 	for _, v := range tpad.devInfos {
 		err := v.EnableEdgeScroll(enabled)
 		if err != nil {
-			logger.Debugf("Enable edge scroll '%v - %v' failed: %v",
+			logger.Warningf("Enable edge scroll '%v - %v' failed: %v",
 				v.Id, v.Name, err)
 		}
 	}
 }
 
 func (tpad *Touchpad) enableTwoFingerScroll() {
-	vert := tpad.VertScroll.Get()
-	horiz := tpad.HorizScroll.Get()
+	vert, err := tpad.VertScroll.GetWithError()
+	if err != nil {
+		logger.Warningf("skip two-finger-scroll apply, dconfig unreadable: %v", err)
+		return
+	}
+	horiz, err := tpad.HorizScroll.GetWithError()
+	if err != nil {
+		logger.Warningf("skip two-finger-scroll apply, dconfig unreadable: %v", err)
+		return
+	}
 	for _, v := range tpad.devInfos {
 		err := v.EnableTwoFingerScroll(vert, horiz)
 		if err != nil {
-			logger.Debugf("Enable two-finger scroll '%v - %v' failed: %v",
+			logger.Warningf("Enable two-finger scroll '%v - %v' failed: %v",
 				v.Id, v.Name, err)
 		}
 	}
 }
 
 func (tpad *Touchpad) enableTapToClick() {
-	enabled := tpad.TapClick.Get()
+	enabled, err := tpad.TapClick.GetWithError()
+	if err != nil {
+		logger.Warningf("skip tap-to-click apply, dconfig unreadable: %v", err)
+		return
+	}
 	for _, v := range tpad.devInfos {
 		err := v.EnableTapToClick(enabled)
 		if err != nil {
-			logger.Debugf("Enable tap to click '%v - %v' failed: %v",
+			logger.Warningf("Enable tap to click '%v - %v' failed: %v",
 				v.Id, v.Name, err)
 		}
 	}
@@ -438,7 +458,11 @@ func (tpad *Touchpad) disableWhileTyping() {
 	}
 
 	var usedLibinput bool = false
-	enabled := tpad.DisableIfTyping.Get()
+	enabled, err := tpad.DisableIfTyping.GetWithError()
+	if err != nil {
+		logger.Warningf("skip disable-while-typing apply, dconfig unreadable: %v", err)
+		return
+	}
 	for _, v := range tpad.devInfos {
 		err := v.EnableDisableWhileTyping(enabled)
 		if err != nil {
@@ -517,7 +541,11 @@ func (tpad *Touchpad) stopSyndaemon() {
 }
 
 func (tpad *Touchpad) enablePalmDetect() {
-	enabled := tpad.PalmDetect.Get()
+	enabled, err := tpad.PalmDetect.GetWithError()
+	if err != nil {
+		logger.Warningf("skip palm-detect apply, dconfig unreadable: %v", err)
+		return
+	}
 	for _, dev := range tpad.devInfos {
 		err := dev.EnablePalmDetect(enabled)
 		if err != nil {
