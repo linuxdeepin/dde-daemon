@@ -444,7 +444,7 @@ func (m *Manager) setColorTempOneShot() {
 		name := monitor.Name
 		monitor.PropsMu.RUnlock()
 
-		// monitor.Brightness 为 0 或默认值时，从配置取原始值并应用缩放
+		// monitor.Brightness 为 0 或默认值时，从配置取实际显示值（配置中即显示值）
 		if br <= 0 {
 			var config *SysMonitorConfig
 			for _, c := range configs {
@@ -454,7 +454,7 @@ func (m *Manager) setColorTempOneShot() {
 				}
 			}
 			if config != nil {
-				br = scaleBrightness(config.Brightness, m.getBrightnessScale())
+				br = config.Brightness
 			}
 		}
 
