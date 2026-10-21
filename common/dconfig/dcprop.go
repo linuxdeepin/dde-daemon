@@ -57,6 +57,7 @@ func checkSet(setOk bool) *dbus.Error {
 
 type Bool struct {
 	base
+	lastKnown bool
 }
 
 func (b *Bool) Bind(dc *DConfig, key string) {
@@ -77,14 +78,23 @@ func (b *Bool) GetValue() (val interface{}, err *dbus.Error) {
 	return
 }
 
-func (b *Bool) Get() bool {
+// GetWithError 返回配置项当前值。dconfig 后端暂时不可读（服务重启、
+// 总线拥塞等）时，返回最近一次成功读取的值及错误，使调用方能区分
+// "配置就是 false" 和 "值读不到"，避免把读取失败当成 false 写入设备。
+func (b *Bool) GetWithError() (bool, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
 	v, err := b.dc.GetValueBool(b.key)
 	if err != nil {
-		return false
+		return b.lastKnown, err
 	}
+	b.lastKnown = v
+	return v, nil
+}
+
+func (b *Bool) Get() bool {
+	v, _ := b.GetWithError()
 	return v
 }
 
