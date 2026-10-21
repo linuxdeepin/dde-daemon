@@ -4,13 +4,13 @@
     "contents": {
         "timeZone": {
             "value": "Asia/Shanghai",
-            "serial": 0,
+            "serial": 1,
             "flags": [],
             "name": "time zone of user set",
             "name[zh_CN]": "用户设置的时区",
             "description": "time zone property",
             "permissions": "readwrite",
-            "visibility": "private"
+            "visibility": "public"
         },
         "ntpServer": {
             "value": "",
