@@ -5,7 +5,6 @@
 package brightness
 
 import (
-	"errors"
 	"fmt"
 	"math"
 	"sync"
@@ -19,30 +18,9 @@ import (
 )
 
 var _useWayland bool
-var _productName string
-var _chooseBigProductNames []string
 
 func SetUseWayland(value bool) {
 	_useWayland = value
-}
-
-// SetProductName 设置设备 ProductName，用于 backLight-max-brightness-choose-big 特征判断
-func SetProductName(productName string) {
-	_productName = productName
-}
-
-// SetChooseBigProductNames 设置 ProductName 命中后选最大背光亮度的机型列表
-func SetChooseBigProductNames(list []string) {
-	_chooseBigProductNames = list
-}
-
-func isChooseBigProduct() bool {
-	for _, name := range _chooseBigProductNames {
-		if name == _productName {
-			return true
-		}
-	}
-	return false
 }
 
 const (
@@ -107,7 +85,7 @@ func GetMaxBacklightBrightness() int {
 	}
 
 	maxBrightness := controllers[0].MaxBrightness
-	if isChooseBigProduct() {
+	if _curveManager.isChooseBigProduct() {
 		// backLight-max-brightness-choose-big 命中的机型取最大亮度
 		for _, controller := range controllers {
 			if maxBrightness < controller.MaxBrightness {
@@ -237,17 +215,6 @@ func getBestBacklightController(controllers displayBl.Controllers) *displayBl.Co
 	return ret
 }
 
-func setBestBacklightController(controllers displayBl.Controllers, value float64) error {
-	if controller := getBestBacklightController(controllers); controller != nil {
-		err := _setBacklight(value, controller)
-		if err != nil {
-			logger.Warningf("failed to set backlight by %s: %v", controller.Name, err)
-		}
-		return err
-	}
-	return errors.New("setBestBacklightController failed to set best backlight.")
-}
-
 // backlightControllerCache 背光控制器缓存
 var (
 	cachedBacklightControllers displayBl.Controllers
@@ -291,13 +258,19 @@ func SetBacklight(brightness float64) error {
 }
 
 func setBacklight(value float64, controllers displayBl.Controllers) error {
-	if err := setBestBacklightController(controllers, value); err != nil {
-		logger.Warning(err)
+	best := getBestBacklightController(controllers)
+	if best != nil {
+		if err := _setBacklight(value, best); err == nil {
+			return nil
+		} else {
+			logger.Warningf("failed to set backlight by %s: %v", best.Name, err)
+		}
 	} else {
-		return nil
+		logger.Warning("no backlight controller available")
 	}
 
-	// 有些厂商机器存在写背光文件延时，bug-307835
+	// 有些厂商机器存在写背光文件延时，bug-307835。
+	// 回退路径保留 best controller：同步写入失败后异步重试可能成功。
 	go func() {
 		for _, controller := range controllers {
 			err := _setBacklight(value, controller)

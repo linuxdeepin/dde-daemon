@@ -310,10 +310,11 @@ func newManager(service *dbusutil.Service) *Manager {
 		unsupportGammaDrmList: []string{
 			"Loongson",
 		},
-		gammaSupportUpdates: make(chan struct{}, 1),
-		gammaSupportCtx:     gammaSupportCtx,
-		gammaSupportCancel:  gammaSupportCancel,
-		isVM:                isVM,
+		gammaSupportUpdates:     make(chan struct{}, 1),
+		gammaSupportCtx:         gammaSupportCtx,
+		gammaSupportCancel:      gammaSupportCancel,
+		isVM:                    isVM,
+		dsgBrightnessPercentage: 100,
 	}
 	if !_greeterMode {
 		m.xsManager = xs.NewXSettings(m.service.Conn())

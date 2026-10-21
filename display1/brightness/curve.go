@@ -28,9 +28,11 @@ type BrightnessPoint struct {
 type BrightnessCurveConfig struct {
 	EDID        string            `json:"edid,omitempty"` // 屏幕EDID标识（可选，默认曲线不需要）
 	CurvePoints []BrightnessPoint `json:"curve_points"`   // 亮度曲线点
-	MaxLimit    int32             `json:"max_limit"`      // 最大亮度限制百分比 (0-100)，表示最大亮度的百分比
+	MaxLimit    int32             `json:"max_limit"`      // 最大亮度限制百分比 (0-100)，表示最大亮度的百分比；0 表示不限制
 	MaxScale    int32             `json:"max_scale"`      // 告知外部曲线最大比例
 }
+
+type curveFunc func(percentage float64, maxBrightness int32) int32
 
 // CurveManager 管理亮度曲线的配置和计算
 type CurveManager struct {
@@ -39,17 +41,21 @@ type CurveManager struct {
 	// 亮度限制功能使用的硬件信息
 	configBoardName string
 	deviceBoardName string
+	productName     string
+
+	// backLight-max-brightness-choose-big 命中的机型列表
+	chooseBigProductNames []string
 
 	// 亮度限制功能开关与缩放值
 	maxBrightnessUnlimited bool
 	maxScale               int32
 
 	// 默认曲线函数
-	defaultCurveFunc func(percentage float64, maxBrightness int) int32
+	defaultCurveFunc curveFunc
 
 	// 受限曲线
 	// 配置上可能会有多项，但只应用第一个匹配上的，因为多控制器可能导致亮度设置错乱
-	limitedCurveFunc func(percentage float64) int32
+	limitedCurveFunc curveFunc
 }
 
 // 全局 CurveManager 实例
@@ -76,6 +82,16 @@ func SetDeviceBoardName(boardName string) {
 	_curveManager.setDeviceBoardName(boardName)
 }
 
+// SetProductName 设置设备 ProductName，用于 backLight-max-brightness-choose-big 特征判断
+func SetProductName(productName string) {
+	_curveManager.setProductName(productName)
+}
+
+// SetChooseBigProductNames 设置 ProductName 命中后选最大背光亮度的机型列表
+func SetChooseBigProductNames(list []string) {
+	_curveManager.setChooseBigProductNames(list)
+}
+
 // SetDefaultBrightnessCurve 设置默认亮度曲线（不依赖硬件信息）
 func SetDefaultBrightnessCurve(jsonStr string) {
 	_curveManager.setDefaultBrightnessCurve(jsonStr)
@@ -98,16 +114,22 @@ func GetCurrentMaxScale() int32 {
 // curvePoints: 曲线点数组
 // 返回插值后的曲线值（百分比形式）
 func interpolateCurveValue(percentage float64, curvePoints []BrightnessPoint) float64 {
-	if percentage <= 0 {
-		return float64(curvePoints[0].Value)
+	if len(curvePoints) == 0 {
+		return 0
 	}
 
-	if percentage >= 100 {
-		return float64(curvePoints[len(curvePoints)-1].Value)
+	first := curvePoints[0]
+	last := curvePoints[len(curvePoints)-1]
+	if percentage <= float64(first.Percentage) {
+		return float64(first.Value)
+	}
+
+	if percentage >= float64(last.Percentage) {
+		return float64(last.Value)
 	}
 
 	// 线性插值
-	curveValue := float64(curvePoints[0].Value)
+	curveValue := float64(last.Value)
 	for i := 0; i < len(curvePoints)-1; i++ {
 		p1, p2 := curvePoints[i], curvePoints[i+1]
 		if percentage >= float64(p1.Percentage) && percentage <= float64(p2.Percentage) {
@@ -138,17 +160,28 @@ func matchControllerByEDID(controller *displayBl.Controller, configEDID string) 
 
 // 配置验证
 func validateBrightnessCurve(curve BrightnessCurveConfig) error {
-	if curve.MaxLimit < 0 {
-		return fmt.Errorf("max_limit must be over 0, got: %d", curve.MaxLimit)
+	if curve.MaxLimit < 0 || curve.MaxLimit > 100 {
+		return fmt.Errorf("max_limit must be in range [0,100], got: %d", curve.MaxLimit)
+	}
+
+	if curve.MaxScale < 0 {
+		return fmt.Errorf("max_scale must not be negative, got: %d", curve.MaxScale)
 	}
 
 	if len(curve.CurvePoints) == 0 {
 		return fmt.Errorf("curve_points cannot be empty")
 	}
 
-	// 验证曲线点非递减
-	for i := 1; i < len(curve.CurvePoints); i++ {
-		if curve.CurvePoints[i].Percentage < curve.CurvePoints[i-1].Percentage {
+	for i, point := range curve.CurvePoints {
+		if point.Percentage < 0 || point.Percentage > 100 {
+			return fmt.Errorf("curve point percentage must be in range [0,100], got: %d", point.Percentage)
+		}
+		if point.Value < 0 || point.Value > 100 {
+			return fmt.Errorf("curve point value must be in range [0,100], got: %d", point.Value)
+		}
+
+		// 验证曲线点非递减
+		if i > 0 && point.Percentage < curve.CurvePoints[i-1].Percentage {
 			return fmt.Errorf("curve points must be in non-descending order")
 		}
 	}
@@ -162,7 +195,7 @@ func (cm *CurveManager) generateDefaultCurveFuncLocked(curve BrightnessCurveConf
 	logger.Debugf("Generating default curve function with %d points", len(curve.CurvePoints))
 
 	// 默认曲线函数：根据百分比和最大亮度计算实际亮度值
-	cm.defaultCurveFunc = func(percentage float64, maxBrightness int) int32 {
+	cm.defaultCurveFunc = func(percentage float64, maxBrightness int32) int32 {
 		// 使用统一的插值函数
 		curveValue := interpolateCurveValue(percentage, curve.CurvePoints)
 
@@ -206,6 +239,25 @@ func (cm *CurveManager) isMaxBrightnessUnlimited() bool {
 	return cm.maxBrightnessUnlimited
 }
 
+// unmarshalCurveJSON 解析曲线 JSON。
+// 正常配置直接按 JSON 解析；同时兼容旧配置把 JSON 作为转义字符串传入的情况，
+// 不再无条件删除所有反斜杠，避免破坏合法的 JSON 转义。
+func unmarshalCurveJSON(jsonStr string, v interface{}) error {
+	raw := []byte(jsonStr)
+	if !json.Valid(raw) {
+		var unescaped string
+		if err := json.Unmarshal([]byte(`"`+jsonStr+`"`), &unescaped); err != nil {
+			return fmt.Errorf("invalid JSON: %v", err)
+		}
+		raw = []byte(unescaped)
+		if !json.Valid(raw) {
+			return fmt.Errorf("invalid JSON")
+		}
+	}
+
+	return json.Unmarshal(raw, v)
+}
+
 // parseCustomBrightnessCurves 解析自定义亮度曲线配置
 func (cm *CurveManager) parseCustomBrightnessCurves(jsonStr string) error {
 	var config struct {
@@ -213,12 +265,9 @@ func (cm *CurveManager) parseCustomBrightnessCurves(jsonStr string) error {
 		Curves    []BrightnessCurveConfig `json:"curves"`
 	}
 
-	// Remove any backslash characters from the input JSON string
-	jsonStr = strings.ReplaceAll(jsonStr, "\\", "")
-
 	logger.Debugf("Parsing custom brightness curves: %s", jsonStr)
 
-	if err := json.Unmarshal([]byte(jsonStr), &config); err != nil {
+	if err := unmarshalCurveJSON(jsonStr, &config); err != nil {
 		return fmt.Errorf("Custom curve failed to parse JSON: %v", err)
 	}
 
@@ -249,7 +298,7 @@ func (cm *CurveManager) parseCustomBrightnessCurves(jsonStr string) error {
 		for _, controller := range controllers {
 			if matchControllerByEDID(controller, curve.EDID) {
 				logger.Infof("Found matching controller for EDID %s: %s", curve.EDID, controller.Name)
-				cm.limitedCurveFunc = cm.generateCustomCurveFunc(curve, int32(controller.MaxBrightness))
+				cm.limitedCurveFunc = cm.generateCustomCurveFunc(curve)
 				cm.maxScale = curve.MaxScale
 				return nil
 			}
@@ -260,8 +309,8 @@ func (cm *CurveManager) parseCustomBrightnessCurves(jsonStr string) error {
 	return nil
 }
 
-func (cm *CurveManager) generateCustomCurveFunc(curve BrightnessCurveConfig, controllerMaxBrightness int32) func(float64) int32 {
-	return func(percentage float64) int32 {
+func (cm *CurveManager) generateCustomCurveFunc(curve BrightnessCurveConfig) curveFunc {
+	return func(percentage float64, controllerMaxBrightness int32) int32 {
 		// 使用统一的插值函数
 		curveValue := interpolateCurveValue(percentage, curve.CurvePoints)
 
@@ -295,11 +344,13 @@ func (cm *CurveManager) getCurveValue(v float64, c *displayBl.Controller) (int32
 	if !supported || unlimited || limitedFunc == nil {
 		logger.Debugf("Limited curve not working now, maxBrightnessUnlimited=%v, func exist=%v", unlimited, limitedFunc != nil)
 	} else {
-		return limitedFunc(vv), true
+		// 使用实际写入的控制器最大亮度进行换算，避免 EDID 匹配到的控制器
+		// 与实际选中的背光控制器不一致时按错误的最大值缩放。
+		return limitedFunc(vv, int32(c.MaxBrightness)), true
 	}
 
 	if defaultFunc != nil {
-		return defaultFunc(vv, c.MaxBrightness), true
+		return defaultFunc(vv, int32(c.MaxBrightness)), true
 	}
 
 	// 默认无处理的值
@@ -311,6 +362,30 @@ func (cm *CurveManager) setDeviceBoardName(boardName string) {
 	cm.mu.Lock()
 	defer cm.mu.Unlock()
 	cm.deviceBoardName = boardName
+}
+
+func (cm *CurveManager) setProductName(productName string) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	cm.productName = productName
+}
+
+func (cm *CurveManager) setChooseBigProductNames(list []string) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	cm.chooseBigProductNames = append([]string(nil), list...)
+}
+
+func (cm *CurveManager) isChooseBigProduct() bool {
+	cm.mu.RLock()
+	defer cm.mu.RUnlock()
+
+	for _, name := range cm.chooseBigProductNames {
+		if name == cm.productName {
+			return true
+		}
+	}
+	return false
 }
 
 // setDefaultBrightnessCurve 设置默认亮度曲线（内部方法）
@@ -331,13 +406,10 @@ func (cm *CurveManager) setDefaultBrightnessCurve(jsonStr string) {
 
 // parseDefaultBrightnessCurve 解析默认亮度曲线配置
 func (cm *CurveManager) parseDefaultBrightnessCurve(jsonStr string) error {
-	// Remove any backslash characters from the input JSON string
-	jsonStr = strings.ReplaceAll(jsonStr, "\\", "")
-
 	logger.Debugf("Parsing default brightness curve: %s", jsonStr)
 
 	var curve BrightnessCurveConfig
-	if err := json.Unmarshal([]byte(jsonStr), &curve); err != nil {
+	if err := unmarshalCurveJSON(jsonStr, &curve); err != nil {
 		return fmt.Errorf("failed to parse JSON: %v", err)
 	}
 
