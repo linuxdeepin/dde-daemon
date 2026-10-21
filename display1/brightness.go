@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 
 	"github.com/godbus/dbus/v5"
 
@@ -41,29 +42,30 @@ func (m *Manager) initBacklightCurve() {
 
 // getDsgBrightnessPercentage 读取实际亮度百分比（取值范围 [50,100]）
 func (m *Manager) getDsgBrightnessPercentage() {
+	percentage := int32(100)
+
 	v, err := m.displayConfigMgr.Value(0, DSettingsKeyBrightnessPercentage)
 	if err != nil {
 		logger.Warning(err)
-		m.dsgBrightnessPercentage = 100
-		return
-	}
-	switch vType := v.Value().(type) {
-	case float64:
-		m.dsgBrightnessPercentage = int32(vType)
-	case int64:
-		m.dsgBrightnessPercentage = int32(vType)
-	default:
-		logger.Warning("type is wrong!")
-		m.dsgBrightnessPercentage = 100
+	} else {
+		switch vType := v.Value().(type) {
+		case float64:
+			percentage = int32(vType)
+		case int64:
+			percentage = int32(vType)
+		default:
+			logger.Warning("type is wrong!")
+		}
 	}
 
 	// limit min/max value
-	if m.dsgBrightnessPercentage < 50 {
-		m.dsgBrightnessPercentage = 50
-	} else if m.dsgBrightnessPercentage > 100 {
-		m.dsgBrightnessPercentage = 100
+	if percentage < 50 {
+		percentage = 50
+	} else if percentage > 100 {
+		percentage = 100
 	}
-	logger.Info("Brightness percentage value:", m.dsgBrightnessPercentage)
+	atomic.StoreInt32(&m.dsgBrightnessPercentage, percentage)
+	logger.Info("Brightness percentage value:", percentage)
 }
 
 // refreshMaxBacklightBrightness 重新计算并刷新 MaxBacklightBrightness 属性
@@ -141,15 +143,23 @@ func (m *Manager) getMaxBrightnessUnlimited() {
 		return
 	}
 
-	brightness.SetDeviceBoardName(getDmiBoardName())
-	boardSupported := brightness.IsDeviceSupported()
-	if !boardSupported {
+	// device board name 已在 initBacklightCurve 中设置
+
+	// 关闭操作不依赖曲线是否可用，必须始终生效，避免曲线被移除后
+	// 已开启的功能无法关闭。
+	if !enabled {
+		if err := m.setMaxBrightnessUnlimited(false); err != nil {
+			logger.Warning(err)
+		}
+		return
+	}
+
+	if !brightness.IsDeviceSupported() {
 		logger.Warningf("Current board %s not match config", getDmiBoardName())
 		return
 	}
 
-	maxScale := brightness.GetCurrentMaxScale()
-	if maxScale <= 100 {
+	if maxScale := brightness.GetCurrentMaxScale(); maxScale <= 100 {
 		logger.Warningf("Curve scale %d too low", maxScale)
 		return
 	}
@@ -157,7 +167,9 @@ func (m *Manager) getMaxBrightnessUnlimited() {
 	logger.Info("Max brightness unlimited:", enabled)
 
 	// 同步 DBus 属性与受限亮度（setMaxBrightnessUnlimited 内部会触发 resetLimitedBrightness）
-	m.setMaxBrightnessUnlimited(enabled)
+	if err := m.setMaxBrightnessUnlimited(enabled); err != nil {
+		logger.Warning(err)
+	}
 }
 
 // resetLimitedBrightness 根据缩放值变化调整亮度属性值
@@ -183,6 +195,8 @@ func (m *Manager) resetLimitedBrightness() {
 		newBr = 1.0
 		m.SetBrightness(builtinMonitor.Name, newBr)
 	} else {
+		// 切换受限模式时仅更新上报/滑块亮度，不改写背光，保持实际亮度不变；
+		// 只有 newBr 超出 1.0、无法用滑块表示时才在上面的分支把背光限制到最大值。
 		builtinMonitor.setPropBrightnessWithLock(newBr)
 		m.syncPropBrightness()
 	}
@@ -192,27 +206,31 @@ func (m *Manager) resetLimitedBrightness() {
 func (m *Manager) setMaxBrightnessUnlimited(enabled bool) error {
 	logger.Infof("SetMaxBrightnessUnlimited called with: %v", enabled)
 
-	brightness.SetDeviceBoardName(getDmiBoardName())
-	boardSupported := brightness.IsDeviceSupported()
-	if !boardSupported {
-		logger.Warningf("Current board %s not match config, cannot enable max brightness limit", getDmiBoardName())
-		return errors.New("board name mismatch: current board not supported")
+	if enabled {
+		boardSupported := brightness.IsDeviceSupported()
+		if !boardSupported {
+			logger.Warningf("Current board %s not match config, cannot enable max brightness limit", getDmiBoardName())
+			return errors.New("board name mismatch: current board not supported")
+		}
+
+		maxScale := brightness.GetCurrentMaxScale()
+		if maxScale <= 100 {
+			logger.Warningf("Curve max scale too small: %d", maxScale)
+			return errors.New("Curve config: max scale too low")
+		}
 	}
 
-	maxScale := brightness.GetCurrentMaxScale()
-	if maxScale <= 100 {
-		logger.Warningf("Curve max scale too small: %d", maxScale)
-		return errors.New("Curve config: max scale too low")
-	}
+	changed := m.MaxBrightnessUnlimited != enabled
 
 	brightness.SetMaxBrightnessUnlimited(enabled)
 
-	if m.MaxBrightnessUnlimited != enabled {
+	if changed {
 		m.MaxBrightnessUnlimited = enabled
 		m.emitPropChangedMaxBrightnessUnlimited(enabled)
+		// 仅在模式实际切换时重新换算滑块亮度，避免 DConfig 回调或重复写入
+		// 对已经调整过的亮度再次缩放。
+		m.resetLimitedBrightness()
 	}
-
-	m.resetLimitedBrightness()
 
 	return nil
 }
@@ -393,8 +411,12 @@ func (m *Manager) isBuiltinMonitor(name string) bool {
 }
 
 func (m *Manager) setMonitorBrightness(monitor *Monitor, brightnessValue float64) error {
-	// 根据dsg调整实际亮度百分比
-	brightnessValue = math.Round(brightnessValue*float64(m.dsgBrightnessPercentage)) / 100.0
+	// 根据dsg调整实际亮度百分比，不在此处量化到整数百分比，避免损失精度
+	percentage := atomic.LoadInt32(&m.dsgBrightnessPercentage)
+	if percentage <= 0 {
+		percentage = 100
+	}
+	brightnessValue = brightnessValue * float64(percentage) / 100.0
 	logger.Debug("setMonitorBrightness reality value:", brightnessValue)
 
 	setter := m.createBrightnessSetter(monitor)

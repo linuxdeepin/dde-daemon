@@ -40,13 +40,13 @@ func Start(service *dbusutil.Service) error {
 			err = so.SetWriteCallback(m, "ColorTemperatureEnabled", func(write *dbusutil.PropertyWrite) *dbus.Error {
 				value, ok := write.Value.(bool)
 				if !ok {
-					err = errors.New("Type is not bool")
+					err := errors.New("Type is not bool")
 					logger.Warning(err)
 					return dbusutil.ToError(err)
 				}
 				ok = m.setPropColorTemperatureEnabled(value)
 				if !ok {
-					err = errors.New("Set ColorTemperatureEnabled failed!")
+					err := errors.New("Set ColorTemperatureEnabled failed!")
 					logger.Warning(err)
 					return dbusutil.ToError(err)
 				}
@@ -60,24 +60,24 @@ func Start(service *dbusutil.Service) error {
 				} else {
 					m.colorTemperatureModeOn = m.ColorTemperatureMode
 				}
-				err = m.setColorTempMode(mode)
-				return dbusutil.ToError(err)
+				if err := m.setColorTempMode(mode); err != nil {
+					return dbusutil.ToError(err)
+				}
+				return nil
 			})
 
 			err = so.SetWriteCallback(m, "MaxBrightnessUnlimited", func(write *dbusutil.PropertyWrite) *dbus.Error {
 				value, ok := write.Value.(bool)
 				if !ok {
-					err = errors.New("Type is not bool")
+					err := errors.New("Type is not bool")
 					logger.Warning(err)
 					return dbusutil.ToError(err)
 				}
-				err = m.setMaxBrightnessUnlimited(value)
-				if err != nil {
+				if err := m.setMaxBrightnessUnlimited(value); err != nil {
 					return dbusutil.ToError(err)
 				}
 				// 持久化配置
-				err = setGlobalDconfValue(DSettingsAppID, DSettingsDisplayName, "", DSettingsKeyMaxBrightnessUnlimited, dbus.MakeVariant(value))
-				if err != nil {
+				if err := setGlobalDconfValue(DSettingsAppID, DSettingsDisplayName, "", DSettingsKeyMaxBrightnessUnlimited, dbus.MakeVariant(value)); err != nil {
 					logger.Warning("failed to save max brightness unlimited config:", err)
 					return dbusutil.ToError(err)
 				}

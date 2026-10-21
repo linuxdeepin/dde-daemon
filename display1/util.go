@@ -15,6 +15,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/godbus/dbus/v5"
 	hostname1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.hostname1"
@@ -308,26 +309,39 @@ func getConfigVersion(filename string) (string, error) {
 	return string(bytes.TrimSpace(content)), nil
 }
 
+var (
+	dmiBoardNameOnce    sync.Once
+	dmiBoardNameValue   string
+	dmiProductNameOnce  sync.Once
+	dmiProductNameValue string
+)
+
 // getDmiBoardName 获取设备主板名称（DMI board_name）
 func getDmiBoardName() string {
 	const boardNamePath = "/sys/class/dmi/id/board_name"
-	content, err := os.ReadFile(boardNamePath)
-	if err != nil {
-		logger.Warning("failed to read dmi board name:", err)
-		return ""
-	}
-	return strings.TrimSpace(string(content))
+	dmiBoardNameOnce.Do(func() {
+		content, err := os.ReadFile(boardNamePath)
+		if err != nil {
+			logger.Warning("failed to read dmi board name:", err)
+			return
+		}
+		dmiBoardNameValue = strings.TrimSpace(string(content))
+	})
+	return dmiBoardNameValue
 }
 
 // getDmiProductName 获取设备产品名称（DMI product_name）
 func getDmiProductName() string {
 	const productNamePath = "/sys/class/dmi/id/product_name"
-	content, err := os.ReadFile(productNamePath)
-	if err != nil {
-		logger.Warning("failed to read dmi product name:", err)
-		return ""
-	}
-	return strings.TrimSpace(string(content))
+	dmiProductNameOnce.Do(func() {
+		content, err := os.ReadFile(productNamePath)
+		if err != nil {
+			logger.Warning("failed to read dmi product name:", err)
+			return
+		}
+		dmiProductNameValue = strings.TrimSpace(string(content))
+	})
+	return dmiProductNameValue
 }
 
 func getComputeChassis() (string, error) {
