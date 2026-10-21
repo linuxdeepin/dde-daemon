@@ -1,3 +1,10 @@
+dde-daemon (6.1.110) unstable; urgency=medium
+
+  * feat(display1): migrate default brightness curve from startdde
+  * fix(display1): harden brightness curve handling
+
+ -- zhangkun <zhangkun2@uniontech.com>  Wed, 21 Oct 2026 16:43:26 +0800
+
 dde-daemon (6.1.109) unstable; urgency=medium
 
   * i18n: Updates for project Deepin Desktop Environment (#1275)
