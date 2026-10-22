@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -780,7 +780,12 @@ func loadUserConfigInfo(u *User) {
 	var isSave = false
 	xSession, _ := kf.GetString(confGroupUser, confKeyXSession)
 	u.XSession = xSession
-	if u.XSession == "" {
+	if dm, _ := users.GetDefaultDM(); dm == "ddm" {
+		if u.XSession != "treeland" {
+			u.XSession = "treeland"
+			isSave = true
+		}
+	} else if u.XSession == "" {
 		xSession, _ = users.GetDefaultXSession()
 		u.XSession = xSession
 		isSave = true
@@ -943,13 +948,23 @@ func (u *User) setAutomaticLogin(enabled bool) *dbus.Error {
 		name = ""
 	}
 
+	dm, _ := users.GetDefaultDM()
 	session := u.XSession
-	if session == "" {
+	if enabled && dm == "ddm" {
+		// DDM 下启用自动登录时固定使用 treeland，不依赖可能过期的 XSession。
+		session = "treeland"
+	} else if session == "" {
 		session = getUserSession(u.HomeDir)
 	}
 	if err := users.SetAutoLoginUser(name, session); err != nil {
 		logger.Warning("DoAction: set auto login failed:", err)
 		return dbusutil.ToError(err)
+	}
+
+	if enabled && dm == "ddm" && u.setPropXSession("treeland") {
+		if err := u.writeUserConfig(); err != nil {
+			logger.Warning("Failed to save XSession:", err)
+		}
 	}
 
 	u.AutomaticLogin = enabled
