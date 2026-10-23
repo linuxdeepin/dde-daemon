@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -56,9 +56,17 @@ func (c *loginEventCollector) Collect() error {
 	return nil
 }
 func genLastRebootCmd() *exec.Cmd {
-	args := []string{"last", "-x", "reboot", "--time-format", "iso", "|", "awk", "'NR==2 {print}'"}
-	// create command
-	return exec.Command("/bin/bash", "-c", strings.Join(args, " "))
+	return exec.Command("last", "-x", "reboot", "--time-format", "iso")
+}
+
+// selectSecondRebootRecord mirrors the previous `awk 'NR==2 {print}'` behavior
+// without involving a shell.
+func selectSecondRebootRecord(content []byte) ([]byte, error) {
+	records := strings.Split(strings.TrimSuffix(string(content), "\n"), "\n")
+	if len(records) < 2 {
+		return nil, errors.New("last command did not record a previous reboot")
+	}
+	return []byte(records[1]), nil
 }
 
 func parseLastRebootCmdOutPut(content []byte) (*loginTimeInfo, error) {
@@ -102,7 +110,12 @@ func (c *loginEventCollector) collectLoginTimeInfo() error {
 		logger.Warningf("last command execute failed, out: %v, err: %v", string(out), err)
 		return err
 	}
-	info, err := parseLastRebootCmdOutPut(out)
+	record, err := selectSecondRebootRecord(out)
+	if err != nil {
+		logger.Warningf("last command result selection failed, out: %v, err: %v", string(out), err)
+		return err
+	}
+	info, err := parseLastRebootCmdOutPut(record)
 	if err != nil {
 		return err
 	}

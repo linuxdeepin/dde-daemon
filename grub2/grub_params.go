@@ -7,10 +7,8 @@ package grub2
 import (
 	"bytes"
 	"os"
-	"os/exec"
 	"sort"
 	"strconv"
-	"strings"
 
 	"github.com/linuxdeepin/dde-daemon/grub_common"
 )
@@ -38,17 +36,8 @@ const (
 	defaultGrubTimeoutInt  = 5
 )
 
-func decodeShellValue(in string) string {
-	output, err := exec.Command("/bin/sh", "-c", "echo -n "+in).Output()
-	if err != nil {
-		// fallback
-		return strings.Trim(in, "\"")
-	}
-	return string(output)
-}
-
 func getTimeout(params map[string]string) int {
-	timeoutStr := decodeShellValue(params[grubTimeout])
+	timeoutStr := grub_common.DecodeShellValue(params[grubTimeout])
 	timeoutInt, err := strconv.Atoi(timeoutStr)
 	if err != nil {
 		return defaultGrubTimeoutInt
@@ -57,7 +46,7 @@ func getTimeout(params map[string]string) int {
 }
 
 func getGfxMode(params map[string]string) (val string) {
-	val = decodeShellValue(params[grubGfxmode])
+	val = grub_common.DecodeShellValue(params[grubGfxmode])
 	if val == "" {
 		val = defaultGrubGfxMode
 	}
@@ -65,7 +54,7 @@ func getGfxMode(params map[string]string) (val string) {
 }
 
 func getDefaultEntry(params map[string]string) (val string) {
-	val = decodeShellValue(params[grubDefault])
+	val = grub_common.DecodeShellValue(params[grubDefault])
 	if val == "" {
 		val = defaultGrubDefault
 	}
@@ -73,7 +62,7 @@ func getDefaultEntry(params map[string]string) (val string) {
 }
 
 func getTheme(params map[string]string) string {
-	return decodeShellValue(params[grubTheme])
+	return grub_common.DecodeShellValue(params[grubTheme])
 }
 
 func genGrubParamsContent(params map[string]string) []byte {

@@ -12,7 +12,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -113,13 +112,50 @@ func readGrubParamsFile(filePath string, params map[string]string) error {
 	return scanner.Err()
 }
 
+// DecodeShellValue removes the quoting and escape characters from a value
+// written in shell syntax in a GRUB configuration file.
+//
+// Only quoting and escapes are interpreted: single and double quotes are
+// dropped, and outside single quotes a backslash is dropped while the
+// character after it is kept. Everything else is left as written: no word
+// splitting, no comment handling, no variable or command substitution, so
+// $VAR, ${VAR}, $(...) and backticks come back as plain data and untrusted
+// input cannot run commands.
+//
+// Malformed input (an unterminated quote) falls back to trimming surrounding
+// double quotes, preserving the historical behaviour.
 func DecodeShellValue(in string) string {
-	output, err := exec.Command("/bin/sh", "-c", "echo -n "+in).Output()
-	if err != nil {
-		// fallback
+	var b strings.Builder
+	var quote byte
+
+	for i := 0; i < len(in); i++ {
+		c := in[i]
+		switch {
+		case c == '\\' && quote != '\'' && i+1 < len(in):
+			// an escape drops the backslash and keeps the next character
+			i++
+			b.WriteByte(in[i])
+		case c == '\'' && quote != '"':
+			if quote == '\'' {
+				quote = 0
+			} else {
+				quote = '\''
+			}
+		case c == '"' && quote != '\'':
+			if quote == '"' {
+				quote = 0
+			} else {
+				quote = '"'
+			}
+		default:
+			b.WriteByte(c)
+		}
+	}
+
+	if quote != 0 {
 		return strings.Trim(in, "\"")
 	}
-	return string(output)
+	return b.String()
 }
 
 type Gfxmode struct {
