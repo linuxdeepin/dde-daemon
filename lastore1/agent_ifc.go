@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/godbus/dbus/v5"
@@ -116,10 +117,10 @@ func (a *Agent) SendNotify(sender dbus.Sender, appName string, replacesId uint32
 				}
 			}
 		} else {
-			output, err := exec.Command("/bin/sh", "-c", "xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d ' ' -f 5) WM_CLASS").Output()
+			output, err := getActiveWindowWMClass()
 			if err != nil {
 				logger.Warning(err)
-			} else if strings.Contains(string(output), "dde-control-center") {
+			} else if strings.Contains(output, "dde-control-center") {
 				// 焦点在控制中心上,需要判断是否为更新模块
 				currentModule, err := a.controlCenter.Page().Get(0)
 				if err != nil {
@@ -128,7 +129,7 @@ func (a *Agent) SendNotify(sender dbus.Sender, appName string, replacesId uint32
 					logger.Info("update module of dde-control-center is in the foreground, don't need send notify")
 					needSend = false
 				}
-			} else if strings.Contains(string(output), "dde-lock") {
+			} else if strings.Contains(output, "dde-lock") {
 				// 前台应用在模态更新界面时,不发送通知(TODO: 如果后台更新时发生了锁屏，需要增加判断是否发通知)
 				needSend = false
 			}
@@ -155,4 +156,41 @@ func (a *Agent) ReportLog(sender dbus.Sender, msg string) *dbus.Error {
 	}
 	logger.Info("report log from lastore daemon")
 	return dbusutil.ToError(a.lastoreObj.eventLog.ReportLog(0, msg))
+}
+
+// getActiveWindowWMClass runs xprop directly instead of through a shell and
+// returns the WM_CLASS of the currently active X11 window.
+func getActiveWindowWMClass() (string, error) {
+	rootOut, err := exec.Command("xprop", "-root", "_NET_ACTIVE_WINDOW").Output()
+	if err != nil {
+		return "", err
+	}
+	id, err := parseActiveWindowID(rootOut)
+	if err != nil {
+		return "", err
+	}
+	out, err := exec.Command("xprop", "-id", id, "WM_CLASS").Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
+}
+
+func parseActiveWindowID(out []byte) (string, error) {
+	fields := strings.Fields(string(out))
+	if len(fields) == 0 {
+		return "", errors.New("xprop returned no active window")
+	}
+	id := fields[len(fields)-1]
+	if !strings.HasPrefix(id, "0x") {
+		return "", fmt.Errorf("invalid active window id %q", id)
+	}
+	value, err := strconv.ParseUint(id[2:], 16, 64)
+	if err != nil {
+		return "", fmt.Errorf("invalid active window id %q: %v", id, err)
+	}
+	if value == 0 {
+		return "", errors.New("no active window")
+	}
+	return id, nil
 }
