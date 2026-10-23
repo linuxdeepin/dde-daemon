@@ -39,7 +39,7 @@ Copyright: None
 License: CC0-1.0
 
 # sh
-Files: gen.sh _tool/prop_gen/gen.sh gen_test_report.sh
+Files: gen.sh _tool/prop_gen/gen.sh
 Copyright: None
 License: GPL-3.0-or-later
 
