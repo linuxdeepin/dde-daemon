@@ -132,16 +132,6 @@
           "permissions": "readwrite",
           "visibility": "private"
         },
-        "keybinding": {
-          "value": false,
-          "serial": 0,
-          "flags": [],
-          "name": "keybindingEnable",
-          "name[zh_CN]": "快捷键模块启动",
-          "description": "Allow keybinding module start",
-          "permissions": "readwrite",
-          "visibility": "private"
-        },
         "lastore": {
           "value": true,
           "serial": 0,

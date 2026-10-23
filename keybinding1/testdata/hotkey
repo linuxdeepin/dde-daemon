@@ -1,3 +1,0 @@
-status:		enabled
-mask:		0x078c7ffb
-commands:	enable, disable, reset, <mask>
