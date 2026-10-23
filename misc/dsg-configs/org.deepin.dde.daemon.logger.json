@@ -152,16 +152,6 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
-        "keybinding": {
-            "value": "",
-            "serial": 0,
-            "flags": ["global"],
-            "name": "keybinding logger level",
-            "name[zh_CN]": "快捷键模块日志级别",
-            "description": "keybinding logger level",
-            "permissions": "readwrite",
-            "visibility": "private"
-        },
         "lastore": {
             "value": "",
             "serial": 0,

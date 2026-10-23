@@ -22,7 +22,6 @@ display/display
 dock-apps-builder/dock-apps-builder
 dock-daemon/dock-daemon
 inputdevices1/inputdevices
-keybinding1/keybinding
 launcher-daemon/launcher-daemon
 mime/mime
 mounts/mounts
