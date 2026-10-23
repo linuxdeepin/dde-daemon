@@ -56,9 +56,6 @@ TEST = \
     ${GOPKG_PREFIX}/image_effect1 \
     ${GOPKG_PREFIX}/inputdevices1 \
     ${GOPKG_PREFIX}/inputdevices1/iso639 \
-    ${GOPKG_PREFIX}/keybinding1 \
-    ${GOPKG_PREFIX}/keybinding1/shortcuts \
-    ${GOPKG_PREFIX}/keybinding1/util \
     ${GOPKG_PREFIX}/langselector1 \
     ${GOPKG_PREFIX}/lastore1 \
     ${GOPKG_PREFIX}/loader \
@@ -228,9 +225,6 @@ install: build install-dde-data install-icons
 
 	mkdir -pv ${DESTDIR}${DAEMON_LIBDIR}/service-trigger
 	cp -f misc/service-trigger/*.json ${DESTDIR}${DAEMON_LIBDIR}/service-trigger/
-
-	mkdir -pv ${DESTDIR}${PREFIX}/libexec/dde-daemon/
-	cp -r misc/libexec/dde-daemon/* ${DESTDIR}${PREFIX}/libexec/dde-daemon/
 
 	mkdir -pv ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
 	cp -r misc/dsg-configs/*.json ${DESTDIR}${PREFIX}/share/dsg/configs/org.deepin.dde.daemon/
