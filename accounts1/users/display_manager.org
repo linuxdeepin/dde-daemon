@@ -28,6 +28,13 @@
 **XSession**: =Autologin/Session=
 
 
+** DDM
+
+**Config**: dconfig, =appid= =org.deepin.dde.ddm=, =resource= =org.deepin.dde.ddm=
+**Autologin**: =autologinUser=
+**XSession**: =autologinSession=
+
+
 ** Slim
 
 **Config**: =/etc/slim.conf=
