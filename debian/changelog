@@ -1,3 +1,12 @@
+dde-daemon (6.1.111) unstable; urgency=medium
+
+  * fix: 唤醒后保持节能模式下用户设置的亮度值
+  * test: add 118 unit tests across 12 modules + register 3 pkgs
+  * refactor(keybinding): remove unused module
+  * fix(security): remove shell command execution
+
+ -- zhangkun <zhangkun2@uniontech.com>  Mon, 26 Oct 2026 11:07:02 +0800
+
 dde-daemon (6.1.110) unstable; urgency=medium
 
   * feat(display1): migrate default brightness curve from startdde
