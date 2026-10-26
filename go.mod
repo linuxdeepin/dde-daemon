@@ -11,7 +11,7 @@ require (
 	github.com/linuxdeepin/dde-api v0.0.0-20260511093853-07ca3f2f1232
 	github.com/linuxdeepin/go-dbus-factory v0.0.0-20260804093636-709f57a20d4a
 	github.com/linuxdeepin/go-gir v0.0.0-20251204113853-1873b5530f50
-	github.com/linuxdeepin/go-lib v0.0.0-20260205120541-a1f572ce1442
+	github.com/linuxdeepin/go-lib v0.0.0-20261026024823-76eca13ff434
 	github.com/linuxdeepin/go-x11-client v0.0.0-20240415051504-c8e43d028ff9
 	github.com/mdlayher/netlink v1.7.2
 	github.com/rickb777/date v1.21.1
@@ -30,7 +30,6 @@ require (
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.1.0 // indirect
 	github.com/mdlayher/socket v0.4.1 // indirect
-	github.com/mozillazg/go-pinyin v0.19.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rickb777/plural v1.4.2 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect
