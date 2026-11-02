@@ -1232,9 +1232,20 @@ func (u *User) SetSecretKey(sender dbus.Sender, secretKey string) *dbus.Error {
 }
 
 func (u *User) GetSecretKey(sender dbus.Sender, username string) (string, *dbus.Error) {
-	err := u.checkAuth(sender, true, polkitActionUserAdministration)
-	if err != nil {
-		return "", dbusutil.ToError(err)
+	// Prevent cross-user secret key access: the selfPass shortcut in
+	// checkAuth only verifies that the caller owns *this* User DBus object,
+	// not that username matches the object owner. Force full Polkit auth
+	// whenever username differs from u.UserName.
+	if username != u.UserName {
+		err := u.checkAuth(sender, false, polkitActionUserAdministration)
+		if err != nil {
+			return "", dbusutil.ToError(err)
+		}
+	} else {
+		err := u.checkAuth(sender, true, polkitActionUserAdministration)
+		if err != nil {
+			return "", dbusutil.ToError(err)
+		}
 	}
 	if u.uadpInterface == nil {
 		return "", nil

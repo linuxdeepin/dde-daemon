@@ -63,7 +63,7 @@ func (dm *DataManager) Save(file string) error {
 		return err
 	}
 
-	logger.Debugf("%s:\n%s", file, string(data))
+	logger.Debugf("saved data to %s", file)
 	return nil
 }
 

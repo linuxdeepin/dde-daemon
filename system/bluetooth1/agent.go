@@ -296,7 +296,7 @@ func (a *agent) RequestPinCode(device dbus.ObjectPath) (pinCode string, busErr *
 //
 //	org.bluez.Error.Canceled
 func (a *agent) DisplayPinCode(device dbus.ObjectPath, pinCode string) (busErr *dbus.Error) {
-	logger.Info("DisplayPinCode()", pinCode)
+	logger.Info("DisplayPinCode()")
 	ua := a.b.getActiveUserAgent()
 	if ua == nil {
 		logger.Warning("ua is nil")
