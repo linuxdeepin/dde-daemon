@@ -283,13 +283,13 @@ func (a *agent) waitResponse() (auth authorize, err error) {
 	t := time.NewTimer(60 * time.Second)
 	select {
 	case auth = <-a.rspChan:
-		logger.Info("receive", auth)
+		logger.Info("receive auth response")
 		if !auth.accept {
 			err = btcommon.ErrRejected
 			logger.Warningf("emitRequest return with: %v", err)
 			return
 		}
-		logger.Infof("emitRequest accept %v with %v", a.requestDevice, auth.key)
+		logger.Infof("emitRequest accept %v", a.requestDevice)
 		return
 	case <-t.C:
 		logger.Info("timeout")

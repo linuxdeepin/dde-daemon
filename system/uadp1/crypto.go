@@ -86,7 +86,7 @@ func (ctx *CryptoContext) Save(file string) bool {
 		return false
 	}
 
-	logger.Debugf("%s:\n%s", file, string(data))
+	logger.Debugf("saved key to %s", file)
 	return true
 }
 
