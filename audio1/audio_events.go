@@ -149,8 +149,14 @@ func (a *Audio) checkAutoSwitchOutputPort() (auto bool, cardId uint32, portName 
 			logger.Warning(err)
 			continue
 		}
-		if _, err = pc.Ports.Get(prefer.PortName, pulse.DirectionSink); err != nil {
+		portInfo, err := pc.Ports.Get(prefer.PortName, pulse.DirectionSink)
+		if err != nil {
 			logger.Warning(err)
+			continue
+		}
+		// 跳过不可用端口，继续查找下一个候选
+		if portInfo.Available == pulse.AvailableTypeNo {
+			logger.Debugf("output port <%s, %s> is unavailable, skip", prefer.CardName, prefer.PortName)
 			continue
 		}
 		mode := GetConfigKeeper().GetMode(card, prefer.PortName)
@@ -226,6 +232,11 @@ func (a *Audio) checkAutoSwitchInputPort() (auto bool, cardId uint32, portName s
 		port, err := pc.Ports.Get(prefer.PortName, pulse.DirectionSource)
 		if err != nil {
 			logger.Warning(err)
+			continue
+		}
+		// 端口虽在优先级队列中，但当前不可用（如 profile 切换过程中的中间态），跳过
+		if port.Available == pulse.AvailableTypeNo {
+			logger.Debugf("input port <%s, %s> is unavailable, skip", prefer.CardName, prefer.PortName)
 			continue
 		}
 		if card.ActiveProfile != nil && port.Profiles.Exists(card.ActiveProfile.Name) {
