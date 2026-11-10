@@ -22,6 +22,32 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
+        "SampleNTPServers": {
+            "value": [
+                "ntp.ntsc.ac.cn",
+                "ntp.aliyun.com",
+                "cn.ntp.org.cn",
+                "0.debian.pool.ntp.org",
+                "1.debian.pool.ntp.org",
+                "2.debian.pool.ntp.org",
+                "3.debian.pool.ntp.org",
+                "0.arch.pool.ntp.org",
+                "1.arch.pool.ntp.org",
+                "2.arch.pool.ntp.org",
+                "3.arch.pool.ntp.org",
+                "0.fedora.pool.ntp.org",
+                "1.fedora.pool.ntp.org",
+                "2.fedora.pool.ntp.org",
+                "3.fedora.pool.ntp.org"
+            ],
+            "serial": 0,
+            "flags": ["global"],
+            "name": "sample NTP servers",
+            "name[zh_CN]": "示例NTP服务器列表",
+            "description": "sample NTP servers",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
         "FallbackNTPServer": {
             "value": "",
             "serial": 0,
