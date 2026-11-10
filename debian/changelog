@@ -1,3 +1,10 @@
+dde-daemon (6.1.111.1000+pajil) unstable; urgency=medium
+
+  * feat(accounts1): support autologin configuration for DDM
+  * feat: persist mute state per audio device port
+
+ -- zhangkun <zhangkun2@uniontech.com>  Tue, 10 Nov 2026 14:40:00 +0800
+
 dde-daemon (6.1.111) unstable; urgency=medium
 
   * fix: 唤醒后保持节能模式下用户设置的亮度值
