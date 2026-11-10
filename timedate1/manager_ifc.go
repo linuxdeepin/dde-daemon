@@ -1,10 +1,11 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package timedate
 
 import (
+	"errors"
 	"time"
 
 	"github.com/linuxdeepin/go-lib/strv"
@@ -89,27 +90,11 @@ func (m *Manager) SetNTPServer(server string) *dbus.Error {
 }
 
 func (m *Manager) GetSampleNTPServers() (servers []string, busErr *dbus.Error) {
-	servers = []string{
-		"ntp.ntsc.ac.cn",
-		"ntp.aliyun.com",
-		"cn.ntp.org.cn",
-
-		"0.debian.pool.ntp.org",
-		"1.debian.pool.ntp.org",
-		"2.debian.pool.ntp.org",
-		"3.debian.pool.ntp.org",
-
-		"0.arch.pool.ntp.org",
-		"1.arch.pool.ntp.org",
-		"2.arch.pool.ntp.org",
-		"3.arch.pool.ntp.org",
-
-		"0.fedora.pool.ntp.org",
-		"1.fedora.pool.ntp.org",
-		"2.fedora.pool.ntp.org",
-		"3.fedora.pool.ntp.org",
+	if m.ntpDConfig == nil {
+		return nil, dbusutil.ToError(errors.New("timedated dconfig is not initialized"))
 	}
-	return servers, nil
+	servers, err := m.ntpDConfig.GetValueStringList(dSettingsKeySampleNTPServers)
+	return servers, dbusutil.ToError(err)
 }
 
 // To control whether the RTC is the local time or UTC.

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -14,6 +14,7 @@ import (
 	"sync"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/common/dconfig"
 	ddbus "github.com/linuxdeepin/dde-daemon/dbus"
 	"github.com/linuxdeepin/dde-daemon/session/common"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
@@ -43,6 +44,11 @@ const (
 	dSettingsKeyShortTimeFormat = "shortTimeFormat"
 	dSettingsKeyLongTimeFormat  = "longTimeFormat"
 	dSettingsKeyWeekBegins      = "weekBegins"
+)
+
+const (
+	dSettingsTimeDatedName       = "org.deepin.dde.daemon.timedated"
+	dSettingsKeySampleNTPServers = "SampleNTPServers"
 )
 
 //go:generate dbusutil-gen -type Manager manager.go
@@ -93,6 +99,8 @@ type Manager struct {
 	setter         timedate.Timedate
 	userObj        accounts.User
 	dConfigManager configManager.Manager
+
+	ntpDConfig *dconfig.DConfig
 
 	//nolint
 	signals *struct {
@@ -411,6 +419,11 @@ func NewManager(service *dbusutil.Service) (*Manager, error) {
 	m.dConfigManager, err = configManager.NewManager(sysBus, dsPath)
 	if err != nil {
 		logger.Warning(err)
+	}
+
+	m.ntpDConfig, err = dconfig.NewDConfig(dSettingsAppID, dSettingsTimeDatedName, "")
+	if err != nil {
+		logger.Warning("failed to init timedated config:", err)
 	}
 
 	m.initUserObj(sysBus)
