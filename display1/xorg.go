@@ -435,7 +435,7 @@ func (mm *xMonitorManager) getStdMonitorName(name string, edid []byte) (string, 
 		return stdName, nil
 	}
 
-	stdName, err := getStdMonitorName(edid)
+	stdName, err := getStdMonitorName(name, edid)
 	if err != nil {
 		return "", err
 	}

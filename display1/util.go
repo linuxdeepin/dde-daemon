@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
 	"os"
 	"path/filepath"
@@ -400,24 +401,60 @@ func hasRate(rates []float64, rate float64) bool {
 
 var regCardOutput = regexp.MustCompile(`^card\d+-.+`)
 
-func getStdMonitorName(edid []byte) (string, error) {
+func getStdMonitorName(outputName string, edid []byte) (string, error) {
+	return getStdMonitorNameFromDir("/sys/class/drm", outputName, edid)
+}
+
+// getStdMonitorNameFromDir 根据 EDID 查找标准显示器名，目录参数便于测试。
+//
+// 多台同型号显示器可能具有完全相同的 EDID，此时不能直接返回第一个匹配项，
+// 否则这些显示器会得到相同的 UUID，显示配置会互相覆盖。优先使用 X output
+// 名称精确匹配 connector 名称；无法精确匹配时，只有唯一匹配才返回，存在多个
+// 匹配则返回错误，由调用方回退到唯一的 X output 名称。
+func getStdMonitorNameFromDir(dir, outputName string, edid []byte) (string, error) {
 	// /sys/class/drm/card0-HDMI-A-1
-	fileInfos, err := os.ReadDir("/sys/class/drm")
+	fileInfos, err := os.ReadDir(dir)
 	if err != nil {
 		return "", err
 	}
+
+	var exactMatches []string
+	var otherMatches []string
 	for _, info := range fileInfos {
 		name := info.Name()
-		if regCardOutput.MatchString(name) {
-			nameParts := strings.SplitN(name, "-", 2)
-			if len(nameParts) == 2 {
-				outputName := nameParts[1]
-				sysEdid, _ := readSysDrmEdid(name)
-				if outputName != "" && len(sysEdid) > 0 && edidEqual(edid, sysEdid) {
-					return outputName, nil
-				}
-			}
+		if !regCardOutput.MatchString(name) {
+			continue
 		}
+
+		nameParts := strings.SplitN(name, "-", 2)
+		if len(nameParts) != 2 || nameParts[1] == "" {
+			continue
+		}
+
+		connectorName := nameParts[1]
+		sysEdid, err := readSysDrmEdid(dir, name)
+		if err != nil || len(sysEdid) == 0 || !edidEqual(edid, sysEdid) {
+			continue
+		}
+
+		if connectorName == outputName {
+			exactMatches = append(exactMatches, connectorName)
+		} else {
+			otherMatches = append(otherMatches, connectorName)
+		}
+	}
+
+	if len(exactMatches) == 1 {
+		return exactMatches[0], nil
+	}
+	if len(exactMatches) > 1 {
+		return "", fmt.Errorf("ambiguous EDID: output %q matches multiple connectors %v", outputName, exactMatches)
+	}
+	if len(otherMatches) == 1 {
+		return otherMatches[0], nil
+	}
+	if len(otherMatches) > 1 {
+		return "", fmt.Errorf("ambiguous EDID: output %q matches multiple connectors %v", outputName, otherMatches)
 	}
 	return "", errors.New("can not get std name")
 }
@@ -434,7 +471,7 @@ func edidEqual(edid1, edid2 []byte) bool {
 	return false
 }
 
-func readSysDrmEdid(name string) ([]byte, error) {
-	content, err := os.ReadFile(filepath.Join("/sys/class/drm", name, "edid"))
+func readSysDrmEdid(dir, name string) ([]byte, error) {
+	content, err := os.ReadFile(filepath.Join(dir, name, "edid"))
 	return content, err
 }
