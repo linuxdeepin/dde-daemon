@@ -29,6 +29,7 @@ const (
 	PowerScope        = "org.deepin.dde.Power1:/org/deepin/dde/Power1"
 	InputDevicesScope = "org.deepin.dde.InputDevices1:/org/deepin/dde/InputDevices1"
 	AirplaneModeScope = "org.deepin.dde.AirplaneMode1:/org/deepin/dde/AirplaneMode1"
+	TimedateScope     = "org.deepin.dde.Timedate1:/org/deepin/dde/Timedate1"
 
 	defaultRuntimeDir = "/run/dde-daemon"
 	defaultStateFile  = defaultRuntimeDir + "/security_loader_allow_callers.json"

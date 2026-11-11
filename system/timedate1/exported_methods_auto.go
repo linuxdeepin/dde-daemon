@@ -9,6 +9,11 @@ import (
 func (v *Manager) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
+			Name:   "SetAllowCaller",
+			Fn:     v.SetAllowCaller,
+			InArgs: []string{"uniqueName"},
+		},
+		{
 			Name:   "SetLocalRTC",
 			Fn:     v.SetLocalRTC,
 			InArgs: []string{"enabled", "fixSystem", "message"},

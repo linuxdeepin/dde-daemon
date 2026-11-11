@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,15 +9,27 @@ import (
 	"os"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/dde-daemon/timedate1/zoneinfo"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
+// SetAllowCaller registers the uniqueName of a security-loader launched process,
+// so that its calls on this interface skip the Polkit check.
+func (m *Manager) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
+	return dbusutil.ToError(m.allowCallers.AddCaller(securityloader.TimedateScope, sender, uniqueName))
+}
+
 // SetTime set the current time and date,
 // pass a value of microseconds since 1 Jan 1970 UTC
 func (m *Manager) SetTime(sender dbus.Sender, usec int64, relative bool, message string) *dbus.Error {
+	err := m.checkAuthorization("SetTime", message, sender)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
 	// TODO: check usec validity
-	err := m.core.SetTime(0, usec, relative, false)
+	err = m.core.SetTime(0, usec, relative, false)
 	return dbusutil.ToError(err)
 }
 
@@ -80,6 +92,11 @@ func (m *Manager) SetLocalRTC(sender dbus.Sender, enabled bool, fixSystem bool, 
 
 // SetNTP to control whether the system clock is synchronized with the network
 func (m *Manager) SetNTP(sender dbus.Sender, enabled bool, message string) *dbus.Error {
+	err := m.checkAuthorization("SetNTP", message, sender)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
 	currentNTPEnabled, err := m.core.NTP().Get(0)
 	if err != nil {
 		return dbusutil.ToError(err)
