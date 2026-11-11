@@ -6,15 +6,14 @@ package timedated
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 
 	dbus "github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	ConfigManager "github.com/linuxdeepin/go-dbus-factory/org.desktopspec.ConfigManager"
-	polkit "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.policykit1"
 	systemd1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.systemd1"
 	timedate1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timedate1"
 	timesync1 "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.timesync1"
@@ -29,6 +28,7 @@ import (
 type Manager struct {
 	core              timedate1.Timedate
 	service           *dbusutil.Service
+	allowCallers      *securityloader.AllowCallerRegistry
 	PropsMu           sync.RWMutex
 	NTPServer         string
 	timesyncd         timesync1.Timesync1
@@ -61,8 +61,9 @@ const (
 func NewManager(service *dbusutil.Service) (*Manager, error) {
 	core := timedate1.NewTimedate(service.Conn())
 	m := &Manager{
-		core:    core,
-		service: service,
+		core:         core,
+		service:      service,
+		allowCallers: securityloader.DefaultRegistry(),
 	}
 	return m, nil
 }
@@ -300,36 +301,21 @@ func (m *Manager) destroy() {
 	m.core = nil
 }
 
+// checkAuthorization authorizes the caller. Callers registered by
+// security-loader are trusted directly, all others go through Polkit.
 func (m *Manager) checkAuthorization(method, msg string, sender dbus.Sender) error {
-	isAuthorized, err := doAuthorized(msg, string(sender))
+	err := securityloader.AuthorizeWithPolkitDetails(
+		m.allowCallers,
+		securityloader.TimedateScope,
+		sender,
+		m.service.Conn(),
+		timedate1ActionId,
+		map[string]string{"polkit.message": msg},
+	)
 	if err != nil {
-		logger.Warning("Has error occurred in doAuthorized:", err)
-		return err
+		logger.Warningf("[%s] Failed to authorize %v: %v", method, sender, err)
 	}
-	if !isAuthorized {
-		logger.Warning("Failed to authorize")
-		return fmt.Errorf("[%s] Failed to authorize for %v", method, sender)
-	}
-	return nil
-}
-
-func doAuthorized(msg, sysBusName string) (bool, error) {
-	systemBus, err := dbus.SystemBus()
-	if err != nil {
-		return false, err
-	}
-	authority := polkit.NewAuthority(systemBus)
-	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
-	subject.SetDetail("name", sysBusName)
-	detail := map[string]string{
-		"polkit.message": msg,
-	}
-	ret, err := authority.CheckAuthorization(0, subject, timedate1ActionId,
-		detail, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
-	if err != nil {
-		return false, err
-	}
-	return ret.IsAuthorized, nil
+	return err
 }
 
 func (m *Manager) setNTPServerToTimeSyncd(server string) error {
