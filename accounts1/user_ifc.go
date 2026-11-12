@@ -1069,9 +1069,25 @@ func (u *User) PasswordExpiredInfo() (expiredStatus ExpiredStatus, dayLeft int64
 	return expiredStatusNormal, daysLeft + 1, nil
 }
 
-func (u *User) SetPasswordHint(hint string) (busErr *dbus.Error) {
+func (u *User) SetPasswordHint(sender dbus.Sender, hint string) (busErr *dbus.Error) {
+	// The hint belongs to a single account but the object path is public, so
+	// without this check any local user could rewrite someone else's hint.
+	// The owner passes without a prompt; other callers need the
+	// user-administration action, which the polkit rule grants to the
+	// greeter's lightdm user in an active session.
+	err := u.checkAuth(sender, true, polkitActionChangeOwnData)
+	if err != nil {
+		logger.Warningf("SetPasswordHint denied for %v: %v", sender, err)
+		return dbusutil.ToError(err)
+	}
+
+	err = validatePasswordHint(hint)
+	if err != nil {
+		return dbusutil.ToError(err)
+	}
+
 	encodeHint := base64.StdEncoding.EncodeToString([]byte(hint))
-	err := u.writeUserConfigWithChange(confKeyPasswordHint, encodeHint)
+	err = u.writeUserConfigWithChange(confKeyPasswordHint, encodeHint)
 	if err == nil {
 		u.setPropPasswordHint(hint)
 	}
