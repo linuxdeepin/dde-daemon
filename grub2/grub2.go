@@ -18,6 +18,7 @@ import (
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -46,12 +47,14 @@ const (
 
 type Grub2 struct {
 	service            *dbusutil.Service
+	allowCallers       *securityloader.AllowCallerRegistry
 	modifyManager      *modifyManager
 	entries            []Entry
 	theme              *Theme
 	editAuth           *EditAuth
 	fstart             *Fstart
 	gfxmodeDetectState gfxmodeDetectState
+	gfxmodeDetectMu    sync.Mutex
 	inhibitFd          dbus.UnixFD
 	PropsMu            sync.RWMutex
 	dbusObj            ofdbus.DBus
@@ -296,8 +299,9 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 
 func NewGrub2(service *dbusutil.Service) *Grub2 {
 	g := &Grub2{
-		service:   service,
-		inhibitFd: -1,
+		service:      service,
+		allowCallers: securityloader.DefaultRegistry(),
+		inhibitFd:    -1,
 	}
 	g.dbusObj = ofdbus.NewDBus(service.Conn())
 	g.sysLoop = dbusutil.NewSignalLoop(service.Conn(), 10)
