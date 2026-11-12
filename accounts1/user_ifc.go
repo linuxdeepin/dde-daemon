@@ -27,6 +27,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 	"unsafe"
 
@@ -39,6 +40,7 @@ import (
 	"github.com/linuxdeepin/go-lib/imgutil"
 	"github.com/linuxdeepin/go-lib/strv"
 	dutils "github.com/linuxdeepin/go-lib/utils"
+	"golang.org/x/sys/unix"
 	"golang.org/x/xerrors"
 )
 
@@ -1086,80 +1088,160 @@ func (u *User) GetReminderInfo() (info LoginReminderInfo, dbusErr *dbus.Error) {
 // #nosec G101
 const secretQuestionDirectory = "/var/lib/dde-daemon/secret-question/"
 
-func walkQuestions(username string, f func(id int, salt string) error) error {
-	path := filepath.Join(secretQuestionDirectory, username)
+// prepareSecretQuestionsStore makes the on-disk store private to the daemon.
+// Older versions created it with 0777, which let any local user plant files
+// under it, so the mode is fixed up even when the directory already exists.
+func prepareSecretQuestionsStore() error {
+	err := os.MkdirAll(secretQuestionDirectory, 0700)
+	if err != nil {
+		return err
+	}
 
-	file, err := os.Open(path)
+	return os.Chmod(secretQuestionDirectory, 0700)
+}
+
+// openSecretQuestionsFile opens the stored file for username. The daemon runs
+// as root, so an entry planted by another user must never be trusted: the file
+// is opened without following symlinks and without blocking on a FIFO, then
+// checked to be a regular, single-link file owned by the daemon itself.
+func openSecretQuestionsFile(path string) (*os.File, error) {
+	file, err := os.OpenFile(path, os.O_RDONLY|unix.O_NOFOLLOW|unix.O_NONBLOCK, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	info, err := file.Stat()
+	if err != nil {
+		file.Close()
+
+		return nil, err
+	}
+
+	if !info.Mode().IsRegular() {
+		file.Close()
+
+		return nil, xerrors.Errorf("secret question store %q is not a regular file", path)
+	}
+
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	if !ok {
+		file.Close()
+
+		return nil, xerrors.Errorf("cannot stat secret question store %q", path)
+	}
+
+	if stat.Nlink != 1 {
+		file.Close()
+
+		return nil, xerrors.Errorf("secret question store %q has %d links", path, stat.Nlink)
+	}
+
+	if stat.Uid != uint32(os.Geteuid()) {
+		file.Close()
+
+		return nil, xerrors.Errorf("secret question store %q is owned by uid %d", path, stat.Uid)
+	}
+
+	return file, nil
+}
+
+const secretQuestionCount = 3
+
+// maxSecretQuestionAnswerSize bounds one stored salt+hash entry. A real
+// crypt(3) result is a few hundred bytes; accepting unbounded D-Bus byte
+// arrays would let a caller fill /var/lib and make the store unparsable.
+const maxSecretQuestionAnswerSize = 4096
+
+type secretQuestion struct {
+	id   int
+	salt string
+}
+
+// loadSecretQuestions reads the complete secret-question store for username.
+// A missing store means the account has not configured secret questions; any
+// other malformed content is an error so callers fail closed.
+func loadSecretQuestions(dir, username string) ([]secretQuestion, error) {
+	path := filepath.Join(dir, username)
+
+	file, err := openSecretQuestionsFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil
+			return nil, nil
 		}
 
-		return err
+		return nil, err
 	}
 	defer file.Close()
 
 	reader := bufio.NewReader(file)
+	questions := make([]secretQuestion, 0, secretQuestionCount)
+	seen := make(map[int]struct{}, secretQuestionCount)
 	for {
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			if err == io.EOF {
+		line, readErr := reader.ReadString('\n')
+		if len(line) > 0 {
+			line = strings.TrimSuffix(line, "\n")
+			line = strings.TrimSuffix(line, "\r")
+			if line == "" {
+				return nil, xerrors.New("empty line in secret question store")
+			}
+
+			item := strings.SplitN(line, ":", 2)
+			if len(item) != 2 {
+				return nil, xerrors.New("wrong format")
+			}
+
+			id, err := strconv.Atoi(item[0])
+			if err != nil {
+				return nil, err
+			}
+			if id <= 0 || item[1] == "" {
+				return nil, xerrors.New("invalid secret question entry")
+			}
+			if _, ok := seen[id]; ok {
+				return nil, xerrors.Errorf("duplicate secret question id %d", id)
+			}
+			seen[id] = struct{}{}
+
+			questions = append(questions, secretQuestion{id: id, salt: item[1]})
+		}
+
+		if readErr != nil {
+			if readErr == io.EOF {
 				break
 			}
 
-			return err
-		}
-
-		line = strings.TrimSpace(line)
-		if len(line) == 0 {
-			return nil
-		}
-
-		item := strings.SplitN(line, ":", 2)
-		if len(item) != 2 {
-			return xerrors.New("wrong format")
-		}
-
-		id, err := strconv.Atoi(item[0])
-		if err != nil {
-			return err
-		}
-
-		salt := item[1]
-
-		err = f(id, salt)
-		if err != nil {
-			return err
+			return nil, readErr
 		}
 	}
 
-	return nil
-}
-
-func (u *User) GetSecretQuestions() (list []int, err *dbus.Error) {
-	err1 := walkQuestions(u.UserName, func(id int, salt string) error {
-		list = append(list, id)
-
-		return nil
-	})
-	if err1 != nil {
-		err = dbusutil.ToError(err1)
+	if len(questions) == 0 {
+		return nil, xerrors.New("no secret questions stored")
 	}
 
-	return
+	return questions, nil
 }
 
-func (u *User) VerifySecretQuestions(answers map[int]string) (failed []int, err *dbus.Error) {
-	err1 := walkQuestions(u.UserName, func(id int, salt string) error {
-		answer, ok := answers[id]
+// verifySecretAnswers checks every stored question. It fails closed when the
+// store does not contain the expected number of questions, so an empty or
+// truncated store can never be mistaken for a successful verification.
+func verifySecretAnswers(questions []secretQuestion, answers map[int]string) ([]int, error) {
+	if len(questions) != secretQuestionCount {
+		return nil, xerrors.Errorf("secret question store contains %d questions, expected %d",
+			len(questions), secretQuestionCount)
+	}
+
+	var failed []int
+	for _, question := range questions {
+		answer, ok := answers[question.id]
 		if !ok || len(answer) == 0 {
-			return xerrors.New("empty answer")
+			failed = append(failed, question.id)
+			continue
 		}
 
 		answerCStr := C.CString(answer)
 		defer C.free(unsafe.Pointer(answerCStr))
 
-		saltCStr := C.CString(salt)
+		saltCStr := C.CString(question.salt)
 		defer C.free(unsafe.Pointer(saltCStr))
 
 		data := C.struct_crypt_data{}
@@ -1168,40 +1250,167 @@ func (u *User) VerifySecretQuestions(answers map[int]string) (failed []int, err 
 		// salt 格式：$类型$salt&encrypted，无需去除 encrypted
 		res := C.crypt_r(answerCStr, saltCStr, &data)
 		if res == nil {
-			return fmt.Errorf("encrypt failed")
+			return nil, fmt.Errorf("encrypt failed")
 		}
 
 		resStr := C.GoString(res)
-		if resStr != salt {
-			failed = append(failed, id)
+		if resStr != question.salt {
+			failed = append(failed, question.id)
 		}
-
-		return nil
-	})
-	if err1 != nil {
-		err = dbusutil.ToError(err1)
-		return
 	}
 
-	return
+	return failed, nil
+}
+
+// writeSecretQuestions replaces the stored questions for username. The content
+// is written to a temporary file and renamed into place, so an interrupted
+// write can never leave a truncated store behind and a symlink planted in the
+// store is replaced instead of followed.
+func writeSecretQuestions(dir, username string, content []byte) error {
+	err := os.MkdirAll(dir, 0700)
+	if err != nil {
+		return err
+	}
+
+	path := filepath.Join(dir, username)
+
+	file, err := os.CreateTemp(dir, ".secret-question-*")
+	if err != nil {
+		return err
+	}
+	tmpPath := file.Name()
+	defer func() {
+		if tmpPath != "" {
+			_ = os.Remove(tmpPath)
+		}
+	}()
+
+	err = file.Chmod(0600)
+	if err != nil {
+		file.Close()
+
+		return err
+	}
+
+	_, err = file.Write(content)
+	if err != nil {
+		file.Close()
+
+		return err
+	}
+
+	err = file.Close()
+	if err != nil {
+		return err
+	}
+
+	err = os.Rename(tmpPath, path)
+	if err != nil {
+		return err
+	}
+	tmpPath = ""
+
+	return nil
+}
+
+func (u *User) GetSecretQuestions(sender dbus.Sender) (list []int, err *dbus.Error) {
+	if err := u.checkAuth(sender, true, polkitActionChangeOwnData); err != nil {
+		return nil, dbusutil.ToError(err)
+	}
+
+	if err := prepareSecretQuestionsStore(); err != nil {
+		logger.Warningf("failed to secure secret question store: %v", err)
+	}
+
+	questions, loadErr := loadSecretQuestions(secretQuestionDirectory, u.UserName)
+	if loadErr != nil {
+		return nil, dbusutil.ToError(loadErr)
+	}
+	for _, question := range questions {
+		list = append(list, question.id)
+	}
+
+	return list, nil
+}
+
+func (u *User) VerifySecretQuestions(sender dbus.Sender, answers map[int]string) ([]int, *dbus.Error) {
+	if err := u.checkAuth(sender, true, polkitActionChangeOwnData); err != nil {
+		return nil, dbusutil.ToError(err)
+	}
+
+	if err := prepareSecretQuestionsStore(); err != nil {
+		logger.Warningf("failed to secure secret question store: %v", err)
+	}
+
+	// Hold the verify lock across the check and the outcome accounting so
+	// concurrent rounds cannot all pass the check before any failure lands.
+	secretQuestionVerifyLimiter.verifyMu.Lock()
+	defer secretQuestionVerifyLimiter.verifyMu.Unlock()
+
+	if locked, remain := secretQuestionVerifyLimiter.locked(u.UserName); locked {
+		return nil, dbusutil.ToError(xerrors.Errorf("too many failed attempts, retry in %s",
+			remain.Round(time.Second)))
+	}
+
+	questions, loadErr := loadSecretQuestions(secretQuestionDirectory, u.UserName)
+	if loadErr != nil {
+		secretQuestionVerifyLimiter.recordFailure(u.UserName)
+		return nil, dbusutil.ToError(loadErr)
+	}
+
+	failed, verifyErr := verifySecretAnswers(questions, answers)
+	if verifyErr != nil {
+		// Malformed or incomplete answers are guesses too: count them so a
+		// caller cannot dodge the limiter by sending a partial answer set.
+		secretQuestionVerifyLimiter.recordFailure(u.UserName)
+		return nil, dbusutil.ToError(verifyErr)
+	}
+
+	if len(failed) == 0 {
+		secretQuestionVerifyLimiter.reset(u.UserName)
+	} else {
+		secretQuestionVerifyLimiter.recordFailure(u.UserName)
+	}
+
+	return failed, nil
+}
+
+func validateSecretQuestionList(list map[int][]byte) error {
+	if len(list) != secretQuestionCount {
+		return xerrors.Errorf("expected %d secret questions, got %d", secretQuestionCount, len(list))
+	}
+
+	for id, encryptedAnswer := range list {
+		if id <= 0 {
+			return xerrors.Errorf("invalid secret question id %d", id)
+		}
+		if len(encryptedAnswer) == 0 || len(encryptedAnswer) > maxSecretQuestionAnswerSize {
+			return xerrors.Errorf("invalid secret answer length %d for question %d",
+				len(encryptedAnswer), id)
+		}
+		if bytes.ContainsAny(encryptedAnswer, "\r\n") {
+			return xerrors.Errorf("secret answer for question %d contains a line break", id)
+		}
+	}
+
+	return nil
 }
 
 func (u *User) SetSecretQuestions(sender dbus.Sender, list map[int][]byte) *dbus.Error {
-	if len(list) != 3 {
-		return &dbus.ErrMsgInvalidArg
-	}
-
 	err := u.checkAuth(sender, false, polkitActionChangeOwnData)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
 
-	err = os.MkdirAll(secretQuestionDirectory, os.ModePerm)
+	if err := validateSecretQuestionList(list); err != nil {
+		logger.Warningf("invalid secret question payload for user=%s: %v", u.UserName, err)
+		return &dbus.ErrMsgInvalidArg
+	}
+
+	err = prepareSecretQuestionsStore()
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
-
-	path := filepath.Join(secretQuestionDirectory, u.UserName)
 
 	var content bytes.Buffer
 	for id, encryptedAnswer := range list {
@@ -1211,8 +1420,7 @@ func (u *User) SetSecretQuestions(sender dbus.Sender, list map[int][]byte) *dbus
 		content.WriteRune('\n')
 	}
 
-	err = os.WriteFile(path, content.Bytes(), 0600)
-	return dbusutil.ToError(err)
+	return dbusutil.ToError(writeSecretQuestions(secretQuestionDirectory, u.UserName, content.Bytes()))
 }
 
 func (u *User) SetSecretKey(sender dbus.Sender, secretKey string) *dbus.Error {

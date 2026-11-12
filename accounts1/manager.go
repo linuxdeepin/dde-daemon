@@ -136,6 +136,12 @@ func NewManager(service *dbusutil.Service) *Manager {
 	m.usersMap = make(map[string]*User)
 	m.userAddedChanMap = make(map[string]chan string)
 
+	// An upgraded system may still carry a world-writable secret question
+	// store, so make it private before any account can read or write it.
+	if err := prepareSecretQuestionsStore(); err != nil {
+		logger.Warningf("failed to secure secret question store: %v", err)
+	}
+
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
 	m.initAccountDSettings()
