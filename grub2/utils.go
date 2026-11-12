@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -195,7 +195,13 @@ func replaceAndBackupDir(src, dst string) error {
 	}
 	err = os.Rename(dst, src)
 	if err != nil {
-		os.Rename(bakDir, src)
+		// Put the previous theme back; if that fails too, the caller must
+		// know the tree is now missing rather than just "replace failed".
+		rollbackErr := os.Rename(bakDir, src)
+		if rollbackErr != nil {
+			return fmt.Errorf("rename %s to %s failed: %v; restore %s to %s failed: %v",
+				dst, src, err, bakDir, src, rollbackErr)
+		}
 		return err
 	}
 
