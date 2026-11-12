@@ -1,10 +1,11 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -12,6 +13,7 @@ import (
 	"strconv"
 
 	"github.com/godbus/dbus/v5"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	"github.com/linuxdeepin/go-lib/keyfile"
 )
@@ -22,6 +24,8 @@ const (
 	dbusServiceName = "org.deepin.dde.Greeter1"
 	dbusPath        = "/org/deepin/dde/Greeter1"
 	dbusInterface   = dbusServiceName
+
+	polkitActionUpdateQtTheme = "org.deepin.dde.greeter.update-qt-theme"
 )
 
 const (
@@ -58,13 +62,30 @@ type Manager struct {
 
 func (m *Manager) UpdateGreeterQtTheme(sender dbus.Sender, fd dbus.UnixFD) *dbus.Error {
 	m.service.DelayAutoQuit()
-	err := updateGreeterQtTheme(fd)
+
+	// The theme file lives in /etc/lightdm and is shared by every user of
+	// the machine, so the caller must be authorized before it is touched.
+	authorized, err := securityloader.CheckPolkitAuth(m.service.Conn(),
+		string(sender), polkitActionUpdateQtTheme)
+	if err != nil {
+		logger.Warningf("failed to authorize %v: %v", sender, err)
+		return dbusutil.ToError(err)
+	}
+	if !authorized {
+		logger.Warningf("caller %v is not authorized to update the greeter theme", sender)
+		return dbusutil.ToError(errAccessDenied)
+	}
+
+	err = updateGreeterQtTheme(fd)
 	if err != nil {
 		logger.Warning(err)
+		return dbusutil.ToError(err)
 	}
 	updateXSettingsConfig()
-	return dbusutil.ToError(err)
+	return nil
 }
+
+var errAccessDenied = errors.New("access denied")
 
 func updateGreeterQtTheme(fd dbus.UnixFD) error {
 	f := os.NewFile(uintptr(fd), "")
@@ -118,8 +139,13 @@ func updateXSettingsConfig() {
 		if err == nil {
 			if isInteger(value) {
 				_, err = xf.WriteString(fmt.Sprintf("%s %s\n", xsettingsKey, value))
+			} else if quoteXSettingsValue(value) == "" && value != "" {
+				// The value comes from a file the caller controls. A quote or
+				// newline inside it would otherwise terminate the string and
+				// inject extra xsettingsd keys, so such values are dropped.
+				logger.Warningf("skip invalid xsettings value for %s", xsettingsKey)
 			} else {
-				_, err = xf.WriteString(fmt.Sprintf("%s \"%s\"\n", xsettingsKey, value))
+				_, err = xf.WriteString(fmt.Sprintf("%s %s\n", xsettingsKey, quoteXSettingsValue(value)))
 			}
 		}
 
@@ -155,6 +181,18 @@ func updateXSettingsConfig() {
 	if err != nil {
 		logger.Warning(err)
 	}
+}
+
+// quoteXSettingsValue renders value as an xsettingsd string. Values that
+// cannot be rendered safely (quotes, backslashes, control characters) yield
+// an empty string and must be skipped by the caller.
+func quoteXSettingsValue(value string) string {
+	for _, r := range value {
+		if r == '"' || r == '\\' || r < 0x20 || r == 0x7f {
+			return ""
+		}
+	}
+	return `"` + value + `"`
 }
 
 func (*Manager) GetInterfaceName() string {
