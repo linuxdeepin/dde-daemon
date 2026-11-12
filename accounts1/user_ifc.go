@@ -1086,62 +1086,87 @@ func (u *User) GetReminderInfo() (info LoginReminderInfo, dbusErr *dbus.Error) {
 // #nosec G101
 const secretQuestionDirectory = "/var/lib/dde-daemon/secret-question/"
 
-func walkQuestions(username string, f func(id int, salt string) error) error {
+var errSecretQuestionsNotSet = errors.New("secret questions are not set")
+
+// walkQuestions calls f for every stored question. It returns the number of
+// questions visited. A missing store means "no questions set", which callers
+// must not confuse with a successful verification, so it is reported as a
+// dedicated error instead of being swallowed.
+func walkQuestions(username string, f func(id int, salt string) error) (int, error) {
 	path := filepath.Join(secretQuestionDirectory, username)
 
 	file, err := os.Open(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil
+			return 0, errSecretQuestionsNotSet
 		}
 
-		return err
+		return 0, err
 	}
 	defer file.Close()
 
-	reader := bufio.NewReader(file)
+	return parseQuestions(bufio.NewReader(file), f)
+}
+
+// parseQuestions reads the "id:salt" lines of a secret question store and
+// reports how many question entries were parsed.
+func parseQuestions(reader *bufio.Reader, f func(id int, salt string) error) (int, error) {
+	count := 0
 	for {
 		line, err := reader.ReadString('\n')
+		// The last line of a well-formed store may have no trailing newline;
+		// process it instead of dropping it like the old code did.
+		if len(line) == 0 && err != nil {
+			if err == io.EOF {
+				break
+			}
+
+			return count, err
+		}
+
+		trimmed := strings.TrimSpace(line)
+		// An empty line is not a terminator: stopping here would silently
+		// verify only the questions written before it.
+		if len(trimmed) != 0 {
+			item := strings.SplitN(trimmed, ":", 2)
+			if len(item) != 2 {
+				return count, xerrors.New("wrong format")
+			}
+
+			id, err := strconv.Atoi(item[0])
+			if err != nil {
+				return count, err
+			}
+
+			err = f(id, item[1])
+			if err != nil {
+				return count, err
+			}
+			count++
+		}
+
 		if err != nil {
 			if err == io.EOF {
 				break
 			}
 
-			return err
-		}
-
-		line = strings.TrimSpace(line)
-		if len(line) == 0 {
-			return nil
-		}
-
-		item := strings.SplitN(line, ":", 2)
-		if len(item) != 2 {
-			return xerrors.New("wrong format")
-		}
-
-		id, err := strconv.Atoi(item[0])
-		if err != nil {
-			return err
-		}
-
-		salt := item[1]
-
-		err = f(id, salt)
-		if err != nil {
-			return err
+			return count, err
 		}
 	}
 
-	return nil
+	return count, nil
 }
 
 func (u *User) GetSecretQuestions() (list []int, err *dbus.Error) {
-	err1 := walkQuestions(u.UserName, func(id int, salt string) error {
+	_, err1 := walkQuestions(u.UserName, func(id int, salt string) error {
 		list = append(list, id)
 
 		return nil
 	})
+	// A missing store simply means the account has no questions yet.
+	if errors.Is(err1, errSecretQuestionsNotSet) {
+		return nil, nil
+	}
 	if err1 != nil {
 		err = dbusutil.ToError(err1)
 	}
@@ -1150,7 +1175,7 @@ func (u *User) GetSecretQuestions() (list []int, err *dbus.Error) {
 }
 
 func (u *User) VerifySecretQuestions(answers map[int]string) (failed []int, err *dbus.Error) {
-	err1 := walkQuestions(u.UserName, func(id int, salt string) error {
+	count, err1 := walkQuestions(u.UserName, func(id int, salt string) error {
 		answer, ok := answers[id]
 		if !ok || len(answer) == 0 {
 			return xerrors.New("empty answer")
@@ -1180,6 +1205,13 @@ func (u *User) VerifySecretQuestions(answers map[int]string) (failed []int, err 
 	})
 	if err1 != nil {
 		err = dbusutil.ToError(err1)
+		return
+	}
+	// An empty failed list means "all answers correct" to the caller. Without
+	// a single question there is nothing to verify, so report that explicitly
+	// instead of letting the caller read it as a pass.
+	if count == 0 {
+		err = dbusutil.ToError(errSecretQuestionsNotSet)
 		return
 	}
 
