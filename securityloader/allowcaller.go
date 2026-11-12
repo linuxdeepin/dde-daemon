@@ -30,6 +30,7 @@ const (
 	InputDevicesScope = "org.deepin.dde.InputDevices1:/org/deepin/dde/InputDevices1"
 	AirplaneModeScope = "org.deepin.dde.AirplaneMode1:/org/deepin/dde/AirplaneMode1"
 	TimedateScope     = "org.deepin.dde.Timedate1:/org/deepin/dde/Timedate1"
+	Grub2Scope        = "org.deepin.dde.Grub2:/org/deepin/dde/Grub2"
 
 	defaultRuntimeDir = "/run/dde-daemon"
 	defaultStateFile  = defaultRuntimeDir + "/security_loader_allow_callers.json"
@@ -116,12 +117,20 @@ var (
 )
 
 func NewAllowCallerRegistry(service *dbusutil.Service) *AllowCallerRegistry {
+	return NewAllowCallerRegistryWithStateFile(service, defaultStateFile)
+}
+
+// NewAllowCallerRegistryWithStateFile is NewAllowCallerRegistry for a service
+// that runs in its own process and must not share the caller state file with
+// dde-system-daemon: two processes keeping their own copy of one file would
+// overwrite each other's registrations.
+func NewAllowCallerRegistryWithStateFile(service *dbusutil.Service, stateFile string) *AllowCallerRegistry {
 	groupID, err := lookupGroupID(privilegedGroup)
 	if err != nil {
 		logger.Warningf("failed to resolve privileged group %s: %v", privilegedGroup, err)
 		groupID = invalidGroupID
 	}
-	registry := newAllowCallerRegistry(serviceBus{service}, defaultStateFile, groupID)
+	registry := newAllowCallerRegistry(serviceBus{service}, stateFile, groupID)
 	if err := registry.load(); err != nil {
 		logger.Warning("failed to load security-loader callers:", err)
 	}

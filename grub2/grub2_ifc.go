@@ -10,6 +10,7 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -26,6 +27,13 @@ const (
 
 func (*Grub2) GetInterfaceName() string {
 	return dbusInterface
+}
+
+// SetAllowCaller registers a security-loader launched caller, so that its
+// calls on this interface skip the Polkit check. The D-Bus policy only lets
+// the deepin-daemon group reach this method.
+func (g *Grub2) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
+	return dbusutil.ToError(g.allowCallers.AddCaller(securityloader.Grub2Scope, sender, uniqueName))
 }
 
 // GetSimpleEntryTitles return entry titles only in level one and will
@@ -245,6 +253,27 @@ func (g *Grub2) Reset(sender dbus.Sender) *dbus.Error {
 }
 
 func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
+	if !noCheckAuth {
+		err := securityloader.AuthorizeWithPolkit(
+			g.allowCallers,
+			securityloader.Grub2Scope,
+			sender,
+			g.service.Conn(),
+			polikitActionIdPrepareGfxmodeDetect,
+		)
+		if err != nil {
+			logger.Warningf("PrepareGfxmodeDetect denied for %v: %v", sender, err)
+			return dbusutil.ToError(err)
+		}
+	}
+
+	// Detection rewrites the boot configuration, so two calls must never
+	// schedule overlapping modify tasks. Serialise the whole method; the
+	// state check below is only meaningful while no other call can slip in
+	// between reading gfxmodeDetectState and setting it to Detecting.
+	g.gfxmodeDetectMu.Lock()
+	defer g.gfxmodeDetectMu.Unlock()
+
 	g.service.DelayAutoQuit()
 
 	gfxmodes, err := grub_common.GetGfxmodesFromSysDrm()
