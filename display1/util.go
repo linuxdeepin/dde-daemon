@@ -414,26 +414,53 @@ func hasRate(rates []float64, rate float64) bool {
 
 var regCardOutput = regexp.MustCompile(`^card\d+-.+`)
 
-func getStdMonitorName(edid []byte) (string, error) {
-	// /sys/class/drm/card0-HDMI-A-1
-	fileInfos, err := os.ReadDir("/sys/class/drm")
+func getStdMonitorName(edid []byte, connectorID uint32) (string, error) {
+	return getStdMonitorNameAt("/sys/class/drm", connectorID, edid)
+}
+
+func getStdMonitorNameAt(drmDir string, connectorID uint32, edid []byte) (string, error) {
+	fileInfos, err := os.ReadDir(drmDir)
 	if err != nil {
 		return "", err
 	}
+	matchedName := ""
+	nameCounts := make(map[string]int)
 	for _, info := range fileInfos {
 		name := info.Name()
-		if regCardOutput.MatchString(name) {
-			nameParts := strings.SplitN(name, "-", 2)
-			if len(nameParts) == 2 {
-				outputName := nameParts[1]
-				sysEdid, _ := readSysDrmEdid(name)
-				if outputName != "" && len(sysEdid) > 0 && edidEqual(edid, sysEdid) {
-					return outputName, nil
-				}
+		if !regCardOutput.MatchString(name) {
+			continue
+		}
+		_, outputName, _ := strings.Cut(name, "-")
+		sysEdid, _ := os.ReadFile(filepath.Join(drmDir, name, "edid"))
+		if outputName == "" || len(sysEdid) == 0 || !edidEqual(edid, sysEdid) {
+			continue
+		}
+		nameCounts[outputName]++
+		if connectorID != 0 {
+			data, err := os.ReadFile(filepath.Join(drmDir, name, "connector_id"))
+			if err != nil {
+				continue
+			}
+			id, err := strconv.ParseUint(strings.TrimSpace(string(data)), 10, 32)
+			if err != nil || uint32(id) != connectorID {
+				continue
 			}
 		}
+		if matchedName != "" {
+			// Leave the standard name empty so getOutputUuid uses the
+			// distinct RandR names instead of aliasing both monitors.
+			return "", errors.New("ambiguous monitor identity: multiple DRM connectors match")
+		}
+		matchedName = outputName
 	}
-	return "", errors.New("can not get std name")
+	if matchedName == "" {
+		return "", errors.New("can not get std name")
+	}
+	// Standard names omit the GPU; identical names and EDIDs would still alias.
+	if nameCounts[matchedName] > 1 {
+		return "", errors.New("ambiguous standard name: multiple GPUs have the same connector name and EDID")
+	}
+	return matchedName, nil
 }
 
 func edidEqual(edid1, edid2 []byte) bool {
@@ -446,9 +473,4 @@ func edidEqual(edid1, edid2 []byte) bool {
 		return bytes.Equal(edid1, edid2[:128])
 	}
 	return false
-}
-
-func readSysDrmEdid(name string) ([]byte, error) {
-	content, err := os.ReadFile(filepath.Join("/sys/class/drm", name, "edid"))
-	return content, err
 }
