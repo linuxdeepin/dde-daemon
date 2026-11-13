@@ -1,0 +1,86 @@
+# SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: CC0-1.0
+
+name: Unit Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-test:
+    name: Build and Run Unit Tests
+    runs-on: ubuntu-22.04
+    container: linuxdeepin/deepin:crimson
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup apt sources
+        run: |
+          set -euxo pipefail
+          echo "deb [trusted=yes] http://mirrors.kernel.org/deepin/beige/ crimson main commercial community" > /etc/apt/sources.list
+          echo "deb-src [trusted=yes] http://mirrors.kernel.org/deepin/beige/ crimson main commercial community" >> /etc/apt/sources.list
+          rm -rf /etc/apt/sources.list.d
+          apt-get update
+
+      - name: Install build dependencies
+        run: |
+          set -euxo pipefail
+          apt-get install -y --no-install-recommends \
+            devscripts equivs git \
+            golang-go \
+            golang-github-linuxdeepin-go-lib-dev \
+            golang-github-linuxdeepin-go-dbus-factory-dev \
+            golang-gir-gio-2.0-dev golang-gir-glib-2.0-dev \
+            golang-gir-gobject-2.0-dev golang-gir-gudev-1.0-dev \
+            golang-github-axgle-mahonia-dev \
+            golang-github-davecgh-go-spew-dev \
+            golang-github-fsnotify-fsnotify-dev \
+            golang-github-gosexy-gettext-dev \
+            golang-github-jinzhu-gorm-dev \
+            golang-github-kelvins-sunrisesunset-dev \
+            golang-github-linuxdeepin-go-x11-client-dev \
+            golang-github-lofanmi-pinyin-dev \
+            golang-github-mattn-go-sqlite3-dev \
+            golang-github-mozillazg-go-pinyin-dev \
+            golang-github-msteinert-pam-dev \
+            golang-github-nfnt-resize-dev \
+            golang-github-rickb777-date-dev \
+            golang-github-smartystreets-goconvey-dev \
+            golang-github-teambition-rrule-go-dev \
+            golang-github-adrg-xdg-dev \
+            golang-golang-x-sys-dev \
+            golang-golang-x-xerrors-dev \
+            golang-gopkg-check.v1-dev \
+            golang-gopkg-yaml.v3-dev \
+            golang-google-protobuf-dev \
+            golang-github-mdlayher-netlink-dev \
+            golang-github-jouyouyun-hardware-dev \
+            golang-dbus-dev \
+            dde-api-dev \
+            deepin-desktop-schemas \
+            deepin-gettext-tools \
+            libfontconfig1-dev libglib2.0-dev libgtk-3-dev \
+            libinput-dev librsvg2-bin libudev-dev \
+            libx11-dev libxcursor-dev \
+            libxfixes-dev libxi-dev libxkbfile-dev libxtst-dev \
+            libddcutil-dev libxcb-record0-dev libxcb1-dev \
+            python3 \
+            pkg-config
+
+      - name: Run unit tests
+        run: |
+          # dde-daemon uses `make test` which sets up GOPATH and runs
+          # `go test -v` on all registered packages.
+          make test
