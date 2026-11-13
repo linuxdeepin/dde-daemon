@@ -265,7 +265,7 @@ func (b *Bluetooth) Confirm(device dbus.ObjectPath, accept bool) *dbus.Error {
 // FeedPinCode should call when you receive RequestPinCode signal, notice that accept must true
 // if you accept connect request. If accept is false, pinCode will be ignored.
 func (b *Bluetooth) FeedPinCode(device dbus.ObjectPath, accept bool, pinCode string) *dbus.Error {
-	logger.Infof("dbus call FeedPinCode with device %v, accept %t and pinCode %s", device, accept, pinCode)
+	logger.Infof("dbus call FeedPinCode with device %v, accept %t", device, accept)
 
 	err := b.feed(device, accept, pinCode)
 	if err != nil {
@@ -280,7 +280,7 @@ func (b *Bluetooth) FeedPinCode(device dbus.ObjectPath, accept bool, pinCode str
 // if you accept connect request. If accept is false, passkey will be ignored.
 // passkey must be range in 0~999999.
 func (b *Bluetooth) FeedPasskey(device dbus.ObjectPath, accept bool, passkey uint32) *dbus.Error {
-	logger.Infof("dbus call FeedPasskey with device %v, accept %t and passkey %d", device, accept, passkey)
+	logger.Infof("dbus call FeedPasskey with device %v, accept %t", device, accept)
 
 	err := b.feed(device, accept, fmt.Sprintf("%06d", passkey))
 	if err != nil {
