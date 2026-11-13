@@ -46,19 +46,20 @@ const (
 //go:generate dbusutil-gen em -type Grub2,Theme,EditAuth
 
 type Grub2 struct {
-	service            *dbusutil.Service
-	allowCallers       *securityloader.AllowCallerRegistry
-	modifyManager      *modifyManager
-	entries            []Entry
-	theme              *Theme
-	editAuth           *EditAuth
-	fstart             *Fstart
-	gfxmodeDetectState gfxmodeDetectState
-	gfxmodeDetectMu    sync.Mutex
-	inhibitFd          dbus.UnixFD
-	PropsMu            sync.RWMutex
-	dbusObj            ofdbus.DBus
-	sysLoop            *dbusutil.SignalLoop
+	service               *dbusutil.Service
+	allowCallers          *securityloader.AllowCallerRegistry
+	modifyManager         *modifyManager
+	entries               []Entry
+	theme                 *Theme
+	editAuth              *EditAuth
+	fstart                *Fstart
+	gfxmodeDetectState    gfxmodeDetectState
+	gfxmodeDetectMu       sync.Mutex
+	gfxmodeDetectStarting bool // guarded by PropsMu
+	inhibitFd             dbus.UnixFD
+	PropsMu               sync.RWMutex
+	dbusObj               ofdbus.DBus
+	sysLoop               *dbusutil.SignalLoop
 	// props:
 	ThemeFile    string
 	DefaultEntry string
@@ -240,6 +241,7 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 	if err != nil {
 		g.PropsMu.Lock()
 		g.gfxmodeDetectState = gfxmodeDetectStateFailed
+		g.gfxmodeDetectStarting = false
 		g.PropsMu.Unlock()
 		logger.Warning("failed to get current gfxmode:", err)
 		task := modifyTask{
@@ -252,6 +254,7 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 	}
 	g.PropsMu.Lock()
 	g.gfxmodeDetectState = gfxmodeDetectStateNone
+	g.gfxmodeDetectStarting = false
 	g.PropsMu.Unlock()
 	logger.Debug("currentGfxmode:", currentGfxmode)
 
