@@ -105,33 +105,16 @@ func (m *modifyManager) start(tasks ...modifyTask) {
 func (m *modifyManager) update(adjustTheme bool, adjustThemeLang string) {
 	if adjustTheme {
 		logJobStart(logJobAdjustTheme)
-		err := copyBgSource(defaultThemeDir, defaultThemeTmpDir)
-		if err != nil && !os.IsNotExist(err) {
-			logger.Warning("failed to copy background source:", err)
-		} else {
-			var args []string
-			if adjustThemeLang != "" {
-				args = append(args, "-lang", adjustThemeLang)
-			}
-			args = append(args, "-theme-output", themesTmpDir)
-			cmd := exec.Command(adjustThemeCmd, args...)
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-
-			logger.Debugf("$ %s %s", adjustThemeCmd, strings.Join(args, " "))
-			err = cmd.Run()
-			if err != nil {
-				logger.Warning("failed to adjust theme:", err)
-			} else {
-				syscall.Sync()
-				err = replaceAndBackupDir(themesDir, themesTmpDir)
-				if err != nil {
-					logger.Warning("failed to replace and backup dir:", err)
-				}
-			}
-		}
+		err := m.updateTheme(adjustThemeLang)
 		logJobEnd(logJobAdjustTheme, err)
-		m.g.theme.emitSignalBackgroundChanged()
+		if err != nil {
+			// The theme directory was not replaced, so announcing a new
+			// background would make the settings and the menu disagree. The
+			// config itself is still regenerated, as before.
+			logger.Warning("failed to update theme:", err)
+		} else {
+			m.g.theme.emitSignalBackgroundChanged()
+		}
 	}
 
 	logJobStart(logJobMkConfig)
@@ -141,6 +124,38 @@ func (m *modifyManager) update(adjustTheme bool, adjustThemeLang string) {
 	}
 	logJobEnd(logJobMkConfig, err)
 	m.updateEnd()
+}
+
+// updateTheme regenerates the grub theme into the temporary directory and
+// swaps it into place. Every failure is returned, so the caller can skip the
+// background-changed signal instead of reporting a theme that is not there.
+func (m *modifyManager) updateTheme(lang string) error {
+	err := copyBgSource(defaultThemeDir, defaultThemeTmpDir)
+	if err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("copy background source: %w", err)
+	}
+
+	var args []string
+	if lang != "" {
+		args = append(args, "-lang", lang)
+	}
+	args = append(args, "-theme-output", themesTmpDir)
+	cmd := exec.Command(adjustThemeCmd, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	logger.Debugf("$ %s %s", adjustThemeCmd, strings.Join(args, " "))
+	err = cmd.Run()
+	if err != nil {
+		return fmt.Errorf("adjust theme: %w", err)
+	}
+
+	syscall.Sync()
+	err = replaceAndBackupDir(themesDir, themesTmpDir)
+	if err != nil {
+		return fmt.Errorf("replace and backup dir: %w", err)
+	}
+	return nil
 }
 
 type execStart struct {
