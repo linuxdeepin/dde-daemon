@@ -11,6 +11,8 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"sync"
+	"syscall"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/securityloader"
@@ -60,28 +62,48 @@ type Manager struct {
 	service *dbusutil.Service
 }
 
-func (m *Manager) UpdateGreeterQtTheme(sender dbus.Sender, fd dbus.UnixFD) *dbus.Error {
-	m.service.DelayAutoQuit()
+var greeterThemeMu sync.Mutex
 
+func closeUnixFD(fd dbus.UnixFD) {
+	if fd < 0 {
+		return
+	}
+	_ = syscall.Close(int(fd))
+}
+
+func (m *Manager) UpdateGreeterQtTheme(sender dbus.Sender, fd dbus.UnixFD) *dbus.Error {
 	// The theme file lives in /etc/lightdm and is shared by every user of
 	// the machine, so the caller must be authorized before it is touched.
 	authorized, err := securityloader.CheckPolkitAuth(m.service.Conn(),
 		string(sender), polkitActionUpdateQtTheme)
 	if err != nil {
+		closeUnixFD(fd)
 		logger.Warningf("failed to authorize %v: %v", sender, err)
 		return dbusutil.ToError(err)
 	}
 	if !authorized {
+		closeUnixFD(fd)
 		logger.Warningf("caller %v is not authorized to update the greeter theme", sender)
 		return dbusutil.ToError(errAccessDenied)
 	}
 
-	err = updateGreeterQtTheme(fd)
-	if err != nil {
+	m.service.DelayAutoQuit()
+
+	// The theme file and xsettingsd.conf must be replaced as one logical
+	// update. Serialize the complete replacement; otherwise two authorized
+	// callers can interleave the fixed .tmp file and leave the two files
+	// describing different themes.
+	greeterThemeMu.Lock()
+	defer greeterThemeMu.Unlock()
+
+	if err := updateGreeterQtTheme(fd); err != nil {
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-	updateXSettingsConfig()
+	if err := updateXSettingsConfig(); err != nil {
+		logger.Warning(err)
+		return dbusutil.ToError(err)
+	}
 	return nil
 }
 
@@ -89,6 +111,9 @@ var errAccessDenied = errors.New("access denied")
 
 func updateGreeterQtTheme(fd dbus.UnixFD) error {
 	f := os.NewFile(uintptr(fd), "")
+	if f == nil {
+		return fmt.Errorf("invalid file descriptor %d", fd)
+	}
 	defer f.Close()
 
 	// 目录创建由 postinst 脚本处理，这里只负责文件写入
@@ -117,19 +142,20 @@ func updateGreeterQtTheme(fd dbus.UnixFD) error {
 	return err
 }
 
-func updateXSettingsConfig() {
+func updateXSettingsConfig() error {
+	return updateXSettingsConfigFiles(themeFile, xsettingsFile)
+}
+
+func updateXSettingsConfigFiles(themePath, xsettingsPath string) error {
 	kf := keyfile.NewKeyFile()
-	err := kf.LoadFromFile(themeFile)
-	if err != nil {
-		logger.Warning(err)
-		return
+	if err := kf.LoadFromFile(themePath); err != nil {
+		return fmt.Errorf("load greeter theme %q: %w", themePath, err)
 	}
 
 	// 目录创建由 postinst 脚本处理，这里只负责文件写入
-	xf, err := os.OpenFile(xsettingsFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	xf, err := os.OpenFile(xsettingsPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		logger.Warning(err)
-		return
+		return fmt.Errorf("open xsettings file %q: %w", xsettingsPath, err)
 	}
 	defer xf.Close()
 
@@ -138,49 +164,47 @@ func updateXSettingsConfig() {
 		value, err := kf.GetString(themeSection, themeKey)
 		if err == nil {
 			if isInteger(value) {
-				_, err = xf.WriteString(fmt.Sprintf("%s %s\n", xsettingsKey, value))
+				if _, err = xf.WriteString(fmt.Sprintf("%s %s\n", xsettingsKey, value)); err != nil {
+					return fmt.Errorf("write xsettings key %s: %w", xsettingsKey, err)
+				}
 			} else if quoteXSettingsValue(value) == "" && value != "" {
 				// The value comes from a file the caller controls. A quote or
 				// newline inside it would otherwise terminate the string and
 				// inject extra xsettingsd keys, so such values are dropped.
 				logger.Warningf("skip invalid xsettings value for %s", xsettingsKey)
 			} else {
-				_, err = xf.WriteString(fmt.Sprintf("%s %s\n", xsettingsKey, quoteXSettingsValue(value)))
+				if _, err = xf.WriteString(fmt.Sprintf("%s %s\n", xsettingsKey, quoteXSettingsValue(value))); err != nil {
+					return fmt.Errorf("write xsettings key %s: %w", xsettingsKey, err)
+				}
 			}
-		}
-
-		if err != nil {
-			logger.Warning(err)
+		} else {
+			logger.Debugf("greeter theme key %s is absent: %v", themeKey, err)
 		}
 	}
 
 	// 换算缩放 xsettingsKeyDpi = themeKeyScreenScaleFactors * themeKeyScaleLogicalDpi * 1024
 	themeDpiStr, err := kf.GetString(themeSection, themeKeyScaleLogicalDpi)
 	if err != nil {
-		logger.Warningf("cannot get DPI: %v", err)
-		return
+		return fmt.Errorf("read greeter DPI: %w", err)
 	}
-	exp, err := regexp.Compile(`^([0-9]+),([0-9]+)$`)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
+	exp := regexp.MustCompile(`^([0-9]+),([0-9]+)$`)
 	substr := exp.FindStringSubmatch(themeDpiStr)
 	if len(substr) < 2 {
-		logger.Warning("cannot parse theme dpi")
-		return
+		return fmt.Errorf("parse greeter DPI %q", themeDpiStr)
 	}
 	themeDpi, err := strconv.ParseUint(substr[1], 10, 32)
 	if err != nil {
-		logger.Warning(err)
-		return
+		return fmt.Errorf("parse greeter DPI value %q: %w", substr[1], err)
 	}
 	scale, err := kf.GetFloat64(themeSection, themeKeyScreenScaleFactors)
-	xDpi := uint64(scale * float64(themeDpi) * 1024)
-	_, err = xf.WriteString(fmt.Sprintf("%s %d\n", xsettingsKeyDpi, xDpi))
 	if err != nil {
-		logger.Warning(err)
+		return fmt.Errorf("read greeter scale factors: %w", err)
 	}
+	xDpi := uint64(scale * float64(themeDpi) * 1024)
+	if _, err = xf.WriteString(fmt.Sprintf("%s %d\n", xsettingsKeyDpi, xDpi)); err != nil {
+		return fmt.Errorf("write xsettings DPI: %w", err)
+	}
+	return nil
 }
 
 // quoteXSettingsValue renders value as an xsettingsd string. Values that

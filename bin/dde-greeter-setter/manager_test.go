@@ -5,7 +5,8 @@
 package main
 
 import (
-	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -73,12 +74,55 @@ func Test_quoteXSettingsValue(t *testing.T) {
 }
 
 func Test_updateXSettingsConfigInjectionBlocked(t *testing.T) {
-	// The rendered line must never contain a second key/value pair, no
-	// matter what the caller put into the theme file.
-	value := "Sans\"\nNet/IconThemeName \"attacker\"\nQt/FontName \"" + "x"
-	quoted := quoteXSettingsValue(value)
-	assert.Empty(t, quoted)
-	if quoted != "" {
-		assert.NotContains(t, fmt.Sprintf("%s %s\n", xsettingsKeyFont, quoted), "\nNet/")
-	}
+	dir := t.TempDir()
+	themePath := filepath.Join(dir, "qt-theme.ini")
+	xsettingsPath := filepath.Join(dir, "xsettingsd.conf")
+
+	// The Font value contains a quote followed by a complete injected key.
+	// updateXSettingsConfig must skip this value instead of rendering it.
+	theme := `[Theme]
+IconThemeName=Adwaita
+FontSize=10
+Font=Noto Sans" Net/IconThemeName "attacker
+MonoFont=Noto Mono
+ScreenScaleFactors=1
+ScaleLogicalDpi=96,96
+`
+	assert.NoError(t, os.WriteFile(themePath, []byte(theme), 0600))
+
+	assert.NoError(t, updateXSettingsConfigFiles(themePath, xsettingsPath))
+	got, err := os.ReadFile(xsettingsPath)
+	assert.NoError(t, err)
+	assert.NotContains(t, string(got), `Net/IconThemeName "attacker"`)
+	assert.Contains(t, string(got), `Net/IconThemeName "Adwaita"`)
+}
+
+func Test_updateXSettingsConfigMissingDPI(t *testing.T) {
+	dir := t.TempDir()
+	themePath := filepath.Join(dir, "qt-theme.ini")
+	xsettingsPath := filepath.Join(dir, "xsettingsd.conf")
+
+	theme := `[Theme]
+IconThemeName=Adwaita
+FontSize=10
+`
+	assert.NoError(t, os.WriteFile(themePath, []byte(theme), 0600))
+	assert.Error(t, updateXSettingsConfigFiles(themePath, xsettingsPath))
+}
+
+func Test_updateXSettingsConfigOptionalKeys(t *testing.T) {
+	dir := t.TempDir()
+	themePath := filepath.Join(dir, "qt-theme.ini")
+	xsettingsPath := filepath.Join(dir, "xsettingsd.conf")
+
+	theme := `[Theme]
+IconThemeName=Adwaita
+ScreenScaleFactors=1
+ScaleLogicalDpi=96,96
+`
+	assert.NoError(t, os.WriteFile(themePath, []byte(theme), 0600))
+	assert.NoError(t, updateXSettingsConfigFiles(themePath, xsettingsPath))
+	got, err := os.ReadFile(xsettingsPath)
+	assert.NoError(t, err)
+	assert.Contains(t, string(got), `Net/IconThemeName "Adwaita"`)
 }
