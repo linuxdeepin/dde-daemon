@@ -27,4 +27,25 @@
                 <description xml:lang="fi">Check Authentication</description>
                 <message xml:lang="fi">Tämän toiminnon suorittaminen edellyttää todennusta</message>
         </action>
+
+        <!-- 登录界面主题由所有用户共享，但只有活跃会话里的用户会调整自己的
+             缩放/字体。沿用调整缩放即调整登录界面主题的既有产品行为：活跃
+             会话免认证，非活跃会话与无会话调用者一律要求管理员认证。 -->
+        <action id="org.deepin.dde.greeter.update-qt-theme">
+                <description>Update the greeter Qt theme</description>
+                <message>Authentication is required to update the greeter theme</message>
+                <defaults>
+                        <allow_any>no</allow_any>
+                        <allow_inactive>no</allow_inactive>
+                        <allow_active>yes</allow_active>
+                </defaults>
+                <description xml:lang="en_US">Update the greeter Qt theme</description>
+                <message xml:lang="en_US">Authentication is required to update the greeter theme</message>
+                <description xml:lang="zh_CN">更新登录界面主题</description>
+                <message xml:lang="zh_CN">当前操作需要认证才能修改登录界面主题</message>
+                <description xml:lang="zh_TW">更新登入介面主題</description>
+                <message xml:lang="zh_TW">目前操作需要認證才能修改登入介面主題</message>
+                <description xml:lang="zh_HK">更新登入介面主題</description>
+                <message xml:lang="zh_HK">當前操作需要認證才能修改登入介面主題</message>
+        </action>
 </policyconfig>
