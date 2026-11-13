@@ -1080,7 +1080,17 @@ func (u *User) SetPasswordHint(hint string) (busErr *dbus.Error) {
 	return dbusutil.ToError(err)
 }
 
-func (u *User) GetReminderInfo() (info LoginReminderInfo, dbusErr *dbus.Error) {
+// GetReminderInfo returns login statistics and shadow ageing fields for this
+// account. It exposes when the account last logged in, from where, and how
+// many failed attempts there were, so it must not be readable by every local
+// user: the owner passes without a prompt, other callers need the
+// user-administration action.
+func (u *User) GetReminderInfo(sender dbus.Sender) (info LoginReminderInfo, dbusErr *dbus.Error) {
+	err := u.checkAuth(sender, true, polkitActionChangeOwnData)
+	if err != nil {
+		logger.Warningf("GetReminderInfo denied for %v: %v", sender, err)
+		return info, dbusutil.ToError(err)
+	}
 	return getLoginReminderInfo(u.UserName), nil
 }
 
