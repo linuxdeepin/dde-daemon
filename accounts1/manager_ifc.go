@@ -368,12 +368,20 @@ func (m *Manager) IsPasswordValid(password string) (valid bool, msg string, code
 	return errCode.IsOk(), errCode.Prompt(), int32(errCode), nil
 }
 
-func (m *Manager) GetGroups() (groups []string, busErr *dbus.Error) {
+func (m *Manager) GetGroups(sender dbus.Sender) (groups []string, busErr *dbus.Error) {
+	if err := m.checkAuth(sender); err != nil {
+		logger.Debug("[GetGroups] access denied:", err)
+		return nil, dbusutil.ToError(err)
+	}
 	groups, err := users.GetAllGroups()
 	return groups, dbusutil.ToError(err)
 }
 
-func (m *Manager) GetGroupInfoByName(name string) (groupInfo string, busErr *dbus.Error) {
+func (m *Manager) GetGroupInfoByName(sender dbus.Sender, name string) (groupInfo string, busErr *dbus.Error) {
+	if err := m.checkAuth(sender); err != nil {
+		logger.Debug("[GetGroupInfoByName] access denied:", err)
+		return "", dbusutil.ToError(err)
+	}
 	info, err := users.GetGroupByName(name)
 	if err != nil {
 		logger.Warning(err)
@@ -447,7 +455,7 @@ func (m *Manager) CreateGroup(sender dbus.Sender, groupName string, gid uint32, 
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-	groupList, _ := m.GetGroups()
+	groupList, _ := users.GetAllGroups()
 	m.setPropGroupList(groupList)
 	return nil
 }
@@ -475,7 +483,7 @@ func (m *Manager) DeleteGroup(sender dbus.Sender, groupName string, force bool) 
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-	groupList, _ := m.GetGroups()
+	groupList, _ := users.GetAllGroups()
 	m.setPropGroupList(groupList)
 	return nil
 }
@@ -513,7 +521,7 @@ func (m *Manager) ModifyGroup(sender dbus.Sender, currentGroupName string, newGr
 		logger.Warning(err)
 		return dbusutil.ToError(err)
 	}
-	groupList, _ := m.GetGroups()
+	groupList, _ := users.GetAllGroups()
 	m.setPropGroupList(groupList)
 	return nil
 }
