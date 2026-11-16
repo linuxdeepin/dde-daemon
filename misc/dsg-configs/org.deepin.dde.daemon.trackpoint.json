@@ -11,7 +11,7 @@
         "description[zh_CN]": "启用TrackPoint中键模拟",
         "description": "Enables TrackPoint middle button emulation",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "middleButtonTimeout": {
         "value": 50,
@@ -22,7 +22,7 @@
         "description[zh_CN]": "TrackPoint中键超时时间",
         "description": "TrackPoint middle button timeout",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "wheelEmulation": {
         "value": true,
@@ -33,7 +33,7 @@
         "description[zh_CN]": "启用TrackPoint滚轮模拟",
         "description": "Enables TrackPoint wheel emulation",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "wheelEmulationButton": {
         "value": 2,
@@ -44,7 +44,7 @@
         "description[zh_CN]": "用于滚轮模拟的TrackPoint按键",
         "description": "TrackPoint button for wheel emulation",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "wheelEmulationTimeout": {
         "value": 200,
@@ -55,7 +55,7 @@
         "description[zh_CN]": "TrackPoint滚轮模拟超时时间",
         "description": "TrackPoint wheel emulation timeout",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "wheelHorizScroll": {
         "value": true,
@@ -66,7 +66,7 @@
         "description[zh_CN]": "启用TrackPoint滚轮模拟水平滚动",
         "description": "Enables TrackPoint wheel emulation horizontal scrolling",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "motionAcceleration": {
         "value": 1.0,
@@ -77,7 +77,7 @@
         "description[zh_CN]": "TrackPoint移动加速倍数，-1为系统默认值",
         "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "motionThreshold": {
         "value": 1.0,
@@ -88,7 +88,7 @@
         "description[zh_CN]": "激活TrackPoint加速前指针必须移动的距离（像素），-1为系统默认值",
         "description": "Distance in pixels the pointer must move before accelerated mouse motion is activated. A value of -1 is the system default",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "motionScaling": {
         "value": 10.0,
@@ -99,7 +99,7 @@
         "description[zh_CN]": "TrackPoint移动速度倍数，-1为系统默认值",
         "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "leftHanded": {
         "value": false,
@@ -110,7 +110,7 @@
         "description[zh_CN]": "设置为true以启用左手模式",
         "description": "Set it to true to enable left-handed mode",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       }
   }
 }
