@@ -11,7 +11,7 @@
       "description[zh_CN]": "设置触摸屏长按的持续时间，单位为毫秒",
       "description": "Set the duration for touchscreen longpress, the unit is ms",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "shortpressDuration": {
       "value": 250,
@@ -22,7 +22,7 @@
       "description[zh_CN]": "设置触摸屏短按的持续时间，单位为毫秒",
       "description": "Set the duration for touchscreen shortpress, the unit is ms",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "edgemovestopDuration": {
       "value": 0,
@@ -33,7 +33,7 @@
       "description[zh_CN]": "设置触摸屏边缘移动停止时间，单位为毫秒",
       "description": "Set the duration for touchscreen edge move stop time, the unit is ms",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "longpressBlacklist": {
       "value": ["/opt/google/chrome/chrome","/usr/bin/dde-shell -C DDE"],
@@ -44,7 +44,7 @@
       "description[zh_CN]": "设置禁用触摸屏长按的应用命令行列表",
       "description": "Set app cmdline list for disable touchscreen longpress",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     }
   }
 }

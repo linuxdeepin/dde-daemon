@@ -22,7 +22,7 @@
             "name[zh_CN]": "设置不包含plymouth的缩放",
             "description": "设置不包含plymouth的缩放",
             "permissions": "readwrite",
-            "visibility": "public"
+            "visibility": "private"
         }
     }
 }
