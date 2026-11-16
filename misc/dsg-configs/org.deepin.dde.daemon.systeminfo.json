@@ -12,7 +12,7 @@
             "name[zh_CN]": "是否是M900配置",
             "description": "配置为M900",
             "permissions": "readwrite",
-            "visibility": "public"
+            "visibility": "private"
         }
     }
 }
