@@ -55,7 +55,7 @@
       "description": "The method for setting brightness. 0: auto, 1: gamma, 2: backlight",
       "description[zh_CN]": "设置亮度的方法。0: 自动, 1: 伽马值, 2: 背光",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "displayMode": {
       "value": 2,
@@ -66,7 +66,7 @@
       "description": "The multi monitors display mode. 0: custom, 1: mirrors, 2: extend, 3: onlyone, 4: unknow",
       "description[zh_CN]": "多显示器显示模式。0: 自定义, 1: 镜像, 2: 扩展, 3: 仅一个, 4: 未知",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "brightness": {
       "value": "",
@@ -77,7 +77,7 @@
       "description": "The monitor brightness",
       "description[zh_CN]": "显示器亮度设置",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "mapOutput": {
       "value": "",
@@ -88,7 +88,7 @@
       "description": "Output monitor map",
       "description[zh_CN]": "输出显示器映射关系",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "rateFilter": {
       "value": "{\"1002:6611\": {\"1920*1080\": [59.94, 30, 29.97, 25, 24, 23.98],\"1680*945\": [60.02]},\"1002:6779\": {\"1920*1080\": [30,29.97,25,24,23.98]}}",
@@ -99,7 +99,7 @@
       "description": "Screen refresh rate filter in JSON",
       "description[zh_CN]": "屏幕刷新率过滤器配置（JSON格式）",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "primary": {
       "value": "",
@@ -110,7 +110,7 @@
       "description": "The primary output",
       "description[zh_CN]": "主显示输出设备",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "currentCustomMode": {
       "value": "",
@@ -121,7 +121,7 @@
       "description": "The id of config only in custom mode",
       "description[zh_CN]": "自定义模式下的配置ID",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "blacklist": {
       "value": [],
@@ -132,7 +132,7 @@
       "description": "Filter some invalid outputs",
       "description[zh_CN]": "过滤一些无效的输出设备",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "priority": {
       "value": [],
@@ -143,7 +143,7 @@
       "description": "Outputs priority, the first will be primary",
       "description[zh_CN]": "输出设备优先级，第一个将作为主输出",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "colorTemperatureMode": {
       "value": 0,
@@ -154,7 +154,7 @@
       "description": "Method of adjust color temperature. 0: normal, 1: auto, 2: manual",
       "description[zh_CN]": "色温调节方式。0: 正常, 1: 自动, 2: 手动",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "rotateScreenTimeDelay": {
       "value": 500,
@@ -165,7 +165,7 @@
       "description": "Rotate the screen when the delay ends (range: 0-10000ms)",
       "description[zh_CN]": "屏幕旋转延时结束后执行旋转（范围：0-10000毫秒）",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "customDisplayMode": {
       "value": 1,
@@ -176,7 +176,7 @@
       "description": "The mode of custom display (range: 1-2)",
       "description[zh_CN]": "自定义显示模式类型（范围：1-2）",
       "permissions": "readwrite",
-      "visibility": "public"
+      "visibility": "private"
     },
     "autoChangeScaleEnabled": {
       "value": true,

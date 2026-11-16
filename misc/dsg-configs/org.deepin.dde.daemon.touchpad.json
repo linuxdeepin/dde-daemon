@@ -22,7 +22,7 @@
         "description[zh_CN]": "如果您在打字时意外触碰触控板有问题，请设置为TRUE",
         "description": "Set this to TRUE if you have problems with accidentally hitting the touchpad while typing",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "horizScrollEnabled": {
         "value": true,
@@ -33,7 +33,7 @@
         "description[zh_CN]": "启用触控板水平滚动功能",
         "description": "Set this to TRUE to allow horizontal scrolling by the same method selected with the scroll_method key",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "vertScrollEnabled": {
         "value": true,
@@ -44,7 +44,7 @@
         "description[zh_CN]": "启用触控板垂直滚动功能",
         "description": "Set this to TRUE to allow virtical scrolling by the same method selected with the scroll_method key",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "tapToClick": {
         "value": true,
@@ -55,7 +55,7 @@
         "description[zh_CN]": "启用触控板轻触点击功能",
         "description": "Set this to TRUE to be able to send mouse clicks by tapping on the touchpad",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "touchpadEnabled": {
         "value": true,
@@ -66,7 +66,7 @@
         "description[zh_CN]": "启用所有触控板",
         "description": "Set this to TRUE to enable all touchpads",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "leftHanded": {
         "value": false,
@@ -77,7 +77,7 @@
         "description[zh_CN]": "为左手用户交换触控板左右键",
         "description": "Swap left and right mouse buttons for left-handed mice with 'left', 'right' for right-handed, 'mouse' to follow the mouse setting",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "motionAcceleration": {
         "value": 1.0,
@@ -88,7 +88,7 @@
         "description[zh_CN]": "触控板移动加速倍数，-1为系统默认值",
         "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "motionThreshold": {
         "value": 1.0,
@@ -99,7 +99,7 @@
         "description[zh_CN]": "激活触控板加速前指针必须移动的距离（像素），-1为系统默认值",
         "description": "Distance in pixels the pointer must move before accelerated mouse motion is activated. A value of -1 is the system default",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "motionScaling": {
         "value": 10.0,
@@ -110,7 +110,7 @@
         "description[zh_CN]": "触控板移动速度倍数，-1为系统默认值",
         "description": "Acceleration multiplier for mouse motion. A value of -1 is the system default",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "naturalScroll": {
         "value": true,
@@ -121,7 +121,7 @@
         "description[zh_CN]": "启用触控板自然（反向）滚动",
         "description": "Set this to TRUE to enable natural (reverse) scrolling for touchpads",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "deltaScroll": {
         "value": 30,
@@ -132,7 +132,7 @@
         "description[zh_CN]": "自然滚动增量值",
         "description": "Natural scrolling delta",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "doubleClick": {
         "value": 400,
@@ -143,7 +143,7 @@
         "description[zh_CN]": "触控板双击时间间隔（毫秒）",
         "description": "Length of a double click in milliseconds",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "dragThreshold": {
         "value": 8,
@@ -154,7 +154,7 @@
         "description[zh_CN]": "启动拖拽前的距离",
         "description": "Distance before a drag is started",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "edgeScrollEnabled": {
         "value": true,
@@ -165,7 +165,7 @@
         "description[zh_CN]": "启用（或禁用）边缘滚动",
         "description": "Enable(or disable) edge scrolling",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "palmDetect": {
         "value": false,
@@ -176,7 +176,7 @@
         "description[zh_CN]": "设置为TRUE以启用触控板手掌检测",
         "description": "Set this to TRUE to enable touchpad palm detect",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "palmMinWidth": {
         "value": 6,
@@ -187,7 +187,7 @@
         "description[zh_CN]": "手掌检测的最小宽度",
         "description": "The min width for palm detect",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       },
       "palmMinPressure": {
         "value": 50,
@@ -198,7 +198,7 @@
         "description[zh_CN]": "手掌检测的最小压力",
         "description": "The min pressure for palm detect",
         "permissions": "readwrite",
-        "visibility": "public"
+        "visibility": "private"
       }
   }
 }
