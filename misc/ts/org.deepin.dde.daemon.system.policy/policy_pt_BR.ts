@@ -24,17 +24,17 @@
 		<message>
 			<location filename="org.deepin.dde.daemon.set-plymouth-theme!message" line="0"/>
 			<source>Authentication is required to change the boot theme</source>
-			<translation type="unfinished"/>
+			<translation>É necessário autenticar-se para alterar o tema de inicialização</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.set-plymouth-theme!description" line="0"/>
 			<source>Set the plymouth boot theme</source>
-			<translation type="unfinished"/>
+			<translation>Definir o tema de inicialização do Plymouth</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.scale-plymouth!message" line="0"/>
 			<source>Authentication is required to scale the boot theme</source>
-			<translation type="unfinished"/>
+			<translation>É necessário autenticar-se para redimensionar o tema de inicialização</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.scale-plymouth!description" line="0"/>
