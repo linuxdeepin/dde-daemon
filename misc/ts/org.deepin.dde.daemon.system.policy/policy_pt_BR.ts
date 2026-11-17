@@ -39,7 +39,7 @@
 		<message>
 			<location filename="org.deepin.dde.daemon.scale-plymouth!description" line="0"/>
 			<source>Scale the plymouth boot theme</source>
-			<translation type="unfinished"/>
+			<translation>Redimensionar o tema de inicialização do Plymouth</translation>
 		</message>
 	</context>
 </TS>
