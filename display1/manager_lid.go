@@ -35,12 +35,16 @@ func (m *Manager) initLidSwitch() {
 
 	if hasLid {
 		logger.Info("has lid switch")
-		m.handleLidSwitch(sysPower, func(closed bool) {
-			if m.builtinMonitor != nil {
-				logger.Infof("init lid closed: %v", closed)
-				m.builtinMonitor.lidClosed = closed
-			}
-		})
+		if _greeterMode {
+			m.handleLidSwitch(sysPower, func(closed bool) {
+				if m.builtinMonitor != nil {
+					logger.Infof("init lid closed: %v", closed)
+					m.builtinMonitor.lidClosed = closed
+				}
+			})
+		} else {
+			m.syncLidState()
+		}
 		sysPower.ConnectLidClosed(func() {
 			logger.Warning("lid closed signal")
 			m.holdAutoBrightness()
