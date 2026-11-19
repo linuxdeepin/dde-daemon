@@ -14,7 +14,18 @@ import (
 // 在 X 下，显示器属性改变，断开或者连接显示器。
 // 在 wayland 下，仅显示器属性改变。
 func (m *Manager) handleMonitorChanged(monitorInfo *MonitorInfo) {
+	connectionChanged := true
+	m.monitorMapMu.Lock()
+	if monitor := m.monitorMap[monitorInfo.ID]; monitor != nil {
+		monitor.PropsMu.RLock()
+		connectionChanged = monitor.realConnected != monitorInfo.Connected
+		monitor.PropsMu.RUnlock()
+	}
+	m.monitorMapMu.Unlock()
 	m.updateMonitor(monitorInfo)
+	if connectionChanged {
+		m.syncLidState()
+	}
 	if monitorInfo.Enabled {
 		m.tryToChangeScaleFactor(monitorInfo.Width, monitorInfo.Height)
 	}
@@ -55,6 +66,7 @@ func (m *Manager) handleMonitorAdded(monitorInfo *MonitorInfo) {
 		logger.Warning(err)
 		return
 	}
+	m.syncLidState()
 	m.updatePropMonitors()
 	m.updateMonitorsId(nil)
 	m.tryToChangeScaleFactor(monitorInfo.Width, monitorInfo.Height)
@@ -70,6 +82,7 @@ func (m *Manager) handleMonitorRemoved(monitorId uint32) {
 	}
 
 	m.handleMonitorConnectedChanged(monitor, false)
+	m.syncLidState()
 	m.updatePropMonitors()
 	m.updateMonitorsId(nil)
 	m.removeCanSetBrightness(monitor.Name)
