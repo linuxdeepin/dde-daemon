@@ -89,6 +89,11 @@ func (d *Daemon) Start() error {
 		logger.Warning("init ddm dconfig watch failed:", err)
 	}
 
+	err = d.manager.initDConfigUserNoticeWatch()
+	if err != nil {
+		logger.Warning("init user notice dconfig watch failed:", err)
+	}
+
 	err = service.RequestName(dbusServiceName)
 	if err != nil {
 		return err
