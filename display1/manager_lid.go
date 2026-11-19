@@ -59,6 +59,38 @@ func (m *Manager) initLidSwitch() {
 
 }
 
+func (m *Manager) syncLidState() bool {
+	if m.sysBus == nil || m.getBuiltinMonitor() == nil {
+		return false
+	}
+	closed, err := syspower.NewPower(m.sysBus).LidClosed().Get(0)
+	if err != nil {
+		logger.Warning("failed to sync lid state:", err)
+		return false
+	}
+	return m.updateLidState(closed)
+}
+
+func (m *Manager) updateLidState(closed bool) bool {
+	builtin := m.getBuiltinMonitor()
+	if builtin == nil {
+		return false
+	}
+	hasExternal := false
+	for _, monitor := range m.cloneMonitorMap() {
+		if monitor.ID != builtin.ID && monitor.realConnected && len(monitor.Modes) > 0 {
+			hasExternal = true
+			break
+		}
+	}
+	builtin.PropsMu.Lock()
+	defer builtin.PropsMu.Unlock()
+	previous := builtin.lidClosed
+	builtin.lidClosed = closed && hasExternal
+	logger.Infof("sync lid closed: %v", builtin.lidClosed)
+	return previous != builtin.lidClosed
+}
+
 func (m *Manager) handleLidSwitch(sysPower syspower.Power, handleFunc func(bool)) {
 	hasBat, err := sysPower.OnBattery().Get(0)
 	if err != nil {
