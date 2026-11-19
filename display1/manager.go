@@ -181,10 +181,11 @@ type Manager struct {
 	debugOpts      debugOptions
 	redshiftRunner *redshiftRunner
 
-	sessionActive   bool
-	sessionActiveMu sync.RWMutex
-	newSysCfg       *SysRootConfig
-	cursorShowed    bool
+	sessionActive      bool
+	sessionActiveMu    sync.RWMutex
+	pendingApplyConfig bool
+	newSysCfg          *SysRootConfig
+	cursorShowed       bool
 
 	// dconfig com.deepin.Display
 	displayConfigMgr         configManager.Manager
@@ -438,17 +439,21 @@ func newManager(service *dbusutil.Service) *Manager {
 		}
 		logger.Debug("session active changed", active)
 
-		m.sessionActiveMu.Lock()
-		m.sessionActive = active
-		m.sessionActiveMu.Unlock()
+		pendingApply := m.setSessionActive(active)
 		if !active {
 			m.holdAutoBrightness()
 			return
 		}
 		m.resumeAutoBrightness()
+		if m.syncLidState() {
+			m.updateMonitorsId(nil)
+		}
 		if m.newSysCfg != nil {
 			m.handleSysConfigUpdated(m.newSysCfg)
 			m.newSysCfg = nil
+		}
+		if pendingApply {
+			go m.delayApplyConfig()
 		}
 
 		m.handleTouchscreenChanged()
@@ -1095,7 +1100,37 @@ func (m *Manager) updateMonitorsId(options applyOptions) (changed bool) {
 	return false
 }
 
+func (m *Manager) setSessionActive(active bool) bool {
+	m.sessionActiveMu.Lock()
+	defer m.sessionActiveMu.Unlock()
+
+	m.sessionActive = active
+	if !active {
+		return false
+	}
+	pending := m.pendingApplyConfig
+	m.pendingApplyConfig = false
+	return pending
+}
+
+func (m *Manager) deferApplyConfig() bool {
+	if _greeterMode {
+		return false
+	}
+	m.sessionActiveMu.Lock()
+	defer m.sessionActiveMu.Unlock()
+	if m.sessionActive {
+		return false
+	}
+	m.pendingApplyConfig = true
+	return true
+}
+
 func (m *Manager) delayApplyConfig() {
+	if m.deferApplyConfig() {
+		logger.Debug("defer display config until session is active")
+		return
+	}
 	options := m.getDelayApplyOptions()
 	// NOTE: applyConfig 应在非 X 事件处理的另外一个 goroutine 中进行。
 
