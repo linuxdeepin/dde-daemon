@@ -24,22 +24,22 @@
 		<message>
 			<location filename="org.deepin.dde.daemon.set-plymouth-theme!message" line="0"/>
 			<source>Authentication is required to change the boot theme</source>
-			<translation type="unfinished"/>
+			<translation>Wymagane jest uwierzytelnienie, aby zmienić motyw uruchamiania systemu</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.set-plymouth-theme!description" line="0"/>
 			<source>Set the plymouth boot theme</source>
-			<translation type="unfinished"/>
+			<translation>Ustaw motyw uruchamiania Plymouth</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.scale-plymouth!message" line="0"/>
 			<source>Authentication is required to scale the boot theme</source>
-			<translation type="unfinished"/>
+			<translation>Wymagane jest uwierzytelnienie, aby zmienić skalę motywu uruchamiania systemu</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.scale-plymouth!description" line="0"/>
 			<source>Scale the plymouth boot theme</source>
-			<translation type="unfinished"/>
+			<translation>Zmień skalę motywu uruchamiania Plymouth</translation>
 		</message>
 	</context>
 </TS>
