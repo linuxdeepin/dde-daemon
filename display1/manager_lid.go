@@ -35,16 +35,7 @@ func (m *Manager) initLidSwitch() {
 
 	if hasLid {
 		logger.Info("has lid switch")
-		if _greeterMode {
-			m.handleLidSwitch(sysPower, func(closed bool) {
-				if m.builtinMonitor != nil {
-					logger.Infof("init lid closed: %v", closed)
-					m.builtinMonitor.lidClosed = closed
-				}
-			})
-		} else {
-			m.syncLidState()
-		}
+		m.syncLidState()
 		sysPower.ConnectLidClosed(func() {
 			logger.Warning("lid closed signal")
 			m.holdAutoBrightness()
@@ -96,36 +87,32 @@ func (m *Manager) updateLidState(closed bool) bool {
 }
 
 func (m *Manager) handleLidSwitch(sysPower syspower.Power, handleFunc func(bool)) {
-	hasBat, err := sysPower.OnBattery().Get(0)
-	if err != nil {
-		logger.Warning(err)
-		return
-	}
 	lidClosed, err := sysPower.LidClosed().Get(0)
 	if err != nil {
 		logger.Warning(err)
 		return
 	}
-	// 如果是开盖，不管合盖配置是什么动作，都需要执行开盖操作
-	if !lidClosed {
+	if !lidClosed || _greeterMode {
 		handleFunc(lidClosed)
-	} else {
-		var key string
-		if hasBat {
-			key = dsettingBatteryLidClosedAction
-		} else {
-			key = dsettingLinePowerLidClosedAction
-		}
-		action, err := m.getPowerLidAction(key)
-		if err != nil {
-			logger.Warning(err)
-			return
-		}
-		if action == powerActionDoNothing || _greeterMode {
-			handleFunc(lidClosed)
-		}
+		return
 	}
-
+	hasBat, err := sysPower.OnBattery().Get(0)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	key := dsettingLinePowerLidClosedAction
+	if hasBat {
+		key = dsettingBatteryLidClosedAction
+	}
+	action, err := m.getPowerLidAction(key)
+	if err != nil {
+		logger.Warning(err)
+		return
+	}
+	if action == powerActionDoNothing {
+		handleFunc(lidClosed)
+	}
 }
 
 func (m *Manager) getPowerLidAction(key string) (int64, error) {
