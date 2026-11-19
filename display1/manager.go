@@ -983,6 +983,9 @@ func monitorsRemove(monitors []*Monitor, id uint32) []*Monitor {
 }
 
 func (m *Manager) buildConfigForSingle(monitor *Monitor) SysMonitorConfigs {
+	if cfg := m.getLidClosedSingleConfig(monitor); cfg != nil {
+		return SysMonitorConfigs{cfg}
+	}
 	cfg := monitor.toBasicSysConfig()
 	cfg.Enabled = true
 	cfg.Primary = true
@@ -996,6 +999,46 @@ func (m *Manager) buildConfigForSingle(monitor *Monitor) SysMonitorConfigs {
 	cfg.Rotation = randr.RotationRotate0
 	//cfg.Reflect = 0
 	return SysMonitorConfigs{cfg}
+}
+
+func (m *Manager) getLidClosedSingleConfig(monitor *Monitor) *SysMonitorConfig {
+	builtin := m.getBuiltinMonitor()
+	if builtin == nil || builtin.ID == monitor.ID {
+		return nil
+	}
+	builtin.PropsMu.RLock()
+	closed := builtin.lidClosed
+	builtin.PropsMu.RUnlock()
+	if !closed {
+		return nil
+	}
+
+	var physicalMonitors Monitors
+	for _, item := range m.cloneMonitorMap() {
+		if item.realConnected {
+			physicalMonitors = append(physicalMonitors, item)
+		}
+	}
+	screenCfg := m.getSysScreenConfig(physicalMonitors.getMonitorsId())
+	m.sysConfig.mu.Lock()
+	mode := m.sysConfig.Config.DisplayMode
+	m.sysConfig.mu.Unlock()
+	cfg := screenCfg.getMonitorConfigs(mode, screenCfg.OnlyOneUuid).getByUuid(monitor.uuid)
+	if cfg == nil || !cfg.Enabled {
+		return nil
+	}
+
+	width, height := cfg.Width, cfg.Height
+	swapWidthHeightWithRotation(cfg.Rotation, &width, &height)
+	selected := monitor.selectMode(width, height, cfg.RefreshRate)
+	if selected.isZero() {
+		return nil
+	}
+	width, height = selected.Width, selected.Height
+	swapWidthHeightWithRotation(cfg.Rotation, &width, &height)
+	cfg.Width, cfg.Height, cfg.RefreshRate = width, height, selected.Rate
+	cfg.Name, cfg.X, cfg.Y, cfg.Primary = monitor.Name, 0, 0, true
+	return cfg
 }
 
 func (m *Manager) applyDisplayConfig(mode byte, monitorsId monitorsId, monitorMap map[uint32]*Monitor, setColorTemp bool, options applyOptions) error {
@@ -1322,9 +1365,9 @@ func (m *Manager) init() {
 		}
 
 		m.initBuiltinMonitor()
+		m.initLidSwitch()
 		m.monitorsId = m.getMonitorsId()
 		m.updatePropMonitors()
-		m.initLidSwitch()
 
 	} else {
 		// randr 版本低于 1.2
