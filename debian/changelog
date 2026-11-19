@@ -1,3 +1,13 @@
+dde-daemon (6.1.111.1001+pajil) unstable; urgency=medium
+
+  * fix(accounts): close login options on user notice
+  * chore: Sync release-line guard template
+  * fix: restore closed-lid output on session activation
+  * fix: initialize closed-lid displays before user login
+  * fix: honor closed-lid state in the login greeter
+
+ -- chenyuanbo <chenyuanbo@uniontech.com>  Thu, 19 Nov 2026 21:03:57 +0800
+
 dde-daemon (6.1.111.1000+pajil) unstable; urgency=medium
 
   * feat(accounts1): support autologin configuration for DDM
