@@ -193,6 +193,8 @@ type Audio struct {
 	outputAutoSwitchCountMax int
 	// 自动端口切换
 	enableAutoSwitchPort bool
+	pendingManualPortMu  sync.Mutex
+	pendingManualPort    *pendingManualPortSwitch
 	systemSigLoop        *dbusutil.SignalLoop
 	// 用来进一步断是否需要暂停播放的信息
 	misc uint32
@@ -205,6 +207,12 @@ type Audio struct {
 			enabled  bool
 		}
 	}
+}
+
+type pendingManualPortSwitch struct {
+	cardId    uint32
+	portName  string
+	direction int
 }
 
 func newAudio(service *dbusutil.Service) *Audio {
@@ -1029,7 +1037,7 @@ func (a *Audio) SetPort(cardId uint32, portName string, direction int32) *dbus.E
 		return dbusutil.ToError(fmt.Errorf("card idx: %d, port name: %q is disabled", cardId, portName))
 	}
 
-	err := a.setPort(cardId, portName, int(direction))
+	err := a.setPort(cardId, portName, int(direction), false)
 	if err != nil {
 		return dbusutil.ToError(err)
 	}
@@ -1136,7 +1144,7 @@ func (a *Audio) IsPortEnabled(cardId uint32, portName string) (enabled bool, bus
 	return portConfig.Enabled, nil
 }
 
-func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
+func (a *Audio) setPort(cardId uint32, portName string, direction int, auto bool) error {
 	logger.Debugf("set port %d %s", cardId, portName)
 	if a.ReduceNoise {
 		// 切端口时要关闭降噪，但是设置属性会触发回调
@@ -1187,6 +1195,9 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 	// 蓝牙特殊情况下会出错，导致profile为off, 需要重新寻找合适的
 	if targetPortInfo.Profiles.Exists(card.ActiveProfile.Name) && card.ActiveProfile.Name != "off" {
 		// no need to change profile
+		if !auto {
+			a.clearPendingManualPort(cardId, direction)
+		}
 		return setDefaultPort()
 	}
 
@@ -1207,9 +1218,75 @@ func (a *Audio) setPort(cardId uint32, portName string, direction int) error {
 	if direction == pulse.DirectionSink && targetPortInfo.Profiles.Exists("a2dp_sink") {
 		targetProfile = "a2dp_sink"
 	}
+	if !auto {
+		a.setPendingManualPort(cardId, portName, direction)
+	}
 	card.core.SetProfile(targetProfile)
 	logger.Debug("set profile", targetProfile)
-	return setDefaultPort()
+	if auto {
+		return setDefaultPort()
+	}
+	return nil
+}
+
+func (a *Audio) setPendingManualPort(cardId uint32, portName string, direction int) {
+	logger.Debugf("setPendingManualPort: cardId=%d, portName=%s, direction=%d", cardId, portName, direction)
+
+	a.pendingManualPortMu.Lock()
+	defer a.pendingManualPortMu.Unlock()
+
+	a.pendingManualPort = &pendingManualPortSwitch{
+		cardId:    cardId,
+		portName:  portName,
+		direction: direction,
+	}
+}
+
+func (a *Audio) clearPendingManualPort(cardId uint32, direction int) {
+	logger.Debugf("clearPendingManualPort: cardId=%d, direction=%d", cardId, direction)
+
+	a.pendingManualPortMu.Lock()
+	defer a.pendingManualPortMu.Unlock()
+
+	if a.pendingManualPort != nil &&
+		a.pendingManualPort.cardId == cardId &&
+		a.pendingManualPort.direction == direction {
+		a.pendingManualPort = nil
+	}
+}
+
+func (a *Audio) completePendingManualPort() (handled bool, applied bool) {
+	logger.Debug("completePendingManualPort")
+
+	a.pendingManualPortMu.Lock()
+	if a.pendingManualPort == nil {
+		a.pendingManualPortMu.Unlock()
+		return false, false
+	}
+	pending := *a.pendingManualPort
+	a.pendingManualPortMu.Unlock()
+
+	var err error
+	if pending.direction == pulse.DirectionSink {
+		err = a.setDefaultSinkWithPort(pending.cardId, pending.portName)
+	} else {
+		err = a.setDefaultSourceWithPort(pending.cardId, pending.portName)
+	}
+	if err != nil {
+		logger.Warningf("failed to complete pending manual port: cardId=%d, portName=%s, direction=%d, err=%v",
+			pending.cardId, pending.portName, pending.direction, err)
+		return true, false
+	}
+
+	a.pendingManualPortMu.Lock()
+	if a.pendingManualPort != nil &&
+		a.pendingManualPort.cardId == pending.cardId &&
+		a.pendingManualPort.portName == pending.portName &&
+		a.pendingManualPort.direction == pending.direction {
+		a.pendingManualPort = nil
+	}
+	a.pendingManualPortMu.Unlock()
+	return true, true
 }
 
 func (a *Audio) resetSinksVolume() {
