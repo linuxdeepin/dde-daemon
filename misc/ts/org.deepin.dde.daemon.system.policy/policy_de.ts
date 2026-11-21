@@ -34,12 +34,12 @@
 		<message>
 			<location filename="org.deepin.dde.daemon.scale-plymouth!message" line="0"/>
 			<source>Authentication is required to scale the boot theme</source>
-			<translation type="unfinished"/>
+			<translation>Zum Skalieren des Start-Designs ist eine Authentifizierung erforderlich</translation>
 		</message>
 		<message>
 			<location filename="org.deepin.dde.daemon.scale-plymouth!description" line="0"/>
 			<source>Scale the plymouth boot theme</source>
-			<translation type="unfinished"/>
+			<translation>Plymouth-Startdesign-Skalierung einstellen</translation>
 		</message>
 	</context>
 </TS>
