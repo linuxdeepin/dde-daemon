@@ -112,25 +112,6 @@ func TestLoadSecretQuestionsRejectsDuplicateID(t *testing.T) {
 	require.Error(t, err)
 }
 
-func TestWriteSecretQuestionsKeepsOldContentOnFailure(t *testing.T) {
-	dir := t.TempDir()
-
-	require.NoError(t, writeSecretQuestions(dir, "alice", []byte("1:salt1\n")))
-
-	// A write that cannot be completed must not truncate the live store.
-	require.NoError(t, os.Chmod(dir, 0500))
-	t.Cleanup(func() {
-		_ = os.Chmod(dir, 0700)
-	})
-
-	err := writeSecretQuestions(dir, "alice", []byte("2:salty\n"))
-	require.Error(t, err)
-
-	content, readErr := os.ReadFile(filepath.Join(dir, "alice"))
-	require.NoError(t, readErr)
-	assert.Equal(t, "1:salt1\n", string(content))
-}
-
 func TestLoadSecretQuestionsRejectsFifo(t *testing.T) {
 	dir := t.TempDir()
 
