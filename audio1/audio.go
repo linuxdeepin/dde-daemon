@@ -1247,6 +1247,22 @@ func (a *Audio) moveSinkInputsToSink(inputs []uint32) {
 		return
 	}
 
+	// PipeWire 可能把默认 sink 切到用户已禁用的端口（如声卡 profile 切换的副作用），
+	// 此时不能把流迁过去，改走自动切换选一个启用的端口
+	sinkInfo := a.getSinkInfoByName(sinkName)
+	if sinkInfo != nil {
+		if card, err := a.cards.get(sinkInfo.Card); err == nil {
+			if _, portConfig := GetConfigKeeper().GetCardAndPortConfig(card, sinkInfo.ActivePort.Name); !portConfig.Enabled {
+				logger.Infof("default sink %s port %s is disabled, skip moving streams and re-select by auto switch",
+					sinkName, sinkInfo.ActivePort.Name)
+				// 清掉内存默认状态，否则 checkAutoSwitch 认为已是最佳候选而空操作
+				a.defaultSink = nil
+				a.autoSwitchOutputPort()
+				return
+			}
+		}
+	}
+
 	if inputs == nil {
 		inputs = make([]uint32, 0)
 		for _, sinkInput := range a.sinkInputs {
@@ -1442,6 +1458,17 @@ func (a *Audio) updateDefaultSink(sinkName string) {
 			logger.Warning("failed to get sinkInfo for name:", sinkName)
 		}
 		return
+	}
+	// PipeWire 可能把默认 sink 报到已禁用的端口，恢复/跟随前先校验，禁止则走自动切换
+	if card, err := a.cards.get(sinkInfo.Card); err == nil {
+		if _, portConfig := GetConfigKeeper().GetCardAndPortConfig(card, sinkInfo.ActivePort.Name); !portConfig.Enabled {
+			logger.Infof("default sink %s port %s is disabled, re-select by auto switch",
+				sinkName, sinkInfo.ActivePort.Name)
+			// 清掉内存默认状态，否则 checkAutoSwitch 认为已是最佳候选而空操作
+			a.defaultSink = nil
+			a.autoSwitchOutputPort()
+			return
+		}
 	}
 	a.moveSinkInputsToSink(nil)
 	if a.defaultSink != nil {

@@ -208,9 +208,10 @@ func (pm *PriorityManager) refreshPorts(cards CardList) {
 		newSourcePorts := make([]pulse.CardPortInfo, 0)
 
 		for _, port := range card.Ports {
-			// 端口不可用或被禁用时，不插入到优先级列表中
+			// 端口被禁用时不插入；不可用端口保留在队列中，
+			// 避免 profile 切换中间态导致端口被误删（可用性由 autoSwitch 逻辑过滤）
 			_, pc := GetConfigKeeper().GetCardAndPortConfig(card, port.Name)
-			if port.Available == pulse.AvailableTypeNo || !pc.Enabled {
+			if !pc.Enabled {
 				continue
 			}
 
