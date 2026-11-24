@@ -171,8 +171,6 @@ type xMonitorManager struct {
 	outputs                 map[randr.Output]*OutputInfo
 	primary                 randr.Output
 	monitorChangedCbEnabled bool
-	// 键是 x 的 output 名称，值是标准名。
-	stdNamesCache map[string]string
 }
 
 func newXMonitorManager(xConn *x.Conn, hasRandr1d2 bool) *xMonitorManager {
@@ -181,7 +179,6 @@ func newXMonitorManager(xConn *x.Conn, hasRandr1d2 bool) *xMonitorManager {
 		hasRandr1d2:             hasRandr1d2,
 		crtcs:                   make(map[randr.Crtc]*CrtcInfo),
 		outputs:                 make(map[randr.Output]*OutputInfo),
-		stdNamesCache:           make(map[string]string),
 		monitorChangedCbEnabled: true,
 	}
 	err := xmm.init()
@@ -440,21 +437,6 @@ func toMonitorInfoMap(monitors []*MonitorInfo) map[uint32]*MonitorInfo {
 	return result
 }
 
-func (mm *xMonitorManager) getStdMonitorName(name string, edid []byte) (string, error) {
-	// NOTE：不要加锁
-	stdName := mm.stdNamesCache[name]
-	if stdName != "" {
-		return stdName, nil
-	}
-
-	stdName, err := getStdMonitorName(edid)
-	if err != nil {
-		return "", err
-	}
-	mm.stdNamesCache[name] = stdName
-	return stdName, nil
-}
-
 func (mm *xMonitorManager) refreshMonitorsCache() {
 	// NOTE: 不要加锁
 	monitors := make([]*MonitorInfo, 0, len(mm.outputs))
@@ -477,7 +459,10 @@ func (mm *xMonitorManager) refreshMonitorsCache() {
 
 		stdName := ""
 		if monitor.Connected {
-			stdName, err = mm.getStdMonitorName(monitor.Name, monitor.EDID)
+			// Resolve afresh after output changes. Missing or malformed IDs
+			// return zero, selecting the unique-EDID fallback.
+			connectorID, _ := mm.getOutputConnectorID(outputId)
+			stdName, err = getStdMonitorName(monitor.EDID, connectorID)
 			if err != nil {
 				logger.Warningf("get monitor %v std name failed: %v", monitor.Name, err)
 			}
@@ -1087,6 +1072,31 @@ func (mm *xMonitorManager) getOutputInfo(outputId randr.Output) (*randr.GetOutpu
 		return nil, fmt.Errorf("status is not success, is %v", outputInfo.Status)
 	}
 	return outputInfo, err
+}
+
+func (mm *xMonitorManager) getOutputConnectorID(output randr.Output) (uint32, error) {
+	atom, err := mm.xConn.GetAtom("CONNECTOR_ID")
+	if err != nil {
+		return 0, err
+	}
+	reply, err := randr.GetOutputProperty(mm.xConn, output, atom, 0,
+		0, 1, false, false).Reply(mm.xConn)
+	if err != nil {
+		return 0, err
+	}
+	return decodeOutputConnectorID(reply)
+}
+
+func decodeOutputConnectorID(reply *randr.GetOutputPropertyReply) (uint32, error) {
+	if reply == nil || (reply.Type != x.AtomInteger && reply.Type != x.AtomCardinal) ||
+		reply.Format != 32 || reply.ValueLen != 1 || reply.BytesAfter != 0 || len(reply.Value) != 4 {
+		return 0, errors.New("CONNECTOR_ID must contain exactly one 32-bit integer")
+	}
+	id := x.Get32(reply.Value)
+	if id == 0 {
+		return 0, errors.New("CONNECTOR_ID is zero")
+	}
+	return id, nil
 }
 
 func (mm *xMonitorManager) getOutputEdid(output randr.Output) ([]byte, error) {
