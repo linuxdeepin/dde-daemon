@@ -395,10 +395,27 @@ func (a *Audio) handleSinkEvent(eventType int, idx uint32) {
 		a.handleSinkRemoved(idx)
 	case pulse.EventTypeChange: // sink属性变化
 		a.handleSinkChanged(idx)
+		return
 	default:
 		logger.Warningf("unhandled sink event, sink=%d, type=%d", idx, eventType)
+		return
 	}
 
+	// After a sink is recreated, the server can retain the same default name
+	// without sending a new server event. Recover the exported default path.
+	if a.defaultSink != nil {
+		return
+	}
+	sinkName := a.ctx.GetDefaultSink()
+	if !isPhysicalDevice(sinkName) {
+		return
+	}
+	for _, sink := range a.sinks {
+		if sink.Name == sinkName {
+			a.updateDefaultSink(sinkName)
+			return
+		}
+	}
 }
 
 func (a *Audio) handleSinkAdded(idx uint32) {
