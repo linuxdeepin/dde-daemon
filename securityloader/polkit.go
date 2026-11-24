@@ -19,11 +19,17 @@ import (
 // Callers should pass their existing service.Conn() to avoid re-establishing
 // a system bus connection on every call.
 func CheckPolkitAuth(conn *dbus.Conn, sysBusName, actionID string) (bool, error) {
+	return CheckPolkitAuthWithDetails(conn, sysBusName, actionID, nil)
+}
+
+// CheckPolkitAuthWithDetails is CheckPolkitAuth with extra Polkit details, such
+// as "polkit.message", which the authentication dialog displays.
+func CheckPolkitAuthWithDetails(conn *dbus.Conn, sysBusName, actionID string, details map[string]string) (bool, error) {
 	authority := polkit.NewAuthority(conn)
 	subject := polkit.MakeSubject(polkit.SubjectKindSystemBusName)
 	subject.SetDetail("name", sysBusName)
 	result, err := authority.CheckAuthorization(0, subject, actionID,
-		nil, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
+		details, polkit.CheckAuthorizationFlagsAllowUserInteraction, "")
 	if err != nil {
 		return false, err
 	}
@@ -33,12 +39,18 @@ func CheckPolkitAuth(conn *dbus.Conn, sysBusName, actionID string) (bool, error)
 // AuthorizeWithPolkit applies the caller registry and falls back to Polkit
 // only when the caller is not registered by security-loader.
 func AuthorizeWithPolkit(registry *AllowCallerRegistry, scope string, sender dbus.Sender, conn *dbus.Conn, actionID string) error {
+	return AuthorizeWithPolkitDetails(registry, scope, sender, conn, actionID, nil)
+}
+
+// AuthorizeWithPolkitDetails is AuthorizeWithPolkit with extra Polkit details,
+// used only on the Polkit fallback path.
+func AuthorizeWithPolkitDetails(registry *AllowCallerRegistry, scope string, sender dbus.Sender, conn *dbus.Conn, actionID string, details map[string]string) error {
 	result, err := registry.Authorize(scope, sender)
 	switch result {
 	case AuthError:
 		return err
 	case AuthPolkit:
-		ok, err := CheckPolkitAuth(conn, string(sender), actionID)
+		ok, err := CheckPolkitAuthWithDetails(conn, string(sender), actionID, details)
 		if err != nil {
 			return err
 		}

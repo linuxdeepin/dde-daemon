@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -296,7 +296,7 @@ func (a *agent) RequestPinCode(device dbus.ObjectPath) (pinCode string, busErr *
 //
 //	org.bluez.Error.Canceled
 func (a *agent) DisplayPinCode(device dbus.ObjectPath, pinCode string) (busErr *dbus.Error) {
-	logger.Info("DisplayPinCode()", pinCode)
+	logger.Info("DisplayPinCode()")
 	ua := a.b.getActiveUserAgent()
 	if ua == nil {
 		logger.Warning("ua is nil")
@@ -339,7 +339,7 @@ func (a *agent) RequestPasskey(device dbus.ObjectPath) (passkey uint32, busErr *
 // Note that the passkey will always be a 6-digit number, so the display should be zero-padded at the start if
 // the value contains less than 6 digits.
 func (a *agent) DisplayPasskey(device dbus.ObjectPath, passkey uint32, entered uint16) *dbus.Error {
-	logger.Info("DisplayPasskey()", passkey, entered)
+	logger.Info("DisplayPasskey()")
 	ua := a.b.getActiveUserAgent()
 	if ua == nil {
 		logger.Warning("ua is nil")
@@ -357,7 +357,7 @@ func (a *agent) DisplayPasskey(device dbus.ObjectPath, passkey uint32, entered u
 //
 //	org.bluez.Error.Canceled
 func (a *agent) RequestConfirmation(device dbus.ObjectPath, passkey uint32) *dbus.Error {
-	logger.Info("RequestConfirmation", device, passkey)
+	logger.Info("RequestConfirmation", device)
 	ua := a.b.getActiveUserAgent()
 	if ua == nil {
 		logger.Warning("ua is nil")

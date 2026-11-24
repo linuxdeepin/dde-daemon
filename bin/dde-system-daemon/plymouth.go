@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -26,6 +26,13 @@ const (
 	dsettingsScaleWithoutPlymouthEnabled = "scaleWithoutPlymouthEnabled"
 	plymouthSetDefaultUnit               = "dde-set-default-plymouth-theme.service"
 	updateInitramfsUnit                  = "dde-update-initramfs.service"
+
+	polkitActionSetPlymouthTheme = "org.deepin.dde.daemon.set-plymouth-theme"
+	polkitActionScalePlymouth    = "org.deepin.dde.daemon.scale-plymouth"
+
+	// plymouthThemeMaxLength bounds the theme name taken from D-Bus. Real
+	// theme names are far shorter.
+	plymouthThemeMaxLength = 64
 )
 
 func (d *Daemon) getScaleWithoutPlymouthEnabled() bool {
@@ -56,7 +63,11 @@ func (d *Daemon) getScaleWithoutPlymouthEnabled() bool {
 	return false
 }
 
-func (d *Daemon) ScalePlymouth(scale uint32) *dbus.Error {
+func (d *Daemon) ScalePlymouth(sender dbus.Sender, scale uint32) *dbus.Error {
+	if err := d.authorize(sender, polkitActionScalePlymouth); err != nil {
+		logger.Warningf("ScalePlymouth authorization failed: %q", err.Error())
+		return dbusutil.ToError(err)
+	}
 	return dbusutil.ToError(d.scalePlymouth(scale))
 }
 
@@ -97,6 +108,10 @@ func (d *Daemon) scalePlymouth(scale uint32) error {
 	if !ok {
 		return fmt.Errorf("invalid scale value: %d", scale)
 	}
+	oldTheme, err := currentPlymouthTheme()
+	if err != nil {
+		return err
+	}
 	path, err := exec.LookPath("plymouth-set-default-theme")
 	if err != nil {
 		return fmt.Errorf("could not find plymouth-set-default-theme")
@@ -136,30 +151,115 @@ func (d *Daemon) scalePlymouth(scale uint32) error {
 	}
 	err = updateInitramfsUnit.StartTransientUnit()
 	if err != nil {
-		return fmt.Errorf("failed create unit: %v, err: %v", updateInitramfsUnit, err)
+		return rollbackPlymouthTheme(oldTheme, fmt.Errorf("failed create unit: %v, err: %v", updateInitramfsUnit, err))
 	}
 	if !updateInitramfsUnit.WaitforFinish(d.systemSigLoop) {
-		return fmt.Errorf("%v run failed", updateInitramfsUnit.UnitName)
+		return rollbackPlymouthTheme(oldTheme, fmt.Errorf("%v run failed", updateInitramfsUnit.UnitName))
 	}
 
 	return nil
 }
 
-func (d *Daemon) SetPlymouthTheme(themeName string) *dbus.Error {
+// isValidPlymouthThemeName reports whether name can be a plymouth theme
+// directory name. It rejects an empty or over-long name and anything that
+// plymouth-set-default-theme could read as an option or a path.
+func isValidPlymouthThemeName(name string) bool {
+	if name == "" || len(name) > plymouthThemeMaxLength {
+		return false
+	}
+	if name[0] == '-' || name[0] == '.' {
+		return false
+	}
+	for _, c := range name {
+		switch {
+		case c >= 'a' && c <= 'z', c >= 'A' && c <= 'Z', c >= '0' && c <= '9':
+		case c == '-', c == '_', c == '.':
+		default:
+			return false
+		}
+	}
+	return true
+}
+
+// checkPlymouthThemeName requires themeName to be exactly one of the names
+// printed by `plymouth-set-default-theme --list`. The previous substring test
+// also accepted fragments of a real name and the empty string.
+func checkPlymouthThemeName(themelist, themeName string) error {
+	if !isValidPlymouthThemeName(themeName) {
+		return fmt.Errorf("invalid plymouth theme name %q", themeName)
+	}
+	for _, name := range strings.Fields(themelist) {
+		if name == themeName {
+			return nil
+		}
+	}
+	return fmt.Errorf("plymouth theme name %q does not exist in theme list", themeName)
+}
+
+// currentPlymouthTheme asks plymouth-set-default-theme for the theme that is
+// currently configured. It is read before a change so a failed initramfs
+// rebuild can restore the previous setting.
+func currentPlymouthTheme() (string, error) {
+	out, err := exec.Command("plymouth-set-default-theme").Output()
+	if err != nil {
+		return "", fmt.Errorf("get current plymouth theme failed: %w", err)
+	}
+	theme := strings.TrimSpace(string(out))
+	if theme == "" {
+		return "", fmt.Errorf("current plymouth theme is empty")
+	}
+	return theme, nil
+}
+
+func restorePlymouthTheme(theme string) error {
+	out, err := exec.Command("plymouth-set-default-theme", theme).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("restore plymouth theme %q failed: %s: %w", theme, strings.TrimSpace(string(out)), err)
+	}
+	return nil
+}
+
+func rollbackPlymouthTheme(previousTheme string, cause error) error {
+	if err := restorePlymouthTheme(previousTheme); err != nil {
+		return fmt.Errorf("%v; failed to restore previous theme %q: %v", cause, previousTheme, err)
+	}
+	return fmt.Errorf("%v; restored previous theme %q", cause, previousTheme)
+}
+
+// SetPlymouthTheme changes the boot theme and rebuilds the initramfs. Both
+// commands run as root, so the caller is authorized first: callers registered
+// with the security loader skip the prompt, everyone else needs the polkit
+// action.
+func (d *Daemon) SetPlymouthTheme(sender dbus.Sender, themeName string) *dbus.Error {
+	if err := d.authorize(sender, polkitActionSetPlymouthTheme); err != nil {
+		logger.Warningf("SetPlymouthTheme authorization failed: %q", err.Error())
+		return dbusutil.ToError(err)
+	}
 	return dbusutil.ToError(d.setPlymouthTheme(themeName))
 }
 
 func (d *Daemon) setPlymouthTheme(themeName string) error {
 	plymouthLocker.Lock()
 	defer plymouthLocker.Unlock()
-	defer logger.Debug("end ScalePlymouth", themeName)
+	defer logger.Debug("end SetPlymouthTheme", themeName)
+
+	// Reject malformed names before launching the root theme-list command.
+	if !isValidPlymouthThemeName(themeName) {
+		return fmt.Errorf("invalid plymouth theme name %q", themeName)
+	}
+
 	themelistout, err := exec.Command("plymouth-set-default-theme", "--list").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("seems cannot find the plymouth-set-default-theme: %v", err)
 	}
 	themelist := string(themelistout)
-	if !strings.Contains(themelist, themeName) {
-		return fmt.Errorf("The themeName %s does not exist in plymouth themelist", themeName)
+	if err := checkPlymouthThemeName(themelist, themeName); err != nil {
+		return err
+	}
+
+	oldTheme, err := currentPlymouthTheme()
+	if err != nil {
+		return err
 	}
 
 	out, err := exec.Command("plymouth-set-default-theme", themeName).CombinedOutput()
@@ -169,7 +269,7 @@ func (d *Daemon) setPlymouthTheme(themeName string) error {
 
 	out, err = exec.Command("update-initramfs", "-u", "-k", "all").CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("failed to update initramfs: %s, err: %v", string(out), err)
+		return rollbackPlymouthTheme(oldTheme, fmt.Errorf("failed to update initramfs: %s, err: %v", string(out), err))
 	}
 
 	return nil

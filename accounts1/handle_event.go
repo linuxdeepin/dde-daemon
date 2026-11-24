@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -301,6 +301,9 @@ func (m *Manager) deleteUser(uid string) {
 	if user != nil {
 		user.clearFingers()
 		user.clearSecretQuestions()
+		// The username can be reused by a later account; drop the lockout
+		// state so the new account does not inherit it.
+		secretQuestionVerifyLimiter.reset(user.UserName)
 	} else {
 		logger.Warningf("uid %s not found", uid)
 	}

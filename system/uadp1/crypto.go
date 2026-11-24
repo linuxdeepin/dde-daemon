@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -86,7 +86,7 @@ func (ctx *CryptoContext) Save(file string) bool {
 		return false
 	}
 
-	logger.Debugf("%s:\n%s", file, string(data))
+	logger.Debugf("saved key to %s", file)
 	return true
 }
 
@@ -120,7 +120,7 @@ func (ctx *CryptoContext) CreateKey() bool {
 
 	ret := C.cryptoCreateKey(ctx.handle, &ctx.PrimaryIndex, &ctx.KeyIndex, &auth)
 	C.free(unsafe.Pointer(auth.buffer))
-	logger.Debugf("key: 0x%x uuid: %s", ctx.KeyIndex, ctx.UUID)
+	logger.Debugf("created key: 0x%x", ctx.KeyIndex)
 	return bool(ret)
 }
 

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2022 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -63,7 +63,7 @@ func (dm *DataManager) Save(file string) error {
 		return err
 	}
 
-	logger.Debugf("%s:\n%s", file, string(data))
+	logger.Debugf("saved data to %s", file)
 	return nil
 }
 

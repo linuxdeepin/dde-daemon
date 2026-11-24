@@ -100,6 +100,8 @@ type Manager struct {
 	dsGreeterAccounts configManager.Manager
 	// ddm 的 dconfig 配置
 	dsDDM configManager.Manager
+	// 用户须知 dconfig 配置
+	dsSessionUI configManager.Manager
 
 	dbusDaemon       ofdbus.DBus
 	IsTerminalLocked bool
@@ -135,6 +137,12 @@ func NewManager(service *dbusutil.Service) *Manager {
 	}
 	m.usersMap = make(map[string]*User)
 	m.userAddedChanMap = make(map[string]chan string)
+
+	// An upgraded system may still carry a world-writable secret question
+	// store, so make it private before any account can read or write it.
+	if err := prepareSecretQuestionsStore(); err != nil {
+		logger.Warningf("failed to secure secret question store: %v", err)
+	}
 
 	m.initUsers(getUserPaths())
 	m.initUdcpUsers()
@@ -727,6 +735,10 @@ const (
 	ddmAppID            = "org.deepin.dde.ddm"
 	ddmResourceID       = "org.deepin.dde.ddm"
 	keyDDMAutologinUser = "autologinUser"
+
+	// 用户须知配置（与 dde-session-ui / 控制中心共用）
+	sessionUIAppId    = "org.deepin.dde.session.ui"
+	keyShowUserNotice = "showUserNotice"
 )
 
 // 在 dconfig 设置 quick login （总开关）
@@ -840,6 +852,80 @@ func (m *Manager) removeDDMDConfigWatch() {
 	}
 }
 
+// 用户须知开启后开机必须经过 greeter，自动/快速/免密登录会绕过它，因此在 daemon 侧直接关闭
+func (m *Manager) initDConfigUserNoticeWatch() error {
+	if m.cfgManager == nil {
+		return errors.New("config manager not initialized")
+	}
+
+	path, err := m.cfgManager.AcquireManager(0, sessionUIAppId, sessionUIAppId, "")
+	if err != nil {
+		return err
+	}
+
+	m.dsSessionUI, err = configManager.NewManager(m.sysSigLoop.Conn(), path)
+	if err != nil {
+		return err
+	}
+
+	m.dsSessionUI.InitSignalExt(m.sysSigLoop, true)
+	m.dsSessionUI.ConnectValueChanged(func(key string) {
+		if key == keyShowUserNotice {
+			m.applyUserNoticePolicy()
+		}
+	})
+	m.applyUserNoticePolicy()
+	return nil
+}
+
+func (m *Manager) removeUserNoticeDConfigWatch() {
+	if m.dsSessionUI != nil {
+		m.dsSessionUI.RemoveAllHandlers()
+	}
+}
+
+func (m *Manager) applyUserNoticePolicy() {
+	if m.dsSessionUI == nil {
+		return
+	}
+
+	value, err := m.dsSessionUI.Value(0, keyShowUserNotice)
+	if err != nil {
+		logger.Warning("get showUserNotice failed:", err)
+		return
+	}
+	enabled, _ := value.Value().(bool)
+	if !enabled {
+		return
+	}
+	m.disableLoginOptions()
+}
+
+func (m *Manager) disableLoginOptions() {
+	m.usersMapMu.Lock()
+	userList := make([]*User, 0, len(m.usersMap))
+	for _, u := range m.usersMap {
+		userList = append(userList, u)
+	}
+	m.usersMapMu.Unlock()
+
+	for _, u := range userList {
+		if u.AutomaticLogin {
+			_ = u.setAutomaticLogin(false)
+		}
+		if u.QuickLogin {
+			_ = u.setQuickLogin(false)
+		}
+		if users.CanNoPasswdLogin(u.UserName) {
+			if err := users.EnableNoPasswdLogin(u.UserName, false); err != nil {
+				logger.Warning("disable no password login failed:", err)
+			} else {
+				u.setPropNoPasswdLogin(false)
+			}
+		}
+	}
+}
+
 // 监控 dconfig-daemon 服务是否重新启动, 如果重新启动了，需要重新注册监控器。
 func (m *Manager) initDBusDaemonWatch() {
 	systemBus, err := dbus.SystemBus()
@@ -870,6 +956,10 @@ func (m *Manager) initDBusDaemonWatch() {
 			time.Sleep(2 * time.Second)
 			m.removeGreeterDConfigWatch()
 			m.initDConfigGreeterWatch()
+			m.removeUserNoticeDConfigWatch()
+			if err := m.initDConfigUserNoticeWatch(); err != nil {
+				logger.Warning("re-init user notice dconfig watch failed, err:", err)
+			}
 			// dconfig-daemon 重启后 DDM 的连接已失效，需要重建连接和监听
 			users.ResetDDMDConfig()
 			m.removeDDMDConfigWatch()

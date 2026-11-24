@@ -10,6 +10,7 @@ import (
 
 	"github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -26,6 +27,13 @@ const (
 
 func (*Grub2) GetInterfaceName() string {
 	return dbusInterface
+}
+
+// SetAllowCaller registers a security-loader launched caller, so that its
+// calls on this interface skip the Polkit check. The D-Bus policy only lets
+// the deepin-daemon group reach this method.
+func (g *Grub2) SetAllowCaller(sender dbus.Sender, uniqueName string) *dbus.Error {
+	return dbusutil.ToError(g.allowCallers.AddCaller(securityloader.Grub2Scope, sender, uniqueName))
 }
 
 // GetSimpleEntryTitles return entry titles only in level one and will
@@ -154,16 +162,25 @@ func (g *Grub2) SetGfxmode(sender dbus.Sender, gfxmode string) *dbus.Error {
 		logger.Warning("failed to get sender lang:", err)
 	}
 
+	// PrepareGfxmodeDetect holds this mutex while it checks state and
+	// gathers modes. Without it, a setter could read None in the window
+	// before PrepareGfxmodeDetect switches to Detecting, return success,
+	// and then have its task overwritten by the detection task.
+	g.gfxmodeDetectMu.Lock()
+	defer g.gfxmodeDetectMu.Unlock()
+
 	g.PropsMu.Lock()
-	if g.gfxmodeDetectState == gfxmodeDetectStateDetecting {
+	if g.gfxmodeDetectState == gfxmodeDetectStateDetecting || g.gfxmodeDetectStarting {
 		g.PropsMu.Unlock()
 		return dbusutil.ToError(errInGfxmodeDetect)
 	}
 
-	if g.setPropGfxmode(gfxmode) {
+	changed := g.setPropGfxmode(gfxmode)
+	g.PropsMu.Unlock()
+
+	if changed {
 		g.addModifyTask(getModifyTaskGfxmode(gfxmode, lang))
 	}
-	g.PropsMu.Unlock()
 	return nil
 }
 
@@ -245,6 +262,40 @@ func (g *Grub2) Reset(sender dbus.Sender) *dbus.Error {
 }
 
 func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
+	if !noCheckAuth {
+		err := securityloader.AuthorizeWithPolkit(
+			g.allowCallers,
+			securityloader.Grub2Scope,
+			sender,
+			g.service.Conn(),
+			polikitActionIdPrepareGfxmodeDetect,
+		)
+		if err != nil {
+			logger.Warningf("PrepareGfxmodeDetect denied for %v: %v", sender, err)
+			return dbusutil.ToError(err)
+		}
+	}
+
+	// Detection rewrites the boot configuration, so two calls must never
+	// schedule overlapping modify tasks. Serialise the whole method; the
+	// state check below is only meaningful while no other call can slip in
+	// between reading gfxmodeDetectState and setting it to Detecting.
+	g.gfxmodeDetectMu.Lock()
+	defer g.gfxmodeDetectMu.Unlock()
+
+	// Reserve the startup transition before reading DRM/GRUB state. A
+	// setter that only checked gfxmodeDetectState would otherwise see None
+	// while this method is still gathering modes, enqueue its own task and
+	// return success just before the Detecting state is committed.
+	g.PropsMu.Lock()
+	gfxmodeDetectState := g.gfxmodeDetectState
+	if gfxmodeDetectState == gfxmodeDetectStateDetecting {
+		g.PropsMu.Unlock()
+		return dbusutil.ToError(errors.New("already in detection mode"))
+	}
+	g.gfxmodeDetectStarting = true
+	g.PropsMu.Unlock()
+
 	g.service.DelayAutoQuit()
 
 	gfxmodes, err := grub_common.GetGfxmodesFromSysDrm()
@@ -257,10 +308,6 @@ func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 	gfxmodesStr := joinGfxmodesForDetect(gfxmodes)
 	logger.Debug("Gfxmodes str for detect:", gfxmodesStr)
 
-	g.PropsMu.RLock()
-	gfxmodeDetectState := g.gfxmodeDetectState
-	g.PropsMu.RUnlock()
-
 	defaultParams := grub_common.LoadGrubParams()
 
 	params := make(map[string]string)
@@ -270,9 +317,7 @@ func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 		}
 	}
 
-	if gfxmodeDetectState == gfxmodeDetectStateDetecting {
-		return dbusutil.ToError(errors.New("already in detection mode"))
-	} else if gfxmodeDetectState == gfxmodeDetectStateFailed {
+	if gfxmodeDetectState == gfxmodeDetectStateFailed {
 		cur, _, err := grub_common.GetBootArgDeepinGfxmode()
 		if err == nil {
 			if params[grubGfxmode] == gfxmodesStr &&
@@ -301,6 +346,7 @@ func (g *Grub2) PrepareGfxmodeDetect(sender dbus.Sender) *dbus.Error {
 
 	themeFile := getTheme(params)
 	g.PropsMu.Lock()
+	g.gfxmodeDetectStarting = false
 	g.gfxmodeDetectState = gfxmodeDetectStateDetecting
 	if themeFile != "" {
 		g.setPropThemeFile(fallbackGrubTheme)

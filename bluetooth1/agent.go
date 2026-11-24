@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 - 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2018 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -83,8 +83,7 @@ func (a *agent) RequestPinCode(device dbus.ObjectPath) (pinCode string, busErr *
 //
 //	org.bluez.Error.Canceled
 func (a *agent) DisplayPinCode(device dbus.ObjectPath, pinCode string) *dbus.Error {
-	logger.Infof("dbus call agent DisplayPinCode with device %v and pinCode %s",
-		device, pinCode)
+	logger.Infof("dbus call agent DisplayPinCode with device %v", device)
 
 	_, err := a.emitRequest(device, "DisplayPinCode", pinCode)
 	if err != nil {
@@ -126,8 +125,7 @@ func (a *agent) RequestPasskey(device dbus.ObjectPath) (passkey uint32, busErr *
 // Note that the passkey will always be a 6-digit number, so the display should be zero-padded at the start if
 // the value contains less than 6 digits.
 func (a *agent) DisplayPasskey(device dbus.ObjectPath, passkey uint32, entered uint16) *dbus.Error {
-	logger.Infof("dbus call agent DisplayPasskey with device %v,passkey %d and entered %d",
-		device, passkey, entered)
+	logger.Infof("dbus call agent DisplayPasskey with device %v, entered %d", device, entered)
 
 	key := fmt.Sprintf("%06d", passkey)
 	_, err := a.emitRequest(device, "DisplayPasskey", key)
@@ -147,8 +145,7 @@ func (a *agent) DisplayPasskey(device dbus.ObjectPath, passkey uint32, entered u
 //
 //	org.bluez.Error.Canceled
 func (a *agent) RequestConfirmation(device dbus.ObjectPath, passkey uint32) *dbus.Error {
-	logger.Infof("dbus call agent RequestConfirmation with device %v and passkey %d",
-		device, passkey)
+	logger.Infof("dbus call agent RequestConfirmation with device %v", device)
 
 	key := fmt.Sprintf("%06d", passkey)
 	_, err := a.emitRequest(device, "RequestConfirmation", key)
@@ -283,13 +280,13 @@ func (a *agent) waitResponse() (auth authorize, err error) {
 	t := time.NewTimer(60 * time.Second)
 	select {
 	case auth = <-a.rspChan:
-		logger.Info("receive", auth)
+		logger.Info("receive auth response")
 		if !auth.accept {
 			err = btcommon.ErrRejected
 			logger.Warningf("emitRequest return with: %v", err)
 			return
 		}
-		logger.Infof("emitRequest accept %v with %v", a.requestDevice, auth.key)
+		logger.Infof("emitRequest accept %v", a.requestDevice)
 		return
 	case <-t.C:
 		logger.Info("timeout")
@@ -331,7 +328,7 @@ func (b *Bluetooth) setInitiativeConnect(devPath dbus.ObjectPath, val bool) {
 }
 
 func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...interface{}) (auth authorize, err error) {
-	logger.Info("emitRequest", devPath, signal, args)
+	logger.Info("emitRequest", devPath, signal)
 
 	a.mu.Lock()
 	a.requestDevice = devPath
@@ -373,7 +370,7 @@ func (a *agent) emitRequest(devPath dbus.ObjectPath, signal string, args ...inte
 		}
 	} else {
 		//if signal is not request confirmation, we emit it to dbus
-		logger.Debug("Send Signal for device: ", devPath, signal, args)
+		logger.Debug("Send Signal for device: ", devPath, signal)
 		err = a.emit(signal, devPath, args...)
 		if err != nil {
 			logger.Warningf("emitRequest emit signal failed,err:%v", err)

@@ -181,10 +181,11 @@ type Manager struct {
 	debugOpts      debugOptions
 	redshiftRunner *redshiftRunner
 
-	sessionActive   bool
-	sessionActiveMu sync.RWMutex
-	newSysCfg       *SysRootConfig
-	cursorShowed    bool
+	sessionActive      bool
+	sessionActiveMu    sync.RWMutex
+	pendingApplyConfig bool
+	newSysCfg          *SysRootConfig
+	cursorShowed       bool
 
 	// dconfig com.deepin.Display
 	displayConfigMgr         configManager.Manager
@@ -438,17 +439,21 @@ func newManager(service *dbusutil.Service) *Manager {
 		}
 		logger.Debug("session active changed", active)
 
-		m.sessionActiveMu.Lock()
-		m.sessionActive = active
-		m.sessionActiveMu.Unlock()
+		pendingApply := m.setSessionActive(active)
 		if !active {
 			m.holdAutoBrightness()
 			return
 		}
 		m.resumeAutoBrightness()
+		if m.syncLidState() {
+			m.updateMonitorsId(nil)
+		}
 		if m.newSysCfg != nil {
 			m.handleSysConfigUpdated(m.newSysCfg)
 			m.newSysCfg = nil
+		}
+		if pendingApply {
+			go m.delayApplyConfig()
 		}
 
 		m.handleTouchscreenChanged()
@@ -978,6 +983,9 @@ func monitorsRemove(monitors []*Monitor, id uint32) []*Monitor {
 }
 
 func (m *Manager) buildConfigForSingle(monitor *Monitor) SysMonitorConfigs {
+	if cfg := m.getLidClosedSingleConfig(monitor); cfg != nil {
+		return SysMonitorConfigs{cfg}
+	}
 	cfg := monitor.toBasicSysConfig()
 	cfg.Enabled = true
 	cfg.Primary = true
@@ -991,6 +999,46 @@ func (m *Manager) buildConfigForSingle(monitor *Monitor) SysMonitorConfigs {
 	cfg.Rotation = randr.RotationRotate0
 	//cfg.Reflect = 0
 	return SysMonitorConfigs{cfg}
+}
+
+func (m *Manager) getLidClosedSingleConfig(monitor *Monitor) *SysMonitorConfig {
+	builtin := m.getBuiltinMonitor()
+	if builtin == nil || builtin.ID == monitor.ID {
+		return nil
+	}
+	builtin.PropsMu.RLock()
+	closed := builtin.lidClosed
+	builtin.PropsMu.RUnlock()
+	if !closed {
+		return nil
+	}
+
+	var physicalMonitors Monitors
+	for _, item := range m.cloneMonitorMap() {
+		if item.realConnected {
+			physicalMonitors = append(physicalMonitors, item)
+		}
+	}
+	screenCfg := m.getSysScreenConfig(physicalMonitors.getMonitorsId())
+	m.sysConfig.mu.Lock()
+	mode := m.sysConfig.Config.DisplayMode
+	m.sysConfig.mu.Unlock()
+	cfg := screenCfg.getMonitorConfigs(mode, screenCfg.OnlyOneUuid).getByUuid(monitor.uuid)
+	if cfg == nil || !cfg.Enabled {
+		return nil
+	}
+
+	width, height := cfg.Width, cfg.Height
+	swapWidthHeightWithRotation(cfg.Rotation, &width, &height)
+	selected := monitor.selectMode(width, height, cfg.RefreshRate)
+	if selected.isZero() {
+		return nil
+	}
+	width, height = selected.Width, selected.Height
+	swapWidthHeightWithRotation(cfg.Rotation, &width, &height)
+	cfg.Width, cfg.Height, cfg.RefreshRate = width, height, selected.Rate
+	cfg.Name, cfg.X, cfg.Y, cfg.Primary = monitor.Name, 0, 0, true
+	return cfg
 }
 
 func (m *Manager) applyDisplayConfig(mode byte, monitorsId monitorsId, monitorMap map[uint32]*Monitor, setColorTemp bool, options applyOptions) error {
@@ -1095,7 +1143,37 @@ func (m *Manager) updateMonitorsId(options applyOptions) (changed bool) {
 	return false
 }
 
+func (m *Manager) setSessionActive(active bool) bool {
+	m.sessionActiveMu.Lock()
+	defer m.sessionActiveMu.Unlock()
+
+	m.sessionActive = active
+	if !active {
+		return false
+	}
+	pending := m.pendingApplyConfig
+	m.pendingApplyConfig = false
+	return pending
+}
+
+func (m *Manager) deferApplyConfig() bool {
+	if _greeterMode {
+		return false
+	}
+	m.sessionActiveMu.Lock()
+	defer m.sessionActiveMu.Unlock()
+	if m.sessionActive {
+		return false
+	}
+	m.pendingApplyConfig = true
+	return true
+}
+
 func (m *Manager) delayApplyConfig() {
+	if m.deferApplyConfig() {
+		logger.Debug("defer display config until session is active")
+		return
+	}
 	options := m.getDelayApplyOptions()
 	// NOTE: applyConfig 应在非 X 事件处理的另外一个 goroutine 中进行。
 
@@ -1287,9 +1365,9 @@ func (m *Manager) init() {
 		}
 
 		m.initBuiltinMonitor()
+		m.initLidSwitch()
 		m.monitorsId = m.getMonitorsId()
 		m.updatePropMonitors()
-		m.initLidSwitch()
 
 	} else {
 		// randr 版本低于 1.2

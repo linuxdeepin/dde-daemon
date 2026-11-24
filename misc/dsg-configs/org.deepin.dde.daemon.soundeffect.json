@@ -253,7 +253,7 @@
             "description[zh_CN]": "音效事件播放器选择: 0-libcanberra, 1-paplay, 3-mpv",
             "description": "Sound effect event player selection: 0-libcanberra, 1-paplay, 3-mpv",
             "permissions": "readwrite",
-            "visibility": "public"
+            "visibility": "private"
         }
     }
 }

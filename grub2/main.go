@@ -11,6 +11,7 @@ import (
 
 	"github.com/linuxdeepin/dde-api/inhibit_hint"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
@@ -22,6 +23,15 @@ func RunAsDaemon() {
 	if err != nil {
 		logger.Fatal("failed to new system service", err)
 	}
+
+	// grub2 runs as root and owns its own process, so it must keep its caller
+	// registrations in a file of its own instead of the one dde-system-daemon
+	// also writes.
+	allowCallers := securityloader.NewAllowCallerRegistryWithStateFile(service,
+		"/run/deepin-grub2/security_loader_allow_callers.json")
+	securityloader.SetDefaultRegistry(allowCallers)
+	defer allowCallers.Close()
+
 	_g = NewGrub2(service)
 	ihObj := inhibit_hint.New("lastore-daemon")
 	ihObj.SetName("Control Center")

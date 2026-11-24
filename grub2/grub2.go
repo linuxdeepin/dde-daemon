@@ -18,6 +18,7 @@ import (
 
 	dbus "github.com/godbus/dbus/v5"
 	"github.com/linuxdeepin/dde-daemon/grub_common"
+	"github.com/linuxdeepin/dde-daemon/securityloader"
 	accounts "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.accounts1"
 	ofdbus "github.com/linuxdeepin/go-dbus-factory/system/org.freedesktop.dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -45,17 +46,20 @@ const (
 //go:generate dbusutil-gen em -type Grub2,Theme,EditAuth
 
 type Grub2 struct {
-	service            *dbusutil.Service
-	modifyManager      *modifyManager
-	entries            []Entry
-	theme              *Theme
-	editAuth           *EditAuth
-	fstart             *Fstart
-	gfxmodeDetectState gfxmodeDetectState
-	inhibitFd          dbus.UnixFD
-	PropsMu            sync.RWMutex
-	dbusObj            ofdbus.DBus
-	sysLoop            *dbusutil.SignalLoop
+	service               *dbusutil.Service
+	allowCallers          *securityloader.AllowCallerRegistry
+	modifyManager         *modifyManager
+	entries               []Entry
+	theme                 *Theme
+	editAuth              *EditAuth
+	fstart                *Fstart
+	gfxmodeDetectState    gfxmodeDetectState
+	gfxmodeDetectMu       sync.Mutex
+	gfxmodeDetectStarting bool // guarded by PropsMu
+	inhibitFd             dbus.UnixFD
+	PropsMu               sync.RWMutex
+	dbusObj               ofdbus.DBus
+	sysLoop               *dbusutil.SignalLoop
 	// props:
 	ThemeFile    string
 	DefaultEntry string
@@ -237,6 +241,7 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 	if err != nil {
 		g.PropsMu.Lock()
 		g.gfxmodeDetectState = gfxmodeDetectStateFailed
+		g.gfxmodeDetectStarting = false
 		g.PropsMu.Unlock()
 		logger.Warning("failed to get current gfxmode:", err)
 		task := modifyTask{
@@ -249,6 +254,7 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 	}
 	g.PropsMu.Lock()
 	g.gfxmodeDetectState = gfxmodeDetectStateNone
+	g.gfxmodeDetectStarting = false
 	g.PropsMu.Unlock()
 	logger.Debug("currentGfxmode:", currentGfxmode)
 
@@ -296,8 +302,9 @@ func (g *Grub2) finishGfxmodeDetect(params map[string]string) {
 
 func NewGrub2(service *dbusutil.Service) *Grub2 {
 	g := &Grub2{
-		service:   service,
-		inhibitFd: -1,
+		service:      service,
+		allowCallers: securityloader.DefaultRegistry(),
+		inhibitFd:    -1,
 	}
 	g.dbusObj = ofdbus.NewDBus(service.Conn())
 	g.sysLoop = dbusutil.NewSignalLoop(service.Conn(), 10)

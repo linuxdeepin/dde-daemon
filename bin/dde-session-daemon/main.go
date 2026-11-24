@@ -178,6 +178,16 @@ func main() {
 			DBusPath:      "/org/deepin/dde/AirplaneMode1",
 			DBusInterface: "org.deepin.dde.AirplaneMode1",
 		},
+		{
+			DBusName:      "org.deepin.dde.Timedate1",
+			DBusPath:      "/org/deepin/dde/Timedate1",
+			DBusInterface: "org.deepin.dde.Timedate1",
+		},
+		{
+			DBusName:      "org.deepin.dde.Grub2",
+			DBusPath:      "/org/deepin/dde/Grub2",
+			DBusInterface: "org.deepin.dde.Grub2",
+		},
 	})
 	os.Args = cleanedArgs
 	if err != nil {

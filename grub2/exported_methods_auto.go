@@ -50,6 +50,11 @@ func (v *Grub2) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:   v.Reset,
 		},
 		{
+			Name:   "SetAllowCaller",
+			Fn:     v.SetAllowCaller,
+			InArgs: []string{"uniqueName"},
+		},
+		{
 			Name:   "SetDefaultEntry",
 			Fn:     v.SetDefaultEntry,
 			InArgs: []string{"entry"},
