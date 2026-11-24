@@ -399,12 +399,12 @@ func (m *Manager) exportUserByUid(uId string) error {
 	userPath := userDBusPathPrefix + uId
 	id, _ := strconv.Atoi(uId)
 
-	// 快速路径：已导出则直接返回
+	// 已导出的用户仍需检查家目录，避免跳过属主修复。
 	m.usersMapMu.Lock()
-	_, alreadyExported := m.usersMap[userPath]
+	exportedUser, alreadyExported := m.usersMap[userPath]
 	m.usersMapMu.Unlock()
 	if alreadyExported {
-		return nil
+		return prepareUserHome(exportedUser)
 	}
 
 	var err error
@@ -437,6 +437,9 @@ func (m *Manager) exportUserByUid(uId string) error {
 		}
 
 		u, err = NewDomainUser(uint32(id), m.service, userGroups)
+		if err != nil {
+			return err
+		}
 
 		if users.IsLDAPDomainUserID(uId) {
 			var config = &domainUserConfig{
@@ -457,22 +460,34 @@ func (m *Manager) exportUserByUid(uId string) error {
 		return err
 	}
 
-	var stat = &syscall.Stat_t{}
-	if err := syscall.Stat(u.HomeDir, stat); err != nil {
-		logger.Warning(err)
-	} else if strconv.Itoa(int(stat.Uid)) != u.Uid {
-		logger.Debug("incorrect ownership")
-		err = recoverOwnership(u)
-		if err != nil {
-			logger.Warning(err)
-		}
+	return m.exportPreparedUser(u, userPath)
+}
+
+func prepareUserHome(u *User) error {
+	if u == nil {
+		return errors.New("missing user for export")
+	}
+	u.PropsMu.RLock()
+	snapshot := homeOwnershipSnapshot{userName: u.UserName, uid: u.Uid, gid: u.Gid, path: u.HomeDir}
+	u.PropsMu.RUnlock()
+
+	if err := prepareRecoveryHome(snapshot, false); err != nil && !errors.Is(err, os.ErrNotExist) {
+		logger.Warningf("optional home recovery failed for %s: %v", snapshot.userName, err)
+	}
+
+	return nil
+}
+
+func (m *Manager) exportPreparedUser(u *User, userPath string) error {
+	if err := prepareUserHome(u); err != nil {
+		return err
 	}
 
 	// 临界区：检查 + Export + 写入 usersMap 原子化，防止并发重复导出
 	m.usersMapMu.Lock()
 
 	// 双检：再次确认未被其他 goroutine 抢先导出
-	_, alreadyExported = m.usersMap[userPath]
+	_, alreadyExported := m.usersMap[userPath]
 	if alreadyExported {
 		m.usersMapMu.Unlock()
 		return nil
@@ -480,7 +495,7 @@ func (m *Manager) exportUserByUid(uId string) error {
 
 	ch := m.userAddedChanMap[u.UserName]
 
-	err = m.service.Export(dbus.ObjectPath(userPath), u)
+	err := m.service.Export(dbus.ObjectPath(userPath), u)
 	logger.Debugf("export user %q err: %v", userPath, err)
 
 	if err == nil {
