@@ -21,5 +21,25 @@
 			<source>Disable system read-only protection</source>
 			<translation>Desativar proteção do sistema em modo somente leitura</translation>
 		</message>
+		<message>
+			<location filename="org.deepin.dde.daemon.set-plymouth-theme!message" line="0"/>
+			<source>Authentication is required to change the boot theme</source>
+			<translation>É necessário autenticar-se para alterar o tema de inicialização</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.daemon.set-plymouth-theme!description" line="0"/>
+			<source>Set the plymouth boot theme</source>
+			<translation>Definir o tema de inicialização do Plymouth</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.daemon.scale-plymouth!message" line="0"/>
+			<source>Authentication is required to scale the boot theme</source>
+			<translation>É necessário autenticar-se para redimensionar o tema de inicialização</translation>
+		</message>
+		<message>
+			<location filename="org.deepin.dde.daemon.scale-plymouth!description" line="0"/>
+			<source>Scale the plymouth boot theme</source>
+			<translation>Redimensionar o tema de inicialização do Plymouth</translation>
+		</message>
 	</context>
 </TS>
