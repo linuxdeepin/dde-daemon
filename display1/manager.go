@@ -1710,8 +1710,8 @@ func (m *Manager) getMirrorConfigs(monitorsId monitorsId, monitors Monitors) (co
 		return configs, false, nil
 	}
 
-	if config := configs.getByUuid(primaryMonitor.uuid); config != nil && config.Enabled && !config.Primary {
-		configs.setPrimary(primaryMonitor.uuid)
+	if config := configs.getByUuidAndName(primaryMonitor.uuid, primaryMonitor.Name); config != nil && config.Enabled && !config.Primary {
+		configs.setPrimaryByUuidAndName(primaryMonitor.uuid, primaryMonitor.Name)
 		return configs, true, nil
 	}
 	return configs, false, nil
@@ -1919,7 +1919,7 @@ func (m *Manager) setPrimary(name string) error {
 			// modify configs
 			// TODO 这里为什么需要更新 Name？
 			updateSysMonitorConfigsName(configs, m.monitorMap)
-			configs.setPrimary(primaryMonitor.uuid)
+			configs.setPrimaryByUuidAndName(primaryMonitor.uuid, primaryMonitor.Name)
 		}
 
 		err := m.mm.setMonitorPrimary(primaryMonitor.ID)
@@ -2361,7 +2361,7 @@ func (m *Manager) applyChanges() error {
 
 	configs := m.getSuitableSysMonitorConfigs(m.DisplayMode, monitorsId, monitors)
 	for _, config := range configs {
-		monitor := monitors.GetByUuid(config.UUID)
+		monitor := monitors.GetByUuidAndNameOrUuid(config.UUID, config.Name)
 		if monitor == nil {
 			continue
 		}
@@ -2444,7 +2444,7 @@ func (m *Manager) applySysMonitorConfigs(mode byte, monitorsId monitorsId, monit
 	var primaryMonitorID uint32
 	var enabledMonitors []*Monitor
 	for _, monitor := range monitorMap {
-		monitorCfg := configs.getByUuid(monitor.uuid)
+		monitorCfg := configs.getByUuidAndName(monitor.uuid, monitor.Name)
 		if monitorCfg == nil {
 			logger.Debug("disable monitor", monitor)
 			monitor.Enabled = false
@@ -2534,7 +2534,7 @@ func (m *Manager) applySysMonitorConfigs(mode byte, monitorsId monitorsId, monit
 			if err != nil {
 				logger.Warningf("call setBrightness err: %v, config.Name: %s", err, config.Name)
 				monitors := m.getConnectedMonitors()
-				monitor := monitors.GetByUuid(config.UUID)
+				monitor := monitors.GetByUuidAndNameOrUuid(config.UUID, config.Name)
 				// 插拔过程中存在异常monitor空
 				if monitor == nil {
 					logger.Warning("call GetByUuid failed: ", config.UUID)
@@ -2582,7 +2582,7 @@ func (m *Manager) getInheritedPrimaryMonitor(monitorsId monitorsId, monitors Mon
 		if !config.Primary {
 			continue
 		}
-		if monitor := monitors.GetByUuid(config.UUID); monitor != nil {
+		if monitor := monitors.GetByUuidAndNameOrUuid(config.UUID, config.Name); monitor != nil {
 			return monitor
 		}
 		break

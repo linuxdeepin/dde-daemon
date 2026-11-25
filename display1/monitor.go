@@ -557,6 +557,18 @@ func (monitors Monitors) GetByUuidAndName(uuid, name string) *Monitor {
 	return nil
 }
 
+// GetByUuidAndNameOrUuid 优先用 UUID + Name 查找显示器。
+// 多台同型号显示器的 EDID 可能完全相同而共享 UUID，此时必须用 Name 区分；
+// Name 不匹配时回退到 UUID，保留旧配置的兼容行为。
+func (monitors Monitors) GetByUuidAndNameOrUuid(uuid, name string) *Monitor {
+	if name != "" {
+		if monitor := monitors.GetByUuidAndName(uuid, name); monitor != nil {
+			return monitor
+		}
+	}
+	return monitors.GetByUuid(uuid)
+}
+
 const fillModeKeyDelimiter = ":"
 
 func (m *Monitor) generateFillModeKey() string {

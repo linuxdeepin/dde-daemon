@@ -706,13 +706,29 @@ func (cfgs SysMonitorConfigs) getByUuid(uuid string) *SysMonitorConfig {
 	return nil
 }
 
-func (cfgs SysMonitorConfigs) setPrimary(uuid string) {
-	for _, mc := range cfgs {
-		if mc.UUID == uuid {
-			mc.Primary = true
-		} else {
-			mc.Primary = false
+// getByUuidAndName 优先用 UUID + Name 精确匹配配置。
+// 多台同型号显示器的 EDID 可能完全相同，从而产生相同的 UUID；
+// 此时仅靠 UUID 只能命中第一条配置，必须用 Name 区分。
+func (cfgs SysMonitorConfigs) getByUuidAndName(uuid, name string) *SysMonitorConfig {
+	if name != "" {
+		for _, mc := range cfgs {
+			if uuid == mc.UUID && name == mc.Name {
+				return mc
+			}
 		}
+	}
+
+	// Name 不匹配时回退到旧行为，避免旧配置导致显示器被直接禁用。
+	return cfgs.getByUuid(uuid)
+}
+
+func (cfgs SysMonitorConfigs) setPrimary(uuid string) {
+	cfgs.setPrimaryByUuidAndName(uuid, "")
+}
+
+func (cfgs SysMonitorConfigs) setPrimaryByUuidAndName(uuid, name string) {
+	for _, mc := range cfgs {
+		mc.Primary = mc.UUID == uuid && (name == "" || mc.Name == name)
 	}
 }
 
